@@ -4,8 +4,10 @@
   "prefix": "nx-ng-doc",
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:browser",
-      "outputs": ["{options.outputPath}"],
+      "executor": "@ng-doc/builder:browser",
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/documentation",
         "index": "apps/documentation/src/index.html",
@@ -51,19 +53,39 @@
           "namedChunks": true
         }
       },
-      "defaultConfiguration": "production"
+      "defaultConfiguration": "production",
+      "dependsOn": [
+        {
+          "projects": "dependencies",
+          "target": "build"
+        }
+      ]
     },
     "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
+      "executor": "@ng-doc/builder:dev-server",
       "configurations": {
         "production": {
-          "browserTarget": "documentation:build:production"
+          "browserTarget": "documentation:build:production",
+          "ngDoc": {
+            "pages": "apps/documentation",
+            "tsConfig": "tsconfig.base.json"
+          }
         },
         "development": {
-          "browserTarget": "documentation:build:development"
+          "browserTarget": "documentation:build:development",
+          "ngDoc": {
+            "pages": "apps/documentation",
+            "tsConfig": "tsconfig.base.json"
+          }
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "dependsOn": [
+        {
+          "projects": "dependencies",
+          "target": "build"
+        }
+      ]
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
@@ -82,12 +104,17 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/documentation"],
+      "outputs": [
+        "coverage/apps/documentation"
+      ],
       "options": {
         "jestConfig": "apps/documentation/jest.config.ts",
         "passWithNoTests": true
       }
     }
   },
-  "tags": []
+  "tags": [],
+  "implicitDependencies": [
+    "builder"
+  ]
 }

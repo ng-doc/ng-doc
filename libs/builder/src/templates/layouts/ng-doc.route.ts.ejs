@@ -1,0 +1,1 @@
+<%- `{path: '${entryPoint.route}', loadChildren: () => import('${entryPoint.modulePath}').then(m => m.${entryPoint.moduleName})},`; %>

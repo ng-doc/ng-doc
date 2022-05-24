@@ -1,0 +1,14 @@
+{
+  "name": "@ng-doc/builder",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "builders": "./builders.json",
+  "dependencies": {
+    "@angular-devkit/architect": "^0.1303.5",
+    "chokidar": "^3.5.3",
+    "ejs": "^3.1.8",
+    "minimatch": "^5.1.0",
+    "rxjs": "~7.4.0",
+    "ts-morph": "^14.0.0"
+  }
+}

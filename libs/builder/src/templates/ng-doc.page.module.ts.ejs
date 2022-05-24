@@ -1,0 +1,30 @@
+import {Component, NgModule} from '@angular/core';
+import {RouterModule} from '@angular/router';
+import {CommonModule} from '@angular/common';
+import {NgDocPageModule} from 'ng-doc/app';
+
+@Component({
+	template: `<ng-doc-page></ng-doc-page>`
+})
+export class <%- entryPoint.componentName %> {
+
+}
+
+@NgModule({
+	declarations: [<%- entryPoint.componentName %>],
+	imports: [
+		CommonModule,
+        NgDocPageModule,
+		RouterModule.forChild([{
+			path: '',
+			component: <%- entryPoint.componentName %>,
+			children: [
+            <% for (const child of entryPoint.children) { -%>
+                <%- include('layouts/ng-doc.route.ts.ejs', {entryPoint: child}) -%>
+            <% } -%>
+            ]
+		}]),
+	],
+	exports: [RouterModule]
+})
+export class <%- entryPoint.moduleName %> {}

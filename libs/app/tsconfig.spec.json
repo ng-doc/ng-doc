@@ -2,18 +2,19 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "types": [],
-    "target": "ES2017"
+    "module": "commonjs",
+    "types": [
+      "jest",
+      "node"
+    ]
   },
   "files": [
-    "src/main.ts",
-    "src/polyfills.ts"
+    "src/test-setup.ts"
   ],
   "include": [
-    "src/**/*.d.ts"
-  ],
-  "exclude": [
+    "jest.config.ts",
     "**/*.test.ts",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "**/*.d.ts"
   ]
 }

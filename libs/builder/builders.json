@@ -1,0 +1,15 @@
+{
+  "$schema": "../../node_modules/@angular-devkit/architect/src/builders-schema.json",
+  "builders": {
+    "browser": {
+      "implementation": "./src/browser",
+      "schema": "./src/browser/schema.json",
+      "description": "NgDoc browser"
+    },
+    "dev-server": {
+      "implementation": "./src/dev-server",
+      "schema": "./src/dev-server/schema.json",
+      "description": "NgDoc dev server"
+    }
+  }
+}

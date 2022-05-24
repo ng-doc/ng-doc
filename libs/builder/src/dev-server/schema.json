@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "NgDocBuilder",
+  "description": "NgDocBuilder",
+  "type": "object",
+  "properties": {
+    "ngDoc": {
+      "type": "object",
+      "properties": {
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true,
+          "default": []
+        },
+        "tsConfig": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

@@ -24,7 +24,17 @@
     }
   },
   "targetDependencies": {
+    "pre-build": [
+      {
+        "target": "build",
+        "projects": "dependencies"
+      }
+    ],
     "build": [
+      {
+        "target": "pre-build",
+        "projects": "self"
+      },
       {
         "target": "build",
         "projects": "dependencies"
