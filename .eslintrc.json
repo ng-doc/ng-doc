@@ -1,35 +1,198 @@
 {
-  "root": true,
-  "ignorePatterns": ["**/*"],
-  "plugins": ["@nrwl/nx"],
-  "overrides": [
-    {
-      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-      "rules": {
-        "@nrwl/nx/enforce-module-boundaries": [
-          "error",
-          {
-            "enforceBuildableLibDependency": true,
-            "allow": [],
-            "depConstraints": [
-              {
-                "sourceTag": "*",
-                "onlyDependOnLibsWithTags": ["*"]
-              }
-            ]
-          }
-        ]
-      }
+    "root": true,
+    "ignorePatterns": ["**/*"],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "project": ["tsconfig.base.json"]
     },
-    {
-      "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nrwl/nx/typescript"],
-      "rules": {}
-    },
-    {
-      "files": ["*.js", "*.jsx"],
-      "extends": ["plugin:@nrwl/nx/javascript"],
-      "rules": {}
-    }
-  ]
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "prettier",
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates"
+    ],
+    "plugins": [
+        "@nrwl/nx",
+        "eslint-plugin-import",
+        "eslint-plugin-jsdoc",
+        "eslint-plugin-prefer-arrow",
+        "@typescript-eslint"
+    ],
+    "overrides": [
+        {
+            "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+            "rules": {
+                "@nrwl/nx/enforce-module-boundaries": [
+                    "error",
+                    {
+                        "enforceBuildableLibDependency": true,
+                        "allow": [],
+                        "depConstraints": [
+                            {
+                                "sourceTag": "*",
+                                "onlyDependOnLibsWithTags": ["*"]
+                            }
+                        ]
+                    }
+                ],
+                "@typescript-eslint/dot-notation": "off",
+                "@typescript-eslint/indent": "off",
+                "@typescript-eslint/no-empty-function": "off",
+                "@typescript-eslint/no-unused-expressions": "off",
+                "@typescript-eslint/no-use-before-define": "off",
+                "@typescript-eslint/prefer-namespace-keyword": "error",
+                "@typescript-eslint/triple-slash-reference": "error",
+                "@typescript-eslint/no-floating-promises": "off",
+                "arrow-body-style": "error",
+                "arrow-parens": ["error", "as-needed"],
+                "curly": "error",
+                "eol-last": "error",
+                "eqeqeq": ["error", "always"],
+                "guard-for-in": "error",
+                "import/order": "error",
+                "jsdoc/check-indentation": "error",
+                "new-parens": "error",
+                "no-bitwise": "error",
+                "no-caller": "error",
+                "no-cond-assign": "error",
+                "no-console": [
+                    "error",
+                    {
+                        "allow": [
+                            "warn",
+                            "dir",
+                            "timeLog",
+                            "assert",
+                            "clear",
+                            "count",
+                            "countReset",
+                            "group",
+                            "groupEnd",
+                            "table",
+                            "dirxml",
+                            "error",
+                            "groupCollapsed",
+                            "Console",
+                            "profile",
+                            "profileEnd",
+                            "timeStamp",
+                            "context"
+                        ]
+                    }
+                ],
+                "no-debugger": "error",
+                "no-empty": "off",
+                "no-eval": "error",
+                "no-fallthrough": "error",
+                "no-multiple-empty-lines": [
+                    "error",
+                    {
+                        "max": 2
+                    }
+                ],
+                "no-new-wrappers": "error",
+                "no-redeclare": "error",
+                "no-unused-labels": "error",
+                "no-var": "error",
+                "one-var": ["error", "never"],
+                "prefer-arrow/prefer-arrow-functions": [
+                    "error",
+                    {
+                        "allowStandaloneDeclarations": true
+                    }
+                ],
+                "prefer-const": [
+                    "error",
+                    {
+                        "destructuring": "any"
+                    }
+                ],
+                "radix": "error",
+                "use-isnan": "error",
+                "@typescript-eslint/no-explicit-any": "error",
+                "@typescript-eslint/explicit-function-return-type": [
+                    "error",
+                    {
+                        "allowExpressions": true
+                    }
+                ],
+                "@typescript-eslint/array-type": [
+                    "error",
+                    {
+                        "default": "array-simple"
+                    }
+                ],
+                "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
+                "@typescript-eslint/explicit-member-accessibility": [
+                    "error",
+                    {
+                        "overrides": {
+                            "constructors": "off"
+                        }
+                    }
+                ],
+                "@typescript-eslint/no-unsafe-call": "off",
+                "@typescript-eslint/no-inferrable-types": "off",
+                "@typescript-eslint/unbound-method": [
+                    "error",
+                    {
+                        "ignoreStatic": true
+                    }
+                ],
+                "@typescript-eslint/typedef": [
+                    "error",
+                    {
+                        "parameter": true,
+                        "arrowParameter": true,
+                        "propertyDeclaration": true,
+                        "variableDeclaration": true,
+                        "memberVariableDeclaration": true
+                    }
+                ],
+                "init-declarations": ["off"],
+                "@typescript-eslint/init-declarations": ["error", "always"],
+                "no-shadow": "off",
+                "@typescript-eslint/no-shadow": ["error"],
+                "no-param-reassign": ["error"],
+                "@typescript-eslint/prefer-regexp-exec": ["off"],
+                "jsdoc/check-access": 1,
+                "jsdoc/check-alignment": 1,
+                "jsdoc/check-param-names": 1,
+                "jsdoc/check-property-names": 1,
+                "jsdoc/check-tag-names": 1,
+                "jsdoc/check-types": 1,
+                "jsdoc/check-values": 1,
+                "jsdoc/empty-tags": 1,
+                "jsdoc/implements-on-classes": 1,
+                "jsdoc/multiline-blocks": 1,
+                "jsdoc/newline-after-description": 1,
+                "jsdoc/no-multi-asterisks": 1,
+                "jsdoc/no-undefined-types": 1,
+                "jsdoc/require-jsdoc": 1,
+                "jsdoc/require-param": 1,
+                "jsdoc/require-param-description": 1,
+                "jsdoc/require-param-name": 1,
+                "jsdoc/require-property": 1,
+                "jsdoc/require-property-description": 1,
+                "jsdoc/require-property-name": 1,
+                "jsdoc/require-yields": 1,
+                "jsdoc/require-yields-check": 1,
+                "jsdoc/tag-lines": 1,
+                "jsdoc/valid-types": 1,
+                "@angular-eslint/prefer-on-push-component-change-detection": ["error"]
+            }
+        },
+        {
+            "files": ["*.ts", "*.tsx"],
+            "extends": ["plugin:@nrwl/nx/typescript"],
+            "rules": {}
+        },
+        {
+            "files": ["*.js", "*.jsx"],
+            "extends": ["plugin:@nrwl/nx/javascript"],
+            "rules": {}
+        }
+    ]
 }
