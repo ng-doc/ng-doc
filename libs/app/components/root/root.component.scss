@@ -1,0 +1,24 @@
+:host {
+	display: grid;
+	grid-template-columns: var(--ng-doc-sidebar-width) 1fr;
+	grid-template-rows: var(--ng-doc-header-height);
+	grid-template-areas:
+    "header header"
+    "sidebar body";
+	height: 100%;
+
+	.ng-doc-header {
+		grid-area: header;
+	}
+
+	.ng-doc-sidebar {
+		display: flex;
+		grid-area: sidebar;
+	}
+
+	.ng-doc-body {
+		grid-area: body;
+		padding: calc(var(--ng-doc-base-gutter) * 4);;
+		overflow: auto;
+	}
+}

@@ -1,26 +1,40 @@
 {
-    "compileOnSave": false,
-    "compilerOptions": {
-        "rootDir": ".",
-        "sourceMap": true,
-        "declaration": false,
-        "moduleResolution": "node",
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "importHelpers": true,
-        "strict": true,
-        "target": "es2015",
-        "module": "esnext",
-        "lib": ["es2017", "dom"],
-        "skipLibCheck": true,
-        "skipDefaultLibCheck": true,
-        "baseUrl": ".",
-        "paths": {
-            "@ng-doc/app": ["dist/libs/app"],
-            "@ng-doc/app/generated": ["dist/libs/app/generated/index.ts"],
-            "@ng-doc/builder": ["dist/libs/builder"],
-            "@ng-doc/core": ["dist/libs/core"]
-        }
-    },
-    "exclude": ["node_modules", "tmp"]
+	"compileOnSave": false,
+	"compilerOptions": {
+		"rootDir": ".",
+		"sourceMap": true,
+		"declaration": false,
+		"moduleResolution": "node",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"importHelpers": true,
+		"strict": true,
+		"target": "es2015",
+		"module": "esnext",
+		"lib": [
+			"es2017",
+			"dom"
+		],
+		"skipLibCheck": true,
+		"skipDefaultLibCheck": true,
+		"baseUrl": ".",
+		"paths": {
+			"@ng-doc/app": [
+				"dist/libs/app"
+			],
+			"@ng-doc/app/generated": [
+				"dist/libs/app/generated/index.ts"
+			],
+			"@ng-doc/builder": [
+				"dist/libs/builder"
+			],
+			"@ng-doc/core": [
+				"dist/libs/core"
+			]
+		}
+	},
+	"exclude": [
+		"node_modules",
+		"tmp"
+	]
 }

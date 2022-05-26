@@ -1,37 +1,39 @@
 {
-  "projectType": "application",
-  "sourceRoot": "apps/documentation/src",
-  "prefix": "nx-ng-doc",
-  "targets": {
-    "build": {
-      "executor": "@ng-doc/builder:browser",
-      "outputs": [
-        "{options.outputPath}"
-      ],
-      "options": {
-        "outputPath": "dist/apps/documentation",
-        "index": "apps/documentation/src/index.html",
-        "main": "apps/documentation/src/main.ts",
-        "polyfills": "apps/documentation/src/polyfills.ts",
-        "tsConfig": "apps/documentation/tsconfig.app.json",
-        "inlineStyleLanguage": "scss",
-        "assets": [
-          "apps/documentation/src/favicon.ico",
-          "apps/documentation/src/assets"
-        ],
-        "styles": ["apps/documentation/src/styles.scss"],
-        "scripts": []
-      },
-      "configurations": {
-        "production": {
-          "budgets": [
-            {
-              "type": "initial",
-              "maximumWarning": "500kb",
-              "maximumError": "1mb"
+    "projectType": "application",
+    "sourceRoot": "apps/documentation/src",
+    "prefix": "ng-doc",
+    "targets": {
+        "build": {
+            "executor": "@ng-doc/builder:browser",
+            "outputs": [
+                "{options.outputPath}"
+            ],
+            "options": {
+                "outputPath": "dist/apps/documentation",
+                "index": "apps/documentation/src/index.html",
+                "main": "apps/documentation/src/main.ts",
+                "polyfills": "apps/documentation/src/polyfills.ts",
+                "tsConfig": "apps/documentation/tsconfig.app.json",
+                "inlineStyleLanguage": "scss",
+                "assets": [
+                    "apps/documentation/src/favicon.ico",
+                    "apps/documentation/src/assets"
+                ],
+                "styles": [
+                    "apps/documentation/src/styles.scss"
+                ],
+                "scripts": []
             },
-            {
-              "type": "anyComponentStyle",
+            "configurations": {
+                "production": {
+                    "budgets": [
+                        {
+                            "type": "initial",
+                            "maximumWarning": "500kb",
+                            "maximumError": "1mb"
+                        },
+                        {
+                            "type": "anyComponentStyle",
               "maximumWarning": "2kb",
               "maximumError": "4kb"
             }

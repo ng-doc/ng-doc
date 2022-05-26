@@ -2,9 +2,6 @@
   "extends": [
     "../../.eslintrc.json"
   ],
-  "ignorePatterns": [
-    "!**/*"
-  ],
   "overrides": [
     {
       "files": [
@@ -27,7 +24,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "nx-ng-doc",
+            "prefix": "ng-doc",
             "style": "kebab-case"
           }
         ]

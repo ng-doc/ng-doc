@@ -9,7 +9,7 @@
     ]
   },
   "files": [
-    "src/test-setup.ts"
+    "test-setup.ts"
   ],
   "include": [
     "jest.config.ts",

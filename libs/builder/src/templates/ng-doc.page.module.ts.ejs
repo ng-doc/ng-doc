@@ -1,13 +1,19 @@
+// @ts-nocheck
 import {Component, NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {NgDocPageModule} from '@ng-doc/app';
+import {default as pageMd} from '!!raw-loader!<%- entryPoint.renderedPagePath %>';
 
 @Component({
 	template: `<ng-doc-page></ng-doc-page>`
 })
 export class <%- entryPoint.componentName %> {
+    public readonly pageMd: string = pageMd;
 
+    constructor() {
+        console.log(this.pageMd);
+    }
 }
 
 @NgModule({

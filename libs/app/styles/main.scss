@@ -1,0 +1,13 @@
+@import "palette";
+@import "variables";
+
+
+html, body {
+	background-color: var(--ng-doc-background);
+	margin: 0;
+	height: 100%;
+}
+
+*, *:before, *:after {
+	box-sizing: border-box;
+}

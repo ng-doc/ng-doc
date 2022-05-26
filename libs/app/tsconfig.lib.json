@@ -8,7 +8,7 @@
     "types": []
   },
   "exclude": [
-    "src/test-setup.ts",
+    "test-setup.ts",
     "**/*.spec.ts",
     "**/*.test.ts"
   ],

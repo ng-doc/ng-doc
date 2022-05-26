@@ -3,9 +3,8 @@ import {CommonModule} from '@angular/common';
 import {NgDocRootComponent} from './root.component';
 
 @NgModule({
-  declarations: [NgDocRootComponent],
-  imports: [CommonModule],
-  exports: [NgDocRootComponent],
+	declarations: [NgDocRootComponent],
+	imports: [CommonModule],
+	exports: [NgDocRootComponent],
 })
-export class NgDocRootModule {
-}
+export class NgDocRootModule {}

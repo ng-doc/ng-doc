@@ -1,35 +1,37 @@
 {
-  "projectType": "library",
-  "sourceRoot": "libs/app/src",
-  "prefix": "nx-ng-doc",
-  "targets": {
-    "pre-build": {
-      "executor": "@nrwl/angular:package",
-      "outputs": [
-        "dist/libs/app"
-      ],
-      "options": {
-        "project": "libs/app/ng-package.json"
-      },
-      "configurations": {
-        "production": {
-          "tsConfig": "libs/app/tsconfig.lib.prod.json"
-        },
-        "development": {
-          "tsConfig": "libs/app/tsconfig.lib.json"
-        }
-      },
-      "defaultConfiguration": "production"
-    },
-    "build": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": []
-      }
-    },
-    "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": [
+	"projectType": "library",
+	"sourceRoot": "libs/app/src",
+	"prefix": "ng-doc",
+	"targets": {
+		"pre-build": {
+			"executor": "@nrwl/angular:package",
+			"outputs": [
+				"dist/libs/app"
+			],
+			"options": {
+				"project": "libs/app/ng-package.json"
+			},
+			"configurations": {
+				"production": {
+					"tsConfig": "libs/app/tsconfig.lib.prod.json"
+				},
+				"development": {
+					"tsConfig": "libs/app/tsconfig.lib.json"
+				}
+			},
+			"defaultConfiguration": "production"
+		},
+		"build": {
+			"executor": "@nrwl/workspace:run-commands",
+			"options": {
+				"commands": [
+					"sass --no-source-map libs/app/styles/main.scss dist/libs/app/styles/main.css"
+				]
+			}
+		},
+		"test": {
+			"executor": "@nrwl/jest:jest",
+			"outputs": [
         "coverage/libs/app"
       ],
       "options": {

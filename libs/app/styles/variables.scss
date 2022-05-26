@@ -1,0 +1,16 @@
+:root {
+	--ng-doc-base-gutter: 8px;
+
+	--ng-doc-base-0: var(--ng-doc-white);
+	--ng-doc-base-1: var(--ng-doc-grey-0);
+	--ng-doc-base-2: var(--ng-doc-grey-1);
+	--ng-doc-base-3: var(--ng-doc-grey-2);
+	--ng-doc-base-4: var(--ng-doc-grey-3);
+
+	--ng-doc-background: var(--ng-doc-base-0);
+	--ng-doc-border-color: var(--ng-doc-base-2);
+
+
+	--ng-doc-header-height: 64px;
+	--ng-doc-sidebar-width: 300px;
+}
