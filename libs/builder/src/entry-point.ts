@@ -54,6 +54,16 @@ export class NgDocEntryPoint {
 		return path.relative(this.context.context.workspaceRoot, path.dirname(this.path));
 	}
 
+	get category(): string | undefined {
+		return typeof this.compiledEntryPoint?.category === 'string'
+			? this.compiledEntryPoint?.category
+			: undefined;
+	}
+
+	get title(): string {
+		return this.compiledEntryPoint?.title ?? '';
+	}
+
 	get scope(): string {
 		return this.compiledEntryPoint?.scope ?? this.context.context.workspaceRoot;
 	}
@@ -86,6 +96,10 @@ export class NgDocEntryPoint {
 
 	get renderedPagePath(): string {
 		return path.relative(this.context.context.workspaceRoot, path.join(this.moduleFolder, RENDERED_PAGE_NAME));
+	}
+
+	get hasChildren(): boolean {
+		return this.children.size > 0;
 	}
 
 	update(): void {

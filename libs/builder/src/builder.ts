@@ -7,7 +7,7 @@ import {NgDocEntryPoint} from './entry-point';
 import {CACHE_PATH, ENTRY_POINT_PATTERN, GENERATED_PATH} from './variables';
 import {NgDocRenderer} from './renderer';
 import {NgDocWatcher} from './watcher';
-import {NgDocRoutingEnv} from './templates-env';
+import {NgDocContextEnv, NgDocRoutingEnv} from './templates-env';
 
 export class NgDocBuilder {
 	private readonly project: Project;
@@ -85,7 +85,7 @@ export class NgDocBuilder {
 			await Promise.all([entryPoint.renderModule(), entryPoint.renderPage()]);
 		}
 
-		await this.renderRoutes();
+		await Promise.all([await this.renderRoutes(), await this.renderContext()]);
 	}
 
 	private async renderRoutes(): Promise<void> {
@@ -95,5 +95,14 @@ export class NgDocBuilder {
 		const renderer: NgDocRenderer = new NgDocRenderer<NgDocRoutingEnv>({entryPoints});
 
 		await renderer.renderToFolder('ng-doc.routing.ts.ejs', GENERATED_PATH);
+	}
+
+	private async renderContext(): Promise<void> {
+		const entryPoints: NgDocEntryPoint[] = Array.from(this.entryPoints.values()).filter(
+			(entryPoint: NgDocEntryPoint) => entryPoint.isRootRoute,
+		);
+		const renderer: NgDocRenderer = new NgDocRenderer<NgDocContextEnv>({entryPoints});
+
+		await renderer.renderToFolder('ng-doc.context.ts.ejs', GENERATED_PATH);
 	}
 }

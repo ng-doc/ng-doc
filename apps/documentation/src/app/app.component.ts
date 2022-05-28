@@ -1,4 +1,5 @@
-import {Component} from '@angular/core';
+import {Component, Inject} from '@angular/core';
+import {NG_DOC_CONTEXT, NgDocContext} from '@ng-doc/app';
 
 @Component({
 	selector: 'ng-doc-app',
@@ -7,4 +8,11 @@ import {Component} from '@angular/core';
 })
 export class AppComponent {
 	title = 'documentation';
+
+	constructor(
+		@Inject(NG_DOC_CONTEXT)
+		private readonly ngDocContext: NgDocContext,
+	) {
+		console.log('context', this.ngDocContext);
+	}
 }

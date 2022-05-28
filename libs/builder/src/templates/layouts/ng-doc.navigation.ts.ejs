@@ -1,0 +1,10 @@
+{
+title: '<%- entryPoint.title %>',
+<% if (entryPoint.hasChildren) { %>
+    children: [
+<% entryPoint.children.forEach(child => { %>
+			<%- include('ng-doc.navigation.ts.ejs', {entryPoint: child}); %>
+		<% }); %>
+	],
+<% } %>
+}

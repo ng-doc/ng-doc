@@ -85,7 +85,7 @@
       "dependsOn": [
         {
           "projects": "dependencies",
-          "target": "build"
+          "target": "serve"
         }
       ]
     },

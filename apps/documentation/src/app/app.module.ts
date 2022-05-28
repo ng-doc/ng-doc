@@ -5,7 +5,7 @@ import {AppComponent} from './app.component';
 import {NxWelcomeComponent} from './nx-welcome.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
-import {NG_DOC_ROUTING} from '@ng-doc/app/generated';
+import {NG_DOC_ROUTING, NgDocGeneratedModule} from '@ng-doc/app/generated';
 import {NgDocHeaderModule, NgDocModule, NgDocSidebarModule} from '@ng-doc/app';
 
 @NgModule({
@@ -14,6 +14,7 @@ import {NgDocHeaderModule, NgDocModule, NgDocSidebarModule} from '@ng-doc/app';
 		BrowserModule,
 		BrowserAnimationsModule,
 		NgDocModule.forRoot(),
+		NgDocGeneratedModule.forRoot(),
 		RouterModule.forRoot(NG_DOC_ROUTING),
 		NgDocHeaderModule,
 		NgDocSidebarModule,

@@ -6,7 +6,9 @@ import {Component, OnInit} from '@angular/core';
 	styleUrls: ['./header.component.scss'],
 })
 export class NgDocHeaderComponent implements OnInit {
-	constructor() {}
+	constructor() {
+		console.log('header76');
+	}
 
 	ngOnInit(): void {}
 }
