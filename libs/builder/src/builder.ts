@@ -1,13 +1,14 @@
 import * as path from 'path';
 import {ModuleKind, Project, SourceFile} from 'ts-morph';
-import {asArray, isPresent, NgDocBuilderContext} from '@ng-doc/core';
 import {from, merge, Observable} from 'rxjs';
-import {mergeAll, switchMap, tap} from 'rxjs/operators';
+import {debounceTime, mergeAll, switchMap, tap} from 'rxjs/operators';
 import {NgDocEntryPoint} from './entry-point';
 import {CACHE_PATH, ENTRY_POINT_PATTERN, GENERATED_PATH} from './variables';
 import {NgDocRenderer} from './renderer';
 import {NgDocWatcher} from './watcher';
 import {NgDocContextEnv, NgDocRoutingEnv} from './templates-env';
+import {NgDocBuilderContext} from './interfaces';
+import {asArray, isPresent} from './helpers';
 
 export class NgDocBuilder {
 	private readonly project: Project;
@@ -44,6 +45,7 @@ export class NgDocBuilder {
 		]).pipe(
 			mergeAll(),
 			switchMap((files: string | string[]) => from(this.build(...asArray(files)))),
+			debounceTime(10),
 		);
 	}
 
@@ -73,6 +75,7 @@ export class NgDocBuilder {
 	}
 
 	async build(...changedEntryPoints: string[]): Promise<void> {
+		this.context.context.reportStatus('Building documentation...');
 		await this.project.emit();
 
 		const entryPoints: NgDocEntryPoint[] = changedEntryPoints

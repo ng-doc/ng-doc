@@ -2,11 +2,11 @@ import {Node, ObjectLiteralExpression, SourceFile, Symbol} from 'ts-morph';
 import * as path from 'path';
 import * as minimatch from 'minimatch';
 import {CACHE_PATH, ENTRY_POINT_PATTERN, GENERATED_MODULES_PATH, RENDERED_PAGE_NAME} from './variables';
-import {NgDocBuilderContext, NgDocPage} from '@ng-doc/core';
 import {SyntaxKind} from '@ts-morph/common';
 import {NgDocRenderer} from './renderer';
 import {NgDocPageEnv, NgDocRouteEnv} from './templates-env';
 import {NgDocActions} from './actions';
+import {NgDocBuilderContext, NgDocPage} from './interfaces';
 
 let id = 0;
 
@@ -55,9 +55,7 @@ export class NgDocEntryPoint {
 	}
 
 	get category(): string | undefined {
-		return typeof this.compiledEntryPoint?.category === 'string'
-			? this.compiledEntryPoint?.category
-			: undefined;
+		return typeof this.compiledEntryPoint?.category === 'string' ? this.compiledEntryPoint?.category : undefined;
 	}
 
 	get title(): string {

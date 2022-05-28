@@ -11,30 +11,17 @@
 		"strict": true,
 		"target": "es2015",
 		"module": "esnext",
-		"lib": [
-			"es2017",
-			"dom"
-		],
+		"lib": ["es2017", "dom"],
 		"skipLibCheck": true,
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
 		"paths": {
-			"@ng-doc/app": [
-				"dist/libs/app"
-			],
-			"@ng-doc/app/generated": [
-				"dist/libs/app/generated/index.ts"
-			],
-			"@ng-doc/builder": [
-				"dist/libs/builder"
-			],
-			"@ng-doc/core": [
-				"dist/libs/core"
-			]
+			"@ng-doc/app": ["libs/app/index.ts"],
+			"@ng-doc/app/*": ["libs/app/*"],
+			"@ng-doc/app/generated": ["libs/app/generated/index.ts"],
+			"@ng-doc/builder": ["libs/builder/src/index.ts"],
+			"@ng-doc/core": ["libs/core/src/index.ts"]
 		}
 	},
-	"exclude": [
-		"node_modules",
-		"tmp"
-	]
+	"exclude": ["node_modules", "tmp"]
 }

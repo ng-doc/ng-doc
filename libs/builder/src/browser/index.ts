@@ -1,10 +1,10 @@
 import {BuilderContext, createBuilder} from '@angular-devkit/architect';
 import {BrowserBuilderOutput, executeBrowserBuilder} from '@angular-devkit/build-angular';
-import {NgDocSchema} from '@ng-doc/core';
 import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {NgDocBuilder} from '../builder';
 import {Schema as BrowserBuilderSchema} from '@angular-devkit/build-angular/src/builders/browser/schema';
+import {NgDocSchema} from '../interfaces';
 
 /**
  * Attach NgDocWebpackPlugin before Angular Plugins
@@ -12,7 +12,7 @@ import {Schema as BrowserBuilderSchema} from '@angular-devkit/build-angular/src/
  * @param options Builder configuration
  * @param context Builder context
  */
-export function runBuilder(options: NgDocSchema, context: BuilderContext): Observable<BrowserBuilderOutput> {
+export function runBrowser(options: NgDocSchema, context: BuilderContext): Observable<BrowserBuilderOutput> {
 	const builder: NgDocBuilder = new NgDocBuilder({options, context});
 
 	return combineLatest([
@@ -21,4 +21,4 @@ export function runBuilder(options: NgDocSchema, context: BuilderContext): Obser
 	]).pipe(map(([_, devServerOutput]: [void, BrowserBuilderOutput]) => devServerOutput));
 }
 
-export default createBuilder(runBuilder);
+export default createBuilder(runBrowser);
