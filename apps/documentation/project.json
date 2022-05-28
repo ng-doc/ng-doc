@@ -103,6 +103,6 @@
 			}
 		}
 	},
-	"tags": [],
+	"tags": ["type:app", "app:documentation"],
 	"implicitDependencies": ["builder"]
 }

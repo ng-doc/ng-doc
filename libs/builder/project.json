@@ -5,25 +5,17 @@
 	"targets": {
 		"pre-build": {
 			"executor": "@nrwl/js:tsc",
-			"outputs": [
-				"{options.outputPath}"
-			],
+			"outputs": ["{options.outputPath}"],
 			"options": {
 				"outputPath": "dist/libs/builder",
 				"main": "libs/builder/src/index.ts",
 				"tsConfig": "libs/builder/tsconfig.lib.json",
-				"assets": [
-					"libs/builder/src/templates/**/*",
-					"libs/builder/builders.json"
-				]
+				"assets": ["libs/builder/src/templates/**/*", "libs/builder/builders.json"]
 			}
 		},
 		"build": {
 			"executor": "@nrwl/workspace:run-commands",
-			"outputs": [
-				"dist/libs/builder/src/browser/schema.json",
-				"dist/libs/builder/src/dev-server/schema.json"
-			],
+			"outputs": ["dist/libs/builder/src/browser/schema.json", "dist/libs/builder/src/dev-server/schema.json"],
 			"options": {
 				"commands": [
 					"node build-schema.js --from=\"libs/builder/src/**/*(browser|dev-server)/schema.json\" --to=\"dist/libs/builder/src\""
@@ -44,29 +36,20 @@
 		},
 		"lint": {
 			"executor": "@nrwl/linter:eslint",
-			"outputs": [
-				"{options.outputFile}"
-			],
+			"outputs": ["{options.outputFile}"],
 			"options": {
-				"lintFilePatterns": [
-					"libs/builder/**/*.ts"
-				]
+				"lintFilePatterns": ["libs/builder/**/*.ts"]
 			}
 		},
 		"test": {
 			"executor": "@nrwl/jest:jest",
-			"outputs": [
-				"coverage/libs/builder"
-			],
+			"outputs": ["coverage/libs/builder"],
 			"options": {
 				"jestConfig": "libs/builder/jest.config.ts",
 				"passWithNoTests": true
 			}
 		}
 	},
-	"tags": [],
-	"implicitDependencies": [
-		"core",
-		"app"
-	]
+	"tags": ["type:lib", "lib:builder"],
+	"implicitDependencies": ["core", "app"]
 }
