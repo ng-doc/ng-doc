@@ -5,7 +5,11 @@
 	"overrides": [
 		{
 			"files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+			"extends": ["prettier", "plugin:jsdoc/recommended"],
+			"plugins": ["eslint-plugin-jsdoc", "eslint-plugin-prefer-arrow", "simple-import-sort"],
 			"rules": {
+				"simple-import-sort/imports": "error",
+				"simple-import-sort/exports": "error",
 				"@nrwl/nx/enforce-module-boundaries": [
 					"error",
 					{
@@ -23,13 +27,47 @@
 							}
 						]
 					}
-				]
+				],
+				"prefer-const": [
+					"error",
+					{
+						"destructuring": "any"
+					}
+				],
+				"@angular-eslint/prefer-on-push-component-change-detection": ["error"]
 			}
 		},
 		{
 			"files": ["*.ts", "*.tsx"],
 			"extends": ["plugin:@nrwl/nx/typescript"],
-			"rules": {}
+			"rules": {
+				"@typescript-eslint/typedef": [
+					"error",
+					{
+						"parameter": true,
+						"arrowParameter": true,
+						"propertyDeclaration": true,
+						"variableDeclaration": true,
+						"memberVariableDeclaration": true
+					}
+				],
+				"@typescript-eslint/consistent-type-definitions": ["error", "interface"],
+				"@typescript-eslint/array-type": [
+					"error",
+					{
+						"default": "array-simple"
+					}
+				],
+				"@typescript-eslint/explicit-member-accessibility": [
+					"error",
+					{
+						"accessibility": "no-public",
+						"overrides": {
+							"constructors": "off"
+						}
+					}
+				]
+			}
 		},
 		{
 			"files": ["*.js", "*.jsx"],

@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
-import {NG_DOC_CONTEXT} from '@ng-doc/app/tokens';
 import {NgDocContext, NgDocNavigation} from '@ng-doc/app/interfaces';
+import {NG_DOC_CONTEXT} from '@ng-doc/app/tokens';
 
 @Component({
 	selector: 'ng-doc-sidebar',
@@ -11,10 +11,10 @@ import {NgDocContext, NgDocNavigation} from '@ng-doc/app/interfaces';
 export class NgDocSidebarComponent {
 	constructor(
 		@Inject(NG_DOC_CONTEXT)
-		private readonly context: NgDocContext,
+		readonly context: NgDocContext,
 	) {}
 
-	public get navigation(): NgDocNavigation[] {
+	get navigation(): NgDocNavigation[] {
 		return this.context.navigation;
 	}
 }
