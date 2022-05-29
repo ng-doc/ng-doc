@@ -1,13 +1,20 @@
-@import "palette";
-@import "variables";
+@import 'palette';
+@import 'variables';
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
 
-
-html, body {
+html,
+body {
+	font-family: 'Roboto', sans-serif;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 1.5;
 	background-color: var(--ng-doc-background);
 	margin: 0;
 	height: 100%;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
 	box-sizing: border-box;
 }

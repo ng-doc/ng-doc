@@ -1,9 +1,10 @@
 {
-title: '<%- entryPoint.title %>',
-<% if (entryPoint.hasChildren) { %>
+title: '<%- buildable.title %>',
+route: '<%- buildable.url %>',
+<% if (buildable.hasChildren) { %>
     children: [
-<% entryPoint.children.forEach(child => { %>
-			<%- include('ng-doc.navigation.ts.ejs', {entryPoint: child}); %>
+<% buildable.children.forEach(child => { %>
+			<%- include('ng-doc.navigation.ts.ejs', {buildable: child}); %>
 		<% }); %>
 	],
 <% } %>

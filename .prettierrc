@@ -8,13 +8,13 @@
   "bracketSpacing": false,
   "jsxBracketSameLine": true,
   "overrides": [
-    {
-      "files": [
-        "*.ts"
-      ],
-      "options": {
-        "parser": "typescript"
-      }
-    }
+	  {
+		  "files": [
+			  "*.ts"
+		  ],
+		  "options": {
+			  "parser": "typescript"
+		  }
+	  }
   ]
 }

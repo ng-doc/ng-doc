@@ -1,26 +1,32 @@
+import * as minimatch from 'minimatch';
 import * as path from 'path';
 import {from, merge, Observable} from 'rxjs';
 import {debounceTime, mergeAll, switchMap, tap} from 'rxjs/operators';
-import {ModuleKind, Project, SourceFile} from 'ts-morph';
+import {Constructor, ModuleKind, Project, SourceFile} from 'ts-morph';
 
 import {asArray, isPresent} from '../helpers';
 import {NgDocBuilderContext} from '../interfaces';
 import {NgDocContextEnv, NgDocRoutingEnv} from '../templates-env';
-import {NgDocEntryPoint} from './entry-point';
+import {NgDocBuildable} from './buildable';
+import {NgDocCategoryPoint} from './category';
+import {NgDocPagePoint} from './page';
 import {NgDocRenderer} from './renderer';
-import {CACHE_PATH, ENTRY_POINT_PATTERN, GENERATED_PATH} from './variables';
+import {CACHE_PATH, CATEGORY_PATTERN, GENERATED_PATH, PAGE_PATTERN} from './variables';
 import {NgDocWatcher} from './watcher';
 
 export class NgDocBuilder {
 	private readonly project: Project;
 	private readonly watcher: NgDocWatcher;
-	private readonly entryPoints: Map<string, NgDocEntryPoint> = new Map();
+	private readonly buildables: Map<string, NgDocBuildable> = new Map();
 
 	constructor(private readonly context: NgDocBuilderContext) {
 		this.watcher = new NgDocWatcher(
-			asArray(this.context.options.ngDoc.pages).map((pagesPath: string) =>
-				path.join(pagesPath, ENTRY_POINT_PATTERN),
-			),
+			asArray(this.context.options.ngDoc.pages)
+				.map((pagesPath: string) => [
+					path.join(pagesPath, PAGE_PATTERN),
+					path.join(pagesPath, CATEGORY_PATTERN),
+				])
+				.flat(),
 		);
 
 		this.project = new Project({
@@ -40,9 +46,9 @@ export class NgDocBuilder {
 
 	run(): Observable<void> {
 		return merge([
-			this.watcher.onAdd().pipe(tap((file: string) => this.addEntryPoint(file))),
-			this.watcher.onUpdate().pipe(tap((file: string) => this.updateEntryPoint(file))),
-			this.watcher.onDelete().pipe(tap((file: string) => this.removeEntryPoint(file))),
+			this.watcher.onAdd().pipe(tap((file: string) => this.addBuildable(file))),
+			this.watcher.onUpdate().pipe(tap((file: string) => this.updateBuildable(file))),
+			this.watcher.onDelete().pipe(tap((file: string) => this.removeBuildable(file))),
 		]).pipe(
 			mergeAll(),
 			switchMap((files: string | string[]) => from(this.build(...asArray(files)))),
@@ -50,62 +56,87 @@ export class NgDocBuilder {
 		);
 	}
 
-	addEntryPoint(...paths: string[]): void {
-		for (const entryPointPath of paths) {
-			if (!this.entryPoints.get(entryPointPath)) {
-				const sourceFile: SourceFile = this.project.addSourceFileAtPath(entryPointPath);
+	addBuildable(...paths: string[]): void {
+		for (const buildablePath of paths) {
+			if (!this.buildables.get(buildablePath)) {
+				const sourceFile: SourceFile = this.project.addSourceFileAtPath(buildablePath);
+				const Constructor: Constructor<NgDocBuildable> = this.getBuildableConstructor(buildablePath);
 
-				this.entryPoints.set(entryPointPath, new NgDocEntryPoint(this.context, this.entryPoints, sourceFile));
+				this.buildables.set(buildablePath, new Constructor(this.context, this.buildables, sourceFile));
 			}
 		}
 	}
 
-	updateEntryPoint(...paths: string[]): void {
-		for (const entryPointPath of paths) {
-			if (this.entryPoints.get(entryPointPath)) {
-				this.project.getSourceFile(entryPointPath)?.refreshFromFileSystemSync();
+	updateBuildable(...paths: string[]): void {
+		for (const buildable of paths) {
+			if (this.buildables.get(buildable)) {
+				this.project.getSourceFile(buildable)?.refreshFromFileSystemSync();
 			}
 		}
 	}
 
-	removeEntryPoint(...paths: string[]): void {
-		paths.forEach((entryPointPath: string) => {
-			this.entryPoints.get(entryPointPath)?.destroy();
-			this.entryPoints.delete(entryPointPath);
+	removeBuildable(...paths: string[]): void {
+		paths.forEach((buildablePaths: string) => {
+			this.buildables.get(buildablePaths)?.destroy();
+			this.buildables.delete(buildablePaths);
 		});
 	}
 
-	async build(...changedEntryPoints: string[]): Promise<void> {
+	async build(...changedBuildables: string[]): Promise<void> {
 		this.context.context.reportStatus('Building documentation...');
 		await this.project.emit();
 
-		const entryPoints: NgDocEntryPoint[] = changedEntryPoints
-			.map((entryPointPath: string) => this.entryPoints.get(entryPointPath))
+		const buildables: NgDocBuildable[] = changedBuildables
+			.map((buildablePath: string) => this.buildables.get(buildablePath))
 			.filter(isPresent);
 
-		for (const entryPoint of entryPoints) {
-			entryPoint.update();
+		// first we're updating the entry points to build dependencies
+		for (const buildable of buildables) {
+			buildable.update();
+		}
 
-			await Promise.all([entryPoint.renderModule(), entryPoint.renderPage()]);
+		// when all dependencies are updated, we're rendering entry points data for changed entry points and for parent dependencies
+		const buildCandidates: NgDocBuildable[] = this.getBuildCandidates(buildables);
+
+		for (const buildable of buildCandidates) {
+			await buildable.build();
 		}
 
 		await Promise.all([await this.renderRoutes(), await this.renderContext()]);
 	}
 
-	private async renderRoutes(): Promise<void> {
-		const entryPoints: NgDocEntryPoint[] = Array.from(this.entryPoints.values()).filter(
-			(entryPoint: NgDocEntryPoint) => entryPoint.isRootRoute,
+	private getBuildCandidates(buildables: NgDocBuildable | NgDocBuildable[]): NgDocBuildable[] {
+		return asArray(
+			new Set(
+				...asArray(buildables).map((buildable: NgDocBuildable) => [buildable, ...buildable.parentDependencies]),
+			),
 		);
-		const renderer: NgDocRenderer = new NgDocRenderer<NgDocRoutingEnv>({entryPoints});
+	}
+
+	private getBuildableConstructor(path: string): Constructor<NgDocBuildable> {
+		if (minimatch(path, PAGE_PATTERN)) {
+			return NgDocPagePoint;
+		} else if (minimatch(path, CATEGORY_PATTERN)) {
+			return NgDocCategoryPoint;
+		} else {
+			throw new Error(`Unknown buildable type for path: ${path}`);
+		}
+	}
+
+	private getRootBuildables(): NgDocBuildable[] {
+		return asArray(this.buildables.values()).filter((buildable: NgDocBuildable) => buildable.isRoot);
+	}
+
+	private async renderRoutes(): Promise<void> {
+		const buildables: NgDocBuildable[] = this.getRootBuildables();
+		const renderer: NgDocRenderer = new NgDocRenderer<NgDocRoutingEnv>({buildables});
 
 		await renderer.renderToFolder('ng-doc.routing.ts.ejs', GENERATED_PATH);
 	}
 
 	private async renderContext(): Promise<void> {
-		const entryPoints: NgDocEntryPoint[] = Array.from(this.entryPoints.values()).filter(
-			(entryPoint: NgDocEntryPoint) => entryPoint.isRootRoute,
-		);
-		const renderer: NgDocRenderer = new NgDocRenderer<NgDocContextEnv>({entryPoints});
+		const buildables: NgDocBuildable[] = this.getRootBuildables();
+		const renderer: NgDocRenderer = new NgDocRenderer<NgDocContextEnv>({buildables});
 
 		await renderer.renderToFolder('ng-doc.context.ts.ejs', GENERATED_PATH);
 	}

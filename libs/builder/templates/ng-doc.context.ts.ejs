@@ -5,8 +5,8 @@ export const ngDocContextProvider: Provider = {
 	provide: NG_DOC_CONTEXT,
 	useValue: {
         navigation: [
-        <% for (const entryPoint of entryPoints) { %>
-            <%- include('layouts/ng-doc.navigation.ts.ejs', {entryPoint}) %>,
+        <% for (const buildable of buildables) { %>
+            <%- include('layouts/ng-doc.navigation.ts.ejs', {buildable}) %>,
         <% } %>
         ],
     }

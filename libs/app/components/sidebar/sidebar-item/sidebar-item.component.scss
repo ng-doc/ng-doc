@@ -1,0 +1,16 @@
+.ng-doc-sidebar-link {
+	display: block;
+	padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-horizontal-padding)
+		var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-indent);
+	text-decoration: inherit;
+	color: var(--ng-doc-text-color);
+	cursor: pointer;
+
+	&:hover {
+		background-color: var(--ng-doc-base-1);
+	}
+
+	&:active {
+		background-color: var(--ng-doc-base-2);
+	}
+}

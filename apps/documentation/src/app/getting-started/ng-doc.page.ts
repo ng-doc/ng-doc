@@ -1,8 +1,11 @@
-import {NgDocPage} from '@ng-doc/core';
+import {NgDocPage} from '@ng-doc/builder';
 
-const page: NgDocPage = {
+import GettingStartedCategory from './ng-doc.category';
+
+const GettingStarted: NgDocPage = {
 	mdFile: './index.md',
 	title: 'Getting Started',
+	category: GettingStartedCategory,
 };
 
-export default page;
+export default GettingStarted;

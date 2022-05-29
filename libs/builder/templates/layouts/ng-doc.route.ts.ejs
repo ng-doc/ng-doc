@@ -1,1 +1,1 @@
-<%- `{path: '${entryPoint.route}', loadChildren: () => import('${entryPoint.modulePath}').then(m => m.${entryPoint.moduleName})},`; %>
+<%- `{path: '${buildable.route}', loadChildren: () => import('${buildable.modulePath}').then(m => m.${buildable.moduleName})},`; %>

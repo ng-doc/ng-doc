@@ -1,7 +1,7 @@
-import {NgDocEntryPoint} from './entry-point';
+import {NgDocPagePoint} from './page';
 
 export class NgDocActions {
-	constructor(private readonly entryPoint: NgDocEntryPoint) {}
+	constructor(private readonly entryPoint: NgDocPagePoint) {}
 
 	api(sourcePath: string): string {
 		return `${sourcePath}/api`;

@@ -3,12 +3,12 @@ import {Component, NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {NgDocPageModule} from '@ng-doc/app';
-import {default as pageMd} from '!!raw-loader!<%- entryPoint.renderedPagePath %>';
+import {default as pageMd} from '!!raw-loader!<%- page.builtPagePath %>';
 
 @Component({
 	template: `<ng-doc-page></ng-doc-page>`
 })
-export class <%- entryPoint.componentName %> {
+export class <%- page.componentName %> {
     public readonly pageMd: string = pageMd;
 
     constructor() {
@@ -17,20 +17,15 @@ export class <%- entryPoint.componentName %> {
 }
 
 @NgModule({
-	declarations: [<%- entryPoint.componentName %>],
+	declarations: [<%- page.componentName %>],
 	imports: [
 		CommonModule,
         NgDocPageModule,
 		RouterModule.forChild([{
 			path: '',
-			component: <%- entryPoint.componentName %>,
-			children: [
-            <% for (const child of entryPoint.children) { -%>
-                <%- include('layouts/ng-doc.route.ts.ejs', {entryPoint: child}) -%>
-            <% } -%>
-            ]
+			component: <%- page.componentName %>,
 		}]),
 	],
 	exports: [RouterModule]
 })
-export class <%- entryPoint.moduleName %> {}
+export class <%- page.moduleName %> {}

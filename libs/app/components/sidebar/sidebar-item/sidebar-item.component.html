@@ -1,2 +1,3 @@
-<ng-content></ng-content>
-{{item?.title}}
+<a class="ng-doc-sidebar-link" [routerLink]="item?.route ?? ''">
+	{{ item?.title }}
+</a>

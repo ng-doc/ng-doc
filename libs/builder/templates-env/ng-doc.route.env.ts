@@ -1,5 +1,5 @@
-import {NgDocEntryPoint} from '../engine/entry-point';
+import {NgDocBuildable} from '../engine/buildable';
 
 export interface NgDocRouteEnv {
-	entryPoint: NgDocEntryPoint;
+	buildable: NgDocBuildable;
 }
