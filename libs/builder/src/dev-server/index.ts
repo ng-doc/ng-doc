@@ -2,6 +2,7 @@ import {BuilderContext, createBuilder} from '@angular-devkit/architect';
 import {DevServerBuilderOutput, executeDevServerBuilder} from '@angular-devkit/build-angular';
 import {combineLatest, Observable} from 'rxjs';
 import {map, shareReplay, switchMapTo, take} from 'rxjs/operators';
+
 import {NgDocBuilder} from '../builder';
 import {NgDocSchema} from '../interfaces';
 

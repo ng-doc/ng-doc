@@ -6,6 +6,4 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 	styleUrls: ['./sidebar-item.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocSidebarItemComponent {
-	a = 'asd';
-}
+export class NgDocSidebarItemComponent {}

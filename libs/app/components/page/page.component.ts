@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
 	selector: 'ng-doc-page',
@@ -6,8 +6,4 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 	styleUrls: ['./page.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocPageComponent implements OnInit {
-	constructor() {}
-
-	ngOnInit(): void {}
-}
+export class NgDocPageComponent {}

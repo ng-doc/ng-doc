@@ -1,5 +1,6 @@
-import {NgDocSchema} from './schema';
 import {BuilderContext} from '@angular-devkit/architect';
+
+import {NgDocSchema} from './schema';
 
 export interface NgDocBuilderContext {
 	options: NgDocSchema;

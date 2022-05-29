@@ -1,14 +1,15 @@
 import * as path from 'path';
-import {ModuleKind, Project, SourceFile} from 'ts-morph';
 import {from, merge, Observable} from 'rxjs';
 import {debounceTime, mergeAll, switchMap, tap} from 'rxjs/operators';
+import {ModuleKind, Project, SourceFile} from 'ts-morph';
+
 import {NgDocEntryPoint} from './entry-point';
-import {CACHE_PATH, ENTRY_POINT_PATTERN, GENERATED_PATH} from './variables';
-import {NgDocRenderer} from './renderer';
-import {NgDocWatcher} from './watcher';
-import {NgDocContextEnv, NgDocRoutingEnv} from './templates-env';
-import {NgDocBuilderContext} from './interfaces';
 import {asArray, isPresent} from './helpers';
+import {NgDocBuilderContext} from './interfaces';
+import {NgDocRenderer} from './renderer';
+import {NgDocContextEnv, NgDocRoutingEnv} from './templates-env';
+import {CACHE_PATH, ENTRY_POINT_PATTERN, GENERATED_PATH} from './variables';
+import {NgDocWatcher} from './watcher';
 
 export class NgDocBuilder {
 	private readonly project: Project;
@@ -37,7 +38,7 @@ export class NgDocBuilder {
 		});
 	}
 
-	public run(): Observable<void> {
+	run(): Observable<void> {
 		return merge([
 			this.watcher.onAdd().pipe(tap((file: string) => this.addEntryPoint(file))),
 			this.watcher.onUpdate().pipe(tap((file: string) => this.updateEntryPoint(file))),

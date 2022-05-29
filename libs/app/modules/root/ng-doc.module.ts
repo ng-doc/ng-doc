@@ -1,5 +1,5 @@
-import {ModuleWithProviders, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {ModuleWithProviders, NgModule} from '@angular/core';
 import {NgDocRootModule} from '@ng-doc/app/components/root';
 
 @NgModule({
@@ -7,7 +7,7 @@ import {NgDocRootModule} from '@ng-doc/app/components/root';
 	exports: [NgDocRootModule],
 })
 export class NgDocModule {
-	public static forRoot(): ModuleWithProviders<NgDocModule> {
+	static forRoot(): ModuleWithProviders<NgDocModule> {
 		return {
 			ngModule: NgDocModule,
 		};

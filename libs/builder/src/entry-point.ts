@@ -1,17 +1,18 @@
-import {Node, ObjectLiteralExpression, SourceFile, Symbol} from 'ts-morph';
-import * as path from 'path';
-import * as minimatch from 'minimatch';
-import {CACHE_PATH, ENTRY_POINT_PATTERN, GENERATED_MODULES_PATH, RENDERED_PAGE_NAME} from './variables';
 import {SyntaxKind} from '@ts-morph/common';
-import {NgDocRenderer} from './renderer';
-import {NgDocPageEnv, NgDocRouteEnv} from './templates-env';
+import * as minimatch from 'minimatch';
+import * as path from 'path';
+import {Node, ObjectLiteralExpression, SourceFile, Symbol} from 'ts-morph';
+
 import {NgDocActions} from './actions';
 import {NgDocBuilderContext, NgDocPage} from './interfaces';
+import {NgDocRenderer} from './renderer';
+import {NgDocPageEnv, NgDocRouteEnv} from './templates-env';
+import {CACHE_PATH, ENTRY_POINT_PATTERN, GENERATED_MODULES_PATH, RENDERED_PAGE_NAME} from './variables';
 
-let id = 0;
+let id: number = 0;
 
 export class NgDocEntryPoint {
-	public readonly children: Set<NgDocEntryPoint> = new Set();
+	readonly children: Set<NgDocEntryPoint> = new Set();
 	private entryPointId: number = id++;
 	private compiledEntryPoint?: NgDocPage;
 
@@ -144,7 +145,7 @@ export class NgDocEntryPoint {
 	}
 
 	private getPageExpression(): ObjectLiteralExpression {
-		const defaultExport: Symbol = this.sourceFile.getDefaultExportSymbol()!;
+		const defaultExport: Symbol = this.sourceFile.getDefaultExportSymbolOrThrow();
 		const exportAlias: Symbol = defaultExport.getAliasedSymbol()!;
 		const valueDeclaration: Node = exportAlias.getValueDeclarationOrThrow();
 

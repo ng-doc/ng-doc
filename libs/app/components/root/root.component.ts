@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
 	selector: 'ng-doc-root',
@@ -6,8 +6,4 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 	styleUrls: ['./root.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocRootComponent implements OnInit {
-	constructor() {}
-
-	ngOnInit(): void {}
-}
+export class NgDocRootComponent {}

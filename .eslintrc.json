@@ -33,8 +33,7 @@
 					{
 						"destructuring": "any"
 					}
-				],
-				"@angular-eslint/prefer-on-push-component-change-detection": ["error"]
+				]
 			}
 		},
 		{
@@ -66,7 +65,8 @@
 							"constructors": "off"
 						}
 					}
-				]
+				],
+				"@typescript-eslint/no-inferrable-types": "off"
 			}
 		},
 		{
