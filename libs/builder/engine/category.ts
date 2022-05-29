@@ -9,6 +9,8 @@ import {NgDocPagePoint} from './page';
 import {NgDocRenderer} from './renderer';
 
 export class NgDocCategoryPoint extends NgDocBuildable<NgDocCategory> {
+	moduleName: string = uniqueName(`NgDocGeneratedCategoryModule`);
+
 	constructor(
 		protected override readonly context: NgDocBuilderContext,
 		protected override readonly buildables: Map<string, NgDocBuildable>,
@@ -39,10 +41,6 @@ export class NgDocCategoryPoint extends NgDocBuildable<NgDocCategory> {
 		return asArray(this.children.values()).filter(isCategoryPoint);
 	}
 
-	get moduleName(): string {
-		return uniqueName(`NgDocGeneratedCategoryModule`);
-	}
-
 	get moduleFileName(): string {
 		return `ng-doc-category.module.ts`;
 	}
@@ -51,12 +49,17 @@ export class NgDocCategoryPoint extends NgDocBuildable<NgDocCategory> {
 		await this.buildModule();
 	}
 
+	override update() {
+		super.update();
+		this.rebuildDependencies();
+	}
+
 	private async buildModule(): Promise<void> {
 		if (this.compiled) {
 			const renderer: NgDocRenderer = new NgDocRenderer<NgDocCategoryModuleEnv>({category: this});
 
 			await renderer.renderToFile(
-				'ng-doc.page.module.ts.ejs',
+				'ng-doc.category.module.ts.ejs',
 				path.join(this.generatedPath, this.moduleFileName),
 			);
 		}

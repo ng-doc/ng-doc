@@ -1,10 +1,10 @@
 import * as minimatch from 'minimatch';
 import * as path from 'path';
 import {from, merge, Observable} from 'rxjs';
-import {debounceTime, mergeAll, switchMap, tap} from 'rxjs/operators';
+import {concatMap, debounceTime, mergeAll, tap} from 'rxjs/operators';
 import {Constructor, ModuleKind, Project, SourceFile} from 'ts-morph';
 
-import {asArray, isPresent} from '../helpers';
+import {asArray, isCategoryPoint, isPagePoint, isPresent} from '../helpers';
 import {NgDocBuilderContext} from '../interfaces';
 import {NgDocContextEnv, NgDocRoutingEnv} from '../templates-env';
 import {NgDocBuildable} from './buildable';
@@ -51,7 +51,7 @@ export class NgDocBuilder {
 			this.watcher.onDelete().pipe(tap((file: string) => this.removeBuildable(file))),
 		]).pipe(
 			mergeAll(),
-			switchMap((files: string | string[]) => from(this.build(...asArray(files)))),
+			concatMap((files: string | string[]) => from(this.build(...asArray(files)))),
 			debounceTime(10),
 		);
 	}
@@ -108,7 +108,14 @@ export class NgDocBuilder {
 	private getBuildCandidates(buildables: NgDocBuildable | NgDocBuildable[]): NgDocBuildable[] {
 		return asArray(
 			new Set(
-				...asArray(buildables).map((buildable: NgDocBuildable) => [buildable, ...buildable.parentDependencies]),
+				...asArray(buildables).map((buildable: NgDocBuildable) => [
+					buildable,
+					...(isPagePoint(buildable)
+						? buildable.parentDependencies
+						: isCategoryPoint(buildable)
+						? buildable.childDependencies
+						: []),
+				]),
 			),
 		);
 	}

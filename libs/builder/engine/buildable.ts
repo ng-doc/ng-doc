@@ -3,9 +3,10 @@ import * as minimatch from 'minimatch';
 import * as path from 'path';
 import {Node, ObjectLiteralExpression, SourceFile, Symbol} from 'ts-morph';
 
-import {capitalize} from '../helpers';
+import {asArray, capitalize, isPagePoint} from '../helpers';
 import {NgDocBuilderContext} from '../interfaces';
-import {CACHE_PATH, GENERATED_MODULES_PATH, PAGE_PATTERN} from './variables';
+import {NgDocPagePoint} from './page';
+import {CACHE_PATH, CATEGORY_PATTERN, GENERATED_MODULES_PATH} from './variables';
 
 export abstract class NgDocBuildable<T = any> {
 	readonly children: Set<NgDocBuildable> = new Set();
@@ -50,7 +51,7 @@ export abstract class NgDocBuildable<T = any> {
 			?.getSourceFile()
 			?.getFilePath();
 
-		if (sourceFilePath && minimatch(sourceFilePath, PAGE_PATTERN) && sourceFilePath !== this.path) {
+		if (sourceFilePath && minimatch(sourceFilePath, CATEGORY_PATTERN) && sourceFilePath !== this.path) {
 			return this.buildables.get(path.relative(this.context.context.workspaceRoot, sourceFilePath));
 		}
 		return undefined;
@@ -58,6 +59,15 @@ export abstract class NgDocBuildable<T = any> {
 
 	get parentDependencies(): NgDocBuildable[] {
 		return [...(this.parent?.parentDependencies ?? [])];
+	}
+
+	get childDependencies(): NgDocBuildable[] {
+		return [
+			...this.children,
+			...asArray(this.children)
+				.map((child: NgDocBuildable) => child.childDependencies)
+				.flat(),
+		];
 	}
 
 	get hasChildren(): boolean {
@@ -82,6 +92,10 @@ export abstract class NgDocBuildable<T = any> {
 		this.children.delete(child);
 	}
 
+	clearChildren(): void {
+		this.children.clear();
+	}
+
 	update(): void {
 		const relativePath: string = path.relative(this.context.context.workspaceRoot, this.sourceFile.getFilePath());
 		const pathToCompiled: string = path.join(CACHE_PATH, relativePath.replace(/\.ts$/, '.js'));
@@ -94,6 +108,13 @@ export abstract class NgDocBuildable<T = any> {
 
 	destroy(): void {
 		this.parent?.removeChild(this);
+	}
+
+	rebuildDependencies(): void {
+		asArray(this.buildables.values()).forEach((buildable: NgDocBuildable) => buildable.clearChildren());
+		asArray(this.buildables.values())
+			.filter(isPagePoint)
+			.forEach((page: NgDocPagePoint) => page.parent?.addChild(page));
 	}
 
 	private getExpression(): ObjectLiteralExpression | undefined {

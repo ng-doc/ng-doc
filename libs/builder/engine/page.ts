@@ -10,6 +10,9 @@ import {NgDocRenderer} from './renderer';
 import {RENDERED_PAGE_NAME} from './variables';
 
 export class NgDocPagePoint extends NgDocBuildable<NgDocPage> {
+	moduleName: string = uniqueName(`NgDocGeneratedPageModule`);
+	componentName: string = uniqueName(`NgDocGeneratedPageComponent`);
+
 	constructor(
 		protected override readonly context: NgDocBuilderContext,
 		protected override readonly buildables: Map<string, NgDocBuildable>,
@@ -34,14 +37,6 @@ export class NgDocPagePoint extends NgDocBuildable<NgDocPage> {
 
 	get scope(): string {
 		return this.compiled?.scope ?? this.parent?.scope ?? this.context.context.workspaceRoot;
-	}
-
-	get moduleName(): string {
-		return uniqueName(`NgDocGeneratedPageModule`);
-	}
-
-	get componentName(): string {
-		return uniqueName(`NgDocGeneratedPageComponent`);
 	}
 
 	get moduleFileName(): string {

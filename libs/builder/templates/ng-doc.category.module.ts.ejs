@@ -7,11 +7,11 @@ import { <%- child.moduleName -%> } from "<%- child.modulePath -%>";
 @NgModule({
   imports: [RouterModule.forChild([
     {
-      path: <%- category.route %>,
+      path: '<%- category.isRoot ? '' : category.route %>',
       children: [
 <% for (const page of category.pages) { -%>
-    <%- include('layouts/ng-doc.route.ts.ejs', {page: page}) -%>
-<% } -%>,
+    <%- include('layouts/ng-doc.route.ts.ejs', {buildable: page}) -%>,
+<% } -%>
       ]
     }
   ]),
