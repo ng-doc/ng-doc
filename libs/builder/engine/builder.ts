@@ -3,11 +3,11 @@ import {from, merge, Observable} from 'rxjs';
 import {debounceTime, mergeAll, switchMap, tap} from 'rxjs/operators';
 import {ModuleKind, Project, SourceFile} from 'ts-morph';
 
+import {asArray, isPresent} from '../helpers';
+import {NgDocBuilderContext} from '../interfaces';
+import {NgDocContextEnv, NgDocRoutingEnv} from '../templates-env';
 import {NgDocEntryPoint} from './entry-point';
-import {asArray, isPresent} from './helpers';
-import {NgDocBuilderContext} from './interfaces';
 import {NgDocRenderer} from './renderer';
-import {NgDocContextEnv, NgDocRoutingEnv} from './templates-env';
 import {CACHE_PATH, ENTRY_POINT_PATTERN, GENERATED_PATH} from './variables';
 import {NgDocWatcher} from './watcher';
 

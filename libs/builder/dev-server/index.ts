@@ -3,7 +3,7 @@ import {DevServerBuilderOutput, executeDevServerBuilder} from '@angular-devkit/b
 import {combineLatest, Observable} from 'rxjs';
 import {map, shareReplay, switchMapTo, take} from 'rxjs/operators';
 
-import {NgDocBuilder} from '../builder';
+import {NgDocBuilder} from '../engine/builder';
 import {NgDocSchema} from '../interfaces';
 
 /**

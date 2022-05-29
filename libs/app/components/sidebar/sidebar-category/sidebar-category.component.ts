@@ -1,4 +1,5 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {NgDocNavigation} from '@ng-doc/app/interfaces';
 
 @Component({
 	selector: 'ng-doc-sidebar-category',
@@ -6,4 +7,7 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 	styleUrls: ['./sidebar-category.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocSidebarCategoryComponent {}
+export class NgDocSidebarCategoryComponent {
+	@Input()
+	category?: NgDocNavigation;
+}

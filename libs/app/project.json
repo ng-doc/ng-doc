@@ -1,11 +1,13 @@
 {
 	"projectType": "library",
-	"sourceRoot": "libs/app/src",
+	"sourceRoot": "libs/app",
 	"prefix": "ng-doc",
 	"targets": {
 		"pre-build": {
 			"executor": "@nrwl/angular:package",
-			"outputs": ["dist/libs/app"],
+			"outputs": [
+				"dist/libs/app"
+			],
 			"options": {
 				"project": "libs/app/ng-package.json"
 			},

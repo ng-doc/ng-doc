@@ -1,24 +1,33 @@
 {
 	"$schema": "../../node_modules/nx/schemas/project-schema.json",
-	"sourceRoot": "libs/builder/src",
+	"sourceRoot": "libs/builder",
 	"projectType": "library",
 	"targets": {
 		"pre-build": {
 			"executor": "@nrwl/js:tsc",
-			"outputs": ["{options.outputPath}"],
+			"outputs": [
+				"{options.outputPath}"
+			],
 			"options": {
 				"outputPath": "dist/libs/builder",
-				"main": "libs/builder/src/index.ts",
+				"main": "libs/builder/index.ts",
 				"tsConfig": "libs/builder/tsconfig.lib.json",
-				"assets": ["libs/builder/src/templates/**/*", "libs/builder/builders.json"]
+				"assets": [
+					"libs/builder/templates/**/*",
+					"libs/builder/builders.json",
+					"libs/builder/generated/**/*"
+				]
 			}
 		},
 		"build": {
 			"executor": "@nrwl/workspace:run-commands",
-			"outputs": ["dist/libs/builder/src/browser/schema.json", "dist/libs/builder/src/dev-server/schema.json"],
+			"outputs": [
+				"dist/libs/builder/browser/schema.json",
+				"dist/libs/builder/dev-server/schema.json"
+			],
 			"options": {
 				"commands": [
-					"node build-schema.js --from=\"libs/builder/src/**/*(browser|dev-server)/schema.json\" --to=\"dist/libs/builder/src\""
+					"node build-schema.js --from=\"libs/builder/**/*(browser|dev-server)/schema.json\" --to=\"dist/libs/builder\""
 				]
 			}
 		},

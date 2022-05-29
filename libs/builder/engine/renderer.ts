@@ -2,7 +2,7 @@ import * as ejs from 'ejs';
 import * as fs from 'fs';
 import * as path from 'path';
 
-import {NgDocRendererOptions} from './interfaces';
+import {NgDocRendererOptions} from '../interfaces';
 import {TEMPLATES_PATH} from './variables';
 
 export class NgDocRenderer<T = any> {

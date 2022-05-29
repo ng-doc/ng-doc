@@ -1,16 +1,18 @@
 {
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "outDir": "../../dist/out-tsc",
-    "declaration": true,
-    "types": []
-  },
-  "include": [
-    "**/*.ts"
-  ],
-  "exclude": [
-    "jest.config.ts",
-    "**/*.spec.ts",
-    "**/*.test.ts"
-  ]
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"outDir": "../../dist/out-tsc",
+		"declaration": true,
+		"types": []
+	},
+	"files": [
+		"browser/index.ts",
+		"dev-server/index.ts"
+	],
+	"exclude": [
+		"jest.config.ts",
+		"**/*.spec.ts",
+		"**/*.test.ts",
+		"generated"
+	]
 }

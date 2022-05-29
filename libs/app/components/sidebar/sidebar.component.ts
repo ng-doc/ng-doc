@@ -12,7 +12,9 @@ export class NgDocSidebarComponent {
 	constructor(
 		@Inject(NG_DOC_CONTEXT)
 		readonly context: NgDocContext,
-	) {}
+	) {
+		console.log('context', this.context);
+	}
 
 	get navigation(): NgDocNavigation[] {
 		return this.context.navigation;

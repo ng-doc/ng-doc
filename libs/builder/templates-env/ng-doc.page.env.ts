@@ -1,4 +1,4 @@
-import {NgDocActions} from '../actions';
+import {NgDocActions} from '../engine/actions';
 import {NgDocPage} from '../interfaces';
 
 export interface NgDocPageEnv {

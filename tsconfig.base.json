@@ -16,11 +16,21 @@
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
 		"paths": {
-			"@ng-doc/app": ["libs/app/index.ts"],
-			"@ng-doc/app/*": ["libs/app/*"],
-			"@ng-doc/app/generated": ["libs/app/generated/index.ts"],
-			"@ng-doc/builder": ["libs/builder/src/index.ts"],
-			"@ng-doc/core": ["libs/core/src/index.ts"]
+			"@ng-doc/app": [
+				"libs/app/index.ts"
+			],
+			"@ng-doc/app/*": [
+				"libs/app/*"
+			],
+			"@ng-doc/builder": [
+				"libs/builder/src/index.ts"
+			],
+			"@ng-doc/builder/generated": [
+				"dist/libs/builder/generated/index.ts"
+			],
+			"@ng-doc/core": [
+				"libs/core/src/index.ts"
+			]
 		}
 	},
 	"exclude": ["node_modules", "tmp"]

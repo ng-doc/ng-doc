@@ -3,10 +3,10 @@ import * as minimatch from 'minimatch';
 import * as path from 'path';
 import {Node, ObjectLiteralExpression, SourceFile, Symbol} from 'ts-morph';
 
+import {NgDocBuilderContext, NgDocPage} from '../interfaces';
+import {NgDocPageEnv, NgDocRouteEnv} from '../templates-env';
 import {NgDocActions} from './actions';
-import {NgDocBuilderContext, NgDocPage} from './interfaces';
 import {NgDocRenderer} from './renderer';
-import {NgDocPageEnv, NgDocRouteEnv} from './templates-env';
 import {CACHE_PATH, ENTRY_POINT_PATTERN, GENERATED_MODULES_PATH, RENDERED_PAGE_NAME} from './variables';
 
 let id: number = 0;

@@ -4,9 +4,6 @@
 	"lib": {
 		"entryFile": "./index.ts"
 	},
-	"assets": [
-		"generated"
-	],
 	"allowedNonPeerDependencies": [
 		"raw-loader"
 	]

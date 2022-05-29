@@ -4,7 +4,7 @@ import {Schema as BrowserBuilderSchema} from '@angular-devkit/build-angular/src/
 import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-import {NgDocBuilder} from '../builder';
+import {NgDocBuilder} from '../engine/builder';
 import {NgDocSchema} from '../interfaces';
 
 /**
