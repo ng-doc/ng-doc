@@ -49,6 +49,10 @@ export class NgDocCategoryPoint extends NgDocBuildable<NgDocCategory> {
 		return this.compiled?.title ?? '';
 	}
 
+	get dependencies(): string[] {
+		return [];
+	}
+
 	async build(): Promise<void> {
 		await this.buildModule();
 	}

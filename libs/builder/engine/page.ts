@@ -51,6 +51,10 @@ export class NgDocPagePoint extends NgDocBuildable<NgDocPage> {
 		return path.relative(this.context.context.workspaceRoot, path.join(this.generatedPath, RENDERED_PAGE_NAME));
 	}
 
+	get dependencies(): string[] {
+		return [this.mdPath];
+	}
+
 	async build(): Promise<void> {
 		await Promise.all([this.buildModule(), this.buildPage()]);
 	}

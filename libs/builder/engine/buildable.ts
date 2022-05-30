@@ -1,16 +1,20 @@
 import {SyntaxKind} from '@ts-morph/common';
 import * as minimatch from 'minimatch';
 import * as path from 'path';
+import {from, Subject} from 'rxjs';
+import {switchMap, switchMapTo, takeUntil, tap} from 'rxjs/operators';
 import {Node, ObjectLiteralExpression, SourceFile, Symbol} from 'ts-morph';
 
 import {asArray, capitalize, isPagePoint} from '../helpers';
 import {NgDocBuilderContext} from '../interfaces';
 import {NgDocPagePoint} from './page';
 import {CACHE_PATH, CATEGORY_PATTERN, GENERATED_MODULES_PATH} from './variables';
+import {NgDocWatcher} from './watcher';
 
 export abstract class NgDocBuildable<T = any> {
 	readonly children: Set<NgDocBuildable> = new Set();
 	protected compiled?: T;
+	private updated$: Subject<void> = new Subject();
 
 	protected constructor(
 		protected readonly context: NgDocBuilderContext,
@@ -23,6 +27,7 @@ export abstract class NgDocBuildable<T = any> {
 	abstract scope: string;
 	abstract moduleFileName: string;
 	abstract moduleName: string;
+	abstract dependencies: string[];
 
 	abstract build(): Promise<void>;
 
@@ -106,6 +111,10 @@ export abstract class NgDocBuildable<T = any> {
 		this.compiled = require(pathToCompiled).default;
 
 		this.parent?.addChild(this);
+
+		this.updated$.next();
+
+		this.watchDependencies();
 	}
 
 	destroy(): void {
@@ -125,5 +134,18 @@ export abstract class NgDocBuildable<T = any> {
 		const valueDeclaration: Node | undefined = exportAlias?.getValueDeclarationOrThrow();
 
 		return valueDeclaration?.getFirstChildByKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+	}
+
+	private watchDependencies(): void {
+		if (this.dependencies.length) {
+			const watcher: NgDocWatcher = new NgDocWatcher(this.dependencies);
+			watcher
+				.onUpdate()
+				.pipe(
+					switchMap(() => from(this.build())),
+					takeUntil(this.updated$),
+				)
+				.subscribe();
+		}
 	}
 }
