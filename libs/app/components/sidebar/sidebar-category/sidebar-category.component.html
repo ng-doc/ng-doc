@@ -1,1 +1,8 @@
-<ng-content></ng-content>
+<div class="ng-doc-sidebar-category-wrapper">
+	<div class="ng-doc-sidebar-category">
+		{{ category?.title }}
+	</div>
+	<div class="ng-doc-sidebar-category-children">
+		<ng-content></ng-content>
+	</div>
+</div>

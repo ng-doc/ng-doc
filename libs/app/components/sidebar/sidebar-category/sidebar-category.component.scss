@@ -1,5 +1,16 @@
 :host {
 	display: flex;
 	flex-direction: column;
-	--ng-doc-sidebar-indent: calc(var(--ng-doc-sidebar-indent) + calc(var(--ng-doc-base-gutter) * 3));
+	--ng-doc-sidebar-category-indent: calc(var(--ng-doc-sidebar-item-indent) + calc(var(--ng-doc-base-gutter) * 3));
+
+	.ng-doc-sidebar-category {
+		font-weight: 500;
+		color: var(--ng-doc-muted-text);
+		padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-horizontal-padding)
+			var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
+	}
+
+	.ng-doc-sidebar-category-children {
+		--ng-doc-sidebar-item-indent: calc(var(--ng-doc-sidebar-category-indent) + calc(var(--ng-doc-base-gutter) * 3));
+	}
 }
