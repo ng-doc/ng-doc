@@ -1,9 +1,10 @@
 // @ts-nocheck
 import {NgModule} from "@angular/core";
 import {RouterModule} from "@angular/router";
-// noinspection ES6UnusedImports
-import {} from ''';
+
 {%- for child in category.categories %}
+// noinspection ES6UnusedImports
+import { {{ child.moduleName }} } from '{{ child.moduleImportPath }}';
 {%- endfor %}
 
 @NgModule({
