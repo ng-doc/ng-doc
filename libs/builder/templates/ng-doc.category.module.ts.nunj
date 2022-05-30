@@ -1,6 +1,8 @@
 // @ts-nocheck
 import {NgModule} from "@angular/core";
 import {RouterModule} from "@angular/router";
+// noinspection ES6UnusedImports
+import {} from ''';
 {%- for child in category.categories %}
 {%- endfor %}
 
@@ -16,7 +18,7 @@ import {RouterModule} from "@angular/router";
 				{%- for page in category.pages %}
 				{
 					path: '{{ page.route }}',
-					loadChildren: () => import('{{ page.modulePath }}').then(m => m.{{ page.moduleName }})
+					loadChildren: () => import('{{ page.moduleImportPath }}').then(m => m.{{ page.moduleName }})
 				},
 				{%- endfor %}
 			]

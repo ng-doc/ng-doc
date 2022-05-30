@@ -58,7 +58,7 @@ export abstract class NgDocBuildable<T = any> {
 	}
 
 	get parentDependencies(): NgDocBuildable[] {
-		return [...(this.parent?.parentDependencies ?? [])];
+		return [this.parent ?? [], this.parent?.parentDependencies ?? []].flat();
 	}
 
 	get childDependencies(): NgDocBuildable[] {
@@ -79,9 +79,11 @@ export abstract class NgDocBuildable<T = any> {
 	}
 
 	get modulePath(): string {
-		const relativePath: string = path.relative(this.context.context.workspaceRoot, this.generatedPath);
+		return path.join(this.generatedPath, this.moduleFileName);
+	}
 
-		return path.join(relativePath, this.moduleFileName).replace(/.ts$/, '');
+	get moduleImportPath(): string {
+		return path.relative(this.context.context.workspaceRoot, this.modulePath).replace(/.ts$/, '');
 	}
 
 	addChild(child: NgDocBuildable): void {

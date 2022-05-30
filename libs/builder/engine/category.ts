@@ -64,10 +64,7 @@ export class NgDocCategoryPoint extends NgDocBuildable<NgDocCategory> {
 				category: this,
 			});
 
-			await renderer.renderToFile(
-				'ng-doc.category.module.ts.nunj',
-				path.join(this.generatedPath, this.moduleFileName),
-			);
+			await renderer.renderToFile('ng-doc.category.module.ts.nunj', this.modulePath);
 		}
 	}
 }

@@ -59,10 +59,7 @@ export class NgDocPagePoint extends NgDocBuildable<NgDocPage> {
 		if (this.compiled) {
 			const renderer: NgDocRenderer<NgDocPageModuleEnv> = new NgDocRenderer<NgDocPageModuleEnv>({page: this});
 
-			await renderer.renderToFile(
-				'ng-doc.page.module.ts.nunj',
-				path.join(this.generatedPath, this.moduleFileName),
-			);
+			await renderer.renderToFile('ng-doc.page.module.ts.nunj', this.modulePath);
 		}
 	}
 
