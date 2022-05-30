@@ -1,0 +1,26 @@
+import {Provider} from '@angular/core';
+import {NG_DOC_CONTEXT} from '@ng-doc/app/tokens';
+
+export const ngDocContextProvider: Provider = {
+	provide: NG_DOC_CONTEXT,
+	useValue: {
+		navigation: [
+			{%- macro nav(buildable) %}
+			{
+				title: '{{ buildable.title }}',
+				route: '{{ buildable.url }}',
+				{%- if buildable.hasChildren %}
+				children: [
+					{%- for child in buildable.children %}
+					{{ nav(child) }},
+					{%- endfor %}
+				]
+				{%- endif %}
+			}
+			{%- endmacro %}
+			{%- for buildable in buildables %}
+			{{ nav(buildable) }},
+			{%- endfor %}
+		],
+	}
+}

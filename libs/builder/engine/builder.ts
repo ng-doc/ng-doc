@@ -136,15 +136,15 @@ export class NgDocBuilder {
 
 	private async renderRoutes(): Promise<void> {
 		const buildables: NgDocBuildable[] = this.getRootBuildables();
-		const renderer: NgDocRenderer = new NgDocRenderer<NgDocRoutingEnv>({buildables});
+		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocRoutingEnv>({buildables});
 
-		await renderer.renderToFolder('ng-doc.routing.ts.ejs', GENERATED_PATH);
+		await renderer.renderToFolder('ng-doc.routing.ts.nunj', GENERATED_PATH);
 	}
 
 	private async renderContext(): Promise<void> {
 		const buildables: NgDocBuildable[] = this.getRootBuildables();
-		const renderer: NgDocRenderer = new NgDocRenderer<NgDocContextEnv>({buildables});
+		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocContextEnv>({buildables});
 
-		await renderer.renderToFolder('ng-doc.context.ts.ejs', GENERATED_PATH);
+		await renderer.renderToFolder('ng-doc.context.ts.nunj', GENERATED_PATH);
 	}
 }

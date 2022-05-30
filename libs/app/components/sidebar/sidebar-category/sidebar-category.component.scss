@@ -1,4 +1,5 @@
 :host {
-	display: block;
+	display: flex;
+	flex-direction: column;
 	--ng-doc-sidebar-indent: calc(var(--ng-doc-sidebar-indent) + calc(var(--ng-doc-base-gutter) * 3));
 }

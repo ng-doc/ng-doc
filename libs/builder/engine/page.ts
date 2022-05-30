@@ -57,10 +57,10 @@ export class NgDocPagePoint extends NgDocBuildable<NgDocPage> {
 
 	private async buildModule(): Promise<void> {
 		if (this.compiled) {
-			const renderer: NgDocRenderer = new NgDocRenderer<NgDocPageModuleEnv>({page: this});
+			const renderer: NgDocRenderer<NgDocPageModuleEnv> = new NgDocRenderer<NgDocPageModuleEnv>({page: this});
 
 			await renderer.renderToFile(
-				'ng-doc.page.module.ts.ejs',
+				'ng-doc.page.module.ts.nunj',
 				path.join(this.generatedPath, this.moduleFileName),
 			);
 		}
@@ -68,14 +68,14 @@ export class NgDocPagePoint extends NgDocBuildable<NgDocPage> {
 
 	private async buildPage(): Promise<void> {
 		if (this.compiled) {
-			const renderer: NgDocRenderer = new NgDocRenderer<NgDocPageEnv>({
+			const renderer: NgDocRenderer<NgDocPageEnv> = new NgDocRenderer<NgDocPageEnv>({
 				ngDoc: {
 					page: this.compiled,
 				},
 				ngDocActions: new NgDocActions(this),
 			});
 
-			await renderer.renderToFile(this.mdPath, this.builtPagePath, {fullPath: true});
+			await renderer.renderToFile(this.mdPath, this.builtPagePath, {scope: this.scope});
 		}
 	}
 }

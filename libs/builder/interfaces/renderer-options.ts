@@ -1,4 +1,4 @@
 export interface NgDocRendererOptions<T> {
-  fullPath?: boolean;
-  overrideContext?: T;
+	scope?: string;
+	overrideContext?: T;
 }

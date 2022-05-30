@@ -56,10 +56,12 @@ export class NgDocCategoryPoint extends NgDocBuildable<NgDocCategory> {
 
 	private async buildModule(): Promise<void> {
 		if (this.compiled) {
-			const renderer: NgDocRenderer = new NgDocRenderer<NgDocCategoryModuleEnv>({category: this});
+			const renderer: NgDocRenderer<NgDocCategoryModuleEnv> = new NgDocRenderer<NgDocCategoryModuleEnv>({
+				category: this,
+			});
 
 			await renderer.renderToFile(
-				'ng-doc.category.module.ts.ejs',
+				'ng-doc.category.module.ts.nunj',
 				path.join(this.generatedPath, this.moduleFileName),
 			);
 		}

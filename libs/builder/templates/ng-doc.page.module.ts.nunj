@@ -3,29 +3,30 @@ import {Component, NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {NgDocPageModule} from '@ng-doc/app';
-import {default as pageMd} from '!!raw-loader!<%- page.builtPagePath %>';
+import {default as pageMd} from '!!raw-loader!';
 
 @Component({
 	template: `<ng-doc-page></ng-doc-page>`
 })
-export class <%- page.componentName %> {
-    public readonly pageMd: string = pageMd;
+export class {{ page.componentName }} {
+	public readonly pageMd: string = pageMd;
 
-    constructor() {
-        console.log(this.pageMd);
-    }
+	constructor() {
+		console.log(this.pageMd);
+	}
 }
 
 @NgModule({
-	declarations: [<%- page.componentName %>],
+	declarations: [{{ page.componentName }}],
 	imports: [
 		CommonModule,
-        NgDocPageModule,
+		NgDocPageModule,
 		RouterModule.forChild([{
 			path: '',
-			component: <%- page.componentName %>,
+			component: {{ page.componentName }},
 		}]),
 	],
 	exports: [RouterModule]
 })
-export class <%- page.moduleName %> {}
+export class {{ page.moduleName }} {
+}
