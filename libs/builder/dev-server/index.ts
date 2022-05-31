@@ -1,7 +1,7 @@
 import {BuilderContext, createBuilder} from '@angular-devkit/architect';
 import {DevServerBuilderOutput, executeDevServerBuilder} from '@angular-devkit/build-angular';
 import {combineLatest, Observable} from 'rxjs';
-import {map, shareReplay, switchMapTo, take} from 'rxjs/operators';
+import {first, map, shareReplay, switchMapTo, take} from 'rxjs/operators';
 
 import {NgDocBuilder} from '../engine/builder';
 import {NgDocSchema} from '../interfaces';
@@ -17,7 +17,7 @@ export function runDevServer(options: NgDocSchema, context: BuilderContext): Obs
 	const runner: Observable<void> = builder.run().pipe(shareReplay(1));
 
 	return runner.pipe(
-		take(1),
+		first(),
 		switchMapTo(
 			combineLatest([runner, executeDevServerBuilder(options, context)]).pipe(
 				map(([_, devServerOutput]: [void, DevServerBuilderOutput]) => devServerOutput),

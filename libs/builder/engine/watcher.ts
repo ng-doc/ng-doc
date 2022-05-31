@@ -7,24 +7,38 @@ export class NgDocWatcher {
 	private added$: Subject<string> = new Subject();
 	private deleted$: Subject<string> = new Subject();
 
-	constructor(private files: string | string[]) {
+	constructor(
+		private files: string | string[],
+		private onAdd?: (file: string) => void,
+		private onUpdate?: (file: string) => void,
+		private onDelete?: (file: string) => void,
+	) {
 		this.watcher = chokidar.watch(files);
 
 		this.watcher
-			.on('add', (filePath: string) => this.added$.next(filePath))
-			.on('change', (filePath: string) => this.updated$.next(filePath))
-			.on('unlink', (filePath: string) => this.deleted$.next(filePath));
+			.on('add', (filePath: string) => {
+				this.added$.next(filePath);
+				this.onAdd && this.onAdd(filePath);
+			})
+			.on('change', (filePath: string) => {
+				this.updated$.next(filePath);
+				this.onUpdate && this.onUpdate(filePath);
+			})
+			.on('unlink', (filePath: string) => {
+				this.deleted$.next(filePath);
+				this.onDelete && this.onDelete(filePath);
+			});
 	}
 
-	onUpdate(): Observable<string> {
+	get update(): Observable<string> {
 		return this.updated$.asObservable();
 	}
 
-	onAdd(): Observable<string> {
+	get add(): Observable<string> {
 		return this.added$.asObservable();
 	}
 
-	onDelete(): Observable<string> {
+	get delete(): Observable<string> {
 		return this.deleted$.asObservable();
 	}
 }

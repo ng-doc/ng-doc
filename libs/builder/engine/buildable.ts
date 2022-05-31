@@ -1,12 +1,13 @@
 import {SyntaxKind} from '@ts-morph/common';
 import * as minimatch from 'minimatch';
 import * as path from 'path';
-import {from, Subject} from 'rxjs';
-import {switchMap, switchMapTo, takeUntil, tap} from 'rxjs/operators';
+import {from, Observable, Subject} from 'rxjs';
+import {mapTo, switchMap, switchMapTo, takeUntil, tap} from 'rxjs/operators';
 import {Node, ObjectLiteralExpression, SourceFile, Symbol} from 'ts-morph';
 
 import {asArray, capitalize, isPagePoint} from '../helpers';
 import {NgDocBuilderContext} from '../interfaces';
+import {BuildableStore} from './buildable-store';
 import {NgDocPagePoint} from './page';
 import {CACHE_PATH, CATEGORY_PATTERN, GENERATED_MODULES_PATH} from './variables';
 import {NgDocWatcher} from './watcher';
@@ -18,7 +19,7 @@ export abstract class NgDocBuildable<T = any> {
 
 	protected constructor(
 		protected readonly context: NgDocBuilderContext,
-		protected readonly buildables: Map<string, NgDocBuildable>,
+		protected readonly buildables: BuildableStore,
 		protected readonly sourceFile: SourceFile,
 	) {}
 
@@ -29,7 +30,7 @@ export abstract class NgDocBuildable<T = any> {
 	abstract moduleName: string;
 	abstract dependencies: string[];
 
-	abstract build(): Promise<void>;
+	abstract build(): Observable<void>;
 
 	get url(): string {
 		return `${this.parent ? this.parent.url + '/' : ''}${this.route}`;
@@ -91,6 +92,13 @@ export abstract class NgDocBuildable<T = any> {
 		return path.relative(this.context.context.workspaceRoot, this.modulePath).replace(/.ts$/, '');
 	}
 
+	get needToRebuild(): Observable<NgDocBuildable> {
+		return this.updated$.pipe(
+			switchMap(() => new NgDocWatcher(this.dependencies).update),
+			mapTo(this),
+		);
+	}
+
 	addChild(child: NgDocBuildable): void {
 		this.children.add(child);
 	}
@@ -113,8 +121,6 @@ export abstract class NgDocBuildable<T = any> {
 		this.parent?.addChild(this);
 
 		this.updated$.next();
-
-		this.watchDependencies();
 	}
 
 	destroy(): void {
@@ -122,8 +128,8 @@ export abstract class NgDocBuildable<T = any> {
 	}
 
 	rebuildDependencies(): void {
-		asArray(this.buildables.values()).forEach((buildable: NgDocBuildable) => buildable.clearChildren());
-		asArray(this.buildables.values())
+		asArray(this.buildables).forEach((buildable: NgDocBuildable) => buildable.clearChildren());
+		asArray(this.buildables)
 			.filter(isPagePoint)
 			.forEach((page: NgDocPagePoint) => page.parent?.addChild(page));
 	}
@@ -134,18 +140,5 @@ export abstract class NgDocBuildable<T = any> {
 		const valueDeclaration: Node | undefined = exportAlias?.getValueDeclarationOrThrow();
 
 		return valueDeclaration?.getFirstChildByKindOrThrow(SyntaxKind.ObjectLiteralExpression);
-	}
-
-	private watchDependencies(): void {
-		if (this.dependencies.length) {
-			const watcher: NgDocWatcher = new NgDocWatcher(this.dependencies);
-			watcher
-				.onUpdate()
-				.pipe(
-					switchMap(() => from(this.build())),
-					takeUntil(this.updated$),
-				)
-				.subscribe();
-		}
 	}
 }

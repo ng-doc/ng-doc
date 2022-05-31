@@ -1,10 +1,12 @@
 import * as path from 'path';
+import {from, Observable, of} from 'rxjs';
 import {SourceFile} from 'ts-morph';
 
 import {asArray, isCategoryPoint, isPagePoint, uniqueName} from '../helpers';
 import {NgDocBuilderContext, NgDocCategory} from '../interfaces';
 import {NgDocCategoryModuleEnv} from '../templates-env';
 import {NgDocBuildable} from './buildable';
+import {BuildableStore} from './buildable-store';
 import {NgDocPagePoint} from './page';
 import {NgDocRenderer} from './renderer';
 
@@ -13,7 +15,7 @@ export class NgDocCategoryPoint extends NgDocBuildable<NgDocCategory> {
 
 	constructor(
 		protected override readonly context: NgDocBuilderContext,
-		protected override readonly buildables: Map<string, NgDocBuildable>,
+		protected override readonly buildables: BuildableStore,
 		protected override readonly sourceFile: SourceFile,
 	) {
 		super(context, buildables, sourceFile);
@@ -53,8 +55,8 @@ export class NgDocCategoryPoint extends NgDocBuildable<NgDocCategory> {
 		return [];
 	}
 
-	async build(): Promise<void> {
-		await this.buildModule();
+	build(): Observable<void> {
+		return this.buildModule();
 	}
 
 	override update() {
@@ -62,13 +64,14 @@ export class NgDocCategoryPoint extends NgDocBuildable<NgDocCategory> {
 		this.rebuildDependencies();
 	}
 
-	private async buildModule(): Promise<void> {
+	private buildModule(): Observable<void> {
 		if (this.compiled) {
 			const renderer: NgDocRenderer<NgDocCategoryModuleEnv> = new NgDocRenderer<NgDocCategoryModuleEnv>({
 				category: this,
 			});
 
-			await renderer.renderToFile('ng-doc.category.module.ts.nunj', this.modulePath);
+			return renderer.renderToFile('ng-doc.category.module.ts.nunj', this.modulePath);
 		}
+		return of();
 	}
 }
