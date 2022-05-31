@@ -1,13 +1,13 @@
 import {SyntaxKind} from '@ts-morph/common';
 import * as minimatch from 'minimatch';
 import * as path from 'path';
-import {from, Observable, Subject} from 'rxjs';
-import {mapTo, switchMap, switchMapTo, takeUntil, tap} from 'rxjs/operators';
+import {Observable, Subject} from 'rxjs';
+import {mapTo, switchMap} from 'rxjs/operators';
 import {Node, ObjectLiteralExpression, SourceFile, Symbol} from 'ts-morph';
 
 import {asArray, capitalize, isPagePoint} from '../helpers';
-import {NgDocBuilderContext} from '../interfaces';
-import {BuildableStore} from './buildable-store';
+import {NgDocBuildedOutput, NgDocBuilderContext} from '../interfaces';
+import {NgDocBuildableStore} from './buildable-store';
 import {NgDocPagePoint} from './page';
 import {CACHE_PATH, CATEGORY_PATTERN, GENERATED_MODULES_PATH} from './variables';
 import {NgDocWatcher} from './watcher';
@@ -19,7 +19,7 @@ export abstract class NgDocBuildable<T = any> {
 
 	protected constructor(
 		protected readonly context: NgDocBuilderContext,
-		protected readonly buildables: BuildableStore,
+		protected readonly buildables: NgDocBuildableStore,
 		protected readonly sourceFile: SourceFile,
 	) {}
 
@@ -30,7 +30,7 @@ export abstract class NgDocBuildable<T = any> {
 	abstract moduleName: string;
 	abstract dependencies: string[];
 
-	abstract build(): Observable<void>;
+	abstract build(): Observable<NgDocBuildedOutput[]>;
 
 	get url(): string {
 		return `${this.parent ? this.parent.url + '/' : ''}${this.route}`;

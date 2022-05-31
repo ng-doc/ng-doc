@@ -32,7 +32,7 @@ export class NgDocRenderer<T extends object> {
 		});
 	}
 
-	renderToFile(template: string, filePath: string, options?: NgDocRendererOptions<T>): Observable<void> {
+	renderToFiled(template: string, filePath: string, options?: NgDocRendererOptions<T>): Observable<void> {
 		return this.render(template, options).pipe(
 			tap(() => fs.mkdirSync(path.dirname(filePath), {recursive: true})),
 			tap((rendered: string) => fs.writeFileSync(filePath, rendered)),
@@ -40,7 +40,7 @@ export class NgDocRenderer<T extends object> {
 		);
 	}
 
-	renderToFolder(template: string, folderPath: string, options?: NgDocRendererOptions<T>): Observable<void> {
+	renderToFolderd(template: string, folderPath: string, options?: NgDocRendererOptions<T>): Observable<void> {
 		const fileName: string = path.basename(template).replace(/\.nunj$/, '');
 
 		return this.render(template, options).pipe(

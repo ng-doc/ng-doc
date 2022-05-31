@@ -1,16 +1,16 @@
 import * as path from 'path';
 import {forkJoin, from, Observable, of} from 'rxjs';
-import {concatAll, mapTo} from 'rxjs/operators';
+import {concatAll, map, mapTo} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
 import {uniqueName} from '../helpers';
-import {NgDocBuilderContext, NgDocPage} from '../interfaces';
+import {NgDocBuildedOutput, NgDocBuilderContext, NgDocPage} from '../interfaces';
 import {NgDocPageEnv, NgDocPageModuleEnv} from '../templates-env';
 import {NgDocActions} from './actions';
 import {NgDocBuildable} from './buildable';
-import {BuildableStore} from './buildable-store';
+import {NgDocBuildableStore} from './buildable-store';
 import {NgDocRenderer} from './renderer';
-import {RENDERED_PAGE_NAME} from './variables';
+import {GENERATED_PATH, RENDERED_PAGE_NAME} from './variables';
 
 export class NgDocPagePoint extends NgDocBuildable<NgDocPage> {
 	moduleName: string = uniqueName(`NgDocGeneratedPageModule`);
@@ -18,7 +18,7 @@ export class NgDocPagePoint extends NgDocBuildable<NgDocPage> {
 
 	constructor(
 		protected override readonly context: NgDocBuilderContext,
-		protected override readonly buildables: BuildableStore,
+		protected override readonly buildables: NgDocBuildableStore,
 		protected override readonly sourceFile: SourceFile,
 	) {
 		super(context, buildables, sourceFile);
@@ -58,20 +58,22 @@ export class NgDocPagePoint extends NgDocBuildable<NgDocPage> {
 		return [this.mdPath];
 	}
 
-	build(): Observable<void> {
-		return forkJoin([this.buildPage(), this.buildModule()]).pipe(mapTo(void 0));
+	build(): Observable<NgDocBuildedOutput[]> {
+		return forkJoin([this.buildPage(), this.buildModule()]);
 	}
 
-	private buildModule(): Observable<void> {
+	private buildModule(): Observable<NgDocBuildedOutput> {
 		if (this.compiled) {
 			const renderer: NgDocRenderer<NgDocPageModuleEnv> = new NgDocRenderer<NgDocPageModuleEnv>({page: this});
 
-			return renderer.renderToFile('ng-doc.page.module.ts.nunj', this.modulePath);
+			return renderer
+				.render('ng-doc.page.module.ts.nunj')
+				.pipe(map((output: string) => ({output, filePath: this.modulePath})));
 		}
 		return of();
 	}
 
-	private buildPage(): Observable<void> {
+	private buildPage(): Observable<NgDocBuildedOutput> {
 		if (this.compiled) {
 			const renderer: NgDocRenderer<NgDocPageEnv> = new NgDocRenderer<NgDocPageEnv>({
 				ngDoc: {
@@ -80,7 +82,9 @@ export class NgDocPagePoint extends NgDocBuildable<NgDocPage> {
 				ngDocActions: new NgDocActions(this),
 			});
 
-			return renderer.renderToFile(this.mdPath, this.builtPagePath, {scope: this.scope});
+			return renderer
+				.render(this.mdPath, {scope: this.scope})
+				.pipe(map((output: string) => ({output, filePath: this.builtPagePath})));
 		}
 		return of();
 	}

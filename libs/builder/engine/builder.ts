@@ -1,14 +1,14 @@
 import * as minimatch from 'minimatch';
 import * as path from 'path';
 import {forkJoin, from, merge, Observable} from 'rxjs';
-import {bufferTime, concatMap, filter, first, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
+import {bufferTime, concatMap, filter, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
 import {Constructor, ModuleKind, Project, SourceFile} from 'ts-morph';
 
-import {asArray, isCategoryPoint, isPagePoint} from '../helpers';
-import {NgDocBuilderContext} from '../interfaces';
+import {asArray, emitBuildedOutput, isCategoryPoint, isPagePoint} from '../helpers';
+import {NgDocBuildedOutput, NgDocBuilderContext} from '../interfaces';
 import {NgDocContextEnv, NgDocRoutingEnv} from '../templates-env';
 import {NgDocBuildable} from './buildable';
-import {BuildableStore} from './buildable-store';
+import {NgDocBuildableStore} from './buildable-store';
 import {NgDocCategoryPoint} from './category';
 import {NgDocPagePoint} from './page';
 import {NgDocRenderer} from './renderer';
@@ -18,7 +18,7 @@ import {NgDocWatcher} from './watcher';
 export class NgDocBuilder {
 	private readonly project: Project;
 	private readonly watcher: NgDocWatcher;
-	private readonly buildables: BuildableStore = new BuildableStore();
+	private readonly buildables: NgDocBuildableStore = new NgDocBuildableStore();
 
 	constructor(private readonly context: NgDocBuilderContext) {
 		this.watcher = new NgDocWatcher(
@@ -102,12 +102,16 @@ export class NgDocBuilder {
 			switchMap((buildCandidates: NgDocBuildable[]) =>
 				forkJoin([
 					...buildCandidates.map((buildable: NgDocBuildable) => buildable.build()),
-					this.renderRoutes(),
-					this.renderContext(),
-				]),
+					this.buildRoutes(),
+					this.buildContext(),
+				]).pipe(
+					tap((output: Array<NgDocBuildedOutput | NgDocBuildedOutput[]>) =>
+						emitBuildedOutput(...output.flat()),
+					),
+				),
 			),
-			mapTo(void 0),
 			take(1),
+			mapTo(void 0),
 		);
 	}
 
@@ -140,17 +144,21 @@ export class NgDocBuilder {
 		return asArray(this.buildables).filter((buildable: NgDocBuildable) => buildable.isRoot);
 	}
 
-	private renderRoutes(): Observable<void> {
+	private buildRoutes(): Observable<NgDocBuildedOutput> {
 		const buildables: NgDocBuildable[] = this.getRootBuildables();
 		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocRoutingEnv>({buildables});
 
-		return renderer.renderToFolder('ng-doc.routing.ts.nunj', GENERATED_PATH);
+		return renderer
+			.render('ng-doc.routing.ts.nunj')
+			.pipe(map((output: string) => ({output, filePath: path.join(GENERATED_PATH, 'ng-doc.routing.ts')})));
 	}
 
-	private renderContext(): Observable<void> {
+	private buildContext(): Observable<NgDocBuildedOutput> {
 		const buildables: NgDocBuildable[] = this.getRootBuildables();
 		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocContextEnv>({buildables});
 
-		return renderer.renderToFolder('ng-doc.context.ts.nunj', GENERATED_PATH);
+		return renderer
+			.render('ng-doc.context.ts.nunj')
+			.pipe(map((output: string) => ({output, filePath: path.join(GENERATED_PATH, 'ng-doc.context.ts')})));
 	}
 }

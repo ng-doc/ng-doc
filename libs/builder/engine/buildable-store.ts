@@ -3,7 +3,7 @@ import {Observable, Subject} from 'rxjs';
 import {asArray} from '../helpers';
 import {NgDocBuildable} from './buildable';
 
-export class BuildableStore implements Iterable<NgDocBuildable> {
+export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 	private buildables: Map<string, NgDocBuildable> = new Map();
 	private changed$: Subject<NgDocBuildable> = new Subject();
 

@@ -1,3 +1,4 @@
+export * from './builded-output';
 export * from './builder-context';
 export * from './category';
 export * from './page';

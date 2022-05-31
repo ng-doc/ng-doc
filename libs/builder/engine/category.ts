@@ -1,12 +1,13 @@
 import * as path from 'path';
-import {from, Observable, of} from 'rxjs';
+import {forkJoin, from, Observable, of} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
 import {asArray, isCategoryPoint, isPagePoint, uniqueName} from '../helpers';
-import {NgDocBuilderContext, NgDocCategory} from '../interfaces';
+import {NgDocBuildedOutput, NgDocBuilderContext, NgDocCategory} from '../interfaces';
 import {NgDocCategoryModuleEnv} from '../templates-env';
 import {NgDocBuildable} from './buildable';
-import {BuildableStore} from './buildable-store';
+import {NgDocBuildableStore} from './buildable-store';
 import {NgDocPagePoint} from './page';
 import {NgDocRenderer} from './renderer';
 
@@ -15,7 +16,7 @@ export class NgDocCategoryPoint extends NgDocBuildable<NgDocCategory> {
 
 	constructor(
 		protected override readonly context: NgDocBuilderContext,
-		protected override readonly buildables: BuildableStore,
+		protected override readonly buildables: NgDocBuildableStore,
 		protected override readonly sourceFile: SourceFile,
 	) {
 		super(context, buildables, sourceFile);
@@ -55,8 +56,8 @@ export class NgDocCategoryPoint extends NgDocBuildable<NgDocCategory> {
 		return [];
 	}
 
-	build(): Observable<void> {
-		return this.buildModule();
+	build(): Observable<NgDocBuildedOutput[]> {
+		return forkJoin([this.buildModule()]);
 	}
 
 	override update() {
@@ -64,13 +65,15 @@ export class NgDocCategoryPoint extends NgDocBuildable<NgDocCategory> {
 		this.rebuildDependencies();
 	}
 
-	private buildModule(): Observable<void> {
+	private buildModule(): Observable<NgDocBuildedOutput> {
 		if (this.compiled) {
 			const renderer: NgDocRenderer<NgDocCategoryModuleEnv> = new NgDocRenderer<NgDocCategoryModuleEnv>({
 				category: this,
 			});
 
-			return renderer.renderToFile('ng-doc.category.module.ts.nunj', this.modulePath);
+			return renderer
+				.render('ng-doc.category.module.ts.nunj')
+				.pipe(map((output: string) => ({output, filePath: this.modulePath})));
 		}
 		return of();
 	}
