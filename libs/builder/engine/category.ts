@@ -1,5 +1,5 @@
 import * as path from 'path';
-import {forkJoin, from, Observable, of} from 'rxjs';
+import {forkJoin, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
@@ -58,11 +58,6 @@ export class NgDocCategoryPoint extends NgDocBuildable<NgDocCategory> {
 
 	build(): Observable<NgDocBuildedOutput[]> {
 		return forkJoin([this.buildModule()]);
-	}
-
-	override update() {
-		super.update();
-		this.rebuildDependencies();
 	}
 
 	private buildModule(): Observable<NgDocBuildedOutput> {

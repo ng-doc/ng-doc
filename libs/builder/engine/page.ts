@@ -1,6 +1,6 @@
 import * as path from 'path';
-import {forkJoin, from, Observable, of} from 'rxjs';
-import {concatAll, map, mapTo} from 'rxjs/operators';
+import {forkJoin, Observable, of} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
 import {uniqueName} from '../helpers';
@@ -10,7 +10,7 @@ import {NgDocActions} from './actions';
 import {NgDocBuildable} from './buildable';
 import {NgDocBuildableStore} from './buildable-store';
 import {NgDocRenderer} from './renderer';
-import {GENERATED_PATH, RENDERED_PAGE_NAME} from './variables';
+import {RENDERED_PAGE_NAME} from './variables';
 
 export class NgDocPagePoint extends NgDocBuildable<NgDocPage> {
 	moduleName: string = uniqueName(`NgDocGeneratedPageModule`);

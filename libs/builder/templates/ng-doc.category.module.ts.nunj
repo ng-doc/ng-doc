@@ -13,7 +13,7 @@ import { {{ child.moduleName }} } from '{{ child.moduleImportPath }}';
 			{%- if category.isRoot %}
 			path: '',
 			{%- else %}
-			path: '{{ category.route }}'
+			path: '{{ category.route }}',
 			{%- endif %}
 			children: [
 				{%- for page in category.pages %}

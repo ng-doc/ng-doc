@@ -3,11 +3,11 @@ import * as nunjucks from 'nunjucks';
 import {Environment, lib} from 'nunjucks';
 import * as path from 'path';
 import {Observable, Subscriber} from 'rxjs';
+import {mapTo, tap} from 'rxjs/operators';
 
 import {NgDocRendererOptions} from '../interfaces';
 import {TEMPLATES_PATH} from './variables';
 import TemplateError = lib.TemplateError;
-import {mapTo, tap} from 'rxjs/operators';
 
 export class NgDocRenderer<T extends object> {
 	constructor(private readonly context?: T) {}

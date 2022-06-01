@@ -1,1 +1,7 @@
-@mixin ng-doc-font;
+@mixin ng-doc-font() {
+	font-family: 'GT Eesti Pro Display', sans-serif;
+	color: var(--ng-doc-text);
+	line-height: 22px;
+	font-size: 16px;
+	font-weight: 400;
+}

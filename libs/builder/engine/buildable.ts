@@ -2,7 +2,7 @@ import {SyntaxKind} from '@ts-morph/common';
 import * as minimatch from 'minimatch';
 import * as path from 'path';
 import {Observable, Subject} from 'rxjs';
-import {mapTo, switchMap} from 'rxjs/operators';
+import {finalize, mapTo, switchMap} from 'rxjs/operators';
 import {Node, ObjectLiteralExpression, SourceFile, Symbol} from 'ts-morph';
 
 import {asArray, capitalize, isPagePoint} from '../helpers';
@@ -93,9 +93,12 @@ export abstract class NgDocBuildable<T = any> {
 	}
 
 	get needToRebuild(): Observable<NgDocBuildable> {
+		const watcher: NgDocWatcher = new NgDocWatcher(this.dependencies);
+
 		return this.updated$.pipe(
-			switchMap(() => new NgDocWatcher(this.dependencies).update),
+			switchMap(() => watcher.update),
 			mapTo(this),
+			finalize(() => watcher.close()),
 		);
 	}
 
@@ -107,10 +110,6 @@ export abstract class NgDocBuildable<T = any> {
 		this.children.delete(child);
 	}
 
-	clearChildren(): void {
-		this.children.clear();
-	}
-
 	update(): void {
 		const relativePath: string = path.relative(this.context.context.workspaceRoot, this.sourceFile.getFilePath());
 		const pathToCompiled: string = path.join(CACHE_PATH, relativePath.replace(/\.ts$/, '.js'));
@@ -119,19 +118,11 @@ export abstract class NgDocBuildable<T = any> {
 		this.compiled = require(pathToCompiled).default;
 
 		this.parent?.addChild(this);
-
 		this.updated$.next();
 	}
 
 	destroy(): void {
 		this.parent?.removeChild(this);
-	}
-
-	rebuildDependencies(): void {
-		asArray(this.buildables).forEach((buildable: NgDocBuildable) => buildable.clearChildren());
-		asArray(this.buildables)
-			.filter(isPagePoint)
-			.forEach((page: NgDocPagePoint) => page.parent?.addChild(page));
 	}
 
 	private getExpression(): ObjectLiteralExpression | undefined {

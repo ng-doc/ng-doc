@@ -1,11 +1,31 @@
-import {Observable, Subject} from 'rxjs';
+import * as minimatch from 'minimatch';
+import * as path from 'path';
+import {from, merge, Observable} from 'rxjs';
+import {filter, map, switchMap, tap} from 'rxjs/operators';
+import {Constructor, Project, SourceFile} from 'ts-morph';
 
-import {asArray} from '../helpers';
+import {asArray, isPresent} from '../helpers';
+import {NgDocBuilderContext} from '../interfaces';
 import {NgDocBuildable} from './buildable';
+import {NgDocCategoryPoint} from './category';
+import {NgDocPagePoint} from './page';
+import {CATEGORY_PATTERN, PAGE_PATTERN} from './variables';
+import {NgDocWatcher} from './watcher';
 
 export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
+	private readonly watcher: NgDocWatcher;
 	private buildables: Map<string, NgDocBuildable> = new Map();
-	private changed$: Subject<NgDocBuildable> = new Subject();
+
+	constructor(private readonly context: NgDocBuilderContext, private readonly project: Project) {
+		this.watcher = new NgDocWatcher(
+			asArray(this.context.options.ngDoc.pages)
+				.map((pagesPath: string) => [
+					path.join(pagesPath, PAGE_PATTERN),
+					path.join(pagesPath, CATEGORY_PATTERN),
+				])
+				.flat(),
+		);
+	}
 
 	*[Symbol.iterator](): Iterator<NgDocBuildable> {
 		for (const value of asArray(this.buildables.values())) {
@@ -13,31 +33,96 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 		}
 	}
 
-	get changes(): Observable<NgDocBuildable> {
-		return this.changed$.asObservable();
+	get changes(): Observable<NgDocBuildable[]> {
+		return merge(
+			this.add(),
+			this.update().pipe(map((buildable: NgDocBuildable) => [buildable])),
+			this.remove().pipe(
+				filter(isPresent),
+				map((buildable: NgDocBuildable) => [buildable]),
+			),
+		).pipe(
+			switchMap((buildables: NgDocBuildable[]) => from(this.project.emit()).pipe(map(() => buildables))),
+			tap((buildables: NgDocBuildable[]) =>
+				buildables.forEach((buildable: NgDocBuildable) => buildable.update()),
+			),
+		);
+	}
+
+	get rootBuildables(): NgDocBuildable[] {
+		return asArray(this.buildables.values()).filter((buildable: NgDocBuildable) => buildable.isRoot);
 	}
 
 	get(path: string): NgDocBuildable | undefined {
 		return this.buildables.get(path);
 	}
 
-	set(path: string, buildable: NgDocBuildable): void {
-		this.buildables.set(path, buildable);
-		this.changed$.next(buildable);
-	}
-
 	has(path: string): boolean {
 		return this.buildables.has(path);
 	}
 
-	touch(path: string): void {
-		if (this.buildables.has(path)) {
-			this.changed$.next(this.get(path));
-		}
+	private add(): Observable<NgDocBuildable[]> {
+		return this.watcher.add.pipe(
+			map((paths: string[]) => {
+				const newBuildables: NgDocBuildable[] = [];
+
+				for (const buildablePath of paths) {
+					if (!this.buildables.get(buildablePath)) {
+						const sourceFile: SourceFile = this.project.addSourceFileAtPath(buildablePath);
+						const Constructor: Constructor<NgDocBuildable> = this.getBuildableConstructor(buildablePath);
+						const newBuildable: NgDocBuildable = new Constructor(this.context, this.buildables, sourceFile);
+
+						newBuildables.push(newBuildable);
+						this.buildables.set(buildablePath, newBuildable);
+					}
+				}
+
+				return newBuildables;
+			}),
+		);
 	}
 
-	delete(path: string): void {
-		this.buildables.delete(path);
-		this.changed$.next();
+	private update(): Observable<NgDocBuildable> {
+		return this.watcher.update.pipe(
+			map((path: string) => {
+				const buildable: NgDocBuildable | undefined = this.buildables.get(path);
+
+				if (!buildable) {
+					throw new Error(`Buildable not found: ${path}`);
+				}
+
+				this.project.getSourceFile(path)?.refreshFromFileSystemSync();
+
+				return buildable;
+			}),
+		);
+	}
+
+	private remove(): Observable<NgDocBuildable | undefined> {
+		return this.watcher.remove.pipe(
+			map((path: string) => {
+				const buildable: NgDocBuildable | undefined = this.buildables.get(path);
+
+				if (!buildable) {
+					throw new Error(`Buildable not found: ${path}`);
+				}
+
+				buildable?.destroy();
+				this.buildables.delete(path);
+
+				// we return parent buildable if we have it because we want to rebuild it
+				return buildable?.parent;
+			}),
+		);
+	}
+
+	private getBuildableConstructor(path: string): Constructor<NgDocBuildable> {
+		if (minimatch(path, PAGE_PATTERN)) {
+			return NgDocPagePoint;
+		} else if (minimatch(path, CATEGORY_PATTERN)) {
+			return NgDocCategoryPoint;
+		} else {
+			throw new Error(`Unknown buildable type for path: ${path}`);
+		}
 	}
 }

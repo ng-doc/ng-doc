@@ -1,9 +1,11 @@
+@import '../../../styles/mixins';
+
 .ng-doc-sidebar-link {
+	@include ng-doc-font();
 	display: block;
 	padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-horizontal-padding)
 		var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
 	text-decoration: inherit;
-	color: var(--ng-doc-text);
 	cursor: pointer;
 
 	&:hover {
