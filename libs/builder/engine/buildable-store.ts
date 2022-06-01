@@ -38,10 +38,7 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 		return merge(
 			this.add(),
 			this.update().pipe(map((buildable: NgDocBuildable) => [buildable])),
-			this.remove().pipe(
-				filter(isPresent),
-				map((buildable: NgDocBuildable) => [buildable]),
-			),
+			this.remove().pipe(map(asArray)),
 		).pipe(
 			switchMap((buildables: NgDocBuildable[]) => from(this.project.emit()).pipe(map(() => buildables))),
 			tap((buildables: NgDocBuildable[]) =>
