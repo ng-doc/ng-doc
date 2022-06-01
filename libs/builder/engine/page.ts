@@ -59,7 +59,7 @@ export class NgDocPagePoint extends NgDocBuildable<NgDocPage> {
 	}
 
 	build(): Observable<NgDocBuildedOutput[]> {
-		return forkJoin([this.buildPage(), this.buildModule()]);
+		return this.isReadyToBuild ? forkJoin([this.buildPage(), this.buildModule()]) : of([]);
 	}
 
 	private buildModule(): Observable<NgDocBuildedOutput> {

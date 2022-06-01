@@ -41,32 +41,13 @@ export class NgDocBuilder {
 
 	build(...changedBuildables: NgDocBuildable[]): Observable<void> {
 		this.context.context.reportStatus('Building documentation...');
-		const buildCandidates: NgDocBuildable[] = this.getBuildCandidates(changedBuildables);
-
 		return forkJoin([
-			...buildCandidates.map((buildable: NgDocBuildable) => buildable.build()),
+			...changedBuildables.map((buildable: NgDocBuildable) => buildable.build()),
 			this.buildRoutes(),
 			this.buildContext(),
 		]).pipe(
 			tap((output: Array<NgDocBuildedOutput | NgDocBuildedOutput[]>) => emitBuildedOutput(...output.flat())),
 			mapTo(void 0),
-		);
-	}
-
-	private getBuildCandidates(buildables: NgDocBuildable | NgDocBuildable[]): NgDocBuildable[] {
-		return asArray(
-			new Set(
-				asArray(buildables)
-					.map((buildable: NgDocBuildable) => [
-						buildable,
-						...(isPagePoint(buildable)
-							? buildable.parentDependencies
-							: isCategoryPoint(buildable)
-							? buildable.childDependencies
-							: []),
-					])
-					.flat(),
-			),
 		);
 	}
 

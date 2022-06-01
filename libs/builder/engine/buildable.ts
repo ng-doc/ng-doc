@@ -14,6 +14,7 @@ import {NgDocWatcher} from './watcher';
 export abstract class NgDocBuildable<T = any> {
 	readonly children: Set<NgDocBuildable> = new Set();
 	protected compiled?: T;
+	private readyToBuild: boolean = false;
 
 	protected constructor(
 		protected readonly context: NgDocBuilderContext,
@@ -22,6 +23,7 @@ export abstract class NgDocBuildable<T = any> {
 	) {}
 
 	abstract route: string;
+	abstract title: string;
 	abstract isRoot: boolean;
 	abstract scope: string;
 	abstract moduleFileName: string;
@@ -99,6 +101,10 @@ export abstract class NgDocBuildable<T = any> {
 		);
 	}
 
+	get isReadyToBuild(): boolean {
+		return this.readyToBuild;
+	}
+
 	addChild(child: NgDocBuildable): void {
 		this.children.add(child);
 	}
@@ -119,14 +125,28 @@ export abstract class NgDocBuildable<T = any> {
 			this.compiled = require(pathToCompiled).default;
 
 			if (!this.compiled) {
-				this.context.context.logger.error(
+				throw new Error(
 					`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`,
 				);
 			}
 
+			if (!this.route) {
+				throw new Error(
+					`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a route property.`,
+				);
+			}
+
+			if (!this.title) {
+				throw new Error(
+					`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`,
+				);
+			}
+
+			this.readyToBuild = true;
 			this.parent?.addChild(this);
 		} catch (error: unknown) {
-			this.context.context.logger.error(String(error));
+			this.readyToBuild = false;
+			this.context.context.logger.error(`\n${String(error)}`);
 		}
 	}
 

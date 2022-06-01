@@ -57,7 +57,7 @@ export class NgDocCategoryPoint extends NgDocBuildable<NgDocCategory> {
 	}
 
 	build(): Observable<NgDocBuildedOutput[]> {
-		return forkJoin([this.buildModule()]);
+		return this.isReadyToBuild ? forkJoin([this.buildModule()]) : of([]);
 	}
 
 	private buildModule(): Observable<NgDocBuildedOutput> {
