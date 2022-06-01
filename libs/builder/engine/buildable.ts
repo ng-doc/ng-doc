@@ -14,7 +14,7 @@ import {NgDocWatcher} from './watcher';
 export abstract class NgDocBuildable<T = any> {
 	readonly children: Set<NgDocBuildable> = new Set();
 	protected compiled?: T;
-	private readyToBuild: boolean = false;
+	protected readyToBuild: boolean = false;
 
 	protected constructor(
 		protected readonly context: NgDocBuilderContext,
@@ -114,40 +114,26 @@ export abstract class NgDocBuildable<T = any> {
 	}
 
 	update(): void {
-		try {
-			const relativePath: string = path.relative(
-				this.context.context.workspaceRoot,
-				this.sourceFile.getFilePath(),
+		const relativePath: string = path.relative(this.context.context.workspaceRoot, this.sourceFile.getFilePath());
+		const pathToCompiled: string = path.join(CACHE_PATH, relativePath.replace(/\.ts$/, '.js'));
+
+		delete require.cache[require.resolve(pathToCompiled)];
+		this.compiled = require(pathToCompiled).default;
+
+		if (!this.compiled) {
+			throw new Error(
+				`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`,
 			);
-			const pathToCompiled: string = path.join(CACHE_PATH, relativePath.replace(/\.ts$/, '.js'));
-
-			delete require.cache[require.resolve(pathToCompiled)];
-			this.compiled = require(pathToCompiled).default;
-
-			if (!this.compiled) {
-				throw new Error(
-					`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`,
-				);
-			}
-
-			if (!this.route) {
-				throw new Error(
-					`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a route property.`,
-				);
-			}
-
-			if (!this.title) {
-				throw new Error(
-					`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`,
-				);
-			}
-
-			this.readyToBuild = true;
-			this.parent?.addChild(this);
-		} catch (error: unknown) {
-			this.readyToBuild = false;
-			this.context.context.logger.error(`\n${String(error)}`);
 		}
+
+		if (!this.title) {
+			throw new Error(
+				`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`,
+			);
+		}
+
+		this.readyToBuild = true;
+		this.parent?.addChild(this);
 	}
 
 	destroy(): void {

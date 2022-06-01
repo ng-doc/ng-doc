@@ -1,9 +1,10 @@
+import * as fs from 'fs';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
-import {uniqueName} from '../helpers';
+import {isPresent, uniqueName} from '../helpers';
 import {NgDocBuildedOutput, NgDocBuilderContext, NgDocPage} from '../interfaces';
 import {NgDocPageEnv, NgDocPageModuleEnv} from '../templates-env';
 import {NgDocActions} from './actions';
@@ -56,6 +57,21 @@ export class NgDocPagePoint extends NgDocBuildable<NgDocPage> {
 
 	get dependencies(): string[] {
 		return [this.mdPath];
+	}
+
+	override update(): void {
+		try {
+			super.update();
+
+			if (!isPresent(this.compiled?.mdFile) || !fs.existsSync(this.mdPath)) {
+				throw new Error(
+					`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you define mdFile property correctly and .md file exists.`,
+				);
+			}
+		} catch (error: unknown) {
+			this.readyToBuild = false;
+			this.context.context.logger.error(`\n${String(error)}`);
+		}
 	}
 
 	build(): Observable<NgDocBuildedOutput[]> {

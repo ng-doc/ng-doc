@@ -56,6 +56,15 @@ export class NgDocCategoryPoint extends NgDocBuildable<NgDocCategory> {
 		return [];
 	}
 
+	override update(): void {
+		try {
+			super.update();
+		} catch (error: unknown) {
+			this.readyToBuild = false;
+			this.context.context.logger.error(`\n${String(error)}`);
+		}
+	}
+
 	build(): Observable<NgDocBuildedOutput[]> {
 		return this.isReadyToBuild ? forkJoin([this.buildModule()]) : of([]);
 	}
