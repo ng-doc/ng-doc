@@ -118,7 +118,7 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 				buildable?.destroy();
 				this.buildables.delete(path);
 
-				// we return parent buildable if we have it because we want to rebuild it
+				// we return parent buildable if we have it because we want to rebuild it when his child is removed
 				return buildable?.parent;
 			}),
 		);

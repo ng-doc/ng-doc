@@ -1,13 +1,15 @@
 import * as chokidar from 'chokidar';
-import {Observable, ReplaySubject, Subject} from 'rxjs';
-import {buffer} from 'rxjs/operators';
+import {BehaviorSubject, Observable, ReplaySubject, Subject} from 'rxjs';
+import {filter} from 'rxjs/operators';
+
+import {bufferUntil} from '../operators';
 
 export class NgDocWatcher {
 	private readonly watcher: chokidar.FSWatcher;
 	private updated$: Subject<string> = new Subject();
 	private added$: Subject<string> = new Subject();
 	private deleted$: Subject<string> = new Subject();
-	private ready$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
+	private ready$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
 	constructor(private files: string | string[]) {
 		this.watcher = chokidar.watch(files);
@@ -24,7 +26,7 @@ export class NgDocWatcher {
 	}
 
 	get add(): Observable<string[]> {
-		return this.added$.pipe(buffer(this.ready$));
+		return this.added$.pipe(bufferUntil(this.ready$.pipe(filter((ready: boolean) => ready))));
 	}
 
 	get remove(): Observable<string> {

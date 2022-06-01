@@ -56,14 +56,16 @@ export class NgDocBuilder {
 	private getBuildCandidates(buildables: NgDocBuildable | NgDocBuildable[]): NgDocBuildable[] {
 		return asArray(
 			new Set(
-				...asArray(buildables).map((buildable: NgDocBuildable) => [
-					buildable,
-					...(isPagePoint(buildable)
-						? buildable.parentDependencies
-						: isCategoryPoint(buildable)
-						? buildable.childDependencies
-						: []),
-				]),
+				asArray(buildables)
+					.map((buildable: NgDocBuildable) => [
+						buildable,
+						...(isPagePoint(buildable)
+							? buildable.parentDependencies
+							: isCategoryPoint(buildable)
+							? buildable.childDependencies
+							: []),
+					])
+					.flat(),
 			),
 		);
 	}

@@ -108,13 +108,26 @@ export abstract class NgDocBuildable<T = any> {
 	}
 
 	update(): void {
-		const relativePath: string = path.relative(this.context.context.workspaceRoot, this.sourceFile.getFilePath());
-		const pathToCompiled: string = path.join(CACHE_PATH, relativePath.replace(/\.ts$/, '.js'));
+		try {
+			const relativePath: string = path.relative(
+				this.context.context.workspaceRoot,
+				this.sourceFile.getFilePath(),
+			);
+			const pathToCompiled: string = path.join(CACHE_PATH, relativePath.replace(/\.ts$/, '.js'));
 
-		delete require.cache[require.resolve(pathToCompiled)];
-		this.compiled = require(pathToCompiled).default;
+			delete require.cache[require.resolve(pathToCompiled)];
+			this.compiled = require(pathToCompiled).default;
 
-		this.parent?.addChild(this);
+			if (!this.compiled) {
+				this.context.context.logger.error(
+					`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`,
+				);
+			}
+
+			this.parent?.addChild(this);
+		} catch (error: unknown) {
+			this.context.context.logger.error(String(error));
+		}
 	}
 
 	destroy(): void {
