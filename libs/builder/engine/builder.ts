@@ -34,15 +34,9 @@ export class NgDocBuilder {
 	}
 
 	run(): Observable<void> {
-		const changes: Observable<NgDocBuildable[]> = this.buildables.changes;
-		return merge(
-			changes,
-			changes.pipe(
-				switchMap(() =>
-					merge(...asArray(this.buildables).map((buildable: NgDocBuildable) => buildable.needToRebuild)),
-				),
-			),
-		).pipe(concatMap((buildables: NgDocBuildable | NgDocBuildable[]) => this.build(...asArray(buildables))));
+		return this.buildables.changes.pipe(
+			concatMap((buildables: NgDocBuildable | NgDocBuildable[]) => this.build(...asArray(buildables))),
+		);
 	}
 
 	build(...changedBuildables: NgDocBuildable[]): Observable<void> {

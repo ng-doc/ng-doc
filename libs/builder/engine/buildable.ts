@@ -1,21 +1,19 @@
 import {SyntaxKind} from '@ts-morph/common';
 import * as minimatch from 'minimatch';
 import * as path from 'path';
-import {Observable, Subject} from 'rxjs';
-import {finalize, mapTo, switchMap} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {finalize, mapTo} from 'rxjs/operators';
 import {Node, ObjectLiteralExpression, SourceFile, Symbol} from 'ts-morph';
 
-import {asArray, capitalize, isPagePoint} from '../helpers';
+import {asArray, capitalize} from '../helpers';
 import {NgDocBuildedOutput, NgDocBuilderContext} from '../interfaces';
 import {NgDocBuildableStore} from './buildable-store';
-import {NgDocPagePoint} from './page';
 import {CACHE_PATH, CATEGORY_PATTERN, GENERATED_MODULES_PATH} from './variables';
 import {NgDocWatcher} from './watcher';
 
 export abstract class NgDocBuildable<T = any> {
 	readonly children: Set<NgDocBuildable> = new Set();
 	protected compiled?: T;
-	private updated$: Subject<void> = new Subject();
 
 	protected constructor(
 		protected readonly context: NgDocBuilderContext,
@@ -95,8 +93,7 @@ export abstract class NgDocBuildable<T = any> {
 	get needToRebuild(): Observable<NgDocBuildable> {
 		const watcher: NgDocWatcher = new NgDocWatcher(this.dependencies);
 
-		return this.updated$.pipe(
-			switchMap(() => watcher.update),
+		return watcher.update.pipe(
 			mapTo(this),
 			finalize(() => watcher.close()),
 		);
@@ -118,7 +115,6 @@ export abstract class NgDocBuildable<T = any> {
 		this.compiled = require(pathToCompiled).default;
 
 		this.parent?.addChild(this);
-		this.updated$.next();
 	}
 
 	destroy(): void {

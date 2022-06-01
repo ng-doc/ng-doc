@@ -1,11 +1,12 @@
 import * as minimatch from 'minimatch';
 import * as path from 'path';
 import {from, merge, Observable} from 'rxjs';
-import {filter, map, switchMap, tap} from 'rxjs/operators';
+import {filter, finalize, map, startWith, switchMap, tap} from 'rxjs/operators';
 import {Constructor, Project, SourceFile} from 'ts-morph';
 
 import {asArray, isPresent} from '../helpers';
 import {NgDocBuilderContext} from '../interfaces';
+import {bufferDebounce} from '../operators';
 import {NgDocBuildable} from './buildable';
 import {NgDocCategoryPoint} from './category';
 import {NgDocPagePoint} from './page';
@@ -46,6 +47,13 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 			tap((buildables: NgDocBuildable[]) =>
 				buildables.forEach((buildable: NgDocBuildable) => buildable.update()),
 			),
+			switchMap((buildables: NgDocBuildable[]) =>
+				merge(...asArray(this).map((buildable: NgDocBuildable) => buildable.needToRebuild)).pipe(
+					bufferDebounce(50),
+					startWith(buildables),
+				),
+			),
+			finalize(() => this.watcher.close()),
 		);
 	}
 
