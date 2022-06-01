@@ -1,8 +1,8 @@
 // @ts-nocheck
-import {Component, NgModule, Type} from '@angular/core';
+import {Component, NgModule, Type, ChangeDetectionStrategy} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
-import {NgDocPageModule} from '@ng-doc/app';
+import {NgDocPageModule, NgDocRootPage} from '@ng-doc/app';
 import pageMd from '!!raw-loader!{{ page.builtPagePath }}';
 {%- if page.pageDependenciesImport %}
 // noinspection ES6UnusedImports
@@ -10,9 +10,11 @@ import pageDependencies from '{{ page.pageDependenciesImport }}';
 {%- endif %}
 
 @Component({
-	template: `<ng-doc-page></ng-doc-page>`
+	template: `<ng-doc-page></ng-doc-page>`,
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	providers: [{provide: NgDocRootPage, useExisting: {{ page.componentName }}}],
 })
-export class {{ page.componentName }} {
+export class {{ page.componentName }} extends NgDocRootPage {
 	public readonly pageMd: string = pageMd;
 	{%- if page.pageDependenciesFile %}
 	public readonly demo: Record<string, Type<unknown>> | undefined = pageDependencies.demo;
@@ -21,7 +23,8 @@ export class {{ page.componentName }} {
 	{%- endif %}
 
 	constructor() {
-		console.log(this.pageMd);
+		super();
+		console.log(this.pageMd, this.demo);
 	}
 }
 

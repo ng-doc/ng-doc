@@ -1,4 +1,6 @@
-# Here will be demos
+# Here will be demo
+
+Here you will se how easy it's to create some demo with NgDoc.
 
 ## Inline demo
 

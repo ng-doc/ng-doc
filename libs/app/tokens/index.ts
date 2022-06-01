@@ -1,1 +1,1 @@
-export * from './ng-doc-context';
+export * from './context';

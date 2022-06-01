@@ -1,2 +1,2 @@
-export * from './ng-doc-context';
-export * from './ng-doc-navigation';
+export * from './context';
+export * from './navigation';

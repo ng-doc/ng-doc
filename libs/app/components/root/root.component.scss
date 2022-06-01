@@ -18,7 +18,7 @@
 
 	.ng-doc-body {
 		grid-area: body;
-		padding: calc(var(--ng-doc-base-gutter) * 4);;
+		padding: calc(var(--ng-doc-base-gutter) * 3) calc(var(--ng-doc-base-gutter) * 4);
 		overflow: auto;
 	}
 }
