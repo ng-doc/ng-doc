@@ -1,4 +1,5 @@
 import {NgModule} from '@angular/core';
+
 import {NgDocDemoRendererDirective} from './demo-renderer.directive';
 
 @NgModule({
