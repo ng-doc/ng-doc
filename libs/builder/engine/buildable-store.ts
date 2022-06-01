@@ -1,7 +1,8 @@
+import * as fs from 'fs';
 import * as minimatch from 'minimatch';
 import * as path from 'path';
 import {from, merge, Observable} from 'rxjs';
-import {filter, finalize, map, startWith, switchMap, tap} from 'rxjs/operators';
+import {finalize, map, startWith, switchMap, tap} from 'rxjs/operators';
 import {Constructor, Project, SourceFile} from 'ts-morph';
 
 import {asArray, isCategoryPoint, isPagePoint, isPresent} from '../helpers';
@@ -10,7 +11,7 @@ import {bufferDebounce} from '../operators';
 import {NgDocBuildable} from './buildable';
 import {NgDocCategoryPoint} from './category';
 import {NgDocPagePoint} from './page';
-import {CATEGORY_PATTERN, PAGE_PATTERN} from './variables';
+import {CATEGORY_PATTERN, DEPENDENCY_PATTERN, PAGE_NAME, PAGE_PATTERN} from './variables';
 import {NgDocWatcher} from './watcher';
 
 export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
@@ -23,6 +24,7 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 				.map((pagesPath: string) => [
 					path.join(pagesPath, PAGE_PATTERN),
 					path.join(pagesPath, CATEGORY_PATTERN),
+					path.join(pagesPath, DEPENDENCY_PATTERN),
 				])
 				.flat(),
 		);
@@ -35,11 +37,7 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 	}
 
 	get changes(): Observable<NgDocBuildable[]> {
-		return merge(
-			this.add(),
-			this.update().pipe(map((buildable: NgDocBuildable) => [buildable])),
-			this.remove().pipe(map(asArray)),
-		).pipe(
+		return merge(this.add(), this.update(), this.remove().pipe(map(asArray))).pipe(
 			switchMap((buildables: NgDocBuildable[]) => from(this.project.emit()).pipe(map(() => buildables))),
 			tap((buildables: NgDocBuildable[]) =>
 				buildables.forEach((buildable: NgDocBuildable) => buildable.update()),
@@ -70,6 +68,7 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 
 	private add(): Observable<NgDocBuildable[]> {
 		return this.watcher.add.pipe(
+			map((paths: string[]) => this.processDependencies(paths)),
 			map((paths: string[]) => {
 				const newBuildables: NgDocBuildable[] = [];
 
@@ -89,18 +88,21 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 		);
 	}
 
-	private update(): Observable<NgDocBuildable> {
+	private update(): Observable<NgDocBuildable[]> {
 		return this.watcher.update.pipe(
-			map((path: string) => {
-				const buildable: NgDocBuildable | undefined = this.buildables.get(path);
+			map((path: string) => this.processDependencies(path)),
+			map((paths: string[]) => {
+				return paths.map((path: string) => {
+					const buildable: NgDocBuildable | undefined = this.buildables.get(path);
 
-				if (!buildable) {
-					throw new Error(`Buildable not found: ${path}`);
-				}
+					if (!buildable) {
+						throw new Error(`Buildable not found: ${path}`);
+					}
 
-				this.project.getSourceFile(path)?.refreshFromFileSystemSync();
+					this.project.getSourceFile(path)?.refreshFromFileSystemSync();
 
-				return buildable;
+					return buildable;
+				});
 			}),
 		);
 	}
@@ -108,17 +110,28 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 	private remove(): Observable<NgDocBuildable | undefined> {
 		return this.watcher.remove.pipe(
 			map((path: string) => {
-				const buildable: NgDocBuildable | undefined = this.buildables.get(path);
+				if (this.isDependencies(path)) {
+					const pagePath: string = this.processDependencies(path)[0];
+					const buildable: NgDocBuildable | undefined = this.buildables.get(pagePath);
 
-				if (!buildable) {
-					throw new Error(`Buildable not found: ${path}`);
+					if (!buildable) {
+						throw new Error(`Buildable not found: ${path}`);
+					}
+
+					return buildable;
+				} else {
+					const buildable: NgDocBuildable | undefined = this.buildables.get(path);
+
+					if (!buildable) {
+						throw new Error(`Buildable not found: ${path}`);
+					}
+
+					buildable?.destroy();
+					this.buildables.delete(path);
+
+					// we return parent buildable if we have it because we want to rebuild it when his child is removed
+					return buildable?.parent;
 				}
-
-				buildable?.destroy();
-				this.buildables.delete(path);
-
-				// we return parent buildable if we have it because we want to rebuild it when his child is removed
-				return buildable?.parent;
 			}),
 		);
 	}
@@ -148,5 +161,24 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 					.flat(),
 			),
 		);
+	}
+
+	private processDependencies(paths: string | string[]): string[] {
+		return asArray(paths)
+			.map((dependencyPath: string) => {
+				if (this.isDependencies(dependencyPath)) {
+					const folder: string = path.dirname(dependencyPath);
+					const pagePath: string = path.join(folder, PAGE_NAME);
+
+					return fs.existsSync(pagePath) ? pagePath : undefined;
+				} else {
+					return dependencyPath;
+				}
+			})
+			.filter(isPresent);
+	}
+
+	private isDependencies(path: string): boolean {
+		return minimatch(path, DEPENDENCY_PATTERN);
 	}
 }

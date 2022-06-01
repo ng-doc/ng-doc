@@ -4,14 +4,14 @@ import {forkJoin, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
-import {isPresent, uniqueName} from '../helpers';
+import {asArray, isPresent, uniqueName} from '../helpers';
 import {NgDocBuildedOutput, NgDocBuilderContext, NgDocPage} from '../interfaces';
 import {NgDocPageEnv, NgDocPageModuleEnv} from '../templates-env';
 import {NgDocActions} from './actions';
 import {NgDocBuildable} from './buildable';
 import {NgDocBuildableStore} from './buildable-store';
 import {NgDocRenderer} from './renderer';
-import {RENDERED_PAGE_NAME} from './variables';
+import {DEPENDENCIES_NAME, RENDERED_PAGE_NAME} from './variables';
 
 export class NgDocPagePoint extends NgDocBuildable<NgDocPage> {
 	moduleName: string = uniqueName(`NgDocGeneratedPageModule`);
@@ -57,6 +57,16 @@ export class NgDocPagePoint extends NgDocBuildable<NgDocPage> {
 
 	get dependencies(): string[] {
 		return [this.mdPath];
+	}
+
+	get pageDependenciesFile(): string | undefined {
+		const dependenciesPath: string = path.join(this.folder, DEPENDENCIES_NAME);
+
+		return fs.existsSync(dependenciesPath) ? dependenciesPath : undefined;
+	}
+
+	get pageDependenciesImport(): string | undefined {
+		return this.pageDependenciesFile ? this.pageDependenciesFile.replace(/.ts$/, '') : undefined;
 	}
 
 	override update(): void {

@@ -15,6 +15,22 @@
 		  "options": {
 			  "parser": "typescript"
 		  }
+	  },
+	  {
+		  "files": [
+			  "*.ts.nunj"
+		  ],
+		  "options": {
+			  "parser": "typescript"
+		  }
+	  },
+	  {
+		  "files": [
+			  "*.md.nunj"
+		  ],
+		  "options": {
+			  "parser": "markdown"
+		  }
 	  }
   ]
 }

@@ -1,15 +1,24 @@
 // @ts-nocheck
-import {Component, NgModule} from '@angular/core';
+import {Component, NgModule, Type} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {NgDocPageModule} from '@ng-doc/app';
-import {default as pageMd} from '!!raw-loader!{{ page.builtPagePath }}';
+import pageMd from '!!raw-loader!{{ page.builtPagePath }}';
+{%- if page.pageDependenciesImport %}
+// noinspection ES6UnusedImports
+import pageDependencies from '{{ page.pageDependenciesImport }}';
+{%- endif %}
 
 @Component({
 	template: `<ng-doc-page></ng-doc-page>`
 })
 export class {{ page.componentName }} {
 	public readonly pageMd: string = pageMd;
+	{%- if page.pageDependenciesFile %}
+	public readonly demo: Record<string, Type<unknown>> | undefined = pageDependencies.demo;
+	{%- else %}
+	public readonly demo: Record<string, Type<unknown>> | undefined = undefined;
+	{%- endif %}
 
 	constructor() {
 		console.log(this.pageMd);
@@ -21,6 +30,9 @@ export class {{ page.componentName }} {
 	imports: [
 		CommonModule,
 		NgDocPageModule,
+		{%- if page.pageDependenciesFile %}
+		pageDependencies.module,
+		{%- endif %}
 		RouterModule.forChild([{
 			path: '',
 			component: {{ page.componentName }},

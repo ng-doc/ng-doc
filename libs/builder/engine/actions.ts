@@ -1,3 +1,6 @@
+import {NgDocActionOutput} from '../interfaces';
+import {NgDocAction} from '../types';
+import {demoAction} from './actions/demo.action';
 import {NgDocPagePoint} from './page';
 
 export class NgDocActions {
@@ -8,6 +11,14 @@ export class NgDocActions {
 	}
 
 	demo(className: string): string {
-		return className;
+		return this.performAction(demoAction(className));
+	}
+
+	private performAction(action: NgDocAction): string {
+		const output: NgDocActionOutput = action(this.entryPoint);
+
+		// TODO add dependencies
+
+		return output.output;
 	}
 }
