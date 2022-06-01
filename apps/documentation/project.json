@@ -19,6 +19,10 @@
 			},
 			"configurations": {
 				"production": {
+					"ngDoc": {
+						"pages": "apps/documentation",
+						"tsConfig": "tsconfig.base.json"
+					},
 					"budgets": [
 						{
 							"type": "initial",
@@ -40,6 +44,10 @@
 					"outputHashing": "all"
 				},
 				"development": {
+					"ngDoc": {
+						"pages": "apps/documentation",
+						"tsConfig": "tsconfig.base.json"
+					},
 					"buildOptimizer": false,
 					"optimization": false,
 					"vendorChunk": true,

@@ -30,18 +30,23 @@ export class NgDocDemoRendererDirective {
 
 					this.insertAfter(commentNode, hostNode);
 
+					// search for demo point in markdown output
 					const demoPoint: RegExpMatchArray | null = commentNode.data.match(/(NgDocDemo:)([\s\S]*)?/);
 
 					if (demoPoint) {
+						// get name of the component that we should render
 						const demoComponentName: string = demoPoint[2].trim();
 
+						// create demo viewer component
 						const componentRef: ComponentRef<NgDocDemoViewerComponent> =
 							this.viewContainerRef.createComponent(NgDocDemoViewerComponent);
 
 						componentRef.instance.componentName = demoComponentName;
 
+						// add demo reference to the list to destroy it later
 						this.demoReferences.push(componentRef);
 
+						// replace comment node with host node with demo component
 						commentNode.parentNode?.replaceChild(componentRef.location.nativeElement, commentNode);
 					}
 				}

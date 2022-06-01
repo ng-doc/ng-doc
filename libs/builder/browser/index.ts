@@ -1,8 +1,8 @@
 import {BuilderContext, createBuilder} from '@angular-devkit/architect';
 import {BrowserBuilderOutput, executeBrowserBuilder} from '@angular-devkit/build-angular';
 import {Schema as BrowserBuilderSchema} from '@angular-devkit/build-angular/src/builders/browser/schema';
-import {combineLatest, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {first, shareReplay, switchMapTo} from 'rxjs/operators';
 
 import {NgDocBuilder} from '../engine/builder';
 import {NgDocSchema} from '../interfaces';
@@ -16,11 +16,12 @@ import {NgDocSchema} from '../interfaces';
  */
 export function runBrowser(options: NgDocSchema, context: BuilderContext): Observable<BrowserBuilderOutput> {
 	const builder: NgDocBuilder = new NgDocBuilder({options, context});
+	const runner: Observable<void> = builder.run();
 
-	return combineLatest([
-		builder.run(),
-		executeBrowserBuilder(options as unknown as BrowserBuilderSchema, context),
-	]).pipe(map(([_, devServerOutput]: [void, BrowserBuilderOutput]) => devServerOutput));
+	return runner.pipe(
+		first(),
+		switchMapTo(executeBrowserBuilder(options as unknown as BrowserBuilderSchema, context)),
+	);
 }
 
 export default createBuilder(runBrowser);
