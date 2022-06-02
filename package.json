@@ -12,7 +12,7 @@
 		"start": "npm-watch",
 		"build": "nx build",
 		"test": "nx test",
-		"prepare": "husky install && npx nx build builder"
+		"prepare": "husky install"
 	},
 	"private": true,
 	"dependencies": {
@@ -33,7 +33,7 @@
 		"nunjucks": "^3.2.3",
 		"raw-loader": "^4.0.2",
 		"rxjs": "~6.6.7",
-		"ts-morph": "^14.0.0",
+		"ts-morph": "^15.0.0",
 		"tslib": "^2.0.0",
 		"zone.js": "~0.11.4"
 	},

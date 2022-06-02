@@ -1,0 +1,19 @@
+// @ts-nocheck
+import {NgDocDemoAssets} from '@ng-doc/app';
+{%- for componentName, assets in componentsAssets %}
+	{%- for asset in assets %}
+import {{ asset.name }} from '!!raw-loader!{{ asset.outputPath }}';
+	{%- endfor %}
+{%- endfor %}
+
+export const demoAssets: NgDocDemoAssets = {
+	{%- for componentName, assets in componentsAssets %}
+	{{ componentName }}: [
+		{%- for asset in assets %}
+		{title: '{{ asset.name }}', codeType: '{{ asset.type }}', code: {{ asset.name }}},
+		{%- endfor %}
+	],
+	{%- endfor %}
+}
+
+export default demoAssets;

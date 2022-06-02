@@ -1,8 +1,8 @@
-import {SyntaxKind} from '@ts-morph/common';
 import * as minimatch from 'minimatch';
 import * as path from 'path';
 import {EMPTY, from, Observable, of} from 'rxjs';
 import {first, map, mapTo} from 'rxjs/operators';
+import {SyntaxKind} from 'ts-morph';
 
 import {capitalize, isCategoryPoint} from '../../helpers';
 import {CACHE_PATH, CATEGORY_PATTERN, GENERATED_MODULES_PATH} from '../variables';
@@ -39,12 +39,12 @@ export abstract class NgDocAngularBuildable<T, P extends Parent, C extends Child
 	abstract scope: string;
 
 	/**
-	 * File name of the module.
+	 * File title of the module.
 	 */
 	abstract moduleFileName: string;
 
 	/**
-	 * The name of the module.
+	 * The title of the module.
 	 */
 	abstract moduleName: string;
 
@@ -58,7 +58,7 @@ export abstract class NgDocAngularBuildable<T, P extends Parent, C extends Child
 	}
 
 	/**
-	 * Returns name based on the route.
+	 * Returns title based on the route.
 	 *
 	 * @type {string}
 	 */

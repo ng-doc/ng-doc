@@ -1,7 +1,7 @@
 export interface NgDocCategory {
 	/** The category title */
 	title: string;
-	/** The route of the category (current sourceFileFolder name by default) */
+	/** The route of the category (current sourceFileFolder title by default) */
 	route?: string;
 	/** The scope of the category (project root by default) */
 	scope?: string;

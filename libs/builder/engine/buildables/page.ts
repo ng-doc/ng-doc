@@ -4,7 +4,7 @@ import {forkJoin, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
-import {isPresent, uniqueName} from '../../helpers';
+import {asArray, isPresent, uniqueName} from '../../helpers';
 import {NgDocBuildedOutput, NgDocBuilderContext, NgDocPage} from '../../interfaces';
 import {NgDocPageEnv, NgDocPageModuleEnv} from '../../templates-env';
 import {NgDocActions} from '../actions';
@@ -66,6 +66,10 @@ export class NgDocPagePoint extends NgDocAngularBuildable<NgDocPage, NgDocCatego
 		return [this.mdPath];
 	}
 
+	get assetsFolder(): string {
+		return path.relative(this.context.context.workspaceRoot, path.join(this.folderPathInGenerated, 'assets'));
+	}
+
 	get pageDependenciesFile(): string | undefined {
 		const dependenciesPath: string = path.join(this.sourceFileFolder, PAGE_DEPENDENCIES_NAME);
 
@@ -74,6 +78,12 @@ export class NgDocPagePoint extends NgDocAngularBuildable<NgDocPage, NgDocCatego
 
 	get pageDependenciesImport(): string | undefined {
 		return this.pageDependenciesFile ? this.pageDependenciesFile.replace(/.ts$/, '') : undefined;
+	}
+
+	get componentsAssets(): string | undefined {
+		const dependencies: NgDocPageDependenciesPoint | undefined = asArray(this.children.values())[0];
+
+		return dependencies ? dependencies.componentAssetsInGeneratedImport : undefined;
 	}
 
 	override update(): void {

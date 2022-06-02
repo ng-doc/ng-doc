@@ -1,4 +1,5 @@
 export * from './action-output';
+export * from './asset';
 export * from './builded-output';
 export * from './builder-context';
 export * from './category';

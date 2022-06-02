@@ -1,8 +1,7 @@
-import {SyntaxKind} from '@ts-morph/common';
 import * as path from 'path';
 import {Observable} from 'rxjs';
 import {finalize, mapTo} from 'rxjs/operators';
-import {Node, ObjectLiteralExpression, SourceFile, Symbol} from 'ts-morph';
+import {Node, ObjectLiteralExpression, SourceFile, Symbol, SyntaxKind} from 'ts-morph';
 
 import {asArray} from '../../helpers';
 import {NgDocBuildedOutput, NgDocBuilderContext} from '../../interfaces';

@@ -2,8 +2,16 @@
 import {Component, NgModule, Type, ChangeDetectionStrategy} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
-import {NgDocPageModule, NgDocRootPage} from '@ng-doc/app';
+import {NgDocPageModule, NgDocRootPage, NgDocDemoAssets} from '@ng-doc/app';
 import pageMd from '!!raw-loader!{{ page.builtPagePath }}';
+{%- if page.pageDependenciesImport %}
+// noinspection ES6UnusedImports
+import pageDependencies from '{{ page.pageDependenciesImport }}';
+{%- endif %}
+{%- if page.componentsAssets %}
+// noinspection ES6UnusedImports
+import demoAssets from '{{ page.componentsAssets }}';
+{%- endif %}
 
 @Component({
 	template: `<ng-doc-page></ng-doc-page>`,
@@ -11,12 +19,21 @@ import pageMd from '!!raw-loader!{{ page.builtPagePath }}';
 	providers: [{provide: NgDocRootPage, useExisting: {{ page.componentName }}}],
 })
 export class {{ page.componentName }} extends NgDocRootPage {
-	public readonly pageMd: string = pageMd;
-	public readonly demo: Record<string, Type<unknown>> | undefined = undefined;
+	readonly pageMd: string = pageMd;
+	{%- if page.pageDependenciesFile %}
+	readonly demo: Record<string, Type<unknown>> | undefined = pageDependencies.demo;
+	{%- else %}
+	readonly demo: Record<string, Type<unknown>> | undefined = undefined;
+	{%- endif %}
+	{%- if page.componentsAssets %}
+	readonly demoAssets: NgDocDemoAssets | undefined = demoAssets;
+	{%- else %}
+	readonly demoAssets: NgDocDemoAssets | undefined = undefined;
+	{%- endif %}
 
 	constructor() {
 		super();
-		console.log(this.pageMd, this.demo);
+		console.log(this.pageMd, this.demo, this.demoAssets);
 	}
 }
 
@@ -25,6 +42,9 @@ export class {{ page.componentName }} extends NgDocRootPage {
 	imports: [
 		CommonModule,
 		NgDocPageModule,
+		{%- if page.pageDependenciesFile %}
+		pageDependencies.module,
+		{%- endif %}
 		RouterModule.forChild([{
 			path: '',
 			component: {{ page.componentName }},
@@ -34,3 +54,4 @@ export class {{ page.componentName }} extends NgDocRootPage {
 })
 export class {{ page.moduleName }} {
 }
+

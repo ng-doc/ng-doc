@@ -34,7 +34,7 @@ export class NgDocDemoRendererDirective {
 					const demoPoint: RegExpMatchArray | null = commentNode.data.match(/(NgDocDemo:)([\s\S]*)?/);
 
 					if (demoPoint) {
-						// get name of the component that we should render
+						// get title of the component that we should render
 						const demoComponentName: string = demoPoint[2].trim();
 
 						// create demo viewer component
