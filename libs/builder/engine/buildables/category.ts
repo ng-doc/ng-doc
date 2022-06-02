@@ -3,15 +3,18 @@ import {forkJoin, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
-import {asArray, isCategoryPoint, isPagePoint, uniqueName} from '../helpers';
-import {NgDocBuildedOutput, NgDocBuilderContext, NgDocCategory} from '../interfaces';
-import {NgDocCategoryModuleEnv} from '../templates-env';
+import {asArray, isCategoryPoint, isPagePoint, uniqueName} from '../../helpers';
+import {NgDocBuildedOutput, NgDocBuilderContext, NgDocCategory} from '../../interfaces';
+import {NgDocCategoryModuleEnv} from '../../templates-env';
+import {NgDocBuildableStore} from '../buildable-store';
+import {NgDocRenderer} from '../renderer';
+import {NgDocAngularBuildable} from './angular-buildable';
 import {NgDocBuildable} from './buildable';
-import {NgDocBuildableStore} from './buildable-store';
 import {NgDocPagePoint} from './page';
-import {NgDocRenderer} from './renderer';
 
-export class NgDocCategoryPoint extends NgDocBuildable<NgDocCategory> {
+type CategoryChild = NgDocCategoryPoint | NgDocPagePoint
+
+export class NgDocCategoryPoint extends NgDocAngularBuildable<NgDocCategory, NgDocCategoryPoint, CategoryChild> {
 	moduleName: string = uniqueName(`NgDocGeneratedCategoryModule`);
 
 	constructor(
@@ -52,6 +55,10 @@ export class NgDocCategoryPoint extends NgDocBuildable<NgDocCategory> {
 		return this.compiled?.title ?? '';
 	}
 
+	get buildCandidates(): NgDocBuildable[] {
+		return this.childBuildables;
+	}
+
 	get dependencies(): string[] {
 		return [];
 	}
@@ -59,6 +66,7 @@ export class NgDocCategoryPoint extends NgDocBuildable<NgDocCategory> {
 	override update(): void {
 		try {
 			super.update();
+			this.parent?.addChild(this);
 		} catch (error: unknown) {
 			this.readyToBuild = false;
 			this.context.context.logger.error(`\n${String(error)}`);
@@ -77,7 +85,7 @@ export class NgDocCategoryPoint extends NgDocBuildable<NgDocCategory> {
 
 			return renderer
 				.render('ng-doc.category.module.ts.nunj')
-				.pipe(map((output: string) => ({output, filePath: this.modulePath})));
+				.pipe(map((output: string) => ({output, filePath: this.modulePathInGenerated})));
 		}
 		return of();
 	}

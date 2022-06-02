@@ -1,7 +1,7 @@
 import {NgDocActionOutput} from '../interfaces';
 import {NgDocAction} from '../types';
 import {demoAction} from './actions/demo.action';
-import {NgDocPagePoint} from './page';
+import {NgDocPagePoint} from './buildables/page';
 
 export class NgDocActions {
 	constructor(private readonly entryPoint: NgDocPagePoint) {}

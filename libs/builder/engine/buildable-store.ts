@@ -1,17 +1,17 @@
-import * as fs from 'fs';
 import * as minimatch from 'minimatch';
 import * as path from 'path';
-import {from, merge, Observable} from 'rxjs';
+import {forkJoin, merge, Observable} from 'rxjs';
 import {finalize, map, startWith, switchMap, tap} from 'rxjs/operators';
 import {Constructor, Project, SourceFile} from 'ts-morph';
 
-import {asArray, isCategoryPoint, isPagePoint, isPresent} from '../helpers';
+import {asArray} from '../helpers';
 import {NgDocBuilderContext} from '../interfaces';
 import {bufferDebounce} from '../operators';
-import {NgDocBuildable} from './buildable';
-import {NgDocCategoryPoint} from './category';
-import {NgDocPagePoint} from './page';
-import {CATEGORY_PATTERN, DEPENDENCY_PATTERN, PAGE_NAME, PAGE_PATTERN} from './variables';
+import {NgDocBuildable} from './buildables/buildable';
+import {NgDocCategoryPoint} from './buildables/category';
+import {NgDocPagePoint} from './buildables/page';
+import {NgDocPageDependenciesPoint} from './buildables/page-dependencies';
+import {CATEGORY_PATTERN, PAGE_DEPENDENCY_PATTERN, PAGE_PATTERN} from './variables';
 import {NgDocWatcher} from './watcher';
 
 export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
@@ -24,7 +24,7 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 				.map((pagesPath: string) => [
 					path.join(pagesPath, PAGE_PATTERN),
 					path.join(pagesPath, CATEGORY_PATTERN),
-					path.join(pagesPath, DEPENDENCY_PATTERN),
+					path.join(pagesPath, PAGE_DEPENDENCY_PATTERN),
 				])
 				.flat(),
 		);
@@ -38,7 +38,11 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 
 	get changes(): Observable<NgDocBuildable[]> {
 		return merge(this.add(), this.update(), this.remove().pipe(map(asArray))).pipe(
-			switchMap((buildables: NgDocBuildable[]) => from(this.project.emit()).pipe(map(() => buildables))),
+			switchMap((buildables: NgDocBuildable[]) =>
+				forkJoin(...buildables.map((buildable: NgDocBuildable) => buildable.emit())).pipe(
+					map(() => buildables),
+				),
+			),
 			tap((buildables: NgDocBuildable[]) =>
 				buildables.forEach((buildable: NgDocBuildable) => buildable.update()),
 			),
@@ -52,7 +56,7 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 		);
 	}
 
-	get rootBuildables(): NgDocBuildable[] {
+	get rootBuildablesForBuild(): NgDocBuildable[] {
 		return asArray(this.buildables.values()).filter(
 			(buildable: NgDocBuildable) => buildable.isRoot && buildable.isReadyToBuild,
 		);
@@ -68,7 +72,6 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 
 	private add(): Observable<NgDocBuildable[]> {
 		return this.watcher.add.pipe(
-			map((paths: string[]) => this.processDependencies(paths)),
 			map((paths: string[]) => {
 				const newBuildables: NgDocBuildable[] = [];
 
@@ -90,19 +93,16 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 
 	private update(): Observable<NgDocBuildable[]> {
 		return this.watcher.update.pipe(
-			map((path: string) => this.processDependencies(path)),
-			map((paths: string[]) => {
-				return paths.map((path: string) => {
-					const buildable: NgDocBuildable | undefined = this.buildables.get(path);
+			map((path: string) => {
+				const buildable: NgDocBuildable | undefined = this.buildables.get(path);
 
-					if (!buildable) {
-						throw new Error(`Buildable not found: ${path}`);
-					}
+				if (!buildable) {
+					throw new Error(`Buildable not found: ${path}`);
+				}
 
-					this.project.getSourceFile(path)?.refreshFromFileSystemSync();
+				this.project.getSourceFile(path)?.refreshFromFileSystemSync();
 
-					return buildable;
-				});
+				return [buildable];
 			}),
 		);
 	}
@@ -110,28 +110,17 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 	private remove(): Observable<NgDocBuildable | undefined> {
 		return this.watcher.remove.pipe(
 			map((path: string) => {
-				if (this.isDependencies(path)) {
-					const pagePath: string = this.processDependencies(path)[0];
-					const buildable: NgDocBuildable | undefined = this.buildables.get(pagePath);
+				const buildable: NgDocBuildable | undefined = this.buildables.get(path);
 
-					if (!buildable) {
-						throw new Error(`Buildable not found: ${path}`);
-					}
-
-					return buildable;
-				} else {
-					const buildable: NgDocBuildable | undefined = this.buildables.get(path);
-
-					if (!buildable) {
-						throw new Error(`Buildable not found: ${path}`);
-					}
-
-					buildable?.destroy();
-					this.buildables.delete(path);
-
-					// we return parent buildable if we have it because we want to rebuild it when his child is removed
-					return buildable?.parent;
+				if (!buildable) {
+					throw new Error(`Buildable not found: ${path}`);
 				}
+
+				buildable?.destroy();
+				this.buildables.delete(path);
+
+				// we return parent buildable if we have it because we want to rebuild it when his child is removed
+				return buildable?.parent;
 			}),
 		);
 	}
@@ -141,6 +130,8 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 			return NgDocPagePoint;
 		} else if (minimatch(path, CATEGORY_PATTERN)) {
 			return NgDocCategoryPoint;
+		} else if (minimatch(path, PAGE_DEPENDENCY_PATTERN)) {
+			return NgDocPageDependenciesPoint;
 		} else {
 			throw new Error(`Unknown buildable type for path: ${path}`);
 		}
@@ -150,35 +141,13 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 		return asArray(
 			new Set(
 				asArray(buildables)
-					.map((buildable: NgDocBuildable) => [
-						buildable,
-						...(isPagePoint(buildable)
-							? buildable.parentDependencies
-							: isCategoryPoint(buildable)
-							? buildable.childDependencies
-							: []),
-					])
+					.map((buildable: NgDocBuildable) => [buildable, ...buildable.buildCandidates])
 					.flat(),
 			),
 		);
 	}
 
-	private processDependencies(paths: string | string[]): string[] {
-		return asArray(paths)
-			.map((dependencyPath: string) => {
-				if (this.isDependencies(dependencyPath)) {
-					const folder: string = path.dirname(dependencyPath);
-					const pagePath: string = path.join(folder, PAGE_NAME);
-
-					return fs.existsSync(pagePath) ? pagePath : undefined;
-				} else {
-					return dependencyPath;
-				}
-			})
-			.filter(isPresent);
-	}
-
 	private isDependencies(path: string): boolean {
-		return minimatch(path, DEPENDENCY_PATTERN);
+		return minimatch(path, PAGE_DEPENDENCY_PATTERN);
 	}
 }

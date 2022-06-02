@@ -10,4 +10,9 @@ Here you will se how easy it's to create some demo with NgDoc.
 
 {{ ngDocActions.demo("DemoWithFilesComponent") }}
 
+```typescript
+export class Test {
+	test: string = 'test';
+}
+```
 

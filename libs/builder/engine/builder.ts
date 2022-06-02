@@ -1,13 +1,13 @@
 import * as path from 'path';
-import {forkJoin, merge, Observable} from 'rxjs';
-import {concatMap, map, mapTo, switchMap, tap} from 'rxjs/operators';
+import {forkJoin, Observable} from 'rxjs';
+import {concatMap, map, mapTo, tap} from 'rxjs/operators';
 import {ModuleKind, Project} from 'ts-morph';
 
-import {asArray, emitBuildedOutput, isCategoryPoint, isPagePoint} from '../helpers';
+import {asArray, emitBuildedOutput} from '../helpers';
 import {NgDocBuildedOutput, NgDocBuilderContext} from '../interfaces';
 import {NgDocContextEnv, NgDocRoutingEnv} from '../templates-env';
-import {NgDocBuildable} from './buildable';
 import {NgDocBuildableStore} from './buildable-store';
+import {NgDocBuildable} from './buildables/buildable';
 import {NgDocRenderer} from './renderer';
 import {CACHE_PATH, GENERATED_PATH} from './variables';
 
@@ -52,7 +52,7 @@ export class NgDocBuilder {
 	}
 
 	private buildRoutes(): Observable<NgDocBuildedOutput> {
-		const buildables: NgDocBuildable[] = this.buildables.rootBuildables;
+		const buildables: NgDocBuildable[] = this.buildables.rootBuildablesForBuild;
 		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocRoutingEnv>({buildables});
 
 		return renderer
@@ -61,7 +61,7 @@ export class NgDocBuilder {
 	}
 
 	private buildContext(): Observable<NgDocBuildedOutput> {
-		const buildables: NgDocBuildable[] = this.buildables.rootBuildables;
+		const buildables: NgDocBuildable[] = this.buildables.rootBuildablesForBuild;
 		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocContextEnv>({buildables});
 
 		return renderer

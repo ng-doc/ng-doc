@@ -10,8 +10,10 @@ export interface NgDocPage {
 	title: string;
 	/** The page category */
 	category?: NgDocCategory;
-	/** The route of the page */
+	/** The route of the page (current sourceFileFolder name by default) */
 	route?: string;
-	/** The scope of the page */
+	/** The scope of the page (project root by default) */
 	scope?: string;
+	/** Render the page only for specific build tags */
+	onlyForTags?: string[];
 }

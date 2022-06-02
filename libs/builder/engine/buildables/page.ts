@@ -4,16 +4,19 @@ import {forkJoin, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
-import {asArray, isPresent, uniqueName} from '../helpers';
-import {NgDocBuildedOutput, NgDocBuilderContext, NgDocPage} from '../interfaces';
-import {NgDocPageEnv, NgDocPageModuleEnv} from '../templates-env';
-import {NgDocActions} from './actions';
+import {isPresent, uniqueName} from '../../helpers';
+import {NgDocBuildedOutput, NgDocBuilderContext, NgDocPage} from '../../interfaces';
+import {NgDocPageEnv, NgDocPageModuleEnv} from '../../templates-env';
+import {NgDocActions} from '../actions';
+import {NgDocBuildableStore} from '../buildable-store';
+import {NgDocRenderer} from '../renderer';
+import {PAGE_DEPENDENCIES_NAME, RENDERED_PAGE_NAME} from '../variables';
+import {NgDocAngularBuildable} from './angular-buildable';
 import {NgDocBuildable} from './buildable';
-import {NgDocBuildableStore} from './buildable-store';
-import {NgDocRenderer} from './renderer';
-import {DEPENDENCIES_NAME, RENDERED_PAGE_NAME} from './variables';
+import {NgDocCategoryPoint} from './category';
+import {NgDocPageDependenciesPoint} from './page-dependencies';
 
-export class NgDocPagePoint extends NgDocBuildable<NgDocPage> {
+export class NgDocPagePoint extends NgDocAngularBuildable<NgDocPage, NgDocCategoryPoint, NgDocPageDependenciesPoint> {
 	moduleName: string = uniqueName(`NgDocGeneratedPageModule`);
 	componentName: string = uniqueName(`NgDocGeneratedPageComponent`);
 
@@ -48,11 +51,15 @@ export class NgDocPagePoint extends NgDocBuildable<NgDocPage> {
 	}
 
 	get mdPath(): string {
-		return path.join(this.folder, this.compiled?.mdFile ?? '');
+		return path.join(this.sourceFileFolder, this.compiled?.mdFile ?? '');
 	}
 
 	get builtPagePath(): string {
-		return path.relative(this.context.context.workspaceRoot, path.join(this.generatedPath, RENDERED_PAGE_NAME));
+		return path.relative(this.context.context.workspaceRoot, path.join(this.folderPathInGenerated, RENDERED_PAGE_NAME));
+	}
+
+	get buildCandidates(): NgDocBuildable[] {
+		return this.parentBuildables;
 	}
 
 	get dependencies(): string[] {
@@ -60,7 +67,7 @@ export class NgDocPagePoint extends NgDocBuildable<NgDocPage> {
 	}
 
 	get pageDependenciesFile(): string | undefined {
-		const dependenciesPath: string = path.join(this.folder, DEPENDENCIES_NAME);
+		const dependenciesPath: string = path.join(this.sourceFileFolder, PAGE_DEPENDENCIES_NAME);
 
 		return fs.existsSync(dependenciesPath) ? dependenciesPath : undefined;
 	}
@@ -72,6 +79,7 @@ export class NgDocPagePoint extends NgDocBuildable<NgDocPage> {
 	override update(): void {
 		try {
 			super.update();
+			this.parent?.addChild(this);
 
 			if (!isPresent(this.compiled?.mdFile) || !fs.existsSync(this.mdPath)) {
 				throw new Error(
@@ -94,7 +102,7 @@ export class NgDocPagePoint extends NgDocBuildable<NgDocPage> {
 
 			return renderer
 				.render('ng-doc.page.module.ts.nunj')
-				.pipe(map((output: string) => ({output, filePath: this.modulePath})));
+				.pipe(map((output: string) => ({output, filePath: this.modulePathInGenerated})));
 		}
 		return of();
 	}

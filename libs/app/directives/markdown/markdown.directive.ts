@@ -5,8 +5,11 @@ import {marked} from 'marked';
 	selector: '[ngDocMarkdown]',
 })
 export class NgDocMarkdownDirective implements OnChanges {
-	@Input() ngDocMarkdown: string = '';
-	@Output() rendered: EventEmitter<void> = new EventEmitter<void>();
+	@Input()
+	ngDocMarkdown: string = '';
+
+	@Output()
+	readonly rendered: EventEmitter<void> = new EventEmitter<void>();
 
 	constructor(private readonly elementRef: ElementRef<HTMLElement>) {}
 

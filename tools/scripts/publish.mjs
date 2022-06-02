@@ -2,7 +2,7 @@
  * This is a minimal script to publish your package to "npm".
  * This is meant to be used as-is or customize as you see fit.
  *
- * This script is executed on "dist/path/to/library" as "cwd" by default.
+ * This script is executed on "dist/sourceFilePath/to/library" as "cwd" by default.
  *
  * You might need to authenticate with NPM before running this script.
  */
@@ -19,7 +19,7 @@ function invariant(condition, message) {
   }
 }
 
-// Executing publish script: node path/to/publish.mjs {name} --version {version} --tag {tag}
+// Executing publish script: node sourceFilePath/to/publish.mjs {name} --version {version} --tag {tag}
 // Default "tag" to "next" so we won't publish the "latest" tag by accident.
 const [, , name, version, tag = 'next'] = process.argv;
 

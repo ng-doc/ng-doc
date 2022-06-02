@@ -1,4 +1,4 @@
-import {NgDocCategoryPoint} from '../engine/category';
+import {NgDocCategoryPoint} from '../engine/buildables/category';
 import {Constructable} from '../types';
 
 /**

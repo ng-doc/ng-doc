@@ -1,5 +1,5 @@
 import * as chokidar from 'chokidar';
-import {BehaviorSubject, Observable, ReplaySubject, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {filter} from 'rxjs/operators';
 
 import {bufferUntil} from '../operators';
