@@ -9,6 +9,6 @@ import {NgDocAction} from '../../types';
  */
 export function demoAction(className: string): NgDocAction {
 	return (): NgDocActionOutput => {
-		return {output: `<!--NgDocDemo:${className}-->`};
+		return {output: `<div id="ng-doc-demo" data-name="${className}"></div>`};
 	};
 }
