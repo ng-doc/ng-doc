@@ -1,4 +1,4 @@
-@import "../../styles/mixins";
+@import '../../styles/mixins';
 
 ::ng-deep {
 	:root {
@@ -13,31 +13,31 @@
 	display: flex;
 	align-items: flex-start;
 
-	&[data-ng-doc-text-size="small"] {
+	&[data-ng-doc-text-size='small'] {
 		--ng-doc-font-size: 14px;
 		--ng-doc-line-height: 18px;
 	}
 
-	&[data-ng-doc-text-color="muted"] {
+	&[data-ng-doc-text-color='muted'] {
 		--ng-doc-text: var(--ng-doc-text-muted);
 	}
 
-	&[data-ng-doc-text-align="left"] .ng-doc-text {
+	&[data-ng-doc-text-align='left'] .ng-doc-text {
 		text-align: left;
 	}
 
-	&[data-ng-doc-text-align="center"] .ng-doc-text {
+	&[data-ng-doc-text-align='center'] .ng-doc-text {
 		text-align: center;
 	}
 
-	&[data-ng-doc-text-align="right"] .ng-doc-text {
+	&[data-ng-doc-text-align='right'] .ng-doc-text {
 		text-align: right;
 	}
 
-	&[data-ng-doc-text-absolute="true"] {
+	&[data-ng-doc-text-absolute='true'] {
 		.ng-doc-text-left {
 			position: absolute;
-			transform: translateX(-100%);
+			transform: translateX(calc(-100% - var(--ng-doc-base-gutter)));
 		}
 
 		.ng-doc-text-right {
@@ -98,25 +98,29 @@
 			min-height: var(--ng-doc-line-height);
 		}
 	}
-}
 
-.ng-doc-text {
-	width: 100%;
+	.ng-doc-text {
+		width: 100%;
 
-	&:empty {
-		display: none;
+		&:empty {
+			display: none;
+		}
 	}
-}
 
-.ng-doc-text-left:not(:empty) {
-	width: var(--ng-doc-text-left-width);
+	&[data-ng-doc-text-absolute='false'] {
+		.ng-doc-text-left:not(:empty) {
+			width: var(--ng-doc-text-left-width);
 
-	& ~ .ng-doc-text {
-		margin-left: var(--ng-doc-base-gutter);
+			& ~ .ng-doc-text {
+				margin-left: var(--ng-doc-base-gutter);
+			}
+		}
 	}
-}
 
-.ng-doc-text-right:not(:empty) {
-	width: var(--ng-doc-text-right-width);
-	margin-left: var(--ng-doc-base-gutter);
+	&[data-ng-doc-text-absolute='false'] {
+		.ng-doc-text-right:not(:empty) {
+			width: var(--ng-doc-text-right-width);
+			margin-left: var(--ng-doc-base-gutter);
+		}
+	}
 }
