@@ -2,11 +2,13 @@
 
 .ng-doc-sidebar-link {
 	@include ng-doc-font();
-	display: block;
+	display: flex;
+	align-items: center;
 	padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-horizontal-padding)
 		var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
 	text-decoration: inherit;
 	cursor: pointer;
+	--ng-doc-icon-color: var(--ng-doc-text);
 
 	&:hover {
 		background-color: var(--ng-doc-base-1);
@@ -15,6 +17,6 @@
 	&:active,
 	&.active{
 		background-color: var(--ng-doc-base-11);
-		color: var(--ng-doc-text-inversed);
+		--ng-doc-text: var(--ng-doc-text-inversed);
 	}
 }

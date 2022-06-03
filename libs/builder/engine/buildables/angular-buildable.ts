@@ -1,7 +1,7 @@
 import * as minimatch from 'minimatch';
 import * as path from 'path';
-import {EMPTY, from, Observable, of} from 'rxjs';
-import {first, map, mapTo} from 'rxjs/operators';
+import {from, Observable} from 'rxjs';
+import {mapTo} from 'rxjs/operators';
 import {SyntaxKind} from 'ts-morph';
 
 import {capitalize, isCategoryPoint} from '../../helpers';
@@ -68,6 +68,15 @@ export abstract class NgDocAngularBuildable<T, P extends Parent, C extends Child
 	}
 
 	/**
+	 * Returns is this category buildable.
+	 *
+	 * @type {boolean}
+	 */
+	get isCategory(): boolean {
+		return isCategoryPoint(this);
+	}
+
+	/**
 	 * Returns paths to the module in generated folder
 	 *
 	 * @type {string}
@@ -89,7 +98,7 @@ export abstract class NgDocAngularBuildable<T, P extends Parent, C extends Child
 		return path.join(this.parent?.folderPathInGenerated ?? GENERATED_MODULES_PATH, this.route);
 	}
 
-	// eslint-disable-next-line @TypeScript-eslint/ban-ts-comment
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
 	get parent(): NgDocCategoryPoint | undefined {
 		const sourceFilePath: string | undefined = this.getObjectExpressionFromDefault()

@@ -1,5 +1,6 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 import {NgDocNavigation} from '@ng-doc/app/interfaces';
+import {PolymorpheusContent} from '@tinkoff/ng-polymorpheus';
 
 @Component({
 	selector: 'ng-doc-sidebar-category',
@@ -10,4 +11,20 @@ import {NgDocNavigation} from '@ng-doc/app/interfaces';
 export class NgDocSidebarCategoryComponent {
 	@Input()
 	category?: NgDocNavigation;
+
+	@Input()
+	content: PolymorpheusContent = '';
+
+	@Input()
+	@HostBinding('attr.data-ng-doc-expandable')
+	expandable: boolean = true;
+
+	@Input()
+	expanded: boolean = true;
+
+	toggle(): void {
+		if (this.category?.expandable) {
+			this.expanded = !this.expanded;
+		}
+	}
 }

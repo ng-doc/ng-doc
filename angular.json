@@ -6,7 +6,6 @@
 		"builder": "libs/builder",
 		"core": "libs/core",
 		"documentation": "apps/documentation",
-		"documentation-e2e": "apps/documentation-e2e",
 		"ui-kit": "libs/ui-kit"
 	}
 }

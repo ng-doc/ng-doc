@@ -8,10 +8,9 @@ import {NG_DOC_ROUTING, NgDocGeneratedModule} from '@ng-doc/builder/generated';
 import {NgDocIconModule, NgDocUiKitRootModule} from '@ng-doc/ui-kit';
 
 import {AppComponent} from './app.component';
-import {NxWelcomeComponent} from './nx-welcome.component';
 
 @NgModule({
-	declarations: [AppComponent, NxWelcomeComponent],
+	declarations: [AppComponent],
 	imports: [
 		BrowserModule,
 		BrowserAnimationsModule,

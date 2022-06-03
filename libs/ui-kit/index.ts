@@ -1,4 +1,6 @@
+export * from '@ng-doc/ui-kit/animations';
 export * from '@ng-doc/ui-kit/components';
+export * from '@ng-doc/ui-kit/directives';
 export * from '@ng-doc/ui-kit/interceptors';
 export * from '@ng-doc/ui-kit/interfaces';
 export * from '@ng-doc/ui-kit/modules';

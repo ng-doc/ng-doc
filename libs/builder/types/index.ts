@@ -1,5 +1,5 @@
 export * from './action';
+export * from './code-type';
 export * from './constructable';
 export * from './snippet-type';
-export * from '@ng-doc/app/types/code-type';
-export * from '@ng-doc/app/types/style-type';
+export * from './style-type';

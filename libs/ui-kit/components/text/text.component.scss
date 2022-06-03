@@ -9,6 +9,7 @@
 
 :host {
 	@include ng-doc-font();
+	position: relative;
 	display: flex;
 	align-items: flex-start;
 
@@ -31,6 +32,19 @@
 
 	&[data-ng-doc-text-align="right"] .ng-doc-text {
 		text-align: right;
+	}
+
+	&[data-ng-doc-text-absolute="true"] {
+		.ng-doc-text-left {
+			position: absolute;
+			transform: translateX(-100%);
+		}
+
+		.ng-doc-text-right {
+			position: absolute;
+			right: 0;
+			transform: translateX(calc(100% + var(--ng-doc-base-gutter)));
+		}
 	}
 
 	&h1 {

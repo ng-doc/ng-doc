@@ -1,8 +1,14 @@
 <div class="ng-doc-sidebar-category-wrapper">
-	<div class="ng-doc-sidebar-category">
-		{{ category?.title }}
+	<div class="ng-doc-sidebar-category" (click)="toggle()">
+		<span ng-doc-text [absoluteContent]="true">
+			<ng-doc-icon icon="chevron-right" *ngIf="category?.expandable" [ngDocRotator]="expanded" ngDocTextLeft></ng-doc-icon>
+			{{ category?.title }}
+		</span>
+
 	</div>
-	<div class="ng-doc-sidebar-category-children">
-		<ng-content></ng-content>
-	</div>
+	<ng-doc-expander class="ng-doc-sidebar-category-children" [expanded]="expanded" [content]="contentTemplate">
+		<ng-template #contentTemplate>
+			<ng-content></ng-content>
+		</ng-template>
+	</ng-doc-expander>
 </div>

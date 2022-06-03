@@ -23,9 +23,7 @@
 			"executor": "@nrwl/workspace:run-commands",
 			"outputs": ["dist/libs/ui-kit/styles"],
 			"options": {
-				"commands": [
-					"sass --no-source-map libs/ui-kit/styles/main.scss dist/libs/ui-kit/styles/main.css"
-				]
+				"commands": ["sass --no-source-map libs/ui-kit/styles/main.scss dist/libs/ui-kit/styles/main.css"]
 			}
 		},
 		"test": {
@@ -43,5 +41,5 @@
 			}
 		}
 	},
-	"tags": []
+	"tags": ["type:lib", "lib:ui-kit"]
 }

@@ -34,13 +34,17 @@ export class NgDocTextComponent implements AfterContentChecked {
 	@HostBinding('attr.data-ng-doc-text-align')
 	align: NgDocTextAlign = 'left';
 
+	@Input()
+	@HostBinding('attr.data-ng-doc-text-absolute')
+	absoluteContent: boolean = false;
+
 	@ContentChild(NgDocTextLeftDirective)
 	leftContent?: NgDocTextLeftDirective;
 
 	@ContentChild(NgDocTextRightDirective)
 	rightContent?: NgDocTextRightDirective;
 
-	constructor(private changeDetectorRef: ChangeDetectorRef) {}
+	constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
 	ngAfterContentChecked(): void {
 		this.changeDetectorRef.detectChanges();

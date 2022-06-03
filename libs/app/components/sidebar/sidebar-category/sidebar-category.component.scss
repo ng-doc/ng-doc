@@ -1,13 +1,24 @@
 @import '../../../../ui-kit/styles/mixins';
 
 :host {
+	@include ng-doc-font();
 	display: flex;
 	flex-direction: column;
 	--ng-doc-sidebar-category-indent: calc(var(--ng-doc-sidebar-item-indent) + calc(var(--ng-doc-base-gutter) * 2));
+	--ng-doc-icon-color: var(--ng-doc-text);
+
+	&[data-ng-doc-expandable="true"] {
+		.ng-doc-sidebar-category {
+			cursor: pointer;
+
+			&:hover {
+				background-color: var(--ng-doc-base-1);
+			}
+		}
+	}
 
 	.ng-doc-sidebar-category {
-		@include ng-doc-font();
-		font-weight: bold;
+		--ng-doc-font-weight: bold;
 		padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-horizontal-padding)
 			var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
 	}

@@ -13,7 +13,7 @@ import {NgDocCacheInterceptor} from '@ng-doc/ui-kit/interceptors';
 import {NG_DOC_ASSETS_PATH} from '@ng-doc/ui-kit/tokens';
 import {NgDocIconSize} from '@ng-doc/ui-kit/types';
 import {Subject} from 'rxjs';
-import {debounceTime, switchMap} from 'rxjs/operators';
+import {switchMap} from 'rxjs/operators';
 
 @Component({
 	selector: 'ng-doc-icon',
