@@ -92,8 +92,9 @@
 		"yargs": "^17.5.1"
 	},
 	"lint-staged": {
-		"*.{js,ts,json,css,scss,html,md,ejs}": "prettier --write",
-		"*.{html,ts,js}": "npx nx run-many --all --target=lint --fix --quiet",
-		"*.{js,css,md}": "prettier --write"
+		"*": [
+			"nx affected:lint --fix --files",
+			"nx format:write --files"
+		]
 	}
 }
