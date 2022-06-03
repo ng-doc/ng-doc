@@ -30,28 +30,33 @@ export abstract class NgDocBuildable<P extends NgDocBuildable = any, C extends N
 	/**
 	 * Indicates when it's root buildable and should be used for rooted components.
 	 */
-	abstract isRoot: boolean;
+	abstract readonly isRoot: boolean;
 
 	/**
 	 * Collection of all file dependencies of the current buildable.
 	 * This property is using to watch for changes in this dependencies list and rebuild current buildable.
 	 */
-	abstract dependencies: string[];
+	abstract readonly dependencies: string[];
 
 	/**
 	 * Should return the parent of the current buildable
 	 */
-	abstract parent: P | undefined;
+	abstract readonly parent: P | undefined;
 
 	/**
 	 * Path to the sourceFileFolder in generated files.
 	 */
-	abstract folderPathInGenerated: string;
+	abstract readonly folderPathInGenerated: string;
 
 	/**
 	 * Should return the list of the dependencies that have to be built if current buildable was changed.
 	 */
-	abstract buildCandidates: NgDocBuildable[];
+	abstract readonly buildCandidates: NgDocBuildable[];
+
+	/**
+	 * Indicates when current buildable is using for page navigation.
+	 */
+	abstract readonly isNavigationItem: boolean;
 
 	/**
 	 * Emits source files to the cache, if it needs for the update;
@@ -110,6 +115,10 @@ export abstract class NgDocBuildable<P extends NgDocBuildable = any, C extends N
 				.map((child: NgDocBuildable<P, C>) => child.childBuildables)
 				.flat(),
 		];
+	}
+
+	get navigationItems(): Array<NgDocBuildable<P, C>> {
+		return this.childBuildables.filter((child: NgDocBuildable<P, C>) => child.isNavigationItem);
 	}
 
 	/**

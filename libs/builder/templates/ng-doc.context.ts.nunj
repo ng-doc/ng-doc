@@ -10,9 +10,9 @@ export const ngDocContextProvider: Provider = {
 			{
 				title: '{{ buildable.title }}',
 				route: '{{ buildable.url }}',
-				{%- if buildable.hasChildren %}
+				{%- if buildable.navigationItems.length %}
 				children: [
-					{%- for child in buildable.children %}
+					{%- for child in buildable.navigationItems %}
 					{{ nav(child) }},
 					{%- endfor %}
 				]

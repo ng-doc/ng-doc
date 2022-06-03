@@ -10,7 +10,11 @@ import {NgDocCodeType} from '../types';
  * @returns {string} Formatted code
  */
 export function formatCode(code: string, codeType: NgDocCodeType): string {
-	return require('prettier').format(code, {parser: getPrettierParserFromCodeType(codeType)});
+	try {
+		return require('prettier').format(code, {parser: getPrettierParserFromCodeType(codeType)});
+	} catch (e) {
+		return code;
+	}
 }
 
 /**
@@ -21,14 +25,14 @@ export function formatCode(code: string, codeType: NgDocCodeType): string {
  */
 function getPrettierParserFromCodeType(codeType: NgDocCodeType): Options['parser'] {
 	switch (codeType) {
-		case 'typescript':
+		case 'TypeScript':
 			return 'typescript';
-		case 'html':
+		case 'HTML':
 			return 'html';
-		case 'css':
-		case 'less':
-		case 'scss':
-		case 'sass':
+		case 'CSS':
+		case 'LESS':
+		case 'SCSS':
+		case 'SASS':
 			return 'css';
 		default:
 			return 'typescript';

@@ -6,7 +6,7 @@ export default {
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json',
-      stringifyContentPathRegex: '\\.(html|svg)$',
+      stringifyContentPathRegex: '\\.(HTML|svg)$',
     },
   },
   coverageDirectory: '../../coverage/libs/app',
@@ -17,6 +17,6 @@ export default {
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',
-    'jest-preset-angular/build/serializers/html-comment',
+    'jest-preset-angular/build/serializers/HTML-comment',
   ],
 };

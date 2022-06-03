@@ -15,7 +15,7 @@ import {uniqueName} from './unique-name';
  * @returns {NgDocAsset} The array of assets.
  */
 export function buildAssets(filePath: string, styleType: NgDocStyleType): Array<Omit<NgDocAsset, 'outputPath'>> {
-	const fileContent: string = fs.readFileSync(filePath, 'utf8');
+	const fileContent: string = fs.readFileSync(filePath, 'utf8').trim();
 	const snippets: NgDocSnippet[] = processSnippets(fileContent);
 	const codeType: NgDocCodeType = codeTypeFromExt(filePath);
 
@@ -26,18 +26,19 @@ export function buildAssets(filePath: string, styleType: NgDocStyleType): Array<
 			originalPath: filePath,
 			output: snippet.content,
 			type: snippet.type === 'styles'
-				? ['css', 'scss', 'sass', 'less'].includes(codeType)
+				? ['CSS', 'SCSS', 'SASS', 'LESS'].includes(codeType)
 					? codeType
 					: styleType
 				: snippet.type,
 		}));
-	} else {
+	} else if (fileContent) {
 		return [{
-			title: codeType.toUpperCase(),
+			title: codeType,
 			name: uniqueName('Asset'),
 			originalPath: filePath,
 			output: fileContent,
 			type: codeType,
 		}];
 	}
+	return [];
 }

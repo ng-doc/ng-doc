@@ -1,1 +1,1 @@
-export type NgDocStyleType = "css" | "less" | "sass" | "scss";
+export type NgDocStyleType = "CSS" | "LESS" | "SASS" | "SCSS";

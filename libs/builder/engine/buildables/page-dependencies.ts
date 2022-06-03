@@ -25,6 +25,7 @@ import {NgDocPagePoint} from './page';
 type ComponentAsset = Record<string, NgDocAsset[]>
 
 export class NgDocPageDependenciesPoint extends NgDocBuildable<NgDocPagePoint> {
+	readonly isNavigationItem: boolean = false;
 	private componentsAssets: ComponentAsset = {};
 
 	constructor(

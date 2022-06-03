@@ -18,6 +18,7 @@ type Child = NgDocCategoryPoint | NgDocPagePoint | NgDocPageDependenciesPoint;
  * Buildables for angular end points that generate modules and components.
  */
 export abstract class NgDocAngularBuildable<T, P extends Parent, C extends Child> extends NgDocBuildable<P, C> {
+	readonly isNavigationItem: boolean = true;
 	/**
 	 * Compiled source file.
 	 */
@@ -88,7 +89,7 @@ export abstract class NgDocAngularBuildable<T, P extends Parent, C extends Child
 		return path.join(this.parent?.folderPathInGenerated ?? GENERATED_MODULES_PATH, this.route);
 	}
 
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// eslint-disable-next-line @TypeScript-eslint/ban-ts-comment
 	// @ts-ignore
 	get parent(): NgDocCategoryPoint | undefined {
 		const sourceFilePath: string | undefined = this.getObjectExpressionFromDefault()

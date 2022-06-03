@@ -2,13 +2,15 @@ import {NgDocSnippet} from '../interfaces/snippet';
 import {NgDocSnippetType} from '../types';
 import {escapeRegexp} from './escape-regexp';
 
-const HTMLSnippetStart: RegExp = /(<!--\s*ngDocTSSnippetStart(\(.+\))?\s*-->)/g;
-const StylesSnippetStart: RegExp = /(\/\*\s*ngDocStyleSnippetStart(\(.+\))?\s*\*\/)/g;
-const TypeScriptSnippetStart: RegExp = /(\/\/\s*ngDocHTMLSnippetStart(\(.+\))?\s*)/g;
-const HTMLSnippetEnd: (group?: string) => RegExp = (group: string = '') => new RegExp(`(<!--\\s*ngDocHTMLSnippetEnd(\\(${escapeRegexp(group)}\\))?\\s*-->)`, 'g');
-const StylesSnippetEnd: (group?: string) => RegExp = (group: string = '') => new RegExp(`(\\/\\*\\s*ngDocStyleSnippetEnd(\\(${escapeRegexp(group)}\\))?\\s*\\*\\/)`, 'g');
-const TypeScriptSnippetEnd: (group?: string) => RegExp = (group: string = '') => new RegExp(`(\\/\\*\\s*ngDocTSSnippetEnd(\\(${escapeRegexp(group)}\\))?\\s*\\*\\/)`, 'g');
-
+const HTMLSnippetStart: RegExp = /^.*(<!--\s*NgDocHTMLSnippetStart(\(.+\))?\s*-->).*$/gm;
+const StylesSnippetStart: RegExp = /^.*(\/\*\s*NgDocStyleSnippetStart(\(.+\))?\s*\*\/).*$/gm;
+const TypeScriptSnippetStart: RegExp = /^.*(\/\*\s*NgDocCodeSnippetStart(\(.+\))?\s*\*\/).*$/gm;
+const HTMLSnippetEnd: (group?: string, escape?: boolean) => RegExp = (group: string = '', escape: boolean = true) =>
+	new RegExp(`^.*(<!--\\s*NgDocHTMLSnippetEnd(\\(${escape ? escapeRegexp(group) : group}\\))?\\s*-->).*$`, 'gm');
+const StylesSnippetEnd: (group?: string, escape?: boolean) => RegExp = (group: string = '', escape: boolean = true) =>
+	new RegExp(`^.*(\\/\\*\\s*NgDocStyleSnippetEnd(\\(${escape ? escapeRegexp(group) : group}\\))?\\s*\\*\\/).*$`, 'gm');
+const TypeScriptSnippetEnd: (group?: string, escape?: boolean) => RegExp = (group: string = '', escape: boolean = true) =>
+	new RegExp(`^.*(\\/\\*\\s*NgDocCodeSnippetEnd(\\(${escape ? escapeRegexp(group) : group}\\))?\\s*\\*\\/).*$`, 'gm');
 
 /**
  *	Finds and return all the snippets in the given string.
@@ -18,10 +20,10 @@ const TypeScriptSnippetEnd: (group?: string) => RegExp = (group: string = '') =>
  */
 export function processSnippets(content: string): NgDocSnippet[] {
 	return [
-		...findSnippet(content, 'html', HTMLSnippetStart, HTMLSnippetEnd),
+		...findSnippet(content, 'HTML', HTMLSnippetStart, HTMLSnippetEnd),
 		...findSnippet(content, 'styles', StylesSnippetStart, StylesSnippetEnd),
-		...findSnippet(content, 'typescript', TypeScriptSnippetStart, TypeScriptSnippetEnd),
-	]
+		...findSnippet(content, 'TypeScript', TypeScriptSnippetStart, TypeScriptSnippetEnd),
+	];
 }
 
 /**
@@ -31,24 +33,46 @@ export function processSnippets(content: string): NgDocSnippet[] {
  * @param snippetStart
  * @param snippetEnd
  */
-function findSnippet(content: string, type: NgDocSnippetType, snippetStart: RegExp, snippetEnd: (group?: string) => RegExp): NgDocSnippet[] {
+function findSnippet(
+	content: string,
+	type: NgDocSnippetType,
+	snippetStart: RegExp,
+	snippetEnd: (group?: string) => RegExp,
+): NgDocSnippet[] {
 	const snippets: NgDocSnippet[] = [];
+	const startRegexp: RegExp = new RegExp(snippetStart);
 	let matchStart: RegExpExecArray | null;
 
 	// eslint-disable-next-line no-cond-assign
-	while (matchStart = snippetStart.exec(content)) {
-		const matchEnd: RegExpExecArray | null = snippetEnd(matchStart[2]).exec(content);
+	while ((matchStart = startRegexp.exec(content))) {
+		const group: string = matchStart[2] ? matchStart[2].slice(1, matchStart[2].length - 1) : '';
+		const matchEnd: RegExpExecArray | null = snippetEnd(group).exec(content);
 
 		if (matchEnd) {
 			const snippetCode: string = content.slice(matchStart.index + matchStart[0].length, matchEnd.index).trim();
 
-			snippets.push({
-				content: snippetCode,
-				name: matchStart[2],
-				type
-			});
+			if (snippetCode) {
+				snippets.push({
+					content: removeSnippetsInCode(snippetCode),
+					name: group,
+					type,
+				});
+			}
 		}
 	}
 	return snippets;
 }
 
+/**
+ *
+ * @param code
+ */
+function removeSnippetsInCode(code: string): string {
+	return code
+		.replace(HTMLSnippetStart, '')
+		.replace(StylesSnippetStart, '')
+		.replace(TypeScriptSnippetStart, '')
+		.replace(HTMLSnippetEnd('.*', false), '')
+		.replace(StylesSnippetEnd('.*', false), '')
+		.replace(TypeScriptSnippetEnd('.*', false), '');
+}

@@ -26,7 +26,7 @@ export function runBrowser(options: NgDocSchema, context: BuilderContext): Obser
 				const builder: NgDocBuilder = new NgDocBuilder({
 					options,
 					context,
-					inlineStyleLanguage: (targetOptions?.['inlineStyleLanguage'] as NgDocStyleType) ?? 'css',
+					inlineStyleLanguage: (targetOptions?.['inlineStyleLanguage'] as NgDocStyleType) ?? 'CSS',
 				});
 				const runner: Observable<void> = builder.run();
 

@@ -9,17 +9,17 @@ export function codeTypeFromExt(filePath: string): NgDocCodeType {
 
 	switch (ext) {
 		case 'ts':
-			return 'typescript';
+			return 'TypeScript';
 		case 'html':
-			return 'html';
+			return 'HTML';
 		case 'css':
-			return 'css';
+			return 'CSS';
 		case 'scss':
-			return 'scss';
+			return 'SCSS';
 		case 'less':
-			return 'less';
+			return 'LESS';
 		case 'sass':
-			return 'sass';
+			return 'SASS';
 		default:
 			return 'unknown';
 	}

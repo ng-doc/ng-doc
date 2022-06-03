@@ -1,6 +1,6 @@
 import * as path from 'path';
 import {forkJoin, Observable} from 'rxjs';
-import {concatMap, map, mapTo, tap} from 'rxjs/operators';
+import {concatMap, map, mapTo, startWith, tap} from 'rxjs/operators';
 import {ModuleKind, Project} from 'ts-morph';
 
 import {asArray, emitBuildedOutput} from '../helpers';
@@ -34,9 +34,12 @@ export class NgDocBuilder {
 	}
 
 	run(): Observable<void> {
-		return this.buildables.changes.pipe(
-			concatMap((buildables: NgDocBuildable | NgDocBuildable[]) => this.build(...asArray(buildables))),
-		);
+		return this.buildables.changes
+			.pipe(
+				concatMap((buildables: NgDocBuildable | NgDocBuildable[]) =>
+					this.build(...asArray(buildables))
+				)
+			);
 	}
 
 	build(...changedBuildables: NgDocBuildable[]): Observable<void> {

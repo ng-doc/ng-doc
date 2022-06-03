@@ -1,1 +1,1 @@
-export type NgDocSnippetType = 'typescript' | 'html' | 'styles';
+export type NgDocSnippetType = 'TypeScript' | 'HTML' | 'styles';
