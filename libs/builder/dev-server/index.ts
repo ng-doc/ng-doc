@@ -3,7 +3,7 @@ import {Target} from '@angular-devkit/architect/src/api';
 import {DevServerBuilderOutput, executeDevServerBuilder} from '@angular-devkit/build-angular';
 import {json} from '@angular-devkit/core';
 import {combineLatest, from, Observable} from 'rxjs';
-import {first, map, shareReplay, switchMap, switchMapTo, take} from 'rxjs/operators';
+import {first, map, shareReplay, switchMap, switchMapTo} from 'rxjs/operators';
 
 import {NgDocBuilder} from '../engine/builder';
 import {NgDocSchema} from '../interfaces';

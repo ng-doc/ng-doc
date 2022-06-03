@@ -20,7 +20,9 @@
 			"@ng-doc/app/*": ["libs/app/*"],
 			"@ng-doc/builder": ["libs/builder/index.ts"],
 			"@ng-doc/builder/generated": ["dist/libs/builder/generated/index.ts"],
-			"@ng-doc/core": ["libs/core/src/index.ts"]
+			"@ng-doc/core": ["libs/core/src/index.ts"],
+			"@ng-doc/ui-kit": ["libs/ui-kit/index.ts"],
+			"@ng-doc/ui-kit/*": ["libs/ui-kit/*"]
 		}
 	},
 	"exclude": ["node_modules", "tmp"]

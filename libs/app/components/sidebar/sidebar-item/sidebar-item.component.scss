@@ -1,4 +1,4 @@
-@import '../../../styles/mixins';
+@import '../../../../ui-kit/styles/mixins';
 
 .ng-doc-sidebar-link {
 	@include ng-doc-font();
@@ -12,7 +12,9 @@
 		background-color: var(--ng-doc-base-1);
 	}
 
-	&:active {
-		background-color: var(--ng-doc-base-2);
+	&:active,
+	&.active{
+		background-color: var(--ng-doc-base-11);
+		color: var(--ng-doc-text-inversed);
 	}
 }

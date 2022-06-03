@@ -1,3 +1,4 @@
-<a class="ng-doc-sidebar-link" [routerLink]="item?.route ?? ''">
+<a class="ng-doc-sidebar-link" [routerLink]="item?.route ?? ''" routerLinkActive="active" ng-doc-text>
 	{{ item?.title }}
 </a>
+<div ng-doc-text color="muted" size="small">Some description</div>

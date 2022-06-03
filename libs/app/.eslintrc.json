@@ -25,7 +25,8 @@
 				"@angular-eslint/prefer-on-push-component-change-detection": [
 					"error"
 				],
-				"@typescript-eslint/no-inferrable-types": "off"
+				"@typescript-eslint/no-inferrable-types": "off",
+				"@angular-eslint/no-input-rename": "off"
 			}
 		},
 		{

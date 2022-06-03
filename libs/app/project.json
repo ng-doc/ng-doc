@@ -5,9 +5,7 @@
 	"targets": {
 		"pre-build": {
 			"executor": "@nrwl/angular:package",
-			"outputs": [
-				"dist/libs/app"
-			],
+			"outputs": ["dist/libs/app"],
 			"options": {
 				"project": "libs/app/ng-package.json"
 			},
@@ -25,7 +23,10 @@
 			"executor": "@nrwl/workspace:run-commands",
 			"outputs": ["dist/libs/app/styles"],
 			"options": {
-				"commands": ["sass --no-source-map libs/app/styles/main.scss dist/libs/app/styles/main.css"]
+				"commands": [
+					"sass --no-source-map libs/app/styles/main.scss dist/libs/app/styles/main.css",
+					"sass --no-source-map libs/app/styles/global.scss dist/libs/app/styles/global.css"
+				]
 			}
 		},
 		"test": {

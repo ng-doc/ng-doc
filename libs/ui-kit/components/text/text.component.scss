@@ -1,0 +1,108 @@
+@import "../../styles/mixins";
+
+::ng-deep {
+	:root {
+		--ng-doc-text-left-width: auto;
+		--ng-doc-text-right-width: auto;
+	}
+}
+
+:host {
+	@include ng-doc-font();
+	display: flex;
+	align-items: flex-start;
+
+	&[data-ng-doc-text-size="small"] {
+		--ng-doc-font-size: 14px;
+		--ng-doc-line-height: 18px;
+	}
+
+	&[data-ng-doc-text-color="muted"] {
+		--ng-doc-text: var(--ng-doc-text-muted);
+	}
+
+	&[data-ng-doc-text-align="left"] .ng-doc-text {
+		text-align: left;
+	}
+
+	&[data-ng-doc-text-align="center"] .ng-doc-text {
+		text-align: center;
+	}
+
+	&[data-ng-doc-text-align="right"] .ng-doc-text {
+		text-align: right;
+	}
+
+	&h1 {
+		border: none;
+
+		--ng-doc-font-size: 21px;
+		--ng-doc-line-height: 28px;
+		--ng-doc-font-weight: 600;
+	}
+
+	&h2 {
+		border: none;
+
+		--ng-doc-font-size: 20px;
+		--ng-doc-line-height: 28px;
+		--ng-doc-font-weight: 600;
+	}
+
+	&h3 {
+		--ng-doc-font-size: 17px;
+		--ng-doc-line-height: 24px;
+		--ng-doc-font-weight: 600;
+	}
+
+	&h4,
+	&h5,
+	&h6 {
+		--ng-doc-font-size: 15px;
+		--ng-doc-line-height: 24px;
+		--ng-doc-font-weight: 600;
+	}
+
+	&span {
+		display: inline-flex;
+
+		.ng-doc-text {
+			width: auto;
+		}
+	}
+
+	.ng-doc-text-left,
+	.ng-doc-text-right {
+		display: flex;
+		justify-content: center;
+		flex-shrink: 0;
+		min-height: var(--ng-doc-line-height);
+		align-items: center;
+
+		::ng-deep > ng-doc-svg-icon {
+			display: flex;
+			min-height: var(--ng-doc-line-height);
+		}
+	}
+}
+
+.ng-doc-text {
+	width: 100%;
+
+	&:empty {
+		display: none;
+	}
+}
+
+.ng-doc-text-left:not(:empty) {
+	width: var(--ng-doc-text-left-width);
+
+	& ~ .ng-doc-text {
+		margin-left: var(--ng-doc-base-gutter);
+	}
+}
+
+.ng-doc-text-right:not(:empty) {
+	width: var(--ng-doc-text-right-width);
+	margin-left: var(--ng-doc-base-gutter);
+}

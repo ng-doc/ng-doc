@@ -1,0 +1,26 @@
+:host {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--ng-doc-icon-width, 16px);
+	height: var(--ng-dpc-icon-height, 16px);
+
+	svg {
+		vertical-align: top;
+	}
+
+	&[data-ng-doc-size="24"] {
+		width: var(--ng-doc-icon-width, 24px);
+		height: var(--ng-dpc-icon-height, 24px);
+	}
+
+	&[data-ng-doc-size="32"] {
+		width: var(--ng-doc-icon-width, 32px);
+		height: var(--ng-dpc-icon-height, 32px);
+	}
+
+	&[data-ng-doc-size="48"] {
+		width: var(--ng-doc-icon-width, 48px);
+		height: var(--ng-dpc-icon-height, 48px);
+	}
+}

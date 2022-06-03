@@ -13,7 +13,15 @@
 				"polyfills": "apps/documentation/src/polyfills.ts",
 				"tsConfig": "apps/documentation/tsconfig.app.json",
 				"inlineStyleLanguage": "scss",
-				"assets": ["apps/documentation/src/favicon.ico", "apps/documentation/src/assets"],
+				"assets": [
+					"apps/documentation/src/favicon.ico",
+					"apps/documentation/src/assets",
+					{
+						"glob": "**/*",
+						"input": "dist/libs/ui-kit/assets",
+						"output": "assets"
+					}
+				],
 				"styles": ["apps/documentation/src/styles.scss"],
 				"scripts": []
 			},

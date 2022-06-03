@@ -1,0 +1,9 @@
+<span class="ng-doc-text-left" *ngIf="leftContent">
+	<ng-content select="[ngDocTextLeft]"></ng-content>
+</span>
+<span class="ng-doc-text">
+	<ng-content></ng-content>
+</span>
+<span class="ng-doc-text-right" *ngIf="rightContent">
+	<ng-content select="[ngDocTextRight]"></ng-content>
+</span>

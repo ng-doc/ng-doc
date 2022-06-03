@@ -1,27 +1,7 @@
 :root {
-	--ng-doc-base-gutter: 8px;
-
-	--ng-doc-base-0: var(--ng-doc-white);
-	--ng-doc-base-1: var(--ng-doc-grey-0);
-	--ng-doc-base-2: var(--ng-doc-grey-1);
-	--ng-doc-base-3: var(--ng-doc-grey-2);
-	--ng-doc-base-4: var(--ng-doc-grey-3);
-	--ng-doc-base-5: var(--ng-doc-grey-4);
-	--ng-doc-base-6: var(--ng-doc-grey-5);
-	--ng-doc-base-7: var(--ng-doc-grey-6);
-	--ng-doc-base-8: var(--ng-doc-grey-7);
-	--ng-doc-base-9: var(--ng-doc-grey-8);
-	--ng-doc-base-10: var(--ng-doc-grey-9);
-	--ng-doc-base-11: var(--ng-doc-black);
-
-	--ng-doc-background: var(--ng-doc-base-0);
-	--ng-doc-border-color: var(--ng-doc-base-2);
-	--ng-doc-text: var(--ng-doc-base-11);
-	--ng-doc-muted-text: var(--ng-doc-base-6);
-
 	--ng-doc-header-height: calc(var(--ng-doc-base-gutter) * 7);
 	--ng-doc-sidebar-width: 310px;
 	--ng-doc-sidebar-padding: calc(var(--ng-doc-base-gutter) * 2);
 	--ng-doc-sidebar-vetical-padding: var(--ng-doc-base-gutter);
-	--ng-doc-sidebar-horizontal-padding: calc(var(--ng-doc-base-gutter) * 3);
+	--ng-doc-sidebar-horizontal-padding: calc(var(--ng-doc-base-gutter) * 5);
 }
