@@ -1,0 +1,15 @@
+{
+	"$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+	"schematics": {
+		"category": {
+			"description": "Generate NgDoc category schematic",
+			"factory": "./category/index#build",
+			"schema": "./category/schema.json"
+		},
+		"page": {
+			"description": "Generate NgDoc page schematic",
+			"factory": "./page/index#build",
+			"schema": "./page/schema.json"
+		}
+	}
+}

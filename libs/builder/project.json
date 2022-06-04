@@ -10,7 +10,13 @@
 				"outputPath": "dist/libs/builder",
 				"main": "libs/builder/index.ts",
 				"tsConfig": "libs/builder/tsconfig.lib.json",
-				"assets": ["libs/builder/templates/**/*", "libs/builder/builders.json", "libs/builder/generated/**/*"]
+				"assets": [
+					"libs/builder/templates/**/*",
+					"libs/builder/builders.json",
+					"libs/builder/generated/**/*",
+					"libs/builder/schematics/**/*.json",
+					"libs/builder/schematics/**/files/**/*"
+				]
 			}
 		},
 		"build": {

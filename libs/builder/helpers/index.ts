@@ -4,6 +4,7 @@ export * from './capitalize';
 export * from './code-type-from-ext';
 export * from './emit-builded-output';
 export * from './escape-regexp';
+export * from './find-closest-file';
 export * from './format-code';
 export * from './is-category-point';
 export * from './is-iterable';

@@ -3,6 +3,7 @@
 	"version": "0.0.1",
 	"type": "commonjs",
 	"builders": "./builders.json",
+	"schematics": "./schematics/collection.json",
 	"dependencies": {
 		"@angular-devkit/architect": "^0.1303.5",
 		"chokidar": "^3.5.3",

@@ -6,5 +6,6 @@
 		"types": []
 	},
 	"files": ["index.ts", "naming.ts"],
-	"exclude": ["jest.config.ts", "**/*.spec.ts", "**/*.test.ts", "generated"]
+	"include": ["schematics/**/*"],
+	"exclude": ["jest.config.ts", "**/*.spec.ts", "**/*.test.ts", "generated", "schematics/*/templates/**/*"]
 }

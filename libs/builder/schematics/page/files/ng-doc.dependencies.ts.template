@@ -1,0 +1,10 @@
+import {NgDocPageDependencies} from '@ng-doc/builder';
+import {NgDocPageModule} from './ng-doc.module';
+
+const pageDependencies: NgDocPageDependencies = {
+	module: NgDocPageModule,
+	// Add your demos that you are going to use in the page here
+	demo: {},
+};
+
+export default pageDependencies;
