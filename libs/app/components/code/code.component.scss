@@ -1,0 +1,27 @@
+pre {
+	position: relative;
+	display: flex;
+
+	&:not(:hover) {
+		.ng-doc-copy-button {
+			opacity: 0;
+		}
+	}
+
+	code {
+		width: 100%;
+		border-radius: var(--ng-doc-base-gutter);
+		font-family: var(--ng-doc-code-font);
+		font-size: var(--ng-doc-code-font-size);
+		line-height: var(--ng-doc-code-line-height);
+	}
+
+	.ng-doc-copy-button {
+		position: absolute;
+		top: calc(var(--ng-doc-base-gutter) * 2);
+		right: calc(var(--ng-doc-base-gutter) * 2);
+		transition: var(--ng-doc-transition);
+
+		--ng-doc-icon-color: var(--ng-doc-text-muted);
+	}
+}

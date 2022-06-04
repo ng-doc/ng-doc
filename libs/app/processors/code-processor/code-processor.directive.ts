@@ -19,7 +19,7 @@ export class NgDocCodeProcessorDirective extends NgDocHtmlProcessor<NgDocCodeCom
 	protected override extractComponentOptions(element: Element): Partial<NgDocCodeComponent> {
 		return {
 			code: element.textContent ?? '',
-			language: element.getAttribute('language') || 'html',
+			language: element.getAttribute('data-language') || 'html',
 		};
 	}
 }

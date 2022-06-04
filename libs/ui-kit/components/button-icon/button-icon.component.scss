@@ -1,0 +1,30 @@
+:host {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 0;
+	cursor: pointer;
+	background-color: transparent;
+	border-radius: 50%;
+	width: calc(var(--ng-doc-base-gutter) * 4);
+	height: calc(var(--ng-doc-base-gutter) * 4);
+
+	&[data-ng-doc-size='small'] {
+		width: calc(var(--ng-doc-base-gutter) * 3);
+		height: calc(var(--ng-doc-base-gutter) * 3);
+	}
+
+	&[data-ng-doc-size='large'] {
+		width: calc(var(--ng-doc-base-gutter) * 5);
+		height: calc(var(--ng-doc-base-gutter) * 5);
+	}
+
+	&:hover {
+		background-color: var(--ng-doc-base-1);
+	}
+
+	&:active {
+		background-color: var(--ng-doc-base-2);
+	}
+}

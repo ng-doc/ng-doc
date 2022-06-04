@@ -8,5 +8,8 @@
 </ng-container>
 
 <ng-template #titleContent>
-	<a [routerLink]="[]" [fragment]="anchor">{{ text }}</a>
+	{{ text }}
+	<a class="ng-doc-anchor" [routerLink]="[]" [fragment]="anchor">
+		<ng-doc-icon icon="link"></ng-doc-icon>
+	</a>
 </ng-template>

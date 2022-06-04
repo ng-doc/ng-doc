@@ -1,3 +1,6 @@
 <pre>
-	<code [lang]="language">{{code}}</code>
+	<code [class]="'language-' + language" ngDocCodeHighlighter>{{code}}</code>
+	<button class="ng-doc-copy-button" ng-doc-button-icon (click)="copyCode()">
+		<ng-doc-icon icon="copy"></ng-doc-icon>
+	</button>
 </pre>

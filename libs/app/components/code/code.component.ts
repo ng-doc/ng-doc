@@ -1,4 +1,5 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {Clipboard} from '@angular/cdk/clipboard';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
 @Component({
 	selector: 'ng-doc-code',
@@ -12,4 +13,13 @@ export class NgDocCodeComponent {
 
 	@Input()
 	language: string = 'html';
+
+	@Input()
+	copyButton: boolean = true;
+
+	constructor(private readonly clipboard: Clipboard) {}
+
+	copyCode(): void {
+		this.clipboard.copy(this.code);
+	}
 }
