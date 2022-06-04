@@ -1,5 +1,5 @@
 import {Directive, ElementRef, EventEmitter, Input, OnChanges, Output} from '@angular/core';
-import {NG_DOC_HEADER_TEMPLATE_ID} from '@ng-doc/builder/naming';
+import {NG_DOC_CODE_TEMPLATE_ID, NG_DOC_TITLE_TEMPLATE_ID} from '@ng-doc/builder/naming';
 import {marked} from 'marked';
 
 @Directive({
@@ -17,9 +17,10 @@ export class NgDocMarkdownDirective implements OnChanges {
 	ngOnChanges(): void {
 		const renderer: marked.RendererObject = {
 			heading(text: string, level: 1 | 2 | 3 | 4 | 5 | 6): string {
-				const escapedText: string = text.toLowerCase().replace(/[^\w]+/g, '-');
-
-				return `<div id="${NG_DOC_HEADER_TEMPLATE_ID}" data-text="${escapedText}" data-level="${level}">${escapedText}</div>`;
+				return `<div id="${NG_DOC_TITLE_TEMPLATE_ID}" data-level="${level}">${text}</div>`;
+			},
+			code(code: string, language: string | undefined): string {
+				return `<div id="${NG_DOC_CODE_TEMPLATE_ID}" data-language="${language}">${code}</div>`;
 			},
 		};
 
