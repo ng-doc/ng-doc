@@ -12,7 +12,7 @@ import {NgDocAngularBuildable} from './angular-buildable';
 import {NgDocBuildable} from './buildable';
 import {NgDocPagePoint} from './page';
 
-type CategoryChild = NgDocCategoryPoint | NgDocPagePoint
+type CategoryChild = NgDocCategoryPoint | NgDocPagePoint;
 
 export class NgDocCategoryPoint extends NgDocAngularBuildable<NgDocCategory, NgDocCategoryPoint, CategoryChild> {
 	moduleName: string = uniqueName(`NgDocGeneratedCategoryModule`);
@@ -37,6 +37,10 @@ export class NgDocCategoryPoint extends NgDocAngularBuildable<NgDocCategory, NgD
 
 	get scope(): string {
 		return this.compiled?.scope ?? this.parent?.scope ?? this.context.context.workspaceRoot;
+	}
+
+	get order(): number | undefined {
+		return this.compiled?.order;
 	}
 
 	get pages(): NgDocPagePoint[] {

@@ -1,0 +1,10 @@
+{
+	"$schema": "../../node_modules/@angular-devkit/schematics/collection-schema.json",
+	"schematics": {
+		"page": {
+			"description": "Generate NgDoc page",
+			"factory": "./ng-generate/page/index#buildPage",
+			"schema": "./ng-generate/page/schema.json"
+		}
+	}
+}

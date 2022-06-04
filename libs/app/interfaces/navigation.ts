@@ -9,4 +9,6 @@ export interface NgDocNavigation {
 	expanded?: boolean;
 	/** Children of the navigation item */
 	children?: NgDocNavigation[];
+	/** Order is using for sorting pages and categories in sidebar */
+	order?: number;
 }

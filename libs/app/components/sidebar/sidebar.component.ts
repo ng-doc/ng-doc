@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {NgDocContext, NgDocNavigation} from '@ng-doc/app/interfaces';
 import {NG_DOC_CONTEXT} from '@ng-doc/app/tokens';
+import {isPresent} from '@ng-doc/ui-kit';
 
 @Component({
 	selector: 'ng-doc-sidebar',
@@ -16,7 +17,18 @@ export class NgDocSidebarComponent {
 		console.log('context', this.context);
 	}
 
-	get navigation(): NgDocNavigation[] {
-		return this.context.navigation;
+	getNavigation(nav?: NgDocNavigation): NgDocNavigation[] {
+		return (nav ? nav.children ?? [] : this.context.navigation).sort((a: NgDocNavigation, b: NgDocNavigation) => {
+			if (isPresent(a.order) && isPresent(b.order)) {
+				return a.order - b.order;
+			}
+			if (isPresent(a.order)) {
+				return -1;
+			}
+			if (isPresent(b.order)) {
+				return 1;
+			}
+			return a.title.localeCompare(b.title);
+		});
 	}
 }

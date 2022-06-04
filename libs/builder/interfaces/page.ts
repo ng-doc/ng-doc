@@ -16,4 +16,6 @@ export interface NgDocPage {
 	scope?: string;
 	/** Render the page only for specific build tags */
 	onlyForTags?: string[];
+	/** Order is using for sorting pages and categories in sidebar */
+	order?: number;
 }

@@ -46,6 +46,10 @@ export class NgDocPagePoint extends NgDocAngularBuildable<NgDocPage, NgDocCatego
 		return this.compiled?.scope ?? this.parent?.scope ?? this.context.context.workspaceRoot;
 	}
 
+	get order(): number | undefined {
+		return this.compiled?.order;
+	}
+
 	get moduleFileName(): string {
 		return `ng-doc-page.module.ts`;
 	}
@@ -55,7 +59,10 @@ export class NgDocPagePoint extends NgDocAngularBuildable<NgDocPage, NgDocCatego
 	}
 
 	get builtPagePath(): string {
-		return path.relative(this.context.context.workspaceRoot, path.join(this.folderPathInGenerated, RENDERED_PAGE_NAME));
+		return path.relative(
+			this.context.context.workspaceRoot,
+			path.join(this.folderPathInGenerated, RENDERED_PAGE_NAME),
+		);
 	}
 
 	get buildCandidates(): NgDocBuildable[] {
@@ -120,9 +127,7 @@ export class NgDocPagePoint extends NgDocAngularBuildable<NgDocPage, NgDocCatego
 	private buildPage(): Observable<NgDocBuildedOutput> {
 		if (this.compiled) {
 			const renderer: NgDocRenderer<NgDocPageEnv> = new NgDocRenderer<NgDocPageEnv>({
-				ngDoc: {
-					page: this.compiled,
-				},
+				ngDocPage: this.compiled,
 				ngDocActions: new NgDocActions(this),
 			});
 

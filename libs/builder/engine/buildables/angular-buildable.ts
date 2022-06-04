@@ -40,6 +40,11 @@ export abstract class NgDocAngularBuildable<T, P extends Parent, C extends Child
 	abstract scope: string;
 
 	/**
+	 * Order is using for sorting pages and categories in sidebar
+	 */
+	abstract order?: number;
+
+	/**
 	 * File title of the module.
 	 */
 	abstract moduleFileName: string;

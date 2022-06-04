@@ -13,4 +13,6 @@ export interface NgDocCategory {
 	expandable?: boolean;
 	/** Determines whether the category should be expanded by default */
 	expanded?: boolean;
+	/** Order is using for sorting pages and categories in sidebar */
+	order?: number;
 }
