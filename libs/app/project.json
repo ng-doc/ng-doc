@@ -45,5 +45,5 @@
 		}
 	},
 	"tags": ["type:lib", "lib:app"],
-	"implicitDependencies": ["core"]
+	"implicitDependencies": ["builder"]
 }

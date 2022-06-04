@@ -23,7 +23,7 @@
 							},
 							{
 								"sourceTag": "lib:app",
-								"onlyDependOnLibsWithTags": ["lib:core", "lib:ui-kit"]
+								"onlyDependOnLibsWithTags": ["lib:builder", "lib:ui-kit"]
 							}
 						]
 					}

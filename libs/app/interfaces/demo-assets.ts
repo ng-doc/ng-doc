@@ -1,4 +1,4 @@
-import {NgDocCodeType} from '@ng-doc/app/types';
+import {NgDocCodeType} from '@ng-doc/builder';
 
 export interface NgDocDemoAssets {
 	[name: string]: NgDocDemoAsset[];
