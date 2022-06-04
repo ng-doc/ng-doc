@@ -1,6 +1,6 @@
 import * as minimatch from 'minimatch';
 import * as path from 'path';
-import {forkJoin, merge, Observable} from 'rxjs';
+import {forkJoin, merge, Observable, of} from 'rxjs';
 import {finalize, map, startWith, switchMap, tap} from 'rxjs/operators';
 import {Constructor, Project, SourceFile} from 'ts-morph';
 
@@ -39,9 +39,11 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 	get changes(): Observable<NgDocBuildable[]> {
 		return merge(this.add(), this.update(), this.remove().pipe(map(asArray))).pipe(
 			switchMap((buildables: NgDocBuildable[]) =>
-				forkJoin(...buildables.map((buildable: NgDocBuildable) => buildable.emit())).pipe(
-					map(() => buildables),
-				),
+				buildables.length
+					? forkJoin(...buildables.map((buildable: NgDocBuildable) => buildable.emit())).pipe(
+							map(() => buildables),
+					  )
+					: of(buildables),
 			),
 			tap((buildables: NgDocBuildable[]) =>
 				buildables.forEach((buildable: NgDocBuildable) => buildable.update()),
@@ -116,11 +118,13 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 					throw new Error(`Buildable not found: ${path}`);
 				}
 
+				const parent: NgDocBuildable | undefined = buildable.parent;
+
 				buildable?.destroy();
 				this.buildables.delete(path);
 
 				// we return parent buildable if we have it because we want to rebuild it when his child is removed
-				return buildable?.parent;
+				return parent;
 			}),
 		);
 	}
