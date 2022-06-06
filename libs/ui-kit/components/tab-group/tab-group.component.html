@@ -1,0 +1,18 @@
+<div class="ng-doc-tabs-wrapper">
+	<div
+		class="ng-doc-tab"
+		[class.selected]="tab === selectedTab"
+		*ngFor="let tab of tabs"
+		(click)="selectTab(tab)"
+		#headerTab
+	>
+		<div class="ng-doc-tab-text">
+			<ng-container *polymorpheusOutlet="tab.label; context: {}">{{ tab.label }}</ng-container>
+		</div>
+	</div>
+	<ng-doc-tab-selection [bindTo]="selectedHeaderTab" [isItFirst]="selectedIndex === 0"></ng-doc-tab-selection>
+</div>
+
+<div class="ng-doc-body-wrapper">
+	<ng-container *polymorpheusOutlet="selectedTab?.content ?? '' as text; context: {}">{{ text }}</ng-container>
+</div>

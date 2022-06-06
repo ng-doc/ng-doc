@@ -1,0 +1,51 @@
+:host {
+	position: absolute;
+	left: 0;
+	top: calc(var(--ng-doc-base-gutter) / 2 * -1);
+	height: calc(var(--ng-doc-base-gutter) * 5);
+	background-color: white;
+	border: 2px solid var(--ng-doc-border-color);
+	border-radius: var(--ng-doc-base-gutter) var(--ng-doc-base-gutter) 0 0;
+	border-bottom: 0;
+	z-index: 2;
+	transition: var(--ng-doc-transition);
+
+	&[data-ng-doc-first='true']:before {
+		content: '';
+		position: absolute;
+		left: -2px;
+		bottom: -4px;
+		width: var(--ng-doc-base-gutter);
+		height: var(--ng-doc-base-gutter);
+		background-color: var(--ng-doc-base-0);
+		border-left: 2px solid var(--ng-doc-border-color);
+	}
+
+	&[data-ng-doc-first='false'] {
+		&:before {
+			content: '';
+			position: absolute;
+			left: calc(var(--ng-doc-base-gutter) * -1);
+			bottom: 0;
+			width: var(--ng-doc-base-gutter);
+			height: var(--ng-doc-base-gutter);
+			border: solid var(--ng-doc-border-color);
+			border-bottom-right-radius: var(--ng-doc-base-gutter);
+			border-width: 0 2px 2px 0;
+			box-shadow: 2px 2px 0 white;
+		}
+	}
+
+	&:after {
+		content: '';
+		position: absolute;
+		right: calc(var(--ng-doc-base-gutter) * -1);
+		bottom: 0;
+		width: var(--ng-doc-base-gutter);
+		height: var(--ng-doc-base-gutter);
+		border: solid var(--ng-doc-border-color);
+		border-bottom-left-radius: var(--ng-doc-base-gutter);
+		border-width: 0px 0px 2px 2px;
+		box-shadow: -2px 2px 0 white;
+	}
+}

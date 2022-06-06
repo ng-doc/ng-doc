@@ -1,5 +1,7 @@
-import {ChangeDetectionStrategy, Component, OnInit, Type, ViewChild, ViewContainerRef} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Type} from '@angular/core';
 import {NgDocRootPage} from '@ng-doc/app/classes';
+import {NgDocDemoAsset} from '@ng-doc/app/interfaces';
+import {PolymorpheusComponent} from '@tinkoff/ng-polymorpheus';
 
 @Component({
 	selector: 'ng-doc-demo-viewer',
@@ -7,21 +9,26 @@ import {NgDocRootPage} from '@ng-doc/app/classes';
 	styleUrls: ['./demo-viewer.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocDemoViewerComponent implements OnInit {
-	@ViewChild('demoOutlet', {static: true, read: ViewContainerRef})
-	private demoOutlet?: ViewContainerRef;
-
+export class NgDocDemoViewerComponent {
 	componentName?: string;
 
 	constructor(private readonly rootPage: NgDocRootPage) {}
 
-	ngOnInit(): void {
-		if (this.demoOutlet && this.componentName) {
-			const component: Type<unknown> | undefined = this.rootPage.demo && this.rootPage.demo[this.componentName];
+	get demo(): PolymorpheusComponent<object, object> | undefined {
+		if (this.componentName) {
+			const component: Type<object> | undefined = this.rootPage.demo && this.rootPage.demo[this.componentName];
 
-			if (component) {
-				this.demoOutlet.createComponent(component);
-			}
+			return component ? new PolymorpheusComponent(component) : undefined;
 		}
+
+		return undefined;
+	}
+
+	get assets(): NgDocDemoAsset[] {
+		if (this.componentName) {
+			return (this.rootPage.demoAssets && this.rootPage.demoAssets[this.componentName]) ?? [];
+		}
+
+		return [];
 	}
 }
