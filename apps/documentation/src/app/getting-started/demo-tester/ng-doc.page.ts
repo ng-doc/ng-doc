@@ -6,6 +6,7 @@ const page: NgDocPage = {
 	title: `Demo Tester`,
 	mdFile: './index.md',
 	category: GettingStartedCategory,
+	scope: __dirname,
 };
 
 export default page;

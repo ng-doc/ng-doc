@@ -8,6 +8,7 @@ import {NgDocBuildedOutput, NgDocBuilderContext, NgDocCategory} from '../../inte
 import {NgDocCategoryModuleEnv} from '../../templates-env';
 import {NgDocBuildableStore} from '../buildable-store';
 import {NgDocRenderer} from '../renderer';
+import {CACHE_PATH} from '../variables';
 import {NgDocAngularBuildable} from './angular-buildable';
 import {NgDocBuildable} from './buildable';
 import {NgDocPagePoint} from './page';
@@ -36,7 +37,9 @@ export class NgDocCategoryPoint extends NgDocAngularBuildable<NgDocCategory, NgD
 	}
 
 	get scope(): string {
-		return this.compiled?.scope ?? this.parent?.scope ?? this.context.context.workspaceRoot;
+		return (
+			this.compiled?.scope?.replace(CACHE_PATH, '') ?? this.parent?.scope ?? this.context.context.workspaceRoot
+		);
 	}
 
 	get order(): number | undefined {

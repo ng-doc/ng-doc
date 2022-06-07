@@ -11,4 +11,5 @@ export * from './is-iterable';
 export * from './is-page-point';
 export * from './is-present';
 export * from './process-snippets';
+export * from './typescript';
 export * from './unique-name';

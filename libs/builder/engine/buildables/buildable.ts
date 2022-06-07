@@ -190,6 +190,10 @@ export abstract class NgDocBuildable<P extends NgDocBuildable = any, C extends N
 		this.parent?.removeChild(this);
 	}
 
+	get builderContext(): NgDocBuilderContext {
+		return this.context;
+	}
+
 	/**
 	 * Returns object expression from default export in the current sourceFile
 	 *

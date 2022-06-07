@@ -10,7 +10,7 @@ import {NgDocPageEnv, NgDocPageModuleEnv} from '../../templates-env';
 import {NgDocActions} from '../actions';
 import {NgDocBuildableStore} from '../buildable-store';
 import {NgDocRenderer} from '../renderer';
-import {PAGE_DEPENDENCIES_NAME, RENDERED_PAGE_NAME} from '../variables';
+import {CACHE_PATH, PAGE_DEPENDENCIES_NAME, RENDERED_PAGE_NAME} from '../variables';
 import {NgDocAngularBuildable} from './angular-buildable';
 import {NgDocBuildable} from './buildable';
 import {NgDocCategoryPoint} from './category';
@@ -44,7 +44,9 @@ export class NgDocPagePoint extends NgDocAngularBuildable<NgDocPage, NgDocCatego
 	}
 
 	get scope(): string {
-		return this.compiled?.scope ?? this.parent?.scope ?? this.context.context.workspaceRoot;
+		return (
+			this.compiled?.scope?.replace(CACHE_PATH, '') ?? this.parent?.scope ?? this.context.context.workspaceRoot
+		);
 	}
 
 	get order(): number | undefined {
@@ -135,7 +137,7 @@ export class NgDocPagePoint extends NgDocAngularBuildable<NgDocPage, NgDocCatego
 			});
 
 			return renderer
-				.render(this.mdPath, {scope: this.scope})
+				.render(this.compiled?.mdFile, {scope: this.sourceFileFolder})
 				.pipe(map((output: string) => ({output, filePath: this.builtPagePath})));
 		}
 		return of();

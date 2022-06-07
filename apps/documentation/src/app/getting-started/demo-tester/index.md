@@ -48,4 +48,4 @@ export class Test {
 }
 ```
 
-{{ ngDocActions.api("./ng-doc.page.ts#page") }}
+{{ ngDocActions.api("./ng-doc.page.ts#TestClass") }}

@@ -1,9 +1,9 @@
 import * as path from 'path';
 import {forkJoin, Observable} from 'rxjs';
 import {concatMap, map, mapTo, tap} from 'rxjs/operators';
-import {ModuleKind, Project} from 'ts-morph';
+import {Project} from 'ts-morph';
 
-import {asArray, emitBuildedOutput} from '../helpers';
+import {asArray, createProject, emitBuildedOutput} from '../helpers';
 import {NgDocBuildedOutput, NgDocBuilderContext} from '../interfaces';
 import {NgDocContextEnv, NgDocRoutingEnv} from '../templates-env';
 import {NgDocBuildableStore} from './buildable-store';
@@ -16,18 +16,12 @@ export class NgDocBuilder {
 	private readonly buildables: NgDocBuildableStore;
 
 	constructor(private readonly context: NgDocBuilderContext) {
-		this.project = new Project({
+		this.project = createProject({
 			tsConfigFilePath: this.context.options.ngDoc.tsConfig,
 			compilerOptions: {
-				module: ModuleKind.CommonJS,
 				rootDir: this.context.context.workspaceRoot,
 				outDir: CACHE_PATH,
-				sourceMap: false,
-				incremental: true,
-				declaration: false,
-				skipLibCheck: true,
 			},
-			skipAddingFilesFromTsConfig: true,
 		});
 
 		this.buildables = new NgDocBuildableStore(this.context, this.project);
