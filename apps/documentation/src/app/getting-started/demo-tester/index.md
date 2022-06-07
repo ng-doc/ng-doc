@@ -47,3 +47,5 @@ export class Test {
 	test: string = 'test';
 }
 ```
+
+{{ ngDocActions.api("./ng-doc.page.ts#page") }}
