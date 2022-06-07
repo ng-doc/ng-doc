@@ -26,7 +26,7 @@ export function findDeclaration(project: Project, page: NgDocPagePoint, sourcePa
 
 	const sourceFile: SourceFile = project.addSourceFileAtPath(filePath);
 	const symbol: Symbol | undefined = sourceFile.getLocal(anchor.anchor);
-	const declaration: Node | undefined = symbol?.getValueDeclaration();
+	const declaration: Node | undefined = symbol?.getDeclarations()[0];
 
 	if (!declaration) {
 		throw new Error(`Declaration for name ${anchor.anchor} does not exist in ${filePath}`);

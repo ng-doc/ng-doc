@@ -1,0 +1,5 @@
+{% import "actions/class-api.md.nunj" as class %}
+
+{%- if Node.isClassDeclaration(declaration) %}
+{{ class.render(declaration) }}
+{%- endif %}
