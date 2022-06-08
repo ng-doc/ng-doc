@@ -7,7 +7,7 @@
 
 | Property  | Type  | Default  | Description  |
 |:----------|:------|:---------|:-------------|
-{%- for prop in properties -%}
+{%- for prop in properties %}
 | {{ property.render(prop) }} | {{ type.render(prop) }} | {{ prop.getInitializer().getText() }} | {{ doc.render(prop.getJsDocs()) }} |
 {%- endfor %}
 {%- endmacro -%}
