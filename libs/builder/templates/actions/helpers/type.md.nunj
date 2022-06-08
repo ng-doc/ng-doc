@@ -1,5 +1,3 @@
-{%- macro render(type) %}
-{%- if type %}
-`{{ type }}`
-{%- endif %}
-{%- endmacro %}
+{%- macro render(declaration) -%}
+`{{ declaration.getType().getText() }}`
+{%- endmacro -%}

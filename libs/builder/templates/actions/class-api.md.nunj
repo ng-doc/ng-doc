@@ -1,9 +1,8 @@
 {% import "actions/helpers/class-properties.md.nunj" as properties %}
 
 {% macro render(declaration) %}
-{% set structure = declaration.getStructure() %}
-## {{ structure.name }}
+## {{ declaration.getName() }}
 
-{{ properties.render(structure.properties) }}
+{{ properties.render(declaration.getProperties()) }}
 
 {% endmacro %}
