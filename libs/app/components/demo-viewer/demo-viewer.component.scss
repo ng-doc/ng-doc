@@ -1,3 +1,7 @@
 :host {
 	display: block;
+
+	.ng-doc-example {
+		padding: calc(var(--ng-doc-base-gutter) * 3);
+	}
 }

@@ -1,0 +1,13 @@
+{% import "actions/helpers/property.md.nunj" as property %}
+{% import "actions/helpers/type.md.nunj" as type %}
+{% import "actions/helpers/js-doc.md.nunj" as doc %}
+
+{% macro render(properties) %}
+## Properties
+
+| Property  | Type  | Default  | Description  |
+|:----------|:------|:---------|:-------------|
+{%- for prop in properties %}
+| {{ property.render(prop) }} | {{ type.render(prop.type) }} | {{ prop.initializer }} | {{ doc.render(prop.docs) }} |
+{%- endfor %}
+{% endmacro %}

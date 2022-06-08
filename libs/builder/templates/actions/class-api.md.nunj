@@ -1,4 +1,9 @@
+{% import "actions/helpers/class-properties.md.nunj" as properties %}
+
 {% macro render(declaration) %}
 {% set structure = declaration.getStructure() %}
-{{ structure.name }}
+## {{ structure.name }}
+
+{{ properties.render(structure.properties) }}
+
 {% endmacro %}

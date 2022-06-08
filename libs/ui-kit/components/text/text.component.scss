@@ -50,31 +50,31 @@
 	&h1 {
 		border: none;
 
-		--ng-doc-font-size: 28px;
-		--ng-doc-line-height: 32px;
-		--ng-doc-font-weight: 600;
+		--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 5);
+		--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 7);
+		--ng-doc-font-weight: bold;
 	}
 
 	&h2 {
 		border: none;
 
-		--ng-doc-font-size: 18px;
-		--ng-doc-line-height: 24px;
-		--ng-doc-font-weight: 600;
+		--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 4);
+		--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 5);
+		--ng-doc-font-weight: bold;
 	}
 
 	&h3 {
-		--ng-doc-font-size: 17px;
-		--ng-doc-line-height: 24px;
-		--ng-doc-font-weight: 600;
+		--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 3);
+		--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 4);
+		--ng-doc-font-weight: bold;
 	}
 
 	&h4,
 	&h5,
 	&h6 {
-		--ng-doc-font-size: 15px;
-		--ng-doc-line-height: 24px;
-		--ng-doc-font-weight: 600;
+		--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 2);
+		--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 4);
+		--ng-doc-font-weight: bold;
 	}
 
 	&span {

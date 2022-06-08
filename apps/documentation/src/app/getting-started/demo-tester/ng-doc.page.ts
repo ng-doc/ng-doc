@@ -10,21 +10,3 @@ const page: NgDocPage = {
 };
 
 export default page;
-
-export class TestClass {
-	property1 = 'asd'
-	private property2 = 'asd'
-
-	constructor(
-		some: string,
-	) {
-	}
-
-	method1(): void {
-
-	}
-
-	private method2(): void {
-
-	}
-}

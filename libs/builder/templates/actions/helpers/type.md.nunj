@@ -1,0 +1,5 @@
+{%- macro render(type) %}
+{%- if type %}
+`{{ type }}`
+{%- endif %}
+{%- endmacro %}

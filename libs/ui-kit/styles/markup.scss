@@ -10,23 +10,76 @@
 }
 
 @include headings {
-	margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
+	margin-bottom: calc(var(--ng-doc-base-gutter) * 3);
+	--ng-doc-font-weight: bold;
 }
 
-h1 {
-	margin-top: calc(var(--ng-doc-base-gutter) * 5);
-}
-
-h2 {
-	margin-top: calc(var(--ng-doc-base-gutter) * 2);
+:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) + h1,
+:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) + h2,
+:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) + h3,
+:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) + h4,
+:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) + h5,
+:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) + h6 {
+	margin-top: calc(var(--ng-doc-base-gutter) * 7);
 }
 
 p {
 	margin: calc(var(--ng-doc-base-gutter) * 2) 0;
 }
 
+h1 + h2 {
+	margin-top: calc(var(--ng-doc-base-gutter) * -1);
+}
+
+strong {
+	font-weight: bold;
+}
+
+ol,
+ul {
+	list-style: disc;
+	padding-left: 40px;
+	margin-bottom: calc(var(--ng-doc-base-gutter) * 3);
+
+	li:not(:last-child) {
+		margin-bottom: var(--ng-doc-base-gutter);
+	}
+}
+
 code {
 	border-radius: calc(var(--ng-doc-base-gutter) / 2);
 	background-color: var(--ng-doc-base-1);
-	padding: 0 var(--ng-doc-base-gutter);
+	padding: calc(var(--ng-doc-base-gutter) / 4) var(--ng-doc-base-gutter);
+	font-family: var(--ng-doc-code-font);
+	font-size: var(--ng-doc-code-font-size);
+}
+
+table {
+	width: 100%;
+	border-spacing: 0;
+
+	thead {
+		tr {
+			th {
+				padding: var(--ng-doc-base-gutter) 0;
+				background-color: var(--ng-doc-base-1);
+
+				&:first-child {
+					padding-left: calc(var(--ng-doc-base-gutter) * 4);
+				}
+			}
+		}
+	}
+
+	tbody {
+		tr {
+			td {
+				padding: var(--ng-doc-base-gutter) 0;
+
+				&:first-child {
+					padding-left: calc(var(--ng-doc-base-gutter) * 4);
+				}
+			}
+		}
+	}
 }

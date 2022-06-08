@@ -150,8 +150,4 @@ export class NgDocBuildableStore implements Iterable<NgDocBuildable> {
 			),
 		);
 	}
-
-	private isDependencies(path: string): boolean {
-		return minimatch(path, PAGE_DEPENDENCY_PATTERN);
-	}
 }

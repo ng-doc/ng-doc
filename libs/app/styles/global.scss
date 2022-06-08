@@ -3,7 +3,7 @@
 html,
 body {
 	@include ng-doc-font();
-	font-size: 18px;
+	font-size: var(--ng-doc-font-size);
 	background-color: var(--ng-doc-background);
 	margin: 0;
 	height: 100%;

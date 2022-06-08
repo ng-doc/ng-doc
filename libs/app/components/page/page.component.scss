@@ -1,6 +1,6 @@
 :host {
 	.ng-doc-page-wrapper {
-		& > ::ng-deep * {
+		& > ::ng-deep *:not(table) {
 			max-width: 560px;
 		}
 	}
