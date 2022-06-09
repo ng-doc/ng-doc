@@ -129,8 +129,8 @@ export class NgDocPagePoint extends NgDocAngularBuildable<NgDocPage, NgDocCatego
 			this.dependencies.add(this.mdPath);
 
 			const renderer: NgDocRenderer<NgDocPageEnv> = new NgDocRenderer<NgDocPageEnv>({
-				ngDocPage: this.compiled,
-				ngDocActions: new NgDocActions(this),
+				NgDocPage: this.compiled,
+				NgDocActions: new NgDocActions(this),
 			});
 
 			return renderer

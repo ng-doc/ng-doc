@@ -1,4 +1,4 @@
-# {{ ngDocPage.title }}
+# {{ NgDocPage.title }}
 
 This topic can help you understand better what is NgDoc and how it works.
 

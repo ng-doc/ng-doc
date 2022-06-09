@@ -2,6 +2,10 @@
 
 Here you will se how easy it's to create some demo with NgDoc.
 
+## Playground
+
+{{ NgDocActions.playground("654") }}
+
 ## Inline demo
 
 ```scss
@@ -20,7 +24,7 @@ Here you will se how easy it's to create some demo with NgDoc.
 }
 ```
 
-{{ ngDocActions.demo("InlineDemoComponent") }}
+{{ NgDocActions.demo("InlineDemoComponent") }}
 
 ## Multi file demo
 
@@ -40,7 +44,7 @@ Here you will se how easy it's to create some demo with NgDoc.
 }
 ```
 
-{{ ngDocActions.demo("DemoWithFilesComponent") }}
+{{ NgDocActions.demo("DemoWithFilesComponent") }}
 
 ```typescript
 export class Test {
@@ -50,12 +54,12 @@ export class Test {
 
 ## API
 
-{{ ngDocActions.api("../class.ts#TestClass") }}
+{{ NgDocActions.api("../class.ts#TestClass") }}
 
-{{ ngDocActions.api("../class.ts#MyEnum1") }}
+{{ NgDocActions.api("../class.ts#MyEnum1") }}
 
-{{ ngDocActions.api("../class.ts#MyInterface") }}
+{{ NgDocActions.api("../class.ts#MyInterface") }}
 
-{{ ngDocActions.api("../class.ts#MyType") }}
+{{ NgDocActions.api("../class.ts#MyType") }}
 
-{{ ngDocActions.api("../class.ts#myFunction") }}
+{{ NgDocActions.api("../class.ts#myFunction") }}

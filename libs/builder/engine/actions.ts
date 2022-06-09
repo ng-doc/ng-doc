@@ -5,6 +5,7 @@ import {NgDocActionOutput} from '../interfaces';
 import {NgDocAction} from '../types';
 import {apiAction} from './actions/api.action';
 import {demoAction} from './actions/demo.action';
+import {playgroundAction} from './actions/playground.action';
 import {NgDocPagePoint} from './buildables/page';
 
 export class NgDocActions {
@@ -20,6 +21,10 @@ export class NgDocActions {
 
 	demo(className: string): string {
 		return this.performAction(demoAction(className));
+	}
+
+	playground(className: string): string {
+		return this.performAction(playgroundAction(className));
 	}
 
 	private performAction(action: NgDocAction): string {
