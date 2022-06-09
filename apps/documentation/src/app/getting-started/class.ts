@@ -17,3 +17,27 @@ export class TestClass {
 		console.log('method');
 	}
 }
+
+export enum MyEnum1 {
+	KEY1,
+	KEY2,
+}
+
+export interface MyInterface {
+	property1: string;
+	property2: number;
+	nested: {
+		property1: string;
+		property2: number;
+	};
+}
+
+export type MyType = string | number;
+
+/**
+ *
+ * @param parameter
+ */
+export function myFunction(parameter: MyType): void {
+	console.log(parameter);
+}

@@ -1,0 +1,3 @@
+{% macro render(declaration) %}
+`{{ declaration.getTypeNode().getText() }}`
+{%- endmacro -%}

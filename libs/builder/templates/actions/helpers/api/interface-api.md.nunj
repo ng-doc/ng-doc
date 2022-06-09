@@ -1,0 +1,9 @@
+{% import "actions/helpers/api/type.md.nunj" as type %}
+
+{% macro render(declaration) %}
+| Property | Type |
+|:---------|:-----|
+{%- for member in declaration.getMembers() %}
+| {{ member.getName() }} | {{ type.render(member.getType()) }} |
+{%- endfor %}
+{%- endmacro -%}

@@ -1,4 +1,4 @@
-{%- import "actions/helpers/type.md.nunj" as type -%}
+{%- import "actions/helpers/api/type.md.nunj" as type -%}
 
 {%- macro render(parameters) -%}
 {%- for param in parameters -%}

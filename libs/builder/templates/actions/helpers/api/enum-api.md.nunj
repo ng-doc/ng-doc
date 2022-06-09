@@ -1,0 +1,7 @@
+{% macro render(declaration) %}
+| Key | Value |
+|:----|:------|
+{%- for member in declaration.getMembers() %}
+| {{ member.getName() }} | {{ member.getValue() }} |
+{%- endfor %}
+{%- endmacro -%}

@@ -1,6 +1,6 @@
-{% import "actions/helpers/property.md.nunj" as property %}
-{% import "actions/helpers/type.md.nunj" as type %}
-{% import "actions/helpers/js-doc.md.nunj" as doc -%}
+{% import "actions/helpers/api/property.md.nunj" as property %}
+{% import "actions/helpers/api/type.md.nunj" as type %}
+{% import "actions/helpers/api/js-doc.md.nunj" as doc -%}
 
 {%- macro render(properties) -%}
 ### Properties

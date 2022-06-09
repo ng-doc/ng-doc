@@ -1,7 +1,7 @@
-{% import "actions/helpers/method.md.nunj" as method %}
-{% import "actions/helpers/parameters.md.nunj" as parameters %}
-{% import "actions/helpers/type.md.nunj" as type %}
-{% import "actions/helpers/js-doc.md.nunj" as doc -%}
+{% import "actions/helpers/api/method.md.nunj" as method %}
+{% import "actions/helpers/api/parameters.md.nunj" as parameters %}
+{% import "actions/helpers/api/type.md.nunj" as type %}
+{% import "actions/helpers/api/js-doc.md.nunj" as doc -%}
 
 {%- macro render(methods) -%}
 ### Methods

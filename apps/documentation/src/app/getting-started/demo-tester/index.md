@@ -48,7 +48,14 @@ export class Test {
 }
 ```
 
-
 ## API
 
 {{ ngDocActions.api("../class.ts#TestClass") }}
+
+{{ ngDocActions.api("../class.ts#MyEnum1") }}
+
+{{ ngDocActions.api("../class.ts#MyInterface") }}
+
+{{ ngDocActions.api("../class.ts#MyType") }}
+
+{{ ngDocActions.api("../class.ts#myFunction") }}
