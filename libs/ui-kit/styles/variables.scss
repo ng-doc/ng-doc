@@ -1,6 +1,6 @@
 :root {
 	--ng-doc-base-gutter: 8px;
-	--ng-doc-transition: .1s;
+	--ng-doc-transition: 0.1s;
 
 	--ng-doc-base-0: var(--ng-doc-white);
 	--ng-doc-base-1: var(--ng-doc-grey-0);
@@ -23,7 +23,7 @@
 	--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 3);
 	--ng-doc-font-weight: 400;
 	--ng-doc-code-font: 'Source Code Pro', 'Courier New', monospace;
-	--ng-doc-code-font-size: 12px;
+	--ng-doc-code-font-size: 14px;
 	--ng-doc-code-line-height: 18px;
 	--ng-doc-text: var(--ng-doc-base-11);
 	--ng-doc-text-inversed: var(--ng-doc-base-0);

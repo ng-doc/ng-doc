@@ -7,7 +7,9 @@
 
 | Property  | Type  | Default  | Description  |
 |:----------|:------|:---------|:-------------|
-{%- for p in properties %}
+{%- for p in properties -%}
+{%- if p.getScope() === 'public' %}
 | {{ property.render(p) }} | {{ type.render(p.getType()) }} | {{ p.getInitializer().getText() }} | {{ doc.render(p.getJsDocs()) }} |
-{%- endfor %}
+{%- endif %}
+{%- endfor -%}
 {%- endmacro -%}

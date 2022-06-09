@@ -8,7 +8,9 @@
 
 | Method | Parameters | Return Type | Description  |
 |:-------|:-----------|:------------|:-------------|
-{%- for m in methods %}
+{%- for m in methods -%}
+{%- if m.getScope() === 'public' %}
 | {{ method.render(m) }} | {{ parameters.render(m.getParameters()) }} | {{ type.render(m.getReturnType()) }} | {{ doc.render(m.getJsDocs()) }} |
-{%- endfor %}
+{%- endif %}
+{%- endfor -%}
 {%- endmacro -%}

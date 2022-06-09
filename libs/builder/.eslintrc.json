@@ -1,6 +1,6 @@
 {
 	"extends": ["../../.eslintrc.json"],
-	"ignorePatterns": ["!**/*", "generated"],
+	"ignorePatterns": ["!**/*", "generated", "*.nunj"],
 	"overrides": [
 		{
 			"files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
@@ -8,14 +8,6 @@
 				"@typescript-eslint/ban-types": "off",
 				"@typescript-eslint/no-var-requires": "off"
 			}
-		},
-		{
-			"files": ["*.ts", "*.tsx"],
-			"rules": {}
-		},
-		{
-			"files": ["*.js", "*.jsx"],
-			"rules": {}
 		}
 	]
 }

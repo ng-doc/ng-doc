@@ -1,12 +1,7 @@
 export class TestClass {
 	/** My property */
-	property1 = 'asd'
-	private property2 = 'aks98d'
-
-	constructor(
-		some: string,
-	) {
-	}
+	property1: string = 'asd';
+	private property2: string = 'aks98d';
 
 	/**
 	 * Описание функции
@@ -19,6 +14,6 @@ export class TestClass {
 	}
 
 	private method2(): void {
-
+		console.log('method');
 	}
 }

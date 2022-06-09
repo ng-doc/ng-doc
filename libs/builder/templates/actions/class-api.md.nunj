@@ -5,6 +5,7 @@
 ## {{ declaration.getName() }}
 
 {{ properties.render(declaration.getProperties()) }}
+
 {{ methods.render(declaration.getMethods()) }}
 
 {% endmacro %}
