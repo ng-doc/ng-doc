@@ -25,7 +25,7 @@ export class NgDocActions {
 	private performAction(action: NgDocAction): string {
 		const output: NgDocActionOutput = action(this.project, this.page);
 
-		(output.dependencies ?? []).forEach((dependency: string) => this.page.templateDependencies.add(dependency));
+		this.page.dependencies.add(...(output.dependencies ?? []));
 
 		return output.output;
 	}

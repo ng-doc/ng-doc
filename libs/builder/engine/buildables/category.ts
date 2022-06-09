@@ -66,10 +66,6 @@ export class NgDocCategoryPoint extends NgDocAngularBuildable<NgDocCategory, NgD
 		return this.childBuildables;
 	}
 
-	get dependencies(): string[] {
-		return [];
-	}
-
 	get expandable(): boolean {
 		return this.compiled?.expandable ?? true;
 	}

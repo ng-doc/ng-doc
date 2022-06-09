@@ -1,13 +1,13 @@
 {% import "actions/helpers/property.md.nunj" as property %}
 {% import "actions/helpers/type.md.nunj" as type %}
-{% import "actions/helpers/js-doc.md.nunj" as doc %}
+{% import "actions/helpers/js-doc.md.nunj" as doc -%}
 
 {%- macro render(properties) -%}
-## Properties
+### Properties
 
 | Property  | Type  | Default  | Description  |
 |:----------|:------|:---------|:-------------|
-{%- for prop in properties %}
-| {{ property.render(prop) }} | {{ type.render(prop) }} | {{ prop.getInitializer().getText() }} | {{ doc.render(prop.getJsDocs()) }} |
+{%- for p in properties %}
+| {{ property.render(p) }} | {{ type.render(p.getType()) }} | {{ p.getInitializer().getText() }} | {{ doc.render(p.getJsDocs()) }} |
 {%- endfor %}
 {%- endmacro -%}

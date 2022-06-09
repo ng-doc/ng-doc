@@ -1,0 +1,14 @@
+{% import "actions/helpers/method.md.nunj" as method %}
+{% import "actions/helpers/parameters.md.nunj" as parameters %}
+{% import "actions/helpers/type.md.nunj" as type %}
+{% import "actions/helpers/js-doc.md.nunj" as doc -%}
+
+{%- macro render(methods) -%}
+### Methods
+
+| Method | Parameters | Return Type | Description  |
+|:-------|:-----------|:------------|:-------------|
+{%- for m in methods %}
+| {{ method.render(m) }} | {{ parameters.render(m.getParameters()) }} | {{ type.render(m.getReturnType()) }} | {{ doc.render(m.getJsDocs()) }} |
+{%- endfor %}
+{%- endmacro -%}

@@ -49,6 +49,6 @@ export class Test {
 ```
 
 
-# API
+## API
 
 {{ ngDocActions.api("../class.ts#TestClass") }}

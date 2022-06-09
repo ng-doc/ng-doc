@@ -1,8 +1,9 @@
 import * as path from 'path';
-import {Observable} from 'rxjs';
-import {finalize, mapTo} from 'rxjs/operators';
+import {EMPTY, Observable} from 'rxjs';
+import {debounceTime, finalize, map, mapTo, startWith, switchMap} from 'rxjs/operators';
 import {Node, ObjectLiteralExpression, SourceFile, Symbol, SyntaxKind} from 'ts-morph';
 
+import {ObservableSet} from '../../classes';
 import {asArray} from '../../helpers';
 import {NgDocBuildedOutput, NgDocBuilderContext} from '../../interfaces';
 import {NgDocBuildableStore} from '../buildable-store';
@@ -12,6 +13,11 @@ import {NgDocWatcher} from '../watcher';
  * Base buildable class that all buildables should extend.
  */
 export abstract class NgDocBuildable<P extends NgDocBuildable = any, C extends NgDocBuildable = any> {
+	/**
+	 * Collection of all file dependencies of the current buildable.
+	 * This property is using to watch for changes in this dependencies list and rebuild current buildable.
+	 */
+	readonly dependencies: ObservableSet<string> = new ObservableSet<string>();
 	/**
 	 * The children of the buildable.
 	 * Contains all children of the current buildable.
@@ -31,12 +37,6 @@ export abstract class NgDocBuildable<P extends NgDocBuildable = any, C extends N
 	 * Indicates when it's root buildable and should be used for rooted components.
 	 */
 	abstract readonly isRoot: boolean;
-
-	/**
-	 * Collection of all file dependencies of the current buildable.
-	 * This property is using to watch for changes in this dependencies list and rebuild current buildable.
-	 */
-	abstract readonly dependencies: string[];
 
 	/**
 	 * Should return the parent of the current buildable
@@ -136,12 +136,18 @@ export abstract class NgDocBuildable<P extends NgDocBuildable = any, C extends N
 	 * @type {Observable<NgDocBuildable>}
 	 */
 	get needToRebuild(): Observable<NgDocBuildable<P, C>> {
-		const watcher: NgDocWatcher = new NgDocWatcher(this.dependencies);
+		return this.dependencies.changes()
+			.pipe(
+				switchMap((deps: string[]) => {
+					if (deps.length === 0) {
+						return EMPTY;
+					}
 
-		return watcher.update.pipe(
-			mapTo(this),
-			finalize(() => watcher.close()),
-		);
+					const watcher: NgDocWatcher = new NgDocWatcher(deps);
+
+					return watcher.update.pipe(mapTo(this), finalize(() => watcher.close()))
+				}),
+			);
 	}
 
 	/**

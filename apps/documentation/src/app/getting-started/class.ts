@@ -8,8 +8,14 @@ export class TestClass {
 	) {
 	}
 
-	method1(): void {
-
+	/**
+	 * Описание функции
+	 *
+	 * @param parameter
+	 * @param parameter2
+	 */
+	method1(parameter: number, parameter2: string): void {
+		console.log(parameter, parameter2);
 	}
 
 	private method2(): void {

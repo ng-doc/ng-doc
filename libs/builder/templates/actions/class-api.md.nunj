@@ -1,8 +1,10 @@
 {% import "actions/helpers/class-properties.md.nunj" as properties %}
+{% import "actions/helpers/class-methods.md.nunj" as methods %}
 
 {% macro render(declaration) %}
 ## {{ declaration.getName() }}
 
 {{ properties.render(declaration.getProperties()) }}
+{{ methods.render(declaration.getMethods()) }}
 
 {% endmacro %}

@@ -57,12 +57,15 @@ code {
 table {
 	width: 100%;
 	border-spacing: 0;
+	font-size: 14px;
 
 	thead {
 		tr {
 			th {
 				padding: var(--ng-doc-base-gutter) 0;
 				background-color: var(--ng-doc-base-1);
+				color: var(--ng-doc-text-muted);
+
 
 				&:first-child {
 					padding-left: calc(var(--ng-doc-base-gutter) * 4);

@@ -45,10 +45,6 @@ export class NgDocPageDependenciesPoint extends NgDocBuildable<NgDocPagePoint> {
 		return this.parent?.folderPathInGenerated || '';
 	}
 
-	get dependencies(): string[] {
-		return this.assets.map((asset: NgDocAsset) => asset.originalPath);
-	}
-
 	get buildCandidates(): NgDocBuildable[] {
 		return [];
 	}
@@ -88,7 +84,10 @@ export class NgDocPageDependenciesPoint extends NgDocBuildable<NgDocPagePoint> {
 	}
 
 	build(): Observable<NgDocBuildedOutput[]> {
+		this.dependencies.clear();
 		this.fillAssets();
+		this.dependencies.add(...this.assets.map((asset: NgDocAsset) => asset.originalPath));
+
 		return this.buildComponentAssets()
 			.pipe(
 				map((output: NgDocBuildedOutput) => [

@@ -19,7 +19,6 @@ import {NgDocPageDependenciesPoint} from './page-dependencies';
 export class NgDocPagePoint extends NgDocAngularBuildable<NgDocPage, NgDocCategoryPoint, NgDocPageDependenciesPoint> {
 	moduleName: string = uniqueName(`NgDocGeneratedPageModule`);
 	componentName: string = uniqueName(`NgDocGeneratedPageComponent`);
-	templateDependencies: Set<string> = new Set();
 
 	constructor(
 		protected override readonly context: NgDocBuilderContext,
@@ -70,10 +69,6 @@ export class NgDocPagePoint extends NgDocAngularBuildable<NgDocPage, NgDocCatego
 
 	get buildCandidates(): NgDocBuildable[] {
 		return this.parentBuildables;
-	}
-
-	get dependencies(): string[] {
-		return [this.mdPath, ...asArray(this.templateDependencies)];
 	}
 
 	get assetsFolder(): string {
@@ -128,8 +123,10 @@ export class NgDocPagePoint extends NgDocAngularBuildable<NgDocPage, NgDocCatego
 	}
 
 	private buildPage(): Observable<NgDocBuildedOutput> {
+		this.dependencies.clear();
+
 		if (this.compiled) {
-			this.templateDependencies.clear();
+			this.dependencies.add(this.mdPath);
 
 			const renderer: NgDocRenderer<NgDocPageEnv> = new NgDocRenderer<NgDocPageEnv>({
 				ngDocPage: this.compiled,
