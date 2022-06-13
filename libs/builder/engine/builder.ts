@@ -6,14 +6,14 @@ import {Project} from 'ts-morph';
 import {asArray, createProject, emitBuildedOutput} from '../helpers';
 import {NgDocBuildedOutput, NgDocBuilderContext} from '../interfaces';
 import {NgDocContextEnv, NgDocRoutingEnv} from '../templates-env';
-import {NgDocBuildableStore} from './buildable-store';
-import {NgDocBuildable} from './buildables/buildable';
+import {NgDocEntity} from './entities/entity';
+import {NgDocEntityStore} from './entity-store';
 import {NgDocRenderer} from './renderer';
 import {CACHE_PATH, GENERATED_PATH} from './variables';
 
 export class NgDocBuilder {
 	private readonly project: Project;
-	private readonly buildables: NgDocBuildableStore;
+	private readonly entities: NgDocEntityStore;
 
 	constructor(private readonly context: NgDocBuilderContext) {
 		this.project = createProject({
@@ -24,22 +24,22 @@ export class NgDocBuilder {
 			},
 		});
 
-		this.buildables = new NgDocBuildableStore(this.context, this.project);
+		this.entities = new NgDocEntityStore(this.context, this.project);
 	}
 
 	run(): Observable<void> {
 		console.time('Build documentation');
-		return this.buildables.changes.pipe(
-			concatMap((buildables: NgDocBuildable | NgDocBuildable[]) => this.build(...asArray(buildables))),
+		return this.entities.changes.pipe(
+			concatMap((entities: NgDocEntity | NgDocEntity[]) => this.build(...asArray(entities))),
 			tap(() => console.timeEnd('Build documentation')),
 		);
 	}
 
-	build(...changedBuildables: NgDocBuildable[]): Observable<void> {
+	build(...changedEntities: NgDocEntity[]): Observable<void> {
 		this.context.context.reportStatus('Building documentation...');
 
 		return forkJoin([
-			...changedBuildables.map((buildable: NgDocBuildable) => buildable.build()),
+			...changedEntities.map((entity: NgDocEntity) => entity.build()),
 			this.buildRoutes(),
 			this.buildContext(),
 		]).pipe(
@@ -50,8 +50,8 @@ export class NgDocBuilder {
 	}
 
 	private buildRoutes(): Observable<NgDocBuildedOutput> {
-		const buildables: NgDocBuildable[] = this.buildables.rootBuildablesForBuild;
-		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocRoutingEnv>({buildables});
+		const entities: NgDocEntity[] = this.entities.rootEntitiesForBuild;
+		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocRoutingEnv>({entities});
 
 		return renderer
 			.render('ng-doc.routing.ts.nunj')
@@ -59,8 +59,8 @@ export class NgDocBuilder {
 	}
 
 	private buildContext(): Observable<NgDocBuildedOutput> {
-		const buildables: NgDocBuildable[] = this.buildables.rootBuildablesForBuild;
-		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocContextEnv>({buildables});
+		const entities: NgDocEntity[] = this.entities.rootEntitiesForBuild;
+		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocContextEnv>({entities});
 
 		return renderer
 			.render('ng-doc.context.ts.nunj')

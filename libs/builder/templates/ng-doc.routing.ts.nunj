@@ -2,10 +2,10 @@
 import {Routes} from '@angular/router';
 
 export const NG_DOC_ROUTING: Routes = [
-	{%- for buildable in buildables %}
+	{%- for entity in entities %}
 	{
-		path: '{{ buildable.route }}',
-		loadChildren: () => import('{{ buildable.moduleImportPath }}').then(m => m.{{ buildable.moduleName }})
+		path: '{{ entity.route }}',
+		loadChildren: () => import('{{ entity.moduleImportPath }}').then(m => m.{{ entity.moduleName }})
 	},
 	{%- endfor %}
 ];

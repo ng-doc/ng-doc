@@ -3,27 +3,25 @@ import {forkJoin, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
-import {asArray, isCategoryPoint, isPagePoint, uniqueName} from '../../helpers';
+import {asArray, isCategoryEntity, isPageEntity, uniqueName} from '../../helpers';
 import {NgDocBuildedOutput, NgDocBuilderContext, NgDocCategory} from '../../interfaces';
 import {NgDocCategoryModuleEnv} from '../../templates-env';
-import {NgDocBuildableStore} from '../buildable-store';
+import {NgDocEntityStore} from '../entity-store';
 import {NgDocRenderer} from '../renderer';
 import {CACHE_PATH} from '../variables';
-import {NgDocAngularBuildable} from './angular-buildable';
-import {NgDocBuildable} from './buildable';
-import {NgDocPagePoint} from './page';
+import {NgDocAngularEntity} from './angular-entity';
+import {NgDocEntity} from './entity';
+import {NgDocPageEntity} from './page';
 
-type CategoryChild = NgDocCategoryPoint | NgDocPagePoint;
-
-export class NgDocCategoryPoint extends NgDocAngularBuildable<NgDocCategory, NgDocCategoryPoint, CategoryChild> {
+export class NgDocCategoryPoint extends NgDocAngularEntity<NgDocCategory> {
 	moduleName: string = uniqueName(`NgDocGeneratedCategoryModule`);
 
 	constructor(
 		protected override readonly context: NgDocBuilderContext,
-		protected override readonly buildables: NgDocBuildableStore,
+		protected override readonly entityStore: NgDocEntityStore,
 		protected override readonly sourceFile: SourceFile,
 	) {
-		super(context, buildables, sourceFile);
+		super(context, entityStore, sourceFile);
 	}
 
 	get route(): string {
@@ -46,12 +44,12 @@ export class NgDocCategoryPoint extends NgDocAngularBuildable<NgDocCategory, NgD
 		return this.compiled?.order;
 	}
 
-	get pages(): NgDocPagePoint[] {
-		return asArray(this.children.values()).filter(isPagePoint);
+	get pages(): NgDocPageEntity[] {
+		return asArray(this.children.values()).filter(isPageEntity);
 	}
 
 	get categories(): NgDocCategoryPoint[] {
-		return asArray(this.children.values()).filter(isCategoryPoint);
+		return asArray(this.children.values()).filter(isCategoryEntity);
 	}
 
 	get moduleFileName(): string {
@@ -62,8 +60,8 @@ export class NgDocCategoryPoint extends NgDocAngularBuildable<NgDocCategory, NgD
 		return this.compiled?.title ?? '';
 	}
 
-	get buildCandidates(): NgDocBuildable[] {
-		return this.childBuildables;
+	get buildCandidates(): NgDocEntity[] {
+		return this.childEntities;
 	}
 
 	get expandable(): boolean {

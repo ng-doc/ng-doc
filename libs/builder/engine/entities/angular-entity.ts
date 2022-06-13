@@ -4,33 +4,28 @@ import {from, Observable} from 'rxjs';
 import {mapTo} from 'rxjs/operators';
 import {SyntaxKind} from 'ts-morph';
 
-import {capitalize, isCategoryPoint} from '../../helpers';
+import {capitalize, isCategoryEntity} from '../../helpers';
 import {CACHE_PATH, CATEGORY_PATTERN, GENERATED_MODULES_PATH} from '../variables';
-import {NgDocBuildable} from './buildable';
 import {NgDocCategoryPoint} from './category';
-import {NgDocPagePoint} from './page';
-import {NgDocPageDependenciesPoint} from './page-dependencies';
-
-type Parent = NgDocCategoryPoint;
-type Child = NgDocCategoryPoint | NgDocPagePoint | NgDocPageDependenciesPoint;
+import {NgDocEntity} from './entity';
 
 /**
- * Buildables for angular end points that generate modules and components.
+ * Entity for angular end points that generate modules and components.
  */
-export abstract class NgDocAngularBuildable<T, P extends Parent, C extends Child> extends NgDocBuildable<P, C> {
-	readonly isNavigationItem: boolean = true;
+export abstract class NgDocAngularEntity<T> extends NgDocEntity {
+	readonly isNavigable: boolean = true;
 	/**
 	 * Compiled source file.
 	 */
 	protected compiled?: T;
 
 	/**
-	 * The route for the current buildable.
+	 * The route for the current entity.
 	 */
 	abstract route: string;
 
 	/**
-	 * The title of the current buildable.
+	 * The title of the current entity.
 	 */
 	abstract title: string;
 
@@ -73,12 +68,12 @@ export abstract class NgDocAngularBuildable<T, P extends Parent, C extends Child
 	}
 
 	/**
-	 * Returns is this category buildable.
+	 * Returns is this category entity.
 	 *
 	 * @type {boolean}
 	 */
 	get isCategory(): boolean {
-		return isCategoryPoint(this);
+		return isCategoryEntity(this);
 	}
 
 	/**
@@ -103,8 +98,6 @@ export abstract class NgDocAngularBuildable<T, P extends Parent, C extends Child
 		return path.join(this.parent?.folderPathInGenerated ?? GENERATED_MODULES_PATH, this.route);
 	}
 
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
 	get parent(): NgDocCategoryPoint | undefined {
 		const sourceFilePath: string | undefined = this.getObjectExpressionFromDefault()
 			?.getProperty('category')
@@ -115,11 +108,11 @@ export abstract class NgDocAngularBuildable<T, P extends Parent, C extends Child
 			?.getFilePath();
 
 		if (sourceFilePath && minimatch(sourceFilePath, CATEGORY_PATTERN) && sourceFilePath !== this.sourceFilePath) {
-			const parent: NgDocBuildable<Parent, Child> | undefined = this.buildables.get(
+			const parent: NgDocEntity | undefined = this.entityStore.get(
 				path.relative(this.context.context.workspaceRoot, sourceFilePath),
 			);
 
-			return isCategoryPoint(parent) ? parent : undefined;
+			return isCategoryEntity(parent) ? parent : undefined;
 		}
 		return undefined;
 	}

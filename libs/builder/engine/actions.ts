@@ -3,10 +3,10 @@ import {NgDocAction} from '../types';
 import {apiAction} from './actions/api.action';
 import {demoAction} from './actions/demo.action';
 import {playgroundAction} from './actions/playground.action';
-import {NgDocPagePoint} from './buildables/page';
+import {NgDocPageEntity} from './entities/page';
 
 export class NgDocActions {
-	constructor(private readonly page: NgDocPagePoint) {}
+	constructor(private readonly page: NgDocPageEntity) {}
 
 	api(sourcePath: string): string {
 		return this.performAction(apiAction(sourcePath));

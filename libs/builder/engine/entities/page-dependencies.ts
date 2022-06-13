@@ -12,28 +12,28 @@ import {
 	SourceFile,
 } from 'ts-morph';
 
-import {asArray, buildAssets, formatCode, isPagePoint, isPresent} from '../../helpers';
+import {asArray, buildAssets, formatCode, isPageEntity, isPresent} from '../../helpers';
 import {NgDocAsset, NgDocBuildedOutput, NgDocBuilderContext} from '../../interfaces';
 import {componentDecoratorResolver} from '../../resolvers/component-decorator.resolver';
 import {NgDocComponentAssetsEnv} from '../../templates-env';
-import {NgDocBuildableStore} from '../buildable-store';
+import {NgDocEntityStore} from '../entity-store';
 import {NgDocRenderer} from '../renderer';
 import {PAGE_NAME} from '../variables';
-import {NgDocBuildable} from './buildable';
-import {NgDocPagePoint} from './page';
+import {NgDocEntity} from './entity';
+import {NgDocPageEntity} from './page';
 
-type ComponentAsset = Record<string, NgDocAsset[]>
+type ComponentAsset = Record<string, NgDocAsset[]>;
 
-export class NgDocPageDependenciesPoint extends NgDocBuildable<NgDocPagePoint> {
-	readonly isNavigationItem: boolean = false;
+export class NgDocPageDependenciesEntity extends NgDocEntity {
+	readonly isNavigable: boolean = false;
 	private componentsAssets: ComponentAsset = {};
 
 	constructor(
 		protected override readonly context: NgDocBuilderContext,
-		protected override readonly buildables: NgDocBuildableStore,
+		protected override readonly entityStore: NgDocEntityStore,
 		protected override readonly sourceFile: SourceFile,
 	) {
-		super(context, buildables, sourceFile);
+		super(context, entityStore, sourceFile);
 	}
 
 	get isRoot(): boolean {
@@ -45,21 +45,21 @@ export class NgDocPageDependenciesPoint extends NgDocBuildable<NgDocPagePoint> {
 		return this.parent?.folderPathInGenerated || '';
 	}
 
-	get buildCandidates(): NgDocBuildable[] {
+	get buildCandidates(): NgDocEntity[] {
 		return [];
 	}
 
-	get parent(): NgDocPagePoint | undefined {
+	get parent(): NgDocPageEntity | undefined {
 		const expectedPath: string = path.join(this.sourceFileFolder, PAGE_NAME);
-		const buildable: NgDocBuildable | undefined = this.buildables.get(expectedPath);
+		const buildable: NgDocEntity | undefined = this.entityStore.get(expectedPath);
 
-		return buildable && isPagePoint(buildable) ? buildable : undefined;
+		return buildable && isPageEntity(buildable) ? buildable : undefined;
 	}
 
 	get assets(): NgDocAsset[] {
 		return Object.keys(this.componentsAssets)
 			.map((key: string) => this.componentsAssets[key])
-			.flat()
+			.flat();
 	}
 
 	get componentAssetsInGenerated(): string {
@@ -88,16 +88,15 @@ export class NgDocPageDependenciesPoint extends NgDocBuildable<NgDocPagePoint> {
 		this.fillAssets();
 		this.dependencies.add(...this.assets.map((asset: NgDocAsset) => asset.originalPath));
 
-		return this.buildComponentAssets()
-			.pipe(
-				map((output: NgDocBuildedOutput) => [
-					output,
-					...this.assets.map((asset: NgDocAsset) => ({
-						output: asset.output,
-						filePath: asset.outputPath,
-					}))
-				])
-			);
+		return this.buildComponentAssets().pipe(
+			map((output: NgDocBuildedOutput) => [
+				output,
+				...this.assets.map((asset: NgDocAsset) => ({
+					output: asset.output,
+					filePath: asset.outputPath,
+				})),
+			]),
+		);
 	}
 
 	private fillAssets(): void {
@@ -113,12 +112,13 @@ export class NgDocPageDependenciesPoint extends NgDocBuildable<NgDocPagePoint> {
 	}
 
 	private buildComponentAssets(): Observable<NgDocBuildedOutput> {
-			const renderer: NgDocRenderer<NgDocComponentAssetsEnv> =
-				new NgDocRenderer<NgDocComponentAssetsEnv>({componentsAssets: this.componentsAssets});
+		const renderer: NgDocRenderer<NgDocComponentAssetsEnv> = new NgDocRenderer<NgDocComponentAssetsEnv>({
+			componentsAssets: this.componentsAssets,
+		});
 
-			return renderer
-				.render('ng-doc.component-assets.ts.nunj')
-				.pipe(map((output: string) => ({output, filePath: this.componentAssetsInGenerated})));
+		return renderer
+			.render('ng-doc.component-assets.ts.nunj')
+			.pipe(map((output: string) => ({output, filePath: this.componentAssetsInGenerated})));
 	}
 
 	private getDemoClassDeclarations(objectExpression: ObjectLiteralExpression): ClassDeclaration[] {
@@ -163,12 +163,13 @@ export class NgDocPageDependenciesPoint extends NgDocBuildable<NgDocPagePoint> {
 					.flat(),
 			];
 
-			return {[classDeclaration.getName() ?? '']: assets
-					.map((asset: Omit<NgDocAsset, 'outputPath'>) => ({
-						...asset,
-						output: formatCode(asset.output, asset.type),
-						outputPath: path.join(this.parent?.assetsFolder ?? this.folderPathInGenerated, asset.name),
-					}))};
+			return {
+				[classDeclaration.getName() ?? '']: assets.map((asset: Omit<NgDocAsset, 'outputPath'>) => ({
+					...asset,
+					output: formatCode(asset.output, asset.type),
+					outputPath: path.join(this.parent?.assetsFolder ?? this.folderPathInGenerated, asset.name),
+				})),
+			};
 		}
 
 		return {};

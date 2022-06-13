@@ -1,47 +1,47 @@
 import * as path from 'path';
 import {EMPTY, Observable} from 'rxjs';
-import {debounceTime, finalize, map, mapTo, startWith, switchMap} from 'rxjs/operators';
+import {finalize, mapTo, switchMap} from 'rxjs/operators';
 import {Node, ObjectLiteralExpression, SourceFile, Symbol, SyntaxKind} from 'ts-morph';
 
 import {ObservableSet} from '../../classes';
 import {asArray} from '../../helpers';
 import {NgDocBuildedOutput, NgDocBuilderContext} from '../../interfaces';
-import {NgDocBuildableStore} from '../buildable-store';
+import {NgDocEntityStore} from '../entity-store';
 import {NgDocWatcher} from '../watcher';
 
 /**
- * Base buildable class that all buildables should extend.
+ * Base entity class that all entities should extend.
  */
-export abstract class NgDocBuildable<P extends NgDocBuildable = any, C extends NgDocBuildable = any> {
+export abstract class NgDocEntity {
 	/**
-	 * Collection of all file dependencies of the current buildable.
+	 * Collection of all file dependencies of the current entity.
 	 * This property is using to watch for changes in this dependencies list and rebuild current buildable.
 	 */
 	readonly dependencies: ObservableSet<string> = new ObservableSet<string>();
 	/**
-	 * The children of the buildable.
-	 * Contains all children of the current buildable.
+	 * The children of the entity.
+	 * Contains all children of the current entity.
 	 */
-	readonly children: Set<C> = new Set();
+	readonly children: Set<NgDocEntity> = new Set();
 
-	/** Indicates when current buildable could be built */
+	/** Indicates when current entity could be built */
 	protected readyToBuild: boolean = false;
 
 	protected constructor(
 		protected readonly context: NgDocBuilderContext,
-		protected readonly buildables: NgDocBuildableStore,
+		protected readonly entityStore: NgDocEntityStore,
 		protected readonly sourceFile: SourceFile,
 	) {}
 
 	/**
-	 * Indicates when it's root buildable and should be used for rooted components.
+	 * Indicates when it's root entity and should be used for rooted components.
 	 */
 	abstract readonly isRoot: boolean;
 
 	/**
-	 * Should return the parent of the current buildable
+	 * Should return the parent of the current entity
 	 */
-	abstract readonly parent: P | undefined;
+	abstract readonly parent: NgDocEntity | undefined;
 
 	/**
 	 * Path to the sourceFileFolder in generated files.
@@ -49,14 +49,14 @@ export abstract class NgDocBuildable<P extends NgDocBuildable = any, C extends N
 	abstract readonly folderPathInGenerated: string;
 
 	/**
-	 * Should return the list of the dependencies that have to be built if current buildable was changed.
+	 * Should return the list of the dependencies that have to be built if current entity was changed.
 	 */
-	abstract readonly buildCandidates: NgDocBuildable[];
+	abstract readonly buildCandidates: NgDocEntity[];
 
 	/**
-	 * Indicates when current buildable is using for page navigation.
+	 * Indicates when current entity is using for page navigation.
 	 */
-	abstract readonly isNavigationItem: boolean;
+	abstract readonly isNavigable: boolean;
 
 	/**
 	 * Emits source files to the cache, if it needs for the update;
@@ -65,7 +65,7 @@ export abstract class NgDocBuildable<P extends NgDocBuildable = any, C extends N
 	abstract emit(): Observable<void>;
 
 	/**
-	 * Updates current buildable state from the cache.
+	 * Updates current entity state from the cache.
 	 * This method runs after `emit` method
 	 */
 	abstract update(): void;
@@ -95,30 +95,35 @@ export abstract class NgDocBuildable<P extends NgDocBuildable = any, C extends N
 	}
 
 	/**
-	 * Recursively returns parents for the current buildable
+	 * Recursively returns parents for the current entity
 	 *
-	 * @type {Array<NgDocBuildable>}
+	 * @type {Array<NgDocEntity>}
 	 */
-	get parentBuildables(): Array<NgDocBuildable<P, C>> {
-		return [this.parent ?? [], this.parent?.parentBuildables ?? []].flat();
+	get parentEntities(): NgDocEntity[] {
+		return [this.parent ?? [], this.parent?.parentEntities ?? []].flat();
 	}
 
 	/**
-	 * Recursively returns children for the current buildable
+	 * Recursively returns children for the current entity
 	 *
-	 * @type {Array<NgDocBuildable>}
+	 * @type {Array<NgDocEntity>}
 	 */
-	get childBuildables(): Array<NgDocBuildable<P, C>> {
+	get childEntities(): NgDocEntity[] {
 		return [
 			...this.children,
 			...asArray(this.children)
-				.map((child: NgDocBuildable<P, C>) => child.childBuildables)
+				.map((child: NgDocEntity) => child.childEntities)
 				.flat(),
 		];
 	}
 
-	get navigationItems(): Array<NgDocBuildable<P, C>> {
-		return this.childBuildables.filter((child: NgDocBuildable<P, C>) => child.isNavigationItem);
+	/**
+	 * Returns children of the current buildable that are using for page navigation
+	 *
+	 * @type {NgDocEntity[]}
+	 */
+	get navigationItems(): NgDocEntity[] {
+		return this.childEntities.filter((child: NgDocEntity) => child.isNavigable);
 	}
 
 	/**
@@ -131,28 +136,30 @@ export abstract class NgDocBuildable<P extends NgDocBuildable = any, C extends N
 	}
 
 	/**
-	 * Should emit buildable that needs to be re-build
+	 * Should emit entity that needs to be re-build
 	 *
-	 * @type {Observable<NgDocBuildable>}
+	 * @type {Observable<NgDocEntity>}
 	 */
-	get needToRebuild(): Observable<NgDocBuildable<P, C>> {
-		return this.dependencies.changes()
-			.pipe(
-				switchMap((deps: string[]) => {
-					if (deps.length === 0) {
-						return EMPTY;
-					}
+	get needToRebuild(): Observable<NgDocEntity> {
+		return this.dependencies.changes().pipe(
+			switchMap((deps: string[]) => {
+				if (deps.length === 0) {
+					return EMPTY;
+				}
 
-					const watcher: NgDocWatcher = new NgDocWatcher(deps);
+				const watcher: NgDocWatcher = new NgDocWatcher(deps);
 
-					return watcher.update.pipe(mapTo(this), finalize(() => watcher.close()))
-				}),
-			);
+				return watcher.update.pipe(
+					mapTo(this),
+					finalize(() => watcher.close()),
+				);
+			}),
+		);
 	}
 
 	/**
-	 * Should return if this buildable is ready to build
-	 * Using for build process to skip buildables that is not ready for build
+	 * Should return if this entity is ready to build
+	 * Using for build process to skip entityStore that is not ready for build
 	 *
 	 * @type {boolean}
 	 */
@@ -161,7 +168,7 @@ export abstract class NgDocBuildable<P extends NgDocBuildable = any, C extends N
 	}
 
 	/**
-	 * Returns `SourceFile` for the current buildable
+	 * Returns `SourceFile` for the current entity
 	 *
 	 * @type {SourceFile}
 	 */
@@ -170,25 +177,25 @@ export abstract class NgDocBuildable<P extends NgDocBuildable = any, C extends N
 	}
 
 	/**
-	 * Adds child to the current buildable
+	 * Adds child to the current entity
 	 *
 	 * @type {void}
 	 */
-	addChild(child: C): void {
+	addChild(child: NgDocEntity): void {
 		this.children.add(child);
 	}
 
 	/**
-	 * Removes child from the current buildable
+	 * Removes child from the current entity
 	 *
 	 * @type {void}
 	 */
-	removeChild(child: C): void {
+	removeChild(child: NgDocEntity): void {
 		this.children.delete(child);
 	}
 
 	/**
-	 * Destroys current buildable and clear all references
+	 * Destroys current entity and clear all references
 	 *
 	 * @type {void}
 	 */

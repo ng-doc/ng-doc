@@ -6,28 +6,28 @@ export const ngDocContextProvider: Provider = {
 	provide: NG_DOC_CONTEXT,
 	useValue: {
 		navigation: [
-			{%- macro nav(buildable) %}
+			{%- macro nav(entity) %}
 			{
-				title: '{{ buildable.title }}',
-				route: '{{ buildable.url }}',
-				{%- if buildable.isCategory %}
-				expandable: {{ buildable.expandable }},
-				expanded: {{ buildable.expanded }},
+				title: '{{ entity.title }}',
+				route: '{{ entity.url }}',
+				{%- if entity.isCategory %}
+				expandable: {{ entity.expandable }},
+				expanded: {{ entity.expanded }},
 				{%- endif %}
-				{%- if buildable.order %}
-				order: {{ buildable.order }},
+				{%- if entity.order %}
+				order: {{ entity.order }},
 				{%- endif %}
-				{%- if buildable.navigationItems.length %}
+				{%- if entity.navigationItems.length %}
 				children: [
-					{%- for child in buildable.navigationItems %}
+					{%- for child in entity.navigationItems %}
 					{{ nav(child) }},
 					{%- endfor %}
 				]
 				{%- endif %}
 			}
 			{%- endmacro %}
-			{%- for buildable in buildables %}
-			{{ nav(buildable) }},
+			{%- for entity in entities %}
+			{{ nav(entity) }},
 			{%- endfor %}
 		],
 	}

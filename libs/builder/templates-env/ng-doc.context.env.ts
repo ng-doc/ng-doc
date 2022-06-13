@@ -1,5 +1,5 @@
-import {NgDocBuildable} from '../engine/buildables/buildable';
+import {NgDocEntity} from '../engine/entities/entity';
 
 export interface NgDocContextEnv {
-	buildables: NgDocBuildable[];
+	entities: NgDocEntity[];
 }

@@ -5,27 +5,27 @@ import {map} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
 import {asArray, isPresent, uniqueName} from '../../helpers';
+import {isPageDependencyEntity} from '../../helpers/is-page-dependency-entity';
 import {NgDocBuildedOutput, NgDocBuilderContext, NgDocPage} from '../../interfaces';
 import {NgDocPageEnv, NgDocPageModuleEnv} from '../../templates-env';
 import {NgDocActions} from '../actions';
-import {NgDocBuildableStore} from '../buildable-store';
+import {NgDocEntityStore} from '../entity-store';
 import {NgDocRenderer} from '../renderer';
 import {CACHE_PATH, PAGE_DEPENDENCIES_NAME, RENDERED_PAGE_NAME} from '../variables';
-import {NgDocAngularBuildable} from './angular-buildable';
-import {NgDocBuildable} from './buildable';
-import {NgDocCategoryPoint} from './category';
-import {NgDocPageDependenciesPoint} from './page-dependencies';
+import {NgDocAngularEntity} from './angular-entity';
+import {NgDocEntity} from './entity';
+import {NgDocPageDependenciesEntity} from './page-dependencies';
 
-export class NgDocPagePoint extends NgDocAngularBuildable<NgDocPage, NgDocCategoryPoint, NgDocPageDependenciesPoint> {
+export class NgDocPageEntity extends NgDocAngularEntity<NgDocPage> {
 	moduleName: string = uniqueName(`NgDocGeneratedPageModule`);
 	componentName: string = uniqueName(`NgDocGeneratedPageComponent`);
 
 	constructor(
 		protected override readonly context: NgDocBuilderContext,
-		protected override readonly buildables: NgDocBuildableStore,
+		protected override readonly entityStore: NgDocEntityStore,
 		protected override readonly sourceFile: SourceFile,
 	) {
-		super(context, buildables, sourceFile);
+		super(context, entityStore, sourceFile);
 	}
 
 	get route(): string {
@@ -67,8 +67,8 @@ export class NgDocPagePoint extends NgDocAngularBuildable<NgDocPage, NgDocCatego
 		);
 	}
 
-	get buildCandidates(): NgDocBuildable[] {
-		return this.parentBuildables;
+	get buildCandidates(): NgDocEntity[] {
+		return this.parentEntities;
 	}
 
 	get assetsFolder(): string {
@@ -86,7 +86,9 @@ export class NgDocPagePoint extends NgDocAngularBuildable<NgDocPage, NgDocCatego
 	}
 
 	get componentsAssets(): string | undefined {
-		const dependencies: NgDocPageDependenciesPoint | undefined = asArray(this.children.values())[0];
+		const dependencies: NgDocPageDependenciesEntity | undefined = asArray(this.children.values()).filter(
+			isPageDependencyEntity,
+		)[0];
 
 		return dependencies ? dependencies.componentAssetsInGeneratedImport : undefined;
 	}

@@ -4,7 +4,7 @@ import {findDeclaration} from '../../helpers';
 import {NgDocActionOutput} from '../../interfaces';
 import {NgDocApiEnv} from '../../templates-env/api.env';
 import {NgDocAction} from '../../types';
-import {NgDocPagePoint} from '../buildables/page';
+import {NgDocPageEntity} from '../entities/page';
 import {NgDocRenderer} from '../renderer';
 
 /**
@@ -14,7 +14,7 @@ import {NgDocRenderer} from '../renderer';
  * @returns {NgDocAction} - The action output
  */
 export function apiAction(sourcePath: string): NgDocAction {
-	return (project: Project, page: NgDocPagePoint): NgDocActionOutput => {
+	return (project: Project, page: NgDocPageEntity): NgDocActionOutput => {
 		try {
 			const declaration: Node = findDeclaration(project, page, sourcePath);
 			const renderer: NgDocRenderer<NgDocApiEnv> = new NgDocRenderer<NgDocApiEnv>({

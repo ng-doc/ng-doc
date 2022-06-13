@@ -1,5 +1,5 @@
-import {NgDocPagePoint} from '../engine';
+import {NgDocPageEntity} from '../engine';
 
 export interface NgDocPageModuleEnv {
-	page: NgDocPagePoint;
+	page: NgDocPageEntity;
 }

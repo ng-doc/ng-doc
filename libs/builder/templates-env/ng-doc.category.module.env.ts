@@ -1,4 +1,4 @@
-import {NgDocCategoryPoint} from '../engine/buildables/category';
+import {NgDocCategoryPoint} from '../engine/entities/category';
 
 export interface NgDocCategoryModuleEnv {
 	category: NgDocCategoryPoint;

@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {Node, Project, SourceFile, Symbol} from 'ts-morph';
 
-import {NgDocPagePoint} from '../../engine/buildables/page';
+import {NgDocPageEntity} from '../../engine/entities/page';
 import {NgDocPathAnchor} from '../../interfaces';
 import {extractPathAnchor} from '../extract-path-anchor';
 
@@ -10,11 +10,11 @@ import {extractPathAnchor} from '../extract-path-anchor';
  *	Finds the declaration of a given source path.
  *
  * @param {Project} project - The typescript project
- * @param {NgDocPagePoint} page - The current page
+ * @param {NgDocPageEntity} page - The current page
  * @param {string} sourcePath - The source path to find the declaration
  * @returns {Node} The declaration node
  */
-export function findDeclaration(project: Project, page: NgDocPagePoint, sourcePath: string): Node {
+export function findDeclaration(project: Project, page: NgDocPageEntity, sourcePath: string): Node {
 	const anchor: NgDocPathAnchor = extractPathAnchor(sourcePath);
 	const filePath: string = path.join(page.scope, anchor.path).replace(/^\//, '');
 
