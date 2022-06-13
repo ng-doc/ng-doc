@@ -24,7 +24,9 @@ export function findDeclaration(project: Project, page: NgDocPagePoint, sourcePa
 		);
 	}
 
-	const sourceFile: SourceFile = project.addSourceFileAtPath(filePath);
+	project.getSourceFile(filePath)?.refreshFromFileSystemSync();
+
+	const sourceFile: SourceFile = project.getSourceFile(filePath) ?? project.addSourceFileAtPath(filePath);
 	const symbol: Symbol | undefined = sourceFile.getLocal(anchor.anchor);
 	const declaration: Node | undefined = symbol?.getDeclarations()[0];
 

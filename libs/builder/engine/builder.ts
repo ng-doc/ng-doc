@@ -43,7 +43,8 @@ export class NgDocBuilder {
 			this.buildRoutes(),
 			this.buildContext(),
 		]).pipe(
-			tap((output: Array<NgDocBuildedOutput | NgDocBuildedOutput[]>) => emitBuildedOutput(...output.flat())),
+			map((output: Array<NgDocBuildedOutput | NgDocBuildedOutput[]>) => output.flat()),
+			tap((output: NgDocBuildedOutput[]) => emitBuildedOutput(...output)),
 			mapTo(void 0),
 		);
 	}

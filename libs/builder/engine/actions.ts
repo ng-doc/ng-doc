@@ -1,6 +1,3 @@
-import {Project} from 'ts-morph';
-
-import {createProject} from '../helpers';
 import {NgDocActionOutput} from '../interfaces';
 import {NgDocAction} from '../types';
 import {apiAction} from './actions/api.action';
@@ -9,11 +6,7 @@ import {playgroundAction} from './actions/playground.action';
 import {NgDocPagePoint} from './buildables/page';
 
 export class NgDocActions {
-	private readonly project: Project;
-
-	constructor(private readonly page: NgDocPagePoint) {
-		this.project = createProject();
-	}
+	constructor(private readonly page: NgDocPagePoint) {}
 
 	api(sourcePath: string): string {
 		return this.performAction(apiAction(sourcePath));
@@ -28,7 +21,7 @@ export class NgDocActions {
 	}
 
 	private performAction(action: NgDocAction): string {
-		const output: NgDocActionOutput = action(this.project, this.page);
+		const output: NgDocActionOutput = action(this.page.getSourceFile().getProject(), this.page);
 
 		this.page.dependencies.add(...(output.dependencies ?? []));
 

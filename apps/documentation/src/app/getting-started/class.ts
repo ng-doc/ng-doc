@@ -1,6 +1,8 @@
+import {TestType} from './test';
+
 export class TestClass {
 	/** My property */
-	property1: string = 'asd';
+	property1: TestType = 'asd';
 	private property2: string = 'aks98d';
 
 	/**
