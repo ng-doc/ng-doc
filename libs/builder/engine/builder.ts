@@ -85,7 +85,6 @@ export class NgDocBuilder {
 			map((output: Array<NgDocBuildedOutput | NgDocBuildedOutput[]>) => output.flat()),
 			tap((output: NgDocBuildedOutput[]) => emitBuildedOutput(...output)),
 			mapTo(void 0),
-			tap(() => console.log('asd')),
 		);
 	}
 

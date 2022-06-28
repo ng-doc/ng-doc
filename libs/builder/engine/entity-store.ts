@@ -5,7 +5,7 @@ import {asArray} from '../helpers';
 import {bufferDebounce} from '../operators';
 import {NgDocEntity} from './entities/abstractions/entity';
 import {buildCandidates} from './entities/functions/build-candidates';
-import {initializeEntities} from './entities/hooks/initialize-entities';
+import {initializeEntities} from './entities/functions/initialize-entities';
 
 /**
  *  FileEntity:

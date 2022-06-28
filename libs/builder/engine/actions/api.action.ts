@@ -22,8 +22,6 @@ export function apiAction(sourcePath: string): NgDocAction {
 				declaration,
 			});
 
-			console.log((declaration as ClassDeclaration).getStructure());
-
 			return {
 				output: renderer.renderSync('actions/api.md.nunj'),
 				dependencies: [declaration.getSourceFile().getFilePath()],
