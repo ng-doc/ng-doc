@@ -1,14 +1,13 @@
 import {logging} from '@angular-devkit/core';
 import * as path from 'path';
 import {Observable, of, Subject} from 'rxjs';
-import {finalize, mapTo, startWith, switchMap} from 'rxjs/operators';
+import {finalize, mapTo, startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {Node, ObjectLiteralExpression, Project, SourceFile, Symbol, SyntaxKind} from 'ts-morph';
 
 import {ObservableSet} from '../../../classes';
 import {NgDocBuildedOutput, NgDocBuilderContext} from '../../../interfaces';
 import {NgDocEntityStore} from '../../entity-store';
 import {NgDocWatcher} from '../../watcher';
-import {NgDocEntityEvent} from '../interfaces/entity-event';
 
 /**
  * Base entity class that all entities should extend.
@@ -25,8 +24,7 @@ export abstract class NgDocEntity {
 	/** Indicates when current entity could be built */
 	protected readyToBuild: boolean = false;
 
-	private watcher: NgDocWatcher;
-	private event$: Subject<NgDocEntityEvent> = new Subject<NgDocEntityEvent>();
+	private destroy$: Subject<void> = new Subject<void>();
 
 	protected constructor(
 		readonly project: Project,
@@ -36,7 +34,7 @@ export abstract class NgDocEntity {
 	) {
 		this.entityStore.add(this);
 
-		this.watcher = new NgDocWatcher(this.sourceFilePath);
+		new NgDocWatcher(this.sourceFilePath).remove.pipe(takeUntil(this.destroy$)).subscribe(() => this.destroy());
 	}
 
 	/**
@@ -161,9 +159,9 @@ export abstract class NgDocEntity {
 	 * @type {void}
 	 */
 	destroy(): void {
-		this.entityStore.remove(this);
-
 		this.destroyed = true;
+		this.entityStore.remove(this);
+		this.destroy$.next();
 	}
 
 	/**
