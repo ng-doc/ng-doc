@@ -1,10 +1,14 @@
 import * as glob from 'glob';
-import {Observable, of} from 'rxjs';
+import {forkJoin, Observable, of} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {ExportedDeclarations, Project, SourceFile} from 'ts-morph';
 
 import {asArray, isNotExcludedPath, isPageEntity, uniqueName} from '../../helpers';
 import {NgDocApiScope, NgDocBuildedOutput, NgDocBuilderContext} from '../../interfaces';
+import {NgDocApiModuleEnv} from '../../templates-env/api.module.env';
+import {NgDocApiScopeModuleEnv} from '../../templates-env/api-scope.module.env';
 import {NgDocEntityStore} from '../entity-store';
+import {NgDocRenderer} from '../renderer';
 import {NgDocAngularEntity} from './abstractions/angular.entity';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocApiEntity} from './api.entity';
@@ -13,6 +17,8 @@ import {NgDocPageEntity} from './page.entity';
 
 export class NgDocApiScopeEntity extends NgDocAngularEntity<NgDocApiScope> {
 	moduleName: string = uniqueName(`NgDocGeneratedApiScopeCategoryModule`);
+	override readonly isNavigable: boolean = false;
+	protected override readyToBuild: boolean = true;
 
 	constructor(
 		override readonly project: Project,
@@ -23,6 +29,15 @@ export class NgDocApiScopeEntity extends NgDocAngularEntity<NgDocApiScope> {
 		protected override target: NgDocApiScope,
 	) {
 		super(project, sourceFile, context, entityStore);
+	}
+
+	override get storeKey(): string {
+		return `${super.storeKey}#${this.moduleName}`;
+	}
+
+	override get isRoot(): boolean {
+		// always false, api scopes are not rooted
+		return false;
 	}
 
 	get route(): string {
@@ -38,10 +53,6 @@ export class NgDocApiScopeEntity extends NgDocAngularEntity<NgDocApiScope> {
 		return `${this.parent ? this.parent.url + '/' : ''}${this.route}`;
 	}
 
-	get isRoot(): boolean {
-		return false;
-	}
-
 	get order(): number | undefined {
 		return this.target?.order;
 	}
@@ -51,7 +62,7 @@ export class NgDocApiScopeEntity extends NgDocAngularEntity<NgDocApiScope> {
 	}
 
 	get moduleFileName(): string {
-		return `ng-doc-scope-category.module.ts`;
+		return `ng-doc-scope.module.ts`;
 	}
 
 	get title(): string {
@@ -78,6 +89,7 @@ export class NgDocApiScopeEntity extends NgDocAngularEntity<NgDocApiScope> {
 										sourceFile,
 										this.context,
 										this.entityStore,
+										this,
 										declaration,
 									),
 							),
@@ -89,16 +101,23 @@ export class NgDocApiScopeEntity extends NgDocAngularEntity<NgDocApiScope> {
 	}
 
 	build(): Observable<NgDocBuildedOutput[]> {
-		return of([]);
-	}
-
-	override destroy(): void {
-		this.entityStore.remove(...this.childEntities);
-
-		super.destroy();
+		return this.isReadyToBuild ? forkJoin([this.buildModule()]) : of([]);
 	}
 
 	private buildModule(): Observable<NgDocBuildedOutput> {
+		if (this.target) {
+			const renderer: NgDocRenderer<NgDocApiScopeModuleEnv> = new NgDocRenderer<NgDocApiScopeModuleEnv>({scope: this});
+
+			return renderer
+				.render('api-scope.module.ts.nunj')
+				.pipe(map((output: string) => ({output, filePath: this.modulePathInGenerated})));
+		}
 		return of();
+	}
+
+	override destroy(): void {
+		this.children.forEach((child: NgDocEntity) => child.destroy());
+
+		super.destroy();
 	}
 }

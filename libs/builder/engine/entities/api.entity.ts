@@ -1,19 +1,22 @@
 import * as path from 'path';
-import {Observable, of} from 'rxjs';
-import {catchError, tap} from 'rxjs/operators';
+import {forkJoin, Observable, of} from 'rxjs';
+import {catchError, map, tap} from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
 import {uniqueName} from '../../helpers';
 import {NgDocApi, NgDocApiScope, NgDocBuildedOutput, NgDocBuilderContext} from '../../interfaces';
+import {NgDocApiModuleEnv} from '../../templates-env/api.module.env';
 import {NgDocEntityStore} from '../entity-store';
+import {NgDocRenderer} from '../renderer';
+import {GENERATED_MODULES_PATH} from '../variables';
 import {NgDocAngularEntity} from './abstractions/angular.entity';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocApiScopeEntity} from './api-scope.entity';
 import {NgDocCategoryEntity} from './category.entity';
 
 export class NgDocApiEntity extends NgDocAngularEntity<NgDocApi> {
-	moduleName: string = uniqueName(`NgDocGeneratedApiPageModule`);
-	componentName: string = uniqueName(`NgDocGeneratedApiPageComponent`);
+	moduleName: string = uniqueName(`NgDocGeneratedApiListModule`);
+	componentName: string = uniqueName(`NgDocGeneratedApiListComponent`);
 	parent?: NgDocCategoryEntity;
 
 	constructor(
@@ -26,9 +29,7 @@ export class NgDocApiEntity extends NgDocAngularEntity<NgDocApi> {
 	}
 
 	get route(): string {
-		const folderName: string = path.basename(path.dirname(this.sourceFile.getFilePath()));
-
-		return this.target?.route ?? folderName;
+		return this.target?.route ?? 'api';
 	}
 
 	/**
@@ -53,11 +54,15 @@ export class NgDocApiEntity extends NgDocAngularEntity<NgDocApi> {
 	}
 
 	get moduleFileName(): string {
-		return `ng-doc-api-page.module.ts`;
+		return `ng-doc-api-list.module.ts`;
 	}
 
 	get buildCandidates(): NgDocEntity[] {
 		return this.parentEntities;
+	}
+
+	override get folderPathInGenerated(): string {
+		return path.join(GENERATED_MODULES_PATH, 'api');
 	}
 
 	override init(): Observable<void> {
@@ -86,14 +91,17 @@ export class NgDocApiEntity extends NgDocAngularEntity<NgDocApi> {
 	}
 
 	build(): Observable<NgDocBuildedOutput[]> {
-		return of([]);
+		return this.isReadyToBuild ? forkJoin([this.buildModule()]) : of([]);
 	}
 
 	private buildModule(): Observable<NgDocBuildedOutput> {
-		return of();
-	}
+		if (this.target) {
+			const renderer: NgDocRenderer<NgDocApiModuleEnv> = new NgDocRenderer<NgDocApiModuleEnv>({api: this});
 
-	private buildPage(): Observable<NgDocBuildedOutput> {
+			return renderer
+				.render('api.module.ts.nunj')
+				.pipe(map((output: string) => ({output, filePath: this.modulePathInGenerated})));
+		}
 		return of();
 	}
 

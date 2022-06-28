@@ -139,7 +139,7 @@ export class NgDocPageEntity extends NgDocAngularEntity<NgDocPage> {
 			const renderer: NgDocRenderer<NgDocPageModuleEnv> = new NgDocRenderer<NgDocPageModuleEnv>({page: this});
 
 			return renderer
-				.render('ng-doc.page.module.ts.nunj')
+				.render('page.module.ts.nunj')
 				.pipe(map((output: string) => ({output, filePath: this.modulePathInGenerated})));
 		}
 		return of();

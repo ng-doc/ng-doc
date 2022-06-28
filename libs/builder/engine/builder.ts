@@ -93,7 +93,7 @@ export class NgDocBuilder {
 		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocRoutingEnv>({entities});
 
 		return renderer
-			.render('ng-doc.routing.ts.nunj')
+			.render('routing.ts.nunj')
 			.pipe(map((output: string) => ({output, filePath: path.join(GENERATED_PATH, 'ng-doc.routing.ts')})));
 	}
 
@@ -102,7 +102,7 @@ export class NgDocBuilder {
 		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocContextEnv>({entities});
 
 		return renderer
-			.render('ng-doc.context.ts.nunj')
+			.render('context.ts.nunj')
 			.pipe(map((output: string) => ({output, filePath: path.join(GENERATED_PATH, 'ng-doc.context.ts')})));
 	}
 }

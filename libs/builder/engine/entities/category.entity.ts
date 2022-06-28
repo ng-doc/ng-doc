@@ -112,7 +112,7 @@ export class NgDocCategoryEntity extends NgDocAngularEntity<NgDocCategory> {
 			});
 
 			return renderer
-				.render('ng-doc.category.module.ts.nunj')
+				.render('category.module.ts.nunj')
 				.pipe(map((output: string) => ({output, filePath: this.modulePathInGenerated})));
 		}
 		return of();

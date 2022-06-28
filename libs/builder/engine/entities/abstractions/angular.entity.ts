@@ -48,6 +48,10 @@ export abstract class NgDocAngularEntity<T> extends NgDocEntity {
 	 */
 	abstract moduleName: string;
 
+	override get storeKey(): string {
+		return this.sourceFilePath;
+	}
+
 	/**
 	 * Returns title based on the route.
 	 *

@@ -6,4 +6,4 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 	styleUrls: ['./api-page.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApiPageComponent {}
+export class NgDocApiPageComponent {}

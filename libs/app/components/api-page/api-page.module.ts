@@ -1,10 +1,11 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 
-import {ApiPageComponent} from './api-page.component';
+import {NgDocApiPageComponent} from './api-page.component';
 
 @NgModule({
-	declarations: [ApiPageComponent],
+	declarations: [NgDocApiPageComponent],
 	imports: [CommonModule],
+	exports: [NgDocApiPageComponent]
 })
-export class ApiPageModule {}
+export class NgDocApiPageModule {}

@@ -38,6 +38,11 @@ export abstract class NgDocEntity {
 	}
 
 	/**
+	 * The key by which the entity will be stored in the store
+	 */
+	abstract readonly storeKey: string;
+
+	/**
 	 * Indicates when it's root entity and should be used for rooted components.
 	 */
 	abstract readonly isRoot: boolean;

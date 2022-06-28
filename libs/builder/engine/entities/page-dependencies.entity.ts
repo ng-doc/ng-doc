@@ -37,6 +37,10 @@ export class NgDocPageDependenciesEntity extends NgDocEntity {
 		super(project, sourceFile, context, entityStore);
 	}
 
+	override get storeKey(): string {
+		return this.sourceFilePath;
+	}
+
 	get isRoot(): boolean {
 		// always false, page dependencies are not rooted
 		return false;
@@ -121,7 +125,7 @@ export class NgDocPageDependenciesEntity extends NgDocEntity {
 		});
 
 		return renderer
-			.render('ng-doc.component-assets.ts.nunj')
+			.render('component-assets.ts.nunj')
 			.pipe(map((output: string) => ({output, filePath: this.componentAssetsInGenerated})));
 	}
 

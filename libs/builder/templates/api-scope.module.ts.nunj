@@ -1,0 +1,24 @@
+// @ts-nocheck
+import {NgModule} from "@angular/core";
+import {RouterModule} from "@angular/router";
+
+@NgModule({
+	imports: [
+		RouterModule.forChild([
+			{
+				path: '{{ scope.route }}',
+				children: [
+					{%- for page in scope.children %}
+					{
+						path: '{{ page.route }}',
+						loadChildren: () => import('{{ page.moduleImportPath }}').then(m => m.{{ page.moduleName }})
+					},
+					{%- endfor %}
+				]
+			}
+		]),
+	],
+	exports: [RouterModule]
+})
+export class {{ scope.moduleName }} {
+}

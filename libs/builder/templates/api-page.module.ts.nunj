@@ -1,0 +1,26 @@
+// @ts-nocheck
+import {ChangeDetectionStrategy, Component, NgModule} from "@angular/core";
+import {RouterModule} from "@angular/router";
+import {CommonModule} from '@angular/common';
+import {NgDocApiPageModule} from '@ng-doc/app';
+
+@Component({
+	template: `<ng-doc-api-page></ng-doc-api-page>`,
+	changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class {{ page.componentName }} {}
+
+@NgModule({
+	declarations: [{{ page.componentName }}],
+	imports: [
+		CommonModule,
+		NgDocApiPageModule,
+		RouterModule.forChild([{
+			path: '',
+			component: {{ page.componentName }},
+		}]),
+	],
+	exports: [RouterModule]
+})
+export class {{ page.moduleName }} {
+}
