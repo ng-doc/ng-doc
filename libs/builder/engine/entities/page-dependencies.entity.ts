@@ -41,20 +41,20 @@ export class NgDocPageDependenciesEntity extends NgDocEntity {
 		return this.sourceFilePath;
 	}
 
-	get isRoot(): boolean {
+	override get isRoot(): boolean {
 		// always false, page dependencies are not rooted
 		return false;
 	}
 
-	get folderPathInGenerated(): string {
+	override get folderPathInGenerated(): string {
 		return this.parent?.folderPathInGenerated || '';
 	}
 
-	get buildCandidates(): NgDocEntity[] {
+	override get buildCandidates(): NgDocEntity[] {
 		return [];
 	}
 
-	get parent(): NgDocPageEntity | undefined {
+	override get parent(): NgDocPageEntity | undefined {
 		const expectedPath: string = path.join(this.sourceFileFolder, PAGE_NAME);
 		const buildable: NgDocEntity | undefined = this.entityStore.get(expectedPath);
 
@@ -83,7 +83,7 @@ export class NgDocPageDependenciesEntity extends NgDocEntity {
 		return this.update();
 	}
 
-	build(): Observable<NgDocBuildedOutput[]> {
+	override build(): Observable<NgDocBuildedOutput[]> {
 		this.dependencies.clear();
 		this.fillAssets();
 		this.dependencies.add(...this.assets.map((asset: NgDocAsset) => asset.originalPath));
@@ -99,7 +99,7 @@ export class NgDocPageDependenciesEntity extends NgDocEntity {
 		);
 	}
 
-	protected update(): Observable<void> {
+	protected override update(): Observable<void> {
 		this.fillAssets();
 
 		this.readyToBuild = true;

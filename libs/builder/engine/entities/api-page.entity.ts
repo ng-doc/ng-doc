@@ -5,10 +5,11 @@ import {ExportedDeclarations, Project, SourceFile} from 'ts-morph';
 
 import {uniqueName} from '../../helpers';
 import {NgDocBuildedOutput, NgDocBuilderContext} from '../../interfaces';
-import {NgDocPageModuleEnv} from '../../templates-env';
+import {NgDocApiPageEnv} from '../../templates-env/api-page.env';
 import {NgDocApiPageModuleEnv} from '../../templates-env/api-page.module.env';
 import {NgDocEntityStore} from '../entity-store';
 import {NgDocRenderer} from '../renderer';
+import {RENDERED_PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocApiScopeEntity} from './api-scope.entity';
 
@@ -41,11 +42,11 @@ export class NgDocApiPageEntity extends NgDocEntity {
 		return this.declaration.getSymbol()?.getName() ?? '';
 	}
 
-	get folderPathInGenerated(): string {
+	override get folderPathInGenerated(): string {
 		return path.join(this.parent.folderPathInGenerated, this.route);
 	}
 
-	get buildCandidates(): NgDocEntity[] {
+	override get buildCandidates(): NgDocEntity[] {
 		return [];
 	}
 
@@ -71,6 +72,13 @@ export class NgDocApiPageEntity extends NgDocEntity {
 		return path.relative(this.context.context.workspaceRoot, this.modulePathInGenerated).replace(/.ts$/, '');
 	}
 
+	get builtPagePath(): string {
+		return path.relative(
+			this.context.context.workspaceRoot,
+			path.join(this.folderPathInGenerated, RENDERED_PAGE_NAME),
+		);
+	}
+
 	override init(): Observable<void> {
 		return of(void 0);
 	}
@@ -79,15 +87,25 @@ export class NgDocApiPageEntity extends NgDocEntity {
 		return of(void 0);
 	}
 
-	build(): Observable<NgDocBuildedOutput[]> {
-		return this.isReadyToBuild ? forkJoin([this.buildModule()]) : of([]);
+	override build(): Observable<NgDocBuildedOutput[]> {
+		return this.isReadyToBuild ? forkJoin([this.buildPage(), this.buildModule()]) : of([]);
 	}
 
 	private buildModule(): Observable<NgDocBuildedOutput> {
-			const renderer: NgDocRenderer<NgDocApiPageModuleEnv> = new NgDocRenderer<NgDocApiPageModuleEnv>({page: this});
+		const renderer: NgDocRenderer<NgDocApiPageModuleEnv> = new NgDocRenderer<NgDocApiPageModuleEnv>({page: this});
 
-			return renderer
-				.render('api-page.module.ts.nunj')
-				.pipe(map((output: string) => ({output, filePath: this.modulePathInGenerated})));
+		return renderer
+			.render('api-page.module.ts.nunj')
+			.pipe(map((output: string) => ({output, filePath: this.modulePathInGenerated})));
+	}
+
+	private buildPage(): Observable<NgDocBuildedOutput> {
+		const renderer: NgDocRenderer<NgDocApiPageEnv> = new NgDocRenderer<NgDocApiPageEnv>({
+			declaration: this.declaration,
+		});
+
+		return renderer
+			.render('api-page.md.nunj')
+			.pipe(map((output: string) => ({output, filePath: this.builtPagePath})));
 	}
 }

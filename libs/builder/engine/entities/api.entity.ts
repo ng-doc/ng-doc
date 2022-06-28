@@ -15,9 +15,9 @@ import {NgDocApiScopeEntity} from './api-scope.entity';
 import {NgDocCategoryEntity} from './category.entity';
 
 export class NgDocApiEntity extends NgDocAngularEntity<NgDocApi> {
-	moduleName: string = uniqueName(`NgDocGeneratedApiListModule`);
+	override moduleName: string = uniqueName(`NgDocGeneratedApiListModule`);
 	componentName: string = uniqueName(`NgDocGeneratedApiListComponent`);
-	parent?: NgDocCategoryEntity;
+	override parent?: NgDocCategoryEntity;
 
 	constructor(
 		override readonly project: Project,
@@ -28,7 +28,7 @@ export class NgDocApiEntity extends NgDocAngularEntity<NgDocApi> {
 		super(project, sourceFile, context, entityStore);
 	}
 
-	get route(): string {
+	override get route(): string {
 		return this.target?.route ?? 'api';
 	}
 
@@ -41,23 +41,23 @@ export class NgDocApiEntity extends NgDocAngularEntity<NgDocApi> {
 		return `${this.parent ? this.parent.url + '/' : ''}${this.route}`;
 	}
 
-	get isRoot(): boolean {
+	override get isRoot(): boolean {
 		return !this.target?.category;
 	}
 
-	get title(): string {
+	override get title(): string {
 		return this.target?.title ?? '';
 	}
 
-	get order(): number | undefined {
+	override get order(): number | undefined {
 		return this.target?.order;
 	}
 
-	get moduleFileName(): string {
+	override get moduleFileName(): string {
 		return `ng-doc-api-list.module.ts`;
 	}
 
-	get buildCandidates(): NgDocEntity[] {
+	override get buildCandidates(): NgDocEntity[] {
 		return this.parentEntities;
 	}
 
@@ -90,7 +90,7 @@ export class NgDocApiEntity extends NgDocAngularEntity<NgDocApi> {
 		);
 	}
 
-	build(): Observable<NgDocBuildedOutput[]> {
+	override build(): Observable<NgDocBuildedOutput[]> {
 		return this.isReadyToBuild ? forkJoin([this.buildModule()]) : of([]);
 	}
 

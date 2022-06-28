@@ -17,11 +17,7 @@ export class {{ api.componentName }} {}
 		NgDocApiListModule,
 		RouterModule.forChild([
 		{
-			{%- if api.isRoot %}
-			path: '{{ api.route }}',
-			{%- else %}
 			path: '',
-			{%- endif %}
 			component: {{ api.componentName }},
 			children: [
 				{%- for scope in api.children %}

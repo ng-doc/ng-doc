@@ -1,20 +1,26 @@
 // @ts-nocheck
-import {ChangeDetectionStrategy, Component, NgModule} from "@angular/core";
+import {ChangeDetectionStrategy, Component, NgModule, Type} from "@angular/core";
 import {RouterModule} from "@angular/router";
 import {CommonModule} from '@angular/common';
-import {NgDocApiPageModule} from '@ng-doc/app';
+import {NgDocDemoAssets, NgDocPageModule, NgDocRootPage} from '@ng-doc/app';
+import pageMd from '!!raw-loader!{{ page.builtPagePath }}';
 
 @Component({
-	template: `<ng-doc-api-page></ng-doc-api-page>`,
+	template: `<ng-doc-page></ng-doc-page>`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	providers: [{provide: NgDocRootPage, useExisting: {{ page.componentName }}}],
 })
-export class {{ page.componentName }} {}
+export class {{ page.componentName }} extends NgDocRootPage {
+	readonly pageMd: string = pageMd;
+	readonly demo: Record<string, Type<unknown>> | undefined = undefined;
+	readonly demoAssets: NgDocDemoAssets | undefined = undefined;
+}
 
 @NgModule({
 	declarations: [{{ page.componentName }}],
 	imports: [
 		CommonModule,
-		NgDocApiPageModule,
+		NgDocPageModule,
 		RouterModule.forChild([{
 			path: '',
 			component: {{ page.componentName }},

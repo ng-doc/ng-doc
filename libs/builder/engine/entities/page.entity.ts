@@ -18,10 +18,10 @@ import {NgDocCategoryEntity} from './category.entity';
 import {NgDocPageDependenciesEntity} from './page-dependencies.entity';
 
 export class NgDocPageEntity extends NgDocAngularEntity<NgDocPage> {
-	moduleName: string = uniqueName(`NgDocGeneratedPageModule`);
+	override moduleName: string = uniqueName(`NgDocGeneratedPageModule`);
 	componentName: string = uniqueName(`NgDocGeneratedPageComponent`);
 
-	parent?: NgDocCategoryEntity;
+	override parent?: NgDocCategoryEntity;
 
 	constructor(
 		override readonly project: Project,
@@ -32,7 +32,7 @@ export class NgDocPageEntity extends NgDocAngularEntity<NgDocPage> {
 		super(project, sourceFile, context, entityStore);
 	}
 
-	get route(): string {
+	override get route(): string {
 		const folderName: string = path.basename(path.dirname(this.sourceFile.getFilePath()));
 
 		return this.target?.route ?? folderName;
@@ -47,11 +47,11 @@ export class NgDocPageEntity extends NgDocAngularEntity<NgDocPage> {
 		return `${this.parent ? this.parent.url + '/' : ''}${this.route}`;
 	}
 
-	get isRoot(): boolean {
+	override get isRoot(): boolean {
 		return !this.target?.category;
 	}
 
-	get title(): string {
+	override get title(): string {
 		return this.target?.title ?? '';
 	}
 
@@ -59,11 +59,11 @@ export class NgDocPageEntity extends NgDocAngularEntity<NgDocPage> {
 		return this.target?.scope?.replace(CACHE_PATH, '') ?? this.parent?.scope ?? this.context.context.workspaceRoot;
 	}
 
-	get order(): number | undefined {
+	override get order(): number | undefined {
 		return this.target?.order;
 	}
 
-	get moduleFileName(): string {
+	override get moduleFileName(): string {
 		return `ng-doc-page.module.ts`;
 	}
 
@@ -78,7 +78,7 @@ export class NgDocPageEntity extends NgDocAngularEntity<NgDocPage> {
 		);
 	}
 
-	get buildCandidates(): NgDocEntity[] {
+	override get buildCandidates(): NgDocEntity[] {
 		return this.parentEntities;
 	}
 
@@ -130,7 +130,7 @@ export class NgDocPageEntity extends NgDocAngularEntity<NgDocPage> {
 		);
 	}
 
-	build(): Observable<NgDocBuildedOutput[]> {
+	override build(): Observable<NgDocBuildedOutput[]> {
 		return this.isReadyToBuild ? forkJoin([this.buildPage(), this.buildModule()]) : of([]);
 	}
 

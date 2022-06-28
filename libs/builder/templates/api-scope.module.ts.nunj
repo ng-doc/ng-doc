@@ -6,7 +6,7 @@ import {RouterModule} from "@angular/router";
 	imports: [
 		RouterModule.forChild([
 			{
-				path: '{{ scope.route }}',
+				path: '',
 				children: [
 					{%- for page in scope.children %}
 					{

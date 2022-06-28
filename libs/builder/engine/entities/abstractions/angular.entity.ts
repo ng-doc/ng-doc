@@ -99,7 +99,7 @@ export abstract class NgDocAngularEntity<T> extends NgDocEntity {
 		return path.relative(this.context.context.workspaceRoot, this.modulePathInGenerated).replace(/.ts$/, '');
 	}
 
-	get folderPathInGenerated(): string {
+	override get folderPathInGenerated(): string {
 		return path.join(this.parent?.folderPathInGenerated ?? GENERATED_MODULES_PATH, this.route);
 	}
 
@@ -107,7 +107,7 @@ export abstract class NgDocAngularEntity<T> extends NgDocEntity {
 		return this.update();
 	}
 
-	protected update(): Observable<void> {
+	protected override update(): Observable<void> {
 		return of(null).pipe(
 			tap(() => {
 				this.sourceFile.refreshFromFileSystemSync();

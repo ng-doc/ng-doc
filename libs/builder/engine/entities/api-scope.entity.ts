@@ -16,7 +16,7 @@ import {NgDocApiPageEntity} from './api-page.entity';
 import {NgDocPageEntity} from './page.entity';
 
 export class NgDocApiScopeEntity extends NgDocAngularEntity<NgDocApiScope> {
-	moduleName: string = uniqueName(`NgDocGeneratedApiScopeCategoryModule`);
+	override moduleName: string = uniqueName(`NgDocGeneratedApiScopeCategoryModule`);
 	override readonly isNavigable: boolean = false;
 	protected override readyToBuild: boolean = true;
 
@@ -40,7 +40,7 @@ export class NgDocApiScopeEntity extends NgDocAngularEntity<NgDocApiScope> {
 		return false;
 	}
 
-	get route(): string {
+	override get route(): string {
 		return this.target.route;
 	}
 
@@ -53,7 +53,7 @@ export class NgDocApiScopeEntity extends NgDocAngularEntity<NgDocApiScope> {
 		return `${this.parent ? this.parent.url + '/' : ''}${this.route}`;
 	}
 
-	get order(): number | undefined {
+	override get order(): number | undefined {
 		return this.target?.order;
 	}
 
@@ -61,15 +61,15 @@ export class NgDocApiScopeEntity extends NgDocAngularEntity<NgDocApiScope> {
 		return asArray(this.children.values()).filter(isPageEntity);
 	}
 
-	get moduleFileName(): string {
+	override get moduleFileName(): string {
 		return `ng-doc-scope.module.ts`;
 	}
 
-	get title(): string {
+	override get title(): string {
 		return this.target.name;
 	}
 
-	get buildCandidates(): NgDocEntity[] {
+	override get buildCandidates(): NgDocEntity[] {
 		return this.childEntities;
 	}
 
@@ -100,7 +100,7 @@ export class NgDocApiScopeEntity extends NgDocAngularEntity<NgDocApiScope> {
 		return of(void 0);
 	}
 
-	build(): Observable<NgDocBuildedOutput[]> {
+	override build(): Observable<NgDocBuildedOutput[]> {
 		return this.isReadyToBuild ? forkJoin([this.buildModule()]) : of([]);
 	}
 
