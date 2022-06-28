@@ -1,4 +1,4 @@
-import {forkJoin, Observable} from 'rxjs';
+import {forkJoin, Observable, of} from 'rxjs';
 import {mapTo} from 'rxjs/operators';
 
 import {NgDocEntity} from '../abstractions/entity';
@@ -10,7 +10,5 @@ import {NgDocEntity} from '../abstractions/entity';
  * @returns {NgDocEntity[]} - initialized entities
  */
 export function initializeEntities(entities: NgDocEntity[]): Observable<NgDocEntity[]> {
-	return forkJoin(entities.filter((e: NgDocEntity) => !e.destroyed).map((e: NgDocEntity) => e.init())).pipe(
-		mapTo(entities),
-	);
+	return forkJoin(entities.map((e: NgDocEntity) => (e.destroyed ? of(e) : e.init()))).pipe(mapTo(entities));
 }
