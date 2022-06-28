@@ -1,7 +1,7 @@
 import {NgDocApi} from '@ng-doc/builder';
 
 export const api: NgDocApi = {
-	title: 'API Reference',
+	title: 'API',
 	scopes: [
 		{
 			name: '@ng-doc/app',

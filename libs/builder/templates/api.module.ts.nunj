@@ -18,9 +18,9 @@ export class {{ api.componentName }} {}
 		RouterModule.forChild([
 		{
 			{%- if api.isRoot %}
-			path: '',
-			{%- else %}
 			path: '{{ api.route }}',
+			{%- else %}
+			path: '',
 			{%- endif %}
 			component: {{ api.componentName }},
 			children: [

@@ -2,11 +2,6 @@
 import {NgModule} from "@angular/core";
 import {RouterModule} from "@angular/router";
 
-{%- for child in category.categories %}
-// noinspection ES6UnusedImports
-import { {{ child.moduleName }} } from '{{ child.moduleImportPath }}';
-{%- endfor %}
-
 @NgModule({
 	imports: [RouterModule.forChild([
 		{
@@ -16,18 +11,15 @@ import { {{ child.moduleName }} } from '{{ child.moduleImportPath }}';
 			path: '{{ category.route }}',
 			{%- endif %}
 			children: [
-				{%- for page in category.pages %}
+				{%- for child in category.children %}
 				{
-					path: '{{ page.route }}',
-					loadChildren: () => import('{{ page.moduleImportPath }}').then(m => m.{{ page.moduleName }})
+					path: '{{ child.route }}',
+					loadChildren: () => import('{{ child.moduleImportPath }}').then(m => m.{{ child.moduleName }})
 				},
 				{%- endfor %}
 			]
 		}
 	]),
-		{%- for child in category.categories %}
-		{{ child.moduleName }},
-		{%- endfor %}
 	],
 	exports: [RouterModule]
 })
