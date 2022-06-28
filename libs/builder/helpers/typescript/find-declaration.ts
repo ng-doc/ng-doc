@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {Node, Project, SourceFile, Symbol} from 'ts-morph';
 
-import {NgDocPageEntity} from '../../engine/entities/page';
+import {NgDocPageEntity} from '../../engine/entities/page.entity';
 import {NgDocPathAnchor} from '../../interfaces';
 import {extractPathAnchor} from '../extract-path-anchor';
 

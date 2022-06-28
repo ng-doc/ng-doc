@@ -1,19 +1,31 @@
 import * as path from 'path';
 import {forkJoin, Observable} from 'rxjs';
 import {concatMap, map, mapTo, tap} from 'rxjs/operators';
-import {Project} from 'ts-morph';
+import {Project, SourceFile} from 'ts-morph';
 
 import {asArray, createProject, emitBuildedOutput} from '../helpers';
+import {getEntityConstructor} from '../helpers/get-entity-constructor';
 import {NgDocBuildedOutput, NgDocBuilderContext} from '../interfaces';
+import {bufferDebounce} from '../operators';
 import {NgDocContextEnv, NgDocRoutingEnv} from '../templates-env';
-import {NgDocEntity} from './entities/entity';
+import {Constructable} from '../types';
+import {NgDocEntity} from './entities/abstractions/entity';
 import {NgDocEntityStore} from './entity-store';
 import {NgDocRenderer} from './renderer';
-import {CACHE_PATH, GENERATED_PATH} from './variables';
+import {
+	API_PATTERN,
+	CACHE_PATH,
+	CATEGORY_PATTERN,
+	GENERATED_PATH,
+	PAGE_DEPENDENCY_PATTERN,
+	PAGE_PATTERN,
+} from './variables';
+import {NgDocWatcher} from './watcher';
 
 export class NgDocBuilder {
 	private readonly project: Project;
 	private readonly entities: NgDocEntityStore;
+	private readonly watcher: NgDocWatcher;
 
 	constructor(private readonly context: NgDocBuilderContext) {
 		this.project = createProject({
@@ -24,13 +36,38 @@ export class NgDocBuilder {
 			},
 		});
 
-		this.entities = new NgDocEntityStore(this.context, this.project);
+		this.entities = new NgDocEntityStore();
+
+		this.watcher = new NgDocWatcher(
+			asArray(this.context.options.ngDoc.pages)
+				.map((pagesPath: string) => [
+					path.join(pagesPath, PAGE_PATTERN),
+					path.join(pagesPath, CATEGORY_PATTERN),
+					path.join(pagesPath, PAGE_DEPENDENCY_PATTERN),
+					path.join(pagesPath, API_PATTERN),
+				])
+				.flat(),
+		);
+
+		this.watcher.add
+			.pipe(
+				map((paths: string[]) =>
+					paths.map((sourceFilePath: string) => {
+						const Constructor: Constructable<NgDocEntity> = getEntityConstructor(sourceFilePath);
+						const sourceFile: SourceFile = this.project.addSourceFileAtPath(sourceFilePath);
+
+						return new Constructor(this.project, sourceFile, this.context, this.entities);
+					}),
+				),
+			)
+			.subscribe();
 	}
 
 	run(): Observable<void> {
 		console.time('Build documentation');
 		return this.entities.changes.pipe(
-			concatMap((entities: NgDocEntity | NgDocEntity[]) => this.build(...asArray(entities))),
+			bufferDebounce(20),
+			concatMap((entities: NgDocEntity[][]) => this.build(...asArray(new Set(entities.flat())))),
 			tap(() => console.timeEnd('Build documentation')),
 		);
 	}
@@ -39,7 +76,9 @@ export class NgDocBuilder {
 		this.context.context.reportStatus('Building documentation...');
 
 		return forkJoin([
-			...changedEntities.map((entity: NgDocEntity) => entity.build()),
+			...changedEntities
+				.filter((entity: NgDocEntity) => entity.isReadyToBuild)
+				.map((entity: NgDocEntity) => entity.build()),
 			this.buildRoutes(),
 			this.buildContext(),
 		]).pipe(

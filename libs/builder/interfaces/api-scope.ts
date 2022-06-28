@@ -1,4 +1,7 @@
 export interface NgDocApiScope {
 	name: string;
-	sourcePath: string;
+	route: string;
+	order?: number;
+	include: string | string[];
+	exclude?: string | string[];
 }

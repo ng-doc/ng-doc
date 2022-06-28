@@ -1,10 +1,10 @@
-import {NgDocCategoryPoint} from '../engine/entities/category';
+import {NgDocCategoryEntity} from '../engine/entities/category.entity';
 import {Constructable} from '../types';
 
 /**
  *
  * @param page
  */
-export function isCategoryEntity(page: InstanceType<Constructable>): page is NgDocCategoryPoint {
-	return page instanceof NgDocCategoryPoint;
+export function isCategoryEntity(page: InstanceType<Constructable>): page is NgDocCategoryEntity {
+	return page instanceof NgDocCategoryEntity;
 }

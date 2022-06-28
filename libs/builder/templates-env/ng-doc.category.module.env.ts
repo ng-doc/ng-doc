@@ -1,5 +1,5 @@
-import {NgDocCategoryPoint} from '../engine/entities/category';
+import {NgDocCategoryEntity} from '../engine/entities/category.entity';
 
 export interface NgDocCategoryModuleEnv {
-	category: NgDocCategoryPoint;
+	category: NgDocCategoryEntity;
 }

@@ -1,4 +1,4 @@
-import {NgDocPageDependenciesEntity} from '../engine/entities/page-dependencies';
+import {NgDocPageDependenciesEntity} from '../engine/entities/page-dependencies.entity';
 import {Constructable} from '../types';
 
 /**

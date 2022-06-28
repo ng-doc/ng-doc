@@ -9,6 +9,7 @@ import {
 	Node,
 	ObjectLiteralElementLike,
 	ObjectLiteralExpression,
+	Project,
 	SourceFile,
 } from 'ts-morph';
 
@@ -19,21 +20,21 @@ import {NgDocComponentAssetsEnv} from '../../templates-env';
 import {NgDocEntityStore} from '../entity-store';
 import {NgDocRenderer} from '../renderer';
 import {PAGE_NAME} from '../variables';
-import {NgDocEntity} from './entity';
-import {NgDocPageEntity} from './page';
+import {NgDocEntity} from './abstractions/entity';
+import {NgDocPageEntity} from './page.entity';
 
 type ComponentAsset = Record<string, NgDocAsset[]>;
 
 export class NgDocPageDependenciesEntity extends NgDocEntity {
-	readonly isNavigable: boolean = false;
 	private componentsAssets: ComponentAsset = {};
 
 	constructor(
+		override readonly project: Project,
+		override readonly sourceFile: SourceFile,
 		protected override readonly context: NgDocBuilderContext,
 		protected override readonly entityStore: NgDocEntityStore,
-		protected override readonly sourceFile: SourceFile,
 	) {
-		super(context, entityStore, sourceFile);
+		super(project, sourceFile, context, entityStore);
 	}
 
 	get isRoot(): boolean {
@@ -70,17 +71,12 @@ export class NgDocPageDependenciesEntity extends NgDocEntity {
 		return path.join(this.folderPathInGenerated, 'ng-doc.component-assets');
 	}
 
-	emit(): Observable<void> {
+	override init(): Observable<void> {
 		/*
 			We don't want to emit current source file, because it may be depended on project's files,
 			so it may take too much time, the fastest way is to parse source file.
 		 */
-		return of(void 0);
-	}
-
-	update(): void {
-		this.fillAssets();
-		this.parent?.addChild(this);
+		return this.update();
 	}
 
 	build(): Observable<NgDocBuildedOutput[]> {
@@ -97,6 +93,14 @@ export class NgDocPageDependenciesEntity extends NgDocEntity {
 				})),
 			]),
 		);
+	}
+
+	protected update(): Observable<void> {
+		this.fillAssets();
+
+		this.readyToBuild = true;
+
+		return of(void 0);
 	}
 
 	private fillAssets(): void {

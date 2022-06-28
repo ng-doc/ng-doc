@@ -1,23 +1,27 @@
 import * as minimatch from 'minimatch';
 import * as path from 'path';
-import {from, Observable} from 'rxjs';
-import {mapTo} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {mapTo, tap} from 'rxjs/operators';
 import {SyntaxKind} from 'ts-morph';
 
-import {capitalize, isCategoryEntity} from '../../helpers';
-import {CACHE_PATH, CATEGORY_PATTERN, GENERATED_MODULES_PATH} from '../variables';
-import {NgDocCategoryPoint} from './category';
+import {capitalize, isCategoryEntity} from '../../../helpers';
+import {CACHE_PATH, CATEGORY_PATTERN, GENERATED_MODULES_PATH} from '../../variables';
+import {NgDocCategoryEntity} from '../category.entity';
 import {NgDocEntity} from './entity';
 
 /**
  * Entity for angular end points that generate modules and components.
  */
 export abstract class NgDocAngularEntity<T> extends NgDocEntity {
-	readonly isNavigable: boolean = true;
 	/**
-	 * Compiled source file.
+	 * Indicates when current entity is using for page navigation.
 	 */
-	protected compiled?: T;
+	readonly isNavigable: boolean = true;
+
+	/**
+	 * Entity target.
+	 */
+	protected target?: T;
 
 	/**
 	 * The route for the current entity.
@@ -28,11 +32,6 @@ export abstract class NgDocAngularEntity<T> extends NgDocEntity {
 	 * The title of the current entity.
 	 */
 	abstract title: string;
-
-	/**
-	 * The scope that using to resolve files in the templates.
-	 */
-	abstract scope: string;
 
 	/**
 	 * Order is using for sorting pages and categories in sidebar
@@ -48,15 +47,6 @@ export abstract class NgDocAngularEntity<T> extends NgDocEntity {
 	 * The title of the module.
 	 */
 	abstract moduleName: string;
-
-	/**
-	 * Returns full url from the root
-	 *
-	 * @type {string}
-	 */
-	get url(): string {
-		return `${this.parent ? this.parent.url + '/' : ''}${this.route}`;
-	}
 
 	/**
 	 * Returns title based on the route.
@@ -86,6 +76,17 @@ export abstract class NgDocAngularEntity<T> extends NgDocEntity {
 	}
 
 	/**
+	 * Returns children of the current buildable that are using for page navigation
+	 *
+	 * @type {NgDocEntity[]}
+	 */
+	get navigationItems(): NgDocEntity[] {
+		return this.childEntities.filter(
+			(child: NgDocEntity) => child instanceof NgDocAngularEntity && child.isNavigable,
+		);
+	}
+
+	/**
 	 * Returns relative paths to the module in generated folder that could be used for import
 	 *
 	 * @type {string}
@@ -98,7 +99,39 @@ export abstract class NgDocAngularEntity<T> extends NgDocEntity {
 		return path.join(this.parent?.folderPathInGenerated ?? GENERATED_MODULES_PATH, this.route);
 	}
 
-	get parent(): NgDocCategoryPoint | undefined {
+	override init(): Observable<void> {
+		return this.update();
+	}
+
+	protected update(): Observable<void> {
+		return of(null).pipe(
+			tap(() => {
+				this.sourceFile.refreshFromFileSystemSync();
+				// Sync because async method works weird and runs this hook few times
+				this.sourceFile.emitSync();
+
+				const relativePath: string = path.relative(
+					this.context.context.workspaceRoot,
+					this.sourceFile.getFilePath(),
+				);
+				const pathToCompiled: string = path.join(CACHE_PATH, relativePath.replace(/\.ts$/, '.js'));
+
+				delete require.cache[require.resolve(pathToCompiled)];
+				this.target = require(pathToCompiled).default;
+
+				if (!this.target) {
+					throw new Error(
+						`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`,
+					);
+				}
+
+				this.readyToBuild = true;
+			}),
+			mapTo(void 0),
+		);
+	}
+
+	protected getParentFromCategory(): NgDocCategoryEntity | undefined {
 		const sourceFilePath: string | undefined = this.getObjectExpressionFromDefault()
 			?.getProperty('category')
 			?.getChildrenOfKind(SyntaxKind.Identifier)
@@ -115,31 +148,5 @@ export abstract class NgDocAngularEntity<T> extends NgDocEntity {
 			return isCategoryEntity(parent) ? parent : undefined;
 		}
 		return undefined;
-	}
-
-	override emit(): Observable<void> {
-		return from(this.sourceFile.emit()).pipe(mapTo(void 0));
-	}
-
-	override update(): void {
-		const relativePath: string = path.relative(this.context.context.workspaceRoot, this.sourceFile.getFilePath());
-		const pathToCompiled: string = path.join(CACHE_PATH, relativePath.replace(/\.ts$/, '.js'));
-
-		delete require.cache[require.resolve(pathToCompiled)];
-		this.compiled = require(pathToCompiled).default;
-
-		if (!this.compiled) {
-			throw new Error(
-				`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`,
-			);
-		}
-
-		if (!this.title) {
-			throw new Error(
-				`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`,
-			);
-		}
-
-		this.readyToBuild = true;
 	}
 }

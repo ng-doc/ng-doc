@@ -1,37 +1,43 @@
+import {logging} from '@angular-devkit/core';
 import * as path from 'path';
-import {EMPTY, Observable} from 'rxjs';
-import {finalize, mapTo, switchMap} from 'rxjs/operators';
-import {Node, ObjectLiteralExpression, SourceFile, Symbol, SyntaxKind} from 'ts-morph';
+import {Observable, of, Subject} from 'rxjs';
+import {finalize, mapTo, startWith, switchMap} from 'rxjs/operators';
+import {Node, ObjectLiteralExpression, Project, SourceFile, Symbol, SyntaxKind} from 'ts-morph';
 
-import {ObservableSet} from '../../classes';
-import {asArray} from '../../helpers';
-import {NgDocBuildedOutput, NgDocBuilderContext} from '../../interfaces';
-import {NgDocEntityStore} from '../entity-store';
-import {NgDocWatcher} from '../watcher';
+import {ObservableSet} from '../../../classes';
+import {NgDocBuildedOutput, NgDocBuilderContext} from '../../../interfaces';
+import {NgDocEntityStore} from '../../entity-store';
+import {NgDocWatcher} from '../../watcher';
+import {NgDocEntityEvent} from '../interfaces/entity-event';
 
 /**
  * Base entity class that all entities should extend.
  */
 export abstract class NgDocEntity {
+	/** Indicates when entity was destroyed */
+	destroyed: boolean = false;
 	/**
 	 * Collection of all file dependencies of the current entity.
 	 * This property is using to watch for changes in this dependencies list and rebuild current buildable.
 	 */
 	readonly dependencies: ObservableSet<string> = new ObservableSet<string>();
-	/**
-	 * The children of the entity.
-	 * Contains all children of the current entity.
-	 */
-	readonly children: Set<NgDocEntity> = new Set();
 
 	/** Indicates when current entity could be built */
 	protected readyToBuild: boolean = false;
 
+	private watcher: NgDocWatcher;
+	private event$: Subject<NgDocEntityEvent> = new Subject<NgDocEntityEvent>();
+
 	protected constructor(
+		readonly project: Project,
+		readonly sourceFile: SourceFile,
 		protected readonly context: NgDocBuilderContext,
 		protected readonly entityStore: NgDocEntityStore,
-		protected readonly sourceFile: SourceFile,
-	) {}
+	) {
+		this.entityStore.add(this);
+
+		this.watcher = new NgDocWatcher(this.sourceFilePath);
+	}
 
 	/**
 	 * Indicates when it's root entity and should be used for rooted components.
@@ -41,7 +47,7 @@ export abstract class NgDocEntity {
 	/**
 	 * Should return the parent of the current entity
 	 */
-	abstract readonly parent: NgDocEntity | undefined;
+	abstract readonly parent?: NgDocEntity;
 
 	/**
 	 * Path to the sourceFileFolder in generated files.
@@ -53,36 +59,8 @@ export abstract class NgDocEntity {
 	 */
 	abstract readonly buildCandidates: NgDocEntity[];
 
-	/**
-	 * Indicates when current entity is using for page navigation.
-	 */
-	abstract readonly isNavigable: boolean;
-
-	/**
-	 * Emits source files to the cache, if it needs for the update;
-	 * This method runs before `update` method
-	 */
-	abstract emit(): Observable<void>;
-
-	/**
-	 * Updates current entity state from the cache.
-	 * This method runs after `emit` method
-	 */
-	abstract update(): void;
-
-	/**
-	 * Build all artifacts that need for application.
-	 * This is the last method in the build process, should return output that should be emitted to the file system
-	 */
-	abstract build(): Observable<NgDocBuildedOutput[]>;
-
-	/**
-	 * Returns the sourceFilePath to the source file
-	 *
-	 * @type {string}
-	 */
 	get sourceFilePath(): string {
-		return this.sourceFile.getFilePath();
+		return path.relative(this.context.context.workspaceRoot, this.sourceFile.getFilePath());
 	}
 
 	/**
@@ -104,26 +82,20 @@ export abstract class NgDocEntity {
 	}
 
 	/**
+	 * The children of the entity.
+	 * Contains all children of the current entity.
+	 */
+	get children(): NgDocEntity[] {
+		return this.entityStore.asArray().filter((entity: NgDocEntity) => entity.parent === this);
+	}
+
+	/**
 	 * Recursively returns children for the current entity
 	 *
 	 * @type {Array<NgDocEntity>}
 	 */
 	get childEntities(): NgDocEntity[] {
-		return [
-			...this.children,
-			...asArray(this.children)
-				.map((child: NgDocEntity) => child.childEntities)
-				.flat(),
-		];
-	}
-
-	/**
-	 * Returns children of the current buildable that are using for page navigation
-	 *
-	 * @type {NgDocEntity[]}
-	 */
-	get navigationItems(): NgDocEntity[] {
-		return this.childEntities.filter((child: NgDocEntity) => child.isNavigable);
+		return [...this.children, ...this.children.map((child: NgDocEntity) => child.childEntities).flat()];
 	}
 
 	/**
@@ -132,7 +104,7 @@ export abstract class NgDocEntity {
 	 * @type {boolean}
 	 */
 	get hasChildren(): boolean {
-		return this.children.size > 0;
+		return this.children.length > 0;
 	}
 
 	/**
@@ -142,14 +114,12 @@ export abstract class NgDocEntity {
 	 */
 	get needToRebuild(): Observable<NgDocEntity> {
 		return this.dependencies.changes().pipe(
+			startWith([]),
 			switchMap((deps: string[]) => {
-				if (deps.length === 0) {
-					return EMPTY;
-				}
-
-				const watcher: NgDocWatcher = new NgDocWatcher(deps);
+				const watcher: NgDocWatcher = new NgDocWatcher([...deps, this.sourceFilePath]);
 
 				return watcher.update.pipe(
+					switchMap((filePath: string) => (filePath === this.sourceFilePath ? this.update() : of(this))),
 					mapTo(this),
 					finalize(() => watcher.close()),
 				);
@@ -164,35 +134,26 @@ export abstract class NgDocEntity {
 	 * @type {boolean}
 	 */
 	get isReadyToBuild(): boolean {
-		return this.readyToBuild;
+		return this.readyToBuild && !this.destroyed;
 	}
 
-	/**
-	 * Returns `SourceFile` for the current entity
-	 *
-	 * @type {SourceFile}
-	 */
-	getSourceFile(): SourceFile {
-		return this.sourceFile;
+	get logger(): logging.LoggerApi {
+		return this.context.context.logger;
 	}
 
-	/**
-	 * Adds child to the current entity
-	 *
-	 * @type {void}
-	 */
-	addChild(child: NgDocEntity): void {
-		this.children.add(child);
-	}
+	/** Runs when entity was created */
+	abstract init(): Observable<void>;
 
 	/**
-	 * Removes child from the current entity
-	 *
-	 * @type {void}
+	 * Build all artifacts that need for application.
+	 * This is the last method in the build process, should return output that should be emitted to the file system
 	 */
-	removeChild(child: NgDocEntity): void {
-		this.children.delete(child);
-	}
+	abstract build(): Observable<NgDocBuildedOutput[]>;
+
+	/**
+	 * Runs when the source file was updated, can be used to refresh target file etc.
+	 */
+	protected abstract update(): Observable<void>;
 
 	/**
 	 * Destroys current entity and clear all references
@@ -200,11 +161,9 @@ export abstract class NgDocEntity {
 	 * @type {void}
 	 */
 	destroy(): void {
-		this.parent?.removeChild(this);
-	}
+		this.entityStore.remove(this);
 
-	get builderContext(): NgDocBuilderContext {
-		return this.context;
+		this.destroyed = true;
 	}
 
 	/**

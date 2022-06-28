@@ -1,3 +1,4 @@
+export * from '@ng-doc/app/components/api-page';
 export * from '@ng-doc/app/components/code';
 export * from '@ng-doc/app/components/demo-viewer';
 export * from '@ng-doc/app/components/header';

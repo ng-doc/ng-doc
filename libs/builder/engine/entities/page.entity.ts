@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {SourceFile} from 'ts-morph';
+import {catchError, map, tap} from 'rxjs/operators';
+import {Project, SourceFile} from 'ts-morph';
 
 import {asArray, isPresent, uniqueName} from '../../helpers';
 import {isPageDependencyEntity} from '../../helpers/is-page-dependency-entity';
@@ -12,44 +12,55 @@ import {NgDocActions} from '../actions';
 import {NgDocEntityStore} from '../entity-store';
 import {NgDocRenderer} from '../renderer';
 import {CACHE_PATH, PAGE_DEPENDENCIES_NAME, RENDERED_PAGE_NAME} from '../variables';
-import {NgDocAngularEntity} from './angular-entity';
-import {NgDocEntity} from './entity';
-import {NgDocPageDependenciesEntity} from './page-dependencies';
+import {NgDocAngularEntity} from './abstractions/angular.entity';
+import {NgDocEntity} from './abstractions/entity';
+import {NgDocCategoryEntity} from './category.entity';
+import {NgDocPageDependenciesEntity} from './page-dependencies.entity';
 
 export class NgDocPageEntity extends NgDocAngularEntity<NgDocPage> {
 	moduleName: string = uniqueName(`NgDocGeneratedPageModule`);
 	componentName: string = uniqueName(`NgDocGeneratedPageComponent`);
 
+	parent?: NgDocCategoryEntity;
+
 	constructor(
+		override readonly project: Project,
+		override readonly sourceFile: SourceFile,
 		protected override readonly context: NgDocBuilderContext,
 		protected override readonly entityStore: NgDocEntityStore,
-		protected override readonly sourceFile: SourceFile,
 	) {
-		super(context, entityStore, sourceFile);
+		super(project, sourceFile, context, entityStore);
 	}
 
 	get route(): string {
 		const folderName: string = path.basename(path.dirname(this.sourceFile.getFilePath()));
 
-		return this.compiled?.route ?? folderName;
+		return this.target?.route ?? folderName;
+	}
+
+	/**
+	 * Returns full url from the root
+	 *
+	 * @type {string}
+	 */
+	get url(): string {
+		return `${this.parent ? this.parent.url + '/' : ''}${this.route}`;
 	}
 
 	get isRoot(): boolean {
-		return !this.compiled?.category;
+		return !this.target?.category;
 	}
 
 	get title(): string {
-		return this.compiled?.title ?? '';
+		return this.target?.title ?? '';
 	}
 
 	get scope(): string {
-		return (
-			this.compiled?.scope?.replace(CACHE_PATH, '') ?? this.parent?.scope ?? this.context.context.workspaceRoot
-		);
+		return this.target?.scope?.replace(CACHE_PATH, '') ?? this.parent?.scope ?? this.context.context.workspaceRoot;
 	}
 
 	get order(): number | undefined {
-		return this.compiled?.order;
+		return this.target?.order;
 	}
 
 	get moduleFileName(): string {
@@ -57,7 +68,7 @@ export class NgDocPageEntity extends NgDocAngularEntity<NgDocPage> {
 	}
 
 	get mdPath(): string {
-		return path.join(this.sourceFileFolder, this.compiled?.mdFile ?? '');
+		return path.join(this.sourceFileFolder, this.target?.mdFile ?? '');
 	}
 
 	get builtPagePath(): string {
@@ -93,20 +104,30 @@ export class NgDocPageEntity extends NgDocAngularEntity<NgDocPage> {
 		return dependencies ? dependencies.componentAssetsInGeneratedImport : undefined;
 	}
 
-	override update(): void {
-		try {
-			super.update();
-			this.parent?.addChild(this);
+	protected override update(): Observable<void> {
+		return super.update().pipe(
+			tap(() => {
+				if (!isPresent(this.target?.mdFile) || !fs.existsSync(this.mdPath)) {
+					throw new Error(
+						`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you define mdFile property correctly and .md file exists.`,
+					);
+				}
 
-			if (!isPresent(this.compiled?.mdFile) || !fs.existsSync(this.mdPath)) {
-				throw new Error(
-					`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you define mdFile property correctly and .md file exists.`,
-				);
-			}
-		} catch (error: unknown) {
-			this.readyToBuild = false;
-			this.context.context.logger.error(`\n${String(error)}`);
-		}
+				if (!this.title) {
+					throw new Error(
+						`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`,
+					);
+				}
+
+				this.parent = this.getParentFromCategory();
+			}),
+			catchError((error: unknown) => {
+				this.readyToBuild = false;
+				this.context.context.logger.error(`\n${String(error)}`);
+
+				return of(void 0);
+			}),
+		);
 	}
 
 	build(): Observable<NgDocBuildedOutput[]> {
@@ -114,7 +135,7 @@ export class NgDocPageEntity extends NgDocAngularEntity<NgDocPage> {
 	}
 
 	private buildModule(): Observable<NgDocBuildedOutput> {
-		if (this.compiled) {
+		if (this.target) {
 			const renderer: NgDocRenderer<NgDocPageModuleEnv> = new NgDocRenderer<NgDocPageModuleEnv>({page: this});
 
 			return renderer
@@ -127,16 +148,16 @@ export class NgDocPageEntity extends NgDocAngularEntity<NgDocPage> {
 	private buildPage(): Observable<NgDocBuildedOutput> {
 		this.dependencies.clear();
 
-		if (this.compiled) {
+		if (this.target) {
 			this.dependencies.add(this.mdPath);
 
 			const renderer: NgDocRenderer<NgDocPageEnv> = new NgDocRenderer<NgDocPageEnv>({
-				NgDocPage: this.compiled,
+				NgDocPage: this.target,
 				NgDocActions: new NgDocActions(this),
 			});
 
 			return renderer
-				.render(this.compiled?.mdFile, {scope: this.sourceFileFolder})
+				.render(this.target?.mdFile, {scope: this.sourceFileFolder})
 				.pipe(map((output: string) => ({output, filePath: this.builtPagePath})));
 		}
 		return of();

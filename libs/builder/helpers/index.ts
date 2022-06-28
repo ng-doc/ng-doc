@@ -8,6 +8,7 @@ export * from './find-closest-file';
 export * from './format-code';
 export * from './is-category-entity';
 export * from './is-iterable';
+export * from './is-not-excluded-path';
 export * from './is-page-entity';
 export * from './is-present';
 export * from './process-snippets';

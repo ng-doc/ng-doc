@@ -4,7 +4,7 @@ import {findDeclaration} from '../../helpers';
 import {NgDocActionOutput} from '../../interfaces';
 import {NgDocApiEnv} from '../../templates-env/api.env';
 import {NgDocAction} from '../../types';
-import {NgDocPageEntity} from '../entities/page';
+import {NgDocPageEntity} from '../entities/page.entity';
 import {NgDocRenderer} from '../renderer';
 
 /**
@@ -29,7 +29,7 @@ export function apiAction(sourcePath: string): NgDocAction {
 				dependencies: [declaration.getSourceFile().getFilePath()],
 			};
 		} catch (e) {
-			page.builderContext.context.logger.error(`Error while executing API action: ${e}`);
+			page.logger.error(`Error while executing API action: ${e}`);
 
 			return {output: ``};
 		}

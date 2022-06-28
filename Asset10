@@ -1,0 +1,3 @@
+ngOnInit(): void {
+		console.log('inline-demo works!');
+	}

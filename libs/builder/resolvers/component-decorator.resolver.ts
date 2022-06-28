@@ -7,7 +7,7 @@ import {stringExpressionResolver} from './string-expression.resolver';
 /**
  *	Resolves the component decorator and return its properties.
  *
- * @param {ObjectLiteralExpression} objectLiteralExpression The object literal expression to extract data.
+ * @param {ObjectLiteralExpression} objectLiteralExpression The object literal expression to extract target.
  * @returns {Component} The component decorator properties.
  */
 export function componentDecoratorResolver(objectLiteralExpression: ObjectLiteralExpression): Component {
@@ -17,5 +17,5 @@ export function componentDecoratorResolver(objectLiteralExpression: ObjectLitera
 	return {
 		templateUrl: stringExpressionResolver(getPropertyAssignment(templateProperty)),
 		styleUrls: stringExpressionResolver(getPropertyAssignment(styleUrlsProperty)),
-	}
+	};
 }

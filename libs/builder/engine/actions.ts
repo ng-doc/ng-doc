@@ -3,7 +3,7 @@ import {NgDocAction} from '../types';
 import {apiAction} from './actions/api.action';
 import {demoAction} from './actions/demo.action';
 import {playgroundAction} from './actions/playground.action';
-import {NgDocPageEntity} from './entities/page';
+import {NgDocPageEntity} from './entities/page.entity';
 
 export class NgDocActions {
 	constructor(private readonly page: NgDocPageEntity) {}
@@ -21,7 +21,7 @@ export class NgDocActions {
 	}
 
 	private performAction(action: NgDocAction): string {
-		const output: NgDocActionOutput = action(this.page.getSourceFile().getProject(), this.page);
+		const output: NgDocActionOutput = action(this.page.project, this.page);
 
 		this.page.dependencies.add(...(output.dependencies ?? []));
 
