@@ -11,7 +11,7 @@ import {RouterModule} from "@angular/router";
 					{%- for page in scope.children %}
 					{
 						path: '{{ page.route }}',
-						loadChildren: () => import('{{ page.moduleImportPath }}').then(m => m.{{ page.moduleName }})
+						loadChildren: () => import('{{ page.moduleImport }}').then(m => m.{{ page.moduleName }})
 					},
 					{%- endfor %}
 				]

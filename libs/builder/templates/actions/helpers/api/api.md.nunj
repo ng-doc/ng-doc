@@ -1,0 +1,18 @@
+{% import "actions/helpers/api/class-api.md.nunj" as class %}
+{% import "actions/helpers/api/interface-api.md.nunj" as interface %}
+{% import "actions/helpers/api/enum-api.md.nunj" as enum %}
+{% import "actions/helpers/api/type-alias-api.md.nunj" as typeAlias %}
+
+{%- macro render(Node, declaration) -%}
+{%- if Node.isClassDeclaration(declaration) %}
+{{ class.render(Node, declaration) }}
+{%- elif Node.isEnumDeclaration(declaration) %}
+{{ enum.render(Node, declaration) }}
+{%- elif Node.isInterfaceDeclaration(declaration) %}
+{{ interface.render(Node, declaration) }}
+{%- elif Node.isTypeAliasDeclaration(declaration) %}
+{{ typeAlias.render(Node, declaration) }}
+{%- endif %}
+{%- endmacro -%}
+
+

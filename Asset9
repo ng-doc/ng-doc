@@ -1,5 +1,0 @@
-export class InlineDemoComponent implements OnInit {
-  ngOnInit(): void {
-    console.log("inline-demo works!");
-  }
-}

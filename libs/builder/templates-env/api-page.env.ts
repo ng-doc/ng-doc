@@ -1,5 +1,6 @@
-import {ExportedDeclarations} from 'ts-morph';
+import {ExportedDeclarations, Node} from 'ts-morph';
 
 export interface NgDocApiPageEnv {
-	declaration: ExportedDeclarations
+	Node: typeof Node;
+	declaration: ExportedDeclarations;
 }

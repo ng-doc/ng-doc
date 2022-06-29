@@ -9,7 +9,7 @@
 |:----------|:------|:---------|:-------------|
 {%- for p in properties -%}
 {%- if p.getScope() === 'public' %}
-| {{ property.render(p) }} | {{ type.render(p.getType()) }} | {{ p.getInitializer().getText() }} | {{ doc.render(p.getJsDocs()) }} |
+| {{ property.render(p) }} | {{ type.render(p.getType()) }} | {% if p.getInitializer() %}{{ p.getInitializer().getText() }}{% endif%} | {{ doc.render(p.getJsDocs()) }} |
 {%- endif %}
 {%- endfor -%}
 {%- endmacro -%}

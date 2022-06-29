@@ -14,7 +14,7 @@ import {RouterModule} from "@angular/router";
 				{%- for child in category.children %}
 				{
 					path: '{{ child.route }}',
-					loadChildren: () => import('{{ child.moduleImportPath }}').then(m => m.{{ child.moduleName }})
+					loadChildren: () => import('{{ child.moduleImport }}').then(m => m.{{ child.moduleName }})
 				},
 				{%- endfor %}
 			]

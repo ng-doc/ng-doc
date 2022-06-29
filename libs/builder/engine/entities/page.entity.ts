@@ -12,12 +12,12 @@ import {NgDocActions} from '../actions';
 import {NgDocEntityStore} from '../entity-store';
 import {NgDocRenderer} from '../renderer';
 import {CACHE_PATH, PAGE_DEPENDENCIES_NAME, RENDERED_PAGE_NAME} from '../variables';
-import {NgDocAngularEntity} from './abstractions/angular.entity';
 import {NgDocEntity} from './abstractions/entity';
+import {NgDocFileEntity} from './abstractions/file.entity';
 import {NgDocCategoryEntity} from './category.entity';
-import {NgDocPageDependenciesEntity} from './page-dependencies.entity';
+import {NgDocDependenciesEntity} from './dependencies.entity';
 
-export class NgDocPageEntity extends NgDocAngularEntity<NgDocPage> {
+export class NgDocPageEntity extends NgDocFileEntity<NgDocPage> {
 	override moduleName: string = uniqueName(`NgDocGeneratedPageModule`);
 	componentName: string = uniqueName(`NgDocGeneratedPageComponent`);
 
@@ -74,7 +74,7 @@ export class NgDocPageEntity extends NgDocAngularEntity<NgDocPage> {
 	get builtPagePath(): string {
 		return path.relative(
 			this.context.context.workspaceRoot,
-			path.join(this.folderPathInGenerated, RENDERED_PAGE_NAME),
+			path.join(this.folderPath, RENDERED_PAGE_NAME),
 		);
 	}
 
@@ -83,7 +83,7 @@ export class NgDocPageEntity extends NgDocAngularEntity<NgDocPage> {
 	}
 
 	get assetsFolder(): string {
-		return path.relative(this.context.context.workspaceRoot, path.join(this.folderPathInGenerated, 'assets'));
+		return path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, 'assets'));
 	}
 
 	get pageDependenciesFile(): string | undefined {
@@ -97,11 +97,11 @@ export class NgDocPageEntity extends NgDocAngularEntity<NgDocPage> {
 	}
 
 	get componentsAssets(): string | undefined {
-		const dependencies: NgDocPageDependenciesEntity | undefined = asArray(this.children.values()).filter(
+		const dependencies: NgDocDependenciesEntity | undefined = asArray(this.children.values()).filter(
 			isPageDependencyEntity,
 		)[0];
 
-		return dependencies ? dependencies.componentAssetsInGeneratedImport : undefined;
+		return dependencies ? dependencies.componentAssetsImport : undefined;
 	}
 
 	protected override update(): Observable<void> {
@@ -140,7 +140,7 @@ export class NgDocPageEntity extends NgDocAngularEntity<NgDocPage> {
 
 			return renderer
 				.render('page.module.ts.nunj')
-				.pipe(map((output: string) => ({output, filePath: this.modulePathInGenerated})));
+				.pipe(map((output: string) => ({output, filePath: this.modulePath})));
 		}
 		return of();
 	}

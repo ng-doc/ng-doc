@@ -2,6 +2,7 @@ export * from './as-array';
 export * from './build-assets';
 export * from './capitalize';
 export * from './code-type-from-ext';
+export * from './declaration-folder-name';
 export * from './emit-builded-output';
 export * from './escape-regexp';
 export * from './find-closest-file';

@@ -10,9 +10,9 @@ import {NgDocCategoryEntity} from '../category.entity';
 import {NgDocEntity} from './entity';
 
 /**
- * Entity for angular end points that generate modules and components.
+ * Entity for file end points that generate modules and components.
  */
-export abstract class NgDocAngularEntity<T> extends NgDocEntity {
+export abstract class NgDocFileEntity<T> extends NgDocEntity {
 	/**
 	 * Indicates when current entity is using for page navigation.
 	 */
@@ -75,8 +75,8 @@ export abstract class NgDocAngularEntity<T> extends NgDocEntity {
 	 *
 	 * @type {string}
 	 */
-	get modulePathInGenerated(): string {
-		return path.join(this.folderPathInGenerated, this.moduleFileName);
+	get modulePath(): string {
+		return path.join(this.folderPath, this.moduleFileName);
 	}
 
 	/**
@@ -86,7 +86,7 @@ export abstract class NgDocAngularEntity<T> extends NgDocEntity {
 	 */
 	get navigationItems(): NgDocEntity[] {
 		return this.childEntities.filter(
-			(child: NgDocEntity) => child instanceof NgDocAngularEntity && child.isNavigable,
+			(child: NgDocEntity) => child instanceof NgDocFileEntity && child.isNavigable,
 		);
 	}
 
@@ -95,12 +95,12 @@ export abstract class NgDocAngularEntity<T> extends NgDocEntity {
 	 *
 	 * @type {string}
 	 */
-	get moduleImportPath(): string {
-		return path.relative(this.context.context.workspaceRoot, this.modulePathInGenerated).replace(/.ts$/, '');
+	get moduleImport(): string {
+		return path.relative(this.context.context.workspaceRoot, this.modulePath).replace(/.ts$/, '');
 	}
 
-	override get folderPathInGenerated(): string {
-		return path.join(this.parent?.folderPathInGenerated ?? GENERATED_MODULES_PATH, this.route);
+	override get folderPath(): string {
+		return path.join(this.parent?.folderPath ?? GENERATED_MODULES_PATH, this.route);
 	}
 
 	override init(): Observable<void> {

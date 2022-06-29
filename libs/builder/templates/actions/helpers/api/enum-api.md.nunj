@@ -1,4 +1,4 @@
-{% macro render(declaration) %}
+{% macro render(Node, declaration) %}
 | Key | Value |
 |:----|:------|
 {%- for member in declaration.getMembers() %}

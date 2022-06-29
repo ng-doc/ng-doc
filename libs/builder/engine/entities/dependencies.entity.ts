@@ -25,7 +25,7 @@ import {NgDocPageEntity} from './page.entity';
 
 type ComponentAsset = Record<string, NgDocAsset[]>;
 
-export class NgDocPageDependenciesEntity extends NgDocEntity {
+export class NgDocDependenciesEntity extends NgDocEntity {
 	private componentsAssets: ComponentAsset = {};
 
 	constructor(
@@ -46,8 +46,8 @@ export class NgDocPageDependenciesEntity extends NgDocEntity {
 		return false;
 	}
 
-	override get folderPathInGenerated(): string {
-		return this.parent?.folderPathInGenerated || '';
+	override get folderPath(): string {
+		return this.parent?.folderPath || '';
 	}
 
 	override get buildCandidates(): NgDocEntity[] {
@@ -67,12 +67,12 @@ export class NgDocPageDependenciesEntity extends NgDocEntity {
 			.flat();
 	}
 
-	get componentAssetsInGenerated(): string {
-		return path.join(this.folderPathInGenerated, 'ng-doc.component-assets.ts');
+	get componentAssetsPath(): string {
+		return path.join(this.folderPath, 'ng-doc.component-assets.ts');
 	}
 
-	get componentAssetsInGeneratedImport(): string {
-		return path.join(this.folderPathInGenerated, 'ng-doc.component-assets');
+	get componentAssetsImport(): string {
+		return path.join(this.folderPath, 'ng-doc.component-assets');
 	}
 
 	override init(): Observable<void> {
@@ -126,7 +126,7 @@ export class NgDocPageDependenciesEntity extends NgDocEntity {
 
 		return renderer
 			.render('component-assets.ts.nunj')
-			.pipe(map((output: string) => ({output, filePath: this.componentAssetsInGenerated})));
+			.pipe(map((output: string) => ({output, filePath: this.componentAssetsPath})));
 	}
 
 	private getDemoClassDeclarations(objectExpression: ObjectLiteralExpression): ClassDeclaration[] {
@@ -175,7 +175,7 @@ export class NgDocPageDependenciesEntity extends NgDocEntity {
 				[classDeclaration.getName() ?? '']: assets.map((asset: Omit<NgDocAsset, 'outputPath'>) => ({
 					...asset,
 					output: formatCode(asset.output, asset.type),
-					outputPath: path.join(this.parent?.assetsFolder ?? this.folderPathInGenerated, asset.name),
+					outputPath: path.join(this.parent?.assetsFolder ?? this.folderPath, asset.name),
 				})),
 			};
 		}

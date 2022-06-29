@@ -9,11 +9,11 @@ import {NgDocCategoryModuleEnv} from '../../templates-env';
 import {NgDocEntityStore} from '../entity-store';
 import {NgDocRenderer} from '../renderer';
 import {CACHE_PATH} from '../variables';
-import {NgDocAngularEntity} from './abstractions/angular.entity';
 import {NgDocEntity} from './abstractions/entity';
+import {NgDocFileEntity} from './abstractions/file.entity';
 import {NgDocPageEntity} from './page.entity';
 
-export class NgDocCategoryEntity extends NgDocAngularEntity<NgDocCategory> {
+export class NgDocCategoryEntity extends NgDocFileEntity<NgDocCategory> {
 	override moduleName: string = uniqueName(`NgDocGeneratedCategoryModule`);
 	override parent?: NgDocCategoryEntity;
 
@@ -113,7 +113,7 @@ export class NgDocCategoryEntity extends NgDocAngularEntity<NgDocCategory> {
 
 			return renderer
 				.render('category.module.ts.nunj')
-				.pipe(map((output: string) => ({output, filePath: this.modulePathInGenerated})));
+				.pipe(map((output: string) => ({output, filePath: this.modulePath})));
 		}
 		return of();
 	}

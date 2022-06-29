@@ -5,17 +5,18 @@ import {ExportedDeclarations, Project, SourceFile} from 'ts-morph';
 
 import {asArray, isNotExcludedPath, isPageEntity, uniqueName} from '../../helpers';
 import {NgDocApiScope, NgDocBuildedOutput, NgDocBuilderContext} from '../../interfaces';
-import {NgDocApiModuleEnv} from '../../templates-env/api.module.env';
 import {NgDocApiScopeModuleEnv} from '../../templates-env/api-scope.module.env';
 import {NgDocEntityStore} from '../entity-store';
 import {NgDocRenderer} from '../renderer';
-import {NgDocAngularEntity} from './abstractions/angular.entity';
 import {NgDocEntity} from './abstractions/entity';
+import {NgDocFileEntity} from './abstractions/file.entity';
 import {NgDocApiEntity} from './api.entity';
 import {NgDocApiPageEntity} from './api-page.entity';
+import {isSupportedDeclaration} from './functions/is-supported-declaration';
 import {NgDocPageEntity} from './page.entity';
+import {NgDocSupportedDeclarations} from './types/supported-declarations';
 
-export class NgDocApiScopeEntity extends NgDocAngularEntity<NgDocApiScope> {
+export class NgDocApiScopeEntity extends NgDocFileEntity<NgDocApiScope> {
 	override moduleName: string = uniqueName(`NgDocGeneratedApiScopeCategoryModule`);
 	override readonly isNavigable: boolean = false;
 	protected override readyToBuild: boolean = true;
@@ -75,26 +76,35 @@ export class NgDocApiScopeEntity extends NgDocAngularEntity<NgDocApiScope> {
 
 	protected override update(): Observable<void> {
 		asArray(this.target.include).forEach((include: string) =>
-			this.project
-				.addSourceFilesAtPaths(
-					glob.sync(include).filter((p: string) => isNotExcludedPath(p, asArray(this.target.exclude))),
-				)
-				.forEach((sourceFile: SourceFile) =>
-					asArray(sourceFile.getExportedDeclarations().values()).forEach(
-						(exportedDeclarations: ExportedDeclarations[]) =>
-							exportedDeclarations.forEach(
-								(declaration: ExportedDeclarations) =>
-									new NgDocApiPageEntity(
-										this.project,
-										sourceFile,
-										this.context,
-										this.entityStore,
-										this,
-										declaration,
-									),
-							),
-					),
+			asArray(
+				new Set(
+					this.project
+						.addSourceFilesAtPaths(
+							glob
+								.sync(include)
+								.filter((p: string) => isNotExcludedPath(p, asArray(this.target.exclude))),
+						)
+						.map((sourceFile: SourceFile) => asArray(sourceFile.getExportedDeclarations().values()))
+						.flat(2),
 				),
+			)
+				.filter(isSupportedDeclaration)
+				.forEach(
+				(declaration: NgDocSupportedDeclarations) => {
+					const name: string | undefined = declaration.getName();
+
+					if (name) {
+						new NgDocApiPageEntity(
+							this.project,
+							declaration.getSourceFile(),
+							this.context,
+							this.entityStore,
+							this,
+							name,
+						);
+					}
+				}
+			),
 		);
 
 		return of(void 0);
@@ -106,11 +116,13 @@ export class NgDocApiScopeEntity extends NgDocAngularEntity<NgDocApiScope> {
 
 	private buildModule(): Observable<NgDocBuildedOutput> {
 		if (this.target) {
-			const renderer: NgDocRenderer<NgDocApiScopeModuleEnv> = new NgDocRenderer<NgDocApiScopeModuleEnv>({scope: this});
+			const renderer: NgDocRenderer<NgDocApiScopeModuleEnv> = new NgDocRenderer<NgDocApiScopeModuleEnv>({
+				scope: this,
+			});
 
 			return renderer
 				.render('api-scope.module.ts.nunj')
-				.pipe(map((output: string) => ({output, filePath: this.modulePathInGenerated})));
+				.pipe(map((output: string) => ({output, filePath: this.modulePath})));
 		}
 		return of();
 	}

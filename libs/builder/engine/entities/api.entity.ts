@@ -9,12 +9,12 @@ import {NgDocApiModuleEnv} from '../../templates-env/api.module.env';
 import {NgDocEntityStore} from '../entity-store';
 import {NgDocRenderer} from '../renderer';
 import {GENERATED_MODULES_PATH} from '../variables';
-import {NgDocAngularEntity} from './abstractions/angular.entity';
 import {NgDocEntity} from './abstractions/entity';
+import {NgDocFileEntity} from './abstractions/file.entity';
 import {NgDocApiScopeEntity} from './api-scope.entity';
 import {NgDocCategoryEntity} from './category.entity';
 
-export class NgDocApiEntity extends NgDocAngularEntity<NgDocApi> {
+export class NgDocApiEntity extends NgDocFileEntity<NgDocApi> {
 	override moduleName: string = uniqueName(`NgDocGeneratedApiListModule`);
 	componentName: string = uniqueName(`NgDocGeneratedApiListComponent`);
 	override parent?: NgDocCategoryEntity;
@@ -61,7 +61,7 @@ export class NgDocApiEntity extends NgDocAngularEntity<NgDocApi> {
 		return this.parentEntities;
 	}
 
-	override get folderPathInGenerated(): string {
+	override get folderPath(): string {
 		return path.join(GENERATED_MODULES_PATH, 'api');
 	}
 
@@ -100,7 +100,7 @@ export class NgDocApiEntity extends NgDocAngularEntity<NgDocApi> {
 
 			return renderer
 				.render('api.module.ts.nunj')
-				.pipe(map((output: string) => ({output, filePath: this.modulePathInGenerated})));
+				.pipe(map((output: string) => ({output, filePath: this.modulePath})));
 		}
 		return of();
 	}

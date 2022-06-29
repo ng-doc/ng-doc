@@ -1,9 +1,9 @@
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {ExportedDeclarations, Project, SourceFile} from 'ts-morph';
+import {catchError, map} from 'rxjs/operators';
+import {ExportedDeclarations, Node, Project, SourceFile} from 'ts-morph';
 
-import {uniqueName} from '../../helpers';
+import {declarationFolderName, isPresent, uniqueName} from '../../helpers';
 import {NgDocBuildedOutput, NgDocBuilderContext} from '../../interfaces';
 import {NgDocApiPageEnv} from '../../templates-env/api-page.env';
 import {NgDocApiPageModuleEnv} from '../../templates-env/api-page.module.env';
@@ -12,11 +12,14 @@ import {NgDocRenderer} from '../renderer';
 import {RENDERED_PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocApiScopeEntity} from './api-scope.entity';
+import {isSupportedDeclaration} from './functions/is-supported-declaration';
+import {NgDocSupportedDeclarations} from './types/supported-declarations';
 
 export class NgDocApiPageEntity extends NgDocEntity {
 	moduleName: string = uniqueName(`NgDocGeneratedApiPageModule`);
 	componentName: string = uniqueName(`NgDocGeneratedApiPageComponent`);
 	protected override readyToBuild: boolean = true;
+	private declaration?: NgDocSupportedDeclarations;
 
 	constructor(
 		override readonly project: Project,
@@ -24,9 +27,11 @@ export class NgDocApiPageEntity extends NgDocEntity {
 		protected override readonly context: NgDocBuilderContext,
 		protected override readonly entityStore: NgDocEntityStore,
 		readonly parent: NgDocApiScopeEntity,
-		protected readonly declaration: ExportedDeclarations,
+		protected readonly declarationName: string,
 	) {
 		super(project, sourceFile, context, entityStore);
+
+		this.updateDeclaration();
 	}
 
 	override get storeKey(): string {
@@ -39,11 +44,11 @@ export class NgDocApiPageEntity extends NgDocEntity {
 	}
 
 	get route(): string {
-		return this.declaration.getSymbol()?.getName() ?? '';
+		return path.join(declarationFolderName(this.declaration!), this.declaration?.getSymbol()?.getName() ?? '');
 	}
 
-	override get folderPathInGenerated(): string {
-		return path.join(this.parent.folderPathInGenerated, this.route);
+	override get folderPath(): string {
+		return path.join(this.parent.folderPath, this.route);
 	}
 
 	override get buildCandidates(): NgDocEntity[] {
@@ -59,8 +64,8 @@ export class NgDocApiPageEntity extends NgDocEntity {
 	 *
 	 * @type {string}
 	 */
-	get modulePathInGenerated(): string {
-		return path.join(this.folderPathInGenerated, this.moduleFileName);
+	get modulePath(): string {
+		return path.join(this.folderPath, this.moduleFileName);
 	}
 
 	/**
@@ -68,15 +73,12 @@ export class NgDocApiPageEntity extends NgDocEntity {
 	 *
 	 * @type {string}
 	 */
-	get moduleImportPath(): string {
-		return path.relative(this.context.context.workspaceRoot, this.modulePathInGenerated).replace(/.ts$/, '');
+	get moduleImport(): string {
+		return path.relative(this.context.context.workspaceRoot, this.modulePath).replace(/.ts$/, '');
 	}
 
 	get builtPagePath(): string {
-		return path.relative(
-			this.context.context.workspaceRoot,
-			path.join(this.folderPathInGenerated, RENDERED_PAGE_NAME),
-		);
+		return path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, RENDERED_PAGE_NAME));
 	}
 
 	override init(): Observable<void> {
@@ -84,11 +86,22 @@ export class NgDocApiPageEntity extends NgDocEntity {
 	}
 
 	protected override update(): Observable<void> {
+		this.sourceFile.refreshFromFileSystemSync();
+		this.updateDeclaration();
+
+		if (!this.declaration) {
+			this.destroy();
+		}
+
 		return of(void 0);
 	}
 
 	override build(): Observable<NgDocBuildedOutput[]> {
-		return this.isReadyToBuild ? forkJoin([this.buildPage(), this.buildModule()]) : of([]);
+		return this.isReadyToBuild
+			? forkJoin([this.buildPage(), this.buildModule()]).pipe(
+					map((output: Array<NgDocBuildedOutput | null>) => output.filter(isPresent)),
+			  )
+			: of([]);
 	}
 
 	private buildModule(): Observable<NgDocBuildedOutput> {
@@ -96,16 +109,34 @@ export class NgDocApiPageEntity extends NgDocEntity {
 
 		return renderer
 			.render('api-page.module.ts.nunj')
-			.pipe(map((output: string) => ({output, filePath: this.modulePathInGenerated})));
+			.pipe(map((output: string) => ({output, filePath: this.modulePath})));
 	}
 
-	private buildPage(): Observable<NgDocBuildedOutput> {
+	private buildPage(): Observable<NgDocBuildedOutput | null> {
 		const renderer: NgDocRenderer<NgDocApiPageEnv> = new NgDocRenderer<NgDocApiPageEnv>({
-			declaration: this.declaration,
+			Node,
+			declaration: this.declaration!,
 		});
 
-		return renderer
-			.render('api-page.md.nunj')
-			.pipe(map((output: string) => ({output, filePath: this.builtPagePath})));
+		return renderer.render('api-page.md.nunj').pipe(
+			map((output: string) => ({output, filePath: this.builtPagePath})),
+			catchError((error: unknown) => {
+				this.logger.error(
+					`\nError happened while processing Api Page for entity "${this.declaration
+						?.getSymbol()
+						?.getName()}": ${error}"`,
+				);
+				return of(null);
+			}),
+		);
+	}
+
+	private updateDeclaration(): void {
+		const declaration: NgDocSupportedDeclarations[] | undefined = this.sourceFile
+			.getExportedDeclarations()
+			.get(this.declarationName)
+			?.filter(isSupportedDeclaration);
+
+		this.declaration =  (declaration && declaration[0]) ?? undefined;
 	}
 }

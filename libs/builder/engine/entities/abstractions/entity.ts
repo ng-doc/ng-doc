@@ -55,7 +55,7 @@ export abstract class NgDocEntity {
 	/**
 	 * Path to the sourceFileFolder in generated files.
 	 */
-	abstract readonly folderPathInGenerated: string;
+	abstract readonly folderPath: string;
 
 	/**
 	 * Should return the list of the dependencies that have to be built if current entity was changed.
@@ -164,6 +164,7 @@ export abstract class NgDocEntity {
 	 * @type {void}
 	 */
 	destroy(): void {
+		this.readyToBuild = false;
 		this.destroyed = true;
 		this.entityStore.remove(this);
 		this.destroy$.next();

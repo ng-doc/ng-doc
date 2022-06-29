@@ -1,4 +1,4 @@
-import {NgDocPageDependenciesEntity} from '../engine/entities/page-dependencies.entity';
+import {NgDocDependenciesEntity} from '../engine/entities/dependencies.entity';
 import {Constructable} from '../types';
 
 /**
@@ -7,6 +7,6 @@ import {Constructable} from '../types';
  */
 export function isPageDependencyEntity(
 	dependency: InstanceType<Constructable>,
-): dependency is NgDocPageDependenciesEntity {
-	return dependency instanceof NgDocPageDependenciesEntity;
+): dependency is NgDocDependenciesEntity {
+	return dependency instanceof NgDocDependenciesEntity;
 }

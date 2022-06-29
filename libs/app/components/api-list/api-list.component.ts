@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 
+/**
+ * Component to render something
+ */
 @Component({
 	selector: 'ng-doc-api-list',
 	templateUrl: './api-list.component.html',

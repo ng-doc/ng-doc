@@ -1,6 +1,0 @@
-@Component({
-	selector: 'ng-doc-inline-demo',
-	template: ` <p style="color: red">inline-demo works 234!</p> `,
-	styles: [],
-	changeDetection: ChangeDetectionStrategy.OnPush
-})

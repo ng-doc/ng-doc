@@ -1,9 +1,11 @@
 {% import "actions/helpers/api/type.md.nunj" as type %}
 
-{% macro render(declaration) %}
+{% macro render(Node, declaration) %}
 | Property | Type |
 |:---------|:-----|
 {%- for member in declaration.getMembers() %}
+{% if Node.isMethodSignature(declaration) -%}
 | {{ member.getName() }} | {{ type.render(member.getType()) }} |
+{%- endif %}
 {%- endfor %}
 {%- endmacro -%}

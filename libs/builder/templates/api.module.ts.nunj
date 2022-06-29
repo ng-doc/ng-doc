@@ -8,7 +8,8 @@ import {NgDocApiListModule} from '@ng-doc/app';
 	template: `<ng-doc-api-list></ng-doc-api-list>`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class {{ api.componentName }} {}
+export class {{ api.componentName }} {
+}
 
 @NgModule({
 	declarations: [{{ api.componentName }}],
@@ -16,19 +17,17 @@ export class {{ api.componentName }} {}
 		CommonModule,
 		NgDocApiListModule,
 		RouterModule.forChild([
-		{
-			path: '',
-			component: {{ api.componentName }},
-			children: [
-				{%- for scope in api.children %}
-				{
-					path: '{{ scope.route }}',
-					loadChildren: () => import('{{ scope.moduleImportPath }}').then(m => m.{{ scope.moduleName }})
-				},
-				{%- endfor %}
-			]
-		}
-	]),
+			{
+				path: '',
+				component: {{ api.componentName }},
+			},
+			{%- for scope in api.children %}
+			{
+				path: '{{ scope.route }}',
+				loadChildren: () => import('{{ scope.moduleImport }}').then(m => m.{{ scope.moduleName }})
+			},
+			{%- endfor %}
+		]),
 	],
 	exports: [RouterModule]
 })

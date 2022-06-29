@@ -1,2 +1,12 @@
-# Haha
+{% import "actions/helpers/api/js-doc.md.nunj" as doc -%}
+{% import "actions/helpers/api/api.md.nunj" as api %}
 
+# {{ declaration.getName() }}
+
+{% if declaration.getJsDocs -%}
+{{ doc.render(declaration.getJsDocs()) }}
+{%- endif %}
+
+## Api
+
+{{ api.render(Node, declaration) }}
