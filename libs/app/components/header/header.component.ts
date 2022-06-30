@@ -1,4 +1,5 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {NgDocHeaderLevel} from '@ng-doc/app/types';
 
 @Component({
 	selector: 'ng-doc-header',
@@ -6,4 +7,14 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 	styleUrls: ['./header.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocHeaderComponent {}
+export class NgDocHeaderComponent {
+	@Input()
+	text: string = '';
+
+	@Input()
+	level: NgDocHeaderLevel = 1;
+
+	get anchor(): string {
+		return this.text.toLowerCase().replace(/\s/g, '-');
+	}
+}

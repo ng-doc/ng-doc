@@ -1,5 +1,6 @@
 import {ComponentRef, Directive, ElementRef, Type, ViewContainerRef} from '@angular/core';
 import {NgDocMarkdownDirective} from '@ng-doc/app/directives/markdown';
+import {NgDocProcessorOptions} from '@ng-doc/app/interfaces';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 
 /**
@@ -21,19 +22,21 @@ export abstract class NgDocHtmlProcessor<T> {
 		this.markdown.rendered.pipe(untilDestroyed(this)).subscribe(() => {
 			let elementNode: Element | null = null;
 
-			// clear previous demo references
+			// clear previous references
 			this.componentRefs.forEach((ref: ComponentRef<T>) => ref.destroy());
 			this.componentRefs = [];
 
 			while ((elementNode = this.elementRef.nativeElement.querySelector(this.selector))) {
 				if (elementNode) {
-					const options: Partial<T> = this.extractComponentOptions(elementNode);
+					const options: NgDocProcessorOptions<T> = this.extractComponentOptions(elementNode);
 
 					// create component
-					const componentRef: ComponentRef<T> = this.viewContainerRef.createComponent(this.component);
+					const componentRef: ComponentRef<T> = this.viewContainerRef.createComponent(this.component, {
+						projectableNodes: options.content,
+					});
 
 					// set component options
-					Object.assign(componentRef.instance, options);
+					Object.assign(componentRef.instance, options.inputs);
 
 					// add component reference to the list to destroy it later
 					this.componentRefs.push(componentRef);
@@ -45,5 +48,5 @@ export abstract class NgDocHtmlProcessor<T> {
 		});
 	}
 
-	protected abstract extractComponentOptions(element: Element): Partial<T>;
+	protected abstract extractComponentOptions(element: Element): NgDocProcessorOptions<T>;
 }

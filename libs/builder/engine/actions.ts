@@ -3,6 +3,7 @@ import {NgDocAction} from '../types';
 import {apiAction} from './actions/api.action';
 import {demoAction} from './actions/demo.action';
 import {playgroundAction} from './actions/playground.action';
+import {tagsAction} from './actions/tags.action';
 import {NgDocPageEntity} from './entities/page.entity';
 
 export class NgDocActions {
@@ -18,6 +19,10 @@ export class NgDocActions {
 
 	playground(className: string): string {
 		return this.performAction(playgroundAction(className));
+	}
+
+	tags(sourcePath: string): string {
+		return this.performAction(tagsAction(sourcePath));
 	}
 
 	private performAction(action: NgDocAction): string {

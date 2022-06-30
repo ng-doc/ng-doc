@@ -14,6 +14,11 @@ export class {{ page.componentName }} extends NgDocRootPage {
 	readonly pageMd: string = pageMd;
 	readonly demo: Record<string, Type<unknown>> | undefined = undefined;
 	readonly demoAssets: NgDocDemoAssets | undefined = undefined;
+
+	constructor() {
+		super();
+		console.log(this.pageMd);
+	}
 }
 
 @NgModule({

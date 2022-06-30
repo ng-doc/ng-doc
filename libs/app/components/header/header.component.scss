@@ -1,14 +1,19 @@
 :host {
-	position: relative;
-	display: flex;
-	align-items: center;
-	height: 100%;
-	width: 100%;
-	padding: 0 calc(var(--ng-doc-base-gutter) * 5);
-	box-shadow: 0 4px 4px var(--ng-doc-border-color);
+	display: block;
 
-	.ng-doc-header-brand {
-		font-weight: bold;
-		font-size: 16px;
+	&:not(:hover) .ng-doc-anchor {
+		opacity: 0;
+	}
+
+	.ng-doc-header {
+		display: flex;
+		align-items: center;
+
+		.ng-doc-anchor {
+			display: flex;
+			align-items: center;
+			margin-left: var(--ng-doc-base-gutter);
+			transition: var(--ng-doc-transition);
+		}
 	}
 }

@@ -1,0 +1,22 @@
+@import "../../styles/variables/palette";
+@import "../../styles/mixins";
+
+:host {
+	@include ng-doc-font();
+	display: inline-block;
+	padding: 0 var(--ng-doc-base-gutter);
+	border-radius: calc(var(--ng-doc-base-gutter) / 2);
+	--ng-doc-font-size: 14px;
+
+	&[data-ng-doc-color="primary"] {
+		background-color: var(--ng-doc-primary);
+		color: var(--ng-doc-primary-text);
+	}
+
+	@each $color in $palette-colors {
+		&[data-ng-doc-color="#{$color}"] {
+			background-color: var(--ng-doc-#{#{$color}}-4);
+			color: var(--ng-doc-primary-text);
+		}
+	}
+}

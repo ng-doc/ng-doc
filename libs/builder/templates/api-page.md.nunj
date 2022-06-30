@@ -1,10 +1,14 @@
-{% import "actions/helpers/api/js-doc.md.nunj" as doc -%}
 {% import "actions/helpers/api/api.md.nunj" as api %}
+{% import "actions/helpers/tags.md.nunj" as tags %}
+
+{{ tags.render(Node, declaration, scope) }}
 
 # {{ declaration.getName() }}
 
 {% if declaration.getJsDocs -%}
-{{ doc.render(declaration.getJsDocs()) }}
+{%- for doc in declaration.getJsDocs() -%}
+{{ doc.getInnerText() }}
+{%- endfor -%}
 {%- endif %}
 
 ## Api

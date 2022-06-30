@@ -26,8 +26,8 @@ export class NgDocApiScopeEntity extends NgDocFileEntity<NgDocApiScope> {
 		override readonly sourceFile: SourceFile,
 		protected override readonly context: NgDocBuilderContext,
 		protected override readonly entityStore: NgDocEntityStore,
-		public override parent: NgDocApiEntity,
-		protected override target: NgDocApiScope,
+		override parent: NgDocApiEntity,
+		override target: NgDocApiScope,
 	) {
 		super(project, sourceFile, context, entityStore);
 	}

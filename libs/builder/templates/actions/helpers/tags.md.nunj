@@ -1,0 +1,30 @@
+{% import "actions/helpers/tags-for-decorators.md.nunj" as tagsForDecorators %}
+
+{%- macro render(Node, declaration, scope, additionalTags) -%}
+
+{%- if scope %}
+<div id="ng-doc-template-tag" data-color="grape">{{ scope.name }}</div>
+{%- endif  %}
+
+{%- if Node.isClassDeclaration(declaration) %}
+<div id="ng-doc-template-tag" data-color="red">Class</div>
+{%- elif Node.isEnumDeclaration(declaration) %}
+<div id="ng-doc-template-tag" data-color="orange">Enum</div>
+{%- elif Node.isInterfaceDeclaration(declaration) %}
+<div id="ng-doc-template-tag" data-color="blue">Interface</div>
+{%- elif Node.isTypeAliasDeclaration(declaration) %}
+<div id="ng-doc-template-tag" data-color="indigo">Type</div>{
+{%- elif Node.isFunctionDeclaration(declaration) %}
+<div id="ng-doc-template-tag" data-color="lime">Function</div>
+{%- endif %}
+{{ tagsForDecorators.render(Node, declaration) }}
+
+{%- if additionalTags %}
+{%- for tag in additionalTags %}
+<div id="ng-doc-template-tag" data-color="primary">{{ tag }}</div>
+{%- endfor %}
+{%- endif  %}
+
+{%- endmacro -%}
+
+

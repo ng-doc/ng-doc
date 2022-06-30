@@ -1,6 +1,7 @@
 import {Directive, ElementRef, Self, ViewContainerRef} from '@angular/core';
 import {NgDocDemoViewerComponent} from '@ng-doc/app/components/demo-viewer';
 import {NgDocMarkdownDirective} from '@ng-doc/app/directives/markdown';
+import {NgDocProcessorOptions} from '@ng-doc/app/interfaces';
 import {NgDocHtmlProcessor} from '@ng-doc/app/processors/html-processor';
 import {NG_DOC_DEMO_TEMPLATE_ID} from '@ng-doc/builder/naming';
 import {UntilDestroy} from '@ngneat/until-destroy';
@@ -19,9 +20,11 @@ export class NgDocDemoProcessorDirective extends NgDocHtmlProcessor<NgDocDemoVie
 		super(elementRef, viewContainerRef, markdown, `#${NG_DOC_DEMO_TEMPLATE_ID}`, NgDocDemoViewerComponent);
 	}
 
-	protected override extractComponentOptions(element: Element): Partial<NgDocDemoViewerComponent> {
+	protected override extractComponentOptions(element: Element): NgDocProcessorOptions<NgDocDemoViewerComponent> {
 		return {
-			componentName: element.getAttribute('data-component-name') ?? undefined,
+			inputs: {
+				componentName: element.getAttribute('data-component-name') ?? undefined,
+			}
 		};
 	}
 }

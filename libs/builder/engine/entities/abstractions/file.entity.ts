@@ -21,7 +21,7 @@ export abstract class NgDocFileEntity<T> extends NgDocEntity {
 	/**
 	 * Entity target.
 	 */
-	protected target?: T;
+	target?: T;
 
 	/**
 	 * The route for the current entity.

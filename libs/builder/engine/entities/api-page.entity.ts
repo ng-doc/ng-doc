@@ -1,7 +1,7 @@
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {ExportedDeclarations, Node, Project, SourceFile} from 'ts-morph';
+import {Node, Project, SourceFile} from 'ts-morph';
 
 import {declarationFolderName, isPresent, uniqueName} from '../../helpers';
 import {NgDocBuildedOutput, NgDocBuilderContext} from '../../interfaces';
@@ -44,7 +44,9 @@ export class NgDocApiPageEntity extends NgDocEntity {
 	}
 
 	get route(): string {
-		return path.join(declarationFolderName(this.declaration!), this.declaration?.getSymbol()?.getName() ?? '');
+		return this.declaration
+			? path.join(declarationFolderName(this.declaration), this.declaration?.getSymbol()?.getName() ?? '')
+			: '';
 	}
 
 	override get folderPath(): string {
@@ -89,10 +91,6 @@ export class NgDocApiPageEntity extends NgDocEntity {
 		this.sourceFile.refreshFromFileSystemSync();
 		this.updateDeclaration();
 
-		if (!this.declaration) {
-			this.destroy();
-		}
-
 		return of(void 0);
 	}
 
@@ -113,30 +111,39 @@ export class NgDocApiPageEntity extends NgDocEntity {
 	}
 
 	private buildPage(): Observable<NgDocBuildedOutput | null> {
-		const renderer: NgDocRenderer<NgDocApiPageEnv> = new NgDocRenderer<NgDocApiPageEnv>({
-			Node,
-			declaration: this.declaration!,
-		});
+		if (this.declaration) {
+			const renderer: NgDocRenderer<NgDocApiPageEnv> = new NgDocRenderer<NgDocApiPageEnv>({
+				Node,
+				declaration: this.declaration,
+				scope: this.parent.target
+			});
 
-		return renderer.render('api-page.md.nunj').pipe(
-			map((output: string) => ({output, filePath: this.builtPagePath})),
-			catchError((error: unknown) => {
-				this.logger.error(
-					`\nError happened while processing Api Page for entity "${this.declaration
-						?.getSymbol()
-						?.getName()}": ${error}"`,
-				);
-				return of(null);
-			}),
-		);
+			return renderer.render('api-page.md.nunj').pipe(
+				map((output: string) => ({output, filePath: this.builtPagePath})),
+				catchError((error: unknown) => {
+					this.logger.error(
+						`\nError happened while processing Api Page for entity "${this.declaration
+							?.getSymbol()
+							?.getName()}": ${error}"`,
+					);
+					return of(null);
+				}),
+			);
+		}
+		return of(null);
 	}
 
-	private updateDeclaration(): void {
-		const declaration: NgDocSupportedDeclarations[] | undefined = this.sourceFile
+	private updateDeclaration(): asserts this is this & {declaration: NgDocSupportedDeclarations} {
+		const declarations: NgDocSupportedDeclarations[] | undefined = this.sourceFile
 			.getExportedDeclarations()
 			.get(this.declarationName)
 			?.filter(isSupportedDeclaration);
 
-		this.declaration =  (declaration && declaration[0]) ?? undefined;
+
+		this.declaration = (declarations && declarations[0]) ?? undefined;
+
+		if (!this.declaration) {
+			this.destroy();
+		}
 	}
 }

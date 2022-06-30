@@ -3,7 +3,7 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
-import {NgDocHeaderModule, NgDocModule, NgDocSidebarModule} from '@ng-doc/app';
+import {NgDocModule, NgDocNavbarModule, NgDocSidebarModule} from '@ng-doc/app';
 import {NG_DOC_ROUTING, NgDocGeneratedModule} from '@ng-doc/builder/generated';
 import {NgDocIconModule, NgDocUiKitRootModule} from '@ng-doc/ui-kit';
 
@@ -23,7 +23,7 @@ import {AppComponent} from './app.component';
 			onSameUrlNavigation: 'reload',
 			scrollPositionRestoration: 'enabled',
 		}),
-		NgDocHeaderModule,
+		NgDocNavbarModule,
 		NgDocSidebarModule,
 		NgDocIconModule,
 	],
