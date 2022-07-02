@@ -15,7 +15,7 @@ import {switchMap, tap} from 'rxjs/operators';
 @UntilDestroy()
 export class NgDocNotifyService {
 	private overlayRef?: NgDocOverlayRef;
-	private notify$: Subject<PolymorpheusContent> = new Subject<PolymorpheusContent>();
+	private readonly notify$: Subject<PolymorpheusContent> = new Subject<PolymorpheusContent>();
 
 	constructor(private readonly overlayService: NgDocOverlayService, private readonly overlay: Overlay) {
 		this.notify$
