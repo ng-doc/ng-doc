@@ -2,8 +2,6 @@ import {Node, Project} from 'ts-morph';
 
 import {findDeclaration} from '../../helpers';
 import {NgDocActionOutput} from '../../interfaces';
-import {NG_DOC_TAG_TEMPLATE_ID} from '../../naming';
-import {NgDocApiEnv} from '../../templates-env/api.env';
 import {NgDocTagsEnv} from '../../templates-env/tags.env';
 import {NgDocAction} from '../../types';
 import {NgDocPageEntity} from '../entities';
@@ -18,7 +16,7 @@ import {NgDocRenderer} from '../renderer';
 export function tagsAction(sourcePath: string): NgDocAction {
 	return (project: Project, page: NgDocPageEntity): NgDocActionOutput => {
 		try {
-			const declaration: Node = findDeclaration(project, page, sourcePath);
+			const declaration: Node = findDeclaration(project, page.scope, sourcePath);
 			const renderer: NgDocRenderer<NgDocTagsEnv> = new NgDocRenderer<NgDocTagsEnv>({
 				Node,
 				declaration,
@@ -29,7 +27,7 @@ export function tagsAction(sourcePath: string): NgDocAction {
 				dependencies: [declaration.getSourceFile().getFilePath()],
 			};
 		} catch (e) {
-			page.logger.error(`Error while executing TAGS action: ${e}`);
+			page.logger.error(`Error while executing "tags" action: ${e}`);
 
 			return {output: ``};
 		}

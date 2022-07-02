@@ -1,11 +1,11 @@
-<ng-doc-tab-group>
+<ng-doc-tab-group *ngIf="container; else demoTemplate">
 	<ng-doc-tab [label]="exampleLabel" id="example" [content]="exampleContent">
 		<ng-template #exampleLabel>
 			<div ng-doc-text size="small">Example</div>
 		</ng-template>
 		<ng-template #exampleContent>
 			<div class="ng-doc-example">
-				<ng-container *polymorpheusOutlet="demo ?? ''; context: {}"></ng-container>
+				<ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
 			</div>
 		</ng-template>
 	</ng-doc-tab>
@@ -33,3 +33,7 @@
 		</ng-template>
 	</ng-doc-tab>
 </ng-doc-tab-group>
+
+<ng-template #demoTemplate>
+	<ng-container *polymorpheusOutlet="demo ?? ''; context: {}"></ng-container>
+</ng-template>

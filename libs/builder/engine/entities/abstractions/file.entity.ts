@@ -4,8 +4,8 @@ import {Observable, of} from 'rxjs';
 import {mapTo, tap} from 'rxjs/operators';
 import {SyntaxKind} from 'ts-morph';
 
-import {capitalize, isCategoryEntity} from '../../../helpers';
-import {CACHE_PATH, CATEGORY_PATTERN, GENERATED_MODULES_PATH} from '../../variables';
+import {isCategoryEntity} from '../../../helpers';
+import {CACHE_PATH, CATEGORY_PATTERN} from '../../variables';
 import {NgDocCategoryEntity} from '../category.entity';
 import {NgDocEntity} from './entity';
 
@@ -14,93 +14,12 @@ import {NgDocEntity} from './entity';
  */
 export abstract class NgDocFileEntity<T> extends NgDocEntity {
 	/**
-	 * Indicates when current entity is using for page navigation.
-	 */
-	readonly isNavigable: boolean = true;
-
-	/**
 	 * Entity target.
 	 */
 	target?: T;
 
-	/**
-	 * The route for the current entity.
-	 */
-	abstract route: string;
-
-	/**
-	 * The title of the current entity.
-	 */
-	abstract title: string;
-
-	/**
-	 * Order is using for sorting pages and categories in sidebar
-	 */
-	abstract order?: number;
-
-	/**
-	 * File title of the module.
-	 */
-	abstract moduleFileName: string;
-
-	/**
-	 * The title of the module.
-	 */
-	abstract moduleName: string;
-
 	override get storeKey(): string {
 		return this.sourceFilePath;
-	}
-
-	/**
-	 * Returns title based on the route.
-	 *
-	 * @type {string}
-	 */
-	get name(): string {
-		return capitalize(this.route);
-	}
-
-	/**
-	 * Returns is this category entity.
-	 *
-	 * @type {boolean}
-	 */
-	get isCategory(): boolean {
-		return isCategoryEntity(this);
-	}
-
-	/**
-	 * Returns paths to the module in generated folder
-	 *
-	 * @type {string}
-	 */
-	get modulePath(): string {
-		return path.join(this.folderPath, this.moduleFileName);
-	}
-
-	/**
-	 * Returns children of the current buildable that are using for page navigation
-	 *
-	 * @type {NgDocEntity[]}
-	 */
-	get navigationItems(): NgDocEntity[] {
-		return this.childEntities.filter(
-			(child: NgDocEntity) => child instanceof NgDocFileEntity && child.isNavigable,
-		);
-	}
-
-	/**
-	 * Returns relative paths to the module in generated folder that could be used for import
-	 *
-	 * @type {string}
-	 */
-	get moduleImport(): string {
-		return path.relative(this.context.context.workspaceRoot, this.modulePath).replace(/.ts$/, '');
-	}
-
-	override get folderPath(): string {
-		return path.join(this.parent?.folderPath ?? GENERATED_MODULES_PATH, this.route);
 	}
 
 	override init(): Observable<void> {
@@ -111,7 +30,6 @@ export abstract class NgDocFileEntity<T> extends NgDocEntity {
 		return of(null).pipe(
 			tap(() => {
 				this.sourceFile.refreshFromFileSystemSync();
-				// Sync because async method works weird and runs this hook few times
 				this.sourceFile.emitSync();
 
 				const relativePath: string = path.relative(

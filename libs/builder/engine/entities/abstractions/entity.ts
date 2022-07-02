@@ -1,7 +1,7 @@
 import {logging} from '@angular-devkit/core';
 import * as path from 'path';
 import {Observable, of, Subject} from 'rxjs';
-import {finalize, mapTo, startWith, switchMap, takeUntil} from 'rxjs/operators';
+import {finalize, mapTo, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {Node, ObjectLiteralExpression, Project, SourceFile, Symbol, SyntaxKind} from 'ts-morph';
 
 import {ObservableSet} from '../../../classes';
@@ -51,11 +51,6 @@ export abstract class NgDocEntity {
 	 * Should return the parent of the current entity
 	 */
 	abstract readonly parent?: NgDocEntity;
-
-	/**
-	 * Path to the sourceFileFolder in generated files.
-	 */
-	abstract readonly folderPath: string;
 
 	/**
 	 * Should return the list of the dependencies that have to be built if current entity was changed.
@@ -117,6 +112,7 @@ export abstract class NgDocEntity {
 	 */
 	get needToRebuild(): Observable<NgDocEntity> {
 		return this.dependencies.changes().pipe(
+			tap(() => this.context.context.reportRunning()),
 			startWith([]),
 			switchMap((deps: string[]) => {
 				const watcher: NgDocWatcher = new NgDocWatcher([...deps, this.sourceFilePath]);

@@ -4,8 +4,9 @@ import {NgDocMarkdownModule} from '@ng-doc/app/directives/markdown';
 import {
 	NgDocCodeProcessorModule,
 	NgDocDemoProcessorModule,
+	NgDocPlaygroundProcessorModule,
 	NgDocTagProcessorModule,
-	NgDocTitleProcessorModule
+	NgDocTitleProcessorModule,
 } from '@ng-doc/app/processors';
 
 import {NgDocPageComponent} from './page.component';
@@ -19,6 +20,7 @@ import {NgDocPageComponent} from './page.component';
 		NgDocTitleProcessorModule,
 		NgDocCodeProcessorModule,
 		NgDocTagProcessorModule,
+		NgDocPlaygroundProcessorModule,
 	],
 	exports: [NgDocPageComponent],
 })

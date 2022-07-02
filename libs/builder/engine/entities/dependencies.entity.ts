@@ -46,7 +46,7 @@ export class NgDocDependenciesEntity extends NgDocEntity {
 		return false;
 	}
 
-	override get folderPath(): string {
+	get folderPath(): string {
 		return this.parent?.folderPath || '';
 	}
 

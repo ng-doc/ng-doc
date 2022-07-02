@@ -1,6 +1,7 @@
 import {Directive, ElementRef, Self, ViewContainerRef} from '@angular/core';
 import {NgDocDemoViewerComponent} from '@ng-doc/app/components/demo-viewer';
 import {NgDocMarkdownDirective} from '@ng-doc/app/directives/markdown';
+import {asBoolean} from '@ng-doc/app/helpers';
 import {NgDocProcessorOptions} from '@ng-doc/app/interfaces';
 import {NgDocHtmlProcessor} from '@ng-doc/app/processors/html-processor';
 import {NG_DOC_DEMO_TEMPLATE_ID} from '@ng-doc/builder/naming';
@@ -24,7 +25,8 @@ export class NgDocDemoProcessorDirective extends NgDocHtmlProcessor<NgDocDemoVie
 		return {
 			inputs: {
 				componentName: element.getAttribute('data-component-name') ?? undefined,
-			}
+				container: asBoolean(element.getAttribute('data-container')) ?? true,
+			},
 		};
 	}
 }

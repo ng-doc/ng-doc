@@ -11,10 +11,12 @@ import {stringExpressionResolver} from './string-expression.resolver';
  * @returns {Component} The component decorator properties.
  */
 export function componentDecoratorResolver(objectLiteralExpression: ObjectLiteralExpression): Component {
+	const selectorProperty: ObjectLiteralElementLike | undefined = objectLiteralExpression.getProperty('selector');
 	const templateProperty: ObjectLiteralElementLike | undefined = objectLiteralExpression.getProperty('templateUrl');
 	const styleUrlsProperty: ObjectLiteralElementLike | undefined = objectLiteralExpression.getProperty('styleUrls');
 
 	return {
+		selector: stringExpressionResolver(getPropertyAssignment(selectorProperty)),
 		templateUrl: stringExpressionResolver(getPropertyAssignment(templateProperty)),
 		styleUrls: stringExpressionResolver(getPropertyAssignment(styleUrlsProperty)),
 	};

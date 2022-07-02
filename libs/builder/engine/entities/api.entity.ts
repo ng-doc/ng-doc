@@ -10,11 +10,11 @@ import {NgDocEntityStore} from '../entity-store';
 import {NgDocRenderer} from '../renderer';
 import {GENERATED_MODULES_PATH} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
-import {NgDocFileEntity} from './abstractions/file.entity';
+import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocApiScopeEntity} from './api-scope.entity';
 import {NgDocCategoryEntity} from './category.entity';
 
-export class NgDocApiEntity extends NgDocFileEntity<NgDocApi> {
+export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 	override moduleName: string = uniqueName(`NgDocGeneratedApiListModule`);
 	componentName: string = uniqueName(`NgDocGeneratedApiListComponent`);
 	override parent?: NgDocCategoryEntity;

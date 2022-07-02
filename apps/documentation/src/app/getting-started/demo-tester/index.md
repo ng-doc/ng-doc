@@ -4,7 +4,7 @@ Here you will se how easy it's to create some demo with NgDoc.
 
 ## Playground
 
-{{ NgDocActions.playground("654") }}
+{{ NgDocActions.playground("playground1", "./demo/inline-demo.component.ts#InlineDemoComponent") }}
 
 ## Inline demo
 
@@ -24,7 +24,7 @@ Here you will se how easy it's to create some demo with NgDoc.
 }
 ```
 
-{{ NgDocActions.demo("InlineDemoComponent") }}
+{{ NgDocActions.demo("InlineDemoComponent", {container: false}) }}
 
 ## Multi file demo
 

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 /**
  * Decorator that binds a DOM event to a host listener and supplies configuration metadata.
@@ -65,9 +65,7 @@ import {Component, OnInit} from '@angular/core';
 	selector: 'ng-doc-api-list',
 	templateUrl: './api-list.component.html',
 	styleUrls: ['./api-list.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NgDocApiListComponent implements OnInit {
-	constructor() {}
-
-	ngOnInit(): void {}
+export class NgDocApiListComponent {
 }

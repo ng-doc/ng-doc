@@ -1,5 +1,5 @@
-import {asArray} from '../../../helpers';
-import {NgDocEntity} from '../abstractions/entity';
+import {asArray} from '../../helpers';
+import {NgDocEntity} from '../entities/abstractions/entity';
 
 /**
  *

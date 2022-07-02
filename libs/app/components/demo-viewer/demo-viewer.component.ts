@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Type} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, Type} from '@angular/core';
 import {NgDocRootPage} from '@ng-doc/app/classes';
 import {NgDocDemoAsset} from '@ng-doc/app/interfaces';
 import {PolymorpheusComponent} from '@tinkoff/ng-polymorpheus';
@@ -10,7 +10,11 @@ import {PolymorpheusComponent} from '@tinkoff/ng-polymorpheus';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgDocDemoViewerComponent {
+	@Input()
 	componentName?: string;
+
+	@Input()
+	container: boolean = true;
 
 	constructor(private readonly rootPage: NgDocRootPage) {}
 

@@ -10,13 +10,13 @@ import {extractPathAnchor} from '../extract-path-anchor';
  *	Finds the declaration of a given source path.
  *
  * @param {Project} project - The typescript project
- * @param {NgDocPageEntity} page - The current page
+ * @param {NgDocPageEntity} scope - The scope of the current page
  * @param {string} sourcePath - The source path to find the declaration
  * @returns {Node} The declaration node
  */
-export function findDeclaration(project: Project, page: NgDocPageEntity, sourcePath: string): Node {
+export function findDeclaration(project: Project, scope: string, sourcePath: string): Node {
 	const anchor: NgDocPathAnchor = extractPathAnchor(sourcePath);
-	const filePath: string = path.join(page.scope, anchor.path).replace(/^\//, '');
+	const filePath: string = path.join(scope, anchor.path).replace(/^\//, '');
 
 	if (!fs.existsSync(filePath)) {
 		throw new Error(

@@ -8,12 +8,12 @@ import {NgDocBuildedOutput, NgDocBuilderContext} from '../../interfaces';
 import {NgDocApiPageEnv} from '../../templates-env/api-page.env';
 import {NgDocApiPageModuleEnv} from '../../templates-env/api-page.module.env';
 import {NgDocEntityStore} from '../entity-store';
+import {isSupportedDeclaration} from '../functions/is-supported-declaration';
 import {NgDocRenderer} from '../renderer';
+import {NgDocSupportedDeclarations} from '../types/supported-declarations';
 import {RENDERED_PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocApiScopeEntity} from './api-scope.entity';
-import {isSupportedDeclaration} from './functions/is-supported-declaration';
-import {NgDocSupportedDeclarations} from './types/supported-declarations';
 
 export class NgDocApiPageEntity extends NgDocEntity {
 	moduleName: string = uniqueName(`NgDocGeneratedApiPageModule`);
@@ -49,7 +49,7 @@ export class NgDocApiPageEntity extends NgDocEntity {
 			: '';
 	}
 
-	override get folderPath(): string {
+	get folderPath(): string {
 		return path.join(this.parent.folderPath, this.route);
 	}
 
@@ -115,7 +115,7 @@ export class NgDocApiPageEntity extends NgDocEntity {
 			const renderer: NgDocRenderer<NgDocApiPageEnv> = new NgDocRenderer<NgDocApiPageEnv>({
 				Node,
 				declaration: this.declaration,
-				scope: this.parent.target
+				scope: this.parent.target,
 			});
 
 			return renderer.render('api-page.md.nunj').pipe(
@@ -138,7 +138,6 @@ export class NgDocApiPageEntity extends NgDocEntity {
 			.getExportedDeclarations()
 			.get(this.declarationName)
 			?.filter(isSupportedDeclaration);
-
 
 		this.declaration = (declarations && declarations[0]) ?? undefined;
 

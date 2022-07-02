@@ -1,4 +1,4 @@
-import {ClassDeclaration, Node, Project} from 'ts-morph';
+import {Node, Project} from 'ts-morph';
 
 import {findDeclaration} from '../../helpers';
 import {NgDocActionOutput} from '../../interfaces';
@@ -16,7 +16,7 @@ import {NgDocRenderer} from '../renderer';
 export function apiAction(sourcePath: string): NgDocAction {
 	return (project: Project, page: NgDocPageEntity): NgDocActionOutput => {
 		try {
-			const declaration: Node = findDeclaration(project, page, sourcePath);
+			const declaration: Node = findDeclaration(project, page.scope, sourcePath);
 			const renderer: NgDocRenderer<NgDocApiEnv> = new NgDocRenderer<NgDocApiEnv>({
 				Node,
 				declaration,
@@ -27,7 +27,7 @@ export function apiAction(sourcePath: string): NgDocAction {
 				dependencies: [declaration.getSourceFile().getFilePath()],
 			};
 		} catch (e) {
-			page.logger.error(`Error while executing API action: ${e}`);
+			page.logger.error(`Error while executing "api" action: ${e}`);
 
 			return {output: ``};
 		}

@@ -4,8 +4,8 @@ import {concatMap, map, startWith, switchMap} from 'rxjs/operators';
 import {asArray} from '../helpers';
 import {bufferDebounce} from '../operators';
 import {NgDocEntity} from './entities/abstractions/entity';
-import {buildCandidates} from './entities/functions/build-candidates';
-import {initializeEntities} from './entities/functions/initialize-entities';
+import {buildCandidates} from './functions/build-candidates';
+import {initializeEntities} from './functions/initialize-entities';
 
 /**
  *  FileEntity:

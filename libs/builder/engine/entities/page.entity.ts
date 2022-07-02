@@ -5,19 +5,19 @@ import {catchError, map, tap} from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
 import {asArray, isPresent, uniqueName} from '../../helpers';
-import {isPageDependencyEntity} from '../../helpers/is-page-dependency-entity';
+import {isDependencyEntity} from '../../helpers/is-dependency-entity';
 import {NgDocBuildedOutput, NgDocBuilderContext, NgDocPage} from '../../interfaces';
 import {NgDocPageEnv, NgDocPageModuleEnv} from '../../templates-env';
 import {NgDocActions} from '../actions';
 import {NgDocEntityStore} from '../entity-store';
 import {NgDocRenderer} from '../renderer';
-import {CACHE_PATH, PAGE_DEPENDENCIES_NAME, RENDERED_PAGE_NAME} from '../variables';
+import {CACHE_PATH, PAGE_DEPENDENCIES_NAME, PLAYGROUND_NAME, RENDERED_PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
-import {NgDocFileEntity} from './abstractions/file.entity';
+import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocCategoryEntity} from './category.entity';
 import {NgDocDependenciesEntity} from './dependencies.entity';
 
-export class NgDocPageEntity extends NgDocFileEntity<NgDocPage> {
+export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	override moduleName: string = uniqueName(`NgDocGeneratedPageModule`);
 	componentName: string = uniqueName(`NgDocGeneratedPageComponent`);
 
@@ -72,10 +72,7 @@ export class NgDocPageEntity extends NgDocFileEntity<NgDocPage> {
 	}
 
 	get builtPagePath(): string {
-		return path.relative(
-			this.context.context.workspaceRoot,
-			path.join(this.folderPath, RENDERED_PAGE_NAME),
-		);
+		return path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, RENDERED_PAGE_NAME));
 	}
 
 	override get buildCandidates(): NgDocEntity[] {
@@ -96,9 +93,19 @@ export class NgDocPageEntity extends NgDocFileEntity<NgDocPage> {
 		return this.pageDependenciesFile ? this.pageDependenciesFile.replace(/.ts$/, '') : undefined;
 	}
 
+	get playgroundFile(): string | undefined {
+		const playgroundPath: string = path.join(this.sourceFileFolder, PLAYGROUND_NAME);
+
+		return fs.existsSync(playgroundPath) ? playgroundPath : undefined;
+	}
+
+	get pagePlaygroundImport(): string | undefined {
+		return this.playgroundFile ? this.playgroundFile.replace(/.ts$/, '') : undefined;
+	}
+
 	get componentsAssets(): string | undefined {
 		const dependencies: NgDocDependenciesEntity | undefined = asArray(this.children.values()).filter(
-			isPageDependencyEntity,
+			isDependencyEntity,
 		)[0];
 
 		return dependencies ? dependencies.componentAssetsImport : undefined;
@@ -150,6 +157,8 @@ export class NgDocPageEntity extends NgDocFileEntity<NgDocPage> {
 
 		if (this.target) {
 			this.dependencies.add(this.mdPath);
+			this.pageDependenciesFile && this.dependencies.add(this.pageDependenciesFile);
+			this.playgroundFile && this.dependencies.add(this.playgroundFile);
 
 			const renderer: NgDocRenderer<NgDocPageEnv> = new NgDocRenderer<NgDocPageEnv>({
 				NgDocPage: this.target,

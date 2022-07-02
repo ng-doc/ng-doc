@@ -1,4 +1,4 @@
-import {NgDocEntity} from '../abstractions/entity';
+import {NgDocEntity} from '../entities/abstractions/entity';
 
 export interface NgDocEntityOutput {
 	type: 'insert' | 'remove' | 'empty';

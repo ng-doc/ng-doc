@@ -1,12 +1,17 @@
 import * as minimatch from 'minimatch';
 import {Constructor} from 'ts-morph';
 
-import {API_PATTERN, CATEGORY_PATTERN, PAGE_DEPENDENCY_PATTERN, PAGE_PATTERN} from '../engine';
+import {
+	API_PATTERN,
+	CATEGORY_PATTERN,
+	NgDocApiEntity,
+	NgDocCategoryEntity,
+	NgDocDependenciesEntity,
+	NgDocPageEntity,
+	PAGE_DEPENDENCY_PATTERN,
+	PAGE_PATTERN,
+} from '../engine';
 import {NgDocEntity} from '../engine/entities/abstractions/entity';
-import {NgDocApiEntity} from '../engine/entities/api.entity';
-import {NgDocCategoryEntity} from '../engine/entities/category.entity';
-import {NgDocDependenciesEntity} from '../engine/entities/dependencies.entity';
-import {NgDocPageEntity} from '../engine/entities/page.entity';
 
 /**
  *

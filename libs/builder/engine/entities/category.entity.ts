@@ -10,10 +10,10 @@ import {NgDocEntityStore} from '../entity-store';
 import {NgDocRenderer} from '../renderer';
 import {CACHE_PATH} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
-import {NgDocFileEntity} from './abstractions/file.entity';
+import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocPageEntity} from './page.entity';
 
-export class NgDocCategoryEntity extends NgDocFileEntity<NgDocCategory> {
+export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 	override moduleName: string = uniqueName(`NgDocGeneratedCategoryModule`);
 	override parent?: NgDocCategoryEntity;
 

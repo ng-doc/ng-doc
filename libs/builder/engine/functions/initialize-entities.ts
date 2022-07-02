@@ -1,7 +1,7 @@
 import {forkJoin, Observable, of} from 'rxjs';
 import {mapTo} from 'rxjs/operators';
 
-import {NgDocEntity} from '../abstractions/entity';
+import {NgDocEntity} from '../entities/abstractions/entity';
 
 /**
  * Runs onInit hook for entities

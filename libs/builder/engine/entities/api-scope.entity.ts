@@ -1,22 +1,22 @@
 import * as glob from 'glob';
 import {forkJoin, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {ExportedDeclarations, Project, SourceFile} from 'ts-morph';
+import {Project, SourceFile} from 'ts-morph';
 
 import {asArray, isNotExcludedPath, isPageEntity, uniqueName} from '../../helpers';
 import {NgDocApiScope, NgDocBuildedOutput, NgDocBuilderContext} from '../../interfaces';
 import {NgDocApiScopeModuleEnv} from '../../templates-env/api-scope.module.env';
 import {NgDocEntityStore} from '../entity-store';
+import {isSupportedDeclaration} from '../functions/is-supported-declaration';
 import {NgDocRenderer} from '../renderer';
+import {NgDocSupportedDeclarations} from '../types/supported-declarations';
 import {NgDocEntity} from './abstractions/entity';
-import {NgDocFileEntity} from './abstractions/file.entity';
+import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocApiEntity} from './api.entity';
 import {NgDocApiPageEntity} from './api-page.entity';
-import {isSupportedDeclaration} from './functions/is-supported-declaration';
 import {NgDocPageEntity} from './page.entity';
-import {NgDocSupportedDeclarations} from './types/supported-declarations';
 
-export class NgDocApiScopeEntity extends NgDocFileEntity<NgDocApiScope> {
+export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 	override moduleName: string = uniqueName(`NgDocGeneratedApiScopeCategoryModule`);
 	override readonly isNavigable: boolean = false;
 	protected override readyToBuild: boolean = true;
@@ -89,8 +89,7 @@ export class NgDocApiScopeEntity extends NgDocFileEntity<NgDocApiScope> {
 				),
 			)
 				.filter(isSupportedDeclaration)
-				.forEach(
-				(declaration: NgDocSupportedDeclarations) => {
+				.forEach((declaration: NgDocSupportedDeclarations) => {
 					const name: string | undefined = declaration.getName();
 
 					if (name) {
@@ -103,8 +102,7 @@ export class NgDocApiScopeEntity extends NgDocFileEntity<NgDocApiScope> {
 							name,
 						);
 					}
-				}
-			),
+				}),
 		);
 
 		return of(void 0);

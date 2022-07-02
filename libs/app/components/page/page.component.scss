@@ -1,9 +1,4 @@
 :host {
-	.ng-doc-page-wrapper {
-		& > ::ng-deep *:not(table) {
-			max-width: 560px;
-		}
-	}
 }
 
 // Global Styles

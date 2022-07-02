@@ -5,7 +5,7 @@ import {Constructable} from '../types';
  *
  * @param dependency
  */
-export function isPageDependencyEntity(
+export function isDependencyEntity(
 	dependency: InstanceType<Constructable>,
 ): dependency is NgDocDependenciesEntity {
 	return dependency instanceof NgDocDependenciesEntity;
