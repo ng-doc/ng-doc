@@ -12,7 +12,7 @@ export class NgDocCodeComponent {
 	code: string = '';
 
 	@Input()
-	language: string = 'html';
+	language: string = 'typescript';
 
 	@Input()
 	copyButton: boolean = true;

@@ -1,0 +1,155 @@
+:host {
+	display: block;
+	height: 100%;
+}
+
+.ng-doc-overlay-pointer-wrapper {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+
+	.ng-doc-overlay-pointer {
+		display: flex;
+
+		.ng-doc-pointer {
+			position: relative;
+
+			&:before {
+				position: relative;
+				display: block;
+				content: "";
+				width: 0;
+				height: 0;
+				border: 8px solid transparent;
+			}
+
+			&:after {
+				position: absolute;
+				display: block;
+				content: "";
+				width: 0;
+				height: 0;
+				border: 7px solid transparent;
+			}
+		}
+	}
+
+	.ng-doc-overlay-pointer-content {
+		display: flex;
+		flex: 1;
+		height: 100%;
+	}
+}
+
+/* Vertical positioning */
+:host[data-ng-doc-overlay-position="top"],
+:host[data-ng-doc-overlay-position="bottom"] {
+	.ng-doc-overlay-pointer-wrapper {
+		min-width: calc(var(--ng-doc-base-gutter) * 4);
+	}
+
+	.ng-doc-overlay-pointer {
+		justify-content: center;
+
+		.ng-doc-pointer {
+			top: 1px;
+		}
+
+		.ng-doc-pointer:before {
+			border-bottom: 8px solid var(--ng-doc-overlay-border);
+		}
+
+		.ng-doc-pointer:after {
+			top: 2px;
+			right: 1px;
+			border-bottom: 7px solid var(--ng-doc-overlay-background);
+		}
+	}
+}
+
+:host[data-ng-doc-overlay-position="top"] {
+	.ng-doc-overlay-pointer-wrapper {
+		flex-direction: column-reverse;
+	}
+
+	.ng-doc-overlay-pointer {
+		transform: rotate(180deg) scaleX(-1);
+	}
+}
+
+:host[data-ng-doc-overlay-align="left"] {
+	.ng-doc-overlay-pointer {
+		justify-content: flex-start;
+
+		.ng-doc-pointer {
+			margin-left: calc(var(--ng-doc-base-gutter) * 2);
+		}
+	}
+}
+
+:host[data-ng-doc-overlay-align="right"] {
+	.ng-doc-overlay-pointer {
+		justify-content: flex-end;
+
+		.ng-doc-pointer {
+			margin-right: calc(var(--ng-doc-base-gutter) * 2);
+		}
+	}
+}
+
+/* Horizontal positioning */
+:host[data-ng-doc-overlay-position="left"],
+:host[data-ng-doc-overlay-position="right"] {
+	.ng-doc-overlay-pointer-wrapper {
+		flex-direction: row;
+		min-height: calc(var(--ng-doc-base-gutter) * 4);
+	}
+
+	.ng-doc-overlay-pointer {
+		align-items: center;
+
+		.ng-doc-pointer {
+			left: 1px;
+		}
+
+		.ng-doc-pointer:before {
+			border-right: 8px solid var(--ng-doc-overlay-border);
+		}
+
+		.ng-doc-pointer:after {
+			top: 1px;
+			right: 0;
+			border-right: 7px solid var(--ng-doc-overlay-background);
+		}
+	}
+}
+
+:host[data-ng-doc-overlay-position="left"] {
+	.ng-doc-overlay-pointer-wrapper {
+		flex-direction: row-reverse;
+	}
+
+	.ng-doc-overlay-pointer {
+		transform: rotate(180deg) scaleY(-1);
+	}
+}
+
+:host[data-ng-doc-overlay-align="top"] {
+	.ng-doc-overlay-pointer {
+		align-items: flex-start;
+
+		.ng-doc-pointer {
+			margin-top: calc(var(--ng-doc-base-gutter) * 2);
+		}
+	}
+}
+
+:host[data-ng-doc-overlay-align="bottom"] {
+	.ng-doc-overlay-pointer {
+		align-items: flex-end;
+
+		.ng-doc-pointer {
+			margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
+		}
+	}
+}
