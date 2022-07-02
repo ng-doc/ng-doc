@@ -1,0 +1,10 @@
+:host {
+	.ng-doc-playground-properties-wrapper {
+		display: flex;
+
+		.ng-doc-playground-demos {
+			display: flex;
+			flex-direction: column;
+		}
+	}
+}

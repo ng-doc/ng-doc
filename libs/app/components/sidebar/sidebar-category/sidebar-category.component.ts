@@ -13,14 +13,14 @@ export class NgDocSidebarCategoryComponent {
 	category?: NgDocNavigation;
 
 	@Input()
-	@HostBinding('attr.data-ng-doc-is-root')
+	@HostBinding('attr.properties-ng-doc-is-root')
 	isRoot: boolean = false;
 
 	@Input()
 	content: PolymorpheusContent = '';
 
 	@Input()
-	@HostBinding('attr.data-ng-doc-expandable')
+	@HostBinding('attr.properties-ng-doc-expandable')
 	expandable: boolean = true;
 
 	@Input()

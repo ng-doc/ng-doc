@@ -1,1 +1,6 @@
-<p>playground works!</p>
+<ng-container *ngIf="configuration">
+	<ng-doc-playground-properties [properties]="properties">
+		<ng-doc-playground-demo *ngFor="let selector of configuration.selectors | asArray" [selector]="selector">
+		</ng-doc-playground-demo>
+	</ng-doc-playground-properties>
+</ng-container>

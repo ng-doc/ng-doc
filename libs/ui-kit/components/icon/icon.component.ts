@@ -28,7 +28,7 @@ export class NgDocIconComponent implements OnChanges {
 
 	/** Icon size */
 	@Input()
-	@HostBinding('attr.data-ng-doc-size')
+	@HostBinding('attr.properties-ng-doc-size')
 	size: NgDocIconSize = 16;
 
 	private reload$: Subject<void> = new Subject<void>();

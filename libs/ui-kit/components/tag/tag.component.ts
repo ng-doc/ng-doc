@@ -5,10 +5,10 @@ import {NgDocColor, NgDocPaletteColor} from '@ng-doc/ui-kit/types';
 	selector: 'ng-doc-tag',
 	templateUrl: './tag.component.html',
 	styleUrls: ['./tag.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgDocTagComponent {
 	@Input()
-	@HostBinding('attr.data-ng-doc-color')
+	@HostBinding('attr.properties-ng-doc-color')
 	color: NgDocColor | NgDocPaletteColor = 'primary';
 }

@@ -12,7 +12,7 @@ export class TabSelectionComponent implements OnChanges {
 	bindTo: ElementRef<HTMLElement> | null = null;
 
 	@Input()
-	@HostBinding('attr.data-ng-doc-first')
+	@HostBinding('attr.properties-ng-doc-first')
 	isItFirst: boolean = false;
 
 	constructor(private readonly elementRef: ElementRef<HTMLElement>) {}
