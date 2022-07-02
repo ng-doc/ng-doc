@@ -19,3 +19,13 @@ export const tooltipCloseAnimation: AnimationMetadata[] = [
 	style({transform: 'scale(1)', opacity: 1}),
 	animate('120ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({transform: 'scale(0.8)', opacity: 0})),
 ];
+
+export const notificationOpenAnimation: AnimationMetadata[] = [
+	style({transform: 'scale(0.7)', opacity: 0}),
+	animate('120ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({transform: 'scale(1)', opacity: 1})),
+];
+
+export const notificationCloseAnimation: AnimationMetadata[] = [
+	style({transform: 'scale(1)', opacity: 1}),
+	animate('120ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({transform: 'scale(0.7)', opacity: 0})),
+];
