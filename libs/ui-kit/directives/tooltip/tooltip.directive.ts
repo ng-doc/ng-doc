@@ -1,4 +1,3 @@
-import {Overlay} from '@angular/cdk/overlay';
 import {
 	AfterViewInit,
 	ChangeDetectorRef,
@@ -17,6 +16,7 @@ import {NgDocOverlayContainerComponent} from '@ng-doc/ui-kit/components/overlay-
 import {asArray, isPresent, toElement} from '@ng-doc/ui-kit/helpers';
 import {ngDocZoneDetach, ngDocZoneOptimize} from '@ng-doc/ui-kit/observables';
 import {NgDocOverlayService} from '@ng-doc/ui-kit/services';
+import {NgDocOverlayStrategy} from '@ng-doc/ui-kit/services/overlay-strategy/overlay-strategy';
 import {BaseElement, NgDocOverlayPosition} from '@ng-doc/ui-kit/types';
 import {NgDocOverlayUtils} from '@ng-doc/ui-kit/utils';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
@@ -89,12 +89,12 @@ export class NgDocTooltipDirective implements AfterViewInit, OnDestroy {
 	overlayRef: NgDocOverlayRef | null = null;
 
 	constructor(
-		private elementRef: ElementRef<HTMLElement>,
-		private changeDetectorRef: ChangeDetectorRef,
-		private viewContainerRef: ViewContainerRef,
-		private overlayService: NgDocOverlayService,
-		private ngZone: NgZone,
-		private overlay: Overlay,
+		private readonly elementRef: ElementRef<HTMLElement>,
+		private readonly changeDetectorRef: ChangeDetectorRef,
+		private readonly viewContainerRef: ViewContainerRef,
+		private readonly overlayService: NgDocOverlayService,
+		private readonly ngZone: NgZone,
+		private readonly scrollStrategy: NgDocOverlayStrategy,
 	) {}
 
 	ngAfterViewInit(): void {
@@ -156,7 +156,7 @@ export class NgDocTooltipDirective implements AfterViewInit, OnDestroy {
 				minWidth: this.minWidth,
 				maxHeight: this.maxHeight,
 				maxWidth: this.maxWidth,
-				scrollStrategy: this.overlay.scrollStrategies.close(),
+				scrollStrategy: this.scrollStrategy,
 				disposeOnRouteNavigation: true,
 				openAnimation: tooltipOpenAnimation,
 				closeAnimation: tooltipCloseAnimation,

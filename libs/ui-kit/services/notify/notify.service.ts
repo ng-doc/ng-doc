@@ -1,4 +1,3 @@
-import {Overlay} from '@angular/cdk/overlay';
 import {Injectable} from '@angular/core';
 import {notificationCloseAnimation, notificationOpenAnimation} from '@ng-doc/ui-kit/animations';
 import {NgDocOverlayRef} from '@ng-doc/ui-kit/classes';
@@ -17,7 +16,7 @@ export class NgDocNotifyService {
 	private overlayRef?: NgDocOverlayRef;
 	private readonly notify$: Subject<PolymorpheusContent> = new Subject<PolymorpheusContent>();
 
-	constructor(private readonly overlayService: NgDocOverlayService, private readonly overlay: Overlay) {
+	constructor(private readonly overlayService: NgDocOverlayService) {
 		this.notify$
 			.pipe(
 				tap(() => this.overlayRef?.close()),
@@ -36,7 +35,7 @@ export class NgDocNotifyService {
 		this.overlayRef = this.overlayService.open(content, {
 			overlayContainer: NgDocOverlayContainerComponent,
 			panelClass: 'ng-doc-notify',
-			positionStrategy: this.overlay.position().global().bottom('10px').centerHorizontally(),
+			positionStrategy: this.overlayService.globalPositionStrategy().bottom('10px').centerHorizontally(),
 			openAnimation: notificationOpenAnimation,
 			closeAnimation: notificationCloseAnimation,
 		});
