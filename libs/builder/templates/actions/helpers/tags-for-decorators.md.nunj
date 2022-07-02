@@ -2,17 +2,17 @@
 {%- if declaration.getDecorators %}
 {% for decorator in declaration.getDecorators() %}
 {%- if decorator.getName() === 'Component' %}
-<div id="ng-doc-template-tag" properties-color="blue">{{ decorator.getName() }}</div>
+<div id="ng-doc-template-tag" data-color="blue">{{ decorator.getName() }}</div>
 {%- elif decorator.getName() === 'Directive' %}
-<div id="ng-doc-template-tag" properties-color="orange">{{ decorator.getName() }}</div>
+<div id="ng-doc-template-tag" data-color="orange">{{ decorator.getName() }}</div>
 {%- elif decorator.getName() === 'Injectable' %}
-<div id="ng-doc-template-tag" properties-color="indigo">{{ decorator.getName() }}</div>
+<div id="ng-doc-template-tag" data-color="indigo">{{ decorator.getName() }}</div>
 {%- elif decorator.getName() === 'NgModule' %}
-<div id="ng-doc-template-tag" properties-color="pink">{{ decorator.getName() }}</div>
+<div id="ng-doc-template-tag" data-color="pink">{{ decorator.getName() }}</div>
 {%- elif decorator.getName() === 'Pipe' %}
-<div id="ng-doc-template-tag" properties-color="lime">{{ decorator.getName() }}</div>
+<div id="ng-doc-template-tag" data-color="lime">{{ decorator.getName() }}</div>
 {%- else %}
-<div id="ng-doc-template-tag" properties-color="grey">{{ decorator.getName() }}</div>
+<div id="ng-doc-template-tag" data-color="grey">{{ decorator.getName() }}</div>
 {%- endif %}
 {%- endfor %}
 {%- endif %}

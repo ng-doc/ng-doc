@@ -5,6 +5,12 @@
 		position: relative;
 		display: flex;
 
+		&:not(:hover) {
+			.ng-doc-copy-button {
+				opacity: 0;
+			}
+		}
+
 		code {
 			width: 100%;
 			border-radius: var(--ng-doc-base-gutter);

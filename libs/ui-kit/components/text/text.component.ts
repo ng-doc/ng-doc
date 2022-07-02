@@ -16,26 +16,26 @@ import {NgDocTextRightDirective} from './text-right.directive';
 	selector: '[ng-doc-text]',
 	templateUrl: './text.component.html',
 	styleUrls: ['./text.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NgDocTextComponent implements AfterContentChecked {
 	/** Text color */
 	@Input()
-	@HostBinding('attr.properties-ng-doc-text-size')
+	@HostBinding('attr.data-ng-doc-text-size')
 	size: NgDocSize = 'medium';
 
 	/** Text color */
 	@Input()
-	@HostBinding('attr.properties-ng-doc-text-color')
+	@HostBinding('attr.data-ng-doc-text-color')
 	color: NgDocTextColor = 'normal';
 
 	/** Text align */
 	@Input()
-	@HostBinding('attr.properties-ng-doc-text-align')
+	@HostBinding('attr.data-ng-doc-text-align')
 	align: NgDocTextAlign = 'left';
 
 	@Input()
-	@HostBinding('attr.properties-ng-doc-text-absolute')
+	@HostBinding('attr.data-ng-doc-text-absolute')
 	absoluteContent: boolean = false;
 
 	@ContentChild(NgDocTextLeftDirective)

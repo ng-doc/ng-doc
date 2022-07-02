@@ -6,7 +6,5 @@ export * from '@ng-doc/app/components/header';
 export * from '@ng-doc/app/components/navbar';
 export * from '@ng-doc/app/components/page';
 export * from '@ng-doc/app/components/playground';
-export * from '@ng-doc/app/components/playground-demo';
-export * from '@ng-doc/app/components/playground-properties';
 export * from '@ng-doc/app/components/root';
 export * from '@ng-doc/app/components/sidebar';

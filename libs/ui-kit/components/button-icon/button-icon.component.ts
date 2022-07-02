@@ -9,6 +9,6 @@ import {NgDocSize} from '@ng-doc/ui-kit/types';
 })
 export class NgDocButtonIconComponent {
 	@Input()
-	@HostBinding('attr.properties-ng-doc-size')
+	@HostBinding('attr.data-ng-doc-size')
 	size: NgDocSize = 'medium';
 }
