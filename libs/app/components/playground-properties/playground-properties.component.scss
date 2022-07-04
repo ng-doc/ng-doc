@@ -1,0 +1,29 @@
+:host {
+	.ng-doc-playground-properties-wrapper {
+		display: flex;
+
+		.ng-doc-playground-demos {
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+			margin-right: calc(var(--ng-doc-base-gutter) * 2);
+		}
+
+		.ng-doc-playground-properties {
+			flex-shrink: 0;
+			width: 300px;
+			padding: calc(var(--ng-doc-base-gutter) * 2) calc(var(--ng-doc-base-gutter) * 3);
+			background-color: var(--ng-doc-base-1);
+			border-radius: var(--ng-doc-base-gutter);
+
+			ng-doc-playground-property:not(:last-child) {
+				margin-bottom: var(--ng-doc-base-gutter);
+			}
+		}
+
+		.ng-doc-header {
+			margin-top: 0;
+			margin-bottom: var(--ng-doc-base-gutter);
+		}
+	}
+}

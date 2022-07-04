@@ -2,6 +2,7 @@ export * from './align';
 export * from './base-element';
 export * from './color';
 export * from './constructor';
+export * from './content';
 export * from './icon-size';
 export * from './overlay-animation-event';
 export * from './overlay-origin';

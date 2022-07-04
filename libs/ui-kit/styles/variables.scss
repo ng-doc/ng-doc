@@ -20,6 +20,7 @@
 
 	--ng-doc-background: var(--ng-doc-base-0);
 	--ng-doc-border-color: var(--ng-doc-base-2);
+	--ng-doc-border-hover-color: var(--ng-doc-base-3);
 
 	--ng-doc-font-family: 'Roboto', sans-serif;
 	--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 2);
@@ -31,4 +32,29 @@
 	--ng-doc-text: var(--ng-doc-base-11);
 	--ng-doc-text-inversed: var(--ng-doc-base-0);
 	--ng-doc-text-muted: var(--ng-doc-base-6);
+
+	// NgDocButtonIconComponent
+	--ng-doc-button-background: trasparent;
+	--ng-doc-button-color: var(--ng-doc-text);
+	--ng-doc-button-hover-background: var(--ng-doc-base-1);
+	--ng-doc-button-hover-color: var(--ng-doc-button-color);
+	--ng-doc-button-active-background: var(--ng-doc-base-2);
+	--ng-doc-button-active-color: var(--ng-doc-button-hover-color);
+
+	// NgDocFloatedBorderComponent
+	--ng-doc-floated-border: 2px solid transparent;
+	--ng-doc-floated-border-radius: var(--ng-doc-base-gutter);
+	--ng-doc-floated-border-focus: 2px solid var(--ng-doc-primary);
+
+	/* NgDocInputWrapperComponent */
+	--ng-doc-input-text-align: left;
+	--ng-doc-input-width: 100%;
+	--ng-doc-input-height: 40px;
+	--ng-doc-input-border-radius: var(--ng-doc-base-gutter);
+	--ng-doc-input-border: 1px solid var(--ng-doc-border-color);
+	--ng-doc-input-border-hover: 1px solid var(--ng-doc-border-hover-color);
+	--ng-doc-input-background-color: var(--ng-doc-white);
+	--ng-doc-input-padding-left: calc(var(--ng-doc-base-gutter) * 2);
+	--ng-doc-input-padding-right: calc(var(--ng-doc-base-gutter) * 2);
+	--ng-doc-input-cursor: auto;
 }

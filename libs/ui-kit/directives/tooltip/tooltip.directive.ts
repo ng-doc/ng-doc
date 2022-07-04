@@ -16,7 +16,7 @@ import {NgDocOverlayContainerComponent} from '@ng-doc/ui-kit/components/overlay-
 import {asArray, isPresent, toElement} from '@ng-doc/ui-kit/helpers';
 import {ngDocZoneDetach, ngDocZoneOptimize} from '@ng-doc/ui-kit/observables';
 import {NgDocOverlayService} from '@ng-doc/ui-kit/services';
-import {NgDocOverlayStrategy} from '@ng-doc/ui-kit/services/overlay-strategy/overlay-strategy';
+import {NgDocOverlayStrategy} from '@ng-doc/ui-kit/services/overlay-strategy';
 import {BaseElement, NgDocOverlayPosition} from '@ng-doc/ui-kit/types';
 import {NgDocOverlayUtils} from '@ng-doc/ui-kit/utils';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';

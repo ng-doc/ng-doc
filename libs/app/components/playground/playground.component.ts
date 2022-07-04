@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {NgDocRootPage} from '@ng-doc/app/classes';
-import {NgDocPlaygroundProperties} from '@ng-doc/builder';
+import {NgDocPlaygroundConfig, NgDocPlaygroundProperties} from '@ng-doc/builder';
 
 @Component({
 	selector: 'ng-doc-playground',
@@ -9,11 +9,16 @@ import {NgDocPlaygroundProperties} from '@ng-doc/builder';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgDocPlaygroundComponent implements OnInit {
-	playgroundData?: NgDocPlaygroundProperties;
+	id?: string;
+	properties?: NgDocPlaygroundProperties;
 
 	constructor(private rootPage: NgDocRootPage) {}
 
 	ngOnInit(): void {
-		console.log(this.rootPage.playground, this.playgroundData);
+		console.log(this.rootPage.playground, this.id, this.properties);
+	}
+
+	get configuration(): NgDocPlaygroundConfig | undefined {
+		return this.id && this.rootPage.playground ? this.rootPage.playground[this.id] : undefined;
 	}
 }

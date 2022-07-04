@@ -18,7 +18,7 @@ export class NgDocFocusCatcherDirective {
 	@Output()
 	blurEvent: EventEmitter<Event> = new EventEmitter<Event>();
 
-	@HostBinding('attr.data-lu-focused')
+	@HostBinding('attr.data-ng-doc-focused')
 	focused: boolean = false;
 
 	constructor(

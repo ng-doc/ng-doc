@@ -82,7 +82,7 @@ export class NgDocOverlayContainerComponent implements NgDocOverlayContainer, On
 		}
 	}
 
-	@HostBinding('attr.data-lu-overlay-with-contact-border')
+	@HostBinding('attr.data-ng-doc-overlay-with-contact-border')
 	get contactBorder(): boolean {
 		return !!this.config?.contactBorder;
 	}
