@@ -1,4 +1,5 @@
 import {NgModule} from '@angular/core';
+
 import {NgDocInputNumberDirective} from './input-number.directive';
 
 @NgModule({
