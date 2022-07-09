@@ -56,7 +56,7 @@ export class {{ page.componentName }} extends NgDocRootPage {
 		}]),
 	],
 	exports: [RouterModule]
-})
+}})
 export class {{ page.moduleName }} {
 }
 

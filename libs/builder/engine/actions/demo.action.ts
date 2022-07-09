@@ -1,8 +1,7 @@
-import {NgDocDemoActionOptions} from '@ng-doc/builder';
-
 import {NgDocActionOutput} from '../../interfaces';
 import {NG_DOC_DEMO_TEMPLATE_ID} from '../../naming';
 import {NgDocAction} from '../../types';
+import {NgDocDemoActionOptions} from '../interfaces';
 
 /**
  *	Render demo point on the page, it will be rendered by the application

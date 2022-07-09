@@ -1,14 +1,11 @@
-import * as path from 'path';
-
 import {capitalize, isCategoryEntity} from '../../../helpers';
-import {GENERATED_MODULES_PATH} from '../../variables';
 import {NgDocEntity} from './entity';
-import {NgDocFileEntity} from './file.entity';
+import {NgDocModuleEntity} from './module.entity';
 
 /**
  * Entity for file end points that generate modules and components.
  */
-export abstract class NgDocNavigationEntity<T> extends NgDocFileEntity<T> {
+export abstract class NgDocNavigationEntity<T> extends NgDocModuleEntity<T> {
 	/**
 	 * Indicates when current entity is using for page navigation.
 	 */
@@ -29,20 +26,14 @@ export abstract class NgDocNavigationEntity<T> extends NgDocFileEntity<T> {
 	 */
 	abstract order?: number;
 
-	/**
-	 * File title of the module.
-	 */
-	abstract moduleFileName: string;
-
-	/**
-	 * The title of the module.
-	 */
-	abstract moduleName: string;
-
 	abstract override parent?: NgDocNavigationEntity<unknown>;
 
 	override get storeKey(): string {
 		return this.sourceFilePath;
+	}
+
+	override get folderName(): string {
+		return this.route;
 	}
 
 	/**
@@ -64,15 +55,6 @@ export abstract class NgDocNavigationEntity<T> extends NgDocFileEntity<T> {
 	}
 
 	/**
-	 * Returns paths to the module in generated folder
-	 *
-	 * @type {string}
-	 */
-	get modulePath(): string {
-		return path.join(this.folderPath, this.moduleFileName);
-	}
-
-	/**
 	 * Returns children of the current buildable that are using for page navigation
 	 *
 	 * @type {NgDocEntity[]}
@@ -81,18 +63,5 @@ export abstract class NgDocNavigationEntity<T> extends NgDocFileEntity<T> {
 		return this.childEntities.filter(
 			(child: NgDocEntity) => child instanceof NgDocNavigationEntity && child.isNavigable,
 		);
-	}
-
-	/**
-	 * Returns relative paths to the module in generated folder that could be used for import
-	 *
-	 * @type {string}
-	 */
-	get moduleImport(): string {
-		return path.relative(this.context.context.workspaceRoot, this.modulePath).replace(/.ts$/, '');
-	}
-
-	get folderPath(): string {
-		return path.join(this.parent?.folderPath ?? GENERATED_MODULES_PATH, this.route);
 	}
 }

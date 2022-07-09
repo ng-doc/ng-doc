@@ -4,18 +4,18 @@ import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
-import {asArray, isPresent, uniqueName} from '../../helpers';
-import {isDependencyEntity} from '../../helpers/is-dependency-entity';
+import {asArray, isDependencyEntity, isPlaygroundEntity, isPresent, uniqueName} from '../../helpers';
 import {NgDocBuildedOutput, NgDocBuilderContext, NgDocPage} from '../../interfaces';
 import {NgDocPageEnv, NgDocPageModuleEnv} from '../../templates-env';
 import {NgDocActions} from '../actions';
 import {NgDocEntityStore} from '../entity-store';
 import {NgDocRenderer} from '../renderer';
-import {CACHE_PATH, PAGE_DEPENDENCIES_NAME, PLAYGROUND_NAME, RENDERED_PAGE_NAME} from '../variables';
+import {CACHE_PATH, PAGE_DEPENDENCIES_NAME, RENDERED_PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocCategoryEntity} from './category.entity';
 import {NgDocDependenciesEntity} from './dependencies.entity';
+import {NgDocPlaygroundEntity} from './playground.entity';
 
 export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	override moduleName: string = uniqueName(`NgDocGeneratedPageModule`);
@@ -93,14 +93,8 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return this.pageDependenciesFile ? this.pageDependenciesFile.replace(/.ts$/, '') : undefined;
 	}
 
-	get playgroundFile(): string | undefined {
-		const playgroundPath: string = path.join(this.sourceFileFolder, PLAYGROUND_NAME);
-
-		return fs.existsSync(playgroundPath) ? playgroundPath : undefined;
-	}
-
-	get pagePlaygroundImport(): string | undefined {
-		return this.playgroundFile ? this.playgroundFile.replace(/.ts$/, '') : undefined;
+	get playground(): NgDocPlaygroundEntity | undefined {
+		return this.children.find(isPlaygroundEntity);
 	}
 
 	get componentsAssets(): string | undefined {
@@ -158,7 +152,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		if (this.target) {
 			this.dependencies.add(this.mdPath);
 			this.pageDependenciesFile && this.dependencies.add(this.pageDependenciesFile);
-			this.playgroundFile && this.dependencies.add(this.playgroundFile);
 
 			const renderer: NgDocRenderer<NgDocPageEnv> = new NgDocRenderer<NgDocPageEnv>({
 				NgDocPage: this.target,

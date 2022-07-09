@@ -1,8 +1,8 @@
-import {NgDocPlaygroundProperties} from '@ng-doc/builder';
 import {Node, Project} from 'ts-morph';
 
 import {findDeclaration} from '../../helpers';
 import {declarationToPlayground} from '../../helpers/declaration-to-playground';
+import {NgDocPlaygroundProperties} from '../../interfaces';
 import {NgDocActionOutput} from '../../interfaces';
 import {NG_DOC_PLAYGROUND_TEMPLATE_ID} from '../../naming';
 import {NgDocAction} from '../../types';

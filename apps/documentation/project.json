@@ -81,14 +81,16 @@
 					"ngDoc": {
 						"pages": "apps/documentation",
 						"tsConfig": "tsconfig.base.json"
-					}
+					},
+					"aot": false
 				},
 				"development": {
 					"browserTarget": "documentation:build:development",
 					"ngDoc": {
 						"pages": "apps/documentation",
 						"tsConfig": "tsconfig.base.json"
-					}
+					},
+					"aot": false
 				}
 			},
 			"defaultConfiguration": "development",

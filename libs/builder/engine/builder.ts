@@ -18,7 +18,7 @@ import {
 	CATEGORY_PATTERN,
 	GENERATED_PATH,
 	PAGE_DEPENDENCY_PATTERN,
-	PAGE_PATTERN,
+	PAGE_PATTERN, PLAYGROUND_PATTERN,
 } from './variables';
 import {NgDocWatcher} from './watcher';
 
