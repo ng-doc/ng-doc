@@ -3,14 +3,15 @@ import {Component, NgModule, Type, ChangeDetectionStrategy} from '@angular/core'
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {NgDocPageModule, NgDocRootPage, NgDocDemoAssets} from '@ng-doc/app';
+import {NgDocPlayground} from '@ng-doc/builder';
 import pageMd from '!!raw-loader!{{ page.builtPagePath }}';
 {%- if page.pageDependenciesImport %}
 // noinspection ES6UnusedImports
 import pageDependencies from '{{ page.pageDependenciesImport }}';
 {%- endif %}
-{%- if page.playground %}
+{%- if page.pagePlaygroundImport %}
 // noinspection ES6UnusedImports
-import { {{ page.playground.moduleName }} } from '{{ page.playground.moduleImport }}';
+import pagePlayground from '{{ page.pagePlaygroundImport }}';
 {%- endif %}
 {%- if page.componentsAssets %}
 // noinspection ES6UnusedImports
@@ -26,16 +27,19 @@ import demoAssets from '{{ page.componentsAssets }}';
 export class {{ page.componentName }} extends NgDocRootPage {
 	readonly pageMd: string = pageMd;
 	{%- if page.pageDependenciesFile %}
-	readonly module?: Type<object> = pageDependencies.module;
 	readonly demo: Record<string, Type<unknown>> | undefined = pageDependencies.demo;
+	readonly module: Type<unknown> | undefined = pageDependencies.module;
 	{%- endif %}
 	{%- if page.componentsAssets %}
 	readonly demoAssets: NgDocDemoAssets = demoAssets;
 	{%- endif %}
+	{%- if page.playgroundFile %}
+	readonly playground: NgDocPlayground = pagePlayground;
+	{%- endif %}
 
 	constructor() {
 		super();
-		console.log(this.pageMd, this.demo, this.demoAssets);
+		console.log(this.pageMd, this.demo, this.demoAssets, this.playground);
 	}
 }
 
@@ -46,9 +50,6 @@ export class {{ page.componentName }} extends NgDocRootPage {
 		NgDocPageModule,
 		{%- if page.pageDependenciesFile %}
 		pageDependencies.module,
-		{%- endif %}
-		{%- if page.playground %}
-		{{page.playground.moduleName}},
 		{%- endif %}
 		RouterModule.forChild([{
 			path: '',

@@ -1,13 +1,16 @@
+import '@angular/compiler';
+
 import {CommonModule} from '@angular/common';
 import {
 	ChangeDetectionStrategy,
+	Compiler,
 	Component,
+	ComponentFactory,
 	ComponentRef,
-	createNgModuleRef,
 	Injector,
 	Input,
+	ModuleWithComponentFactories,
 	NgModule,
-	NgModuleRef,
 	Type,
 	ViewChild,
 	ViewContainerRef,
@@ -16,15 +19,15 @@ import {NgDocRootPage} from '@ng-doc/app/classes';
 import {NgDocPlaygroundDynamicContent} from '@ng-doc/builder';
 import {asArray} from '@ng-doc/ui-kit';
 
-class NgDocPlaygroundDemoWrapperComponent {}
+class NgDocDemoComponent {}
 
-class NgDocPlaygroundDemoWrapperModule {}
+class NgDocDemoModule {}
 
 @Component({
 	selector: 'ng-doc-playground-demo',
 	templateUrl: './playground-demo.component.html',
 	styleUrls: ['./playground-demo.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgDocPlaygroundDemoComponent {
 	@Input()
@@ -37,44 +40,38 @@ export class NgDocPlaygroundDemoComponent {
 	dynamicContent?: NgDocPlaygroundDynamicContent[];
 
 	@ViewChild('demoOutlet', {static: true, read: ViewContainerRef})
-	demoOutlet?: ViewContainerRef
+	demoOutlet?: ViewContainerRef;
 
-	private componentRef?: ComponentRef<NgDocPlaygroundDemoWrapperComponent>;
+	private demoRef?: ComponentRef<NgDocDemoComponent>;
 
 	constructor(
 		private readonly rootPage: NgDocRootPage,
 		private readonly injector: Injector,
+		private readonly compiler: Compiler,
 	) {}
 
 	ngAfterViewInit(): void {
-		this.createComponentFromTemplate(this.template);
+		this.createDemo(this.template);
 	}
 
-	private createComponentFromTemplate(template: string): void {
-		this.componentRef?.destroy();
+	createDemo(template: string): void {
+		const sharedModules: Array<Type<unknown>> = [CommonModule, ...asArray(this.rootPage.module)];
+		const componentType: Type<NgDocDemoComponent> = Component({template})(
+			NgDocDemoComponent,
+		);
+		const componentModuleType: Type<NgDocDemoModule> = NgModule({
+			declarations: [componentType],
+			imports: sharedModules,
+		})(NgDocDemoModule);
+		const module: ModuleWithComponentFactories<NgDocDemoComponent> =
+			this.compiler.compileModuleAndAllComponentsSync(componentModuleType);
 
-		const component = this.createComponent();
-		const module = this.createModule(component);
+		const factory: ComponentFactory<NgDocDemoComponent> | undefined = module.componentFactories.find(
+			(comp: ComponentFactory<NgDocDemoComponent>) => comp.componentType === componentType,
+		);
 
-		this.componentRef = this.demoOutlet?.createComponent(component, {ngModuleRef: module});
-	}
+		this.demoRef = factory && this.demoOutlet?.createComponent(factory);
 
-	createComponent(): Type<NgDocPlaygroundDemoWrapperComponent> {
-		const metadata: Component = new Component({
-			selector: 'dynamic',
-			template: this.template,
-		});
-
-		return Component(metadata)(NgDocPlaygroundDemoWrapperComponent);
-	}
-
-	createModule(decoratedComponent: Type<any>): NgModuleRef<any> {
-		const decoratedNgModule: NgDocPlaygroundDemoWrapperModule = NgModule({
-			imports: [CommonModule, ...asArray(this.rootPage.module)],
-			declarations: [decoratedComponent],
-		})(NgDocPlaygroundDemoWrapperModule);
-
-		// @ts-ignore
-		return createNgModuleRef(this.rootPage.module, this.injector);
+		this.demoRef?.changeDetectorRef.detectChanges();
 	}
 }

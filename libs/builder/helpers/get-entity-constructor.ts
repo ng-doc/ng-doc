@@ -8,13 +8,10 @@ import {
 	NgDocCategoryEntity,
 	NgDocDependenciesEntity,
 	NgDocPageEntity,
-	NgDocPlaygroundEntity,
 	PAGE_DEPENDENCY_PATTERN,
 	PAGE_PATTERN,
-	PLAYGROUND_PATTERN,
 } from '../engine';
 import {NgDocEntity} from '../engine/entities/abstractions/entity';
-import {} from '../engine/entities/playground.entity';
 
 /**
  *
@@ -29,8 +26,6 @@ export function getEntityConstructor(path: string): Constructor<NgDocEntity> {
 		return NgDocDependenciesEntity;
 	} else if (minimatch(path, API_PATTERN)) {
 		return NgDocApiEntity;
-	} else if (minimatch(path, PLAYGROUND_PATTERN)) {
-		return NgDocPlaygroundEntity;
 	} else {
 		throw new Error(`Unknown entity type for path: ${path}`);
 	}

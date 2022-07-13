@@ -4,4 +4,3 @@ export * from './api-scope.entity';
 export * from './category.entity';
 export * from './dependencies.entity';
 export * from './page.entity';
-export * from './playground.entity';

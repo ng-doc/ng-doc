@@ -82,6 +82,7 @@
 						"pages": "apps/documentation",
 						"tsConfig": "tsconfig.base.json"
 					},
+					"buildOptimizer": false,
 					"aot": false
 				},
 				"development": {
