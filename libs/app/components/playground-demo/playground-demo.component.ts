@@ -23,9 +23,9 @@ import {
 } from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {NgDocRootPage} from '@ng-doc/app/classes';
-import {extractProperties} from '@ng-doc/app/helpers/extract-properties';
 import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties} from '@ng-doc/builder';
 import {asArray} from '@ng-doc/core';
+import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
@@ -38,6 +38,7 @@ import {NgDocBaseDemoModule} from './demo/base-demo.module';
 	styleUrls: ['./playground-demo.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
+@UntilDestroy()
 export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties>
 	implements OnChanges, AfterViewInit, OnDestroy
 {
@@ -76,7 +77,10 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 			this.unsubscribe$.next();
 
 			this.form?.valueChanges
-				.pipe(takeUntil(this.unsubscribe$))
+				.pipe(
+					takeUntil(this.unsubscribe$),
+					untilDestroyed(this)
+				)
 				.subscribe((properties: Record<string, unknown>) => {
 					console.log('form was changed', properties);
 					this.updateDemo(properties);
@@ -88,16 +92,11 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 		this.renderDemo(this.template);
 	}
 
-	ngOnDestroy(): void {
-		this.unsubscribe$.next();
-		this.unsubscribe$.complete();
-	}
-
 	private updateDemo(properties: Record<string, unknown>): void {
 		if (this.reinitializeDemo) {
 			this.renderDemo(this.template);
 		} else {
-			Object.assign(this.demoRef?.instance.demo ?? {}, extractProperties(properties));
+			Object.assign(this.demoRef?.instance.demo ?? {}, properties);
 			this.demoRef?.instance?.viewContainerRef?.injector.get(ChangeDetectorRef)?.detectChanges();
 		}
 	}
@@ -143,5 +142,10 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 			declarations: [component],
 			imports: sharedModules,
 		})(NgDocDemoModule);
+	}
+
+	ngOnDestroy(): void {
+		this.unsubscribe$.next();
+		this.unsubscribe$.complete();
 	}
 }

@@ -1,7 +1,6 @@
-export interface NgDocTypeControl {
+import {ControlValueAccessor} from '@angular/forms';
+
+export interface NgDocTypeControl extends ControlValueAccessor {
+	default?: string;
 	options?: string[];
-
-	registerOnChange(fn: (value: string) => void): void;
-
-	writeValue(value: string): void;
 }

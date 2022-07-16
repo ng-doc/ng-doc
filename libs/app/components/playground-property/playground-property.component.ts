@@ -45,15 +45,16 @@ export class NgDocPlaygroundPropertyComponent<T = unknown> implements OnChanges 
 				? this.getControlForType(this.property?.type)
 				: undefined;
 
-			if (typeControl) {
-				this.propertyControl = this.propertyOutlet?.createComponent(typeControl);
-				this.propertyControl?.instance.writeValue(this.control?.value);
+			if (typeControl && this.propertyOutlet) {
+				this.propertyControl = this.propertyOutlet.createComponent(typeControl);
+				this.propertyControl.instance.default = this.property?.default;
+				this.propertyControl.instance.writeValue(this.control?.value);
 			}
 		}
 
 		if (control) {
 			this.control?.registerOnChange((value: string) => this.propertyControl?.instance?.writeValue(value));
-			this.propertyControl?.instance.registerOnChange((value: string) => this.control?.setValue(value));
+			this.propertyControl?.instance.registerOnChange((value: unknown) => this.control?.setValue(value));
 		}
 	}
 

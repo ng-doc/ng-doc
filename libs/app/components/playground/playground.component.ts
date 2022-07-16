@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {NgDocRootPage} from '@ng-doc/app/classes';
 import {NgDocPlaygroundConfig, NgDocPlaygroundProperties} from '@ng-doc/builder';
-import {objectKeys} from '@ng-doc/core';
+import {extractValue, objectKeys} from '@ng-doc/core';
 
 @Component({
 	selector: 'ng-doc-playground',
@@ -23,7 +23,7 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 		this.formGroup = new FormGroup<Record<keyof T, FormControl>>(
 			objectKeys(this.properties).reduce((controls: Record<keyof T, FormControl>, key: keyof T) => {
 				if (this.properties) {
-					controls[key] = new FormControl(this.properties[key]?.default);
+					controls[key] = new FormControl(extractValue(this.properties[key]?.default ?? 'undefined'));
 				}
 
 				return controls;
