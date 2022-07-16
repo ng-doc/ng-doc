@@ -1,5 +1,6 @@
 import {Directive, ElementRef, Input, NgZone, OnInit} from '@angular/core';
-import {asArray, toElement} from '@ng-doc/ui-kit/helpers';
+import {asArray} from '@ng-doc/core';
+import {toElement} from '@ng-doc/ui-kit/helpers';
 import {ngDocZoneDetach} from '@ng-doc/ui-kit/observables';
 import {BaseElement, Constructor} from '@ng-doc/ui-kit/types';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';

@@ -10,10 +10,11 @@ import {
 	Output,
 	ViewContainerRef,
 } from '@angular/core';
+import {asArray, isPresent} from '@ng-doc/core';
 import {tooltipCloseAnimation, tooltipOpenAnimation} from '@ng-doc/ui-kit/animations';
 import {NgDocOverlayRef} from '@ng-doc/ui-kit/classes';
 import {NgDocOverlayContainerComponent} from '@ng-doc/ui-kit/components/overlay-container';
-import {asArray, isPresent, toElement} from '@ng-doc/ui-kit/helpers';
+import {toElement} from '@ng-doc/ui-kit/helpers';
 import {ngDocZoneDetach, ngDocZoneOptimize} from '@ng-doc/ui-kit/observables';
 import {NgDocOverlayService} from '@ng-doc/ui-kit/services';
 import {NgDocOverlayStrategy} from '@ng-doc/ui-kit/services/overlay-strategy';

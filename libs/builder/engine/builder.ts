@@ -1,9 +1,10 @@
+import {asArray} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, Observable} from 'rxjs';
 import {concatMap, map, mapTo, tap} from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
-import {asArray, createProject, emitBuildedOutput} from '../helpers';
+import {createProject, emitBuildedOutput} from '../helpers';
 import {getEntityConstructor} from '../helpers/get-entity-constructor';
 import {NgDocBuildedOutput, NgDocBuilderContext} from '../interfaces';
 import {bufferDebounce} from '../operators';
@@ -45,6 +46,7 @@ export class NgDocBuilder {
 					path.join(pagesPath, CATEGORY_PATTERN),
 					path.join(pagesPath, PAGE_DEPENDENCY_PATTERN),
 					path.join(pagesPath, API_PATTERN),
+					path.join(pagesPath, PLAYGROUND_PATTERN),
 				])
 				.flat(),
 		);

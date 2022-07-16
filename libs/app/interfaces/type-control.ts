@@ -1,5 +1,5 @@
-import {FlBaseControlHost} from 'flex-controls';
-
-export interface NgDocTypeControl<T> extends FlBaseControlHost<T> {
-	items?: T[];
+export interface NgDocTypeControl {
+	options?: string[];
+	registerOnChange(fn: (value: string) => void): void;
+	writeValue(value: string): void;
 }

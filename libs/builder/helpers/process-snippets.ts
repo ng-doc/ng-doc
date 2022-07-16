@@ -1,6 +1,7 @@
+import {escapeRegexp} from '@ng-doc/core/helpers/escape-regexp';
+
 import {NgDocSnippet} from '../interfaces/snippet';
 import {NgDocSnippetType} from '../types';
-import {escapeRegexp} from './escape-regexp';
 
 const HTMLSnippetStart: RegExp = /^.*(<!--\s*NgDocHTMLSnippetStart(\(.+\))?\s*-->).*$/gm;
 const StylesSnippetStart: RegExp = /^.*(\/\*\s*NgDocStyleSnippetStart(\(.+\))?\s*\*\/).*$/gm;

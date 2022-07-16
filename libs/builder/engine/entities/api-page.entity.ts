@@ -1,9 +1,10 @@
+import {isPresent} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {Node, Project, SourceFile} from 'ts-morph';
 
-import {declarationFolderName, isPresent, uniqueName} from '../../helpers';
+import {declarationFolderName, uniqueName} from '../../helpers';
 import {NgDocBuildedOutput, NgDocBuilderContext} from '../../interfaces';
 import {NgDocApiPageEnv} from '../../templates-env/api-page.env';
 import {NgDocApiPageModuleEnv} from '../../templates-env/api-page.module.env';

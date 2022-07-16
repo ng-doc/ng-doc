@@ -1,4 +1,4 @@
-import {Node, Project} from 'ts-morph';
+import {ClassDeclaration, ClassExpression, Node, Project} from 'ts-morph';
 
 import {findDeclaration} from '../../helpers';
 import {declarationToPlayground} from '../../helpers/declaration-to-playground';
@@ -15,13 +15,17 @@ import {NgDocPageEntity} from '../entities/page.entity';
  * @param {string} sourcePath - Path to typescript file
  * @returns {NgDocAction} - The action output
  */
-export function playgroundAction(playgroundId: string, sourcePath: string): NgDocAction {
+export function playgroundAction(playgroundId: string): NgDocAction {
 	return (project: Project, page: NgDocPageEntity): NgDocActionOutput => {
 		try {
-			const declaration: Node = findDeclaration(project, page.scope, sourcePath);
+			if (!page.playground) {
+				throw new Error(`Can't find the playground file for the page ${page.route}`);
+			}
 
-			if (!Node.isClassDeclaration(declaration)) {
-				throw new Error(`Playground action works only with class declarations!`);
+			const declaration: ClassDeclaration | undefined = page.playground.getTargetForPlayground(playgroundId);
+
+			if (!declaration) {
+				throw new Error(`Playground action didn't find the class declaration for the current target.`);
 			}
 
 			const playgroundData: NgDocPlaygroundProperties = declarationToPlayground(declaration);

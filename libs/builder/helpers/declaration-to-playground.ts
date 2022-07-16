@@ -1,4 +1,4 @@
-import {ClassDeclaration, JSDoc, PropertyDeclaration} from 'ts-morph';
+import {ClassDeclaration, JSDoc, PropertyDeclaration, Type} from 'ts-morph';
 
 import {NgDocPlaygroundProperties} from '../interfaces';
 
@@ -13,9 +13,11 @@ export function declarationToPlayground(declaration: ClassDeclaration): NgDocPla
 		.reduce((properties: NgDocPlaygroundProperties, property: PropertyDeclaration) => {
 			properties[property.getName()] = {
 				type: property.getType().getText(),
-				comment: property
+				default: property.getInitializer()?.getText(),
+				description: property
 					.getJsDocs()
 					.reduce((comment: string, doc: JSDoc) => `${comment}\n${doc.getCommentText()}`.trim(), ''),
+				options: property.getType().getUnionTypes().map((type: Type) => type.getText()),
 			};
 
 			return properties;

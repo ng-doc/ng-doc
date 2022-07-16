@@ -1,4 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {FormControl, FormGroup} from '@angular/forms';
 import {NgDocPlaygroundProperties} from '@ng-doc/builder';
 
 @Component({
@@ -7,7 +8,14 @@ import {NgDocPlaygroundProperties} from '@ng-doc/builder';
 	styleUrls: ['./playground-properties.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocPlaygroundPropertiesComponent {
+export class NgDocPlaygroundPropertiesComponent<T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties> {
 	@Input()
-	properties?: NgDocPlaygroundProperties;
+	form?: FormGroup<Record<keyof T, FormControl>>;
+
+	@Input()
+	properties?: T;
+
+	getFormControl(key: string): FormControl {
+		return this.form?.get(key) as FormControl
+	}
 }

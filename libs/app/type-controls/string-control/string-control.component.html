@@ -1,6 +1,3 @@
-<ng-doc-input-wrapper [rightContent]="rightContent">
-	<input ngDocInputString>
-	<ng-template #rightContent>
-		<ng-doc-clear-control></ng-doc-clear-control>
-	</ng-template>
+<ng-doc-input-wrapper>
+	<input ngDocInputString [(ngModel)]="model" (ngModelChange)="onChange($event)">
 </ng-doc-input-wrapper>

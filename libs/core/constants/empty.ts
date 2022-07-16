@@ -1,7 +1,5 @@
-import {QueryList} from '@angular/core';
 import {Observable, of} from 'rxjs';
 
-export const EMPTY_QUERY: QueryList<never> = new QueryList<never>();
 export const EMPTY_ARRAY: [] = [];
 export const EMPTY_MAP: Map<never, never> = new Map<never, never>();
 // eslint-disable-next-line @typescript-eslint/no-empty-function

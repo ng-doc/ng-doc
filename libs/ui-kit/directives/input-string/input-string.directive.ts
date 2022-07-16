@@ -1,7 +1,8 @@
 import {ChangeDetectorRef, Directive, ElementRef, HostListener, Inject, Optional, Renderer2, Self} from '@angular/core';
 import {NgControl} from '@angular/forms';
+import {isPresent} from '@ng-doc/core';
 import {NgDocBaseInput} from '@ng-doc/ui-kit/classes';
-import {isPresent, toElement} from '@ng-doc/ui-kit/helpers';
+import {toElement} from '@ng-doc/ui-kit/helpers';
 import {NG_DOC_INPUT_CONTROL} from '@ng-doc/ui-kit/tokens';
 import {UntilDestroy} from '@ngneat/until-destroy';
 import {FL_CONTROL_HOST, FlControlHost} from 'flex-controls';
@@ -42,6 +43,6 @@ export class NgDocInputStringDirective extends NgDocBaseInput<string> {
 	}
 
 	protected override incomingUpdate(value: string | null): void {
-		toElement(this.elementRef).value = isPresent(value) ? String(Number(value)) : '';
+		toElement(this.elementRef).value = isPresent(value) ? String(value) : '';
 	}
 }

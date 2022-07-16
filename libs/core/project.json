@@ -8,7 +8,7 @@
 			"outputs": ["{options.outputPath}"],
 			"options": {
 				"outputPath": "dist/libs/core",
-				"main": "libs/core/src/index.ts",
+				"main": "libs/core/index.ts",
 				"tsConfig": "libs/core/tsconfig.lib.json",
 				"assets": ["libs/core/*.md"]
 			}

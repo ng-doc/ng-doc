@@ -18,8 +18,8 @@ export class NgDocActions {
 		return this.performAction(demoAction(className, options)).output;
 	}
 
-	playground(playgroundId: string, sourcePath: string): string {
-		const output: NgDocActionOutput = this.performAction(playgroundAction(playgroundId, sourcePath));
+	playground(playgroundId: string): string {
+		const output: NgDocActionOutput = this.performAction(playgroundAction(playgroundId));
 
 		return output.output;
 	}

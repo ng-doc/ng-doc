@@ -1,7 +1,6 @@
+import {asArray} from '@ng-doc/core';
 import {Observable, ReplaySubject} from 'rxjs';
 import {debounceTime, map} from 'rxjs/operators';
-
-import {asArray} from '../helpers';
 
 export class ObservableSet<T> {
 	private collection: Set<T> = new Set();

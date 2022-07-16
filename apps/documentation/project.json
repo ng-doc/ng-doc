@@ -73,6 +73,20 @@
 				}
 			]
 		},
+		"pre-serve": {
+			"executor": "@nrwl/workspace:run-commands",
+			"options": {
+				"commands": [
+					"symlink-dir dist/libs/core dist/libs/builder/node_modules/@ng-doc/core"
+				]
+			},
+			"dependsOn": [
+				{
+					"projects": "dependencies",
+					"target": "build"
+				}
+			]
+		},
 		"serve": {
 			"executor": "./dist/libs/builder:dev-server",
 			"configurations": {
@@ -97,8 +111,8 @@
 			"defaultConfiguration": "development",
 			"dependsOn": [
 				{
-					"projects": "dependencies",
-					"target": "build"
+					"projects": "self",
+					"target": "pre-serve"
 				}
 			]
 		},

@@ -8,8 +8,8 @@ import {
 import {ComponentPortal} from '@angular/cdk/portal';
 import {ComponentRef, Injectable, Injector, NgZone, Optional, StaticProvider} from '@angular/core';
 import {Router} from '@angular/router';
+import {asArray} from '@ng-doc/core';
 import {NgDocOverlayRef} from '@ng-doc/ui-kit/classes';
-import {asArray} from '@ng-doc/ui-kit/helpers';
 import {NgDocOverlayConfig, NgDocOverlayContainer} from '@ng-doc/ui-kit/interfaces';
 import {NgDocOverlayOrigin, NgDocOverlayPosition} from '@ng-doc/ui-kit/types';
 import {NgDocOverlayUtils} from '@ng-doc/ui-kit/utils';

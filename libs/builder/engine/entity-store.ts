@@ -1,7 +1,7 @@
+import {asArray} from '@ng-doc/core';
 import {merge, Observable, Subject} from 'rxjs';
 import {concatMap, map, startWith, switchMap} from 'rxjs/operators';
 
-import {asArray} from '../helpers';
 import {bufferDebounce} from '../operators';
 import {NgDocEntity} from './entities/abstractions/entity';
 import {buildCandidates} from './functions/build-candidates';

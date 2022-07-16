@@ -30,6 +30,16 @@
 			 [bindTo]="inputContainer"
 			 propertyName="--ng-doc-input-padding-right"
 			 alignTo="right">
+			<button
+				ng-doc-button-icon
+				size="large"
+				[ngDocFocusable]="false"
+				[disabled]="disabled"
+				(click)="clear()"
+				*ngIf="clearButton && inputHasValue()"
+			>
+				<ng-doc-icon icon="x"></ng-doc-icon>
+			</button>
 			<span class="ng-doc-content" *ngIf="rightContent">
 				<ng-container *polymorpheusOutlet="rightContent as text">{{text}}</ng-container>
 			</span>

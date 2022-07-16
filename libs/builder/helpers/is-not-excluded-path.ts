@@ -1,6 +1,5 @@
+import {asArray} from '@ng-doc/core';
 import * as minimatch from 'minimatch';
-
-import {asArray} from './as-array';
 
 /**
  *

@@ -1,10 +1,11 @@
+import {asArray, isPresent} from '@ng-doc/core';
 import * as fs from 'fs';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
-import {asArray, isDependencyEntity, isPresent, uniqueName} from '../../helpers';
+import {isDependencyEntity, isPlaygroundEntity, uniqueName} from '../../helpers';
 import {NgDocBuildedOutput, NgDocBuilderContext, NgDocPage} from '../../interfaces';
 import {NgDocPageEnv, NgDocPageModuleEnv} from '../../templates-env';
 import {NgDocActions} from '../actions';
@@ -15,6 +16,7 @@ import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocCategoryEntity} from './category.entity';
 import {NgDocDependenciesEntity} from './dependencies.entity';
+import {NgDocPlaygroundEntity} from './playground.entity';
 
 export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	override moduleName: string = uniqueName(`NgDocGeneratedPageModule`);
@@ -98,6 +100,10 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		)[0];
 
 		return dependencies ? dependencies.componentAssetsImport : undefined;
+	}
+
+	get playground(): NgDocPlaygroundEntity | undefined {
+		return this.children.find(isPlaygroundEntity);
 	}
 
 	get playgroundFile(): string | undefined {

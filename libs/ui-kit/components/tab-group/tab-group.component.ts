@@ -10,7 +10,6 @@ import {
 	QueryList,
 	ViewChildren,
 } from '@angular/core';
-import {EMPTY_QUERY} from '@ng-doc/ui-kit/constants';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {startWith} from 'rxjs/operators';
 
@@ -28,10 +27,10 @@ export class NgDocTabGroupComponent<T> implements AfterContentInit, AfterViewIni
 	openedTab?: T;
 
 	@ViewChildren('headerTab')
-	tabElements: QueryList<ElementRef> = EMPTY_QUERY;
+	tabElements: QueryList<ElementRef> = new QueryList<ElementRef>();
 
 	@ContentChildren(NgDocTabComponent)
-	tabs: QueryList<NgDocTabComponent<T>> = EMPTY_QUERY;
+	tabs: QueryList<NgDocTabComponent<T>> = new QueryList<NgDocTabComponent<T>>();
 
 	selectedTab?: NgDocTabComponent<T>;
 

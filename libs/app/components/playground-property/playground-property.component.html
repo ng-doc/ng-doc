@@ -1,6 +1,6 @@
 <label [ng-doc-label]="labelContent">
 	<ng-template #labelContent>
-		<span [ngDocTooltip]="property?.comment ?? ''" [canOpen]="!!property?.comment">{{name}}</span>
+		<span [ngDocTooltip]="property?.description ?? ''" [canOpen]="!!property?.description">{{name}}</span>
 	</ng-template>
-	<ng-container *polymorpheusOutlet="content ?? ''; context: {}"></ng-container>
+	<ng-container #propertyOutlet></ng-container>
 </label>

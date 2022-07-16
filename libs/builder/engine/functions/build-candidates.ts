@@ -1,4 +1,5 @@
-import {asArray} from '../../helpers';
+import {asArray} from '@ng-doc/core';
+
 import {NgDocEntity} from '../entities/abstractions/entity';
 
 /**

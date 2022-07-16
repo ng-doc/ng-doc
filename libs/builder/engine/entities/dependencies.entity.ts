@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {asArray, isPresent} from '@ng-doc/core';
 import * as path from 'path';
 import {Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -13,7 +14,7 @@ import {
 	SourceFile,
 } from 'ts-morph';
 
-import {asArray, buildAssets, formatCode, isPageEntity, isPresent} from '../../helpers';
+import {buildAssets, formatCode, isPageEntity} from '../../helpers';
 import {NgDocAsset, NgDocBuildedOutput, NgDocBuilderContext} from '../../interfaces';
 import {componentDecoratorResolver} from '../../resolvers/component-decorator.resolver';
 import {NgDocComponentAssetsEnv} from '../../templates-env';

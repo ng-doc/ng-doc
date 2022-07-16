@@ -1,4 +1,6 @@
-import {capitalize, isCategoryEntity} from '../../../helpers';
+import {capitalize} from '@ng-doc/core';
+
+import {isCategoryEntity} from '../../../helpers';
 import {NgDocEntity} from './entity';
 import {NgDocModuleEntity} from './module.entity';
 

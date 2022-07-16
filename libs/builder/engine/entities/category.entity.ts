@@ -1,9 +1,10 @@
+import {asArray} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
-import {asArray, isCategoryEntity, isPageEntity, uniqueName} from '../../helpers';
+import {isCategoryEntity, isPageEntity, uniqueName} from '../../helpers';
 import {NgDocBuildedOutput, NgDocBuilderContext, NgDocCategory} from '../../interfaces';
 import {NgDocCategoryModuleEnv} from '../../templates-env';
 import {NgDocEntityStore} from '../entity-store';

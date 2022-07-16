@@ -1,9 +1,10 @@
+import {asArray} from '@ng-doc/core';
 import * as glob from 'glob';
 import {forkJoin, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
-import {asArray, isNotExcludedPath, isPageEntity, uniqueName} from '../../helpers';
+import {isNotExcludedPath, isPageEntity, uniqueName} from '../../helpers';
 import {NgDocApiScope, NgDocBuildedOutput, NgDocBuilderContext} from '../../interfaces';
 import {NgDocApiScopeModuleEnv} from '../../templates-env/api-scope.module.env';
 import {NgDocEntityStore} from '../entity-store';

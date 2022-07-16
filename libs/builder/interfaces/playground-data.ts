@@ -1,9 +1,8 @@
-export interface NgDocPlaygroundProperties {
-	[input: string]: NgDocPlaygroundProperty;
-}
+export type NgDocPlaygroundProperties = Record<string, NgDocPlaygroundProperty>
 
-export interface NgDocPlaygroundProperty<T = unknown> {
+export interface NgDocPlaygroundProperty {
 	type: string;
-	comment?: string;
-	literals?: T[];
+	description?: string;
+	default?: string;
+	options?: string[];
 }

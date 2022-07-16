@@ -1,8 +1,20 @@
-import {ChangeDetectionStrategy, Component, InjectionToken, Injector, Input, OnChanges} from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	ComponentRef,
+	InjectionToken,
+	Injector,
+	Input,
+	OnChanges,
+	SimpleChanges,
+	ViewChild,
+	ViewContainerRef,
+} from '@angular/core';
+import {FormControl} from '@angular/forms';
 import {getTokenForType} from '@ng-doc/app/helpers';
 import {NgDocTypeControl} from '@ng-doc/app/interfaces';
 import {NgDocPlaygroundProperty} from '@ng-doc/builder';
-import {Constructor, NgDocComponentContent} from '@ng-doc/ui-kit';
+import {Constructor} from '@ng-doc/ui-kit';
 
 @Component({
 	selector: 'ng-doc-playground-property',
@@ -10,27 +22,43 @@ import {Constructor, NgDocComponentContent} from '@ng-doc/ui-kit';
 	styleUrls: ['./playground-property.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocPlaygroundPropertyComponent implements OnChanges {
+export class NgDocPlaygroundPropertyComponent<T = unknown> implements OnChanges {
 	@Input()
 	name: string = '';
 
 	@Input()
 	property?: NgDocPlaygroundProperty;
 
-	content?: NgDocComponentContent<NgDocTypeControl<unknown>>;
+	@Input()
+	control?: FormControl;
+
+	@ViewChild('propertyOutlet', {read: ViewContainerRef, static: true})
+	propertyOutlet?: ViewContainerRef;
+
+	private propertyControl?: ComponentRef<NgDocTypeControl>;
 
 	constructor(private readonly injector: Injector) {}
 
-	ngOnChanges(): void {
-		const control: Constructor<NgDocTypeControl<unknown>> | undefined = this.property?.type
-			? this.getControlForType(this.property?.type)
-			: undefined;
+	ngOnChanges({property, control}: SimpleChanges): void {
+		if (property) {
+			const typeControl: Constructor<NgDocTypeControl> | undefined = this.property?.type
+				? this.getControlForType(this.property?.type)
+				: undefined;
 
-		this.content = control ? new NgDocComponentContent<NgDocTypeControl<unknown>>(control) : undefined;
+			if (typeControl) {
+				this.propertyControl = this.propertyOutlet?.createComponent(typeControl);
+				this.propertyControl?.instance.writeValue(this.control?.value);
+			}
+		}
+
+		if (control) {
+			this.control?.registerOnChange((value: string) => this.propertyControl?.instance?.writeValue(value));
+			this.propertyControl?.instance.registerOnChange((value: string) => this.control?.setValue(value));
+		}
 	}
 
-	private getControlForType<T>(type: string): Constructor<NgDocTypeControl<T>> | undefined {
-		const token: InjectionToken<Constructor<NgDocTypeControl<T>>> | undefined = getTokenForType<T>(type);
+	private getControlForType(type: string): Constructor<NgDocTypeControl> | undefined {
+		const token: InjectionToken<Constructor<NgDocTypeControl>> | undefined = getTokenForType<T>(type);
 
 		return token ? this.injector.get(token) : undefined;
 	}

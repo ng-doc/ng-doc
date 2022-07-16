@@ -21,7 +21,10 @@
 		},
 		"build": {
 			"executor": "@nrwl/workspace:run-commands",
-			"outputs": ["dist/libs/builder/browser/schema.json", "dist/libs/builder/dev-server/schema.json"],
+			"outputs": [
+				"dist/libs/builder/browser/schema.json",
+				"dist/libs/builder/dev-server/schema.json"
+			],
 			"options": {
 				"commands": [
 					"node build-schema.js --from=\"libs/builder/**/*(browser|dev-server)/schema.json\" --to=\"dist/libs/builder\""

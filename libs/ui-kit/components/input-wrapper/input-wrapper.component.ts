@@ -41,6 +41,9 @@ export class NgDocInputWrapperComponent<T, B = unknown> implements AfterViewChec
 	blurContext: B | null = null;
 
 	@Input()
+	clearButton: boolean = true;
+
+	@Input()
 	leftContent: NgDocContent = '';
 
 	@Input()
