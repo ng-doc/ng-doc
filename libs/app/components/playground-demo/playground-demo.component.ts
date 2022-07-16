@@ -3,7 +3,8 @@ import '@angular/compiler';
 import {CommonModule} from '@angular/common';
 import {
 	AfterViewInit,
-	ChangeDetectionStrategy, ChangeDetectorRef,
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
 	Compiler,
 	Component,
 	ComponentFactory,
@@ -12,13 +13,17 @@ import {
 	Injector,
 	Input,
 	ModuleWithComponentFactories,
-	NgModule, OnChanges, OnDestroy, SimpleChanges,
+	NgModule,
+	OnChanges,
+	OnDestroy,
+	SimpleChanges,
 	Type,
 	ViewChild,
 	ViewContainerRef,
 } from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {NgDocRootPage} from '@ng-doc/app/classes';
+import {extractProperties} from '@ng-doc/app/helpers/extract-properties';
 import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties} from '@ng-doc/builder';
 import {asArray} from '@ng-doc/core';
 import {Subject} from 'rxjs';
@@ -92,8 +97,8 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 		if (this.reinitializeDemo) {
 			this.renderDemo(this.template);
 		} else {
-			Object.assign(this.demoRef?.instance.demo ?? {}, properties);
-			this.demoRef?.instance?.changeDetectorRef?.detectChanges();
+			Object.assign(this.demoRef?.instance.demo ?? {}, extractProperties(properties));
+			this.demoRef?.instance?.viewContainerRef?.injector.get(ChangeDetectorRef)?.detectChanges();
 		}
 	}
 
@@ -104,13 +109,15 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 			const compiledModule: ModuleWithComponentFactories<NgDocBaseDemoComponent> =
 				this.compiler.compileModuleAndAllComponentsSync(module);
 
-			const factory: ComponentFactory<NgDocBaseDemoComponent> | undefined = compiledModule.componentFactories.find(
-				(comp: ComponentFactory<NgDocBaseDemoComponent>) => comp.componentType === component,
-			);
+			const factory: ComponentFactory<NgDocBaseDemoComponent> | undefined =
+				compiledModule.componentFactories.find(
+					(comp: ComponentFactory<NgDocBaseDemoComponent>) => comp.componentType === component,
+				);
 
 			this.demoRef = factory && this.demoOutlet?.createComponent(factory);
 
-			this.demoRef?.changeDetectorRef.detectChanges();
+			this.demoRef?.changeDetectorRef.markForCheck();
+
 		}
 	}
 
@@ -120,8 +127,8 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 			@ViewChild(instance, {static: true})
 			demo?: Type<unknown>;
 
-			@ViewChild(instance, {static: true, read: ChangeDetectorRef})
-			changeDetectorRef?: ChangeDetectorRef;
+			@ViewChild(instance, {static: true, read: ViewContainerRef})
+			viewContainerRef?: ViewContainerRef;
 		}
 
 		return Component({template})(NgDocDemoComponent);

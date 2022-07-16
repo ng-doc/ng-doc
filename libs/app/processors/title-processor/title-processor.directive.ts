@@ -23,7 +23,7 @@ export class NgDocTitleProcessorDirective extends NgDocHtmlProcessor<NgDocHeader
 			inputs: {
 				text: element.textContent ?? '',
 				level: Number(element.getAttribute('data-level') ?? '1') as NgDocHeaderLevel,
-			}
+			},
 		};
 	}
 }

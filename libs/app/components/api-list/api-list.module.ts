@@ -6,6 +6,6 @@ import {NgDocApiListComponent} from './api-list.component';
 @NgModule({
 	declarations: [NgDocApiListComponent],
 	imports: [CommonModule],
-	exports: [NgDocApiListComponent]
+	exports: [NgDocApiListComponent],
 })
 export class NgDocApiListModule {}

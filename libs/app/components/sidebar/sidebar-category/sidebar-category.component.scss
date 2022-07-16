@@ -9,15 +9,13 @@
 
 	&[data-ng-doc-expandable='false'] {
 		.ng-doc-sidebar-category-button {
-			padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-base-gutter)
-				var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
+			padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-base-gutter) var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
 		}
 	}
 
 	&[data-ng-doc-expandable='true'] {
 		.ng-doc-sidebar-category-button {
-			padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-base-gutter)
-				var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
+			padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-base-gutter) var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
 
 			cursor: pointer;
 

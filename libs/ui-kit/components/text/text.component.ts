@@ -16,7 +16,7 @@ import {NgDocTextRightDirective} from './text-right.directive';
 	selector: '[ng-doc-text]',
 	templateUrl: './text.component.html',
 	styleUrls: ['./text.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgDocTextComponent implements AfterContentChecked {
 	/** Text color */

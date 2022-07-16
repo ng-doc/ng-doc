@@ -65,7 +65,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 	selector: 'ng-doc-api-list',
 	templateUrl: './api-list.component.html',
 	styleUrls: ['./api-list.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocApiListComponent {
-}
+export class NgDocApiListComponent {}

@@ -1,22 +1,27 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
 import {NgDocTypeControl} from '@ng-doc/app/interfaces';
-import {EMPTY_FUNCTION, extractValue} from '@ng-doc/core';
+import {extractValue, isPresent} from '@ng-doc/core';
+import {FL_CONTROL_HOST, FlControlHost} from 'flex-controls';
 
 @Component({
 	selector: 'ng-doc-string-control',
 	templateUrl: './string-control.component.html',
 	styleUrls: ['./string-control.component.scss'],
+	providers: [{provide: FL_CONTROL_HOST, useExisting: NgDocStringControlComponent}],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocStringControlComponent implements NgDocTypeControl {
-	model: string | null | undefined = '';
-	onChange: (value: string) => void = EMPTY_FUNCTION;
-
-	registerOnChange(fn: (value: string) => void): void {
-		this.onChange = (v: string) => fn(`'${v}'`);
+export class NgDocStringControlComponent extends FlControlHost<string | undefined> implements NgDocTypeControl {
+	constructor(protected override changeDetectorRef: ChangeDetectorRef) {
+		super(changeDetectorRef);
 	}
 
-	writeValue(value: string): void {
-		this.model = String(extractValue(value));
+	override registerOnChange(fn: (value: string) => void): void {
+		super.registerOnChange((v: string | null | undefined) => fn(v ? `'${v}'` : `${v}`));
+	}
+
+	override writeValue(value: string | null): void {
+		const extractedValue: string | number | boolean | null | undefined = extractValue(String(value));
+
+		super.writeValue(isPresent(extractedValue) ? String(extractedValue) : extractedValue);
 	}
 }

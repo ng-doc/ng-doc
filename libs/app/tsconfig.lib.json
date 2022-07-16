@@ -7,6 +7,12 @@
 		"inlineSources": true,
 		"types": []
 	},
-	"exclude": ["test-setup.ts", "**/*.spec.ts", "**/*.test.ts"],
-	"files": ["index.ts"]
+	"exclude": [
+		"test-setup.ts",
+		"**/*.spec.ts",
+		"**/*.test.ts"
+	],
+	"files": [
+		"index.ts"
+	]
 }

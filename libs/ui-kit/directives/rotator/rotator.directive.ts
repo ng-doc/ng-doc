@@ -17,10 +17,7 @@ export class NgDocRotatorDirective implements OnChanges, OnInit {
 	@Input()
 	to: number = 90;
 
-	constructor(
-		private readonly elementRef: ElementRef<HTMLElement>,
-		private readonly renderer: Renderer2
-	) {}
+	constructor(private readonly elementRef: ElementRef<HTMLElement>, private readonly renderer: Renderer2) {}
 
 	ngOnChanges({rotated}: SimpleChanges): void {
 		if (rotated) {

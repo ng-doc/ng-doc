@@ -18,8 +18,8 @@ export class NgDocUiKitRootModule {
 					provide: HTTP_INTERCEPTORS,
 					useClass: NgDocCacheInterceptor,
 					multi: true,
-				}
-			]
+				},
+			],
 		};
 	}
 }

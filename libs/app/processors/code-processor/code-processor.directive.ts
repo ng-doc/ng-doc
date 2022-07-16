@@ -22,7 +22,7 @@ export class NgDocCodeProcessorDirective extends NgDocHtmlProcessor<NgDocCodeCom
 			inputs: {
 				code: element.textContent ?? '',
 				language: element.getAttribute('data-language') || 'html',
-			}
+			},
 		};
 	}
 }

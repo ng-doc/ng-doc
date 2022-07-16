@@ -6,6 +6,6 @@ import {NgDocApiPageComponent} from './api-page.component';
 @NgModule({
 	declarations: [NgDocApiPageComponent],
 	imports: [CommonModule],
-	exports: [NgDocApiPageComponent]
+	exports: [NgDocApiPageComponent],
 })
 export class NgDocApiPageModule {}

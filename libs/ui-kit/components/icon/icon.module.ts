@@ -6,6 +6,6 @@ import {NgDocIconComponent} from './icon.component';
 @NgModule({
 	declarations: [NgDocIconComponent],
 	imports: [CommonModule],
-	exports: [NgDocIconComponent]
+	exports: [NgDocIconComponent],
 })
 export class NgDocIconModule {}

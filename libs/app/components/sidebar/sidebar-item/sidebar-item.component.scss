@@ -4,8 +4,7 @@
 	@include ng-doc-font();
 	display: flex;
 	align-items: center;
-	padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-horizontal-padding)
-		var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
+	padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-horizontal-padding) var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
 	text-decoration: inherit;
 	cursor: pointer;
 	--ng-doc-icon-color: var(--ng-doc-text);
@@ -15,7 +14,7 @@
 	}
 
 	&:active,
-	&.active{
+	&.active {
 		background-color: var(--ng-doc-base-11);
 		--ng-doc-text: var(--ng-doc-text-inversed);
 	}

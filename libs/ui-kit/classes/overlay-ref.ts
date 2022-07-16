@@ -2,8 +2,7 @@ import {ConnectedOverlayPositionChange, FlexibleConnectedPositionStrategy, Overl
 import {Location} from '@angular/common';
 import {NgZone} from '@angular/core';
 import {Event, NavigationEnd, Router} from '@angular/router';
-import {isPresent} from '@ng-doc/core';
-import {EMPTY_OBSERVABLE} from '@ng-doc/core';
+import {EMPTY_OBSERVABLE, isPresent} from '@ng-doc/core';
 import {toElement} from '@ng-doc/ui-kit/helpers';
 import {NgDocOverlayConfig, NgDocOverlayContainer} from '@ng-doc/ui-kit/interfaces';
 import {fromSubscribe, ngDocZoneDetach, ngDocZoneOptimize} from '@ng-doc/ui-kit/observables';

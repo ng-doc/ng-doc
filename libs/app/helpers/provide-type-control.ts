@@ -13,9 +13,9 @@ const tokenStore: Map<string, InjectionToken<Constructor<NgDocTypeControl>>> = n
  * @param control
  */
 export function provideTypeControl<T>(type: string, control: Constructor<NgDocTypeControl>): Provider {
-	const token: InjectionToken<Constructor<NgDocTypeControl>> = new InjectionToken<
-		Constructor<NgDocTypeControl>
-	>(`NG_DOC_TYPE_CONTROL_${type}`);
+	const token: InjectionToken<Constructor<NgDocTypeControl>> = new InjectionToken<Constructor<NgDocTypeControl>>(
+		`NG_DOC_TYPE_CONTROL_${type}`,
+	);
 	tokenStore.set(type, token);
 
 	return {

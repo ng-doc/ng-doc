@@ -10,14 +10,14 @@ import {objectKeys} from '@ng-doc/core';
 	styleUrls: ['./playground.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties> implements OnInit {
+export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties>
+	implements OnInit
+{
 	id?: string;
 	properties?: T;
 	formGroup?: FormGroup<Record<keyof T, FormControl>>;
 
-	constructor(private readonly rootPage: NgDocRootPage) {
-
-	}
+	constructor(private readonly rootPage: NgDocRootPage) {}
 
 	ngOnInit(): void {
 		this.formGroup = new FormGroup<Record<keyof T, FormControl>>(

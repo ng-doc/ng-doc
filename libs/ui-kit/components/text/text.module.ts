@@ -8,6 +8,6 @@ import {NgDocTextRightDirective} from './text-right.directive';
 @NgModule({
 	declarations: [NgDocTextComponent, NgDocTextLeftDirective, NgDocTextRightDirective],
 	imports: [CommonModule],
-	exports: [NgDocTextComponent, NgDocTextLeftDirective, NgDocTextRightDirective]
+	exports: [NgDocTextComponent, NgDocTextLeftDirective, NgDocTextRightDirective],
 })
 export class NgDocTextModule {}

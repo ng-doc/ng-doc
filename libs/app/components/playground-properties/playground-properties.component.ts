@@ -16,6 +16,6 @@ export class NgDocPlaygroundPropertiesComponent<T extends NgDocPlaygroundPropert
 	properties?: T;
 
 	getFormControl(key: string): FormControl {
-		return this.form?.get(key) as FormControl
+		return this.form?.get(key) as FormControl;
 	}
 }

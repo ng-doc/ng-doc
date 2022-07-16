@@ -7,8 +7,10 @@ import {share, tap} from 'rxjs/operators';
 export class NgDocCacheInterceptor implements HttpInterceptor {
 	static readonly TOKEN: string = Math.random().toString(36).slice(-8);
 
-	private handlerPool: Map<string, Observable<HttpEvent<unknown>>> = new Map<string,
-		Observable<HttpEvent<unknown>>>();
+	private handlerPool: Map<string, Observable<HttpEvent<unknown>>> = new Map<
+		string,
+		Observable<HttpEvent<unknown>>
+	>();
 
 	intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 		if (request.params.has(NgDocCacheInterceptor.TOKEN)) {

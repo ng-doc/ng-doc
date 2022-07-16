@@ -8,13 +8,7 @@ import {NgDocPlaygroundPropertyComponent} from './playground-property.component'
 
 @NgModule({
 	declarations: [NgDocPlaygroundPropertyComponent],
-	imports: [
-		CommonModule,
-		NgDocLabelModule,
-		NgDocTooltipModule,
-		PolymorpheusModule,
-		ReactiveFormsModule,
-	],
+	imports: [CommonModule, NgDocLabelModule, NgDocTooltipModule, PolymorpheusModule, ReactiveFormsModule],
 	exports: [NgDocPlaygroundPropertyComponent],
 })
 export class NgDocPlaygroundPropertyModule {}

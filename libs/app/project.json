@@ -6,7 +6,9 @@
 	"targets": {
 		"pre-build": {
 			"executor": "@nrwl/angular:package",
-			"outputs": ["dist/libs/app"],
+			"outputs": [
+				"dist/libs/app"
+			],
 			"options": {
 				"project": "libs/app/ng-package.json"
 			},
@@ -22,7 +24,9 @@
 		},
 		"build": {
 			"executor": "@nrwl/workspace:run-commands",
-			"outputs": ["dist/libs/app/styles"],
+			"outputs": [
+				"dist/libs/app/styles"
+			],
 			"options": {
 				"commands": [
 					"sass --no-source-map libs/app/styles/main.scss dist/libs/app/styles/main.css",
@@ -32,7 +36,9 @@
 		},
 		"test": {
 			"executor": "@nrwl/jest:jest",
-			"outputs": ["coverage/libs/app"],
+			"outputs": [
+				"coverage/libs/app"
+			],
 			"options": {
 				"jestConfig": "libs/app/jest.config.ts",
 				"passWithNoTests": true
@@ -41,10 +47,18 @@
 		"lint": {
 			"executor": "@nrwl/linter:eslint",
 			"options": {
-				"lintFilePatterns": ["libs/app/**/*.ts", "libs/app/**/*.html"]
+				"lintFilePatterns": [
+					"libs/app/**/*.ts",
+					"libs/app/**/*.html"
+				]
 			}
 		}
 	},
-	"tags": ["type:lib", "lib:app"],
-	"implicitDependencies": ["builder"]
+	"tags": [
+		"type:lib",
+		"lib:app"
+	],
+	"implicitDependencies": [
+		"builder"
+	]
 }

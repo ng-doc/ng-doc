@@ -6,6 +6,6 @@ import {NgDocTagComponent} from './tag.component';
 @NgModule({
 	declarations: [NgDocTagComponent],
 	imports: [CommonModule],
-	exports: [NgDocTagComponent]
+	exports: [NgDocTagComponent],
 })
 export class NgDocTagModule {}

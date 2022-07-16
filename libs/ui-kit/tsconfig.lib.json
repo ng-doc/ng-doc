@@ -8,6 +8,11 @@
 		"types": []
 	},
 	"exclude": [
-      "test-setup.ts", "**/*.spec.ts", "**/*.test.ts"],
-	"include": ["**/*.ts"]
+		"test-setup.ts",
+		"**/*.spec.ts",
+		"**/*.test.ts"
+	],
+	"include": [
+		"**/*.ts"
+	]
 }
