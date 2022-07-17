@@ -1,5 +1,5 @@
 import {Clipboard} from '@angular/cdk/clipboard';
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 import {NgDocNotifyService} from '@ng-doc/ui-kit';
 
 @Component({
@@ -17,6 +17,10 @@ export class NgDocCodeComponent {
 
 	@Input()
 	copyButton: boolean = true;
+
+	@Input()
+	@HostBinding('attr.data-ng-doc-standalone')
+	standalone: boolean = true;
 
 	constructor(private readonly notifyService: NgDocNotifyService, private readonly clipboard: Clipboard) {}
 

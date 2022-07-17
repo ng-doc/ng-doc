@@ -7,16 +7,22 @@
 		"moduleResolution": "node",
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
+		"allowSyntheticDefaultImports": true,
 		"importHelpers": true,
 		"strict": true,
 		"target": "es2015",
 		"module": "esnext",
-		"lib": ["es2017", "dom"],
+		"lib": [
+			"es2017",
+			"dom"
+		],
 		"skipLibCheck": true,
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
 		"paths": {
-			"@ng-doc/app": ["libs/app/index.ts"],
+			"@ng-doc/app": [
+				"libs/app/index.ts"
+			],
 			"@ng-doc/app/*": ["libs/app/*"],
 			"@ng-doc/builder": ["libs/builder/index.ts"],
 			"@ng-doc/builder/generated": ["dist/libs/builder/generated/index.ts"],

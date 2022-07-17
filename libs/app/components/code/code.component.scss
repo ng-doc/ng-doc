@@ -1,11 +1,22 @@
 :host {
 	display: block;
 
+	&[data-ng-doc-standalone="false"] {
+		pre {
+			margin: 0;
+
+			code {
+				border-radius: 0;
+			}
+		}
+	}
+
 	pre {
 		position: relative;
 		display: flex;
 
 		code {
+			padding: calc(var(--ng-doc-base-gutter) * 2) calc(var(--ng-doc-base-gutter) * 3);
 			width: 100%;
 			border-radius: var(--ng-doc-base-gutter);
 			font-family: var(--ng-doc-code-font);

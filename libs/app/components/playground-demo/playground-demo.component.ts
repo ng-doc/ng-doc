@@ -22,7 +22,7 @@ import {
 } from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {NgDocRootPage} from '@ng-doc/app/classes';
-import {compileTemplate} from '@ng-doc/app/helpers';
+import {compileTemplate, formatHtml} from '@ng-doc/app/helpers';
 import {NgDocPlaygroundFormData} from '@ng-doc/app/interfaces';
 import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties} from '@ng-doc/builder';
 import {asArray} from '@ng-doc/core';
@@ -93,16 +93,19 @@ export class NgDocPlaygroundDemoComponent<
 	}
 
 	get code(): string {
-		return this.properties && this.form
+		const template: string = this.properties && this.form
 			? compileTemplate(
-					this.template,
-					this.selector,
-					this.properties,
-					this.form.value,
-					this.dynamicContent,
-					'preview',
-			  )
+				this.template,
+				this.selector,
+				this.properties,
+				this.form.value,
+				this.dynamicContent,
+				'preview',
+			)
 			: '';
+
+		console.log(formatHtml(template))
+		return formatHtml(template);
 	}
 
 	private updateDemo(data: NgDocPlaygroundFormData<P, C>): void {

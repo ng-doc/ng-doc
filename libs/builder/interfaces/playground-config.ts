@@ -6,8 +6,8 @@ import {NgDocPlaygroundDynamicContent} from './playground-dynamic-content';
 export interface NgDocPlaygroundConfig {
 	/** Component or directive that will be used for the playground */
 	target: Type<unknown>;
-	/** Selectors that will be used to create the current presentation (renders all possible selectors by default) */
-	selectors?: string | string[];
+	/** Selectors that will be used to create the current presentation */
+	selectors: string | string[];
 	/** Template that should be used to render playground */
 	template: string;
 	/**

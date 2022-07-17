@@ -23,28 +23,31 @@ export function compileTemplate(
 	dynamicContent?: Record<string, NgDocPlaygroundDynamicContent>,
 	destination: 'preview' | 'dynamic' | 'compile' = 'dynamic',
 ): string {
-	const selectorMatch: RegExpMatchArray | null = template.match(/(<)?(\w*\s+)?({{\s*ngDocSelector\s*}})/g);
-	const tag: string = (selectorMatch && selectorMatch[1]) ?? extractTagFromSelector(selector);
+	const selectorMatch: RegExpMatchArray | null = /(<)?(\w*\s+)?({{\s*ngDocSelector\s*}})/g.exec(template);
+	const tag: string = ((selectorMatch && selectorMatch[2]) ?? extractTagFromSelector(selector)).trim();
 	const attributes: string = extractAttributesFromSelector(selector);
 	const inputs: string = convertPropertiesToInputs(properties, data);
 
 	template = template
-		.replace(/<\w*\s*{{\s*ngDocSelector\s*}}\w*\s*>/gm, tag + attributes + inputs)
-		.replace(/<\/\w*\s*{{\s*ngDocSelector\s*}}\w*\s*>/gm, tag);
+		.replace(/<\w*\s*{{\s*ngDocSelector\s*}}\w*\s*>/gm, `<${(tag + ' ' + attributes + ' ' + inputs).trim()}>`)
+		.replace(/<\/\w*\s*{{\s*ngDocSelector\s*}}\w*\s*>/gm, `</${tag}>`);
 
 	if (dynamicContent) {
-		objectKeys(dynamicContent)
-			.forEach((key: string) => {
-				const contentTemplate: string =
-					destination === 'compile'
-						? `<ng-container *ngIf="content.${key}">
+		objectKeys(dynamicContent).forEach((key: string) => {
+			const contentTemplate: string =
+				destination === 'compile'
+					? `<ng-container *ngIf="content.${key}">
 								${dynamicContent[key].template}
 							</ng-container>`
-						: data.content[key]
-							? dynamicContent[key].template
-							: ''
-				template = template.replace(new RegExp(`{{\\s*${key}\\s*}}`, 'gm'), contentTemplate)
-			});
+					: data.content[key]
+					? dynamicContent[key].template
+					: '';
+
+			template = template.replace(
+				new RegExp(`{{\\s*${key}\\s*}}`, 'gm'),
+				contentTemplate ? `\n${contentTemplate}\n` : '',
+			);
+		});
 	}
 
 	return template;
@@ -55,9 +58,9 @@ export function compileTemplate(
  * @param selector
  */
 function extractTagFromSelector(selector: string): string {
-	const match: RegExpMatchArray | null = selector.match(/^([^[\]]*)(\[.*])?$/mg);
+	const match: RegExpMatchArray | null = /^([^[\]]*)(\[.*])?$/gm.exec(selector);
 
-	return (match && match[0]) ?? '';
+	return (match && match[1]) || 'div';
 }
 
 /**
@@ -65,9 +68,9 @@ function extractTagFromSelector(selector: string): string {
  * @param selector
  */
 function extractAttributesFromSelector(selector: string): string {
-	const match: RegExpMatchArray | null = selector.match(/^([^[\]]*)(\[.*])?$/mg);
+	const match: RegExpMatchArray | null = /^([^[\]]*)(\[.*])?$/gm.exec(selector);
 
-	return (match && match[1]) ?? '';
+	return (match && match[2]) ?? '';
 }
 
 /**
@@ -85,18 +88,10 @@ function convertPropertiesToInputs<P extends NgDocPlaygroundProperties>(
 		const valueIsString: boolean = typeof propertyValue === 'string';
 		const inputValue: string = valueIsString ? `'${propertyValue}'` : `${propertyValue}`;
 
-		if (removeQuote(property.default ?? '') !== removeQuote(String(propertyValue))) {
+		if ((property.default ?? '') !== inputValue) {
 			inputs += `[${String(key)}]="${inputValue}" `;
 		}
 
 		return inputs;
 	}, '').trim();
-}
-
-/**
- *
- * @param str
- */
-function removeQuote(str: string): string {
-	return str.replace(/['"]/gm, '')
 }

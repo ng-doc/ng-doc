@@ -4,11 +4,11 @@ import {NgDocCodeModule} from '@ng-doc/app/components/code';
 import {NgDocIconModule, NgDocTabGroupModule, NgDocTextModule} from '@ng-doc/ui-kit';
 import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 
-import {NgDocDemoViewerComponent} from './demo-viewer.component';
+import {NgDocDemoComponent} from './demo.component';
 
 @NgModule({
-	declarations: [NgDocDemoViewerComponent],
+	declarations: [NgDocDemoComponent],
 	imports: [CommonModule, NgDocTabGroupModule, NgDocCodeModule, NgDocIconModule, NgDocTextModule, PolymorpheusModule],
-	exports: [NgDocDemoViewerComponent],
+	exports: [NgDocDemoComponent],
 })
-export class NgDocDemoViewerModule {}
+export class NgDocDemoModule {}

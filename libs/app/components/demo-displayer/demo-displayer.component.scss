@@ -1,0 +1,22 @@
+:host {
+	.ng-doc-demo-wrapper {
+		border: 1px solid var(--ng-doc-base-2);
+		border-radius: var(--ng-doc-base-gutter);
+		overflow: hidden;
+
+		.ng-doc-demo-container {
+			display: flex;
+			width: 100%;
+			padding: calc(var(--ng-doc-base-gutter) * 2) calc(var(--ng-doc-base-gutter) * 3);
+
+			.ng-doc-demo {
+				overflow: hidden;
+			}
+
+			.ng-doc-demo-controls {
+				flex-shrink: 0;
+				margin-left: auto;
+			}
+		}
+	}
+}

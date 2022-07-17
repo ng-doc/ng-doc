@@ -1,5 +1,5 @@
 import {Directive, ElementRef, Self, ViewContainerRef} from '@angular/core';
-import {NgDocDemoViewerComponent} from '@ng-doc/app/components/demo-viewer';
+import {NgDocDemoComponent} from '@ng-doc/app/components/demo';
 import {NgDocMarkdownDirective} from '@ng-doc/app/directives/markdown';
 import {asBoolean} from '@ng-doc/app/helpers';
 import {NgDocProcessorOptions} from '@ng-doc/app/interfaces';
@@ -12,16 +12,16 @@ import {UntilDestroy} from '@ngneat/until-destroy';
 	selector: '[ngDocDemoProcessor]',
 })
 @UntilDestroy()
-export class NgDocDemoProcessorDirective extends NgDocHtmlProcessor<NgDocDemoViewerComponent> {
+export class NgDocDemoProcessorDirective extends NgDocHtmlProcessor<NgDocDemoComponent> {
 	constructor(
 		protected override readonly elementRef: ElementRef<HTMLElement>,
 		protected override readonly viewContainerRef: ViewContainerRef,
 		@Self() protected override readonly markdown: NgDocMarkdownDirective,
 	) {
-		super(elementRef, viewContainerRef, markdown, `#${NG_DOC_DEMO_TEMPLATE_ID}`, NgDocDemoViewerComponent);
+		super(elementRef, viewContainerRef, markdown, `#${NG_DOC_DEMO_TEMPLATE_ID}`, NgDocDemoComponent);
 	}
 
-	protected override extractComponentOptions(element: Element): NgDocProcessorOptions<NgDocDemoViewerComponent> {
+	protected override extractComponentOptions(element: Element): NgDocProcessorOptions<NgDocDemoComponent> {
 		return {
 			inputs: {
 				componentName: element.getAttribute('data-component-name') ?? undefined,

@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 import {expandCollapseAnimation, preventInitialChildAnimations} from '@ng-doc/ui-kit/animations';
-import {PolymorpheusContent} from '@tinkoff/ng-polymorpheus';
+import {NgDocContent} from '@ng-doc/ui-kit/types';
 
 /** Component helps to expand or collapse content */
 @Component({
@@ -17,7 +17,7 @@ export class NgDocExpanderComponent {
 
 	/** Expander content */
 	@Input()
-	content: PolymorpheusContent = '';
+	content: NgDocContent = '';
 
 	/** Closed height could be used to show preview of the content */
 	@Input()

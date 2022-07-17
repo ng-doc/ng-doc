@@ -1,5 +1,5 @@
-import {AfterViewInit, Directive, ElementRef} from '@angular/core';
-import highlight from 'highlight.js';
+import {Directive, ElementRef, Input, OnChanges} from '@angular/core';
+import highlight, {AutoHighlightResult} from 'highlight.js';
 import bash from 'highlight.js/lib/languages/bash';
 import css from 'highlight.js/lib/languages/css';
 import javascript from 'highlight.js/lib/languages/javascript';
@@ -17,12 +17,20 @@ highlight.registerLanguage('json', json);
 highlight.registerLanguage('bash', bash);
 
 @Directive({
-	selector: '[ngDocCodeHighlighter]',
+	selector: 'code[ngDocCodeHighlighter]',
 })
-export class NgDocCodeHighlighterDirective implements AfterViewInit {
+export class NgDocCodeHighlighterDirective implements OnChanges {
+	@Input('ngDocCodeHighlighter')
+	code: string = '';
+
+	@Input()
+	language: string = 'typescript';
+
 	constructor(private readonly elementRef: ElementRef<HTMLElement>) {}
 
-	ngAfterViewInit(): void {
-		highlight.highlightElement(this.elementRef.nativeElement);
+	ngOnChanges(): void {
+		const result: AutoHighlightResult = highlight.highlightAuto(this.code, [this.language]);
+
+		this.elementRef.nativeElement.innerHTML = result.value;
 	}
 }

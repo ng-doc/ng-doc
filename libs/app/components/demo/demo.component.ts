@@ -4,12 +4,12 @@ import {NgDocDemoAsset} from '@ng-doc/app/interfaces';
 import {PolymorpheusComponent} from '@tinkoff/ng-polymorpheus';
 
 @Component({
-	selector: 'ng-doc-demo-viewer',
-	templateUrl: './demo-viewer.component.html',
-	styleUrls: ['./demo-viewer.component.scss'],
+	selector: 'ng-doc-demo',
+	templateUrl: './demo.component.html',
+	styleUrls: ['./demo.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocDemoViewerComponent {
+export class NgDocDemoComponent {
 	@Input()
 	componentName?: string;
 

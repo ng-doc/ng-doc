@@ -1,0 +1,21 @@
+<div class="ng-doc-demo-wrapper" *ngIf="container; else demoTemplate">
+	<div class="ng-doc-demo-container">
+		<div class="ng-doc-demo">
+			<ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
+		</div>
+		<div class="ng-doc-demo-controls">
+			<button ng-doc-button-icon (click)="expanded = !expanded">
+				<ng-doc-icon icon="code"></ng-doc-icon>
+			</button>
+		</div>
+	</div>
+	<ng-doc-expander [content]="expanderContent" [expanded]="expanded">
+		<ng-template #expanderContent>
+			<ng-doc-code [code]="code" [language]="language" [copyButton]="false" [standalone]="false"></ng-doc-code>
+		</ng-template>
+	</ng-doc-expander>
+</div>
+
+<ng-template #demoTemplate>
+	<ng-content></ng-content>
+</ng-template>
