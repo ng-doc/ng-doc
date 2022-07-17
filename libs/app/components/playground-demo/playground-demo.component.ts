@@ -2,7 +2,6 @@ import '@angular/compiler';
 
 import {CommonModule} from '@angular/common';
 import {
-	AfterViewInit,
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Compiler,
@@ -43,7 +42,7 @@ import {NgDocBaseDemoModule} from './demo/base-demo.module';
 export class NgDocPlaygroundDemoComponent<
 	P extends NgDocPlaygroundProperties,
 	C extends Record<string, NgDocPlaygroundDynamicContent>,
-> implements OnChanges, AfterViewInit, OnDestroy
+> implements OnChanges, OnDestroy
 {
 	@Input()
 	target?: Type<unknown>;
@@ -79,31 +78,29 @@ export class NgDocPlaygroundDemoComponent<
 		if (form) {
 			this.unsubscribe$.next();
 
+			this.renderDemo(this.template, this.form?.value);
 			this.form?.valueChanges
 				.pipe(takeUntil(this.unsubscribe$), untilDestroyed(this))
 				.subscribe((data: NgDocPlaygroundFormData<P, C>) => {
 					console.log('form was changed', data);
-					this.updateDemo(data.properties);
+					this.updateDemo(data);
 				});
 		}
 	}
 
-	ngAfterViewInit(): void {
-		this.renderDemo(this.template);
-	}
-
-	private updateDemo(properties: Record<string, unknown>): void {
+	private updateDemo(data: NgDocPlaygroundFormData<P, C>): void {
 		if (this.reinitializeDemo) {
-			this.renderDemo(this.template);
+			this.renderDemo(this.template, data);
 		} else {
-			Object.assign(this.demoRef?.instance.demo ?? {}, properties);
-			this.demoRef?.instance?.viewContainerRef?.injector.get(ChangeDetectorRef)?.detectChanges();
+			Object.assign(this.demoRef?.instance.demo ?? {}, data.properties);
+			Object.assign(this.demoRef?.instance.content ?? {}, data.content);
+			this.demoRef?.instance?.viewContainerRef?.injector.get(ChangeDetectorRef)?.markForCheck();
 		}
 	}
 
-	private renderDemo(template: string): void {
+	private renderDemo(template: string, data: NgDocPlaygroundFormData<P, C>): void {
 		if (this.target) {
-			const component: Type<NgDocBaseDemoComponent> = this.createComponent(template, this.target, {});
+			const component: Type<NgDocBaseDemoComponent> = this.createComponent(template, this.target, data.content);
 			const module: Type<NgDocBaseDemoModule> = this.createModule(component);
 			const compiledModule: ModuleWithComponentFactories<NgDocBaseDemoComponent> =
 				this.compiler.compileModuleAndAllComponentsSync(module);
@@ -122,7 +119,7 @@ export class NgDocPlaygroundDemoComponent<
 	private createComponent(
 		template: string,
 		instance: Type<unknown>,
-		content: Record<string, boolean>,
+		content: Record<keyof C, boolean>,
 	): Type<NgDocBaseDemoComponent> {
 		@Directive()
 		class NgDocDemoComponent extends NgDocBaseDemoComponent {
@@ -132,7 +129,7 @@ export class NgDocPlaygroundDemoComponent<
 			@ViewChild(instance, {static: true, read: ViewContainerRef})
 			viewContainerRef?: ViewContainerRef;
 
-			content: Record<string, boolean> = content;
+			content: Record<keyof C, boolean> = content;
 		}
 
 		return Component({template})(NgDocDemoComponent);

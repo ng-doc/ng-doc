@@ -2,9 +2,11 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ComponentRef,
+	HostBinding,
 	InjectionToken,
 	Injector,
 	Input,
+	isDevMode,
 	OnChanges,
 	SimpleChanges,
 	ViewChild,
@@ -41,6 +43,9 @@ export class NgDocPlaygroundPropertyComponent<T = unknown> implements OnChanges 
 
 	ngOnChanges({property, control}: SimpleChanges): void {
 		if (property && this.property) {
+			this.propertyControl?.destroy();
+			this.propertyControl = undefined;
+
 			const type: string = isPlaygroundProperty(this.property) ? this.property.type : 'boolean';
 			const typeControl: Constructor<NgDocTypeControl> | undefined = this.getControlForType(type);
 
@@ -50,6 +55,10 @@ export class NgDocPlaygroundPropertyComponent<T = unknown> implements OnChanges 
 					? this.property.default
 					: undefined;
 				this.propertyControl.instance.writeValue(this.control?.value);
+			} else if (isDevMode()) {
+				console.warn(
+					`NgDocPlayground didn't find the control for the @Input "${this.name}", the type "${type}" was not recognized'`,
+				);
 			}
 		}
 
@@ -57,6 +66,11 @@ export class NgDocPlaygroundPropertyComponent<T = unknown> implements OnChanges 
 			this.control?.registerOnChange((value: string) => this.propertyControl?.instance?.writeValue(value));
 			this.propertyControl?.instance.registerOnChange((value: unknown) => this.control?.setValue(value));
 		}
+	}
+
+	@HostBinding('attr.data-has-property-control')
+	get hasPropertyControl(): boolean {
+		return !!this.propertyControl;
 	}
 
 	get tooltipContent(): string {

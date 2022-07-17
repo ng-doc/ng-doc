@@ -32,6 +32,9 @@ export class InlineDemoComponent implements OnInit {
 	@Input()
 	alias2: Alias = 'one';
 
+	@Input()
+	momo2: boolean = true;
+
 	/* NgDocCodeSnippetStart(ONINIT) */
 	ngOnInit(): void {
 		console.log('inline-demo works!');

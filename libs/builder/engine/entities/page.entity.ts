@@ -164,6 +164,9 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 			this.dependencies.add(this.mdPath);
 			this.pageDependenciesFile && this.dependencies.add(this.pageDependenciesFile);
 			this.playgroundFile && this.dependencies.add(this.playgroundFile);
+			this.playground?.sourceFile
+				?.getReferencedSourceFiles()
+				.forEach((sourceFile: SourceFile) => sourceFile.refreshFromFileSystemSync());
 
 			const renderer: NgDocRenderer<NgDocPageEnv> = new NgDocRenderer<NgDocPageEnv>({
 				NgDocPage: this.target,

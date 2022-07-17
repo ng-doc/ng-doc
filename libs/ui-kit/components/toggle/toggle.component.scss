@@ -1,0 +1,51 @@
+:host {
+	.ng-doc-toggle-wrapper {
+		position: relative;
+		display: inline-block;
+		width: 40px;
+		height: 22px;
+		border-radius: 24px;
+		background-color: var(--ng-doc-base-3);
+		cursor: pointer;
+		transition: background-color var(--ng-doc-transition);
+
+		.ng-doc-toggle-circle {
+			position: absolute;
+			left: 3px;
+			top: 3px;
+			height: calc(var(--ng-doc-base-gutter) * 2);
+			width: calc(var(--ng-doc-base-gutter) * 2);
+			border-radius: 50%;
+			background-color: var(--ng-doc-base-0);
+			user-select: none;
+			transition: transform var(--ng-doc-transition);
+		}
+	}
+
+	&[data-checked="true"] {
+		.ng-doc-toggle-wrapper {
+			background-color: var(--ng-doc-primary);
+		}
+	}
+
+	&[data-ng-doc-dragging="true"] {
+		cursor: grabbing;
+
+		.ng-doc-toggle-wrapper {
+			pointer-events: none;
+		}
+	}
+
+	&[data-disabled="true"] {
+		.ng-doc-toggle-wrapper {
+			background-color: var(--ng-doc-base-2);
+			cursor: unset;
+		}
+
+		&[data-checked="true"] {
+			.ng-doc-toggle-wrapper {
+				background-color: var(--ng-doc-base-3);
+			}
+		}
+	}
+}

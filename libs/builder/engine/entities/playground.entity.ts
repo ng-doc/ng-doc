@@ -1,15 +1,14 @@
 import * as path from 'path';
 import {Observable, of} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import {mapTo, tap} from 'rxjs/operators';
 import {
 	ClassDeclaration,
-	ClassExpression,
 	Expression,
 	Node,
 	ObjectLiteralElementLike,
 	ObjectLiteralExpression,
 	Project,
-	SourceFile
+	SourceFile,
 } from 'ts-morph';
 
 import {isPageEntity} from '../../helpers';
@@ -22,7 +21,7 @@ import {NgDocPageEntity} from './page.entity';
 
 export class NgDocPlaygroundEntity extends NgDocFileEntity<NgDocPlayground> {
 	readonly isRoot: boolean = false;
-	readonly buildCandidates: NgDocEntity[] = [];
+	override readonly buildCandidates: NgDocEntity[] = [];
 
 	constructor(
 		override readonly project: Project,
@@ -45,10 +44,13 @@ export class NgDocPlaygroundEntity extends NgDocFileEntity<NgDocPlayground> {
 	}
 
 	protected override update(): Observable<void> {
-		return of(void 0).pipe(
+		return of(null).pipe(
 			tap(() => {
 				this.sourceFile.refreshFromFileSystemSync();
+
+				this.readyToBuild = true;
 			}),
+			mapTo(void 0),
 		);
 	}
 
@@ -73,11 +75,10 @@ export class NgDocPlaygroundEntity extends NgDocFileEntity<NgDocPlayground> {
 					const targetInitializer: Expression | undefined = target.getInitializer();
 
 					if (Node.isIdentifier(targetInitializer)) {
-
 						const declaration: Node | undefined = targetInitializer
 							.getType()
 							?.getSymbol()
-							?.getDeclarations()[0]
+							?.getDeclarations()[0];
 
 						if (Node.isClassDeclaration(declaration)) {
 							return declaration;

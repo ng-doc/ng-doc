@@ -5,5 +5,5 @@ export interface NgDocPlaygroundFormData<
 	C extends Record<string, NgDocPlaygroundDynamicContent>,
 > {
 	properties: Record<keyof P, unknown>;
-	content: Record<keyof C, unknown>;
+	content: Record<keyof C, boolean>;
 }

@@ -7,29 +7,6 @@ import {NgDocEntity} from './entities/abstractions/entity';
 import {buildCandidates} from './functions/build-candidates';
 import {initializeEntities} from './functions/initialize-entities';
 
-/**
- *  FileEntity:
- * 		Init:
- * 			addSourceFile
- * 			compile
- * 		Change:
- * 			refreshSourceFile
- * 			compile
- * 		Destroy
- * 			nothing
- * 	ApiEntity
- * 		Init:
- * 			addSourceFile
- * 			compile
- * 			generateChildrenApiEntities
- * 		Change:
- * 			refreshSourceFile
- * 			compile
- * 			regenerateChildrenApiEntities
- * 		Destroy
- * 			removeChildrenEntities
- *
- */
 export class NgDocEntityStore implements Iterable<NgDocEntity> {
 	private entities: Map<string, NgDocEntity> = new Map();
 	private entitiesChanged: Subject<NgDocEntity[]> = new Subject<NgDocEntity[]>();
