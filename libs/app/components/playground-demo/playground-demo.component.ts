@@ -22,6 +22,7 @@ import {
 } from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {NgDocRootPage} from '@ng-doc/app/classes';
+import {compileTemplate} from '@ng-doc/app/helpers';
 import {NgDocPlaygroundFormData} from '@ng-doc/app/interfaces';
 import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties} from '@ng-doc/builder';
 import {asArray} from '@ng-doc/core';
@@ -54,6 +55,9 @@ export class NgDocPlaygroundDemoComponent<
 	template: string = '';
 
 	@Input()
+	properties?: P;
+
+	@Input()
 	dynamicContent?: C;
 
 	@Input()
@@ -78,7 +82,7 @@ export class NgDocPlaygroundDemoComponent<
 		if (form) {
 			this.unsubscribe$.next();
 
-			this.renderDemo(this.template, this.form?.value);
+			this.renderDemo(this.form?.value);
 			this.form?.valueChanges
 				.pipe(takeUntil(this.unsubscribe$), untilDestroyed(this))
 				.subscribe((data: NgDocPlaygroundFormData<P, C>) => {
@@ -88,9 +92,22 @@ export class NgDocPlaygroundDemoComponent<
 		}
 	}
 
+	get code(): string {
+		return this.properties && this.form
+			? compileTemplate(
+					this.template,
+					this.selector,
+					this.properties,
+					this.form.value,
+					this.dynamicContent,
+					'preview',
+			  )
+			: '';
+	}
+
 	private updateDemo(data: NgDocPlaygroundFormData<P, C>): void {
 		if (this.reinitializeDemo) {
-			this.renderDemo(this.template, data);
+			this.renderDemo(data);
 		} else {
 			Object.assign(this.demoRef?.instance.demo ?? {}, data.properties);
 			Object.assign(this.demoRef?.instance.content ?? {}, data.content);
@@ -98,8 +115,18 @@ export class NgDocPlaygroundDemoComponent<
 		}
 	}
 
-	private renderDemo(template: string, data: NgDocPlaygroundFormData<P, C>): void {
-		if (this.target) {
+	private renderDemo(data: NgDocPlaygroundFormData<P, C>): void {
+		if (this.target && this.properties) {
+			this.demoRef?.destroy();
+
+			const template: string = compileTemplate(
+				this.template,
+				this.selector,
+				this.properties,
+				data,
+				this.dynamicContent,
+				this.reinitializeDemo ? 'dynamic' : 'compile',
+			);
 			const component: Type<NgDocBaseDemoComponent> = this.createComponent(template, this.target, data.content);
 			const module: Type<NgDocBaseDemoModule> = this.createModule(component);
 			const compiledModule: ModuleWithComponentFactories<NgDocBaseDemoComponent> =
