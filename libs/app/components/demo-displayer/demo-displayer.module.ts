@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {NgDocCodeModule} from '@ng-doc/app/components/code';
-import {NgDocButtonIconModule, NgDocExpanderModule, NgDocIconModule} from '@ng-doc/ui-kit';
+import {NgDocButtonIconModule, NgDocExpanderModule, NgDocIconModule, NgDocTooltipModule} from '@ng-doc/ui-kit';
 import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 
 import {NgDocDemoDisplayerComponent} from './demo-displayer.component';
@@ -15,6 +15,7 @@ import {NgDocDemoDisplayerComponent} from './demo-displayer.component';
 		NgDocCodeModule,
 		NgDocButtonIconModule,
 		NgDocIconModule,
+		NgDocTooltipModule,
 	],
 	exports: [NgDocDemoDisplayerComponent],
 })

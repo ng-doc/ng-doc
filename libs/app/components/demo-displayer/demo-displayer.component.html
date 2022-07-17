@@ -4,6 +4,10 @@
 			<ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
 		</div>
 		<div class="ng-doc-demo-controls">
+			<button class="ng-doc-copy-button" ng-doc-button-icon (click)="copyCode()"
+					ngDocTooltip="Copy code">
+				<ng-doc-icon icon="copy"></ng-doc-icon>
+			</button>
 			<button ng-doc-button-icon (click)="expanded = !expanded">
 				<ng-doc-icon icon="code"></ng-doc-icon>
 			</button>

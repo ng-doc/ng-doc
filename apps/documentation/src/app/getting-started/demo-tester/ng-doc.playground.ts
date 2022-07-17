@@ -10,7 +10,7 @@ export const playground: NgDocPlayground = {
 		dynamicContent: {
 			content: {
 				label: 'My Content',
-				template: `my content`,
+				template: `my-content`,
 			},
 		},
 	},

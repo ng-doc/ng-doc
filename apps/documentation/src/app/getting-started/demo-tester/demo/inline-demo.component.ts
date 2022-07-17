@@ -33,7 +33,10 @@ export class InlineDemoComponent implements OnInit {
 	alias2: Alias = 'one';
 
 	@Input()
-	momo2: boolean = true;
+	momo: boolean = true;
+
+	@Input()
+	nomomo: boolean = true;
 
 	/* NgDocCodeSnippetStart(ONINIT) */
 	ngOnInit(): void {
