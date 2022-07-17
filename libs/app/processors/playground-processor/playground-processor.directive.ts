@@ -22,6 +22,9 @@ export class NgDocPlaygroundProcessorDirective extends NgDocHtmlProcessor<NgDocP
 			inputs: {
 				id: element.getAttribute('data-playground-id') ?? undefined,
 				properties: JSON.parse(element.textContent ?? '') ?? undefined,
+				selectors: (element.getAttribute('data-selectors') ?? '')
+					.split(',')
+					.map((selector: string) => selector.trim()),
 			},
 		};
 	}

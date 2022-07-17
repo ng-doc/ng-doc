@@ -2,7 +2,7 @@
 	<ng-doc-playground-properties [form]="formGroup" [properties]="properties"
 								  [dynamicContent]="configuration.dynamicContent"
 								  (toggleReinitialize)="reinitializeDemo = !reinitializeDemo">
-		<ng-doc-playground-demo *ngFor="let selector of configuration.selectors | asArray"
+		<ng-doc-playground-demo *ngFor="let selector of (configuration.selectors ?? selectors) | asArray"
 								[target]="configuration.target"
 								[selector]="selector"
 								[template]="configuration.template"

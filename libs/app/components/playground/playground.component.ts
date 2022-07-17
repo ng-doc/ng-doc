@@ -14,6 +14,7 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 	implements OnInit
 {
 	id?: string;
+	selectors: string[] = [];
 	properties?: T;
 	formGroup?: FormGroup;
 	reinitializeDemo: boolean = false;
