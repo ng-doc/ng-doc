@@ -21,8 +21,9 @@ import {
 	ViewChild,
 	ViewContainerRef,
 } from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormGroup} from '@angular/forms';
 import {NgDocRootPage} from '@ng-doc/app/classes';
+import {NgDocPlaygroundFormData} from '@ng-doc/app/interfaces';
 import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties} from '@ng-doc/builder';
 import {asArray} from '@ng-doc/core';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
@@ -39,8 +40,10 @@ import {NgDocBaseDemoModule} from './demo/base-demo.module';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @UntilDestroy()
-export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties>
-	implements OnChanges, AfterViewInit, OnDestroy
+export class NgDocPlaygroundDemoComponent<
+	P extends NgDocPlaygroundProperties,
+	C extends Record<string, NgDocPlaygroundDynamicContent>,
+> implements OnChanges, AfterViewInit, OnDestroy
 {
 	@Input()
 	target?: Type<unknown>;
@@ -52,13 +55,13 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 	template: string = '';
 
 	@Input()
-	dynamicContent?: Record<string, NgDocPlaygroundDynamicContent>;
+	dynamicContent?: C;
 
 	@Input()
 	reinitializeDemo: boolean = false;
 
 	@Input()
-	form?: FormGroup<Record<keyof T, FormControl>>;
+	form?: FormGroup;
 
 	@ViewChild('demoOutlet', {static: true, read: ViewContainerRef})
 	demoOutlet?: ViewContainerRef;
@@ -77,13 +80,10 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 			this.unsubscribe$.next();
 
 			this.form?.valueChanges
-				.pipe(
-					takeUntil(this.unsubscribe$),
-					untilDestroyed(this)
-				)
-				.subscribe((properties: Record<string, unknown>) => {
-					console.log('form was changed', properties);
-					this.updateDemo(properties);
+				.pipe(takeUntil(this.unsubscribe$), untilDestroyed(this))
+				.subscribe((data: NgDocPlaygroundFormData<P, C>) => {
+					console.log('form was changed', data);
+					this.updateDemo(data.properties);
 				});
 		}
 	}
@@ -103,7 +103,7 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 
 	private renderDemo(template: string): void {
 		if (this.target) {
-			const component: Type<NgDocBaseDemoComponent> = this.createComponent(template, this.target);
+			const component: Type<NgDocBaseDemoComponent> = this.createComponent(template, this.target, {});
 			const module: Type<NgDocBaseDemoModule> = this.createModule(component);
 			const compiledModule: ModuleWithComponentFactories<NgDocBaseDemoComponent> =
 				this.compiler.compileModuleAndAllComponentsSync(module);
@@ -116,11 +116,14 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 			this.demoRef = factory && this.demoOutlet?.createComponent(factory);
 
 			this.demoRef?.changeDetectorRef.markForCheck();
-
 		}
 	}
 
-	private createComponent(template: string, instance: Type<unknown>): Type<NgDocBaseDemoComponent> {
+	private createComponent(
+		template: string,
+		instance: Type<unknown>,
+		content: Record<string, boolean>,
+	): Type<NgDocBaseDemoComponent> {
 		@Directive()
 		class NgDocDemoComponent extends NgDocBaseDemoComponent {
 			@ViewChild(instance, {static: true})
@@ -128,6 +131,8 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 
 			@ViewChild(instance, {static: true, read: ViewContainerRef})
 			viewContainerRef?: ViewContainerRef;
+
+			content: Record<string, boolean> = content;
 		}
 
 		return Component({template})(NgDocDemoComponent);

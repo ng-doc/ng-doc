@@ -5,7 +5,13 @@ type Alias = 'one' | 'two';
 /* NgDocCodeSnippetStart(Test1) */
 @Component({
 	selector: 'ng-doc-inline-demo',
-	template: ` <p [style.color]="color">inline-demo works 34234!</p> {{count}} `,
+	template: `
+		<p [style.color]="color">
+			inline-demo works 34234!
+			<ng-content></ng-content>
+		</p>
+		{{ count }}
+	`,
 	styles: [],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import {NgDocPlaygroundProperties} from '@ng-doc/builder';
+import {NgDocPlaygroundFormData} from '@ng-doc/app/interfaces';
+import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties} from '@ng-doc/builder';
 
 @Component({
 	selector: 'ng-doc-playground-properties',
@@ -8,14 +9,20 @@ import {NgDocPlaygroundProperties} from '@ng-doc/builder';
 	styleUrls: ['./playground-properties.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocPlaygroundPropertiesComponent<T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties> {
+export class NgDocPlaygroundPropertiesComponent<
+	P extends NgDocPlaygroundProperties,
+	C extends Record<string, NgDocPlaygroundDynamicContent>,
+> {
 	@Input()
-	form?: FormGroup<Record<keyof T, FormControl>>;
+	form?: FormGroup;
 
 	@Input()
-	properties?: T;
+	properties?: P;
 
-	getFormControl(key: string): FormControl {
-		return this.form?.get(key) as FormControl;
+	@Input()
+	dynamicContent?: C;
+
+	getFormControl(controlType: keyof NgDocPlaygroundFormData<P, C>, key: string): FormControl {
+		return this.form?.get(controlType)?.get(key) as FormControl;
 	}
 }

@@ -1,5 +1,6 @@
 <ng-container *ngIf="configuration">
-	<ng-doc-playground-properties [form]="formGroup" [properties]="properties">
+	<ng-doc-playground-properties [form]="formGroup" [properties]="properties"
+								  [dynamicContent]="configuration.dynamicContent">
 		<ng-doc-playground-demo *ngFor="let selector of configuration.selectors | asArray"
 								[target]="configuration.target"
 								[selector]="selector"

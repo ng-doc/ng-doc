@@ -1,6 +1,6 @@
 <label [ng-doc-label]="labelContent">
 	<ng-template #labelContent>
-		<span [ngDocTooltip]="property?.description ?? ''" [canOpen]="!!property?.description">{{name}}</span>
+		<span [ngDocTooltip]="tooltipContent" [canOpen]="!!tooltipContent">{{name}}</span>
 	</ng-template>
 	<ng-container #propertyOutlet></ng-container>
 </label>

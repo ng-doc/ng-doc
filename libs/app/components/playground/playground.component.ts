@@ -15,12 +15,12 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 {
 	id?: string;
 	properties?: T;
-	formGroup?: FormGroup<Record<keyof T, FormControl>>;
+	formGroup?: FormGroup;
 
 	constructor(private readonly rootPage: NgDocRootPage) {}
 
 	ngOnInit(): void {
-		this.formGroup = new FormGroup<Record<keyof T, FormControl>>(
+		const propertiesForm: FormGroup = new FormGroup<Record<keyof T, FormControl>>(
 			objectKeys(this.properties).reduce((controls: Record<keyof T, FormControl>, key: keyof T) => {
 				if (this.properties) {
 					controls[key] = new FormControl(extractValue(this.properties[key]?.default ?? 'undefined'));
@@ -29,6 +29,24 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 				return controls;
 			}, {} as Record<keyof T, FormControl>),
 		);
+
+		const contentForm: FormGroup = new FormGroup(
+			objectKeys(this.configuration?.dynamicContent ?? {}).reduce(
+				(controls: Record<string, FormControl>, key: string) => {
+					if (this.configuration?.dynamicContent) {
+						controls[key] = new FormControl(false);
+					}
+
+					return controls;
+				},
+				{} as Record<keyof T, FormControl>,
+			),
+		);
+
+		this.formGroup = new FormGroup({
+			properties: propertiesForm,
+			content: contentForm,
+		});
 
 		console.log(this.rootPage.playground, this.id, this.properties);
 	}

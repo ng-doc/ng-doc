@@ -11,9 +11,9 @@ import {
 	ViewContainerRef,
 } from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {getTokenForType} from '@ng-doc/app/helpers';
+import {getTokenForType, isPlaygroundProperty} from '@ng-doc/app/helpers';
 import {NgDocTypeControl} from '@ng-doc/app/interfaces';
-import {NgDocPlaygroundProperty} from '@ng-doc/builder';
+import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperty} from '@ng-doc/builder';
 import {Constructor} from '@ng-doc/ui-kit';
 
 @Component({
@@ -27,7 +27,7 @@ export class NgDocPlaygroundPropertyComponent<T = unknown> implements OnChanges 
 	name: string = '';
 
 	@Input()
-	property?: NgDocPlaygroundProperty;
+	property?: NgDocPlaygroundProperty | NgDocPlaygroundDynamicContent;
 
 	@Input()
 	control?: FormControl;
@@ -40,14 +40,15 @@ export class NgDocPlaygroundPropertyComponent<T = unknown> implements OnChanges 
 	constructor(private readonly injector: Injector) {}
 
 	ngOnChanges({property, control}: SimpleChanges): void {
-		if (property) {
-			const typeControl: Constructor<NgDocTypeControl> | undefined = this.property?.type
-				? this.getControlForType(this.property?.type)
-				: undefined;
+		if (property && this.property) {
+			const type: string = isPlaygroundProperty(this.property) ? this.property.type : 'boolean';
+			const typeControl: Constructor<NgDocTypeControl> | undefined = this.getControlForType(type);
 
 			if (typeControl && this.propertyOutlet) {
 				this.propertyControl = this.propertyOutlet.createComponent(typeControl);
-				this.propertyControl.instance.default = this.property?.default;
+				this.propertyControl.instance.default = isPlaygroundProperty(this.property)
+					? this.property.default
+					: undefined;
 				this.propertyControl.instance.writeValue(this.control?.value);
 			}
 		}
@@ -56,6 +57,10 @@ export class NgDocPlaygroundPropertyComponent<T = unknown> implements OnChanges 
 			this.control?.registerOnChange((value: string) => this.propertyControl?.instance?.writeValue(value));
 			this.propertyControl?.instance.registerOnChange((value: unknown) => this.control?.setValue(value));
 		}
+	}
+
+	get tooltipContent(): string {
+		return this.property && isPlaygroundProperty(this.property) ? this.property.description ?? '' : '';
 	}
 
 	private getControlForType(type: string): Constructor<NgDocTypeControl> | undefined {
