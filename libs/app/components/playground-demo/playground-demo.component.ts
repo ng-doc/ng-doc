@@ -69,6 +69,8 @@ export class NgDocPlaygroundDemoComponent<
 	@ViewChild('demoOutlet', {static: true, read: ViewContainerRef})
 	demoOutlet?: ViewContainerRef;
 
+	code: string = '';
+
 	private demoRef?: ComponentRef<NgDocBaseDemoComponent>;
 	private readonly unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -83,6 +85,8 @@ export class NgDocPlaygroundDemoComponent<
 			this.unsubscribe$.next();
 
 			this.renderDemo(this.form?.value);
+			this.updateCodeView();
+
 			this.form?.valueChanges
 				.pipe(takeUntil(this.unsubscribe$), untilDestroyed(this))
 				.subscribe((data: NgDocPlaygroundFormData<P, C>) => {
@@ -90,22 +94,6 @@ export class NgDocPlaygroundDemoComponent<
 					this.updateDemo(data);
 				});
 		}
-	}
-
-	get code(): string {
-		const template: string = this.properties && this.form
-			? compileTemplate(
-				this.template,
-				this.selector,
-				this.properties,
-				this.form.value,
-				this.dynamicContent,
-				'preview',
-			)
-			: '';
-
-		console.log(formatHtml(template))
-		return formatHtml(template);
 	}
 
 	private updateDemo(data: NgDocPlaygroundFormData<P, C>): void {
@@ -116,6 +104,8 @@ export class NgDocPlaygroundDemoComponent<
 			Object.assign(this.demoRef?.instance.content ?? {}, data.content);
 			this.demoRef?.instance?.viewContainerRef?.injector.get(ChangeDetectorRef)?.markForCheck();
 		}
+
+		this.updateCodeView();
 	}
 
 	private renderDemo(data: NgDocPlaygroundFormData<P, C>): void {
@@ -144,6 +134,22 @@ export class NgDocPlaygroundDemoComponent<
 
 			this.demoRef?.changeDetectorRef.markForCheck();
 		}
+	}
+
+	private updateCodeView(): void {
+		const template: string =
+			this.properties && this.form
+				? compileTemplate(
+						this.template,
+						this.selector,
+						this.properties,
+						this.form.value,
+						this.dynamicContent,
+						'preview',
+				  )
+				: '';
+
+		this.code = formatHtml(template);
 	}
 
 	private createComponent(
