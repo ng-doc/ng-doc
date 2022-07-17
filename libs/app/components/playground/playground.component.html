@@ -1,12 +1,14 @@
 <ng-container *ngIf="configuration">
 	<ng-doc-playground-properties [form]="formGroup" [properties]="properties"
-								  [dynamicContent]="configuration.dynamicContent">
+								  [dynamicContent]="configuration.dynamicContent"
+								  (toggleReinitialize)="reinitializeDemo = !reinitializeDemo">
 		<ng-doc-playground-demo *ngFor="let selector of configuration.selectors | asArray"
 								[target]="configuration.target"
 								[selector]="selector"
 								[template]="configuration.template"
 								[properties]="properties"
 								[dynamicContent]="configuration.dynamicContent"
+								[reinitializeDemo]="reinitializeDemo"
 								[form]="formGroup">
 		</ng-doc-playground-demo>
 	</ng-doc-playground-properties>

@@ -16,6 +16,7 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 	id?: string;
 	properties?: T;
 	formGroup?: FormGroup;
+	reinitializeDemo: boolean = false;
 
 	constructor(private readonly rootPage: NgDocRootPage) {}
 
@@ -53,5 +54,9 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 
 	get configuration(): NgDocPlaygroundConfig | undefined {
 		return this.id && this.rootPage.playground ? this.rootPage.playground[this.id] : undefined;
+	}
+
+	resetForm(): void {
+		// this.formGroup?.get('properties')?.setValue
 	}
 }

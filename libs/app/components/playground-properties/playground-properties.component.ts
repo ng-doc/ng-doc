@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {NgDocPlaygroundFormData} from '@ng-doc/app/interfaces';
 import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties} from '@ng-doc/builder';
@@ -12,7 +12,7 @@ import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties} from '@ng-doc/
 export class NgDocPlaygroundPropertiesComponent<
 	P extends NgDocPlaygroundProperties,
 	C extends Record<string, NgDocPlaygroundDynamicContent>,
-> {
+	> {
 	@Input()
 	form?: FormGroup;
 
@@ -21,6 +21,12 @@ export class NgDocPlaygroundPropertiesComponent<
 
 	@Input()
 	dynamicContent?: C;
+
+	@Output()
+	resetForm: EventEmitter<void> = new EventEmitter<void>();
+
+	@Output()
+	toggleReinitialize: EventEmitter<void> = new EventEmitter<void>();
 
 	getFormControl(controlType: keyof NgDocPlaygroundFormData<P, C>, key: string): FormControl {
 		return this.form?.get(controlType)?.get(key) as FormControl;
