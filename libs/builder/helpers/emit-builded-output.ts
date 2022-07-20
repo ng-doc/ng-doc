@@ -1,14 +1,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import {NgDocBuildedOutput} from '../interfaces';
+import {NgDocBuiltOutput} from '../interfaces';
 
 /**
  *
  * @param {...any} outputs
  */
-export function emitBuildedOutput(...outputs: NgDocBuildedOutput[]): void {
-	outputs.forEach((output: NgDocBuildedOutput) => {
+export function emitBuildedOutput(...outputs: NgDocBuiltOutput[]): void {
+	outputs.forEach((output: NgDocBuiltOutput) => {
 		fs.mkdirSync(path.dirname(output.filePath), {recursive: true});
 		fs.writeFileSync(output.filePath, output.output);
 	});

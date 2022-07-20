@@ -5,7 +5,7 @@ import {finalize, mapTo, startWith, switchMap, takeUntil, tap} from 'rxjs/operat
 import {Node, ObjectLiteralExpression, Project, SourceFile, Symbol, SyntaxKind} from 'ts-morph';
 
 import {ObservableSet} from '../../../classes';
-import {NgDocBuildedOutput, NgDocBuilderContext} from '../../../interfaces';
+import {NgDocBuilderContext, NgDocBuiltOutput} from '../../../interfaces';
 import {NgDocEntityStore} from '../../entity-store';
 import {NgDocWatcher} from '../../watcher';
 
@@ -15,6 +15,10 @@ import {NgDocWatcher} from '../../watcher';
 export abstract class NgDocEntity {
 	/** Indicates when entity was destroyed */
 	destroyed: boolean = false;
+
+	/** Last built artifacts */
+	artifacts: NgDocBuiltOutput[] = [];
+
 	/**
 	 * Collection of all file dependencies of the current entity.
 	 * This property is using to watch for changes in this dependencies list and rebuild current buildable.
@@ -147,12 +151,16 @@ export abstract class NgDocEntity {
 	 * Build all artifacts that need for application.
 	 * This is the last method in the build process, should return output that should be emitted to the file system
 	 */
-	abstract build(): Observable<NgDocBuildedOutput[]>;
+	protected abstract build(): Observable<NgDocBuiltOutput[]>;
 
 	/**
 	 * Runs when the source file was updated, can be used to refresh target file etc.
 	 */
 	protected abstract update(): Observable<void>;
+
+	buildArtifacts(): Observable<NgDocBuiltOutput[]> {
+		return this.build().pipe(tap((artifacts: NgDocBuiltOutput[]) => (this.artifacts = artifacts)));
+	}
 
 	/**
 	 * Destroys current entity and clear all references

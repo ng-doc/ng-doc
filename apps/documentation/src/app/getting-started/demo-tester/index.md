@@ -1,6 +1,6 @@
 # Here will be demo
 
-Here you will se how easy it's to create some demo with NgDoc.
+Here you will se how easy it's to create some demo with NgDoc. <div>Some text</div>
 
 ## Playground
 

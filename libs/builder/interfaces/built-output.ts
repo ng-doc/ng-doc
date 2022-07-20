@@ -1,4 +1,4 @@
-export interface NgDocBuildedOutput {
+export interface NgDocBuiltOutput {
 	output: string;
 	filePath: string;
 }

@@ -15,7 +15,7 @@ import {
 } from 'ts-morph';
 
 import {buildAssets, formatCode, isPageEntity} from '../../helpers';
-import {NgDocAsset, NgDocBuildedOutput, NgDocBuilderContext} from '../../interfaces';
+import {NgDocAsset, NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
 import {componentDecoratorResolver} from '../../resolvers/component-decorator.resolver';
 import {NgDocComponentAssetsEnv} from '../../templates-env';
 import {NgDocEntityStore} from '../entity-store';
@@ -84,13 +84,13 @@ export class NgDocDependenciesEntity extends NgDocEntity {
 		return this.update();
 	}
 
-	override build(): Observable<NgDocBuildedOutput[]> {
+	protected override build(): Observable<NgDocBuiltOutput[]> {
 		this.dependencies.clear();
 		this.fillAssets();
 		this.dependencies.add(...this.assets.map((asset: NgDocAsset) => asset.originalPath));
 
 		return this.buildComponentAssets().pipe(
-			map((output: NgDocBuildedOutput) => [
+			map((output: NgDocBuiltOutput) => [
 				output,
 				...this.assets.map((asset: NgDocAsset) => ({
 					output: asset.output,
@@ -120,7 +120,7 @@ export class NgDocDependenciesEntity extends NgDocEntity {
 		}
 	}
 
-	private buildComponentAssets(): Observable<NgDocBuildedOutput> {
+	private buildComponentAssets(): Observable<NgDocBuiltOutput> {
 		const renderer: NgDocRenderer<NgDocComponentAssetsEnv> = new NgDocRenderer<NgDocComponentAssetsEnv>({
 			componentsAssets: this.componentsAssets,
 		});

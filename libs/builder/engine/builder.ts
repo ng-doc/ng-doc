@@ -1,12 +1,13 @@
 import {asArray} from '@ng-doc/core';
 import * as path from 'path';
-import {forkJoin, Observable} from 'rxjs';
-import {concatMap, map, mapTo, tap} from 'rxjs/operators';
+import {forkJoin, Observable, of} from 'rxjs';
+import {concatMap, map, mapTo, switchMap, tap} from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
 import {createProject, emitBuildedOutput} from '../helpers';
+import {buildApiIndexes, buildGlobalIndexes} from '../helpers/build-global-indexes';
 import {getEntityConstructor} from '../helpers/get-entity-constructor';
-import {NgDocBuildedOutput, NgDocBuilderContext} from '../interfaces';
+import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
 import {bufferDebounce} from '../operators';
 import {NgDocContextEnv, NgDocRoutingEnv} from '../templates-env';
 import {Constructable} from '../types';
@@ -19,7 +20,8 @@ import {
 	CATEGORY_PATTERN,
 	GENERATED_PATH,
 	PAGE_DEPENDENCY_PATTERN,
-	PAGE_PATTERN, PLAYGROUND_PATTERN,
+	PAGE_PATTERN,
+	PLAYGROUND_PATTERN,
 } from './variables';
 import {NgDocWatcher} from './watcher';
 
@@ -80,17 +82,19 @@ export class NgDocBuilder {
 		return forkJoin([
 			...changedEntities
 				.filter((entity: NgDocEntity) => entity.isReadyToBuild)
-				.map((entity: NgDocEntity) => entity.build()),
+				.map((entity: NgDocEntity) => entity.buildArtifacts()),
 			this.buildRoutes(),
 			this.buildContext(),
 		]).pipe(
-			map((output: Array<NgDocBuildedOutput | NgDocBuildedOutput[]>) => output.flat()),
-			tap((output: NgDocBuildedOutput[]) => emitBuildedOutput(...output)),
+			switchMap((output: Array<NgDocBuiltOutput | NgDocBuiltOutput[]>) =>
+				this.buildIndexes().pipe(map((indexOutput: NgDocBuiltOutput[]) => [...output.flat(), ...indexOutput])),
+			),
+			tap((output: NgDocBuiltOutput[]) => emitBuildedOutput(...output)),
 			mapTo(void 0),
 		);
 	}
 
-	private buildRoutes(): Observable<NgDocBuildedOutput> {
+	private buildRoutes(): Observable<NgDocBuiltOutput> {
 		const entities: NgDocEntity[] = this.entities.rootEntitiesForBuild;
 		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocRoutingEnv>({entities});
 
@@ -99,12 +103,22 @@ export class NgDocBuilder {
 			.pipe(map((output: string) => ({output, filePath: path.join(GENERATED_PATH, 'ng-doc.routing.ts')})));
 	}
 
-	private buildContext(): Observable<NgDocBuildedOutput> {
+	private buildContext(): Observable<NgDocBuiltOutput> {
 		const entities: NgDocEntity[] = this.entities.rootEntitiesForBuild;
 		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocContextEnv>({entities});
 
 		return renderer
 			.render('context.ts.nunj')
 			.pipe(map((output: string) => ({output, filePath: path.join(GENERATED_PATH, 'ng-doc.context.ts')})));
+	}
+
+	private buildIndexes(): Observable<NgDocBuiltOutput[]> {
+		return of([{
+			output: buildGlobalIndexes(this.entities),
+			filePath: path.join(GENERATED_PATH, 'ng-doc.global-indexes.json')
+		}, {
+			output: buildApiIndexes(this.entities),
+			filePath: path.join(GENERATED_PATH, 'ng-doc.api-indexes.json')
+		}]);
 	}
 }

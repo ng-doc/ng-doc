@@ -4,7 +4,7 @@ import {catchError, map, tap} from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
 import {uniqueName} from '../../helpers';
-import {NgDocApi, NgDocApiScope, NgDocBuildedOutput, NgDocBuilderContext} from '../../interfaces';
+import {NgDocApi, NgDocApiScope, NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocApiModuleEnv} from '../../templates-env/api.module.env';
 import {NgDocEntityStore} from '../entity-store';
 import {NgDocRenderer} from '../renderer';
@@ -90,11 +90,11 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		);
 	}
 
-	override build(): Observable<NgDocBuildedOutput[]> {
+	protected override build(): Observable<NgDocBuiltOutput[]> {
 		return this.isReadyToBuild ? forkJoin([this.buildModule()]) : of([]);
 	}
 
-	private buildModule(): Observable<NgDocBuildedOutput> {
+	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
 			const renderer: NgDocRenderer<NgDocApiModuleEnv> = new NgDocRenderer<NgDocApiModuleEnv>({api: this});
 

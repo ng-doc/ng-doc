@@ -2,26 +2,16 @@ import {capitalize} from '@ng-doc/core';
 
 import {isCategoryEntity} from '../../../helpers';
 import {NgDocEntity} from './entity';
-import {NgDocModuleEntity} from './module.entity';
+import {NgDocRouteEntity} from './route.entity';
 
 /**
  * Entity for file end points that generate modules and components.
  */
-export abstract class NgDocNavigationEntity<T> extends NgDocModuleEntity<T> {
+export abstract class NgDocNavigationEntity<T> extends NgDocRouteEntity<T> {
 	/**
 	 * Indicates when current entity is using for page navigation.
 	 */
 	readonly isNavigable: boolean = true;
-
-	/**
-	 * The route for the current entity.
-	 */
-	abstract route: string;
-
-	/**
-	 * The title of the current entity.
-	 */
-	abstract title: string;
 
 	/**
 	 * Order is using for sorting pages and categories in sidebar

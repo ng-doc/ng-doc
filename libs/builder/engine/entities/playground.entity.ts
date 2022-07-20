@@ -12,7 +12,7 @@ import {
 } from 'ts-morph';
 
 import {isPageEntity} from '../../helpers';
-import {NgDocBuildedOutput, NgDocBuilderContext, NgDocPlayground} from '../../interfaces';
+import {NgDocBuilderContext, NgDocBuiltOutput, NgDocPlayground} from '../../interfaces';
 import {NgDocEntityStore} from '../entity-store';
 import {PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
@@ -39,7 +39,7 @@ export class NgDocPlaygroundEntity extends NgDocFileEntity<NgDocPlayground> {
 		return buildable && isPageEntity(buildable) ? buildable : undefined;
 	}
 
-	override build(): Observable<NgDocBuildedOutput[]> {
+	protected override build(): Observable<NgDocBuiltOutput[]> {
 		return of([]);
 	}
 

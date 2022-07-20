@@ -5,7 +5,7 @@ import {catchError, map, tap} from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
 import {isCategoryEntity, isPageEntity, uniqueName} from '../../helpers';
-import {NgDocBuildedOutput, NgDocBuilderContext, NgDocCategory} from '../../interfaces';
+import {NgDocBuilderContext, NgDocBuiltOutput, NgDocCategory} from '../../interfaces';
 import {NgDocCategoryModuleEnv} from '../../templates-env';
 import {NgDocEntityStore} from '../entity-store';
 import {NgDocRenderer} from '../renderer';
@@ -102,11 +102,11 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 		);
 	}
 
-	override build(): Observable<NgDocBuildedOutput[]> {
+	protected override build(): Observable<NgDocBuiltOutput[]> {
 		return this.isReadyToBuild ? forkJoin([this.buildModule()]) : of([]);
 	}
 
-	private buildModule(): Observable<NgDocBuildedOutput> {
+	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
 			const renderer: NgDocRenderer<NgDocCategoryModuleEnv> = new NgDocRenderer<NgDocCategoryModuleEnv>({
 				category: this,

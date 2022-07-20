@@ -5,7 +5,7 @@ import {map} from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
 import {isNotExcludedPath, isPageEntity, uniqueName} from '../../helpers';
-import {NgDocApiScope, NgDocBuildedOutput, NgDocBuilderContext} from '../../interfaces';
+import {NgDocApiScope, NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocApiScopeModuleEnv} from '../../templates-env/api-scope.module.env';
 import {NgDocEntityStore} from '../entity-store';
 import {isSupportedDeclaration} from '../functions/is-supported-declaration';
@@ -109,11 +109,11 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 		return of(void 0);
 	}
 
-	override build(): Observable<NgDocBuildedOutput[]> {
+	protected override build(): Observable<NgDocBuiltOutput[]> {
 		return this.isReadyToBuild ? forkJoin([this.buildModule()]) : of([]);
 	}
 
-	private buildModule(): Observable<NgDocBuildedOutput> {
+	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
 			const renderer: NgDocRenderer<NgDocApiScopeModuleEnv> = new NgDocRenderer<NgDocApiScopeModuleEnv>({
 				scope: this,

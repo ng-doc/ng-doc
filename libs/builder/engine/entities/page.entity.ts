@@ -6,7 +6,7 @@ import {catchError, map, tap} from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
 import {isDependencyEntity, isPlaygroundEntity, uniqueName} from '../../helpers';
-import {NgDocBuildedOutput, NgDocBuilderContext, NgDocPage} from '../../interfaces';
+import {NgDocBuilderContext, NgDocBuiltOutput, NgDocPage} from '../../interfaces';
 import {NgDocPageEnv, NgDocPageModuleEnv} from '../../templates-env';
 import {NgDocActions} from '../actions';
 import {NgDocEntityStore} from '../entity-store';
@@ -142,11 +142,11 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		);
 	}
 
-	override build(): Observable<NgDocBuildedOutput[]> {
+	protected override build(): Observable<NgDocBuiltOutput[]> {
 		return this.isReadyToBuild ? forkJoin([this.buildPage(), this.buildModule()]) : of([]);
 	}
 
-	private buildModule(): Observable<NgDocBuildedOutput> {
+	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
 			const renderer: NgDocRenderer<NgDocPageModuleEnv> = new NgDocRenderer<NgDocPageModuleEnv>({page: this});
 
@@ -157,7 +157,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return of();
 	}
 
-	private buildPage(): Observable<NgDocBuildedOutput> {
+	private buildPage(): Observable<NgDocBuiltOutput> {
 		this.dependencies.clear();
 
 		if (this.target) {
