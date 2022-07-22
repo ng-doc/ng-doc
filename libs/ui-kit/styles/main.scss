@@ -5,3 +5,5 @@
 @import 'markup';
 @import '../directives/tooltip/tooltip';
 @import '../services/notify/notify';
+
+@include palette-vars();

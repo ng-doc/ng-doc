@@ -1,9 +1,16 @@
+<h1 ng-doc-text>Api List</h1>
 <div class="ng-doc-api-list-wrapper">
+	<div class="ng-doc-api-filter">
+		<ng-doc-input-wrapper>
+			<input ngDocInputString [(ngModel)]="searchTerm">
+		</ng-doc-input-wrapper>
+	</div>
 	<div class="ng-doc-api-list">
 		<div class="ng-doc-api-scope" *ngFor="let scope of api">
 			<h3 class="ng-doc-scope-title" ng-doc-text>{{scope.title}}</h3>
 			<ul class="ng-doc-scope-items" *ngIf="scope.items.length">
-				<li class="ng-doc-scope-item" *ngFor="let apiReference of scope.items">
+				<li class="ng-doc-scope-item"
+					*ngFor="let apiReference of scope.items | ngDocFilterByText: searchTerm: matcher">
 					<a class="ng-doc-scope-item-link" [routerLink]="[apiReference.route]">
 						<ng-doc-declaration-icon [kind]="apiReference.type"
 												 [ngDocTooltip]="apiReference.type">

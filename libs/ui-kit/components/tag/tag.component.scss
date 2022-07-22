@@ -1,4 +1,4 @@
-@import "../../styles/variables/palette";
+@import "../../styles/palette/palette";
 @import "../../styles/mixins";
 
 :host {
@@ -10,9 +10,9 @@
 	color: var(--ng-doc-tag-color);
 	--ng-doc-font-size: 14px;
 
-	@each $color in $palette-colors {
-		&[data-ng-doc-color="#{$color}"] {
-			--ng-doc-tag-background: var(--ng-doc-#{#{$color}}-4);
+	@each $color-name in $ng-doc-palette-colors {
+		&[data-ng-doc-color="#{$color-name}"] {
+			--ng-doc-tag-background: var(--ng-doc-#{#{$color-name}}-100);
 			--ng-doc-tag-color: var(--ng-doc-white);
 		}
 	}

@@ -1,0 +1,26 @@
+@import "color-palette";
+
+@function palette($palette-colors) {
+	$map: ();
+
+	@each $color-name, $color in $palette-colors {
+		$color-map: color-palette($color-name, $color);
+		$map: map-merge($map, (#{$color-name}: $color-map));
+	}
+
+	@return $map;
+}
+
+$ng-doc-palette-colors: (
+	"red": #f05c46,
+	"pink": #f046b7,
+	"teal": #269999,
+	"yellow": #fc0,
+	"blue": #38a1d6,
+	"orange": #ff941a,
+	"green": #79b821,
+	"gray": #7b7b7b,
+	"purple": #ac46f0,
+);
+
+$ng-doc-palette: palette($ng-doc-palette-colors);

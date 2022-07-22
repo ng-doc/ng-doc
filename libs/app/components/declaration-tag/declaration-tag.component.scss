@@ -3,7 +3,7 @@
 :host {
 	@each $name, $color in $declaration-colors {
 		&[data-ng-doc-kind="#{$name}"] {
-			--ng-doc-tag-background: var(--ng-doc-#{#{$color}}-4);
+			--ng-doc-tag-background: var(--ng-doc-#{#{$color}}-100);
 			--ng-doc-tag-color: var(--ng-doc-white);
 		}
 	}

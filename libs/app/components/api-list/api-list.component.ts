@@ -71,6 +71,8 @@ import {ngDocMakePure} from '@ng-doc/ui-kit/decorators';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgDocApiListComponent {
+	searchTerm: string = '';
+
 	constructor(
 		@Inject(NG_DOC_API_LIST_TOKEN)
 		public apiList: NgDocApiList[],
@@ -89,5 +91,9 @@ export class NgDocApiListComponent {
 						a.type.localeCompare(b.type) - a.name.localeCompare(b.name),
 				),
 			}));
+	}
+
+	matcher(item: NgDocApiListItem, searchTerm: string): boolean {
+		return item.name.toLowerCase().includes(searchTerm.toLowerCase());
 	}
 }

@@ -1,0 +1,26 @@
+@import "blend-modes";
+@import "hex-to-rgb";
+
+@function color-palette($color-name, $base-color) {
+	@return (
+		#{$color-name}-rgb: hex-to-rgb($base-color),
+		#{$color-name}-10: blend-normal(rgba(#fff, .9), blend-screen(rgba($base-color, .55), $base-color)),
+		#{$color-name}-20: blend-normal(rgba(#fff, .8), blend-screen(rgba($base-color, .5), $base-color)),
+		#{$color-name}-30: blend-normal(rgba(#fff, .7), blend-screen(rgba($base-color, .45), $base-color)),
+		#{$color-name}-40: blend-normal(rgba(#fff, .6), blend-screen(rgba($base-color, .4), $base-color)),
+		#{$color-name}-50: blend-normal(rgba(#fff, .5), blend-screen(rgba($base-color, .35), $base-color)),
+		#{$color-name}-60: blend-normal(rgba(#fff, .4), blend-screen(rgba($base-color, .3), $base-color)),
+		#{$color-name}-70: blend-normal(rgba(#fff, .3), blend-screen(rgba($base-color, .25), $base-color)),
+		#{$color-name}-80: blend-normal(rgba(#fff, .2), blend-screen(rgba($base-color, .2), $base-color)),
+		#{$color-name}-90: blend-normal(rgba(#fff, .1), blend-screen(rgba($base-color, .15), $base-color)),
+		#{$color-name}-100: $base-color,
+		#{$color-name}-110: blend-normal(rgba(#000, .025), blend-multiply(rgba($base-color, .1), $base-color)),
+		#{$color-name}-120: blend-normal(rgba(#000, .05), blend-multiply(rgba($base-color, .2), $base-color)),
+		#{$color-name}-130: blend-normal(rgba(#000, .085), blend-multiply(rgba($base-color, .3), $base-color)),
+		#{$color-name}-140: blend-normal(rgba(#000, .12), blend-multiply(rgba($base-color, .4), $base-color)),
+		#{$color-name}-150: blend-normal(rgba(#000, .155), blend-multiply(rgba($base-color, .5), $base-color)),
+		#{$color-name}-160: blend-normal(rgba(#000, .19), blend-multiply(rgba($base-color, .6), $base-color)),
+		#{$color-name}-170: blend-normal(rgba(#000, .22), blend-multiply(rgba($base-color, .7), $base-color)),
+		#{$color-name}-180: blend-normal(rgba(#000, .25), blend-multiply(rgba($base-color, .8), $base-color))
+	);
+}

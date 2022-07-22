@@ -1,5 +1,6 @@
 :host {
 	&[data-ng-doc-focused="true"] {
-		--ng-doc-floated-border: var(--ng-doc-floated-border-focus);
+		--ng-doc-floated-border-color: var(--ng-doc-primary);
+		--ng-doc-floated-border-shadow-color: rgba(var(--ng-doc-primary-rgb), .1);
 	}
 }

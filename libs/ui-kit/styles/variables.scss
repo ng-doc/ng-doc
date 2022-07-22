@@ -3,19 +3,20 @@
 	--ng-doc-transition: 0.1s;
 
 	--ng-doc-base-0: var(--ng-doc-white);
-	--ng-doc-base-1: var(--ng-doc-grey-0);
-	--ng-doc-base-2: var(--ng-doc-grey-1);
-	--ng-doc-base-3: var(--ng-doc-grey-2);
-	--ng-doc-base-4: var(--ng-doc-grey-3);
-	--ng-doc-base-5: var(--ng-doc-grey-4);
-	--ng-doc-base-6: var(--ng-doc-grey-5);
-	--ng-doc-base-7: var(--ng-doc-grey-6);
-	--ng-doc-base-8: var(--ng-doc-grey-7);
-	--ng-doc-base-9: var(--ng-doc-grey-8);
-	--ng-doc-base-10: var(--ng-doc-grey-9);
-	--ng-doc-base-11: var(--ng-doc-black);
+	--ng-doc-base-1: var(--ng-doc-gray-10);
+	--ng-doc-base-2: var(--ng-doc-gray-20);
+	--ng-doc-base-3: var(--ng-doc-gray-30);
+	--ng-doc-base-4: var(--ng-doc-gray-40);
+	--ng-doc-base-5: var(--ng-doc-gray-50);
+	--ng-doc-base-6: var(--ng-doc-gray-60);
+	--ng-doc-base-7: var(--ng-doc-gray-70);
+	--ng-doc-base-8: var(--ng-doc-gray-90);
+	--ng-doc-base-9: var(--ng-doc-gray-100);
+	--ng-doc-base-10: var(--ng-doc-gray-110);
+	--ng-doc-base-11: var(--ng-doc-gray-180);
 
-	--ng-doc-primary: var(--ng-doc-blue-5);
+	--ng-doc-primary: var(--ng-doc-blue-100);
+	--ng-doc-primary-rgb: var(--ng-doc-blue-rgb);
 	--ng-doc-primary-text: var(--ng-doc-white);
 
 	--ng-doc-background: var(--ng-doc-base-0);
@@ -31,7 +32,7 @@
 	--ng-doc-code-line-height: 18px;
 	--ng-doc-text: var(--ng-doc-base-11);
 	--ng-doc-text-inversed: var(--ng-doc-base-0);
-	--ng-doc-text-muted: var(--ng-doc-base-6);
+	--ng-doc-text-muted: var(--ng-doc-base-8);
 
 	// NgDocButtonIconComponent
 	--ng-doc-button-background: trasparent;
@@ -42,9 +43,10 @@
 	--ng-doc-button-active-color: var(--ng-doc-button-hover-color);
 
 	// NgDocFloatedBorderComponent
-	--ng-doc-floated-border: 2px solid transparent;
+	--ng-doc-floated-border-color: transparent;
+	--ng-doc-floated-border: 1px solid var(--ng-doc-floated-border-color);
+	--ng-doc-floated-border-shadow-color: 0 1px 2px rgba(16, 24, 40, 0.05), 0 0 0 4px transparent;
 	--ng-doc-floated-border-radius: var(--ng-doc-base-gutter);
-	--ng-doc-floated-border-focus: 2px solid var(--ng-doc-primary);
 
 	/* NgDocInputWrapperComponent */
 	--ng-doc-input-text-align: left;
