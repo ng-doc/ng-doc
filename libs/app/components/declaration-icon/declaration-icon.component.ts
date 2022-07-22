@@ -8,6 +8,6 @@ import {ChangeDetectionStrategy, Component, HostBinding, Input, OnInit} from '@a
 })
 export class NgDocDeclarationIconComponent {
 	@Input()
-	@HostBinding('attr.data-ng-doc-type')
-	type: string = '';
+	@HostBinding('attr.data-ng-doc-kind')
+	kind: string = '';
 }

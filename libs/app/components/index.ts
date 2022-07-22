@@ -2,6 +2,7 @@ export * from '@ng-doc/app/components/api-list';
 export * from '@ng-doc/app/components/api-page';
 export * from '@ng-doc/app/components/code';
 export * from '@ng-doc/app/components/declaration-icon';
+export * from '@ng-doc/app/components/declaration-tag';
 export * from '@ng-doc/app/components/demo';
 export * from '@ng-doc/app/components/demo-displayer';
 export * from '@ng-doc/app/components/header';

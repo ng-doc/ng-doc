@@ -5,6 +5,7 @@ import {Observable, Subscriber} from 'rxjs';
 import {NgDocRendererOptions} from '../interfaces';
 import {TEMPLATES_PATH} from './variables';
 import TemplateError = lib.TemplateError;
+import {humanizeDeclarationName} from '@ng-doc/core';
 
 export class NgDocRenderer<T extends object> {
 	constructor(private readonly context?: T) {}
@@ -33,6 +34,7 @@ export class NgDocRenderer<T extends object> {
 	private getEnvironment(options?: NgDocRendererOptions<T>): Environment {
 		return nunjucks.configure(options?.scope ?? TEMPLATES_PATH, {
 			autoescape: false,
-		});
+		})
+			.addFilter('humanizeDeclarationName', humanizeDeclarationName)
 	}
 }

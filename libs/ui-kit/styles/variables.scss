@@ -33,15 +33,6 @@
 	--ng-doc-text-inversed: var(--ng-doc-base-0);
 	--ng-doc-text-muted: var(--ng-doc-base-6);
 
-	// Declaration colors
-	--ng-doc-declaration-color: var(--ng-doc-white);
-	--ng-doc-class-background: var(--ng-doc-red-4);
-	--ng-doc-interface-background: var(--ng-doc-blue-4);
-	--ng-doc-enum-background: var(--ng-doc-orange-4);
-	--ng-doc-variable-background: var(--ng-doc-orange-4);
-	--ng-doc-function-background: var(--ng-doc-lime-4);
-	--ng-doc-type-background: var(--ng-doc-indigo-4);
-
 	// NgDocButtonIconComponent
 	--ng-doc-button-background: trasparent;
 	--ng-doc-button-color: var(--ng-doc-text);
@@ -66,4 +57,8 @@
 	--ng-doc-input-padding-left: calc(var(--ng-doc-base-gutter) * 2);
 	--ng-doc-input-padding-right: calc(var(--ng-doc-base-gutter) * 2);
 	--ng-doc-input-cursor: auto;
+
+	/* NgDocTagComponent */
+	--ng-doc-tag-background: var(--ng-doc-primary);
+	--ng-doc-tag-color: var(--ng-doc-primary-text);
 }

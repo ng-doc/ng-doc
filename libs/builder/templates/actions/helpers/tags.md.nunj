@@ -6,16 +6,8 @@
 <div id="ng-doc-template-tag" data-color="grape">{{ scope.name }}</div>
 {%- endif  %}
 
-{%- if Node.isClassDeclaration(declaration) %}
-<div id="ng-doc-template-tag" data-type="declaration">Class</div>
-{%- elif Node.isEnumDeclaration(declaration) %}
-<div id="ng-doc-template-tag" data-type="declaration">Enum</div>
-{%- elif Node.isInterfaceDeclaration(declaration) %}
-<div id="ng-doc-template-tag" data-type="declaration">Interface</div>
-{%- elif Node.isTypeAliasDeclaration(declaration) %}
-<div id="ng-doc-template-tag" data-type="declaration">Type</div>{
-{%- elif Node.isFunctionDeclaration(declaration) %}
-<div id="ng-doc-template-tag" data-type="declaration">Function</div>
+{%- if declaration %}
+<div id="ng-doc-declaration-template-tag">{{ declaration.getKindName() | humanizeDeclarationName }}</div>
 {%- endif %}
 {{ tagsForDecorators.render(Node, declaration) }}
 

@@ -5,7 +5,7 @@
 			<ul class="ng-doc-scope-items" *ngIf="scope.items.length">
 				<li class="ng-doc-scope-item" *ngFor="let apiReference of scope.items">
 					<a class="ng-doc-scope-item-link" [routerLink]="[apiReference.route]">
-						<ng-doc-declaration-icon [type]="apiReference.type"
+						<ng-doc-declaration-icon [kind]="apiReference.type"
 												 [ngDocTooltip]="apiReference.type">
 						</ng-doc-declaration-icon>
 						{{apiReference.name}}

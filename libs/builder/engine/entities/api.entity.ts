@@ -2,7 +2,7 @@ import {humanizeDeclarationName} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
-import {Project, SourceFile} from 'ts-morph';
+import {Node, Project, SourceFile} from 'ts-morph';
 
 import {isApiPageEntity, isApiScopeEntity, uniqueName} from '../../helpers';
 import {NgDocApi, NgDocApiList, NgDocApiScope, NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
