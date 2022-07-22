@@ -9,6 +9,10 @@ import {NgDocColor, NgDocPaletteColor} from '@ng-doc/ui-kit/types';
 })
 export class NgDocTagComponent {
 	@Input()
+	@HostBinding('attr.data-ng-doc-type')
+	type: 'default' | 'declaration' = 'default';
+
+	@Input()
 	@HostBinding('attr.data-ng-doc-color')
 	color: NgDocColor | NgDocPaletteColor = 'primary';
 }

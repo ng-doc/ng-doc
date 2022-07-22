@@ -4,13 +4,14 @@ import {forkJoin, Observable, of} from 'rxjs';
 import {concatMap, map, mapTo, switchMap, tap} from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
-import {createProject, emitBuildedOutput} from '../helpers';
-import {buildApiIndexes, buildGlobalIndexes} from '../helpers/build-global-indexes';
+import {createProject, emitBuildedOutput, isApiPageEntity} from '../helpers';
+import {buildGlobalIndexes} from '../helpers/build-global-indexes';
 import {getEntityConstructor} from '../helpers/get-entity-constructor';
-import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
+import {NgDocApiListItem, NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
 import {bufferDebounce} from '../operators';
 import {NgDocContextEnv, NgDocRoutingEnv} from '../templates-env';
 import {Constructable} from '../types';
+import {NgDocApiPageEntity} from './entities';
 import {NgDocEntity} from './entities/abstractions/entity';
 import {NgDocEntityStore} from './entity-store';
 import {NgDocRenderer} from './renderer';
@@ -87,7 +88,8 @@ export class NgDocBuilder {
 			this.buildContext(),
 		]).pipe(
 			switchMap((output: Array<NgDocBuiltOutput | NgDocBuiltOutput[]>) =>
-				this.buildIndexes().pipe(map((indexOutput: NgDocBuiltOutput[]) => [...output.flat(), ...indexOutput])),
+					this.buildIndexes()
+					.pipe(map((indexes: NgDocBuiltOutput) => [...output.flat(), indexes])),
 			),
 			tap((output: NgDocBuiltOutput[]) => emitBuildedOutput(...output)),
 			mapTo(void 0),
@@ -112,13 +114,10 @@ export class NgDocBuilder {
 			.pipe(map((output: string) => ({output, filePath: path.join(GENERATED_PATH, 'ng-doc.context.ts')})));
 	}
 
-	private buildIndexes(): Observable<NgDocBuiltOutput[]> {
-		return of([{
+	private buildIndexes(): Observable<NgDocBuiltOutput> {
+		return of({
 			output: buildGlobalIndexes(this.entities),
 			filePath: path.join(GENERATED_PATH, 'ng-doc.global-indexes.json')
-		}, {
-			output: buildApiIndexes(this.entities),
-			filePath: path.join(GENERATED_PATH, 'ng-doc.api-indexes.json')
-		}]);
+		});
 	}
 }

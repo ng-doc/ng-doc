@@ -21,6 +21,7 @@ export class NgDocTagProcessorDirective extends NgDocHtmlProcessor<NgDocTagCompo
 		return {
 			content: [[new Text(element.textContent ?? '')]],
 			inputs: {
+				type: element.getAttribute('data-type') as 'default' | 'declaration' ?? 'default',
 				color: element.getAttribute('data-color') as NgDocColor,
 			},
 		};

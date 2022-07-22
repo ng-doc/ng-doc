@@ -1,4 +1,7 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
+import {NG_DOC_API_LIST_TOKEN} from '@ng-doc/app/tokens';
+import {NgDocApiList, NgDocApiListItem} from '@ng-doc/builder';
+import {ngDocMakePure} from '@ng-doc/ui-kit/decorators';
 
 /**
  * Decorator that binds a DOM event to a host listener and supplies configuration metadata.
@@ -67,4 +70,24 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 	styleUrls: ['./api-list.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocApiListComponent {}
+export class NgDocApiListComponent {
+	constructor(
+		@Inject(NG_DOC_API_LIST_TOKEN)
+		public apiList: NgDocApiList[],
+	) {
+		console.log('apiList', apiList);
+	}
+
+	@ngDocMakePure
+	get api(): NgDocApiList[] {
+		return this.apiList
+			.sort((a: NgDocApiList, b: NgDocApiList) => a.title.localeCompare(b.title))
+			.map((api: NgDocApiList) => ({
+				...api,
+				items: api.items.sort(
+					(a: NgDocApiListItem, b: NgDocApiListItem) =>
+						a.type.localeCompare(b.type) - a.name.localeCompare(b.name),
+				),
+			}));
+	}
+}

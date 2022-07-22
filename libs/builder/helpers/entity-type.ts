@@ -1,5 +1,5 @@
 import {
-	NgDocApiPageEntity,
+	NgDocApiPageEntity, NgDocApiScopeEntity,
 	NgDocCategoryEntity,
 	NgDocDependenciesEntity,
 	NgDocPageEntity,
@@ -56,4 +56,12 @@ export function isNavigationEntity(page: InstanceType<Constructable>): page is N
  */
 export function isApiPageEntity(page: InstanceType<Constructable>): page is NgDocApiPageEntity {
 	return page instanceof NgDocApiPageEntity;
+}
+
+/**
+ *
+ * @param page
+ */
+export function isApiScopeEntity(page: InstanceType<Constructable>): page is NgDocApiScopeEntity {
+	return page instanceof NgDocApiScopeEntity;
 }

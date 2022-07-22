@@ -7,15 +7,15 @@
 {%- endif  %}
 
 {%- if Node.isClassDeclaration(declaration) %}
-<div id="ng-doc-template-tag" data-color="red">Class</div>
+<div id="ng-doc-template-tag" data-type="declaration">Class</div>
 {%- elif Node.isEnumDeclaration(declaration) %}
-<div id="ng-doc-template-tag" data-color="orange">Enum</div>
+<div id="ng-doc-template-tag" data-type="declaration">Enum</div>
 {%- elif Node.isInterfaceDeclaration(declaration) %}
-<div id="ng-doc-template-tag" data-color="blue">Interface</div>
+<div id="ng-doc-template-tag" data-type="declaration">Interface</div>
 {%- elif Node.isTypeAliasDeclaration(declaration) %}
-<div id="ng-doc-template-tag" data-color="indigo">Type</div>{
+<div id="ng-doc-template-tag" data-type="declaration">Type</div>{
 {%- elif Node.isFunctionDeclaration(declaration) %}
-<div id="ng-doc-template-tag" data-color="lime">Function</div>
+<div id="ng-doc-template-tag" data-type="declaration">Function</div>
 {%- endif %}
 {{ tagsForDecorators.render(Node, declaration) }}
 

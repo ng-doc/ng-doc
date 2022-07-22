@@ -30,14 +30,6 @@ export function buildGlobalIndexes(entityStore: NgDocEntityStore): string {
 /**
  *
  * @param entityStore
- */
-export function buildApiIndexes(entityStore: NgDocEntityStore): string {
-	return buildIndexes(entityStore, NgDocApiPageEntity);
-}
-
-/**
- *
- * @param entityStore
  * @param entityType
  */
 function buildIndexes<T extends NgDocRouteEntity<unknown>>(

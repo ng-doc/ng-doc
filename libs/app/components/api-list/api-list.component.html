@@ -1,1 +1,18 @@
-<p>api-list works!</p>
+<div class="ng-doc-api-list-wrapper">
+	<div class="ng-doc-api-list">
+		<div class="ng-doc-api-scope" *ngFor="let scope of api">
+			<h3 class="ng-doc-scope-title" ng-doc-text>{{scope.title}}</h3>
+			<ul class="ng-doc-scope-items" *ngIf="scope.items.length">
+				<li class="ng-doc-scope-item" *ngFor="let apiReference of scope.items">
+					<a class="ng-doc-scope-item-link" [routerLink]="[apiReference.route]">
+						<ng-doc-declaration-icon [type]="apiReference.type"
+												 [ngDocTooltip]="apiReference.type">
+						</ng-doc-declaration-icon>
+						{{apiReference.name}}
+					</a>
+
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,39 @@
+:host {
+	.ng-doc-api-list-wrapper {
+
+		.ng-doc-api-list {
+
+			.ng-doc-api-scope {
+				display: flex;
+				flex-direction: column;
+
+
+				.ng-doc-scope-items {
+					list-style: none;
+					margin: 0;
+					padding: 0;
+
+					.ng-doc-scope-item {
+						margin: var(--ng-doc-base-gutter) 0;
+						float: left;
+						width: 33%;
+						overflow: hidden;
+						min-width: 330px;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+
+						.ng-doc-scope-item-link {
+							display: flex;
+							align-items: center;
+							text-decoration: none;
+
+							ng-doc-declaration-icon {
+								margin-right: var(--ng-doc-base-gutter);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

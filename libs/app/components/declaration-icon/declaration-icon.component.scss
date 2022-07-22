@@ -1,0 +1,62 @@
+:host {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: calc(var(--ng-doc-base-gutter) * 2);
+	height: calc(var(--ng-doc-base-gutter) * 2);
+	border-radius: calc(var(--ng-doc-base-gutter) / 4);
+
+	&[data-ng-doc-type="Class"] {
+		background-color: var(--ng-doc-class-background);
+		color: var(--ng-doc-declaration-color);
+
+		&:before {
+			content: 'C';
+		}
+	}
+
+	&[data-ng-doc-type="Interface"] {
+		background-color: var(--ng-doc-interface-background);
+		color: var(--ng-doc-declaration-color);
+
+		&:before {
+			content: 'I';
+		}
+	}
+
+	&[data-ng-doc-type="Enum"] {
+		background-color: var(--ng-doc-enum-background);
+		color: var(--ng-doc-declaration-color);
+
+		&:before {
+			content: 'E';
+		}
+	}
+
+	&[data-ng-doc-type="Function"] {
+		background-color: var(--ng-doc-function-background);
+		color: var(--ng-doc-declaration-color);
+
+		&:before {
+			content: 'F';
+		}
+	}
+
+	&[data-ng-doc-type="Variable"] {
+		background-color: var(--ng-doc-variable-background);
+		color: var(--ng-doc-declaration-color);
+
+		&:before {
+			content: 'V';
+		}
+	}
+
+	&[data-ng-doc-type="Type Alias"] {
+		background-color: var(--ng-doc-type-background);
+		color: var(--ng-doc-declaration-color);
+
+		&:before {
+			content: 'T';
+		}
+	}
+}

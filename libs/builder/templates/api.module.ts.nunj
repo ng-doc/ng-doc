@@ -2,10 +2,15 @@
 import {ChangeDetectionStrategy, Component, NgModule} from "@angular/core";
 import {RouterModule} from "@angular/router";
 import {CommonModule} from '@angular/common';
-import {NgDocApiListModule} from '@ng-doc/app';
+import {NgDocApiListModule, NG_DOC_API_LIST_TOKEN} from '@ng-doc/app';
+import apiList from './ng-doc.api-list.json';
 
 @Component({
 	template: `<ng-doc-api-list></ng-doc-api-list>`,
+	providers: [{
+		provide: NG_DOC_API_LIST_TOKEN,
+		useValue: apiList
+	}],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class {{ api.componentName }} {

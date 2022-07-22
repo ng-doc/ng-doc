@@ -1,16 +1,18 @@
+import {humanizeDeclarationName} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
-import {uniqueName} from '../../helpers';
-import {NgDocApi, NgDocApiScope, NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
+import {isApiPageEntity, isApiScopeEntity, uniqueName} from '../../helpers';
+import {NgDocApi, NgDocApiList, NgDocApiScope, NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocApiModuleEnv} from '../../templates-env/api.module.env';
 import {NgDocEntityStore} from '../entity-store';
 import {NgDocRenderer} from '../renderer';
 import {GENERATED_MODULES_PATH} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
+import {NgDocApiPageEntity} from './api-page.entity';
 import {NgDocApiScopeEntity} from './api-scope.entity';
 import {NgDocCategoryEntity} from './category.entity';
 
@@ -91,7 +93,7 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 	}
 
 	protected override build(): Observable<NgDocBuiltOutput[]> {
-		return this.isReadyToBuild ? forkJoin([this.buildModule()]) : of([]);
+		return this.isReadyToBuild ? forkJoin([this.buildModule(), this.buildApiList()]) : of([]);
 	}
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
@@ -103,6 +105,26 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 				.pipe(map((output: string) => ({output, filePath: this.modulePath})));
 		}
 		return of();
+	}
+
+	private buildApiList(): Observable<NgDocBuiltOutput> {
+		const apiItems: NgDocApiList[] = this.children
+			.filter(isApiScopeEntity)
+			.map((scope: NgDocApiScopeEntity) => ({
+				title: scope.title,
+				items: scope.children
+					.filter(isApiPageEntity)
+					.map((page: NgDocApiPageEntity) => ({
+						route: path.join(scope.route, page.route),
+						type: humanizeDeclarationName(page.declaration?.getKindName() ?? ''),
+						name: page.declaration?.getName() ?? ''
+					}))
+			}))
+
+		return of({
+			output: JSON.stringify(apiItems),
+			filePath: path.join(this.folderPath, 'ng-doc.api-list.json')
+		});
 	}
 
 	private reloadScopes(): void {

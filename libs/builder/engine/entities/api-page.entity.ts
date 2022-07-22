@@ -22,7 +22,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	override moduleName: string = uniqueName(`NgDocGeneratedApiPageModule`);
 	componentName: string = uniqueName(`NgDocGeneratedApiPageComponent`);
 	protected override readyToBuild: boolean = true;
-	private declaration?: NgDocSupportedDeclarations;
+	declaration?: NgDocSupportedDeclarations;
 
 	constructor(
 		override readonly project: Project,

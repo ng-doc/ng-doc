@@ -5,7 +5,6 @@ import {Observable, Subscriber} from 'rxjs';
 import {NgDocRendererOptions} from '../interfaces';
 import {TEMPLATES_PATH} from './variables';
 import TemplateError = lib.TemplateError;
-import {Node} from 'ts-morph';
 
 export class NgDocRenderer<T extends object> {
 	constructor(private readonly context?: T) {}

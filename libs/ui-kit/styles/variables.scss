@@ -33,6 +33,15 @@
 	--ng-doc-text-inversed: var(--ng-doc-base-0);
 	--ng-doc-text-muted: var(--ng-doc-base-6);
 
+	// Declaration colors
+	--ng-doc-declaration-color: var(--ng-doc-white);
+	--ng-doc-class-background: var(--ng-doc-red-4);
+	--ng-doc-interface-background: var(--ng-doc-blue-4);
+	--ng-doc-enum-background: var(--ng-doc-orange-4);
+	--ng-doc-variable-background: var(--ng-doc-orange-4);
+	--ng-doc-function-background: var(--ng-doc-lime-4);
+	--ng-doc-type-background: var(--ng-doc-indigo-4);
+
 	// NgDocButtonIconComponent
 	--ng-doc-button-background: trasparent;
 	--ng-doc-button-color: var(--ng-doc-text);
