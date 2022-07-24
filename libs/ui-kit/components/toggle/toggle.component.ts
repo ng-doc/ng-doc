@@ -8,10 +8,9 @@ import {
 	OnInit,
 	Optional,
 	Renderer2,
-	Self,
 	ViewChild,
 } from '@angular/core';
-import {ControlValueAccessor, NgControl} from '@angular/forms';
+import {ControlValueAccessor} from '@angular/forms';
 import {NgDocPositionUtils} from '@ng-doc/ui-kit/utils';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {FL_CONTROL_HOST, FlCompareHost, FlControlHost, FlControlSelector} from 'flex-controls';
@@ -43,15 +42,11 @@ export class NgDocToggleComponent<T> extends FlControlSelector<T> implements OnI
 		@Inject(FlCompareHost)
 		@Optional()
 		protected override compareHost?: FlCompareHost<T | boolean | null>,
-		@Inject(NgControl)
-		@Self()
-		@Optional()
-		protected override ngControl?: NgControl,
 		@Inject(FL_CONTROL_HOST)
 		@Optional()
 		protected override host?: FlControlHost<T>,
 	) {
-		super(changeDetectorRef, compareHost, host, ngControl);
+		super(compareHost, host);
 	}
 
 	override ngOnInit(): void {

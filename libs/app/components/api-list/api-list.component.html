@@ -4,6 +4,14 @@
 		<ng-doc-input-wrapper>
 			<input ngDocInputString [(ngModel)]="searchTerm">
 		</ng-doc-input-wrapper>
+
+		<ng-doc-combobox>
+			<ng-container *ngDocData>
+				<ng-doc-option [value]="1">1</ng-doc-option>
+				<ng-doc-option [value]="2">2</ng-doc-option>
+				<ng-doc-option [value]="3">4</ng-doc-option>
+			</ng-container>
+		</ng-doc-combobox>
 	</div>
 	<div class="ng-doc-api-list">
 		<div class="ng-doc-api-scope" *ngFor="let scope of api">

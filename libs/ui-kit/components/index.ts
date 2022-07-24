@@ -1,5 +1,7 @@
 export * from '@ng-doc/ui-kit/components/button-icon';
 export * from '@ng-doc/ui-kit/components/clear-control';
+export * from '@ng-doc/ui-kit/components/combobox';
+export * from '@ng-doc/ui-kit/components/dropdown';
 export * from '@ng-doc/ui-kit/components/expander';
 export * from '@ng-doc/ui-kit/components/floated-border';
 export * from '@ng-doc/ui-kit/components/floated-content';
@@ -8,6 +10,7 @@ export * from '@ng-doc/ui-kit/components/icon';
 export * from '@ng-doc/ui-kit/components/input-wrapper';
 export * from '@ng-doc/ui-kit/components/label';
 export * from '@ng-doc/ui-kit/components/line';
+export * from '@ng-doc/ui-kit/components/option';
 export * from '@ng-doc/ui-kit/components/overlay-container';
 export * from '@ng-doc/ui-kit/components/overlay-pointer';
 export * from '@ng-doc/ui-kit/components/tab-group';

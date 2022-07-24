@@ -1,5 +1,4 @@
-import {ChangeDetectorRef, Directive, ElementRef, HostListener, Inject, Optional, Renderer2, Self} from '@angular/core';
-import {NgControl} from '@angular/forms';
+import {Directive, ElementRef, HostListener, Inject, Optional, Renderer2} from '@angular/core';
 import {isPresent} from '@ng-doc/core';
 import {NgDocBaseInput} from '@ng-doc/ui-kit/classes';
 import {toElement} from '@ng-doc/ui-kit/helpers';
@@ -20,16 +19,11 @@ export class NgDocInputStringDirective extends NgDocBaseInput<string> {
 	constructor(
 		public override elementRef: ElementRef<HTMLInputElement>,
 		protected override renderer: Renderer2,
-		protected override changeDetectorRef: ChangeDetectorRef,
-		@Inject(NgControl)
-		@Self()
-		@Optional()
-		protected override ngControl?: NgControl,
 		@Inject(FL_CONTROL_HOST)
 		@Optional()
 		protected override host?: FlControlHost<string>,
 	) {
-		super(elementRef, renderer, changeDetectorRef, ngControl, host);
+		super(elementRef, renderer, host);
 	}
 
 	@HostListener('blur')

@@ -1,0 +1,10 @@
+<ng-doc-combobox-host>
+	<ng-doc-input-wrapper ngDocFocusCatcher>
+		<input ngDocInputString [readonly]="readonly">
+		<ng-doc-dropdown [content]="dropdownContent">
+			<ng-template #dropdownContent>
+				<ng-container *ngTemplateOutlet="data"></ng-container>
+			</ng-template>
+		</ng-doc-dropdown>
+	</ng-doc-input-wrapper>
+</ng-doc-combobox-host>

@@ -1,3 +1,6 @@
+export * from '@ng-doc/ui-kit/directives/data';
+export * from '@ng-doc/ui-kit/directives/dropdown-handler';
+export * from '@ng-doc/ui-kit/directives/dropdown-origin';
 export * from '@ng-doc/ui-kit/directives/event-switcher';
 export * from '@ng-doc/ui-kit/directives/focus-catcher';
 export * from '@ng-doc/ui-kit/directives/focusable';

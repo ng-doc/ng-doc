@@ -1,4 +1,5 @@
 export * from '@ng-doc/ui-kit/animations';
+export * from '@ng-doc/ui-kit/cdk';
 export * from '@ng-doc/ui-kit/components';
 export * from '@ng-doc/ui-kit/constants';
 export * from '@ng-doc/ui-kit/directives';

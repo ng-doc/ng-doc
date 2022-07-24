@@ -57,7 +57,7 @@ export class NgDocInputWrapperComponent<T, B = unknown> implements AfterViewChec
 	input?: NgDocBaseInput<T>;
 
 	@ContentChild(NG_DOC_INPUT_CONTROL)
-	inputControl: FlControl<T> | null = null;
+	inputControl?: FlControl<T>;
 
 	@ViewChild(NgDocFocusCatcherDirective, {static: true})
 	focusCatcher?: NgDocFocusCatcherDirective;

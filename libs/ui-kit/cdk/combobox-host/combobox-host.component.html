@@ -1,0 +1,10 @@
+<label
+	class="ng-doc-dropdown-host"
+	ngDocFocusCatcher
+	[ngDocDropdownHandler]="dropdown"
+	(click)="clickEvent()"
+	(blurEvent)="dropdown?.close()"
+	#origin
+>
+	<ng-content></ng-content>
+</label>

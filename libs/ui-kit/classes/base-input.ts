@@ -1,17 +1,14 @@
+import {Directive, ElementRef, HostBinding, Renderer2} from '@angular/core';
 import {FlControl, FlControlHost} from 'flex-controls';
-import {ChangeDetectorRef, Directive, ElementRef, HostBinding, Renderer2} from '@angular/core';
-import {NgControl} from '@angular/forms';
 
 @Directive()
 export abstract class NgDocBaseInput<T> extends FlControl<T> {
 	protected constructor(
 		public elementRef: ElementRef<HTMLInputElement>,
 		protected renderer: Renderer2,
-		protected override changeDetectorRef: ChangeDetectorRef,
-		protected override ngControl?: NgControl,
 		protected override host?: FlControlHost<T>,
 	) {
-		super(changeDetectorRef, host, ngControl);
+		super(host);
 	}
 
 	@HostBinding('class')

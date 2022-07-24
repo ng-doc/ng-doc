@@ -16,7 +16,7 @@ export class NgDocClearControlComponent<T> extends FlControl<T> implements After
 		@Inject(FL_CONTROL_HOST) protected override host: FlControlHost<T>,
 		@Inject(NgDocInputHost) @Optional() protected inputHost?: NgDocInputHost<T>,
 	) {
-		super(changeDetectorRef, host);
+		super(host);
 	}
 
 	ngAfterContentInit(): void {

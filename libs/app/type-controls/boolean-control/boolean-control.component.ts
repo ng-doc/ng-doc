@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {NgDocTypeControl} from '@ng-doc/app/interfaces';
 import {FL_CONTROL_HOST, FlControlHost} from 'flex-controls';
 
@@ -10,7 +10,7 @@ import {FL_CONTROL_HOST, FlControlHost} from 'flex-controls';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgDocBooleanControlComponent extends FlControlHost<string | undefined> implements NgDocTypeControl {
-	constructor(protected override changeDetectorRef: ChangeDetectorRef) {
-		super(changeDetectorRef);
+	constructor() {
+		super();
 	}
 }

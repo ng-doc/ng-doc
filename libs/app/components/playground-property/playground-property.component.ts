@@ -16,7 +16,7 @@ import {FormControl} from '@angular/forms';
 import {getTokenForType, isPlaygroundProperty} from '@ng-doc/app/helpers';
 import {NgDocTypeControl} from '@ng-doc/app/interfaces';
 import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperty} from '@ng-doc/builder';
-import {Constructor} from '@ng-doc/ui-kit';
+import {Constructor} from '@ng-doc/core';
 
 @Component({
 	selector: 'ng-doc-playground-property',
