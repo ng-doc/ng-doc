@@ -8,7 +8,8 @@
 	width: 100%;
 	height: 100%;
 	background-color: var(--ng-doc-overlay-background);
-	border: 1px solid var(--ng-doc-overlay-border);
+	border: var(--ng-doc-overlay-border);
+	border-radius: var(--ng-doc-overlay-border-radius);
 }
 
 :host[data-ng-doc-overlay-position="top"] {

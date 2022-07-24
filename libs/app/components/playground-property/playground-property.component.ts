@@ -16,7 +16,7 @@ import {FormControl} from '@angular/forms';
 import {getTokenForType, isPlaygroundProperty} from '@ng-doc/app/helpers';
 import {NgDocTypeControl} from '@ng-doc/app/interfaces';
 import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperty} from '@ng-doc/builder';
-import {Constructor} from '@ng-doc/core';
+import {Constructor, extractValueOrThrow} from '@ng-doc/core';
 
 @Component({
 	selector: 'ng-doc-playground-property',
@@ -47,10 +47,15 @@ export class NgDocPlaygroundPropertyComponent<T = unknown> implements OnChanges 
 			this.propertyControl = undefined;
 
 			const type: string = isPlaygroundProperty(this.property) ? this.property.type : 'boolean';
-			const typeControl: Constructor<NgDocTypeControl> | undefined = this.getControlForType(type);
+			const typeControl: Constructor<NgDocTypeControl> | undefined =
+				this.getControlForType(type) ??
+				this.getControlForTypeAlias(isPlaygroundProperty(this.property) ? this.property.options : undefined);
 
 			if (typeControl && this.propertyOutlet) {
 				this.propertyControl = this.propertyOutlet.createComponent(typeControl);
+				this.propertyControl.instance.options = isPlaygroundProperty(this.property)
+					? this.property.options
+					: undefined;
 				this.propertyControl.instance.default = isPlaygroundProperty(this.property)
 					? this.property.default
 					: undefined;
@@ -81,5 +86,26 @@ export class NgDocPlaygroundPropertyComponent<T = unknown> implements OnChanges 
 		const token: InjectionToken<Constructor<NgDocTypeControl>> | undefined = getTokenForType<T>(type);
 
 		return token ? this.injector.get(token) : undefined;
+	}
+
+	private getControlForTypeAlias(options?: string[]): Constructor<NgDocTypeControl> | undefined {
+		if (options && options.length) {
+			let optionsIsValid: boolean = true;
+
+			try {
+				options.forEach((item: string) => extractValueOrThrow(item));
+			} catch {
+				optionsIsValid = false;
+			}
+
+			if (optionsIsValid) {
+				const token: InjectionToken<Constructor<NgDocTypeControl>> | undefined =
+					getTokenForType<T>('NgDocTypeAlias');
+
+				return token ? this.injector.get(token) : undefined;
+			}
+		}
+
+		return undefined;
 	}
 }

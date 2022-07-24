@@ -6,9 +6,17 @@ import {NgDocExtractedValue} from '@ng-doc/core/types';
  */
 export function extractValue(value: string): NgDocExtractedValue {
 	try {
-		return new Function(`return ${value}`)();
+		return extractValueOrThrow(value);
 	} catch {
 		return '';
 	}
 
+}
+
+/**
+ *
+ * @param value
+ */
+export function extractValueOrThrow(value: string): NgDocExtractedValue {
+	return new Function(`return ${value}`)();
 }

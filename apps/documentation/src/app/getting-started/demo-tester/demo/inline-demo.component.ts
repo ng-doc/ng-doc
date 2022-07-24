@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 
-type Alias = 'one' | 'two';
+type Alias = 'one' | 'two' | 34;
 
 /* NgDocCodeSnippetStart(Test1) */
 @Component({

@@ -6,11 +6,11 @@
 		</ng-doc-input-wrapper>
 
 		<ng-doc-combobox>
-			<ng-container *ngDocData>
+			<ng-doc-list *ngDocData>
 				<ng-doc-option [value]="1">1</ng-doc-option>
 				<ng-doc-option [value]="2">2</ng-doc-option>
 				<ng-doc-option [value]="3">4</ng-doc-option>
-			</ng-container>
+			</ng-doc-list>
 		</ng-doc-combobox>
 	</div>
 	<div class="ng-doc-api-list">
@@ -20,9 +20,9 @@
 				<li class="ng-doc-scope-item"
 					*ngFor="let apiReference of scope.items | ngDocFilterByText: searchTerm: matcher">
 					<a class="ng-doc-scope-item-link" [routerLink]="[apiReference.route]">
-						<ng-doc-declaration-icon [kind]="apiReference.type"
-												 [ngDocTooltip]="apiReference.type">
-						</ng-doc-declaration-icon>
+						<ng-doc-kind-icon [kind]="apiReference.type"
+										  [ngDocTooltip]="apiReference.type">
+						</ng-doc-kind-icon>
 						{{apiReference.name}}
 					</a>
 

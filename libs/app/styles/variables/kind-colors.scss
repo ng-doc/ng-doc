@@ -5,4 +5,13 @@ $declaration-colors: (
 	"Variable": "orange",
 	"Function": "green",
 	"Type Alias": "indigo"
-)
+);
+
+$type-colors: (
+	"string": "red",
+	"number": "blue",
+	"boolean": "orange",
+	"null": "orange",
+	"undefined": "orange",
+	"object": "orange",
+);

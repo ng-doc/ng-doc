@@ -11,7 +11,13 @@ import {
 	SkipSelf,
 	ViewChild,
 } from '@angular/core';
-import {NgDocBaseInput, NgDocDisplayValueHost, NgDocInputHost, NgDocOverlayHost} from '@ng-doc/ui-kit/classes';
+import {
+	NgDocBaseInput,
+	NgDocDisplayValueHost,
+	NgDocInputHost,
+	NgDocListHost,
+	NgDocOverlayHost,
+} from '@ng-doc/ui-kit/classes';
 import {NgDocDropdownComponent} from '@ng-doc/ui-kit/components/dropdown';
 import {ngDocZoneOptimize} from '@ng-doc/ui-kit/observables';
 import {NgDocDisplayValueFunction, NgDocOverlayPosition} from '@ng-doc/ui-kit/types';
@@ -51,13 +57,23 @@ import {filter} from 'rxjs/operators';
 			provide: NgDocDisplayValueHost,
 			useExisting: NgDocComboboxHostComponent,
 		},
+		{
+			provide: NgDocListHost,
+			useExisting: NgDocComboboxHostComponent,
+		},
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @UntilDestroy()
 export class NgDocComboboxHostComponent<T>
 	extends FlControlHost<T>
-	implements NgDocOverlayHost, NgDocInputHost<string>, FlCompareHost<T>, NgDocDisplayValueHost<T>, AfterContentInit
+	implements
+		NgDocOverlayHost,
+		NgDocInputHost<string>,
+		FlCompareHost<T>,
+		NgDocDisplayValueHost<T>,
+		NgDocListHost,
+		AfterContentInit
 {
 	@Input()
 	compareFn: FlCompareFunction<T> = FL_DEFAULT_COMPARE;
@@ -106,6 +122,10 @@ export class NgDocComboboxHostComponent<T>
 		if (value) {
 			this.dropdown?.close();
 		}
+	}
+
+	get listHostOrigin(): ElementRef<HTMLElement> | undefined {
+		return this.inputControl?.elementRef;
 	}
 
 	get searchText(): string {

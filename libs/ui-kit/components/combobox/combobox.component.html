@@ -1,6 +1,12 @@
 <ng-doc-combobox-host>
-	<ng-doc-input-wrapper ngDocFocusCatcher>
+	<ng-doc-input-wrapper ngDocFocusCatcher
+						  [rightContent]="rightContent"
+						  [blurContent]="hasValue ? valueContent : null"
+						  [blurContext]="model">
 		<input ngDocInputString [readonly]="readonly">
+		<ng-template #rightContent>
+			<ng-doc-clear-control></ng-doc-clear-control>
+		</ng-template>
 		<ng-doc-dropdown [content]="dropdownContent">
 			<ng-template #dropdownContent>
 				<ng-container *ngTemplateOutlet="data"></ng-container>
