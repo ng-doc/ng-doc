@@ -2,7 +2,7 @@
 
 .ng-doc-tooltip {
 	--ng-doc-overlay-background: var(--ng-doc-base-9);
-	--ng-doc-overlay-border: 0px solid var(--ng-doc-base-9);
+	--ng-doc-overlay-border: var(--ng-doc-base-9);
 
 	.ng-doc-overlay-content {
 		@include ng-doc-font();
