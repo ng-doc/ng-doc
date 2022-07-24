@@ -1,4 +1,5 @@
 import {NgModule} from '@angular/core';
+
 import {NgDocExtractValuePipe} from './extract-value.pipe';
 
 @NgModule({
