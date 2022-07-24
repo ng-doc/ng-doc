@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 
-type Alias = 'one' | 'two' | 34;
+type Alias = 'one' | 'two' | 34 | true;
 
 /* NgDocCodeSnippetStart(Test1) */
 @Component({
@@ -30,7 +30,7 @@ export class InlineDemoComponent implements OnInit {
 	alias: 'one' | 'two' = 'one';
 
 	@Input()
-	alias2: Alias = 'one';
+	alias2: Alias = true;
 
 	@Input()
 	momo: boolean = true;

@@ -19,7 +19,11 @@
 							  positions="left-center"
 							  ngDocTextLeft>
 			</ng-doc-kind-icon>
-			{{value}}
+			<div>{{value}}</div>
+			<span ng-doc-text
+				  color="muted"
+				  size="small"
+				  *ngIf="value === (default | ngDocExtractValue)" ngDocTextRight>[default]</span>
 		</div>
 	</ng-template>
 </ng-doc-combobox>

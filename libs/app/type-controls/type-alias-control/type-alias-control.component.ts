@@ -14,6 +14,7 @@ import {FL_CONTROL_HOST, FlControlHost} from 'flex-controls';
 	styleUrls: ['./type-alias-control.component.scss'],
 })
 export class NgDocTypeAliasControlComponent<T> extends FlControlHost<T> implements NgDocTypeControl {
+	default?: string;
 	options?: string[];
 
 	constructor() {

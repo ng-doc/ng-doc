@@ -20,6 +20,11 @@
 			ng-doc-playground-property:not(:last-child) {
 				margin-bottom: var(--ng-doc-base-gutter);
 			}
+
+			.ng-doc-playground-controls {
+				display: flex;
+				justify-content: flex-end;
+			}
 		}
 
 		.ng-doc-header {
