@@ -9,7 +9,7 @@ export function formatHtml(html: string): string {
 	return prettier.format(html, {
 		parser: 'html',
 		plugins: [htmlParser],
-		printWidth: 70,
+		printWidth: 60,
 		tabWidth: 4,
 	});
 }

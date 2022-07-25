@@ -3,17 +3,14 @@ import {NgDocListHost} from '@ng-doc/ui-kit/classes';
 import {NgDocDataDirective} from '@ng-doc/ui-kit/directives/data';
 import {NgDocContextWithImplicit} from '@ng-doc/ui-kit/interfaces';
 import {NgDocContent} from '@ng-doc/ui-kit/types';
-import {FL_CONTROL_HOST, FlControlHost} from 'flex-controls';
+import {FlControlHost, provideControlHost} from 'flex-controls';
 
 @Component({
 	selector: 'ng-doc-combobox',
 	templateUrl: './combobox.component.html',
 	styleUrls: ['./combobox.component.scss'],
 	providers: [
-		{
-			provide: FL_CONTROL_HOST,
-			useExisting: NgDocComboboxComponent,
-		},
+		provideControlHost(NgDocComboboxComponent),
 		{
 			provide: NgDocListHost,
 			useExisting: NgDocComboboxComponent,
@@ -24,6 +21,15 @@ import {FL_CONTROL_HOST, FlControlHost} from 'flex-controls';
 export class NgDocComboboxComponent<T> extends FlControlHost<T> implements NgDocListHost {
 	@Input()
 	readonly: boolean = false;
+
+	@Input()
+	placeholder: string = 'Chose the value';
+
+	@Input()
+	clearButton: boolean = true;
+
+	@Input()
+	rightContent: NgDocContent = '';
 
 	@Input()
 	valueContent: NgDocContent<NgDocContextWithImplicit<T>> = '';

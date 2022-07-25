@@ -12,7 +12,7 @@ import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties} from '@ng-doc/
 export class NgDocPlaygroundPropertiesComponent<
 	P extends NgDocPlaygroundProperties,
 	C extends Record<string, NgDocPlaygroundDynamicContent>,
-	> {
+> {
 	@Input()
 	form?: FormGroup;
 

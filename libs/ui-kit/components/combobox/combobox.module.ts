@@ -8,6 +8,7 @@ import {NgDocInputWrapperModule} from '@ng-doc/ui-kit/components/input-wrapper';
 import {NgDocFocusCatcherModule} from '@ng-doc/ui-kit/directives';
 import {NgDocDropdownOriginModule} from '@ng-doc/ui-kit/directives/dropdown-origin';
 import {NgDocInputStringModule} from '@ng-doc/ui-kit/directives/input-string';
+import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 
 import {NgDocComboboxComponent} from './combobox.component';
 
@@ -23,6 +24,7 @@ import {NgDocComboboxComponent} from './combobox.component';
 		NgDocComboboxHostModule,
 		NgDocClearControlModule,
 		NgDocIconModule,
+		PolymorpheusModule,
 	],
 	exports: [NgDocComboboxComponent],
 })

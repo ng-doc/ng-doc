@@ -5,8 +5,11 @@ import {NgDocKindIconModule} from '@ng-doc/app/components';
 import {provideTypeControl} from '@ng-doc/app/helpers';
 import {NgDocExtractValueModule} from '@ng-doc/app/pipes/extract-value';
 import {
+	NgDocButtonIconModule,
 	NgDocComboboxModule,
 	NgDocDataModule,
+	NgDocFocusableModule,
+	NgDocIconModule,
 	NgDocListModule,
 	NgDocOptionModule,
 	NgDocTextModule,
@@ -28,6 +31,9 @@ import {NgDocTypeAliasControlComponent} from './type-alias-control.component';
 		NgDocTextModule,
 		NgDocKindIconModule,
 		NgDocTooltipModule,
+		NgDocButtonIconModule,
+		NgDocFocusableModule,
+		NgDocIconModule,
 	],
 	providers: [provideTypeControl<string>('NgDocTypeAlias', NgDocTypeAliasControlComponent)],
 	exports: [NgDocTypeAliasControlComponent],

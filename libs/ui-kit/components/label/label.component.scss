@@ -17,6 +17,7 @@
 	display: flex;
 	flex-direction: row;
 	pointer-events: auto;
+	margin-bottom: calc(var(--ng-doc-base-gutter) / 2);
 }
 
 .ng-doc-content {

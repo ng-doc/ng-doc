@@ -5,6 +5,17 @@
 
 	.ng-doc-api-list-wrapper {
 
+		.ng-doc-api-filter {
+			display: flex;
+
+			.ng-doc-api-filter-item {
+
+				&:not(:last-child) {
+					margin-right: calc(var(--ng-doc-base-gutter) * 2);
+				}
+			}
+		}
+
 		.ng-doc-api-list {
 
 			.ng-doc-api-scope {

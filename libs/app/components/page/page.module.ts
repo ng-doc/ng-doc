@@ -2,7 +2,8 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {NgDocMarkdownModule} from '@ng-doc/app/directives/markdown';
 import {
-	NgDocCodeProcessorModule, NgDocDeclarationTagProcessorModule,
+	NgDocCodeProcessorModule,
+	NgDocDeclarationTagProcessorModule,
 	NgDocDemoProcessorModule,
 	NgDocPlaygroundProcessorModule,
 	NgDocTagProcessorModule,

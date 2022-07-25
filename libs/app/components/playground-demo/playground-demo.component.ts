@@ -89,10 +89,7 @@ export class NgDocPlaygroundDemoComponent<
 
 			this.form?.valueChanges
 				.pipe(takeUntil(this.unsubscribe$), untilDestroyed(this))
-				.subscribe((data: NgDocPlaygroundFormData<P, C>) => {
-					console.log('form was changed', data);
-					this.updateDemo(data);
-				});
+				.subscribe((data: NgDocPlaygroundFormData<P, C>) => this.updateDemo(data));
 		}
 	}
 

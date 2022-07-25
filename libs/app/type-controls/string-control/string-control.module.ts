@@ -2,13 +2,33 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {provideTypeControl} from '@ng-doc/app/helpers';
-import {NgDocClearControlModule, NgDocInputStringModule, NgDocInputWrapperModule} from '@ng-doc/ui-kit';
+import {NgDocExtractValueModule} from '@ng-doc/app/pipes';
+import {
+	NgDocButtonIconModule,
+	NgDocClearControlModule,
+	NgDocFocusableModule,
+	NgDocIconModule,
+	NgDocInputStringModule,
+	NgDocInputWrapperModule,
+} from '@ng-doc/ui-kit';
+import {FlControlSilencerModule} from 'flex-controls';
 
 import {NgDocStringControlComponent} from './string-control.component';
 
 @NgModule({
 	declarations: [NgDocStringControlComponent],
-	imports: [CommonModule, NgDocInputWrapperModule, NgDocInputStringModule, NgDocClearControlModule, FormsModule],
+	imports: [
+		CommonModule,
+		NgDocInputWrapperModule,
+		NgDocInputStringModule,
+		NgDocClearControlModule,
+		FormsModule,
+		FlControlSilencerModule,
+		NgDocExtractValueModule,
+		NgDocIconModule,
+		NgDocButtonIconModule,
+		NgDocFocusableModule,
+	],
 	providers: [provideTypeControl<string>('string', NgDocStringControlComponent)],
 	exports: [NgDocStringControlComponent],
 })

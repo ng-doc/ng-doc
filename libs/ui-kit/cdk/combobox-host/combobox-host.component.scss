@@ -4,6 +4,8 @@
 	width: 100%;
 }
 
-.ng-doc-dropdown-host {
+::ng-deep .ng-doc-combobox-host-overlay .ng-doc-overlay-content {
 	display: block;
+	max-height: 300px;
+	overflow: auto;
 }

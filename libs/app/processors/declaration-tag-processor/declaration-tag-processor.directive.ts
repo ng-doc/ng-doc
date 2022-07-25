@@ -4,7 +4,6 @@ import {NgDocMarkdownDirective} from '@ng-doc/app/directives/markdown';
 import {NgDocProcessorOptions} from '@ng-doc/app/interfaces';
 import {NgDocHtmlProcessor} from '@ng-doc/app/processors/html-processor';
 import {NG_DOC_DECLARATION_TAG_TEMPLATE_ID} from '@ng-doc/builder/naming';
-import {NgDocColor, NgDocTagComponent} from '@ng-doc/ui-kit';
 
 @Directive({
 	selector: '[ngDocDeclarationTagProcessor]',

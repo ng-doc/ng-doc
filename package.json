@@ -32,7 +32,7 @@
 		"@tinkoff/ng-polymorpheus": "^4.0.0",
 		"@types/svgo": "^2.6.3",
 		"chokidar": "^3.5.3",
-		"flex-controls": "^1.0.3",
+		"flex-controls": "^1.1.0",
 		"highlight.js": "^11.5.1",
 		"lunr": "^2.3.9",
 		"marked": "^4.0.18",

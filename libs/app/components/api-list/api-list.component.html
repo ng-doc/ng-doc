@@ -1,24 +1,41 @@
 <h1 ng-doc-text>Api List</h1>
-<div class="ng-doc-api-list-wrapper">
-	<div class="ng-doc-api-filter">
-		<ng-doc-input-wrapper>
-			<input ngDocInputString [(ngModel)]="searchTerm">
-		</ng-doc-input-wrapper>
+<div class="ng-doc-api-list-wrapper" *ngIf="api$ | async as api">
+	<form class="ng-doc-api-filter" [formGroup]="formGroup">
+		<label class="ng-doc-api-filter-item" ng-doc-label="Filter">
+			<ng-doc-input-wrapper [leftContent]="leftContent">
+				<ng-template #leftContent>
+					<ng-doc-icon icon="search"></ng-doc-icon>
+				</ng-template>
+				<input ngDocInputString [formControl]="formGroup.controls.filter">
+			</ng-doc-input-wrapper>
+		</label>
 
-		<ng-doc-combobox>
-			<ng-doc-list *ngDocData>
-				<ng-doc-option [value]="1">1</ng-doc-option>
-				<ng-doc-option [value]="2">2</ng-doc-option>
-				<ng-doc-option [value]="3">4</ng-doc-option>
-			</ng-doc-list>
-		</ng-doc-combobox>
-	</div>
+		<label class="ng-doc-api-filter-item" ng-doc-label="Type">
+			<ng-doc-combobox [formControl]="formGroup.controls.type" [valueContent]="comboboxItem" [readonly]="true">
+				<ng-doc-list *ngDocData>
+					<ng-doc-option *ngFor="let type of types" [value]="type">
+						<ng-container *ngTemplateOutlet="comboboxItem; context: {$implicit: type}"></ng-container>
+					</ng-doc-option>
+				</ng-doc-list>
+				<ng-template let-value #comboboxItem>
+					<div ng-doc-text>
+						<ng-doc-kind-icon [kind]="value"
+										  [ngDocTooltip]="value"
+										  [positions]="['left-center', 'right-center']"
+										  ngDocTextLeft>
+						</ng-doc-kind-icon>
+						{{value}}
+					</div>
+				</ng-template>
+			</ng-doc-combobox>
+		</label>
+	</form>
 	<div class="ng-doc-api-list">
 		<div class="ng-doc-api-scope" *ngFor="let scope of api">
 			<h3 class="ng-doc-scope-title" ng-doc-text>{{scope.title}}</h3>
 			<ul class="ng-doc-scope-items" *ngIf="scope.items.length">
 				<li class="ng-doc-scope-item"
-					*ngFor="let apiReference of scope.items | ngDocFilterByText: searchTerm: matcher">
+					*ngFor="let apiReference of scope.items">
 					<a class="ng-doc-scope-item-link" [routerLink]="[apiReference.route]">
 						<ng-doc-kind-icon [kind]="apiReference.type"
 										  [ngDocTooltip]="apiReference.type">

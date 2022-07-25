@@ -1,14 +1,15 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {NgDocKindIconModule} from '@ng-doc/app/components/kind-icon';
-import {NgDocFilterByTextModule} from '@ng-doc/app/pipes';
 import {
 	NgDocComboboxModule,
 	NgDocDataModule,
+	NgDocIconModule,
 	NgDocInputStringModule,
 	NgDocInputWrapperModule,
+	NgDocLabelModule,
 	NgDocListModule,
 	NgDocOptionModule,
 	NgDocTextModule,
@@ -28,11 +29,13 @@ import {NgDocApiListComponent} from './api-list.component';
 		NgDocInputWrapperModule,
 		NgDocInputStringModule,
 		FormsModule,
-		NgDocFilterByTextModule,
 		NgDocComboboxModule,
 		NgDocOptionModule,
 		NgDocDataModule,
 		NgDocListModule,
+		NgDocLabelModule,
+		ReactiveFormsModule,
+		NgDocIconModule,
 	],
 	exports: [NgDocApiListComponent],
 })

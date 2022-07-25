@@ -1,13 +1,15 @@
-<ng-doc-combobox [ngModel]="model" [readonly]="true" [valueContent]="valueTemplate"
-				 (ngModelChange)="updateModel($event)">
+<ng-doc-combobox [ngModel]="model"
+				 [readonly]="true"
+				 [valueContent]="valueTemplate"
+				 [clearButton]="false"
+				 [rightContent]="rightContent"
+				 (ngModelChange)="changeModel($event)">
 	<ng-doc-list *ngDocData>
 		<ng-container *ngFor="let option of options">
 			<ng-container *ngIf="option | ngDocExtractValue as value">
 				<ng-doc-option [value]="value">
 					<ng-container *ngTemplateOutlet="valueTemplate; context: {$implicit: value}"></ng-container>
-
 				</ng-doc-option>
-
 			</ng-container>
 		</ng-container>
 	</ng-doc-list>
@@ -25,5 +27,18 @@
 				  size="small"
 				  *ngIf="value === (default | ngDocExtractValue)" ngDocTextRight>[default]</span>
 		</div>
+	</ng-template>
+	<ng-template #rightContent>
+		<button
+			ng-doc-button-icon
+			size="large"
+			[ngDocFocusable]="false"
+			[disabled]="disabled"
+			(click)="updateModel(defaultValue)"
+			(focusout)="onTouched()"
+			*ngIf="model && model !== defaultValue"
+		>
+			<ng-doc-icon icon="x"></ng-doc-icon>
+		</button>
 	</ng-template>
 </ng-doc-combobox>

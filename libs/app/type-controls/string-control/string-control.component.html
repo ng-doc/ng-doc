@@ -1,6 +1,16 @@
-<ng-doc-input-wrapper [rightContent]="rightContent">
-	<input ngDocInputString>
+<ng-doc-input-wrapper [rightContent]="rightContent" flControlSilencer>
+	<input ngDocInputString [ngModel]="model" (ngModelChange)="changeModel($event)">
 	<ng-template #rightContent>
-		<ng-doc-clear-control></ng-doc-clear-control>
+		<button
+			ng-doc-button-icon
+			size="large"
+			[ngDocFocusable]="false"
+			[disabled]="disabled"
+			(click)="updateModel(defaultValue)"
+			(focusout)="onTouched()"
+			*ngIf="model && model !== defaultValue"
+		>
+			<ng-doc-icon icon="x"></ng-doc-icon>
+		</button>
 	</ng-template>
 </ng-doc-input-wrapper>

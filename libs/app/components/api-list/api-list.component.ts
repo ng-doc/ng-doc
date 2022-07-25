@@ -1,7 +1,18 @@
 import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {NG_DOC_API_LIST_TOKEN} from '@ng-doc/app/tokens';
+import {NgDocTypedForm} from '@ng-doc/app/types';
 import {NgDocApiList, NgDocApiListItem} from '@ng-doc/builder';
+import {asArray} from '@ng-doc/core';
 import {ngDocMakePure} from '@ng-doc/ui-kit/decorators';
+import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
+import {Observable} from 'rxjs';
+import {debounceTime, map, startWith} from 'rxjs/operators';
+
+interface ApiFilterForm {
+	filter: string | null;
+	type: string | null;
+}
 
 /**
  * Decorator that binds a DOM event to a host listener and supplies configuration metadata.
@@ -70,30 +81,55 @@ import {ngDocMakePure} from '@ng-doc/ui-kit/decorators';
 	styleUrls: ['./api-list.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
+@UntilDestroy()
 export class NgDocApiListComponent {
-	searchTerm: string = '';
+	formGroup: FormGroup<NgDocTypedForm<ApiFilterForm>>;
+	api$: Observable<NgDocApiList[]>;
 
 	constructor(
 		@Inject(NG_DOC_API_LIST_TOKEN)
-		public apiList: NgDocApiList[],
+		private readonly apiList: NgDocApiList[],
+		private readonly formBuilder: FormBuilder,
 	) {
 		console.log('apiList', apiList);
+
+		this.formGroup = this.formBuilder.group({
+			filter: [''],
+			type: [''],
+		});
+
+		this.api$ = this.formGroup.valueChanges.pipe(
+			debounceTime(200),
+			startWith(null),
+			map(() => this.formGroup.value),
+			map((form: Partial<ApiFilterForm>) =>
+				this.apiList
+					.map((api: NgDocApiList) => ({
+						...api,
+						items: api.items
+							.filter(
+								(item: NgDocApiListItem) =>
+									item.name.toLowerCase().includes(form?.filter?.toLowerCase() ?? '') &&
+									(!form?.type || item.type === form?.type),
+							)
+							.sort(
+								(a: NgDocApiListItem, b: NgDocApiListItem) =>
+									a.type.localeCompare(b.type) - a.name.localeCompare(b.name),
+							),
+					}))
+					.filter((api: NgDocApiList) => api.items.length)
+					.sort((a: NgDocApiList, b: NgDocApiList) => a.title.localeCompare(b.title)),
+			),
+			untilDestroyed(this),
+		);
 	}
 
 	@ngDocMakePure
-	get api(): NgDocApiList[] {
-		return this.apiList
-			.sort((a: NgDocApiList, b: NgDocApiList) => a.title.localeCompare(b.title))
-			.map((api: NgDocApiList) => ({
-				...api,
-				items: api.items.sort(
-					(a: NgDocApiListItem, b: NgDocApiListItem) =>
-						a.type.localeCompare(b.type) - a.name.localeCompare(b.name),
-				),
-			}));
-	}
-
-	matcher(item: NgDocApiListItem, searchTerm: string): boolean {
-		return item.name.toLowerCase().includes(searchTerm.toLowerCase());
+	get types(): string[] {
+		return asArray(
+			new Set(
+				this.apiList.flatMap((api: NgDocApiList) => api.items).flatMap((item: NgDocApiListItem) => item.type),
+			),
+		);
 	}
 }

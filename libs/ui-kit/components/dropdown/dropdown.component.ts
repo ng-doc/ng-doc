@@ -55,7 +55,7 @@ export class NgDocDropdownComponent implements OnChanges, OnDestroy {
 	withArrow: boolean = false;
 
 	@Input()
-	borderOffset: number = 0;
+	borderOffset: number = -8;
 
 	@Input()
 	panelClass: string | string[] = [];

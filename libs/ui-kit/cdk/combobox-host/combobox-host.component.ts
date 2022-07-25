@@ -29,6 +29,7 @@ import {
 	FlCompareHost,
 	FlControlHost,
 	FlControlSelector,
+	provideControlHost,
 } from 'flex-controls';
 import {filter} from 'rxjs/operators';
 
@@ -37,10 +38,7 @@ import {filter} from 'rxjs/operators';
 	templateUrl: './combobox-host.component.html',
 	styleUrls: ['./combobox-host.component.scss'],
 	providers: [
-		{
-			provide: FL_CONTROL_HOST,
-			useExisting: NgDocComboboxHostComponent,
-		},
+		provideControlHost(NgDocComboboxHostComponent),
 		{
 			provide: NgDocOverlayHost,
 			useExisting: NgDocComboboxHostComponent,

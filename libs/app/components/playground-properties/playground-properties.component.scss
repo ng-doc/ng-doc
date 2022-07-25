@@ -18,7 +18,7 @@
 			border-radius: var(--ng-doc-base-gutter);
 
 			ng-doc-playground-property:not(:last-child) {
-				margin-bottom: var(--ng-doc-base-gutter);
+				margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
 			}
 
 			.ng-doc-playground-controls {
@@ -29,7 +29,7 @@
 
 		.ng-doc-header {
 			margin-top: 0;
-			margin-bottom: var(--ng-doc-base-gutter);
+			margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
 		}
 	}
 }

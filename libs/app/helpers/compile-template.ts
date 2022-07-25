@@ -70,7 +70,7 @@ function extractTagFromSelector(selector: string): string {
 function extractAttributesFromSelector(selector: string): string {
 	const match: RegExpMatchArray | null = /^([^[\]]*)(\[.*])?$/gm.exec(selector);
 
-	return (match && match[2]) ?? '';
+	return (match && match[2]?.replace(/^\[(.*)\]$/gm, '$1')) ?? '';
 }
 
 /**
@@ -82,16 +82,18 @@ function convertPropertiesToInputs<P extends NgDocPlaygroundProperties>(
 	properties: P,
 	data: NgDocPlaygroundFormData<P>,
 ): string {
-	return objectKeys(properties).reduce((inputs: string, key: keyof P) => {
-		const property: NgDocPlaygroundProperty = properties[key];
-		const propertyValue: unknown = data.properties[key];
-		const valueIsString: boolean = typeof propertyValue === 'string';
-		const inputValue: string = valueIsString ? `'${propertyValue}'` : `${propertyValue}`;
+	return objectKeys(properties)
+		.reduce((inputs: string, key: keyof P) => {
+			const property: NgDocPlaygroundProperty = properties[key];
+			const propertyValue: unknown = data.properties[key];
+			const valueIsString: boolean = typeof propertyValue === 'string';
+			const inputValue: string = valueIsString ? `'${propertyValue}'` : `${propertyValue}`;
 
-		if ((property.default ?? '') !== inputValue) {
-			inputs += `[${String(key)}]="${inputValue}" `;
-		}
+			if ((property.default ?? '') !== inputValue) {
+				inputs += `[${String(key)}]="${inputValue}" `;
+			}
 
-		return inputs;
-	}, '').trim();
+			return inputs;
+		}, '')
+		.trim();
 }
