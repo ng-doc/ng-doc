@@ -3,12 +3,11 @@
 .ng-doc-tooltip {
 	--ng-doc-overlay-background: var(--ng-doc-base-9);
 	--ng-doc-overlay-border: var(--ng-doc-base-9);
-	--ng-doc-overlay-border-radius: var(--ng-doc-base-gutter);
+	--ng-doc-overlay-border-radius: calc(var(--ng-doc-base-gutter) / 2);
 
 	.ng-doc-overlay-content {
 		@include ng-doc-font();
 		padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
-		border-radius: calc(var(--ng-doc-base-gutter) / 2);
 		max-width: 576px;
 		max-height: 50vh;
 		white-space: pre-line;

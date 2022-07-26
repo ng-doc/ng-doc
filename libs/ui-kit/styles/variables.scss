@@ -64,3 +64,18 @@
 	--ng-doc-tag-background: var(--ng-doc-primary);
 	--ng-doc-tag-color: var(--ng-doc-primary-text);
 }
+
+body.dark {
+	--ng-doc-base-0: var(--ng-doc-gray-180);
+	--ng-doc-base-1: var(--ng-doc-gray-170);
+	--ng-doc-base-2: var(--ng-doc-gray-160);
+	--ng-doc-base-3: var(--ng-doc-gray-150);
+	--ng-doc-base-4: var(--ng-doc-gray-150);
+	--ng-doc-base-5: var(--ng-doc-gray-140);
+	--ng-doc-base-6: var(--ng-doc-gray-130);
+	--ng-doc-base-7: var(--ng-doc-gray-120);
+	--ng-doc-base-8: var(--ng-doc-gray-110);
+	--ng-doc-base-9: var(--ng-doc-gray-100);
+	--ng-doc-base-10: var(--ng-doc-gray-90);
+	--ng-doc-base-11: var(--ng-doc-gray-80);
+}

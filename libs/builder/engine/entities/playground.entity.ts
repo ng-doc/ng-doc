@@ -36,7 +36,7 @@ export class NgDocPlaygroundEntity extends NgDocFileEntity<NgDocPlayground> {
 		const expectedPath: string = path.join(this.sourceFileFolder, PAGE_NAME);
 		const buildable: NgDocEntity | undefined = this.entityStore.get(expectedPath);
 
-		return buildable && isPageEntity(buildable) ? buildable : undefined;
+		return isPageEntity(buildable) ? buildable : undefined;
 	}
 
 	protected override build(): Observable<NgDocBuiltOutput[]> {

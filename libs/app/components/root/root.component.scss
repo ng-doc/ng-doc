@@ -20,5 +20,6 @@
 		grid-area: body;
 		padding: calc(var(--ng-doc-base-gutter) * 4) calc(var(--ng-doc-base-gutter) * 4);
 		overflow: auto;
+		background-color: var(--ng-doc-base-0);
 	}
 }

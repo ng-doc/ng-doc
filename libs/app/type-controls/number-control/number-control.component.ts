@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {NgDocTypeControl} from '@ng-doc/app/interfaces';
-import {extractValue, NgDocExtractedValue} from '@ng-doc/core';
+import {extractValue} from '@ng-doc/core';
 import {FlControl} from 'flex-controls';
 
 @Component({
@@ -16,11 +16,11 @@ export class NgDocNumberControlComponent extends FlControl<number> implements Ng
 		super();
 	}
 
-	get defaultValue(): NgDocExtractedValue {
-		return this.default ? extractValue(this.default) : null;
+	get defaultValue(): number | null {
+		return this.default ? (extractValue(this.default) as number) : null;
 	}
 
 	changeModel(value: number | null): void {
-		this.updateModel(value === null && this.default ? Number(extractValue(this.default)) : value);
+		this.updateModel(value === null && this.default ? this.defaultValue : value);
 	}
 }

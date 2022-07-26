@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {NgDocPlaygroundPropertyModule} from '@ng-doc/app/components/playground-property';
-import {NgDocButtonIconModule, NgDocIconModule, NgDocTooltipModule} from '@ng-doc/ui-kit';
+import {NgDocButtonIconModule, NgDocIconModule, NgDocTextModule, NgDocTooltipModule} from '@ng-doc/ui-kit';
 
 import {NgDocPlaygroundPropertiesComponent} from './playground-properties.component';
 
@@ -14,6 +14,7 @@ import {NgDocPlaygroundPropertiesComponent} from './playground-properties.compon
 		NgDocIconModule,
 		NgDocTooltipModule,
 		NgDocTooltipModule,
+		NgDocTextModule,
 	],
 	exports: [NgDocPlaygroundPropertiesComponent],
 })

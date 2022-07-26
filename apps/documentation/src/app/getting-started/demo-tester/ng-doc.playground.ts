@@ -1,4 +1,5 @@
 import {NgDocPlayground} from '@ng-doc/builder';
+import {NgDocTagComponent} from '@ng-doc/ui-kit';
 
 import {InlineDemoComponent} from './demo/inline-demo.component';
 
@@ -12,6 +13,10 @@ export const playground: NgDocPlayground = {
 				template: `my-content`,
 			},
 		},
+	},
+	playground2: {
+		target: NgDocTagComponent,
+		template: `<{{ngDocSelector}}>My tag</{{ngDocSelector}}>`,
 	},
 };
 

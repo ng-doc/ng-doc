@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {NgDocTypeControl} from '@ng-doc/app/interfaces';
-import {extractValue, NgDocExtractedValue} from '@ng-doc/core';
+import {extractValue} from '@ng-doc/core';
 import {FlControl} from 'flex-controls';
 
 @Component({
@@ -16,8 +16,8 @@ export class NgDocTypeAliasControlComponent<T> extends FlControl<T> implements N
 		super();
 	}
 
-	get defaultValue(): NgDocExtractedValue {
-		return this.default ? extractValue(this.default) : null;
+	get defaultValue(): T | null {
+		return this.default ? (extractValue(this.default) as unknown as T) : null;
 	}
 
 	typeOf(value: unknown): string {
@@ -25,6 +25,6 @@ export class NgDocTypeAliasControlComponent<T> extends FlControl<T> implements N
 	}
 
 	changeModel(value: T | null): void {
-		this.updateModel(value === null && this.default ? (this.defaultValue as unknown as T) : value);
+		this.updateModel(value === null && this.default ? this.defaultValue : value);
 	}
 }

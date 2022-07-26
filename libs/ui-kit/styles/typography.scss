@@ -1,0 +1,125 @@
+html {
+	-webkit-font-smoothing: antialiased;
+}
+
+p {
+	line-height: 1.5rem;
+	margin-top: 1.5rem;
+	margin-bottom: 0;
+}
+
+ul,
+ol {
+	margin-top: 1.5rem;
+	margin-bottom: 1.5rem;
+}
+
+ul li,
+ol li {
+	line-height: 1.5rem;
+}
+
+ul ul,
+ol ul,
+ul ol,
+ol ol {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+blockquote {
+	line-height: 1.5rem;
+	margin-top: 1.5rem;
+	margin-bottom: 1.5rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: inherit;
+	margin-top: 1.5rem;
+	margin-bottom: 0;
+	line-height: 1.5rem;
+}
+
+h1 {
+	font-size: 4.242rem;
+	line-height: 4.5rem;
+	margin-top: 3rem;
+}
+
+h2 {
+	font-size: 2.828rem;
+	line-height: 3rem;
+	margin-top: 3rem;
+}
+
+h3 {
+	font-size: 1.414rem;
+}
+
+h4 {
+	font-size: 0.707rem;
+}
+
+h5 {
+	font-size: 0.4713333333333333rem;
+}
+
+h6 {
+	font-size: 0.3535rem;
+}
+
+
+code {
+	vertical-align: bottom;
+	border-radius: calc(var(--ng-doc-base-gutter) / 2);
+	background-color: var(--ng-doc-base-1);
+	padding: calc(var(--ng-doc-base-gutter) / 4) var(--ng-doc-base-gutter);
+	font-family: var(--ng-doc-code-font);
+	font-size: var(--ng-doc-code-font-size);
+}
+
+.lead {
+	font-size: 1.414rem;
+}
+
+.hug {
+	margin-top: 0;
+}
+
+table {
+	width: 100%;
+	border-spacing: 0;
+	font-size: 14px;
+
+	thead {
+		tr {
+			th {
+				padding: var(--ng-doc-base-gutter) 0;
+				background-color: var(--ng-doc-base-1);
+				color: var(--ng-doc-text-muted);
+
+
+				&:first-child {
+					padding-left: calc(var(--ng-doc-base-gutter) * 4);
+				}
+			}
+		}
+	}
+
+	tbody {
+		tr {
+			td {
+				padding: var(--ng-doc-base-gutter) 0;
+
+				&:first-child {
+					padding-left: calc(var(--ng-doc-base-gutter) * 4);
+				}
+			}
+		}
+	}
+}

@@ -1,3 +1,10 @@
-<div class="ng-doc-navbar-brand">
-	<ng-content></ng-content>
+<div class="ng-doc-navbar-left">
+	<ng-container *polymorpheusOutlet="leftContent"></ng-container>
+</div>
+<div class="ng-doc-navbar-center">
+	<ng-doc-search *ngIf="search"></ng-doc-search>
+	<ng-container *polymorpheusOutlet="centerContent"></ng-container>
+</div>
+<div class="ng-doc-navbar-right">
+	<ng-container *polymorpheusOutlet="rightContent"></ng-container>
 </div>

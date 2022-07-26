@@ -13,7 +13,7 @@
 			</button>
 		</div>
 		<ng-container *ngIf="(properties | keyvalue)?.length">
-			<h4 class="ng-doc-header">Properties</h4>
+			<h4 class="ng-doc-header" ng-doc-text>Properties</h4>
 			<ng-doc-playground-property *ngFor="let property of properties | keyvalue"
 										[name]="property.key"
 										[property]="property.value"
@@ -22,7 +22,7 @@
 		</ng-container>
 
 		<ng-container *ngIf="(dynamicContent | keyvalue)?.length">
-			<h4 class="ng-doc-header">Content</h4>
+			<h4 class="ng-doc-header" ng-doc-text>Content</h4>
 			<ng-doc-playground-property *ngFor="let content of dynamicContent | keyvalue"
 										[name]="content.key"
 										[property]="content.value"

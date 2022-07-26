@@ -30,11 +30,7 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 		override parent: NgDocApiEntity,
 		override target: NgDocApiScope,
 	) {
-		super(project, sourceFile, context, entityStore);
-	}
-
-	override get storeKey(): string {
-		return `${super.storeKey}#${this.moduleName}`;
+		super(project, sourceFile, context, entityStore, target.route);
 	}
 
 	override get isRoot(): boolean {

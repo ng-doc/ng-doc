@@ -6,9 +6,26 @@
 	width: 100%;
 	padding: 0 calc(var(--ng-doc-base-gutter) * 5);
 	box-shadow: 0 4px 4px var(--ng-doc-border-color);
+	background-color: var(--ng-doc-base-0);
+	z-index: 10;
 
-	.ng-doc-navbar-brand {
-		font-weight: bold;
-		font-size: 16px;
+	.ng-doc-navbar-left,
+	.ng-doc-navbar-center,
+	.ng-doc-navbar-right {
+		display: flex;
+		align-items: center;
+		width: 33%;
+	}
+
+	.ng-doc-navbar-left {
+		justify-content: flex-start;
+	}
+
+	.ng-doc-navbar-center {
+		justify-content: center;
+	}
+
+	.ng-doc-navbar-left {
+		justify-content: flex-end;
 	}
 }

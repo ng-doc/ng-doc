@@ -71,7 +71,7 @@ $horizontal-padding: calc(var(--ng-doc-base-gutter) * 2);
 			cursor: var(--ng-doc-input-cursor);
 
 			&::placeholder {
-				color: var(--ng-doc-black-40);
+				color: var(--ng-doc-gray-70);
 			}
 
 			&.-blink {

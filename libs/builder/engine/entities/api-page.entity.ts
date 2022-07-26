@@ -32,13 +32,9 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 		readonly parent: NgDocApiScopeEntity,
 		protected readonly declarationName: string,
 	) {
-		super(project, sourceFile, context, entityStore);
+		super(project, sourceFile, context, entityStore, declarationName);
 
 		this.updateDeclaration();
-	}
-
-	override get storeKey(): string {
-		return `${super.sourceFilePath}#${this.componentName}`;
 	}
 
 	override get isRoot(): boolean {

@@ -1,0 +1,9 @@
+<ng-doc-input-wrapper ngDocDropdownOrigin ngDocFocusCatcher (focusEvent)="dropdown.open()"
+					  (blurEvent)="dropdown.close()">
+	<input ngDocInputString ngModel (ngModelChange)="searchTerm$.next($event)">
+	<ng-doc-dropdown [content]="dropdownContent" width="100%" #dropdown>
+		<ng-template #dropdownContent>
+			asdasd
+		</ng-template>
+	</ng-doc-dropdown>
+</ng-doc-input-wrapper>

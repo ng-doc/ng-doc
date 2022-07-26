@@ -1,7 +1,8 @@
 import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {NG_DOC_API_LIST_TOKEN} from '@ng-doc/app/tokens';
-import {NgDocTypedForm} from '@ng-doc/app/types';
+import {NgDocFormPartialValue} from '@ng-doc/app/types';
 import {NgDocApiList, NgDocApiListItem} from '@ng-doc/builder';
 import {asArray} from '@ng-doc/core';
 import {ngDocMakePure} from '@ng-doc/ui-kit/decorators';
@@ -10,8 +11,8 @@ import {Observable} from 'rxjs';
 import {debounceTime, map, startWith} from 'rxjs/operators';
 
 interface ApiFilterForm {
-	filter: string | null;
-	type: string | null;
+	filter: FormControl<string | null>;
+	type: FormControl<string | null>;
 }
 
 /**
@@ -83,26 +84,43 @@ interface ApiFilterForm {
 })
 @UntilDestroy()
 export class NgDocApiListComponent {
-	formGroup: FormGroup<NgDocTypedForm<ApiFilterForm>>;
+	formGroup: FormGroup<ApiFilterForm>;
 	api$: Observable<NgDocApiList[]>;
 
 	constructor(
 		@Inject(NG_DOC_API_LIST_TOKEN)
 		private readonly apiList: NgDocApiList[],
 		private readonly formBuilder: FormBuilder,
+		private readonly route: ActivatedRoute,
+		private readonly router: Router,
 	) {
-		console.log('apiList', apiList);
-
 		this.formGroup = this.formBuilder.group({
 			filter: [''],
 			type: [''],
 		});
 
+		this.route.queryParamMap.pipe(untilDestroyed(this)).subscribe((paramMap: ParamMap) =>
+			this.formGroup.setValue({
+				filter: paramMap.get('filter') || null,
+				type: paramMap.get('type') || null,
+			}),
+		);
+
+		this.formGroup.valueChanges
+			.pipe(untilDestroyed(this))
+			.subscribe((formValue: NgDocFormPartialValue<typeof this.formGroup>) =>
+				this.router.navigate([], {
+					relativeTo: this.route,
+					queryParams: formValue,
+					queryParamsHandling: 'merge',
+				}),
+			);
+
 		this.api$ = this.formGroup.valueChanges.pipe(
-			debounceTime(200),
+			debounceTime(100),
 			startWith(null),
 			map(() => this.formGroup.value),
-			map((form: Partial<ApiFilterForm>) =>
+			map((form: NgDocFormPartialValue<typeof this.formGroup>) =>
 				this.apiList
 					.map((api: NgDocApiList) => ({
 						...api,

@@ -38,10 +38,6 @@ export class NgDocDependenciesEntity extends NgDocEntity {
 		super(project, sourceFile, context, entityStore);
 	}
 
-	override get storeKey(): string {
-		return this.sourceFilePath;
-	}
-
 	override get isRoot(): boolean {
 		// always false, page dependencies are not rooted
 		return false;

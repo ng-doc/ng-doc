@@ -20,10 +20,6 @@ export abstract class NgDocNavigationEntity<T> extends NgDocRouteEntity<T> {
 
 	abstract override parent?: NgDocNavigationEntity<unknown>;
 
-	override get storeKey(): string {
-		return this.sourceFilePath;
-	}
-
 	override get folderName(): string {
 		return this.route;
 	}

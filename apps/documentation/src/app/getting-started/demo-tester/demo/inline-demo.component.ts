@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostBinding, Input, OnInit} from '@angular/core';
 
 type Alias = 'one' | 'two' | 34 | true;
 
@@ -12,7 +12,13 @@ type Alias = 'one' | 'two' | 34 | true;
 		</p>
 		{{ count }}
 	`,
-	styles: [],
+	styles: [
+		`
+			:host[data-momo='false'] {
+				background-color: black;
+			}
+		`,
+	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 /* NgDocCodeSnippetEnd(Test1) */
@@ -33,6 +39,7 @@ export class InlineDemoComponent implements OnInit {
 	alias2: Alias = true;
 
 	@Input()
+	@HostBinding('attr.data-momo')
 	momo: boolean = true;
 
 	@Input()

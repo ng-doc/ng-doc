@@ -18,10 +18,6 @@ export abstract class NgDocFileEntity<T> extends NgDocEntity {
 	 */
 	target?: T;
 
-	override get storeKey(): string {
-		return this.sourceFilePath;
-	}
-
 	override init(): Observable<void> {
 		return this.update();
 	}

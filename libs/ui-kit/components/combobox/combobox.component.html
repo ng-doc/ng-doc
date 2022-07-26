@@ -1,7 +1,7 @@
 <ng-doc-combobox-host>
 	<ng-doc-input-wrapper ngDocFocusCatcher
 						  [rightContent]="inputRightContent"
-						  [blurContent]="hasValue ? valueContent : null"
+						  [blurContent]="hasValue ? valueContent : ''"
 						  [blurContext]="model">
 		<input ngDocInputString [readonly]="readonly" [placeholder]="placeholder">
 		<ng-template #inputRightContent>

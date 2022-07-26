@@ -32,7 +32,7 @@ export class NgDocComboboxComponent<T> extends FlControlHost<T> implements NgDoc
 	rightContent: NgDocContent = '';
 
 	@Input()
-	valueContent: NgDocContent<NgDocContextWithImplicit<T>> = '';
+	valueContent: NgDocContent<NgDocContextWithImplicit<T | null>> = '';
 
 	@ContentChild(NgDocDataDirective, {read: TemplateRef})
 	data: TemplateRef<never> | null = null;

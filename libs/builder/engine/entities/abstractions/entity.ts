@@ -35,6 +35,7 @@ export abstract class NgDocEntity {
 		readonly sourceFile: SourceFile,
 		protected readonly context: NgDocBuilderContext,
 		protected readonly entityStore: NgDocEntityStore,
+		protected readonly storeAdditionalKey?: string,
 	) {
 		this.entityStore.add(this);
 
@@ -44,7 +45,9 @@ export abstract class NgDocEntity {
 	/**
 	 * The key by which the entity will be stored in the store
 	 */
-	abstract readonly storeKey: string;
+	get storeKey(): string {
+		return this.storeAdditionalKey ? `${this.sourceFilePath}#${this.storeAdditionalKey}` : this.sourceFilePath;
+	}
 
 	/**
 	 * Indicates when it's root entity and should be used for rooted components.
