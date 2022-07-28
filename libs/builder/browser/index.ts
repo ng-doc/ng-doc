@@ -9,6 +9,7 @@ import {first, switchMap, switchMapTo} from 'rxjs/operators';
 import {NgDocBuilder} from '../engine/builder';
 import {NgDocSchema} from '../interfaces';
 import {NgDocStyleType} from '../types';
+import {modifyConfiguration} from '../webpack/modify-configuration';
 
 /**
  * Attach NgDocWebpackPlugin before Angular Plugins
@@ -32,7 +33,11 @@ export function runBrowser(options: NgDocSchema, context: BuilderContext): Obser
 
 				return runner.pipe(
 					first(),
-					switchMapTo(executeBrowserBuilder(options as unknown as BrowserBuilderSchema, context)),
+					switchMapTo(
+						executeBrowserBuilder(options as unknown as BrowserBuilderSchema, context, {
+							webpackConfiguration: modifyConfiguration,
+						}),
+					),
 				);
 			})
 		);

@@ -4,14 +4,13 @@ import {forkJoin, Observable, of} from 'rxjs';
 import {concatMap, map, mapTo, switchMap, tap} from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
-import {createProject, emitBuildedOutput, isApiPageEntity} from '../helpers';
+import {createProject, emitBuildedOutput} from '../helpers';
 import {buildGlobalIndexes} from '../helpers/build-global-indexes';
 import {getEntityConstructor} from '../helpers/get-entity-constructor';
-import {NgDocApiListItem, NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
+import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
 import {bufferDebounce} from '../operators';
 import {NgDocContextEnv, NgDocRoutingEnv} from '../templates-env';
 import {Constructable} from '../types';
-import {NgDocApiPageEntity} from './entities';
 import {NgDocEntity} from './entities/abstractions/entity';
 import {NgDocEntityStore} from './entity-store';
 import {NgDocRenderer} from './renderer';
@@ -19,6 +18,7 @@ import {
 	API_PATTERN,
 	CACHE_PATH,
 	CATEGORY_PATTERN,
+	GENERATED_ASSETS_PATH,
 	GENERATED_PATH,
 	PAGE_DEPENDENCY_PATTERN,
 	PAGE_PATTERN,
@@ -88,8 +88,7 @@ export class NgDocBuilder {
 			this.buildContext(),
 		]).pipe(
 			switchMap((output: Array<NgDocBuiltOutput | NgDocBuiltOutput[]>) =>
-					this.buildIndexes()
-					.pipe(map((indexes: NgDocBuiltOutput) => [...output.flat(), indexes])),
+				this.buildIndexes().pipe(map((indexes: NgDocBuiltOutput) => [...output.flat(), indexes])),
 			),
 			tap((output: NgDocBuiltOutput[]) => emitBuildedOutput(...output)),
 			mapTo(void 0),
@@ -117,7 +116,7 @@ export class NgDocBuilder {
 	private buildIndexes(): Observable<NgDocBuiltOutput> {
 		return of({
 			output: buildGlobalIndexes(this.entities),
-			filePath: path.join(GENERATED_PATH, 'ng-doc.global-indexes.json')
+			filePath: path.join(GENERATED_ASSETS_PATH, 'indexes.json'),
 		});
 	}
 }

@@ -8,6 +8,7 @@ import {first, map, shareReplay, switchMap, switchMapTo} from 'rxjs/operators';
 import {NgDocBuilder} from '../engine/builder';
 import {NgDocSchema} from '../interfaces';
 import {NgDocStyleType} from '../types';
+import {modifyConfiguration} from '../webpack/modify-configuration';
 
 /**
  * Attach NgDocBuilder and run DevServer
@@ -31,9 +32,10 @@ export function runDevServer(options: NgDocSchema, context: BuilderContext): Obs
 				return runner.pipe(
 					first(),
 					switchMapTo(
-						combineLatest([runner, executeDevServerBuilder(options, context)]).pipe(
-							map(([_, devServerOutput]: [void, DevServerBuilderOutput]) => devServerOutput),
-						),
+						combineLatest([
+							runner,
+							executeDevServerBuilder(options, context, {webpackConfiguration: modifyConfiguration}),
+						]).pipe(map(([_, devServerOutput]: [void, DevServerBuilderOutput]) => devServerOutput)),
 					),
 				);
 			})

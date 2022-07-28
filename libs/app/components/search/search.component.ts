@@ -1,5 +1,8 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {NgDocSearchEngine} from '@ng-doc/app/classes';
+import * as lunr from 'lunr';
 import {Observable, Subject} from 'rxjs';
+import {switchMap} from 'rxjs/operators';
 
 @Component({
 	selector: 'ng-doc-search',
@@ -11,10 +14,13 @@ export class NgDocSearchComponent {
 	searchTerm$: Subject<string> = new Subject<string>();
 	search$: Observable<unknown>;
 
-	private readonly worker: Worker;
-
-	constructor() {
+	constructor(private readonly searchEngine: NgDocSearchEngine) {
 		this.search$ = this.searchTerm$.pipe();
-		this.worker = new Worker('', {type: 'module'});
+
+		this.searchTerm$
+			.pipe(switchMap((term: string) => this.searchEngine.search(term)))
+			.subscribe((result: lunr.Index.Result[]) => {
+				console.log(result);
+			});
 	}
 }
