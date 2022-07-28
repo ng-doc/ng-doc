@@ -1,6 +1,6 @@
 import * as webpack from 'webpack';
 
-import {NgDocAssetsPlugin} from './assets.plugin';
+import {NgDocAssetsPlugin} from './plugins/assets.plugin';
 
 /**
  *

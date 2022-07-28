@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as webpack from 'webpack';
 
-import {ASSETS_PATH, GENERATED_ASSETS_PATH} from '../engine/variables';
+import {ASSETS_PATH, GENERATED_ASSETS_PATH} from '../../engine/variables';
 
 export class NgDocAssetsPlugin {
 	apply(compiler: webpack.Compiler): void {
@@ -17,8 +17,9 @@ export class NgDocAssetsPlugin {
 						files.forEach((file: string) => {
 							const filePath: string = path.join(GENERATED_ASSETS_PATH, file);
 							const fileContent: string = String(fs.readFileSync(filePath));
+							const assetsPath: string = path.join(ASSETS_PATH, file);
 
-							assets[path.join(ASSETS_PATH, path.basename(file))] = {
+							assets[assetsPath] = {
 								source: () => fileContent,
 								size: () => fileContent.length,
 							};
