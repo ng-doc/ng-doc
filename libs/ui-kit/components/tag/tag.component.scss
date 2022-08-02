@@ -10,9 +10,9 @@
 	color: var(--ng-doc-tag-color);
 	--ng-doc-font-size: 14px;
 
-	@each $color-name in $ng-doc-palette-colors {
+	@each $color-name, $color-value in $ng-doc-palette-colors {
 		&[data-ng-doc-color="#{$color-name}"] {
-			--ng-doc-tag-background: var(--ng-doc-#{#{$color-name}}-100);
+			--ng-doc-tag-background: var(--ng-doc-#{$color-name}-100);
 			--ng-doc-tag-color: var(--ng-doc-white);
 		}
 	}
