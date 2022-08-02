@@ -1,7 +1,8 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
 import {NgDocSearchEngine} from '@ng-doc/app/classes';
-import * as lunr from 'lunr';
-import {Observable, Subject} from 'rxjs';
+import {NgDocPageInfo} from '@ng-doc/core';
+import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
+import {Subject} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 
 @Component({
@@ -10,17 +11,23 @@ import {switchMap} from 'rxjs/operators';
 	styleUrls: ['./search.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
+@UntilDestroy()
 export class NgDocSearchComponent {
-	searchTerm$: Subject<string> = new Subject<string>();
-	search$: Observable<unknown>;
+	readonly query$: Subject<string> = new Subject<string>();
+	queryResult: NgDocPageInfo[] = [];
 
-	constructor(private readonly searchEngine: NgDocSearchEngine) {
-		this.search$ = this.searchTerm$.pipe();
-
-		this.searchTerm$
-			.pipe(switchMap((term: string) => this.searchEngine.search(term)))
-			.subscribe((result: lunr.Index.Result[]) => {
-				console.log(result);
+	constructor(
+		private readonly searchEngine: NgDocSearchEngine,
+		private readonly changeDetectorRef: ChangeDetectorRef,
+	) {
+		this.query$
+			.pipe(
+				switchMap((term: string) => this.searchEngine.search(term)),
+				untilDestroyed(this),
+			)
+			.subscribe((result: NgDocPageInfo[]) => {
+				this.queryResult = result;
+				this.changeDetectorRef.markForCheck();
 			});
 	}
 }

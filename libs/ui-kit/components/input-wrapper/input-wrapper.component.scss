@@ -36,7 +36,7 @@ $horizontal-padding: calc(var(--ng-doc-base-gutter) * 2);
 		width: var(--ng-doc-input-width);
 		height: var(--ng-doc-input-height);
 		background-color: var(--ng-doc-input-background-color);
-		border-radius: var(--ng-doc-input-border-radius);
+		border-radius: var(--ng-doc-floated-border-radius);
 
 		&:after {
 			position: absolute;
@@ -47,7 +47,7 @@ $horizontal-padding: calc(var(--ng-doc-base-gutter) * 2);
 			width: 100%;
 			height: 100%;
 			border: var(--ng-doc-input-border);
-			border-radius: var(--ng-doc-input-border-radius);
+			border-radius: var(--ng-doc-floated-border-radius);
 			pointer-events: none;
 		}
 
@@ -71,7 +71,7 @@ $horizontal-padding: calc(var(--ng-doc-base-gutter) * 2);
 			cursor: var(--ng-doc-input-cursor);
 
 			&::placeholder {
-				color: var(--ng-doc-gray-70);
+				color: var(--ng-doc-grey-70);
 			}
 
 			&.-blink {

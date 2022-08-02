@@ -88,7 +88,7 @@ export class NgDocBuilder {
 			this.buildContext(),
 		]).pipe(
 			switchMap((output: Array<NgDocBuiltOutput | NgDocBuiltOutput[]>) =>
-				this.buildIndexes().pipe(map((indexes: NgDocBuiltOutput) => [...output.flat(), indexes])),
+				this.buildIndexes().pipe(map((indexes: NgDocBuiltOutput[]) => [...output.flat(), ...indexes])),
 			),
 			tap((output: NgDocBuiltOutput[]) => emitBuildedOutput(...output)),
 			mapTo(void 0),
@@ -113,10 +113,16 @@ export class NgDocBuilder {
 			.pipe(map((output: string) => ({output, filePath: path.join(GENERATED_PATH, 'ng-doc.context.ts')})));
 	}
 
-	private buildIndexes(): Observable<NgDocBuiltOutput> {
-		return of({
-			output: buildGlobalIndexes(this.entities),
+	private buildIndexes(): Observable<NgDocBuiltOutput[]> {
+		const [dictionary, indexes] = buildGlobalIndexes(this.entities);
+
+
+		return of([{
+			output: dictionary,
+			filePath: path.join(GENERATED_ASSETS_PATH, 'pages.json'),
+		}, {
+			output: indexes,
 			filePath: path.join(GENERATED_ASSETS_PATH, 'indexes.json'),
-		});
+		}])
 	}
 }

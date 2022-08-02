@@ -14,4 +14,5 @@ export * from '@ng-doc/app/components/playground-properties';
 export * from '@ng-doc/app/components/playground-property';
 export * from '@ng-doc/app/components/root';
 export * from '@ng-doc/app/components/search';
+export * from '@ng-doc/app/components/search-result';
 export * from '@ng-doc/app/components/sidebar';

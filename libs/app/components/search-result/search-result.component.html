@@ -1,0 +1,14 @@
+<div class="ng-doc-search-result-wrapper">
+	<div class="ng-doc-search-result-category" *ngFor="let item of groupedResult | keyvalue">
+		<h4 class="ng-doc-search-result-title" ng-doc-text>{{typeToLabel(item.key)}}</h4>
+		<ul class="ng-doc-search-result-pages">
+			<li class="ng-doc-search-result-page" *ngFor="let page of item.value">
+				<a class="ng-doc-search-result-page-link" [routerLink]="[page.route]">
+					<ng-doc-kind-icon *ngIf="page.kind" [kind]="page.kind"
+									  [ngDocTooltip]="page.kind"></ng-doc-kind-icon>
+					{{page.title}}
+				</a>
+			</li>
+		</ul>
+	</div>
+</div>

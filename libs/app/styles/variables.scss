@@ -1,5 +1,9 @@
 :root {
-	--ng-doc-header-height: calc(var(--ng-doc-base-gutter) * 7);
+	// Navbar
+	--ng-doc-navbar-height: calc(var(--ng-doc-base-gutter) * 7);
+	--ng-doc-navbar-horizontal-padding: calc(var(--ng-doc-base-gutter) * 5);
+
+	// Sidebar
 	--ng-doc-sidebar-width: 310px;
 	--ng-doc-sidebar-padding: calc(var(--ng-doc-base-gutter) * 2);
 	--ng-doc-sidebar-vetical-padding: var(--ng-doc-base-gutter);

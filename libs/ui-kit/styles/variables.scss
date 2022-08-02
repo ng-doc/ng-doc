@@ -3,17 +3,17 @@
 	--ng-doc-transition: 0.1s;
 
 	--ng-doc-base-0: var(--ng-doc-white);
-	--ng-doc-base-1: var(--ng-doc-gray-10);
-	--ng-doc-base-2: var(--ng-doc-gray-20);
-	--ng-doc-base-3: var(--ng-doc-gray-30);
-	--ng-doc-base-4: var(--ng-doc-gray-40);
-	--ng-doc-base-5: var(--ng-doc-gray-50);
-	--ng-doc-base-6: var(--ng-doc-gray-60);
-	--ng-doc-base-7: var(--ng-doc-gray-70);
-	--ng-doc-base-8: var(--ng-doc-gray-90);
-	--ng-doc-base-9: var(--ng-doc-gray-100);
-	--ng-doc-base-10: var(--ng-doc-gray-110);
-	--ng-doc-base-11: var(--ng-doc-gray-180);
+	--ng-doc-base-1: var(--ng-doc-grey-10);
+	--ng-doc-base-2: var(--ng-doc-grey-20);
+	--ng-doc-base-3: var(--ng-doc-grey-30);
+	--ng-doc-base-4: var(--ng-doc-grey-40);
+	--ng-doc-base-5: var(--ng-doc-grey-50);
+	--ng-doc-base-6: var(--ng-doc-grey-60);
+	--ng-doc-base-7: var(--ng-doc-grey-70);
+	--ng-doc-base-8: var(--ng-doc-grey-90);
+	--ng-doc-base-9: var(--ng-doc-grey-100);
+	--ng-doc-base-10: var(--ng-doc-grey-110);
+	--ng-doc-base-11: var(--ng-doc-grey-180);
 
 	--ng-doc-primary: var(--ng-doc-blue-100);
 	--ng-doc-primary-rgb: var(--ng-doc-blue-rgb);
@@ -52,7 +52,6 @@
 	--ng-doc-input-text-align: left;
 	--ng-doc-input-width: 100%;
 	--ng-doc-input-height: 40px;
-	--ng-doc-input-border-radius: var(--ng-doc-base-gutter);
 	--ng-doc-input-border: 1px solid var(--ng-doc-border-color);
 	--ng-doc-input-border-hover: 1px solid var(--ng-doc-border-hover-color);
 	--ng-doc-input-background-color: var(--ng-doc-white);
@@ -66,16 +65,16 @@
 }
 
 body.dark {
-	--ng-doc-base-0: var(--ng-doc-gray-180);
-	--ng-doc-base-1: var(--ng-doc-gray-170);
-	--ng-doc-base-2: var(--ng-doc-gray-160);
-	--ng-doc-base-3: var(--ng-doc-gray-150);
-	--ng-doc-base-4: var(--ng-doc-gray-150);
-	--ng-doc-base-5: var(--ng-doc-gray-140);
-	--ng-doc-base-6: var(--ng-doc-gray-130);
-	--ng-doc-base-7: var(--ng-doc-gray-120);
-	--ng-doc-base-8: var(--ng-doc-gray-110);
-	--ng-doc-base-9: var(--ng-doc-gray-100);
-	--ng-doc-base-10: var(--ng-doc-gray-90);
-	--ng-doc-base-11: var(--ng-doc-gray-80);
+	--ng-doc-base-0: var(--ng-doc-grey-180);
+	--ng-doc-base-1: var(--ng-doc-grey-170);
+	--ng-doc-base-2: var(--ng-doc-grey-160);
+	--ng-doc-base-3: var(--ng-doc-grey-150);
+	--ng-doc-base-4: var(--ng-doc-grey-150);
+	--ng-doc-base-5: var(--ng-doc-grey-140);
+	--ng-doc-base-6: var(--ng-doc-grey-130);
+	--ng-doc-base-7: var(--ng-doc-grey-120);
+	--ng-doc-base-8: var(--ng-doc-grey-110);
+	--ng-doc-base-9: var(--ng-doc-grey-100);
+	--ng-doc-base-10: var(--ng-doc-grey-90);
+	--ng-doc-base-11: var(--ng-doc-grey-80);
 }

@@ -21,6 +21,11 @@
 						"glob": "**/*",
 						"input": "dist/libs/ui-kit/assets",
 						"output": "assets"
+					},
+					{
+						"glob": "**/*",
+						"input": "dist/libs/builder/generated/assets",
+						"output": "assets"
 					}
 				],
 				"styles": ["apps/documentation/src/styles.scss"],

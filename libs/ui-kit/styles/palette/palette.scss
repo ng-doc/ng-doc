@@ -11,16 +11,25 @@
 	@return $map;
 }
 
+// Color palette link - https://colorscheme.ru/#39.1TvlDHw0w0
 $ng-doc-palette-colors: (
-	"red": #f05c46,
-	"pink": #f046b7,
-	"teal": #269999,
-	"yellow": #fc0,
-	"blue": #38a1d6,
-	"orange": #ff941a,
-	"green": #79b821,
-	"gray": #7b7b7b,
-	"purple": #8700CB,
+	"red": #FF0000,
+	"pink": #FF0066,
+	"purple": #CC00CC,
+	"deep-purple": #9900CC,
+	"indigo": #6600CC,
+	"blue": #0066CC,
+	"light-blue": #0099CC,
+	"cian": #00CCCC,
+	"teal": #04BF8B,
+	"green": #00CC00,
+	"light-green": #00CC33,
+	"lime": #99FF00,
+	"yellow": #FFFF00,
+	"ember": #FFCC00,
+	"orange": #FF9900,
+	"deep-orange": #FF6600,
+	"grey": #818181,
 );
 
 $ng-doc-palette: palette($ng-doc-palette-colors);

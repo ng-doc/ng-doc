@@ -1,0 +1,35 @@
+:host {
+	display: block;
+
+	.ng-doc-search-result-wrapper {
+		display: flex;
+		flex-direction: row;
+
+		.ng-doc-search-result-category {
+
+			.ng-doc-search-result-title {
+				margin: 0 0 calc(var(--ng-doc-base-gutter) * 2);
+			}
+
+			.ng-doc-search-result-pages {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+
+				.ng-doc-search-result-page {
+					margin-bottom: var(--ng-doc-base-gutter);
+
+					.ng-doc-search-result-page-link {
+						display: flex;
+						align-items: center;
+						text-decoration: none;
+
+						ng-doc-kind-icon {
+							margin-right: var(--ng-doc-base-gutter);
+						}
+					}
+				}
+			}
+		}
+	}
+}

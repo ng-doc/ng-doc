@@ -1,0 +1,16 @@
+:host {
+	width: 100%;
+	max-width: 300px;
+	--ng-doc-floated-border-radius: 20px;
+
+	ng-doc-icon {
+		width: 40px;
+		height: 40px;
+	}
+}
+
+.ng-doc-search-result-content {
+	height: 100%;
+	overflow: auto;
+	padding: calc(var(--ng-doc-base-gutter) * 3) var(--ng-doc-navbar-horizontal-padding);
+}

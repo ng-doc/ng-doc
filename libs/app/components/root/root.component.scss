@@ -1,7 +1,7 @@
 :host {
 	display: grid;
 	grid-template-columns: var(--ng-doc-sidebar-width) 1fr;
-	grid-template-rows: var(--ng-doc-header-height);
+	grid-template-rows: var(--ng-doc-navbar-height);
 	grid-template-areas:
     "header header"
     "sidebar body";

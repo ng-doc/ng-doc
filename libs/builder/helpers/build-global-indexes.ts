@@ -1,11 +1,10 @@
-import {AbstractConstructor, Constructor} from '@ng-doc/core';
+import {AbstractConstructor, Constructor, humanizeDeclarationName, NgDocPageInfos, NgDocPageType} from '@ng-doc/core';
 import * as lunr from 'lunr';
 import {marked} from 'marked';
 import * as minimatch from 'minimatch';
 
-import {NgDocApiPageEntity} from '../engine';
+import {NgDocApiPageEntity} from '../engine/entities';
 import {NgDocEntity} from '../engine/entities/abstractions/entity';
-import {NgDocNavigationEntity} from '../engine/entities/abstractions/navigation.entity';
 import {NgDocRouteEntity} from '../engine/entities/abstractions/route.entity';
 import {NgDocEntityStore} from '../engine/entity-store';
 import {NgDocBuiltOutput, NgDocPageIndex} from '../interfaces';
@@ -23,8 +22,8 @@ function isAcceptableToken(token: marked.Token): token is NgDocTokenTypes {
  *
  * @param entityStore
  */
-export function buildGlobalIndexes(entityStore: NgDocEntityStore): string {
-	return buildIndexes(entityStore, NgDocNavigationEntity);
+export function buildGlobalIndexes(entityStore: NgDocEntityStore): string[] {
+	return buildIndexes(entityStore, NgDocRouteEntity);
 }
 
 /**
@@ -35,7 +34,7 @@ export function buildGlobalIndexes(entityStore: NgDocEntityStore): string {
 function buildIndexes<T extends NgDocRouteEntity<unknown>>(
 	entityStore: NgDocEntityStore,
 	entityType: Constructor<T> | AbstractConstructor<T>,
-): string {
+): string[] {
 	const indexes: NgDocPageIndex[] = [];
 
 	(entityStore.asArray().filter((entity: NgDocEntity) => entity instanceof entityType) as T[]).forEach(
@@ -45,7 +44,7 @@ function buildIndexes<T extends NgDocRouteEntity<unknown>>(
 				.map((artifact: NgDocBuiltOutput) => {
 					const tokens: marked.TokensList = marked.lexer(artifact.output);
 
-					return extractIndexes(entity.route, entity.title, tokens);
+					return extractIndexes(entity, tokens);
 				})
 				.flat();
 
@@ -53,7 +52,12 @@ function buildIndexes<T extends NgDocRouteEntity<unknown>>(
 		},
 	);
 
+	const queryLexer: {termSeparator: RegExp} = (lunr as unknown as {QueryLexer: {termSeparator: RegExp}}).QueryLexer;
+	queryLexer.termSeparator = lunr.tokenizer.separator = /\s+/;
+
 	const index: lunr.Index = lunr((builder: lunr.Builder) => {
+		builder.pipeline.remove(lunr.stemmer);
+
 		builder.ref('route');
 		builder.field('heading', {boost: 10});
 		builder.field('content', {boost: 5});
@@ -61,24 +65,47 @@ function buildIndexes<T extends NgDocRouteEntity<unknown>>(
 		indexes.forEach((index: NgDocPageIndex) => builder.add(index));
 	});
 
-	return JSON.stringify(index);
+	const pages: NgDocPageInfos = indexes.reduce((pages: NgDocPageInfos, index: NgDocPageIndex) => {
+		pages[index.route] = {
+			route: index.route,
+			title: index.title,
+			type: index.type,
+			kind: index.kind,
+		};
+
+		return pages;
+	}, {});
+
+	return [JSON.stringify(pages), JSON.stringify(index)];
 }
 
 /**
  *
- * @param route
- * @param title
+ * @param entity
  * @param tokens
- * @param indexes
  */
-function extractIndexes(route: string, title: string, tokens: marked.Token[]): NgDocPageIndex[] {
+function extractIndexes<T extends NgDocRouteEntity<unknown>>(entity: T, tokens: marked.Token[]): NgDocPageIndex[] {
 	return tokens
 		.filter(isAcceptableToken)
 		.reduce((indexes: NgDocPageIndex[], token: NgDocTokenTypes, index: number) => {
 			if (index === 0 && token.type !== 'heading') {
-				indexes.push({route, heading: title, content: ''});
+				indexes.push({
+					route: entity.fullRoute,
+					type: getTypeFromEntity(entity),
+					title: entity.title,
+					heading: entity.title,
+					content: '',
+					kind: getKindFromEntity(entity),
+				});
 			} else if (token.type === 'heading') {
-				indexes.push({route, heading: extractText(token), content: ''});
+				indexes.push({
+					route: entity.fullRoute,
+					type: getTypeFromEntity(entity),
+					title: entity.title,
+					heading: extractText(token),
+					content: '',
+					kind: getKindFromEntity(entity),
+				});
 			} else {
 				indexes[indexes.length - 1].content += extractText(token);
 			}
@@ -95,4 +122,26 @@ function extractText(token: NgDocTokenTypes): string {
 	return token.tokens?.length
 		? token.tokens.map((t: marked.Token) => (t.type === 'text' ? t.text : '')).join(' ')
 		: token.text;
+}
+
+/**
+ *
+ * @param entity
+ */
+function getTypeFromEntity(entity: NgDocEntity): NgDocPageType {
+	if (entity instanceof NgDocApiPageEntity) {
+		return 'api';
+	}
+	return 'guide';
+}
+
+/**
+ *
+ * @param entity
+ */
+function getKindFromEntity(entity: NgDocEntity): string | undefined {
+	if (entity instanceof NgDocApiPageEntity) {
+		return humanizeDeclarationName(entity.declaration?.getKindName() ?? '');
+	}
+	return undefined;
 }

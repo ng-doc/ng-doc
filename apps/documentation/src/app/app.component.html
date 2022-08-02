@@ -1,5 +1,9 @@
 <ng-doc-root>
-	<ng-doc-navbar>NgDoc</ng-doc-navbar>
+	<ng-doc-navbar [leftContent]="leftContent">
+		<ng-template #leftContent>
+			<h3 class="brand">NgDoc</h3>
+		</ng-template>
+	</ng-doc-navbar>
 	<ng-doc-sidebar></ng-doc-sidebar>
 	<router-outlet></router-outlet>
 </ng-doc-root>
