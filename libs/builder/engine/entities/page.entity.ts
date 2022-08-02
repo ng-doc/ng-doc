@@ -56,6 +56,15 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return this.target?.title ?? '';
 	}
 
+	override get canBeBuild(): boolean {
+		return (
+			!this.target ||
+			!this.context.options.ngDoc.tag ||
+			!this.target.onlyForTags ||
+			asArray(this.target.onlyForTags).includes(this.context.options.ngDoc.tag)
+		);
+	}
+
 	get scope(): string {
 		return this.target?.scope?.replace(CACHE_PATH, '') ?? this.parent?.scope ?? this.context.context.workspaceRoot;
 	}

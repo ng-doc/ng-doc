@@ -16,6 +16,11 @@ export abstract class NgDocEntity {
 	/** Indicates when entity was destroyed */
 	destroyed: boolean = false;
 
+	/** Indicates if the current entity can be build */
+	get canBeBuild(): boolean {
+		return true;
+	}
+
 	/** Last built artifacts */
 	artifacts: NgDocBuiltOutput[] = [];
 
@@ -91,7 +96,7 @@ export abstract class NgDocEntity {
 	 * Contains all children of the current entity.
 	 */
 	get children(): NgDocEntity[] {
-		return this.entityStore.asArray().filter((entity: NgDocEntity) => entity.parent === this);
+		return this.entityStore.asArray().filter((entity: NgDocEntity) => entity.parent === this && entity.canBeBuild);
 	}
 
 	/**
@@ -140,7 +145,7 @@ export abstract class NgDocEntity {
 	 * @type {boolean}
 	 */
 	get isReadyToBuild(): boolean {
-		return this.readyToBuild && !this.destroyed;
+		return this.readyToBuild && !this.destroyed && this.canBeBuild;
 	}
 
 	get logger(): logging.LoggerApi {

@@ -108,7 +108,8 @@
 					"browserTarget": "documentation:build:development",
 					"ngDoc": {
 						"pages": "apps/documentation",
-						"tsConfig": "tsconfig.base.json"
+						"tsConfig": "tsconfig.base.json",
+						"tag": "develop"
 					},
 					"aot": false
 				}
