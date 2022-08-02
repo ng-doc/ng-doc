@@ -1,0 +1,16 @@
+:host {
+	display: block;
+	border: var(--ng-doc-demo-displayer-border);
+	border-radius: var(--ng-doc-demo-displayer-border-radius);
+
+	&:not(:last-child) {
+		border-bottom: 0;
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+	&:not(:first-child) {
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+	}
+}

@@ -1,7 +1,13 @@
 :host {
+	display: flex;
+	flex-direction: column;
+
+	&[data-ng-doc-border="true"] {
+		border: var(--ng-doc-demo-displayer-border);
+		border-radius: var(--ng-doc-demo-displayer-border-radius);
+	}
+
 	.ng-doc-demo-wrapper {
-		border: 1px solid var(--ng-doc-base-2);
-		border-radius: var(--ng-doc-base-gutter);
 		overflow: hidden;
 
 		.ng-doc-demo-container {

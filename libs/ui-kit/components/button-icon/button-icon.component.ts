@@ -11,4 +11,8 @@ export class NgDocButtonIconComponent {
 	@Input()
 	@HostBinding('attr.data-ng-doc-size')
 	size: NgDocSize = 'medium';
+
+	@Input()
+	@HostBinding('attr.data-ng-doc-toggled')
+	toggled: boolean = false;
 }

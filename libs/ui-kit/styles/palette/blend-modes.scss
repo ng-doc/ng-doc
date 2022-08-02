@@ -5,6 +5,14 @@
 
 @use "sass:math";
 
+@function blend-opacity($foreground, $background) {
+	$bm-red: math.div(red($background) * red($foreground), 255);
+	$bm-green: math.div(green($background) * green($foreground), 255);
+	$bm-blue: math.div(blue($background) * blue($foreground), 255);
+
+	@return rgba($bm-red, $bm-green, $bm-blue, 1 - opacity($foreground))
+}
+
 @function blend-normal($foreground, $background) {
 	$opacity: opacity($foreground);
 	$background-opacity: opacity($background);

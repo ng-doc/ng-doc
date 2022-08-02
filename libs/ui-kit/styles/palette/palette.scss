@@ -4,7 +4,7 @@
 	$map: ();
 
 	@each $color-name, $color in $palette-colors {
-		$color-map: color-palette($color-name, $color);
+		$color-map: color-palette($color-name, $color, $color-name == 'grey');
 		$map: map-merge($map, (#{$color-name}: $color-map));
 	}
 
@@ -29,7 +29,7 @@ $ng-doc-palette-colors: (
 	"ember": #FFCC00,
 	"orange": #FF9900,
 	"deep-orange": #FF6600,
-	"grey": #818181,
+	"grey": #1e1e1e,
 );
 
 $ng-doc-palette: palette($ng-doc-palette-colors);

@@ -10,12 +10,11 @@
 	--ng-doc-icon-color: var(--ng-doc-text);
 
 	&:hover {
-		background-color: var(--ng-doc-base-1);
+		background-color: var(--ng-doc-base-2);
 	}
 
 	&:active,
 	&.active {
-		background-color: var(--ng-doc-base-11);
-		--ng-doc-text: var(--ng-doc-text-inversed);
+		background-color: var(--ng-doc-active);
 	}
 }

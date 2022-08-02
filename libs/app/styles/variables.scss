@@ -8,4 +8,8 @@
 	--ng-doc-sidebar-padding: calc(var(--ng-doc-base-gutter) * 2);
 	--ng-doc-sidebar-vetical-padding: var(--ng-doc-base-gutter);
 	--ng-doc-sidebar-horizontal-padding: calc(var(--ng-doc-base-gutter) * 5);
+
+	// DemoDisplayer
+	--ng-doc-demo-displayer-border: 1px solid var(--ng-doc-base-2);
+	--ng-doc-demo-displayer-border-radius: var(--ng-doc-base-gutter);
 }

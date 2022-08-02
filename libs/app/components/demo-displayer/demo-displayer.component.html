@@ -9,6 +9,7 @@
 				<ng-doc-icon icon="copy"></ng-doc-icon>
 			</button>
 			<button ng-doc-button-icon (click)="expanded = !expanded"
+					[toggled]="expanded"
 					[ngDocTooltip]="(expanded ? 'Hide' : 'Show') + ' code'">
 				<ng-doc-icon icon="code"></ng-doc-icon>
 			</button>
