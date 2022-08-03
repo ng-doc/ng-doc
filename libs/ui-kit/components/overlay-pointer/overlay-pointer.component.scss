@@ -56,13 +56,15 @@
 		}
 
 		.ng-doc-pointer:before {
-			border-bottom: 8px solid var(--ng-doc-overlay-border);
+			border-bottom: 8px solid;
+			border-bottom-color: var(--ng-doc-overlay-border);
 		}
 
 		.ng-doc-pointer:after {
 			top: 2px;
 			right: 1px;
-			border-bottom: 7px solid var(--ng-doc-overlay-background);
+			border-bottom: 7px solid;
+			border-bottom-color: var(--ng-doc-overlay-background);
 		}
 	}
 }

@@ -3,7 +3,7 @@
 	<ng-template #leftContent>
 		<ng-doc-icon icon="search"></ng-doc-icon>
 	</ng-template>
-	<input ngDocInputString ngModel (ngModelChange)="query$.next($event); dropdown.open()">
+	<input ngDocInputString ngModel (ngModelChange)="query$.next($event); dropdown.open()" placeholder="Search">
 	<ng-doc-dropdown [content]="dropdownContent" width="100%" maxHeight="calc(95vh - var(--ng-doc-navbar-height)"
 					 #dropdown>
 		<ng-template #dropdownContent>

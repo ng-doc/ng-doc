@@ -1,5 +1,6 @@
 export * from './align';
 export * from './base-element';
+export * from './blockquote-type';
 export * from './color';
 export * from './content';
 export * from './display-value-fn';

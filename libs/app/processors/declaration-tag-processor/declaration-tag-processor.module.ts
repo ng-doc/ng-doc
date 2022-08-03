@@ -1,11 +1,11 @@
-import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {NgDocDeclarationTagModule} from '@ng-doc/app/components/declaration-tag';
 
 import {NgDocDeclarationTagProcessorDirective} from './declaration-tag-processor.directive';
 
 @NgModule({
 	declarations: [NgDocDeclarationTagProcessorDirective],
-	imports: [CommonModule],
+	imports: [NgDocDeclarationTagModule],
 	exports: [NgDocDeclarationTagProcessorDirective],
 })
 export class NgDocDeclarationTagProcessorModule {}

@@ -1,0 +1,33 @@
+@import '../../styles/mixins';
+
+:host {
+	@include ng-doc-font();
+	display: flex;
+	padding: calc(var(--ng-doc-base-gutter) * 2);
+	border-radius: var(--ng-doc-base-gutter);
+	background-color: var(--ng-doc-base-1);
+	border-left: 4px solid var(--ng-doc-base-3);
+	margin-inline-start: 0;
+	margin-inline-end: 0;
+
+	&[data-ng-doc-type='note'] {
+		background-color: var(--ng-doc-light-blue-10);
+		border-left-color: var(--ng-doc-light-blue-100);
+		--ng-doc-icon-color: var(--ng-doc-light-blue-100);
+	}
+
+	&[data-ng-doc-type='warning'] {
+		background-color: var(--ng-doc-orange-10);
+		border-left-color: var(--ng-doc-orange-100);
+		--ng-doc-icon-color: var(--ng-doc-orange-100);
+	}
+
+	.ng-doc-blockquote-icon {
+		display: flex;
+		margin-right: calc(var(--ng-doc-base-gutter) * 2);
+	}
+
+	::ng-deep p {
+		margin: 0;
+	}
+}

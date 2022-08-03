@@ -1,0 +1,14 @@
+<div class="ng-doc-blockquote-icon" *ngIf="type !== 'default'">
+	<ng-container [ngSwitch]="type">
+		<ng-container *ngSwitchCase="'note'">
+			<ng-doc-icon icon="info" [size]="24"></ng-doc-icon>
+		</ng-container>
+		<ng-container *ngSwitchCase="'warning'">
+			<ng-doc-icon icon="alert-triangle" [size]="24"></ng-doc-icon>
+		</ng-container>
+	</ng-container>
+</div>
+<div>
+	<ng-content></ng-content>
+</div>
+

@@ -16,7 +16,7 @@ and much more! NgDoc consists of 4 libraries:
 - `@ng-doc/builder` - The main library that build and render documentation
 - `@ng-doc/app` - Application framework, main logical elements of the application
 - `@ng-doc/ui-kit` - Library for user interface development
-- `@ng-doc/core` - Shared things between libraries
+- `@ng-doc/core` - Shared interfaces, helpers etc. between libraries
 
 ## @ng-doc/builder
 

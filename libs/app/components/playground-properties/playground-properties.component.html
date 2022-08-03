@@ -4,11 +4,14 @@
 	</div>
 	<div class="ng-doc-playground-properties">
 		<div class="ng-doc-playground-controls">
-			<button ng-doc-button-icon (click)="resetForm.emit()" ngDocTooltip="Reset form with values by default">
+			<button ng-doc-button-icon (click)="resetForm.emit()"
+					ngDocTooltip="Reset form with values by default"
+					[positions]="['top-right', 'left-center', 'bottom-right']">
 				<ng-doc-icon icon="x-circle"></ng-doc-icon>
 			</button>
 			<button ng-doc-button-icon (click)="toggleReinitialize.emit()"
-					ngDocTooltip="Re-initialize demo when properties change">
+					ngDocTooltip="Re-initialize demo when properties change"
+					[positions]="['top-right', 'left-center', 'bottom-right']">
 				<ng-doc-icon icon="refresh-cw"></ng-doc-icon>
 			</button>
 		</div>

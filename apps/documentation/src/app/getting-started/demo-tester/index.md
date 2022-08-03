@@ -2,6 +2,16 @@
 
 Here you will se how easy it's to create some demo with NgDoc. <div>Some text</div>
 
+> Default blockqoute
+
+> **Note**
+> This is a note
+
+> **Warning**
+> This is a warning
+>
+> This is another row
+
 ## Playground
 
 {{ NgDocActions.playground("playground1") }}

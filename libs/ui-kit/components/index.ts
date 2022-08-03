@@ -1,3 +1,4 @@
+export * from '@ng-doc/ui-kit/components/blockquote';
 export * from '@ng-doc/ui-kit/components/button-icon';
 export * from '@ng-doc/ui-kit/components/clear-control';
 export * from '@ng-doc/ui-kit/components/combobox';
