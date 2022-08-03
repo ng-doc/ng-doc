@@ -103,10 +103,8 @@ $horizontal-padding: calc(var(--ng-doc-base-gutter) * 2);
 	}
 
 	.ng-doc-content {
-		::ng-deep > ng-doc-svg-icon {
-			width: 40px;
-			height: 40px;
-		}
+		--ng-doc-icon-width: 40px;
+		--ng-doc-icon-height: 40px;
 	}
 }
 

@@ -93,6 +93,7 @@ export class NgDocPlaygroundPropertyComponent<T = unknown> implements OnChanges 
 			let optionsIsValid: boolean = true;
 
 			try {
+				// checking that all values are extractable
 				options.forEach((item: string) => extractValueOrThrow(item));
 			} catch {
 				optionsIsValid = false;
