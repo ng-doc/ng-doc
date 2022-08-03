@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
-import {NgDocBlockquoteProcessorDirective} from './blockquote-processor.directive';
 import {NgDocBlockquoteModule} from '@ng-doc/ui-kit';
+
+import {NgDocBlockquoteProcessorDirective} from './blockquote-processor.directive';
 
 @NgModule({
 	declarations: [NgDocBlockquoteProcessorDirective],
