@@ -1,21 +1,6 @@
-<ng-doc-tab-group *ngIf="container; else demoTemplate">
-	<ng-doc-tab [label]="exampleLabel" id="example" [content]="exampleContent">
-		<ng-template #exampleLabel>
-			<div ng-doc-text size="small">Example</div>
-		</ng-template>
-		<ng-template #exampleContent>
-			<div class="ng-doc-example">
-				<ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
-			</div>
-		</ng-template>
-	</ng-doc-tab>
-	<ng-doc-tab [label]="codeLabel" id="code" [content]="codeContent">
-		<ng-template #codeLabel>
-			<div ng-doc-text size="small">
-				<ng-doc-icon icon="code" ngDocTextLeft></ng-doc-icon>
-				Code
-			</div>
-		</ng-template>
+<ng-container *ngIf="container; else demoTemplate">
+	<ng-doc-demo-displayer [codeContent]="codeContent">
+		<ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
 		<ng-template #codeContent>
 			<ng-container *ngIf="assets.length === 1">
 				<ng-doc-code *ngFor="let asset of assets" [code]="asset.code" [language]="asset.codeType"></ng-doc-code>
@@ -31,8 +16,8 @@
 				</ng-doc-tab-group>
 			</ng-container>
 		</ng-template>
-	</ng-doc-tab>
-</ng-doc-tab-group>
+	</ng-doc-demo-displayer>
+</ng-container>
 
 <ng-template #demoTemplate>
 	<ng-container *polymorpheusOutlet="demo ?? ''; context: {}"></ng-container>

@@ -4,7 +4,9 @@
 			<ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
 		</div>
 		<div class="ng-doc-demo-controls">
-			<button class="ng-doc-copy-button" ng-doc-button-icon (click)="copyCode()"
+			<button class="ng-doc-copy-button" *ngIf="!codeContent"
+					ng-doc-button-icon
+					(click)="copyCode()"
 					ngDocTooltip="Copy code">
 				<ng-doc-icon icon="copy"></ng-doc-icon>
 			</button>
@@ -15,7 +17,7 @@
 			</button>
 		</div>
 	</div>
-	<ng-doc-expander [content]="expanderContent" [expanded]="expanded">
+	<ng-doc-expander [content]="codeContent ? codeContent : expanderContent" [expanded]="expanded">
 		<ng-template #expanderContent>
 			<ng-doc-code [code]="code" [language]="language" [copyButton]="false" [standalone]="false"></ng-doc-code>
 		</ng-template>

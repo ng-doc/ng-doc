@@ -1,6 +1,6 @@
 import {Clipboard} from '@angular/cdk/clipboard';
 import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
-import {NgDocNotifyService} from '@ng-doc/ui-kit';
+import {NgDocContent, NgDocNotifyService} from '@ng-doc/ui-kit';
 
 @Component({
 	selector: 'ng-doc-demo-displayer',
@@ -9,6 +9,9 @@ import {NgDocNotifyService} from '@ng-doc/ui-kit';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgDocDemoDisplayerComponent {
+	@Input()
+	codeContent: NgDocContent = '';
+
 	@Input()
 	code: string = '';
 
