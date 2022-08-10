@@ -1,10 +1,14 @@
+import {NgDocHtmlParser} from '@ng-doc/app/classes';
 import {NgDocPlaygroundFormData} from '@ng-doc/app/interfaces';
 import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties, NgDocPlaygroundProperty} from '@ng-doc/builder';
 import {objectKeys} from '@ng-doc/core';
+import * as CSSWhat from 'css-what';
+import {SelectorType} from 'css-what';
+import {Selector, TagSelector} from 'css-what/lib/es/types';
+import {DefaultTreeAdapterMap} from 'parse5';
 
-/**
- * <{{ngDocSelector}}></{{ngDocSelector}}>
- */
+const NG_DOC_SELECTOR_NAME: string = 'ng-doc-selector';
+
 
 /**
  *
@@ -23,77 +27,101 @@ export function compileTemplate(
 	dynamicContent?: Record<string, NgDocPlaygroundDynamicContent>,
 	destination: 'preview' | 'dynamic' | 'compile' = 'dynamic',
 ): string {
-	const selectorMatch: RegExpMatchArray | null = /(<)?(\w*\s+)?({{\s*ngDocSelector\s*}})/g.exec(template);
-	const tag: string = ((selectorMatch && selectorMatch[2]) ?? extractTagFromSelector(selector)).trim();
-	const attributes: string = extractAttributesFromSelector(selector);
-	const inputs: string = convertPropertiesToInputs(properties, data);
+	const parser: NgDocHtmlParser = new NgDocHtmlParser(template);
+	const selectors: Selector[] = CSSWhat.parse(selector)[0];
 
-	template = template
-		.replace(/<\w*\s*{{\s*ngDocSelector\s*}}\w*\s*>/gm, `<${(tag + ' ' + attributes + ' ' + inputs).trim()}>`)
-		.replace(/<\/\w*\s*{{\s*ngDocSelector\s*}}\w*\s*>/gm, `</${tag}>`);
+	const rootElement: DefaultTreeAdapterMap['element'] | undefined =
+		parser.find(NG_DOC_SELECTOR_NAME) ?? parser.find(selector);
 
+	if (rootElement) {
+		rootElement.attrs = [];
+		selectorToAttributes(parser, rootElement, selectors);
+
+		if (rootElement.tagName.toLowerCase() === NG_DOC_SELECTOR_NAME.toLowerCase()) {
+			rootElement.tagName =
+				(selectors.find((selector: Selector) => selector.type === SelectorType.Tag) as TagSelector)?.name ??
+				'div';
+		}
+
+		propertiesToAttributes(parser, rootElement, properties, data);
+	}
+
+	return replaceContent(parser.serialize(), data, dynamicContent, destination).replace(/=""/g, '');
+}
+
+/**
+ *
+ * @param parser
+ * @param element
+ * @param selectors
+ */
+function selectorToAttributes(
+	parser: NgDocHtmlParser,
+	element: DefaultTreeAdapterMap['element'],
+	selectors: Selector[],
+): void {
+	selectors.forEach((selector: Selector) => {
+		if (selector.type === 'attribute') {
+			parser.setAttribute(element, selector.name, selector.value);
+		}
+	});
+}
+
+/**
+ *
+ * @param parser
+ * @param element
+ * @param properties
+ * @param data
+ */
+function propertiesToAttributes<P extends NgDocPlaygroundProperties>(
+	parser: NgDocHtmlParser,
+	element: DefaultTreeAdapterMap['element'],
+	properties: P,
+	data: NgDocPlaygroundFormData<P>,
+): void {
+	objectKeys(properties).forEach((key: keyof P) => {
+		const property: NgDocPlaygroundProperty = properties[key];
+		const propertyValue: unknown = data.properties[key];
+		const valueIsString: boolean = typeof propertyValue === 'string';
+		const inputValue: string = valueIsString ? `'${propertyValue}'` : `${propertyValue}`;
+
+		if ((property.default ?? '') !== inputValue) {
+			parser.setAttribute(element, `[${String(key)}]`, inputValue);
+		}
+	});
+}
+
+/**
+ *
+ * @param htmlData
+ * @param data
+ * @param dynamicContent
+ * @param destination
+ */
+function replaceContent(
+	htmlData: string,
+	data: NgDocPlaygroundFormData,
+	dynamicContent: Record<string, NgDocPlaygroundDynamicContent> | undefined,
+	destination: 'preview' | 'dynamic' | 'compile',
+): string {
 	if (dynamicContent) {
 		objectKeys(dynamicContent).forEach((key: string) => {
-			const contentTemplate: string =
+			const elementContent: string =
 				destination === 'compile'
 					? `<ng-container *ngIf="content.${key}">
 								${dynamicContent[key].template}
-							</ng-container>`
+						</ng-container>`
 					: data.content[key]
 					? dynamicContent[key].template
 					: '';
 
-			template = template.replace(
+			htmlData = htmlData.replace(
 				new RegExp(`{{\\s*${key}\\s*}}`, 'gm'),
-				contentTemplate ? `\n${contentTemplate}\n` : '',
+				elementContent ? `\n${elementContent}\n` : '',
 			);
 		});
 	}
 
-	return template;
-}
-
-/**
- *
- * @param selector
- */
-function extractTagFromSelector(selector: string): string {
-	const match: RegExpMatchArray | null = /^([^[\]]*)(\[.*])?$/gm.exec(selector);
-
-	return (match && match[1]) || 'div';
-}
-
-/**
- *
- * @param selector
- */
-function extractAttributesFromSelector(selector: string): string {
-	const match: RegExpMatchArray | null = /^([^[\]]*)(\[.*])?$/gm.exec(selector);
-
-	return (match && match[2]?.replace(/^\[(.*)\]$/gm, '$1')) ?? '';
-}
-
-/**
- *
- * @param properties
- * @param data
- */
-function convertPropertiesToInputs<P extends NgDocPlaygroundProperties>(
-	properties: P,
-	data: NgDocPlaygroundFormData<P>,
-): string {
-	return objectKeys(properties)
-		.reduce((inputs: string, key: keyof P) => {
-			const property: NgDocPlaygroundProperty = properties[key];
-			const propertyValue: unknown = data.properties[key];
-			const valueIsString: boolean = typeof propertyValue === 'string';
-			const inputValue: string = valueIsString ? `'${propertyValue}'` : `${propertyValue}`;
-
-			if ((property.default ?? '') !== inputValue) {
-				inputs += `[${String(key)}]="${inputValue}" `;
-			}
-
-			return inputs;
-		}, '')
-		.trim();
+	return htmlData;
 }

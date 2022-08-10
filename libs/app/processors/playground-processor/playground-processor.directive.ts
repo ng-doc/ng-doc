@@ -21,8 +21,8 @@ export class NgDocPlaygroundProcessorDirective extends NgDocHtmlProcessor<NgDocP
 		return {
 			inputs: {
 				id: element.getAttribute('data-playground-id') ?? undefined,
-				properties: JSON.parse(element.textContent ?? '') ?? undefined,
-				selectors: (element.getAttribute('data-selectors') ?? '')
+				properties: JSON.parse(element.querySelector('#data')?.textContent ?? '') ?? undefined,
+				selectors: (element.querySelector('#selectors')?.textContent ?? '')
 					.split(',')
 					.map((selector: string) => selector.trim()),
 			},

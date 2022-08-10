@@ -37,9 +37,10 @@ export function playgroundAction(playgroundId: string): NgDocAction {
 			const playgroundData: NgDocPlaygroundProperties = declarationToPlayground(declaration);
 
 			return {
-				output: `<div id="${NG_DOC_PLAYGROUND_TEMPLATE_ID}" data-playground-id="${playgroundId}" data-selectors="${selectors}">${JSON.stringify(
-					playgroundData,
-				)}</div>`,
+				output: `<div id="${NG_DOC_PLAYGROUND_TEMPLATE_ID}" data-playground-id="${playgroundId}">
+							<div id="selectors">${selectors}</div>
+							<div id="data">${JSON.stringify(playgroundData)}</div>
+						</div>`,
 				dependencies: [declaration.getSourceFile().getFilePath()],
 			};
 		} catch (e) {

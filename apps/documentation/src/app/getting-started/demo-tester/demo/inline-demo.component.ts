@@ -4,7 +4,7 @@ type Alias = 'one' | 'two' | 34 | true;
 
 /* NgDocCodeSnippetStart(Test1) */
 @Component({
-	selector: '[ng-doc-inline-demo], ng-doc-inline, span[ng-doc-inline]',
+	selector: '[ng-doc-inline="true"], [ng-doc-inline-demo], ng-doc-inline, span[ng-doc-inline]',
 	template: `
 		<div [style.color]="color">
 			inline-demo works 34234!
