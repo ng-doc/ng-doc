@@ -3,7 +3,7 @@ import {PolymorpheusContent} from '@tinkoff/ng-polymorpheus';
 
 @Component({
 	selector: 'ng-doc-tab',
-	templateUrl: './tab.component.html',
+	template: '',
 	styleUrls: ['./tab.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

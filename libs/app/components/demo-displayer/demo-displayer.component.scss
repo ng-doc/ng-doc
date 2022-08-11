@@ -1,6 +1,8 @@
 :host {
 	display: flex;
 	flex-direction: column;
+	--ng-doc-code-margin: 0;
+	--ng-doc-code-border-radius: 0;
 
 	&[data-ng-doc-border="true"] {
 		border: var(--ng-doc-demo-displayer-border);

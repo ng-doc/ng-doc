@@ -14,11 +14,12 @@
 	pre {
 		position: relative;
 		display: flex;
+		margin: var(--ng-doc-code-margin, 1em 0px);
 
 		code {
 			padding: calc(var(--ng-doc-base-gutter) * 2) calc(var(--ng-doc-base-gutter) * 3);
 			width: 100%;
-			border-radius: var(--ng-doc-base-gutter);
+			border-radius: var(--ng-doc-code-border-radius, var(--ng-doc-base-gutter));
 			font-family: var(--ng-doc-code-font);
 			font-size: var(--ng-doc-code-font-size);
 			line-height: var(--ng-doc-code-line-height);

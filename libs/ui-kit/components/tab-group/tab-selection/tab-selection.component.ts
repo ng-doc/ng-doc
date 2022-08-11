@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input, OnChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges} from '@angular/core';
 import {NgDocPosition} from '@ng-doc/ui-kit/types';
 
 @Component({
@@ -10,10 +10,6 @@ import {NgDocPosition} from '@ng-doc/ui-kit/types';
 export class TabSelectionComponent implements OnChanges {
 	@Input()
 	bindTo: ElementRef<HTMLElement> | null = null;
-
-	@Input()
-	@HostBinding('attr.data-ng-doc-first')
-	isItFirst: boolean = false;
 
 	constructor(private readonly elementRef: ElementRef<HTMLElement>) {}
 
