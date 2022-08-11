@@ -3,15 +3,14 @@
 		<ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
 		<ng-template #codeContent>
 			<ng-container *ngIf="assets.length === 1">
-				<ng-doc-code *ngFor="let asset of assets" [code]="asset.code" [language]="asset.codeType"
-							 [margin]="false"></ng-doc-code>
+				<ng-doc-code *ngFor="let asset of assets" [code]="asset.code" [language]="asset.codeType"></ng-doc-code>
 			</ng-container>
 
 			<ng-container *ngIf="assets.length > 1">
 				<ng-doc-tab-group>
 					<ng-doc-tab *ngFor="let asset of assets" [label]="asset.title" [content]="assetContent">
 						<ng-template #assetContent>
-							<ng-doc-code [code]="asset.code" [language]="asset.codeType" [margin]="false"></ng-doc-code>
+							<ng-doc-code [code]="asset.code" [language]="asset.codeType"></ng-doc-code>
 						</ng-template>
 					</ng-doc-tab>
 				</ng-doc-tab-group>
