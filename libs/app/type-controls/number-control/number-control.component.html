@@ -6,6 +6,7 @@
 			size="large"
 			[ngDocFocusable]="false"
 			[disabled]="disabled"
+			[rounded]="false"
 			(click)="updateModel(defaultValue)"
 			(focusout)="onTouched()"
 			*ngIf="model && model !== defaultValue"

@@ -67,7 +67,7 @@ $horizontal-padding: calc(var(--ng-doc-base-gutter) * 2);
 			outline: none;
 			text-align: var(--ng-doc-input-text-align);
 			border: 0;
-			border-radius: var(--ng-doc-input-border-radius);
+			border-radius: var(--ng-doc-floated-border-radius);
 			cursor: var(--ng-doc-input-cursor);
 
 			&::placeholder {

@@ -15,4 +15,8 @@ export class NgDocButtonIconComponent {
 	@Input()
 	@HostBinding('attr.data-ng-doc-toggled')
 	toggled: boolean = false;
+
+	@Input()
+	@HostBinding('attr.data-ng-doc-rounded')
+	rounded: boolean = true;
 }

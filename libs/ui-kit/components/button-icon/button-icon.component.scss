@@ -10,6 +10,7 @@
 	height: calc(var(--ng-doc-base-gutter) * 4);
 	background-color: var(--ng-doc-button-background);
 	color: var(--ng-doc-button-color);
+	--ng-doc-icon-color: var(--ng-doc-button-color);
 
 	&[data-ng-doc-size='small'] {
 		width: calc(var(--ng-doc-base-gutter) * 3);
@@ -37,5 +38,13 @@
 		background-color: var(--ng-doc-button-active-background);
 		color: var(--ng-doc-button-active-color);
 		--ng-doc-icon-color: var(--ng-doc-button-active-color);
+	}
+
+	&[data-ng-doc-rounded="false"] {
+		--ng-doc-button-color: var(--ng-doc-grey-100);
+		--ng-doc-button-hover-color: var(--ng-doc-grey-130);
+		--ng-doc-button-active-color: var(--ng-doc-grey-160);
+		--ng-doc-button-hover-background: transparent;
+		--ng-doc-button-active-background: transparent;
 	}
 }
