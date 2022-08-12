@@ -1,0 +1,17 @@
+:host {
+	position: absolute;
+	z-index: 2;
+	transition: var(--ng-doc-transition);
+	background-color: var(--ng-doc-primary);
+	pointer-events: none;
+
+	&[data-ng-doc-orientation='vertical'] {
+		right: 0;
+		width: var(--ng-doc-selection-size);
+	}
+
+	&[data-ng-doc-orientation='horizontal'] {
+		bottom: 0;
+		height: var(--ng-doc-selection-size);
+	}
+}
