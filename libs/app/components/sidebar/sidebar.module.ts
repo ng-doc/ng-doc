@@ -5,9 +5,11 @@ import {
 	NgDocExpanderModule,
 	NgDocIconModule,
 	NgDocLineModule,
-	NgDocRotatorModule, NgDocSelectionModule,
+	NgDocRotatorModule,
+	NgDocSelectionModule,
 	NgDocTextModule,
 } from '@ng-doc/ui-kit';
+import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 
 import {NgDocSidebarComponent} from './sidebar.component';
 import {NgDocSidebarCategoryComponent} from './sidebar-category/sidebar-category.component';
@@ -24,6 +26,7 @@ import {NgDocSidebarItemComponent} from './sidebar-item/sidebar-item.component';
 		NgDocRotatorModule,
 		NgDocLineModule,
 		NgDocSelectionModule,
+		PolymorpheusModule,
 	],
 	exports: [NgDocSidebarComponent],
 })

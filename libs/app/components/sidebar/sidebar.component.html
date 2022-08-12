@@ -10,10 +10,14 @@
 				[expandable]="!!item?.expandable"
 				[expanded]="!!item?.expanded"
 				[isRoot]="!!root"
+				[content]="categoryContent"
 			>
-				<ng-container *ngFor="let child of getNavigation(item)">
-					<ng-container *ngTemplateOutlet="sidebarTemplate; context: {item: child, root: false}"></ng-container>
-				</ng-container>
+				<ng-template #categoryContent>
+					<ng-container *ngFor="let child of getNavigation(item)">
+						<ng-container
+							*ngTemplateOutlet="sidebarTemplate; context: {item: child, root: false}"></ng-container>
+					</ng-container>
+				</ng-template>
 			</ng-doc-sidebar-category>
 		</ng-container>
 

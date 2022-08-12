@@ -39,6 +39,7 @@ Here you will se how easy it's to create some demo with NgDoc. <div>Some text</d
 ```
 
 {{ NgDocActions.demo("InlineDemoComponent", {container: false}) }}
+{{ NgDocActions.demo("InlineDemoComponent") }}
 
 ## Multi file demo
 
@@ -68,12 +69,17 @@ export class Test {
 
 ## API
 
+### TestClass
 {{ NgDocActions.api("../class.ts#TestClass") }}
 
+### MyEnum1
 {{ NgDocActions.api("../class.ts#MyEnum1") }}
 
+### MyInterface
 {{ NgDocActions.api("../class.ts#MyInterface") }}
 
+### MyType
 {{ NgDocActions.api("../class.ts#MyType") }}
 
+### myFunction
 {{ NgDocActions.api("../class.ts#myFunction") }}

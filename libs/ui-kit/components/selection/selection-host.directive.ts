@@ -23,11 +23,13 @@ export class NgDocSelectionHostDirective {
 	removeOrigin(origin: NgDocSelectionOriginDirective): void {
 		this.origins.delete(origin);
 
-		this.changeSelected(origin, this.selected !== origin);
+		if (this.selected === origin) {
+			this.changeSelected(origin, false);
+		}
 	}
 
 	changeSelected(origin: NgDocSelectionOriginDirective, selected: boolean): void {
-		this.selected = this.selected === origin || selected ? (selected ? origin : undefined) : undefined;
+		this.selected = this.selected === origin || selected ? (selected ? origin : undefined) : this.selected;
 		this.selectedChange.next(this.selected?.elementRef?.nativeElement ?? undefined);
 	}
 }

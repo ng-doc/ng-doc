@@ -6,7 +6,7 @@ export class TestClass {
 	private property2: string = 'aks98d';
 
 	/**
-	 * Описание функции
+	 * Function description
 	 *
 	 * @param parameter
 	 * @param parameter2

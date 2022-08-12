@@ -27,7 +27,7 @@ export class NgDocSelectionComponent implements AfterViewInit {
 	}
 
 	private setStyles(element?: HTMLElement): void {
-		this.elementRef.nativeElement.style.display = 'none';
+		this.elementRef.nativeElement.style.visibility = 'hidden';
 		if (element) {
 			const position: NgDocPosition = this.getPosition(element);
 
@@ -39,7 +39,7 @@ export class NgDocSelectionComponent implements AfterViewInit {
 				this.elementRef.nativeElement.style.height = position.height;
 			}
 
-			this.elementRef.nativeElement.style.display = 'block';
+			this.elementRef.nativeElement.style.visibility = 'visible';
 		}
 	}
 

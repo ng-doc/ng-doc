@@ -20,6 +20,7 @@
 			<div class="ng-doc-sidebar-category-children">
 				<!--We wrap content via ng-template to save state of the child components -->
 				<ng-content></ng-content>
+				<ng-container *polymorpheusOutlet="content"></ng-container>
 			</div>
 		</ng-template>
 	</ng-doc-expander>
