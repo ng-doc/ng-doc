@@ -1,13 +1,12 @@
+import {objectKeys} from '@ng-doc/core';
 import * as nunjucks from 'nunjucks';
 import {Environment, lib} from 'nunjucks';
 import {Observable, Subscriber} from 'rxjs';
 
 import {NgDocRendererOptions} from '../interfaces';
+import * as filters from './template-filters';
 import {TEMPLATES_PATH} from './variables';
 import TemplateError = lib.TemplateError;
-import {humanizeDeclarationName} from '@ng-doc/core';
-
-import {displayType} from '../helpers';
 
 export class NgDocRenderer<T extends object> {
 	constructor(private readonly context?: T) {}
@@ -34,10 +33,15 @@ export class NgDocRenderer<T extends object> {
 	}
 
 	private getEnvironment(options?: NgDocRendererOptions<T>): Environment {
-		return nunjucks.configure(options?.scope ?? TEMPLATES_PATH, {
+		let environment: Environment = nunjucks.configure(options?.scope ?? TEMPLATES_PATH, {
 			autoescape: false,
-		})
-			.addFilter('humanizeDeclarationName', humanizeDeclarationName)
-			.addFilter('displayType', displayType)
+		});
+
+		// TODO: TEST PRODUCTION
+		objectKeys(filters).forEach(
+			(filter: keyof typeof filters) => (environment = environment.addFilter(filter, filters[filter])),
+		);
+
+		return environment;
 	}
 }

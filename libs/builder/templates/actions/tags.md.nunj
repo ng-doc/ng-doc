@@ -1,3 +1,0 @@
-{% import "actions/helpers/tags.md.nunj" as tags %}
-
-{{ tags.render(Node, dclaration, scope, additionalTags) }}

@@ -1,9 +1,0 @@
-{% import "actions/helpers/api/class-properties.md.nunj" as properties %}
-{% import "actions/helpers/api/class-methods.md.nunj" as methods %}
-
-{% macro render(Node, declaration) %}
-{{ properties.render(declaration.getProperties()) }}
-
-{{ methods.render(declaration.getMethods()) }}
-
-{% endmacro %}

@@ -1,3 +1,5 @@
 {%- macro render(declaration) -%}
-{{ declaration.getName() }}
+{{ declaration | exportDeclaration }}
 {%- endmacro -%}
+
+

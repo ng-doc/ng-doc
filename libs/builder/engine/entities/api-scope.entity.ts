@@ -5,12 +5,12 @@ import {map} from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
 import {isNotExcludedPath, isPageEntity, uniqueName} from '../../helpers';
+import {isSupportedDeclaration} from '../../helpers/is-supported-declaration';
 import {NgDocApiScope, NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocApiScopeModuleEnv} from '../../templates-env/api-scope.module.env';
+import {NgDocSupportedDeclarations} from '../../types/supported-declarations';
 import {NgDocEntityStore} from '../entity-store';
-import {isSupportedDeclaration} from '../functions/is-supported-declaration';
 import {NgDocRenderer} from '../renderer';
-import {NgDocSupportedDeclarations} from '../types/supported-declarations';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocApiEntity} from './api.entity';

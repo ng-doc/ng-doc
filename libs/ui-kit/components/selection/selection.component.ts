@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, HostBinding, Input} from '@angular/core';
-import {NgDocOrientation, NgDocPosition} from '@ng-doc/ui-kit/types';
+import {NgDocHorizontalAlign, NgDocPosition, NgDocVerticalAlign} from '@ng-doc/ui-kit/types';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 
 import {NgDocSelectionHostDirective} from './selection-host.directive';
@@ -12,8 +12,8 @@ import {NgDocSelectionHostDirective} from './selection-host.directive';
 @UntilDestroy()
 export class NgDocSelectionComponent implements AfterViewInit {
 	@Input()
-	@HostBinding('attr.data-ng-doc-orientation')
-	orientation: NgDocOrientation = 'horizontal';
+	@HostBinding('attr.data-ng-doc-align')
+	align: NgDocHorizontalAlign | NgDocVerticalAlign = 'bottom';
 
 	constructor(
 		private readonly elementRef: ElementRef<HTMLElement>,
@@ -31,14 +31,14 @@ export class NgDocSelectionComponent implements AfterViewInit {
 		if (element) {
 			const position: NgDocPosition = this.getPosition(element);
 
-			if (this.orientation === 'horizontal') {
-				this.elementRef.nativeElement.style.left = position.left;
-				this.elementRef.nativeElement.style.width = position.width;
-			} else {
+			if (this.align === 'left' || this.align === 'right') {
 				this.elementRef.nativeElement.style.top = position.top;
-				this.elementRef.nativeElement.style.height = position.height;
+			} else {
+				this.elementRef.nativeElement.style.left = position.left;
 			}
 
+			this.elementRef.nativeElement.style.height = position.height;
+			this.elementRef.nativeElement.style.width = position.width;
 			this.elementRef.nativeElement.style.visibility = 'visible';
 		}
 	}

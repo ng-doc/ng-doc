@@ -1,7 +1,0 @@
-{%- import "actions/helpers/api/type.md.nunj" as type -%}
-
-{%- macro render(parameters) -%}
-{%- for param in parameters -%}
-{{ param.getName() }}: {{ type.render(param.getType()) }}<br />
-{%- endfor -%}
-{%- endmacro -%}

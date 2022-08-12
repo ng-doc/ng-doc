@@ -1,4 +1,4 @@
-{% import "actions/helpers/api/api.md.nunj" as api %}
+{% import "actions/helpers/api.md.nunj" as api %}
 {% import "actions/helpers/tags.md.nunj" as tags %}
 
 {{ tags.render(Node, declaration, scope) }}
@@ -13,4 +13,4 @@
 
 ## Api
 
-{{ api.render(Node, declaration) }}
+{{ api.render(declaration) }}

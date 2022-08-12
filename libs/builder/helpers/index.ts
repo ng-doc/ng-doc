@@ -9,6 +9,7 @@ export * from './find-closest-file';
 export * from './format-code';
 export * from './get-entity-constructor';
 export * from './is-not-excluded-path';
+export * from './is-supported-declaration';
 export * from './process-snippets';
 export * from './typescript';
 export * from './unique-name';

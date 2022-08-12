@@ -1,5 +1,0 @@
-{%- macro render(docs) -%}
-{%- for doc in docs -%}
-{{ doc.getDescription().trim() }}
-{%- endfor -%}
-{%- endmacro -%}

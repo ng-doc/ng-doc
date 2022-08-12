@@ -2,16 +2,16 @@ import {isPresent} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {Node, Project, SourceFile} from 'ts-morph';
+import {Project, SourceFile} from 'ts-morph';
 
 import {declarationFolderName, uniqueName} from '../../helpers';
+import {isSupportedDeclaration} from '../../helpers/is-supported-declaration';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocApiPageEnv} from '../../templates-env/api-page.env';
 import {NgDocApiPageModuleEnv} from '../../templates-env/api-page.module.env';
+import {NgDocSupportedDeclarations} from '../../types/supported-declarations';
 import {NgDocEntityStore} from '../entity-store';
-import {isSupportedDeclaration} from '../functions/is-supported-declaration';
 import {NgDocRenderer} from '../renderer';
-import {NgDocSupportedDeclarations} from '../types/supported-declarations';
 import {RENDERED_PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocRouteEntity} from './abstractions/route.entity';
@@ -98,7 +98,6 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	private buildPage(): Observable<NgDocBuiltOutput | null> {
 		if (this.declaration) {
 			const renderer: NgDocRenderer<NgDocApiPageEnv> = new NgDocRenderer<NgDocApiPageEnv>({
-				Node,
 				declaration: this.declaration,
 				scope: this.parent.target,
 			});

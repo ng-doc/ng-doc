@@ -1,3 +1,0 @@
-{%- macro render(property) -%}
-{{ property.getName() }}
-{%- endmacro -%}

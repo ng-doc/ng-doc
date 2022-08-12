@@ -18,7 +18,6 @@ export function apiAction(sourcePath: string): NgDocAction {
 		try {
 			const declaration: Node = findDeclaration(project, page.scope, sourcePath);
 			const renderer: NgDocRenderer<NgDocApiEnv> = new NgDocRenderer<NgDocApiEnv>({
-				Node,
 				declaration,
 			});
 

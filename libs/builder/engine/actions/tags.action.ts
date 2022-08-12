@@ -18,7 +18,6 @@ export function tagsAction(sourcePath: string): NgDocAction {
 		try {
 			const declaration: Node = findDeclaration(project, page.scope, sourcePath);
 			const renderer: NgDocRenderer<NgDocTagsEnv> = new NgDocRenderer<NgDocTagsEnv>({
-				Node,
 				declaration,
 			});
 

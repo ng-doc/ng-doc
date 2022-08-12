@@ -7,7 +7,8 @@
 	background-color: var(--ng-doc-base-1);
 	--ng-doc-sidebar-category-indent: var(--ng-doc-sidebar-horizontal-padding);
 	--ng-doc-sidebar-item-indent: var(--ng-doc-sidebar-horizontal-padding);
-	--ng-doc-selection-size: 5px;
+	--ng-doc-selection-border: 5px solid var(--ng-doc-primary);
+	--ng-doc-selection-background: var(--ng-doc-base-1);
 
 	.ng-doc-side-bar-wrapper {
 		position: relative;

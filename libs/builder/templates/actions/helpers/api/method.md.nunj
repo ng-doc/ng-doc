@@ -1,3 +1,0 @@
-{%- macro render(method) -%}
-{{ method.getName() }}
-{%- endmacro -%}
