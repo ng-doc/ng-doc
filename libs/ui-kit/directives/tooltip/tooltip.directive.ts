@@ -35,7 +35,7 @@ export class NgDocTooltipDirective implements AfterViewInit, OnDestroy {
 	content: PolymorpheusContent = '';
 
 	@Input()
-	delay: number = 100;
+	delay: number = 300;
 
 	@Input()
 	displayOrigin?: BaseElement<HTMLElement>;

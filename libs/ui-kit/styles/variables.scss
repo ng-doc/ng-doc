@@ -65,6 +65,9 @@
 	/* NgDocTagComponent */
 	--ng-doc-tag-background: var(--ng-doc-primary);
 	--ng-doc-tag-color: var(--ng-doc-primary-text);
+
+	/* NgDocSelection */
+	--ng-doc-selection-size: 3px;
 }
 
 body.dark {

@@ -1,5 +1,9 @@
 @import '../../../../ui-kit/styles/mixins';
 
+:host {
+	display: block;
+}
+
 .ng-doc-sidebar-link {
 	@include ng-doc-font();
 	display: flex;
@@ -10,11 +14,11 @@
 	--ng-doc-icon-color: var(--ng-doc-text);
 
 	&:hover {
-		background-color: var(--ng-doc-base-2);
+		background-color: var(--ng-doc-base-1);
 	}
 
 	&:active,
 	&.active {
-		background-color: var(--ng-doc-active);
+		background-color: transparent;
 	}
 }

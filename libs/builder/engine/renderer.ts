@@ -7,6 +7,8 @@ import {TEMPLATES_PATH} from './variables';
 import TemplateError = lib.TemplateError;
 import {humanizeDeclarationName} from '@ng-doc/core';
 
+import {displayType} from '../helpers';
+
 export class NgDocRenderer<T extends object> {
 	constructor(private readonly context?: T) {}
 
@@ -36,5 +38,6 @@ export class NgDocRenderer<T extends object> {
 			autoescape: false,
 		})
 			.addFilter('humanizeDeclarationName', humanizeDeclarationName)
+			.addFilter('displayType', displayType)
 	}
 }

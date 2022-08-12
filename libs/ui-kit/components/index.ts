@@ -15,6 +15,7 @@ export * from '@ng-doc/ui-kit/components/list';
 export * from '@ng-doc/ui-kit/components/option';
 export * from '@ng-doc/ui-kit/components/overlay-container';
 export * from '@ng-doc/ui-kit/components/overlay-pointer';
+export * from '@ng-doc/ui-kit/components/selection';
 export * from '@ng-doc/ui-kit/components/tab-group';
 export * from '@ng-doc/ui-kit/components/tag';
 export * from '@ng-doc/ui-kit/components/text';

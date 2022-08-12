@@ -1,3 +1,3 @@
 {%- macro render(type) -%}
-`{{ type.getText() }}`
+`{{ type | displayType }}`
 {%- endmacro -%}

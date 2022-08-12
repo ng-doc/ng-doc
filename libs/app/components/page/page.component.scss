@@ -4,6 +4,7 @@
 // Global Styles
 ::ng-deep {
 	.ng-doc-page-wrapper {
+		max-width: 800px;
 
 		& > ng-doc-tag {
 			margin-bottom: var(--ng-doc-base-gutter);

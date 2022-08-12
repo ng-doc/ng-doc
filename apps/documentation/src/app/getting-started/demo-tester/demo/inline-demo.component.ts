@@ -1,5 +1,7 @@
 import {ChangeDetectionStrategy, Component, HostBinding, Input, OnInit} from '@angular/core';
 
+import {TestType} from '../../test';
+
 type Alias = 'one' | 'two' | 34 | true;
 
 /* NgDocCodeSnippetStart(Test1) */
@@ -30,7 +32,7 @@ export class InlineDemoComponent implements OnInit {
 
 	/** Count property */
 	@Input()
-	count: number = 0;
+	count: TestType = 0;
 
 	@Input()
 	alias: 'one' | 'two' = 'one';

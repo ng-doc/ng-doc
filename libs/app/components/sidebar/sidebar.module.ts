@@ -5,7 +5,7 @@ import {
 	NgDocExpanderModule,
 	NgDocIconModule,
 	NgDocLineModule,
-	NgDocRotatorModule,
+	NgDocRotatorModule, NgDocSelectionModule,
 	NgDocTextModule,
 } from '@ng-doc/ui-kit';
 
@@ -23,6 +23,7 @@ import {NgDocSidebarItemComponent} from './sidebar-item/sidebar-item.component';
 		NgDocExpanderModule,
 		NgDocRotatorModule,
 		NgDocLineModule,
+		NgDocSelectionModule,
 	],
 	exports: [NgDocSidebarComponent],
 })

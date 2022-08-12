@@ -5,6 +5,7 @@ export * from './color';
 export * from './content';
 export * from './display-value-fn';
 export * from './icon-size';
+export * from './orientation';
 export * from './overlay-animation-event';
 export * from './overlay-origin';
 export * from './overlay-position';

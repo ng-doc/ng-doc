@@ -1,6 +1,7 @@
 import {ClassDeclaration, JSDoc, PropertyDeclaration, Type} from 'ts-morph';
 
 import {NgDocPlaygroundProperties} from '../interfaces';
+import {displayType} from './typescript';
 
 /**
  *
@@ -12,7 +13,7 @@ export function declarationToPlayground(declaration: ClassDeclaration): NgDocPla
 		.filter((property: PropertyDeclaration) => !!property.getDecorator('Input'))
 		.reduce((properties: NgDocPlaygroundProperties, property: PropertyDeclaration) => {
 			properties[property.getName()] = {
-				type: property.getType().getText(),
+				type: displayType(property.getType()),
 				default: property.getInitializer()?.getText(),
 				description: property
 					.getJsDocs()

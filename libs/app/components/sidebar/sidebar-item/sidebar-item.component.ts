@@ -10,4 +10,6 @@ import {NgDocNavigation} from '@ng-doc/app/interfaces';
 export class NgDocSidebarItemComponent {
 	@Input()
 	item?: NgDocNavigation;
+
+	selected: boolean = false;
 }
