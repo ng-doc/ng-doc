@@ -2,6 +2,7 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {NgDocMarkdownModule} from '@ng-doc/app/directives/markdown';
 import {
+	NgDocApiProcessorModule,
 	NgDocBlockquoteProcessorModule,
 	NgDocCodeProcessorModule,
 	NgDocDeclarationTagProcessorModule,
@@ -25,6 +26,7 @@ import {NgDocPageComponent} from './page.component';
 		NgDocPlaygroundProcessorModule,
 		NgDocDeclarationTagProcessorModule,
 		NgDocBlockquoteProcessorModule,
+		NgDocApiProcessorModule,
 	],
 	exports: [NgDocPageComponent],
 })

@@ -1,3 +1,4 @@
+export * from '@ng-doc/app/api-displayers';
 export * from '@ng-doc/app/classes';
 export * from '@ng-doc/app/components';
 export * from '@ng-doc/app/directives';

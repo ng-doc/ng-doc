@@ -1,7 +1,7 @@
+import {NgDocExportedDeclaration} from '@ng-doc/core';
 import {ExportedDeclarations} from 'ts-morph';
 
 import {exportDeclaration as helper} from '../../helpers/typescript/export-declaration';
-import {NgDocExportedDeclaration} from '../../interfaces';
 import {NG_DOC_EXPORTED_DECLARATION_TEMPLATE_ID} from '../../naming';
 
 /**

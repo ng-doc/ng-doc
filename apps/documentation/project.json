@@ -29,7 +29,8 @@
 					}
 				],
 				"styles": ["apps/documentation/src/styles.scss"],
-				"scripts": []
+				"scripts": [],
+				"allowedCommonJsDependencies": ["prettier"]
 			},
 			"configurations": {
 				"production": {
