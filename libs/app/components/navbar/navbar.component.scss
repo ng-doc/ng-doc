@@ -13,16 +13,18 @@
 	.ng-doc-navbar-center,
 	.ng-doc-navbar-right {
 		display: flex;
-		align-items: center;
-		width: 33%;
 	}
 
 	.ng-doc-navbar-left {
 		justify-content: flex-start;
+		width: calc(var(--ng-doc-sidebar-width) - var(--ng-doc-navbar-horizontal-padding));
+		flex-shrink: 0;
 	}
 
 	.ng-doc-navbar-center {
-		justify-content: center;
+		padding-left: calc(var(--ng-doc-base-gutter) * 4);
+		justify-content: flex-start;
+		width: 100%;
 	}
 
 	.ng-doc-navbar-right {

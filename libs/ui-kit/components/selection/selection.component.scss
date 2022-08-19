@@ -9,7 +9,7 @@
 		border-left: var(--ng-doc-selection-border);
 	}
 
-	&[data-ng-doc-align='left'] {
+	&[data-ng-doc-align='right'] {
 		right: 0;
 		border-right: var(--ng-doc-selection-border);
 	}

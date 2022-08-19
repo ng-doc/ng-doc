@@ -8,7 +8,6 @@ import {
 	Component,
 	ComponentFactory,
 	ComponentRef,
-	Directive,
 	Injector,
 	Input,
 	ModuleWithComponentFactories,
@@ -154,16 +153,18 @@ export class NgDocPlaygroundDemoComponent<
 		instance: Type<unknown>,
 		content: Record<keyof C, boolean>,
 	): Type<NgDocBaseDemoComponent> {
-		@Directive()
 		class NgDocDemoComponent extends NgDocBaseDemoComponent {
-			@ViewChild(instance, {static: true})
 			demo?: Type<unknown>;
-
-			@ViewChild(instance, {static: true, read: ViewContainerRef})
 			viewContainerRef?: ViewContainerRef;
-
 			content: Record<keyof C, boolean> = content;
 		}
+
+		/* Add decorators dynamically, otherwise it doesn't work in production build */
+		NgDocDemoComponent.prototype.demo = ViewChild(instance, {static: true})(NgDocDemoComponent.prototype, 'demo');
+		NgDocDemoComponent.prototype.viewContainerRef = ViewChild(instance, {static: true, read: ViewContainerRef})(
+			NgDocDemoComponent.prototype,
+			'viewContainerRef',
+		);
 
 		return Component({template})(NgDocDemoComponent);
 	}

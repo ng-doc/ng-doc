@@ -1,7 +1,11 @@
 :host {
 	width: 100%;
-	max-width: 300px;
-	--ng-doc-floated-border-radius: 20px;
+	max-width: 500px;
+	--ng-doc-floated-border-radius: var(--ng-doc-base-gutter);
+	--ng-doc-input-background-color: var(--ng-doc-base-1);
+	--ng-doc-input-border: none;
+	--ng-doc-input-border-hover: none;
+	--ng-doc-icon-color: var(--ng-doc-base-8);
 }
 
 .ng-doc-search-result-content {

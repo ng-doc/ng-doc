@@ -15,8 +15,8 @@
 	--ng-doc-base-10: var(--ng-doc-grey-110);
 	--ng-doc-base-11: var(--ng-doc-grey-180);
 
-	--ng-doc-primary: var(--ng-doc-teal-100);
-	--ng-doc-primary-rgb: var(--ng-doc-teal-rgb);
+	--ng-doc-primary: var(--ng-doc-ember-100);
+	--ng-doc-primary-rgb: var(--ng-doc-ember-rgb);
 	--ng-doc-primary-text: var(--ng-doc-white);
 	--ng-doc-hover: var(--ng-doc-teal-20);
 	--ng-doc-active: var(--ng-doc-teal-40);
@@ -67,7 +67,7 @@
 	--ng-doc-tag-color: var(--ng-doc-primary-text);
 
 	/* NgDocSelection */
-	--ng-doc-selection-border: 3px solid var(--ng-doc-primary);
+	--ng-doc-selection-border: 4px solid var(--ng-doc-primary);
 	--ng-doc-selection-background: transparent;
 }
 
