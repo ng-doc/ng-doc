@@ -12,7 +12,7 @@ import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties} from '@ng-doc/
 export class NgDocPlaygroundPropertiesComponent<
 	P extends NgDocPlaygroundProperties,
 	C extends Record<string, NgDocPlaygroundDynamicContent>,
-	> {
+> {
 	@Input()
 	form?: FormGroup;
 
@@ -26,7 +26,7 @@ export class NgDocPlaygroundPropertiesComponent<
 	reinitializeDemo: boolean = false;
 
 	@Output()
-	reinitializeDemoChanges: EventEmitter<boolean> = new EventEmitter<boolean>();
+	reinitializeDemoChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@Output()
 	resetForm: EventEmitter<void> = new EventEmitter<void>();
