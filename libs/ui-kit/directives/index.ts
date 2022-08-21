@@ -1,3 +1,4 @@
+export * from '@ng-doc/ui-kit/directives/checked-change';
 export * from '@ng-doc/ui-kit/directives/data';
 export * from '@ng-doc/ui-kit/directives/dropdown-handler';
 export * from '@ng-doc/ui-kit/directives/dropdown-origin';

@@ -16,4 +16,8 @@ export interface NgDocPlaygroundConfig {
 	 *  template to define the place where the current content should be rendered
 	 */
 	dynamicContent?: Record<string, NgDocPlaygroundDynamicContent>;
+	/**
+	 * Custom data that you can use in the templates (e.g. {{data.providedProperty}})
+	 */
+	data?: Record<string, unknown>;
 }

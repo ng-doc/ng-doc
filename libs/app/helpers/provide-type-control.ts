@@ -1,26 +1,34 @@
 import {InjectionToken, Provider} from '@angular/core';
-import {NgDocTypeControl} from '@ng-doc/app/interfaces';
+import {NgDocProvidedTypeControl, NgDocTypeControl, NgDocTypeControlProviderOptions} from '@ng-doc/app/interfaces';
 import {Constructor} from '@ng-doc/core';
 
-const tokenStore: Map<string, InjectionToken<Constructor<NgDocTypeControl>>> = new Map<
+const tokenStore: Map<string, InjectionToken<NgDocProvidedTypeControl>> = new Map<
 	string,
-	InjectionToken<Constructor<NgDocTypeControl>>
+	InjectionToken<NgDocProvidedTypeControl>
 >();
 
 /**
  *
  * @param type
  * @param control
+ * @param options
  */
-export function provideTypeControl<T>(type: string, control: Constructor<NgDocTypeControl>): Provider {
-	const token: InjectionToken<Constructor<NgDocTypeControl>> = new InjectionToken<Constructor<NgDocTypeControl>>(
+export function provideTypeControl(
+	type: string,
+	control: Constructor<NgDocTypeControl>,
+	options?: NgDocTypeControlProviderOptions,
+): Provider {
+	const token: InjectionToken<NgDocProvidedTypeControl> = new InjectionToken<NgDocProvidedTypeControl>(
 		`NG_DOC_TYPE_CONTROL_${type}`,
 	);
 	tokenStore.set(type, token);
 
 	return {
 		provide: token,
-		useValue: control,
+		useValue: {
+			control,
+			options,
+		},
 	};
 }
 
@@ -28,6 +36,6 @@ export function provideTypeControl<T>(type: string, control: Constructor<NgDocTy
  *
  * @param type
  */
-export function getTokenForType<T>(type: string): InjectionToken<Constructor<NgDocTypeControl>> | undefined {
+export function getTokenForType(type: string): InjectionToken<NgDocProvidedTypeControl> | undefined {
 	return tokenStore.get(type);
 }

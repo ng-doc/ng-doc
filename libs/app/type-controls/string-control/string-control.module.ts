@@ -29,7 +29,7 @@ import {NgDocStringControlComponent} from './string-control.component';
 		NgDocButtonIconModule,
 		NgDocFocusableModule,
 	],
-	providers: [provideTypeControl<string>('string', NgDocStringControlComponent)],
+	providers: [provideTypeControl('string', NgDocStringControlComponent)],
 	exports: [NgDocStringControlComponent],
 })
 export class NgDocStringControlModule {}

@@ -1,0 +1,8 @@
+<code *ngIf="wrap">
+	<ng-container *ngTemplateOutlet="typeTemplate"></ng-container>
+</code>
+<ng-container *ngIf="!wrap">
+	<ng-container *ngTemplateOutlet="typeTemplate"></ng-container>
+</ng-container>
+
+<ng-template #typeTemplate>{{type}}</ng-template>

@@ -18,10 +18,11 @@
 	--ng-doc-primary: var(--ng-doc-ember-100);
 	--ng-doc-primary-rgb: var(--ng-doc-ember-rgb);
 	--ng-doc-primary-text: var(--ng-doc-white);
-	--ng-doc-hover: var(--ng-doc-teal-20);
-	--ng-doc-active: var(--ng-doc-teal-40);
+	--ng-doc-hover: var(--ng-doc-ember-20);
+	--ng-doc-active: var(--ng-doc-ember-40);
 
 	--ng-doc-background: var(--ng-doc-base-0);
+	--ng-doc-border-size: 1px;
 	--ng-doc-border-color: var(--ng-doc-base-2);
 	--ng-doc-border-hover-color: var(--ng-doc-base-3);
 
@@ -51,12 +52,18 @@
 	--ng-doc-floated-border-shadow-color: 0 1px 2px rgba(16, 24, 40, 0.05), 0 0 0 4px transparent;
 	--ng-doc-floated-border-radius: var(--ng-doc-base-gutter);
 
+	/* NgDocCheckboxComponent */
+	--ng-doc-checkbox-color: var(--ng-doc-primary);
+	--ng-doc-checkbox-color-text: var(--ng-doc-primary-text);
+	--ng-doc-checkbox-border: var(--ng-doc-border-size) solid var(--ng-doc-border-color);
+	--ng-doc-checkbox-border-hover: var(--ng-doc-border-size) solid var(--ng-doc-border-hover-color);
+
 	/* NgDocInputWrapperComponent */
 	--ng-doc-input-text-align: left;
 	--ng-doc-input-width: 100%;
 	--ng-doc-input-height: 40px;
-	--ng-doc-input-border: 1px solid var(--ng-doc-border-color);
-	--ng-doc-input-border-hover: 1px solid var(--ng-doc-border-hover-color);
+	--ng-doc-input-border: var(--ng-doc-border-size) solid var(--ng-doc-border-color);
+	--ng-doc-input-border-hover: var(--ng-doc-border-size) solid var(--ng-doc-border-hover-color);
 	--ng-doc-input-background-color: var(--ng-doc-white);
 	--ng-doc-input-padding-left: calc(var(--ng-doc-base-gutter) * 2);
 	--ng-doc-input-padding-right: calc(var(--ng-doc-base-gutter) * 2);

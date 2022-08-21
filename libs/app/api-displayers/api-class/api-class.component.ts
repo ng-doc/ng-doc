@@ -1,6 +1,7 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {NgDocApiDisplayer} from '@ng-doc/app/interfaces';
+import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
+import {NgDocApiDisplayer, NgDocApiDisplayerContext} from '@ng-doc/app/interfaces';
 import {NgDocExportedClass} from '@ng-doc/core';
+import {NG_DOC_COMPONENT_CONTEXT} from '@ng-doc/ui-kit';
 
 @Component({
 	selector: 'ng-doc-api-class',
@@ -9,5 +10,12 @@ import {NgDocExportedClass} from '@ng-doc/core';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgDocApiClassComponent implements NgDocApiDisplayer<NgDocExportedClass> {
-	declaration?: NgDocExportedClass;
+	constructor(
+		@Inject(NG_DOC_COMPONENT_CONTEXT)
+		private readonly context: NgDocApiDisplayerContext<NgDocExportedClass>,
+	) {}
+
+	get api(): NgDocExportedClass {
+		return this.context.api;
+	}
 }

@@ -69,11 +69,16 @@
 		--ng-doc-font-weight: bold;
 	}
 
-	&h4,
+	&h4 {
+		--ng-doc-font-size: 22px;
+		--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 4);
+		--ng-doc-font-weight: bold;
+	}
+
 	&h5,
 	&h6 {
 		--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 2);
-		--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 4);
+		--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 3);
 		--ng-doc-font-weight: bold;
 	}
 

@@ -6,12 +6,15 @@ import {InlineDemoComponent} from './demo/inline-demo.component';
 export const playground: NgDocPlayground = {
 	playground1: {
 		target: InlineDemoComponent,
-		template: `<ng-doc-selector>{{content}}</ng-doc-selector>`,
+		template: `<ng-doc-selector>{{data.myString}}{{content}}</ng-doc-selector>`,
 		dynamicContent: {
 			content: {
 				label: 'My Content',
 				template: `my-content`,
 			},
+		},
+		data: {
+			myString: 'HAHA',
 		},
 	},
 	playground2: {

@@ -17,7 +17,7 @@
 		margin: var(--ng-doc-code-margin, 1em 0px);
 
 		code {
-			padding: calc(var(--ng-doc-base-gutter) * 2) calc(var(--ng-doc-base-gutter) * 3);
+			padding: calc(var(--ng-doc-base-gutter) * 2);
 			width: 100%;
 			border-radius: var(--ng-doc-code-border-radius, var(--ng-doc-base-gutter));
 			font-family: var(--ng-doc-code-font);
@@ -30,7 +30,7 @@
 		.ng-doc-copy-button {
 			position: absolute;
 			top: var(--ng-doc-base-gutter);
-			right: var(--ng-doc-base-gutter);
+			right: calc(var(--ng-doc-base-gutter) * 2);
 			transition: var(--ng-doc-transition);
 
 			--ng-doc-icon-color: var(--ng-doc-text-muted);

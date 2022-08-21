@@ -10,7 +10,12 @@ import {FlControlHost, provideControlHost} from 'flex-controls';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgDocBooleanControlComponent extends FlControlHost<string | undefined> implements NgDocTypeControl {
+	name: string = '';
+	description: string = '';
+
 	constructor() {
 		super();
+
+		this.controlChange.subscribe(() => this.onTouched());
 	}
 }

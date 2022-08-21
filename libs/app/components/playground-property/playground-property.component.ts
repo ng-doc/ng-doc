@@ -14,9 +14,9 @@ import {
 } from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {getTokenForType, isPlaygroundProperty} from '@ng-doc/app/helpers';
-import {NgDocTypeControl} from '@ng-doc/app/interfaces';
+import {NgDocProvidedTypeControl, NgDocTypeControl, NgDocTypeControlProviderOptions} from '@ng-doc/app/interfaces';
 import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperty} from '@ng-doc/builder';
-import {Constructor, extractValueOrThrow} from '@ng-doc/core';
+import {extractValueOrThrow} from '@ng-doc/core';
 
 @Component({
 	selector: 'ng-doc-playground-property',
@@ -24,7 +24,7 @@ import {Constructor, extractValueOrThrow} from '@ng-doc/core';
 	styleUrls: ['./playground-property.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocPlaygroundPropertyComponent<T = unknown> implements OnChanges {
+export class NgDocPlaygroundPropertyComponent implements OnChanges {
 	@Input()
 	name: string = '';
 
@@ -37,6 +37,8 @@ export class NgDocPlaygroundPropertyComponent<T = unknown> implements OnChanges 
 	@ViewChild('propertyOutlet', {read: ViewContainerRef, static: true})
 	propertyOutlet?: ViewContainerRef;
 
+	option?: NgDocTypeControlProviderOptions;
+
 	private propertyControl?: ComponentRef<NgDocTypeControl>;
 
 	constructor(private readonly injector: Injector) {}
@@ -47,12 +49,14 @@ export class NgDocPlaygroundPropertyComponent<T = unknown> implements OnChanges 
 			this.propertyControl = undefined;
 
 			const type: string = isPlaygroundProperty(this.property) ? this.property.type : 'boolean';
-			const typeControl: Constructor<NgDocTypeControl> | undefined =
+			const typeControl: NgDocProvidedTypeControl | undefined =
 				this.getControlForType(type) ??
 				this.getControlForTypeAlias(isPlaygroundProperty(this.property) ? this.property.options : undefined);
 
 			if (typeControl && this.propertyOutlet) {
-				this.propertyControl = this.propertyOutlet.createComponent(typeControl);
+				this.propertyControl = this.propertyOutlet.createComponent(typeControl.control);
+				this.propertyControl.instance.name = this.name;
+				this.propertyControl.instance.description = this.tooltipContent;
 				this.propertyControl.instance.options = isPlaygroundProperty(this.property)
 					? this.property.options
 					: undefined;
@@ -60,6 +64,8 @@ export class NgDocPlaygroundPropertyComponent<T = unknown> implements OnChanges 
 					? this.property.default
 					: undefined;
 				this.propertyControl.instance.writeValue(this.control?.value);
+
+				this.option = typeControl.options;
 			} else if (isDevMode()) {
 				console.warn(
 					`NgDocPlayground didn't find the control for the @Input "${this.name}", the type "${type}" was not recognized'`,
@@ -70,6 +76,7 @@ export class NgDocPlaygroundPropertyComponent<T = unknown> implements OnChanges 
 		if (control) {
 			this.control?.registerOnChange((value: string) => this.propertyControl?.instance?.writeValue(value));
 			this.propertyControl?.instance.registerOnChange((value: unknown) => this.control?.setValue(value));
+			this.propertyControl?.instance.registerOnTouched(() => this.control?.markAsTouched());
 		}
 	}
 
@@ -82,13 +89,13 @@ export class NgDocPlaygroundPropertyComponent<T = unknown> implements OnChanges 
 		return this.property && isPlaygroundProperty(this.property) ? this.property.description ?? '' : '';
 	}
 
-	private getControlForType(type: string): Constructor<NgDocTypeControl> | undefined {
-		const token: InjectionToken<Constructor<NgDocTypeControl>> | undefined = getTokenForType<T>(type);
+	private getControlForType(type: string): NgDocProvidedTypeControl | undefined {
+		const token: InjectionToken<NgDocProvidedTypeControl> | undefined = getTokenForType(type);
 
 		return token ? this.injector.get(token) : undefined;
 	}
 
-	private getControlForTypeAlias(options?: string[]): Constructor<NgDocTypeControl> | undefined {
+	private getControlForTypeAlias(options?: string[]): NgDocProvidedTypeControl | undefined {
 		if (options && options.length) {
 			let optionsIsValid: boolean = true;
 
@@ -100,8 +107,7 @@ export class NgDocPlaygroundPropertyComponent<T = unknown> implements OnChanges 
 			}
 
 			if (optionsIsValid) {
-				const token: InjectionToken<Constructor<NgDocTypeControl>> | undefined =
-					getTokenForType<T>('NgDocTypeAlias');
+				const token: InjectionToken<NgDocProvidedTypeControl> | undefined = getTokenForType('NgDocTypeAlias');
 
 				return token ? this.injector.get(token) : undefined;
 			}

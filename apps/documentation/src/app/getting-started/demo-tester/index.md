@@ -69,7 +69,6 @@ export class Test {
 
 ## API
 
-### TestClass
 {{ NgDocActions.api("../class.ts#TestClass") }}
 
 ### MyEnum1

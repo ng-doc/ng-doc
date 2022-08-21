@@ -1,2 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600&display=swap');
+
+@font-face {
+	font-family: 'GT Eesti Pro Display';
+	src: url('../assets/fonts/gteestiprodisplay_light.otf');
+}
+
+@font-face {
+	font-family: 'GT Eesti Pro Display';
+	src: url('../assets/fonts/gteestiprodisplay_regular.otf');
+	font-weight: 400;
+}
+
+@font-face {
+	font-family: 'GT Eesti Pro Display';
+	src: url('../assets/fonts/gteestiprodisplay_medium.otf');
+	font-weight: 500;
+}

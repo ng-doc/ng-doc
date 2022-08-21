@@ -24,6 +24,7 @@ import {switchMap} from 'rxjs/operators';
 export class NgDocIconComponent implements OnChanges {
 	/** Icon name */
 	@Input()
+	@HostBinding('attr.data-ng-doc-icon')
 	icon: string = '';
 
 	/** Icon size */

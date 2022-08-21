@@ -35,7 +35,7 @@ import {NgDocTypeAliasControlComponent} from './type-alias-control.component';
 		NgDocFocusableModule,
 		NgDocIconModule,
 	],
-	providers: [provideTypeControl<string>('NgDocTypeAlias', NgDocTypeAliasControlComponent)],
+	providers: [provideTypeControl('NgDocTypeAlias', NgDocTypeAliasControlComponent)],
 	exports: [NgDocTypeAliasControlComponent],
 })
 export class NgDocTypeAliasControlModule {}

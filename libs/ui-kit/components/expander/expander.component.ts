@@ -25,4 +25,8 @@ export class NgDocExpanderComponent {
 
 	@HostBinding('@preventInitialChild')
 	preventInitialChild?: never;
+
+	toggle(): void {
+		this.expanded = !this.expanded;
+	}
 }

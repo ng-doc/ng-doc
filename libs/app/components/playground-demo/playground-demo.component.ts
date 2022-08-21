@@ -60,6 +60,9 @@ export class NgDocPlaygroundDemoComponent<
 	dynamicContent?: C;
 
 	@Input()
+	data?: Record<string, unknown>;
+
+	@Input()
 	reinitializeDemo: boolean = false;
 
 	@Input()
@@ -116,7 +119,12 @@ export class NgDocPlaygroundDemoComponent<
 				this.dynamicContent,
 				this.reinitializeDemo ? 'dynamic' : 'compile',
 			);
-			const component: Type<NgDocBaseDemoComponent> = this.createComponent(template, this.target, data.content);
+			const component: Type<NgDocBaseDemoComponent> = this.createComponent(
+				template,
+				this.target,
+				data.content,
+				this.data,
+			);
 			const module: Type<NgDocBaseDemoModule> = this.createModule(component);
 			const compiledModule: ModuleWithComponentFactories<NgDocBaseDemoComponent> =
 				this.compiler.compileModuleAndAllComponentsSync(module);
@@ -152,11 +160,13 @@ export class NgDocPlaygroundDemoComponent<
 		template: string,
 		instance: Type<unknown>,
 		content: Record<keyof C, boolean>,
+		data?: Record<string, unknown>,
 	): Type<NgDocBaseDemoComponent> {
 		class NgDocDemoComponent extends NgDocBaseDemoComponent {
 			demo?: Type<unknown>;
 			viewContainerRef?: ViewContainerRef;
 			content: Record<keyof C, boolean> = content;
+			data?: Record<string, unknown> = data;
 		}
 
 		/* Add decorators dynamically, otherwise it doesn't work in production build */

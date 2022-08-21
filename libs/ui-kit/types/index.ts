@@ -14,4 +14,5 @@ export * from './palette-color';
 export * from './position';
 export * from './size';
 export * from './subscribable';
+export * from './tag-size';
 export * from './text-color';

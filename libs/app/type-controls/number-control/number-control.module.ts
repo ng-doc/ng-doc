@@ -27,7 +27,7 @@ import {NgDocNumberControlComponent} from './number-control.component';
 		NgDocFocusableModule,
 		NgDocIconModule,
 	],
-	providers: [provideTypeControl<number>('number', NgDocNumberControlComponent)],
+	providers: [provideTypeControl('number', NgDocNumberControlComponent)],
 	exports: [NgDocNumberControlComponent],
 })
 export class NgDocNumberControlModule {}

@@ -21,12 +21,12 @@ export class NgDocApiDisplayerComponent implements OnInit {
 	ngOnInit(): void {
 		if (this.api) {
 			const token: InjectionToken<Constructor<NgDocApiDisplayer>> | undefined = getApiDisplayerToken(
-				this.api.kind as any,
+				this.api.kind,
 			);
 
 			if (!token) {
 				throw new Error(
-					`Unknown api declaration type ${this.api.kind}, or component displayer was not provided!`,
+					`Unknown api declaration type "${this.api.kind}", or component displayer was not provided!`,
 				);
 			}
 

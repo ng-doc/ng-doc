@@ -1,44 +1,42 @@
-import {
-	ClassDeclarationStructure,
-	EnumDeclarationStructure,
-	FunctionDeclarationOverloadStructure,
-	FunctionDeclarationStructure,
-	InterfaceDeclarationStructure,
-	ModuleDeclarationStructure,
-	TypeAliasDeclarationStructure,
-	VariableDeclarationStructure,
-} from 'ts-morph';
-
-export interface NgDocExportedClass extends Omit<ClassDeclarationStructure, 'kind'> {
-	kind: NgDocExportedDeclarationKind.Class;
+export interface NgDocExportedClass {
+	kind: 'Class';
+	name?: string;
+	isExported?: boolean;
+	isAbstract?: boolean;
+	isDefaultExport?: boolean;
+	implements: string[];
+	decorators: string[];
+	properties: NgDocExportedProperty[];
+	methods: NgDocExportedMethod[];
+	docs: string;
 }
 
-export interface NgDocExportedInterface extends Omit<InterfaceDeclarationStructure, 'kind'> {
-	kind: NgDocExportedDeclarationKind.Interface;
+export interface NgDocExportedInterface {
+	kind: 'Interface';
 }
 
-export interface NgDocExportedFunction extends Omit<FunctionDeclarationStructure, 'kind'> {
-	kind: NgDocExportedDeclarationKind.Function;
+export interface NgDocExportedFunction {
+	kind: 'Function';
 }
 
-export interface NgDocExportedEnum extends Omit<EnumDeclarationStructure, 'kind'> {
-	kind: NgDocExportedDeclarationKind.Enum;
+export interface NgDocExportedEnum {
+	kind: 'Enum';
 }
 
-export interface NgDocExportedVariable extends Omit<VariableDeclarationStructure, 'kind'> {
-	kind: NgDocExportedDeclarationKind.Variable;
+export interface NgDocExportedVariable {
+	kind: 'Variable';
 }
 
-export interface NgDocExportedModule extends Omit<ModuleDeclarationStructure, 'kind'> {
-	kind: NgDocExportedDeclarationKind.Module;
+export interface NgDocExportedModule {
+	kind: 'Module';
 }
 
-export interface NgDocExportedFunctionOverload extends Omit<FunctionDeclarationOverloadStructure, 'kind'> {
-	kind: NgDocExportedDeclarationKind.FunctionOverload;
+export interface NgDocExportedFunctionOverload {
+	kind: 'FunctionOverload';
 }
 
-export interface NgDocExportedTypeAlias extends Omit<TypeAliasDeclarationStructure, 'kind'> {
-	kind: NgDocExportedDeclarationKind.TypeAlias;
+export interface NgDocExportedTypeAlias {
+	kind: 'TypeAlias';
 }
 
 export type NgDocExportedDeclaration =
@@ -51,13 +49,48 @@ export type NgDocExportedDeclaration =
 	| NgDocExportedFunctionOverload
 	| NgDocExportedTypeAlias;
 
-export enum NgDocExportedDeclarationKind {
-	Class = 2,
-	Interface = 19,
-	Function = 13,
-	Enum = 8,
-	Variable = 48,
-	Module = 29,
-	FunctionOverload = 14,
-	TypeAlias = 38,
+export type NgDocExportedDeclarationKind = NgDocExportedDeclaration['kind'];
+
+export interface NgDocExportedProperty {
+	name: string;
+	type: NgDocExportedType;
+	isAbstract?: boolean;
+	isReadonly?: boolean;
+	isStatic?: boolean;
+	hasExclamationToken?: boolean;
+	hasQuestionToken?: boolean;
+	hasOverrideKeyword?: boolean;
+	decorators: string[];
+	initializer?: string;
+	docs: string;
 }
+
+export interface NgDocExportedMethod {
+	name: string;
+	returnType: NgDocExportedType;
+	isAsync?: boolean;
+	isAbstract?: boolean;
+	hasQuestionToken?: boolean;
+	hasOverrideKeyword?: boolean;
+	isStatic?: boolean;
+	decorators: string[];
+	parameters: NgDocExportedParameter[];
+	overloads: NgDocExportedMethodOverload[];
+	docs: string;
+}
+
+export interface NgDocExportedParameter {
+	name: string;
+	type: NgDocExportedType;
+	decorators: string[];
+	isReadonly?: boolean;
+	hasQuestionToken?: boolean;
+	hasOverrideKeyword?: boolean;
+	initializer?: string;
+}
+
+export type NgDocExportedType = string;
+
+export type NgDocExportedMethodOverload = Omit<NgDocExportedMethod, 'name' | 'overloads' | 'decorators'>;
+
+

@@ -16,9 +16,4 @@
 	&:hover {
 		background-color: var(--ng-doc-base-1);
 	}
-
-	&:active,
-	&.active {
-		background-color: transparent;
-	}
 }

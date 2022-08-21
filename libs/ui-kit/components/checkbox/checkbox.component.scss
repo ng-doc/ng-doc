@@ -1,0 +1,99 @@
+@import '../../styles/mixins';
+@import '../../styles/palette';
+
+:host {
+	display: inline-flex;
+	align-items: flex-start;
+	flex-direction: column;
+
+	&:not(:last-of-type) {
+		margin-bottom: var(--ng-doc-list-element-vertical-space);
+		margin-right: var(--ng-doc-list-element-horizontal-space);
+	}
+
+	&:hover:not([data-checked='true']) {
+		.ng-doc-checkbox {
+			border: var(--ng-doc-checkbox-border-hover);
+		}
+	}
+
+	&:not([data-disabled='true']) {
+		.ng-doc-checkbox-wrapper {
+			cursor: pointer;
+		}
+	}
+
+	&[data-checked='true'] {
+		.ng-doc-checkbox {
+			background-color: var(--ng-doc-checkbox-color);
+			--ng-doc-checkbox-border: var(--ng-doc-checkbox-color);
+			--ng-doc-checkbox-border-hover: var(--ng-doc-checkbox-color);
+			--ng-doc-icon-color: var(--ng-doc-checkbox-color-text);
+		}
+	}
+
+	@include ng-doc-font();
+
+	@each $color-name, $color in $ng-doc-palette-colors {
+		&[data-ng-doc-color='#{$color-name}'] {
+			--ng-doc-checkbox-color: var(--ng-doc-#{$color-name}-100);
+		}
+	}
+}
+
+input {
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	width: 1px;
+	outline: 0;
+}
+
+.ng-doc-checkbox-wrapper {
+	display: flex;
+}
+
+.ng-doc-checkbox {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: calc(var(--ng-doc-base-gutter) * 2 + var(--ng-doc-base-gutter) / 2);
+	height: calc(var(--ng-doc-base-gutter) * 2 + var(--ng-doc-base-gutter) / 2);
+	border: var(--ng-doc-checkbox-border);
+	flex: 0 0 calc(var(--ng-doc-base-gutter) * 2 + var(--ng-doc-base-gutter) / 2);
+	background-color: var(--ng-doc-base-0);
+	transition: background-color var(--ng-doc-transition);
+	box-sizing: border-box;
+	border-radius: calc(var(--ng-doc-base-gutter) / 2);
+}
+
+.ng-doc-checkbox-content {
+	display: flex;
+	align-items: flex-start;
+}
+
+.ng-doc-checkbox-icons {
+	display: flex;
+	margin-left: var(--ng-doc-base-gutter);
+	margin-top: calc(var(--ng-doc-base-gutter) / 2);
+
+	&:empty {
+		display: none;
+	}
+}
+
+.ng-doc-checkbox-text {
+	margin-left: var(--ng-doc-base-gutter);
+	line-height: calc(var(--ng-doc-base-gutter) * 2 + var(--ng-doc-base-gutter) / 2);
+
+	&:empty {
+		display: none;
+	}
+}

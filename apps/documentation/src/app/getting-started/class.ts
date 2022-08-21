@@ -1,9 +1,15 @@
 import {TestType} from './test';
 
-export class TestClass {
-	/** My property */
-	property1: TestType = 'asd';
-	private property2: string = 'aks98d';
+export abstract class TestClass implements MyInterface {
+	/**
+	 * My property
+	 *
+	 * @type {TestType}
+	 *
+	 * asdasd
+	 */
+	static property1: TestType = 'asd';
+	property2: string | number = 'aks98d';
 
 	/**
 	 * Function description
@@ -26,12 +32,8 @@ export enum MyEnum1 {
 }
 
 export interface MyInterface {
-	property1: string;
-	property2: number;
-	nested: {
-		property1: string;
-		property2: number;
-	};
+	property1: TestType;
+	property2: string | number;
 }
 
 export type MyType = string | number;

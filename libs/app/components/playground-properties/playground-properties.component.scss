@@ -25,10 +25,34 @@
 				display: flex;
 				justify-content: flex-end;
 			}
+
+			.ng-doc-playground-header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				height: 40px;
+				margin-bottom: var(--ng-doc-base-gutter);
+
+				h4 {
+					margin: 0;
+				}
+			}
+
+			.ng-doc-playground-setting {
+				display: flex;
+				flex-direction: column;
+			}
 		}
 
-		.ng-doc-header {
+		.ng-doc-title {
 			margin-top: 0;
+			margin-bottom: calc(var(--ng-doc-base-gutter) + var(--ng-doc-base-gutter) / 2);
 		}
+	}
+
+	.ng-doc-playground-divider {
+		margin: calc(var(--ng-doc-base-gutter) * 2) 0;
+		height: 1px;
+		background-color: var(--ng-doc-base-2);
 	}
 }
