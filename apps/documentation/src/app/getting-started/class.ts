@@ -17,8 +17,11 @@ export abstract class TestClass implements MyInterface {
 	 * @param parameter
 	 * @param parameter2
 	 */
-	method1(parameter: number, parameter2: string): void {
+	method1(parameter: number): number;
+	method1(parameter: number, parameter2: string): string;
+	method1(parameter: number, parameter2?: string): string | number {
 		console.log(parameter, parameter2);
+		return '';
 	}
 
 	private method2(): void {

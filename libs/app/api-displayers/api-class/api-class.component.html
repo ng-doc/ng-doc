@@ -3,70 +3,23 @@
 	<ng-container *ngTemplateOutlet="tagsTemplate; context: api"></ng-container>
 </h3>
 
-
 <ng-container *ngIf="api.properties?.length">
 	<h3>Properties</h3>
-	<table>
-		<thead>
-		<tr>
-			<th>Name</th>
-			<th>Type</th>
-			<th>Initializer</th>
-			<th>Description</th>
-		</tr>
-		</thead>
-		<tbody>
-
-		<tr *ngFor="let property of api.properties">
-			<td>
-				{{property.name}}
-				<ng-container *ngTemplateOutlet="tagsTemplate; context: property"></ng-container>
-			</td>
-			<td>
-				<ng-doc-api-type [type]="property.type"></ng-doc-api-type>
-			</td>
-			<td><code>{{property.initializer}}</code></td>
-			<td>{{property.docs}}</td>
-		</tr>
-		</tbody>
-	</table>
+	<ng-doc-api-properties [properties]="api.properties"></ng-doc-api-properties>
 </ng-container>
+
 <ng-container *ngIf="api.methods?.length">
 	<h3>Methods</h3>
-	<table>
-		<thead>
-		<tr>
-			<th>Name</th>
-			<th>Parameters</th>
-			<th>Return Type</th>
-			<th>Description</th>
-		</tr>
-		</thead>
-		<tbody *ngFor="let method of api.methods">
-		<ng-container>
-			<tr>
-				<td>{{method.name}}</td>
-				<td>
-					<ng-container *ngFor="let parameter of method.parameters">
-						<ng-doc-api-parameter [parameter]="parameter"></ng-doc-api-parameter>
-						<br>
-					</ng-container>
-				</td>
-				<td>
-					<ng-doc-api-type [type]="method.returnType"></ng-doc-api-type>
-				</td>
-				<td>{{method.docs}}</td>
-			</tr>
-		</ng-container>
-		</tbody>
-	</table>
+	<ng-doc-api-methods [methods]="api.methods"></ng-doc-api-methods>
 </ng-container>
 
 <ng-template let-isStatic="isStatic" let-isAbstract="isAbstract" let-isReadonly="isReadonly"
-			 let-hasOverrideKeyword="hasOverrideKeyword" let-isExported="isExported" #tagsTemplate>
+			 let-hasOverrideKeyword="hasOverrideKeyword" let-isExported="isExported" let-isAsync="isAsync"
+			 #tagsTemplate>
 	<span class="ng-doc-api-class-tags">
 		<ng-doc-tag *ngIf="isExported" color="orange" size="small" ngDocTooltip="Exported">E</ng-doc-tag>
 	<ng-doc-tag *ngIf="isStatic" color="deep-purple" size="small" ngDocTooltip="Static">S</ng-doc-tag>
+	<ng-doc-tag *ngIf="isAsync" color="green" size="small" ngDocTooltip="Async">A</ng-doc-tag>
 	<ng-doc-tag *ngIf="isAbstract" color="purple" size="small" ngDocTooltip="Abstract">A</ng-doc-tag>
 	<ng-doc-tag *ngIf="isReadonly" color="red" size="small" ngDocTooltip="Readonly">R</ng-doc-tag>
 	<ng-doc-tag *ngIf="hasOverrideKeyword" color="orange" size="small" ngDocTooltip="Override">O</ng-doc-tag>

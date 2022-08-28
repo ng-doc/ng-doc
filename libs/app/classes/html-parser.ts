@@ -47,6 +47,14 @@ export class NgDocHtmlParser {
 		return undefined;
 	}
 
+	removeAttribute(node: DefaultTreeAdapterMap['element'], name: string): void {
+		const existingAttribute: number = node.attrs.findIndex((attr: Attribute) => attr.name === name || attr.name === `[${name}]`);
+
+		if (existingAttribute > -1) {
+			node.attrs.splice(existingAttribute, 1);
+		}
+	}
+
 	setAttribute(node: DefaultTreeAdapterMap['element'], name: string, value?: string): void {
 		const existingAttribute: Attribute | undefined = node.attrs.find((attr: Attribute) => attr.name === name);
 

@@ -9,6 +9,7 @@
 	text-align: center;
 	line-height: calc(var(--ng-doc-base-gutter) * 2);
 	text-transform: uppercase;
+	flex-shrink: 0;
 
 	&[data-ng-doc-type="declaration"] {
 		@each $name, $color in $declaration-colors {

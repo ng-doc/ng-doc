@@ -31,7 +31,7 @@
 				align-items: center;
 				justify-content: space-between;
 				height: 40px;
-				margin-bottom: var(--ng-doc-base-gutter);
+				margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
 
 				h4 {
 					margin: 0;

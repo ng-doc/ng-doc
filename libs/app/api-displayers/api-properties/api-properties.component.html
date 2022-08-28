@@ -1,0 +1,39 @@
+<table cdk-table [dataSource]="properties">
+	<ng-container cdkColumnDef="tags">
+		<th cdk-header-cell *cdkHeaderCellDef></th>
+		<td cdk-cell *cdkCellDef="let property">
+			<ng-doc-tag *ngIf="property.isStatic" color="deep-purple" size="small" ngDocTooltip="Static">S</ng-doc-tag>
+			<ng-doc-tag *ngIf="property.isAbstract" color="purple" size="small" ngDocTooltip="Abstract">A</ng-doc-tag>
+			<ng-doc-tag *ngIf="property.isReadonly" color="red" size="small" ngDocTooltip="Readonly">R</ng-doc-tag>
+			<ng-doc-tag *ngIf="property.hasOverrideKeyword" color="orange" size="small" ngDocTooltip="Override">O
+			</ng-doc-tag>
+		</td>
+	</ng-container>
+
+	<ng-container cdkColumnDef="name">
+		<th cdk-header-cell *cdkHeaderCellDef>Name</th>
+		<td cdk-cell *cdkCellDef="let property">{{property.name}}</td>
+	</ng-container>
+
+	<ng-container cdkColumnDef="type">
+		<th cdk-header-cell *cdkHeaderCellDef>Type</th>
+		<td cdk-cell *cdkCellDef="let property">
+			<ng-doc-api-type [type]="property.type"></ng-doc-api-type>
+		</td>
+	</ng-container>
+
+	<ng-container cdkColumnDef="initializer">
+		<th cdk-header-cell *cdkHeaderCellDef>Initializer</th>
+		<td cdk-cell *cdkCellDef="let property">
+			<code>{{property.initializer}}</code>
+		</td>
+	</ng-container>
+
+	<ng-container cdkColumnDef="description">
+		<th cdk-header-cell *cdkHeaderCellDef>Description</th>
+		<td cdk-cell *cdkCellDef="let property">{{property.docs}}</td>
+	</ng-container>
+
+	<tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
+	<tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
+</table>

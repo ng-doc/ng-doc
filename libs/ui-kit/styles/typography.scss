@@ -110,6 +110,10 @@ table {
 				&:first-child {
 					padding-left: calc(var(--ng-doc-base-gutter) * 4);
 				}
+
+				&:last-child {
+					padding-right: calc(var(--ng-doc-base-gutter) * 4);
+				}
 			}
 		}
 	}
@@ -121,6 +125,10 @@ table {
 
 				&:first-child {
 					padding-left: calc(var(--ng-doc-base-gutter) * 4);
+				}
+
+				&:last-child {
+					padding-right: calc(var(--ng-doc-base-gutter) * 4);
 				}
 			}
 		}

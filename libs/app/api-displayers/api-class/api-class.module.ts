@@ -1,9 +1,9 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {NgDocApiParameterModule} from '@ng-doc/app/api-displayers/api-parameter';
-import {NgDocApiTypeModule} from '@ng-doc/app/api-displayers/api-type';
+import {NgDocApiMethodsModule} from '@ng-doc/app/api-displayers/api-methods';
+import {NgDocApiPropertiesModule} from '@ng-doc/app/api-displayers/api-properties';
 import {provideApiDisplayer} from '@ng-doc/app/helpers';
-import {NgDocExpanderModule, NgDocLetModule, NgDocTagModule, NgDocTextModule, NgDocTooltipModule} from '@ng-doc/ui-kit';
+import {NgDocTagModule, NgDocTextModule, NgDocTooltipModule} from '@ng-doc/ui-kit';
 
 import {NgDocApiClassComponent} from './api-class.component';
 
@@ -11,13 +11,11 @@ import {NgDocApiClassComponent} from './api-class.component';
 	declarations: [NgDocApiClassComponent],
 	imports: [
 		CommonModule,
-		NgDocExpanderModule,
-		NgDocLetModule,
-		NgDocApiParameterModule,
-		NgDocApiTypeModule,
 		NgDocTagModule,
 		NgDocTooltipModule,
 		NgDocTextModule,
+		NgDocApiPropertiesModule,
+		NgDocApiMethodsModule,
 	],
 	providers: [provideApiDisplayer('Class', NgDocApiClassComponent)],
 })

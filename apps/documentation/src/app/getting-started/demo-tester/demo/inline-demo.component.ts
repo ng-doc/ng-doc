@@ -24,6 +24,9 @@ type Alias = 'one' | 'two' | 34 | true;
 /* NgDocCodeSnippetEnd(Test1) */
 /* NgDocCodeSnippetStart(Test2) */
 export class InlineDemoComponent implements OnInit {
+	@Input('ng-doc-inline')
+	base: string = '';
+
 	/** Color property */
 	@Input()
 	color: string = 'red';

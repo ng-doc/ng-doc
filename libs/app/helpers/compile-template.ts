@@ -87,6 +87,7 @@ function propertiesToAttributes<P extends NgDocPlaygroundProperties>(
 		const inputValue: string = valueIsString ? `'${propertyValue}'` : `${propertyValue}`;
 
 		if ((property.default ?? '') !== inputValue) {
+			parser.removeAttribute(element, String(key));
 			parser.setAttribute(element, `[${String(key)}]`, inputValue);
 		}
 	});
