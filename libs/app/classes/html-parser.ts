@@ -1,18 +1,18 @@
-import {asArray} from '@ng-doc/core';
+import {asArray, isPresent} from '@ng-doc/core';
 import * as CSSWhat from 'css-what';
 import {AttributeSelector, SelectorType} from 'css-what';
 import {Selector, TagSelector} from 'css-what/lib/es/types';
-import {DefaultTreeAdapterMap, parseFragment, serialize} from 'parse5';
-import {Attribute} from 'parse5/dist/common/token';
+import {Node, NodeTag, parser} from 'posthtml-parser';
+import {render} from 'posthtml-render';
 
 export class NgDocHtmlParser {
-	private readonly parsedHTML: DefaultTreeAdapterMap['documentFragment'];
+	private readonly parsedHTML: Node[];
 
 	constructor(private html: string) {
-		this.parsedHTML = parseFragment(html);
+		this.parsedHTML = parser(html);
 	}
 
-	find(selector: string): DefaultTreeAdapterMap['element'] | undefined {
+	find(selector: string): NodeTag | undefined {
 		const selectors: Selector[] = CSSWhat.parse(selector)[0];
 		const tagSelectors: TagSelector[] = selectors.filter(
 			(selector: Selector) => selector.type === SelectorType.Tag,
@@ -21,51 +21,58 @@ export class NgDocHtmlParser {
 			(selector: Selector) => selector.type === SelectorType.Attribute,
 		) as AttributeSelector[];
 
-		const nodes: Array<DefaultTreeAdapterMap['childNode']> = [...this.parsedHTML.childNodes];
+		const nodes: Node[] = [...this.parsedHTML];
 
 		while (nodes.length) {
-			const shiftNode: DefaultTreeAdapterMap['childNode'] | undefined = nodes.shift();
-			const node: DefaultTreeAdapterMap['element'] | undefined =
-				shiftNode?.nodeName.slice(0, 1) === '#' ? undefined : (shiftNode as DefaultTreeAdapterMap['element']);
+			const shiftNode: Node | undefined = nodes.shift();
+			const node: NodeTag | undefined =
+				!isPresent(shiftNode) || !this.isNodeTag(shiftNode) ? undefined : shiftNode;
 
 			if (
 				tagSelectors.every(
-					(tagSelector: TagSelector) => tagSelector.name.toLowerCase() === node?.nodeName.toLowerCase(),
+					(tagSelector: TagSelector) => tagSelector.name.toLowerCase() === String(node?.tag).toLowerCase(),
 				) &&
-				attrSelectors.every((attrSelector: AttributeSelector) =>
-					node?.attrs.find(
-						(attr: Attribute) => attr.name === attrSelector.name && attr.value === attrSelector.value,
-					),
-				)
+				attrSelectors.every((attrSelector: AttributeSelector) => {
+					const attrValue: unknown = node && node.attrs && node?.attrs[attrSelector.name];
+
+					return (
+						Object.keys(node?.attrs ?? {}).includes(attrSelector.name) && attrValue === attrSelector.value
+					);
+				})
 			) {
 				return node;
 			} else {
-				nodes.push(...asArray((node as DefaultTreeAdapterMap['element'] | undefined)?.childNodes));
+				nodes.push(...asArray(node?.content).flat());
 			}
 		}
 
 		return undefined;
 	}
 
-	removeAttribute(node: DefaultTreeAdapterMap['element'], name: string): void {
-		const existingAttribute: number = node.attrs.findIndex((attr: Attribute) => attr.name === name || attr.name === `[${name}]`);
-
-		if (existingAttribute > -1) {
-			node.attrs.splice(existingAttribute, 1);
+	removeAttribute(node: Node, name: string): void {
+		if (this.isNodeTag(node) && Object.keys(node?.attrs ?? {}).includes(name) && node.attrs) {
+			delete node.attrs[name];
+		}
+		if (this.isNodeTag(node) && Object.keys(node?.attrs ?? {}).includes(`[${name}]`) && node.attrs) {
+			delete node.attrs[`[${name}]`];
 		}
 	}
 
-	setAttribute(node: DefaultTreeAdapterMap['element'], name: string, value?: string): void {
-		const existingAttribute: Attribute | undefined = node.attrs.find((attr: Attribute) => attr.name === name);
+	setAttribute(node: Node, name: string, value?: string): void {
+		if (this.isNodeTag(node)) {
+			if (!node.attrs) {
+				node.attrs = {};
+			}
 
-		if (existingAttribute) {
-			existingAttribute.value = value ?? '';
-		} else {
-			node.attrs.push({name, value: value ?? ''});
+			node.attrs[name] = value ?? '';
 		}
 	}
 
 	serialize(): string {
-		return serialize(this.parsedHTML);
+		return render(this.parsedHTML);
+	}
+
+	private isNodeTag(node: Node): node is NodeTag {
+		return typeof node !== 'string' && typeof node !== 'number';
 	}
 }

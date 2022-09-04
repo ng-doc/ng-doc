@@ -14,7 +14,7 @@
 			</button>
 		</div>
 		<div class="ng-doc-playground-setting">
-			<ng-doc-checkbox [(ngModel)]="reinitializeDemo">
+			<ng-doc-checkbox [(ngModel)]="reinitializeDemo" (ngModelChange)="reinitializeDemoChange.emit($event)">
 				<span ng-doc-text [ngDocTooltip]="'Will recreate components every time one of the input has changed'"
 					  [positions]="['bottom-right', 'left-center']">
 					Reinitialize on changes

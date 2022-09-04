@@ -20,6 +20,10 @@ Here you will se how easy it's to create some demo with NgDoc. <div>Some text</d
 
 {{ NgDocActions.playground("playground2") }}
 
+## Combobox playground
+
+{{ NgDocActions.playground("comboboxPlayground") }}
+
 ## Inline demo
 
 ```scss
@@ -67,18 +71,3 @@ export class Test {
 }
 ```
 
-## API
-
-{{ NgDocActions.api("../class.ts#TestClass") }}
-
-### MyEnum1
-{{ NgDocActions.api("../class.ts#MyEnum1") }}
-
-### MyInterface
-{{ NgDocActions.api("../class.ts#MyInterface") }}
-
-### MyType
-{{ NgDocActions.api("../class.ts#MyType") }}
-
-### myFunction
-{{ NgDocActions.api("../class.ts#myFunction") }}

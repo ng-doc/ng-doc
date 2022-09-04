@@ -5,7 +5,7 @@ import {objectKeys} from '@ng-doc/core';
 import * as CSSWhat from 'css-what';
 import {SelectorType} from 'css-what';
 import {Selector, TagSelector} from 'css-what/lib/es/types';
-import {DefaultTreeAdapterMap} from 'parse5';
+import {NodeTag} from 'posthtml-parser';
 
 const NG_DOC_SELECTOR_NAME: string = 'ng-doc-selector';
 
@@ -30,15 +30,14 @@ export function compileTemplate(
 	const parser: NgDocHtmlParser = new NgDocHtmlParser(template);
 	const selectors: Selector[] = CSSWhat.parse(selector)[0];
 
-	const rootElement: DefaultTreeAdapterMap['element'] | undefined =
-		parser.find(NG_DOC_SELECTOR_NAME) ?? parser.find(selector);
+	const rootElement: NodeTag | undefined = parser.find(NG_DOC_SELECTOR_NAME) ?? parser.find(selector);
 
 	if (rootElement) {
-		rootElement.attrs = [];
+		rootElement.attrs = {};
 		selectorToAttributes(parser, rootElement, selectors);
 
-		if (rootElement.tagName.toLowerCase() === NG_DOC_SELECTOR_NAME.toLowerCase()) {
-			rootElement.tagName =
+		if (String(rootElement.tag).toLowerCase() === NG_DOC_SELECTOR_NAME.toLowerCase()) {
+			rootElement.tag =
 				(selectors.find((selector: Selector) => selector.type === SelectorType.Tag) as TagSelector)?.name ??
 				'div';
 		}
@@ -57,7 +56,7 @@ export function compileTemplate(
  */
 function selectorToAttributes(
 	parser: NgDocHtmlParser,
-	element: DefaultTreeAdapterMap['element'],
+	element: NodeTag,
 	selectors: Selector[],
 ): void {
 	selectors.forEach((selector: Selector) => {
@@ -76,7 +75,7 @@ function selectorToAttributes(
  */
 function propertiesToAttributes<P extends NgDocPlaygroundProperties>(
 	parser: NgDocHtmlParser,
-	element: DefaultTreeAdapterMap['element'],
+	element: NodeTag,
 	properties: P,
 	data: NgDocPlaygroundFormData<P>,
 ): void {
