@@ -44,7 +44,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 
 	override get route(): string {
 		return this.declaration
-			? path.join(declarationFolderName(this.declaration), this.declaration?.getSymbol()?.getName() ?? '')
+			? slash(path.join(declarationFolderName(this.declaration), this.declaration?.getSymbol()?.getName() ?? ''))
 			: '';
 	}
 
