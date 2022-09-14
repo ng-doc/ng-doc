@@ -16,7 +16,7 @@ import {extractPathAnchor} from '../extract-path-anchor';
  */
 export function findDeclaration(project: Project, scope: string, sourcePath: string): Node {
 	const anchor: NgDocPathAnchor = extractPathAnchor(sourcePath);
-	const filePath: string = path.join(scope, anchor.path).replace(/^\//, '');
+	const filePath: string = path.join(scope, anchor.path);
 
 	if (!fs.existsSync(filePath)) {
 		throw new Error(
