@@ -5,7 +5,7 @@ import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
-import {isDependencyEntity, isPlaygroundEntity, uniqueName} from '../../helpers';
+import {isDependencyEntity, isPlaygroundEntity, slash, uniqueName} from '../../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput, NgDocPage} from '../../interfaces';
 import {NgDocPageEnv, NgDocPageModuleEnv} from '../../templates-env';
 import {NgDocActions} from '../actions';
@@ -66,7 +66,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	}
 
 	get scope(): string {
-		return this.target?.scope?.replace(CACHE_PATH, '') ?? this.parent?.scope ?? this.context.context.workspaceRoot;
+		return this.target?.scope?.replace(CACHE_PATH, this.context.context.workspaceRoot) ?? this.parent?.scope ?? this.context.context.workspaceRoot;
 	}
 
 	override get order(): number | undefined {
@@ -82,7 +82,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	}
 
 	get builtPagePath(): string {
-		return path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, RENDERED_PAGE_NAME));
+		return slash(path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, RENDERED_PAGE_NAME)));
 	}
 
 	override get buildCandidates(): NgDocEntity[] {
@@ -100,7 +100,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	}
 
 	get pageDependenciesImport(): string | undefined {
-		return this.pageDependenciesFile ? this.pageDependenciesFile.replace(/.ts$/, '') : undefined;
+		return this.pageDependenciesFile ? slash(this.pageDependenciesFile.replace(/.ts$/, '')) : undefined;
 	}
 
 	get componentsAssets(): string | undefined {
@@ -122,7 +122,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	}
 
 	get pagePlaygroundImport(): string | undefined {
-		return this.playgroundFile ? this.playgroundFile.replace(/.ts$/, '') : undefined;
+		return this.playgroundFile ? slash(this.playgroundFile.replace(/.ts$/, '')) : undefined;
 	}
 
 	protected override update(): Observable<void> {

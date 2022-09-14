@@ -14,7 +14,7 @@ import {
 	SourceFile,
 } from 'ts-morph';
 
-import {buildAssets, formatCode, isPageEntity} from '../../helpers';
+import {buildAssets, formatCode, isPageEntity, slash} from '../../helpers';
 import {NgDocAsset, NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
 import {componentDecoratorResolver} from '../../resolvers/component-decorator.resolver';
 import {NgDocComponentAssetsEnv} from '../../templates-env';
@@ -69,7 +69,7 @@ export class NgDocDependenciesEntity extends NgDocEntity {
 	}
 
 	get componentAssetsImport(): string {
-		return path.join(this.folderPath, 'ng-doc.component-assets');
+		return slash(path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, 'ng-doc.component-assets')));
 	}
 
 	override init(): Observable<void> {
@@ -172,7 +172,7 @@ export class NgDocDependenciesEntity extends NgDocEntity {
 				[classDeclaration.getName() ?? '']: assets.map((asset: Omit<NgDocAsset, 'outputPath'>) => ({
 					...asset,
 					output: formatCode(asset.output, asset.type),
-					outputPath: path.join(this.parent?.assetsFolder ?? this.folderPath, asset.name),
+					outputPath: slash(path.join(this.parent?.assetsFolder ?? this.folderPath, asset.name)),
 				})),
 			};
 		}

@@ -2,6 +2,7 @@ import * as path from 'path';
 
 import {GENERATED_MODULES_PATH} from '../../variables';
 import {NgDocFileEntity} from './file.entity';
+import {slash} from '../../../helpers';
 
 export abstract class NgDocModuleEntity<T> extends NgDocFileEntity<T> {
 	abstract override parent?: NgDocModuleEntity<unknown>;
@@ -38,6 +39,6 @@ export abstract class NgDocModuleEntity<T> extends NgDocFileEntity<T> {
 	 * @type {string}
 	 */
 	get moduleImport(): string {
-		return path.relative(this.context.context.workspaceRoot, this.modulePath).replace(/.ts$/, '');
+		return slash(path.relative(this.context.context.workspaceRoot, this.modulePath)).replace(/.ts$/, '');
 	}
 }

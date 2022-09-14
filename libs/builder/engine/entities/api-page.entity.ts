@@ -4,7 +4,7 @@ import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
-import {declarationFolderName, uniqueName} from '../../helpers';
+import {declarationFolderName, slash, uniqueName} from '../../helpers';
 import {isSupportedDeclaration} from '../../helpers/is-supported-declaration';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocApiPageEnv} from '../../templates-env/api-page.env';
@@ -65,7 +65,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	}
 
 	get builtPagePath(): string {
-		return path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, RENDERED_PAGE_NAME));
+		return slash(path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, RENDERED_PAGE_NAME)));
 	}
 
 	override init(): Observable<void> {

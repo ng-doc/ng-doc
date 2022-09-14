@@ -13,4 +13,5 @@ export * from './is-not-excluded-path';
 export * from './is-supported-declaration';
 export * from './process-snippets';
 export * from './typescript';
+export * from './slash';
 export * from './unique-name';
