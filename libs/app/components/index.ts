@@ -1,6 +1,7 @@
 export * from '@ng-doc/app/components/api-displayer';
 export * from '@ng-doc/app/components/api-list';
 export * from '@ng-doc/app/components/api-page';
+export * from '@ng-doc/app/components/api-tags';
 export * from '@ng-doc/app/components/code';
 export * from '@ng-doc/app/components/declaration-tag';
 export * from '@ng-doc/app/components/demo';

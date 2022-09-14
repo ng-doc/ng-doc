@@ -1,0 +1,8 @@
+:host {
+	display: inline-flex;
+	align-items: center;
+
+	ng-doc-tag:not(:last-child) {
+		margin-right: calc(var(--ng-doc-base-gutter) / 2);
+	}
+}

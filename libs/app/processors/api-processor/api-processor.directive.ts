@@ -26,7 +26,7 @@ export class NgDocApiProcessorDirective extends NgDocHtmlProcessor<NgDocApiDispl
 	protected override extractComponentOptions(element: Element): NgDocProcessorOptions<NgDocApiDisplayerComponent> {
 		return {
 			inputs: {
-				api: JSON.parse(element.textContent ?? ''),
+				api: JSON.parse(element.textContent ?? 'undefined'),
 			},
 		};
 	}

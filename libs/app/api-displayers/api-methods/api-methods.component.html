@@ -37,14 +37,6 @@
 		<td cdk-cell *cdkCellDef="let method">{{method.docs}}</td>
 	</ng-container>
 
-	<ng-container cdkColumnDef="overloads">
-		<td cdk-cell *cdkCellDef="let method" [attr.colspan]="columns.length">
-			234
-		</td>
-
-	</ng-container>
-
 	<tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
 	<tr cdk-row *cdkRowDef="let element; columns: columns;"></tr>
-	<tr cdk-row *cdkRowDef="let row; columns: ['overloads']"></tr>
 </table>

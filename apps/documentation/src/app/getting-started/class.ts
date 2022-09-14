@@ -29,8 +29,11 @@ export abstract class TestClass implements MyInterface {
 	}
 }
 
+/** What about this */
 export enum MyEnum1 {
+	/** Key 1 description */
 	KEY1,
+	/** Key 2 description */
 	KEY2,
 }
 

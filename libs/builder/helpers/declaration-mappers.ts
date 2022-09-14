@@ -2,6 +2,8 @@ import {
 	asArray,
 	NgDocExportedClass,
 	NgDocExportedDeclaration,
+	NgDocExportedEnum,
+	NgDocExportedMember,
 	NgDocExportedMethod,
 	NgDocExportedMethodOverload,
 	NgDocExportedParameter,
@@ -12,6 +14,9 @@ import {
 	ClassDeclaration,
 	ClassDeclarationStructure,
 	Decorator,
+	EnumDeclaration,
+	EnumDeclarationStructure,
+	EnumMember,
 	Expression,
 	JSDoc,
 	MethodDeclaration,
@@ -37,7 +42,29 @@ export function mapDeclaration(declaration: NgDocSupportedDeclarations): NgDocEx
 		return mapClassDeclaration(declaration);
 	}
 
+	if (Node.isEnumDeclaration(declaration)) {
+		return mapEnumDeclaration(declaration);
+	}
+
 	return undefined;
+}
+
+/**
+ *
+ * @param declaration
+ */
+export function mapEnumDeclaration(declaration: EnumDeclaration): NgDocExportedEnum {
+	const structure: EnumDeclarationStructure = declaration.getStructure();
+	const {name, isExported, isDefaultExport} = structure;
+
+	return {
+		kind: 'Enum',
+		name,
+		isExported,
+		isDefaultExport,
+		members: declaration.getMembers().map(mapEnumMember),
+		docs: declaration.getJsDocs().map(mapJsDoc).join('\n'),
+	};
 }
 
 /**
@@ -157,6 +184,19 @@ export function mapParameter(declaration: ParameterDeclaration): NgDocExportedPa
 		hasOverrideKeyword,
 		initializer: mapExpression(declaration.getInitializer()),
 		isReadonly,
+	};
+}
+
+/**
+ *
+ * @param declaration
+ */
+export function mapEnumMember(declaration: EnumMember): NgDocExportedMember {
+	return {
+		name: declaration.getName(),
+		value: String(declaration.getValue()),
+		type: mapType(declaration.getType()),
+		docs: declaration.getJsDocs().map(mapJsDoc).join('\n'),
 	};
 }
 

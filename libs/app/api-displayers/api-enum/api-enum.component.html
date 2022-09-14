@@ -1,0 +1,19 @@
+<table cdk-table [dataSource]="api?.members ?? []" multiTemplateDataRows>
+	<ng-container cdkColumnDef="name">
+		<th cdk-header-cell *cdkHeaderCellDef>Member</th>
+		<td cdk-cell *cdkCellDef="let member">{{member.name}}</td>
+	</ng-container>
+
+	<ng-container cdkColumnDef="value">
+		<th cdk-header-cell *cdkHeaderCellDef>Value</th>
+		<td cdk-cell *cdkCellDef="let member">{{member.value}}</td>
+	</ng-container>
+
+	<ng-container cdkColumnDef="description">
+		<th cdk-header-cell *cdkHeaderCellDef>Description</th>
+		<td cdk-cell *cdkCellDef="let member">{{member.docs}}</td>
+	</ng-container>
+
+	<tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
+	<tr cdk-row *cdkRowDef="let element; columns: columns;"></tr>
+</table>

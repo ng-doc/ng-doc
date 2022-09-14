@@ -13,30 +13,41 @@ export interface NgDocExportedClass {
 
 export interface NgDocExportedInterface {
 	kind: 'Interface';
+	name: string;
 }
 
 export interface NgDocExportedFunction {
 	kind: 'Function';
+	name: string;
 }
 
 export interface NgDocExportedEnum {
 	kind: 'Enum';
+	name: string;
+	isExported?: boolean;
+	isDefaultExport?: boolean;
+	members: NgDocExportedMember[];
+	docs: string;
 }
 
 export interface NgDocExportedVariable {
 	kind: 'Variable';
+	name: string;
 }
 
 export interface NgDocExportedModule {
 	kind: 'Module';
+	name: string;
 }
 
 export interface NgDocExportedFunctionOverload {
 	kind: 'FunctionOverload';
+	name: string;
 }
 
 export interface NgDocExportedTypeAlias {
 	kind: 'TypeAlias';
+	name: string;
 }
 
 export type NgDocExportedDeclaration =
@@ -87,6 +98,13 @@ export interface NgDocExportedParameter {
 	hasQuestionToken?: boolean;
 	hasOverrideKeyword?: boolean;
 	initializer?: string;
+}
+
+export interface NgDocExportedMember {
+	name: string;
+	value: string;
+	type: string;
+	docs: string;
 }
 
 export type NgDocExportedType = string;
