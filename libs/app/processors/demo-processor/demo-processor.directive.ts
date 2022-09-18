@@ -24,8 +24,8 @@ export class NgDocDemoProcessorDirective extends NgDocHtmlProcessor<NgDocDemoCom
 	protected override extractComponentOptions(element: Element): NgDocProcessorOptions<NgDocDemoComponent> {
 		return {
 			inputs: {
-				componentName: element.getAttribute('data-component-name') ?? undefined,
-				container: asBoolean(element.getAttribute('data-container')) ?? true,
+				componentName: element.getAttribute('data-component-name') || undefined,
+				container: asBoolean(element.getAttribute('data-container')) || true,
 			},
 		};
 	}

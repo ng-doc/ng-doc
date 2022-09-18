@@ -10,7 +10,6 @@ import {NgDocApiEnumComponent} from './api-enum.component';
 @NgModule({
 	declarations: [NgDocApiEnumComponent],
 	imports: [CommonModule, CdkTableModule, NgDocKindIconModule, NgDocTextModule, NgDocTooltipModule],
-	exports: [NgDocApiEnumComponent],
 	providers: [provideApiDisplayer('Enum', NgDocApiEnumComponent)],
 })
 export class NgDocApiEnumModule {}

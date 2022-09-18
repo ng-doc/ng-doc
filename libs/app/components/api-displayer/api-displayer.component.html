@@ -1,6 +1,6 @@
 <ng-container *ngIf="api">
 	<h3 class="ng-doc-api-header">
-		<span class="ng-doc-api-name">{{api?.name}}</span>
+		<span class="ng-doc-api-name">{{api?.name ?? ''}}</span>
 		<ng-doc-api-tags [api]="api"></ng-doc-api-tags>
 	</h3>
 

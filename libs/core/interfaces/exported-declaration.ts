@@ -14,11 +14,33 @@ export interface NgDocExportedClass {
 export interface NgDocExportedInterface {
 	kind: 'Interface';
 	name: string;
+	isExported?: boolean;
+	isDefaultExport?: boolean;
+	extends: string[];
+	properties: NgDocExportedPropertySignature[];
+	methods: NgDocExportedMethodSignature[];
+	docs: string;
 }
 
 export interface NgDocExportedFunction {
 	kind: 'Function';
 	name: string;
+	isExported?: boolean;
+	isDefaultExport?: boolean;
+	parameters: NgDocExportedParameter[];
+	overloads: NgDocExportedFunctionOverload[];
+	returnType: string;
+	docs: string;
+}
+
+export interface NgDocExportedFunctionOverload {
+	kind: 'FunctionOverload';
+	name: string;
+	isExported?: boolean;
+	isDefaultExport?: boolean;
+	parameters: NgDocExportedParameter[];
+	returnType: string;
+	docs: string;
 }
 
 export interface NgDocExportedEnum {
@@ -33,21 +55,19 @@ export interface NgDocExportedEnum {
 export interface NgDocExportedVariable {
 	kind: 'Variable';
 	name: string;
-}
-
-export interface NgDocExportedModule {
-	kind: 'Module';
-	name: string;
-}
-
-export interface NgDocExportedFunctionOverload {
-	kind: 'FunctionOverload';
-	name: string;
+	isExported?: boolean;
+	isDefaultExport?: boolean;
+	type: string;
+	docs: string;
 }
 
 export interface NgDocExportedTypeAlias {
 	kind: 'TypeAlias';
 	name: string;
+	isExported?: boolean;
+	isDefaultExport?: boolean;
+	code: string;
+	docs: string;
 }
 
 export type NgDocExportedDeclaration =
@@ -56,7 +76,6 @@ export type NgDocExportedDeclaration =
 	| NgDocExportedFunction
 	| NgDocExportedEnum
 	| NgDocExportedVariable
-	| NgDocExportedModule
 	| NgDocExportedFunctionOverload
 	| NgDocExportedTypeAlias;
 
@@ -76,6 +95,14 @@ export interface NgDocExportedProperty {
 	docs: string;
 }
 
+export interface NgDocExportedPropertySignature {
+	name: string;
+	type: NgDocExportedType;
+	isReadonly?: boolean;
+	hasQuestionToken?: boolean;
+	docs: string;
+}
+
 export interface NgDocExportedMethod {
 	name: string;
 	returnType: NgDocExportedType;
@@ -87,6 +114,14 @@ export interface NgDocExportedMethod {
 	decorators: string[];
 	parameters: NgDocExportedParameter[];
 	overloads: NgDocExportedMethodOverload[];
+	docs: string;
+}
+
+export interface NgDocExportedMethodSignature {
+	name: string;
+	returnType: NgDocExportedType;
+	hasQuestionToken?: boolean;
+	parameters: NgDocExportedParameter[];
 	docs: string;
 }
 

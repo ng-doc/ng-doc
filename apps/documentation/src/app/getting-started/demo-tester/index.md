@@ -77,8 +77,8 @@ export class Test {
 
 {{ NgDocActions.api("../class.ts#MyEnum1") }}
 
-{{ NgDocActions.api("../class.ts#MyInterface") }}
-
 {{ NgDocActions.api("../class.ts#MyType") }}
+
+{{ NgDocActions.api("../class.ts#MyInterface") }}
 
 {{ NgDocActions.api("../class.ts#myFunction") }}

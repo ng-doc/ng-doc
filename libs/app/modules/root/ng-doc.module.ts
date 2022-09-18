@@ -1,6 +1,13 @@
 import {OverlayModule} from '@angular/cdk/overlay';
 import {ModuleWithProviders, NgModule} from '@angular/core';
-import {NgDocApiClassModule, NgDocApiEnumModule} from '@ng-doc/app/api-displayers';
+import {
+	NgDocApiClassModule,
+	NgDocApiEnumModule,
+	NgDocApiFunctionModule,
+	NgDocApiInterfaceModule,
+	NgDocApiTypeAliasModule,
+	NgDocApiVariableModule,
+} from '@ng-doc/app/api-displayers';
 import {NgDocSearchEngine} from '@ng-doc/app/classes';
 import {NgDocRootModule} from '@ng-doc/app/components/root';
 import {
@@ -16,6 +23,10 @@ import {
 		/* Api displayers */
 		NgDocApiClassModule,
 		NgDocApiEnumModule,
+		NgDocApiTypeAliasModule,
+		NgDocApiInterfaceModule,
+		NgDocApiFunctionModule,
+		NgDocApiVariableModule,
 		/* Type controls */
 		NgDocStringControlModule,
 		NgDocNumberControlModule,

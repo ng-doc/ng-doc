@@ -26,7 +26,7 @@ export class NgDocDeclarationTagProcessorDirective extends NgDocHtmlProcessor<Ng
 	protected override extractComponentOptions(element: Element): NgDocProcessorOptions<NgDocDeclarationTagComponent> {
 		return {
 			inputs: {
-				kind: element.textContent ?? '',
+				kind: element.textContent || '',
 			},
 		};
 	}

@@ -12,7 +12,7 @@ const tokenStore: Map<NgDocExportedDeclarationKind, InjectionToken<Constructor<N
  * @param type
  * @param control
  */
-export function provideApiDisplayer<T>(
+export function provideApiDisplayer(
 	type: NgDocExportedDeclarationKind,
 	control: Constructor<NgDocApiDisplayer>,
 ): Provider {
@@ -31,7 +31,7 @@ export function provideApiDisplayer<T>(
  *
  * @param type
  */
-export function getApiDisplayerToken<T>(
+export function getApiDisplayerToken(
 	type: NgDocExportedDeclarationKind,
 ): InjectionToken<Constructor<NgDocApiDisplayer>> | undefined {
 	return tokenStore.get(type);

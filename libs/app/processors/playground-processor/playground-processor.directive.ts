@@ -20,9 +20,9 @@ export class NgDocPlaygroundProcessorDirective extends NgDocHtmlProcessor<NgDocP
 	protected override extractComponentOptions(element: Element): NgDocProcessorOptions<NgDocPlaygroundComponent> {
 		return {
 			inputs: {
-				id: element.getAttribute('data-playground-id') ?? undefined,
-				properties: JSON.parse(element.querySelector('#data')?.textContent ?? '') ?? undefined,
-				selectors: (element.querySelector('#selectors')?.textContent ?? '')
+				id: element.getAttribute('data-playground-id') || undefined,
+				properties: JSON.parse(element.querySelector('#data')?.textContent ?? '') || undefined,
+				selectors: (element.querySelector('#selectors')?.textContent || '')
 					.split(',')
 					.map((selector: string) => selector.trim()),
 			},
