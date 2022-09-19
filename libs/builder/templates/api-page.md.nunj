@@ -7,6 +7,4 @@
 
 {{ declaration | formatJsDoc }}
 
-## Api
-
-{{ api.render(declaration) }}
+{{ api.render(declaration, false) }}
