@@ -20,6 +20,6 @@ export class NgDocApiVariableComponent implements NgDocApiDisplayer<NgDocExporte
 	}
 
 	get code(): string {
-		return ``;
+		return `${this.api.declarationKind} ${this.api.name}: ${this.api.type};`;
 	}
 }

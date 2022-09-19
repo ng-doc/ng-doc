@@ -33,8 +33,9 @@ export function provideTypeControl(
 }
 
 /**
+ * Returns token for type control based on provided type
  *
- * @param type
+ * @param type - type for searched control (e.g. `string`)
  */
 export function getTokenForType(type: string): InjectionToken<NgDocProvidedTypeControl> | undefined {
 	return tokenStore.get(type);

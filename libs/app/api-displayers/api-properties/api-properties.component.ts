@@ -11,5 +11,5 @@ export class NgDocApiPropertiesComponent {
 	@Input()
 	properties: NgDocExportedProperty[] = [];
 
-	columns: string[] = ['tags', 'name', 'type', 'initializer', 'description'];
+	readonly columns: string[] = ['tags', 'name', 'type', 'initializer', 'description'];
 }

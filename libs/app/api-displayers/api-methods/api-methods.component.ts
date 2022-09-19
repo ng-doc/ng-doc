@@ -11,5 +11,5 @@ export class NgDocApiMethodsComponent {
 	@Input()
 	methods: NgDocExportedMethod[] = [];
 
-	columns: string[] = ['tags', 'name', 'parameters', 'returnType', 'description'];
+	readonly columns: string[] = ['tags', 'name', 'parameters', 'returnType', 'description'];
 }

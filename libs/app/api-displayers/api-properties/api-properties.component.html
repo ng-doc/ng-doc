@@ -25,7 +25,7 @@
 	<ng-container cdkColumnDef="initializer">
 		<th cdk-header-cell *cdkHeaderCellDef>Initializer</th>
 		<td cdk-cell *cdkCellDef="let property">
-			<code>{{property.initializer}}</code>
+			<code *ngIf="property.initializer">{{property.initializer}}</code>
 		</td>
 	</ng-container>
 

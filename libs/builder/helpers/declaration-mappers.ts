@@ -1,5 +1,5 @@
 import {
-	asArray,
+	asArray, isPresent,
 	NgDocExportedClass,
 	NgDocExportedDeclaration,
 	NgDocExportedEnum,
@@ -30,13 +30,13 @@ import {
 	FunctionDeclarationStructure,
 	InterfaceDeclaration,
 	InterfaceDeclarationStructure,
-	JSDoc,
+	JSDoc, JSDocParameterTag, JSDocStructure, JSDocTag, JSDocTagStructure,
 	MethodDeclaration,
 	MethodDeclarationOverloadStructure,
 	MethodDeclarationStructure,
 	MethodSignature,
 	MethodSignatureStructure,
-	Node,
+	Node, OptionalKind,
 	ParameterDeclaration,
 	ParameterDeclarationStructure,
 	PropertyDeclaration,
@@ -48,7 +48,7 @@ import {
 	TypeAliasDeclarationStructure,
 	TypeFormatFlags,
 	VariableDeclaration,
-	VariableDeclarationStructure,
+	VariableDeclarationStructure, VariableStatement,
 } from 'ts-morph';
 
 import {NgDocSupportedDeclarations} from '../types';
@@ -92,6 +92,7 @@ export function mapDeclaration(declaration: NgDocSupportedDeclarations): NgDocEx
 export function mapEnumDeclaration(declaration: EnumDeclaration): NgDocExportedEnum {
 	const structure: EnumDeclarationStructure = declaration.getStructure();
 	const {name, isExported, isDefaultExport} = structure;
+	const docStructures: JSDocStructure[] = declaration.getJsDocs().map((doc: JSDoc) => doc.getStructure());
 
 	return {
 		kind: 'Enum',
@@ -99,7 +100,7 @@ export function mapEnumDeclaration(declaration: EnumDeclaration): NgDocExportedE
 		isExported,
 		isDefaultExport,
 		members: declaration.getMembers().map(mapEnumMember),
-		docs: declaration.getJsDocs().map(mapJsDoc).join('\n'),
+		docs: docStructures.map(mapJsDoc).join('\n'),
 	};
 }
 
@@ -110,6 +111,7 @@ export function mapEnumDeclaration(declaration: EnumDeclaration): NgDocExportedE
 export function mapTypeAliasDeclaration(declaration: TypeAliasDeclaration): NgDocExportedTypeAlias {
 	const structure: TypeAliasDeclarationStructure = declaration.getStructure();
 	const {name, isExported, isDefaultExport} = structure;
+	const docStructures: JSDocStructure[] = declaration.getJsDocs().map((doc: JSDoc) => doc.getStructure());
 
 	return {
 		kind: 'TypeAlias',
@@ -117,7 +119,7 @@ export function mapTypeAliasDeclaration(declaration: TypeAliasDeclaration): NgDo
 		isExported,
 		isDefaultExport,
 		code: declaration.getText(),
-		docs: declaration.getJsDocs().map(mapJsDoc).join('\n'),
+		docs: docStructures.map(mapJsDoc).join('\n'),
 	};
 }
 
@@ -128,16 +130,17 @@ export function mapTypeAliasDeclaration(declaration: TypeAliasDeclaration): NgDo
 export function mapFunctionDeclaration(declaration: FunctionDeclaration): NgDocExportedFunction {
 	const structure: FunctionDeclarationStructure = declaration.getStructure() as FunctionDeclarationStructure;
 	const {isExported, isDefaultExport} = structure;
+	const docStructures: JSDocStructure[] = declaration.getJsDocs().map((doc: JSDoc) => doc.getStructure());
 
 	return {
 		kind: 'Function',
 		name: structure.name ?? '',
 		isExported,
 		isDefaultExport,
-		parameters: declaration.getParameters().map(mapParameter),
+		parameters: declaration.getParameters().map((p: ParameterDeclaration) => mapParameter(p, declaration.getJsDocs())),
 		overloads: declaration.getOverloads().map(mapFunctionOverloadDeclaration),
 		returnType: mapType(declaration.getReturnType()),
-		docs: declaration.getJsDocs().map(mapJsDoc).join('\n'),
+		docs: docStructures.map(mapJsDoc).join('\n'),
 	};
 }
 
@@ -149,15 +152,16 @@ export function mapFunctionOverloadDeclaration(declaration: FunctionDeclaration)
 	const structure: FunctionDeclarationOverloadStructure =
 		declaration.getStructure() as FunctionDeclarationOverloadStructure;
 	const {isExported, isDefaultExport} = structure;
+	const docStructures: JSDocStructure[] = declaration.getJsDocs().map((doc: JSDoc) => doc.getStructure());
 
 	return {
 		kind: 'FunctionOverload',
 		name: declaration.getName() ?? '',
 		isExported,
 		isDefaultExport,
-		parameters: declaration.getParameters().map(mapParameter),
+		parameters: declaration.getParameters().map((p: ParameterDeclaration) => mapParameter(p, declaration.getJsDocs())),
 		returnType: mapType(declaration.getReturnType()),
-		docs: declaration.getJsDocs().map(mapJsDoc).join('\n'),
+		docs: docStructures.map(mapJsDoc).join('\n'),
 	};
 }
 
@@ -166,14 +170,19 @@ export function mapFunctionOverloadDeclaration(declaration: FunctionDeclaration)
  * @param declaration
  */
 export function mapVariableDeclaration(declaration: VariableDeclaration): NgDocExportedVariable {
+	const statement: VariableStatement | undefined = declaration.getVariableStatement();
 	const structure: VariableDeclarationStructure = declaration.getStructure();
 	const {name} = structure;
+	const docStructures: JSDocStructure[] = statement?.getJsDocs().map((doc: JSDoc) => doc.getStructure()) ?? [];
 
 	return {
 		kind: 'Variable',
 		name: name ?? '',
+		declarationKind: statement?.getDeclarationKind() ?? 'const',
 		type: mapType(declaration.getType()),
-		docs: '',
+		isExported: statement?.isExported(),
+		isDefaultExport: statement?.isDefaultExport(),
+		docs: docStructures.map(mapJsDoc).join('\n') ?? ''
 	};
 }
 
@@ -184,6 +193,7 @@ export function mapVariableDeclaration(declaration: VariableDeclaration): NgDocE
 export function mapClassDeclaration(declaration: ClassDeclaration): NgDocExportedClass {
 	const structure: ClassDeclarationStructure = declaration.getStructure();
 	const {name, isExported, isAbstract, isDefaultExport} = structure;
+	const docStructures: JSDocStructure[] = declaration.getJsDocs().map((doc: JSDoc) => doc.getStructure());
 
 	return {
 		kind: 'Class',
@@ -195,7 +205,7 @@ export function mapClassDeclaration(declaration: ClassDeclaration): NgDocExporte
 		decorators: declaration.getDecorators().map(mapDecorator),
 		properties: declaration.getProperties().map(mapProperty),
 		methods: declaration.getMethods().map(mapMethod),
-		docs: declaration.getJsDocs().map(mapJsDoc).join('\n'),
+		docs: docStructures.map(mapJsDoc).join('\n'),
 	};
 }
 
@@ -206,6 +216,7 @@ export function mapClassDeclaration(declaration: ClassDeclaration): NgDocExporte
 export function mapInterfaceDeclaration(declaration: InterfaceDeclaration): NgDocExportedInterface {
 	const structure: InterfaceDeclarationStructure = declaration.getStructure();
 	const {name, isExported, isDefaultExport} = structure;
+	const docStructures: JSDocStructure[] = declaration.getJsDocs().map((doc: JSDoc) => doc.getStructure());
 
 	return {
 		kind: 'Interface',
@@ -215,7 +226,7 @@ export function mapInterfaceDeclaration(declaration: InterfaceDeclaration): NgDo
 		extends: asArray(structure.extends).map(String),
 		properties: declaration.getProperties().map(mapPropertySignature),
 		methods: declaration.getMethods().map(mapMethodSignature),
-		docs: declaration.getJsDocs().map(mapJsDoc).join('\n'),
+		docs: docStructures.map(mapJsDoc).join('\n'),
 	};
 }
 
@@ -227,6 +238,7 @@ export function mapProperty(declaration: PropertyDeclaration): NgDocExportedProp
 	const structure: PropertyDeclarationStructure = declaration.getStructure();
 	const {name, isAbstract, hasExclamationToken, hasQuestionToken, hasOverrideKeyword, isReadonly, isStatic} =
 		structure;
+	const docStructures: JSDocStructure[] = declaration.getJsDocs().map((doc: JSDoc) => doc.getStructure());
 
 	return {
 		name,
@@ -239,7 +251,7 @@ export function mapProperty(declaration: PropertyDeclaration): NgDocExportedProp
 		initializer: mapExpression(declaration.getInitializer()),
 		isReadonly,
 		isStatic,
-		docs: declaration.getJsDocs().map(mapJsDoc).join('\n'),
+		docs: docStructures.map(mapJsDoc).join('\n'),
 	};
 }
 
@@ -250,13 +262,14 @@ export function mapProperty(declaration: PropertyDeclaration): NgDocExportedProp
 export function mapPropertySignature(declaration: PropertySignature): NgDocExportedPropertySignature {
 	const structure: PropertySignatureStructure = declaration.getStructure();
 	const {name, hasQuestionToken, isReadonly} = structure;
+	const docStructures: JSDocStructure[] = declaration.getJsDocs().map((doc: JSDoc) => doc.getStructure());
 
 	return {
 		name,
 		type: mapType(declaration.getType()),
 		hasQuestionToken,
 		isReadonly,
-		docs: declaration.getJsDocs().map(mapJsDoc).join('\n'),
+		docs: docStructures.map(mapJsDoc).join('\n'),
 	};
 }
 
@@ -266,8 +279,8 @@ export function mapPropertySignature(declaration: PropertySignature): NgDocExpor
  */
 export function mapMethod(declaration: MethodDeclaration): NgDocExportedMethod {
 	const structure: MethodDeclarationStructure = declaration.getStructure() as MethodDeclarationStructure;
-
 	const {name, isAsync, isAbstract, hasQuestionToken, hasOverrideKeyword, isStatic} = structure;
+	const docStructures: JSDocStructure[] = declaration.getJsDocs().map((doc: JSDoc) => doc.getStructure());
 
 	return {
 		name,
@@ -278,9 +291,9 @@ export function mapMethod(declaration: MethodDeclaration): NgDocExportedMethod {
 		hasQuestionToken,
 		hasOverrideKeyword,
 		isStatic,
-		parameters: declaration.getParameters().map(mapParameter),
+		parameters: declaration.getParameters().map((p: ParameterDeclaration) => mapParameter(p, declaration.getJsDocs())),
 		overloads: declaration.getOverloads().map(mapMethodOverload),
-		docs: declaration.getJsDocs().map(mapJsDoc).join('\n'),
+		docs: docStructures.map(mapJsDoc).join('\n'),
 	};
 }
 
@@ -290,15 +303,15 @@ export function mapMethod(declaration: MethodDeclaration): NgDocExportedMethod {
  */
 export function mapMethodSignature(declaration: MethodSignature): NgDocExportedMethodSignature {
 	const structure: MethodSignatureStructure = declaration.getStructure();
-
 	const {name, hasQuestionToken} = structure;
+	const docStructures: JSDocStructure[] = declaration.getJsDocs().map((doc: JSDoc) => doc.getStructure());
 
 	return {
 		name,
 		returnType: mapType(declaration.getReturnType()),
 		hasQuestionToken,
-		parameters: declaration.getParameters().map(mapParameter),
-		docs: declaration.getJsDocs().map(mapJsDoc).join('\n'),
+		parameters: declaration.getParameters().map((p: ParameterDeclaration) => mapParameter(p, declaration.getJsDocs())),
+		docs: docStructures.map(mapJsDoc).join('\n'),
 	};
 }
 
@@ -309,8 +322,8 @@ export function mapMethodSignature(declaration: MethodSignature): NgDocExportedM
 export function mapMethodOverload(declaration: MethodDeclaration): NgDocExportedMethodOverload {
 	const structure: MethodDeclarationOverloadStructure =
 		declaration.getStructure() as MethodDeclarationOverloadStructure;
-
 	const {isAsync, isAbstract, hasQuestionToken, hasOverrideKeyword, isStatic} = structure;
+	const docStructures: JSDocStructure[] = declaration.getJsDocs().map((doc: JSDoc) => doc.getStructure());
 
 	return {
 		returnType: mapType(declaration.getReturnType()),
@@ -319,18 +332,18 @@ export function mapMethodOverload(declaration: MethodDeclaration): NgDocExported
 		hasQuestionToken,
 		hasOverrideKeyword,
 		isStatic,
-		parameters: declaration.getParameters().map(mapParameter),
-		docs: declaration.getJsDocs().map(mapJsDoc).join('\n'),
+		parameters: declaration.getParameters().map((p: ParameterDeclaration) => mapParameter(p, declaration.getJsDocs())),
+		docs: docStructures.map(mapJsDoc).join('\n'),
 	};
 }
 
 /**
  *
  * @param declaration
+ * @param docs
  */
-export function mapParameter(declaration: ParameterDeclaration): NgDocExportedParameter {
+export function mapParameter(declaration: ParameterDeclaration, docs: JSDoc[] = []): NgDocExportedParameter {
 	const structure: ParameterDeclarationStructure = declaration.getStructure();
-
 	const {name, hasQuestionToken, hasOverrideKeyword, isReadonly} = structure;
 
 	return {
@@ -341,6 +354,7 @@ export function mapParameter(declaration: ParameterDeclaration): NgDocExportedPa
 		hasOverrideKeyword,
 		initializer: mapExpression(declaration.getInitializer()),
 		isReadonly,
+		docs: mapJsDocForTag(docs, 'param')
 	};
 }
 
@@ -349,11 +363,13 @@ export function mapParameter(declaration: ParameterDeclaration): NgDocExportedPa
  * @param declaration
  */
 export function mapEnumMember(declaration: EnumMember): NgDocExportedMember {
+	const docStructures: JSDocStructure[] = declaration.getJsDocs().map((doc: JSDoc) => doc.getStructure());
+
 	return {
 		name: declaration.getName(),
 		value: String(declaration.getValue()),
 		type: mapType(declaration.getType()),
-		docs: declaration.getJsDocs().map(mapJsDoc).join('\n'),
+		docs: docStructures.map(mapJsDoc).join('\n'),
 	};
 }
 
@@ -361,8 +377,23 @@ export function mapEnumMember(declaration: EnumMember): NgDocExportedMember {
  *
  * @param doc
  */
-export function mapJsDoc(doc: JSDoc): string {
-	return doc.getCommentText() ?? '';
+export function mapJsDoc(doc: JSDocStructure): string {
+	return String(doc.description ?? '');
+}
+
+/**
+ *
+ * @param docs
+ * @param tagName
+ */
+export function mapJsDocForTag(docs: JSDoc[], tagName: string): string {
+	return docs
+		.map((doc: JSDoc) => doc.getTags())
+		.flat()
+		.filter(isPresent)
+		.filter((tag: JSDocTag) => tag.getTagName() === tagName)
+		.map((tag: JSDocTag) => String(tag.getComment()).replace(/^-\s*/gm, ''))
+		.join('\n')
 }
 
 /**

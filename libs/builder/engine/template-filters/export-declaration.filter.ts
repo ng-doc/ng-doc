@@ -7,9 +7,10 @@ import {NG_DOC_EXPORTED_DECLARATION_TEMPLATE_ID} from '../../naming';
 /**
  *
  * @param declaration
+ * @param header
  */
-export function exportDeclaration(declaration: ExportedDeclarations): string {
+export function exportDeclaration(declaration: ExportedDeclarations, header: boolean = true): string {
 	const structure: NgDocExportedDeclaration | undefined = helper(declaration);
 
-	return `<div id="${NG_DOC_EXPORTED_DECLARATION_TEMPLATE_ID}">${structure ? JSON.stringify(structure) : ''}</div>`;
+	return `<div id="${NG_DOC_EXPORTED_DECLARATION_TEMPLATE_ID}" data-header="${header}">${structure ? JSON.stringify(structure) : ''}</div>`;
 }

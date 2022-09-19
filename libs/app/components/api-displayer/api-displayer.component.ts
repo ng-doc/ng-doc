@@ -14,6 +14,9 @@ export class NgDocApiDisplayerComponent implements OnInit {
 	@Input()
 	api?: NgDocExportedDeclaration;
 
+	@Input()
+	header: boolean = true;
+
 	apiDisplayer?: NgDocComponentContent<NgDocApiDisplayer>;
 
 	constructor(private readonly injector: Injector) {}

@@ -57,6 +57,7 @@ export interface NgDocExportedVariable {
 	name: string;
 	isExported?: boolean;
 	isDefaultExport?: boolean;
+	declarationKind: string;
 	type: string;
 	docs: string;
 }
@@ -133,6 +134,7 @@ export interface NgDocExportedParameter {
 	hasQuestionToken?: boolean;
 	hasOverrideKeyword?: boolean;
 	initializer?: string;
+	docs: string;
 }
 
 export interface NgDocExportedMember {

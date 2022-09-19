@@ -5,11 +5,7 @@
 
 # {{ declaration.getName() }}
 
-{% if declaration.getJsDocs -%}
-{%- for doc in declaration.getJsDocs() -%}
-{{ doc.getInnerText() }}
-{%- endfor -%}
-{%- endif %}
+{{ declaration | formatJsDoc }}
 
 ## Api
 

@@ -27,6 +27,9 @@ export class NgDocApiProcessorDirective extends NgDocHtmlProcessor<NgDocApiDispl
 		return {
 			inputs: {
 				api: JSON.parse(element.textContent || '{}'),
+				header: element.getAttribute('data-header')
+					? element.getAttribute('data-header') !== 'false'
+					: true
 			},
 		};
 	}
