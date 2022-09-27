@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {NgDocExportedProperty} from '@ng-doc/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {NgDocExportedProperty, NgDocExportedPropertySignature} from '@ng-doc/core';
 
 @Component({
 	selector: 'ng-doc-api-properties',
@@ -7,9 +7,16 @@ import {NgDocExportedProperty} from '@ng-doc/core';
 	styleUrls: ['./api-properties.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocApiPropertiesComponent {
+export class NgDocApiPropertiesComponent implements OnChanges {
 	@Input()
-	properties: NgDocExportedProperty[] = [];
+	properties: NgDocExportedProperty[] | NgDocExportedPropertySignature[] = [];
 
-	readonly columns: string[] = ['tags', 'name', 'type', 'initializer', 'description'];
+	@Input()
+	signature: boolean = false;
+
+	columns: string[] = [];
+
+	ngOnChanges(): void {
+		this.columns = ['tags', 'name', 'type', ...(this.signature ? [] : ['initializer']), 'description'];
+	}
 }

@@ -38,8 +38,9 @@ export enum MyEnum1 {
 }
 
 export interface MyInterface {
-	property1: TestType;
+	property1?: TestType;
 	property2: string | number;
+	method(prop1: number): void;
 }
 
 export type MyType = string | number;

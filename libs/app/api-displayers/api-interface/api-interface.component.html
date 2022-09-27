@@ -1,1 +1,11 @@
-<p>api-interface works!</p>
+<ng-container *ngIf="api.properties?.length">
+	<h4>Properties</h4>
+	<ng-doc-api-properties [properties]="api.properties" [signature]="true"></ng-doc-api-properties>
+</ng-container>
+
+<ng-container *ngIf="api.methods?.length">
+	<h4>Methods</h4>
+	<ng-doc-api-methods [methods]="api.methods" [signature]="true"></ng-doc-api-methods>
+</ng-container>
+
+
