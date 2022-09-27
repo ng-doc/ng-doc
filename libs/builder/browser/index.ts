@@ -24,6 +24,7 @@ export function runBrowser(options: NgDocSchema, context: BuilderContext): Obser
 		.pipe(
 			switchMap((targetOptions: json.JsonObject ) => {
 				const builder: NgDocBuilder = new NgDocBuilder({
+					tsConfig: String(targetOptions['tsConfig']),
 					options,
 					context,
 					inlineStyleLanguage: (targetOptions?.['inlineStyleLanguage'] as NgDocStyleType) ?? 'CSS',

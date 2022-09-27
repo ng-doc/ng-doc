@@ -33,7 +33,7 @@ export class NgDocBuilder {
 
 	constructor(private readonly context: NgDocBuilderContext) {
 		this.project = createProject({
-			tsConfigFilePath: this.context.options.ngDoc.tsConfig,
+			tsConfigFilePath: this.context.tsConfig,
 			compilerOptions: {
 				rootDir: this.context.context.workspaceRoot,
 				outDir: CACHE_PATH,

@@ -35,8 +35,7 @@
 			"configurations": {
 				"production": {
 					"ngDoc": {
-						"pages": "apps/documentation",
-						"tsConfig": "tsconfig.base.json"
+						"pages": "apps/documentation"
 					},
 					"budgets": [
 						{
@@ -64,8 +63,7 @@
 				},
 				"development": {
 					"ngDoc": {
-						"pages": "apps/documentation",
-						"tsConfig": "tsconfig.base.json"
+						"pages": "apps/documentation"
 					},
 					"buildOptimizer": false,
 					"optimization": false,
@@ -112,7 +110,6 @@
 					"browserTarget": "documentation:build:development",
 					"ngDoc": {
 						"pages": "apps/documentation",
-						"tsConfig": "tsconfig.base.json",
 						"tag": "develop"
 					}
 				}
