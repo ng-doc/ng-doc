@@ -20,7 +20,7 @@
 </ng-container>
 
 <ng-template #titleContent>
-	<span class="ng-doc-header">
+	<span class="ng-doc-header" [id]="anchor">
 		{{ text }}
 		<a class="ng-doc-anchor" [routerLink]="[]" [fragment]="anchor">
 			<ng-doc-icon icon="link-2" [size]="24"></ng-doc-icon>

@@ -18,11 +18,7 @@ import {AppComponent} from './app.component';
 		NgDocModule.forRoot(),
 		NgDocUiKitRootModule.forRoot(),
 		NgDocGeneratedModule.forRoot(),
-		RouterModule.forRoot(NG_DOC_ROUTING, {
-			anchorScrolling: 'enabled',
-			onSameUrlNavigation: 'reload',
-			scrollPositionRestoration: 'enabled',
-		}),
+		RouterModule.forRoot(NG_DOC_ROUTING),
 		NgDocNavbarModule,
 		NgDocSidebarModule,
 		NgDocIconModule,

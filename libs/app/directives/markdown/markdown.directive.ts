@@ -1,4 +1,5 @@
-import {Directive, ElementRef, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import {AfterViewInit, Directive, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 import {NG_DOC_BLOCKQUOTE_TEMPLATE_ID, NG_DOC_CODE_TEMPLATE_ID, NG_DOC_TITLE_TEMPLATE_ID} from '@ng-doc/builder/naming';
 import {marked} from 'marked';
 
@@ -8,14 +9,14 @@ const WARNING_ANCHOR: string = '<p><strong>Warning</strong>';
 @Directive({
 	selector: '[ngDocMarkdown]',
 })
-export class NgDocMarkdownDirective implements OnChanges {
+export class NgDocMarkdownDirective implements OnChanges, AfterViewInit {
 	@Input()
 	ngDocMarkdown: string = '';
 
 	@Output()
 	readonly rendered: EventEmitter<void> = new EventEmitter<void>();
 
-	constructor(private readonly elementRef: ElementRef<HTMLElement>) {}
+	constructor(private readonly elementRef: ElementRef<HTMLElement>, private router: Router, private route: ActivatedRoute) {}
 
 	ngOnChanges(): void {
 		const renderer: marked.RendererObject = {
@@ -45,5 +46,15 @@ export class NgDocMarkdownDirective implements OnChanges {
 
 		this.elementRef.nativeElement.innerHTML = marked.parse(this.ngDocMarkdown);
 		this.rendered.emit();
+	}
+
+	ngAfterViewInit(): void {
+		if (this.route.snapshot.fragment) {
+			const element: HTMLElement | null = this.elementRef.nativeElement.querySelector("#" + this.route.snapshot.fragment);
+
+			if (element) {
+				element.scrollIntoView();
+			}
+		}
 	}
 }
