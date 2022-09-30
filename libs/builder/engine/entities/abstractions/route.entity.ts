@@ -1,6 +1,7 @@
 import * as path from 'path';
 
 import {NgDocModuleEntity} from './module.entity';
+import {slash} from '../../../helpers';
 
 export abstract class NgDocRouteEntity<T> extends NgDocModuleEntity<T> {
 	/**
@@ -16,6 +17,6 @@ export abstract class NgDocRouteEntity<T> extends NgDocModuleEntity<T> {
 	get fullRoute(): string {
 		const parentRoute: string = this.parent instanceof NgDocRouteEntity ? this.parent.fullRoute : '';
 
-		return path.join(parentRoute, this.route);
+		return slash(path.join(parentRoute, this.route));
 	}
 }

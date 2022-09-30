@@ -114,14 +114,6 @@ export class NgDocComboboxHostComponent<T>
 			.subscribe(() => this.dropdown?.close());
 	}
 
-	protected override incomingUpdate(value: T | null): void {
-		super.incomingUpdate(value);
-
-		if (value) {
-			this.dropdown?.close();
-		}
-	}
-
 	get listHostOrigin(): ElementRef<HTMLElement> | undefined {
 		return this.inputControl?.elementRef;
 	}
