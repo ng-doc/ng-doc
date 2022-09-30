@@ -18,7 +18,7 @@
 		"default": {
 			"runner": "nx/tasks-runners/default",
 			"options": {
-				"cacheableOperations": ["pre-build", "build", "lint", "test", "e2e"]
+				"cacheableOperations": ["pre-build", "build", "schematics", "lint", "test", "e2e"]
 			}
 		}
 	},
@@ -29,9 +29,15 @@
 				"projects": "dependencies"
 			}
 		],
-		"build": [
+		"schematics": [
 			{
 				"target": "pre-build",
+				"projects": "self"
+			}
+		],
+		"build": [
+			{
+				"target": "schematics",
 				"projects": "self"
 			},
 			{

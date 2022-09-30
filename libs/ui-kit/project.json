@@ -6,9 +6,7 @@
 	"targets": {
 		"pre-build": {
 			"executor": "@nrwl/angular:package",
-			"outputs": [
-				"dist/libs/ui-kit"
-			],
+			"outputs": ["dist/libs/ui-kit"],
 			"options": {
 				"project": "libs/ui-kit/ng-package.json"
 			},
@@ -24,20 +22,20 @@
 		},
 		"build": {
 			"executor": "@nrwl/workspace:run-commands",
-			"outputs": [
-				"dist/libs/ui-kit/styles"
-			],
+			"outputs": ["dist/libs/ui-kit/styles"],
 			"options": {
-				"commands": [
-					"sass --no-source-map libs/ui-kit/styles/main.scss dist/libs/ui-kit/styles/main.css"
-				]
+				"commands": ["sass --no-source-map libs/ui-kit/styles/main.scss dist/libs/ui-kit/styles/main.css"]
+			}
+		},
+		"schematics": {
+			"executor": "@nrwl/workspace:run-commands",
+			"options": {
+				"commands": []
 			}
 		},
 		"test": {
 			"executor": "@nrwl/jest:jest",
-			"outputs": [
-				"coverage/libs/ui-kit"
-			],
+			"outputs": ["coverage/libs/ui-kit"],
 			"options": {
 				"jestConfig": "libs/ui-kit/jest.config.ts",
 				"passWithNoTests": true
@@ -46,10 +44,7 @@
 		"lint": {
 			"executor": "@nrwl/linter:eslint",
 			"options": {
-				"lintFilePatterns": [
-					"libs/ui-kit/**/*.ts",
-					"libs/ui-kit/**/*.html"
-				]
+				"lintFilePatterns": ["libs/ui-kit/**/*.ts", "libs/ui-kit/**/*.html"]
 			}
 		}
 	},

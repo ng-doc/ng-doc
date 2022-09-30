@@ -9,6 +9,7 @@ import {
 	NgDocApiVariableModule,
 } from '@ng-doc/app/api-displayers';
 import {NgDocSearchEngine} from '@ng-doc/app/classes';
+import {NgDocNavbarModule, NgDocSidebarModule} from '@ng-doc/app/components';
 import {NgDocRootModule} from '@ng-doc/app/components/root';
 import {
 	NgDocBooleanControlModule,
@@ -33,7 +34,7 @@ import {
 		NgDocBooleanControlModule,
 		NgDocTypeAliasControlModule,
 	],
-	exports: [NgDocRootModule],
+	exports: [NgDocRootModule, NgDocNavbarModule, NgDocSidebarModule],
 })
 export class NgDocModule {
 	static forRoot(): ModuleWithProviders<NgDocModule> {

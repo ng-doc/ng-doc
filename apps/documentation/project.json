@@ -30,7 +30,7 @@
 				],
 				"styles": ["apps/documentation/src/styles.scss"],
 				"scripts": [],
-				"allowedCommonJsDependencies": ["prettier"]
+				"allowedCommonJsDependencies": ["prettier", "posthtml-parser", "posthtml-render"]
 			},
 			"configurations": {
 				"production": {

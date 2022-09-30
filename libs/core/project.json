@@ -19,6 +19,12 @@
 				"commands": []
 			}
 		},
+		"schematics": {
+			"executor": "@nrwl/workspace:run-commands",
+			"options": {
+				"commands": []
+			}
+		},
 		"publish": {
 			"executor": "@nrwl/workspace:run-commands",
 			"options": {
