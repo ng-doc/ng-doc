@@ -1,12 +1,12 @@
 import {HostTree} from '@angular-devkit/schematics';
 import {SchematicTestRunner, UnitTestTree} from '@angular-devkit/schematics/testing';
-import {APP_COMPONENT_CONTENT} from '@ng-doc/app/schematics/ng-add/constants/app-component-content';
-import {NG_DOC_VERSION} from '@ng-doc/app/schematics/ng-add/constants/version';
-import {createAngularJson} from '@ng-doc/app/schematics/ng-add/utils/create-angular-json';
 import {createProject, createSourceFile, saveActiveProject, setActiveProject} from 'ng-morph';
 import {join} from 'path';
 
+import {APP_COMPONENT_CONTENT} from '../constants/app-component-content';
+import {NG_DOC_VERSION} from '../constants/version';
 import {Schema} from '../schema';
+import {createAngularJson} from '../utils/create-angular-json';
 
 const collectionPath: string = join(__dirname, '../../collection.json');
 

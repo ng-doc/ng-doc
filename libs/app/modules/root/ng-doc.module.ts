@@ -1,4 +1,5 @@
 import {OverlayModule} from '@angular/cdk/overlay';
+import {HttpClientModule} from '@angular/common/http';
 import {ModuleWithProviders, NgModule} from '@angular/core';
 import {
 	NgDocApiClassModule,
@@ -20,6 +21,7 @@ import {
 
 @NgModule({
 	imports: [
+		HttpClientModule,
 		OverlayModule,
 		/* Api displayers */
 		NgDocApiClassModule,

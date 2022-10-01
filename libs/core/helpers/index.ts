@@ -1,5 +1,6 @@
 export * from './as-array';
 export * from './capitalize';
+export * from './escape-html';
 export * from './escape-regexp';
 export * from './extract-value';
 export * from './humanize-declaration-name';

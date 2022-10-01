@@ -29,3 +29,23 @@ builders that Angular provides you to build the application
 and run it in development mode. NgDoc uses these to inject into build mode, and then
 it will run one of the native angular builders to build your application.
 
+## @ng-doc/app
+
+Provides a core set of components that are used to build the application and display the content of
+the documentation.
+
+Some of them are customizable and offer the ability to provide your own variations, for example
+for `Playground Demo` you can provide your own component that will manage the possible values of
+`@Input`
+
+## @ng-doc/ui-kit
+
+Provides a set of components for creating your own documentation blocks if required, buttons,
+comboboxes, icons, etc.
+
+You can use the components from this library as you wish, to create new or modify existing
+application blocks.
+
+## @ng-doc/core
+
+Contains common, reusable entities used by other libraries in this project.
