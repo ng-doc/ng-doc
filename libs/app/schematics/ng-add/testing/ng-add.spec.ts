@@ -78,7 +78,7 @@ export class AppModule {}
 `);
 	});
 
-	it('should add styles', async () => {
+	it('should update angular.json', async () => {
 		const options: Schema = {
 			project: '',
 		};
@@ -101,8 +101,16 @@ export class AppModule {}
                 "highlight.js/styles/default.css",
                 "highlight.js/styles/vs.css"
               ]
-            },
-            "builder": "@ng-doc/builder:browser"
+             },
+             "configurations": {
+              \t"production": {
+              \t\t"sourceMap": true,
+\t\t\t\t\t"optimization": false,
+\t\t\t\t\t"buildOptimizer": false,
+\t\t\t\t\t"aot": false
+              \t}
+              },
+              "builder": "@ng-doc/builder:browser"
           }
         }
     }

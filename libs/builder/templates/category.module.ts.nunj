@@ -5,11 +5,7 @@ import {RouterModule} from "@angular/router";
 @NgModule({
 	imports: [RouterModule.forChild([
 		{
-			{%- if category.isRoot %}
 			path: '',
-			{%- else %}
-			path: '{{ category.route }}',
-			{%- endif %}
 			children: [
 				{%- for child in category.children %}
 				{

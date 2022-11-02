@@ -6,7 +6,7 @@ const page: NgDocPage = {
 	title: `What is NgDoc?`,
 	mdFile: './index.md',
 	category: GettingStartedCategory,
-	order: 1,
+	order: 2,
 };
 
 export default page;

@@ -1,4 +1,4 @@
-import {TestType} from './test';
+import {TestType} from '../getting-started/test';
 
 export abstract class TestClass implements MyInterface {
 	/**

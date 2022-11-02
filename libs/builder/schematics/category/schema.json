@@ -11,13 +11,13 @@
 				"$source": "argv",
 				"index": 0
 			},
-			"x-prompt": "The title of you page (e.g. \"Getting Started\")?"
+			"x-prompt": "The title of your category (e.g. \"Getting Started\")?"
 		},
 		"route": {
 			"type": "string",
 			"description": "The route of the page",
 			"alias": "r",
-			"x-prompt": "The route of the page (its directory name by default, e.g. \"getting-started\")."
+			"x-prompt": "The route of the category (its directory name by default, e.g. \"getting-started\")."
 		},
 		"path": {
 			"type": "string",

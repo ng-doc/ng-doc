@@ -17,7 +17,15 @@ export function createAngularJson(): void {
           "build": {
             "options": {
               "main": "test/main.ts"
-             }
+             },
+             "configurations": {
+              	"production": {
+              		"sourceMap": true,
+					"optimization": true,
+					"buildOptimizer": true,
+					"aot": true
+              	}
+              }
           }
         }
     }

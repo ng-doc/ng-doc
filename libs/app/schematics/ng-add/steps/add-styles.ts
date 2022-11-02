@@ -14,6 +14,8 @@ import {getProject} from '../utils/get-project';
  */
 export function addStyles(options: Schema, context: SchematicContext): Rule {
 	return updateWorkspace((workspace: WorkspaceDefinition) => {
+		context.logger.info(`[INFO]: Adding global styles...`);
+
 		const project: ProjectDefinition | undefined = getProject(options, workspace);
 
 		if (!project) {

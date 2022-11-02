@@ -11,7 +11,7 @@
 				"$source": "argv",
 				"index": 0
 			},
-			"x-prompt": "The title of you page (e.g. \"Getting Started\")?"
+			"x-prompt": "The title of your page (e.g. \"Getting Started\")?"
 		},
 		"route": {
 			"type": "string",

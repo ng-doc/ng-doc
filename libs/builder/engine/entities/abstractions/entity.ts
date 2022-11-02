@@ -109,7 +109,7 @@ export abstract class NgDocEntity {
 	}
 
 	/**
-	 * Returns `true` if current has children
+	 * Returns `true` if current entity has children
 	 *
 	 * @type {boolean}
 	 */

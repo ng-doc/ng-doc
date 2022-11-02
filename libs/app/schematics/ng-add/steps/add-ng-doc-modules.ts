@@ -23,6 +23,8 @@ import {getProject} from '../utils/get-project';
  */
 export function addNgDocModules(options: Schema): Rule {
 	return async (tree: Tree, context: SchematicContext) => {
+		context.logger.info(`[INFO]: Adding NgDoc modules to the root module...`);
+
 		const workspace: WorkspaceDefinition = await getWorkspace(tree);
 		const project: ProjectDefinition | undefined = getProject(options, workspace);
 

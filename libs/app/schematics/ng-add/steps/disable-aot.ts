@@ -1,3 +1,4 @@
+import {JsonValue} from '@angular/compiler-cli/ngcc/src/utils';
 import {Rule, SchematicContext} from '@angular-devkit/schematics';
 import {
 	ProjectDefinition,
@@ -14,9 +15,9 @@ import {getProject} from '../utils/get-project';
  * @param options
  * @param context
  */
-export function replaceBuilders(options: Schema, context: SchematicContext): Rule {
+export function disableAot(options: Schema, context: SchematicContext): Rule {
 	return updateWorkspace((workspace: WorkspaceDefinition) => {
-		context.logger.info(`[INFO]: Replacing default builders...`);
+		context.logger.info(`[INFO]: Disabling AOT to enable Playgrounds...`);
 
 		const project: ProjectDefinition | undefined = getProject(options, workspace);
 
@@ -29,15 +30,30 @@ export function replaceBuilders(options: Schema, context: SchematicContext): Rul
 		const serveTarget: TargetDefinition | undefined = project.targets.get('serve');
 
 		if (buildTarget) {
-			buildTarget.builder = '@ng-doc/builder:browser';
-		} else {
-			context.logger.warn(`[WARNING]: "build" target was not found, please add builder manually.`);
+			disableOptimizations(buildTarget)
 		}
 
 		if (serveTarget) {
-			serveTarget.builder = '@ng-doc/builder:dev-server';
-		} else {
-			context.logger.warn(`[WARNING]: "serve" target was not found, please add builder manually.`);
+			disableOptimizations(serveTarget)
 		}
 	});
+}
+
+/**
+ *
+ * @param definition
+ */
+function disableOptimizations(definition: TargetDefinition): void {
+	if (definition.configurations) {
+		Object.keys(definition.configurations)
+			.forEach((key: string) => {
+				const configuration:  Record<string, JsonValue> | undefined = definition.configurations && definition.configurations[key];
+
+				if (configuration) {
+					configuration["optimization"] = false;
+					configuration["buildOptimizer"] = false;
+					configuration["aot"] = false;
+				}
+			})
+	}
 }
