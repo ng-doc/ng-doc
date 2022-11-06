@@ -36,7 +36,7 @@ export abstract class NgDocHtmlProcessor<T> {
 					});
 
 					// set component options
-					Object.assign(componentRef.instance, options.inputs);
+					Object.assign(componentRef.instance as object, options.inputs);
 
 					// add component reference to the list to destroy it later
 					this.componentRefs.push(componentRef);

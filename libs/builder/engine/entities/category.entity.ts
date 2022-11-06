@@ -16,6 +16,7 @@ import {NgDocPageEntity} from './page.entity';
 
 export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 	override moduleName: string = uniqueName(`NgDocGeneratedCategoryModule`);
+	override moduleFileName: string = `${uniqueName('ng-doc-category')}.module.ts`;
 	override parent?: NgDocCategoryEntity;
 
 	constructor(
@@ -60,10 +61,6 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 
 	get categories(): NgDocCategoryEntity[] {
 		return asArray(this.children.values()).filter(isCategoryEntity);
-	}
-
-	override get moduleFileName(): string {
-		return `ng-doc-category.module.ts`;
 	}
 
 	override get title(): string {

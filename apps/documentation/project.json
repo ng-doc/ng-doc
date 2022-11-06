@@ -35,7 +35,7 @@
 			"configurations": {
 				"production": {
 					"ngDoc": {
-						"pages": "apps/documentation"
+						"pages": "apps/documentation/test-docs"
 					},
 					"budgets": [
 						{
@@ -63,7 +63,7 @@
 				},
 				"development": {
 					"ngDoc": {
-						"pages": "apps/documentation"
+						"pages": "apps/documentation/src/test-docs"
 					},
 					"buildOptimizer": false,
 					"optimization": false,
@@ -83,7 +83,7 @@
 			]
 		},
 		"pre-serve": {
-			"executor": "@nrwl/workspace:run-commands",
+			"executor": "nx:run-commands",
 			"options": {
 				"commands": [
 					"symlink-dir dist/libs/core dist/libs/builder/node_modules/@ng-doc/core"
@@ -102,14 +102,14 @@
 				"production": {
 					"browserTarget": "documentation:build:production",
 					"ngDoc": {
-						"pages": "apps/documentation",
+						"pages": "apps/documentation/src/test-docs",
 						"tsConfig": "tsconfig.base.json"
 					}
 				},
 				"development": {
 					"browserTarget": "documentation:build:development",
 					"ngDoc": {
-						"pages": "apps/documentation",
+						"pages": "apps/documentation/src/test-docs",
 						"tag": "develop"
 					}
 				}

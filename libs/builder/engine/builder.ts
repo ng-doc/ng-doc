@@ -91,6 +91,7 @@ export class NgDocBuilder {
 				this.buildIndexes().pipe(map((indexes: NgDocBuiltOutput[]) => [...output.flat(), ...indexes])),
 			),
 			tap((output: NgDocBuiltOutput[]) => emitBuildedOutput(...output)),
+			tap(() => this.clearEntityStore()),
 			mapTo(void 0),
 		);
 	}
@@ -116,13 +117,22 @@ export class NgDocBuilder {
 	private buildIndexes(): Observable<NgDocBuiltOutput[]> {
 		const [dictionary, indexes] = buildGlobalIndexes(this.entities);
 
+		return of([
+			{
+				output: dictionary,
+				filePath: path.join(GENERATED_ASSETS_PATH, 'pages.json'),
+			},
+			{
+				output: indexes,
+				filePath: path.join(GENERATED_ASSETS_PATH, 'indexes.json'),
+			},
+		]);
+	}
 
-		return of([{
-			output: dictionary,
-			filePath: path.join(GENERATED_ASSETS_PATH, 'pages.json'),
-		}, {
-			output: indexes,
-			filePath: path.join(GENERATED_ASSETS_PATH, 'indexes.json'),
-		}])
+	private clearEntityStore(): void {
+		const destroyed: NgDocEntity[] = this.entities.asArray().filter((entity: NgDocEntity) => entity.destroyed);
+
+		destroyed.forEach((entity: NgDocEntity) => entity.removeArtifacts());
+		this.entities.remove(...destroyed);
 	}
 }

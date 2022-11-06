@@ -38,7 +38,7 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 	}
 
 	private getPropertiesFormValues<K extends keyof T>(): Record<K, NgDocExtractedValue> {
-		return objectKeys(this.properties).reduce((controls: Record<K, NgDocExtractedValue>, key: K) => {
+		return objectKeys(this.properties ?? {}).reduce((controls: Record<K, NgDocExtractedValue>, key: K) => {
 			if (this.properties) {
 				controls[key] = extractValue(this.properties[key]?.default ?? 'undefined');
 			}

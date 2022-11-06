@@ -1,8 +1,9 @@
+import * as fs from 'fs';
 import * as path from 'path';
 
+import {slash} from '../../../helpers';
 import {GENERATED_MODULES_PATH} from '../../variables';
 import {NgDocFileEntity} from './file.entity';
-import {slash} from '../../../helpers';
 
 export abstract class NgDocModuleEntity<T> extends NgDocFileEntity<T> {
 	abstract override parent?: NgDocModuleEntity<unknown>;
@@ -40,5 +41,15 @@ export abstract class NgDocModuleEntity<T> extends NgDocFileEntity<T> {
 	 */
 	get moduleImport(): string {
 		return slash(path.relative(this.context.context.workspaceRoot, this.modulePath)).replace(/.ts$/, '');
+	}
+
+	override destroy(): void {
+		super.destroy();
+	}
+
+	override removeArtifacts(): void {
+		super.removeArtifacts();
+
+		fs.rmSync(this.folderPath, { recursive: true, force: true });
 	}
 }

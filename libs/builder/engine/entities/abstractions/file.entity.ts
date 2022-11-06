@@ -1,8 +1,9 @@
+import * as fs from 'fs';
 import * as minimatch from 'minimatch';
 import * as path from 'path';
-import {Observable, of} from 'rxjs';
+import {EMPTY, forkJoin, from, Observable, of} from 'rxjs';
 import {mapTo, tap} from 'rxjs/operators';
-import {SyntaxKind} from 'ts-morph';
+import {OutputFile, SyntaxKind} from 'ts-morph';
 
 import {isCategoryEntity} from '../../../helpers';
 import {CACHE_PATH, CATEGORY_PATTERN} from '../../variables';
@@ -18,24 +19,31 @@ export abstract class NgDocFileEntity<T> extends NgDocEntity {
 	 */
 	target?: T;
 
+	get pathToCompiledFile(): string {
+		const relativePath: string = path.relative(this.context.context.workspaceRoot, this.sourceFile.getFilePath());
+
+		return path.join(CACHE_PATH, relativePath.replace(/\.ts$/, '.js'));
+	}
+
+	emit(): Observable<void> {
+		if (!this.destroyed) {
+			// Doesnt work async
+			this.sourceFile.refreshFromFileSystemSync();
+			this.sourceFile.emitSync();
+		}
+
+		return of(void 0);
+	}
+
 	override init(): Observable<void> {
 		return this.update();
 	}
 
 	protected override update(): Observable<void> {
-		return of(null).pipe(
+		return this.emit().pipe(
 			tap(() => {
-				this.sourceFile.refreshFromFileSystemSync();
-				this.sourceFile.emitSync();
-
-				const relativePath: string = path.relative(
-					this.context.context.workspaceRoot,
-					this.sourceFile.getFilePath(),
-				);
-				const pathToCompiled: string = path.join(CACHE_PATH, relativePath.replace(/\.ts$/, '.js'));
-
-				delete require.cache[require.resolve(pathToCompiled)];
-				this.target = require(pathToCompiled).default;
+				delete require.cache[require.resolve(this.pathToCompiledFile)];
+				this.target = require(this.pathToCompiledFile).default;
 
 				if (!this.target) {
 					throw new Error(
@@ -66,5 +74,17 @@ export abstract class NgDocFileEntity<T> extends NgDocEntity {
 			return isCategoryEntity(parent) ? parent : undefined;
 		}
 		return undefined;
+	}
+
+	override destroy(): void {
+		super.destroy();
+	}
+
+	override removeArtifacts() {
+		super.removeArtifacts();
+
+		this.sourceFile.getEmitOutput().getOutputFiles().forEach((file: OutputFile) => {
+			fs.unlinkSync(file.getFilePath());
+		})
 	}
 }

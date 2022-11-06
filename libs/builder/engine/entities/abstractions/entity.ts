@@ -170,6 +170,10 @@ export abstract class NgDocEntity {
 		return this.build().pipe(tap((artifacts: NgDocBuiltOutput[]) => (this.artifacts = artifacts)));
 	}
 
+	removeArtifacts(): void {
+
+	}
+
 	/**
 	 * Destroys current entity and clear all references
 	 *
@@ -178,7 +182,6 @@ export abstract class NgDocEntity {
 	destroy(): void {
 		this.readyToBuild = false;
 		this.destroyed = true;
-		this.entityStore.remove(this);
 		this.destroy$.next();
 	}
 
