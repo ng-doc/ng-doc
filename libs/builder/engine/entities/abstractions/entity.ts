@@ -50,7 +50,7 @@ export abstract class NgDocEntity {
 	/**
 	 * The key by which the entity will be stored in the store
 	 */
-	get storeKey(): string {
+	get id(): string {
 		return this.storeAdditionalKey ? `${this.sourceFilePath}#${this.storeAdditionalKey}` : this.sourceFilePath;
 	}
 
@@ -164,7 +164,7 @@ export abstract class NgDocEntity {
 	/**
 	 * Runs when the source file was updated, can be used to refresh target file etc.
 	 */
-	protected abstract update(): Observable<void>;
+	abstract update(): Observable<void>;
 
 	buildArtifacts(): Observable<NgDocBuiltOutput[]> {
 		return this.build().pipe(tap((artifacts: NgDocBuiltOutput[]) => (this.artifacts = artifacts)));

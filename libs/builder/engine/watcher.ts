@@ -1,36 +1,47 @@
 import * as chokidar from 'chokidar';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import * as minimatch from 'minimatch';
+import {BehaviorSubject, Observable, Subject, Subscriber} from 'rxjs';
 import {filter} from 'rxjs/operators';
 
 import {bufferUntil} from '../operators';
+import {PAGE_PATTERN} from './variables';
+import asString = lunr.utils.asString;
 
 export class NgDocWatcher {
 	private readonly watcher: chokidar.FSWatcher;
-	private updated$: Subject<string> = new Subject();
-	private added$: Subject<string> = new Subject();
-	private deleted$: Subject<string> = new Subject();
-	private ready$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+	private readonly change$: Subject<string> = new Subject();
+	private readonly add$: Subject<string> = new Subject();
+	private readonly unlink$: Subject<string> = new Subject();
 
-	constructor(private files: string | string[]) {
-		this.watcher = chokidar.watch(files);
+	constructor() {
+		this.watcher = chokidar.watch([]);
 
 		this.watcher
-			.on('ready', () => this.ready$.next(true))
-			.on('add', (filePath: string) => this.added$.next(filePath))
-			.on('change', (filePath: string) => this.updated$.next(filePath))
-			.on('unlink', (filePath: string) => this.deleted$.next(filePath));
+			.on('add', this.add$.next)
+			.on('change', this.change$.next)
+			.on('unlink', this.unlink$.next)
 	}
 
-	get update(): Observable<string> {
-		return this.updated$.asObservable();
+	watch(paths: string | readonly string[]): this {
+		this.watcher.add(paths);
+
+		return this;
 	}
 
-	get add(): Observable<string[]> {
-		return this.added$.pipe(bufferUntil(this.ready$.pipe(filter((ready: boolean) => ready))));
+	unwatch(paths: string | readonly string[]): void {
+		this.watcher.unwatch(paths);
 	}
 
-	get remove(): Observable<string> {
-		return this.deleted$.asObservable();
+	onAdd(filterPath?: string): Observable<string> {
+		return this.add$.pipe(filter((path: string) => !filterPath || minimatch(path, filterPath)))
+	}
+
+	onChange(filterPath?: string): Observable<string> {
+		return this.change$.pipe(filter((path: string) => !filterPath || minimatch(path, filterPath)))
+	}
+
+	onUnlink(filterPath?: string): Observable<string> {
+		return this.unlink$.pipe(filter((path: string) => !filterPath || minimatch(path, filterPath)))
 	}
 
 	close(): void {

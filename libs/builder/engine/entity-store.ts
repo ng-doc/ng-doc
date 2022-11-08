@@ -50,8 +50,8 @@ export class NgDocEntityStore implements Iterable<NgDocEntity> {
 	add(...entities: NgDocEntity[]): void {
 		if (entities.length) {
 			entities.forEach((entity: NgDocEntity) => {
-				this.entities.get(entity.storeKey)?.destroy();
-				this.entities.set(entity.storeKey, entity);
+				this.entities.get(entity.id)?.destroy();
+				this.entities.set(entity.id, entity);
 			});
 
 			this.entitiesChanged.next(entities);
@@ -60,7 +60,7 @@ export class NgDocEntityStore implements Iterable<NgDocEntity> {
 
 	remove(...entities: NgDocEntity[]): void {
 		if (entities.length) {
-			entities.forEach((entity: NgDocEntity) => this.entities.delete(entity.storeKey));
+			entities.forEach((entity: NgDocEntity) => this.entities.delete(entity.id));
 
 			this.entitiesChanged.next(entities);
 		}
