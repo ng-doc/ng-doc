@@ -47,6 +47,10 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 			: '';
 	}
 
+	override emit() {
+		// Emitting source file is not necessary for this type of entity
+	}
+
 	override get title(): string {
 		return this.declarationName;
 	}

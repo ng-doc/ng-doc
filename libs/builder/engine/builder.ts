@@ -118,9 +118,7 @@ export class NgDocBuilder implements Iterable<NgDocEntity> {
 					/*
 						 	Refresh and compile source files for all not destroyed entities
 						 */
-					entity.sourceFile.refreshFromFileSystemSync();
-					// Не все должны эмитить
-					entity.sourceFile.emitSync();
+					entity.emit()
 				}
 				return of(entity);
 			}),

@@ -70,6 +70,10 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 		return this.childEntities;
 	}
 
+	override emit() {
+		// Emitting source file is not necessary for this type of entity
+	}
+
 	override update(): Observable<void> {
 		return of(void 0);
 	}

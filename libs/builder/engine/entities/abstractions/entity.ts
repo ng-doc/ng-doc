@@ -143,6 +143,13 @@ export abstract class NgDocEntity {
 		return this.build().pipe(tap((artifacts: NgDocBuiltOutput[]) => (this.artifacts = artifacts)));
 	}
 
+	emit(): void {
+		if (!this.destroyed) {
+			this.sourceFile.refreshFromFileSystemSync();
+			this.sourceFile.emitSync();
+		}
+	}
+
 	removeArtifacts(): void {
 
 	}

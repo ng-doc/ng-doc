@@ -2,7 +2,6 @@ import * as fs from 'fs';
 import * as minimatch from 'minimatch';
 import * as path from 'path';
 import {Observable, of} from 'rxjs';
-import {mapTo, tap} from 'rxjs/operators';
 import {OutputFile, SyntaxKind} from 'ts-morph';
 
 import {isCategoryEntity} from '../../../helpers';
@@ -25,36 +24,23 @@ export abstract class NgDocFileEntity<T> extends NgDocEntity {
 		return path.join(CACHE_PATH, relativePath.replace(/\.ts$/, '.js'));
 	}
 
-	emit(): Observable<void> {
-		if (!this.destroyed) {
-			// Doesnt work async
-			this.sourceFile.refreshFromFileSystemSync();
-			this.sourceFile.emitSync();
-		}
-
-		return of(void 0);
-	}
-
 	override init(): Observable<void> {
 		return this.update();
 	}
 
 	override update(): Observable<void> {
-		return this.emit().pipe(
-			tap(() => {
-				delete require.cache[require.resolve(this.pathToCompiledFile)];
-				this.target = require(this.pathToCompiledFile).default;
+		delete require.cache[require.resolve(this.pathToCompiledFile)];
+		this.target = require(this.pathToCompiledFile).default;
 
-				if (!this.target) {
-					throw new Error(
-						`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`,
-					);
-				}
+		if (!this.target) {
+			throw new Error(
+				`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`,
+			);
+		}
 
-				this.readyToBuild = true;
-			}),
-			mapTo(void 0),
-		);
+		this.readyToBuild = true;
+
+		return of(void 0)
 	}
 
 	protected getParentFromCategory(): NgDocCategoryEntity | undefined {
