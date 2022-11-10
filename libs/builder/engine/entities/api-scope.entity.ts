@@ -71,35 +71,6 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 	}
 
 	override update(): Observable<void> {
-		asArray(this.target.include).forEach((include: string) =>
-			asArray(
-				new Set(
-					this.sourceFile.getProject()
-						.addSourceFilesAtPaths(
-							glob
-								.sync(include)
-								.filter((p: string) => isNotExcludedPath(p, asArray(this.target.exclude))),
-						)
-						.map((sourceFile: SourceFile) => asArray(sourceFile.getExportedDeclarations().values()))
-						.flat(2),
-				),
-			)
-				.filter(isSupportedDeclaration)
-				.forEach((declaration: NgDocSupportedDeclarations) => {
-					const name: string | undefined = declaration.getName();
-
-					if (name) {
-						new NgDocApiPageEntity(
-							this.builder,
-							declaration.getSourceFile(),
-							this.context,
-							this,
-							name,
-						);
-					}
-				}),
-		);
-
 		return of(void 0);
 	}
 

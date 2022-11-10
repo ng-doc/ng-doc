@@ -125,10 +125,7 @@ export class NgDocBuilder implements Iterable<NgDocEntity> {
 						 	they are created based on the NgDocApiEntities
 						 */
 					if (entity instanceof NgDocApiEntity) {
-						entity.children.forEach((child: NgDocEntity) => {
-							child.destroy();
-							this.remove(child);
-						});
+						entity.children.forEach((child: NgDocEntity) => child.destroy());
 					}
 				}
 				return of(entity);

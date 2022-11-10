@@ -71,7 +71,6 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 
 				this.parent = this.getParentFromCategory();
 			}),
-			tap(() => this.reloadScopes()),
 			catchError((error: unknown) => {
 				this.readyToBuild = false;
 				this.context.context.logger.error(`\n${String(error)}`);
@@ -114,14 +113,5 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 			output: JSON.stringify(apiItems),
 			filePath: path.join(this.folderPath, 'ng-doc.api-list.json')
 		});
-	}
-
-	private reloadScopes(): void {
-		this.children.forEach((child: NgDocEntity) => child.destroy());
-
-		this.target?.scopes.forEach(
-			(scope: NgDocApiScope) =>
-				new NgDocApiScopeEntity(this.builder, this.sourceFile, this.context, this, scope),
-		);
 	}
 }

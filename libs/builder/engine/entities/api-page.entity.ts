@@ -72,7 +72,6 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	}
 
 	override update(): Observable<void> {
-		this.sourceFile.refreshFromFileSystemSync();
 		this.updateDeclaration();
 
 		return of(void 0);

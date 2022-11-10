@@ -35,10 +35,10 @@ export abstract class NgDocEntity {
 	private destroy$: Subject<void> = new Subject<void>();
 
 	constructor(
-		protected readonly builder: NgDocBuilder,
+		readonly builder: NgDocBuilder,
 		readonly sourceFile: SourceFile,
-		protected readonly context: NgDocBuilderContext,
-		protected readonly storeAdditionalKey?: string,
+		readonly context: NgDocBuilderContext,
+		readonly storeAdditionalKey?: string,
 	) {}
 
 	/**

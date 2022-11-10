@@ -8,6 +8,7 @@ export * from './entity-type';
 export * from './extract-path-anchor';
 export * from './find-closest-file';
 export * from './format-code';
+export * from './generate-api-entities';
 export * from './get-entity-constructor';
 export * from './is-not-excluded-path';
 export * from './is-supported-declaration';
