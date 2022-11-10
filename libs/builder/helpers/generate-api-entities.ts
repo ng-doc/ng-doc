@@ -1,12 +1,17 @@
+import {asArray} from '@ng-doc/core';
+import * as glob from 'glob';
+import {SourceFile} from 'ts-morph';
+
 import {NgDocApiEntity, NgDocApiPageEntity, NgDocApiScopeEntity} from '../engine';
 import {NgDocApiScope} from '../interfaces';
-import * as glob from 'glob';
-import {isNotExcludedPath} from './is-not-excluded-path';
-import {SourceFile} from 'ts-morph';
-import {isSupportedDeclaration} from './is-supported-declaration';
 import {NgDocSupportedDeclarations} from '../types';
-import {asArray} from '@ng-doc/core';
+import {isNotExcludedPath} from './is-not-excluded-path';
+import {isSupportedDeclaration} from './is-supported-declaration';
 
+/**
+ *
+ * @param apiRootEntity
+ */
 export function generateApiEntities(apiRootEntity: NgDocApiEntity): Array<NgDocApiScopeEntity | NgDocApiPageEntity> {
 	const result: Array<NgDocApiScopeEntity | NgDocApiPageEntity> = []
 
