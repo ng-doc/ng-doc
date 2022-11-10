@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Inject, Input, NgZone} from '@angular/core';
 import {NgDocContent, ngDocZoneOptimize} from '@ng-doc/ui-kit';
 import {WINDOW} from '@ng-web-apis/common';
-import {UntilDestroy} from '@ngneat/until-destroy';
+import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {fromEvent} from 'rxjs';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 
@@ -39,7 +39,8 @@ export class NgDocNavbarComponent {
 				debounceTime(10),
 				map((e: Event) => ((e.target as Document)?.scrollingElement?.scrollTop ?? 0) > 0),
 				distinctUntilChanged(),
-				ngDocZoneOptimize(this.ngZone)
+				ngDocZoneOptimize(this.ngZone),
+				untilDestroyed(this)
 			)
 			.subscribe((scrolled: boolean) => {
 				this.hasShadow = scrolled;

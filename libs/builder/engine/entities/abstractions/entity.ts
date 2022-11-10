@@ -155,7 +155,6 @@ export abstract class NgDocEntity {
 	destroy(): void {
 		this.readyToBuild = false;
 		this.destroyed = true;
-		this.removeArtifacts();
 		this.destroy$.next();
 	}
 

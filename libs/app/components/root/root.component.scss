@@ -23,7 +23,7 @@
 
 	.ng-doc-body {
 		margin-left: var(--ng-doc-sidebar-width);
-		padding: calc(var(--ng-doc-base-gutter) * 4) calc(var(--ng-doc-base-gutter) * 4);
+		padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 4);
 		overflow: auto;
 		background-color: var(--ng-doc-base-0);
 	}

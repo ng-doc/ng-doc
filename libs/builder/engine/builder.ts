@@ -194,7 +194,12 @@ export class NgDocBuilder implements Iterable<NgDocEntity> {
 	}
 
 	private collectGarbage(): void {
-		asArray(this.entities.values()).forEach((entity: NgDocEntity) => entity.destroyed && this.remove(entity));
+		asArray(this.entities.values()).forEach((entity: NgDocEntity) => {
+			if (entity.destroyed) {
+				entity.removeArtifacts();
+				this.remove(entity)
+			}
+		});
 	}
 
 	private buildRoutes(): Observable<NgDocBuiltOutput> {
