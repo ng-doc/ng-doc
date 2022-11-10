@@ -11,7 +11,7 @@ import {
 	switchMap,
 	takeUntil,
 	tap,
-	withLatestFrom
+	withLatestFrom,
 } from 'rxjs/operators';
 import {Project} from 'ts-morph';
 
@@ -87,95 +87,104 @@ export class NgDocBuilder implements Iterable<NgDocEntity> {
 				this.add(entity);
 			});
 
-		this.watcher.onUnlink(PAGE_PATTERN, CATEGORY_PATTERN, PAGE_DEPENDENCY_PATTERN, API_PATTERN, PLAYGROUND_PATTERN)
+		this.watcher
+			.onChange(PAGE_PATTERN, CATEGORY_PATTERN, PAGE_DEPENDENCY_PATTERN, API_PATTERN, PLAYGROUND_PATTERN)
+			.subscribe((path: string) => {
+				const entity: NgDocEntity | undefined = this.get(path);
+
+				if (entity) {
+					this.touchEntity.next(entity);
+				}
+			});
+
+		this.watcher
+			.onUnlink(PAGE_PATTERN, CATEGORY_PATTERN, PAGE_DEPENDENCY_PATTERN, API_PATTERN, PLAYGROUND_PATTERN)
 			.subscribe((path: string) => {
 				const entity: NgDocEntity | undefined = this.get(path);
 
 				if (entity) {
 					entity.destroy();
 				}
-			})
+			});
 	}
 
 	run(): Observable<void> {
 		console.time('Build documentation');
 
-		return this.touchEntity
-			.pipe(
-				concatMap((entity: NgDocEntity) => {
-					if (!entity.destroyed) {
-						/*
+		return this.touchEntity.pipe(
+			concatMap((entity: NgDocEntity) => {
+				if (!entity.destroyed) {
+					/*
 						 	Refresh and compile source files for all not destroyed entities
 						 */
-						entity.sourceFile.refreshFromFileSystemSync();
-						entity.sourceFile.emitSync();
+					entity.sourceFile.refreshFromFileSystemSync();
+					entity.sourceFile.emitSync();
 
-						/*
+					/*
 							We destroy children entities for NgDocApiEntities because
 						 	they are created based on the NgDocApiEntities
 						 */
-						if (entity instanceof NgDocApiEntity) {
-							entity.children.forEach((child: NgDocEntity) => {
-								child.destroy();
-								this.remove(child);
-							});
-						}
+					if (entity instanceof NgDocApiEntity) {
+						entity.children.forEach((child: NgDocEntity) => {
+							child.destroy();
+							this.remove(child);
+						});
 					}
-					return of(entity);
-				}),
-				/* Delay to buffer all changes from the FileSystem */
-				bufferDebounce(100),
-				mergeMap((entities: NgDocEntity[]) =>
-					// Refetch compiled data for non destroyed entities
-					forkJoin(entities.map((entity: NgDocEntity) => entity.destroyed ? of(entity) : entity.update().pipe(mapTo(entity))))
-						.pipe(
-							switchMap((entities: NgDocEntity[]) =>
-								merge(
-									...entities
-										.map((entity: NgDocEntity) =>
-											// Watch for dependency changes of non destroyed entities
-											entity.destroyed
-												? of(entity)
-												: entity.dependencies.changes()
-													.pipe(
-														switchMap((dependencies: string[]) =>
-																this.watcher.watch(dependencies).onChange(...dependencies)
-														),
-														startWith(null),
-														mapTo(entity),
-														takeUntil(
-															merge(
-																this.touchEntity.pipe(filter((e: NgDocEntity) => e === entity)),
-																entity.onDestroy(),
-															),
-														),
-													),
-										),
-								),
-							)
-						)
-				),
-				// Build touched entities
-				mergeMap((entity: NgDocEntity) => entity.destroyed ? EMPTY : entity.buildArtifacts()),
-				bufferDebounce(100),
-				concatMap((output: NgDocBuiltOutput[][]) =>
-					// Build Context, Routes and indexes
-					forkJoin([this.buildContext(), this.buildRoutes()])
-						.pipe(
-							switchMap((contextAndRoutes: NgDocBuiltOutput[]) =>
-								this.buildIndexes()
-									.pipe(
-										tap((indexes: NgDocBuiltOutput[]) => {
-											emitBuiltOutput(...[...output.flat(), ...contextAndRoutes, ...indexes]);
-											this.collectGarbage();
-										}),
-										tap(() => console.timeEnd('Build documentation')),
-									)
+				}
+				return of(entity);
+			}),
+			/* Delay to buffer all changes from the FileSystem */
+			bufferDebounce(100),
+			mergeMap((entities: NgDocEntity[]) =>
+				// Refetch compiled data for non destroyed entities
+				forkJoin(
+					entities.map((entity: NgDocEntity) =>
+						entity.destroyed ? of(entity) : entity.update().pipe(mapTo(entity)),
+					),
+				).pipe(
+					switchMap((entities: NgDocEntity[]) =>
+						merge(
+							...entities.map((entity: NgDocEntity) =>
+								// Watch for dependency changes of non destroyed entities
+								entity.destroyed
+									? of(entity)
+									: entity.dependencies.changes().pipe(
+											switchMap((dependencies: string[]) =>
+												this.watcher.watch(dependencies).onChange(...dependencies),
+											),
+											startWith(null),
+											mapTo(entity),
+											takeUntil(
+												merge(
+													this.touchEntity.pipe(filter((e: NgDocEntity) => e === entity)),
+													entity.onDestroy(),
+												),
+											),
+									  ),
 							),
-						)
+						),
+					),
 				),
-				mapTo(void 0)
-			)
+			),
+			// Build touched entities
+			mergeMap((entity: NgDocEntity) => (entity.destroyed ? EMPTY : entity.buildArtifacts())),
+			bufferDebounce(100),
+			concatMap((output: NgDocBuiltOutput[][]) =>
+				// Build Context, Routes and indexes
+				forkJoin([this.buildContext(), this.buildRoutes()]).pipe(
+					switchMap((contextAndRoutes: NgDocBuiltOutput[]) =>
+						this.buildIndexes().pipe(
+							tap((indexes: NgDocBuiltOutput[]) => {
+								emitBuiltOutput(...[...output.flat(), ...contextAndRoutes, ...indexes]);
+								this.collectGarbage();
+							}),
+							tap(() => console.timeEnd('Build documentation')),
+						),
+					),
+				),
+			),
+			mapTo(void 0),
+		);
 	}
 
 	*[Symbol.iterator](): Iterator<NgDocEntity> {
@@ -209,7 +218,7 @@ export class NgDocBuilder implements Iterable<NgDocEntity> {
 		asArray(this.entities.values()).forEach((entity: NgDocEntity) => {
 			if (entity.destroyed) {
 				entity.removeArtifacts();
-				this.remove(entity)
+				this.remove(entity);
 			}
 		});
 	}
