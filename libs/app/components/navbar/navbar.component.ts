@@ -1,5 +1,9 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {NgDocContent} from '@ng-doc/ui-kit';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Inject, Input, NgZone} from '@angular/core';
+import {NgDocContent, ngDocZoneOptimize} from '@ng-doc/ui-kit';
+import {WINDOW} from '@ng-web-apis/common';
+import {UntilDestroy} from '@ngneat/until-destroy';
+import {fromEvent} from 'rxjs';
+import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 
 @Component({
 	selector: 'ng-doc-navbar',
@@ -7,6 +11,7 @@ import {NgDocContent} from '@ng-doc/ui-kit';
 	styleUrls: ['./navbar.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
+@UntilDestroy()
 export class NgDocNavbarComponent {
 	@Input()
 	leftContent: NgDocContent = '';
@@ -19,4 +24,26 @@ export class NgDocNavbarComponent {
 
 	@Input()
 	search: boolean = true;
+
+	@HostBinding('class.has-shadow')
+	hasShadow: boolean = false;
+
+	constructor(
+		@Inject(WINDOW)
+		private readonly window: Window,
+		private readonly ngZone: NgZone,
+		private readonly changeDetectorRef: ChangeDetectorRef,
+	) {
+		fromEvent(this.window, 'scroll')
+			.pipe(
+				debounceTime(10),
+				map((e: Event) => ((e.target as Document)?.scrollingElement?.scrollTop ?? 0) > 0),
+				distinctUntilChanged(),
+				ngDocZoneOptimize(this.ngZone)
+			)
+			.subscribe((scrolled: boolean) => {
+				this.hasShadow = scrolled;
+				this.changeDetectorRef.markForCheck();
+			});
+	}
 }

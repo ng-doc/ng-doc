@@ -2,7 +2,7 @@ import {isPresent} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {Project, SourceFile} from 'ts-morph';
+import {SourceFile} from 'ts-morph';
 
 import {declarationFolderName, slash, uniqueName} from '../../helpers';
 import {isSupportedDeclaration} from '../../helpers/is-supported-declaration';
@@ -10,7 +10,7 @@ import {NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocApiPageEnv} from '../../templates-env/api-page.env';
 import {NgDocApiPageModuleEnv} from '../../templates-env/api-page.module.env';
 import {NgDocSupportedDeclarations} from '../../types/supported-declarations';
-import {NgDocEntityStore} from '../entity-store';
+import {NgDocBuilder} from '../builder';
 import {NgDocRenderer} from '../renderer';
 import {RENDERED_PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
@@ -25,14 +25,13 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	declaration?: NgDocSupportedDeclarations;
 
 	constructor(
-		override readonly project: Project,
+		protected override readonly builder: NgDocBuilder,
 		override readonly sourceFile: SourceFile,
 		protected override readonly context: NgDocBuilderContext,
-		protected override readonly entityStore: NgDocEntityStore,
-		readonly parent: NgDocApiScopeEntity,
+		override parent: NgDocApiScopeEntity,
 		protected readonly declarationName: string,
 	) {
-		super(project, sourceFile, context, entityStore, declarationName);
+		super(builder, sourceFile, context, declarationName);
 
 		this.updateDeclaration();
 	}
@@ -72,7 +71,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 		return of(void 0);
 	}
 
-	protected override update(): Observable<void> {
+	override update(): Observable<void> {
 		this.sourceFile.refreshFromFileSystemSync();
 		this.updateDeclaration();
 

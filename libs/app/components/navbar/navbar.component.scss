@@ -1,13 +1,24 @@
 :host {
 	position: relative;
 	display: flex;
-	align-items: center;
+	justify-content: center;
 	height: 100%;
-	width: 100%;
-	padding: 0 var(--ng-doc-navbar-horizontal-padding);
-	box-shadow: 0 4px 4px var(--ng-doc-border-color);
-	background-color: var(--ng-doc-base-0);
-	z-index: 10;
+	transition: var(--ng-doc-transition) box-shadow;
+
+	&.has-shadow {
+		box-shadow: var(--ng-doc-border-color) 0px 5px 20px -5px;
+	}
+
+	.navbar-container {
+		display: flex;
+		align-items: center;
+		height: 100%;
+		width: 100%;
+		padding: 0 var(--ng-doc-navbar-horizontal-padding);
+		background-color: var(--ng-doc-base-0);
+		z-index: 10;
+		max-width: var(--ng-doc-max-app-width);
+	}
 
 	.ng-doc-navbar-left,
 	.ng-doc-navbar-center,

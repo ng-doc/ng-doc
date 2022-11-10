@@ -10,15 +10,12 @@ import {
 	Node,
 	ObjectLiteralElementLike,
 	ObjectLiteralExpression,
-	Project,
-	SourceFile,
 } from 'ts-morph';
 
 import {buildAssets, formatCode, isPageEntity, slash} from '../../helpers';
-import {NgDocAsset, NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
+import {NgDocAsset, NgDocBuiltOutput} from '../../interfaces';
 import {componentDecoratorResolver} from '../../resolvers/component-decorator.resolver';
 import {NgDocComponentAssetsEnv} from '../../templates-env';
-import {NgDocEntityStore} from '../entity-store';
 import {NgDocRenderer} from '../renderer';
 import {PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
@@ -28,15 +25,6 @@ type ComponentAsset = Record<string, NgDocAsset[]>;
 
 export class NgDocDependenciesEntity extends NgDocEntity {
 	private componentsAssets: ComponentAsset = {};
-
-	constructor(
-		override readonly project: Project,
-		override readonly sourceFile: SourceFile,
-		protected override readonly context: NgDocBuilderContext,
-		protected override readonly entityStore: NgDocEntityStore,
-	) {
-		super(project, sourceFile, context, entityStore);
-	}
 
 	override get isRoot(): boolean {
 		// always false, page dependencies are not rooted
@@ -53,7 +41,7 @@ export class NgDocDependenciesEntity extends NgDocEntity {
 
 	override get parent(): NgDocPageEntity | undefined {
 		const expectedPath: string = path.join(this.sourceFileFolder, PAGE_NAME);
-		const buildable: NgDocEntity | undefined = this.entityStore.get(expectedPath);
+		const buildable: NgDocEntity | undefined = this.builder.get(expectedPath);
 
 		return buildable && isPageEntity(buildable) ? buildable : undefined;
 	}
@@ -96,7 +84,7 @@ export class NgDocDependenciesEntity extends NgDocEntity {
 		);
 	}
 
-	protected override update(): Observable<void> {
+	override update(): Observable<void> {
 		this.fillAssets();
 
 		this.readyToBuild = true;

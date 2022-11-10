@@ -2,14 +2,14 @@ import {asArray} from '@ng-doc/core';
 import * as glob from 'glob';
 import {forkJoin, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {Project, SourceFile} from 'ts-morph';
+import {SourceFile} from 'ts-morph';
 
 import {isNotExcludedPath, isPageEntity, uniqueName} from '../../helpers';
 import {isSupportedDeclaration} from '../../helpers/is-supported-declaration';
 import {NgDocApiScope, NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocApiScopeModuleEnv} from '../../templates-env/api-scope.module.env';
 import {NgDocSupportedDeclarations} from '../../types/supported-declarations';
-import {NgDocEntityStore} from '../entity-store';
+import {NgDocBuilder} from '../builder';
 import {NgDocRenderer} from '../renderer';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
@@ -23,14 +23,13 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 	protected override readyToBuild: boolean = true;
 
 	constructor(
-		override readonly project: Project,
+		protected override readonly builder: NgDocBuilder,
 		override readonly sourceFile: SourceFile,
 		protected override readonly context: NgDocBuilderContext,
-		protected override readonly entityStore: NgDocEntityStore,
 		override parent: NgDocApiEntity,
 		override target: NgDocApiScope,
 	) {
-		super(project, sourceFile, context, entityStore, target.route);
+		super(builder, sourceFile, context, target.route);
 	}
 
 	override get isRoot(): boolean {
@@ -71,11 +70,11 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 		return this.childEntities;
 	}
 
-	protected override update(): Observable<void> {
+	override update(): Observable<void> {
 		asArray(this.target.include).forEach((include: string) =>
 			asArray(
 				new Set(
-					this.project
+					this.sourceFile.getProject()
 						.addSourceFilesAtPaths(
 							glob
 								.sync(include)
@@ -91,10 +90,9 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 
 					if (name) {
 						new NgDocApiPageEntity(
-							this.project,
+							this.builder,
 							declaration.getSourceFile(),
 							this.context,
-							this.entityStore,
 							this,
 							name,
 						);

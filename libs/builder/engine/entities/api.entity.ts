@@ -2,12 +2,10 @@ import {humanizeDeclarationName} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
-import {Project, SourceFile} from 'ts-morph';
 
 import {isApiPageEntity, isApiScopeEntity, slash, uniqueName} from '../../helpers';
-import {NgDocApi, NgDocApiList, NgDocApiScope, NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
+import {NgDocApi, NgDocApiList, NgDocApiScope, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocApiModuleEnv} from '../../templates-env/api.module.env';
-import {NgDocEntityStore} from '../entity-store';
 import {NgDocRenderer} from '../renderer';
 import {GENERATED_MODULES_PATH} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
@@ -20,15 +18,6 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 	override moduleName: string = uniqueName(`NgDocGeneratedApiListModule`);
 	componentName: string = uniqueName(`NgDocGeneratedApiListComponent`);
 	override parent?: NgDocCategoryEntity;
-
-	constructor(
-		override readonly project: Project,
-		override readonly sourceFile: SourceFile,
-		protected override readonly context: NgDocBuilderContext,
-		protected override readonly entityStore: NgDocEntityStore,
-	) {
-		super(project, sourceFile, context, entityStore);
-	}
 
 	override get route(): string {
 		return this.target?.route ?? 'api';
@@ -71,7 +60,7 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		return this.update();
 	}
 
-	protected override update(): Observable<void> {
+	override update(): Observable<void> {
 		return super.update().pipe(
 			tap(() => {
 				if (!this.title) {
@@ -132,7 +121,7 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 
 		this.target?.scopes.forEach(
 			(scope: NgDocApiScope) =>
-				new NgDocApiScopeEntity(this.project, this.sourceFile, this.context, this.entityStore, this, scope),
+				new NgDocApiScopeEntity(this.builder, this.sourceFile, this.context, this, scope),
 		);
 	}
 }

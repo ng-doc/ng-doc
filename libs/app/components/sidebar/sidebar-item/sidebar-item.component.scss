@@ -13,7 +13,15 @@
 	cursor: pointer;
 	--ng-doc-icon-color: var(--ng-doc-text);
 
-	&:hover {
-		background-color: var(--ng-doc-base-1);
+	span {
+		transition: var(--ng-doc-transition) color;
+	}
+
+	&:hover:not(.active) {
+		--ng-doc-text: var(--ng-doc-grey-100)
+	}
+
+	&.active {
+		--ng-doc-font-weight: bold;
 	}
 }

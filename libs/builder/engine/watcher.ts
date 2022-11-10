@@ -1,11 +1,7 @@
 import * as chokidar from 'chokidar';
 import * as minimatch from 'minimatch';
-import {BehaviorSubject, Observable, Subject, Subscriber} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {filter} from 'rxjs/operators';
-
-import {bufferUntil} from '../operators';
-import {PAGE_PATTERN} from './variables';
-import asString = lunr.utils.asString;
 
 export class NgDocWatcher {
 	private readonly watcher: chokidar.FSWatcher;
@@ -17,9 +13,9 @@ export class NgDocWatcher {
 		this.watcher = chokidar.watch([]);
 
 		this.watcher
-			.on('add', this.add$.next)
-			.on('change', this.change$.next)
-			.on('unlink', this.unlink$.next)
+			.on('add', (path: string) => this.add$.next(path))
+			.on('change', (path: string) => this.change$.next(path))
+			.on('unlink', (path: string) => this.unlink$.next(path));
 	}
 
 	watch(paths: string | readonly string[]): this {
@@ -32,16 +28,16 @@ export class NgDocWatcher {
 		this.watcher.unwatch(paths);
 	}
 
-	onAdd(filterPath?: string): Observable<string> {
-		return this.add$.pipe(filter((path: string) => !filterPath || minimatch(path, filterPath)))
+	onAdd(...filterPaths: string[]): Observable<string> {
+		return this.add$.pipe(filter((path: string) => !filterPaths || filterPaths.some((p: string) => minimatch(path, p))));
 	}
 
-	onChange(filterPath?: string): Observable<string> {
-		return this.change$.pipe(filter((path: string) => !filterPath || minimatch(path, filterPath)))
+	onChange(...filterPaths: string[]): Observable<string> {
+		return this.change$.pipe(filter((path: string) => !filterPaths || filterPaths.some((p: string) => minimatch(path, p))));
 	}
 
-	onUnlink(filterPath?: string): Observable<string> {
-		return this.unlink$.pipe(filter((path: string) => !filterPath || minimatch(path, filterPath)))
+	onUnlink(...filterPaths: string[]): Observable<string> {
+		return this.unlink$.pipe(filter((path: string) => !filterPaths || filterPaths.some((p: string) => minimatch(path, p))));
 	}
 
 	close(): void {

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as minimatch from 'minimatch';
 import * as path from 'path';
-import {EMPTY, forkJoin, from, Observable, of} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {mapTo, tap} from 'rxjs/operators';
 import {OutputFile, SyntaxKind} from 'ts-morph';
 
@@ -39,7 +39,7 @@ export abstract class NgDocFileEntity<T> extends NgDocEntity {
 		return this.update();
 	}
 
-	protected override update(): Observable<void> {
+	override update(): Observable<void> {
 		return this.emit().pipe(
 			tap(() => {
 				delete require.cache[require.resolve(this.pathToCompiledFile)];
@@ -67,7 +67,7 @@ export abstract class NgDocFileEntity<T> extends NgDocEntity {
 			?.getFilePath();
 
 		if (sourceFilePath && minimatch(sourceFilePath, CATEGORY_PATTERN) && sourceFilePath !== this.sourceFilePath) {
-			const parent: NgDocEntity | undefined = this.entityStore.get(
+			const parent: NgDocEntity | undefined = this.builder.get(
 				path.relative(this.context.context.workspaceRoot, sourceFilePath),
 			);
 

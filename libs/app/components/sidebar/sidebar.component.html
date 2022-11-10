@@ -1,6 +1,4 @@
-<div class="ng-doc-side-bar-wrapper" ngDocSelectionHost>
-	<ng-doc-selection align="right"></ng-doc-selection>
-
+<div class="ng-doc-side-bar-wrapper">
 	<ng-container *ngFor="let item of getNavigation()">
 		<ng-container *ngTemplateOutlet="sidebarTemplate; context: {item: this.item, root: true}"></ng-container>
 	</ng-container>
@@ -24,7 +22,7 @@
 		</ng-container>
 
 		<ng-template #itemTemplate>
-			<ng-doc-sidebar-item [item]="item" [ngDocSelectionOrigin]="sidebarItem.selected" #sidebarItem></ng-doc-sidebar-item>
+			<ng-doc-sidebar-item [item]="item"></ng-doc-sidebar-item>
 		</ng-template>
 	</ng-template>
 </div>

@@ -50,36 +50,36 @@
 	&h1 {
 		border: none;
 
-		--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 5);
-		--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 7);
-		--ng-doc-font-weight: bold;
+		--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 6);
+		--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 9);
+		--ng-doc-font-weight: 700;
 	}
 
 	&h2 {
 		border: none;
 
 		--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 4);
-		--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 5);
-		--ng-doc-font-weight: bold;
+		--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 6);
+		--ng-doc-font-weight: 600;
 	}
 
 	&h3 {
 		--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 3);
-		--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 4);
-		--ng-doc-font-weight: bold;
+		--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 5);
+		--ng-doc-font-weight: 600;
 	}
 
 	&h4 {
-		--ng-doc-font-size: 22px;
+		--ng-doc-font-size: 20px;
 		--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 4);
-		--ng-doc-font-weight: bold;
+		--ng-doc-font-weight: 600;
 	}
 
 	&h5,
 	&h6 {
 		--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 2);
 		--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 3);
-		--ng-doc-font-weight: bold;
+		--ng-doc-font-weight: 600;
 	}
 
 	&span {

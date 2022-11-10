@@ -1,23 +1,28 @@
 :host {
-	display: grid;
-	grid-template-columns: var(--ng-doc-sidebar-width) 1fr;
-	grid-template-rows: var(--ng-doc-navbar-height);
-	grid-template-areas:
-    "header header"
-    "sidebar body";
-	height: 100%;
+	main {
+		display: flex;
+		width: 100%;
+		margin-left: auto;
+		margin-right: auto;
+		max-width: var(--ng-doc-max-app-width);
+		padding-top: var(--ng-doc-navbar-height);
+	}
 
 	.ng-doc-header {
-		grid-area: header;
+		position: fixed;
+		height: var(--ng-doc-navbar-height);
+		width: 100%;
+		z-index: 1;
 	}
 
 	.ng-doc-sidebar {
+		position: fixed;
 		display: flex;
-		grid-area: sidebar;
+		width: var(--ng-doc-sidebar-width);
 	}
 
 	.ng-doc-body {
-		grid-area: body;
+		margin-left: var(--ng-doc-sidebar-width);
 		padding: calc(var(--ng-doc-base-gutter) * 4) calc(var(--ng-doc-base-gutter) * 4);
 		overflow: auto;
 		background-color: var(--ng-doc-base-0);

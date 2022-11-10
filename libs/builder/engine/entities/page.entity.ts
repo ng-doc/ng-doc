@@ -3,13 +3,12 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
-import {Project, SourceFile} from 'ts-morph';
+import {SourceFile} from 'ts-morph';
 
 import {isDependencyEntity, isPlaygroundEntity, slash, uniqueName} from '../../helpers';
-import {NgDocBuilderContext, NgDocBuiltOutput, NgDocPage} from '../../interfaces';
+import {NgDocBuiltOutput, NgDocPage} from '../../interfaces';
 import {NgDocPageEnv, NgDocPageModuleEnv} from '../../templates-env';
 import {NgDocActions} from '../actions';
-import {NgDocEntityStore} from '../entity-store';
 import {NgDocRenderer} from '../renderer';
 import {CACHE_PATH, PAGE_DEPENDENCIES_NAME, PLAYGROUND_NAME, RENDERED_PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
@@ -24,15 +23,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	override moduleFileName: string = `${uniqueName('ng-doc-page')}.module.ts`;
 
 	override parent?: NgDocCategoryEntity;
-
-	constructor(
-		override readonly project: Project,
-		override readonly sourceFile: SourceFile,
-		protected override readonly context: NgDocBuilderContext,
-		protected override readonly entityStore: NgDocEntityStore,
-	) {
-		super(project, sourceFile, context, entityStore);
-	}
 
 	override get route(): string {
 		const folderName: string = path.basename(path.dirname(this.sourceFile.getFilePath()));
@@ -67,7 +57,11 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	}
 
 	get scope(): string {
-		return this.target?.scope?.replace(CACHE_PATH, this.context.context.workspaceRoot) ?? this.parent?.scope ?? this.context.context.workspaceRoot;
+		return (
+			this.target?.scope?.replace(CACHE_PATH, this.context.context.workspaceRoot) ??
+			this.parent?.scope ??
+			this.context.context.workspaceRoot
+		);
 	}
 
 	override get order(): number | undefined {
@@ -122,7 +116,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return this.playgroundFile ? slash(this.playgroundFile.replace(/.ts$/, '')) : undefined;
 	}
 
-	protected override update(): Observable<void> {
+	override update(): Observable<void> {
 		return super.update().pipe(
 			tap(() => {
 				if (!isPresent(this.target?.mdFile) || !fs.existsSync(this.mdPath)) {

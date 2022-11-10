@@ -6,7 +6,6 @@ import * as minimatch from 'minimatch';
 import {NgDocApiPageEntity} from '../engine/entities';
 import {NgDocEntity} from '../engine/entities/abstractions/entity';
 import {NgDocRouteEntity} from '../engine/entities/abstractions/route.entity';
-import {NgDocEntityStore} from '../engine/entity-store';
 import {NgDocBuiltOutput, NgDocPageIndex} from '../interfaces';
 import {NgDocTokenTypes} from '../types';
 
@@ -20,24 +19,24 @@ function isAcceptableToken(token: marked.Token): token is NgDocTokenTypes {
 
 /**
  *
- * @param entityStore
+ * @param entities
  */
-export function buildGlobalIndexes(entityStore: NgDocEntityStore): string[] {
-	return buildIndexes(entityStore, NgDocRouteEntity);
+export function buildGlobalIndexes(entities: NgDocEntity[]): string[] {
+	return buildIndexes(entities, NgDocRouteEntity);
 }
 
 /**
  *
- * @param entityStore
+ * @param entities
  * @param entityType
  */
 function buildIndexes<T extends NgDocRouteEntity<unknown>>(
-	entityStore: NgDocEntityStore,
+	entities: NgDocEntity[],
 	entityType: Constructor<T> | AbstractConstructor<T>,
 ): string[] {
 	const indexes: NgDocPageIndex[] = [];
 
-	(entityStore.asArray().filter((entity: NgDocEntity) => entity instanceof entityType) as T[]).forEach(
+	(entities.filter((entity: NgDocEntity) => entity instanceof entityType) as T[]).forEach(
 		(entity: T) => {
 			const pageIndexes: NgDocPageIndex[] = entity.artifacts
 				.filter((artifact: NgDocBuiltOutput) => minimatch(artifact.filePath, '**/*.md'))

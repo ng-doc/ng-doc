@@ -29,7 +29,7 @@ export class NgDocActions {
 	}
 
 	private performAction(action: NgDocAction): NgDocActionOutput {
-		const output: NgDocActionOutput = action(this.page.project, this.page);
+		const output: NgDocActionOutput = action(this.page.sourceFile.getProject(), this.page);
 
 		this.page.dependencies.add(...(output.dependencies ?? []));
 

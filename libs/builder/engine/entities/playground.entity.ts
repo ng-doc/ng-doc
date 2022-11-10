@@ -1,19 +1,10 @@
 import * as path from 'path';
 import {Observable, of} from 'rxjs';
 import {mapTo, tap} from 'rxjs/operators';
-import {
-	ClassDeclaration,
-	Expression,
-	Node,
-	ObjectLiteralElementLike,
-	ObjectLiteralExpression,
-	Project,
-	SourceFile,
-} from 'ts-morph';
+import {ClassDeclaration, Expression, Node, ObjectLiteralElementLike, ObjectLiteralExpression} from 'ts-morph';
 
 import {isPageEntity} from '../../helpers';
-import {NgDocBuilderContext, NgDocBuiltOutput, NgDocPlayground} from '../../interfaces';
-import {NgDocEntityStore} from '../entity-store';
+import {NgDocBuiltOutput, NgDocPlayground} from '../../interfaces';
 import {PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocFileEntity} from './abstractions/file.entity';
@@ -23,18 +14,9 @@ export class NgDocPlaygroundEntity extends NgDocFileEntity<NgDocPlayground> {
 	readonly isRoot: boolean = false;
 	override readonly buildCandidates: NgDocEntity[] = [];
 
-	constructor(
-		override readonly project: Project,
-		override readonly sourceFile: SourceFile,
-		protected override readonly context: NgDocBuilderContext,
-		protected override readonly entityStore: NgDocEntityStore,
-	) {
-		super(project, sourceFile, context, entityStore);
-	}
-
 	override get parent(): NgDocPageEntity | undefined {
 		const expectedPath: string = path.join(this.sourceFileFolder, PAGE_NAME);
-		const buildable: NgDocEntity | undefined = this.entityStore.get(expectedPath);
+		const buildable: NgDocEntity | undefined = this.builder.get(expectedPath);
 
 		return isPageEntity(buildable) ? buildable : undefined;
 	}
@@ -43,7 +25,7 @@ export class NgDocPlaygroundEntity extends NgDocFileEntity<NgDocPlayground> {
 		return of([]);
 	}
 
-	protected override update(): Observable<void> {
+	override update(): Observable<void> {
 		return of(null).pipe(
 			tap(() => {
 				this.sourceFile.refreshFromFileSystemSync();

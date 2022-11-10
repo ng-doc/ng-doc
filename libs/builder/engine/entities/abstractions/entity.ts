@@ -1,13 +1,12 @@
 import {logging} from '@angular-devkit/core';
+import {NgDocBuilder} from '@ng-doc/builder';
 import * as path from 'path';
-import {Observable, of, Subject} from 'rxjs';
-import {finalize, mapTo, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {Node, ObjectLiteralExpression, Project, SourceFile, Symbol, SyntaxKind} from 'ts-morph';
+import {Observable, Subject} from 'rxjs';
+import {take, tap} from 'rxjs/operators';
+import {Node, ObjectLiteralExpression, SourceFile, Symbol, SyntaxKind} from 'ts-morph';
 
 import {ObservableSet} from '../../../classes';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../../interfaces';
-import {NgDocEntityStore} from '../../entity-store';
-import {NgDocWatcher} from '../../watcher';
 
 /**
  * Base entity class that all entities should extend.
@@ -35,17 +34,12 @@ export abstract class NgDocEntity {
 
 	private destroy$: Subject<void> = new Subject<void>();
 
-	protected constructor(
-		readonly project: Project,
+	constructor(
+		protected readonly builder: NgDocBuilder,
 		readonly sourceFile: SourceFile,
 		protected readonly context: NgDocBuilderContext,
-		protected readonly entityStore: NgDocEntityStore,
 		protected readonly storeAdditionalKey?: string,
-	) {
-		this.entityStore.add(this);
-
-		new NgDocWatcher(this.sourceFilePath).remove.pipe(takeUntil(this.destroy$)).subscribe(() => this.destroy());
-	}
+	) {}
 
 	/**
 	 * The key by which the entity will be stored in the store
@@ -96,7 +90,7 @@ export abstract class NgDocEntity {
 	 * Contains all children of the current entity.
 	 */
 	get children(): NgDocEntity[] {
-		return this.entityStore.asArray().filter((entity: NgDocEntity) => entity.parent === this && entity.canBeBuild);
+		return this.builder.asArray().filter((entity: NgDocEntity) => entity.parent === this);
 	}
 
 	/**
@@ -115,27 +109,6 @@ export abstract class NgDocEntity {
 	 */
 	get hasChildren(): boolean {
 		return this.children.length > 0;
-	}
-
-	/**
-	 * Should emit entity that needs to be re-build
-	 *
-	 * @type {Observable<NgDocEntity>}
-	 */
-	get needToRebuild(): Observable<NgDocEntity> {
-		return this.dependencies.changes().pipe(
-			tap(() => this.context.context.reportRunning()),
-			startWith([]),
-			switchMap((deps: string[]) => {
-				const watcher: NgDocWatcher = new NgDocWatcher([...deps, this.sourceFilePath]);
-
-				return watcher.update.pipe(
-					switchMap((filePath: string) => (filePath === this.sourceFilePath ? this.update() : of(this))),
-					mapTo(this),
-					finalize(() => watcher.close()),
-				);
-			}),
-		);
 	}
 
 	/**
@@ -182,7 +155,12 @@ export abstract class NgDocEntity {
 	destroy(): void {
 		this.readyToBuild = false;
 		this.destroyed = true;
+		this.removeArtifacts();
 		this.destroy$.next();
+	}
+
+	onDestroy(): Observable<void> {
+		return this.destroy$.asObservable().pipe(take(1))
 	}
 
 	/**
