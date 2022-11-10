@@ -1,13 +1,16 @@
 :root {
+	--ng-doc-app-max-width: 1400px;
+	--ng-doc-app-horizontal-padding: calc(var(--ng-doc-base-gutter) * 3);
+
 	// Navbar
 	--ng-doc-navbar-height: calc(var(--ng-doc-base-gutter) * 7);
-	--ng-doc-navbar-horizontal-padding: calc(var(--ng-doc-base-gutter) * 5);
+	--ng-doc-navbar-horizontal-padding: var(--ng-doc-app-horizontal-padding);
 
 	// Sidebar
 	--ng-doc-sidebar-width: 310px;
 	--ng-doc-sidebar-padding: calc(var(--ng-doc-base-gutter) * 2);
 	--ng-doc-sidebar-vetical-padding: var(--ng-doc-base-gutter);
-	--ng-doc-sidebar-horizontal-padding: calc(var(--ng-doc-base-gutter) * 5);
+	--ng-doc-sidebar-horizontal-padding: var(--ng-doc-app-horizontal-padding);
 
 	// DemoDisplayer
 	--ng-doc-demo-displayer-border: 1px solid var(--ng-doc-base-2);

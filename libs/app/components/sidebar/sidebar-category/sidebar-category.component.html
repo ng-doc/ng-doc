@@ -1,6 +1,7 @@
 <div class="ng-doc-sidebar-category-wrapper">
 	<div class="ng-doc-sidebar-category-button" (click)="toggle()">
-		<div class="ng-doc-sidebar-category">
+		<div class="ng-doc-sidebar-category" [routerLink]="category?.route ?? ''" routerLinkActive="active">
+			<ng-doc-dot></ng-doc-dot>
 			<span
 				ng-doc-text
 				[absoluteContent]="true"

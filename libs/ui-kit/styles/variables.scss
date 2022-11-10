@@ -1,7 +1,6 @@
 :root {
 	--ng-doc-base-gutter: 8px;
 	--ng-doc-transition: 0.1s;
-	--ng-doc-max-app-width: 1400px;
 
 	--ng-doc-base-0: var(--ng-doc-white);
 	--ng-doc-base-1: var(--ng-doc-grey-10);
@@ -81,6 +80,10 @@
 	/* NgDocSelection */
 	--ng-doc-selection-border: 4px solid var(--ng-doc-primary);
 	--ng-doc-selection-background: transparent;
+
+	/* NgDocDot */
+	--ng-doc-dot-size: var(--ng-doc-base-gutter);
+	--ng-doc-dot-background: var(--ng-doc-primary);
 }
 
 body.dark {

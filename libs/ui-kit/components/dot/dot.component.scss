@@ -1,0 +1,17 @@
+@import "../../styles/palette/palette";
+@import "../../styles/mixins";
+
+:host {
+	display: inline;
+	width: var(--ng-doc-dot-size);
+	height: var(--ng-doc-dot-size);
+	border-radius: var(--ng-doc-dot-size);
+	line-height: var(--ng-doc-line-height);
+	background-color: var(--ng-doc-dot-background);
+
+	@each $color-name, $color-value in $ng-doc-palette-colors {
+		&[data-ng-doc-color="#{$color-name}"] {
+			--ng-doc-dot-background: var(--ng-doc-#{$color-name}-100);
+		}
+	}
+}

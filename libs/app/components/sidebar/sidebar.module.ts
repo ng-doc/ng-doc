@@ -2,6 +2,7 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {
+	NgDocDotModule,
 	NgDocExpanderModule,
 	NgDocIconModule,
 	NgDocLineModule,
@@ -25,6 +26,7 @@ import {NgDocSidebarItemComponent} from './sidebar-item/sidebar-item.component';
 		NgDocRotatorModule,
 		NgDocLineModule,
 		PolymorpheusModule,
+		NgDocDotModule,
 	],
 	exports: [NgDocSidebarComponent],
 })
