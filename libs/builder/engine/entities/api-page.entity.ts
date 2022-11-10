@@ -25,11 +25,11 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	declaration?: NgDocSupportedDeclarations;
 
 	constructor(
-		protected override readonly builder: NgDocBuilder,
+		override readonly builder: NgDocBuilder,
 		override readonly sourceFile: SourceFile,
-		protected override readonly context: NgDocBuilderContext,
+		override readonly context: NgDocBuilderContext,
 		override parent: NgDocApiScopeEntity,
-		protected readonly declarationName: string,
+		readonly declarationName: string,
 	) {
 		super(builder, sourceFile, context, declarationName);
 

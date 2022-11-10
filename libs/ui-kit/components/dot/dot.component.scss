@@ -14,4 +14,16 @@
 			--ng-doc-dot-background: var(--ng-doc-#{$color-name}-100);
 		}
 	}
+
+	&[data-ng-doc-size="small"] {
+		--ng-doc-dot-size: calc(var(--ng-doc-base-gutter) / 2);
+	}
+
+	&[data-ng-doc-size="medium"] {
+		--ng-doc-dot-size: var(--ng-doc-base-gutter);
+	}
+
+	&[data-ng-doc-size="large"] {
+		--ng-doc-dot-size: calc(var(--ng-doc-base-gutter) * 2);
+	}
 }

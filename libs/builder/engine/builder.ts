@@ -15,7 +15,7 @@ import {
 } from 'rxjs/operators';
 import {Project} from 'ts-morph';
 
-import {createProject, emitBuiltOutput} from '../helpers';
+import {createProject, emitBuiltOutput, generateApiEntities} from '../helpers';
 import {buildGlobalIndexes} from '../helpers/build-global-indexes';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
 import {bufferDebounce} from '../operators';
@@ -29,6 +29,7 @@ import {
 	NgDocPlaygroundEntity,
 } from './entities';
 import {NgDocEntity} from './entities/abstractions/entity';
+import {buildCandidates} from './functions/build-candidates';
 import {NgDocRenderer} from './renderer';
 import {
 	API_PATTERN,
@@ -118,31 +119,42 @@ export class NgDocBuilder implements Iterable<NgDocEntity> {
 						 	Refresh and compile source files for all not destroyed entities
 						 */
 					entity.sourceFile.refreshFromFileSystemSync();
+					// Не все должны эмитить
 					entity.sourceFile.emitSync();
-
-					/*
-							We destroy children entities for NgDocApiEntities because
-						 	they are created based on the NgDocApiEntities
-						 */
-					if (entity instanceof NgDocApiEntity) {
-						entity.children.forEach((child: NgDocEntity) => child.destroy());
-					}
 				}
 				return of(entity);
 			}),
 			/* Delay to buffer all changes from the FileSystem */
 			bufferDebounce(100),
 			mergeMap((entities: NgDocEntity[]) =>
-				// Refetch compiled data for non destroyed entities
+				// Re-fetch compiled data for non destroyed entities
 				forkJoin(
 					entities.map((entity: NgDocEntity) =>
-						entity.destroyed ? of(entity) : entity.update().pipe(mapTo(entity)),
+						entity.destroyed
+							? of(entity)
+							: entity.update()
+								.pipe(
+									tap(() => {
+										/*
+											We destroy children entities for NgDocApiEntities because
+						 					they are created based on the NgDocApiEntities
+										 */
+										if (entity instanceof NgDocApiEntity) {
+											entity.children.forEach((child: NgDocEntity) => child.destroy());
+											generateApiEntities(entity).forEach((e: NgDocEntity) => {
+												this.add(e);
+												this.touchEntity.next(e);
+											});
+										}
+									}),
+									mapTo(entity)
+								),
 					),
 				).pipe(
 					switchMap((entities: NgDocEntity[]) =>
 						merge(
 							...entities.map((entity: NgDocEntity) =>
-								// Watch for dependency changes of non destroyed entities
+								// Watch for dependency changes of non-destroyed entities
 								entity.destroyed
 									? of(entity)
 									: entity.dependencies.changes().pipe(
@@ -163,10 +175,20 @@ export class NgDocBuilder implements Iterable<NgDocEntity> {
 					),
 				),
 			),
-			// Build touched entities
-			mergeMap((entity: NgDocEntity) => (entity.destroyed ? EMPTY : entity.buildArtifacts())),
 			bufferDebounce(100),
-			concatMap((output: NgDocBuiltOutput[][]) =>
+			// Build touched entities and their dependencies
+			mergeMap((entities: NgDocEntity[]) =>
+				forkJoin(
+					entities
+						.map((entity: NgDocEntity) =>
+							entity.destroyed
+								? EMPTY
+								: forkJoin(buildCandidates(entity).map((e: NgDocEntity) => e.buildArtifacts()))
+						)
+				)
+					.pipe(map((output: NgDocBuiltOutput[][][]) => output.flat(2)))
+			),
+			concatMap((output: NgDocBuiltOutput[]) =>
 				// Build Context, Routes and indexes
 				forkJoin([this.buildContext(), this.buildRoutes()]).pipe(
 					switchMap((contextAndRoutes: NgDocBuiltOutput[]) =>

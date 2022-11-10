@@ -23,9 +23,9 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 	protected override readyToBuild: boolean = true;
 
 	constructor(
-		protected override readonly builder: NgDocBuilder,
+		override readonly builder: NgDocBuilder,
 		override readonly sourceFile: SourceFile,
-		protected override readonly context: NgDocBuilderContext,
+		override readonly context: NgDocBuilderContext,
 		override parent: NgDocApiEntity,
 		override target: NgDocApiScope,
 	) {

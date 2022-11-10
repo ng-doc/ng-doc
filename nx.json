@@ -1,73 +1,66 @@
 {
-  "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "npmScope": "ng-doc",
-  "affected": {
-    "defaultBase": "main"
-  },
-  "cli": {
-    "packageManager": "npm"
-  },
-  "implicitDependencies": {
-    "package.json": {
-      "dependencies": "*",
-      "devDependencies": "*"
-    },
-    ".eslintrc.json": "*"
-  },
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "@nrwl/nx-cloud",
-      "options": {
-        "cacheableOperations": [
-          "pre-build",
-          "build",
-          "schematics",
-          "lint",
-          "test",
-          "e2e"
-        ],
-        "accessToken": "MWFkNWRhOTQtM2ViYi00ZmVlLWI0MjYtN2Q4Y2M2YmRjYmIxfHJlYWQtd3JpdGU="
-      }
-    }
-  },
-  "targetDependencies": {
-    "pre-build": [
-      {
-        "target": "build",
-        "projects": "dependencies"
-      }
-    ],
-    "schematics": [
-      {
-        "target": "pre-build",
-        "projects": "self"
-      }
-    ],
-    "build": [
-      {
-        "target": "schematics",
-        "projects": "self"
-      },
-      {
-        "target": "build",
-        "projects": "dependencies"
-      }
-    ]
-  },
-  "generators": {
-    "@nrwl/angular:application": {
-      "style": "scss",
-      "linter": "eslint",
-      "unitTestRunner": "jest",
-      "e2eTestRunner": "cypress"
-    },
-    "@nrwl/angular:library": {
-      "linter": "eslint",
-      "unitTestRunner": "jest"
-    },
-    "@nrwl/angular:component": {
-      "style": "scss"
-    }
-  },
-  "defaultProject": "documentation"
+	"$schema": "./node_modules/nx/schemas/nx-schema.json",
+	"npmScope": "ng-doc",
+	"affected": {
+		"defaultBase": "main"
+	},
+	"cli": {
+		"packageManager": "npm"
+	},
+	"implicitDependencies": {
+		"package.json": {
+			"dependencies": "*",
+			"devDependencies": "*"
+		},
+		".eslintrc.json": "*"
+	},
+	"tasksRunnerOptions": {
+		"default": {
+			"runner": "@nrwl/nx-cloud",
+			"options": {
+				"cacheableOperations": ["pre-build", "build", "schematics", "lint", "test", "e2e"],
+				"accessToken": "MWFkNWRhOTQtM2ViYi00ZmVlLWI0MjYtN2Q4Y2M2YmRjYmIxfHJlYWQtd3JpdGU="
+			}
+		}
+	},
+	"targetDependencies": {
+		"pre-build": [
+			{
+				"target": "build",
+				"projects": "dependencies"
+			}
+		],
+		"schematics": [
+			{
+				"target": "pre-build",
+				"projects": "self"
+			}
+		],
+		"build": [
+			{
+				"target": "schematics",
+				"projects": "self"
+			},
+			{
+				"target": "build",
+				"projects": "dependencies"
+			}
+		]
+	},
+	"generators": {
+		"@nrwl/angular:application": {
+			"style": "scss",
+			"linter": "eslint",
+			"unitTestRunner": "jest",
+			"e2eTestRunner": "cypress"
+		},
+		"@nrwl/angular:library": {
+			"linter": "eslint",
+			"unitTestRunner": "jest"
+		},
+		"@nrwl/angular:component": {
+			"style": "scss"
+		}
+	},
+	"defaultProject": "documentation"
 }
