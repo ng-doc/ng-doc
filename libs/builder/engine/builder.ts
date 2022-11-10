@@ -15,7 +15,7 @@ import {
 } from 'rxjs/operators';
 import {Project} from 'ts-morph';
 
-import {createProject, emitBuildedOutput} from '../helpers';
+import {createProject, emitBuiltOutput} from '../helpers';
 import {buildGlobalIndexes} from '../helpers/build-global-indexes';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
 import {bufferDebounce} from '../operators';
@@ -104,9 +104,16 @@ export class NgDocBuilder implements Iterable<NgDocEntity> {
 			.pipe(
 				concatMap((entity: NgDocEntity) => {
 					if (!entity.destroyed) {
+						/*
+						 	Refresh and compile source files for all not destroyed entities
+						 */
 						entity.sourceFile.refreshFromFileSystemSync();
 						entity.sourceFile.emitSync();
 
+						/*
+							We destroy children entities for NgDocApiEntities because
+						 	they are created based on the NgDocApiEntities
+						 */
 						if (entity instanceof NgDocApiEntity) {
 							entity.children.forEach((child: NgDocEntity) => {
 								child.destroy();
@@ -116,14 +123,17 @@ export class NgDocBuilder implements Iterable<NgDocEntity> {
 					}
 					return of(entity);
 				}),
+				/* Delay to buffer all changes from the FileSystem */
 				bufferDebounce(100),
 				mergeMap((entities: NgDocEntity[]) =>
+					// Refetch compiled data for non destroyed entities
 					forkJoin(entities.map((entity: NgDocEntity) => entity.destroyed ? of(entity) : entity.update().pipe(mapTo(entity))))
 						.pipe(
 							switchMap((entities: NgDocEntity[]) =>
 								merge(
 									...entities
 										.map((entity: NgDocEntity) =>
+											// Watch for dependency changes of non destroyed entities
 											entity.destroyed
 												? of(entity)
 												: entity.dependencies.changes()
@@ -145,16 +155,18 @@ export class NgDocBuilder implements Iterable<NgDocEntity> {
 							)
 						)
 				),
+				// Build touched entities
 				mergeMap((entity: NgDocEntity) => entity.destroyed ? EMPTY : entity.buildArtifacts()),
 				bufferDebounce(100),
 				concatMap((output: NgDocBuiltOutput[][]) =>
+					// Build Context, Routes and indexes
 					forkJoin([this.buildContext(), this.buildRoutes()])
 						.pipe(
 							switchMap((contextAndRoutes: NgDocBuiltOutput[]) =>
 								this.buildIndexes()
 									.pipe(
 										tap((indexes: NgDocBuiltOutput[]) => {
-											emitBuildedOutput(...[...output.flat(), ...contextAndRoutes, ...indexes]);
+											emitBuiltOutput(...[...output.flat(), ...contextAndRoutes, ...indexes]);
 											this.collectGarbage();
 										}),
 										tap(() => console.timeEnd('Build documentation')),
