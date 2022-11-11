@@ -41,6 +41,10 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 		return this.target.route;
 	}
 
+	override get keywords(): string[] {
+		return [];
+	}
+
 	/**
 	 * Returns full url from the root
 	 *

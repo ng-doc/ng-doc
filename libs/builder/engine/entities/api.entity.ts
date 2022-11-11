@@ -56,6 +56,10 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		return path.join(GENERATED_MODULES_PATH, 'api');
 	}
 
+	override get keywords(): string[] {
+		return [];
+	}
+
 	override init(): Observable<void> {
 		return this.update();
 	}

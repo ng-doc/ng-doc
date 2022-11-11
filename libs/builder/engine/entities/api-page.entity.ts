@@ -67,6 +67,10 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 		return `ng-doc-api-page.module.ts`;
 	}
 
+	override get keywords(): string[] {
+		return [this.declarationName];
+	}
+
 	get builtPagePath(): string {
 		return slash(path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, RENDERED_PAGE_NAME)));
 	}

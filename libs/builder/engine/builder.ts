@@ -21,6 +21,7 @@ import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
 import {bufferDebounce} from '../operators';
 import {NgDocContextEnv, NgDocRoutingEnv} from '../templates-env';
 import {Constructable} from '../types';
+import {NgDocArtifactsProcessor} from './artifact-processor';
 import {
 	NgDocApiEntity,
 	NgDocCategoryEntity,
@@ -47,9 +48,12 @@ export class NgDocBuilder implements Iterable<NgDocEntity> {
 	private readonly project: Project;
 	private readonly entities: Map<string, NgDocEntity> = new Map<string, NgDocEntity>();
 	private readonly watcher: NgDocWatcher;
+	private readonly artifactsProcessor: NgDocArtifactsProcessor;
 	private readonly touchEntity: Subject<NgDocEntity> = new Subject<NgDocEntity>();
 
 	constructor(private readonly context: NgDocBuilderContext) {
+		this.artifactsProcessor = new NgDocArtifactsProcessor(this, this.entities);
+
 		this.project = createProject({
 			tsConfigFilePath: this.context.tsConfig,
 			compilerOptions: {
@@ -114,12 +118,20 @@ export class NgDocBuilder implements Iterable<NgDocEntity> {
 
 		return this.touchEntity.pipe(
 			concatMap((entity: NgDocEntity) => {
+				/*
+					Refresh and compile source files for all not destroyed entities
+				*/
 				if (!entity.destroyed) {
-					/*
-						 	Refresh and compile source files for all not destroyed entities
-						 */
 					entity.emit()
 				}
+				/*
+					We destroy children entities for NgDocApiEntities because
+					they are created based on the NgDocApiEntities
+				*/
+				if (entity instanceof NgDocApiEntity) {
+					entity.children.forEach((child: NgDocEntity) => child.destroy());
+				}
+
 				return of(entity);
 			}),
 			/* Delay to buffer all changes from the FileSystem */
@@ -134,11 +146,9 @@ export class NgDocBuilder implements Iterable<NgDocEntity> {
 								.pipe(
 									tap(() => {
 										/*
-											We destroy children entities for NgDocApiEntities because
-						 					they are created based on the NgDocApiEntities
+											Re-generate children Entities for NgDocApiEntity if it was changed
 										 */
 										if (entity instanceof NgDocApiEntity) {
-											entity.children.forEach((child: NgDocEntity) => child.destroy());
 											generateApiEntities(entity).forEach((e: NgDocEntity) => {
 												this.add(e);
 												this.touchEntity.next(e);
@@ -192,7 +202,8 @@ export class NgDocBuilder implements Iterable<NgDocEntity> {
 					switchMap((contextAndRoutes: NgDocBuiltOutput[]) =>
 						this.buildIndexes().pipe(
 							tap((indexes: NgDocBuiltOutput[]) => {
-								emitBuiltOutput(...[...output.flat(), ...contextAndRoutes, ...indexes]);
+								const artifacts: NgDocBuiltOutput[] = this.artifactsProcessor.process([...output.flat(), ...contextAndRoutes, ...indexes]);
+								emitBuiltOutput(...artifacts);
 								this.collectGarbage();
 							}),
 							tap(() => console.timeEnd('Build documentation')),

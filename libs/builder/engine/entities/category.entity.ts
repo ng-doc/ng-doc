@@ -52,6 +52,10 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 		return asArray(this.children.values()).filter(isCategoryEntity);
 	}
 
+	override get keywords(): string[] {
+		return [];
+	}
+
 	override get title(): string {
 		return this.target?.title ?? '';
 	}

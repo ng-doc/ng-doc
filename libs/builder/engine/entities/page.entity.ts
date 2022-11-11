@@ -68,6 +68,10 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return this.target?.order;
 	}
 
+	override get keywords(): string[] {
+		return [...asArray(this.target?.title), ...asArray(this.target?.keyword)];
+	}
+
 	get mdPath(): string {
 		return path.join(this.sourceFileFolder, this.target?.mdFile ?? '');
 	}

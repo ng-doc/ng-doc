@@ -37,7 +37,6 @@ export class NgDocRenderer<T extends object> {
 			autoescape: false,
 		});
 
-		// TODO: TEST PRODUCTION
 		objectKeys(filters).forEach(
 			(filter: keyof typeof filters) => (environment = environment.addFilter(filter, filters[filter])),
 		);

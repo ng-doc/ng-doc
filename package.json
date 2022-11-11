@@ -46,6 +46,7 @@
     "posthtml-render": "^3.0.0",
     "prettier": "2.6.2",
     "raw-loader": "^4.0.2",
+    "remark": "^14.0.2",
     "rxjs": "~6.6.7",
     "svgo": "^2.8.0",
     "ts-morph": "^15.0.0",
