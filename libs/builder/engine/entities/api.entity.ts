@@ -17,6 +17,7 @@ import {NgDocCategoryEntity} from './category.entity';
 export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 	override moduleName: string = uniqueName(`NgDocGeneratedApiListModule`);
 	componentName: string = uniqueName(`NgDocGeneratedApiListComponent`);
+	override moduleFileName: string = `${uniqueName('ng-doc-api-list')}.module.ts`;
 	override parent?: NgDocCategoryEntity;
 
 	override get route(): string {
@@ -42,10 +43,6 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 
 	override get order(): number | undefined {
 		return this.target?.order;
-	}
-
-	override get moduleFileName(): string {
-		return `ng-doc-api-list.module.ts`;
 	}
 
 	override get buildCandidates(): NgDocEntity[] {

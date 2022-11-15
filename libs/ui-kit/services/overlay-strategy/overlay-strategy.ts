@@ -24,7 +24,7 @@ export class NgDocOverlayStrategy implements ScrollStrategy {
 				ngDocZoneDetach(this.ngZone),
 				throttleTime(10),
 				filter((scrollEvent: Event) =>
-					scrollEvent.target instanceof HTMLElement
+					scrollEvent.target instanceof Node
 						? scrollEvent.target.contains(this.origin) || !this.origin
 						: false,
 				),

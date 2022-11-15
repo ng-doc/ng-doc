@@ -1,7 +1,8 @@
 import {asArray} from '@ng-doc/core';
 import * as path from 'path';
-import {EMPTY, forkJoin, merge, Observable, of, Subject} from 'rxjs';
+import {forkJoin, merge, Observable, of, Subject} from 'rxjs';
 import {
+	catchError,
 	concatMap,
 	map,
 	mapTo,
@@ -109,7 +110,12 @@ export class NgDocBuilder {
 								.pipe(takeUntil(entity.onDestroy())),
 							this.watcher
 								.onUnlink(...entity.rootFiles)
-								.pipe(tap(() => entity.destroy()), take(1))
+								.pipe(
+									tap(() => {
+										entity.destroy();
+									}),
+									take(1),
+								)
 						)
 							.pipe(startWith(null), mapTo(entity))
 				)
@@ -179,7 +185,7 @@ export class NgDocBuilder {
 				forkJoin(
 					entities.map((entity: NgDocEntity) =>
 						entity.destroyed
-							? EMPTY
+							? of([])
 							: forkJoin(buildCandidates(entity).map((e: NgDocEntity) => e.buildArtifacts())),
 					),
 				).pipe(map((output: NgDocBuiltOutput[][][]) => output.flat(2))),
@@ -190,6 +196,7 @@ export class NgDocBuilder {
 					switchMap((contextAndRoutesAndDictionary: NgDocBuiltOutput[]) =>
 						this.buildIndexes().pipe(
 							tap((indexes: NgDocBuiltOutput[]) => {
+								// TODO: ADD CACHE
 								emitBuiltOutput(...[...output.flat(), ...contextAndRoutesAndDictionary, ...indexes]);
 								this.collectGarbage();
 							}),
@@ -199,6 +206,11 @@ export class NgDocBuilder {
 				),
 			),
 			mapTo(void 0),
+			catchError((e: Error) => {
+				this.context.context.logger.error(`NgDoc error: ${e}`);
+
+				return of(void 0)
+			})
 		);
 	}
 

@@ -1,0 +1,16 @@
+{% import "declarations/parameters.md.nunj" as parameters %}
+{% import "declarations/type.md.nunj" as type %}
+
+{%- macro render(methods) -%}
+{%- set methods = methods | filterByScope("public") %}
+
+{%- if methods.length %}
+### Methods
+
+| Method | Parameters | Return Type | Description  |
+|:-------|:-----------|:------------|:-------------|
+{%- for m in methods %}
+| {{ m.getName() }} | {{ parameters.render(m.getParameters()) }} | {{ type.render(m.getReturnType()) }} | {{ m.getJsDocs() | inlineJsDocs }} |
+{%- endfor -%}
+{%- endif %}
+{%- endmacro -%}

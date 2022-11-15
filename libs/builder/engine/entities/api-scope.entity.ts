@@ -17,6 +17,8 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 	override moduleName: string = uniqueName(`NgDocGeneratedApiScopeCategoryModule`);
 	override readonly isNavigable: boolean = false;
 	protected override readyToBuild: boolean = true;
+	override moduleFileName: string = `${uniqueName('ng-doc-api-scope')}.module.ts`;
+	override id: string = uniqueName(`${this.sourceFilePath}}#${this.target.route}`);
 
 	constructor(
 		override readonly builder: NgDocBuilder,
@@ -25,7 +27,7 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 		override parent: NgDocApiEntity,
 		override target: NgDocApiScope,
 	) {
-		super(builder, sourceFile, context, target.route);
+		super(builder, sourceFile, context);
 	}
 
 	override get rootFiles(): string[] {
@@ -60,10 +62,6 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 
 	get pages(): NgDocPageEntity[] {
 		return asArray(this.children.values()).filter(isPageEntity);
-	}
-
-	override get moduleFileName(): string {
-		return `ng-doc-scope.module.ts`;
 	}
 
 	override get title(): string {

@@ -1,10 +1,9 @@
-{%- macro render(cls) -%}
+{% import "declarations/properties.md.nunj" as properties %}
+{% import "declarations/methods.md.nunj" as methods %}
 
-## Properties
+{% macro render(declaration) %}
+{{ properties.render(declaration.getProperties()) }}
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-{%- for property in cls.getProperties() %}
-| {{ property.getName() }} | `{{ property.getType() | displayType }}` | {{ property.getInitializer() | displayInitializer }} | {{ property.getJsDocs() | inlineJsDocs }} |
-{%- endfor %}
-{%- endmacro -%}
+{{ methods.render(declaration.getMethods()) }}
+
+{% endmacro %}

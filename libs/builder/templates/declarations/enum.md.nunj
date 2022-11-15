@@ -1,0 +1,7 @@
+{% macro render(declaration) %}
+| Key | Value | Description |
+|:----|:------|:------------|
+{%- for m in declaration.getMembers() %}
+| {{ m.getName() }} | `{{ m.getValue() | dump }}` | {{ m.getJsDocs() | inlineJsDocs }} |
+{%- endfor %}
+{%- endmacro -%}

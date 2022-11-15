@@ -1,0 +1,15 @@
+{% import "declarations/type.md.nunj" as type %}
+
+{%- macro render(properties) -%}
+{%- set properties = properties | filterByScope("public") %}
+
+{%- if properties.length %}
+### Properties
+
+| Property  | Type  | Default  | Description  |
+|:----------|:------|:---------|:-------------|
+{%- for p in properties %}
+| {{ p.getName() }} | {{ type.render(p.getType()) }} | `{{ p.getInitializer().getText() if p.getInitializer() }}` | {{ p.getJsDocs() | inlineJsDocs }} |
+{%- endfor -%}
+{%- endif %}
+{%- endmacro -%}

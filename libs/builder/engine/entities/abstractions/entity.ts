@@ -12,6 +12,11 @@ import {NgDocBuilderContext, NgDocBuiltOutput} from '../../../interfaces';
  * Base entity class that all entities should extend.
  */
 export abstract class NgDocEntity {
+	/**
+	 * The key by which the entity will be stored in the store
+	 */
+	readonly id: string = this.sourceFilePath;
+
 	/** Indicates when entity was destroyed */
 	destroyed: boolean = false;
 
@@ -38,7 +43,6 @@ export abstract class NgDocEntity {
 		readonly builder: NgDocBuilder,
 		readonly sourceFile: SourceFile,
 		readonly context: NgDocBuilderContext,
-		readonly storeAdditionalKey?: string,
 	) {}
 
 	/**
@@ -46,13 +50,6 @@ export abstract class NgDocEntity {
 	 */
 	get rootFiles(): string[] {
 		return [this.sourceFilePath];
-	}
-
-	/**
-	 * The key by which the entity will be stored in the store
-	 */
-	get id(): string {
-		return this.storeAdditionalKey ? `${this.sourceFilePath}#${this.storeAdditionalKey}` : this.sourceFilePath;
 	}
 
 	/**

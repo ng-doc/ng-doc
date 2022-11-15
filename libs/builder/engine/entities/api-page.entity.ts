@@ -21,8 +21,10 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	override folderName: string = '';
 	override moduleName: string = uniqueName(`NgDocGeneratedApiPageModule`);
 	componentName: string = uniqueName(`NgDocGeneratedApiPageComponent`);
+	override moduleFileName: string = `${uniqueName('ng-doc-api-page')}.module.ts`;
 	protected override readyToBuild: boolean = true;
 	declaration?: NgDocSupportedDeclarations;
+	override id: string = uniqueName(`${this.sourceFilePath}}#${this.declarationName}`);
 
 	constructor(
 		override readonly builder: NgDocBuilder,
@@ -31,7 +33,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 		override parent: NgDocApiScopeEntity,
 		readonly declarationName: string,
 	) {
-		super(builder, sourceFile, context, declarationName);
+		super(builder, sourceFile, context);
 
 		this.updateDeclaration();
 	}
@@ -64,10 +66,6 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 
 	override get buildCandidates(): NgDocEntity[] {
 		return [];
-	}
-
-	override get moduleFileName(): string {
-		return `ng-doc-api-page.module.ts`;
 	}
 
 	override get keywords(): string[] {

@@ -12,7 +12,7 @@
 		position: fixed;
 		height: var(--ng-doc-navbar-height);
 		width: 100%;
-		z-index: 1;
+		z-index: 10;
 	}
 
 	.ng-doc-sidebar {
@@ -22,8 +22,9 @@
 	}
 
 	.ng-doc-body {
+		width: 100%;
 		margin-left: var(--ng-doc-sidebar-width);
-		padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 4);
+		padding: calc(var(--ng-doc-base-gutter) * 3) calc(var(--ng-doc-base-gutter) * 4);
 		overflow: auto;
 		background-color: var(--ng-doc-base-0);
 	}

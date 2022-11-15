@@ -1,0 +1,3 @@
+{%- macro render(type) -%}
+`{{ type | displayType }}`
+{%- endmacro -%}

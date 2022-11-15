@@ -49,7 +49,5 @@ export abstract class NgDocModuleEntity<T> extends NgDocFileEntity<T> {
 
 	override removeArtifacts(): void {
 		super.removeArtifacts();
-
-		fs.rmSync(this.folderPath, { recursive: true, force: true });
 	}
 }

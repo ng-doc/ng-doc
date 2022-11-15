@@ -70,7 +70,7 @@ export abstract class NgDocFileEntity<T> extends NgDocEntity {
 		super.removeArtifacts();
 
 		this.sourceFile.getEmitOutput().getOutputFiles().forEach((file: OutputFile) => {
-			fs.unlinkSync(file.getFilePath());
+			fs.existsSync(file.getFilePath()) && fs.unlinkSync(file.getFilePath());
 		})
 	}
 }

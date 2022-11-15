@@ -109,7 +109,7 @@
 				"development": {
 					"browserTarget": "documentation:build:development",
 					"ngDoc": {
-						"pages": "apps/documentation/src/app",
+						"pages": "apps/documentation/src/test-docs",
 						"tag": "develop"
 					}
 				}
