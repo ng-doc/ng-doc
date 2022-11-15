@@ -84,6 +84,9 @@ interface ApiFilterForm {
 })
 @UntilDestroy()
 export class NgDocApiListComponent {
+	/**
+	 * My comment
+	 */
 	formGroup: FormGroup<ApiFilterForm>;
 	api$: Observable<NgDocApiList[]>;
 

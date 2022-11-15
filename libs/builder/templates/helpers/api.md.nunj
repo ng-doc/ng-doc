@@ -1,0 +1,9 @@
+{% import "declarations/class.md.nunj" as class %}
+
+{%- macro render(Node, declaration) -%}
+{%- if Node.isClassDeclaration(declaration) %}
+{{ class.render(declaration) }}
+{%- endif %}
+{%- endmacro -%}
+
+

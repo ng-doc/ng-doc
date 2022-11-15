@@ -6,6 +6,7 @@ import {
 	NgDocPlaygroundEntity,
 } from '../engine';
 import {NgDocNavigationEntity} from '../engine/entities/abstractions/navigation.entity';
+import {NgDocRouteEntity} from '../engine/entities/abstractions/route.entity';
 import {Constructable} from '../types';
 
 /**
@@ -64,4 +65,12 @@ export function isApiPageEntity(page: InstanceType<Constructable>): page is NgDo
  */
 export function isApiScopeEntity(page: InstanceType<Constructable>): page is NgDocApiScopeEntity {
 	return page instanceof NgDocApiScopeEntity;
+}
+
+/**
+ *
+ * @param page
+ */
+export function isRouteEntity(page: InstanceType<Constructable>): page is NgDocRouteEntity<unknown> {
+	return page instanceof NgDocRouteEntity;
 }

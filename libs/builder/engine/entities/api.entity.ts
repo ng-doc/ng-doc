@@ -4,7 +4,7 @@ import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
 
 import {isApiPageEntity, isApiScopeEntity, slash, uniqueName} from '../../helpers';
-import {NgDocApi, NgDocApiList, NgDocApiScope, NgDocBuiltOutput} from '../../interfaces';
+import {NgDocApi, NgDocApiList, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocApiModuleEnv} from '../../templates-env/api.module.env';
 import {NgDocRenderer} from '../renderer';
 import {GENERATED_MODULES_PATH} from '../variables';
@@ -100,22 +100,18 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 	}
 
 	private buildApiList(): Observable<NgDocBuiltOutput> {
-		const apiItems: NgDocApiList[] = this.children
-			.filter(isApiScopeEntity)
-			.map((scope: NgDocApiScopeEntity) => ({
-				title: scope.title,
-				items: scope.children
-					.filter(isApiPageEntity)
-					.map((page: NgDocApiPageEntity) => ({
-						route: slash(path.join(scope.route, page.route)),
-						type: humanizeDeclarationName(page.declaration?.getKindName() ?? ''),
-						name: page.declaration?.getName() ?? ''
-					}))
-			}))
+		const apiItems: NgDocApiList[] = this.children.filter(isApiScopeEntity).map((scope: NgDocApiScopeEntity) => ({
+			title: scope.title,
+			items: scope.children.filter(isApiPageEntity).map((page: NgDocApiPageEntity) => ({
+				route: slash(path.join(scope.route, page.route)),
+				type: humanizeDeclarationName(page.declaration?.getKindName() ?? ''),
+				name: page.declaration?.getName() ?? '',
+			})),
+		}));
 
 		return of({
 			output: JSON.stringify(apiItems),
-			filePath: path.join(this.folderPath, 'ng-doc.api-list.json')
+			filePath: path.join(this.folderPath, 'ng-doc.api-list.json'),
 		});
 	}
 }

@@ -7,6 +7,7 @@ import {NgDocRendererOptions} from '../interfaces';
 import * as filters from './template-filters';
 import {TEMPLATES_PATH} from './variables';
 import TemplateError = lib.TemplateError;
+import {Node} from 'ts-morph';
 
 export class NgDocRenderer<T extends object> {
 	constructor(private readonly context?: T) {}
@@ -15,7 +16,7 @@ export class NgDocRenderer<T extends object> {
 		return new Observable((observer: Subscriber<string>) => {
 			this.getEnvironment(options).render(
 				template,
-				options?.overrideContext ?? this.context,
+				this.getContext(options?.overrideContext),
 				(err: TemplateError | null, data: string | null) => {
 					if (err) {
 						observer.error(err);
@@ -29,7 +30,14 @@ export class NgDocRenderer<T extends object> {
 	}
 
 	renderSync(template: string, options?: NgDocRendererOptions<T>): string {
-		return this.getEnvironment(options).render(template, options?.overrideContext ?? this.context);
+		return this.getEnvironment(options).render(template, this.getContext(options?.overrideContext));
+	}
+
+	private getContext(context?: T): object {
+		return {
+			...(context ?? this.context),
+			Node: Node,
+		}
 	}
 
 	private getEnvironment(options?: NgDocRendererOptions<T>): Environment {

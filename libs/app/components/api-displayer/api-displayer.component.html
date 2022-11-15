@@ -1,8 +1,0 @@
-<ng-container *ngIf="api">
-	<h3 class="ng-doc-api-header" *ngIf="header">
-		<span class="ng-doc-api-name">{{api?.name ?? ''}}</span>
-		<ng-doc-api-tags [api]="api"></ng-doc-api-tags>
-	</h3>
-
-	<ng-container *polymorpheusOutlet="apiDisplayer; context: {api: this.api ?? null}"></ng-container>
-</ng-container>

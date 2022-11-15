@@ -1,7 +1,7 @@
 import {AbstractConstructor, Constructor, humanizeDeclarationName, NgDocPageInfos, NgDocPageType} from '@ng-doc/core';
-import * as lunr from 'lunr';
+import lunr from 'lunr';
 import {marked} from 'marked';
-import * as minimatch from 'minimatch';
+import minimatch from 'minimatch';
 
 import {NgDocApiPageEntity} from '../engine/entities';
 import {NgDocEntity} from '../engine/entities/abstractions/entity';

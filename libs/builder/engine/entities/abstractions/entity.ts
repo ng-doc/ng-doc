@@ -42,6 +42,13 @@ export abstract class NgDocEntity {
 	) {}
 
 	/**
+	 * Files that are watched for changes to rebuild entity or remove it
+	 */
+	get rootFiles(): string[] {
+		return [this.sourceFilePath];
+	}
+
+	/**
 	 * The key by which the entity will be stored in the store
 	 */
 	get id(): string {
@@ -90,7 +97,7 @@ export abstract class NgDocEntity {
 	 * Contains all children of the current entity.
 	 */
 	get children(): NgDocEntity[] {
-		return this.builder.asArray().filter((entity: NgDocEntity) => entity.parent === this);
+		return this.builder.entities.asArray().filter((entity: NgDocEntity) => entity.parent === this);
 	}
 
 	/**

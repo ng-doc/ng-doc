@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import * as minimatch from 'minimatch';
+import minimatch from 'minimatch';
 import * as path from 'path';
 import {Observable, of} from 'rxjs';
 import {OutputFile, SyntaxKind} from 'ts-morph';

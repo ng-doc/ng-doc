@@ -3,12 +3,12 @@ import * as path from 'path';
 import {EMPTY, forkJoin, merge, Observable, of, Subject} from 'rxjs';
 import {
 	concatMap,
-	filter,
 	map,
 	mapTo,
 	mergeMap,
 	startWith,
 	switchMap,
+	take,
 	takeUntil,
 	tap,
 	withLatestFrom,
@@ -17,11 +17,12 @@ import {Project} from 'ts-morph';
 
 import {createProject, emitBuiltOutput, generateApiEntities} from '../helpers';
 import {buildGlobalIndexes} from '../helpers/build-global-indexes';
+import {generateKeywordsDictionary} from '../helpers/generate-keywords-dictionary';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
 import {bufferDebounce} from '../operators';
 import {NgDocContextEnv, NgDocRoutingEnv} from '../templates-env';
+import {NgDocKeywordsDictionaryEnv} from '../templates-env/keywords-dictionary.env';
 import {Constructable} from '../types';
-import {NgDocArtifactsProcessor} from './artifact-processor';
 import {
 	NgDocApiEntity,
 	NgDocCategoryEntity,
@@ -30,6 +31,7 @@ import {
 	NgDocPlaygroundEntity,
 } from './entities';
 import {NgDocEntity} from './entities/abstractions/entity';
+import {NgDocEntityStore} from './entity-store';
 import {buildCandidates} from './functions/build-candidates';
 import {NgDocRenderer} from './renderer';
 import {
@@ -44,15 +46,13 @@ import {
 } from './variables';
 import {NgDocWatcher} from './watcher';
 
-export class NgDocBuilder implements Iterable<NgDocEntity> {
+export class NgDocBuilder {
+	readonly entities: NgDocEntityStore = new NgDocEntityStore();
 	private readonly project: Project;
-	private readonly entities: Map<string, NgDocEntity> = new Map<string, NgDocEntity>();
 	private readonly watcher: NgDocWatcher;
-	private readonly artifactsProcessor: NgDocArtifactsProcessor;
 	private readonly touchEntity: Subject<NgDocEntity> = new Subject<NgDocEntity>();
 
 	constructor(private readonly context: NgDocBuilderContext) {
-		this.artifactsProcessor = new NgDocArtifactsProcessor(this, this.entities);
 
 		this.project = createProject({
 			tsConfigFilePath: this.context.tsConfig,
@@ -89,40 +89,39 @@ export class NgDocBuilder implements Iterable<NgDocEntity> {
 				),
 			)
 			.subscribe((entity: NgDocEntity) => {
-				this.add(entity);
+				this.entities.set(entity.id, entity);
 			});
 
-		this.watcher
-			.onChange(PAGE_PATTERN, CATEGORY_PATTERN, PAGE_DEPENDENCY_PATTERN, API_PATTERN, PLAYGROUND_PATTERN)
-			.subscribe((path: string) => {
-				const entity: NgDocEntity | undefined = this.get(path);
-
-				if (entity) {
-					this.touchEntity.next(entity);
-				}
-			});
-
-		this.watcher
-			.onUnlink(PAGE_PATTERN, CATEGORY_PATTERN, PAGE_DEPENDENCY_PATTERN, API_PATTERN, PLAYGROUND_PATTERN)
-			.subscribe((path: string) => {
-				const entity: NgDocEntity | undefined = this.get(path);
-
-				if (entity) {
-					entity.destroy();
-				}
-			});
 	}
 
 	run(): Observable<void> {
 		console.time('Build documentation');
 
-		return this.touchEntity.pipe(
+		const touchedEntity: Observable<NgDocEntity> = this.entities.changes()
+			.pipe(
+				tap(([entity, removed]: [NgDocEntity, boolean]) => removed ? entity.destroy() : this.watcher.watch(entity.rootFiles)),
+				mergeMap(([entity]: [NgDocEntity, boolean]) =>
+					entity.destroyed
+						? of(entity)
+						: merge(
+							this.watcher
+								.onChange(...entity.rootFiles)
+								.pipe(takeUntil(entity.onDestroy())),
+							this.watcher
+								.onUnlink(...entity.rootFiles)
+								.pipe(tap(() => entity.destroy()), take(1))
+						)
+							.pipe(startWith(null), mapTo(entity))
+				)
+			)
+
+		return touchedEntity.pipe(
 			concatMap((entity: NgDocEntity) => {
 				/*
 					Refresh and compile source files for all not destroyed entities
 				*/
 				if (!entity.destroyed) {
-					entity.emit()
+					entity.emit();
 				}
 				/*
 					We destroy children entities for NgDocApiEntities because
@@ -142,21 +141,17 @@ export class NgDocBuilder implements Iterable<NgDocEntity> {
 					entities.map((entity: NgDocEntity) =>
 						entity.destroyed
 							? of(entity)
-							: entity.update()
-								.pipe(
+							: entity.update().pipe(
 									tap(() => {
 										/*
 											Re-generate children Entities for NgDocApiEntity if it was changed
 										 */
 										if (entity instanceof NgDocApiEntity) {
-											generateApiEntities(entity).forEach((e: NgDocEntity) => {
-												this.add(e);
-												this.touchEntity.next(e);
-											});
+											generateApiEntities(entity).forEach((e: NgDocEntity) => this.entities.set(e.id, e));
 										}
 									}),
-									mapTo(entity)
-								),
+									mapTo(entity),
+							  ),
 					),
 				).pipe(
 					switchMap((entities: NgDocEntity[]) =>
@@ -171,12 +166,7 @@ export class NgDocBuilder implements Iterable<NgDocEntity> {
 											),
 											startWith(null),
 											mapTo(entity),
-											takeUntil(
-												merge(
-													this.touchEntity.pipe(filter((e: NgDocEntity) => e === entity)),
-													entity.onDestroy(),
-												),
-											),
+											takeUntil(entity.onDestroy()),
 									  ),
 							),
 						),
@@ -187,23 +177,20 @@ export class NgDocBuilder implements Iterable<NgDocEntity> {
 			// Build touched entities and their dependencies
 			mergeMap((entities: NgDocEntity[]) =>
 				forkJoin(
-					entities
-						.map((entity: NgDocEntity) =>
-							entity.destroyed
-								? EMPTY
-								: forkJoin(buildCandidates(entity).map((e: NgDocEntity) => e.buildArtifacts()))
-						)
-				)
-					.pipe(map((output: NgDocBuiltOutput[][][]) => output.flat(2)))
+					entities.map((entity: NgDocEntity) =>
+						entity.destroyed
+							? EMPTY
+							: forkJoin(buildCandidates(entity).map((e: NgDocEntity) => e.buildArtifacts())),
+					),
+				).pipe(map((output: NgDocBuiltOutput[][][]) => output.flat(2))),
 			),
 			concatMap((output: NgDocBuiltOutput[]) =>
 				// Build Context, Routes and indexes
-				forkJoin([this.buildContext(), this.buildRoutes()]).pipe(
-					switchMap((contextAndRoutes: NgDocBuiltOutput[]) =>
+				forkJoin([this.buildContext(), this.buildRoutes(), this.buildKeywordsDictionary()]).pipe(
+					switchMap((contextAndRoutesAndDictionary: NgDocBuiltOutput[]) =>
 						this.buildIndexes().pipe(
 							tap((indexes: NgDocBuiltOutput[]) => {
-								const artifacts: NgDocBuiltOutput[] = this.artifactsProcessor.process([...output.flat(), ...contextAndRoutes, ...indexes]);
-								emitBuiltOutput(...artifacts);
+								emitBuiltOutput(...[...output.flat(), ...contextAndRoutesAndDictionary, ...indexes]);
 								this.collectGarbage();
 							}),
 							tap(() => console.timeEnd('Build documentation')),
@@ -215,38 +202,15 @@ export class NgDocBuilder implements Iterable<NgDocEntity> {
 		);
 	}
 
-	*[Symbol.iterator](): Iterator<NgDocEntity> {
-		for (const value of asArray(this.entities.values())) {
-			yield value;
-		}
-	}
-
-	asArray(): NgDocEntity[] {
-		return asArray(this);
-	}
-
 	get(id: string): NgDocEntity | undefined {
 		return this.entities.get(id);
 	}
 
-	private add(entity: NgDocEntity): void {
-		if (this.entities.get(entity.id)) {
-			throw new Error(`Entity with id "${entity.id}" already exists.`);
-		}
-		this.entities.set(entity.id, entity);
-		this.touchEntity.next(entity);
-	}
-
-	private remove(entity: NgDocEntity): void {
-		this.entities.delete(entity.id);
-		this.touchEntity.next(entity);
-	}
-
 	private collectGarbage(): void {
-		asArray(this.entities.values()).forEach((entity: NgDocEntity) => {
+		this.entities.asArray().forEach((entity: NgDocEntity) => {
 			if (entity.destroyed) {
 				entity.removeArtifacts();
-				this.remove(entity);
+				this.entities.delete(entity.id);
 			}
 		});
 	}
@@ -269,8 +233,16 @@ export class NgDocBuilder implements Iterable<NgDocEntity> {
 			.pipe(map((output: string) => ({output, filePath: path.join(GENERATED_PATH, 'ng-doc.context.ts')})));
 	}
 
+	private buildKeywordsDictionary(): Observable<NgDocBuiltOutput> {
+		const renderer: NgDocRenderer<NgDocKeywordsDictionaryEnv> = new NgDocRenderer<NgDocKeywordsDictionaryEnv>({dictionary: generateKeywordsDictionary(this.entities.asArray())});
+
+		return renderer
+			.render('keywords-dictionary.ts.nunj')
+			.pipe(map((output: string) => ({output, filePath: path.join(GENERATED_PATH, 'ng-doc.keywords-dictionary.ts')})));
+	}
+
 	private buildIndexes(): Observable<NgDocBuiltOutput[]> {
-		const [dictionary, indexes] = buildGlobalIndexes(this.asArray());
+		const [dictionary, indexes] = buildGlobalIndexes(this.entities.asArray());
 
 		return of([
 			{

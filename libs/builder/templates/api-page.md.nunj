@@ -1,5 +1,5 @@
-{% import "actions/helpers/api.md.nunj" as api %}
-{% import "actions/helpers/tags.md.nunj" as tags %}
+{% import "helpers/api.md.nunj" as api %}
+{% import "helpers/tags.md.nunj" as tags %}
 
 {{ tags.render(Node, declaration, scope) }}
 
@@ -7,4 +7,4 @@
 
 {{ declaration | formatJsDoc }}
 
-{{ api.render(declaration, false) }}
+{{ api.render(Node, declaration, false) }}

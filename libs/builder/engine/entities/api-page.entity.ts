@@ -48,7 +48,10 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	}
 
 	override emit() {
-		// Emitting source file is not necessary for this type of entity
+		/**
+		 * Just refresh source file, we don't need to emit it
+		 */
+		this.sourceFile.refreshFromFileSystemSync();
 	}
 
 	override get title(): string {

@@ -1,5 +1,5 @@
 import * as chokidar from 'chokidar';
-import * as minimatch from 'minimatch';
+import minimatch from 'minimatch';
 import {Observable, Subject} from 'rxjs';
 import {filter} from 'rxjs/operators';
 

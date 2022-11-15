@@ -1,20 +1,16 @@
 import {asArray} from '@ng-doc/core';
-import * as glob from 'glob';
 import {forkJoin, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
-import {isNotExcludedPath, isPageEntity, uniqueName} from '../../helpers';
-import {isSupportedDeclaration} from '../../helpers/is-supported-declaration';
+import {isPageEntity, uniqueName} from '../../helpers';
 import {NgDocApiScope, NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocApiScopeModuleEnv} from '../../templates-env/api-scope.module.env';
-import {NgDocSupportedDeclarations} from '../../types/supported-declarations';
 import {NgDocBuilder} from '../builder';
 import {NgDocRenderer} from '../renderer';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocApiEntity} from './api.entity';
-import {NgDocApiPageEntity} from './api-page.entity';
 import {NgDocPageEntity} from './page.entity';
 
 export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
@@ -30,6 +26,10 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 		override target: NgDocApiScope,
 	) {
 		super(builder, sourceFile, context, target.route);
+	}
+
+	override get rootFiles(): string[] {
+		return [];
 	}
 
 	override get isRoot(): boolean {

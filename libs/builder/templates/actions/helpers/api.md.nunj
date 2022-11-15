@@ -1,5 +1,0 @@
-{%- macro render(declaration, header) -%}
-{{ declaration | exportDeclaration(header) }}
-{%- endmacro -%}
-
-

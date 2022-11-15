@@ -1,7 +1,6 @@
 export * from './build-assets';
 export * from './code-type-from-ext';
 export * from './declaration-folder-name';
-export * from './declaration-mappers';
 export * from './declaration-to-playground';
 export * from './emit-built-output';
 export * from './entity-type';

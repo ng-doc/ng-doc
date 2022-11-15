@@ -1,6 +1,24 @@
-import {AfterViewInit, Directive, ElementRef, EventEmitter, Input, OnChanges, Output, Sanitizer} from '@angular/core';
+import {
+	AfterViewInit,
+	Directive,
+	ElementRef,
+	EventEmitter,
+	Inject,
+	Input,
+	OnChanges,
+	Output,
+	Sanitizer
+} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {NG_DOC_BLOCKQUOTE_TEMPLATE_ID, NG_DOC_CODE_TEMPLATE_ID, NG_DOC_TITLE_TEMPLATE_ID} from '@ng-doc/builder/naming';
+import {NG_DOC_KEYWORDS_DICTIONARY} from '@ng-doc/app/tokens';
+import {NgDocKeywordsDictionary} from '@ng-doc/app/types';
+import {NgDocKeywordEntity} from '@ng-doc/builder';
+import {
+	NG_DOC_BLOCKQUOTE_TEMPLATE_ID,
+	NG_DOC_CODE_TEMPLATE_ID,
+	NG_DOC_LINK_TEMPLATE_ID,
+	NG_DOC_TITLE_TEMPLATE_ID
+} from '@ng-doc/builder/naming';
 import {escapeHtml} from '@ng-doc/core';
 import {marked} from 'marked';
 
@@ -21,15 +39,22 @@ export class NgDocMarkdownDirective implements OnChanges, AfterViewInit {
 		private readonly elementRef: ElementRef<HTMLElement>,
 		private readonly router: Router,
 		private readonly route: ActivatedRoute,
-		private readonly sanitizer: Sanitizer,
+		@Inject(NG_DOC_KEYWORDS_DICTIONARY)
+		private readonly keywordsDictionary: NgDocKeywordsDictionary
 	) {}
 
 	ngOnChanges(): void {
-		const sanitizer: Sanitizer = this.sanitizer;
-
 		const renderer: marked.RendererObject = {
 			heading(text: string, level: 1 | 2 | 3 | 4 | 5 | 6): string {
 				return `<div id="${NG_DOC_TITLE_TEMPLATE_ID}" data-level="${level}">${escapeHtml(text)}</div>`;
+			},
+			codespan: (code: string) => {
+				const keywordEntity: NgDocKeywordEntity | undefined = this.keywordsDictionary[code];
+
+				if (keywordEntity) {
+					return `<code class="ng-doc-inline-code"><span id="${NG_DOC_LINK_TEMPLATE_ID}" data-path="${keywordEntity.path}">${keywordEntity.title}</span></code>`
+				}
+				return `<code class="ng-doc-inline-code2">${code}</code>`
 			},
 			code(code: string, language: string | undefined): string {
 				return `<div id="${NG_DOC_CODE_TEMPLATE_ID}" data-language="${language}">${escapeHtml(code)}</div>`;

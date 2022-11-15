@@ -1,0 +1,10 @@
+{%- macro render(cls) -%}
+
+## Properties
+
+| Name | Type | Default | Description |
+|------|------|---------|-------------|
+{%- for property in cls.getProperties() %}
+| {{ property.getName() }} | `{{ property.getType() | displayType }}` | {{ property.getInitializer() | displayInitializer }} | {{ property.getJsDocs() | inlineJsDocs }} |
+{%- endfor %}
+{%- endmacro -%}
