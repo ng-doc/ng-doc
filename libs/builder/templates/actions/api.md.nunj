@@ -1,3 +1,0 @@
-{% import "helpers/api.md.nunj" as api %}
-
-{{ api.render(Node, declaration) }}

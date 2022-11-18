@@ -7,6 +7,6 @@ import {NgDocRootPage} from '@ng-doc/app/classes';
 	styleUrls: ['./page.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocPageComponent {
+export class NgDocPageComponent  {
 	constructor(readonly rootPage: NgDocRootPage) {}
 }

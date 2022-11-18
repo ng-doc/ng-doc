@@ -4,7 +4,7 @@ import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {NgDocPageModule, NgDocRootPage, NgDocDemoAssets} from '@ng-doc/app';
 import {NgDocPlayground} from '@ng-doc/builder';
-import pageMd from '!!raw-loader!{{ page.builtPagePath }}';
+import pageContent from '!!raw-loader!{{ page.builtPagePath }}';
 {%- if page.pageDependenciesImport %}
 // noinspection ES6UnusedImports
 import pageDependencies from '{{ page.pageDependenciesImport }}';
@@ -25,7 +25,7 @@ import demoAssets from '{{ page.componentsAssets }}';
 	providers: [{provide: NgDocRootPage, useExisting: {{ page.componentName }}}],
 })
 export class {{ page.componentName }} extends NgDocRootPage {
-	readonly pageMd: string = pageMd;
+	readonly pageContent: string = pageContent;
 	{%- if page.pageDependenciesFile %}
 	readonly demo: Record<string, Type<unknown>> | undefined = pageDependencies.demo;
 	readonly module: Type<unknown> | undefined = pageDependencies.module;
@@ -39,7 +39,7 @@ export class {{ page.componentName }} extends NgDocRootPage {
 
 	constructor() {
 		super();
-		console.log(this.pageMd, this.demo, this.demoAssets, this.playground);
+		console.log(this.pageContent, this.demo, this.demoAssets, this.playground);
 	}
 }
 

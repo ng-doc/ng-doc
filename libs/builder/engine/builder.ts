@@ -122,6 +122,7 @@ export class NgDocBuilder {
 			)
 
 		return touchedEntity.pipe(
+			tap(() => this.context.context.reportRunning()),
 			concatMap((entity: NgDocEntity) => {
 				/*
 					Refresh and compile source files for all not destroyed entities
@@ -210,7 +211,7 @@ export class NgDocBuilder {
 				this.context.context.logger.error(`NgDoc error: ${e}`);
 
 				return of(void 0)
-			})
+			}),
 		);
 	}
 
@@ -229,7 +230,7 @@ export class NgDocBuilder {
 
 	private buildRoutes(): Observable<NgDocBuiltOutput> {
 		const entities: NgDocEntity[] = this.rootEntitiesForBuild;
-		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocRoutingEnv>({entities});
+		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocRoutingEnv>(this, {entities});
 
 		return renderer
 			.render('routing.ts.nunj')
@@ -238,7 +239,7 @@ export class NgDocBuilder {
 
 	private buildContext(): Observable<NgDocBuiltOutput> {
 		const entities: NgDocEntity[] = this.rootEntitiesForBuild;
-		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocContextEnv>({entities});
+		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocContextEnv>(this,{entities});
 
 		return renderer
 			.render('context.ts.nunj')
@@ -246,7 +247,7 @@ export class NgDocBuilder {
 	}
 
 	private buildKeywordsDictionary(): Observable<NgDocBuiltOutput> {
-		const renderer: NgDocRenderer<NgDocKeywordsDictionaryEnv> = new NgDocRenderer<NgDocKeywordsDictionaryEnv>({dictionary: generateKeywordsDictionary(this.entities.asArray())});
+		const renderer: NgDocRenderer<NgDocKeywordsDictionaryEnv> = new NgDocRenderer<NgDocKeywordsDictionaryEnv>(this,{dictionary: generateKeywordsDictionary(this.entities.asArray())});
 
 		return renderer
 			.render('keywords-dictionary.ts.nunj')

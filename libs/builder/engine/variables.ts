@@ -5,7 +5,7 @@ export const CATEGORY_NAME: string = 'ng-doc.category.ts';
 export const PAGE_DEPENDENCIES_NAME: string = 'ng-doc.dependencies.ts';
 export const API_NAME: string = 'ng-doc.api.ts';
 export const PLAYGROUND_NAME: string = 'ng-doc.playground.ts';
-export const RENDERED_PAGE_NAME: string = 'index.md';
+export const RENDERED_PAGE_NAME: string = 'index.html';
 
 export const PAGE_PATTERN: string = `**/${PAGE_NAME}`;
 export const CATEGORY_PATTERN: string = `**/${CATEGORY_NAME}`;

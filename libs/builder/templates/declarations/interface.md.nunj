@@ -1,9 +1,0 @@
-{% import "declarations/type.md.nunj" as type %}
-
-{% macro render(declaration) %}
-| Property | Type |
-|:---------|:-----|
-{%- for member in declaration.getMembers() %}
-
-{%- endfor %}
-{%- endmacro -%}

@@ -1,4 +1,4 @@
-{%- macro render(Node, declaration) -%}
+{%- macro render(declaration) -%}
 {%- if declaration.getDecorators %}
 {% for decorator in declaration.getDecorators() %}
 {%- if decorator.getName() === 'Component' %}

@@ -1,7 +1,6 @@
 <div
 	class="ng-doc-page-wrapper"
-	[ngDocMarkdown]="rootPage.pageMd"
-	ngDocTitleProcessor
+	[innerHTML]="rootPage.pageContent | ngDocSanitizeHtml"
 	ngDocBlockquoteProcessor
 	ngDocDemoProcessor
 	ngDocPlaygroundProcessor

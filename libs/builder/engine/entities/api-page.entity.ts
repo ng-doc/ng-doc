@@ -1,10 +1,11 @@
+import {Standardization, TSDocParser, TSDocTagDefinition, TSDocTagSyntaxKind} from '@microsoft/tsdoc';
 import {isPresent} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {SourceFile} from 'ts-morph';
+import {Node, SourceFile} from 'ts-morph';
 
-import {declarationFolderName, slash, uniqueName} from '../../helpers';
+import {declarationFolderName, marked, slash, uniqueName} from '../../helpers';
 import {isSupportedDeclaration} from '../../helpers/is-supported-declaration';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocApiPageEnv} from '../../templates-env/api-page.env';
@@ -95,7 +96,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	}
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
-		const renderer: NgDocRenderer<NgDocApiPageModuleEnv> = new NgDocRenderer<NgDocApiPageModuleEnv>({page: this});
+		const renderer: NgDocRenderer<NgDocApiPageModuleEnv> = new NgDocRenderer<NgDocApiPageModuleEnv>(this.builder, {page: this});
 
 		return renderer
 			.render('api-page.module.ts.nunj')
@@ -104,12 +105,13 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 
 	private buildPage(): Observable<NgDocBuiltOutput | null> {
 		if (this.declaration) {
-			const renderer: NgDocRenderer<NgDocApiPageEnv> = new NgDocRenderer<NgDocApiPageEnv>({
+			const renderer: NgDocRenderer<NgDocApiPageEnv> = new NgDocRenderer<NgDocApiPageEnv>(this.builder, {
 				declaration: this.declaration,
 				scope: this.parent.target,
 			});
 
-			return renderer.render('api-page.md.nunj').pipe(
+			return renderer.render('api-page.html.nunj').pipe(
+				map((markdown: string) => marked(markdown)),
 				map((output: string) => ({output, filePath: this.builtPagePath})),
 				catchError((error: unknown) => {
 					this.logger.error(

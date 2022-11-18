@@ -17,6 +17,12 @@ export class NgDocSidebarComponent {
 		console.log('context', this.context);
 	}
 
+	/**
+	 * Description
+	 *
+	 * @param {NgDocNavigation} nav  - some param, that can return `ThisCode` and somethin else
+	 * @returns {NgDocNavigation} - something
+	 */
 	getNavigation(nav?: NgDocNavigation): NgDocNavigation[] {
 		return (nav ? nav.children ?? [] : this.context.navigation).sort((a: NgDocNavigation, b: NgDocNavigation) => {
 			if (isPresent(a.order) && isPresent(b.order)) {

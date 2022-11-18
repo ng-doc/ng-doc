@@ -18,7 +18,7 @@ interface ApiFilterForm {
 /**
  * Decorator that binds a DOM event to a host listener and supplies configuration metadata.
  * Angular invokes the supplied handler method when the host element emits the specified event,
- * and updates the bound element with the result.
+ * and updates the bound element with the result.12
  *
  * If the handler method returns false, applies `preventDefault` on the bound element.
  *
@@ -75,6 +75,19 @@ interface ApiFilterForm {
  * The global target names that can be used to prefix an event name are
  * `document:`, `window:` and `body:`.
  *
+ * @usageNotes
+ *
+ * alsdkjalskdj
+ * sda
+ *
+ * asdas
+ * d asda
+ *
+ *  as dasdas
+ *
+ *  asdasdasdasdas
+ *  a
+ *  sdasdasdasd
  */
 @Component({
 	selector: 'ng-doc-api-list',

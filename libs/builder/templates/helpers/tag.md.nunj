@@ -1,0 +1,3 @@
+{%- macro render(content) -%}
+<span class="ng-doc-tag">{{ content }}</span>
+{%- endmacro -%}

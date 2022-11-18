@@ -1,6 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {NgDocMarkdownModule} from '@ng-doc/app/directives/markdown';
+import {NgDocSanitizeHtmlModule} from '@ng-doc/app/pipes';
 import {
 	NgDocBlockquoteProcessorModule,
 	NgDocCodeProcessorModule,
@@ -18,7 +18,6 @@ import {NgDocPageComponent} from './page.component';
 	declarations: [NgDocPageComponent],
 	imports: [
 		CommonModule,
-		NgDocMarkdownModule,
 		NgDocDemoProcessorModule,
 		NgDocTitleProcessorModule,
 		NgDocCodeProcessorModule,
@@ -27,6 +26,7 @@ import {NgDocPageComponent} from './page.component';
 		NgDocDeclarationTagProcessorModule,
 		NgDocBlockquoteProcessorModule,
 		NgDocLinkProcessorModule,
+		NgDocSanitizeHtmlModule,
 	],
 	exports: [NgDocPageComponent],
 })

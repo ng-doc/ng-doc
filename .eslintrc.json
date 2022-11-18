@@ -6,8 +6,9 @@
 		{
 			"files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
 			"extends": ["prettier", "plugin:jsdoc/recommended"],
-			"plugins": ["eslint-plugin-jsdoc", "eslint-plugin-prefer-arrow", "simple-import-sort"],
+			"plugins": ["eslint-plugin-jsdoc", "eslint-plugin-prefer-arrow", "simple-import-sort", "eslint-plugin-tsdoc"],
 			"rules": {
+				"tsdoc/syntax": "warn",
 				"simple-import-sort/imports": "error",
 				"simple-import-sort/exports": "error",
 				"@nrwl/nx/enforce-module-boundaries": [

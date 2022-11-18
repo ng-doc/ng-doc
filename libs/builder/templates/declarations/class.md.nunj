@@ -1,9 +1,0 @@
-{% import "declarations/properties.md.nunj" as properties %}
-{% import "declarations/methods.md.nunj" as methods %}
-
-{% macro render(declaration) %}
-{{ properties.render(declaration.getProperties()) }}
-
-{{ methods.render(declaration.getMethods()) }}
-
-{% endmacro %}

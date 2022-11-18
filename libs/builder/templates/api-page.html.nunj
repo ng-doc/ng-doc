@@ -1,0 +1,12 @@
+{% import "api/class.md.nunj" as class %}
+
+{% if Node.isClassDeclaration(declaration) -%}
+{{ class.render(declaration) }}
+{%- elseif Node.isInterfaceDeclaration(declaration) -%}
+
+{%- elseif Node.isEnumDeclaration(declaration) -%}
+
+{%- elseif Node.isTypeAliasDeclaration(declaration) -%}
+
+{%- endif -%}
+

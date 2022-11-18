@@ -105,7 +105,7 @@ export class NgDocDependenciesEntity extends NgDocEntity {
 	}
 
 	private buildComponentAssets(): Observable<NgDocBuiltOutput> {
-		const renderer: NgDocRenderer<NgDocComponentAssetsEnv> = new NgDocRenderer<NgDocComponentAssetsEnv>({
+		const renderer: NgDocRenderer<NgDocComponentAssetsEnv> = new NgDocRenderer<NgDocComponentAssetsEnv>(this.builder, {
 			componentsAssets: this.componentsAssets,
 		});
 

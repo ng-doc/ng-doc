@@ -7,7 +7,7 @@ import {ngDocZoneDetach} from '@ng-doc/ui-kit/observables';
 import {fromEvent, Subject} from 'rxjs';
 import {filter, takeUntil, throttleTime} from 'rxjs/operators';
 
-@Injectable({providedIn: 'root'})
+@Injectable({providedIn: 'root', })
 export class NgDocOverlayStrategy implements ScrollStrategy {
 	private overlayRef: any | null = null;
 	private destroy$: Subject<void> = new Subject<void>();

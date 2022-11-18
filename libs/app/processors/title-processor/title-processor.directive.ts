@@ -1,6 +1,5 @@
-import {Directive, ElementRef, Self, ViewContainerRef} from '@angular/core';
+import {Directive, ElementRef, ViewContainerRef} from '@angular/core';
 import {NgDocHeaderComponent} from '@ng-doc/app/components/header';
-import {NgDocMarkdownDirective} from '@ng-doc/app/directives/markdown';
 import {NgDocProcessorOptions} from '@ng-doc/app/interfaces';
 import {NgDocHtmlProcessor} from '@ng-doc/app/processors/html-processor';
 import {NgDocHeaderLevel} from '@ng-doc/app/types';
@@ -13,9 +12,8 @@ export class NgDocTitleProcessorDirective extends NgDocHtmlProcessor<NgDocHeader
 	constructor(
 		protected override readonly elementRef: ElementRef<HTMLElement>,
 		protected override readonly viewContainerRef: ViewContainerRef,
-		@Self() protected override readonly markdown: NgDocMarkdownDirective,
 	) {
-		super(elementRef, viewContainerRef, markdown, `#${NG_DOC_TITLE_TEMPLATE_ID}`, NgDocHeaderComponent);
+		super(elementRef, viewContainerRef, `#${NG_DOC_TITLE_TEMPLATE_ID}`, NgDocHeaderComponent);
 	}
 
 	protected override extractComponentOptions(element: Element): NgDocProcessorOptions<NgDocHeaderComponent> {

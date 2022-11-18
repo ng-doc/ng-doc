@@ -5,7 +5,7 @@ import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
-import {isDependencyEntity, isPlaygroundEntity, slash, uniqueName} from '../../helpers';
+import {isDependencyEntity, isPlaygroundEntity, marked, slash, uniqueName} from '../../helpers';
 import {NgDocBuiltOutput, NgDocPage} from '../../interfaces';
 import {NgDocPageEnv, NgDocPageModuleEnv} from '../../templates-env';
 import {NgDocActions} from '../actions';
@@ -152,7 +152,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			const renderer: NgDocRenderer<NgDocPageModuleEnv> = new NgDocRenderer<NgDocPageModuleEnv>({page: this});
+			const renderer: NgDocRenderer<NgDocPageModuleEnv> = new NgDocRenderer<NgDocPageModuleEnv>(this.builder, {page: this});
 
 			return renderer
 				.render('page.module.ts.nunj')
@@ -172,14 +172,17 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 				?.getReferencedSourceFiles()
 				.forEach((sourceFile: SourceFile) => sourceFile.refreshFromFileSystemSync());
 
-			const renderer: NgDocRenderer<NgDocPageEnv> = new NgDocRenderer<NgDocPageEnv>({
+			const renderer: NgDocRenderer<NgDocPageEnv> = new NgDocRenderer<NgDocPageEnv>(this.builder, {
 				NgDocPage: this.target,
 				NgDocActions: new NgDocActions(this),
 			});
 
 			return renderer
 				.render(this.target?.mdFile, {scope: this.sourceFileFolder})
-				.pipe(map((output: string) => ({output, filePath: this.builtPagePath})));
+				.pipe(
+					map((markdown: string) => marked(markdown)),
+					map((output: string) => ({output, filePath: this.builtPagePath}))
+				);
 		}
 		return of();
 	}

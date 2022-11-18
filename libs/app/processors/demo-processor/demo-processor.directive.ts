@@ -1,6 +1,5 @@
-import {Directive, ElementRef, Self, ViewContainerRef} from '@angular/core';
+import {Directive, ElementRef, ViewContainerRef} from '@angular/core';
 import {NgDocDemoComponent} from '@ng-doc/app/components/demo';
-import {NgDocMarkdownDirective} from '@ng-doc/app/directives/markdown';
 import {asBoolean} from '@ng-doc/app/helpers';
 import {NgDocProcessorOptions} from '@ng-doc/app/interfaces';
 import {NgDocHtmlProcessor} from '@ng-doc/app/processors/html-processor';
@@ -16,16 +15,15 @@ export class NgDocDemoProcessorDirective extends NgDocHtmlProcessor<NgDocDemoCom
 	constructor(
 		protected override readonly elementRef: ElementRef<HTMLElement>,
 		protected override readonly viewContainerRef: ViewContainerRef,
-		@Self() protected override readonly markdown: NgDocMarkdownDirective,
 	) {
-		super(elementRef, viewContainerRef, markdown, `#${NG_DOC_DEMO_TEMPLATE_ID}`, NgDocDemoComponent);
+		super(elementRef, viewContainerRef, `ng-doc-demo`, NgDocDemoComponent);
 	}
 
 	protected override extractComponentOptions(element: Element): NgDocProcessorOptions<NgDocDemoComponent> {
 		return {
 			inputs: {
-				componentName: element.getAttribute('data-component-name') || undefined,
-				container: asBoolean(element.getAttribute('data-container')) || true,
+				componentName: element.getAttribute('componentName') || undefined,
+				container: asBoolean(element.getAttribute('container')) || true,
 			},
 		};
 	}

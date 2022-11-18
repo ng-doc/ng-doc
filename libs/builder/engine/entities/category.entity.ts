@@ -98,7 +98,7 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			const renderer: NgDocRenderer<NgDocCategoryModuleEnv> = new NgDocRenderer<NgDocCategoryModuleEnv>({
+			const renderer: NgDocRenderer<NgDocCategoryModuleEnv> = new NgDocRenderer<NgDocCategoryModuleEnv>(this.builder, {
 				category: this,
 			});
 

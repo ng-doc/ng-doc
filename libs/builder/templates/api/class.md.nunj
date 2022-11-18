@@ -1,0 +1,30 @@
+{% import "helpers/tag.md.nunj" as tagMacro %}
+{% import "helpers/methods.md.nunj" as methodsMacro %}
+
+{% macro render(declaration) %}
+{%- set description = declaration | extractDocs -%}
+{%- set usageNotes = declaration | extractDocs('@usageNotes') -%}
+{%- set staticMethods = declaration.getMethods() | filterByStatic(true) -%}
+{%- set methods = declaration.getMethods() | filterByStatic(false) -%}
+
+# {{ tagMacro.render('abstract') if declaration.isAbstract() }} {{ declaration.getName() }}
+
+{{ description if description else 'No documentation has been provided.' }}
+
+{% if staticMethods.length -%}
+## Static Methods
+{{ methodsMacro.render(staticMethods)}}
+{%- endif %}
+
+{% if methods.length -%}
+## Methods
+{{ methodsMacro.render(methods)}}
+{%- endif %}
+
+{% if usageNotes -%}
+## Usage Notes
+{{ usageNotes}}
+{%- endif %}
+
+
+{% endmacro %}

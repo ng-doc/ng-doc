@@ -3,7 +3,7 @@ import {ChangeDetectionStrategy, Component, NgModule, Type} from "@angular/core"
 import {RouterModule} from "@angular/router";
 import {CommonModule} from '@angular/common';
 import {NgDocDemoAssets, NgDocPageModule, NgDocRootPage} from '@ng-doc/app';
-import pageMd from '!!raw-loader!{{ page.builtPagePath }}';
+import pageContent from '!!raw-loader!{{ page.builtPagePath }}';
 
 @Component({
 	template: `<ng-doc-page></ng-doc-page>`,
@@ -11,13 +11,13 @@ import pageMd from '!!raw-loader!{{ page.builtPagePath }}';
 	providers: [{provide: NgDocRootPage, useExisting: {{ page.componentName }}}],
 })
 export class {{ page.componentName }} extends NgDocRootPage {
-	readonly pageMd: string = pageMd;
+	readonly pageContent: string = pageContent;
 	readonly demo: Record<string, Type<unknown>> | undefined = undefined;
 	readonly demoAssets: NgDocDemoAssets | undefined = undefined;
 
 	constructor() {
 		super();
-		console.log(this.pageMd);
+		console.log(this.pageContent);
 	}
 }
 

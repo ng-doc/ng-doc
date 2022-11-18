@@ -40,37 +40,36 @@ h4,
 h5,
 h6 {
 	font-family: inherit;
-	margin-top: 1.5rem;
+	margin-top: 0;
 	margin-bottom: 0;
 	line-height: 1.5rem;
+	font-weight: 600;
 }
 
 h1 {
-	font-size: 4.242rem;
-	line-height: 4.5rem;
-	margin-top: 3rem;
+	font-size: calc(var(--ng-doc-base-gutter) * 6);
+	line-height: calc(var(--ng-doc-base-gutter) * 9);
+	font-weight: 700;
 }
 
 h2 {
-	font-size: 2.828rem;
-	line-height: 3rem;
-	margin-top: 2rem;
+	font-size: calc(var(--ng-doc-base-gutter) * 4);
+	line-height: calc(var(--ng-doc-base-gutter) * 6);
 }
 
 h3 {
-	font-size: 1.414rem;
+	font-size: calc(var(--ng-doc-base-gutter) * 3);
+	line-height: calc(var(--ng-doc-base-gutter) * 5);
 }
 
 h4 {
-	font-size: 22px;
+	font-size: 20px;
+	line-height: calc(var(--ng-doc-base-gutter) * 4);
 }
 
-h5 {
-	font-size: 16px;
-}
-
-h6 {
-	font-size: 0.3535rem;
+h5, h6 {
+	font-size: calc(var(--ng-doc-base-gutter) * 2);
+	line-height: calc(var(--ng-doc-base-gutter) * 3);
 }
 
 

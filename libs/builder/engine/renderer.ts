@@ -9,8 +9,13 @@ import {TEMPLATES_PATH} from './variables';
 import TemplateError = lib.TemplateError;
 import {Node} from 'ts-morph';
 
+import {NgDocBuilder} from './builder';
+
 export class NgDocRenderer<T extends object> {
-	constructor(private readonly context?: T) {}
+	constructor(
+		private readonly builder: NgDocBuilder,
+		private readonly context?: T,
+	) {}
 
 	render(template: string, options?: NgDocRendererOptions<T>): Observable<string> {
 		return new Observable((observer: Subscriber<string>) => {
@@ -35,8 +40,7 @@ export class NgDocRenderer<T extends object> {
 
 	private getContext(context?: T): object {
 		return {
-			...(context ?? this.context),
-			Node: Node,
+			...(context ?? this.context)
 		}
 	}
 
@@ -48,6 +52,9 @@ export class NgDocRenderer<T extends object> {
 		objectKeys(filters).forEach(
 			(filter: keyof typeof filters) => (environment = environment.addFilter(filter, filters[filter])),
 		);
+
+		environment.addGlobal('Node', Node);
+		environment.addGlobal('NgDocBuilder', this.builder);
 
 		return environment;
 	}

@@ -86,7 +86,7 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			const renderer: NgDocRenderer<NgDocApiScopeModuleEnv> = new NgDocRenderer<NgDocApiScopeModuleEnv>({
+			const renderer: NgDocRenderer<NgDocApiScopeModuleEnv> = new NgDocRenderer<NgDocApiScopeModuleEnv>(this.builder,{
 				scope: this,
 			});
 

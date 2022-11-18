@@ -1,0 +1,3 @@
+{% macro render(code, language = "typescript", copyButton = true) %}
+	<div id="ng-doc-template-code" data-language="{{ language }}" data-copy-button="{{ copyButton }}">{{ code | escape }}</div>
+{% endmacro %}

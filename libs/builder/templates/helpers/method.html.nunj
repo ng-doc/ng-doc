@@ -1,0 +1,39 @@
+{% import "helpers/code.html.nunj" as codeMacro %}
+{% import "helpers/type.md.nunj" as typeMacro %}
+
+{% macro render(method) %}
+	{% set parameters = method.getParameters()  %}
+<table>
+	<thead>
+		<tr>
+			<th><h3>{{ method.getName() }}</h3></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>{{ method | extractDocs }}</td>
+		</tr>
+		<tr>
+			<td>{{ codeMacro.render(method | methodPresentation, "typescript", false) }}</td>
+		</tr>
+		{%- if parameters.length %}
+		<tr>
+			<td>
+				<h5>Parameters</h5>
+				<table>
+					<tbody>
+						{%- for param in parameters %}
+							<tr>
+								<td>{{ param.getName() }}</td>
+								<td>{{ typeMacro.render(param.getType()) }}</td>
+								<td>{{ method | extractParameterDocs(param.getName()) | marked }}</td>
+							</tr>
+						{%- endfor %}
+					</tbody>
+				</table>
+			</td>
+		</tr>
+		{%- endif %}
+	</tbody>
+</table>
+{% endmacro %}
