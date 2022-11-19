@@ -1,21 +1,20 @@
-import {AbstractConstructor, Constructor, humanizeDeclarationName, NgDocPageInfos, NgDocPageType} from '@ng-doc/core';
+import {
+	AbstractConstructor,
+	asArray,
+	Constructor,
+	humanizeDeclarationName,
+	isNodeTag,
+	NgDocPageInfos,
+	NgDocPageType
+} from '@ng-doc/core';
 import lunr from 'lunr';
-import {marked} from 'marked';
 import minimatch from 'minimatch';
+import {Node, NodeTag, parser} from 'posthtml-parser'
 
 import {NgDocApiPageEntity} from '../engine/entities';
 import {NgDocEntity} from '../engine/entities/abstractions/entity';
 import {NgDocRouteEntity} from '../engine/entities/abstractions/route.entity';
 import {NgDocBuiltOutput, NgDocPageIndex} from '../interfaces';
-import {NgDocTokenTypes} from '../types';
-
-/**
- *
- * @param token
- */
-function isAcceptableToken(token: marked.Token): token is NgDocTokenTypes {
-	return ['heading', 'paragraph', 'text'].includes(token.type);
-}
 
 /**
  *
@@ -39,11 +38,11 @@ function buildIndexes<T extends NgDocRouteEntity<unknown>>(
 	(entities.filter((entity: NgDocEntity) => entity instanceof entityType) as T[]).forEach(
 		(entity: T) => {
 			const pageIndexes: NgDocPageIndex[] = entity.artifacts
-				.filter((artifact: NgDocBuiltOutput) => minimatch(artifact.filePath, '**/*.md'))
+				.filter((artifact: NgDocBuiltOutput) => minimatch(artifact.filePath, '**/*.html'))
 				.map((artifact: NgDocBuiltOutput) => {
-					const tokens: marked.TokensList = marked.lexer(artifact.output);
+					const nodes: Node[] = parser(artifact.output);
 
-					return extractIndexes(entity, tokens);
+					return extractIndexes(entity, nodes);
 				})
 				.flat();
 
@@ -81,46 +80,44 @@ function buildIndexes<T extends NgDocRouteEntity<unknown>>(
 /**
  *
  * @param entity
- * @param tokens
+ * @param nodes
  */
-function extractIndexes<T extends NgDocRouteEntity<unknown>>(entity: T, tokens: marked.Token[]): NgDocPageIndex[] {
-	return tokens
-		.filter(isAcceptableToken)
-		.reduce((indexes: NgDocPageIndex[], token: NgDocTokenTypes, index: number) => {
-			if (index === 0 && token.type !== 'heading') {
-				indexes.push({
-					route: entity.fullRoute,
-					type: getTypeFromEntity(entity),
-					title: entity.title,
-					heading: entity.title,
-					content: '',
-					kind: getKindFromEntity(entity),
-				});
-			} else if (token.type === 'heading') {
-				indexes.push({
-					route: entity.fullRoute,
-					type: getTypeFromEntity(entity),
-					title: entity.title,
-					heading: extractText(token),
-					content: '',
-					kind: getKindFromEntity(entity),
-				});
-			} else {
-				indexes[indexes.length - 1].content += extractText(token);
+function extractIndexes<T extends NgDocRouteEntity<unknown>>(entity: T, nodes: Node[]): NgDocPageIndex[] {
+	return nodes
+		.reduce((indexes: NgDocPageIndex[], node: Node, index: number) => {
+			if (isNodeTag(node)) {
+				if (index === 0 && !isHeaderTag(node)) {
+					indexes.push({
+						route: entity.fullRoute,
+						type: getTypeFromEntity(entity),
+						title: entity.title,
+						heading: entity.title,
+						content: '',
+						kind: getKindFromEntity(entity),
+					});
+				} else if (isHeaderTag(node)) {
+					indexes.push({
+						route: entity.fullRoute,
+						type: getTypeFromEntity(entity),
+						title: entity.title,
+						heading: extractText(node),
+						content: '',
+						kind: getKindFromEntity(entity),
+					});
+				} else if (isParagraph(node)) {
+					indexes[indexes.length - 1].content += extractText(node);
+				}
 			}
-
 			return indexes;
 		}, []);
 }
 
-/**
- *
- * @param token
- */
-function extractText(token: NgDocTokenTypes): string {
-	return token.tokens?.length
-		? token.tokens.map((t: marked.Token) => (t.type === 'text' ? t.text : '')).join(' ')
-		: token.text;
+function extractText(node: Node): string {
+	if (isNodeTag(node)) {
+		return asArray(node.content).flat().map((node: Node) => extractText(node)).join('\n')
+	} else {
+		return String(node);
+	}
 }
 
 /**
@@ -132,6 +129,14 @@ function getTypeFromEntity(entity: NgDocEntity): NgDocPageType {
 		return 'api';
 	}
 	return 'guide';
+}
+
+function isHeaderTag(node: NodeTag): boolean {
+	return ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(String(node.tag));
+}
+
+function isParagraph(node: NodeTag): boolean {
+	return ['p'].includes(String(node.tag));
 }
 
 /**

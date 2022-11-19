@@ -5,4 +5,3 @@ export * from './constructable';
 export * from './snippet-type';
 export * from './style-type';
 export * from './supported-declarations';
-export * from './token-types';

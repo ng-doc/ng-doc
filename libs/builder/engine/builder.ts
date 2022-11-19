@@ -54,7 +54,6 @@ export class NgDocBuilder {
 	private readonly touchEntity: Subject<NgDocEntity> = new Subject<NgDocEntity>();
 
 	constructor(private readonly context: NgDocBuilderContext) {
-
 		this.project = createProject({
 			tsConfigFilePath: this.context.tsConfig,
 			compilerOptions: {
@@ -92,34 +91,29 @@ export class NgDocBuilder {
 			.subscribe((entity: NgDocEntity) => {
 				this.entities.set(entity.id, entity);
 			});
-
 	}
 
 	run(): Observable<void> {
 		console.time('Build documentation');
 
-		const touchedEntity: Observable<NgDocEntity> = this.entities.changes()
-			.pipe(
-				tap(([entity, removed]: [NgDocEntity, boolean]) => removed ? entity.destroy() : this.watcher.watch(entity.rootFiles)),
-				mergeMap(([entity]: [NgDocEntity, boolean]) =>
-					entity.destroyed
-						? of(entity)
-						: merge(
-							this.watcher
-								.onChange(...entity.rootFiles)
-								.pipe(takeUntil(entity.onDestroy())),
-							this.watcher
-								.onUnlink(...entity.rootFiles)
-								.pipe(
-									tap(() => {
-										entity.destroy();
-									}),
-									take(1),
-								)
-						)
-							.pipe(startWith(null), mapTo(entity))
-				)
-			)
+		const touchedEntity: Observable<NgDocEntity> = this.entities.changes().pipe(
+			tap(([entity, removed]: [NgDocEntity, boolean]) =>
+				removed ? entity.destroy() : this.watcher.watch(entity.rootFiles),
+			),
+			mergeMap(([entity]: [NgDocEntity, boolean]) =>
+				entity.destroyed
+					? of(entity)
+					: merge(
+							this.watcher.onChange(...entity.rootFiles).pipe(takeUntil(entity.onDestroy())),
+							this.watcher.onUnlink(...entity.rootFiles).pipe(
+								tap(() => {
+									entity.destroy();
+								}),
+								take(1),
+							),
+					  ).pipe(startWith(null), mapTo(entity)),
+			),
+		);
 
 		return touchedEntity.pipe(
 			tap(() => this.context.context.reportRunning()),
@@ -151,10 +145,12 @@ export class NgDocBuilder {
 							: entity.update().pipe(
 									tap(() => {
 										/*
-											Re-generate children Entities for NgDocApiEntity if it was changed
-										 */
+										Re-generate children Entities for NgDocApiEntity if it was changed
+									 */
 										if (entity instanceof NgDocApiEntity) {
-											generateApiEntities(entity).forEach((e: NgDocEntity) => this.entities.set(e.id, e));
+											generateApiEntities(entity).forEach((e: NgDocEntity) =>
+												this.entities.set(e.id, e),
+											);
 										}
 									}),
 									mapTo(entity),
@@ -210,7 +206,7 @@ export class NgDocBuilder {
 			catchError((e: Error) => {
 				this.context.context.logger.error(`NgDoc error: ${e}`);
 
-				return of(void 0)
+				return of(void 0);
 			}),
 		);
 	}
@@ -239,7 +235,7 @@ export class NgDocBuilder {
 
 	private buildContext(): Observable<NgDocBuiltOutput> {
 		const entities: NgDocEntity[] = this.rootEntitiesForBuild;
-		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocContextEnv>(this,{entities});
+		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocContextEnv>(this, {entities});
 
 		return renderer
 			.render('context.ts.nunj')
@@ -247,11 +243,17 @@ export class NgDocBuilder {
 	}
 
 	private buildKeywordsDictionary(): Observable<NgDocBuiltOutput> {
-		const renderer: NgDocRenderer<NgDocKeywordsDictionaryEnv> = new NgDocRenderer<NgDocKeywordsDictionaryEnv>(this,{dictionary: generateKeywordsDictionary(this.entities.asArray())});
+		const renderer: NgDocRenderer<NgDocKeywordsDictionaryEnv> = new NgDocRenderer<NgDocKeywordsDictionaryEnv>(
+			this,
+			{dictionary: generateKeywordsDictionary(this.entities.asArray())},
+		);
 
-		return renderer
-			.render('keywords-dictionary.ts.nunj')
-			.pipe(map((output: string) => ({output, filePath: path.join(GENERATED_PATH, 'ng-doc.keywords-dictionary.ts')})));
+		return renderer.render('keywords-dictionary.ts.nunj').pipe(
+			map((output: string) => ({
+				output,
+				filePath: path.join(GENERATED_PATH, 'ng-doc.keywords-dictionary.ts'),
+			})),
+		);
 	}
 
 	private buildIndexes(): Observable<NgDocBuiltOutput[]> {

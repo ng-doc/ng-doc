@@ -1,4 +1,4 @@
-import {asArray, isPresent} from '@ng-doc/core';
+import {asArray, isNodeTag, isPresent} from '@ng-doc/core';
 import * as CSSWhat from 'css-what';
 import {AttributeSelector, SelectorType} from 'css-what';
 import {Selector, TagSelector} from 'css-what/lib/es/types';
@@ -26,7 +26,7 @@ export class NgDocHtmlParser {
 		while (nodes.length) {
 			const shiftNode: Node | undefined = nodes.shift();
 			const node: NodeTag | undefined =
-				!isPresent(shiftNode) || !this.isNodeTag(shiftNode) ? undefined : shiftNode;
+				!isPresent(shiftNode) || !isNodeTag(shiftNode) ? undefined : shiftNode;
 
 			if (
 				tagSelectors.every(
@@ -50,16 +50,16 @@ export class NgDocHtmlParser {
 	}
 
 	removeAttribute(node: Node, name: string): void {
-		if (this.isNodeTag(node) && Object.keys(node?.attrs ?? {}).includes(name) && node.attrs) {
+		if (isNodeTag(node) && Object.keys(node?.attrs ?? {}).includes(name) && node.attrs) {
 			delete node.attrs[name];
 		}
-		if (this.isNodeTag(node) && Object.keys(node?.attrs ?? {}).includes(`[${name}]`) && node.attrs) {
+		if (isNodeTag(node) && Object.keys(node?.attrs ?? {}).includes(`[${name}]`) && node.attrs) {
 			delete node.attrs[`[${name}]`];
 		}
 	}
 
 	setAttribute(node: Node, name: string, value?: string): void {
-		if (this.isNodeTag(node)) {
+		if (isNodeTag(node)) {
 			if (!node.attrs) {
 				node.attrs = {};
 			}
@@ -70,9 +70,5 @@ export class NgDocHtmlParser {
 
 	serialize(): string {
 		return render(this.parsedHTML);
-	}
-
-	private isNodeTag(node: Node): node is NodeTag {
-		return typeof node !== 'string' && typeof node !== 'number';
 	}
 }

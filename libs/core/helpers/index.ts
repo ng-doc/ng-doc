@@ -5,6 +5,7 @@ export * from './escape-regexp';
 export * from './extract-value';
 export * from './humanize-declaration-name';
 export * from './is-iterable';
+export * from './is-node-tag';
 export * from './is-present';
 export * from './kebab-case';
 export * from './object-keys';
