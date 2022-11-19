@@ -1,15 +1,28 @@
-{% import "helpers/tag.md.nunj" as tagMacro %}
-{% import "helpers/methods.md.nunj" as methodsMacro %}
+{% import "helpers/tag.html.nunj" as tagMacro %}
+{% import "helpers/methods.html.nunj" as methodsMacro %}
+{% import "helpers/properties.html.nunj" as propertiesMacro %}
 
 {% macro render(declaration) %}
 {%- set description = declaration | extractDocs -%}
 {%- set usageNotes = declaration | extractDocs('@usageNotes') -%}
-{%- set staticMethods = declaration.getMethods() | filterByStatic(true) -%}
-{%- set methods = declaration.getMethods() | filterByStatic(false) -%}
+{%- set staticProperties = declaration.getProperties() | filterByStatic(true) | filterByScope("public") -%}
+{%- set staticMethods = declaration.getMethods() | filterByStatic(true) | filterByScope("public") -%}
+{%- set properties = declaration.getProperties() | filterByStatic(false) | filterByScope("public") -%}
+{%- set methods = declaration.getMethods() | filterByStatic(false) | filterByScope("public") -%}
 
 # {{ tagMacro.render('abstract') if declaration.isAbstract() }} {{ declaration.getName() }}
 
 {{ description if description else 'No documentation has been provided.' }}
+
+{% if staticProperties.length -%}
+## Static Properties
+{{ propertiesMacro.render(staticProperties)}}
+{%- endif %}
+
+{% if properties.length -%}
+## Properties
+{{ propertiesMacro.render(properties)}}
+{%- endif %}
 
 {% if staticMethods.length -%}
 ## Static Methods

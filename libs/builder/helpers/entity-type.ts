@@ -1,3 +1,5 @@
+import {ClassDeclaration, MethodDeclaration, PropertyDeclaration} from 'ts-morph';
+
 import {
 	NgDocApiPageEntity, NgDocApiScopeEntity,
 	NgDocCategoryEntity,

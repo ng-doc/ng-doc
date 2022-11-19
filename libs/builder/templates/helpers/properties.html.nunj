@@ -1,0 +1,22 @@
+{% import "helpers/type.html.nunj" as typeMacro %}
+
+{% macro render(properties) %}
+<table>
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		{%- for property in properties %}
+		<tr>
+			<td>{{ property.getName() }}</td>
+			<td>{{ typeMacro.render(property.getType()) }}</td>
+			<td>{{ property | extractDocs }}</td>
+		</tr>
+		{%- endfor %}
+	</tbody>
+</table>
+{% endmacro %}
