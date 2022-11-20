@@ -111,7 +111,6 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 			});
 
 			return renderer.render('api-page.html.nunj').pipe(
-				map((markdown: string) => marked(markdown)),
 				map((output: string) => ({output, filePath: this.builtPagePath})),
 				catchError((error: unknown) => {
 					this.logger.error(

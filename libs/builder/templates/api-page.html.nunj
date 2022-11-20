@@ -1,4 +1,4 @@
-{% import "api/class.md.nunj" as class %}
+{% import "api/class.html.nunj" as class %}
 
 {% if Node.isClassDeclaration(declaration) -%}
 {{ class.render(declaration) }}

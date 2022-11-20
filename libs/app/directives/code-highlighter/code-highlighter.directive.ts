@@ -1,4 +1,5 @@
-import {Directive, ElementRef, Input, OnChanges} from '@angular/core';
+import {Directive, ElementRef, HostBinding, Input, OnChanges} from '@angular/core';
+import {SafeHtml} from '@angular/platform-browser';
 import highlight, {AutoHighlightResult} from 'highlight.js';
 import bash from 'highlight.js/lib/languages/bash';
 import css from 'highlight.js/lib/languages/css';
@@ -25,6 +26,9 @@ export class NgDocCodeHighlighterDirective implements OnChanges {
 
 	@Input()
 	language: string = 'typescript';
+
+	@HostBinding('class.hljs')
+	protected highlightJsClass: boolean = true;
 
 	constructor(private readonly elementRef: ElementRef<HTMLElement>) {}
 

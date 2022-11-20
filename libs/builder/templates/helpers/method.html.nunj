@@ -1,12 +1,13 @@
 {% import "helpers/code.html.nunj" as codeMacro %}
 {% import "helpers/type.html.nunj" as typeMacro %}
+{% import "helpers/declaration-tags.html.nunj" as tagsMacro %}
 
 {% macro render(method) %}
 	{% set parameters = method.getParameters()  %}
 <table>
 	<thead>
 		<tr>
-			<th><h3>{{ method.getName() }}</h3></th>
+			<th><h3>{{ method.getName() }} {{ tagsMacro.render(method) }}</h3></th>
 		</tr>
 	</thead>
 	<tbody>

@@ -1,0 +1,8 @@
+{% import "helpers/tag.html.nunj" as tagMacro %}
+
+{%- macro render(declaration) -%}
+{{ tagMacro.render("abstract") if declaration.isAbstract and declaration.isAbstract() }}
+{{ tagMacro.render("static") if declaration.isStatic and declaration.isStatic() }}
+{{ tagMacro.render("async") if declaration.isAsync and declaration.isAsync() }}
+{{ tagMacro.render("readonly") if declaration.isReadonly and declaration.isReadonly() }}
+{%- endmacro -%}

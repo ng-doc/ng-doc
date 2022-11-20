@@ -1,4 +1,5 @@
 {% import "helpers/type.html.nunj" as typeMacro %}
+{% import "helpers/declaration-tags.html.nunj" as tagsMacro %}
 
 {% macro render(properties) %}
 <table>
@@ -12,7 +13,7 @@
 	<tbody>
 		{%- for property in properties %}
 		<tr>
-			<td>{{ property.getName() }}</td>
+			<td>{{ tagsMacro.render(property) }} {{ property.getName() }}</td>
 			<td>{{ typeMacro.render(property.getType()) }}</td>
 			<td>{{ property | extractDocs }}</td>
 		</tr>

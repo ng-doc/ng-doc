@@ -11,6 +11,7 @@ import {asArray} from '@ng-doc/core';
 import {JSDoc, JSDocableNode} from 'ts-morph';
 
 import {TsDocFormatter} from '../engine/ts-doc-formatter';
+import {marked} from './marked';
 
 /**
  *
@@ -21,14 +22,15 @@ import {TsDocFormatter} from '../engine/ts-doc-formatter';
 export function extractDocs(node: JSDocableNode, customTag?: string): string {
 	const jsDocs: JSDoc[] = asArray(node.getJsDocs()[0]);
 	const parser: TSDocParser = new TSDocParser(getTsDocConfiguration());
-
-	return jsDocs.map((doc: JSDoc) => {
+	const docs: string = jsDocs.map((doc: JSDoc) => {
 		const context: ParserContext = parser.parseString(doc.getText());
 
 		return customTag
 			? TsDocFormatter.renderDocNodes(context.docComment.customBlocks.filter((block: DocBlock) => block.blockTag.tagName === customTag))
 			: TsDocFormatter.renderDocNode(context.docComment.summarySection);
 	}).join('');
+
+	return marked(docs);
 }
 
 /**

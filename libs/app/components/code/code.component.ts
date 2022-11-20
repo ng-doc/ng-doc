@@ -29,3 +29,4 @@ export class NgDocCodeComponent {
 		this.notifyService.notify('Copied!');
 	}
 }
+

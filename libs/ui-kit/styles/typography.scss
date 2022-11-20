@@ -40,10 +40,22 @@ h4,
 h5,
 h6 {
 	font-family: inherit;
-	margin-top: 0;
-	margin-bottom: 0;
+	margin: 0;
 	line-height: 1.5rem;
 	font-weight: 600;
+}
+
+article {
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		&:not(:first-child) {
+			margin-top: calc(var(--ng-doc-base-gutter) * 5);
+		}
+	}
 }
 
 h1 {
@@ -92,6 +104,19 @@ code {
 	margin-top: 0;
 }
 
+.ng-doc-tag {
+	font-size: 14px;
+	padding: calc(var(--ng-doc-base-gutter) / 2) var(--ng-doc-base-gutter);
+	border-radius: var(--ng-doc-base-gutter);
+	background-color: var(--ng-doc-deep-orange-100);
+	color: var(--ng-doc-white);
+	vertical-align: middle;
+
+	&[data-content="abstract"] {
+
+	}
+}
+
 table {
 	width: 100%;
 	border-spacing: 0;
@@ -101,9 +126,9 @@ table {
 	thead {
 		tr {
 			th {
-				padding: var(--ng-doc-base-gutter) 0;
+				padding: var(--ng-doc-base-gutter);
 				background-color: var(--ng-doc-base-1);
-				color: var(--ng-doc-text-muted);
+				//color: var(--ng-doc-text-muted);
 				text-align: left;
 
 
@@ -121,7 +146,7 @@ table {
 	tbody {
 		tr {
 			td {
-				padding: var(--ng-doc-base-gutter) 0;
+				padding: var(--ng-doc-base-gutter);
 
 				&:first-child {
 					padding-left: calc(var(--ng-doc-base-gutter) * 4);

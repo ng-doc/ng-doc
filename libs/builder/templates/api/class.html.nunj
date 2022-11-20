@@ -1,0 +1,55 @@
+{% import "helpers/methods.html.nunj" as methodsMacro %}
+{% import "helpers/properties.html.nunj" as propertiesMacro %}
+{% import "helpers/declaration-tags.html.nunj" as tagsMacro %}
+{% import "helpers/type.html.nunj" as typeMacro %}
+
+{% macro render(declaration) %}
+	{%- set description = declaration | extractDocs -%}
+	{%- set usageNotes = declaration | extractDocs('@usageNotes') -%}
+	{%- set extends = declaration.getExtends() -%}
+	{%- set implements = declaration.getImplements() -%}
+	{%- set staticProperties = declaration.getProperties() | filterByStatic(true) | filterByScope("public") -%}
+	{%- set staticMethods = declaration.getMethods() | filterByStatic(true) | filterByScope("public") -%}
+	{%- set properties = declaration.getProperties() | filterByStatic(false) | filterByScope("public") -%}
+	{%- set methods = declaration.getMethods() | filterByStatic(false) | filterByScope("public") -%}
+
+	<h1>{{ declaration.getName() }} {{ tagsMacro.render(declaration) }}</h1>
+	{% if extends %}
+		<div class="ng-doc-details">Extends {{ typeMacro.render(extends.getType()) }}</div>
+	{%- endif %}
+	{% if implements.length %}
+		<div class="ng-doc-details">
+			Implements
+			{%- for i in implements -%}
+			{{ typeMacro.render(i.getType()) }}{{ ', ' if not loop.last }}
+			{%- endfor %}
+		</div>
+	{%- endif %}
+
+	{{ description if description else 'No documentation has been provided.' }}
+
+	{% if staticProperties.length -%}
+		<h2>Static Properties</h2>
+		{{ propertiesMacro.render(staticProperties)}}
+	{%- endif %}
+
+	{% if properties.length -%}
+		<h2>Properties</h2>
+		{{ propertiesMacro.render(properties)}}
+	{%- endif %}
+
+	{% if staticMethods.length -%}
+		<h2>Static Methods</h2>
+		{{ methodsMacro.render(staticMethods)}}
+	{%- endif %}
+
+	{% if methods.length -%}
+		<h2>Methods</h2>
+		{{ methodsMacro.render(methods)}}
+	{%- endif %}
+
+	{% if usageNotes -%}
+		<h2>Usage Notes</h2>
+		{{ usageNotes}}
+	{%- endif %}
+{% endmacro %}
