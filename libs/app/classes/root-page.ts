@@ -1,4 +1,4 @@
-import {Type} from '@angular/core';
+import {Directive, Type} from '@angular/core';
 import {NgDocDemoAssets} from '@ng-doc/app/interfaces';
 import {NgDocPlayground} from '@ng-doc/builder';
 import {ClassDeclaration} from 'ng-morph';
@@ -15,11 +15,20 @@ export class MyClass1{
 
 }
 
+/**
+ * Docs for interface
+ *
+ * @usageNotes
+ *
+ * This is usage notes
+ */
 export interface MyInterface1 {
  val1?: string;
+ func?: () => void;
+ func2(): void;
 }
 
-export interface MyInterface2 {
+export interface MyInterface2 extends MyInterface1 {
 	val2?: string;
 }
 
@@ -28,8 +37,8 @@ export interface MyInterface2 {
  * asdpaoisa psd aii apso iaiidpqowie q psad paisdp as as aps
  * apsod iaps oi i apsoipqoiepqow poi `MyListComponent`
  */
+@Directive()
 export abstract class MyClass2 extends MyClass1 implements MyInterface1 {
-	val1: string | undefined;
 	/**
 	 * Some really ling text that you can tead o assdkorwp poiqpwoie dpsfi aposdi pai dasdaos iapsod
 	 * asdpaoisa psd aii apso iaiidpqowie q psad paisdp as as aps
@@ -42,12 +51,15 @@ export abstract class MyClass2 extends MyClass1 implements MyInterface1 {
 	 * apsod iaps oi i apsoipqoiepqow poi
 	 */
 	abstract property: string;
+	val1: string | undefined;
 	/**
 	 * Some really ling text that you can tead o assdkorwp poiqpwoie dpsfi aposdi pai dasdaos iapsod
 	 * asdpaoisa psd aii apso iaiidpqowie q psad paisdp as as aps
 	 * apsod iaps oi i apsoipqoiepqow poi
 	 */
 	property2: string = 'default value';
+
+	abstract readonly property3: string;
 
 	/**
 	 * Some really ling text that you can tead o assdkorwp poiqpwoie dpsfi aposdi pai dasdaos iapsod
@@ -71,7 +83,6 @@ export abstract class MyClass2 extends MyClass1 implements MyInterface1 {
 		return value;
 	}
 
-
 	/**
 	 * Some really ling text that you can tead o assdkorwp poiqpwoie dpsfi aposdi pai dasdaos iapsod
 	 * asdpaoisa psd aii apso iaiidpqowie q psad paisdp as as aps
@@ -80,4 +91,8 @@ export abstract class MyClass2 extends MyClass1 implements MyInterface1 {
 	 * @param value Some really ling text that you can tead o assdkorwp poiqpwoie dpsfi aposdi pai dasdaos iapsod
 	 */
 	abstract method3(value: string): string;
+
+	func(): void {}
+
+	func2() {}
 }

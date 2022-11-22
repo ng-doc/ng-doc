@@ -1,0 +1,17 @@
+{% import "helpers/tag.html.nunj" as tagMacro %}
+{% set selectors = declaration | extractSelectors %}
+
+{%- if scope %}
+	{{ tagMacro.render(scope.name, "ng-doc-tag-scope") }}
+{%- endif %}
+
+{%- if declaration.getDecorators %}
+	{% for decorator in declaration.getDecorators() %}
+		{{ tagMacro.render('@' + decorator.getName(), decorator.getName()) }}
+	{%- endfor %}
+{%- endif %}
+
+
+{% for selector in selectors %}
+	{{ tagMacro.render(selector, "ng-doc-tag-selector") }}
+{%- endfor %}

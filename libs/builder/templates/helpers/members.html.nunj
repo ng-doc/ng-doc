@@ -1,0 +1,20 @@
+{% macro render(members) %}
+	<table>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Value</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for member in members %}
+				<tr>
+					<td>{{ member.getName() }} </td>
+					<td><code>{{ member.getValue() | dump }}</code></td>
+					<td>{{ member | extractDocs }} </td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endmacro %}

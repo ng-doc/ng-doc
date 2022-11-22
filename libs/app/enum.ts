@@ -1,6 +1,12 @@
-/*
-asa;lskda;lk ;lka;sldka
+/**
+ * This is docs
+ *
+ * @usageNotes
+ *
+ * Uasdasdasd
  */
+import {ClassDeclaration} from 'ng-morph';
+
 export enum MyEnum {
 	/**
 	 * Key 1

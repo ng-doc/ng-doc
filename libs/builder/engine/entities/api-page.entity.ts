@@ -1,11 +1,10 @@
-import {Standardization, TSDocParser, TSDocTagDefinition, TSDocTagSyntaxKind} from '@microsoft/tsdoc';
 import {isPresent} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {Node, SourceFile} from 'ts-morph';
+import {ClassDeclaration, InterfaceDeclaration, SourceFile} from 'ts-morph';
 
-import {declarationFolderName, marked, slash, uniqueName} from '../../helpers';
+import {declarationFolderName, slash, uniqueName} from '../../helpers';
 import {isSupportedDeclaration} from '../../helpers/is-supported-declaration';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocApiPageEnv} from '../../templates-env/api-page.env';

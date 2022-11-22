@@ -2,6 +2,7 @@ import * as chokidar from 'chokidar';
 import minimatch from 'minimatch';
 import {Observable, Subject} from 'rxjs';
 import {filter} from 'rxjs/operators';
+import {EnumDeclaration} from 'ts-morph';
 
 export class NgDocWatcher {
 	private readonly watcher: chokidar.FSWatcher;

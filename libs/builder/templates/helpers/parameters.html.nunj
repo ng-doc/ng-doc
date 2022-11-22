@@ -1,0 +1,22 @@
+{% import "helpers/type.html.nunj" as typeMacro %}
+
+{% macro render(parameters, origin) %}
+	<table>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Type</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+		{%- for param in parameters %}
+			<tr>
+				<td>{{ param.getName() }}</td>
+				<td>{{ typeMacro.render(param.getType()) }}</td>
+				<td>{{ origin | extractParameterDocs(param.getName()) }}</td>
+			</tr>
+		{%- endfor %}
+		</tbody>
+	</table>
+{% endmacro %}

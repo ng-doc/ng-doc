@@ -1,0 +1,21 @@
+{% import "helpers/declaration-tags.html.nunj" as tagsMacro %}
+
+{% include "parts/page-tags.html.nunj" %}
+<header>
+	<h1>{{ declaration.getName() }}</h1>
+	{{ tagsMacro.render(declaration) }}
+</header>
+
+{% block details %}{% endblock %}
+
+<section>
+	{% set description = docNode | extractDocs %}
+
+	{{ description if description else 'No documentation has been provided.' }}
+</section>
+
+
+{% block overview %}{% endblock %}
+
+
+{% include "parts/usage-notes.html.nunj" %}

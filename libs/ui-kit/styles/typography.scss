@@ -45,19 +45,6 @@ h6 {
 	font-weight: 600;
 }
 
-article {
-	h1,
-	h2,
-	h3,
-	h4,
-	h5,
-	h6 {
-		&:not(:first-child) {
-			margin-top: calc(var(--ng-doc-base-gutter) * 5);
-		}
-	}
-}
-
 h1 {
 	font-size: calc(var(--ng-doc-base-gutter) * 6);
 	line-height: calc(var(--ng-doc-base-gutter) * 9);
@@ -102,19 +89,6 @@ code {
 
 .hug {
 	margin-top: 0;
-}
-
-.ng-doc-tag {
-	font-size: 14px;
-	padding: calc(var(--ng-doc-base-gutter) / 2) var(--ng-doc-base-gutter);
-	border-radius: var(--ng-doc-base-gutter);
-	background-color: var(--ng-doc-deep-orange-100);
-	color: var(--ng-doc-white);
-	vertical-align: middle;
-
-	&[data-content="abstract"] {
-
-	}
 }
 
 table {

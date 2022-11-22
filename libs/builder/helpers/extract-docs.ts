@@ -4,7 +4,7 @@ import {
 	TSDocConfiguration,
 	TSDocParser,
 	TSDocTagDefinition,
-	TSDocTagSyntaxKind
+	TSDocTagSyntaxKind,
 } from '@microsoft/tsdoc';
 import {ParserContext} from '@microsoft/tsdoc/lib/parser/ParserContext';
 import {asArray} from '@ng-doc/core';
@@ -41,13 +41,14 @@ export function extractDocs(node: JSDocableNode, customTag?: string): string {
 export function extractParameterDocs(node: JSDocableNode, paramName: string): string {
 	const jsDocs: JSDoc[] = asArray(node.getJsDocs()[0]);
 	const parser: TSDocParser = new TSDocParser(getTsDocConfiguration());
-
-	return jsDocs.map((doc: JSDoc) => {
+	const docs: string = jsDocs.map((doc: JSDoc) => {
 		const context: ParserContext = parser.parseString(doc.getText());
 		const paramBlock: DocParamBlock | undefined = context.docComment.params.tryGetBlockByName(paramName);
 
 		return paramBlock ? TsDocFormatter.renderDocNode(paramBlock.content) : '';
 	}).join('');
+
+	return marked(docs);
 }
 
 /**
