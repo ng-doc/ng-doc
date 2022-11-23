@@ -162,7 +162,7 @@ export abstract class NgDocEntity {
 		return artifacts
 			.map((artifact: NgDocBuiltOutput) => {
 				if (minimatch(artifact.filePath, `**/*.html`)) {
-					return htmlPostProcessor(artifact)
+					return htmlPostProcessor(this, artifact)
 				}
 
 				return artifact;

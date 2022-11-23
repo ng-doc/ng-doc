@@ -18,17 +18,18 @@ const hasClass: any = (node: any, cls: any) => {
 /**
  *
  * @param options
+ * @param parentRoute
  */
-export default function autolinkHeading(): any {
+export default function autolinkHeading(parentRoute?: string): any {
 	return (tree: any) => visit(tree, (node: any) => {
-		if (is(node, HEADINGS) && node.properties.id && !hasClass(node, NO_ANCHOR_CLASS)) {
+		if (parentRoute && is(node, HEADINGS) && node.properties.id && !hasClass(node, NO_ANCHOR_CLASS)) {
 			node.children.push({
 				type: 'element',
 				tagName: 'a',
 				properties: {
 					title: 'Link to heading',
 					className: ['ng-doc-header-link'],
-					href: `#${node.properties.id}`
+					href: `${parentRoute}#${node.properties.id}`
 				},
 				children: [{
 					type: 'element',
