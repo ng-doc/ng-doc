@@ -35,7 +35,7 @@ export default function autolinkHeading(): any {
 					tagName: 'ng-doc-icon',
 					properties: {
 						icon: "link-2",
-						size: 24,
+						size: 16,
 					},
 				}]
 			});

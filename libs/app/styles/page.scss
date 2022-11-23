@@ -9,7 +9,7 @@ article {
 		margin-bottom: calc(var(--ng-doc-base-gutter) * 5);
 
 		@include headings {
-			argin: calc(var(--ng-doc-base-gutter) * 3) 0;
+			//margin: calc(var(--ng-doc-base-gutter) * 3) 0;
 		}
 	}
 
@@ -88,5 +88,11 @@ article {
 			background-color: var(--ng-doc-teal-40);
 			color: var(--ng-doc-teal-170);
 		}
+	}
+
+	.ng-doc-header-link {
+		display: inline-flex;
+		margin-left: var(--ng-doc-base-gutter);
+		vertical-align: middle;
 	}
 }
