@@ -1,12 +1,12 @@
 import {logging} from '@angular-devkit/core';
-import {NgDocBuilder} from '@ng-doc/builder';
-import * as path from 'path';
+import minimatch from 'minimatch';
 import {Observable, Subject} from 'rxjs';
-import {take, tap} from 'rxjs/operators';
-import {Node, ObjectLiteralExpression, SourceFile, Symbol, SyntaxKind} from 'ts-morph';
+import {map, take, tap} from 'rxjs/operators';
 
 import {ObservableSet} from '../../../classes';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../../interfaces';
+import { NgDocBuilder } from '../../builder';
+import {htmlPostProcessor} from '../../post-processors';
 
 /**
  * Base entity class that all entities should extend.
@@ -15,13 +15,13 @@ export abstract class NgDocEntity {
 	/**
 	 * The key by which the entity will be stored in the store
 	 */
-	readonly id: string = this.sourceFilePath;
+	abstract readonly id: string;
 
 	/** Indicates when entity was destroyed */
 	destroyed: boolean = false;
 
-	/** Indicates if the current entity can be build */
-	get canBeBuild(): boolean {
+	/** Indicates if the current entity can be built */
+	get canBeBuilt(): boolean {
 		return true;
 	}
 
@@ -41,16 +41,13 @@ export abstract class NgDocEntity {
 
 	constructor(
 		readonly builder: NgDocBuilder,
-		readonly sourceFile: SourceFile,
 		readonly context: NgDocBuilderContext,
 	) {}
 
 	/**
 	 * Files that are watched for changes to rebuild entity or remove it
 	 */
-	get rootFiles(): string[] {
-		return [this.sourceFilePath];
-	}
+	abstract readonly rootFiles: string[];
 
 	/**
 	 * Indicates when it's root entity and should be used for rooted components.
@@ -66,19 +63,6 @@ export abstract class NgDocEntity {
 	 * Should return the list of the dependencies that have to be built if current entity was changed.
 	 */
 	abstract readonly buildCandidates: NgDocEntity[];
-
-	get sourceFilePath(): string {
-		return path.relative(this.context.context.workspaceRoot, this.sourceFile.getFilePath());
-	}
-
-	/**
-	 * Returns relative path to a sourceFileFolder of the source file
-	 *
-	 * @type {string}
-	 */
-	get sourceFileFolder(): string {
-		return path.relative(this.context.context.workspaceRoot, path.dirname(this.sourceFilePath));
-	}
 
 	/**
 	 * Recursively returns parents for the current entity
@@ -122,7 +106,7 @@ export abstract class NgDocEntity {
 	 * @type {boolean}
 	 */
 	get isReadyToBuild(): boolean {
-		return this.readyToBuild && !this.destroyed && this.canBeBuild;
+		return this.readyToBuild && !this.destroyed && this.canBeBuilt;
 	}
 
 	get logger(): logging.LoggerApi {
@@ -144,18 +128,19 @@ export abstract class NgDocEntity {
 	abstract update(): Observable<void>;
 
 	buildArtifacts(): Observable<NgDocBuiltOutput[]> {
-		return this.build().pipe(tap((artifacts: NgDocBuiltOutput[]) => (this.artifacts = artifacts)));
+		return this.build()
+			.pipe(
+				map((output: NgDocBuiltOutput[]) => this.processArtifacts(output)),
+				tap((artifacts: NgDocBuiltOutput[]) => (this.artifacts = artifacts))
+			);
 	}
 
 	emit(): void {
-		if (!this.destroyed) {
-			this.sourceFile.refreshFromFileSystemSync();
-			this.sourceFile.emitSync();
-		}
+		// No implementation
 	}
 
 	removeArtifacts(): void {
-
+		// No implementation
 	}
 
 	/**
@@ -173,16 +158,14 @@ export abstract class NgDocEntity {
 		return this.destroy$.asObservable().pipe(take(1))
 	}
 
-	/**
-	 * Returns object expression from default export in the current sourceFile
-	 *
-	 * @type {ObjectLiteralExpression | undefined}
-	 */
-	protected getObjectExpressionFromDefault(): ObjectLiteralExpression | undefined {
-		const defaultExport: Symbol | undefined = this.sourceFile.getDefaultExportSymbol();
-		const exportAlias: Symbol | undefined = defaultExport?.getAliasedSymbol();
-		const valueDeclaration: Node | undefined = exportAlias?.getValueDeclarationOrThrow();
+	private processArtifacts(artifacts: NgDocBuiltOutput[]): NgDocBuiltOutput[] {
+		return artifacts
+			.map((artifact: NgDocBuiltOutput) => {
+				if (minimatch(artifact.filePath, `**/*.html`)) {
+					return htmlPostProcessor(artifact)
+				}
 
-		return valueDeclaration?.getFirstChildByKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+				return artifact;
+			})
 	}
 }

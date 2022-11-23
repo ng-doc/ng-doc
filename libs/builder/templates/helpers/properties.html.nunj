@@ -13,7 +13,7 @@
 	<tbody>
 		{%- for property in properties %}
 		<tr>
-			<td>{{ tagsMacro.render(property) }} {{ property.getName() }}</td>
+			<td>{{ property.getName() }}{{ tagsMacro.render(property) }}</td>
 			<td>{{ typeMacro.render(property.getType()) }}</td>
 			<td>{{ property | extractDocs }}</td>
 		</tr>

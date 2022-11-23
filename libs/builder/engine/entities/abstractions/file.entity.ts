@@ -8,11 +8,12 @@ import {isCategoryEntity} from '../../../helpers';
 import {CACHE_PATH, CATEGORY_PATTERN} from '../../variables';
 import {NgDocCategoryEntity} from '../category.entity';
 import {NgDocEntity} from './entity';
+import {NgDocSourceFileEntity} from './source-file.entity';
 
 /**
  * Entity for file end points that generate modules and components.
  */
-export abstract class NgDocFileEntity<T> extends NgDocEntity {
+export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 	/**
 	 * Entity target.
 	 */

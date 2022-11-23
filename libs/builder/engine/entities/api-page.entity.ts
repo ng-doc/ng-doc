@@ -99,7 +99,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 
 		return renderer
 			.render('api-page.module.ts.nunj')
-			.pipe(map((output: string) => ({output, filePath: this.modulePath})));
+			.pipe(map((output: string) => ({creator: this, content: output, filePath: this.modulePath})));
 	}
 
 	private buildPage(): Observable<NgDocBuiltOutput | null> {
@@ -110,7 +110,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 			});
 
 			return renderer.render('api-page.html.nunj').pipe(
-				map((output: string) => ({output, filePath: this.builtPagePath})),
+				map((output: string) => ({creator: this, content: output, filePath: this.builtPagePath})),
 				catchError((error: unknown) => {
 					this.logger.error(
 						`\nError happened while processing Api Page for entity "${this.declaration

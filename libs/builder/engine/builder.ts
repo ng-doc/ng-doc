@@ -17,12 +17,8 @@ import {
 import {Project} from 'ts-morph';
 
 import {createProject, emitBuiltOutput, generateApiEntities} from '../helpers';
-import {buildGlobalIndexes} from '../helpers/build-global-indexes';
-import {generateKeywordsDictionary} from '../helpers/generate-keywords-dictionary';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
 import {bufferDebounce} from '../operators';
-import {NgDocContextEnv, NgDocRoutingEnv} from '../templates-env';
-import {NgDocKeywordsDictionaryEnv} from '../templates-env/keywords-dictionary.env';
 import {Constructable} from '../types';
 import {
 	NgDocApiEntity,
@@ -30,17 +26,15 @@ import {
 	NgDocDependenciesEntity,
 	NgDocPageEntity,
 	NgDocPlaygroundEntity,
+	NgDocSkeletonEntity,
 } from './entities';
 import {NgDocEntity} from './entities/abstractions/entity';
 import {NgDocEntityStore} from './entity-store';
 import {buildCandidates} from './functions/build-candidates';
-import {NgDocRenderer} from './renderer';
 import {
 	API_PATTERN,
 	CACHE_PATH,
 	CATEGORY_PATTERN,
-	GENERATED_ASSETS_PATH,
-	GENERATED_PATH,
 	PAGE_DEPENDENCY_PATTERN,
 	PAGE_PATTERN,
 	PLAYGROUND_PATTERN,
@@ -49,6 +43,7 @@ import {NgDocWatcher} from './watcher';
 
 export class NgDocBuilder {
 	readonly entities: NgDocEntityStore = new NgDocEntityStore();
+	readonly skeleton: NgDocSkeletonEntity = new NgDocSkeletonEntity(this, this.context);
 	private readonly project: Project;
 	private readonly watcher: NgDocWatcher;
 	private readonly touchEntity: Subject<NgDocEntity> = new Subject<NgDocEntity>();
@@ -177,6 +172,8 @@ export class NgDocBuilder {
 				),
 			),
 			bufferDebounce(100),
+			// Adding skeleton entity, because it contains skeleton file for the project that should be rebuilt
+			map((entities: NgDocEntity[]) => [...entities, this.skeleton]),
 			// Build touched entities and their dependencies
 			mergeMap((entities: NgDocEntity[]) =>
 				forkJoin(
@@ -185,21 +182,13 @@ export class NgDocBuilder {
 							? of([])
 							: forkJoin(buildCandidates(entity).map((e: NgDocEntity) => e.buildArtifacts())),
 					),
-				).pipe(map((output: NgDocBuiltOutput[][][]) => output.flat(2))),
-			),
-			concatMap((output: NgDocBuiltOutput[]) =>
-				// Build Context, Routes and indexes
-				forkJoin([this.buildContext(), this.buildRoutes(), this.buildKeywordsDictionary()]).pipe(
-					switchMap((contextAndRoutesAndDictionary: NgDocBuiltOutput[]) =>
-						this.buildIndexes().pipe(
-							tap((indexes: NgDocBuiltOutput[]) => {
-								// TODO: ADD CACHE
-								emitBuiltOutput(...[...output.flat(), ...contextAndRoutesAndDictionary, ...indexes]);
-								this.collectGarbage();
-							}),
-							tap(() => console.timeEnd('Build documentation')),
-						),
-					),
+				).pipe(
+					map((output: NgDocBuiltOutput[][][]) => output.flat(2)),
+					tap((output: NgDocBuiltOutput[]) => {
+						emitBuiltOutput(...output);
+						this.collectGarbage();
+						console.timeEnd('Build documentation')
+					})
 				),
 			),
 			mapTo(void 0),
@@ -222,56 +211,5 @@ export class NgDocBuilder {
 				this.entities.delete(entity.id);
 			}
 		});
-	}
-
-	private buildRoutes(): Observable<NgDocBuiltOutput> {
-		const entities: NgDocEntity[] = this.rootEntitiesForBuild;
-		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocRoutingEnv>(this, {entities});
-
-		return renderer
-			.render('routing.ts.nunj')
-			.pipe(map((output: string) => ({output, filePath: path.join(GENERATED_PATH, 'ng-doc.routing.ts')})));
-	}
-
-	private buildContext(): Observable<NgDocBuiltOutput> {
-		const entities: NgDocEntity[] = this.rootEntitiesForBuild;
-		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocContextEnv>(this, {entities});
-
-		return renderer
-			.render('context.ts.nunj')
-			.pipe(map((output: string) => ({output, filePath: path.join(GENERATED_PATH, 'ng-doc.context.ts')})));
-	}
-
-	private buildKeywordsDictionary(): Observable<NgDocBuiltOutput> {
-		const renderer: NgDocRenderer<NgDocKeywordsDictionaryEnv> = new NgDocRenderer<NgDocKeywordsDictionaryEnv>(
-			this,
-			{dictionary: generateKeywordsDictionary(this.entities.asArray())},
-		);
-
-		return renderer.render('keywords-dictionary.ts.nunj').pipe(
-			map((output: string) => ({
-				output,
-				filePath: path.join(GENERATED_PATH, 'ng-doc.keywords-dictionary.ts'),
-			})),
-		);
-	}
-
-	private buildIndexes(): Observable<NgDocBuiltOutput[]> {
-		const [dictionary, indexes] = buildGlobalIndexes(this.entities.asArray());
-
-		return of([
-			{
-				output: dictionary,
-				filePath: path.join(GENERATED_ASSETS_PATH, 'pages.json'),
-			},
-			{
-				output: indexes,
-				filePath: path.join(GENERATED_ASSETS_PATH, 'indexes.json'),
-			},
-		]);
-	}
-
-	get rootEntitiesForBuild(): NgDocEntity[] {
-		return asArray(this.entities.values()).filter((entity: NgDocEntity) => entity.isRoot && entity.isReadyToBuild);
 	}
 }

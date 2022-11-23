@@ -6,14 +6,14 @@ import {
 	HostBinding,
 	Inject,
 	Input,
-	OnChanges,
+	OnChanges, OnInit,
 	Optional,
 } from '@angular/core';
 import {NgDocCacheInterceptor} from '@ng-doc/ui-kit/interceptors';
 import {NG_DOC_ASSETS_PATH} from '@ng-doc/ui-kit/tokens';
 import {NgDocIconSize} from '@ng-doc/ui-kit/types';
 import {Subject} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
+import {filter, startWith, switchMap} from 'rxjs/operators';
 
 @Component({
 	selector: 'ng-doc-icon',
@@ -21,7 +21,7 @@ import {switchMap} from 'rxjs/operators';
 	styleUrls: ['./icon.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocIconComponent implements OnChanges {
+export class NgDocIconComponent implements OnChanges, OnInit {
 	/** Icon name */
 	@Input()
 	@HostBinding('attr.data-ng-doc-icon')
@@ -38,9 +38,17 @@ export class NgDocIconComponent implements OnChanges {
 		private readonly elementRef: ElementRef<HTMLElement>,
 		private readonly httpClient: HttpClient,
 		@Inject(NG_DOC_ASSETS_PATH) @Optional() private assetsPath: string,
-	) {
+	) {}
+
+	ngOnChanges(): void {
+		this.reload$.next();
+	}
+
+	ngOnInit(): void {
 		this.reload$
 			.pipe(
+				startWith(null),
+				filter(() => !!this.icon),
 				switchMap(() =>
 					this.httpClient.get(this.href, {
 						responseType: 'text',
@@ -49,10 +57,6 @@ export class NgDocIconComponent implements OnChanges {
 				),
 			)
 			.subscribe((svg: string) => (this.elementRef.nativeElement.innerHTML = svg));
-	}
-
-	ngOnChanges(): void {
-		this.reload$.next();
 	}
 
 	get href(): string {

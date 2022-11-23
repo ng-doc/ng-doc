@@ -5,11 +5,10 @@ import {
 	NgDocBlockquoteProcessorModule,
 	NgDocCodeProcessorModule,
 	NgDocDeclarationTagProcessorModule,
-	NgDocDemoProcessorModule,
+	NgDocDemoProcessorModule, NgDocIconProcessorModule,
 	NgDocLinkProcessorModule,
 	NgDocPlaygroundProcessorModule,
 	NgDocTagProcessorModule,
-	NgDocTitleProcessorModule,
 } from '@ng-doc/app/processors';
 
 import {NgDocPageComponent} from './page.component';
@@ -19,7 +18,6 @@ import {NgDocPageComponent} from './page.component';
 	imports: [
 		CommonModule,
 		NgDocDemoProcessorModule,
-		NgDocTitleProcessorModule,
 		NgDocCodeProcessorModule,
 		NgDocTagProcessorModule,
 		NgDocPlaygroundProcessorModule,
@@ -27,6 +25,7 @@ import {NgDocPageComponent} from './page.component';
 		NgDocBlockquoteProcessorModule,
 		NgDocLinkProcessorModule,
 		NgDocSanitizeHtmlModule,
+		NgDocIconProcessorModule,
 	],
 	exports: [NgDocPageComponent],
 })

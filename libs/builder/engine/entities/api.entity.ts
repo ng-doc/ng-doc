@@ -91,7 +91,7 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 
 			return renderer
 				.render('api.module.ts.nunj')
-				.pipe(map((output: string) => ({output, filePath: this.modulePath})));
+				.pipe(map((output: string) => ({creator: this, content: output, filePath: this.modulePath})));
 		}
 		return of();
 	}
@@ -107,7 +107,8 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		}));
 
 		return of({
-			output: JSON.stringify(apiItems),
+			creator: this,
+			content: JSON.stringify(apiItems),
 			filePath: path.join(this.folderPath, 'ng-doc.api-list.json'),
 		});
 	}

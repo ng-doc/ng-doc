@@ -19,11 +19,12 @@ import {NgDocComponentAssetsEnv} from '../../templates-env';
 import {NgDocRenderer} from '../renderer';
 import {PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
+import {NgDocSourceFileEntity} from './abstractions/source-file.entity';
 import {NgDocPageEntity} from './page.entity';
 
 type ComponentAsset = Record<string, NgDocAsset[]>;
 
-export class NgDocDependenciesEntity extends NgDocEntity {
+export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 	private componentsAssets: ComponentAsset = {};
 
 	override get isRoot(): boolean {
@@ -77,7 +78,8 @@ export class NgDocDependenciesEntity extends NgDocEntity {
 			map((output: NgDocBuiltOutput) => [
 				output,
 				...this.assets.map((asset: NgDocAsset) => ({
-					output: asset.output,
+					creator: this,
+					content: asset.output,
 					filePath: asset.outputPath,
 				})),
 			]),
@@ -111,7 +113,7 @@ export class NgDocDependenciesEntity extends NgDocEntity {
 
 		return renderer
 			.render('component-assets.ts.nunj')
-			.pipe(map((output: string) => ({output, filePath: this.componentAssetsPath})));
+			.pipe(map((output: string) => ({creator: this, content: output, filePath: this.componentAssetsPath})));
 	}
 
 	private getDemoClassDeclarations(objectExpression: ObjectLiteralExpression): ClassDeclaration[] {

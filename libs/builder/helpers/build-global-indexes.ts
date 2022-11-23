@@ -40,7 +40,7 @@ function buildIndexes<T extends NgDocRouteEntity<unknown>>(
 			const pageIndexes: NgDocPageIndex[] = entity.artifacts
 				.filter((artifact: NgDocBuiltOutput) => minimatch(artifact.filePath, '**/*.html'))
 				.map((artifact: NgDocBuiltOutput) => {
-					const nodes: Node[] = parser(artifact.output);
+					const nodes: Node[] = parser(artifact.content);
 
 					return extractIndexes(entity, nodes);
 				})
@@ -112,6 +112,10 @@ function extractIndexes<T extends NgDocRouteEntity<unknown>>(entity: T, nodes: N
 		}, []);
 }
 
+/**
+ *
+ * @param node
+ */
 function extractText(node: Node): string {
 	if (isNodeTag(node)) {
 		return asArray(node.content).flat().map((node: Node) => extractText(node)).join('\n')
@@ -131,10 +135,18 @@ function getTypeFromEntity(entity: NgDocEntity): NgDocPageType {
 	return 'guide';
 }
 
+/**
+ *
+ * @param node
+ */
 function isHeaderTag(node: NodeTag): boolean {
 	return ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(String(node.tag));
 }
 
+/**
+ *
+ * @param node
+ */
 function isParagraph(node: NodeTag): boolean {
 	return ['p'].includes(String(node.tag));
 }
