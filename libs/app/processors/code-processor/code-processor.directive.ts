@@ -11,14 +11,18 @@ export class NgDocCodeProcessorDirective extends NgDocHtmlProcessor<NgDocCodeCom
 		protected override readonly elementRef: ElementRef<HTMLElement>,
 		protected override readonly viewContainerRef: ViewContainerRef,
 	) {
-		super(elementRef, viewContainerRef, `ng-doc-code`, NgDocCodeComponent);
+		super(elementRef, viewContainerRef, `pre code`, NgDocCodeComponent);
+	}
+
+	protected override replaceElement(element: Element): Element {
+		return element.closest('pre') ?? element;
 	}
 
 	protected override extractComponentOptions(element: Element): NgDocProcessorOptions<NgDocCodeComponent> {
 		return {
 			inputs: {
-				code: element.textContent ?? '',
-				language: element.getAttribute('language') || 'html',
+				html: element.innerHTML ?? '',
+				language: element.getAttribute('lang') || 'html',
 				copyButton: element.getAttribute('copyButton') !== 'false',
 			},
 		};

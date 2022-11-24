@@ -95,4 +95,13 @@ article {
 		margin-left: var(--ng-doc-base-gutter);
 		vertical-align: middle;
 	}
+
+	.ng-doc-code-anchor {
+		text-decoration: none;
+		color: inherit;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
 }

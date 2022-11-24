@@ -28,8 +28,13 @@ export abstract class NgDocHtmlProcessor<T> implements OnInit {
 				Object.assign(componentRef.instance as object, options.inputs);
 
 				// replace element node with component node
-				elementNode.parentNode?.replaceChild(componentRef.location.nativeElement, elementNode);
+				const replaceElement: Element = this.replaceElement(elementNode);
+				replaceElement.parentNode?.replaceChild(componentRef.location.nativeElement, replaceElement);
 			})
+	}
+
+	protected replaceElement(element: Element): Element {
+		return element;
 	}
 
 	protected abstract extractComponentOptions(element: Element): NgDocProcessorOptions<T>;

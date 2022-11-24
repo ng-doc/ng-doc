@@ -7,7 +7,7 @@ const page: NgDocPage = {
 	mdFile: './index.md',
 	category: GettingStartedCategory,
 	order: 2,
-	keyword: 'MyPage'
+	keyword: 'MyPage',
 };
 
 export default page;

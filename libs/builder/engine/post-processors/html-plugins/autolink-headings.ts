@@ -1,11 +1,6 @@
 const is: any = require('hast-util-is-element');
-const visit: any = require('unist-util-visit');
+const visit: any = require('unist-util-visit-parents');
 
-/**
- * Get remark to add IDs to headings and inject anchors into them.
- * This is a stripped-down equivalent of [rehype-autolink-headings](https://github.com/wooorm/rehype-autolink-headings)
- * that supports ignoring headings with the `no-anchor` class.
- */
 const HEADINGS: string[] = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 const NO_ANCHOR_CLASS: string = 'no-anchor';
 
@@ -21,7 +16,7 @@ const hasClass: any = (node: any, cls: any) => {
  * @param parentRoute
  */
 export default function autolinkHeading(parentRoute?: string): any {
-	return (tree: any) => visit(tree, (node: any) => {
+	return (tree: any) => visit(tree, 'element', (node: any) => {
 		if (parentRoute && is(node, HEADINGS) && node.properties.id && !hasClass(node, NO_ANCHOR_CLASS)) {
 			node.children.push({
 				type: 'element',

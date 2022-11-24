@@ -3,7 +3,7 @@ import * as path from 'path';
 import {slash} from '../../../helpers';
 import {NgDocModuleEntity} from './module.entity';
 
-export abstract class NgDocRouteEntity<T> extends NgDocModuleEntity<T> {
+export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T> {
 	/**
 	 * The route for the current entity.
 	 */

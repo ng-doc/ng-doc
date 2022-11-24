@@ -1,5 +1,5 @@
 <pre>
-	<code [ngDocCodeHighlighter]="code" [language]="language"></code>
+	<code [ngDocCodeHighlighter]="code" [html]="html" [language]="language" #codeContainer></code>
 	<button class="ng-doc-copy-button" ng-doc-button-icon *ngIf="copyButton" (click)="copyCode()"
 			ngDocTooltip="Copy code">
 		<ng-doc-icon icon="copy"></ng-doc-icon>

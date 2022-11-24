@@ -12,7 +12,7 @@ const WARNING_ANCHOR: string = '<p><strong>Warning</strong>';
 export function marked(markdown: string): string {
 	const renderer: markedRender.RendererObject = {
 		code(code: string, language: string | undefined): string {
-			return `<ng-doc-code language="${language}">${escapeHtml(code)}</ng-doc-code>`;
+			return `<pre><code class="language-${language}" lang="${language}">${escapeHtml(code)}</code></pre>`;
 		},
 		blockquote(quote: string): string {
 			if (new RegExp(`^${NOTE_ANCHOR}`).test(quote)) {

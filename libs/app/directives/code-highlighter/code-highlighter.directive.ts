@@ -25,6 +25,9 @@ export class NgDocCodeHighlighterDirective implements OnChanges {
 	code: string = '';
 
 	@Input()
+	html: string = '';
+
+	@Input()
 	language: string = 'typescript';
 
 	@HostBinding('class.hljs')
@@ -33,8 +36,12 @@ export class NgDocCodeHighlighterDirective implements OnChanges {
 	constructor(private readonly elementRef: ElementRef<HTMLElement>) {}
 
 	ngOnChanges(): void {
-		const result: AutoHighlightResult = highlight.highlightAuto(this.code, [this.language]);
+		if (this.code) {
+			const result: AutoHighlightResult = highlight.highlightAuto(this.code, [this.language]);
 
-		this.elementRef.nativeElement.innerHTML = result.value;
+			this.elementRef.nativeElement.innerHTML = result.value ?? this.html;
+		} else {
+			this.elementRef.nativeElement.innerHTML = this.html;
+		}
 	}
 }

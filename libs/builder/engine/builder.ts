@@ -6,7 +6,7 @@ import {
 	concatMap,
 	map,
 	mapTo,
-	mergeMap,
+	mergeMap, retry,
 	startWith,
 	switchMap,
 	take,
@@ -46,7 +46,6 @@ export class NgDocBuilder {
 	readonly skeleton: NgDocSkeletonEntity = new NgDocSkeletonEntity(this, this.context);
 	private readonly project: Project;
 	private readonly watcher: NgDocWatcher;
-	private readonly touchEntity: Subject<NgDocEntity> = new Subject<NgDocEntity>();
 
 	constructor(private readonly context: NgDocBuilderContext) {
 		this.project = createProject({
@@ -173,7 +172,11 @@ export class NgDocBuilder {
 			),
 			bufferDebounce(100),
 			// Adding skeleton entity, because it contains skeleton file for the project that should be rebuilt
-			map((entities: NgDocEntity[]) => [...entities, this.skeleton]),
+			map((entities: NgDocEntity[]) => {
+				this.entities.updateKeywordMap();
+
+				return [...entities, this.skeleton];
+			}),
 			// Build touched entities and their dependencies
 			mergeMap((entities: NgDocEntity[]) =>
 				forkJoin(
