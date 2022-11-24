@@ -1,7 +1,7 @@
 import {logging} from '@angular-devkit/core';
 import minimatch from 'minimatch';
-import {Observable, Subject} from 'rxjs';
-import {map, take, tap} from 'rxjs/operators';
+import {EMPTY, Observable, Subject, throwError} from 'rxjs';
+import {catchError, map, take, tap} from 'rxjs/operators';
 
 import {ObservableSet} from '../../../classes';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../../interfaces';
@@ -131,7 +131,13 @@ export abstract class NgDocEntity {
 		return this.build()
 			.pipe(
 				map((output: NgDocBuiltOutput[]) => this.processArtifacts(output)),
-				tap((artifacts: NgDocBuiltOutput[]) => (this.artifacts = artifacts))
+				tap((artifacts: NgDocBuiltOutput[]) => (this.artifacts = artifacts)),
+				catchError((e: Error) => {
+					this.logger.error(`Error during processing "${this.id}"\n${e.message}\n${e.stack}`);
+					this.readyToBuild = false;
+
+					return EMPTY;
+				})
 			);
 	}
 

@@ -181,7 +181,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 				.render(this.target?.mdFile, {scope: this.sourceFileFolder})
 				.pipe(
 					map((markdown: string) => marked(markdown)),
-					map((output: string) => ({creator: this, content: output, filePath: this.builtPagePath}))
+					map((output: string) => ({content: output, filePath: this.builtPagePath}))
 				);
 		}
 		return of();

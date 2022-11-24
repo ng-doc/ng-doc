@@ -1,4 +1,4 @@
-import {isPresent} from '@ng-doc/core';
+import {asArray, isPresent} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
@@ -99,7 +99,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 
 		return renderer
 			.render('api-page.module.ts.nunj')
-			.pipe(map((output: string) => ({creator: this, content: output, filePath: this.modulePath})));
+			.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
 	}
 
 	private buildPage(): Observable<NgDocBuiltOutput | null> {
@@ -110,7 +110,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 			});
 
 			return renderer.render('api-page.html.nunj').pipe(
-				map((output: string) => ({creator: this, content: output, filePath: this.builtPagePath})),
+				map((output: string) => ({content: output, filePath: this.builtPagePath})),
 				catchError((error: unknown) => {
 					this.logger.error(
 						`\nError happened while processing Api Page for entity "${this.declaration
@@ -125,12 +125,12 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	}
 
 	private updateDeclaration(): asserts this is this & {declaration: NgDocSupportedDeclarations} {
-		const declarations: NgDocSupportedDeclarations[] | undefined = this.sourceFile
-			.getExportedDeclarations()
-			.get(this.declarationName)
-			?.filter(isSupportedDeclaration);
+		const declarations: NgDocSupportedDeclarations[] = [
+			...asArray(this.sourceFile.getExportedDeclarations().get(this.declarationName)),
+			...asArray(this.sourceFile.getExportedDeclarations().get('default')),
+		].filter(isSupportedDeclaration);
 
-		this.declaration = (declarations && declarations[0]) ?? undefined;
+		this.declaration = declarations.find((declaration: NgDocSupportedDeclarations) => declaration.getName() === this.declarationName);
 
 		if (!this.declaration) {
 			this.destroy();

@@ -78,7 +78,6 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 			map((output: NgDocBuiltOutput) => [
 				output,
 				...this.assets.map((asset: NgDocAsset) => ({
-					creator: this,
 					content: asset.output,
 					filePath: asset.outputPath,
 				})),
@@ -113,7 +112,7 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 
 		return renderer
 			.render('component-assets.ts.nunj')
-			.pipe(map((output: string) => ({creator: this, content: output, filePath: this.componentAssetsPath})));
+			.pipe(map((output: string) => ({content: output, filePath: this.componentAssetsPath})));
 	}
 
 	private getDemoClassDeclarations(objectExpression: ObjectLiteralExpression): ClassDeclaration[] {

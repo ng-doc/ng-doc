@@ -180,13 +180,10 @@ export class NgDocBuilder {
 			// Build touched entities and their dependencies
 			mergeMap((entities: NgDocEntity[]) =>
 				forkJoin(
-					entities.map((entity: NgDocEntity) =>
-						entity.destroyed
-							? of([])
-							: forkJoin(buildCandidates(entity).map((e: NgDocEntity) => e.buildArtifacts())),
-					),
+					buildCandidates(entities)
+						.map((entity: NgDocEntity) => entity.destroyed ? of([]) : entity.buildArtifacts())
 				).pipe(
-					map((output: NgDocBuiltOutput[][][]) => output.flat(2)),
+					map((output: NgDocBuiltOutput[][]) => output.flat()),
 					tap((output: NgDocBuiltOutput[]) => {
 						emitBuiltOutput(...output);
 						this.collectGarbage();
@@ -196,7 +193,7 @@ export class NgDocBuilder {
 			),
 			mapTo(void 0),
 			catchError((e: Error) => {
-				this.context.context.logger.error(`NgDoc error: ${e}`);
+				this.context.context.logger.error(`NgDoc error: ${e.message}\n${e.stack}`);
 
 				return of(void 0);
 			}),

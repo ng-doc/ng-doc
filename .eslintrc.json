@@ -8,6 +8,8 @@
 			"extends": ["prettier", "plugin:jsdoc/recommended"],
 			"plugins": ["eslint-plugin-jsdoc", "eslint-plugin-prefer-arrow", "simple-import-sort", "eslint-plugin-tsdoc"],
 			"rules": {
+				"jsdoc/require-param-type": "off",
+				"jsdoc/require-returns-type": "off",
 				"tsdoc/syntax": "warn",
 				"simple-import-sort/imports": "error",
 				"simple-import-sort/exports": "error",
