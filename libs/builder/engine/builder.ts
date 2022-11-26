@@ -89,6 +89,7 @@ export class NgDocBuilder {
 
 	run(): Observable<void> {
 		console.time('Build step 1');
+		console.time('Build documentation');
 
 		const touchedEntity: Observable<NgDocEntity> = this.entities.changes().pipe(
 			tap(([entity, removed]: [NgDocEntity, boolean]) =>
@@ -191,9 +192,14 @@ export class NgDocBuilder {
 				).pipe(
 					map((output: NgDocBuiltOutput[][]) => output.flat()),
 					tap((output: NgDocBuiltOutput[]) => {
+						/*
+							We emit files and only after that delete destroyed ones, because otherwise
+							angular compiler can raise an error that these items are not exist
+						 */
 						emitBuiltOutput(...output);
 						this.collectGarbage();
 						console.timeEnd('Build step 3');
+						console.timeEnd('Build documentation');
 					})
 				),
 			),
