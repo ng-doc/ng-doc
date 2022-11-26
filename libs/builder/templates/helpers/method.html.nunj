@@ -16,7 +16,10 @@
 			<td>{{ method | extractDocs }}</td>
 		</tr>
 		<tr>
-			<td>{{ codeMacro.render(method | methodPresentation, "typescript", false) }}</td>
+			<td>
+				<h5 class="no-anchor">Presentation</h5>
+				{{ codeMacro.render(method | methodPresentation, "typescript", false) }}
+			</td>
 		</tr>
 		<tr>
 			<td>

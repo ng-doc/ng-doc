@@ -32,13 +32,14 @@ export class NgDocRootComponent {
 			if (target instanceof HTMLAnchorElement) {
 				const hasModifier: boolean = event.button !== 0 || event.ctrlKey || event.metaKey;
 				const isDownloadable: boolean = target.getAttribute('download') != null;
+				const hasHash: boolean = !!target.hash;
 
 
-				if (!hasModifier && !isDownloadable) {
-					const { pathname, search, hash } = target;
+				if (!hasModifier && !isDownloadable && !hasHash) {
+					const { pathname, search } = target;
 					const isInPageAnchor: boolean = target.getAttribute('href')?.startsWith('#') ?? false;
 					const correctPathname: string = isInPageAnchor ? this.location.path() : pathname;
-					const relativeUrl: string = correctPathname + search + hash;
+					const relativeUrl: string = correctPathname + search;
 
 					event.preventDefault();
 

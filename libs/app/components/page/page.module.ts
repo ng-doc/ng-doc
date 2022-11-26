@@ -12,6 +12,7 @@ import {
 } from '@ng-doc/app/processors';
 
 import {NgDocPageComponent} from './page.component';
+import {NgDocPageMapModule} from '@ng-doc/app/components/page-map';
 
 @NgModule({
 	declarations: [NgDocPageComponent],
@@ -26,6 +27,7 @@ import {NgDocPageComponent} from './page.component';
 		NgDocLinkProcessorModule,
 		NgDocSanitizeHtmlModule,
 		NgDocIconProcessorModule,
+		NgDocPageMapModule,
 	],
 	exports: [NgDocPageComponent],
 })

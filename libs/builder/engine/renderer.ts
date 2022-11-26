@@ -6,10 +6,10 @@ import {Observable, Subscriber} from 'rxjs';
 import {NgDocRendererOptions} from '../interfaces';
 import * as filters from './template-filters';
 import {TEMPLATES_PATH} from './variables';
-import TemplateError = lib.TemplateError;
 import {Node} from 'ts-morph';
 
 import {NgDocBuilder} from './builder';
+import TemplateError = lib.TemplateError;
 
 export class NgDocRenderer<T extends object> {
 	constructor(

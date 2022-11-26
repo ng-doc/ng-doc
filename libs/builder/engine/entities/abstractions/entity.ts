@@ -1,11 +1,11 @@
 import {logging} from '@angular-devkit/core';
 import minimatch from 'minimatch';
-import {EMPTY, Observable, Subject, throwError} from 'rxjs';
+import {EMPTY, Observable, Subject} from 'rxjs';
 import {catchError, map, take, tap} from 'rxjs/operators';
 
 import {ObservableSet} from '../../../classes';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../../interfaces';
-import { NgDocBuilder } from '../../builder';
+import {NgDocBuilder} from '../../builder';
 import {htmlPostProcessor} from '../../post-processors';
 
 /**
@@ -78,7 +78,7 @@ export abstract class NgDocEntity {
 	 * Contains all children of the current entity.
 	 */
 	get children(): NgDocEntity[] {
-		return this.builder.entities.asArray().filter((entity: NgDocEntity) => entity.parent === this);
+		return this.builder.entities.asArray().filter((entity: NgDocEntity) => entity.parent === this && !entity.destroyed);
 	}
 
 	/**
@@ -105,7 +105,7 @@ export abstract class NgDocEntity {
 	 *
 	 * @type {boolean}
 	 */
-	get isReadyToBuild(): boolean {
+	get isReadyForBuild(): boolean {
 		return this.readyToBuild && !this.destroyed && this.canBeBuilt;
 	}
 
@@ -131,7 +131,19 @@ export abstract class NgDocEntity {
 		return this.build()
 			.pipe(
 				map((output: NgDocBuiltOutput[]) => this.processArtifacts(output)),
-				tap((artifacts: NgDocBuiltOutput[]) => (this.artifacts = artifacts)),
+				map((artifacts: NgDocBuiltOutput[]) => {
+					/* 
+						We are checking that artifacts result was changed, otherwise we don't want to emit
+						the same files to file system, because it will force Angular to rebuild application
+					 */
+					if (artifacts.every((a: NgDocBuiltOutput, i: number) => a.content === this.artifacts[i]?.content)) {
+						return [];
+					} else {
+						this.artifacts = artifacts;
+
+						return this.artifacts;
+					}
+				}),
 				catchError((e: Error) => {
 					this.logger.error(`Error during processing "${this.id}"\n${e.message}\n${e.stack}`);
 					this.readyToBuild = false;

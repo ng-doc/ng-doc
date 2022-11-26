@@ -1,0 +1,6 @@
+<ul class="page-map">
+	<li *ngFor="let item of map" class="page-map-item level-{{item.level}}">
+		<a [href]="item.path">{{item.title}}</a>
+	</li>
+</ul>
+

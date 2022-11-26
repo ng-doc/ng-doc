@@ -25,10 +25,13 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 	}
 
 	protected build(): Observable<NgDocBuiltOutput[]> {
-		return forkJoin([this.buildRoutes(), this.buildContext(), this.buildIndexes()])
-			.pipe(
-				map(([routes, context, indexes]: [NgDocBuiltOutput, NgDocBuiltOutput, NgDocBuiltOutput[]]) => [routes, context, ...indexes])
-			);
+		return forkJoin([this.buildRoutes(), this.buildContext(), this.buildIndexes()]).pipe(
+			map(([routes, context, indexes]: [NgDocBuiltOutput, NgDocBuiltOutput, NgDocBuiltOutput[]]) => [
+				routes,
+				context,
+				...indexes,
+			]),
+		);
 	}
 
 	private buildRoutes(): Observable<NgDocBuiltOutput> {
@@ -37,7 +40,9 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 
 		return renderer
 			.render('routing.ts.nunj')
-			.pipe(map((output: string) => ({content: output, filePath: path.join(GENERATED_PATH, 'ng-doc.routing.ts')})));
+			.pipe(
+				map((output: string) => ({content: output, filePath: path.join(GENERATED_PATH, 'ng-doc.routing.ts')})),
+			);
 	}
 
 	private buildContext(): Observable<NgDocBuiltOutput> {
@@ -46,11 +51,13 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 
 		return renderer
 			.render('context.ts.nunj')
-			.pipe(map((output: string) => ({content: output, filePath: path.join(GENERATED_PATH, 'ng-doc.context.ts')})));
+			.pipe(
+				map((output: string) => ({content: output, filePath: path.join(GENERATED_PATH, 'ng-doc.context.ts')})),
+			);
 	}
 
 	private buildIndexes(): Observable<NgDocBuiltOutput[]> {
-		const [dictionary, indexes] = buildGlobalIndexes(this.builder.entities.asArray());
+		const [dictionary, indexes] = buildGlobalIndexes(this.builder.entities.asArray().filter(this.isReady));
 
 		return of([
 			{
@@ -65,6 +72,10 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 	}
 
 	private get rootEntitiesForBuild(): NgDocEntity[] {
-		return this.builder.entities.asArray().filter((entity: NgDocEntity) => entity.isRoot && entity.isReadyToBuild);
+		return this.builder.entities.asArray().filter((entity: NgDocEntity) => entity.isRoot && this.isReady(entity));
+	}
+
+	private isReady(entity: NgDocEntity): boolean {
+		return entity.isReadyForBuild;
 	}
 }

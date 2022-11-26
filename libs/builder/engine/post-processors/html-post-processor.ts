@@ -1,8 +1,8 @@
 import {isRouteEntity} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
 import {NgDocEntity} from '../entities/abstractions/entity';
-import autolinkCode from './html-plugins/autolink-code';
 import autolinkHeading from './html-plugins/autolink-headings';
+import keywordsProcessor from './html-plugins/keywords-processor';
 
 
 /**
@@ -19,7 +19,7 @@ export function htmlPostProcessor(entity: NgDocEntity, content: NgDocBuiltOutput
 			.use(require('rehype-highlight'))
 			.use(require('rehype-slug'))
 			.use(autolinkHeading, isRouteEntity(entity) ? entity.fullRoute : undefined)
-			.use(autolinkCode, entity.builder.entities)
+			.use(keywordsProcessor, entity.builder.entities)
 			.processSync(content.content)
 			.toString()
 	}

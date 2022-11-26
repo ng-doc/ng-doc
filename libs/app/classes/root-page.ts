@@ -41,7 +41,7 @@ export interface MyInterface2 extends MyInterface1 {
 export abstract class MyClass2 extends MyClass1 implements MyInterface1 {
 	/**
 	 * Some really ling text that you can tead o assdkorwp poiqpwoie dpsfi aposdi pai dasdaos iapsod
-	 * asdpaoisa psd aii apso iaiidpqowie q psad paisdp as as aps
+	 * asdpaoisa psd aii apso iaiidpqowie q psad paisdp as as *asda67sd* `MyPage`
 	 * apsod iaps oi i apsoipqoiepqow poi
 	 */
 	static property2: string = 'default value';

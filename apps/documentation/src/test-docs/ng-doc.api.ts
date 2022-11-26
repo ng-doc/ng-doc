@@ -13,6 +13,11 @@ export const api: NgDocApi = {
 			route: 'builder',
 			include: 'libs/builder/**/*.ts',
 		},
+		{
+			name: '@ng-doc/core',
+			route: 'core',
+			include: 'libs/core/**/*.ts',
+		},
 	],
 };
 

@@ -2,7 +2,7 @@ import {asArray, isPresent} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {ClassDeclaration, InterfaceDeclaration, SourceFile} from 'ts-morph';
+import {SourceFile} from 'ts-morph';
 
 import {declarationFolderName, slash, uniqueName} from '../../helpers';
 import {isSupportedDeclaration} from '../../helpers/is-supported-declaration';
@@ -87,7 +87,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	}
 
 	protected override build(): Observable<NgDocBuiltOutput[]> {
-		return this.isReadyToBuild
+		return this.isReadyForBuild
 			? forkJoin([this.buildPage(), this.buildModule()]).pipe(
 					map((output: Array<NgDocBuiltOutput | null>) => output.filter(isPresent)),
 			  )
@@ -95,7 +95,9 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	}
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
-		const renderer: NgDocRenderer<NgDocApiPageModuleEnv> = new NgDocRenderer<NgDocApiPageModuleEnv>(this.builder, {page: this});
+		const renderer: NgDocRenderer<NgDocApiPageModuleEnv> = new NgDocRenderer<NgDocApiPageModuleEnv>(this.builder, {
+			page: this,
+		});
 
 		return renderer
 			.render('api-page.module.ts.nunj')
@@ -130,7 +132,9 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 			...asArray(this.sourceFile.getExportedDeclarations().get('default')),
 		].filter(isSupportedDeclaration);
 
-		this.declaration = declarations.find((declaration: NgDocSupportedDeclarations) => declaration.getName() === this.declarationName);
+		this.declaration = declarations.find(
+			(declaration: NgDocSupportedDeclarations) => declaration.getName() === this.declarationName,
+		);
 
 		// Doesnr work?
 		if (!this.declaration) {

@@ -1,0 +1,29 @@
+:host {
+	position: relative;
+	width: 200px;
+
+	.page-map {
+		position: fixed;
+		list-style: none;
+
+		.page-map-item {
+			padding: var(--ng-doc-base-gutter);
+
+			&.level-1 {
+				padding-left: var(--ng-doc-base-gutter);
+			}
+
+			&.level-2 {
+				padding-left: calc(var(--ng-doc-base-gutter) * 2);
+			}
+
+			&.level-3 {
+				padding-left: calc(var(--ng-doc-base-gutter) * 3);
+			}
+
+			&.level-4 {
+				padding-left: calc(var(--ng-doc-base-gutter) * 4);
+			}
+		}
+	}
+}

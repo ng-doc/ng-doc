@@ -11,6 +11,5 @@ export {
 	methodPresentation,
 	noLineBreaks,
 	typeAliasPresentation,
-	variablePresentation,
-} from '../helpers';
+	variablePresentation} from '../helpers';
 export {humanizeDeclarationName} from '@ng-doc/core';

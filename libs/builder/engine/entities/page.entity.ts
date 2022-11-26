@@ -147,12 +147,14 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	}
 
 	protected override build(): Observable<NgDocBuiltOutput[]> {
-		return this.isReadyToBuild ? forkJoin([this.buildPage(), this.buildModule()]) : of([]);
+		return this.isReadyForBuild ? forkJoin([this.buildPage(), this.buildModule()]) : of([]);
 	}
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			const renderer: NgDocRenderer<NgDocPageModuleEnv> = new NgDocRenderer<NgDocPageModuleEnv>(this.builder, {page: this});
+			const renderer: NgDocRenderer<NgDocPageModuleEnv> = new NgDocRenderer<NgDocPageModuleEnv>(this.builder, {
+				page: this,
+			});
 
 			return renderer
 				.render('page.module.ts.nunj')
@@ -177,12 +179,10 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 				NgDocActions: new NgDocActions(this),
 			});
 
-			return renderer
-				.render(this.target?.mdFile, {scope: this.sourceFileFolder})
-				.pipe(
-					map((markdown: string) => marked(markdown)),
-					map((output: string) => ({content: output, filePath: this.builtPagePath}))
-				);
+			return renderer.render(this.target?.mdFile, {scope: this.sourceFileFolder}).pipe(
+				map((markdown: string) => marked(markdown)),
+				map((output: string) => ({content: output, filePath: this.builtPagePath})),
+			);
 		}
 		return of();
 	}

@@ -9,7 +9,7 @@ const textContent: any = require('hast-util-to-string');
  *
  * @param entityStore
  */
-export default function autolinkCode(entityStore: NgDocEntityStore): any {
+export default function keywordsProcessor(entityStore: NgDocEntityStore): any {
 	return (tree: any) =>visit(tree, 'element', (node: any, _: any, parent: any) => {
 		if (!isCodeNode(node)) {
 			return;

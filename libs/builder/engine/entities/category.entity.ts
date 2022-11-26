@@ -93,14 +93,17 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 	}
 
 	protected override build(): Observable<NgDocBuiltOutput[]> {
-		return this.isReadyToBuild ? forkJoin([this.buildModule()]) : of([]);
+		return this.isReadyForBuild ? forkJoin([this.buildModule()]) : of([]);
 	}
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			const renderer: NgDocRenderer<NgDocCategoryModuleEnv> = new NgDocRenderer<NgDocCategoryModuleEnv>(this.builder, {
-				category: this,
-			});
+			const renderer: NgDocRenderer<NgDocCategoryModuleEnv> = new NgDocRenderer<NgDocCategoryModuleEnv>(
+				this.builder,
+				{
+					category: this,
+				},
+			);
 
 			return renderer
 				.render('category.module.ts.nunj')

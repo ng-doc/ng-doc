@@ -131,7 +131,7 @@ export class NgDocBuilder {
 				return of(entity);
 			}),
 			/* Delay to buffer all changes from the FileSystem */
-			bufferDebounce(100),
+			bufferDebounce(0),
 			mergeMap((entities: NgDocEntity[]) =>
 				// Re-fetch compiled data for non destroyed entities
 				forkJoin(
@@ -172,7 +172,8 @@ export class NgDocBuilder {
 					),
 				),
 			),
-			bufferDebounce(100),
+			bufferDebounce(0),
+			tap(() => this.entities.updateKeywordMap()),
 			// Build touched entities and their dependencies
 			mergeMap((entities: NgDocEntity[]) =>
 				forkJoin(

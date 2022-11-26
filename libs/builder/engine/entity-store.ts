@@ -42,17 +42,15 @@ export class NgDocEntityStore extends Map<string, NgDocEntity> {
 		return asArray(this.keywordMap.get(keyword));
 	}
 
-
 	updateKeywordMap(): void {
 		this.keywordMap = new Map<string, NgDocRouteEntity[]>();
 
-		this.asArray()
-			.forEach((entity: NgDocEntity) => {
-				if (isRouteEntity(entity)) {
-					entity.keywords.forEach((keyword: string) =>
-						this.keywordMap.set(keyword, [...asArray(this.keywordMap.get(keyword)), entity])
-					)
-				}
-			})
+		this.asArray().forEach((entity: NgDocEntity) => {
+			if (isRouteEntity(entity)) {
+				entity.keywords.forEach((keyword: string) =>
+					this.keywordMap.set(keyword, [...asArray(this.keywordMap.get(keyword)), entity]),
+				);
+			}
+		});
 	}
 }

@@ -82,12 +82,14 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 	}
 
 	protected override build(): Observable<NgDocBuiltOutput[]> {
-		return this.isReadyToBuild ? forkJoin([this.buildModule(), this.buildApiList()]) : of([]);
+		return this.isReadyForBuild ? forkJoin([this.buildModule(), this.buildApiList()]) : of([]);
 	}
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			const renderer: NgDocRenderer<NgDocApiModuleEnv> = new NgDocRenderer<NgDocApiModuleEnv>(this.builder, {api: this});
+			const renderer: NgDocRenderer<NgDocApiModuleEnv> = new NgDocRenderer<NgDocApiModuleEnv>(this.builder, {
+				api: this,
+			});
 
 			return renderer
 				.render('api.module.ts.nunj')

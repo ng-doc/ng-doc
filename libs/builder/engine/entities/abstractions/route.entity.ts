@@ -14,7 +14,6 @@ export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T>
 	 */
 	abstract title: string;
 
-
 	/**
 	 * Keywords that will be used to create links to the current entity on the pages
 	 */
