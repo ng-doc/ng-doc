@@ -9,7 +9,7 @@ import {displayType} from './typescript';
 export function methodPresentation(method: MethodDeclaration): string {
 	const parameters: string = method.getParameters().map(parameterPresentation).join(', ');
 
-	return `${method.getName()}(${parameters}): ${displayType(method.getReturnType())};`;
+	return `function ${method.getName()}(${parameters}): ${displayType(method.getReturnType())};`;
 }
 
 /**

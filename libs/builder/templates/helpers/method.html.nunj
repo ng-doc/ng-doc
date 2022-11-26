@@ -1,6 +1,6 @@
 {% import "helpers/code.html.nunj" as codeMacro %}
 {% import "helpers/type.html.nunj" as typeMacro %}
-{% import "helpers/declaration-tags.html.nunj" as tagsMacro %}
+{% import "helpers/declaration-modifiers.html.nunj" as tagsMacro %}
 {% import "helpers/parameters.html.nunj" as parametersMacro %}
 
 {% macro render(method) %}

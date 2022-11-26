@@ -1,12 +1,13 @@
 import {asArray} from '@ng-doc/core';
+import chalk from 'chalk';
 import * as path from 'path';
-import {forkJoin, merge, Observable, of, Subject} from 'rxjs';
+import {forkJoin, merge, Observable, of} from 'rxjs';
 import {
 	catchError,
 	concatMap,
 	map,
 	mapTo,
-	mergeMap, retry,
+	mergeMap,
 	startWith,
 	switchMap,
 	take,
@@ -88,9 +89,6 @@ export class NgDocBuilder {
 	}
 
 	run(): Observable<void> {
-		console.time('Build step 1');
-		console.time('Build documentation');
-
 		const touchedEntity: Observable<NgDocEntity> = this.entities.changes().pipe(
 			tap(([entity, removed]: [NgDocEntity, boolean]) =>
 				removed ? entity.destroy() : this.watcher.watch(entity.rootFiles),
@@ -111,7 +109,10 @@ export class NgDocBuilder {
 		);
 
 		return touchedEntity.pipe(
-			tap(() => this.context.context.reportRunning()),
+			tap(() => {
+				this.print('Building documentation');
+				this.context.context.reportRunning()
+			}),
 			concatMap((entity: NgDocEntity) => {
 				/*
 					Refresh and compile source files for all not destroyed entities
@@ -131,25 +132,21 @@ export class NgDocBuilder {
 			}),
 			/* Delay to buffer all changes from the FileSystem */
 			bufferDebounce(100),
-			mergeMap((entities: NgDocEntity[]) => {
-				console.timeEnd('Build step 1');
-				console.time('Build step 2');
+			mergeMap((entities: NgDocEntity[]) =>
 				// Re-fetch compiled data for non destroyed entities
-				return forkJoin(
+				forkJoin(
 					entities.map((entity: NgDocEntity) =>
 						entity.destroyed
 							? of(entity)
 							: entity.update().pipe(
 									tap(() => {
 										/*
-										Re-generate children Entities for NgDocApiEntity if it was changed
-									 */
+									Re-generate children Entities for NgDocApiEntity if it was changed
+								 */
 										if (entity instanceof NgDocApiEntity) {
-											console.time('Generate Entities');
 											generateApiEntities(entity).forEach((e: NgDocEntity) =>
 												this.entities.set(e.id, e),
 											);
-											console.timeEnd('Generate Entities');
 										}
 									}),
 									mapTo(entity),
@@ -173,24 +170,20 @@ export class NgDocBuilder {
 							),
 						),
 					),
-				)
-	}),
+				),
+			),
 			bufferDebounce(100),
-			// Adding skeleton entity, because it contains skeleton file for the project that should be rebuilt
-			map((entities: NgDocEntity[]) => {
-				console.timeEnd('Build step 2');
-				console.time('Build step 3');
-				this.entities.updateKeywordMap();
-
-				return [...entities, this.skeleton];
-			}),
 			// Build touched entities and their dependencies
 			mergeMap((entities: NgDocEntity[]) =>
 				forkJoin(
-					buildCandidates(entities)
-						.map((entity: NgDocEntity) => entity.destroyed ? of([]) : entity.buildArtifacts())
+					buildCandidates(entities).map((entity: NgDocEntity) =>
+						entity.destroyed ? of([]) : entity.buildArtifacts(),
+					),
 				).pipe(
-					map((output: NgDocBuiltOutput[][]) => output.flat()),
+					switchMap((output: NgDocBuiltOutput[][]) =>
+						this.skeleton.buildArtifacts()
+							.pipe(map((skeleton: NgDocBuiltOutput[]) => [...output.flat(), ...skeleton]))
+					),
 					tap((output: NgDocBuiltOutput[]) => {
 						/*
 							We emit files and only after that delete destroyed ones, because otherwise
@@ -198,9 +191,7 @@ export class NgDocBuilder {
 						 */
 						emitBuiltOutput(...output);
 						this.collectGarbage();
-						console.timeEnd('Build step 3');
-						console.timeEnd('Build documentation');
-					})
+					}),
 				),
 			),
 			mapTo(void 0),
@@ -223,5 +214,11 @@ export class NgDocBuilder {
 				this.entities.delete(entity.id);
 			}
 		});
+	}
+
+	private print(text: string): void {
+		process.stdout.clearLine(0);
+		process.stdout.cursorTo(0);
+		process.stdout.write(`${chalk.blue('NgDoc:')} ${chalk.green(text)}`);
 	}
 }

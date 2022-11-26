@@ -81,35 +81,50 @@ function buildIndexes<T extends NgDocRouteEntity<unknown>>(
  *
  * @param entity
  * @param nodes
+ * @param parentIndex
+ * @param indexes
  */
-function extractIndexes<T extends NgDocRouteEntity<unknown>>(entity: T, nodes: Node[]): NgDocPageIndex[] {
-	return nodes
-		.reduce((indexes: NgDocPageIndex[], node: Node, index: number) => {
+function extractIndexes<T extends NgDocRouteEntity<unknown>>(entity: T, nodes: Node[], indexes: NgDocPageIndex[] = []): NgDocPageIndex[] {
+	if (!indexes.length) {
+		indexes.push({
+			route: entity.fullRoute,
+			type: getTypeFromEntity(entity),
+			title: entity.title,
+			heading: entity.title,
+			content: '',
+			kind: getKindFromEntity(entity),
+		})
+	}
+
+	nodes.forEach((node: Node) => {
 			if (isNodeTag(node)) {
-				if (index === 0 && !isHeaderTag(node)) {
-					indexes.push({
-						route: entity.fullRoute,
-						type: getTypeFromEntity(entity),
-						title: entity.title,
-						heading: entity.title,
-						content: '',
-						kind: getKindFromEntity(entity),
-					});
-				} else if (isHeaderTag(node)) {
-					indexes.push({
-						route: entity.fullRoute,
-						type: getTypeFromEntity(entity),
-						title: entity.title,
-						heading: extractText(node),
-						content: '',
-						kind: getKindFromEntity(entity),
-					});
-				} else if (isParagraph(node)) {
-					indexes[indexes.length - 1].content += extractText(node);
+				if (!isIgnoredTag(node)) {
+					if (isHeadingTag(node)) {
+						indexes.push({
+							route: entity.fullRoute,
+							type: getTypeFromEntity(entity),
+							title: entity.title,
+							heading: extractText(node),
+							content: '',
+							kind: getKindFromEntity(entity),
+						});
+					} else if (Array.isArray(node.content)) {
+						indexes[indexes.length - 1].content += extractText(node);
+
+						extractIndexes(entity, asArray(node.content).flat(), indexes);
+					}
 				}
 			}
-			return indexes;
-		}, []);
+		})
+	return indexes;
+}
+
+/**
+ *
+ * @param node
+ */
+function isIgnoredTag(node: NodeTag): boolean {
+	return ['pre', 'code', 'div', 'span'].includes(String(node.tag));
 }
 
 /**
@@ -118,7 +133,11 @@ function extractIndexes<T extends NgDocRouteEntity<unknown>>(entity: T, nodes: N
  */
 function extractText(node: Node): string {
 	if (isNodeTag(node)) {
-		return asArray(node.content).flat().map((node: Node) => extractText(node)).join('\n')
+		return isIgnoredTag(node)
+				? ''
+				: (asArray(node.content).flat().filter((node: Node) => typeof node === 'string') as string[])
+				.map((str: string) => str.trim())
+				.join('\n')
 	} else {
 		return String(node);
 	}
@@ -139,8 +158,24 @@ function getTypeFromEntity(entity: NgDocEntity): NgDocPageType {
  *
  * @param node
  */
-function isHeaderTag(node: NodeTag): boolean {
+function isHeadingTag(node: NodeTag): boolean {
 	return ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(String(node.tag));
+}
+
+/**
+ *
+ * @param node
+ */
+function isHeaderTag(node: NodeTag): boolean {
+	return ['header'].includes(String(node.tag));
+}
+
+/**
+ *
+ * @param node
+ */
+function isSectionTag(node: NodeTag): boolean {
+	return ['section'].includes(String(node.tag));
 }
 
 /**

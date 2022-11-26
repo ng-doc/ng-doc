@@ -1,4 +1,4 @@
-{% import "helpers/declaration-tags.html.nunj" as tagsMacro %}
+{% import "helpers/declaration-modifiers.html.nunj" as tagsMacro %}
 
 {% include "parts/page-tags.html.nunj" %}
 <header>

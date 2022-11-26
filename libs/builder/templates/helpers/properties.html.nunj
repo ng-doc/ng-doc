@@ -1,5 +1,5 @@
 {% import "helpers/type.html.nunj" as typeMacro %}
-{% import "helpers/declaration-tags.html.nunj" as tagsMacro %}
+{% import "helpers/declaration-modifiers.html.nunj" as tagsMacro %}
 
 {% macro render(properties) %}
 <table>

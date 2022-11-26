@@ -5,7 +5,6 @@ export * from '@ng-doc/app/components/declaration-tag';
 export * from '@ng-doc/app/components/demo';
 export * from '@ng-doc/app/components/demo-displayer';
 export * from '@ng-doc/app/components/header';
-export * from '@ng-doc/app/components/keyword-link';
 export * from '@ng-doc/app/components/kind-icon';
 export * from '@ng-doc/app/components/link';
 export * from '@ng-doc/app/components/navbar';

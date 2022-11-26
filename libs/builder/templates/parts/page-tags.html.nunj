@@ -1,9 +1,12 @@
 {% import "helpers/tag.html.nunj" as tagMacro %}
+
 {% set selectors = declaration | extractSelectors %}
 
 {%- if scope %}
 	{{ tagMacro.render(scope.name, "ng-doc-tag-scope") }}
 {%- endif %}
+
+{{ tagMacro.render(declaration.getKindName() | humanizeDeclarationName) }}
 
 {%- if declaration.getDecorators %}
 	{% for decorator in declaration.getDecorators() %}
