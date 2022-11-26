@@ -46,6 +46,11 @@ export abstract class NgDocSourceFileEntity extends NgDocEntity {
 		}
 	}
 
+	override destroy(): void {
+		super.destroy();
+		this.sourceFile.forget();
+	}
+
 	/**
 	 * Returns object expression from default export in the current sourceFile
 	 *

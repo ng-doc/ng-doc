@@ -88,7 +88,7 @@ export class NgDocBuilder {
 	}
 
 	run(): Observable<void> {
-		console.time('Build documentation');
+		console.time('Build step 1');
 
 		const touchedEntity: Observable<NgDocEntity> = this.entities.changes().pipe(
 			tap(([entity, removed]: [NgDocEntity, boolean]) =>
@@ -130,9 +130,11 @@ export class NgDocBuilder {
 			}),
 			/* Delay to buffer all changes from the FileSystem */
 			bufferDebounce(100),
-			mergeMap((entities: NgDocEntity[]) =>
+			mergeMap((entities: NgDocEntity[]) => {
+				console.timeEnd('Build step 1');
+				console.time('Build step 2');
 				// Re-fetch compiled data for non destroyed entities
-				forkJoin(
+				return forkJoin(
 					entities.map((entity: NgDocEntity) =>
 						entity.destroyed
 							? of(entity)
@@ -142,9 +144,11 @@ export class NgDocBuilder {
 										Re-generate children Entities for NgDocApiEntity if it was changed
 									 */
 										if (entity instanceof NgDocApiEntity) {
+											console.time('Generate Entities');
 											generateApiEntities(entity).forEach((e: NgDocEntity) =>
 												this.entities.set(e.id, e),
 											);
+											console.timeEnd('Generate Entities');
 										}
 									}),
 									mapTo(entity),
@@ -168,11 +172,13 @@ export class NgDocBuilder {
 							),
 						),
 					),
-				),
-			),
+				)
+	}),
 			bufferDebounce(100),
 			// Adding skeleton entity, because it contains skeleton file for the project that should be rebuilt
 			map((entities: NgDocEntity[]) => {
+				console.timeEnd('Build step 2');
+				console.time('Build step 3');
 				this.entities.updateKeywordMap();
 
 				return [...entities, this.skeleton];
@@ -187,7 +193,7 @@ export class NgDocBuilder {
 					tap((output: NgDocBuiltOutput[]) => {
 						emitBuiltOutput(...output);
 						this.collectGarbage();
-						console.timeEnd('Build documentation')
+						console.timeEnd('Build step 3');
 					})
 				),
 			),

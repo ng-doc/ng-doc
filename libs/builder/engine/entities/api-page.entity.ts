@@ -132,6 +132,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 
 		this.declaration = declarations.find((declaration: NgDocSupportedDeclarations) => declaration.getName() === this.declarationName);
 
+		// Doesnr work?
 		if (!this.declaration) {
 			this.destroy();
 		}
