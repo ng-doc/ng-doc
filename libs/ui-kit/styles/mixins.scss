@@ -6,3 +6,12 @@
 	font-size: var(--ng-doc-font-size);
 	font-weight: var(--ng-doc-font-weight);
 }
+
+@mixin ng-doc-heading-font() {
+	font-family: var(--ng-doc-heading-font-family);
+	font-variant: no-contextual;
+	color: var(--ng-doc-text);
+	line-height: var(--ng-doc-line-height);
+	font-size: var(--ng-doc-font-size);
+	font-weight: var(--ng-doc-font-weight);
+}

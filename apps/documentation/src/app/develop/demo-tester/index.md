@@ -12,12 +12,6 @@ Here you will se how easy it's to create some demo with NgDoc. <div>Some text</d
 >
 > This is another row
 
-## Playground
-
-{{ NgDocActions.playground("playground1") }}
-
-## Tag playground
-
 {{ NgDocActions.playground("playground2") }}
 
 ## Combobox playground
@@ -70,15 +64,3 @@ export class Test {
 	test: string = 'test';
 }
 ```
-
-## API
-
-{{ NgDocActions.api("../class.ts#TestClass") }}
-
-{{ NgDocActions.api("../class.ts#MyEnum1") }}
-
-{{ NgDocActions.api("../class.ts#MyType") }}
-
-{{ NgDocActions.api("../class.ts#MyInterface") }}
-
-{{ NgDocActions.api("../class.ts#myFunction") }}

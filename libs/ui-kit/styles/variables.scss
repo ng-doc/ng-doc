@@ -26,11 +26,12 @@
 	--ng-doc-border-color: var(--ng-doc-base-2);
 	--ng-doc-border-hover-color: var(--ng-doc-base-3);
 
-	--ng-doc-font-family: 'Inter', 'GT Eesti Pro Display', 'Roboto', sans-serif;
+	--ng-doc-heading-font-family: 'Nunito', sans-serif;
+	--ng-doc-font-family: 'Nunito Sans', sans-serif;
 	--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 2);
 	--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 3);
 	--ng-doc-font-weight: 500;
-	--ng-doc-code-font: 'Source Code Pro', 'Courier New', monospace;
+	--ng-doc-code-font: 'Source Code Pro', monospace;
 	--ng-doc-code-font-size: 14px;
 	--ng-doc-code-line-height: 18px;
 	--ng-doc-code-font-weight: 600;
@@ -39,8 +40,8 @@
 	--ng-doc-text-muted: var(--ng-doc-base-8);
 
 	// Inline code
-	--ng-doc-inline-code-background: var(--ng-doc-deep-purple-10);
-	--ng-doc-inline-code-color: var(--ng-doc-deep-purple-100);
+	--ng-doc-inline-code-background: var(--ng-doc-base-2);
+	--ng-doc-inline-code-color: var(--ng-doc-text);
 
 	// NgDocButtonIconComponent
 	--ng-doc-button-background: trasparent;

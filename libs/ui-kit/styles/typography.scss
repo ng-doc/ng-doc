@@ -39,26 +39,26 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: inherit;
+	font-family: var(--ng-doc-heading-font-family);
 	margin: 0;
 	line-height: 1.5rem;
-	font-weight: 600;
+	font-weight: 700;
 }
 
 h1 {
-	font-size: calc(var(--ng-doc-base-gutter) * 6);
-	line-height: calc(var(--ng-doc-base-gutter) * 9);
-	font-weight: 700;
+	font-size: calc(var(--ng-doc-base-gutter) * 5);
+	line-height: calc(var(--ng-doc-base-gutter) * 6);
+	font-weight: 900;
 }
 
 h2 {
 	font-size: calc(var(--ng-doc-base-gutter) * 4);
-	line-height: calc(var(--ng-doc-base-gutter) * 6);
+	line-height: calc(var(--ng-doc-base-gutter) * 5);
 }
 
 h3 {
 	font-size: calc(var(--ng-doc-base-gutter) * 3);
-	line-height: calc(var(--ng-doc-base-gutter) * 5);
+	line-height: calc(var(--ng-doc-base-gutter) * 4);
 }
 
 h4 {
@@ -71,6 +71,9 @@ h5, h6 {
 	line-height: calc(var(--ng-doc-base-gutter) * 3);
 }
 
+pre code {
+	white-space: unset;
+}
 
 code {
 	vertical-align: bottom;
@@ -81,6 +84,7 @@ code {
 	font-family: var(--ng-doc-code-font);
 	font-size: var(--ng-doc-code-font-size);
 	font-weight: var(--ng-doc-code-font-weight);
+	white-space: nowrap;
 }
 
 .lead {
@@ -131,5 +135,14 @@ table {
 				}
 			}
 		}
+	}
+}
+
+a {
+	text-decoration: none;
+	color: var(--ng-doc-blue-100);
+
+	&:hover {
+		text-decoration: underline;
 	}
 }

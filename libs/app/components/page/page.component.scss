@@ -1,3 +1,11 @@
 :host {
 	display: flex;
+
+	article {
+		width: 100%;
+	}
+
+	ng-doc-page-map {
+		margin-left: calc(var(--ng-doc-base-gutter) * 3);
+	}
 }

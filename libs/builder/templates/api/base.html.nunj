@@ -1,12 +1,11 @@
 {% import "helpers/declaration-modifiers.html.nunj" as tagsMacro %}
 
-{% include "parts/page-tags.html.nunj" %}
 <header>
+	{% include "parts/page-tags.html.nunj" %}
+	{% block modifier %}{% endblock %}
 	<h1>{{ declaration.getName() }}</h1>
-	{{ tagsMacro.render(declaration) }}
+	{% block details %}{% endblock %}
 </header>
-
-{% block details %}{% endblock %}
 
 <section>
 	{% set description = docNode | extractDocs %}

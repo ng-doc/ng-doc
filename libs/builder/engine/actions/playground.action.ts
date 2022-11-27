@@ -1,8 +1,8 @@
+import {escapeHtml} from '@ng-doc/core';
 import {ClassDeclaration, Decorator, Node, Project} from 'ts-morph';
 
 import {declarationToPlayground} from '../../helpers/declaration-to-playground';
 import {NgDocActionOutput, NgDocPlaygroundProperties} from '../../interfaces';
-import {NG_DOC_PLAYGROUND_TEMPLATE_ID} from '../../naming';
 import {componentDecoratorResolver} from '../../resolvers/component-decorator.resolver';
 import {NgDocAction} from '../../types';
 import {NgDocPageEntity} from '../entities/page.entity';
@@ -37,10 +37,10 @@ export function playgroundAction(playgroundId: string): NgDocAction {
 			const playgroundData: NgDocPlaygroundProperties = declarationToPlayground(declaration);
 
 			return {
-				output: `<div id="${NG_DOC_PLAYGROUND_TEMPLATE_ID}" data-playground-id="${playgroundId}">
+				output: `<ng-doc-playground id="${playgroundId}">
 							<div id="selectors">${selectors}</div>
-							<div id="data">${JSON.stringify(playgroundData)}</div>
-						</div>`,
+							<div id="data">${escapeHtml(JSON.stringify(playgroundData))}</div>
+						</ng-doc-playground>`,
 				dependencies: [declaration.getSourceFile().getFilePath()],
 			};
 		} catch (e) {

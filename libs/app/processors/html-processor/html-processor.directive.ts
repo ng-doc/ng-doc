@@ -30,6 +30,8 @@ export abstract class NgDocHtmlProcessor<T> implements OnInit {
 				// replace element node with component node
 				const replaceElement: Element = this.replaceElement(elementNode);
 				replaceElement.parentNode?.replaceChild(componentRef.location.nativeElement, replaceElement);
+
+				componentRef.changeDetectorRef.markForCheck();
 			})
 	}
 

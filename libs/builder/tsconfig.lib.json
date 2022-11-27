@@ -5,7 +5,7 @@
 		"declaration": true,
 		"types": []
 	},
-	"files": ["index.ts", "naming.ts"],
+	"files": ["index.ts"],
 	"include": ["schematics/**/*"],
 	"exclude": ["jest.config.ts", "**/*.spec.ts", "**/*.test.ts", "generated", "schematics/*/templates/**/*"]
 }

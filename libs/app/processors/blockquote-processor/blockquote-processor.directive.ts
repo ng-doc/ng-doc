@@ -18,7 +18,7 @@ export class NgDocBlockquoteProcessorDirective extends NgDocHtmlProcessor<NgDocB
 		return {
 			content: [Array.from(element.childNodes)],
 			inputs: {
-				type: (element.getAttribute('data-type') as NgDocBlockquoteType) || 'default',
+				type: (element.getAttribute('type') as NgDocBlockquoteType) || 'default',
 			},
 		};
 	}

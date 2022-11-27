@@ -16,7 +16,9 @@ export function generatePageMap(container: HTMLElement, headings: string[] = ['h
 				? 1
 				: levelFromTagName(previousItem.element) < headingLevel
 					? previousItem.level + 1
-					: previousItem.level;
+					: levelFromTagName(previousItem.element) > headingLevel
+						? previousItem.level - 1
+						: previousItem.level
 			const anchor: HTMLAnchorElement | null = heading.querySelector<HTMLAnchorElement>('a.ng-doc-header-link');
 
 			if (anchor) {

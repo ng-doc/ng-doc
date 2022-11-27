@@ -1,0 +1,35 @@
+@import "../mixins/headings";
+
+article {
+	header {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		margin-bottom: calc(var(--ng-doc-base-gutter) * 3);
+
+		.ng-doc-page-tags {
+			display: flex;
+			align-items: flex-start;
+			flex-wrap: wrap;
+			margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
+			line-height: 22px;
+		}
+
+		h1 {
+			margin-right: var(--ng-doc-base-gutter);
+		}
+
+		.ng-doc-header-details {
+			margin-top: var(--ng-doc-base-gutter);
+
+			.ng-doc-header-details-label {
+				font-size: 11px;
+				font-weight: 600;
+				line-height: 18px;
+				margin-left: calc(var(--ng-doc-base-gutter) * 2);
+				margin-right: var(--ng-doc-base-gutter);
+				opacity: .5;
+			}
+		}
+	}
+}

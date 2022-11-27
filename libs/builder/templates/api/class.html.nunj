@@ -3,35 +3,28 @@
 {% import "helpers/type.html.nunj" as typeMacro %}
 {% import "helpers/methods.html.nunj" as methodsMacro %}
 {% import "helpers/properties.html.nunj" as propertiesMacro %}
+{% import "helpers/tag.html.nunj" as tagMacro %}
+
+{% block modifier %}
+	{{ tagMacro.render('Abstract', 'ng-doc-declaration-modifier') }}
+{% endblock %}
 
 {% block details %}
-
 	{% set extends = declaration.getExtends() %}
 	{% set implements = declaration.getImplements() %}
-	{% set direved = declaration.getDerivedClasses() %}
 
-	{% if extends or implements.length or derived.length %}
-		<section>
+	{% if extends or implements.length %}
+		<div class="ng-doc-header-details">
 			{% if extends %}
-				<div class="ng-doc-declaration-details">Extends {{ typeMacro.render(extends.getType()) }}</div>
+				{{ tagMacro.render(typeMacro.render(extends.getType()), "class-extends") }}
 			{%- endif %}
 			{% if implements.length %}
-				<div class="ng-doc-declaration-details">
-					Implements
-					{%- for i in implements -%}
-						{{ typeMacro.render(i.getType()) }}{{ ', ' if not loop.last }}
-					{%- endfor %}
-				</div>
+				<span class="ng-doc-header-details-label">Implements</span>
+				{%- for i in implements -%}
+					{{ tagMacro.render(typeMacro.render(i.getType()), "class-implements") }}
+				{%- endfor %}
 			{%- endif %}
-			{% if derived.length %}
-				<div class="ng-doc-declaration-details">
-					Derived
-					{%- for d in derived -%}
-						{{ typeMacro.render(d.getName()) }}{{ ', ' if not loop.last }}
-					{%- endfor %}
-				</div>
-			{%- endif %}
-		</section>
+		</div>
 	{% endif %}
 {% endblock %}
 

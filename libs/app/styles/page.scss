@@ -1,10 +1,24 @@
 @import "mixins/headings";
+@import "parts/header";
 
 .ng-doc-header-details {
 
 }
 
 article {
+	@include headings {
+		&:hover {
+			.ng-doc-header-link {
+				opacity: 1;
+			}
+		}
+
+		.ng-doc-header-link {
+			opacity: 0;
+			transition: var(--ng-doc-transition);
+		}
+	}
+
 	section {
 		margin-bottom: calc(var(--ng-doc-base-gutter) * 5);
 
@@ -15,7 +29,17 @@ article {
 
 	header {
 		display: flex;
-		align-items: center;
+		flex-direction: column;
+		align-items: flex-start;
+		margin-bottom: calc(var(--ng-doc-base-gutter) * 3);
+
+		.ng-doc-page-tags {
+			display: flex;
+			align-items: flex-start;
+			flex-wrap: wrap;
+			margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
+			line-height: 22px;
+		}
 
 		h1 {
 			margin-right: var(--ng-doc-base-gutter);
@@ -41,15 +65,54 @@ article {
 		}
 	}
 
+	.ng-doc-inline-delimiter {
+		font-weight: 700;
+		font-size: 14px;
+		opacity: 0.2;
+		margin: 0 var(--ng-doc-base-gutter);
+	}
+
 	.ng-doc-tag {
 		display: inline-block;
-		font-size: 14px;
-		font-weight: 600;
 		padding: 0 var(--ng-doc-base-gutter);
+		font-size: 14px;
+		line-height: 22px;
 		border-radius: var(--ng-doc-base-gutter);
 		background-color: var(--ng-doc-grey-30);
 		color: var(--ng-doc-grey-150);
 		vertical-align: middle;
+		white-space: nowrap;
+		font-weight: 700;
+
+		code {
+			color: inherit;
+			background-color: transparent;
+			padding: 0;
+			white-space: nowrap;
+		}
+
+		& + .ng-doc-tag {
+			margin-left: var(--ng-doc-base-gutter);
+		}
+
+		&[data-content="ng-doc-scope"] {
+			padding: 0;
+			background-color: transparent;
+			color: var(--ng-doc-text);
+		}
+
+		&[data-content="ng-doc-declaration-modifier"] {
+			font-family: var(--ng-doc-heading-font-family);
+			font-weight: 800;
+			background-color: transparent;
+			color: var(--ng-doc-deep-orange-100);
+			padding: 0;
+		}
+
+		&[data-content="Class"] {
+			background-color: var(--ng-doc-pink-10);
+			color: var(--ng-doc-pink-70);
+		}
 
 		&[data-content="Component"] {
 			background-color: var(--ng-doc-light-blue-20);
@@ -96,12 +159,11 @@ article {
 		vertical-align: middle;
 	}
 
-	.ng-doc-code-anchor {
-		text-decoration: none;
-		color: inherit;
+	code .ng-doc-code-anchor {
+		color: var(--ng-doc-blue-100);;
+	}
 
-		&:hover {
-			text-decoration: underline;
-		}
+	pre code .ng-doc-code-anchor {
+		color: inherit;
 	}
 }

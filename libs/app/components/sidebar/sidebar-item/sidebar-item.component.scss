@@ -5,7 +5,7 @@
 }
 
 .ng-doc-sidebar-link {
-	@include ng-doc-font();
+	@include ng-doc-heading-font();
 	display: flex;
 	align-items: center;
 	padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-horizontal-padding) var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
@@ -27,7 +27,7 @@
 	}
 
 	&.active {
-		--ng-doc-font-weight: bold;
+		--ng-doc-font-weight: 800;
 
 		--ng-doc-dot-background: var(--ng-doc-primary);
 	}

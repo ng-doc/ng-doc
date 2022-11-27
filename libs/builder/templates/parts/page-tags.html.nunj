@@ -1,20 +1,25 @@
 {% import "helpers/tag.html.nunj" as tagMacro %}
 
-{% set selectors = declaration | extractSelectors %}
+<div class="ng-doc-page-tags">
+	{% set selectors = declaration | extractSelectors %}
 
-{%- if scope %}
-	{{ tagMacro.render(scope.name, "ng-doc-tag-scope") }}
-{%- endif %}
 
-{{ tagMacro.render(declaration.getKindName() | humanizeDeclarationName) }}
+	{{ tagMacro.render(scope.name, "ng-doc-scope") }}
+	<span class="ng-doc-inline-delimiter">/</span>
+	{{ tagMacro.render(declaration.getKindName() | humanizeDeclarationName) }}
 
-{%- if declaration.getDecorators %}
-	{% for decorator in declaration.getDecorators() %}
-		{{ tagMacro.render('@' + decorator.getName(), decorator.getName()) }}
+
+	{%- if declaration.getDecorators and declaration.getDecorators().length %}
+		<span class="ng-doc-inline-delimiter">/</span>
+		{% for decorator in declaration.getDecorators() %}
+			{{ tagMacro.render('@' + decorator.getName(), decorator.getName()) }}
+		{%- endfor %}
+	{%- endif %}
+
+
+	{% for selector in selectors %}
+		<span class="ng-doc-inline-delimiter">/</span>
+		{{ tagMacro.render(selector, "ng-doc-tag-selector") }}
 	{%- endfor %}
-{%- endif %}
+</div>
 
-
-{% for selector in selectors %}
-	{{ tagMacro.render(selector, "ng-doc-tag-selector") }}
-{%- endfor %}

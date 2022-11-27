@@ -9,3 +9,5 @@ type Test = NgDocApiListComponent;
 
 const variable: string = 'mma'
 ```
+
+{{ NgDocActions.playground("playground1") }}

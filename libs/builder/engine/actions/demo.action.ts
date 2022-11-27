@@ -1,5 +1,4 @@
 import {NgDocActionOutput} from '../../interfaces';
-import {NG_DOC_DEMO_TEMPLATE_ID} from '../../naming';
 import {NgDocAction} from '../../types';
 import {NgDocDemoActionOptions} from '../interfaces';
 
@@ -13,9 +12,9 @@ import {NgDocDemoActionOptions} from '../interfaces';
 export function demoAction(componentName: string, options?: NgDocDemoActionOptions): NgDocAction {
 	return (): NgDocActionOutput => {
 		return {
-			output: `<div id="${NG_DOC_DEMO_TEMPLATE_ID}"data-component-name="${componentName}" data-container="${
+			output: `<ng-doc-demo componentName="${componentName}" container="${
 				options?.container ?? true
-			}"></div>`,
+			}"></ng-doc-demo>`,
 		};
 	};
 }

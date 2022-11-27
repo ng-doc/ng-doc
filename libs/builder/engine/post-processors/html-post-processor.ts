@@ -19,7 +19,7 @@ export function htmlPostProcessor(entity: NgDocEntity, content: NgDocBuiltOutput
 			.use(require('rehype-highlight'))
 			.use(require('rehype-slug'))
 			.use(autolinkHeading, isRouteEntity(entity) ? entity.fullRoute : undefined)
-			.use(keywordsProcessor, entity.builder.entities)
+			.use(keywordsProcessor, entity.builder.entities, isRouteEntity(entity) ? entity : undefined)
 			.processSync(content.content)
 			.toString()
 	}

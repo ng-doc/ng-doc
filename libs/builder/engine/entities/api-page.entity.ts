@@ -117,7 +117,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 					this.logger.error(
 						`\nError happened while processing Api Page for entity "${this.declaration
 							?.getSymbol()
-							?.getName()}": ${error}"`,
+							?.getName()}":\n${error}"`,
 					);
 					return of(null);
 				}),

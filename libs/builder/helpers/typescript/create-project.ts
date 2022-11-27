@@ -15,7 +15,11 @@ export function createProject(options?: ProjectOptions): Project {
 			incremental: true,
 			declaration: false,
 			skipLibCheck: true,
-			noResolve: true,
+			/*
+				true value increases the speed, but thn it's not possible to resolve imports,
+				TODO: maybe as a workaround it's possible to add all source files that we need to the Project
+			 */
+			noResolve: false,
 			isolatedModules: true,
 			types : [],
 			...options?.compilerOptions,
