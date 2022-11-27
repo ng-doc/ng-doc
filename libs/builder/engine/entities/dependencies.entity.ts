@@ -157,6 +157,8 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 					.flat(),
 			];
 
+
+
 			return {
 				[classDeclaration.getName() ?? '']: assets.map((asset: Omit<NgDocAsset, 'outputPath'>) => ({
 					...asset,

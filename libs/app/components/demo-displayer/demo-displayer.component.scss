@@ -1,6 +1,7 @@
 :host {
 	display: flex;
 	flex-direction: column;
+	overflow: hidden;
 	--ng-doc-code-margin: 0;
 	--ng-doc-code-border-radius: 0;
 
