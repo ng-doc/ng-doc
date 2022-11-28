@@ -2,46 +2,23 @@
 	position: relative;
 	width: 200px;
 
-	.page-map {
+	.ng-doc-page-map {
 		position: fixed;
 		list-style: none;
 		margin: 0;
 		padding: 0;
+		padding-left: var(--ng-doc-base-gutter);
 		border-left: 1px solid var(--ng-doc-base-3);
 
-		.page-map-item {
-			color: var(--ng-doc-text);
-			padding: var(--ng-doc-base-gutter);
+		ng-doc-dot {
+			position: absolute;
+			transform: translateX(-50%);
+			left: 0;
+			transition: var(--ng-doc-transition);
+		}
 
-			&.level-1 {
-				padding-left: var(--ng-doc-base-gutter);
-			}
+		.ng-doc-page-map-item {
 
-			&.level-2 {
-				padding-left: calc(var(--ng-doc-base-gutter) * 2);
-			}
-
-			&.level-3 {
-				padding-left: calc(var(--ng-doc-base-gutter) * 3);
-			}
-
-			&.level-4 {
-				padding-left: calc(var(--ng-doc-base-gutter) * 4);
-			}
-
-			&:hover {
-				cursor: pointer;
-
-				color: var(--ng-doc-primary);
-			}
-
-			a {
-				color: inherit;
-
-				&:hover {
-					text-decoration: none;
-				}
-			}
 		}
 	}
 }

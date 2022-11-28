@@ -1,0 +1,13 @@
+.ng-doc-decorators-group {
+	display: flex;
+
+	&.column {
+		flex-direction: column;
+		align-items: flex-start;
+
+		.ng-doc-tag {
+			margin: 0;
+			margin-bottom: var(--ng-doc-base-gutter);
+		}
+	}
+}

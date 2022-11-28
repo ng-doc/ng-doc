@@ -1,0 +1,115 @@
+.ng-doc-tag {
+	display: inline-block;
+	padding: 0 var(--ng-doc-base-gutter);
+	font-size: 14px;
+	line-height: 22px;
+	border-radius: var(--ng-doc-base-gutter);
+	background-color: var(--ng-doc-grey-30);
+	color: var(--ng-doc-grey-150);
+	vertical-align: middle;
+	white-space: nowrap;
+	font-weight: 700;
+
+	code {
+		color: inherit;
+		background-color: transparent;
+		padding: 0;
+		white-space: nowrap;
+	}
+
+	& + .ng-doc-tag {
+		margin-left: var(--ng-doc-base-gutter);
+	}
+
+	&[data-content="ng-doc-scope"] {
+		padding: 0;
+		background-color: transparent;
+		color: var(--ng-doc-text);
+	}
+
+	&[data-content="ng-doc-declaration-modifier"] {
+		font-family: var(--ng-doc-heading-font-family);
+		font-weight: 800;
+		background-color: transparent;
+		color: var(--ng-doc-deep-orange-100);
+		padding: 0;
+	}
+
+	/*----------------- Declarations --------------------*/
+	&[data-content="Class"] {
+		background-color: var(--ng-doc-pink-10);
+		color: var(--ng-doc-pink-70);
+	}
+
+	&[data-content="Interface"] {
+		background-color: var(--ng-doc-blue-20);
+		color: var(--ng-doc-blue-150);
+	}
+
+	&[data-content="Enum"],
+	&[data-content="Variable"]{
+		background-color: var(--ng-doc-orange-20);
+		color: var(--ng-doc-orange-150);
+	}
+
+	&[data-content="Function"] {
+		background-color: var(--ng-doc-green-20);
+		color: var(--ng-doc-green-150);
+	}
+
+	&[data-content="Type Alias"] {
+		background-color: var(--ng-doc-purple-20);
+		color: var(--ng-doc-purple-150);
+	}
+
+	/*----------------- Class Decorators --------------------*/
+	&[data-content="Component"] {
+		background-color: var(--ng-doc-light-blue-20);
+		color: var(--ng-doc-light-blue-150);
+	}
+
+	&[data-content="Directive"] {
+		background-color: var(--ng-doc-orange-20);
+		color: var(--ng-doc-orange-150);
+	}
+
+	&[data-content="Service"] {
+		background-color: var(--ng-doc-indigo-20);
+		color: var(--ng-doc-indigo-150);
+	}
+
+	&[data-content="Pipe"] {
+		background-color: var(--ng-doc-green-20);
+		color: var(--ng-doc-green-150);
+	}
+
+	&[data-content="NgModule"] {
+		background-color: var(--ng-doc-pink-20);
+		color: var(--ng-doc-pink-150);
+	}
+
+	/*----------------- Property Decorators --------------------*/
+	&[data-content="Input"] {
+		background-color: var(--ng-doc-light-blue-20);
+		color: var(--ng-doc-light-blue-150);
+	}
+
+	&[data-content="Output"] {
+		background-color: var(--ng-doc-light-blue-20);
+		color: var(--ng-doc-light-blue-150);
+	}
+
+	/*----------------- Modificators --------------------*/
+	&[data-content="abstract"],
+	&[data-content="static"],
+	&[data-content="async"],
+	&[data-content="readonly"] {
+		background-color: var(--ng-doc-deep-orange-70);
+		color: var(--ng-doc-white);
+	}
+
+	&[data-content="ng-doc-tag-selector"] {
+		background-color: var(--ng-doc-teal-40);
+		color: var(--ng-doc-teal-170);
+	}
+}

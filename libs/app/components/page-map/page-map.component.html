@@ -1,6 +1,11 @@
-<ul class="page-map">
-	<li *ngFor="let item of map" class="page-map-item level-{{item.level}}">
-		<a [href]="item.path">{{item.title}}</a>
+<ul class="ng-doc-page-map">
+	<ng-doc-dot size="medium" #selection></ng-doc-dot>
+	<li *ngFor="let item of map"
+		ng-doc-page-map-element
+		[href]="item.path"
+		[level]="item.level"
+		[selected]="item === activeItem">
+		{{item.title}}
 	</li>
 </ul>
 

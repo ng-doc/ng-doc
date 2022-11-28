@@ -1,0 +1,11 @@
+{% import "helpers/tag.html.nunj" as tagMacro %}
+
+{% macro render(decorators, column) %}
+	{% if decorators.length %}
+		<div class="ng-doc-decorators-group {{ 'column' if column }}">
+			{% for decorator in decorators %}
+				{{ tagMacro.render('@' + decorator.getName(), decorator.getName()) }}
+			{%- endfor %}
+		</div>
+	{% endif %}
+{% endmacro %}

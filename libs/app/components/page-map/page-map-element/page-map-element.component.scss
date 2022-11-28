@@ -1,0 +1,38 @@
+:host {
+	color: var(--ng-doc-text);
+	padding: var(--ng-doc-base-gutter);
+
+	&[data-ng-doc-level="1"] {
+		padding-left: var(--ng-doc-base-gutter);
+	}
+
+	&[data-ng-doc-level="2"] {
+		padding-left: calc(var(--ng-doc-base-gutter) * 2);
+	}
+
+	&[data-ng-doc-level="3"] {
+		padding-left: calc(var(--ng-doc-base-gutter) * 3);
+	}
+
+	&[data-ng-doc-level="4"] {
+		padding-left: calc(var(--ng-doc-base-gutter) * 4);
+	}
+
+	&[data-ng-doc-selected="true"] {
+		color: var(--ng-doc-primary);
+	}
+
+	&:hover {
+		cursor: pointer;
+
+		color: var(--ng-doc-primary);
+	}
+
+	a {
+		color: inherit;
+
+		&:hover {
+			text-decoration: none;
+		}
+	}
+}

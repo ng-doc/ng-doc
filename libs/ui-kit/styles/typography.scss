@@ -41,8 +41,13 @@ h5,
 h6 {
 	font-family: var(--ng-doc-heading-font-family);
 	margin: 0;
+	margin-top: calc(var(--ng-doc-base-gutter) * 4);
 	line-height: 1.5rem;
 	font-weight: 700;
+
+	&:first-child {
+		margin: 0;
+	}
 }
 
 h1 {
@@ -126,6 +131,7 @@ table {
 		tr {
 			td {
 				padding: var(--ng-doc-base-gutter);
+				vertical-align: top;
 
 				&:first-child {
 					padding-left: calc(var(--ng-doc-base-gutter) * 4);

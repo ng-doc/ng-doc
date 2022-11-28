@@ -19,13 +19,18 @@ assembly of playgrounds to the side of the `@ng-doc/builder`.
 We're going to improve the demo by adding the ability for users of your documentation to open the
 demo in Stackblitz, which would be cool, wouldn't it?
 
+## Build stability and error output
+
+In order to better understand what went wrong, we would like to improve error output as well as
+increase build stability to skip parts of the application that cannot be built.
+
 ## Tests
 
 Features are always cool, but sometimes you have to spend time on boring tests to ensure stability,
 you should be familiar with this right? First of all we are going to add tests for the heart of
 our library `@ng-doc/builder` and later add them to UI elements as well.
 
-## Did we forget something?
+## Did we miss anything?
 
 If you have a suggestion or a cool idea to improve the library, you can always leave it in our
 project repository.
