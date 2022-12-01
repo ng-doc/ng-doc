@@ -21,7 +21,7 @@ export class AppComponent {
 		if (this.themeService.currentTheme) {
 			this.themeService.set()
 		} else {
-			this.themeService.set('night');
+			this.themeService.set('ng-doc-night');
 		}
 	}
 }

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import minimatch from 'minimatch';
 import * as path from 'path';
-import {Observable, of} from 'rxjs';
+import {Observable, of, throwError} from 'rxjs';
 import {OutputFile, SyntaxKind} from 'ts-morph';
 
 import {isCategoryEntity} from '../../../helpers';
@@ -30,13 +30,17 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 	}
 
 	override update(): Observable<void> {
+		this.readyToBuild = false;
+
 		delete require.cache[require.resolve(this.pathToCompiledFile)];
 		this.target = require(this.pathToCompiledFile).default;
 
 		if (!this.target) {
-			throw new Error(
-				`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`,
-			);
+			return throwError(
+				new Error(
+					`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`,
+				)
+			)
 		}
 
 		this.readyToBuild = true;

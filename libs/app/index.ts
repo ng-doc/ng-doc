@@ -1,5 +1,6 @@
 export * from '@ng-doc/app/classes';
 export * from '@ng-doc/app/components';
+export * from '@ng-doc/app/constants';
 export * from '@ng-doc/app/directives';
 export * from '@ng-doc/app/helpers';
 export * from '@ng-doc/app/interfaces';

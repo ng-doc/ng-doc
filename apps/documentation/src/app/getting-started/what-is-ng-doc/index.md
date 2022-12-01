@@ -1,2 +1,2 @@
 # {{ NgDocPage.title }}
-`NgDocApiListComponent`
+

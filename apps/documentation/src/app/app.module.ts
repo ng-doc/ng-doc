@@ -20,7 +20,6 @@ import {AppComponent} from './app.component';
 		NgDocGeneratedModule.forRoot(),
 		RouterModule.forRoot(NG_DOC_ROUTING),
 	],
-	providers: [],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

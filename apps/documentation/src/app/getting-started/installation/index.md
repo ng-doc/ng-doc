@@ -17,7 +17,7 @@ Install the NgDoc via your package manage
 npm i @ng-doc/{core,builder,ui-kit,app}
 ```
 
-### Add builders
+### Adding builders
 
 First of all you need to add builders from NgDoc library to your application, open `angular.json`
 file, and replace `browser` and `dev-server` builders for `build` and `serve` targets with
@@ -40,11 +40,10 @@ from the NgDoc as shown in the example below
 	}
 ```
 
-### Import styles
+### Importing styles
 
-You will also need to import the global styles provided by the library, in addition to the global
-styles you need to import the styles from the `highlightjs` library and you can change them at any
-time. To do that edit you `angular.json` file, or add them to you `styles` file
+You will also need to import the global styles provided by the library.
+To do that edit you `angular.json` file, or add them to you `styles` file
 
 ```json
 {
@@ -54,9 +53,7 @@ time. To do that edit you `angular.json` file, or add them to you `styles` file
 				"build": {
 					"options": {
 						"styles": [
-							"@ng-doc/app/styles/global.scss",
-							"highlight.js/styles/default.css",
-							"highlight.js/styles/vs.css"
+							"@ng-doc/app/styles/global.scss"
 						]
 					}
 				}
@@ -66,7 +63,45 @@ time. To do that edit you `angular.json` file, or add them to you `styles` file
 }
 ```
 
-### Import global modules
+## Adding assets
+
+The NgDoc libraries come with assets that include various icons, fonts, themes, and other very
+useful things. You also need to include them, for this add the following code to your `angular.json`
+file.
+
+```json
+{
+	"projects": {
+		"my-project": {
+			"architect": {
+				"build": {
+					"options": {
+						"assets": [
+							{
+								"glob": "**/*",
+								"input": "./node_modules/@ng-doc/ui-kit/assets",
+								"output": "assets"
+							},
+							{
+								"glob": "**/*",
+								"input": "./node_modules/@ng-doc/app/assets",
+								"output": "assets"
+							},
+							{
+								"glob": "**/*",
+								"input": "./node_modules/@ng-doc/builder/generated/assets",
+								"output": "assets"
+							}
+						]
+					}
+				}
+			}
+		}
+	}
+}
+```
+
+### Importing global modules
 
 Import the global library-provided modules into your application's root `AppModule`
 
@@ -85,7 +120,7 @@ import {AppComponent} from './app.component';
 	declarations: [AppComponent],
 	imports: [
 		BrowserModule,
-		// To enable animations
+		// To enable animations ( import NoopAnimationsModule if you don't like animations :( )
 		BrowserAnimationsModule,
 		// Root NgDoc module
 		NgDocModule.forRoot(),
@@ -104,7 +139,7 @@ export class AppModule {
 
 ```
 
-### Add application layout
+### Adding application layout
 
 You will also need to add an application layer to your root `AppComponent` to display header and
 menu, to do this open your `app.component.html` file and add the following code to it

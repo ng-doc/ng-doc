@@ -1,6 +1,8 @@
 import {DOCUMENT} from '@angular/common';
 import {Inject, Injectable} from '@angular/core';
+import {NG_DOC_STORE_THEME_KEY} from '@ng-doc/app/constants';
 import {NgDocTheme} from '@ng-doc/app/interfaces';
+import {NgDocStoreService} from '@ng-doc/app/services/store';
 import {NG_DOC_THEME} from '@ng-doc/app/tokens';
 
 @Injectable({
@@ -15,6 +17,7 @@ export class NgDocThemeService {
 		private readonly document: Document,
 		@Inject(NG_DOC_THEME)
 		private readonly themes: NgDocTheme[],
+		private readonly store: NgDocStoreService,
 	) {
 	}
 
@@ -22,23 +25,36 @@ export class NgDocThemeService {
 		return this.theme;
 	}
 
-	set(id?: string): void {
+	set(id?: string): Promise<void> {
 		this.removeLink();
 
 		if (id !== 'day' && id) {
 			const theme: NgDocTheme | undefined = this.themes.find((theme: NgDocTheme) => theme.id === id);
 
 			if (!theme) {
-				throw new Error(`Theme with id "${id}" is not registered. Make sure that you registered it in the root of your application.`)
+				console.warn(`Theme with id "${id}" is not registered. Make sure that you registered it in the root of your application.`);
+
+				return Promise.resolve();
 			}
 
 			this.createLinkIfNoExists();
 
 			if (this.linkElement) {
 				this.linkElement.href = theme.path;
+				this.store.set(NG_DOC_STORE_THEME_KEY, theme.id);
 				this.theme = theme;
+
+				return new Promise<void>((resolve: () => void, reject: (err: Event | string) => void) => {
+					if (this.linkElement) {
+						this.linkElement.onload = resolve;
+						this.linkElement.onerror = reject;
+					}
+				})
 			}
 		}
+		this.store.set(NG_DOC_STORE_THEME_KEY, 'day');
+
+		return Promise.resolve();
 	}
 
 	private removeLink(): void {

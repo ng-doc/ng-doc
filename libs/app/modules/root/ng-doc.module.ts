@@ -1,10 +1,14 @@
 import {OverlayModule} from '@angular/cdk/overlay';
 import {HttpClientModule} from '@angular/common/http';
-import {ModuleWithProviders, NgModule} from '@angular/core';
+import {APP_INITIALIZER, ModuleWithProviders, NgModule, Optional} from '@angular/core';
 import {NgDocSearchEngine} from '@ng-doc/app/classes';
 import {NgDocNavbarModule, NgDocSidebarModule} from '@ng-doc/app/components';
 import {NgDocRootModule} from '@ng-doc/app/components/root';
-import {NG_DOC_THEME} from '@ng-doc/app/tokens';
+import {NG_DOC_STORE_THEME_KEY} from '@ng-doc/app/constants';
+import {NG_DOC_NIGHT_THEME} from '@ng-doc/app/constants';
+import {NgDocTheme} from '@ng-doc/app/interfaces';
+import {NgDocStoreService, NgDocThemeService} from '@ng-doc/app/services';
+import {NG_DOC_DEFAULT_THEME, NG_DOC_THEME} from '@ng-doc/app/tokens';
 import {
 	NgDocBooleanControlModule,
 	NgDocNumberControlModule,
@@ -30,7 +34,19 @@ export class NgDocModule {
 			ngModule: NgDocModule,
 			providers: [
 				{provide: NgDocSearchEngine, useValue: new NgDocSearchEngine()},
-				{provide: NG_DOC_THEME, useValue: {id: 'night', path: 'assets/themes/night.css'}, multi: true}
+				{provide: NG_DOC_THEME, useValue: NG_DOC_NIGHT_THEME, multi: true},
+				{
+					provide: APP_INITIALIZER,
+					useFactory: (themeService: NgDocThemeService, store: NgDocStoreService, defaultTheme: NgDocTheme) => {
+						return () => {
+							const themeId: string | null = store.get(NG_DOC_STORE_THEME_KEY);
+
+							return themeService.set(themeId ?? defaultTheme?.id);
+						}
+					},
+					multi: true,
+					deps: [NgDocThemeService, NgDocStoreService, [new Optional(), NG_DOC_DEFAULT_THEME]]
+				}
 			],
 		};
 	}

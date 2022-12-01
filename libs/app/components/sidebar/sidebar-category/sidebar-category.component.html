@@ -4,7 +4,6 @@
 			<ng-doc-dot *ngIf="!expandable"></ng-doc-dot>
 			<span
 				ng-doc-text
-				[absoluteContent]="true"
 				[color]="expandable ? 'normal' : 'muted'"
 			>
 				<ng-doc-icon icon="chevron-right" *ngIf="category?.expandable" [ngDocRotator]="expanded" ngDocTextLeft>

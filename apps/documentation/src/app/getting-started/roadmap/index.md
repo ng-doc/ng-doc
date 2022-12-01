@@ -14,6 +14,11 @@ remove in future releases, moreover, using it forces you to turn off AOT to comp
 application, not very cool right? We will rewrite this part, leaving the existing API and moving the
 assembly of playgrounds to the side of the `@ng-doc/builder`.
 
+## Performance
+
+We also want to work on performance to speed up the generation of documentation, we have a few
+ideas, but we'll see what comes of it
+
 ## Stackblitz API
 
 We're going to improve the demo by adding the ability for users of your documentation to open the
@@ -30,7 +35,12 @@ Features are always cool, but sometimes you have to spend time on boring tests t
 you should be familiar with this right? First of all we are going to add tests for the heart of
 our library `@ng-doc/builder` and later add them to UI elements as well.
 
-## Did we forget something?
+## Multi-language support
+
+We want to add support for multiple languages in the future so that you can write even more
+user-friendly documentation.
+
+## Did we miss anything?
 
 If you have a suggestion or a cool idea to improve the library, you can always leave it in our
 project repository.
