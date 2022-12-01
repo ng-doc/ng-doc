@@ -6,6 +6,7 @@ export * from '@ng-doc/app/interfaces';
 export * from '@ng-doc/app/modules';
 export * from '@ng-doc/app/pipes';
 export * from '@ng-doc/app/processors';
+export * from '@ng-doc/app/services';
 export * from '@ng-doc/app/tokens';
 export * from '@ng-doc/app/type-controls';
 export * from '@ng-doc/app/types';

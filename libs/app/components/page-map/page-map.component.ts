@@ -87,9 +87,8 @@ export class NgDocPageMapComponent implements OnChanges, AfterViewInit {
 			const element: HTMLElement | undefined = this.elements.toArray()[index]?.elementRef.nativeElement;
 
 			if (element) {
-				const top: number = element.offsetTop + element.offsetHeight / 2 - 4;
-
-				this.renderer.setStyle(this.selection.nativeElement, 'top', `${top}px`);
+				this.renderer.setStyle(this.selection.nativeElement, 'top', `${element.offsetTop}px`);
+				this.renderer.setStyle(this.selection.nativeElement, 'height', `${element.offsetHeight}px`);
 			}
 		}
 

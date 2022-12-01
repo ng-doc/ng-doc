@@ -1,11 +1,10 @@
-<ng-doc-input-wrapper [leftContent]="leftContent" ngDocDropdownOrigin ngDocFocusCatcher (focusEvent)="dropdown.open()"
-					  (blurEvent)="dropdown.close()" (click)="dropdown.open()">
+<ng-doc-input-wrapper [leftContent]="leftContent" ngDocDropdownOrigin ngDocFocusCatcher (focusEvent)="inputElement.value ? dropdown.open() : null"
+					  (blurEvent)="dropdown.close()" (click)="inputElement.value ? dropdown.open() : null" #input>
 	<ng-template #leftContent>
 		<ng-doc-icon icon="search"></ng-doc-icon>
 	</ng-template>
-	<input ngDocInputString ngModel (ngModelChange)="query$.next($event); dropdown.open()" placeholder="Search...">
-	<ng-doc-dropdown [content]="dropdownContent" width="100%" maxHeight="calc(95vh - var(--ng-doc-navbar-height)"
-					 #dropdown>
+	<input ngDocInputString ngModel (ngModelChange)="query$.next($event); dropdown.open()" placeholder="Search..." #inputElement>
+	<ng-doc-dropdown [content]="dropdownContent" [width]="input.elementRef.nativeElement.offsetWidth" maxHeight="calc(95vh - var(--ng-doc-navbar-height)" #dropdown>
 		<ng-template #dropdownContent>
 			<div class="ng-doc-search-result-content">
 				<ng-doc-search-result [result]="queryResult"></ng-doc-search-result>

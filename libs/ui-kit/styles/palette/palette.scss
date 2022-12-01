@@ -4,7 +4,7 @@
 	$map: ();
 
 	@each $color-name, $color in $palette-colors {
-		$color-map: color-palette($color-name, $color, $color-name == 'grey');
+		$color-map: color-palette($color-name, $color);
 		$map: map-merge($map, (#{$color-name}: $color-map));
 	}
 

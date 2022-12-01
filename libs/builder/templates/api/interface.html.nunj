@@ -3,21 +3,18 @@
 {% import "helpers/type.html.nunj" as typeMacro %}
 {% import "helpers/methods.html.nunj" as methodsMacro %}
 {% import "helpers/properties.html.nunj" as propertiesMacro %}
+{% import "helpers/tag.html.nunj" as tagMacro %}
 
 {% block details %}
 	{%- set extends = declaration.getExtends() -%}
 
 	{% if extends.length %}
-		<section>
-			{% if extends.length %}
-				<div class="ng-doc-declaration-details">
-					Extends
-					{%- for e in extends -%}
-						{{ typeMacro.render(e.getType()) }}{{ ', ' if not loop.last }}
-					{%- endfor %}
-				</div>
-			{%- endif %}
-		</section>
+		<div class="ng-doc-header-details">
+			<span class="ng-doc-header-details-label">Extends</span>
+			{%- for i in extends -%}
+				{{ tagMacro.render(typeMacro.render(i.getType()), "interface-extends") }}
+			{%- endfor %}
+		</div>
 	{% endif %}
 {% endblock %}
 

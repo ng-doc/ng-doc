@@ -1,7 +1,10 @@
 <ng-doc-root>
-	<ng-doc-navbar [leftContent]="leftContent">
+	<ng-doc-navbar [leftContent]="leftContent" [rightContent]="rightContent">
 		<ng-template #leftContent>
 			<h3 class="brand">NgDoc</h3>
+		</ng-template>
+		<ng-template #rightContent>
+			<button (click)="toggleTheme()">toggle theme</button>
 		</ng-template>
 	</ng-doc-navbar>
 	<ng-doc-sidebar></ng-doc-sidebar>

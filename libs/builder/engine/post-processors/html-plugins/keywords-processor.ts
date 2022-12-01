@@ -83,9 +83,11 @@ function getNodes(node: any, parent: any, entityStore: NgDocEntityStore, inlineL
 			// Convert code tag to link if it's a link to the page entity
 			if (inlineLink && isPageEntity(entity)) {
 				parent.tagName = "a";
-				parent.properties = {href: entity.fullRoute, class: 'ng-doc-code-anchor'};
+				parent.properties = {href: entity.fullRoute};
 
 				return {type: 'text', value: entity.title};
+			} else if (inlineLink && entity) {
+				parent.properties.class = 'ng-doc-code-with-link'
 			}
 
 			// Add link inside the code if it's a link to the API entity

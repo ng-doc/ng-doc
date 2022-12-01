@@ -36,7 +36,6 @@ export class NgDocNavbarComponent {
 	) {
 		fromEvent(this.window, 'scroll')
 			.pipe(
-				debounceTime(10),
 				map((e: Event) => ((e.target as Document)?.scrollingElement?.scrollTop ?? 0) > 0),
 				distinctUntilChanged(),
 				ngDocZoneOptimize(this.ngZone),

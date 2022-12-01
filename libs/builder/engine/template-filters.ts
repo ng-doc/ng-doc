@@ -4,6 +4,7 @@ export {
 	displayType,
 	extractDocs,
 	extractParameterDocs,
+	extractSeeDocs,
 	extractSelectors,
 	filterByScope,
 	filterByStatic,

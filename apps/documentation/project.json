@@ -24,6 +24,11 @@
 					},
 					{
 						"glob": "**/*",
+						"input": "dist/libs/app/assets",
+						"output": "assets"
+					},
+					{
+						"glob": "**/*",
 						"input": "dist/libs/builder/generated/assets",
 						"output": "assets"
 					}

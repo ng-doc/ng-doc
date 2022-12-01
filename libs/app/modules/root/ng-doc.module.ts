@@ -4,6 +4,7 @@ import {ModuleWithProviders, NgModule} from '@angular/core';
 import {NgDocSearchEngine} from '@ng-doc/app/classes';
 import {NgDocNavbarModule, NgDocSidebarModule} from '@ng-doc/app/components';
 import {NgDocRootModule} from '@ng-doc/app/components/root';
+import {NG_DOC_THEME} from '@ng-doc/app/tokens';
 import {
 	NgDocBooleanControlModule,
 	NgDocNumberControlModule,
@@ -27,7 +28,10 @@ export class NgDocModule {
 	static forRoot(): ModuleWithProviders<NgDocModule> {
 		return {
 			ngModule: NgDocModule,
-			providers: [{provide: NgDocSearchEngine, useValue: new NgDocSearchEngine()}],
+			providers: [
+				{provide: NgDocSearchEngine, useValue: new NgDocSearchEngine()},
+				{provide: NG_DOC_THEME, useValue: {id: 'night', path: 'assets/themes/night.css'}, multi: true}
+			],
 		};
 	}
 }

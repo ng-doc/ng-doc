@@ -4,6 +4,7 @@ import {addPackageJsonDependency, createProject, setActiveProject} from 'ng-morp
 
 import {NG_DOC_VERSION} from './constants/version';
 import {Schema} from './schema';
+import {addAssets} from './steps/add-assets';
 import {addLayout} from './steps/add-layout';
 import {addNgDocModules} from './steps/add-ng-doc-modules';
 import {addStyles} from './steps/add-styles';
@@ -27,6 +28,7 @@ export function ngAdd(options: Schema): Rule {
 		return chain([
 			replaceBuilders(options, context),
 			addStyles(options, context),
+			addAssets(options, context),
 			disableAot(options, context),
 			addNgDocModules(options),
 			addLayout(options),

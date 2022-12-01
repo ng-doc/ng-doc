@@ -43,10 +43,11 @@
 						.ng-doc-scope-item-link {
 							display: flex;
 							align-items: center;
-							text-decoration: none;
+							color: var(--ng-doc-text);
 
 							ng-doc-kind-icon {
 								margin-right: var(--ng-doc-base-gutter);
+								text-decoration: none !important;
 							}
 						}
 					}

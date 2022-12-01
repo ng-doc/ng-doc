@@ -11,6 +11,10 @@ export abstract class NgDocRootPage {
 	abstract readonly playground?: NgDocPlayground;
 }
 
+/**
+ * @see `MyInterface1`
+ * @see `MyInterface2`
+ */
 export class MyClass1{
 
 }
@@ -36,6 +40,7 @@ export interface MyInterface2 extends MyInterface1 {
  * Some really ling text that you can tead o assdkorwp poiqpwoie dpsfi aposdi pai dasdaos iapsod
  * asdpaoisa psd aii apso iaiidpqowie q psad paisdp as as aps
  * apsod iaps oi i apsoipqoiepqow poi `MyListComponent`
+ *
  */
 @Directive()
 export abstract class MyClass2 extends MyClass1 implements MyInterface1 {

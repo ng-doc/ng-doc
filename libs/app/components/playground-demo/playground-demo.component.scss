@@ -2,6 +2,7 @@
 	display: block;
 	border: var(--ng-doc-demo-displayer-border);
 	border-radius: var(--ng-doc-demo-displayer-border-radius);
+	overflow: hidden;
 
 	&:not(:last-child) {
 		border-bottom: 0;

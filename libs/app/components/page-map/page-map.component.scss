@@ -10,9 +10,12 @@
 		padding-left: var(--ng-doc-base-gutter);
 		border-left: 1px solid var(--ng-doc-base-3);
 
-		ng-doc-dot {
+		.ng-doc-page-map-selection {
 			position: absolute;
-			transform: translateX(-50%);
+			transform: translateX(calc(-50% - 0.5px));
+			width: calc(var(--ng-doc-base-gutter) / 2);
+			border-radius: calc(var(--ng-doc-base-gutter) / 2);
+			background-color: var(--ng-doc-primary);
 			left: 0;
 			transition: var(--ng-doc-transition);
 		}

@@ -1,3 +1,10 @@
+@mixin headings {
+	h1, h2, h3,
+	h4, h5, h6 {
+		@content;
+	}
+}
+
 html {
 	-webkit-font-smoothing: antialiased;
 }
@@ -33,21 +40,11 @@ blockquote {
 	margin-bottom: 1.5rem;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+@include headings {
 	font-family: var(--ng-doc-heading-font-family);
-	margin: 0;
-	margin-top: calc(var(--ng-doc-base-gutter) * 4);
+	margin: calc(var(--ng-doc-base-gutter) * 4) 0 0;
 	line-height: 1.5rem;
 	font-weight: 700;
-
-	&:first-child {
-		margin: 0;
-	}
 }
 
 h1 {
@@ -104,8 +101,8 @@ code {
 table {
 	width: 100%;
 	border-spacing: 0;
-	font-size: 14px;
-	margin: 1.5em 0;
+	margin: calc(var(--ng-doc-base-gutter) * 4) 0;
+	margin-bottom: calc(var(--ng-doc-base-gutter) * 7);
 
 	thead {
 		tr {
@@ -122,6 +119,11 @@ table {
 
 				&:last-child {
 					padding-right: calc(var(--ng-doc-base-gutter) * 4);
+				}
+
+				@include headings {
+					margin-top: 0;
+					margin-bottom: 0;
 				}
 			}
 		}
@@ -140,14 +142,22 @@ table {
 				&:last-child {
 					padding-right: calc(var(--ng-doc-base-gutter) * 4);
 				}
+
+				table {
+					margin: calc(var(--ng-doc-base-gutter) * 2) 0;
+				}
 			}
 		}
+	}
+
+	@include headings {
+		margin: 0 0 calc(var(--ng-doc-base-gutter) * 2);
 	}
 }
 
 a {
 	text-decoration: none;
-	color: var(--ng-doc-blue-100);
+	color: var(--ng-doc-link-color);
 
 	&:hover {
 		text-decoration: underline;

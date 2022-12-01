@@ -18,7 +18,11 @@
 	</thead>
 	<tbody>
 		<tr>
-			<td>{{ method | extractDocs }}</td>
+			<td>
+				{% set description = method | extractDocs %}
+
+				{{ description if description else 'No documentation has been provided.' }}
+			</td>
 		</tr>
 		<tr>
 			<td>

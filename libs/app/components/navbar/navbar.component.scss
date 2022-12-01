@@ -6,7 +6,7 @@
 	transition: var(--ng-doc-transition) box-shadow;
 
 	&.has-shadow {
-		box-shadow: var(--ng-doc-border-color) 0px 5px 20px -5px;
+		box-shadow: var(--ng-doc-shadow-color) 0px 5px 20px -5px;
 	}
 
 	.navbar-container {

@@ -29,6 +29,10 @@ article {
 				margin-left: calc(var(--ng-doc-base-gutter) * 2);
 				margin-right: var(--ng-doc-base-gutter);
 				opacity: .5;
+
+				&:first-child {
+					margin-left: 0;
+				}
 			}
 		}
 	}

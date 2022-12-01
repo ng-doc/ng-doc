@@ -36,6 +36,24 @@ export function extractDocs(node: JSDocableNode, customTag?: string): string {
 /**
  *
  * @param node
+ */
+export function extractSeeDocs(node: JSDocableNode): string[] {
+	const jsDocs: JSDoc[] = asArray(node.getJsDocs()[0]);
+	const parser: TSDocParser = new TSDocParser(getTsDocConfiguration());
+
+
+	return jsDocs.map((jsDoc: JSDoc) => {
+		const context: ParserContext = parser.parseString(jsDoc.getText())
+
+		return context.docComment.seeBlocks
+			.map((seeBlock: DocBlock) => TsDocFormatter.renderDocNode(seeBlock))
+			.map(marked);
+	}).flat()
+}
+
+/**
+ *
+ * @param node
  * @param paramName
  */
 export function extractParameterDocs(node: JSDocableNode, paramName: string): string {
