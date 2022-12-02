@@ -94,7 +94,7 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 			);
 
 			return renderer
-				.render('api-scope.module.ts.nunj')
+				.render('./api-scope.module.ts.nunj')
 				.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
 		}
 		return of();

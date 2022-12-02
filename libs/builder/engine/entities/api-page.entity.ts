@@ -100,7 +100,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 		});
 
 		return renderer
-			.render('api-page.module.ts.nunj')
+			.render('./api-page.module.ts.nunj')
 			.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
 	}
 
@@ -111,7 +111,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 				scope: this.parent.target,
 			});
 
-			return renderer.render('api-page.html.nunj').pipe(
+			return renderer.render('./api-page.html.nunj').pipe(
 				map((output: string) => ({content: output, filePath: this.builtPagePath})),
 				catchError((error: unknown) => {
 					this.logger.error(

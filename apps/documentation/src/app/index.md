@@ -1,20 +1,23 @@
 -   Getting Started
-	-   Installation
-	-   Roadmap
-	-   What is NgDoc
+    -   Installation
+    -   Roadmap
+    -   What is NgDoc
 -   Entities
-	-   Page
-	-   Category
-	-   Dependency
-	-   API Reference
+    -   Page
+    -   Category
+    -   Dependency
+    -   API Reference
 -   Content
-	-   Nunjucks
-	-   Variables & Custom Data
-	-   Demo
-	-   Playground
-	-   Keywords
+    -   Nunjucks
+    -  Guidelines
+    - Declaration
+    -   Variables & Custom Data
+    -   Demo
+    -   Playground
+    -   Keywords
 -   Customization
-	-   Themes
+    -   Themes
+    -   Highlight.js
 
 Создание страницы
 Создание категории

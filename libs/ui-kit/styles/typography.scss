@@ -42,7 +42,7 @@ blockquote {
 
 @include headings {
 	font-family: var(--ng-doc-heading-font-family);
-	margin: calc(var(--ng-doc-base-gutter) * 4) 0 0;
+	margin: calc(var(--ng-doc-base-gutter) * 6) 0 0;
 	line-height: 1.5rem;
 	font-weight: 700;
 }

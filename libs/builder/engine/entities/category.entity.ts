@@ -7,7 +7,6 @@ import {isCategoryEntity, isPageEntity, uniqueName} from '../../helpers';
 import {NgDocBuiltOutput, NgDocCategory} from '../../interfaces';
 import {NgDocCategoryModuleEnv} from '../../templates-env';
 import {NgDocRenderer} from '../renderer';
-import {CACHE_PATH} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocPageEntity} from './page.entity';
@@ -34,10 +33,6 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 
 	override get isRoot(): boolean {
 		return !this.target?.category;
-	}
-
-	get scope(): string {
-		return this.target?.scope?.replace(CACHE_PATH, '') ?? this.parent?.scope ?? this.context.context.workspaceRoot;
 	}
 
 	override get order(): number | undefined {
@@ -106,7 +101,7 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 			);
 
 			return renderer
-				.render('category.module.ts.nunj')
+				.render('./category.module.ts.nunj')
 				.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
 		}
 		return of();

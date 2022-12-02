@@ -1,8 +1,8 @@
-/**
- * Page configuration
- */
 import {NgDocCategory} from './category';
 
+/**
+ * Page configuration interface, that should be used to describe configuration of the page
+ */
 export interface NgDocPage {
 	/** The page template */
 	mdFile: string;
@@ -12,8 +12,6 @@ export interface NgDocPage {
 	category?: NgDocCategory;
 	/** The route of the page (current source file folder title by default) */
 	route?: string;
-	/** The scope of the page (project root by default) */
-	scope?: string;
 	/** Render the page only for specific build tags */
 	onlyForTags?: string[];
 	/** Order is using for sorting pages and categories in sidebar */

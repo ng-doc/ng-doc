@@ -111,7 +111,7 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 		});
 
 		return renderer
-			.render('component-assets.ts.nunj')
+			.render('./component-assets.ts.nunj')
 			.pipe(map((output: string) => ({content: output, filePath: this.componentAssetsPath})));
 	}
 

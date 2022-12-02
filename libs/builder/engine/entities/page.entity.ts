@@ -10,7 +10,7 @@ import {NgDocBuiltOutput, NgDocPage} from '../../interfaces';
 import {NgDocPageEnv, NgDocPageModuleEnv} from '../../templates-env';
 import {NgDocActions} from '../actions';
 import {NgDocRenderer} from '../renderer';
-import {CACHE_PATH, PAGE_DEPENDENCIES_NAME, PLAYGROUND_NAME, RENDERED_PAGE_NAME} from '../variables';
+import {PAGE_DEPENDENCIES_NAME, PLAYGROUND_NAME, RENDERED_PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocCategoryEntity} from './category.entity';
@@ -53,14 +53,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 			!this.context.options.ngDoc.tag ||
 			!this.target.onlyForTags ||
 			asArray(this.target.onlyForTags).includes(this.context.options.ngDoc.tag)
-		);
-	}
-
-	get scope(): string {
-		return (
-			this.target?.scope?.replace(CACHE_PATH, this.context.context.workspaceRoot) ??
-			this.parent?.scope ??
-			this.context.context.workspaceRoot
 		);
 	}
 
@@ -139,7 +131,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 			}),
 			catchError((error: unknown) => {
 				this.readyToBuild = false;
-				this.context.context.logger.error(`\n${String(error)}`);
+				this.context.context.logger.error(`\n\n${String(error)}`);
 
 				return of(void 0);
 			}),
@@ -157,7 +149,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 			});
 
 			return renderer
-				.render('page.module.ts.nunj')
+				.render('./page.module.ts.nunj')
 				.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
 		}
 		return of();
@@ -177,7 +169,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 			const renderer: NgDocRenderer<NgDocPageEnv> = new NgDocRenderer<NgDocPageEnv>(this.builder, {
 				NgDocPage: this.target,
 				NgDocActions: new NgDocActions(this),
-			});
+			}, this.dependencies);
 
 			return renderer.render(this.target?.mdFile, {scope: this.sourceFileFolder}).pipe(
 				map((markdown: string) => marked(markdown)),

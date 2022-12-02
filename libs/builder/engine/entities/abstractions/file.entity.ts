@@ -32,15 +32,17 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 	override update(): Observable<void> {
 		this.readyToBuild = false;
 
-		delete require.cache[require.resolve(this.pathToCompiledFile)];
-		this.target = require(this.pathToCompiledFile).default;
+		try {
+			delete require.cache[require.resolve(this.pathToCompiledFile)];
+			this.target = require(this.pathToCompiledFile).default;
 
-		if (!this.target) {
-			return throwError(
+			if (!this.target) {
 				new Error(
 					`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`,
 				)
-			)
+			}
+		} catch (e: unknown) {
+			return throwError(e)
 		}
 
 		this.readyToBuild = true;

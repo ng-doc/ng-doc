@@ -39,7 +39,7 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocRoutingEnv>(this.builder, {entities});
 
 		return renderer
-			.render('routing.ts.nunj')
+			.render('./routing.ts.nunj')
 			.pipe(
 				map((output: string) => ({content: output, filePath: path.join(GENERATED_PATH, 'ng-doc.routing.ts')})),
 			);
@@ -50,7 +50,7 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocContextEnv>(this.builder, {entities});
 
 		return renderer
-			.render('context.ts.nunj')
+			.render('./context.ts.nunj')
 			.pipe(
 				map((output: string) => ({content: output, filePath: path.join(GENERATED_PATH, 'ng-doc.context.ts')})),
 			);
