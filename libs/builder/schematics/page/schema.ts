@@ -35,4 +35,8 @@ export interface NgDocBuildPageSchema extends SchematicArgv {
 	 * If parameter was provided, generator will import first parent category automatically (alias is `-c`)
 	 */
 	category?: boolean;
+	/**
+	 * Keyword for the entity (alias is `-k`)
+	 */
+	keyword?: string;
 }

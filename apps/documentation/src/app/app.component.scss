@@ -1,3 +1,12 @@
 .brand {
 	margin: 0;
 }
+
+.ng-doc-header-controls {
+	display: flex;
+
+	a[ng-doc-button-icon],
+	button[ng-doc-button-icon] {
+		margin-left: calc(var(--ng-doc-base-gutter) * 2);
+	}
+}

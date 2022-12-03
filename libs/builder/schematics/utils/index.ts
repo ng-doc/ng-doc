@@ -1,1 +1,1 @@
-export * from './extract-category-name';
+export * from './extract-default-export-name';

@@ -10,6 +10,7 @@
 	height: calc(var(--ng-doc-base-gutter) * 4);
 	background-color: var(--ng-doc-button-background);
 	color: var(--ng-doc-button-color);
+	overflow: hidden;
 	--ng-doc-icon-color: var(--ng-doc-button-color);
 
 	&[data-ng-doc-size='small'] {

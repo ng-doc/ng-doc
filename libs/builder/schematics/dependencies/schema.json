@@ -1,0 +1,19 @@
+{
+	"$schema": "http://json-schema.org/schema",
+	"$id": "NgDocDependencies",
+	"title": "NgDocDependencies schematic",
+	"type": "object",
+	"properties": {
+		"module": {
+			"type": "boolean",
+			"description": "Should NgDoc generates module",
+			"alias": "m"
+		},
+		"path": {
+			"type": "string",
+			"format": "path",
+			"description": "The path to create the simple schematic within.",
+			"visible": false
+		}
+	}
+}

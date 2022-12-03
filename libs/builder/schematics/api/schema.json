@@ -1,0 +1,14 @@
+{
+	"$schema": "http://json-schema.org/schema",
+	"$id": "NgDocApi",
+	"title": "NgDocApi schematic",
+	"type": "object",
+	"properties": {
+		"path": {
+			"type": "string",
+			"format": "path",
+			"description": "The path to create the simple schematic within.",
+			"visible": false
+		}
+	}
+}

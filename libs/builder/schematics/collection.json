@@ -2,14 +2,24 @@
 	"$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
 	"schematics": {
 		"category": {
-			"description": "Generate NgDoc category schematic",
+			"description": "Generates NgDoc Category entity",
 			"factory": "./category/index#build",
 			"schema": "./category/schema.json"
 		},
 		"page": {
-			"description": "Generate NgDoc page schematic",
+			"description": "Generates NgDoc Page entity",
 			"factory": "./page/index#build",
 			"schema": "./page/schema.json"
+		},
+		"api": {
+			"description": "Generates NgDoc API entity",
+			"factory": "./api/index#build",
+			"schema": "./api/schema.json"
+		},
+		"dependencies": {
+			"description": "Generates NgDoc dependencies entity",
+			"factory": "./dependencies/index#build",
+			"schema": "./dependencies/schema.json"
 		}
 	}
 }

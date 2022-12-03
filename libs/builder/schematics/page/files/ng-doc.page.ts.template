@@ -1,12 +1,13 @@
 import {NgDocPage} from '@ng-doc/builder';<% if (importPath && categoryName) { %>
 import <%= categoryName %> from '<%= importPath %>';<% } %>
 
-const page: NgDocPage = {
+const <%= pageName %>: NgDocPage = {
 	title: `<%= title %>`,
 	mdFile: './index.md',<% if (route) { %>
 	route: `<%= route %>`,<% } %><% if (importPath && categoryName) { %>
 	category: <%= categoryName %>,<% } %><% if (order) { %>
-    order: `<%= order %>`,<% } %>
+    order: <%= order %>,<% } %><% if (keyword) { %>
+    keyword: `<%= keyword %>`,<% } %>
 };
 
-export default page;
+export default <%= pageName %>;

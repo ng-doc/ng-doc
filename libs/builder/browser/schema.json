@@ -1,19 +1,25 @@
 {
 	"$schema": "http://json-schema.org/draft-07/schema",
 	"title": "NgDocBuilder",
-	"description": "NgDocBuilder",
+	"description": "NgDocBuilder Browser Schema",
 	"type": "object",
 	"properties": {
 		"ngDoc": {
 			"type": "object",
 			"properties": {
-				"sources": {
-					"type": "array",
+				"pages": {
+					"type": ["array", "string"],
 					"items": {
 						"type": "string"
 					},
 					"uniqueItems": true,
 					"default": []
+				},
+				"tag": {
+					"type": "string"
+				},
+				"defaultRoute": {
+					"type": "string"
 				}
 			}
 		}

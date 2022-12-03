@@ -115,7 +115,8 @@
 					"browserTarget": "documentation:build:development",
 					"ngDoc": {
 						"pages": "apps/documentation/src/app",
-						"tag": "develop"
+						"tag": "develop",
+						"defaultRoute": "getting-started/installation"
 					}
 				}
 			},

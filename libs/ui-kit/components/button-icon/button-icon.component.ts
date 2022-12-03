@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/c
 import {NgDocSize} from '@ng-doc/ui-kit/types';
 
 @Component({
-	selector: 'button[ng-doc-button-icon]',
+	selector: 'button[ng-doc-button-icon], a[ng-doc-button-icon]',
 	templateUrl: './button-icon.component.html',
 	styleUrls: ['./button-icon.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,

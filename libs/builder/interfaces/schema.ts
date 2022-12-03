@@ -5,5 +5,6 @@ export interface NgDocSchema extends json.JsonObject {
 	ngDoc: {
 		pages: string[];
 		tag: string;
+		defaultRoute?: string;
 	};
 }

@@ -36,7 +36,8 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 
 	private buildRoutes(): Observable<NgDocBuiltOutput> {
 		const entities: NgDocEntity[] = this.rootEntitiesForBuild;
-		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocRoutingEnv>(this.builder, {entities});
+		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocRoutingEnv>(
+			this.builder, {entities, defaultRoute: this.context.options.ngDoc.defaultRoute});
 
 		return renderer
 			.render('./routing.ts.nunj')

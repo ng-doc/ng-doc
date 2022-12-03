@@ -1,8 +1,8 @@
 import {NgDocDependencies} from '@ng-doc/builder';
-import {<%= pageName %>Module} from './ng-doc.module';
+import {NgDocPageModule} from './ng-doc.module';
 
-const <%= pageName %>Dependencies: NgDocDependencies = {
-	module: <%= pageName %>Module,
+const <%= pageName %>Dependencies: NgDocDependencies = {<% if (module) { %>
+	module: <%= pageName %>Module,<% } %>
 	// Add your demos that you are going to use in the page here
 	demo: {},
 };

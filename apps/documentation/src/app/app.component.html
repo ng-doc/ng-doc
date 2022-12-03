@@ -4,7 +4,18 @@
 			<h3 class="brand">NgDoc</h3>
 		</ng-template>
 		<ng-template #rightContent>
-			<button (click)="toggleTheme()">toggle theme</button>
+			<div class="ng-doc-header-controls" @preventInitialChild>
+				<a ng-doc-button-icon size="large" href="todo" target="_blank" ngDocTooltip="Buy me a coffee (or a beer 🍻)">
+					<ng-doc-icon icon="coffee" [size]="24"></ng-doc-icon>
+				</a>
+				<button ng-doc-button-icon size="large" (click)="toggleTheme()" ngDocTooltip="Toggle theme">
+					<ng-doc-icon [@switchIcon]="{value: ':enter', params: {from: '-100%', to: '-100%'}}" icon="sun" [size]="24" *ngIf="themeService.currentTheme?.id === 'ng-doc-night'"></ng-doc-icon>
+					<ng-doc-icon [@switchIcon]="{value: ':enter', params: {from: '100%', to: '100%'}}" icon="moon" [size]="24" *ngIf="!themeService.currentTheme"></ng-doc-icon>
+				</button>
+				<a ng-doc-button-icon size="large" href="https://github.com/skoropadas/ng-doc" target="_blank" ngDocTooltip="Check repo">
+					<ng-doc-icon icon="github" [size]="24"></ng-doc-icon>
+				</a>
+			</div>
 		</ng-template>
 	</ng-doc-navbar>
 	<ng-doc-sidebar></ng-doc-sidebar>
