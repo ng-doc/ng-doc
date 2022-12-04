@@ -1,4 +1,4 @@
-import {ModuleKind, Project, ProjectOptions} from 'ts-morph';
+import {ModuleKind, ModuleResolutionKind, Project, ProjectOptions} from 'ts-morph';
 
 /**
  * Creates typescript project
@@ -15,6 +15,7 @@ export function createProject(options?: ProjectOptions): Project {
 			incremental: true,
 			declaration: false,
 			skipLibCheck: true,
+			moduleResolution: ModuleResolutionKind.NodeJs,
 			/*
 				true value increases the speed, but thn it's not possible to resolve imports,
 				TODO: maybe as a workaround it's possible to add all source files that we need to the Project

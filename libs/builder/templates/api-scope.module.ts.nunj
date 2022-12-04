@@ -5,6 +5,9 @@ import {RouterModule} from "@angular/router";
 @NgModule({
 	imports: [
 		RouterModule.forChild([
+			{%- if scope.children.length %}
+			{path: '', redirectTo: '{{ scope.children[0].route }}', pathMatch: 'full' },
+			{%- endif  %}
 			{
 				path: '',
 				children: [

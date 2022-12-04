@@ -1,14 +1,14 @@
 import {asArray} from '@ng-doc/core';
 import chalk from 'chalk';
 import * as path from 'path';
-import {forkJoin, merge, Observable, of} from 'rxjs';
+import {asyncScheduler, forkJoin, merge, Observable, of} from 'rxjs';
 import {
 	catchError,
 	concatMap,
 	map,
 	mapTo,
-	mergeMap,
-	startWith,
+	mergeMap, share,
+	startWith, subscribeOn,
 	switchMap, switchMapTo,
 	take,
 	takeUntil,
@@ -41,6 +41,7 @@ import {
 	PLAYGROUND_PATTERN,
 } from './variables';
 import {NgDocWatcher} from './watcher';
+import {bufferEmits} from '../operators/buffer-emits';
 
 export class NgDocBuilder {
 	readonly entities: NgDocEntityStore = new NgDocEntityStore();
@@ -51,7 +52,10 @@ export class NgDocBuilder {
 	constructor(private readonly context: NgDocBuilderContext) {
 		this.project = createProject({
 			tsConfigFilePath: this.context.tsConfig,
-			compilerOptions: {rootDir: this.context.context.workspaceRoot, outDir: CACHE_PATH,},
+			compilerOptions: {
+				rootDir: this.context.context.workspaceRoot,
+				outDir: CACHE_PATH,
+			},
 		});
 
 		this.watcher = new NgDocWatcher().watch(
@@ -103,6 +107,8 @@ export class NgDocBuilder {
 							),
 					  ).pipe(startWith(null), mapTo(entity)),
 			),
+			subscribeOn(asyncScheduler),
+			share()
 		);
 
 		return touchedEntity.pipe(
@@ -128,7 +134,7 @@ export class NgDocBuilder {
 					)
 			}),
 			/* Delay to buffer all changes from the FileSystem */
-			bufferDebounce(1000),
+			bufferEmits(touchedEntity),
 			mergeMap((entities: NgDocEntity[]) =>
 				// Re-fetch compiled data for non destroyed entities
 				forkJoin(
@@ -174,7 +180,7 @@ export class NgDocBuilder {
 					),
 				),
 			),
-			bufferDebounce(1000),
+			bufferDebounce(0),
 			tap(() => this.entities.updateKeywordMap()),
 			// Build touched entities and their dependencies
 			mergeMap((entities: NgDocEntity[]) =>

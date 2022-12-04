@@ -1,6 +1,6 @@
 import path from 'path';
 import {from, Observable} from 'rxjs';
-import {mapTo, switchMap, switchMapTo} from 'rxjs/operators';
+import {mapTo, switchMap} from 'rxjs/operators';
 import {Node, ObjectLiteralExpression, SourceFile, Symbol, SyntaxKind} from 'ts-morph';
 
 import {NgDocBuilderContext} from '../../../interfaces';
@@ -50,11 +50,10 @@ export abstract class NgDocSourceFileEntity extends NgDocEntity {
 
 	override emit(): Observable<void> {
 		if (!this.destroyed) {
-			return from(this.sourceFile.refreshFromFileSystem())
-				.pipe(
-					switchMap(() => this.sourceFile.emit()),
-					mapTo(void 0)
-				)
+			return from(this.sourceFile.refreshFromFileSystem()).pipe(
+				switchMap(() => this.sourceFile.emit()),
+				mapTo(void 0),
+			);
 		}
 		return super.emit();
 	}

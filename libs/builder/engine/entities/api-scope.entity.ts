@@ -18,7 +18,7 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 	override readonly isNavigable: boolean = false;
 	protected override readyToBuild: boolean = true;
 	override moduleFileName: string = `${uniqueName('ng-doc-api-scope')}.module.ts`;
-	override id: string = uniqueName(`${this.sourceFilePath}}#${this.target.route}`);
+	override id: string = uniqueName(`${this.sourceFilePath}#${this.target.route}`);
 
 	constructor(
 		override readonly builder: NgDocBuilder,

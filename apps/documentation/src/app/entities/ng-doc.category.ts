@@ -1,7 +1,5 @@
 import {NgDocCategory} from '@ng-doc/builder';
 
-// import {PAGE_NAME} from '../../extra';
-
 const EntitiesCategory: NgDocCategory = {
 	title: 'Entities',
 	expandable: true,
