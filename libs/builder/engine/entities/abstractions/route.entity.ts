@@ -21,7 +21,7 @@ export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T>
 
 	/**
 	 * List of keywords that are used by the entity
-	 * (they will be sat by Keywords Processor, and used to indicate when this entity should be re-build)
+	 * (they will be sat by Keywords Processor, and used to indicate when this entity should be re-build if one of them appears)
 	 */
 	usedKeywords: Set<string> = new Set<string>();
 

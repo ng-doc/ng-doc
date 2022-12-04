@@ -2,7 +2,7 @@ import {NgDocPage} from '@ng-doc/builder';
 
 import EntitiesCategory from '../ng-doc.category';
 
-export const CategoryPage: NgDocPage = {
+const CategoryPage: NgDocPage = {
 	title: 'Category',
 	mdFile: './index.md',
 	category: EntitiesCategory,

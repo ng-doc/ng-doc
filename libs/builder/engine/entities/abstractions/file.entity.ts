@@ -19,15 +19,6 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 	 */
 	target?: T;
 
-	get pathToCompiledFile(): string {
-		const relativePath: string = path.relative(this.context.context.workspaceRoot, this.sourceFile.getFilePath());
-
-		return path.join(CACHE_PATH, relativePath.replace(/\.ts$/, '.js'));
-	}
-
-	override init(): Observable<void> {
-		return this.update();
-	}
 
 	override update(): Observable<void> {
 		this.readyToBuild = false;

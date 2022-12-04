@@ -58,15 +58,17 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 	}
 
 	get componentAssetsImport(): string {
-		return slash(path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, 'ng-doc.component-assets')));
+		return slash(
+			path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, 'ng-doc.component-assets')),
+		);
 	}
 
-	override init(): Observable<void> {
+	override emit(): Observable<void> {
 		/*
 			We don't want to emit current source file, because it may be depended on project's files,
 			so it may take too much time, the fastest way is to parse source file.
 		 */
-		return this.update();
+		return of(void 0);
 	}
 
 	protected override build(): Observable<NgDocBuiltOutput[]> {

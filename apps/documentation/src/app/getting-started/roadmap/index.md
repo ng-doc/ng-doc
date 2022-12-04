@@ -14,11 +14,6 @@ remove in future releases, moreover, using it forces you to turn off AOT to comp
 application, not very cool right? We will rewrite this part, leaving the existing API and moving the
 assembly of playgrounds to the side of the `@ng-doc/builder`.
 
-## Performance
-
-We also want to work on performance to speed up the generation of documentation, we have a few
-ideas, but we'll see what comes of it
-
 ## Stackblitz API
 
 We're going to improve the demo by adding the ability for users of your documentation to open the

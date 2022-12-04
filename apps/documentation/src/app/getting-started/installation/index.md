@@ -63,7 +63,7 @@ To do that edit you `angular.json` file, or add them to you `styles` file
 }
 ```
 
-## Adding assets
+### Adding assets
 
 The NgDoc libraries come with assets that include various icons, fonts, themes, and other very
 useful things. You also need to include them, for this add the following code to your `angular.json`

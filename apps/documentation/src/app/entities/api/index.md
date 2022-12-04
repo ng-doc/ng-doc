@@ -60,17 +60,6 @@ Don't like that the API section is at the top? You can also add a category to it
 structure your documentation articles.
 
 ```typescript
-// ng-doc.category.ts
-import {NgDocCategory} from '@ng-doc/builder';
-
-export const MyAwesomeCategory: NgDocCategory = {
-	title: 'MyAwesomeCategory',
-}
-
-export default MyAwesomeCategory;
-```
-
-```typescript
 // ng-doc.api.ts
 import {NgDocApi} from '@ng-doc/builder';
 import MyAwesomeCategory from '../ng-doc.category';

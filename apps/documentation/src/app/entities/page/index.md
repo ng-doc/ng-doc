@@ -46,17 +46,6 @@ for details on how to create one). To add a category to your page, you can use t
 just import category and put it in the `category` field, just like that:
 
 ```typescript
-// ng-doc.category.ts
-import {NgDocCategory} from '@ng-doc/builder';
-
-export const MyAwesomeCategory: NgDocCategory = {
-	title: 'MyAwesomeCategory',
-}
-
-export default MyAwesomeCategory;
-```
-
-```typescript
 // ng-doc.page.ts
 import {NgDocPage} from '@ng-doc/builder';
 import MyAwesomeCategory from '../ng-doc.category';

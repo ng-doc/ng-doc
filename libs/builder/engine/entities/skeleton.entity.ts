@@ -16,10 +16,6 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 	readonly parent: undefined = undefined;
 	readonly buildCandidates: NgDocEntity[] = [];
 
-	override init(): Observable<void> {
-		return of(void 0);
-	}
-
 	override update(): Observable<void> {
 		return of(void 0);
 	}

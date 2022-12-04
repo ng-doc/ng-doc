@@ -2,7 +2,7 @@ import {NgDocPage} from '@ng-doc/builder';
 
 import EntitiesCategory from '../ng-doc.category';
 
-export const ApiPage: NgDocPage = {
+const ApiPage: NgDocPage = {
 	title: 'API',
 	mdFile: './index.md',
 	category: EntitiesCategory,

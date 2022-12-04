@@ -4,8 +4,8 @@ import {NgDocContext, NgDocNavigation} from '@ng-doc/app/interfaces';
 import {NG_DOC_CONTEXT} from '@ng-doc/app/tokens';
 import {isPresent} from '@ng-doc/core';
 import {ngDocZoneOptimize} from '@ng-doc/ui-kit';
-import {filter} from 'rxjs/operators';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
+import {filter, first} from 'rxjs/operators';
 
 @Component({
 	selector: 'ng-doc-sidebar',
@@ -30,6 +30,7 @@ export class NgDocSidebarComponent {
 		this.router.events
 			.pipe(
 				filter((event: Event) => event instanceof NavigationEnd),
+				first(),
 				ngDocZoneOptimize(this.ngZone),
 				untilDestroyed(this),
 			)

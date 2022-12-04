@@ -1,6 +1,6 @@
 import {animate, style, transition, trigger} from '@angular/animations';
 import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
-import {NG_DOC_CONTEXT, NgDocContext, NgDocThemeService} from '@ng-doc/app';
+import {NG_DOC_CONTEXT, NG_DOC_NIGHT_THEME, NgDocContext, NgDocTheme, NgDocThemeService} from '@ng-doc/app';
 import {preventInitialChildAnimations} from '@ng-doc/ui-kit';
 
 @Component({
@@ -31,6 +31,7 @@ import {preventInitialChildAnimations} from '@ng-doc/ui-kit';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
+	protected readonly nightTheme: NgDocTheme = NG_DOC_NIGHT_THEME;
 	constructor(
 		@Inject(NG_DOC_CONTEXT)
 		private readonly ngDocContext: NgDocContext,
@@ -41,10 +42,10 @@ export class AppComponent {
 	}
 
 	toggleTheme(): void {
-		if (this.themeService.currentTheme) {
-			this.themeService.set()
-		} else {
-			this.themeService.set('ng-doc-night');
-		}
+		this.themeService.set(
+			this.themeService.currentTheme
+				? undefined
+				: this.nightTheme.id
+		)
 	}
 }

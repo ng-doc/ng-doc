@@ -25,6 +25,14 @@ export class NgDocPlaygroundEntity extends NgDocFileEntity<NgDocPlayground> {
 		return of([]);
 	}
 
+	override emit(): Observable<void> {
+		/*
+			We don't want to emit current source file, because it may be depended on project's files,
+			so it may take too much time, the fastest way is to parse source file.
+		 */
+		return of(void 0);
+	}
+
 	override update(): Observable<void> {
 		return of(null).pipe(
 			tap(() => {

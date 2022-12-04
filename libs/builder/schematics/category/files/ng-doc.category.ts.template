@@ -1,7 +1,7 @@
 import {NgDocCategory} from '@ng-doc/builder';<% if (importPath && categoryName) { %>
 import <%= categoryName %> from '<%= importPath %>';<% } %>
 
-export const <%= constantName %>: NgDocCategory = {
+const <%= constantName %>: NgDocCategory = {
 	title: '<%= title %>',<% if (route) { %>
     route: `<%= route %>`,<% } %><% if (importPath && categoryName) { %>
     category: <%= categoryName %>,<% } %><% if (expanded) { %>

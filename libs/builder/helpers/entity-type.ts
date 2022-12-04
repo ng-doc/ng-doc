@@ -1,6 +1,7 @@
 import {ClassDeclaration, MethodDeclaration, PropertyDeclaration} from 'ts-morph';
 
 import {
+	NgDocApiEntity,
 	NgDocApiPageEntity, NgDocApiScopeEntity,
 	NgDocCategoryEntity,
 	NgDocDependenciesEntity,
@@ -51,6 +52,14 @@ export function isPlaygroundEntity(page: InstanceType<Constructable>): page is N
  */
 export function isNavigationEntity(page: InstanceType<Constructable>): page is NgDocNavigationEntity<unknown> {
 	return page instanceof NgDocNavigationEntity;
+}
+
+/**
+ *
+ * @param page
+ */
+export function isApiEntity(page: InstanceType<Constructable>): page is NgDocApiEntity {
+	return page instanceof NgDocApiEntity;
 }
 
 /**

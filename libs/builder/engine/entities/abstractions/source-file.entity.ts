@@ -1,8 +1,11 @@
 import path from 'path';
+import {from, Observable} from 'rxjs';
+import {mapTo, switchMap, switchMapTo} from 'rxjs/operators';
 import {Node, ObjectLiteralExpression, SourceFile, Symbol, SyntaxKind} from 'ts-morph';
 
 import {NgDocBuilderContext} from '../../../interfaces';
 import {NgDocBuilder} from '../../builder';
+import {CACHE_PATH} from '../../variables';
 import {NgDocEntity} from './entity';
 
 export abstract class NgDocSourceFileEntity extends NgDocEntity {
@@ -30,6 +33,12 @@ export abstract class NgDocSourceFileEntity extends NgDocEntity {
 		return path.relative(this.context.context.workspaceRoot, this.sourceFile.getFilePath());
 	}
 
+	get pathToCompiledFile(): string {
+		const relativePath: string = path.relative(this.context.context.workspaceRoot, this.sourceFile.getFilePath());
+
+		return path.join(CACHE_PATH, relativePath.replace(/\.ts$/, '.js'));
+	}
+
 	/**
 	 * Returns relative path to a sourceFileFolder of the source file
 	 *
@@ -39,11 +48,15 @@ export abstract class NgDocSourceFileEntity extends NgDocEntity {
 		return path.relative(this.context.context.workspaceRoot, path.dirname(this.sourceFilePath));
 	}
 
-	override emit(): void {
+	override emit(): Observable<void> {
 		if (!this.destroyed) {
-			this.sourceFile.refreshFromFileSystemSync();
-			this.sourceFile.emitSync();
+			return from(this.sourceFile.refreshFromFileSystem())
+				.pipe(
+					switchMap(() => this.sourceFile.emit()),
+					mapTo(void 0)
+				)
 		}
+		return super.emit();
 	}
 
 	override destroy(): void {

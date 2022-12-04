@@ -1,10 +1,10 @@
 import {NgDocApi} from '@ng-doc/builder';
 
-export const api: NgDocApi = {
+const Api: NgDocApi = {
 	title: 'API',
 	scopes: [
 		// Add the paths to the source code of your project, based on which you want to generate the API here
 	],
 };
 
-export default api;
+export default Api;

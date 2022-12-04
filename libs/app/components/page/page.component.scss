@@ -7,5 +7,6 @@
 
 	ng-doc-page-map {
 		margin-left: calc(var(--ng-doc-base-gutter) * 3);
+		flex-shrink: 0;
 	}
 }

@@ -1,7 +1,7 @@
 import {asArray, isPresent} from '@ng-doc/core';
 import * as path from 'path';
-import {forkJoin, Observable, of} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import {forkJoin, from, Observable, of} from 'rxjs';
+import {catchError, map, mapTo} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
 import {declarationFolderName, slash, uniqueName} from '../../helpers';
@@ -53,7 +53,8 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 		/**
 		 * Just refresh source file, we don't need to emit it
 		 */
-		this.sourceFile.refreshFromFileSystemSync();
+
+		return from(this.sourceFile.refreshFromFileSystem()).pipe(mapTo(void 0))
 	}
 
 	override get title(): string {
@@ -74,10 +75,6 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 
 	get builtPagePath(): string {
 		return slash(path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, RENDERED_PAGE_NAME)));
-	}
-
-	override init(): Observable<void> {
-		return of(void 0);
 	}
 
 	override update(): Observable<void> {

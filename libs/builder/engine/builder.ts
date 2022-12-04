@@ -9,20 +9,20 @@ import {
 	mapTo,
 	mergeMap,
 	startWith,
-	switchMap,
+	switchMap, switchMapTo,
 	take,
 	takeUntil,
 	tap,
 	withLatestFrom,
 } from 'rxjs/operators';
-import {Project} from 'ts-morph';
+import {Project, SourceFile} from 'ts-morph';
 
 import {createProject, emitBuiltOutput, generateApiEntities} from '../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
 import {bufferDebounce} from '../operators';
 import {Constructable} from '../types';
 import {
-	NgDocApiEntity,
+	NgDocApiEntity, NgDocApiPageEntity, NgDocApiScopeEntity,
 	NgDocCategoryEntity,
 	NgDocDependenciesEntity,
 	NgDocPageEntity,
@@ -51,10 +51,7 @@ export class NgDocBuilder {
 	constructor(private readonly context: NgDocBuilderContext) {
 		this.project = createProject({
 			tsConfigFilePath: this.context.tsConfig,
-			compilerOptions: {
-				rootDir: this.context.context.workspaceRoot,
-				outDir: CACHE_PATH,
-			},
+			compilerOptions: {rootDir: this.context.context.workspaceRoot, outDir: CACHE_PATH,},
 		});
 
 		this.watcher = new NgDocWatcher().watch(
@@ -111,27 +108,27 @@ export class NgDocBuilder {
 		return touchedEntity.pipe(
 			tap(() => {
 				this.print('Building documentation');
-				this.context.context.reportRunning()
+				this.context.context.reportRunning();
 			}),
-			concatMap((entity: NgDocEntity) => {
+			mergeMap((entity: NgDocEntity) => {
 				/*
 					Refresh and compile source files for all not destroyed entities
 				*/
-				if (!entity.destroyed) {
-					entity.emit();
-				}
-				/*
-					We destroy children entities for NgDocApiEntities because
-					they are created based on the NgDocApiEntities
-				*/
-				if (entity instanceof NgDocApiEntity) {
-					entity.children.forEach((child: NgDocEntity) => child.destroy());
-				}
-
-				return of(entity);
+				return (entity.destroyed ? of(entity) : entity.emit().pipe(mapTo(entity)))
+					.pipe(
+						tap(() => {
+							/*
+								We destroy children entities for NgDocApiEntities because
+								they are created based on the NgDocApiEntities
+							*/
+							if (entity instanceof NgDocApiEntity) {
+								entity.children.forEach((child: NgDocEntity) => child.destroy());
+							}
+						})
+					)
 			}),
 			/* Delay to buffer all changes from the FileSystem */
-			bufferDebounce(0),
+			bufferDebounce(1000),
 			mergeMap((entities: NgDocEntity[]) =>
 				// Re-fetch compiled data for non destroyed entities
 				forkJoin(
@@ -141,8 +138,8 @@ export class NgDocBuilder {
 							: entity.update().pipe(
 									tap(() => {
 										/*
-									Re-generate children Entities for NgDocApiEntity if it was changed
-								 */
+								Re-generate children Entities for NgDocApiEntity if it was changed
+							 */
 										if (entity instanceof NgDocApiEntity) {
 											generateApiEntities(entity).forEach((e: NgDocEntity) =>
 												this.entities.set(e.id, e),
@@ -177,7 +174,7 @@ export class NgDocBuilder {
 					),
 				),
 			),
-			bufferDebounce(0),
+			bufferDebounce(1000),
 			tap(() => this.entities.updateKeywordMap()),
 			// Build touched entities and their dependencies
 			mergeMap((entities: NgDocEntity[]) =>
@@ -197,6 +194,7 @@ export class NgDocBuilder {
 						 */
 						emitBuiltOutput(...output);
 						this.collectGarbage();
+						this.print();
 					}),
 				),
 			),
@@ -206,7 +204,7 @@ export class NgDocBuilder {
 
 				return of(void 0);
 			}),
-		);
+		) as unknown as Observable<void>;
 	}
 
 	get(id: string): NgDocEntity | undefined {
@@ -222,9 +220,9 @@ export class NgDocBuilder {
 		});
 	}
 
-	private print(text: string): void {
+	private print(text?: string): void {
 		process.stdout.clearLine(0);
 		process.stdout.cursorTo(0);
-		process.stdout.write(`${chalk.blue('NgDoc:')} ${chalk.green(text)}`);
+		text && process.stdout.write(`${chalk.blue('NgDoc:')} ${chalk.green(text)}`);
 	}
 }

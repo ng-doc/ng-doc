@@ -21,6 +21,7 @@ export function createProject(options?: ProjectOptions): Project {
 			 */
 			noResolve: false,
 			isolatedModules: true,
+
 			types : [],
 			...options?.compilerOptions,
 		},

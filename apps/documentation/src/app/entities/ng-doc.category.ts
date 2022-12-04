@@ -1,6 +1,8 @@
 import {NgDocCategory} from '@ng-doc/builder';
 
-export const EntitiesCategory: NgDocCategory = {
+// import {PAGE_NAME} from '../../extra';
+
+const EntitiesCategory: NgDocCategory = {
 	title: 'Entities',
 	expandable: true,
 	order: 2,

@@ -1,6 +1,6 @@
 import {logging} from '@angular-devkit/core';
 import minimatch from 'minimatch';
-import {EMPTY, Observable, Subject} from 'rxjs';
+import {EMPTY, Observable, of, Subject} from 'rxjs';
 import {catchError, map, take, tap} from 'rxjs/operators';
 
 import {ObservableSet} from '../../../classes';
@@ -113,9 +113,6 @@ export abstract class NgDocEntity {
 		return this.context.context.logger;
 	}
 
-	/** Runs when entity was created */
-	abstract init(): Observable<void>;
-
 	/**
 	 * Build all artifacts that need for application.
 	 * This is the last method in the build process, should return output that should be emitted to the file system
@@ -132,7 +129,7 @@ export abstract class NgDocEntity {
 			.pipe(
 				map((output: NgDocBuiltOutput[]) => this.processArtifacts(output)),
 				map((artifacts: NgDocBuiltOutput[]) => {
-					/* 
+					/*
 						We are checking that artifacts result was changed, otherwise we don't want to emit
 						the same files to file system, because it will force Angular to rebuild application
 					 */
@@ -153,8 +150,9 @@ export abstract class NgDocEntity {
 			);
 	}
 
-	emit(): void {
+	emit(): Observable<void> {
 		// No implementation
+		return of(void 0);
 	}
 
 	removeArtifacts(): void {

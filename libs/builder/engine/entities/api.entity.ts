@@ -57,10 +57,6 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		return [];
 	}
 
-	override init(): Observable<void> {
-		return this.update();
-	}
-
 	override update(): Observable<void> {
 		return super.update().pipe(
 			tap(() => {
