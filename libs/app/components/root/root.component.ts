@@ -1,10 +1,12 @@
 import {Location} from '@angular/common';
-import {ChangeDetectionStrategy, Component, ElementRef, NgZone} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, Inject, NgZone} from '@angular/core';
 import {Router} from '@angular/router';
 import {ngDocZoneDetach, ngDocZoneOptimize} from '@ng-doc/ui-kit';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {fromEvent, Observable} from 'rxjs';
 import {filter} from 'rxjs/operators';
+import {isExternalLink} from '@ng-doc/app/helpers';
+import {WINDOW} from '@ng-web-apis/common';
 
 @Component({
 	selector: 'ng-doc-root',
@@ -19,6 +21,8 @@ export class NgDocRootComponent {
 		private readonly ngZone: NgZone,
 		private readonly router: Router,
 		private readonly location: Location,
+		@Inject(WINDOW)
+		private readonly window: Window,
 	) {
 		(
 			fromEvent(this.elementRef.nativeElement, 'click').pipe(
@@ -30,20 +34,25 @@ export class NgDocRootComponent {
 			const target: EventTarget | null = event.target;
 
 			if (target instanceof HTMLAnchorElement) {
-				const hasModifier: boolean = event.button !== 0 || event.ctrlKey || event.metaKey;
-				const isDownloadable: boolean = target.getAttribute('download') != null;
-				const hasHash: boolean = !!target.hash;
-
-
-				if (!hasModifier && !isDownloadable && !hasHash) {
-					const { pathname, search } = target;
-					const isInPageAnchor: boolean = target.getAttribute('href')?.startsWith('#') ?? false;
-					const correctPathname: string = isInPageAnchor ? this.location.path() : pathname;
-					const relativeUrl: string = correctPathname + search;
-
+				if (isExternalLink(target.href)) {
 					event.preventDefault();
 
-					this.router.navigate([relativeUrl]);
+					this.window.open(target.href, '_blank')?.focus();
+				} else {
+					const hasModifier: boolean = event.button !== 0 || event.ctrlKey || event.metaKey;
+					const isDownloadable: boolean = target.getAttribute('download') != null;
+					const hasHash: boolean = !!target.hash;
+
+					if (!hasModifier && !isDownloadable && !hasHash) {
+						const {pathname, search} = target;
+						const isInPageAnchor: boolean = target.getAttribute('href')?.startsWith('#') ?? false;
+						const correctPathname: string = isInPageAnchor ? this.location.path() : pathname;
+						const relativeUrl: string = correctPathname + search;
+
+						event.preventDefault();
+
+						this.router.navigate([relativeUrl]);
+					}
 				}
 			}
 		});

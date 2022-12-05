@@ -67,11 +67,13 @@ h3 {
 h4 {
 	font-size: 20px;
 	line-height: calc(var(--ng-doc-base-gutter) * 4);
+	margin-top: calc(var(--ng-doc-base-gutter) * 3);
 }
 
 h5, h6 {
 	font-size: calc(var(--ng-doc-base-gutter) * 2);
 	line-height: calc(var(--ng-doc-base-gutter) * 3);
+	margin-top: calc(var(--ng-doc-base-gutter) * 2);
 }
 
 pre code {

@@ -5,6 +5,7 @@
 	width: var(--ng-doc-icon-width, 16px);
 	height: var(--ng-doc-icon-height, 16px);
 	color: var(--ng-doc-icon-color, var(--ng-doc-text));
+	vertical-align: sub;
 
 	svg {
 		vertical-align: top;

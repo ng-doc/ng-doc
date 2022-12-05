@@ -95,7 +95,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 			isDependencyEntity,
 		)[0];
 
-		return dependencies ? dependencies.componentAssetsImport : undefined;
+		return dependencies && dependencies.assets.length ? dependencies.componentAssetsImport : undefined;
 	}
 
 	get playground(): NgDocPlaygroundEntity | undefined {

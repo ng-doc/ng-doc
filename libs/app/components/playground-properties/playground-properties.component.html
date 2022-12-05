@@ -35,7 +35,7 @@
 		<ng-container *ngIf="(dynamicContent | keyvalue)?.length">
 			<h5 class="ng-doc-title" ng-doc-text>Content</h5>
 			<ng-doc-playground-property *ngFor="let content of dynamicContent | keyvalue"
-										[name]="content.key"
+										[name]="content.value.label"
 										[property]="content.value"
 										[control]="getFormControl('content', content.key)">
 			</ng-doc-playground-property>

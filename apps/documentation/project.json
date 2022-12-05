@@ -116,7 +116,12 @@
 					"ngDoc": {
 						"pages": "apps/documentation/src/app",
 						"tag": "develop",
-						"defaultRoute": "getting-started/installation"
+						"defaultRoute": "getting-started/installation",
+						"keywords": {
+							"nunjucks": {
+								"path": "https://mozilla.github.io/nunjucks/"
+							}
+						}
 					}
 				}
 			},

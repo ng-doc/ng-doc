@@ -1,5 +1,5 @@
 import * as path from 'path';
-import {Observable, of} from 'rxjs';
+import {from, Observable, of} from 'rxjs';
 import {mapTo, tap} from 'rxjs/operators';
 import {ClassDeclaration, Expression, Node, ObjectLiteralElementLike, ObjectLiteralExpression} from 'ts-morph';
 
@@ -30,14 +30,12 @@ export class NgDocPlaygroundEntity extends NgDocFileEntity<NgDocPlayground> {
 			We don't want to emit current source file, because it may be depended on project's files,
 			so it may take too much time, the fastest way is to parse source file.
 		 */
-		return of(void 0);
+		return from(this.sourceFile.refreshFromFileSystem()).pipe(mapTo(void 0));
 	}
 
 	override update(): Observable<void> {
 		return of(null).pipe(
 			tap(() => {
-				this.sourceFile.refreshFromFileSystemSync();
-
 				this.readyToBuild = true;
 			}),
 			mapTo(void 0),

@@ -8,6 +8,7 @@ export * from './builder-context';
 export * from './built-output';
 export * from './category';
 export * from './dependencies';
+export * from './keyword-map';
 export * from './page';
 export * from './page-index';
 export * from './path-anchor';

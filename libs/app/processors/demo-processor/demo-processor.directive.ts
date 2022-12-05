@@ -22,7 +22,7 @@ export class NgDocDemoProcessorDirective extends NgDocHtmlProcessor<NgDocDemoCom
 		return {
 			inputs: {
 				componentName: element.getAttribute('componentName') || undefined,
-				container: asBoolean(element.getAttribute('container')) || true,
+				container: asBoolean(element.getAttribute('container')),
 			},
 		};
 	}

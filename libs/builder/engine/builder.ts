@@ -181,7 +181,7 @@ export class NgDocBuilder {
 				),
 			),
 			bufferDebounce(0),
-			tap(() => this.entities.updateKeywordMap()),
+			tap(() => this.entities.updateKeywordMap(this.context.options.ngDoc.keywords)),
 			// Build touched entities and their dependencies
 			mergeMap((entities: NgDocEntity[]) =>
 				forkJoin(

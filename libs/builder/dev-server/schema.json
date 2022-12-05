@@ -18,6 +18,9 @@
 				"tag": {
 					"type": "string"
 				},
+				"keywords": {
+					"type": "object"
+				},
 				"defaultRoute": {
 					"type": "string"
 				}

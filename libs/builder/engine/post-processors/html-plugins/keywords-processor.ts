@@ -1,6 +1,7 @@
 import {isPageEntity} from '../../../helpers';
 import {NgDocRouteEntity} from '../../entities/abstractions/route.entity';
 import {NgDocEntityStore} from '../../entity-store';
+import {NgDocKeyword} from '@ng-doc/builder';
 
 const visit: any = require('unist-util-visit-parents');
 const is: any = require('hast-util-is-element');
@@ -78,24 +79,24 @@ function getNodes(node: any, parent: any, entityStore: NgDocEntityStore, inlineL
 				e.usedKeywords.add(word);
 			}
 
-			const entity: NgDocRouteEntity | undefined = entityStore.getByKeyword(word);
+			const keyword: NgDocKeyword | undefined = entityStore.getByKeyword(word);
 
 			// Convert code tag to link if it's a link to the page entity
-			if (inlineLink && isPageEntity(entity)) {
+			if (inlineLink && keyword?.isCodeLink === false) {
 				parent.tagName = "a";
-				parent.properties = {href: entity.fullRoute};
+				parent.properties = {href: keyword.path};
 
-				return {type: 'text', value: entity.title};
-			} else if (inlineLink && entity) {
+				return {type: 'text', value: keyword.title};
+			} else if (inlineLink && keyword) {
 				parent.properties.class = 'ng-doc-code-with-link'
 			}
 
 			// Add link inside the code if it's a link to the API entity
-			return entity
+			return keyword
 				? createLinkNode(
 					inlineLink
-						? entity.title
-						: word, entity.fullRoute
+						? keyword.title
+						: word, keyword.path
 				)
 				: {type: 'text', value: word};
 		});

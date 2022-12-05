@@ -1,5 +1,4 @@
 import {Directive, ElementRef, HostBinding, Input, OnChanges} from '@angular/core';
-import {SafeHtml} from '@angular/platform-browser';
 import highlight, {AutoHighlightResult} from 'highlight.js';
 import bash from 'highlight.js/lib/languages/bash';
 import css from 'highlight.js/lib/languages/css';
@@ -7,6 +6,8 @@ import javascript from 'highlight.js/lib/languages/javascript';
 import json from 'highlight.js/lib/languages/json';
 import less from 'highlight.js/lib/languages/less';
 import scss from 'highlight.js/lib/languages/scss';
+import markdown from 'highlight.js/lib/languages/markdown';
+import twig from 'highlight.js/lib/languages/twig';
 import typescript from 'highlight.js/lib/languages/typescript';
 
 highlight.registerLanguage('javascript', javascript);
@@ -16,6 +17,8 @@ highlight.registerLanguage('less', less);
 highlight.registerLanguage('scss', scss);
 highlight.registerLanguage('json', json);
 highlight.registerLanguage('bash', bash);
+highlight.registerLanguage('markdown', markdown);
+highlight.registerLanguage('twig', twig);
 
 @Directive({
 	selector: 'code[ngDocCodeHighlighter]',
