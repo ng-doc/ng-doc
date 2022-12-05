@@ -9,6 +9,35 @@ This command will automatically install and add the library to your project.
 ng add @ng-doc/app
 ```
 
+## Configuration
+
+Before you start creating documentation for your cool project, you need to add a minimum
+configuration, open your `angular.json` file and configure `ngDoc` property.
+
+You can check all properties that you can configure in the `NgDocSchema` interface.
+
+```json
+
+{
+	"projects": {
+		"my-project": {
+			"architect": {
+				"serve": {
+					"builder": "@ng-doc/builder:dev-server",
+					"options": {
+						"ngDoc": {
+							// Path to your documentation
+							"pages": "apps/documentation/src/app",
+							// Default route that should be opened by default
+							"defaultRoute": "getting-started/installation"
+						}
+					}
+				}
+			}
+		}
+	}
+```
+
 ## Manual
 
 Install the NgDoc via your package manage
@@ -52,9 +81,7 @@ To do that edit you `angular.json` file, or add them to you `styles` file
 			"architect": {
 				"build": {
 					"options": {
-						"styles": [
-							"@ng-doc/app/styles/global.scss"
-						]
+						"styles": ["@ng-doc/app/styles/global.scss"]
 					}
 				}
 			}
@@ -134,9 +161,7 @@ import {AppComponent} from './app.component';
 	providers: [],
 	bootstrap: [AppComponent],
 })
-export class AppModule {
-}
-
+export class AppModule {}
 ```
 
 ### Adding application layout
@@ -145,7 +170,6 @@ You will also need to add an application layer to your root `AppComponent` to di
 menu, to do this open your `app.component.html` file and add the following code to it
 
 ```html
-
 <ng-doc-root>
 	<ng-doc-navbar [leftContent]="leftContent">
 		<ng-template #leftContent>
