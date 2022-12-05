@@ -39,9 +39,6 @@
 			},
 			"configurations": {
 				"production": {
-					"ngDoc": {
-						"pages": "apps/documentation/test-docs"
-					},
 					"budgets": [
 						{
 							"type": "initial",
@@ -67,9 +64,6 @@
 					"aot": false
 				},
 				"development": {
-					"ngDoc": {
-						"pages": "apps/documentation/src/app"
-					},
 					"buildOptimizer": false,
 					"optimization": false,
 					"vendorChunk": true,
@@ -105,11 +99,7 @@
 			"executor": "./dist/libs/builder:dev-server",
 			"configurations": {
 				"production": {
-					"browserTarget": "documentation:build:production",
-					"ngDoc": {
-						"pages": "apps/documentation/src/test-docs",
-						"tsConfig": "tsconfig.base.json"
-					}
+					"browserTarget": "documentation:build:production"
 				},
 				"development": {
 					"browserTarget": "documentation:build:development",
@@ -120,6 +110,10 @@
 						"keywords": {
 							"nunjucks": {
 								"path": "https://mozilla.github.io/nunjucks/"
+							},
+							"tsdoc": {
+								"title": "TsDoc",
+								"path": "https://tsdoc.org/"
 							}
 						}
 					}
