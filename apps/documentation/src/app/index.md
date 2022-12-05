@@ -20,6 +20,7 @@
 - Customization
 	- Themes
 	- Highlight.js
+    - Type Controls
 
 Создание страницы
 Создание категории

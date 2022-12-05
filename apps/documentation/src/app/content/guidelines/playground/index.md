@@ -106,7 +106,8 @@ content.
 
 To make your playgrounds more lively and dynamic you can use `data` field,
 for example, you decided to show how a component that should display a list of elements works, but
-it won’t work without the list itself, to fix this you can use the `data` field in your playground configuration,
+it won’t work without the list itself, to fix this you can use the `data` field in your playground
+configuration,
 and put there any data you want.
 
 ```typescript
@@ -131,3 +132,10 @@ export default PagePlayground;
 And here we go, the data that was provided in the configuration now is displaying in the playground
 
 {{ NgDocActions.playground("TagDataPlayground") }}
+
+## Custom type controls and type recognition
+
+NgDoc can recognize some custom types, such as the simplest `Type Alias` types, but sometimes your
+components may contain `@Input` properties that have more complex types, interfaces or classes.
+To help NgDoc recognize them, you can create your own control component that will process these types,
+you can read how to do this in the `CustomizationTypeControls` article.
