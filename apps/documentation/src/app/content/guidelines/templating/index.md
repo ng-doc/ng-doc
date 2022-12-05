@@ -111,5 +111,5 @@ NgDoc will render it like this:
 
 - `ContentGuidelinesDemo`
 - `ContentGuidelinesPlayground`
-- `ContentGuidelinesKeywords`
+- `ContentKeywords`
 

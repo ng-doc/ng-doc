@@ -57,5 +57,5 @@ What `NgModule` should include:
 ## See also
 
 - `EntitiesPage`
-- `ContentDemo`
-- `ContentPlayground`
+- `ContentGuidelinesDemo`
+- `ContentGuidelinesPlayground`

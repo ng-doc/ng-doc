@@ -139,3 +139,8 @@ NgDoc can recognize some custom types, such as the simplest `Type Alias` types, 
 components may contain `@Input` properties that have more complex types, interfaces or classes.
 To help NgDoc recognize them, you can create your own control component that will process these types,
 you can read how to do this in the `CustomizationTypeControls` article.
+
+## See Also
+
+- `EntitiesPage`
+- `EntitiesDependencies`

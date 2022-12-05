@@ -105,3 +105,7 @@ export class MyClass {
 	}
 }
 ```
+
+## See Also
+
+- `EntitiesAPI`

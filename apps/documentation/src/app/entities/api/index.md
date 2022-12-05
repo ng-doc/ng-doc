@@ -88,4 +88,4 @@ the `ContentDeclarations` article.
 ## See also
 
 - `EntitiesCategory`
-- `ContentDeclarations`
+- `ContentApiTemplating`

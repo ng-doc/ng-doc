@@ -74,7 +74,6 @@ render content dynamically, see `ContentNunjucks` or `ContentTemplating` for mor
 
 - `EntitiesCategory`
 - `EntitiesDependencies`
-- `ContentTemplating`
-- `ContentNunjucks`
-- `ContentDemo`
-- `ContentPlayground`
+- `ContentGuidelinesTemplating`
+- `ContentGuidelinesDemo`
+- `ContentGuidelinesPlayground`

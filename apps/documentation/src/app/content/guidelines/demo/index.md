@@ -90,3 +90,7 @@ NgDoc will render its code like below
 
 {{ NgDocActions.demo("ButtonInlineDemoComponent") }}
 
+## See Also
+
+- `EntitiesPage`
+- `EntitiesDependencies`

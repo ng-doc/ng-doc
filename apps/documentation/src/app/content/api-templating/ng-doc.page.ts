@@ -6,7 +6,7 @@ const ApiTemplatingPage: NgDocPage = {
 	mdFile: './index.md',
 	category: ContentCategory,
 	order: 3,
-	keyword: 'ApiTemplating',
+	keyword: 'ContentApiTemplating',
 }
 
 export default ApiTemplatingPage;
