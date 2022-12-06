@@ -4,25 +4,26 @@ import * as path from 'path';
 import {asyncScheduler, forkJoin, merge, Observable, of} from 'rxjs';
 import {
 	catchError,
-	concatMap,
 	map,
 	mapTo,
-	mergeMap, share,
-	startWith, subscribeOn,
-	switchMap, switchMapTo,
+	mergeMap,
+	share,
+	startWith,
+	subscribeOn,
+	switchMap,
 	take,
 	takeUntil,
 	tap,
 	withLatestFrom,
 } from 'rxjs/operators';
-import {Project, SourceFile} from 'ts-morph';
+import {Project} from 'ts-morph';
 
 import {createProject, emitBuiltOutput, generateApiEntities} from '../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
 import {bufferDebounce} from '../operators';
 import {Constructable} from '../types';
 import {
-	NgDocApiEntity, NgDocApiPageEntity, NgDocApiScopeEntity,
+	NgDocApiEntity,
 	NgDocCategoryEntity,
 	NgDocDependenciesEntity,
 	NgDocPageEntity,

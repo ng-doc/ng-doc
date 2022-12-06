@@ -14,6 +14,7 @@ import {
 } from '@ng-doc/ui-kit';
 
 import {AppComponent} from './app.component';
+import {FloatingCirclePositionControlModule} from './common/floating-circle-position-control/floating-circle-position-control.module';
 
 @NgModule({
 	declarations: [AppComponent],
@@ -29,6 +30,7 @@ import {AppComponent} from './app.component';
 		NgDocIconModule,
 		NgDocTooltipModule,
 		NgDocTagModule,
+		FloatingCirclePositionControlModule,
 	],
 	bootstrap: [AppComponent],
 })

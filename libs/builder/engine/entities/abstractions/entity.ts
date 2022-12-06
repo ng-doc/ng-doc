@@ -145,7 +145,7 @@ export abstract class NgDocEntity {
 					this.logger.error(`Error during processing "${this.id}"\n${e.message}\n${e.stack}`);
 					this.readyToBuild = false;
 
-					return EMPTY;
+					return of([]);
 				})
 			);
 	}

@@ -83,7 +83,7 @@ function propertiesToAttributes<P extends NgDocPlaygroundProperties>(
 		const property: NgDocPlaygroundProperty = properties[key];
 		const propertyValue: unknown = data.properties[key];
 		const valueIsString: boolean = typeof propertyValue === 'string';
-		const inputValue: string = valueIsString ? `'${propertyValue}'` : `${propertyValue}`;
+		const inputValue: string = valueIsString ? `'${propertyValue}'` : `${JSON.stringify(propertyValue)}`;
 
 		if ((property.default ?? '') !== inputValue) {
 			parser.removeAttribute(element, String(key));

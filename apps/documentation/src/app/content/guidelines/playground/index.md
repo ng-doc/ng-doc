@@ -149,3 +149,4 @@ you can read how to do this in the `CustomizationTypeControls` article.
 
 - `EntitiesPage`
 - `EntitiesDependencies`
+- `CustomizationTypeControls`
