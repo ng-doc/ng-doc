@@ -1,5 +1,9 @@
 # {{ NgDocPage.title }}
 
+> **Warning**
+> Playgrounds use the deprecated JIT compiler, so make sure you set `aot: false` in your project
+> settings in `angular.json`. We'll fix that in the future releases.
+
 The Playground is another cool feature that NgDoc provides out of the box, it's especially handy for
 creating dynamic demos of your components and directives, to give your users the opportunity to play
 with them.
@@ -137,7 +141,8 @@ And here we go, the data that was provided in the configuration now is displayin
 
 NgDoc can recognize some custom types, such as the simplest `Type Alias` types, but sometimes your
 components may contain `@Input` properties that have more complex types, interfaces or classes.
-To help NgDoc recognize them, you can create your own control component that will process these types,
+To help NgDoc recognize them, you can create your own control component that will process these
+types,
 you can read how to do this in the `CustomizationTypeControls` article.
 
 ## See Also

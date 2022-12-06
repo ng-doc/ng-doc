@@ -13,6 +13,8 @@ import {
 	NgDocStringControlModule,
 	NgDocTypeAliasControlModule,
 } from '@ng-doc/app/type-controls';
+import {NgDocApplicationConfig, NgDocTheme} from '@ng-doc/app/interfaces';
+import {asArray} from '@ng-doc/core';
 
 @NgModule({
 	imports: [
@@ -27,12 +29,23 @@ import {
 	exports: [NgDocRootModule, NgDocNavbarModule, NgDocSidebarModule],
 })
 export class NgDocModule {
-	static forRoot(): ModuleWithProviders<NgDocModule> {
+	static forRoot(config?: NgDocApplicationConfig): ModuleWithProviders<NgDocModule> {
 		return {
 			ngModule: NgDocModule,
 			providers: [
 				{provide: NgDocSearchEngine, useValue: new NgDocSearchEngine()},
 				{provide: NG_DOC_THEME, useValue: NG_DOC_NIGHT_THEME, multi: true},
+				...asArray(config?.themes)
+					.map((theme: NgDocTheme) => ({
+						provide: NG_DOC_THEME,
+						useValue: theme,
+						multi: true,
+					})),
+				...asArray(config?.defaultThemeId)
+					.map((themeId: string) => ({
+						provide: NG_DOC_DEFAULT_THEME_ID,
+						useValue: themeId,
+					})),
 				{
 					provide: APP_INITIALIZER,
 					useFactory: (themeService: NgDocThemeService, store: NgDocStoreService, defaultThemeId: string) => {
