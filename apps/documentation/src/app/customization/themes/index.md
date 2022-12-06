@@ -106,7 +106,8 @@ NgDoc comes with two themes, a main light theme and an additional dark theme.
 
 The light theme is set by default and has no `id`, while the dark theme is optional and can be
 loaded using the `NgDocThemeService` service, or set by default using the `defaultTheme` field in
-the `forRoot` method of the module ` NgDocModule`, you can get its id by importing `NG_DOC_NIGHT_THEME`
+the `forRoot` method of the module ` NgDocModule`, you can get its id by
+importing `NG_DOC_NIGHT_THEME`
 variable.
 
 For example, you can set the dark theme by default as follows
@@ -124,5 +125,27 @@ import {AppComponent} from './app.component';
 	bootstrap: [AppComponent],
 })
 export class AppModule {
+}
+```
+
+## Code highlighting
+
+We use the `highlightjs` library for code highlighting, it has a lot of ready-made themes, and if
+you want to use a different code theme for your NgDoc theme, then you can simply import the code theme file
+from the `highlightjs` library into your theme file.
+
+> **Note**
+> To include one CSS file in another, you will need to use SASS or LESS, and the import must be
+> relative and not contain an extension, read more [here](https://sass-lang.com/blog/feature-watchcss-imports-and-css-compatibility)
+
+For example like this
+
+```scss
+// theme.scss
+
+@import '../../../../node_modules/highlight.js/styles/agate';
+
+:host {
+	// My custom theme implementation
 }
 ```

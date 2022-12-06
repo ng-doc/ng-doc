@@ -114,6 +114,10 @@
 							"tsdoc": {
 								"title": "TsDoc",
 								"path": "https://tsdoc.org/"
+							},
+							"highlightjs": {
+								"title": "highlight.js",
+								"path": "https://highlightjs.org/"
 							}
 						}
 					}
