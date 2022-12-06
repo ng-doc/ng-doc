@@ -1,41 +1,51 @@
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {share, tap} from 'rxjs/operators';
+import {share, shareReplay, tap} from 'rxjs/operators';
 
 @Injectable()
 export class NgDocCacheInterceptor implements HttpInterceptor {
 	static readonly TOKEN: string = Math.random().toString(36).slice(-8);
+	private cache: Map<string, Observable<HttpEvent<unknown>>> = new Map<string, Observable<HttpEvent<unknown>>>();
 
-	private handlerPool: Map<string, Observable<HttpEvent<unknown>>> = new Map<
-		string,
-		Observable<HttpEvent<unknown>>
-	>();
-
-	intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-		if (request.params.has(NgDocCacheInterceptor.TOKEN)) {
-			const cachedRequest: Observable<HttpEvent<unknown>> | undefined = this.handlerPool.get(request.url);
-
-			if (cachedRequest) {
-				return cachedRequest;
-			}
-
-			const newRequest: HttpRequest<unknown> = request.clone({
-				params: request.params.delete(NgDocCacheInterceptor.TOKEN),
-			});
-			const newHandler: Observable<HttpEvent<unknown>> = next.handle(newRequest).pipe(
-				tap((event: HttpEvent<unknown>) => {
-					if (event instanceof HttpResponse) {
-						this.handlerPool.delete(event.url || '');
-					}
-				}),
-				share(),
-			);
-			this.handlerPool.set(request.url, newHandler);
-
-			return newHandler;
-		} else {
+	intercept<T>(request: HttpRequest<T>, next: HttpHandler): Observable<HttpEvent<T>> {
+		// Only GET requests can be cached
+		if (request.method !== 'GET') {
 			return next.handle(request);
 		}
+
+		// Do not cache request when the token is not provided
+		if (!request.params.has(NgDocCacheInterceptor.TOKEN)) {
+			return next.handle(request);
+		}
+
+		// Return cached response
+		const cachedRequest: Observable<HttpEvent<T>> | undefined = this.cache.get(request.url) as Observable<HttpEvent<T>>;
+
+		if (cachedRequest) {
+			return cachedRequest;
+		}
+
+		// Clone the request, delete the TOKEN from the params
+		const newRequest: HttpRequest<T> = request.clone({
+			params: request.params.delete(NgDocCacheInterceptor.TOKEN),
+		});
+
+		// Create a new request handler
+		const newHandler: Observable<HttpEvent<T>> = next.handle(newRequest).pipe(
+			tap({
+				error: (event: HttpEvent<Error>) => {
+					if (event instanceof HttpResponse) {
+						this.cache.delete(event.url || '');
+					}
+				},
+			}),
+			shareReplay(1)
+		);
+
+		// Cache the request and return the new handler
+		this.cache.set(request.url, newHandler);
+
+		return newHandler;
 	}
 }

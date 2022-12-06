@@ -16,6 +16,7 @@
 	{% if extends or implements.length %}
 		<div class="ng-doc-header-details">
 			{% if extends %}
+				<span class="ng-doc-header-details-label">Extends</span>
 				{{ tagMacro.render(typeMacro.render(extends.getType()), "class-extends") }}
 			{%- endif %}
 			{% if implements.length %}

@@ -27,4 +27,4 @@ export const NG_DOC_THEME: InjectionToken<NgDocTheme> = new InjectionToken<NgDoc
  *
  * You can provide this token in the root of you application, to set theme by default.
  */
-export const NG_DOC_DEFAULT_THEME: InjectionToken<NgDocTheme> = new InjectionToken<NgDocTheme>(`NG_DOC_DEFAULT_THEME`);
+export const NG_DOC_DEFAULT_THEME_ID: InjectionToken<string> = new InjectionToken<string>(`NG_DOC_DEFAULT_THEME`);

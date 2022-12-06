@@ -10,7 +10,7 @@ import {
 	NgDocIconModule,
 	NgDocTagModule,
 	NgDocTooltipModule,
-	NgDocUiKitRootModule
+	NgDocUiKitRootModule,
 } from '@ng-doc/ui-kit';
 
 import {AppComponent} from './app.component';
