@@ -8,6 +8,24 @@
 			"executor": "./dist/libs/builder:browser",
 			"outputs": ["{options.outputPath}"],
 			"options": {
+				"ngDoc": {
+					"pages": "apps/documentation/src/app",
+					"tag": "develop",
+					"defaultRoute": "getting-started/installation",
+					"keywords": {
+						"nunjucks": {
+							"path": "https://mozilla.github.io/nunjucks/"
+						},
+						"tsdoc": {
+							"title": "TsDoc",
+							"path": "https://tsdoc.org/"
+						},
+						"highlightjs": {
+							"title": "highlight.js",
+							"path": "https://highlightjs.org/"
+						}
+					}
+				},
 				"outputPath": "dist/apps/documentation",
 				"index": "apps/documentation/src/index.html",
 				"main": "apps/documentation/src/main.ts",
@@ -76,12 +94,12 @@
 			"defaultConfiguration": "production",
 			"dependsOn": [
 				{
-					"projects": "dependencies",
-					"target": "build"
+					"projects": "self",
+					"target": "link-core"
 				}
 			]
 		},
-		"pre-serve": {
+		"link-core": {
 			"executor": "nx:run-commands",
 			"options": {
 				"commands": [
@@ -99,7 +117,25 @@
 			"executor": "./dist/libs/builder:dev-server",
 			"configurations": {
 				"production": {
-					"browserTarget": "documentation:build:production"
+					"browserTarget": "documentation:build:production",
+					"ngDoc": {
+						"pages": "apps/documentation/src/app",
+						"tag": "production",
+						"defaultRoute": "getting-started/installation",
+						"keywords": {
+							"nunjucks": {
+								"path": "https://mozilla.github.io/nunjucks/"
+							},
+							"tsdoc": {
+								"title": "TsDoc",
+								"path": "https://tsdoc.org/"
+							},
+							"highlightjs": {
+								"title": "highlight.js",
+								"path": "https://highlightjs.org/"
+							}
+						}
+					}
 				},
 				"development": {
 					"browserTarget": "documentation:build:development",
@@ -127,7 +163,7 @@
 			"dependsOn": [
 				{
 					"projects": "self",
-					"target": "pre-serve"
+					"target": "link-core"
 				}
 			]
 		},

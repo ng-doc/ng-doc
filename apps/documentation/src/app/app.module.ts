@@ -25,7 +25,10 @@ import {FloatingCirclePositionControlModule} from './common/floating-circle-posi
 		NgDocModule.forRoot(),
 		NgDocUiKitRootModule.forRoot(),
 		NgDocGeneratedModule.forRoot(),
-		RouterModule.forRoot(NG_DOC_ROUTING, {scrollPositionRestoration: 'top', anchorScrolling: 'enabled'}),
+		RouterModule.forRoot([{
+			path: 'docs',
+			children: NG_DOC_ROUTING
+		}], {scrollPositionRestoration: 'top', anchorScrolling: 'enabled'}),
 		NgDocButtonIconModule,
 		NgDocIconModule,
 		NgDocTooltipModule,

@@ -1,0 +1,12 @@
+name: PR Checks
+
+on:
+    pull_request:
+        branches:
+            - master
+
+jobs:
+    lint:
+        uses: ./.github/workflows/lint.yml
+    tests:
+        uses: ./.github/workflows/tests.yml

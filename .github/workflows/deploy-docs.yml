@@ -1,0 +1,36 @@
+name: NgDoc Deploy Documentation
+
+on:
+    push:
+        branches:
+            - release
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Configure AWS Credentials
+                uses: aws-actions/configure-aws-credentials@v1
+                with:
+                    aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                    aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                    aws-region: eu-central-1
+
+            -   name: Checkout
+                uses: actions/checkout@v2
+
+            -   name: Setup Node.js
+                uses: actions/setup-node@v3
+                with:
+                    cache: npm
+                    node-version: 16
+
+            -   name: Install Dependencies
+                run: npm ci
+
+            -   name: Build
+                run: npm run build:prod
+
+            -   name: Deploy
+                if: success()
+                run: aws s3 sync ./dist/angular-github-actions-amazon-s3 s3://ng-doc

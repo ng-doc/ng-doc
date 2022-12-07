@@ -7,9 +7,6 @@
 		</ng-template>
 		<ng-template #rightContent>
 			<div class="ng-doc-header-controls" @preventInitialChild>
-				<a ng-doc-button-icon size="large" href="todo" target="_blank" ngDocTooltip="Buy me a coffee (or a beer 🍻)">
-					<ng-doc-icon icon="coffee" [size]="24"></ng-doc-icon>
-				</a>
 				<button ng-doc-button-icon size="large" (click)="toggleTheme()" ngDocTooltip="Toggle theme">
 					<ng-doc-icon [@switchIcon]="{value: ':enter', params: {from: '-100%', to: '-100%'}}" icon="sun" [size]="24" *ngIf="themeService.currentTheme?.id === nightTheme.id"></ng-doc-icon>
 					<ng-doc-icon [@switchIcon]="{value: ':enter', params: {from: '100%', to: '100%'}}" icon="moon" [size]="24" *ngIf="!themeService.currentTheme"></ng-doc-icon>
