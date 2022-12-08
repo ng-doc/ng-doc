@@ -5,7 +5,7 @@ import {ngDocZoneDetach, ngDocZoneOptimize} from '@ng-doc/ui-kit';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {fromEvent, Observable} from 'rxjs';
 import {filter} from 'rxjs/operators';
-import {isExternalLink} from '@ng-doc/app/helpers';
+import {isExternalLink} from '@ng-doc/app/helpers/is-external-link';
 import {WINDOW} from '@ng-web-apis/common';
 
 @Component({

@@ -2,7 +2,7 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {provideTypeControl} from '@ng-doc/app/helpers';
-import {NgDocExtractValueModule} from '@ng-doc/app/pipes';
+import {NgDocExtractValueModule} from '@ng-doc/app/pipes/extract-value';
 import {
 	NgDocButtonIconModule,
 	NgDocClearControlModule,

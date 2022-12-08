@@ -8,7 +8,7 @@ import {
 	OnDestroy,
 	Optional,
 } from '@angular/core';
-import {NgDocListItem} from '@ng-doc/ui-kit/classes';
+import {NgDocListItem} from '@ng-doc/ui-kit/classes/list-item';
 import {NgDocListComponent} from '@ng-doc/ui-kit/components/list';
 import {FL_CONTROL_HOST, FlCompareHost, FlControlHost, FlControlSelector} from 'flex-controls';
 

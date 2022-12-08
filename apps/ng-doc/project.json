@@ -1,0 +1,190 @@
+{
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"projectType": "application",
+	"sourceRoot": "apps/ng-doc/src",
+	"prefix": "ng-doc",
+	"targets": {
+		"build": {
+			"executor": "./dist/libs/builder:browser",
+			"outputs": ["{options.outputPath}"],
+			"options": {
+				"ngDoc": {
+					"pages": "apps/ng-doc/src/app",
+					"tag": "production",
+					"keywords": {
+						"nunjucks": {
+							"path": "https://mozilla.github.io/nunjucks/"
+						},
+						"tsdoc": {
+							"title": "TsDoc",
+							"path": "https://tsdoc.org/"
+						},
+						"highlightjs": {
+							"title": "highlight.js",
+							"path": "https://highlightjs.org/"
+						}
+					}
+				},
+				"outputPath": "dist/apps/ng-doc",
+				"index": "apps/ng-doc/src/index.html",
+				"main": "apps/ng-doc/src/main.ts",
+				"polyfills": "apps/ng-doc/src/polyfills.ts",
+				"tsConfig": "apps/ng-doc/tsconfig.app.json",
+				"inlineStyleLanguage": "scss",
+				"assets": [
+					"apps/ng-doc/src/favicon.ico",
+					"apps/ng-doc/src/assets",
+					{
+						"glob": "**/*",
+						"input": "dist/libs/ui-kit/assets",
+						"output": "assets"
+					},
+					{
+						"glob": "**/*",
+						"input": "dist/libs/app/assets",
+						"output": "assets"
+					},
+					{
+						"glob": "**/*",
+						"input": "dist/libs/builder/generated/assets",
+						"output": "assets"
+					}
+				],
+				"styles": ["apps/ng-doc/src/styles.scss"],
+				"scripts": [],
+				"allowedCommonJsDependencies": ["prettier", "posthtml-parser", "posthtml-render"]
+			},
+			"configurations": {
+				"production": {
+					"budgets": [
+						{
+							"type": "initial",
+							"maximumWarning": "500kb",
+							"maximumError": "10mb"
+						},
+						{
+							"type": "anyComponentStyle",
+							"maximumWarning": "2kb",
+							"maximumError": "4kb"
+						}
+					],
+					"fileReplacements": [
+						{
+							"replace": "apps/ng-doc/src/environments/environment.ts",
+							"with": "apps/ng-doc/src/environments/environment.prod.ts"
+						}
+					],
+					"outputHashing": "all",
+					"sourceMap": true,
+					"optimization": true,
+					"buildOptimizer": false,
+					"aot": false
+				},
+				"development": {
+					"buildOptimizer": false,
+					"optimization": false,
+					"vendorChunk": true,
+					"extractLicenses": false,
+					"sourceMap": true,
+					"namedChunks": true,
+					"aot": false
+				}
+			},
+			"defaultConfiguration": "production",
+			"dependsOn": [
+				{
+					"projects": "self",
+					"target": "link-core"
+				}
+			]
+		},
+		"link-core": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"symlink-dir dist/libs/core dist/libs/builder/node_modules/@ng-doc/core"
+				]
+			},
+			"dependsOn": [
+				{
+					"projects": "dependencies",
+					"target": "build"
+				}
+			]
+		},
+		"serve": {
+			"executor": "./dist/libs/builder:dev-server",
+			"configurations": {
+				"production": {
+					"browserTarget": "ng-doc:build:production",
+					"ngDoc": {
+						"pages": "apps/ng-doc/src/app",
+						"tag": "production",
+						"keywords": {
+							"nunjucks": {
+								"path": "https://mozilla.github.io/nunjucks/"
+							},
+							"tsdoc": {
+								"title": "TsDoc",
+								"path": "https://tsdoc.org/"
+							},
+							"highlightjs": {
+								"title": "highlight.js",
+								"path": "https://highlightjs.org/"
+							}
+						}
+					}
+				},
+				"development": {
+					"browserTarget": "ng-doc:build:development",
+					"ngDoc": {
+						"pages": "apps/ng-doc/src/app",
+						"tag": "develop",
+						"keywords": {
+							"nunjucks": {
+								"path": "https://mozilla.github.io/nunjucks/"
+							},
+							"tsdoc": {
+								"title": "TsDoc",
+								"path": "https://tsdoc.org/"
+							},
+							"highlightjs": {
+								"title": "highlight.js",
+								"path": "https://highlightjs.org/"
+							}
+						}
+					}
+				}
+			},
+			"defaultConfiguration": "development",
+			"dependsOn": [
+				{
+					"projects": "self",
+					"target": "link-core"
+				}
+			]
+		},
+		"extract-i18n": {
+			"executor": "@angular-devkit/build-angular:extract-i18n",
+			"options": {
+				"browserTarget": "ng-doc:build"
+			}
+		},
+		"lint": {
+			"executor": "@nrwl/linter:eslint",
+			"options": {
+				"lintFilePatterns": ["apps/ng-doc/**/*.ts", "apps/ng-doc/**/*.html"]
+			}
+		},
+		"test": {
+			"executor": "@nrwl/jest:jest",
+			"outputs": ["coverage/apps/ng-doc"],
+			"options": {
+				"jestConfig": "apps/ng-doc/jest.config.ts",
+				"passWithNoTests": true
+			}
+		}
+	},
+	"tags": ["type:app", "app:ng-doc"],
+	"implicitDependencies": ["builder"]
+}

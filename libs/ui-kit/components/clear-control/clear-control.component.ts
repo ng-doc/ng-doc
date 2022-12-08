@@ -1,5 +1,5 @@
 import {AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Optional} from '@angular/core';
-import {NgDocInputHost} from '@ng-doc/ui-kit/classes';
+import {NgDocInputHost} from '@ng-doc/ui-kit/classes/input-host';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {FL_CONTROL_HOST, FlControl, FlControlHost} from 'flex-controls';
 

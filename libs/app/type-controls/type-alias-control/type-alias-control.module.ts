@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {NgDocKindIconModule} from '@ng-doc/app/components';
+import {NgDocKindIconModule} from '@ng-doc/app/components/kind-icon';
 import {provideTypeControl} from '@ng-doc/app/helpers';
 import {NgDocExtractValueModule} from '@ng-doc/app/pipes/extract-value';
 import {

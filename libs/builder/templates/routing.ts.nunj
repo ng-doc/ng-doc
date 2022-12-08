@@ -2,9 +2,6 @@
 import {Routes} from '@angular/router';
 
 export const NG_DOC_ROUTING: Routes = [
-	{%- if defaultRoute %}
-	{path: '', redirectTo: '{{ defaultRoute }}', pathMatch: 'full' },
-	{%- endif  %}
 	{%- for entity in entities %}
 	{
 		path: '{{ entity.route }}',

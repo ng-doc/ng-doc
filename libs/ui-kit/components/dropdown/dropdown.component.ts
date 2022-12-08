@@ -19,7 +19,8 @@ import {
 } from '@angular/core';
 import {asArray} from '@ng-doc/core';
 import {dropdownOpenAnimation} from '@ng-doc/ui-kit/animations';
-import {NgDocOverlayHost, NgDocOverlayRef} from '@ng-doc/ui-kit/classes';
+import {NgDocOverlayRef} from '@ng-doc/ui-kit/classes/overlay-ref';
+import {NgDocOverlayHost} from '@ng-doc/ui-kit/classes/overlay-host';
 import {NgDocOverlayContainerComponent} from '@ng-doc/ui-kit/components/overlay-container';
 import {mergeOverlayConfigs, toElement} from '@ng-doc/ui-kit/helpers';
 import {NgDocOverlayConfig, NgDocOverlayProperties} from '@ng-doc/ui-kit/interfaces';

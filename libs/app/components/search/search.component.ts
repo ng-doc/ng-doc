@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
-import {NgDocSearchEngine} from '@ng-doc/app/classes';
+import {NgDocSearchEngine} from '@ng-doc/app/classes/search-engine';
 import {NgDocPageInfo} from '@ng-doc/core';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {Subject} from 'rxjs';

@@ -11,7 +11,8 @@ import {
 	Optional,
 	ViewChild,
 } from '@angular/core';
-import {NgDocBaseInput, NgDocInputHost} from '@ng-doc/ui-kit/classes';
+import {NgDocBaseInput} from '@ng-doc/ui-kit/classes/base-input';
+import {NgDocInputHost} from '@ng-doc/ui-kit/classes/input-host';
 import {ngDocMakePure} from '@ng-doc/ui-kit/decorators';
 import {NgDocFocusCatcherDirective} from '@ng-doc/ui-kit/directives/focus-catcher';
 import {NgDocContextWithImplicit} from '@ng-doc/ui-kit/interfaces';

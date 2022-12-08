@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
-import {NgDocRouteActiveModule} from '@ng-doc/app/directives';
+import {NgDocRouteActiveModule} from '@ng-doc/app/directives/route-active';
 import {
 	NgDocDotModule,
 	NgDocExpanderModule,

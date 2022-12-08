@@ -1,5 +1,5 @@
 import {Directive, ElementRef, HostBinding, Input, OnChanges} from '@angular/core';
-import highlight, {AutoHighlightResult} from 'highlight.js';
+import highlight from 'highlight.js/lib/core';
 import bash from 'highlight.js/lib/languages/bash';
 import css from 'highlight.js/lib/languages/css';
 import javascript from 'highlight.js/lib/languages/javascript';
@@ -9,6 +9,7 @@ import scss from 'highlight.js/lib/languages/scss';
 import markdown from 'highlight.js/lib/languages/markdown';
 import twig from 'highlight.js/lib/languages/twig';
 import typescript from 'highlight.js/lib/languages/typescript';
+import {AutoHighlightResult} from 'highlight.js';
 
 highlight.registerLanguage('javascript', javascript);
 highlight.registerLanguage('typescript', typescript);

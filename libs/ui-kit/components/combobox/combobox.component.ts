@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, ContentChild, ElementRef, Input, TemplateRef} from '@angular/core';
-import {NgDocListHost} from '@ng-doc/ui-kit/classes';
+import {NgDocListHost} from '@ng-doc/ui-kit/classes/list-host';
 import {NgDocDataDirective} from '@ng-doc/ui-kit/directives/data';
 import {NgDocContextWithImplicit} from '@ng-doc/ui-kit/interfaces';
 import {NgDocContent} from '@ng-doc/ui-kit/types';

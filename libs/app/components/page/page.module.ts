@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {NgDocPageMapModule} from '@ng-doc/app/components/page-map';
-import {NgDocSanitizeHtmlModule} from '@ng-doc/app/pipes';
+import {NgDocSanitizeHtmlModule} from '@ng-doc/app/pipes/sanitize-html';
 import {
 	NgDocBlockquoteProcessorModule,
 	NgDocCodeProcessorModule,
@@ -10,6 +10,12 @@ import {
 } from '@ng-doc/app/processors';
 
 import {NgDocPageComponent} from './page.component';
+import {
+	NgDocBooleanControlModule,
+	NgDocNumberControlModule,
+	NgDocStringControlModule,
+	NgDocTypeAliasControlModule
+} from '@ng-doc/app/type-controls';
 
 @NgModule({
 	declarations: [NgDocPageComponent],
@@ -22,6 +28,11 @@ import {NgDocPageComponent} from './page.component';
 		NgDocSanitizeHtmlModule,
 		NgDocIconProcessorModule,
 		NgDocPageMapModule,
+		/* Type controls */
+		NgDocStringControlModule,
+		NgDocNumberControlModule,
+		NgDocBooleanControlModule,
+		NgDocTypeAliasControlModule,
 	],
 	exports: [NgDocPageComponent],
 })

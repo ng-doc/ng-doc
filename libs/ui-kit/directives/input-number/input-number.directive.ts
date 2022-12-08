@@ -1,6 +1,6 @@
 import {Directive, ElementRef, HostListener, Inject, Optional, Renderer2} from '@angular/core';
 import {isPresent} from '@ng-doc/core';
-import {NgDocBaseInput} from '@ng-doc/ui-kit/classes';
+import {NgDocBaseInput} from '@ng-doc/ui-kit/classes/base-input';
 import {toElement} from '@ng-doc/ui-kit/helpers';
 import {NG_DOC_INPUT_CONTROL} from '@ng-doc/ui-kit/tokens';
 import {UntilDestroy} from '@ngneat/until-destroy';

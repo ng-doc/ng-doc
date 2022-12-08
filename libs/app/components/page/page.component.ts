@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {NgDocRootPage} from '@ng-doc/app/classes';
+import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
 
 @Component({
 	selector: 'ng-doc-page',

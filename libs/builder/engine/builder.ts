@@ -181,7 +181,7 @@ export class NgDocBuilder {
 					),
 				),
 			),
-			bufferDebounce(0),
+			bufferDebounce(1000),
 			tap(() => this.entities.updateKeywordMap(this.context.options.ngDoc.keywords)),
 			// Build touched entities and their dependencies
 			mergeMap((entities: NgDocEntity[]) =>
@@ -200,6 +200,7 @@ export class NgDocBuilder {
 							angular compiler can raise an error that these items are not exist
 						 */
 						emitBuiltOutput(...output);
+						console.log('\n\n\n\nemit', ...output.map(o => `\n${o.filePath}`))
 						this.collectGarbage();
 						this.print();
 					}),

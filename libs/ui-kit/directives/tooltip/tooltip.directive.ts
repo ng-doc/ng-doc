@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import {asArray, isPresent} from '@ng-doc/core';
 import {tooltipCloseAnimation, tooltipOpenAnimation} from '@ng-doc/ui-kit/animations';
-import {NgDocOverlayRef} from '@ng-doc/ui-kit/classes';
+import {NgDocOverlayRef} from '@ng-doc/ui-kit/classes/overlay-ref';
 import {NgDocOverlayContainerComponent} from '@ng-doc/ui-kit/components/overlay-container';
 import {toElement} from '@ng-doc/ui-kit/helpers';
 import {ngDocZoneDetach, ngDocZoneOptimize} from '@ng-doc/ui-kit/observables';

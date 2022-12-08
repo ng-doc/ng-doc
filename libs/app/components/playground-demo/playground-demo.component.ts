@@ -20,7 +20,7 @@ import {
 	ViewContainerRef,
 } from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {NgDocRootPage} from '@ng-doc/app/classes';
+import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
 import {compileTemplate, formatHtml} from '@ng-doc/app/helpers';
 import {NgDocPlaygroundFormData} from '@ng-doc/app/interfaces';
 import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties} from '@ng-doc/builder';

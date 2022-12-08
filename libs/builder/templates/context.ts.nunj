@@ -9,7 +9,7 @@ export const ngDocContextProvider: Provider = {
 			{%- macro nav(entity) %}
 			{
 				title: '{{ entity.title }}',
-				route: '{{ entity.url }}',
+				route: '{{ entity.fullRoute }}',
 				{%- if entity.isCategory %}
 				expandable: {{ entity.expandable }},
 				expanded: {{ entity.expanded }},

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input, Type} from '@angular/core';
-import {NgDocRootPage} from '@ng-doc/app/classes';
+import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
 import {NgDocDemoAsset} from '@ng-doc/app/interfaces';
 import {PolymorpheusComponent} from '@tinkoff/ng-polymorpheus';
 
