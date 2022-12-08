@@ -1,4 +1,4 @@
-name: NgDoc Deploy Documentation
+name: Deploy Documentation
 
 on:
     push:

@@ -2,7 +2,7 @@
 	display: block;
 	height: calc(100vh - var(--ng-doc-navbar-height));
 	width: 100%;
-	overflow: scroll;
+	overflow: auto;
 	padding: var(--ng-doc-sidebar-padding) 0;
 	--ng-doc-sidebar-category-indent: var(--ng-doc-sidebar-horizontal-padding);
 	--ng-doc-sidebar-item-indent: var(--ng-doc-sidebar-horizontal-padding);

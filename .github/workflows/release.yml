@@ -1,4 +1,4 @@
-name: NgDoc Release Libraries
+name: Release Libraries
 
 on:
     push:
