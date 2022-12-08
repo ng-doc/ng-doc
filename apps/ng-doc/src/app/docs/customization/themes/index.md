@@ -56,7 +56,7 @@ A theme is just a set of overridden CSS variables that NgDoc uses, for example, 
 looks like this, which allows you to enable dark mode.
 
 ```scss
-{% include "../../../../../../libs/app/styles/themes/ng-doc-night.scss" %}
+{% include "../../../../../../../libs/app/styles/themes/ng-doc-night.scss" %}
 ```
 
 ## Switching themes
@@ -143,7 +143,7 @@ For example like this
 ```scss
 // theme.scss
 
-@import '../../../../node_modules/highlight.js/styles/agate';
+@import '../../../../../node_modules/highlight.js/styles/agate';
 
 :host {
 	// My custom theme implementation

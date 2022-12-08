@@ -8,8 +8,9 @@ import less from 'highlight.js/lib/languages/less';
 import scss from 'highlight.js/lib/languages/scss';
 import markdown from 'highlight.js/lib/languages/markdown';
 import twig from 'highlight.js/lib/languages/twig';
+import xml from 'highlight.js/lib/languages/xml';
 import typescript from 'highlight.js/lib/languages/typescript';
-import {AutoHighlightResult} from 'highlight.js';
+import {HighlightResult} from 'highlight.js';
 
 highlight.registerLanguage('javascript', javascript);
 highlight.registerLanguage('typescript', typescript);
@@ -20,6 +21,8 @@ highlight.registerLanguage('json', json);
 highlight.registerLanguage('bash', bash);
 highlight.registerLanguage('markdown', markdown);
 highlight.registerLanguage('twig', twig);
+highlight.registerLanguage('html', xml);
+highlight.registerLanguage('xml', xml);
 
 @Directive({
 	selector: 'code[ngDocCodeHighlighter]',
@@ -41,7 +44,7 @@ export class NgDocCodeHighlighterDirective implements OnChanges {
 
 	ngOnChanges(): void {
 		if (this.code) {
-			const result: AutoHighlightResult = highlight.highlightAuto(this.code, [this.language]);
+			const result: HighlightResult = highlight.highlight(this.language, this.code);
 
 			this.elementRef.nativeElement.innerHTML = result.value ?? this.html;
 		} else {
