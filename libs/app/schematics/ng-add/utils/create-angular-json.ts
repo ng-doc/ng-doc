@@ -30,7 +30,6 @@ export function createAngularJson(): void {
         }
     }
   }
-}`,
-		{overwrite: true},
+}`
 	);
 }

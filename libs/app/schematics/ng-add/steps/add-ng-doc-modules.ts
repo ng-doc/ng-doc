@@ -4,7 +4,7 @@ import {ProjectDefinition, WorkspaceDefinition} from '@angular-devkit/core/src/w
 import {Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
 import {getWorkspace} from '@schematics/angular/utility/workspace';
 import {
-	addImportToNgModule,
+	addImportToModule,
 	ClassDeclaration,
 	createProject,
 	getMainModule,
@@ -53,7 +53,7 @@ function importMainModules(mainModule: ClassDeclaration): void {
 	const mainModulePath: string = mainModule.getSourceFile().getFilePath();
 
 	MAIN_MODULES.forEach((module: ImportModule) => {
-		addImportToNgModule(mainModule, module.initializer, {unique: true});
+		addImportToModule(mainModule, module.initializer);
 
 		module.imports.forEach((moduleImport: EntityImport) => {
 			addUniqueImport(mainModulePath, moduleImport.name, moduleImport.path);
