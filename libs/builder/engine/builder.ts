@@ -1,7 +1,7 @@
 import {asArray} from '@ng-doc/core';
 import chalk from 'chalk';
 import * as path from 'path';
-import {asyncScheduler, forkJoin, merge, Observable, of} from 'rxjs';
+import {forkJoin, merge, Observable, of} from 'rxjs';
 import {
 	catchError,
 	map,
@@ -9,7 +9,6 @@ import {
 	mergeMap,
 	share,
 	startWith,
-	subscribeOn,
 	switchMap,
 	take,
 	takeUntil,
@@ -108,7 +107,6 @@ export class NgDocBuilder {
 							),
 					  ).pipe(startWith(null), mapTo(entity)),
 			),
-			subscribeOn(asyncScheduler),
 			share()
 		);
 
@@ -181,6 +179,7 @@ export class NgDocBuilder {
 					),
 				),
 			),
+			// TODO: refactor and remove async timer here, right now it needs to create children entities for API
 			bufferDebounce(1000),
 			tap(() => this.entities.updateKeywordMap(this.context.options.ngDoc.keywords)),
 			// Build touched entities and their dependencies

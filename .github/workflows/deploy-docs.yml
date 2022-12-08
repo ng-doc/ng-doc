@@ -29,8 +29,8 @@ jobs:
                 run: npm ci
 
             -   name: Build
-                run: npm run build:prod
+                run: npx nx build:production
 
             -   name: Deploy
                 if: success()
-                run: aws s3 sync ./dist/angular-github-actions-amazon-s3 s3://ng-doc
+                run: aws s3 sync ./dist/apps/ng-doc s3://ng-doc
