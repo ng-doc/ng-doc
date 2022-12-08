@@ -3,7 +3,9 @@ name: NgDoc Deploy Documentation
 on:
     push:
         branches:
-            - release
+            - beta
+        tags:
+            - v**
 
 jobs:
     deploy:

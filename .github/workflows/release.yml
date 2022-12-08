@@ -33,7 +33,7 @@ jobs:
                 run: npx nx run-many --target=build --projects=app,builder,ui-kit,core
 
             -   name: Build Libraries
-                run: npx semantic-release
+                run: echo "🎉 Running semantic"
 
             #- run: npx nx workspace-lint
             #- run: npx nx format:check
