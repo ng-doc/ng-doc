@@ -1,3 +1,7 @@
+/**
+ *
+ * @param content
+ */
 export function escapeHtml(content: string): string {
 	return content
 		.replace(/&/g, '&amp;')

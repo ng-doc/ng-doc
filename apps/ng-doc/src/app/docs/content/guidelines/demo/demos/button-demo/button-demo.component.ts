@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {NgDocNotifyService} from '@ng-doc/ui-kit/services/notify';
 
 @Component({

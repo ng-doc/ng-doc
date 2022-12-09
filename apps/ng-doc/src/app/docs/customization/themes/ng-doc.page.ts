@@ -1,4 +1,5 @@
 import {NgDocPage} from '@ng-doc/builder';
+
 import CustomizationCategory from '../ng-doc.category';
 
 const ThemesPage: NgDocPage = {

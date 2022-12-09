@@ -22,7 +22,7 @@ To follow the DRY principle even in your templates, you can include one template
 example, to add the `dry-template.md` template to your current page template, you can write the
 following
 
-```markdown
+```twig
 {{ '{% include "../shared/dry-template.md" %}' | safe }}
 ```
 

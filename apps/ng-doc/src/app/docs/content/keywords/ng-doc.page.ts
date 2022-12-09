@@ -1,4 +1,5 @@
 import {NgDocPage} from '@ng-doc/builder';
+
 import ContentCategory from '../ng-doc.category';
 
 const KeywordsPage: NgDocPage = {

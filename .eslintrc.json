@@ -26,7 +26,15 @@
 							},
 							{
 								"sourceTag": "lib:app",
-								"onlyDependOnLibsWithTags": ["lib:builder", "lib:ui-kit"]
+								"onlyDependOnLibsWithTags": ["lib:builder", "lib:ui-kit", "lib:core"]
+							},
+							{
+								"sourceTag": "lib:builder",
+								"onlyDependOnLibsWithTags": ["lib:core"]
+							},
+							{
+								"sourceTag": "lib:ui-kit",
+								"onlyDependOnLibsWithTags": ["lib:core"]
 							}
 						]
 					}

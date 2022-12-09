@@ -1,4 +1,5 @@
 import {NgDocPlayground} from '@ng-doc/builder';
+
 import {FloatingCircleComponent} from './floating-circle/floating-circle.component';
 
 const TypeControlsPagePlayground: NgDocPlayground = {

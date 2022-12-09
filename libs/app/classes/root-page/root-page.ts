@@ -96,7 +96,9 @@ export abstract class MyClass2 extends MyClass1 implements MyInterface1 {
 	 */
 	abstract method3(value: string): string;
 
+	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	func(): void {}
 
+	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	func2() {}
 }

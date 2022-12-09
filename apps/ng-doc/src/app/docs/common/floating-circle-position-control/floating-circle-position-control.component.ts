@@ -1,8 +1,10 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {NgDocTypeControl} from '@ng-doc/app';
-import {FloatingCirclePosition} from '../../customization/type-controls/floating-circle/floating-circle.component';
 import {FormControl, FormGroup} from '@angular/forms';
+import {NgDocTypeControl} from '@ng-doc/app';
+import {EMPTY_FUNCTION} from '@ng-doc/core';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
+
+import {FloatingCirclePosition} from '../../customization/type-controls/floating-circle/floating-circle.component';
 
 @Component({
 	selector: 'ng-doc-floating-circle-position-control',
@@ -24,8 +26,8 @@ export class FloatingCirclePositionControlComponent implements NgDocTypeControl 
 		bottom: new FormControl<string>(''),
 	});
 
-	touched: () => void = () => {};
-	changed: (value: FloatingCirclePosition | null) => void = () => {};
+	touched: () => void = EMPTY_FUNCTION;
+	changed: (value: FloatingCirclePosition | null) => void = EMPTY_FUNCTION;
 
 	registerOnChange(fn: (value: FloatingCirclePosition | null) => void): void {
 		this.changed = fn;

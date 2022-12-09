@@ -1,7 +1,7 @@
 import {Decorator, Node} from 'ts-morph';
 
-import {NgDocSupportedDeclarations} from '../types';
 import {componentDecoratorResolver} from '../resolvers/component-decorator.resolver';
+import {NgDocSupportedDeclarations} from '../types';
 
 /**
  *

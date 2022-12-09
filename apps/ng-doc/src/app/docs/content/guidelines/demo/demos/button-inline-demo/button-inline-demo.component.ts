@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {NgDocNotifyService} from '@ng-doc/ui-kit/services/notify';
 
 @Component({
@@ -8,6 +8,7 @@ import {NgDocNotifyService} from '@ng-doc/ui-kit/services/notify';
 		<button ng-doc-button (click)="clickEvent()">Just a button</button>
 		<!-- NgDocHTMLSnippetEnd(Button Template) -->
 	`,
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonInlineDemoComponent {
 	/* NgDocCodeSnippetStart(Constructor) */

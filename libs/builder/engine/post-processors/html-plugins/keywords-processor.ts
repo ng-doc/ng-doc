@@ -1,7 +1,8 @@
+import {NgDocKeyword} from '@ng-doc/builder';
+
 import {isPageEntity, printWarning} from '../../../helpers';
 import {NgDocRouteEntity} from '../../entities/abstractions/route.entity';
 import {NgDocEntityStore} from '../../entity-store';
-import {NgDocKeyword} from '@ng-doc/builder';
 
 const visit: any = require('unist-util-visit-parents');
 const is: any = require('hast-util-is-element');

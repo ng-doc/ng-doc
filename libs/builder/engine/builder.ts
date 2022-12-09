@@ -8,6 +8,7 @@ import {Project} from 'ts-morph';
 import {createProject, emitBuiltOutput} from '../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
 import {bufferDebounce} from '../operators';
+import {bufferUntilOnce} from '../operators/buffer-until-once';
 import {
 	NgDocApiEntity,
 	NgDocCategoryEntity,
@@ -17,6 +18,7 @@ import {
 	NgDocSkeletonEntity,
 } from './entities';
 import {NgDocEntity} from './entities/abstractions/entity';
+import {entityLifeCycle} from './entity-life-cycle';
 import {NgDocEntityStore} from './entity-store';
 import {buildCandidates} from './functions/build-candidates';
 import {
@@ -28,8 +30,6 @@ import {
 	PLAYGROUND_PATTERN,
 } from './variables';
 import {NgDocWatcher} from './watcher';
-import {entityLifeCycle} from './entity-life-cycle';
-import {bufferUntilOnce} from '../operators/buffer-until-once';
 
 export class NgDocBuilder {
 	readonly entities: NgDocEntityStore = new NgDocEntityStore();

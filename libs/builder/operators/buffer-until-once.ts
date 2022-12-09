@@ -1,6 +1,10 @@
 import {Observable, OperatorFunction} from 'rxjs';
 import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
 
+/**
+ *
+ * @param until
+ */
 export function bufferUntilOnce<T>(until: Observable<unknown>): OperatorFunction<T, T[]> {
 	let buffer: T[] = [];
 	const sharedUntil: Observable<unknown> = until.pipe(shareReplay(1));

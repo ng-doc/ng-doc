@@ -1,11 +1,20 @@
-import {NgDocWatcher} from './watcher';
-import {Constructable} from '../types';
-import {NgDocEntity} from './entities/abstractions/entity';
 import {forkJoin, merge, Observable, of} from 'rxjs';
 import {map, startWith, switchMap, take, takeUntil, tap} from 'rxjs/operators';
-import {NgDocBuilder} from './builder';
 import {Project} from 'ts-morph';
 
+import {Constructable} from '../types';
+import {NgDocBuilder} from './builder';
+import {NgDocEntity} from './entities/abstractions/entity';
+import {NgDocWatcher} from './watcher';
+
+/**
+ *
+ * @param builder
+ * @param project
+ * @param watcher
+ * @param path
+ * @param EntityConstructor
+ */
 export function entityLifeCycle(
 	builder: NgDocBuilder,
 	project: Project,
@@ -40,6 +49,10 @@ export function entityLifeCycle(
 	);
 }
 
+/**
+ *
+ * @param entity
+ */
 function childGenerator(entity: NgDocEntity): Observable<NgDocEntity[]> {
 	entity.children.forEach((child: NgDocEntity) => child.destroy());
 

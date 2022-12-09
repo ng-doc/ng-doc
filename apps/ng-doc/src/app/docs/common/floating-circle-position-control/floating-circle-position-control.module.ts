@@ -1,8 +1,9 @@
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FloatingCirclePositionControlComponent} from './floating-circle-position-control.component';
+import {NgModule} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
 import {provideTypeControl} from '@ng-doc/app';
+
+import {FloatingCirclePositionControlComponent} from './floating-circle-position-control.component';
 
 @NgModule({
 	imports: [CommonModule, ReactiveFormsModule],

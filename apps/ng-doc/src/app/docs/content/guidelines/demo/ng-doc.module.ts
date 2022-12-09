@@ -1,7 +1,8 @@
 import {NgModule} from '@angular/core';
+import {NgDocButtonModule} from '@ng-doc/ui-kit/components/button';
+
 import {ButtonDemoComponent} from './demos/button-demo/button-demo.component';
 import {ButtonInlineDemoComponent} from './demos/button-inline-demo/button-inline-demo.component';
-import {NgDocButtonModule} from '@ng-doc/ui-kit/components/button';
 
 @NgModule({
 	// Import dependencies

@@ -1,4 +1,5 @@
 import {NgDocPage} from '@ng-doc/builder';
+
 import GuidelinesCategory from '../ng-doc.category';
 
 const DemoPage: NgDocPage = {

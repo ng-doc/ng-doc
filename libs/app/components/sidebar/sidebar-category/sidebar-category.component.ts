@@ -1,10 +1,10 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input, OnInit} from '@angular/core';
-import {NgDocNavigation} from '@ng-doc/app/interfaces';
-import {PolymorpheusContent} from '@tinkoff/ng-polymorpheus';
 import {Event, NavigationEnd, Router} from '@angular/router';
-import {filter, first, startWith} from 'rxjs/operators';
+import {NgDocNavigation} from '@ng-doc/app/interfaces';
 import {ngDocZoneOptimize} from '@ng-doc/ui-kit';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
+import {PolymorpheusContent} from '@tinkoff/ng-polymorpheus';
+import {filter, first, startWith} from 'rxjs/operators';
 
 @Component({
 	selector: 'ng-doc-sidebar-category',

@@ -8,14 +8,14 @@ import {
 	NgDocDemoProcessorModule, NgDocIconProcessorModule,
 	NgDocPlaygroundProcessorModule,
 } from '@ng-doc/app/processors';
-
-import {NgDocPageComponent} from './page.component';
 import {
 	NgDocBooleanControlModule,
 	NgDocNumberControlModule,
 	NgDocStringControlModule,
 	NgDocTypeAliasControlModule
 } from '@ng-doc/app/type-controls';
+
+import {NgDocPageComponent} from './page.component';
 
 @NgModule({
 	declarations: [NgDocPageComponent],

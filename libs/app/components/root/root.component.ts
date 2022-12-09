@@ -1,12 +1,12 @@
 import {Location} from '@angular/common';
 import {ChangeDetectionStrategy, Component, ElementRef, Inject, NgZone} from '@angular/core';
 import {Router} from '@angular/router';
+import {isExternalLink} from '@ng-doc/app/helpers/is-external-link';
 import {ngDocZoneDetach, ngDocZoneOptimize} from '@ng-doc/ui-kit';
+import {WINDOW} from '@ng-web-apis/common';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {fromEvent, Observable} from 'rxjs';
 import {filter} from 'rxjs/operators';
-import {isExternalLink} from '@ng-doc/app/helpers/is-external-link';
-import {WINDOW} from '@ng-web-apis/common';
 
 @Component({
 	selector: 'ng-doc-root',
