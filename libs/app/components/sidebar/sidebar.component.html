@@ -8,7 +8,7 @@
 			<ng-doc-sidebar-category
 				[category]="item"
 				[expandable]="!!item?.expandable"
-				[expanded]="isExpanded(item)"
+				[expanded]="!!item?.expanded || !item?.expandable"
 				[isRoot]="!!root"
 				[content]="categoryContent"
 			>

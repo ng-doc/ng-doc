@@ -17,11 +17,11 @@ export default function keywordsProcessor(entityStore: NgDocEntityStore, entity?
 		entity.usedKeywords = new Set();
 	}
 
-	return (tree: any) =>visit(tree, 'element', (node: any, _: any, parent: any) => {
+	return (tree: any) => visit(tree, 'element', (node: any, ancestors: any) => {
 		if (!isCodeNode(node)) {
 			return;
 		}
-
+		const parent: any = ancestors[ancestors.length - 1];
 		const isInlineCode: boolean = !is(parent, 'pre');
 
 		visit(node, 'text', (node: any, ancestors: any) => {
@@ -81,7 +81,7 @@ function getNodes(node: any, parent: any, entityStore: NgDocEntityStore, inlineL
 
 			const keyword: NgDocKeyword | undefined = entityStore.getByKeyword(word);
 
-			if (/^\*\w+/gm.test(word) && !keyword) {
+			if (inlineLink && /^\*\w+/gm.test(word) && !keyword) {
 				printWarning(`Keyword "${word}" is missing.`);
 			}
 

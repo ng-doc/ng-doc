@@ -41,7 +41,7 @@ export const MyAwesomePage: NgDocPage = {
 	title: 'My Awesome Page',
 	mdFile: './index.md',
 	// This keyword can be used to create a link to the page
-	// (e.g. like that `*MyCustomKeyword`)
+	// (e.g. like that "*MyCustomKeyword")
 	keyword: `MyCustomKeyword`,
 }
 
