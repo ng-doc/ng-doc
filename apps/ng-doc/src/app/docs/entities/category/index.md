@@ -37,4 +37,4 @@ export default MyAwesomeCategory;
 
 ## See also
 
-- `EntitiesPage`
+- `*EntitiesPage`

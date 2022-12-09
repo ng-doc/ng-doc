@@ -6,7 +6,7 @@ the code and usage first, and only then read the documentation. 😄
 ## Creating a demo
 
 First of all, in order to display the demo on the page, you need the `ng-doc.dependencies.ts`
-file as well as the `NgModule`, you can read about how to create them in the `EntitiesDependencies`
+file as well as the `NgModule`, you can read about how to create them in the `*EntitiesDependencies`
 article.
 
 If you already have them, you can start creating a demo, the demo in NgDoc is a regular Angular
@@ -92,5 +92,5 @@ NgDoc will render its code like below
 
 ## See Also
 
-- `EntitiesPage`
-- `EntitiesDependencies`
+- `*EntitiesPage`
+- `*EntitiesDependencies`

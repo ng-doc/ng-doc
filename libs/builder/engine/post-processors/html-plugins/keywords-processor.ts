@@ -1,4 +1,4 @@
-import {isPageEntity} from '../../../helpers';
+import {isPageEntity, printWarning} from '../../../helpers';
 import {NgDocRouteEntity} from '../../entities/abstractions/route.entity';
 import {NgDocEntityStore} from '../../entity-store';
 import {NgDocKeyword} from '@ng-doc/builder';
@@ -69,7 +69,7 @@ function isCodeNode(node: any): boolean {
  * @param e
  */
 function getNodes(node: any, parent: any, entityStore: NgDocEntityStore, inlineLink: boolean, e?: NgDocRouteEntity) {
-	const KeywordRegexp: RegExp = /([A-Za-z0-9_.-]+)/;
+	const KeywordRegexp: RegExp = /([A-Za-z0-9_.-/*]+)/;
 
 	return textContent(node)
 		.split(KeywordRegexp)
@@ -80,6 +80,10 @@ function getNodes(node: any, parent: any, entityStore: NgDocEntityStore, inlineL
 			}
 
 			const keyword: NgDocKeyword | undefined = entityStore.getByKeyword(word);
+
+			if (/^\*\w+/gm.test(word) && !keyword) {
+				printWarning(`Keyword "${word}" is missing.`);
+			}
 
 			// Convert code tag to link if it's a link to the page entity
 			if (inlineLink && keyword?.isCodeLink === false) {

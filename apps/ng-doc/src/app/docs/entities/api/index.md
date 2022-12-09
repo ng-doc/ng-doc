@@ -83,9 +83,9 @@ export default api;
 
 As mentioned above, NgDoc will generate documentation for all exported declarations it finds using
 the `include` field, to see how you can write documentation for various declarations, see
-the `ContentDeclarations` article.
+the `*ContentApiTemplating` article.
 
 ## See also
 
-- `EntitiesCategory`
-- `ContentApiTemplating`
+- `*EntitiesCategory`
+- `*ContentApiTemplating`

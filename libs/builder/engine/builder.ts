@@ -134,7 +134,6 @@ export class NgDocBuilder {
 						 */
 						emitBuiltOutput(...output);
 						this.collectGarbage();
-						this.print();
 					}),
 				),
 			),
@@ -158,11 +157,5 @@ export class NgDocBuilder {
 				this.entities.delete(entity.id);
 			}
 		});
-	}
-
-	private print(text?: string): void {
-		process.stdout.clearLine(0);
-		process.stdout.cursorTo(0);
-		text && process.stdout.write(`${chalk.blue('NgDoc:')} ${chalk.green(text)}`);
 	}
 }

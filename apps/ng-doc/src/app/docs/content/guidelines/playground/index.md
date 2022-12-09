@@ -16,7 +16,7 @@ Creating playgrounds starts with the fact that you need to create a file `ng-doc
 the folder with your page `ng-doc.page.ts`. In it you must describe the playground configuration
 which must match the `NgDocPlayground` type and export it.
 
-You will also need to create a dependency file and `NgModule`, see the `EntitiesDependencies`
+You will also need to create a dependency file and `NgModule`, see the `*EntitiesDependencies`
 article on how to do this.
 
 ## Configuration
@@ -143,10 +143,10 @@ NgDoc can recognize some custom types, such as the simplest `Type Alias` types, 
 components may contain `@Input` properties that have more complex types, interfaces or classes.
 To help NgDoc recognize them, you can create your own control component that will process these
 types,
-you can read how to do this in the `CustomizationTypeControls` article.
+you can read how to do this in the `*CustomizationTypeControls` article.
 
 ## See Also
 
-- `EntitiesPage`
-- `EntitiesDependencies`
-- `CustomizationTypeControls`
+- `*EntitiesPage`
+- `*EntitiesDependencies`
+- `*CustomizationTypeControls`

@@ -54,4 +54,4 @@ later, when our API stabilizes.
 
 ## See Also
 
-- `ContentGuidelinesPlayground`
+- `*ContentGuidelinesPlayground`

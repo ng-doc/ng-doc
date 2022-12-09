@@ -25,7 +25,7 @@ export function typeAliasPresentation(typeAlias: TypeAliasDeclaration): string {
  * @param variable
  */
 export function variablePresentation(variable: VariableDeclaration): string {
-	return `${variable.getVariableStatement()?.getDeclarationKind() ?? 'const'} ${variable.getName()}: ${variable.getType().getText()};`
+	return `${variable.getVariableStatement()?.getDeclarationKind() ?? 'const'} ${variable.getName()}: ${displayType(variable.getType())};`
 }
 
 /**
