@@ -8,6 +8,7 @@ export class NgDocWatcher {
 	private readonly change$: Subject<string> = new Subject();
 	private readonly add$: Subject<string> = new Subject();
 	private readonly unlink$: Subject<string> = new Subject();
+	private readonly ready$: Subject<void> = new Subject();
 
 	constructor() {
 		this.watcher = chokidar.watch([]);
@@ -15,7 +16,8 @@ export class NgDocWatcher {
 		this.watcher
 			.on('add', (path: string) => this.add$.next(path))
 			.on('change', (path: string) => this.change$.next(path))
-			.on('unlink', (path: string) => this.unlink$.next(path));
+			.on('unlink', (path: string) => this.unlink$.next(path))
+			.on('ready', () => this.ready$.next());
 	}
 
 	watch(paths: string | readonly string[]): this {
@@ -44,6 +46,10 @@ export class NgDocWatcher {
 		return this.unlink$.pipe(
 			filter((path: string) => !filterPaths || filterPaths.some((p: string) => minimatch(path, p))),
 		);
+	}
+
+	onReady(): Observable<void> {
+		return this.ready$;
 	}
 
 	close(): void {

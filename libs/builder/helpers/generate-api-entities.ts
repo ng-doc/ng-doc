@@ -8,6 +8,8 @@ import {NgDocSupportedDeclarations} from '../types';
 import {isNotExcludedPath} from './is-not-excluded-path';
 import {isSupportedDeclaration} from './is-supported-declaration';
 
+// one file - sourceFile.getNodesReferencingOtherSourceFiles()[0].getModuleSpecifierSourceFile().getNodesReferencingOtherSourceFiles()
+
 /**
  *
  * @param apiRootEntity

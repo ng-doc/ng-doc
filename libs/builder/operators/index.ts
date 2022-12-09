@@ -1,2 +1,2 @@
 export * from './buffer-debounce';
-export * from './buffer-until';
+export * from './buffer-until-once';

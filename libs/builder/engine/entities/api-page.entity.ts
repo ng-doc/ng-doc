@@ -23,6 +23,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	componentName: string = uniqueName(`NgDocGeneratedApiPageComponent`);
 	override moduleFileName: string = `${uniqueName('ng-doc-api-page')}.module.ts`;
 	protected override readyToBuild: boolean = true;
+	override readonly physical: boolean = false;
 	declaration?: NgDocSupportedDeclarations;
 	override id: string = uniqueName(`${this.sourceFilePath}}#${this.declarationName}`);
 

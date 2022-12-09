@@ -16,6 +16,7 @@ import {NgDocPageEntity} from './page.entity';
 export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 	override moduleName: string = uniqueName(`NgDocGeneratedApiScopeCategoryModule`);
 	override readonly isNavigable: boolean = false;
+	override readonly physical: boolean = false;
 	protected override readyToBuild: boolean = true;
 	override moduleFileName: string = `${uniqueName('ng-doc-api-scope')}.module.ts`;
 	override id: string = uniqueName(`${this.sourceFilePath}#${this.target.route}`);

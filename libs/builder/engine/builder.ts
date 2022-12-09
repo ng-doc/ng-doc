@@ -2,25 +2,12 @@ import {asArray} from '@ng-doc/core';
 import chalk from 'chalk';
 import * as path from 'path';
 import {forkJoin, merge, Observable, of} from 'rxjs';
-import {
-	catchError,
-	map,
-	mapTo,
-	mergeMap,
-	share,
-	startWith,
-	switchMap,
-	take,
-	takeUntil,
-	tap,
-	withLatestFrom,
-} from 'rxjs/operators';
+import {catchError, map, mapTo, mergeMap, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {Project} from 'ts-morph';
 
-import {createProject, emitBuiltOutput, generateApiEntities} from '../helpers';
+import {createProject, emitBuiltOutput} from '../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
 import {bufferDebounce} from '../operators';
-import {Constructable} from '../types';
 import {
 	NgDocApiEntity,
 	NgDocCategoryEntity,
@@ -41,7 +28,8 @@ import {
 	PLAYGROUND_PATTERN,
 } from './variables';
 import {NgDocWatcher} from './watcher';
-import {bufferEmits} from '../operators/buffer-emits';
+import {entityLifeCycle} from './entity-life-cycle';
+import {bufferUntilOnce} from '../operators/buffer-until-once';
 
 export class NgDocBuilder {
 	readonly entities: NgDocEntityStore = new NgDocEntityStore();
@@ -49,7 +37,7 @@ export class NgDocBuilder {
 	private readonly project: Project;
 	private readonly watcher: NgDocWatcher;
 
-	constructor(private readonly context: NgDocBuilderContext) {
+	constructor(readonly context: NgDocBuilderContext) {
 		this.project = createProject({
 			tsConfigFilePath: this.context.tsConfig,
 			compilerOptions: {
@@ -69,95 +57,42 @@ export class NgDocBuilder {
 				])
 				.flat(),
 		);
-
-		// New entities that come from FileSystem
-		merge(
-			this.watcher.onAdd(PAGE_PATTERN).pipe(withLatestFrom(of(NgDocPageEntity))),
-			this.watcher.onAdd(CATEGORY_PATTERN).pipe(withLatestFrom(of(NgDocCategoryEntity))),
-			this.watcher.onAdd(PAGE_DEPENDENCY_PATTERN).pipe(withLatestFrom(of(NgDocDependenciesEntity))),
-			this.watcher.onAdd(API_PATTERN).pipe(withLatestFrom(of(NgDocApiEntity))),
-			this.watcher.onAdd(PLAYGROUND_PATTERN).pipe(withLatestFrom(of(NgDocPlaygroundEntity))),
-		)
-			.pipe(
-				map(
-					([path, Entity]: [string, Constructable<NgDocEntity>]) =>
-						new Entity(this, this.project.addSourceFileAtPath(path), this.context),
-				),
-			)
-			.subscribe((entity: NgDocEntity) => {
-				this.entities.set(entity.id, entity);
-			});
 	}
 
 	run(): Observable<void> {
-		const touchedEntity: Observable<NgDocEntity> = this.entities.changes().pipe(
-			tap(([entity, removed]: [NgDocEntity, boolean]) =>
-				removed ? entity.destroy() : this.watcher.watch(entity.rootFiles),
-			),
-			mergeMap(([entity]: [NgDocEntity, boolean]) =>
-				entity.destroyed
-					? of(entity)
-					: merge(
-							this.watcher.onChange(...entity.rootFiles).pipe(takeUntil(entity.onDestroy())),
-							this.watcher.onUnlink(...entity.rootFiles).pipe(
-								tap(() => {
-									entity.destroy();
-								}),
-								take(1),
-							),
-					  ).pipe(startWith(null), mapTo(entity)),
-			),
-			share()
-		);
-
-		return touchedEntity.pipe(
-			tap(() => {
-				this.print('Building documentation');
-				this.context.context.reportRunning();
-			}),
-			mergeMap((entity: NgDocEntity) => {
+		const entities: Observable<NgDocEntity[]> = merge(
+			entityLifeCycle(this, this.project, this.watcher, PAGE_PATTERN, NgDocPageEntity),
+			entityLifeCycle(this, this.project, this.watcher, CATEGORY_PATTERN, NgDocCategoryEntity),
+			entityLifeCycle(this, this.project, this.watcher, PAGE_DEPENDENCY_PATTERN, NgDocDependenciesEntity),
+			entityLifeCycle(this, this.project, this.watcher, API_PATTERN, NgDocApiEntity),
+			entityLifeCycle(this, this.project, this.watcher, PLAYGROUND_PATTERN, NgDocPlaygroundEntity),
+		)
+			.pipe(
+				bufferUntilOnce(this.watcher.onReady()),
+				map((entities: NgDocEntity[][]) => entities.flat())
+			)
+		return entities.pipe(
+			tap(() => this.context.context.reportRunning()),
+			mergeMap((entities: NgDocEntity[]) => {
 				/*
 					Refresh and compile source files for all not destroyed entities
 				*/
-				return (entity.destroyed ? of(entity) : entity.emit().pipe(mapTo(entity)))
-					.pipe(
-						tap(() => {
-							/*
-								We destroy children entities for NgDocApiEntities because
-								they are created based on the NgDocApiEntities
-							*/
-							if (entity instanceof NgDocApiEntity) {
-								entity.children.forEach((child: NgDocEntity) => child.destroy());
-							}
-						})
-					)
+				return forkJoin(entities.map((entity: NgDocEntity) => entity.destroyed ? of(null) : entity.emit())).pipe(mapTo(entities))
 			}),
-			/* Delay to buffer all changes from the FileSystem */
-			bufferEmits(touchedEntity),
-			mergeMap((entities: NgDocEntity[]) =>
+			mergeMap((entities: NgDocEntity[]) => {
 				// Re-fetch compiled data for non destroyed entities
-				forkJoin(
+				return forkJoin(
 					entities.map((entity: NgDocEntity) =>
 						entity.destroyed
 							? of(entity)
 							: entity.update().pipe(
-									tap(() => {
-										/*
-								Re-generate children Entities for NgDocApiEntity if it was changed
-							 */
-										if (entity instanceof NgDocApiEntity) {
-											generateApiEntities(entity).forEach((e: NgDocEntity) =>
-												this.entities.set(e.id, e),
-											);
-										}
-									}),
-									catchError((e: Error) => {
-										this.context.context.logger.error(`NgDoc error: ${e.message}\n${e.stack}`);
+								catchError((e: Error) => {
+									this.context.context.logger.error(`\n\nNgDoc error: ${e.message}\n${e.stack}`);
 
-										return of(void 0);
-									}),
-									mapTo(entity),
-							  ),
+									return of(void 0);
+								}),
+								mapTo(entity),
+							),
 					),
 				).pipe(
 					switchMap((entities: NgDocEntity[]) =>
@@ -167,20 +102,19 @@ export class NgDocBuilder {
 								entity.destroyed
 									? of(entity)
 									: entity.dependencies.changes().pipe(
-											switchMap((dependencies: string[]) =>
-												this.watcher.watch(dependencies).onChange(...dependencies),
-											),
-											startWith(null),
-											mapTo(entity),
-											takeUntil(entity.onDestroy()),
-									  ),
+										switchMap((dependencies: string[]) =>
+											this.watcher.watch(dependencies).onChange(...dependencies),
+										),
+										startWith(null),
+										mapTo(entity),
+										takeUntil(entity.onDestroy()),
+									),
 							),
 						),
 					),
-				),
-			),
-			// TODO: refactor and remove async timer here, right now it needs to create children entities for API
-			bufferDebounce(1000),
+				);
+			}),
+			bufferDebounce(0),
 			tap(() => this.entities.updateKeywordMap(this.context.options.ngDoc.keywords)),
 			// Build touched entities and their dependencies
 			mergeMap((entities: NgDocEntity[]) =>
@@ -199,7 +133,6 @@ export class NgDocBuilder {
 							angular compiler can raise an error that these items are not exist
 						 */
 						emitBuiltOutput(...output);
-						console.log('\n\n\n\nemit', ...output.map(o => `\n${o.filePath}`))
 						this.collectGarbage();
 						this.print();
 					}),
