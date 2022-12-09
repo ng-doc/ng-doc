@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input, OnInit} from '@angular/core';
 import {NgDocNavigation} from '@ng-doc/app/interfaces';
 import {PolymorpheusContent} from '@tinkoff/ng-polymorpheus';
 import {Event, NavigationEnd, Router} from '@angular/router';
@@ -13,7 +13,7 @@ import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @UntilDestroy()
-export class NgDocSidebarCategoryComponent {
+export class NgDocSidebarCategoryComponent implements OnInit {
 	@Input()
 	category?: NgDocNavigation;
 
@@ -34,7 +34,9 @@ export class NgDocSidebarCategoryComponent {
 	constructor(
 		private readonly router: Router,
 		private readonly changeDetectorRef: ChangeDetectorRef,
-	) {
+	) {}
+
+	ngOnInit(): void {
 		/**
 		 * We need to update this component every time a navigation occurs to expand the category if its child node is currently rendered
 		 */
