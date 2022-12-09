@@ -145,7 +145,7 @@ For example like this
 
 @import '../../../../../node_modules/highlight.js/styles/agate';
 
-:host {
+:root {
 	// My custom theme implementation
 }
 ```
