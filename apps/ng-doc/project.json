@@ -64,8 +64,8 @@
 						},
 						{
 							"type": "anyComponentStyle",
-							"maximumWarning": "2kb",
-							"maximumError": "4kb"
+							"maximumWarning": "8kb",
+							"maximumError": "10kb"
 						}
 					],
 					"fileReplacements": [
@@ -97,9 +97,7 @@
 		"link-core": {
 			"executor": "nx:run-commands",
 			"options": {
-				"commands": [
-					"symlink-dir dist/libs/core dist/libs/builder/node_modules/@ng-doc/core"
-				]
+				"commands": ["symlink-dir dist/libs/core dist/libs/builder/node_modules/@ng-doc/core"]
 			},
 			"dependsOn": [
 				{
