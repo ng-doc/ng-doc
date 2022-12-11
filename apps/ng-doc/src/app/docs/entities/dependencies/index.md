@@ -50,12 +50,10 @@ it yourself next to the dependency file or when generating it.
 
 What `NgModule` should include:
 
-- `imports` - should contain all the dependencies that you need for your demos and playgrounds
-- `declarations` - a list of demos that you have created specifically for this page
-- `exports` - the components you use for the playground
+-   `imports` - should contain all the dependencies that you need for your demos and playgrounds
+-   `declarations` - a list of demos that you have created specifically for this page
 
 ## See also
 
-- `*EntitiesPage`
-- `*ContentGuidelinesDemo`
-- `*ContentGuidelinesPlayground`
+-   `*EntitiesPage`
+-   `*ContentGuidelinesDemo`

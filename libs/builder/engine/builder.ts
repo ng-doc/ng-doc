@@ -53,7 +53,6 @@ export class NgDocBuilder {
 					path.join(pagesPath, CATEGORY_PATTERN),
 					path.join(pagesPath, PAGE_DEPENDENCY_PATTERN),
 					path.join(pagesPath, API_PATTERN),
-					path.join(pagesPath, PLAYGROUND_PATTERN),
 				])
 				.flat(),
 		);
@@ -65,19 +64,19 @@ export class NgDocBuilder {
 			entityLifeCycle(this, this.project, this.watcher, CATEGORY_PATTERN, NgDocCategoryEntity),
 			entityLifeCycle(this, this.project, this.watcher, PAGE_DEPENDENCY_PATTERN, NgDocDependenciesEntity),
 			entityLifeCycle(this, this.project, this.watcher, API_PATTERN, NgDocApiEntity),
-			entityLifeCycle(this, this.project, this.watcher, PLAYGROUND_PATTERN, NgDocPlaygroundEntity),
-		)
-			.pipe(
-				bufferUntilOnce(this.watcher.onReady()),
-				map((entities: NgDocEntity[][]) => entities.flat())
-			)
+		).pipe(
+			bufferUntilOnce(this.watcher.onReady()),
+			map((entities: NgDocEntity[][]) => entities.flat()),
+		);
 		return entities.pipe(
 			tap(() => this.context.context.reportRunning()),
 			mergeMap((entities: NgDocEntity[]) => {
 				/*
 					Refresh and compile source files for all not destroyed entities
 				*/
-				return forkJoin(entities.map((entity: NgDocEntity) => entity.destroyed ? of(null) : entity.emit())).pipe(mapTo(entities))
+				return forkJoin(
+					entities.map((entity: NgDocEntity) => (entity.destroyed ? of(null) : entity.emit())),
+				).pipe(mapTo(entities));
 			}),
 			mergeMap((entities: NgDocEntity[]) => {
 				// Re-fetch compiled data for non destroyed entities
@@ -86,13 +85,13 @@ export class NgDocBuilder {
 						entity.destroyed
 							? of(entity)
 							: entity.update().pipe(
-								catchError((e: Error) => {
-									this.context.context.logger.error(`\n\nNgDoc error: ${e.message}\n${e.stack}`);
+									catchError((e: Error) => {
+										this.context.context.logger.error(`\n\nNgDoc error: ${e.message}\n${e.stack}`);
 
-									return of(void 0);
-								}),
-								mapTo(entity),
-							),
+										return of(void 0);
+									}),
+									mapTo(entity),
+							  ),
 					),
 				).pipe(
 					switchMap((entities: NgDocEntity[]) =>
@@ -102,13 +101,13 @@ export class NgDocBuilder {
 								entity.destroyed
 									? of(entity)
 									: entity.dependencies.changes().pipe(
-										switchMap((dependencies: string[]) =>
-											this.watcher.watch(dependencies).onChange(...dependencies),
-										),
-										startWith(null),
-										mapTo(entity),
-										takeUntil(entity.onDestroy()),
-									),
+											switchMap((dependencies: string[]) =>
+												this.watcher.watch(dependencies).onChange(...dependencies),
+											),
+											startWith(null),
+											mapTo(entity),
+											takeUntil(entity.onDestroy()),
+									  ),
 							),
 						),
 					),
@@ -124,8 +123,9 @@ export class NgDocBuilder {
 					),
 				).pipe(
 					switchMap((output: NgDocBuiltOutput[][]) =>
-						this.skeleton.buildArtifacts()
-							.pipe(map((skeleton: NgDocBuiltOutput[]) => [...output.flat(), ...skeleton]))
+						this.skeleton
+							.buildArtifacts()
+							.pipe(map((skeleton: NgDocBuiltOutput[]) => [...output.flat(), ...skeleton])),
 					),
 					tap((output: NgDocBuiltOutput[]) => {
 						/*

@@ -66,7 +66,7 @@ So, for example to render title, you can do this
 {{ '{{ NgDocPage.title }}' | safe }}
 ```
 
-The `NgDocActions` provides some functions that you can call to render demo or playground on the page,
+The `NgDocActions` provides some functions that you can call to render demo on the page,
 for example, to render demo you can call `demo` method with the name of you demo component.
 Подробнее о демо вы можете прочитать в разделе `*ContentGuidelinesDemo`.
 
@@ -109,7 +109,5 @@ NgDoc will render it like this:
 
 ## SeeAlso
 
-- `*ContentGuidelinesDemo`
-- `*ContentGuidelinesPlayground`
-- `*ContentKeywords`
-
+-   `*ContentGuidelinesDemo`
+-   `*ContentKeywords`
