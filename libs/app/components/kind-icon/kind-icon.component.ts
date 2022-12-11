@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/c
 
 @Component({
 	selector: 'ng-doc-kind-icon',
-	template: '{{kind.slice(0, 1)}}',
+	template: '{{kind[0]}}',
 	styleUrls: ['./kind-icon.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })

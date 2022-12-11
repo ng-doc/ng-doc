@@ -7,7 +7,6 @@ import {
 	NgDocCodeProcessorModule,
 	NgDocDemoProcessorModule,
 	NgDocIconProcessorModule,
-	NgDocPlaygroundProcessorModule,
 } from '@ng-doc/app/processors';
 
 import {NgDocPageComponent} from './page.component';
@@ -18,7 +17,6 @@ import {NgDocPageComponent} from './page.component';
 		CommonModule,
 		NgDocDemoProcessorModule,
 		NgDocCodeProcessorModule,
-		NgDocPlaygroundProcessorModule,
 		NgDocBlockquoteProcessorModule,
 		NgDocSanitizeHtmlModule,
 		NgDocIconProcessorModule,
