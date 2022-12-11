@@ -39,7 +39,6 @@ export class {{ page.componentName }} extends NgDocRootPage {
 
 	constructor() {
 		super();
-		console.log(this.pageContent, this.demo, this.demoAssets, this.playground);
 	}
 }
 
