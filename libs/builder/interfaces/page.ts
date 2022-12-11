@@ -18,4 +18,6 @@ export interface NgDocPage {
 	order?: number;
 	/** Custom keyword that uses to create links to this page (`title` by default) */
 	keyword?: string;
+	/** Any custom data that you can provide for the page and use on it via `NgDocPage.data` */
+	data?: unknown;
 }

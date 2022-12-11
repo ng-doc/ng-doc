@@ -19,7 +19,7 @@ import {NgDocPageMapItem} from '@ng-doc/app/interfaces';
 import {ngDocZoneOptimize} from '@ng-doc/ui-kit';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {fromEvent} from 'rxjs';
-import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
+import {distinctUntilChanged, filter, map, startWith} from 'rxjs/operators';
 
 import {NgDocPageMapElementComponent} from './page-map-element/page-map-element.component';
 
@@ -62,6 +62,7 @@ export class NgDocPageMapComponent implements OnChanges, AfterViewInit {
 			.pipe(
 				map((event: Event) => (event.target as Document).scrollingElement as HTMLElement),
 				startWith(this.document.scrollingElement as HTMLElement),
+				filter(() => !!this.map.length),
 				map((target: HTMLElement) => {
 					const percentage: number = target.scrollTop * 100 / (target.scrollHeight - target.offsetHeight);
 					const selectionLine: number = target.scrollTop + target.offsetHeight * percentage / 100;

@@ -1,3 +1,5 @@
+import {CACHE_PATH} from '@ng-doc/builder';
+import * as path from 'path';
 import {ModuleKind, ModuleResolutionKind, Project, ProjectOptions} from 'ts-morph';
 
 /**
@@ -15,6 +17,7 @@ export function createProject(options?: ProjectOptions): Project {
 			incremental: true,
 			declaration: false,
 			skipLibCheck: true,
+			tsBuildInfoFile: path.join(CACHE_PATH, 'ng-doc.buildinfo.json'),
 			moduleResolution: ModuleResolutionKind.NodeJs,
 			/*
 				true value increases the speed, but thn it's not possible to resolve imports,

@@ -105,9 +105,6 @@ export class AppModule {}
              "configurations": {
               \t"production": {
               \t\t"sourceMap": true,
-\t\t\t\t\t"optimization": false,
-\t\t\t\t\t"buildOptimizer": false,
-\t\t\t\t\t"aot": false
               \t}
               },
               "builder": "@ng-doc/builder:browser"
