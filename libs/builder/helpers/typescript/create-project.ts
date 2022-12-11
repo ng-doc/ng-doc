@@ -1,6 +1,7 @@
-import {CACHE_PATH} from '@ng-doc/builder';
 import * as path from 'path';
 import {ModuleKind, ModuleResolutionKind, Project, ProjectOptions} from 'ts-morph';
+
+import {CACHE_PATH} from '../../engine/variables';
 
 /**
  * Creates typescript project
@@ -26,7 +27,7 @@ export function createProject(options?: ProjectOptions): Project {
 			noResolve: false,
 			isolatedModules: true,
 
-			types : [],
+			types: [],
 			...options?.compilerOptions,
 		},
 		skipAddingFilesFromTsConfig: true,

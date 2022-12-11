@@ -1,5 +1,4 @@
 import {asArray} from '@ng-doc/core';
-import chalk from 'chalk';
 import * as path from 'path';
 import {forkJoin, from, merge, Observable, of} from 'rxjs';
 import {catchError, map, mapTo, mergeMap, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
@@ -14,21 +13,13 @@ import {
 	NgDocCategoryEntity,
 	NgDocDependenciesEntity,
 	NgDocPageEntity,
-	NgDocPlaygroundEntity,
 	NgDocSkeletonEntity,
 } from './entities';
 import {NgDocEntity} from './entities/abstractions/entity';
 import {entityLifeCycle} from './entity-life-cycle';
 import {NgDocEntityStore} from './entity-store';
 import {buildCandidates} from './functions/build-candidates';
-import {
-	API_PATTERN,
-	CACHE_PATH,
-	CATEGORY_PATTERN,
-	PAGE_DEPENDENCY_PATTERN,
-	PAGE_PATTERN,
-	PLAYGROUND_PATTERN,
-} from './variables';
+import {API_PATTERN, CACHE_PATH, CATEGORY_PATTERN, PAGE_DEPENDENCY_PATTERN, PAGE_PATTERN} from './variables';
 import {NgDocWatcher} from './watcher';
 
 export class NgDocBuilder {
@@ -59,7 +50,7 @@ export class NgDocBuilder {
 	}
 
 	run(): Observable<void> {
-		console.time('Build')
+		console.time('Build');
 		const entities: Observable<NgDocEntity[]> = merge(
 			entityLifeCycle(this, this.project, this.watcher, PAGE_PATTERN, NgDocPageEntity),
 			entityLifeCycle(this, this.project, this.watcher, CATEGORY_PATTERN, NgDocCategoryEntity),
@@ -73,17 +64,15 @@ export class NgDocBuilder {
 		return entities.pipe(
 			tap(() => this.context.context.reportRunning()),
 			mergeMap((entities: NgDocEntity[]) => {
-				console.time('Emit')
 				/*
 					Refresh and compile source files for all not destroyed entities
 				*/
 				return forkJoin(
 					entities.map((entity: NgDocEntity) => (entity.destroyed ? of(null) : entity.emit())),
-				).pipe(mapTo(entities), tap(() => console.timeEnd('Emit')));
+				).pipe(mapTo(entities));
 			}),
 			switchMap((entities: NgDocEntity[]) => from(this.project.emit()).pipe(mapTo(entities))),
 			mergeMap((entities: NgDocEntity[]) => {
-				console.time('Update')
 				// Re-fetch compiled data for non destroyed entities
 				return forkJoin(
 					entities.map((entity: NgDocEntity) =>
@@ -99,7 +88,6 @@ export class NgDocBuilder {
 							  ),
 					),
 				).pipe(
-					tap(() => console.timeEnd('Update')),
 					switchMap((entities: NgDocEntity[]) =>
 						merge(
 							...entities.map((entity: NgDocEntity) =>
@@ -140,7 +128,6 @@ export class NgDocBuilder {
 						 */
 						emitBuiltOutput(...output);
 						this.collectGarbage();
-						console.timeEnd('Build')
 					}),
 				),
 			),
