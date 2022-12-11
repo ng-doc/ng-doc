@@ -8,13 +8,18 @@ import {NgDocApplicationConfig, NgDocTheme} from '@ng-doc/app/interfaces';
 import {NgDocStoreService, NgDocThemeService} from '@ng-doc/app/services';
 import {NG_DOC_DEFAULT_THEME_ID, NG_DOC_THEME} from '@ng-doc/app/tokens';
 import {asArray} from '@ng-doc/core';
+import {NgDocUiKitRootModule} from '@ng-doc/ui-kit';
 
 @NgModule({
 	imports: [
 		HttpClientModule,
 		OverlayModule,
+		NgDocUiKitRootModule.forRoot(),
 	],
-	exports: [NgDocRootModule],
+	exports: [
+		NgDocRootModule,
+		NgDocUiKitRootModule,
+	],
 })
 export class NgDocModule {
 	static forRoot(config?: NgDocApplicationConfig): ModuleWithProviders<NgDocModule> {

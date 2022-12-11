@@ -23,7 +23,6 @@ import {AppComponent} from './app.component';
 		BrowserAnimationsModule,
 		HttpClientModule,
 		NgDocModule.forRoot(),
-		NgDocUiKitRootModule.forRoot(),
 		NgDocGeneratedModule.forRoot(),
 		RouterModule.forRoot([
 			{path: '', redirectTo: 'getting-started/installation', pathMatch: 'full'},

@@ -5,15 +5,10 @@ import {NgDocSanitizeHtmlModule} from '@ng-doc/app/pipes/sanitize-html';
 import {
 	NgDocBlockquoteProcessorModule,
 	NgDocCodeProcessorModule,
-	NgDocDemoProcessorModule, NgDocIconProcessorModule,
+	NgDocDemoProcessorModule,
+	NgDocIconProcessorModule,
 	NgDocPlaygroundProcessorModule,
 } from '@ng-doc/app/processors';
-import {
-	NgDocBooleanControlModule,
-	NgDocNumberControlModule,
-	NgDocStringControlModule,
-	NgDocTypeAliasControlModule
-} from '@ng-doc/app/type-controls';
 
 import {NgDocPageComponent} from './page.component';
 
@@ -28,11 +23,6 @@ import {NgDocPageComponent} from './page.component';
 		NgDocSanitizeHtmlModule,
 		NgDocIconProcessorModule,
 		NgDocPageMapModule,
-		/* Type controls */
-		NgDocStringControlModule,
-		NgDocNumberControlModule,
-		NgDocBooleanControlModule,
-		NgDocTypeAliasControlModule,
 	],
 	exports: [NgDocPageComponent],
 })
