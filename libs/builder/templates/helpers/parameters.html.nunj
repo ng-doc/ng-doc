@@ -1,12 +1,12 @@
 {% import "helpers/type.html.nunj" as typeMacro %}
 
 {% macro render(parameters, origin) %}
-	<table>
+	<table class="ng-doc-parameters-table">
 		<thead>
 			<tr>
-				<th>Name</th>
-				<th>Type</th>
-				<th>Description</th>
+				<th class="ng-doc-parameters-table-name">Name</th>
+				<th class="ng-doc-parameters-table-type">Type</th>
+				<th class="ng-doc-parameters-table-description">Description</th>
 			</tr>
 		</thead>
 		<tbody>

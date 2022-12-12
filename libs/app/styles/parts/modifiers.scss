@@ -1,0 +1,26 @@
+.ng-doc-modifiers-wrapper {
+	line-height: 18px;
+}
+
+.ng-doc-modifier {
+	font-size: 14px;
+	color: var(--ng-doc-text);
+	white-space: nowrap;
+	font-weight: 800;
+
+	&[data-content="Abstract"] {
+		color: var(--ng-doc-deep-orange-100);
+	}
+
+	&[data-content="Static"] {
+		color: var(--ng-doc-pink-100);
+	}
+
+	&[data-content="Async"] {
+		color: var(--ng-doc-green-100);
+	}
+
+	&[data-content="Readonly"] {
+		color: var(--ng-doc-deep-orange-100);
+	}
+}

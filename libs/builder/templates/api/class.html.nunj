@@ -4,9 +4,10 @@
 {% import "helpers/methods.html.nunj" as methodsMacro %}
 {% import "helpers/properties.html.nunj" as propertiesMacro %}
 {% import "helpers/tag.html.nunj" as tagMacro %}
+{% import "helpers/modifier.html.nunj" as modifierMacro %}
 
 {% block modifier %}
-	{{ tagMacro.render('Abstract', 'ng-doc-declaration-modifier') }}
+	{{ modifierMacro.render('Abstract') }}
 {% endblock %}
 
 {% block details %}

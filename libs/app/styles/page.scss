@@ -2,7 +2,10 @@
 @import "parts/header";
 @import "parts/tags";
 @import "parts/decorators";
+@import "parts/modifiers";
+@import "parts/badge";
 @import "parts/see-also";
+@import "parts/tables";
 
 article {
 	@include headings {

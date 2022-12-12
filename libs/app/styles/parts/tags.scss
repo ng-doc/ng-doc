@@ -1,8 +1,11 @@
+.ng-doc-tags-wrapper {
+	line-height: 22px;
+}
+
 .ng-doc-tag {
 	display: inline-block;
 	padding: 0 var(--ng-doc-base-gutter);
 	font-size: 14px;
-	line-height: 22px;
 	border-radius: var(--ng-doc-base-gutter);
 	background-color: var(--ng-doc-base-3);
 	color: var(--ng-doc-text);
@@ -97,15 +100,6 @@
 	&[data-content="Output"] {
 		background-color: var(--ng-doc-light-blue-20);
 		color: var(--ng-doc-light-blue-150);
-	}
-
-	/*----------------- Modificators --------------------*/
-	&[data-content="abstract"],
-	&[data-content="static"],
-	&[data-content="async"],
-	&[data-content="readonly"] {
-		background-color: var(--ng-doc-deep-orange-70);
-		color: var(--ng-doc-white);
 	}
 
 	&[data-content="ng-doc-tag-selector"] {

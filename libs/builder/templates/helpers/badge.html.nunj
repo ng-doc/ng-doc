@@ -1,0 +1,3 @@
+{%- macro render(content, attributeOverride) -%}
+	<span class="ng-doc-badge" data-content="{{ attributeOverride if attributeOverride else content }}">{{ content[0] }}</span>
+{%- endmacro -%}

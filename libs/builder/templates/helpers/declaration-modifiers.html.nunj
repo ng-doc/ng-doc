@@ -1,8 +1,40 @@
 {% import "helpers/tag.html.nunj" as tagMacro %}
+{% import "helpers/badge.html.nunj" as badgeMacro %}
+{% import "helpers/modifier.html.nunj" as modifierMacro %}
 
-{%- macro render(declaration) -%}
-{{ tagMacro.render("abstract") if declaration.isAbstract and declaration.isAbstract() }}
-{{ tagMacro.render("static") if declaration.isStatic and declaration.isStatic() }}
-{{ tagMacro.render("async") if declaration.isAsync and declaration.isAsync() }}
-{{ tagMacro.render("readonly") if declaration.isReadonly and declaration.isReadonly() }}
+{%- macro render(declaration, type='tag') -%}
+	{% set isAbstract = declaration.isAbstract and declaration.isAbstract() %}
+	{% set isStatic = declaration.isStatic and declaration.isStatic() %}
+	{% set isAsync = declaration.isAsync and declaration.isAsync() %}
+	{% set isReadonly = declaration.isReadonly and declaration.isReadonly() %}
+
+	{%- if type == 'badge' %}
+		{%- if isAbstract or isStatic or isAsync or isReadonly %}
+			<span class="ng-doc-badge-wrapper">
+				{{ badgeMacro.render("Abstract") if isAbstract }}
+				{{ badgeMacro.render("Static") if isStatic }}
+				{{ badgeMacro.render("Async") if isAsync }}
+				{{ badgeMacro.render("Readonly") if isReadonly }}
+			</span>
+		{%- endif %}
+
+	{%- elseif type == 'modifier' %}
+		{%- if isAbstract or isStatic or isAsync or isReadonly %}
+			<div class="ng-doc-modifiers-wrapper">
+				{{ modifierMacro.render("Abstract") if isAbstract }}
+				{{ modifierMacro.render("Static") if isStatic }}
+				{{ modifierMacro.render("Async") if isAsync }}
+				{{ modifierMacro.render("Readonly") if isReadonly }}
+			</div>
+		{%- endif %}
+	{%- else %}
+		{%- if isAbstract or isStatic or isAsync or isReadonly %}
+			<span class="ng-doc-tags-wrapper">
+				{{ tagMacro.render("abstract") if isAbstract }}
+				{{ tagMacro.render("static") if isStatic }}
+				{{ tagMacro.render("async") if isAsync }}
+				{{ tagMacro.render("readonly") if isReadonly }}
+			</span>
+		{%- endif %}
+	{%- endif %}
 {%- endmacro -%}
