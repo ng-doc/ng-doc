@@ -1,5 +1,14 @@
 <div class="navbar-container">
 	<div class="ng-doc-navbar-left">
+		<button
+			class="ng-doc-menu"
+			*ngDocMediaQuery="sidebarService.breakpoints"
+			ng-doc-button-icon
+			size="large"
+			(click)="sidebarService.toggle()"
+		>
+			<ng-doc-icon icon="menu" [size]="24"></ng-doc-icon>
+		</button>
 		<ng-container *polymorpheusOutlet="leftContent"></ng-container>
 	</div>
 	<div class="ng-doc-navbar-center">

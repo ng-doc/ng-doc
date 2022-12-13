@@ -10,4 +10,10 @@
 		margin-left: calc(var(--ng-doc-base-gutter) * 3);
 		flex-shrink: 0;
 	}
+
+	@media screen and (max-width: 1200px) {
+		ng-doc-page-map {
+			display: none;
+		}
+	}
 }

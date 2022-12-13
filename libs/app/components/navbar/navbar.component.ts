@@ -1,9 +1,10 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Inject, Input, NgZone} from '@angular/core';
+import {NgDocSidebarService} from '@ng-doc/app/services';
 import {NgDocContent, ngDocZoneOptimize} from '@ng-doc/ui-kit';
 import {WINDOW} from '@ng-web-apis/common';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {fromEvent} from 'rxjs';
-import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
+import {combineLatest, fromEvent, merge, of} from 'rxjs';
+import {debounceTime, distinctUntilChanged, map, startWith, switchMap} from 'rxjs/operators';
 
 @Component({
 	selector: 'ng-doc-navbar',
@@ -33,16 +34,23 @@ export class NgDocNavbarComponent {
 		private readonly window: Window,
 		private readonly ngZone: NgZone,
 		private readonly changeDetectorRef: ChangeDetectorRef,
+		protected readonly sidebarService: NgDocSidebarService,
 	) {
-		fromEvent(this.window, 'scroll')
-			.pipe(
+		combineLatest([
+			fromEvent(this.window, 'scroll').pipe(
 				map((e: Event) => ((e.target as Document)?.scrollingElement?.scrollTop ?? 0) > 0),
 				distinctUntilChanged(),
+				startWith(false),
+			),
+			this.sidebarService.isExpanded(),
+		])
+			.pipe(
+				map(([scrolled, sidebarVisible]: [boolean, boolean]) => scrolled || sidebarVisible),
 				ngDocZoneOptimize(this.ngZone),
-				untilDestroyed(this)
+				untilDestroyed(this),
 			)
-			.subscribe((scrolled: boolean) => {
-				this.hasShadow = scrolled;
+			.subscribe((hasShadow: boolean) => {
+				this.hasShadow = hasShadow;
 				this.changeDetectorRef.markForCheck();
 			});
 	}

@@ -1,14 +1,17 @@
+import {BreakpointObserver} from '@angular/cdk/layout';
 import {Location} from '@angular/common';
 import {ChangeDetectionStrategy, Component, ElementRef, Inject, NgZone} from '@angular/core';
 import {Router} from '@angular/router';
 import {isExternalLink} from '@ng-doc/app/helpers/is-external-link';
-import {ngDocZoneDetach, ngDocZoneOptimize} from '@ng-doc/ui-kit';
+import {NgDocSidebarService} from '@ng-doc/app/services';
+import {fadeAnimation, ngDocZoneOptimize} from '@ng-doc/ui-kit';
 import {WINDOW} from '@ng-web-apis/common';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {fromEvent, Observable} from 'rxjs';
 import {filter} from 'rxjs/operators';
 
 @Component({
+	animations: [fadeAnimation],
 	selector: 'ng-doc-root',
 	templateUrl: './root.component.html',
 	styleUrls: ['./root.component.scss'],
@@ -21,6 +24,8 @@ export class NgDocRootComponent {
 		private readonly ngZone: NgZone,
 		private readonly router: Router,
 		private readonly location: Location,
+		private readonly breakpointObserver: BreakpointObserver,
+		protected readonly sidebarService: NgDocSidebarService,
 		@Inject(WINDOW)
 		private readonly window: Window,
 	) {

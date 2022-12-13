@@ -6,10 +6,10 @@
 	ngDocIconProcessor
 	#pageContainer
 ></article>
-<ng-doc-page-map [pageContainer]="pageContainer"></ng-doc-page-map>
 
-<pre>
-	<code>
-		{asd: "asdasd"}
-	</code>
-</pre>
+<ng-template
+	[ngDocMediaQuery]="[mediaQuery.breakpoints.Large, mediaQuery.breakpoints.XLarge]"
+	#mediaQuery="ngDocMediaQuery"
+>
+	<ng-doc-page-map [pageContainer]="pageContainer"></ng-doc-page-map>
+</ng-template>

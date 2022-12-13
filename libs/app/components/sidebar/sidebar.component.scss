@@ -4,6 +4,8 @@
 	width: 100%;
 	overflow: auto;
 	padding: var(--ng-doc-sidebar-padding) 0;
+	background: var(--ng-doc-sidebar-background);
+	box-shadow: var(--ng-doc-sidebar-shadow);
 	--ng-doc-sidebar-category-indent: var(--ng-doc-sidebar-horizontal-padding);
 	--ng-doc-sidebar-item-indent: var(--ng-doc-sidebar-horizontal-padding);
 	--ng-doc-selection-background: var(--ng-doc-base-1);

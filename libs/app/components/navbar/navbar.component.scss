@@ -41,4 +41,8 @@
 	.ng-doc-navbar-right {
 		justify-content: flex-end;
 	}
+
+	.ng-doc-menu {
+		margin-right: calc(var(--ng-doc-base-gutter) * 2);
+	}
 }

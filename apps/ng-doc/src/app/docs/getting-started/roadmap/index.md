@@ -10,8 +10,8 @@ generated API
 ## Playgrounds
 
 We have developed another feature called "Playgrounds", but decided not to include it in the release
-because it uses an deprecated JIT Compiler, and its current API does not suit us, we will continue to
-work on this feature to include it in the next releases.
+because it uses an deprecated JIT Compiler, and its current API does not suit us, we will continue
+to work on this feature to include it in the next releases.
 
 ## Performance
 
@@ -33,6 +33,11 @@ increase build stability to skip parts of the application that cannot be built.
 Features are always cool, but sometimes you have to spend time on boring tests to ensure stability,
 you should be familiar with this right? First of all we are going to add tests for the heart of
 our library `@ng-doc/builder` and later add them to UI elements as well.
+
+## Angular inside markdown
+
+We also want to investigate the possibility of adding angular templates directly to your `markdown`
+code, this could be a useful feature, but we are not completely sure about it yet.
 
 ## Multi-language support
 
