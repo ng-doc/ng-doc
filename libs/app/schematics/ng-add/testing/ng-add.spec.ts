@@ -62,17 +62,17 @@ describe('ng-add', () => {
 
 		const tree: UnitTestTree = await runner.runSchematicAsync('ng-add', options, host).toPromise();
 
-		expect(tree.readContent('test/app/app.module.ts'))
-			.toEqual(`import { NgDocUiKitRootModule } from "@ng-doc/ui-kit";
-import { NgDocModule } from "@ng-doc/app";
+		expect(tree.readContent('test/app/app.module.ts')).toEqual(`import { NgDocModule } from "@ng-doc/app";
 import { NG_DOC_ROUTING, NgDocGeneratedModule } from "@ng-doc/builder/generated";
 import { RouterModule } from "@angular/router";
+import { NgDocSidebarModule } from "@ng-doc/app/components/sidebar";
+import { NgDocNavbarModule } from "@ng-doc/app/components/navbar";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 
 @NgModule({declarations: [AppComponent],
-        imports: [BrowserAnimationsModule, RouterModule.forRoot(NG_DOC_ROUTING), NgDocModule.forRoot(), NgDocUiKitRootModule.forRoot(), NgDocGeneratedModule.forRoot()]
+        imports: [BrowserAnimationsModule, NgDocNavbarModule, NgDocSidebarModule, RouterModule.forRoot(NG_DOC_ROUTING), NgDocModule.forRoot(), NgDocGeneratedModule.forRoot()]
     })
 export class AppModule {}
 `);
@@ -97,9 +97,7 @@ export class AppModule {}
             "options": {
               "main": "test/main.ts",
               "styles": [
-                "@ng-doc/app/styles/global.scss",
-                "highlight.js/styles/default.css",
-                "highlight.js/styles/vs.css"
+                "./node_modules/@ng-doc/app/styles/global.css"
               ],
               "assets": [
                 {
