@@ -13,7 +13,7 @@
 		"build": "nx build",
 		"test": "nx test",
 		"build:analyze": "nx build --stats-json && webpack-bundle-analyzer dist/apps/ng-doc/stats.json",
-		"prepare": "husky install"
+		"prepare": "node ./prepare.js"
 	},
 	"private": true,
 	"dependencies": {
