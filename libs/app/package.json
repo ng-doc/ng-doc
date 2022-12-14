@@ -23,5 +23,8 @@
 		"@ng-doc/core": "0.0.0",
 		"@ng-doc/ui-kit": "0.0.0",
 		"@ng-doc/builder": "0.0.0"
+	},
+	"publishConfig": {
+		"access": "public"
 	}
 }
