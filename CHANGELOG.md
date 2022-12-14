@@ -1,3 +1,12 @@
+# [15.0.0-beta.7](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.6...v15.0.0-beta.7) (2022-12-14)
+
+
+### Bug Fixes
+
+* **ng-doc:** add cdk to dependencies for `@ng-doc/app` ([7f80a8c](https://github.com/skoropadas/ng-doc/commit/7f80a8c1f4aba4a9f1a780f8534996ec69884fa4))
+* **ng-doc:** angular dependencies for `ng-doc/app` ([fc0f36e](https://github.com/skoropadas/ng-doc/commit/fc0f36ecfcea1c0c618fb577eb10df28b55ee6f9))
+* **ng-doc:** fixes for schematics ([af031e3](https://github.com/skoropadas/ng-doc/commit/af031e316a668ae21ca2af78236cc66b2ab3fd79))
+
 # [15.0.0-beta.6](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.5...v15.0.0-beta.6) (2022-12-14)
 
 
