@@ -7,7 +7,20 @@ module.exports = {
 		[
 			'./plugins/semantic-release/publish-packages.js',
 			{
-				packages: ['dist/libs/core', 'dist/libs/ui-kit', 'dist/libs/builder', 'dist/libs/app'],
+				packages: [
+					{
+						pkgRoot: 'dist/libs/core',
+					},
+					{
+						pkgRoot: 'dist/libs/ui-kit',
+					},
+					{
+						pkgRoot: 'dist/libs/builder',
+					},
+					{
+						pkgRoot: 'dist/libs/app',
+					},
+				],
 			},
 		],
 		[
