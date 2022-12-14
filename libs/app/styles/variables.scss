@@ -5,6 +5,7 @@
 	// Navbar
 	--ng-doc-navbar-height: calc(var(--ng-doc-base-gutter) * 7);
 	--ng-doc-navbar-horizontal-padding: var(--ng-doc-app-horizontal-padding);
+	--ng-doc-navbar-left-width: calc(var(--ng-doc-sidebar-width) - var(--ng-doc-navbar-horizontal-padding));
 
 	// Sidebar
 	--ng-doc-sidebar-width: 310px;

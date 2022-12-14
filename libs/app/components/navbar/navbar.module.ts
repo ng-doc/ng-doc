@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {NgDocSearchModule} from '@ng-doc/app/components/search';
-import {NgDocButtonIconModule, NgDocIconModule, NgDocMediaQueryModule} from '@ng-doc/ui-kit';
+import {NgDocButtonIconModule, NgDocIconModule, NgDocLetModule, NgDocMediaQueryModule} from '@ng-doc/ui-kit';
 import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 
 import {NgDocNavbarComponent} from './navbar.component';
@@ -15,6 +15,7 @@ import {NgDocNavbarComponent} from './navbar.component';
 		NgDocButtonIconModule,
 		NgDocIconModule,
 		NgDocMediaQueryModule,
+		NgDocLetModule,
 	],
 	exports: [NgDocNavbarComponent],
 })

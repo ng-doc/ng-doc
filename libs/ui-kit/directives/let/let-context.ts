@@ -9,7 +9,7 @@ export class NgDocLetContext<T> implements NgDocContextWithImplicit<T> {
 		return this.internalDirectiveInstance.ngDocLet;
 	}
 
-	get luLet(): T {
+	get ngDocLet(): T {
 		return this.internalDirectiveInstance.ngDocLet;
 	}
 }

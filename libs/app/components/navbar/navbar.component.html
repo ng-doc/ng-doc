@@ -1,5 +1,14 @@
-<div class="navbar-container">
+<div class="navbar-container" *ngDocLet="sidebarService.isCollapsable() | async as isCollapsable">
 	<div class="ng-doc-navbar-left">
+		<ng-container *polymorpheusOutlet="leftContent"></ng-container>
+	</div>
+	<div class="ng-doc-navbar-center">
+		<ng-doc-search *ngIf="search && !isCollapsable"></ng-doc-search>
+		<ng-container *polymorpheusOutlet="centerContent"></ng-container>
+	</div>
+	<div class="ng-doc-navbar-right">
+		<ng-doc-search *ngIf="search && isCollapsable" mod="icon"></ng-doc-search>
+		<ng-container *polymorpheusOutlet="rightContent"></ng-container>
 		<button
 			class="ng-doc-menu"
 			*ngDocMediaQuery="sidebarService.breakpoints"
@@ -9,13 +18,5 @@
 		>
 			<ng-doc-icon icon="menu" [size]="24"></ng-doc-icon>
 		</button>
-		<ng-container *polymorpheusOutlet="leftContent"></ng-container>
-	</div>
-	<div class="ng-doc-navbar-center">
-		<ng-doc-search *ngIf="search"></ng-doc-search>
-		<ng-container *polymorpheusOutlet="centerContent"></ng-container>
-	</div>
-	<div class="ng-doc-navbar-right">
-		<ng-container *polymorpheusOutlet="rightContent"></ng-container>
 	</div>
 </div>

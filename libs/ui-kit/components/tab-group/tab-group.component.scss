@@ -4,7 +4,9 @@
 	.ng-doc-tabs-wrapper {
 		@include ng-doc-font();
 		position: relative;
+		width: 100%;
 		display: inline-flex;
+		overflow-x: auto;
 		line-height: 18px;
 		font-size: 14px;
 
@@ -12,6 +14,7 @@
 			position: relative;
 			padding: calc(var(--ng-doc-base-gutter) * 2);
 			cursor: pointer;
+			white-space: nowrap;
 
 			.ng-doc-tab-text {
 				@include ng-doc-font();

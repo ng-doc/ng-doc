@@ -1,19 +1,22 @@
 :host {
 	.ng-doc-root-wrapper {
 		&.collapsable {
+			--ng-doc-navbar-left-width: auto;
+
 			.ng-doc-sidebar {
-				left: calc(var(--ng-doc-sidebar-width) * -1);
+				right: calc(var(--ng-doc-sidebar-width) * -1);
 				transition: 220ms cubic-bezier(0.25, 0.8, 0.25, 1);
 
 				--ng-doc-sidebar-shadow: var(--ng-doc-shadow-color) 0px 5px 20px -5px;
 
 				&.visible {
-					left: 0;
+					right: 0;
 				}
 			}
 
 			.ng-doc-body {
 				margin-left: 0;
+				padding: calc(var(--ng-doc-base-gutter) * 3) calc(var(--ng-doc-base-gutter) * 3);
 			}
 		}
 

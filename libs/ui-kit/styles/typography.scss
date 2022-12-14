@@ -1,6 +1,10 @@
 @mixin headings {
-	h1, h2, h3,
-	h4, h5, h6 {
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
 		@content;
 	}
 }
@@ -47,8 +51,12 @@ blockquote {
 	line-height: 1.5rem;
 	font-weight: 700;
 
-	& + h1, & + h2, & + h3,
-	& + h4, & + h5, & + h6 {
+	& + h1,
+	& + h2,
+	& + h3,
+	& + h4,
+	& + h5,
+	& + h6 {
 		margin-top: calc(var(--ng-doc-base-gutter) * 5);
 	}
 }
@@ -75,7 +83,8 @@ h4 {
 	margin-top: calc(var(--ng-doc-base-gutter) * 3);
 }
 
-h5, h6 {
+h5,
+h6 {
 	font-size: calc(var(--ng-doc-base-gutter) * 2);
 	line-height: calc(var(--ng-doc-base-gutter) * 3);
 	margin-top: calc(var(--ng-doc-base-gutter) * 2);
@@ -107,6 +116,8 @@ code {
 }
 
 table {
+	display: block;
+	overflow-x: auto;
 	width: 100%;
 	border-spacing: 0;
 	margin: calc(var(--ng-doc-base-gutter) * 4) 0;
@@ -119,7 +130,6 @@ table {
 				background-color: var(--ng-doc-base-1);
 				//color: var(--ng-doc-text-muted);
 				text-align: left;
-
 
 				&:first-child {
 					border-top-left-radius: var(--ng-doc-base-gutter);
@@ -176,4 +186,3 @@ a {
 		text-decoration: underline;
 	}
 }
-
