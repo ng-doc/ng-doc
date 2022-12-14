@@ -1,3 +1,13 @@
+# [15.0.0-beta.3](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.2...v15.0.0-beta.3) (2022-12-14)
+
+
+### Bug Fixes
+
+* **ng-doc:** downgrade `chalk` version ([bc604ed](https://github.com/skoropadas/ng-doc/commit/bc604edc127fb50a5c1988cb1434803725f914b3))
+* **ng-doc:** make package public ([0c4984c](https://github.com/skoropadas/ng-doc/commit/0c4984ca8122c55373378551410c656b5d3e12e1))
+* **ng-doc:** non peer dependencies array ([a3e733e](https://github.com/skoropadas/ng-doc/commit/a3e733e84ba8d352382550f3f27d2571f1f7706d))
+* **ng-doc:** update packages dependencies ([3124b4e](https://github.com/skoropadas/ng-doc/commit/3124b4e788644eb2ff4cb0795546fe8b25a4b63e))
+
 # [15.0.0-beta.2](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.1...v15.0.0-beta.2) (2022-12-14)
 
 
