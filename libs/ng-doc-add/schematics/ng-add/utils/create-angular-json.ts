@@ -30,6 +30,6 @@ export function createAngularJson(): void {
         }
     }
   }
-}`
+}`,
 	);
 }

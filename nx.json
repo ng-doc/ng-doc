@@ -30,17 +30,7 @@
 				"projects": "dependencies"
 			}
 		],
-		"schematics": [
-			{
-				"target": "pre-build",
-				"projects": "self"
-			}
-		],
 		"build": [
-			{
-				"target": "schematics",
-				"projects": "self"
-			},
 			{
 				"target": "build",
 				"projects": "dependencies"

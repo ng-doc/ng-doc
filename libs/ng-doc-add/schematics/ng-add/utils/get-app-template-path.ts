@@ -11,7 +11,7 @@ import {
 	getMainModule,
 	Node,
 	saveActiveProject,
-	setActiveProject
+	setActiveProject,
 } from 'ng-morph';
 
 import {getInitializer} from './get-initializer';
