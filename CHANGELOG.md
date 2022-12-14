@@ -1,3 +1,10 @@
+# [15.0.0-beta.4](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.3...v15.0.0-beta.4) (2022-12-14)
+
+
+### Bug Fixes
+
+* **ng-doc:** release config ([193dac2](https://github.com/skoropadas/ng-doc/commit/193dac2792a483d5b8f6e692e3b21f3a4f3f1089))
+
 # [15.0.0-beta.3](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.2...v15.0.0-beta.3) (2022-12-14)
 
 
