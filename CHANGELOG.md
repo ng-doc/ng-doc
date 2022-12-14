@@ -1,3 +1,10 @@
+# [15.0.0-beta.5](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.4...v15.0.0-beta.5) (2022-12-14)
+
+
+### Bug Fixes
+
+* **ng-doc:** add npm access for packages ([0217c88](https://github.com/skoropadas/ng-doc/commit/0217c88c9e440dc7836e033cfcfa95ab63ef2487))
+
 # [15.0.0-beta.4](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.3...v15.0.0-beta.4) (2022-12-14)
 
 
