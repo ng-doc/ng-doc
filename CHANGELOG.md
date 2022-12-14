@@ -1,3 +1,10 @@
+# [15.0.0-beta.6](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.5...v15.0.0-beta.6) (2022-12-14)
+
+
+### Bug Fixes
+
+* **ng-doc:** add schema for `ng-add` command ([00ed2de](https://github.com/skoropadas/ng-doc/commit/00ed2debeeb6b88c9a4673634d8b73846fff7545))
+
 # [15.0.0-beta.5](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.4...v15.0.0-beta.5) (2022-12-14)
 
 
