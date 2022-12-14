@@ -8,7 +8,8 @@
 			"executor": "@nrwl/angular:package",
 			"outputs": ["dist/libs/app"],
 			"options": {
-				"project": "libs/app/ng-package.json"
+				"project": "libs/app/ng-package.json",
+				"updateBuildableProjectDepsInPackageJson": false
 			},
 			"configurations": {
 				"production": {
@@ -39,7 +40,8 @@
 				"outputPath": "dist/libs/app",
 				"main": "libs/app/schematics/index.ts",
 				"tsConfig": "libs/app/tsconfig.schematics.json",
-				"assets": ["libs/app/schematics/**/*.json", "libs/app/schematics/**/files/**/*"]
+				"assets": ["libs/app/schematics/**/*.json", "libs/app/schematics/**/files/**/*"],
+				"updateBuildableProjectDepsInPackageJson": false
 			}
 		},
 		"test": {
@@ -57,11 +59,6 @@
 			}
 		}
 	},
-	"tags": [
-		"type:lib",
-		"lib:app"
-	],
-	"implicitDependencies": [
-		"builder"
-	]
+	"tags": ["type:lib", "lib:app"],
+	"implicitDependencies": ["builder"]
 }

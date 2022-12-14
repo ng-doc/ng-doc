@@ -4,12 +4,26 @@
 	"type": "commonjs",
 	"builders": "./builders.json",
 	"schematics": "./schematics/collection.json",
-	"dependencies": {
+	"peerDependencies": {
 		"@angular-devkit/architect": "^0.1303.5",
 		"chokidar": "^3.5.3",
-		"ejs": "^3.1.8",
 		"minimatch": "^5.1.0",
-		"rxjs": "~7.4.0",
-		"ts-morph": "^14.0.0"
+		"rxjs": "^6.6.7",
+		"ts-morph": "^15.0.0",
+		"nunjucks": "^3.2.3",
+		"lunr": "^2.3.9",
+		"posthtml-parser": "^0.11.0",
+		"prettier": "^2.6.2",
+		"glob": "^8.0.3",
+		"marked": "^4.0.18",
+		"chalk": "^5.2.0",
+		"rehype": "^9.0.1",
+		"rehype-format": "^3.1.0",
+		"rehype-highlight": "^4.1.0",
+		"rehype-slug": "^4.0.0",
+		"highlight.js": "^11.5.1"
+	},
+	"dependencies": {
+		"@ng-doc/core": "0.0.0"
 	}
 }

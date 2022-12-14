@@ -2,10 +2,16 @@
 	"name": "@ng-doc/ui-kit",
 	"version": "0.0.1",
 	"peerDependencies": {
-		"@angular/common": "^13.3.0",
-		"@angular/core": "^13.3.0"
+		"@angular/common": ">= 13.3.0",
+		"@angular/core": ">= 13.3.0",
+		"@angular/cdk": ">= 13.3.0",
+		"@ngneat/until-destroy": "^9.2.0",
+		"flex-controls": "^1.1.1",
+		"@tinkoff/ng-polymorpheus": "^4.0.0",
+		"rxjs": "^6.6.7"
 	},
 	"dependencies": {
-		"tslib": "^2.3.0"
+		"tslib": "^2.3.0",
+		"@ng-doc/core": "0.0.0"
 	}
 }

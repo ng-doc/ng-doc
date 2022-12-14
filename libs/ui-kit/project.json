@@ -8,7 +8,8 @@
 			"executor": "@nrwl/angular:package",
 			"outputs": ["dist/libs/ui-kit"],
 			"options": {
-				"project": "libs/ui-kit/ng-package.json"
+				"project": "libs/ui-kit/ng-package.json",
+				"updateBuildableProjectDepsInPackageJson": false
 			},
 			"configurations": {
 				"production": {
@@ -48,8 +49,5 @@
 			}
 		}
 	},
-	"tags": [
-		"type:lib",
-		"lib:ui-kit"
-	]
+	"tags": ["type:lib", "lib:ui-kit"]
 }

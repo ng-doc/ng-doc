@@ -16,7 +16,8 @@
 					"libs/builder/generated/**/*",
 					"libs/builder/schematics/**/*.json",
 					"libs/builder/schematics/**/files/**/*"
-				]
+				],
+				"updateBuildableProjectDepsInPackageJson": false
 			}
 		},
 		"build": {

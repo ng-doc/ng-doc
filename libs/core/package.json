@@ -1,5 +1,8 @@
 {
-  "name": "@ng-doc/core",
-  "version": "0.0.1",
-  "type": "commonjs"
+	"name": "@ng-doc/core",
+	"version": "0.0.1",
+	"type": "commonjs",
+	"peerDependencies": {
+		"rxjs": "^6.6.7"
+	}
 }

@@ -11,6 +11,12 @@ module.exports = {
 			},
 		],
 		[
+			'./plugins/semantic-release/update-dependencies.js',
+			{
+				packages: ['dist/libs/core', 'dist/libs/ui-kit', 'dist/libs/builder', 'dist/libs/app'],
+			},
+		],
+		[
 			'@semantic-release/git',
 			{
 				assets: ['CHANGELOG.md', 'package.json'],
