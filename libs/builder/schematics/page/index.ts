@@ -1,4 +1,4 @@
-import {classify,dasherize} from '@angular-devkit/core/src/utils/strings';
+import {classify, dasherize} from '@angular-devkit/core/src/utils/strings';
 import {
 	apply,
 	applyTemplates,
@@ -50,7 +50,13 @@ export function build(options: NgDocBuildPageSchema): Rule {
 							(demoTemplates.includes(basename(path)) && options.demo) ||
 							!demoTemplates.includes(basename(path)),
 					),
-					applyTemplates({...options, categoryName: categoryConstantName, importPath: categoryImportPath, pageName}),
+					applyTemplates({
+						...options,
+						categoryName: categoryConstantName,
+						importPath: categoryImportPath,
+						pageName,
+						keyword: options.keyword,
+					}),
 					move(path),
 					forEach((fileEntry: FileEntry) => {
 						if (host.exists(fileEntry.path)) {
