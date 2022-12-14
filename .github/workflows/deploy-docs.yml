@@ -39,4 +39,4 @@ jobs:
               if: success()
               run: |
                   aws s3 sync ./dist/apps/ng-doc s3://ng-doc
-                  aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths "/*"
+                  AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths "/*"
