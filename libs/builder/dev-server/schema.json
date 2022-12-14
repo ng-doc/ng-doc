@@ -20,9 +20,6 @@
 				},
 				"keywords": {
 					"type": "object"
-				},
-				"defaultRoute": {
-					"type": "string"
 				}
 			}
 		}

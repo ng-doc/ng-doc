@@ -125,7 +125,7 @@
 	},
 	"lint-staged": {
 		"*": [
-			"nx affected:lint --fix --files",
+			"nx affected:lint --fix --files --quiet",
 			"nx format:write --files"
 		]
 	}

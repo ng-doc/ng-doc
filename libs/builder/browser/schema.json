@@ -18,8 +18,8 @@
 				"tag": {
 					"type": "string"
 				},
-				"defaultRoute": {
-					"type": "string"
+				"keywords": {
+					"type": "object"
 				}
 			}
 		}
