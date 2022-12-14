@@ -7,10 +7,22 @@
 	},
 	"peerDependencies": {
 		"@angular/common": "^13.3.0",
-		"@angular/core": "^13.3.0"
+		"@angular/core": "^13.3.0",
+		"rxjs": "~6.6.7",
+		"css-what": "^6.1.0",
+		"posthtml-parser": "^0.11.0",
+		"posthtml-render": "^3.0.0",
+		"lunr": "^2.3.9",
+		"highlight.js": "^11.5.1",
+		"prettier": "^2.6.2",
+		"flex-controls": "^1.1.1",
+		"ng-morph": "^2.1.1"
 	},
 	"dependencies": {
 		"tslib": "^2.3.0",
-		"raw-loader": "^4.0.2"
+		"raw-loader": "^4.0.2",
+		"@ng-doc/core": "0.0.0",
+		"@ng-doc/ui-kit": "0.0.0",
+		"@ng-doc/builder": "0.0.0"
 	}
 }
