@@ -5,6 +5,12 @@ module.exports = {
 		'@semantic-release/release-notes-generator',
 		'@semantic-release/changelog',
 		[
+			'./plugins/semantic-release/publish-packages.js',
+			{
+				packages: ['dist/libs/core', 'dist/libs/ui-kit', 'dist/libs/builder', 'dist/libs/app'],
+			},
+		],
+		[
 			'@semantic-release/git',
 			{
 				assets: ['CHANGELOG.md', 'package.json'],
