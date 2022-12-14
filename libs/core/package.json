@@ -4,5 +4,8 @@
 	"type": "commonjs",
 	"peerDependencies": {
 		"rxjs": "^6.6.7"
+	},
+	"publishConfig": {
+		"access": "public"
 	}
 }

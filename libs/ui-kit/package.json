@@ -13,5 +13,8 @@
 	"dependencies": {
 		"tslib": "^2.3.0",
 		"@ng-doc/core": "0.0.0"
+	},
+	"publishConfig": {
+		"access": "public"
 	}
 }
