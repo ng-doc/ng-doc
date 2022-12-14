@@ -4,7 +4,6 @@
 	"lib": {
 		"entryFile": "index.ts"
 	},
-	"assets": [
-		"assets"
-	]
+	"assets": ["assets"],
+	"allowedNonPeerDependencies": ["@ng-doc/core"]
 }
