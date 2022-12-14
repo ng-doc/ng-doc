@@ -12,7 +12,6 @@ import {NgDocButtonIconModule} from '@ng-doc/ui-kit/components/button-icon';
 import {NgDocIconModule} from '@ng-doc/ui-kit/components/icon';
 import {NgDocTagModule} from '@ng-doc/ui-kit/components/tag';
 import {NgDocTooltipModule} from '@ng-doc/ui-kit/directives/tooltip';
-import {NgDocUiKitRootModule} from '@ng-doc/ui-kit/modules/root';
 
 import {AppComponent} from './app.component';
 
