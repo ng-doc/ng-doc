@@ -1,3 +1,10 @@
+# [15.0.0-beta.2](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.1...v15.0.0-beta.2) (2022-12-14)
+
+
+### Bug Fixes
+
+* **ng-doc:** release trigger ([e7ac592](https://github.com/skoropadas/ng-doc/commit/e7ac592fc2f5ddadceb6633d13d6a3790b4eeb00))
+
 # [15.0.0-beta.1](https://github.com/skoropadas/ng-doc/compare/v14.0.0...v15.0.0-beta.1) (2022-12-14)
 
 
