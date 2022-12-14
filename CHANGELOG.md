@@ -1,3 +1,10 @@
+# [15.0.0-beta.8](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.7...v15.0.0-beta.8) (2022-12-14)
+
+
+### Bug Fixes
+
+* **ng-doc:** move ng-add schematics to the external library ([066a548](https://github.com/skoropadas/ng-doc/commit/066a54891705117a434772b8e4116646a62e47e0))
+
 # [15.0.0-beta.7](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.6...v15.0.0-beta.7) (2022-12-14)
 
 
