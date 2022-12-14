@@ -7,12 +7,11 @@ does not create references for the keywords used in them, for example, to classe
 your API, we are going to fix this by starting to process assets by creating references to the
 generated API
 
-## Building playgrounds with AOT
+## Playgrounds
 
-Playgrounds are currently using the deprecated JIT compiler, which the Angular team is going to
-remove in future releases, moreover, using it forces you to turn off AOT to compile the entire
-application, not very cool right? We will rewrite this part, leaving the existing API and moving the
-assembly of playgrounds to the side of the `@ng-doc/builder`.
+We have developed another feature called "Playgrounds", but decided not to include it in the release
+because it uses an deprecated JIT Compiler, and its current API does not suit us, we will continue
+to work on this feature to include it in the next releases.
 
 ## Performance
 
@@ -34,6 +33,11 @@ increase build stability to skip parts of the application that cannot be built.
 Features are always cool, but sometimes you have to spend time on boring tests to ensure stability,
 you should be familiar with this right? First of all we are going to add tests for the heart of
 our library `@ng-doc/builder` and later add them to UI elements as well.
+
+## Angular inside markdown
+
+We also want to investigate the possibility of adding angular templates directly to your `markdown`
+code, this could be a useful feature, but we are not completely sure about it yet.
 
 ## Multi-language support
 

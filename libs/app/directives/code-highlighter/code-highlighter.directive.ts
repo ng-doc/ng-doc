@@ -1,16 +1,16 @@
 import {Directive, ElementRef, HostBinding, Input, OnChanges} from '@angular/core';
+import {HighlightResult} from 'highlight.js';
 import highlight from 'highlight.js/lib/core';
 import bash from 'highlight.js/lib/languages/bash';
 import css from 'highlight.js/lib/languages/css';
 import javascript from 'highlight.js/lib/languages/javascript';
 import json from 'highlight.js/lib/languages/json';
 import less from 'highlight.js/lib/languages/less';
-import scss from 'highlight.js/lib/languages/scss';
 import markdown from 'highlight.js/lib/languages/markdown';
+import scss from 'highlight.js/lib/languages/scss';
 import twig from 'highlight.js/lib/languages/twig';
-import xml from 'highlight.js/lib/languages/xml';
 import typescript from 'highlight.js/lib/languages/typescript';
-import {HighlightResult} from 'highlight.js';
+import xml from 'highlight.js/lib/languages/xml';
 
 highlight.registerLanguage('javascript', javascript);
 highlight.registerLanguage('typescript', typescript);

@@ -1,4 +1,5 @@
 import {NgDocPage} from '@ng-doc/builder';
+
 import GuidelinesCategory from '../ng-doc.category';
 
 const TemplatingPage: NgDocPage = {
@@ -7,6 +8,6 @@ const TemplatingPage: NgDocPage = {
 	category: GuidelinesCategory,
 	keyword: 'ContentGuidelinesTemplating',
 	order: 1,
-}
+};
 
 export default TemplatingPage;

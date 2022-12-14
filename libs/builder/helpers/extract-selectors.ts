@@ -1,7 +1,7 @@
 import {Decorator, Node} from 'ts-morph';
 
-import {NgDocSupportedDeclarations} from '../types';
 import {componentDecoratorResolver} from '../resolvers/component-decorator.resolver';
+import {NgDocSupportedDeclarations} from '../types';
 
 /**
  *
@@ -9,7 +9,8 @@ import {componentDecoratorResolver} from '../resolvers/component-decorator.resol
  */
 export function extractSelectors(declaration: NgDocSupportedDeclarations): string[] {
 	if (Node.isClassDeclaration(declaration)) {
-		const decorator: Decorator | undefined = declaration.getDecorator('Component') ?? declaration.getDecorator('Directive');
+		const decorator: Decorator | undefined =
+			declaration.getDecorator('Component') ?? declaration.getDecorator('Directive');
 
 		if (decorator) {
 			const expression: Node | undefined = decorator.getArguments()[0];

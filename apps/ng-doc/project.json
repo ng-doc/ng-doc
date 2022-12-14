@@ -64,8 +64,8 @@
 						},
 						{
 							"type": "anyComponentStyle",
-							"maximumWarning": "2kb",
-							"maximumError": "4kb"
+							"maximumWarning": "8kb",
+							"maximumError": "10kb"
 						}
 					],
 					"fileReplacements": [
@@ -75,10 +75,7 @@
 						}
 					],
 					"outputHashing": "all",
-					"sourceMap": true,
-					"optimization": true,
-					"buildOptimizer": false,
-					"aot": false
+					"sourceMap": true
 				},
 				"development": {
 					"buildOptimizer": false,
@@ -86,8 +83,7 @@
 					"vendorChunk": true,
 					"extractLicenses": false,
 					"sourceMap": true,
-					"namedChunks": true,
-					"aot": false
+					"namedChunks": true
 				}
 			},
 			"defaultConfiguration": "production",
@@ -101,9 +97,7 @@
 		"link-core": {
 			"executor": "nx:run-commands",
 			"options": {
-				"commands": [
-					"symlink-dir dist/libs/core dist/libs/builder/node_modules/@ng-doc/core"
-				]
+				"commands": ["symlink-dir dist/libs/core dist/libs/builder/node_modules/@ng-doc/core"]
 			},
 			"dependsOn": [
 				{

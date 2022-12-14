@@ -27,9 +27,7 @@ You can check all properties that you can configure in the `NgDocSchema` interfa
 					"options": {
 						"ngDoc": {
 							// Path to your documentation
-							"pages": "apps/documentation/src/app",
-							// Default route that should be opened by default
-							"defaultRoute": "getting-started/installation"
+							"pages": "apps/documentation/src/app"
 						}
 					}
 				}

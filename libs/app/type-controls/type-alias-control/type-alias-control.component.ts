@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {NgDocTypeControl} from '@ng-doc/app/interfaces';
 import {extractValue} from '@ng-doc/core';
 import {FlControl} from 'flex-controls';
@@ -7,6 +7,7 @@ import {FlControl} from 'flex-controls';
 	selector: 'ng-doc-type-alias-control',
 	templateUrl: './type-alias-control.component.html',
 	styleUrls: ['./type-alias-control.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgDocTypeAliasControlComponent<T> extends FlControl<T> implements NgDocTypeControl {
 	default?: string;

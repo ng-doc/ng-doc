@@ -8,26 +8,33 @@ import {NgDocSupportedDeclarations} from '../types';
 import {isNotExcludedPath} from './is-not-excluded-path';
 import {isSupportedDeclaration} from './is-supported-declaration';
 
+// one file - sourceFile.getNodesReferencingOtherSourceFiles()[0].getModuleSpecifierSourceFile().getNodesReferencingOtherSourceFiles()
+
 /**
  *
  * @param apiRootEntity
  */
 export function generateApiEntities(apiRootEntity: NgDocApiEntity): Array<NgDocApiScopeEntity | NgDocApiPageEntity> {
-	const result: Array<NgDocApiScopeEntity | NgDocApiPageEntity> = []
+	const result: Array<NgDocApiScopeEntity | NgDocApiPageEntity> = [];
 
 	apiRootEntity.target?.scopes.forEach((scope: NgDocApiScope) => {
-		const scopeEntity: NgDocApiScopeEntity = new NgDocApiScopeEntity(apiRootEntity.builder, apiRootEntity.sourceFile, apiRootEntity.context, apiRootEntity, scope);
+		const scopeEntity: NgDocApiScopeEntity = new NgDocApiScopeEntity(
+			apiRootEntity.builder,
+			apiRootEntity.sourceFile,
+			apiRootEntity.context,
+			apiRootEntity,
+			scope,
+		);
 
 		result.push(scopeEntity);
 
 		asArray(scope.include).forEach((include: string) =>
 			asArray(
 				new Set(
-					apiRootEntity.sourceFile.getProject()
+					apiRootEntity.sourceFile
+						.getProject()
 						.addSourceFilesAtPaths(
-							glob
-								.sync(include)
-								.filter((p: string) => isNotExcludedPath(p, asArray(scope.exclude))),
+							glob.sync(include).filter((p: string) => isNotExcludedPath(p, asArray(scope.exclude))),
 						)
 						.map((sourceFile: SourceFile) => asArray(sourceFile.getExportedDeclarations().values()))
 						.flat(2),
@@ -45,13 +52,12 @@ export function generateApiEntities(apiRootEntity: NgDocApiEntity): Array<NgDocA
 								apiRootEntity.context,
 								scopeEntity,
 								name,
-							)
-						)
+							),
+						);
 					}
 				}),
 		);
-		}
-	);
+	});
 
 	return result;
 }

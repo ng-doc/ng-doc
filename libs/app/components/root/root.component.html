@@ -1,13 +1,19 @@
-<div class="ng-doc-header">
-	<ng-content select="ng-doc-navbar"></ng-content>
+<div class="ng-doc-root-wrapper" [class.collapsable]="sidebarService.isCollapsable() | async">
+	<div class="ng-doc-header">
+		<ng-content select="ng-doc-navbar"></ng-content>
+	</div>
+	<main>
+		<div class="ng-doc-sidebar" [class.visible]="sidebarService.visibilityChanges() | async">
+			<ng-content select="ng-doc-sidebar"></ng-content>
+		</div>
+		<div class="ng-doc-body">
+			<div
+				class="ng-doc-backdrop"
+				@fadeAnimation
+				*ngIf="sidebarService.isExpanded() | async"
+				(click)="sidebarService.hide()"
+			></div>
+			<ng-content></ng-content>
+		</div>
+	</main>
 </div>
-<main>
-	<div class="ng-doc-sidebar">
-		<ng-content select="ng-doc-sidebar"></ng-content>
-	</div>
-	<div class="ng-doc-body">
-		<ng-content></ng-content>
-	</div>
-</main>
-
-

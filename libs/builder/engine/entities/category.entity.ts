@@ -64,7 +64,7 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 	}
 
 	get expanded(): boolean {
-		return this.target?.expanded ?? !this.isRoot;
+		return this.target?.expanded ?? false;
 	}
 
 	override update(): Observable<void> {

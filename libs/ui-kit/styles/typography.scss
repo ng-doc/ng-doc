@@ -1,6 +1,10 @@
 @mixin headings {
-	h1, h2, h3,
-	h4, h5, h6 {
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
 		@content;
 	}
 }
@@ -43,9 +47,19 @@ blockquote {
 
 @include headings {
 	font-family: var(--ng-doc-heading-font-family);
-	margin: calc(var(--ng-doc-base-gutter) * 6) 0 0;
+	margin: calc(var(--ng-doc-base-gutter) * 9) 0 0;
 	line-height: 1.5rem;
 	font-weight: 700;
+	overflow-wrap: anywhere;
+
+	& + h1,
+	& + h2,
+	& + h3,
+	& + h4,
+	& + h5,
+	& + h6 {
+		margin-top: calc(var(--ng-doc-base-gutter) * 5);
+	}
 }
 
 h1 {
@@ -70,7 +84,8 @@ h4 {
 	margin-top: calc(var(--ng-doc-base-gutter) * 3);
 }
 
-h5, h6 {
+h5,
+h6 {
 	font-size: calc(var(--ng-doc-base-gutter) * 2);
 	line-height: calc(var(--ng-doc-base-gutter) * 3);
 	margin-top: calc(var(--ng-doc-base-gutter) * 2);
@@ -101,6 +116,10 @@ code {
 	margin-top: 0;
 }
 
+.ng-doc-table-wrapper {
+	overflow-x: auto;
+}
+
 table {
 	width: 100%;
 	border-spacing: 0;
@@ -115,13 +134,16 @@ table {
 				//color: var(--ng-doc-text-muted);
 				text-align: left;
 
-
 				&:first-child {
+					border-top-left-radius: var(--ng-doc-base-gutter);
+					border-bottom-left-radius: var(--ng-doc-base-gutter);
 					padding-left: calc(var(--ng-doc-base-gutter) * 4);
 				}
 
 				&:last-child {
 					padding-right: calc(var(--ng-doc-base-gutter) * 4);
+					border-top-right-radius: var(--ng-doc-base-gutter);
+					border-bottom-right-radius: var(--ng-doc-base-gutter);
 				}
 
 				@include headings {
@@ -137,6 +159,7 @@ table {
 			td {
 				padding: var(--ng-doc-base-gutter);
 				vertical-align: top;
+				border-bottom: 1px solid var(--ng-doc-base-1);
 
 				&:first-child {
 					padding-left: calc(var(--ng-doc-base-gutter) * 4);

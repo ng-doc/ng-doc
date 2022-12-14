@@ -22,7 +22,7 @@ To follow the DRY principle even in your templates, you can include one template
 example, to add the `dry-template.md` template to your current page template, you can write the
 following
 
-```markdown
+```twig
 {{ '{% include "../shared/dry-template.md" %}' | safe }}
 ```
 
@@ -66,9 +66,9 @@ So, for example to render title, you can do this
 {{ '{{ NgDocPage.title }}' | safe }}
 ```
 
-The `NgDocActions` provides some functions that you can call to render demo or playground on the page,
+The `NgDocActions` provides some functions that you can call to render demo on the page,
 for example, to render demo you can call `demo` method with the name of you demo component.
-Подробнее о демо вы можете прочитать в разделе `ContentGuidelinesDemo`.
+Подробнее о демо вы можете прочитать в разделе `*ContentGuidelinesDemo`.
 
 ```twig
 {{ '{{ NgDocActions.demo("MyDemoComponent") }}' | safe }}
@@ -109,7 +109,5 @@ NgDoc will render it like this:
 
 ## SeeAlso
 
-- `ContentGuidelinesDemo`
-- `ContentGuidelinesPlayground`
-- `ContentKeywords`
-
+-   `*ContentGuidelinesDemo`
+-   `*ContentKeywords`

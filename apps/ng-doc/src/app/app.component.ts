@@ -1,9 +1,9 @@
 import {animate, style, transition, trigger} from '@angular/animations';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {preventInitialChildAnimations} from '@ng-doc/ui-kit/animations';
-import {NgDocTheme} from '@ng-doc/app/interfaces';
 import {NG_DOC_NIGHT_THEME} from '@ng-doc/app/constants/themes';
+import {NgDocTheme} from '@ng-doc/app/interfaces';
 import {NgDocThemeService} from '@ng-doc/app/services/theme';
+import {preventInitialChildAnimations} from '@ng-doc/ui-kit/animations';
 
 @Component({
 	animations: [

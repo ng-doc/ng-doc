@@ -1,7 +1,7 @@
 # {{ NgDocPage.title }}
 
 The page is the main building block of your guidelines, which you can use to describe some
-cool features of your project, show various demos, create playgrounds and do many other things
+cool features of your project, show various demos, write guidelines and do many other things
 that are useful to your users.
 
 ## Creating a page
@@ -34,14 +34,14 @@ import {NgDocPage} from '@ng-doc/builder';
 export const MyAwesomePage: NgDocPage = {
 	title: 'MyAwesomePage',
 	mdFile: './index.md',
-}
+};
 
 export default MyAwesomePage;
 ```
 
 ## Adding a category
 
-You can use categories to structure your documentation (see the `EntitiesCategory` article
+You can use categories to structure your documentation (see the `*EntitiesCategory` article
 for details on how to create one). To add a category to your page, you can use the `category` field,
 just import category and put it in the `category` field, just like that:
 
@@ -54,10 +54,9 @@ export const MyAwesomePage: NgDocPage = {
 	title: 'MyAwesomePage',
 	category: MyAwesomeCategory,
 	mdFile: './index.md',
-}
+};
 
 export default MyAwesomePage;
-
 ```
 
 ## Creating a content
@@ -68,12 +67,11 @@ rebuilds page if needed.
 
 Your page content fully supports the `markdown` syntax, but it is
 extended with the `nunjucks` engine which allows you to reuse one template for multiple pages, or
-render content dynamically, see `ContentNunjucks` or `ContentTemplating` for more details.
+render content dynamically, see `*ContentGuidelinesTemplating` for more details.
 
 ## See also
 
-- `EntitiesCategory`
-- `EntitiesDependencies`
-- `ContentGuidelinesTemplating`
-- `ContentGuidelinesDemo`
-- `ContentGuidelinesPlayground`
+-   `*EntitiesCategory`
+-   `*EntitiesDependencies`
+-   `*ContentGuidelinesTemplating`
+-   `*ContentGuidelinesDemo`

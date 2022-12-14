@@ -1,17 +1,10 @@
-import '@angular/compiler';
-
-import {CommonModule} from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
-	Compiler,
 	Component,
-	ComponentFactory,
 	ComponentRef,
 	Injector,
 	Input,
-	ModuleWithComponentFactories,
-	NgModule,
 	OnChanges,
 	OnDestroy,
 	SimpleChanges,
@@ -24,13 +17,11 @@ import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
 import {compileTemplate, formatHtml} from '@ng-doc/app/helpers';
 import {NgDocPlaygroundFormData} from '@ng-doc/app/interfaces';
 import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties} from '@ng-doc/builder';
-import {asArray} from '@ng-doc/core';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
 import {NgDocBaseDemoComponent} from './demo/base-demo.component';
-import {NgDocBaseDemoModule} from './demo/base-demo.module';
 
 @Component({
 	selector: 'ng-doc-playground-demo',
@@ -76,11 +67,7 @@ export class NgDocPlaygroundDemoComponent<
 	private demoRef?: ComponentRef<NgDocBaseDemoComponent>;
 	private readonly unsubscribe$: Subject<void> = new Subject<void>();
 
-	constructor(
-		private readonly rootPage: NgDocRootPage,
-		private readonly injector: Injector,
-		private readonly compiler: Compiler,
-	) {}
+	constructor(private readonly rootPage: NgDocRootPage, private readonly injector: Injector) {}
 
 	ngOnChanges({form}: SimpleChanges): void {
 		if (form) {
@@ -119,24 +106,17 @@ export class NgDocPlaygroundDemoComponent<
 				this.dynamicContent,
 				this.reinitializeDemo ? 'dynamic' : 'compile',
 			);
-			const component: Type<NgDocBaseDemoComponent> = this.createComponent(
-				template,
-				this.target,
-				data.content,
-				this.data,
-			);
-			const module: Type<NgDocBaseDemoModule> = this.createModule(component);
-			const compiledModule: ModuleWithComponentFactories<NgDocBaseDemoComponent> =
-				this.compiler.compileModuleAndAllComponentsSync(module);
-
-			const factory: ComponentFactory<NgDocBaseDemoComponent> | undefined =
-				compiledModule.componentFactories.find(
-					(comp: ComponentFactory<NgDocBaseDemoComponent>) => comp.componentType === component,
-				);
-
-			this.demoRef = factory && this.demoOutlet?.createComponent(factory);
-
-			this.demoRef?.changeDetectorRef.markForCheck();
+			// const compiledModule: ModuleWithComponentFactories<NgDocBaseDemoComponent> =
+			// 	this.compiler.compileModuleAndAllComponentsSync(module);
+			//
+			// const factory: ComponentFactory<NgDocBaseDemoComponent> | undefined =
+			// 	compiledModule.componentFactories.find(
+			// 		(comp: ComponentFactory<NgDocBaseDemoComponent>) => comp.componentType === component,
+			// 	);
+			//
+			// this.demoRef = factory && this.demoOutlet?.createComponent(factory);
+			//
+			// this.demoRef?.changeDetectorRef.markForCheck();
 		}
 	}
 
@@ -154,40 +134,6 @@ export class NgDocPlaygroundDemoComponent<
 				: '';
 
 		this.code = formatHtml(template);
-	}
-
-	private createComponent(
-		template: string,
-		instance: Type<unknown>,
-		content: Record<keyof C, boolean>,
-		data?: Record<string, unknown>,
-	): Type<NgDocBaseDemoComponent> {
-		class NgDocDemoComponent extends NgDocBaseDemoComponent {
-			demo?: Type<unknown>;
-			viewContainerRef?: ViewContainerRef;
-			content: Record<keyof C, boolean> = content;
-			data?: Record<string, unknown> = data;
-		}
-
-		/* Add decorators dynamically, otherwise it doesn't work in production build */
-		NgDocDemoComponent.prototype.demo = ViewChild(instance, {static: true})(NgDocDemoComponent.prototype, 'demo');
-		NgDocDemoComponent.prototype.viewContainerRef = ViewChild(instance, {static: true, read: ViewContainerRef})(
-			NgDocDemoComponent.prototype,
-			'viewContainerRef',
-		);
-
-		return Component({template})(NgDocDemoComponent);
-	}
-
-	private createModule(component: Type<unknown>): Type<NgDocBaseDemoModule> {
-		class NgDocDemoModule extends NgDocBaseDemoModule {}
-
-		const sharedModules: Array<Type<unknown>> = [CommonModule, ...asArray(this.rootPage.module)];
-
-		return NgModule({
-			declarations: [component],
-			imports: sharedModules,
-		})(NgDocDemoModule);
 	}
 
 	ngOnDestroy(): void {

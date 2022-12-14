@@ -9,10 +9,6 @@ import pageContent from '!!raw-loader!{{ page.builtPagePath }}';
 // noinspection ES6UnusedImports
 import pageDependencies from '{{ page.pageDependenciesImport }}';
 {%- endif %}
-{%- if page.pagePlaygroundImport %}
-// noinspection ES6UnusedImports
-import pagePlayground from '{{ page.pagePlaygroundImport }}';
-{%- endif %}
 {%- if page.componentsAssets %}
 // noinspection ES6UnusedImports
 import demoAssets from '{{ page.componentsAssets }}';
@@ -33,13 +29,9 @@ export class {{ page.componentName }} extends NgDocRootPage {
 	{%- if page.componentsAssets %}
 	readonly demoAssets: NgDocDemoAssets = demoAssets;
 	{%- endif %}
-	{%- if page.playgroundFile %}
-	readonly playground: NgDocPlayground = pagePlayground;
-	{%- endif %}
 
 	constructor() {
 		super();
-		console.log(this.pageContent, this.demo, this.demoAssets, this.playground);
 	}
 }
 

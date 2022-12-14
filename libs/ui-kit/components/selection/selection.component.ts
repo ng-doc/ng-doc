@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, HostBinding, Input} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input} from '@angular/core';
 import {NgDocHorizontalAlign, NgDocPosition, NgDocVerticalAlign} from '@ng-doc/ui-kit/types';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 
@@ -8,6 +8,7 @@ import {NgDocSelectionHostDirective} from './selection-host.directive';
 	selector: 'ng-doc-selection',
 	template: '',
 	styleUrls: ['./selection.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @UntilDestroy()
 export class NgDocSelectionComponent implements AfterViewInit {

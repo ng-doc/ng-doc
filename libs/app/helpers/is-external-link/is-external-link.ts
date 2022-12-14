@@ -1,3 +1,7 @@
+/**
+ *
+ * @param url
+ */
 export function isExternalLink(url: string): boolean {
 	const anchorElement: HTMLAnchorElement = document.createElement('a');
 

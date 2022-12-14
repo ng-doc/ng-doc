@@ -6,7 +6,12 @@
 		{
 			"files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
 			"extends": ["prettier", "plugin:jsdoc/recommended"],
-			"plugins": ["eslint-plugin-jsdoc", "eslint-plugin-prefer-arrow", "simple-import-sort", "eslint-plugin-tsdoc"],
+			"plugins": [
+				"eslint-plugin-jsdoc",
+				"eslint-plugin-prefer-arrow",
+				"simple-import-sort",
+				"eslint-plugin-tsdoc"
+			],
 			"rules": {
 				"jsdoc/require-param-type": "off",
 				"jsdoc/require-returns-type": "off",
@@ -26,7 +31,15 @@
 							},
 							{
 								"sourceTag": "lib:app",
-								"onlyDependOnLibsWithTags": ["lib:builder", "lib:ui-kit"]
+								"onlyDependOnLibsWithTags": ["lib:builder", "lib:ui-kit", "lib:core"]
+							},
+							{
+								"sourceTag": "lib:builder",
+								"onlyDependOnLibsWithTags": ["lib:core"]
+							},
+							{
+								"sourceTag": "lib:ui-kit",
+								"onlyDependOnLibsWithTags": ["lib:core"]
 							}
 						]
 					}

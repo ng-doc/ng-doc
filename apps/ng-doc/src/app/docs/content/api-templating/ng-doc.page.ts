@@ -1,4 +1,5 @@
 import {NgDocPage} from '@ng-doc/builder';
+
 import ContentCategory from '../ng-doc.category';
 
 const ApiTemplatingPage: NgDocPage = {
@@ -7,6 +8,6 @@ const ApiTemplatingPage: NgDocPage = {
 	category: ContentCategory,
 	order: 3,
 	keyword: 'ContentApiTemplating',
-}
+};
 
 export default ApiTemplatingPage;

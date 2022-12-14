@@ -1,4 +1,5 @@
 import {NgDocPage} from '@ng-doc/builder';
+
 import EntitiesCategory from '../ng-doc.category';
 
 const DependenciesPage: NgDocPage = {
@@ -6,7 +7,7 @@ const DependenciesPage: NgDocPage = {
 	mdFile: './index.md',
 	category: EntitiesCategory,
 	order: 3,
-	keyword: 'EntitiesDependencies'
-}
+	keyword: 'EntitiesDependencies',
+};
 
 export default DependenciesPage;

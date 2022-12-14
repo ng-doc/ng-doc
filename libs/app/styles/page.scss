@@ -1,8 +1,11 @@
-@import "mixins/headings";
-@import "parts/header";
-@import "parts/tags";
-@import "parts/decorators";
-@import "parts/see-also";
+@import 'mixins/headings';
+@import 'parts/header';
+@import 'parts/tags';
+@import 'parts/decorators';
+@import 'parts/modifiers';
+@import 'parts/badge';
+@import 'parts/see-also';
+@import 'parts/tables';
 
 article {
 	@include headings {
@@ -37,9 +40,10 @@ article {
 		margin-bottom: calc(var(--ng-doc-base-gutter) * 3);
 
 		.ng-doc-page-tags {
-			display: flex;
-			align-items: flex-start;
+			display: inline-flex;
 			flex-wrap: wrap;
+			align-items: flex-start;
+			gap: var(--ng-doc-base-gutter);
 			margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
 			line-height: 22px;
 		}
@@ -50,14 +54,14 @@ article {
 		}
 	}
 
-	th, td {
+	th,
+	td {
 		p {
 			margin: 0;
 		}
 	}
 
 	.ng-doc-method-table {
-
 	}
 
 	.ng-doc-inline-header {
@@ -73,7 +77,6 @@ article {
 		font-weight: 700;
 		font-size: 14px;
 		opacity: 0.2;
-		margin: 0 var(--ng-doc-base-gutter);
 	}
 
 	.ng-doc-header-link {
@@ -90,7 +93,8 @@ article {
 		color: inherit;
 	}
 
-	ng-doc-demo, ng-doc-playground {
+	ng-doc-demo,
+	ng-doc-playground {
 		margin: calc(var(--ng-doc-base-gutter) * 4) 0;
 	}
 }

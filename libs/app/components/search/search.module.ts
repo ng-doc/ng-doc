@@ -3,6 +3,8 @@ import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {NgDocSearchResultModule} from '@ng-doc/app/components/search-result';
 import {
+	NgDocAutofocusModule,
+	NgDocButtonIconModule,
 	NgDocDropdownModule,
 	NgDocDropdownOriginModule,
 	NgDocFocusCatcherModule,
@@ -25,6 +27,8 @@ import {NgDocSearchComponent} from './search.component';
 		FormsModule,
 		NgDocSearchResultModule,
 		NgDocIconModule,
+		NgDocButtonIconModule,
+		NgDocAutofocusModule,
 	],
 	exports: [NgDocSearchComponent],
 })

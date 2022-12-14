@@ -1,4 +1,7 @@
+import * as path from 'path';
 import {ModuleKind, ModuleResolutionKind, Project, ProjectOptions} from 'ts-morph';
+
+import {CACHE_PATH} from '../../engine/variables';
 
 /**
  * Creates typescript project
@@ -15,6 +18,7 @@ export function createProject(options?: ProjectOptions): Project {
 			incremental: true,
 			declaration: false,
 			skipLibCheck: true,
+			tsBuildInfoFile: path.join(CACHE_PATH, 'ng-doc.buildinfo.json'),
 			moduleResolution: ModuleResolutionKind.NodeJs,
 			/*
 				true value increases the speed, but thn it's not possible to resolve imports,
@@ -23,7 +27,7 @@ export function createProject(options?: ProjectOptions): Project {
 			noResolve: false,
 			isolatedModules: true,
 
-			types : [],
+			types: [],
 			...options?.compilerOptions,
 		},
 		skipAddingFilesFromTsConfig: true,

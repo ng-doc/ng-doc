@@ -1,9 +1,9 @@
 import {humanizeDeclarationName} from '@ng-doc/core';
 import * as path from 'path';
-import {forkJoin, Observable, of} from 'rxjs';
-import {catchError, map, tap} from 'rxjs/operators';
+import {forkJoin, from, Observable, of} from 'rxjs';
+import {catchError, map, switchMap, tap} from 'rxjs/operators';
 
-import {isApiPageEntity, isApiScopeEntity, slash, uniqueName} from '../../helpers';
+import {generateApiEntities, isApiPageEntity, isApiScopeEntity, slash, uniqueName} from '../../helpers';
 import {NgDocApi, NgDocApiList, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocApiModuleEnv} from '../../templates-env/api.module.env';
 import {NgDocRenderer} from '../renderer';
@@ -55,6 +55,14 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 
 	override get keywords(): string[] {
 		return [];
+	}
+
+	override childrenGenerator(): Observable<NgDocEntity[]> {
+		return this.emit().pipe(
+			switchMap(() => from(this.sourceFile.getProject().emit())),
+			switchMap(() => this.update()),
+			map(() => generateApiEntities(this)),
+		);
 	}
 
 	override update(): Observable<void> {

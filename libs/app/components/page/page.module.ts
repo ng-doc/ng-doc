@@ -5,17 +5,12 @@ import {NgDocSanitizeHtmlModule} from '@ng-doc/app/pipes/sanitize-html';
 import {
 	NgDocBlockquoteProcessorModule,
 	NgDocCodeProcessorModule,
-	NgDocDemoProcessorModule, NgDocIconProcessorModule,
-	NgDocPlaygroundProcessorModule,
+	NgDocDemoProcessorModule,
+	NgDocIconProcessorModule,
 } from '@ng-doc/app/processors';
+import {NgDocMediaQueryModule} from '@ng-doc/ui-kit';
 
 import {NgDocPageComponent} from './page.component';
-import {
-	NgDocBooleanControlModule,
-	NgDocNumberControlModule,
-	NgDocStringControlModule,
-	NgDocTypeAliasControlModule
-} from '@ng-doc/app/type-controls';
 
 @NgModule({
 	declarations: [NgDocPageComponent],
@@ -23,16 +18,11 @@ import {
 		CommonModule,
 		NgDocDemoProcessorModule,
 		NgDocCodeProcessorModule,
-		NgDocPlaygroundProcessorModule,
 		NgDocBlockquoteProcessorModule,
 		NgDocSanitizeHtmlModule,
 		NgDocIconProcessorModule,
 		NgDocPageMapModule,
-		/* Type controls */
-		NgDocStringControlModule,
-		NgDocNumberControlModule,
-		NgDocBooleanControlModule,
-		NgDocTypeAliasControlModule,
+		NgDocMediaQueryModule,
 	],
 	exports: [NgDocPageComponent],
 })

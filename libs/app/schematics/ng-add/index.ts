@@ -8,7 +8,6 @@ import {addAssets} from './steps/add-assets';
 import {addLayout} from './steps/add-layout';
 import {addNgDocModules} from './steps/add-ng-doc-modules';
 import {addStyles} from './steps/add-styles';
-import {disableAot} from './steps/disable-aot';
 import {replaceBuilders} from './steps/replace-builders';
 
 /**
@@ -29,7 +28,6 @@ export function ngAdd(options: Schema): Rule {
 			replaceBuilders(options, context),
 			addStyles(options, context),
 			addAssets(options, context),
-			disableAot(options, context),
 			addNgDocModules(options),
 			addLayout(options),
 		]);

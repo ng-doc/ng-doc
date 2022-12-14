@@ -19,3 +19,12 @@
 		margin-left: calc(var(--ng-doc-base-gutter) * 2);
 	}
 }
+
+@media screen and (max-width: 600px) {
+	.ng-doc-header-controls {
+		a[ng-doc-button-icon],
+		button[ng-doc-button-icon] {
+			margin-left: var(--ng-doc-base-gutter);
+		}
+	}
+}

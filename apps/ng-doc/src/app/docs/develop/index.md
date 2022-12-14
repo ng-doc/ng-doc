@@ -1,0 +1,1 @@
+{{ NgDocPage.data.prop }}

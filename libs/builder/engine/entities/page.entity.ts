@@ -61,7 +61,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	}
 
 	override get keywords(): string[] {
-		return [...asArray(this.target?.title), ...asArray(this.target?.keyword)];
+		return [...asArray(this.target?.keyword)].map((k: string) => `*${k}`);
 	}
 
 	get mdPath(): string {
@@ -166,10 +166,14 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 				?.getReferencedSourceFiles()
 				.forEach((sourceFile: SourceFile) => sourceFile.refreshFromFileSystemSync());
 
-			const renderer: NgDocRenderer<NgDocPageEnv> = new NgDocRenderer<NgDocPageEnv>(this.builder, {
-				NgDocPage: this.target,
-				NgDocActions: new NgDocActions(this),
-			}, this.dependencies);
+			const renderer: NgDocRenderer<NgDocPageEnv> = new NgDocRenderer<NgDocPageEnv>(
+				this.builder,
+				{
+					NgDocPage: this.target,
+					NgDocActions: new NgDocActions(this),
+				},
+				this.dependencies,
+			);
 
 			return renderer.render(this.target?.mdFile, {scope: this.sourceFileFolder}).pipe(
 				map((markdown: string) => marked(markdown)),

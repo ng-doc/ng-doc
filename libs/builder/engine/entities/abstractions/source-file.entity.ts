@@ -50,10 +50,7 @@ export abstract class NgDocSourceFileEntity extends NgDocEntity {
 
 	override emit(): Observable<void> {
 		if (!this.destroyed) {
-			return from(this.sourceFile.refreshFromFileSystem()).pipe(
-				switchMap(() => this.sourceFile.emit()),
-				mapTo(void 0),
-			);
+			return from(this.sourceFile.refreshFromFileSystem()).pipe(mapTo(void 0));
 		}
 		return super.emit();
 	}

@@ -2,9 +2,14 @@
 	[innerHTML]="rootPage.pageContent | ngDocSanitizeHtml"
 	ngDocBlockquoteProcessor
 	ngDocDemoProcessor
-	ngDocPlaygroundProcessor
 	ngDocCodeProcessor
 	ngDocIconProcessor
 	#pageContainer
 ></article>
-<ng-doc-page-map [pageContainer]="pageContainer"></ng-doc-page-map>
+
+<ng-template
+	[ngDocMediaQuery]="[mediaQuery.breakpoints.Large, mediaQuery.breakpoints.XLarge]"
+	#mediaQuery="ngDocMediaQuery"
+>
+	<ng-doc-page-map [pageContainer]="pageContainer"></ng-doc-page-map>
+</ng-template>

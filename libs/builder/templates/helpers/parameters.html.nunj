@@ -1,22 +1,24 @@
 {% import "helpers/type.html.nunj" as typeMacro %}
 
 {% macro render(parameters, origin) %}
-	<table>
-		<thead>
+	<div class="ng-doc-table-wrapper">
+		<table class="ng-doc-parameters-table">
+			<thead>
 			<tr>
-				<th>Name</th>
-				<th>Type</th>
-				<th>Description</th>
+				<th class="ng-doc-parameters-table-name">Name</th>
+				<th class="ng-doc-parameters-table-type">Type</th>
+				<th class="ng-doc-parameters-table-description">Description</th>
 			</tr>
-		</thead>
-		<tbody>
-		{%- for param in parameters %}
-			<tr>
-				<td>{{ param.getName() }}</td>
-				<td>{{ typeMacro.render(param.getType()) }}</td>
-				<td>{{ origin | extractParameterDocs(param.getName()) }}</td>
-			</tr>
-		{%- endfor %}
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+			{%- for param in parameters %}
+				<tr>
+					<td>{{ param.getName() }}</td>
+					<td>{{ typeMacro.render(param.getType()) }}</td>
+					<td>{{ origin | extractParameterDocs(param.getName()) }}</td>
+				</tr>
+			{%- endfor %}
+			</tbody>
+		</table>
+	</div>
 {% endmacro %}

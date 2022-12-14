@@ -91,7 +91,7 @@ export class AppModule {}
   "defaultProject": "demo",
   "projects": {
     "demo": {
-    	"root": ".",
+    \t"root": ".",
         "architect": {
           "build": {
             "options": {
@@ -100,14 +100,31 @@ export class AppModule {}
                 "@ng-doc/app/styles/global.scss",
                 "highlight.js/styles/default.css",
                 "highlight.js/styles/vs.css"
+              ],
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "./node_modules/@ng-doc/ui-kit/assets",
+                  "output": "assets"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "./node_modules/@ng-doc/app/assets",
+                  "output": "assets"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "./node_modules/@ng-doc/builder/generated/assets",
+                  "output": "assets"
+                }
               ]
              },
              "configurations": {
               \t"production": {
               \t\t"sourceMap": true,
-\t\t\t\t\t"optimization": false,
-\t\t\t\t\t"buildOptimizer": false,
-\t\t\t\t\t"aot": false
+\t\t\t\t\t"optimization": true,
+\t\t\t\t\t"buildOptimizer": true,
+\t\t\t\t\t"aot": true
               \t}
               },
               "builder": "@ng-doc/builder:browser"

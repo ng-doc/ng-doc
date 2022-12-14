@@ -1,14 +1,68 @@
-<ng-doc-input-wrapper [leftContent]="leftContent" ngDocDropdownOrigin ngDocFocusCatcher (focusEvent)="inputElement.value ? dropdown.open() : null"
-					  (blurEvent)="dropdown.close()" (click)="inputElement.value ? dropdown.open() : null" #input>
-	<ng-template #leftContent>
-		<ng-doc-icon icon="search"></ng-doc-icon>
-	</ng-template>
-	<input ngDocInputString ngModel (ngModelChange)="query$.next($event); dropdown.open()" placeholder="Search..." #inputElement>
-	<ng-doc-dropdown [content]="dropdownContent" [width]="input.elementRef.nativeElement.offsetWidth" maxHeight="calc(95vh - var(--ng-doc-navbar-height)" #dropdown>
-		<ng-template #dropdownContent>
-			<div class="ng-doc-search-result-content">
-				<ng-doc-search-result [result]="queryResult"></ng-doc-search-result>
-			</div>
+<ng-container *ngIf="mod === 'icon'; else searchInput">
+	<button ng-doc-button-icon size="large" (click)="inputDropdown.toggle()" ngDocDropdownOrigin>
+		<ng-doc-icon icon="search" [size]="24"></ng-doc-icon>
+
+		<ng-doc-dropdown
+			[content]="dropdownContent"
+			panelClass="ng-doc-search-dropdown"
+			width="100%"
+			height="80vh"
+			#inputDropdown
+		>
+			<ng-template #dropdownContent>
+				<div class="ng-doc-search-wrapper">
+					<ng-doc-input-wrapper [leftContent]="leftContent" ngDocDropdownOrigin>
+						<ng-template #leftContent>
+							<ng-doc-icon icon="search"></ng-doc-icon>
+						</ng-template>
+						<input
+							ngDocInputString
+							[(ngModel)]="searchTerm"
+							(ngModelChange)="query$.next($event)"
+							placeholder="Search..."
+							ngDocAutofocus
+						/>
+					</ng-doc-input-wrapper>
+					<div class="ng-doc-search-result-content">
+						<ng-doc-search-result [result]="queryResult"></ng-doc-search-result>
+					</div>
+				</div>
+			</ng-template>
+		</ng-doc-dropdown>
+	</button>
+</ng-container>
+
+<ng-template #searchInput>
+	<ng-doc-input-wrapper
+		[leftContent]="leftContent"
+		ngDocDropdownOrigin
+		ngDocFocusCatcher
+		(focusEvent)="inputElement.value ? dropdown.open() : null"
+		(blurEvent)="dropdown.close()"
+		(click)="inputElement.value ? dropdown.open() : null"
+		#input
+	>
+		<ng-template #leftContent>
+			<ng-doc-icon icon="search"></ng-doc-icon>
 		</ng-template>
-	</ng-doc-dropdown>
-</ng-doc-input-wrapper>
+		<input
+			ngDocInputString
+			[(ngModel)]="searchTerm"
+			(ngModelChange)="query$.next($event); dropdown.open()"
+			placeholder="Search..."
+			#inputElement
+		/>
+		<ng-doc-dropdown
+			[content]="dropdownContent"
+			[width]="input.elementRef.nativeElement.offsetWidth"
+			maxHeight="calc(95vh - var(--ng-doc-navbar-height)"
+			#dropdown
+		>
+			<ng-template #dropdownContent>
+				<div class="ng-doc-search-result-content">
+					<ng-doc-search-result [result]="queryResult"></ng-doc-search-result>
+				</div>
+			</ng-template>
+		</ng-doc-dropdown>
+	</ng-doc-input-wrapper>
+</ng-template>

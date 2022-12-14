@@ -1,4 +1,5 @@
 import {NgDocPage} from '@ng-doc/builder';
+
 import CustomizationCategory from '../ng-doc.category';
 
 const ThemesPage: NgDocPage = {
@@ -7,6 +8,6 @@ const ThemesPage: NgDocPage = {
 	category: CustomizationCategory,
 	order: 1,
 	keyword: 'CustomizationThemes',
-}
+};
 
 export default ThemesPage;

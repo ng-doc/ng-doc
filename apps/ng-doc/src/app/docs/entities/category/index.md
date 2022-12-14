@@ -30,11 +30,11 @@ import {NgDocCategory} from '@ng-doc/builder';
 
 export const MyAwesomeCategory: NgDocCategory = {
 	title: 'MyAwesomeCategory',
-}
+};
 
 export default MyAwesomeCategory;
 ```
 
 ## See also
 
-- `EntitiesPage`
+-   `*EntitiesPage`

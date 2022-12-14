@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input} from '@angular/core';
 import {NgDocSearchEngine} from '@ng-doc/app/classes/search-engine';
 import {NgDocPageInfo} from '@ng-doc/core';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
@@ -13,6 +13,12 @@ import {switchMap} from 'rxjs/operators';
 })
 @UntilDestroy()
 export class NgDocSearchComponent {
+	@Input()
+	@HostBinding('attr.data-ng-doc-mod')
+	mod: 'input' | 'icon' = 'input';
+
+	searchTerm: string = '';
+
 	readonly query$: Subject<string> = new Subject<string>();
 	queryResult: NgDocPageInfo[] = [];
 

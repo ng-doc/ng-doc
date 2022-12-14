@@ -28,7 +28,7 @@
 
 	.ng-doc-navbar-left {
 		justify-content: flex-start;
-		width: calc(var(--ng-doc-sidebar-width) - var(--ng-doc-navbar-horizontal-padding));
+		width: var(--ng-doc-navbar-left-width);
 		flex-shrink: 0;
 	}
 
@@ -40,5 +40,9 @@
 
 	.ng-doc-navbar-right {
 		justify-content: flex-end;
+	}
+
+	.ng-doc-menu {
+		margin-left: calc(var(--ng-doc-base-gutter) * 2);
 	}
 }

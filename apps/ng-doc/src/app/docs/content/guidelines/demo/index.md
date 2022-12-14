@@ -6,7 +6,7 @@ the code and usage first, and only then read the documentation. 😄
 ## Creating a demo
 
 First of all, in order to display the demo on the page, you need the `ng-doc.dependencies.ts`
-file as well as the `NgModule`, you can read about how to create them in the `EntitiesDependencies`
+file as well as the `NgModule`, you can read about how to create them in the `*EntitiesDependencies`
 article.
 
 If you already have them, you can start creating a demo, the demo in NgDoc is a regular Angular
@@ -20,7 +20,7 @@ Component inside it.
 After that make sure your component is declared in the `declaration` section of
 your `NgModule`, and all its dependencies are imported in the `imports` section.
 
-```typescript {% include "./ng-doc.module.ts" %} ```
+`typescript {% include "./ng-doc.module.ts" %} `
 
 ### Adding module and demo to dependencies file
 
@@ -28,7 +28,7 @@ And the last step is to add your demo to the `ng-doc.dependencies.ts` file, in t
 this is necessary so that NgDoc knows which components it should consider as a demo, and what their
 name is, this can be done simply list them separated by commas.
 
-```typescript {% include "./ng-doc.dependencies.ts" %} ```
+`typescript {% include "./ng-doc.dependencies.ts" %} `
 
 ### Displaying demo
 
@@ -62,7 +62,6 @@ container.
 > You can use this option not only as a demo output, but also as an opportunity to insert any of your
 > components into the page template so that the user can interact with them.
 
-
 {{ NgDocActions.demo("ButtonDemoComponent", {container: false}) }}
 
 ## Snippets
@@ -77,14 +76,14 @@ then you should try to use snippets.
 Snippets look like comments, we have 3 different types of snippets that you can use
 
 | Language   | Start                                   | End                                   |
-|------------|-----------------------------------------|---------------------------------------|
+| ---------- | --------------------------------------- | ------------------------------------- |
 | TypeScript | `/* NgDocCodeSnippetStart(Title) */`    | `/* NgDocCodeSnippetEnd(Title) */`    |
 | HTML       | `<!-- NgDocHTMLSnippetStart(Title) -->` | `<!-- NgDocHTMLSnippetEnd(Title) -->` |
 | Styles     | `/* NgDocStyleSnippetStart(Title) */`   | `/* NgDocStyleSnippetStart(Title) */` |
 
 And let's say if you have a component that contains snippets and looks like this
 
-```typescript {% include "./demos/button-inline-demo/button-inline-demo.component.ts" %} ```
+`typescript {% include "./demos/button-inline-demo/button-inline-demo.component.ts" %} `
 
 NgDoc will render its code like below
 
@@ -92,5 +91,5 @@ NgDoc will render its code like below
 
 ## See Also
 
-- `EntitiesPage`
-- `EntitiesDependencies`
+-   `*EntitiesPage`
+-   `*EntitiesDependencies`

@@ -16,6 +16,7 @@ export * from './is-supported-declaration';
 export * from './marked';
 export * from './no-line-breaks';
 export * from './presentation';
+export * from './print-console';
 export * from './process-snippets';
 export * from './slash';
 export * from './typescript';

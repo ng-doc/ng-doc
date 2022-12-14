@@ -10,8 +10,8 @@ export class NgDocLetDirective<T> {
 	ngDocLet!: T;
 
 	constructor(
-		@Inject(ViewContainerRef) viewContainer: ViewContainerRef,
-		@Inject(TemplateRef) templateRef: TemplateRef<NgDocLetContext<T>>,
+		private readonly viewContainer: ViewContainerRef,
+		private readonly templateRef: TemplateRef<NgDocLetContext<T>>,
 	) {
 		viewContainer.createEmbeddedView(templateRef, new NgDocLetContext<T>(this));
 	}

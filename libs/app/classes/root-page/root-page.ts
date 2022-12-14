@@ -14,9 +14,7 @@ export abstract class NgDocRootPage {
  * @see `MyInterface1`
  * @see `MyInterface2`
  */
-export class MyClass1{
-
-}
+export class MyClass1 {}
 
 /**
  * Docs for interface
@@ -26,9 +24,9 @@ export class MyClass1{
  * This is usage notes
  */
 export interface MyInterface1 {
- val1?: string;
- func?: () => void;
- func2(): void;
+	val1?: string;
+	func?: () => void;
+	func2(): void;
 }
 
 export interface MyInterface2 extends MyInterface1 {
@@ -96,7 +94,9 @@ export abstract class MyClass2 extends MyClass1 implements MyInterface1 {
 	 */
 	abstract method3(value: string): string;
 
+	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	func(): void {}
 
+	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	func2() {}
 }

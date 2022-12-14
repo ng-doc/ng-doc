@@ -6,7 +6,7 @@ as a result, mentions of certain entities or pages will turn into links automati
 ## Auto-Generated keywords
 
 NgDoc automatically generates keywords for all declarations specified in `ng-doc.api.ts` (
-see `EntitiesAPI` for how to create it), for example, if you have a class declaration that's called
+see `*EntitiesAPI` for how to create it), for example, if you have a class declaration that's called
 `MyAwesomeClass`, NgDoc generates keyword `MyAwesomeClass` for it, this means that if you decide to
 mention this class as inline code or block code, NgDoc will automatically create a link to the API
 page of this declaration.
@@ -26,9 +26,13 @@ from one category to another, you don't have to search the documentation for pat
 work.
 
 > **Note**
-> To turn a page keyword into a link, use the inline code in which you specify the keyword
+> To turn a page keyword into a link, use the inline code (should start with "*" symbol)
+> in which you specify the keyword (e.g. keyword "MyPage" can be used like "*MyPage")
 
-To do that, specify your preferred keyword in your page configuration in the `keyword` field.
+We have added a special prefix `*` to use page keywords to notify you of outdated links.
+
+So, to create keyword for the page, specify your preferred keyword in your page configuration in
+the `keyword` field.
 
 ```typescript
 import {NgDocPage} from '@ng-doc/builder';
@@ -37,9 +41,9 @@ export const MyAwesomePage: NgDocPage = {
 	title: 'My Awesome Page',
 	mdFile: './index.md',
 	// This keyword can be used to create a link to the page
-	// (e.g. like that `MyCustomKeyword`)
+	// (e.g. like that "*MyCustomKeyword")
 	keyword: `MyCustomKeyword`,
-}
+};
 
 export default MyAwesomePage;
 ```

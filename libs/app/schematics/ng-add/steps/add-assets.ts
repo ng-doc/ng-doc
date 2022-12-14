@@ -2,9 +2,10 @@ import {getProjectTargetOptions} from '@angular/cdk/schematics';
 import {JsonArray, JsonValue} from '@angular/compiler-cli/ngcc/src/utils';
 import {Rule, SchematicContext} from '@angular-devkit/schematics';
 import {ProjectDefinition, updateWorkspace, WorkspaceDefinition} from '@schematics/angular/utility/workspace';
+
+import {NG_DOC_ASSETS} from '../constants/assets';
 import {Schema} from '../schema';
 import {getProject} from '../utils/get-project';
-import {NG_DOC_ASSETS} from '../constants/assets';
 
 /**
  *

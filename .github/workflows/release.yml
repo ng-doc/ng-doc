@@ -1,11 +1,11 @@
-name: NgDoc Release Libraries
+name: Release Libraries
 
 on:
     push:
         branches:
             - release
             - beta
-            - "*.x"
+            - '*.x'
 
 jobs:
     lint:
@@ -17,25 +17,26 @@ jobs:
         runs-on: ubuntu-latest
         needs: [lint, tests]
         steps:
-            -   name: Checkout
-                uses: actions/checkout@v2
+            - name: Checkout
+              uses: actions/checkout@v2
 
-            -   name: Setup Node.js
-                uses: actions/setup-node@v3
-                with:
-                    cache: npm
-                    node-version: 16
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  cache: npm
+                  node-version: 16
 
-            -   name: Install Dependencies
-                run: npm ci
+            - name: Install Dependencies
+              run: npm ci
 
-            -   name: Build Libraries
-                run: npx nx run-many --target=build --projects=app,builder,ui-kit,core
+            - name: Build Libraries
+              run: npx nx run-many --target=build --projects=app,builder,ui-kit,core
 
-            -   name: Release
-                run: echo "🎉 Running semantic"
+            - name: Build Documentation
+              run: npx nx build
 
-            #- run: npx nx workspace-lint
-            #- run: npx nx format:check
-            #- run: npx nx affected --target=lint --parallel=3
-            #- run: npx nx affected --target=test --parallel=3 --ci --code-coverage
+            - name: Release
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+              run: echo "🎉 Running release" #npx semantic-release

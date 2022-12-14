@@ -1,23 +1,22 @@
 name: Lint
 
-on:
-    workflow_call
+on: workflow_call
 
 jobs:
     lint:
         runs-on: ubuntu-latest
         steps:
-            -   name: Checkout
-                uses: actions/checkout@v2
+            - name: Checkout
+              uses: actions/checkout@v2
 
-            -   name: Setup Node.js
-                uses: actions/setup-node@v3
-                with:
-                    cache: npm
-                    node-version: 16
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  cache: npm
+                  node-version: 16
 
-            -   name: Install Dependencies
-                run: npm ci
+            - name: Install Dependencies
+              run: npm ci
 
-            -   name: Linting
-                run: echo "🎉 Running lint"
+            - name: Lint
+              run: npx nx run-many --all --target=lint --quiet

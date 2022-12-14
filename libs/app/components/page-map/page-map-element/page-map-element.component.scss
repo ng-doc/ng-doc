@@ -1,24 +1,25 @@
 :host {
+	display: flex;
+	margin: 0;
 	color: var(--ng-doc-text);
-	padding: var(--ng-doc-base-gutter);
 
-	&[data-ng-doc-level="1"] {
+	&[data-ng-doc-level='1'] a {
 		padding-left: var(--ng-doc-base-gutter);
 	}
 
-	&[data-ng-doc-level="2"] {
+	&[data-ng-doc-level='2'] a {
 		padding-left: calc(var(--ng-doc-base-gutter) * 2);
 	}
 
-	&[data-ng-doc-level="3"] {
+	&[data-ng-doc-level='3'] a {
 		padding-left: calc(var(--ng-doc-base-gutter) * 3);
 	}
 
-	&[data-ng-doc-level="4"] {
+	&[data-ng-doc-level='4'] a {
 		padding-left: calc(var(--ng-doc-base-gutter) * 4);
 	}
 
-	&[data-ng-doc-selected="true"] {
+	&[data-ng-doc-selected='true'] {
 		color: var(--ng-doc-primary);
 	}
 
@@ -29,7 +30,9 @@
 	}
 
 	a {
+		padding: var(--ng-doc-base-gutter);
 		color: inherit;
+		width: 100%;
 
 		&:hover {
 			text-decoration: none;
