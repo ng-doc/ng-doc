@@ -19,5 +19,5 @@ jobs:
             -   name: Install Dependencies
                 run: npm ci
 
-            -   name: Linting
+            -   name: Lint
                 run: npx nx run-many --all --target=lint --quiet

@@ -50,6 +50,7 @@ blockquote {
 	margin: calc(var(--ng-doc-base-gutter) * 9) 0 0;
 	line-height: 1.5rem;
 	font-weight: 700;
+	overflow-wrap: anywhere;
 
 	& + h1,
 	& + h2,
@@ -115,9 +116,11 @@ code {
 	margin-top: 0;
 }
 
-table {
-	display: block;
+.ng-doc-table-wrapper {
 	overflow-x: auto;
+}
+
+table {
 	width: 100%;
 	border-spacing: 0;
 	margin: calc(var(--ng-doc-base-gutter) * 4) 0;

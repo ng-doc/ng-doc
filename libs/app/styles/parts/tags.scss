@@ -46,7 +46,7 @@
 
 	&[data-content="Interface"] {
 		background-color: var(--ng-doc-blue-20);
-		color: var(--ng-doc-blue-150);
+		color: var(--ng-doc-blue-90);
 	}
 
 	&[data-content="Enum"],
@@ -62,7 +62,7 @@
 
 	&[data-content="Type Alias"] {
 		background-color: var(--ng-doc-purple-20);
-		color: var(--ng-doc-purple-150);
+		color: var(--ng-doc-purple-90);
 	}
 
 	/*----------------- Class Decorators --------------------*/

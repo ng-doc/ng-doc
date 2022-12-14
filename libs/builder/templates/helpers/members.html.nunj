@@ -1,13 +1,14 @@
 {% macro render(members) %}
-	<table>
-		<thead>
+	<div class="ng-doc-table-wrapper">
+		<table>
+			<thead>
 			<tr>
 				<th>Name</th>
 				<th>Value</th>
 				<th>Description</th>
 			</tr>
-		</thead>
-		<tbody>
+			</thead>
+			<tbody>
 			{% for member in members %}
 				<tr>
 					<td>{{ member.getName() }} </td>
@@ -15,6 +16,7 @@
 					<td>{{ member | extractDocs }} </td>
 				</tr>
 			{% endfor %}
-		</tbody>
-	</table>
+			</tbody>
+		</table>
+	</div>
 {% endmacro %}

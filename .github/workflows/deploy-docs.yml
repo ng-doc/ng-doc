@@ -1,13 +1,9 @@
 name: Deploy Documentation
 
 # Switch to released types after first stable release
-#on:
-#    release:
-#        types: [ published ]
 on:
-    push:
-        branches:
-            - main
+    release:
+        types: [ published ]
 
 jobs:
     deploy:

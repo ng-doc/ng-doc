@@ -20,6 +20,10 @@ article {
 		}
 
 		.ng-doc-header-details {
+			display: inline-flex;
+			flex-wrap: wrap;
+			align-items: baseline;
+			gap: var(--ng-doc-base-gutter);
 			margin-top: var(--ng-doc-base-gutter);
 
 			.ng-doc-header-details-label {
@@ -27,7 +31,6 @@ article {
 				font-weight: 600;
 				line-height: 18px;
 				margin-left: calc(var(--ng-doc-base-gutter) * 2);
-				margin-right: var(--ng-doc-base-gutter);
 				opacity: .5;
 
 				&:first-child {

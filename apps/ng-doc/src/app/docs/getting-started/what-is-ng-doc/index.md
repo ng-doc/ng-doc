@@ -9,13 +9,7 @@ it.
 The project was created to facilitate and speed up the process of writing documentation, for
 example, the documentation for your API is collected from the code and comments to it, which makes
 it relevant even without using the library, and the guidelines use the `markdown` format, which
-allows your users to read it even without switching to the website with the documentation, which
-makes
-it more useful.
-
-The current tools that you can find for creating documentation did not suit me, because either they
-gave too much technical information that was not user-friendly, or they forced me to write too much
-code to display simple things, so that's why this documentation engine was created.
+allows your users to read it even without switching to the website, which makes it more useful.
 
 ## How it works?
 
