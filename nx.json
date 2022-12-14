@@ -32,6 +32,10 @@
 		],
 		"build": [
 			{
+				"target": "pre-build",
+				"projects": "self"
+			},
+			{
 				"target": "build",
 				"projects": "dependencies"
 			}
