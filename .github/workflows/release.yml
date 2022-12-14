@@ -32,11 +32,8 @@ jobs:
             - name: Install Dependencies
               run: npm ci
 
-            - name: Build Libraries
-              run: npx nx run-many --target=build --projects=app,builder,ui-kit,core
-
-            - name: Build Documentation
-              run: npx nx build
+            - name: Build Projects
+              run: npx nx run-many --all --target=build
 
             - name: Release
               env:

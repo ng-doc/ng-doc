@@ -1,0 +1,15 @@
+{
+	"name": "@ng-doc/ng-doc-add",
+	"version": "0.0.1",
+	"type": "commonjs",
+	"schematics": "./schematics/collection.json",
+	"ng-add": {
+		"save": true
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"peerDependencies": {
+		"ng-morph": "^2.1.1"
+	}
+}

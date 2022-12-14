@@ -1,10 +1,6 @@
 {
 	"name": "@ng-doc/app",
 	"version": "0.0.1",
-	"schematics": "./schematics/collection.json",
-	"ng-add": {
-		"save": true
-	},
 	"peerDependencies": {
 		"@angular/common": ">= 13.3.0",
 		"@angular/core": ">= 13.3.0",
@@ -18,8 +14,7 @@
 		"lunr": "^2.3.9",
 		"highlight.js": "^11.5.1",
 		"prettier": "^2.6.2",
-		"flex-controls": "^1.1.1",
-		"ng-morph": "^2.1.1"
+		"flex-controls": "^1.1.1"
 	},
 	"dependencies": {
 		"tslib": "^2.3.0",
