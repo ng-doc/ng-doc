@@ -7,6 +7,7 @@
 		"@angular/cdk": ">= 13.3.0",
 		"@ngneat/until-destroy": "^9.2.0",
 		"@tinkoff/ng-polymorpheus": "^4.0.0",
+		"@ng-web-apis/common": "^2.0.1",
 		"rxjs": "~6.6.7",
 		"css-what": "^6.1.0",
 		"posthtml-parser": "^0.11.0",

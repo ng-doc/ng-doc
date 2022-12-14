@@ -9,7 +9,7 @@ module.exports = {
 			{
 				packages: [
 					{
-						pkgRoot: 'dist/libs/ng-doc-add',
+						pkgRoot: 'dist/libs/add',
 					},
 					{
 						pkgRoot: 'dist/libs/core',
@@ -29,13 +29,7 @@ module.exports = {
 		[
 			'./plugins/semantic-release/update-dependencies.js',
 			{
-				packages: [
-					'dist/libs/ng-doc-add',
-					'dist/libs/core',
-					'dist/libs/ui-kit',
-					'dist/libs/builder',
-					'dist/libs/app',
-				],
+				packages: ['dist/libs/add', 'dist/libs/core', 'dist/libs/ui-kit', 'dist/libs/builder', 'dist/libs/app'],
 			},
 		],
 		[
