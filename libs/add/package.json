@@ -1,5 +1,5 @@
 {
-	"name": "@ng-doc/ng-doc-add",
+	"name": "@ng-doc/add",
 	"version": "0.0.1",
 	"type": "commonjs",
 	"schematics": "./schematics/collection.json",
@@ -10,6 +10,7 @@
 		"access": "public"
 	},
 	"peerDependencies": {
+		"@angular/cdk": ">= 13.3.0",
 		"ng-morph": "^2.1.1"
 	}
 }

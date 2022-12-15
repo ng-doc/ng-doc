@@ -7,7 +7,7 @@ import {NgDocNavbarModule} from '@ng-doc/app/components/navbar';
 import {NgDocRootModule} from '@ng-doc/app/components/root';
 import {NgDocSidebarModule} from '@ng-doc/app/components/sidebar';
 import {NgDocModule} from '@ng-doc/app/modules/root';
-import {NgDocGeneratedModule} from '@ng-doc/builder/generated';
+import {NgDocGeneratedModule} from '@ng-doc/generated';
 import {NgDocButtonIconModule} from '@ng-doc/ui-kit/components/button-icon';
 import {NgDocIconModule} from '@ng-doc/ui-kit/components/icon';
 import {NgDocTagModule} from '@ng-doc/ui-kit/components/tag';

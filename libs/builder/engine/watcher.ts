@@ -1,6 +1,6 @@
 import * as chokidar from 'chokidar';
 import minimatch from 'minimatch';
-import {Observable, Subject} from 'rxjs';
+import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {filter} from 'rxjs/operators';
 
 export class NgDocWatcher {

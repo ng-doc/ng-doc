@@ -7,6 +7,7 @@ import {from, Observable, of} from 'rxjs';
 import {first, switchMap, switchMapTo} from 'rxjs/operators';
 
 import {NgDocBuilder} from '../engine/builder';
+import {createBuilderContext} from '../helpers';
 import {NgDocSchema} from '../interfaces';
 import {NgDocStyleType} from '../types';
 
@@ -23,12 +24,7 @@ export function runBrowser(options: NgDocSchema, context: BuilderContext): Obser
 	return (browserTarget ? from(context.getTargetOptions(browserTarget)) : of(options as unknown as json.JsonObject))
 		.pipe(
 			switchMap((targetOptions: json.JsonObject ) => {
-				const builder: NgDocBuilder = new NgDocBuilder({
-					tsConfig: String(targetOptions['tsConfig']),
-					options,
-					context,
-					inlineStyleLanguage: (targetOptions?.['inlineStyleLanguage'] as NgDocStyleType) ?? 'CSS',
-				});
+				const builder: NgDocBuilder = new NgDocBuilder(createBuilderContext(targetOptions, options, context));
 				const runner: Observable<void> = builder.run();
 
 				return runner.pipe(

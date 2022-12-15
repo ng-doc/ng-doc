@@ -1,3 +1,5 @@
+export const GENERATED_PATH: string = '@ng-doc/generated';
+
 export interface ImportModule {
 	initializer: string;
 	imports: EntityImport[];
@@ -27,7 +29,7 @@ export const MAIN_MODULES: readonly ImportModule[] = [
 			{name: 'RouterModule', path: '@angular/router'},
 			{
 				name: 'NG_DOC_ROUTING',
-				path: '@ng-doc/builder/generated',
+				path: GENERATED_PATH,
 			},
 		],
 	},
@@ -37,6 +39,6 @@ export const MAIN_MODULES: readonly ImportModule[] = [
 	},
 	{
 		initializer: 'NgDocGeneratedModule.forRoot()',
-		imports: [{name: 'NgDocGeneratedModule', path: '@ng-doc/builder/generated'}],
+		imports: [{name: 'NgDocGeneratedModule', path: GENERATED_PATH}],
 	},
 ];

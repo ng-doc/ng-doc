@@ -14,7 +14,5 @@ export const API_PATTERN: string = `**/${API_NAME}`;
 export const PLAYGROUND_PATTERN: string = `**/${PLAYGROUND_NAME}`;
 export const CACHE_PATH: string = path.join(__dirname, '.cache');
 export const GENERATED_PATH: string = path.join(__dirname, '../generated');
-export const GENERATED_MODULES_PATH: string = path.join(GENERATED_PATH, 'modules');
 export const GENERATED_ASSETS_PATH: string = path.join(GENERATED_PATH, 'assets');
-export const ASSETS_PATH: string = 'assets/ng-doc';
 export const TEMPLATES_PATH: string = path.join(__dirname, '../templates');

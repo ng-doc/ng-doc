@@ -1,7 +1,6 @@
 import * as path from 'path';
 
 import {slash} from '../../../helpers';
-import {GENERATED_MODULES_PATH} from '../../variables';
 import {NgDocFileEntity} from './file.entity';
 
 export abstract class NgDocModuleEntity<T> extends NgDocFileEntity<T> {
@@ -22,7 +21,7 @@ export abstract class NgDocModuleEntity<T> extends NgDocFileEntity<T> {
 	abstract folderName: string;
 
 	get folderPath(): string {
-		return path.join(this.parent?.folderPath ?? GENERATED_MODULES_PATH, this.folderName);
+		return path.join(this.parent?.folderPath ?? this.context.modulesPath, this.folderName);
 	}
 
 	/**
