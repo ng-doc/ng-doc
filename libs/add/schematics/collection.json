@@ -5,6 +5,12 @@
 			"description": "Add NgDoc library to the project.",
 			"factory": "./ng-add/index#ngAdd",
 			"schema": "./ng-add/schema.json"
+		},
+		"ng-add-setup-project": {
+			"private": true,
+			"description": "Sets up the project after dependencies have been installed",
+			"factory": "./ng-add/index#ngAddSetupProject",
+			"schema": "./ng-add/schema.json"
 		}
 	}
 }

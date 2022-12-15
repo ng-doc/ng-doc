@@ -133,20 +133,7 @@
 					"browserTarget": "ng-doc:build:development",
 					"ngDoc": {
 						"pages": "apps/ng-doc/src/app",
-						"tag": "develop",
-						"keywords": {
-							"nunjucks": {
-								"path": "https://mozilla.github.io/nunjucks/"
-							},
-							"tsdoc": {
-								"title": "TsDoc",
-								"path": "https://tsdoc.org/"
-							},
-							"highlightjs": {
-								"title": "highlight.js",
-								"path": "https://highlightjs.org/"
-							}
-						}
+						"tag": "develop"
 					}
 				}
 			},

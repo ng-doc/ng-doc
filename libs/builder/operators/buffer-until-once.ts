@@ -1,5 +1,5 @@
 import {Observable, OperatorFunction} from 'rxjs';
-import {map, shareReplay, switchMap, tap} from 'rxjs/operators';
+import {map, shareReplay, startWith, switchMap, tap} from 'rxjs/operators';
 
 /**
  *
@@ -12,6 +12,7 @@ export function bufferUntilOnce<T>(until: Observable<unknown>): OperatorFunction
 	return (source: Observable<T>) =>
 		source.pipe(
 			tap((v: T) => buffer.push(v)),
+			startWith(null),
 			switchMap(() =>
 				sharedUntil.pipe(
 					map(() => buffer),

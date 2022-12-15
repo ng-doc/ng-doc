@@ -6,6 +6,7 @@ import {combineLatest, from, Observable, of} from 'rxjs';
 import {first, map, shareReplay, switchMap, switchMapTo} from 'rxjs/operators';
 
 import {NgDocBuilder} from '../engine/builder';
+import {createBuilderContext} from '../helpers';
 import {NgDocSchema} from '../interfaces';
 import {NgDocStyleType} from '../types';
 
@@ -21,12 +22,7 @@ export function runDevServer(options: NgDocSchema, context: BuilderContext): Obs
 	return (browserTarget ? from(context.getTargetOptions(browserTarget)) : of(options as unknown as json.JsonObject))
 		.pipe(
 			switchMap((targetOptions: json.JsonObject ) => {
-				const builder: NgDocBuilder = new NgDocBuilder({
-					tsConfig: String(targetOptions['tsConfig']),
-					options,
-					context,
-					inlineStyleLanguage: (targetOptions?.['inlineStyleLanguage'] as NgDocStyleType) ?? 'CSS',
-				});
+				const builder: NgDocBuilder = new NgDocBuilder(createBuilderContext(targetOptions, options, context));
 				const runner: Observable<void> = builder.run().pipe(shareReplay(1));
 
 				return runner.pipe(

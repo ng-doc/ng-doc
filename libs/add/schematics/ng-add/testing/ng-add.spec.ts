@@ -7,6 +7,8 @@ import {APP_COMPONENT_CONTENT} from '../constants/app-component-content';
 import {NG_DOC_VERSION} from '../constants/version';
 import {Schema} from '../schema';
 import {createAngularJson} from '../utils/create-angular-json';
+import {createGitIgnore} from '../utils/create-git-ignore';
+import {createTsConfigs} from '../utils/create-ts-configs';
 
 const collectionPath: string = join(__dirname, '../../collection.json');
 
@@ -22,6 +24,8 @@ describe('ng-add', () => {
 
 		createSourceFile('package.json', '{"dependencies": {"@angular/core": "~13.0.0"}}');
 		createAngularJson();
+		createTsConfigs();
+		createGitIgnore()
 		createMainFiles();
 		saveActiveProject();
 	});
@@ -37,6 +41,7 @@ describe('ng-add', () => {
 			`{
   "dependencies": {
     "@angular/core": "~13.0.0",
+    "@ng-doc/app": "${NG_DOC_VERSION}",
     "@ng-doc/builder": "${NG_DOC_VERSION}",
     "@ng-doc/core": "${NG_DOC_VERSION}",
     "@ng-doc/ui-kit": "${NG_DOC_VERSION}"
@@ -50,9 +55,39 @@ describe('ng-add', () => {
 			project: '',
 		};
 
-		const tree: UnitTestTree = await runner.runSchematicAsync('ng-add', options, host).toPromise();
+		const tree: UnitTestTree = await runner.runSchematicAsync('ng-add-setup-project', options, host).toPromise();
 
 		expect(tree.readContent('test/app/app.template.html')).toEqual(APP_COMPONENT_CONTENT);
+	});
+
+	it('should update tsconfig', async () => {
+		const options: Schema = {
+			project: '',
+		};
+
+		const tree: UnitTestTree = await runner.runSchematicAsync('ng-add-setup-project', options, host).toPromise();
+
+		expect(tree.readContent('tsconfig.json')).toEqual(`{
+  "compilerOptions": {
+    "paths": {
+      "@ng-doc/generated": ".ng-doc//index.ts",
+      "@ng-doc/generated/*": ".ng-doc//*"
+    }
+  }
+}`);
+	});
+
+	it('should add .ng-doc folder to gitignore tsconfig', async () => {
+		const options: Schema = {
+			project: '',
+		};
+
+		const tree: UnitTestTree = await runner.runSchematicAsync('ng-add-setup-project', options, host).toPromise();
+
+		expect(tree.readContent('.gitignore')).toEqual(`.cache
+
+# NgDoc files
+.ng-doc`);
 	});
 
 	it('should add NgDoc modules', async () => {
@@ -60,10 +95,10 @@ describe('ng-add', () => {
 			project: '',
 		};
 
-		const tree: UnitTestTree = await runner.runSchematicAsync('ng-add', options, host).toPromise();
+		const tree: UnitTestTree = await runner.runSchematicAsync('ng-add-setup-project', options, host).toPromise();
 
 		expect(tree.readContent('test/app/app.module.ts')).toEqual(`import { NgDocModule } from "@ng-doc/app";
-import { NG_DOC_ROUTING, NgDocGeneratedModule } from "@ng-doc/builder/generated";
+import { NG_DOC_ROUTING, NgDocGeneratedModule } from "@ng-doc/generated";
 import { RouterModule } from "@angular/router";
 import { NgDocSidebarModule } from "@ng-doc/app/components/sidebar";
 import { NgDocNavbarModule } from "@ng-doc/app/components/navbar";
@@ -83,7 +118,7 @@ export class AppModule {}
 			project: '',
 		};
 
-		const tree: UnitTestTree = await runner.runSchematicAsync('ng-add', options, host).toPromise();
+		const tree: UnitTestTree = await runner.runSchematicAsync('ng-add-setup-project', options, host).toPromise();
 
 		expect(tree.readContent('angular.json')).toEqual(`
 {
@@ -92,10 +127,12 @@ export class AppModule {}
   "projects": {
     "demo": {
     \t"root": ".",
+    \t"sourceRoot": "src",
         "architect": {
           "build": {
             "options": {
               "main": "test/main.ts",
+              "tsConfig": "test/tsconfig.app.json",
               "styles": [
                 "./node_modules/@ng-doc/app/styles/global.css"
               ],
@@ -115,14 +152,17 @@ export class AppModule {}
                   "input": "./node_modules/@ng-doc/builder/generated/assets",
                   "output": "assets"
                 }
-              ]
+              ],
              },
              "configurations": {
               \t"production": {
               \t\t"sourceMap": true,
 \t\t\t\t\t"optimization": true,
 \t\t\t\t\t"buildOptimizer": true,
-\t\t\t\t\t"aot": true
+          "aot": true,
+          "ngDoc": {
+            "pages": "src"
+          }
               \t}
               },
               "builder": "@ng-doc/builder:browser"

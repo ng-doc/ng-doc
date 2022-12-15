@@ -7,7 +7,6 @@ import {generateApiEntities, isApiPageEntity, isApiScopeEntity, slash, uniqueNam
 import {NgDocApi, NgDocApiList, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocApiModuleEnv} from '../../templates-env/api.module.env';
 import {NgDocRenderer} from '../renderer';
-import {GENERATED_MODULES_PATH} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocApiPageEntity} from './api-page.entity';
@@ -50,7 +49,7 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 	}
 
 	override get folderPath(): string {
-		return path.join(GENERATED_MODULES_PATH, 'api');
+		return path.join(this.context.apiPath, 'api');
 	}
 
 	override get keywords(): string[] {
@@ -114,7 +113,7 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		}));
 
 		return of({
-			content: JSON.stringify(apiItems),
+			content: JSON.stringify(apiItems, undefined, 2),
 			filePath: path.join(this.folderPath, 'ng-doc.api-list.json'),
 		});
 	}

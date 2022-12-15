@@ -1,5 +1,6 @@
 export * from './build-assets';
 export * from './code-type-from-ext';
+export * from './create-builder-context';
 export * from './declaration-folder-name';
 export * from './declaration-to-playground';
 export * from './emit-built-output';

@@ -74,7 +74,7 @@ function buildIndexes<T extends NgDocRouteEntity<unknown>>(
 		return pages;
 	}, {});
 
-	return [JSON.stringify(pages), JSON.stringify(index)];
+	return [JSON.stringify(pages, undefined, 2), JSON.stringify(index, undefined, 2)];
 }
 
 /**

@@ -6,7 +6,6 @@ import {buildGlobalIndexes} from '../../helpers/build-global-indexes';
 import {NgDocBuiltOutput} from '../../interfaces';
 import {NgDocContextEnv, NgDocRoutingEnv} from '../../templates-env';
 import {NgDocRenderer} from '../renderer';
-import {GENERATED_ASSETS_PATH, GENERATED_PATH} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 
 export class NgDocSkeletonEntity extends NgDocEntity {
@@ -21,8 +20,10 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 	}
 
 	protected build(): Observable<NgDocBuiltOutput[]> {
-		return forkJoin([this.buildRoutes(), this.buildContext(), this.buildIndexes()]).pipe(
-			map(([routes, context, indexes]: [NgDocBuiltOutput, NgDocBuiltOutput, NgDocBuiltOutput[]]) => [
+		return forkJoin([this.buildIndexFile(), this.buildGeneratedModule(), this.buildRoutes(), this.buildContext(), this.buildIndexes()]).pipe(
+			map(([index, generatedModule, routes, context, indexes]: [NgDocBuiltOutput, NgDocBuiltOutput, NgDocBuiltOutput, NgDocBuiltOutput, NgDocBuiltOutput[]]) => [
+				index,
+				generatedModule,
 				routes,
 				context,
 				...indexes,
@@ -32,13 +33,15 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 
 	private buildRoutes(): Observable<NgDocBuiltOutput> {
 		const entities: NgDocEntity[] = this.rootEntitiesForBuild;
-		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocRoutingEnv>(
-			this.builder, {entities});
+		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocRoutingEnv>(this.builder, {entities});
 
 		return renderer
 			.render('./routing.ts.nunj')
 			.pipe(
-				map((output: string) => ({content: output, filePath: path.join(GENERATED_PATH, 'ng-doc.routing.ts')})),
+				map((output: string) => ({
+					content: output,
+					filePath: path.join(this.context.buildPath, 'ng-doc.routing.ts'),
+				})),
 			);
 	}
 
@@ -49,7 +52,36 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 		return renderer
 			.render('./context.ts.nunj')
 			.pipe(
-				map((output: string) => ({content: output, filePath: path.join(GENERATED_PATH, 'ng-doc.context.ts')})),
+				map((output: string) => ({
+					content: output,
+					filePath: path.join(this.context.buildPath, 'ng-doc.context.ts'),
+				})),
+			);
+	}
+
+	private buildIndexFile(): Observable<NgDocBuiltOutput> {
+		const renderer: NgDocRenderer<never> = new NgDocRenderer(this.builder);
+
+		return renderer
+			.render('./index.ts.nunj')
+			.pipe(
+				map((output: string) => ({
+					content: output,
+					filePath: path.join(this.context.buildPath, 'index.ts'),
+				})),
+			);
+	}
+
+	private buildGeneratedModule(): Observable<NgDocBuiltOutput> {
+		const renderer: NgDocRenderer<never> = new NgDocRenderer(this.builder);
+
+		return renderer
+			.render('./ng-doc.generated.module.ts.nunj')
+			.pipe(
+				map((output: string) => ({
+					content: output,
+					filePath: path.join(this.context.buildPath, 'ng-doc.generated.module.ts'),
+				})),
 			);
 	}
 
@@ -59,11 +91,11 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 		return of([
 			{
 				content: dictionary,
-				filePath: path.join(GENERATED_ASSETS_PATH, 'pages.json'),
+				filePath: path.join(this.context.assetsPath, 'pages.json'),
 			},
 			{
 				content: indexes,
-				filePath: path.join(GENERATED_ASSETS_PATH, 'indexes.json'),
+				filePath: path.join(this.context.assetsPath, 'indexes.json'),
 			},
 		]);
 	}

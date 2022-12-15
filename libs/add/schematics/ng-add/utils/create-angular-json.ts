@@ -13,10 +13,12 @@ export function createAngularJson(): void {
   "projects": {
     "demo": {
     	"root": ".",
+    	"sourceRoot": "src",
         "architect": {
           "build": {
             "options": {
-              "main": "test/main.ts"
+              "main": "test/main.ts",
+              "tsConfig": "test/tsconfig.app.json",
              },
              "configurations": {
               	"production": {

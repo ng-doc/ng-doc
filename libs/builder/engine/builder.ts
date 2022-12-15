@@ -1,6 +1,6 @@
-import {asArray} from '@ng-doc/core';
+import {asArray, isPresent} from '@ng-doc/core';
 import * as path from 'path';
-import {forkJoin, from, merge, Observable, of} from 'rxjs';
+import {from, merge, Observable, of} from 'rxjs';
 import {catchError, map, mapTo, mergeMap, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {Project} from 'ts-morph';
 
@@ -8,6 +8,7 @@ import {createProject, emitBuiltOutput} from '../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
 import {bufferDebounce} from '../operators';
 import {bufferUntilOnce} from '../operators/buffer-until-once';
+import {forkJoinOrEmpty} from '../operators/fork-join-or-empty';
 import {
 	NgDocApiEntity,
 	NgDocCategoryEntity,
@@ -67,14 +68,14 @@ export class NgDocBuilder {
 				/*
 					Refresh and compile source files for all not destroyed entities
 				*/
-				return forkJoin(
+				return forkJoinOrEmpty(
 					entities.map((entity: NgDocEntity) => (entity.destroyed ? of(null) : entity.emit())),
 				).pipe(mapTo(entities));
 			}),
 			switchMap((entities: NgDocEntity[]) => from(this.project.emit()).pipe(mapTo(entities))),
 			mergeMap((entities: NgDocEntity[]) => {
 				// Re-fetch compiled data for non destroyed entities
-				return forkJoin(
+				return forkJoinOrEmpty(
 					entities.map((entity: NgDocEntity) =>
 						entity.destroyed
 							? of(entity)
@@ -89,29 +90,32 @@ export class NgDocBuilder {
 					),
 				).pipe(
 					switchMap((entities: NgDocEntity[]) =>
-						merge(
-							...entities.map((entity: NgDocEntity) =>
-								// Watch for dependency changes of non-destroyed entities
-								entity.destroyed
-									? of(entity)
-									: entity.dependencies.changes().pipe(
-											switchMap((dependencies: string[]) =>
-												this.watcher.watch(dependencies).onChange(...dependencies),
-											),
-											startWith(null),
-											mapTo(entity),
-											takeUntil(entity.onDestroy()),
-									  ),
-							),
-						),
+						entities.length
+							? merge(
+									...entities.map((entity: NgDocEntity) =>
+										// Watch for dependency changes of non-destroyed entities
+										entity.destroyed
+											? of(entity)
+											: entity.dependencies.changes().pipe(
+													switchMap((dependencies: string[]) =>
+														this.watcher.watch(dependencies).onChange(...dependencies),
+													),
+													startWith(null),
+													mapTo(entity),
+													takeUntil(entity.onDestroy()),
+											  ),
+									),
+							  )
+							: of(null),
 					),
 				);
 			}),
 			bufferDebounce(0),
+			map((entities: Array<NgDocEntity | null>) => entities.filter(isPresent)),
 			tap(() => this.entities.updateKeywordMap(this.context.options.ngDoc.keywords)),
 			// Build touched entities and their dependencies
 			mergeMap((entities: NgDocEntity[]) =>
-				forkJoin(
+				forkJoinOrEmpty(
 					buildCandidates(entities).map((entity: NgDocEntity) =>
 						entity.destroyed ? of([]) : entity.buildArtifacts(),
 					),
@@ -126,6 +130,7 @@ export class NgDocBuilder {
 							We emit files and only after that delete destroyed ones, because otherwise
 							angular compiler can raise an error that these items are not exist
 						 */
+						console.log('emit');
 						emitBuiltOutput(...output);
 						this.collectGarbage();
 					}),

@@ -22,7 +22,7 @@ function prepare(pluginConfig, {logger}) {
 			});
 		}
 
-		fs.writeFileSync(`${path.join(packageDir, 'package.json')}`, JSON.stringify(packageJson));
+		fs.writeFileSync(`${path.join(packageDir, 'package.json')}`, JSON.stringify(packageJson, undefined, 2));
 	}
 }
 
