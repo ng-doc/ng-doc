@@ -1,3 +1,11 @@
+# [15.0.0-beta.9](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.8...v15.0.0-beta.9) (2022-12-15)
+
+
+### Bug Fixes
+
+* **ng-doc:** release fixes ([653bcb9](https://github.com/skoropadas/ng-doc/commit/653bcb938aed9542acc9da454f4e6c058d8914d8))
+* **ng-doc:** rename `ng-doc-add` library ([a91449b](https://github.com/skoropadas/ng-doc/commit/a91449b677fe817ba7f7d46ed225817373f4381a))
+
 # [15.0.0-beta.8](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.7...v15.0.0-beta.8) (2022-12-14)
 
 
