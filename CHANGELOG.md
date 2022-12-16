@@ -1,3 +1,12 @@
+# [15.0.0-beta.14](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.13...v15.0.0-beta.14) (2022-12-16)
+
+
+### Bug Fixes
+
+* **ng-doc:** add `allowSyntheticDefaultImports` to ng-add ([026e411](https://github.com/skoropadas/ng-doc/commit/026e4116ddd72cf90e4611d512cf4850f9cd3d0c))
+* **ng-doc:** add raw-loader to the builder dependencies ([a234b8e](https://github.com/skoropadas/ng-doc/commit/a234b8e920b3dccbbca03e2827971b5b4d0ca194))
+* **ng-doc:** remove reference to builder ([7e4d7bc](https://github.com/skoropadas/ng-doc/commit/7e4d7bcf27d13a1d968c39e8a1db46f8ed5d31bf))
+
 # [15.0.0-beta.13](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.12...v15.0.0-beta.13) (2022-12-16)
 
 
