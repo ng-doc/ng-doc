@@ -1,1 +1,1 @@
-export * from './html-parser';
+export const NgDocHtmlParser: null = null;
