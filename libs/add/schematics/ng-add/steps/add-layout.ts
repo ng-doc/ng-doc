@@ -2,7 +2,7 @@ import {getProjectTargetOptions} from '@angular/cdk/schematics';
 import {JsonValue} from '@angular/compiler-cli/ngcc/src/utils';
 import {ProjectDefinition, WorkspaceDefinition} from '@angular-devkit/core/src/workspace';
 import {Rule, SchematicContext, Tree, UpdateRecorder} from '@angular-devkit/schematics';
-import {getWorkspace} from '@nrwl/workspace';
+import {getWorkspace} from '@schematics/angular/utility/workspace';
 
 import {APP_COMPONENT_CONTENT} from '../constants/app-component-content';
 import {Schema} from '../schema';
