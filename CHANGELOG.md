@@ -1,3 +1,10 @@
+# [15.0.0-beta.11](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.10...v15.0.0-beta.11) (2022-12-16)
+
+
+### Bug Fixes
+
+* **ng-doc:** search doesnt show results ([af416fd](https://github.com/skoropadas/ng-doc/commit/af416fde6db507f5142dbcafa392569cc685f06f))
+
 # [15.0.0-beta.10](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.9...v15.0.0-beta.10) (2022-12-16)
 
 
