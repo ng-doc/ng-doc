@@ -1,7 +1,7 @@
 import {logging} from '@angular-devkit/core';
-import minimatch from 'minimatch';
-import {EMPTY, Observable, of, Subject} from 'rxjs';
-import {catchError, map, take, tap} from 'rxjs/operators';
+import * as path from 'path';
+import {Observable, of, Subject} from 'rxjs';
+import {catchError, map, take} from 'rxjs/operators';
 
 import {ObservableSet} from '../../../classes';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../../interfaces';
@@ -47,10 +47,7 @@ export abstract class NgDocEntity {
 
 	private destroy$: Subject<void> = new Subject<void>();
 
-	constructor(
-		readonly builder: NgDocBuilder,
-		readonly context: NgDocBuilderContext,
-	) {}
+	constructor(readonly builder: NgDocBuilder, readonly context: NgDocBuilderContext) {}
 
 	/**
 	 * Files that are watched for changes to rebuild entity or remove it
@@ -86,7 +83,9 @@ export abstract class NgDocEntity {
 	 * Contains all children of the current entity.
 	 */
 	get children(): NgDocEntity[] {
-		return this.builder.entities.asArray().filter((entity: NgDocEntity) => entity.parent === this && !entity.destroyed);
+		return this.builder.entities
+			.asArray()
+			.filter((entity: NgDocEntity) => entity.parent === this && !entity.destroyed);
 	}
 
 	/**
@@ -137,29 +136,28 @@ export abstract class NgDocEntity {
 	}
 
 	buildArtifacts(): Observable<NgDocBuiltOutput[]> {
-		return this.build()
-			.pipe(
-				map((output: NgDocBuiltOutput[]) => this.processArtifacts(output)),
-				map((artifacts: NgDocBuiltOutput[]) => {
-					/*
+		return this.build().pipe(
+			// TODO: make it async
+			map((output: NgDocBuiltOutput[]) => this.processArtifacts(output)),
+			map((artifacts: NgDocBuiltOutput[]) => {
+				/*
 						We are checking that artifacts result was changed, otherwise we don't want to emit
 						the same files to file system, because it will force Angular to rebuild application
 					 */
-					if (artifacts.every((a: NgDocBuiltOutput, i: number) => a.content === this.artifacts[i]?.content)) {
-						return [];
-					} else {
-						this.artifacts = artifacts;
+				if (artifacts.every((a: NgDocBuiltOutput, i: number) => a.content === this.artifacts[i]?.content)) {
+					return [];
+				}
 
-						return this.artifacts;
-					}
-				}),
-				catchError((e: Error) => {
-					this.logger.error(`Error during processing "${this.id}"\n${e.message}\n${e.stack}`);
-					this.readyToBuild = false;
+				this.artifacts = artifacts;
+				return this.artifacts;
+			}),
+			catchError((e: Error) => {
+				this.logger.error(`Error during processing "${this.id}"\n${e.message}\n${e.stack}`);
+				this.readyToBuild = false;
 
-					return of([]);
-				})
-			);
+				return of([]);
+			}),
+		);
 	}
 
 	emit(): Observable<void> {
@@ -185,17 +183,16 @@ export abstract class NgDocEntity {
 	}
 
 	onDestroy(): Observable<void> {
-		return this.destroy$.asObservable().pipe(take(1))
+		return this.destroy$.asObservable().pipe(take(1));
 	}
 
 	private processArtifacts(artifacts: NgDocBuiltOutput[]): NgDocBuiltOutput[] {
-		return artifacts
-			.map((artifact: NgDocBuiltOutput) => {
-				if (minimatch(artifact.filePath, `**/*.html`)) {
-					return htmlPostProcessor(this, artifact)
-				}
+		return artifacts.map((artifact: NgDocBuiltOutput) => {
+			if (path.extname(artifact.filePath) === '.html') {
+				return htmlPostProcessor(this, artifact);
+			}
 
-				return artifact;
-			})
+			return artifact;
+		});
 	}
 }
