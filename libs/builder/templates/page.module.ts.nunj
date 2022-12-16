@@ -3,7 +3,6 @@ import {Component, NgModule, Type, ChangeDetectionStrategy} from '@angular/core'
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {NgDocPageModule, NgDocRootPage, NgDocDemoAssets} from '@ng-doc/app';
-import {NgDocPlayground} from '@ng-doc/builder';
 import pageContent from '!!raw-loader!{{ page.builtPagePath }}';
 {%- if page.pageDependenciesImport %}
 // noinspection ES6UnusedImports
