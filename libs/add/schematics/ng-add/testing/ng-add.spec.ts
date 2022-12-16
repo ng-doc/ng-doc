@@ -60,6 +60,23 @@ describe('ng-add', () => {
 		expect(tree.readContent('test/app/app.template.html')).toEqual(APP_COMPONENT_CONTENT);
 	});
 
+	it('should update app tsconfig', async () => {
+		const options: Schema = {
+			project: '',
+		};
+
+		const tree: UnitTestTree = await runner.runSchematicAsync('ng-add-setup-project', options, host).toPromise();
+
+		expect(tree.readContent('test/tsconfig.app.json')).toEqual(`
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true
+  },
+  "extends": "../tsconfig.json"
+}
+`);
+	});
+
 	it('should update tsconfig', async () => {
 		const options: Schema = {
 			project: '',
