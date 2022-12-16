@@ -1,3 +1,10 @@
+# [15.0.0-beta.12](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.11...v15.0.0-beta.12) (2022-12-16)
+
+
+### Bug Fixes
+
+* **ng-doc:** ng-add depends on nx ([2515fa9](https://github.com/skoropadas/ng-doc/commit/2515fa9e89722450b9e9fafad1ef0820da86c215))
+
 # [15.0.0-beta.11](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.10...v15.0.0-beta.11) (2022-12-16)
 
 
