@@ -1,10 +1,10 @@
 import {BuilderContext} from '@angular-devkit/architect';
 import {json} from '@angular-devkit/core';
+import {NgDocStyleType} from '@ng-doc/core';
 import * as path from 'path';
 
 import {GENERATED_ASSETS_PATH} from '../engine';
 import {NgDocBuilderContext, NgDocSchema} from '../interfaces';
-import {NgDocStyleType} from '../types';
 
 /**
  *

@@ -1,8 +1,8 @@
+import {NgDocCodeType, NgDocStyleType} from '@ng-doc/core';
 import * as fs from 'fs';
 
 import {NgDocAsset} from '../interfaces';
 import {NgDocSnippet} from '../interfaces/snippet';
-import {NgDocCodeType, NgDocStyleType} from '../types';
 import {codeTypeFromExt} from './code-type-from-ext';
 import {processSnippets} from './process-snippets';
 import {uniqueName} from './unique-name';

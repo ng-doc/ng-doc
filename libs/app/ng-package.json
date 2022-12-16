@@ -4,5 +4,5 @@
 	"lib": {
 		"entryFile": "./index.ts"
 	},
-	"allowedNonPeerDependencies": ["@ng-doc/core", "@ng-doc/ui-kit", "@ng-doc/builder"]
+	"allowedNonPeerDependencies": ["@ng-doc/core", "@ng-doc/ui-kit"]
 }

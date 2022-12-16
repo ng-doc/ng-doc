@@ -1,6 +1,5 @@
+import {NgDocCodeType} from '@ng-doc/core';
 import {Options} from 'prettier';
-
-import {NgDocCodeType} from '../types';
 
 /**
  *	Format code with Prettier

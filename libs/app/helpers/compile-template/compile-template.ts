@@ -1,5 +1,5 @@
 import {NgDocPlaygroundFormData} from '@ng-doc/app/interfaces';
-import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties} from '@ng-doc/builder';
+import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties} from '@ng-doc/core';
 // import {objectKeys} from '@ng-doc/core';
 // import * as CSSWhat from 'css-what';
 // import {SelectorType} from 'css-what';

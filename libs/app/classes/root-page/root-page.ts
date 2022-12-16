@@ -1,6 +1,6 @@
 import {Directive, Type} from '@angular/core';
 import {NgDocDemoAssets} from '@ng-doc/app/interfaces';
-import {NgDocPlayground} from '@ng-doc/builder';
+import {NgDocPlayground} from '@ng-doc/core';
 
 export abstract class NgDocRootPage {
 	abstract readonly pageContent: string;

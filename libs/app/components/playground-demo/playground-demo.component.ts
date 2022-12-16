@@ -16,7 +16,7 @@ import {FormGroup} from '@angular/forms';
 import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
 import {compileTemplate, formatHtml} from '@ng-doc/app/helpers';
 import {NgDocPlaygroundFormData} from '@ng-doc/app/interfaces';
-import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties} from '@ng-doc/builder';
+import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties} from '@ng-doc/core';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';

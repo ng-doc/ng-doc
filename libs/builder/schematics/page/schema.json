@@ -4,6 +4,15 @@
 	"title": "NgDocPage schematic",
 	"type": "object",
 	"properties": {
+		"path": {
+			"type": "string",
+			"format": "path",
+			"$default": {
+				"$source": "workingDirectory"
+			},
+			"description": "The path at which to create the entity file, relative to the current workspace. Default is a folder with the same name as the component in the project root.",
+			"visible": false
+		},
 		"title": {
 			"type": "string",
 			"description": "The title of the page.",
@@ -35,12 +44,6 @@
 			"type": "boolean",
 			"description": "Order page in sidebar",
 			"alias": "o"
-		},
-		"path": {
-			"type": "string",
-			"format": "path",
-			"description": "The path to create the simple schematic within.",
-			"visible": false
 		}
 	}
 }

@@ -1,4 +1,4 @@
-import {NgDocPage} from '@ng-doc/builder';
+import {NgDocPage} from '@ng-doc/core';
 
 import {CUSTOM_DATA} from './custom-data';
 

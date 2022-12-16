@@ -15,7 +15,7 @@ import {getProject} from '../utils/get-project';
  */
 export function addLayout(options: Schema): Rule {
 	return async (tree: Tree, context: SchematicContext) => {
-		context.logger.info(`[INFO]: Adding NgDocLayour to the root component...`);
+		context.logger.info(`[INFO]: Adding NgDoc layout to the root component...`);
 
 		const workspace: WorkspaceDefinition = await getWorkspace(tree);
 		const project: ProjectDefinition | undefined = getProject(options, workspace);

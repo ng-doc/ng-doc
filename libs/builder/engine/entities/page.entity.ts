@@ -1,4 +1,4 @@
-import {asArray, isPresent} from '@ng-doc/core';
+import {asArray, isPresent, NgDocPage} from '@ng-doc/core';
 import * as fs from 'fs';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
@@ -6,7 +6,7 @@ import {catchError, map, tap} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
 import {isDependencyEntity, isPlaygroundEntity, marked, slash, uniqueName} from '../../helpers';
-import {NgDocBuiltOutput, NgDocPage} from '../../interfaces';
+import {NgDocBuiltOutput} from '../../interfaces';
 import {NgDocPageEnv, NgDocPageModuleEnv} from '../../templates-env';
 import {NgDocActions} from '../actions';
 import {NgDocRenderer} from '../renderer';

@@ -1,4 +1,4 @@
-import {NgDocCodeType} from '../types';
+import {NgDocCodeType} from '@ng-doc/core';
 
 export interface NgDocAsset {
 	originalPath: string;

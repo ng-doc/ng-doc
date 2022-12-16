@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {NgDocPlaygroundFormData} from '@ng-doc/app/interfaces';
-import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties} from '@ng-doc/builder';
+import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties} from '@ng-doc/core';
 
 @Component({
 	selector: 'ng-doc-playground-properties',

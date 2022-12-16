@@ -5,12 +5,12 @@ import * as path from 'path';
 import {Observable, Subscriber} from 'rxjs';
 import {Node} from 'ts-morph';
 
-import {NgDocRendererOptions} from '../interfaces';
 import {NgDocBuilder} from './builder';
 import * as filters from './template-filters';
 import {TEMPLATES_PATH} from './variables';
 import TemplateError = lib.TemplateError;
 import {ObservableSet} from '../classes';
+import {NgDocRendererOptions} from '../interfaces';
 
 class NgDocRelativeLoader implements ILoader {
 	constructor(

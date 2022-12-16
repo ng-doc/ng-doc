@@ -1,4 +1,4 @@
-import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties} from '@ng-doc/builder';
+import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperties} from '@ng-doc/core';
 
 export interface NgDocPlaygroundFormData<
 	P extends NgDocPlaygroundProperties = NgDocPlaygroundProperties,

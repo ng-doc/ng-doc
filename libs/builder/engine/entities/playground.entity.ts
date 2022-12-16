@@ -1,10 +1,11 @@
+import {NgDocPlayground} from '@ng-doc/core';
 import * as path from 'path';
 import {from, Observable, of} from 'rxjs';
 import {mapTo, tap} from 'rxjs/operators';
 import {ClassDeclaration, Expression, Node, ObjectLiteralElementLike, ObjectLiteralExpression} from 'ts-morph';
 
 import {isPageEntity} from '../../helpers';
-import {NgDocBuiltOutput, NgDocPlayground} from '../../interfaces';
+import {NgDocBuiltOutput} from '../../interfaces';
 import {PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocFileEntity} from './abstractions/file.entity';
