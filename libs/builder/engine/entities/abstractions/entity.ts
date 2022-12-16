@@ -1,7 +1,7 @@
 import {logging} from '@angular-devkit/core';
-import minimatch from 'minimatch';
-import {EMPTY, Observable, of, Subject} from 'rxjs';
-import {catchError, map, take, tap} from 'rxjs/operators';
+import * as path from 'path';
+import {Observable, of, Subject} from 'rxjs';
+import {catchError, map, take} from 'rxjs/operators';
 
 import {ObservableSet} from '../../../classes';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../../interfaces';
@@ -137,6 +137,7 @@ export abstract class NgDocEntity {
 
 	buildArtifacts(): Observable<NgDocBuiltOutput[]> {
 		return this.build().pipe(
+			// TODO: make it async
 			map((output: NgDocBuiltOutput[]) => this.processArtifacts(output)),
 			map((artifacts: NgDocBuiltOutput[]) => {
 				/*
@@ -145,11 +146,10 @@ export abstract class NgDocEntity {
 					 */
 				if (artifacts.every((a: NgDocBuiltOutput, i: number) => a.content === this.artifacts[i]?.content)) {
 					return [];
-				} else {
-					this.artifacts = artifacts;
-
-					return this.artifacts;
 				}
+
+				this.artifacts = artifacts;
+				return this.artifacts;
 			}),
 			catchError((e: Error) => {
 				this.logger.error(`Error during processing "${this.id}"\n${e.message}\n${e.stack}`);
@@ -188,7 +188,7 @@ export abstract class NgDocEntity {
 
 	private processArtifacts(artifacts: NgDocBuiltOutput[]): NgDocBuiltOutput[] {
 		return artifacts.map((artifact: NgDocBuiltOutput) => {
-			if (minimatch(artifact.filePath, `**/*.html`)) {
+			if (path.extname(artifact.filePath) === '.html') {
 				return htmlPostProcessor(this, artifact);
 			}
 

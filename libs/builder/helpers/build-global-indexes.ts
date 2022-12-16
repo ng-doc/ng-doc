@@ -5,11 +5,11 @@ import {
 	humanizeDeclarationName,
 	isNodeTag,
 	NgDocPageInfos,
-	NgDocPageType
+	NgDocPageType,
 } from '@ng-doc/core';
 import lunr from 'lunr';
-import minimatch from 'minimatch';
-import {Node, NodeTag, parser} from 'posthtml-parser'
+import * as path from 'path';
+import {Node, NodeTag, parser} from 'posthtml-parser';
 
 import {NgDocApiPageEntity} from '../engine/entities';
 import {NgDocEntity} from '../engine/entities/abstractions/entity';
@@ -35,20 +35,18 @@ function buildIndexes<T extends NgDocRouteEntity<unknown>>(
 ): string[] {
 	const indexes: NgDocPageIndex[] = [];
 
-	(entities.filter((entity: NgDocEntity) => entity instanceof entityType) as T[]).forEach(
-		(entity: T) => {
-			const pageIndexes: NgDocPageIndex[] = entity.artifacts
-				.filter((artifact: NgDocBuiltOutput) => minimatch(artifact.filePath, '**/*.html'))
-				.map((artifact: NgDocBuiltOutput) => {
-					const nodes: Node[] = parser(artifact.content);
+	(entities.filter((entity: NgDocEntity) => entity instanceof entityType) as T[]).forEach((entity: T) => {
+		const pageIndexes: NgDocPageIndex[] = entity.artifacts
+			.filter((artifact: NgDocBuiltOutput) => path.extname(artifact.filePath) === '.html')
+			.map((artifact: NgDocBuiltOutput) => {
+				const nodes: Node[] = parser(artifact.content);
 
-					return extractIndexes(entity, nodes);
-				})
-				.flat();
+				return extractIndexes(entity, nodes);
+			})
+			.flat();
 
-			indexes.push(...pageIndexes);
-		},
-	);
+		indexes.push(...pageIndexes);
+	});
 
 	const queryLexer: {termSeparator: RegExp} = (lunr as unknown as {QueryLexer: {termSeparator: RegExp}}).QueryLexer;
 	queryLexer.termSeparator = lunr.tokenizer.separator = /\s+/;
@@ -84,7 +82,11 @@ function buildIndexes<T extends NgDocRouteEntity<unknown>>(
  * @param parentIndex
  * @param indexes
  */
-function extractIndexes<T extends NgDocRouteEntity<unknown>>(entity: T, nodes: Node[], indexes: NgDocPageIndex[] = []): NgDocPageIndex[] {
+function extractIndexes<T extends NgDocRouteEntity<unknown>>(
+	entity: T,
+	nodes: Node[],
+	indexes: NgDocPageIndex[] = [],
+): NgDocPageIndex[] {
 	if (!indexes.length) {
 		indexes.push({
 			route: entity.fullRoute,
@@ -93,29 +95,29 @@ function extractIndexes<T extends NgDocRouteEntity<unknown>>(entity: T, nodes: N
 			heading: entity.title,
 			content: '',
 			kind: getKindFromEntity(entity),
-		})
+		});
 	}
 
 	nodes.forEach((node: Node) => {
-			if (isNodeTag(node)) {
-				if (!isIgnoredTag(node)) {
-					if (isHeadingTag(node)) {
-						indexes.push({
-							route: entity.fullRoute,
-							type: getTypeFromEntity(entity),
-							title: entity.title,
-							heading: extractText(node),
-							content: '',
-							kind: getKindFromEntity(entity),
-						});
-					} else if (Array.isArray(node.content)) {
-						indexes[indexes.length - 1].content += extractText(node);
+		if (isNodeTag(node)) {
+			if (!isIgnoredTag(node)) {
+				if (isHeadingTag(node)) {
+					indexes.push({
+						route: entity.fullRoute,
+						type: getTypeFromEntity(entity),
+						title: entity.title,
+						heading: extractText(node),
+						content: '',
+						kind: getKindFromEntity(entity),
+					});
+				} else if (Array.isArray(node.content)) {
+					indexes[indexes.length - 1].content += extractText(node);
 
-						extractIndexes(entity, asArray(node.content).flat(), indexes);
-					}
+					extractIndexes(entity, asArray(node.content).flat(), indexes);
 				}
 			}
-		})
+		}
+	});
 	return indexes;
 }
 
@@ -134,10 +136,14 @@ function isIgnoredTag(node: NodeTag): boolean {
 function extractText(node: Node): string {
 	if (isNodeTag(node)) {
 		return isIgnoredTag(node)
-				? ''
-				: (asArray(node.content).flat().filter((node: Node) => typeof node === 'string') as string[])
-				.map((str: string) => str.trim())
-				.join('\n')
+			? ''
+			: (
+					asArray(node.content)
+						.flat()
+						.filter((node: Node) => typeof node === 'string') as string[]
+			  )
+					.map((str: string) => str.trim())
+					.join('\n');
 	} else {
 		return String(node);
 	}
