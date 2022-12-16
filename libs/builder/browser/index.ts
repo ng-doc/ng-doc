@@ -18,20 +18,17 @@ import {NgDocSchema} from '../interfaces';
 export function runBrowser(options: NgDocSchema, context: BuilderContext): Observable<BrowserBuilderOutput> {
 	const browserTarget: Target | null = options.browserTarget ? targetFromTargetString(options.browserTarget) : null;
 
-	return (browserTarget ? from(context.getTargetOptions(browserTarget)) : of(options as any))
-		.pipe(
-			switchMap((targetOptions: any ) => {
-				const builder: NgDocBuilder = new NgDocBuilder(createBuilderContext(targetOptions, options, context));
-				const runner: Observable<void> = builder.run();
+	return (browserTarget ? from(context.getTargetOptions(browserTarget)) : of(options as any)).pipe(
+		switchMap((targetOptions: any) => {
+			const builder: NgDocBuilder = new NgDocBuilder(createBuilderContext(targetOptions, options, context));
+			const runner: Observable<void> = builder.run();
 
-				return runner.pipe(
-					first(),
-					// @ts-ignore
-					switchMap(() => executeBrowserBuilder(options as any, context)),
-				);
-			})
-		);
-
+			return runner.pipe(
+				first(),
+				switchMap(() => executeBrowserBuilder(options as any, context)),
+			);
+		}),
+	);
 }
 
 export default createBuilder(runBrowser);

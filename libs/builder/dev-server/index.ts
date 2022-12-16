@@ -17,24 +17,21 @@ import {NgDocSchema} from '../interfaces';
 export function runDevServer(options: NgDocSchema, context: BuilderContext): Observable<DevServerBuilderOutput> {
 	const browserTarget: Target | null = options.browserTarget ? targetFromTargetString(options.browserTarget) : null;
 
-	return (browserTarget ? from(context.getTargetOptions(browserTarget)) : of(options as unknown as any))
-		.pipe(
-			switchMap((targetOptions: any ) => {
-				const builder: NgDocBuilder = new NgDocBuilder(createBuilderContext(targetOptions, options, context));
-				const runner: Observable<void> = builder.run().pipe(shareReplay(1));
+	return (browserTarget ? from(context.getTargetOptions(browserTarget)) : of(options as unknown as any)).pipe(
+		switchMap((targetOptions: any) => {
+			const builder: NgDocBuilder = new NgDocBuilder(createBuilderContext(targetOptions, options, context));
+			const runner: Observable<void> = builder.run().pipe(shareReplay(1));
 
-				return runner.pipe(
-					first(),
-					switchMapTo(
-						combineLatest([runner, executeDevServerBuilder(options, context)]).pipe(
-							// @ts-ignore
-							map(([_, devServerOutput]: [void, DevServerBuilderOutput]) => devServerOutput),
-						),
+			return runner.pipe(
+				first(),
+				switchMapTo(
+					combineLatest([runner, executeDevServerBuilder(options, context)]).pipe(
+						map(([_, devServerOutput]: [void, DevServerBuilderOutput]) => devServerOutput),
 					),
-				);
-			})
-		)
-
+				),
+			);
+		}),
+	);
 }
 
 export default createBuilder(runDevServer);
