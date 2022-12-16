@@ -3,6 +3,7 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
+import {NgDocThemeToggleModule} from '@ng-doc/app';
 import {NgDocNavbarModule} from '@ng-doc/app/components/navbar';
 import {NgDocRootModule} from '@ng-doc/app/components/root';
 import {NgDocSidebarModule} from '@ng-doc/app/components/sidebar';
@@ -38,6 +39,7 @@ import {AppComponent} from './app.component';
 		NgDocButtonIconModule,
 		NgDocIconModule,
 		NgDocTooltipModule,
+		NgDocThemeToggleModule,
 	],
 	bootstrap: [AppComponent],
 })

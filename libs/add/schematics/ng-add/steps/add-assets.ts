@@ -27,13 +27,20 @@ export function addAssets(options: Schema): Rule {
 			const targetOptions: Record<string, JsonValue> = getProjectTargetOptions(project, 'build');
 
 			const assets: JsonArray | undefined = targetOptions['assets'] as JsonArray | undefined;
+			const jsDependencies: JsonArray | undefined = targetOptions['allowedCommonJsDependencies'] as JsonArray | undefined;
 
 			if (!assets) {
 				targetOptions['assets'] = NG_DOC_ASSETS;
 				return;
 			}
 
+			if (!jsDependencies) {
+				targetOptions['allowedCommonJsDependencies'] = ['@ng-doc/core'];
+				return;
+			}
+
 			targetOptions['assets'] = Array.from(new Set([...NG_DOC_ASSETS, ...assets]));
+			targetOptions['allowedCommonJsDependencies'] = Array.from(new Set([...jsDependencies, '@ng-doc/core']));
 		});
 	}
 }

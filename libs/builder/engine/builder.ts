@@ -1,4 +1,5 @@
 import {asArray, isPresent} from '@ng-doc/core';
+import * as fs from 'fs';
 import * as path from 'path';
 import {from, merge, Observable, of} from 'rxjs';
 import {catchError, map, mapTo, mergeMap, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
@@ -51,7 +52,8 @@ export class NgDocBuilder {
 	}
 
 	run(): Observable<void> {
-		console.time('Build');
+		fs.rmSync(this.context.buildPath, {recursive: true, force: true});
+
 		const entities: Observable<NgDocEntity[]> = merge(
 			entityLifeCycle(this, this.project, this.watcher, PAGE_PATTERN, NgDocPageEntity),
 			entityLifeCycle(this, this.project, this.watcher, CATEGORY_PATTERN, NgDocCategoryEntity),

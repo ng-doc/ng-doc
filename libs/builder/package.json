@@ -6,7 +6,7 @@
 	"schematics": "./schematics/collection.json",
 	"dependencies": {
 		"@ng-doc/core": "0.0.0",
-		"@angular-devkit/architect": ">=0.1303.5",
+		"@angular-devkit/architect": ">=0.1500.0",
 		"chokidar": "^3.5.3",
 		"minimatch": "^5.1.0",
 		"rxjs": "^6.6.7",

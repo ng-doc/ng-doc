@@ -155,22 +155,22 @@ export class AppModule {}
               "main": "test/main.ts",
               "tsConfig": "test/tsconfig.app.json",
               "styles": [
-                "./node_modules/@ng-doc/app/styles/global.css"
+                "node_modules/@ng-doc/app/styles/global.css"
               ],
               "assets": [
                 {
                   "glob": "**/*",
-                  "input": "./node_modules/@ng-doc/ui-kit/assets",
+                  "input": "node_modules/@ng-doc/ui-kit/assets",
                   "output": "assets"
                 },
                 {
                   "glob": "**/*",
-                  "input": "./node_modules/@ng-doc/app/assets",
+                  "input": "node_modules/@ng-doc/app/assets",
                   "output": "assets"
                 },
                 {
                   "glob": "**/*",
-                  "input": "./node_modules/@ng-doc/builder/generated/assets",
+                  "input": "node_modules/@ng-doc/builder/generated/assets",
                   "output": "assets"
                 }
               ],
