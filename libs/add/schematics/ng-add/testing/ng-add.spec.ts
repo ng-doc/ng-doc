@@ -25,7 +25,7 @@ describe('ng-add', () => {
 		createSourceFile('package.json', '{"dependencies": {"@angular/core": "~13.0.0"}}');
 		createAngularJson();
 		createTsConfigs();
-		createGitIgnore()
+		createGitIgnore();
 		createMainFiles();
 		saveActiveProject();
 	});
@@ -70,8 +70,12 @@ describe('ng-add', () => {
 		expect(tree.readContent('tsconfig.json')).toEqual(`{
   "compilerOptions": {
     "paths": {
-      "@ng-doc/generated": ".ng-doc//index.ts",
-      "@ng-doc/generated/*": ".ng-doc//*"
+      "@ng-doc/generated": [
+        ".ng-doc//index.ts"
+      ],
+      "@ng-doc/generated/*": [
+        ".ng-doc//*"
+      ]
     }
   }
 }`);

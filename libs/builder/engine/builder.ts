@@ -130,7 +130,6 @@ export class NgDocBuilder {
 							We emit files and only after that delete destroyed ones, because otherwise
 							angular compiler can raise an error that these items are not exist
 						 */
-						console.log('emit');
 						emitBuiltOutput(...output);
 						this.collectGarbage();
 					}),

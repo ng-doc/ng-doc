@@ -3,7 +3,7 @@ import {
 	ProjectDefinition,
 	TargetDefinition,
 	updateWorkspace,
-	WorkspaceDefinition
+	WorkspaceDefinition,
 } from '@schematics/angular/utility/workspace';
 import {JSONFile} from 'ng-morph';
 import * as path from 'path';
@@ -17,7 +17,7 @@ import {getProject} from '../utils/get-project';
  * @param options
  */
 export function addTsconfigPaths(options: Schema): Rule {
-	return  async (tree: Tree, context: SchematicContext) => {
+	return async (tree: Tree, context: SchematicContext) => {
 		return updateWorkspace((workspace: WorkspaceDefinition) => {
 			context.logger.info(`[INFO]: Adding tsconfig paths to ng-doc folder...`);
 
@@ -32,22 +32,28 @@ export function addTsconfigPaths(options: Schema): Rule {
 			const serveTarget: TargetDefinition | undefined = project.targets.get('serve');
 
 			if (buildTarget) {
-				const tsConfigPath: string = String(buildTarget.options && buildTarget.options['tsConfig']);
+				const tsConfigPath: string | undefined =
+					buildTarget.options && (buildTarget.options['tsConfig'] as string);
 
-				updateTsConfigPaths(tree, tsConfigPath, options.project);
+				tsConfigPath && updateTsConfigPaths(tree, String(tsConfigPath), options.project);
 			} else {
-				context.logger.warn(`[WARNING]: "build" target was not found, please add paths to ".ng-doc" folder in your tsconfig.json file manually.`);
+				context.logger.warn(
+					`[WARNING]: "build" target was not found, please add paths to ".ng-doc" folder in your tsconfig.json file manually.`,
+				);
 			}
 
 			if (serveTarget) {
-				const tsConfigPath: string = String(serveTarget.options && serveTarget.options['tsConfig']);
+				const tsConfigPath: string | undefined =
+					serveTarget.options && (serveTarget.options['tsConfig'] as string);
 
-				updateTsConfigPaths(tree, tsConfigPath, options.project);
+				tsConfigPath && updateTsConfigPaths(tree, String(tsConfigPath), options.project);
 			} else {
-				context.logger.warn(`[WARNING]: "serve" target was not found, please add paths to ".ng-doc" folder in your tsconfig.json file manually.`);
+				context.logger.warn(
+					`[WARNING]: "serve" target was not found, please add paths to ".ng-doc" folder in your tsconfig.json file manually.`,
+				);
 			}
 		});
-	}
+	};
 }
 
 /**
@@ -64,8 +70,8 @@ function updateTsConfigPaths(tree: Tree, filePath: string, projectName: string):
 	const ext: string | undefined = json.get(['extends']);
 
 	if (paths || !ext) {
-		json.modify(['compilerOptions', 'paths', `${GENERATED_PATH}`], `.ng-doc/${projectName}/index.ts`);
-		json.modify(['compilerOptions', 'paths', `${GENERATED_PATH}/*`], `.ng-doc/${projectName}/*`);
+		json.modify(['compilerOptions', 'paths', `${GENERATED_PATH}`], [`.ng-doc/${projectName}/index.ts`]);
+		json.modify(['compilerOptions', 'paths', `${GENERATED_PATH}/*`], [`.ng-doc/${projectName}/*`]);
 	} else if (ext) {
 		updateTsConfigPaths(tree, path.join(path.dirname(filePath), ext), projectName);
 	}

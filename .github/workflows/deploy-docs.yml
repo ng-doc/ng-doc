@@ -3,7 +3,7 @@ name: Deploy Documentation
 # Switch to released types after first stable release
 on:
     release:
-        types: [published]
+        types: [prereleased]
 
 jobs:
     deploy:
