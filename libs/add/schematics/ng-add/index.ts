@@ -11,6 +11,7 @@ import {addNgDocModules} from './steps/add-ng-doc-modules';
 import {addStyles} from './steps/add-styles';
 import {addTsconfigPaths} from './steps/add-tsconfig-paths';
 import {replaceBuilders} from './steps/replace-builders';
+import {updateAppTsConfig} from './steps/update-app-ts-config';
 
 /**
  *
@@ -44,6 +45,7 @@ export function ngAddSetupProject(options: Schema): Rule {
 		addNgDocModules(options),
 		addLayout(options),
 		addTsconfigPaths(options),
-		addGitIgnore()
+		updateAppTsConfig(options),
+		addGitIgnore(),
 	]);
 }
