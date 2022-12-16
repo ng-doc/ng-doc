@@ -1,4 +1,4 @@
-import {NgDocDependencies} from '@ng-doc/builder';
+import {NgDocDependencies} from '@ng-doc/core';
 import {<%= pageName %>Module} from './ng-doc.module';
 
 const <%= pageName %>Dependencies: NgDocDependencies = {

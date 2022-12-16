@@ -1,4 +1,4 @@
-import {NgDocPlaygroundProperty} from '@ng-doc/builder';
+import {NgDocPlaygroundProperty} from '@ng-doc/core';
 import {objectKeys} from '@ng-doc/core';
 
 /**

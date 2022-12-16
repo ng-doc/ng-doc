@@ -1,10 +1,10 @@
-import {humanizeDeclarationName} from '@ng-doc/core';
+import {humanizeDeclarationName, NgDocApi, NgDocApiList} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, from, Observable, of} from 'rxjs';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 
 import {generateApiEntities, isApiPageEntity, isApiScopeEntity, slash, uniqueName} from '../../helpers';
-import {NgDocApi, NgDocApiList, NgDocBuiltOutput} from '../../interfaces';
+import {NgDocBuiltOutput} from '../../interfaces';
 import {NgDocApiModuleEnv} from '../../templates-env/api.module.env';
 import {NgDocRenderer} from '../renderer';
 import {NgDocEntity} from './abstractions/entity';

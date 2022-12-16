@@ -1,6 +1,6 @@
+import {NgDocPlaygroundProperties} from '@ng-doc/core';
 import {ClassDeclaration, JSDoc, PropertyDeclaration, Type} from 'ts-morph';
 
-import {NgDocPlaygroundProperties} from '../interfaces';
 import {displayType} from './typescript';
 
 /**

@@ -9,7 +9,7 @@
 		"@ngneat/until-destroy": "^9.2.0",
 		"@tinkoff/ng-polymorpheus": "^4.0.0",
 		"@ng-web-apis/common": "^2.0.1",
-		"rxjs": "~6.6.7",
+		"rxjs": "^7.0.0",
 		"css-what": "^6.1.0",
 		"posthtml-parser": "^0.11.0",
 		"posthtml-render": "^3.0.0",
@@ -21,8 +21,7 @@
 	"dependencies": {
 		"tslib": "^2.3.0",
 		"@ng-doc/core": "0.0.0",
-		"@ng-doc/ui-kit": "0.0.0",
-		"@ng-doc/builder": "0.0.0"
+		"@ng-doc/ui-kit": "0.0.0"
 	},
 	"publishConfig": {
 		"access": "public"

@@ -4,7 +4,8 @@
 	"type": "commonjs",
 	"builders": "./builders.json",
 	"schematics": "./schematics/collection.json",
-	"peerDependencies": {
+	"dependencies": {
+		"@ng-doc/core": "0.0.0",
 		"@angular-devkit/architect": ">=0.1303.5",
 		"chokidar": "^3.5.3",
 		"minimatch": "^5.1.0",
@@ -23,9 +24,6 @@
 		"rehype-slug": "^4.0.0",
 		"highlight.js": "^11.5.1",
 		"@microsoft/tsdoc": "^0.14.2"
-	},
-	"dependencies": {
-		"@ng-doc/core": "0.0.0"
 	},
 	"publishConfig": {
 		"access": "public"

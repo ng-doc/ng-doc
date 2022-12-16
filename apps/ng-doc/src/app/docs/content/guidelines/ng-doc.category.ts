@@ -1,4 +1,4 @@
-import {NgDocCategory} from '@ng-doc/builder';
+import {NgDocCategory} from '@ng-doc/core';
 
 import ContentCategory from '../ng-doc.category';
 

@@ -1,8 +1,8 @@
-import {escapeHtml} from '@ng-doc/core';
+import {escapeHtml, NgDocPlaygroundProperties} from '@ng-doc/core';
 import {ClassDeclaration, Decorator, Node, Project} from 'ts-morph';
 
 import {declarationToPlayground} from '../../helpers/declaration-to-playground';
-import {NgDocActionOutput, NgDocPlaygroundProperties} from '../../interfaces';
+import {NgDocActionOutput} from '../../interfaces';
 import {componentDecoratorResolver} from '../../resolvers/component-decorator.resolver';
 import {NgDocAction} from '../../types';
 import {NgDocPageEntity} from '../entities/page.entity';

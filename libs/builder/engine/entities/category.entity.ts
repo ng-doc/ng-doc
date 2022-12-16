@@ -1,10 +1,10 @@
-import {asArray} from '@ng-doc/core';
+import {asArray, NgDocCategory} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
 
 import {isCategoryEntity, isPageEntity, uniqueName} from '../../helpers';
-import {NgDocBuiltOutput, NgDocCategory} from '../../interfaces';
+import {NgDocBuiltOutput} from '../../interfaces';
 import {NgDocCategoryModuleEnv} from '../../templates-env';
 import {NgDocRenderer} from '../renderer';
 import {NgDocEntity} from './abstractions/entity';

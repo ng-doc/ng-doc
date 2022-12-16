@@ -1,5 +1,6 @@
+import {NgDocPage} from '@ng-doc/core';
+
 import {NgDocActions} from '../engine/actions';
-import {NgDocPage} from '../interfaces';
 
 export interface NgDocPageEnv {
 	NgDocPage: NgDocPage;

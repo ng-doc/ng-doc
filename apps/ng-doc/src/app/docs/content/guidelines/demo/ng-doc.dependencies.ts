@@ -1,4 +1,4 @@
-import {NgDocDependencies} from '@ng-doc/builder';
+import {NgDocDependencies} from '@ng-doc/core';
 
 import {ButtonDemoComponent} from './demos/button-demo/button-demo.component';
 import {ButtonInlineDemoComponent} from './demos/button-inline-demo/button-inline-demo.component';

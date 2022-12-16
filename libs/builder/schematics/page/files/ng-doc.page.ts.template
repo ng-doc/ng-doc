@@ -1,4 +1,4 @@
-import {NgDocPage} from '@ng-doc/builder';<% if (importPath && categoryName) { %>
+import {NgDocPage} from '@ng-doc/core';<% if (importPath && categoryName) { %>
 import <%= categoryName %> from '<%= importPath %>';<% } %>
 
 const <%= pageName %>: NgDocPage = {
