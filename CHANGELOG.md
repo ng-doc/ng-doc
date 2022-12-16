@@ -1,3 +1,10 @@
+# [15.0.0-beta.10](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.9...v15.0.0-beta.10) (2022-12-16)
+
+
+### Bug Fixes
+
+* **ng-doc:** fix @ng-doc/add schematics ([a705cc7](https://github.com/skoropadas/ng-doc/commit/a705cc70c7195db813388cca0b1ee791e32c29e7))
+
 # [15.0.0-beta.9](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.8...v15.0.0-beta.9) (2022-12-15)
 
 
