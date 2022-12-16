@@ -1,3 +1,11 @@
+# [15.0.0-beta.13](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.12...v15.0.0-beta.13) (2022-12-16)
+
+
+### Bug Fixes
+
+* **ng-doc:** project fixes for default angular app ([4361ae0](https://github.com/skoropadas/ng-doc/commit/4361ae07b28ea41a2404d7b66a47fa66e29afe88))
+* **ng-doc:** project fixes for default angular app ([83c571a](https://github.com/skoropadas/ng-doc/commit/83c571abb840b6625f90dec5b03d473f6a2adbc8))
+
 # [15.0.0-beta.12](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.11...v15.0.0-beta.12) (2022-12-16)
 
 
