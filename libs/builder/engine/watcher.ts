@@ -10,8 +10,11 @@ export class NgDocWatcher {
 	private readonly unlink$: Subject<string> = new Subject();
 	private readonly ready$: Subject<void> = new Subject();
 
-	constructor() {
-		this.watcher = chokidar.watch([]);
+	constructor(files?: string[]) {
+		this.watcher = chokidar.watch(files ?? [], {
+			/*  `useFsEvents` causes problems on Mac when chokidar doesn't fire `unlink` event if the file has been moved */
+			useFsEvents: false,
+		});
 
 		this.watcher
 			.on('add', (path: string) => this.add$.next(path))

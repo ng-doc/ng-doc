@@ -39,7 +39,7 @@ export class NgDocBuilder {
 			},
 		});
 
-		this.watcher = new NgDocWatcher().watch(
+		this.watcher = new NgDocWatcher(
 			asArray(this.context.options.ngDoc.pages)
 				.map((pagesPath: string) => [
 					path.join(pagesPath, PAGE_PATTERN),
