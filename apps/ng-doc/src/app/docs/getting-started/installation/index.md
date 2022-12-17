@@ -21,8 +21,7 @@ npm i @ng-doc/{core,builder,ui-kit,app}
 
 First of all you need to add builders from NgDoc library to your application, open `angular.json`
 file, and replace `browser` and `dev-server` builders for `build` and `serve` targets with
-alternatives
-from the NgDoc as shown in the example below
+alternatives from the NgDoc as shown in the example below
 
 ```json
 {
@@ -53,13 +52,23 @@ To do that edit you `angular.json` file, or add them to you `styles` file
 			"architect": {
 				"build": {
 					"options": {
-						"styles": ["@ng-doc/app/styles/global.scss"]
+						"styles": ["node_modules/@ng-doc/app/styles/global.css"]
 					}
 				}
 			}
 		}
 	}
 }
+```
+
+### Adding .ng-doc folder to gitignore
+
+`.ng-doc` folder contains generated components and modules, you need to add it to your `.gitignore`,
+because NgDoc regenerates them every time the application is launched.
+
+```gitignore
+## NgDoc folder
+.ng-doc
 ```
 
 ### Adding assets
@@ -78,17 +87,17 @@ file.
 						"assets": [
 							{
 								"glob": "**/*",
-								"input": "./node_modules/@ng-doc/ui-kit/assets",
+								"input": "node_modules/@ng-doc/ui-kit/assets",
 								"output": "assets"
 							},
 							{
 								"glob": "**/*",
-								"input": "./node_modules/@ng-doc/app/assets",
+								"input": "node_modules/@ng-doc/app/assets",
 								"output": "assets"
 							},
 							{
 								"glob": "**/*",
-								"input": "./node_modules/@ng-doc/builder/generated/assets",
+								"input": "node_modules/@ng-doc/builder/generated/assets",
 								"output": "assets"
 							}
 						]
@@ -100,9 +109,28 @@ file.
 }
 ```
 
+### Updating tsconfig
+
+NgDoc generates modules and components for your documentation that you later need to import into the
+application, NgDoc also uses synthetic imports that you need to enable,
+to do this, edit the tsconfig.json of the existing application by adding the path to
+the generated files and `allowSyntheticDefaultImports` option.
+
+```json
+{
+	"compilerOptions": {
+		"allowSyntheticDefaultImports": true,
+		"paths": {
+			"@ng-doc/generated": [".ng-doc/test-docs/index.ts"],
+			"@ng-doc/generated/*": [".ng-doc/test-docs/*"]
+		}
+	}
+}
+```
+
 ### Importing global modules
 
-Import the global library-provided modules into your application's root `AppModule`
+Import the global library-provided modules into your application's root `AppModule`.
 
 ```typescript
 import {NgModule} from '@angular/core';
@@ -110,7 +138,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
 import {NgDocModule} from '@ng-doc/app';
-import {NG_DOC_ROUTING, NgDocGeneratedModule} from '@ng-doc/builder/generated';
+import {NG_DOC_ROUTING, NgDocGeneratedModule} from '@ng-doc/generated';
 import {NgDocUiKitRootModule} from '@ng-doc/ui-kit';
 
 import {AppComponent} from './app.component';
@@ -123,8 +151,6 @@ import {AppComponent} from './app.component';
 		BrowserAnimationsModule,
 		// Root NgDoc module
 		NgDocModule.forRoot(),
-		// Root NgDoc ui-kit module
-		NgDocUiKitRootModule.forRoot(),
 		// Generated module that contains all generated pages
 		NgDocGeneratedModule.forRoot(),
 		// Add generated routes
