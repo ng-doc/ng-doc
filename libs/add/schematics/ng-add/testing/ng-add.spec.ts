@@ -174,6 +174,9 @@ export class AppModule {}
                   "output": "assets"
                 }
               ],
+              "allowedCommonJsDependencies": [
+                "@ng-doc/core"
+              ],
              },
              "configurations": {
               \t"production": {
