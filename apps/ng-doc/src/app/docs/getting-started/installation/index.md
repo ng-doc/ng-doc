@@ -6,34 +6,7 @@ To install the NgDoc, you can use the command above.
 This command will automatically install and add the library to your project.
 
 ```bash
-ng add @ng-doc/app
-```
-
-## Configuration
-
-Before you start creating documentation for your cool project, you need to add a minimum
-configuration, open your `angular.json` file and configure `ngDoc` property.
-
-You can check all properties that you can configure in the `NgDocSchema` interface.
-
-```json
-
-{
-	"projects": {
-		"my-project": {
-			"architect": {
-				"serve": {
-					"builder": "@ng-doc/builder:dev-server",
-					"options": {
-						"ngDoc": {
-							// Path to your documentation
-							"pages": "apps/documentation/src/app"
-						}
-					}
-				}
-			}
-		}
-	}
+ng add @ng-doc/add
 ```
 
 ## Manual
@@ -58,13 +31,14 @@ from the NgDoc as shown in the example below
 			"architect": {
 				"build": {
 					"builder": "@ng-doc/builder:browser"
-				},
-				"serve": {
-					"builder": "@ng-doc/builder:dev-server"
 				}
+			},
+			"serve": {
+				"builder": "@ng-doc/builder:dev-server"
 			}
 		}
 	}
+}
 ```
 
 ### Importing styles
@@ -171,7 +145,7 @@ menu, to do this open your `app.component.html` file and add the following code 
 <ng-doc-root>
 	<ng-doc-navbar [leftContent]="leftContent">
 		<ng-template #leftContent>
-			<h3 class="brand">MyDocs</h3>
+			<h3 class="brand" style="margin: 0">MyDocs</h3>
 		</ng-template>
 	</ng-doc-navbar>
 	<ng-doc-sidebar></ng-doc-sidebar>
