@@ -33,6 +33,14 @@ module.exports = {
 			},
 		],
 		[
+			'./plugins/semantic-release/copy-package-info.js',
+			{
+				original: 'package.json',
+				keys: ['keywords', 'author', 'repository', 'bugs', 'homepage'],
+				packages: ['dist/libs/add', 'dist/libs/core', 'dist/libs/ui-kit', 'dist/libs/builder', 'dist/libs/app'],
+			},
+		],
+		[
 			'@semantic-release/git',
 			{
 				assets: ['CHANGELOG.md', 'package.json'],

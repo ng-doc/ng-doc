@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-/* Плагин обновляет зависимости между пакетами на основании сгенерированной semantic-release версией */
+/* The plugin updates dependencies between packages based on the generated semantic-release version */
 
 function prepare(pluginConfig, {logger}) {
 	const localPackages = collectPackageNames(pluginConfig.packages);

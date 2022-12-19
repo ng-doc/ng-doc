@@ -2,6 +2,7 @@
 	"name": "ng-doc",
 	"version": "0.0.0",
 	"license": "MIT",
+	"description": "The documentation engine for your Angular projects.",
 	"watch": {
 		"serve": "libs/**/*.*"
 	},
@@ -15,6 +16,25 @@
 		"build:analyze": "nx build --stats-json && webpack-bundle-analyzer dist/apps/ng-doc/stats.json",
 		"prepare": "node ./prepare.js"
 	},
+	"keywords": [
+		"angular",
+		"documentation",
+		"generator",
+		"builder",
+		"guides",
+		"api",
+		"demo",
+		"ng-doc"
+	],
+	"author": "Skoropad Aleksandr <alex@skoropad.dev>",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/skoropadas/ng-doc.git"
+	},
+	"bugs": {
+		"url": "https://github.com/skoropadas/ng-doc/issues"
+	},
+	"homepage": "https://ng-doc.com/",
 	"private": true,
 	"dependencies": {
 		"@angular-devkit/architect": "0.1500.3",
