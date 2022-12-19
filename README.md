@@ -6,7 +6,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/skoropadas/ng-doc">
-    <img src="apps/ng-doc/src/assets/images/ng-doc.svg" alt="Logo" height="100px">
+    <img src="https://ng-doc.com/assets/images/ng-doc.svg" alt="Logo" height="100px">
   </a>
 
 <h3 align="center">NgDoc</h3>
@@ -47,8 +47,6 @@ NgDoc allows you to do the following things:
     our [roadmap](https://ng-doc.com/getting-started/roadmap) to find out what will be in future
     releases.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <!-- GETTING STARTED -->
 
 ## Getting Started
@@ -62,8 +60,6 @@ packages and configure your application.
 ```sh
    ng add @ng-doc/add
 ```
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
 
@@ -81,8 +77,6 @@ Don't forget to give the project a star! Thanks again!
 3. Commit your Changes (`git commit -m 'feat(features-scope): add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, Input, Type} from '@angular/core';
 import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
 import {NgDocDemoAsset} from '@ng-doc/app/interfaces';
+import {ngDocMakePure} from '@ng-doc/ui-kit/decorators';
 import {PolymorpheusComponent} from '@tinkoff/ng-polymorpheus';
 
 @Component({
@@ -18,6 +19,7 @@ export class NgDocDemoComponent {
 
 	constructor(private readonly rootPage: NgDocRootPage) {}
 
+	@ngDocMakePure
 	get demo(): PolymorpheusComponent<object, object> | undefined {
 		if (this.componentName) {
 			const component: Type<object> | undefined = this.rootPage.demo && this.rootPage.demo[this.componentName];
