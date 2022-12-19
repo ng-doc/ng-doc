@@ -43,7 +43,7 @@ export function addLayout(options: Schema): Rule {
 			recorder.insertLeft(0, APP_COMPONENT_CONTENT);
 			tree.commitUpdate(recorder);
 
-			context.logger.info(`Content of the app component was replaced with ng-doc layout.`);
+			context.logger.info(`[INFO]: Content of the app component was replaced with ng-doc layout.`);
 		}
 	};
 }
