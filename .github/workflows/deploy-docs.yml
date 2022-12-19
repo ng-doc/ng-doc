@@ -1,12 +1,14 @@
 name: Deploy Documentation
 
 on:
-    release:
-        types: [released]
+    workflow_run:
+        workflows: [Release]
+        types: [completed]
 
 jobs:
     deploy:
         runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
         steps:
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v1
@@ -27,5 +29,5 @@ jobs:
             - name: Deploy
               if: success()
               run: |
-                  aws s3 sync ./dist/apps/ng-doc s3://ng-doc
+                  aws s3 sync ./ng-doc s3://ng-doc
                   AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths "/*"

@@ -1,4 +1,4 @@
-name: Release Libraries
+name: Release
 
 on:
     push:
@@ -35,14 +35,14 @@ jobs:
             - name: Build Projects
               run: npx nx run-many --all --target=build
 
+            - name: Uploading Artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                  name: artifacts
+                  path: dist/apps/ng-doc
+
             - name: Release
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
               run: npx semantic-release
-
-            - name: Uploading Artifacts
-              uses: actions/upload-artifact@v3
-              with:
-                  name: artifacts
-                  path: dist
