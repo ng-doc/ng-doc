@@ -2,6 +2,7 @@ import {NgDocGlobalKeyword} from './keyword-map';
 
 export interface NgDocSchema {
 	browserTarget: string;
+	main: string;
 	ngDoc?: NgDocConfiguration;
 }
 

@@ -36,7 +36,7 @@ module.exports = {
 			'./plugins/semantic-release/copy-package-info.js',
 			{
 				original: 'package.json',
-				keys: ['keywords', 'author', 'repository', 'bugs', 'homepage'],
+				keys: ['keywords', 'author', 'repository', 'bugs', 'homepage', 'license'],
 				packages: ['dist/libs/add', 'dist/libs/core', 'dist/libs/ui-kit', 'dist/libs/builder', 'dist/libs/app'],
 			},
 		],
