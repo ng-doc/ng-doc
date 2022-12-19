@@ -29,5 +29,5 @@ jobs:
             - name: Deploy
               if: success()
               run: |
-                  aws s3 sync ./ng-doc s3://ng-doc
+                  aws s3 sync ./artifacts s3://ng-doc
                   AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths "/*"
