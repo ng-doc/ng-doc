@@ -1,3 +1,10 @@
+# [15.0.0-beta.18](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.17...v15.0.0-beta.18) (2022-12-19)
+
+
+### Bug Fixes
+
+* **demo:** demo recreates component every change detection cycle ([4421c7f](https://github.com/skoropadas/ng-doc/commit/4421c7f711e0c75d3518f7a826ab6e2e06a643c4))
+
 # [15.0.0-beta.17](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.16...v15.0.0-beta.17) (2022-12-19)
 
 
