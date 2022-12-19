@@ -1,7 +1,22 @@
 <ng-doc-root>
 	<ng-doc-navbar [leftContent]="leftContent" [rightContent]="rightContent">
 		<ng-template #leftContent>
-			<h3 class="brand">NgDoc <ng-doc-tag size="small" color="orange">beta</ng-doc-tag></h3>
+			<a class="brand" routerLink="/">
+				<h3>
+					<img src="assets/images/ng-doc.svg" />
+					<ng-template
+						[ngDocMediaQuery]="[
+							ngDocMediaQuery.breakpoints.Small,
+							ngDocMediaQuery.breakpoints.Medium,
+							ngDocMediaQuery.breakpoints.Large
+						]"
+						#ngDocMediaQuery="ngDocMediaQuery"
+					>
+						NgDoc
+					</ng-template>
+					<ng-doc-tag size="small" color="orange">beta</ng-doc-tag>
+				</h3>
+			</a>
 		</ng-template>
 		<ng-template #rightContent>
 			<div class="ng-doc-header-controls" @preventInitialChild>

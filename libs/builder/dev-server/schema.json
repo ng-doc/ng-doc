@@ -13,7 +13,7 @@
 						"type": "string"
 					},
 					"uniqueItems": true,
-					"default": []
+					"optional": true
 				},
 				"tag": {
 					"type": "string"

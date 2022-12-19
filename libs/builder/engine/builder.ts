@@ -40,7 +40,7 @@ export class NgDocBuilder {
 		});
 
 		this.watcher = new NgDocWatcher(
-			asArray(this.context.options.ngDoc.pages)
+			this.context.pagesPaths
 				.map((pagesPath: string) => [
 					path.join(pagesPath, PAGE_PATTERN),
 					path.join(pagesPath, CATEGORY_PATTERN),
@@ -100,7 +100,10 @@ export class NgDocBuilder {
 											? of(entity)
 											: entity.dependencies.changes().pipe(
 													switchMap((dependencies: string[]) =>
-														this.watcher.watch(dependencies).onChange(...dependencies),
+														this.watcher
+															.watch(dependencies)
+															.onChange(...dependencies)
+															.pipe(tap(() => entity.dependenciesChanged())),
 													),
 													startWith(null),
 													mapTo(entity),
@@ -114,7 +117,7 @@ export class NgDocBuilder {
 			}),
 			bufferDebounce(0),
 			map((entities: Array<NgDocEntity | null>) => entities.filter(isPresent)),
-			tap(() => this.entities.updateKeywordMap(this.context.options.ngDoc.keywords)),
+			tap(() => this.entities.updateKeywordMap(this.context.options.ngDoc?.keywords)),
 			// Build touched entities and their dependencies
 			mergeMap((entities: NgDocEntity[]) =>
 				forkJoinOrEmpty(

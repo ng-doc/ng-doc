@@ -40,3 +40,9 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
               run: npx semantic-release
+
+            - name: Uploading Artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                  name: artifacts
+                  path: dist

@@ -6,6 +6,7 @@ import {NG_DOC_VERSION} from './constants/version';
 import {Schema} from './schema';
 import {addAssets} from './steps/add-assets';
 import {addGitIgnore} from './steps/add-git-ignore';
+import {addJsDependencies} from './steps/add-js-dependencies';
 import {addLayout} from './steps/add-layout';
 import {addNgDocModules} from './steps/add-ng-doc-modules';
 import {addStyles} from './steps/add-styles';
@@ -42,6 +43,7 @@ export function ngAddSetupProject(options: Schema): Rule {
 		replaceBuilders(options),
 		addStyles(options),
 		addAssets(options),
+		addJsDependencies(options),
 		addNgDocModules(options),
 		addLayout(options),
 		addTsconfigPaths(options),

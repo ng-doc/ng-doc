@@ -2,7 +2,7 @@ import {BuilderContext, createBuilder, targetFromTargetString} from '@angular-de
 import {Target} from '@angular-devkit/architect/src/api';
 import {BrowserBuilderOutput, executeBrowserBuilder} from '@angular-devkit/build-angular';
 import {from, Observable, of} from 'rxjs';
-import {first, switchMap} from 'rxjs/operators';
+import {first, switchMap, withLatestFrom} from 'rxjs/operators';
 
 import {NgDocBuilder} from '../engine/builder';
 import {createBuilderContext} from '../helpers';
@@ -19,8 +19,11 @@ export function runBrowser(options: NgDocSchema, context: BuilderContext): Obser
 	const browserTarget: Target | null = options.browserTarget ? targetFromTargetString(options.browserTarget) : null;
 
 	return (browserTarget ? from(context.getTargetOptions(browserTarget)) : of(options as any)).pipe(
-		switchMap((targetOptions: any) => {
-			const builder: NgDocBuilder = new NgDocBuilder(createBuilderContext(targetOptions, options, context));
+		withLatestFrom(from(context.getProjectMetadata(context.target?.project ?? ''))),
+		switchMap(([targetOptions, project]: [any, any]) => {
+			const builder: NgDocBuilder = new NgDocBuilder(
+				createBuilderContext(targetOptions, options, context, project),
+			);
 			const runner: Observable<void> = builder.run();
 
 			return runner.pipe(

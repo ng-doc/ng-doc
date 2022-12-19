@@ -131,6 +131,13 @@ export abstract class NgDocEntity {
 	 */
 	abstract update(): Observable<void>;
 
+	/**
+	 * Method called by NgDocBuilder when one or more dependencies have changed
+	 */
+	dependenciesChanged(): void {
+		this.readyToBuild = true;
+	}
+
 	childrenGenerator(): Observable<NgDocEntity[]> {
 		return of([]);
 	}
