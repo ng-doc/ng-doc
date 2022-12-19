@@ -1,3 +1,14 @@
+# [15.0.0-beta.17](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.16...v15.0.0-beta.17) (2022-12-19)
+
+
+### Bug Fixes
+
+* **builder:** builder freezes if rendering fails ([b8cbd72](https://github.com/skoropadas/ng-doc/commit/b8cbd723397be8456874629de5d66561fd7ee070))
+* **builder:** pages paths now uses sourceRoot folder by default ([564a89e](https://github.com/skoropadas/ng-doc/commit/564a89e0877777da10a6c2c0a9604f98e3b12523))
+* **ng-doc:** `ng-doc` doesn't forget pages that have been moved to another directory ([6ba172e](https://github.com/skoropadas/ng-doc/commit/6ba172ee316c93893bb15fcb1f1ff3da18f0db36))
+* **ng-doc:** ng-add doesn't update assets ([1bd745f](https://github.com/skoropadas/ng-doc/commit/1bd745fcd86cc8fb297d11950b25fb9d446b221b))
+* **schematics:** generated dependency file has invalid import of the page ([86e641b](https://github.com/skoropadas/ng-doc/commit/86e641b7d775790b9027274e60675939ab68b608))
+
 # [15.0.0-beta.16](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.15...v15.0.0-beta.16) (2022-12-17)
 
 
