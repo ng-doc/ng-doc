@@ -17,7 +17,6 @@ export function createBuilderContext(
 	targetOptions: json.JsonObject,
 	options: NgDocSchema,
 	context: BuilderContext,
-	project: any,
 ): NgDocBuilderContext {
 	const buildPath: string = path.join(context.workspaceRoot, '.ng-doc', context.target?.project ?? 'app');
 
@@ -26,7 +25,7 @@ export function createBuilderContext(
 		options,
 		context,
 		inlineStyleLanguage: (targetOptions?.['inlineStyleLanguage'] as NgDocStyleType) ?? 'CSS',
-		pagesPaths: options.ngDoc?.pages?.length ? asArray(options.ngDoc?.pages) : [project?.sourceRoot],
+		pagesPaths: options.ngDoc?.pages?.length ? asArray(options.ngDoc?.pages) : [path.dirname(options.main)],
 		assetsPath: GENERATED_ASSETS_PATH,
 		buildPath,
 		apiPath: path.join(buildPath, 'api'),

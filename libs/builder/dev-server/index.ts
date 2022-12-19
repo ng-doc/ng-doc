@@ -1,8 +1,7 @@
-import {BuilderContext, createBuilder, targetFromTargetString} from '@angular-devkit/architect';
-import {Target} from '@angular-devkit/architect/src/api';
+import {BuilderContext, createBuilder, Target, targetFromTargetString} from '@angular-devkit/architect';
 import {DevServerBuilderOutput, executeDevServerBuilder} from '@angular-devkit/build-angular';
 import {combineLatest, from, Observable, of} from 'rxjs';
-import {first, map, shareReplay, switchMap, switchMapTo, withLatestFrom} from 'rxjs/operators';
+import {first, map, shareReplay, switchMap, switchMapTo} from 'rxjs/operators';
 
 import {NgDocBuilder} from '../engine/builder';
 import {createBuilderContext} from '../helpers';
@@ -18,11 +17,8 @@ export function runDevServer(options: NgDocSchema, context: BuilderContext): Obs
 	const browserTarget: Target | null = options.browserTarget ? targetFromTargetString(options.browserTarget) : null;
 
 	return (browserTarget ? from(context.getTargetOptions(browserTarget)) : of(options as unknown as any)).pipe(
-		withLatestFrom(from(context.getProjectMetadata(context.target?.project ?? ''))),
-		switchMap(([targetOptions, project]: [any, any]) => {
-			const builder: NgDocBuilder = new NgDocBuilder(
-				createBuilderContext(targetOptions, options, context, project),
-			);
+		switchMap((targetOptions: any) => {
+			const builder: NgDocBuilder = new NgDocBuilder(createBuilderContext(targetOptions, options, context));
 			const runner: Observable<void> = builder.run().pipe(shareReplay(1));
 
 			return runner.pipe(
