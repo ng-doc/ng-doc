@@ -1,3 +1,10 @@
+# [15.0.0-beta.16](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.15...v15.0.0-beta.16) (2022-12-17)
+
+
+### Bug Fixes
+
+* **ng-doc:** `ng-doc` doesn't forget pages that have been moved to another directory ([c433a10](https://github.com/skoropadas/ng-doc/commit/c433a1007d07716833de2a987f9be63c7dc73a7a))
+
 # [15.0.0-beta.15](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.14...v15.0.0-beta.15) (2022-12-16)
 
 
