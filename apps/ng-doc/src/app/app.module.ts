@@ -9,6 +9,7 @@ import {NgDocRootModule} from '@ng-doc/app/components/root';
 import {NgDocSidebarModule} from '@ng-doc/app/components/sidebar';
 import {NgDocModule} from '@ng-doc/app/modules/root';
 import {NgDocGeneratedModule} from '@ng-doc/generated';
+import {NgDocMediaQueryModule} from '@ng-doc/ui-kit';
 import {NgDocButtonIconModule} from '@ng-doc/ui-kit/components/button-icon';
 import {NgDocIconModule} from '@ng-doc/ui-kit/components/icon';
 import {NgDocTagModule} from '@ng-doc/ui-kit/components/tag';
@@ -40,6 +41,7 @@ import {AppComponent} from './app.component';
 		NgDocIconModule,
 		NgDocTooltipModule,
 		NgDocThemeToggleModule,
+		NgDocMediaQueryModule,
 	],
 	bootstrap: [AppComponent],
 })

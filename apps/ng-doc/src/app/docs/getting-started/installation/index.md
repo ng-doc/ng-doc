@@ -11,7 +11,7 @@ ng add @ng-doc/add
 
 ## Manual
 
-Install the NgDoc via your package manage
+Install the NgDoc via npm
 
 ```bash
 npm i @ng-doc/{core,builder,ui-kit,app}
@@ -30,10 +30,10 @@ alternatives from the NgDoc as shown in the example below
 			"architect": {
 				"build": {
 					"builder": "@ng-doc/builder:browser"
+				},
+				"serve": {
+					"builder": "@ng-doc/builder:dev-server"
 				}
-			},
-			"serve": {
-				"builder": "@ng-doc/builder:dev-server"
 			}
 		}
 	}
@@ -66,7 +66,7 @@ To do that edit you `angular.json` file, or add them to you `styles` file
 `.ng-doc` folder contains generated components and modules, you need to add it to your `.gitignore`,
 because NgDoc regenerates them every time the application is launched.
 
-```gitignore
+```
 ## NgDoc folder
 .ng-doc
 ```
