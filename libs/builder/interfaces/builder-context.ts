@@ -8,6 +8,7 @@ export interface NgDocBuilderContext {
 	options: NgDocSchema;
 	context: BuilderContext;
 	inlineStyleLanguage: NgDocStyleType;
+	pagesPaths: string[];
 	assetsPath: string;
 	buildPath: string;
 	apiPath: string;

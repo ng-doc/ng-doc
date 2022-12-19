@@ -50,9 +50,9 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	override get canBeBuilt(): boolean {
 		return (
 			!this.target ||
-			!this.context.options.ngDoc.tag ||
+			!this.context.options.ngDoc?.tag ||
 			!this.target.onlyForTags ||
-			asArray(this.target.onlyForTags).includes(this.context.options.ngDoc.tag)
+			asArray(this.target.onlyForTags).includes(this.context.options.ngDoc?.tag)
 		);
 	}
 
@@ -166,10 +166,14 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 				?.getReferencedSourceFiles()
 				.forEach((sourceFile: SourceFile) => sourceFile.refreshFromFileSystemSync());
 
-			const renderer: NgDocRenderer<NgDocPageEnv> = new NgDocRenderer<NgDocPageEnv>(this.builder, {
-				NgDocPage: this.target,
-				NgDocActions: new NgDocActions(this),
-			}, this.dependencies);
+			const renderer: NgDocRenderer<NgDocPageEnv> = new NgDocRenderer<NgDocPageEnv>(
+				this.builder,
+				{
+					NgDocPage: this.target,
+					NgDocActions: new NgDocActions(this),
+				},
+				this.dependencies,
+			);
 
 			return renderer.render(this.target?.mdFile, {scope: this.sourceFileFolder}).pipe(
 				map((markdown: string) => marked(markdown)),
