@@ -8,7 +8,5 @@ import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgDocPageComponent {
-	constructor(readonly rootPage: NgDocRootPage) {
-		console.log(this.rootPage.pageContent);
-	}
+	constructor(readonly rootPage: NgDocRootPage) {}
 }

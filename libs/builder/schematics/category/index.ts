@@ -28,9 +28,8 @@ import {NgDocBuildCategorySchema} from './schema';
 export function build(options: NgDocBuildCategorySchema): Rule {
 	return (host: Tree) => {
 		const path: string = join(options.path, `/${dasherize(options.title)}`);
-		const rootFolder: string = process.cwd();
 		const closestCategoryFile: string | null = options.category
-			? findClosestFile(rootFolder, options.path, CATEGORY_NAME)
+			? findClosestFile(options.path, CATEGORY_NAME)
 			: null;
 		const categoryConstantName: string | null =
 			options.category && closestCategoryFile ? extractDefaultExportName(closestCategoryFile) : null;
