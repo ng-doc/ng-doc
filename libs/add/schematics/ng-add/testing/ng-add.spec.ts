@@ -160,8 +160,13 @@ export class AppModule {}
               "assets": [
                 {
                   "glob": "**/*",
+                  "input": "node_modules/@ng-doc/app/assets",
+                  "output": "assets/ng-doc/app"
+                },
+                {
+                  "glob": "**/*",
                   "input": "node_modules/@ng-doc/ui-kit/assets",
-                  "output": "assets/ng-doc"
+                  "output": "assets/ng-doc/ui-kit"
                 },
                 {
                   "glob": "**/*",
