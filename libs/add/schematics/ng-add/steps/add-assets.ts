@@ -3,7 +3,7 @@ import {JsonArray, JsonValue} from '@angular/compiler-cli/ngcc/src/utils';
 import {Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
 import {ProjectDefinition, updateWorkspace, WorkspaceDefinition} from '@schematics/angular/utility/workspace';
 
-import {NG_DOC_ASSETS} from '../constants/assets';
+import {getNgDocAssets} from '../constants/assets';
 import {Schema} from '../schema';
 import {getProject} from '../utils/get-project';
 
@@ -29,11 +29,11 @@ export function addAssets(options: Schema): Rule {
 			const assets: JsonArray | undefined = targetOptions['assets'] as JsonArray | undefined;
 
 			if (!assets) {
-				targetOptions['assets'] = NG_DOC_ASSETS;
+				targetOptions['assets'] = getNgDocAssets(options);
 				return;
 			}
 
-			targetOptions['assets'] = Array.from(new Set([...NG_DOC_ASSETS, ...assets]));
+			targetOptions['assets'] = Array.from(new Set([...getNgDocAssets(options), ...assets]));
 		});
 	};
 }

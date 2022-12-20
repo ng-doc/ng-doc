@@ -8,8 +8,8 @@ export class NgDocSearchEngine {
 
 	constructor() {
 		this.index$ = forkJoin([
-			this.request<object>(`assets/indexes.json`).pipe(map(this.createIndex)),
-			this.request<NgDocPageInfos>(`assets/pages.json`),
+			this.request<object>(`assets/ng-doc/indexes.json`).pipe(map(this.createIndex)),
+			this.request<NgDocPageInfos>(`assets/ng-doc/pages.json`),
 		]).pipe(shareReplay(1));
 	}
 

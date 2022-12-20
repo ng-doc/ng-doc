@@ -11,6 +11,7 @@
 				"main": "libs/builder/index.ts",
 				"tsConfig": "libs/builder/tsconfig.lib.json",
 				"assets": [
+					"libs/builder/README.md",
 					"libs/builder/templates/**/*",
 					"libs/builder/builders.json",
 					"libs/builder/generated/**/*",

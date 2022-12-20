@@ -160,18 +160,18 @@ export class AppModule {}
               "assets": [
                 {
                   "glob": "**/*",
-                  "input": "node_modules/@ng-doc/ui-kit/assets",
-                  "output": "assets"
-                },
-                {
-                  "glob": "**/*",
                   "input": "node_modules/@ng-doc/app/assets",
-                  "output": "assets"
+                  "output": "assets/ng-doc/app"
                 },
                 {
                   "glob": "**/*",
-                  "input": "node_modules/@ng-doc/builder/generated/assets",
-                  "output": "assets"
+                  "input": "node_modules/@ng-doc/ui-kit/assets",
+                  "output": "assets/ng-doc/ui-kit"
+                },
+                {
+                  "glob": "**/*",
+                  "input": ".ng-doc//assets",
+                  "output": "assets/ng-doc"
                 }
               ],
               "allowedCommonJsDependencies": [
