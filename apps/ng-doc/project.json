@@ -32,9 +32,7 @@
 				"tsConfig": "apps/ng-doc/tsconfig.app.json",
 				"inlineStyleLanguage": "scss",
 				"assets": [
-					"apps/ng-doc/src/favicons",
 					"apps/ng-doc/src/assets",
-					"apps/ng-doc/src/manifest.json",
 					{
 						"glob": "**/*",
 						"input": "dist/libs/ui-kit/assets",
