@@ -20,14 +20,22 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 	}
 
 	protected build(): Observable<NgDocBuiltOutput[]> {
-		return forkJoin([this.buildIndexFile(), this.buildGeneratedModule(), this.buildRoutes(), this.buildContext(), this.buildIndexes()]).pipe(
-			map(([index, generatedModule, routes, context, indexes]: [NgDocBuiltOutput, NgDocBuiltOutput, NgDocBuiltOutput, NgDocBuiltOutput, NgDocBuiltOutput[]]) => [
-				index,
-				generatedModule,
-				routes,
-				context,
-				...indexes,
-			]),
+		return forkJoin([
+			this.buildIndexFile(),
+			this.buildGeneratedModule(),
+			this.buildRoutes(),
+			this.buildContext(),
+			this.buildIndexes(),
+		]).pipe(
+			map(
+				([index, generatedModule, routes, context, indexes]: [
+					NgDocBuiltOutput,
+					NgDocBuiltOutput,
+					NgDocBuiltOutput,
+					NgDocBuiltOutput,
+					NgDocBuiltOutput[],
+				]) => [index, generatedModule, routes, context, ...indexes],
+			),
 		);
 	}
 
@@ -35,54 +43,46 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 		const entities: NgDocEntity[] = this.rootEntitiesForBuild;
 		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocRoutingEnv>(this.builder, {entities});
 
-		return renderer
-			.render('./routing.ts.nunj')
-			.pipe(
-				map((output: string) => ({
-					content: output,
-					filePath: path.join(this.context.buildPath, 'ng-doc.routing.ts'),
-				})),
-			);
+		return renderer.render('./routing.ts.nunj').pipe(
+			map((output: string) => ({
+				content: output,
+				filePath: path.join(this.context.buildPath, 'ng-doc.routing.ts'),
+			})),
+		);
 	}
 
 	private buildContext(): Observable<NgDocBuiltOutput> {
 		const entities: NgDocEntity[] = this.rootEntitiesForBuild;
 		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocContextEnv>(this.builder, {entities});
 
-		return renderer
-			.render('./context.ts.nunj')
-			.pipe(
-				map((output: string) => ({
-					content: output,
-					filePath: path.join(this.context.buildPath, 'ng-doc.context.ts'),
-				})),
-			);
+		return renderer.render('./context.ts.nunj').pipe(
+			map((output: string) => ({
+				content: output,
+				filePath: path.join(this.context.buildPath, 'ng-doc.context.ts'),
+			})),
+		);
 	}
 
 	private buildIndexFile(): Observable<NgDocBuiltOutput> {
 		const renderer: NgDocRenderer<never> = new NgDocRenderer(this.builder);
 
-		return renderer
-			.render('./index.ts.nunj')
-			.pipe(
-				map((output: string) => ({
-					content: output,
-					filePath: path.join(this.context.buildPath, 'index.ts'),
-				})),
-			);
+		return renderer.render('./index.ts.nunj').pipe(
+			map((output: string) => ({
+				content: output,
+				filePath: path.join(this.context.buildPath, 'index.ts'),
+			})),
+		);
 	}
 
 	private buildGeneratedModule(): Observable<NgDocBuiltOutput> {
 		const renderer: NgDocRenderer<never> = new NgDocRenderer(this.builder);
 
-		return renderer
-			.render('./ng-doc.generated.module.ts.nunj')
-			.pipe(
-				map((output: string) => ({
-					content: output,
-					filePath: path.join(this.context.buildPath, 'ng-doc.generated.module.ts'),
-				})),
-			);
+		return renderer.render('./ng-doc.generated.module.ts.nunj').pipe(
+			map((output: string) => ({
+				content: output,
+				filePath: path.join(this.context.buildPath, 'ng-doc.generated.module.ts'),
+			})),
+		);
 	}
 
 	private buildIndexes(): Observable<NgDocBuiltOutput[]> {

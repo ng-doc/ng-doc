@@ -36,17 +36,12 @@
 					{
 						"glob": "**/*",
 						"input": "dist/libs/ui-kit/assets",
-						"output": "assets"
+						"output": "assets/ng-doc"
 					},
 					{
 						"glob": "**/*",
-						"input": "dist/libs/app/assets",
-						"output": "assets"
-					},
-					{
-						"glob": "**/*",
-						"input": "dist/libs/builder/generated/assets",
-						"output": "assets"
+						"input": ".ng-doc/ng-doc/assets",
+						"output": "assets/ng-doc"
 					}
 				],
 				"styles": ["apps/ng-doc/src/styles.scss"],

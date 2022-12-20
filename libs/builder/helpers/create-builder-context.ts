@@ -3,7 +3,6 @@ import {json} from '@angular-devkit/core';
 import {asArray, NgDocStyleType} from '@ng-doc/core';
 import * as path from 'path';
 
-import {GENERATED_ASSETS_PATH} from '../engine';
 import {NgDocBuilderContext, NgDocSchema} from '../interfaces';
 
 /**
@@ -26,7 +25,7 @@ export function createBuilderContext(
 		context,
 		inlineStyleLanguage: (targetOptions?.['inlineStyleLanguage'] as NgDocStyleType) ?? 'CSS',
 		pagesPaths: options.ngDoc?.pages?.length ? asArray(options.ngDoc?.pages) : [path.dirname(options.main)],
-		assetsPath: GENERATED_ASSETS_PATH,
+		assetsPath: path.join(buildPath, 'assets'),
 		buildPath,
 		apiPath: path.join(buildPath, 'api'),
 		modulesPath: path.join(buildPath, 'modules'),
