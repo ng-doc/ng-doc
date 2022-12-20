@@ -1,3 +1,12 @@
+# [15.0.0-beta.20](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.19...v15.0.0-beta.20) (2022-12-20)
+
+
+### Bug Fixes
+
+* **ng-doc:** add README.md for builder ([a13325f](https://github.com/skoropadas/ng-doc/commit/a13325fbaccf495de35a084df2a39c70a81eb522))
+* **ng-doc:** ng-doc doesn't update the indexes when page content has been updated ([31280f8](https://github.com/skoropadas/ng-doc/commit/31280f8aab9695604df395c5d9737ca3f75045b3))
+* **schematics:** auto import category creates incorrect import ([bfc2e3e](https://github.com/skoropadas/ng-doc/commit/bfc2e3eb67ae9805d69ab82d291442e538edafda))
+
 # [15.0.0-beta.19](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.18...v15.0.0-beta.19) (2022-12-19)
 
 
