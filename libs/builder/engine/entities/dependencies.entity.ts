@@ -37,7 +37,7 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 	}
 
 	override get buildCandidates(): NgDocEntity[] {
-		return [];
+		return asArray(this.parent);
 	}
 
 	override get parent(): NgDocPageEntity | undefined {
@@ -61,14 +61,6 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 		return slash(
 			path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, 'ng-doc.component-assets')),
 		);
-	}
-
-	override emit(): Observable<void> {
-		/*
-			We don't want to emit current source file, because it may be depended on project's files,
-			so it may take too much time, the fastest way is to parse source file.
-		 */
-		return of(void 0);
 	}
 
 	protected override build(): Observable<NgDocBuiltOutput[]> {
@@ -108,9 +100,12 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 	}
 
 	private buildComponentAssets(): Observable<NgDocBuiltOutput> {
-		const renderer: NgDocRenderer<NgDocComponentAssetsEnv> = new NgDocRenderer<NgDocComponentAssetsEnv>(this.builder, {
-			componentsAssets: this.componentsAssets,
-		});
+		const renderer: NgDocRenderer<NgDocComponentAssetsEnv> = new NgDocRenderer<NgDocComponentAssetsEnv>(
+			this.builder,
+			{
+				componentsAssets: this.componentsAssets,
+			},
+		);
 
 		return renderer
 			.render('./component-assets.ts.nunj')
@@ -158,8 +153,6 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 					)
 					.flat(),
 			];
-
-
 
 			return {
 				[classDeclaration.getName() ?? '']: assets.map((asset: Omit<NgDocAsset, 'outputPath'>) => ({
