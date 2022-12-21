@@ -1,3 +1,10 @@
+# [15.0.0-beta.21](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.20...v15.0.0-beta.21) (2022-12-21)
+
+
+### Bug Fixes
+
+* **dependencies:** dependency file doesn't generate assets when it was just created ([e408606](https://github.com/skoropadas/ng-doc/commit/e408606c5a464d8400be9d440fa71eff109332e1))
+
 # [15.0.0-beta.20](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.19...v15.0.0-beta.20) (2022-12-20)
 
 
