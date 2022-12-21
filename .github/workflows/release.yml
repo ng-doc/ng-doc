@@ -23,6 +23,9 @@ jobs:
                   fetch-depth: 0
                   token: ${{ secrets.SEMANTIC_RELEASE }}
 
+            - name: NX Set SHA
+              uses: nrwl/nx-set-shas@v3
+
             - name: Setup Node.js
               uses: actions/setup-node@v3
               with:
@@ -33,7 +36,7 @@ jobs:
               run: npm ci
 
             - name: Build Projects
-              run: npx nx run-many --all --target=build
+              run: npx nx affected --target=build --parallel=3 --all
 
             - name: Uploading Artifacts
               uses: actions/upload-artifact@v3

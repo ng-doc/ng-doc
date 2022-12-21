@@ -1,23 +1,25 @@
 name: Tests
 
-on:
-    workflow_call
+on: workflow_call
 
 jobs:
     lint:
         runs-on: ubuntu-latest
         steps:
-            -   name: Checkout
-                uses: actions/checkout@v2
+            - name: Checkout
+              uses: actions/checkout@v2
 
-            -   name: Setup Node.js
-                uses: actions/setup-node@v3
-                with:
-                    cache: npm
-                    node-version: 16
+            - name: NX Set SHA
+              uses: nrwl/nx-set-shas@v3
 
-            -   name: Install Dependencies
-                run: npm ci
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  cache: npm
+                  node-version: 16
 
-            -   name: Test
-                run: npx nx run-many --all --target=test
+            - name: Install Dependencies
+              run: npm ci
+
+            - name: Test
+              run: npx nx affected --target=test --parallel=3 --all
