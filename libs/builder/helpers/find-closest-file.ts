@@ -18,7 +18,7 @@ export function findClosestFile(currentFolder: string, fileName: string): string
 
 	const parentPath: string = path.dirname(currentPath);
 
-	if (parentPath === '/') {
+	if (['/', '.', ''].includes(parentPath)) {
 		return null;
 	}
 
