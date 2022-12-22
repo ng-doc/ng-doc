@@ -1,3 +1,11 @@
+# [15.0.0-beta.23](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.22...v15.0.0-beta.23) (2022-12-22)
+
+
+### Bug Fixes
+
+* **builder:** the dependency file was assembled incorrectly ([3afda1d](https://github.com/skoropadas/ng-doc/commit/3afda1dbb5865e866a9e04d5c7c9adec7cdb1d11))
+* **schematics:** category parameter raise an error if there is no category in the folder ([1701fa4](https://github.com/skoropadas/ng-doc/commit/1701fa4642a203dcbd6bbb2f2a348f400b218f12))
+
 # [15.0.0-beta.22](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.21...v15.0.0-beta.22) (2022-12-22)
 
 
