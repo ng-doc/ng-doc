@@ -12,7 +12,7 @@ export class ObservableSet<T> {
 
 	add(...values: T[]): void {
 		values.forEach((value: T) => this.collection.add(value));
-		this.changes$.next();
+		values.length && this.changes$.next();
 	}
 
 	delete(value: T): void {

@@ -42,9 +42,9 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 
 	override get parent(): NgDocPageEntity | undefined {
 		const expectedPath: string = path.join(this.sourceFileFolder, PAGE_NAME);
-		const buildable: NgDocEntity | undefined = this.builder.get(expectedPath);
+		const entity: NgDocEntity | undefined = this.builder.get(expectedPath);
 
-		return buildable && isPageEntity(buildable) ? buildable : undefined;
+		return entity && isPageEntity(entity) ? entity : undefined;
 	}
 
 	get assets(): NgDocAsset[] {

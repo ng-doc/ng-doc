@@ -9,6 +9,9 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v2
 
+            - name: NX Set SHA
+              uses: nrwl/nx-set-shas@v3
+
             - name: Setup Node.js
               uses: actions/setup-node@v3
               with:
@@ -19,4 +22,4 @@ jobs:
               run: npm ci
 
             - name: Test
-              run: npx nx run-many --all --target=test
+              run: npx nx affected --target=test --parallel=3 --all
