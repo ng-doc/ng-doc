@@ -1,3 +1,10 @@
+# [15.0.0-beta.22](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.21...v15.0.0-beta.22) (2022-12-22)
+
+
+### Bug Fixes
+
+* **page:** ng-doc doesn't forget about removed demos ([cc60604](https://github.com/skoropadas/ng-doc/commit/cc606046c318ce9f6601cab8b75cfc9c76b37390))
+
 # [15.0.0-beta.21](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.20...v15.0.0-beta.21) (2022-12-21)
 
 
