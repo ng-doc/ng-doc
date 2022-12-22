@@ -25,14 +25,12 @@
 		"route": {
 			"type": "string",
 			"description": "The route of the page",
-			"alias": "r",
-			"x-prompt": "The route of the category (its directory name by default, e.g. \"getting-started\")."
+			"alias": "r"
 		},
 		"category": {
 			"type": "boolean",
 			"description": "Automatically import the category.",
-			"alias": "c",
-			"x-prompt": "Do you want to automatically import closest category?"
+			"alias": "c"
 		},
 		"order": {
 			"type": "boolean",

@@ -25,20 +25,17 @@
 		"route": {
 			"type": "string",
 			"description": "The route of the page",
-			"alias": "r",
-			"x-prompt": "The route of the page (its directory name by default, e.g. \"getting-started\")."
+			"alias": "r"
 		},
 		"demo": {
 			"type": "boolean",
 			"description": "Generate module and page dependency file for demos.",
-			"alias": "d",
-			"x-prompt": "Are you going to create demos?"
+			"alias": "d"
 		},
 		"category": {
 			"type": "boolean",
 			"description": "Automatically import the category.",
-			"alias": "c",
-			"x-prompt": "Do you want to automatically import closest category?"
+			"alias": "c"
 		},
 		"order": {
 			"type": "boolean",
