@@ -73,7 +73,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	}
 
 	override get buildCandidates(): NgDocEntity[] {
-		return [...this.parentEntities, ...asArray(this.pageDependencies)];
+		return this.parentEntities;
 	}
 
 	get assetsFolder(): string {
@@ -82,7 +82,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 
 	get pageDependencies(): NgDocDependenciesEntity | undefined {
 		const expectedPath: string = path.join(this.sourceFileFolder, PAGE_DEPENDENCIES_NAME);
-		const entity: NgDocEntity | undefined = this.builder.get(expectedPath);
+		const entity: NgDocEntity | undefined = this.builder.get(expectedPath, true);
 
 		return entity && isDependencyEntity(entity) ? entity : undefined;
 	}

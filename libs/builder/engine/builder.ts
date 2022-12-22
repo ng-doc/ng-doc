@@ -2,7 +2,7 @@ import {asArray, isPresent} from '@ng-doc/core';
 import * as fs from 'fs';
 import * as path from 'path';
 import {from, merge, Observable, of} from 'rxjs';
-import {catchError, map, mapTo, mergeMap, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {catchError, concatMap, map, mapTo, mergeMap, share, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {Project} from 'ts-morph';
 
 import {createProject, emitBuiltOutput} from '../helpers';
@@ -62,6 +62,9 @@ export class NgDocBuilder {
 		).pipe(
 			bufferUntilOnce(this.watcher.onReady()),
 			map((entities: NgDocEntity[][]) => entities.flat()),
+			bufferDebounce(100),
+			map((entities: NgDocEntity[][]) => entities.flat()),
+			share(),
 		);
 
 		return entities.pipe(
@@ -74,7 +77,7 @@ export class NgDocBuilder {
 					entities.map((entity: NgDocEntity) => (entity.destroyed ? of(null) : entity.emit())),
 				).pipe(mapTo(entities));
 			}),
-			switchMap((entities: NgDocEntity[]) => from(this.project.emit()).pipe(mapTo(entities))),
+			concatMap((entities: NgDocEntity[]) => from(this.project.emit()).pipe(mapTo(entities))),
 			mergeMap((entities: NgDocEntity[]) => {
 				// Re-fetch compiled data for non destroyed entities
 				return forkJoinOrEmpty(
@@ -107,7 +110,12 @@ export class NgDocBuilder {
 													),
 													startWith(null),
 													mapTo(entity),
-													takeUntil(entity.onDestroy()),
+													takeUntil(
+														merge(
+															entity.onDestroy(),
+															this.watcher.onChange(...entity.rootFiles),
+														),
+													),
 											  ),
 									),
 							  )
@@ -119,7 +127,7 @@ export class NgDocBuilder {
 			map((entities: Array<NgDocEntity | null>) => entities.filter(isPresent)),
 			tap(() => this.entities.updateKeywordMap(this.context.options.ngDoc?.keywords)),
 			// Build touched entities and their dependencies
-			mergeMap((entities: NgDocEntity[]) =>
+			concatMap((entities: NgDocEntity[]) =>
 				forkJoinOrEmpty(
 					buildCandidates(entities).map((entity: NgDocEntity) =>
 						entity.destroyed ? of([]) : entity.buildArtifacts(),
@@ -149,8 +157,9 @@ export class NgDocBuilder {
 		) as unknown as Observable<void>;
 	}
 
-	get(id: string): NgDocEntity | undefined {
-		return this.entities.get(id);
+	get(id: string, canBeBuilt?: boolean): NgDocEntity | undefined {
+		const entity: NgDocEntity | undefined = this.entities.get(id);
+		return isPresent(canBeBuilt) ? (entity?.canBeBuilt === canBeBuilt ? entity : undefined) : entity;
 	}
 
 	private collectGarbage(): void {
