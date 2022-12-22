@@ -3,6 +3,7 @@ import {from, Observable} from 'rxjs';
 import {mapTo, switchMap} from 'rxjs/operators';
 import {Node, ObjectLiteralExpression, SourceFile, Symbol, SyntaxKind} from 'ts-morph';
 
+import {slash} from '../../../helpers';
 import {NgDocBuilderContext} from '../../../interfaces';
 import {NgDocBuilder} from '../../builder';
 import {CACHE_PATH} from '../../variables';
@@ -33,12 +34,6 @@ export abstract class NgDocSourceFileEntity extends NgDocEntity {
 		return path.relative(this.context.context.workspaceRoot, this.sourceFile.getFilePath());
 	}
 
-	get pathToCompiledFile(): string {
-		const relativePath: string = path.relative(this.context.context.workspaceRoot, this.sourceFile.getFilePath());
-
-		return path.join(CACHE_PATH, relativePath.replace(/\.ts$/, '.js'));
-	}
-
 	/**
 	 * Returns relative path to a sourceFileFolder of the source file
 	 *
@@ -48,11 +43,22 @@ export abstract class NgDocSourceFileEntity extends NgDocEntity {
 		return path.relative(this.context.context.workspaceRoot, path.dirname(this.sourceFilePath));
 	}
 
+	get importPath(): string {
+		return slash(this.sourceFilePath.replace(/.ts$/, ''));
+	}
+
+	/**
+	 * Returns import paths that can be used to import the current source file
+	 */
+	get pathToCompiledFile(): string {
+		const relativePath: string = path.relative(this.context.context.workspaceRoot, this.sourceFile.getFilePath());
+
+		return path.join(CACHE_PATH, relativePath.replace(/\.ts$/, '.js'));
+	}
+
 	override emit(): Observable<void> {
 		if (!this.destroyed) {
-			return from(this.sourceFile.refreshFromFileSystem()).pipe(
-				mapTo(void 0),
-			);
+			return from(this.sourceFile.refreshFromFileSystem()).pipe(mapTo(void 0));
 		}
 		return super.emit();
 	}

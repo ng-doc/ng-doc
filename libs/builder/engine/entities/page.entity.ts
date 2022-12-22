@@ -73,21 +73,18 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	}
 
 	override get buildCandidates(): NgDocEntity[] {
-		return this.parentEntities;
+		return [...this.parentEntities, ...asArray(this.pageDependencies)];
 	}
 
 	get assetsFolder(): string {
 		return path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, 'assets'));
 	}
 
-	get pageDependenciesFile(): string | undefined {
-		const dependenciesPath: string = path.join(this.sourceFileFolder, PAGE_DEPENDENCIES_NAME);
+	get pageDependencies(): NgDocDependenciesEntity | undefined {
+		const expectedPath: string = path.join(this.sourceFileFolder, PAGE_DEPENDENCIES_NAME);
+		const entity: NgDocEntity | undefined = this.builder.get(expectedPath);
 
-		return fs.existsSync(dependenciesPath) ? dependenciesPath : undefined;
-	}
-
-	get pageDependenciesImport(): string | undefined {
-		return this.pageDependenciesFile ? slash(this.pageDependenciesFile.replace(/.ts$/, '')) : undefined;
+		return entity && isDependencyEntity(entity) ? entity : undefined;
 	}
 
 	get componentsAssets(): string | undefined {
@@ -160,7 +157,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 
 		if (this.target) {
 			this.dependencies.add(this.mdPath);
-			this.pageDependenciesFile && this.dependencies.add(this.pageDependenciesFile);
 			this.playgroundFile && this.dependencies.add(this.playgroundFile);
 			this.playground?.sourceFile
 				?.getReferencedSourceFiles()
