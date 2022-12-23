@@ -64,6 +64,10 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 	}
 
 	protected override build(): Observable<NgDocBuiltOutput[]> {
+		if (!this.parent) {
+			return of([]);
+		}
+
 		this.dependencies.clear();
 		this.fillAssets();
 		this.dependencies.add(...this.assets.map((asset: NgDocAsset) => asset.originalPath));
