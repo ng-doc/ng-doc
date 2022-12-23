@@ -62,8 +62,6 @@ export class NgDocBuilder {
 		).pipe(
 			bufferUntilOnce(this.watcher.onReady()),
 			map((entities: NgDocEntity[][]) => entities.flat()),
-			bufferDebounce(100),
-			map((entities: NgDocEntity[][]) => entities.flat()),
 			share(),
 		);
 
@@ -123,7 +121,7 @@ export class NgDocBuilder {
 					),
 				);
 			}),
-			bufferDebounce(0),
+			bufferDebounce(1000),
 			map((entities: Array<NgDocEntity | null>) => entities.filter(isPresent)),
 			tap(() => this.entities.updateKeywordMap(this.context.options.ngDoc?.keywords)),
 			// Build touched entities and their dependencies
