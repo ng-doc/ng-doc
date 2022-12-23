@@ -1,3 +1,10 @@
+# [15.0.0-beta.24](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.23...v15.0.0-beta.24) (2022-12-23)
+
+
+### Bug Fixes
+
+* **ng-doc:** doesn't render all entities ([99d0562](https://github.com/skoropadas/ng-doc/commit/99d0562cea5227faca2ed2bd114515fd29292be4))
+
 # [15.0.0-beta.23](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.22...v15.0.0-beta.23) (2022-12-22)
 
 
