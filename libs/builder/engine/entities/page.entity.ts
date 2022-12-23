@@ -73,7 +73,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	}
 
 	override get buildCandidates(): NgDocEntity[] {
-		return this.parentEntities;
+		return [...this.parentEntities, ...asArray(this.pageDependencies)];
 	}
 
 	get assetsFolder(): string {
