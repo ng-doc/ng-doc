@@ -16,6 +16,7 @@ export * from './is-not-excluded-path';
 export * from './is-supported-declaration';
 export * from './marked';
 export * from './no-line-breaks';
+export * from './not-empty-assets';
 export * from './presentation';
 export * from './print-console';
 export * from './process-snippets';

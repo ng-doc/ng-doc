@@ -68,8 +68,9 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 			return of([]);
 		}
 
-		this.dependencies.clear();
 		this.fillAssets();
+
+		this.dependencies.clear();
 		this.dependencies.add(...this.assets.map((asset: NgDocAsset) => asset.originalPath));
 
 		return this.buildComponentAssets().pipe(
@@ -84,8 +85,6 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 	}
 
 	override update(): Observable<void> {
-		this.fillAssets();
-
 		this.readyToBuild = true;
 
 		return of(void 0);
