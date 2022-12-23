@@ -1,5 +1,5 @@
 import {Observable, OperatorFunction} from 'rxjs';
-import {debounceTime, map, tap} from 'rxjs/operators';
+import {buffer, debounceTime, share} from 'rxjs/operators';
 
 /**
  *
@@ -7,13 +7,8 @@ import {debounceTime, map, tap} from 'rxjs/operators';
  */
 export function bufferDebounce<T>(duration: number): OperatorFunction<T, T[]> {
 	return (source: Observable<T>) => {
-		let buffer: T[] = [];
+		const sharedSource: Observable<T> = source.pipe(share());
 
-		return source.pipe(
-			tap((value: T) => buffer.push(value)),
-			debounceTime(duration),
-			map(() => buffer),
-			tap(() => (buffer = [])),
-		);
+		return sharedSource.pipe(buffer(sharedSource.pipe(debounceTime(duration))));
 	};
 }

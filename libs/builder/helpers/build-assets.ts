@@ -33,7 +33,7 @@ export function buildAssets(filePath: string, styleType: NgDocStyleType): Array<
 							: styleType
 						: snippet.type,
 			}));
-		} else if (fileContent) {
+		} else {
 			return [
 				{
 					title: codeType,

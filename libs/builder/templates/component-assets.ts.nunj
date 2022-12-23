@@ -1,7 +1,7 @@
 // @ts-nocheck
 import {NgDocDemoAssets} from '@ng-doc/app';
 {%- for componentName, assets in componentsAssets %}
-	{%- for asset in assets %}
+	{%- for asset in assets | notEmptyAssets %}
 import {{ asset.name }} from '!!raw-loader!{{ asset.outputPath }}';
 	{%- endfor %}
 {%- endfor %}
@@ -9,7 +9,7 @@ import {{ asset.name }} from '!!raw-loader!{{ asset.outputPath }}';
 export const demoAssets: NgDocDemoAssets = {
 	{%- for componentName, assets in componentsAssets %}
 	{{ componentName }}: [
-		{%- for asset in assets %}
+		{%- for asset in assets | notEmptyAssets %}
 		{title: '{{ asset.title }}', codeType: '{{ asset.type }}', code: {{ asset.name }}},
 		{%- endfor %}
 	],

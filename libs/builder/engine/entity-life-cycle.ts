@@ -1,5 +1,5 @@
 import {forkJoin, merge, Observable, of} from 'rxjs';
-import {concatMap, map, mergeMap, startWith, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {concatMap, map, mergeMap, startWith, take, takeUntil, tap} from 'rxjs/operators';
 import {Project} from 'ts-morph';
 
 import {Constructable} from '../types';
@@ -53,8 +53,6 @@ export function entityLifeCycle(
  * @param entity
  */
 function childGenerator(entity: NgDocEntity): Observable<NgDocEntity[]> {
-	entity.children.forEach((child: NgDocEntity) => child.destroy());
-
 	return entity.childrenGenerator().pipe(
 		concatMap((entities: NgDocEntity[]) =>
 			!entities.length
