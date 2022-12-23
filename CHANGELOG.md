@@ -1,3 +1,12 @@
+# [15.0.0-beta.25](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.24...v15.0.0-beta.25) (2022-12-23)
+
+
+### Bug Fixes
+
+* **ng-doc:** ng-doc- destroys dependency entity after build ([d62d6c5](https://github.com/skoropadas/ng-doc/commit/d62d6c5f516d64b2691607ee76c26db4770a81eb))
+* **ng-doc:** several created entities are rendered incorrectly ([6761e4f](https://github.com/skoropadas/ng-doc/commit/6761e4fb156421e514966905e22ad7ad94e95e38))
+* **ng-doc:** the css tab in the demo is still invisible after adding styles ([ad678a7](https://github.com/skoropadas/ng-doc/commit/ad678a7ec978e8b8606e7e867e0d3828b0e638cd))
+
 # [15.0.0-beta.24](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.23...v15.0.0-beta.24) (2022-12-23)
 
 
