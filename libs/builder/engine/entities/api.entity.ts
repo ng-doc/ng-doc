@@ -57,12 +57,13 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 	}
 
 	override childrenGenerator(): Observable<NgDocEntity[]> {
-		return this.emit()
-			.pipe(
-				switchMap(() => from(this.sourceFile.getProject().emit())),
-				switchMap(() => this.update()),
-				map(() => generateApiEntities(this))
-			);
+		this.children.forEach((child: NgDocEntity) => child.destroy());
+
+		return this.emit().pipe(
+			switchMap(() => from(this.sourceFile.getProject().emit())),
+			switchMap(() => this.update()),
+			map(() => generateApiEntities(this)),
+		);
 	}
 
 	override update(): Observable<void> {
