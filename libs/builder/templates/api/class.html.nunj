@@ -7,7 +7,7 @@
 {% import "helpers/modifier.html.nunj" as modifierMacro %}
 
 {% block modifier %}
-	{{ modifierMacro.render('Abstract') }}
+	{{ modifierMacro.render('Abstract') if declaration.isAbstract() }}
 {% endblock %}
 
 {% block details %}
