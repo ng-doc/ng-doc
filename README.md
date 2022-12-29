@@ -25,7 +25,8 @@
   </p>
 </div>
 
-> **Note**
+> **Warning**
+>
 > This project is still in beta testing, soon it will be released as a full release without the beta
 > tag, you can install it and try, any help in finding bugs will be appreciated :)
 
