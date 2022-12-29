@@ -6,7 +6,7 @@ To install the NgDoc, you can use the command above.
 This command will automatically install and add the library to your project.
 
 ```bash
-ng add @ng-doc/add
+ng add @ng-doc/add@beta
 ```
 
 ## Manual
@@ -14,7 +14,7 @@ ng add @ng-doc/add
 Install the NgDoc via npm
 
 ```bash
-npm i @ng-doc/{core,builder,ui-kit,app}
+npm i @ng-doc/{core,builder,ui-kit,app}@beta
 ```
 
 ### Adding builders
