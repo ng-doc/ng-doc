@@ -30,10 +30,13 @@ export function entityLifeCycle(
 					merge(
 						...entities.map((entity: NgDocEntity) =>
 							merge(
-								watcher.onChange(...entity.rootFiles).pipe(
-									concatMap(() => childGenerator(entity)),
-									takeUntil(entity.onDestroy()),
-								),
+								watcher
+									.watch(entity.rootFiles)
+									.onChange(...entity.rootFiles)
+									.pipe(
+										concatMap(() => childGenerator(entity)),
+										takeUntil(entity.onDestroy()),
+									),
 								watcher.onUnlink(...entity.rootFiles).pipe(
 									tap(() => entity.destroy()),
 									take(1),
