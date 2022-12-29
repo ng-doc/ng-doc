@@ -1,3 +1,11 @@
+# [15.0.0-beta.26](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.25...v15.0.0-beta.26) (2022-12-29)
+
+
+### Bug Fixes
+
+* **builder:** all classes are abstract on the API page ([d4f3462](https://github.com/skoropadas/ng-doc/commit/d4f346223927a442673181b4acc46823696bcaa0))
+* **builder:** api not updating automatically when files change ([1dcf640](https://github.com/skoropadas/ng-doc/commit/1dcf64089ce413b1d133622f40fad0d9ebae519a))
+
 # [15.0.0-beta.25](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.24...v15.0.0-beta.25) (2022-12-23)
 
 
