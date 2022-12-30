@@ -20,7 +20,9 @@ Component inside it.
 After that make sure your component is declared in the `declaration` section of
 your `NgModule`, and all its dependencies are imported in the `imports` section.
 
-`typescript {% include "./ng-doc.module.ts" %} `
+```typescript
+{% include "./ng-doc.module.ts" %}
+```
 
 ### Adding module and demo to dependencies file
 
@@ -28,7 +30,9 @@ And the last step is to add your demo to the `ng-doc.dependencies.ts` file, in t
 this is necessary so that NgDoc knows which components it should consider as a demo, and what their
 name is, this can be done simply list them separated by commas.
 
-`typescript {% include "./ng-doc.dependencies.ts" %} `
+```typescript
+{% include "./ng-doc.dependencies.ts" %}
+```
 
 ### Displaying demo
 
@@ -83,7 +87,9 @@ Snippets look like comments, we have 3 different types of snippets that you can 
 
 And let's say if you have a component that contains snippets and looks like this
 
-`typescript {% include "./demos/button-inline-demo/button-inline-demo.component.ts" %} `
+```typescript
+{% include "./demos/button-inline-demo/button-inline-demo.component.ts" %}
+```
 
 NgDoc will render its code like below
 

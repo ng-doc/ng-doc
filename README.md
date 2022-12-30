@@ -6,7 +6,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/skoropadas/ng-doc">
-    <img src="https://ng-doc.com/assets/images/ng-doc.svg" alt="Logo" height="100px">
+    <img src="https://ng-doc.com/assets/images/ng-doc.svg?" alt="Logo" height="100px">
   </a>
 
 <h3 align="center">NgDoc</h3>
@@ -25,6 +25,11 @@
   </p>
 </div>
 
+> **Warning**
+>
+> This project is still in beta testing, soon it will be released as a full release without the beta
+> tag, you can install it and try, any help in finding bugs will be appreciated :)
+
 <!-- ABOUT THE PROJECT -->
 
 ## About The Project
@@ -40,7 +45,8 @@ NgDoc allows you to do the following things:
 -   Render demos on the page in one line of code
 -   The documentation for your API is based on comments to your code
 -   Dynamic links to API, Pages, or foreign websites via `Keywords` feature
--   Automatic generation of links to your API in code examples or in mentions of any entity inside inline code
+-   Automatic generation of links to your API in code examples or in mentions of any entity inside
+    inline code
 -   Offline search that collects indexes automatically based on you documentation
 -   Customizable interface
 -   And much more, just check out
@@ -58,7 +64,7 @@ that you can install NgDoc using the command below, it will automatically instal
 packages and configure your application.
 
 ```sh
-   ng add @ng-doc/add
+   ng add @ng-doc/add@beta
 ```
 
 <!-- CONTRIBUTING -->
