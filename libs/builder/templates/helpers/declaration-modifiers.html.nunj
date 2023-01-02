@@ -7,32 +7,36 @@
 	{% set isStatic = declaration.isStatic and declaration.isStatic() %}
 	{% set isAsync = declaration.isAsync and declaration.isAsync() %}
 	{% set isReadonly = declaration.isReadonly and declaration.isReadonly() %}
+	{% set isOverriden = declaration.hasOverrideKeyword and declaration.hasOverrideKeyword() %}
 
 	{%- if type == 'badge' %}
-		{%- if isAbstract or isStatic or isAsync or isReadonly %}
+		{%- if isAbstract or isStatic or isAsync or isOverriden or isReadonly %}
 			<span class="ng-doc-badge-wrapper">
 				{{ badgeMacro.render("Abstract") if isAbstract }}
 				{{ badgeMacro.render("Static") if isStatic }}
 				{{ badgeMacro.render("Async") if isAsync }}
+				{{ badgeMacro.render("Overriden") if isOverriden }}
 				{{ badgeMacro.render("Readonly") if isReadonly }}
 			</span>
 		{%- endif %}
 
 	{%- elseif type == 'modifier' %}
-		{%- if isAbstract or isStatic or isAsync or isReadonly %}
+		{%- if isAbstract or isStatic or isAsync or isOverriden or isReadonly %}
 			<div class="ng-doc-modifiers-wrapper">
 				{{ modifierMacro.render("Abstract") if isAbstract }}
 				{{ modifierMacro.render("Static") if isStatic }}
 				{{ modifierMacro.render("Async") if isAsync }}
+				{{ modifierMacro.render("Overriden") if isOverriden }}
 				{{ modifierMacro.render("Readonly") if isReadonly }}
 			</div>
 		{%- endif %}
 	{%- else %}
-		{%- if isAbstract or isStatic or isAsync or isReadonly %}
+		{%- if isAbstract or isStatic or isAsync or isOverriden or isReadonly %}
 			<span class="ng-doc-tags-wrapper">
 				{{ tagMacro.render("abstract") if isAbstract }}
 				{{ tagMacro.render("static") if isStatic }}
 				{{ tagMacro.render("async") if isAsync }}
+				{{ tagMacro.render("overriden") if isOverriden }}
 				{{ tagMacro.render("readonly") if isReadonly }}
 			</span>
 		{%- endif %}

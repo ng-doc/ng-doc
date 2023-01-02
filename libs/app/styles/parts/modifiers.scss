@@ -8,19 +8,23 @@
 	white-space: nowrap;
 	font-weight: 800;
 
-	&[data-content="Abstract"] {
+	&[data-content='Abstract'] {
 		color: var(--ng-doc-deep-orange-100);
 	}
 
-	&[data-content="Static"] {
+	&[data-content='Static'] {
 		color: var(--ng-doc-pink-100);
 	}
 
-	&[data-content="Async"] {
+	&[data-content='Async'] {
 		color: var(--ng-doc-green-100);
 	}
 
-	&[data-content="Readonly"] {
+	&[data-content='Overriden'] {
+		color: var(--ng-doc-light-blue-100);
+	}
+
+	&[data-content='Readonly'] {
 		color: var(--ng-doc-deep-orange-100);
 	}
 }

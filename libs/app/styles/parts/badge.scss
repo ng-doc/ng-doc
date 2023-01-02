@@ -1,5 +1,17 @@
 .ng-doc-badge-wrapper {
-	line-height: calc(var(--ng-doc-base-gutter) * 2);
+	display: inline-flex;
+	margin-right: var(--ng-doc-base-gutter);
+	vertical-align: middle;
+
+	.ng-doc-badge:first-child {
+		border-top-left-radius: var(--ng-doc-base-gutter);
+		border-bottom-left-radius: var(--ng-doc-base-gutter);
+	}
+
+	.ng-doc-badge:last-child {
+		border-top-right-radius: var(--ng-doc-base-gutter);
+		border-bottom-right-radius: var(--ng-doc-base-gutter);
+	}
 }
 
 .ng-doc-badge {
@@ -10,25 +22,28 @@
 	height: calc(var(--ng-doc-base-gutter) * 2);
 	font-family: var(--ng-doc-heading-font-family);
 	font-size: 10px;
-	border-radius: calc(var(--ng-doc-base-gutter) * 2);
 	color: var(--ng-doc-white);
 	white-space: nowrap;
 	font-weight: 900;
 	background-color: var(--ng-doc-text);
 
-	&[data-content="Abstract"] {
+	&[data-content='Abstract'] {
 		background-color: var(--ng-doc-deep-orange-100);
 	}
 
-	&[data-content="Static"] {
+	&[data-content='Static'] {
 		background-color: var(--ng-doc-pink-100);
 	}
 
-	&[data-content="Async"] {
+	&[data-content='Async'] {
 		background-color: var(--ng-doc-green-100);
 	}
 
-	&[data-content="Readonly"] {
-		background-color: var(--ng-doc-deep-orange-100);
+	&[data-content='Overriden'] {
+		background-color: var(--ng-doc-light-blue-100);
+	}
+
+	&[data-content='Readonly'] {
+		background-color: var(--ng-doc-red-100);
 	}
 }
