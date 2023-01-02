@@ -1,3 +1,16 @@
+# [15.0.0-beta.27](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.26...v15.0.0-beta.27) (2023-01-02)
+
+
+### Bug Fixes
+
+* **builder:** added path to API entity is not watched for changes ([8723bc7](https://github.com/skoropadas/ng-doc/commit/8723bc70be85a91bff149c1ca0c1d03daca80fc4))
+* **tags:** add color for `@Injectable` decorator ([03ef2bb](https://github.com/skoropadas/ng-doc/commit/03ef2bb0d5cfcde4ff71081ababadb5a91842e98))
+
+
+### Features
+
+* **tags:** add `Overridden` keyword for overridden methods and properties ([1fff33f](https://github.com/skoropadas/ng-doc/commit/1fff33fbdc7556089a22f478da491e091bed80e7))
+
 # [15.0.0-beta.26](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.25...v15.0.0-beta.26) (2022-12-29)
 
 
