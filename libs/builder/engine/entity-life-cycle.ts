@@ -1,5 +1,5 @@
-import {forkJoin, merge, Observable, of} from 'rxjs';
-import {concatMap, map, mergeMap, startWith, take, takeUntil, tap} from 'rxjs/operators';
+import {merge, Observable, of} from 'rxjs';
+import {map, mergeMap, startWith, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {Project} from 'ts-morph';
 
 import {Constructable} from '../types';
@@ -24,46 +24,41 @@ export function entityLifeCycle(
 ): Observable<NgDocEntity[]> {
 	return watcher.onAdd(path).pipe(
 		map((p: string) => new EntityConstructor(builder, project.addSourceFileAtPath(p), builder.context)),
-		mergeMap((entity: NgDocEntity) =>
-			childGenerator(entity).pipe(
-				concatMap((entities: NgDocEntity[]) =>
-					merge(
-						...entities.map((entity: NgDocEntity) =>
-							merge(
-								watcher
-									.watch(entity.rootFiles)
-									.onChange(...entity.rootFiles)
-									.pipe(
-										concatMap(() => childGenerator(entity)),
-										takeUntil(entity.onDestroy()),
-									),
-								watcher.onUnlink(...entity.rootFiles).pipe(
-									tap(() => entity.destroy()),
-									take(1),
-									map(() => [entity]),
-								),
-							),
-						),
-					).pipe(startWith(entities)),
-				),
-			),
-		),
+		mergeMap((entity: NgDocEntity) => childGenerator(entity, watcher)),
 	);
 }
 
 /**
  *
  * @param entity
+ * @param watcher
  */
-function childGenerator(entity: NgDocEntity): Observable<NgDocEntity[]> {
-	return entity.childrenGenerator().pipe(
-		concatMap((entities: NgDocEntity[]) =>
-			!entities.length
+function childGenerator(entity: NgDocEntity, watcher: NgDocWatcher): Observable<NgDocEntity[]> {
+	return merge(
+		watcher
+			.watch(entity.rootFiles)
+			.onChange(...entity.rootFiles)
+			.pipe(takeUntil(entity.onDestroy())),
+		watcher.onUnlink(...entity.rootFiles).pipe(
+			tap(() => entity.destroy()),
+			take(1),
+		),
+	).pipe(
+		startWith(entity),
+		switchMap(() =>
+			entity.destroyed
 				? of([entity])
-				: forkJoin(entities.map((e: NgDocEntity) => childGenerator(e))).pipe(
-						map((children: NgDocEntity[][]) => [entity, ...children.flat()]),
+				: entity.childrenGenerator().pipe(
+						switchMap((children: NgDocEntity[]) =>
+							children.length
+								? merge(...children.map((child: NgDocEntity) => childGenerator(child, watcher)))
+								: of([]),
+						),
+						map((children: NgDocEntity[]) => [entity, ...children]),
+						tap((entities: NgDocEntity[]) =>
+							entities.forEach((e: NgDocEntity) => entity.builder.entities.set(e.id, e)),
+						),
 				  ),
 		),
-		tap((entities: NgDocEntity[]) => entities.forEach((e: NgDocEntity) => entity.builder.entities.set(e.id, e))),
 	);
 }
