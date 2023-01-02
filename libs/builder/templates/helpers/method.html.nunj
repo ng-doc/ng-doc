@@ -3,6 +3,7 @@
 {% import "helpers/declaration-modifiers.html.nunj" as tagsMacro %}
 {% import "helpers/parameters.html.nunj" as parametersMacro %}
 {% import "helpers/decorators.html.nunj" as decoratorsMacro %}
+{% import "helpers/no-content.html.nunj" as noContentMacro %}
 
 {% macro render(method) %}
 	{% set parameters = method.getParameters() %}
@@ -22,7 +23,7 @@
 				<td>
 					{% set description = method | extractDocs %}
 
-					{{ description if description else 'No documentation has been provided.' }}
+					{{ description if description else noContentMacro.render('No documentation has been provided.') }}
 				</td>
 			</tr>
 			<tr>

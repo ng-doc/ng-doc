@@ -1,4 +1,5 @@
 {% import "helpers/declaration-modifiers.html.nunj" as tagsMacro %}
+{% import "helpers/no-content.html.nunj" as noContentMacro %}
 
 <header>
 	{% include "parts/page-tags.html.nunj" %}
@@ -10,7 +11,7 @@
 <section>
 	{% set description = docNode | extractDocs %}
 
-	{{ description if description else 'No documentation has been provided.' }}
+	{{ description if description else noContentMacro.render('No documentation has been provided.') }}
 </section>
 
 {% include "parts/see-also.html.nunj" %}

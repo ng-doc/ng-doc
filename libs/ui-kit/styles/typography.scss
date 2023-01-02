@@ -157,7 +157,7 @@ table {
 	tbody {
 		tr {
 			td {
-				padding: var(--ng-doc-base-gutter);
+				padding: calc(var(--ng-doc-base-gutter) * 2);
 				vertical-align: top;
 				border-bottom: 1px solid var(--ng-doc-base-1);
 

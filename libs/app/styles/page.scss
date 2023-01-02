@@ -1,11 +1,12 @@
-@import "mixins/headings";
-@import "parts/header";
-@import "parts/tags";
-@import "parts/decorators";
-@import "parts/modifiers";
-@import "parts/badge";
-@import "parts/see-also";
-@import "parts/tables";
+@import 'mixins/headings';
+@import 'parts/header';
+@import 'parts/tags';
+@import 'parts/decorators';
+@import 'parts/modifiers';
+@import 'parts/badge';
+@import 'parts/see-also';
+@import 'parts/tables';
+@import 'parts/text';
 
 article {
 	@include headings {
@@ -54,14 +55,14 @@ article {
 		}
 	}
 
-	th, td {
+	th,
+	td {
 		p {
 			margin: 0;
 		}
 	}
 
 	.ng-doc-method-table {
-
 	}
 
 	.ng-doc-inline-header {
@@ -93,7 +94,8 @@ article {
 		color: inherit;
 	}
 
-	ng-doc-demo, ng-doc-playground {
+	ng-doc-demo,
+	ng-doc-playground {
 		margin: calc(var(--ng-doc-base-gutter) * 4) 0;
 	}
 }
