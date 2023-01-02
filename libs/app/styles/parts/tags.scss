@@ -47,7 +47,7 @@
 
 	&[data-content='Interface'] {
 		background-color: var(--ng-doc-blue-20);
-		color: var(--ng-doc-blue-90);
+		color: var(--ng-doc-light-blue-90);
 	}
 
 	&[data-content='Enum'],
@@ -77,9 +77,9 @@
 		color: var(--ng-doc-orange-100);
 	}
 
-	&[data-content='Service'] {
-		background-color: var(--ng-doc-indigo-10);
-		color: var(--ng-doc-indigo-100);
+	&[data-content='Injectable'] {
+		background-color: var(--ng-doc-blue-20);
+		color: var(--ng-doc-light-blue-90);
 	}
 
 	&[data-content='Pipe'] {

@@ -20,6 +20,10 @@
 		color: var(--ng-doc-green-100);
 	}
 
+	&[data-content='Overriden'] {
+		color: var(--ng-doc-light-blue-100);
+	}
+
 	&[data-content='Readonly'] {
 		color: var(--ng-doc-deep-orange-100);
 	}
