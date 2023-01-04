@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
 @Component({
 	selector: 'ng-doc-tooltip-wrapper',
@@ -7,11 +7,14 @@ import {Component, Input} from '@angular/core';
 			<ng-content></ng-content>
 		</div>
 	`,
-	styles: [`
-		.content-projection {
-			display: unset;
-		}
-	`]
+	styles: [
+		`
+			.content-projection {
+				display: unset;
+			}
+		`,
+	],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgDocTooltipWrapperComponent {
 	@Input()
