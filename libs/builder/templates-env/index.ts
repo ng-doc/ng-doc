@@ -4,6 +4,7 @@ export * from './api-page.env';
 export * from './api-page.module.env';
 export * from './api-scope.module.env';
 export * from './category.module.env';
+export * from './code.env';
 export * from './component-assets.env';
 export * from './context.env';
 export * from './page.env';

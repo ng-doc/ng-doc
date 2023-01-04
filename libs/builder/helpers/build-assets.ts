@@ -25,6 +25,7 @@ export function buildAssets(filePath: string, styleType: NgDocStyleType): Array<
 				title: snippet.name,
 				name: uniqueName('Asset'),
 				originalPath: filePath,
+				code: snippet.content,
 				output: snippet.content,
 				type:
 					snippet.type === 'styles'
@@ -39,6 +40,7 @@ export function buildAssets(filePath: string, styleType: NgDocStyleType): Array<
 					title: codeType,
 					name: uniqueName('Asset'),
 					originalPath: filePath,
+					code: fileContent,
 					output: fileContent,
 					type: codeType,
 				},

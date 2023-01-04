@@ -15,7 +15,7 @@ import {
 import {buildAssets, formatCode, isPageEntity, slash} from '../../helpers';
 import {NgDocAsset, NgDocBuiltOutput} from '../../interfaces';
 import {componentDecoratorResolver} from '../../resolvers/component-decorator.resolver';
-import {NgDocComponentAssetsEnv} from '../../templates-env';
+import {NgDocCodeEnv, NgDocComponentAssetsEnv} from '../../templates-env';
 import {NgDocRenderer} from '../renderer';
 import {PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
@@ -137,6 +137,7 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 	}
 
 	private getComponentAssets(classDeclaration: ClassDeclaration): ComponentAsset {
+		const render: NgDocRenderer<NgDocCodeEnv> = new NgDocRenderer<NgDocCodeEnv>(this.builder);
 		const decorator: Decorator | undefined = classDeclaration.getDecorator('Component');
 		const decoratorArgument: Node | undefined = decorator?.getArguments()[0];
 
@@ -158,11 +159,25 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 			];
 
 			return {
-				[classDeclaration.getName() ?? '']: assets.map((asset: Omit<NgDocAsset, 'outputPath'>) => ({
-					...asset,
-					output: formatCode(asset.output, asset.type),
-					outputPath: slash(path.join(this.parent?.assetsFolder ?? this.folderPath, asset.name)),
-				})),
+				[classDeclaration.getName() ?? '']: assets.map((asset: Omit<NgDocAsset, 'outputPath'>) => {
+					const code: string = formatCode(asset.output, asset.type);
+
+					return {
+						...asset,
+						code,
+						output: render
+							.renderSync('./code.html.nunj', {
+								overrideContext: {
+									code,
+									lang: asset.type,
+								},
+							})
+							.trim(),
+						outputPath: slash(
+							path.join(this.parent?.assetsFolder ?? this.folderPath, `${asset.name}.html`),
+						),
+					};
+				}),
 			};
 		}
 

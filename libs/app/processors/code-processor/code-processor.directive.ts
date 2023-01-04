@@ -21,10 +21,9 @@ export class NgDocCodeProcessorDirective extends NgDocHtmlProcessor<NgDocCodeCom
 	protected override extractComponentOptions(element: Element): NgDocProcessorOptions<NgDocCodeComponent> {
 		return {
 			inputs: {
-				html: element.innerHTML ?? '',
-				language: element.getAttribute('lang') || 'html',
 				copyButton: element.getAttribute('copyButton') !== 'false',
 			},
+			content: [[(element.closest('pre') ?? element).cloneNode(true)]],
 		};
 	}
 }
