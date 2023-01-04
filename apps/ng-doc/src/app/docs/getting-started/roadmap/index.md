@@ -1,6 +1,6 @@
 # {{ NgDocPage.title }}
 
-## Processing assets
+## ✅ ~~Processing assets~~
 
 Assets that are generated for your demos are currently not processed, which means that `NgDoc`
 does not create references for the keywords used in them, for example, to classes or interfaces in

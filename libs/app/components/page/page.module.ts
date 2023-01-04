@@ -7,6 +7,7 @@ import {
 	NgDocCodeProcessorModule,
 	NgDocDemoProcessorModule,
 	NgDocIconProcessorModule,
+	NgDocTooltipProcessorModule,
 } from '@ng-doc/app/processors';
 import {NgDocMediaQueryModule} from '@ng-doc/ui-kit';
 
@@ -23,6 +24,7 @@ import {NgDocPageComponent} from './page.component';
 		NgDocIconProcessorModule,
 		NgDocPageMapModule,
 		NgDocMediaQueryModule,
+		NgDocTooltipProcessorModule,
 	],
 	exports: [NgDocPageComponent],
 })

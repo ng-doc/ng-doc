@@ -10,6 +10,7 @@ export {
 	filterByStatic,
 	marked,
 	methodPresentation,
+	noEmpty,
 	noLineBreaks,
 	notEmptyAssets,
 	typeAliasPresentation,

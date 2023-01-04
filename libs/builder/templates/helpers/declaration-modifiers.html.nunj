@@ -8,10 +8,11 @@
 	{% set isAsync = declaration.isAsync and declaration.isAsync() %}
 	{% set isReadonly = declaration.isReadonly and declaration.isReadonly() %}
 	{% set isOverriden = declaration.hasOverrideKeyword and declaration.hasOverrideKeyword() %}
+	{% set tooltip = ["Abstract" if isAbstract, 'Static' if isStatic, 'Async' if isAsync, 'Readonly' if isReadonly, 'Overriden' if isOverriden] | noEmpty | join(', ') %}
 
 	{%- if type == 'badge' %}
 		{%- if isAbstract or isStatic or isAsync or isOverriden or isReadonly %}
-			<span class="ng-doc-badge-wrapper">
+			<span class="ng-doc-badge-wrapper" ngDocTooltip="{{ tooltip }}">
 				{{ badgeMacro.render("Abstract") if isAbstract }}
 				{{ badgeMacro.render("Static") if isStatic }}
 				{{ badgeMacro.render("Async") if isAsync }}

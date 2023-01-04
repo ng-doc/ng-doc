@@ -13,10 +13,7 @@ import {ObservableSet} from '../classes';
 import {NgDocRendererOptions} from '../interfaces';
 
 class NgDocRelativeLoader implements ILoader {
-	constructor(
-		private readonly path: string,
-		private readonly dependenciesStore?: ObservableSet<string>,
-	) {}
+	constructor(private readonly path: string, private readonly dependenciesStore?: ObservableSet<string>) {}
 	getSource(name: string) {
 		const fullPath: string = path.join(this.path, name);
 
@@ -54,16 +51,20 @@ export class NgDocRenderer<T extends object> {
 		});
 	}
 
+	renderSync(template: string, options?: NgDocRendererOptions<T>): string {
+		return this.getEnvironment(options).render(template, this.getContext(options?.overrideContext));
+	}
+
 	private getContext(context?: T): object {
 		return {
-			...(context ?? this.context)
-		}
+			...(context ?? this.context),
+		};
 	}
 
 	private getEnvironment(options?: NgDocRendererOptions<T>): Environment {
 		let environment: Environment = new Environment(
 			new NgDocRelativeLoader(options?.scope ?? TEMPLATES_PATH, this.dependenciesStore),
-			{autoescape: false}
+			{autoescape: false},
 		);
 
 		objectKeys(filters).forEach(

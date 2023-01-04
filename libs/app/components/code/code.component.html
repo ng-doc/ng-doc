@@ -1,7 +1,8 @@
-<pre>
-	<code [ngDocCodeHighlighter]="code" [html]="html" [language]="language" #codeContainer></code>
-	<button class="ng-doc-copy-button" ng-doc-button-icon *ngIf="copyButton" (click)="copyCode()"
-			ngDocTooltip="Copy code">
-		<ng-doc-icon icon="copy"></ng-doc-icon>
-	</button>
-</pre>
+<div class="code-wrapper" [innerHTML]="html" *ngIf="html"></div>
+<div class="code-wrapper" *ngIf="!html">
+	<ng-content></ng-content>
+</div>
+
+<button class="ng-doc-copy-button" ng-doc-button-icon *ngIf="copyButton" (click)="copyCode()" ngDocTooltip="Copy code">
+	<ng-doc-icon icon="copy"></ng-doc-icon>
+</button>

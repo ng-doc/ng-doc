@@ -8,6 +8,8 @@ const visit: any = require('unist-util-visit-parents');
 const is: any = require('hast-util-is-element');
 const textContent: any = require('hast-util-to-string');
 
+const languages: string[] = ['typescript'];
+
 /**
  *
  * @param entityStore
@@ -26,23 +28,25 @@ export default function keywordsProcessor(entityStore: NgDocEntityStore, entity?
 			const parent: any = ancestors[ancestors.length - 1];
 			const isInlineCode: boolean = !is(parent, 'pre');
 
-			visit(node, 'text', (node: any, ancestors: any) => {
-				if (hasLinkAncestor(ancestors)) {
-					return;
-				}
+			if (isInlineCode || languages.includes(node.properties.lang)) {
+				visit(node, 'text', (node: any, ancestors: any) => {
+					if (hasLinkAncestor(ancestors)) {
+						return;
+					}
 
-				const parent: any = ancestors[ancestors.length - 1];
-				const index: number = parent.children.indexOf(node);
+					const parent: any = ancestors[ancestors.length - 1];
+					const index: number = parent.children.indexOf(node);
 
-				// Parse the text for words that we can convert to links
-				const nodes: any[] = getNodes(node, parent, entityStore, isInlineCode, entity);
-				// Replace the text node with the links and leftover text nodes
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				Array.prototype.splice.apply(parent.children, [index, 1].concat(nodes));
-				// Do not visit this node's children or the newly added nodes
-				return [visit.SKIP, index + nodes.length];
-			});
+					// Parse the text for words that we can convert to links
+					const nodes: any[] = getNodes(node, parent, entityStore, isInlineCode, entity);
+					// Replace the text node with the links and leftover text nodes
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					Array.prototype.splice.apply(parent.children, [index, 1].concat(nodes));
+					// Do not visit this node's children or the newly added nodes
+					return [visit.SKIP, index + nodes.length];
+				});
+			}
 		});
 }
 
