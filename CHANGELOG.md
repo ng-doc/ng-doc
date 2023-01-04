@@ -1,3 +1,16 @@
+# [15.0.0-beta.28](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.27...v15.0.0-beta.28) (2023-01-04)
+
+
+### Bug Fixes
+
+* **keywords:** ng-doc generates links not only for typescript code examples ([8646fb8](https://github.com/skoropadas/ng-doc/commit/8646fb82ccdcb0aafba4e6cf820f3e82b10dc7a1))
+
+
+### Features
+
+* **api:** add tooltips for properties badges ([3812f14](https://github.com/skoropadas/ng-doc/commit/3812f14eabea75349db8f95ef1a11507d319f325))
+* **demo:** demo code will now be processed by the keyword processor ([fdbb8ad](https://github.com/skoropadas/ng-doc/commit/fdbb8ad1d8c3bd9a3a1a7f3d3d4c56d42e255a71))
+
 # [15.0.0-beta.27](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.26...v15.0.0-beta.27) (2023-01-02)
 
 
