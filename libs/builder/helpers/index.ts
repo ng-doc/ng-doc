@@ -15,6 +15,7 @@ export * from './get-entity-constructor';
 export * from './is-not-excluded-path';
 export * from './is-supported-declaration';
 export * from './marked';
+export * from './no-empty';
 export * from './no-line-breaks';
 export * from './not-empty-assets';
 export * from './presentation';
