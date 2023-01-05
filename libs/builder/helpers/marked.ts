@@ -13,7 +13,7 @@ export function marked(markdown: string): string {
 	const renderer: markedRender.RendererObject = {
 		code(code: string, language: string | undefined): string {
 			const lang: string = language ?? 'typescript';
-			
+
 			return `<pre><code class="language-${lang}" lang="${lang}">${escapeHtml(code)}</code></pre>`;
 		},
 		blockquote(quote: string): string {

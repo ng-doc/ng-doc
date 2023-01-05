@@ -1,6 +1,7 @@
 {% extends "api/base.html.nunj" %}
 
 {% import "helpers/type.html.nunj" as typeMacro %}
+{% import "helpers/constructor.html.nunj" as constructorMacro %}
 {% import "helpers/methods.html.nunj" as methodsMacro %}
 {% import "helpers/properties.html.nunj" as propertiesMacro %}
 {% import "helpers/tag.html.nunj" as tagMacro %}
@@ -31,10 +32,18 @@
 {% endblock %}
 
 {% block overview %}
+	{%- set constructors = declaration.getConstructors() | filterByScope("public") -%}
 	{%- set staticProperties = declaration.getProperties() | filterByStatic(true) | filterByScope("public") -%}
 	{%- set staticMethods = declaration.getMethods() | filterByStatic(true) | filterByScope("public") -%}
 	{%- set properties = declaration.getProperties() | filterByStatic(false) | filterByScope("public") -%}
 	{%- set methods = declaration.getMethods() | filterByStatic(false) | filterByScope("public") -%}
+
+	{% if constructors.length -%}
+		<section>
+			<h2>Constructor</h2>
+			{{ constructorMacro.render(constructors[0]) }}
+		</section>
+	{%- endif %}
 
 	{% if staticProperties.length -%}
 		<section>

@@ -1,6 +1,7 @@
 /* Just export filters from this file, they will be included to the template renderer automatically */
 
 export {
+	constructorPresentation,
 	displayType,
 	extractDocs,
 	extractParameterDocs,
@@ -8,6 +9,7 @@ export {
 	extractSelectors,
 	filterByScope,
 	filterByStatic,
+	functionPresentation,
 	marked,
 	methodPresentation,
 	noEmpty,

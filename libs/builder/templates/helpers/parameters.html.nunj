@@ -1,4 +1,5 @@
 {% import "helpers/type.html.nunj" as typeMacro %}
+{% import "helpers/declaration-modifiers.html.nunj" as tagsMacro %}
 
 {% macro render(parameters, origin) %}
 	<div class="ng-doc-table-wrapper">
@@ -13,7 +14,7 @@
 			<tbody>
 			{%- for param in parameters %}
 				<tr>
-					<td>{{ param.getName() }}</td>
+					<td>{{ tagsMacro.render(param, "badge") }}{{ param.getName() }}</td>
 					<td>{{ typeMacro.render(param.getType()) }}</td>
 					<td>{{ origin | extractParameterDocs(param.getName()) }}</td>
 				</tr>

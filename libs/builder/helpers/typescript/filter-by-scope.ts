@@ -1,5 +1,5 @@
 import {asArray} from '@ng-doc/core';
-import {MethodDeclaration, Scope, ScopedNode} from 'ts-morph';
+import {Scope, ScopedNode} from 'ts-morph';
 
 /**
  *
