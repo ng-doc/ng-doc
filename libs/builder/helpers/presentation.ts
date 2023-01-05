@@ -86,9 +86,9 @@ export function variablePresentation(variable: VariableDeclaration): string {
  */
 function parameterPresentation(parameter: ParameterDeclaration): string {
 	return [
+		decoratorsPresentation(parameter),
 		scopePresentation(parameter),
 		modPresentation(parameter),
-		decoratorsPresentation(parameter),
 		parameter.getName() + (parameter.hasQuestionToken() ? '?' : '') + ':',
 		displayType(parameter.getType()),
 		parameter.getInitializer() ? `= ${parameter.getInitializer()}` : '',
