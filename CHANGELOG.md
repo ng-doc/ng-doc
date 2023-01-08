@@ -1,3 +1,10 @@
+# [15.0.0-beta.30](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.29...v15.0.0-beta.30) (2023-01-08)
+
+
+### Features
+
+* **api:** add accessors section for classes and interfaces ([b1a4610](https://github.com/skoropadas/ng-doc/commit/b1a4610204d3def2ccdb92e38181e2c21df7e3d1))
+
 # [15.0.0-beta.29](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.28...v15.0.0-beta.29) (2023-01-08)
 
 
