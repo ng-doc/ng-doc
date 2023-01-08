@@ -16,8 +16,8 @@
 			{%- for property in properties %}
 				{% set propertyChain = property | getPropertyChain %}
 				{% set inheritedFrom = property.getParent() if property.getParent() !== originalParent %}
-				{% set overriddenProperty = property | getOverriddenProperty %}
-				{% set implementedProperty = property | getImplementedProperty %}
+				{% set overriddenMember = property | getOverriddenMember %}
+				{% set implementedMember = property | getImplementedMember %}
 				{% set docNode = propertyChain | firstNodeWithComment %}
 
 				<tr>
@@ -27,12 +27,10 @@
 						<div class="ng-doc-node-details">
 							{%- if inheritedFrom %}
 								inherited from <code>{{ inheritedFrom.getName() }}</code>
-							{%- elseif overriddenProperty %}
-								overrides
-								<code>{{ overriddenProperty.getParent().getName() }}</code>
-							{%- elseif implementedProperty %}
-								implements
-								<code>{{ implementedProperty.getParent().getName() }}</code>
+							{%- elseif overriddenMember %}
+								overrides <code>{{ overriddenMember.getParent().getName() }}</code>
+							{%- elseif implementedMember %}
+								implements <code>{{ implementedMember.getParent().getName() }}</code>
 							{%- endif %}
 						</div>
 					</td>
