@@ -36,6 +36,8 @@ import {AppComponent} from './app.component';
 			],
 			{
 				scrollPositionRestoration: 'enabled',
+				anchorScrolling: 'enabled',
+				scrollOffset: () => [0, 70],
 			},
 		),
 		NgDocRootModule,

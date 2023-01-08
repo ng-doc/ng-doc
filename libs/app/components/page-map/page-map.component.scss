@@ -2,14 +2,11 @@
 	position: relative;
 	width: var(--ng-doc-page-map-width);
 
-	.ng-doc-page-map {
+	.ng-doc-page-map-wrapper {
 		position: fixed;
-		list-style: none;
+		overflow-y: auto;
+		height: 70%;
 		width: var(--ng-doc-page-map-width);
-		margin: 0;
-		padding: 0;
-		padding-left: var(--ng-doc-base-gutter);
-		border-left: 1px solid var(--ng-doc-base-3);
 
 		.ng-doc-page-map-selection {
 			position: absolute;
@@ -17,12 +14,19 @@
 			width: calc(var(--ng-doc-base-gutter) / 2);
 			border-radius: calc(var(--ng-doc-base-gutter) / 2);
 			background-color: var(--ng-doc-primary);
-			left: 0;
+			left: 1px;
 			transition: var(--ng-doc-transition);
 		}
 
-		.ng-doc-page-map-item {
+		.ng-doc-page-map {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			padding-left: var(--ng-doc-base-gutter);
+			border-left: 1px solid var(--ng-doc-base-3);
 
+			.ng-doc-page-map-item {
+			}
 		}
 	}
 }

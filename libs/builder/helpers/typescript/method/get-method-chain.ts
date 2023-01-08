@@ -19,6 +19,8 @@ export function getMethodChain(method: MethodDeclaration): Array<MethodDeclarati
 				methods.push(mtd);
 			}
 		});
+
+		// TODO: Add interfaces
 	}
 
 	if (Node.isInterfaceDeclaration(parent)) {

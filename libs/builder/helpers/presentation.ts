@@ -1,10 +1,12 @@
 import {isPresent} from '@ng-doc/core';
 import {
+	AccessorDeclaration,
 	ConstructorDeclaration,
 	DecoratableNode,
 	Decorator,
 	FunctionDeclaration,
 	MethodDeclaration,
+	Node,
 	ParameterDeclaration,
 	ReadonlyableNode,
 	Scope,
@@ -32,6 +34,21 @@ export function constructorPresentation(constructor: ConstructorDeclaration): st
 		.join(' ');
 
 	return formatCode(presentation, 'TypeScript');
+}
+
+/**
+ *
+ * @param accessor
+ */
+export function accessorPresentation(accessor: AccessorDeclaration): string {
+	const parameters: string = accessor.getParameters().map(parameterPresentation).join(', ');
+	const prefix: string = Node.isGetAccessorDeclaration(accessor) ? 'get' : 'set';
+	const header: string = Node.isGetAccessorDeclaration(accessor)
+		? `${accessor.getName()}():`
+		: `${accessor.getName()}(${parameters})`;
+	const returnType: string = Node.isGetAccessorDeclaration(accessor) ? displayType(accessor.getReturnType()) : '';
+
+	return [prefix, scopePresentation(accessor), header, returnType].filter(isPresent).join(' ') + ';';
 }
 
 /**

@@ -1,3 +1,4 @@
+export * from './accessor';
 export * from './class';
 export * from './create-project';
 export * from './display-type';
@@ -6,6 +7,7 @@ export * from './filter-by-static';
 export * from './find-declaration';
 export * from './first-node-with-comment';
 export * from './interface';
+export * from './member';
 export * from './method';
 export * from './node';
 export * from './property';

@@ -33,6 +33,7 @@
 		padding: var(--ng-doc-base-gutter);
 		color: inherit;
 		width: 100%;
+		word-break: break-word;
 
 		&:hover {
 			text-decoration: none;

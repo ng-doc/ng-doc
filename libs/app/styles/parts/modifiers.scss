@@ -30,6 +30,16 @@
 	&[data-content='Readonly'] {
 		color: var(--ng-doc-deep-orange-100);
 	}
+
+	&[data-content='get'] {
+		font-size: 16px;
+		color: var(--ng-doc-green-100);
+	}
+
+	&[data-content='set'] {
+		font-size: 16px;
+		color: var(--ng-doc-pink-100);
+	}
 }
 
 .ng-doc-node-details {

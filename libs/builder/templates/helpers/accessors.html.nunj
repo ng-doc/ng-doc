@@ -1,0 +1,7 @@
+{% import "helpers/accessor.html.nunj" as accessor %}
+
+{% macro render(accessors, originalParent) %}
+	{%- for a in accessors | groupAccessors %}
+		{{ accessor.render(a, originalParent) }}
+	{% endfor -%}
+{% endmacro %}

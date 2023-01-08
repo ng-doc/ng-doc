@@ -9,8 +9,8 @@
 	{% set parameters = method.getParameters() %}
 	{% set methodChain = method | getMethodChain %}
 	{% set inheritedFrom = method.getParent() if method.getParent() !== originalParent %}
-	{% set overriddenMethod = method | getOverriddenMethod %}
-	{% set implementedMethod = method | getImplementedMethod %}
+	{% set overriddenMember = method | getOverriddenMember %}
+	{% set implementedMember = method | getImplementedMember %}
 	{% set docNode = methodChain | firstNodeWithComment %}
 
 	<div class="ng-doc-table-wrapper">
@@ -24,10 +24,10 @@
 					<div class="ng-doc-node-details">
 						{%- if inheritedFrom %}
 							inherited from <code>{{ inheritedFrom.getName() }}</code>
-						{%- elseif overriddenMethod %}
-							overrides <code>{{ overriddenMethod.getParent().getName() }}</code>
-						{%- elseif implementedMethod %}
-							implements <code>{{ implementedMethod.getParent().getName() }}</code>
+						{%- elseif overriddenMember %}
+							overrides <code>{{ overriddenMember.getParent().getName() }}</code>
+						{%- elseif implementedMember %}
+							implements <code>{{ implementedMember.getParent().getName() }}</code>
 						{%- endif %}
 					</div>
 				</th>

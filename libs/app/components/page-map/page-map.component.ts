@@ -90,6 +90,8 @@ export class NgDocPageMapComponent implements OnChanges, AfterViewInit {
 			if (element) {
 				this.renderer.setStyle(this.selection.nativeElement, 'top', `${element.offsetTop}px`);
 				this.renderer.setStyle(this.selection.nativeElement, 'height', `${element.offsetHeight}px`);
+
+				element.scrollIntoView({block: 'nearest'});
 			}
 		}
 

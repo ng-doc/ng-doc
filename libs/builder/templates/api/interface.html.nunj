@@ -3,6 +3,7 @@
 {% import "helpers/type.html.nunj" as typeMacro %}
 {% import "helpers/methods.html.nunj" as methodsMacro %}
 {% import "helpers/properties.html.nunj" as propertiesMacro %}
+{% import "helpers/accessors.html.nunj" as accessorsMacro %}
 {% import "helpers/tag.html.nunj" as tagMacro %}
 
 {% block details %}
@@ -21,11 +22,19 @@
 {% block overview %}
 	{%- set properties = declaration | getInterfaceProperties | sortByNodesName -%}
 	{%- set methods = declaration | getInterfaceMethods | sortByNodesName -%}
+	{%- set accessors = declaration | getInterfaceAccessors | sortByNodesName -%}
 
 	{% if properties.length -%}
 		<section>
 			<h2>Properties</h2>
 			{{ propertiesMacro.render(properties, declaration) }}
+		</section>
+	{%- endif %}
+
+	{% if accessors.length -%}
+		<section>
+			<h2>Accessors</h2>
+			{{ accessorsMacro.render(accessors, declaration) }}
 		</section>
 	{%- endif %}
 
