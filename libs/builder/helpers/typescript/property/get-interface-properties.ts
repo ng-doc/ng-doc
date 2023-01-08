@@ -1,5 +1,6 @@
 import {asArray} from '@ng-doc/core';
 import {InterfaceDeclaration, PropertySignature} from 'ts-morph';
+
 import {forAllInterfaces} from '../interface';
 
 /**
