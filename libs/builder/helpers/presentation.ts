@@ -86,6 +86,7 @@ export function variablePresentation(variable: VariableDeclaration): string {
  */
 function parameterPresentation(parameter: ParameterDeclaration): string {
 	return [
+		parameter.hasOverrideKeyword() ? 'override' : '',
 		decoratorsPresentation(parameter),
 		scopePresentation(parameter),
 		modPresentation(parameter),

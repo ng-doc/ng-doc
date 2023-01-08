@@ -50,12 +50,12 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 			: '';
 	}
 
-	override emit() {
+	override emit(): Observable<void> {
 		/**
 		 * Just refresh source file, we don't need to emit it
 		 */
 
-		return from(this.sourceFile.refreshFromFileSystem()).pipe(mapTo(void 0))
+		return from(this.sourceFile.refreshFromFileSystem()).pipe(mapTo(void 0));
 	}
 
 	override get title(): string {

@@ -19,20 +19,20 @@
 {% endblock %}
 
 {% block overview %}
-	{%- set properties = declaration.getProperties() -%}
-	{%- set methods = declaration.getMethods() -%}
+	{%- set properties = declaration | getInterfaceProperties | sortByNodesName -%}
+	{%- set methods = declaration | getInterfaceMethods | sortByNodesName -%}
 
 	{% if properties.length -%}
 		<section>
 			<h2>Properties</h2>
-			{{ propertiesMacro.render(properties) }}
+			{{ propertiesMacro.render(properties, declaration) }}
 		</section>
 	{%- endif %}
 
 	{% if methods.length -%}
 		<section>
 			<h2>Methods</h2>
-			{{ methodsMacro.render(methods) }}
+			{{ methodsMacro.render(methods, declaration) }}
 		</section>
 	{%- endif %}
 {% endblock %}

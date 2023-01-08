@@ -2,7 +2,7 @@
 {% import "helpers/declaration-modifiers.html.nunj" as tagsMacro %}
 {% import "helpers/decorators.html.nunj" as decoratorsMacro %}
 
-{% macro render(properties) %}
+{% macro render(properties, originalParent) %}
 	<div class="ng-doc-table-wrapper">
 		<table class="ng-doc-properties-table">
 			<thead>
@@ -14,13 +14,30 @@
 			</thead>
 			<tbody>
 			{%- for property in properties %}
+				{% set propertyChain = property | getPropertyChain %}
+				{% set inheritedFrom = property.getParent() if property.getParent() !== originalParent %}
+				{% set overriddenProperty = property | getOverriddenProperty %}
+				{% set implementedProperty = property | getImplementedProperty %}
+				{% set docNode = propertyChain | firstNodeWithComment %}
+
 				<tr>
 					<td>
 						{{ decoratorsMacro.render(property.getDecorators(), true) if property.getDecorators }}
 						{{ tagsMacro.render(property, "badge") }}{{ property.getName() }}
+						<div class="ng-doc-node-details">
+							{%- if inheritedFrom %}
+								inherited from <code>{{ inheritedFrom.getName() }}</code>
+							{%- elseif overriddenProperty %}
+								overrides
+								<code>{{ overriddenProperty.getParent().getName() }}</code>
+							{%- elseif implementedProperty %}
+								implements
+								<code>{{ implementedProperty.getParent().getName() }}</code>
+							{%- endif %}
+						</div>
 					</td>
 					<td>{{ typeMacro.render(property.getType()) }}</td>
-					<td>{{ property | extractDocs }}</td>
+					<td>{{ docNode | extractDocs }}</td>
 				</tr>
 			{%- endfor %}
 			</tbody>
