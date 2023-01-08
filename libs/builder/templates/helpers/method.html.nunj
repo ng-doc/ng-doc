@@ -5,23 +5,38 @@
 {% import "helpers/decorators.html.nunj" as decoratorsMacro %}
 {% import "helpers/no-content.html.nunj" as noContentMacro %}
 
-{% macro render(method) %}
+{% macro render(method, originalParent) %}
 	{% set parameters = method.getParameters() %}
+	{% set methodChain = method | getMethodChain %}
+	{% set inheritedFrom = method.getParent() if method.getParent() !== originalParent %}
+	{% set overriddenMethod = method | getOverriddenMethod %}
+	{% set implementedMethod = method | getImplementedMethod %}
+	{% set docNode = methodChain | firstNodeWithComment %}
+
 	<div class="ng-doc-table-wrapper">
 		<table class="ng-doc-method-table">
 			<thead>
 			<tr>
 				<th>
 					{{ decoratorsMacro.render(method.getDecorators()) if method.getDecorators }}
-					<h3>{{ method.getName() }}</h3>
 					{{ tagsMacro.render(method, 'modifier') }}
+					<h3>{{ method.getName() }}</h3>
+					<div class="ng-doc-node-details">
+						{%- if inheritedFrom %}
+							inherited from <code>{{ inheritedFrom.getName() }}</code>
+						{%- elseif overriddenMethod %}
+							overrides <code>{{ overriddenMethod.getParent().getName() }}</code>
+						{%- elseif implementedMethod %}
+							implements <code>{{ implementedMethod.getParent().getName() }}</code>
+						{%- endif %}
+					</div>
 				</th>
 			</tr>
 			</thead>
 			<tbody>
 			<tr>
 				<td>
-					{% set description = method | extractDocs %}
+					{% set description = docNode | extractDocs %}
 
 					{{ description if description else noContentMacro.render('No documentation has been provided.') }}
 				</td>
@@ -36,7 +51,7 @@
 				<td>
 					{%- if parameters.length %}
 						<h5 class="no-anchor">Parameters</h5>
-						{{ parametersMacro.render(parameters, method) }}
+						{{ parametersMacro.render(parameters, docNode) }}
 					{%- endif %}
 					<h5 class="no-anchor">Returns</h5>
 					<p>

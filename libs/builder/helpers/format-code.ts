@@ -10,7 +10,9 @@ import {Options} from 'prettier';
  */
 export function formatCode(code: string, codeType: NgDocCodeType): string {
 	try {
-		return require('prettier').format(code, {parser: getPrettierParserFromCodeType(codeType)});
+		const parser: Options['parser'] | undefined = getPrettierParserFromCodeType(codeType);
+
+		return require('prettier').format(code, parser ? {parser} : {});
 	} catch (e) {
 		return code;
 	}
@@ -22,18 +24,14 @@ export function formatCode(code: string, codeType: NgDocCodeType): string {
  * @param {NgDocCodeType} codeType Code type
  * @returns {string} Parser
  */
-function getPrettierParserFromCodeType(codeType: NgDocCodeType): Options['parser'] {
+function getPrettierParserFromCodeType(codeType: NgDocCodeType): Options['parser'] | undefined {
 	switch (codeType) {
-		case 'TypeScript':
-			return 'typescript';
-		case 'HTML':
-			return 'html';
 		case 'CSS':
 		case 'LESS':
 		case 'SCSS':
 		case 'SASS':
 			return 'css';
 		default:
-			return 'typescript';
+			return codeType.toLowerCase();
 	}
 }

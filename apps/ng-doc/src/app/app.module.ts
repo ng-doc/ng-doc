@@ -25,14 +25,19 @@ import {AppComponent} from './app.component';
 		HttpClientModule,
 		NgDocModule.forRoot(),
 		NgDocGeneratedModule.forRoot(),
-		RouterModule.forRoot([
-			{path: '', redirectTo: 'getting-started/installation', pathMatch: 'full'},
+		RouterModule.forRoot(
+			[
+				{path: '', redirectTo: 'getting-started/installation', pathMatch: 'full'},
+				{
+					path: '',
+					loadChildren: () =>
+						import('./docs/docs.module').then((m: typeof import('./docs/docs.module')) => m.DocsModule),
+				},
+			],
 			{
-				path: '',
-				loadChildren: () =>
-					import('./docs/docs.module').then((m: typeof import('./docs/docs.module')) => m.DocsModule),
+				scrollPositionRestoration: 'enabled',
 			},
-		]),
+		),
 		NgDocRootModule,
 		NgDocNavbarModule,
 		NgDocSidebarModule,

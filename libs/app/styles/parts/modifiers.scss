@@ -1,3 +1,5 @@
+@import '../../../ui-kit/styles/mixins';
+
 .ng-doc-modifiers-wrapper {
 	line-height: 18px;
 }
@@ -5,6 +7,7 @@
 .ng-doc-modifier {
 	font-size: 14px;
 	color: var(--ng-doc-text);
+	font-family: var(--ng-doc-heading-font-family);
 	white-space: nowrap;
 	font-weight: 800;
 
@@ -26,5 +29,22 @@
 
 	&[data-content='Readonly'] {
 		color: var(--ng-doc-deep-orange-100);
+	}
+}
+
+.ng-doc-node-details {
+	@include ng-doc-font();
+
+	--ng-doc-font-size: 14px;
+	--ng-doc-text: var(--ng-doc-text-muted);
+	--ng-doc-font-weight: 400;
+	--ng-doc-line-height: 18px;
+
+	code.ng-doc-code-with-link {
+		background-color: transparent;
+		padding: 0;
+
+		--ng-doc-code-font-size: var(--ng-doc-font-size);
+		--ng-doc-code-font-weight: var(--ng-doc-font-weight);
 	}
 }

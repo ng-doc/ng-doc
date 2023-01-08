@@ -85,6 +85,11 @@ As mentioned above, NgDoc will generate documentation for all exported declarati
 the `include` field, to see how you can write documentation for various declarations, see
 the `*ContentApiTemplating` article.
 
+## Examples of output
+
+If you would like to see what the output of the API looks like, you can look at the API example
+for the following entities `NgDocPageEntity`, `NgDocApiPageEntity`.
+
 ## See also
 
 -   `*EntitiesCategory`

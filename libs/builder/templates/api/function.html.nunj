@@ -8,7 +8,7 @@
 
 	<section>
 		<h2>Presentation</h2>
-		{{ codeMacro.render(declaration | methodPresentation, "typescript", false) }}
+		{{ codeMacro.render(declaration | functionPresentation, "typescript", false) }}
 	</section>
 
 	{% if parameters.length -%}

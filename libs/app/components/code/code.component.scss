@@ -15,7 +15,7 @@
 	.ng-doc-copy-button {
 		position: absolute;
 		top: var(--ng-doc-base-gutter);
-		right: calc(var(--ng-doc-base-gutter) * 2);
+		right: var(--ng-doc-base-gutter);
 		transition: var(--ng-doc-transition);
 
 		--ng-doc-icon-color: var(--ng-doc-text-muted);
