@@ -1,3 +1,12 @@
+# [15.0.0-beta.29](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.28...v15.0.0-beta.29) (2023-01-08)
+
+
+### Features
+
+* **api:** add constructor API for classes ([cf2083e](https://github.com/skoropadas/ng-doc/commit/cf2083e34e7363e91a5416680d0f2144f76a241a))
+* **api:** add constructor API for classes ([b3f1411](https://github.com/skoropadas/ng-doc/commit/b3f1411d58182cd2ab83455f1202199247fd7100))
+* **api:** improvements for class and interface APIs ([c522ed2](https://github.com/skoropadas/ng-doc/commit/c522ed22243d645bc5d09131c870d9d698582a30))
+
 # [15.0.0-beta.28](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.27...v15.0.0-beta.28) (2023-01-04)
 
 
