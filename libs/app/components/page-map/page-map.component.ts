@@ -64,19 +64,19 @@ export class NgDocPageMapComponent implements OnChanges, AfterViewInit {
 				startWith(this.document.scrollingElement as HTMLElement),
 				filter(() => !!this.map.length),
 				map((target: HTMLElement) => {
-					const percentage: number = target.scrollTop * 100 / (target.scrollHeight - target.offsetHeight);
-					const selectionLine: number = target.scrollTop + target.offsetHeight * percentage / 100;
+					const percentage: number = (target.scrollTop * 100) / (target.scrollHeight - target.offsetHeight);
+					const selectionLine: number = target.scrollTop + (target.offsetHeight * percentage) / 100;
 
 					return this.map.reduce((pTarget: NgDocPageMapItem, cTarget: NgDocPageMapItem) => {
 						const pTop: number = pTarget.element.getBoundingClientRect().top + target.scrollTop;
 						const cTop: number = cTarget.element.getBoundingClientRect().top + target.scrollTop;
 
-						return (Math.abs(cTop - selectionLine) < Math.abs(pTop - selectionLine) ? cTarget : pTarget);
+						return Math.abs(cTop - selectionLine) < Math.abs(pTop - selectionLine) ? cTarget : pTarget;
 					});
 				}),
 				distinctUntilChanged(),
 				ngDocZoneOptimize(this.ngZone),
-				untilDestroyed(this)
+				untilDestroyed(this),
 			)
 			.subscribe(this.select.bind(this));
 	}
@@ -90,6 +90,8 @@ export class NgDocPageMapComponent implements OnChanges, AfterViewInit {
 			if (element) {
 				this.renderer.setStyle(this.selection.nativeElement, 'top', `${element.offsetTop}px`);
 				this.renderer.setStyle(this.selection.nativeElement, 'height', `${element.offsetHeight}px`);
+
+				element.scrollIntoView({block: 'nearest'});
 			}
 		}
 

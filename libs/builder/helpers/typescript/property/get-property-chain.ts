@@ -22,6 +22,8 @@ export function getPropertyChain(
 				properties.push(prop);
 			}
 		});
+
+		// TODO: Add interfaces
 	}
 
 	if (Node.isInterfaceDeclaration(parent)) {

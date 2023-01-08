@@ -1,6 +1,7 @@
 /* Just export filters from this file, they will be included to the template renderer automatically */
 
 export {
+	accessorPresentation,
 	constructorPresentation,
 	displayType,
 	extractDocs,
@@ -11,14 +12,18 @@ export {
 	filterByStatic,
 	firstNodeWithComment,
 	functionPresentation,
+	getAccessorChain,
+	getClassAccessors,
 	getClassMethods,
 	getClassProperties,
 	getImplementedMember,
+	getInterfaceAccessors,
 	getInterfaceMethods,
 	getInterfaceProperties,
 	getMethodChain,
 	getOverriddenMember,
 	getPropertyChain,
+	groupAccessors,
 	marked,
 	methodPresentation,
 	noEmpty,

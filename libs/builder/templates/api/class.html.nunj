@@ -4,6 +4,7 @@
 {% import "helpers/constructor.html.nunj" as constructorMacro %}
 {% import "helpers/methods.html.nunj" as methodsMacro %}
 {% import "helpers/properties.html.nunj" as propertiesMacro %}
+{% import "helpers/accessors.html.nunj" as accessorsMacro %}
 {% import "helpers/tag.html.nunj" as tagMacro %}
 {% import "helpers/modifier.html.nunj" as modifierMacro %}
 
@@ -35,11 +36,13 @@
 	{%- set constructors = declaration.getConstructors() | filterByScope("public") -%}
 	{%- set allProperties = declaration | getClassProperties | filterByScope(["public", "protected"]) | sortByNodesName -%}
 	{%- set allMethods = declaration | getClassMethods | filterByScope(["public", "protected"]) | sortByNodesName -%}
+	{%- set allAccessors = declaration | getClassAccessors | filterByScope(["public", "protected"]) | sortByNodesName -%}
 
 	{%- set staticProperties = allProperties | filterByStatic(true) -%}
-	{%- set staticGetAccessors = declaration.getGetAccessors() | filterByStatic(true) | filterByScope("public") -%}
-	{%- set staticMethods = allMethods | filterByStatic(true) | filterByScope("public") -%}
+	{%- set staticAccessors = allAccessors | filterByStatic(true) -%}
+	{%- set staticMethods = allMethods | filterByStatic(true) -%}
 	{%- set properties = allProperties | filterByStatic(false) -%}
+	{%- set accessors = allAccessors | filterByStatic(false) -%}
 	{%- set getAccessors = declaration.getGetAccessors() | filterByStatic(false) -%}
 	{%- set methods = allMethods | filterByStatic(false) -%}
 
@@ -61,6 +64,20 @@
 		<section>
 			<h2>Properties</h2>
 			{{ propertiesMacro.render(properties, declaration) }}
+		</section>
+	{%- endif %}
+
+	{% if staticAccessors.length -%}
+		<section>
+			<h2>Static Accessors</h2>
+			{{ accessorsMacro.render(staticAccessors, declaration) }}
+		</section>
+	{%- endif %}
+
+	{% if accessors.length -%}
+		<section>
+			<h2>Accessors</h2>
+			{{ accessorsMacro.render(accessors, declaration) }}
 		</section>
 	{%- endif %}
 

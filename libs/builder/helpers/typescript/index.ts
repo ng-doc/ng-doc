@@ -1,3 +1,4 @@
+export * from './accessor';
 export * from './class';
 export * from './create-project';
 export * from './display-type';
