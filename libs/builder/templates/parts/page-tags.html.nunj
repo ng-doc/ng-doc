@@ -3,11 +3,12 @@
 
 <div class="ng-doc-page-tags">
 	{% set selectors = declaration | extractSelectors %}
+	{% set declarationType = declaration | getDeclarationType %}
 
 
 	{{ tagMacro.render(scope.name, "ng-doc-scope") }}
 	<span class="ng-doc-inline-delimiter">/</span>
-	{{ tagMacro.render(declaration.getKindName() | humanizeDeclarationName) }}
+	{{ tagMacro.render(declarationType) if declarationType }}
 
 
 	{%- if declaration.getDecorators and declaration.getDecorators().length %}

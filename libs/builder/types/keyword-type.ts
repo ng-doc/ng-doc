@@ -1,3 +1,3 @@
-import {NgDocEntityType, NgDocPageType} from '@ng-doc/core';
+import {NgDocKindType, NgDocPageType} from '@ng-doc/core';
 
-export type NgDocKeywordType = NgDocEntityType | NgDocPageType;
+export type NgDocKeywordType = NgDocKindType | NgDocPageType;

@@ -1,12 +1,4 @@
-import {
-	AbstractConstructor,
-	asArray,
-	Constructor,
-	humanizeDeclarationName,
-	isNodeTag,
-	NgDocPageInfos,
-	NgDocPageType,
-} from '@ng-doc/core';
+import {AbstractConstructor, asArray, Constructor, isNodeTag, NgDocPageInfos, NgDocPageType} from '@ng-doc/core';
 import lunr from 'lunr';
 import * as path from 'path';
 import {Node, NodeTag, parser} from 'posthtml-parser';
@@ -15,6 +7,8 @@ import {NgDocApiPageEntity} from '../engine/entities';
 import {NgDocEntity} from '../engine/entities/abstractions/entity';
 import {NgDocRouteEntity} from '../engine/entities/abstractions/route.entity';
 import {NgDocBuiltOutput, NgDocPageIndex} from '../interfaces';
+import {isApiPageEntity} from './entity-type';
+import {getKindType} from './get-kind-type';
 
 /**
  *
@@ -94,7 +88,7 @@ function extractIndexes<T extends NgDocRouteEntity<unknown>>(
 			title: entity.title,
 			heading: entity.title,
 			content: '',
-			kind: getKindFromEntity(entity),
+			kind: (isApiPageEntity(entity) && entity.declaration && getKindType(entity.declaration)) || undefined,
 		});
 	}
 
@@ -108,7 +102,9 @@ function extractIndexes<T extends NgDocRouteEntity<unknown>>(
 						title: entity.title,
 						heading: extractText(node),
 						content: '',
-						kind: getKindFromEntity(entity),
+						kind:
+							(isApiPageEntity(entity) && entity.declaration && getKindType(entity.declaration)) ||
+							undefined,
 					});
 				} else if (Array.isArray(node.content)) {
 					indexes[indexes.length - 1].content += extractText(node);
@@ -166,39 +162,4 @@ function getTypeFromEntity(entity: NgDocEntity): NgDocPageType {
  */
 function isHeadingTag(node: NodeTag): boolean {
 	return ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(String(node.tag));
-}
-
-/**
- *
- * @param node
- */
-function isHeaderTag(node: NodeTag): boolean {
-	return ['header'].includes(String(node.tag));
-}
-
-/**
- *
- * @param node
- */
-function isSectionTag(node: NodeTag): boolean {
-	return ['section'].includes(String(node.tag));
-}
-
-/**
- *
- * @param node
- */
-function isParagraph(node: NodeTag): boolean {
-	return ['p'].includes(String(node.tag));
-}
-
-/**
- *
- * @param entity
- */
-function getKindFromEntity(entity: NgDocEntity): string | undefined {
-	if (entity instanceof NgDocApiPageEntity) {
-		return humanizeDeclarationName(entity.declaration?.getKindName() ?? '');
-	}
-	return undefined;
 }

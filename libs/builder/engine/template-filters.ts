@@ -16,6 +16,7 @@ export {
 	getClassAccessors,
 	getClassMethods,
 	getClassProperties,
+	getDeclarationType,
 	getImplementedMember,
 	getInterfaceAccessors,
 	getInterfaceMethods,
@@ -33,4 +34,3 @@ export {
 	typeAliasPresentation,
 	variablePresentation,
 } from '../helpers';
-export {humanizeDeclarationName} from '@ng-doc/core';

@@ -1,4 +1,5 @@
-@import "../../styles/variables/kind-colors";
+@import '../../styles/variables/kind-colors';
+@import '../../styles/mixins/entities-colors';
 
 :host {
 	display: inline-block;
@@ -10,19 +11,16 @@
 	line-height: calc(var(--ng-doc-base-gutter) * 2);
 	text-transform: uppercase;
 	flex-shrink: 0;
+	font-weight: 700;
 
-	&[data-ng-doc-type="declaration"] {
-		@each $name, $color in $declaration-colors {
-			&[data-ng-doc-kind="#{$name}"] {
-				background-color: var(--ng-doc-#{#{$color}}-100);
-				color: var(--ng-doc-white);
-			}
-		}
+	&[data-ng-doc-type='declaration'] {
+		color: var(--ng-doc-white);
+		@include entitiesColors('data-ng-doc-kind', false, 'background');
 	}
 
-	&[data-ng-doc-type="type"] {
+	&[data-ng-doc-type='type'] {
 		@each $name, $color in $type-colors {
-			&[data-ng-doc-kind="#{$name}"] {
+			&[data-ng-doc-kind='#{$name}'] {
 				background-color: var(--ng-doc-#{#{$color}}-100);
 				color: var(--ng-doc-white);
 			}

@@ -1,9 +1,9 @@
-import {NgDocAngularEntities, NgDocDeclarations} from '@ng-doc/core';
-import {Node} from 'ts-morph';
+import {NgDocKindType} from '@ng-doc/core';
 
 import {NgDocRouteEntity} from '../engine/entities/abstractions/route.entity';
 import {NgDocKeywordType} from '../types';
 import {isApiPageEntity, isPageEntity} from './entity-type';
+import {getKindType} from './get-kind-type';
 
 /**
  *
@@ -11,23 +11,9 @@ import {isApiPageEntity, isPageEntity} from './entity-type';
  */
 export function getKeywordTypeFromEntity(entity: NgDocRouteEntity): NgDocKeywordType | undefined {
 	if (isApiPageEntity(entity)) {
-		if (Node.isClassDeclaration(entity.declaration)) {
-			for (const decorator of NgDocAngularEntities) {
-				if (entity.declaration.getDecorator(decorator)) {
-					return decorator;
-				}
-			}
+		const kindType: NgDocKindType | undefined = entity.declaration && getKindType(entity.declaration);
 
-			return 'Class';
-		}
-
-		for (const declaration of NgDocDeclarations) {
-			if (entity.declaration?.getKindName().includes(declaration)) {
-				return declaration;
-			}
-		}
-
-		return 'api';
+		return kindType ?? 'api';
 	}
 
 	if (isPageEntity(entity)) {
