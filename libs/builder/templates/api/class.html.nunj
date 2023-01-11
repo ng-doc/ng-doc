@@ -33,9 +33,9 @@
 
 {% block overview %}
 	{%- set constructors = declaration.getConstructors() | filterByScope("public") -%}
-	{%- set allProperties = declaration | getClassProperties | filterByScope(["public", "protected"]) | sortByNodesName -%}
-	{%- set allMethods = declaration | getClassMethods | filterByScope(["public", "protected"]) | sortByNodesName -%}
-	{%- set allAccessors = declaration | getClassAccessors | filterByScope(["public", "protected"]) | sortByNodesName -%}
+	{%- set allProperties = declaration | getClassProperties | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
+	{%- set allMethods = declaration | getClassMethods | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
+	{%- set allAccessors = declaration | getClassAccessors | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
 
 	{%- set staticProperties = allProperties | filterByStatic(true) -%}
 	{%- set staticAccessors = allAccessors | filterByStatic(true) -%}

@@ -19,9 +19,9 @@
 {% endblock %}
 
 {% block overview %}
-	{%- set properties = declaration | getInterfaceProperties | sortByNodesName -%}
-	{%- set methods = declaration | getInterfaceMethods | sortByNodesName -%}
-	{%- set accessors = declaration | getInterfaceAccessors | sortByNodesName -%}
+	{%- set properties = declaration | getInterfaceProperties | filterUselessMembers | sortByNodesName -%}
+	{%- set methods = declaration | getInterfaceMethods | filterUselessMembers | sortByNodesName -%}
+	{%- set accessors = declaration | getInterfaceAccessors | filterUselessMembers | sortByNodesName -%}
 
 	{% if properties.length -%}
 		<section>

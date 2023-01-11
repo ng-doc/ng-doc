@@ -10,6 +10,7 @@ export {
 	extractSelectors,
 	filterByScope,
 	filterByStatic,
+	filterUselessMembers,
 	firstNodeWithComment,
 	functionPresentation,
 	getAccessorChain,

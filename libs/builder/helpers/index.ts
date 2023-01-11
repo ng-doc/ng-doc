@@ -8,6 +8,7 @@ export * from './entity-type';
 export * from './extract-docs';
 export * from './extract-path-anchor';
 export * from './extract-selectors';
+export * from './filter-useless-members';
 export * from './find-closest-file';
 export * from './format-code';
 export * from './generate-api-entities';
