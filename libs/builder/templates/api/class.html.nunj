@@ -5,11 +5,10 @@
 {% import "helpers/methods.html.nunj" as methodsMacro %}
 {% import "helpers/properties.html.nunj" as propertiesMacro %}
 {% import "helpers/accessors.html.nunj" as accessorsMacro %}
-{% import "helpers/tag.html.nunj" as tagMacro %}
 {% import "helpers/modifier.html.nunj" as modifierMacro %}
 
 {% block modifier %}
-	{{ modifierMacro.render('Abstract') if declaration.isAbstract() }}
+	{{ modifierMacro.render('abstract') if declaration.isAbstract() }}
 {% endblock %}
 
 {% block details %}
@@ -20,12 +19,12 @@
 		<div class="ng-doc-header-details">
 			{% if extends %}
 				<span class="ng-doc-header-details-label">Extends</span>
-				{{ tagMacro.render(typeMacro.render(extends.getType()), "class-extends") }}
+				{{ typeMacro.render(extends.getType()) }}
 			{%- endif %}
 			{% if implements.length %}
 				<span class="ng-doc-header-details-label">Implements</span>
 				{%- for i in implements -%}
-					{{ tagMacro.render(typeMacro.render(i.getType()), "class-implements") }}
+					{{ typeMacro.render(i.getType()) }}
 				{%- endfor %}
 			{%- endif %}
 		</div>

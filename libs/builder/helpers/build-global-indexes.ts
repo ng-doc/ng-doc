@@ -157,7 +157,7 @@ function getTypeFromEntity(entity: NgDocEntity): NgDocPageType {
 	if (entity instanceof NgDocApiPageEntity) {
 		return 'api';
 	}
-	return 'guide';
+	return 'guideline';
 }
 
 /**

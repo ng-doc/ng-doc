@@ -103,7 +103,7 @@ function getNodes(node: any, parent: any, entityStore: NgDocEntityStore, inlineL
 
 			// Add link inside the code if it's a link to the API entity
 			return keyword
-				? createLinkNode(inlineLink ? keyword.title : word, keyword.path)
+				? createLinkNode(inlineLink ? keyword.title : word, keyword.path, keyword.type)
 				: {type: 'text', value: word};
 		});
 }
@@ -112,12 +112,13 @@ function getNodes(node: any, parent: any, entityStore: NgDocEntityStore, inlineL
  *
  * @param text
  * @param href
+ * @param type
  */
-function createLinkNode(text: string, href: string) {
+function createLinkNode(text: string, href: string, type?: string) {
 	return {
 		type: 'element',
 		tagName: 'a',
-		properties: {href: href, class: 'ng-doc-code-anchor'},
+		properties: {href: href, class: 'ng-doc-code-anchor', 'data-link-type': type},
 		children: [{type: 'text', value: text}],
 	};
 }

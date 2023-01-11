@@ -1,7 +1,11 @@
+import {HostBinding, Input} from '@angular/core';
+
 export abstract class ParentClass {
 	abstract parentAbstractMethod1(): void;
 	abstract parentAbstractMethod2(): void;
 
+	@Input()
+	@HostBinding()
 	parentMethod1(): void {
 		console.log('');
 	}
@@ -13,6 +17,8 @@ export abstract class ParentClass {
 		console.log('');
 	}
 
+	@Input()
+	@HostBinding()
 	/**
 	 * Comment getter
 	 */
@@ -29,6 +35,8 @@ export abstract class ParentClass {
 }
 
 export class Class extends ParentClass implements Int {
+	@Input()
+	@HostBinding()
 	intGetterProp: string = '';
 	intSetterProp: string = '';
 	parentAbstractMethod1: () => void = () => {
@@ -39,6 +47,8 @@ export class Class extends ParentClass implements Int {
 		console.log('');
 	}
 
+	@Input()
+	@HostBinding()
 	override set prop(v: string) {
 		console.log('');
 	}

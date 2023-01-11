@@ -1,0 +1,60 @@
+$entities: (
+	'Class': (
+		background: var(--ng-doc-class-background),
+		color: var(--ng-doc-class-color),
+	),
+	'Interface': (
+		background: var(--ng-doc-interface-background),
+		color: var(--ng-doc-interface-color),
+	),
+	'Enum': (
+		background: var(--ng-doc-enum-background),
+		color: var(--ng-doc-enum-color),
+	),
+	'Variable': (
+		background: var(--ng-doc-variable-background),
+		color: var(--ng-doc-variable-color),
+	),
+	'Function': (
+		background: var(--ng-doc-function-background),
+		color: var(--ng-doc-function-color),
+	),
+	'TypeAlias': (
+		background: var(--ng-doc-type-alias-background),
+		color: var(--ng-doc-type-alias-color),
+	),
+	'Component': (
+		background: var(--ng-doc-component-decorator-background),
+		color: var(--ng-doc-component-decorator-color),
+	),
+	'Directive': (
+		background: var(--ng-doc-directive-decorator-background),
+		color: var(--ng-doc-directive-decorator-color),
+	),
+	'Injectable': (
+		background: var(--ng-doc-injectable-decorator-background),
+		color: var(--ng-doc-injectable-decorator-color),
+	),
+	'Pipe': (
+		background: var(--ng-doc-pipe-decorator-background),
+		color: var(--ng-doc-pipe-decorator-color),
+	),
+	'NgModule': (
+		background: var(--ng-doc-ng-module-decorator-background),
+		color: var(--ng-doc-ng-module-decorator-color),
+	),
+);
+
+@mixin entitiesColors($attr, $background-prop: 'background-color', $color-prop: 'color') {
+	@each $name, $props in $entities {
+		&[#{$attr}='#{$name}'] {
+			@if $background-prop {
+				#{$background-prop}: #{map-get($props, 'background')};
+			}
+
+			@if $color-prop {
+				#{$color-prop}: #{map-get($props, 'color')};
+			}
+		}
+	}
+}

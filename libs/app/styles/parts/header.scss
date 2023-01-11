@@ -1,4 +1,4 @@
-@import "../mixins/headings";
+@import '../mixins/headings';
 
 article {
 	header {
@@ -25,13 +25,14 @@ article {
 			align-items: baseline;
 			gap: var(--ng-doc-base-gutter);
 			margin-top: var(--ng-doc-base-gutter);
+			line-height: 18px;
 
 			.ng-doc-header-details-label {
 				font-size: 11px;
 				font-weight: 600;
 				line-height: 18px;
 				margin-left: calc(var(--ng-doc-base-gutter) * 2);
-				opacity: .5;
+				opacity: 0.5;
 
 				&:first-child {
 					margin-left: 0;

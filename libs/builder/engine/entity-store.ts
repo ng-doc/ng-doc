@@ -1,6 +1,6 @@
 import {asArray, objectKeys} from '@ng-doc/core';
 
-import {isApiPageEntity, isRouteEntity} from '../helpers';
+import {getKeywordTypeFromEntity, isApiPageEntity, isRouteEntity} from '../helpers';
 import {NgDocGlobalKeyword, NgDocKeyword} from '../interfaces';
 import {NgDocEntity} from './entities/abstractions/entity';
 
@@ -42,7 +42,7 @@ export class NgDocEntityStore extends Map<string, NgDocEntity> {
 					this.addKeyword(key, {
 						title: globalKeyword.title ?? key,
 						path: globalKeyword.path,
-						isCodeLink: !!globalKeyword.isCodeLink
+						isCodeLink: !!globalKeyword.isCodeLink,
 					});
 				}
 			}
@@ -54,6 +54,7 @@ export class NgDocEntityStore extends Map<string, NgDocEntity> {
 					this.addKeyword(keyword, {
 						title: entity.title,
 						path: entity.fullRoute,
+						type: getKeywordTypeFromEntity(entity),
 						isCodeLink: isApiPageEntity(entity),
 					}),
 				);

@@ -1,3 +1,5 @@
+@import '../mixins/entities-colors';
+
 .ng-doc-tags-wrapper {
 	line-height: 22px;
 }
@@ -7,19 +9,11 @@
 	padding: 0 var(--ng-doc-base-gutter);
 	font-size: 14px;
 	border-radius: var(--ng-doc-base-gutter);
-	background-color: var(--ng-doc-base-3);
+	background-color: var(--ng-doc-base-2);
 	color: var(--ng-doc-text);
 	vertical-align: middle;
 	white-space: nowrap;
-	font-weight: 700;
-
-	code,
-	code.ng-doc-code-with-link {
-		color: inherit;
-		background-color: transparent;
-		padding: 0;
-		white-space: nowrap;
-	}
+	font-weight: 600;
 
 	& + .ng-doc-tag {
 		margin-left: var(--ng-doc-base-gutter);
@@ -39,69 +33,7 @@
 		padding: 0;
 	}
 
-	/*----------------- Declarations --------------------*/
-	&[data-content='Class'] {
-		background-color: var(--ng-doc-pink-10);
-		color: var(--ng-doc-pink-70);
-	}
-
-	&[data-content='Interface'] {
-		background-color: var(--ng-doc-blue-20);
-		color: var(--ng-doc-light-blue-90);
-	}
-
-	&[data-content='Enum'],
-	&[data-content='Variable'] {
-		background-color: var(--ng-doc-orange-20);
-		color: var(--ng-doc-orange-150);
-	}
-
-	&[data-content='Function'] {
-		background-color: var(--ng-doc-green-20);
-		color: var(--ng-doc-green-150);
-	}
-
-	&[data-content='Type Alias'] {
-		background-color: var(--ng-doc-purple-20);
-		color: var(--ng-doc-purple-90);
-	}
-
-	/*----------------- Class Decorators --------------------*/
-	&[data-content='Component'] {
-		background-color: var(--ng-doc-light-blue-10);
-		color: var(--ng-doc-light-blue-100);
-	}
-
-	&[data-content='Directive'] {
-		background-color: var(--ng-doc-orange-10);
-		color: var(--ng-doc-orange-100);
-	}
-
-	&[data-content='Injectable'] {
-		background-color: var(--ng-doc-blue-20);
-		color: var(--ng-doc-light-blue-90);
-	}
-
-	&[data-content='Pipe'] {
-		background-color: var(--ng-doc-green-10);
-		color: var(--ng-doc-green-100);
-	}
-
-	&[data-content='NgModule'] {
-		background-color: var(--ng-doc-pink-10);
-		color: var(--ng-doc-pink-100);
-	}
-
-	/*----------------- Property Decorators --------------------*/
-	&[data-content='Input'] {
-		background-color: var(--ng-doc-light-blue-10);
-		color: var(--ng-doc-light-blue-100);
-	}
-
-	&[data-content='Output'] {
-		background-color: var(--ng-doc-light-blue-20);
-		color: var(--ng-doc-light-blue-150);
-	}
+	@include entitiesColors('data-content');
 
 	&[data-content='ng-doc-tag-selector'] {
 		background-color: var(--ng-doc-teal-10);

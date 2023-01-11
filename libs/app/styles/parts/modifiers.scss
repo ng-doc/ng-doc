@@ -11,23 +11,23 @@
 	white-space: nowrap;
 	font-weight: 800;
 
-	&[data-content='Abstract'] {
+	&[data-content='abstract'] {
 		color: var(--ng-doc-deep-orange-100);
 	}
 
-	&[data-content='Static'] {
+	&[data-content='static'] {
 		color: var(--ng-doc-pink-100);
 	}
 
-	&[data-content='Async'] {
+	&[data-content='async'] {
 		color: var(--ng-doc-green-100);
 	}
 
-	&[data-content='Overriden'] {
+	&[data-content='overriden'] {
 		color: var(--ng-doc-light-blue-100);
 	}
 
-	&[data-content='Readonly'] {
+	&[data-content='readonly'] {
 		color: var(--ng-doc-deep-orange-100);
 	}
 
@@ -48,13 +48,12 @@
 	--ng-doc-font-size: 14px;
 	--ng-doc-text: var(--ng-doc-text-muted);
 	--ng-doc-font-weight: 400;
-	--ng-doc-line-height: 18px;
+	--ng-doc-line-height: 22px;
 
 	code.ng-doc-code-with-link {
-		background-color: transparent;
+		--ng-doc-inline-code-background: transparent !important;
 		padding: 0;
 
 		--ng-doc-code-font-size: var(--ng-doc-font-size);
-		--ng-doc-code-font-weight: var(--ng-doc-font-weight);
 	}
 }

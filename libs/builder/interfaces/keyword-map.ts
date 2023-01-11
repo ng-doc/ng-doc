@@ -1,6 +1,11 @@
+import {NgDocEntityType, NgDocPageType} from '@ng-doc/core';
+
+import {NgDocKeywordType} from '../types';
+
 export interface NgDocKeyword {
 	title: string;
 	path: string;
+	type?: NgDocKeywordType;
 	isCodeLink: boolean;
 }
 

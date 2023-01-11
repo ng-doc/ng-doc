@@ -64,7 +64,7 @@ that you can install NgDoc using the command below, it will automatically instal
 packages and configure your application.
 
 ```sh
-   ng add @ng-doc/add
+ng add @ng-doc/add
 ```
 
 <!-- CONTRIBUTING -->
