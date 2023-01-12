@@ -1,4 +1,4 @@
-import {ClassDeclaration, InterfaceDeclaration, Node} from 'ts-morph';
+import {ClassDeclaration, ClassInstanceMemberTypes, InterfaceDeclaration, Node} from 'ts-morph';
 
 import {findBaseClass, findClass} from '../class';
 import {findInterface} from '../interface';
@@ -16,8 +16,8 @@ export function findMember(node: ClassDeclaration | InterfaceDeclaration, name: 
 	if (Node.isClassDeclaration(node)) {
 		const member: NgDocClassMember | undefined = findClass(
 			node,
-			(cls: ClassDeclaration) => !!cls.getMember(name),
-		)?.getMember(name) as NgDocClassMember;
+			(cls: ClassDeclaration) => !!cls.getInstanceMember(name),
+		)?.getInstanceMember(name);
 
 		return member;
 	}

@@ -12,20 +12,20 @@
 	{%- if type == 'badge' %}
 		{%- if isAbstract or isStatic or isAsync or isReadonly %}
 			<span class="ng-doc-badge-wrapper" ngDocTooltip="{{ tooltip }}">
-				{{ badgeMacro.render("Abstract") if isAbstract }}
-				{{ badgeMacro.render("Static") if isStatic }}
-				{{ badgeMacro.render("Async") if isAsync }}
-				{{ badgeMacro.render("Readonly") if isReadonly }}
+				{{ badgeMacro.render("abstract") if isAbstract }}
+				{{ badgeMacro.render("static") if isStatic }}
+				{{ badgeMacro.render("async") if isAsync }}
+				{{ badgeMacro.render("readonly") if isReadonly }}
 			</span>
 		{%- endif %}
 
 	{%- elseif type == 'modifier' %}
 		{%- if isAbstract or isStatic or isAsync or isReadonly %}
 			<div class="ng-doc-modifiers-wrapper">
-				{{ modifierMacro.render("Abstract") if isAbstract }}
-				{{ modifierMacro.render("Static") if isStatic }}
-				{{ modifierMacro.render("Async") if isAsync }}
-				{{ modifierMacro.render("Readonly") if isReadonly }}
+				{{ modifierMacro.render("abstract") if isAbstract }}
+				{{ modifierMacro.render("static") if isStatic }}
+				{{ modifierMacro.render("async") if isAsync }}
+				{{ modifierMacro.render("readonly") if isReadonly }}
 			</div>
 		{%- endif %}
 	{%- else %}

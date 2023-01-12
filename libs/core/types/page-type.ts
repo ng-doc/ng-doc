@@ -1,1 +1,1 @@
-export type NgDocPageType = 'guide' | 'api';
+export type NgDocPageType = 'guideline' | 'api';

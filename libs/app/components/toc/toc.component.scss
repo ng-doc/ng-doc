@@ -2,13 +2,13 @@
 	position: relative;
 	width: var(--ng-doc-page-map-width);
 
-	.ng-doc-page-map-wrapper {
+	.ng-doc-toc-wrapper {
 		position: fixed;
 		overflow-y: auto;
 		height: 70%;
 		width: var(--ng-doc-page-map-width);
 
-		.ng-doc-page-map-selection {
+		.ng-doc-toc-selection {
 			position: absolute;
 			transform: translateX(calc(-50% - 0.5px));
 			width: calc(var(--ng-doc-base-gutter) / 2);
@@ -18,7 +18,7 @@
 			transition: var(--ng-doc-transition);
 		}
 
-		.ng-doc-page-map {
+		.ng-doc-toc {
 			list-style: none;
 			margin: 0;
 			padding: 0;

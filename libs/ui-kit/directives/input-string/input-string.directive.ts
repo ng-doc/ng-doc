@@ -6,7 +6,7 @@ import {NG_DOC_INPUT_CONTROL} from '@ng-doc/ui-kit/tokens';
 import {UntilDestroy} from '@ngneat/until-destroy';
 import {FL_CONTROL_HOST, FlControlHost} from 'flex-controls';
 
-/** Директива преобразует любую модель в текст */
+/** Directive converts any input data or model to text */
 @Directive({
 	selector: `input[ngDocInputString]`,
 	providers: [

@@ -1,4 +1,4 @@
-import {NgDocPageType} from '@ng-doc/core';
+import {NgDocKindType, NgDocPageType} from '@ng-doc/core';
 
 export interface NgDocPageIndex {
 	route: string;
@@ -6,5 +6,5 @@ export interface NgDocPageIndex {
 	type: NgDocPageType;
 	heading: string;
 	content: string;
-	kind?: string;
+	kind?: NgDocKindType;
 }

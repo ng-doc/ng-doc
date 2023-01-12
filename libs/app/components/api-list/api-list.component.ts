@@ -90,6 +90,6 @@ export class NgDocApiListComponent {
 			new Set(
 				this.apiList.flatMap((api: NgDocApiList) => api.items).flatMap((item: NgDocApiListItem) => item.type),
 			),
-		);
+		).sort();
 	}
 }

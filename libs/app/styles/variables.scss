@@ -2,6 +2,36 @@
 	--ng-doc-app-max-width: 1400px;
 	--ng-doc-app-horizontal-padding: calc(var(--ng-doc-base-gutter) * 3);
 
+	// Entities
+	--ng-doc-class-color: var(--ng-doc-pink-70);
+	--ng-doc-class-background: var(--ng-doc-pink-10);
+	--ng-doc-interface-color: var(--ng-doc-light-blue-90);
+	--ng-doc-interface-background: var(--ng-doc-blue-10);
+	--ng-doc-enum-color: var(--ng-doc-orange-150);
+	--ng-doc-enum-background: var(--ng-doc-orange-20);
+	--ng-doc-variable-color: var(--ng-doc-orange-150);
+	--ng-doc-variable-background: var(--ng-doc-orange-20);
+	--ng-doc-function-color: var(--ng-doc-green-150);
+	--ng-doc-function-background: var(--ng-doc-green-20);
+	--ng-doc-type-alias-color: var(--ng-doc-purple-90);
+	--ng-doc-type-alias-background: var(--ng-doc-purple-10);
+
+	// Decorators
+	--ng-doc-component-decorator-background: var(--ng-doc-light-blue-10);
+	--ng-doc-component-decorator-color: var(--ng-doc-blue-100);
+	--ng-doc-directive-decorator-background: var(--ng-doc-orange-10);
+	--ng-doc-directive-decorator-color: var(--ng-doc-orange-100);
+	--ng-doc-injectable-decorator-background: var(--ng-doc-teal-20);
+	--ng-doc-injectable-decorator-color: var(--ng-doc-teal-100);
+	--ng-doc-pipe-decorator-background: var(--ng-doc-green-10);
+	--ng-doc-pipe-decorator-color: var(--ng-doc-green-100);
+	--ng-doc-ng-module-decorator-background: var(--ng-doc-pink-10);
+	--ng-doc-ng-module-decorator-color: var(--ng-doc-pink-100);
+	--ng-doc-input-decorator-background: var(--ng-doc-light-blue-10);
+	--ng-doc-input-decorator-color: var(--ng-doc-light-blue-100);
+	--ng-doc-output-decorator-background: var(--ng-doc-light-blue-20);
+	--ng-doc-output-decorator-color: var(--ng-doc-light-blue-150);
+
 	// Navbar
 	--ng-doc-navbar-height: calc(var(--ng-doc-base-gutter) * 7);
 	--ng-doc-navbar-horizontal-padding: var(--ng-doc-app-horizontal-padding);

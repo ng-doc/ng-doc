@@ -1,5 +1,6 @@
 import {
 	CallSignatureDeclaration,
+	ClassInstanceMemberTypes,
 	ClassMemberTypes,
 	ClassStaticBlockDeclaration,
 	ConstructorDeclaration,
@@ -8,10 +9,7 @@ import {
 	TypeElementTypes,
 } from 'ts-morph';
 
-export type NgDocClassMember = Exclude<
-	ClassMemberTypes,
-	ConstructorDeclaration | CallSignatureDeclaration | ClassStaticBlockDeclaration
->;
+export type NgDocClassMember = ClassInstanceMemberTypes;
 export type NgDocInterfaceMember = Exclude<
 	TypeElementTypes,
 	ConstructSignatureDeclaration | CallSignatureDeclaration | IndexSignatureDeclaration

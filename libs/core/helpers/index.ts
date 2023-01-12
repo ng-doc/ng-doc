@@ -3,7 +3,6 @@ export * from './capitalize';
 export * from './escape-html';
 export * from './escape-regexp';
 export * from './extract-value';
-export * from './humanize-declaration-name';
 export * from './is-iterable';
 export * from './is-node-tag';
 export * from './is-present';

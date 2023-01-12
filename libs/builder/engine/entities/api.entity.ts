@@ -1,9 +1,9 @@
-import {humanizeDeclarationName, NgDocApi, NgDocApiList} from '@ng-doc/core';
+import {NgDocApi, NgDocApiList} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, from, Observable, of} from 'rxjs';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 
-import {generateApiEntities, isApiPageEntity, isApiScopeEntity, slash, uniqueName} from '../../helpers';
+import {generateApiEntities, getKindType, isApiPageEntity, isApiScopeEntity, slash, uniqueName} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
 import {NgDocApiModuleEnv} from '../../templates-env/api.module.env';
 import {NgDocRenderer} from '../renderer';
@@ -108,7 +108,7 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 			title: scope.title,
 			items: scope.children.filter(isApiPageEntity).map((page: NgDocApiPageEntity) => ({
 				route: slash(path.join(scope.route, page.route)),
-				type: humanizeDeclarationName(page.declaration?.getKindName() ?? ''),
+				type: (page.declaration && getKindType(page.declaration)) ?? '',
 				name: page.declaration?.getName() ?? '',
 			})),
 		}));

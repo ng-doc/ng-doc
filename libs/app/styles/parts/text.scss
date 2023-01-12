@@ -1,5 +1,11 @@
+@import '../mixins/entities-colors';
+
 .ng-doc-no-content {
 	color: var(--ng-doc-text-muted);
 	font-style: italic;
 	font-size: 14px;
+}
+
+code.ng-doc-code-with-link {
+	--ng-doc-inline-code-background: var(--ng-doc-blue-10);
 }
