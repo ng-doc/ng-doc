@@ -1,3 +1,10 @@
+# [15.0.0-beta.32](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.31...v15.0.0-beta.32) (2023-01-12)
+
+
+### Bug Fixes
+
+* **app:** toc is not stretched to full height ([1dce071](https://github.com/skoropadas/ng-doc/commit/1dce071ff8cc535e12a5a313297f52e6ebd61e5f))
+
 # [15.0.0-beta.31](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.30...v15.0.0-beta.31) (2023-01-12)
 
 
