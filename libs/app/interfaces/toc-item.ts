@@ -1,4 +1,4 @@
-export interface NgDocPageMapItem {
+export interface NgDocTocItem {
 	title: string;
 	path: string;
 	element: HTMLHeadingElement;

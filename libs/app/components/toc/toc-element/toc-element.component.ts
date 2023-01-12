@@ -1,12 +1,12 @@
 import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input} from '@angular/core';
 
 @Component({
-	selector: 'li[ng-doc-page-map-element]',
-	templateUrl: './page-map-element.component.html',
-	styleUrls: ['./page-map-element.component.scss'],
+	selector: 'li[ng-doc-toc-element]',
+	templateUrl: './toc-element.component.html',
+	styleUrls: ['./toc-element.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocPageMapElementComponent {
+export class NgDocTocElementComponent {
 	@Input()
 	href: string = '';
 

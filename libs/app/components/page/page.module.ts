@@ -1,12 +1,13 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {NgDocPageMapModule} from '@ng-doc/app/components/page-map';
+import {NgDocPageMapModule} from '@ng-doc/app/components/toc';
 import {NgDocSanitizeHtmlModule} from '@ng-doc/app/pipes/sanitize-html';
 import {
 	NgDocBlockquoteProcessorModule,
 	NgDocCodeProcessorModule,
 	NgDocDemoProcessorModule,
-	NgDocIconProcessorModule, NgDocTooltipProcessorModule,
+	NgDocIconProcessorModule,
+	NgDocTooltipProcessorModule,
 } from '@ng-doc/app/processors';
 import {NgDocMediaQueryModule} from '@ng-doc/ui-kit';
 

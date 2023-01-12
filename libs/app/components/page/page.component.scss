@@ -6,13 +6,13 @@
 		overflow: hidden;
 	}
 
-	ng-doc-page-map {
+	ng-doc-toc {
 		margin-left: calc(var(--ng-doc-base-gutter) * 3);
 		flex-shrink: 0;
 	}
 
 	@media screen and (max-width: 1200px) {
-		ng-doc-page-map {
+		ng-doc-toc {
 			display: none;
 		}
 	}
