@@ -4,7 +4,7 @@ This article only scratches the surface of theme creation, we won't dive into th
 variables in it as this is just a beta version of the library, when its API stabilizes we'll cover
 theme creation in more detail.
 
-## How to create you own theme
+## How to create your own theme
 
 Themes in NgDoc are regular CSS files that override CSS variables, in order to create your own theme
 you need to create a theme file.
@@ -36,18 +36,19 @@ import {AppComponent} from './app.component';
 	declarations: [AppComponent],
 	imports: [
 		NgDocModule.forRoot({
-			themes: [{
-				// Your theme ID that you can use to enable theme
-				id: 'custom-theme',
-				// Path to the theme, that will be used by NgDoc to load theme
-				path: 'assets/themes/custom-theme.css'
-			}]
+			themes: [
+				{
+					// Your theme ID that you can use to enable theme
+					id: 'custom-theme',
+					// Path to the theme, that will be used by NgDoc to load theme
+					path: 'assets/themes/custom-theme.css',
+				},
+			],
 		}),
 	],
 	bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}
 ```
 
 ### Theme content
@@ -69,8 +70,7 @@ import {NgDocThemeService} from '@ng-doc/app';
 
 @Component({})
 export class AppComponent {
-	constructor(protected readonly themeService: NgDocThemeService) {
-	}
+	constructor(protected readonly themeService: NgDocThemeService) {}
 
 	setTheme(): void {
 		this.themeService.set('custom-theme');
@@ -91,13 +91,10 @@ import {AppComponent} from './app.component';
 
 @NgModule({
 	declarations: [AppComponent],
-	imports: [
-		NgDocModule.forRoot({defaultTheme: 'custom-theme'}),
-	],
+	imports: [NgDocModule.forRoot({defaultTheme: 'custom-theme'})],
 	bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}
 ```
 
 ## Themes out of the box
@@ -119,13 +116,10 @@ import {AppComponent} from './app.component';
 
 @NgModule({
 	declarations: [AppComponent],
-	imports: [
-		NgDocModule.forRoot({defaultTheme: NG_DOC_NIGHT_THEME.id}),
-	],
+	imports: [NgDocModule.forRoot({defaultTheme: NG_DOC_NIGHT_THEME.id})],
 	bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}
 ```
 
 ## Code highlighting
