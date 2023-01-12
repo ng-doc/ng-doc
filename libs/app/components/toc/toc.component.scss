@@ -5,7 +5,7 @@
 	.ng-doc-toc-wrapper {
 		position: fixed;
 		overflow-y: auto;
-		height: 70%;
+		height: calc(100% - var(--ng-doc-navbar-height) - var(--ng-doc-base-gutter) * 5);
 		width: var(--ng-doc-page-map-width);
 
 		.ng-doc-toc-selection {
