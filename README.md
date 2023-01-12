@@ -87,9 +87,9 @@ Don't forget to give the project a star! Thanks again!
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[npm-shield]: https://img.shields.io/npm/v/@ng-doc/builder.svg?style=for-the-badge
+[npm-shield]: https://img.shields.io/npm/v/@ng-doc/builder/beta.svg?style=for-the-badge
 [npm-url]: https://www.npmjs.com/package/@ng-doc/builder
 [license-shield]: https://img.shields.io/github/license/skoropadas/ng-doc.svg?style=for-the-badge
 [license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
-[build-shield]: https://img.shields.io/github/actions/workflow/status/skoropadas/ng-doc/release.yml?style=for-the-badge&branch=release
+[build-shield]: https://img.shields.io/github/actions/workflow/status/skoropadas/ng-doc/release.yml?style=for-the-badge&branch=beta
 [build-url]: https://github.com/skoropadas/ng-doc/actions
