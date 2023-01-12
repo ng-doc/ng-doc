@@ -5,10 +5,10 @@
 {% import "helpers/decorators.html.nunj" as decoratorsMacro %}
 {% import "helpers/no-content.html.nunj" as noContentMacro %}
 
-{% macro render(method, originalParent) %}
+{% macro render(method, origin) %}
 	{% set parameters = method.getParameters() %}
 	{% set methodChain = method | getMethodChain %}
-	{% set inheritedFrom = method.getParent() if method.getParent() !== originalParent %}
+	{% set inheritedFrom = method | getInheritedParent(origin) %}
 	{% set overriddenMember = method | getOverriddenMember %}
 	{% set implementedMember = method | getImplementedMember %}
 	{% set docNode = methodChain | firstNodeWithComment %}
@@ -25,9 +25,9 @@
 						{%- if inheritedFrom %}
 							inherited from <code>{{ inheritedFrom.getName() }}</code>
 						{%- elseif overriddenMember %}
-							overrides <code>{{ overriddenMember.getParent().getName() }}</code>
+							overrides <code>{{ (overriddenMember | getMemberParent).getName() }}</code>
 						{%- elseif implementedMember %}
-							implements <code>{{ implementedMember.getParent().getName() }}</code>
+							implements <code>{{ (implementedMember | getMemberParent).getName() }}</code>
 						{%- endif %}
 					</div>
 				</th>

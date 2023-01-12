@@ -6,11 +6,11 @@
 {% import "helpers/no-content.html.nunj" as noContentMacro %}
 {% import "helpers/modifier.html.nunj" as modifierMacro %}
 
-{% macro render(accessor, originalParent) %}
-	{% macro renderAccessor(accessor, type, originalParent) %}
+{% macro render(accessor, origin) %}
+	{% macro renderAccessor(accessor, type, origin) %}
 		{% set parameters = accessor.getParameters() %}
 		{% set accessorChain = accessor | getAccessorChain %}
-		{% set inheritedFrom = accessor.getParent() if accessor.getParent() !== originalParent %}
+		{% set inheritedFrom = accessor | getInheritedParent(origin) %}
 		{% set overriddenMember = accessor | getOverriddenMember %}
 		{% set implementedMember = accessor | getImplementedMember %}
 		{% set docNode = accessorChain | firstNodeWithComment %}
@@ -63,6 +63,6 @@
 	{% endmacro %}
 
 
-	{{ renderAccessor(accessor.get, "get", originalParent) if accessor.get }}
-	{{ renderAccessor(accessor.set, "set", originalParent) if accessor.set }}
+	{{ renderAccessor(accessor.get, "get", origin) if accessor.get }}
+	{{ renderAccessor(accessor.set, "set", origin) if accessor.set }}
 {% endmacro %}
