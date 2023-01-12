@@ -64,7 +64,7 @@ that you can install NgDoc using the command below, it will automatically instal
 packages and configure your application.
 
 ```sh
-ng add @ng-doc/add
+   ng add @ng-doc/add@beta
 ```
 
 <!-- CONTRIBUTING -->
@@ -91,5 +91,5 @@ Don't forget to give the project a star! Thanks again!
 [npm-url]: https://www.npmjs.com/package/@ng-doc/builder
 [license-shield]: https://img.shields.io/github/license/skoropadas/ng-doc.svg?style=for-the-badge
 [license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
-[build-shield]: https://img.shields.io/github/actions/workflow/status/skoropadas/ng-doc/release.yml?style=for-the-badge&branch=beta
+[build-shield]: https://img.shields.io/github/actions/workflow/status/skoropadas/ng-doc/release.yml?style=for-the-badge&branch=release
 [build-url]: https://github.com/skoropadas/ng-doc/actions

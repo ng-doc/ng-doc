@@ -1,5 +1,5 @@
 module.exports = {
-	branches: ['+([0-9])?(.{+([0-9]),x}).x', 'release', {name: 'beta', channel: 'latest', prerelease: true}],
+	branches: ['+([0-9])?(.{+([0-9]),x}).x', 'release', {name: 'beta', channel: 'beta', prerelease: true}],
 	plugins: [
 		'@semantic-release/commit-analyzer',
 		'@semantic-release/release-notes-generator',
