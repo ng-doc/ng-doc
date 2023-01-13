@@ -10,19 +10,18 @@
 
 		.ng-doc-toc-selection {
 			position: absolute;
-			transform: translateX(calc(-50% - 0.5px));
+			transform: translateX(-50%);
 			width: calc(var(--ng-doc-base-gutter) / 2);
 			border-radius: calc(var(--ng-doc-base-gutter) / 2);
 			background-color: var(--ng-doc-primary);
-			left: 1px;
+			left: calc(var(--ng-doc-toc-margin) + 1px);
 			transition: var(--ng-doc-transition);
 		}
 
 		.ng-doc-toc {
 			list-style: none;
-			margin: 0;
-			padding: 0;
-			padding-left: var(--ng-doc-base-gutter);
+			padding: 0 0 0 var(--ng-doc-base-gutter);
+			margin: 0 0 0 var(--ng-doc-toc-margin);
 			border-left: 1px solid var(--ng-doc-base-3);
 
 			.ng-doc-page-map-item {
