@@ -1,13 +1,21 @@
 # {{ NgDocPage.title }}
 
+Before installing the library, you will need the Angular application that you will use to display
+your documentation.
+
 ## Automatic (recommended)
 
 To install the NgDoc, you can use the command above.
-This command will automatically install and add the library to your project.
+This command will automatically install and add the library to your project,
+and configure it.
 
 ```bash
 ng add @ng-doc/add@beta
 ```
+
+By default NgDoc uses your project's `sourceRoot` as the directory where you should create
+documentation, you can always change this, see the `*GettingStartedConfiguration` article for more
+details
 
 ## Manual
 

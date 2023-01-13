@@ -6,7 +6,7 @@ const page: NgDocPage = {
 	title: `Roadmap`,
 	mdFile: './index.md',
 	category: GettingStartedCategory,
-	order: 2,
+	order: 4,
 	keyword: 'GettingStartedRoadmap',
 };
 

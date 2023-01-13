@@ -2,11 +2,12 @@ import {NgDocPage} from '@ng-doc/core';
 
 import GettingStartedCategory from '../ng-doc.category';
 
-const page: NgDocPage = {
-	title: `What is NgDoc?`,
+const Configuration: NgDocPage = {
+	title: `Configuration`,
 	mdFile: './index.md',
 	category: GettingStartedCategory,
-	order: 1,
+	keyword: 'GettingStartedConfiguration',
+	order: 3,
 };
 
-export default page;
+export default Configuration;
