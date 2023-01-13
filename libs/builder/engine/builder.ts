@@ -84,7 +84,11 @@ export class NgDocBuilder {
 					entities.map((entity: NgDocEntity) =>
 						entity.destroyed
 							? of(entity)
-							: entity.update().pipe(
+							: /*
+								TODO: If we run update method for entity, then before that, we need to add all entities
+								 that depend on it via keyword to `buildCandidates` to force links updates
+							 */
+							  entity.update().pipe(
 									catchError((e: Error) => {
 										this.context.context.logger.error(`\n\nNgDoc error: ${e.message}\n${e.stack}`);
 
