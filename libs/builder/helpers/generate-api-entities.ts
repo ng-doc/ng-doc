@@ -1,5 +1,6 @@
 import {asArray, NgDocApiScope} from '@ng-doc/core';
 import * as glob from 'glob';
+import {getSourceFiles} from 'ng-morph';
 import {SourceFile} from 'ts-morph';
 
 import {NgDocApiEntity, NgDocApiPageEntity, NgDocApiScopeEntity} from '../engine';
@@ -7,28 +8,31 @@ import {NgDocSupportedDeclarations} from '../types';
 import {isNotExcludedPath} from './is-not-excluded-path';
 import {isSupportedDeclaration} from './is-supported-declaration';
 
-// one file - sourceFile.getNodesReferencingOtherSourceFiles()[0].getModuleSpecifierSourceFile().getNodesReferencingOtherSourceFiles()
-
 /**
  *
  * @param apiRootEntity
  */
 export function generateApiEntities(apiRootEntity: NgDocApiEntity): Array<NgDocApiScopeEntity | NgDocApiPageEntity> {
-	const result: Array<NgDocApiScopeEntity | NgDocApiPageEntity> = []
+	const result: Array<NgDocApiScopeEntity | NgDocApiPageEntity> = [];
 
+	console.time('Generating API entities');
 	apiRootEntity.target?.scopes.forEach((scope: NgDocApiScope) => {
-		const scopeEntity: NgDocApiScopeEntity = new NgDocApiScopeEntity(apiRootEntity.builder, apiRootEntity.sourceFile, apiRootEntity.context, apiRootEntity, scope);
+		const scopeEntity: NgDocApiScopeEntity = new NgDocApiScopeEntity(
+			apiRootEntity.builder,
+			apiRootEntity.sourceFile,
+			apiRootEntity.context,
+			apiRootEntity,
+			scope,
+		);
 
 		result.push(scopeEntity);
 
 		asArray(scope.include).forEach((include: string) =>
 			asArray(
 				new Set(
-					apiRootEntity.sourceFile.getProject()
+					apiRootEntity.builder.project
 						.addSourceFilesAtPaths(
-							glob
-								.sync(include)
-								.filter((p: string) => isNotExcludedPath(p, asArray(scope.exclude))),
+							glob.sync(include).filter((p: string) => isNotExcludedPath(p, asArray(scope.exclude))),
 						)
 						.map((sourceFile: SourceFile) => asArray(sourceFile.getExportedDeclarations().values()))
 						.flat(2),
@@ -46,13 +50,13 @@ export function generateApiEntities(apiRootEntity: NgDocApiEntity): Array<NgDocA
 								apiRootEntity.context,
 								scopeEntity,
 								name,
-							)
-						)
+							),
+						);
 					}
 				}),
 		);
-		}
-	);
+	});
 
+	console.timeEnd('Generating API entities');
 	return result;
 }

@@ -6,22 +6,22 @@ export const api: NgDocApi = {
 		{
 			name: '@ng-doc/app',
 			route: 'app',
-			include: 'libs/app/**/*.ts',
+			include: 'libs/app/index.ts',
 		},
 		{
 			name: '@ng-doc/builder',
 			route: 'builder',
-			include: 'libs/builder/**/*.ts',
+			include: 'libs/builder/index.ts',
 		},
 		{
 			name: '@ng-doc/ui-kit',
 			route: 'ui-kit',
-			include: 'libs/ui-kit/**/*.ts',
+			include: 'libs/ui-kit/index.ts',
 		},
 		{
 			name: '@ng-doc/core',
 			route: 'core',
-			include: 'libs/core/**/*.ts',
+			include: 'libs/core/index.ts',
 		},
 	],
 };

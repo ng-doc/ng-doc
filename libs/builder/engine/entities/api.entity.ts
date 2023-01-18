@@ -60,8 +60,12 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		this.children.forEach((child: NgDocEntity) => child.destroy());
 
 		return this.emit().pipe(
+			tap(() => console.time('API EMIT')),
 			switchMap(() => from(this.sourceFile.getProject().emit())),
+			tap(() => console.timeEnd('API EMIT')),
+			tap(() => console.time('API Update')),
 			switchMap(() => this.update()),
+			tap(() => console.timeEnd('API Update')),
 			map(() => generateApiEntities(this)),
 		);
 	}
@@ -92,12 +96,12 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			const renderer: NgDocRenderer<NgDocApiModuleEnv> = new NgDocRenderer<NgDocApiModuleEnv>(this.builder, {
-				api: this,
-			});
-
-			return renderer
-				.render('./api.module.ts.nunj')
+			return this.builder.renderer
+				.render('./api.module.ts.nunj', {
+					context: {
+						api: this,
+					},
+				})
 				.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
 		}
 		return of();

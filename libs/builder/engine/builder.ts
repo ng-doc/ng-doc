@@ -1,5 +1,6 @@
 import {asArray, isPresent} from '@ng-doc/core';
 import * as fs from 'fs';
+import {getSourceFiles} from 'ng-morph';
 import * as path from 'path';
 import {from, merge, Observable, of} from 'rxjs';
 import {catchError, concatMap, map, mapTo, mergeMap, share, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
@@ -21,23 +22,27 @@ import {NgDocEntity} from './entities/abstractions/entity';
 import {entityLifeCycle} from './entity-life-cycle';
 import {NgDocEntityStore} from './entity-store';
 import {buildCandidates} from './functions/build-candidates';
+import {NgDocRenderer} from './renderer';
 import {API_PATTERN, CACHE_PATH, CATEGORY_PATTERN, PAGE_DEPENDENCY_PATTERN, PAGE_PATTERN} from './variables';
 import {NgDocWatcher} from './watcher';
 
 export class NgDocBuilder {
 	readonly entities: NgDocEntityStore = new NgDocEntityStore();
 	readonly skeleton: NgDocSkeletonEntity = new NgDocSkeletonEntity(this, this.context);
-	private readonly project: Project;
+	readonly renderer: NgDocRenderer = new NgDocRenderer();
+	private readonly compiledProject: Project;
+	readonly project: Project;
 	private readonly watcher: NgDocWatcher;
 
 	constructor(readonly context: NgDocBuilderContext) {
-		this.project = createProject({
-			tsConfigFilePath: this.context.tsConfig,
+		this.compiledProject = createProject({
 			compilerOptions: {
 				rootDir: this.context.context.workspaceRoot,
 				outDir: CACHE_PATH,
 			},
 		});
+
+		this.project = createProject({tsConfigFilePath: this.context.tsConfig});
 
 		this.watcher = new NgDocWatcher(
 			this.context.pagesPaths
@@ -53,12 +58,13 @@ export class NgDocBuilder {
 
 	run(): Observable<void> {
 		fs.rmSync(this.context.buildPath, {recursive: true, force: true});
+		console.time('Emit');
 
 		const entities: Observable<NgDocEntity[]> = merge(
-			entityLifeCycle(this, this.project, this.watcher, PAGE_PATTERN, NgDocPageEntity),
-			entityLifeCycle(this, this.project, this.watcher, CATEGORY_PATTERN, NgDocCategoryEntity),
-			entityLifeCycle(this, this.project, this.watcher, PAGE_DEPENDENCY_PATTERN, NgDocDependenciesEntity),
-			entityLifeCycle(this, this.project, this.watcher, API_PATTERN, NgDocApiEntity),
+			entityLifeCycle(this, this.compiledProject, this.watcher, PAGE_PATTERN, NgDocPageEntity),
+			entityLifeCycle(this, this.compiledProject, this.watcher, CATEGORY_PATTERN, NgDocCategoryEntity),
+			entityLifeCycle(this, this.compiledProject, this.watcher, PAGE_DEPENDENCY_PATTERN, NgDocDependenciesEntity),
+			entityLifeCycle(this, this.compiledProject, this.watcher, API_PATTERN, NgDocApiEntity),
 		).pipe(
 			bufferUntilOnce(this.watcher.onReady()),
 			map((entities: NgDocEntity[][]) => entities.flat()),
@@ -77,7 +83,11 @@ export class NgDocBuilder {
 					entities.map((entity: NgDocEntity) => (entity.destroyed ? of(null) : entity.emit())),
 				).pipe(mapTo(entities));
 			}),
-			concatMap((entities: NgDocEntity[]) => from(this.project.emit()).pipe(mapTo(entities))),
+			tap(() => console.timeEnd('Emit')),
+			tap(() => console.time('Emit Project')),
+			concatMap((entities: NgDocEntity[]) => from(this.compiledProject.emit()).pipe(mapTo(entities))),
+			tap(() => console.timeEnd('Emit Project')),
+			tap(() => console.time('Update')),
 			mergeMap((entities: NgDocEntity[]) => {
 				// Re-fetch compiled data for non destroyed entities
 				return forkJoinOrEmpty(
@@ -124,15 +134,19 @@ export class NgDocBuilder {
 				);
 			}),
 			bufferDebounce(500),
+			tap(() => console.timeEnd('Update')),
+			tap(() => console.time('Build')),
 			map((entities: Array<NgDocEntity | null>) => entities.filter(isPresent)),
 			tap(() => this.entities.updateKeywordMap(this.context.options.ngDoc?.keywords)),
+			tap(() => console.time('Build Artifacts')),
 			// Build touched entities and their dependencies
 			concatMap((entities: NgDocEntity[]) =>
 				forkJoinOrEmpty(
-					buildCandidates(entities).map((entity: NgDocEntity) =>
-						entity.destroyed ? of([]) : entity.buildArtifacts(),
-					),
+					buildCandidates(entities).map((entity: NgDocEntity) => {
+						return entity.destroyed ? of([]) : entity.buildArtifacts();
+					}),
 				).pipe(
+					tap(() => console.timeEnd('Build Artifacts')),
 					switchMap((output: NgDocBuiltOutput[][]) =>
 						this.skeleton
 							.buildArtifacts()
@@ -145,6 +159,7 @@ export class NgDocBuilder {
 						 */
 						emitBuiltOutput(...output);
 						this.collectGarbage();
+						console.timeEnd('Build');
 					}),
 				),
 			),

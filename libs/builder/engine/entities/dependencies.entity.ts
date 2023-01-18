@@ -103,15 +103,12 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 	}
 
 	private buildComponentAssets(): Observable<NgDocBuiltOutput> {
-		const renderer: NgDocRenderer<NgDocComponentAssetsEnv> = new NgDocRenderer<NgDocComponentAssetsEnv>(
-			this.builder,
-			{
-				componentsAssets: this.componentsAssets,
-			},
-		);
-
-		return renderer
-			.render('./component-assets.ts.nunj')
+		return this.builder.renderer
+			.render('./component-assets.ts.nunj', {
+				context: {
+					componentsAssets: this.componentsAssets,
+				},
+			})
 			.pipe(map((output: string) => ({content: output, filePath: this.componentAssetsPath})));
 	}
 
@@ -137,7 +134,6 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 	}
 
 	private getComponentAssets(classDeclaration: ClassDeclaration): ComponentAsset {
-		const render: NgDocRenderer<NgDocCodeEnv> = new NgDocRenderer<NgDocCodeEnv>(this.builder);
 		const decorator: Decorator | undefined = classDeclaration.getDecorator('Component');
 		const decoratorArgument: Node | undefined = decorator?.getArguments()[0];
 
@@ -165,9 +161,9 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 					return {
 						...asset,
 						code,
-						output: render
+						output: this.builder.renderer
 							.renderSync('./code.html.nunj', {
-								overrideContext: {
+								context: {
 									code,
 									lang: asset.type,
 								},

@@ -93,33 +93,31 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	}
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
-		const renderer: NgDocRenderer<NgDocApiPageModuleEnv> = new NgDocRenderer<NgDocApiPageModuleEnv>(this.builder, {
-			page: this,
-		});
-
-		return renderer
-			.render('./api-page.module.ts.nunj')
+		return this.builder.renderer
+			.render('./api-page.module.ts.nunj', {context: {page: this}})
 			.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
 	}
 
 	private buildPage(): Observable<NgDocBuiltOutput | null> {
 		if (this.declaration) {
-			const renderer: NgDocRenderer<NgDocApiPageEnv> = new NgDocRenderer<NgDocApiPageEnv>(this.builder, {
-				declaration: this.declaration,
-				scope: this.parent.target,
-			});
-
-			return renderer.render('./api-page.html.nunj').pipe(
-				map((output: string) => ({content: output, filePath: this.builtPagePath})),
-				catchError((error: unknown) => {
-					this.logger.error(
-						`\nError happened while processing Api Page for entity "${this.declaration
-							?.getSymbol()
-							?.getName()}":\n${error}"`,
-					);
-					return of(null);
-				}),
-			);
+			return this.builder.renderer
+				.render('./api-page.html.nunj', {
+					context: {
+						declaration: this.declaration,
+						scope: this.parent.target,
+					},
+				})
+				.pipe(
+					map((output: string) => ({content: output, filePath: this.builtPagePath})),
+					catchError((error: unknown) => {
+						this.logger.error(
+							`\nError happened while processing Api Page for entity "${this.declaration
+								?.getSymbol()
+								?.getName()}":\n${error}"`,
+						);
+						return of(null);
+					}),
+				);
 		}
 		return of(null);
 	}

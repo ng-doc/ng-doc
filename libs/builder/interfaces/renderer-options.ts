@@ -1,4 +1,7 @@
+import {ObservableSet} from '../classes';
+
 export interface NgDocRendererOptions<T> {
 	scope?: string;
-	overrideContext?: T;
+	dependenciesStore?: ObservableSet<string>;
+	context?: T;
 }
