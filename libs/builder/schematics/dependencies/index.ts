@@ -12,7 +12,7 @@ import {
 	Tree,
 	url,
 } from '@angular-devkit/schematics';
-import path, {basename, relative} from 'path';
+import path, {basename} from 'path';
 
 import {PAGE_NAME} from '../../engine';
 import {extractDefaultExportName} from '../utils';

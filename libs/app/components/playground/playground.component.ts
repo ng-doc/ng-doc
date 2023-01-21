@@ -1,8 +1,13 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {NgDocRootPage} from '@ng-doc/app/classes';
-import {NgDocPlaygroundConfig, NgDocPlaygroundProperties} from '@ng-doc/core';
-import {extractValue, NgDocExtractedValue, objectKeys} from '@ng-doc/core';
+import {
+	extractValue,
+	NgDocExtractedValue,
+	NgDocPlaygroundConfig,
+	NgDocPlaygroundProperties,
+	objectKeys,
+} from '@ng-doc/core';
 
 @Component({
 	selector: 'ng-doc-playground',

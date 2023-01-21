@@ -1,6 +1,5 @@
 import {asArray, NgDocApiScope} from '@ng-doc/core';
 import * as glob from 'glob';
-import {getSourceFiles} from 'ng-morph';
 import {SourceFile} from 'ts-morph';
 
 import {NgDocApiEntity, NgDocApiPageEntity, NgDocApiScopeEntity} from '../engine';

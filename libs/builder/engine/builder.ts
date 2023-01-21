@@ -1,4 +1,4 @@
-import {asArray, isPresent} from '@ng-doc/core';
+import {isPresent} from '@ng-doc/core';
 import * as fs from 'fs';
 import * as path from 'path';
 import {from, merge, Observable, of} from 'rxjs';

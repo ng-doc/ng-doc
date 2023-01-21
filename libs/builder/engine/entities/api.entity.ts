@@ -5,8 +5,6 @@ import {catchError, map, switchMap, tap} from 'rxjs/operators';
 
 import {generateApiEntities, getKindType, isApiPageEntity, isApiScopeEntity, slash, uniqueName} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
-import {NgDocApiModuleEnv} from '../../templates-env/api.module.env';
-import {NgDocRenderer} from '../renderer';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocApiPageEntity} from './api-page.entity';

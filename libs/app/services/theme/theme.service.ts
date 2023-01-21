@@ -18,8 +18,7 @@ export class NgDocThemeService {
 		@Inject(NG_DOC_THEME)
 		private readonly themes: NgDocTheme[],
 		private readonly store: NgDocStoreService,
-	) {
-	}
+	) {}
 
 	get currentTheme(): NgDocTheme | undefined {
 		return this.theme;
@@ -32,7 +31,9 @@ export class NgDocThemeService {
 			const theme: NgDocTheme | undefined = this.themes.find((theme: NgDocTheme) => theme.id === id);
 
 			if (!theme) {
-				console.warn(`Theme with id "${id}" is not registered. Make sure that you registered it in the root of your application.`);
+				console.warn(
+					`Theme with id "${id}" is not registered. Make sure that you registered it in the root of your application.`,
+				);
 
 				return Promise.resolve();
 			}
@@ -49,7 +50,7 @@ export class NgDocThemeService {
 						this.linkElement.onload = resolve;
 						this.linkElement.onerror = reject;
 					}
-				})
+				});
 			}
 		}
 		this.store.set(NG_DOC_STORE_THEME_KEY, 'day');
@@ -67,7 +68,7 @@ export class NgDocThemeService {
 			this.linkElement = this.document.createElement('link');
 			this.linkElement.setAttribute('rel', 'stylesheet');
 			this.linkElement.setAttribute('type', 'text/css');
-			this.document.getElementsByTagName("head")[0].appendChild(this.linkElement);
+			this.document.getElementsByTagName('head')[0].appendChild(this.linkElement);
 		}
 	}
 }

@@ -7,9 +7,7 @@ import {SourceFile} from 'ts-morph';
 
 import {isDependencyEntity, isPlaygroundEntity, marked, slash, uniqueName} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
-import {NgDocPageEnv, NgDocPageModuleEnv} from '../../templates-env';
 import {NgDocActions} from '../actions';
-import {NgDocRenderer} from '../renderer';
 import {PAGE_DEPENDENCIES_NAME, PLAYGROUND_NAME, RENDERED_PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';

@@ -5,8 +5,6 @@ import {catchError, map, tap} from 'rxjs/operators';
 
 import {isCategoryEntity, isPageEntity, uniqueName} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
-import {NgDocCategoryModuleEnv} from '../../templates-env';
-import {NgDocRenderer} from '../renderer';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocPageEntity} from './page.entity';

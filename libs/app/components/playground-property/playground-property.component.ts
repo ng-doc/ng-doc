@@ -15,8 +15,7 @@ import {
 import {FormControl} from '@angular/forms';
 import {getTokenForType, isPlaygroundProperty} from '@ng-doc/app/helpers';
 import {NgDocProvidedTypeControl, NgDocTypeControl, NgDocTypeControlProviderOptions} from '@ng-doc/app/interfaces';
-import {NgDocPlaygroundDynamicContent, NgDocPlaygroundProperty} from '@ng-doc/core';
-import {extractValueOrThrow} from '@ng-doc/core';
+import {extractValueOrThrow, NgDocPlaygroundDynamicContent, NgDocPlaygroundProperty} from '@ng-doc/core';
 
 @Component({
 	selector: 'ng-doc-playground-property',

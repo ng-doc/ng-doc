@@ -1,7 +1,7 @@
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {share, shareReplay, tap} from 'rxjs/operators';
+import {shareReplay, tap} from 'rxjs/operators';
 
 @Injectable()
 export class NgDocCacheInterceptor implements HttpInterceptor {
@@ -20,7 +20,9 @@ export class NgDocCacheInterceptor implements HttpInterceptor {
 		}
 
 		// Return cached response
-		const cachedRequest: Observable<HttpEvent<T>> | undefined = this.cache.get(request.url) as Observable<HttpEvent<T>>;
+		const cachedRequest: Observable<HttpEvent<T>> | undefined = this.cache.get(request.url) as Observable<
+			HttpEvent<T>
+		>;
 
 		if (cachedRequest) {
 			return cachedRequest;
@@ -40,7 +42,7 @@ export class NgDocCacheInterceptor implements HttpInterceptor {
 					}
 				},
 			}),
-			shareReplay(1)
+			shareReplay(1),
 		);
 
 		// Cache the request and return the new handler

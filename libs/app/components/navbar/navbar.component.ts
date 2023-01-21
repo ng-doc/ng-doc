@@ -3,8 +3,8 @@ import {NgDocSidebarService} from '@ng-doc/app/services';
 import {NgDocContent, ngDocZoneOptimize} from '@ng-doc/ui-kit';
 import {WINDOW} from '@ng-web-apis/common';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {combineLatest, fromEvent, merge, of} from 'rxjs';
-import {debounceTime, distinctUntilChanged, map, startWith, switchMap} from 'rxjs/operators';
+import {combineLatest, fromEvent} from 'rxjs';
+import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
 
 @Component({
 	selector: 'ng-doc-navbar',

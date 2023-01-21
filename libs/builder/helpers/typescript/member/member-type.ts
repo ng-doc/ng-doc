@@ -1,9 +1,6 @@
 import {
 	CallSignatureDeclaration,
 	ClassInstanceMemberTypes,
-	ClassMemberTypes,
-	ClassStaticBlockDeclaration,
-	ConstructorDeclaration,
 	ConstructSignatureDeclaration,
 	IndexSignatureDeclaration,
 	TypeElementTypes,

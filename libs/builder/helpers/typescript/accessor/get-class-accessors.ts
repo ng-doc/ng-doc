@@ -2,7 +2,6 @@ import {asArray} from '@ng-doc/core';
 import {AccessorDeclaration, ClassDeclaration, GetAccessorDeclaration, SetAccessorDeclaration} from 'ts-morph';
 
 import {forAllClasses} from '../class';
-import {NgDocAccessor} from './accessor';
 
 /**
  *

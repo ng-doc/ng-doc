@@ -1,6 +1,6 @@
 import {NgDocKeyword} from '@ng-doc/builder';
 
-import {isPageEntity, printWarning} from '../../../helpers';
+import {printWarning} from '../../../helpers';
 import {NgDocRouteEntity} from '../../entities/abstractions/route.entity';
 import {NgDocEntityStore} from '../../entity-store';
 

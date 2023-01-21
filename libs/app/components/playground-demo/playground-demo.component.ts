@@ -33,7 +33,8 @@ import {NgDocBaseDemoComponent} from './demo/base-demo.component';
 export class NgDocPlaygroundDemoComponent<
 	P extends NgDocPlaygroundProperties,
 	C extends Record<string, NgDocPlaygroundDynamicContent>,
-> implements OnChanges, OnDestroy {
+> implements OnChanges, OnDestroy
+{
 	@Input()
 	target?: Type<unknown>;
 
@@ -66,8 +67,7 @@ export class NgDocPlaygroundDemoComponent<
 	private demoRef?: ComponentRef<NgDocBaseDemoComponent>;
 	private readonly unsubscribe$: Subject<void> = new Subject<void>();
 
-	constructor(private readonly rootPage: NgDocRootPage, private readonly injector: Injector) {
-	}
+	constructor(private readonly rootPage: NgDocRootPage, private readonly injector: Injector) {}
 
 	ngOnChanges({form}: SimpleChanges): void {
 		if (form) {
@@ -124,18 +124,17 @@ export class NgDocPlaygroundDemoComponent<
 		const template: string =
 			this.properties && this.form
 				? compileTemplate(
-					this.template,
-					this.selector,
-					this.properties,
-					this.form.value,
-					this.dynamicContent,
-					'preview',
-				)
+						this.template,
+						this.selector,
+						this.properties,
+						this.form.value,
+						this.dynamicContent,
+						'preview',
+				  )
 				: '';
 
 		this.code = formatHtml(template);
 	}
-
 
 	ngOnDestroy(): void {
 		this.unsubscribe$.next();

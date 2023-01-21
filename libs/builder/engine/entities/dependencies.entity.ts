@@ -15,8 +15,6 @@ import {
 import {buildAssets, formatCode, isPageEntity, slash} from '../../helpers';
 import {NgDocAsset, NgDocBuiltOutput} from '../../interfaces';
 import {componentDecoratorResolver} from '../../resolvers/component-decorator.resolver';
-import {NgDocCodeEnv, NgDocComponentAssetsEnv} from '../../templates-env';
-import {NgDocRenderer} from '../renderer';
 import {PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocSourceFileEntity} from './abstractions/source-file.entity';

@@ -4,8 +4,6 @@ import {map} from 'rxjs/operators';
 
 import {buildGlobalIndexes} from '../../helpers/build-global-indexes';
 import {NgDocBuiltOutput} from '../../interfaces';
-import {NgDocContextEnv, NgDocRoutingEnv} from '../../templates-env';
-import {NgDocRenderer} from '../renderer';
 import {NgDocEntity} from './abstractions/entity';
 
 export class NgDocSkeletonEntity extends NgDocEntity {

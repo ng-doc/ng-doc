@@ -1,12 +1,12 @@
 import * as fs from 'fs';
 import minimatch from 'minimatch';
 import * as path from 'path';
-import {from, Observable, of, throwError} from 'rxjs';
-import {catchError, mapTo, tap} from 'rxjs/operators';
+import {from, Observable} from 'rxjs';
+import {mapTo, tap} from 'rxjs/operators';
 import {OutputFile, SyntaxKind} from 'ts-morph';
 
 import {isCategoryEntity} from '../../../helpers';
-import {CACHE_PATH, CATEGORY_PATTERN} from '../../variables';
+import {CATEGORY_PATTERN} from '../../variables';
 import {NgDocCategoryEntity} from '../category.entity';
 import {NgDocEntity} from './entity';
 import {NgDocSourceFileEntity} from './source-file.entity';

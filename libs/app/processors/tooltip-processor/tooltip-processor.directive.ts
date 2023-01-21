@@ -16,12 +16,11 @@ export class NgDocTooltipProcessorDirective extends NgDocHtmlProcessor<NgDocTool
 	}
 
 	protected override extractComponentOptions(element: Element): NgDocProcessorOptions<NgDocTooltipWrapperComponent> {
-
 		return {
 			inputs: {
 				content: element.getAttribute('ngDocTooltip') ?? '',
 			},
-			content: [[element.cloneNode(true)]]
+			content: [[element.cloneNode(true)]],
 		};
 	}
 }

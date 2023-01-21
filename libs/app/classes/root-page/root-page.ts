@@ -1,4 +1,4 @@
-import {Directive, Type} from '@angular/core';
+import {Type} from '@angular/core';
 import {NgDocDemoAssets} from '@ng-doc/app/interfaces';
 import {NgDocPlayground} from '@ng-doc/core';
 

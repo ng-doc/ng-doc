@@ -1,4 +1,4 @@
-import {AfterViewInit, ComponentRef, Directive, ElementRef, OnInit, Type, ViewContainerRef} from '@angular/core';
+import {ComponentRef, Directive, ElementRef, OnInit, Type, ViewContainerRef} from '@angular/core';
 import {NgDocProcessorOptions} from '@ng-doc/app/interfaces';
 
 /**
@@ -15,24 +15,23 @@ export abstract class NgDocHtmlProcessor<T> implements OnInit {
 	) {}
 
 	ngOnInit(): void {
-		this.elementRef.nativeElement.querySelectorAll(this.selector)
-			.forEach((elementNode: Element) => {
-				const options: NgDocProcessorOptions<T> = this.extractComponentOptions(elementNode);
+		this.elementRef.nativeElement.querySelectorAll(this.selector).forEach((elementNode: Element) => {
+			const options: NgDocProcessorOptions<T> = this.extractComponentOptions(elementNode);
 
-				// create component
-				const componentRef: ComponentRef<T> = this.viewContainerRef.createComponent(this.component, {
-					projectableNodes: options.content,
-				});
+			// create component
+			const componentRef: ComponentRef<T> = this.viewContainerRef.createComponent(this.component, {
+				projectableNodes: options.content,
+			});
 
-				// set component options
-				Object.assign(componentRef.instance as object, options.inputs);
+			// set component options
+			Object.assign(componentRef.instance as object, options.inputs);
 
-				// replace element node with component node
-				const replaceElement: Element = this.replaceElement(elementNode);
-				replaceElement.parentNode?.replaceChild(componentRef.location.nativeElement, replaceElement);
+			// replace element node with component node
+			const replaceElement: Element = this.replaceElement(elementNode);
+			replaceElement.parentNode?.replaceChild(componentRef.location.nativeElement, replaceElement);
 
-				componentRef.changeDetectorRef.markForCheck();
-			})
+			componentRef.changeDetectorRef.markForCheck();
+		});
 	}
 
 	protected replaceElement(element: Element): Element {

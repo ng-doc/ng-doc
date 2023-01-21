@@ -1,3 +1,3 @@
 import {NgDocApiEnv} from './api.env';
 
-export type NgDocTagsEnv = NgDocApiEnv
+export type NgDocTagsEnv = NgDocApiEnv;

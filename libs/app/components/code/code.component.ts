@@ -1,5 +1,4 @@
 import {Clipboard} from '@angular/cdk/clipboard';
-import {Element} from '@angular/compiler';
 import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input, ViewChild} from '@angular/core';
 import {NgDocNotifyService} from '@ng-doc/ui-kit';
 

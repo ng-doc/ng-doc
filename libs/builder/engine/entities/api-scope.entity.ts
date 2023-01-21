@@ -5,9 +5,7 @@ import {SourceFile} from 'ts-morph';
 
 import {isPageEntity, uniqueName} from '../../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
-import {NgDocApiScopeModuleEnv} from '../../templates-env/api-scope.module.env';
 import {NgDocBuilder} from '../builder';
-import {NgDocRenderer} from '../renderer';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocApiEntity} from './api.entity';

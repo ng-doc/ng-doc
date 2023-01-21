@@ -1,6 +1,6 @@
 import path from 'path';
 import {from, Observable} from 'rxjs';
-import {mapTo, switchMap} from 'rxjs/operators';
+import {mapTo} from 'rxjs/operators';
 import {Node, ObjectLiteralExpression, SourceFile, Symbol, SyntaxKind} from 'ts-morph';
 
 import {slash} from '../../../helpers';

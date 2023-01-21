@@ -1,8 +1,7 @@
-import {ClassDeclaration, MethodDeclaration, PropertyDeclaration} from 'ts-morph';
-
 import {
 	NgDocApiEntity,
-	NgDocApiPageEntity, NgDocApiScopeEntity,
+	NgDocApiPageEntity,
+	NgDocApiScopeEntity,
 	NgDocCategoryEntity,
 	NgDocDependenciesEntity,
 	NgDocPageEntity,
@@ -24,9 +23,7 @@ export function isPageEntity(page: InstanceType<Constructable>): page is NgDocPa
  *
  * @param dependency
  */
-export function isDependencyEntity(
-	dependency: InstanceType<Constructable>,
-): dependency is NgDocDependenciesEntity {
+export function isDependencyEntity(dependency: InstanceType<Constructable>): dependency is NgDocDependenciesEntity {
 	return dependency instanceof NgDocDependenciesEntity;
 }
 
