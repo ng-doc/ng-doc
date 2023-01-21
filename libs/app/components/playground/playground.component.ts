@@ -29,8 +29,6 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 			properties: propertiesForm,
 			content: contentForm,
 		});
-
-		console.log(this.rootPage.playground, this.id, this.properties);
 	}
 
 	get configuration(): NgDocPlaygroundConfig | undefined {

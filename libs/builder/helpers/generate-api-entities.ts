@@ -15,7 +15,6 @@ import {isSupportedDeclaration} from './is-supported-declaration';
 export function generateApiEntities(apiRootEntity: NgDocApiEntity): Array<NgDocApiScopeEntity | NgDocApiPageEntity> {
 	const result: Array<NgDocApiScopeEntity | NgDocApiPageEntity> = [];
 
-	console.time('Generating API entities');
 	apiRootEntity.target?.scopes.forEach((scope: NgDocApiScope) => {
 		const scopeEntity: NgDocApiScopeEntity = new NgDocApiScopeEntity(
 			apiRootEntity.builder,
@@ -57,6 +56,5 @@ export function generateApiEntities(apiRootEntity: NgDocApiEntity): Array<NgDocA
 		);
 	});
 
-	console.timeEnd('Generating API entities');
 	return result;
 }

@@ -60,12 +60,8 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		this.children.forEach((child: NgDocEntity) => child.destroy());
 
 		return this.emit().pipe(
-			tap(() => console.time('API EMIT')),
 			switchMap(() => from(this.sourceFile.getProject().emit())),
-			tap(() => console.timeEnd('API EMIT')),
-			tap(() => console.time('API Update')),
 			switchMap(() => this.update()),
-			tap(() => console.timeEnd('API Update')),
 			map(() => generateApiEntities(this)),
 		);
 	}

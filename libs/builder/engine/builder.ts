@@ -58,7 +58,6 @@ export class NgDocBuilder {
 
 	run(): Observable<void> {
 		fs.rmSync(this.context.buildPath, {recursive: true, force: true});
-		console.time('Emit');
 
 		const entities: Observable<NgDocEntity[]> = merge(
 			entityLifeCycle(this, this.compiledProject, this.watcher, PAGE_PATTERN, NgDocPageEntity),
@@ -83,11 +82,7 @@ export class NgDocBuilder {
 					entities.map((entity: NgDocEntity) => (entity.destroyed ? of(null) : entity.emit())),
 				).pipe(mapTo(entities));
 			}),
-			tap(() => console.timeEnd('Emit')),
-			tap(() => console.time('Emit Project')),
 			concatMap((entities: NgDocEntity[]) => from(this.compiledProject.emit()).pipe(mapTo(entities))),
-			tap(() => console.timeEnd('Emit Project')),
-			tap(() => console.time('Update')),
 			mergeMap((entities: NgDocEntity[]) => {
 				// Re-fetch compiled data for non destroyed entities
 				return forkJoinOrEmpty(
@@ -134,11 +129,8 @@ export class NgDocBuilder {
 				);
 			}),
 			bufferDebounce(500),
-			tap(() => console.timeEnd('Update')),
-			tap(() => console.time('Build')),
 			map((entities: Array<NgDocEntity | null>) => entities.filter(isPresent)),
 			tap(() => this.entities.updateKeywordMap(this.context.options.ngDoc?.keywords)),
-			tap(() => console.time('Build Artifacts')),
 			// Build touched entities and their dependencies
 			concatMap((entities: NgDocEntity[]) =>
 				forkJoinOrEmpty(
@@ -146,7 +138,6 @@ export class NgDocBuilder {
 						return entity.destroyed ? of([]) : entity.buildArtifacts();
 					}),
 				).pipe(
-					tap(() => console.timeEnd('Build Artifacts')),
 					switchMap((output: NgDocBuiltOutput[][]) =>
 						this.skeleton
 							.buildArtifacts()
@@ -159,7 +150,6 @@ export class NgDocBuilder {
 						 */
 						emitBuiltOutput(...output);
 						this.collectGarbage();
-						console.timeEnd('Build');
 					}),
 				),
 			),
