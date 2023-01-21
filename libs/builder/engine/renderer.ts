@@ -1,16 +1,14 @@
 import {objectKeys} from '@ng-doc/core';
 import * as fs from 'fs';
-import {Environment, ILoader, lib} from 'nunjucks';
+import {Environment, ILoader} from 'nunjucks';
 import * as path from 'path';
-import {Observable, Subscriber} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Node} from 'ts-morph';
 
-import {NgDocBuilder} from './builder';
-import * as filters from './template-filters';
-import {TEMPLATES_PATH} from './variables';
-import TemplateError = lib.TemplateError;
 import {ObservableSet} from '../classes';
 import {NgDocRendererOptions} from '../interfaces';
+import * as filters from './template-filters';
+import {TEMPLATES_PATH} from './variables';
 
 class NgDocRelativeLoader implements ILoader {
 	constructor(private readonly path: string, private readonly dependenciesStore?: ObservableSet<string>) {}
@@ -27,43 +25,18 @@ class NgDocRelativeLoader implements ILoader {
 	}
 }
 
-export class NgDocRenderer<T extends object> {
-	constructor(
-		private readonly builder: NgDocBuilder,
-		private readonly context?: T,
-		private readonly dependenciesStore?: ObservableSet<string>,
-	) {}
-
-	render(template: string, options?: NgDocRendererOptions<T>): Observable<string> {
-		return new Observable((observer: Subscriber<string>) => {
-			this.getEnvironment(options).render(
-				template,
-				this.getContext(options?.overrideContext),
-				(err: TemplateError | null, data: string | null) => {
-					if (err) {
-						observer.error(err);
-					} else {
-						observer.next(data ?? '');
-						observer.complete();
-					}
-				},
-			);
-		});
+export class NgDocRenderer {
+	render<T extends object>(template: string, options?: NgDocRendererOptions<T>): Observable<string> {
+		return of(this.renderSync(template, options));
 	}
 
-	renderSync(template: string, options?: NgDocRendererOptions<T>): string {
-		return this.getEnvironment(options).render(template, this.getContext(options?.overrideContext));
+	renderSync<T extends object>(template: string, options?: NgDocRendererOptions<T>): string {
+		return this.getEnvironment(options).render(template, options?.context);
 	}
 
-	private getContext(context?: T): object {
-		return {
-			...(context ?? this.context),
-		};
-	}
-
-	private getEnvironment(options?: NgDocRendererOptions<T>): Environment {
+	private getEnvironment<T extends object>(options?: NgDocRendererOptions<T>): Environment {
 		let environment: Environment = new Environment(
-			new NgDocRelativeLoader(options?.scope ?? TEMPLATES_PATH, this.dependenciesStore),
+			new NgDocRelativeLoader(options?.scope ?? TEMPLATES_PATH, options?.dependenciesStore),
 			{autoescape: false},
 		);
 
@@ -72,7 +45,6 @@ export class NgDocRenderer<T extends object> {
 		);
 
 		environment.addGlobal('Node', Node);
-		environment.addGlobal('NgDocBuilder', this.builder);
 
 		return environment;
 	}

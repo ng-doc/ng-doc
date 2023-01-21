@@ -20,16 +20,12 @@ export function createProject(options?: ProjectOptions): Project {
 			skipLibCheck: true,
 			tsBuildInfoFile: path.join(CACHE_PATH, 'ng-doc.buildinfo.json'),
 			moduleResolution: ModuleResolutionKind.NodeJs,
-			/*
-				true value increases the speed, but thn it's not possible to resolve imports,
-				TODO: maybe as a workaround it's possible to add all source files that we need to the Project
-			 */
-			noResolve: false,
 			isolatedModules: true,
-
 			types: [],
 			...options?.compilerOptions,
 		},
 		skipAddingFilesFromTsConfig: true,
+		skipFileDependencyResolution: true,
+		skipLoadingLibFiles: true,
 	});
 }

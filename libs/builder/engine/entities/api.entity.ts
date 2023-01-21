@@ -92,12 +92,12 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			const renderer: NgDocRenderer<NgDocApiModuleEnv> = new NgDocRenderer<NgDocApiModuleEnv>(this.builder, {
-				api: this,
-			});
-
-			return renderer
-				.render('./api.module.ts.nunj')
+			return this.builder.renderer
+				.render('./api.module.ts.nunj', {
+					context: {
+						api: this,
+					},
+				})
 				.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
 		}
 		return of();

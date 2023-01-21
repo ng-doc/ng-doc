@@ -75,7 +75,7 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 
 	override emit(): Observable<void> {
 		// Emitting source file is not necessary for this type of entity
-		return of(void 0)
+		return of(void 0);
 	}
 
 	override update(): Observable<void> {
@@ -88,15 +88,12 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			const renderer: NgDocRenderer<NgDocApiScopeModuleEnv> = new NgDocRenderer<NgDocApiScopeModuleEnv>(
-				this.builder,
-				{
-					scope: this,
-				},
-			);
-
-			return renderer
-				.render('./api-scope.module.ts.nunj')
+			return this.builder.renderer
+				.render('./api-scope.module.ts.nunj', {
+					context: {
+						scope: this,
+					},
+				})
 				.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
 		}
 		return of();
