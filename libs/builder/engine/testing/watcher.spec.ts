@@ -1,20 +1,15 @@
 import {CATEGORY_PATTERN, NgDocWatcher, PAGE_PATTERN} from '@ng-doc/builder';
-import {createMockCategory, mockedCategoryPath} from '@ng-doc/builder/testing/mocks/create-category';
-import {createMockPage, mockedPageFSPath, mockedPagePath} from '@ng-doc/builder/testing/mocks/create-page';
+import {getMockedFileSystem} from '@ng-doc/builder/testing/get-mocked-file-system';
+import {GettingStartedMockedCategoryPath, InstallationMockedPagePath} from '@ng-doc/builder/testing/mocks/variables';
 import * as fs from 'fs';
 import mock from 'mock-fs';
 import {first} from 'rxjs/operators';
 
 describe('NgDocWatcher', () => {
 	let watcher: NgDocWatcher;
-	const pageName: string = 'page';
-	const categoryName: string = 'category';
 
 	beforeEach(() => {
-		mock({
-			...createMockPage(pageName),
-			...createMockCategory(categoryName),
-		});
+		mock(getMockedFileSystem());
 
 		watcher = new NgDocWatcher([PAGE_PATTERN]);
 	});
@@ -25,30 +20,30 @@ describe('NgDocWatcher', () => {
 	});
 
 	it('should emit watched file path', async () => {
-		expect(await watcher.onAdd(PAGE_PATTERN).pipe(first()).toPromise()).toBe(mockedPagePath(pageName));
+		expect(await watcher.onAdd(PAGE_PATTERN).pipe(first()).toPromise()).toBe(InstallationMockedPagePath);
 	});
 
 	it('should emit path when file was changed', async () => {
 		await watcher.onReady().pipe(first()).toPromise();
 
-		fs.writeFileSync(mockedPageFSPath(pageName), '123');
+		fs.writeFileSync(InstallationMockedPagePath, '123');
 
-		expect(await watcher.onChange(PAGE_PATTERN).pipe(first()).toPromise()).toBe(mockedPagePath(pageName));
+		expect(await watcher.onChange(PAGE_PATTERN).pipe(first()).toPromise()).toBe(InstallationMockedPagePath);
 	});
 
 	it('should emit path when file was unlinked', async () => {
 		await watcher.onReady().pipe(first()).toPromise();
 
-		fs.unlinkSync(mockedPageFSPath(pageName));
+		fs.unlinkSync(InstallationMockedPagePath);
 
-		expect(await watcher.onUnlink(PAGE_PATTERN).pipe(first()).toPromise()).toBe(mockedPagePath(pageName));
+		expect(await watcher.onUnlink(PAGE_PATTERN).pipe(first()).toPromise()).toBe(InstallationMockedPagePath);
 	});
 
-	it('should add another file to watchers', async () => {
+	it('should start watching for new files', async () => {
 		await watcher.onReady().pipe(first()).toPromise();
 
 		watcher.watch(CATEGORY_PATTERN);
 
-		expect(await watcher.onAdd(CATEGORY_PATTERN).pipe(first()).toPromise()).toBe(mockedCategoryPath(categoryName));
+		expect(await watcher.onAdd(CATEGORY_PATTERN).pipe(first()).toPromise()).toBe(GettingStartedMockedCategoryPath);
 	});
 });
