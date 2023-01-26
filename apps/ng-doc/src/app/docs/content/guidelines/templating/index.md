@@ -27,7 +27,7 @@ following
 ```
 
 This will force `nunjucks` to include the `dry-template.md` template in your current page, and NgDoc
-will start watching for changes to this template so that if it changes, it will re-render all
+will start watching for changes to this template so that if it changes, NgDoc will re-render all
 templates that depend on it
 
 ### Macros

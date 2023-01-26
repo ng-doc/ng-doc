@@ -1,6 +1,5 @@
 import {ClassDeclaration} from 'ts-morph';
 
-import {findBaseClass} from './find-base-class';
 import {forAllClasses} from './for-all-classes';
 
 /**

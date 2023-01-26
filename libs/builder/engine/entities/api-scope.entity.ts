@@ -5,9 +5,7 @@ import {SourceFile} from 'ts-morph';
 
 import {isPageEntity, uniqueName} from '../../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
-import {NgDocApiScopeModuleEnv} from '../../templates-env/api-scope.module.env';
 import {NgDocBuilder} from '../builder';
-import {NgDocRenderer} from '../renderer';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocApiEntity} from './api.entity';
@@ -88,15 +86,12 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			const renderer: NgDocRenderer<NgDocApiScopeModuleEnv> = new NgDocRenderer<NgDocApiScopeModuleEnv>(
-				this.builder,
-				{
-					scope: this,
-				},
-			);
-
-			return renderer
-				.render('./api-scope.module.ts.nunj')
+			return this.builder.renderer
+				.render('./api-scope.module.ts.nunj', {
+					context: {
+						scope: this,
+					},
+				})
 				.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
 		}
 		return of();

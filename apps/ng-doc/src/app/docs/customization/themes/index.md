@@ -4,7 +4,7 @@ This article only scratches the surface of theme creation, we won't dive into th
 variables in it as this is just a beta version of the library, when its API stabilizes we'll cover
 theme creation in more detail.
 
-## How to create you own theme
+## How to create your own theme
 
 Themes in NgDoc are regular CSS files that override CSS variables, in order to create your own theme
 you need to create a theme file.

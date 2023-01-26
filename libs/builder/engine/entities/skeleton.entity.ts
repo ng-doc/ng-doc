@@ -4,8 +4,6 @@ import {map} from 'rxjs/operators';
 
 import {buildGlobalIndexes} from '../../helpers/build-global-indexes';
 import {NgDocBuiltOutput} from '../../interfaces';
-import {NgDocContextEnv, NgDocRoutingEnv} from '../../templates-env';
-import {NgDocRenderer} from '../renderer';
 import {NgDocEntity} from './abstractions/entity';
 
 export class NgDocSkeletonEntity extends NgDocEntity {
@@ -41,9 +39,8 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 
 	private buildRoutes(): Observable<NgDocBuiltOutput> {
 		const entities: NgDocEntity[] = this.rootEntitiesForBuild;
-		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocRoutingEnv>(this.builder, {entities});
 
-		return renderer.render('./routing.ts.nunj').pipe(
+		return this.builder.renderer.render('./routing.ts.nunj', {context: {entities}}).pipe(
 			map((output: string) => ({
 				content: output,
 				filePath: path.join(this.context.buildPath, 'ng-doc.routing.ts'),
@@ -53,9 +50,8 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 
 	private buildContext(): Observable<NgDocBuiltOutput> {
 		const entities: NgDocEntity[] = this.rootEntitiesForBuild;
-		const renderer: NgDocRenderer<NgDocRoutingEnv> = new NgDocRenderer<NgDocContextEnv>(this.builder, {entities});
 
-		return renderer.render('./context.ts.nunj').pipe(
+		return this.builder.renderer.render('./context.ts.nunj', {context: {entities}}).pipe(
 			map((output: string) => ({
 				content: output,
 				filePath: path.join(this.context.buildPath, 'ng-doc.context.ts'),
@@ -64,9 +60,7 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 	}
 
 	private buildIndexFile(): Observable<NgDocBuiltOutput> {
-		const renderer: NgDocRenderer<never> = new NgDocRenderer(this.builder);
-
-		return renderer.render('./index.ts.nunj').pipe(
+		return this.builder.renderer.render('./index.ts.nunj').pipe(
 			map((output: string) => ({
 				content: output,
 				filePath: path.join(this.context.buildPath, 'index.ts'),
@@ -75,9 +69,7 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 	}
 
 	private buildGeneratedModule(): Observable<NgDocBuiltOutput> {
-		const renderer: NgDocRenderer<never> = new NgDocRenderer(this.builder);
-
-		return renderer.render('./ng-doc.generated.module.ts.nunj').pipe(
+		return this.builder.renderer.render('./ng-doc.generated.module.ts.nunj').pipe(
 			map((output: string) => ({
 				content: output,
 				filePath: path.join(this.context.buildPath, 'ng-doc.generated.module.ts'),

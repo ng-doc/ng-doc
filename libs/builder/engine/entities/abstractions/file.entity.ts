@@ -1,11 +1,12 @@
 import * as fs from 'fs';
 import minimatch from 'minimatch';
 import * as path from 'path';
-import {Observable, of, throwError} from 'rxjs';
+import {from, Observable} from 'rxjs';
+import {mapTo, tap} from 'rxjs/operators';
 import {OutputFile, SyntaxKind} from 'ts-morph';
 
 import {isCategoryEntity} from '../../../helpers';
-import {CACHE_PATH, CATEGORY_PATTERN} from '../../variables';
+import {CATEGORY_PATTERN} from '../../variables';
 import {NgDocCategoryEntity} from '../category.entity';
 import {NgDocEntity} from './entity';
 import {NgDocSourceFileEntity} from './source-file.entity';
@@ -19,26 +20,23 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 	 */
 	target?: T;
 
-
 	override update(): Observable<void> {
 		this.readyToBuild = false;
 
-		try {
-			delete require.cache[require.resolve(this.pathToCompiledFile)];
-			this.target = require(this.pathToCompiledFile).default;
+		return from(import(`${this.pathToCompiledFile}`)).pipe(
+			tap((file: any) => {
+				this.target = file.default;
 
-			if (!this.target) {
-				new Error(
-					`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`,
-				)
-			}
-		} catch (e: unknown) {
-			return throwError(e)
-		}
+				if (!this.target) {
+					new Error(
+						`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`,
+					);
+				}
 
-		this.readyToBuild = true;
-
-		return of(void 0)
+				this.readyToBuild = true;
+			}),
+			mapTo(void 0),
+		);
 	}
 
 	protected getParentFromCategory(): NgDocCategoryEntity | undefined {
@@ -67,8 +65,11 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 	override removeArtifacts() {
 		super.removeArtifacts();
 
-		this.sourceFile.getEmitOutput().getOutputFiles().forEach((file: OutputFile) => {
-			fs.existsSync(file.getFilePath()) && fs.unlinkSync(file.getFilePath());
-		})
+		this.sourceFile
+			.getEmitOutput()
+			.getOutputFiles()
+			.forEach((file: OutputFile) => {
+				fs.existsSync(file.getFilePath()) && fs.unlinkSync(file.getFilePath());
+			});
 	}
 }

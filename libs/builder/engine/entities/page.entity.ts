@@ -7,9 +7,7 @@ import {SourceFile} from 'ts-morph';
 
 import {isDependencyEntity, isPlaygroundEntity, marked, slash, uniqueName} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
-import {NgDocPageEnv, NgDocPageModuleEnv} from '../../templates-env';
 import {NgDocActions} from '../actions';
-import {NgDocRenderer} from '../renderer';
 import {PAGE_DEPENDENCIES_NAME, PLAYGROUND_NAME, RENDERED_PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
@@ -141,12 +139,12 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			const renderer: NgDocRenderer<NgDocPageModuleEnv> = new NgDocRenderer<NgDocPageModuleEnv>(this.builder, {
-				page: this,
-			});
-
-			return renderer
-				.render('./page.module.ts.nunj')
+			return this.builder.renderer
+				.render('./page.module.ts.nunj', {
+					context: {
+						page: this,
+					},
+				})
 				.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
 		}
 		return of();
@@ -162,19 +160,19 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 				?.getReferencedSourceFiles()
 				.forEach((sourceFile: SourceFile) => sourceFile.refreshFromFileSystemSync());
 
-			const renderer: NgDocRenderer<NgDocPageEnv> = new NgDocRenderer<NgDocPageEnv>(
-				this.builder,
-				{
-					NgDocPage: this.target,
-					NgDocActions: new NgDocActions(this),
-				},
-				this.dependencies,
-			);
-
-			return renderer.render(this.target?.mdFile, {scope: this.sourceFileFolder}).pipe(
-				map((markdown: string) => marked(markdown)),
-				map((output: string) => ({content: output, filePath: this.builtPagePath})),
-			);
+			return this.builder.renderer
+				.render(this.target?.mdFile, {
+					scope: this.sourceFileFolder,
+					context: {
+						NgDocPage: this.target,
+						NgDocActions: new NgDocActions(this),
+					},
+					dependenciesStore: this.dependencies,
+				})
+				.pipe(
+					map((markdown: string) => marked(markdown)),
+					map((output: string) => ({content: output, filePath: this.builtPagePath})),
+				);
 		}
 		return of();
 	}

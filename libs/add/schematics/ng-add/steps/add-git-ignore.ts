@@ -1,4 +1,4 @@
-import {FileEntry, Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
+import {Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
 import {updateWorkspace, WorkspaceDefinition} from '@schematics/angular/utility/workspace';
 
 /**
@@ -19,7 +19,7 @@ export function addGitIgnore(): Rule {
 				return;
 			}
 
-			tree.overwrite('.gitignore', `${gitignore}\n\n# NgDoc files\n.ng-doc`)
+			tree.overwrite('.gitignore', `${gitignore}\n\n# NgDoc files\n.ng-doc`);
 		});
-	}
+	};
 }

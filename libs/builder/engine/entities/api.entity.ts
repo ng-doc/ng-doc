@@ -5,8 +5,6 @@ import {catchError, map, switchMap, tap} from 'rxjs/operators';
 
 import {generateApiEntities, getKindType, isApiPageEntity, isApiScopeEntity, slash, uniqueName} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
-import {NgDocApiModuleEnv} from '../../templates-env/api.module.env';
-import {NgDocRenderer} from '../renderer';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocApiPageEntity} from './api-page.entity';
@@ -92,12 +90,12 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			const renderer: NgDocRenderer<NgDocApiModuleEnv> = new NgDocRenderer<NgDocApiModuleEnv>(this.builder, {
-				api: this,
-			});
-
-			return renderer
-				.render('./api.module.ts.nunj')
+			return this.builder.renderer
+				.render('./api.module.ts.nunj', {
+					context: {
+						api: this,
+					},
+				})
 				.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
 		}
 		return of();

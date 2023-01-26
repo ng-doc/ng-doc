@@ -7,7 +7,7 @@
 	}
 
 	ng-doc-toc {
-		margin-left: calc(var(--ng-doc-base-gutter) * 3);
+		--ng-doc-toc-margin: calc(var(--ng-doc-base-gutter) * 3);
 		flex-shrink: 0;
 	}
 

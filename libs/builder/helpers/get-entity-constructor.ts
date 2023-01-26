@@ -10,7 +10,9 @@ import {
 	NgDocPageEntity,
 	NgDocPlaygroundEntity,
 	PAGE_DEPENDENCY_PATTERN,
-	PAGE_PATTERN, PLAYGROUND_PATTERN} from '../engine';
+	PAGE_PATTERN,
+	PLAYGROUND_PATTERN,
+} from '../engine';
 import {NgDocEntity} from '../engine/entities/abstractions/entity';
 
 /**

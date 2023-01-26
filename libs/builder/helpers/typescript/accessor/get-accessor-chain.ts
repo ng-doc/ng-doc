@@ -9,7 +9,6 @@ import {
 
 import {forAllClasses} from '../class';
 import {forAllInterfaces} from '../interface/for-all-interfaces';
-import {NgDocAccessor} from './accessor';
 import {getInterfaceAccessors} from './get-interface-accessors';
 
 /**

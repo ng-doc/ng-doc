@@ -7,8 +7,6 @@ import {NgDocSupportedDeclarations} from '../types';
 import {isNotExcludedPath} from './is-not-excluded-path';
 import {isSupportedDeclaration} from './is-supported-declaration';
 
-// one file - sourceFile.getNodesReferencingOtherSourceFiles()[0].getModuleSpecifierSourceFile().getNodesReferencingOtherSourceFiles()
-
 /**
  *
  * @param apiRootEntity
@@ -30,8 +28,7 @@ export function generateApiEntities(apiRootEntity: NgDocApiEntity): Array<NgDocA
 		asArray(scope.include).forEach((include: string) =>
 			asArray(
 				new Set(
-					apiRootEntity.sourceFile
-						.getProject()
+					apiRootEntity.builder.project
 						.addSourceFilesAtPaths(
 							glob.sync(include).filter((p: string) => isNotExcludedPath(p, asArray(scope.exclude))),
 						)

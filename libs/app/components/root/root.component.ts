@@ -4,7 +4,7 @@ import {ChangeDetectionStrategy, Component, ElementRef, Inject, NgZone} from '@a
 import {Router} from '@angular/router';
 import {isExternalLink} from '@ng-doc/app/helpers/is-external-link';
 import {NgDocSidebarService} from '@ng-doc/app/services';
-import {fadeAnimation, ngDocZoneDetach, ngDocZoneOptimize} from '@ng-doc/ui-kit';
+import {fadeAnimation, ngDocZoneDetach} from '@ng-doc/ui-kit';
 import {WINDOW} from '@ng-web-apis/common';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {fromEvent, Observable} from 'rxjs';

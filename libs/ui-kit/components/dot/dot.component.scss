@@ -1,5 +1,5 @@
-@import "../../styles/palette/palette";
-@import "../../styles/mixins";
+@import '../../styles/palette/palette';
+@import '../../styles/mixins';
 
 :host {
 	display: inline;
@@ -8,22 +8,23 @@
 	border-radius: var(--ng-doc-dot-size);
 	line-height: var(--ng-doc-line-height);
 	background-color: var(--ng-doc-dot-background);
+	transition: var(--ng-doc-transition);
 
 	@each $color-name, $color-value in $ng-doc-palette-colors {
-		&[data-ng-doc-color="#{$color-name}"] {
+		&[data-ng-doc-color='#{$color-name}'] {
 			--ng-doc-dot-background: var(--ng-doc-#{$color-name}-100);
 		}
 	}
 
-	&[data-ng-doc-size="small"] {
+	&[data-ng-doc-size='small'] {
 		--ng-doc-dot-size: calc(var(--ng-doc-base-gutter) / 2);
 	}
 
-	&[data-ng-doc-size="medium"] {
+	&[data-ng-doc-size='medium'] {
 		--ng-doc-dot-size: var(--ng-doc-base-gutter);
 	}
 
-	&[data-ng-doc-size="large"] {
+	&[data-ng-doc-size='large'] {
 		--ng-doc-dot-size: calc(var(--ng-doc-base-gutter) * 2);
 	}
 }

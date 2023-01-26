@@ -2,7 +2,7 @@
 import {ChangeDetectionStrategy, Component, NgModule} from "@angular/core";
 import {RouterModule} from "@angular/router";
 import {CommonModule} from '@angular/common';
-import {NgDocApiListModule, NG_DOC_API_LIST_TOKEN} from '@ng-doc/app';
+import {NG_DOC_API_LIST_TOKEN, NgDocApiListModule} from '@ng-doc/app';
 import apiList from './ng-doc.api-list.json';
 
 @Component({

@@ -1,4 +1,4 @@
-import {Directive, Inject, Input, TemplateRef, ViewContainerRef} from '@angular/core';
+import {Directive, Input, TemplateRef, ViewContainerRef} from '@angular/core';
 
 import {NgDocLetContext} from './let-context';
 

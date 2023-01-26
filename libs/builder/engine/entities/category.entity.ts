@@ -5,8 +5,6 @@ import {catchError, map, tap} from 'rxjs/operators';
 
 import {isCategoryEntity, isPageEntity, uniqueName} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
-import {NgDocCategoryModuleEnv} from '../../templates-env';
-import {NgDocRenderer} from '../renderer';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocPageEntity} from './page.entity';
@@ -93,15 +91,12 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			const renderer: NgDocRenderer<NgDocCategoryModuleEnv> = new NgDocRenderer<NgDocCategoryModuleEnv>(
-				this.builder,
-				{
-					category: this,
-				},
-			);
-
-			return renderer
-				.render('./category.module.ts.nunj')
+			return this.builder.renderer
+				.render('./category.module.ts.nunj', {
+					context: {
+						category: this,
+					},
+				})
 				.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
 		}
 		return of();

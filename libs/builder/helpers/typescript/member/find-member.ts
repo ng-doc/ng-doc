@@ -1,6 +1,6 @@
-import {ClassDeclaration, ClassInstanceMemberTypes, InterfaceDeclaration, Node} from 'ts-morph';
+import {ClassDeclaration, InterfaceDeclaration, Node} from 'ts-morph';
 
-import {findBaseClass, findClass} from '../class';
+import {findClass} from '../class';
 import {findInterface} from '../interface';
 import {getInterfaceMember} from '../interface/get-interface-member';
 import {NgDocClassMember, NgDocInterfaceMember, NgDocMemberType} from './member-type';

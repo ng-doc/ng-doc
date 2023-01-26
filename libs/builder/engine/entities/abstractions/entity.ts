@@ -145,7 +145,9 @@ export abstract class NgDocEntity {
 	buildArtifacts(): Observable<NgDocBuiltOutput[]> {
 		return this.build().pipe(
 			// TODO: make it async
-			map((output: NgDocBuiltOutput[]) => this.processArtifacts(output)),
+			map((output: NgDocBuiltOutput[]) => {
+				return this.processArtifacts(output);
+			}),
 			map((artifacts: NgDocBuiltOutput[]) => {
 				/*
 						We are checking that artifacts result was changed, otherwise we don't want to emit

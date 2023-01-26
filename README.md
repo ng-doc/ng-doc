@@ -63,8 +63,8 @@ First of all you need an Angular application which will be used to render the do
 that you can install NgDoc using the command below, it will automatically install all the necessary
 packages and configure your application.
 
-```sh
-   ng add @ng-doc/add@beta
+```bash
+ng add @ng-doc/add@beta
 ```
 
 <!-- CONTRIBUTING -->

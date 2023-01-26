@@ -8,7 +8,7 @@ export class NgDocWatcher {
 	private readonly change$: Subject<string> = new Subject();
 	private readonly add$: Subject<string> = new Subject();
 	private readonly unlink$: Subject<string> = new Subject();
-	private readonly ready$: Subject<void> = new Subject();
+	private readonly ready$: ReplaySubject<void> = new ReplaySubject(1);
 
 	constructor(files?: string[]) {
 		this.watcher = chokidar.watch(files ?? [], {

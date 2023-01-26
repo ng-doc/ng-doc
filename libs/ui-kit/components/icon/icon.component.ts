@@ -6,7 +6,8 @@ import {
 	HostBinding,
 	Inject,
 	Input,
-	OnChanges, OnInit,
+	OnChanges,
+	OnInit,
 	Optional,
 } from '@angular/core';
 import {NgDocCacheInterceptor} from '@ng-doc/ui-kit/interceptors';

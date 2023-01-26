@@ -1,4 +1,4 @@
-import {NgDocAngularEntities, NgDocDeclarations, NgDocKindType} from '@ng-doc/core';
+import {NgDocAngularEntities, NgDocKindType} from '@ng-doc/core';
 import {Node} from 'ts-morph';
 
 import {getDeclarationType} from './get-declaration-type';

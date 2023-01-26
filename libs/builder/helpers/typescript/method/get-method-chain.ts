@@ -1,6 +1,6 @@
 import {ClassDeclaration, InterfaceDeclaration, MethodDeclaration, MethodSignature, Node} from 'ts-morph';
 
-import {findBaseClass, forAllClasses} from '../class';
+import {forAllClasses} from '../class';
 import {forAllInterfaces} from '../interface/for-all-interfaces';
 
 /**
