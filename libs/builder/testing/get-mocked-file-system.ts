@@ -6,7 +6,7 @@ import path from 'path';
  *
  */
 export function getMockedFileSystem(): DirectoryItems {
-	const currentFolder: string = path.join(process.cwd(), __dirname);
+	const currentFolder: string = __dirname;
 
 	return {
 		...collectFiles(path.join(currentFolder, 'mocks/app')),
