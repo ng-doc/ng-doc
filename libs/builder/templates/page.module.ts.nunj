@@ -1,16 +1,16 @@
 // @ts-nocheck
-import {ChangeDetectionStrategy, Component, NgModule, Type} from '@angular/core';
+import {Component, NgModule, Type, ChangeDetectionStrategy} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
-import {NgDocDemoAssets, NgDocPageModule, NgDocRootPage} from '@ng-doc/app';
-import pageContent from '!!raw-loader!';
-// noinspection ES6UnusedImports
-// noinspection ES6UnusedImports
-import pageDependencies from '';
-import demoAssets from '';
+import {NgDocPageModule, NgDocRootPage, NgDocDemoAssets} from '@ng-doc/app';
+import pageContent from '!!raw-loader!{{ page.builtPagePath }}';
 {%- if page.pageDependencies %}
+// noinspection ES6UnusedImports
+import pageDependencies from '{{ page.pageDependencies.importPath }}';
 {%- endif %}
 {%- if page.componentsAssets %}
+// noinspection ES6UnusedImports
+import demoAssets from '{{ page.componentsAssets }}';
 {%- endif %}
 
 
@@ -45,6 +45,7 @@ export class {{ page.componentName }} extends NgDocRootPage {
 		RouterModule.forChild([{
 			path: '',
 			component: {{ page.componentName }},
+			title: '{{ page.title }}',
 		}]),
 	],
 	exports: [RouterModule]
