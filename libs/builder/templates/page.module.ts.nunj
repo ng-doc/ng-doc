@@ -45,6 +45,7 @@ export class {{ page.componentName }} extends NgDocRootPage {
 		RouterModule.forChild([{
 			path: '',
 			component: {{ page.componentName }},
+			title: '{{ page.title }}',
 		}]),
 	],
 	exports: [RouterModule]
