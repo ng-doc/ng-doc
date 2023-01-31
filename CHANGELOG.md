@@ -1,3 +1,21 @@
+# [15.0.0-beta.33](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.32...v15.0.0-beta.33) (2023-01-31)
+
+
+### Bug Fixes
+
+* **app:** toc selection bar cut off ([f582991](https://github.com/skoropadas/ng-doc/commit/f5829915864a6a27e270d3e7457bcacd95722d19))
+
+
+### Features
+
+* **app:** add simple animation for dot in sidebar items ([7c2b154](https://github.com/skoropadas/ng-doc/commit/7c2b154dd55f9b9e547abf4f1c5bc0811389224b))
+* **app:** add titles for guidelines and api pages ([2ed2f0d](https://github.com/skoropadas/ng-doc/commit/2ed2f0d3eea0f9dd2462ad5034c958f631688585))
+
+
+### Performance Improvements
+
+* **builder:** improve builder performance ([2543469](https://github.com/skoropadas/ng-doc/commit/25434695678754b895c30744435c407742bcc2a8))
+
 # [15.0.0-beta.32](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.31...v15.0.0-beta.32) (2023-01-12)
 
 
