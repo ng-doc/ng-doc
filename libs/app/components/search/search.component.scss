@@ -29,6 +29,15 @@
 	}
 }
 
+.search-hotkey {
+	width: calc(var(--ng-doc-base-gutter) * 3);
+	height: calc(var(--ng-doc-base-gutter) * 3);
+	margin-right: var(--ng-doc-base-gutter);
+	--ng-doc-tag-border: 1px solid var(--ng-doc-base-7);
+	--ng-doc-tag-color: var(--ng-doc-base-7);
+	--ng-doc-tag-background: transparent;
+}
+
 ::ng-deep .ng-doc-search-dropdown {
 	--ng-doc-overlay-border-radius: 0px !important;
 }
