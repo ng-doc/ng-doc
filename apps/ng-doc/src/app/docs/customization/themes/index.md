@@ -1,8 +1,7 @@
 # {{ NgDocPage.title }}
 
 This article only scratches the surface of theme creation, we won't dive into the details of all the
-variables in it as this is just a beta version of the library, when its API stabilizes we'll cover
-theme creation in more detail.
+variables in it, when its API stabilizes we'll cover other topics in more detail.
 
 ## How to create your own theme
 

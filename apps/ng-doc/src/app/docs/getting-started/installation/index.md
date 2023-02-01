@@ -10,7 +10,7 @@ This command will automatically install and add the library to your project,
 and configure it.
 
 ```bash
-ng add @ng-doc/add@beta
+ng add @ng-doc/add
 ```
 
 By default NgDoc uses your project's `sourceRoot` as the directory where you should create
@@ -22,7 +22,7 @@ details
 Install the NgDoc via npm
 
 ```bash
-npm i @ng-doc/{core,builder,ui-kit,app}@beta
+npm i @ng-doc/{core,builder,ui-kit,app}
 ```
 
 ### Adding builders
