@@ -16,10 +16,9 @@ import {NgDocApiScopeEntity} from './api-scope.entity';
 
 export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	declaration?: NgDocSupportedDeclarations;
-	uniqueDeclarationName: string = uniqueName(this.declarationName);
 
 	override readonly physical: boolean = false;
-	override readonly id: string = uniqueName(`${this.sourceFilePath}}#${this.uniqueDeclarationName}`);
+	override readonly id: string = uniqueName(`${this.sourceFilePath}}#${this.declarationName}`);
 	override folderName: string = '';
 	protected override readyToBuild: boolean = true;
 
@@ -29,6 +28,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 		override readonly context: NgDocBuilderContext,
 		override parent: NgDocApiScopeEntity,
 		readonly declarationName: string,
+		readonly index: number,
 	) {
 		super(builder, sourceFile, context);
 
@@ -42,7 +42,12 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 
 	override get route(): string {
 		return this.declaration
-			? slash(path.join(declarationFolderName(this.declaration), this.uniqueDeclarationName))
+			? slash(
+					path.join(
+						declarationFolderName(this.declaration),
+						this.declarationName + (this.index ? this.index : ''),
+					),
+			  )
 			: '';
 	}
 
