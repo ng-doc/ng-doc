@@ -58,7 +58,7 @@ Some variables are also available in your template, such as `NgDocPage`and `NgDo
 
 The `NgDocPage` variable contains information about the current page, which you can use to, for
 example, render its title. You may have noticed that NgDoc creates similar dynamic titles when you
-generate pages with schematics.
+generate pages via schematics.
 
 So, for example to render title, you can do this
 
@@ -68,7 +68,7 @@ So, for example to render title, you can do this
 
 The `NgDocActions` provides some functions that you can call to render demo on the page,
 for example, to render demo you can call `demo` method with the name of you demo component.
-Подробнее о демо вы можете прочитать в разделе `*ContentGuidelinesDemo`.
+You can read more about the demo in the `*ContentGuidelinesDemo`.
 
 ```twig
 {{ '{{ NgDocActions.demo("MyDemoComponent") }}' | safe }}
