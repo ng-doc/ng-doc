@@ -30,6 +30,9 @@
 }
 
 .search-hotkey {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	width: calc(var(--ng-doc-base-gutter) * 3);
 	height: calc(var(--ng-doc-base-gutter) * 3);
 	margin-right: var(--ng-doc-base-gutter);
