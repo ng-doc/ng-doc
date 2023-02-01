@@ -54,6 +54,9 @@ NgDoc allows you to do the following things:
 
 ### Installation
 
+> **Warning**
+> This library was created for Angular 15+ projects, it may not work with previous versions
+
 First of all you need an Angular application which will be used to render the documentation, after
 that you can install NgDoc using the command below, it will automatically install all the necessary
 packages and configure your application.
