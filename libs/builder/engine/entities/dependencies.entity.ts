@@ -52,13 +52,11 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 	}
 
 	get componentAssetsPath(): string {
-		return path.join(this.folderPath, 'ng-doc.component-assets.ts');
+		return path.join(this.folderPath, 'component-assets.ts');
 	}
 
 	get componentAssetsImport(): string {
-		return slash(
-			path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, 'ng-doc.component-assets')),
-		);
+		return slash(path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, 'component-assets')));
 	}
 
 	protected override build(): Observable<NgDocBuiltOutput[]> {

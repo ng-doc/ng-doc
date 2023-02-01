@@ -3,3 +3,5 @@
 `Class`
 
 `NgDocTooltipDirective`
+
+{{ NgDocPage.title }}

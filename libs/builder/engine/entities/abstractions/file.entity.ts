@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import minimatch from 'minimatch';
 import * as path from 'path';
-import {from, Observable} from 'rxjs';
+import {from, Observable, of, throwError} from 'rxjs';
 import {mapTo, tap} from 'rxjs/operators';
 import {OutputFile, SyntaxKind} from 'ts-morph';
 
@@ -23,20 +23,22 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 	override update(): Observable<void> {
 		this.readyToBuild = false;
 
-		return from(import(`${this.pathToCompiledFile}`)).pipe(
-			tap((file: any) => {
-				this.target = file.default;
+		try {
+			delete require.cache[require.resolve(this.pathToCompiledFile)];
+			this.target = require(this.pathToCompiledFile).default;
 
-				if (!this.target) {
-					new Error(
-						`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`,
-					);
-				}
+			if (!this.target) {
+				new Error(
+					`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`,
+				);
+			}
+		} catch (e: unknown) {
+			return throwError(e);
+		}
 
-				this.readyToBuild = true;
-			}),
-			mapTo(void 0),
-		);
+		this.readyToBuild = true;
+
+		return of(void 0);
 	}
 
 	protected getParentFromCategory(): NgDocCategoryEntity | undefined {

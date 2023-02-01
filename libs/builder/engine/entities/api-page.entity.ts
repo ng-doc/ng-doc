@@ -15,14 +15,13 @@ import {NgDocRouteEntity} from './abstractions/route.entity';
 import {NgDocApiScopeEntity} from './api-scope.entity';
 
 export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
-	override folderName: string = '';
-	override moduleName: string = uniqueName(`NgDocGeneratedApiPageModule`);
-	componentName: string = uniqueName(`NgDocGeneratedApiPageComponent`);
-	override moduleFileName: string = `${uniqueName('ng-doc-api-page')}.module.ts`;
-	protected override readyToBuild: boolean = true;
-	override readonly physical: boolean = false;
 	declaration?: NgDocSupportedDeclarations;
-	override id: string = uniqueName(`${this.sourceFilePath}}#${this.declarationName}`);
+	uniqueDeclarationName: string = uniqueName(this.declarationName);
+
+	override readonly physical: boolean = false;
+	override readonly id: string = uniqueName(`${this.sourceFilePath}}#${this.uniqueDeclarationName}`);
+	override folderName: string = '';
+	protected override readyToBuild: boolean = true;
 
 	constructor(
 		override readonly builder: NgDocBuilder,
@@ -43,7 +42,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 
 	override get route(): string {
 		return this.declaration
-			? slash(path.join(declarationFolderName(this.declaration), this.declaration?.getSymbol()?.getName() ?? ''))
+			? slash(path.join(declarationFolderName(this.declaration), this.uniqueDeclarationName))
 			: '';
 	}
 

@@ -5,7 +5,7 @@ export const NG_DOC_ROUTING: Routes = [
 	{%- for entity in entities %}
 	{
 		path: '{{ entity.route }}',
-		loadChildren: () => import('{{ entity.moduleImport }}').then(m => m.{{ entity.moduleName }})
+		loadChildren: () => import('{{ entity.moduleImport }}').then(m => m.DynamicModule)
 	},
 	{%- endfor %}
 ];

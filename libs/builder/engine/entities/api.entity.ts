@@ -12,8 +12,6 @@ import {NgDocApiScopeEntity} from './api-scope.entity';
 import {NgDocCategoryEntity} from './category.entity';
 
 export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
-	override moduleName: string = uniqueName(`NgDocGeneratedApiListModule`);
-	componentName: string = uniqueName(`NgDocGeneratedApiListComponent`);
 	override moduleFileName: string = `${uniqueName('ng-doc-api-list')}.module.ts`;
 	override parent?: NgDocCategoryEntity;
 
@@ -47,7 +45,7 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 	}
 
 	override get folderPath(): string {
-		return path.join(this.context.apiPath, 'api');
+		return this.context.apiPath;
 	}
 
 	override get keywords(): string[] {

@@ -10,8 +10,6 @@ import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocPageEntity} from './page.entity';
 
 export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
-	override moduleName: string = uniqueName(`NgDocGeneratedCategoryModule`);
-	override moduleFileName: string = `${uniqueName('ng-doc-category')}.module.ts`;
 	override parent?: NgDocCategoryEntity;
 
 	override get route(): string {

@@ -17,9 +17,9 @@ import demoAssets from '{{ page.componentsAssets }}';
 @Component({
 	template: `<ng-doc-page></ng-doc-page>`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	providers: [{provide: NgDocRootPage, useExisting: {{ page.componentName }}}],
+	providers: [{provide: NgDocRootPage, useExisting: DynamicComponent}],
 })
-export class {{ page.componentName }} extends NgDocRootPage {
+export class DynamicComponent extends NgDocRootPage {
 	readonly pageContent: string = pageContent;
 	{%- if page.pageDependencies %}
 	readonly demo: Record<string, Type<unknown>> | undefined = pageDependencies.demo;
@@ -35,7 +35,7 @@ export class {{ page.componentName }} extends NgDocRootPage {
 }
 
 @NgModule({
-	declarations: [{{ page.componentName }}],
+	declarations: [DynamicComponent],
 	imports: [
 		CommonModule,
 		NgDocPageModule,
@@ -44,12 +44,12 @@ export class {{ page.componentName }} extends NgDocRootPage {
 		{%- endif %}
 		RouterModule.forChild([{
 			path: '',
-			component: {{ page.componentName }},
+			component: DynamicComponent,
 			title: '{{ page.title }}',
 		}]),
 	],
 	exports: [RouterModule]
 })
-export class {{ page.moduleName }} {
+export class DynamicModule {
 }
 

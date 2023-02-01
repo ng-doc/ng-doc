@@ -4,16 +4,12 @@ import {slash} from '../../../helpers';
 import {NgDocFileEntity} from './file.entity';
 
 export abstract class NgDocModuleEntity<T> extends NgDocFileEntity<T> {
-	abstract override parent?: NgDocModuleEntity<unknown>;
 	/**
-	 * File title of the module.
+	 * Title of the module file.
 	 */
-	abstract moduleFileName: string;
+	readonly moduleFileName: string = 'module.ts';
 
-	/**
-	 * The title of the module.
-	 */
-	abstract moduleName: string;
+	abstract override parent?: NgDocModuleEntity<unknown>;
 
 	/**
 	 * Folder name in generated folder
@@ -21,7 +17,7 @@ export abstract class NgDocModuleEntity<T> extends NgDocFileEntity<T> {
 	abstract folderName: string;
 
 	get folderPath(): string {
-		return path.join(this.parent?.folderPath ?? this.context.modulesPath, this.folderName);
+		return path.join(this.parent?.folderPath ?? this.context.guidesPath, this.folderName);
 	}
 
 	/**

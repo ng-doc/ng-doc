@@ -28,6 +28,6 @@ export function createBuilderContext(
 		assetsPath: path.join(buildPath, 'assets'),
 		buildPath,
 		apiPath: path.join(buildPath, 'api'),
-		modulesPath: path.join(buildPath, 'modules'),
+		guidesPath: path.join(buildPath, 'guides'),
 	};
 }

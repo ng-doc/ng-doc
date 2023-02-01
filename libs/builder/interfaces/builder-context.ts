@@ -12,5 +12,5 @@ export interface NgDocBuilderContext {
 	assetsPath: string;
 	buildPath: string;
 	apiPath: string;
-	modulesPath: string;
+	guidesPath: string;
 }

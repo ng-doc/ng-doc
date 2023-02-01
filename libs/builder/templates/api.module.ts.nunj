@@ -13,28 +13,28 @@ import apiList from './ng-doc.api-list.json';
 	}],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class {{ api.componentName }} {
+export class DynamicComponent {
 }
 
 @NgModule({
-	declarations: [{{ api.componentName }}],
+	declarations: [DynamicComponent],
 	imports: [
 		CommonModule,
 		NgDocApiListModule,
 		RouterModule.forChild([
 			{
 				path: '',
-				component: {{ api.componentName }},
+				component: DynamicComponent,
 			},
 			{%- for scope in api.children %}
 			{
 				path: '{{ scope.route }}',
-				loadChildren: () => import('{{ scope.moduleImport }}').then(m => m.{{ scope.moduleName }})
+				loadChildren: () => import('{{ scope.moduleImport }}').then(m => m.DynamicModule)
 			},
 			{%- endfor %}
 		]),
 	],
 	exports: [RouterModule]
 })
-export class {{ api.moduleName }} {
+export class DynamicModule {
 }

@@ -16,10 +16,6 @@ import {NgDocDependenciesEntity} from './dependencies.entity';
 import {NgDocPlaygroundEntity} from './playground.entity';
 
 export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
-	override moduleName: string = uniqueName(`NgDocGeneratedPageModule`);
-	componentName: string = uniqueName(`NgDocGeneratedPageComponent`);
-	override moduleFileName: string = `${uniqueName('ng-doc-page')}.module.ts`;
-
 	override parent?: NgDocCategoryEntity;
 
 	override get route(): string {
