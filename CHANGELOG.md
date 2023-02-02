@@ -1,3 +1,10 @@
+## [15.0.1](https://github.com/skoropadas/ng-doc/compare/v15.0.0...v15.0.1) (2023-02-02)
+
+
+### Bug Fixes
+
+* **builder:** demo viewer doesn't show source code ([73ffe77](https://github.com/skoropadas/ng-doc/commit/73ffe7760b010863f84d9e00f561817e2232cdcd))
+
 # [15.0.0](https://github.com/skoropadas/ng-doc/compare/v14.0.0...v15.0.0) (2023-02-01)
 
 
