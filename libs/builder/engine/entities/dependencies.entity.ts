@@ -83,6 +83,8 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 	override update(): Observable<void> {
 		this.readyToBuild = true;
 
+		this.fillAssets();
+
 		return of(void 0);
 	}
 
