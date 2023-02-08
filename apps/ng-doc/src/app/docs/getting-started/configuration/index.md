@@ -2,6 +2,84 @@
 
 This section describes how you can configure certain functions of the library.
 
+## Builder configuration
+
+The main configuration takes place in the `angular.json` file for each build configuration, in
+the `ngDoc` field, which is of type `NgDocConfiguration`, to change any of the settings, such as the
+path to the location of your pages, create a field as follows:
+
+```json
+{
+	"projects": {
+		"my-project": {
+			"architect": {
+				"build": {
+					"configurations": {
+						"production": {
+							"ngDoc": {
+								"pages": "src/app/docs/pages"
+							}
+						},
+						"development": {
+							"ngDoc": {
+								"pages": "src/app/docs/pages"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+```
+
+## Configuring repository
+
+If you are creating an open source project and would like to receive suggestions for improving the
+documentation from your users, then the best way is to make this process easier for them, you can do
+this by adding a "Suggest edits" and "View Source" buttons to each page, for this
+specify `repoConfig`
+that should match `NgDocRepoConfig` interface in your `angular.json` config.
+
+After that, NgDoc will start displaying links for editing and viewing the source code of the page.
+
+> **Note**
+> NgDoc supports only GitHub repositories, you can ask for support for other repositories by
+> creating an issue in our `ngDocFeatureRequest` page.
+
+```json
+{
+	"projects": {
+		"my-project": {
+			"architect": {
+				"build": {
+					"configurations": {
+						"production": {
+							"ngDoc": {
+								"repoConfig": {
+									"url": "https://github.com/skoropadas/ng-doc",
+									"mainBranch": "main",
+									"releaseBranch": "release"
+								}
+							}
+						},
+						"development": {
+							"ngDoc": {
+								"repoConfig": {
+									"url": "https://github.com/skoropadas/ng-doc",
+									"mainBranch": "main",
+									"releaseBranch": "release"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+```
+
 ## Documentation route
 
 By default, the documentation is located at the root of the application router and has routes
@@ -80,10 +158,8 @@ export class DocsComponent {}
 Now you need to add lazy loading for DocsModule and set a route for it
 
 ```typescript
-import {HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
 
 import {AppComponent} from './app.component';

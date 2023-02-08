@@ -1,6 +1,7 @@
+import {URL} from 'node:url';
 import * as path from 'path';
 
-import {slash} from '../../../helpers';
+import {editFileInRepoUrl, slash} from '../../../helpers';
 import {NgDocModuleEntity} from './module.entity';
 
 export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T> {
@@ -25,6 +26,20 @@ export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T>
 	 */
 	usedKeywords: Set<string> = new Set<string>();
 
+	/**
+	 * Url for to the source file to the current page, that can be used to open it in repository and edit
+	 */
+	get editSourceFileUrl(): string | undefined {
+		return undefined;
+	}
+
+	/**
+	 * Url for to the source file to the current page, that can be used to open it in repository and view
+	 */
+	get viewSourceFileUrl(): string | undefined {
+		return undefined;
+	}
+
 	get fullRoute(): string {
 		const parentRoute: string =
 			this.parent instanceof NgDocRouteEntity
@@ -33,4 +48,10 @@ export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T>
 
 		return slash(path.join('/', parentRoute, this.route));
 	}
+
+	/**
+	 * External website URL, that can be used to edit source file of the current page
+	 */
+	// abstract get editSourceFileUrl(): string | undefined;
+	// abstract get viewSourceFileUrl(): string | undefined;
 }

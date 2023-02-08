@@ -9,7 +9,7 @@ import {
 	NgDocIconProcessorModule,
 	NgDocTooltipProcessorModule,
 } from '@ng-doc/app/processors';
-import {NgDocMediaQueryModule} from '@ng-doc/ui-kit';
+import {NgDocButtonIconModule, NgDocIconModule, NgDocMediaQueryModule, NgDocTooltipModule} from '@ng-doc/ui-kit';
 
 import {NgDocPageComponent} from './page.component';
 
@@ -25,6 +25,9 @@ import {NgDocPageComponent} from './page.component';
 		NgDocPageMapModule,
 		NgDocMediaQueryModule,
 		NgDocTooltipProcessorModule,
+		NgDocButtonIconModule,
+		NgDocIconModule,
+		NgDocTooltipModule,
 	],
 	exports: [NgDocPageComponent],
 })

@@ -1,11 +1,9 @@
-import {capitalize} from '@ng-doc/core';
-
 import {isCategoryEntity} from '../../../helpers';
 import {NgDocEntity} from './entity';
 import {NgDocRouteEntity} from './route.entity';
 
 /**
- * Entity for file end points that generate modules and components.
+ * Entity for pages that are using for navigation in the sidebar.
  */
 export abstract class NgDocNavigationEntity<T> extends NgDocRouteEntity<T> {
 	/**
@@ -22,15 +20,6 @@ export abstract class NgDocNavigationEntity<T> extends NgDocRouteEntity<T> {
 
 	override get folderName(): string {
 		return this.route;
-	}
-
-	/**
-	 * Returns title based on the route.
-	 *
-	 * @type {string}
-	 */
-	get name(): string {
-		return capitalize(this.route);
 	}
 
 	/**

@@ -2,8 +2,17 @@
 	display: flex;
 
 	article {
+		position: relative;
 		width: 100%;
 		overflow: hidden;
+
+		.ng-doc-page-controls {
+			position: absolute;
+			display: flex;
+			grid-gap: var(--ng-doc-base-gutter);
+			top: 0;
+			right: 0;
+		}
 	}
 
 	ng-doc-toc {

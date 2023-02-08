@@ -14,7 +14,6 @@ import {NgDocCategoryEntity} from './category.entity';
 export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 	override moduleFileName: string = `${uniqueName('ng-doc-api-list')}.module.ts`;
 	override parent?: NgDocCategoryEntity;
-
 	override get route(): string {
 		return this.target?.route ?? 'api';
 	}
