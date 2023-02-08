@@ -1,3 +1,17 @@
+# [15.1.0](https://github.com/skoropadas/ng-doc/compare/v15.0.1...v15.1.0) (2023-02-08)
+
+
+### Bug Fixes
+
+* **app:** copy code button changes style based on global theme ([c2e2f4e](https://github.com/skoropadas/ng-doc/commit/c2e2f4ef2cdcb9e6ae39a2cb13dc15e4ef7715e6))
+* **core:** search bar shows "Unknown" ([ee53a18](https://github.com/skoropadas/ng-doc/commit/ee53a18fe063b4aeb57d50d8ac529328ebfa6b7a)), closes [#6](https://github.com/skoropadas/ng-doc/issues/6)
+* **ui-kit:** the primary color is too bright for the light theme ([e5e2c74](https://github.com/skoropadas/ng-doc/commit/e5e2c7494f0479e97c06c34155771bc5e62aed49))
+
+
+### Features
+
+* **ng-doc:** add links on each page to edit guides or API documentation ([9bc230a](https://github.com/skoropadas/ng-doc/commit/9bc230ac081d05318019477b6fe4ba8528c2971f)), closes [#3](https://github.com/skoropadas/ng-doc/issues/3)
+
 ## [15.0.1](https://github.com/skoropadas/ng-doc/compare/v15.0.0...v15.0.1) (2023-02-02)
 
 
