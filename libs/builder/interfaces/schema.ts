@@ -1,4 +1,5 @@
 import {NgDocGlobalKeyword} from './keyword-map';
+import {NgDocRepoConfig} from './repo-config';
 
 export interface NgDocSchema {
 	browserTarget: string;
@@ -28,4 +29,9 @@ export interface NgDocConfiguration {
 	 * List of the global keywords, to create link to foreign websites
 	 */
 	keywords?: Record<string, NgDocGlobalKeyword>;
+	/**
+	 * The repository configuration.
+	 * If it is defined, Ngoc will use it to display the "Suggest edits" button, and "View source" button, on each page.
+	 */
+	repoConfig?: NgDocRepoConfig;
 }

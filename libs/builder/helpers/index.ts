@@ -25,6 +25,7 @@ export * from './not-empty-assets';
 export * from './presentation';
 export * from './print-console';
 export * from './process-snippets';
+export * from './repo-link';
 export * from './slash';
 export * from './typescript';
 export * from './unique-name';

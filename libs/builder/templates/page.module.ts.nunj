@@ -20,6 +20,12 @@ import demoAssets from '{{ page.componentsAssets }}';
 	providers: [{provide: NgDocRootPage, useExisting: DynamicComponent}],
 })
 export class DynamicComponent extends NgDocRootPage {
+	{%- if page.editSourceFileUrl %}
+	readonly editSourceFileUrl: string = '{{ page.editSourceFileUrl }}';
+	{%- endif %}
+	{%- if page.viewSourceFileUrl %}
+	readonly viewSourceFileUrl: string = '{{ page.viewSourceFileUrl }}';
+	{%- endif %}
 	readonly pageContent: string = pageContent;
 	{%- if page.pageDependencies %}
 	readonly demo: Record<string, Type<unknown>> | undefined = pageDependencies.demo;

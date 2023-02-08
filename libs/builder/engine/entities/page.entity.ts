@@ -1,11 +1,20 @@
 import {asArray, isPresent, NgDocPage} from '@ng-doc/core';
 import * as fs from 'fs';
+import {URL} from 'node:url';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
-import {isDependencyEntity, isPlaygroundEntity, marked, slash, uniqueName} from '../../helpers';
+import {
+	editFileInRepoUrl,
+	isDependencyEntity,
+	isPlaygroundEntity,
+	marked,
+	slash,
+	uniqueName,
+	viewFileInRepoUrl,
+} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
 import {NgDocActions} from '../actions';
 import {PAGE_DEPENDENCIES_NAME, PLAYGROUND_NAME, RENDERED_PAGE_NAME} from '../variables';
@@ -39,6 +48,13 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 
 	override get title(): string {
 		return this.target?.title ?? '';
+	}
+
+	override get editSourceFileUrl(): string | undefined {
+		if (this.context.options.ngDoc?.repoConfig) {
+			return editFileInRepoUrl(this.context.options.ngDoc?.repoConfig, this.mdPath, this.route.toLowerCase());
+		}
+		return undefined;
 	}
 
 	override get canBeBuilt(): boolean {

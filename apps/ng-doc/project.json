@@ -11,6 +11,11 @@
 				"ngDoc": {
 					"pages": "apps/ng-doc/src/app",
 					"tag": "production",
+					"repoConfig": {
+						"url": "https://github.com/skoropadas/ng-doc",
+						"mainBranch": "main",
+						"releaseBranch": "release"
+					},
 					"keywords": {
 						"nunjucks": {
 							"path": "https://mozilla.github.io/nunjucks/"
@@ -22,6 +27,10 @@
 						"highlightjs": {
 							"title": "highlight.js",
 							"path": "https://highlightjs.org/"
+						},
+						"ngDocFeatureRequest": {
+							"title": "NgDoc Feature Request",
+							"path": "https://github.com/skoropadas/ng-doc/issues/new?template=feature_request.md"
 						}
 					}
 				},
@@ -116,6 +125,11 @@
 					"ngDoc": {
 						"pages": "apps/ng-doc/src/app",
 						"tag": "production",
+						"repoConfig": {
+							"url": "https://github.com/skoropadas/ng-doc",
+							"mainBranch": "main",
+							"releaseBranch": "release"
+						},
 						"keywords": {
 							"nunjucks": {
 								"path": "https://mozilla.github.io/nunjucks/"
@@ -127,6 +141,10 @@
 							"highlightjs": {
 								"title": "highlight.js",
 								"path": "https://highlightjs.org/"
+							},
+							"ngDocFeatureRequest": {
+								"title": "NgDoc Feature Request",
+								"path": "https://github.com/skoropadas/ng-doc/issues/new?template=feature_request.md"
 							}
 						}
 					}
@@ -135,7 +153,29 @@
 					"browserTarget": "ng-doc:build:development",
 					"ngDoc": {
 						"pages": "apps/ng-doc/src/app",
-						"tag": "develop"
+						"tag": "production",
+						"repoConfig": {
+							"url": "https://github.com/skoropadas/ng-doc",
+							"mainBranch": "main",
+							"releaseBranch": "release"
+						},
+						"keywords": {
+							"nunjucks": {
+								"path": "https://mozilla.github.io/nunjucks/"
+							},
+							"tsdoc": {
+								"title": "TsDoc",
+								"path": "https://tsdoc.org/"
+							},
+							"highlightjs": {
+								"title": "highlight.js",
+								"path": "https://highlightjs.org/"
+							},
+							"ngDocFeatureRequest": {
+								"title": "NgDoc Feature Request",
+								"path": "https://github.com/skoropadas/ng-doc/issues/new?template=feature_request.md"
+							}
+						}
 					}
 				}
 			},

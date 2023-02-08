@@ -6,4 +6,5 @@ export * from './keyword-map';
 export * from './page-index';
 export * from './path-anchor';
 export * from './renderer-options';
+export * from './repo-config';
 export * from './schema';

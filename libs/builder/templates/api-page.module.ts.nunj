@@ -11,6 +11,12 @@ import pageContent from '!!raw-loader!{{ page.builtPagePath }}';
 	providers: [{provide: NgDocRootPage, useExisting: DynamicComponent}],
 })
 export class DynamicComponent extends NgDocRootPage {
+	{%- if page.editSourceFileUrl %}
+	readonly editSourceFileUrl: string = '{{ page.editSourceFileUrl }}';
+	{%- endif %}
+	{%- if page.viewSourceFileUrl %}
+	readonly viewSourceFileUrl: string = '{{ page.viewSourceFileUrl }}';
+	{%- endif %}
 	readonly pageContent: string = pageContent;
 	readonly demo: Record<string, Type<unknown>> | undefined = undefined;
 	readonly demoAssets: NgDocDemoAssets | undefined = undefined;
