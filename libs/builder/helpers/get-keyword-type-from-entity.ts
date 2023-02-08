@@ -17,7 +17,7 @@ export function getKeywordTypeFromEntity(entity: NgDocRouteEntity): NgDocKeyword
 	}
 
 	if (isPageEntity(entity)) {
-		return 'guideline';
+		return 'guide';
 	}
 
 	return undefined;
