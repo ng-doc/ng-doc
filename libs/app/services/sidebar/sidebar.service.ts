@@ -48,14 +48,14 @@ export class NgDocSidebarService {
 	show(): void {
 		if (!this.visible.value) {
 			this.visible.next(true);
-			this.document.documentElement.classList.add('cdk-global-scrollblock');
+			this.document.documentElement.classList.add('no-scroll');
 		}
 	}
 
 	hide(): void {
 		if (this.visible.value) {
 			this.visible.next(false);
-			this.document.documentElement.classList.remove('cdk-global-scrollblock');
+			this.document.documentElement.classList.remove('no-scroll');
 		}
 	}
 
