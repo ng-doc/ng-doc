@@ -1,3 +1,11 @@
+## [15.1.1](https://github.com/skoropadas/ng-doc/compare/v15.1.0...v15.1.1) (2023-02-09)
+
+
+### Bug Fixes
+
+* **app:** toc visual fixes, now it is easier to visually determine the level of the element ([449c0f0](https://github.com/skoropadas/ng-doc/commit/449c0f016d416cdbd709e1a310e776123e99955f))
+* **builder:** using the `browser` builder, `ng build` completes successfully but doesn't exit ([25bebac](https://github.com/skoropadas/ng-doc/commit/25bebac31a7b2af76c1f30204cbe5b4b3defd79c)), closes [#7](https://github.com/skoropadas/ng-doc/issues/7)
+
 # [15.1.0](https://github.com/skoropadas/ng-doc/compare/v15.0.1...v15.1.0) (2023-02-08)
 
 
