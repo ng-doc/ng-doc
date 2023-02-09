@@ -33,6 +33,7 @@
 
 		.ng-doc-header {
 			position: fixed;
+			top: 0;
 			height: var(--ng-doc-navbar-height);
 			width: 100%;
 			z-index: 10;
@@ -40,6 +41,7 @@
 
 		.ng-doc-sidebar {
 			position: fixed;
+			top: var(--ng-doc-navbar-height);
 			display: flex;
 			width: var(--ng-doc-sidebar-width);
 			z-index: 5;

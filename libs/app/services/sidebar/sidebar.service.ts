@@ -2,6 +2,7 @@ import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {DOCUMENT} from '@angular/common';
 import {Inject, Injectable} from '@angular/core';
 import {Event, NavigationEnd, Router} from '@angular/router';
+import {NgDocScrollService} from '@ng-doc/ui-kit';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {filter, pluck, startWith, switchMap} from 'rxjs/operators';
@@ -20,6 +21,7 @@ export class NgDocSidebarService {
 		protected readonly document: Document,
 		protected readonly breakpointObserver: BreakpointObserver,
 		protected readonly router: Router,
+		protected readonly scroll: NgDocScrollService,
 	) {
 		this.observer = this.breakpointObserver.observe(this.breakpoints).pipe(pluck('matches'), untilDestroyed(this));
 
@@ -48,14 +50,14 @@ export class NgDocSidebarService {
 	show(): void {
 		if (!this.visible.value) {
 			this.visible.next(true);
-			this.document.documentElement.classList.add('no-scroll');
+			this.scroll.block();
 		}
 	}
 
 	hide(): void {
 		if (this.visible.value) {
 			this.visible.next(false);
-			this.document.documentElement.classList.remove('no-scroll');
+			this.scroll.unblock();
 		}
 	}
 
