@@ -1,3 +1,5 @@
+@import '../../../ui-kit/styles/mixins';
+
 :host {
 	.ng-doc-root-wrapper {
 		&.collapsable {
@@ -40,7 +42,7 @@
 			position: fixed;
 			display: flex;
 			width: var(--ng-doc-sidebar-width);
-			z-index: 1;
+			z-index: 5;
 		}
 
 		.ng-doc-body {
@@ -53,11 +55,12 @@
 	}
 
 	.ng-doc-backdrop {
+		@include ng-doc-backdrop-filter(rgba(0, 0, 0, 0.2));
 		position: fixed;
 		left: 0;
 		top: 0;
 		width: 100%;
 		height: 100%;
-		background-color: rgba(0, 0, 0, 0.2);
+		z-index: 1;
 	}
 }
