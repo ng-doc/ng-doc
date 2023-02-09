@@ -51,6 +51,7 @@
 	// Code
 	--ng-doc-code-max-height: 400px;
 
-	// PageMap
-	--ng-doc-page-map-width: 200px;
+	// Table of contents
+	--ng-doc-toc-width: 250px;
+	--ng-doc-toc-indent: calc(var(--ng-doc-base-gutter) + var(--ng-doc-base-gutter) / 2);
 }

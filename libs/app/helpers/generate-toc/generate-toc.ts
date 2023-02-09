@@ -14,7 +14,7 @@ export function generateToc(container: HTMLElement, headings: string[] = ['h1', 
 		const headingLevel: number = levelFromTagName(heading);
 		const previousItem: NgDocTocItem | undefined = map[i - 1];
 		const level: number = !previousItem
-			? 1
+			? 0
 			: levelFromTagName(previousItem.element) < headingLevel
 			? previousItem.level + 1
 			: levelFromTagName(previousItem.element) > headingLevel
