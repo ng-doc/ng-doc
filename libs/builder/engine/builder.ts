@@ -2,7 +2,19 @@ import {isPresent} from '@ng-doc/core';
 import * as fs from 'fs';
 import * as path from 'path';
 import {from, merge, Observable, of} from 'rxjs';
-import {catchError, concatMap, map, mapTo, mergeMap, share, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {
+	catchError,
+	concatMap,
+	finalize,
+	map,
+	mapTo,
+	mergeMap,
+	share,
+	startWith,
+	switchMap,
+	takeUntil,
+	tap,
+} from 'rxjs/operators';
 import {Project} from 'ts-morph';
 
 import {createProject, emitBuiltOutput} from '../helpers';
@@ -31,7 +43,6 @@ export class NgDocBuilder {
 	readonly renderer: NgDocRenderer = new NgDocRenderer();
 	private readonly compiledProject: Project;
 	readonly project: Project;
-	private readonly watcher: NgDocWatcher;
 
 	constructor(readonly context: NgDocBuilderContext) {
 		this.compiledProject = createProject({
@@ -42,8 +53,12 @@ export class NgDocBuilder {
 		});
 
 		this.project = createProject({tsConfigFilePath: this.context.tsConfig});
+	}
 
-		this.watcher = new NgDocWatcher(
+	run(): Observable<void> {
+		fs.rmSync(this.context.buildPath, {recursive: true, force: true});
+
+		const watcher: NgDocWatcher = new NgDocWatcher(
 			this.context.pagesPaths
 				.map((pagesPath: string) => [
 					path.join(pagesPath, PAGE_PATTERN),
@@ -53,18 +68,14 @@ export class NgDocBuilder {
 				])
 				.flat(),
 		);
-	}
-
-	run(): Observable<void> {
-		fs.rmSync(this.context.buildPath, {recursive: true, force: true});
 
 		const entities: Observable<NgDocEntity[]> = merge(
-			entityLifeCycle(this, this.compiledProject, this.watcher, PAGE_PATTERN, NgDocPageEntity),
-			entityLifeCycle(this, this.compiledProject, this.watcher, CATEGORY_PATTERN, NgDocCategoryEntity),
-			entityLifeCycle(this, this.compiledProject, this.watcher, PAGE_DEPENDENCY_PATTERN, NgDocDependenciesEntity),
-			entityLifeCycle(this, this.compiledProject, this.watcher, API_PATTERN, NgDocApiEntity),
+			entityLifeCycle(this, this.compiledProject, watcher, PAGE_PATTERN, NgDocPageEntity),
+			entityLifeCycle(this, this.compiledProject, watcher, CATEGORY_PATTERN, NgDocCategoryEntity),
+			entityLifeCycle(this, this.compiledProject, watcher, PAGE_DEPENDENCY_PATTERN, NgDocDependenciesEntity),
+			entityLifeCycle(this, this.compiledProject, watcher, API_PATTERN, NgDocApiEntity),
 		).pipe(
-			bufferUntilOnce(this.watcher.onReady()),
+			bufferUntilOnce(watcher.onReady()),
 			map((entities: NgDocEntity[][]) => entities.flat()),
 			bufferDebounce(100),
 			map((entities: NgDocEntity[][]) => entities.flat()),
@@ -111,7 +122,7 @@ export class NgDocBuilder {
 											? of(entity)
 											: entity.dependencies.changes().pipe(
 													switchMap((dependencies: string[]) =>
-														this.watcher
+														watcher
 															.watch(dependencies)
 															.onChange(...dependencies)
 															.pipe(tap(() => entity.dependenciesChanged())),
@@ -121,7 +132,7 @@ export class NgDocBuilder {
 													takeUntil(
 														merge(
 															entity.onDestroy(),
-															this.watcher.onChange(...entity.rootFiles),
+															watcher.onChange(...entity.rootFiles),
 														),
 													),
 											  ),
@@ -162,11 +173,13 @@ export class NgDocBuilder {
 
 				return of(void 0);
 			}),
+			finalize(() => watcher.close()),
 		) as unknown as Observable<void>;
 	}
 
 	get(id: string, canBeBuilt?: boolean): NgDocEntity | undefined {
 		const entity: NgDocEntity | undefined = this.entities.get(id);
+
 		return isPresent(canBeBuilt) ? (entity?.canBeBuilt === canBeBuilt ? entity : undefined) : entity;
 	}
 
