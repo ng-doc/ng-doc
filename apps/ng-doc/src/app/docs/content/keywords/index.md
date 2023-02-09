@@ -35,7 +35,7 @@ So, to create keyword for the page, specify your preferred keyword in your page 
 the `keyword` field.
 
 ```typescript
-import {NgDocPage} from '@ng-doc/builder';
+import {NgDocPage} from '@ng-doc/core';
 
 export const MyAwesomePage: NgDocPage = {
 	title: 'My Awesome Page',
@@ -43,7 +43,7 @@ export const MyAwesomePage: NgDocPage = {
 	// This keyword can be used to create a link to the page
 	// (e.g. like that "*MyCustomKeyword")
 	keyword: `MyCustomKeyword`,
-}
+};
 
 export default MyAwesomePage;
 ```
