@@ -29,7 +29,7 @@ the page configuration must correspond to the `NgDocPage` type, you can read mor
 properties in the documentation for the type, below is an example of the minimum page configuration.
 
 ```typescript
-import {NgDocPage} from '@ng-doc/builder';
+import {NgDocPage} from '@ng-doc/core';
 
 export const MyAwesomePage: NgDocPage = {
 	title: 'MyAwesomePage',
@@ -47,7 +47,7 @@ just import category and put it in the `category` field, just like that:
 
 ```typescript
 // ng-doc.page.ts
-import {NgDocPage} from '@ng-doc/builder';
+import {NgDocPage} from '@ng-doc/core';
 import MyAwesomeCategory from '../ng-doc.category';
 
 export const MyAwesomePage: NgDocPage = {

@@ -31,7 +31,7 @@ about the various
 properties in the documentation for the type, below is an example of possible configuration.
 
 ```typescript
-import {NgDocDependencies} from '@ng-doc/builder';
+import {NgDocDependencies} from '@ng-doc/core';
 
 const MyPageDependencies: NgDocDependencies = {
 	/** NgModule that declarates demo components, and exports components that are using in the playgrounds */

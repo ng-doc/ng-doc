@@ -267,7 +267,6 @@ export class NgDocDropdownComponent implements OnChanges, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		/* Жестко уничтожаем оверлей если он был открыт на момент уничтожения компонента */
 		if (this.overlay) {
 			this.overlay.overlayRef.dispose();
 		}

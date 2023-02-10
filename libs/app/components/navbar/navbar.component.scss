@@ -1,4 +1,7 @@
+@import '../../../ui-kit/styles/mixins';
+
 :host {
+	@include ng-doc-backdrop-filter(var(--ng-doc-navbar-background));
 	position: relative;
 	display: flex;
 	justify-content: center;
@@ -6,7 +9,7 @@
 	transition: var(--ng-doc-transition) box-shadow;
 
 	&.has-shadow {
-		box-shadow: var(--ng-doc-shadow-color) 0px 5px 20px -5px;
+		box-shadow: var(--ng-doc-shadow-color) 0 5px 20px -5px;
 	}
 
 	.navbar-container {
@@ -15,7 +18,6 @@
 		height: 100%;
 		width: 100%;
 		padding: 0 var(--ng-doc-navbar-horizontal-padding);
-		background-color: var(--ng-doc-base-0);
 		z-index: 10;
 		max-width: var(--ng-doc-app-max-width);
 	}

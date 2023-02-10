@@ -22,9 +22,6 @@ interface ApiFilterForm {
 })
 @UntilDestroy()
 export class NgDocApiListComponent {
-	/**
-	 * My comment
-	 */
 	formGroup: FormGroup<ApiFilterForm>;
 	api$: Observable<NgDocApiList[]>;
 
@@ -73,7 +70,7 @@ export class NgDocApiListComponent {
 							)
 							.sort(
 								(a: NgDocApiListItem, b: NgDocApiListItem) =>
-									a.type.localeCompare(b.type) - a.name.localeCompare(b.name),
+									a.type.localeCompare(b.type) || a.name.localeCompare(b.name),
 							),
 					}))
 					.filter((api: NgDocApiList) => api.items.length)
