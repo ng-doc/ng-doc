@@ -12,6 +12,7 @@ body:
           options:
               - 'Yes'
               - 'No'
+              - "I don't know"
       validations:
           required: true
 
@@ -68,3 +69,6 @@ body:
       id: other
       attributes:
           label: Anything else?
+          placeholder: |
+              Please provide any additional information that may be helpful in understanding the issue.
+              If you have a screenshot, attach it here.
