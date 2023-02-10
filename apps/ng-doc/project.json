@@ -30,7 +30,7 @@
 						},
 						"ngDocFeatureRequest": {
 							"title": "NgDoc Feature Request",
-							"path": "https://github.com/skoropadas/ng-doc/issues/new?template=feature_request.md"
+							"path": "https://github.com/skoropadas/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Enhancement&template=feature_request.yaml&title=%5BFeature%5D+"
 						}
 					}
 				},
@@ -144,7 +144,7 @@
 							},
 							"ngDocFeatureRequest": {
 								"title": "NgDoc Feature Request",
-								"path": "https://github.com/skoropadas/ng-doc/issues/new?template=feature_request.md"
+								"path": "https://github.com/skoropadas/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Enhancement&template=feature_request.yaml&title=%5BFeature%5D+"
 							}
 						}
 					}
@@ -173,7 +173,7 @@
 							},
 							"ngDocFeatureRequest": {
 								"title": "NgDoc Feature Request",
-								"path": "https://github.com/skoropadas/ng-doc/issues/new?template=feature_request.md"
+								"path": "https://github.com/skoropadas/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Enhancement&template=feature_request.yaml&title=%5BFeature%5D+"
 							}
 						}
 					}
