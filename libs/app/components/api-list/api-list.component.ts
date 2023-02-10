@@ -73,7 +73,7 @@ export class NgDocApiListComponent {
 							)
 							.sort(
 								(a: NgDocApiListItem, b: NgDocApiListItem) =>
-									a.type.localeCompare(b.type) - a.name.localeCompare(b.name),
+									a.type.localeCompare(b.type) || a.name.localeCompare(b.name),
 							),
 					}))
 					.filter((api: NgDocApiList) => api.items.length)
