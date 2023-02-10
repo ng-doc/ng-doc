@@ -1,3 +1,12 @@
+# [15.2.0](https://github.com/skoropadas/ng-doc/compare/v15.1.1...v15.2.0) (2023-02-10)
+
+
+### Features
+
+* **app:** add glass effect to the header ([0833db3](https://github.com/skoropadas/ng-doc/commit/0833db3aba6204a46107f0cb4dc80cf65e8680b4))
+* **app:** entities in the api list are sorted by type and name ([c2ae928](https://github.com/skoropadas/ng-doc/commit/c2ae92857065bceb4ddf6ee12155311c830cfced))
+* **ui-kit:** add `NgDocScrollService` that allows to block document scroll ([e644459](https://github.com/skoropadas/ng-doc/commit/e6444598b28a667fa2b5e0dcf003e905a3288e62))
+
 ## [15.1.1](https://github.com/skoropadas/ng-doc/compare/v15.1.0...v15.1.1) (2023-02-09)
 
 
