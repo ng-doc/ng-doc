@@ -1,4 +1,6 @@
 import {isPresent} from '@ng-doc/core';
+import * as console from 'console';
+import * as esbuild from 'esbuild';
 import * as fs from 'fs';
 import * as path from 'path';
 import {from, merge, Observable, of} from 'rxjs';
@@ -15,7 +17,7 @@ import {
 	takeUntil,
 	tap,
 } from 'rxjs/operators';
-import {Project} from 'ts-morph';
+import {Project, SourceFile} from 'ts-morph';
 
 import {createProject, emitBuiltOutput} from '../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
@@ -92,7 +94,7 @@ export class NgDocBuilder {
 					entities.map((entity: NgDocEntity) => (entity.destroyed ? of(null) : entity.emit())),
 				).pipe(mapTo(entities));
 			}),
-			concatMap((entities: NgDocEntity[]) => from(this.compiledProject.emit()).pipe(mapTo(entities))),
+			concatMap((entities: NgDocEntity[]) => this.emit().pipe(mapTo(entities))),
 			mergeMap((entities: NgDocEntity[]) => {
 				// Re-fetch compiled data for non destroyed entities
 				return forkJoinOrEmpty(
@@ -181,6 +183,21 @@ export class NgDocBuilder {
 		const entity: NgDocEntity | undefined = this.entities.get(id);
 
 		return isPresent(canBeBuilt) ? (entity?.canBeBuilt === canBeBuilt ? entity : undefined) : entity;
+	}
+
+	emit(...only: SourceFile[]): Observable<void> {
+		return from(
+			esbuild.build({
+				entryPoints: (only.length ? only : this.compiledProject.getSourceFiles()).map((s: SourceFile) =>
+					s.getFilePath(),
+				),
+				tsconfig: this.context.tsConfig,
+				bundle: true,
+				format: 'cjs',
+				outbase: this.context.context.workspaceRoot,
+				outdir: CACHE_PATH,
+			}),
+		).pipe(mapTo(void 0));
 	}
 
 	private collectGarbage(): void {
