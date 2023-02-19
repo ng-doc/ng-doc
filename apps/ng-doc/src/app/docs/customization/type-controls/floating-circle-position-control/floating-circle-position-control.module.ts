@@ -2,13 +2,14 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
 import {provideTypeControl} from '@ng-doc/app';
+import {NgDocLabelModule} from '@ng-doc/ui-kit';
 
 import {FloatingCirclePositionControlComponent} from './floating-circle-position-control.component';
 
 @NgModule({
-	imports: [CommonModule, ReactiveFormsModule],
+	imports: [CommonModule, ReactiveFormsModule, NgDocLabelModule],
 	declarations: [FloatingCirclePositionControlComponent],
-	// Registering control as a Type Control
+	// Registering the control as a Type Control
 	providers: [provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent)],
 	exports: [FloatingCirclePositionControlComponent],
 })

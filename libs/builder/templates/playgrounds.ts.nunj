@@ -5,9 +5,9 @@ import {NgDocBasePlayground, providePlaygroundDemo} from '@ng-doc/app';
 import pageDependencies from '{{ dependencies.importPath }}'; import {CommonModule} from '@angular/common';
 
 {% set components = [] -%}
+{%- set index = 1 %}
 
 {%- for id in dependencies.playgroundIds -%}
-{%- set index = 1 %}
 {%- set playgrounds = dependencies.getPlaygroundsExpression() %}
 {%- set target = playgrounds | getTargetForPlayground(id) %}
 {%- set template = playgrounds | getTemplateForPlayground(id) %}

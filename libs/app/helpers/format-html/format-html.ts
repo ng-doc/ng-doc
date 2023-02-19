@@ -13,6 +13,9 @@ export function formatHtml(html: string): Observable<string> {
 				plugins: [htmlParser],
 				printWidth: 60,
 				tabWidth: 4,
+				bracketSameLine: true,
+				bracketSpacing: true,
+				htmlWhitespaceSensitivity: "ignore"
 			}),
 		),
 	);

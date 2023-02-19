@@ -1,11 +1,12 @@
 import {NgDocPage} from '@ng-doc/core';
 
-import GuidelinesCategory from '../ng-doc.category';
+import GuidesCategory from '../ng-doc.category';
 
 const PlaygroundPage: NgDocPage = {
 	title: `Playground`,
 	mdFile: './index.md',
-	category: GuidelinesCategory,
+	category: GuidesCategory,
+	keyword: 'ContentGuidesPlayground'
 };
 
 export default PlaygroundPage;

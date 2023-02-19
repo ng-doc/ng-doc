@@ -4,7 +4,7 @@ import {NgDocTypeControl} from '@ng-doc/app';
 import {EMPTY_FUNCTION} from '@ng-doc/core';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 
-import {FloatingCirclePosition} from '../../customization/type-controls/floating-circle/floating-circle.component';
+import {FloatingCirclePosition} from '../floating-circle/floating-circle.component';
 
 @Component({
 	selector: 'ng-doc-floating-circle-position-control',
@@ -17,26 +17,22 @@ export class FloatingCirclePositionControlComponent implements NgDocTypeControl 
 	model: FormGroup<{
 		top: FormControl<string | null>;
 		left: FormControl<string | null>;
-		bottom: FormControl<string | null>;
-		right: FormControl<string | null>;
 	}> = new FormGroup({
 		top: new FormControl<string>(''),
 		left: new FormControl<string>(''),
-		right: new FormControl<string>(''),
-		bottom: new FormControl<string>(''),
 	});
 
 	touched: () => void = EMPTY_FUNCTION;
 	changed: (value: FloatingCirclePosition | null) => void = EMPTY_FUNCTION;
 
-	registerOnChange(fn: (value: FloatingCirclePosition | null) => void): void {
-		this.changed = fn;
-	}
-
 	constructor() {
 		this.model.valueChanges
 			.pipe(untilDestroyed(this))
 			.subscribe((value: FloatingCirclePosition) => this.changed(value));
+	}
+
+	registerOnChange(fn: (value: FloatingCirclePosition | null) => void): void {
+		this.changed = fn;
 	}
 
 	registerOnTouched(fn: () => void): void {
@@ -48,8 +44,6 @@ export class FloatingCirclePositionControlComponent implements NgDocTypeControl 
 			{
 				top: null,
 				left: null,
-				right: null,
-				bottom: null,
 				...(obj ? obj : {}),
 			},
 			{emitEvent: false},

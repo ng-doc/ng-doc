@@ -1,13 +1,13 @@
 import {NgDocPage} from '@ng-doc/core';
 
-import GuidelinesCategory from '../ng-doc.category';
+import GuidesCategory from '../ng-doc.category';
 
 const DemoPage: NgDocPage = {
 	title: 'Demo',
 	mdFile: './index.md',
-	category: GuidelinesCategory,
+	category: GuidesCategory,
 	order: 2,
-	keyword: 'ContentGuidelinesDemo',
+	keyword: 'ContentGuidesDemo',
 }
 
 export default DemoPage;

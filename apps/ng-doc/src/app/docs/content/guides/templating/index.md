@@ -6,7 +6,7 @@ can do.
 
 ## Nunjucks
 
-All guidelines you create are handled by `nunjucks`, `nunjucks` is a powerful templating language
+All guides you create are handled by `nunjucks`, `nunjucks` is a powerful templating language
 that allows you to create more dynamic templates.
 
 This means that you can use any of the functions provided by `nunjucks` inside your templates!
@@ -68,7 +68,7 @@ So, for example to render title, you can do this
 
 The `NgDocActions` provides some functions that you can call to render demo on the page,
 for example, to render demo you can call `demo` method with the name of you demo component.
-You can read more about the demo in the `*ContentGuidelinesDemo`.
+You can read more about the demo in the `*ContentGuidesDemo`.
 
 ```twig
 {{ '{{ NgDocActions.demo("MyDemoComponent") }}' | safe }}
@@ -109,5 +109,5 @@ NgDoc will render it like this:
 
 ## SeeAlso
 
--   `*ContentGuidelinesDemo`
+-   `*ContentGuidesDemo`
 -   `*ContentKeywords`
