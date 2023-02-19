@@ -1,6 +1,9 @@
+import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {NgDocPlaygroundContent, NgDocPlaygroundProperties} from '@ng-doc/core';
+import {Observable} from 'rxjs';
+import {pluck} from 'rxjs/operators';
 
 import {NgDocPlaygroundForm} from '../playground.component';
 
@@ -31,6 +34,11 @@ export class NgDocPlaygroundPropertiesComponent<
 
 	@Output()
 	resetForm: EventEmitter<void> = new EventEmitter<void>();
+
+	readonly breakpoints: string[] = [Breakpoints.XSmall];
+	readonly observer: Observable<boolean> = this.breakpointObserver.observe(this.breakpoints).pipe(pluck('matches'));
+
+	constructor(protected readonly breakpointObserver: BreakpointObserver) {}
 
 	getFormControl(controlType: keyof typeof this.form.controls, key: string): FormControl {
 		return this.form.get(controlType)?.get(key) as FormControl;

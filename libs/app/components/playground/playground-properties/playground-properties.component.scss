@@ -1,6 +1,20 @@
 :host {
 	.ng-doc-playground-properties-wrapper {
+		position: relative;
 		display: flex;
+
+		&.vertical {
+			flex-direction: column;
+
+			.ng-doc-playground-demos {
+				margin-right: 0;
+				margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
+			}
+
+			.ng-doc-playground-properties {
+				width: 100%;
+			}
+		}
 
 		.ng-doc-playground-demos {
 			display: flex;
