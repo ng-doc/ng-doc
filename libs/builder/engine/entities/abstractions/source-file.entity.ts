@@ -15,6 +15,11 @@ export abstract class NgDocSourceFileEntity extends NgDocEntity {
 	 */
 	override readonly id: string = this.sourceFilePath;
 
+	/**
+	 * Indicates whether the entity's source file can be compiled
+	 */
+	readonly compilable: boolean = false;
+
 	constructor(
 		override readonly builder: NgDocBuilder,
 		readonly sourceFile: SourceFile,

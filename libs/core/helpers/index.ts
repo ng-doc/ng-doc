@@ -1,4 +1,5 @@
 export * from './as-array';
+export * from './build-playground-demo-template';
 export * from './capitalize';
 export * from './escape-html';
 export * from './escape-regexp';

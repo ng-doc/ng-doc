@@ -6,9 +6,15 @@ import {
 	NgDocBlockquoteProcessorModule,
 	NgDocCodeProcessorModule,
 	NgDocDemoProcessorModule,
-	NgDocIconProcessorModule,
+	NgDocIconProcessorModule, NgDocPlaygroundProcessorModule,
 	NgDocTooltipProcessorModule,
 } from '@ng-doc/app/processors';
+import {
+	NgDocBooleanControlModule,
+	NgDocNumberControlModule,
+	NgDocStringControlModule,
+	NgDocTypeAliasControlModule
+} from '@ng-doc/app/type-controls';
 import {NgDocButtonIconModule, NgDocIconModule, NgDocMediaQueryModule, NgDocTooltipModule} from '@ng-doc/ui-kit';
 
 import {NgDocPageComponent} from './page.component';
@@ -28,6 +34,13 @@ import {NgDocPageComponent} from './page.component';
 		NgDocButtonIconModule,
 		NgDocIconModule,
 		NgDocTooltipModule,
+		NgDocPlaygroundProcessorModule,
+
+		/* TypeControls */
+		NgDocBooleanControlModule,
+		NgDocNumberControlModule,
+		NgDocStringControlModule,
+		NgDocTypeAliasControlModule,
 	],
 	exports: [NgDocPageComponent],
 })

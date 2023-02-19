@@ -1,5 +1,4 @@
 import {isPresent} from '@ng-doc/core';
-import * as console from 'console';
 import * as esbuild from 'esbuild';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -19,7 +18,7 @@ import {
 } from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
-import {createProject, emitBuiltOutput} from '../helpers';
+import {createProject, emitBuiltOutput, isFileEntity} from '../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
 import {bufferDebounce} from '../operators';
 import {bufferUntilOnce} from '../operators/buffer-until-once';
@@ -32,6 +31,7 @@ import {
 	NgDocSkeletonEntity,
 } from './entities';
 import {NgDocEntity} from './entities/abstractions/entity';
+import {NgDocFileEntity} from './entities/abstractions/file.entity';
 import {entityLifeCycle} from './entity-life-cycle';
 import {NgDocEntityStore} from './entity-store';
 import {buildCandidates} from './functions/build-candidates';
@@ -43,17 +43,9 @@ export class NgDocBuilder {
 	readonly entities: NgDocEntityStore = new NgDocEntityStore();
 	readonly skeleton: NgDocSkeletonEntity = new NgDocSkeletonEntity(this, this.context);
 	readonly renderer: NgDocRenderer = new NgDocRenderer();
-	private readonly compiledProject: Project;
 	readonly project: Project;
 
 	constructor(readonly context: NgDocBuilderContext) {
-		this.compiledProject = createProject({
-			compilerOptions: {
-				rootDir: this.context.context.workspaceRoot,
-				outDir: CACHE_PATH,
-			},
-		});
-
 		this.project = createProject({tsConfigFilePath: this.context.tsConfig});
 	}
 
@@ -72,10 +64,10 @@ export class NgDocBuilder {
 		);
 
 		const entities: Observable<NgDocEntity[]> = merge(
-			entityLifeCycle(this, this.compiledProject, watcher, PAGE_PATTERN, NgDocPageEntity),
-			entityLifeCycle(this, this.compiledProject, watcher, CATEGORY_PATTERN, NgDocCategoryEntity),
-			entityLifeCycle(this, this.compiledProject, watcher, PAGE_DEPENDENCY_PATTERN, NgDocDependenciesEntity),
-			entityLifeCycle(this, this.compiledProject, watcher, API_PATTERN, NgDocApiEntity),
+			entityLifeCycle(this, this.project, watcher, PAGE_PATTERN, NgDocPageEntity),
+			entityLifeCycle(this, this.project, watcher, CATEGORY_PATTERN, NgDocCategoryEntity),
+			entityLifeCycle(this, this.project, watcher, PAGE_DEPENDENCY_PATTERN, NgDocDependenciesEntity),
+			entityLifeCycle(this, this.project, watcher, API_PATTERN, NgDocApiEntity),
 		).pipe(
 			bufferUntilOnce(watcher.onReady()),
 			map((entities: NgDocEntity[][]) => entities.flat()),
@@ -188,12 +180,18 @@ export class NgDocBuilder {
 	emit(...only: SourceFile[]): Observable<void> {
 		return from(
 			esbuild.build({
-				entryPoints: (only.length ? only : this.compiledProject.getSourceFiles()).map((s: SourceFile) =>
-					s.getFilePath(),
-				),
+				entryPoints: (only.length
+					? only
+					: this.entities
+							.asArray()
+							.filter(isFileEntity)
+							.filter((e: NgDocFileEntity<unknown>) => e.compilable)
+							.map((e: NgDocFileEntity<unknown>) => e.sourceFile)
+				).map((s: SourceFile) => s.getFilePath()),
 				tsconfig: this.context.tsConfig,
 				bundle: true,
 				format: 'cjs',
+				treeShaking: true,
 				outbase: this.context.context.workspaceRoot,
 				outdir: CACHE_PATH,
 			}),

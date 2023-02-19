@@ -1,29 +1,33 @@
-import {Component} from '@angular/core';
-import {asArray, isPresent} from '@ng-doc/core';
+import {asArray, isPresent, objectKeys} from '@ng-doc/core';
 import * as path from 'path';
-import {Observable, of} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {forkJoin, Observable, of} from 'rxjs';
+import {map, tap} from 'rxjs/operators';
 import {
 	ClassDeclaration,
-	Decorator,
 	Expression,
 	Node,
 	ObjectLiteralElementLike,
 	ObjectLiteralExpression,
+	PropertyAssignment
 } from 'ts-morph';
 
-import {buildAssets, formatCode, isPageEntity, slash} from '../../helpers';
+import {
+	formatCode,
+	getComponentAsset,
+	getDemoClassDeclarations,
+	getTargetForPlayground,
+	isPageEntity,
+	slash
+} from '../../helpers';
 import {NgDocAsset, NgDocBuiltOutput} from '../../interfaces';
-import {componentDecoratorResolver} from '../../resolvers/component-decorator.resolver';
+import {NgDocComponentAsset} from '../../types';
 import {PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocSourceFileEntity} from './abstractions/source-file.entity';
 import {NgDocPageEntity} from './page.entity';
 
-type ComponentAsset = Record<string, NgDocAsset[]>;
-
 export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
-	private componentsAssets: ComponentAsset = {};
+	private componentsAssets: NgDocComponentAsset = {};
 
 	override get isRoot(): boolean {
 		// always false, page dependencies are not rooted
@@ -38,6 +42,10 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 		return asArray(this.parent);
 	}
 
+	/**
+	 * The parent of the current entity is always the page entity
+	 * that located in the same folder
+	 */
 	override get parent(): NgDocPageEntity | undefined {
 		const expectedPath: string = path.join(this.sourceFileFolder, PAGE_NAME);
 		const entity: NgDocEntity | undefined = this.builder.get(expectedPath);
@@ -59,16 +67,63 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 		return slash(path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, 'component-assets')));
 	}
 
+	get playgroundsPath(): string {
+		return path.join(this.folderPath, 'playgrounds.ts');
+	}
+
+	get playgroundIds(): string[] {
+		const playgrounds: ObjectLiteralExpression | undefined = this.getPlaygroundsExpression();
+
+		return playgrounds?.getProperties().filter(Node.isPropertyAssignment).map((p: PropertyAssignment) => p.getName()) ?? []
+	}
+
+	override dependenciesChanged() {
+		super.dependenciesChanged();
+
+		this.getTargets().forEach((target: ClassDeclaration) => target.getSourceFile().refreshFromFileSystem());
+	}
+
+	override update(): Observable<void> {
+		this.fillAssets();
+
+		return of(void 0);
+	}
+
 	protected override build(): Observable<NgDocBuiltOutput[]> {
 		if (!this.parent) {
 			return of([]);
 		}
+		this.dependencies.clear();
 
 		this.fillAssets();
 
-		this.dependencies.clear();
-		this.dependencies.add(...this.assets.map((asset: NgDocAsset) => asset.originalPath));
+		this.getTargets().forEach((target: ClassDeclaration) => this.dependencies.add(target.getSourceFile().getFilePath()));
 
+		return forkJoin([this.buildAssets(), this.buildPlaygrounds()]).pipe(
+			map(([assets, playgrounds]: [NgDocBuiltOutput[], NgDocBuiltOutput]) => [...assets, playgrounds]),
+		);
+	}
+
+	getPlaygroundsExpression(): ObjectLiteralExpression | undefined {
+		const objectExpression: ObjectLiteralExpression | undefined = this.getObjectExpressionFromDefault();
+
+		if (objectExpression) {
+			const property: ObjectLiteralElementLike | undefined = objectExpression.getProperty('playgrounds');
+
+			if (Node.isPropertyAssignment(property)) {
+				const value: Expression| undefined = property.getInitializer();
+
+				if (Node.isObjectLiteralExpression(value)) {
+					return value;
+				}
+			}
+
+		}
+
+		return undefined;
+	}
+
+	private buildAssets(): Observable<NgDocBuiltOutput[]> {
 		return this.buildComponentAssets().pipe(
 			map((output: NgDocBuiltOutput) => [
 				output,
@@ -80,24 +135,34 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 		);
 	}
 
-	override update(): Observable<void> {
-		this.readyToBuild = true;
-
-		this.fillAssets();
-
-		return of(void 0);
-	}
-
 	private fillAssets(): void {
 		const objectExpression: ObjectLiteralExpression | undefined = this.getObjectExpressionFromDefault();
 
 		if (objectExpression) {
-			const classDeclarations: ClassDeclaration[] = this.getDemoClassDeclarations(objectExpression);
+			const classDeclarations: ClassDeclaration[] = getDemoClassDeclarations(objectExpression);
 
 			this.componentsAssets = classDeclarations
-				.map((classDeclarations: ClassDeclaration) => this.getComponentAssets(classDeclarations))
-				.reduce((acc: ComponentAsset, curr: ComponentAsset) => ({...acc, ...curr}), {});
+				.map((classDeclarations: ClassDeclaration) =>
+					getComponentAsset(
+						classDeclarations,
+						this.context.inlineStyleLanguage,
+						slash(this.parent?.assetsFolder ?? this.folderPath),
+					),
+				)
+				.reduce((acc: NgDocComponentAsset, curr: NgDocComponentAsset) => ({...acc, ...curr}), {});
+
+			this.dependencies.add(...this.assets.map((asset: NgDocAsset) => asset.originalPath));
 		}
+	}
+
+	private getTargets(): ClassDeclaration[] {
+		return this.playgroundIds
+			.map((pId: string) => {
+				const expression: ObjectLiteralExpression | undefined = this.getPlaygroundsExpression();
+
+				return expression && getTargetForPlayground(expression, pId);
+			})
+			.filter(isPresent)
 	}
 
 	private buildComponentAssets(): Observable<NgDocBuiltOutput> {
@@ -110,71 +175,14 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 			.pipe(map((output: string) => ({content: output, filePath: this.componentAssetsPath})));
 	}
 
-	private getDemoClassDeclarations(objectExpression: ObjectLiteralExpression): ClassDeclaration[] {
-		const demoProperty: ObjectLiteralElementLike | undefined = objectExpression.getProperty('demo');
-
-		if (
-			demoProperty &&
-			(Node.isPropertyAssignment(demoProperty) || Node.isShorthandPropertyAssignment(demoProperty))
-		) {
-			const initializer: Expression | undefined = demoProperty.getInitializer();
-
-			if (initializer && initializer instanceof ObjectLiteralExpression) {
-				return initializer
-					.getProperties()
-					.map((property: ObjectLiteralElementLike) => property.getType().getSymbol()?.getValueDeclaration())
-					.filter(isPresent)
-					.filter(Node.isClassDeclaration);
-			}
-		}
-
-		return [];
-	}
-
-	private getComponentAssets(classDeclaration: ClassDeclaration): ComponentAsset {
-		const decorator: Decorator | undefined = classDeclaration.getDecorator('Component');
-		const decoratorArgument: Node | undefined = decorator?.getArguments()[0];
-
-		if (Node.isObjectLiteralExpression(decoratorArgument)) {
-			const decoratorData: Component = componentDecoratorResolver(decoratorArgument);
-			const filePath: string = classDeclaration.getSourceFile().getFilePath();
-			const fileDir: string = path.dirname(filePath);
-
-			const assets: Array<Omit<NgDocAsset, 'outputPath'>> = [
-				...buildAssets(filePath, this.context.inlineStyleLanguage),
-				...(decoratorData.templateUrl
-					? buildAssets(path.join(fileDir, decoratorData.templateUrl), this.context.inlineStyleLanguage)
-					: []),
-				...asArray(decoratorData.styleUrls)
-					.map((styleUrl: string) =>
-						buildAssets(path.join(fileDir, styleUrl), this.context.inlineStyleLanguage),
-					)
-					.flat(),
-			];
-
-			return {
-				[classDeclaration.getName() ?? '']: assets.map((asset: Omit<NgDocAsset, 'outputPath'>) => {
-					const code: string = formatCode(asset.output, asset.type);
-
-					return {
-						...asset,
-						code,
-						output: this.builder.renderer
-							.renderSync('./code.html.nunj', {
-								context: {
-									code,
-									lang: asset.type,
-								},
-							})
-							.trim(),
-						outputPath: slash(
-							path.join(this.parent?.assetsFolder ?? this.folderPath, `${asset.name}.html`),
-						),
-					};
-				}),
-			};
-		}
-
-		return {};
+	private buildPlaygrounds(): Observable<NgDocBuiltOutput> {
+		return this.builder.renderer
+			.render('./playgrounds.ts.nunj', {
+				context: {
+					dependencies: this,
+				},
+			})
+			// TODO: move format code to the post processor?
+			.pipe(map((output: string) => ({content: formatCode(output, 'TypeScript'), filePath: this.playgroundsPath})));
 	}
 }

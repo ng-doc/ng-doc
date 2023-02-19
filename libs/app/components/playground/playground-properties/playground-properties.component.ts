@@ -1,0 +1,38 @@
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {FormControl, FormGroup} from '@angular/forms';
+import {NgDocPlaygroundContent, NgDocPlaygroundProperties} from '@ng-doc/core';
+
+import {NgDocPlaygroundForm} from '../playground.component';
+
+@Component({
+	selector: 'ng-doc-playground-properties',
+	templateUrl: './playground-properties.component.html',
+	styleUrls: ['./playground-properties.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class NgDocPlaygroundPropertiesComponent<
+	P extends NgDocPlaygroundProperties,
+	C extends Record<string, NgDocPlaygroundContent>,
+> {
+	@Input()
+	form!: FormGroup<NgDocPlaygroundForm>;
+
+	@Input()
+	properties?: P;
+
+	@Input()
+	dynamicContent?: C;
+
+	@Input()
+	reinitializeDemo: boolean = false;
+
+	@Output()
+	reinitializeDemoChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+	@Output()
+	resetForm: EventEmitter<void> = new EventEmitter<void>();
+
+	getFormControl(controlType: keyof typeof this.form.controls, key: string): FormControl {
+		return this.form.get(controlType)?.get(key) as FormControl;
+	}
+}

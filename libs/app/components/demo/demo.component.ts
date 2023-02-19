@@ -28,9 +28,9 @@ export class NgDocDemoComponent implements OnInit {
 
 	private getDemo(): PolymorpheusComponent<object, object> | undefined {
 		if (this.componentName) {
-			const component: Type<object> | undefined = this.rootPage.demo && this.rootPage.demo[this.componentName];
+			const component: Type<unknown> | undefined = this.rootPage.dependencies?.demo && this.rootPage.dependencies.demo[this.componentName];
 
-			return component ? new PolymorpheusComponent(component) : undefined;
+			return component ? new PolymorpheusComponent(component as Type<object>) : undefined;
 		}
 
 		return undefined;
