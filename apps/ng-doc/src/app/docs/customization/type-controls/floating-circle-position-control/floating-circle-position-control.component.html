@@ -1,11 +1,12 @@
 <div class="controls" [formGroup]="model">
-	<label ng-doc-label="">
-		<div>Top</div>
-		<input formControlName="top">
+	<label ng-doc-label="Top">
+		<ng-doc-input-wrapper>
+			<input ngDocInputString formControlName="top" />
+		</ng-doc-input-wrapper>
 	</label>
-	<label>
-		<div>Left</div>
-		<input formControlName="left">
+	<label ng-doc-label="Left">
+		<ng-doc-input-wrapper>
+			<input ngDocInputString formControlName="left" />
+		</ng-doc-input-wrapper>
 	</label>
 </div>
-
