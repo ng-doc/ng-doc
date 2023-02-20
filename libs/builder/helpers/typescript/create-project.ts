@@ -25,7 +25,7 @@ export function createProject(options?: ProjectOptions): Project {
 			...options?.compilerOptions,
 		},
 		skipAddingFilesFromTsConfig: true,
-		skipFileDependencyResolution: true,
-		skipLoadingLibFiles: true,
+		skipFileDependencyResolution: false,
+		skipLoadingLibFiles: false,
 	});
 }
