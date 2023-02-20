@@ -5,8 +5,8 @@ import {CUSTOM_DATA} from './custom-data';
 export const DevelopPage: NgDocPage = {
 	title: 'Develop',
 	mdFile: './index.md',
-	onlyForTags: ['develop'],
+	onlyForTags: ['development'],
 	data: CUSTOM_DATA,
-}
+};
 
 export default DevelopPage;

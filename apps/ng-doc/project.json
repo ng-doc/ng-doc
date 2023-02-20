@@ -153,7 +153,7 @@
 					"browserTarget": "ng-doc:build:development",
 					"ngDoc": {
 						"pages": "apps/ng-doc/src/app",
-						"tag": "production",
+						"tag": "development",
 						"repoConfig": {
 							"url": "https://github.com/skoropadas/ng-doc",
 							"mainBranch": "main",
