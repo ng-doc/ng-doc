@@ -1,31 +1,21 @@
 import {asArray, isPresent, NgDocPage} from '@ng-doc/core';
 import * as fs from 'fs';
-import {URL} from 'node:url';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
-import {SourceFile} from 'ts-morph';
 
-import {
-	editFileInRepoUrl,
-	isDependencyEntity,
-	isPlaygroundEntity,
-	marked,
-	slash,
-	uniqueName,
-	viewFileInRepoUrl,
-} from '../../helpers';
+import {editFileInRepoUrl, isDependencyEntity, marked, slash,} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
 import {NgDocActions} from '../actions';
-import {PAGE_DEPENDENCIES_NAME, PLAYGROUND_NAME, RENDERED_PAGE_NAME} from '../variables';
+import {PAGE_DEPENDENCIES_NAME, RENDERED_PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocCategoryEntity} from './category.entity';
 import {NgDocDependenciesEntity} from './dependencies.entity';
-import {NgDocPlaygroundEntity} from './playground.entity';
 
 export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	override parent?: NgDocCategoryEntity;
+	override compilable: boolean = true;
 
 	override get route(): string {
 		const folderName: string = path.basename(path.dirname(this.sourceFile.getFilePath()));
@@ -98,25 +88,9 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	}
 
 	get componentsAssets(): string | undefined {
-		const dependencies: NgDocDependenciesEntity | undefined = asArray(this.children.values()).filter(
-			isDependencyEntity,
-		)[0];
+		const dependencies: NgDocDependenciesEntity | undefined = this.pageDependencies;
 
 		return dependencies && dependencies.assets.length ? dependencies.componentAssetsImport : undefined;
-	}
-
-	get playground(): NgDocPlaygroundEntity | undefined {
-		return this.children.find(isPlaygroundEntity);
-	}
-
-	get playgroundFile(): string | undefined {
-		const playgroundPath: string = path.join(this.sourceFileFolder, PLAYGROUND_NAME);
-
-		return fs.existsSync(playgroundPath) ? playgroundPath : undefined;
-	}
-
-	get pagePlaygroundImport(): string | undefined {
-		return this.playgroundFile ? slash(this.playgroundFile.replace(/.ts$/, '')) : undefined;
 	}
 
 	override update(): Observable<void> {
@@ -167,10 +141,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 
 		if (this.target) {
 			this.dependencies.add(this.mdPath);
-			this.playgroundFile && this.dependencies.add(this.playgroundFile);
-			this.playground?.sourceFile
-				?.getReferencedSourceFiles()
-				.forEach((sourceFile: SourceFile) => sourceFile.refreshFromFileSystemSync());
 
 			return this.builder.renderer
 				.render(this.target?.mdFile, {

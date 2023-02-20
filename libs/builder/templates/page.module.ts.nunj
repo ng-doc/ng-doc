@@ -3,9 +3,11 @@ import {Component, NgModule, Type, ChangeDetectionStrategy} from '@angular/core'
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {NgDocPageModule, NgDocRootPage, NgDocDemoAssets} from '@ng-doc/app';
+import {NgDocDependencies} from '@ng-doc/core';
 import pageContent from '!!raw-loader!{{ page.builtPagePath }}';
 {%- if page.pageDependencies %}
 // noinspection ES6UnusedImports
+import {PlaygroundsModule} from './playgrounds';
 import pageDependencies from '{{ page.pageDependencies.importPath }}';
 {%- endif %}
 {%- if page.componentsAssets %}
@@ -20,17 +22,20 @@ import demoAssets from '{{ page.componentsAssets }}';
 	providers: [{provide: NgDocRootPage, useExisting: DynamicComponent}],
 })
 export class DynamicComponent extends NgDocRootPage {
+	readonly pageContent: string = pageContent;
+
 	{%- if page.editSourceFileUrl %}
 	readonly editSourceFileUrl: string = '{{ page.editSourceFileUrl }}';
 	{%- endif %}
+
 	{%- if page.viewSourceFileUrl %}
 	readonly viewSourceFileUrl: string = '{{ page.viewSourceFileUrl }}';
 	{%- endif %}
-	readonly pageContent: string = pageContent;
+
 	{%- if page.pageDependencies %}
-	readonly demo: Record<string, Type<unknown>> | undefined = pageDependencies.demo;
-	readonly module: Type<unknown> | undefined = pageDependencies.module;
+	readonly dependencies?: NgDocDependencies = pageDependencies;
 	{%- endif %}
+
 	{%- if page.componentsAssets %}
 	readonly demoAssets: NgDocDemoAssets = demoAssets;
 	{%- endif %}
@@ -47,6 +52,7 @@ export class DynamicComponent extends NgDocRootPage {
 		NgDocPageModule,
 		{%- if page.pageDependencies %}
 		pageDependencies.module,
+		PlaygroundsModule,
 		{%- endif %}
 		RouterModule.forChild([{
 			path: '',

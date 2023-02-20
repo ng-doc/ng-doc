@@ -11,15 +11,7 @@ export function generateToc(container: HTMLElement, headings: string[] = ['h1', 
 	);
 
 	return headingElements.reduce((map: NgDocTocItem[], heading: HTMLHeadingElement, i: number) => {
-		const headingLevel: number = levelFromTagName(heading);
-		const previousItem: NgDocTocItem | undefined = map[i - 1];
-		const level: number = !previousItem
-			? 0
-			: levelFromTagName(previousItem.element) < headingLevel
-			? previousItem.level + 1
-			: levelFromTagName(previousItem.element) > headingLevel
-			? previousItem.level - 1
-			: previousItem.level;
+		const level: number = levelFromTagName(heading);
 		const anchor: HTMLAnchorElement | null = heading.querySelector<HTMLAnchorElement>('a.ng-doc-header-link');
 
 		if (anchor) {

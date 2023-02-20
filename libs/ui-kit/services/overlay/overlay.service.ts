@@ -11,7 +11,7 @@ import {Router} from '@angular/router';
 import {asArray} from '@ng-doc/core';
 import {NgDocOverlayRef} from '@ng-doc/ui-kit/classes';
 import {NgDocOverlayConfig, NgDocOverlayContainer} from '@ng-doc/ui-kit/interfaces';
-import {NgDocOverlayOrigin, NgDocOverlayPosition} from '@ng-doc/ui-kit/types';
+import {NgDocContent, NgDocOverlayOrigin, NgDocOverlayPosition} from '@ng-doc/ui-kit/types';
 import {NgDocOverlayUtils} from '@ng-doc/ui-kit/utils';
 import {PolymorpheusComponent, PolymorpheusContent} from '@tinkoff/ng-polymorpheus';
 import {take} from 'rxjs/operators';
@@ -26,17 +26,13 @@ export class NgDocOverlayService {
 		private router?: Router,
 	) {}
 
-	open<R>(
-		content: PolymorpheusContent,
-		config: NgDocOverlayConfig,
-		providers: StaticProvider[] = [],
-	): NgDocOverlayRef<R> {
+	open<R>(content: NgDocContent, config: NgDocOverlayConfig, providers: StaticProvider[] = []): NgDocOverlayRef<R> {
 		const overlayRef: OverlayRef = this.createOverlay(config);
 		return this.attachTooltipContainer(content, overlayRef, config, providers);
 	}
 
 	private attachTooltipContainer<R>(
-		content: PolymorpheusContent,
+		content: NgDocContent,
 		overlay: OverlayRef,
 		config: NgDocOverlayConfig,
 		providers: StaticProvider[],

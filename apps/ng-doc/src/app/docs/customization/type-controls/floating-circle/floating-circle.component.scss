@@ -1,0 +1,15 @@
+.area {
+	position: relative;
+	width: 100px;
+	height: 100px;
+	background-color: var(--ng-doc-base-4);
+	border: 1px solid var(--ng-doc-border-color);
+}
+
+.circle {
+	position: absolute;
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	background-color: var(--ng-doc-primary);
+}

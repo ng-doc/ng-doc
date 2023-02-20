@@ -1,6 +1,6 @@
 import {NgDocApi, NgDocApiList} from '@ng-doc/core';
 import * as path from 'path';
-import {forkJoin, from, Observable, of} from 'rxjs';
+import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 
 import {generateApiEntities, getKindType, isApiPageEntity, isApiScopeEntity, slash, uniqueName} from '../../helpers';
@@ -14,6 +14,8 @@ import {NgDocCategoryEntity} from './category.entity';
 export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 	override moduleFileName: string = `${uniqueName('ng-doc-api-list')}.module.ts`;
 	override parent?: NgDocCategoryEntity;
+	override compilable: boolean = true;
+
 	override get route(): string {
 		return this.target?.route ?? 'api';
 	}
@@ -55,7 +57,7 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		this.children.forEach((child: NgDocEntity) => child.destroy());
 
 		return this.emit().pipe(
-			switchMap(() => from(this.sourceFile.getProject().emit())),
+			switchMap(() => this.builder.emit(this.sourceFile)),
 			switchMap(() => this.update()),
 			map(() => generateApiEntities(this)),
 		);

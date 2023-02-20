@@ -3,7 +3,7 @@ import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
 
-import {isCategoryEntity, isPageEntity, uniqueName} from '../../helpers';
+import {isCategoryEntity, isPageEntity} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
@@ -11,6 +11,7 @@ import {NgDocPageEntity} from './page.entity';
 
 export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 	override parent?: NgDocCategoryEntity;
+	override compilable: boolean = true;
 
 	override get route(): string {
 		const folderName: string = path.basename(path.dirname(this.sourceFile.getFilePath()));

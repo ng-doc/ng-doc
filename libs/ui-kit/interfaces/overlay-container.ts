@@ -1,4 +1,4 @@
-import {NgDocOverlayAnimationEvent} from '@ng-doc/ui-kit/types';
+import {NgDocContent, NgDocOverlayAnimationEvent} from '@ng-doc/ui-kit/types';
 import {PolymorpheusContent} from '@tinkoff/ng-polymorpheus';
 import {Observable} from 'rxjs';
 
@@ -7,7 +7,7 @@ import {NgDocOverlayConfig} from './overlay-config';
 export interface NgDocOverlayContainer {
 	animationEvent: Observable<NgDocOverlayAnimationEvent>;
 	config?: NgDocOverlayConfig;
-	content: PolymorpheusContent;
+	content: NgDocContent;
 	isFocused: boolean;
 
 	close(): void;

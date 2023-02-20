@@ -18,6 +18,7 @@ import {toElement} from '@ng-doc/ui-kit/helpers';
 import {NgDocOverlayConfig, NgDocOverlayContainer} from '@ng-doc/ui-kit/interfaces';
 import {ngDocZoneOptimize} from '@ng-doc/ui-kit/observables';
 import {
+	NgDocContent,
 	NgDocHorizontalAlign,
 	NgDocOverlayAnimationEvent,
 	NgDocOverlayPosition,
@@ -49,7 +50,7 @@ export class NgDocOverlayContainerComponent implements NgDocOverlayContainer, On
 	relativePosition: NgDocOverlayRelativePosition | null = null;
 
 	config?: NgDocOverlayConfig;
-	content: PolymorpheusContent = '';
+	content: NgDocContent = '';
 
 	private currentPosition?: NgDocOverlayPosition;
 	private animationEvent$: Subject<NgDocOverlayAnimationEvent> = new Subject<NgDocOverlayAnimationEvent>();

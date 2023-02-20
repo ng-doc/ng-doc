@@ -1,7 +1,7 @@
 # {{ NgDocPage.title }}
 
-The page is the main building block of your guidelines, which you can use to describe some
-cool features of your project, show various demos, write guidelines and do many other things
+The page is the main building block of your guides, which you can use to describe some
+cool features of your project, show various demos, write guides and do many other things
 that are useful to your users.
 
 ## Creating a page
@@ -67,11 +67,11 @@ rebuilds page if needed.
 
 Your page content fully supports the `markdown` syntax, but it is
 extended with the `nunjucks` engine which allows you to reuse one template for multiple pages, or
-render content dynamically, see `*ContentGuidelinesTemplating` for more details.
+render content dynamically, see `*ContentGuidesTemplating` for more details.
 
 ## See also
 
 -   `*EntitiesCategory`
 -   `*EntitiesDependencies`
--   `*ContentGuidelinesTemplating`
--   `*ContentGuidelinesDemo`
+-   `*ContentGuidesTemplating`
+-   `*ContentGuidesDemo`

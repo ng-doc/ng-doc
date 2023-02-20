@@ -5,7 +5,7 @@ export type NgDocPlaygroundProperties = Record<string, NgDocPlaygroundProperty>
 export interface NgDocPlaygroundProperty {
 	/** Type of the property  */
 	type: string;
-	/** The name of the property in the code (it can be different than input name) */
+	/** The name of the property in the code (it can be different from input name) */
 	name: string;
 	/** Commend for the property */
 	description?: string;

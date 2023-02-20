@@ -20,6 +20,8 @@ export function buildAssets(filePath: string, styleType: NgDocStyleType): Array<
 		const snippets: NgDocSnippet[] = processSnippets(fileContent);
 		const codeType: NgDocCodeType = codeTypeFromExt(filePath);
 
+		// If the file contains snippets, we return an asset for each snippet,
+		// otherwise we return a single file as an asset.
 		if (snippets.length) {
 			return snippets.map((snippet: NgDocSnippet) => ({
 				title: snippet.name,
