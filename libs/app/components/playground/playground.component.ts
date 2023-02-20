@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
 import {
 	extractValue,
@@ -9,10 +9,7 @@ import {
 	objectKeys,
 } from '@ng-doc/core';
 
-export interface NgDocPlaygroundForm {
-	properties: FormGroup<Record<string, FormControl<NgDocExtractedValue>>>;
-	content: FormGroup<Record<string, FormControl<boolean>>>;
-}
+import {NgDocPlaygroundForm} from './playground-form';
 
 @Component({
 	selector: 'ng-doc-playground',
