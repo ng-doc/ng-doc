@@ -1,3 +1,10 @@
+## [15.3.2](https://github.com/skoropadas/ng-doc/compare/v15.3.1...v15.3.2) (2023-02-20)
+
+
+### Bug Fixes
+
+* **builder:** types to some properties are defined as any ([5bc231c](https://github.com/skoropadas/ng-doc/commit/5bc231c35178c0da391e8cd1418a9f77d8221a06))
+
 ## [15.3.1](https://github.com/skoropadas/ng-doc/compare/v15.3.0...v15.3.1) (2023-02-20)
 
 
