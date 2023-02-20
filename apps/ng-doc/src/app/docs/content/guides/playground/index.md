@@ -19,7 +19,7 @@ for example:
 > **Note**
 > For the template you can also use your real selector, but we recommend using `ng-doc-selector` to
 > avoid cases where your playgrounds stop working when the selector is changed during refactoring.
-> 
+>
 > `ng-doc-selector` is a unique selector that will be dynamically replaced with your component's
 > selector, and if your component has multiple selectors, NgDoc will also create a view for each
 > possible selector.
@@ -36,19 +36,18 @@ const PageDependencies: NgDocDependencies = {
 		TagPlayground: {
 			target: NgDocTagComponent,
 			template: `<ng-doc-selector>Tag Label</ng-doc-selector>`,
-		}
-	}
-}
+		},
+	},
+};
 
 export default PageDependencies;
 ```
 
-
-* `target` - The Angular Component/Directive class that will be used for the playground (make sure you export the module of this
-	 component from the **module of your page**, otherwise Angular will not be able to create it)
-* `template` - The template that will be used for the playground, you can use the Angular syntax inside,
-	 but it's value cannot be provided dynamically, so you can't use variables or functions her,
-	 value of this variable should be static.
+-   `target` - The Angular Component/Directive class that will be used for the playground (make sure you export the module of this
+    component from the **module of your page**, otherwise Angular will not be able to create it)
+-   `template` - The template that will be used for the playground, you can use the Angular syntax inside,
+    but it's value cannot be provided dynamically, so you can't use variables or functions her,
+    value of this variable should be static.
 
 In this example, we created a playground for the `NgDocTagComponent`, to make it work,
 we also need to export its module from the `PageModule`.
@@ -67,9 +66,7 @@ import {NgDocTagModule} from '@ng-doc/ui-kit';
 	exports: [NgDocTagModule],
 })
 export class PlaygroundModule {}
-
-````
-
+```
 
 ## Displaying
 
@@ -121,12 +118,12 @@ const PageDependencies: NgDocDependencies = {
 			content: {
 				icon: {
 					label: 'icon',
-					template: '<ng-doc-icon icon="at-sign" [size]="16"></ng-doc-icon>'
-				}
-			}
-		}
-	}
-}
+					template: '<ng-doc-icon icon="at-sign" [size]="16"></ng-doc-icon>',
+				},
+			},
+		},
+	},
+};
 
 export default PageDependencies;
 ```
@@ -148,13 +145,13 @@ import {NgDocPlayground} from '@ng-doc/builder';
 import {NgDocTagComponent} from '@ng-doc/ui-kit';
 
 const PagePlayground: NgDocPlayground = {
-	TagPlayground: {
+	TagDataPlayground: {
 		target: NgDocTagComponent,
 		template: `<ng-doc-selector>{{ "{{data.array | json}}" | safe }}</ng-doc-selector>`,
 		data: {
-			array: [1, 2, 3]
-		}
-	}
+			array: [1, 2, 3],
+		},
+	},
 };
 
 export default PagePlayground;
@@ -164,9 +161,8 @@ export default PagePlayground;
 
 {{ NgDocActions.playground("TagDataPlayground") }}
 
-
 ## See Also
 
-- `*EntitiesPage`
-- `*EntitiesDependencies`
-- `*CustomizationTypeControls`
+-   `*EntitiesPage`
+-   `*EntitiesDependencies`
+-   `*CustomizationTypeControls`
