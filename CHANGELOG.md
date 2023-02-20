@@ -1,3 +1,10 @@
+## [15.3.1](https://github.com/skoropadas/ng-doc/compare/v15.3.0...v15.3.1) (2023-02-20)
+
+
+### Bug Fixes
+
+* **project:** push a stuck release ([c66a867](https://github.com/skoropadas/ng-doc/commit/c66a86723ff05c9e665a09b62c95763ae61c9acd))
+
 # [15.3.0](https://github.com/skoropadas/ng-doc/compare/v15.2.0...v15.3.0) (2023-02-20)
 
 
