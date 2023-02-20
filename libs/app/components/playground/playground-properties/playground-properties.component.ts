@@ -5,7 +5,7 @@ import {NgDocPlaygroundContent, NgDocPlaygroundProperties} from '@ng-doc/core';
 import {Observable} from 'rxjs';
 import {pluck} from 'rxjs/operators';
 
-import {NgDocPlaygroundForm} from '../playground.component';
+import {NgDocPlaygroundForm} from '../playground-form';
 
 @Component({
 	selector: 'ng-doc-playground-properties',

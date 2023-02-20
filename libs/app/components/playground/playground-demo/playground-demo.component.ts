@@ -31,7 +31,7 @@ import {Observable, of, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
 import {NgDocBasePlayground} from '../base-playground';
-import {NgDocPlaygroundForm} from '../playground.component';
+import {NgDocPlaygroundForm} from '../playground-form';
 
 @Component({
 	selector: 'ng-doc-playground-demo',
