@@ -9,6 +9,7 @@
 	background-color: var(--ng-doc-tag-background);
 	border: var(--ng-doc-tag-border);
 	color: var(--ng-doc-tag-color);
+	--ng-doc-icon-color: var(--ng-doc-tag-color);
 	--ng-doc-font-size: 14px;
 
 	@each $color-name, $color-value in $ng-doc-palette-colors {

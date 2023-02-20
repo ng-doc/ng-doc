@@ -11,6 +11,9 @@
 				"main": "libs/builder/index.ts",
 				"tsConfig": "libs/builder/tsconfig.lib.json",
 				"assets": [
+					"libs/builder/engine/.cache/**/*",
+					"libs/builder/engine/entities/abstractions/import.js",
+					"libs/builder/engine/entities/abstractions/import.cjs",
 					"libs/builder/README.md",
 					"libs/builder/templates/**/*",
 					"libs/builder/builders.json",

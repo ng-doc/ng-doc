@@ -32,7 +32,7 @@ export class NgDocCodeComponent {
 	) {}
 
 	copyCode(): void {
-		this.clipboard.copy(this.elementRef.nativeElement.querySelector('code')?.textContent ?? 'Error :(');
+		this.clipboard.copy(this.elementRef.nativeElement.querySelector('code')?.textContent ?? '');
 		this.notifyService.notify('Copied!');
 	}
 }

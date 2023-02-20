@@ -6,8 +6,8 @@ const ThemesPage: NgDocPage = {
 	title: 'Themes',
 	mdFile: './index.md',
 	category: CustomizationCategory,
-	order: 1,
+	order: 2,
 	keyword: 'CustomizationThemes',
-}
+};
 
 export default ThemesPage;

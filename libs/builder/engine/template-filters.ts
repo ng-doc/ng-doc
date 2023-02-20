@@ -17,6 +17,7 @@ export {
 	getClassAccessors,
 	getClassMethods,
 	getClassProperties,
+	getContentForPlayground,
 	getDeclarationType,
 	getImplementedMember,
 	getInheritedParent,
@@ -26,7 +27,10 @@ export {
 	getMemberParent,
 	getMethodChain,
 	getOverriddenMember,
+	getPlaygroundClassProperties,
 	getPropertyChain,
+	getTargetForPlayground,
+	getTemplateForPlayground,
 	groupAccessors,
 	marked,
 	methodPresentation,
@@ -35,5 +39,5 @@ export {
 	notEmptyAssets,
 	sortByNodesName,
 	typeAliasPresentation,
-	variablePresentation,
-} from '../helpers';
+	variablePresentation} from '../helpers';
+export {buildPlaygroundDemoTemplate,objectKeys} from '@ng-doc/core'

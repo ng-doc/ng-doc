@@ -6,6 +6,9 @@ import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {combineLatest, fromEvent} from 'rxjs';
 import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
 
+/**
+ * Navbar component for ng-doc application
+ */
 @Component({
 	selector: 'ng-doc-navbar',
 	templateUrl: './navbar.component.html',
@@ -14,18 +17,33 @@ import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
 })
 @UntilDestroy()
 export class NgDocNavbarComponent {
+	/**
+	 * Content for left side of navbar
+	 */
 	@Input()
 	leftContent: NgDocContent = '';
 
+	/**
+	 * Content for center side of navbar
+	 */
 	@Input()
 	centerContent: NgDocContent = '';
 
+	/**
+	 * Content for right side of navbar
+	 */
 	@Input()
 	rightContent: NgDocContent = '';
 
+	/**
+	 * Show search input
+	 */
 	@Input()
 	search: boolean = true;
 
+	/**
+	 * Indicates if navbar has shadow
+	 */
 	@HostBinding('class.has-shadow')
 	hasShadow: boolean = false;
 

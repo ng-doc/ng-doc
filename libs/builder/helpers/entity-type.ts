@@ -5,8 +5,8 @@ import {
 	NgDocCategoryEntity,
 	NgDocDependenciesEntity,
 	NgDocPageEntity,
-	NgDocPlaygroundEntity,
 } from '../engine';
+import {NgDocFileEntity} from '../engine/entities/abstractions/file.entity';
 import {NgDocNavigationEntity} from '../engine/entities/abstractions/navigation.entity';
 import {NgDocRouteEntity} from '../engine/entities/abstractions/route.entity';
 import {Constructable} from '../types';
@@ -39,14 +39,6 @@ export function isCategoryEntity(page: InstanceType<Constructable>): page is NgD
  *
  * @param page
  */
-export function isPlaygroundEntity(page: InstanceType<Constructable>): page is NgDocPlaygroundEntity {
-	return page instanceof NgDocPlaygroundEntity;
-}
-
-/**
- *
- * @param page
- */
 export function isNavigationEntity(page: InstanceType<Constructable>): page is NgDocNavigationEntity<unknown> {
 	return page instanceof NgDocNavigationEntity;
 }
@@ -57,6 +49,14 @@ export function isNavigationEntity(page: InstanceType<Constructable>): page is N
  */
 export function isApiEntity(page: InstanceType<Constructable>): page is NgDocApiEntity {
 	return page instanceof NgDocApiEntity;
+}
+
+/**
+ *
+ * @param page
+ */
+export function isFileEntity<T>(page: InstanceType<Constructable>): page is NgDocFileEntity<T> {
+	return page instanceof NgDocFileEntity;
 }
 
 /**

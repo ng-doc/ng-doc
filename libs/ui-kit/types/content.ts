@@ -9,7 +9,10 @@ import {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type NgDocContent<C extends object = {}> =
-	| PolymorpheusPrimitive
+	| string
+	| number
+	| null
+	| undefined
 	| TemplateRef<C>
 	| PolymorpheusTemplate<C>
 	| PolymorpheusHandler<C>

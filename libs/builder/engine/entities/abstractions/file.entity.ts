@@ -1,9 +1,9 @@
 import * as fs from 'fs';
 import minimatch from 'minimatch';
 import * as path from 'path';
-import {from, Observable, of, throwError} from 'rxjs';
-import {mapTo, tap} from 'rxjs/operators';
+import {Observable, of, throwError} from 'rxjs';
 import {OutputFile, SyntaxKind} from 'ts-morph';
+import {global} from 'yargs';
 
 import {isCategoryEntity} from '../../../helpers';
 import {CATEGORY_PATTERN} from '../../variables';

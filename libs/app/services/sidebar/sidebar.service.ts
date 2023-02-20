@@ -7,6 +7,9 @@ import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {filter, pluck, startWith, switchMap} from 'rxjs/operators';
 
+/**
+ * Service for sidebar, it can be used to hide/show sidebar or to check if sidebar is collapsable.
+ */
 @Injectable({
 	providedIn: 'root',
 })
@@ -33,20 +36,35 @@ export class NgDocSidebarService {
 			.subscribe(() => this.hide());
 	}
 
+	/**
+	 * Indicates if sidebar can be collapsable.
+	 * You can use it to start showing a button in the navbar to show/hide sidebar.
+	 * This method uses media queries to check if sidebar is collapsable based on the current screen size.
+	 */
 	isCollapsable(): Observable<boolean> {
 		return this.observer;
 	}
 
+	/**
+	 * Indicates if sidebar is visible, based on the show/hide methods.
+	 */
 	visibilityChanges(): Observable<boolean> {
 		return this.visible.asObservable();
 	}
 
+	/**
+	 * Indicates if sidebar is expanded, based on the show/hide methods and if sidebar is collapsable.
+	 * This method can be used to display backdrop when sidebar is expanded.
+	 */
 	isExpanded(): Observable<boolean> {
 		return this.isCollapsable().pipe(
 			switchMap((isCollapsable: boolean) => (isCollapsable ? this.visibilityChanges() : of(false))),
 		);
 	}
 
+	/**
+	 * Show sidebar, and block scrolling.
+	 */
 	show(): void {
 		if (!this.visible.value) {
 			this.visible.next(true);
@@ -54,6 +72,9 @@ export class NgDocSidebarService {
 		}
 	}
 
+	/**
+	 * Hide sidebar, and unblock scrolling.
+	 */
 	hide(): void {
 		if (this.visible.value) {
 			this.visible.next(false);
@@ -61,6 +82,9 @@ export class NgDocSidebarService {
 		}
 	}
 
+	/**
+	 * Toggle sidebar visibility.
+	 */
 	toggle(): void {
 		this.visible.value ? this.hide() : this.show();
 	}

@@ -8,7 +8,7 @@ it.
 
 The project was created to facilitate and speed up the process of writing documentation, for
 example, the documentation for your API is collected from the code and comments to it, which makes
-it relevant even without using the library, and the guidelines use the `markdown` format, which
+it relevant even without using the library, and the guides use the `markdown` format, which
 allows your users to read it even without switching to the website, which makes it more useful.
 
 ## How it works?

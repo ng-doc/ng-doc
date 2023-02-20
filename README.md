@@ -88,6 +88,6 @@ Don't forget to give the project a star! Thanks again!
 [npm-shield]: https://img.shields.io/npm/v/@ng-doc/builder.svg?style=for-the-badge
 [npm-url]: https://www.npmjs.com/package/@ng-doc/builder
 [license-shield]: https://img.shields.io/github/license/skoropadas/ng-doc.svg?style=for-the-badge
-[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
+[license-url]: https://github.com/skoropadas/ng-doc/blob/main/LICENSE
 [build-shield]: https://img.shields.io/github/actions/workflow/status/skoropadas/ng-doc/release.yml?style=for-the-badge&branch=release
 [build-url]: https://github.com/skoropadas/ng-doc/actions
