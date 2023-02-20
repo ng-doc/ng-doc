@@ -13,7 +13,7 @@ import {
 	template: `
 		<div
 			class="content-projection"
-			[ngDocTooltip]="content"
+			[ngDocTooltip]="content ?? ''"
 			[displayOrigin]="tooltipElement ?? contentProjection"
 			[pointerOrigin]="tooltipElement ?? contentProjection"
 			#contentProjection
