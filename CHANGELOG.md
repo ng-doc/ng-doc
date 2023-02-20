@@ -1,3 +1,11 @@
+# [15.3.0](https://github.com/skoropadas/ng-doc/compare/v15.2.0...v15.3.0) (2023-02-20)
+
+
+### Features
+
+* **app:** add `NgDocCustomNavbarDirective`, `NgDocCustomSidebarDirective` for custom components ([f5ae230](https://github.com/skoropadas/ng-doc/commit/f5ae230be0bda793fce50a0888520165844a2365))
+* **project:** add playground feature ([f750580](https://github.com/skoropadas/ng-doc/commit/f7505807740a8742bd897f1069c004c9c8f77a53)), closes [#12](https://github.com/skoropadas/ng-doc/issues/12)
+
 # [15.2.0](https://github.com/skoropadas/ng-doc/compare/v15.1.1...v15.2.0) (2023-02-10)
 
 
