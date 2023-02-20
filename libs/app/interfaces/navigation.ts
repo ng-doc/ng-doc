@@ -1,3 +1,6 @@
+/**
+ * Navigation item interface
+ */
 export interface NgDocNavigation {
 	/** Title of the navigation item */
 	title: string;

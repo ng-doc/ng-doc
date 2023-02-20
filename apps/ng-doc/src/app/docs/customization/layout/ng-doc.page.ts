@@ -2,12 +2,11 @@ import {NgDocPage} from '@ng-doc/core';
 
 import CustomizationCategory from '../ng-doc.category';
 
-const ThemesPage: NgDocPage = {
-	title: 'Themes',
+const LayoutPage: NgDocPage = {
+	title: `Layout`,
 	mdFile: './index.md',
 	category: CustomizationCategory,
-	order: 2,
-	keyword: 'CustomizationThemes',
+	order: 1,
 };
 
-export default ThemesPage;
+export default LayoutPage;

@@ -11,7 +11,7 @@
 		<ng-container *polymorpheusOutlet="rightContent"></ng-container>
 		<button
 			class="ng-doc-menu"
-			*ngDocMediaQuery="sidebarService.breakpoints"
+			*ngIf="isCollapsable"
 			ng-doc-button-icon
 			size="large"
 			(click)="sidebarService.toggle()"

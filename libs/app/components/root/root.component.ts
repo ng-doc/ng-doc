@@ -11,7 +11,17 @@ import {fromEvent, Observable} from 'rxjs';
 import {filter} from 'rxjs/operators';
 
 /**
- * Directive uses for providing custom navbar
+ * Directive uses for providing custom navbar, you should mark element with this directive
+ * and the `NgDocRootComponent` will use it as a navbar
+ *
+ * ```html
+ * <ng-doc-root>
+ *     <my-custom-navbar ngDocCustomNavbar></my-custom-navbar>
+ *
+ *     <ng-doc-sidebar></ng-doc-sidebar>
+ *     <router-outlet></router-outlet>
+ * </ng-doc-root>
+ * ```
  */
 @Directive({
 	selector: '[ngDocCustomNavbar]',
@@ -19,7 +29,17 @@ import {filter} from 'rxjs/operators';
 export class NgDocCustomNavbarDirective {}
 
 /**
- * Directive uses for providing custom sidebar
+ * Directive uses for providing custom sidebar, you should mark element with this directive
+ * and the `NgDocRootComponent` will use it as a sidebar
+ *
+ * ```html
+ * <ng-doc-root>
+ *     <ng-doc-navbar></ng-doc-sidebar>
+ *
+ *     <my-custom-sidebar ngDocCustomSidebar></my-custom-sidebar>
+ *     <router-outlet></router-outlet>
+ * </ng-doc-root>
+ * ```
  */
 @Directive({
 	selector: '[ngDocCustomSidebar]',
