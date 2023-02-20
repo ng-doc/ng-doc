@@ -36,7 +36,7 @@ name is, this can be done simply list them separated by commas.
 
 ### Displaying demo
 
-To display the created demo on the page, you must use the `demo` method from `NgDocActions`,
+To display the created demo on the page, you should use the `demo` method from `NgDocActions`,
 passing the name of your component to it as follows
 
 ```twig
@@ -66,7 +66,6 @@ container.
 > You can use this option not only as a demo output, but also as an opportunity to insert any of your
 > components into the page template so that the user can interact with them.
 
-
 {{ NgDocActions.demo("ButtonDemoComponent", {container: false}) }}
 
 ## Snippets
@@ -81,7 +80,7 @@ then you should try to use snippets.
 Snippets look like comments, we have 3 different types of snippets that you can use
 
 | Language   | Start                                   | End                                   |
-|------------|-----------------------------------------|---------------------------------------|
+| ---------- | --------------------------------------- | ------------------------------------- |
 | TypeScript | `/* NgDocCodeSnippetStart(Title) */`    | `/* NgDocCodeSnippetEnd(Title) */`    |
 | HTML       | `<!-- NgDocHTMLSnippetStart(Title) -->` | `<!-- NgDocHTMLSnippetEnd(Title) -->` |
 | Styles     | `/* NgDocStyleSnippetStart(Title) */`   | `/* NgDocStyleSnippetStart(Title) */` |
@@ -98,5 +97,5 @@ NgDoc will render its code like below
 
 ## See Also
 
-- `*EntitiesPage`
-- `*EntitiesDependencies`
+-   `*EntitiesPage`
+-   `*EntitiesDependencies`

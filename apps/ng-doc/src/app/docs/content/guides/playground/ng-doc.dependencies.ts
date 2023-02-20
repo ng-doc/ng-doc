@@ -19,19 +19,19 @@ const PlaygroundDependencies: NgDocDependencies = {
 			</ng-doc-selector>`,
 			content: {
 				icon: {
-					label: 'icon',
-					template: '<ng-doc-icon icon="at-sign" [size]="16"></ng-doc-icon>'
-				}
+					label: 'email icon',
+					template: '<ng-doc-icon icon="at-sign" [size]="16"></ng-doc-icon>',
+				},
 			},
 		},
 		TagDataPlayground: {
 			target: NgDocTagComponent,
 			template: `<ng-doc-selector>{{data.array | json}}</ng-doc-selector>`,
 			data: {
-				array: [1, 2, 3]
-			}
-		}
-	}
+				array: [1, 2, 3],
+			},
+		},
+	},
 };
 
 export default PlaygroundDependencies;

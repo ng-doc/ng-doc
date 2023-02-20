@@ -1,11 +1,13 @@
 import {NgDocPlaygroundProperties} from '@ng-doc/core';
 import {
-	ClassDeclaration, Expression,
-	JSDoc, Node,
+	ClassDeclaration,
+	Expression,
+	JSDoc,
+	Node,
 	ObjectLiteralElementLike,
 	ObjectLiteralExpression,
 	PropertyDeclaration,
-	Type
+	Type,
 } from 'ts-morph';
 
 import {getPlaygroundById} from './get-playground-by-id';
@@ -55,7 +57,10 @@ export function getTemplateForPlayground(expression: ObjectLiteralExpression, pl
 		if (Node.isPropertyAssignment(template)) {
 			const templateInitializer: Expression | undefined = template.getInitializer();
 
-			if (Node.isStringLiteral(templateInitializer) || Node.isNoSubstitutionTemplateLiteral(templateInitializer)) {
+			if (
+				Node.isStringLiteral(templateInitializer) ||
+				Node.isNoSubstitutionTemplateLiteral(templateInitializer)
+			) {
 				return templateInitializer.getLiteralValue();
 			}
 		}
@@ -82,33 +87,38 @@ export function getContentForPlayground(
 			const contentInitializer: Expression | undefined = content.getInitializer();
 
 			if (Node.isObjectLiteralExpression(contentInitializer)) {
-				return contentInitializer.getProperties().reduce((content: Record<string, string>, property: ObjectLiteralElementLike) => {
-					if (Node.isPropertyAssignment(property)) {
-						const initializer: Expression | undefined = property.getInitializer();
+				return contentInitializer
+					.getProperties()
+					.reduce((content: Record<string, string>, property: ObjectLiteralElementLike) => {
+						if (Node.isPropertyAssignment(property)) {
+							const initializer: Expression | undefined = property.getInitializer();
 
-						if (Node.isObjectLiteralExpression(initializer)) {
-							const templateProperty: ObjectLiteralElementLike | undefined = initializer.getProperty('template');
+							if (Node.isObjectLiteralExpression(initializer)) {
+								const templateProperty: ObjectLiteralElementLike | undefined =
+									initializer.getProperty('template');
 
-							if (Node.isPropertyAssignment(templateProperty)) {
-								const templateInitializer: Expression | undefined = templateProperty.getInitializer();
+								if (Node.isPropertyAssignment(templateProperty)) {
+									const templateInitializer: Expression | undefined =
+										templateProperty.getInitializer();
 
-								if (Node.isStringLiteral(templateInitializer) || Node.isNoSubstitutionTemplateLiteral(templateInitializer)) {
-									content[property.getName()] = templateInitializer.getLiteralValue();
+									if (
+										Node.isStringLiteral(templateInitializer) ||
+										Node.isNoSubstitutionTemplateLiteral(templateInitializer)
+									) {
+										content[property.getName()] = templateInitializer.getLiteralValue();
+									}
 								}
 							}
 						}
-					}
 
-					return content;
-				}, {});
+						return content;
+					}, {});
 			}
 		}
 	}
 
 	return {};
 }
-
-
 
 /**
  *
@@ -136,7 +146,7 @@ export function getPlaygroundClassProperties(declaration: ClassDeclaration): NgD
 				options: property
 					.getType()
 					.getUnionTypes()
-					.map((type: Type) => type.getText()),
+					.map((type: Type) => displayType(type)),
 			};
 
 			return properties;

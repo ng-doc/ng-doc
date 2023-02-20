@@ -15,13 +15,13 @@ that can be passed positions, and it looks like this
 {{ NgDocActions.demo("FloatingCircleComponent") }}
 
 If we try to display it in the playground, NgDoc will write in the console that it skipped
-the `position` input, because it cannot recognize its type. Let's now teach NgDoc to understand
+the `position` input, because it cannot recognize its type. Let's teach NgDoc to understand
 the `FloatingCirclePosition` type we created in the component.
 
 ## Creating Type Control
 
-Type controls are a extended `ControlValueAccessor` in which NgDoc adds additional
-information, such as the name of an input or its description based on a comment.
+Type control is an extended `ControlValueAccessor` in which NgDoc adds additional
+information, such as the name of an input or its description based on a comments to your code.
 To create it you need to implement `NgDocTypeControl` interface in your component, so,
 let's create it.
 
@@ -36,7 +36,7 @@ To make it available for playgrounds, it must be declared and registered in `App
 create a module for this component in which it will be declared and registered as a type control,
 this will allow you to simply import the module in the `AppModule` in the future.
 
-```typescript {% include "./floating-circle-position-control/floating-circle-position-control.module.ts" %} ```
+`typescript {% include "./floating-circle-position-control/floating-circle-position-control.module.ts" %} `
 
 ## Using Type Control in the playground
 
@@ -46,6 +46,51 @@ be replaced by your type control, and you can start playing with `position` valu
 
 {{ NgDocActions.playground("FloatingCircle") }}
 
+## Registering types
+
+In the example above, we registered a type control for the `FloatingCirclePosition` type like this:
+
+```typescript
+@NgModule({
+	providers: [
+		provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {hideLabel: true}),
+	],
+})
+export class FloatingCirclePositionControlModule {}
+```
+
+And it worked, but you should remember, that NgDoc is sensitive to the type name, so if you change
+the type of the `position` input and make it possible to be `undefined`:
+
+```typescript
+@Component({
+	selector: 'ng-doc-floating-circle',
+	templateUrl: './floating-circle.component.html',
+	styleUrls: ['./floating-circle.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class FloatingCircleComponent {
+	@Input()
+	position?: FloatingCirclePosition = {top: '10px', left: '10px'};
+}
+```
+
+Then you will need to register a new type control for the `FloatingCirclePosition | undefined` type,
+and make sure that your type control can handle `undefined` values. You can register multiple types
+for a single type control at the same time, for example:
+
+```typescript
+@NgModule({
+	providers: [
+		provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {hideLabel: true}),
+		provideTypeControl('FloatingCirclePosition | undefined', FloatingCirclePositionControlComponent, {
+			hideLabel: true,
+		}),
+	],
+})
+export class FloatingCirclePositionControlModule {}
+```
+
 ## Appearance of controls
 
 In order for your custom controls to better fit into the documentation design, you can use
@@ -54,4 +99,4 @@ later, when our API stabilizes.
 
 ## See Also
 
-- `*ContentGuidesPlayground`
+-   `*ContentGuidesPlayground`

@@ -5,18 +5,10 @@
 	<div class="ng-doc-playground-properties">
 		<div class="ng-doc-playground-header">
 			<h4 ng-doc-text>Playground</h4>
-			<button
-				ng-doc-button
-				color="red"
-				(click)="resetForm.emit()"
-				[ngDocTooltip]="'Resets all properties to default values'"
-				[positions]="['top-right', 'left-center']"
-			>
-				Reset
-			</button>
+			<button ng-doc-button color="red" (click)="resetForm.emit()">Reset</button>
 		</div>
 		<div class="ng-doc-playground-setting">
-			<ng-doc-checkbox [(ngModel)]="reinitializeDemo" (ngModelChange)="reinitializeDemoChange.emit($event)">
+			<ng-doc-checkbox [(ngModel)]="recreateDemo" (ngModelChange)="recreateDemoChange.emit($event)">
 				<span
 					ng-doc-text
 					[ngDocTooltip]="'Recreates demo everytime\none of the input has changed'"

@@ -27,7 +27,7 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 	selectors: string[] = [];
 	properties?: T;
 	formGroup!: FormGroup<NgDocPlaygroundForm>;
-	reinitializeDemo: boolean = false;
+	recreateDemo: boolean = false;
 
 	constructor(private readonly rootPage: NgDocRootPage, private readonly formBuilder: FormBuilder) {}
 
@@ -39,7 +39,6 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 			properties: propertiesForm,
 			content: contentForm,
 		});
-
 	}
 
 	get configuration(): NgDocPlaygroundConfig | undefined {
@@ -67,7 +66,7 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 			},
 			{} as Record<keyof T, boolean>,
 		);
-		return {}
+		return {};
 	}
 
 	resetForm(): void {

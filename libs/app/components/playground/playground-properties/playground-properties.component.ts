@@ -27,10 +27,10 @@ export class NgDocPlaygroundPropertiesComponent<
 	dynamicContent?: C;
 
 	@Input()
-	reinitializeDemo: boolean = false;
+	recreateDemo: boolean = false;
 
 	@Output()
-	reinitializeDemoChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+	recreateDemoChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@Output()
 	resetForm: EventEmitter<void> = new EventEmitter<void>();

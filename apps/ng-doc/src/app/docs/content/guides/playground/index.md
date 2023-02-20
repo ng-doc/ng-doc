@@ -13,16 +13,18 @@ page folder, you can read more about how to do this in the `*EntitiesDependencie
 
 In the `ng-doc.dependencies.ts` file, add the `playgrounds` field, which must match the
 `NgDocPlaygroundConfig` interface. A playground config is a regular object whose key is the name of
-the playground (which you should use to display it on the page) and whose value is the config itself,
+the playground (which you should use to display it on the page) and whose value is the config
+itself,
 for example:
 
 > **Note**
 > For the template you can also use your real selector, but we recommend using `ng-doc-selector` to
 > avoid cases where your playgrounds stop working when the selector is changed during refactoring.
->
-> `ng-doc-selector` is a unique selector that will be dynamically replaced with your component's
-> selector, and if your component has multiple selectors, NgDoc will also create a view for each
-> possible selector.
+
+> **Note**
+> If you don't need to render all possible selectors of your component, you can use the `selector`
+> field
+> to specify the selectors that you want to see in your playground.
 
 ```typescript
 import {NgDocDependencies} from '@ng-doc/core';
@@ -43,17 +45,24 @@ const PageDependencies: NgDocDependencies = {
 export default PageDependencies;
 ```
 
--   `target` - The Angular Component/Directive class that will be used for the playground (make sure you export the module of this
-    component from the **module of your page**, otherwise Angular will not be able to create it)
--   `template` - The template that will be used for the playground, you can use the Angular syntax inside,
-    but it's value cannot be provided dynamically, so you can't use variables or functions her,
-    value of this variable should be static.
+-   `target` - The Angular Component/Directive class that will be used for the playground (make sure
+    you export the module of this
+    component from the **module of your page** (`PageModule` in the current example), otherwise
+    Angular will not be able to create it)
+-   `template` - The template that will be used for the playground, you can use the Angular syntax
+    inside,
+    but it's value cannot be provided dynamically, so you can't use variables or functions there,
+    value of this property should be static.
+-   `<ng-doc-selector>` - is a unique tag that will be dynamically replaced with your component's
+    selector, and if your component has multiple selectors, NgDoc will also create a view for each
+    possible selector.
 
 In this example, we created a playground for the `NgDocTagComponent`, to make it work,
 we also need to export its module from the `PageModule`.
 
 > **Note**
-> If you are using any other components in your playground, you must also export their modules from your page module.
+> If you are using any other components in your playground, you must also export their modules from
+> your page module.
 
 ```typescript
 import {CommonModule} from '@angular/common';
@@ -70,7 +79,7 @@ export class PlaygroundModule {}
 
 ## Displaying
 
-To display the created playground on the page, you must use the `playground` method
+To display the created playground on the page, you should use the `playground` method
 from `NgDocActions`, passing the key of your playground to it as follows
 
 ```twig
@@ -79,9 +88,8 @@ from `NgDocActions`, passing the key of your playground to it as follows
 
 ## Playground example
 
-NgDoc will detect your component inputs types and create controls for them so you can interact with
-it in real time, also when changing inputs values, NgDoc will generate a new template that your
-users can copy and paste into their application
+NgDoc will recognize `@Input` field types and creates controls for them, which allow you to change their
+values and see how the component changes.
 
 {{ NgDocActions.playground("TagPlayground") }}
 
@@ -91,7 +99,8 @@ There is no magic, NgDoc can only recognize simple type such as `string`, `numbe
 or Type Alias types which are union of `string`, `number`, `boolean`.
 
 It can't recognize complex types such as `Interface`, `Class` or `Enum`, but you can create your
-own custom controls for them to teach NgDoc doing that, read more about it in the `*CustomizationTypeControls`.
+own custom controls for them to teach NgDoc doing that, read more about it in
+the `*CustomizationTypeControls`.
 
 ## Optional content
 
@@ -117,7 +126,7 @@ const PageDependencies: NgDocDependencies = {
 			</ng-doc-selector>`,
 			content: {
 				icon: {
-					label: 'icon',
+					label: 'email icon',
 					template: '<ng-doc-icon icon="at-sign" [size]="16"></ng-doc-icon>',
 				},
 			},

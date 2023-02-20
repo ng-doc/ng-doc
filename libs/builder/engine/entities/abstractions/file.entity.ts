@@ -24,8 +24,6 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 		this.readyToBuild = false;
 
 		try {
-			// @ts-ignore
-			global.document = {};
 			delete require.cache[require.resolve(this.pathToCompiledFile)];
 			this.target = require(this.pathToCompiledFile).default;
 

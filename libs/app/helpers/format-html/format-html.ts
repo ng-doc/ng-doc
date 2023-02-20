@@ -12,10 +12,10 @@ export function formatHtml(html: string): Observable<string> {
 				parser: 'html',
 				plugins: [htmlParser],
 				printWidth: 60,
-				tabWidth: 4,
+				tabWidth: 2,
 				bracketSameLine: true,
 				bracketSpacing: true,
-				htmlWhitespaceSensitivity: "ignore"
+				htmlWhitespaceSensitivity: 'ignore',
 			}),
 		),
 	);
