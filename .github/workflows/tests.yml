@@ -1,23 +1,22 @@
 name: Tests
 
-on:
-    workflow_call
+on: workflow_call
 
 jobs:
-    lint:
+    test:
         runs-on: ubuntu-latest
         steps:
-            -   name: Checkout
-                uses: actions/checkout@v2
+            - name: Checkout
+              uses: actions/checkout@v2
 
-            -   name: Setup Node.js
-                uses: actions/setup-node@v3
-                with:
-                    cache: npm
-                    node-version: 16
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  cache: npm
+                  node-version: 16
 
-            -   name: Install Dependencies
-                run: npm ci
+            - name: Install Dependencies
+              run: npm ci
 
-            -   name: Test
-                run: npx nx run-many --all --target=test
+            - name: Test
+              run: npx nx run-many --all --target=test
