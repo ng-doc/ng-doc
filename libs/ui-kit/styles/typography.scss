@@ -14,8 +14,8 @@ html {
 }
 
 p {
-	line-height: 1.5rem;
-	margin-top: 1rem;
+	line-height: calc(var(--ng-doc-base-gutter) * 3);
+	margin-top: calc(var(--ng-doc-base-gutter) * 3);
 	margin-bottom: 0;
 }
 
@@ -94,6 +94,7 @@ h6 {
 pre code {
 	white-space: unset;
 	box-shadow: inset 0px 6px 6px rgba(16, 19, 19, 0.32);
+	background-color: var(--ng-doc-code-background);
 }
 
 code {
