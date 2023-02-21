@@ -10,6 +10,7 @@
 			"options": {
 				"ngDoc": {
 					"pages": "apps/ng-doc/src/app",
+					"routePrefix": "docs",
 					"tag": "production",
 					"repoConfig": {
 						"url": "https://github.com/skoropadas/ng-doc",
@@ -124,6 +125,7 @@
 					"browserTarget": "ng-doc:build:production",
 					"ngDoc": {
 						"pages": "apps/ng-doc/src/app",
+						"routePrefix": "docs",
 						"tag": "production",
 						"repoConfig": {
 							"url": "https://github.com/skoropadas/ng-doc",
@@ -153,6 +155,7 @@
 					"browserTarget": "ng-doc:build:development",
 					"ngDoc": {
 						"pages": "apps/ng-doc/src/app",
+						"routePrefix": "docs",
 						"tag": "development",
 						"repoConfig": {
 							"url": "https://github.com/skoropadas/ng-doc",

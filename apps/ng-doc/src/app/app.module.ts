@@ -3,17 +3,8 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
-import {NgDocThemeToggleModule} from '@ng-doc/app';
-import {NgDocNavbarModule} from '@ng-doc/app/components/navbar';
-import {NgDocRootModule} from '@ng-doc/app/components/root';
-import {NgDocSidebarModule} from '@ng-doc/app/components/sidebar';
-import {NgDocModule} from '@ng-doc/app/modules/root';
+import {NgDocModule} from '@ng-doc/app';
 import {NgDocGeneratedModule} from '@ng-doc/generated';
-import {NgDocMediaQueryModule} from '@ng-doc/ui-kit';
-import {NgDocButtonIconModule} from '@ng-doc/ui-kit/components/button-icon';
-import {NgDocIconModule} from '@ng-doc/ui-kit/components/icon';
-import {NgDocTagModule} from '@ng-doc/ui-kit/components/tag';
-import {NgDocTooltipModule} from '@ng-doc/ui-kit/directives/tooltip';
 
 import {AppComponent} from './app.component';
 
@@ -28,12 +19,19 @@ import {AppComponent} from './app.component';
 		RouterModule.forRoot(
 			[
 				{
-					path: '',
+					path: 'docs',
 					loadChildren: () =>
 						import('./docs/docs.module').then((m: typeof import('./docs/docs.module')) => m.DocsModule),
 				},
-				{path: '', redirectTo: 'getting-started/installation', pathMatch: 'full'},
-				{path: '**', redirectTo: 'getting-started/installation', pathMatch: 'full'},
+				{
+					path: '',
+					loadChildren: () =>
+						import('./pages/landing/landing.module').then(
+							(m: typeof import('./pages/landing/landing.module')) => m.LandingModule,
+						),
+					pathMatch: 'full',
+				},
+				{path: '**', redirectTo: 'docs/getting-started/installation', pathMatch: 'full'},
 			],
 			{
 				scrollPositionRestoration: 'enabled',
@@ -41,15 +39,6 @@ import {AppComponent} from './app.component';
 				scrollOffset: [0, 70],
 			},
 		),
-		NgDocRootModule,
-		NgDocNavbarModule,
-		NgDocSidebarModule,
-		NgDocTagModule,
-		NgDocButtonIconModule,
-		NgDocIconModule,
-		NgDocTooltipModule,
-		NgDocThemeToggleModule,
-		NgDocMediaQueryModule,
 	],
 	bootstrap: [AppComponent],
 })

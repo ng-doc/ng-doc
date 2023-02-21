@@ -1,1 +1,38 @@
-<router-outlet></router-outlet>
+<ng-doc-root>
+	<ng-doc-navbar [leftContent]="leftContent" [rightContent]="rightContent">
+		<ng-template #leftContent>
+			<a class="brand" routerLink="/">
+				<h3>
+					<img src="assets/images/ng-doc.svg" />
+					<ng-template
+						[ngDocMediaQuery]="[
+							ngDocMediaQuery.breakpoints.Small,
+							ngDocMediaQuery.breakpoints.Medium,
+							ngDocMediaQuery.breakpoints.Large,
+							ngDocMediaQuery.breakpoints.XLarge
+						]"
+						#ngDocMediaQuery="ngDocMediaQuery"
+					>
+						NgDoc
+					</ng-template>
+				</h3>
+			</a>
+		</ng-template>
+		<ng-template #rightContent>
+			<div class="ng-doc-header-controls" @preventInitialChild>
+				<ng-doc-theme-toggle></ng-doc-theme-toggle>
+				<a
+					ng-doc-button-icon
+					size="large"
+					href="https://github.com/skoropadas/ng-doc"
+					target="_blank"
+					ngDocTooltip="Check repo"
+				>
+					<ng-doc-icon icon="github" [size]="24"></ng-doc-icon>
+				</a>
+			</div>
+		</ng-template>
+	</ng-doc-navbar>
+	<ng-doc-sidebar></ng-doc-sidebar>
+	<router-outlet></router-outlet>
+</ng-doc-root>
