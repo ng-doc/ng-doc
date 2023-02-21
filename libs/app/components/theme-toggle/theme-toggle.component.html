@@ -1,14 +1,20 @@
 <button ng-doc-button-icon size="large" (click)="toggleTheme()" ngDocTooltip="Toggle theme">
 	<ng-doc-icon
-		[@switchIcon]="{value: ':enter', params: {from: '-100%', to: '-100%'}}"
+		[@switchIcon]="{value: ':enter', params: {from: '-100%', to: '100%'}}"
 		icon="sun"
 		[size]="24"
-		*ngIf="themeService.currentTheme?.id === nightTheme.id"
+		*ngIf="!nextTheme?.id"
 	></ng-doc-icon>
 	<ng-doc-icon
-		[@switchIcon]="{value: ':enter', params: {from: '100%', to: '100%'}}"
+		[@switchIcon]="{value: ':enter', params: {from: '-100%', to: '100%'}}"
 		icon="moon"
 		[size]="24"
-		*ngIf="!themeService.currentTheme"
+		*ngIf="nextTheme?.id === themes[0]?.id"
+	></ng-doc-icon>
+	<ng-doc-icon
+		[@switchIcon]="{value: ':enter', params: {from: '-100%', to: '100%'}}"
+		icon="circle"
+		[size]="24"
+		*ngIf="nextTheme?.id === themes[1]?.id"
 	></ng-doc-icon>
 </button>

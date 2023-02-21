@@ -21,14 +21,13 @@ p {
 
 ul,
 ol {
-	margin-top: 1.5rem;
-	margin-bottom: 1.5rem;
+	margin: calc(var(--ng-doc-base-gutter) * 4) 0;
 }
 
 ul li,
 ol li {
 	line-height: 1.5rem;
-	margin-bottom: var(--ng-doc-base-gutter);
+	margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
 }
 
 ul ul,
@@ -91,10 +90,14 @@ h6 {
 	margin-top: calc(var(--ng-doc-base-gutter) * 2);
 }
 
-pre code {
-	white-space: unset;
-	box-shadow: inset 0px 6px 6px rgba(16, 19, 19, 0.32);
-	background-color: var(--ng-doc-code-background);
+pre {
+	margin: var(--ng-doc-code-margin);
+
+	code {
+		white-space: unset;
+		box-shadow: inset 0px 6px 6px rgba(16, 19, 19, 0.32);
+		background-color: var(--ng-doc-code-background);
+	}
 }
 
 code {
