@@ -74,7 +74,7 @@ import {NgDocTagModule} from '@ng-doc/ui-kit';
 	// Just export all modules that are needed for your playgrounds
 	exports: [NgDocTagModule],
 })
-export class PlaygroundModule {}
+export class PageModule {}
 ```
 
 ## Displaying
