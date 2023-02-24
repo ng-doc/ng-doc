@@ -3,8 +3,9 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
-import {NgDocModule} from '@ng-doc/app';
+import {NgDocModule, NgDocNavbarModule, NgDocThemeToggleModule} from '@ng-doc/app';
 import {NgDocGeneratedModule} from '@ng-doc/generated';
+import {NgDocButtonIconModule, NgDocIconModule, NgDocMediaQueryModule, NgDocTooltipModule} from '@ng-doc/ui-kit';
 
 import {AppComponent} from './app.component';
 
@@ -21,7 +22,9 @@ import {AppComponent} from './app.component';
 				{
 					path: 'docs',
 					loadChildren: () =>
-						import('./docs/docs.module').then((m: typeof import('./docs/docs.module')) => m.DocsModule),
+						import('./pages/docs/docs.module').then(
+							(m: typeof import('./pages/docs/docs.module')) => m.DocsModule,
+						),
 				},
 				{
 					path: '',
@@ -30,6 +33,7 @@ import {AppComponent} from './app.component';
 							(m: typeof import('./pages/landing/landing.module')) => m.LandingModule,
 						),
 					pathMatch: 'full',
+					data: {hideSidebar: true},
 				},
 				{path: '**', redirectTo: 'docs/getting-started/installation', pathMatch: 'full'},
 			],
@@ -39,7 +43,14 @@ import {AppComponent} from './app.component';
 				scrollOffset: [0, 70],
 			},
 		),
+		NgDocNavbarModule,
+		NgDocButtonIconModule,
+		NgDocIconModule,
+		NgDocTooltipModule,
+		NgDocThemeToggleModule,
+		NgDocMediaQueryModule,
 	],
 	bootstrap: [AppComponent],
+	exports: [AppComponent],
 })
 export class AppModule {}

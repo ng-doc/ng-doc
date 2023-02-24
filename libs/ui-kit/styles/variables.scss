@@ -89,4 +89,7 @@
 	/* NgDocDot */
 	--ng-doc-dot-size: calc(var(--ng-doc-base-gutter) / 2);
 	--ng-doc-dot-background: var(--ng-doc-primary);
+
+	/* Sidenav */
+	--ng-doc-sidenav-width: 300px;
 }

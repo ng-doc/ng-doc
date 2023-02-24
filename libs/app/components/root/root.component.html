@@ -4,18 +4,13 @@
 		<ng-content select="[ngDocCustomNavbar]"></ng-content>
 	</div>
 	<main>
-		<div class="ng-doc-sidebar" [class.visible]="sidebarService.visibilityChanges() | async">
-			<ng-content select="ng-doc-sidebar"></ng-content>
-			<ng-content select="[ngDocCustomSidebar]"></ng-content>
-		</div>
-		<div class="ng-doc-body">
-			<div
-				class="ng-doc-backdrop"
-				@fadeAnimation
-				*ngIf="sidebarService.isExpanded() | async"
-				(click)="sidebarService.hide()"
-			></div>
+		<ng-doc-sidenav [sidebar]="sidebarContent" [opened]="sidebar">
+			<ng-template #sidebarContent>
+				<ng-content select="ng-doc-sidebar"></ng-content>
+				<ng-content select="[ngDocCustomSidebar]"></ng-content>
+			</ng-template>
+
 			<ng-content></ng-content>
-		</div>
+		</ng-doc-sidenav>
 	</main>
 </div>

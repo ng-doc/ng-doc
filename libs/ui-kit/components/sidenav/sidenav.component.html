@@ -1,0 +1,10 @@
+<button (click)="opened = !opened" style="margin-left: 500px">toggle</button>
+<div class="ng-doc-sidenav-wrapper">
+	<div class="ng-doc-sidenav" [@sidenavAnimation]="opened">
+		<ng-container *polymorpheusOutlet="sidebar"></ng-container>
+	</div>
+	<div class="ng-doc-sidenav-content" [@sidenavContentAnimation]="!floating ? opened : null">
+		<div class="ng-doc-backdrop" @fadeAnimation *ngIf="hasBackdrop" (click)="close()"></div>
+		<ng-content></ng-content>
+	</div>
+</div>

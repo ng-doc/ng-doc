@@ -1,0 +1,10 @@
+:host {
+	section {
+		padding: 64px 0px;
+	}
+
+	.ng-doc-container {
+		margin: 0 auto;
+		max-width: var(--ng-doc-app-max-width);
+	}
+}

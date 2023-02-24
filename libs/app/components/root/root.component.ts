@@ -1,14 +1,23 @@
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {Location} from '@angular/common';
-import {ChangeDetectionStrategy, Component, Directive, ElementRef, Inject, NgZone} from '@angular/core';
-import {Router} from '@angular/router';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	Directive,
+	ElementRef,
+	HostBinding,
+	Inject,
+	Input,
+	NgZone,
+} from '@angular/core';
+import {Event as RouterEvent, NavigationEnd, Router} from '@angular/router';
 import {isExternalLink} from '@ng-doc/app/helpers/is-external-link';
 import {NgDocSidebarService} from '@ng-doc/app/services';
-import {fadeAnimation, ngDocZoneDetach} from '@ng-doc/ui-kit';
+import {ngDocZoneDetach} from '@ng-doc/ui-kit';
 import {WINDOW} from '@ng-web-apis/common';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {fromEvent, Observable} from 'rxjs';
-import {filter} from 'rxjs/operators';
+import {delay, filter, take} from 'rxjs/operators';
 
 /**
  * Directive uses for providing custom navbar, you should mark element with this directive
@@ -47,7 +56,6 @@ export class NgDocCustomNavbarDirective {}
 export class NgDocCustomSidebarDirective {}
 
 @Component({
-	animations: [fadeAnimation],
 	selector: 'ng-doc-root',
 	templateUrl: './root.component.html',
 	styleUrls: ['./root.component.scss'],
@@ -56,6 +64,23 @@ export class NgDocCustomSidebarDirective {}
 })
 @UntilDestroy()
 export class NgDocRootComponent {
+	/**
+	 * If `true` then the sidebar will be shown
+	 */
+	@Input()
+	sidebar: boolean = true;
+
+	/**
+	 * If `true` then page will be shown without width limit.
+	 * You can use it for example for landing page
+	 */
+	@Input()
+	@HostBinding('attr.data-ng-doc-no-width-limit')
+	noWidthLimit: boolean = false;
+
+	@HostBinding('@.disabled')
+	disabledAnimations: boolean = true;
+
 	constructor(
 		private readonly elementRef: ElementRef<HTMLElement>,
 		private readonly ngZone: NgZone,
@@ -66,6 +91,15 @@ export class NgDocRootComponent {
 		@Inject(WINDOW)
 		private readonly window: Window,
 	) {
+		// Trick for preventing initial animations
+		this.router.events
+			.pipe(
+				filter((event: RouterEvent) => event instanceof NavigationEnd),
+				take(1),
+				delay(100),
+			)
+			.subscribe(() => (this.disabledAnimations = false));
+
 		(
 			fromEvent(this.elementRef.nativeElement, 'click').pipe(
 				filter(this.isPointerEvent),

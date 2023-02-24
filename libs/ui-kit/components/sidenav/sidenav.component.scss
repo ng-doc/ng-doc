@@ -1,0 +1,34 @@
+@import '../../styles/mixins';
+
+:host {
+	width: 100%;
+
+	.ng-doc-sidenav-wrapper {
+		position: relative;
+		display: flex;
+		width: 100%;
+	}
+
+	.ng-doc-sidenav {
+		position: fixed;
+		top: var(--ng-doc-sidenav-top, 0);
+		width: var(--ng-doc-sidenav-width);
+		flex-shrink: 0;
+		z-index: 5;
+	}
+
+	.ng-doc-sidenav-content {
+		width: 100%;
+		padding: var(--ng-doc-sidenav-content-padding);
+	}
+
+	.ng-doc-backdrop {
+		@include ng-doc-backdrop-filter(rgba(0, 0, 0, 0.2));
+		position: fixed;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 1;
+	}
+}

@@ -1,7 +1,8 @@
-@import "main";
+@import 'main';
 
 html {
 	overflow-y: scroll;
+	overflow-x: hidden;
 }
 
 html,
@@ -28,7 +29,7 @@ body {
 /* Track */
 ::-webkit-scrollbar-track {
 	&:hover {
-		background: rgba(0,0,0,0.1);
+		background: rgba(0, 0, 0, 0.1);
 	}
 }
 

@@ -1,6 +1,7 @@
 :root {
 	--ng-doc-app-max-width: 1400px;
 	--ng-doc-app-horizontal-padding: calc(var(--ng-doc-base-gutter) * 3);
+	--ng-doc-page-padding: calc(var(--ng-doc-base-gutter) * 3) var(--ng-doc-app-horizontal-padding);
 
 	// Entities
 	--ng-doc-class-color: var(--ng-doc-pink-70);
