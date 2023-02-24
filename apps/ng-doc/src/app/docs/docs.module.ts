@@ -9,6 +9,7 @@ import {DocsComponent} from './docs.component';
 	imports: [
 		CommonModule,
 		RouterModule.forChild([
+			{path: '', redirectTo: 'getting-started/installation', pathMatch: 'full'},
 			{
 				path: '',
 				children: NG_DOC_ROUTING,
