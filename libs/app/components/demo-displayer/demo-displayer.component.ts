@@ -25,6 +25,7 @@ export class NgDocDemoDisplayerComponent {
 	@HostBinding('attr.data-ng-doc-border')
 	border: boolean = true;
 
+	@Input()
 	expanded: boolean = false;
 
 	constructor(private readonly notifyService: NgDocNotifyService, private readonly clipboard: Clipboard) {}

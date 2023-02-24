@@ -1,7 +1,6 @@
 export * from './actions';
 export * from './builder';
 export * from './entities';
-export * from './interfaces';
 export * from './post-processors';
 export * from './renderer';
 export * from './ts-doc-formatter';

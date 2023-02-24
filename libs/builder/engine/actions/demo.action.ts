@@ -1,6 +1,7 @@
+import {escapeHtml, NgDocDemoActionOptions} from '@ng-doc/core';
+
 import {NgDocActionOutput} from '../../interfaces';
 import {NgDocAction} from '../../types';
-import {NgDocDemoActionOptions} from '../interfaces';
 
 /**
  *	Render demo point on the page, it will be rendered by the application
@@ -12,9 +13,9 @@ import {NgDocDemoActionOptions} from '../interfaces';
 export function demoAction(componentName: string, options?: NgDocDemoActionOptions): NgDocAction {
 	return (): NgDocActionOutput => {
 		return {
-			output: `<ng-doc-demo componentName="${componentName}" container="${
-				options?.container ?? true
-			}"></ng-doc-demo>`,
+			output: `<ng-doc-demo componentName="${componentName}">
+						<div id="options">${escapeHtml(JSON.stringify(options ?? {}))}</div>
+					</ng-doc-demo>`,
 		};
 	};
 }

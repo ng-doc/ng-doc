@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit, Type} from '@angular/core';
 import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
 import {NgDocDemoAsset} from '@ng-doc/app/interfaces';
+import {asArray, NgDocDemoActionOptions} from '@ng-doc/core';
 import {NgDocContent} from '@ng-doc/ui-kit';
 import {PolymorpheusComponent} from '@tinkoff/ng-polymorpheus';
 
@@ -15,7 +16,7 @@ export class NgDocDemoComponent implements OnInit {
 	componentName?: string;
 
 	@Input()
-	container: boolean = true;
+	options: NgDocDemoActionOptions = {};
 
 	demo?: NgDocContent<object>;
 	assets: NgDocDemoAsset[] = [];
@@ -40,7 +41,10 @@ export class NgDocDemoComponent implements OnInit {
 
 	private getAssets(): NgDocDemoAsset[] {
 		if (this.componentName) {
-			return (this.rootPage.demoAssets && this.rootPage.demoAssets[this.componentName]) ?? [];
+			return ((this.rootPage.demoAssets && this.rootPage.demoAssets[this.componentName]) ?? []).filter(
+				(asset: NgDocDemoAsset) =>
+					!this.options.tabs?.length || asArray(this.options.tabs).includes(asset.title),
+			);
 		}
 
 		return [];
