@@ -1,3 +1,11 @@
+# [15.4.0](https://github.com/skoropadas/ng-doc/compare/v15.3.2...v15.4.0) (2023-02-24)
+
+
+### Features
+
+* **app:** add dark purple theme ([fce107f](https://github.com/skoropadas/ng-doc/commit/fce107ff6faf6929e3fc1f85826e007d34e21cba))
+* **app:** add more options to configure `demo` action ([2ce8826](https://github.com/skoropadas/ng-doc/commit/2ce88267ca1790a2c96ef1299f169461cd430919)), closes [#16](https://github.com/skoropadas/ng-doc/issues/16)
+
 ## [15.3.2](https://github.com/skoropadas/ng-doc/compare/v15.3.1...v15.3.2) (2023-02-20)
 
 
