@@ -18,7 +18,7 @@
 
 @mixin ng-doc-backdrop-filter($base-color: var(--ng-doc-base-0)) {
 	& {
-		backdrop-filter: saturate(180%) blur(10px);
+		backdrop-filter: blur(10px);
 
 		&:before {
 			content: '';

@@ -1,50 +1,52 @@
-@import "blend-modes";
-@import "hex-to-rgb";
+@import 'blend-modes';
+@import 'hex-to-rgb';
 
 @function color-palette($color-name, $base-color) {
 	@if ($color-name == 'grey') {
 		@return (
 			#{$color-name}-rgb: hex-to-rgb($base-color),
-			#{$color-name}-10: blend-normal(rgba(#fff, .95), blend-multiply(rgba($base-color, 95), $base-color)),
-			#{$color-name}-20: blend-normal(rgba(#fff, .9), blend-multiply(rgba($base-color, .9), $base-color)),
-			#{$color-name}-30: blend-normal(rgba(#fff, .85), blend-multiply(rgba($base-color, .85), $base-color)),
-			#{$color-name}-40: blend-normal(rgba(#fff, .8), blend-multiply(rgba($base-color, .8), $base-color)),
-			#{$color-name}-50: blend-normal(rgba(#fff, .75), blend-multiply(rgba($base-color, .75), $base-color)),
-			#{$color-name}-60: blend-normal(rgba(#fff, .7), blend-multiply(rgba($base-color, .7), $base-color)),
-			#{$color-name}-70: blend-normal(rgba(#fff, .65), blend-multiply(rgba($base-color, .65), $base-color)),
-			#{$color-name}-80: blend-normal(rgba(#fff, .6), blend-multiply(rgba($base-color, .6), $base-color)),
-			#{$color-name}-90: blend-normal(rgba(#fff, .55), blend-multiply(rgba($base-color, .55), $base-color)),
-			#{$color-name}-100: blend-normal(rgba(#fff, .5), blend-multiply(rgba($base-color, .5), $base-color)),
-			#{$color-name}-110: blend-normal(rgba(#fff, .45), blend-multiply(rgba($base-color, .45), $base-color)),
-			#{$color-name}-120: blend-normal(rgba(#fff, .4), blend-multiply(rgba($base-color, .4), $base-color)),
-			#{$color-name}-130: blend-normal(rgba(#fff, .35), blend-multiply(rgba($base-color, .35), $base-color)),
-			#{$color-name}-140: blend-normal(rgba(#fff, .3), blend-multiply(rgba($base-color, .3), $base-color)),
-			#{$color-name}-150: blend-normal(rgba(#fff, .25), blend-multiply(rgba($base-color, .25), $base-color)),
-			#{$color-name}-160: blend-normal(rgba(#fff, .2), blend-multiply(rgba($base-color, .2), $base-color)),
-			#{$color-name}-170: blend-normal(rgba(#fff, .15), blend-multiply(rgba($base-color, .15), $base-color)),
-			#{$color-name}-180: blend-normal(rgba(#fff, .1), blend-multiply(rgba($base-color, .1), $base-color)),
+			#{$color-name}-10: blend-normal(rgba(#fff, 0.95), blend-multiply(rgba($base-color, 95), $base-color)),
+			#{$color-name}-20: blend-normal(rgba(#fff, 0.9), blend-multiply(rgba($base-color, 0.9), $base-color)),
+			#{$color-name}-30: blend-normal(rgba(#fff, 0.85), blend-multiply(rgba($base-color, 0.85), $base-color)),
+			#{$color-name}-40: blend-normal(rgba(#fff, 0.8), blend-multiply(rgba($base-color, 0.8), $base-color)),
+			#{$color-name}-50: blend-normal(rgba(#fff, 0.75), blend-multiply(rgba($base-color, 0.75), $base-color)),
+			#{$color-name}-60: blend-normal(rgba(#fff, 0.7), blend-multiply(rgba($base-color, 0.7), $base-color)),
+			#{$color-name}-70: blend-normal(rgba(#fff, 0.65), blend-multiply(rgba($base-color, 0.65), $base-color)),
+			#{$color-name}-80: blend-normal(rgba(#fff, 0.6), blend-multiply(rgba($base-color, 0.6), $base-color)),
+			#{$color-name}-90: blend-normal(rgba(#fff, 0.55), blend-multiply(rgba($base-color, 0.55), $base-color)),
+			#{$color-name}-100: blend-normal(rgba(#fff, 0.5), blend-multiply(rgba($base-color, 0.5), $base-color)),
+			#{$color-name}-110: blend-normal(rgba(#fff, 0.45), blend-multiply(rgba($base-color, 0.45), $base-color)),
+			#{$color-name}-120: blend-normal(rgba(#fff, 0.4), blend-multiply(rgba($base-color, 0.4), $base-color)),
+			#{$color-name}-130: blend-normal(rgba(#fff, 0.35), blend-multiply(rgba($base-color, 0.35), $base-color)),
+			#{$color-name}-140: blend-normal(rgba(#fff, 0.3), blend-multiply(rgba($base-color, 0.3), $base-color)),
+			#{$color-name}-150: blend-normal(rgba(#fff, 0.25), blend-multiply(rgba($base-color, 0.25), $base-color)),
+			#{$color-name}-160: blend-normal(rgba(#fff, 0.2), blend-multiply(rgba($base-color, 0.2), $base-color)),
+			#{$color-name}-170: blend-normal(rgba(#fff, 0.15), blend-multiply(rgba($base-color, 0.15), $base-color)),
+			#{$color-name}-180: blend-normal(rgba(#fff, 0.1), blend-multiply(rgba($base-color, 0.1), $base-color)),
+			#{$color-name}-190: blend-normal(rgba(#fff, 0.05), blend-multiply(rgba($base-color, 0.05), $base-color))
 		);
 	} @else {
 		@return (
 			#{$color-name}-rgb: hex-to-rgb($base-color),
-			#{$color-name}-10: blend-opacity(rgba(#fff, .9), blend-screen(rgba($base-color, .55), $base-color)),
-			#{$color-name}-20: blend-opacity(rgba(#fff, .8), blend-screen(rgba($base-color, .5), $base-color)),
-			#{$color-name}-30: blend-opacity(rgba(#fff, .7), blend-screen(rgba($base-color, .45), $base-color)),
-			#{$color-name}-40: blend-opacity(rgba(#fff, .6), blend-screen(rgba($base-color, .4), $base-color)),
-			#{$color-name}-50: blend-opacity(rgba(#fff, .5), blend-screen(rgba($base-color, .35), $base-color)),
-			#{$color-name}-60: blend-opacity(rgba(#fff, .4), blend-screen(rgba($base-color, .3), $base-color)),
-			#{$color-name}-70: blend-opacity(rgba(#fff, .3), blend-screen(rgba($base-color, .25), $base-color)),
-			#{$color-name}-80: blend-opacity(rgba(#fff, .2), blend-screen(rgba($base-color, .2), $base-color)),
-			#{$color-name}-90: blend-opacity(rgba(#fff, .1), blend-screen(rgba($base-color, .15), $base-color)),
+			#{$color-name}-10: blend-opacity(rgba(#fff, 0.9), blend-screen(rgba($base-color, 0.55), $base-color)),
+			#{$color-name}-20: blend-opacity(rgba(#fff, 0.8), blend-screen(rgba($base-color, 0.5), $base-color)),
+			#{$color-name}-30: blend-opacity(rgba(#fff, 0.7), blend-screen(rgba($base-color, 0.45), $base-color)),
+			#{$color-name}-40: blend-opacity(rgba(#fff, 0.6), blend-screen(rgba($base-color, 0.4), $base-color)),
+			#{$color-name}-50: blend-opacity(rgba(#fff, 0.5), blend-screen(rgba($base-color, 0.35), $base-color)),
+			#{$color-name}-60: blend-opacity(rgba(#fff, 0.4), blend-screen(rgba($base-color, 0.3), $base-color)),
+			#{$color-name}-70: blend-opacity(rgba(#fff, 0.3), blend-screen(rgba($base-color, 0.25), $base-color)),
+			#{$color-name}-80: blend-opacity(rgba(#fff, 0.2), blend-screen(rgba($base-color, 0.2), $base-color)),
+			#{$color-name}-90: blend-opacity(rgba(#fff, 0.1), blend-screen(rgba($base-color, 0.15), $base-color)),
 			#{$color-name}-100: $base-color,
-			#{$color-name}-110: blend-normal(rgba(#000, .025), blend-multiply(rgba($base-color, .1), $base-color)),
-			#{$color-name}-120: blend-normal(rgba(#000, .05), blend-multiply(rgba($base-color, .2), $base-color)),
-			#{$color-name}-130: blend-normal(rgba(#000, .085), blend-multiply(rgba($base-color, .3), $base-color)),
-			#{$color-name}-140: blend-normal(rgba(#000, .1), blend-multiply(rgba($base-color, .4), $base-color)),
-			#{$color-name}-150: blend-normal(rgba(#000, .125), blend-multiply(rgba($base-color, .5), $base-color)),
-			#{$color-name}-160: blend-normal(rgba(#000, .15), blend-multiply(rgba($base-color, .6), $base-color)),
-			#{$color-name}-170: blend-normal(rgba(#000, .285), blend-multiply(rgba($base-color, .7), $base-color)),
-			#{$color-name}-180: blend-normal(rgba(#000, .2), blend-multiply(rgba($base-color, .8), $base-color))
+			#{$color-name}-110: blend-normal(rgba(#000, 0.025), blend-multiply(rgba($base-color, 0.1), $base-color)),
+			#{$color-name}-120: blend-normal(rgba(#000, 0.05), blend-multiply(rgba($base-color, 0.2), $base-color)),
+			#{$color-name}-130: blend-normal(rgba(#000, 0.085), blend-multiply(rgba($base-color, 0.3), $base-color)),
+			#{$color-name}-140: blend-normal(rgba(#000, 0.1), blend-multiply(rgba($base-color, 0.4), $base-color)),
+			#{$color-name}-150: blend-normal(rgba(#000, 0.125), blend-multiply(rgba($base-color, 0.5), $base-color)),
+			#{$color-name}-160: blend-normal(rgba(#000, 0.15), blend-multiply(rgba($base-color, 0.6), $base-color)),
+			#{$color-name}-170: blend-normal(rgba(#000, 0.285), blend-multiply(rgba($base-color, 0.7), $base-color)),
+			#{$color-name}-180: blend-normal(rgba(#000, 0.2), blend-multiply(rgba($base-color, 0.8), $base-color)),
+			#{$color-name}-190: blend-normal(rgba(#000, 0.225), blend-multiply(rgba($base-color, 0.9), $base-color))
 		);
 	}
 }
