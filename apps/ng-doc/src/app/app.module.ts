@@ -27,12 +27,13 @@ import {AppComponent} from './app.component';
 		NgDocGeneratedModule.forRoot(),
 		RouterModule.forRoot(
 			[
-				{path: '', redirectTo: 'getting-started/installation', pathMatch: 'full'},
 				{
 					path: '',
 					loadChildren: () =>
 						import('./docs/docs.module').then((m: typeof import('./docs/docs.module')) => m.DocsModule),
 				},
+				{path: '', redirectTo: 'getting-started/installation', pathMatch: 'full'},
+				{path: '**', redirectTo: 'getting-started/installation', pathMatch: 'full'},
 			],
 			{
 				scrollPositionRestoration: 'enabled',

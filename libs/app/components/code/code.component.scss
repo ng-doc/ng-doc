@@ -27,7 +27,7 @@
 	::ng-deep {
 		pre {
 			display: flex;
-			margin: var(--ng-doc-code-margin, 1em 0px);
+			margin: var(--ng-doc-code-margin);
 
 			code {
 				padding: calc(var(--ng-doc-base-gutter) * 2);
