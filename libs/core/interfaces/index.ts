@@ -3,6 +3,7 @@ export * from './api-list';
 export * from './api-list-item';
 export * from './api-scope';
 export * from './category';
+export * from './demo-options';
 export * from './dependencies';
 export * from './exported-declaration';
 export * from './page';
