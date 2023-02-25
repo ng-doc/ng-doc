@@ -60,7 +60,7 @@
 				],
 				"styles": ["apps/ng-doc/src/styles.scss"],
 				"scripts": [],
-				"allowedCommonJsDependencies": ["prettier", "posthtml-parser", "posthtml-render"]
+				"allowedCommonJsDependencies": ["prettier", "posthtml-parser", "posthtml-render", "js-beautify"]
 			},
 			"configurations": {
 				"production": {
