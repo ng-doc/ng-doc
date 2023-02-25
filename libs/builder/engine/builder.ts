@@ -79,7 +79,6 @@ export class NgDocBuilder {
 		return entities.pipe(
 			tap(() => this.context.context.reportRunning()),
 			mergeMap((entities: NgDocEntity[]) => {
-				console.time('build');
 				/*
 					Refresh and compile source files for all not destroyed entities
 				*/
@@ -122,7 +121,6 @@ export class NgDocBuilder {
 															.onChange(...dependencies)
 															.pipe(
 																tap(() => {
-																	console.time('dependenciesChanged');
 																	entity.dependenciesChanged();
 																}),
 															),
@@ -164,8 +162,6 @@ export class NgDocBuilder {
 						 */
 						emitBuiltOutput(...output);
 						this.collectGarbage();
-						console.timeEnd('build');
-						console.timeEnd('dependenciesChanged');
 					}),
 				),
 			),
