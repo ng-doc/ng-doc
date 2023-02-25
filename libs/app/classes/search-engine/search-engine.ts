@@ -1,4 +1,5 @@
-import {isPresent, NgDocPageInfo, NgDocPageInfos} from '@ng-doc/core';
+import {isPresent} from '@ng-doc/core/helpers/is-present';
+import {NgDocPageInfo, NgDocPageInfos} from '@ng-doc/core/interfaces';
 import * as lunr from 'lunr';
 import {forkJoin, from, Observable} from 'rxjs';
 import {map, shareReplay, switchMap} from 'rxjs/operators';

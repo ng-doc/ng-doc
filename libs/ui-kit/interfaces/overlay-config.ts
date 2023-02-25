@@ -1,7 +1,7 @@
 import {AnimationMetadata} from '@angular/animations';
 import {OverlayConfig} from '@angular/cdk/overlay';
 import {ViewContainerRef} from '@angular/core';
-import {Constructor} from '@ng-doc/core';
+import {Constructor} from '@ng-doc/core/types';
 
 import {NgDocOverlayContainer} from './overlay-container';
 import {NgDocOverlayProperties} from './overlay-properties';

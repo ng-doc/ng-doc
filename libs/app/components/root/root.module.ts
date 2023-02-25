@@ -1,6 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {NgDocMediaQueryModule} from '@ng-doc/ui-kit';
+import {NgDocMediaQueryModule} from '@ng-doc/ui-kit/directives/media-query';
 
 import {NgDocCustomNavbarDirective, NgDocCustomSidebarDirective, NgDocRootComponent} from './root.component';
 

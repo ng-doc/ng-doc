@@ -1,5 +1,6 @@
 import {Type} from '@angular/core';
-import {NgDocPlaygroundProperties} from '@ng-doc/core';
+
+import {NgDocPlaygroundProperties} from '../interfaces';
 
 export type NgDocPlaygroundsMetadata = Record<string, NgDocPlaygroundMetadata>;
 

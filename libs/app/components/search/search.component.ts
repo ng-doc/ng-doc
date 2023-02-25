@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input} from '@angular/core';
 import {NgDocSearchEngine} from '@ng-doc/app/classes/search-engine';
-import {NgDocPageInfo} from '@ng-doc/core';
+import {NgDocPageInfo} from '@ng-doc/core/interfaces/page-info';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {Subject} from 'rxjs';
 import {switchMap} from 'rxjs/operators';

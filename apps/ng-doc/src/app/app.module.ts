@@ -3,16 +3,16 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
-import {NgDocThemeToggleModule} from '@ng-doc/app';
 import {NgDocNavbarModule} from '@ng-doc/app/components/navbar';
 import {NgDocRootModule} from '@ng-doc/app/components/root';
 import {NgDocSidebarModule} from '@ng-doc/app/components/sidebar';
+import {NgDocThemeToggleModule} from '@ng-doc/app/components/theme-toggle';
 import {NgDocModule} from '@ng-doc/app/modules/root';
 import {NgDocGeneratedModule} from '@ng-doc/generated';
-import {NgDocMediaQueryModule} from '@ng-doc/ui-kit';
 import {NgDocButtonIconModule} from '@ng-doc/ui-kit/components/button-icon';
 import {NgDocIconModule} from '@ng-doc/ui-kit/components/icon';
 import {NgDocTagModule} from '@ng-doc/ui-kit/components/tag';
+import {NgDocMediaQueryModule} from '@ng-doc/ui-kit/directives/media-query';
 import {NgDocTooltipModule} from '@ng-doc/ui-kit/directives/tooltip';
 
 import {AppComponent} from './app.component';

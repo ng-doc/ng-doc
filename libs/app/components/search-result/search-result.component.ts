@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {NgDocPageInfo} from '@ng-doc/core';
+import {NgDocPageInfo} from '@ng-doc/core/interfaces';
 
 @Component({
 	selector: 'ng-doc-search-result',

@@ -1,9 +1,9 @@
 import {DOCUMENT} from '@angular/common';
 import {Directive, EventEmitter, Inject, Input, NgZone, Output} from '@angular/core';
-import {isKeyboardEvent, objectKeys} from '@ng-doc/core';
+import {isKeyboardEvent} from '@ng-doc/core/helpers/is-keyboard-event';
+import {objectKeys} from '@ng-doc/core/helpers/object-keys';
 import {ngDocZoneOptimize} from '@ng-doc/ui-kit/observables';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {Document} from 'postcss';
 import {fromEvent, Observable} from 'rxjs';
 import {filter, share} from 'rxjs/operators';
 
