@@ -71,7 +71,7 @@ export class NgDocBuilder {
 		).pipe(
 			bufferUntilOnce(watcher.onReady()),
 			map((entities: NgDocEntity[][]) => entities.flat()),
-			bufferDebounce(100),
+			bufferDebounce(50),
 			map((entities: NgDocEntity[][]) => entities.flat()),
 			share(),
 		);
@@ -79,6 +79,7 @@ export class NgDocBuilder {
 		return entities.pipe(
 			tap(() => this.context.context.reportRunning()),
 			mergeMap((entities: NgDocEntity[]) => {
+				console.time('build');
 				/*
 					Refresh and compile source files for all not destroyed entities
 				*/
@@ -119,7 +120,12 @@ export class NgDocBuilder {
 														watcher
 															.watch(dependencies)
 															.onChange(...dependencies)
-															.pipe(tap(() => entity.dependenciesChanged())),
+															.pipe(
+																tap(() => {
+																	console.time('dependenciesChanged');
+																	entity.dependenciesChanged();
+																}),
+															),
 													),
 													startWith(null),
 													mapTo(entity),
@@ -136,7 +142,7 @@ export class NgDocBuilder {
 					),
 				);
 			}),
-			bufferDebounce(500),
+			bufferDebounce(50),
 			map((entities: Array<NgDocEntity | null>) => entities.filter(isPresent)),
 			tap(() => this.entities.updateKeywordMap(this.context.options.ngDoc?.keywords)),
 			// Build touched entities and their dependencies
@@ -158,6 +164,8 @@ export class NgDocBuilder {
 						 */
 						emitBuiltOutput(...output);
 						this.collectGarbage();
+						console.timeEnd('build');
+						console.timeEnd('dependenciesChanged');
 					}),
 				),
 			),
