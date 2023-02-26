@@ -20,7 +20,7 @@ export function createBuilderContext(
 	const buildPath: string = path.join(context.workspaceRoot, '.ng-doc', context.target?.project ?? 'app');
 
 	return {
-		tsConfig: String(targetOptions['tsConfig']),
+		tsConfig: options.ngDoc?.tsConfig ?? String(targetOptions['tsConfig']),
 		options,
 		context,
 		inlineStyleLanguage: (targetOptions?.['inlineStyleLanguage'] as NgDocStyleType) ?? 'CSS',

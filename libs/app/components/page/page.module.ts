@@ -6,14 +6,15 @@ import {
 	NgDocBlockquoteProcessorModule,
 	NgDocCodeProcessorModule,
 	NgDocDemoProcessorModule,
-	NgDocIconProcessorModule, NgDocPlaygroundProcessorModule,
+	NgDocIconProcessorModule,
+	NgDocPlaygroundProcessorModule,
 	NgDocTooltipProcessorModule,
 } from '@ng-doc/app/processors';
 import {
 	NgDocBooleanControlModule,
 	NgDocNumberControlModule,
 	NgDocStringControlModule,
-	NgDocTypeAliasControlModule
+	NgDocTypeAliasControlModule,
 } from '@ng-doc/app/type-controls';
 import {NgDocButtonIconModule, NgDocIconModule, NgDocMediaQueryModule, NgDocTooltipModule} from '@ng-doc/ui-kit';
 

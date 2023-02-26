@@ -10,6 +10,7 @@
 			"options": {
 				"ngDoc": {
 					"pages": "apps/ng-doc/src/app",
+					"tsConfig": "apps/ng-doc/tsconfig.app.json",
 					"tag": "production",
 					"repoConfig": {
 						"url": "https://github.com/skoropadas/ng-doc",
@@ -86,6 +87,7 @@
 					"sourceMap": true
 				},
 				"development": {
+					"tsConfig": "apps/ng-doc/tsconfig.app.json",
 					"buildOptimizer": false,
 					"optimization": false,
 					"vendorChunk": true,
@@ -119,9 +121,6 @@
 		},
 		"serve": {
 			"executor": "./dist/libs/builder:dev-server",
-			"options": {
-				"tsConfig": "apps/ng-doc/tsconfig.app.json"
-			},
 			"configurations": {
 				"production": {
 					"browserTarget": "ng-doc:build:production",

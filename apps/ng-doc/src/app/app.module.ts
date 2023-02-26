@@ -3,8 +3,7 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
-import {NgDocNavbarModule} from '@ng-doc/app/components/navbar';
-import {NgDocRootModule} from '@ng-doc/app/components/root';
+import {NgDocNavbarModule} from '@ng-doc/app';
 import {NgDocSidebarModule} from '@ng-doc/app/components/sidebar';
 import {NgDocThemeToggleModule} from '@ng-doc/app/components/theme-toggle';
 import {NgDocModule} from '@ng-doc/app/modules/root';
@@ -40,7 +39,6 @@ import {AppComponent} from './app.component';
 				scrollOffset: [0, 70],
 			},
 		),
-		NgDocRootModule,
 		NgDocNavbarModule,
 		NgDocSidebarModule,
 		NgDocTagModule,
