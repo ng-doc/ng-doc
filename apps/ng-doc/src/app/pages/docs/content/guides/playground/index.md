@@ -150,20 +150,25 @@ To make your playgrounds more lively and dynamic you can use `data` field,
 and put any data you want in it, to use it in your template, for example like that:
 
 ```typescript
-import {NgDocPlayground} from '@ng-doc/builder';
+import {NgDocDependencies} from '@ng-doc/core';
 import {NgDocTagComponent} from '@ng-doc/ui-kit';
 
-const PagePlayground: NgDocPlayground = {
-	TagDataPlayground: {
-		target: NgDocTagComponent,
-		template: `<ng-doc-selector>{{ "{{data.array | json}}" | safe }}</ng-doc-selector>`,
-		data: {
-			array: [1, 2, 3],
+import {PageModule} from './ng-doc.module';
+
+const PageDependencies: NgDocDependencies = {
+	module: PageModule,
+	playgrounds: {
+		TagDataPlayground: {
+			target: NgDocTagComponent,
+			template: `<ng-doc-selector>{{ "{{data.array | json}}" | safe }}</ng-doc-selector>`,
+			data: {
+				array: [1, 2, 3],
+			},
 		},
 	},
 };
 
-export default PagePlayground;
+export default PageDependencies;
 ```
 
 ### Example of output

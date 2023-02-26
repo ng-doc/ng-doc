@@ -10,7 +10,8 @@ import {
 	Output,
 	ViewContainerRef,
 } from '@angular/core';
-import {asArray, isPresent} from '@ng-doc/core';
+import {asArray} from '@ng-doc/core/helpers/as-array';
+import {isPresent} from '@ng-doc/core/helpers/is-present';
 import {tooltipCloseAnimation, tooltipOpenAnimation} from '@ng-doc/ui-kit/animations';
 import {NgDocOverlayRef} from '@ng-doc/ui-kit/classes/overlay-ref';
 import {NgDocOverlayContainerComponent} from '@ng-doc/ui-kit/components/overlay-container';

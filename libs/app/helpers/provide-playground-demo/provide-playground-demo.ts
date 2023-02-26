@@ -1,10 +1,7 @@
 import {InjectionToken, Provider} from '@angular/core';
-import {Constructor} from '@ng-doc/core';
+import {Constructor} from '@ng-doc/core/types';
 
-const tokenStore: Map<string, InjectionToken<unknown>> = new Map<
-	string,
-	InjectionToken<unknown>
->();
+const tokenStore: Map<string, InjectionToken<unknown>> = new Map<string, InjectionToken<unknown>>();
 
 /**
  *
@@ -15,15 +12,9 @@ const tokenStore: Map<string, InjectionToken<unknown>> = new Map<
  * @param selector
  * @param component
  */
-export function providePlaygroundDemo(
-	playgroundId: string,
-	component: Constructor<unknown>,
-): Provider {
+export function providePlaygroundDemo(playgroundId: string, component: Constructor<unknown>): Provider {
 	const token: InjectionToken<unknown> =
-		tokenStore.get(playgroundId) ??
-		new InjectionToken<unknown>(
-		`NG_DOC_PLAYGROUND_DEMO_${playgroundId}`,
-	);
+		tokenStore.get(playgroundId) ?? new InjectionToken<unknown>(`NG_DOC_PLAYGROUND_DEMO_${playgroundId}`);
 
 	tokenStore.set(playgroundId, token);
 

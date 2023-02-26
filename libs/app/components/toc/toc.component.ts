@@ -17,7 +17,7 @@ import {
 import {Event as REvent, Router, Scroll} from '@angular/router';
 import {generateToc} from '@ng-doc/app/helpers';
 import {NgDocTocItem} from '@ng-doc/app/interfaces';
-import {isPresent} from '@ng-doc/core';
+import {isPresent} from '@ng-doc/core/helpers/is-present';
 import {ngDocZoneOptimize} from '@ng-doc/ui-kit';
 import {UntilDestroy} from '@ngneat/until-destroy';
 import {fromEvent, merge, Observable} from 'rxjs';

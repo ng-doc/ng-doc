@@ -1,9 +1,10 @@
+import {NgDocDemoActionOptions} from '@ng-doc/core';
+
 import {NgDocActionOutput} from '../interfaces';
 import {NgDocAction} from '../types';
 import {demoAction} from './actions/demo.action';
 import {playgroundAction} from './actions/playground.action';
 import {NgDocPageEntity} from './entities/page.entity';
-import {NgDocDemoActionOptions} from './interfaces';
 
 export class NgDocActions {
 	constructor(private readonly page: NgDocPageEntity) {}

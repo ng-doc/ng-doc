@@ -2,7 +2,7 @@ import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {DOCUMENT} from '@angular/common';
 import {Inject, Injectable} from '@angular/core';
 import {Event, NavigationEnd, Router} from '@angular/router';
-import {NgDocScrollService} from '@ng-doc/ui-kit';
+import {NgDocScrollService} from '@ng-doc/ui-kit/services/scroll';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {filter, pluck, startWith, switchMap} from 'rxjs/operators';

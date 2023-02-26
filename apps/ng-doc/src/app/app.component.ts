@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, HostBinding} from '@angular/core';
 import {Router} from '@angular/router';
-import {preventInitialChildAnimations} from '@ng-doc/ui-kit';
+import {preventInitialChildAnimations} from '@ng-doc/ui-kit/animations';
 
 @Component({
 	animations: [preventInitialChildAnimations],

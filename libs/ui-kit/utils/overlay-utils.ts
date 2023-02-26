@@ -1,5 +1,5 @@
 import {ConnectedPosition, ConnectionPositionPair} from '@angular/cdk/overlay';
-import {asArray} from '@ng-doc/core';
+import {asArray} from '@ng-doc/core/helpers/as-array';
 import {
 	NgDocHorizontalAlign,
 	NgDocOverlayPosition,

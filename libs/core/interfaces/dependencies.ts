@@ -1,5 +1,6 @@
 import {Type} from '@angular/core';
-import {NgDocPlaygroundConfig} from '@ng-doc/core';
+
+import {NgDocPlaygroundConfig} from '../interfaces';
 
 /**
  * A map of dependencies that should be used in a demo page.
