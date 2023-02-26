@@ -1,3 +1,14 @@
+## [15.4.1](https://github.com/skoropadas/ng-doc/compare/v15.4.0...v15.4.1) (2023-02-26)
+
+
+### Performance Improvements
+
+* **app:** add minification for HTML files ([c51ad6d](https://github.com/skoropadas/ng-doc/commit/c51ad6db127f330e0482764325858453f1debe91))
+* **app:** remove unused languages imports for highlight.js ([ab93672](https://github.com/skoropadas/ng-doc/commit/ab93672e0d5e07aa4e378054929d9974253a2dbf))
+* **builder:** change imports from `@ng-doc/core` ([44b949c](https://github.com/skoropadas/ng-doc/commit/44b949c9e488e4520852bdb8874fc9e7cbf5712a))
+* **builder:** reduce delays ([12a8fcf](https://github.com/skoropadas/ng-doc/commit/12a8fcf986b911ca4aef4e4e57d597a2af188a07))
+* **builder:** replace `prettier` with `js-beautify` to reduce bundle size ([da688e5](https://github.com/skoropadas/ng-doc/commit/da688e58595dba6ebc04d48e7ecefb03e6ad99a5))
+
 # [15.4.0](https://github.com/skoropadas/ng-doc/compare/v15.3.2...v15.4.0) (2023-02-24)
 
 
