@@ -3,6 +3,9 @@
 	"version": "0.0.1",
 	"type": "commonjs",
 	"peerDependencies": {
+		"posthtml-render": "^3.0.0",
+		"posthtml-parser": "^0.11.0",
+		"css-what": "^6.1.0",
 		"rxjs": "^7.0.0"
 	},
 	"publishConfig": {

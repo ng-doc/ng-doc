@@ -10,7 +10,8 @@ import {
 	Output,
 	ViewContainerRef,
 } from '@angular/core';
-import {asArray, isPresent} from '@ng-doc/core';
+import {asArray} from '@ng-doc/core/helpers/as-array';
+import {isPresent} from '@ng-doc/core/helpers/is-present';
 import {tooltipCloseAnimation, tooltipOpenAnimation} from '@ng-doc/ui-kit/animations';
 import {NgDocOverlayRef} from '@ng-doc/ui-kit/classes/overlay-ref';
 import {NgDocOverlayContainerComponent} from '@ng-doc/ui-kit/components/overlay-container';
@@ -21,7 +22,6 @@ import {NgDocOverlayStrategy} from '@ng-doc/ui-kit/services/overlay-strategy';
 import {BaseElement, NgDocContent, NgDocOverlayPosition} from '@ng-doc/ui-kit/types';
 import {NgDocOverlayUtils} from '@ng-doc/ui-kit/utils';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {PolymorpheusContent} from '@tinkoff/ng-polymorpheus';
 import {EMPTY, fromEvent, merge, timer} from 'rxjs';
 import {filter, switchMap, takeUntil} from 'rxjs/operators';
 

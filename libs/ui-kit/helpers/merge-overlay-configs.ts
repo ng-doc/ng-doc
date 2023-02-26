@@ -3,7 +3,7 @@
  * @param currentConfig
  * @param hostConfig
  */
-import {isPresent} from '@ng-doc/core';
+import {isPresent} from '@ng-doc/core/helpers/is-present';
 import {NgDocOverlayProperties} from '@ng-doc/ui-kit/interfaces';
 
 /**

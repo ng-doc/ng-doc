@@ -10,6 +10,7 @@
 			"options": {
 				"ngDoc": {
 					"pages": "apps/ng-doc/src/app",
+					"tsConfig": "apps/ng-doc/tsconfig.app.json",
 					"tag": "production",
 					"repoConfig": {
 						"url": "https://github.com/skoropadas/ng-doc",
@@ -38,7 +39,7 @@
 				"index": "apps/ng-doc/src/index.html",
 				"main": "apps/ng-doc/src/main.ts",
 				"polyfills": "apps/ng-doc/src/polyfills.ts",
-				"tsConfig": "apps/ng-doc/tsconfig.app.json",
+				"tsConfig": "apps/ng-doc/tsconfig.build.json",
 				"inlineStyleLanguage": "scss",
 				"assets": [
 					"apps/ng-doc/src/assets",
@@ -60,7 +61,7 @@
 				],
 				"styles": ["apps/ng-doc/src/styles.scss"],
 				"scripts": [],
-				"allowedCommonJsDependencies": ["prettier", "posthtml-parser", "posthtml-render"]
+				"allowedCommonJsDependencies": ["@ng-doc/core", "posthtml-parser", "posthtml-render", "js-beautify"]
 			},
 			"configurations": {
 				"production": {
@@ -86,6 +87,7 @@
 					"sourceMap": true
 				},
 				"development": {
+					"tsConfig": "apps/ng-doc/tsconfig.app.json",
 					"buildOptimizer": false,
 					"optimization": false,
 					"vendorChunk": true,

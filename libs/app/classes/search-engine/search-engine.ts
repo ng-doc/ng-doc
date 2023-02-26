@@ -1,5 +1,6 @@
-import {isPresent, NgDocPageInfo, NgDocPageInfos} from '@ng-doc/core';
-import * as lunr from 'lunr';
+import {isPresent} from '@ng-doc/core/helpers/is-present';
+import {NgDocPageInfo, NgDocPageInfos} from '@ng-doc/core/interfaces';
+import type * as lunr from 'lunr';
 import {forkJoin, from, Observable} from 'rxjs';
 import {map, shareReplay, switchMap} from 'rxjs/operators';
 
@@ -7,10 +8,17 @@ export class NgDocSearchEngine {
 	private index$: Observable<[lunr.Index, NgDocPageInfos]>;
 
 	constructor() {
-		this.index$ = forkJoin([
-			this.request<object>(`assets/ng-doc/indexes.json`).pipe(map(this.createIndex)),
-			this.request<NgDocPageInfos>(`assets/ng-doc/pages.json`),
-		]).pipe(shareReplay(1));
+		this.index$ = from(import('lunr')).pipe(
+			switchMap((lunrLib: any) =>
+				forkJoin([
+					this.request<object>(`assets/ng-doc/indexes.json`).pipe(
+						map((index: object) => this.createIndex(lunrLib.default, index)),
+					),
+					this.request<NgDocPageInfos>(`assets/ng-doc/pages.json`),
+				]),
+			),
+			shareReplay(1),
+		);
 	}
 
 	search(query: string): Observable<NgDocPageInfo[]> {
@@ -19,13 +27,13 @@ export class NgDocSearchEngine {
 		);
 	}
 
-	private createIndex(indexes: object): lunr.Index {
-		const queryLexer: {termSeparator: RegExp} = (lunr as unknown as {QueryLexer: {termSeparator: RegExp}})
+	private createIndex(lunrLib: any, indexes: object): lunr.Index {
+		const queryLexer: {termSeparator: RegExp} = (lunrLib as unknown as {QueryLexer: {termSeparator: RegExp}})
 			.QueryLexer;
 
-		queryLexer.termSeparator = lunr.tokenizer.separator = /\s+/;
+		queryLexer.termSeparator = lunrLib.tokenizer.separator = /\s+/;
 
-		return lunr.Index.load(indexes);
+		return lunrLib.Index.load(indexes);
 	}
 
 	private queryIndex(query: string, index: lunr.Index, dictionary: NgDocPageInfos): NgDocPageInfo[] {

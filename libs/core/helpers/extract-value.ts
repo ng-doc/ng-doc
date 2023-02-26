@@ -1,4 +1,4 @@
-import {NgDocExtractedValue} from '@ng-doc/core/types';
+import {NgDocExtractedValue} from '../types';
 
 /**
  *
@@ -10,7 +10,6 @@ export function extractValue(value: string): NgDocExtractedValue {
 	} catch {
 		return '';
 	}
-
 }
 
 /**

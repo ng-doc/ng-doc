@@ -1,5 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {extractValue, NgDocExtractedValue} from '@ng-doc/core';
+import {extractValue} from '@ng-doc/core/helpers/extract-value';
+import {NgDocExtractedValue} from '@ng-doc/core/types/extracted-value';
 
 @Pipe({
 	name: 'ngDocExtractValue',

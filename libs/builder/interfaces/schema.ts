@@ -34,4 +34,8 @@ export interface NgDocConfiguration {
 	 * If it is defined, Ngoc will use it to display the "Suggest edits" button, and "View source" button, on each page.
 	 */
 	repoConfig?: NgDocRepoConfig;
+	/**
+	 * The path to the tsconfig file (NgDoc uses tsconfig of you application by default, but you can override it)
+	 */
+	tsConfig?: string;
 }

@@ -1,6 +1,5 @@
 import {Directive, ElementRef, ViewContainerRef} from '@angular/core';
 import {NgDocDemoComponent} from '@ng-doc/app/components/demo';
-import {asBoolean} from '@ng-doc/app/helpers';
 import {NgDocProcessorOptions} from '@ng-doc/app/interfaces';
 import {NgDocHtmlProcessor} from '@ng-doc/app/processors/html-processor';
 import {UntilDestroy} from '@ngneat/until-destroy';

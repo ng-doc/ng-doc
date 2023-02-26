@@ -1,5 +1,5 @@
 import {NgDocDemoAssets} from '@ng-doc/app/interfaces';
-import {NgDocDependencies} from '@ng-doc/core';
+import {NgDocDependencies} from '@ng-doc/core/interfaces';
 
 /**
  * Base class for NgDoc page

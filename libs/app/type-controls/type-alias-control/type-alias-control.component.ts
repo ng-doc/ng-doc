@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {NgDocTypeControl} from '@ng-doc/app/interfaces';
-import {extractValue} from '@ng-doc/core';
+import {extractValue} from '@ng-doc/core/helpers/extract-value';
 import {FlControl} from 'flex-controls';
 
 @Component({

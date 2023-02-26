@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {asArray} from '@ng-doc/core';
+import {asArray} from '@ng-doc/core/helpers/as-array';
 
 @Pipe({
 	name: 'asArray',

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {preventInitialChildAnimations} from '@ng-doc/ui-kit';
+import {preventInitialChildAnimations} from '@ng-doc/ui-kit/animations';
 
 @Component({
 	animations: [preventInitialChildAnimations],

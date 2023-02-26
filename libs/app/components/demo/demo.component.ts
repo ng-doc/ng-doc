@@ -1,8 +1,9 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit, Type} from '@angular/core';
 import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
 import {NgDocDemoAsset} from '@ng-doc/app/interfaces';
-import {asArray, NgDocDemoActionOptions} from '@ng-doc/core';
-import {NgDocContent} from '@ng-doc/ui-kit';
+import {asArray} from '@ng-doc/core/helpers/as-array';
+import {NgDocDemoActionOptions} from '@ng-doc/core/interfaces';
+import {NgDocContent} from '@ng-doc/ui-kit/types';
 import {PolymorpheusComponent} from '@tinkoff/ng-polymorpheus';
 
 @Component({

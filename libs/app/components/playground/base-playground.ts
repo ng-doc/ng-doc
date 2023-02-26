@@ -1,5 +1,5 @@
 import {Directive, Type, ViewContainerRef} from '@angular/core';
-import {NgDocPlaygroundConfig} from '@ng-doc/core';
+import {NgDocPlaygroundConfig} from '@ng-doc/core/interfaces';
 
 /**
  * Base class for playgrounds components.

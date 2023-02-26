@@ -5,7 +5,6 @@ import {NgDocOverlayContainerComponent} from '@ng-doc/ui-kit/components/overlay-
 import {NgDocOverlayService} from '@ng-doc/ui-kit/services/overlay';
 import {NgDocContent} from '@ng-doc/ui-kit/types';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {PolymorpheusContent} from '@tinkoff/ng-polymorpheus';
 import {Subject, timer} from 'rxjs';
 import {switchMap, tap} from 'rxjs/operators';
 

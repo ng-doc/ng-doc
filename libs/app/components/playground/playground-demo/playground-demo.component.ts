@@ -18,14 +18,10 @@ import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
 import {formatHtml} from '@ng-doc/app/helpers/format-html';
 import {getPlaygroundDemoToken} from '@ng-doc/app/helpers/provide-playground-demo';
 import {NgDocFormPartialValue} from '@ng-doc/app/types';
-import {
-	buildPlaygroundDemoTemplate,
-	NgDocExtractedValue,
-	NgDocPlaygroundConfig,
-	NgDocPlaygroundProperties,
-	NgDocPlaygroundProperty,
-	objectKeys,
-} from '@ng-doc/core';
+import {buildPlaygroundDemoTemplate} from '@ng-doc/core/helpers/build-playground-demo-template';
+import {objectKeys} from '@ng-doc/core/helpers/object-keys';
+import {NgDocPlaygroundConfig, NgDocPlaygroundProperties, NgDocPlaygroundProperty} from '@ng-doc/core/interfaces';
+import {NgDocExtractedValue} from '@ng-doc/core/types';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {Observable, of, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';

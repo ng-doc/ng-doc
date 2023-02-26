@@ -1,5 +1,4 @@
 import {NgDocContent, NgDocOverlayAnimationEvent} from '@ng-doc/ui-kit/types';
-import {PolymorpheusContent} from '@tinkoff/ng-polymorpheus';
 import {Observable} from 'rxjs';
 
 import {NgDocOverlayConfig} from './overlay-config';

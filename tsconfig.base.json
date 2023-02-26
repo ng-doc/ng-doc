@@ -21,12 +21,10 @@
 			"@ng-doc/app": ["libs/app/index.ts"],
 			"@ng-doc/app/*": ["libs/app/*"],
 			"@ng-doc/builder": ["libs/builder/index.ts"],
-			"@ng-doc/builder/generated": ["dist/libs/builder/generated/index.ts"],
 			"@ng-doc/builder/testing/*": ["libs/builder/testing/*"],
 			"@ng-doc/core": ["libs/core/index.ts"],
 			"@ng-doc/core/*": ["libs/core/*"],
 			"@ng-doc/generated": [".ng-doc/ng-doc/index.ts"],
-			"@ng-doc/generated/*": [".ng-doc/ng-doc/*"],
 			"@ng-doc/ui-kit": ["libs/ui-kit/index.ts"],
 			"@ng-doc/ui-kit/*": ["libs/ui-kit/*"]
 		}
