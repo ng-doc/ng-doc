@@ -105,8 +105,8 @@ file.
 							},
 							{
 								"glob": "**/*",
-								"input": "node_modules/@ng-doc/builder/generated/assets",
-								"output": "assets"
+								"input": ".ng-doc/docs/assets",
+								"output": "assets/ng-doc"
 							}
 						]
 					}
