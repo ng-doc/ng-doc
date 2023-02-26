@@ -38,7 +38,7 @@
 				"index": "apps/ng-doc/src/index.html",
 				"main": "apps/ng-doc/src/main.ts",
 				"polyfills": "apps/ng-doc/src/polyfills.ts",
-				"tsConfig": "apps/ng-doc/tsconfig.app.json",
+				"tsConfig": "apps/ng-doc/tsconfig.build.json",
 				"inlineStyleLanguage": "scss",
 				"assets": [
 					"apps/ng-doc/src/assets",
@@ -60,7 +60,7 @@
 				],
 				"styles": ["apps/ng-doc/src/styles.scss"],
 				"scripts": [],
-				"allowedCommonJsDependencies": ["prettier", "posthtml-parser", "posthtml-render", "js-beautify"]
+				"allowedCommonJsDependencies": ["@ng-doc/core", "posthtml-parser", "posthtml-render", "js-beautify"]
 			},
 			"configurations": {
 				"production": {
@@ -119,6 +119,9 @@
 		},
 		"serve": {
 			"executor": "./dist/libs/builder:dev-server",
+			"options": {
+				"tsConfig": "apps/ng-doc/tsconfig.app.json"
+			},
 			"configurations": {
 				"production": {
 					"browserTarget": "ng-doc:build:production",
