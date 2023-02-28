@@ -38,6 +38,8 @@ export {
 	noLineBreaks,
 	notEmptyAssets,
 	sortByNodesName,
+	sortNavigationEntities,
 	typeAliasPresentation,
-	variablePresentation} from '../helpers';
-export {buildPlaygroundDemoTemplate,objectKeys} from '@ng-doc/core'
+	variablePresentation,
+} from '../helpers';
+export {buildPlaygroundDemoTemplate, objectKeys} from '@ng-doc/core';
