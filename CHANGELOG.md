@@ -1,3 +1,12 @@
+# [15.5.0](https://github.com/skoropadas/ng-doc/compare/v15.4.1...v15.5.0) (2023-03-01)
+
+
+### Features
+
+* **app:** add "Previous/Next Page" links to guide pages ([01bd3fd](https://github.com/skoropadas/ng-doc/commit/01bd3fde26452e28e5283540739814a37fa5aeae)), closes [#19](https://github.com/skoropadas/ng-doc/issues/19)
+* **app:** display protected keyword ([56b8f4c](https://github.com/skoropadas/ng-doc/commit/56b8f4cbb3c9316c94a721c7c6a3102b4c767317)), closes [#13](https://github.com/skoropadas/ng-doc/issues/13)
+* **ui-kit:** add more types of button ([7708737](https://github.com/skoropadas/ng-doc/commit/77087377bc3d975c7202273e8e557cb53196c670))
+
 ## [15.4.1](https://github.com/skoropadas/ng-doc/compare/v15.4.0...v15.4.1) (2023-02-26)
 
 
