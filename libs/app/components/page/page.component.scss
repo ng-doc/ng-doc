@@ -25,4 +25,20 @@
 			display: none;
 		}
 	}
+
+	.ng-doc-navigation-controls {
+		display: flex;
+		margin-top: calc(var(--ng-doc-base-gutter) * 12);
+		border-top: 1px solid var(--ng-doc-base-2);
+		padding-top: calc(var(--ng-doc-base-gutter) * 2);
+
+		a {
+			--ng-doc-text: var(--ng-doc-base-10);
+			--ng-doc-icon-color: var(--ng-doc-text);
+
+			&:last-child {
+				margin-left: auto;
+			}
+		}
+	}
 }

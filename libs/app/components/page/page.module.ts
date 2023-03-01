@@ -1,5 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {RouterLink} from '@angular/router';
 import {NgDocPageMapModule} from '@ng-doc/app/components/toc';
 import {NgDocSanitizeHtmlModule} from '@ng-doc/app/pipes/sanitize-html';
 import {
@@ -16,13 +17,26 @@ import {
 	NgDocStringControlModule,
 	NgDocTypeAliasControlModule,
 } from '@ng-doc/app/type-controls';
-import {NgDocButtonIconModule, NgDocIconModule, NgDocMediaQueryModule, NgDocTooltipModule} from '@ng-doc/ui-kit';
+import {
+	NgDocButtonIconModule,
+	NgDocButtonModule,
+	NgDocIconModule,
+	NgDocMediaQueryModule,
+	NgDocTextModule,
+	NgDocTooltipModule,
+} from '@ng-doc/ui-kit';
 
 import {NgDocPageComponent} from './page.component';
 
 @NgModule({
 	declarations: [NgDocPageComponent],
 	imports: [
+		/* TypeControls */
+		NgDocBooleanControlModule,
+		NgDocNumberControlModule,
+		NgDocStringControlModule,
+		NgDocTypeAliasControlModule,
+
 		CommonModule,
 		NgDocDemoProcessorModule,
 		NgDocCodeProcessorModule,
@@ -36,12 +50,9 @@ import {NgDocPageComponent} from './page.component';
 		NgDocIconModule,
 		NgDocTooltipModule,
 		NgDocPlaygroundProcessorModule,
-
-		/* TypeControls */
-		NgDocBooleanControlModule,
-		NgDocNumberControlModule,
-		NgDocStringControlModule,
-		NgDocTypeAliasControlModule,
+		RouterLink,
+		NgDocButtonModule,
+		NgDocTextModule,
 	],
 	exports: [NgDocPageComponent],
 })
