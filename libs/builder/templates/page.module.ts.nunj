@@ -3,7 +3,7 @@ import {Component, NgModule, Type, ChangeDetectionStrategy} from '@angular/core'
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {NgDocPageModule, NgDocRootPage, NgDocDemoAssets} from '@ng-doc/app';
-import {NgDocDependencies} from '@ng-doc/core';
+import {NgDocDependencies, NgDocPageType} from '@ng-doc/core';
 import pageContent from '!!raw-loader!{{ page.builtPagePath }}';
 {%- if page.pageDependencies %}
 // noinspection ES6UnusedImports
@@ -22,6 +22,7 @@ import demoAssets from '{{ page.componentsAssets }}';
 	providers: [{provide: NgDocRootPage, useExisting: DynamicComponent}],
 })
 export class DynamicComponent extends NgDocRootPage {
+	readonly pageType: NgDocPageType = 'guide';
 	readonly pageContent: string = pageContent;
 
 	{%- if page.editSourceFileUrl %}

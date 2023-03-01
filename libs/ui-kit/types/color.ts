@@ -1,1 +1,1 @@
-export type NgDocColor = 'primary';
+export type NgDocColor = 'primary' | 'link';

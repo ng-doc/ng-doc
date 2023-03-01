@@ -1,10 +1,12 @@
 import {NgDocDemoAssets} from '@ng-doc/app/interfaces';
+import {NgDocPageType} from '@ng-doc/core';
 import {NgDocDependencies} from '@ng-doc/core/interfaces';
 
 /**
  * Base class for NgDoc page
  */
 export abstract class NgDocRootPage {
+	abstract readonly pageType: NgDocPageType;
 	/**
 	 * Html content of the page
 	 */
