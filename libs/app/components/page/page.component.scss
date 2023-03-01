@@ -33,10 +33,12 @@
 		padding-top: calc(var(--ng-doc-base-gutter) * 2);
 
 		a {
+			--ng-doc-button-hover-background: var(--ng-doc-base-1);
+			--ng-doc-button-active-background: var(--ng-doc-base-2);
 			--ng-doc-text: var(--ng-doc-base-10);
 			--ng-doc-icon-color: var(--ng-doc-text);
 
-			&:last-child {
+			&:last-child:not(:first-child) {
 				margin-left: auto;
 			}
 		}
