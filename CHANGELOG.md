@@ -1,3 +1,11 @@
+## [15.5.1](https://github.com/skoropadas/ng-doc/compare/v15.5.0...v15.5.1) (2023-03-01)
+
+
+### Bug Fixes
+
+* **app:** previous page button display on the right side of the page ([b32d978](https://github.com/skoropadas/ng-doc/commit/b32d9781fcef1499d33ea0d8f898d254c6cb4a24))
+* **app:** previous/next buttons have wrong background color for dark themes ([90bf376](https://github.com/skoropadas/ng-doc/commit/90bf37650fadbb6fd498a5df46a3787db74f5982))
+
 # [15.5.0](https://github.com/skoropadas/ng-doc/compare/v15.4.1...v15.5.0) (2023-03-01)
 
 
