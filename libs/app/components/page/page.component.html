@@ -32,13 +32,13 @@
 	></div>
 
 	<div class="ng-doc-navigation-controls" *ngIf="rootPage.pageType === 'guide'">
-		<a ng-doc-button-text color="grey" *ngIf="prevPage" [routerLink]="prevPage.route">
+		<a ng-doc-button-text *ngIf="prevPage" [routerLink]="prevPage.route">
 			<span ng-doc-text>
 				<ng-doc-icon icon="arrow-left" ngDocTextLeft></ng-doc-icon>
 				{{ prevPage.title }}
 			</span>
 		</a>
-		<a ng-doc-button-text color="grey" *ngIf="nextPage" [routerLink]="nextPage.route">
+		<a ng-doc-button-text *ngIf="nextPage" [routerLink]="nextPage.route">
 			<span ng-doc-text>
 				{{ nextPage.title }}
 				<ng-doc-icon icon="arrow-right" ngDocTextRight></ng-doc-icon>
