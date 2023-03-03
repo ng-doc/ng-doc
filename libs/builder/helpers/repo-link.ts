@@ -1,4 +1,5 @@
 import {NgDocRepoConfig} from '../interfaces';
+import {slash} from './slash';
 
 /**
  *
@@ -17,7 +18,7 @@ export function editFileInRepoUrl(
 ): string {
 	if (url && mainBranch) {
 		const rUrl = url.replace(/\/$/, '');
-		const fPath = filePath.replace(/^\//, '');
+		const fPath = slash(filePath).replace(/^\//, '');
 
 		return `${rUrl}/edit/${mainBranch}/${fPath}?message=docs(${scope}): describe your changes here...${
 			lineNumber ? `#L${lineNumber}` : ''
@@ -42,9 +43,9 @@ export function viewFileInRepoUrl(
 ): string {
 	if (url && releaseBranch) {
 		const rUrl = url.replace(/\/$/, '');
-		const fPath = filePath.replace(/^\//, '');
+		const fPath = slash(filePath).replace(/^\//, '');
 
-		return `${url}/blob/${releaseBranch}/${fPath}${lineNumber ? `#L${lineNumber}` : ''}`;
+		return `${rUrl}/blob/${releaseBranch}/${fPath}${lineNumber ? `#L${lineNumber}` : ''}`;
 	}
 
 	return filePath;
