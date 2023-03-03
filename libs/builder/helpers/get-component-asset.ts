@@ -9,6 +9,7 @@ import {componentDecoratorResolver} from '../resolvers/component-decorator.resol
 import {NgDocComponentAsset} from '../types';
 import {buildAssets} from './build-assets';
 import {formatCode} from './format-code';
+import {slash} from './slash';
 
 /**
  *
@@ -57,7 +58,7 @@ export function getComponentAsset(
 							},
 						})
 						.trim(),
-					outputPath: path.join(outDir, `${asset.name}.html`),
+					outputPath: slash(path.join(outDir, `${asset.name}.html`)),
 				};
 			}),
 		};
