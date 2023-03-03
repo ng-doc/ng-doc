@@ -6,12 +6,35 @@
 				<ng-template #leftContent>
 					<ng-doc-icon icon="search"></ng-doc-icon>
 				</ng-template>
-				<input ngDocInputString [formControl]="formGroup.controls.filter" placeholder="Type the name">
+				<input ngDocInputString [formControl]="formGroup.controls.filter" placeholder="Type the name" />
 			</ng-doc-input-wrapper>
 		</label>
 
+		<label class="ng-doc-api-filter-item" ng-doc-label="Scope">
+			<ng-doc-combobox
+				[formControl]="formGroup.controls.scope"
+				[valueContent]="comboboxItem"
+				[readonly]="true"
+				placeholder="Choose the scope"
+			>
+				<ng-doc-list *ngDocData>
+					<ng-doc-option *ngFor="let scope of scopes" [value]="scope">
+						<ng-container *ngTemplateOutlet="comboboxItem; context: {$implicit: scope}"></ng-container>
+					</ng-doc-option>
+				</ng-doc-list>
+				<ng-template let-value #comboboxItem>
+					{{ value }}
+				</ng-template>
+			</ng-doc-combobox>
+		</label>
+
 		<label class="ng-doc-api-filter-item" ng-doc-label="Type">
-			<ng-doc-combobox [formControl]="formGroup.controls.type" [valueContent]="comboboxItem" [readonly]="true">
+			<ng-doc-combobox
+				[formControl]="formGroup.controls.type"
+				[valueContent]="comboboxItem"
+				[readonly]="true"
+				placeholder="Choose the entity type"
+			>
 				<ng-doc-list *ngDocData>
 					<ng-doc-option *ngFor="let type of types" [value]="type">
 						<ng-container *ngTemplateOutlet="comboboxItem; context: {$implicit: type}"></ng-container>
@@ -19,12 +42,14 @@
 				</ng-doc-list>
 				<ng-template let-value #comboboxItem>
 					<div ng-doc-text>
-						<ng-doc-kind-icon [kind]="value"
-										  [ngDocTooltip]="value"
-										  [positions]="['left-center', 'right-center']"
-										  ngDocTextLeft>
+						<ng-doc-kind-icon
+							[kind]="value"
+							[ngDocTooltip]="value"
+							[positions]="['left-center', 'right-center']"
+							ngDocTextLeft
+						>
 						</ng-doc-kind-icon>
-						{{value}}
+						{{ value }}
 					</div>
 				</ng-template>
 			</ng-doc-combobox>
@@ -32,17 +57,14 @@
 	</form>
 	<div class="ng-doc-api-list">
 		<div class="ng-doc-api-scope" *ngFor="let scope of api">
-			<h3 class="ng-doc-scope-title" ng-doc-text>{{scope.title}}</h3>
+			<h3 class="ng-doc-scope-title" ng-doc-text>{{ scope.title }}</h3>
 			<ul class="ng-doc-scope-items" *ngIf="scope.items.length">
-				<li class="ng-doc-scope-item"
-					*ngFor="let apiReference of scope.items">
+				<li class="ng-doc-scope-item" *ngFor="let apiReference of scope.items">
 					<a class="ng-doc-scope-item-link" [routerLink]="[apiReference.route]">
-						<ng-doc-kind-icon [kind]="apiReference.type"
-										  [ngDocTooltip]="apiReference.type">
+						<ng-doc-kind-icon [kind]="apiReference.type" [ngDocTooltip]="apiReference.type">
 						</ng-doc-kind-icon>
-						{{apiReference.name}}
+						{{ apiReference.name }}
 					</a>
-
 				</li>
 			</ul>
 		</div>

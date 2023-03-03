@@ -12,6 +12,7 @@ import {debounceTime, map, startWith} from 'rxjs/operators';
 
 interface ApiFilterForm {
 	filter: FormControl<string | null>;
+	scope: FormControl<string | null>;
 	type: FormControl<string | null>;
 }
 
@@ -35,12 +36,14 @@ export class NgDocApiListComponent {
 	) {
 		this.formGroup = this.formBuilder.group({
 			filter: [''],
+			scope: [''],
 			type: [''],
 		});
 
 		this.route.queryParamMap.pipe(untilDestroyed(this)).subscribe((paramMap: ParamMap) =>
 			this.formGroup.setValue({
 				filter: paramMap.get('filter') || null,
+				scope: paramMap.get('scope') || null,
 				type: paramMap.get('type') || null,
 			}),
 		);
@@ -61,6 +64,7 @@ export class NgDocApiListComponent {
 			map(() => this.formGroup.value),
 			map((form: NgDocFormPartialValue<typeof this.formGroup>) =>
 				this.apiList
+					.filter((api: NgDocApiList) => !form?.scope || api.title === form?.scope)
 					.map((api: NgDocApiList) => ({
 						...api,
 						items: api.items
@@ -74,11 +78,15 @@ export class NgDocApiListComponent {
 									a.type.localeCompare(b.type) || a.name.localeCompare(b.name),
 							),
 					}))
-					.filter((api: NgDocApiList) => api.items.length)
-					.sort((a: NgDocApiList, b: NgDocApiList) => a.title.localeCompare(b.title)),
+					.filter((api: NgDocApiList) => api.items.length),
 			),
 			untilDestroyed(this),
 		);
+	}
+
+	@ngDocMakePure
+	get scopes(): string[] {
+		return asArray(new Set(this.apiList.flatMap((api: NgDocApiList) => api.title))).sort();
 	}
 
 	@ngDocMakePure
