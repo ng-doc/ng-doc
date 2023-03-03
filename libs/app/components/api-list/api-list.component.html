@@ -6,7 +6,12 @@
 				<ng-template #leftContent>
 					<ng-doc-icon icon="search"></ng-doc-icon>
 				</ng-template>
-				<input ngDocInputString [formControl]="formGroup.controls.filter" placeholder="Type the name" />
+				<input
+					ngDocInputString
+					[formControl]="formGroup.controls.filter"
+					placeholder="Type the name"
+					ngDocAutofocus
+				/>
 			</ng-doc-input-wrapper>
 		</label>
 
