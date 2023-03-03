@@ -1,3 +1,17 @@
+# [15.6.0](https://github.com/skoropadas/ng-doc/compare/v15.5.1...v15.6.0) (2023-03-03)
+
+
+### Bug Fixes
+
+* **app:** missing dependency js-beautify ([fa1a8e3](https://github.com/skoropadas/ng-doc/commit/fa1a8e375a709553aeda942d70a12dede4a41643)), closes [#22](https://github.com/skoropadas/ng-doc/issues/22)
+* **builder:** api scopes are not sorted by `order` field ([b07598c](https://github.com/skoropadas/ng-doc/commit/b07598cda0192c13667ae883a7285a3c959b6ef2))
+* **builder:** paths are generated incorrectly on Windows ([9cbda4c](https://github.com/skoropadas/ng-doc/commit/9cbda4c4e697474ab90303b68cacc911125d656e)), closes [#25](https://github.com/skoropadas/ng-doc/issues/25)
+
+
+### Features
+
+* **app:** add `scope` filter for api list ([911196c](https://github.com/skoropadas/ng-doc/commit/911196cd438af03f13fe1bcd3494b8cec704d657)), closes [#23](https://github.com/skoropadas/ng-doc/issues/23)
+
 ## [15.5.1](https://github.com/skoropadas/ng-doc/compare/v15.5.0...v15.5.1) (2023-03-01)
 
 
