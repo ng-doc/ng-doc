@@ -64,6 +64,10 @@ export class NgDocApiScopeEntity extends NgDocRouteEntity<NgDocApiScope> {
 		return this.target.name;
 	}
 
+	get order(): number | undefined {
+		return this.target.order;
+	}
+
 	override get buildCandidates(): NgDocEntity[] {
 		return this.childEntities;
 	}
