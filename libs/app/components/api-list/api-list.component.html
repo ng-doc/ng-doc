@@ -13,16 +13,16 @@
 		<label class="ng-doc-api-filter-item" ng-doc-label="Scope">
 			<ng-doc-combobox
 				[formControl]="formGroup.controls.scope"
-				[valueContent]="comboboxItem"
+				[valueContent]="comboboxScopeItem"
 				[readonly]="true"
 				placeholder="Choose the scope"
 			>
 				<ng-doc-list *ngDocData>
 					<ng-doc-option *ngFor="let scope of scopes" [value]="scope">
-						<ng-container *ngTemplateOutlet="comboboxItem; context: {$implicit: scope}"></ng-container>
+						<ng-container *ngTemplateOutlet="comboboxScopeItem; context: {$implicit: scope}"></ng-container>
 					</ng-doc-option>
 				</ng-doc-list>
-				<ng-template let-value #comboboxItem>
+				<ng-template let-value #comboboxScopeItem>
 					{{ value }}
 				</ng-template>
 			</ng-doc-combobox>
@@ -31,16 +31,16 @@
 		<label class="ng-doc-api-filter-item" ng-doc-label="Type">
 			<ng-doc-combobox
 				[formControl]="formGroup.controls.type"
-				[valueContent]="comboboxItem"
+				[valueContent]="comboboxTypeItem"
 				[readonly]="true"
 				placeholder="Choose the entity type"
 			>
 				<ng-doc-list *ngDocData>
 					<ng-doc-option *ngFor="let type of types" [value]="type">
-						<ng-container *ngTemplateOutlet="comboboxItem; context: {$implicit: type}"></ng-container>
+						<ng-container *ngTemplateOutlet="comboboxTypeItem; context: {$implicit: type}"></ng-container>
 					</ng-doc-option>
 				</ng-doc-list>
-				<ng-template let-value #comboboxItem>
+				<ng-template let-value #comboboxTypeItem>
 					<div ng-doc-text>
 						<ng-doc-kind-icon
 							[kind]="value"
