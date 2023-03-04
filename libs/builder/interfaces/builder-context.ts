@@ -1,7 +1,7 @@
 import {BuilderContext} from '@angular-devkit/architect';
 import {NgDocStyleType} from '@ng-doc/core';
 
-import {NgDocConfiguration, NgDocSchema} from './schema';
+import {NgDocConfiguration} from './schema';
 
 export interface NgDocBuilderContext {
 	tsConfig: string;
