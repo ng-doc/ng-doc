@@ -42,9 +42,7 @@ export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T>
 
 	get fullRoute(): string {
 		const parentRoute: string =
-			this.parent instanceof NgDocRouteEntity
-				? this.parent.fullRoute
-				: this.context.options.ngDoc?.routePrefix ?? '';
+			this.parent instanceof NgDocRouteEntity ? this.parent.fullRoute : this.context.config.routePrefix ?? '';
 
 		return slash(path.join('/', parentRoute, this.route));
 	}
