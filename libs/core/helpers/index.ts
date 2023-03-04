@@ -4,6 +4,7 @@ export * from './capitalize';
 export * from './escape-html';
 export * from './escape-regexp';
 export * from './extract-value';
+export * from './format-html';
 export * from './is-iterable';
 export * from './is-keyboard-event';
 export * from './is-node-tag';

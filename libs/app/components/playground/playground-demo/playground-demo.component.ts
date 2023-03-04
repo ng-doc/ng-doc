@@ -15,10 +15,10 @@ import {
 } from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
-import {formatHtml} from '@ng-doc/app/helpers/format-html';
 import {getPlaygroundDemoToken} from '@ng-doc/app/helpers/provide-playground-demo';
 import {NgDocFormPartialValue} from '@ng-doc/app/types';
 import {buildPlaygroundDemoTemplate} from '@ng-doc/core/helpers/build-playground-demo-template';
+import {formatHtml} from '@ng-doc/core/helpers/format-html';
 import {objectKeys} from '@ng-doc/core/helpers/object-keys';
 import {NgDocPlaygroundConfig, NgDocPlaygroundProperties, NgDocPlaygroundProperty} from '@ng-doc/core/interfaces';
 import {NgDocExtractedValue} from '@ng-doc/core/types';
