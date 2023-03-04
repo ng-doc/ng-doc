@@ -24,11 +24,6 @@ export interface NgDocConfiguration {
 	 */
 	routePrefix?: string;
 	/**
-	 * Tag for of the current target, you can use it in conjunction with the `onlyForTags` field in your pages to
-	 * hide pages for certain documentation builds
-	 */
-	tag?: string;
-	/**
 	 * List of the global keywords, to create link to foreign websites
 	 */
 	keywords?: Record<string, NgDocGlobalKeyword>;

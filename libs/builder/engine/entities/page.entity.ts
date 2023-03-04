@@ -49,10 +49,9 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 
 	override get canBeBuilt(): boolean {
 		return (
-			!this.target ||
-			!this.context.config.tag ||
-			!this.target.onlyForTags ||
-			asArray(this.target.onlyForTags).includes(this.context.config.tag)
+			!!this.target &&
+			(!this.target.onlyForTags ||
+				asArray(this.target.onlyForTags).includes(this.context.context.target?.configuration ?? ''))
 		);
 	}
 
