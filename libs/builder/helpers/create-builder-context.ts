@@ -21,7 +21,7 @@ export function createBuilderContext(
 	const buildPath: string = path.join(context.workspaceRoot, '.ng-doc', context.target?.project ?? 'app');
 	const projectRoot: string = path.join(context.workspaceRoot, path.dirname(targetOptions['main'] as string));
 
-	if (options.ngDoc) {
+	if (Object.keys(options.ngDoc ?? {}).length) {
 		context.logger.warn(
 			'`ngDoc` field in `angular.json` file is deprecated and will be removed in the next major release.\n' +
 				'Please use configuration file to configure NgDoc. For more information, see https://ng-doc.com/getting-started/configuration#builder-configuration',
