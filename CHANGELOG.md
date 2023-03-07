@@ -1,3 +1,10 @@
+## [15.7.1](https://github.com/skoropadas/ng-doc/compare/v15.7.0...v15.7.1) (2023-03-07)
+
+
+### Bug Fixes
+
+* **app:** ng-doc does not use the `tsConfig` passed in the global configuration ([3dfd5cc](https://github.com/skoropadas/ng-doc/commit/3dfd5ccff882dfeceb40e96672e00cbcfe9d1881))
+
 # [15.7.0](https://github.com/skoropadas/ng-doc/compare/v15.6.0...v15.7.0) (2023-03-07)
 
 
