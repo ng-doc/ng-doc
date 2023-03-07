@@ -25,6 +25,9 @@ const NgDocConfig: NgDocConfiguration = {
 			path: 'https://github.com/skoropadas/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Enhancement&template=feature_request.yaml&title=%5BFeature%5D+',
 		},
 	},
+	guide: {
+		anchorHeadings: ['h1', 'h2', 'h3', 'h4'],
+	},
 };
 
 export default NgDocConfig;
