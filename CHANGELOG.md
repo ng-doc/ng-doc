@@ -1,3 +1,22 @@
+# [15.7.0](https://github.com/skoropadas/ng-doc/compare/v15.6.0...v15.7.0) (2023-03-07)
+
+
+### Bug Fixes
+
+* **app:** filter for entity type on the api list page doesn't display type icons ([eeb8bdd](https://github.com/skoropadas/ng-doc/commit/eeb8bdd042708a9d18f6b640fbdc4b89c5d4a313))
+* **app:** global CSS styles leak into component demos ([91727f5](https://github.com/skoropadas/ng-doc/commit/91727f54243605a965e3fe9e11d432c0dd72a8c0)), closes [#28](https://github.com/skoropadas/ng-doc/issues/28)
+* **app:** prev/next links are wrong for pages with similar routes ([3cdf42a](https://github.com/skoropadas/ng-doc/commit/3cdf42abe6644e2390c0f9d1601d3eb55765e193)), closes [#29](https://github.com/skoropadas/ng-doc/issues/29)
+* **app:** remove warning about `beautify-html` library ([714f3c7](https://github.com/skoropadas/ng-doc/commit/714f3c7875c50e87cbeac7df2da80541a698a38f))
+* **builder:** `onlyForTags` property of the page/category configuration object should contain project configuration name like `production` or `development` ([9aebc99](https://github.com/skoropadas/ng-doc/commit/9aebc99231400ee8b963e6fbb4f9fdab4a38be40))
+
+
+### Features
+
+* **app:** `toc` is generated based on headers with id given header level ([96cd9e2](https://github.com/skoropadas/ng-doc/commit/96cd9e24d440dc8f230de9cb82b30ea907ce47e2))
+* **app:** add `anchorHeadings` to the `NgDocConfiguration` interface, that can be used to limit the headings for which anchor links should be generated ([10aaa20](https://github.com/skoropadas/ng-doc/commit/10aaa20525dea2ebd56f72ac9e670f55f01c981f)), closes [#27](https://github.com/skoropadas/ng-doc/issues/27)
+* **app:** filter by entity name on the api list page is focused by default ([865d0a4](https://github.com/skoropadas/ng-doc/commit/865d0a499154cf6a72adbb6afe136757f745ae32))
+* **app:** replace `ngDoc` configuration field in `angular.json` with `ng-doc.config.js` file ([e2c9b6c](https://github.com/skoropadas/ng-doc/commit/e2c9b6c2b489979756c253cefbd0af0f3b255a21)), closes [#20](https://github.com/skoropadas/ng-doc/issues/20)
+
 # [15.6.0](https://github.com/skoropadas/ng-doc/compare/v15.5.1...v15.6.0) (2023-03-03)
 
 
