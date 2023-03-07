@@ -31,7 +31,7 @@ export function createBuilderContext(
 	const config: NgDocConfiguration = {...options.ngDoc, ...loadConfig(projectRoot)};
 
 	return {
-		tsConfig: options.ngDoc?.tsConfig ?? String(targetOptions['tsConfig']),
+		tsConfig: config?.tsConfig ?? String(targetOptions['tsConfig']),
 		config,
 		context,
 		inlineStyleLanguage: (targetOptions?.['inlineStyleLanguage'] as NgDocStyleType) ?? 'CSS',
