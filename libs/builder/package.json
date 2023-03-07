@@ -21,11 +21,15 @@
 		"rehype": "^9.0.1",
 		"rehype-format": "^3.1.0",
 		"rehype-highlight": "^4.1.0",
-		"rehype-slug": "^4.0.0",
+		"hast-util-to-string": "^1.0.4",
+		"github-slugger": "^1.5.0",
+		"hast-util-heading-rank": "^1.0.1",
 		"highlight.js": "^11.5.1",
 		"raw-loader": "^4.0.2",
 		"esbuild": "^0.17.8",
-		"@microsoft/tsdoc": "^0.14.2"
+		"@microsoft/tsdoc": "^0.14.2",
+		"cosmiconfig": "^8.1.0",
+		"cosmiconfig-typescript-loader": "^4.3.0"
 	},
 	"publishConfig": {
 		"access": "public"

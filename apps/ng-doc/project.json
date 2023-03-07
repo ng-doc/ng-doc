@@ -8,33 +8,6 @@
 			"executor": "./dist/libs/builder:browser",
 			"outputs": ["{options.outputPath}"],
 			"options": {
-				"ngDoc": {
-					"pages": "apps/ng-doc/src/app",
-					"tsConfig": "apps/ng-doc/tsconfig.app.json",
-					"tag": "production",
-					"repoConfig": {
-						"url": "https://github.com/skoropadas/ng-doc",
-						"mainBranch": "main",
-						"releaseBranch": "release"
-					},
-					"keywords": {
-						"nunjucks": {
-							"path": "https://mozilla.github.io/nunjucks/"
-						},
-						"tsdoc": {
-							"title": "TsDoc",
-							"path": "https://tsdoc.org/"
-						},
-						"highlightjs": {
-							"title": "highlight.js",
-							"path": "https://highlightjs.org/"
-						},
-						"ngDocFeatureRequest": {
-							"title": "NgDoc Feature Request",
-							"path": "https://github.com/skoropadas/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Enhancement&template=feature_request.yaml&title=%5BFeature%5D+"
-						}
-					}
-				},
 				"outputPath": "dist/apps/ng-doc",
 				"index": "apps/ng-doc/src/index.html",
 				"main": "apps/ng-doc/src/main.ts",
@@ -123,62 +96,10 @@
 			"executor": "./dist/libs/builder:dev-server",
 			"configurations": {
 				"production": {
-					"browserTarget": "ng-doc:build:production",
-					"ngDoc": {
-						"pages": "apps/ng-doc/src/app",
-						"tag": "production",
-						"repoConfig": {
-							"url": "https://github.com/skoropadas/ng-doc",
-							"mainBranch": "main",
-							"releaseBranch": "release"
-						},
-						"keywords": {
-							"nunjucks": {
-								"path": "https://mozilla.github.io/nunjucks/"
-							},
-							"tsdoc": {
-								"title": "TsDoc",
-								"path": "https://tsdoc.org/"
-							},
-							"highlightjs": {
-								"title": "highlight.js",
-								"path": "https://highlightjs.org/"
-							},
-							"ngDocFeatureRequest": {
-								"title": "NgDoc Feature Request",
-								"path": "https://github.com/skoropadas/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Enhancement&template=feature_request.yaml&title=%5BFeature%5D+"
-							}
-						}
-					}
+					"browserTarget": "ng-doc:build:production"
 				},
 				"development": {
-					"browserTarget": "ng-doc:build:development",
-					"ngDoc": {
-						"pages": "apps/ng-doc/src/app",
-						"tag": "development",
-						"repoConfig": {
-							"url": "https://github.com/skoropadas/ng-doc",
-							"mainBranch": "main",
-							"releaseBranch": "release"
-						},
-						"keywords": {
-							"nunjucks": {
-								"path": "https://mozilla.github.io/nunjucks/"
-							},
-							"tsdoc": {
-								"title": "TsDoc",
-								"path": "https://tsdoc.org/"
-							},
-							"highlightjs": {
-								"title": "highlight.js",
-								"path": "https://highlightjs.org/"
-							},
-							"ngDocFeatureRequest": {
-								"title": "NgDoc Feature Request",
-								"path": "https://github.com/skoropadas/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Enhancement&template=feature_request.yaml&title=%5BFeature%5D+"
-							}
-						}
-					}
+					"browserTarget": "ng-doc:build:development"
 				}
 			},
 			"defaultConfiguration": "development",

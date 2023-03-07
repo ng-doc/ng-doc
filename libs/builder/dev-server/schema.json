@@ -5,23 +5,7 @@
 	"type": "object",
 	"properties": {
 		"ngDoc": {
-			"type": "object",
-			"properties": {
-				"pages": {
-					"type": ["array", "string"],
-					"items": {
-						"type": "string"
-					},
-					"uniqueItems": true,
-					"optional": true
-				},
-				"tag": {
-					"type": "string"
-				},
-				"keywords": {
-					"type": "object"
-				}
-			}
+			"type": "object"
 		}
 	},
 	"additionalProperties": true

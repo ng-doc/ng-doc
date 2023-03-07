@@ -2,6 +2,7 @@ export * from './action-output';
 export * from './asset';
 export * from './builder-context';
 export * from './built-output';
+export * from './configuration';
 export * from './keyword-map';
 export * from './page-index';
 export * from './path-anchor';

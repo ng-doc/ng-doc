@@ -142,7 +142,7 @@ export class NgDocBuilder {
 			}),
 			bufferDebounce(50),
 			map((entities: Array<NgDocEntity | null>) => entities.filter(isPresent)),
-			tap(() => this.entities.updateKeywordMap(this.context.options.ngDoc?.keywords)),
+			tap(() => this.entities.updateKeywordMap(this.context.config.keywords)),
 			// Build touched entities and their dependencies
 			concatMap((entities: NgDocEntity[]) =>
 				forkJoinOrEmpty(

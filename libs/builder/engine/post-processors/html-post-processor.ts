@@ -1,8 +1,9 @@
-import {isRouteEntity} from '../../helpers';
+import {isPageEntity, isRouteEntity} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
 import {NgDocEntity} from '../entities/abstractions/entity';
 import autolinkHeading from './html-plugins/autolink-headings';
 import keywordsProcessor from './html-plugins/keywords-processor';
+import slugger from './html-plugins/slugger';
 
 /**
  *
@@ -16,7 +17,7 @@ export function htmlPostProcessor(entity: NgDocEntity, content: NgDocBuiltOutput
 		content: require('rehype')()
 			.use(require('rehype-format'))
 			.use(require('rehype-highlight'))
-			.use(require('rehype-slug'))
+			.use(slugger, isPageEntity(entity) ? entity.context.config.guide?.anchorHeadings : undefined)
 			.use(require('rehype-minify-whitespace'))
 			.use(autolinkHeading, isRouteEntity(entity) ? entity.fullRoute : undefined)
 			.use(keywordsProcessor, entity.builder.entities, isRouteEntity(entity) ? entity : undefined)

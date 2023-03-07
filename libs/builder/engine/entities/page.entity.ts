@@ -4,7 +4,7 @@ import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
 
-import {editFileInRepoUrl, isDependencyEntity, marked, slash,} from '../../helpers';
+import {editFileInRepoUrl, isDependencyEntity, marked, slash} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
 import {NgDocActions} from '../actions';
 import {PAGE_DEPENDENCIES_NAME, RENDERED_PAGE_NAME} from '../variables';
@@ -41,18 +41,17 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	}
 
 	override get editSourceFileUrl(): string | undefined {
-		if (this.context.options.ngDoc?.repoConfig) {
-			return editFileInRepoUrl(this.context.options.ngDoc?.repoConfig, this.mdPath, this.route.toLowerCase());
+		if (this.context.config.repoConfig) {
+			return editFileInRepoUrl(this.context.config.repoConfig, this.mdPath, this.route.toLowerCase());
 		}
 		return undefined;
 	}
 
 	override get canBeBuilt(): boolean {
 		return (
-			!this.target ||
-			!this.context.options.ngDoc?.tag ||
-			!this.target.onlyForTags ||
-			asArray(this.target.onlyForTags).includes(this.context.options.ngDoc?.tag)
+			!!this.target &&
+			(!this.target.onlyForTags ||
+				asArray(this.target.onlyForTags).includes(this.context.context.target?.configuration ?? ''))
 		);
 	}
 
