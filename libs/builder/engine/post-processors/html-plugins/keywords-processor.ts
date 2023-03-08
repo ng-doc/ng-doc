@@ -1,4 +1,5 @@
 import {NgDocKeyword} from '@ng-doc/builder';
+import {NG_DOC_ELEMENT} from '@ng-doc/core/constants/defaults';
 
 import {printWarning} from '../../../helpers';
 import {NgDocRouteEntity} from '../../entities/abstractions/route.entity';
@@ -98,7 +99,7 @@ function getNodes(node: any, parent: any, entityStore: NgDocEntityStore, inlineL
 
 				return {type: 'text', value: keyword.title};
 			} else if (inlineLink && keyword) {
-				parent.properties.class = 'ng-doc-code-with-link';
+				parent.properties.class = [NG_DOC_ELEMENT, 'ng-doc-code-with-link'];
 			}
 
 			// Add link inside the code if it's a link to the API entity
@@ -118,7 +119,7 @@ function createLinkNode(text: string, href: string, type?: string) {
 	return {
 		type: 'element',
 		tagName: 'a',
-		properties: {href: href, class: 'ng-doc-code-anchor', 'data-link-type': type},
+		properties: {href: href, class: ['ng-doc-code-anchor', NG_DOC_ELEMENT], 'data-link-type': type},
 		children: [{type: 'text', value: text}],
 	};
 }

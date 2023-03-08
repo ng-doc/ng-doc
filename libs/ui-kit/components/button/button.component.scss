@@ -12,6 +12,7 @@
 	border-radius: calc(var(--ng-doc-base-gutter) / 2);
 	padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
 	background-color: var(--ng-doc-button-background);
+	text-decoration: none;
 	--ng-doc-text: var(--ng-doc-button-color);
 	--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 2);
 	--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 3);

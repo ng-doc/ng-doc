@@ -44,6 +44,9 @@ export class NgDocTextComponent implements AfterContentChecked {
 	@ContentChild(NgDocTextRightDirective)
 	rightContent?: NgDocTextRightDirective;
 
+	@HostBinding('class.ngde')
+	readonly ngDocElement: boolean = true;
+
 	constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
 	ngAfterContentChecked(): void {

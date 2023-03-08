@@ -7,6 +7,9 @@
 @import 'parts/see-also';
 @import 'parts/tables';
 @import 'parts/text';
+@import 'defaults';
+
+$class: $ng-doc-element;
 
 article {
 	@include headings {
@@ -26,7 +29,7 @@ article {
 		}
 	}
 
-	section {
+	section#{$class} {
 		margin-bottom: calc(var(--ng-doc-base-gutter) * 5);
 
 		@include headings {
@@ -34,7 +37,7 @@ article {
 		}
 	}
 
-	header {
+	header#{$class} {
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
@@ -49,7 +52,7 @@ article {
 			line-height: 22px;
 		}
 
-		h1 {
+		h1#{$class} {
 			margin: 0;
 			margin-right: var(--ng-doc-base-gutter);
 		}
@@ -57,7 +60,7 @@ article {
 
 	th,
 	td {
-		p {
+		p#{$class} {
 			margin: 0;
 		}
 	}
