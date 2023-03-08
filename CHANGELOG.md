@@ -1,3 +1,15 @@
+## [15.7.2](https://github.com/skoropadas/ng-doc/compare/v15.7.1...v15.7.2) (2023-03-08)
+
+
+### Bug Fixes
+
+* **app:** some dependencies are not installed ([0c57d6c](https://github.com/skoropadas/ng-doc/commit/0c57d6ce7ec2c1250c99edc636629255408d5c7b)), closes [#30](https://github.com/skoropadas/ng-doc/issues/30)
+
+
+### Reverts
+
+* Revert "fix(app): global CSS styles leak into component demos" ([a1d9bb9](https://github.com/skoropadas/ng-doc/commit/a1d9bb90080f9ba8052c579305a73475ae70be9e))
+
 ## [15.7.1](https://github.com/skoropadas/ng-doc/compare/v15.7.0...v15.7.1) (2023-03-07)
 
 
