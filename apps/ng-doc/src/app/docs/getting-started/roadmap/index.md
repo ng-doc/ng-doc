@@ -7,7 +7,7 @@ does not create references for the keywords used in them, for example, to classe
 your API, we are going to fix this by starting to process assets by creating references to the
 generated API
 
-## Playgrounds
+## ✅ ~~Playgrounds~~
 
 We have developed another feature called "Playgrounds", but decided not to include it in the release
 because it uses an deprecated JIT Compiler, and its current API does not suit us, we will continue
