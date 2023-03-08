@@ -25,5 +25,5 @@
 </ng-container>
 
 <ng-template #demoTemplate>
-	<ng-doc-demo-renderer [demo]="demo"></ng-doc-demo-renderer>
+	<ng-container *polymorpheusOutlet="demo ?? ''; context: {}"></ng-container>
 </ng-template>
