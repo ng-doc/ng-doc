@@ -2,6 +2,7 @@ import {NgDocConfiguration} from '@ng-doc/builder';
 
 const NgDocConfig: NgDocConfiguration = {
 	pages: 'apps/ng-doc/src/app',
+	routePrefix: 'docs',
 	tsConfig: 'apps/ng-doc/tsconfig.app.json',
 	repoConfig: {
 		url: 'https://github.com/skoropadas/ng-doc',
