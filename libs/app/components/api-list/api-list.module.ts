@@ -4,6 +4,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {NgDocKindIconModule} from '@ng-doc/app/components/kind-icon';
 import {
+	NgDocAutofocusModule,
 	NgDocComboboxModule,
 	NgDocDataModule,
 	NgDocIconModule,
@@ -36,6 +37,7 @@ import {NgDocApiListComponent} from './api-list.component';
 		NgDocLabelModule,
 		ReactiveFormsModule,
 		NgDocIconModule,
+		NgDocAutofocusModule,
 	],
 	exports: [NgDocApiListComponent],
 })

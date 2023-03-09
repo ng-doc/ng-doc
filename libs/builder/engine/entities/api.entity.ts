@@ -101,14 +101,17 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 	}
 
 	private buildApiList(): Observable<NgDocBuiltOutput> {
-		const apiItems: NgDocApiList[] = this.children.filter(isApiScopeEntity).map((scope: NgDocApiScopeEntity) => ({
-			title: scope.title,
-			items: scope.children.filter(isApiPageEntity).map((page: NgDocApiPageEntity) => ({
-				route: slash(path.join(scope.route, page.route)),
-				type: (page.declaration && getKindType(page.declaration)) ?? '',
-				name: page.declaration?.getName() ?? '',
-			})),
-		}));
+		const apiItems: NgDocApiList[] = this.children
+			.filter(isApiScopeEntity)
+			.sort((a: NgDocApiScopeEntity, b: NgDocApiScopeEntity) => (b.order ?? 0) - (a.order ?? 0))
+			.map((scope: NgDocApiScopeEntity) => ({
+				title: scope.title,
+				items: scope.children.filter(isApiPageEntity).map((page: NgDocApiPageEntity) => ({
+					route: slash(path.join(scope.route, page.route)),
+					type: (page.declaration && getKindType(page.declaration)) ?? '',
+					name: page.declaration?.getName() ?? '',
+				})),
+			}));
 
 		return of({
 			content: JSON.stringify(apiItems, undefined, 2),

@@ -30,5 +30,6 @@ export * from './print-console';
 export * from './process-snippets';
 export * from './repo-link';
 export * from './slash';
+export * from './sort-navigation-entities';
 export * from './typescript';
 export * from './unique-name';

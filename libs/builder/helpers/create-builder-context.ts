@@ -3,7 +3,8 @@ import {json} from '@angular-devkit/core';
 import {asArray, NgDocStyleType} from '@ng-doc/core';
 import * as path from 'path';
 
-import {NgDocBuilderContext, NgDocSchema} from '../interfaces';
+import {NgDocBuilderContext, NgDocConfiguration, NgDocSchema} from '../interfaces';
+import {loadConfig} from './load-config';
 
 /**
  *
@@ -18,13 +19,23 @@ export function createBuilderContext(
 	context: BuilderContext,
 ): NgDocBuilderContext {
 	const buildPath: string = path.join(context.workspaceRoot, '.ng-doc', context.target?.project ?? 'app');
+	const projectRoot: string = path.join(context.workspaceRoot, path.dirname(targetOptions['main'] as string));
+
+	if (Object.keys(options.ngDoc ?? {}).length) {
+		context.logger.warn(
+			'`ngDoc` field in `angular.json` file is deprecated and will be removed in the next major release.\n' +
+				'Please use configuration file to configure NgDoc. For more information, see https://ng-doc.com/getting-started/configuration#builder-configuration',
+		);
+	}
+
+	const config: NgDocConfiguration = {...options.ngDoc, ...loadConfig(projectRoot)};
 
 	return {
-		tsConfig: String(targetOptions['tsConfig']),
-		options,
+		tsConfig: config?.tsConfig ?? String(targetOptions['tsConfig']),
+		config,
 		context,
 		inlineStyleLanguage: (targetOptions?.['inlineStyleLanguage'] as NgDocStyleType) ?? 'CSS',
-		pagesPaths: options.ngDoc?.pages?.length ? asArray(options.ngDoc?.pages) : [path.dirname(options.main)],
+		pagesPaths: config.pages?.length ? asArray(config.pages) : [path.dirname(options.main)],
 		assetsPath: path.join(buildPath, 'assets'),
 		buildPath,
 		apiPath: path.join(buildPath, 'api'),

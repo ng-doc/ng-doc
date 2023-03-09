@@ -5,7 +5,7 @@ import {NgDocNotifyService} from '@ng-doc/ui-kit/services/notify';
 	selector: 'ng-doc-button-inline-demo',
 	template: `
 		<!-- NgDocHTMLSnippetStart(Button Template) -->
-		<button ng-doc-button (click)="clickEvent()">Just a button</button>
+		<button ng-doc-button-flat color="orange" (click)="clickEvent()">Just a button</button>
 		<!-- NgDocHTMLSnippetEnd(Button Template) -->
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,

@@ -20,7 +20,12 @@ import {NgDocPlaygroundPropertiesComponent} from './playground-properties/playgr
 import {NgDocPlaygroundPropertyComponent} from './playground-property/playground-property.component';
 
 @NgModule({
-	declarations: [NgDocPlaygroundComponent, NgDocPlaygroundPropertyComponent, NgDocPlaygroundPropertiesComponent, NgDocPlaygroundDemoComponent],
+	declarations: [
+		NgDocPlaygroundComponent,
+		NgDocPlaygroundPropertyComponent,
+		NgDocPlaygroundPropertiesComponent,
+		NgDocPlaygroundDemoComponent,
+	],
 	imports: [
 		CommonModule,
 		ReactiveFormsModule,
@@ -36,6 +41,11 @@ import {NgDocPlaygroundPropertyComponent} from './playground-property/playground
 		NgDocButtonModule,
 		NgDocDemoDisplayerModule,
 	],
-	exports: [NgDocPlaygroundComponent, NgDocPlaygroundPropertyComponent, NgDocPlaygroundPropertiesComponent, NgDocPlaygroundDemoComponent],
+	exports: [
+		NgDocPlaygroundComponent,
+		NgDocPlaygroundPropertyComponent,
+		NgDocPlaygroundPropertiesComponent,
+		NgDocPlaygroundDemoComponent,
+	],
 })
 export class NgDocPlaygroundModule {}

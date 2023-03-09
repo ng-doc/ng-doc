@@ -22,17 +22,6 @@ export class NgDocSidebarComponent {
 	 * @returns {NgDocNavigation} - something
 	 */
 	getNavigation(nav?: NgDocNavigation): NgDocNavigation[] {
-		return (nav ? nav.children ?? [] : this.context.navigation).sort((a: NgDocNavigation, b: NgDocNavigation) => {
-			if (isPresent(a.order) && isPresent(b.order)) {
-				return a.order - b.order;
-			}
-			if (isPresent(a.order)) {
-				return -1;
-			}
-			if (isPresent(b.order)) {
-				return 1;
-			}
-			return a.title.localeCompare(b.title);
-		});
+		return nav ? nav.children ?? [] : this.context.navigation;
 	}
 }

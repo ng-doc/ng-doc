@@ -26,7 +26,7 @@ import {
 	NgDocVerticalAlign,
 } from '@ng-doc/ui-kit/types';
 import {NgDocFocusUtils, NgDocOverlayUtils} from '@ng-doc/ui-kit/utils';
-import {PolymorpheusContent, PolymorpheusOutletDirective} from '@tinkoff/ng-polymorpheus';
+import {PolymorpheusOutletDirective} from '@tinkoff/ng-polymorpheus';
 import {Observable, Subject} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
 

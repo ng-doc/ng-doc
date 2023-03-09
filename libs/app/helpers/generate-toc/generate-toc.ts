@@ -1,17 +1,24 @@
 import {NgDocTocItem} from '@ng-doc/app/interfaces';
+import {asArray} from '@ng-doc/core/helpers/as-array';
+import {NgDocHeading} from '@ng-doc/core/types';
 
 /**
+ * Generate table of contents, only for headings with id
  *
  * @param container
  * @param headings
  */
-export function generateToc(container: HTMLElement, headings: string[] = ['h1', 'h2', 'h3', 'h4']): NgDocTocItem[] {
+export function generateToc(container: HTMLElement): NgDocTocItem[] {
+	const headings: NgDocHeading[] = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+
 	const headingElements: HTMLHeadingElement[] = Array.from(
 		container.querySelectorAll<HTMLHeadingElement>(headings.join(', ')),
-	);
+	).filter((heading: HTMLHeadingElement) => heading.id);
 
-	return headingElements.reduce((map: NgDocTocItem[], heading: HTMLHeadingElement, i: number) => {
-		const level: number = levelFromTagName(heading);
+	const levels: number[] = asArray(new Set(headingElements.map(levelFromTagName).sort()));
+
+	return headingElements.reduce((map: NgDocTocItem[], heading: HTMLHeadingElement) => {
+		const headingLevel: number = levelFromTagName(heading);
 		const anchor: HTMLAnchorElement | null = heading.querySelector<HTMLAnchorElement>('a.ng-doc-header-link');
 
 		if (anchor) {
@@ -19,7 +26,7 @@ export function generateToc(container: HTMLElement, headings: string[] = ['h1', 
 				title: heading.textContent?.trim() ?? '',
 				element: heading,
 				path: anchor.pathname + anchor.hash,
-				level,
+				level: levels.indexOf(headingLevel) + 1,
 			});
 		}
 
@@ -32,5 +39,5 @@ export function generateToc(container: HTMLElement, headings: string[] = ['h1', 
  * @param heading
  */
 function levelFromTagName(heading: HTMLHeadingElement): number {
-	return Number(heading.tagName.replace(/[a-zA-Z]*/g, '') || 1);
+	return Number(heading.tagName.toLowerCase().replace(/[a-z]*/g, '') || 1);
 }

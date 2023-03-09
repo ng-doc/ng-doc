@@ -28,6 +28,14 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 		return `${this.parent ? this.parent.url + '/' : ''}${this.route}`;
 	}
 
+	override get canBeBuilt(): boolean {
+		return (
+			!!this.target &&
+			(!this.target.onlyForTags ||
+				asArray(this.target.onlyForTags).includes(this.context.context.target?.configuration ?? ''))
+		);
+	}
+
 	override get isRoot(): boolean {
 		return !this.target?.category;
 	}

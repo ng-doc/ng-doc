@@ -22,7 +22,6 @@ import {NgDocOverlayStrategy} from '@ng-doc/ui-kit/services/overlay-strategy';
 import {BaseElement, NgDocContent, NgDocOverlayPosition} from '@ng-doc/ui-kit/types';
 import {NgDocOverlayUtils} from '@ng-doc/ui-kit/utils';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {PolymorpheusContent} from '@tinkoff/ng-polymorpheus';
 import {EMPTY, fromEvent, merge, timer} from 'rxjs';
 import {filter, switchMap, takeUntil} from 'rxjs/operators';
 

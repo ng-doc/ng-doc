@@ -64,9 +64,9 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	}
 
 	override get editSourceFileUrl(): string | undefined {
-		if (this.context.options.ngDoc?.repoConfig) {
+		if (this.context.config.repoConfig) {
 			return editFileInRepoUrl(
-				this.context.options.ngDoc?.repoConfig,
+				this.context.config.repoConfig,
 				this.sourceFilePath,
 				this.parent.route.toLowerCase(),
 				this.declaration?.getStartLineNumber(true),
@@ -76,9 +76,9 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	}
 
 	override get viewSourceFileUrl(): string | undefined {
-		if (this.context.options.ngDoc?.repoConfig) {
+		if (this.context.config.repoConfig) {
 			return viewFileInRepoUrl(
-				this.context.options.ngDoc?.repoConfig,
+				this.context.config.repoConfig,
 				this.sourceFilePath,
 				this.declaration?.getStartLineNumber(true),
 			);

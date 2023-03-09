@@ -5,7 +5,6 @@ export * from './api-scope';
 export * from './category';
 export * from './demo-options';
 export * from './dependencies';
-export * from './exported-declaration';
 export * from './page';
 export * from './page-info';
 export * from './playground-config';
