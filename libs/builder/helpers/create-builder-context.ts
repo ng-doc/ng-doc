@@ -35,7 +35,7 @@ export function createBuilderContext(
 		config,
 		context,
 		inlineStyleLanguage: (targetOptions?.['inlineStyleLanguage'] as NgDocStyleType) ?? 'CSS',
-		pagesPaths: config.pages?.length ? asArray(config.pages) : [path.dirname(options.main)],
+		pagesPaths: config.pages?.length ? asArray(config.pages) : [projectRoot],
 		assetsPath: path.join(buildPath, 'assets'),
 		buildPath,
 		apiPath: path.join(buildPath, 'api'),
