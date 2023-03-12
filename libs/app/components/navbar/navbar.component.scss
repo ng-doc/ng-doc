@@ -1,7 +1,7 @@
 @import '../../../ui-kit/styles/mixins';
 
 :host {
-	@include ng-doc-backdrop-filter(var(--ng-doc-navbar-background));
+	@include ng-doc-backdrop-filter(var(--ng-doc-navbar-background), '[data-glass-effect="false"]');
 	position: relative;
 	display: flex;
 	justify-content: center;

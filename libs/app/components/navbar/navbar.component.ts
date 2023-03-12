@@ -42,6 +42,13 @@ export class NgDocNavbarComponent {
 	search: boolean = true;
 
 	/**
+	 * Use glass effect for navbar
+	 */
+	@Input()
+	@HostBinding('attr.data-glass-effect')
+	glassEffect: boolean = true;
+
+	/**
 	 * Indicates if navbar has shadow
 	 */
 	@HostBinding('class.has-shadow')
