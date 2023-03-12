@@ -1,10 +1,23 @@
 :host {
 	section {
-		padding: 64px 0px;
+		position: relative;
+		padding: 64px 0;
+
+		&.greeting {
+			height: 1000px;
+		}
 	}
 
 	.ng-doc-container {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 		margin: 0 auto;
 		max-width: var(--ng-doc-app-max-width);
 	}
+}
+
+.subtitle {
+	--ng-doc-font-size: 22px;
 }

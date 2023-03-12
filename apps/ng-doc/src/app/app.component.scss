@@ -2,6 +2,19 @@
 	&[data-ng-doc-is-landing='true'] {
 		--ng-doc-page-max-width: auto;
 		--ng-doc-page-padding: 0;
+		--ng-doc-main-padding: 0;
+
+		ng-doc-navbar {
+			transition: 300ms ease-in-out;
+
+			&:before {
+				transition: 300ms ease-in-out;
+			}
+
+			&:not(.has-shadow) {
+				--ng-doc-navbar-background: transparent;
+			}
+		}
 	}
 }
 
@@ -10,6 +23,7 @@
 	color: var(--ng-doc-text);
 
 	h3 {
+		font-size: 22px;
 		margin: 0;
 		display: flex;
 		align-items: center;
@@ -21,12 +35,12 @@
 
 		.brand-title-doc {
 			font-family: var(--ng-doc-heading-font-family);
-			font-weight: 900;
+			font-weight: 800;
 		}
 	}
 
 	img {
-		height: 32px;
+		height: 38px;
 		margin-right: var(--ng-doc-base-gutter);
 	}
 }
