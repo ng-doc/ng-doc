@@ -183,10 +183,7 @@ export class AppModule {}
               \t\t"sourceMap": true,
 \t\t\t\t\t"optimization": true,
 \t\t\t\t\t"buildOptimizer": true,
-          "aot": true,
-          "ngDoc": {
-            "pages": "src"
-          }
+\t\t\t\t\t"aot": true
               \t}
               },
               "builder": "@ng-doc/builder:browser"
