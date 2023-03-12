@@ -1,3 +1,12 @@
+## [15.7.4](https://github.com/skoropadas/ng-doc/compare/v15.7.3...v15.7.4) (2023-03-12)
+
+
+### Bug Fixes
+
+* **add:** `add` command adds deprecated configuration ([dbaf75b](https://github.com/skoropadas/ng-doc/commit/dbaf75b2bcca4f334cdf3334b99a0fffa67a36be))
+* **add:** path error, if `ngDoc` configuration in `angular.json` is not provided ([03a57ad](https://github.com/skoropadas/ng-doc/commit/03a57ad609030a424481305de2a293512bbd26cb))
+* **app:** global CSS styles leak into component demos ([f8d615a](https://github.com/skoropadas/ng-doc/commit/f8d615a68269a0e45d4f60bd64c6051083532b9d)), closes [#28](https://github.com/skoropadas/ng-doc/issues/28)
+
 ## [15.7.3](https://github.com/skoropadas/ng-doc/compare/v15.7.2...v15.7.3) (2023-03-08)
 
 
