@@ -1,5 +1,5 @@
 import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
+import {NgModule, Provider} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {NgDocKindIconModule} from '@ng-doc/app/components/kind-icon';
 import {provideTypeControl} from '@ng-doc/app/helpers';
@@ -18,6 +18,8 @@ import {
 
 import {NgDocTypeAliasControlComponent} from './type-alias-control.component';
 
+const provider: Provider = provideTypeControl('NgDocTypeAlias', NgDocTypeAliasControlComponent);
+
 @NgModule({
 	declarations: [NgDocTypeAliasControlComponent],
 	imports: [
@@ -35,7 +37,7 @@ import {NgDocTypeAliasControlComponent} from './type-alias-control.component';
 		NgDocFocusableModule,
 		NgDocIconModule,
 	],
-	providers: [provideTypeControl('NgDocTypeAlias', NgDocTypeAliasControlComponent)],
+	providers: [provider],
 	exports: [NgDocTypeAliasControlComponent],
 })
 export class NgDocTypeAliasControlModule {}
