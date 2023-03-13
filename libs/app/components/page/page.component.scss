@@ -38,7 +38,7 @@
 			--ng-doc-text: var(--ng-doc-base-10);
 			--ng-doc-icon-color: var(--ng-doc-text);
 
-			&:last-child:not(:first-child) {
+			&.ng-doc-next-page {
 				margin-left: auto;
 			}
 		}
