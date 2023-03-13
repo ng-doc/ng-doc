@@ -1,3 +1,12 @@
+## [15.7.5](https://github.com/skoropadas/ng-doc/compare/v15.7.4...v15.7.5) (2023-03-13)
+
+
+### Bug Fixes
+
+* **app:** next page button is aligned to the left if there is no previous page ([017560b](https://github.com/skoropadas/ng-doc/commit/017560b74a09275db2afd119284f21c9c2836aaf))
+* **app:** playground's type controls are not provided ([458ab4a](https://github.com/skoropadas/ng-doc/commit/458ab4a6d7e785d81d96a668c8ad2d038f7bd656))
+* **builder:** add `Page` suffix for `page` schematic ([88b92d3](https://github.com/skoropadas/ng-doc/commit/88b92d3811dd2ce725df1565a50649475677b357))
+
 ## [15.7.4](https://github.com/skoropadas/ng-doc/compare/v15.7.3...v15.7.4) (2023-03-12)
 
 
