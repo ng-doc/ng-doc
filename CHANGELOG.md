@@ -1,3 +1,11 @@
+## [15.7.7](https://github.com/skoropadas/ng-doc/compare/v15.7.6...v15.7.7) (2023-03-13)
+
+
+### Bug Fixes
+
+* **builder:** replace `ts-node` config loader with `swc` ([b0df84f](https://github.com/skoropadas/ng-doc/commit/b0df84f6eb024bb9cd2e6e0c200c61a36154d05d))
+* **builder:** update builder imports ([a4ef8c3](https://github.com/skoropadas/ng-doc/commit/a4ef8c3e3de291a8ac43bbc4fc9db2f008dcb2c0))
+
 ## [15.7.6](https://github.com/skoropadas/ng-doc/compare/v15.7.5...v15.7.6) (2023-03-13)
 
 
