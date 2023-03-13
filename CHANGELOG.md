@@ -1,3 +1,69 @@
+# [15.0.0-beta.34](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.33...v15.0.0-beta.34) (2023-03-13)
+
+
+### Bug Fixes
+
+* **add:** `add` command adds deprecated configuration ([dbaf75b](https://github.com/skoropadas/ng-doc/commit/dbaf75b2bcca4f334cdf3334b99a0fffa67a36be))
+* **add:** path error, if `ngDoc` configuration in `angular.json` is not provided ([03a57ad](https://github.com/skoropadas/ng-doc/commit/03a57ad609030a424481305de2a293512bbd26cb))
+* **app:** copy code button changes style based on global theme ([c2e2f4e](https://github.com/skoropadas/ng-doc/commit/c2e2f4ef2cdcb9e6ae39a2cb13dc15e4ef7715e6))
+* **app:** filter for entity type on the api list page doesn't display type icons ([eeb8bdd](https://github.com/skoropadas/ng-doc/commit/eeb8bdd042708a9d18f6b640fbdc4b89c5d4a313))
+* **app:** global CSS styles leak into component demos ([f8d615a](https://github.com/skoropadas/ng-doc/commit/f8d615a68269a0e45d4f60bd64c6051083532b9d)), closes [#28](https://github.com/skoropadas/ng-doc/issues/28)
+* **app:** missing dependency js-beautify ([fa1a8e3](https://github.com/skoropadas/ng-doc/commit/fa1a8e375a709553aeda942d70a12dede4a41643)), closes [#22](https://github.com/skoropadas/ng-doc/issues/22)
+* **app:** next page button is aligned to the left if there is no previous page ([017560b](https://github.com/skoropadas/ng-doc/commit/017560b74a09275db2afd119284f21c9c2836aaf))
+* **app:** ng-doc does not use the `tsConfig` passed in the global configuration ([3dfd5cc](https://github.com/skoropadas/ng-doc/commit/3dfd5ccff882dfeceb40e96672e00cbcfe9d1881))
+* **app:** playground's type controls are not provided ([458ab4a](https://github.com/skoropadas/ng-doc/commit/458ab4a6d7e785d81d96a668c8ad2d038f7bd656))
+* **app:** prev/next links are wrong for pages with similar routes ([3cdf42a](https://github.com/skoropadas/ng-doc/commit/3cdf42abe6644e2390c0f9d1601d3eb55765e193)), closes [#29](https://github.com/skoropadas/ng-doc/issues/29)
+* **app:** previous page button display on the right side of the page ([b32d978](https://github.com/skoropadas/ng-doc/commit/b32d9781fcef1499d33ea0d8f898d254c6cb4a24))
+* **app:** previous/next buttons have wrong background color for dark themes ([90bf376](https://github.com/skoropadas/ng-doc/commit/90bf37650fadbb6fd498a5df46a3787db74f5982))
+* **app:** remove warning about `beautify-html` library ([714f3c7](https://github.com/skoropadas/ng-doc/commit/714f3c7875c50e87cbeac7df2da80541a698a38f))
+* **app:** some dependencies are not installed ([0c57d6c](https://github.com/skoropadas/ng-doc/commit/0c57d6ce7ec2c1250c99edc636629255408d5c7b)), closes [#30](https://github.com/skoropadas/ng-doc/issues/30)
+* **app:** toc visual fixes, now it is easier to visually determine the level of the element ([449c0f0](https://github.com/skoropadas/ng-doc/commit/449c0f016d416cdbd709e1a310e776123e99955f))
+* **builder:** `onlyForTags` property of the page/category configuration object should contain project configuration name like `production` or `development` ([9aebc99](https://github.com/skoropadas/ng-doc/commit/9aebc99231400ee8b963e6fbb4f9fdab4a38be40))
+* **builder:** add `Page` suffix for `page` schematic ([88b92d3](https://github.com/skoropadas/ng-doc/commit/88b92d3811dd2ce725df1565a50649475677b357))
+* **builder:** api scopes are not sorted by `order` field ([b07598c](https://github.com/skoropadas/ng-doc/commit/b07598cda0192c13667ae883a7285a3c959b6ef2))
+* **builder:** demo viewer doesn't show source code ([73ffe77](https://github.com/skoropadas/ng-doc/commit/73ffe7760b010863f84d9e00f561817e2232cdcd))
+* **builder:** paths are generated incorrectly on Windows ([9cbda4c](https://github.com/skoropadas/ng-doc/commit/9cbda4c4e697474ab90303b68cacc911125d656e)), closes [#25](https://github.com/skoropadas/ng-doc/issues/25)
+* **builder:** replace `ts-node` config loader with `swc` ([b0df84f](https://github.com/skoropadas/ng-doc/commit/b0df84f6eb024bb9cd2e6e0c200c61a36154d05d))
+* **builder:** types to some properties are defined as any ([5bc231c](https://github.com/skoropadas/ng-doc/commit/5bc231c35178c0da391e8cd1418a9f77d8221a06))
+* **builder:** update builder imports ([a4ef8c3](https://github.com/skoropadas/ng-doc/commit/a4ef8c3e3de291a8ac43bbc4fc9db2f008dcb2c0))
+* **builder:** using the `browser` builder, `ng build` completes successfully but doesn't exit ([25bebac](https://github.com/skoropadas/ng-doc/commit/25bebac31a7b2af76c1f30204cbe5b4b3defd79c)), closes [#7](https://github.com/skoropadas/ng-doc/issues/7)
+* **builder:** wrong links generated for duplicate class names ([f8c34e2](https://github.com/skoropadas/ng-doc/commit/f8c34e273fc944d4c0a1f741e69880b8376cf5d3)), closes [#1](https://github.com/skoropadas/ng-doc/issues/1)
+* **core:** search bar shows "Unknown" ([ee53a18](https://github.com/skoropadas/ng-doc/commit/ee53a18fe063b4aeb57d50d8ac529328ebfa6b7a)), closes [#6](https://github.com/skoropadas/ng-doc/issues/6)
+* **project:** push a stuck release ([c66a867](https://github.com/skoropadas/ng-doc/commit/c66a86723ff05c9e665a09b62c95763ae61c9acd))
+* **ui-kit:** the primary color is too bright for the light theme ([e5e2c74](https://github.com/skoropadas/ng-doc/commit/e5e2c7494f0479e97c06c34155771bc5e62aed49))
+
+
+### Features
+
+* **app:** `toc` is generated based on headers with id given header level ([96cd9e2](https://github.com/skoropadas/ng-doc/commit/96cd9e24d440dc8f230de9cb82b30ea907ce47e2))
+* **app:** add "Previous/Next Page" links to guide pages ([01bd3fd](https://github.com/skoropadas/ng-doc/commit/01bd3fde26452e28e5283540739814a37fa5aeae)), closes [#19](https://github.com/skoropadas/ng-doc/issues/19)
+* **app:** add `anchorHeadings` to the `NgDocConfiguration` interface, that can be used to limit the headings for which anchor links should be generated ([10aaa20](https://github.com/skoropadas/ng-doc/commit/10aaa20525dea2ebd56f72ac9e670f55f01c981f)), closes [#27](https://github.com/skoropadas/ng-doc/issues/27)
+* **app:** add `NgDocCustomNavbarDirective`, `NgDocCustomSidebarDirective` for custom components ([f5ae230](https://github.com/skoropadas/ng-doc/commit/f5ae230be0bda793fce50a0888520165844a2365))
+* **app:** add `scope` filter for api list ([911196c](https://github.com/skoropadas/ng-doc/commit/911196cd438af03f13fe1bcd3494b8cec704d657)), closes [#23](https://github.com/skoropadas/ng-doc/issues/23)
+* **app:** add dark purple theme ([fce107f](https://github.com/skoropadas/ng-doc/commit/fce107ff6faf6929e3fc1f85826e007d34e21cba))
+* **app:** add glass effect to the header ([0833db3](https://github.com/skoropadas/ng-doc/commit/0833db3aba6204a46107f0cb4dc80cf65e8680b4))
+* **app:** add more options to configure `demo` action ([2ce8826](https://github.com/skoropadas/ng-doc/commit/2ce88267ca1790a2c96ef1299f169461cd430919)), closes [#16](https://github.com/skoropadas/ng-doc/issues/16)
+* **app:** add shortcut for search field ([fb3fecc](https://github.com/skoropadas/ng-doc/commit/fb3fecc9eb85d4c8dff44554dd14352281708d17))
+* **app:** display protected keyword ([56b8f4c](https://github.com/skoropadas/ng-doc/commit/56b8f4cbb3c9316c94a721c7c6a3102b4c767317)), closes [#13](https://github.com/skoropadas/ng-doc/issues/13)
+* **app:** entities in the api list are sorted by type and name ([c2ae928](https://github.com/skoropadas/ng-doc/commit/c2ae92857065bceb4ddf6ee12155311c830cfced))
+* **app:** filter by entity name on the api list page is focused by default ([865d0a4](https://github.com/skoropadas/ng-doc/commit/865d0a499154cf6a72adbb6afe136757f745ae32))
+* **app:** replace `ngDoc` configuration field in `angular.json` with `ng-doc.config.js` file ([e2c9b6c](https://github.com/skoropadas/ng-doc/commit/e2c9b6c2b489979756c253cefbd0af0f3b255a21)), closes [#20](https://github.com/skoropadas/ng-doc/issues/20)
+* **ng-doc:** add links on each page to edit guides or API documentation ([9bc230a](https://github.com/skoropadas/ng-doc/commit/9bc230ac081d05318019477b6fe4ba8528c2971f)), closes [#3](https://github.com/skoropadas/ng-doc/issues/3)
+* **project:** add playground feature ([f750580](https://github.com/skoropadas/ng-doc/commit/f7505807740a8742bd897f1069c004c9c8f77a53)), closes [#12](https://github.com/skoropadas/ng-doc/issues/12)
+* **project:** public release ([8a01852](https://github.com/skoropadas/ng-doc/commit/8a0185288851a48fa08d615d331d6eca7e6f2a53))
+* **ui-kit:** add `NgDocHotkeyDirective` for binding shortcuts ([e931994](https://github.com/skoropadas/ng-doc/commit/e931994febd1fbdb520238bd88945336950662d5))
+* **ui-kit:** add `NgDocScrollService` that allows to block document scroll ([e644459](https://github.com/skoropadas/ng-doc/commit/e6444598b28a667fa2b5e0dcf003e905a3288e62))
+* **ui-kit:** add more types of button ([7708737](https://github.com/skoropadas/ng-doc/commit/77087377bc3d975c7202273e8e557cb53196c670))
+
+
+### Performance Improvements
+
+* **app:** add minification for HTML files ([c51ad6d](https://github.com/skoropadas/ng-doc/commit/c51ad6db127f330e0482764325858453f1debe91))
+* **app:** remove unused languages imports for highlight.js ([ab93672](https://github.com/skoropadas/ng-doc/commit/ab93672e0d5e07aa4e378054929d9974253a2dbf))
+* **builder:** change imports from `@ng-doc/core` ([44b949c](https://github.com/skoropadas/ng-doc/commit/44b949c9e488e4520852bdb8874fc9e7cbf5712a))
+* **builder:** reduce delays ([12a8fcf](https://github.com/skoropadas/ng-doc/commit/12a8fcf986b911ca4aef4e4e57d597a2af188a07))
+* **builder:** replace `prettier` with `js-beautify` to reduce bundle size ([da688e5](https://github.com/skoropadas/ng-doc/commit/da688e58595dba6ebc04d48e7ecefb03e6ad99a5))
+
 # [15.0.0-beta.33](https://github.com/skoropadas/ng-doc/compare/v15.0.0-beta.32...v15.0.0-beta.33) (2023-01-31)
 
 
