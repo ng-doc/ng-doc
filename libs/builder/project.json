@@ -14,9 +14,9 @@
 					"libs/builder/README.md",
 					"libs/builder/templates/**/*",
 					"libs/builder/builders.json",
-					"libs/builder/generated/**/*",
 					"libs/builder/schematics/**/*.json",
-					"libs/builder/schematics/**/files/**/*"
+					"libs/builder/schematics/**/files/**/*",
+					"libs/builder/engine/post-processors/html-plugins/**/*"
 				],
 				"updateBuildableProjectDepsInPackageJson": false
 			}

@@ -2,6 +2,51 @@
 
 This section describes how you can configure certain functions of the library.
 
+## Configuration file
+
+The main library configuration can be done in `ng-doc.config.ts` configuration file, it should be
+exported by default and match `NgDocConfiguration` interface.
+
+> **Note** You can create a configuration file in the root of your repository or in the root of the
+> documentation application.
+
+```typescript
+import {NgDocConfiguration} from '@ng-doc/builder';
+
+const config: NgDocConfiguration = {
+	// ...
+};
+
+export default config;
+```
+
+## Configuring repository
+
+If you are creating an open source project and would like to receive suggestions for improving the
+documentation from your users, then the best way is to make this process easier for them, you can do
+this by adding a "Suggest edits" and "View Source" buttons to each page, for this
+specify `repoConfig` that should match `NgDocRepoConfig` interface in your `ng-doc.config.ts` file.
+
+After that, NgDoc will start displaying links for editing and viewing the source code of the page.
+
+> **Note**
+> NgDoc supports only GitHub repositories, you can ask for support for other repositories by
+> creating an issue in our `ngDocFeatureRequest` page.
+
+```typescript
+import {NgDocConfiguration} from '@ng-doc/builder';
+
+const config: NgDocConfiguration = {
+	repoConfig: {
+		url: 'https://github.com/skoropadas/ng-doc',
+		mainBranch: 'main',
+		releaseBranch: 'release',
+	},
+};
+
+export default config;
+```
+
 ## Documentation route
 
 By default, the documentation is located at the root of the application router and has routes
@@ -80,10 +125,8 @@ export class DocsComponent {}
 Now you need to add lazy loading for DocsModule and set a route for it
 
 ```typescript
-import {HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
 
 import {AppComponent} from './app.component';
@@ -108,31 +151,16 @@ export class AppModule {}
 ### Configure NgDoc route prefix
 
 NgDoc generates links automatically, and doesn't know what route the parent page will have, so you
-need to specify the `routePrefix` property in your application configuration for all configurations
+need to specify the `routePrefix` property in `ng-doc.config.ts` file.
 
-```json
-{
-	"projects": {
-		"my-project": {
-			"architect": {
-				"build": {
-					"configurations": {
-						"production": {
-							"ngDoc": {
-								"routePrefix": "docs"
-							}
-						},
-						"development": {
-							"ngDoc": {
-								"routePrefix": "docs"
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
+```typescript
+import {NgDocConfiguration} from '@ng-doc/builder';
+
+const config: NgDocConfiguration = {
+	routePrefix: 'docs',
+};
+
+export default config;
 ```
 
 That's it, now you should be able to see your documentation on new route!

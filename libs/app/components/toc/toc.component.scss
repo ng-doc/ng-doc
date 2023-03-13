@@ -1,12 +1,12 @@
 :host {
 	position: relative;
-	width: var(--ng-doc-page-map-width);
+	width: var(--ng-doc-toc-width);
 
 	.ng-doc-toc-wrapper {
 		position: fixed;
 		overflow-y: auto;
 		height: calc(100% - var(--ng-doc-navbar-height) - var(--ng-doc-base-gutter) * 5);
-		width: var(--ng-doc-page-map-width);
+		width: var(--ng-doc-toc-width);
 
 		.ng-doc-toc-selection {
 			position: absolute;
@@ -20,7 +20,7 @@
 
 		.ng-doc-toc {
 			list-style: none;
-			padding: 0 0 0 var(--ng-doc-base-gutter);
+			padding: 0;
 			margin: 0 0 0 var(--ng-doc-toc-margin);
 			border-left: 1px solid var(--ng-doc-base-3);
 

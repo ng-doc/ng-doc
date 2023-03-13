@@ -30,7 +30,7 @@ Let's see how an example of a basic API configuration looks like.
 > The paths you pass to the `include` and `exclude` fields must be passed relative to your project root path
 
 ```typescript
-import {NgDocApi} from '@ng-doc/builder';
+import {NgDocApi} from '@ng-doc/core';
 
 export const api: NgDocApi = {
 	title: 'API Reference',
@@ -61,7 +61,7 @@ structure your documentation articles.
 
 ```typescript
 // ng-doc.api.ts
-import {NgDocApi} from '@ng-doc/builder';
+import {NgDocApi} from '@ng-doc/core';
 import MyAwesomeCategory from '../ng-doc.category';
 
 export const api: NgDocApi = {

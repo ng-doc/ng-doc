@@ -12,55 +12,123 @@
 	border-radius: calc(var(--ng-doc-base-gutter) / 2);
 	padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
 	background-color: var(--ng-doc-button-background);
-	color: var(--ng-doc-button-color);
+	text-decoration: none;
+	--ng-doc-text: var(--ng-doc-button-color);
 	--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 2);
 	--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 3);
+	--ng-doc-icon-color: var(--ng-doc-button-color);
+
+	&[data-ng-doc-rounded='true'] {
+		border-radius: calc(var(--ng-doc-base-gutter) * 5);
+	}
 
 	&[data-ng-doc-size='small'] {
 		width: calc(var(--ng-doc-base-gutter) * 3);
 		height: calc(var(--ng-doc-base-gutter) * 3);
+
+		&[data-ng-doc-rounded='true'] {
+			border-radius: calc(var(--ng-doc-base-gutter) * 3);
+		}
 	}
 
 	&[data-ng-doc-size='large'] {
 		width: calc(var(--ng-doc-base-gutter) * 5);
 		height: calc(var(--ng-doc-base-gutter) * 5);
+
+		&[data-ng-doc-rounded='true'] {
+			border-radius: calc(var(--ng-doc-base-gutter) * 5);
+		}
 	}
 
 	&:hover {
+		text-decoration: none;
 		background-color: var(--ng-doc-button-hover-background);
-		color: var(--ng-doc-button-hover-color);
-		--ng-doc-icon-color: var(--ng-doc-button-hover-color);
+		--ng-doc-button-color: var(--ng-doc-button-hover-color);
 	}
 
 	&:active {
 		background-color: var(--ng-doc-button-active-background);
-		color: var(--ng-doc-button-active-color);
-		--ng-doc-icon-color: var(--ng-doc-button-active-color);
+		--ng-doc-button-color: var(--ng-doc-button-active-color);
 	}
 
-	&[data-ng-doc-rounded='false'] {
-		--ng-doc-button-color: var(--ng-doc-grey-100);
-		--ng-doc-button-hover-color: var(--ng-doc-grey-130);
-		--ng-doc-button-active-color: var(--ng-doc-grey-160);
-		--ng-doc-button-hover-background: transparent;
-		--ng-doc-button-active-background: transparent;
+	&[ng-doc-button] {
+		&[data-ng-doc-color='primary'] {
+			--ng-doc-button-background: rgba(var(--ng-doc-primary-rgb), 0.15);
+			--ng-doc-button-color: var(--ng-doc-text);
+			--ng-doc-button-hover-background: rgba(var(--ng-doc-primary-rgb), 0.25);
+			--ng-doc-button-active-background: rgba(var(--ng-doc-primary-rgb), 0.35);
+		}
+
+		&[data-ng-doc-color='link'] {
+			--ng-doc-button-background: rgba(var(--ng-doc-link-color-rgb), 0.15);
+			--ng-doc-button-color: var(--ng-doc-text);
+			--ng-doc-button-hover-background: rgba(var(--ng-doc-link-color-rgb), 0.25);
+			--ng-doc-button-active-background: rgba(var(--ng-doc-link-color-rgb), 0.35);
+		}
+
+		@each $color-name, $color-value in $ng-doc-palette-colors {
+			&[data-ng-doc-color='#{$color-name}'] {
+				--ng-doc-button-background: var(--ng-doc-#{$color-name}-10);
+				--ng-doc-button-color: var(--ng-doc-#{$color-name}-120);
+				--ng-doc-button-hover-background: var(--ng-doc-#{$color-name}-20);
+				--ng-doc-button-hover-color: var(--ng-doc-#{$color-name}-120);
+				--ng-doc-button-active-background: var(--ng-doc-#{$color-name}-30);
+				--ng-doc-button-active-color: var(--ng-doc-#{$color-name}-120);
+			}
+		}
 	}
 
-	&[data-ng-doc-color='primary'] {
-		--ng-doc-button-background: rgba(var(--ng-doc-primary-rgb, 0.15));
-		--ng-doc-button-color: var(--ng-doc-text);
-		--ng-doc-button-hover-background: rgba(var(--ng-doc-primary-rgb, 0.25));
-		--ng-doc-button-active-background: rgba(var(--ng-doc-primary-rgb, 0.35));
+	&[ng-doc-button-text] {
+		&[data-ng-doc-color='primary'] {
+			--ng-doc-button-background: transparent;
+			--ng-doc-button-color: var(--ng-doc-primary);
+			--ng-doc-button-hover-background: rgba(var(--ng-doc-primary-rgb), 0.1);
+			--ng-doc-button-active-background: rgba(var(--ng-doc-primary-rgb), 0.25);
+		}
+
+		&[data-ng-doc-color='link'] {
+			--ng-doc-button-background: transparent;
+			--ng-doc-button-color: var(--ng-doc-link-color);
+			--ng-doc-button-hover-background: rgba(var(--ng-doc-link-color-rgb), 0.1);
+			--ng-doc-button-active-background: rgba(var(--ng-doc-link-color-rgb), 0.25);
+		}
+
+		@each $color-name, $color-value in $ng-doc-palette-colors {
+			&[data-ng-doc-color='#{$color-name}'] {
+				--ng-doc-button-background: transparent;
+				--ng-doc-button-color: var(--ng-doc-#{$color-name}-100);
+				--ng-doc-button-hover-background: var(--ng-doc-#{$color-name}-10);
+				--ng-doc-button-hover-color: var(--ng-doc-#{$color-name}-100);
+				--ng-doc-button-active-background: var(--ng-doc-#{$color-name}-20);
+				--ng-doc-button-active-color: var(--ng-doc-#{$color-name}-100);
+			}
+		}
 	}
 
-	@each $color-name, $color-value in $ng-doc-palette-colors {
-		&[data-ng-doc-color='#{$color-name}'] {
-			--ng-doc-button-background: var(--ng-doc-#{$color-name}-10);
-			--ng-doc-button-color: var(--ng-doc-#{$color-name}-120);
-			--ng-doc-button-hover-background: var(--ng-doc-#{$color-name}-20);
-			--ng-doc-button-hover-color: var(--ng-doc-#{$color-name}-120);
-			--ng-doc-button-active-background: var(--ng-doc-#{$color-name}-30);
-			--ng-doc-button-active-color: var(--ng-doc-#{$color-name}-120);
+	&[ng-doc-button-flat] {
+		&[data-ng-doc-color='primary'] {
+			--ng-doc-button-background: var(--ng-doc-primary);
+			--ng-doc-button-color: var(--ng-doc-primary-text);
+			--ng-doc-button-hover-background: rgba(var(--ng-doc-primary-rgb), 0.9);
+			--ng-doc-button-active-background: rgba(var(--ng-doc-primary-rgb), 0.8);
+		}
+
+		&[data-ng-doc-color='link'] {
+			--ng-doc-button-background: var(--ng-doc-link-color);
+			--ng-doc-button-color: var(--ng-doc-white);
+			--ng-doc-button-hover-background: rgba(var(--ng-doc-link-color-rgb), 0.9);
+			--ng-doc-button-active-background: rgba(var(--ng-doc-link-color-rgb), 0.8);
+		}
+
+		@each $color-name, $color-value in $ng-doc-palette-colors {
+			&[data-ng-doc-color='#{$color-name}'] {
+				--ng-doc-button-background: var(--ng-doc-#{$color-name}-100);
+				--ng-doc-button-color: var(--ng-doc-white);
+				--ng-doc-button-hover-background: var(--ng-doc-#{$color-name}-90);
+				--ng-doc-button-hover-color: var(--ng-doc-white);
+				--ng-doc-button-active-background: var(--ng-doc-#{$color-name}-80);
+				--ng-doc-button-active-color: var(--ng-doc-white);
+			}
 		}
 	}
 }

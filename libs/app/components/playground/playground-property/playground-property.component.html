@@ -1,0 +1,11 @@
+<label [ng-doc-label]="option?.hideLabel ? '' : labelContent">
+	<ng-template #labelContent>
+		<span
+			[ngDocTooltip]="tooltipContent"
+			[canOpen]="!!tooltipContent"
+			[positions]="['left-center', 'top-right', 'bottom-right']"
+			>{{ name }}</span
+		>
+	</ng-template>
+	<ng-container #propertyOutlet></ng-container>
+</label>

@@ -26,7 +26,7 @@ the category configuration must correspond to the `NgDocCategory` type, you can 
 properties in the documentation for the type, below is an example of the minimum category configuration.
 
 ```typescript
-import {NgDocCategory} from '@ng-doc/builder';
+import {NgDocCategory} from '@ng-doc/core';
 
 export const MyAwesomeCategory: NgDocCategory = {
 	title: 'MyAwesomeCategory',

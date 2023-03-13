@@ -12,21 +12,11 @@ import {htmlPostProcessor} from '../../post-processors';
  * Base entity class that all entities should extend.
  */
 export abstract class NgDocEntity {
-	/**
-	 * The key by which the entity will be stored in the store
-	 */
-	abstract readonly id: string;
+	/** Last built artifacts */
+	artifacts: NgDocBuiltOutput[] = [];
 
 	/** Indicates when entity was destroyed */
 	destroyed: boolean = false;
-
-	/** Indicates if the current entity can be built */
-	get canBeBuilt(): boolean {
-		return true;
-	}
-
-	/** Last built artifacts */
-	artifacts: NgDocBuiltOutput[] = [];
 
 	/**
 	 * Collection of all file dependencies of the current entity.
@@ -42,12 +32,15 @@ export abstract class NgDocEntity {
 	 */
 	readonly physical: boolean = true;
 
+	private destroy$: Subject<void> = new Subject<void>();
+
 	/** Indicates when current entity could be built */
 	protected readyToBuild: boolean = false;
 
-	private destroy$: Subject<void> = new Subject<void>();
-
-	constructor(readonly builder: NgDocBuilder, readonly context: NgDocBuilderContext) {}
+	/**
+	 * The key by which the entity will be stored in the store
+	 */
+	abstract readonly id: string;
 
 	/**
 	 * Files that are watched for changes to rebuild entity or remove it
@@ -68,6 +61,13 @@ export abstract class NgDocEntity {
 	 * Should return the list of the dependencies that have to be built if current entity was changed.
 	 */
 	abstract readonly buildCandidates: NgDocEntity[];
+
+	constructor(readonly builder: NgDocBuilder, readonly context: NgDocBuilderContext) {}
+
+	/** Indicates if the current entity can be built */
+	get canBeBuilt(): boolean {
+		return true;
+	}
 
 	/**
 	 * Recursively returns parents for the current entity

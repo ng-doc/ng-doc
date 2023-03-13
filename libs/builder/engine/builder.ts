@@ -1,11 +1,24 @@
 import {isPresent} from '@ng-doc/core';
+import * as esbuild from 'esbuild';
 import * as fs from 'fs';
 import * as path from 'path';
 import {from, merge, Observable, of} from 'rxjs';
-import {catchError, concatMap, map, mapTo, mergeMap, share, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {Project} from 'ts-morph';
+import {
+	catchError,
+	concatMap,
+	finalize,
+	map,
+	mapTo,
+	mergeMap,
+	share,
+	startWith,
+	switchMap,
+	takeUntil,
+	tap,
+} from 'rxjs/operators';
+import {Project, SourceFile} from 'ts-morph';
 
-import {createProject, emitBuiltOutput} from '../helpers';
+import {createProject, emitBuiltOutput, isFileEntity} from '../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
 import {bufferDebounce} from '../operators';
 import {bufferUntilOnce} from '../operators/buffer-until-once';
@@ -18,6 +31,7 @@ import {
 	NgDocSkeletonEntity,
 } from './entities';
 import {NgDocEntity} from './entities/abstractions/entity';
+import {NgDocFileEntity} from './entities/abstractions/file.entity';
 import {entityLifeCycle} from './entity-life-cycle';
 import {NgDocEntityStore} from './entity-store';
 import {buildCandidates} from './functions/build-candidates';
@@ -29,21 +43,16 @@ export class NgDocBuilder {
 	readonly entities: NgDocEntityStore = new NgDocEntityStore();
 	readonly skeleton: NgDocSkeletonEntity = new NgDocSkeletonEntity(this, this.context);
 	readonly renderer: NgDocRenderer = new NgDocRenderer();
-	private readonly compiledProject: Project;
 	readonly project: Project;
-	private readonly watcher: NgDocWatcher;
 
 	constructor(readonly context: NgDocBuilderContext) {
-		this.compiledProject = createProject({
-			compilerOptions: {
-				rootDir: this.context.context.workspaceRoot,
-				outDir: CACHE_PATH,
-			},
-		});
-
 		this.project = createProject({tsConfigFilePath: this.context.tsConfig});
+	}
 
-		this.watcher = new NgDocWatcher(
+	run(): Observable<void> {
+		fs.rmSync(this.context.buildPath, {recursive: true, force: true});
+
+		const watcher: NgDocWatcher = new NgDocWatcher(
 			this.context.pagesPaths
 				.map((pagesPath: string) => [
 					path.join(pagesPath, PAGE_PATTERN),
@@ -53,20 +62,16 @@ export class NgDocBuilder {
 				])
 				.flat(),
 		);
-	}
-
-	run(): Observable<void> {
-		fs.rmSync(this.context.buildPath, {recursive: true, force: true});
 
 		const entities: Observable<NgDocEntity[]> = merge(
-			entityLifeCycle(this, this.compiledProject, this.watcher, PAGE_PATTERN, NgDocPageEntity),
-			entityLifeCycle(this, this.compiledProject, this.watcher, CATEGORY_PATTERN, NgDocCategoryEntity),
-			entityLifeCycle(this, this.compiledProject, this.watcher, PAGE_DEPENDENCY_PATTERN, NgDocDependenciesEntity),
-			entityLifeCycle(this, this.compiledProject, this.watcher, API_PATTERN, NgDocApiEntity),
+			entityLifeCycle(this, this.project, watcher, PAGE_PATTERN, NgDocPageEntity),
+			entityLifeCycle(this, this.project, watcher, CATEGORY_PATTERN, NgDocCategoryEntity),
+			entityLifeCycle(this, this.project, watcher, PAGE_DEPENDENCY_PATTERN, NgDocDependenciesEntity),
+			entityLifeCycle(this, this.project, watcher, API_PATTERN, NgDocApiEntity),
 		).pipe(
-			bufferUntilOnce(this.watcher.onReady()),
+			bufferUntilOnce(watcher.onReady()),
 			map((entities: NgDocEntity[][]) => entities.flat()),
-			bufferDebounce(100),
+			bufferDebounce(50),
 			map((entities: NgDocEntity[][]) => entities.flat()),
 			share(),
 		);
@@ -81,7 +86,7 @@ export class NgDocBuilder {
 					entities.map((entity: NgDocEntity) => (entity.destroyed ? of(null) : entity.emit())),
 				).pipe(mapTo(entities));
 			}),
-			concatMap((entities: NgDocEntity[]) => from(this.compiledProject.emit()).pipe(mapTo(entities))),
+			concatMap((entities: NgDocEntity[]) => this.emit().pipe(mapTo(entities))),
 			mergeMap((entities: NgDocEntity[]) => {
 				// Re-fetch compiled data for non destroyed entities
 				return forkJoinOrEmpty(
@@ -111,17 +116,21 @@ export class NgDocBuilder {
 											? of(entity)
 											: entity.dependencies.changes().pipe(
 													switchMap((dependencies: string[]) =>
-														this.watcher
+														watcher
 															.watch(dependencies)
 															.onChange(...dependencies)
-															.pipe(tap(() => entity.dependenciesChanged())),
+															.pipe(
+																tap(() => {
+																	entity.dependenciesChanged();
+																}),
+															),
 													),
 													startWith(null),
 													mapTo(entity),
 													takeUntil(
 														merge(
 															entity.onDestroy(),
-															this.watcher.onChange(...entity.rootFiles),
+															watcher.onChange(...entity.rootFiles),
 														),
 													),
 											  ),
@@ -131,9 +140,9 @@ export class NgDocBuilder {
 					),
 				);
 			}),
-			bufferDebounce(500),
+			bufferDebounce(50),
 			map((entities: Array<NgDocEntity | null>) => entities.filter(isPresent)),
-			tap(() => this.entities.updateKeywordMap(this.context.options.ngDoc?.keywords)),
+			tap(() => this.entities.updateKeywordMap(this.context.config.keywords)),
 			// Build touched entities and their dependencies
 			concatMap((entities: NgDocEntity[]) =>
 				forkJoinOrEmpty(
@@ -162,12 +171,35 @@ export class NgDocBuilder {
 
 				return of(void 0);
 			}),
+			finalize(() => watcher.close()),
 		) as unknown as Observable<void>;
 	}
 
 	get(id: string, canBeBuilt?: boolean): NgDocEntity | undefined {
 		const entity: NgDocEntity | undefined = this.entities.get(id);
+
 		return isPresent(canBeBuilt) ? (entity?.canBeBuilt === canBeBuilt ? entity : undefined) : entity;
+	}
+
+	emit(...only: SourceFile[]): Observable<void> {
+		return from(
+			esbuild.build({
+				entryPoints: (only.length
+					? only
+					: this.entities
+							.asArray()
+							.filter(isFileEntity)
+							.filter((e: NgDocFileEntity<unknown>) => e.compilable)
+							.map((e: NgDocFileEntity<unknown>) => e.sourceFile)
+				).map((s: SourceFile) => s.getFilePath()),
+				tsconfig: this.context.tsConfig,
+				bundle: true,
+				format: 'cjs',
+				treeShaking: true,
+				outbase: this.context.context.workspaceRoot,
+				outdir: CACHE_PATH,
+			}),
+		).pipe(mapTo(void 0));
 	}
 
 	private collectGarbage(): void {

@@ -1,6 +1,9 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit, Type} from '@angular/core';
 import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
 import {NgDocDemoAsset} from '@ng-doc/app/interfaces';
+import {asArray} from '@ng-doc/core/helpers/as-array';
+import {NgDocDemoActionOptions} from '@ng-doc/core/interfaces';
+import {NgDocContent} from '@ng-doc/ui-kit/types';
 import {PolymorpheusComponent} from '@tinkoff/ng-polymorpheus';
 
 @Component({
@@ -14,9 +17,9 @@ export class NgDocDemoComponent implements OnInit {
 	componentName?: string;
 
 	@Input()
-	container: boolean = true;
+	options: NgDocDemoActionOptions = {};
 
-	demo?: PolymorpheusComponent<object, object>;
+	demo?: NgDocContent<object>;
 	assets: NgDocDemoAsset[] = [];
 
 	constructor(private readonly rootPage: NgDocRootPage) {}
@@ -26,11 +29,12 @@ export class NgDocDemoComponent implements OnInit {
 		this.assets = this.getAssets();
 	}
 
-	private getDemo(): PolymorpheusComponent<object, object> | undefined {
+	private getDemo(): NgDocContent<object> | undefined {
 		if (this.componentName) {
-			const component: Type<object> | undefined = this.rootPage.demo && this.rootPage.demo[this.componentName];
+			const component: Type<unknown> | undefined =
+				this.rootPage.dependencies?.demo && this.rootPage.dependencies.demo[this.componentName];
 
-			return component ? new PolymorpheusComponent(component) : undefined;
+			return component ? new PolymorpheusComponent(component as Type<object>) : undefined;
 		}
 
 		return undefined;
@@ -38,7 +42,10 @@ export class NgDocDemoComponent implements OnInit {
 
 	private getAssets(): NgDocDemoAsset[] {
 		if (this.componentName) {
-			return (this.rootPage.demoAssets && this.rootPage.demoAssets[this.componentName]) ?? [];
+			return ((this.rootPage.demoAssets && this.rootPage.demoAssets[this.componentName]) ?? []).filter(
+				(asset: NgDocDemoAsset) =>
+					!this.options.tabs?.length || asArray(this.options.tabs).includes(asset.title),
+			);
 		}
 
 		return [];

@@ -1,15 +1,13 @@
 import {Injector, StaticProvider, TemplateRef, Type} from '@angular/core';
 import {NG_DOC_COMPONENT_CONTEXT} from '@ng-doc/ui-kit/tokens';
-import {
-	PolymorpheusComponent,
-	PolymorpheusHandler,
-	PolymorpheusPrimitive,
-	PolymorpheusTemplate,
-} from '@tinkoff/ng-polymorpheus';
+import {PolymorpheusComponent, PolymorpheusHandler, PolymorpheusTemplate} from '@tinkoff/ng-polymorpheus';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type NgDocContent<C extends object = {}> =
-	| PolymorpheusPrimitive
+	| string
+	| number
+	| null
+	| undefined
 	| TemplateRef<C>
 	| PolymorpheusTemplate<C>
 	| PolymorpheusHandler<C>

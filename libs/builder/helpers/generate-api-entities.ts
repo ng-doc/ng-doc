@@ -37,21 +37,32 @@ export function generateApiEntities(apiRootEntity: NgDocApiEntity): Array<NgDocA
 				),
 			)
 				.filter(isSupportedDeclaration)
-				.forEach((declaration: NgDocSupportedDeclarations) => {
-					const name: string | undefined = declaration.getName();
-
-					if (name) {
-						result.push(
-							new NgDocApiPageEntity(
-								apiRootEntity.builder,
-								declaration.getSourceFile(),
-								apiRootEntity.context,
-								scopeEntity,
-								name,
-							),
+				.forEach(
+					(
+						declaration: NgDocSupportedDeclarations,
+						_i: number,
+						declarations: NgDocSupportedDeclarations[],
+					) => {
+						const name: string | undefined = declaration.getName();
+						const duplicates: NgDocSupportedDeclarations[] = declarations.filter(
+							(d: NgDocSupportedDeclarations) =>
+								d.getName() === name && d.getKindName() === declaration.getKindName(),
 						);
-					}
-				}),
+
+						if (name) {
+							result.push(
+								new NgDocApiPageEntity(
+									apiRootEntity.builder,
+									declaration.getSourceFile(),
+									apiRootEntity.context,
+									scopeEntity,
+									name,
+									duplicates.indexOf(declaration),
+								),
+							);
+						}
+					},
+				),
 		);
 	});
 

@@ -1,12 +1,16 @@
-import {NgDocPage} from '@ng-doc/core';
-
-import {CUSTOM_DATA} from './custom-data';
+import {NgDocAngularEntities, NgDocDeclarations, NgDocPage} from '@ng-doc/core';
 
 export const DevelopPage: NgDocPage = {
 	title: 'Develop',
-	mdFile: './index.md',
-	onlyForTags: ['develop'],
-	data: CUSTOM_DATA,
+	mdFile: './index.md.nunj',
+	onlyForTags: ['development'],
+	data: {
+		modifiers: ['abstract', 'static', 'async', 'readonly'],
+		entities: {
+			typescript: NgDocDeclarations,
+			angular: NgDocAngularEntities,
+		},
+	},
 };
 
 export default DevelopPage;

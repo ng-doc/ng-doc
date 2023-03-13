@@ -1,21 +1,51 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {ReactiveFormsModule} from '@angular/forms';
-import {NgDocPlaygroundDemoModule} from '@ng-doc/app/components/playground-demo';
-import {NgDocPlaygroundPropertiesModule} from '@ng-doc/app/components/playground-properties';
-import {NgDocAsArrayModule} from '@ng-doc/ui-kit';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {NgDocDemoDisplayerModule} from '@ng-doc/app/components/demo-displayer';
+import {
+	NgDocAsArrayModule,
+	NgDocButtonIconModule,
+	NgDocButtonModule,
+	NgDocCheckboxModule,
+	NgDocIconModule,
+	NgDocLabelModule,
+	NgDocTextModule,
+	NgDocTooltipModule,
+} from '@ng-doc/ui-kit';
+import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 
 import {NgDocPlaygroundComponent} from './playground.component';
+import {NgDocPlaygroundDemoComponent} from './playground-demo/playground-demo.component';
+import {NgDocPlaygroundPropertiesComponent} from './playground-properties/playground-properties.component';
+import {NgDocPlaygroundPropertyComponent} from './playground-property/playground-property.component';
 
 @NgModule({
-	declarations: [NgDocPlaygroundComponent],
+	declarations: [
+		NgDocPlaygroundComponent,
+		NgDocPlaygroundPropertyComponent,
+		NgDocPlaygroundPropertiesComponent,
+		NgDocPlaygroundDemoComponent,
+	],
 	imports: [
 		CommonModule,
 		ReactiveFormsModule,
+		NgDocLabelModule,
+		NgDocTooltipModule,
+		PolymorpheusModule,
 		NgDocAsArrayModule,
-		NgDocPlaygroundDemoModule,
-		NgDocPlaygroundPropertiesModule,
+		NgDocButtonIconModule,
+		NgDocIconModule,
+		NgDocTextModule,
+		NgDocCheckboxModule,
+		FormsModule,
+		NgDocButtonModule,
+		NgDocDemoDisplayerModule,
 	],
-	exports: [NgDocPlaygroundComponent],
+	exports: [
+		NgDocPlaygroundComponent,
+		NgDocPlaygroundPropertyComponent,
+		NgDocPlaygroundPropertiesComponent,
+		NgDocPlaygroundDemoComponent,
+	],
 })
 export class NgDocPlaygroundModule {}

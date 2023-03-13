@@ -2,6 +2,11 @@
 	"name": "@ng-doc/core",
 	"version": "0.0.1",
 	"type": "commonjs",
+	"dependencies": {
+		"posthtml-render": "^3.0.0",
+		"posthtml-parser": "^0.11.0",
+		"css-what": "^6.1.0"
+	},
 	"peerDependencies": {
 		"rxjs": "^7.0.0"
 	},

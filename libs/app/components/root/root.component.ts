@@ -1,14 +1,51 @@
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {Location} from '@angular/common';
-import {ChangeDetectionStrategy, Component, ElementRef, Inject, NgZone} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Directive, ElementRef, Inject, NgZone} from '@angular/core';
 import {Router} from '@angular/router';
 import {isExternalLink} from '@ng-doc/app/helpers/is-external-link';
-import {NgDocSidebarService} from '@ng-doc/app/services';
-import {fadeAnimation, ngDocZoneDetach} from '@ng-doc/ui-kit';
+import {NgDocSidebarService} from '@ng-doc/app/services/sidebar';
+import {fadeAnimation} from '@ng-doc/ui-kit/animations';
+import {ngDocZoneDetach} from '@ng-doc/ui-kit/observables';
 import {WINDOW} from '@ng-web-apis/common';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {fromEvent, Observable} from 'rxjs';
 import {filter} from 'rxjs/operators';
+
+/**
+ * Directive uses for providing custom navbar, you should mark element with this directive
+ * and the `NgDocRootComponent` will use it as a navbar
+ *
+ * ```html
+ * <ng-doc-root>
+ *     <my-custom-navbar ngDocCustomNavbar></my-custom-navbar>
+ *
+ *     <ng-doc-sidebar></ng-doc-sidebar>
+ *     <router-outlet></router-outlet>
+ * </ng-doc-root>
+ * ```
+ */
+@Directive({
+	selector: '[ngDocCustomNavbar]',
+})
+export class NgDocCustomNavbarDirective {}
+
+/**
+ * Directive uses for providing custom sidebar, you should mark element with this directive
+ * and the `NgDocRootComponent` will use it as a sidebar
+ *
+ * ```html
+ * <ng-doc-root>
+ *     <ng-doc-navbar></ng-doc-sidebar>
+ *
+ *     <my-custom-sidebar ngDocCustomSidebar></my-custom-sidebar>
+ *     <router-outlet></router-outlet>
+ * </ng-doc-root>
+ * ```
+ */
+@Directive({
+	selector: '[ngDocCustomSidebar]',
+})
+export class NgDocCustomSidebarDirective {}
 
 @Component({
 	animations: [fadeAnimation],

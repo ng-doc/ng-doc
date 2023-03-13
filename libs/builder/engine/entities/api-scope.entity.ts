@@ -7,16 +7,13 @@ import {isPageEntity, uniqueName} from '../../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocBuilder} from '../builder';
 import {NgDocEntity} from './abstractions/entity';
-import {NgDocNavigationEntity} from './abstractions/navigation.entity';
+import {NgDocRouteEntity} from './abstractions/route.entity';
 import {NgDocApiEntity} from './api.entity';
 import {NgDocPageEntity} from './page.entity';
 
-export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
-	override moduleName: string = uniqueName(`NgDocGeneratedApiScopeCategoryModule`);
-	override readonly isNavigable: boolean = false;
+export class NgDocApiScopeEntity extends NgDocRouteEntity<NgDocApiScope> {
 	override readonly physical: boolean = false;
 	protected override readyToBuild: boolean = true;
-	override moduleFileName: string = `${uniqueName('ng-doc-api-scope')}.module.ts`;
 	override id: string = uniqueName(`${this.sourceFilePath}#${this.target.route}`);
 
 	constructor(
@@ -46,6 +43,10 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 		return [];
 	}
 
+	override get folderName(): string {
+		return this.route;
+	}
+
 	/**
 	 * Returns full url from the root
 	 *
@@ -55,16 +56,16 @@ export class NgDocApiScopeEntity extends NgDocNavigationEntity<NgDocApiScope> {
 		return `${this.parent ? this.parent.url + '/' : ''}${this.route}`;
 	}
 
-	override get order(): number | undefined {
-		return this.target?.order;
-	}
-
 	get pages(): NgDocPageEntity[] {
 		return asArray(this.children.values()).filter(isPageEntity);
 	}
 
 	override get title(): string {
 		return this.target.name;
+	}
+
+	get order(): number | undefined {
+		return this.target.order;
 	}
 
 	override get buildCandidates(): NgDocEntity[] {

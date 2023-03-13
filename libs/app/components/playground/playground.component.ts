@@ -1,13 +1,12 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {NgDocRootPage} from '@ng-doc/app/classes';
-import {
-	extractValue,
-	NgDocExtractedValue,
-	NgDocPlaygroundConfig,
-	NgDocPlaygroundProperties,
-	objectKeys,
-} from '@ng-doc/core';
+import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
+import {extractValue} from '@ng-doc/core/helpers/extract-value';
+import {objectKeys} from '@ng-doc/core/helpers/object-keys';
+import {NgDocPlaygroundConfig, NgDocPlaygroundProperties} from '@ng-doc/core/interfaces';
+import {NgDocExtractedValue} from '@ng-doc/core/types';
+
+import {NgDocPlaygroundForm} from './playground-form';
 
 @Component({
 	selector: 'ng-doc-playground',
@@ -18,11 +17,11 @@ import {
 export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties>
 	implements OnInit
 {
-	id?: string;
+	id: string = '';
 	selectors: string[] = [];
 	properties?: T;
-	formGroup?: FormGroup;
-	reinitializeDemo: boolean = false;
+	formGroup!: FormGroup<NgDocPlaygroundForm>;
+	recreateDemo: boolean = false;
 
 	constructor(private readonly rootPage: NgDocRootPage, private readonly formBuilder: FormBuilder) {}
 
@@ -37,7 +36,7 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 	}
 
 	get configuration(): NgDocPlaygroundConfig | undefined {
-		return this.id && this.rootPage.playground ? this.rootPage.playground[this.id] : undefined;
+		return this.rootPage.dependencies?.playgrounds?.[this.id];
 	}
 
 	private getPropertiesFormValues<K extends keyof T>(): Record<K, NgDocExtractedValue> {
@@ -51,9 +50,9 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 	}
 
 	private getContentFormValues(): Record<string, boolean> {
-		return objectKeys(this.configuration?.dynamicContent ?? {}).reduce(
+		return objectKeys(this.configuration?.content ?? {}).reduce(
 			(controls: Record<string, boolean>, key: string) => {
-				if (this.configuration?.dynamicContent) {
+				if (this.configuration?.content) {
 					controls[key] = false;
 				}
 
@@ -61,6 +60,7 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 			},
 			{} as Record<keyof T, boolean>,
 		);
+		return {};
 	}
 
 	resetForm(): void {

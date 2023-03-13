@@ -4,7 +4,7 @@ import {forkJoin, from, Observable, of} from 'rxjs';
 import {catchError, map, mapTo} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
-import {declarationFolderName, slash, uniqueName} from '../../helpers';
+import {declarationFolderName, editFileInRepoUrl, slash, uniqueName, viewFileInRepoUrl} from '../../helpers';
 import {isSupportedDeclaration} from '../../helpers/is-supported-declaration';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocSupportedDeclarations} from '../../types/supported-declarations';
@@ -15,14 +15,12 @@ import {NgDocRouteEntity} from './abstractions/route.entity';
 import {NgDocApiScopeEntity} from './api-scope.entity';
 
 export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
-	override folderName: string = '';
-	override moduleName: string = uniqueName(`NgDocGeneratedApiPageModule`);
-	componentName: string = uniqueName(`NgDocGeneratedApiPageComponent`);
-	override moduleFileName: string = `${uniqueName('ng-doc-api-page')}.module.ts`;
-	protected override readyToBuild: boolean = true;
-	override readonly physical: boolean = false;
 	declaration?: NgDocSupportedDeclarations;
-	override id: string = uniqueName(`${this.sourceFilePath}}#${this.declarationName}`);
+
+	override readonly physical: boolean = false;
+	override readonly id: string = uniqueName(`${this.sourceFilePath}}#${this.declarationName}`);
+	override folderName: string = '';
+	protected override readyToBuild: boolean = true;
 
 	constructor(
 		override readonly builder: NgDocBuilder,
@@ -30,6 +28,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 		override readonly context: NgDocBuilderContext,
 		override parent: NgDocApiScopeEntity,
 		readonly declarationName: string,
+		readonly index: number,
 	) {
 		super(builder, sourceFile, context);
 
@@ -43,7 +42,12 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 
 	override get route(): string {
 		return this.declaration
-			? slash(path.join(declarationFolderName(this.declaration), this.declaration?.getSymbol()?.getName() ?? ''))
+			? slash(
+					path.join(
+						declarationFolderName(this.declaration),
+						this.declarationName + (this.index ? this.index : ''),
+					),
+			  )
 			: '';
 	}
 
@@ -57,6 +61,29 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 
 	override get title(): string {
 		return this.declarationName;
+	}
+
+	override get editSourceFileUrl(): string | undefined {
+		if (this.context.config.repoConfig) {
+			return editFileInRepoUrl(
+				this.context.config.repoConfig,
+				this.sourceFilePath,
+				this.parent.route.toLowerCase(),
+				this.declaration?.getStartLineNumber(true),
+			);
+		}
+		return undefined;
+	}
+
+	override get viewSourceFileUrl(): string | undefined {
+		if (this.context.config.repoConfig) {
+			return viewFileInRepoUrl(
+				this.context.config.repoConfig,
+				this.sourceFilePath,
+				this.declaration?.getStartLineNumber(true),
+			);
+		}
+		return undefined;
 	}
 
 	override get folderPath(): string {

@@ -34,7 +34,7 @@ export function build(options: NgDocBuildPageSchema): Rule {
 		const closestCategoryFile: string | null = options.category
 			? findClosestFile(options.path, CATEGORY_NAME)
 			: null;
-		const pageName: string = classify(options.title);
+		const pageName: string = classify(options.title + 'Page');
 		const categoryConstantName: string | null =
 			options.category && closestCategoryFile ? extractDefaultExportName(closestCategoryFile) : null;
 		const categoryImportPath: string | null = closestCategoryFile

@@ -1,7 +1,7 @@
 # {{ NgDocPage.title }}
 
-The page is the main building block of your guidelines, which you can use to describe some
-cool features of your project, show various demos, write guidelines and do many other things
+The page is the main building block of your guides, which you can use to describe some
+cool features of your project, show various demos, write guides and do many other things
 that are useful to your users.
 
 ## Creating a page
@@ -29,7 +29,7 @@ the page configuration must correspond to the `NgDocPage` type, you can read mor
 properties in the documentation for the type, below is an example of the minimum page configuration.
 
 ```typescript
-import {NgDocPage} from '@ng-doc/builder';
+import {NgDocPage} from '@ng-doc/core';
 
 export const MyAwesomePage: NgDocPage = {
 	title: 'MyAwesomePage',
@@ -47,7 +47,7 @@ just import category and put it in the `category` field, just like that:
 
 ```typescript
 // ng-doc.page.ts
-import {NgDocPage} from '@ng-doc/builder';
+import {NgDocPage} from '@ng-doc/core';
 import MyAwesomeCategory from '../ng-doc.category';
 
 export const MyAwesomePage: NgDocPage = {
@@ -67,11 +67,11 @@ rebuilds page if needed.
 
 Your page content fully supports the `markdown` syntax, but it is
 extended with the `nunjucks` engine which allows you to reuse one template for multiple pages, or
-render content dynamically, see `*ContentGuidelinesTemplating` for more details.
+render content dynamically, see `*ContentGuidesTemplating` for more details.
 
 ## See also
 
 -   `*EntitiesCategory`
 -   `*EntitiesDependencies`
--   `*ContentGuidelinesTemplating`
--   `*ContentGuidelinesDemo`
+-   `*ContentGuidesTemplating`
+-   `*ContentGuidesDemo`

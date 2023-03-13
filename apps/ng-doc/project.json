@@ -8,28 +8,11 @@
 			"executor": "./dist/libs/builder:browser",
 			"outputs": ["{options.outputPath}"],
 			"options": {
-				"ngDoc": {
-					"pages": "apps/ng-doc/src/app",
-					"tag": "production",
-					"keywords": {
-						"nunjucks": {
-							"path": "https://mozilla.github.io/nunjucks/"
-						},
-						"tsdoc": {
-							"title": "TsDoc",
-							"path": "https://tsdoc.org/"
-						},
-						"highlightjs": {
-							"title": "highlight.js",
-							"path": "https://highlightjs.org/"
-						}
-					}
-				},
 				"outputPath": "dist/apps/ng-doc",
 				"index": "apps/ng-doc/src/index.html",
 				"main": "apps/ng-doc/src/main.ts",
 				"polyfills": "apps/ng-doc/src/polyfills.ts",
-				"tsConfig": "apps/ng-doc/tsconfig.app.json",
+				"tsConfig": "apps/ng-doc/tsconfig.build.json",
 				"inlineStyleLanguage": "scss",
 				"assets": [
 					"apps/ng-doc/src/assets",
@@ -51,7 +34,7 @@
 				],
 				"styles": ["apps/ng-doc/src/styles.scss"],
 				"scripts": [],
-				"allowedCommonJsDependencies": ["prettier", "posthtml-parser", "posthtml-render"]
+				"allowedCommonJsDependencies": ["@ng-doc/core", "posthtml-parser", "posthtml-render", "js-beautify"]
 			},
 			"configurations": {
 				"production": {
@@ -77,6 +60,7 @@
 					"sourceMap": true
 				},
 				"development": {
+					"tsConfig": "apps/ng-doc/tsconfig.app.json",
 					"buildOptimizer": false,
 					"optimization": false,
 					"vendorChunk": true,
@@ -112,31 +96,10 @@
 			"executor": "./dist/libs/builder:dev-server",
 			"configurations": {
 				"production": {
-					"browserTarget": "ng-doc:build:production",
-					"ngDoc": {
-						"pages": "apps/ng-doc/src/app",
-						"tag": "production",
-						"keywords": {
-							"nunjucks": {
-								"path": "https://mozilla.github.io/nunjucks/"
-							},
-							"tsdoc": {
-								"title": "TsDoc",
-								"path": "https://tsdoc.org/"
-							},
-							"highlightjs": {
-								"title": "highlight.js",
-								"path": "https://highlightjs.org/"
-							}
-						}
-					}
+					"browserTarget": "ng-doc:build:production"
 				},
 				"development": {
-					"browserTarget": "ng-doc:build:development",
-					"ngDoc": {
-						"pages": "apps/ng-doc/src/app",
-						"tag": "develop"
-					}
+					"browserTarget": "ng-doc:build:development"
 				}
 			},
 			"defaultConfiguration": "development",

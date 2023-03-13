@@ -1,16 +1,16 @@
 import {BuilderContext} from '@angular-devkit/architect';
 import {NgDocStyleType} from '@ng-doc/core';
 
-import {NgDocSchema} from './schema';
+import {NgDocConfiguration} from './configuration';
 
 export interface NgDocBuilderContext {
 	tsConfig: string;
-	options: NgDocSchema;
+	config: NgDocConfiguration;
 	context: BuilderContext;
 	inlineStyleLanguage: NgDocStyleType;
 	pagesPaths: string[];
 	assetsPath: string;
 	buildPath: string;
 	apiPath: string;
-	modulesPath: string;
+	guidesPath: string;
 }

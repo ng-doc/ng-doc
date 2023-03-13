@@ -13,7 +13,7 @@ import {RouterModule} from "@angular/router";
 				{%- for child in category.children %}
 				{
 					path: '{{ child.route }}',
-					loadChildren: () => import('{{ child.moduleImport }}').then(m => m.{{ child.moduleName }})
+					loadChildren: () => import('{{ child.moduleImport }}').then(m => m.DynamicModule)
 				},
 				{%- endfor %}
 			]
@@ -22,5 +22,5 @@ import {RouterModule} from "@angular/router";
 	],
 	exports: [RouterModule]
 })
-export class {{ category.moduleName }} {
+export class DynamicModule {
 }

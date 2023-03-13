@@ -17,7 +17,7 @@ import {
 	SimpleChanges,
 	ViewContainerRef,
 } from '@angular/core';
-import {asArray} from '@ng-doc/core';
+import {asArray} from '@ng-doc/core/helpers/as-array';
 import {dropdownOpenAnimation} from '@ng-doc/ui-kit/animations';
 import {NgDocOverlayHost} from '@ng-doc/ui-kit/classes/overlay-host';
 import {NgDocOverlayRef} from '@ng-doc/ui-kit/classes/overlay-ref';
@@ -267,7 +267,6 @@ export class NgDocDropdownComponent implements OnChanges, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		/* Жестко уничтожаем оверлей если он был открыт на момент уничтожения компонента */
 		if (this.overlay) {
 			this.overlay.overlayRef.dispose();
 		}

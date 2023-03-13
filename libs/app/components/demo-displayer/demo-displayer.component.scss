@@ -5,7 +5,7 @@
 	--ng-doc-code-margin: 0;
 	--ng-doc-code-border-radius: 0;
 
-	&[data-ng-doc-border="true"] {
+	&[data-ng-doc-border='true'] {
 		border: var(--ng-doc-demo-displayer-border);
 		border-radius: var(--ng-doc-demo-displayer-border-radius);
 	}
@@ -15,7 +15,6 @@
 
 		.ng-doc-demo-container {
 			display: flex;
-			align-items: center;
 			justify-content: flex-start;
 			width: 100%;
 			padding: calc(var(--ng-doc-base-gutter) * 2);

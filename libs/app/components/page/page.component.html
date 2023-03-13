@@ -1,12 +1,51 @@
-<article
-	[innerHTML]="rootPage.pageContent | ngDocSanitizeHtml"
-	ngDocBlockquoteProcessor
-	ngDocDemoProcessor
-	ngDocCodeProcessor
-	ngDocIconProcessor
-	ngDocTooltipProcessor
-	#pageContainer
-></article>
+<article>
+	<div class="ng-doc-page-controls">
+		<a
+			ng-doc-button-icon
+			*ngIf="rootPage.editSourceFileUrl"
+			[href]="rootPage.editSourceFileUrl"
+			target="_blank"
+			ngDocTooltip="Suggest Edits"
+		>
+			<ng-doc-icon icon="edit-2"></ng-doc-icon>
+		</a>
+		<a
+			ng-doc-button-icon
+			*ngIf="rootPage.viewSourceFileUrl"
+			[href]="rootPage.viewSourceFileUrl"
+			target="_blank"
+			ngDocTooltip="View Source"
+		>
+			<ng-doc-icon icon="code"></ng-doc-icon>
+		</a>
+	</div>
+
+	<div
+		[innerHTML]="rootPage.pageContent | ngDocSanitizeHtml"
+		ngDocBlockquoteProcessor
+		ngDocDemoProcessor
+		ngDocCodeProcessor
+		ngDocIconProcessor
+		ngDocTooltipProcessor
+		ngDocPlaygroundProcessor
+		#pageContainer
+	></div>
+
+	<div class="ng-doc-navigation-controls" *ngIf="rootPage.pageType === 'guide'">
+		<a class="ng-doc-prev-page" ng-doc-button-text *ngIf="prevPage" [routerLink]="prevPage.route">
+			<span ng-doc-text>
+				<ng-doc-icon icon="arrow-left" ngDocTextLeft></ng-doc-icon>
+				{{ prevPage.title }}
+			</span>
+		</a>
+		<a class="ng-doc-next-page" ng-doc-button-text *ngIf="nextPage" [routerLink]="nextPage.route">
+			<span ng-doc-text>
+				{{ nextPage.title }}
+				<ng-doc-icon icon="arrow-right" ngDocTextRight></ng-doc-icon>
+			</span>
+		</a>
+	</div>
+</article>
 
 <ng-template
 	[ngDocMediaQuery]="[mediaQuery.breakpoints.Large, mediaQuery.breakpoints.XLarge]"

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {PolymorpheusContent} from '@tinkoff/ng-polymorpheus';
+import {NgDocContent} from '@ng-doc/ui-kit/types';
 
 @Component({
 	selector: 'ng-doc-tab',
@@ -9,12 +9,12 @@ import {PolymorpheusContent} from '@tinkoff/ng-polymorpheus';
 })
 export class NgDocTabComponent<T> {
 	@Input()
-	label: PolymorpheusContent = '';
+	label: NgDocContent = '';
 
 	@Input()
 	id: T | number = 0;
 
 	/** Expander content */
 	@Input()
-	content: PolymorpheusContent = '';
+	content: NgDocContent = '';
 }

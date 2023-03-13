@@ -3,8 +3,8 @@ import {notificationCloseAnimation, notificationOpenAnimation} from '@ng-doc/ui-
 import {NgDocOverlayRef} from '@ng-doc/ui-kit/classes';
 import {NgDocOverlayContainerComponent} from '@ng-doc/ui-kit/components/overlay-container';
 import {NgDocOverlayService} from '@ng-doc/ui-kit/services/overlay';
+import {NgDocContent} from '@ng-doc/ui-kit/types';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {PolymorpheusContent} from '@tinkoff/ng-polymorpheus';
 import {Subject, timer} from 'rxjs';
 import {switchMap, tap} from 'rxjs/operators';
 
@@ -14,24 +14,24 @@ import {switchMap, tap} from 'rxjs/operators';
 @UntilDestroy()
 export class NgDocNotifyService {
 	private overlayRef?: NgDocOverlayRef;
-	private readonly notify$: Subject<PolymorpheusContent> = new Subject<PolymorpheusContent>();
+	private readonly notify$: Subject<NgDocContent> = new Subject<NgDocContent>();
 
 	constructor(private readonly overlayService: NgDocOverlayService) {
 		this.notify$
 			.pipe(
 				tap(() => this.overlayRef?.close()),
-				tap((content: PolymorpheusContent) => this.openOverlay(content)),
+				tap((content: NgDocContent) => this.openOverlay(content)),
 				switchMap(() => timer(2000)),
 				untilDestroyed(this),
 			)
 			.subscribe(() => this.overlayRef?.close());
 	}
 
-	notify(content: PolymorpheusContent): void {
+	notify(content: NgDocContent): void {
 		this.notify$.next(content);
 	}
 
-	private openOverlay(content: PolymorpheusContent): void {
+	private openOverlay(content: NgDocContent): void {
 		this.overlayRef = this.overlayService.open(content, {
 			overlayContainer: NgDocOverlayContainerComponent,
 			panelClass: 'ng-doc-notify',

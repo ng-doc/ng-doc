@@ -35,6 +35,7 @@
 <ng-template #searchInput>
 	<ng-doc-input-wrapper
 		[leftContent]="leftContent"
+		[rightContent]="rightContent"
 		ngDocDropdownOrigin
 		ngDocFocusCatcher
 		(focusEvent)="inputElement.value ? dropdown.open() : null"
@@ -50,8 +51,13 @@
 			[(ngModel)]="searchTerm"
 			(ngModelChange)="query$.next($event); dropdown.open()"
 			placeholder="Search..."
+			[ngDocHotkey]="{ctrlKey: false, altKey: false, shiftKey: false, code: 'Slash'}"
+			(ngDocHotkey)="inputElement.focus()"
 			#inputElement
 		/>
+		<ng-template #rightContent>
+			<ng-doc-tag class="search-hotkey">/</ng-doc-tag>
+		</ng-template>
 		<ng-doc-dropdown
 			[content]="dropdownContent"
 			[width]="input.elementRef.nativeElement.offsetWidth"

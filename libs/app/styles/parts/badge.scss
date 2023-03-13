@@ -28,6 +28,10 @@
 	background-color: var(--ng-doc-text);
 	text-transform: capitalize;
 
+	&[data-content='protected'] {
+		background-color: var(--ng-doc-base-8);
+	}
+
 	&[data-content='abstract'] {
 		background-color: var(--ng-doc-deep-orange-100);
 	}

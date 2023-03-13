@@ -11,6 +11,10 @@
 	white-space: nowrap;
 	font-weight: 800;
 
+	&[data-content='protected'] {
+		color: var(--ng-doc-base-8);
+	}
+
 	&[data-content='abstract'] {
 		color: var(--ng-doc-deep-orange-100);
 	}

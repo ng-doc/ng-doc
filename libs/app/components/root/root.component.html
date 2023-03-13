@@ -1,10 +1,12 @@
 <div class="ng-doc-root-wrapper" [class.collapsable]="sidebarService.isCollapsable() | async">
 	<div class="ng-doc-header">
 		<ng-content select="ng-doc-navbar"></ng-content>
+		<ng-content select="[ngDocCustomNavbar]"></ng-content>
 	</div>
 	<main>
 		<div class="ng-doc-sidebar" [class.visible]="sidebarService.visibilityChanges() | async">
 			<ng-content select="ng-doc-sidebar"></ng-content>
+			<ng-content select="[ngDocCustomSidebar]"></ng-content>
 		</div>
 		<div class="ng-doc-body">
 			<div

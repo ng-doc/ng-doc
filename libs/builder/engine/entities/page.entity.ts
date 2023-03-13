@@ -3,24 +3,19 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
-import {SourceFile} from 'ts-morph';
 
-import {isDependencyEntity, isPlaygroundEntity, marked, slash, uniqueName} from '../../helpers';
+import {editFileInRepoUrl, isDependencyEntity, marked, slash} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
 import {NgDocActions} from '../actions';
-import {PAGE_DEPENDENCIES_NAME, PLAYGROUND_NAME, RENDERED_PAGE_NAME} from '../variables';
+import {PAGE_DEPENDENCIES_NAME, RENDERED_PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocCategoryEntity} from './category.entity';
 import {NgDocDependenciesEntity} from './dependencies.entity';
-import {NgDocPlaygroundEntity} from './playground.entity';
 
 export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
-	override moduleName: string = uniqueName(`NgDocGeneratedPageModule`);
-	componentName: string = uniqueName(`NgDocGeneratedPageComponent`);
-	override moduleFileName: string = `${uniqueName('ng-doc-page')}.module.ts`;
-
 	override parent?: NgDocCategoryEntity;
+	override compilable: boolean = true;
 
 	override get route(): string {
 		const folderName: string = path.basename(path.dirname(this.sourceFile.getFilePath()));
@@ -45,12 +40,18 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return this.target?.title ?? '';
 	}
 
+	override get editSourceFileUrl(): string | undefined {
+		if (this.context.config.repoConfig) {
+			return editFileInRepoUrl(this.context.config.repoConfig, this.mdPath, this.route.toLowerCase());
+		}
+		return undefined;
+	}
+
 	override get canBeBuilt(): boolean {
 		return (
-			!this.target ||
-			!this.context.options.ngDoc?.tag ||
-			!this.target.onlyForTags ||
-			asArray(this.target.onlyForTags).includes(this.context.options.ngDoc?.tag)
+			!!this.target &&
+			(!this.target.onlyForTags ||
+				asArray(this.target.onlyForTags).includes(this.context.context.target?.configuration ?? ''))
 		);
 	}
 
@@ -86,25 +87,9 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	}
 
 	get componentsAssets(): string | undefined {
-		const dependencies: NgDocDependenciesEntity | undefined = asArray(this.children.values()).filter(
-			isDependencyEntity,
-		)[0];
+		const dependencies: NgDocDependenciesEntity | undefined = this.pageDependencies;
 
 		return dependencies && dependencies.assets.length ? dependencies.componentAssetsImport : undefined;
-	}
-
-	get playground(): NgDocPlaygroundEntity | undefined {
-		return this.children.find(isPlaygroundEntity);
-	}
-
-	get playgroundFile(): string | undefined {
-		const playgroundPath: string = path.join(this.sourceFileFolder, PLAYGROUND_NAME);
-
-		return fs.existsSync(playgroundPath) ? playgroundPath : undefined;
-	}
-
-	get pagePlaygroundImport(): string | undefined {
-		return this.playgroundFile ? slash(this.playgroundFile.replace(/.ts$/, '')) : undefined;
 	}
 
 	override update(): Observable<void> {
@@ -155,10 +140,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 
 		if (this.target) {
 			this.dependencies.add(this.mdPath);
-			this.playgroundFile && this.dependencies.add(this.playgroundFile);
-			this.playground?.sourceFile
-				?.getReferencedSourceFiles()
-				.forEach((sourceFile: SourceFile) => sourceFile.refreshFromFileSystemSync());
 
 			return this.builder.renderer
 				.render(this.target?.mdFile, {

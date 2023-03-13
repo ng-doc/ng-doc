@@ -7,7 +7,7 @@ export type NgDocPaletteColor =
 	| 'blue'
 	| 'light-blue'
 	| 'cian'
-	| 'teen'
+	| 'teal'
 	| 'green'
 	| 'light-green'
 	| 'lime'

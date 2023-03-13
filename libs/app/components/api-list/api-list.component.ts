@@ -3,7 +3,8 @@ import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {NG_DOC_API_LIST_TOKEN} from '@ng-doc/app/tokens';
 import {NgDocFormPartialValue} from '@ng-doc/app/types';
-import {asArray, NgDocApiList, NgDocApiListItem} from '@ng-doc/core';
+import {asArray} from '@ng-doc/core/helpers/as-array';
+import {NgDocApiList, NgDocApiListItem} from '@ng-doc/core/interfaces';
 import {ngDocMakePure} from '@ng-doc/ui-kit/decorators';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {Observable} from 'rxjs';
@@ -11,6 +12,7 @@ import {debounceTime, map, startWith} from 'rxjs/operators';
 
 interface ApiFilterForm {
 	filter: FormControl<string | null>;
+	scope: FormControl<string | null>;
 	type: FormControl<string | null>;
 }
 
@@ -22,9 +24,6 @@ interface ApiFilterForm {
 })
 @UntilDestroy()
 export class NgDocApiListComponent {
-	/**
-	 * My comment
-	 */
 	formGroup: FormGroup<ApiFilterForm>;
 	api$: Observable<NgDocApiList[]>;
 
@@ -37,12 +36,14 @@ export class NgDocApiListComponent {
 	) {
 		this.formGroup = this.formBuilder.group({
 			filter: [''],
+			scope: [''],
 			type: [''],
 		});
 
 		this.route.queryParamMap.pipe(untilDestroyed(this)).subscribe((paramMap: ParamMap) =>
 			this.formGroup.setValue({
 				filter: paramMap.get('filter') || null,
+				scope: paramMap.get('scope') || null,
 				type: paramMap.get('type') || null,
 			}),
 		);
@@ -63,6 +64,7 @@ export class NgDocApiListComponent {
 			map(() => this.formGroup.value),
 			map((form: NgDocFormPartialValue<typeof this.formGroup>) =>
 				this.apiList
+					.filter((api: NgDocApiList) => !form?.scope || api.title === form?.scope)
 					.map((api: NgDocApiList) => ({
 						...api,
 						items: api.items
@@ -73,14 +75,18 @@ export class NgDocApiListComponent {
 							)
 							.sort(
 								(a: NgDocApiListItem, b: NgDocApiListItem) =>
-									a.type.localeCompare(b.type) - a.name.localeCompare(b.name),
+									a.type.localeCompare(b.type) || a.name.localeCompare(b.name),
 							),
 					}))
-					.filter((api: NgDocApiList) => api.items.length)
-					.sort((a: NgDocApiList, b: NgDocApiList) => a.title.localeCompare(b.title)),
+					.filter((api: NgDocApiList) => api.items.length),
 			),
 			untilDestroyed(this),
 		);
+	}
+
+	@ngDocMakePure
+	get scopes(): string[] {
+		return asArray(new Set(this.apiList.flatMap((api: NgDocApiList) => api.title))).sort();
 	}
 
 	@ngDocMakePure

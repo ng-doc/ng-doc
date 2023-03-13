@@ -3,14 +3,22 @@ import {ChangeDetectionStrategy, Component, NgModule, Type} from "@angular/core"
 import {RouterModule} from "@angular/router";
 import {CommonModule} from '@angular/common';
 import {NgDocDemoAssets, NgDocPageModule, NgDocRootPage} from '@ng-doc/app';
+import {NgDocPageType} from '@ng-doc/core';
 import pageContent from '!!raw-loader!{{ page.builtPagePath }}';
 
 @Component({
 	template: `<ng-doc-page></ng-doc-page>`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	providers: [{provide: NgDocRootPage, useExisting: {{ page.componentName }}}],
+	providers: [{provide: NgDocRootPage, useExisting: DynamicComponent}],
 })
-export class {{ page.componentName }} extends NgDocRootPage {
+export class DynamicComponent extends NgDocRootPage {
+	readonly pageType: NgDocPageType = 'api';
+	{%- if page.editSourceFileUrl %}
+	readonly editSourceFileUrl: string = '{{ page.editSourceFileUrl }}';
+	{%- endif %}
+	{%- if page.viewSourceFileUrl %}
+	readonly viewSourceFileUrl: string = '{{ page.viewSourceFileUrl }}';
+	{%- endif %}
 	readonly pageContent: string = pageContent;
 	readonly demo: Record<string, Type<unknown>> | undefined = undefined;
 	readonly demoAssets: NgDocDemoAssets | undefined = undefined;
@@ -21,17 +29,17 @@ export class {{ page.componentName }} extends NgDocRootPage {
 }
 
 @NgModule({
-	declarations: [{{ page.componentName }}],
+	declarations: [DynamicComponent],
 	imports: [
 		CommonModule,
 		NgDocPageModule,
 		RouterModule.forChild([{
 			path: '',
-			component: {{ page.componentName }},
+			component: DynamicComponent,
 			title: '{{ page.title }}',
 		}]),
 	],
 	exports: [RouterModule]
 })
-export class {{ page.moduleName }} {
+export class DynamicModule {
 }

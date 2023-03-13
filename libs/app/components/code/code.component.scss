@@ -19,12 +19,15 @@
 		transition: var(--ng-doc-transition);
 
 		--ng-doc-icon-color: var(--ng-doc-text-muted);
+		--ng-doc-button-background: transparent;
+		--ng-doc-button-hover-background: var(--ng-doc-grey-150);
+		--ng-doc-button-active-background: var(--ng-doc-grey-160);
 	}
 
 	::ng-deep {
 		pre {
 			display: flex;
-			margin: var(--ng-doc-code-margin, 1em 0px);
+			margin: var(--ng-doc-code-margin);
 
 			code {
 				padding: calc(var(--ng-doc-base-gutter) * 2);

@@ -1,6 +1,5 @@
 import {Directive, ElementRef, ViewContainerRef} from '@angular/core';
 import {NgDocDemoComponent} from '@ng-doc/app/components/demo';
-import {asBoolean} from '@ng-doc/app/helpers';
 import {NgDocProcessorOptions} from '@ng-doc/app/interfaces';
 import {NgDocHtmlProcessor} from '@ng-doc/app/processors/html-processor';
 import {UntilDestroy} from '@ngneat/until-destroy';
@@ -22,7 +21,7 @@ export class NgDocDemoProcessorDirective extends NgDocHtmlProcessor<NgDocDemoCom
 		return {
 			inputs: {
 				componentName: element.getAttribute('componentName') || undefined,
-				container: asBoolean(element.getAttribute('container')),
+				options: JSON.parse(element.querySelector('#options')?.textContent ?? '') || {},
 			},
 		};
 	}

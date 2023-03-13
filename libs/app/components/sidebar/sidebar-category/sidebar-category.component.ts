@@ -1,8 +1,8 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input, OnInit} from '@angular/core';
 import {Event, NavigationEnd, Router} from '@angular/router';
 import {NgDocNavigation} from '@ng-doc/app/interfaces';
+import {NgDocContent} from '@ng-doc/ui-kit/types';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {PolymorpheusContent} from '@tinkoff/ng-polymorpheus';
 import {filter, startWith} from 'rxjs/operators';
 
 @Component({
@@ -21,7 +21,7 @@ export class NgDocSidebarCategoryComponent implements OnInit {
 	isRoot: boolean = false;
 
 	@Input()
-	content: PolymorpheusContent = '';
+	content: NgDocContent = '';
 
 	@Input()
 	@HostBinding('attr.data-ng-doc-expandable')

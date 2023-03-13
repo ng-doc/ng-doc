@@ -1,0 +1,74 @@
+name: '🐞 Bug Report'
+description: Report a bug
+title: '[Bug] '
+labels: 'Type: Bug'
+assignees: skoropadas
+
+body:
+    - type: dropdown
+      id: is-regression
+      attributes:
+          label: Is this a regression?
+          options:
+              - 'Yes'
+              - 'No'
+              - "I don't know"
+      validations:
+          required: true
+
+    - type: textarea
+      id: description
+      attributes:
+          label: Description
+          placeholder: |
+              A clear and concise description of what the bug is.
+              What is the current behavior?
+              What is the expected behavior?
+              Please provide a link to a minimal reproduction of the problem with instructions.
+      validations:
+          required: true
+
+    - type: textarea
+      id: exception-or-error
+      attributes:
+          label: Please provide the exception or error you saw
+          render: true
+
+    - type: dropdown
+      id: os
+      attributes:
+          label: OS
+          options:
+              - Unix (Linux, macOS, etc.)
+              - Windows
+              - iOS, Android, etc.
+              - Something else
+      validations:
+          required: true
+
+    - type: dropdown
+      id: browser
+      attributes:
+          label: Browser
+          options:
+              - Chrome
+              - Firefox
+              - Safari
+              - Edge
+              - IE
+              - Other
+
+    - type: input
+      id: node-version
+      attributes:
+          label: Node version
+      validations:
+          required: true
+
+    - type: textarea
+      id: other
+      attributes:
+          label: Anything else?
+          placeholder: |
+              Please provide any additional information that may be helpful in understanding the issue.
+              If you have a screenshot, attach it here.

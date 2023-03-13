@@ -1,0 +1,25 @@
+@import '../../../../node_modules/highlight.js/styles/base16/hardcore';
+
+:root {
+	--ng-doc-base-0: #2a2438;
+	--ng-doc-base-1: #352f44;
+	--ng-doc-base-2: #474057;
+	--ng-doc-base-3: #453d57;
+	--ng-doc-base-4: #5e5474;
+	--ng-doc-base-5: #41365a;
+	--ng-doc-base-6: #5e5474;
+	--ng-doc-base-7: #625c71;
+	--ng-doc-base-8: #a19baf;
+	--ng-doc-base-9: var(--ng-doc-grey-100);
+	--ng-doc-base-10: var(--ng-doc-grey-90);
+	--ng-doc-base-11: var(--ng-doc-grey-80);
+	--ng-doc-text: var(--ng-doc-white);
+	--ng-doc-shadow-color: rgb(var(--ng-doc-grey-rgb));
+	--ng-doc-code-background: #281f2e;
+	--ng-doc-link-color: var(--ng-doc-pink-120);
+	--ng-doc-link-color-rgb: var(--ng-doc-pink-rgb);
+}
+
+pre code.hljs {
+	background-color: #27202e;
+}

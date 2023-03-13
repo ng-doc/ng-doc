@@ -21,10 +21,17 @@
 		"rehype": "^9.0.1",
 		"rehype-format": "^3.1.0",
 		"rehype-highlight": "^4.1.0",
-		"rehype-slug": "^4.0.0",
+		"hast-util-to-string": "^1.0.4",
+		"unist-util-visit": "^2.0.1",
+		"github-slugger": "^1.5.0",
+		"hast-util-heading-rank": "^1.0.1",
+		"hast-util-has-property": "^1.0.4",
 		"highlight.js": "^11.5.1",
 		"raw-loader": "^4.0.2",
-		"@microsoft/tsdoc": "^0.14.2"
+		"esbuild": "^0.17.8",
+		"@microsoft/tsdoc": "^0.14.2",
+		"cosmiconfig": "^8.1.0",
+		"cosmiconfig-typescript-swc-loader": "^0.0.2"
 	},
 	"publishConfig": {
 		"access": "public"

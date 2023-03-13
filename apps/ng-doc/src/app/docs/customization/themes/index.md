@@ -1,8 +1,7 @@
 # {{ NgDocPage.title }}
 
 This article only scratches the surface of theme creation, we won't dive into the details of all the
-variables in it as this is just a beta version of the library, when its API stabilizes we'll cover
-theme creation in more detail.
+variables in it, when its API stabilizes we'll cover other topics in more detail.
 
 ## How to create your own theme
 
@@ -99,13 +98,15 @@ export class AppModule {}
 
 ## Themes out of the box
 
-NgDoc comes with two themes, a main light theme and an additional dark theme.
+NgDoc comes with following themes out of the box:
 
-The light theme is set by default and has no `id`, while the dark theme is optional and can be
+-   Light theme (default)
+-   Night theme (`NG_DOC_NIGHT_THEME`)
+-   Dark Purple theme (`NG_DOC_DARK_PURPLE_THEME`)
+
+The light theme is set by default and has no `id`, while other themes are optional and can be
 loaded using the `NgDocThemeService` service, or set by default using the `defaultTheme` field in
-the `forRoot` method of the module ` NgDocModule`, you can get its id by
-importing `NG_DOC_NIGHT_THEME`
-variable.
+the `forRoot` method of the module ` NgDocModule`.
 
 For example, you can set the dark theme by default as follows
 

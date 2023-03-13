@@ -37,5 +37,5 @@ export function marked(markdown: string): string {
 
 	markedRender.use({renderer});
 
-	return markedRender.parse(markdown);
+	return markedRender.parse(markdown, {headerIds: false});
 }

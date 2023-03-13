@@ -15,7 +15,7 @@
 	--ng-doc-base-10: var(--ng-doc-grey-110);
 	--ng-doc-base-11: var(--ng-doc-grey-180);
 
-	--ng-doc-primary: var(--ng-doc-ember-120);
+	--ng-doc-primary: var(--ng-doc-ember-140);
 	--ng-doc-primary-rgb: var(--ng-doc-ember-rgb);
 	--ng-doc-primary-text: var(--ng-doc-white);
 	--ng-doc-hover: var(--ng-doc-ember-20);
@@ -36,12 +36,14 @@
 	--ng-doc-code-font-size: 14px;
 	--ng-doc-code-line-height: 18px;
 	--ng-doc-code-font-weight: 600;
+	--ng-doc-code-margin: calc(var(--ng-doc-base-gutter) * 5) 0px;
 	--ng-doc-text: var(--ng-doc-base-11);
 	--ng-doc-text-inversed: var(--ng-doc-base-0);
 	--ng-doc-text-muted: var(--ng-doc-base-8);
 
 	// Link
 	--ng-doc-link-color: var(--ng-doc-blue-100);
+	--ng-doc-link-color-rgb: var(--ng-doc-blue-rgb);
 
 	// Inline code
 	--ng-doc-inline-code-background: var(--ng-doc-base-2);

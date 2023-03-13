@@ -19,14 +19,14 @@ export const ngDocContextProvider: Provider = {
 				{%- endif %}
 				{%- if entity.navigationItems.length %}
 				children: [
-					{%- for child in entity.navigationItems %}
+					{%- for child in entity.navigationItems | sortNavigationEntities %}
 					{{ nav(child) }},
 					{%- endfor %}
 				]
 				{%- endif %}
 			}
 			{%- endmacro %}
-			{%- for entity in entities %}
+			{%- for entity in entities | sortNavigationEntities %}
 			{{ nav(entity) }},
 			{%- endfor %}
 		],

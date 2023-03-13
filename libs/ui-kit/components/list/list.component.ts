@@ -1,7 +1,7 @@
 import {ListKeyManager} from '@angular/cdk/a11y';
 import {DOCUMENT} from '@angular/common';
 import {ChangeDetectionStrategy, Component, ElementRef, Inject, NgZone, Optional} from '@angular/core';
-import {asArray} from '@ng-doc/core';
+import {asArray} from '@ng-doc/core/helpers/as-array';
 import {NgDocListHost} from '@ng-doc/ui-kit/classes/list-host';
 import {NgDocListItem} from '@ng-doc/ui-kit/classes/list-item';
 import {toElement} from '@ng-doc/ui-kit/helpers';

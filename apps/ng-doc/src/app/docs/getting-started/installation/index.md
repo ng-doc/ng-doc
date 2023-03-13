@@ -5,12 +5,12 @@ your documentation.
 
 ## Automatic (recommended)
 
-To install the NgDoc, you can use the command above.
+To install the NgDoc, you can use the command below.
 This command will automatically install and add the library to your project,
 and configure it.
 
 ```bash
-ng add @ng-doc/add@beta
+ng add @ng-doc/add
 ```
 
 By default NgDoc uses your project's `sourceRoot` as the directory where you should create
@@ -22,7 +22,7 @@ details
 Install the NgDoc via npm
 
 ```bash
-npm i @ng-doc/{core,builder,ui-kit,app}@beta
+npm i @ng-doc/{core,builder,ui-kit,app}
 ```
 
 ### Adding builders
@@ -105,8 +105,8 @@ file.
 							},
 							{
 								"glob": "**/*",
-								"input": "node_modules/@ng-doc/builder/generated/assets",
-								"output": "assets"
+								"input": ".ng-doc/docs/assets",
+								"output": "assets/ng-doc"
 							}
 						]
 					}

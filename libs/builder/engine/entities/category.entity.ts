@@ -3,16 +3,15 @@ import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
 
-import {isCategoryEntity, isPageEntity, uniqueName} from '../../helpers';
+import {isCategoryEntity, isPageEntity} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocPageEntity} from './page.entity';
 
 export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
-	override moduleName: string = uniqueName(`NgDocGeneratedCategoryModule`);
-	override moduleFileName: string = `${uniqueName('ng-doc-category')}.module.ts`;
 	override parent?: NgDocCategoryEntity;
+	override compilable: boolean = true;
 
 	override get route(): string {
 		const folderName: string = path.basename(path.dirname(this.sourceFile.getFilePath()));
@@ -27,6 +26,14 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 	 */
 	get url(): string {
 		return `${this.parent ? this.parent.url + '/' : ''}${this.route}`;
+	}
+
+	override get canBeBuilt(): boolean {
+		return (
+			!!this.target &&
+			(!this.target.onlyForTags ||
+				asArray(this.target.onlyForTags).includes(this.context.context.target?.configuration ?? ''))
+		);
 	}
 
 	override get isRoot(): boolean {

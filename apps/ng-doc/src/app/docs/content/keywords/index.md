@@ -3,6 +3,10 @@
 Keywords allow you not to tie your documentation to certain links, as well as make it more dynamic,
 as a result, mentions of certain entities or pages will turn into links automatically.
 
+> **Warning**
+> Keywords are case-sensitive and only support PascalCase, so if you want to create a link to
+> an entity you must specify the correct case of the entity name.
+
 ## Auto-Generated keywords
 
 NgDoc automatically generates keywords for all declarations specified in `ng-doc.api.ts` (
@@ -35,7 +39,7 @@ So, to create keyword for the page, specify your preferred keyword in your page 
 the `keyword` field.
 
 ```typescript
-import {NgDocPage} from '@ng-doc/builder';
+import {NgDocPage} from '@ng-doc/core';
 
 export const MyAwesomePage: NgDocPage = {
 	title: 'My Awesome Page',
