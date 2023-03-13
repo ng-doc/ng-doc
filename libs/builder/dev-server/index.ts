@@ -1,5 +1,5 @@
 import {BuilderContext, createBuilder, Target, targetFromTargetString} from '@angular-devkit/architect';
-import {DevServerBuilderOutput, executeDevServerBuilder} from '@angular-devkit/build-angular';
+import {DevServerBuilderOutput, serveWebpackBrowser} from '@angular-devkit/build-angular/src/builders/dev-server';
 import {combineLatest, from, Observable, of} from 'rxjs';
 import {first, map, shareReplay, switchMap, switchMapTo} from 'rxjs/operators';
 
@@ -24,7 +24,7 @@ export function runDevServer(options: NgDocSchema, context: BuilderContext): Obs
 			return runner.pipe(
 				first(),
 				switchMapTo(
-					combineLatest([runner, executeDevServerBuilder(options, context)]).pipe(
+					combineLatest([runner, serveWebpackBrowser(options, context)]).pipe(
 						map(([_, devServerOutput]: [void, DevServerBuilderOutput]) => devServerOutput),
 					),
 				),
