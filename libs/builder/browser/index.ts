@@ -1,5 +1,5 @@
 import {BuilderContext, createBuilder, Target, targetFromTargetString} from '@angular-devkit/architect';
-import {BrowserBuilderOutput, executeBrowserBuilder} from '@angular-devkit/build-angular';
+import {BrowserBuilderOutput, buildWebpackBrowser} from '@angular-devkit/build-angular/src/builders/browser';
 import {EMPTY, from, Observable, of} from 'rxjs';
 import {catchError, first, switchMap} from 'rxjs/operators';
 
@@ -24,7 +24,7 @@ export function runBrowser(options: NgDocSchema, context: BuilderContext): Obser
 
 			return runner.pipe(
 				first(),
-				switchMap(() => executeBrowserBuilder(options as any, context)),
+				switchMap(() => buildWebpackBrowser(options as any, context)),
 			);
 		}),
 		catchError((e: unknown) => {
