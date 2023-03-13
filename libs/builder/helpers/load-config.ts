@@ -1,6 +1,6 @@
 import {cosmiconfigSync, PublicExplorerSync} from 'cosmiconfig';
 import {CosmiconfigResult} from 'cosmiconfig/dist/types';
-import {TypeScriptLoader} from 'cosmiconfig-typescript-loader';
+import {TypeScriptSWCLoader} from 'cosmiconfig-typescript-swc-loader';
 
 import {NgDocConfiguration} from '../interfaces';
 
@@ -15,7 +15,7 @@ export function loadConfig(searchFrom: string): NgDocConfiguration {
 	const explorerSync: PublicExplorerSync = cosmiconfigSync(moduleName, {
 		searchPlaces: [`${moduleName}.config.ts`],
 		loaders: {
-			'.ts': TypeScriptLoader(),
+			'.ts': TypeScriptSWCLoader(),
 		},
 	});
 	const searchedFor: CosmiconfigResult | null = explorerSync.search(searchFrom);
