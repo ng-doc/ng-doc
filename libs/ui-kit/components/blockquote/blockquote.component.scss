@@ -9,6 +9,7 @@
 	border-left: 4px solid var(--ng-doc-base-3);
 	margin-inline-start: 0;
 	margin-inline-end: 0;
+	margin: calc(var(--ng-doc-base-gutter) * 4) 0;
 
 	&[data-ng-doc-type='note'] {
 		background-color: var(--ng-doc-light-blue-10);
