@@ -15,25 +15,29 @@ import {getProject} from '../utils/get-project';
 export function addStyles(options: Schema): Rule {
 	return async (tree: Tree, context: SchematicContext) => {
 		return updateWorkspace((workspace: WorkspaceDefinition) => {
-			context.logger.info(`[INFO]: Adding global styles...`);
+			const logger = context.logger.createChild('add-styles');
 
-			const project: ProjectDefinition | undefined = getProject(options, workspace);
+			context.logger.info(`[INFO]: Global styles`);
+			logger.info(`🔄 Adding NgDoc global styles to the target project...`);
 
-			if (!project) {
-				context.logger.warn(`[WARNING]: Target project not found.`);
-				return;
+			try {
+				const project: ProjectDefinition | undefined = getProject(options, workspace);
+
+				if (!project) {
+					logger.error(`❌ Target project not found. Please add global NgDoc styles manually.`);
+
+					return;
+				}
+
+				const targetOptions: Record<string, JsonValue> = getProjectTargetOptions(project, 'build');
+				const styles: JsonArray | undefined = targetOptions['styles'] as JsonArray | undefined;
+
+				targetOptions['styles'] = Array.from(new Set([...NG_DOC_STYLES, ...(styles ?? [])]));
+
+				logger.info('✅ Done!');
+			} catch (e) {
+				logger.error(`❌ Error: ${e}`);
 			}
-
-			const targetOptions: Record<string, JsonValue> = getProjectTargetOptions(project, 'build');
-
-			const styles: JsonArray | undefined = targetOptions['styles'] as JsonArray | undefined;
-
-			if (!styles) {
-				targetOptions['styles'] = NG_DOC_STYLES;
-				return;
-			}
-
-			targetOptions['styles'] = Array.from(new Set([...NG_DOC_STYLES, ...styles]));
 		});
-	}
+	};
 }

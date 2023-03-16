@@ -14,27 +14,35 @@ import {getProject} from '../utils/get-project';
 export function addJsDependencies(options: Schema): Rule {
 	return async (tree: Tree, context: SchematicContext) => {
 		return updateWorkspace((workspace: WorkspaceDefinition) => {
-			context.logger.info(`[INFO]: Adding @ng-doc/core to allowedCommonJsDependencies...`);
+			const logger = context.logger.createChild('add-js-dependencies');
 
-			const project: ProjectDefinition | undefined = getProject(options, workspace);
+			context.logger.info(`[INFO]: Common JS dependencies`);
+			logger.info(`🔄 Adding "@ng-doc/core" library to "allowedCommonJsDependencies"...`);
 
-			if (!project) {
-				context.logger.warn(`[WARNING]: Target project not found.`);
-				return;
+			try {
+				const project: ProjectDefinition | undefined = getProject(options, workspace);
+
+				if (!project) {
+					logger.error(
+						`❌ Target project not found. Please add "@ng-doc/core" library to "allowedCommonJsDependencies" manually.`,
+					);
+
+					return;
+				}
+
+				const targetOptions: Record<string, JsonValue> = getProjectTargetOptions(project, 'build');
+				const jsDependencies: JsonArray | undefined = targetOptions['allowedCommonJsDependencies'] as
+					| JsonArray
+					| undefined;
+
+				targetOptions['allowedCommonJsDependencies'] = Array.from(
+					new Set([...(jsDependencies ?? []), '@ng-doc/core']),
+				);
+
+				logger.info('✅ Done!');
+			} catch (e) {
+				logger.error(`❌ Error: ${e}`);
 			}
-
-			const targetOptions: Record<string, JsonValue> = getProjectTargetOptions(project, 'build');
-
-			const jsDependencies: JsonArray | undefined = targetOptions['allowedCommonJsDependencies'] as
-				| JsonArray
-				| undefined;
-
-			if (!jsDependencies) {
-				targetOptions['allowedCommonJsDependencies'] = ['@ng-doc/core'];
-				return;
-			}
-
-			targetOptions['allowedCommonJsDependencies'] = Array.from(new Set([...jsDependencies, '@ng-doc/core']));
 		});
 	};
 }

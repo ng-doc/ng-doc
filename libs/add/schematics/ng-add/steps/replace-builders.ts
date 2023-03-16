@@ -16,28 +16,42 @@ import {getProject} from '../utils/get-project';
 export function replaceBuilders(options: Schema): Rule {
 	return async (tree: Tree, context: SchematicContext) => {
 		return updateWorkspace((workspace: WorkspaceDefinition) => {
-			context.logger.info(`[INFO]: Replacing default builders...`);
+			const logger = context.logger.createChild('replace-builders');
 
-			const project: ProjectDefinition | undefined = getProject(options, workspace);
+			context.logger.info(`[INFO]: Builders`);
+			logger.info(`🔄 Replacing Angular CLI builders with @ng-doc builders...`);
 
-			if (!project) {
-				context.logger.warn(`[WARNING]: Target project not found.`);
-				return;
-			}
+			try {
+				const project: ProjectDefinition | undefined = getProject(options, workspace);
 
-			const buildTarget: TargetDefinition | undefined = project.targets.get('build');
-			const serveTarget: TargetDefinition | undefined = project.targets.get('serve');
+				if (!project) {
+					logger.error(`❌ Target project not found. Please replace builders manually.`);
 
-			if (buildTarget) {
-				buildTarget.builder = '@ng-doc/builder:browser';
-			} else {
-				context.logger.warn(`[WARNING]: "build" target was not found, please add @ng-doc builder manually.`);
-			}
+					return;
+				}
 
-			if (serveTarget) {
-				serveTarget.builder = '@ng-doc/builder:dev-server';
-			} else {
-				context.logger.warn(`[WARNING]: "serve" target was not found, please add @ng-doc builder manually.`);
+				const buildTarget: TargetDefinition | undefined = project.targets.get('build');
+				const serveTarget: TargetDefinition | undefined = project.targets.get('serve');
+
+				if (buildTarget) {
+					buildTarget.builder = '@ng-doc/builder:browser';
+				} else {
+					logger.error(
+						`❌ "build" target was not found, please add "@ng-doc/builder:browser" builder manually.`,
+					);
+				}
+
+				if (serveTarget) {
+					serveTarget.builder = '@ng-doc/builder:dev-server';
+				} else {
+					logger.warn(
+						`❌ "serve" target was not found, please add "@ng-doc/builder:dev-server" builder manually.`,
+					);
+				}
+
+				logger.info('✅ Done!');
+			} catch (e) {
+				logger.error(`❌ Error: ${e}`);
 			}
 		});
 	};
