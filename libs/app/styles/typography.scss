@@ -83,14 +83,14 @@ h3#{$class} {
 h4#{$class} {
 	font-size: 20px;
 	line-height: calc(var(--ng-doc-base-gutter) * 4);
-	margin-top: calc(var(--ng-doc-base-gutter) * 3);
+	margin: calc(var(--ng-doc-base-gutter) * 2) 0;
 }
 
 h5#{$class},
 h6#{$class} {
 	font-size: calc(var(--ng-doc-base-gutter) * 2);
 	line-height: calc(var(--ng-doc-base-gutter) * 3);
-	margin-top: calc(var(--ng-doc-base-gutter) * 2);
+	margin: calc(var(--ng-doc-base-gutter) * 2) 0;
 }
 
 pre#{$class} {
