@@ -3,7 +3,7 @@
 NgDoc is a library for creating documentation for your Angular projects, it is injected into the
 build process of a regular Angular application and creates documentation that can be displayed in
 it. The current documentation is created using the library itself, so it's already an example of
-how it works and what it can do.
+how it works, what it can do and how it looks.
 
 ## Motivation
 
