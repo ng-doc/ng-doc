@@ -1,5 +1,5 @@
 import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
+import {NgModule, Provider} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {provideTypeControl} from '@ng-doc/app/helpers';
 import {NgDocExtractValueModule} from '@ng-doc/app/pipes/extract-value';
@@ -15,6 +15,8 @@ import {FlControlSilencerModule} from 'flex-controls';
 
 import {NgDocStringControlComponent} from './string-control.component';
 
+const provider: Provider = provideTypeControl('string', NgDocStringControlComponent);
+
 @NgModule({
 	declarations: [NgDocStringControlComponent],
 	imports: [
@@ -29,7 +31,7 @@ import {NgDocStringControlComponent} from './string-control.component';
 		NgDocButtonIconModule,
 		NgDocFocusableModule,
 	],
-	providers: [provideTypeControl('string', NgDocStringControlComponent)],
+	providers: [provider],
 	exports: [NgDocStringControlComponent],
 })
 export class NgDocStringControlModule {}
