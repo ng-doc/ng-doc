@@ -1,3 +1,11 @@
+## [15.7.8](https://github.com/skoropadas/ng-doc/compare/v15.7.7...v15.7.8) (2023-03-17)
+
+
+### Bug Fixes
+
+* **add:** schematic doesnt add NgDoc modules ([dcee2ae](https://github.com/skoropadas/ng-doc/commit/dcee2ae3196916585782ca9aea87cd5ea792a40f))
+* **builder:** if an error is made in the template syntax, the application throws an error and stops building, while if the error is fixed, you still have to restart the build ([81f7b70](https://github.com/skoropadas/ng-doc/commit/81f7b708e408edb576d4a05470ef66ba6dc3c105))
+
 ## [15.7.7](https://github.com/skoropadas/ng-doc/compare/v15.7.6...v15.7.7) (2023-03-13)
 
 
