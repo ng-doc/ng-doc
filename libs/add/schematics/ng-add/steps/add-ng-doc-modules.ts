@@ -23,25 +23,32 @@ import {getProject} from '../utils/get-project';
  */
 export function addNgDocModules(options: Schema): Rule {
 	return async (tree: Tree, context: SchematicContext) => {
-		context.logger.info(`[INFO]: Adding NgDoc modules to the root module...`);
+		const logger = context.logger.createChild('add-ng-doc-modules');
 
-		const workspace: WorkspaceDefinition = await getWorkspace(tree);
-		const project: ProjectDefinition | undefined = getProject(options, workspace);
+		context.logger.info(`[INFO]: NgDoc modules`);
+		logger.info(`🔄 Importing NgDoc modules to the root module...`);
 
-		if (!project) {
-			context.logger.warn('[WARNING]: Target project not found in current workspace');
-			return;
+		try {
+			const workspace: WorkspaceDefinition = await getWorkspace(tree);
+			const project: ProjectDefinition | undefined = getProject(options, workspace);
+
+			if (!project) {
+				logger.error(`❌ Target project not found. Please import NgDoc modules manually.`);
+
+				return;
+			}
+
+			const buildOptions: Record<string, JsonValue> = getProjectTargetOptions(project, 'build');
+			const mainModule: ClassDeclaration = getMainModule(buildOptions['main'] as string);
+
+			setActiveProject(createProject(tree, '/', ['**/*.ts', '**/*.json']));
+			importMainModules(mainModule);
+			saveActiveProject();
+
+			logger.info('✅ Done!');
+		} catch (e) {
+			logger.error(`❌ Error: ${e}`);
 		}
-
-		const buildOptions: Record<string, JsonValue> = getProjectTargetOptions(project, 'build');
-
-		setActiveProject(createProject(tree, '/', ['**/*.ts', '**/*.json']));
-
-		const mainModule: ClassDeclaration = getMainModule(buildOptions['main'] as string);
-
-		importMainModules(mainModule);
-
-		saveActiveProject();
 	};
 }
 
