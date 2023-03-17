@@ -1,7 +1,6 @@
-import {URL} from 'node:url';
 import * as path from 'path';
 
-import {editFileInRepoUrl, slash} from '../../../helpers';
+import {slash} from '../../../helpers';
 import {NgDocModuleEntity} from './module.entity';
 
 export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T> {
