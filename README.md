@@ -38,6 +38,7 @@ NgDoc allows you to do the following things:
 
 -   Dynamic markdown templates for your guidelines via Nunjucks
 -   Render demos on the page in one line of code
+-   Create playgrounds for your Angular Components and Directives
 -   The documentation for your API is based on comments to your code
 -   Dynamic links to API, Pages, or foreign websites via `Keywords` feature
 -   Automatic generation of links to your API in code examples or in mentions of any entity inside
