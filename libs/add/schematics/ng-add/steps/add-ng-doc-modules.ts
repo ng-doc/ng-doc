@@ -39,9 +39,11 @@ export function addNgDocModules(options: Schema): Rule {
 			}
 
 			const buildOptions: Record<string, JsonValue> = getProjectTargetOptions(project, 'build');
-			const mainModule: ClassDeclaration = getMainModule(buildOptions['main'] as string);
 
 			setActiveProject(createProject(tree, '/', ['**/*.ts', '**/*.json']));
+
+			const mainModule: ClassDeclaration = getMainModule(buildOptions['main'] as string);
+
 			importMainModules(mainModule);
 			saveActiveProject();
 
