@@ -1,3 +1,10 @@
+## [15.7.9](https://github.com/skoropadas/ng-doc/compare/v15.7.8...v15.7.9) (2023-03-19)
+
+
+### Bug Fixes
+
+	**builder:**new demo code previews are unavailable until the application is restarted([038e0ef](https://github.com/skoropadas/ng-doc/commit/038e0ef79ca650f55ff00536ff93c5416ca64d8b)), closes[#33](https://github.com/skoropadas/ng-doc/issues/33)
+
 ## [15.7.8](https://github.com/skoropadas/ng-doc/compare/v15.7.7...v15.7.8) (2023-03-17)
 
 
