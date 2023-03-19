@@ -1,8 +1,18 @@
+const {readFileSync} = require('fs');
+const {join} = require('path');
+
 module.exports = {
 	branches: ['+([0-9])?(.{+([0-9]),x}).x', 'release', {name: 'beta', channel: 'beta', prerelease: true}],
 	plugins: [
 		'@semantic-release/commit-analyzer',
-		'@semantic-release/release-notes-generator',
+		[
+			'@semantic-release/release-notes-generator',
+			{
+				writerOpts: {
+					commitPartial: readFileSync(join(__dirname, './commit.hbs'), 'utf-8'),
+				},
+			},
+		],
 		'@semantic-release/changelog',
 		[
 			'./plugins/semantic-release/publish-packages.js',
