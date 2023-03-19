@@ -19,7 +19,7 @@ export function createBuilderContext(
 	context: BuilderContext,
 ): NgDocBuilderContext {
 	const buildPath: string = path.join(context.workspaceRoot, '.ng-doc', context.target?.project ?? 'app');
-	const projectRoot: string = path.join(context.workspaceRoot, path.dirname(targetOptions['main'] as string));
+	const projectRoot: string = path.dirname(targetOptions['main'] as string);
 
 	if (Object.keys(options.ngDoc ?? {}).length) {
 		context.logger.warn(
