@@ -1,8 +1,9 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input} from '@angular/core';
-import {SearchResultWithHighlight} from '@lyrasearch/plugin-match-highlight';
+import {Position, SearchResultWithHighlight} from '@lyrasearch/plugin-match-highlight';
 import {NgDocSearchEngine} from '@ng-doc/app/classes/search-engine';
 import {SearchSchema} from '@ng-doc/app/interfaces';
-import {NgDocPageInfo} from '@ng-doc/core/interfaces/page-info';
+import {NgDocPageType} from '@ng-doc/core';
+import {NgDocHighlightPosition} from '@ng-doc/ui-kit';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {Subject} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
@@ -41,6 +42,18 @@ export class NgDocSearchComponent {
 	}
 
 	groupByPage(item: SearchResultWithHighlight<SearchSchema>): string {
-		return item.document.title;
+		return item.document.breadcrumbs;
+	}
+
+	getPageTypeForGroup(group: string): NgDocPageType {
+		return this.queryResult.find(
+			(item?: SearchResultWithHighlight<SearchSchema>) => item?.document?.breadcrumbs === group,
+		)?.document['pageType'] as NgDocPageType;
+	}
+
+	getPositions(key: string, item: SearchResultWithHighlight<SearchSchema>): NgDocHighlightPosition[] {
+		return Object.values(item.positions[key] ?? {})
+			.map((positions: Position[]) => positions)
+			.flat();
 	}
 }

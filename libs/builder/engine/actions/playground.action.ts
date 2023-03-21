@@ -17,10 +17,13 @@ import {NgDocPageEntity} from '../entities/page.entity';
 export function playgroundAction(pId: string): NgDocAction {
 	return (project: Project, page: NgDocPageEntity): NgDocActionOutput => {
 		try {
-			const playgroundsExpression: ObjectLiteralExpression | undefined = page.pageDependencies?.getPlaygroundsExpression();
+			const playgroundsExpression: ObjectLiteralExpression | undefined =
+				page.pageDependencies?.getPlaygroundsExpression();
 
 			if (!playgroundsExpression) {
-				throw new Error(`Can't find the playground configuration for "${page.route}" page. Make sure that you configured the "${pId}" playground correctly.`);
+				throw new Error(
+					`Can't find the playground configuration for "${page.route}" page. Make sure that you configured the "${pId}" playground correctly.`,
+				);
 			}
 
 			const declaration: ClassDeclaration | undefined = getTargetForPlayground(playgroundsExpression, pId);

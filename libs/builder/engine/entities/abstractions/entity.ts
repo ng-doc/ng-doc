@@ -208,7 +208,7 @@ export abstract class NgDocEntity {
 				}
 
 				return artifact;
-			})
+			}),
 		);
 	}
 }

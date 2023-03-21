@@ -1,6 +1,9 @@
+@import "../../styles/mixins";
+
 :host {
+	@include ng-doc-font();
 	display: block;
-	padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
+	padding: var(--ng-doc-option-padding, var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2));
 
 	&:hover:not([data-disabled="true"]),
 	&[data-ng-doc-hover="true"]:not([data-disabled="true"]) {

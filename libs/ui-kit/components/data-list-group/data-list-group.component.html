@@ -1,7 +1,10 @@
 <ng-doc-list>
 	<ng-container *ngIf="items && items.length; else emptyTemplate">
 		<ng-doc-option-group *ngFor="let group of groupItems">
-			<span *polymorpheusOutlet="groupContent as groupText; context: getGroupContext(group)" ngDocOptionGroupHeader>
+			<span
+				*polymorpheusOutlet="groupContent as groupText; context: getGroupContext(group)"
+				ngDocOptionGroupHeader
+			>
 				{{ groupText }}
 			</span>
 			<ng-doc-option
@@ -10,7 +13,7 @@
 				[disabled]="itemDisabledFn(item)"
 			>
 				<ng-container *polymorpheusOutlet="itemContent as text; context: getContext(item)">
-					{{text}}
+					{{ text }}
 				</ng-container>
 			</ng-doc-option>
 		</ng-doc-option-group>

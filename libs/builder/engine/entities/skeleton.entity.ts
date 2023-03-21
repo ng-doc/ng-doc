@@ -79,17 +79,14 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 	}
 
 	private buildIndexes(): Observable<NgDocBuiltOutput[]> {
-		return from(buildIndexes(this.builder.entities.asArray().filter(this.isReady)))
-			.pipe(
-				map((sectionIndexes: NgDocPageSectionIndex[]) =>
-					[
-						{
-							content: JSON.stringify(sectionIndexes, null, 2),
-							filePath: path.join(this.context.assetsPath, 'indexes.json'),
-						},
-					]
-				)
-			)
+		return from(buildIndexes(this.builder.entities.asArray().filter(this.isReady))).pipe(
+			map((sectionIndexes: NgDocPageSectionIndex[]) => [
+				{
+					content: JSON.stringify(sectionIndexes, null, 2),
+					filePath: path.join(this.context.assetsPath, 'indexes.json'),
+				},
+			]),
+		);
 	}
 
 	private get rootEntitiesForBuild(): NgDocEntity[] {

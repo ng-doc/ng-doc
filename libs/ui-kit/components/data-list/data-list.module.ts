@@ -9,13 +9,7 @@ import {NgDocDataListComponent} from './data-list.component';
 
 @NgModule({
 	declarations: [NgDocDataListComponent],
-	imports: [
-		CommonModule,
-		NgDocListModule,
-		NgDocOptionModule,
-		NgDocTextModule,
-		PolymorpheusModule,
-	],
+	imports: [CommonModule, NgDocListModule, NgDocOptionModule, NgDocTextModule, PolymorpheusModule],
 	exports: [NgDocDataListComponent],
 })
 export class NgDocDataListModule {}

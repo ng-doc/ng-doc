@@ -51,6 +51,4 @@ export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T>
 
 		return slash(path.join('/', parentRoute, this.route));
 	}
-
-
 }

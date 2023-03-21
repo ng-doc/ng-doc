@@ -6,7 +6,7 @@ import * as path from 'path';
 import {NgDocEntity} from '../engine/entities/abstractions/entity';
 import {NgDocRouteEntity} from '../engine/entities/abstractions/route.entity';
 import {NgDocBuiltOutput} from '../interfaces';
-import {isApiPageEntity} from './entity-type';
+import {isApiPageEntity, isRouteEntity} from './entity-type';
 
 /**
  *
@@ -44,6 +44,7 @@ export async function buildIndexes(entities: NgDocEntity[]): Promise<NgDocPageSe
 								section = doc;
 							} else {
 								pages.push({
+									breadcrumbs: buildBreadcrumbs(entity),
 									pageType: isApiPageEntity(entity) ? 'api' : 'guide',
 									title: entity.title,
 									sectionTitle: section?.content ?? '',
@@ -58,6 +59,14 @@ export async function buildIndexes(entities: NgDocEntity[]): Promise<NgDocPageSe
 	}
 
 	return pages;
+}
+
+/**
+ *
+ * @param entity
+ */
+function buildBreadcrumbs(entity: NgDocRouteEntity): string {
+	return isRouteEntity(entity.parent) ? `${buildBreadcrumbs(entity.parent)} • ${entity.title}` : entity.title;
 }
 
 /**

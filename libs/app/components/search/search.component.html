@@ -24,7 +24,7 @@
 						/>
 					</ng-doc-input-wrapper>
 					<div class="ng-doc-search-result-content">
-<!--						<ng-doc-search-result [result]="queryResult"></ng-doc-search-result>-->
+						<!--						<ng-doc-search-result [result]="queryResult"></ng-doc-search-result>-->
 					</div>
 				</div>
 			</ng-template>
@@ -39,7 +39,6 @@
 		ngDocDropdownOrigin
 		ngDocFocusCatcher
 		(focusEvent)="inputElement.value ? dropdown.open() : null"
-		(blurEvent)="dropdown.close()"
 		(click)="inputElement.value ? dropdown.open() : null"
 		#input
 	>
@@ -66,9 +65,34 @@
 		>
 			<ng-template #dropdownContent>
 				<div class="ng-doc-search-result-content">
-					<ng-doc-data-list-group [items]="queryResult" [itemContent]="itemContent" [itemGroupFn]="groupByPage">
+					<ng-doc-data-list-group
+						[items]="queryResult"
+						[itemContent]="itemContent"
+						[groupContent]="groupContent"
+						[itemGroupFn]="groupByPage"
+					>
+						<ng-template let-group #groupContent>
+							<div class="ng-doc-group-header" *ngDocLet="getPageTypeForGroup(group) as pageType">
+								<ng-doc-tag size="small" [color]="pageType === 'api' ? 'red' : 'blue'">
+									{{ pageType }}
+								</ng-doc-tag>
+								{{ group }}
+							</div>
+						</ng-template>
 						<ng-template let-item #itemContent>
-							{{item.document.content}}
+							<h5
+								class="ng-doc-search-section-title"
+								ng-doc-text
+								[innerHTML]="
+									item.document.sectionTitle
+										| ngDocHighlighterPipe: getPositions('sectionTitle', item)
+								"
+							></h5>
+							<div
+								[innerHTML]="
+									item.document.content | ngDocHighlighterPipe: getPositions('content', item)
+								"
+							></div>
 						</ng-template>
 					</ng-doc-data-list-group>
 				</div>

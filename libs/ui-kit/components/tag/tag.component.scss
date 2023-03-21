@@ -21,7 +21,7 @@
 
 	&[data-ng-doc-size='small'] {
 		padding: 0 calc(var(--ng-doc-base-gutter) / 2);
-		--ng-doc-font-size: 12px;
+		--ng-doc-font-size: 10px;
 		--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 2);
 	}
 }

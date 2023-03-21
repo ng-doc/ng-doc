@@ -18,40 +18,47 @@ export function provideSearchEngine(): Provider {
 	return {
 		provide: NgDocSearchEngine,
 		useValue: new NgDocSearchEngine(),
-	}
+	};
 }
 
 export class NgDocSearchEngine {
-	private db$: Observable<LyraWithHighlight<SearchSchema>>
+	private db$: Observable<LyraWithHighlight<SearchSchema>>;
 
 	constructor() {
 		this.db$ = from(
 			create<SearchSchema>({
 				schema: {
+					breadcrumbs: 'string',
 					title: 'string',
 					sectionTitle: 'string',
 					content: 'string',
 				},
 				hooks: {
-					afterInsert
-				}
+					afterInsert,
+				},
 			}),
 		).pipe(
 			map((db: Lyra<SearchSchema>) => db as LyraWithHighlight<SearchSchema>),
 			switchMap((db: LyraWithHighlight<SearchSchema>) =>
 				this.request<NgDocPageSectionIndex[]>(`assets/ng-doc/indexes.json`).pipe(
 					switchMap((pages: NgDocPageSectionIndex[]) =>
-						Promise.all(pages.map((page: NgDocPageSectionIndex) => insertWithHooks(db, page as unknown as ResolveSchema<SearchSchema>)))
+						Promise.all(
+							pages.map((page: NgDocPageSectionIndex) =>
+								insertWithHooks(db, page as unknown as ResolveSchema<SearchSchema>),
+							),
+						),
 					),
 					map(() => db),
 				),
 			),
 			shareReplay(1),
-		) as Observable<LyraWithHighlight<SearchSchema>>
+		) as Observable<LyraWithHighlight<SearchSchema>>;
 	}
 
 	search(query: string): Observable<Array<SearchResultWithHighlight<SearchSchema>>> {
-		return this.db$.pipe(switchMap((db: LyraWithHighlight<SearchSchema>) => searchWithHighlight(db, {term: query})));
+		return this.db$.pipe(
+			switchMap((db: LyraWithHighlight<SearchSchema>) => searchWithHighlight(db, {term: query})),
+		);
 	}
 
 	private request<T>(url: string): Observable<T> {

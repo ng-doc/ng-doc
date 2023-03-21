@@ -17,7 +17,6 @@
     <a href="https://ng-doc.com/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-	<a href="https://ng-doc.com/getting-started/roadmap">Roadmap</a>
     ·
     <a href="https://github.com/skoropadas/ng-doc/issues">Report Bug</a>
     ·

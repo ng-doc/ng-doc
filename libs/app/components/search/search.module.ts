@@ -8,11 +8,14 @@ import {
 	NgDocDropdownModule,
 	NgDocDropdownOriginModule,
 	NgDocFocusCatcherModule,
+	NgDocHighlighterModule,
 	NgDocHotkeyModule,
 	NgDocIconModule,
 	NgDocInputStringModule,
 	NgDocInputWrapperModule,
+	NgDocLetModule,
 	NgDocTagModule,
+	NgDocTextModule,
 } from '@ng-doc/ui-kit';
 
 import {NgDocSearchComponent} from './search.component';
@@ -33,6 +36,9 @@ import {NgDocSearchComponent} from './search.component';
 		NgDocTagModule,
 		NgDocHotkeyModule,
 		NgDocDataListGroupModule,
+		NgDocHighlighterModule,
+		NgDocTextModule,
+		NgDocLetModule,
 	],
 	exports: [NgDocSearchComponent],
 })
