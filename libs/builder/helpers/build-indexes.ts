@@ -2,14 +2,11 @@ import {create, ResolveSchema} from '@lyrasearch/lyra';
 import {defaultHtmlSchema, NodeContent, populate} from '@lyrasearch/plugin-parsedoc';
 import {NgDocPageSectionIndex} from '@ng-doc/core/interfaces';
 import * as path from 'path';
-import {filter} from 'unist-util-filter'
 
 import {NgDocEntity} from '../engine/entities/abstractions/entity';
 import {NgDocRouteEntity} from '../engine/entities/abstractions/route.entity';
 import {NgDocBuiltOutput} from '../interfaces';
 import {isApiPageEntity} from './entity-type';
-
-const NOT_INDEXABLE_TAGS: string[] = ['code'];
 
 /**
  *
@@ -20,14 +17,20 @@ export async function buildIndexes(entities: NgDocEntity[]): Promise<NgDocPageSe
 
 	for (const entity of entities) {
 		if (entity instanceof NgDocRouteEntity) {
-			const artifacts: NgDocBuiltOutput[] = entity.artifacts.filter((artifact: NgDocBuiltOutput) => path.extname(artifact.filePath) === '.html');
+			const artifacts: NgDocBuiltOutput[] = entity.artifacts.filter(
+				(artifact: NgDocBuiltOutput) => path.extname(artifact.filePath) === '.html',
+			);
 
 			for (const artifact of artifacts) {
-				const db = await create({ schema: {
+				const db = await create({
+					schema: {
 						...defaultHtmlSchema,
-					} });
+					},
+				});
 
-				await populate(db, removeNotIndexableTags(artifact.content), 'html', {
+				const indexableContent: string = removeNotIndexableTags(artifact.content);
+
+				await populate(db, indexableContent, 'html', {
 					transformFn: (node: NodeContent) => transformFn(node),
 				});
 
@@ -46,15 +49,13 @@ export async function buildIndexes(entities: NgDocEntity[]): Promise<NgDocPageSe
 									sectionTitle: section?.content ?? '',
 									route: sectionRoute(entity.fullRoute, doc),
 									content: doc.content,
-								})
+								});
 							}
 						}
-					})
-
+					});
 			}
 		}
 	}
-
 
 	return pages;
 }
@@ -73,6 +74,7 @@ function isIndexable(doc?: ResolveSchema<typeof defaultHtmlSchema>): boolean {
  * @param doc
  */
 function isHeading(doc: ResolveSchema<typeof defaultHtmlSchema>): boolean {
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
 	return ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(doc.type) && !!doc?.properties && !!doc.properties['id'];
 }
@@ -83,6 +85,7 @@ function isHeading(doc: ResolveSchema<typeof defaultHtmlSchema>): boolean {
  * @param doc
  */
 function sectionRoute(route: string, doc: ResolveSchema<typeof defaultHtmlSchema>): string {
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
 	const anchor = doc?.properties && doc.properties['id'] ? `#${doc.properties['id']}` : '';
 
@@ -104,29 +107,33 @@ function transformFn(node: NodeContent): NodeContent {
 		case 'b':
 		case 'p':
 		case 'ul':
-			return { ...node, raw: `<p>${node.content}</p>`}
+			return {...node, raw: `<p>${node.content}</p>`};
 		default:
-			return node
+			return node;
 	}
 }
-
 
 /**
  *
  * @param html
  */
 function removeNotIndexableTags(html: string): string {
-	return require('rehype')()
-		.use(removeCodeBlocks())
-		.processSync()
-		.toString();
+	return require('rehype')().use(removeCodeBlocks).processSync(html).toString();
 }
 
 /**
  *
  */
 function removeCodeBlocks(): any {
+	const filter = require('unist-util-filter');
+
 	return (tree: any) => {
-		filter(tree, {cascade: false}, (node: any) => !NOT_INDEXABLE_TAGS.includes(node.tag));
+		return filter(tree, {cascade: false}, (node: any) => {
+			const preWithCode: boolean =
+				node?.tagName === 'pre' && node?.children?.some((child: any) => child?.tagName === 'code');
+			const notIndexable: boolean = node?.properties?.indexable === 'false';
+
+			return !node?.tagName || (!preWithCode && !notIndexable);
+		});
 	};
 }

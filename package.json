@@ -90,6 +90,7 @@
 		"svgo": "^2.8.0",
 		"ts-morph": "^15.0.0",
 		"tslib": "^2.3.0",
+		"unist-util-filter": "^2.0.3",
 		"unist-util-visit": "^2.0.1",
 		"zone.js": "~0.11.4"
 	},
@@ -112,7 +113,6 @@
 		"@nrwl/js": "15.8.7",
 		"@nrwl/linter": "15.8.7",
 		"@nrwl/nx-cloud": "15.2.3",
-		"@nrwl/rollup": "15.8.7",
 		"@nrwl/workspace": "15.8.7",
 		"@semantic-release/changelog": "^6.0.2",
 		"@semantic-release/commit-analyzer": "^9.0.2",
@@ -162,9 +162,8 @@
 	},
 	"lint-staged": {
 		"*": [
-			"nx affected:lint --fix --quiet --base=main --head=HEAD",
+			"nx affected:lint --fix --quiet=true --base=main --head=HEAD",
 			"nx format:write --base=main --head=HEAD"
 		]
 	}
 }
-

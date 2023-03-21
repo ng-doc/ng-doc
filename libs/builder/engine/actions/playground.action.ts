@@ -1,7 +1,7 @@
 import {escapeHtml, NgDocPlaygroundProperties} from '@ng-doc/core';
 import {ClassDeclaration, Decorator, Node, ObjectLiteralExpression, Project} from 'ts-morph';
 
-import {getPlaygroundById, getPlaygroundClassProperties, getTargetForPlayground} from '../../helpers';
+import {getPlaygroundClassProperties, getTargetForPlayground} from '../../helpers';
 import {NgDocActionOutput} from '../../interfaces';
 import {componentDecoratorResolver} from '../../resolvers/component-decorator.resolver';
 import {NgDocAction} from '../../types';
@@ -39,7 +39,7 @@ export function playgroundAction(pId: string): NgDocAction {
 			const playgroundData: NgDocPlaygroundProperties = getPlaygroundClassProperties(declaration);
 
 			return {
-				output: `<ng-doc-playground id="${pId}">
+				output: `<ng-doc-playground id="${pId}" indexable="false">
 							<div id="selectors">${selectors}</div>
 							<div id="data">${escapeHtml(JSON.stringify(playgroundData))}</div>
 						</ng-doc-playground>`,

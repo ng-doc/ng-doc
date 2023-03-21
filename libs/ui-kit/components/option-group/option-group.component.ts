@@ -11,10 +11,8 @@ import {NgDocOptionComponent} from '@ng-doc/ui-kit/components/option';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {startWith} from 'rxjs/operators';
 
-
-@Directive({selector: '[ngDocOptionGroupHeader'})
+@Directive({selector: '[ngDocOptionGroupHeader]'})
 export class NgDocOptionGroupHeaderDirective {}
-
 
 @Component({
 	selector: 'ng-doc-option-group',

@@ -28,7 +28,8 @@
 					"error"
 				],
 				"@typescript-eslint/no-inferrable-types": "off",
-				"@angular-eslint/no-input-rename": "off"
+				"@angular-eslint/no-input-rename": "off",
+				"@typescript-eslint/member-ordering": "off"
 			}
 		},
 		{
