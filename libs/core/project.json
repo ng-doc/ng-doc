@@ -1,16 +1,22 @@
 {
+	"name": "core",
 	"$schema": "../../node_modules/nx/schemas/project-schema.json",
 	"sourceRoot": "libs/core",
 	"projectType": "library",
 	"targets": {
 		"pre-build": {
-			"executor": "@nrwl/js:tsc",
+			"executor": "@nrwl/rollup:rollup",
 			"outputs": ["{options.outputPath}"],
 			"options": {
+				"project": "libs/core/package.json",
+				"entryFile": "libs/core/index.ts",
 				"outputPath": "dist/libs/core",
 				"main": "libs/core/index.ts",
 				"tsConfig": "libs/core/tsconfig.lib.json",
-				"assets": ["libs/core/*.md"],
+				"assets": ["libs/core/README.md"],
+				"format": ["cjs", "esm"],
+				"compiler": "babel",
+				"external": ["typescript"],
 				"updateBuildableProjectDepsInPackageJson": false
 			}
 		},

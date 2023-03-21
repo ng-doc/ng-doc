@@ -1,5 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input} from '@angular/core';
+import {SearchResultWithHighlight} from '@lyrasearch/plugin-match-highlight';
 import {NgDocSearchEngine} from '@ng-doc/app/classes/search-engine';
+import {SearchSchema} from '@ng-doc/app/interfaces';
 import {NgDocPageInfo} from '@ng-doc/core/interfaces/page-info';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {Subject} from 'rxjs';
@@ -20,7 +22,7 @@ export class NgDocSearchComponent {
 	searchTerm: string = '';
 
 	readonly query$: Subject<string> = new Subject<string>();
-	queryResult: NgDocPageInfo[] = [];
+	queryResult: Array<SearchResultWithHighlight<SearchSchema>> = [];
 
 	constructor(
 		private readonly searchEngine: NgDocSearchEngine,
@@ -31,9 +33,14 @@ export class NgDocSearchComponent {
 				switchMap((term: string) => this.searchEngine.search(term)),
 				untilDestroyed(this),
 			)
-			.subscribe((result: NgDocPageInfo[]) => {
+			.subscribe((result: Array<SearchResultWithHighlight<SearchSchema>>) => {
 				this.queryResult = result;
+				console.log(this.queryResult);
 				this.changeDetectorRef.markForCheck();
 			});
+	}
+
+	groupByPage(item: SearchResultWithHighlight<SearchSchema>): string {
+		return item.document.title;
 	}
 }

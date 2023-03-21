@@ -10,7 +10,8 @@
 		"@tinkoff/ng-polymorpheus": "^4.0.0",
 		"@ng-web-apis/common": "^2.0.1",
 		"rxjs": "^7.0.0",
-		"lunr": "^2.3.9",
+		"@lyrasearch/lyra": "^0.4.11",
+		"@lyrasearch/plugin-match-highlight": "^0.1.0",
 		"highlight.js": "^11.5.1",
 		"js-beautify": "^1.14.7",
 		"flex-controls": "^1.1.1"

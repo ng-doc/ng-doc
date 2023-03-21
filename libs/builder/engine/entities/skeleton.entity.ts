@@ -1,8 +1,9 @@
+import {NgDocPageSectionIndex} from '@ng-doc/core';
 import path from 'path';
-import {forkJoin, Observable, of} from 'rxjs';
+import {forkJoin, from, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-import {buildGlobalIndexes} from '../../helpers/build-global-indexes';
+import {buildIndexes} from '../../helpers/build-indexes';
 import {NgDocBuiltOutput} from '../../interfaces';
 import {NgDocEntity} from './abstractions/entity';
 
@@ -78,18 +79,17 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 	}
 
 	private buildIndexes(): Observable<NgDocBuiltOutput[]> {
-		const [dictionary, indexes] = buildGlobalIndexes(this.builder.entities.asArray().filter(this.isReady));
-
-		return of([
-			{
-				content: dictionary,
-				filePath: path.join(this.context.assetsPath, 'pages.json'),
-			},
-			{
-				content: indexes,
-				filePath: path.join(this.context.assetsPath, 'indexes.json'),
-			},
-		]);
+		return from(buildIndexes(this.builder.entities.asArray().filter(this.isReady)))
+			.pipe(
+				map((sectionIndexes: NgDocPageSectionIndex[]) =>
+					[
+						{
+							content: JSON.stringify(sectionIndexes, null, 2),
+							filePath: path.join(this.context.assetsPath, 'indexes.json'),
+						},
+					]
+				)
+			)
 	}
 
 	private get rootEntitiesForBuild(): NgDocEntity[] {

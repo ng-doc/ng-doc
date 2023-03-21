@@ -1,0 +1,18 @@
+.ng-doc-option-group-header {
+	display: flex;
+	line-height: 18px;
+	font-size: 13px;
+	background-color: var(--ng-doc-black-10);
+
+	& > ::ng-deep * {
+		margin: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
+	}
+}
+
+.ng-doc-option-group {
+	::ng-deep ng-doc-option {
+		.ng-doc-option-wrapper {
+			padding-left: calc(var(--ng-doc-base-gutter) * 2);
+		}
+	}
+}
