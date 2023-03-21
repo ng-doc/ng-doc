@@ -1,6 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
+import {RouterModule} from '@angular/router';
 import {
 	NgDocAutofocusModule,
 	NgDocButtonIconModule,
@@ -24,12 +25,13 @@ import {NgDocSearchComponent} from './search.component';
 	declarations: [NgDocSearchComponent],
 	imports: [
 		CommonModule,
+		FormsModule,
+		RouterModule,
 		NgDocInputWrapperModule,
 		NgDocInputStringModule,
 		NgDocDropdownModule,
 		NgDocDropdownOriginModule,
 		NgDocFocusCatcherModule,
-		FormsModule,
 		NgDocIconModule,
 		NgDocButtonIconModule,
 		NgDocAutofocusModule,

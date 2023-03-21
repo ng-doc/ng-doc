@@ -48,7 +48,10 @@ export async function buildIndexes(entities: NgDocEntity[]): Promise<NgDocPageSe
 									pageType: isApiPageEntity(entity) ? 'api' : 'guide',
 									title: entity.title,
 									sectionTitle: section?.content ?? '',
-									route: sectionRoute(entity.fullRoute, doc),
+									route: entity.fullRoute,
+									// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+									// @ts-ignore
+									fragment: section?.properties && section.properties['id'],
 									content: doc.content,
 								});
 							}
@@ -86,19 +89,6 @@ function isHeading(doc: ResolveSchema<typeof defaultHtmlSchema>): boolean {
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
 	return ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(doc.type) && !!doc?.properties && !!doc.properties['id'];
-}
-
-/**
- *
- * @param route
- * @param doc
- */
-function sectionRoute(route: string, doc: ResolveSchema<typeof defaultHtmlSchema>): string {
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
-	const anchor = doc?.properties && doc.properties['id'] ? `#${doc.properties['id']}` : '';
-
-	return `${route}${anchor}`;
 }
 
 /**

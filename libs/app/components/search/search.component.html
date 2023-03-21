@@ -23,9 +23,7 @@
 							ngDocAutofocus
 						/>
 					</ng-doc-input-wrapper>
-					<div class="ng-doc-search-result-content">
-						<!--						<ng-doc-search-result [result]="queryResult"></ng-doc-search-result>-->
-					</div>
+					<ng-container *ngTemplateOutlet="searchResults"></ng-container>
 				</div>
 			</ng-template>
 		</ng-doc-dropdown>
@@ -58,45 +56,47 @@
 			<ng-doc-tag class="search-hotkey">/</ng-doc-tag>
 		</ng-template>
 		<ng-doc-dropdown
-			[content]="dropdownContent"
+			[content]="searchResults"
 			[width]="input.elementRef.nativeElement.offsetWidth"
 			maxHeight="calc(95vh - var(--ng-doc-navbar-height)"
 			#dropdown
 		>
-			<ng-template #dropdownContent>
-				<div class="ng-doc-search-result-content">
-					<ng-doc-data-list-group
-						[items]="queryResult"
-						[itemContent]="itemContent"
-						[groupContent]="groupContent"
-						[itemGroupFn]="groupByPage"
-					>
-						<ng-template let-group #groupContent>
-							<div class="ng-doc-group-header" *ngDocLet="getPageTypeForGroup(group) as pageType">
-								<ng-doc-tag size="small" [color]="pageType === 'api' ? 'red' : 'blue'">
-									{{ pageType }}
-								</ng-doc-tag>
-								{{ group }}
-							</div>
-						</ng-template>
-						<ng-template let-item #itemContent>
-							<h5
-								class="ng-doc-search-section-title"
-								ng-doc-text
-								[innerHTML]="
-									item.document.sectionTitle
-										| ngDocHighlighterPipe: getPositions('sectionTitle', item)
-								"
-							></h5>
-							<div
-								[innerHTML]="
-									item.document.content | ngDocHighlighterPipe: getPositions('content', item)
-								"
-							></div>
-						</ng-template>
-					</ng-doc-data-list-group>
-				</div>
-			</ng-template>
+			<
 		</ng-doc-dropdown>
 	</ng-doc-input-wrapper>
+</ng-template>
+
+<ng-template #searchResults>
+	<div class="ng-doc-search-result-content">
+		<ng-doc-data-list-group
+			[items]="queryResult"
+			[itemContent]="itemContent"
+			[groupContent]="groupContent"
+			[itemGroupFn]="groupByPage"
+			[emptyContent]="emptyContent"
+		>
+			<ng-template let-group #groupContent>
+				<div class="ng-doc-group-header" *ngDocLet="getPageTypeForGroup(group) as pageType">
+					<ng-doc-tag size="small" [color]="pageType === 'api' ? 'red' : 'blue'">
+						{{ pageType }}
+					</ng-doc-tag>
+					{{ group }}
+				</div>
+			</ng-template>
+			<ng-template let-item #itemContent>
+				<a class="ng-doc-search-option" [routerLink]="item.document.route" [fragment]="item.document.fragment">
+					<h5
+						class="ng-doc-search-section-title"
+						ng-doc-text
+						[innerHTML]="item.document.sectionTitle | ngDocHighlighterPipe: getPositions('sectionTitle', item) || item.document.title"
+					></h5>
+					<div class="ng-doc-search-content" [innerHTML]="item.document.content | ngDocHighlighterPipe: getPositions('content', item)" ng-doc-text>
+					</div>
+				</a>
+			</ng-template>
+			<ng-template #emptyContent>
+				Nothing found
+			</ng-template>
+		</ng-doc-data-list-group>
+	</div>
 </ng-template>

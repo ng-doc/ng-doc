@@ -16,7 +16,7 @@
 	{% set implements = declaration.getImplements() %}
 
 	{% if extends or implements.length %}
-		<div class="ng-doc-header-details">
+		<div class="ng-doc-header-details" indexable="false">
 			{% if extends %}
 				<span class="ng-doc-header-details-label">Extends</span>
 				{{ typeMacro.render(extends.getType()) }}

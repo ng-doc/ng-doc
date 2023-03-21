@@ -42,12 +42,12 @@ export class NgDocSearchComponent {
 	}
 
 	groupByPage(item: SearchResultWithHighlight<SearchSchema>): string {
-		return item.document.breadcrumbs;
+		return item.document['breadcrumbs'] as string;
 	}
 
 	getPageTypeForGroup(group: string): NgDocPageType {
 		return this.queryResult.find(
-			(item?: SearchResultWithHighlight<SearchSchema>) => item?.document?.breadcrumbs === group,
+			(item?: SearchResultWithHighlight<SearchSchema>) => item?.document['breadcrumbs'] === group,
 		)?.document['pageType'] as NgDocPageType;
 	}
 

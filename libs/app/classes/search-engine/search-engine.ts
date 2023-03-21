@@ -28,8 +28,6 @@ export class NgDocSearchEngine {
 		this.db$ = from(
 			create<SearchSchema>({
 				schema: {
-					breadcrumbs: 'string',
-					title: 'string',
 					sectionTitle: 'string',
 					content: 'string',
 				},

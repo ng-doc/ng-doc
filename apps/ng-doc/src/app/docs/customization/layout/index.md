@@ -4,8 +4,10 @@ This article will help you to customize layout of the documentation app.
 
 ## Customization
 
-By default, the documentation application has a width of `1400px`, but you can change this, as well as
-many other things, such as the height of the `navbar` or the width of the `sidebar`. Below is a list of
+By default, the documentation application has a width of `1400px`, but you can change this, as well
+as
+many other things, such as the height of the `navbar` or the width of the `sidebar`. Below is a list
+of
 all the available variables that affect the layout, you can change them in the `styles.css` file of
 your documentation application.
 
@@ -29,7 +31,8 @@ The `navbar` is the top bar of the documentation application, it can be customiz
 your own `navbar`. Below is a list of all the available variables that affect the `navbar` layout
 and its style.
 
-> **Note** > `NgDocNavbarComponent` doesn't use `--ng-doc-navbar-height` variable, it's used by the parent layout
+> **Note**
+> NgDocNavbarComponent doesn't use `--ng-doc-navbar-height` variable, it's used by the parent layout
 > to restrict the height of the `NgDocNavbarComponent` or custom `navbar` component.
 
 ```scss
@@ -55,9 +58,10 @@ The `NgDocNavbarComponent` can be customized by adding your own content. You can
 by providing `ng-template` to the one of its inputs like on the example below:
 
 ```html
+
 <ng-doc-navbar [leftContent]="brand" [rightContent]="controls">
 	<ng-template #brand>
-		<img src="assets/images/brand.svg" />
+		<img src="assets/images/brand.svg"/>
 	</ng-template>
 	<ng-template #controls>
 		<a
@@ -80,6 +84,7 @@ If you want to replace the `NgDocNavbarComponent` with your own `navbar`, then j
 and mark it with `NgDocCustomNavbarDirective` directive like on the example below:
 
 ```html
+
 <ng-doc-root>
 	<my-custom-navbar ngDocCustomNavbar></my-custom-navbar>
 
@@ -105,7 +110,8 @@ import {NgDocSidebarService} from '@ng-doc/app';
 	styleUrls: ['./my-custom-navbar.component.scss'],
 })
 export class MyCustomNavbarComponent {
-	constructor(private sidebarService: NgDocSidebarService) {}
+	constructor(private sidebarService: NgDocSidebarService) {
+	}
 
 	toggleSidebar() {
 		this.sidebarService.toggle();
@@ -115,7 +121,8 @@ export class MyCustomNavbarComponent {
 
 ## Sidebar
 
-The `sidebar` is the left bar of the documentation application, it can be customized or replaced with
+The `sidebar` is the left bar of the documentation application, it can be customized or replaced
+with
 your own `sidebar`. Below is a list of all the available variables that affect the `sidebar` layout:
 
 ```scss
@@ -144,11 +151,12 @@ If you want to replace the `NgDocSidebarComponent` with your own `sidebar`, then
 and mark it with `NgDocCustomSidebarDirective` directive like on the example below:
 
 ```html
-<ng-doc-root>
-    <ng-doc-navbar></ng-doc-sidebar>
 
-    <my-custom-sidebar ngDocCustomSidebar></my-custom-sidebar>
-    <router-outlet></router-outlet>
+<ng-doc-root>
+	<ng-doc-navbar></ng-doc-sidebar>
+
+		<my-custom-sidebar ngDocCustomSidebar></my-custom-sidebar>
+		<router-outlet></router-outlet>
 </ng-doc-root>
 ```
 

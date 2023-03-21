@@ -15,7 +15,7 @@
 	height: 100%;
 	overflow: auto;
 
-	--ng-doc-option-padding: calc(var(--ng-doc-base-gutter) * 2);
+	--ng-doc-option-padding: 0;
 }
 
 .ng-doc-search-wrapper {
@@ -56,6 +56,17 @@
 	align-items: center;
 
 	ng-doc-tag {
+		text-transform: uppercase;
 		margin-right: var(--ng-doc-base-gutter);
 	}
+}
+
+.ng-doc-search-option {
+	display: block;
+	padding: calc(var(--ng-doc-base-gutter) * 2);
+	text-decoration: none;
+}
+
+.ng-doc-search-content {
+	display: block;
 }

@@ -7,4 +7,5 @@ export interface NgDocPageSectionIndex {
 	content: string;
 	pageType: NgDocPageType;
 	route: string;
+	fragment?: string;
 }
