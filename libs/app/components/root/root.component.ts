@@ -1,5 +1,5 @@
 import {BreakpointObserver} from '@angular/cdk/layout';
-import {Location} from '@angular/common';
+import {DOCUMENT, Location} from '@angular/common';
 import {ChangeDetectionStrategy, Component, Directive, ElementRef, Inject, NgZone} from '@angular/core';
 import {Router} from '@angular/router';
 import {isExternalLink} from '@ng-doc/app/helpers/is-external-link';
@@ -58,6 +58,8 @@ export class NgDocCustomSidebarDirective {}
 @UntilDestroy()
 export class NgDocRootComponent {
 	constructor(
+		@Inject(DOCUMENT)
+		private readonly document: Document,
 		private readonly elementRef: ElementRef<HTMLElement>,
 		private readonly ngZone: NgZone,
 		private readonly router: Router,
@@ -82,6 +84,9 @@ export class NgDocRootComponent {
 				}
 
 				if (target instanceof HTMLAnchorElement) {
+					const base: HTMLBaseElement | null = this.document.querySelector('base');
+					const baseHref: string = base?.getAttribute('href') ?? '/';
+
 					if (isExternalLink(target.href)) {
 						event.preventDefault();
 
@@ -94,7 +99,7 @@ export class NgDocRootComponent {
 							const {pathname, search} = target;
 							const isInPageAnchor: boolean = target.getAttribute('href')?.startsWith('#') ?? false;
 							const correctPathname: string = isInPageAnchor ? this.location.path() : pathname;
-							const relativeUrl: string = correctPathname + search;
+							const relativeUrl: string = (correctPathname + search).replace(baseHref, '');
 							const hash: string = target.hash;
 
 							event.preventDefault();
