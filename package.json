@@ -48,7 +48,7 @@
 		"@angular/platform-browser": "15.0.3",
 		"@angular/platform-browser-dynamic": "15.0.3",
 		"@angular/router": "15.0.3",
-		"@lyrasearch/lyra": "^0.4.11",
+		"@lyrasearch/lyra": "^0.4.12",
 		"@lyrasearch/plugin-match-highlight": "^0.1.0",
 		"@lyrasearch/plugin-parsedoc": "^0.1.0",
 		"@microsoft/tsdoc": "^0.14.2",

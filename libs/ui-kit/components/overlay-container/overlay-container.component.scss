@@ -14,40 +14,40 @@
 	overflow: hidden;
 }
 
-:host[data-ng-doc-overlay-position="top"] {
+:host[data-ng-doc-overlay-position='top'] {
 	transform-origin: bottom;
 
-	&[data-ng-doc-overlay-with-contact-border="false"] {
+	&[data-ng-doc-overlay-with-contact-border='false'] {
 		.ng-doc-overlay-content {
 			border-bottom: none;
 		}
 	}
 }
 
-:host[data-ng-doc-overlay-position="bottom"] {
+:host[data-ng-doc-overlay-position='bottom'] {
 	transform-origin: top;
 
-	&[data-ng-doc-overlay-with-contact-border="false"] {
+	&[data-ng-doc-overlay-with-contact-border='false'] {
 		.ng-doc-overlay-content {
 			border-top: none;
 		}
 	}
 }
 
-:host[data-ng-doc-overlay-position="left"] {
+:host[data-ng-doc-overlay-position='left'] {
 	transform-origin: right;
 
-	&[data-ng-doc-overlay-with-contact-border="false"] {
+	&[data-ng-doc-overlay-with-contact-border='false'] {
 		.ng-doc-overlay-content {
 			border-right: none;
 		}
 	}
 }
 
-:host[data-ng-doc-overlay-position="right"] {
+:host[data-ng-doc-overlay-position='right'] {
 	transform-origin: left;
 
-	&[data-ng-doc-overlay-with-contact-border="false"] {
+	&[data-ng-doc-overlay-with-contact-border='false'] {
 		.ng-doc-overlay-content {
 			border-left: none;
 		}

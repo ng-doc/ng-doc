@@ -31,6 +31,11 @@ export class NgDocSearchEngine {
 					sectionTitle: 'string',
 					content: 'string',
 				},
+				components: {
+					tokenizer: {
+						enableStemming: false,
+					},
+				},
 				hooks: {
 					afterInsert,
 				},
@@ -55,7 +60,13 @@ export class NgDocSearchEngine {
 
 	search(query: string): Observable<Array<SearchResultWithHighlight<SearchSchema>>> {
 		return this.db$.pipe(
-			switchMap((db: LyraWithHighlight<SearchSchema>) => searchWithHighlight(db, {term: query})),
+			switchMap((db: LyraWithHighlight<SearchSchema>) =>
+				searchWithHighlight(db, {
+					term: query,
+					boost: {sectionTitle: 2},
+					properties: ['sectionTitle', 'content'],
+				}),
+			),
 		);
 	}
 

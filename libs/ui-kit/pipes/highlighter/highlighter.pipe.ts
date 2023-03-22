@@ -16,8 +16,11 @@ export class NgDocHighlighterPipe implements PipeTransform {
 				const {start, length} = position;
 				const end = start + length;
 
-				input = `${input.slice(0, start)}<mark class="ng-doc-mark">${input.slice(start, end)}</mark>${input.slice(end)}`;
-			})
+				input = `${input.slice(0, start)}<mark class="ng-doc-mark">${input.slice(
+					start,
+					end,
+				)}</mark>${input.slice(end)}`;
+			});
 
 		return input;
 	}

@@ -58,10 +58,9 @@ The `NgDocNavbarComponent` can be customized by adding your own content. You can
 by providing `ng-template` to the one of its inputs like on the example below:
 
 ```html
-
 <ng-doc-navbar [leftContent]="brand" [rightContent]="controls">
 	<ng-template #brand>
-		<img src="assets/images/brand.svg"/>
+		<img src="assets/images/brand.svg" />
 	</ng-template>
 	<ng-template #controls>
 		<a
@@ -84,7 +83,6 @@ If you want to replace the `NgDocNavbarComponent` with your own `navbar`, then j
 and mark it with `NgDocCustomNavbarDirective` directive like on the example below:
 
 ```html
-
 <ng-doc-root>
 	<my-custom-navbar ngDocCustomNavbar></my-custom-navbar>
 
@@ -110,8 +108,7 @@ import {NgDocSidebarService} from '@ng-doc/app';
 	styleUrls: ['./my-custom-navbar.component.scss'],
 })
 export class MyCustomNavbarComponent {
-	constructor(private sidebarService: NgDocSidebarService) {
-	}
+	constructor(private sidebarService: NgDocSidebarService) {}
 
 	toggleSidebar() {
 		this.sidebarService.toggle();
