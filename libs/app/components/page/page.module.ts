@@ -8,6 +8,7 @@ import {
 	NgDocCodeProcessorModule,
 	NgDocDemoProcessorModule,
 	NgDocIconProcessorModule,
+	NgDocLinkProcessorModule,
 	NgDocPlaygroundProcessorModule,
 	NgDocTooltipProcessorModule,
 } from '@ng-doc/app/processors';
@@ -53,6 +54,7 @@ import {NgDocPageComponent} from './page.component';
 		RouterLink,
 		NgDocButtonModule,
 		NgDocTextModule,
+		NgDocLinkProcessorModule,
 	],
 	exports: [NgDocPageComponent],
 })

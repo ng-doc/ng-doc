@@ -1,0 +1,11 @@
+<a [class]="classes" [routerLink]="path" [fragment]="fragment" *ngIf="!isExternalLink">
+	<ng-container *ngTemplateOutlet="content"></ng-container>
+</a>
+
+<a [class]="classes" [href]="path" *ngIf="isExternalLink" target="_blank">
+	<ng-container *ngTemplateOutlet="content"></ng-container>
+</a>
+
+<ng-template #content>
+	<ng-content></ng-content>
+</ng-template>
