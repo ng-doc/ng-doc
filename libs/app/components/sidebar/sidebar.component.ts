@@ -15,12 +15,6 @@ export class NgDocSidebarComponent {
 		readonly context: NgDocContext,
 	) {}
 
-	/**
-	 * Description
-	 *
-	 * @param {NgDocNavigation} nav  - some param, that can return `ThisCode` and somethin else
-	 * @returns {NgDocNavigation} - something
-	 */
 	getNavigation(nav?: NgDocNavigation): NgDocNavigation[] {
 		return nav ? nav.children ?? [] : this.context.navigation;
 	}

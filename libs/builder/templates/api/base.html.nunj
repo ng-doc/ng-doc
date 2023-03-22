@@ -1,16 +1,22 @@
 {% import "helpers/declaration-modifiers.html.nunj" as tagsMacro %}
 {% import "helpers/no-content.html.nunj" as noContentMacro %}
 
+{% set description = docNode | extractDocs %}
+
 <header>
 	{% include "parts/page-tags.html.nunj" %}
 	{% block modifier %}{% endblock %}
 	<h1>{{ declaration.getName() }}</h1>
+
+	{% if not description %}
+		<!-- This is a hack to make the declaration name available to the search index. -->
+		<div style="display: none">API documentation page for the {{ declaration.getName() }} entity.</div>
+	{% endif %}
+
 	{% block details %}{% endblock %}
 </header>
 
 <section>
-	{% set description = docNode | extractDocs %}
-
 	{{ description if description else noContentMacro.render('No documentation has been provided.') }}
 </section>
 

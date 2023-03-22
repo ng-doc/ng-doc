@@ -11,6 +11,7 @@
 	border: 1px solid var(--ng-doc-overlay-border);
 	border-radius: var(--ng-doc-overlay-border-radius);
 	box-shadow: var(--ng-doc-overlay-shadow);
+	overflow: hidden;
 }
 
 :host[data-ng-doc-overlay-position="top"] {
