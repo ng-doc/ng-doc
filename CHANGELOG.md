@@ -1,3 +1,11 @@
+## [15.7.12](https://github.com/skoropadas/ng-doc/compare/v15.7.11...v15.7.12) (2023-03-22)
+
+
+### Bug Fixes
+
+**app:** 
+navigation links in code examples do not work when using baseHref([12280d0](https://github.com/skoropadas/ng-doc/commit/12280d0a0774f29d10e875bffc37982f38272c6c)), closes[#34](https://github.com/skoropadas/ng-doc/issues/34)
+
 ## [15.7.11](https://github.com/skoropadas/ng-doc/compare/v15.7.10...v15.7.11) (2023-03-22)
 
 
