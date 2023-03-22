@@ -23,12 +23,12 @@
 	<div
 		[innerHTML]="rootPage.pageContent | ngDocSanitizeHtml"
 		ngDocBlockquoteProcessor
-		ngDocDemoProcessor
+		ngDocLinkProcessor
 		ngDocCodeProcessor
 		ngDocIconProcessor
 		ngDocTooltipProcessor
+		ngDocDemoProcessor
 		ngDocPlaygroundProcessor
-		ngDocLinkProcessor
 		#pageContainer
 	></div>
 
