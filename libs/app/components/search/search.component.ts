@@ -1,10 +1,10 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input} from '@angular/core';
-import {Position, SearchResultWithHighlight} from '@lyrasearch/plugin-match-highlight';
 import {NgDocSearchEngine} from '@ng-doc/app/classes/search-engine';
 import {SearchSchema} from '@ng-doc/app/interfaces';
 import {NgDocPageType} from '@ng-doc/core';
 import {NgDocHighlightPosition} from '@ng-doc/ui-kit';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
+import {Position, SearchResultWithHighlight} from '@orama/plugin-match-highlight';
 import {Subject} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 
@@ -23,7 +23,7 @@ export class NgDocSearchComponent {
 	searchTerm: string = '';
 
 	readonly query$: Subject<string> = new Subject<string>();
-	queryResult: Array<SearchResultWithHighlight<SearchSchema>> = [];
+	queryResult: SearchResultWithHighlight[] = [];
 
 	constructor(
 		private readonly searchEngine: NgDocSearchEngine,
@@ -34,24 +34,23 @@ export class NgDocSearchComponent {
 				switchMap((term: string) => this.searchEngine.search(term)),
 				untilDestroyed(this),
 			)
-			.subscribe((result: Array<SearchResultWithHighlight<SearchSchema>>) => {
+			.subscribe((result: SearchResultWithHighlight[]) => {
 				this.queryResult = result;
 				console.log(this.queryResult);
 				this.changeDetectorRef.markForCheck();
 			});
 	}
 
-	groupByPage(item: SearchResultWithHighlight<SearchSchema>): string {
+	groupByPage(item: SearchResultWithHighlight): string {
 		return item.document['breadcrumbs'] as string;
 	}
 
 	getPageTypeForGroup(group: string): NgDocPageType {
-		return this.queryResult.find(
-			(item?: SearchResultWithHighlight<SearchSchema>) => item?.document['breadcrumbs'] === group,
-		)?.document['pageType'] as NgDocPageType;
+		return this.queryResult.find((item?: SearchResultWithHighlight) => item?.document['breadcrumbs'] === group)
+			?.document['pageType'] as NgDocPageType;
 	}
 
-	getPositions(key: string, item: SearchResultWithHighlight<SearchSchema>): NgDocHighlightPosition[] {
+	getPositions(key: string, item: SearchResultWithHighlight): NgDocHighlightPosition[] {
 		return Object.values(item.positions[key] ?? {})
 			.map((positions: Position[]) => positions)
 			.flat();

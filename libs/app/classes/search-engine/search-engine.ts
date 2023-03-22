@@ -1,13 +1,13 @@
 import {Provider} from '@angular/core';
-import {create, insertWithHooks, Lyra, ResolveSchema} from '@lyrasearch/lyra';
-import {
-	afterInsert,
-	LyraWithHighlight,
-	SearchResultWithHighlight,
-	searchWithHighlight,
-} from '@lyrasearch/plugin-match-highlight';
 import {SearchSchema} from '@ng-doc/app/interfaces';
 import {NgDocPageSectionIndex} from '@ng-doc/core/interfaces';
+import {create, insert, Orama} from '@orama/orama';
+import {
+	afterInsert,
+	OramaWithHighlight,
+	SearchResultWithHighlight,
+	searchWithHighlight,
+} from '@orama/plugin-match-highlight';
 import {from, Observable} from 'rxjs';
 import {map, shareReplay, switchMap} from 'rxjs/operators';
 
@@ -22,45 +22,38 @@ export function provideSearchEngine(): Provider {
 }
 
 export class NgDocSearchEngine {
-	private db$: Observable<LyraWithHighlight<SearchSchema>>;
+	private db$: Observable<OramaWithHighlight>;
 
 	constructor() {
 		this.db$ = from(
-			create<SearchSchema>({
+			create({
 				schema: {
 					sectionTitle: 'string',
 					content: 'string',
 				},
 				components: {
-					tokenizer: {
-						enableStemming: false,
-					},
-				},
-				hooks: {
-					afterInsert,
+					afterInsert: [afterInsert],
 				},
 			}),
 		).pipe(
-			map((db: Lyra<SearchSchema>) => db as LyraWithHighlight<SearchSchema>),
-			switchMap((db: LyraWithHighlight<SearchSchema>) =>
+			map((db: Orama) => db as OramaWithHighlight),
+			switchMap((db: OramaWithHighlight) =>
 				this.request<NgDocPageSectionIndex[]>(`assets/ng-doc/indexes.json`).pipe(
 					switchMap((pages: NgDocPageSectionIndex[]) =>
 						Promise.all(
-							pages.map((page: NgDocPageSectionIndex) =>
-								insertWithHooks(db, page as unknown as ResolveSchema<SearchSchema>),
-							),
+							pages.map((page: NgDocPageSectionIndex) => insert(db, page as unknown as SearchSchema)),
 						),
 					),
 					map(() => db),
 				),
 			),
 			shareReplay(1),
-		) as Observable<LyraWithHighlight<SearchSchema>>;
+		) as Observable<OramaWithHighlight>;
 	}
 
-	search(query: string): Observable<Array<SearchResultWithHighlight<SearchSchema>>> {
+	search(query: string): Observable<SearchResultWithHighlight[]> {
 		return this.db$.pipe(
-			switchMap((db: LyraWithHighlight<SearchSchema>) =>
+			switchMap((db: OramaWithHighlight) =>
 				searchWithHighlight(db, {
 					term: query,
 					boost: {sectionTitle: 2},

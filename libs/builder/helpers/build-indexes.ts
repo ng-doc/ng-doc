@@ -1,6 +1,6 @@
-import {create, ResolveSchema} from '@lyrasearch/lyra';
-import {defaultHtmlSchema, NodeContent, populate} from '@lyrasearch/plugin-parsedoc';
 import {NgDocPageSectionIndex} from '@ng-doc/core/interfaces';
+import {create} from '@orama/orama';
+import {defaultHtmlSchema, NodeContent, populate} from '@orama/plugin-parsedoc';
 import * as path from 'path';
 
 import {NgDocEntity} from '../engine/entities/abstractions/entity';
@@ -34,11 +34,11 @@ export async function buildIndexes(entities: NgDocEntity[]): Promise<NgDocPageSe
 					transformFn: (node: NodeContent) => transformFn(node),
 				});
 
-				let section: ResolveSchema<typeof defaultHtmlSchema> | undefined;
+				let section: typeof defaultHtmlSchema | undefined;
 
-				Object.values(db.docs)
+				Object.values(db.data.docs)
 					.filter(isIndexable)
-					.forEach((doc?: ResolveSchema<typeof defaultHtmlSchema>) => {
+					.forEach((doc?: typeof defaultHtmlSchema) => {
 						if (doc) {
 							if (isHeading(doc)) {
 								section = doc;
@@ -76,8 +76,8 @@ function buildBreadcrumbs(entity: NgDocRouteEntity): string {
  *
  * @param doc
  */
-function isIndexable(doc?: ResolveSchema<typeof defaultHtmlSchema>): boolean {
-	return !!doc?.content.trim();
+function isIndexable(doc?: typeof defaultHtmlSchema): boolean {
+	return !!doc?.content?.trim();
 }
 
 /**
@@ -85,7 +85,7 @@ function isIndexable(doc?: ResolveSchema<typeof defaultHtmlSchema>): boolean {
  * @param node
  * @param doc
  */
-function isHeading(doc: ResolveSchema<typeof defaultHtmlSchema>): boolean {
+function isHeading(doc: typeof defaultHtmlSchema): boolean {
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
 	return ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(doc.type) && !!doc?.properties && !!doc.properties['id'];
