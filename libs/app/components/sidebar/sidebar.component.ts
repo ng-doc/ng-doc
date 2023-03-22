@@ -1,7 +1,6 @@
 import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {NgDocContext, NgDocNavigation} from '@ng-doc/app/interfaces';
 import {NG_DOC_CONTEXT} from '@ng-doc/app/tokens';
-import {isPresent} from '@ng-doc/core/helpers/is-present';
 
 @Component({
 	selector: 'ng-doc-sidebar',
