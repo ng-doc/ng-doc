@@ -19,13 +19,13 @@ import {GlowParticle} from './glow-particle';
 const LIGHT_PALETTE = [
 	{r: 201, g: 70, b: 208}, // pink
 	{r: 45, g: 74, b: 227}, // blue
-	{r: 255, g: 255, b: 255, a: 0.9}, // white
+	{r: 255, g: 255, b: 255}, // white
 ];
 
 const DARK_PALETTE = [
 	{r: 201, g: 70, b: 208}, // pink
 	{r: 45, g: 74, b: 227}, // blue
-	{r: 0, g: 0, b: 0, a: 0.9}, // black
+	{r: 0, g: 0, b: 0}, // black
 ];
 
 @Component({
@@ -46,7 +46,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 	totalParticles: number = 20;
 
 	@Input()
-	showControls: boolean = true;
+	showControls: boolean = false;
 
 	@ViewChild('canvas', {static: true})
 	canvas!: ElementRef<HTMLCanvasElement>;

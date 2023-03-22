@@ -7,8 +7,8 @@ export class GlowParticle {
 		public y: number,
 		public radius: number,
 		public rgb: {r: number; g: number; b: number; a?: number},
-		public vx: number = Math.random() * 2,
-		public vy: number = Math.random() * 2,
+		public vx: number = Math.random() * 1.5,
+		public vy: number = Math.random() * 1.5,
 	) {}
 
 	animate(ctx: CanvasRenderingContext2D, stageWidth: number, stageHeight: number) {

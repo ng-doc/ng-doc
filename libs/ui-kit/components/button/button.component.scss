@@ -32,8 +32,8 @@
 	}
 
 	&[data-ng-doc-size='large'] {
-		width: calc(var(--ng-doc-base-gutter) * 5);
-		height: calc(var(--ng-doc-base-gutter) * 5);
+		--ng-doc-font-size: 20px;
+		--ng-doc-font-weight: 700;
 
 		&[data-ng-doc-rounded='true'] {
 			border-radius: calc(var(--ng-doc-base-gutter) * 5);

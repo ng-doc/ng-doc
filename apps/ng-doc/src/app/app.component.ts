@@ -1,5 +1,4 @@
 import {ChangeDetectionStrategy, Component, HostBinding} from '@angular/core';
-import {Router} from '@angular/router';
 import {preventInitialChildAnimations} from '@ng-doc/ui-kit/animations';
 
 @Component({
@@ -10,10 +9,8 @@ import {preventInitialChildAnimations} from '@ng-doc/ui-kit/animations';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-	constructor(private readonly router: Router) {}
-
 	@HostBinding('attr.data-ng-doc-is-landing')
 	get isLandingPage(): boolean {
-		return this.router.url === '/';
+		return new URL(window.location.href).pathname === '/';
 	}
 }
