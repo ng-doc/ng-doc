@@ -5,7 +5,7 @@ export const api: NgDocApi = {
 	scopes: [
 		{
 			name: '@ng-doc/app',
-			route: 'app',
+			route: 'my-site',
 			include: 'libs/app/**/*.ts',
 		},
 		{
