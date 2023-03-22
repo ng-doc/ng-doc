@@ -40,6 +40,7 @@ import {NgDocPageComponent} from './page.component';
 
 		CommonModule,
 		NgDocDemoProcessorModule,
+		NgDocLinkProcessorModule,
 		NgDocCodeProcessorModule,
 		NgDocBlockquoteProcessorModule,
 		NgDocSanitizeHtmlModule,
@@ -54,7 +55,6 @@ import {NgDocPageComponent} from './page.component';
 		RouterLink,
 		NgDocButtonModule,
 		NgDocTextModule,
-		NgDocLinkProcessorModule,
 	],
 	exports: [NgDocPageComponent],
 })

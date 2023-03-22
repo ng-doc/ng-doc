@@ -7,7 +7,7 @@ import {NgDocProcessorOptions} from '@ng-doc/app/interfaces';
  */
 @Directive()
 export abstract class NgDocHtmlProcessor<T> implements OnInit {
-	constructor(
+	protected constructor(
 		protected readonly elementRef: ElementRef<HTMLElement>,
 		protected readonly viewContainerRef: ViewContainerRef,
 		protected readonly selector: string,

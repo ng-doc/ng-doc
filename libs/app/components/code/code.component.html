@@ -1,4 +1,4 @@
-<div class="code-wrapper" [innerHTML]="html" *ngIf="html"></div>
+<div class="code-wrapper" [innerHTML]="html" ngDocLinkProcessor *ngIf="html"></div>
 <div class="code-wrapper" *ngIf="!html">
 	<ng-content></ng-content>
 </div>
