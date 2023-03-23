@@ -5,7 +5,7 @@
 	--ng-doc-code-margin: 0;
 	--ng-doc-code-border-radius: 0;
 
-	&[data-ng-doc-border="true"] {
+	&[data-ng-doc-border='true'] {
 		border: var(--ng-doc-demo-displayer-border);
 		border-radius: var(--ng-doc-demo-displayer-border-radius);
 	}
@@ -21,6 +21,7 @@
 
 			.ng-doc-demo {
 				overflow: hidden;
+				width: 100%;
 			}
 
 			.ng-doc-demo-controls {
