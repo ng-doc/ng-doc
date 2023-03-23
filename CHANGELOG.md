@@ -1,3 +1,15 @@
+# [15.8.0](https://github.com/skoropadas/ng-doc/compare/v15.7.12...v15.8.0) (2023-03-23)
+
+
+### Bug Fixes
+
+**app:** headings don't display anchor icon on hover([167b15a] (https://github.com/skoropadas/ng-doc/commit/167b15afb54d84037dc28ce4e90e79130d23f4e7))
+
+
+### Features
+
+**add:** add schematics adds default `RouterModule` config automatically to allow scroll repositions when link anchor was clicked([2698781] (https://github.com/skoropadas/ng-doc/commit/269878102a513cfc2778ad1d1c45e6a935e234ed))
+
 ## [15.7.12](https://github.com/skoropadas/ng-doc/compare/v15.7.11...v15.7.12) (2023-03-22)
 
 
