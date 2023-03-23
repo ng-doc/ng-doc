@@ -6,7 +6,6 @@ project, but they may not always be clear to your users, we will help you fix th
 Documentation for entities is very useful because it is right in the code, which means it can be
 read not only on your documentation site, but also during the coding.
 
-
 > **Note**
 > We are trying to support the `tsdoc` standard syntax, you can read more about it on their website
 
@@ -29,9 +28,7 @@ form.
  * sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
  * like Aldus PageMaker including versions of Lorem Ipsum.
  */
-export class MyClass {
-
-}
+export class MyClass {}
 ```
 
 ### See Also
@@ -53,9 +50,7 @@ special **See Also** section.
  * @see `MyAnotherClass`
  * @see `AndAnotherOneClass` (you can also add some comments like this)
  */
-export class MyClass {
-
-}
+export class MyClass {}
 ```
 
 ### Usage Notes
@@ -81,9 +76,7 @@ All content you write after the `@usageNotes` tag will be related to it.
  * All this content will be rendered in the Usage Notes section
  *
  */
-export class MyClass {
-
-}
+export class MyClass {}
 ```
 
 ## Function/Method
@@ -101,8 +94,7 @@ export class MyClass {
 	 *
 	 * @param num This param is really important, and this is the doc for it
 	 */
-	doSomething(num: number): void {
-	}
+	doSomething(num: number): void {}
 }
 ```
 

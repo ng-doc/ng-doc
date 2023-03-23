@@ -36,7 +36,7 @@ To make it available for playgrounds, it must be declared and registered in `App
 create a module for this component in which it will be declared and registered as a type control,
 this will allow you to simply import the module in the `AppModule` in the future.
 
-```typescript {% include "./floating-circle-position-control/floating-circle-position-control.module.ts" %} ```
+`typescript {% include "./floating-circle-position-control/floating-circle-position-control.module.ts" %} `
 
 ## Using Type Control in the playground
 
@@ -52,9 +52,7 @@ In the example above, we registered a type control for the `FloatingCirclePositi
 
 ```typescript
 @NgModule({
-	providers: [
-		provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {hideLabel: true}),
-	],
+	providers: [provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {hideLabel: true})],
 })
 export class FloatingCirclePositionControlModule {}
 ```
@@ -99,4 +97,4 @@ later, when our API stabilizes.
 
 ## See Also
 
--   `*ContentGuidesPlayground`
+- `*ContentGuidesPlayground`

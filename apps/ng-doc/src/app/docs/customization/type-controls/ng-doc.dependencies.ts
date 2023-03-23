@@ -10,9 +10,9 @@ const TypeControlsPageDependencies: NgDocDependencies = {
 	playgrounds: {
 		FloatingCircle: {
 			target: FloatingCircleComponent,
-			template: '<ng-doc-selector></ng-doc-selector>'
-		}
-	}
-}
+			template: '<ng-doc-selector></ng-doc-selector>',
+		},
+	},
+};
 
 export default TypeControlsPageDependencies;

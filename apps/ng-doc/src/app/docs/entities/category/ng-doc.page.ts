@@ -7,7 +7,7 @@ const CategoryPage: NgDocPage = {
 	mdFile: './index.md',
 	category: EntitiesCategory,
 	order: 2,
-	keyword: 'EntitiesCategory'
+	keyword: 'EntitiesCategory',
 };
 
 export default CategoryPage;

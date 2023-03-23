@@ -8,7 +8,7 @@ const DemoPageDependencies: NgDocDependencies = {
 	// Add your module here
 	module: DemoPageModule,
 	// And all demos that you'd like to use
-	demo: {ButtonDemoComponent, ButtonInlineDemoComponent}
-}
+	demo: {ButtonDemoComponent, ButtonInlineDemoComponent},
+};
 
 export default DemoPageDependencies;

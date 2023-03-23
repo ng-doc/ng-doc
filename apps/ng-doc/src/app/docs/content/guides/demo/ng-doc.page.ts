@@ -8,6 +8,6 @@ const DemoPage: NgDocPage = {
 	category: GuidesCategory,
 	order: 2,
 	keyword: 'ContentGuidesDemo',
-}
+};
 
 export default DemoPage;

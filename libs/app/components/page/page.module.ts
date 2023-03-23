@@ -40,11 +40,11 @@ import {NgDocPageComponent} from './page.component';
 
 		CommonModule,
 		NgDocDemoProcessorModule,
+		NgDocIconProcessorModule,
 		NgDocLinkProcessorModule,
 		NgDocCodeProcessorModule,
 		NgDocBlockquoteProcessorModule,
 		NgDocSanitizeHtmlModule,
-		NgDocIconProcessorModule,
 		NgDocPageMapModule,
 		NgDocMediaQueryModule,
 		NgDocTooltipProcessorModule,

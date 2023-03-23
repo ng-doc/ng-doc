@@ -4,8 +4,10 @@ This article will help you to customize layout of the documentation app.
 
 ## Customization
 
-By default, the documentation application has a width of `1400px`, but you can change this, as well as
-many other things, such as the height of the `navbar` or the width of the `sidebar`. Below is a list of
+By default, the documentation application has a width of `1400px`, but you can change this, as well
+as
+many other things, such as the height of the `navbar` or the width of the `sidebar`. Below is a list
+of
 all the available variables that affect the layout, you can change them in the `styles.css` file of
 your documentation application.
 
@@ -29,7 +31,8 @@ The `navbar` is the top bar of the documentation application, it can be customiz
 your own `navbar`. Below is a list of all the available variables that affect the `navbar` layout
 and its style.
 
-> **Note** > `NgDocNavbarComponent` doesn't use `--ng-doc-navbar-height` variable, it's used by the parent layout
+> **Note** > `NgDocNavbarComponent` doesn't use `--ng-doc-navbar-height` variable, it's used by the
+> parent layout
 > to restrict the height of the `NgDocNavbarComponent` or custom `navbar` component.
 
 ```scss
@@ -115,7 +118,8 @@ export class MyCustomNavbarComponent {
 
 ## Sidebar
 
-The `sidebar` is the left bar of the documentation application, it can be customized or replaced with
+The `sidebar` is the left bar of the documentation application, it can be customized or replaced
+with
 your own `sidebar`. Below is a list of all the available variables that affect the `sidebar` layout:
 
 ```scss

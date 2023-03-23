@@ -71,7 +71,7 @@ render content dynamically, see `*ContentGuidesTemplating` for more details.
 
 ## See also
 
--   `*EntitiesCategory`
--   `*EntitiesDependencies`
--   `*ContentGuidesTemplating`
--   `*ContentGuidesDemo`
+- `*EntitiesCategory`
+- `*EntitiesDependencies`
+- `*ContentGuidesTemplating`
+- `*ContentGuidesDemo`

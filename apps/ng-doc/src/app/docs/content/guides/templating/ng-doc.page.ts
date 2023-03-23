@@ -8,6 +8,6 @@ const TemplatingPage: NgDocPage = {
 	category: GuidesCategory,
 	keyword: 'ContentGuidesTemplating',
 	order: 1,
-}
+};
 
 export default TemplatingPage;
