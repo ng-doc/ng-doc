@@ -1,20 +1,26 @@
-# {{ NgDocPage.title }}
+#
+
+{{ NgDocPage.title }}
 
 ## Modifiers
 
 ### Badges
 
 <span class="ng-doc-badge-wrapper">
-	{%- for modifier in NgDocPage.data.modifiers %}
+{%- for modifier in NgDocPage.data.modifiers %}
+
     <span class="ng-doc-badge" data-content="{{ modifier }}">{{ modifier[0] }}</span>
-	{%- endfor %}
+
+{%- endfor %}
 </span>
 
 ### Modifiers
 
 <span class="ng-doc-modifiers-wrapper">
 {%- for modifier in NgDocPage.data.modifiers %}
+
     <span class="ng-doc-modifier" data-content="{{ modifier }}">{{ modifier }}</span>
+
 {%- endfor %}
 </span>
 
@@ -23,7 +29,9 @@
 <span class="ng-doc-tags-wrapper">
 <span class="ng-doc-tag" data-content="ng-doc-scope">@scope/name</span>
 {%- for modifier in NgDocPage.data.modifiers %}
+
     <span class="ng-doc-tag" data-content="{{ modifier }}">{{ modifier }}</span>
+
 {%- endfor %}
 </span>
 
@@ -33,15 +41,18 @@
 
 <span class="ng-doc-tags-wrapper">
 {%- for entity in NgDocPage.data.entities.typescript %}
+
     <span class="ng-doc-tag" data-content="{{ entity }}">{{ entity }}</span>
+
 {%- endfor %}
 </span>
-
 
 ### Angular
 
 <span class="ng-doc-tags-wrapper">
 {%- for entity in NgDocPage.data.entities.angular %}
+
     <span class="ng-doc-tag" data-content="{{ entity }}">{{ entity }}</span>
+
 {%- endfor %}
 </span>

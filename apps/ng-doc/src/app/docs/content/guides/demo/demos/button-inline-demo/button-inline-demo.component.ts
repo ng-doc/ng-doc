@@ -13,11 +13,13 @@ import {NgDocNotifyService} from '@ng-doc/ui-kit/services/notify';
 export class ButtonInlineDemoComponent {
 	/* NgDocCodeSnippetStart(Constructor) */
 	constructor(private readonly notifyService: NgDocNotifyService) {}
+
 	/* NgDocCodeSnippetEnd(Constructor) */
 
 	/* NgDocCodeSnippetStart(ClickEvent) */
 	clickEvent(): void {
 		this.notifyService.notify('Button was clicked!');
 	}
+
 	/* NgDocCodeSnippetEnd(ClickEvent) */
 }

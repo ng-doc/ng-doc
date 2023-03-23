@@ -8,6 +8,6 @@ const ApiTemplatingPage: NgDocPage = {
 	category: ContentCategory,
 	order: 3,
 	keyword: 'ContentApiTemplating',
-}
+};
 
 export default ApiTemplatingPage;

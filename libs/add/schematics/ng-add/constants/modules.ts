@@ -24,7 +24,8 @@ export const MAIN_MODULES: readonly ImportModule[] = [
 		imports: [{name: 'NgDocSidebarModule', path: '@ng-doc/app/components/sidebar'}],
 	},
 	{
-		initializer: 'RouterModule.forRoot(NG_DOC_ROUTING)',
+		initializer:
+			"RouterModule.forRoot(NG_DOC_ROUTING, {scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', scrollOffset: [0, 70]})",
 		imports: [
 			{name: 'RouterModule', path: '@angular/router'},
 			{

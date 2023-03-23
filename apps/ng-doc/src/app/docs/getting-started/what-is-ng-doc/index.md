@@ -26,5 +26,6 @@ your application however you like, or integrate the documentation into an existi
 ## What next?
 
 We are going to improve the library further, adding new features and fixes to it, you can see
-our `*GettingStartedRoadmap`, and in order to start using the library, see the `*GettingStartedInstallation`
+our `*GettingStartedRoadmap`, and in order to start using the library, see
+the `*GettingStartedInstallation`
 article.

@@ -6,7 +6,7 @@ const PlaygroundPage: NgDocPage = {
 	title: `Playground`,
 	mdFile: './index.md',
 	category: GuidesCategory,
-	keyword: 'ContentGuidesPlayground'
+	keyword: 'ContentGuidesPlayground',
 };
 
 export default PlaygroundPage;

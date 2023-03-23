@@ -2,9 +2,7 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 
 import {FloatingCircleComponent} from './floating-circle/floating-circle.component';
-import {
-	FloatingCirclePositionControlModule
-} from './floating-circle-position-control/floating-circle-position-control.module';
+import {FloatingCirclePositionControlModule} from './floating-circle-position-control/floating-circle-position-control.module';
 
 @NgModule({
 	imports: [CommonModule, FloatingCirclePositionControlModule],
@@ -12,5 +10,4 @@ import {
 	declarations: [FloatingCircleComponent],
 	providers: [],
 })
-export class TypeControlsPageModule {
-}
+export class TypeControlsPageModule {}

@@ -128,7 +128,7 @@ import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 
 @NgModule({declarations: [AppComponent],
-        imports: [BrowserAnimationsModule, NgDocNavbarModule, NgDocSidebarModule, RouterModule.forRoot(NG_DOC_ROUTING), NgDocModule.forRoot(), NgDocGeneratedModule.forRoot()]
+        imports: [BrowserAnimationsModule, NgDocNavbarModule, NgDocSidebarModule, RouterModule.forRoot(NG_DOC_ROUTING, {scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', scrollOffset: [0, 70]}), NgDocModule.forRoot(), NgDocGeneratedModule.forRoot()]
     })
 export class AppModule {}
 `);
