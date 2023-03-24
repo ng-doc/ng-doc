@@ -1,7 +1,7 @@
 # {{ NgDocPage.title }}
 
 What is documentation without a demo right? Sometimes we all like to look at
-the code and usage first, and only then read the documentation. 😄
+the code and usage first, and only then read the documentation.
 
 ## Creating a demo
 
@@ -43,8 +43,6 @@ passing the name of your component to it as follows
 {{'{{ NgDocActions.demo("ButtonDemoComponent") }}' | safe }}
 ```
 
-#### Output
-
 NgDoc will separate your component's code into multiple tabs to make it easier to view, and show it
 like this
 
@@ -56,16 +54,14 @@ The demo action also supports some options that can be passed as the second para
 conform to the `NgDocDemoActionOptions` interface. For example, displaying a demo without a
 container.
 
-```twig
-{{'{{ NgDocActions.demo("ButtonDemoComponent", {container: false}) }}' | safe }}
-```
-
-#### Output
-
 > **Note**
 > You can use this option not only as a demo output, but also as an opportunity to insert any of
 > your
 > components into the page template so that the user can interact with them.
+
+```twig
+{{'{{ NgDocActions.demo("ButtonDemoComponent", {container: false}) }}' | safe }}
+```
 
 {{ NgDocActions.demo("ButtonDemoComponent", {container: false}) }}
 

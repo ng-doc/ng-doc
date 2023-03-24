@@ -6,6 +6,7 @@ import {NgDocSanitizeHtmlModule} from '@ng-doc/app/pipes/sanitize-html';
 import {
 	NgDocBlockquoteProcessorModule,
 	NgDocCodeProcessorModule,
+	NgDocDemoPaneProcessorModule,
 	NgDocDemoProcessorModule,
 	NgDocIconProcessorModule,
 	NgDocLinkProcessorModule,
@@ -55,6 +56,7 @@ import {NgDocPageComponent} from './page.component';
 		RouterLink,
 		NgDocButtonModule,
 		NgDocTextModule,
+		NgDocDemoPaneProcessorModule,
 	],
 	exports: [NgDocPageComponent],
 })

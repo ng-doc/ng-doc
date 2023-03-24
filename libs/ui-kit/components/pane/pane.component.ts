@@ -7,35 +7,44 @@ import {
 	ElementRef,
 	HostBinding,
 	Inject,
+	Input,
+	NgZone,
+	OnChanges,
 	OnInit,
+	SimpleChange,
+	SimpleChanges,
 	ViewChild,
 } from '@angular/core';
+import {ngDocZoneOptimize} from '@ng-doc/ui-kit/observables';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {fromEvent, merge, Observable} from 'rxjs';
-import {map, pairwise, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {debounceTime, map, pairwise, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 
 @Directive({
-	selector: '[ngDocScreenFace]',
+	selector: '[ngDocPaneFront]',
 })
-export class NgDocScreenFaceDirective {}
+export class NgDocPaneFrontDirective {}
 
 @Directive({
-	selector: '[ngDocScreenBack]',
+	selector: '[ngDocPaneBack]',
 })
-export class NgDocScreenBackDirective {}
+export class NgDocPaneBackDirective {}
 
 @Component({
-	selector: 'ng-doc-screen',
-	templateUrl: './screen.component.html',
-	styleUrls: ['./screen.component.scss'],
+	selector: 'ng-doc-pane',
+	templateUrl: './pane.component.html',
+	styleUrls: ['./pane.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @UntilDestroy()
-export class NgDocScreenComponent implements OnInit {
+export class NgDocPaneComponent implements OnChanges, OnInit {
+	@Input()
+	expanded: boolean = false;
+
 	@ViewChild('resizer', {static: true})
 	resizer?: ElementRef<HTMLElement>;
 
-	width: string = '100%';
+	width: string = '0%';
 
 	@HostBinding('attr.data-ng-doc-dragging')
 	dragging: boolean = false;
@@ -45,6 +54,7 @@ export class NgDocScreenComponent implements OnInit {
 		private readonly document: Document,
 		private readonly changeDetectorRef: ChangeDetectorRef,
 		private readonly elementRef: ElementRef<HTMLElement>,
+		private readonly ngZone: NgZone,
 	) {}
 
 	ngOnInit(): void {
@@ -63,17 +73,17 @@ export class NgDocScreenComponent implements OnInit {
 				}),
 			);
 
-			const mouseMove$ = fromEvent(this.document, 'mousemove') as Observable<MouseEvent>;
+			const mouseMove$ = (fromEvent(this.document, 'mousemove') as Observable<MouseEvent>).pipe(
+				map((event: MouseEvent) => event.clientX),
+				pairwise(),
+				map(([prev, next]: [number, number]) => next - prev),
+			);
 
 			mouseDown$
 				.pipe(
 					switchMap(() => {
-						const dragEvent$ = mouseMove$.pipe(
-							map((event: MouseEvent) => event.clientX),
-							pairwise(),
-							map(([prev, next]: [number, number]) => next - prev),
-							takeUntil(mouseUp$),
-						);
+						const dragEvent$ = mouseMove$.pipe(takeUntil(mouseUp$));
+
 						const clickEvent$ = mouseUp$.pipe(
 							map(() => null),
 							takeUntil(mouseMove$),
@@ -89,7 +99,19 @@ export class NgDocScreenComponent implements OnInit {
 				});
 		}
 
+		fromEvent(window, 'resize')
+			.pipe(debounceTime(100), untilDestroyed(this), ngDocZoneOptimize(this.ngZone))
+			.subscribe(() => this.addDelta(0));
+
 		this.addDelta(0);
+	}
+
+	ngOnChanges({expanded}: SimpleChanges): void {
+		if (expanded) {
+			expanded.currentValue
+				? this.addDelta(this.elementRef.nativeElement.offsetWidth)
+				: this.addDelta(-this.elementRef.nativeElement.offsetWidth);
+		}
 	}
 
 	toggle(): void {

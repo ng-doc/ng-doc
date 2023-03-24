@@ -6,6 +6,9 @@
 
 {{  NgDocActions.demo("DevelopDemoComponent", {container: false}) }}
 
+
+{{  NgDocActions.demoPane("ButtonDemoComponent") }}
+
 ### Badges
 
 
