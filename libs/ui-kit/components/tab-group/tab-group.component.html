@@ -15,5 +15,5 @@
 </div>
 
 <div class="ng-doc-body-wrapper">
-	<ng-container *polymorpheusOutlet="selectedTab?.content ?? '' as text; context: {}">{{ text }}</ng-container>
+	<div *polymorpheusOutlet="selectedTab?.content ?? '' as text; context: {}" @tabFadeAnimation>{{ text }}</div>
 </div>

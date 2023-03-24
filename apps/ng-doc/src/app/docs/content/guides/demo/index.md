@@ -34,7 +34,7 @@ name is, this can be done simply list them separated by commas.
 {% include "./ng-doc.dependencies.ts" %}
 ```
 
-### Displaying demo
+## Displaying demo
 
 To display the created demo on the page, you should use the `demo` method from `NgDocActions`,
 passing the name of your component to it as follows
@@ -47,8 +47,6 @@ NgDoc will separate your component's code into multiple tabs to make it easier t
 like this
 
 {{ NgDocActions.demo("ButtonDemoComponent") }}
-
-## Configuration
 
 The demo action also supports some options that can be passed as the second parameter and must
 conform to the `NgDocDemoActionOptions` interface. For example, displaying a demo without a
@@ -64,6 +62,28 @@ container.
 ```
 
 {{ NgDocActions.demo("ButtonDemoComponent", {container: false}) }}
+
+## Displaying demo pane
+
+The Demo Pane is another way to display a demo, you can display it by using the `demoPane` method
+from `NgDocActions`, passing the name of your component to it as follows
+
+```twig
+{{'{{ NgDocActions.demoPane("ButtonDemoComponent") }}' | safe }}
+```
+
+NgDoc will display demo and code in a separate pane, and show it like this
+
+{{ NgDocActions.demoPane("ButtonDemoComponent") }}
+
+The demo pane action also supports some options that can be passed as the second parameter and must
+conform to the `NgDocDemoPaneActionOptions` interface. For example, displaying code first:
+
+```twig
+{{'{{ NgDocActions.demoPane("ButtonDemoComponent", {expanded: true, tabs: ["HTML"]}) }}' | safe }}
+```
+
+{{ NgDocActions.demoPane("ButtonDemoComponent", {expanded: true, tabs: ["HTML"]}) }}
 
 ## Snippets
 

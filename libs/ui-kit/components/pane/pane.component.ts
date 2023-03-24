@@ -18,7 +18,7 @@ import {
 import {ngDocZoneOptimize} from '@ng-doc/ui-kit/observables';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {fromEvent, merge, Observable} from 'rxjs';
-import {debounceTime, map, pairwise, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {debounceTime, filter, map, pairwise, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 
 @Directive({
 	selector: '[ngDocPaneFront]',
@@ -92,6 +92,8 @@ export class NgDocPaneComponent implements OnChanges, OnInit {
 
 						return merge(dragEvent$, clickEvent$);
 					}),
+					filter((delta: number | null) => delta !== 0),
+					ngDocZoneOptimize(this.ngZone),
 					untilDestroyed(this),
 				)
 				.subscribe((delta: number | null) => {
@@ -128,7 +130,6 @@ export class NgDocPaneComponent implements OnChanges, OnInit {
 
 	private addDelta(delta: number): void {
 		if (this.resizer) {
-			console.log('delta', delta);
 			const maxWidth = this.elementRef.nativeElement.offsetWidth - this.resizer.nativeElement.offsetWidth;
 
 			this.width = `${Math.min(maxWidth, Math.max(0, this.resizer.nativeElement.offsetLeft + delta))}px`;
