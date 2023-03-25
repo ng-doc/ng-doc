@@ -3,38 +3,9 @@
 What is documentation without a demo right? Sometimes we all like to look at
 the code and usage first, and only then read the documentation.
 
-## Creating a demo
+{% include "../../../shared/creating-demo.md" %}
 
-First of all, in order to display the demo on the page, you need the `ng-doc.dependencies.ts`
-file as well as the `NgModule`, you can read about how to create them in the `*EntitiesDependencies`
-article.
-
-If you already have them, you can start creating a demo, the demo in NgDoc is a regular Angular
-Component, which shows one of the possible uses of your code.
-
-You can create a `demos` folder which will store all the demos for your page and create an Angular
-Component inside it.
-
-### Declaring in NgModule
-
-After that make sure your component is declared in the `declaration` section of
-your `NgModule`, and all its dependencies are imported in the `imports` section.
-
-```typescript
-{% include "./ng-doc.module.ts" %}
-```
-
-### Adding module and demo to dependencies file
-
-And the last step is to add your demo to the `ng-doc.dependencies.ts` file, in the `demos` section,
-this is necessary so that NgDoc knows which components it should consider as a demo, and what their
-name is, this can be done simply list them separated by commas.
-
-```typescript
-{% include "./ng-doc.dependencies.ts" %}
-```
-
-## Displaying demo
+## Displaying Demo
 
 To display the created demo on the page, you should use the `demo` method from `NgDocActions`,
 passing the name of your component to it as follows
@@ -62,28 +33,6 @@ container.
 ```
 
 {{ NgDocActions.demo("ButtonDemoComponent", {container: false}) }}
-
-## Displaying demo pane
-
-The Demo Pane is another way to display a demo, you can display it by using the `demoPane` method
-from `NgDocActions`, passing the name of your component to it as follows
-
-```twig
-{{'{{ NgDocActions.demoPane("ButtonDemoComponent") }}' | safe }}
-```
-
-NgDoc will display demo and code in a separate pane, and show it like this
-
-{{ NgDocActions.demoPane("ButtonDemoComponent") }}
-
-The demo pane action also supports some options that can be passed as the second parameter and must
-conform to the `NgDocDemoPaneActionOptions` interface. For example, displaying code first:
-
-```twig
-{{'{{ NgDocActions.demoPane("ButtonDemoComponent", {expanded: true, tabs: ["HTML"]}) }}' | safe }}
-```
-
-{{ NgDocActions.demoPane("ButtonDemoComponent", {expanded: true, tabs: ["HTML"]}) }}
 
 ## Snippets
 

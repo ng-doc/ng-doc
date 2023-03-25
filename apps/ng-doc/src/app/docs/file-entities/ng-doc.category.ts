@@ -1,7 +1,7 @@
 import {NgDocCategory} from '@ng-doc/core';
 
 const EntitiesCategory: NgDocCategory = {
-	title: 'Entities',
+	title: 'File Entities',
 	expandable: true,
 	order: 2,
 };
