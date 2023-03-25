@@ -36,7 +36,9 @@ To make it available for playgrounds, it must be declared and registered in `App
 create a module for this component in which it will be declared and registered as a type control,
 this will allow you to simply import the module in the `AppModule` in the future.
 
-```typescript {% include "./floating-circle-position-control/floating-circle-position-control.module.ts" %} ```
+```typescript file="./floating-circle-position-control/floating-circle-position-control.module.ts"
+
+```
 
 ## Using Type Control in the playground
 
@@ -52,7 +54,11 @@ In the example above, we registered a type control for the `FloatingCirclePositi
 
 ```typescript
 @NgModule({
-	providers: [provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {hideLabel: true})],
+  providers: [
+    provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {
+      hideLabel: true,
+    }),
+  ],
 })
 export class FloatingCirclePositionControlModule {}
 ```
@@ -62,14 +68,14 @@ the type of the `position` input and make it possible to be `undefined`:
 
 ```typescript
 @Component({
-	selector: 'ng-doc-floating-circle',
-	templateUrl: './floating-circle.component.html',
-	styleUrls: ['./floating-circle.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'ng-doc-floating-circle',
+  templateUrl: './floating-circle.component.html',
+  styleUrls: ['./floating-circle.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FloatingCircleComponent {
-	@Input()
-	position?: FloatingCirclePosition = {top: '10px', left: '10px'};
+  @Input()
+  position?: FloatingCirclePosition = {top: '10px', left: '10px'};
 }
 ```
 
@@ -79,12 +85,14 @@ for a single type control at the same time, for example:
 
 ```typescript
 @NgModule({
-	providers: [
-		provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {hideLabel: true}),
-		provideTypeControl('FloatingCirclePosition | undefined', FloatingCirclePositionControlComponent, {
-			hideLabel: true,
-		}),
-	],
+  providers: [
+    provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {
+      hideLabel: true,
+    }),
+    provideTypeControl('FloatingCirclePosition | undefined', FloatingCirclePositionControlComponent, {
+      hideLabel: true,
+    }),
+  ],
 })
 export class FloatingCirclePositionControlModule {}
 ```

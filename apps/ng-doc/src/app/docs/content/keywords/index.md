@@ -42,11 +42,11 @@ the `keyword` field.
 import {NgDocPage} from '@ng-doc/core';
 
 export const MyAwesomePage: NgDocPage = {
-	title: 'My Awesome Page',
-	mdFile: './index.md',
-	// This keyword can be used to create a link to the page
-	// (e.g. like that "*MyCustomKeyword")
-	keyword: `MyCustomKeyword`,
+  title: 'My Awesome Page',
+  mdFile: './index.md',
+  // This keyword can be used to create a link to the page
+  // (e.g. like that "*MyCustomKeyword")
+  keyword: `MyCustomKeyword`,
 };
 
 export default MyAwesomePage;
@@ -61,22 +61,22 @@ builder in the `angular.json` file and must conform to the `NgDocGlobalKeyword` 
 ```json
 
 {
-	"projects": {
-		"my-project": {
-			"architect": {
-				"serve": {
-					"builder": "@ng-doc/builder:dev-server",
-					"options": {
-						"ngDoc": {
-							"keywords": {
-								"google": {
-									"path": "https://google.com/"
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+  "projects": {
+    "my-project": {
+      "architect": {
+        "serve": {
+          "builder": "@ng-doc/builder:dev-server",
+          "options": {
+            "ngDoc": {
+              "keywords": {
+                "google": {
+                  "path": "https://google.com/"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 ```

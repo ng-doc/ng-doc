@@ -17,11 +17,11 @@ your documentation application.
 
 ```scss
 :root {
-	// `auto` - will stretch the app to the full width of the screen
-	--ng-doc-app-max-width: auto;
-	--ng-doc-app-horizontal-padding: calc(var(--ng-doc-base-gutter) * 3);
-	--ng-doc-navbar-height: 60px;
-	--ng-doc-sidebar-width: 300px;
+  // `auto` - will stretch the app to the full width of the screen
+  --ng-doc-app-max-width: auto;
+  --ng-doc-app-horizontal-padding: calc(var(--ng-doc-base-gutter) * 3);
+  --ng-doc-navbar-height: 60px;
+  --ng-doc-sidebar-width: 300px;
 }
 ```
 
@@ -37,18 +37,18 @@ and its style.
 
 ```scss
 :root {
-	// Background color of the `navbar`
-	--ng-doc-navbar-background: var(--ng-doc-base-0);
+  // Background color of the `navbar`
+  --ng-doc-navbar-background: var(--ng-doc-base-0);
 
-	// Color of the shadow of the `navbar` when the page is scrolled
-	--ng-doc-shadow-color: rgba(0, 0, 0, 0.2);
+  // Color of the shadow of the `navbar` when the page is scrolled
+  --ng-doc-shadow-color: rgba(0, 0, 0, 0.2);
 
-	// Horizontal padding of the `navbar`
-	--ng-doc-navbar-horizontal-padding: calc(var(--ng-doc-base-gutter) * 3);
+  // Horizontal padding of the `navbar`
+  --ng-doc-navbar-horizontal-padding: calc(var(--ng-doc-base-gutter) * 3);
 
-	// Maximum width of the documentation application, `navbar` uses this
-	// Variable to calculate width of the `navbar` content
-	--ng-doc-app-max-width: auto;
+  // Maximum width of the documentation application, `navbar` uses this
+  // Variable to calculate width of the `navbar` content
+  --ng-doc-app-max-width: auto;
 }
 ```
 
@@ -59,20 +59,20 @@ by providing `ng-template` to the one of its inputs like on the example below:
 
 ```html
 <ng-doc-navbar [leftContent]="brand" [rightContent]="controls">
-	<ng-template #brand>
-		<img src="assets/images/brand.svg" />
-	</ng-template>
-	<ng-template #controls>
-		<a
-			ng-doc-button-icon
-			size="large"
-			href="https://github.com/me/my-repo"
-			target="_blank"
-			ngDocTooltip="Check my repo"
-		>
-			<ng-doc-icon icon="github" [size]="24"></ng-doc-icon>
-		</a>
-	</ng-template>
+  <ng-template #brand>
+    <img src="assets/images/brand.svg" />
+  </ng-template>
+  <ng-template #controls>
+    <a
+      ng-doc-button-icon
+      size="large"
+      href="https://github.com/me/my-repo"
+      target="_blank"
+      ngDocTooltip="Check my repo"
+    >
+      <ng-doc-icon icon="github" [size]="24"></ng-doc-icon>
+    </a>
+  </ng-template>
 </ng-doc-navbar>
 ```
 
@@ -84,10 +84,10 @@ and mark it with `NgDocCustomNavbarDirective` directive like on the example belo
 
 ```html
 <ng-doc-root>
-	<my-custom-navbar ngDocCustomNavbar></my-custom-navbar>
+  <my-custom-navbar ngDocCustomNavbar></my-custom-navbar>
 
-	<ng-doc-sidebar></ng-doc-sidebar>
-	<router-outlet></router-outlet>
+  <ng-doc-sidebar></ng-doc-sidebar>
+  <router-outlet></router-outlet>
 </ng-doc-root>
 ```
 
@@ -103,16 +103,16 @@ import {Component} from '@angular/core';
 import {NgDocSidebarService} from '@ng-doc/app';
 
 @Component({
-	selector: 'my-custom-navbar',
-	templateUrl: './my-custom-navbar.component.html',
-	styleUrls: ['./my-custom-navbar.component.scss'],
+  selector: 'my-custom-navbar',
+  templateUrl: './my-custom-navbar.component.html',
+  styleUrls: ['./my-custom-navbar.component.scss'],
 })
 export class MyCustomNavbarComponent {
-	constructor(private sidebarService: NgDocSidebarService) {}
+  constructor(private sidebarService: NgDocSidebarService) {}
 
-	toggleSidebar() {
-		this.sidebarService.toggle();
-	}
+  toggleSidebar() {
+    this.sidebarService.toggle();
+  }
 }
 ```
 
@@ -124,20 +124,20 @@ your own `sidebar`. Below is a list of all the available variables that affect t
 
 ```scss
 :root {
-	// Background color of the `navbar`
-	--ng-doc-sidebar-background: var(--ng-doc-base-0);
+  // Background color of the `navbar`
+  --ng-doc-sidebar-background: var(--ng-doc-base-0);
 
-	// Uses for vertical padding of the sidebar
-	--ng-doc-sidebar-padding: 16px;
+  // Uses for vertical padding of the sidebar
+  --ng-doc-sidebar-padding: 16px;
 
-	// Uses to display the shadow on mobile devices
-	--ng-doc-sidebar-shadow: rgba(0, 0, 0, 0.2);
+  // Uses to display the shadow on mobile devices
+  --ng-doc-sidebar-shadow: rgba(0, 0, 0, 0.2);
 
-	// Configures indent size of the sidebar categories
-	--ng-doc-sidebar-category-indent: var(--ng-doc-base-gutter);
+  // Configures indent size of the sidebar categories
+  --ng-doc-sidebar-category-indent: var(--ng-doc-base-gutter);
 
-	// Configures indent size of the sidebar items
-	--ng-doc-sidebar-item-indent: var(--ng-doc-base-gutter);
+  // Configures indent size of the sidebar items
+  --ng-doc-sidebar-item-indent: var(--ng-doc-base-gutter);
 }
 ```
 
@@ -165,14 +165,14 @@ import {Component, Inject} from '@angular/core';
 import {NG_DOC_CONTEXT, NgDocContext} from '@ng-doc/app';
 
 @Component({
-	selector: 'my-custom-sidebar',
-	templateUrl: './my-custom-sidebar.component.html',
-	styleUrls: ['./my-custom-sidebar.component.scss'],
+  selector: 'my-custom-sidebar',
+  templateUrl: './my-custom-sidebar.component.html',
+  styleUrls: ['./my-custom-sidebar.component.scss'],
 })
 export class MyCustomSidebarComponent {
-	constructor(@Inject(NG_DOC_CONTEXT) private context: NgDocContext) {
-		// `context.navigation` contains the list of categories and pages of documentation
-		console.log(context.navigation);
-	}
+  constructor(@Inject(NG_DOC_CONTEXT) private context: NgDocContext) {
+    // `context.navigation` contains the list of categories and pages of documentation
+    console.log(context.navigation);
+  }
 }
 ```

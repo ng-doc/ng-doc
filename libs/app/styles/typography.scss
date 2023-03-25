@@ -98,7 +98,7 @@ pre#{$class} {
 
 	code#{$class} {
 		white-space: unset;
-		box-shadow: inset 0px 6px 6px rgba(16, 19, 19, 0.32);
+		box-shadow: var(--ng-doc-code-shadow, inset 0px 6px 6px rgba(16, 19, 19, 0.32));
 		font-family: var(--ng-doc-code-font);
 		font-size: var(--ng-doc-code-font-size);
 		font-weight: var(--ng-doc-code-font-weight);
