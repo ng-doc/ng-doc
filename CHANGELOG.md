@@ -1,3 +1,15 @@
+# [15.9.0](https://github.com/skoropadas/ng-doc/compare/v15.8.0...v15.9.0) (2023-03-26)
+
+
+### Bug Fixes
+
+**app:** code blocks have wrong font config([8a8b172] (https://github.com/skoropadas/ng-doc/commit/8a8b17205050f360619f4aebc6a6931aa1336acc))
+
+
+### Features
+
+**app:** conditionally remove docs page from sidebar([5f52ab8] (https://github.com/skoropadas/ng-doc/commit/5f52ab8006876434a2e3133e07e688283e68964e)), closes[#35](https://github.com/skoropadas/ng-doc/issues/35)
+
 # [15.8.0](https://github.com/skoropadas/ng-doc/compare/v15.7.12...v15.8.0) (2023-03-23)
 
 
