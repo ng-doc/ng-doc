@@ -82,9 +82,14 @@ function loadFile(str: string, contextFolder: string): [string, string] {
 	const file = fs.readFileSync(relativeFilePath ?? '', 'utf8');
 	const fileLines: string[] = file.split(EOL);
 
-	const fromLine = res.groups['from'] ? parseInt(res.groups['from'], 10) : 0;
+	const fromLine = res.groups['from'] ? parseInt(res.groups['from'], 10) : 1;
 	const hasDash = !!res.groups['dash'] ?? false;
-	const toLine = hasDash ? (res.groups['to'] ? parseInt(res.groups['to'], 10) : fileLines.length) : fromLine;
+	const toLine =
+		(hasDash && !res.groups['to']) || (!res.groups['to'] && !res.groups['from'])
+			? fileLines.length
+			: res.groups['to']
+			? parseInt(res.groups['to'], 10)
+			: fromLine;
 
 	return [relativeFilePath, fileLines.slice(fromLine - 1, toLine).join(EOL)];
 }

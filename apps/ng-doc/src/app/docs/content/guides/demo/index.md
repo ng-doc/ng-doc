@@ -20,7 +20,7 @@ Component inside it.
 After that make sure your component is declared in the `declaration` section of
 your `NgModule`, and all its dependencies are imported in the `imports` section.
 
-```typescript file="./ng-doc.module.ts"
+```typescript file="./ng-doc.module.ts" fileName="ng-doc.module.ts"
 
 ```
 
@@ -30,7 +30,7 @@ And the last step is to add your demo to the `ng-doc.dependencies.ts` file, in t
 this is necessary so that NgDoc knows which components it should consider as a demo, and what their
 name is, this can be done simply list them separated by commas.
 
-```typescript file="./ng-doc.dependencies.ts"
+```typescript file="./ng-doc.dependencies.ts" fileName="ng-doc.dependencies.ts"
 
 ```
 
@@ -39,7 +39,7 @@ name is, this can be done simply list them separated by commas.
 To display the created demo on the page, you should use the `demo` method from `NgDocActions`,
 passing the name of your component to it as follows
 
-```twig
+```twig fileName="index.md"
 {{'{{ NgDocActions.demo("ButtonDemoComponent") }}' | safe }}
 ```
 
@@ -56,7 +56,7 @@ The demo action also supports some options that can be passed as the second para
 conform to the `NgDocDemoActionOptions` interface. For example, displaying a demo without a
 container.
 
-```twig
+```twig fileName="index.md"
 {{'{{ NgDocActions.demo("ButtonDemoComponent", {container: false}) }}' | safe }}
 ```
 
@@ -89,7 +89,7 @@ Snippets look like comments, we have 3 different types of snippets that you can 
 
 And let's say if you have a component that contains snippets and looks like this
 
-```typescript file="./demos/button-inline-demo/button-inline-demo.component.ts"
+```typescript file="./demos/button-inline-demo/button-inline-demo.component.ts" fileName="button-inline-demo.component.ts"
 
 ```
 

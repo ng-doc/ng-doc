@@ -28,7 +28,7 @@ The `ng-doc.page.ts` file should contain your page configuration,
 the page configuration must correspond to the `NgDocPage` type, you can read more about the various
 properties in the documentation for the type, below is an example of the minimum page configuration.
 
-```typescript
+```typescript fileName="ng-doc.page.ts"
 import {NgDocPage} from '@ng-doc/core';
 
 export const MyAwesomePage: NgDocPage = {
@@ -45,8 +45,7 @@ You can use categories to structure your documentation (see the `*EntitiesCatego
 for details on how to create one). To add a category to your page, you can use the `category` field,
 just import category and put it in the `category` field, just like that:
 
-```typescript
-// ng-doc.page.ts
+```typescript fileName="ng-doc.page.ts"
 import {NgDocPage} from '@ng-doc/core';
 import MyAwesomeCategory from '../ng-doc.category';
 

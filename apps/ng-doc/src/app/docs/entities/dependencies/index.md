@@ -30,7 +30,7 @@ the dependencies configuration must correspond to the `NgDocDependencies` type, 
 about the various
 properties in the documentation for the type, below is an example of possible configuration.
 
-```typescript
+```typescript fileName="ng-doc.dependencies.ts"
 import {NgDocDependencies} from '@ng-doc/core';
 
 const MyPageDependencies: NgDocDependencies = {

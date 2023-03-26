@@ -31,7 +31,7 @@ First of all you need to add builders from NgDoc library to your application, op
 file, and replace `browser` and `dev-server` builders for `build` and `serve` targets with
 alternatives from the NgDoc as shown in the example below
 
-```json
+```json fileName="angular.json"
 {
   "projects": {
     "my-project": {
@@ -53,7 +53,7 @@ alternatives from the NgDoc as shown in the example below
 You will also need to import the global styles provided by the library.
 To do that edit you `angular.json` file, or add them to you `styles` file
 
-```json
+```json fileName="angular.json"
 {
   "projects": {
     "my-project": {
@@ -74,7 +74,7 @@ To do that edit you `angular.json` file, or add them to you `styles` file
 `.ng-doc` folder contains generated components and modules, you need to add it to your `.gitignore`,
 because NgDoc regenerates them every time the application is launched.
 
-```
+```fileName=".gitignore"
 ## NgDoc folder
 .ng-doc
 ```
@@ -85,7 +85,7 @@ The NgDoc libraries come with assets that include various icons, fonts, themes, 
 useful things. You also need to include them, for this add the following code to your `angular.json`
 file.
 
-```json
+```json fileName="angular.json"
 {
   "projects": {
     "my-project": {
@@ -124,13 +124,13 @@ application, NgDoc also uses synthetic imports that you need to enable,
 to do this, edit the tsconfig.json of the existing application by adding the path to
 the generated files and `allowSyntheticDefaultImports` option.
 
-```json
+```json fileName="tsconfig.json"
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@ng-doc/generated": [".ng-doc/test-docs/index.ts"],
-      "@ng-doc/generated/*": [".ng-doc/test-docs/*"]
+      "@ng-doc/generated": [".ng-doc/project-folder-name/index.ts"],
+      "@ng-doc/generated/*": [".ng-doc/project-folder-name/*"]
     }
   }
 }
@@ -140,7 +140,7 @@ the generated files and `allowSyntheticDefaultImports` option.
 
 Import the global library-provided modules into your application's root `AppModule`.
 
-```typescript
+```typescript fileName="app.module.ts"
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -175,7 +175,7 @@ export class AppModule {}
 You will also need to add an application layer to your root `AppComponent` to display header and
 menu, to do this open your `app.component.html` file and add the following code to it
 
-```html
+```html fileName="app.component.html"
 <ng-doc-root>
   <ng-doc-navbar [leftContent]="leftContent">
     <ng-template #leftContent>

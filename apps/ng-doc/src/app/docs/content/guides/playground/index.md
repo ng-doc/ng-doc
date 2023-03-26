@@ -26,7 +26,7 @@ for example:
 > field
 > to specify the selectors that you want to see in your playground.
 
-```typescript
+```typescript fileName="ng-doc.dependencies.ts"
 import {NgDocDependencies} from '@ng-doc/core';
 import {NgDocTagComponent} from '@ng-doc/ui-kit';
 
@@ -64,7 +64,7 @@ we also need to export its module from the `PageModule`.
 > If you are using any other components in your playground, you must also export their modules from
 > your page module.
 
-```typescript
+```typescript fileName="ng-doc.module.ts"
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {NgDocTagModule} from '@ng-doc/ui-kit';
@@ -82,7 +82,7 @@ export class PageModule {}
 To display the created playground on the page, you should use the `playground` method
 from `NgDocActions`, passing the key of your playground to it as follows
 
-```twig
+```twig fileName="index.md"
 {{'{{ NgDocActions.playground("TagPlayground") }}' | safe }}
 ```
 
@@ -109,7 +109,7 @@ Some components may support displaying other child components with `ng-content`,
 optional, or you just want to make some content in the playground optional, to do this you can use
 the `content` field in your playground configuration, for example:
 
-```typescript
+```typescript fileName="ng-doc.dependencies.ts"
 import {NgDocDependencies} from '@ng-doc/core';
 import {NgDocTagComponent} from '@ng-doc/ui-kit';
 
@@ -150,7 +150,7 @@ content.
 To make your playgrounds more lively and dynamic you can use `data` field,
 and put any data you want in it, to use it in your template, for example like that:
 
-```typescript
+```typescript fileName="ng-doc.dependencies.ts"
 import {NgDocDependencies} from '@ng-doc/core';
 import {NgDocTagComponent} from '@ng-doc/ui-kit';
 

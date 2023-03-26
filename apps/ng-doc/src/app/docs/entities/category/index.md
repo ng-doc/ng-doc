@@ -29,7 +29,7 @@ various
 properties in the documentation for the type, below is an example of the minimum category
 configuration.
 
-```typescript
+```typescript fileName="ng-doc.category.ts"
 import {NgDocCategory} from '@ng-doc/core';
 
 export const MyAwesomeCategory: NgDocCategory = {

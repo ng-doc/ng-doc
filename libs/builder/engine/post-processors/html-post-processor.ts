@@ -17,7 +17,7 @@ export function htmlPostProcessor(entity: NgDocEntity, content: NgDocBuiltOutput
 		...content,
 		content: require('rehype')()
 			.use(require('rehype-format'))
-			.use(require('rehype-highlight'))
+			.use(require('rehype-highlight'), {ignoreMissing: true})
 			.use(slugger, isPageEntity(entity) ? entity.context.config.guide?.anchorHeadings : undefined)
 			.use(require('rehype-minify-whitespace'))
 			.use(autolinkHeading, isRouteEntity(entity) ? entity.fullRoute : undefined)
