@@ -27,7 +27,6 @@ export function marked(markdown: string, page?: NgDocPageEntity): string {
 					.find((parameter: string) => parameter.startsWith('fileName='))
 					?.replace(/"/g, '')
 					?.replace('fileName=', '') ?? '';
-			const lineNumbers: boolean = parameters.includes('lineNumbers');
 
 			if (fileParameter && page) {
 				const result: [string, string] = loadFile(fileParameter, page.mdFolder);
@@ -37,7 +36,7 @@ export function marked(markdown: string, page?: NgDocPageEntity): string {
 				code = result[1];
 			}
 
-			return `<pre><code class="language-${lang}" lang="${lang}" fileName="${fileName}" lineNumbers="${lineNumbers}">${escapeHtml(
+			return `<pre><code class="language-${lang}" lang="${lang}" fileName="${fileName}">${escapeHtml(
 				code,
 			)}</code></pre>`;
 		},

@@ -10,7 +10,7 @@ exported by default and match `NgDocConfiguration` interface.
 > **Note** You can create a configuration file in the root of your repository or in the root of the
 > documentation application.
 
-```typescript
+```typescript fileName="ng-doc.config.ts"
 import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
@@ -33,7 +33,7 @@ After that, NgDoc will start displaying links for editing and viewing the source
 > NgDoc supports only GitHub repositories, you can ask for support for other repositories by
 > creating an issue in our `ngDocFeatureRequest` page.
 
-```typescript
+```typescript fileName="ng-doc.config.ts"
 import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
@@ -63,7 +63,7 @@ new `DocsModule`
 and made it a child, in the future we will also do lazy loading so as not to load dependencies that
 other pages do not need.
 
-```typescript
+```typescript fileName="docs.module.ts"
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
@@ -98,7 +98,7 @@ export class DocsModule {}
 Same for the component, we just move the content that NgDoc adds by default to `AppComponent` to
 `DocsComponent`.
 
-```typescript
+```typescript fileName="docs.component.ts"
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
@@ -124,7 +124,7 @@ export class DocsComponent {}
 
 Now you need to add lazy loading for DocsModule and set a route for it
 
-```typescript
+```typescript fileName="app.module.ts"
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router';
@@ -152,7 +152,7 @@ export class AppModule {}
 NgDoc generates links automatically, and doesn't know what route the parent page will have, so you
 need to specify the `routePrefix` property in `ng-doc.config.ts` file.
 
-```typescript
+```typescript fileName="ng-doc.config.ts"
 import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {

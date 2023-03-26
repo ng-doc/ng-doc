@@ -58,7 +58,7 @@ Sometimes it is necessary to create links to third-party documentation or just t
 to create such links you can use global keywords that can be declared in the configuration file,
 you can read about it in the `*GettingStartedConfiguration` article.
 
-```typescript
+```typescript fileName="ng-doc.config.ts"
 import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
