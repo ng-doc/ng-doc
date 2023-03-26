@@ -55,28 +55,19 @@ export default MyAwesomePage;
 ## Global keywords
 
 Sometimes it is necessary to create links to third-party documentation or just to other sites,
-to create such links you can use global keywords that can be declared in the configuration for your
-builder in the `angular.json` file and must conform to the `NgDocGlobalKeyword` interface.
+to create such links you can use global keywords that can be declared in the configuration file,
+you can read about it in the `*GettingStartedConfiguration` article.
 
-```json
+```typescript
+import {NgDocConfiguration} from '@ng-doc/builder';
 
-{
-	"projects": {
-		"my-project": {
-			"architect": {
-				"serve": {
-					"builder": "@ng-doc/builder:dev-server",
-					"options": {
-						"ngDoc": {
-							"keywords": {
-								"google": {
-									"path": "https://google.com/"
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+const config: NgDocConfiguration = {
+	keywords: {
+		google: {
+			path: 'https://google.com/',
+		},
+	},
+};
+
+export default config;
 ```

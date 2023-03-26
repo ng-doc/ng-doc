@@ -36,7 +36,7 @@ To make it available for playgrounds, it must be declared and registered in `App
 create a module for this component in which it will be declared and registered as a type control,
 this will allow you to simply import the module in the `AppModule` in the future.
 
-`typescript {% include "./floating-circle-position-control/floating-circle-position-control.module.ts" %} `
+```typescript {% include "./floating-circle-position-control/floating-circle-position-control.module.ts" %} ```
 
 ## Using Type Control in the playground
 
