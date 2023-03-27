@@ -1,16 +1,24 @@
 {
+	"name": "utils",
 	"$schema": "../../node_modules/nx/schemas/project-schema.json",
 	"sourceRoot": "libs/utils",
 	"projectType": "library",
 	"targets": {
 		"pre-build": {
-			"executor": "@nrwl/js:tsc",
+			"executor": "@nrwl/rollup:rollup",
 			"outputs": ["{options.outputPath}"],
 			"options": {
 				"outputPath": "dist/libs/utils",
+				"project": "libs/utils/package.json",
 				"main": "libs/utils/index.ts",
 				"tsConfig": "libs/utils/tsconfig.lib.json",
-				"assets": ["libs/utils/*.md"],
+				"assets": [
+					{
+						"glob": "**/*.md",
+						"input": "libs/utils",
+						"output": "./"
+					}
+				],
 				"updateBuildableProjectDepsInPackageJson": false
 			}
 		},

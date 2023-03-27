@@ -56,5 +56,10 @@
 			"style": "scss"
 		}
 	},
-	"defaultProject": "ng-doc"
+	"defaultProject": "ng-doc",
+	"targetDefaults": {
+		"lint": {
+			"inputs": ["default", "{workspaceRoot}/.eslintrc.json"]
+		}
+	}
 }

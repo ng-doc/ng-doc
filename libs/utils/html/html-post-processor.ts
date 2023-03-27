@@ -1,4 +1,5 @@
 import {NgDocHeading} from '@ng-doc/core';
+import twig from 'highlight.js/lib/languages/twig';
 import {rehype} from 'rehype';
 import rehypeFormat from 'rehype-format';
 import rehypeHighlight from 'rehype-highlight';
@@ -25,7 +26,7 @@ export interface NgDocHtmlPostProcessorConfig {
 export async function htmlPostProcessor(html: string, config: NgDocHtmlPostProcessorConfig): Promise<string> {
 	return rehype()
 		.use(rehypeFormat)
-		.use(rehypeHighlight)
+		.use(rehypeHighlight, {ignoreMissing: true, languages: {twig}})
 		.use(sluggerPlugin, config.headings)
 		.use(rehypeMinifyWhitespace)
 		.use(autolinkHeadingPlugin, config.route)

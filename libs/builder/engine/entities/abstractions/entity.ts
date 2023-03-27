@@ -204,6 +204,8 @@ export abstract class NgDocEntity {
 		return forkJoin(
 			artifacts.map((artifact: NgDocBuiltOutput) => {
 				if (path.extname(artifact.filePath) === '.html') {
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
 					return from(importEsModule<typeof import('@ng-doc/utils')>('@ng-doc/utils')).pipe(
 						switchMap((utils: typeof import('@ng-doc/utils')) => {
 							if (isRouteEntity(this)) {
@@ -213,8 +215,10 @@ export abstract class NgDocEntity {
 							return utils.htmlPostProcessor(artifact.content, {
 								headings: this.context.config.guide?.anchorHeadings,
 								route: isRouteEntity(this) ? this.fullRoute : undefined,
-								addUsedKeyword: isRouteEntity(this) ? this.usedKeywords.add : undefined,
-								getKeyword: this.builder.entities.getByKeyword,
+								addUsedKeyword: isRouteEntity(this)
+									? this.usedKeywords.add.bind(this.usedKeywords)
+									: undefined,
+								getKeyword: this.builder.entities.getByKeyword.bind(this.builder.entities),
 							});
 						}),
 						map((content: string) => ({...artifact, content})),

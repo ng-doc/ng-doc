@@ -1,5 +1,5 @@
-import {NG_DOC_ELEMENT} from '@ng-doc/core/constants/defaults';
-import {printWarning} from '@ng-doc/core/helpers/print-console';
+import {NG_DOC_ELEMENT} from '@ng-doc/core/constants/defaults.js';
+import {printWarning} from '@ng-doc/core/helpers/print-console.js';
 import {NgDocKeyword} from '@ng-doc/core/interfaces';
 import {Element, Text} from 'hast';
 import {isElement} from 'hast-util-is-element';
