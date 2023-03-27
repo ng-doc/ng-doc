@@ -82,6 +82,7 @@
 			"options": {
 				"commands": [
 					"symlink-dir dist/libs/core dist/libs/builder/node_modules/@ng-doc/core",
+					"symlink-dir dist/libs/utils dist/libs/builder/node_modules/@ng-doc/utils",
 					"symlink-dir dist/libs/builder node_modules/@ng-doc/builder"
 				]
 			},

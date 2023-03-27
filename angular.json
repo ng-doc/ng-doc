@@ -7,6 +7,7 @@
 		"builder": "libs/builder",
 		"core": "libs/core",
 		"ng-doc": "apps/ng-doc",
-		"ui-kit": "libs/ui-kit"
+		"ui-kit": "libs/ui-kit",
+		"utils": "libs/utils"
 	}
 }
