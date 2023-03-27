@@ -74,7 +74,7 @@ To do that edit you `angular.json` file, or add them to you `styles` file
 `.ng-doc` folder contains generated components and modules, you need to add it to your `.gitignore`,
 because NgDoc regenerates them every time the application is launched.
 
-```
+```gitignore
 ## NgDoc folder
 .ng-doc
 ```

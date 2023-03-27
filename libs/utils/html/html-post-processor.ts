@@ -26,7 +26,7 @@ export interface NgDocHtmlPostProcessorConfig {
 export async function htmlPostProcessor(html: string, config: NgDocHtmlPostProcessorConfig): Promise<string> {
 	return rehype()
 		.use(rehypeFormat)
-		.use(rehypeHighlight, {languages: {twig}})
+		.use(rehypeHighlight, {ignoreMissing: true, languages: {twig}})
 		.use(sluggerPlugin, config.headings)
 		.use(rehypeMinifyWhitespace)
 		.use(autolinkHeadingPlugin, config.route)
