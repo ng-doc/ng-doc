@@ -26,7 +26,7 @@ export function marked(markdown: string, page?: NgDocPageEntity): string {
 				parameters
 					.find((parameter: string) => parameter.startsWith('fileName='))
 					?.replace(/"/g, '')
-					?.replace('fileName=', '') ?? '';
+					?.replace(/^fileName=/, '') ?? '';
 
 			if (fileParameter && page) {
 				const result: [string, string] = loadFile(fileParameter, page.mdFolder);
@@ -77,18 +77,22 @@ function loadFile(str: string, contextFolder: string): [string, string] {
 	if (!res || !res.groups || !res.groups['path']) {
 		throw new Error(`Unable to parse file path ${str}`);
 	}
-	const relativeFilePath: string = path.join(contextFolder, res?.groups['path'].replace(/"/g, ''));
+	const groupPath = res.groups['path'].replace(/"/g, '');
+	const relativeFilePath: string = path.join(contextFolder, groupPath);
 	const file = fs.readFileSync(relativeFilePath ?? '', 'utf8');
 	const fileLines: string[] = file.split(EOL);
 
 	const fromLine = res.groups['from'] ? parseInt(res.groups['from'], 10) : 1;
 	const hasDash = !!res.groups['dash'] ?? false;
-	const toLine =
-		(hasDash && !res.groups['to']) || (!res.groups['to'] && !res.groups['from'])
-			? fileLines.length
-			: res.groups['to']
-			? parseInt(res.groups['to'], 10)
-			: fromLine;
+	let toLine = fileLines.length;
+
+	if (res.groups['to']) {
+		toLine = parseInt(res.groups['to'], 10);
+	}
+
+	if (!hasDash && res.groups['from']) {
+		toLine = fromLine;
+	}
 
 	return [relativeFilePath, fileLines.slice(fromLine - 1, toLine).join(EOL)];
 }
