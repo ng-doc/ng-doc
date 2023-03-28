@@ -1,17 +1,24 @@
 {
-	"name": "core",
+	"name": "utils",
 	"$schema": "../../node_modules/nx/schemas/project-schema.json",
-	"sourceRoot": "libs/core",
+	"sourceRoot": "libs/utils",
 	"projectType": "library",
 	"targets": {
 		"pre-build": {
-			"executor": "@nrwl/js:tsc",
+			"executor": "@nrwl/rollup:rollup",
 			"outputs": ["{options.outputPath}"],
 			"options": {
-				"outputPath": "dist/libs/core",
-				"main": "libs/core/index.ts",
-				"tsConfig": "libs/core/tsconfig.lib.json",
-				"assets": ["libs/core/*.md"],
+				"outputPath": "dist/libs/utils",
+				"project": "libs/utils/package.json",
+				"main": "libs/utils/index.ts",
+				"tsConfig": "libs/utils/tsconfig.lib.json",
+				"assets": [
+					{
+						"glob": "**/*.md",
+						"input": "libs/utils",
+						"output": "./"
+					}
+				],
 				"updateBuildableProjectDepsInPackageJson": false
 			}
 		},
@@ -21,16 +28,10 @@
 				"commands": []
 			}
 		},
-		"schematics": {
-			"executor": "nx:run-commands",
-			"options": {
-				"commands": []
-			}
-		},
 		"publish": {
 			"executor": "nx:run-commands",
 			"options": {
-				"command": "node tools/scripts/publish.mjs core {args.ver} {args.tag}"
+				"command": "node tools/scripts/publish.mjs utils {args.ver} {args.tag}"
 			},
 			"dependsOn": [
 				{
@@ -43,17 +44,17 @@
 			"executor": "@nrwl/linter:eslint",
 			"outputs": ["{options.outputFile}"],
 			"options": {
-				"lintFilePatterns": ["libs/core/**/*.ts"]
+				"lintFilePatterns": ["libs/utils/**/*.ts"]
 			}
 		},
 		"test": {
 			"executor": "@nrwl/jest:jest",
-			"outputs": ["coverage/libs/core"],
+			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
 			"options": {
-				"jestConfig": "libs/core/jest.config.ts",
+				"jestConfig": "libs/utils/jest.config.ts",
 				"passWithNoTests": true
 			}
 		}
 	},
-	"tags": ["type:lib", "lib:core"]
+	"tags": ["type:lib", "lib:utils"]
 }

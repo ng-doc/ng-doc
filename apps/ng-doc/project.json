@@ -35,7 +35,13 @@
 				],
 				"styles": ["apps/ng-doc/src/styles.scss"],
 				"scripts": [],
-				"allowedCommonJsDependencies": ["@ng-doc/core", "posthtml-parser", "posthtml-render", "js-beautify"]
+				"allowedCommonJsDependencies": [
+					"@ng-doc/core",
+					"posthtml-parser",
+					"posthtml-render",
+					"js-beautify",
+					"chalk"
+				]
 			},
 			"configurations": {
 				"production": {
@@ -83,6 +89,8 @@
 			"options": {
 				"commands": [
 					"symlink-dir dist/libs/core dist/libs/builder/node_modules/@ng-doc/core",
+					"symlink-dir dist/libs/core dist/libs/utils/node_modules/@ng-doc/core",
+					"symlink-dir dist/libs/utils dist/libs/builder/node_modules/@ng-doc/utils",
 					"symlink-dir dist/libs/builder node_modules/@ng-doc/builder"
 				]
 			},

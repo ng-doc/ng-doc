@@ -1,12 +1,12 @@
 import {logging} from '@angular-devkit/core';
 import * as path from 'path';
-import {from, Observable, of, Subject} from 'rxjs';
+import {forkJoin, from, Observable, of, Subject} from 'rxjs';
 import {catchError, map, switchMap, take} from 'rxjs/operators';
 
 import {ObservableSet} from '../../../classes';
+import {importEsModule, isRouteEntity} from '../../../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../../interfaces';
 import {NgDocBuilder} from '../../builder';
-import {htmlPostProcessor} from '../../post-processors';
 
 /**
  * Base entity class that all entities should extend.
@@ -200,14 +200,32 @@ export abstract class NgDocEntity {
 		return this.destroy$.asObservable().pipe(take(1));
 	}
 
-	private async processArtifacts(artifacts: NgDocBuiltOutput[]): Promise<NgDocBuiltOutput[]> {
-		return Promise.all(
+	private processArtifacts(artifacts: NgDocBuiltOutput[]): Observable<NgDocBuiltOutput[]> {
+		return forkJoin(
 			artifacts.map((artifact: NgDocBuiltOutput) => {
 				if (path.extname(artifact.filePath) === '.html') {
-					return htmlPostProcessor(this, artifact);
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					return from(importEsModule<typeof import('@ng-doc/utils')>('@ng-doc/utils')).pipe(
+						switchMap((utils: typeof import('@ng-doc/utils')) => {
+							if (isRouteEntity(this)) {
+								this.usedKeywords = new Set();
+							}
+
+							return utils.htmlPostProcessor(artifact.content, {
+								headings: this.context.config.guide?.anchorHeadings,
+								route: isRouteEntity(this) ? this.fullRoute : undefined,
+								addUsedKeyword: isRouteEntity(this)
+									? this.usedKeywords.add.bind(this.usedKeywords)
+									: undefined,
+								getKeyword: this.builder.entities.getByKeyword.bind(this.builder.entities),
+							});
+						}),
+						map((content: string) => ({...artifact, content})),
+					);
 				}
 
-				return artifact;
+				return of(artifact);
 			}),
 		);
 	}

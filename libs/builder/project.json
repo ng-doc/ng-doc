@@ -66,5 +66,5 @@
 		}
 	},
 	"tags": ["type:lib", "lib:builder"],
-	"implicitDependencies": ["!app"]
+	"implicitDependencies": ["!app", "utils"]
 }

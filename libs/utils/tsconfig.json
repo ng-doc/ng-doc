@@ -1,17 +1,17 @@
 {
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
-		"module": "CommonJS",
+		"module": "ES2015",
+		"target": "ESNext",
 		"forceConsistentCasingInFileNames": true,
 		"strict": true,
 		"noImplicitOverride": true,
 		"noPropertyAccessFromIndexSignature": true,
 		"noImplicitReturns": true,
-		"noFallthroughCasesInSwitch": true,
-		"target": "es2020"
+		"noFallthroughCasesInSwitch": true
 	},
 	"files": [],
-	"include": ["**/*.ts"],
+	"include": [],
 	"references": [
 		{
 			"path": "./tsconfig.lib.json"

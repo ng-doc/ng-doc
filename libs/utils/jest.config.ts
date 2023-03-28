@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-	displayName: 'add',
+	displayName: 'utils',
 	preset: '../../jest.preset.js',
 	globals: {},
 	transform: {
@@ -12,5 +12,5 @@ export default {
 		],
 	},
 	moduleFileExtensions: ['ts', 'js', 'html'],
-	coverageDirectory: '../../coverage/libs/add',
+	coverageDirectory: '../../coverage/libs/utils',
 };
