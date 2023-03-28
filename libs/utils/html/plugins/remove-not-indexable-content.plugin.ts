@@ -18,7 +18,7 @@ export default function removeNotIndexableContentPlugin(): any {
 			const preWithCode: boolean = node?.tagName === 'pre' && node?.children?.some(isCodeNode);
 			const notIndexable: boolean = node?.properties?.['indexable'] === 'false';
 
-			return !node?.tagName || (!preWithCode && !notIndexable && !isCodeNode(node));
+			return !node?.tagName || (!preWithCode && !notIndexable);
 		});
 	};
 }
