@@ -10,12 +10,14 @@ import {
 	QueryList,
 	ViewChildren,
 } from '@angular/core';
+import {tabFadeAnimation} from '@ng-doc/ui-kit/animations';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {startWith} from 'rxjs/operators';
 
 import {NgDocTabComponent} from './tab/tab.component';
 
 @Component({
+	animations: [tabFadeAnimation],
 	selector: 'ng-doc-tab-group',
 	templateUrl: './tab-group.component.html',
 	styleUrls: ['./tab-group.component.scss'],

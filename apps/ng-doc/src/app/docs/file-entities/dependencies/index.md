@@ -32,6 +32,9 @@ properties in the documentation for the type, below is an example of possible co
 
 ```typescript fileName="ng-doc.dependencies.ts"
 import {NgDocDependencies} from '@ng-doc/core';
+import {ComponentClass} from '../../../libs/my-lib/src/lib/my-lib.component';
+import {InlineDemoComponent} from './demos/inline-demo.component';
+import {DemoWithFilesComponent} from './demos/demo-with-files.component';
 
 const MyPageDependencies: NgDocDependencies = {
   /** NgModule that declarates demo components, and exports components that are using in the playgrounds */

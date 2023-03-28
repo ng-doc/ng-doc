@@ -42,12 +42,17 @@
 		--ng-doc-button-active-background: var(--ng-doc-grey-160);
 	}
 
+	.ng-doc-code-wrapper {
+		height: 100%;
+	}
+
 	::ng-deep {
 		pre {
 			display: flex;
 			margin: var(--ng-doc-code-margin);
 			border-radius: var(--ng-doc-code-border-radius, var(--ng-doc-base-gutter));
 			overflow: hidden;
+			height: 100%;
 
 			code {
 				padding: calc(var(--ng-doc-base-gutter) * 2);
@@ -57,6 +62,7 @@
 				line-height: var(--ng-doc-code-line-height);
 				max-height: var(--ng-doc-code-max-height);
 				overflow: auto;
+				height: 100%;
 			}
 		}
 	}

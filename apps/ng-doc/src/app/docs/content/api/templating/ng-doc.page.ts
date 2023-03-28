@@ -1,12 +1,12 @@
 import {NgDocPage} from '@ng-doc/core';
 
-import ContentCategory from '../ng-doc.category';
+import ApiCategory from '../ng-doc.category';
 
 const ApiTemplatingPage: NgDocPage = {
-  title: 'Api Templating',
+  title: 'Templating',
   mdFile: './index.md',
-  category: ContentCategory,
-  order: 3,
+  category: ApiCategory,
+  order: 1,
   keyword: 'ContentApiTemplating',
 };
 

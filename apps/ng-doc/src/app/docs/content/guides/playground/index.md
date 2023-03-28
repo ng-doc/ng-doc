@@ -14,8 +14,7 @@ page folder, you can read more about how to do this in the `*EntitiesDependencie
 In the `ng-doc.dependencies.ts` file, add the `playgrounds` field, which must match the
 `NgDocPlaygroundConfig` interface. A playground config is a regular object whose key is the name of
 the playground (which you should use to display it on the page) and whose value is the config
-itself,
-for example:
+itself, for example:
 
 > **Note**
 > For the template you can also use your real selector, but we recommend using `ng-doc-selector` to

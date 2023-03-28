@@ -2,6 +2,7 @@ import {NgDocPageSectionIndex} from '@ng-doc/core';
 import path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
+
 import {NgDocBuiltOutput} from '../../interfaces';
 import {NgDocEntity} from './abstractions/entity';
 
@@ -77,7 +78,10 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 	}
 
 	private buildIndexes(): Observable<NgDocBuiltOutput[]> {
-		const allIndexes: NgDocPageSectionIndex[] = this.builder.entities.asArray().map((entity: NgDocEntity) => entity.indexes).flat();
+		const allIndexes: NgDocPageSectionIndex[] = this.builder.entities
+			.asArray()
+			.map((entity: NgDocEntity) => entity.indexes)
+			.flat();
 
 		return of(allIndexes).pipe(
 			map((sectionIndexes: NgDocPageSectionIndex[]) => [

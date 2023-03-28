@@ -1,6 +1,9 @@
 @import '../../styles/mixins';
 
 :host {
+	display: flex;
+	flex-direction: column;
+
 	.ng-doc-tabs-wrapper {
 		@include ng-doc-font();
 		position: relative;
@@ -9,6 +12,7 @@
 		overflow-x: auto;
 		line-height: 18px;
 		font-size: 14px;
+		flex-shrink: 0;
 
 		.ng-doc-tab {
 			position: relative;
@@ -28,6 +32,8 @@
 
 	.ng-doc-body-wrapper {
 		position: relative;
-		background-color: var(--ng-doc-base-0);
+		background-color: var(--ng-doc-tab-group-background);
+		height: 100%;
+		overflow: hidden;
 	}
 }

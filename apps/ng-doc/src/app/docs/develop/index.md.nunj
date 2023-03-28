@@ -1,10 +1,16 @@
-#
-
-{{ NgDocPage.title }}
+# {{ NgDocPage.title }}
 
 ## Modifiers
 
+### Demo
+
+{{  NgDocActions.demo("DevelopDemoComponent", {container: false}) }}
+
+
+{{  NgDocActions.demoPane("ButtonDemoComponent") }}
+
 ### Badges
+
 
 <span class="ng-doc-badge-wrapper">
 {%- for modifier in NgDocPage.data.modifiers %}
