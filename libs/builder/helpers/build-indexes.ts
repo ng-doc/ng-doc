@@ -2,11 +2,14 @@ import {NgDocPageSectionIndex} from '@ng-doc/core/interfaces';
 import {create} from '@orama/orama';
 import {defaultHtmlSchema, NodeContent, populate} from '@orama/plugin-parsedoc';
 import * as path from 'path';
+import {from} from 'rxjs';
+import {switchMap} from 'rxjs/operators';
 
 import {NgDocEntity} from '../engine/entities/abstractions/entity';
 import {NgDocRouteEntity} from '../engine/entities/abstractions/route.entity';
 import {NgDocBuiltOutput} from '../interfaces';
 import {isApiPageEntity, isRouteEntity} from './entity-type';
+import {importEsModule} from './import-es-module';
 
 /**
  *
@@ -28,7 +31,7 @@ export async function buildIndexes(entities: NgDocEntity[]): Promise<NgDocPageSe
 					},
 				});
 
-				const indexableContent: string = removeNotIndexableTags(artifact.content);
+				const indexableContent: string = await removeNotIndexableContent(artifact.content);
 
 				await populate(db, indexableContent, 'html', {
 					transformFn: (node: NodeContent) => transformFn(node),
@@ -118,23 +121,8 @@ function transformFn(node: NodeContent): NodeContent {
  *
  * @param html
  */
-function removeNotIndexableTags(html: string): string {
-	return require('rehype')().use(removeCodeBlocks).processSync(html).toString();
-}
-
-/**
- *
- */
-function removeCodeBlocks(): any {
-	const filter = require('unist-util-filter');
-
-	return (tree: any) => {
-		return filter(tree, {cascade: false}, (node: any) => {
-			const preWithCode: boolean =
-				node?.tagName === 'pre' && node?.children?.some((child: any) => child?.tagName === 'code');
-			const notIndexable: boolean = node?.properties?.indexable === 'false';
-
-			return !node?.tagName || (!preWithCode && !notIndexable);
-		});
-	};
+async function removeNotIndexableContent(html: string): Promise<string> {
+	return from(importEsModule<typeof import('@ng-doc/utils')>('@ng-doc/utils'))
+		.pipe(switchMap((utils: typeof import('@ng-doc/utils')) => utils.removeNotIndexableContent(html)))
+		.toPromise();
 }

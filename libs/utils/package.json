@@ -11,7 +11,8 @@
 		"hast-util-heading-rank": "^2.1.1",
 		"hast-util-to-string": "^2.0.0",
 		"unist-util-visit": "^4.1.2",
-		"rehype-minify-whitespace": "^5.0.1"
+		"rehype-minify-whitespace": "^5.0.1",
+		"unist-util-filter": "^4.0.1"
 	},
 	"publishConfig": {
 		"access": "public"

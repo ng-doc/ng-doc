@@ -82,7 +82,7 @@ function getNodes(
 			const keyword: NgDocKeyword | undefined = getKeyword(word);
 
 			if (inlineLink && /^\*\w+/gm.test(word) && !keyword) {
-				printWarning(`Keyword "${word}" is missing.`);
+				// printWarning(`Keyword "${word}" is missing.`);
 			}
 
 			// Convert code tag to link if it's a link to the page entity

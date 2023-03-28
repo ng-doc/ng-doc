@@ -8,6 +8,7 @@ import {VFileWithOutput} from 'unified';
 
 import autolinkHeadingPlugin from './plugins/autolink-headings.plugin';
 import keywordsPlugin, {AddUsedKeyword, GetKeyword} from './plugins/keywords.plugin';
+import markCodeBlocksPlugin from './plugins/mark-code-blocks.plugin';
 import markElementsPlugin from './plugins/mark-elements.plugin';
 import sluggerPlugin from './plugins/slugger.plugin';
 
@@ -32,6 +33,7 @@ export async function htmlPostProcessor(html: string, config: NgDocHtmlPostProce
 		.use(autolinkHeadingPlugin, config.route)
 		.use(keywordsPlugin, config.addUsedKeyword, config.getKeyword)
 		.use(markElementsPlugin)
+		.use(markCodeBlocksPlugin)
 		.process(html)
 		.then((file: VFileWithOutput<string>) => file.toString());
 }
