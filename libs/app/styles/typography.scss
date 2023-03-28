@@ -97,12 +97,18 @@ pre#{$class} {
 	margin: var(--ng-doc-code-margin);
 
 	code#{$class} {
+		position: relative;
 		white-space: unset;
-		box-shadow: inset 0px 6px 6px rgba(16, 19, 19, 0.32);
+		box-shadow: var(--ng-doc-code-shadow);
 		font-family: var(--ng-doc-code-font);
 		font-size: var(--ng-doc-code-font-size);
 		font-weight: var(--ng-doc-code-font-weight);
+		border: var(--ng-doc-code-border);
 	}
+}
+
+.hljs {
+	background-color: var(--ng-doc-code-background, none);
 }
 
 *:not(pre) > code#{$class} {

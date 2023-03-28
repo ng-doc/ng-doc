@@ -1,9 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {NgDocCodeHighlighterModule} from '@ng-doc/app/directives/code-highlighter';
-import {NgDocSanitizeHtmlModule} from '@ng-doc/app/pipes/sanitize-html';
 import {NgDocLinkProcessorModule} from '@ng-doc/app/processors/link-processor';
-import {NgDocButtonIconModule, NgDocIconModule, NgDocTooltipModule} from '@ng-doc/ui-kit';
+import {NgDocButtonIconModule, NgDocIconModule, NgDocTextModule, NgDocTooltipModule} from '@ng-doc/ui-kit';
 
 import {NgDocCodeComponent} from './code.component';
 
@@ -11,11 +9,10 @@ import {NgDocCodeComponent} from './code.component';
 	declarations: [NgDocCodeComponent],
 	imports: [
 		CommonModule,
-		NgDocCodeHighlighterModule,
+		NgDocTextModule,
 		NgDocButtonIconModule,
 		NgDocIconModule,
 		NgDocTooltipModule,
-		NgDocSanitizeHtmlModule,
 		NgDocLinkProcessorModule,
 	],
 	exports: [NgDocCodeComponent],

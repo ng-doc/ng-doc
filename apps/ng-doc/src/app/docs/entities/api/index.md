@@ -30,18 +30,18 @@ Let's see how an example of a basic API configuration looks like.
 > The paths you pass to the `include` and `exclude` fields must be passed relative to your project
 > root path
 
-```typescript
+```typescript fileName="ng-doc.api.ts"
 import {NgDocApi} from '@ng-doc/core';
 
 export const api: NgDocApi = {
-	title: 'API Reference',
-	scopes: [
-		{
-			name: 'my-library-name',
-			route: 'my-library',
-			include: 'path/to/my-library/source/files/**/*.ts',
-		},
-	],
+  title: 'API Reference',
+  scopes: [
+    {
+      name: 'my-library-name',
+      route: 'my-library',
+      include: 'path/to/my-library/source/files/**/*.ts',
+    },
+  ],
 };
 
 export default api;
@@ -60,21 +60,21 @@ the `include` field.
 Don't like that the API section is at the top? You can also add a category to it to better
 structure your documentation articles.
 
-```typescript
+```typescript fileName="ng-doc.api.ts"
 // ng-doc.api.ts
 import {NgDocApi} from '@ng-doc/core';
 import MyAwesomeCategory from '../ng-doc.category';
 
 export const api: NgDocApi = {
-	title: 'API Reference',
-	category: MyAwesomeCategory,
-	scopes: [
-		{
-			name: 'my-library-name',
-			route: 'my-library',
-			include: 'path/to/my-library/source/files/**/*.ts',
-		},
-	],
+  title: 'API Reference',
+  category: MyAwesomeCategory,
+  scopes: [
+    {
+      name: 'my-library-name',
+      route: 'my-library',
+      include: 'path/to/my-library/source/files/**/*.ts',
+    },
+  ],
 };
 
 export default api;

@@ -1,15 +1,33 @@
 :host {
 	position: relative;
 	display: block;
+	margin: var(--ng-doc-code-margin);
 
-	&[data-ng-doc-standalone='false'] {
-		pre {
-			margin: 0;
+	&[data-ng-doc-has-header='true'] {
+		--ng-doc-code-border-radius: 0 0 var(--ng-doc-base-gutter) var(--ng-doc-base-gutter);
+		--ng-doc-code-shadow: none;
+	}
 
-			code {
-				border-radius: 0;
-			}
+	.ng-doc-code-wrapper {
+		--ng-doc-code-margin: 0;
+	}
+
+	.ng-doc-code-header {
+		display: flex;
+		align-items: center;
+		padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
+		background: var(--ng-doc-code-header-background, var(--ng-doc-base-2));
+		border-radius: var(--ng-doc-base-gutter) var(--ng-doc-base-gutter) 0 0;
+
+		.ng-doc-code-file-name {
+			--ng-doc-text: var(--ng-doc-code-header-color);
+			--ng-doc-font-weight: 600;
+			--ng-doc-font-size: 14px;
 		}
+	}
+
+	.ng-doc-code-body {
+		position: relative;
 	}
 
 	.ng-doc-copy-button {
