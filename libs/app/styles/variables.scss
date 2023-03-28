@@ -1,5 +1,5 @@
 :root {
-	--ng-doc-app-max-width: 1400px;
+	--ng-doc-app-max-width: 1500px;
 	--ng-doc-app-horizontal-padding: calc(var(--ng-doc-base-gutter) * 3);
 	--ng-doc-code-background: var(--ng-doc-base-1);
 
@@ -54,6 +54,6 @@
 	--ng-doc-code-max-height: 400px;
 
 	// Table of contents
-	--ng-doc-toc-width: 250px;
+	--ng-doc-toc-width: 280px;
 	--ng-doc-toc-indent: calc(var(--ng-doc-base-gutter) + var(--ng-doc-base-gutter) / 2);
 }
