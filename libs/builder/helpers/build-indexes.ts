@@ -17,7 +17,6 @@ import {importEsModule} from './import-es-module';
  * @param artifacts
  */
 export async function buildIndexes(entity: NgDocEntity, artifacts: NgDocBuiltOutput[]): Promise<NgDocPageSectionIndex[]> {
-	console.time(`buildIndexes ${entity.id}`);
 	const pages: NgDocPageSectionIndex[] = [];
 
 	if (entity instanceof NgDocRouteEntity) {
@@ -65,8 +64,6 @@ export async function buildIndexes(entity: NgDocEntity, artifacts: NgDocBuiltOut
 				});
 		}
 	}
-
-	console.timeEnd(`buildIndexes ${entity.id}`);
 
 	return pages;
 }
