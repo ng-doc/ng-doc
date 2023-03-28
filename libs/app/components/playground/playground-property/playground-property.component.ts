@@ -13,8 +13,8 @@ import {
 	ViewContainerRef,
 } from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {isPlaygroundProperty} from '@ng-doc/app/helpers/is-playground-property';
-import {getTokenForType} from '@ng-doc/app/helpers/provide-type-control';
+import {isPlaygroundProperty} from '@ng-doc/app/helpers';
+import {getTokenForType} from '@ng-doc/app/helpers';
 import {NgDocProvidedTypeControl, NgDocTypeControl, NgDocTypeControlProviderOptions} from '@ng-doc/app/interfaces';
 import {extractValueOrThrow} from '@ng-doc/core/helpers/extract-value';
 import {NgDocPlaygroundContent, NgDocPlaygroundProperty} from '@ng-doc/core/interfaces';

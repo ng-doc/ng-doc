@@ -202,3 +202,8 @@ a#{$class} {
 		text-decoration: underline;
 	}
 }
+
+mark.ng-doc-mark {
+	background-color: rgba(var(--ng-doc-primary-rgb), 0.2);
+	color: inherit;
+}

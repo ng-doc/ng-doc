@@ -1,0 +1,24 @@
+:host {
+	display: block;
+}
+
+.ng-doc-option-group-header {
+	position: sticky;
+	top: 0;
+	display: flex;
+	background-color: var(--ng-doc-base-2);
+	padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
+	z-index: 1;
+
+	--ng-doc-font-size: 13px;
+	--ng-doc-font-weight: 700;
+	--ng-doc-text: var(--ng-doc-base-10);
+}
+
+.ng-doc-option-group {
+	::ng-deep ng-doc-option {
+		.ng-doc-option-wrapper {
+			padding-left: calc(var(--ng-doc-base-gutter) * 2);
+		}
+	}
+}

@@ -19,7 +19,7 @@
 			<table class="ng-doc-accessor-table">
 				<thead>
 				<tr>
-					<th>
+					<th indexable="false">
 						{{ decoratorsMacro.render(accessor.getDecorators()) if accessor.getDecorators }}
 						{{ tagsMacro.render(accessor, 'modifier') }}
 						<h3>{{ modifierMacro.render(type) }} {{ accessor.getName() }}</h3>
@@ -44,13 +44,13 @@
 					</td>
 				</tr>
 				<tr>
-					<td>
+					<td indexable="false">
 						<h5 class="no-anchor">Presentation</h5>
 						{{ codeMacro.render(accessor | accessorPresentation, "typescript", false) }}
 					</td>
 				</tr>
 				<tr>
-					<td>
+					<td indexable="false">
 						<h5 class="no-anchor">Type</h5>
 						<p>
 							{{ typeMacro.render(accessor.getType()) }}

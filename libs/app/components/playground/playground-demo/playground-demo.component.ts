@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
-import {getPlaygroundDemoToken} from '@ng-doc/app/helpers/provide-playground-demo';
+import {getPlaygroundDemoToken} from '@ng-doc/app/helpers';
 import {NgDocFormPartialValue} from '@ng-doc/app/types';
 import {buildPlaygroundDemoTemplate} from '@ng-doc/core/helpers/build-playground-demo-template';
 import {formatHtml} from '@ng-doc/core/helpers/format-html';

@@ -1,3 +1,3 @@
 {%- macro render(content, attributeOverride) -%}
-<span class="ng-doc-tag" data-content="{{ attributeOverride if attributeOverride else content }}">{{ content }}</span>
+<span class="ng-doc-tag" indexable="false" data-content="{{ attributeOverride if attributeOverride else content }}">{{ content }}</span>
 {%- endmacro -%}

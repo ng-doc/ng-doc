@@ -6,7 +6,7 @@
 	<div class="ng-doc-table-wrapper">
 		<table class="ng-doc-parameters-table">
 			<thead>
-			<tr>
+			<tr indexable="false">
 				<th class="ng-doc-parameters-table-name">Name</th>
 				<th class="ng-doc-parameters-table-type">Type</th>
 				<th class="ng-doc-parameters-table-description">Description</th>
@@ -21,7 +21,7 @@
 				{% set docNode = paramChain | firstNodeWithComment %}
 
 				<tr>
-					<td>
+					<td indexable="false">
 						{{ decoratorsMacro.render(param.getDecorators(), true) if param.getDecorators }}
 						{{ tagsMacro.render(param, "badge") }}{{ param.getName() }}
 						<div class="ng-doc-node-details">
