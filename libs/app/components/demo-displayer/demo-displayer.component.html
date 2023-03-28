@@ -25,9 +25,9 @@
 	</div>
 	<ng-doc-expander [content]="codeContent ? codeContent : expanderContent" [expanded]="expanded">
 		<ng-template #expanderContent>
-			<ng-doc-code [copyButton]="false" [standalone]="false">
-				<pre>
-					<code [ngDocCodeHighlighter]="code" [language]="'html'"></code>
+			<ng-doc-code [copyButton]="false">
+				<pre class="hljs ngde">
+					<code class="ngde" [ngDocCodeHighlighter]="code" [language]="'html'"></code>
 				</pre>
 			</ng-doc-code>
 		</ng-template>

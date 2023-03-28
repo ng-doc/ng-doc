@@ -30,24 +30,24 @@ the dependencies configuration must correspond to the `NgDocDependencies` type, 
 about the various
 properties in the documentation for the type, below is an example of possible configuration.
 
-```typescript
+```typescript fileName="ng-doc.dependencies.ts"
 import {NgDocDependencies} from '@ng-doc/core';
 import {ComponentClass} from '../../../libs/my-lib/src/lib/my-lib.component';
 import {InlineDemoComponent} from './demos/inline-demo.component';
 import {DemoWithFilesComponent} from './demos/demo-with-files.component';
 
 const MyPageDependencies: NgDocDependencies = {
-	/** NgModule that declarates demo components, and exports components that are using in the playgrounds */
-	module: PageModule,
-	/** Demo components, that you are going to use on the page, the object key should be Class name, and value Class constructor  */
-	demo: {InlineDemoComponent, DemoWithFilesComponent},
-	/** Playground components, that you are going to use on the page  */
-	playgrounds: {
-		MyPlayground: {
-			target: ComponentClass,
-			template: `<ng-doc-selector></ng-doc-selector>`,
-		},
-	},
+  /** NgModule that declarates demo components, and exports components that are using in the playgrounds */
+  module: PageModule,
+  /** Demo components, that you are going to use on the page, the object key should be Class name, and value Class constructor  */
+  demo: {InlineDemoComponent, DemoWithFilesComponent},
+  /** Playground components, that you are going to use on the page  */
+  playgrounds: {
+    MyPlayground: {
+      target: ComponentClass,
+      template: `<ng-doc-selector></ng-doc-selector>`,
+    },
+  },
 };
 
 export default MyPageDependencies;

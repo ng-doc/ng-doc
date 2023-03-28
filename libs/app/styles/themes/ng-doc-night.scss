@@ -1,3 +1,5 @@
+@import '../../../../node_modules/highlight.js/styles/github-dark';
+
 :root {
 	--ng-doc-base-0: var(--ng-doc-grey-180);
 	--ng-doc-base-1: var(--ng-doc-grey-170);
@@ -15,4 +17,6 @@
 	--ng-doc-shadow-color: rgb(var(--ng-doc-grey-rgb));
 	--ng-doc-link-color: var(--ng-doc-light-blue-100);
 	--ng-doc-link-color-rgb: var(--ng-doc-light-blue-rgb);
+	--ng-doc-primary: var(--ng-doc-ember-140);
+	--ng-doc-primary-rgb: var(--ng-doc-ember-rgb);
 }

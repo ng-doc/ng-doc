@@ -67,6 +67,10 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return path.join(this.sourceFileFolder, this.target?.mdFile ?? '');
 	}
 
+	get mdFolder(): string {
+		return path.dirname(this.mdPath);
+	}
+
 	get builtPagePath(): string {
 		return slash(path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, RENDERED_PAGE_NAME)));
 	}
@@ -102,9 +106,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 				}
 
 				if (!this.title) {
-					throw new Error(
-						`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`,
-					);
+					throw new Error(`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`);
 				}
 
 				this.parent = this.getParentFromCategory();
@@ -151,7 +153,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 					dependenciesStore: this.dependencies,
 				})
 				.pipe(
-					map((markdown: string) => marked(markdown)),
+					map((markdown: string) => marked(markdown, this)),
 					map((output: string) => ({content: output, filePath: this.builtPagePath})),
 				);
 		}

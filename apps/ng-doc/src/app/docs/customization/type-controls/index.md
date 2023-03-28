@@ -36,7 +36,9 @@ To make it available for playgrounds, it must be declared and registered in `App
 create a module for this component in which it will be declared and registered as a type control,
 this will allow you to simply import the module in the `AppModule` in the future.
 
-`typescript {% include "./floating-circle-position-control/floating-circle-position-control.module.ts" %} `
+```typescript file="./floating-circle-position-control/floating-circle-position-control.module.ts" fileName="floating-circle-position-control.module.ts"
+
+```
 
 ## Using Type Control in the playground
 
@@ -50,9 +52,13 @@ be replaced by your type control, and you can start playing with `position` valu
 
 In the example above, we registered a type control for the `FloatingCirclePosition` type like this:
 
-```typescript
+```typescript fileName="floating-circle-position-control.module.ts"
 @NgModule({
-	providers: [provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {hideLabel: true})],
+  providers: [
+    provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {
+      hideLabel: true,
+    }),
+  ],
 })
 export class FloatingCirclePositionControlModule {}
 ```
@@ -60,16 +66,16 @@ export class FloatingCirclePositionControlModule {}
 And it worked, but you should remember, that NgDoc is sensitive to the type name, so if you change
 the type of the `position` input and make it possible to be `undefined`:
 
-```typescript
+```typescript fileName="floating-circle.component.ts"
 @Component({
-	selector: 'ng-doc-floating-circle',
-	templateUrl: './floating-circle.component.html',
-	styleUrls: ['./floating-circle.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'ng-doc-floating-circle',
+  templateUrl: './floating-circle.component.html',
+  styleUrls: ['./floating-circle.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FloatingCircleComponent {
-	@Input()
-	position?: FloatingCirclePosition = {top: '10px', left: '10px'};
+  @Input()
+  position?: FloatingCirclePosition = {top: '10px', left: '10px'};
 }
 ```
 
@@ -77,14 +83,16 @@ Then you will need to register a new type control for the `FloatingCirclePositio
 and make sure that your type control can handle `undefined` values. You can register multiple types
 for a single type control at the same time, for example:
 
-```typescript
+```typescript fileName="floating-circle-position-control.module.ts"
 @NgModule({
-	providers: [
-		provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {hideLabel: true}),
-		provideTypeControl('FloatingCirclePosition | undefined', FloatingCirclePositionControlComponent, {
-			hideLabel: true,
-		}),
-	],
+  providers: [
+    provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {
+      hideLabel: true,
+    }),
+    provideTypeControl('FloatingCirclePosition | undefined', FloatingCirclePositionControlComponent, {
+      hideLabel: true,
+    }),
+  ],
 })
 export class FloatingCirclePositionControlModule {}
 ```
