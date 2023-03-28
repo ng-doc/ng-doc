@@ -9,6 +9,7 @@ import {addGitIgnore} from './steps/add-git-ignore';
 import {addJsDependencies} from './steps/add-js-dependencies';
 import {addLayout} from './steps/add-layout';
 import {addNgDocModules} from './steps/add-ng-doc-modules';
+import {addSearchEngine} from './steps/add-search-engine';
 import {addStyles} from './steps/add-styles';
 import {addTsconfigPaths} from './steps/add-tsconfig-paths';
 import {replaceBuilders} from './steps/replace-builders';
@@ -45,6 +46,7 @@ export function ngAddSetupProject(options: Schema): Rule {
 		addAssets(options),
 		addJsDependencies(options),
 		addNgDocModules(options),
+		addSearchEngine(options),
 		addLayout(options),
 		addTsconfigPaths(options),
 		updateAppTsConfig(options),
