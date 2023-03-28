@@ -104,11 +104,8 @@ pre#{$class} {
 		font-size: var(--ng-doc-code-font-size);
 		font-weight: var(--ng-doc-code-font-weight);
 		border: var(--ng-doc-code-border);
+		background-color: var(--ng-doc-code-background, inherit);
 	}
-}
-
-.hljs {
-	background-color: var(--ng-doc-code-background, none);
 }
 
 *:not(pre) > code#{$class} {
