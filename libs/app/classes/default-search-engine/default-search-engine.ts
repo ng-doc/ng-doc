@@ -98,6 +98,6 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 	}
 
 	private request<T>(url: string): Observable<T> {
-		return from(fetch(url)).pipe(switchMap((response: Response) => from(response.json()) as Observable<T>));
+		return from(fetch(url)).pipe(switchMap((response: Response) => response.json() as Promise<T>));
 	}
 }
