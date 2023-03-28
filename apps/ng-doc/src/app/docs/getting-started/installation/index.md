@@ -138,14 +138,15 @@ the generated files and `allowSyntheticDefaultImports` option.
 
 ### Importing global modules
 
-Import the global library-provided modules into your application's root `AppModule`.
+Import the global library-provided modules into your application's root `AppModule`,
+and add `NgDocDefaultSearchEngine` to the providers section to enable search.
 
 ```typescript fileName="app.module.ts"
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
-import {NgDocModule} from '@ng-doc/app';
+import {NgDocModule, provideSearchEngine, NgDocDefaultSearchEngine} from '@ng-doc/app';
 import {NG_DOC_ROUTING, NgDocGeneratedModule} from '@ng-doc/generated';
 import {NgDocUiKitRootModule} from '@ng-doc/ui-kit';
 
@@ -164,10 +165,12 @@ import {AppComponent} from './app.component';
     // Add generated routes
     RouterModule.forRoot(NG_DOC_ROUTING),
   ],
-  providers: [],
+  // Add search engine to the providers
+  providers: [provideSearchEngine(NgDocDefaultSearchEngine)],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+}
 ```
 
 ### Adding application layout
