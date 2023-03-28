@@ -5,9 +5,9 @@ import {ButtonInlineDemoComponent} from './demos/button-inline-demo/button-inlin
 import {DemoPanePageModule} from './ng-doc.module';
 
 const DemoPanePageDependencies: NgDocDependencies = {
-	module: DemoPanePageModule,
-	// Add your demos that you are going to use in the page here
-	demo: {ButtonDemoComponent, ButtonInlineDemoComponent},
+  module: DemoPanePageModule,
+  // Add your demos that you are going to use in the page here
+  demo: {ButtonDemoComponent, ButtonInlineDemoComponent},
 };
 
 export default DemoPanePageDependencies;
