@@ -1,10 +1,12 @@
 import {logging} from '@angular-devkit/core';
+import {NgDocPageSectionIndex} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, from, Observable, of, Subject} from 'rxjs';
-import {catchError, map, switchMap, take} from 'rxjs/operators';
+import {catchError, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
 
 import {ObservableSet} from '../../../classes';
 import {importEsModule, isRouteEntity} from '../../../helpers';
+import {buildIndexes} from '../../../helpers/build-indexes';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../../interfaces';
 import {NgDocBuilder} from '../../builder';
 
@@ -17,6 +19,9 @@ export abstract class NgDocEntity {
 
 	/** Indicates when entity was destroyed */
 	destroyed: boolean = false;
+
+	/** Search indexes for the current entity */
+	indexes: NgDocPageSectionIndex[] = [];
 
 	/**
 	 * Collection of all file dependencies of the current entity.
@@ -201,6 +206,8 @@ export abstract class NgDocEntity {
 	}
 
 	private processArtifacts(artifacts: NgDocBuiltOutput[]): Observable<NgDocBuiltOutput[]> {
+		this.indexes = [];
+
 		return forkJoin(
 			artifacts.map((artifact: NgDocBuiltOutput) => {
 				if (path.extname(artifact.filePath) === '.html') {
@@ -227,6 +234,15 @@ export abstract class NgDocEntity {
 
 				return of(artifact);
 			}),
-		);
+		)
+			.pipe(
+				switchMap((artifacts: NgDocBuiltOutput[]) =>
+					from(buildIndexes(this, artifacts))
+						.pipe(
+							tap((indexes: NgDocPageSectionIndex[]) => this.indexes = indexes),
+							mapTo(artifacts),
+						)
+				)
+			)
 	}
 }

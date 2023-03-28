@@ -13,58 +13,60 @@ import {importEsModule} from './import-es-module';
 
 /**
  *
- * @param entities
+ * @param entity
+ * @param artifacts
  */
-export async function buildIndexes(entities: NgDocEntity[]): Promise<NgDocPageSectionIndex[]> {
+export async function buildIndexes(entity: NgDocEntity, artifacts: NgDocBuiltOutput[]): Promise<NgDocPageSectionIndex[]> {
+	console.time(`buildIndexes ${entity.id}`);
 	const pages: NgDocPageSectionIndex[] = [];
 
-	for (const entity of entities) {
-		if (entity instanceof NgDocRouteEntity) {
-			const artifacts: NgDocBuiltOutput[] = entity.artifacts.filter(
-				(artifact: NgDocBuiltOutput) => path.extname(artifact.filePath) === '.html',
-			);
+	if (entity instanceof NgDocRouteEntity) {
+		const htmlArifacts: NgDocBuiltOutput[] = artifacts.filter(
+			(artifact: NgDocBuiltOutput) => path.extname(artifact.filePath) === '.html',
+		);
 
-			for (const artifact of artifacts) {
-				const db = await create({
-					schema: {
-						...defaultHtmlSchema,
-					},
-				});
+		for (const artifact of htmlArifacts) {
+			const db = await create({
+				schema: {
+					...defaultHtmlSchema,
+				},
+			});
 
-				const indexableContent: string = await removeNotIndexableContent(artifact.content);
+			const indexableContent: string = await removeNotIndexableContent(artifact.content);
 
-				await populate(db, indexableContent, 'html', {
-					transformFn: (node: NodeContent) => transformFn(node),
-				});
+			await populate(db, indexableContent, 'html', {
+				transformFn: (node: NodeContent) => transformFn(node),
+			});
 
-				let section: typeof defaultHtmlSchema | undefined;
+			let section: typeof defaultHtmlSchema | undefined;
 
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				Object.values(db.data.docs.docs as unknown as Array<typeof defaultHtmlSchema>)
-					.filter(isIndexable)
-					.forEach((doc?: typeof defaultHtmlSchema) => {
-						if (doc) {
-							if (isHeading(doc)) {
-								section = doc;
-							} else {
-								pages.push({
-									breadcrumbs: buildBreadcrumbs(entity),
-									pageType: isApiPageEntity(entity) ? 'api' : 'guide',
-									title: entity.title,
-									section: section?.content ?? '',
-									route: entity.fullRoute,
-									// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-									// @ts-ignore
-									fragment: section?.properties && section.properties['id'],
-									content: doc.content,
-								});
-							}
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			Object.values(db.data.docs.docs as unknown as Array<typeof defaultHtmlSchema>)
+				.filter(isIndexable)
+				.forEach((doc?: typeof defaultHtmlSchema) => {
+					if (doc) {
+						if (isHeading(doc)) {
+							section = doc;
+						} else {
+							pages.push({
+								breadcrumbs: buildBreadcrumbs(entity),
+								pageType: isApiPageEntity(entity) ? 'api' : 'guide',
+								title: entity.title,
+								section: section?.content ?? '',
+								route: entity.fullRoute,
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore
+								fragment: section?.properties && section.properties['id'],
+								content: doc.content,
+							});
 						}
-					});
-			}
+					}
+				});
 		}
 	}
+
+	console.timeEnd(`buildIndexes ${entity.id}`);
 
 	return pages;
 }

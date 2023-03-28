@@ -27,11 +27,6 @@ export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T>
 	usedKeywords: Set<string> = new Set<string>();
 
 	/**
-	 * List of indexes that should be sat by Indexes Processor based on html artifacts of the current entity
-	 */
-	indexes: NgDocPageSectionIndex[] = [];
-
-	/**
 	 * Url for to the source file to the current page, that can be used to open it in repository and edit
 	 */
 	get editSourceFileUrl(): string | undefined {
