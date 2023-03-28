@@ -38,8 +38,8 @@
 
 		--ng-doc-icon-color: var(--ng-doc-text-muted);
 		--ng-doc-button-background: transparent;
-		--ng-doc-button-hover-background: var(--ng-doc-grey-150);
-		--ng-doc-button-active-background: var(--ng-doc-grey-160);
+		--ng-doc-button-hover-background: var(--ng-doc-code-copy-button-hover-background, var(--ng-doc-base-2));
+		--ng-doc-button-active-background: var(--ng-doc-code-copy-button-active-background, var(--ng-doc-base-3));
 	}
 
 	.ng-doc-code-wrapper {
