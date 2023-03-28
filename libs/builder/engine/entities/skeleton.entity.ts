@@ -78,7 +78,10 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 	}
 
 	private buildIndexes(): Observable<NgDocBuiltOutput[]> {
-		const allIndexes: NgDocPageSectionIndex[] = this.builder.entities.asArray().map((entity: NgDocEntity) => entity.indexes).flat();
+		const allIndexes: NgDocPageSectionIndex[] = this.builder.entities
+			.asArray()
+			.map((entity: NgDocEntity) => entity.indexes)
+			.flat();
 
 		return of(allIndexes).pipe(
 			map((sectionIndexes: NgDocPageSectionIndex[]) => [
