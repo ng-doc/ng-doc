@@ -1,7 +1,8 @@
 import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
-	Component, ElementRef,
+	Component,
+	ElementRef,
 	HostBinding,
 	HostListener,
 	Inject,

@@ -49,7 +49,7 @@ export async function buildIndexes(entities: NgDocEntity[]): Promise<NgDocPageSe
 									breadcrumbs: buildBreadcrumbs(entity),
 									pageType: isApiPageEntity(entity) ? 'api' : 'guide',
 									title: entity.title,
-									sectionTitle: section?.content ?? '',
+									section: section?.content ?? '',
 									route: entity.fullRoute,
 									// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 									// @ts-ignore

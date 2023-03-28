@@ -4,6 +4,7 @@ import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {
 	NgDocAutofocusModule,
+	NgDocBindModule,
 	NgDocButtonIconModule,
 	NgDocDataListGroupModule,
 	NgDocDropdownModule,
@@ -15,6 +16,7 @@ import {
 	NgDocInputStringModule,
 	NgDocInputWrapperModule,
 	NgDocLetModule,
+	NgDocRunModule,
 	NgDocTagModule,
 	NgDocTextModule,
 } from '@ng-doc/ui-kit';
@@ -43,6 +45,8 @@ import {NgDocSearchComponent} from './search.component';
 		NgDocTextModule,
 		NgDocLetModule,
 		FlControlSilencerModule,
+		NgDocRunModule,
+		NgDocBindModule,
 	],
 	exports: [NgDocSearchComponent],
 })

@@ -3,8 +3,6 @@
 This article describes how to customize the search functionality of the documentation
 and how to create a custom search.
 
-
-
 ## Language
 
 By default, the search is configured to search in English.

@@ -10,12 +10,11 @@ import {
 } from '@angular/core';
 import {Router} from '@angular/router';
 import {NgDocSearchEngine} from '@ng-doc/app/classes/search-engine';
+import {NgDocSearchResult} from '@ng-doc/app/interfaces';
 import {NgDocPageType} from '@ng-doc/core';
 import {NgDocHighlightPosition} from '@ng-doc/ui-kit';
 import {NgDocListHost} from '@ng-doc/ui-kit/classes';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {Result} from '@orama/orama/dist/types';
-import {Position, SearchResultWithHighlight} from '@orama/plugin-match-highlight';
 import {FlControlHost, provideControlHost} from 'flex-controls';
 import {Subject} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
@@ -34,7 +33,7 @@ import {switchMap} from 'rxjs/operators';
 	],
 })
 @UntilDestroy()
-export class NgDocSearchComponent extends FlControlHost<Result> implements NgDocListHost {
+export class NgDocSearchComponent extends FlControlHost<NgDocSearchResult> implements NgDocListHost {
 	@Input()
 	@HostBinding('attr.data-ng-doc-mod')
 	mod: 'input' | 'icon' = 'input';
@@ -45,7 +44,7 @@ export class NgDocSearchComponent extends FlControlHost<Result> implements NgDoc
 	searchTerm: string = '';
 
 	readonly query$: Subject<string> = new Subject<string>();
-	queryResult?: SearchResultWithHighlight;
+	queryResult: NgDocSearchResult[] = [];
 
 	constructor(
 		private readonly elementRef: ElementRef<HTMLElement>,
@@ -61,9 +60,8 @@ export class NgDocSearchComponent extends FlControlHost<Result> implements NgDoc
 				switchMap((term: string) => this.searchEngine.search(term)),
 				untilDestroyed(this),
 			)
-			.subscribe((result: SearchResultWithHighlight) => {
+			.subscribe((result: NgDocSearchResult[]) => {
 				this.queryResult = result;
-				console.log(this.queryResult);
 				this.changeDetectorRef.markForCheck();
 			});
 	}
@@ -72,27 +70,29 @@ export class NgDocSearchComponent extends FlControlHost<Result> implements NgDoc
 		return this.inputElement ?? this.elementRef;
 	}
 
-	groupByPage(item: Result): string {
-		return item.document['breadcrumbs'] as string;
+	groupByPage(result: NgDocSearchResult): string {
+		return result.index.breadcrumbs;
 	}
 
 	getPageTypeForGroup(group: string): NgDocPageType {
-		return this.queryResult?.hits.find((item?: Result) => item?.document['breadcrumbs'] === group)?.document[
-			'pageType'
-		] as NgDocPageType;
+		return (
+			this.queryResult?.find((item: NgDocSearchResult) => item.index.breadcrumbs === group)?.index.pageType ??
+			'guide'
+		);
 	}
 
-	getPositions(key: string, item: SearchResultWithHighlight): NgDocHighlightPosition[] {
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		return Object.values(item.positions[key]).flat();
+	getPositions<T extends NgDocSearchResult, K extends keyof T['positions']>(
+		key: K,
+		item: T,
+	): NgDocHighlightPosition[] {
+		return item.positions[key] ?? [];
 	}
 
-	override incomingUpdate(obj: Result | null): void {
+	override incomingUpdate(obj: NgDocSearchResult | null): void {
 		super.incomingUpdate(null);
 
 		if (obj) {
-			this.ngZone.run(() => this.router.navigate([obj.document['route']]));
+			this.ngZone.run(() => this.router.navigate([obj.index.route]));
 		}
 	}
 }

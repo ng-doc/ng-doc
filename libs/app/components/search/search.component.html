@@ -72,14 +72,17 @@
 <ng-template #searchResults>
 	<div class="ng-doc-search-result-content">
 		<ng-doc-data-list-group
-			[items]="queryResult?.hits ?? []"
+			[items]="queryResult"
 			[itemContent]="itemContent"
 			[groupContent]="groupContent"
 			[itemGroupFn]="groupByPage"
 			[emptyContent]="emptyContent"
 		>
 			<ng-template let-group #groupContent>
-				<div class="ng-doc-group-header" *ngDocLet="getPageTypeForGroup(group) as pageType">
+				<div
+					class="ng-doc-group-header"
+					*ngDocLet="getPageTypeForGroup | ngDocBind: this | ngDocRun: group as pageType"
+				>
 					<ng-doc-tag size="small" [color]="pageType === 'api' ? 'red' : 'blue'">
 						{{ pageType }}
 					</ng-doc-tag>
@@ -87,23 +90,26 @@
 				</div>
 			</ng-template>
 			<ng-template let-item #itemContent>
-				<a class="ng-doc-search-option" [routerLink]="item.document.route" [fragment]="item.document.fragment">
+				<a class="ng-doc-search-option" [routerLink]="item.index.route" [fragment]="item.index.fragment">
 					<h5
+						*ngDocLet="
+							item.index.section
+								| ngDocHighlighterPipe: (getPositions | ngDocRun: 'section':item) as section
+						"
 						class="ng-doc-search-section-title"
 						ng-doc-text
-						[innerHTML]="
-							item.document.sectionTitle
-								| ngDocHighlighterPipe: getPositions('sectionTitle', item) || item.document.title
-						"
+						[innerHTML]="section || item.index.title"
 					></h5>
 					<div
 						class="ng-doc-search-content"
-						[innerHTML]="item.document.content | ngDocHighlighterPipe: getPositions('content', item)"
+						[innerHTML]="
+							item.index.content | ngDocHighlighterPipe: (getPositions | ngDocRun: 'content':item)
+						"
 						ng-doc-text
 					></div>
 				</a>
 			</ng-template>
-			<ng-template #emptyContent> Nothing found </ng-template>
+			<ng-template #emptyContent> Nothing found</ng-template>
 		</ng-doc-data-list-group>
 	</div>
 </ng-template>

@@ -7,6 +7,6 @@ const SearchPage: NgDocPage = {
 	mdFile: './index.md',
 	order: 2,
 	category: CustomizationCategory,
-}
+};
 
 export default SearchPage;
