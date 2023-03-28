@@ -59,6 +59,9 @@ export class NgDocListComponent<T> {
 				this.keyManager?.activeItem?.setInactiveStyles();
 				this.keyManager?.onKeydown(typedEvent);
 				this.keyManager?.activeItem?.setActiveStyles();
+
+				if (this.keyManager?.activeItem)
+					toElement(this.keyManager?.activeItem.elementRef).scrollIntoView({block: 'nearest'})
 			});
 	}
 

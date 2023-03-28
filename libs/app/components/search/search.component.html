@@ -21,6 +21,8 @@
 							(ngModelChange)="query$.next($event)"
 							placeholder="Search..."
 							ngDocAutofocus
+							flControlSilencer
+							#inputElement
 						/>
 					</ng-doc-input-wrapper>
 					<ng-container *ngTemplateOutlet="searchResults"></ng-container>
@@ -38,6 +40,7 @@
 		ngDocFocusCatcher
 		(focusEvent)="inputElement.value ? dropdown.open() : null"
 		(click)="inputElement.value ? dropdown.open() : null"
+		flControlSilencer
 		#input
 	>
 		<ng-template #leftContent>
@@ -69,7 +72,7 @@
 <ng-template #searchResults>
 	<div class="ng-doc-search-result-content">
 		<ng-doc-data-list-group
-			[items]="queryResult"
+			[items]="queryResult?.hits ?? []"
 			[itemContent]="itemContent"
 			[groupContent]="groupContent"
 			[itemGroupFn]="groupByPage"

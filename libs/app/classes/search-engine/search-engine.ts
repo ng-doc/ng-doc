@@ -2,6 +2,7 @@ import {Provider} from '@angular/core';
 import {SearchSchema} from '@ng-doc/app/interfaces';
 import {NgDocPageSectionIndex} from '@ng-doc/core/interfaces';
 import {create, insert, Orama} from '@orama/orama';
+import {stemmers} from '@orama/orama';
 import {
 	afterInsert,
 	OramaWithHighlight,
@@ -12,19 +13,31 @@ import {from, Observable} from 'rxjs';
 import {map, shareReplay, switchMap} from 'rxjs/operators';
 
 /**
- *
+ * Possible languages for the `NgDocSearchEngine`.
  */
-export function provideSearchEngine(): Provider {
+export type NgDocSearchEngineLanguage = keyof typeof stemmers;
+
+/**
+ * Provides the `NgDocSearchEngine` to enable search in the documentation.
+ *
+ * You can create and provide your own `NgDocSearchEngine` if you want to handle the search yourself.
+ *
+ * @param language
+ */
+export function provideSearchEngine(language?: NgDocSearchEngineLanguage): Provider {
 	return {
 		provide: NgDocSearchEngine,
-		useValue: new NgDocSearchEngine(),
+		useValue: new NgDocSearchEngine(language),
 	};
 }
 
+/**
+ * Search engine for the documentation, it loads the index and provides a search method.
+ */
 export class NgDocSearchEngine {
 	private db$: Observable<OramaWithHighlight>;
 
-	constructor() {
+	constructor(language?: NgDocSearchEngineLanguage) {
 		this.db$ = from(
 			create({
 				schema: {
@@ -33,6 +46,10 @@ export class NgDocSearchEngine {
 				},
 				components: {
 					afterInsert: [afterInsert],
+					tokenizer: {
+						language: language,
+						stemmer: stemmers[language ?? 'english'],
+					},
 				},
 			}),
 		).pipe(
@@ -51,7 +68,12 @@ export class NgDocSearchEngine {
 		) as Observable<OramaWithHighlight>;
 	}
 
-	search(query: string): Observable<SearchResultWithHighlight[]> {
+	/**
+	 * Search the documentation for the given query.
+	 *
+	 * @param query The query to search for.
+	 */
+	search(query: string): Observable<SearchResultWithHighlight> {
 		return this.db$.pipe(
 			switchMap((db: OramaWithHighlight) =>
 				searchWithHighlight(db, {

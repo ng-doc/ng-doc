@@ -36,7 +36,9 @@ export async function buildIndexes(entities: NgDocEntity[]): Promise<NgDocPageSe
 
 				let section: typeof defaultHtmlSchema | undefined;
 
-				Object.values(db.data.docs)
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				Object.values(db.data.docs.docs as unknown as Array<typeof defaultHtmlSchema>)
 					.filter(isIndexable)
 					.forEach((doc?: typeof defaultHtmlSchema) => {
 						if (doc) {

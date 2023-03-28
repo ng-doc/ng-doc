@@ -6,16 +6,13 @@
 	position: sticky;
 	top: 0;
 	display: flex;
-	background-color: var(--ng-doc-base-0);
+	background-color: var(--ng-doc-base-2);
+	padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
 	z-index: 1;
+
 	--ng-doc-font-size: 13px;
 	--ng-doc-font-weight: 700;
-	--ng-doc-text: var(--ng-doc-text-muted);
-
-	& > ::ng-deep * {
-		margin: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
-		margin-bottom: 0;
-	}
+	--ng-doc-text: var(--ng-doc-base-10);
 }
 
 .ng-doc-option-group {
@@ -24,11 +21,4 @@
 			padding-left: calc(var(--ng-doc-base-gutter) * 2);
 		}
 	}
-}
-
-.ng-doc-divider {
-	width: 100%;
-	height: 1px;
-	background-color: var(--ng-doc-base-3);
-	margin-top: var(--ng-doc-base-gutter);
 }

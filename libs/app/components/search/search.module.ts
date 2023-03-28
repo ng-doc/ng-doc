@@ -18,6 +18,7 @@ import {
 	NgDocTagModule,
 	NgDocTextModule,
 } from '@ng-doc/ui-kit';
+import {FlControlSilencerModule} from 'flex-controls';
 
 import {NgDocSearchComponent} from './search.component';
 
@@ -41,6 +42,7 @@ import {NgDocSearchComponent} from './search.component';
 		NgDocHighlighterModule,
 		NgDocTextModule,
 		NgDocLetModule,
+		FlControlSilencerModule,
 	],
 	exports: [NgDocSearchComponent],
 })

@@ -6,7 +6,7 @@ const TypeControlsPage: NgDocPage = {
 	title: 'Type Controls',
 	mdFile: './index.md',
 	category: CustomizationCategory,
-	order: 3,
+	order: 4,
 	keyword: 'CustomizationTypeControls',
 }
 
