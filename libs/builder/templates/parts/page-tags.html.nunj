@@ -7,18 +7,18 @@
 
 
 	{{ tagMacro.render(scope.name, "ng-doc-scope") }}
-	<span class="ng-doc-inline-delimiter">/</span>
+	<span class="ng-doc-inline-delimiter" indexable="false">/</span>
 	{{ tagMacro.render(declarationType) if declarationType }}
 
 
 	{%- if declaration.getDecorators and declaration.getDecorators().length %}
-		<span class="ng-doc-inline-delimiter">/</span>
+		<span class="ng-doc-inline-delimiter" indexable="false">/</span>
 		{{ decoratorsMacro.render(declaration.getDecorators()) }}
 	{%- endif %}
 
 
 	{% for selector in selectors %}
-		<span class="ng-doc-inline-delimiter">/</span>
+		<span class="ng-doc-inline-delimiter" indexable="false">/</span>
 		{{ tagMacro.render(selector, "ng-doc-tag-selector") }}
 	{%- endfor %}
 </div>

@@ -19,7 +19,7 @@ import {NgDocTextRightDirective} from './text-right.directive';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgDocTextComponent implements AfterContentChecked {
-	/** Text color */
+	/** Text size */
 	@Input()
 	@HostBinding('attr.data-ng-doc-text-size')
 	size: NgDocSize = 'medium';

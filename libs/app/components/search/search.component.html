@@ -21,11 +21,11 @@
 							(ngModelChange)="query$.next($event)"
 							placeholder="Search..."
 							ngDocAutofocus
+							flControlSilencer
+							#inputElement
 						/>
 					</ng-doc-input-wrapper>
-					<div class="ng-doc-search-result-content">
-						<ng-doc-search-result [result]="queryResult"></ng-doc-search-result>
-					</div>
+					<ng-container *ngTemplateOutlet="searchResults"></ng-container>
 				</div>
 			</ng-template>
 		</ng-doc-dropdown>
@@ -39,8 +39,8 @@
 		ngDocDropdownOrigin
 		ngDocFocusCatcher
 		(focusEvent)="inputElement.value ? dropdown.open() : null"
-		(blurEvent)="dropdown.close()"
 		(click)="inputElement.value ? dropdown.open() : null"
+		flControlSilencer
 		#input
 	>
 		<ng-template #leftContent>
@@ -59,16 +59,57 @@
 			<ng-doc-tag class="search-hotkey">/</ng-doc-tag>
 		</ng-template>
 		<ng-doc-dropdown
-			[content]="dropdownContent"
+			[content]="searchResults"
 			[width]="input.elementRef.nativeElement.offsetWidth"
 			maxHeight="calc(95vh - var(--ng-doc-navbar-height)"
 			#dropdown
 		>
-			<ng-template #dropdownContent>
-				<div class="ng-doc-search-result-content">
-					<ng-doc-search-result [result]="queryResult"></ng-doc-search-result>
-				</div>
-			</ng-template>
+			<
 		</ng-doc-dropdown>
 	</ng-doc-input-wrapper>
+</ng-template>
+
+<ng-template #searchResults>
+	<div class="ng-doc-search-result-content">
+		<ng-doc-data-list-group
+			[items]="queryResult"
+			[itemContent]="itemContent"
+			[groupContent]="groupContent"
+			[itemGroupFn]="groupByPage"
+			[emptyContent]="emptyContent"
+		>
+			<ng-template let-group #groupContent>
+				<div
+					class="ng-doc-group-header"
+					*ngDocLet="getPageTypeForGroup | ngDocBind: this | ngDocRun: group as pageType"
+				>
+					<ng-doc-tag size="small" [color]="pageType === 'api' ? 'red' : 'blue'">
+						{{ pageType }}
+					</ng-doc-tag>
+					{{ group }}
+				</div>
+			</ng-template>
+			<ng-template let-item #itemContent>
+				<a class="ng-doc-search-option" [routerLink]="item.index.route" [fragment]="item.index.fragment">
+					<h5
+						*ngDocLet="
+							item.index.section
+								| ngDocHighlighterPipe: (getPositions | ngDocRun: 'section':item) as section
+						"
+						class="ng-doc-search-section-title"
+						ng-doc-text
+						[innerHTML]="section || item.index.title"
+					></h5>
+					<div
+						class="ng-doc-search-content"
+						[innerHTML]="
+							item.index.content | ngDocHighlighterPipe: (getPositions | ngDocRun: 'content':item)
+						"
+						ng-doc-text
+					></div>
+				</a>
+			</ng-template>
+			<ng-template #emptyContent> Nothing found</ng-template>
+		</ng-doc-data-list-group>
+	</div>
 </ng-template>

@@ -6,7 +6,7 @@ const ThemesPage: NgDocPage = {
 	title: 'Themes',
 	mdFile: './index.md',
 	category: CustomizationCategory,
-	order: 2,
+	order: 3,
 	keyword: 'CustomizationThemes',
 };
 

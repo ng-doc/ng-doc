@@ -48,6 +48,9 @@
 		"@angular/platform-browser": "15.2.4",
 		"@angular/platform-browser-dynamic": "15.2.4",
 		"@angular/router": "15.2.4",
+		"@orama/orama": "^1.0.0-beta.6",
+		"@orama/plugin-match-highlight": "^1.0.0-beta.6",
+		"@orama/plugin-parsedoc": "^1.0.0-beta.6",
 		"@microsoft/tsdoc": "^0.14.2",
 		"@ng-web-apis/common": "^2.0.1",
 		"@ngneat/until-destroy": "^9.2.0",
@@ -70,7 +73,6 @@
 		"hast-util-to-string": "^2.0.0",
 		"highlight.js": "^11.5.1",
 		"js-beautify": "^1.14.7",
-		"lunr": "^2.3.9",
 		"marked": "^4.0.18",
 		"minimatch": "^5.1.0",
 		"ng-morph": "^2.1.1",
@@ -88,6 +90,7 @@
 		"svgo": "^2.8.0",
 		"ts-morph": "^15.0.0",
 		"tslib": "^2.3.0",
+		"unist-util-filter": "^2.0.3",
 		"unist-util-visit": "^4.1.2",
 		"zone.js": "0.12.0"
 	},
@@ -126,7 +129,7 @@
 		"@types/marked": "^4.0.3",
 		"@types/minimatch": "^3.0.5",
 		"@types/mock-fs": "^4.13.1",
-		"@types/node": "16.11.7",
+		"@types/node": "18.7.1",
 		"@types/nunjucks": "^3.2.1",
 		"@typescript-eslint/eslint-plugin": "5.42.0",
 		"@typescript-eslint/parser": "5.42.0",
@@ -161,7 +164,7 @@
 	"lint-staged": {
 		"*": [
 			"nx affected:lint --fix --quiet=true --base=main --head=HEAD",
-			"nx format:write --files"
+			"nx format:write --base=main --head=HEAD"
 		]
 	}
 }
