@@ -26,7 +26,6 @@ import {mergeOverlayConfigs, toElement} from '@ng-doc/ui-kit/helpers';
 import {NgDocOverlayConfig, NgDocOverlayProperties} from '@ng-doc/ui-kit/interfaces';
 import {ngDocZoneDetach} from '@ng-doc/ui-kit/observables';
 import {NgDocOverlayService} from '@ng-doc/ui-kit/services/overlay';
-import {NgDocOverlayStrategy} from '@ng-doc/ui-kit/services/overlay-strategy';
 import {NgDocContent, NgDocOverlayOrigin, NgDocOverlayPosition} from '@ng-doc/ui-kit/types';
 import {NgDocOverlayUtils} from '@ng-doc/ui-kit/utils';
 import {UntilDestroy} from '@ngneat/until-destroy';
@@ -109,7 +108,6 @@ export class NgDocDropdownComponent implements OnChanges, OnDestroy {
 		protected changeDetectorRef: ChangeDetectorRef,
 		protected overlayService: NgDocOverlayService,
 		protected viewContainerRef: ViewContainerRef,
-		protected overlayScrollStrategy: NgDocOverlayStrategy,
 		protected ngZone: NgZone,
 		@Inject(NgDocOverlayHost)
 		@Optional()
@@ -237,7 +235,7 @@ export class NgDocDropdownComponent implements OnChanges, OnDestroy {
 				this.currentOrigin,
 				this.getPositions(overlayProperties.positions || [], overlayProperties.borderOffset || 0),
 			),
-			scrollStrategy: this.overlayScrollStrategy,
+			scrollStrategy: this.overlayService.scrollStrategy().reposition(),
 			viewContainerRef: this.viewContainerRef,
 			openAnimation: dropdownOpenAnimation,
 			...overlayProperties,

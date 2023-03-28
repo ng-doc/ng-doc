@@ -14,7 +14,8 @@
 .ng-doc-search-result-content {
 	height: 100%;
 	overflow: auto;
-	padding: calc(var(--ng-doc-base-gutter) * 3) var(--ng-doc-navbar-horizontal-padding);
+
+	--ng-doc-option-padding: 0;
 }
 
 .ng-doc-search-wrapper {
@@ -43,4 +44,29 @@
 
 ::ng-deep .ng-doc-search-dropdown {
 	--ng-doc-overlay-border-radius: 0px !important;
+}
+
+.ng-doc-search-section-title {
+	display: block;
+	margin: 0 0 var(--ng-doc-base-gutter);
+}
+
+.ng-doc-group-header {
+	display: flex;
+	align-items: center;
+
+	ng-doc-tag {
+		text-transform: uppercase;
+		margin-right: var(--ng-doc-base-gutter);
+	}
+}
+
+.ng-doc-search-option {
+	display: block;
+	padding: calc(var(--ng-doc-base-gutter) * 2);
+	text-decoration: none;
+}
+
+.ng-doc-search-content {
+	display: block;
 }

@@ -13,7 +13,7 @@ import {NgDocAction} from '../../types';
 export function demoAction(componentName: string, options?: NgDocDemoActionOptions): NgDocAction {
 	return (): NgDocActionOutput => {
 		return {
-			output: `<ng-doc-demo componentName="${componentName}">
+			output: `<ng-doc-demo componentName="${componentName}" indexable="false">
 						<div id="options">${escapeHtml(JSON.stringify(options ?? {}))}</div>
 					</ng-doc-demo>`,
 		};

@@ -12,3 +12,4 @@ export * from './playground-config';
 export * from './playground-content';
 export * from './playground-data';
 export * from './playground-metadata';
+export * from './section-index';

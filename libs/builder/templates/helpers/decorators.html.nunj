@@ -2,7 +2,7 @@
 
 {% macro render(decorators, column) %}
 	{% if decorators.length %}
-		<div class="ng-doc-decorators-group {{ 'column' if column }}">
+		<div class="ng-doc-decorators-group {{ 'column' if column }}" indexable="false">
 			{% for decorator in decorators %}
 				{{ tagMacro.render('@' + decorator.getName(), decorator.getName()) }}
 			{%- endfor %}

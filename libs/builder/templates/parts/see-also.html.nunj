@@ -10,7 +10,7 @@
 {% endset %}
 
 {%- if seeDocs.length or derivedClasses | trim %}
-	<section>
+	<section indexable="false">
 		<h2>See Also</h2>
 
 		<ul class="ng-doc-see-also">

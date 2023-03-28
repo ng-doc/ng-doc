@@ -1,7 +1,7 @@
 import {logging} from '@angular-devkit/core';
 import * as path from 'path';
-import {Observable, of, Subject} from 'rxjs';
-import {catchError, map, take} from 'rxjs/operators';
+import {from, Observable, of, Subject} from 'rxjs';
+import {catchError, map, switchMap, take} from 'rxjs/operators';
 
 import {ObservableSet} from '../../../classes';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../../interfaces';
@@ -152,9 +152,7 @@ export abstract class NgDocEntity {
 	buildArtifacts(): Observable<NgDocBuiltOutput[]> {
 		return this.build().pipe(
 			// TODO: make it async
-			map((output: NgDocBuiltOutput[]) => {
-				return this.processArtifacts(output);
-			}),
+			switchMap((output: NgDocBuiltOutput[]) => this.processArtifacts(output)),
 			map((artifacts: NgDocBuiltOutput[]) => {
 				/*
 						We are checking that artifacts result was changed, otherwise we don't want to emit
@@ -202,13 +200,15 @@ export abstract class NgDocEntity {
 		return this.destroy$.asObservable().pipe(take(1));
 	}
 
-	private processArtifacts(artifacts: NgDocBuiltOutput[]): NgDocBuiltOutput[] {
-		return artifacts.map((artifact: NgDocBuiltOutput) => {
-			if (path.extname(artifact.filePath) === '.html') {
-				return htmlPostProcessor(this, artifact);
-			}
+	private async processArtifacts(artifacts: NgDocBuiltOutput[]): Promise<NgDocBuiltOutput[]> {
+		return Promise.all(
+			artifacts.map((artifact: NgDocBuiltOutput) => {
+				if (path.extname(artifact.filePath) === '.html') {
+					return htmlPostProcessor(this, artifact);
+				}
 
-			return artifact;
-		});
+				return artifact;
+			}),
+		);
 	}
 }
