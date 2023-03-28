@@ -1,6 +1,6 @@
 import {NG_DOC_ELEMENT} from '@ng-doc/core/constants/defaults.js';
-import {printWarning} from '@ng-doc/core/helpers/print-console.js';
 import {NgDocKeyword} from '@ng-doc/core/interfaces';
+import chalk from 'chalk';
 import {Element, Text} from 'hast';
 import {isElement} from 'hast-util-is-element';
 import {toString} from 'hast-util-to-string';
@@ -82,7 +82,7 @@ function getNodes(
 			const keyword: NgDocKeyword | undefined = getKeyword(word);
 
 			if (inlineLink && /^\*\w+/gm.test(word) && !keyword) {
-				// printWarning(`Keyword "${word}" is missing.`);
+				console.log(`\n${chalk.blue('NgDoc:')} ${chalk.yellow(`Keyword "${word}" is missing.`)}`);
 			}
 
 			// Convert code tag to link if it's a link to the page entity

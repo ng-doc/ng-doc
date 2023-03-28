@@ -11,4 +11,3 @@ export * from './is-node-tag';
 export * from './is-present';
 export * from './kebab-case';
 export * from './object-keys';
-export * from './print-console';
