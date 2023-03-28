@@ -8,6 +8,6 @@ const ApiPage: NgDocPage = {
 	category: EntitiesCategory,
 	keyword: 'EntitiesAPI',
 	order: 4,
-}
+};
 
 export default ApiPage;

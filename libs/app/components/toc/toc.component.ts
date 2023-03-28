@@ -55,9 +55,16 @@ export class NgDocTocComponent implements OnChanges, AfterViewInit {
 	) {}
 
 	ngOnChanges(): void {
-		if (this.pageContainer) {
-			this.map = generateToc(this.pageContainer);
-		}
+		/**
+		 * We need to use `Promise.resolve().then()` here because we need to wait for the `pageContainer` to be rendered
+		 * and processed by the processors
+		 */
+		Promise.resolve().then(() => {
+			if (this.pageContainer) {
+				this.map = generateToc(this.pageContainer);
+				this.changeDetectorRef.detectChanges();
+			}
+		});
 	}
 
 	ngAfterViewInit(): void {
@@ -80,8 +87,8 @@ export class NgDocTocComponent implements OnChanges, AfterViewInit {
 		const routerSelection: Observable<NgDocTocItem> = this.router.events.pipe(
 			map((event: REvent) => {
 				if (event instanceof Scroll) {
-					const item: NgDocTocItem | undefined = this.map.find(
-						(item: NgDocTocItem) => event.routerEvent.url === item.path,
+					const item: NgDocTocItem | undefined = this.map.find((item: NgDocTocItem) =>
+						item.path.includes(event.routerEvent.url),
 					);
 
 					if (item) {
@@ -95,9 +102,11 @@ export class NgDocTocComponent implements OnChanges, AfterViewInit {
 			debounceTime(20),
 		);
 
-		merge(scrollSelection, routerSelection)
-			.pipe(distinctUntilChanged(), ngDocZoneOptimize(this.ngZone))
-			.subscribe(this.select.bind(this));
+		Promise.resolve().then(() => {
+			merge(scrollSelection, routerSelection)
+				.pipe(distinctUntilChanged(), ngDocZoneOptimize(this.ngZone))
+				.subscribe(this.select.bind(this));
+		});
 	}
 
 	private select(item: NgDocTocItem): void {

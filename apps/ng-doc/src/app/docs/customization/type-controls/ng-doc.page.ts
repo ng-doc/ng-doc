@@ -8,6 +8,6 @@ const TypeControlsPage: NgDocPage = {
 	category: CustomizationCategory,
 	order: 4,
 	keyword: 'CustomizationTypeControls',
-}
+};
 
 export default TypeControlsPage;

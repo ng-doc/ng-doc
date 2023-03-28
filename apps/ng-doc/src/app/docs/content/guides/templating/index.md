@@ -109,5 +109,5 @@ NgDoc will render it like this:
 
 ## SeeAlso
 
--   `*ContentGuidesDemo`
--   `*ContentKeywords`
+- `*ContentGuidesDemo`
+- `*ContentKeywords`

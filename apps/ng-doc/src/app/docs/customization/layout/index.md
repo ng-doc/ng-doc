@@ -31,8 +31,8 @@ The `navbar` is the top bar of the documentation application, it can be customiz
 your own `navbar`. Below is a list of all the available variables that affect the `navbar` layout
 and its style.
 
-> **Note**
-> NgDocNavbarComponent doesn't use `--ng-doc-navbar-height` variable, it's used by the parent layout
+> **Note** > `NgDocNavbarComponent` doesn't use `--ng-doc-navbar-height` variable, it's used by the
+> parent layout
 > to restrict the height of the `NgDocNavbarComponent` or custom `navbar` component.
 
 ```scss
@@ -148,12 +148,11 @@ If you want to replace the `NgDocSidebarComponent` with your own `sidebar`, then
 and mark it with `NgDocCustomSidebarDirective` directive like on the example below:
 
 ```html
-
 <ng-doc-root>
-	<ng-doc-navbar></ng-doc-sidebar>
+    <ng-doc-navbar></ng-doc-sidebar>
 
-		<my-custom-sidebar ngDocCustomSidebar></my-custom-sidebar>
-		<router-outlet></router-outlet>
+    <my-custom-sidebar ngDocCustomSidebar></my-custom-sidebar>
+    <router-outlet></router-outlet>
 </ng-doc-root>
 ```
 

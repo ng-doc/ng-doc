@@ -23,7 +23,7 @@ export class NgDocCodeProcessorDirective extends NgDocHtmlProcessor<NgDocCodeCom
 			inputs: {
 				copyButton: element.getAttribute('copyButton') !== 'false',
 			},
-			content: [[(element.closest('pre') ?? element).cloneNode(true)]],
+			content: [[element.closest('pre') ?? element]],
 		};
 	}
 }

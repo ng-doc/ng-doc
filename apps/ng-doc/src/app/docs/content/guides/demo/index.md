@@ -63,7 +63,8 @@ container.
 #### Output
 
 > **Note**
-> You can use this option not only as a demo output, but also as an opportunity to insert any of your
+> You can use this option not only as a demo output, but also as an opportunity to insert any of
+> your
 > components into the page template so that the user can interact with them.
 
 {{ NgDocActions.demo("ButtonDemoComponent", {container: false}) }}
@@ -71,7 +72,8 @@ container.
 ## Snippets
 
 If you prefer to write template and style code in one `typescript` file, or you just don't want to
-create multiple files for one demo, or you want to help users to focus on more important lines of code,
+create multiple files for one demo, or you want to help users to focus on more important lines of
+code,
 then you should try to use snippets.
 
 > **Note**
@@ -97,5 +99,5 @@ NgDoc will render its code like below
 
 ## See Also
 
--   `*EntitiesPage`
--   `*EntitiesDependencies`
+- `*EntitiesPage`
+- `*EntitiesDependencies`

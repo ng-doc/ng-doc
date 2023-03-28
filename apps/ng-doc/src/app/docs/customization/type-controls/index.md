@@ -52,9 +52,7 @@ In the example above, we registered a type control for the `FloatingCirclePositi
 
 ```typescript
 @NgModule({
-	providers: [
-		provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {hideLabel: true}),
-	],
+	providers: [provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {hideLabel: true})],
 })
 export class FloatingCirclePositionControlModule {}
 ```
@@ -99,4 +97,4 @@ later, when our API stabilizes.
 
 ## See Also
 
--   `*ContentGuidesPlayground`
+- `*ContentGuidesPlayground`

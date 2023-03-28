@@ -27,7 +27,8 @@ the API configuration must correspond to the `NgDocApi` type.
 Let's see how an example of a basic API configuration looks like.
 
 > **Note**
-> The paths you pass to the `include` and `exclude` fields must be passed relative to your project root path
+> The paths you pass to the `include` and `exclude` fields must be passed relative to your project
+> root path
 
 ```typescript
 import {NgDocApi} from '@ng-doc/core';
@@ -92,5 +93,5 @@ for the following entities `NgDocPageEntity`, `NgDocApiPageEntity`.
 
 ## See also
 
--   `*EntitiesCategory`
--   `*ContentApiTemplating`
+- `*EntitiesCategory`
+- `*ContentApiTemplating`

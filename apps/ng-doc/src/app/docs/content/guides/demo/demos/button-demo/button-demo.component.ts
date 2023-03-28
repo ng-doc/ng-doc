@@ -8,10 +8,7 @@ import {NgDocNotifyService} from '@ng-doc/ui-kit/services/notify';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonDemoComponent {
-	constructor(
-		private readonly notifyService: NgDocNotifyService,
-	) {
-	}
+	constructor(private readonly notifyService: NgDocNotifyService) {}
 
 	clickEvent(): void {
 		this.notifyService.notify('Button was clicked!');
