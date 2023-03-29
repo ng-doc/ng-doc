@@ -5,7 +5,7 @@ import {
 	ElementRef,
 	HostBinding,
 	Input,
-	NgZone,
+	NgZone, Optional,
 	ViewChild,
 } from '@angular/core';
 import {Router} from '@angular/router';
@@ -16,7 +16,7 @@ import {NgDocHighlightPosition} from '@ng-doc/ui-kit';
 import {NgDocListHost} from '@ng-doc/ui-kit/classes';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {FlControlHost, provideControlHost} from 'flex-controls';
-import {Subject} from 'rxjs';
+import {NEVER, Subject} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 
 @Component({
@@ -48,16 +48,23 @@ export class NgDocSearchComponent extends FlControlHost<NgDocSearchResult> imple
 
 	constructor(
 		private readonly elementRef: ElementRef<HTMLElement>,
-		private readonly searchEngine: NgDocSearchEngine,
 		protected override readonly changeDetectorRef: ChangeDetectorRef,
 		private readonly router: Router,
 		private readonly ngZone: NgZone,
+		@Optional()
+		private readonly searchEngine?: NgDocSearchEngine,
 	) {
 		super();
 
+		if (!this.searchEngine) {
+			throw new Error(`NgDoc: Search engine is not provided,
+			please check this article: https://ng-doc.com/getting-started/installation#importing-global-modules
+			to learn how to provide it.`);
+		}
+
 		this.query$
 			.pipe(
-				switchMap((term: string) => this.searchEngine.search(term)),
+				switchMap((term: string) => this.searchEngine?.search(term) ?? NEVER),
 				untilDestroyed(this),
 			)
 			.subscribe((result: NgDocSearchResult[]) => {
