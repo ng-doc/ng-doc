@@ -144,3 +144,13 @@ For example like this
   // My custom theme implementation
 }
 ```
+
+If you import a theme from the `highlightjs` library, it's background color will be overridden by
+the `--ng-doc-code-background` variable, but if you'd like to use color from the imported theme
+you can reset value of this variable
+
+```scss fileName="styles.scss"
+:root {
+  --ng-doc-code-background: unset;
+}
+```

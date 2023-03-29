@@ -40,6 +40,24 @@ this will allow you to simply import the module in the `AppModule` in the future
 
 ```
 
+And now you can import your module into your root module to make it available for playgrounds.
+
+```typescript fileName="app.module.ts"
+import {NgModule} from '@angular/core';
+import {FloatingCirclePositionControlModule} from './floating-circle-position-control/floating-circle-position-control.module';
+
+import {AppComponent} from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    FloatingCirclePositionControlModule
+  ],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
+
 ## Using Type Control in the playground
 
 Now all you need to do is import your type control's module into `AppModule`, after which you can
