@@ -37,7 +37,7 @@ ul ul#{$class},
 ol ul#{$class},
 ul ol#{$class},
 ol ol#{$class} {
-	margin-top: 0;
+	margin-top: calc(var(--ng-doc-base-gutter) * 2);
 	margin-bottom: 0;
 }
 
