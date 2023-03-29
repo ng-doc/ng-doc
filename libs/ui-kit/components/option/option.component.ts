@@ -51,7 +51,9 @@ export class NgDocOptionComponent<T> extends FlControlSelector<T> implements NgD
 	}
 
 	selectByUser(): void {
-		this.select();
+		const anchor: HTMLAnchorElement | null = this.elementRef.nativeElement.querySelector('a');
+
+		anchor ? anchor.click() : this.select();
 	}
 
 	setActiveStyles(): void {

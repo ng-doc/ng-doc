@@ -5,17 +5,15 @@ import {
 	ElementRef,
 	HostBinding,
 	Input,
-	NgZone, Optional,
+	Optional,
 	ViewChild,
 } from '@angular/core';
-import {Router} from '@angular/router';
 import {NgDocSearchEngine} from '@ng-doc/app/classes/search-engine';
 import {NgDocSearchResult} from '@ng-doc/app/interfaces';
 import {NgDocPageType} from '@ng-doc/core';
 import {NgDocHighlightPosition} from '@ng-doc/ui-kit';
 import {NgDocListHost} from '@ng-doc/ui-kit/classes';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {FlControlHost, provideControlHost} from 'flex-controls';
 import {NEVER, Subject} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 
@@ -29,11 +27,10 @@ import {switchMap} from 'rxjs/operators';
 			provide: NgDocListHost,
 			useExisting: NgDocSearchComponent,
 		},
-		provideControlHost(NgDocSearchComponent),
 	],
 })
 @UntilDestroy()
-export class NgDocSearchComponent extends FlControlHost<NgDocSearchResult> implements NgDocListHost {
+export class NgDocSearchComponent implements NgDocListHost {
 	@Input()
 	@HostBinding('attr.data-ng-doc-mod')
 	mod: 'input' | 'icon' = 'input';
@@ -48,14 +45,10 @@ export class NgDocSearchComponent extends FlControlHost<NgDocSearchResult> imple
 
 	constructor(
 		private readonly elementRef: ElementRef<HTMLElement>,
-		protected override readonly changeDetectorRef: ChangeDetectorRef,
-		private readonly router: Router,
-		private readonly ngZone: NgZone,
+		private readonly changeDetectorRef: ChangeDetectorRef,
 		@Optional()
 		private readonly searchEngine?: NgDocSearchEngine,
 	) {
-		super();
-
 		if (!this.searchEngine) {
 			throw new Error(`NgDoc: Search engine is not provided,
 			please check this article: https://ng-doc.com/getting-started/installation#importing-global-modules
@@ -83,23 +76,11 @@ export class NgDocSearchComponent extends FlControlHost<NgDocSearchResult> imple
 
 	getPageTypeForGroup(group: string): NgDocPageType {
 		return (
-			this.queryResult?.find((item: NgDocSearchResult) => item.index.breadcrumbs === group)?.index.pageType ??
-			'guide'
+			this.queryResult?.find((item: NgDocSearchResult) => item.index.breadcrumbs === group)?.index.pageType ?? 'guide'
 		);
 	}
 
-	getPositions<T extends NgDocSearchResult, K extends keyof T['positions']>(
-		key: K,
-		item: T,
-	): NgDocHighlightPosition[] {
+	getPositions<T extends NgDocSearchResult, K extends keyof T['positions']>(key: K, item: T): NgDocHighlightPosition[] {
 		return item.positions[key] ?? [];
-	}
-
-	override incomingUpdate(obj: NgDocSearchResult | null): void {
-		super.incomingUpdate(null);
-
-		if (obj) {
-			this.ngZone.run(() => this.router.navigate([obj.index.route]));
-		}
 	}
 }

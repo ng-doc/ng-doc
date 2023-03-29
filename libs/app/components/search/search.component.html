@@ -21,7 +21,6 @@
 							(ngModelChange)="query$.next($event)"
 							placeholder="Search..."
 							ngDocAutofocus
-							flControlSilencer
 							#inputElement
 						/>
 					</ng-doc-input-wrapper>
@@ -40,7 +39,6 @@
 		ngDocFocusCatcher
 		(focusEvent)="inputElement.value ? dropdown.open() : null"
 		(click)="inputElement.value ? dropdown.open() : null"
-		flControlSilencer
 		#input
 	>
 		<ng-template #leftContent>

@@ -45,7 +45,6 @@ import {NgDocSearchComponent} from './search.component';
 		NgDocHighlighterModule,
 		NgDocTextModule,
 		NgDocLetModule,
-		FlControlSilencerModule,
 		NgDocRunModule,
 		NgDocBindModule,
 		NgDocSanitizeHtmlModule,
