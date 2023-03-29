@@ -2,6 +2,7 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
+import {NgDocSanitizeHtmlModule} from '@ng-doc/app/pipes';
 import {
 	NgDocAutofocusModule,
 	NgDocBindModule,
@@ -47,6 +48,7 @@ import {NgDocSearchComponent} from './search.component';
 		FlControlSilencerModule,
 		NgDocRunModule,
 		NgDocBindModule,
+		NgDocSanitizeHtmlModule,
 	],
 	exports: [NgDocSearchComponent],
 })

@@ -92,18 +92,15 @@
 			<ng-template let-item #itemContent>
 				<a class="ng-doc-search-option" [routerLink]="item.index.route" [fragment]="item.index.fragment">
 					<h5
-						*ngDocLet="
-							item.index.section
-								| ngDocHighlighterPipe: (getPositions | ngDocRun: 'section':item) as section
-						"
 						class="ng-doc-search-section-title"
 						ng-doc-text
-						[innerHTML]="section || item.index.title"
+						[innerHTML]="((item.index.section
+								| ngDocHighlighterPipe: (getPositions | ngDocRun: 'section': item)) | ngDocSanitizeHtml) || item.index.title"
 					></h5>
 					<div
 						class="ng-doc-search-content"
 						[innerHTML]="
-							item.index.content | ngDocHighlighterPipe: (getPositions | ngDocRun: 'content':item)
+							item.index.content | ngDocHighlighterPipe: (getPositions | ngDocRun: 'content':item) | ngDocSanitizeHtml
 						"
 						ng-doc-text
 					></div>

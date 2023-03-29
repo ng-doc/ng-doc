@@ -4,7 +4,7 @@ import {asArray} from '@ng-doc/core/helpers/as-array';
 import {objectKeys} from '@ng-doc/core/helpers/object-keys';
 import {NgDocPageSectionIndex} from '@ng-doc/core/interfaces';
 import {NgDocHighlightPosition} from '@ng-doc/ui-kit';
-import {create, insert, Orama, stemmers} from '@orama/orama';
+import {create, insert, insertMultiple, Orama, stemmers} from '@orama/orama';
 import {Document} from '@orama/orama/dist/types';
 import {
 	afterInsert,
@@ -37,7 +37,7 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 		this.db$ = from(
 			create({
 				schema: {
-					sectionTitle: 'string',
+					section: 'string',
 					content: 'string',
 				},
 				components: {
@@ -53,9 +53,7 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 			switchMap((db: OramaWithHighlight) =>
 				this.request<NgDocPageSectionIndex[]>(`assets/ng-doc/indexes.json`).pipe(
 					switchMap((pages: NgDocPageSectionIndex[]) =>
-						Promise.all(
-							pages.map((page: NgDocPageSectionIndex) => insert(db, page as unknown as SearchSchema)),
-						),
+						insertMultiple(db, pages as unknown as SearchSchema[]),
 					),
 					map(() => db),
 				),
@@ -74,8 +72,8 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 			switchMap((db: OramaWithHighlight) =>
 				searchWithHighlight(db, {
 					term: query,
-					boost: {sectionTitle: 2},
-					properties: ['sectionTitle', 'content'],
+					boost: {section: 2},
+					properties: ['section', 'content'],
 				}),
 			),
 			map((result: SearchResultWithHighlight) =>
