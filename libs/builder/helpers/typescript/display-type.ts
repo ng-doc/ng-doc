@@ -1,4 +1,4 @@
-import {Type, TypeFormatFlags} from 'ts-morph';
+import {Type, TypeFormatFlags, TypeNode} from 'ts-morph';
 
 /**
  *
@@ -6,4 +6,12 @@ import {Type, TypeFormatFlags} from 'ts-morph';
  */
 export function displayType(type: Type): string {
 	return type.getText(undefined, TypeFormatFlags.NoTruncation);
+}
+
+/**
+ *
+ * @param node
+ */
+export function displayTypeNode(node: TypeNode): string {
+	return node.getText();
 }

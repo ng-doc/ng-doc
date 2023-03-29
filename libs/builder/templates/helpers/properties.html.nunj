@@ -34,7 +34,7 @@
 							{%- endif %}
 						</div>
 					</td>
-					<td>{{ typeMacro.render(property.getType()) }}</td>
+					<td>{{ typeMacro.renderNode(property.getTypeNode()) }}</td>
 					<td>{{ docNode | extractDocs }}</td>
 				</tr>
 			{%- endfor %}

@@ -4,6 +4,7 @@ export {
 	accessorPresentation,
 	constructorPresentation,
 	displayType,
+	displayTypeNode,
 	extractDocs,
 	extractParameterDocs,
 	extractSeeDocs,
