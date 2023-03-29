@@ -97,7 +97,7 @@ import {AppComponent} from './app.component';
   imports: [
     // ...
   ],
-  providers: [provideSearchEngine(CustomSearchEngine, 'dutch')],
+  providers: [provideSearchEngine(CustomSearchEngine)],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
