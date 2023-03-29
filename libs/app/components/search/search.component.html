@@ -68,9 +68,9 @@
 </ng-template>
 
 <ng-template #searchResults>
-	<div class="ng-doc-search-result-content">
+	<div class="ng-doc-search-result-content" *ngIf="search$ | async as state">
 		<ng-doc-data-list-group
-			[items]="queryResult"
+			[items]="state.result"
 			[itemContent]="itemContent"
 			[groupContent]="groupContent"
 			[itemGroupFn]="groupByPage"
@@ -79,7 +79,7 @@
 			<ng-template let-group #groupContent>
 				<div
 					class="ng-doc-group-header"
-					*ngDocLet="getPageTypeForGroup | ngDocBind: this | ngDocRun: group as pageType"
+					*ngDocLet="getPageTypeForGroup | ngDocBind: this | ngDocRun: group:state.result as pageType"
 				>
 					<ng-doc-tag size="small" [color]="pageType === 'api' ? 'red' : 'blue'">
 						{{ pageType }}
@@ -92,8 +92,11 @@
 					<h5
 						class="ng-doc-search-section-title"
 						ng-doc-text
-						[innerHTML]="((item.index.section
-								| ngDocHighlighterPipe: (getPositions | ngDocRun: 'section': item)) | ngDocSanitizeHtml) || item.index.title"
+						[innerHTML]="
+							(item.index.section
+								| ngDocHighlighterPipe: (getPositions | ngDocRun: 'section':item)
+								| ngDocSanitizeHtml) || item.index.title
+						"
 					></h5>
 					<div
 						class="ng-doc-search-content"
@@ -104,7 +107,15 @@
 					></div>
 				</a>
 			</ng-template>
-			<ng-template #emptyContent> Nothing found</ng-template>
+			<ng-template #emptyContent>
+				<ng-container *ngIf="!state.pending"> Nothing found </ng-container>
+				<ng-container *ngIf="state.pending">
+					<div class="ng-doc-search-progress">
+						<ng-doc-spinner size="small"></ng-doc-spinner>
+						Searching...
+					</div>
+				</ng-container>
+			</ng-template>
 		</ng-doc-data-list-group>
 	</div>
 </ng-template>

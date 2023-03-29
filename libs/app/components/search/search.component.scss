@@ -70,3 +70,12 @@
 .ng-doc-search-content {
 	display: block;
 }
+
+.ng-doc-search-progress {
+	display: flex;
+	align-items: center;
+
+	ng-doc-spinner {
+		margin-right: var(--ng-doc-base-gutter);
+	}
+}

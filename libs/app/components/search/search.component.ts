@@ -11,7 +11,7 @@ import {
 import {NgDocSearchEngine} from '@ng-doc/app/classes/search-engine';
 import {NgDocSearchResult} from '@ng-doc/app/interfaces';
 import {NgDocPageType} from '@ng-doc/core';
-import {NgDocHighlightPosition} from '@ng-doc/ui-kit';
+import {NgDocHighlightPosition, observableState, StatedObservable} from '@ng-doc/ui-kit';
 import {NgDocListHost} from '@ng-doc/ui-kit/classes';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {NEVER, Subject} from 'rxjs';
@@ -41,7 +41,7 @@ export class NgDocSearchComponent implements NgDocListHost {
 	searchTerm: string = '';
 
 	readonly query$: Subject<string> = new Subject<string>();
-	queryResult: NgDocSearchResult[] = [];
+	readonly search$: StatedObservable<NgDocSearchResult[]>;
 
 	constructor(
 		private readonly elementRef: ElementRef<HTMLElement>,
@@ -49,21 +49,16 @@ export class NgDocSearchComponent implements NgDocListHost {
 		@Optional()
 		private readonly searchEngine?: NgDocSearchEngine,
 	) {
-		if (!this.searchEngine) {
-			throw new Error(`NgDoc: Search engine is not provided,
-			please check this article: https://ng-doc.com/getting-started/installation#importing-global-modules
-			to learn how to provide it.`);
-		}
+		// if (!this.searchEngine) {
+		// 	throw new Error(`NgDoc: Search engine is not provided,
+		// 	please check this article: https://ng-doc.com/getting-started/installation#importing-global-modules
+		// 	to learn how to provide it.`);
+		// }
 
-		this.query$
-			.pipe(
-				switchMap((term: string) => this.searchEngine?.search(term) ?? NEVER),
-				untilDestroyed(this),
-			)
-			.subscribe((result: NgDocSearchResult[]) => {
-				this.queryResult = result;
-				this.changeDetectorRef.markForCheck();
-			});
+		this.search$ = this.query$.pipe(
+			switchMap((term: string) => this.searchEngine?.search(term).pipe(observableState()) ?? NEVER),
+			untilDestroyed(this),
+		);
 	}
 
 	get listHostOrigin(): ElementRef<HTMLElement> {
@@ -74,10 +69,8 @@ export class NgDocSearchComponent implements NgDocListHost {
 		return result.index.breadcrumbs;
 	}
 
-	getPageTypeForGroup(group: string): NgDocPageType {
-		return (
-			this.queryResult?.find((item: NgDocSearchResult) => item.index.breadcrumbs === group)?.index.pageType ?? 'guide'
-		);
+	getPageTypeForGroup(group: string, results: NgDocSearchResult[]): NgDocPageType {
+		return results.find((item: NgDocSearchResult) => item.index.breadcrumbs === group)?.index.pageType ?? 'guide';
 	}
 
 	getPositions<T extends NgDocSearchResult, K extends keyof T['positions']>(key: K, item: T): NgDocHighlightPosition[] {

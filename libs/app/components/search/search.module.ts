@@ -17,7 +17,7 @@ import {
 	NgDocInputStringModule,
 	NgDocInputWrapperModule,
 	NgDocLetModule,
-	NgDocRunModule,
+	NgDocRunModule, NgDocSpinnerModule,
 	NgDocTagModule,
 	NgDocTextModule,
 } from '@ng-doc/ui-kit';
@@ -48,6 +48,7 @@ import {NgDocSearchComponent} from './search.component';
 		NgDocRunModule,
 		NgDocBindModule,
 		NgDocSanitizeHtmlModule,
+		NgDocSpinnerModule,
 	],
 	exports: [NgDocSearchComponent],
 })

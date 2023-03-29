@@ -1,0 +1,50 @@
+:host {
+	display: inline-block;
+
+	&[data-ng-doc-size="small"] {
+		width: calc(var(--ng-doc-base-gutter) * 3);
+		height: calc(var(--ng-doc-base-gutter) * 3);
+	}
+
+	&[data-ng-doc-size="medium"] {
+		width: calc(var(--ng-doc-base-gutter) * 5);
+		height: calc(var(--ng-doc-base-gutter) * 5);
+	}
+
+	&[data-ng-doc-size="large"] {
+		width: calc(var(--ng-doc-base-gutter) * 8);
+		height: calc(var(--ng-doc-base-gutter) * 8);
+	}
+
+	.ng-doc-spinner {
+		animation: rotate 2s linear infinite;
+
+		.ng-doc-spinner-path {
+			stroke: var(--ng-doc-spinner-color, var(--ng-doc-primary));
+			stroke-linecap: round;
+			animation: dash 1.5s ease-in-out infinite;
+		}
+
+	}
+
+	@keyframes rotate {
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+
+	@keyframes dash {
+		0% {
+			stroke-dasharray: 1, 150;
+			stroke-dashoffset: 0;
+		}
+		50% {
+			stroke-dasharray: 90, 150;
+			stroke-dashoffset: -35;
+		}
+		100% {
+			stroke-dasharray: 90, 150;
+			stroke-dashoffset: -124;
+		}
+	}
+}
