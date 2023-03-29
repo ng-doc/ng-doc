@@ -14,8 +14,8 @@ import {NgDocPageType} from '@ng-doc/core';
 import {NgDocHighlightPosition, observableState, StatedObservable} from '@ng-doc/ui-kit';
 import {NgDocListHost} from '@ng-doc/ui-kit/classes';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {NEVER, Subject} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
+import {BehaviorSubject, NEVER, ReplaySubject, Subject} from 'rxjs';
+import {filter, skip, switchMap} from 'rxjs/operators';
 
 @Component({
 	selector: 'ng-doc-search',
@@ -40,7 +40,7 @@ export class NgDocSearchComponent implements NgDocListHost {
 
 	searchTerm: string = '';
 
-	readonly query$: Subject<string> = new Subject<string>();
+	readonly query$: BehaviorSubject<string> = new BehaviorSubject<string>('');
 	readonly search$: StatedObservable<NgDocSearchResult[]>;
 
 	constructor(
@@ -49,13 +49,14 @@ export class NgDocSearchComponent implements NgDocListHost {
 		@Optional()
 		private readonly searchEngine?: NgDocSearchEngine,
 	) {
-		// if (!this.searchEngine) {
-		// 	throw new Error(`NgDoc: Search engine is not provided,
-		// 	please check this article: https://ng-doc.com/getting-started/installation#importing-global-modules
-		// 	to learn how to provide it.`);
-		// }
+		if (!this.searchEngine) {
+			throw new Error(`NgDoc: Search engine is not provided,
+			please check this article: https://ng-doc.com/getting-started/installation#importing-global-modules
+			to learn how to provide it.`);
+		}
 
 		this.search$ = this.query$.pipe(
+			skip(1),
 			switchMap((term: string) => this.searchEngine?.search(term).pipe(observableState()) ?? NEVER),
 			untilDestroyed(this),
 		);
