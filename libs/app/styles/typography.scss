@@ -17,6 +17,11 @@ html {
 	-webkit-font-smoothing: antialiased;
 }
 
+iframe#{$class} {
+	width: 100%;
+	border: 0;
+}
+
 p#{$class} {
 	line-height: calc(var(--ng-doc-base-gutter) * 3);
 	margin: calc(var(--ng-doc-base-gutter) * 2) 0;
