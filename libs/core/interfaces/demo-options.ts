@@ -10,6 +10,8 @@ export interface NgDocDemoActionOptions {
 	defaultTab?: string;
 	/** List of tabs that should be displayed if they are not empty and exist */
 	tabs?: string | string[];
+	/** Class name that should be added to the container */
+	class?: string | string[];
 }
 
 /**
@@ -22,4 +24,6 @@ export interface NgDocDemoPaneActionOptions {
 	defaultTab?: string;
 	/** List of tabs that should be displayed if they are not empty and exist */
 	tabs?: string | string[];
+	/** Class name that should be added to the container */
+	class?: string | string[];
 }

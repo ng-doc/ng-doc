@@ -4,6 +4,8 @@
 
 	--ng-doc-code-margin: 0;
 	--ng-doc-code-border-radius: 0;
+	--ng-doc-smooth-resize-height: var(--ng-doc-demo-pain-height);
+	--ng-doc-smooth-resize-max-height: 100%;
 
 	ng-doc-tab-group,
 	ng-doc-code,

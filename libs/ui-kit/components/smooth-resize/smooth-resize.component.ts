@@ -18,6 +18,8 @@ import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input, OnCh
 			:host {
 				display: block;
 				overflow: hidden;
+				height: var(--ng-doc-smooth-resize-height);
+				max-height: var(--ng-doc-smooth-resize-max-height);
 			}
 		`,
 	],
