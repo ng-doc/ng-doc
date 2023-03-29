@@ -14,7 +14,7 @@
 		*ngIf="copyButton"
 		(click)="copyCode(); tooltipText = 'Copied!'"
 		[ngDocTooltip]="tooltipContent"
-		(beforeOpen)="tooltipText = 'Copy to clipboard'"
+		(mouseenter)="tooltipText = 'Copy to clipboard'"
 	>
 		<ng-template #tooltipContent>
 			{{tooltipText}}
