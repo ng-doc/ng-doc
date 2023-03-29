@@ -20,6 +20,29 @@ import {map, shareReplay, switchMap} from 'rxjs/operators';
  */
 export type NgDocDefaultSearchEngineLanguage = keyof typeof stemmers;
 
+/**
+ * Options for the `NgDocDefaultSearchEngine`.
+ */
+export interface NgDocDefaultSearchEngineOptions {
+	/**
+	 * The language to use for the search engine.
+	 */
+	language?: NgDocDefaultSearchEngineLanguage;
+	/**
+	 * Specifies the maximum distance (following the Levenshtein algorithm) between the term and the searchable property.
+	 * (doesn't work with `exact` option)
+	 */
+	tolerance?: number;
+	/**
+	 * If `true`, finds all the document with an exact match of the term property.
+	 */
+	exact?: boolean;
+	/**
+	 * Number of results to return (default: 15).
+	 */
+	limit?: number;
+}
+
 interface SearchSchema extends Document {
 	sectionTitle: 'string';
 	content: 'string';
@@ -32,7 +55,7 @@ interface SearchSchema extends Document {
 export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 	private db$: Observable<OramaWithHighlight>;
 
-	constructor(language?: NgDocDefaultSearchEngineLanguage) {
+	constructor(private options?: NgDocDefaultSearchEngineOptions) {
 		super();
 		this.db$ = from(
 			create({
@@ -43,8 +66,8 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 				components: {
 					afterInsert: [afterInsert],
 					tokenizer: {
-						language: language || 'english',
-						stemmer: stemmers[language || 'english'],
+						language: options?.language || 'english',
+						stemmer: stemmers[options?.language || 'english'],
 					},
 				},
 			}),
@@ -74,6 +97,9 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 					term: query,
 					boost: {section: 2},
 					properties: ['section', 'content'],
+					tolerance: this.options?.tolerance,
+					exact: this.options?.exact,
+					limit: this.options?.limit ?? 15,
 				}),
 			),
 			map((result: SearchResultWithHighlight) =>

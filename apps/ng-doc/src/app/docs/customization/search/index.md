@@ -21,7 +21,31 @@ import {AppComponent} from './app.component';
   imports: [
     // ...
   ],
-  providers: [provideSearchEngine(NgDocDefaultSearchEngine, 'dutch')],
+  providers: [provideSearchEngine(NgDocDefaultSearchEngine, {language: 'dutch'})],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
+
+## Configuration
+
+You can configure the default search engine by providing the `NgDocDefaultSearchEngineOptions`
+object to the `provideSearchEngine` function in your root module.
+
+For example, increasing the number of results returned by the search engine:
+
+```ts fileName="app.module.ts"
+import {NgModule} from '@angular/core';
+import {NgDocDefaultSearchEngine, provideSearchEngine} from '@ng-doc/app';
+
+import {AppComponent} from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    // ...
+  ],
+  providers: [provideSearchEngine(NgDocDefaultSearchEngine, {limit: 20})],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
