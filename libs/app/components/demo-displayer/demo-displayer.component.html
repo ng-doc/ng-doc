@@ -8,9 +8,13 @@
 				class="ng-doc-copy-button"
 				*ngIf="!codeContent"
 				ng-doc-button-icon
-				(click)="copyCode()"
-				ngDocTooltip="Copy code"
+				(click)="copyCode(); tooltipText = 'Copied!'"
+				[ngDocTooltip]="tooltipContent"
+				(beforeOpen)="tooltipText = 'Copy to clipboard'"
 			>
+				<ng-template #tooltipContent>
+					{{tooltipText}}
+				</ng-template>
 				<ng-doc-icon icon="copy"></ng-doc-icon>
 			</button>
 			<button

@@ -1,6 +1,5 @@
 import {Clipboard} from '@angular/cdk/clipboard';
 import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input} from '@angular/core';
-import {NgDocNotifyService} from '@ng-doc/ui-kit';
 
 @Component({
 	selector: 'ng-doc-code',
@@ -21,9 +20,10 @@ export class NgDocCodeComponent {
 	@Input()
 	lineNumbers: boolean = false;
 
+	tooltipText: string = '';
+
 	constructor(
 		private elementRef: ElementRef<HTMLElement>,
-		private readonly notifyService: NgDocNotifyService,
 		private readonly clipboard: Clipboard,
 	) {}
 
@@ -38,6 +38,5 @@ export class NgDocCodeComponent {
 
 	copyCode(): void {
 		this.clipboard.copy(this.codeElement?.textContent ?? '');
-		this.notifyService.notify('Copied!');
 	}
 }
