@@ -1,5 +1,6 @@
 :host {
 	display: block;
+	--ng-doc-tab-group-background: var(--ng-doc-code-background);
 
 	.ng-doc-example {
 		padding: calc(var(--ng-doc-base-gutter) * 3);

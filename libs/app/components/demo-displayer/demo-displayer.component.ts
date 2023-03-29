@@ -28,9 +28,13 @@ export class NgDocDemoDisplayerComponent {
 	@Input()
 	expanded: boolean = false;
 
-	tooltipText: string = '';
+	copyTooltipText: string = '';
 
 	constructor(private readonly clipboard: Clipboard) {}
+
+	protected get expandTooltipText(): string {
+		return this.expanded ? 'Collapse' : 'Expand';
+	}
 
 	copyCode(): void {
 		this.clipboard.copy(this.code);

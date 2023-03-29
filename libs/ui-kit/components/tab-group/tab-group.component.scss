@@ -13,6 +13,7 @@
 		line-height: 18px;
 		font-size: 14px;
 		flex-shrink: 0;
+		background-color: var(--ng-doc-tab-group-header-background, var(--ng-doc-tab-group-background));
 
 		.ng-doc-tab {
 			position: relative;
