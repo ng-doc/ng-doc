@@ -63,32 +63,32 @@ To do so, you need to implement the `NgDocSearchEngine` class and provide it via
 
 ```ts fileName="custom-search-engine.ts"
 import {NgDocSearchEngine, NgDocSearchResult} from '@ng-doc/app';
-import {NgDocPageSectionIndex} from '@ng-doc/core';
+import {NgDocPageIndex} from '@ng-doc/core';
 import {from, Observable} from 'rxjs';
 import {map, shareReplay, switchMap} from 'rxjs/operators';
 
 export class CustomSearchEngine extends NgDocSearchEngine {
   // Load indexes from assets
-  indexes: Observable<NgDocPageSectionIndex[]> = from(fetch(`assets/ng-doc/indexes.json`)).pipe(
-    switchMap((response: Response) => response.json() as Promise<NgDocPageSectionIndex[]>),
+  indexes: Observable<NgDocPageIndex[]> = from(fetch(`assets/ng-doc/indexes.json`)).pipe(
+    switchMap((response: Response) => response.json() as Promise<NgDocPageIndex[]>),
     // Use `shareReplay(1)` to cache the response and avoid making multiple requests
     shareReplay(1),
   );
 
   search(query: string): Observable<NgDocSearchResult[]> {
-    return this.indexes.pipe(map((indexes: NgDocPageSectionIndex[]) => this.filterIndexes(indexes, query)));
+    return this.indexes.pipe(map((indexes: NgDocPageIndex[]) => this.filterIndexes(indexes, query)));
   }
 
-  private filterIndexes(indexes: NgDocPageSectionIndex[], query: string): NgDocSearchResult[] {
+  private filterIndexes(indexes: NgDocPageIndex[], query: string): NgDocSearchResult[] {
     return (
       indexes
         // Filter indexes by query
-        .filter((index: NgDocPageSectionIndex) => index.content.toLowerCase().includes(query.toLowerCase()))
+        .filter((index: NgDocPageIndex) => index.content.toLowerCase().includes(query.toLowerCase()))
         // Get first 10 results, you can remove this line to get all results
         // it's recommended to limit the number of results to avoid performance issues
         .slice(0, 10)
         // Map indexes to search results
-        .map((index: NgDocPageSectionIndex) => ({
+        .map((index: NgDocPageIndex) => ({
           index,
           // You can provide a list of positions where the query was found in the title
           // then the search component will highlight them

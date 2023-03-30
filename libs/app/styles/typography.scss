@@ -1,4 +1,5 @@
 @import 'defaults';
+@import "../../ui-kit/styles/mixins";
 
 $class: $ng-doc-element;
 
@@ -53,10 +54,10 @@ blockquote#{$class} {
 }
 
 @include headings {
-	font-family: var(--ng-doc-heading-font-family);
+	@include ng-doc-heading-font();
 	margin: calc(var(--ng-doc-base-gutter) * 9) 0 0;
-	line-height: 1.5rem;
-	font-weight: 700;
+	--ng-doc-line-height: 1.5rem;
+	--ng-doc-font-weight: 700;
 	overflow-wrap: anywhere;
 
 	& + h1#{$class},
@@ -70,31 +71,31 @@ blockquote#{$class} {
 }
 
 h1#{$class} {
-	font-size: calc(var(--ng-doc-base-gutter) * 5);
-	line-height: calc(var(--ng-doc-base-gutter) * 6);
-	font-weight: 900;
+	--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 5);
+	--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 6);
+	--ng-doc-font-weight: 900;
 }
 
 h2#{$class} {
-	font-size: calc(var(--ng-doc-base-gutter) * 4);
-	line-height: calc(var(--ng-doc-base-gutter) * 5);
+	--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 4);
+	--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 5);
 }
 
 h3#{$class} {
-	font-size: calc(var(--ng-doc-base-gutter) * 3);
-	line-height: calc(var(--ng-doc-base-gutter) * 4);
+	--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 3);
+	--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 4);
 }
 
 h4#{$class} {
-	font-size: 20px;
-	line-height: calc(var(--ng-doc-base-gutter) * 4);
+	--ng-doc-font-size: 20px;
+	--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 4);
 	margin: calc(var(--ng-doc-base-gutter) * 2) 0;
 }
 
 h5#{$class},
 h6#{$class} {
-	font-size: calc(var(--ng-doc-base-gutter) * 2);
-	line-height: calc(var(--ng-doc-base-gutter) * 3);
+	--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 2);
+	--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 3);
 	margin: calc(var(--ng-doc-base-gutter) * 2) 0;
 }
 

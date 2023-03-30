@@ -1,4 +1,4 @@
-import {NgDocPageSectionIndex} from '@ng-doc/core/interfaces';
+import {NgDocPageIndex} from '@ng-doc/core/interfaces';
 import {create} from '@orama/orama';
 import {defaultHtmlSchema, NodeContent, populate} from '@orama/plugin-parsedoc';
 import * as path from 'path';
@@ -16,8 +16,8 @@ import {importEsModule} from './import-es-module';
  * @param entity
  * @param artifacts
  */
-export async function buildIndexes(entity: NgDocEntity, artifacts: NgDocBuiltOutput[]): Promise<NgDocPageSectionIndex[]> {
-	const pages: NgDocPageSectionIndex[] = [];
+export async function buildIndexes(entity: NgDocEntity, artifacts: NgDocBuiltOutput[]): Promise<NgDocPageIndex[]> {
+	const pages: NgDocPageIndex[] = [];
 
 	if (entity instanceof NgDocRouteEntity) {
 		const htmlArifacts: NgDocBuiltOutput[] = artifacts.filter(

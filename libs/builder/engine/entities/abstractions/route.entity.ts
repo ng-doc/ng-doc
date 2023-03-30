@@ -1,4 +1,4 @@
-import {NgDocPageSectionIndex} from '@ng-doc/core';
+import {NgDocPageIndex} from '@ng-doc/core';
 import * as path from 'path';
 
 import {slash} from '../../../helpers';

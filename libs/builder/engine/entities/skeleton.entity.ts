@@ -1,4 +1,4 @@
-import {NgDocPageSectionIndex} from '@ng-doc/core';
+import {NgDocPageIndex} from '@ng-doc/core';
 import path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -78,13 +78,13 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 	}
 
 	private buildIndexes(): Observable<NgDocBuiltOutput[]> {
-		const allIndexes: NgDocPageSectionIndex[] = this.builder.entities
+		const allIndexes: NgDocPageIndex[] = this.builder.entities
 			.asArray()
 			.map((entity: NgDocEntity) => entity.indexes)
 			.flat();
 
 		return of(allIndexes).pipe(
-			map((sectionIndexes: NgDocPageSectionIndex[]) => [
+			map((sectionIndexes: NgDocPageIndex[]) => [
 				{
 					content: JSON.stringify(sectionIndexes, null, 2),
 					filePath: path.join(this.context.assetsPath, 'indexes.json'),

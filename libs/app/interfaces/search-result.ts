@@ -1,4 +1,4 @@
-import {NgDocPageSectionIndex} from '@ng-doc/core/interfaces';
+import {NgDocPageIndex} from '@ng-doc/core/interfaces';
 import {NgDocHighlightPosition} from '@ng-doc/ui-kit';
 
 /**
@@ -8,9 +8,9 @@ export interface NgDocSearchResult {
 	/**
 	 * Index that was found.
 	 */
-	index: NgDocPageSectionIndex;
+	index: NgDocPageIndex;
 	/**
 	 * Positions of the found terms.
 	 */
-	positions: Partial<Record<keyof NgDocPageSectionIndex, NgDocHighlightPosition[]>>;
+	positions: Partial<Record<keyof NgDocPageIndex, NgDocHighlightPosition[]>>;
 }

@@ -22,6 +22,7 @@ import demoAssets from '{{ page.componentsAssets }}';
 	providers: [{provide: NgDocRootPage, useExisting: DynamicComponent}],
 })
 export class DynamicComponent extends NgDocRootPage {
+	readonly routePrefix: string = '{{ page.context.config.routePrefix }}';
 	readonly pageType: NgDocPageType = 'guide';
 	readonly pageContent: string = pageContent;
 

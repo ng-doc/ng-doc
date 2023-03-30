@@ -2,7 +2,7 @@ import {NgDocSearchEngine} from '@ng-doc/app/classes/search-engine';
 import {NgDocSearchResult} from '@ng-doc/app/interfaces';
 import {asArray} from '@ng-doc/core/helpers/as-array';
 import {objectKeys} from '@ng-doc/core/helpers/object-keys';
-import {NgDocPageSectionIndex} from '@ng-doc/core/interfaces';
+import {NgDocPageIndex} from '@ng-doc/core/interfaces';
 import {NgDocHighlightPosition} from '@ng-doc/ui-kit';
 import {create, insert, insertMultiple, Orama, stemmers} from '@orama/orama';
 import {Document} from '@orama/orama/dist/types';
@@ -74,8 +74,8 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 		).pipe(
 			map((db: Orama) => db as OramaWithHighlight),
 			switchMap((db: OramaWithHighlight) =>
-				this.request<NgDocPageSectionIndex[]>(`assets/ng-doc/indexes.json`).pipe(
-					switchMap((pages: NgDocPageSectionIndex[]) =>
+				this.request<NgDocPageIndex[]>(`assets/ng-doc/indexes.json`).pipe(
+					switchMap((pages: NgDocPageIndex[]) =>
 						insertMultiple(db, pages as unknown as SearchSchema[]),
 					),
 					map(() => db),
@@ -104,17 +104,17 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 			),
 			map((result: SearchResultWithHighlight) =>
 				result.hits.map((hit: SearchResultWithHighlight['hits'][0]) => {
-					const keys: Array<keyof NgDocPageSectionIndex> = objectKeys(hit.positions) as unknown as Array<keyof NgDocPageSectionIndex>;
+					const keys: Array<keyof NgDocPageIndex> = objectKeys(hit.positions) as unknown as Array<keyof NgDocPageIndex>;
 
 					return {
-						index: hit.document as unknown as NgDocPageSectionIndex,
-						positions: keys.reduce((acc: Record<keyof NgDocPageSectionIndex, NgDocHighlightPosition[]>, key: keyof NgDocPageSectionIndex) => {
+						index: hit.document as unknown as NgDocPageIndex,
+						positions: keys.reduce((acc: Record<keyof NgDocPageIndex, NgDocHighlightPosition[]>, key: keyof NgDocPageIndex) => {
 							// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 							// @ts-ignore
 							acc[key] = [...asArray(acc[key]), ...Object.values(hit.positions[key]).flat()];
 
 							return acc;
-						}, {} as any) as Partial<Record<keyof NgDocPageSectionIndex, NgDocHighlightPosition[]>>,
+						}, {} as any) as Partial<Record<keyof NgDocPageIndex, NgDocHighlightPosition[]>>,
 					}
 				})
 			)

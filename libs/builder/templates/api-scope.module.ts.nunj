@@ -10,6 +10,7 @@ import {RouterModule} from "@angular/router";
 			{%- endif  %}
 			{
 				path: '',
+				title: '{{ scope.title }}',
 				children: [
 					{%- for page in scope.builtChildren %}
 					{

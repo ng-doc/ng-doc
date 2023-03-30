@@ -5,8 +5,8 @@
 	@if ($color-name == 'grey') {
 		@return (
 			#{$color-name}-rgb: hex-to-rgb($base-color),
-			#{$color-name}-10: blend-normal(rgba(#fff, 0.95), blend-multiply(rgba($base-color, 95), $base-color)),
-			#{$color-name}-20: blend-normal(rgba(#fff, 0.9), blend-multiply(rgba($base-color, 0.9), $base-color)),
+			#{$color-name}-10: blend-normal(rgba(#fff, 0.96), blend-multiply(rgba($base-color, 96), $base-color)),
+			#{$color-name}-20: blend-normal(rgba(#fff, 0.92), blend-multiply(rgba($base-color, 0.92), $base-color)),
 			#{$color-name}-30: blend-normal(rgba(#fff, 0.85), blend-multiply(rgba($base-color, 0.85), $base-color)),
 			#{$color-name}-40: blend-normal(rgba(#fff, 0.8), blend-multiply(rgba($base-color, 0.8), $base-color)),
 			#{$color-name}-50: blend-normal(rgba(#fff, 0.75), blend-multiply(rgba($base-color, 0.75), $base-color)),

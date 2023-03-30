@@ -6,12 +6,13 @@
 	position: sticky;
 	top: 0;
 	display: flex;
-	background-color: var(--ng-doc-base-2);
+	background-color: var(--ng-doc-base-1);
 	padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
 	z-index: 1;
 
 	--ng-doc-font-size: 13px;
 	--ng-doc-font-weight: 700;
+	--ng-doc-font-line-height: 18px;
 	--ng-doc-text: var(--ng-doc-base-10);
 }
 

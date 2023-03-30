@@ -10,7 +10,7 @@
 
 	{% if not description %}
 		<!-- This is a hack to make the declaration name available to the search index. -->
-		<div style="display: none">API documentation page for the {{ declaration.getName() }} entity.</div>
+		<div style="display: none">API documentation page for the {{ declaration.getName() }}.</div>
 	{% endif %}
 
 	{% block details %}{% endblock %}

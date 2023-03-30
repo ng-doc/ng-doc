@@ -17,7 +17,7 @@ There are 3 types of snippets that you can use
   - `/* NgDocStyleSnippetStart(Title) */` - Start of the snippet
   - `/* NgDocStyleSnippetEnd(Title) */` - End of the snippet
 
-## Using Snippets
+## Usage
 
 Snippets look like comments, and you can use them in any of your demos, and they will be
 displayed in the demo's code tab.
@@ -37,5 +37,5 @@ NgDoc will render its code like below
 
 ## See Also
 
-- `*EntitiesPage`
-- `*EntitiesDependencies`
+- `*ContentGuidesDemo`
+- `*ContentGuidesDemoPane`

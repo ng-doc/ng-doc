@@ -22,6 +22,7 @@
 								(ngModelChange)="query$.next($event)"
 								placeholder="Search..."
 								ngDocAutofocus
+								[selectAll]="true"
 								#inputElement
 							/>
 						</ng-doc-input-wrapper>
@@ -51,7 +52,7 @@
 				(ngModelChange)="query$.next($event); dropdown.open()"
 				placeholder="Search..."
 				[ngDocHotkey]="{ctrlKey: false, altKey: false, shiftKey: false, code: 'Slash'}"
-				(ngDocHotkey)="inputElement.focus()"
+				(ngDocHotkey)="inputElement.focus(); inputElement.select()"
 				#inputElement
 			/>
 			<ng-template #rightContent>

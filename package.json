@@ -34,7 +34,7 @@
 	"bugs": {
 		"url": "https://github.com/skoropadas/ng-doc/issues"
 	},
-	"homepage": "https://ng-doc.com/",
+	"homepage": "https://ng-doc.com",
 	"private": true,
 	"dependencies": {
 		"@angular-devkit/architect": "0.1502.4",

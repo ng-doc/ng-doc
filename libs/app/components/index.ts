@@ -1,4 +1,5 @@
 export * from '@ng-doc/app/components/api-list';
+export * from '@ng-doc/app/components/breadcrumb';
 export * from '@ng-doc/app/components/code';
 export * from '@ng-doc/app/components/demo';
 export * from '@ng-doc/app/components/demo-displayer';
