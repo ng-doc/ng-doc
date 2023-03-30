@@ -90,7 +90,11 @@ the `*ContentApiTemplating` article.
 If you would like to see what the output of the API looks like, you can look at the API example
 for the following entities `NgDocPageEntity`, `NgDocApiPageEntity`.
 
+{% index false %}
+
 ## See also
 
 - `*EntitiesCategory`
 - `*ContentApiTemplating`
+
+{% endindex %}

@@ -51,6 +51,18 @@ import {AppComponent} from './app.component';
 export class AppModule {}
 ```
 
+## Avoiding Indexing
+
+By default, builder creates indexes for all content of the documentation except code blocks.
+If you want to exclude some content from the search, you can wrap in special `nunjucks` block:
+
+```twig fileName="index.md"
+{{'{% index false %}' | safe }}
+## Not indexed section
+The content of this section will not be indexed by the builder.
+{{'{% endindex %}' | safe }}
+```
+
 ## Custom Search Engine
 
 You can create your own search engine that will be used by the `NgDocSearchComponent` in the navbar.

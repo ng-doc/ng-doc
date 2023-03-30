@@ -175,8 +175,12 @@ export default PageDependencies;
 
 {{ NgDocActions.playground("TagDataPlayground") }}
 
+{% index false %}
+
 ## See Also
 
 - `*EntitiesPage`
 - `*EntitiesDependencies`
 - `*CustomizationTypeControls`
+
+{% endindex %}

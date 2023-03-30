@@ -97,7 +97,10 @@ export class MyClass {
   doSomething(num: number): void {}
 }
 ```
+{% index false %}
 
 ## See Also
 
 - `*EntitiesAPI`
+
+{% endindex %}

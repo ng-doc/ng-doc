@@ -39,6 +39,10 @@ export const MyAwesomeCategory: NgDocCategory = {
 export default MyAwesomeCategory;
 ```
 
+{% index false %}
+
 ## See also
 
 - `*EntitiesPage`
+
+{% endindex %}

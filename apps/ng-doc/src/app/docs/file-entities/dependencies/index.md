@@ -64,8 +64,12 @@ What `NgModule` should include:
 - `declarations` - a list of demos that you have created specifically for this page
 - `exports` - a list of modules that are needed for the playgrounds
 
+{% index false %}
+
 ## See also
 
 - `*EntitiesPage`
 - `*ContentGuidesDemo`
 - `*ContentGuidesPlayground`
+
+{% endindex %}

@@ -35,7 +35,11 @@ NgDoc will render its code like below
 
 {{ NgDocActions.demo("ButtonInlineDemoComponent", {expanded: true}) }}
 
+{% index false %}
+
 ## See Also
 
 - `*ContentGuidesDemo`
 - `*ContentGuidesDemoPane`
+
+{% endindex %}

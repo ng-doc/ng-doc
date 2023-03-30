@@ -121,6 +121,10 @@ In order for your custom controls to better fit into the documentation design, y
 components from our UI-Kit library, and global CSS variables we will provide documentation for it
 later, when our API stabilizes.
 
+{% index false %}
+
 ## See Also
 
 - `*ContentGuidesPlayground`
+
+{% endindex %}

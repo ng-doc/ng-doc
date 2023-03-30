@@ -70,6 +70,7 @@
 	</ng-template>
 
 	<ng-template #searchResults>
+		<ng-doc-smooth-resize [trigger]="state?.result">
 		<div class="ng-doc-search-result-content">
 			<ng-doc-data-list-group
 				[items]="state?.result ?? []"
@@ -123,5 +124,6 @@
 				</ng-template>
 			</ng-doc-data-list-group>
 		</div>
+		</ng-doc-smooth-resize>
 	</ng-template>
 </ng-container>

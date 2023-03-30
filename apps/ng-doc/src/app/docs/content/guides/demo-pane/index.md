@@ -62,6 +62,8 @@ To customize only specific demo pane, you can provide CSS class to the options o
 {{'{{ NgDocActions.demoPane("ButtonDemoComponent", {class: "my-demo-pane"}) }}' | safe }}
 ```
 
+{% index false %}
+
 ## See Also
 
 - `*EntitiesPage`
@@ -69,3 +71,5 @@ To customize only specific demo pane, you can provide CSS class to the options o
 - `*ContentGuidesDemoPane`
 - `*ContentGuidesPlayground`
 - `*ContentGuidesSnippets`
+
+{% endindex %}

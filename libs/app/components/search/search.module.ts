@@ -17,11 +17,12 @@ import {
 	NgDocInputStringModule,
 	NgDocInputWrapperModule,
 	NgDocLetModule,
-	NgDocRunModule, NgDocSpinnerModule,
+	NgDocRunModule,
+	NgDocSmoothResizeModule,
+	NgDocSpinnerModule,
 	NgDocTagModule,
 	NgDocTextModule,
 } from '@ng-doc/ui-kit';
-import {FlControlSilencerModule} from 'flex-controls';
 
 import {NgDocSearchComponent} from './search.component';
 
@@ -49,6 +50,7 @@ import {NgDocSearchComponent} from './search.component';
 		NgDocBindModule,
 		NgDocSanitizeHtmlModule,
 		NgDocSpinnerModule,
+		NgDocSmoothResizeModule,
 	],
 	exports: [NgDocSearchComponent],
 })

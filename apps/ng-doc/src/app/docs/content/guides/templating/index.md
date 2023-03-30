@@ -168,7 +168,11 @@ Or if you want to create a warning-style `blockquote` you can write the followin
 > **Warning**
 > This is warning blockquote
 
-## SeeAlso
+{% index false %}
+
+## See Also
 
 - `*ContentGuidesDemo`
 - `*ContentKeywords`
+
+{% endindex %}
