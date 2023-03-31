@@ -9,7 +9,7 @@ module.exports = {
 			'@semantic-release/release-notes-generator',
 			{
 				writerOpts: {
-					commitPartial: readFileSync(join(__dirname, './commit.hbs'), 'utf-8'),
+					commitPartial: readFileSync(join(__dirname, './release-notes/template.hbs'), 'utf-8'),
 				},
 			},
 		],
