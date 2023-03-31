@@ -1,3 +1,78 @@
+# [15.10.0-beta.1](https://github.com/skoropadas/ng-doc/compare/v15.9.0...v15.10.0-beta.1) (2023-03-31)
+
+
+### Bug Fixes
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
+
+
+
+### Features
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
+
+
+
+### Performance Improvements
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
 # [15.9.0](https://github.com/skoropadas/ng-doc/compare/v15.8.0...v15.9.0) (2023-03-26)
 
 ### Bug Fixes
