@@ -1,3 +1,10 @@
+# [15.10.0-beta.2](https://github.com/skoropadas/ng-doc/compare/v15.10.0-beta.1...v15.10.0-beta.2) (2023-03-31)
+
+
+### Bug Fixes
+
+# [](https://github.com/skoropadas/ng-doc/compare/...)
+
 # [15.10.0-beta.1](https://github.com/skoropadas/ng-doc/compare/v15.9.0...v15.10.0-beta.1) (2023-03-31)
 
 
