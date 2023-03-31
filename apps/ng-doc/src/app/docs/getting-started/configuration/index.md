@@ -138,8 +138,7 @@ import {AppComponent} from './app.component';
 		RouterModule.forRoot([
 			{
 				path: 'docs',
-				loadChildren: () =>
-					import('./docs/docs.module').then((m: typeof import('./docs/docs.module')) => m.DocsModule),
+				loadChildren: () => import('./docs/docs.module').then((m: typeof import('./docs/docs.module')) => m.DocsModule),
 			},
 		]),
 	],

@@ -5,13 +5,13 @@
 				<h3>
 					<img src="assets/images/ng-doc.svg" />
 					<ng-template
+						#ngDocMediaQuery="ngDocMediaQuery"
 						[ngDocMediaQuery]="[
 							ngDocMediaQuery.breakpoints.Small,
 							ngDocMediaQuery.breakpoints.Medium,
 							ngDocMediaQuery.breakpoints.Large,
 							ngDocMediaQuery.breakpoints.XLarge
 						]"
-						#ngDocMediaQuery="ngDocMediaQuery"
 					>
 						NgDoc
 					</ng-template>
@@ -19,16 +19,16 @@
 			</a>
 		</ng-template>
 		<ng-template #rightContent>
-			<div class="ng-doc-header-controls" @preventInitialChild>
+			<div @preventInitialChild class="ng-doc-header-controls">
 				<ng-doc-theme-toggle></ng-doc-theme-toggle>
 				<a
-					ng-doc-button-icon
-					size="large"
 					href="https://github.com/skoropadas/ng-doc"
-					target="_blank"
+					ng-doc-button-icon
 					ngDocTooltip="Check repo"
+					size="large"
+					target="_blank"
 				>
-					<ng-doc-icon icon="github" [size]="24"></ng-doc-icon>
+					<ng-doc-icon [size]="24" icon="github"></ng-doc-icon>
 				</a>
 			</div>
 		</ng-template>

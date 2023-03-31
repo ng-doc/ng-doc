@@ -15,25 +15,30 @@ import {getProject} from '../utils/get-project';
 export function addAssets(options: Schema): Rule {
 	return async (tree: Tree, context: SchematicContext) => {
 		return updateWorkspace((workspace: WorkspaceDefinition) => {
-			context.logger.info(`[INFO]: Adding global assets...`);
+			const logger = context.logger.createChild('add-assets');
 
-			const project: ProjectDefinition | undefined = getProject(options, workspace);
+			context.logger.info(`[INFO]: Global assets`);
+			logger.info(`🔄 Adding assets to the target project...`);
 
-			if (!project) {
-				context.logger.warn(`[WARNING]: Target project not found.`);
-				return;
+			try {
+				const project: ProjectDefinition | undefined = getProject(options, workspace);
+
+				if (!project) {
+					logger.error(`❌ Target project not found. Please add assets manually.`);
+
+					return;
+				}
+
+				const targetOptions: Record<string, JsonValue> = getProjectTargetOptions(project, 'build');
+
+				const assets: JsonArray | undefined = targetOptions['assets'] as JsonArray | undefined;
+
+				targetOptions['assets'] = Array.from(new Set([...getNgDocAssets(options), ...(assets ?? [])]));
+
+				logger.info('✅ Done!');
+			} catch (e) {
+				logger.error(`Error: ${e}`);
 			}
-
-			const targetOptions: Record<string, JsonValue> = getProjectTargetOptions(project, 'build');
-
-			const assets: JsonArray | undefined = targetOptions['assets'] as JsonArray | undefined;
-
-			if (!assets) {
-				targetOptions['assets'] = getNgDocAssets(options);
-				return;
-			}
-
-			targetOptions['assets'] = Array.from(new Set([...getNgDocAssets(options), ...assets]));
 		});
 	};
 }

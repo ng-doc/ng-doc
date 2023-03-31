@@ -15,35 +15,47 @@ import {getProject} from '../utils/get-project';
  */
 export function addLayout(options: Schema): Rule {
 	return async (tree: Tree, context: SchematicContext) => {
-		context.logger.info(`[INFO]: Adding NgDoc layout to the root component...`);
+		const logger = context.logger.createChild('add-layout');
 
-		const workspace: WorkspaceDefinition = await getWorkspace(tree);
-		const project: ProjectDefinition | undefined = getProject(options, workspace);
+		context.logger.info(`[INFO]: Application layout`);
+		logger.info(`🔄 Replacing the content of the root component with NgDoc layout...`);
 
-		if (!project) {
-			return;
-		}
+		try {
+			const workspace: WorkspaceDefinition = await getWorkspace(tree);
+			const project: ProjectDefinition | undefined = getProject(options, workspace);
 
-		const buildOptions: Record<string, JsonValue> = getProjectTargetOptions(project, 'build');
+			if (!project) {
+				logger.error(
+					`❌ Target project not found. Please replace the content of the root component with NgDoc layout manually.`,
+				);
 
-		const appTemplatePath: string | undefined = getAppTemplatePath(tree, buildOptions['main'] as string);
+				return;
+			}
 
-		if (!appTemplatePath) {
-			context.logger.error('Could not find the default main template file for this project.');
+			const buildOptions: Record<string, JsonValue> = getProjectTargetOptions(project, 'build');
+			const appTemplatePath: string | undefined = getAppTemplatePath(tree, buildOptions['main'] as string);
 
-			return;
-		}
+			if (!appTemplatePath) {
+				logger.error(
+					'❌ Could not find the default main template file for the project. Please replace the content of the root component with NgDoc layout manually.',
+				);
 
-		const html: Buffer | null = tree.read(appTemplatePath);
+				return;
+			}
 
-		if (html) {
-			const recorder: UpdateRecorder = tree.beginUpdate(appTemplatePath);
+			const html: Buffer | null = tree.read(appTemplatePath);
 
-			recorder.remove(0, html.length);
-			recorder.insertLeft(0, APP_COMPONENT_CONTENT);
-			tree.commitUpdate(recorder);
+			if (html) {
+				const recorder: UpdateRecorder = tree.beginUpdate(appTemplatePath);
 
-			context.logger.info(`[INFO]: Content of the app component was replaced with ng-doc layout.`);
+				recorder.remove(0, html.length);
+				recorder.insertLeft(0, APP_COMPONENT_CONTENT);
+				tree.commitUpdate(recorder);
+
+				logger.info('✅ Done!');
+			}
+		} catch (e) {
+			logger.error(`❌ Error: ${e}`);
 		}
 	};
 }

@@ -6,6 +6,7 @@
 	<ng-template let-item="item" let-root="root" #sidebarTemplate>
 		<ng-container *ngIf="item.children?.length; else itemTemplate">
 			<ng-doc-sidebar-category
+				*ngIf="!item.hidden"
 				[category]="item"
 				[expandable]="!!item?.expandable"
 				[expanded]="!!item?.expanded || !item?.expandable"
@@ -23,7 +24,7 @@
 		</ng-container>
 
 		<ng-template #itemTemplate>
-			<ng-doc-sidebar-item [item]="item"></ng-doc-sidebar-item>
+			<ng-doc-sidebar-item [item]="item" *ngIf="!item.hidden"></ng-doc-sidebar-item>
 		</ng-template>
 	</ng-template>
 </div>

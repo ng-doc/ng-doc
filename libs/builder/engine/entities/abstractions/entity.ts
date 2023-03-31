@@ -89,6 +89,13 @@ export abstract class NgDocEntity {
 	}
 
 	/**
+	 * Returns children that are ready to build or already built
+	 */
+	get builtChildren(): NgDocEntity[] {
+		return this.children.filter((entity: NgDocEntity) => entity.isReadyForBuild);
+	}
+
+	/**
 	 * Recursively returns children for the current entity
 	 *
 	 * @type {Array<NgDocEntity>}

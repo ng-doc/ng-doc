@@ -45,17 +45,17 @@ const PageDependencies: NgDocDependencies = {
 export default PageDependencies;
 ```
 
--   `target` - The Angular Component/Directive class that will be used for the playground (make sure
-    you export the module of this
-    component from the **module of your page** (`PageModule` in the current example), otherwise
-    Angular will not be able to create it)
--   `template` - The template that will be used for the playground, you can use the Angular syntax
-    inside,
-    but it's value cannot be provided dynamically, so you can't use variables or functions there,
-    value of this property should be static.
--   `<ng-doc-selector>` - is a unique tag that will be dynamically replaced with your component's
-    selector, and if your component has multiple selectors, NgDoc will also create a view for each
-    possible selector.
+- `target` - The Angular Component/Directive class that will be used for the playground (make sure
+  you export the module of this
+  component from the **module of your page** (`PageModule` in the current example), otherwise
+  Angular will not be able to create it)
+- `template` - The template that will be used for the playground, you can use the Angular syntax
+  inside,
+  but it's value cannot be provided dynamically, so you can't use variables or functions there,
+  value of this property should be static.
+- `<ng-doc-selector>` - is a unique tag that will be dynamically replaced with your component's
+  selector, and if your component has multiple selectors, NgDoc will also create a view for each
+  possible selector.
 
 In this example, we created a playground for the `NgDocTagComponent`, to make it work,
 we also need to export its module from the `PageModule`.
@@ -88,7 +88,8 @@ from `NgDocActions`, passing the key of your playground to it as follows
 
 ## Playground example
 
-NgDoc will recognize `@Input` field types and creates controls for them, which allow you to change their
+NgDoc will recognize `@Input` field types and creates controls for them, which allow you to change
+their
 values and see how the component changes.
 
 {{ NgDocActions.playground("TagPlayground") }}
@@ -177,6 +178,6 @@ export default PageDependencies;
 
 ## See Also
 
--   `*EntitiesPage`
--   `*EntitiesDependencies`
--   `*CustomizationTypeControls`
+- `*EntitiesPage`
+- `*EntitiesDependencies`
+- `*CustomizationTypeControls`

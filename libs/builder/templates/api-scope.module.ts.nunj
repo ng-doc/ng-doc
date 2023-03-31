@@ -5,13 +5,13 @@ import {RouterModule} from "@angular/router";
 @NgModule({
 	imports: [
 		RouterModule.forChild([
-			{%- if scope.children.length %}
-			{path: '', redirectTo: '{{ scope.children[0].route }}', pathMatch: 'full' },
+			{%- if scope.builtChildren.length %}
+			{path: '', redirectTo: '{{ scope.builtChildren[0].route }}', pathMatch: 'full' },
 			{%- endif  %}
 			{
 				path: '',
 				children: [
-					{%- for page in scope.children %}
+					{%- for page in scope.builtChildren %}
 					{
 						path: '{{ page.route }}',
 						loadChildren: () => import('{{ page.moduleImport }}').then(m => m.DynamicModule)

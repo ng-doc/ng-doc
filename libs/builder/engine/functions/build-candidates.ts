@@ -26,8 +26,19 @@ export function buildCandidates(entities: NgDocEntity[]): NgDocEntity[] {
 	);
 
 	const candidatesByKeywords: NgDocEntity[] = entitiesFromStore.filter(
-		(entity: NgDocEntity) => isRouteEntity(entity) && candidatesKeywords.some((keyword: string) => entity.usedKeywords.has(keyword))
+		(entity: NgDocEntity) =>
+			isRouteEntity(entity) && candidatesKeywords.some((keyword: string) => entity.usedKeywords.has(keyword)),
 	);
 
-	return asArray(new Set([...candidates, ...candidatesByKeywords]));
+	return asArray(new Set([...candidates, ...candidatesByKeywords])).sort(prioritySort);
+}
+
+// Sort entities by parent-child relationship, children should be first, parents should be last
+/**
+ *
+ * @param a
+ * @param b
+ */
+function prioritySort(a: NgDocEntity, b: NgDocEntity): number {
+	return b.parentEntities.length - a.parentEntities.length;
 }
