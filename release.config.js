@@ -5,14 +5,7 @@ module.exports = {
 	branches: ['+([0-9])?(.{+([0-9]),x}).x', 'release', {name: 'beta', channel: 'beta', prerelease: true}],
 	plugins: [
 		'@semantic-release/commit-analyzer',
-		[
-			'@semantic-release/release-notes-generator',
-			{
-				writerOpts: {
-					commitPartial: readFileSync(join(__dirname, './release-notes/template.hbs'), 'utf-8'),
-				},
-			},
-		],
+		'@semantic-release/release-notes-generator',
 		'@semantic-release/changelog',
 		[
 			'./plugins/semantic-release/publish-packages.js',
