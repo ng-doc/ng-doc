@@ -207,6 +207,6 @@ a#{$class} {
 }
 
 mark.ng-doc-mark {
-	background-color: var(--ng-doc-mark-background, rgba(var(--ng-doc-primary-rgb), 0.1));
+	background-color: var(--ng-doc-mark-background, var(--ng-doc-ember-30));
 	color: var(--ng-doc-mark-color, inherit);
 }

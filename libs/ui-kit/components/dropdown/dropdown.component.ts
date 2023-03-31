@@ -64,6 +64,9 @@ export class NgDocDropdownComponent implements OnChanges, OnDestroy {
 	contactBorder: boolean = true;
 
 	@Input()
+	hasBackdrop: boolean = false;
+
+	@Input()
 	positions: NgDocOverlayPosition | NgDocOverlayPosition[] = [
 		'bottom-center',
 		'top-center',
@@ -238,6 +241,7 @@ export class NgDocDropdownComponent implements OnChanges, OnDestroy {
 			scrollStrategy: this.overlayService.scrollStrategy().reposition(),
 			viewContainerRef: this.viewContainerRef,
 			openAnimation: dropdownOpenAnimation,
+			hasBackdrop: this.hasBackdrop,
 			...overlayProperties,
 			panelClass: ['ng-doc-dropdown', ...asArray(this.panelClass), ...asArray(this.overlayHost?.panelClass)],
 		};

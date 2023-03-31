@@ -66,14 +66,6 @@ export class NgDocSearchComponent implements NgDocListHost {
 		return this.inputElement ?? this.elementRef;
 	}
 
-	groupByPage(result: NgDocSearchResult): string {
-		return result.index.breadcrumbs;
-	}
-
-	getPageTypeForGroup(group: string, results: NgDocSearchResult[]): NgDocPageType {
-		return results.find((item: NgDocSearchResult) => item.index.breadcrumbs === group)?.index.pageType ?? 'guide';
-	}
-
 	getPositions<T extends NgDocSearchResult, K extends keyof T['positions']>(key: K, item: T): NgDocHighlightPosition[] {
 		return item.positions[key] ?? [];
 	}

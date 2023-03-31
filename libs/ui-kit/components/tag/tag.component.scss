@@ -13,14 +13,22 @@
 	--ng-doc-font-size: 14px;
 
 	@each $color-name, $color-value in $ng-doc-palette-colors {
-		&[data-ng-doc-color='#{$color-name}'] {
+		&[data-ng-doc-color='#{$color-name}'][data-ng-doc-mod="default"] {
 			--ng-doc-tag-background: var(--ng-doc-#{$color-name}-100);
 			--ng-doc-tag-color: var(--ng-doc-white);
 		}
 	}
 
+	@each $color-name, $color-value in $ng-doc-palette-colors {
+		&[data-ng-doc-color='#{$color-name}'][data-ng-doc-mod="light"] {
+			--ng-doc-tag-background: var(--ng-doc-#{$color-name}-10);
+			--ng-doc-tag-color: var(--ng-doc-#{$color-name}-140);
+		}
+	}
+
 	&[data-ng-doc-size='small'] {
 		padding: 0 calc(var(--ng-doc-base-gutter) / 2);
+		border-radius: 6px;
 		--ng-doc-font-size: 10px;
 		--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 2);
 	}

@@ -7,7 +7,7 @@ export interface NgDocPageIndex {
 	/**
 	 * Generated breadcrumbs.
 	 */
-	breadcrumbs: string;
+	breadcrumbs: string[];
 	/**
 	 * Title of the page.
 	 */
@@ -18,8 +18,9 @@ export interface NgDocPageIndex {
 	section: string;
 	/**
 	 * Indexed content
+	 * Usually content maybe undefined only for the API pages that have no content/documentation.
 	 */
-	content: string;
+	content?: string;
 	/**
 	 * The type of the page.
 	 */

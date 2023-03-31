@@ -208,6 +208,10 @@ export abstract class NgDocEntity {
 	private processArtifacts(artifacts: NgDocBuiltOutput[]): Observable<NgDocBuiltOutput[]> {
 		this.indexes = [];
 
+		if (!artifacts.length) {
+			return of([]);
+		}
+
 		return forkJoin(
 			artifacts.map((artifact: NgDocBuiltOutput) => {
 				if (path.extname(artifact.filePath) === '.html') {

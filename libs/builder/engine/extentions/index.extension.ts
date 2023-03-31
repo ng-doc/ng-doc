@@ -1,6 +1,6 @@
 import nunjucks, {Extension} from 'nunjucks'
 
-export class NgDocNotIndexableExtension implements Extension {
+export class NgDocIndexExtension implements Extension {
 	tags: string[] = ['index'];
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

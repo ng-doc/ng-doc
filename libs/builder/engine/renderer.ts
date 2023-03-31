@@ -8,7 +8,7 @@ import {Node} from 'ts-morph';
 
 import {ObservableSet} from '../classes';
 import {NgDocRendererOptions} from '../interfaces';
-import {NgDocNotIndexableExtension} from './extentions/not-indexable.extension';
+import {NgDocIndexExtension} from './extentions/index.extension';
 import * as filters from './template-filters';
 import {TEMPLATES_PATH} from './variables';
 
@@ -47,7 +47,7 @@ export class NgDocRenderer {
 		);
 
 		environment.addGlobal('Node', Node);
-		environment.addExtension('NgDocNotIndexableExtension', new NgDocNotIndexableExtension())
+		environment.addExtension('NgDocIndexExtension', new NgDocIndexExtension())
 
 		return environment;
 	}

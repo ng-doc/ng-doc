@@ -38,7 +38,7 @@ export interface NgDocDefaultSearchEngineOptions {
 	 */
 	exact?: boolean;
 	/**
-	 * Number of results to return (default: 15).
+	 * Number of results to return (default: 10).
 	 */
 	limit?: number;
 }
@@ -99,7 +99,7 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 					properties: ['section', 'content'],
 					tolerance: this.options?.tolerance,
 					exact: this.options?.exact,
-					limit: this.options?.limit ?? 15,
+					limit: this.options?.limit ?? 10,
 				}),
 			),
 			map((result: SearchResultWithHighlight) =>

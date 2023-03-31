@@ -57,7 +57,7 @@ export async function buildIndexes(entity: NgDocEntity, artifacts: NgDocBuiltOut
 								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 								// @ts-ignore
 								fragment: section?.properties && section.properties['id'],
-								content: doc.content,
+								content: doc.content.toString() === '%%API_NAME_ANCHOR%%' ? undefined : doc.content.toString(),
 							});
 						}
 					}
@@ -72,8 +72,8 @@ export async function buildIndexes(entity: NgDocEntity, artifacts: NgDocBuiltOut
  *
  * @param entity
  */
-function buildBreadcrumbs(entity: NgDocRouteEntity): string {
-	return isRouteEntity(entity.parent) ? `${buildBreadcrumbs(entity.parent)} • ${entity.title}` : entity.title;
+function buildBreadcrumbs(entity: NgDocRouteEntity): string[] {
+	return isRouteEntity(entity.parent) ? [...buildBreadcrumbs(entity.parent), entity.title] : [entity.title];
 }
 
 /**
