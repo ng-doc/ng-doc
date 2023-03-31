@@ -35,10 +35,14 @@
 							},
 							{
 								"sourceTag": "lib:builder",
-								"onlyDependOnLibsWithTags": ["lib:core"]
+								"onlyDependOnLibsWithTags": ["lib:core", "lib:utils"]
 							},
 							{
 								"sourceTag": "lib:ui-kit",
+								"onlyDependOnLibsWithTags": ["lib:core"]
+							},
+							{
+								"sourceTag": "lib:utils",
 								"onlyDependOnLibsWithTags": ["lib:core"]
 							}
 						]

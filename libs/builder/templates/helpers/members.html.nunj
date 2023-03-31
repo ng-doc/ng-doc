@@ -2,7 +2,7 @@
 	<div class="ng-doc-table-wrapper">
 		<table>
 			<thead>
-			<tr>
+			<tr indexable="false">
 				<th>Name</th>
 				<th>Value</th>
 				<th>Description</th>
@@ -11,8 +11,8 @@
 			<tbody>
 			{% for member in members %}
 				<tr>
-					<td>{{ member.getName() }} </td>
-					<td><code>{{ member.getValue() | dump }}</code></td>
+					<td indexable="false">{{ member.getName() }} </td>
+					<td indexable="false"><code>{{ member.getValue() | dump }}</code></td>
 					<td>{{ member | extractDocs }} </td>
 				</tr>
 			{% endfor %}

@@ -1,3 +1,4 @@
+import {NgDocPageIndex} from '@ng-doc/core';
 import * as path from 'path';
 
 import {slash} from '../../../helpers';
@@ -45,10 +46,4 @@ export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T>
 
 		return slash(path.join('/', parentRoute, this.route));
 	}
-
-	/**
-	 * External website URL, that can be used to edit source file of the current page
-	 */
-	// abstract get editSourceFileUrl(): string | undefined;
-	// abstract get viewSourceFileUrl(): string | undefined;
 }

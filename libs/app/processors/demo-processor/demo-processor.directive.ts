@@ -4,7 +4,7 @@ import {NgDocProcessorOptions} from '@ng-doc/app/interfaces';
 import {NgDocHtmlProcessor} from '@ng-doc/app/processors/html-processor';
 import {UntilDestroy} from '@ngneat/until-destroy';
 
-/** Processor replaces html node with `NgDocDemoViewerComponent` to display demo */
+/** Processor replaces html node with `NgDocDemoComponent` to display demo */
 @Directive({
 	selector: '[ngDocDemoProcessor]',
 })

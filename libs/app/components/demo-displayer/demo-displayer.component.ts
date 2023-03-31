@@ -1,6 +1,6 @@
 import {Clipboard} from '@angular/cdk/clipboard';
 import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
-import {NgDocContent, NgDocNotifyService} from '@ng-doc/ui-kit';
+import {NgDocContent} from '@ng-doc/ui-kit';
 
 @Component({
 	selector: 'ng-doc-demo-displayer',
@@ -28,10 +28,15 @@ export class NgDocDemoDisplayerComponent {
 	@Input()
 	expanded: boolean = false;
 
-	constructor(private readonly notifyService: NgDocNotifyService, private readonly clipboard: Clipboard) {}
+	copyTooltipText: string = '';
+
+	constructor(private readonly clipboard: Clipboard) {}
+
+	protected get expandTooltipText(): string {
+		return this.expanded ? 'Collapse' : 'Expand';
+	}
 
 	copyCode(): void {
 		this.clipboard.copy(this.code);
-		this.notifyService.notify('Copied!');
 	}
 }
