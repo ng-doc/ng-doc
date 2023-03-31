@@ -36,9 +36,11 @@ export class NgDocPlaygroundPropertiesComponent<
 	resetForm: EventEmitter<void> = new EventEmitter<void>();
 
 	readonly breakpoints: string[] = [Breakpoints.XSmall];
-	readonly observer: Observable<boolean> = this.breakpointObserver.observe(this.breakpoints).pipe(pluck('matches'));
+	readonly observer: Observable<boolean>;
 
-	constructor(protected readonly breakpointObserver: BreakpointObserver) {}
+	constructor(protected readonly breakpointObserver: BreakpointObserver) {
+		this.observer = this.breakpointObserver.observe(this.breakpoints).pipe(pluck('matches'));
+	}
 
 	getFormControl(controlType: keyof typeof this.form.controls, key: string): FormControl {
 		return this.form.get(controlType)?.get(key) as FormControl;
