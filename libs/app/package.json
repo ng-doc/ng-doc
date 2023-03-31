@@ -10,7 +10,7 @@
 		"@tinkoff/ng-polymorpheus": "^4.0.0",
 		"@ng-web-apis/common": "^2.0.1",
 		"rxjs": "^7.0.0",
-		"flex-controls": "^1.1.1"
+		"flex-controls": "^1.1.5"
 	},
 	"dependencies": {
 		"tslib": "^2.3.0",

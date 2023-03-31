@@ -10,7 +10,7 @@
 		"allowSyntheticDefaultImports": true,
 		"importHelpers": true,
 		"strict": true,
-		"target": "es2022",
+		"target": "es2020",
 		"module": "esnext",
 		"lib": ["es2019", "dom"],
 		"skipLibCheck": true,
