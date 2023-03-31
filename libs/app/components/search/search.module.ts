@@ -18,7 +18,6 @@ import {
 	NgDocInputWrapperModule,
 	NgDocLetModule,
 	NgDocRunModule,
-	NgDocSmoothResizeModule,
 	NgDocSpinnerModule,
 	NgDocTagModule,
 	NgDocTextModule,
@@ -50,7 +49,6 @@ import {NgDocSearchComponent} from './search.component';
 		NgDocBindModule,
 		NgDocSanitizeHtmlModule,
 		NgDocSpinnerModule,
-		NgDocSmoothResizeModule,
 	],
 	exports: [NgDocSearchComponent],
 })

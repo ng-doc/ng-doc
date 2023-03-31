@@ -44,6 +44,7 @@ export interface NgDocDefaultSearchEngineOptions {
 }
 
 interface SearchSchema extends Document {
+	title: 'string';
 	sectionTitle: 'string';
 	content: 'string';
 }
@@ -60,6 +61,7 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 		this.db$ = from(
 			create({
 				schema: {
+					title: 'string',
 					section: 'string',
 					content: 'string',
 				},
@@ -95,7 +97,7 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 			switchMap((db: OramaWithHighlight) =>
 				searchWithHighlight(db, {
 					term: query,
-					boost: {section: 2},
+					boost: {title: 4, section: 2},
 					properties: ['section', 'content'],
 					tolerance: this.options?.tolerance,
 					exact: this.options?.exact,
