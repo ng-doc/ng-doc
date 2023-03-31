@@ -31,8 +31,7 @@ export function buildPlaygroundDemoTemplate(
 
 		if (String(rootElement.tag).toLowerCase() === NG_DOC_DYNAMIC_SELECTOR.toLowerCase()) {
 			rootElement.tag =
-				(selectors.find((selector: Selector) => selector.type === SelectorType.Tag) as TagSelector)?.name ??
-				'div';
+				(selectors.find((selector: Selector) => selector.type === SelectorType.Tag) as TagSelector)?.name ?? 'div';
 		}
 
 		inputs && parser.fillAngularAttributes(rootElement, inputs);
@@ -61,10 +60,7 @@ function replaceContent(htmlData: string, content: Record<string, string>, previ
 					${content[key]}
 				</ng-container>`.trim();
 
-		htmlData = htmlData.replace(
-			new RegExp(`{{\\s*content.${key}\\s*}}`, 'gm'),
-			condition ? `\n${condition}\n` : '',
-		);
+		htmlData = htmlData.replace(new RegExp(`{{\\s*content.${key}\\s*}}`, 'gm'), condition ? `\n${condition}\n` : '');
 	});
 
 	return htmlData;
