@@ -45,7 +45,7 @@ export function addSearchEngine(options: Schema): Rule {
 
 			addImports(mainModule.getSourceFile().getFilePath(), [{
 				namedImports: ['provideSearchEngine', 'NgDocDefaultSearchEngine'],
-				moduleSpecifier: '@ng-docs/app',
+				moduleSpecifier: '@ng-doc/app',
 			}]);
 			addProviderToNgModule(mainModule, 'provideSearchEngine(NgDocDefaultSearchEngine)', {unique: true});
 
