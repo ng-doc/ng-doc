@@ -9,6 +9,7 @@ import {RouterModule} from "@angular/router";
 		{%- endif  %}
 		{
 			path: '',
+			title: '{{ category.title }}',
 			children: [
 				{%- for child in category.builtChildren %}
 				{

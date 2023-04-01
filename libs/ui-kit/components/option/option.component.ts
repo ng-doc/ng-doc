@@ -2,6 +2,7 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
+	ElementRef,
 	HostBinding,
 	HostListener,
 	Inject,
@@ -29,6 +30,7 @@ export class NgDocOptionComponent<T> extends FlControlSelector<T> implements NgD
 	protected hovered: boolean = false;
 
 	constructor(
+		readonly elementRef: ElementRef<HTMLElement>,
 		protected override readonly changeDetectorRef: ChangeDetectorRef,
 		@Optional()
 		private readonly list: NgDocListComponent<T>,
@@ -49,7 +51,9 @@ export class NgDocOptionComponent<T> extends FlControlSelector<T> implements NgD
 	}
 
 	selectByUser(): void {
-		this.select();
+		const anchor: HTMLAnchorElement | null = this.elementRef.nativeElement.querySelector('a');
+
+		anchor ? anchor.click() : this.select();
 	}
 
 	setActiveStyles(): void {

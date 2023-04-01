@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit, Type} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostBinding, Input, OnInit, Type} from '@angular/core';
 import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
 import {NgDocDemoAsset} from '@ng-doc/app/interfaces';
 import {asArray} from '@ng-doc/core/helpers/as-array';
@@ -23,6 +23,11 @@ export class NgDocDemoComponent implements OnInit {
 	assets: NgDocDemoAsset[] = [];
 
 	constructor(private readonly rootPage: NgDocRootPage) {}
+
+	@HostBinding('class')
+	protected get classes(): string | string[] {
+		return this.options.class ?? '';
+	}
 
 	ngOnInit(): void {
 		this.demo = this.getDemo();

@@ -5,5 +5,11 @@
 		"entryFile": "./index.ts",
 		"styleIncludePaths": ["./styles"]
 	},
-	"allowedNonPeerDependencies": ["@ng-doc/core", "@ng-doc/ui-kit"]
+	"allowedNonPeerDependencies": [
+		"@ng-doc/core",
+		"@ng-doc/ui-kit",
+		"@orama/plugin-match-highlight",
+		"highlight.js",
+		"js-beautify"
+	]
 }

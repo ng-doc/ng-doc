@@ -1,0 +1,11 @@
+<div class="ng-doc-pane-back" [style.width]="width">
+	<div class="ng-doc-pane-content">
+		<ng-content select="[ngDocPaneBack]"></ng-content>
+	</div>
+</div>
+<div class="ng-doc-pane-resizer" #resizer></div>
+<div class="ng-doc-pane-front">
+	<div class="ng-doc-pane-content">
+		<ng-content select="[ngDocPaneFront]"></ng-content>
+	</div>
+</div>

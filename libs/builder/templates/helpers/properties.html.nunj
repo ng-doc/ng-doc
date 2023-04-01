@@ -6,7 +6,7 @@
 	<div class="ng-doc-table-wrapper">
 		<table class="ng-doc-properties-table">
 			<thead>
-			<tr>
+			<tr indexable="false">
 				<th class="ng-doc-properties-table-name">Name</th>
 				<th class="ng-doc-properties-table-type">Type</th>
 				<th class="ng-doc-properties-table-description">Description</th>
@@ -21,7 +21,7 @@
 				{% set docNode = propertyChain | firstNodeWithComment %}
 
 				<tr>
-					<td>
+					<td indexable="false">
 						{{ decoratorsMacro.render(property.getDecorators(), true) if property.getDecorators }}
 						{{ tagsMacro.render(property, "badge") }}{{ property.getName() }}
 						<div class="ng-doc-node-details">
@@ -34,7 +34,7 @@
 							{%- endif %}
 						</div>
 					</td>
-					<td>{{ typeMacro.render(property.getType()) }}</td>
+					<td>{{ typeMacro.renderNode(property.getTypeNode()) }}</td>
 					<td>{{ docNode | extractDocs }}</td>
 				</tr>
 			{%- endfor %}

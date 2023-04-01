@@ -1,0 +1,17 @@
+:host {
+	display: block;
+	max-height: var(--ng-doc-list-size);
+}
+
+ng-doc-option-group {
+	&:not(:last-child) {
+		margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
+	}
+}
+
+.ng-doc-empty-message {
+	padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
+
+	--ng-doc-font-size: 13px;
+	--ng-doc-line-height: 22px;
+}

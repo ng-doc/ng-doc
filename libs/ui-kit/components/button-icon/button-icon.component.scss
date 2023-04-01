@@ -23,12 +23,6 @@
 		height: calc(var(--ng-doc-base-gutter) * 5);
 	}
 
-	&[data-ng-doc-toggled="true"] {
-		--ng-doc-icon-color: var(--ng-doc-primary);
-		--ng-doc-button-hover-background: var(--ng-doc-hover);
-		--ng-doc-button-hover-color: var(--ng-doc-primary);
-	}
-
 	&:hover {
 		background-color: var(--ng-doc-button-hover-background);
 		color: var(--ng-doc-button-hover-color);

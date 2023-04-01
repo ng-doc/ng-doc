@@ -16,14 +16,14 @@
 			</tr>
 			<tr>
 				<td>
-					<h5 class="no-anchor">Presentation</h5>
+					<h5 class="no-anchor" indexable="false">Presentation</h5>
 					{{ codeMacro.render(constructor | constructorPresentation, "typescript", false) }}
 				</td>
 			</tr>
 			<tr>
 				<td>
 					{%- if parameters.length %}
-						<h5 class="no-anchor">Parameters</h5>
+						<h5 class="no-anchor" indexable="false">Parameters</h5>
 						{{ parametersMacro.render(parameters, constructor) }}
 					{%- endif %}
 				</td>

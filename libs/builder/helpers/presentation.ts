@@ -48,7 +48,9 @@ export function accessorPresentation(accessor: AccessorDeclaration): string {
 		: `${accessor.getName()}(${parameters})`;
 	const returnType: string = Node.isGetAccessorDeclaration(accessor) ? displayType(accessor.getReturnType()) : '';
 
-	return [prefix, scopePresentation(accessor), header, returnType].filter(isPresent).join(' ') + ';';
+	const presentation: string = [prefix, scopePresentation(accessor), header, returnType].filter(isPresent).join(' ') + ';';
+
+	return formatCode(presentation, 'TypeScript');
 }
 
 /**
@@ -58,9 +60,11 @@ export function accessorPresentation(accessor: AccessorDeclaration): string {
 export function methodPresentation(method: MethodDeclaration): string {
 	const parameters: string = method.getParameters().map(parameterPresentation).join(', ');
 
-	return [scopePresentation(method), `${method.getName()}(${parameters}):`, `${displayType(method.getReturnType())};`]
+	const presentation: string =  [scopePresentation(method), `${method.getName()}(${parameters}):`, `${displayType(method.getReturnType())};`]
 		.filter(isPresent)
 		.join(' ');
+
+	return formatCode(presentation, 'TypeScript');
 }
 
 /**
@@ -70,9 +74,11 @@ export function methodPresentation(method: MethodDeclaration): string {
 export function functionPresentation(fnc: FunctionDeclaration): string {
 	const parameters: string = fnc.getParameters().map(parameterPresentation).join(', ');
 
-	return ['function', `${fnc.getName()}(${parameters}):`, `${displayType(fnc.getReturnType())};`]
+	const presentation: string =  ['function', `${fnc.getName()}(${parameters}):`, `${displayType(fnc.getReturnType())};`]
 		.filter(isPresent)
 		.join(' ');
+
+	return formatCode(presentation, 'TypeScript');
 }
 
 /**
@@ -80,7 +86,9 @@ export function functionPresentation(fnc: FunctionDeclaration): string {
  * @param typeAlias
  */
 export function typeAliasPresentation(typeAlias: TypeAliasDeclaration): string {
-	return typeAlias.getText().replace('export', '').trim();
+	const presentation: string = `type ${typeAlias.getName()} = ${displayType(typeAlias.getType())};`;
+
+	return formatCode(presentation, "TypeScript");
 }
 
 /**
@@ -88,13 +96,15 @@ export function typeAliasPresentation(typeAlias: TypeAliasDeclaration): string {
  * @param variable
  */
 export function variablePresentation(variable: VariableDeclaration): string {
-	return [
+	const presentation: string =  [
 		variable.getVariableStatement()?.getDeclarationKind() ?? 'const',
 		`${variable.getName()}:`,
 		`${displayType(variable.getType())};`,
 	]
 		.filter(isPresent)
 		.join(' ');
+
+	return formatCode(presentation, 'TypeScript');
 }
 
 /**

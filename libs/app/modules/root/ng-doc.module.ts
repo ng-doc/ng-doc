@@ -1,7 +1,6 @@
 import {OverlayModule} from '@angular/cdk/overlay';
 import {HttpClientModule} from '@angular/common/http';
 import {APP_INITIALIZER, ModuleWithProviders, NgModule, Optional} from '@angular/core';
-import {NgDocSearchEngine} from '@ng-doc/app/classes/search-engine';
 import {NgDocRootModule} from '@ng-doc/app/components/root';
 import {NG_DOC_DARK_PURPLE_THEME, NG_DOC_NIGHT_THEME, NG_DOC_STORE_THEME_KEY} from '@ng-doc/app/constants';
 import {NgDocApplicationConfig, NgDocTheme} from '@ng-doc/app/interfaces';
@@ -20,7 +19,6 @@ export class NgDocModule {
 		return {
 			ngModule: NgDocModule,
 			providers: [
-				{provide: NgDocSearchEngine, useValue: new NgDocSearchEngine()},
 				{provide: NG_DOC_THEME, useValue: NG_DOC_NIGHT_THEME, multi: true},
 				{provide: NG_DOC_THEME, useValue: NG_DOC_DARK_PURPLE_THEME, multi: true},
 				...asArray(config?.themes).map((theme: NgDocTheme) => ({

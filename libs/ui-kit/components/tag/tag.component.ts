@@ -15,4 +15,8 @@ export class NgDocTagComponent {
 	@Input()
 	@HostBinding('attr.data-ng-doc-size')
 	size: NgDocTagSize = 'medium';
+
+	@Input()
+	@HostBinding('attr.data-ng-doc-mod')
+	mod: 'default' | 'light' = 'default';
 }

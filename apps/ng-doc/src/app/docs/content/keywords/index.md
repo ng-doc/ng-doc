@@ -38,15 +38,15 @@ We have added a special prefix `*` to use page keywords to notify you of outdate
 So, to create keyword for the page, specify your preferred keyword in your page configuration in
 the `keyword` field.
 
-```typescript
+```typescript fileName="ng-doc.page.ts"
 import {NgDocPage} from '@ng-doc/core';
 
 export const MyAwesomePage: NgDocPage = {
-	title: 'My Awesome Page',
-	mdFile: './index.md',
-	// This keyword can be used to create a link to the page
-	// (e.g. like that "*MyCustomKeyword")
-	keyword: `MyCustomKeyword`,
+  title: 'My Awesome Page',
+  mdFile: './index.md',
+  // This keyword can be used to create a link to the page
+  // (e.g. like that "*MyCustomKeyword")
+  keyword: `MyCustomKeyword`,
 };
 
 export default MyAwesomePage;
@@ -58,15 +58,15 @@ Sometimes it is necessary to create links to third-party documentation or just t
 to create such links you can use global keywords that can be declared in the configuration file,
 you can read about it in the `*GettingStartedConfiguration` article.
 
-```typescript
+```typescript fileName="ng-doc.config.ts"
 import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
-	keywords: {
-		google: {
-			path: 'https://google.com/',
-		},
-	},
+  keywords: {
+    google: {
+      path: 'https://google.com/',
+    },
+  },
 };
 
 export default config;

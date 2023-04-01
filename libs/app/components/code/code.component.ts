@@ -1,6 +1,5 @@
 import {Clipboard} from '@angular/cdk/clipboard';
-import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input, ViewChild} from '@angular/core';
-import {NgDocNotifyService} from '@ng-doc/ui-kit';
+import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input} from '@angular/core';
 
 @Component({
 	selector: 'ng-doc-code',
@@ -16,23 +15,28 @@ export class NgDocCodeComponent {
 	copyButton: boolean = true;
 
 	@Input()
-	@HostBinding('attr.data-ng-doc-standalone')
-	standalone: boolean = true;
+	fileName?: string;
 
-	@ViewChild('htmlContainer', {read: ElementRef})
-	htmlContainer?: ElementRef<HTMLElement>;
+	@Input()
+	lineNumbers: boolean = false;
 
-	@ViewChild('contentContainer', {read: ElementRef})
-	contentContainer?: ElementRef<HTMLElement>;
+	tooltipText: string = '';
 
 	constructor(
 		private elementRef: ElementRef<HTMLElement>,
-		private readonly notifyService: NgDocNotifyService,
 		private readonly clipboard: Clipboard,
 	) {}
 
+	@HostBinding('attr.data-ng-doc-has-header')
+	get hasHeader(): boolean {
+		return !!this.fileName;
+	}
+
+	get codeElement(): HTMLElement | null {
+		return this.elementRef?.nativeElement.querySelector('code') ?? null;
+	}
+
 	copyCode(): void {
-		this.clipboard.copy(this.elementRef.nativeElement.querySelector('code')?.textContent ?? '');
-		this.notifyService.notify('Copied!');
+		this.clipboard.copy(this.codeElement?.textContent ?? '');
 	}
 }
