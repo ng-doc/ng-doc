@@ -55,7 +55,7 @@
 					{%- endif %}
 					<h5 class="no-anchor" indexable="false">Returns</h5>
 					<p>
-						{{ typeMacro.render(method.getReturnType()) }}
+						{{ typeMacro.returnType(method) }}
 					</p>
 				</td>
 			</tr>

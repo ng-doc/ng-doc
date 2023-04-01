@@ -6,7 +6,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/skoropadas/ng-doc">
-    <img src="https://ng-doc.com/assets/images/ng-doc.svg?" alt="Logo" height="100px">
+    <img src="https://ng-doc.com/assets/images/ng-doc.svg?" alt="Logo" height="150px">
   </a>
 
 <h3 align="center">NgDoc</h3>

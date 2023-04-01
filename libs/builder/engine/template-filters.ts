@@ -3,8 +3,8 @@
 export {
 	accessorPresentation,
 	constructorPresentation,
+	displayReturnType,
 	displayType,
-	displayTypeNode,
 	extractDocs,
 	extractParameterDocs,
 	extractSeeDocs,
