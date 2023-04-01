@@ -16,13 +16,27 @@
 	overflow: auto;
 
 	--ng-doc-option-padding: 0;
+
+	&[data-ng-doc-mod='icon'] {
+		.ng-doc-search-wrapper {
+			padding: calc(var(--ng-doc-base-gutter) * 2) 0;
+		}
+
+		.ng-doc-search-option {
+			padding: 12px 16px;
+		}
+	}
 }
 
 .ng-doc-search-wrapper {
 	display: flex;
 	flex-direction: column;
 	height: 100%;
-	padding: calc(var(--ng-doc-base-gutter) * 2);
+	padding: calc(var(--ng-doc-base-gutter) * 2) 0;
+
+	ng-doc-input-wrapper {
+		padding: 0 calc(var(--ng-doc-base-gutter) * 2);
+	}
 
 	.ng-doc-search-result-content {
 		padding: 0;

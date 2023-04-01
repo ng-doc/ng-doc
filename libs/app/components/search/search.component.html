@@ -70,7 +70,7 @@
 	</ng-template>
 
 	<ng-template #searchResults>
-		<div class="ng-doc-search-result-content">
+		<div class="ng-doc-search-result-content" [attr.data-ng-doc-mod]="mod">
 			<ng-doc-data-list [items]="state?.result ?? []" [itemContent]="itemContent" [emptyContent]="emptyContent">
 				<ng-template let-item #itemContent>
 					<a class="ng-doc-search-option" [routerLink]="item.index.route" [fragment]="item.index.fragment">
