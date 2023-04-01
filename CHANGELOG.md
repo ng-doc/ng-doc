@@ -1,3 +1,10 @@
+## [15.10.1](https://github.com/skoropadas/ng-doc/compare/v15.10.0...v15.10.1) (2023-04-01)
+
+
+### Bug Fixes
+
+* **builder:** builder emits error if there are API nodes without type ([ee67112](https://github.com/skoropadas/ng-doc/commit/ee67112fa0acc846f4caf99fbcc61fcd73560e85))
+
 # [15.10.0](https://github.com/skoropadas/ng-doc/compare/v15.9.0...v15.10.0) (2023-04-01)
 
 
