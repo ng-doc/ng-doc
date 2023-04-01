@@ -1,3 +1,10 @@
+## [15.10.2](https://github.com/skoropadas/ng-doc/compare/v15.10.1...v15.10.2) (2023-04-01)
+
+
+### Bug Fixes
+
+* **builder:** logical types are not recognized correctly in playground ([16c348c](https://github.com/skoropadas/ng-doc/commit/16c348c445f72236b3c36d057cb50ae77962a13a))
+
 ## [15.10.1](https://github.com/skoropadas/ng-doc/compare/v15.10.0...v15.10.1) (2023-04-01)
 
 
