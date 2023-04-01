@@ -7,11 +7,12 @@ import {
 	ObjectLiteralElementLike,
 	ObjectLiteralExpression,
 	PropertyDeclaration,
-	Type, TypeNode,
+	Type,
+	TypeFormatFlags,
 } from 'ts-morph';
 
 import {getPlaygroundById} from './get-playground-by-id';
-import {displayType, displayTypeNode} from './typescript';
+import {displayType} from './typescript';
 
 /**
  *
@@ -135,11 +136,10 @@ export function getPlaygroundClassProperties(declaration: ClassDeclaration): NgD
 					?.getArguments()[0]
 					?.getText()
 					.replace(/^["']|['"]$/g, '') ?? property.getName();
-			const typeNode: TypeNode | undefined = property.getTypeNode();
 
 			properties[property.getName()] = {
 				name: inputName,
-				type: typeNode ? displayTypeNode(typeNode) : displayType(property.getType()),
+				type: displayType(property),
 				default: property.getInitializer()?.getText(),
 				description: property
 					.getJsDocs()
@@ -147,7 +147,7 @@ export function getPlaygroundClassProperties(declaration: ClassDeclaration): NgD
 				options: property
 					.getType()
 					.getUnionTypes()
-					.map((type: Type) => displayType(type)),
+					.map((type: Type) => type.getText(undefined, TypeFormatFlags.NoTruncation)),
 			};
 
 			return properties;

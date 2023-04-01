@@ -34,7 +34,7 @@
 							{%- endif %}
 						</div>
 					</td>
-					<td>{{ typeMacro.renderNode(param.getTypeNode()) }}</td>
+					<td>{{ typeMacro.type(param) }}</td>
 					<td>{{ origin | extractParameterDocs(param.getName()) }}</td>
 				</tr>
 			{%- endfor %}
