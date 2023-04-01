@@ -1,3 +1,37 @@
+# [15.10.0](https://github.com/skoropadas/ng-doc/compare/v15.9.0...v15.10.0) (2023-04-01)
+
+
+### Bug Fixes
+
+* **app:** nested `ul` list are displayed with wrong margin ([4b7ae6b](https://github.com/skoropadas/ng-doc/commit/4b7ae6beb8c2e8068dd3a5dc3dc20f346edabff1))
+* **builder:** inline code is lost in indexes ([7157dc0](https://github.com/skoropadas/ng-doc/commit/7157dc067098356c957243a638184ca55d2daaba))
+* **builder:** ng-doc expands type aliases for API ([86ca3ab](https://github.com/skoropadas/ng-doc/commit/86ca3ab0485b63f11b588adbddd8f61d92e833ed))
+* **builder:** ng-doc truncates long literal types ([f1581fd](https://github.com/skoropadas/ng-doc/commit/f1581fdbee7393c0d12778a941337ab02058cb69))
+* **p:** iframes are not styled ([ce4379c](https://github.com/skoropadas/ng-doc/commit/ce4379c49fe557234b6f4cd919805147d8b222ab))
+* **project:** dependency injection error after update to 15.10.0 ([5ca03a1](https://github.com/skoropadas/ng-doc/commit/5ca03a1cbc9615fced9427fea91daa0d60798309))
+* **search:** fix `@oramasearch/orama` warnings and add HTML sanitizer ([378d8aa](https://github.com/skoropadas/ng-doc/commit/378d8aaff88faf6431b3c87e7a5eb63004a13b4f))
+
+
+### Features
+
+* **add:** ng-add command provides `NgDocSearchEngine` automatically ([af535c4](https://github.com/skoropadas/ng-doc/commit/af535c45e5fde814c5302bf071dd10b546d4b247))
+* **app:** add a spinner to the search component to indicate when the search is in progress ([d35c4e8](https://github.com/skoropadas/ng-doc/commit/d35c4e85cd22014b6ec480616a092c720675d18f))
+* **app:** add animation of content changes for tabs and code tooltips ([5fec4ab](https://github.com/skoropadas/ng-doc/commit/5fec4ab04d4f8278407fbaf7a1fed1ae9bab5b94))
+* **app:** add breadcrumbs for guides ([931fd86](https://github.com/skoropadas/ng-doc/commit/931fd86401980c6a18e01cb04feaacda3ac9248b))
+* **app:** code blocks use `--ng-doc-code-background` CSS variable ([75f4d8a](https://github.com/skoropadas/ng-doc/commit/75f4d8ac28f88227fa3747d53d0e8fa56e0dfbe4))
+* **app:** copy to clipboard button now changes its text if code was copied ([f71f7c4](https://github.com/skoropadas/ng-doc/commit/f71f7c4b7791213494a28a925e6cea65d137038e))
+* **app:** search component and search engine improvements ([d865e26](https://github.com/skoropadas/ng-doc/commit/d865e26c490ba8ebd6da57c945cb64d5de4cbb74)), closes [#31](https://github.com/skoropadas/ng-doc/issues/31)
+* **builder:** add `demoPane` method to display demo ([3ce3e32](https://github.com/skoropadas/ng-doc/commit/3ce3e32fe86087cf1ffb4d38f0c3cce8fbc44b46))
+* **builder:** content indexing can be disabled for certain blocks ([43ebeaa](https://github.com/skoropadas/ng-doc/commit/43ebeaa1ee3104879fd79727273ae98fba7a7acb))
+* **builder:** markdown code blocks improvements ([32aa365](https://github.com/skoropadas/ng-doc/commit/32aa36504109e746840826e8880f6b832a52b000))
+* **builder:** now all API presentation are formatted by default ([a7108e8](https://github.com/skoropadas/ng-doc/commit/a7108e89b71a1982c9564d50f707ad6c3e596fd8))
+* **utils:** add new `@ng-doc/utils` package that now contains Post HTML Processor ([0d44b5a](https://github.com/skoropadas/ng-doc/commit/0d44b5a3569ce045da69b7c0b7e76bb43d52c983))
+
+
+### Performance Improvements
+
+* **builder:** improve the indexing process ([02857e2](https://github.com/skoropadas/ng-doc/commit/02857e2e4dd944d756cc085f7c755a0ebf55b898))
+
 # [15.9.0](https://github.com/skoropadas/ng-doc/compare/v15.8.0...v15.9.0) (2023-03-26)
 
 
