@@ -14,8 +14,8 @@ import {
 } from '@angular-devkit/schematics';
 import path, {basename} from 'path';
 
-import {PAGE_NAME} from '../../engine';
-import {extractDefaultExportName} from '../utils';
+import {PAGE_NAME} from '../../engine/variables';
+import {extractDefaultExportName} from '../utils/extract-default-export-name';
 import {NgDocBuildDependenciesSchema} from './schema';
 
 const demoTemplates: string[] = ['ng-doc.module.ts.template'];
