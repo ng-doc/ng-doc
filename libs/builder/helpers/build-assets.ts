@@ -5,7 +5,6 @@ import {NgDocAsset} from '../interfaces';
 import {NgDocSnippet} from '../interfaces/snippet';
 import {codeTypeFromExt} from './code-type-from-ext';
 import {processSnippets} from './process-snippets';
-import {uniqueName} from './unique-name';
 
 /**
  * Builds an asset from a file.
@@ -16,6 +15,7 @@ import {uniqueName} from './unique-name';
  */
 export function buildAssets(filePath: string, styleType: NgDocStyleType): Array<Omit<NgDocAsset, 'outputPath'>> {
 	try {
+		let assetsCounter: number = 0;
 		const fileContent: string = fs.readFileSync(filePath, 'utf8').trim();
 		const snippets: NgDocSnippet[] = processSnippets(fileContent);
 		const codeType: NgDocCodeType = codeTypeFromExt(filePath);
@@ -25,7 +25,7 @@ export function buildAssets(filePath: string, styleType: NgDocStyleType): Array<
 		if (snippets.length) {
 			return snippets.map((snippet: NgDocSnippet) => ({
 				title: snippet.name,
-				name: uniqueName('Asset'),
+				name: `Asset${++assetsCounter}`,
 				originalPath: filePath,
 				code: snippet.content,
 				output: snippet.content,
@@ -40,7 +40,7 @@ export function buildAssets(filePath: string, styleType: NgDocStyleType): Array<
 			return [
 				{
 					title: codeType,
-					name: uniqueName('Asset'),
+					name: `Asset${++assetsCounter}`,
 					originalPath: filePath,
 					code: fileContent,
 					output: fileContent,

@@ -58,7 +58,7 @@ export function getComponentAsset(
 							},
 						})
 						.trim(),
-					outputPath: slash(path.join(outDir, `${asset.name}.html`)),
+					outputPath: slash(path.join(outDir, classDeclaration.getName() ?? '', asset.type, `${asset.name}.html`)),
 				};
 			}),
 		};
