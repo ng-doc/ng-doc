@@ -8,7 +8,7 @@ import {Node, TypeFormatFlags} from 'ts-morph';
 export function displayType(node: Node): string {
 	return (
 		(Node.isTyped(node) && node.getTypeNode()?.getText()) ||
-		(Node.isTyped(node) && node.getType().getText(undefined, TypeFormatFlags.NoTruncation)) ||
+		node.getType().getText(undefined, TypeFormatFlags.NoTruncation) ||
 		''
 	);
 }

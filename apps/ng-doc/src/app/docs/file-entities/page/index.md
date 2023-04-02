@@ -13,7 +13,7 @@ it will ask questions and show hints for required properties. You can find all a
 the interface `NgDocBuildPageSchema`
 
 ```bash
-ng g @ng-doc/builder:page
+ng g @ng-doc/builder:page Installation
 ```
 
 This command will create a folder with your page name and generate `ng-doc.page.ts` and `index.md`

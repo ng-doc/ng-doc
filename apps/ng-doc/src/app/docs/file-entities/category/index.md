@@ -13,7 +13,7 @@ it will ask questions and show hints for required properties. You can find all a
 the interface `NgDocBuildCategorySchema`
 
 ```bash
-ng g @ng-doc/builder:category
+ng g @ng-doc/builder:category "Getting Started"
 ```
 
 This command will create folder with you category name and generate `ng-doc.category.ts` file
