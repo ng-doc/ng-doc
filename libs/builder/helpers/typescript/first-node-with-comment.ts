@@ -6,6 +6,6 @@ import {JSDocableNode} from 'ts-morph';
  *
  * @param nodes
  */
-export function firstNodeWithComment(nodes: JSDocableNode[]): JSDocableNode {
+export function firstNodeWithComment<T extends JSDocableNode>(nodes: T[]): T {
 	return nodes.find((n: JSDocableNode) => n.getJsDocs().length) ?? nodes[0];
 }
