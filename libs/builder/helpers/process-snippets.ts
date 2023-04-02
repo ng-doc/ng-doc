@@ -40,13 +40,14 @@ function findSnippet(
 	snippetStart: RegExp,
 	snippetEnd: (group?: string) => RegExp,
 ): NgDocSnippet[] {
+	let snippetCounter: number = 0;
 	const snippets: NgDocSnippet[] = [];
 	const startRegexp: RegExp = new RegExp(snippetStart);
 	let matchStart: RegExpExecArray | null;
 
 	// eslint-disable-next-line no-cond-assign
 	while ((matchStart = startRegexp.exec(content))) {
-		const group: string = matchStart[2] ? matchStart[2].slice(1, matchStart[2].length - 1) : '';
+		const group: string = matchStart[2] ? matchStart[2].slice(1, matchStart[2].length - 1) : `Code Snippet ${++snippetCounter}`;
 		const matchEnd: RegExpExecArray | null = snippetEnd(group).exec(content);
 
 		if (matchEnd) {
