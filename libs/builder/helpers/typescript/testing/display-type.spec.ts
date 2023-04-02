@@ -1,4 +1,12 @@
-import {ClassDeclaration, Project, SourceFile} from 'ts-morph';
+import {de} from '@orama/orama/dist/components/tokenizer/stop-words/de';
+import {
+	ClassDeclaration,
+	EnumDeclaration,
+	InterfaceDeclaration,
+	Project,
+	SourceFile,
+	TypeAliasDeclaration
+} from 'ts-morph';
 
 import {createProject} from '../create-project';
 import {displayReturnType, displayType} from '../display-type';
@@ -288,4 +296,81 @@ describe('displayType', () => {
 			expect(displayType(declaration.getImplements()[0])).toBe(`Test`);
 		})
 	});
+
+	describe('Interface', () => {
+		it('should return thw type of extended interface', () => {
+			const sourceFile: SourceFile = project.createSourceFile(
+				'class.ts',
+				`
+				interface Test {
+					property: string;
+				}
+
+				interface Test2 extends Test {
+				}
+			`,
+			);
+			const declaration: InterfaceDeclaration = sourceFile.getInterfaceOrThrow('Test2');
+
+			expect(displayType(declaration.getExtends()[0])).toBe(`Test`);
+		})
+	})
+
+	describe('Type Alias', () => {
+		it('should return the type of a type alias', () => {
+			const sourceFile: SourceFile = project.createSourceFile(
+				'class.ts',
+				`
+				type Test = string;
+			`,
+			);
+			const declaration: TypeAliasDeclaration = sourceFile.getTypeAliasOrThrow('Test');
+
+			expect(displayType(declaration)).toBe(`string`);
+		})
+
+		it('should return the type of a type alias for union type', () => {
+			const sourceFile: SourceFile = project.createSourceFile(
+				'class.ts',
+				`
+				type Test = 'value1' | 'value2';
+			`,
+			);
+			const declaration: TypeAliasDeclaration = sourceFile.getTypeAliasOrThrow('Test');
+
+			expect(displayType(declaration)).toBe(`Test`);
+		})
+	})
+
+	describe('Enum', () => {
+		it('should return the type of a enum', () => {
+			const sourceFile: SourceFile = project.createSourceFile(
+				'class.ts',
+				`
+				enum Test {
+					VALUE1 = 'value1',
+					VALUE2 = 'value2'
+				}
+			`,
+			);
+			const declaration: EnumDeclaration = sourceFile.getEnumOrThrow('Test');
+
+			expect(displayType(declaration)).toBe(`Test`);
+		})
+
+		it('should return the type of a enum member', () => {
+			const sourceFile: SourceFile = project.createSourceFile(
+				'class.ts',
+				`
+				enum Test {
+					VALUE1 = 'value1',
+					VALUE2 = 'value2'
+				}
+			`,
+			);
+			const declaration: EnumDeclaration = sourceFile.getEnumOrThrow('Test');
+
+			expect(displayType(declaration.getMemberOrThrow('VALUE1'))).toBe(`Test.VALUE1`);
+		})
+	})
 });
