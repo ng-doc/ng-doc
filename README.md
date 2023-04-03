@@ -6,7 +6,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/skoropadas/ng-doc">
-    <img src="https://ng-doc.com/assets/images/ng-doc.svg?" alt="Logo" height="150px">
+    <img src="https://ng-doc.com/assets/images/ng-doc.svg?raw=true" alt="Logo" height="150px">
   </a>
 
 <h3 align="center">NgDoc</h3>
@@ -43,9 +43,7 @@ NgDoc allows you to do the following things:
   inline code
 - Offline search that collects indexes automatically based on you documentation
 - Customizable interface
-- And much more, just check out
-  our [roadmap](https://ng-doc.com/getting-started/roadmap) to find out what will be in future
-  releases.
+- And much more!
 
 <!-- GETTING STARTED -->
 

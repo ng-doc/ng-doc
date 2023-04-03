@@ -4,7 +4,6 @@ export * from './create-project';
 export * from './display-type';
 export * from './filter-by-scope';
 export * from './filter-by-static';
-export * from './find-declaration';
 export * from './first-node-with-comment';
 export * from './interface';
 export * from './member';

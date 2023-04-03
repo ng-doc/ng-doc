@@ -17,6 +17,7 @@ export * from './get-demo-class-declarations';
 export * from './get-entity-constructor';
 export * from './get-keyword-type-from-entity';
 export * from './get-kind-type';
+export * from './get-page-type';
 export * from './get-playground-by-id';
 export * from './get-playground-properties';
 export * from './import-es-module';

@@ -94,6 +94,12 @@
 			"files": ["*.js", "*.jsx"],
 			"extends": ["plugin:@nrwl/nx/javascript"],
 			"rules": {}
+		},
+		{
+			"files": ["*.spec.ts"],
+			"rules": {
+				"@typescript-eslint/no-non-null-assertion": "off"
+			}
 		}
 	]
 }

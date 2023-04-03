@@ -3,7 +3,6 @@ export * from './asset';
 export * from './builder-context';
 export * from './built-output';
 export * from './configuration';
-export * from './page-index';
 export * from './path-anchor';
 export * from './renderer-options';
 export * from './repo-config';
