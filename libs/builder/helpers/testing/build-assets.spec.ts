@@ -35,7 +35,7 @@ describe('buildAssets', () => {
 		expect(result).toStrictEqual([
 			{
 				title: 'HTML',
-				name: 'Asset1',
+				name: 'Asset',
 				originalPath: filePath,
 				code: fileContent,
 				output: fileContent,
@@ -61,7 +61,7 @@ describe('buildAssets', () => {
 		expect(result).toStrictEqual([
 			{
 				title: 'Code Snippet 1',
-				name: 'Asset1',
+				name: 'Asset',
 				originalPath: filePath,
 				code: snippetContent,
 				output: snippetContent,
@@ -91,7 +91,7 @@ describe('buildAssets', () => {
 		expect(result).toStrictEqual([
 			{
 				title: 'Code Snippet 1',
-				name: 'Asset1',
+				name: 'Asset',
 				originalPath: filePath,
 				code: snippetContent1,
 				output: snippetContent1,
@@ -121,7 +121,7 @@ describe('buildAssets', () => {
 		expect(result).toStrictEqual([
 			{
 				title: 'Snippet1',
-				name: 'Asset1',
+				name: 'Asset',
 				originalPath: filePath,
 				code: snippetContent1,
 				output: snippetContent1,
@@ -129,7 +129,7 @@ describe('buildAssets', () => {
 			},
 			{
 				title: 'Snippet2',
-				name: 'Asset2',
+				name: 'Asset',
 				originalPath: filePath,
 				code: snippetContent2,
 				output: snippetContent2,

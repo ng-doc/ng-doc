@@ -61,7 +61,8 @@
 			"outputs": ["coverage/libs/builder"],
 			"options": {
 				"jestConfig": "libs/builder/jest.config.ts",
-				"passWithNoTests": true
+				"passWithNoTests": true,
+				"runInBand": true
 			}
 		}
 	},

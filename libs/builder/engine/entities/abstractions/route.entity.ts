@@ -1,7 +1,7 @@
-import {NgDocPageIndex} from '@ng-doc/core';
+import {asArray, NgDocPageIndex} from '@ng-doc/core';
 import * as path from 'path';
 
-import {slash} from '../../../helpers';
+import {isRouteEntity, slash} from '../../../helpers';
 import {NgDocModuleEntity} from './module.entity';
 
 export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T> {
@@ -45,5 +45,12 @@ export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T>
 			this.parent instanceof NgDocRouteEntity ? this.parent.fullRoute : this.context.config.routePrefix ?? '';
 
 		return slash(path.join('/', parentRoute, this.route));
+	}
+
+	/**
+	 * Returns breadcrumbs for the current entity
+	 */
+	get breadcrumbs(): string[] {
+		return isRouteEntity(this.parent) ? [...asArray(this?.parent?.breadcrumbs), this.title] : [this.title];
 	}
 }

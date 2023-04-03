@@ -1,79 +1,72 @@
+import {NgDocPageType} from '@ng-doc/core';
 import {NgDocPageIndex} from '@ng-doc/core/interfaces';
-import {create} from '@orama/orama';
+import {create, stemmers} from '@orama/orama';
 import {defaultHtmlSchema, NodeContent, populate} from '@orama/plugin-parsedoc';
-import * as path from 'path';
 import {from} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 
-import {NgDocEntity} from '../engine/entities/abstractions/entity';
-import {NgDocRouteEntity} from '../engine/entities/abstractions/route.entity';
-import {NgDocBuiltOutput} from '../interfaces';
-import {isApiPageEntity, isRouteEntity} from './entity-type';
 import {importEsModule} from './import-es-module';
 
-/**
- *
- * @param entity
- * @param artifacts
- */
-export async function buildIndexes(entity: NgDocEntity, artifacts: NgDocBuiltOutput[]): Promise<NgDocPageIndex[]> {
-	const pages: NgDocPageIndex[] = [];
-
-	if (entity instanceof NgDocRouteEntity) {
-		const htmlArifacts: NgDocBuiltOutput[] = artifacts.filter(
-			(artifact: NgDocBuiltOutput) => path.extname(artifact.filePath) === '.html',
-		);
-
-		for (const artifact of htmlArifacts) {
-			const db = await create({
-				schema: {
-					...defaultHtmlSchema,
-				},
-			});
-
-			const indexableContent: string = await removeNotIndexableContent(artifact.content);
-
-			await populate(db, indexableContent, 'html', {
-				transformFn: (node: NodeContent) => transformFn(node),
-			});
-
-			let section: typeof defaultHtmlSchema | undefined;
-
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			Object.values(db.data.docs.docs as unknown as Array<typeof defaultHtmlSchema>)
-				.filter(isIndexable)
-				.forEach((doc?: typeof defaultHtmlSchema) => {
-					if (doc) {
-						if (isHeading(doc)) {
-							section = doc;
-						} else {
-							pages.push({
-								breadcrumbs: buildBreadcrumbs(entity),
-								pageType: isApiPageEntity(entity) ? 'api' : 'guide',
-								title: entity.title,
-								section: section?.content ?? '',
-								route: entity.fullRoute,
-								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-								// @ts-ignore
-								fragment: section?.properties && section.properties['id'],
-								content: doc.content.toString() === '%%API_NAME_ANCHOR%%' ? undefined : doc.content.toString(),
-							});
-						}
-					}
-				});
-		}
-	}
-
-	return pages;
+export interface NgDocIndexBuilderConfig {
+	title: string;
+	content: string;
+	breadcrumbs: string[];
+	pageType: NgDocPageType;
+	route: string;
 }
 
 /**
+ *	Builds the indexes for a given content
  *
- * @param entity
+ * @param config
  */
-function buildBreadcrumbs(entity: NgDocRouteEntity): string[] {
-	return isRouteEntity(entity.parent) ? [...buildBreadcrumbs(entity.parent), entity.title] : [entity.title];
+export async function buildIndexes(config: NgDocIndexBuilderConfig): Promise<NgDocPageIndex[]> {
+	const pages: NgDocPageIndex[] = [];
+
+	const db = await create({
+		schema: {
+			...defaultHtmlSchema,
+		},
+		components: {
+			tokenizer: {
+				stemmer: stemmers.english
+			}
+		}
+	});
+
+	const indexableContent: string = await removeNotIndexableContent(config.content);
+
+	await populate(db, indexableContent, 'html', {
+		transformFn: (node: NodeContent) => transformFn(node),
+	});
+
+	let section: typeof defaultHtmlSchema | undefined;
+
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	Object.values(db.data.docs.docs as unknown as Array<typeof defaultHtmlSchema>)
+		.filter(isIndexable)
+		.forEach((doc?: typeof defaultHtmlSchema) => {
+			if (doc) {
+				if (isHeading(doc)) {
+					section = doc;
+				} else {
+					pages.push({
+						breadcrumbs: config.breadcrumbs,
+						pageType: config.pageType,
+						title: config.title,
+						section: section?.content ?? '',
+						route: config.route,
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
+						fragment: section?.properties && section.properties['id'],
+						content: doc.content.toString() === '%%API_NAME_ANCHOR%%' ? undefined : doc.content.toString(),
+					});
+				}
+			}
+		});
+
+	return pages;
 }
 
 /**

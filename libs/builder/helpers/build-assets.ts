@@ -15,7 +15,6 @@ import {processSnippets} from './process-snippets';
  */
 export function buildAssets(filePath: string, styleType: NgDocStyleType): Array<Omit<NgDocAsset, 'outputPath'>> {
 	try {
-		let assetsCounter: number = 0;
 		const fileContent: string = fs.readFileSync(filePath, 'utf8').trim();
 		const snippets: NgDocSnippet[] = processSnippets(fileContent);
 		const codeType: NgDocCodeType = codeTypeFromExt(filePath);
@@ -25,7 +24,7 @@ export function buildAssets(filePath: string, styleType: NgDocStyleType): Array<
 		if (snippets.length) {
 			return snippets.map((snippet: NgDocSnippet) => ({
 				title: snippet.name,
-				name: `Asset${++assetsCounter}`,
+				name: `Asset`,
 				originalPath: filePath,
 				code: snippet.content,
 				output: snippet.content,
@@ -40,7 +39,7 @@ export function buildAssets(filePath: string, styleType: NgDocStyleType): Array<
 			return [
 				{
 					title: codeType,
-					name: `Asset${++assetsCounter}`,
+					name: `Asset`,
 					originalPath: filePath,
 					code: fileContent,
 					output: fileContent,

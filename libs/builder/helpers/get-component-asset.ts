@@ -44,7 +44,7 @@ export function getComponentAsset(
 		];
 
 		return {
-			[classDeclaration.getName() ?? '']: assets.map((asset: Omit<NgDocAsset, 'outputPath'>) => {
+			[classDeclaration.getName() ?? '']: assets.map((asset: Omit<NgDocAsset, 'outputPath'>, i: number) => {
 				const code: string = formatCode(asset.output, asset.type);
 
 				return {
@@ -58,7 +58,7 @@ export function getComponentAsset(
 							},
 						})
 						.trim(),
-					outputPath: slash(path.join(outDir, classDeclaration.getName() ?? '', asset.type, `${asset.name}.html`)),
+					outputPath: slash(path.join(outDir, classDeclaration.getName() ?? '', asset.type, `${asset.name}${i}.html`)),
 				};
 			}),
 		};
