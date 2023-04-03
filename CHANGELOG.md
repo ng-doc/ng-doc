@@ -1,3 +1,16 @@
+## [15.10.4](https://github.com/skoropadas/ng-doc/compare/v15.10.3...v15.10.4) (2023-04-03)
+
+
+### Bug Fixes
+
+* **builder:** api doesn't display `undefined` for optional types if `strict` mode is enabled ([1a812a2](https://github.com/skoropadas/ng-doc/commit/1a812a2c550263b3119ccfd914c05b02dd543df7))
+* **builder:** remove unused duplicate of `NgDocPageIndex` interface ([8c65331](https://github.com/skoropadas/ng-doc/commit/8c65331f82cf3ddb83cdadabe6de8a88d448cad6))
+
+
+### Performance Improvements
+
+* **utils:** html post processor doesn't wrap the html with the body tag anymore ([6118a7e](https://github.com/skoropadas/ng-doc/commit/6118a7edd994b3866d6bb9e0ad822a4360d5c89e))
+
 ## [15.10.3](https://github.com/skoropadas/ng-doc/compare/v15.10.2...v15.10.3) (2023-04-02)
 
 
