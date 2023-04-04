@@ -2,11 +2,13 @@ import {Node, TypeFormatFlags} from 'ts-morph';
 
 /**
  *
- * @param type
  * @param node
+ * @param typeFormatFlags
  */
 export function displayType(node: Node): string {
-	return node.getType().getText(undefined, TypeFormatFlags.NoTruncation)
+	return Node.isTypeAliasDeclaration(node)
+		? node.getTypeNodeOrThrow().getText(undefined)
+		:node.getType().getText(undefined, TypeFormatFlags.NoTruncation)
 }
 
 /**
