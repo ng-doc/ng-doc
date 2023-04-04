@@ -11,6 +11,7 @@ import {
 	ReadonlyableNode,
 	Scope,
 	ScopeableNode,
+	StaticableNode,
 	TypeAliasDeclaration,
 	TypeFormatFlags,
 	VariableDeclaration,
@@ -32,7 +33,7 @@ export function constructorPresentation(constructor: ConstructorDeclaration): st
 		displayReturnType(constructor),
 	]
 		.filter(isPresent)
-		.join(' ');
+		.join(' ') + ';';
 
 	return formatCode(presentation, 'TypeScript');
 }
@@ -49,7 +50,7 @@ export function accessorPresentation(accessor: AccessorDeclaration): string {
 		: `${accessor.getName()}(${parameters})`;
 	const returnType: string = Node.isGetAccessorDeclaration(accessor) ? displayReturnType(accessor) : '';
 
-	const presentation: string = [prefix, scopePresentation(accessor), header, returnType].filter(isPresent).join(' ') + ';';
+	const presentation: string = [staticPresentation(accessor), scopePresentation(accessor), prefix, header, returnType].filter(isPresent).join(' ') + ';';
 
 	return formatCode(presentation, 'TypeScript');
 }
@@ -61,7 +62,7 @@ export function accessorPresentation(accessor: AccessorDeclaration): string {
 export function methodPresentation(method: MethodDeclaration): string {
 	const parameters: string = method.getParameters().map(parameterPresentation).join(', ');
 
-	const presentation: string =  [scopePresentation(method), `${method.getName()}(${parameters}):`, `${displayReturnType(method)};`]
+	const presentation: string =  [memberModifiers(method), staticPresentation(method), scopePresentation(method), `${method.getName()}(${parameters}):`, `${displayReturnType(method)};`]
 		.filter(isPresent)
 		.join(' ');
 
@@ -87,7 +88,7 @@ export function functionPresentation(fnc: FunctionDeclaration): string {
  * @param typeAlias
  */
 export function typeAliasPresentation(typeAlias: TypeAliasDeclaration): string {
-	const presentation: string = `type ${typeAlias.getName()} = ${typeAlias.getType().getText(undefined, TypeFormatFlags.NoTruncation)};`;
+	const presentation: string = `type ${typeAlias.getName()} = ${displayType(typeAlias)};`;
 
 	return formatCode(presentation, "TypeScript");
 }
@@ -119,7 +120,7 @@ function parameterPresentation(parameter: ParameterDeclaration): string {
 		modPresentation(parameter),
 		parameter.getName() + (parameter.hasQuestionToken() ? '?' : '') + ':',
 		displayType(parameter),
-		parameter.getInitializer() ? `= ${parameter.getInitializer()}` : '',
+		parameter.getInitializer() ? `= ${parameter.getInitializer()?.getText() ?? ''}` : '',
 	]
 		.filter(isPresent)
 		.join(' ');
@@ -131,6 +132,27 @@ function parameterPresentation(parameter: ParameterDeclaration): string {
  */
 function scopePresentation(node: ScopeableNode): string {
 	return (node.getScope && node.getScope()?.replace(Scope.Public, '')) ?? '';
+}
+
+/**
+ *
+ * @param node
+ */
+function staticPresentation(node: StaticableNode): string {
+	return node.isStatic() ? 'static' : '';
+}
+
+/**
+ *
+ * @param member
+ */
+function memberModifiers(member: Node): string {
+	return [
+		(Node.isAbstractable(member) && member.isAbstract() && 'abstract') || '',
+		(Node.isAsyncable(member) && member.isAsync() && 'async') || '',
+	]
+		.filter(isPresent)
+		.join(' ');
 }
 
 /**

@@ -1,7 +1,7 @@
 import {de} from '@orama/orama/dist/components/tokenizer/stop-words/de';
 import {
 	ClassDeclaration,
-	EnumDeclaration,
+	EnumDeclaration, FunctionDeclaration,
 	InterfaceDeclaration,
 	Project,
 	SourceFile,
@@ -338,7 +338,7 @@ describe('displayType', () => {
 			);
 			const declaration: TypeAliasDeclaration = sourceFile.getTypeAliasOrThrow('Test');
 
-			expect(displayType(declaration)).toBe(`Test`);
+			expect(displayType(declaration)).toBe(`'value1' | 'value2'`);
 		})
 	})
 
@@ -371,6 +371,64 @@ describe('displayType', () => {
 			const declaration: EnumDeclaration = sourceFile.getEnumOrThrow('Test');
 
 			expect(displayType(declaration.getMemberOrThrow('VALUE1'))).toBe(`Test.VALUE1`);
+		})
+	})
+
+	describe('Function', () => {
+		it('should return the type of a function', () => {
+			const sourceFile: SourceFile = project.createSourceFile(
+				'class.ts',
+				`
+				function test(): string {
+					return 'string';
+				}
+			`,
+			);
+			const declaration: FunctionDeclaration = sourceFile.getFunctionOrThrow('test');
+
+			expect(displayReturnType(declaration)).toBe(`string`);
+		})
+
+		it('should return the type of a parameter', () => {
+			const sourceFile: SourceFile = project.createSourceFile(
+				'class.ts',
+				`
+				function test(param: string): string {
+					return param;
+				}
+			`,
+			);
+			const declaration: FunctionDeclaration = sourceFile.getFunctionOrThrow('test');
+
+			expect(displayType(declaration.getParameterOrThrow('param'))).toBe(`string`);
+		})
+
+		it('should return the type of a optional parameter', () => {
+			const sourceFile: SourceFile = project.createSourceFile(
+				'class.ts',
+				`
+				function test(param?: string): string {
+					return param;
+				}
+			`,
+			);
+			const declaration: FunctionDeclaration = sourceFile.getFunctionOrThrow('test');
+
+			expect(displayType(declaration.getParameterOrThrow('param'))).toBe(`string | undefined`);
+		})
+
+		it('should return the type of a parameter with default value', () => {
+			const sourceFile: SourceFile = project.createSourceFile(
+				'class.ts',
+				`
+				function test(param = false): string {
+					return param;
+				}
+			`,
+			);
+			const declaration: FunctionDeclaration = sourceFile.getFunctionOrThrow('test');
+
+			expect(displayType(declaration.getParameterOrThrow('param'))).toBe(`boolean`);
 		})
 	})
 });
