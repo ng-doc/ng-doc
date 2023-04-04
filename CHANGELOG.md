@@ -1,3 +1,10 @@
+## [15.10.5](https://github.com/skoropadas/ng-doc/compare/v15.10.4...v15.10.5) (2023-04-04)
+
+
+### Bug Fixes
+
+* **builder:** default param value displayed as [object Object] in API presentations ([30fb08b](https://github.com/skoropadas/ng-doc/commit/30fb08b5691fc8025c3c2912799afee1c209c29c)), closes [#40](https://github.com/skoropadas/ng-doc/issues/40)
+
 ## [15.10.4](https://github.com/skoropadas/ng-doc/compare/v15.10.3...v15.10.4) (2023-04-03)
 
 
