@@ -138,8 +138,8 @@ function scopePresentation(node: ScopeableNode): string {
  *
  * @param node
  */
-function staticPresentation(node: StaticableNode): string {
-	return node.isStatic() ? 'static' : '';
+function staticPresentation(node: Node): string {
+	return Node.isStaticable(node) && node.isStatic() ? 'static' : '';
 }
 
 /**
