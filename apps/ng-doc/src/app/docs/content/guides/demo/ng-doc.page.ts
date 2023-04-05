@@ -3,7 +3,7 @@ import {NgDocPage} from '@ng-doc/core';
 import GuidesCategory from '../ng-doc.category';
 
 const DemoPage: NgDocPage = {
-  title: 'Demo',
+  title: 'Demo1',
   mdFile: './index.md',
   category: GuidesCategory,
   order: 2,

@@ -23,18 +23,7 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 			this.buildGeneratedModule(),
 			this.buildRoutes(),
 			this.buildContext(),
-			this.buildIndexes(),
-		]).pipe(
-			map(
-				([index, generatedModule, routes, context, indexes]: [
-					NgDocBuiltOutput,
-					NgDocBuiltOutput,
-					NgDocBuiltOutput,
-					NgDocBuiltOutput,
-					NgDocBuiltOutput[],
-				]) => [index, generatedModule, routes, context, ...indexes],
-			),
-		);
+		])
 	}
 
 	private buildRoutes(): Observable<NgDocBuiltOutput> {
@@ -74,22 +63,6 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 				content: output,
 				filePath: path.join(this.context.buildPath, 'ng-doc.generated.module.ts'),
 			})),
-		);
-	}
-
-	private buildIndexes(): Observable<NgDocBuiltOutput[]> {
-		const allIndexes: NgDocPageIndex[] = this.builder.entities
-			.asArray()
-			.map((entity: NgDocEntity) => entity.indexes)
-			.flat();
-
-		return of(allIndexes).pipe(
-			map((sectionIndexes: NgDocPageIndex[]) => [
-				{
-					content: JSON.stringify(sectionIndexes, null, 2),
-					filePath: path.join(this.context.assetsPath, 'indexes.json'),
-				},
-			]),
 		);
 	}
 

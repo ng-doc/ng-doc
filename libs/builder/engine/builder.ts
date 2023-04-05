@@ -1,8 +1,7 @@
 import {isPresent} from '@ng-doc/core';
 import * as esbuild from 'esbuild';
-import * as fs from 'fs';
 import * as path from 'path';
-import {from, merge, Observable, of} from 'rxjs';
+import {forkJoin, from, merge, Observable, of} from 'rxjs';
 import {
 	catchError,
 	concatMap,
@@ -18,7 +17,7 @@ import {
 } from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
-import {createProject, emitBuiltOutput, isFileEntity} from '../helpers';
+import {createProject, emitBuiltOutput, invalidateCacheIfNecessary, isFileEntity} from '../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
 import {bufferDebounce} from '../operators';
 import {bufferUntilOnce} from '../operators/buffer-until-once';
@@ -32,6 +31,7 @@ import {
 } from './entities';
 import {NgDocEntity} from './entities/abstractions/entity';
 import {NgDocFileEntity} from './entities/abstractions/file.entity';
+import {NgDocIndexesEntity} from './entities/indexes.entity';
 import {entityLifeCycle} from './entity-life-cycle';
 import {NgDocEntityStore} from './entity-store';
 import {buildCandidates} from './functions/build-candidates';
@@ -42,6 +42,7 @@ import {NgDocWatcher} from './watcher';
 export class NgDocBuilder {
 	readonly entities: NgDocEntityStore = new NgDocEntityStore();
 	readonly skeleton: NgDocSkeletonEntity = new NgDocSkeletonEntity(this, this.context);
+	readonly indexes: NgDocIndexesEntity = new NgDocIndexesEntity(this, this.context);
 	readonly renderer: NgDocRenderer = new NgDocRenderer();
 	readonly project: Project;
 
@@ -50,7 +51,9 @@ export class NgDocBuilder {
 	}
 
 	run(): Observable<void> {
-		fs.rmSync(this.context.buildPath, {recursive: true, force: true});
+		invalidateCacheIfNecessary();
+
+		console.time('build');
 
 		const watcher: NgDocWatcher = new NgDocWatcher(
 			this.context.pagesPaths
@@ -127,12 +130,7 @@ export class NgDocBuilder {
 													),
 													startWith(null),
 													mapTo(entity),
-													takeUntil(
-														merge(
-															entity.onDestroy(),
-															watcher.onChange(...entity.rootFiles),
-														),
-													),
+													takeUntil(merge(entity.onDestroy(), watcher.onChange(...entity.rootFiles))),
 											  ),
 									),
 							  )
@@ -151,9 +149,13 @@ export class NgDocBuilder {
 					}),
 				).pipe(
 					switchMap((output: NgDocBuiltOutput[][]) =>
-						this.skeleton
-							.buildArtifacts()
-							.pipe(map((skeleton: NgDocBuiltOutput[]) => [...output.flat(), ...skeleton])),
+						forkJoin([this.skeleton.buildArtifacts(), this.indexes.buildArtifacts()]).pipe(
+							map(([skeleton, indexes]: [NgDocBuiltOutput[], NgDocBuiltOutput[]]) => [
+								...output.flat(),
+								...skeleton,
+								...indexes,
+							]),
+						),
 					),
 					tap((output: NgDocBuiltOutput[]) => {
 						/*
@@ -162,6 +164,7 @@ export class NgDocBuilder {
 						 */
 						emitBuiltOutput(...output);
 						this.collectGarbage();
+						console.timeEnd('build');
 					}),
 				),
 			),

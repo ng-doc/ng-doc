@@ -4,7 +4,7 @@ import {forkJoin, from, Observable, of, Subject} from 'rxjs';
 import {catchError, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
 
 import {ObservableSet} from '../../../classes';
-import {codeTypeFromExt, getPageType, importEsModule, isRouteEntity} from '../../../helpers';
+import {codeTypeFromExt, getPageType, importEsModule, isCacheValid, isRouteEntity, updateCache} from '../../../helpers';
 import {buildIndexes} from '../../../helpers/build-indexes';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../../interfaces';
 import {NgDocBuilder} from '../../builder';
@@ -66,8 +66,7 @@ export abstract class NgDocEntity {
 	 */
 	abstract readonly buildCandidates: NgDocEntity[];
 
-	constructor(readonly builder: NgDocBuilder, readonly context: NgDocBuilderContext) {
-	}
+	constructor(readonly builder: NgDocBuilder, readonly context: NgDocBuilderContext) {}
 
 	/** Indicates if the current entity can be built */
 	get canBeBuilt(): boolean {
@@ -131,6 +130,13 @@ export abstract class NgDocEntity {
 	}
 
 	/**
+	 * Returns the list of paths that can be cached for the current entity
+	 */
+	get cachedPaths(): string[] {
+		return this.rootFiles.concat(this.dependencies.asArray());
+	}
+
+	/**
 	 * Build all artifacts that need for application.
 	 * This is the last method in the build process, should return output that should be emitted to the file system
 	 */
@@ -153,28 +159,32 @@ export abstract class NgDocEntity {
 	}
 
 	buildArtifacts(): Observable<NgDocBuiltOutput[]> {
-		return this.build().pipe(
-			// TODO: make it async
-			switchMap((output: NgDocBuiltOutput[]) => this.processArtifacts(output)),
-			map((artifacts: NgDocBuiltOutput[]) => {
-				/*
-						We are checking that artifacts result was changed, otherwise we don't want to emit
-						the same files to file system, because it will force Angular to rebuild application
-					 */
-				if (artifacts.every((a: NgDocBuiltOutput, i: number) => a.content === this.artifacts[i]?.content)) {
-					return [];
-				}
+		return this.cachedPaths.length && isCacheValid(this.id, this.cachedPaths)
+			? of([])
+			: this.build().pipe(
+					switchMap((output: NgDocBuiltOutput[]) => this.processArtifacts(output)),
+					map((artifacts: NgDocBuiltOutput[]) => {
+						/*
+							We are checking that artifacts result was changed, otherwise we don't want to emit
+							the same files to file system, because it will force Angular to rebuild application
+						 */
+						if (artifacts.every((a: NgDocBuiltOutput, i: number) => a.content === this.artifacts[i]?.content)) {
+							return [];
+						}
 
-				this.artifacts = artifacts;
-				return this.artifacts;
-			}),
-			catchError((e: Error) => {
-				this.logger.error(`Error during processing "${this.id}"\n${e.message}\n${e.stack}`);
-				this.readyToBuild = false;
+						this.artifacts = artifacts;
 
-				return of([]);
-			}),
-		);
+						updateCache(this.id, this.cachedPaths);
+
+						return this.artifacts;
+					}),
+					catchError((e: Error) => {
+						this.logger.error(`Error during processing "${this.id}"\n${e.message}\n${e.stack}`);
+						this.readyToBuild = false;
+
+						return of([]);
+					}),
+			  );
 	}
 
 	emit(): Observable<void> {
@@ -236,28 +246,28 @@ export abstract class NgDocEntity {
 			}),
 		).pipe(
 			switchMap((artifacts: NgDocBuiltOutput[]) => {
-				const htmlArtifacts = artifacts
-					.filter((artifact: NgDocBuiltOutput) => codeTypeFromExt(artifact.filePath) === 'HTML');
+				const htmlArtifacts = artifacts.filter(
+					(artifact: NgDocBuiltOutput) => codeTypeFromExt(artifact.filePath) === 'HTML',
+				);
 
 				return htmlArtifacts.length === 0
 					? of(artifacts)
 					: forkJoin(
-						htmlArtifacts
-							.map((artifact: NgDocBuiltOutput) =>
+							htmlArtifacts.map((artifact: NgDocBuiltOutput) =>
 								isRouteEntity(this)
 									? buildIndexes({
-										title: this.title,
-										content: artifact.content,
-										pageType: getPageType(this),
-										breadcrumbs: this.breadcrumbs,
-										route: isRouteEntity(this) ? this.fullRoute : '',
-									})
+											title: this.title,
+											content: artifact.content,
+											pageType: getPageType(this),
+											breadcrumbs: this.breadcrumbs,
+											route: isRouteEntity(this) ? this.fullRoute : '',
+									  })
 									: of([]),
 							),
-					).pipe(
-						tap((indexes: NgDocPageIndex[][]) => (this.indexes = indexes.flat())),
-						mapTo(artifacts),
-					);
+					  ).pipe(
+							tap((indexes: NgDocPageIndex[][]) => (this.indexes = indexes.flat())),
+							mapTo(artifacts),
+					  );
 			}),
 		);
 	}
