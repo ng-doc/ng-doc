@@ -21,6 +21,18 @@ the `-m` argument.
 ng g @ng-doc/builder:dependencies
 ```
 
+## Module
+
+The module that you need to pass in the `module` field should be Angular `NgModule`, you can create
+it yourself next to the dependency file or when generating it.
+
+What `NgModule` should include:
+
+- `imports` - should contain all the dependencies that you need for your demos and playgrounds
+- `declarations` - a list of demos that you have created specifically for this page
+- `exports` - a list of modules that are needed for the playgrounds
+
+
 ## Configuration
 
 {% include "../../shared/export-by-default.md" %}
@@ -52,17 +64,6 @@ const MyPageDependencies: NgDocDependencies = {
 
 export default MyPageDependencies;
 ```
-
-## Module
-
-The module that you need to pass in the `module` field should be Angular `NgModule`, you can create
-it yourself next to the dependency file or when generating it.
-
-What `NgModule` should include:
-
-- `imports` - should contain all the dependencies that you need for your demos and playgrounds
-- `declarations` - a list of demos that you have created specifically for this page
-- `exports` - a list of modules that are needed for the playgrounds
 
 {% index false %}
 
