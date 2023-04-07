@@ -3,7 +3,14 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
-import {NgDocModule, NgDocNavbarModule, NgDocSidebarModule, NgDocThemeToggleModule} from '@ng-doc/app';
+import {
+	NgDocDefaultSearchEngine,
+	NgDocModule,
+	NgDocNavbarModule,
+	NgDocSidebarModule,
+	NgDocThemeToggleModule,
+	provideSearchEngine,
+} from '@ng-doc/app';
 import {NgDocGeneratedModule} from '@ng-doc/generated';
 import {NgDocButtonIconModule, NgDocIconModule, NgDocMediaQueryModule, NgDocTooltipModule} from '@ng-doc/ui-kit';
 
@@ -22,9 +29,7 @@ import {AppComponent} from './app.component';
 				{
 					path: 'docs',
 					loadChildren: () =>
-						import('./pages/docs/docs.module').then(
-							(m: typeof import('./pages/docs/docs.module')) => m.DocsModule,
-						),
+						import('./pages/docs/docs.module').then((m: typeof import('./pages/docs/docs.module')) => m.DocsModule),
 				},
 				{
 					path: '',
