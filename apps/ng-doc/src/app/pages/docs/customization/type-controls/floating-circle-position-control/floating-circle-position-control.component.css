@@ -1,0 +1,5 @@
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--ng-doc-base-gutter) * 2);
+}

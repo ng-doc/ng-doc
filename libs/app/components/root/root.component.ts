@@ -62,7 +62,7 @@ export class NgDocRootComponent {
 	noWidthLimit: boolean = false;
 
 	@HostBinding('@.disabled')
-	disabledAnimations: boolean = true;
+	disabledAnimations: boolean = false;
 
 	constructor(protected readonly sidebarService: NgDocSidebarService) {}
 }

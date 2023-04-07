@@ -1,5 +1,13 @@
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
+	Component,
+	EventEmitter,
+	HostBinding,
+	Input,
+	Output,
+} from '@angular/core';
 import {fadeAnimation} from '@ng-doc/ui-kit/animations';
 import {NgDocContent} from '@ng-doc/ui-kit/types';
 
@@ -51,6 +59,8 @@ export class NgDocSidenavComponent {
 	@Output()
 	openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+	constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
+
 	get hasBackdrop(): boolean {
 		return this.floating && this.opened;
 	}
@@ -58,11 +68,13 @@ export class NgDocSidenavComponent {
 	open(): void {
 		this.opened = true;
 		this.openedChange.emit(this.opened);
+		this.changeDetectorRef.markForCheck();
 	}
 
 	close(): void {
 		this.opened = false;
 		this.openedChange.emit(this.opened);
+		this.changeDetectorRef.markForCheck();
 	}
 
 	toggle(): void {
