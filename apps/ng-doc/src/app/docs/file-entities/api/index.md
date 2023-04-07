@@ -6,10 +6,6 @@ else.
 
 ## Creating an API
 
-> **Warning**
-> NgDoc does not support loading multiple `ng-doc.api.ts` files, all your APIs must be
-> listed in **one** file.
-
 To create an API entity, you can use a special schematic, it will generate `ng-doc.api.ts` file for
 you in the current directory.
 
@@ -91,6 +87,14 @@ If you would like to see what the output of the API looks like, you can look at 
 for the following entities `NgDocPageEntity`, `NgDocApiPageEntity`.
 
 {% index false %}
+
+## Multiple API configurations
+
+By default, NgDoc is configured to work only with one API configuration file, but if it is necessary
+you can create multiple API configurations files. For multiple API configurations, you need to
+specify different value for the `route` field in the `ng-doc.api.ts` file otherwise you will
+get a conflict between two API pages, because the `route` property is optional and if you don't specify
+it, NgDoc will use `api` as a default value.
 
 ## See also
 
