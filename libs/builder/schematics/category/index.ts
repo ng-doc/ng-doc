@@ -14,9 +14,9 @@ import {
 } from '@angular-devkit/schematics';
 import {join, relative} from 'path';
 
-import {CATEGORY_NAME} from '../../engine';
-import {findClosestFile} from '../../helpers';
-import {extractDefaultExportName} from '../utils';
+import {CATEGORY_NAME} from '../../engine/variables';
+import {findClosestFile} from '../../helpers/find-closest-file';
+import {extractDefaultExportName} from '../utils/extract-default-export-name';
 import {NgDocBuildCategorySchema} from './schema';
 
 /**

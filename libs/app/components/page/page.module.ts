@@ -1,13 +1,16 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {RouterLink} from '@angular/router';
+import {NgDocBreadcrumbModule} from "@ng-doc/app/components/breadcrumb";
 import {NgDocPageMapModule} from '@ng-doc/app/components/toc';
 import {NgDocSanitizeHtmlModule} from '@ng-doc/app/pipes/sanitize-html';
 import {
 	NgDocBlockquoteProcessorModule,
 	NgDocCodeProcessorModule,
+	NgDocDemoPaneProcessorModule,
 	NgDocDemoProcessorModule,
 	NgDocIconProcessorModule,
+	NgDocLinkProcessorModule,
 	NgDocPlaygroundProcessorModule,
 	NgDocTooltipProcessorModule,
 } from '@ng-doc/app/processors';
@@ -39,10 +42,11 @@ import {NgDocPageComponent} from './page.component';
 
 		CommonModule,
 		NgDocDemoProcessorModule,
+		NgDocIconProcessorModule,
+		NgDocLinkProcessorModule,
 		NgDocCodeProcessorModule,
 		NgDocBlockquoteProcessorModule,
 		NgDocSanitizeHtmlModule,
-		NgDocIconProcessorModule,
 		NgDocPageMapModule,
 		NgDocMediaQueryModule,
 		NgDocTooltipProcessorModule,
@@ -53,6 +57,8 @@ import {NgDocPageComponent} from './page.component';
 		RouterLink,
 		NgDocButtonModule,
 		NgDocTextModule,
+		NgDocDemoPaneProcessorModule,
+		NgDocBreadcrumbModule,
 	],
 	exports: [NgDocPageComponent],
 })

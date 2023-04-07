@@ -1,6 +1,7 @@
 :root {
-	--ng-doc-app-max-width: 1400px;
+	--ng-doc-app-max-width: 1450px;
 	--ng-doc-app-horizontal-padding: calc(var(--ng-doc-base-gutter) * 3);
+	--ng-doc-code-background: var(--ng-doc-base-1);
 	--ng-doc-page-padding: calc(var(--ng-doc-base-gutter) * 3) var(--ng-doc-app-horizontal-padding);
 	--ng-doc-main-padding: var(--ng-doc-navbar-height) 0 0 0;
 
@@ -55,6 +56,15 @@
 	--ng-doc-code-max-height: 400px;
 
 	// Table of contents
-	--ng-doc-toc-width: 250px;
+	--ng-doc-toc-width: 280px;
 	--ng-doc-toc-indent: calc(var(--ng-doc-base-gutter) + var(--ng-doc-base-gutter) / 2);
+
+	// Search
+	--ng-doc-search-result-color: #454545;
+
+	// Page type tags
+	--ng-doc-api-tag-color: var(--ng-doc-red-100);
+	--ng-doc-api-tag-background: var(--ng-doc-red-10);
+	--ng-doc-guide-tag-color: var(--ng-doc-blue-100);
+	--ng-doc-guide-tag-background: var(--ng-doc-blue-10);
 }

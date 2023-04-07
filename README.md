@@ -6,7 +6,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/skoropadas/ng-doc">
-    <img src="https://ng-doc.com/assets/images/ng-doc.svg?" alt="Logo" height="100px">
+    <img src="https://ng-doc.com/assets/images/ng-doc.svg?raw=true" alt="Logo" height="150px">
   </a>
 
 <h3 align="center">NgDoc</h3>
@@ -17,8 +17,6 @@
     <a href="https://ng-doc.com/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-	<a href="https://ng-doc.com/getting-started/roadmap">Roadmap</a>
-    ·
     <a href="https://github.com/skoropadas/ng-doc/issues">Report Bug</a>
     ·
     <a href="https://github.com/skoropadas/ng-doc/issues">Request Feature</a>
@@ -36,17 +34,16 @@ documentation.
 
 NgDoc allows you to do the following things:
 
--   Dynamic markdown templates for your guidelines via Nunjucks
--   Render demos on the page in one line of code
--   The documentation for your API is based on comments to your code
--   Dynamic links to API, Pages, or foreign websites via `Keywords` feature
--   Automatic generation of links to your API in code examples or in mentions of any entity inside
-    inline code
--   Offline search that collects indexes automatically based on you documentation
--   Customizable interface
--   And much more, just check out
-    our [roadmap](https://ng-doc.com/getting-started/roadmap) to find out what will be in future
-    releases.
+- Dynamic markdown templates for your guidelines via Nunjucks
+- Render demos on the page in one line of code
+- Create playgrounds for your Angular Components and Directives
+- The documentation for your API is based on comments to your code
+- Dynamic links to API, Pages, or foreign websites via `Keywords` feature
+- Automatic generation of links to your API in code examples or in mentions of any entity inside
+  inline code
+- Offline search that collects indexes automatically based on you documentation
+- Customizable interface
+- And much more!
 
 <!-- GETTING STARTED -->
 

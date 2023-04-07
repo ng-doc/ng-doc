@@ -19,38 +19,40 @@ import {getProject} from '../utils/get-project';
 export function addTsconfigPaths(options: Schema): Rule {
 	return async (tree: Tree, context: SchematicContext) => {
 		return updateWorkspace((workspace: WorkspaceDefinition) => {
-			context.logger.info(`[INFO]: Adding tsconfig paths to ng-doc folder...`);
+			const logger = context.logger.createChild('add-tsconfig-paths');
 
-			const project: ProjectDefinition | undefined = getProject(options, workspace);
+			context.logger.info(`[INFO]: TSConfig paths`);
+			logger.info(`🔄 Configuring TSConfig paths to allow import from ".ng-doc" folder...`);
 
-			if (!project) {
-				context.logger.warn(`[WARNING]: Target project not found.`);
-				return;
-			}
+			try {
+				const project: ProjectDefinition | undefined = getProject(options, workspace);
 
-			const buildTarget: TargetDefinition | undefined = project.targets.get('build');
-			const serveTarget: TargetDefinition | undefined = project.targets.get('serve');
+				if (!project) {
+					logger.error(`❌ Target project not found. Please configure tsconfig paths manually.`);
 
-			if (buildTarget) {
-				const tsConfigPath: string | undefined =
-					buildTarget.options && (buildTarget.options['tsConfig'] as string);
+					return;
+				}
 
-				tsConfigPath && updateTsConfigPaths(tree, String(tsConfigPath), options.project);
-			} else {
-				context.logger.warn(
-					`[WARNING]: "build" target was not found, please add paths to ".ng-doc" folder in your tsconfig.json file manually.`,
-				);
-			}
+				const buildTarget: TargetDefinition | undefined = project.targets.get('build');
+				const serveTarget: TargetDefinition | undefined = project.targets.get('serve');
 
-			if (serveTarget) {
-				const tsConfigPath: string | undefined =
-					serveTarget.options && (serveTarget.options['tsConfig'] as string);
+				if (buildTarget) {
+					const tsConfigPath: string | undefined =
+						buildTarget.options && (buildTarget.options['tsConfig'] as string);
 
-				tsConfigPath && updateTsConfigPaths(tree, String(tsConfigPath), options.project);
-			} else {
-				context.logger.warn(
-					`[WARNING]: "serve" target was not found, please add paths to ".ng-doc" folder in your tsconfig.json file manually.`,
-				);
+					tsConfigPath && updateTsConfigPaths(tree, String(tsConfigPath), options.project);
+				}
+
+				if (serveTarget) {
+					const tsConfigPath: string | undefined =
+						serveTarget.options && (serveTarget.options['tsConfig'] as string);
+
+					tsConfigPath && updateTsConfigPaths(tree, String(tsConfigPath), options.project);
+				}
+
+				logger.info('✅ Done!');
+			} catch (e) {
+				logger.error(`❌ Error: ${e}`);
 			}
 		});
 	};

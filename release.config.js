@@ -1,3 +1,6 @@
+const {readFileSync} = require('fs');
+const {join} = require('path');
+
 module.exports = {
 	branches: ['+([0-9])?(.{+([0-9]),x}).x', 'release', {name: 'beta', channel: 'beta', prerelease: true}],
 	plugins: [
@@ -15,6 +18,9 @@ module.exports = {
 						pkgRoot: 'dist/libs/core',
 					},
 					{
+						pkgRoot: 'dist/libs/utils',
+					},
+					{
 						pkgRoot: 'dist/libs/ui-kit',
 					},
 					{
@@ -29,7 +35,14 @@ module.exports = {
 		[
 			'./plugins/semantic-release/update-dependencies.js',
 			{
-				packages: ['dist/libs/add', 'dist/libs/core', 'dist/libs/ui-kit', 'dist/libs/builder', 'dist/libs/app'],
+				packages: [
+					'dist/libs/add',
+					'dist/libs/core',
+					'dist/libs/utils',
+					'dist/libs/ui-kit',
+					'dist/libs/builder',
+					'dist/libs/app',
+				],
 			},
 		],
 		[
@@ -37,7 +50,14 @@ module.exports = {
 			{
 				original: 'package.json',
 				keys: ['keywords', 'author', 'repository', 'bugs', 'homepage', 'license'],
-				packages: ['dist/libs/add', 'dist/libs/core', 'dist/libs/ui-kit', 'dist/libs/builder', 'dist/libs/app'],
+				packages: [
+					'dist/libs/add',
+					'dist/libs/core',
+					'dist/libs/utils',
+					'dist/libs/ui-kit',
+					'dist/libs/builder',
+					'dist/libs/app',
+				],
 			},
 		],
 		[

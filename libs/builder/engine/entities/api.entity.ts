@@ -46,7 +46,7 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 	}
 
 	override get folderPath(): string {
-		return this.context.apiPath;
+		return path.join(this.context.apiPath, this.route);
 	}
 
 	override get keywords(): string[] {

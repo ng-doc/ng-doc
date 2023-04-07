@@ -12,6 +12,7 @@ import pageContent from '!!raw-loader!{{ page.builtPagePath }}';
 	providers: [{provide: NgDocRootPage, useExisting: DynamicComponent}],
 })
 export class DynamicComponent extends NgDocRootPage {
+	readonly routePrefix?: string = undefined;
 	readonly pageType: NgDocPageType = 'api';
 	{%- if page.editSourceFileUrl %}
 	readonly editSourceFileUrl: string = '{{ page.editSourceFileUrl }}';

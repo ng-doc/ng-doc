@@ -1,7 +1,7 @@
 import {asArray, objectKeys} from '@ng-doc/core';
+import {NgDocGlobalKeyword, NgDocKeyword} from '@ng-doc/core';
 
 import {getKeywordTypeFromEntity, isApiPageEntity, isRouteEntity} from '../helpers';
-import {NgDocGlobalKeyword, NgDocKeyword} from '../interfaces';
 import {NgDocEntity} from './entities/abstractions/entity';
 
 export class NgDocEntityStore extends Map<string, NgDocEntity> {

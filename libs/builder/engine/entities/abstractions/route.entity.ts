@@ -1,7 +1,7 @@
-import {URL} from 'node:url';
+import {asArray, NgDocPageIndex} from '@ng-doc/core';
 import * as path from 'path';
 
-import {editFileInRepoUrl, slash} from '../../../helpers';
+import {isRouteEntity, slash} from '../../../helpers';
 import {NgDocModuleEntity} from './module.entity';
 
 export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T> {
@@ -48,8 +48,9 @@ export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T>
 	}
 
 	/**
-	 * External website URL, that can be used to edit source file of the current page
+	 * Returns breadcrumbs for the current entity
 	 */
-	// abstract get editSourceFileUrl(): string | undefined;
-	// abstract get viewSourceFileUrl(): string | undefined;
+	get breadcrumbs(): string[] {
+		return isRouteEntity(this.parent) ? [...asArray(this?.parent?.breadcrumbs), this.title] : [this.title];
+	}
 }

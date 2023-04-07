@@ -2,12 +2,20 @@
 
 ## Modifiers
 
+### Demo
+
+{{  NgDocActions.demo("DevelopDemoComponent", {container: false}) }}
+
+
+{{  NgDocActions.demoPane("ButtonDemoComponent") }}
+
 ### Badges
 
+
 <span class="ng-doc-badge-wrapper">
-	{%- for modifier in NgDocPage.data.modifiers %}
+{%- for modifier in NgDocPage.data.modifiers %}
     <span class="ng-doc-badge" data-content="{{ modifier }}">{{ modifier[0] }}</span>
-	{%- endfor %}
+{%- endfor %}
 </span>
 
 ### Modifiers
@@ -36,7 +44,6 @@
     <span class="ng-doc-tag" data-content="{{ entity }}">{{ entity }}</span>
 {%- endfor %}
 </span>
-
 
 ### Angular
 

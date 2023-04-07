@@ -13,10 +13,10 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   cache: npm
-                  node-version: 16
+                  node-version: 18
 
             - name: Install Dependencies
               run: npm ci
 
             - name: Test
-              run: npx nx run-many --all --target=test
+              run: npx nx run-many --all --target=test --configuration=ci

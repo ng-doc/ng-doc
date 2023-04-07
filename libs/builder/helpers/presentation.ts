@@ -11,12 +11,14 @@ import {
 	ReadonlyableNode,
 	Scope,
 	ScopeableNode,
+	StaticableNode,
 	TypeAliasDeclaration,
+	TypeFormatFlags,
 	VariableDeclaration,
 } from 'ts-morph';
 
 import {formatCode} from './format-code';
-import {displayType} from './typescript';
+import {displayReturnType, displayType} from './typescript';
 
 /**
  *
@@ -28,10 +30,10 @@ export function constructorPresentation(constructor: ConstructorDeclaration): st
 	const presentation: string = [
 		scopePresentation(constructor),
 		`constructor(\n	${parameters}\n):`,
-		displayType(constructor.getReturnType()),
+		displayReturnType(constructor),
 	]
 		.filter(isPresent)
-		.join(' ');
+		.join(' ') + ';';
 
 	return formatCode(presentation, 'TypeScript');
 }
@@ -46,9 +48,11 @@ export function accessorPresentation(accessor: AccessorDeclaration): string {
 	const header: string = Node.isGetAccessorDeclaration(accessor)
 		? `${accessor.getName()}():`
 		: `${accessor.getName()}(${parameters})`;
-	const returnType: string = Node.isGetAccessorDeclaration(accessor) ? displayType(accessor.getReturnType()) : '';
+	const returnType: string = Node.isGetAccessorDeclaration(accessor) ? displayReturnType(accessor) : '';
 
-	return [prefix, scopePresentation(accessor), header, returnType].filter(isPresent).join(' ') + ';';
+	const presentation: string = [staticPresentation(accessor), scopePresentation(accessor), prefix, header, returnType].filter(isPresent).join(' ') + ';';
+
+	return formatCode(presentation, 'TypeScript');
 }
 
 /**
@@ -58,9 +62,11 @@ export function accessorPresentation(accessor: AccessorDeclaration): string {
 export function methodPresentation(method: MethodDeclaration): string {
 	const parameters: string = method.getParameters().map(parameterPresentation).join(', ');
 
-	return [scopePresentation(method), `${method.getName()}(${parameters}):`, `${displayType(method.getReturnType())};`]
+	const presentation: string =  [memberModifiers(method), staticPresentation(method), scopePresentation(method), `${method.getName()}(${parameters}):`, `${displayReturnType(method)};`]
 		.filter(isPresent)
 		.join(' ');
+
+	return formatCode(presentation, 'TypeScript');
 }
 
 /**
@@ -70,9 +76,11 @@ export function methodPresentation(method: MethodDeclaration): string {
 export function functionPresentation(fnc: FunctionDeclaration): string {
 	const parameters: string = fnc.getParameters().map(parameterPresentation).join(', ');
 
-	return ['function', `${fnc.getName()}(${parameters}):`, `${displayType(fnc.getReturnType())};`]
+	const presentation: string =  ['function', `${fnc.getName()}(${parameters}):`, `${displayReturnType(fnc)};`]
 		.filter(isPresent)
 		.join(' ');
+
+	return formatCode(presentation, 'TypeScript');
 }
 
 /**
@@ -80,7 +88,9 @@ export function functionPresentation(fnc: FunctionDeclaration): string {
  * @param typeAlias
  */
 export function typeAliasPresentation(typeAlias: TypeAliasDeclaration): string {
-	return typeAlias.getText().replace('export', '').trim();
+	const presentation: string = `type ${typeAlias.getName()} = ${displayType(typeAlias)};`;
+
+	return formatCode(presentation, "TypeScript");
 }
 
 /**
@@ -88,13 +98,15 @@ export function typeAliasPresentation(typeAlias: TypeAliasDeclaration): string {
  * @param variable
  */
 export function variablePresentation(variable: VariableDeclaration): string {
-	return [
+	const presentation: string =  [
 		variable.getVariableStatement()?.getDeclarationKind() ?? 'const',
 		`${variable.getName()}:`,
-		`${displayType(variable.getType())};`,
+		`${displayType(variable)};`,
 	]
 		.filter(isPresent)
 		.join(' ');
+
+	return formatCode(presentation, 'TypeScript');
 }
 
 /**
@@ -107,8 +119,8 @@ function parameterPresentation(parameter: ParameterDeclaration): string {
 		scopePresentation(parameter),
 		modPresentation(parameter),
 		parameter.getName() + (parameter.hasQuestionToken() ? '?' : '') + ':',
-		displayType(parameter.getType()),
-		parameter.getInitializer() ? `= ${parameter.getInitializer()}` : '',
+		displayType(parameter),
+		parameter.getInitializer() ? `= ${parameter.getInitializer()?.getText() ?? ''}` : '',
 	]
 		.filter(isPresent)
 		.join(' ');
@@ -120,6 +132,27 @@ function parameterPresentation(parameter: ParameterDeclaration): string {
  */
 function scopePresentation(node: ScopeableNode): string {
 	return (node.getScope && node.getScope()?.replace(Scope.Public, '')) ?? '';
+}
+
+/**
+ *
+ * @param node
+ */
+function staticPresentation(node: Node): string {
+	return Node.isStaticable(node) && node.isStatic() ? 'static' : '';
+}
+
+/**
+ *
+ * @param member
+ */
+function memberModifiers(member: Node): string {
+	return [
+		(Node.isAbstractable(member) && member.isAbstract() && 'abstract') || '',
+		(Node.isAsyncable(member) && member.isAsync() && 'async') || '',
+	]
+		.filter(isPresent)
+		.join(' ');
 }
 
 /**

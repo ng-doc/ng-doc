@@ -1,7 +1,7 @@
 import {escapeHtml, NgDocPlaygroundProperties} from '@ng-doc/core';
 import {ClassDeclaration, Decorator, Node, ObjectLiteralExpression, Project} from 'ts-morph';
 
-import {getPlaygroundById, getPlaygroundClassProperties, getTargetForPlayground} from '../../helpers';
+import {getPlaygroundClassProperties, getTargetForPlayground} from '../../helpers';
 import {NgDocActionOutput} from '../../interfaces';
 import {componentDecoratorResolver} from '../../resolvers/component-decorator.resolver';
 import {NgDocAction} from '../../types';
@@ -17,10 +17,13 @@ import {NgDocPageEntity} from '../entities/page.entity';
 export function playgroundAction(pId: string): NgDocAction {
 	return (project: Project, page: NgDocPageEntity): NgDocActionOutput => {
 		try {
-			const playgroundsExpression: ObjectLiteralExpression | undefined = page.pageDependencies?.getPlaygroundsExpression();
+			const playgroundsExpression: ObjectLiteralExpression | undefined =
+				page.pageDependencies?.getPlaygroundsExpression();
 
 			if (!playgroundsExpression) {
-				throw new Error(`Can't find the playground configuration for "${page.route}" page. Make sure that you configured the "${pId}" playground correctly.`);
+				throw new Error(
+					`Can't find the playground configuration for "${page.route}" page. Make sure that you configured the "${pId}" playground correctly.`,
+				);
 			}
 
 			const declaration: ClassDeclaration | undefined = getTargetForPlayground(playgroundsExpression, pId);
@@ -39,7 +42,7 @@ export function playgroundAction(pId: string): NgDocAction {
 			const playgroundData: NgDocPlaygroundProperties = getPlaygroundClassProperties(declaration);
 
 			return {
-				output: `<ng-doc-playground id="${pId}">
+				output: `<ng-doc-playground id="${pId}" indexable="false">
 							<div id="selectors">${selectors}</div>
 							<div id="data">${escapeHtml(JSON.stringify(playgroundData))}</div>
 						</ng-doc-playground>`,

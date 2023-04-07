@@ -1,15 +1,24 @@
-import {Directive, ElementRef, OnInit} from '@angular/core';
+import {Directive, ElementRef, Input, OnInit} from '@angular/core';
 import {NgDocFocusUtils} from '@ng-doc/ui-kit/utils';
 
 @Directive({
 	selector: '[ngDocAutofocus]',
 })
 export class NgDocAutofocusDirective implements OnInit {
+	@Input()
+	selectAll: boolean = false;
+
 	constructor(private elementRef: ElementRef<HTMLElement>) {}
 
 	ngOnInit(): void {
-		if (NgDocFocusUtils.isNativeKeyboardFocusable(this.elementRef.nativeElement)) {
-			this.elementRef.nativeElement.focus();
+		const element: HTMLElement = this.elementRef.nativeElement;
+
+		if (NgDocFocusUtils.isNativeKeyboardFocusable(element)) {
+			element.focus();
+		}
+
+		if (this.selectAll && element instanceof HTMLInputElement) {
+			Promise.resolve().then(() => element.select());
 		}
 	}
 }

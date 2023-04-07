@@ -3,6 +3,7 @@
 export {
 	accessorPresentation,
 	constructorPresentation,
+	displayReturnType,
 	displayType,
 	extractDocs,
 	extractParameterDocs,

@@ -16,6 +16,7 @@ export const ngDocContextProvider: Provider = {
 				{%- endif %}
 				{%- if entity.order %}
 				order: {{ entity.order }},
+				hidden: {{ "true" if entity.target.hidden else "false" }},
 				{%- endif %}
 				{%- if entity.navigationItems.length %}
 				children: [

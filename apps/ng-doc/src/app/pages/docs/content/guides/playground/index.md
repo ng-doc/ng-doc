@@ -14,8 +14,7 @@ page folder, you can read more about how to do this in the `*EntitiesDependencie
 In the `ng-doc.dependencies.ts` file, add the `playgrounds` field, which must match the
 `NgDocPlaygroundConfig` interface. A playground config is a regular object whose key is the name of
 the playground (which you should use to display it on the page) and whose value is the config
-itself,
-for example:
+itself, for example:
 
 > **Note**
 > For the template you can also use your real selector, but we recommend using `ng-doc-selector` to
@@ -26,36 +25,36 @@ for example:
 > field
 > to specify the selectors that you want to see in your playground.
 
-```typescript
+```typescript fileName="ng-doc.dependencies.ts"
 import {NgDocDependencies} from '@ng-doc/core';
 import {NgDocTagComponent} from '@ng-doc/ui-kit';
 
 import {PageModule} from './ng-doc.module';
 
 const PageDependencies: NgDocDependencies = {
-	module: PageModule,
-	playgrounds: {
-		TagPlayground: {
-			target: NgDocTagComponent,
-			template: `<ng-doc-selector>Tag Label</ng-doc-selector>`,
-		},
-	},
+  module: PageModule,
+  playgrounds: {
+    TagPlayground: {
+      target: NgDocTagComponent,
+      template: `<ng-doc-selector>Tag Label</ng-doc-selector>`,
+    },
+  },
 };
 
 export default PageDependencies;
 ```
 
--   `target` - The Angular Component/Directive class that will be used for the playground (make sure
-    you export the module of this
-    component from the **module of your page** (`PageModule` in the current example), otherwise
-    Angular will not be able to create it)
--   `template` - The template that will be used for the playground, you can use the Angular syntax
-    inside,
-    but it's value cannot be provided dynamically, so you can't use variables or functions there,
-    value of this property should be static.
--   `<ng-doc-selector>` - is a unique tag that will be dynamically replaced with your component's
-    selector, and if your component has multiple selectors, NgDoc will also create a view for each
-    possible selector.
+- `target` - The Angular Component/Directive class that will be used for the playground (make sure
+  you export the module of this
+  component from the **module of your page** (`PageModule` in the current example), otherwise
+  Angular will not be able to create it)
+- `template` - The template that will be used for the playground, you can use the Angular syntax
+  inside,
+  but it's value cannot be provided dynamically, so you can't use variables or functions there,
+  value of this property should be static.
+- `<ng-doc-selector>` - is a unique tag that will be dynamically replaced with your component's
+  selector, and if your component has multiple selectors, NgDoc will also create a view for each
+  possible selector.
 
 In this example, we created a playground for the `NgDocTagComponent`, to make it work,
 we also need to export its module from the `PageModule`.
@@ -64,15 +63,15 @@ we also need to export its module from the `PageModule`.
 > If you are using any other components in your playground, you must also export their modules from
 > your page module.
 
-```typescript
+```typescript fileName="ng-doc.module.ts"
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {NgDocTagModule} from '@ng-doc/ui-kit';
 
 @NgModule({
-	imports: [CommonModule],
-	// Just export all modules that are needed for your playgrounds
-	exports: [NgDocTagModule],
+  imports: [CommonModule],
+  // Just export all modules that are needed for your playgrounds
+  exports: [NgDocTagModule],
 })
 export class PageModule {}
 ```
@@ -82,13 +81,14 @@ export class PageModule {}
 To display the created playground on the page, you should use the `playground` method
 from `NgDocActions`, passing the key of your playground to it as follows
 
-```twig
+```twig fileName="index.md"
 {{'{{ NgDocActions.playground("TagPlayground") }}' | safe }}
 ```
 
 ## Playground example
 
-NgDoc will recognize `@Input` field types and creates controls for them, which allow you to change their
+NgDoc will recognize `@Input` field types and creates controls for them, which allow you to change
+their
 values and see how the component changes.
 
 {{ NgDocActions.playground("TagPlayground") }}
@@ -108,30 +108,30 @@ Some components may support displaying other child components with `ng-content`,
 optional, or you just want to make some content in the playground optional, to do this you can use
 the `content` field in your playground configuration, for example:
 
-```typescript
+```typescript fileName="ng-doc.dependencies.ts"
 import {NgDocDependencies} from '@ng-doc/core';
 import {NgDocTagComponent} from '@ng-doc/ui-kit';
 
 import {PageModule} from './ng-doc.module';
 
 const PageDependencies: NgDocDependencies = {
-	module: PageModule,
-	playgrounds: {
-		TagIconPlayground: {
-			target: NgDocTagComponent,
-			template: `
+  module: PageModule,
+  playgrounds: {
+    TagIconPlayground: {
+      target: NgDocTagComponent,
+      template: `
 			<ng-doc-selector>
 				{{ "{{content.icon}}" | safe }}
 				Tag Label
 			</ng-doc-selector>`,
-			content: {
-				icon: {
-					label: 'email icon',
-					template: '<ng-doc-icon icon="at-sign" [size]="16"></ng-doc-icon>',
-				},
-			},
-		},
-	},
+      content: {
+        icon: {
+          label: 'email icon',
+          template: '<ng-doc-icon icon="at-sign" [size]="16"></ng-doc-icon>',
+        },
+      },
+    },
+  },
 };
 
 export default PageDependencies;
@@ -149,23 +149,23 @@ content.
 To make your playgrounds more lively and dynamic you can use `data` field,
 and put any data you want in it, to use it in your template, for example like that:
 
-```typescript
+```typescript fileName="ng-doc.dependencies.ts"
 import {NgDocDependencies} from '@ng-doc/core';
 import {NgDocTagComponent} from '@ng-doc/ui-kit';
 
 import {PageModule} from './ng-doc.module';
 
 const PageDependencies: NgDocDependencies = {
-	module: PageModule,
-	playgrounds: {
-		TagDataPlayground: {
-			target: NgDocTagComponent,
-			template: `<ng-doc-selector>{{ "{{data.array | json}}" | safe }}</ng-doc-selector>`,
-			data: {
-				array: [1, 2, 3],
-			},
-		},
-	},
+  module: PageModule,
+  playgrounds: {
+    TagDataPlayground: {
+      target: NgDocTagComponent,
+      template: `<ng-doc-selector>{{ "{{data.array | json}}" | safe }}</ng-doc-selector>`,
+      data: {
+        array: [1, 2, 3],
+      },
+    },
+  },
 };
 
 export default PageDependencies;
@@ -175,8 +175,12 @@ export default PageDependencies;
 
 {{ NgDocActions.playground("TagDataPlayground") }}
 
+{% index false %}
+
 ## See Also
 
--   `*EntitiesPage`
--   `*EntitiesDependencies`
--   `*CustomizationTypeControls`
+- `*EntitiesPage`
+- `*EntitiesDependencies`
+- `*CustomizationTypeControls`
+
+{% endindex %}

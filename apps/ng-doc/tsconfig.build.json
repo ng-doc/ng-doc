@@ -9,7 +9,9 @@
 			"@ng-doc/core/*": ["dist/libs/core/*"],
 			"@ng-doc/generated": [".ng-doc/ng-doc/index"],
 			"@ng-doc/ui-kit": ["dist/libs/ui-kit/index"],
-			"@ng-doc/ui-kit/*": ["dist/libs/ui-kit/*"]
+			"@ng-doc/ui-kit/*": ["dist/libs/ui-kit/*"],
+			"@ng-doc/utils": ["dist/libs/utils/index"],
+			"@ng-doc/utils/*": ["dist/libs/utils/*"]
 		}
 	}
 }

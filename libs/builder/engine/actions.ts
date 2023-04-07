@@ -1,8 +1,9 @@
-import {NgDocDemoActionOptions} from '@ng-doc/core';
+import {NgDocDemoActionOptions, NgDocDemoPaneActionOptions} from '@ng-doc/core';
 
 import {NgDocActionOutput} from '../interfaces';
 import {NgDocAction} from '../types';
 import {demoAction} from './actions/demo.action';
+import {demoPaneAction} from './actions/demo-pane.action';
 import {playgroundAction} from './actions/playground.action';
 import {NgDocPageEntity} from './entities/page.entity';
 
@@ -11,6 +12,10 @@ export class NgDocActions {
 
 	demo(className: string, options?: NgDocDemoActionOptions): string {
 		return this.performAction(demoAction(className, options)).output;
+	}
+
+	demoPane(className: string, options?: NgDocDemoPaneActionOptions): string {
+		return this.performAction(demoPaneAction(className, options)).output;
 	}
 
 	playground(playgroundId: string): string {

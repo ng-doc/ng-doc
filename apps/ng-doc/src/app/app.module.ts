@@ -51,7 +51,7 @@ import {AppComponent} from './app.component';
 		NgDocThemeToggleModule,
 		NgDocMediaQueryModule,
 	],
+	providers: [provideSearchEngine(NgDocDefaultSearchEngine)],
 	bootstrap: [AppComponent],
-	exports: [AppComponent],
 })
 export class AppModule {}

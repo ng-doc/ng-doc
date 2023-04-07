@@ -17,34 +17,40 @@ import {getProject} from '../utils/get-project';
 export function updateAppTsConfig(options: Schema): Rule {
 	return async (tree: Tree, context: SchematicContext) => {
 		return updateWorkspace((workspace: WorkspaceDefinition) => {
-			context.logger.info(`[INFO]: Updating application tsconfig...`);
+			const logger = context.logger.createChild('update-app-ts-config');
 
-			const project: ProjectDefinition | undefined = getProject(options, workspace);
+			context.logger.info(`[INFO]: TSConfig compilerOptions`);
+			logger.info(`🔄 Updating tsconfig compilerOptions...`);
 
-			if (!project) {
-				context.logger.warn(`[WARNING]: Target project not found.`);
-				return;
-			}
+			try {
+				const project: ProjectDefinition | undefined = getProject(options, workspace);
 
-			const buildTarget: TargetDefinition | undefined = project.targets.get('build');
-			const serveTarget: TargetDefinition | undefined = project.targets.get('serve');
+				if (!project) {
+					logger.error(`❌ Target project not found. Please configure "compilerOptions" manually.`);
 
-			if (buildTarget) {
-				const tsConfigPath: string | undefined =
-					buildTarget.options && (buildTarget.options['tsConfig'] as string);
+					return;
+				}
 
-				tsConfigPath && updateTsConfig(tree, String(tsConfigPath));
-			} else {
-				context.logger.warn(`[WARNING]: "build" target was not found.`);
-			}
+				const buildTarget: TargetDefinition | undefined = project.targets.get('build');
+				const serveTarget: TargetDefinition | undefined = project.targets.get('serve');
 
-			if (serveTarget) {
-				const tsConfigPath: string | undefined =
-					serveTarget.options && (serveTarget.options['tsConfig'] as string);
+				if (buildTarget) {
+					const tsConfigPath: string | undefined =
+						buildTarget.options && (buildTarget.options['tsConfig'] as string);
 
-				tsConfigPath && updateTsConfig(tree, String(tsConfigPath));
-			} else {
-				context.logger.warn(`[WARNING]: "serve" target was not found.`);
+					tsConfigPath && updateTsConfig(tree, String(tsConfigPath));
+				}
+
+				if (serveTarget) {
+					const tsConfigPath: string | undefined =
+						serveTarget.options && (serveTarget.options['tsConfig'] as string);
+
+					tsConfigPath && updateTsConfig(tree, String(tsConfigPath));
+				}
+
+				logger.info('✅ Done!');
+			} catch (e) {
+				logger.error(`❌ Error: ${e}`);
 			}
 		});
 	};

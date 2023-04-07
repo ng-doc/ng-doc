@@ -2,6 +2,7 @@
 	"name": "@ng-doc/core",
 	"version": "0.0.1",
 	"type": "commonjs",
+	"sideEffects": false,
 	"dependencies": {
 		"posthtml-render": "^3.0.0",
 		"posthtml-parser": "^0.11.0",

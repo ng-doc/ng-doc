@@ -1,6 +1,6 @@
 import {NgDocHeading} from '@ng-doc/core';
+import {NgDocGlobalKeyword} from '@ng-doc/core/interfaces/keyword-map';
 
-import {NgDocGlobalKeyword} from './keyword-map';
 import {NgDocRepoConfig} from './repo-config';
 
 /**

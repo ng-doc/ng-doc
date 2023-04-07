@@ -1,8 +1,26 @@
-<div class="code-wrapper" [innerHTML]="html" *ngIf="html"></div>
-<div class="code-wrapper" *ngIf="!html">
-	<ng-content></ng-content>
+<div class="ng-doc-code-header" *ngIf="hasHeader">
+	<span class="ng-doc-code-file-name" ng-doc-text>{{ fileName }}</span>
 </div>
+<div class="ng-doc-code-body">
+	<div class="ng-doc-code-wrapper" [innerHTML]="html" ngDocLinkProcessor *ngIf="html"></div>
+	<div class="ng-doc-code-wrapper" *ngIf="!html">
+		<ng-content></ng-content>
+	</div>
 
-<button class="ng-doc-copy-button" ng-doc-button-icon *ngIf="copyButton" (click)="copyCode()" ngDocTooltip="Copy code">
-	<ng-doc-icon icon="copy"></ng-doc-icon>
-</button>
+	<button
+
+		class="ng-doc-copy-button"
+		ng-doc-button-icon
+		*ngIf="copyButton"
+		(click)="copyCode(); tooltipText = 'Copied!'"
+		[ngDocTooltip]="tooltipContent"
+		(mouseenter)="tooltipText = 'Copy to clipboard'"
+	>
+		<ng-template #tooltipContent>
+			<ng-doc-smooth-resize [trigger]="tooltipText">
+				{{tooltipText}}
+			</ng-doc-smooth-resize>
+		</ng-template>
+		<ng-doc-icon icon="copy"></ng-doc-icon>
+	</button>
+</div>

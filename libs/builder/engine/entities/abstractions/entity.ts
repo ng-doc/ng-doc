@@ -1,12 +1,13 @@
 import {logging} from '@angular-devkit/core';
-import * as path from 'path';
-import {Observable, of, Subject} from 'rxjs';
-import {catchError, map, take} from 'rxjs/operators';
+import {NgDocPageIndex} from '@ng-doc/core';
+import {forkJoin, from, Observable, of, Subject} from 'rxjs';
+import {catchError, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
 
 import {ObservableSet} from '../../../classes';
+import {codeTypeFromExt, getPageType, importEsModule, isRouteEntity} from '../../../helpers';
+import {buildIndexes} from '../../../helpers/build-indexes';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../../interfaces';
 import {NgDocBuilder} from '../../builder';
-import {htmlPostProcessor} from '../../post-processors';
 
 /**
  * Base entity class that all entities should extend.
@@ -17,6 +18,9 @@ export abstract class NgDocEntity {
 
 	/** Indicates when entity was destroyed */
 	destroyed: boolean = false;
+
+	/** Search indexes for the current entity */
+	indexes: NgDocPageIndex[] = [];
 
 	/**
 	 * Collection of all file dependencies of the current entity.
@@ -62,7 +66,8 @@ export abstract class NgDocEntity {
 	 */
 	abstract readonly buildCandidates: NgDocEntity[];
 
-	constructor(readonly builder: NgDocBuilder, readonly context: NgDocBuilderContext) {}
+	constructor(readonly builder: NgDocBuilder, readonly context: NgDocBuilderContext) {
+	}
 
 	/** Indicates if the current entity can be built */
 	get canBeBuilt(): boolean {
@@ -83,9 +88,14 @@ export abstract class NgDocEntity {
 	 * Contains all children of the current entity.
 	 */
 	get children(): NgDocEntity[] {
-		return this.builder.entities
-			.asArray()
-			.filter((entity: NgDocEntity) => entity.parent === this && !entity.destroyed);
+		return this.builder.entities.asArray().filter((entity: NgDocEntity) => entity.parent === this && !entity.destroyed);
+	}
+
+	/**
+	 * Returns children that are ready to build or already built
+	 */
+	get builtChildren(): NgDocEntity[] {
+		return this.children.filter((entity: NgDocEntity) => entity.isReadyForBuild);
 	}
 
 	/**
@@ -145,9 +155,7 @@ export abstract class NgDocEntity {
 	buildArtifacts(): Observable<NgDocBuiltOutput[]> {
 		return this.build().pipe(
 			// TODO: make it async
-			map((output: NgDocBuiltOutput[]) => {
-				return this.processArtifacts(output);
-			}),
+			switchMap((output: NgDocBuiltOutput[]) => this.processArtifacts(output)),
 			map((artifacts: NgDocBuiltOutput[]) => {
 				/*
 						We are checking that artifacts result was changed, otherwise we don't want to emit
@@ -195,13 +203,62 @@ export abstract class NgDocEntity {
 		return this.destroy$.asObservable().pipe(take(1));
 	}
 
-	private processArtifacts(artifacts: NgDocBuiltOutput[]): NgDocBuiltOutput[] {
-		return artifacts.map((artifact: NgDocBuiltOutput) => {
-			if (path.extname(artifact.filePath) === '.html') {
-				return htmlPostProcessor(this, artifact);
-			}
+	private processArtifacts(artifacts: NgDocBuiltOutput[]): Observable<NgDocBuiltOutput[]> {
+		this.indexes = [];
 
-			return artifact;
-		});
+		if (!artifacts.length) {
+			return of([]);
+		}
+
+		return forkJoin(
+			artifacts.map((artifact: NgDocBuiltOutput) => {
+				if (codeTypeFromExt(artifact.filePath) === 'HTML') {
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					return from(importEsModule<typeof import('@ng-doc/utils')>('@ng-doc/utils')).pipe(
+						switchMap((utils: typeof import('@ng-doc/utils')) => {
+							if (isRouteEntity(this)) {
+								this.usedKeywords = new Set();
+							}
+
+							return utils.htmlPostProcessor(artifact.content, {
+								headings: this.context.config.guide?.anchorHeadings,
+								route: isRouteEntity(this) ? this.fullRoute : undefined,
+								addUsedKeyword: isRouteEntity(this) ? this.usedKeywords.add.bind(this.usedKeywords) : undefined,
+								getKeyword: this.builder.entities.getByKeyword.bind(this.builder.entities),
+							});
+						}),
+						map((content: string) => ({...artifact, content})),
+					);
+				}
+
+				return of(artifact);
+			}),
+		).pipe(
+			switchMap((artifacts: NgDocBuiltOutput[]) => {
+				const htmlArtifacts = artifacts
+					.filter((artifact: NgDocBuiltOutput) => codeTypeFromExt(artifact.filePath) === 'HTML');
+
+				return htmlArtifacts.length === 0
+					? of(artifacts)
+					: forkJoin(
+						htmlArtifacts
+							.map((artifact: NgDocBuiltOutput) =>
+								isRouteEntity(this)
+									? buildIndexes({
+										title: this.title,
+										content: artifact.content,
+										pageType: getPageType(this),
+										breadcrumbs: this.breadcrumbs,
+										route: isRouteEntity(this) ? this.fullRoute : '',
+									})
+									: of([]),
+							),
+					).pipe(
+						tap((indexes: NgDocPageIndex[][]) => (this.indexes = indexes.flat())),
+						mapTo(artifacts),
+					);
+			}),
+		);
 	}
 }

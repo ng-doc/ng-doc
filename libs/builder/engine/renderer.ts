@@ -3,10 +3,12 @@ import * as fs from 'fs';
 import {Environment, ILoader} from 'nunjucks';
 import * as path from 'path';
 import {Observable, of} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {Node} from 'ts-morph';
 
 import {ObservableSet} from '../classes';
 import {NgDocRendererOptions} from '../interfaces';
+import {NgDocIndexExtension} from './extentions/index.extension';
 import * as filters from './template-filters';
 import {TEMPLATES_PATH} from './variables';
 
@@ -27,7 +29,7 @@ class NgDocRelativeLoader implements ILoader {
 
 export class NgDocRenderer {
 	render<T extends object>(template: string, options?: NgDocRendererOptions<T>): Observable<string> {
-		return of(this.renderSync(template, options));
+		return of(null).pipe(map(() => this.renderSync(template, options)));
 	}
 
 	renderSync<T extends object>(template: string, options?: NgDocRendererOptions<T>): string {
@@ -45,6 +47,7 @@ export class NgDocRenderer {
 		);
 
 		environment.addGlobal('Node', Node);
+		environment.addExtension('NgDocIndexExtension', new NgDocIndexExtension())
 
 		return environment;
 	}

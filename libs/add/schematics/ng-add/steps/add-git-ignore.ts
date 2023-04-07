@@ -1,5 +1,5 @@
 import {Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
-import {updateWorkspace, WorkspaceDefinition} from '@schematics/angular/utility/workspace';
+import {updateWorkspace} from '@schematics/angular/utility/workspace';
 
 /**
  *
@@ -8,18 +8,27 @@ import {updateWorkspace, WorkspaceDefinition} from '@schematics/angular/utility/
  */
 export function addGitIgnore(): Rule {
 	return async (tree: Tree, context: SchematicContext) => {
-		return updateWorkspace((workspace: WorkspaceDefinition) => {
-			context.logger.info(`[INFO]: Adding .ng-doc folder to .gitignore...`);
+		return updateWorkspace(() => {
+			const logger = context.logger.createChild('add-gitignore');
 
-			const gitignore: Buffer | null = tree.read('.gitignore');
+			context.logger.info(`[INFO]: Git ignore`);
+			logger.info(`🔄 Adding ".ng-doc" folder to .gitignore file...`);
 
-			if (!gitignore) {
-				context.logger.warn(`[WARNING]: .gitignore not found, please add ".ng-doc" folder into it manually.`);
+			try {
+				const gitignore: Buffer | null = tree.read('.gitignore');
 
-				return;
+				if (!gitignore) {
+					logger.warn(`⚠️ ".gitignore" file was not found, please add ".ng-doc" folder into it manually.`);
+
+					return;
+				}
+
+				tree.overwrite('.gitignore', `${gitignore}\n\n# NgDoc files\n.ng-doc`);
+
+				logger.info('✅ Done!');
+			} catch (e) {
+				logger.error(`❌ Error: ${e}`);
 			}
-
-			tree.overwrite('.gitignore', `${gitignore}\n\n# NgDoc files\n.ng-doc`);
 		});
 	};
 }

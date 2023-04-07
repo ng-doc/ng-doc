@@ -6,6 +6,14 @@ import {NgDocDependencies} from '@ng-doc/core/interfaces';
  * Base class for NgDoc page
  */
 export abstract class NgDocRootPage {
+	/**
+	 * Route prefix
+	 */
+	abstract readonly routePrefix?: string;
+
+	/**
+	 * The type of the page
+	 */
 	abstract readonly pageType: NgDocPageType;
 	/**
 	 * Html content of the page

@@ -4,13 +4,14 @@ import {RouterModule} from "@angular/router";
 
 @NgModule({
 	imports: [RouterModule.forChild([
-		{%- if category.children.length %}
-		{path: '', redirectTo: '{{ category.children[0].route }}', pathMatch: 'full' },
+		{%- if category.builtChildren.length %}
+		{path: '', redirectTo: '{{ category.builtChildren[0].route }}', pathMatch: 'full' },
 		{%- endif  %}
 		{
 			path: '',
+			title: '{{ category.title }}',
 			children: [
-				{%- for child in category.children %}
+				{%- for child in category.builtChildren %}
 				{
 					path: '{{ child.route }}',
 					loadChildren: () => import('{{ child.moduleImport }}').then(m => m.DynamicModule)

@@ -37,7 +37,7 @@ export abstract class NgDocNavigationEntity<T> extends NgDocRouteEntity<T> {
 	 * @type {NgDocEntity[]}
 	 */
 	get navigationItems(): NgDocEntity[] {
-		return this.children.filter(
+		return this.builtChildren.filter(
 			(child: NgDocEntity) => child instanceof NgDocNavigationEntity && child.isNavigable,
 		);
 	}

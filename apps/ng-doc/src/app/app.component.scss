@@ -23,10 +23,10 @@
 	color: var(--ng-doc-text);
 
 	h3 {
-		font-size: 22px;
 		margin: 0;
 		display: flex;
 		align-items: center;
+		font-size: 22px;
 
 		.brand-title-ng {
 			font-family: var(--ng-doc-font-family);
@@ -35,12 +35,12 @@
 
 		.brand-title-doc {
 			font-family: var(--ng-doc-heading-font-family);
-			font-weight: 800;
+			font-weight: 900;
 		}
 	}
 
 	img {
-		height: 38px;
+		height: 40px;
 		margin-right: var(--ng-doc-base-gutter);
 	}
 }

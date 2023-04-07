@@ -8,6 +8,7 @@ import {
 	ObjectLiteralExpression,
 	PropertyDeclaration,
 	Type,
+	TypeFormatFlags,
 } from 'ts-morph';
 
 import {getPlaygroundById} from './get-playground-by-id';
@@ -138,7 +139,7 @@ export function getPlaygroundClassProperties(declaration: ClassDeclaration): NgD
 
 			properties[property.getName()] = {
 				name: inputName,
-				type: displayType(property.getType()),
+				type: displayType(property),
 				default: property.getInitializer()?.getText(),
 				description: property
 					.getJsDocs()
@@ -146,7 +147,7 @@ export function getPlaygroundClassProperties(declaration: ClassDeclaration): NgD
 				options: property
 					.getType()
 					.getUnionTypes()
-					.map((type: Type) => displayType(type)),
+					.map((type: Type) => type.getText(undefined, TypeFormatFlags.NoTruncation)),
 			};
 
 			return properties;
