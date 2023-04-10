@@ -32,7 +32,6 @@ What `NgModule` should include:
 - `declarations` - a list of demos that you have created specifically for this page
 - `exports` - a list of modules that are needed for the playgrounds
 
-
 ## Configuration
 
 {% include "../../shared/export-by-default.md" %}
@@ -49,17 +48,17 @@ import {InlineDemoComponent} from './demos/inline-demo.component';
 import {DemoWithFilesComponent} from './demos/demo-with-files.component';
 
 const MyPageDependencies: NgDocDependencies = {
-  /** NgModule that declarates demo components, and exports components that are using in the playgrounds */
-  module: PageModule,
-  /** Demo components, that you are going to use on the page, the object key should be Class name, and value Class constructor  */
-  demo: {InlineDemoComponent, DemoWithFilesComponent},
-  /** Playground components, that you are going to use on the page  */
-  playgrounds: {
-    MyPlayground: {
-      target: ComponentClass,
-      template: `<ng-doc-selector></ng-doc-selector>`,
-    },
-  },
+	/** NgModule that declarates demo components, and exports components that are using in the playgrounds */
+	module: PageModule,
+	/** Demo components, that you are going to use on the page, the object key should be Class name, and value Class constructor  */
+	demo: {InlineDemoComponent, DemoWithFilesComponent},
+	/** Playground components, that you are going to use on the page  */
+	playgrounds: {
+		MyPlayground: {
+			target: ComponentClass,
+			template: `<ng-doc-selector></ng-doc-selector>`,
+		},
+	},
 };
 
 export default MyPageDependencies;

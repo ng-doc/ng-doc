@@ -6,8 +6,8 @@ import {ButtonDemoComponent} from './button-demo/button-demo.component';
 import {DevelopDemoComponent} from './develop-demo/develop-demo.component';
 
 @NgModule({
-  imports: [CommonModule, NgDocPaneModule, NgDocButtonModule],
-  declarations: [DevelopDemoComponent, ButtonDemoComponent],
-  exports: [],
+	imports: [CommonModule, NgDocPaneModule, NgDocButtonModule],
+	declarations: [DevelopDemoComponent, ButtonDemoComponent],
+	exports: [],
 })
 export class DevelopPageModule {}

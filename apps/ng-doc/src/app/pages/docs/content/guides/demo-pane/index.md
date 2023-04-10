@@ -36,23 +36,23 @@ from your `styles.scss` file.
 
 ```scss fileName="styles.scss"
 :root {
-  // Fixed height for all demo panes
-  --ng-doc-demo-pain-height: 300px;
+	// Fixed height for all demo panes
+	--ng-doc-demo-pain-height: 300px;
 
-  // Background color for front and back panes
-  --ng-doc-pane-background: #fff;
-  // Border for front and back panes
-  --ng-doc-pane-border: 1px solid #e5e5e5;
+	// Background color for front and back panes
+	--ng-doc-pane-background: #fff;
+	// Border for front and back panes
+	--ng-doc-pane-border: 1px solid #e5e5e5;
 
-  // Background color for front pane
-  --ng-doc-pane-front-background: #fff;
-  // Border for front pane
-  --ng-doc-pane-front-border: 1px solid #e5e5e5;
-  
-  // Background color for back pane
-  --ng-doc-pane-back-background: #fff;
-  // Border for back pane
-  --ng-doc-pane-back-border: 1px solid #e5e5e5;
+	// Background color for front pane
+	--ng-doc-pane-front-background: #fff;
+	// Border for front pane
+	--ng-doc-pane-front-border: 1px solid #e5e5e5;
+
+	// Background color for back pane
+	--ng-doc-pane-back-background: #fff;
+	// Border for back pane
+	--ng-doc-pane-back-border: 1px solid #e5e5e5;
 }
 ```
 

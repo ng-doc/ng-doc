@@ -7,14 +7,14 @@ import {NgDocInputStringModule, NgDocInputWrapperModule, NgDocLabelModule} from 
 import {FloatingCirclePositionControlComponent} from './floating-circle-position-control.component';
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule, NgDocLabelModule, NgDocInputWrapperModule, NgDocInputStringModule],
-  declarations: [FloatingCirclePositionControlComponent],
-  // Registering the control as a Type Control
-  providers: [
-    provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {
-      hideLabel: true,
-    }),
-  ],
-  exports: [FloatingCirclePositionControlComponent],
+	imports: [CommonModule, ReactiveFormsModule, NgDocLabelModule, NgDocInputWrapperModule, NgDocInputStringModule],
+	declarations: [FloatingCirclePositionControlComponent],
+	// Registering the control as a Type Control
+	providers: [
+		provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {
+			hideLabel: true,
+		}),
+	],
+	exports: [FloatingCirclePositionControlComponent],
 })
 export class FloatingCirclePositionControlModule {}

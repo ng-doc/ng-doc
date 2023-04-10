@@ -33,7 +33,7 @@ configuration.
 import {NgDocCategory} from '@ng-doc/core';
 
 export const MyAwesomeCategory: NgDocCategory = {
-  title: 'MyAwesomeCategory',
+	title: 'MyAwesomeCategory',
 };
 
 export default MyAwesomeCategory;

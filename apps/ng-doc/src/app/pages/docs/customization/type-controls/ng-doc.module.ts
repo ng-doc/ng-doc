@@ -5,9 +5,9 @@ import {FloatingCircleComponent} from './floating-circle/floating-circle.compone
 import {FloatingCirclePositionControlModule} from './floating-circle-position-control/floating-circle-position-control.module';
 
 @NgModule({
-  imports: [CommonModule, FloatingCirclePositionControlModule],
-  exports: [FloatingCircleComponent],
-  declarations: [FloatingCircleComponent],
-  providers: [],
+	imports: [CommonModule, FloatingCirclePositionControlModule],
+	exports: [FloatingCircleComponent],
+	declarations: [FloatingCircleComponent],
+	providers: [],
 })
 export class TypeControlsPageModule {}

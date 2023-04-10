@@ -30,14 +30,14 @@ Let's see how an example of a basic API configuration looks like.
 import {NgDocApi} from '@ng-doc/core';
 
 export const api: NgDocApi = {
-  title: 'API Reference',
-  scopes: [
-    {
-      name: 'my-library-name',
-      route: 'my-library',
-      include: 'path/to/my-library/source/files/**/*.ts',
-    },
-  ],
+	title: 'API Reference',
+	scopes: [
+		{
+			name: 'my-library-name',
+			route: 'my-library',
+			include: 'path/to/my-library/source/files/**/*.ts',
+		},
+	],
 };
 
 export default api;
@@ -61,15 +61,15 @@ import {NgDocApi} from '@ng-doc/core';
 import MyAwesomeCategory from '../ng-doc.category';
 
 export const api: NgDocApi = {
-  title: 'API Reference',
-  category: MyAwesomeCategory,
-  scopes: [
-    {
-      name: 'my-library-name',
-      route: 'my-library',
-      include: 'path/to/my-library/source/files/**/*.ts',
-    },
-  ],
+	title: 'API Reference',
+	category: MyAwesomeCategory,
+	scopes: [
+		{
+			name: 'my-library-name',
+			route: 'my-library',
+			include: 'path/to/my-library/source/files/**/*.ts',
+		},
+	],
 };
 
 export default api;

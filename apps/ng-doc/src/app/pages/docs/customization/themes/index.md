@@ -32,20 +32,20 @@ import {NgDocModule} from '@ng-doc/app';
 import {AppComponent} from './app.component';
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [
-    NgDocModule.forRoot({
-      themes: [
-        {
-          // Your theme ID that you can use to enable theme
-          id: 'custom-theme',
-          // Path to the theme, that will be used by NgDoc to load theme
-          path: 'assets/themes/custom-theme.css',
-        },
-      ],
-    }),
-  ],
-  bootstrap: [AppComponent],
+	declarations: [AppComponent],
+	imports: [
+		NgDocModule.forRoot({
+			themes: [
+				{
+					// Your theme ID that you can use to enable theme
+					id: 'custom-theme',
+					// Path to the theme, that will be used by NgDoc to load theme
+					path: 'assets/themes/custom-theme.css',
+				},
+			],
+		}),
+	],
+	bootstrap: [AppComponent],
 })
 export class AppModule {}
 ```
@@ -69,11 +69,11 @@ import {NgDocThemeService} from '@ng-doc/app';
 
 @Component({})
 export class AppComponent {
-  constructor(protected readonly themeService: NgDocThemeService) {}
+	constructor(protected readonly themeService: NgDocThemeService) {}
 
-  setTheme(): void {
-    this.themeService.set('custom-theme');
-  }
+	setTheme(): void {
+		this.themeService.set('custom-theme');
+	}
 }
 ```
 
@@ -89,9 +89,9 @@ import {NgDocModule} from '@ng-doc/app';
 import {AppComponent} from './app.component';
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [NgDocModule.forRoot({defaultTheme: 'custom-theme'})],
-  bootstrap: [AppComponent],
+	declarations: [AppComponent],
+	imports: [NgDocModule.forRoot({defaultTheme: 'custom-theme'})],
+	bootstrap: [AppComponent],
 })
 export class AppModule {}
 ```
@@ -116,9 +116,9 @@ import {NgDocModule, NG_DOC_NIGHT_THEME} from '@ng-doc/app';
 import {AppComponent} from './app.component';
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [NgDocModule.forRoot({defaultTheme: NG_DOC_NIGHT_THEME.id})],
-  bootstrap: [AppComponent],
+	declarations: [AppComponent],
+	imports: [NgDocModule.forRoot({defaultTheme: NG_DOC_NIGHT_THEME.id})],
+	bootstrap: [AppComponent],
 })
 export class AppModule {}
 ```
@@ -141,7 +141,7 @@ For example like this
 @import '../../../../../node_modules/highlight.js/styles/agate';
 
 :root {
-  // My custom theme implementation
+	// My custom theme implementation
 }
 ```
 
@@ -151,6 +151,6 @@ you can reset value of this variable
 
 ```scss fileName="styles.scss"
 :root {
-  --ng-doc-code-background: unset;
+	--ng-doc-code-background: unset;
 }
 ```

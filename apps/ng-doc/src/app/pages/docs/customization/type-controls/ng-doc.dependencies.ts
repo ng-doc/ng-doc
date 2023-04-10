@@ -5,14 +5,14 @@ import {FloatingCirclePositionControlComponent} from './floating-circle-position
 import {TypeControlsPageModule} from './ng-doc.module';
 
 const TypeControlsPageDependencies: NgDocDependencies = {
-  module: TypeControlsPageModule,
-  demo: {FloatingCircleComponent, FloatingCirclePositionControlComponent},
-  playgrounds: {
-    FloatingCircle: {
-      target: FloatingCircleComponent,
-      template: '<ng-doc-selector></ng-doc-selector>',
-    },
-  },
+	module: TypeControlsPageModule,
+	demo: {FloatingCircleComponent, FloatingCirclePositionControlComponent},
+	playgrounds: {
+		FloatingCircle: {
+			target: FloatingCircleComponent,
+			template: '<ng-doc-selector></ng-doc-selector>',
+		},
+	},
 };
 
 export default TypeControlsPageDependencies;
