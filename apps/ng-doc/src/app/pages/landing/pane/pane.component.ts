@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 import {NgDocContent, NgDocOrientation, NgDocTextModule} from '@ng-doc/ui-kit';
 import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';

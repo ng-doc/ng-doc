@@ -9,7 +9,7 @@
 	&[data-ng-doc-has-media] {
 		grid-template-columns: auto 1fr;
 
-		&[data-ng-doc-orientation="vertical"] {
+		&[data-ng-doc-orientation='vertical'] {
 			grid-template-columns: 1fr;
 			grid-template-rows: auto 1fr;
 		}
