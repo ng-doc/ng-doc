@@ -1,62 +1,74 @@
-<div id="landing-wrapper">
+<div id="landing-wrapper" xmlns="http://www.w3.org/1999/html">
 	<div id="landing-content">
 		<section class="greeting">
 			<ng-doc-background></ng-doc-background>
 
 			<div class="ng-doc-container">
 				<div class="ng-doc-landing-header">
-					<h1 ng-doc-text align="center">Create documentation faster than ever!</h1>
+					<h1 ng-doc-text align="center">
+						Easy to start, easy to use! <br />
+						Documentation engine based on Angular.
+					</h1>
 					<div class="subtitle" ng-doc-text align="center">
-						Fully automated documentation engine for Angular projects that will save you time and effort.
+						Fully automated documentation engine that will save you time and effort.
 					</div>
 
-					<div class="ng-doc-landing-buttons">
-						<a ng-doc-button-flat [routerLink]="['docs']" size="large" color="primary">
-							<span ng-doc-text>
-								<ng-doc-icon icon="arrow-right" ngDocTextRight></ng-doc-icon>
-								Get Started
-							</span>
-						</a>
-					</div>
+					<!--					<div class="ng-doc-landing-buttons">-->
+					<!--						<a ng-doc-button-flat [routerLink]="['docs']" size="large" color="primary">-->
+					<!--							<span ng-doc-text>-->
+					<!--								<ng-doc-icon icon="arrow-right" ngDocTextRight></ng-doc-icon>-->
+					<!--								Get Started-->
+					<!--							</span>-->
+					<!--						</a>-->
+					<!--					</div>-->
 				</div>
 
-				<ng-template [ngDocMediaQuery]="[mediaQuery.breakpoints.XSmall]" #mediaQuery="ngDocMediaQuery">
-					<video autoplay muted loop playsinline>
-						<source src="http://assets.ng-doc.com/ng-doc-in-action.mp4" type="video/mp4" />
-						You need a browser that supports HTML5 video to view this video.
-					</video>
-				</ng-template>
-
-				<ng-template
-					[ngDocMediaQuery]="[
-						mediaQuery.breakpoints.XLarge,
-						mediaQuery.breakpoints.Large,
-						mediaQuery.breakpoints.Medium,
-						mediaQuery.breakpoints.Small
-					]"
-					#mediaQuery="ngDocMediaQuery"
-				>
+				<div class="ng-doc-landing-preview">
 					<a href="#try-it">
-						<figure>
-							<video autoplay muted loop playsinline>
-								<source src="http://assets.ng-doc.com/ng-doc-in-action-landscape.mp4" type="video/mp4" />
-								You need a browser that supports HTML5 video to view this video.
-							</video>
-						</figure>
+						<img class="editor" src="assets/landing/editor.png" alt="ng-doc logo" />
+						<img class="preview" src="assets/landing/demo-app.png" alt="ng-doc logo" />
 					</a>
-				</ng-template>
+				</div>
 			</div>
 		</section>
 
-		<section id="start">
-			<div class="ng-doc-container">
-				<div class="ng-doc-landing-header">
-					<h2 ng-doc-text align="center">One command and you are ready!</h2>
-					<div class="subtitle" ng-doc-text align="center">
-						Create an Angular application that you are gonna use to serve documentation, and run special schematic
-						command to install and configure it!
-					</div>
-				</div>
+		<section id="features">
+			<div class="ng-doc-landing-header">
+				<h1 ng-doc-text align="center">
+					Everything you need <br />
+					to create a great documentation!
+				</h1>
+			</div>
+			<div class="ng-doc-container panes">
+				<ng-doc-pane title="Full-Text search out of the box!">
+					NgDoc automatically indexes everything you write, so you can search for anything you want!
+				</ng-doc-pane>
+
+				<ng-doc-pane
+					title="API Documentation based on your code"
+					orientation="vertical"
+					[media]="media"
+					style="grid-row: span 2"
+				>
+					One small configuration file, and NgDoc starts rendering documentation based on your code
+
+					<ng-template #media>
+						<img src="assets/landing/ng-doc-api.png" />
+					</ng-template>
+				</ng-doc-pane>
+
+				<ng-doc-pane title="Dynamic markdown">
+					Markdown of NgDoc supports Nunjucks, so you can extend, include and reuse your markdown files!
+				</ng-doc-pane>
+
+				<ng-doc-pane title="Demo and Playgrounds">
+					You can easily create interactive playgrounds and demos, and share them with your users!
+				</ng-doc-pane>
+
+				<ng-doc-pane title="Keywords">
+					Use keywords for you Guides and API to create dynamic links and avoid situations when you need to update them
+					manually!
+				</ng-doc-pane>
 			</div>
 		</section>
 

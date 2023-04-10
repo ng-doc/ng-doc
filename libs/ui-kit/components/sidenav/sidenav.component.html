@@ -1,4 +1,4 @@
-<button (click)="opened = !opened" style="margin-left: 500px">toggle</button>
+<!--<button *ngIf="sidebar" (click)="opened = !opened" style="margin-left: 500px">toggle</button>-->
 <div class="ng-doc-sidenav-wrapper">
 	<div class="ng-doc-sidenav" [@sidenavAnimation]="opened">
 		<ng-container *polymorpheusOutlet="sidebar"></ng-container>

@@ -1,3 +1,5 @@
+@import '../../../../../../libs/ui-kit/styles/mixins';
+
 :host {
 	section {
 		position: relative;
@@ -21,6 +23,13 @@
 		margin: 0 auto;
 		padding: 0 calc(var(--ng-doc-base-gutter) * 2);
 		max-width: 1280px;
+
+		&.panes {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			grid-gap: 2em;
+			font-feature-settings: normal;
+		}
 	}
 
 	.ng-doc-landing-header {
@@ -28,6 +37,11 @@
 		flex-direction: column;
 		align-items: center;
 		margin-bottom: calc(var(--ng-doc-base-gutter) * 7);
+
+		h1 {
+			--ng-doc-font-size: 36px;
+			--ng-doc-line-height: 40px;
+		}
 
 		h1,
 		h2 {
@@ -40,17 +54,44 @@
 			margin-top: calc(var(--ng-doc-base-gutter) * 4);
 		}
 	}
+
+	.ng-doc-landing-preview {
+		position: relative;
+		overflow: hidden;
+		width: 100%;
+
+		img {
+			max-height: 800px;
+			min-width: 500px;
+		}
+
+		.editor {
+		}
+
+		.preview {
+			position: absolute;
+			top: 0;
+			left: 0;
+			transform: translateX(35%);
+		}
+	}
 }
 
 .subtitle {
 	--ng-doc-font-size: 22px;
 	max-width: 500px;
+	margin-top: calc(var(--ng-doc-base-gutter) * 2);
+	opacity: 0.8;
 }
 
 iframe {
 	width: 100%;
 	height: 600px;
 	border: 0;
+}
+
+img {
+	max-width: 100%;
 }
 
 video {
