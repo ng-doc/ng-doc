@@ -86,8 +86,6 @@ the `*ContentApiTemplating` article.
 If you would like to see what the output of the API looks like, you can look at the API example
 for the following entities `NgDocPageEntity`, `NgDocApiPageEntity`.
 
-{% index false %}
-
 ## Multiple API configurations
 
 By default, NgDoc is configured to work only with one API configuration file, but if it is necessary
@@ -95,6 +93,8 @@ you can create multiple API configurations files. For multiple API configuration
 specify different value for the `route` field in the `ng-doc.api.ts` file otherwise you will
 get a conflict between two API pages, because the `route` property is optional and if you don't specify
 it, NgDoc will use `api` as a default value.
+
+{% index false %}
 
 ## See also
 
