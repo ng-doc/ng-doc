@@ -1,4 +1,5 @@
 import {isPresent} from '@ng-doc/core';
+import * as console from 'console';
 import * as esbuild from 'esbuild';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -16,7 +17,7 @@ import {
 	takeUntil,
 	tap,
 } from 'rxjs/operators';
-import {Project, SourceFile} from 'ts-morph';
+import {InterfaceDeclaration, Project, SourceFile} from 'ts-morph';
 
 import {createProject, emitBuiltOutput, isFileEntity} from '../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
@@ -70,10 +71,8 @@ export class NgDocBuilder {
 			entityLifeCycle(this, this.project, watcher, API_PATTERN, NgDocApiEntity),
 		).pipe(
 			bufferUntilOnce(watcher.onReady()),
-			map((entities: NgDocEntity[][]) => entities.flat()),
 			bufferDebounce(50),
-			map((entities: NgDocEntity[][]) => entities.flat()),
-			share(),
+			map((entities: NgDocEntity[][][]) => entities.flat(2)),
 		);
 
 		return entities.pipe(
@@ -189,7 +188,7 @@ export class NgDocBuilder {
 					: this.entities
 							.asArray()
 							.filter(isFileEntity)
-							.filter((e: NgDocFileEntity<unknown>) => e.compilable)
+							.filter((e: NgDocFileEntity<unknown>) => e.compilable && !e.destroyed)
 							.map((e: NgDocFileEntity<unknown>) => e.sourceFile)
 				).map((s: SourceFile) => s.getFilePath()),
 				tsconfig: this.context.tsConfig,
