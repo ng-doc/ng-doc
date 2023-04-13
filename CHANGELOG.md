@@ -1,3 +1,21 @@
+# [15.11.0](https://github.com/skoropadas/ng-doc/compare/v15.10.5...v15.11.0) (2023-04-13)
+
+
+### Bug Fixes
+
+* **app:** headings in not indexable content have a wrong margin ([82dbea1](https://github.com/skoropadas/ng-doc/commit/82dbea1ce0e01b586ba7d1c240f775e5aefa8b8d))
+* **builder:** ng-doc throws an error if a page was removed from the file system ([515e8b7](https://github.com/skoropadas/ng-doc/commit/515e8b7eacffe8ab68097f2206dfbe08b3ee06ff))
+
+
+### Features
+
+* **builder:** now ng-doc handles several API configuration files correctly ([ab84513](https://github.com/skoropadas/ng-doc/commit/ab84513b78a349b565d01f9fe536148d4815b2aa)), closes [#26](https://github.com/skoropadas/ng-doc/issues/26)
+
+
+### Performance Improvements
+
+* **builder:** enable the "noEmit" property for the NgDoc TypeScript project, this should slightly improve performance for the projects with a lot of API entities ([f06a75d](https://github.com/skoropadas/ng-doc/commit/f06a75df5ad470ae4e2d11ff659152a4e4c73a75))
+
 ## [15.10.5](https://github.com/skoropadas/ng-doc/compare/v15.10.4...v15.10.5) (2023-04-04)
 
 
