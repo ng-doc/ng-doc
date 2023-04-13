@@ -11,7 +11,7 @@
 		"chokidar": "^3.5.3",
 		"minimatch": "^5.1.0",
 		"rxjs": "^6.6.7",
-		"ts-morph": "^15.0.0",
+		"ts-morph": "^17.0.0",
 		"nunjucks": "^3.2.3",
 		"@orama/orama": "^1.0.0-beta.7",
 		"@orama/plugin-parsedoc": "^1.0.0-beta.7",
