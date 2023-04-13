@@ -21,6 +21,7 @@ export function createProject(options?: ProjectOptions): Project {
 			tsBuildInfoFile: path.join(CACHE_PATH, 'ng-doc.buildinfo.json'),
 			moduleResolution: ModuleResolutionKind.NodeJs,
 			isolatedModules: true,
+			noEmit: true,
 			types: [],
 			...options?.compilerOptions,
 		},

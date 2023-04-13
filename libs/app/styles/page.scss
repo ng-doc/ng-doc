@@ -24,17 +24,19 @@ article {
 			transition: var(--ng-doc-transition);
 		}
 
-		&:first-child {
-			margin-top: 0;
-		}
+
+	}
+
+	.ng-doc-page-wrapper > {
+		@include headings {
+				&:first-child {
+					margin-top: 0;
+				}
+			}
 	}
 
 	section#{$class} {
 		margin-bottom: calc(var(--ng-doc-base-gutter) * 5);
-
-		@include headings {
-			//margin: calc(var(--ng-doc-base-gutter) * 3) 0;
-		}
 	}
 
 	header#{$class} {
