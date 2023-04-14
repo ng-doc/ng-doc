@@ -154,23 +154,7 @@ export abstract class NgDocEntity {
 
 	buildArtifacts(): Observable<NgDocBuiltOutput[]> {
 		return of(null).pipe(
-			tap(
-				() =>
-					this.id === 'libs/ui-kit/components/pane/pane.component.ts}#NgDocPaneComponent' &&
-					console.time(`Build ${this.id}`),
-			),
-			tap(
-				() =>
-					this.id === 'libs/ui-kit/components/pane/pane.component.ts}#NgDocPaneComponent' &&
-					console.time(`Render ${this.id}`),
-			),
 			switchMap(() => this.build()),
-			tap(
-				() =>
-					this.id === 'libs/ui-kit/components/pane/pane.component.ts}#NgDocPaneComponent' &&
-					console.timeEnd(`Render ${this.id}`),
-			),
-			// TODO: make it async
 			switchMap((output: NgDocBuiltOutput[]) => this.processArtifacts(output)),
 			map((artifacts: NgDocBuiltOutput[]) => {
 				/*
@@ -182,9 +166,6 @@ export abstract class NgDocEntity {
 				}
 
 				this.artifacts = artifacts;
-
-				this.id === 'libs/ui-kit/components/pane/pane.component.ts}#NgDocPaneComponent' &&
-					console.timeEnd(`Build ${this.id}`);
 				return this.artifacts;
 			}),
 			catchError((e: Error) => {
