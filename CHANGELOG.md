@@ -1,3 +1,10 @@
+## [15.11.1](https://github.com/skoropadas/ng-doc/compare/v15.11.0...v15.11.1) (2023-04-14)
+
+
+### Bug Fixes
+
+* **builder:** keywords links are not created for code blocks with `ts` extension ([aa97451](https://github.com/skoropadas/ng-doc/commit/aa974513ca191e45dd2676bf572d4f78e8a88cc2))
+
 # [15.11.0](https://github.com/skoropadas/ng-doc/compare/v15.10.5...v15.11.0) (2023-04-13)
 
 
