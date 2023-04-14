@@ -30,12 +30,11 @@ from one category to another, you don't have to search the documentation for pat
 work.
 
 > **Note**
-> To turn a page keyword into a link, use the inline code (should start with "*" symbol)
-> in which you specify the keyword (e.g. keyword "MyPage" can be used like "*MyPage")
+> To turn a page keyword into a link, use the inline code (should start with `*` symbol)
+> in which you specify the keyword
 
-We have added a special prefix `*` to use page keywords to notify you of outdated links.
-
-So, to create keyword for the page, specify your preferred keyword in your page configuration in
+We have added a special prefix `*` to use page keywords to notify you of outdated links. So, to
+create keyword for the page, specify your preferred keyword in your page configuration in
 the `keyword` field.
 
 ```typescript fileName="ng-doc.page.ts"
@@ -50,6 +49,12 @@ export const MyAwesomePage: NgDocPage = {
 };
 
 export default MyAwesomePage;
+```
+
+After that, you can use this keyword to create a link to the page.
+
+```markdown
+Link to the page: `*MyCustomKeyword`
 ```
 
 ## Global keywords
@@ -70,4 +75,10 @@ const config: NgDocConfiguration = {
 };
 
 export default config;
+```
+
+After that, you can use this keyword to create a link to the page.
+
+```markdown
+Link to the page: `google`
 ```
