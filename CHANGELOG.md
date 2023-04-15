@@ -1,3 +1,10 @@
+## [15.11.2](https://github.com/skoropadas/ng-doc/compare/v15.11.1...v15.11.2) (2023-04-15)
+
+
+### Bug Fixes
+
+* **project:** dependency versions are not locked ([c4e2d59](https://github.com/skoropadas/ng-doc/commit/c4e2d596e777625f861922751f420c28a5fc6f95)), closes [#41](https://github.com/skoropadas/ng-doc/issues/41)
+
 ## [15.11.1](https://github.com/skoropadas/ng-doc/compare/v15.11.0...v15.11.1) (2023-04-14)
 
 
