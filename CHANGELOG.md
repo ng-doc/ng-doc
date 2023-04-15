@@ -1,3 +1,10 @@
+## [15.11.3](https://github.com/skoropadas/ng-doc/compare/v15.11.2...v15.11.3) (2023-04-15)
+
+
+### Bug Fixes
+
+* **builder:** ng-doc throws an error "CodeBlockWriter is not a constructor" during development ([52aee4a](https://github.com/skoropadas/ng-doc/commit/52aee4adeef9f753dd3e88c61ff5c825baa67d0b))
+
 ## [15.11.2](https://github.com/skoropadas/ng-doc/compare/v15.11.1...v15.11.2) (2023-04-15)
 
 
