@@ -125,11 +125,11 @@ you can do it by changing the order property.
 @NgModule({
   providers: [
     provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {
-      hideLabel: true,
       order: 1,
     }),
   ],
 })
+export class FloatingCirclePositionControlModule {}
 ```
 
 Below is a list of order values for the types that are already registered in NgDoc, so you can
