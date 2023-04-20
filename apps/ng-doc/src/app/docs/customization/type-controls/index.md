@@ -115,6 +115,31 @@ for a single type control at the same time, for example:
 export class FloatingCirclePositionControlModule {}
 ```
 
+## Ordering
+
+NgDoc orders type controls by the order property which is set in the `provideTypeControl` function
+and the name of the `@Input` property, so if you want to change the order of your type control,
+you can do it by changing the order property.
+
+```typescript fileName="floating-circle-position-control.module.ts"
+@NgModule({
+  providers: [
+    provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {
+      hideLabel: true,
+      order: 1,
+    }),
+  ],
+})
+```
+
+Below is a list of order values for the types that are already registered in NgDoc, so you can
+use them to set the order of your type controls.
+
+- `TypeAlias` - 10
+- `string` - 20
+- `number` - 30
+- `boolean` - 40
+
 ## Appearance of controls
 
 In order for your custom controls to better fit into the documentation design, you can use

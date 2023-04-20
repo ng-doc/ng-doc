@@ -3,12 +3,12 @@ import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgDocDemoDisplayerModule} from '@ng-doc/app/components/demo-displayer';
 import {
-	NgDocAsArrayModule,
+	NgDocAsArrayModule, NgDocBindModule,
 	NgDocButtonIconModule,
 	NgDocButtonModule,
 	NgDocCheckboxModule,
 	NgDocIconModule,
-	NgDocLabelModule,
+	NgDocLabelModule, NgDocRunModule,
 	NgDocTextModule,
 	NgDocTooltipModule,
 } from '@ng-doc/ui-kit';
@@ -40,6 +40,8 @@ import {NgDocPlaygroundPropertyComponent} from './playground-property/playground
 		FormsModule,
 		NgDocButtonModule,
 		NgDocDemoDisplayerModule,
+		NgDocBindModule,
+		NgDocRunModule,
 	],
 	exports: [
 		NgDocPlaygroundComponent,
