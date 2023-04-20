@@ -6,7 +6,7 @@ import {NgDocButtonModule, NgDocIconModule, NgDocMediaQueryModule, NgDocTextModu
 
 import {BackgroundComponent} from './background/background.component';
 import {LandingComponent} from './landing.component';
-import {PaneComponent} from './pane/pane.component';
+import {TileComponent} from './pane/tile.component';
 
 @NgModule({
 	imports: [
@@ -22,7 +22,7 @@ import {PaneComponent} from './pane/pane.component';
 		NgDocMediaQueryModule,
 		NgDocIconModule,
 		NgDocCodeModule,
-		PaneComponent,
+		TileComponent,
 		NgDocCodeHighlighterModule,
 	],
 	declarations: [LandingComponent, BackgroundComponent],

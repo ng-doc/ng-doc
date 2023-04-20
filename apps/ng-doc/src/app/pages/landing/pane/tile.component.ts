@@ -4,26 +4,26 @@ import {NgDocContent, NgDocOrientation, NgDocTextModule} from '@ng-doc/ui-kit';
 import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 
 @Component({
-	selector: 'ng-doc-pane',
+	selector: 'ng-doc-tile',
 	standalone: true,
 	imports: [CommonModule, NgDocTextModule, PolymorpheusModule],
 	template: `
-		<div class="ng-doc-pane-wrapper">
+		<div class="ng-doc-tile-media" *ngIf="media">
+			<ng-container *polymorpheusOutlet="media">{{ media }}</ng-container>
+		</div>
+		<div class="ng-doc-tile-content">
 			<h3 ng-doc-text>
 				<ng-container *polymorpheusOutlet="title">{{ title }}</ng-container>
 			</h3>
-			<div class="ng-doc-pane-content" ng-doc-text>
+			<div class="ng-doc-tile-description" ng-doc-text>
 				<ng-content></ng-content>
 			</div>
 		</div>
-		<div class="ng-doc-pane-media" *ngIf="media">
-			<ng-container *polymorpheusOutlet="media">{{ media }}</ng-container>
-		</div>
 	`,
-	styleUrls: ['./pane.component.scss'],
+	styleUrls: ['./tile.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaneComponent {
+export class TileComponent {
 	@Input()
 	title: NgDocContent = '';
 

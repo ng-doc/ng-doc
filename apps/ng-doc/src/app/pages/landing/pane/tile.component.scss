@@ -1,0 +1,27 @@
+:host {
+	display: flex;
+	flex-direction: column;
+	padding: 40px;
+	background: var(--ng-doc-base-1);
+	border-radius: 40px;
+
+	.ng-doc-tile-content {
+		display: flex;
+		flex-direction: column;
+
+		h3 {
+			margin: 0;
+			--ng-doc-font-size: 40px;
+			--ng-doc-line-height: 48px;
+			--ng-doc-font-weight: 800;
+		}
+
+		.ng-doc-tile-description {
+			max-width: 650px;
+
+			--ng-doc-font-size: 24px;
+			--ng-doc-line-height: 30px;
+			--ng-doc-font-weight: 400;
+		}
+	}
+}

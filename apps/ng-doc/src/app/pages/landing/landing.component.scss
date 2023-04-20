@@ -3,107 +3,91 @@
 :host {
 	section {
 		position: relative;
-		padding: 64px 0;
-		min-height: 100vh;
 
 		&.greeting {
-			padding-top: 114px;
-		}
+			p {
+				margin-top: calc(var(--ng-doc-base-gutter) * 4);
+				--ng-doc-font-size: 27px;
+				--ng-doc-line-height: 32px;
+			}
 
-		&:nth-child(odd) {
-			background-color: var(--ng-doc-base-1);
+			img {
+				width: 350px;
+				height: 350px;
+			}
+
+			.container {
+				margin-top: 70px;
+			}
+
+			.greeting-content {
+				display: flex;
+				flex-direction: column;
+				max-width: 600px;
+				margin-bottom: 95px;
+
+				.greeting-buttons {
+					display: flex;
+					margin-top: calc(var(--ng-doc-base-gutter) * 4);
+
+					a {
+						--ng-doc-button-padding: calc(var(--ng-doc-base-gutter) * 3) calc(var(--ng-doc-base-gutter) * 4);
+						--ng-doc-font-size: 34px;
+						--ng-doc-line-height: 40px;
+						--ng-doc-font-weight: 800;
+					}
+				}
+			}
 		}
 	}
 
-	.ng-doc-container {
+	h1 {
+		margin: 0;
+		--ng-doc-font-size: 64px;
+		--ng-doc-line-height: 70px;
+	}
+
+	h2 {
+		margin: 0;
+		--ng-doc-font-size: 48px;
+		--ng-doc-line-height: 54px;
+		--ng-doc-font-weight: 900;
+	}
+
+	.section-container {
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
 		margin: 0 auto;
-		padding: 0 calc(var(--ng-doc-base-gutter) * 2);
-		max-width: 1280px;
+		padding: 70px 80px 24px;
+		max-width: 1440px;
 
-		&.panes {
+		&.grid {
 			display: grid;
-			grid-template-columns: repeat(3, 1fr);
-			grid-gap: 2em;
-			font-feature-settings: normal;
+			grid-template-columns: repeat(6, 1fr);
+			grid-gap: 40px;
 		}
 	}
 
-	.ng-doc-landing-header {
+	.container {
 		display: flex;
-		flex-direction: column;
-		align-items: center;
-		margin-bottom: calc(var(--ng-doc-base-gutter) * 7);
 
-		h1 {
-			--ng-doc-font-size: 36px;
-			--ng-doc-line-height: 40px;
+		&.row {
+			flex-direction: row;
 		}
 
-		h1,
-		h2 {
-			margin-top: 0;
-		}
-
-		.ng-doc-landing-buttons {
-			display: flex;
-			gap: calc(var(--ng-doc-base-gutter) * 2);
-			margin-top: calc(var(--ng-doc-base-gutter) * 4);
-		}
-	}
-
-	.ng-doc-landing-preview {
-		position: relative;
-		overflow: hidden;
-		width: 100%;
-
-		img {
-			max-height: 800px;
-			min-width: 500px;
-		}
-
-		.editor {
-		}
-
-		.preview {
-			position: absolute;
-			top: 0;
-			left: 0;
-			transform: translateX(35%);
+		&.space-between {
+			justify-content: space-between;
 		}
 	}
 }
 
-.subtitle {
-	--ng-doc-font-size: 22px;
-	max-width: 500px;
-	margin-top: calc(var(--ng-doc-base-gutter) * 2);
-	opacity: 0.8;
-}
-
-iframe {
-	width: 100%;
-	height: 600px;
-	border: 0;
-}
-
-img {
-	max-width: 100%;
+figure {
+	margin: 0;
 }
 
 video {
 	width: 100%;
-	max-width: 1100px;
-	cursor: pointer;
 	background-color: black;
 	border-radius: 8px;
-	box-shadow: 0px -24px 300px 0px rgb(110 110 110 / 32%);
-}
-
-#api-docs {
-	overflow: hidden;
-	padding: 3vw 15vw 10vw;
 }
