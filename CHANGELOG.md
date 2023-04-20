@@ -1,3 +1,15 @@
+# [15.12.0](https://github.com/skoropadas/ng-doc/compare/v15.11.3...v15.12.0) (2023-04-20)
+
+
+### Features
+
+* **playgrounds:** the controls used in playgrounds are now sorted primarily by type and then by name, which should make playgrounds pretty. It is now also possible to specify the order for custom type controls ([009f462](https://github.com/skoropadas/ng-doc/commit/009f46225d4f370687ecda2cb00bcfff8914114a))
+
+
+### Performance Improvements
+
+* **builder:** the Entity API search for exported declarations has been optimized, now it is twice as fast. For ng-doc documentation, it used to take 6 - 7 seconds, now ~3 seconds ([0d905c4](https://github.com/skoropadas/ng-doc/commit/0d905c44c771df5d2c961119f0dcd66051550f5d))
+
 ## [15.11.3](https://github.com/skoropadas/ng-doc/compare/v15.11.2...v15.11.3) (2023-04-15)
 
 
