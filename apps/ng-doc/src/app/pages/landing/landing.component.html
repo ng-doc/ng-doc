@@ -33,12 +33,18 @@
 			them truthfully dynamic!
 		</ng-doc-tile>
 
-		<ng-doc-tile title="Demos" style="grid-column: span 3">
+		<ng-doc-tile title="Demos" [media]="demoMedia" style="grid-column: span 3">
+			<ng-template #demoMedia>
+				<img src="assets/landing/demo.png" />
+			</ng-template>
 			NgDoc includes two different types of demos, so you can choose the one that suits you best and display it via just
 			one line of code!
 		</ng-doc-tile>
 
-		<ng-doc-tile title="Playgrounds" style="grid-column: span 3">
+		<ng-doc-tile title="Playgrounds" [media]="playgroundMedia" style="grid-column: span 3">
+			<ng-template #playgroundMedia>
+				<img src="assets/landing/playground.png" />
+			</ng-template>
 			NgDoc provides playgrounds that read inputs of your components and directives and creates a live example of it!
 		</ng-doc-tile>
 

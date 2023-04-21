@@ -5,6 +5,10 @@
 	background: var(--ng-doc-base-1);
 	border-radius: 40px;
 
+	.ng-doc-tile-media {
+		overflow: hidden;
+	}
+
 	.ng-doc-tile-content {
 		display: flex;
 		flex-direction: column;

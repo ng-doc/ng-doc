@@ -1,4 +1,4 @@
-import {CommonModule} from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {NgDocCodeHighlighterModule, NgDocCodeModule} from '@ng-doc/app';
@@ -24,6 +24,7 @@ import {TileComponent} from './pane/tile.component';
 		NgDocCodeModule,
 		TileComponent,
 		NgDocCodeHighlighterModule,
+		NgOptimizedImage,
 	],
 	declarations: [LandingComponent, BackgroundComponent],
 	exports: [RouterModule],
