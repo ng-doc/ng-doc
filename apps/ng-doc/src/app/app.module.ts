@@ -23,7 +23,7 @@ import {AppComponent} from './app.component';
 		BrowserModule,
 		BrowserAnimationsModule,
 		HttpClientModule,
-		NgDocModule.forRoot({defaultThemeId: NG_DOC_NIGHT_THEME.id}),
+		NgDocModule.forRoot({defaultThemeId: 'auto'}),
 		NgDocGeneratedModule.forRoot(),
 		RouterModule.forRoot(
 			[

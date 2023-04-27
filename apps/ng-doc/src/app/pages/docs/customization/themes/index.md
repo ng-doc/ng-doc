@@ -81,7 +81,11 @@ export class AppComponent {
 
 If you don't need the functionality to switch themes on the fly and would like to set a default
 theme, then you can do this by passing a theme id to the `forRoot` method of the `NgDocModule`
-module
+module.
+
+> **Note**
+> You can also provide `auto` value to the `defaultThemeId` field, then NgDoc will automatically
+> select the theme based on the user's system settings.
 
 ```typescript fileName="app.module.ts"
 import {NgModule} from '@angular/core';
@@ -90,7 +94,7 @@ import {AppComponent} from './app.component';
 
 @NgModule({
 	declarations: [AppComponent],
-	imports: [NgDocModule.forRoot({defaultTheme: 'custom-theme'})],
+	imports: [NgDocModule.forRoot({defaultThemeId: 'custom-theme'})],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}
@@ -105,7 +109,7 @@ NgDoc comes with following themes out of the box:
 - Dark Purple theme (`NG_DOC_DARK_PURPLE_THEME`)
 
 The light theme is set by default and has no `id`, while other themes are optional and can be
-loaded using the `NgDocThemeService` service, or set by default using the `defaultTheme` field in
+loaded using the `NgDocThemeService` service, or set by default using the `defaultThemeId` field in
 the `forRoot` method of the module ` NgDocModule`.
 
 For example, you can set the dark theme by default as follows
@@ -117,7 +121,7 @@ import {AppComponent} from './app.component';
 
 @NgModule({
 	declarations: [AppComponent],
-	imports: [NgDocModule.forRoot({defaultTheme: NG_DOC_NIGHT_THEME.id})],
+	imports: [NgDocModule.forRoot({defaultThemeId: NG_DOC_NIGHT_THEME.id})],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

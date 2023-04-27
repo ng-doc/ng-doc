@@ -1,18 +1,25 @@
 import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable} from '@angular/core';
-import {NG_DOC_STORE_THEME_KEY} from '@ng-doc/app/constants';
+import {Inject, Injectable, Optional} from '@angular/core';
+import {NG_DOC_NIGHT_THEME, NG_DOC_STORE_THEME_KEY} from '@ng-doc/app/constants';
 import {NgDocTheme} from '@ng-doc/app/interfaces';
 import {NgDocStoreService} from '@ng-doc/app/services/store';
-import {NG_DOC_THEME} from '@ng-doc/app/tokens';
-import {Observable, Subject} from 'rxjs';
+import {NG_DOC_DEFAULT_THEME_ID, NG_DOC_THEME} from '@ng-doc/app/tokens';
+import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
+import {from, fromEvent, Observable, Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
+/**
+ * Service for managing themes.
+ */
 @Injectable({
 	providedIn: 'root',
 })
+@UntilDestroy()
 export class NgDocThemeService {
 	private linkElement?: HTMLLinkElement;
 	private theme: NgDocTheme | undefined = undefined;
 	private readonly theme$: Subject<NgDocTheme | undefined> = new Subject<NgDocTheme | undefined>();
+	private readonly disableAutoTheme$: Subject<void> = new Subject<void>();
 
 	constructor(
 		@Inject(DOCUMENT)
@@ -20,14 +27,34 @@ export class NgDocThemeService {
 		@Inject(NG_DOC_THEME)
 		private readonly themes: NgDocTheme[],
 		private readonly store: NgDocStoreService,
-	) {}
+		@Inject(NG_DOC_DEFAULT_THEME_ID)
+		@Optional()
+		private readonly defaultThemeId?: string | 'auto',
+	) {
+		if (defaultThemeId === 'auto') {
+			fromEvent<MediaQueryList>(window.matchMedia('(prefers-color-scheme: dark)'), 'change')
+				.pipe(takeUntil(this.disableAutoTheme$), untilDestroyed(this))
+				.subscribe((event: MediaQueryList) => this.set(event.matches ? NG_DOC_NIGHT_THEME.id : undefined, false))
+		}
+	}
 
+	/**
+	 * Returns the current theme.
+	 */
 	get currentTheme(): NgDocTheme | undefined {
 		return this.theme;
 	}
 
-	set(id?: string): Promise<void> {
+	/**
+	 * Sets the theme by id.
+	 *
+	 * @param id Theme id.
+	 * @param save Whether to save the theme in the store to restore it when the page is reloaded. (`true` by default)
+	 */
+	set(id?: string, save: boolean = true): Promise<void> {
 		this.removeLink();
+
+		save && this.disableAutoTheme$.next();
 
 		if (id !== 'day' && id) {
 			const theme: NgDocTheme | undefined = this.themes.find((theme: NgDocTheme) => theme.id === id);
@@ -44,7 +71,7 @@ export class NgDocThemeService {
 
 			if (this.linkElement) {
 				this.linkElement.href = theme.path;
-				this.store.set(NG_DOC_STORE_THEME_KEY, theme.id);
+				save && this.store.set(NG_DOC_STORE_THEME_KEY, theme.id);
 				this.theme = theme;
 
 				return new Promise<void>((resolve: () => void, reject: (err: Event | string) => void) => {
@@ -58,12 +85,17 @@ export class NgDocThemeService {
 				});
 			}
 		}
-		this.store.set(NG_DOC_STORE_THEME_KEY, 'day');
+
+		save && this.store.set(NG_DOC_STORE_THEME_KEY, 'day');
+
 		this.theme$.next(undefined);
 
 		return Promise.resolve();
 	}
 
+	/**
+	 * Returns an observable that emits when the theme changes.
+	 */
 	themeChanges(): Observable<NgDocTheme | undefined> {
 		return this.theme$.asObservable();
 	}
