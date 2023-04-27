@@ -1,4 +1,4 @@
-<ng-doc-root [sidebar]="!isLandingPage" [noWidthLimit]="isLandingPage">
+<ng-doc-root [sidebar]="!isLandingPage" [noWidthLimit]="isLandingPage" [footerContent]="footerContent">
 	<ng-doc-navbar [leftContent]="leftContent" [rightContent]="rightContent" [hamburger]="!isLandingPage">
 		<ng-template #leftContent>
 			<a class="brand" routerLink="/">
@@ -37,4 +37,8 @@
 
 	<ng-doc-sidebar></ng-doc-sidebar>
 	<router-outlet></router-outlet>
+
+	<ng-template #footerContent>
+		<div class="ng-doc-footer">MIT © 2023 Aleksandr Skoropad</div>
+	</ng-template>
 </ng-doc-root>

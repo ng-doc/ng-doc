@@ -8,7 +8,7 @@ import {
 	ViewChild,
 } from '@angular/core';
 import {NgDocSidebarService} from '@ng-doc/app/services/sidebar';
-import {NgDocHorizontalAlign, NgDocSidenavComponent} from '@ng-doc/ui-kit';
+import {NgDocContent, NgDocHorizontalAlign, NgDocSidenavComponent} from '@ng-doc/ui-kit';
 import {UntilDestroy} from '@ngneat/until-destroy';
 import {combineLatest, merge, NEVER, Observable, of} from 'rxjs';
 import {delay, filter, map, mapTo, startWith, tap} from 'rxjs/operators';
@@ -64,6 +64,12 @@ export class NgDocRootComponent implements AfterViewInit {
 	 */
 	@Input()
 	sidebar: boolean = true;
+
+	/**
+	 * Content for footer
+	 */
+	@Input()
+	footerContent: NgDocContent = '';
 
 	/**
 	 * If `true` then page will be shown without width limit.

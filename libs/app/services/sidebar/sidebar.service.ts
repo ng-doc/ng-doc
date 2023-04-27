@@ -26,12 +26,16 @@ export class NgDocSidebarService {
 		protected readonly router: Router,
 		protected readonly scroll: NgDocScrollService,
 	) {
-		this.observer = this.breakpointObserver.observe(this.breakpoints)
+		this.observer = this.breakpointObserver
+			.observe(this.breakpoints)
 			.pipe(pluck('matches'), distinctUntilChanged(), untilDestroyed(this));
 
 		combineLatest([this.router.events, this.isMobileMode()])
 			.pipe(
-				filter(([event, isMobileMode]: [Event, boolean]) => event instanceof NavigationEnd && this.expanded.value && isMobileMode),
+				filter(
+					([event, isMobileMode]: [Event, boolean]) =>
+						event instanceof NavigationEnd && this.expanded.value && isMobileMode,
+				),
 				debounceTime(10),
 			)
 			.subscribe(() => this.hide());
@@ -40,12 +44,12 @@ export class NgDocSidebarService {
 			.pipe(untilDestroyed(this))
 			.subscribe((isMobileMode: boolean) => {
 				if (isMobileMode) {
-					this.hide()
+					this.hide();
 				} else {
 					this.show();
 					this.scroll.unblock();
 				}
-			})
+			});
 	}
 
 	/**
