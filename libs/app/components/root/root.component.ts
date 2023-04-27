@@ -11,7 +11,7 @@ import {NgDocSidebarService} from '@ng-doc/app/services/sidebar';
 import {NgDocHorizontalAlign, NgDocSidenavComponent} from '@ng-doc/ui-kit';
 import {UntilDestroy} from '@ngneat/until-destroy';
 import {combineLatest, merge, NEVER, Observable, of} from 'rxjs';
-import {delay, filter, map, mapTo, tap} from 'rxjs/operators';
+import {delay, filter, map, mapTo, startWith, tap} from 'rxjs/operators';
 
 /**
  * Directive uses for providing custom navbar, you should mark element with this directive
@@ -88,7 +88,9 @@ export class NgDocRootComponent implements AfterViewInit {
 		this.sidenavState$ = combineLatest([
 			this.sidebarService.isMobileMode(),
 			this.sidenav
-				? merge(this.sidenav.beforeOpen.pipe(mapTo(true)), this.sidenav.afterClose.pipe(mapTo(false)))
+				? merge(this.sidenav.beforeOpen.pipe(mapTo(true)), this.sidenav.afterClose.pipe(mapTo(false))).pipe(
+						startWith(false),
+				  )
 				: of(true),
 		]).pipe(
 			filter(([isMobile, opened]: [boolean, boolean]) => !opened || (opened && !isMobile)),

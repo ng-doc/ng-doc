@@ -42,6 +42,12 @@ export class NgDocNavbarComponent {
 	search: boolean = true;
 
 	/**
+	 * Show hamburger button
+	 */
+	@Input()
+	hamburger: boolean = true;
+
+	/**
 	 * Use glass effect for navbar
 	 */
 	@Input()
