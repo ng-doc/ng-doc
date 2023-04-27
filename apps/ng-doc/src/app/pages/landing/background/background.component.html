@@ -1,0 +1,4 @@
+<canvas #canvas></canvas>
+<ng-container *ngIf="showControls">
+	<button (click)="setCompositionOperation(comp)" *ngFor="let comp of globalCompositionOperation">{{ comp }}</button>
+</ng-container>

@@ -42,6 +42,19 @@ export class NgDocNavbarComponent {
 	search: boolean = true;
 
 	/**
+	 * Show hamburger button
+	 */
+	@Input()
+	hamburger: boolean = true;
+
+	/**
+	 * Use glass effect for navbar
+	 */
+	@Input()
+	@HostBinding('attr.data-glass-effect')
+	glassEffect: boolean = true;
+
+	/**
 	 * Indicates if navbar has shadow
 	 */
 	@HostBinding('class.has-shadow')
@@ -60,10 +73,14 @@ export class NgDocNavbarComponent {
 				distinctUntilChanged(),
 				startWith(false),
 			),
+			this.sidebarService.isMobileMode(),
 			this.sidebarService.isExpanded(),
 		])
 			.pipe(
-				map(([scrolled, sidebarVisible]: [boolean, boolean]) => scrolled || sidebarVisible),
+				map(
+					([scrolled, isMobileMode, isExpanded]: [boolean, boolean, boolean]) =>
+						scrolled || (isMobileMode && isExpanded),
+				),
 				ngDocZoneOptimize(this.ngZone),
 				untilDestroyed(this),
 			)

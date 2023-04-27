@@ -4,8 +4,8 @@ import {Inject, Injectable} from '@angular/core';
 import {Event, NavigationEnd, Router} from '@angular/router';
 import {NgDocScrollService} from '@ng-doc/ui-kit/services/scroll';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {BehaviorSubject, Observable, of} from 'rxjs';
-import {filter, pluck, startWith, switchMap} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
+import {debounceTime, distinctUntilChanged, filter, pluck, share, startWith, switchMap, tap} from 'rxjs/operators';
 
 /**
  * Service for sidebar, it can be used to hide/show sidebar or to check if sidebar is collapsable.
@@ -17,7 +17,7 @@ import {filter, pluck, startWith, switchMap} from 'rxjs/operators';
 export class NgDocSidebarService {
 	readonly breakpoints: string[] = [Breakpoints.XSmall, Breakpoints.Small];
 	protected readonly observer: Observable<boolean>;
-	protected readonly visible: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+	protected readonly expanded: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
 	constructor(
 		@Inject(DOCUMENT)
@@ -26,48 +26,52 @@ export class NgDocSidebarService {
 		protected readonly router: Router,
 		protected readonly scroll: NgDocScrollService,
 	) {
-		this.observer = this.breakpointObserver.observe(this.breakpoints).pipe(pluck('matches'), untilDestroyed(this));
+		this.observer = this.breakpointObserver
+			.observe(this.breakpoints)
+			.pipe(pluck('matches'), distinctUntilChanged(), untilDestroyed(this));
 
-		this.router.events
+		combineLatest([this.router.events, this.isMobileMode()])
 			.pipe(
-				filter((event: Event) => event instanceof NavigationEnd && this.visible.value),
-				startWith(null),
+				filter(
+					([event, isMobileMode]: [Event, boolean]) =>
+						event instanceof NavigationEnd && this.expanded.value && isMobileMode,
+				),
+				debounceTime(10),
 			)
 			.subscribe(() => this.hide());
+
+		this.isMobileMode()
+			.pipe(untilDestroyed(this))
+			.subscribe((isMobileMode: boolean) => {
+				if (isMobileMode) {
+					this.hide();
+				} else {
+					this.show();
+					this.scroll.unblock();
+				}
+			});
 	}
 
 	/**
-	 * Indicates if sidebar can be collapsable.
-	 * You can use it to start showing a button in the navbar to show/hide sidebar.
-	 * This method uses media queries to check if sidebar is collapsable based on the current screen size.
+	 * Indicates if sidebar is collapsable, based on the screen size.
 	 */
-	isCollapsable(): Observable<boolean> {
+	isMobileMode(): Observable<boolean> {
 		return this.observer;
 	}
 
 	/**
 	 * Indicates if sidebar is visible, based on the show/hide methods.
 	 */
-	visibilityChanges(): Observable<boolean> {
-		return this.visible.asObservable();
-	}
-
-	/**
-	 * Indicates if sidebar is expanded, based on the show/hide methods and if sidebar is collapsable.
-	 * This method can be used to display backdrop when sidebar is expanded.
-	 */
 	isExpanded(): Observable<boolean> {
-		return this.isCollapsable().pipe(
-			switchMap((isCollapsable: boolean) => (isCollapsable ? this.visibilityChanges() : of(false))),
-		);
+		return this.expanded.asObservable();
 	}
 
 	/**
 	 * Show sidebar, and block scrolling.
 	 */
 	show(): void {
-		if (!this.visible.value) {
-			this.visible.next(true);
+		if (!this.expanded.value) {
+			this.expanded.next(true);
 			this.scroll.block();
 		}
 	}
@@ -76,8 +80,8 @@ export class NgDocSidebarService {
 	 * Hide sidebar, and unblock scrolling.
 	 */
 	hide(): void {
-		if (this.visible.value) {
-			this.visible.next(false);
+		if (this.expanded.value) {
+			this.expanded.next(false);
 			this.scroll.unblock();
 		}
 	}
@@ -86,6 +90,6 @@ export class NgDocSidebarService {
 	 * Toggle sidebar visibility.
 	 */
 	toggle(): void {
-		this.visible.value ? this.hide() : this.show();
+		this.expanded.value ? this.hide() : this.show();
 	}
 }

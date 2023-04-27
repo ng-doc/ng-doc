@@ -4,6 +4,7 @@ import {NG_DOC_STORE_THEME_KEY} from '@ng-doc/app/constants';
 import {NgDocTheme} from '@ng-doc/app/interfaces';
 import {NgDocStoreService} from '@ng-doc/app/services/store';
 import {NG_DOC_THEME} from '@ng-doc/app/tokens';
+import {Observable, Subject} from 'rxjs';
 
 @Injectable({
 	providedIn: 'root',
@@ -11,6 +12,7 @@ import {NG_DOC_THEME} from '@ng-doc/app/tokens';
 export class NgDocThemeService {
 	private linkElement?: HTMLLinkElement;
 	private theme: NgDocTheme | undefined = undefined;
+	private readonly theme$: Subject<NgDocTheme | undefined> = new Subject<NgDocTheme | undefined>();
 
 	constructor(
 		@Inject(DOCUMENT)
@@ -47,15 +49,23 @@ export class NgDocThemeService {
 
 				return new Promise<void>((resolve: () => void, reject: (err: Event | string) => void) => {
 					if (this.linkElement) {
-						this.linkElement.onload = resolve;
+						this.linkElement.onload = () => {
+							this.theme$.next(theme);
+							resolve();
+						};
 						this.linkElement.onerror = reject;
 					}
 				});
 			}
 		}
 		this.store.set(NG_DOC_STORE_THEME_KEY, 'day');
+		this.theme$.next(undefined);
 
 		return Promise.resolve();
+	}
+
+	themeChanges(): Observable<NgDocTheme | undefined> {
+		return this.theme$.asObservable();
 	}
 
 	private removeLink(): void {

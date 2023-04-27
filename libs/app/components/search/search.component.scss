@@ -7,7 +7,7 @@
 	--ng-doc-icon-color: var(--ng-doc-base-8);
 
 	&[data-ng-doc-mod='input'] {
-		width: 100%;
+		width: 256px;
 	}
 }
 
@@ -74,12 +74,12 @@
 			margin-right: calc(var(--ng-doc-base-gutter) / 2);
 			--ng-doc-font-weight: 900;
 
-			&[data-ng-doc-page-type="guide"] {
+			&[data-ng-doc-page-type='guide'] {
 				--ng-doc-tag-color: var(--ng-doc-guide-tag-color);
 				--ng-doc-tag-background: var(--ng-doc-guide-tag-background);
 			}
 
-			&[data-ng-doc-page-type="api"] {
+			&[data-ng-doc-page-type='api'] {
 				--ng-doc-tag-color: var(--ng-doc-api-tag-color);
 				--ng-doc-tag-background: var(--ng-doc-api-tag-background);
 			}

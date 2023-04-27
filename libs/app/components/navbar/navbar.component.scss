@@ -1,7 +1,7 @@
 @import '../../../ui-kit/styles/mixins';
 
 :host {
-	@include ng-doc-backdrop-filter(var(--ng-doc-navbar-background));
+	@include ng-doc-backdrop-filter(var(--ng-doc-navbar-background), '[data-glass-effect="false"]');
 	position: relative;
 	display: flex;
 	justify-content: center;
@@ -14,7 +14,6 @@
 
 	.navbar-container {
 		display: flex;
-		align-items: center;
 		height: 100%;
 		width: 100%;
 		padding: 0 var(--ng-doc-navbar-horizontal-padding);
@@ -26,22 +25,24 @@
 	.ng-doc-navbar-center,
 	.ng-doc-navbar-right {
 		display: flex;
+		align-items: center;
 	}
 
 	.ng-doc-navbar-left {
 		justify-content: flex-start;
-		width: var(--ng-doc-navbar-left-width);
-		flex-shrink: 0;
+		width: 100%;
+		max-width: var(--ng-doc-navbar-left-width);
 	}
 
 	.ng-doc-navbar-center {
-		padding-left: calc(var(--ng-doc-base-gutter) * 4);
+		padding: 0 var(--ng-doc-app-horizontal-padding);
 		justify-content: flex-start;
-		width: 100%;
+		max-width: calc(100% - var(--ng-doc-toc-width));
 	}
 
 	.ng-doc-navbar-right {
 		justify-content: flex-end;
+		margin-left: auto;
 	}
 
 	.ng-doc-menu {
