@@ -15,7 +15,7 @@ import {FlControlSilencerModule} from 'flex-controls';
 
 import {NgDocStringControlComponent} from './string-control.component';
 
-const provider: Provider = provideTypeControl('string', NgDocStringControlComponent);
+const provider: Provider = provideTypeControl('string', NgDocStringControlComponent, {order: 20});
 
 @NgModule({
 	declarations: [NgDocStringControlComponent],

@@ -1,10 +1,9 @@
 import {asArray, NgDocApiScope} from '@ng-doc/core';
 import * as glob from 'glob';
-import {SourceFile} from 'ts-morph';
+import {ExportedDeclarations, SourceFile} from 'ts-morph';
 
 import {NgDocApiEntity, NgDocApiPageEntity, NgDocApiScopeEntity} from '../engine';
 import {NgDocSupportedDeclarations} from '../types';
-import {isNotExcludedPath} from './is-not-excluded-path';
 import {isSupportedDeclaration} from './is-supported-declaration';
 
 /**
@@ -13,58 +12,77 @@ import {isSupportedDeclaration} from './is-supported-declaration';
  */
 export function generateApiEntities(apiRootEntity: NgDocApiEntity): Array<NgDocApiScopeEntity | NgDocApiPageEntity> {
 	const result: Array<NgDocApiScopeEntity | NgDocApiPageEntity> = [];
+	const scopes: Map<string, NgDocApiScopeEntity> = new Map();
+	const duplicatesInScope: Map<NgDocApiScopeEntity, Map<string, number>> = new Map();
 
-	apiRootEntity.target?.scopes.forEach((scope: NgDocApiScope) => {
-		const scopeEntity: NgDocApiScopeEntity = new NgDocApiScopeEntity(
-			apiRootEntity.builder,
-			apiRootEntity.sourceFile,
-			apiRootEntity.context,
-			apiRootEntity,
-			scope,
-		);
+	const paths: string[] =
+		apiRootEntity.target?.scopes
+			.map((scope: NgDocApiScope) => {
+				const scopeEntity: NgDocApiScopeEntity = new NgDocApiScopeEntity(
+					apiRootEntity.builder,
+					apiRootEntity.sourceFile,
+					apiRootEntity.context,
+					apiRootEntity,
+					scope,
+				);
+				const files: string[] = asArray(scope.include)
+					.map((i: string) =>
+						glob.sync(i, {
+							ignore: scope.exclude,
+							absolute: true,
+						}),
+					)
+					.flat();
 
-		result.push(scopeEntity);
+				files.forEach((f: string) => scopes.set(f, scopeEntity));
 
-		asArray(scope.include).forEach((include: string) =>
-			asArray(
-				new Set(
-					apiRootEntity.builder.project
-						.addSourceFilesAtPaths(
-							glob.sync(include).filter((p: string) => isNotExcludedPath(p, asArray(scope.exclude))),
-						)
-						.map((sourceFile: SourceFile) => asArray(sourceFile.getExportedDeclarations().values()))
-						.flat(2),
-				),
-			)
-				.filter(isSupportedDeclaration)
-				.forEach(
-					(
-						declaration: NgDocSupportedDeclarations,
-						_i: number,
-						declarations: NgDocSupportedDeclarations[],
-					) => {
-						const name: string | undefined = declaration.getName();
-						const duplicates: NgDocSupportedDeclarations[] = declarations.filter(
-							(d: NgDocSupportedDeclarations) =>
-								d.getName() === name && d.getKindName() === declaration.getKindName(),
-						);
+				result.push(scopeEntity);
 
-						if (name) {
-							result.push(
-								new NgDocApiPageEntity(
-									apiRootEntity.builder,
-									declaration.getSourceFile(),
-									apiRootEntity.context,
-									scopeEntity,
-									name,
-									duplicates.indexOf(declaration),
-								),
-							);
-						}
-					},
-				),
-		);
-	});
+				return files;
+			})
+			.flat() ?? [];
+
+	apiRootEntity.builder.project
+		.addSourceFilesAtPaths(paths)
+		.map((sourceFile: SourceFile) => sourceFile.getExportedDeclarations())
+		.reduce(
+			(acc: Map<string, NgDocSupportedDeclarations[]>, declarations: ReadonlyMap<string, ExportedDeclarations[]>) => {
+				declarations.forEach((value: ExportedDeclarations[], key: string) => {
+					const existing: NgDocSupportedDeclarations[] | undefined = acc.get(key);
+					const supported: NgDocSupportedDeclarations[] = value.filter(isSupportedDeclaration);
+
+					existing ? acc.set(key, asArray(new Set(existing.concat(supported)))) : acc.set(key, supported);
+				});
+
+				return acc;
+			},
+			new Map(),
+		)
+		.forEach((declarations: NgDocSupportedDeclarations[], name: string) => {
+			declarations.forEach((declaration: NgDocSupportedDeclarations) => {
+				const sourceFile: SourceFile = declaration.getSourceFile();
+				const scope: NgDocApiScopeEntity | undefined = scopes.get(sourceFile.getFilePath());
+
+				if (scope) {
+					const duplicates: Map<string, number> = duplicatesInScope.get(scope) ?? new Map();
+					const count: number = duplicates.get(name) ?? 0;
+
+					const page: NgDocApiPageEntity = new NgDocApiPageEntity(
+						apiRootEntity.builder,
+						sourceFile,
+						apiRootEntity.context,
+						scope,
+						name,
+						count,
+					);
+
+					duplicates.set(name, count + 1);
+					duplicatesInScope.set(scope, duplicates);
+
+					result.push(page);
+				}
+			});
+		});
 
 	return result;
 }

@@ -8,7 +8,7 @@ import {SKIP, visitParents} from 'unist-util-visit-parents';
 
 import {hasLinkAncestor, isCodeNode} from '../helpers';
 
-const languages: string[] = ['typescript'];
+const languages: string[] = ['typescript', 'ts'];
 
 export type AddUsedKeyword = (keyword: string) => void;
 export type GetKeyword = (keyword: string) => NgDocKeyword | undefined;
