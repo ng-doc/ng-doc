@@ -1,31 +1,27 @@
 :host {
 	display: flex;
 	flex-direction: column;
-	padding: 40px;
 	background: var(--ng-doc-base-1);
-	border-radius: 40px;
+	border-radius: 24px;
+	overflow: hidden;
 
 	.ng-doc-tile-media {
+		padding: 24px 24px 0;
 		overflow: hidden;
+		height: 100%;
+	}
+
+	h3 {
+		margin: 0;
 	}
 
 	.ng-doc-tile-content {
 		display: flex;
 		flex-direction: column;
-
-		h3 {
-			margin: 0;
-			--ng-doc-font-size: 40px;
-			--ng-doc-line-height: 48px;
-			--ng-doc-font-weight: 800;
-		}
+		padding: 24px;
 
 		.ng-doc-tile-description {
 			max-width: 650px;
-
-			--ng-doc-font-size: 24px;
-			--ng-doc-line-height: 30px;
-			--ng-doc-font-weight: 400;
 		}
 	}
 }

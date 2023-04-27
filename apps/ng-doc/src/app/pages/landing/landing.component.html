@@ -1,169 +1,94 @@
 <section id="greeting" class="greeting">
-	<ng-doc-background></ng-doc-background>
+	<ng-doc-background style="opacity: 0.4"></ng-doc-background>
 	<div class="section-container">
-		<div class="container row space-between">
+		<div class="container row center">
 			<div class="greeting-content">
-				<h1 ng-doc-text>Documentation for<br />Angular projects</h1>
-				<p ng-doc-text>Привяжите свою документацию к коду и забудьте о постоянной поддержке и обновлениях</p>
+				<h1 ng-doc-text align="center">Documentation for<br />Angular projects</h1>
+				<p ng-doc-text align="center">Create a beautiful documentation for your project in minutes!</p>
 				<div class="greeting-buttons">
-					<a ng-doc-button-flat [routerLink]="['docs']" size="large" color="grey" [rounded]="true"> Quick start </a>
+					<a ng-doc-button-flat [routerLink]="['docs']" size="large" color="grey" [rounded]="true">
+						<span ng-doc-text>
+							Quick start
+							<ng-doc-icon icon="zap" [size]="24" ngDocTextLeft></ng-doc-icon>
+						</span>
+					</a>
+				</div>
+				<div class="greeting-shields">
+					<a href="https://www.npmjs.com/package/@ng-doc/builder" target="_blank">
+						<img src="https://img.shields.io/npm/v/@ng-doc/builder.svg?style=for-the-badge" />
+					</a>
+
+					<a href="https://github.com/skoropadas/ng-doc/stargazers" target="_blank">
+						<img src="https://img.shields.io/github/stars/skoropadas/ng-doc?style=for-the-badge" />
+					</a>
+
+					<a href="https://github.com/skoropadas/ng-doc/blob/main/LICENSE" target="_blank">
+						<img src="https://img.shields.io/github/license/skoropadas/ng-doc.svg?style=for-the-badge" />
+					</a>
 				</div>
 			</div>
-			<img src="assets/images/ng-doc.svg" />
+
+			<figure>
+				<video autoplay muted loop playsinline>
+					<source src="http://assets.ng-doc.com/ng-doc-in-action-landscape.mp4" type="video/mp4" />
+					You need a browser that supports HTML5 video to view this video.
+				</video>
+			</figure>
 		</div>
-		<h2 ng-doc-text>How it works</h2>
 	</div>
 </section>
 
-<section id="how-it-works" class="how-it-works">
+<section id="try-it" class="try-it">
 	<div class="section-container">
-		<figure>
-			<video autoplay muted loop playsinline>
-				<source src="http://assets.ng-doc.com/ng-doc-in-action-landscape.mp4" type="video/mp4" />
-				You need a browser that supports HTML5 video to view this video.
-			</video>
-		</figure>
+		<h1 ng-doc-text>Try it out for yourself!</h1>
+		<div class="container">
+			<!--			<iframe src="https://stackblitz.com/edit/node-pw2tyk?embed=1&file=src/app/docs/button/index.md&hideNavigation=1">-->
+			<!--			</iframe>-->
+		</div>
 	</div>
 </section>
 
-<section id="features" class="features">
-	<div class="section-container grid">
-		<ng-doc-tile title="Markdown + Nunjucks" style="grid-column: span 6">
-			Markdown of NgDoc supports Nunjucks, so you can extend, include and reuse your markdown templates which making
-			them truthfully dynamic!
-		</ng-doc-tile>
+<!--<section id="features" class="features">-->
+<!--	<div class="section-container grid">-->
+<!--		<ng-doc-tile title="Markdown + Nunjucks" [media]="mdNjMedia" style="grid-column: span 2">-->
+<!--			<ng-template #mdNjMedia>-->
+<!--				<ng-doc-icon class="feature-icon" icon="align-center" [size]="24"></ng-doc-icon>-->
+<!--			</ng-template>-->
 
-		<ng-doc-tile title="Demos" [media]="demoMedia" style="grid-column: span 3">
-			<ng-template #demoMedia>
-				<img src="assets/landing/demo.png" />
-			</ng-template>
-			NgDoc includes two different types of demos, so you can choose the one that suits you best and display it via just
-			one line of code!
-		</ng-doc-tile>
+<!--			Markdown of NgDoc supports Nunjucks, so you can extend, include and reuse your markdown templates which making-->
+<!--			them truthfully dynamic!-->
+<!--		</ng-doc-tile>-->
 
-		<ng-doc-tile title="Playgrounds" [media]="playgroundMedia" style="grid-column: span 3">
-			<ng-template #playgroundMedia>
-				<img src="assets/landing/playground.png" />
-			</ng-template>
-			NgDoc provides playgrounds that read inputs of your components and directives and creates a live example of it!
-		</ng-doc-tile>
+<!--		<ng-doc-tile title="Demos" [media]="demoMedia" style="grid-column: span 2">-->
+<!--			<ng-template #demoMedia>-->
+<!--			</ng-template>-->
 
-		<ng-doc-tile title="API Documentation" style="grid-column: span 6">
-			NgDoc can automatically generate and update API Documentation based on your code!
-		</ng-doc-tile>
+<!--			NgDoc includes two different types of demos, so you can choose the one that suits you best and display it via just-->
+<!--			one line of code!-->
+<!--		</ng-doc-tile>-->
 
-		<ng-doc-tile title="Full-text search" style="grid-column: span 2">
-			NgDoc automatically indexes everything you write to create a better search experience for your users
-		</ng-doc-tile>
+<!--		<ng-doc-tile title="Playgrounds" [media]="playgroundMedia" style="grid-column: span 2">-->
+<!--			<ng-template #playgroundMedia>-->
+<!--			</ng-template>-->
+<!--			NgDoc provides playgrounds that read inputs of your components and directives and creates a live example of it!-->
+<!--		</ng-doc-tile>-->
 
-		<ng-doc-tile title="Keywords" style="grid-column: span 2">
-			You can use keywords to link your guides and API, NgDoc will automatically update them! Keywords also work in the
-			code blocks!
-		</ng-doc-tile>
+<!--		<ng-doc-tile title="API Documentation" style="grid-column: span 6">-->
+<!--			NgDoc can automatically generate and update API Documentation based on your code!-->
+<!--		</ng-doc-tile>-->
 
-		<ng-doc-tile title="Customization" style="grid-column: span 2">
-			Interface is fully customizable! You can change colors, fonts, sizes, replace sidebar or header with your own
-			components and much more!
-		</ng-doc-tile>
-	</div>
-</section>
+<!--		<ng-doc-tile title="Full-text search" style="grid-column: span 2">-->
+<!--			NgDoc automatically indexes everything you write to create a better search experience for your users-->
+<!--		</ng-doc-tile>-->
 
-<!--<div id="landing-wrapper" xmlns="http://www.w3.org/1999/html">-->
-<!--	<div id="landing-content">-->
-<!--		<section class="greeting">-->
-<!--			<ng-doc-background></ng-doc-background>-->
+<!--		<ng-doc-tile title="Keywords" style="grid-column: span 2">-->
+<!--			You can use keywords to link your guides and API, NgDoc will automatically update them! Keywords also work in the-->
+<!--			code blocks!-->
+<!--		</ng-doc-tile>-->
 
-<!--			<div class="ng-doc-container">-->
-<!--				<div class="ng-doc-landing-header">-->
-<!--					<h1 ng-doc-text align="center">-->
-<!--						Easy to start, easy to use! <br />-->
-<!--						Documentation engine based on Angular.-->
-<!--					</h1>-->
-<!--					<div class="subtitle" ng-doc-text align="center">-->
-<!--						Fully automated documentation engine that will save you time and effort.-->
-<!--					</div>-->
-
-<!--					&lt;!&ndash;					<div class="ng-doc-landing-buttons">&ndash;&gt;-->
-<!--					&lt;!&ndash;						<a ng-doc-button-flat [routerLink]="['docs']" size="large" color="primary">&ndash;&gt;-->
-<!--					&lt;!&ndash;							<span ng-doc-text>&ndash;&gt;-->
-<!--					&lt;!&ndash;								<ng-doc-icon icon="arrow-right" ngDocTextRight></ng-doc-icon>&ndash;&gt;-->
-<!--					&lt;!&ndash;								Get Started&ndash;&gt;-->
-<!--					&lt;!&ndash;							</span>&ndash;&gt;-->
-<!--					&lt;!&ndash;						</a>&ndash;&gt;-->
-<!--					&lt;!&ndash;					</div>&ndash;&gt;-->
-<!--				</div>-->
-
-<!--				<div class="ng-doc-landing-preview">-->
-<!--					<a href="#try-it">-->
-<!--						<img class="editor" src="assets/landing/editor.png" alt="ng-doc logo" />-->
-<!--						<img class="preview" src="assets/landing/demo-app.png" alt="ng-doc logo" />-->
-<!--					</a>-->
-<!--				</div>-->
-<!--			</div>-->
-<!--		</section>-->
-
-<!--		<section id="features">-->
-<!--			<div class="ng-doc-landing-header">-->
-<!--				<h1 ng-doc-text align="center">-->
-<!--					Everything you need <br />-->
-<!--					to create a great documentation!-->
-<!--				</h1>-->
-<!--			</div>-->
-<!--			<div class="ng-doc-container panes">-->
-<!--				<ng-doc-pane title="Full-Text search out of the box!">-->
-<!--					NgDoc automatically indexes everything you write, so you can search for anything you want!-->
-<!--				</ng-doc-pane>-->
-
-<!--				<ng-doc-pane-->
-<!--					title="API Documentation based on your code"-->
-<!--					orientation="vertical"-->
-<!--					[media]="media"-->
-<!--					style="grid-row: span 2"-->
-<!--				>-->
-<!--					One small configuration file, and NgDoc starts rendering documentation based on your code-->
-
-<!--					<ng-template #media>-->
-<!--						<img src="assets/landing/ng-doc-api.png" />-->
-<!--					</ng-template>-->
-<!--				</ng-doc-pane>-->
-
-<!--				<ng-doc-pane title="Dynamic markdown">-->
-<!--					Markdown of NgDoc supports Nunjucks, so you can extend, include and reuse your markdown files!-->
-<!--				</ng-doc-pane>-->
-
-<!--				<ng-doc-pane title="Demo and Playgrounds">-->
-<!--					You can easily create interactive playgrounds and demos, and share them with your users!-->
-<!--				</ng-doc-pane>-->
-
-<!--				<ng-doc-pane title="Keywords">-->
-<!--					Use keywords for you Guides and API to create dynamic links and avoid situations when you need to update them-->
-<!--					manually!-->
-<!--				</ng-doc-pane>-->
-<!--			</div>-->
-<!--		</section>-->
-
-<!--		<ng-template-->
-<!--			[ngDocMediaQuery]="[-->
-<!--				mediaQuery.breakpoints.XLarge,-->
-<!--				mediaQuery.breakpoints.Large,-->
-<!--				mediaQuery.breakpoints.Medium,-->
-<!--				mediaQuery.breakpoints.Small-->
-<!--			]"-->
-<!--			#mediaQuery="ngDocMediaQuery"-->
-<!--		>-->
-<!--			<section id="try-it">-->
-<!--				<div class="ng-doc-container">-->
-<!--					<div class="ng-doc-landing-header">-->
-<!--						<h2 ng-doc-text align="center">Try it!</h2>-->
-<!--						<div class="subtitle" ng-doc-text align="center">Here is a simple example of how to write guides.</div>-->
-<!--					</div>-->
-<!--					&lt;!&ndash;		<iframe&ndash;&gt;-->
-<!--					&lt;!&ndash;			src="https://stackblitz.com/edit/node-pw2tyk?embed=1&file=src/app/docs/button/index.md&hideNavigation=1"&ndash;&gt;-->
-<!--					&lt;!&ndash;		></iframe>&ndash;&gt;-->
-<!--				</div>-->
-<!--			</section>-->
-<!--		</ng-template>-->
-
-<!--		<a [routerLink]="['docs']">Go to Docs</a>-->
+<!--		<ng-doc-tile title="Customization" style="grid-column: span 2">-->
+<!--			Interface is fully customizable! You can change colors, fonts, sizes, replace sidebar or header with your own-->
+<!--			components and much more!-->
+<!--		</ng-doc-tile>-->
 <!--	</div>-->
-<!--</div>-->
+<!--</section>-->

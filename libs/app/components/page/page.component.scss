@@ -3,7 +3,9 @@
 
 	article {
 		position: relative;
-		width: 100%;
+		width: var(--ng-doc-article-width, 100%);
+		margin-left: auto;
+		margin-right: auto;
 		overflow: hidden;
 
 		.ng-doc-page-controls {

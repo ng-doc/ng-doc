@@ -1,6 +1,17 @@
-import {ChangeDetectionStrategy, Component, Directive, HostBinding, Input} from '@angular/core';
+import {
+	AfterViewInit,
+	ChangeDetectionStrategy,
+	Component,
+	Directive,
+	HostBinding,
+	Input,
+	ViewChild,
+} from '@angular/core';
 import {NgDocSidebarService} from '@ng-doc/app/services/sidebar';
+import {NgDocHorizontalAlign, NgDocSidenavComponent} from '@ng-doc/ui-kit';
 import {UntilDestroy} from '@ngneat/until-destroy';
+import {combineLatest, merge, NEVER, Observable, of} from 'rxjs';
+import {delay, filter, map, mapTo, tap} from 'rxjs/operators';
 
 /**
  * Directive uses for providing custom navbar, you should mark element with this directive
@@ -46,9 +57,10 @@ export class NgDocCustomSidebarDirective {}
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @UntilDestroy()
-export class NgDocRootComponent {
+export class NgDocRootComponent implements AfterViewInit {
 	/**
 	 * If `true` then the sidebar will be shown
+	 * You can use it for example for landing page to hide sidebar
 	 */
 	@Input()
 	sidebar: boolean = true;
@@ -61,8 +73,31 @@ export class NgDocRootComponent {
 	@HostBinding('attr.data-ng-doc-no-width-limit')
 	noWidthLimit: boolean = false;
 
-	@HostBinding('@.disabled')
-	disabledAnimations: boolean = false;
+	@ViewChild(NgDocSidenavComponent)
+	sidenav?: NgDocSidenavComponent;
+
+	protected sidenavState$: Observable<{
+		over: boolean;
+		align: NgDocHorizontalAlign;
+		hasBackdrop: boolean;
+	}> = NEVER;
 
 	constructor(protected readonly sidebarService: NgDocSidebarService) {}
+
+	ngAfterViewInit(): void {
+		this.sidenavState$ = combineLatest([
+			this.sidebarService.isMobileMode(),
+			this.sidenav
+				? merge(this.sidenav.beforeOpen.pipe(mapTo(true)), this.sidenav.afterClose.pipe(mapTo(false)))
+				: of(true),
+		]).pipe(
+			filter(([isMobile, opened]: [boolean, boolean]) => !opened || (opened && !isMobile)),
+			map(([isMobile]: [boolean, boolean]) => ({
+				over: isMobile,
+				align: (isMobile ? 'right' : 'left') as NgDocHorizontalAlign,
+				hasBackdrop: isMobile,
+			})),
+			delay(0),
+		);
+	}
 }

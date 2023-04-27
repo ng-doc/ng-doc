@@ -67,10 +67,14 @@ export class NgDocNavbarComponent {
 				distinctUntilChanged(),
 				startWith(false),
 			),
+			this.sidebarService.isMobileMode(),
 			this.sidebarService.isExpanded(),
 		])
 			.pipe(
-				map(([scrolled, sidebarVisible]: [boolean, boolean]) => scrolled || sidebarVisible),
+				map(
+					([scrolled, isMobileMode, isExpanded]: [boolean, boolean, boolean]) =>
+						scrolled || (isMobileMode && isExpanded),
+				),
 				ngDocZoneOptimize(this.ngZone),
 				untilDestroyed(this),
 			)

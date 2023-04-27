@@ -3,6 +3,26 @@
 :host {
 	width: 100%;
 
+	&[data-ng-doc-align='right'] {
+		.ng-doc-sidenav-wrapper {
+			flex-direction: row-reverse;
+		}
+	}
+
+	&[data-ng-doc-over='true'] {
+		.ng-doc-sidenav-content {
+			min-width: 100%;
+		}
+
+		&[data-ng-doc-align='left'] .ng-doc-sidenav {
+			--ng-doc-sidebar-shadow: var(--ng-doc-shadow-color) -5px 5px 20px -5px;
+		}
+
+		&[data-ng-doc-align='right'] .ng-doc-sidenav {
+			--ng-doc-sidebar-shadow: var(--ng-doc-shadow-color) 0px 5px 20px -5px;
+		}
+	}
+
 	.ng-doc-sidenav-wrapper {
 		position: relative;
 		display: flex;
@@ -15,6 +35,7 @@
 		width: var(--ng-doc-sidenav-width);
 		flex-shrink: 0;
 		z-index: 5;
+		transition: box-shadow var(--ng-doc-transition);
 	}
 
 	.ng-doc-sidenav-content {
@@ -23,7 +44,8 @@
 	}
 
 	.ng-doc-backdrop {
-		@include ng-doc-backdrop-filter(rgba(0, 0, 0, 0.2));
+		@include ng-doc-backdrop-filter(rgba(0, 0, 0, 0.2), 'nothing');
+
 		position: fixed;
 		left: 0;
 		top: 0;

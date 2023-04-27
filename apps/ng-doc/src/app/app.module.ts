@@ -4,6 +4,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
 import {
+	NG_DOC_NIGHT_THEME,
 	NgDocDefaultSearchEngine,
 	NgDocModule,
 	NgDocNavbarModule,
@@ -22,7 +23,7 @@ import {AppComponent} from './app.component';
 		BrowserModule,
 		BrowserAnimationsModule,
 		HttpClientModule,
-		NgDocModule.forRoot(),
+		NgDocModule.forRoot({defaultThemeId: NG_DOC_NIGHT_THEME.id}),
 		NgDocGeneratedModule.forRoot(),
 		RouterModule.forRoot(
 			[

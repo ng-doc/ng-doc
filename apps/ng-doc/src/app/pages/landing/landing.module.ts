@@ -6,7 +6,7 @@ import {NgDocButtonModule, NgDocIconModule, NgDocMediaQueryModule, NgDocTextModu
 
 import {BackgroundComponent} from './background/background.component';
 import {LandingComponent} from './landing.component';
-import {TileComponent} from './pane/tile.component';
+import {TileComponent} from './tile/tile.component';
 
 @NgModule({
 	imports: [
