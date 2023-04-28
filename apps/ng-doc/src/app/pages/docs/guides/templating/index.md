@@ -68,7 +68,7 @@ So, for example to render title, you can do this
 
 The `NgDocActions` provides some functions that you can call to render demo on the page,
 for example, to render demo you can call `demo` method with the name of you demo component.
-You can read more about the demo in the `*ContentGuidesDemo`.
+You can read more about the demo in the `*GuidesDemo`.
 
 ```twig fileName="index.md"
 {{ '{{ NgDocActions.demo("MyDemoComponent") }}' | safe }}
@@ -144,26 +144,24 @@ And to load from a specific line to the end of the file, you can write the follo
 
 ```
 
-### Note
+### Blockquotes
 
-To create a note-style `blockquote` you can write the following
-
-```markdown fileName="index.md"
-> **Note**
-> This is note blockquote
-```
-
-> **Note**
-> This is note blockquote
-
-### Warning
-
-Or if you want to create a warning-style `blockquote` you can write the following
+NgDoc supports default blockquotes and some custom blockquotes, for example, you can use
+`Note` and `Warning` blockquotes to highlight some important information in your guides
 
 ```markdown fileName="index.md"
+> Default blockquote
+
+> **Note**
+> This is note blockquote
+
 > **Warning**
 > This is warning blockquote
 ```
+> Default blockquote
+
+> **Note**
+> This is note blockquote
 
 > **Warning**
 > This is warning blockquote
@@ -172,7 +170,7 @@ Or if you want to create a warning-style `blockquote` you can write the followin
 
 ## See Also
 
-- `*ContentGuidesDemo`
-- `*ContentKeywords`
+- `*GuidesDemo`
+- `*FeaturesKeywords`
 
 {% endindex %}

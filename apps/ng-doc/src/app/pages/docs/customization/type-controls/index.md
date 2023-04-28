@@ -148,6 +148,6 @@ later, when our API stabilizes.
 
 ## See Also
 
-- `*ContentGuidesPlayground`
+- `*GuidesPlayground`
 
 {% endindex %}

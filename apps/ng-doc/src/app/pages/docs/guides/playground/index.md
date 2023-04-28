@@ -85,10 +85,7 @@ from `NgDocActions`, passing the key of your playground to it as follows
 {{'{{ NgDocActions.playground("TagPlayground") }}' | safe }}
 ```
 
-## Playground example
-
-NgDoc will recognize `@Input` field types and creates controls for them, which allow you to change
-their
+NgDoc will recognize `@Input` field types and creates controls for them, which allow you to change their
 values and see how the component changes.
 
 {{ NgDocActions.playground("TagPlayground") }}
@@ -137,8 +134,6 @@ const PageDependencies: NgDocDependencies = {
 export default PageDependencies;
 ```
 
-### Example of output
-
 NgDoc will create new control in the `Content` section that allows you to display or hide dynamic
 content.
 
@@ -170,8 +165,6 @@ const PageDependencies: NgDocDependencies = {
 
 export default PageDependencies;
 ```
-
-### Example of output
 
 {{ NgDocActions.playground("TagDataPlayground") }}
 

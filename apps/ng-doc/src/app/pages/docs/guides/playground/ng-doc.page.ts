@@ -2,12 +2,11 @@ import {NgDocPage} from '@ng-doc/core';
 
 import GuidesCategory from '../ng-doc.category';
 
-const DemoPage: NgDocPage = {
-	title: 'Demo',
+const PlaygroundPage: NgDocPage = {
+	title: `Playground`,
 	mdFile: './index.md',
 	category: GuidesCategory,
-	order: 2,
-	keyword: 'ContentGuidesDemo',
+	keyword: 'GuidesPlayground',
 };
 
-export default DemoPage;
+export default PlaygroundPage;

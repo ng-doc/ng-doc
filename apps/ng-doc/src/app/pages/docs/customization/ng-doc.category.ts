@@ -2,7 +2,7 @@ import {NgDocCategory} from '@ng-doc/core';
 
 const CustomizationCategory: NgDocCategory = {
 	title: 'Customization',
-	order: 4,
+	order: 6,
 	expandable: true,
 };
 

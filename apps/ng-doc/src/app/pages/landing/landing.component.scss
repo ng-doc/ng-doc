@@ -37,7 +37,6 @@
 
 				.greeting-shields {
 					display: flex;
-					justify-content: center;
 					margin-top: 72px;
 					flex-wrap: wrap;
 					gap: var(--ng-doc-base-gutter);
@@ -45,7 +44,6 @@
 
 				.greeting-buttons {
 					display: flex;
-					justify-content: center;
 					margin-top: calc(var(--ng-doc-base-gutter) * 2);
 
 					a {
@@ -112,7 +110,7 @@
 		flex-direction: column;
 		margin: 0 auto;
 		padding: 48px 16px 92px;
-		max-width: 1340px;
+		max-width: var(--ng-doc-app-max-width);
 
 		&.grid {
 			display: grid;
@@ -123,6 +121,7 @@
 
 	.container {
 		display: flex;
+		padding: 0 8px;
 
 		&.row {
 			flex-direction: row;

@@ -61,7 +61,7 @@
 			<ng-doc-dropdown
 				[content]="searchResults"
 				positions="bottom-right"
-				[width]="500"
+				[width]="input.elementRef.nativeElement.offsetWidth"
 				maxHeight="calc(95vh - var(--ng-doc-navbar-height)"
 				#dropdown
 			>

@@ -12,7 +12,7 @@
 <h3 align="center">NgDoc</h3>
 
   <p align="center">
-    Create documentation faster than ever!
+    Create user-friendly documentation for your projects with ease!
     <br />
     <a href="https://ng-doc.com/"><strong>Explore the docs »</strong></a>
     <br />

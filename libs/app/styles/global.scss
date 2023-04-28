@@ -47,3 +47,7 @@ body {
 ::-webkit-scrollbar-thumb:hover {
 	background: var(--ng-doc-base-8);
 }
+
+::selection {
+	background: rgba(var(--ng-doc-primary-rgb), 0.2);
+}

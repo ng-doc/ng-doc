@@ -7,7 +7,7 @@ const DemoPanePage: NgDocPage = {
 	mdFile: './index.md',
 	category: GuidesCategory,
 	order: 3,
-	keyword: 'ContentGuidesDemoPane',
+	keyword: 'GuidesDemoPane',
 };
 
 export default DemoPanePage;

@@ -4,9 +4,9 @@
 	</div>
 	<div class="ng-doc-navbar-center">
 		<ng-container *polymorpheusOutlet="centerContent"></ng-container>
+		<ng-doc-search *ngIf="search && !isMobileMode"></ng-doc-search>
 	</div>
 	<div class="ng-doc-navbar-right">
-		<ng-doc-search *ngIf="search && !isMobileMode"></ng-doc-search>
 		<ng-doc-search *ngIf="search && isMobileMode" mod="icon"></ng-doc-search>
 		<ng-container *polymorpheusOutlet="rightContent"></ng-container>
 		<button

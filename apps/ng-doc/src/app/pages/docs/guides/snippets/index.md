@@ -39,7 +39,7 @@ NgDoc will render its code like below
 
 ## See Also
 
-- `*ContentGuidesDemo`
-- `*ContentGuidesDemoPane`
+- `*GuidesDemo`
+- `*GuidesDemoPane`
 
 {% endindex %}

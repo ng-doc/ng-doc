@@ -3,7 +3,7 @@
 What is documentation without a demo right? Sometimes we all like to look at
 the code and usage first, and only then read the documentation.
 
-{% include "../../../shared/creating-demo.md" %}
+{% include "../../shared/creating-demo.md" %}
 
 ## Displaying demo
 
@@ -66,8 +66,8 @@ To customize only specific demo, you can provide CSS class to the options of the
 
 - `*EntitiesPage`
 - `*EntitiesDependencies`
-- `*ContentGuidesDemoPane`
-- `*ContentGuidesPlayground`
-- `*ContentGuidesSnippets`
+- `*GuidesDemoPane`
+- `*GuidesPlayground`
+- `*GuidesSnippets`
 
 {% endindex %}

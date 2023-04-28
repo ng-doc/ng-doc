@@ -69,7 +69,7 @@ export default MyPageDependencies;
 ## See also
 
 - `*EntitiesPage`
-- `*ContentGuidesDemo`
-- `*ContentGuidesPlayground`
+- `*GuidesDemo`
+- `*GuidesPlayground`
 
 {% endindex %}

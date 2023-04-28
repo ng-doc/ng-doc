@@ -1,5 +1,5 @@
 <ng-doc-root [sidebar]="!isLandingPage" [noWidthLimit]="isLandingPage" [footerContent]="footerContent">
-	<ng-doc-navbar [leftContent]="leftContent" [rightContent]="rightContent" [hamburger]="!isLandingPage">
+	<ng-doc-navbar [leftContent]="leftContent" [rightContent]="rightContent" [hamburger]="!isLandingPage" [search]="!isLandingPage">
 		<ng-template #leftContent>
 			<a class="brand" routerLink="/">
 				<h3>
@@ -25,7 +25,7 @@
 				<a
 					href="https://github.com/skoropadas/ng-doc"
 					ng-doc-button-icon
-					ngDocTooltip="Check repo"
+					ngDocTooltip="Repository on GitHub"
 					size="large"
 					target="_blank"
 				>
