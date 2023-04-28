@@ -24,6 +24,12 @@ export abstract class NgDocEntity {
 	indexes: NgDocPageIndex[] = [];
 
 	/**
+	 * List of keywords that are used by the entity
+	 * (they will be sat by Keywords Processor, and used to indicate when this entity should be re-build if one of them appears)
+	 */
+	usedKeywords: Set<string> = new Set<string>();
+
+	/**
 	 * Collection of all file dependencies of the current entity.
 	 * This property is using to watch for changes in this dependencies list and rebuild current buildable.
 	 */
@@ -224,7 +230,7 @@ export abstract class NgDocEntity {
 							return utils.htmlPostProcessor(artifact.content, {
 								headings: this.context.config.guide?.anchorHeadings,
 								route: isRouteEntity(this) ? this.fullRoute : undefined,
-								addUsedKeyword: isRouteEntity(this) ? this.usedKeywords.add.bind(this.usedKeywords) : undefined,
+								addUsedKeyword: this.usedKeywords.add.bind(this.usedKeywords),
 								getKeyword: this.builder.entities.getByKeyword.bind(this.builder.entities),
 							});
 						}),
