@@ -21,12 +21,6 @@ export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T>
 	abstract keywords: string[];
 
 	/**
-	 * List of keywords that are used by the entity
-	 * (they will be sat by Keywords Processor, and used to indicate when this entity should be re-build if one of them appears)
-	 */
-	usedKeywords: Set<string> = new Set<string>();
-
-	/**
 	 * Url for to the source file to the current page, that can be used to open it in repository and edit
 	 */
 	get editSourceFileUrl(): string | undefined {

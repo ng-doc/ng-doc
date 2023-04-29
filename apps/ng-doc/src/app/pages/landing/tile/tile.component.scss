@@ -1,0 +1,27 @@
+:host {
+	display: flex;
+	flex-direction: column;
+	background: var(--ng-doc-base-1);
+	border-radius: 24px;
+	overflow: hidden;
+
+	.ng-doc-tile-media {
+		padding: 24px 24px 0;
+		overflow: hidden;
+		height: 100%;
+	}
+
+	h3 {
+		margin: 0;
+	}
+
+	.ng-doc-tile-content {
+		display: flex;
+		flex-direction: column;
+		padding: 24px;
+
+		.ng-doc-tile-description {
+			max-width: 650px;
+		}
+	}
+}

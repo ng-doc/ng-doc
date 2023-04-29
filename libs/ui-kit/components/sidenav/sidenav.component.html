@@ -1,0 +1,14 @@
+<div class="ng-doc-sidenav-wrapper">
+	<div
+		class="ng-doc-sidenav"
+		[@sidenavAnimation]="opened ? align : false"
+		(@sidenavAnimation.start)="animationStart($event)"
+		(@sidenavAnimation.done)="animationDone($event)"
+	>
+		<ng-container *polymorpheusOutlet="sidebar"></ng-container>
+	</div>
+	<div class="ng-doc-sidenav-content" [@sidenavContentAnimation]="!over ? opened : false">
+		<div class="ng-doc-backdrop" @backdropFade *ngIf="backdrop" (click)="closeEvent.emit()"></div>
+		<ng-content></ng-content>
+	</div>
+</div>
