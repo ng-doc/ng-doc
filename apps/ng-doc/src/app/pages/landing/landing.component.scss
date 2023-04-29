@@ -20,7 +20,7 @@
 
 			figure {
 				width: 100%;
-				max-width: 850px;
+				max-width: 900px;
 			}
 
 			.container {
@@ -109,7 +109,7 @@
 		display: flex;
 		flex-direction: column;
 		margin: 0 auto;
-		padding: 48px 16px 92px;
+		padding: 48px var(--ng-doc-app-horizontal-padding) 92px;
 		max-width: var(--ng-doc-app-max-width);
 
 		&.grid {
@@ -121,7 +121,6 @@
 
 	.container {
 		display: flex;
-		padding: 0 8px;
 
 		&.row {
 			flex-direction: row;

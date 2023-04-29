@@ -51,8 +51,12 @@ export class NgDocThemeService {
 	 * @param id Theme id.
 	 * @param save Whether to save the theme in the store to restore it when the page is reloaded. (`true` by default)
 	 */
-	set(id?: string, save: boolean = true): Promise<void> {
+	set(id?: string | 'auto', save: boolean = true): Promise<void> {
 		this.removeLink();
+
+		if (id === 'auto') {
+			return Promise.resolve();
+		}
 
 		save && this.disableAutoTheme$.next();
 
