@@ -1,3 +1,18 @@
+# [15.13.0](https://github.com/skoropadas/ng-doc/compare/v15.12.0...v15.13.0) (2023-04-29)
+
+
+### Bug Fixes
+
+* **app:** long bread crumbs do not break correctly on a new line ([386911a](https://github.com/skoropadas/ng-doc/commit/386911a206b027e60f102c436e18110d055d10b9))
+* **builder:** links based on keywords are not created for code examples in demos ([ca9480d](https://github.com/skoropadas/ng-doc/commit/ca9480decb89f5a5bf6bc42c4b6eaaac53d7c012))
+* **builder:** update `nunjucks` package version to fix vulnerability ([6d8066a](https://github.com/skoropadas/ng-doc/commit/6d8066a60a2db614e2388eed1415d59e02d87ccf))
+
+
+### Features
+
+* **app:** you can provide `auto` as the `defaultTheme` and the theme will be selected automatically based on the user's OS settings ([1f55720](https://github.com/skoropadas/ng-doc/commit/1f55720d8aab141bb56d76c1c1a669cf9f3baeb7))
+* **layout:** sidebar and root component were improved, now you can customize or disable some features ([e7692f3](https://github.com/skoropadas/ng-doc/commit/e7692f3f30bf41c91d601f20150f6a1a36ca95c4))
+
 # [15.12.0](https://github.com/skoropadas/ng-doc/compare/v15.11.3...v15.12.0) (2023-04-20)
 
 
