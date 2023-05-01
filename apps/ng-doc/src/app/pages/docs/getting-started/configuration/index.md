@@ -38,7 +38,7 @@ import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
 	repoConfig: {
-		url: 'https://github.com/skoropadas/ng-doc',
+		url: 'https://github.com/ng-doc/ng-doc',
 		mainBranch: 'main',
 		releaseBranch: 'release',
 	},
