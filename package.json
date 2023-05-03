@@ -29,10 +29,10 @@
 	"author": "Skoropad Aleksandr <alex@skoropad.dev>",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/skoropadas/ng-doc.git"
+		"url": "git+https://github.com/ng-doc/ng-doc.git"
 	},
 	"bugs": {
-		"url": "https://github.com/skoropadas/ng-doc/issues"
+		"url": "https://github.com/ng-doc/ng-doc/issues"
 	},
 	"homepage": "https://ng-doc.com",
 	"private": true,
