@@ -35,4 +35,6 @@ export function runBrowser(options: NgDocSchema, context: BuilderContext): Obser
 	);
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 export default createBuilder(runBrowser);

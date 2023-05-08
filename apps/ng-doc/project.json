@@ -35,13 +35,7 @@
 				],
 				"styles": ["apps/ng-doc/src/styles.scss"],
 				"scripts": [],
-				"allowedCommonJsDependencies": [
-					"@ng-doc/core",
-					"posthtml-parser",
-					"posthtml-render",
-					"js-beautify",
-					"chalk"
-				]
+				"allowedCommonJsDependencies": ["@ng-doc/core", "posthtml-parser", "posthtml-render", "js-beautify", "chalk"]
 			},
 			"configurations": {
 				"production": {
@@ -79,7 +73,6 @@
 			"defaultConfiguration": "production",
 			"dependsOn": [
 				{
-					"projects": "self",
 					"target": "link-core"
 				}
 			]
@@ -96,8 +89,8 @@
 			},
 			"dependsOn": [
 				{
-					"projects": "dependencies",
-					"target": "build"
+					"target": "build",
+					"dependencies": true
 				}
 			]
 		},
@@ -114,7 +107,6 @@
 			"defaultConfiguration": "development",
 			"dependsOn": [
 				{
-					"projects": "self",
 					"target": "link-core"
 				}
 			]
@@ -126,13 +118,13 @@
 			}
 		},
 		"lint": {
-			"executor": "@nrwl/linter:eslint",
+			"executor": "@nx/linter:eslint",
 			"options": {
 				"lintFilePatterns": ["apps/ng-doc/**/*.ts", "apps/ng-doc/**/*.html"]
 			}
 		},
 		"test": {
-			"executor": "@nrwl/jest:jest",
+			"executor": "@nx/jest:jest",
 			"outputs": ["coverage/apps/ng-doc"],
 			"options": {
 				"jestConfig": "apps/ng-doc/jest.config.ts",
