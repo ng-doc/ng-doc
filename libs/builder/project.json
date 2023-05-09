@@ -5,7 +5,7 @@
 	"projectType": "library",
 	"targets": {
 		"pre-build": {
-			"executor": "@nrwl/js:tsc",
+			"executor": "@nx/js:tsc",
 			"outputs": ["{options.outputPath}"],
 			"options": {
 				"outputPath": "dist/libs/builder",
@@ -44,20 +44,19 @@
 			},
 			"dependsOn": [
 				{
-					"projects": "self",
 					"target": "build"
 				}
 			]
 		},
 		"lint": {
-			"executor": "@nrwl/linter:eslint",
+			"executor": "@nx/linter:eslint",
 			"outputs": ["{options.outputFile}"],
 			"options": {
 				"lintFilePatterns": ["libs/builder/**/*.ts"]
 			}
 		},
 		"test": {
-			"executor": "@nrwl/jest:jest",
+			"executor": "@nx/jest:jest",
 			"outputs": ["coverage/libs/builder"],
 			"options": {
 				"jestConfig": "libs/builder/jest.config.ts",

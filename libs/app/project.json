@@ -6,7 +6,7 @@
 	"prefix": "ng-doc",
 	"targets": {
 		"pre-build": {
-			"executor": "@nrwl/angular:package",
+			"executor": "@nx/angular:package",
 			"outputs": ["dist/libs/app"],
 			"options": {
 				"project": "libs/app/ng-package.json",
@@ -34,7 +34,7 @@
 			}
 		},
 		"schematics": {
-			"executor": "@nrwl/js:tsc",
+			"executor": "@nx/js:tsc",
 			"outputs": ["{options.outputPath}"],
 			"options": {
 				"clean": false,
@@ -46,7 +46,7 @@
 			}
 		},
 		"test": {
-			"executor": "@nrwl/jest:jest",
+			"executor": "@nx/jest:jest",
 			"outputs": ["coverage/libs/app"],
 			"options": {
 				"jestConfig": "libs/app/jest.config.ts",
@@ -54,7 +54,7 @@
 			}
 		},
 		"lint": {
-			"executor": "@nrwl/linter:eslint",
+			"executor": "@nx/linter:eslint",
 			"options": {
 				"lintFilePatterns": ["libs/app/**/*.ts", "libs/app/**/*.html"]
 			}
