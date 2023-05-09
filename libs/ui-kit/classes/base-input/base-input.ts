@@ -1,14 +1,13 @@
-import {Directive, ElementRef, HostBinding, Renderer2} from '@angular/core';
-import {FlControl, FlControlHost} from 'flex-controls';
+import {Directive, ElementRef, HostBinding, inject, Renderer2} from '@angular/core';
+import {FL_CONTROL_HOST, FlControl} from 'flex-controls';
+import {FlBaseControlHost} from 'flex-controls/interfaces';
 
 @Directive()
 export abstract class NgDocBaseInput<T> extends FlControl<T> {
-	protected constructor(
-		public elementRef: ElementRef<HTMLInputElement>,
-		protected renderer: Renderer2,
-		protected override host?: FlControlHost<T>,
-	) {
-		super(host);
+	elementRef: ElementRef<HTMLInputElement> = inject(ElementRef);
+	private renderer: Renderer2 = inject(Renderer2);
+	protected constructor() {
+		super(inject<FlBaseControlHost<T, T> | undefined>(FL_CONTROL_HOST, {optional: true}) || undefined);
 	}
 
 	@HostBinding('class')
