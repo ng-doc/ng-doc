@@ -7,7 +7,7 @@
 	"dependencies": {
 		"@ng-doc/core": "0.0.0",
 		"@ng-doc/utils": "0.0.0",
-		"@angular-devkit/architect": ">=0.1500.0",
+		"@angular-devkit/architect": ">=0.1600.0",
 		"chokidar": "3.5.3",
 		"minimatch": "5.1.0",
 		"rxjs": "^6.6.7",

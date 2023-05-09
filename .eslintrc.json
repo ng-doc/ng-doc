@@ -1,24 +1,19 @@
 {
 	"root": true,
 	"ignorePatterns": ["**/*"],
-	"plugins": ["@nrwl/nx"],
+	"plugins": ["@nx"],
 	"overrides": [
 		{
 			"files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
 			"extends": ["prettier", "plugin:jsdoc/recommended"],
-			"plugins": [
-				"eslint-plugin-jsdoc",
-				"eslint-plugin-prefer-arrow",
-				"simple-import-sort",
-				"eslint-plugin-tsdoc"
-			],
+			"plugins": ["eslint-plugin-jsdoc", "eslint-plugin-prefer-arrow", "simple-import-sort", "eslint-plugin-tsdoc"],
 			"rules": {
 				"jsdoc/require-param-type": "off",
 				"jsdoc/require-returns-type": "off",
 				"tsdoc/syntax": "warn",
 				"simple-import-sort/imports": "error",
 				"simple-import-sort/exports": "error",
-				"@nrwl/nx/enforce-module-boundaries": [
+				"@nx/enforce-module-boundaries": [
 					"error",
 					{
 						"enforceBuildableLibDependency": true,
@@ -58,7 +53,7 @@
 		},
 		{
 			"files": ["*.ts", "*.tsx"],
-			"extends": ["plugin:@nrwl/nx/typescript"],
+			"extends": ["plugin:@nx/typescript"],
 			"rules": {
 				"@typescript-eslint/typedef": [
 					"error",
@@ -92,7 +87,7 @@
 		},
 		{
 			"files": ["*.js", "*.jsx"],
-			"extends": ["plugin:@nrwl/nx/javascript"],
+			"extends": ["plugin:@nx/javascript"],
 			"rules": {}
 		},
 		{
