@@ -35,7 +35,7 @@ describe('ng-add', () => {
 			project: '',
 		};
 
-		const tree: UnitTestTree = await runner.runSchematicAsync('ng-add', options, host).toPromise();
+		const tree: UnitTestTree = await runner.runSchematic('ng-add', options, host);
 
 		expect(tree.readContent('package.json')).toEqual(
 			`{
@@ -55,7 +55,7 @@ describe('ng-add', () => {
 			project: '',
 		};
 
-		const tree: UnitTestTree = await runner.runSchematicAsync('ng-add-setup-project', options, host).toPromise();
+		const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
 		expect(tree.readContent('test/app/app.template.html')).toEqual(APP_COMPONENT_CONTENT);
 	});
@@ -65,7 +65,7 @@ describe('ng-add', () => {
 			project: '',
 		};
 
-		const tree: UnitTestTree = await runner.runSchematicAsync('ng-add-setup-project', options, host).toPromise();
+		const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
 		expect(tree.readContent('test/tsconfig.app.json')).toEqual(`
 {
@@ -82,7 +82,7 @@ describe('ng-add', () => {
 			project: '',
 		};
 
-		const tree: UnitTestTree = await runner.runSchematicAsync('ng-add-setup-project', options, host).toPromise();
+		const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
 		expect(tree.readContent('tsconfig.json')).toEqual(`{
   "compilerOptions": {
@@ -103,7 +103,7 @@ describe('ng-add', () => {
 			project: '',
 		};
 
-		const tree: UnitTestTree = await runner.runSchematicAsync('ng-add-setup-project', options, host).toPromise();
+		const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
 		expect(tree.readContent('.gitignore')).toEqual(`.cache
 
@@ -116,7 +116,7 @@ describe('ng-add', () => {
 			project: '',
 		};
 
-		const tree: UnitTestTree = await runner.runSchematicAsync('ng-add-setup-project', options, host).toPromise();
+		const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
 		expect(tree.readContent('test/app/app.module.ts')).toEqual(`import { provideSearchEngine, NgDocDefaultSearchEngine } from "@ng-doc/app";
 import { NgDocModule } from "@ng-doc/app";
@@ -141,7 +141,7 @@ export class AppModule {}
 			project: '',
 		};
 
-		const tree: UnitTestTree = await runner.runSchematicAsync('ng-add-setup-project', options, host).toPromise();
+		const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
 		expect(tree.readContent('angular.json')).toEqual(`
 {

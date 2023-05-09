@@ -1,5 +1,5 @@
 import {getProjectTargetOptions} from '@angular/cdk/schematics';
-import {JsonValue} from '@angular/compiler-cli/ngcc/src/utils';
+import {JsonValue} from '@angular-devkit/core';
 import {ProjectDefinition, WorkspaceDefinition} from '@angular-devkit/core/src/workspace';
 import {Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
 import {getWorkspace} from '@schematics/angular/utility/workspace';
@@ -38,7 +38,7 @@ export function addNgDocModules(options: Schema): Rule {
 				return;
 			}
 
-			const buildOptions: Record<string, JsonValue> = getProjectTargetOptions(project, 'build');
+			const buildOptions: Record<string, JsonValue | undefined> = getProjectTargetOptions(project, 'build');
 
 			setActiveProject(createProject(tree, '/', ['**/*.ts', '**/*.json']));
 
