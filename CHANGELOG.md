@@ -1,3 +1,23 @@
+# [16.0.0-beta.1](https://github.com/ng-doc/ng-doc/compare/v15.13.0...v16.0.0-beta.1) (2023-05-09)
+
+
+### Bug Fixes
+
+* **ng-doc:** `ng-doc` doesn't forget pages that have been moved to another directory ([c433a10](https://github.com/ng-doc/ng-doc/commit/c433a1007d07716833de2a987f9be63c7dc73a7a))
+* **ng-doc:** release trigger ([e7ac592](https://github.com/ng-doc/ng-doc/commit/e7ac592fc2f5ddadceb6633d13d6a3790b4eeb00))
+* **project:** dependency injection error after update to 15.10.0 ([cc41f44](https://github.com/ng-doc/ng-doc/commit/cc41f448054d73b9961f8a7be7689b4195a23c1f))
+
+
+### Features
+
+* **project:** angular 16 support ([f785944](https://github.com/ng-doc/ng-doc/commit/f7859446c63e4a1208047080751c122133153708))
+* **project:** angular 16 support ([3b4f6d4](https://github.com/ng-doc/ng-doc/commit/3b4f6d437427fb65b4eb117523b0009e1602fb5a)), closes [#43](https://github.com/ng-doc/ng-doc/issues/43)
+
+
+### BREAKING CHANGES
+
+* **project:** Angular 16
+
 # [15.13.0](https://github.com/skoropadas/ng-doc/compare/v15.12.0...v15.13.0) (2023-04-29)
 
 ### Bug Fixes
