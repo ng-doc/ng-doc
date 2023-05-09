@@ -1,5 +1,5 @@
 import {getProjectTargetOptions} from '@angular/cdk/schematics';
-import {JsonArray, JsonValue} from '@angular/compiler-cli/ngcc/src/utils';
+import {JsonArray, JsonValue} from '@angular-devkit/core';
 import {Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
 import {ProjectDefinition, updateWorkspace, WorkspaceDefinition} from '@schematics/angular/utility/workspace';
 
@@ -30,7 +30,7 @@ export function addJsDependencies(options: Schema): Rule {
 					return;
 				}
 
-				const targetOptions: Record<string, JsonValue> = getProjectTargetOptions(project, 'build');
+				const targetOptions: Record<string, JsonValue | undefined> = getProjectTargetOptions(project, 'build');
 				const jsDependencies: JsonArray | undefined = targetOptions['allowedCommonJsDependencies'] as
 					| JsonArray
 					| undefined;
