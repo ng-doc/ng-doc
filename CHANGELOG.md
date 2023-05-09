@@ -1,3 +1,10 @@
+## [16.0.1](https://github.com/ng-doc/ng-doc/compare/v16.0.0...v16.0.1) (2023-05-09)
+
+
+### Bug Fixes
+
+* **project:** bump version ([28c6b03](https://github.com/ng-doc/ng-doc/commit/28c6b03e89ee3d44d8c066873bfb340dd201f876))
+
 # [16.0.0](https://github.com/ng-doc/ng-doc/compare/v15.13.0...v16.0.0) (2023-05-09)
 
 
