@@ -3,7 +3,7 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ContentChild,
-	ElementRef,
+	ElementRef, forwardRef,
 	Inject,
 	Input,
 	NgZone,
@@ -38,26 +38,26 @@ import {filter} from 'rxjs/operators';
 	templateUrl: './combobox-host.component.html',
 	styleUrls: ['./combobox-host.component.scss'],
 	providers: [
-		provideControlHost(NgDocComboboxHostComponent),
+		provideControlHost(forwardRef(() => NgDocComboboxHostComponent)),
 		{
 			provide: NgDocOverlayHost,
-			useExisting: NgDocComboboxHostComponent,
+			useExisting: forwardRef(() => NgDocComboboxHostComponent),
 		},
 		{
 			provide: NgDocInputHost,
-			useExisting: NgDocComboboxHostComponent,
+			useExisting: forwardRef(() => NgDocComboboxHostComponent),
 		},
 		{
 			provide: FlCompareHost,
-			useExisting: NgDocComboboxHostComponent,
+			useExisting: forwardRef(() => NgDocComboboxHostComponent),
 		},
 		{
 			provide: NgDocDisplayValueHost,
-			useExisting: NgDocComboboxHostComponent,
+			useExisting: forwardRef(() => NgDocComboboxHostComponent),
 		},
 		{
 			provide: NgDocListHost,
-			useExisting: NgDocComboboxHostComponent,
+			useExisting: forwardRef(() => NgDocComboboxHostComponent),
 		},
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,

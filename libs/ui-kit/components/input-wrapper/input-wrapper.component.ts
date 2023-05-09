@@ -16,7 +16,6 @@ import {NgDocInputHost} from '@ng-doc/ui-kit/classes/input-host';
 import {ngDocMakePure} from '@ng-doc/ui-kit/decorators';
 import {NgDocFocusCatcherDirective} from '@ng-doc/ui-kit/directives/focus-catcher';
 import {NgDocContextWithImplicit} from '@ng-doc/ui-kit/interfaces';
-import {NG_DOC_INPUT_CONTROL} from '@ng-doc/ui-kit/tokens';
 import {NgDocContent, NgDocTextAlign} from '@ng-doc/ui-kit/types';
 import {UntilDestroy} from '@ngneat/until-destroy';
 import {FL_CONTROL_HOST, FlControl, FlControlHost} from 'flex-controls';
@@ -54,7 +53,7 @@ export class NgDocInputWrapperComponent<T, B = unknown> implements AfterViewChec
 	@ContentChild(NgDocBaseInput)
 	input?: NgDocBaseInput<T>;
 
-	@ContentChild(NG_DOC_INPUT_CONTROL)
+	@ContentChild(NgDocBaseInput)
 	inputControl?: FlControl<T>;
 
 	@ViewChild(NgDocFocusCatcherDirective, {static: true})
