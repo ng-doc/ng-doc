@@ -20,7 +20,6 @@
 		"glob": "8.1.0",
 		"marked": "4.0.18",
 		"highlight.js": "11.5.1",
-		"raw-loader": "4.0.2",
 		"esbuild": "0.17.8",
 		"@microsoft/tsdoc": "0.14.2",
 		"cosmiconfig": "8.1.0",

@@ -8,6 +8,11 @@ import {NgDocRepoConfig} from './repo-config';
  */
 export interface NgDocConfiguration {
 	/**
+	 * The builder that will be used to build the Angular application. (Webpack is used by default)
+	 * You can use `esbuild`, then NgDoc will also use `Vite` for the development server.
+	 */
+	angularBuilder?: 'esbuild'
+	/**
 	 * List of paths to your documentation location (e.g. "src/app")
 	 */
 	pages?: string | string[];

@@ -80,7 +80,6 @@
 		"posthtml-parser": "0.11.0",
 		"posthtml-render": "3.0.0",
 		"prettier": "2.6.2",
-		"raw-loader": "4.0.2",
 		"rehype": "12.0.1",
 		"rehype-format": "4.0.1",
 		"rehype-highlight": "6.0.0",

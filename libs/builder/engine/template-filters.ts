@@ -40,6 +40,7 @@ export {
 	notEmptyAssets,
 	sortByNodesName,
 	sortNavigationEntities,
+	toTemplateString,
 	typeAliasPresentation,
 	variablePresentation,
 } from '../helpers';

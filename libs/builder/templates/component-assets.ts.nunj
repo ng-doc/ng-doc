@@ -1,19 +1,12 @@
 // @ts-nocheck
 import {NgDocDemoAssets} from '@ng-doc/app';
-{% set i = 0 %}
-{%- for componentName, assets in componentsAssets %}
-	{%- for asset in assets | notEmptyAssets %}
-import {{ asset.name + i }} from '!!raw-loader!{{ asset.outputPath }}';
-	{%- set i = i + 1 %}
-	{%- endfor %}
-{%- endfor %}
 
 export const demoAssets: NgDocDemoAssets = {
 {% set i = 0 %}
 	{%- for componentName, assets in componentsAssets %}
 	{{ componentName }}: [
 		{%- for asset in assets | notEmptyAssets %}
-		{title: '{{ asset.title }}', codeType: '{{ asset.type }}', code: {{ asset.name + i }}},
+		{title: '{{ asset.title }}', codeType: '{{ asset.type }}', code: `{{ asset.output | toTemplateString }}`},
 	{%- set i = i + 1 %}
 		{%- endfor %}
 	],

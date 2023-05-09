@@ -98,10 +98,6 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 		return [this.declarationName];
 	}
 
-	get builtPagePath(): string {
-		return slash(path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, RENDERED_PAGE_NAME)));
-	}
-
 	override update(): Observable<void> {
 		this.updateDeclaration();
 
@@ -110,7 +106,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 
 	protected override build(): Observable<NgDocBuiltOutput[]> {
 		return this.isReadyForBuild
-			? forkJoin([this.buildPage(), this.buildModule()]).pipe(
+			? forkJoin([this.buildModule()]).pipe(
 					map((output: Array<NgDocBuiltOutput | null>) => output.filter(isPresent)),
 			  )
 			: of([]);
@@ -122,28 +118,18 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 			.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
 	}
 
-	private buildPage(): Observable<NgDocBuiltOutput | null> {
+	pageContent(): string {
 		if (this.declaration) {
 			return this.builder.renderer
-				.render('./api-page.html.nunj', {
+				.renderSync('./api-page.html.nunj', {
 					context: {
 						declaration: this.declaration,
 						scope: this.parent.target,
 					},
 				})
-				.pipe(
-					map((output: string) => ({content: output, filePath: this.builtPagePath})),
-					catchError((error: unknown) => {
-						this.logger.error(
-							`\nError happened while processing Api Page for entity "${this.declaration
-								?.getSymbol()
-								?.getName()}":\n${error}"`,
-						);
-						return of(null);
-					}),
-				);
 		}
-		return of(null);
+
+		return ''
 	}
 
 	private updateDeclaration(): asserts this is this & {declaration: NgDocSupportedDeclarations} {

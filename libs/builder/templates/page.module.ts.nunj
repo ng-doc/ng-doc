@@ -4,7 +4,6 @@ import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {NgDocPageModule, NgDocRootPage, NgDocDemoAssets} from '@ng-doc/app';
 import {NgDocDependencies, NgDocPageType} from '@ng-doc/core';
-import pageContent from '!!raw-loader!{{ page.builtPagePath }}';
 {%- if page.pageDependencies %}
 // noinspection ES6UnusedImports
 import {PlaygroundsModule} from './playgrounds';
@@ -14,6 +13,8 @@ import pageDependencies from '{{ page.pageDependencies.importPath }}';
 // noinspection ES6UnusedImports
 import demoAssets from '{{ page.componentsAssets }}';
 {%- endif %}
+
+const pageContent: string = `{{ page.pageContent() | toTemplateString }}`
 
 
 @Component({

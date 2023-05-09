@@ -71,10 +71,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return path.dirname(this.mdPath);
 	}
 
-	get builtPagePath(): string {
-		return slash(path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, RENDERED_PAGE_NAME)));
-	}
-
 	override get buildCandidates(): NgDocEntity[] {
 		return [...this.parentEntities, ...asArray(this.pageDependencies)];
 	}
@@ -121,7 +117,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	}
 
 	protected override build(): Observable<NgDocBuiltOutput[]> {
-		return this.isReadyForBuild ? forkJoin([this.buildPage(), this.buildModule()]) : of([]);
+		return this.isReadyForBuild ? forkJoin([this.buildModule()]) : of([]);
 	}
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
@@ -137,14 +133,17 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return of();
 	}
 
-	private buildPage(): Observable<NgDocBuiltOutput> {
+	/**
+	 * Builds and returns the page HTML content
+	 */
+	pageContent(): string {
 		this.dependencies.clear();
 
 		if (this.target) {
 			this.dependencies.add(this.mdPath);
 
-			return this.builder.renderer
-				.render(this.target?.mdFile, {
+			const markdown: string = this.builder.renderer
+				.renderSync(this.target.mdFile, {
 					scope: this.sourceFileFolder,
 					context: {
 						NgDocPage: this.target,
@@ -152,11 +151,10 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 					},
 					dependenciesStore: this.dependencies,
 				})
-				.pipe(
-					map((markdown: string) => marked(markdown, this)),
-					map((output: string) => ({content: output, filePath: this.builtPagePath})),
-				);
+
+			return marked(markdown, this);
 		}
-		return of();
+
+		return '';
 	}
 }
