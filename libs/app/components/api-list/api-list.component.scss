@@ -7,13 +7,11 @@
 		.ng-doc-api-filter {
 			display: flex;
 			margin-top: calc(var(--ng-doc-base-gutter) * 3);
+			flex-wrap: wrap;
+			gap: calc(var(--ng-doc-base-gutter) * 2);
 
 			.ng-doc-api-filter-item {
 				width: 200px;
-
-				&:not(:last-child) {
-					margin-right: calc(var(--ng-doc-base-gutter) * 2);
-				}
 			}
 		}
 
