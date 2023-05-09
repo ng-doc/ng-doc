@@ -15,7 +15,7 @@
 			</ng-doc-input-wrapper>
 		</label>
 
-		<label class="ng-doc-api-filter-item" ng-doc-label="Scope">
+		<label class="ng-doc-api-filter-item" ng-doc-label="Scope" *ngIf="scopes.length">
 			<ng-doc-combobox
 				[formControl]="formGroup.controls.scope"
 				[valueContent]="comboboxScopeItem"

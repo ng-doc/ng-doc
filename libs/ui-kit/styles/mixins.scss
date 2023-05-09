@@ -16,8 +16,8 @@
 	font-weight: var(--ng-doc-font-weight);
 }
 
-@mixin ng-doc-backdrop-filter($base-color: var(--ng-doc-base-0)) {
-	& {
+@mixin ng-doc-backdrop-filter($base-color: var(--ng-doc-base-0), $disableSelector: ':empty') {
+	&:not(#{$disableSelector}) {
 		backdrop-filter: blur(10px);
 
 		&:before {
@@ -36,5 +36,9 @@
 		& {
 			background-color: $base-color;
 		}
+	}
+
+	&#{$disableSelector} {
+		background-color: $base-color;
 	}
 }

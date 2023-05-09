@@ -20,13 +20,14 @@
 			</ng-doc-checkbox>
 		</div>
 		<div class="ng-doc-playground-divider"></div>
-		<ng-container *ngIf="(properties | keyvalue)?.length">
+		<ng-container *ngIf="propertyControls.length">
 			<h5 class="ng-doc-title" ng-doc-text>Settings</h5>
 			<ng-doc-playground-property
-				*ngFor="let property of properties | keyvalue"
-				[name]="property.value.name"
-				[property]="property.value"
-				[control]="getFormControl('properties', property.key)"
+				*ngFor="let propertyControl of propertyControls"
+				[name]="propertyControl.property.name"
+				[property]="propertyControl.property"
+				[typeControl]="propertyControl.typeControl"
+				[control]="getFormControl | ngDocBind: this | ngDocRun: 'properties': propertyControl.propertyName"
 			>
 			</ng-doc-playground-property>
 		</ng-container>
@@ -37,7 +38,8 @@
 				*ngFor="let content of dynamicContent | keyvalue"
 				[name]="content.value.label"
 				[property]="content.value"
-				[control]="getFormControl('content', content.key)"
+				[typeControl]="contentTypeControl"
+				[control]="getFormControl | ngDocBind: this | ngDocRun: 'content': content.key"
 			>
 			</ng-doc-playground-property>
 		</ng-container>

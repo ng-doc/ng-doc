@@ -1,84 +1,125 @@
-# [15.10.0-beta.2](https://github.com/skoropadas/ng-doc/compare/v15.10.0-beta.1...v15.10.0-beta.2) (2023-03-31)
-
-
-### Bug Fixes
-
-# [](https://github.com/skoropadas/ng-doc/compare/...)
-
-# [15.10.0-beta.1](https://github.com/skoropadas/ng-doc/compare/v15.9.0...v15.10.0-beta.1) (2023-03-31)
-
+# [15.13.0](https://github.com/skoropadas/ng-doc/compare/v15.12.0...v15.13.0) (2023-04-29)
 
 ### Bug Fixes
 
-# [](https://github.com/skoropadas/ng-doc/compare/...)
-
-
-# [](https://github.com/skoropadas/ng-doc/compare/...)
-
-
-# [](https://github.com/skoropadas/ng-doc/compare/...)
-
-
-# [](https://github.com/skoropadas/ng-doc/compare/...)
-
-
-# [](https://github.com/skoropadas/ng-doc/compare/...)
-
-
-# [](https://github.com/skoropadas/ng-doc/compare/...)
-
-
-# [](https://github.com/skoropadas/ng-doc/compare/...)
-
-
-# [](https://github.com/skoropadas/ng-doc/compare/...)
-
-
-
+- **app:** long bread crumbs do not break correctly on a new line ([386911a](https://github.com/skoropadas/ng-doc/commit/386911a206b027e60f102c436e18110d055d10b9))
+- **builder:** links based on keywords are not created for code examples in demos ([ca9480d](https://github.com/skoropadas/ng-doc/commit/ca9480decb89f5a5bf6bc42c4b6eaaac53d7c012))
+- **builder:** update `nunjucks` package version to fix vulnerability ([6d8066a](https://github.com/skoropadas/ng-doc/commit/6d8066a60a2db614e2388eed1415d59e02d87ccf))
 
 ### Features
 
-# [](https://github.com/skoropadas/ng-doc/compare/...)
+- **app:** you can provide `auto` as the `defaultTheme` and the theme will be selected automatically based on the user's OS settings ([1f55720](https://github.com/skoropadas/ng-doc/commit/1f55720d8aab141bb56d76c1c1a669cf9f3baeb7))
+- **layout:** sidebar and root component were improved, now you can customize or disable some features ([e7692f3](https://github.com/skoropadas/ng-doc/commit/e7692f3f30bf41c91d601f20150f6a1a36ca95c4))
 
+# [15.12.0](https://github.com/skoropadas/ng-doc/compare/v15.11.3...v15.12.0) (2023-04-20)
 
-# [](https://github.com/skoropadas/ng-doc/compare/...)
+### Features
 
-
-# [](https://github.com/skoropadas/ng-doc/compare/...)
-
-
-# [](https://github.com/skoropadas/ng-doc/compare/...)
-
-
-# [](https://github.com/skoropadas/ng-doc/compare/...)
-
-
-# [](https://github.com/skoropadas/ng-doc/compare/...)
-
-
-# [](https://github.com/skoropadas/ng-doc/compare/...)
-
-
-# [](https://github.com/skoropadas/ng-doc/compare/...)
-
-
-# [](https://github.com/skoropadas/ng-doc/compare/...)
-
-
-# [](https://github.com/skoropadas/ng-doc/compare/...)
-
-
-# [](https://github.com/skoropadas/ng-doc/compare/...)
-
-
-# [](https://github.com/skoropadas/ng-doc/compare/...)
-
-
-
+- **playgrounds:** the controls used in playgrounds are now sorted primarily by type and then by name, which should make playgrounds pretty. It is now also possible to specify the order for custom type controls ([009f462](https://github.com/skoropadas/ng-doc/commit/009f46225d4f370687ecda2cb00bcfff8914114a))
 
 ### Performance Improvements
 
-# [](https://github.com/skoropadas/ng-doc/compare/...)
+- **builder:** the Entity API search for exported declarations has been optimized, now it is twice as fast. For ng-doc documentation, it used to take 6 - 7 seconds, now ~3 seconds ([0d905c4](https://github.com/skoropadas/ng-doc/commit/0d905c44c771df5d2c961119f0dcd66051550f5d))
+
+## [15.11.3](https://github.com/skoropadas/ng-doc/compare/v15.11.2...v15.11.3) (2023-04-15)
+
+### Bug Fixes
+
+- **builder:** ng-doc throws an error "CodeBlockWriter is not a constructor" during development ([52aee4a](https://github.com/skoropadas/ng-doc/commit/52aee4adeef9f753dd3e88c61ff5c825baa67d0b))
+
+## [15.11.2](https://github.com/skoropadas/ng-doc/compare/v15.11.1...v15.11.2) (2023-04-15)
+
+### Bug Fixes
+
+- **project:** dependency versions are not locked ([c4e2d59](https://github.com/skoropadas/ng-doc/commit/c4e2d596e777625f861922751f420c28a5fc6f95)), closes [#41](https://github.com/skoropadas/ng-doc/issues/41)
+
+## [15.11.1](https://github.com/skoropadas/ng-doc/compare/v15.11.0...v15.11.1) (2023-04-14)
+
+### Bug Fixes
+
+- **builder:** keywords links are not created for code blocks with `ts` extension ([aa97451](https://github.com/skoropadas/ng-doc/commit/aa974513ca191e45dd2676bf572d4f78e8a88cc2))
+
+# [15.11.0](https://github.com/skoropadas/ng-doc/compare/v15.10.5...v15.11.0) (2023-04-13)
+
+### Bug Fixes
+
+- **app:** headings in not indexable content have a wrong margin ([82dbea1](https://github.com/skoropadas/ng-doc/commit/82dbea1ce0e01b586ba7d1c240f775e5aefa8b8d))
+- **builder:** ng-doc throws an error if a page was removed from the file system ([515e8b7](https://github.com/skoropadas/ng-doc/commit/515e8b7eacffe8ab68097f2206dfbe08b3ee06ff))
+
+### Features
+
+- **builder:** now ng-doc handles several API configuration files correctly ([ab84513](https://github.com/skoropadas/ng-doc/commit/ab84513b78a349b565d01f9fe536148d4815b2aa)), closes [#26](https://github.com/skoropadas/ng-doc/issues/26)
+
+### Performance Improvements
+
+- **builder:** enable the "noEmit" property for the NgDoc TypeScript project, this should slightly improve performance for the projects with a lot of API entities ([f06a75d](https://github.com/skoropadas/ng-doc/commit/f06a75df5ad470ae4e2d11ff659152a4e4c73a75))
+
+## [15.10.5](https://github.com/skoropadas/ng-doc/compare/v15.10.4...v15.10.5) (2023-04-04)
+
+### Bug Fixes
+
+- **builder:** default param value displayed as [object Object] in API presentations ([30fb08b](https://github.com/skoropadas/ng-doc/commit/30fb08b5691fc8025c3c2912799afee1c209c29c)), closes [#40](https://github.com/skoropadas/ng-doc/issues/40)
+
+## [15.10.4](https://github.com/skoropadas/ng-doc/compare/v15.10.3...v15.10.4) (2023-04-03)
+
+### Bug Fixes
+
+- **builder:** api doesn't display `undefined` for optional types if `strict` mode is enabled ([1a812a2](https://github.com/skoropadas/ng-doc/commit/1a812a2c550263b3119ccfd914c05b02dd543df7))
+- **builder:** remove unused duplicate of `NgDocPageIndex` interface ([8c65331](https://github.com/skoropadas/ng-doc/commit/8c65331f82cf3ddb83cdadabe6de8a88d448cad6))
+
+### Performance Improvements
+
+- **utils:** html post processor doesn't wrap the html with the body tag anymore ([6118a7e](https://github.com/skoropadas/ng-doc/commit/6118a7edd994b3866d6bb9e0ad822a4360d5c89e))
+
+## [15.10.3](https://github.com/skoropadas/ng-doc/compare/v15.10.2...v15.10.3) (2023-04-02)
+
+### Bug Fixes
+
+- **builder:** logical types are not recognized correctly in playground ([e062357](https://github.com/skoropadas/ng-doc/commit/e06235723695428828a515c81065830c459b7043))
+- **builder:** some types are not displayed in the API ([f9e3885](https://github.com/skoropadas/ng-doc/commit/f9e3885bb97090b954c55a12be32fe102eef8052))
+
+## [15.10.2](https://github.com/skoropadas/ng-doc/compare/v15.10.1...v15.10.2) (2023-04-01)
+
+### Bug Fixes
+
+- **builder:** logical types are not recognized correctly in playground ([16c348c](https://github.com/skoropadas/ng-doc/commit/16c348c445f72236b3c36d057cb50ae77962a13a))
+
+## [15.10.1](https://github.com/skoropadas/ng-doc/compare/v15.10.0...v15.10.1) (2023-04-01)
+
+### Bug Fixes
+
+- **builder:** builder emits error if there are API nodes without type ([ee67112](https://github.com/skoropadas/ng-doc/commit/ee67112fa0acc846f4caf99fbcc61fcd73560e85))
+
+# [15.10.0](https://github.com/skoropadas/ng-doc/compare/v15.9.0...v15.10.0) (2023-04-01)
+
+### Bug Fixes
+
+- **app:** nested `ul` list are displayed with wrong margin ([4b7ae6b](https://github.com/skoropadas/ng-doc/commit/4b7ae6beb8c2e8068dd3a5dc3dc20f346edabff1))
+- **builder:** inline code is lost in indexes ([7157dc0](https://github.com/skoropadas/ng-doc/commit/7157dc067098356c957243a638184ca55d2daaba))
+- **builder:** ng-doc expands type aliases for API ([86ca3ab](https://github.com/skoropadas/ng-doc/commit/86ca3ab0485b63f11b588adbddd8f61d92e833ed))
+- **builder:** ng-doc truncates long literal types ([f1581fd](https://github.com/skoropadas/ng-doc/commit/f1581fdbee7393c0d12778a941337ab02058cb69))
+- **p:** iframes are not styled ([ce4379c](https://github.com/skoropadas/ng-doc/commit/ce4379c49fe557234b6f4cd919805147d8b222ab))
+- **project:** dependency injection error after update to 15.10.0 ([5ca03a1](https://github.com/skoropadas/ng-doc/commit/5ca03a1cbc9615fced9427fea91daa0d60798309))
+- **search:** fix `@oramasearch/orama` warnings and add HTML sanitizer ([378d8aa](https://github.com/skoropadas/ng-doc/commit/378d8aaff88faf6431b3c87e7a5eb63004a13b4f))
+
+### Features
+
+- **add:** ng-add command provides `NgDocSearchEngine` automatically ([af535c4](https://github.com/skoropadas/ng-doc/commit/af535c45e5fde814c5302bf071dd10b546d4b247))
+- **app:** add a spinner to the search component to indicate when the search is in progress ([d35c4e8](https://github.com/skoropadas/ng-doc/commit/d35c4e85cd22014b6ec480616a092c720675d18f))
+- **app:** add animation of content changes for tabs and code tooltips ([5fec4ab](https://github.com/skoropadas/ng-doc/commit/5fec4ab04d4f8278407fbaf7a1fed1ae9bab5b94))
+- **app:** add breadcrumbs for guides ([931fd86](https://github.com/skoropadas/ng-doc/commit/931fd86401980c6a18e01cb04feaacda3ac9248b))
+- **app:** code blocks use `--ng-doc-code-background` CSS variable ([75f4d8a](https://github.com/skoropadas/ng-doc/commit/75f4d8ac28f88227fa3747d53d0e8fa56e0dfbe4))
+- **app:** copy to clipboard button now changes its text if code was copied ([f71f7c4](https://github.com/skoropadas/ng-doc/commit/f71f7c4b7791213494a28a925e6cea65d137038e))
+- **app:** search component and search engine improvements ([d865e26](https://github.com/skoropadas/ng-doc/commit/d865e26c490ba8ebd6da57c945cb64d5de4cbb74)), closes [#31](https://github.com/skoropadas/ng-doc/issues/31)
+- **builder:** add `demoPane` method to display demo ([3ce3e32](https://github.com/skoropadas/ng-doc/commit/3ce3e32fe86087cf1ffb4d38f0c3cce8fbc44b46))
+- **builder:** content indexing can be disabled for certain blocks ([43ebeaa](https://github.com/skoropadas/ng-doc/commit/43ebeaa1ee3104879fd79727273ae98fba7a7acb))
+- **builder:** markdown code blocks improvements ([32aa365](https://github.com/skoropadas/ng-doc/commit/32aa36504109e746840826e8880f6b832a52b000))
+- **builder:** now all API presentation are formatted by default ([a7108e8](https://github.com/skoropadas/ng-doc/commit/a7108e89b71a1982c9564d50f707ad6c3e596fd8))
+- **utils:** add new `@ng-doc/utils` package that now contains Post HTML Processor ([0d44b5a](https://github.com/skoropadas/ng-doc/commit/0d44b5a3569ce045da69b7c0b7e76bb43d52c983))
+
+### Performance Improvements
+
+- **builder:** improve the indexing process ([02857e2](https://github.com/skoropadas/ng-doc/commit/02857e2e4dd944d756cc085f7c755a0ebf55b898))
 
 # [15.9.0](https://github.com/skoropadas/ng-doc/compare/v15.8.0...v15.9.0) (2023-03-26)
 

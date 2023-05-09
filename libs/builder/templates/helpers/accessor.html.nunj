@@ -53,7 +53,7 @@
 					<td indexable="false">
 						<h5 class="no-anchor">Type</h5>
 						<p>
-							{{ typeMacro.render(accessor.getType()) }}
+							{{ typeMacro.type(accessor) }}
 						</p>
 					</td>
 				</tr>

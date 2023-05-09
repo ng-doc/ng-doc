@@ -1,13 +1,13 @@
 import {logging} from '@angular-devkit/core';
 import {NgDocPageIndex} from '@ng-doc/core';
-import * as path from 'path';
-import {forkJoin, from, Observable, of, Subject} from 'rxjs';
+import {from, Observable, of, Subject} from 'rxjs';
 import {catchError, map, mapTo, switchMap, take, tap} from 'rxjs/operators';
 
 import {ObservableSet} from '../../../classes';
-import {importEsModule, isRouteEntity} from '../../../helpers';
+import {codeTypeFromExt, getPageType, importEsModule, isRouteEntity} from '../../../helpers';
 import {buildIndexes} from '../../../helpers/build-indexes';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../../interfaces';
+import {forkJoinOrEmpty} from '../../../operators/fork-join-or-empty';
 import {NgDocBuilder} from '../../builder';
 
 /**
@@ -22,6 +22,12 @@ export abstract class NgDocEntity {
 
 	/** Search indexes for the current entity */
 	indexes: NgDocPageIndex[] = [];
+
+	/**
+	 * List of keywords that are used by the entity
+	 * (they will be sat by Keywords Processor, and used to indicate when this entity should be re-build if one of them appears)
+	 */
+	usedKeywords: Set<string> = new Set<string>();
 
 	/**
 	 * Collection of all file dependencies of the current entity.
@@ -88,9 +94,7 @@ export abstract class NgDocEntity {
 	 * Contains all children of the current entity.
 	 */
 	get children(): NgDocEntity[] {
-		return this.builder.entities
-			.asArray()
-			.filter((entity: NgDocEntity) => entity.parent === this && !entity.destroyed);
+		return this.builder.entities.asArray().filter((entity: NgDocEntity) => entity.parent === this && !entity.destroyed);
 	}
 
 	/**
@@ -155,14 +159,14 @@ export abstract class NgDocEntity {
 	}
 
 	buildArtifacts(): Observable<NgDocBuiltOutput[]> {
-		return this.build().pipe(
-			// TODO: make it async
+		return of(null).pipe(
+			switchMap(() => this.build()),
 			switchMap((output: NgDocBuiltOutput[]) => this.processArtifacts(output)),
 			map((artifacts: NgDocBuiltOutput[]) => {
 				/*
-						We are checking that artifacts result was changed, otherwise we don't want to emit
-						the same files to file system, because it will force Angular to rebuild application
-					 */
+							We are checking that artifacts result was changed, otherwise we don't want to emit
+							the same files to file system, because it will force Angular to rebuild application
+						 */
 				if (artifacts.every((a: NgDocBuiltOutput, i: number) => a.content === this.artifacts[i]?.content)) {
 					return [];
 				}
@@ -212,9 +216,9 @@ export abstract class NgDocEntity {
 			return of([]);
 		}
 
-		return forkJoin(
+		return forkJoinOrEmpty(
 			artifacts.map((artifact: NgDocBuiltOutput) => {
-				if (path.extname(artifact.filePath) === '.html') {
+				if (codeTypeFromExt(artifact.filePath) === 'HTML') {
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
 					return from(importEsModule<typeof import('@ng-doc/utils')>('@ng-doc/utils')).pipe(
@@ -226,9 +230,7 @@ export abstract class NgDocEntity {
 							return utils.htmlPostProcessor(artifact.content, {
 								headings: this.context.config.guide?.anchorHeadings,
 								route: isRouteEntity(this) ? this.fullRoute : undefined,
-								addUsedKeyword: isRouteEntity(this)
-									? this.usedKeywords.add.bind(this.usedKeywords)
-									: undefined,
+								addUsedKeyword: this.usedKeywords.add.bind(this.usedKeywords),
 								getKeyword: this.builder.entities.getByKeyword.bind(this.builder.entities),
 							});
 						}),
@@ -238,15 +240,29 @@ export abstract class NgDocEntity {
 
 				return of(artifact);
 			}),
-		)
-			.pipe(
-				switchMap((artifacts: NgDocBuiltOutput[]) =>
-					from(buildIndexes(this, artifacts))
-						.pipe(
-							tap((indexes: NgDocPageIndex[]) => this.indexes = indexes),
-							mapTo(artifacts),
-						)
-				)
-			)
+		).pipe(
+			switchMap((artifacts: NgDocBuiltOutput[]) => {
+				const htmlArtifacts = artifacts.filter(
+					(artifact: NgDocBuiltOutput) => codeTypeFromExt(artifact.filePath) === 'HTML',
+				);
+
+				return forkJoinOrEmpty(
+					htmlArtifacts.map((artifact: NgDocBuiltOutput) =>
+						isRouteEntity(this)
+							? buildIndexes({
+									title: this.title,
+									content: artifact.content,
+									pageType: getPageType(this),
+									breadcrumbs: this.breadcrumbs,
+									route: isRouteEntity(this) ? this.fullRoute : '',
+							  })
+							: of([]),
+					),
+				).pipe(
+					tap((indexes: NgDocPageIndex[][]) => (this.indexes = indexes.flat())),
+					mapTo(artifacts),
+				);
+			}),
+		);
 	}
 }

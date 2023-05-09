@@ -16,7 +16,7 @@ export function declarationFolderName(declaration: ExportedDeclarations): string
 	} else if (Node.isVariableDeclaration(declaration)) {
 		return 'variables';
 	} else if (Node.isTypeAliasDeclaration(declaration)) {
-		return 'types'
+		return 'type-aliases'
 	} else if (Node.isModuleDeclaration(declaration)) {
 		return 'modules'
 	} else {

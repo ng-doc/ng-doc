@@ -3,6 +3,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {APP_INITIALIZER, ModuleWithProviders, NgModule, Optional} from '@angular/core';
 import {NgDocRootModule} from '@ng-doc/app/components/root';
 import {NG_DOC_DARK_PURPLE_THEME, NG_DOC_NIGHT_THEME, NG_DOC_STORE_THEME_KEY} from '@ng-doc/app/constants';
+import {isDarkOsTheme} from '@ng-doc/app/helpers';
 import {NgDocApplicationConfig, NgDocTheme} from '@ng-doc/app/interfaces';
 import {NgDocStoreService} from '@ng-doc/app/services/store';
 import {NgDocThemeService} from '@ng-doc/app/services/theme';
@@ -32,11 +33,15 @@ export class NgDocModule {
 				})),
 				{
 					provide: APP_INITIALIZER,
-					useFactory: (themeService: NgDocThemeService, store: NgDocStoreService, defaultThemeId: string) => {
+					useFactory: (themeService: NgDocThemeService, store: NgDocStoreService, defaultThemeId: string | 'auto') => {
 						return () => {
 							const themeId: string | null = store.get(NG_DOC_STORE_THEME_KEY);
 
-							return themeService.set(themeId ?? defaultThemeId);
+							if (defaultThemeId === 'auto' && !themeId) {
+								return themeService.set(isDarkOsTheme() ? NG_DOC_NIGHT_THEME.id : undefined, false);
+							}
+
+							return themeService.set(themeId ?? defaultThemeId, false);
 						};
 					},
 					multi: true,

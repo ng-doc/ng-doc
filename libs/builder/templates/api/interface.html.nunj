@@ -12,7 +12,7 @@
 		<div class="ng-doc-header-details" indexable="false">
 			<span class="ng-doc-header-details-label">Extends</span>
 			{%- for i in extends -%}
-				{{ typeMacro.render(i.getType()) }}
+				{{ typeMacro.type(i) }}
 			{%- endfor %}
 		</div>
 	{% endif %}

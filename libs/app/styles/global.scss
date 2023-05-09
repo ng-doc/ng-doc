@@ -2,6 +2,7 @@
 
 html {
 	overflow-y: scroll;
+	overflow-x: hidden;
 }
 
 html,
@@ -45,4 +46,8 @@ body {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
 	background: var(--ng-doc-base-8);
+}
+
+::selection {
+	background: rgba(var(--ng-doc-primary-rgb), 0.2);
 }

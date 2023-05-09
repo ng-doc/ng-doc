@@ -3,7 +3,7 @@
  */
 export interface NgDocRepoConfig {
 	/**
-	 * The URL of the repository (e.g. "https://github.com/skoropadas/ng-doc")
+	 * The URL of the repository (e.g. "https://github.com/ng-doc/ng-doc")
 	 */
 	url: string;
 	/**

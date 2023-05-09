@@ -18,6 +18,7 @@ import {marked} from './marked';
  * @param node
  * @param section
  * @param customTag
+ * @param param
  */
 export function extractDocs(node: JSDocableNode, customTag?: string): string {
 	const jsDocs: JSDoc[] = asArray(node.getJsDocs()[0]);

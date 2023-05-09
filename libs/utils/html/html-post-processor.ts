@@ -1,9 +1,11 @@
 import {NgDocHeading} from '@ng-doc/core';
 import twig from 'highlight.js/lib/languages/twig';
-import {rehype} from 'rehype';
 import rehypeFormat from 'rehype-format';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeMinifyWhitespace from 'rehype-minify-whitespace';
+import rehypeParse from 'rehype-parse';
+import rehypeStringify from 'rehype-stringify';
+import {unified} from 'unified';
 import {VFileWithOutput} from 'unified';
 
 import autolinkHeadingPlugin from './plugins/autolink-headings.plugin';
@@ -25,7 +27,9 @@ export interface NgDocHtmlPostProcessorConfig {
  * @param config
  */
 export async function htmlPostProcessor(html: string, config: NgDocHtmlPostProcessorConfig): Promise<string> {
-	return rehype()
+	return unified()
+		.use(rehypeParse, {fragment: true})
+		.use(rehypeStringify)
 		.use(rehypeFormat)
 		.use(rehypeHighlight, {ignoreMissing: true, languages: {twig}})
 		.use(sluggerPlugin, config.headings)
