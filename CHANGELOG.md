@@ -1,3 +1,23 @@
+# [16.0.0](https://github.com/ng-doc/ng-doc/compare/v15.13.0...v16.0.0) (2023-05-09)
+
+
+### Bug Fixes
+
+* **app:** api list filter is too small on mobile devices ([c1d7668](https://github.com/ng-doc/ng-doc/commit/c1d766835ac0805a84d8df9de57b9341c544e680))
+* **app:** search doesn't work in `ES2022` projects ([dec2325](https://github.com/ng-doc/ng-doc/commit/dec2325aad0ff0bb95d636ea0d8c116a02bee07d))
+
+
+### Features
+
+* **app:** update angular dependencies ([c4e1da6](https://github.com/ng-doc/ng-doc/commit/c4e1da65746f659c147fb68fa2abdf23ffb6087d))
+* **project:** angular 16 support ([f785944](https://github.com/ng-doc/ng-doc/commit/f7859446c63e4a1208047080751c122133153708))
+* **project:** angular 16 support ([3b4f6d4](https://github.com/ng-doc/ng-doc/commit/3b4f6d437427fb65b4eb117523b0009e1602fb5a)), closes [#43](https://github.com/ng-doc/ng-doc/issues/43)
+
+
+### BREAKING CHANGES
+
+* **project:** Angular 16
+
 # [15.13.0](https://github.com/skoropadas/ng-doc/compare/v15.12.0...v15.13.0) (2023-04-29)
 
 
