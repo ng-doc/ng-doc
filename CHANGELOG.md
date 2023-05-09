@@ -1,3 +1,10 @@
+# [16.0.0-beta.2](https://github.com/ng-doc/ng-doc/compare/v16.0.0-beta.1...v16.0.0-beta.2) (2023-05-09)
+
+
+### Features
+
+* **app:** update angular dependencies ([c4e1da6](https://github.com/ng-doc/ng-doc/commit/c4e1da65746f659c147fb68fa2abdf23ffb6087d))
+
 # [16.0.0-beta.1](https://github.com/ng-doc/ng-doc/compare/v15.13.0...v16.0.0-beta.1) (2023-05-09)
 
 
