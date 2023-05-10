@@ -21,7 +21,8 @@ NgDoc will create a demo panes with your component's code and demo, and show it 
 ## Configuration
 
 The demo action also supports some options that can be passed as the second parameter and must
-conform to the `NgDocDemoPaneActionOptions` interface. For example, displaying a code pane by default and only html tab.
+conform to the `NgDocDemoPaneActionOptions` interface. For example, displaying a code pane by
+default and only html tab.
 
 ```twig fileName="index.md"
 {{'{{ NgDocActions.demoPane("ButtonDemoComponent", {expanded: true, tabs: ["HTML"]}) }}' | safe }}
@@ -31,32 +32,34 @@ conform to the `NgDocDemoPaneActionOptions` interface. For example, displaying a
 
 ## Customization
 
-You can also customize the styles of the demo pane. To do this, need to provide following CSS variables
+You can also customize the styles of the demo pane. To do this, need to provide following CSS
+variables
 from your `styles.scss` file.
 
 ```scss fileName="styles.scss"
 :root {
-	// Fixed height for all demo panes
-	--ng-doc-demo-pain-height: 300px;
+  // Fixed height for all demo panes
+  --ng-doc-demo-pain-height: 300px;
 
-	// Background color for front and back panes
-	--ng-doc-pane-background: #fff;
-	// Border for front and back panes
-	--ng-doc-pane-border: 1px solid #e5e5e5;
+  // Background color for front and back panes
+  --ng-doc-pane-background: #fff;
+  // Border for front and back panes
+  --ng-doc-pane-border: 1px solid #e5e5e5;
 
-	// Background color for front pane
-	--ng-doc-pane-front-background: #fff;
-	// Border for front pane
-	--ng-doc-pane-front-border: 1px solid #e5e5e5;
+  // Background color for front pane
+  --ng-doc-pane-front-background: #fff;
+  // Border for front pane
+  --ng-doc-pane-front-border: 1px solid #e5e5e5;
 
-	// Background color for back pane
-	--ng-doc-pane-back-background: #fff;
-	// Border for back pane
-	--ng-doc-pane-back-border: 1px solid #e5e5e5;
+  // Background color for back pane
+  --ng-doc-pane-back-background: #fff;
+  // Border for back pane
+  --ng-doc-pane-back-border: 1px solid #e5e5e5;
 }
 ```
 
-To customize only specific demo pane, you can provide CSS class to the options of the `demoPane` method.
+To customize only specific demo pane, you can provide CSS class to the options of the `demoPane`
+method.
 
 ```twig fileName="index.md"
 {{'{{ NgDocActions.demoPane("ButtonDemoComponent", {class: "my-demo-pane"}) }}' | safe }}

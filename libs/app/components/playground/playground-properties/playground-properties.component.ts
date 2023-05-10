@@ -5,7 +5,8 @@ import {
 	EventEmitter,
 	InjectionToken,
 	Injector,
-	Input, isDevMode,
+	Input,
+	isDevMode,
 	OnChanges,
 	Output,
 	SimpleChanges,
@@ -104,8 +105,9 @@ export class NgDocPlaygroundPropertiesComponent<
 
 	private getTypeControl(property: NgDocPlaygroundProperty): NgDocProvidedTypeControl | undefined {
 		const type: string = property.type;
-		const typeControl: NgDocProvidedTypeControl | undefined = this.getControlForType(type)
-			?? this.getControlForTypeAlias(isPlaygroundProperty(property) ? property.options : undefined);
+		const typeControl: NgDocProvidedTypeControl | undefined =
+			this.getControlForType(type) ??
+			this.getControlForTypeAlias(isPlaygroundProperty(property) ? property.options : undefined);
 
 		if (!typeControl && isDevMode()) {
 			console.warn(

@@ -37,11 +37,7 @@ import {NgDocThemeService} from '@ng-doc/app/services';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgDocThemeToggleComponent {
-	protected readonly themes: Array<NgDocTheme | undefined> = [
-		NG_DOC_NIGHT_THEME,
-		NG_DOC_DARK_PURPLE_THEME,
-		undefined,
-	];
+	protected readonly themes: Array<NgDocTheme | undefined> = [NG_DOC_NIGHT_THEME, NG_DOC_DARK_PURPLE_THEME, undefined];
 
 	constructor(protected readonly themeService: NgDocThemeService) {}
 

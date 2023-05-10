@@ -4,7 +4,7 @@ import {asArray} from '@ng-doc/core/helpers/as-array';
 import {objectKeys} from '@ng-doc/core/helpers/object-keys';
 import {NgDocPageIndex} from '@ng-doc/core/interfaces';
 import {NgDocHighlightPosition} from '@ng-doc/ui-kit';
-import {create, insert, insertMultiple, Orama, stemmers} from '@orama/orama';
+import {create, insertMultiple, Orama, stemmers} from '@orama/orama';
 import {Document} from '@orama/orama/dist/types';
 import {
 	afterInsert,

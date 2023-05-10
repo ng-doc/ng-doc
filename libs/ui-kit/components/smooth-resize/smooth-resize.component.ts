@@ -1,4 +1,4 @@
-import {animate, query, style, transition, trigger} from '@angular/animations';
+import {animate, style, transition, trigger} from '@angular/animations';
 import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input, OnChanges} from '@angular/core';
 
 @Component({
@@ -35,7 +35,7 @@ export class NgDocSmoothResizeComponent implements OnChanges {
 	@HostBinding('@resizeAnimation')
 	resizeAnimation?: {
 		value: unknown;
-		params: {startHeight: number; startWidth: number, startOpacity: number};
+		params: {startHeight: number; startWidth: number; startOpacity: number};
 	} = {
 		value: 0,
 		params: {startHeight: 0, startWidth: 0, startOpacity: 0},

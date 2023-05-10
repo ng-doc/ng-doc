@@ -2,7 +2,7 @@ import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {Directive, EmbeddedViewRef, Input, OnChanges, TemplateRef, ViewContainerRef} from '@angular/core';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {Subject} from 'rxjs';
-import {debounceTime, distinctUntilChanged, pluck, takeUntil} from 'rxjs/operators';
+import {distinctUntilChanged, pluck, takeUntil} from 'rxjs/operators';
 
 @Directive({
 	selector: '[ngDocMediaQuery]',

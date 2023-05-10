@@ -27,7 +27,7 @@ describe('codeTypeFromExt', () => {
 
 	it('should return unknown for unknown files', () => {
 		expect(codeTypeFromExt('test.pdf')).toBe('unknown');
-	})
+	});
 
 	describe('Windows paths', () => {
 		it('should return TypeScript for ts files', () => {
@@ -56,6 +56,6 @@ describe('codeTypeFromExt', () => {
 
 		it('should return unknown for unknown files', () => {
 			expect(codeTypeFromExt('C:\\test\\test.pdf')).toBe('unknown');
-		})
-	})
+		});
+	});
 });

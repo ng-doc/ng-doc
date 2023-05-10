@@ -1,13 +1,5 @@
 import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
-import {
-	ChangeDetectionStrategy,
-	ChangeDetectorRef,
-	Component,
-	EventEmitter,
-	HostBinding,
-	Input,
-	Output,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
 import {NgDocContent, NgDocHorizontalAlign} from '@ng-doc/ui-kit/types';
 
 @Component({
@@ -108,8 +100,6 @@ export class NgDocSidenavComponent {
 
 	@Output()
 	afterClose: EventEmitter<void> = new EventEmitter<void>();
-
-	constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
 	protected get backdrop(): boolean {
 		return this.over && this.opened && this.hasBackdrop;

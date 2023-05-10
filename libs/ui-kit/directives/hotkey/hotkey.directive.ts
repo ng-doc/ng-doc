@@ -1,5 +1,4 @@
-import {DOCUMENT} from '@angular/common';
-import {Directive, EventEmitter, Inject, Input, NgZone, Output} from '@angular/core';
+import {Directive, EventEmitter, Input, NgZone, Output} from '@angular/core';
 import {isKeyboardEvent} from '@ng-doc/core/helpers/is-keyboard-event';
 import {objectKeys} from '@ng-doc/core/helpers/object-keys';
 import {ngDocZoneOptimize} from '@ng-doc/ui-kit/observables';
@@ -21,8 +20,6 @@ export class NgDocHotkeyDirective {
 	callback: EventEmitter<void> = new EventEmitter<void>();
 
 	constructor(
-		@Inject(DOCUMENT)
-		private readonly document: Document,
 		private readonly ngZone: NgZone,
 	) {
 		KEYUP_EVENT.pipe(

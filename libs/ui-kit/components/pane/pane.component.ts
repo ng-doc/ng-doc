@@ -11,7 +11,6 @@ import {
 	NgZone,
 	OnChanges,
 	OnInit,
-	SimpleChange,
 	SimpleChanges,
 	ViewChild,
 } from '@angular/core';

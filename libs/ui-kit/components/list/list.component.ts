@@ -1,5 +1,4 @@
 import {ListKeyManager} from '@angular/cdk/a11y';
-import {DOCUMENT} from '@angular/common';
 import {ChangeDetectionStrategy, Component, ElementRef, Inject, NgZone, Optional} from '@angular/core';
 import {asArray} from '@ng-doc/core/helpers/as-array';
 import {NgDocListHost} from '@ng-doc/ui-kit/classes/list-host';
@@ -23,12 +22,9 @@ export class NgDocListComponent<T> {
 	constructor(
 		private elementRef: ElementRef<HTMLElement>,
 		private ngZone: NgZone,
-		@Inject(DOCUMENT) private documentRef: Document,
 		@Inject(NgDocListHost) @Optional() private listHost?: NgDocListHost,
 	) {
-		const origin: HTMLElement | null = this.listHost?.listHostOrigin
-			? toElement(this.listHost?.listHostOrigin)
-			: null;
+		const origin: HTMLElement | null = this.listHost?.listHostOrigin ? toElement(this.listHost?.listHostOrigin) : null;
 		const list: HTMLElement = toElement(this.elementRef);
 
 		merge(

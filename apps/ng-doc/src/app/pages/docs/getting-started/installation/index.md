@@ -33,18 +33,18 @@ alternatives from the NgDoc as shown in the example below
 
 ```json fileName="angular.json"
 {
-	"projects": {
-		"my-project": {
-			"architect": {
-				"build": {
-					"builder": "@ng-doc/builder:browser"
-				},
-				"serve": {
-					"builder": "@ng-doc/builder:dev-server"
-				}
-			}
-		}
-	}
+  "projects": {
+    "my-project": {
+      "architect": {
+        "build": {
+          "builder": "@ng-doc/builder:browser"
+        },
+        "serve": {
+          "builder": "@ng-doc/builder:dev-server"
+        }
+      }
+    }
+  }
 }
 ```
 
@@ -55,17 +55,17 @@ To do that edit you `angular.json` file, or add them to you `styles` file
 
 ```json fileName="angular.json"
 {
-	"projects": {
-		"my-project": {
-			"architect": {
-				"build": {
-					"options": {
-						"styles": ["node_modules/@ng-doc/app/styles/global.css"]
-					}
-				}
-			}
-		}
-	}
+  "projects": {
+    "my-project": {
+      "architect": {
+        "build": {
+          "options": {
+            "styles": ["node_modules/@ng-doc/app/styles/global.css"]
+          }
+        }
+      }
+    }
+  }
 }
 ```
 
@@ -87,33 +87,33 @@ file.
 
 ```json fileName="angular.json"
 {
-	"projects": {
-		"my-project": {
-			"architect": {
-				"build": {
-					"options": {
-						"assets": [
-							{
-								"glob": "**/*",
-								"input": "node_modules/@ng-doc/ui-kit/assets",
-								"output": "assets"
-							},
-							{
-								"glob": "**/*",
-								"input": "node_modules/@ng-doc/app/assets",
-								"output": "assets"
-							},
-							{
-								"glob": "**/*",
-								"input": ".ng-doc/docs/assets",
-								"output": "assets/ng-doc"
-							}
-						]
-					}
-				}
-			}
-		}
-	}
+  "projects": {
+    "my-project": {
+      "architect": {
+        "build": {
+          "options": {
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "node_modules/@ng-doc/ui-kit/assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@ng-doc/app/assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*",
+                "input": ".ng-doc/docs/assets",
+                "output": "assets/ng-doc"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
 }
 ```
 
@@ -126,13 +126,13 @@ the generated files and `allowSyntheticDefaultImports` option.
 
 ```json fileName="tsconfig.json"
 {
-	"compilerOptions": {
-		"allowSyntheticDefaultImports": true,
-		"paths": {
-			"@ng-doc/generated": [".ng-doc/project-folder-name/index.ts"],
-			"@ng-doc/generated/*": [".ng-doc/project-folder-name/*"]
-		}
-	}
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@ng-doc/generated": [".ng-doc/project-folder-name/index.ts"],
+      "@ng-doc/generated/*": [".ng-doc/project-folder-name/*"]
+    }
+  }
 }
 ```
 
@@ -153,21 +153,21 @@ import {NgDocUiKitRootModule} from '@ng-doc/ui-kit';
 import {AppComponent} from './app.component';
 
 @NgModule({
-	declarations: [AppComponent],
-	imports: [
-		BrowserModule,
-		// To enable animations ( import NoopAnimationsModule if you don't like animations :( )
-		BrowserAnimationsModule,
-		// Root NgDoc module
-		NgDocModule.forRoot(),
-		// Generated module that contains all generated pages
-		NgDocGeneratedModule.forRoot(),
-		// Add generated routes
-		RouterModule.forRoot(NG_DOC_ROUTING),
-	],
-	// Add search engine to the providers
-	providers: [provideSearchEngine(NgDocDefaultSearchEngine)],
-	bootstrap: [AppComponent],
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    // To enable animations ( import NoopAnimationsModule if you don't like animations :( )
+    BrowserAnimationsModule,
+    // Root NgDoc module
+    NgDocModule.forRoot(),
+    // Generated module that contains all generated pages
+    NgDocGeneratedModule.forRoot(),
+    // Add generated routes
+    RouterModule.forRoot(NG_DOC_ROUTING),
+  ],
+  // Add search engine to the providers
+  providers: [provideSearchEngine(NgDocDefaultSearchEngine)],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
 ```
@@ -179,12 +179,12 @@ menu, to do this open your `app.component.html` file and add the following code 
 
 ```html fileName="app.component.html"
 <ng-doc-root>
-	<ng-doc-navbar [leftContent]="leftContent">
-		<ng-template #leftContent>
-			<h3 class="brand" style="margin: 0">MyDocs</h3>
-		</ng-template>
-	</ng-doc-navbar>
-	<ng-doc-sidebar></ng-doc-sidebar>
-	<router-outlet></router-outlet>
+  <ng-doc-navbar [leftContent]="leftContent">
+    <ng-template #leftContent>
+      <h3 class="brand" style="margin: 0">MyDocs</h3>
+    </ng-template>
+  </ng-doc-navbar>
+  <ng-doc-sidebar></ng-doc-sidebar>
+  <router-outlet></router-outlet>
 </ng-doc-root>
 ```

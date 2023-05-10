@@ -1,4 +1,4 @@
-<section id="greeting" class="greeting">
+<section class="greeting" id="greeting">
 	<ng-doc-background style="opacity: 0.4"></ng-doc-background>
 	<div class="section-container">
 		<div class="container row space-between">
@@ -6,10 +6,10 @@
 				<h1 ng-doc-text>Documentation for<br />Angular projects</h1>
 				<p ng-doc-text>Create user-friendly documentation for your projects with ease!</p>
 				<div class="greeting-buttons">
-					<a ng-doc-button-flat [routerLink]="['docs']" size="large" color="grey" [rounded]="true">
+					<a [rounded]="true" [routerLink]="['docs']" color="grey" ng-doc-button-flat size="large">
 						<span ng-doc-text>
 							Quick start
-							<ng-doc-icon icon="zap" [size]="24" ngDocTextLeft></ng-doc-icon>
+							<ng-doc-icon [size]="24" icon="zap" ngDocTextLeft></ng-doc-icon>
 						</span>
 					</a>
 				</div>
@@ -29,16 +29,16 @@
 			</div>
 
 			<ng-template
+				#mediaQuery="ngDocMediaQuery"
 				[ngDocMediaQuery]="[
 					mediaQuery.breakpoints.XLarge,
 					mediaQuery.breakpoints.Large,
 					mediaQuery.breakpoints.Medium,
 					mediaQuery.breakpoints.Small
 				]"
-				#mediaQuery="ngDocMediaQuery"
 			>
 				<figure>
-					<video autoplay loop playsinline [muted]="'muted'">
+					<video [muted]="'muted'" autoplay loop playsinline>
 						<source src="https://assets.ng-doc.com/ng-doc-in-action.mp4" type="video/mp4" />
 						You need a browser that supports HTML5 video to view this video.
 					</video>
@@ -48,7 +48,7 @@
 	</div>
 </section>
 
-<section id="try-it" class="try-it">
+<section class="try-it" id="try-it">
 	<div class="section-container">
 		<h1 ng-doc-text>Try it out for yourself!</h1>
 		<p class="description" ng-doc-text>

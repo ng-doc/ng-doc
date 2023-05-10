@@ -89,12 +89,12 @@ to add documentation to the parameters, use the `@param` tag and parameter name.
 
 ```typescript fileName="my-class.ts"
 export class MyClass {
-	/**
-	 * My awesome docs for the
-	 *
-	 * @param num This param is really important, and this is the doc for it
-	 */
-	doSomething(num: number): void {}
+  /**
+   * My awesome docs for the
+   *
+   * @param num This param is really important, and this is the doc for it
+   */
+  doSomething(num: number): void {}
 }
 ```
 
