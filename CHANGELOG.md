@@ -1,3 +1,10 @@
+## [16.0.2](https://github.com/ng-doc/ng-doc/compare/v16.0.1...v16.0.2) (2023-05-10)
+
+
+### Bug Fixes
+
+* **app:** footer is not at the bottom of the page if its content is smaller than the screen height ([ec5b768](https://github.com/ng-doc/ng-doc/commit/ec5b7686bd4ca47135bc857b7426c8e0bb461a39))
+
 ## [16.0.1](https://github.com/ng-doc/ng-doc/compare/v16.0.0...v16.0.1) (2023-05-09)
 
 
