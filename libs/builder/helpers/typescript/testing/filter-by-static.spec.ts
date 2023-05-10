@@ -1,7 +1,6 @@
 import {ClassDeclaration, MethodDeclaration, Project, PropertyDeclaration, SourceFile} from 'ts-morph';
 
 import {createProject} from '../create-project';
-import {filterByScope} from '../filter-by-scope';
 import {filterByStatic} from '../filter-by-static';
 
 describe('filterByScope', () => {
