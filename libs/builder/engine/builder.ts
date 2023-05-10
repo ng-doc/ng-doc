@@ -1,5 +1,4 @@
 import {isPresent} from '@ng-doc/core';
-import * as console from 'console';
 import * as esbuild from 'esbuild';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -11,13 +10,12 @@ import {
 	map,
 	mapTo,
 	mergeMap,
-	share,
 	startWith,
 	switchMap,
 	takeUntil,
 	tap,
 } from 'rxjs/operators';
-import {InterfaceDeclaration, Project, SourceFile} from 'ts-morph';
+import {Project, SourceFile} from 'ts-morph';
 
 import {createProject, emitBuiltOutput, isFileEntity} from '../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
@@ -126,12 +124,7 @@ export class NgDocBuilder {
 													),
 													startWith(null),
 													mapTo(entity),
-													takeUntil(
-														merge(
-															entity.onDestroy(),
-															watcher.onChange(...entity.rootFiles),
-														),
-													),
+													takeUntil(merge(entity.onDestroy(), watcher.onChange(...entity.rootFiles))),
 											  ),
 									),
 							  )
@@ -150,9 +143,7 @@ export class NgDocBuilder {
 					}),
 				).pipe(
 					switchMap((output: NgDocBuiltOutput[][]) =>
-						this.skeleton
-							.buildArtifacts()
-							.pipe(map((skeleton: NgDocBuiltOutput[]) => [...output.flat(), ...skeleton])),
+						this.skeleton.buildArtifacts().pipe(map((skeleton: NgDocBuiltOutput[]) => [...output.flat(), ...skeleton])),
 					),
 					tap((output: NgDocBuiltOutput[]) => {
 						/*

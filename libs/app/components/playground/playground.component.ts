@@ -50,16 +50,13 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 	}
 
 	private getContentFormValues(): Record<string, boolean> {
-		return objectKeys(this.configuration?.content ?? {}).reduce(
-			(controls: Record<string, boolean>, key: string) => {
-				if (this.configuration?.content) {
-					controls[key] = false;
-				}
+		return objectKeys(this.configuration?.content ?? {}).reduce((controls: Record<string, boolean>, key: string) => {
+			if (this.configuration?.content) {
+				controls[key] = false;
+			}
 
-				return controls;
-			},
-			{} as Record<keyof T, boolean>,
-		);
+			return controls;
+		}, {} as Record<keyof T, boolean>);
 		return {};
 	}
 

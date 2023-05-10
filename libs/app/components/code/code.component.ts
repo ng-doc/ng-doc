@@ -22,10 +22,7 @@ export class NgDocCodeComponent {
 
 	tooltipText: string = '';
 
-	constructor(
-		private elementRef: ElementRef<HTMLElement>,
-		private readonly clipboard: Clipboard,
-	) {}
+	constructor(private elementRef: ElementRef<HTMLElement>, private readonly clipboard: Clipboard) {}
 
 	@HostBinding('attr.data-ng-doc-has-header')
 	get hasHeader(): boolean {

@@ -14,7 +14,6 @@ import {
 	ViewContainerRef,
 } from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
 import {getPlaygroundDemoToken} from '@ng-doc/app/helpers';
 import {NgDocFormPartialValue} from '@ng-doc/app/types';
 import {buildPlaygroundDemoTemplate} from '@ng-doc/core/helpers/build-playground-demo-template';
@@ -67,7 +66,7 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 	private demoRef?: ComponentRef<NgDocBasePlayground>;
 	private readonly unsubscribe$: Subject<void> = new Subject<void>();
 
-	constructor(private readonly rootPage: NgDocRootPage, private readonly injector: Injector) {}
+	constructor(private readonly injector: Injector) {}
 
 	ngOnChanges({form, id}: SimpleChanges): void {
 		if (form && id) {
@@ -109,9 +108,7 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 			this.demoRef?.destroy();
 
 			if (this.playgroundDemo) {
-				this.demoRef = this.demoOutlet?.createComponent(
-					this.playgroundDemo as unknown as Type<NgDocBasePlayground>,
-				);
+				this.demoRef = this.demoOutlet?.createComponent(this.playgroundDemo as unknown as Type<NgDocBasePlayground>);
 			}
 
 			this.demoRef?.changeDetectorRef.markForCheck();

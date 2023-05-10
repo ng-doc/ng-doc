@@ -1,4 +1,4 @@
-import {ClassDeclaration, MethodDeclaration, Project, PropertyDeclaration, Scope, SourceFile} from 'ts-morph';
+import {ClassDeclaration, MethodDeclaration, Project, PropertyDeclaration, SourceFile} from 'ts-morph';
 
 import {createProject} from '../create-project';
 import {filterByScope} from '../filter-by-scope';
@@ -24,9 +24,7 @@ describe('filterByScope', () => {
 		const declaration: ClassDeclaration = sourceFile.getClassOrThrow('Test');
 
 		expect(
-			filterByStatic(declaration.getProperties(), true).map((property: PropertyDeclaration) =>
-				property.getName(),
-			),
+			filterByStatic(declaration.getProperties(), true).map((property: PropertyDeclaration) => property.getName()),
 		).toStrictEqual(['property1']);
 	});
 
@@ -43,11 +41,9 @@ describe('filterByScope', () => {
 		const declaration: ClassDeclaration = sourceFile.getClassOrThrow('Test');
 
 		expect(
-			filterByStatic(declaration.getProperties(), false).map((property: PropertyDeclaration) =>
-				property.getName(),
-			),
+			filterByStatic(declaration.getProperties(), false).map((property: PropertyDeclaration) => property.getName()),
 		).toStrictEqual(['property2']);
-	})
+	});
 
 	it('should return static method', () => {
 		const sourceFile: SourceFile = project.createSourceFile(
@@ -64,7 +60,7 @@ describe('filterByScope', () => {
 		expect(
 			filterByStatic(declaration.getMethods(), true).map((method: MethodDeclaration) => method.getName()),
 		).toStrictEqual(['method1']);
-	})
+	});
 
 	it('should return non-static method', () => {
 		const sourceFile: SourceFile = project.createSourceFile(
@@ -81,5 +77,5 @@ describe('filterByScope', () => {
 		expect(
 			filterByStatic(declaration.getMethods(), false).map((method: MethodDeclaration) => method.getName()),
 		).toStrictEqual(['method2']);
-	})
+	});
 });

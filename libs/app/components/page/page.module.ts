@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {RouterLink} from '@angular/router';
-import {NgDocBreadcrumbModule} from "@ng-doc/app/components/breadcrumb";
+import {NgDocBreadcrumbModule} from '@ng-doc/app/components/breadcrumb';
 import {NgDocPageMapModule} from '@ng-doc/app/components/toc';
 import {NgDocSanitizeHtmlModule} from '@ng-doc/app/pipes/sanitize-html';
 import {
