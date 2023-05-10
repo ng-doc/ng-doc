@@ -6,8 +6,8 @@ import {printProgress} from '../helpers';
 /**
  * Prints a progress message. If no message is passed, the message will be cleared.
  *
- * @param message - The message to print.
+ * @param args - Arguments to pass to the `printProgress` function.
  */
-export function progress<T>(message?: string): OperatorFunction<T, T> {
-	return (source: Observable<T>) => source.pipe(tap(() => printProgress(message)));
+export function progress<T>(...args: Parameters<typeof printProgress>): OperatorFunction<T, T> {
+	return (source: Observable<T>) => source.pipe(tap(() => printProgress(...args)));
 }
