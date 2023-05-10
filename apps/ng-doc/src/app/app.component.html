@@ -1,5 +1,10 @@
 <ng-doc-root [sidebar]="!isLandingPage" [noWidthLimit]="isLandingPage" [footerContent]="footerContent">
-	<ng-doc-navbar [leftContent]="leftContent" [rightContent]="rightContent" [hamburger]="!isLandingPage" [search]="!isLandingPage">
+	<ng-doc-navbar
+		[leftContent]="leftContent"
+		[rightContent]="rightContent"
+		[hamburger]="!isLandingPage"
+		[search]="!isLandingPage"
+	>
 		<ng-template #leftContent>
 			<a class="brand" routerLink="/">
 				<h3>

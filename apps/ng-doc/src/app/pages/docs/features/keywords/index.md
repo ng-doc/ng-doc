@@ -41,11 +41,11 @@ the `keyword` field.
 import {NgDocPage} from '@ng-doc/core';
 
 export const MyAwesomePage: NgDocPage = {
-	title: 'My Awesome Page',
-	mdFile: './index.md',
-	// This keyword can be used to create a link to the page
-	// (e.g. like that "*MyCustomKeyword")
-	keyword: `MyCustomKeyword`,
+  title: 'My Awesome Page',
+  mdFile: './index.md',
+  // This keyword can be used to create a link to the page
+  // (e.g. like that "*MyCustomKeyword")
+  keyword: `MyCustomKeyword`,
 };
 
 export default MyAwesomePage;
@@ -67,11 +67,11 @@ you can read about it in the `*GettingStartedConfiguration` article.
 import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
-	keywords: {
-		google: {
-			path: 'https://google.com/',
-		},
-	},
+  keywords: {
+    google: {
+      path: 'https://google.com/',
+    },
+  },
 };
 
 export default config;

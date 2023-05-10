@@ -32,13 +32,13 @@ import {NgDocTagComponent} from '@ng-doc/ui-kit';
 import {PageModule} from './ng-doc.module';
 
 const PageDependencies: NgDocDependencies = {
-	module: PageModule,
-	playgrounds: {
-		TagPlayground: {
-			target: NgDocTagComponent,
-			template: `<ng-doc-selector>Tag Label</ng-doc-selector>`,
-		},
-	},
+  module: PageModule,
+  playgrounds: {
+    TagPlayground: {
+      target: NgDocTagComponent,
+      template: `<ng-doc-selector>Tag Label</ng-doc-selector>`,
+    },
+  },
 };
 
 export default PageDependencies;
@@ -69,9 +69,9 @@ import {NgModule} from '@angular/core';
 import {NgDocTagModule} from '@ng-doc/ui-kit';
 
 @NgModule({
-	imports: [CommonModule],
-	// Just export all modules that are needed for your playgrounds
-	exports: [NgDocTagModule],
+  imports: [CommonModule],
+  // Just export all modules that are needed for your playgrounds
+  exports: [NgDocTagModule],
 })
 export class PageModule {}
 ```
@@ -85,7 +85,8 @@ from `NgDocActions`, passing the key of your playground to it as follows
 {{'{{ NgDocActions.playground("TagPlayground") }}' | safe }}
 ```
 
-NgDoc will recognize `@Input` field types and creates controls for them, which allow you to change their
+NgDoc will recognize `@Input` field types and creates controls for them, which allow you to change
+their
 values and see how the component changes.
 
 {{ NgDocActions.playground("TagPlayground") }}
@@ -112,23 +113,23 @@ import {NgDocTagComponent} from '@ng-doc/ui-kit';
 import {PageModule} from './ng-doc.module';
 
 const PageDependencies: NgDocDependencies = {
-	module: PageModule,
-	playgrounds: {
-		TagIconPlayground: {
-			target: NgDocTagComponent,
-			template: `
+  module: PageModule,
+  playgrounds: {
+    TagIconPlayground: {
+      target: NgDocTagComponent,
+      template: `
 			<ng-doc-selector>
 				{{ "{{content.icon}}" | safe }}
 				Tag Label
 			</ng-doc-selector>`,
-			content: {
-				icon: {
-					label: 'email icon',
-					template: '<ng-doc-icon icon="at-sign" [size]="16"></ng-doc-icon>',
-				},
-			},
-		},
-	},
+      content: {
+        icon: {
+          label: 'email icon',
+          template: '<ng-doc-icon icon="at-sign" [size]="16"></ng-doc-icon>',
+        },
+      },
+    },
+  },
 };
 
 export default PageDependencies;
@@ -151,16 +152,16 @@ import {NgDocTagComponent} from '@ng-doc/ui-kit';
 import {PageModule} from './ng-doc.module';
 
 const PageDependencies: NgDocDependencies = {
-	module: PageModule,
-	playgrounds: {
-		TagDataPlayground: {
-			target: NgDocTagComponent,
-			template: `<ng-doc-selector>{{ "{{data.array | json}}" | safe }}</ng-doc-selector>`,
-			data: {
-				array: [1, 2, 3],
-			},
-		},
-	},
+  module: PageModule,
+  playgrounds: {
+    TagDataPlayground: {
+      target: NgDocTagComponent,
+      template: `<ng-doc-selector>{{ "{{data.array | json}}" | safe }}</ng-doc-selector>`,
+      data: {
+        array: [1, 2, 3],
+      },
+    },
+  },
 };
 
 export default PageDependencies;
