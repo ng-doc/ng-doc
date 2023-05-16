@@ -96,16 +96,16 @@ file.
               {
                 "glob": "**/*",
                 "input": "node_modules/@ng-doc/ui-kit/assets",
-                "output": "assets"
+                "output": "assets/ng-doc/ui-kit"
               },
               {
                 "glob": "**/*",
                 "input": "node_modules/@ng-doc/app/assets",
-                "output": "assets"
+                "output": "assets/ng-doc/app"
               },
               {
                 "glob": "**/*",
-                "input": ".ng-doc/docs/assets",
+                "input": ".ng-doc/project-name/assets",
                 "output": "assets/ng-doc"
               }
             ]
