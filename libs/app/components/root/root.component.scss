@@ -1,6 +1,8 @@
 :host {
+
 	&[data-ng-doc-no-width-limit='true'] {
 		.ng-doc-root-wrapper {
+
 			main {
 				max-width: none;
 			}
@@ -8,6 +10,10 @@
 	}
 
 	.ng-doc-root-wrapper {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+
 		main {
 			display: flex;
 			width: 100%;
@@ -19,6 +25,10 @@
 			--ng-doc-sidenav-top: var(--ng-doc-navbar-height);
 			--ng-doc-sidenav-width: var(--ng-doc-sidebar-width);
 			--ng-doc-sidenav-content-padding: var(--ng-doc-page-padding);
+		}
+
+		footer {
+			margin-top: auto;
 		}
 
 		.ng-doc-header {

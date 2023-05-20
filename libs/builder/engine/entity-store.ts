@@ -1,5 +1,4 @@
-import {asArray, objectKeys} from '@ng-doc/core';
-import {NgDocGlobalKeyword, NgDocKeyword} from '@ng-doc/core';
+import {asArray, NgDocGlobalKeyword, NgDocKeyword, objectKeys} from '@ng-doc/core';
 
 import {getKeywordTypeFromEntity, isApiPageEntity, isRouteEntity} from '../helpers';
 import {NgDocEntity} from './entities/abstractions/entity';

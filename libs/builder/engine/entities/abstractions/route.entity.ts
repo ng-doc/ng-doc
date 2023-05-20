@@ -1,4 +1,4 @@
-import {asArray, NgDocPageIndex} from '@ng-doc/core';
+import {asArray} from '@ng-doc/core';
 import * as path from 'path';
 
 import {isRouteEntity, slash} from '../../../helpers';

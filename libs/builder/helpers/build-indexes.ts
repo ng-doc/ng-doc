@@ -1,6 +1,6 @@
 import {NgDocPageType} from '@ng-doc/core';
 import {NgDocPageIndex} from '@ng-doc/core/interfaces';
-import {create, stemmers} from '@orama/orama';
+import {create} from '@orama/orama';
 import {defaultHtmlSchema, NodeContent, populate} from '@orama/plugin-parsedoc';
 import {from} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
@@ -26,11 +26,6 @@ export async function buildIndexes(config: NgDocIndexBuilderConfig): Promise<NgD
 	const db = await create({
 		schema: {
 			...defaultHtmlSchema,
-		},
-		components: {
-			tokenizer: {
-				stemmer: stemmers.english
-			}
 		}
 	});
 

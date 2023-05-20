@@ -13,7 +13,7 @@ export class NgDocLetDirective<T> {
 		private readonly viewContainer: ViewContainerRef,
 		private readonly templateRef: TemplateRef<NgDocLetContext<T>>,
 	) {
-		viewContainer.createEmbeddedView(templateRef, new NgDocLetContext<T>(this));
+		this.viewContainer.createEmbeddedView(this.templateRef, new NgDocLetContext<T>(this));
 	}
 
 	static ngTemplateContextGuard<T>(_dir: NgDocLetDirective<T>, _ctx: unknown): _ctx is NgDocLetDirective<T> {

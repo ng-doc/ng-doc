@@ -4,7 +4,7 @@ import {asArray} from '@ng-doc/core/helpers/as-array';
 import {objectKeys} from '@ng-doc/core/helpers/object-keys';
 import {NgDocPageIndex} from '@ng-doc/core/interfaces';
 import {NgDocHighlightPosition} from '@ng-doc/ui-kit';
-import {create, insert, insertMultiple, Orama, stemmers} from '@orama/orama';
+import {create, insertMultiple, Orama} from '@orama/orama';
 import {Document} from '@orama/orama/dist/types';
 import {
 	afterInsert,
@@ -12,13 +12,9 @@ import {
 	SearchResultWithHighlight,
 	searchWithHighlight,
 } from '@orama/plugin-match-highlight';
+import * as stemmer from '@orama/stemmers';
 import {from, Observable} from 'rxjs';
 import {map, shareReplay, switchMap} from 'rxjs/operators';
-
-/**
- * Possible languages for the `NgDocSearchEngine`.
- */
-export type NgDocDefaultSearchEngineLanguage = keyof typeof stemmers;
 
 /**
  * Options for the `NgDocDefaultSearchEngine`.
@@ -27,7 +23,7 @@ export interface NgDocDefaultSearchEngineOptions {
 	/**
 	 * The language to use for the search engine.
 	 */
-	language?: NgDocDefaultSearchEngineLanguage;
+	stemmer?: typeof stemmer.stemmer;
 	/**
 	 * Specifies the maximum distance (following the Levenshtein algorithm) between the term and the searchable property.
 	 * (doesn't work with `exact` option)
@@ -68,8 +64,7 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 				components: {
 					afterInsert: [afterInsert],
 					tokenizer: {
-						language: options?.language || 'english',
-						stemmer: stemmers[options?.language || 'english'],
+						stemmer: options?.stemmer
 					},
 				},
 			}),

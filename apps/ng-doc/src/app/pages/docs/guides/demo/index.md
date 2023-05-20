@@ -45,12 +45,12 @@ You can customize the demo component via CSS variables.
 
 ```scss fileName="styles.scss"
 :root {
-	// Demo border
-	--ng-doc-demo-displayer-border: 1px solid #ccc;
-	// Demo border radius
-	--ng-doc-demo-displayer-border-radius: 4px;
-	// Demo background
-	--ng-doc-demo-displayer-background: #fff;
+  // Demo border
+  --ng-doc-demo-displayer-border: 1px solid #ccc;
+  // Demo border radius
+  --ng-doc-demo-displayer-border-radius: 4px;
+  // Demo background
+  --ng-doc-demo-displayer-background: #fff;
 }
 ```
 

@@ -3,12 +3,14 @@ import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgDocDemoDisplayerModule} from '@ng-doc/app/components/demo-displayer';
 import {
-	NgDocAsArrayModule, NgDocBindModule,
+	NgDocAsArrayModule,
+	NgDocBindModule,
 	NgDocButtonIconModule,
 	NgDocButtonModule,
 	NgDocCheckboxModule,
 	NgDocIconModule,
-	NgDocLabelModule, NgDocRunModule,
+	NgDocLabelModule,
+	NgDocRunModule,
 	NgDocTextModule,
 	NgDocTooltipModule,
 } from '@ng-doc/ui-kit';

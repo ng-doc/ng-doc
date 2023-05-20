@@ -1,21 +1,20 @@
 import {
 	ChangeDetectionStrategy,
-	ChangeDetectorRef,
 	Component,
 	ElementRef,
+	forwardRef,
 	HostBinding,
 	Input,
 	Optional,
-	ViewChild,
+	ViewChild
 } from '@angular/core';
 import {NgDocSearchEngine} from '@ng-doc/app/classes/search-engine';
 import {NgDocSearchResult} from '@ng-doc/app/interfaces';
-import {NgDocPageType} from '@ng-doc/core';
 import {NgDocHighlightPosition, observableState, StatedObservable} from '@ng-doc/ui-kit';
 import {NgDocListHost} from '@ng-doc/ui-kit/classes';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {BehaviorSubject, NEVER, ReplaySubject, Subject} from 'rxjs';
-import {filter, skip, switchMap} from 'rxjs/operators';
+import {BehaviorSubject, NEVER} from 'rxjs';
+import {skip, switchMap} from 'rxjs/operators';
 
 @Component({
 	selector: 'ng-doc-search',
@@ -25,7 +24,7 @@ import {filter, skip, switchMap} from 'rxjs/operators';
 	providers: [
 		{
 			provide: NgDocListHost,
-			useExisting: NgDocSearchComponent,
+			useExisting: forwardRef(() => NgDocSearchComponent),
 		},
 	],
 })
@@ -45,7 +44,6 @@ export class NgDocSearchComponent implements NgDocListHost {
 
 	constructor(
 		private readonly elementRef: ElementRef<HTMLElement>,
-		private readonly changeDetectorRef: ChangeDetectorRef,
 		@Optional()
 		private readonly searchEngine?: NgDocSearchEngine,
 	) {

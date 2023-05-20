@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Directive, ElementRef, Input, Renderer2} from '@angular/core';
+import {Directive, ElementRef, Input, Renderer2} from '@angular/core';
 import {Event, IsActiveMatchOptions, NavigationEnd, Router} from '@angular/router';
 import {asArray} from '@ng-doc/core/helpers/as-array';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
@@ -27,7 +27,6 @@ export class NgDocRouteActiveDirective {
 		private readonly elementRef: ElementRef<HTMLElement>,
 		private readonly router: Router,
 		private readonly renderer: Renderer2,
-		private readonly changeDetectorRef: ChangeDetectorRef,
 	) {
 		this.router.events
 			.pipe(

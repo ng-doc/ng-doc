@@ -5,8 +5,7 @@ import rehypeHighlight from 'rehype-highlight';
 import rehypeMinifyWhitespace from 'rehype-minify-whitespace';
 import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
-import {unified} from 'unified';
-import {VFileWithOutput} from 'unified';
+import {unified, VFileWithOutput} from 'unified';
 
 import autolinkHeadingPlugin from './plugins/autolink-headings.plugin';
 import keywordsPlugin, {AddUsedKeyword, GetKeyword} from './plugins/keywords.plugin';

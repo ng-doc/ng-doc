@@ -148,6 +148,10 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	ngOnDestroy(): void {
+		this.animationId && window.cancelAnimationFrame(this.animationId);
+	}
+
 	private createCircles() {
 		let currentColor = 0;
 		this.particles = [];
@@ -166,9 +170,5 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 
 			this.particles[i] = item;
 		}
-	}
-
-	ngOnDestroy(): void {
-		this.animationId && window.cancelAnimationFrame(this.animationId);
 	}
 }

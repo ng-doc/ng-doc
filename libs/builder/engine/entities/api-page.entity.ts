@@ -1,7 +1,7 @@
 import {asArray, isPresent} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, from, Observable, of} from 'rxjs';
-import {catchError, map, mapTo} from 'rxjs/operators';
+import {map, mapTo} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
 import {declarationFolderName, editFileInRepoUrl, slash, uniqueName, viewFileInRepoUrl} from '../../helpers';
@@ -9,7 +9,6 @@ import {isSupportedDeclaration} from '../../helpers/is-supported-declaration';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocSupportedDeclarations} from '../../types/supported-declarations';
 import {NgDocBuilder} from '../builder';
-import {RENDERED_PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocRouteEntity} from './abstractions/route.entity';
 import {NgDocApiScopeEntity} from './api-scope.entity';
@@ -42,12 +41,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 
 	override get route(): string {
 		return this.declaration
-			? slash(
-					path.join(
-						declarationFolderName(this.declaration),
-						this.declarationName + (this.index ? this.index : ''),
-					),
-			  )
+			? slash(path.join(declarationFolderName(this.declaration), this.declarationName + (this.index ? this.index : '')))
 			: '';
 	}
 
@@ -106,9 +100,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 
 	protected override build(): Observable<NgDocBuiltOutput[]> {
 		return this.isReadyForBuild
-			? forkJoin([this.buildModule()]).pipe(
-					map((output: Array<NgDocBuiltOutput | null>) => output.filter(isPresent)),
-			  )
+			? forkJoin([this.buildModule()]).pipe(map((output: Array<NgDocBuiltOutput | null>) => output.filter(isPresent)))
 			: of([]);
 	}
 
@@ -120,16 +112,15 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 
 	pageContent(): string {
 		if (this.declaration) {
-			return this.builder.renderer
-				.renderSync('./api-page.html.nunj', {
-					context: {
-						declaration: this.declaration,
-						scope: this.parent.target,
-					},
-				})
+			return this.builder.renderer.renderSync('./api-page.html.nunj', {
+				context: {
+					declaration: this.declaration,
+					scope: this.parent.target,
+				},
+			});
 		}
 
-		return ''
+		return '';
 	}
 
 	private updateDeclaration(): asserts this is this & {declaration: NgDocSupportedDeclarations} {

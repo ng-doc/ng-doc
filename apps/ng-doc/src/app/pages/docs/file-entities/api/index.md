@@ -30,14 +30,14 @@ Let's see how an example of a basic API configuration looks like.
 import {NgDocApi} from '@ng-doc/core';
 
 export const api: NgDocApi = {
-	title: 'API Reference',
-	scopes: [
-		{
-			name: 'my-library-name',
-			route: 'my-library',
-			include: 'path/to/my-library/source/files/**/*.ts',
-		},
-	],
+  title: 'API Reference',
+  scopes: [
+    {
+      name: 'my-library-name',
+      route: 'my-library',
+      include: 'path/to/my-library/source/files/**/*.ts',
+    },
+  ],
 };
 
 export default api;
@@ -61,15 +61,15 @@ import {NgDocApi} from '@ng-doc/core';
 import MyAwesomeCategory from '../ng-doc.category';
 
 export const api: NgDocApi = {
-	title: 'API Reference',
-	category: MyAwesomeCategory,
-	scopes: [
-		{
-			name: 'my-library-name',
-			route: 'my-library',
-			include: 'path/to/my-library/source/files/**/*.ts',
-		},
-	],
+  title: 'API Reference',
+  category: MyAwesomeCategory,
+  scopes: [
+    {
+      name: 'my-library-name',
+      route: 'my-library',
+      include: 'path/to/my-library/source/files/**/*.ts',
+    },
+  ],
 };
 
 export default api;
@@ -91,7 +91,8 @@ for the following entities `NgDocPageEntity`, `NgDocApiPageEntity`.
 By default, NgDoc is configured to work only with one API configuration file, but if it is necessary
 you can create multiple API configurations files. For multiple API configurations, you need to
 specify different value for the `route` field in the `ng-doc.api.ts` file otherwise you will
-get a conflict between two API pages, because the `route` property is optional and if you don't specify
+get a conflict between two API pages, because the `route` property is optional and if you don't
+specify
 it, NgDoc will use `api` as a default value.
 
 {% index false %}

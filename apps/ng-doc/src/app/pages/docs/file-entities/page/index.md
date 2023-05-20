@@ -32,8 +32,8 @@ properties in the documentation for the type, below is an example of the minimum
 import {NgDocPage} from '@ng-doc/core';
 
 export const MyAwesomePage: NgDocPage = {
-	title: 'MyAwesomePage',
-	mdFile: './index.md',
+  title: 'MyAwesomePage',
+  mdFile: './index.md',
 };
 
 export default MyAwesomePage;
@@ -50,9 +50,9 @@ import {NgDocPage} from '@ng-doc/core';
 import MyAwesomeCategory from '../ng-doc.category';
 
 export const MyAwesomePage: NgDocPage = {
-	title: 'MyAwesomePage',
-	category: MyAwesomeCategory,
-	mdFile: './index.md',
+  title: 'MyAwesomePage',
+  category: MyAwesomeCategory,
+  mdFile: './index.md',
 };
 
 export default MyAwesomePage;

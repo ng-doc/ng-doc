@@ -114,9 +114,7 @@ export class NgDocTooltipDirective implements AfterViewInit, OnDestroy {
 			fromEvent(this.pointerOriginElement, 'mouseleave'),
 			this.beforeOpen.pipe(
 				switchMap(() =>
-					isPresent(this.overlayRef)
-						? fromEvent(this.overlayRef.overlayRef.overlayElement, 'mouseleave')
-						: EMPTY,
+					isPresent(this.overlayRef) ? fromEvent(this.overlayRef.overlayRef.overlayElement, 'mouseleave') : EMPTY,
 				),
 			),
 		)
@@ -126,9 +124,7 @@ export class NgDocTooltipDirective implements AfterViewInit, OnDestroy {
 					timer(50).pipe(
 						takeUntil(fromEvent(this.pointerOriginElement, 'mouseenter')),
 						takeUntil(
-							isPresent(this.overlayRef)
-								? fromEvent(this.overlayRef.overlayRef.overlayElement, 'mouseenter')
-								: EMPTY,
+							isPresent(this.overlayRef) ? fromEvent(this.overlayRef.overlayRef.overlayElement, 'mouseenter') : EMPTY,
 						),
 					),
 				),

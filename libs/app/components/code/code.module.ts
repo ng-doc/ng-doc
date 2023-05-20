@@ -6,7 +6,7 @@ import {
 	NgDocIconModule,
 	NgDocSmoothResizeModule,
 	NgDocTextModule,
-	NgDocTooltipModule
+	NgDocTooltipModule,
 } from '@ng-doc/ui-kit';
 
 import {NgDocCodeComponent} from './code.component';

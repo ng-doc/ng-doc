@@ -4,8 +4,8 @@ import {Inject, Injectable} from '@angular/core';
 import {Event, NavigationEnd, Router} from '@angular/router';
 import {NgDocScrollService} from '@ng-doc/ui-kit/services/scroll';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
-import {debounceTime, distinctUntilChanged, filter, pluck, share, startWith, switchMap, tap} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {debounceTime, distinctUntilChanged, filter, pluck} from 'rxjs/operators';
 
 /**
  * Service for sidebar, it can be used to hide/show sidebar or to check if sidebar is collapsable.

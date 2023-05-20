@@ -5,7 +5,7 @@ import {NgDocTheme} from '@ng-doc/app/interfaces';
 import {NgDocStoreService} from '@ng-doc/app/services/store';
 import {NG_DOC_DEFAULT_THEME_ID, NG_DOC_THEME} from '@ng-doc/app/tokens';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {from, fromEvent, Observable, Subject} from 'rxjs';
+import {fromEvent, Observable, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
 /**
@@ -31,7 +31,7 @@ export class NgDocThemeService {
 		@Optional()
 		private readonly defaultThemeId?: string | 'auto',
 	) {
-		if (defaultThemeId === 'auto') {
+		if (this.defaultThemeId === 'auto') {
 			fromEvent<MediaQueryList>(window.matchMedia('(prefers-color-scheme: dark)'), 'change')
 				.pipe(takeUntil(this.disableAutoTheme$), untilDestroyed(this))
 				.subscribe((event: MediaQueryList) => this.set(event.matches ? NG_DOC_NIGHT_THEME.id : undefined, false))
