@@ -1,4 +1,13 @@
-import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input, Optional, ViewChild} from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	forwardRef,
+	HostBinding,
+	Input,
+	Optional,
+	ViewChild
+} from '@angular/core';
 import {NgDocSearchEngine} from '@ng-doc/app/classes/search-engine';
 import {NgDocSearchResult} from '@ng-doc/app/interfaces';
 import {NgDocHighlightPosition, observableState, StatedObservable} from '@ng-doc/ui-kit';
@@ -15,7 +24,7 @@ import {skip, switchMap} from 'rxjs/operators';
 	providers: [
 		{
 			provide: NgDocListHost,
-			useExisting: NgDocSearchComponent,
+			useExisting: forwardRef(() => NgDocSearchComponent),
 		},
 	],
 })
