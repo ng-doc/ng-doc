@@ -4,10 +4,10 @@ import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, tap} from 'rxjs/operators';
 
-import {editFileInRepoUrl, isDependencyEntity, marked, slash} from '../../helpers';
+import {editFileInRepoUrl, isDependencyEntity, marked} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
 import {NgDocActions} from '../actions';
-import {PAGE_DEPENDENCIES_NAME, RENDERED_PAGE_NAME} from '../variables';
+import {PAGE_DEPENDENCIES_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocCategoryEntity} from './category.entity';
@@ -142,15 +142,14 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		if (this.target) {
 			this.dependencies.add(this.mdPath);
 
-			const markdown: string = this.builder.renderer
-				.renderSync(this.target.mdFile, {
-					scope: this.sourceFileFolder,
-					context: {
-						NgDocPage: this.target,
-						NgDocActions: new NgDocActions(this),
-					},
-					dependenciesStore: this.dependencies,
-				})
+			const markdown: string = this.builder.renderer.renderSync(this.target.mdFile, {
+				scope: this.sourceFileFolder,
+				context: {
+					NgDocPage: this.target,
+					NgDocActions: new NgDocActions(this),
+				},
+				dependenciesStore: this.dependencies,
+			});
 
 			return marked(markdown, this);
 		}

@@ -2,7 +2,7 @@ import {NgDocConfiguration} from '@ng-doc/builder';
 
 const NgDocConfig: NgDocConfiguration = {
 	angularBuilder: 'esbuild',
-	pages: 'apps/ng-doc/src/app',
+	pages: 'apps/ng-doc/src/poc',
 	routePrefix: 'docs',
 	tsConfig: 'apps/ng-doc/tsconfig.app.json',
 	repoConfig: {

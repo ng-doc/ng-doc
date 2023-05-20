@@ -1,4 +1,10 @@
-import {BuilderContext, createBuilder, Target, targetFromTargetString} from '@angular-devkit/architect';
+import {
+	BuilderContext,
+	createBuilder,
+	fromAsyncIterable,
+	Target,
+	targetFromTargetString,
+} from '@angular-devkit/architect';
 import {buildWebpackBrowser} from '@angular-devkit/build-angular/src/builders/browser';
 import {buildEsbuildBrowser} from '@angular-devkit/build-angular/src/builders/browser-esbuild';
 import {Observable} from 'rxjs';
@@ -18,15 +24,15 @@ import {NgDocBuilderContext, NgDocSchema} from '../interfaces';
 export async function runBrowser(options: NgDocSchema, context: BuilderContext): Promise<any> {
 	const browserTarget: Target | null = options.browserTarget ? targetFromTargetString(options.browserTarget) : null;
 	const targetOptions: any = browserTarget ? await context.getTargetOptions(browserTarget) : (options as any);
-    const builderContext: NgDocBuilderContext = createBuilderContext(targetOptions, options, context);
+	const builderContext: NgDocBuilderContext = createBuilderContext(targetOptions, options, context);
 	const builder: NgDocBuilder = new NgDocBuilder(builderContext);
 	const runner: Observable<void> = builder.run();
 
 	await runner.pipe(first()).toPromise();
 
 	return builderContext.config.angularBuilder === 'esbuild'
-		? buildEsbuildBrowser(options as any, context)
-		: buildWebpackBrowser(options as any, context)
+		? fromAsyncIterable(buildEsbuildBrowser(options as any, context)).toPromise()
+		: await buildWebpackBrowser(options as any, context).toPromise();
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

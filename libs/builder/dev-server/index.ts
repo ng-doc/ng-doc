@@ -34,10 +34,9 @@ export function runDevServer(options: NgDocSchema, context: BuilderContext): Obs
 			return runner.pipe(
 				first(),
 				switchMapTo(
-					combineLatest([
-						runner,
-						serveWebpackBrowser(options, context),
-					]).pipe(map(([_, devServerOutput]: [void, DevServerBuilderOutput]) => devServerOutput)),
+					combineLatest([runner, serveWebpackBrowser(options, context)]).pipe(
+						map(([_, devServerOutput]: [void, DevServerBuilderOutput]) => devServerOutput),
+					),
 				),
 			);
 		}),
