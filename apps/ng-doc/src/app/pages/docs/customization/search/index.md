@@ -7,21 +7,22 @@ and how to create a custom search.
 
 By default, the search is configured to search in English. If your documentation is in another
 language, you can change the language of the search to match your documentation.
-To do so, you need to provide the preferred language to the `provideSearchEngine` function
-in your root module.
+To do so, you need to import stemmer from `@orama/stemmers` package and provide it to the
+`provideSearchEngine` function in your root module.
 
 ```ts fileName="app.module.ts"
 import {NgModule} from '@angular/core';
 import {NgDocDefaultSearchEngine, provideSearchEngine} from '@ng-doc/app';
 
 import {AppComponent} from './app.component';
+import {stemmer} from '@orama/stemmers/dutch';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     // ...
   ],
-  providers: [provideSearchEngine(NgDocDefaultSearchEngine, {language: 'dutch'})],
+  providers: [provideSearchEngine(NgDocDefaultSearchEngine, {stemmer})],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
