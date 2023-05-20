@@ -14,7 +14,7 @@ import {
 import {
 	formatCode,
 	getComponentAsset,
-	getDemoClassDeclarations,
+	getDemoClassDeclarations, getObjectExpressionFromDefault,
 	getTargetForPlayground,
 	isPageEntity,
 	slash,
@@ -112,7 +112,7 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 	}
 
 	getPlaygroundsExpression(): ObjectLiteralExpression | undefined {
-		const objectExpression: ObjectLiteralExpression | undefined = this.getObjectExpressionFromDefault();
+		const objectExpression: ObjectLiteralExpression | undefined = getObjectExpressionFromDefault(this.sourceFile);
 
 		if (objectExpression) {
 			const property: ObjectLiteralElementLike | undefined = objectExpression.getProperty('playgrounds');
@@ -142,7 +142,7 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 	}
 
 	private fillAssets(): void {
-		const objectExpression: ObjectLiteralExpression | undefined = this.getObjectExpressionFromDefault();
+		const objectExpression: ObjectLiteralExpression | undefined = getObjectExpressionFromDefault(this.sourceFile);
 
 		if (objectExpression) {
 			const classDeclarations: ClassDeclaration[] = getDemoClassDeclarations(objectExpression);

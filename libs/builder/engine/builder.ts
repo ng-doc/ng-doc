@@ -1,5 +1,4 @@
 import {isPresent} from '@ng-doc/core';
-import * as esbuild from 'esbuild';
 import * as fs from 'fs';
 import * as path from 'path';
 import {from, merge, Observable, of} from 'rxjs';
@@ -17,7 +16,7 @@ import {
 } from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
-import {createProject, emitBuiltOutput, isFileEntity} from '../helpers';
+import {buildFileEntity, createProject, emitBuiltOutput, isFileEntity} from '../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
 import {bufferDebounce} from '../operators';
 import {bufferUntilOnce} from '../operators/buffer-until-once';
@@ -35,7 +34,7 @@ import {entityLifeCycle} from './entity-life-cycle';
 import {NgDocEntityStore} from './entity-store';
 import {buildCandidates} from './functions/build-candidates';
 import {NgDocRenderer} from './renderer';
-import {API_PATTERN, CACHE_PATH, CATEGORY_PATTERN, PAGE_DEPENDENCY_PATTERN, PAGE_PATTERN} from './variables';
+import {API_PATTERN, CATEGORY_PATTERN, PAGE_DEPENDENCY_PATTERN, PAGE_PATTERN} from './variables';
 import {NgDocWatcher} from './watcher';
 
 export class NgDocBuilder {
@@ -172,23 +171,20 @@ export class NgDocBuilder {
 	}
 
 	emit(...only: SourceFile[]): Observable<void> {
+		const sourceFiles: SourceFile[] = only.length
+			? only
+			: this.entities
+					.asArray()
+					.filter(isFileEntity)
+					.filter((e: NgDocFileEntity<unknown>) => e.compilable && !e.destroyed)
+					.map((e: NgDocFileEntity<unknown>) => e.sourceFile);
+
 		return from(
-			esbuild.build({
-				entryPoints: (only.length
-					? only
-					: this.entities
-							.asArray()
-							.filter(isFileEntity)
-							.filter((e: NgDocFileEntity<unknown>) => e.compilable && !e.destroyed)
-							.map((e: NgDocFileEntity<unknown>) => e.sourceFile)
-				).map((s: SourceFile) => s.getFilePath()),
-				tsconfig: this.context.tsConfig,
-				bundle: true,
-				format: 'cjs',
-				treeShaking: true,
-				outbase: this.context.context.workspaceRoot,
-				outdir: CACHE_PATH,
-			}),
+			Promise.all(
+				sourceFiles.map((s: SourceFile) =>
+					buildFileEntity(s, this.context.tsConfig, this.context.context.workspaceRoot),
+				),
+			),
 		).pipe(mapTo(void 0));
 	}
 

@@ -4,7 +4,7 @@ import * as path from 'path';
 import {Observable, of, throwError} from 'rxjs';
 import {OutputFile, SyntaxKind} from 'ts-morph';
 
-import {isCategoryEntity} from '../../../helpers';
+import {getObjectExpressionFromDefault, isCategoryEntity} from '../../../helpers';
 import {CATEGORY_PATTERN} from '../../variables';
 import {NgDocCategoryEntity} from '../category.entity';
 import {NgDocEntity} from './entity';
@@ -41,7 +41,7 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 	}
 
 	protected getParentFromCategory(): NgDocCategoryEntity | undefined {
-		const sourceFilePath: string | undefined = this.getObjectExpressionFromDefault()
+		const sourceFilePath: string | undefined = getObjectExpressionFromDefault(this.sourceFile)
 			?.getProperty('category')
 			?.getChildrenOfKind(SyntaxKind.Identifier)
 			?.pop()

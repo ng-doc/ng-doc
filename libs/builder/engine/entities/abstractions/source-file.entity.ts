@@ -1,7 +1,7 @@
 import path from 'path';
 import {from, Observable} from 'rxjs';
 import {mapTo} from 'rxjs/operators';
-import {Node, ObjectLiteralExpression, SourceFile, Symbol, SyntaxKind} from 'ts-morph';
+import {SourceFile} from 'ts-morph';
 
 import {slash} from '../../../helpers';
 import {NgDocBuilderContext} from '../../../interfaces';
@@ -70,18 +70,5 @@ export abstract class NgDocSourceFileEntity extends NgDocEntity {
 
 	override destroy(): void {
 		super.destroy();
-	}
-
-	/**
-	 * Returns object expression from default export in the current sourceFile
-	 *
-	 * @type {ObjectLiteralExpression | undefined}
-	 */
-	protected getObjectExpressionFromDefault(): ObjectLiteralExpression | undefined {
-		const defaultExport: Symbol | undefined = this.sourceFile.getDefaultExportSymbol();
-		const exportAlias: Symbol | undefined = defaultExport?.getAliasedSymbol();
-		const valueDeclaration: Node | undefined = exportAlias?.getValueDeclarationOrThrow();
-
-		return valueDeclaration?.getFirstChildByKindOrThrow(SyntaxKind.ObjectLiteralExpression);
 	}
 }

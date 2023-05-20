@@ -5,6 +5,7 @@ export * from './display-type';
 export * from './filter-by-scope';
 export * from './filter-by-static';
 export * from './first-node-with-comment';
+export * from './get-object-expression-from-default';
 export * from './interface';
 export * from './member';
 export * from './method';
