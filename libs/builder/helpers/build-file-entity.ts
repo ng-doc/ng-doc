@@ -14,14 +14,21 @@ import {getObjectExpressionFromDefault} from './typescript';
  */
 export async function buildFileEntity(sourceFile: SourceFile, tsconfig: string, outbase: string): Promise<string> {
 	const p: string = path.relative(outbase, sourceFile.getFilePath());
+	const outPath: string = path.join(CACHE_PATH, p).replace(/\.ts$/, '.js');
 
+	/**
+	 * Remove module, demo and playgrounds properties from the default export
+	 * if the file is a page. This is done to prevent compiling the page dependencies
+	 * that are not needed for the page inside the bundle.
+	 *
+	 */
 	if (minimatch(p, PAGE_PATTERN)) {
 		const objectLiteralExpression: ObjectLiteralExpression | undefined = getObjectExpressionFromDefault(sourceFile);
 
 		if (objectLiteralExpression) {
-			objectLiteralExpression.getProperty('module')?.remove();
-			objectLiteralExpression.getProperty('demo')?.remove();
-			objectLiteralExpression.getProperty('playgrounds')?.remove();
+			// objectLiteralExpression.getProperty('module')?.remove();
+			// objectLiteralExpression.getProperty('demo')?.remove();
+			// objectLiteralExpression.getProperty('playgrounds')?.remove();
 		}
 	}
 
@@ -37,8 +44,10 @@ export async function buildFileEntity(sourceFile: SourceFile, tsconfig: string, 
 		format: 'cjs',
 		treeShaking: true,
 		outbase,
-		outfile: path.join(CACHE_PATH, p).replace(/\.ts$/, '.js'),
+		outfile: outPath,
 	});
 
-	return path.join(CACHE_PATH, path.basename(p));
+	await sourceFile.refreshFromFileSystem();
+
+	return outPath;
 }

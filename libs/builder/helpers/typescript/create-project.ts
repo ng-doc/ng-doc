@@ -1,7 +1,4 @@
-import * as path from 'path';
 import {ModuleKind, ModuleResolutionKind, Project, ProjectOptions} from 'ts-morph';
-
-import {CACHE_PATH} from '../../engine/variables';
 
 /**
  * Creates typescript project
@@ -18,8 +15,7 @@ export function createProject(options?: ProjectOptions): Project {
 			incremental: true,
 			declaration: false,
 			skipLibCheck: true,
-			tsBuildInfoFile: path.join(CACHE_PATH, 'ng-doc.buildinfo.json'),
-			moduleResolution: ModuleResolutionKind.NodeJs,
+			moduleResolution: ModuleResolutionKind.NodeNext,
 			isolatedModules: true,
 			noEmit: true,
 			types: [],
