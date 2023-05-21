@@ -2,6 +2,7 @@ import {merge, Observable, of} from 'rxjs';
 import {map, mergeMap, startWith, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {Project} from 'ts-morph';
 
+import {progress} from '../operators';
 import {Constructable} from '../types';
 import {NgDocBuilder} from './builder';
 import {NgDocEntity} from './entities/abstractions/entity';
@@ -23,6 +24,7 @@ export function entityLifeCycle(
 	EntityConstructor: Constructable<NgDocEntity>,
 ): Observable<NgDocEntity[]> {
 	return watcher.onAdd(path).pipe(
+		progress(`Collecting ${EntityConstructor.name} entities...`),
 		map((p: string) => new EntityConstructor(builder, project.addSourceFileAtPath(p), builder.context)),
 		mergeMap((entity: NgDocEntity) => childGenerator(entity, watcher)),
 	);

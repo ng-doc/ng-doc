@@ -29,6 +29,7 @@ export * from './no-line-breaks';
 export * from './not-empty-assets';
 export * from './presentation';
 export * from './process-html';
+export * from './print-progress';
 export * from './process-snippets';
 export * from './repo-link';
 export * from './slash';
