@@ -54,7 +54,9 @@ it will be passed to `esbuild` as `external` option.
 import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
-  externalPackages: ['fs', 'path'],
+  guide: {
+    externalPackages: ['fs', 'path']
+  },
 };
 
 export default config;
