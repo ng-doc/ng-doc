@@ -21,6 +21,7 @@ import pageDependencies from '{{ dependencies.importPath }}'; import {CommonModu
 			{%- set components = (components.push(comp), components) %}
 
 @Component({
+	selector: 'ng-doc-playground-{{ index }}',
 	template: `
 		{{template | buildPlaygroundDemoTemplate(selector, content) }}
 	`,

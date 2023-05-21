@@ -13,7 +13,7 @@
 				"index": "apps/ng-doc/src/index.html",
 				"main": "apps/ng-doc/src/main.ts",
 				"polyfills": "apps/ng-doc/src/polyfills.ts",
-				"tsConfig": "apps/ng-doc/tsconfig.build.json",
+				"tsConfig": "apps/ng-doc/tsconfig.app.json",
 				"inlineStyleLanguage": "scss",
 				"assets": [
 					"apps/ng-doc/src/assets",
@@ -61,7 +61,6 @@
 					"sourceMap": true
 				},
 				"development": {
-					"tsConfig": "apps/ng-doc/tsconfig.app.json",
 					"buildOptimizer": false,
 					"optimization": false,
 					"vendorChunk": true,

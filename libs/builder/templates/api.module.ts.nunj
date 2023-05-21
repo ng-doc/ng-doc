@@ -6,6 +6,7 @@ import {NG_DOC_API_LIST_TOKEN, NgDocApiListModule} from '@ng-doc/app';
 import apiList from './ng-doc.api-list.json';
 
 @Component({
+	selector: 'ng-doc-api-list-page-{{ api.route | kebabCase }}',
 	template: `<ng-doc-api-list></ng-doc-api-list>`,
 	providers: [{
 		provide: NG_DOC_API_LIST_TOKEN,
