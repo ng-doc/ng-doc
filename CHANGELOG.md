@@ -1,3 +1,10 @@
+## [16.1.1](https://github.com/ng-doc/ng-doc/compare/v16.1.0...v16.1.1) (2023-05-21)
+
+
+### Bug Fixes
+
+* **core:** playgrounds cannot import `formatHtml` function dynamically ([e58b5ea](https://github.com/ng-doc/ng-doc/commit/e58b5ea7696fb8409166a5c5f05a8b2c5cac11c9))
+
 # [16.1.0](https://github.com/ng-doc/ng-doc/compare/v16.0.2...v16.1.0) (2023-05-21)
 
 
