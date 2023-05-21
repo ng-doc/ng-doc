@@ -1,7 +1,7 @@
 import {asArray, isPresent} from '@ng-doc/core';
 import * as path from 'path';
-import {forkJoin, Observable, of} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {forkJoin, from, Observable, of} from 'rxjs';
+import {map, mapTo, switchMap, tap} from 'rxjs/operators';
 import {
 	ClassDeclaration,
 	Expression,
@@ -17,9 +17,11 @@ import {
 	getDemoClassDeclarations,
 	getTargetForPlayground,
 	isPageEntity,
+	processHtml,
 	slash,
 } from '../../helpers';
 import {NgDocAsset, NgDocBuiltOutput} from '../../interfaces';
+import {forkJoinOrEmpty} from '../../operators/fork-join-or-empty';
 import {NgDocComponentAsset} from '../../types';
 import {PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
@@ -89,9 +91,7 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 	}
 
 	override update(): Observable<void> {
-		this.fillAssets();
-
-		return of(void 0);
+		return this.fillAssets();
 	}
 
 	protected override build(): Observable<NgDocBuiltOutput[]> {
@@ -100,15 +100,18 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 		}
 		this.dependencies.clear();
 
-		this.fillAssets();
-
 		this.getTargets().forEach((target: ClassDeclaration) =>
 			this.dependencies.add(target.getSourceFile().getFilePath()),
 		);
 
-		return forkJoin([this.buildAssets(), this.buildPlaygrounds()]).pipe(
-			map(([assets, playgrounds]: [NgDocBuiltOutput[], NgDocBuiltOutput]) => [...assets, playgrounds]),
-		);
+		return this.fillAssets()
+			.pipe(
+				switchMap(() =>
+					forkJoin([this.buildAssets(), this.buildPlaygrounds()]).pipe(
+						map(([assets, playgrounds]: [NgDocBuiltOutput[], NgDocBuiltOutput]) => [...assets, playgrounds]),
+					)
+				)
+			)
 	}
 
 	getPlaygroundsExpression(): ObjectLiteralExpression | undefined {
@@ -141,7 +144,7 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 		);
 	}
 
-	private fillAssets(): void {
+	private fillAssets(): Observable<void> {
 		const objectExpression: ObjectLiteralExpression | undefined = this.getObjectExpressionFromDefault();
 
 		if (objectExpression) {
@@ -158,7 +161,19 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 				.reduce((acc: NgDocComponentAsset, curr: NgDocComponentAsset) => ({...acc, ...curr}), {});
 
 			this.dependencies.add(...this.assets.map((asset: NgDocAsset) => asset.originalPath));
+
+			return forkJoinOrEmpty(
+				Object.keys(this.componentsAssets).map((key: string) =>
+					forkJoinOrEmpty(
+						this.componentsAssets[key].map((asset: NgDocAsset) =>
+							from(processHtml(this, asset.output)).pipe(tap((output: string) => (asset.output = output))),
+						),
+					)
+				),
+			).pipe(mapTo(void 0));
 		}
+
+		return of(void 0);
 	}
 
 	private getTargets(): ClassDeclaration[] {

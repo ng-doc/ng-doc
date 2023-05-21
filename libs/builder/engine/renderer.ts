@@ -3,7 +3,6 @@ import * as fs from 'fs';
 import {Environment, ILoader} from 'nunjucks';
 import * as path from 'path';
 import {Observable, of} from 'rxjs';
-import {map} from 'rxjs/operators';
 import {Node} from 'ts-morph';
 
 import {ObservableSet} from '../classes';
@@ -29,7 +28,7 @@ class NgDocRelativeLoader implements ILoader {
 
 export class NgDocRenderer {
 	render<T extends object>(template: string, options?: NgDocRendererOptions<T>): Observable<string> {
-		return of(null).pipe(map(() => this.renderSync(template, options)));
+		return of(this.renderSync(template, options));
 	}
 
 	renderSync<T extends object>(template: string, options?: NgDocRendererOptions<T>): string {

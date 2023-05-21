@@ -1,13 +1,14 @@
-import {asArray, isPresent, NgDocPage} from '@ng-doc/core';
+import {asArray, isPresent, NgDocPage, NgDocPageIndex} from '@ng-doc/core';
 import * as fs from 'fs';
 import * as path from 'path';
-import {forkJoin, Observable, of} from 'rxjs';
-import {catchError, map, tap} from 'rxjs/operators';
+import {forkJoin, from, Observable, of} from 'rxjs';
+import {catchError, map, mapTo, switchMap, tap} from 'rxjs/operators';
 
-import {editFileInRepoUrl, isDependencyEntity, marked, slash} from '../../helpers';
+import {editFileInRepoUrl, getPageType, isDependencyEntity, marked, processHtml} from '../../helpers';
+import {buildIndexes} from '../../helpers/build-indexes';
 import {NgDocBuiltOutput} from '../../interfaces';
 import {NgDocActions} from '../actions';
-import {PAGE_DEPENDENCIES_NAME, RENDERED_PAGE_NAME} from '../variables';
+import {PAGE_DEPENDENCIES_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocCategoryEntity} from './category.entity';
@@ -71,10 +72,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return path.dirname(this.mdPath);
 	}
 
-	get builtPagePath(): string {
-		return slash(path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, RENDERED_PAGE_NAME)));
-	}
-
 	override get buildCandidates(): NgDocEntity[] {
 		return [...this.parentEntities, ...asArray(this.pageDependencies)];
 	}
@@ -121,30 +118,13 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	}
 
 	protected override build(): Observable<NgDocBuiltOutput[]> {
-		return this.isReadyForBuild ? forkJoin([this.buildPage(), this.buildModule()]) : of([]);
+		return this.isReadyForBuild ? forkJoin([this.buildModule()]) : of([]);
 	}
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			return this.builder.renderer
-				.render('./page.module.ts.nunj', {
-					context: {
-						page: this,
-					},
-				})
-				.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
-		}
-		return of();
-	}
-
-	private buildPage(): Observable<NgDocBuiltOutput> {
-		this.dependencies.clear();
-
-		if (this.target) {
-			this.dependencies.add(this.mdPath);
-
-			return this.builder.renderer
-				.render(this.target?.mdFile, {
+			const page: Observable<string> = this.builder.renderer
+				.render(this.target.mdFile, {
 					scope: this.sourceFileFolder,
 					context: {
 						NgDocPage: this.target,
@@ -153,9 +133,36 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 					dependenciesStore: this.dependencies,
 				})
 				.pipe(
-					map((markdown: string) => marked(markdown, this)),
-					map((output: string) => ({content: output, filePath: this.builtPagePath})),
+					map((output: string) => marked(output, this)),
+					switchMap((html: string) => processHtml(this, html)),
+					switchMap((content: string) =>
+						from(
+							buildIndexes({
+								title: this.title,
+								content,
+								pageType: getPageType(this),
+								breadcrumbs: this.breadcrumbs,
+								route: this.fullRoute,
+							}),
+						).pipe(
+							tap((indexes: NgDocPageIndex[]) => this.indexes.push(...indexes)),
+							mapTo(content),
+						),
+					),
 				);
+
+			return page.pipe(
+				switchMap((pageContent: string) =>
+					this.builder.renderer
+						.render('./page.module.ts.nunj', {
+							context: {
+								page: this,
+								pageContent,
+							},
+						})
+						.pipe(map((output: string) => ({content: output, filePath: this.modulePath}))),
+				),
+			);
 		}
 		return of();
 	}
