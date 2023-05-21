@@ -1,3 +1,23 @@
+# [16.1.0](https://github.com/ng-doc/ng-doc/compare/v16.0.2...v16.1.0) (2023-05-21)
+
+
+### Bug Fixes
+
+* **app:** `arrow-up`, `arrow-down` hotkeys don't work for the search input ([ea58bd5](https://github.com/ng-doc/ng-doc/commit/ea58bd56372ea231ea1b8ad370f4515ca256deca))
+* **app:** browser console has various warnings ([a41927e](https://github.com/ng-doc/ng-doc/commit/a41927eea9bcf48987159bba059f548a54e199f0))
+
+
+### Features
+
+* **builder:** add experimental esbuild support, now you can configure the builder by specifying `angularBuilder` property in the `ng-doc.config.ts` file ([57f40a2](https://github.com/ng-doc/ng-doc/commit/57f40a28604fa9965ca306a2aba6019b7eac1348)), closes [#42](https://github.com/ng-doc/ng-doc/issues/42)
+* **builder:** external packages now can be provided in the configuration file, to make them available in your code for file entities ([4f0c1b2](https://github.com/ng-doc/ng-doc/commit/4f0c1b2e87b9ec1a10efafff3ec0d5d83321202d))
+* **builder:** the current state of the build is now displayed in the console ([#49](https://github.com/ng-doc/ng-doc/issues/49)) ([9e8f4bf](https://github.com/ng-doc/ng-doc/commit/9e8f4bf16d7a2985c7c894f6e1d735e891df65ab))
+
+
+### Performance Improvements
+
+* **app:** `@orama/*` packages that are using for search have been updated, resulting in a reduced size of the main bundle. However, now it is necessary to manually import the stemmer from `@orama/stemmers` for languages other than English ([8a0f69c](https://github.com/ng-doc/ng-doc/commit/8a0f69c1f3279f230f953e2dc8fb4b08b236022a))
+
 ## [16.0.2](https://github.com/ng-doc/ng-doc/compare/v16.0.1...v16.0.2) (2023-05-10)
 
 
