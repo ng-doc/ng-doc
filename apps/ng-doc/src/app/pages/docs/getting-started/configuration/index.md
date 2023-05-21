@@ -20,6 +20,27 @@ const config: NgDocConfiguration = {
 export default config;
 ```
 
+## ESBuild builder
+
+> **Warning**
+> This feature is experimental and may not work as expected.
+> For more information, see [this guide](https://angular.io/guide/esbuild)
+
+By default, NgDoc uses `webpack` to build and serve the documentation application, but you can also use
+`esbuild`, to switch to `esbuild` you need to specify `angularBuilder` property in your
+`ng-doc.config.ts` file, it will enable `esbuild` builder for `build` target and `vite` + `esbuild`
+for `serve` target.
+
+```typescript fileName="ng-doc.config.ts"
+import {NgDocConfiguration} from '@ng-doc/builder';
+
+const config: NgDocConfiguration = {
+  angularBuilder: 'esbuild',
+};
+
+export default config;
+```
+
 ## Configuring repository
 
 If you are creating an open source project and would like to receive suggestions for improving the
