@@ -5,9 +5,10 @@ import {CommonModule} from '@angular/common';
 import {NgDocDemoAssets, NgDocPageModule, NgDocRootPage} from '@ng-doc/app';
 import {NgDocPageType} from '@ng-doc/core';
 
-const pageContent: string = `{{ page.pageContent() | toTemplateString }}`
+const pageContent: string = `{{ pageContent | toTemplateString }}`
 
 @Component({
+	selector: 'ng-doc-page-{{ page.fullRoute | kebabCase }}',
 	template: `<ng-doc-page></ng-doc-page>`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [{provide: NgDocRootPage, useExisting: DynamicComponent}],

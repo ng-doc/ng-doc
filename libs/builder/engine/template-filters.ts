@@ -44,4 +44,4 @@ export {
 	typeAliasPresentation,
 	variablePresentation,
 } from '../helpers';
-export {buildPlaygroundDemoTemplate, objectKeys} from '@ng-doc/core';
+export {buildPlaygroundDemoTemplate, kebabCase, objectKeys} from '@ng-doc/core';

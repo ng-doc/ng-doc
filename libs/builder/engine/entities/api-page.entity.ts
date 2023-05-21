@@ -1,10 +1,19 @@
-import {asArray, isPresent} from '@ng-doc/core';
+import {asArray, isPresent, NgDocPageIndex} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, from, Observable, of} from 'rxjs';
-import {map, mapTo} from 'rxjs/operators';
+import {map, mapTo, switchMap, tap} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
-import {declarationFolderName, editFileInRepoUrl, slash, uniqueName, viewFileInRepoUrl} from '../../helpers';
+import {
+	declarationFolderName,
+	editFileInRepoUrl,
+	getPageType,
+	processHtml,
+	slash,
+	uniqueName,
+	viewFileInRepoUrl,
+} from '../../helpers';
+import {buildIndexes} from '../../helpers/build-indexes';
 import {isSupportedDeclaration} from '../../helpers/is-supported-declaration';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocSupportedDeclarations} from '../../types/supported-declarations';
@@ -105,22 +114,39 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	}
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
-		return this.builder.renderer
-			.render('./api-page.module.ts.nunj', {context: {page: this}})
-			.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
-	}
-
-	pageContent(): string {
-		if (this.declaration) {
-			return this.builder.renderer.renderSync('./api-page.html.nunj', {
+		const page: Observable<string> = this.builder.renderer
+			.render('./api-page.html.nunj', {
 				context: {
 					declaration: this.declaration,
 					scope: this.parent.target,
 				},
-			});
-		}
+			})
+			.pipe(
+				switchMap((output: string) => processHtml(this, output)),
+				switchMap((content: string) =>
+					from(
+						buildIndexes({
+							title: this.title,
+							content,
+							pageType: getPageType(this),
+							breadcrumbs: this.breadcrumbs,
+							route: this.fullRoute,
+						}),
+					).pipe(
+						tap((indexes: NgDocPageIndex[]) => this.indexes.push(...indexes)),
+						mapTo(content),
+					),
+				),
+			);
 
-		return '';
+		return page.pipe(
+			switchMap((pageContent: string) =>
+				this.builder.renderer.render('./api-page.module.ts.nunj', {
+					context: {page: this, pageContent},
+				}),
+			),
+			map((output: string) => ({content: output, filePath: this.modulePath})),
+		);
 	}
 
 	private updateDeclaration(): asserts this is this & {declaration: NgDocSupportedDeclarations} {
