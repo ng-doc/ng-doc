@@ -190,6 +190,7 @@ export class NgDocBuilder {
 				bundle: true,
 				format: 'cjs',
 				treeShaking: true,
+				external: this.context.config.guide?.externalPackages,
 				outbase: this.context.context.workspaceRoot,
 				outdir: CACHE_PATH,
 			}),
