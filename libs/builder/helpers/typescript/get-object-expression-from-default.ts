@@ -1,4 +1,4 @@
-import {Node, ObjectLiteralExpression, SourceFile, Symbol, SyntaxKind} from 'ts-morph';
+import {ExportedDeclarations, Node, ObjectLiteralExpression, SourceFile, SyntaxKind} from 'ts-morph';
 
 /**
  * Returns object expression from default export in the current sourceFile
@@ -6,9 +6,11 @@ import {Node, ObjectLiteralExpression, SourceFile, Symbol, SyntaxKind} from 'ts-
  * @param sourceFile - source file to get object expression from
  */
 export function getObjectExpressionFromDefault(sourceFile: SourceFile): ObjectLiteralExpression | undefined {
-	const defaultExport: Symbol | undefined = sourceFile.getDefaultExportSymbol();
-	const exportAlias: Symbol | undefined = defaultExport?.getAliasedSymbol();
-	const valueDeclaration: Node | undefined = exportAlias?.getValueDeclarationOrThrow();
+	const defaultExport: ExportedDeclarations | undefined = sourceFile.getExportedDeclarations()?.get('default')?.[0];
 
-	return valueDeclaration?.getFirstChildByKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+	if (Node.isVariableDeclaration(defaultExport)) {
+		return defaultExport?.getFirstChildByKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+	}
+
+	return undefined;
 }

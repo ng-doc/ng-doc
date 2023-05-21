@@ -1,3 +1,4 @@
+import {escapeRegexp} from '@ng-doc/core';
 import * as esbuild from 'esbuild';
 import minimatch from 'minimatch';
 import * as path from 'path';
@@ -7,12 +8,14 @@ import {CACHE_PATH, PAGE_PATTERN} from '../engine';
 import {getObjectExpressionFromDefault} from './typescript';
 
 /**
+ * Builds file entity and returns the path to the built file
  *
- * @param sourceFile
- * @param tsconfig
- * @param outbase
+ * @param sourceFile - source file to build
+ * @param tsconfig - path to tsconfig file
+ * @param outbase - path to the outbase directory
  */
 export async function buildFileEntity(sourceFile: SourceFile, tsconfig: string, outbase: string): Promise<string> {
+	let code: string = sourceFile.getFullText();
 	const p: string = path.relative(outbase, sourceFile.getFilePath());
 	const outPath: string = path.join(CACHE_PATH, p).replace(/\.ts$/, '.js');
 
@@ -25,16 +28,20 @@ export async function buildFileEntity(sourceFile: SourceFile, tsconfig: string, 
 	if (minimatch(p, PAGE_PATTERN)) {
 		const objectLiteralExpression: ObjectLiteralExpression | undefined = getObjectExpressionFromDefault(sourceFile);
 
+		/**
+		 * Remove module, demo and playgrounds properties from the default export
+		 * We use regex to remove the properties because ts-morph does it slowly
+		 */
 		if (objectLiteralExpression) {
-			// objectLiteralExpression.getProperty('module')?.remove();
-			// objectLiteralExpression.getProperty('demo')?.remove();
-			// objectLiteralExpression.getProperty('playgrounds')?.remove();
+			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('module')?.getText() ?? '');
+			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('demo')?.getText() ?? '');
+			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('playgrounds')?.getText() ?? '');
 		}
 	}
 
 	await esbuild.build({
 		stdin: {
-			contents: sourceFile.getFullText(),
+			contents: code,
 			resolveDir: path.dirname(p),
 			loader: 'ts',
 			sourcefile: p,
@@ -50,4 +57,15 @@ export async function buildFileEntity(sourceFile: SourceFile, tsconfig: string, 
 	await sourceFile.refreshFromFileSystem();
 
 	return outPath;
+}
+
+/**
+ *
+ * @param code
+ * @param property
+ */
+function replaceCodeProperty(code: string, property: string): string {
+	const regex: RegExp = new RegExp(`${escapeRegexp(property)},?`);
+
+	return code.replace(regex, '');
 }
