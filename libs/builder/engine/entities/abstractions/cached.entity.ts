@@ -1,3 +1,4 @@
+import {NgDocBuilderContext} from '@ng-doc/builder';
 import {asArray} from '@ng-doc/core';
 
 import {isCacheValid, NgDocCache, updateCache} from '../cache';
@@ -20,8 +21,13 @@ export abstract class NgDocCachedEntity {
 	 */
 	cachedProperties: Set<string> = new Set<string>();
 
+	protected constructor(readonly context: NgDocBuilderContext) {}
+
+	/**
+	 * Indicates when cache is valid for the current entity.
+	 */
 	isCacheValid(): boolean {
-		return !!this.cachedFilePaths.length && isCacheValid(this.id, this);
+		return !!this.cachedFilePaths.length && isCacheValid(this.id, this) && this.context.config.cache !== false;
 	}
 
 	updateCache(): void {

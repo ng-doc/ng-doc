@@ -65,8 +65,8 @@ export abstract class NgDocEntity extends NgDocCachedEntity {
 	 */
 	abstract readonly buildCandidates: NgDocEntity[];
 
-	constructor(readonly builder: NgDocBuilder, readonly context: NgDocBuilderContext) {
-		super();
+	constructor(readonly builder: NgDocBuilder, override readonly context: NgDocBuilderContext) {
+		super(context);
 	}
 
 	/** Indicates if the current entity can be built */

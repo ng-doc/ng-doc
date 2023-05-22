@@ -52,9 +52,7 @@ function childGenerator(entity: NgDocEntity, watcher: NgDocWatcher): Observable<
 				? of([entity])
 				: entity.childrenGenerator().pipe(
 						switchMap((children: NgDocEntity[]) =>
-							children.length
-								? merge(...children.map((child: NgDocEntity) => childGenerator(child, watcher)))
-								: of([]),
+							children.length ? merge(...children.map((child: NgDocEntity) => childGenerator(child, watcher))) : of([]),
 						),
 						map((children: NgDocEntity[]) => [entity, ...children]),
 						tap((entities: NgDocEntity[]) =>
