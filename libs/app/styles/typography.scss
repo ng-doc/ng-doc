@@ -1,5 +1,5 @@
 @import 'defaults';
-@import "../../ui-kit/styles/mixins";
+@import '../../ui-kit/styles/mixins';
 
 $class: $ng-doc-element;
 
@@ -57,7 +57,7 @@ blockquote#{$class} {
 	@include ng-doc-heading-font();
 	margin: calc(var(--ng-doc-base-gutter) * 9) 0 0;
 	--ng-doc-line-height: 1.5rem;
-	--ng-doc-font-weight: 700;
+	--ng-doc-font-weight: 800;
 	overflow-wrap: anywhere;
 
 	& + h1#{$class},
@@ -72,7 +72,7 @@ blockquote#{$class} {
 
 h1#{$class} {
 	--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 5);
-	--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 6);
+	--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 5);
 	--ng-doc-font-weight: 900;
 }
 

@@ -46,7 +46,7 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 	}
 
 	override get folderPath(): string {
-		return this.context.apiPath;
+		return path.join(this.context.apiPath, this.route);
 	}
 
 	override get keywords(): string[] {
@@ -67,9 +67,7 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		return super.update().pipe(
 			tap(() => {
 				if (!this.title) {
-					throw new Error(
-						`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`,
-					);
+					throw new Error(`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`);
 				}
 
 				this.parent = this.getParentFromCategory();

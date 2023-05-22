@@ -10,7 +10,7 @@ export class NgDocHtmlParser {
 	private readonly parsedHTML: Node[];
 
 	constructor(private html: string) {
-		this.parsedHTML = parser(html);
+		this.parsedHTML = parser(this.html);
 	}
 
 	find(selector: string): NodeTag | undefined {

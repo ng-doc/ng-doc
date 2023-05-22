@@ -1,11 +1,11 @@
-import {de} from '@orama/orama/dist/components/tokenizer/stop-words/de';
 import {
 	ClassDeclaration,
-	EnumDeclaration, FunctionDeclaration,
+	EnumDeclaration,
+	FunctionDeclaration,
 	InterfaceDeclaration,
 	Project,
 	SourceFile,
-	TypeAliasDeclaration
+	TypeAliasDeclaration,
 } from 'ts-morph';
 
 import {createProject} from '../create-project';
@@ -227,7 +227,7 @@ describe('displayType', () => {
 				const declaration: ClassDeclaration = sourceFile.getClassOrThrow('Test');
 
 				expect(displayType(declaration.getMethodOrThrow('method').getParameterOrThrow('param'))).toBe(`string`);
-			})
+			});
 
 			it('should return the type of a optional parameter', () => {
 				const sourceFile: SourceFile = project.createSourceFile(
@@ -242,8 +242,10 @@ describe('displayType', () => {
 				);
 				const declaration: ClassDeclaration = sourceFile.getClassOrThrow('Test');
 
-				expect(displayType(declaration.getMethodOrThrow('method').getParameterOrThrow('param'))).toBe(`string | undefined`);
-			})
+				expect(displayType(declaration.getMethodOrThrow('method').getParameterOrThrow('param'))).toBe(
+					`string | undefined`,
+				);
+			});
 
 			it('should return the type of a parameter with default value', () => {
 				const sourceFile: SourceFile = project.createSourceFile(
@@ -259,7 +261,7 @@ describe('displayType', () => {
 				const declaration: ClassDeclaration = sourceFile.getClassOrThrow('Test');
 
 				expect(displayType(declaration.getMethodOrThrow('method').getParameterOrThrow('param'))).toBe(`string`);
-			})
+			});
 		});
 
 		it('should return type of extended class', () => {
@@ -277,7 +279,7 @@ describe('displayType', () => {
 			const declaration: ClassDeclaration = sourceFile.getClassOrThrow('Test2');
 
 			expect(displayType(declaration.getExtends()!)).toBe(`Test`);
-		})
+		});
 
 		it('should return type of implemented interface', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -294,7 +296,7 @@ describe('displayType', () => {
 			const declaration: ClassDeclaration = sourceFile.getClassOrThrow('Test2');
 
 			expect(displayType(declaration.getImplements()[0])).toBe(`Test`);
-		})
+		});
 	});
 
 	describe('Interface', () => {
@@ -313,8 +315,8 @@ describe('displayType', () => {
 			const declaration: InterfaceDeclaration = sourceFile.getInterfaceOrThrow('Test2');
 
 			expect(displayType(declaration.getExtends()[0])).toBe(`Test`);
-		})
-	})
+		});
+	});
 
 	describe('Type Alias', () => {
 		it('should return the type of a type alias', () => {
@@ -327,7 +329,7 @@ describe('displayType', () => {
 			const declaration: TypeAliasDeclaration = sourceFile.getTypeAliasOrThrow('Test');
 
 			expect(displayType(declaration)).toBe(`string`);
-		})
+		});
 
 		it('should return the type of a type alias for union type', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -339,8 +341,8 @@ describe('displayType', () => {
 			const declaration: TypeAliasDeclaration = sourceFile.getTypeAliasOrThrow('Test');
 
 			expect(displayType(declaration)).toBe(`'value1' | 'value2'`);
-		})
-	})
+		});
+	});
 
 	describe('Enum', () => {
 		it('should return the type of a enum', () => {
@@ -356,7 +358,7 @@ describe('displayType', () => {
 			const declaration: EnumDeclaration = sourceFile.getEnumOrThrow('Test');
 
 			expect(displayType(declaration)).toBe(`Test`);
-		})
+		});
 
 		it('should return the type of a enum member', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -371,8 +373,8 @@ describe('displayType', () => {
 			const declaration: EnumDeclaration = sourceFile.getEnumOrThrow('Test');
 
 			expect(displayType(declaration.getMemberOrThrow('VALUE1'))).toBe(`Test.VALUE1`);
-		})
-	})
+		});
+	});
 
 	describe('Function', () => {
 		it('should return the type of a function', () => {
@@ -387,7 +389,7 @@ describe('displayType', () => {
 			const declaration: FunctionDeclaration = sourceFile.getFunctionOrThrow('test');
 
 			expect(displayReturnType(declaration)).toBe(`string`);
-		})
+		});
 
 		it('should return the type of a parameter', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -401,7 +403,7 @@ describe('displayType', () => {
 			const declaration: FunctionDeclaration = sourceFile.getFunctionOrThrow('test');
 
 			expect(displayType(declaration.getParameterOrThrow('param'))).toBe(`string`);
-		})
+		});
 
 		it('should return the type of a optional parameter', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -415,7 +417,7 @@ describe('displayType', () => {
 			const declaration: FunctionDeclaration = sourceFile.getFunctionOrThrow('test');
 
 			expect(displayType(declaration.getParameterOrThrow('param'))).toBe(`string | undefined`);
-		})
+		});
 
 		it('should return the type of a parameter with default value', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -429,6 +431,6 @@ describe('displayType', () => {
 			const declaration: FunctionDeclaration = sourceFile.getFunctionOrThrow('test');
 
 			expect(displayType(declaration.getParameterOrThrow('param'))).toBe(`boolean`);
-		})
-	})
+		});
+	});
 });

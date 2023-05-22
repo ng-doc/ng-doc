@@ -9,7 +9,6 @@ import {
 	map,
 	mapTo,
 	mergeMap,
-	share,
 	startWith,
 	switchMap,
 	takeUntil,
@@ -19,7 +18,7 @@ import {Project, SourceFile} from 'ts-morph';
 
 import {createProject, emitBuiltOutput, invalidateCacheIfNecessary, isFileEntity} from '../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
-import {bufferDebounce} from '../operators';
+import {bufferDebounce, progress} from '../operators';
 import {bufferUntilOnce} from '../operators/buffer-until-once';
 import {forkJoinOrEmpty} from '../operators/fork-join-or-empty';
 import {
@@ -73,13 +72,12 @@ export class NgDocBuilder {
 			entityLifeCycle(this, this.project, watcher, API_PATTERN, NgDocApiEntity),
 		).pipe(
 			bufferUntilOnce(watcher.onReady()),
-			map((entities: NgDocEntity[][]) => entities.flat()),
 			bufferDebounce(50),
-			map((entities: NgDocEntity[][]) => entities.flat()),
-			share(),
+			map((entities: NgDocEntity[][][]) => entities.flat(2)),
 		);
 
 		return entities.pipe(
+			progress('Compiling entities...'),
 			tap(() => this.context.context.reportRunning()),
 			mergeMap((entities: NgDocEntity[]) => {
 				/*
@@ -139,6 +137,7 @@ export class NgDocBuilder {
 				);
 			}),
 			bufferDebounce(50),
+			progress('Building documentation...'),
 			map((entities: Array<NgDocEntity | null>) => entities.filter(isPresent)),
 			tap(() => this.entities.updateKeywordMap(this.context.config.keywords)),
 			// Build touched entities and their dependencies
@@ -157,6 +156,7 @@ export class NgDocBuilder {
 							]),
 						),
 					),
+					progress('Emitting files...'),
 					tap((output: NgDocBuiltOutput[]) => {
 						/*
 							We emit files and only after that delete destroyed ones, because otherwise
@@ -168,6 +168,7 @@ export class NgDocBuilder {
 					}),
 				),
 			),
+			progress(),
 			mapTo(void 0),
 			catchError((e: Error) => {
 				this.context.context.logger.error(`NgDoc error: ${e.message}\n${e.stack}`);
@@ -192,13 +193,14 @@ export class NgDocBuilder {
 					: this.entities
 							.asArray()
 							.filter(isFileEntity)
-							.filter((e: NgDocFileEntity<unknown>) => e.compilable)
+							.filter((e: NgDocFileEntity<unknown>) => e.compilable && !e.destroyed)
 							.map((e: NgDocFileEntity<unknown>) => e.sourceFile)
 				).map((s: SourceFile) => s.getFilePath()),
 				tsconfig: this.context.tsConfig,
 				bundle: true,
 				format: 'cjs',
 				treeShaking: true,
+				external: this.context.config.guide?.externalPackages,
 				outbase: this.context.context.workspaceRoot,
 				outdir: CACHE_PATH,
 			}),

@@ -1,11 +1,18 @@
-import {BuilderContext, createBuilder, Target, targetFromTargetString} from '@angular-devkit/architect';
-import {BrowserBuilderOutput, buildWebpackBrowser} from '@angular-devkit/build-angular/src/builders/browser';
-import {EMPTY, from, Observable, of} from 'rxjs';
-import {catchError, first, switchMap} from 'rxjs/operators';
+import {
+	BuilderContext,
+	createBuilder,
+	fromAsyncIterable,
+	Target,
+	targetFromTargetString,
+} from '@angular-devkit/architect';
+import {buildWebpackBrowser} from '@angular-devkit/build-angular/src/builders/browser';
+import {buildEsbuildBrowser} from '@angular-devkit/build-angular/src/builders/browser-esbuild';
+import {Observable} from 'rxjs';
+import {first} from 'rxjs/operators';
 
 import {NgDocBuilder} from '../engine/builder';
 import {createBuilderContext} from '../helpers';
-import {NgDocSchema} from '../interfaces';
+import {NgDocBuilderContext, NgDocSchema} from '../interfaces';
 
 /**
  * Attach NgDocWebpackPlugin before Angular Plugins
@@ -14,25 +21,20 @@ import {NgDocSchema} from '../interfaces';
  * @param context Builder context
  * @returns Observable of BrowserBuilderOutput
  */
-export function runBrowser(options: NgDocSchema, context: BuilderContext): Observable<BrowserBuilderOutput> {
+export async function runBrowser(options: NgDocSchema, context: BuilderContext): Promise<any> {
 	const browserTarget: Target | null = options.browserTarget ? targetFromTargetString(options.browserTarget) : null;
+	const targetOptions: any = browserTarget ? await context.getTargetOptions(browserTarget) : (options as any);
+	const builderContext: NgDocBuilderContext = createBuilderContext(targetOptions, options, context);
+	const builder: NgDocBuilder = new NgDocBuilder(builderContext);
+	const runner: Observable<void> = builder.run();
 
-	return (browserTarget ? from(context.getTargetOptions(browserTarget)) : of(options as any)).pipe(
-		switchMap((targetOptions: any) => {
-			const builder: NgDocBuilder = new NgDocBuilder(createBuilderContext(targetOptions, options, context));
-			const runner: Observable<void> = builder.run();
+	await runner.pipe(first()).toPromise();
 
-			return runner.pipe(
-				first(),
-				switchMap(() => buildWebpackBrowser(options as any, context)),
-			);
-		}),
-		catchError((e: unknown) => {
-			console.error(e);
-
-			return EMPTY;
-		}),
-	);
+	return builderContext.config.angularBuilder === 'esbuild'
+		? fromAsyncIterable(buildEsbuildBrowser(options as any, context)).toPromise()
+		: await buildWebpackBrowser(options as any, context).toPromise();
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 export default createBuilder(runBrowser);

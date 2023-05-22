@@ -1,3 +1,32 @@
+:host {
+	&[data-ng-doc-is-landing='true'] {
+		--ng-doc-page-max-width: auto;
+		--ng-doc-page-padding: 0;
+		--ng-doc-main-padding: 0;
+
+		ng-doc-navbar {
+			transition: 300ms ease-in-out;
+
+			&:before {
+				transition: 300ms ease-in-out;
+			}
+
+			&:not(.has-shadow) {
+				--ng-doc-navbar-background: transparent;
+			}
+		}
+	}
+
+	.ng-doc-footer {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: calc(var(--ng-doc-base-gutter) * 3);
+		color: var(--ng-doc-text-muted);
+		font-size: 12px;
+	}
+}
+
 .brand {
 	text-decoration: none;
 	color: var(--ng-doc-text);
@@ -20,7 +49,7 @@
 	}
 
 	img {
-		height: 40px;
+		height: 36px;
 		margin-right: var(--ng-doc-base-gutter);
 	}
 }

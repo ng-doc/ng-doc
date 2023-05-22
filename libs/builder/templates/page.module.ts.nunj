@@ -4,7 +4,6 @@ import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {NgDocPageModule, NgDocRootPage, NgDocDemoAssets} from '@ng-doc/app';
 import {NgDocDependencies, NgDocPageType} from '@ng-doc/core';
-import pageContent from '!!raw-loader!{{ page.builtPagePath }}';
 {%- if page.pageDependencies %}
 // noinspection ES6UnusedImports
 import {PlaygroundsModule} from './playgrounds';
@@ -15,8 +14,11 @@ import pageDependencies from '{{ page.pageDependencies.importPath }}';
 import demoAssets from '{{ page.componentsAssets }}';
 {%- endif %}
 
+const pageContent: string = `{{ pageContent | toTemplateString }}`
+
 
 @Component({
+	selector: 'ng-doc-page-{{ page.fullRoute | kebabCase }}',
 	template: `<ng-doc-page></ng-doc-page>`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [{provide: NgDocRootPage, useExisting: DynamicComponent}],

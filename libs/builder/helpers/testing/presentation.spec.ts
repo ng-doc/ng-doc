@@ -1,10 +1,13 @@
 import {
 	ConstructorDeclaration,
 	FunctionDeclaration,
-	GetAccessorDeclaration, MethodDeclaration,
+	GetAccessorDeclaration,
+	MethodDeclaration,
 	Project,
 	SetAccessorDeclaration,
-	SourceFile, TypeAliasDeclaration, VariableDeclaration
+	SourceFile,
+	TypeAliasDeclaration,
+	VariableDeclaration,
 } from 'ts-morph';
 
 import {formatCode} from '../format-code';
@@ -13,7 +16,8 @@ import {
 	constructorPresentation,
 	functionPresentation,
 	methodPresentation,
-	typeAliasPresentation, variablePresentation
+	typeAliasPresentation,
+	variablePresentation,
 } from '../presentation';
 import {createProject} from '../typescript';
 
@@ -104,7 +108,7 @@ describe('presentation', () => {
 			const declaration: FunctionDeclaration = sourceFile.getFunctionOrThrow('test');
 
 			expect(functionPresentation(declaration)).toBe(formatCode(`function test(@Inject() param: string): string;`));
-		})
+		});
 
 		it('should display parameters mod', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -118,7 +122,7 @@ describe('presentation', () => {
 			const declaration: FunctionDeclaration = sourceFile.getFunctionOrThrow('test');
 
 			expect(functionPresentation(declaration)).toBe(formatCode(`function test(readonly param: string): string;`));
-		})
+		});
 
 		it('should display question token for optional parameters', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -132,7 +136,7 @@ describe('presentation', () => {
 			const declaration: FunctionDeclaration = sourceFile.getFunctionOrThrow('test');
 
 			expect(functionPresentation(declaration)).toBe(formatCode(`function test(param?: string | undefined): string;`));
-		})
+		});
 	});
 
 	describe('Constructor', () => {
@@ -150,7 +154,7 @@ describe('presentation', () => {
 			expect(constructorPresentation(declaration)).toBe(
 				formatCode(`constructor(\n\tparam1: string, \n\tparam2: boolean = false\n): Test;`),
 			);
-		})
+		});
 
 		it('should display scope of parameters', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -166,7 +170,7 @@ describe('presentation', () => {
 			expect(constructorPresentation(declaration)).toBe(
 				formatCode(`constructor(\n\tprivate param1: string, \n\tparam2: boolean = false\n): Test;`),
 			);
-		})
+		});
 
 		it('should display parameters decorators', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -182,7 +186,7 @@ describe('presentation', () => {
 			expect(constructorPresentation(declaration)).toBe(
 				formatCode(`constructor(\n\t@Inject() param: string\n): Test;`),
 			);
-		})
+		});
 
 		it('should display parameters mod', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -195,10 +199,8 @@ describe('presentation', () => {
 			);
 			const declaration: ConstructorDeclaration = sourceFile.getClassOrThrow('Test').getConstructors()[0];
 
-			expect(constructorPresentation(declaration)).toBe(
-				formatCode(`constructor(\n\treadonly param: string\n): Test;`),
-			);
-		})
+			expect(constructorPresentation(declaration)).toBe(formatCode(`constructor(\n\treadonly param: string\n): Test;`));
+		});
 
 		it('should display question token for optional parameters', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -214,7 +216,7 @@ describe('presentation', () => {
 			expect(constructorPresentation(declaration)).toBe(
 				formatCode(`constructor(\n\tparam?: string | undefined\n): Test;`),
 			);
-		})
+		});
 
 		it('should display all possible modifiers together', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -227,10 +229,11 @@ describe('presentation', () => {
 			);
 			const declaration: ConstructorDeclaration = sourceFile.getClassOrThrow('Test').getConstructors()[0];
 
-			expect(constructorPresentation(declaration))
-				.toBe(formatCode(`constructor(\n\t@Inject() private readonly param?: boolean | undefined = false\n): Test;`));
-		})
-	})
+			expect(constructorPresentation(declaration)).toBe(
+				formatCode(`constructor(\n\t@Inject() private readonly param?: boolean | undefined = false\n): Test;`),
+			);
+		});
+	});
 
 	describe('Accessor', () => {
 		describe('Getter', () => {
@@ -248,7 +251,7 @@ describe('presentation', () => {
 				const declaration: GetAccessorDeclaration = sourceFile.getClassOrThrow('Test').getGetAccessors()[0];
 
 				expect(accessorPresentation(declaration)).toBe(formatCode(`get test(): string;`));
-			})
+			});
 
 			it('should display scope', () => {
 				const sourceFile: SourceFile = project.createSourceFile(
@@ -264,7 +267,7 @@ describe('presentation', () => {
 				const declaration: GetAccessorDeclaration = sourceFile.getClassOrThrow('Test').getGetAccessors()[0];
 
 				expect(accessorPresentation(declaration)).toBe(formatCode(`private get test(): string;`));
-			})
+			});
 
 			it('should display static', () => {
 				const sourceFile: SourceFile = project.createSourceFile(
@@ -280,7 +283,7 @@ describe('presentation', () => {
 				const declaration: GetAccessorDeclaration = sourceFile.getClassOrThrow('Test').getGetAccessors()[0];
 
 				expect(accessorPresentation(declaration)).toBe(formatCode(`static get test(): string;`));
-			})
+			});
 
 			it('should display readonly', () => {
 				const sourceFile: SourceFile = project.createSourceFile(
@@ -296,7 +299,7 @@ describe('presentation', () => {
 				const declaration: GetAccessorDeclaration = sourceFile.getClassOrThrow('Test').getGetAccessors()[0];
 
 				expect(accessorPresentation(declaration)).toBe(formatCode(`get test(): readonly string[];`));
-			})
+			});
 
 			it('should display inherited type', () => {
 				const sourceFile: SourceFile = project.createSourceFile(
@@ -312,8 +315,8 @@ describe('presentation', () => {
 				const declaration: GetAccessorDeclaration = sourceFile.getClassOrThrow('Test').getGetAccessors()[0];
 
 				expect(accessorPresentation(declaration)).toBe(formatCode(`get test(): string;`));
-			})
-		})
+			});
+		});
 
 		describe('Setter', () => {
 			it('should display presentation', () => {
@@ -328,7 +331,7 @@ describe('presentation', () => {
 				const declaration: SetAccessorDeclaration = sourceFile.getClassOrThrow('Test').getSetAccessors()[0];
 
 				expect(accessorPresentation(declaration)).toBe(formatCode(`set test(value: string);`));
-			})
+			});
 
 			it('should display scope', () => {
 				const sourceFile: SourceFile = project.createSourceFile(
@@ -342,7 +345,7 @@ describe('presentation', () => {
 				const declaration: SetAccessorDeclaration = sourceFile.getClassOrThrow('Test').getSetAccessors()[0];
 
 				expect(accessorPresentation(declaration)).toBe(formatCode(`private set test(value: string);`));
-			})
+			});
 
 			it('should display static', () => {
 				const sourceFile: SourceFile = project.createSourceFile(
@@ -356,7 +359,7 @@ describe('presentation', () => {
 				const declaration: SetAccessorDeclaration = sourceFile.getClassOrThrow('Test').getSetAccessors()[0];
 
 				expect(accessorPresentation(declaration)).toBe(formatCode(`static set test(value: string);`));
-			})
+			});
 
 			it('should display inherited type', () => {
 				const sourceFile: SourceFile = project.createSourceFile(
@@ -370,9 +373,9 @@ describe('presentation', () => {
 				const declaration: SetAccessorDeclaration = sourceFile.getClassOrThrow('Test').getSetAccessors()[0];
 
 				expect(accessorPresentation(declaration)).toBe(formatCode(`set test(value: string = 'string');`));
-			})
-		})
-	})
+			});
+		});
+	});
 
 	describe('Method', () => {
 		it('should display presentation', () => {
@@ -387,7 +390,7 @@ describe('presentation', () => {
 			const declaration: MethodDeclaration = sourceFile.getClassOrThrow('Test').getMethods()[0];
 
 			expect(methodPresentation(declaration)).toBe(formatCode(`test(param: string): void;`));
-		})
+		});
 
 		it('should display scope', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -401,7 +404,7 @@ describe('presentation', () => {
 			const declaration: MethodDeclaration = sourceFile.getClassOrThrow('Test').getMethods()[0];
 
 			expect(methodPresentation(declaration)).toBe(formatCode(`private test(param: string): void;`));
-		})
+		});
 
 		it('should display static', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -415,7 +418,7 @@ describe('presentation', () => {
 			const declaration: MethodDeclaration = sourceFile.getClassOrThrow('Test').getMethods()[0];
 
 			expect(methodPresentation(declaration)).toBe(formatCode(`static test(param: string): void;`));
-		})
+		});
 
 		it('should display abstract', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -429,7 +432,7 @@ describe('presentation', () => {
 			const declaration: MethodDeclaration = sourceFile.getClassOrThrow('Test').getMethods()[0];
 
 			expect(methodPresentation(declaration)).toBe(formatCode(`abstract test(param: string): void;`));
-		})
+		});
 
 		it('should display async', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -443,7 +446,7 @@ describe('presentation', () => {
 			const declaration: MethodDeclaration = sourceFile.getClassOrThrow('Test').getMethods()[0];
 
 			expect(methodPresentation(declaration)).toBe(formatCode(`async test(param: string): Promise<void>;`));
-		})
+		});
 
 		it('should display async and abstract together', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -457,7 +460,7 @@ describe('presentation', () => {
 			const declaration: MethodDeclaration = sourceFile.getClassOrThrow('Test').getMethods()[0];
 
 			expect(methodPresentation(declaration)).toBe(formatCode(`abstract async test(param: string): Promise<void>;`));
-		})
+		});
 
 		it('should display inherited return type', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -473,7 +476,7 @@ describe('presentation', () => {
 			const declaration: MethodDeclaration = sourceFile.getClassOrThrow('Test').getMethods()[0];
 
 			expect(methodPresentation(declaration)).toBe(formatCode(`test(): string;`));
-		})
+		});
 
 		it('should display inherited parameter type', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -487,7 +490,7 @@ describe('presentation', () => {
 			const declaration: MethodDeclaration = sourceFile.getClassOrThrow('Test').getMethods()[0];
 
 			expect(methodPresentation(declaration)).toBe(formatCode(`test(param: string = 'test'): void;`));
-		})
+		});
 
 		it('should display inherited parameter type with multiple parameters', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -500,8 +503,10 @@ describe('presentation', () => {
 			);
 			const declaration: MethodDeclaration = sourceFile.getClassOrThrow('Test').getMethods()[0];
 
-			expect(methodPresentation(declaration)).toBe(formatCode(`test(param: string = 'test', param2: string = 'test'): void;`));
-		})
+			expect(methodPresentation(declaration)).toBe(
+				formatCode(`test(param: string = 'test', param2: string = 'test'): void;`),
+			);
+		});
 
 		it('should display decorators of parameters', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -515,8 +520,8 @@ describe('presentation', () => {
 			const declaration: MethodDeclaration = sourceFile.getClassOrThrow('Test').getMethods()[0];
 
 			expect(methodPresentation(declaration)).toBe(formatCode(`test(@Inject() param: string): void;`));
-		})
-	})
+		});
+	});
 
 	describe('Type Alias', () => {
 		it('should display presentation', () => {
@@ -529,7 +534,7 @@ describe('presentation', () => {
 			const declaration: TypeAliasDeclaration = sourceFile.getTypeAliasOrThrow('Test');
 
 			expect(typeAliasPresentation(declaration)).toBe(formatCode(`type Test = string;`));
-		})
+		});
 
 		it('should not expand type of keyof values', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -545,7 +550,7 @@ describe('presentation', () => {
 			const declaration: TypeAliasDeclaration = sourceFile.getTypeAliasOrThrow('Test');
 
 			expect(typeAliasPresentation(declaration)).toBe(formatCode(`type Test = keyof Test;`));
-		})
+		});
 
 		it('should display union types', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -557,7 +562,7 @@ describe('presentation', () => {
 			const declaration: TypeAliasDeclaration = sourceFile.getTypeAliasOrThrow('Test');
 
 			expect(typeAliasPresentation(declaration)).toBe(formatCode(`type Test = string | number;`));
-		})
+		});
 
 		it('should display intersection types', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -572,7 +577,7 @@ describe('presentation', () => {
 			const declaration: TypeAliasDeclaration = sourceFile.getTypeAliasOrThrow('Test');
 
 			expect(typeAliasPresentation(declaration)).toBe(formatCode(`type Test = Test1 & Test2;`));
-		})
+		});
 
 		it('should display tuple types', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -584,7 +589,7 @@ describe('presentation', () => {
 			const declaration: TypeAliasDeclaration = sourceFile.getTypeAliasOrThrow('Test');
 
 			expect(typeAliasPresentation(declaration)).toBe(formatCode(`type Test = [string, number];`));
-		})
+		});
 
 		it('should not expand simple Assigned type', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -598,7 +603,7 @@ describe('presentation', () => {
 			const declaration: TypeAliasDeclaration = sourceFile.getTypeAliasOrThrow('Test');
 
 			expect(typeAliasPresentation(declaration)).toBe(formatCode(`type Test = AssignedType;`));
-		})
+		});
 
 		it('should display Assigned type', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -612,8 +617,8 @@ describe('presentation', () => {
 			const declaration: TypeAliasDeclaration = sourceFile.getTypeAliasOrThrow('Test');
 
 			expect(typeAliasPresentation(declaration)).toBe(formatCode(`type Test = AssignedType;`));
-		})
-	})
+		});
+	});
 
 	describe('Variable', () => {
 		it('should display presentation', () => {
@@ -626,7 +631,7 @@ describe('presentation', () => {
 			const declaration: VariableDeclaration = sourceFile.getVariableDeclarationOrThrow('test');
 
 			expect(variablePresentation(declaration)).toBe(formatCode(`const test: 'test';`));
-		})
+		});
 
 		it('should display presentation with type', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -638,7 +643,7 @@ describe('presentation', () => {
 			const declaration: VariableDeclaration = sourceFile.getVariableDeclarationOrThrow('test');
 
 			expect(variablePresentation(declaration)).toBe(formatCode(`const test: string;`));
-		})
+		});
 
 		it('should display let', () => {
 			const sourceFile: SourceFile = project.createSourceFile(
@@ -650,6 +655,6 @@ describe('presentation', () => {
 			const declaration: VariableDeclaration = sourceFile.getVariableDeclarationOrThrow('test');
 
 			expect(variablePresentation(declaration)).toBe(formatCode(`let test: string;`));
-		})
-	})
+		});
+	});
 });

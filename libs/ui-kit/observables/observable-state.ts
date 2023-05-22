@@ -1,6 +1,6 @@
-import type { Observable, OperatorFunction } from 'rxjs';
-import { of } from 'rxjs';
-import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators';
+import type {Observable, OperatorFunction} from 'rxjs';
+import {of} from 'rxjs';
+import {catchError, map, startWith, switchMap, tap} from 'rxjs/operators';
 
 export type StatedObservable<T, E = Error> = Observable<ObservableState<T, E>>;
 

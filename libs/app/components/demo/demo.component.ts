@@ -48,8 +48,7 @@ export class NgDocDemoComponent implements OnInit {
 	private getAssets(): NgDocDemoAsset[] {
 		if (this.componentName) {
 			return ((this.rootPage.demoAssets && this.rootPage.demoAssets[this.componentName]) ?? []).filter(
-				(asset: NgDocDemoAsset) =>
-					!this.options.tabs?.length || asArray(this.options.tabs).includes(asset.title),
+				(asset: NgDocDemoAsset) => !this.options.tabs?.length || asArray(this.options.tabs).includes(asset.title),
 			);
 		}
 

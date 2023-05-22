@@ -14,7 +14,7 @@ import {FlControlSilencerModule} from 'flex-controls';
 
 import {NgDocNumberControlComponent} from './number-control.component';
 
-const provider: Provider = provideTypeControl('number', NgDocNumberControlComponent);
+const provider: Provider = provideTypeControl('number', NgDocNumberControlComponent, {order: 30});
 
 @NgModule({
 	declarations: [NgDocNumberControlComponent],

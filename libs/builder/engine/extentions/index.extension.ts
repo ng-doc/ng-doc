@@ -1,4 +1,4 @@
-import nunjucks, {Extension} from 'nunjucks'
+import nunjucks, {Extension} from 'nunjucks';
 
 export class NgDocIndexExtension implements Extension {
 	tags: string[] = ['index'];
@@ -13,7 +13,7 @@ export class NgDocIndexExtension implements Extension {
 
 		parser.advanceAfterBlockEnd();
 
-		return new nodes.CallExtension(this, 'run', args, [body])
+		return new nodes.CallExtension(this, 'run', args, [body]);
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

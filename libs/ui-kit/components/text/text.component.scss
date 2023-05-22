@@ -22,10 +22,6 @@
 		--ng-doc-text: var(--ng-doc-text-muted);
 	}
 
-	&[data-ng-doc-text-align='left'] .ng-doc-text {
-		text-align: left;
-	}
-
 	&[data-ng-doc-text-align='center'] .ng-doc-text {
 		text-align: center;
 	}

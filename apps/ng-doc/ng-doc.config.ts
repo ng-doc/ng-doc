@@ -1,10 +1,12 @@
 import {NgDocConfiguration} from '@ng-doc/builder';
 
 const NgDocConfig: NgDocConfiguration = {
+	angularBuilder: 'webpack',
 	pages: 'apps/ng-doc/src/app',
+	routePrefix: 'docs',
 	tsConfig: 'apps/ng-doc/tsconfig.app.json',
 	repoConfig: {
-		url: 'https://github.com/skoropadas/ng-doc',
+		url: 'https://github.com/ng-doc/ng-doc',
 		mainBranch: 'main',
 		releaseBranch: 'release',
 	},
@@ -22,7 +24,7 @@ const NgDocConfig: NgDocConfiguration = {
 		},
 		ngDocFeatureRequest: {
 			title: 'NgDoc Feature Request',
-			path: 'https://github.com/skoropadas/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Enhancement&template=feature_request.yaml&title=%5BFeature%5D+',
+			path: 'https://github.com/ng-doc/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Enhancement&template=feature_request.yaml&title=%5BFeature%5D+',
 		},
 	},
 	guide: {

@@ -124,8 +124,7 @@ export class NgDocDropdownComponent implements OnChanges, OnDestroy {
 			}
 
 			if (this.overlay) {
-				const positionStrategy: PositionStrategy | undefined =
-					this.overlay.overlayRef.getConfig().positionStrategy;
+				const positionStrategy: PositionStrategy | undefined = this.overlay.overlayRef.getConfig().positionStrategy;
 				if (positionStrategy instanceof FlexibleConnectedPositionStrategy && this.currentOrigin) {
 					this.overlay.overlayRef.updatePositionStrategy(positionStrategy.setOrigin(this.currentOrigin));
 				}

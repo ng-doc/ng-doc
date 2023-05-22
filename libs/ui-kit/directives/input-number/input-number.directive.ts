@@ -1,28 +1,17 @@
-import {Directive, ElementRef, HostListener, Inject, Optional, Renderer2} from '@angular/core';
+import {Directive, ElementRef, HostListener} from '@angular/core';
 import {isPresent} from '@ng-doc/core/helpers/is-present';
 import {NgDocBaseInput} from '@ng-doc/ui-kit/classes/base-input';
 import {toElement} from '@ng-doc/ui-kit/helpers';
-import {NG_DOC_INPUT_CONTROL} from '@ng-doc/ui-kit/tokens';
 import {UntilDestroy} from '@ngneat/until-destroy';
-import {FL_CONTROL_HOST, FlControlHost} from 'flex-controls';
 
 @Directive({
 	selector: `input[ngDocInputNumber]`,
-	providers: [
-		{provide: NG_DOC_INPUT_CONTROL, useExisting: NgDocInputNumberDirective},
-		{provide: NgDocBaseInput, useExisting: NgDocInputNumberDirective},
-	],
+	providers: [{provide: NgDocBaseInput, useExisting: NgDocInputNumberDirective}],
 })
 @UntilDestroy()
 export class NgDocInputNumberDirective extends NgDocBaseInput<number> {
-	constructor(
-		public override elementRef: ElementRef<HTMLInputElement>,
-		protected override renderer: Renderer2,
-		@Inject(FL_CONTROL_HOST)
-		@Optional()
-		protected override host?: FlControlHost<number>,
-	) {
-		super(elementRef, renderer, host);
+	constructor(override elementRef: ElementRef<HTMLInputElement>) {
+		super();
 	}
 
 	@HostListener('blur')

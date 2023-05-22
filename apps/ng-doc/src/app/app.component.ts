@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostBinding} from '@angular/core';
 import {preventInitialChildAnimations} from '@ng-doc/ui-kit/animations';
 
 @Component({
@@ -8,4 +8,9 @@ import {preventInitialChildAnimations} from '@ng-doc/ui-kit/animations';
 	styleUrls: ['./app.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {}
+export class AppComponent {
+	@HostBinding('attr.data-ng-doc-is-landing')
+	get isLandingPage(): boolean {
+		return new URL(window.location.href).pathname === '/';
+	}
+}

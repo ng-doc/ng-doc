@@ -1,5 +1,10 @@
-<ng-doc-root>
-	<ng-doc-navbar [leftContent]="leftContent" [rightContent]="rightContent">
+<ng-doc-root [sidebar]="!isLandingPage" [noWidthLimit]="isLandingPage" [footerContent]="footerContent">
+	<ng-doc-navbar
+		[leftContent]="leftContent"
+		[rightContent]="rightContent"
+		[hamburger]="!isLandingPage"
+		[search]="!isLandingPage"
+	>
 		<ng-template #leftContent>
 			<a class="brand" routerLink="/">
 				<h3>
@@ -23,9 +28,9 @@
 			<div @preventInitialChild class="ng-doc-header-controls">
 				<ng-doc-theme-toggle></ng-doc-theme-toggle>
 				<a
-					href="https://github.com/skoropadas/ng-doc"
+					href="https://github.com/ng-doc/ng-doc"
 					ng-doc-button-icon
-					ngDocTooltip="Check repo"
+					ngDocTooltip="Repository on GitHub"
 					size="large"
 					target="_blank"
 				>
@@ -34,6 +39,11 @@
 			</div>
 		</ng-template>
 	</ng-doc-navbar>
+
 	<ng-doc-sidebar></ng-doc-sidebar>
 	<router-outlet></router-outlet>
+
+	<ng-template #footerContent>
+		<div class="ng-doc-footer">MIT © 2023 Aleksandr Skoropad</div>
+	</ng-template>
 </ng-doc-root>

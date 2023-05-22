@@ -1,4 +1,4 @@
-import {asArray, NgDocPageIndex} from '@ng-doc/core';
+import {asArray} from '@ng-doc/core';
 import * as path from 'path';
 
 import {isRouteEntity, slash} from '../../../helpers';
@@ -19,12 +19,6 @@ export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T>
 	 * Keywords that will be used to create links to the current entity on the pages
 	 */
 	abstract keywords: string[];
-
-	/**
-	 * List of keywords that are used by the entity
-	 * (they will be sat by Keywords Processor, and used to indicate when this entity should be re-build if one of them appears)
-	 */
-	usedKeywords: Set<string> = new Set<string>();
 
 	/**
 	 * Url for to the source file to the current page, that can be used to open it in repository and edit

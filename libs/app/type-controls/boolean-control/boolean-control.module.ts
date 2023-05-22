@@ -5,7 +5,7 @@ import {NgDocCheckboxModule, NgDocTooltipModule} from '@ng-doc/ui-kit';
 
 import {NgDocBooleanControlComponent} from './boolean-control.component';
 
-const provider: Provider = provideTypeControl('boolean', NgDocBooleanControlComponent, {hideLabel: true});
+const provider: Provider = provideTypeControl('boolean', NgDocBooleanControlComponent, {hideLabel: true, order: 40});
 
 @NgModule({
 	declarations: [NgDocBooleanControlComponent],

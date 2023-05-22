@@ -58,10 +58,7 @@ export function getTemplateForPlayground(expression: ObjectLiteralExpression, pl
 		if (Node.isPropertyAssignment(template)) {
 			const templateInitializer: Expression | undefined = template.getInitializer();
 
-			if (
-				Node.isStringLiteral(templateInitializer) ||
-				Node.isNoSubstitutionTemplateLiteral(templateInitializer)
-			) {
+			if (Node.isStringLiteral(templateInitializer) || Node.isNoSubstitutionTemplateLiteral(templateInitializer)) {
 				return templateInitializer.getLiteralValue();
 			}
 		}
@@ -95,12 +92,10 @@ export function getContentForPlayground(
 							const initializer: Expression | undefined = property.getInitializer();
 
 							if (Node.isObjectLiteralExpression(initializer)) {
-								const templateProperty: ObjectLiteralElementLike | undefined =
-									initializer.getProperty('template');
+								const templateProperty: ObjectLiteralElementLike | undefined = initializer.getProperty('template');
 
 								if (Node.isPropertyAssignment(templateProperty)) {
-									const templateInitializer: Expression | undefined =
-										templateProperty.getInitializer();
+									const templateInitializer: Expression | undefined = templateProperty.getInitializer();
 
 									if (
 										Node.isStringLiteral(templateInitializer) ||
@@ -139,7 +134,7 @@ export function getPlaygroundClassProperties(declaration: ClassDeclaration): NgD
 
 			properties[property.getName()] = {
 				name: inputName,
-				type: displayType(property),
+				type: displayType(property, TypeFormatFlags.NoTruncation | TypeFormatFlags.UseSingleQuotesForStringLiteralType),
 				default: property.getInitializer()?.getText(),
 				description: property
 					.getJsDocs()
@@ -147,7 +142,9 @@ export function getPlaygroundClassProperties(declaration: ClassDeclaration): NgD
 				options: property
 					.getType()
 					.getUnionTypes()
-					.map((type: Type) => type.getText(undefined, TypeFormatFlags.NoTruncation)),
+					.map((type: Type) =>
+						type.getText(undefined, TypeFormatFlags.NoTruncation | TypeFormatFlags.UseSingleQuotesForStringLiteralType),
+					),
 			};
 
 			return properties;

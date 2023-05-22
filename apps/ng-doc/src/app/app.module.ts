@@ -3,16 +3,16 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
-import {NgDocDefaultSearchEngine, NgDocNavbarModule, provideSearchEngine} from '@ng-doc/app';
-import {NgDocSidebarModule} from '@ng-doc/app/components/sidebar';
-import {NgDocThemeToggleModule} from '@ng-doc/app/components/theme-toggle';
-import {NgDocModule} from '@ng-doc/app/modules/root';
+import {
+	NgDocDefaultSearchEngine,
+	NgDocModule,
+	NgDocNavbarModule,
+	NgDocSidebarModule,
+	NgDocThemeToggleModule,
+	provideSearchEngine,
+} from '@ng-doc/app';
 import {NgDocGeneratedModule} from '@ng-doc/generated';
-import {NgDocButtonIconModule} from '@ng-doc/ui-kit/components/button-icon';
-import {NgDocIconModule} from '@ng-doc/ui-kit/components/icon';
-import {NgDocTagModule} from '@ng-doc/ui-kit/components/tag';
-import {NgDocMediaQueryModule} from '@ng-doc/ui-kit/directives/media-query';
-import {NgDocTooltipModule} from '@ng-doc/ui-kit/directives/tooltip';
+import {NgDocButtonIconModule, NgDocIconModule, NgDocMediaQueryModule, NgDocTooltipModule} from '@ng-doc/ui-kit';
 
 import {AppComponent} from './app.component';
 
@@ -22,16 +22,25 @@ import {AppComponent} from './app.component';
 		BrowserModule,
 		BrowserAnimationsModule,
 		HttpClientModule,
-		NgDocModule.forRoot(),
+		NgDocModule.forRoot({defaultThemeId: 'auto'}),
 		NgDocGeneratedModule.forRoot(),
 		RouterModule.forRoot(
 			[
 				{
+					path: 'docs',
+					loadChildren: () =>
+						import('./pages/docs/docs.module').then((m: typeof import('./pages/docs/docs.module')) => m.DocsModule),
+				},
+				{
 					path: '',
 					loadChildren: () =>
-						import('./docs/docs.module').then((m: typeof import('./docs/docs.module')) => m.DocsModule),
+						import('./pages/landing/landing.module').then(
+							(m: typeof import('./pages/landing/landing.module')) => m.LandingModule,
+						),
+					pathMatch: 'full',
+					data: {hideSidebar: true},
 				},
-				{path: '**', redirectTo: 'getting-started/installation', pathMatch: 'full'},
+				{path: '**', redirectTo: 'docs/getting-started/installation', pathMatch: 'full'},
 			],
 			{
 				scrollPositionRestoration: 'enabled',
@@ -41,7 +50,6 @@ import {AppComponent} from './app.component';
 		),
 		NgDocNavbarModule,
 		NgDocSidebarModule,
-		NgDocTagModule,
 		NgDocButtonIconModule,
 		NgDocIconModule,
 		NgDocTooltipModule,

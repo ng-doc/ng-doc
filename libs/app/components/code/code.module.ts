@@ -1,12 +1,13 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {NgDocSanitizeHtmlModule} from "@ng-doc/app/pipes";
 import {NgDocLinkProcessorModule} from '@ng-doc/app/processors/link-processor';
 import {
 	NgDocButtonIconModule,
 	NgDocIconModule,
 	NgDocSmoothResizeModule,
 	NgDocTextModule,
-	NgDocTooltipModule
+	NgDocTooltipModule,
 } from '@ng-doc/ui-kit';
 
 import {NgDocCodeComponent} from './code.component';
@@ -21,6 +22,7 @@ import {NgDocCodeComponent} from './code.component';
 		NgDocTooltipModule,
 		NgDocLinkProcessorModule,
 		NgDocSmoothResizeModule,
+		NgDocSanitizeHtmlModule,
 	],
 	exports: [NgDocCodeComponent],
 })
