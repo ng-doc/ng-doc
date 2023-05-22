@@ -1,5 +1,3 @@
-export type Constructor<T> = new (...args: any[]) => T;
+export type Constructor<T = unknown> = new (...args: any[]) => T;
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type AbstractConstructor<T> = Function & {
-	prototype: T;
-};
+export type AbstractConstructor<T = unknown> = abstract new (...args: any[]) => T;

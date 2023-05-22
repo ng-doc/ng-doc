@@ -16,7 +16,7 @@ import {
 } from 'rxjs/operators';
 import {Project, SourceFile} from 'ts-morph';
 
-import {createProject, emitBuiltOutput, invalidateCacheIfNecessary, isFileEntity} from '../helpers';
+import {createProject, emitBuiltOutput, isFileEntity} from '../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
 import {bufferDebounce, progress} from '../operators';
 import {bufferUntilOnce} from '../operators/buffer-until-once';
@@ -30,6 +30,7 @@ import {
 } from './entities';
 import {NgDocEntity} from './entities/abstractions/entity';
 import {NgDocFileEntity} from './entities/abstractions/file.entity';
+import {invalidateCacheIfNecessary} from './entities/cache';
 import {NgDocIndexesEntity} from './entities/indexes.entity';
 import {entityLifeCycle} from './entity-life-cycle';
 import {NgDocEntityStore} from './entity-store';

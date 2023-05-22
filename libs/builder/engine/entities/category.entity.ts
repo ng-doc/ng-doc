@@ -7,8 +7,10 @@ import {isCategoryEntity, isPageEntity} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
+import {CachedEntity} from './cache/decorators';
 import {NgDocPageEntity} from './page.entity';
 
+@CachedEntity()
 export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 	override parent?: NgDocCategoryEntity;
 	override compilable: boolean = true;

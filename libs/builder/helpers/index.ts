@@ -1,5 +1,4 @@
 export * from './build-assets';
-export * from './cache';
 export * from './code-type-from-ext';
 export * from './create-builder-context';
 export * from './declaration-folder-name';

@@ -11,9 +11,11 @@ import {NgDocActions} from '../actions';
 import {PAGE_DEPENDENCIES_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
+import {CachedEntity} from './cache/decorators';
 import {NgDocCategoryEntity} from './category.entity';
 import {NgDocDependenciesEntity} from './dependencies.entity';
 
+@CachedEntity()
 export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	override parent?: NgDocCategoryEntity;
 	override compilable: boolean = true;

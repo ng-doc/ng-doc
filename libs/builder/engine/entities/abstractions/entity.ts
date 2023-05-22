@@ -1,20 +1,23 @@
 import {logging} from '@angular-devkit/core';
 import {NgDocPageIndex} from '@ng-doc/core';
 import {Observable, of, Subject} from 'rxjs';
-import {catchError, switchMap, take} from 'rxjs/operators';
+import {catchError, take, tap} from 'rxjs/operators';
 
 import {ObservableSet} from '../../../classes';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../../interfaces';
 import {NgDocBuilder} from '../../builder';
+import {CachedProperty} from '../cache/decorators';
+import {NgDocCachedEntity} from './cached.entity';
 
 /**
  * Base entity class that all entities should extend.
  */
-export abstract class NgDocEntity {
+export abstract class NgDocEntity extends NgDocCachedEntity {
 	/** Indicates when entity was destroyed */
 	destroyed: boolean = false;
 
 	/** Search indexes for the current entity */
+	@CachedProperty()
 	indexes: NgDocPageIndex[] = [];
 
 	/**
@@ -43,11 +46,6 @@ export abstract class NgDocEntity {
 	protected readyToBuild: boolean = false;
 
 	/**
-	 * The key by which the entity will be stored in the store
-	 */
-	abstract readonly id: string;
-
-	/**
 	 * Files that are watched for changes to rebuild entity or remove it
 	 */
 	abstract readonly rootFiles: string[];
@@ -67,7 +65,9 @@ export abstract class NgDocEntity {
 	 */
 	abstract readonly buildCandidates: NgDocEntity[];
 
-	constructor(readonly builder: NgDocBuilder, readonly context: NgDocBuilderContext) {}
+	constructor(readonly builder: NgDocBuilder, readonly context: NgDocBuilderContext) {
+		super();
+	}
 
 	/** Indicates if the current entity can be built */
 	get canBeBuilt(): boolean {
@@ -130,10 +130,7 @@ export abstract class NgDocEntity {
 		return this.context.context.logger;
 	}
 
-	/**
-	 * Returns the list of paths that can be cached for the current entity
-	 */
-	get cachedPaths(): string[] {
+	override get cachedFilePaths(): string[] {
 		return this.rootFiles.concat(this.dependencies.asArray());
 	}
 
@@ -160,21 +157,23 @@ export abstract class NgDocEntity {
 	}
 
 	buildArtifacts(): Observable<NgDocBuiltOutput[]> {
+		if (this.isCacheValid()) {
+			return of([]);
+		}
+
 		// Clear all indexes and used keywords before build
 		this.usedKeywords.clear();
 		this.indexes = [];
 
-		return this.cachedPaths.length && isCacheValid(this.id, this.cachedPaths)
-			? of([])
-			: this.build().pipe(
-					tap(() => updateCache(this.id, this.cachedPaths)),
-					catchError((e: Error) => {
-						this.logger.error(`Error during processing "${this.id}"\n${e.message}\n${e.stack}`);
-						this.readyToBuild = false;
+		return this.build().pipe(
+			tap(() => this.updateCache()),
+			catchError((e: Error) => {
+				this.logger.error(`Error during processing "${this.id}"\n${e.message}\n${e.stack}`);
+				this.readyToBuild = false;
 
-						return of([]);
-					}),
-			  );
+				return of([]);
+			}),
+		);
 	}
 
 	emit(): Observable<void> {

@@ -26,8 +26,10 @@ import {NgDocComponentAsset} from '../../types';
 import {PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocSourceFileEntity} from './abstractions/source-file.entity';
+import {CachedEntity} from './cache/decorators';
 import {NgDocPageEntity} from './page.entity';
 
+@CachedEntity()
 export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 	private componentsAssets: NgDocComponentAsset = {};
 

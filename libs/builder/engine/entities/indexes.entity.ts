@@ -21,25 +21,17 @@ export class NgDocIndexesEntity extends NgDocEntity {
 		return this.buildIndexes();
 	}
 
-	override get cachedPaths(): string[] {
-		return [this.pathToIndexFile];
-	}
-
-	get pathToIndexFile(): string {
-		return path.join(this.context.assetsPath, 'indexes.json')
-	}
-
 	private buildIndexes(): Observable<NgDocBuiltOutput[]> {
-		const allIndices: NgDocPageIndex[] = this.builder.entities
+		const allIndexes: NgDocPageIndex[] = this.builder.entities
 			.asArray()
 			.map((entity: NgDocEntity) => entity.indexes)
 			.flat();
 
-		return of(allIndices).pipe(
-			map((pageIndices: NgDocPageIndex[]) => [
+		return of(allIndexes).pipe(
+			map((pageIndexes: NgDocPageIndex[]) => [
 				{
-					content: JSON.stringify(pageIndices, null, 2),
-					filePath: this.pathToIndexFile,
+					content: JSON.stringify(pageIndexes, null, 2),
+					filePath: path.join(this.context.assetsPath, 'indexes.json'),
 				},
 			]),
 		);

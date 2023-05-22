@@ -9,8 +9,10 @@ import {NgDocBuilder} from '../builder';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocRouteEntity} from './abstractions/route.entity';
 import {NgDocApiEntity} from './api.entity';
+import {CachedEntity} from './cache/decorators';
 import {NgDocPageEntity} from './page.entity';
 
+@CachedEntity()
 export class NgDocApiScopeEntity extends NgDocRouteEntity<NgDocApiScope> {
 	override readonly physical: boolean = false;
 	protected override readyToBuild: boolean = true;

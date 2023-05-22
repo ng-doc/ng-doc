@@ -21,7 +21,9 @@ import {NgDocBuilder} from '../builder';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocRouteEntity} from './abstractions/route.entity';
 import {NgDocApiScopeEntity} from './api-scope.entity';
+import {CachedEntity} from './cache/decorators';
 
+@CachedEntity()
 export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	declaration?: NgDocSupportedDeclarations;
 

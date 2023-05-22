@@ -1,4 +1,3 @@
-import {NgDocPageIndex} from '@ng-doc/core';
 import path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -18,12 +17,7 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 	}
 
 	protected build(): Observable<NgDocBuiltOutput[]> {
-		return forkJoin([
-			this.buildIndexFile(),
-			this.buildGeneratedModule(),
-			this.buildRoutes(),
-			this.buildContext(),
-		])
+		return forkJoin([this.buildIndexFile(), this.buildGeneratedModule(), this.buildRoutes(), this.buildContext()]);
 	}
 
 	private buildRoutes(): Observable<NgDocBuiltOutput> {
