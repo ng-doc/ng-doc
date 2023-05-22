@@ -11,5 +11,5 @@ export function CachedProperty<TClass extends NgDocCachedEntity, TProperty>() {
 
 			return initialValue;
 		};
-	}
+	};
 }

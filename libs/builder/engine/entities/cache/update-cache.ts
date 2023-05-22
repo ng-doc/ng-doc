@@ -1,7 +1,7 @@
-import * as fs from "fs";
+import * as fs from 'fs';
 
 import {NgDocCachedEntity} from '../abstractions/cached.entity';
-import {createCache} from "./create-cache";
+import {createCache} from './create-cache';
 import {getCacheFilePath} from './get-cache-file-path';
 import {NgDocCache} from './interfaces';
 

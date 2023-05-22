@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import * as fs from 'fs';
 
 import {getCacheFilePath} from './get-cache-file-path';
 import {NgDocCache} from './interfaces';

@@ -174,7 +174,7 @@ export class NgDocBuilder {
 			catchError((e: Error) => {
 				this.context.context.logger.error(`NgDoc error: ${e.message}\n${e.stack}`);
 
-				return of(void 0);
+				return of(void 0).pipe(progress());
 			}),
 			finalize(() => watcher.close()),
 		) as unknown as Observable<void>;

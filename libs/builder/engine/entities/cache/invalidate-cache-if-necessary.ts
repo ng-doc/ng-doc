@@ -1,7 +1,7 @@
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from 'fs';
+import * as path from 'path';
 
-import {getCacheDirPath} from "./get-cache-dir-path";
+import {getCacheDirPath} from './get-cache-dir-path';
 
 /**
  * Checks the version of the current package and invalidates the cache if necessary

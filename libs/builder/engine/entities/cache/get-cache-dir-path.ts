@@ -1,5 +1,5 @@
-import findCacheDir from "find-cache-dir";
-import * as path from "path";
+import findCacheDir from 'find-cache-dir';
+import * as path from 'path';
 
 /**
  * Returns cache directory path

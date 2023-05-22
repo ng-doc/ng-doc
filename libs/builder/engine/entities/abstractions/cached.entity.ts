@@ -25,7 +25,7 @@ export abstract class NgDocCachedEntity {
 	}
 
 	updateCache(): void {
-		updateCache(this.id, this)
+		updateCache(this.id, this);
 	}
 
 	getCachedProperties(): Record<string, unknown> {
