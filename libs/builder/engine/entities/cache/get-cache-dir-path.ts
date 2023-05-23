@@ -9,6 +9,6 @@ export function getCacheDirPath(): string {
 		findCacheDir({
 			name: 'ng-doc',
 			create: true,
-		}) ?? '',
+		}) ?? '.cache',
 	);
 }

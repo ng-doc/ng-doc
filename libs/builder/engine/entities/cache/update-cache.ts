@@ -1,7 +1,6 @@
 import * as fs from 'fs';
+import * as path from 'path';
 
-import {NgDocCachedEntity} from '../abstractions/cached.entity';
-import {createCache} from './create-cache';
 import {getCacheFilePath} from './get-cache-file-path';
 import {NgDocCache} from './interfaces';
 
@@ -10,11 +9,15 @@ import {NgDocCache} from './interfaces';
  * This function creates object and writes it to cache file
  *
  * @param id - unique id for cache
- * @param entity
+ * @param cache - cache object
  */
-export function updateCache(id: string, entity: NgDocCachedEntity): void {
+export function updateCache(id: string, cache: NgDocCache): void {
 	const cacheFilePath: string = getCacheFilePath(id);
-	const cache: NgDocCache = createCache(entity);
+	const cacheDirPath: string = path.dirname(cacheFilePath);
+
+	if (!fs.existsSync(cacheDirPath)) {
+		fs.mkdirSync(cacheDirPath, {recursive: true});
+	}
 
 	fs.writeFileSync(cacheFilePath, JSON.stringify(cache, null, 2));
 }

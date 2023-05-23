@@ -30,7 +30,7 @@ import {
 } from './entities';
 import {NgDocEntity} from './entities/abstractions/entity';
 import {NgDocFileEntity} from './entities/abstractions/file.entity';
-import {invalidateCacheIfNecessary} from './entities/cache';
+import {invalidateCacheIfNeeded} from './entities/cache';
 import {NgDocIndexesEntity} from './entities/indexes.entity';
 import {entityLifeCycle} from './entity-life-cycle';
 import {NgDocEntityStore} from './entity-store';
@@ -51,7 +51,7 @@ export class NgDocBuilder {
 	}
 
 	run(): Observable<void> {
-		invalidateCacheIfNecessary();
+		invalidateCacheIfNeeded(this.context.cachedFiles);
 
 		console.time('build');
 

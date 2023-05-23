@@ -4,7 +4,7 @@ import {NgDocCachedEntity} from '../../abstractions/cached.entity';
 import {loadCache} from '../load-cache';
 
 /**
- *
+ * Decorator for cached entities, it will load the cache and assign the properties to the entity
  */
 export function CachedEntity<TClass extends Constructor<NgDocCachedEntity & {id: string}>>() {
 	return (Value: TClass, _context: ClassDecoratorContext<TClass>) => {
