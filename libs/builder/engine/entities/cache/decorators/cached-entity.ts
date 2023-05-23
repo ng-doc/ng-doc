@@ -1,6 +1,7 @@
-import {Constructor} from '@ng-doc/core';
+import {asArray, Constructor} from '@ng-doc/core';
 
 import {NgDocCachedEntity} from '../../abstractions/cached.entity';
+import {NgDocCacheAccessor, NgDocCachedType} from '../interfaces';
 import {loadCache} from '../load-cache';
 
 /**
@@ -14,9 +15,12 @@ export function CachedEntity<TClass extends Constructor<NgDocCachedEntity & {id:
 
 				this.cache = loadCache(this.id);
 
-				this.cachedProperties.forEach((property: string) => {
-					if (Object.keys(this.cache?.properties ?? {}).includes(property)) {
-						Object.assign(this, {[property]: this.cache?.properties?.[property]});
+				asArray(this.cachedProperties.keys()).forEach((property: string) => {
+					const accessor: NgDocCacheAccessor<NgDocCachedType> | undefined = this.cachedProperties.get(property);
+					const value: unknown = this.cache?.properties?.[property];
+
+					if (Object.keys(this.cache?.properties ?? {}).includes(property) && accessor) {
+						Object.assign(this, {[property]: accessor.get(value as NgDocCachedType)});
 					}
 				});
 			}

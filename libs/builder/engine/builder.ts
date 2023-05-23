@@ -139,6 +139,8 @@ export class NgDocBuilder {
 			progress('Building documentation...'),
 			map((entities: Array<NgDocEntity | null>) => entities.filter(isPresent)),
 			tap(() => this.entities.updateKeywordMap(this.context.config.keywords)),
+			// Build only entities that are not cached or have changed
+			map((entities: NgDocEntity[]) => entities.filter((entity: NgDocEntity) => !entity.isCacheValid())),
 			// Build touched entities and their dependencies
 			concatMap((entities: NgDocEntity[]) =>
 				forkJoinOrEmpty(

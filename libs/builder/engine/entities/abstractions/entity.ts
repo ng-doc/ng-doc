@@ -24,6 +24,10 @@ export abstract class NgDocEntity extends NgDocCachedEntity {
 	 * List of keywords that are used by the entity
 	 * (they will be sat by Keywords Processor, and used to indicate when this entity should be re-build if one of them appears)
 	 */
+	@CachedProperty({
+		get: (value: string[]) => new Set<string>(value),
+		set: (value: Set<string>) => Array.from(value),
+	})
 	usedKeywords: Set<string> = new Set<string>();
 
 	/**
@@ -157,10 +161,6 @@ export abstract class NgDocEntity extends NgDocCachedEntity {
 	}
 
 	buildArtifacts(): Observable<NgDocBuiltOutput[]> {
-		if (this.isCacheValid()) {
-			return of([]);
-		}
-
 		// Clear all indexes and used keywords before build
 		this.usedKeywords.clear();
 		this.indexes = [];

@@ -11,6 +11,7 @@ export const DevelopPage: NgDocPage = {
       angular: NgDocAngularEntities,
     },
   },
+  keyword: 'DevelopPage'
 };
 
 export default DevelopPage;

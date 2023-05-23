@@ -1,7 +1,7 @@
 import {NgDocBuilderContext} from '@ng-doc/builder';
 import {asArray} from '@ng-doc/core';
 
-import {createCache, isCacheValid, NgDocCache, updateCache} from '../cache';
+import {createCache, isCacheValid, NgDocCache, NgDocCacheAccessor, NgDocCachedType, updateCache} from '../cache';
 
 export abstract class NgDocCachedEntity {
 	/**
@@ -19,7 +19,7 @@ export abstract class NgDocCachedEntity {
 	/**
 	 * List of properties that should be cached for the current entity.
 	 */
-	cachedProperties: Set<string> = new Set<string>();
+	cachedProperties: Map<string, NgDocCacheAccessor<any, any>> = new Map<string, NgDocCacheAccessor<any, any>>();
 
 	protected constructor(readonly context: NgDocBuilderContext) {}
 
@@ -39,10 +39,14 @@ export abstract class NgDocCachedEntity {
 	getCachedProperties(): Record<string, unknown> {
 		const cachedProperties: Record<string, unknown> = {};
 
-		asArray(this.cachedProperties).forEach((property: string) => {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			cachedProperties[property] = this[property];
+		asArray(this.cachedProperties.keys()).forEach((property: string) => {
+			const accessor: NgDocCacheAccessor<NgDocCachedType> | undefined = this.cachedProperties.get(property);
+
+			if (accessor) {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				cachedProperties[property] = accessor.set(this[property]);
+			}
 		});
 
 		return cachedProperties;

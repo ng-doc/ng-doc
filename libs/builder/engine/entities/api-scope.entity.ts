@@ -49,6 +49,10 @@ export class NgDocApiScopeEntity extends NgDocRouteEntity<NgDocApiScope> {
 		return this.route;
 	}
 
+	override get cachedFilePaths(): string[] {
+		return this.parent.rootFiles;
+	}
+
 	/**
 	 * Returns full url from the root
 	 *
