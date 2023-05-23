@@ -25,11 +25,7 @@ export async function runBrowser(options: NgDocSchema, context: BuilderContext):
 	const browserTarget: Target | null = options.browserTarget ? targetFromTargetString(options.browserTarget) : null;
 	const targetOptions: any = browserTarget ? await context.getTargetOptions(browserTarget) : (options as any);
 	const builderContext: NgDocBuilderContext = createBuilderContext(targetOptions, options, context);
-	const builder: NgDocBuilder = new NgDocBuilder({
-		...builderContext,
-		// Cache should be always disabled for browser build
-		config: {...builderContext.config, cache: false},
-	});
+	const builder: NgDocBuilder = new NgDocBuilder(builderContext);
 	const runner: Observable<void> = builder.run();
 
 	await runner.pipe(first()).toPromise();
