@@ -13,5 +13,5 @@ describe('getCacheDirPath', () => {
 		const cacheFilePath: string = getCacheDirPath();
 
 		expect(cacheFilePath).toBe('.cache');
-	})
+	});
 });

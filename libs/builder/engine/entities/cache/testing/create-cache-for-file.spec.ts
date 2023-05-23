@@ -17,5 +17,5 @@ describe('createCacheForFile', () => {
 		const result: string = createCacheForFile('folder/file1');
 
 		expect(result).toBeTruthy();
-	})
+	});
 });
