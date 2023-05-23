@@ -53,8 +53,6 @@ export class NgDocBuilder {
 	run(): Observable<void> {
 		invalidateCacheIfNeeded(this.context.cachedFiles);
 
-		console.time('build');
-
 		const watcher: NgDocWatcher = new NgDocWatcher(
 			this.context.pagesPaths
 				.map((pagesPath: string) => [
@@ -165,7 +163,6 @@ export class NgDocBuilder {
 						 */
 						emitBuiltOutput(...output);
 						this.collectGarbage();
-						console.timeEnd('build');
 					}),
 				),
 			),
