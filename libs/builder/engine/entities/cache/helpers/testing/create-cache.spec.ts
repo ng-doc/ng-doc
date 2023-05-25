@@ -1,7 +1,7 @@
 import {vol} from 'memfs';
 
+import {NgDocCachedData} from '../../interfaces';
 import {createCache} from '../create-cache';
-import {NgDocCachedData} from '../interfaces';
 
 jest.mock('fs');
 
