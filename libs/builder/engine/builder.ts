@@ -1,5 +1,6 @@
 import {isPresent} from '@ng-doc/core';
 import * as esbuild from 'esbuild';
+import * as fs from 'fs';
 import * as path from 'path';
 import {forkJoin, from, merge, Observable, of} from 'rxjs';
 import {
@@ -52,8 +53,10 @@ export class NgDocBuilder {
 	}
 
 	run(): Observable<void> {
-		if (this.context.config?.cache !== false) {
-			invalidateCacheIfNeeded(this.context.cachedFiles);
+		if (this.context.config?.cache !== false && invalidateCacheIfNeeded(this.context.cachedFiles)) {
+			// do nothing
+		} else {
+			fs.rmSync(this.context.buildPath, {recursive: true, force: true});
 		}
 
 		const watcher: NgDocWatcher = new NgDocWatcher(
