@@ -1,3 +1,10 @@
+# [16.2.0](https://github.com/ng-doc/ng-doc/compare/v16.1.1...v16.2.0) (2023-05-25)
+
+
+### Features
+
+* **builder:** cache is here! Now NgDoc caches build results and next time it will use them or rebuild only necessary pages instead of rebuilding everything from scratch ([83a6caa](https://github.com/ng-doc/ng-doc/commit/83a6caa22af8b2909f2ab1785a1377da2924a850)), closes [#44](https://github.com/ng-doc/ng-doc/issues/44)
+
 ## [16.1.1](https://github.com/ng-doc/ng-doc/compare/v16.1.0...v16.1.1) (2023-05-21)
 
 
