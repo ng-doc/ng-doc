@@ -22,14 +22,13 @@ export async function buildFileEntity(sourceFile: SourceFile, tsconfig: string, 
 	/**
 	 * Remove module, demo and playgrounds properties from the default export
 	 * if the file is a page. This is done to prevent compiling the page dependencies
-	 * that are not needed for the page inside the bundle.
+	 * that are not needed for the NgDoc builder
 	 *
 	 */
 	if (minimatch(p, PAGE_PATTERN)) {
 		const objectLiteralExpression: ObjectLiteralExpression | undefined = getObjectExpressionFromDefault(sourceFile);
 
 		/**
-		 * Remove module, demo and playgrounds properties from the default export
 		 * We use regex to remove the properties because ts-morph does it slowly
 		 */
 		if (objectLiteralExpression) {
