@@ -30,8 +30,8 @@ export function buildCandidates(entityStore: NgDocEntityStore, entities: NgDocEn
 	const candidatesByKeywords: NgDocEntity[] = entitiesFromStore.filter(
 		(entity: NgDocEntity) =>
 			// Check if entity is route and has keywords that are used by candidates
-			candidatesKeywords.some((keyword: string) =>
-				entity.potentialKeywords.has(keyword) || entity.usedKeywords.has(keyword)
+			candidatesKeywords.some(
+				(keyword: string) => entity.potentialKeywords.has(keyword) || entity.usedKeywords.has(keyword),
 			) ||
 			// Check if one of the used keywords is outdated
 			asArray(entity.usedKeywords).some((keyword: string) => !entityStore.getByKeyword(keyword)),

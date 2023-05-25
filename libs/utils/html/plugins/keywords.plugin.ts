@@ -24,7 +24,7 @@ export type GetKeyword = (keyword: string) => NgDocKeyword | undefined;
 export default function keywordsPlugin(
 	addUsedKeyword?: AddKeyword,
 	addPotentialKeyword?: AddKeyword,
-	getKeyword?: GetKeyword
+	getKeyword?: GetKeyword,
 ) {
 	return (tree: Element) =>
 		visitParents(tree, 'element', (node: Element, ancestors: Element[]) => {
