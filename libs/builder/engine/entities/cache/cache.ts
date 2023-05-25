@@ -8,12 +8,24 @@ export interface NgDocCachedClass {
 	__cachedFiles?: Set<string>;
 }
 
-export class NgDocCache<T extends InstanceType<Constructor<{id: string}>> = InstanceType<Constructor<{id: string}>>> {
+export class NgDocCache<
+	T extends InstanceType<Constructor<{id: string}>> = InstanceType<
+		Constructor<{
+			id: string;
+		}>
+	>,
+> {
+	constructor(readonly enabled: boolean) {}
+
 	isCacheValid(cls: T): boolean {
-		return isCacheValid(cls.id, this.createCache(cls));
+		return this.enabled && isCacheValid(cls.id, this.createCache(cls));
 	}
 
 	cache(cls: T): void {
+		if (!this.enabled) {
+			return;
+		}
+
 		updateCache(cls.id, this.createCache(cls));
 	}
 

@@ -34,9 +34,7 @@ export function getComponentAsset(
 			// Add assets for the component file
 			...buildAssets(filePath, inlineStyleLang),
 			// Add assets for the template file if it exists
-			...(decoratorData.templateUrl
-				? buildAssets(path.join(fileDir, decoratorData.templateUrl), inlineStyleLang)
-				: []),
+			...(decoratorData.templateUrl ? buildAssets(path.join(fileDir, decoratorData.templateUrl), inlineStyleLang) : []),
 			// Add assets for the style files if they exist
 			...asArray(decoratorData.styleUrls)
 				.map((styleUrl: string) => buildAssets(path.join(fileDir, styleUrl), inlineStyleLang))

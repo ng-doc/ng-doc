@@ -44,7 +44,7 @@ export class NgDocBuilder {
 	readonly skeleton: NgDocSkeletonEntity = new NgDocSkeletonEntity(this, this.context);
 	readonly indexes: NgDocIndexesEntity = new NgDocIndexesEntity(this, this.context);
 	readonly renderer: NgDocRenderer = new NgDocRenderer();
-	readonly cache: NgDocCache = new NgDocCache();
+	readonly cache: NgDocCache = new NgDocCache(this.context.config?.cache !== false);
 	readonly project: Project;
 
 	constructor(readonly context: NgDocBuilderContext) {
@@ -52,7 +52,9 @@ export class NgDocBuilder {
 	}
 
 	run(): Observable<void> {
-		invalidateCacheIfNeeded(this.context.cachedFiles);
+		if (this.context.config?.cache !== false) {
+			invalidateCacheIfNeeded(this.context.cachedFiles);
+		}
 
 		const watcher: NgDocWatcher = new NgDocWatcher(
 			this.context.pagesPaths
