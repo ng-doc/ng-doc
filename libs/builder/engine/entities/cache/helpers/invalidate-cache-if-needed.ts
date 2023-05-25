@@ -13,15 +13,18 @@ const CORE_CACHE_ID: string = 'ng-doc-core';
  *
  * @param coreFiles - list of core files, if they were changed, the cache will be invalidated
  */
-export function invalidateCacheIfNeeded(coreFiles: string[] = []): void {
+export function invalidateCacheIfNeeded(coreFiles: string[] = []): boolean {
 	const cacheDirPath: string = getCacheDirPath();
 	const version: string = require('../../../../package.json').version;
 	const cache: NgDocCachedData = createCache(version, coreFiles);
+	const isValid: boolean = isCacheValid(CORE_CACHE_ID, cache);
 
-	if (!isCacheValid(CORE_CACHE_ID, cache)) {
+	if (!isValid) {
 		fs.rmSync(cacheDirPath, {recursive: true, force: true});
 	}
 
 	fs.mkdirSync(cacheDirPath, {recursive: true});
 	updateCache(CORE_CACHE_ID, cache);
+
+	return isValid;
 }
