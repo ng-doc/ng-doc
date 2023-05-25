@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 
+import {NgDocCachedData} from '../interfaces';
 import {createCache} from './create-cache';
 import {getCacheDirPath} from './get-cache-dir-path';
-import {NgDocCache} from './interfaces';
 import {isCacheValid} from './is-cache-valid';
 import {updateCache} from './update-cache';
 
@@ -15,8 +15,8 @@ const CORE_CACHE_ID: string = 'ng-doc-core';
  */
 export function invalidateCacheIfNeeded(coreFiles: string[] = []): void {
 	const cacheDirPath: string = getCacheDirPath();
-	const version: string = require('../../../package.json').version;
-	const cache: NgDocCache = createCache(version, coreFiles);
+	const version: string = require('../../../../package.json').version;
+	const cache: NgDocCachedData = createCache(version, coreFiles);
 
 	if (!isCacheValid(CORE_CACHE_ID, cache)) {
 		fs.rmSync(cacheDirPath, {recursive: true, force: true});

@@ -1,5 +1,5 @@
+import {NgDocCachedData} from '../interfaces';
 import {createCacheForFile} from './create-cache-for-file';
-import {NgDocCache} from './interfaces';
 import {loadCache} from './load-cache';
 
 /**
@@ -8,8 +8,8 @@ import {loadCache} from './load-cache';
  * @param id - unique id for cache
  * @param cache - cache object
  */
-export function isCacheValid(id: string, cache: NgDocCache): boolean {
-	const savedCache: NgDocCache = loadCache(id);
+export function isCacheValid(id: string, cache: NgDocCachedData): boolean {
+	const savedCache: NgDocCachedData = loadCache(id);
 	const filesAreValid: boolean = Object.keys(savedCache.files ?? {}).every(
 		(filePath: string) => savedCache.files?.[filePath] === createCacheForFile(filePath),
 	);

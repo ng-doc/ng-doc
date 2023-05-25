@@ -30,7 +30,7 @@ import {
 } from './entities';
 import {NgDocEntity} from './entities/abstractions/entity';
 import {NgDocFileEntity} from './entities/abstractions/file.entity';
-import {invalidateCacheIfNeeded} from './entities/cache';
+import {invalidateCacheIfNeeded, NgDocCache} from './entities/cache';
 import {NgDocIndexesEntity} from './entities/indexes.entity';
 import {entityLifeCycle} from './entity-life-cycle';
 import {NgDocEntityStore} from './entity-store';
@@ -44,6 +44,7 @@ export class NgDocBuilder {
 	readonly skeleton: NgDocSkeletonEntity = new NgDocSkeletonEntity(this, this.context);
 	readonly indexes: NgDocIndexesEntity = new NgDocIndexesEntity(this, this.context);
 	readonly renderer: NgDocRenderer = new NgDocRenderer();
+	readonly cache: NgDocCache = new NgDocCache();
 	readonly project: Project;
 
 	constructor(readonly context: NgDocBuilderContext) {
@@ -140,7 +141,7 @@ export class NgDocBuilder {
 			map((entities: Array<NgDocEntity | null>) => entities.filter(isPresent)),
 			tap(() => this.entities.updateKeywordMap(this.context.config.keywords)),
 			// Build only entities that are not cached or have changed
-			map((entities: NgDocEntity[]) => entities.filter((entity: NgDocEntity) => !entity.isCacheValid())),
+			map((entities: NgDocEntity[]) => entities.filter((entity: NgDocEntity) => !this.cache.isCacheValid(entity))),
 			// Build touched entities and their dependencies
 			concatMap((entities: NgDocEntity[]) =>
 				forkJoinOrEmpty(

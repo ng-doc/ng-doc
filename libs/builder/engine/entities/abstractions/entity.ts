@@ -6,13 +6,17 @@ import {catchError, take, tap} from 'rxjs/operators';
 import {ObservableSet} from '../../../classes';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../../interfaces';
 import {NgDocBuilder} from '../../builder';
-import {CachedProperty} from '../cache/decorators';
-import {NgDocCachedEntity} from './cached.entity';
+import {CachedFilesGetter, CachedProperty} from '../cache/decorators';
 
 /**
  * Base entity class that all entities should extend.
  */
-export abstract class NgDocEntity extends NgDocCachedEntity {
+export abstract class NgDocEntity {
+	/**
+	 * The key by which the entity will be stored in the store
+	 */
+	abstract readonly id: string;
+
 	/** Indicates when entity was destroyed */
 	destroyed: boolean = false;
 
@@ -69,9 +73,7 @@ export abstract class NgDocEntity extends NgDocCachedEntity {
 	 */
 	abstract readonly buildCandidates: NgDocEntity[];
 
-	constructor(readonly builder: NgDocBuilder, override readonly context: NgDocBuilderContext) {
-		super(context);
-	}
+	constructor(readonly builder: NgDocBuilder, readonly context: NgDocBuilderContext) {}
 
 	/** Indicates if the current entity can be built */
 	get canBeBuilt(): boolean {
@@ -134,7 +136,8 @@ export abstract class NgDocEntity extends NgDocCachedEntity {
 		return this.context.context.logger;
 	}
 
-	override get cachedFilePaths(): string[] {
+	@CachedFilesGetter()
+	get cachedFilePaths(): string[] {
 		return this.rootFiles.concat(this.dependencies.asArray());
 	}
 
@@ -166,7 +169,7 @@ export abstract class NgDocEntity extends NgDocCachedEntity {
 		this.indexes = [];
 
 		return this.build().pipe(
-			tap(() => this.updateCache()),
+			tap(() => this.builder.cache.cache(this)),
 			catchError((e: Error) => {
 				this.logger.error(`Error during processing "${this.id}"\n${e.message}\n${e.stack}`);
 				this.readyToBuild = false;

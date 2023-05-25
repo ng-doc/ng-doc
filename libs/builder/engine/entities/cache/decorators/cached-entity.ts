@@ -1,28 +1,36 @@
+import {NgDocBuilder} from '@ng-doc/builder';
 import {asArray, Constructor} from '@ng-doc/core';
 
-import {NgDocCachedEntity} from '../../abstractions/cached.entity';
-import {NgDocCacheAccessor, NgDocCachedType} from '../interfaces';
-import {loadCache} from '../load-cache';
+import {NgDocCachedClass} from '../cache';
+import {loadCache} from '../helpers';
+import {NgDocCacheAccessor, NgDocCachedData, NgDocCachedType} from '../interfaces';
 
 /**
  * Decorator for cached entities, it will load the cache and assign the properties to the entity
  */
-export function CachedEntity<TClass extends Constructor<NgDocCachedEntity & {id: string}>>() {
+export function CachedEntity<TClass extends Constructor<{id: string}>>() {
 	return (Value: TClass, _context: ClassDecoratorContext<TClass>) => {
-		abstract class NgDocCacheEntityWrapper extends Value {
+		abstract class NgDocCacheEntityWrapper extends Value implements NgDocCachedClass {
+			__cachedProps?: Map<string, NgDocCacheAccessor<any, any>>;
+			__cachedFiles?: Set<string>;
+
 			protected constructor(...args: any[]) {
 				super(...args);
 
-				this.cache = loadCache(this.id);
+				const builder: NgDocBuilder | undefined = args.find((arg: unknown) => arg instanceof NgDocBuilder);
 
-				asArray(this.cachedProperties.keys()).forEach((property: string) => {
-					const accessor: NgDocCacheAccessor<NgDocCachedType> | undefined = this.cachedProperties.get(property);
-					const value: unknown = this.cache?.properties?.[property];
+				if (builder) {
+					const cache: NgDocCachedData = loadCache(this.id);
 
-					if (Object.keys(this.cache?.properties ?? {}).includes(property) && accessor) {
-						Object.assign(this, {[property]: accessor.get(value as NgDocCachedType)});
-					}
-				});
+					asArray(this.__cachedProps?.keys()).forEach((property: string) => {
+						const accessor: NgDocCacheAccessor<NgDocCachedType> | undefined = this.__cachedProps?.get(property);
+						const value: unknown = cache.properties?.[property];
+
+						if (Object.keys(cache?.properties ?? {}).includes(property) && accessor) {
+							Object.assign(this, {[property]: accessor.get(value as NgDocCachedType)});
+						}
+					});
+				}
 			}
 		}
 

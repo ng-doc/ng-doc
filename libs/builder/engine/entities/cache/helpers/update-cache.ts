@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
+import {NgDocCachedData} from '../interfaces';
 import {getCacheFilePath} from './get-cache-file-path';
-import {NgDocCache} from './interfaces';
 
 /**
  * Updates cache for given files
@@ -11,7 +11,7 @@ import {NgDocCache} from './interfaces';
  * @param id - unique id for cache
  * @param cache - cache object
  */
-export function updateCache(id: string, cache: NgDocCache): void {
+export function updateCache(id: string, cache: NgDocCachedData): void {
 	const cacheFilePath: string = getCacheFilePath(id);
 	const cacheDirPath: string = path.dirname(cacheFilePath);
 

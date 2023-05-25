@@ -1,7 +1,7 @@
 import {vol} from 'memfs';
 
 import {createCache} from '../create-cache';
-import {NgDocCache} from '../interfaces';
+import {NgDocCachedData} from '../interfaces';
 import {isCacheValid} from '../is-cache-valid';
 import {updateCache} from '../update-cache';
 
@@ -18,7 +18,7 @@ describe('isCacheValid', () => {
 			file2: 'content2',
 		});
 
-		const cache: NgDocCache = createCache('0.0.0', ['file1', 'file2']);
+		const cache: NgDocCachedData = createCache('0.0.0', ['file1', 'file2']);
 
 		updateCache('test', cache);
 
@@ -31,7 +31,7 @@ describe('isCacheValid', () => {
 			file2: 'content2',
 		});
 
-		const cache: NgDocCache = createCache('0.0.0', ['file1', 'file2']);
+		const cache: NgDocCachedData = createCache('0.0.0', ['file1', 'file2']);
 
 		updateCache('test', cache);
 
@@ -45,7 +45,7 @@ describe('isCacheValid', () => {
 			file3: 'content3',
 		});
 
-		const cache: NgDocCache = createCache('0.0.0', ['file1', 'file2']);
+		const cache: NgDocCachedData = createCache('0.0.0', ['file1', 'file2']);
 
 		updateCache('test', cache);
 
@@ -58,7 +58,7 @@ describe('isCacheValid', () => {
 			file2: 'content2',
 		});
 
-		const cache: NgDocCache = createCache('0.0.0', ['file1', 'file2']);
+		const cache: NgDocCachedData = createCache('0.0.0', ['file1', 'file2']);
 
 		updateCache('test', cache);
 

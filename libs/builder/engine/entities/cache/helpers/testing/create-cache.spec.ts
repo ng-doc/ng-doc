@@ -1,7 +1,7 @@
 import {vol} from 'memfs';
 
 import {createCache} from '../create-cache';
-import {NgDocCache} from '../interfaces';
+import {NgDocCachedData} from '../interfaces';
 
 jest.mock('fs');
 
@@ -16,7 +16,7 @@ describe('createCache', () => {
 	});
 
 	it('should return an empty cache if nothing was provided', () => {
-		const result: NgDocCache = createCache();
+		const result: NgDocCachedData = createCache();
 
 		expect(result).toStrictEqual({
 			version: undefined,
@@ -25,7 +25,7 @@ describe('createCache', () => {
 	});
 
 	it('should return a cache with files if files were provided', () => {
-		const result: NgDocCache = createCache(undefined, ['folder/file1', 'folder/file2']);
+		const result: NgDocCachedData = createCache(undefined, ['folder/file1', 'folder/file2']);
 
 		expect(result).toStrictEqual({
 			version: undefined,
@@ -38,7 +38,7 @@ describe('createCache', () => {
 	});
 
 	it('should return a cache with properties if properties were provided', () => {
-		const result: NgDocCache = createCache(undefined, undefined, {property: 'value'});
+		const result: NgDocCachedData = createCache(undefined, undefined, {property: 'value'});
 
 		expect(result).toStrictEqual({
 			version: undefined,
@@ -47,7 +47,7 @@ describe('createCache', () => {
 	});
 
 	it('should return a cache with version if version was provided', () => {
-		const result: NgDocCache = createCache('1.0.0');
+		const result: NgDocCachedData = createCache('1.0.0');
 
 		expect(result).toStrictEqual({
 			version: '1.0.0',

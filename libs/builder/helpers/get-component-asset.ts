@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
-import {NgDocRenderer} from '@ng-doc/builder';
 import {asArray, NgDocStyleType} from '@ng-doc/core';
 import * as path from 'path';
 import {ClassDeclaration, Decorator, Node} from 'ts-morph';
 
+import {NgDocRenderer} from '../engine/renderer';
 import {NgDocAsset} from '../interfaces';
 import {componentDecoratorResolver} from '../resolvers/component-decorator.resolver';
 import {NgDocComponentAsset} from '../types';
