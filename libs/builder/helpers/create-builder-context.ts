@@ -21,7 +21,7 @@ export function createBuilderContext(
 	const buildPath: string = path.join(context.workspaceRoot, '.ng-doc', context.target?.project ?? 'app');
 	const projectRoot: string = path.dirname(targetOptions['main'] as string);
 
-	const config: NgDocConfiguration = loadConfig(projectRoot);
+	const [configPath, config]: [string, NgDocConfiguration] = loadConfig(projectRoot);
 
 	return {
 		tsConfig: config?.tsConfig ?? String(targetOptions['tsConfig']),
@@ -30,6 +30,7 @@ export function createBuilderContext(
 		inlineStyleLanguage: (targetOptions?.['inlineStyleLanguage'] as NgDocStyleType) ?? 'CSS',
 		pagesPaths: config.pages?.length ? asArray(config.pages) : [projectRoot],
 		assetsPath: path.join(buildPath, 'assets'),
+		cachedFiles: [configPath],
 		buildPath,
 		apiPath: path.join(buildPath, 'api'),
 		guidesPath: path.join(buildPath, 'guides'),

@@ -6,6 +6,9 @@ export class ObservableSet<T> {
 	private collection: Set<T> = new Set();
 	private changes$: ReplaySubject<void> = new ReplaySubject<void>();
 
+	asArray(): T[] {
+		return asArray(this.collection);
+	}
 	changes(): Observable<T[]> {
 		return this.changes$.pipe(map(() => asArray(this.collection)));
 	}

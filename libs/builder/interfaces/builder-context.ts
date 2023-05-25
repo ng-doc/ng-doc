@@ -8,6 +8,7 @@ export interface NgDocBuilderContext {
 	config: NgDocConfiguration;
 	context: BuilderContext;
 	inlineStyleLanguage: NgDocStyleType;
+	cachedFiles: string[];
 	pagesPaths: string[];
 	assetsPath: string;
 	buildPath: string;

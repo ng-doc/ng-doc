@@ -8,7 +8,7 @@ import rehypeStringify from 'rehype-stringify';
 import {unified, VFileWithOutput} from 'unified';
 
 import autolinkHeadingPlugin from './plugins/autolink-headings.plugin';
-import keywordsPlugin, {AddUsedKeyword, GetKeyword} from './plugins/keywords.plugin';
+import keywordsPlugin, {AddKeyword, GetKeyword} from './plugins/keywords.plugin';
 import markCodeBlocksPlugin from './plugins/mark-code-blocks.plugin';
 import markElementsPlugin from './plugins/mark-elements.plugin';
 import sluggerPlugin from './plugins/slugger.plugin';
@@ -16,7 +16,8 @@ import sluggerPlugin from './plugins/slugger.plugin';
 export interface NgDocHtmlPostProcessorConfig {
 	headings?: NgDocHeading[];
 	route?: string;
-	addUsedKeyword?: AddUsedKeyword;
+	addUsedKeyword?: AddKeyword;
+	addPotentialKeyword?: AddKeyword;
 	getKeyword?: GetKeyword;
 }
 
@@ -34,7 +35,7 @@ export async function htmlPostProcessor(html: string, config: NgDocHtmlPostProce
 		.use(sluggerPlugin, config.headings)
 		.use(rehypeMinifyWhitespace)
 		.use(autolinkHeadingPlugin, config.route)
-		.use(keywordsPlugin, config.addUsedKeyword, config.getKeyword)
+		.use(keywordsPlugin, config.addUsedKeyword, config.addPotentialKeyword, config.getKeyword)
 		.use(markElementsPlugin)
 		.use(markCodeBlocksPlugin)
 		.process(html)

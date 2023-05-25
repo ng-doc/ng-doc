@@ -13,6 +13,10 @@ export interface NgDocConfiguration {
 	 */
 	angularBuilder?: 'esbuild' | 'webpack';
 	/**
+	 * Determines whether to use the cache or not. (enabled by default)
+	 */
+	cache?: boolean;
+	/**
 	 * List of paths to your documentation location (e.g. "src/app")
 	 */
 	pages?: string | string[];

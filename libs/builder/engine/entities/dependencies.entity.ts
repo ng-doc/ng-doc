@@ -26,8 +26,10 @@ import {NgDocComponentAsset} from '../../types';
 import {PAGE_NAME} from '../variables';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocSourceFileEntity} from './abstractions/source-file.entity';
+import {CachedEntity} from './cache/decorators';
 import {NgDocPageEntity} from './page.entity';
 
+@CachedEntity()
 export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 	private componentsAssets: NgDocComponentAsset = {};
 
@@ -104,14 +106,13 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 			this.dependencies.add(target.getSourceFile().getFilePath()),
 		);
 
-		return this.fillAssets()
-			.pipe(
-				switchMap(() =>
-					forkJoin([this.buildAssets(), this.buildPlaygrounds()]).pipe(
-						map(([assets, playgrounds]: [NgDocBuiltOutput[], NgDocBuiltOutput]) => [...assets, playgrounds]),
-					)
-				)
-			)
+		return this.fillAssets().pipe(
+			switchMap(() =>
+				forkJoin([this.buildAssets(), this.buildPlaygrounds()]).pipe(
+					map(([assets, playgrounds]: [NgDocBuiltOutput[], NgDocBuiltOutput]) => [...assets, playgrounds]),
+				),
+			),
+		);
 	}
 
 	getPlaygroundsExpression(): ObjectLiteralExpression | undefined {
@@ -168,7 +169,7 @@ export class NgDocDependenciesEntity extends NgDocSourceFileEntity {
 						this.componentsAssets[key].map((asset: NgDocAsset) =>
 							from(processHtml(this, asset.output)).pipe(tap((output: string) => (asset.output = output))),
 						),
-					)
+					),
 				),
 			).pipe(mapTo(void 0));
 		}
