@@ -4,7 +4,6 @@ const NgDocConfig: NgDocConfiguration = {
 	angularBuilder: 'webpack',
 	pages: 'apps/ng-doc/src/app',
 	routePrefix: 'docs',
-	cache: false,
 	tsConfig: 'apps/ng-doc/tsconfig.app.json',
 	repoConfig: {
 		url: 'https://github.com/ng-doc/ng-doc',
