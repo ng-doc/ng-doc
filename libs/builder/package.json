@@ -23,7 +23,9 @@
 		"esbuild": "0.17.8",
 		"@microsoft/tsdoc": "0.14.2",
 		"cosmiconfig": "8.1.0",
-		"cosmiconfig-typescript-swc-loader": "0.0.2"
+		"cosmiconfig-typescript-swc-loader": "0.0.2",
+		"find-cache-dir": "3.3.2",
+		"crypto": "1.0.1"
 	},
 	"publishConfig": {
 		"access": "public"

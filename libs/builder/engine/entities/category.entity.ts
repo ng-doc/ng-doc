@@ -7,8 +7,10 @@ import {isCategoryEntity, isPageEntity} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
+import {CachedEntity} from './cache/decorators';
 import {NgDocPageEntity} from './page.entity';
 
+@CachedEntity()
 export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 	override parent?: NgDocCategoryEntity;
 	override compilable: boolean = true;
@@ -76,9 +78,7 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 		return super.update().pipe(
 			tap(() => {
 				if (!this.title) {
-					throw new Error(
-						`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`,
-					);
+					throw new Error(`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`);
 				}
 
 				this.parent = this.getParentFromCategory();

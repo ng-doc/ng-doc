@@ -1,27 +1,47 @@
 import {logging} from '@angular-devkit/core';
 import {NgDocPageIndex} from '@ng-doc/core';
 import {Observable, of, Subject} from 'rxjs';
-import {catchError, switchMap, take} from 'rxjs/operators';
+import {catchError, take, tap} from 'rxjs/operators';
 
 import {ObservableSet} from '../../../classes';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../../interfaces';
 import {NgDocBuilder} from '../../builder';
+import {CachedFilesGetter, CachedProperty} from '../cache/decorators';
 
 /**
  * Base entity class that all entities should extend.
  */
 export abstract class NgDocEntity {
+	/**
+	 * The key by which the entity will be stored in the store
+	 */
+	abstract readonly id: string;
+
 	/** Indicates when entity was destroyed */
 	destroyed: boolean = false;
 
 	/** Search indexes for the current entity */
+	@CachedProperty()
 	indexes: NgDocPageIndex[] = [];
 
 	/**
-	 * List of keywords that are used by the entity
+	 * List of keywords that were linked to the entity
+	 */
+	@CachedProperty({
+		get: (value: string[]) => new Set<string>(value),
+		set: (value: Set<string>) => Array.from(value),
+	})
+	usedKeywords: Set<string> = new Set<string>();
+
+	/**
+	 * List of potential keywords that are used by the entity but not linked yet
 	 * (they will be sat by Keywords Processor, and used to indicate when this entity should be re-build if one of them appears)
 	 */
-	usedKeywords: Set<string> = new Set<string>();
+	@CachedProperty({
+		get: (value: string[]) => new Set<string>(value),
+		set: (value: Set<string>) => Array.from(value),
+	})
+	potentialKeywords: Set<string> = new Set<string>();
 
 	/**
 	 * Collection of all file dependencies of the current entity.
@@ -41,11 +61,6 @@ export abstract class NgDocEntity {
 
 	/** Indicates when current entity could be built */
 	protected readyToBuild: boolean = false;
-
-	/**
-	 * The key by which the entity will be stored in the store
-	 */
-	abstract readonly id: string;
 
 	/**
 	 * Files that are watched for changes to rebuild entity or remove it
@@ -130,6 +145,11 @@ export abstract class NgDocEntity {
 		return this.context.context.logger;
 	}
 
+	@CachedFilesGetter()
+	get cachedFilePaths(): string[] {
+		return this.rootFiles.concat(this.dependencies.asArray());
+	}
+
 	/**
 	 * Build all artifacts that need for application.
 	 * This is the last method in the build process, should return output that should be emitted to the file system
@@ -155,10 +175,11 @@ export abstract class NgDocEntity {
 	buildArtifacts(): Observable<NgDocBuiltOutput[]> {
 		// Clear all indexes and used keywords before build
 		this.usedKeywords.clear();
+		this.potentialKeywords.clear();
 		this.indexes = [];
 
-		return of(null).pipe(
-			switchMap(() => this.build()),
+		return this.build().pipe(
+			tap(() => this.builder.cache.cache(this)),
 			catchError((e: Error) => {
 				this.logger.error(`Error during processing "${this.id}"\n${e.message}\n${e.stack}`);
 				this.readyToBuild = false;

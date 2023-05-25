@@ -24,7 +24,7 @@ export function entityLifeCycle(
 	EntityConstructor: Constructable<NgDocEntity>,
 ): Observable<NgDocEntity[]> {
 	return watcher.onAdd(path).pipe(
-		progress(`Collecting ${EntityConstructor.name} entities...`),
+		progress(`Collecting entities...`),
 		map((p: string) => new EntityConstructor(builder, project.addSourceFileAtPath(p), builder.context)),
 		mergeMap((entity: NgDocEntity) => childGenerator(entity, watcher)),
 	);
@@ -52,9 +52,7 @@ function childGenerator(entity: NgDocEntity, watcher: NgDocWatcher): Observable<
 				? of([entity])
 				: entity.childrenGenerator().pipe(
 						switchMap((children: NgDocEntity[]) =>
-							children.length
-								? merge(...children.map((child: NgDocEntity) => childGenerator(child, watcher)))
-								: of([]),
+							children.length ? merge(...children.map((child: NgDocEntity) => childGenerator(child, watcher))) : of([]),
 						),
 						map((children: NgDocEntity[]) => [entity, ...children]),
 						tap((entities: NgDocEntity[]) =>
