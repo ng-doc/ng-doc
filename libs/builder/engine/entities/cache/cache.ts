@@ -1,7 +1,7 @@
 import {asArray, Constructor, isPresent} from '@ng-doc/core';
 
 import {createCache, isCacheValid, updateCache} from './helpers';
-import {NgDocCacheAccessor, NgDocCachedType} from './interfaces';
+import {NgDocCacheAccessor, NgDocCachedData, NgDocCachedType} from './interfaces';
 
 export interface NgDocCachedClass {
 	__cachedProps?: Map<string, NgDocCacheAccessor<any, any>>;
@@ -10,11 +10,15 @@ export interface NgDocCachedClass {
 
 export class NgDocCache<T extends InstanceType<Constructor<{id: string}>> = InstanceType<Constructor<{id: string}>>> {
 	isCacheValid(cls: T): boolean {
-		return isCacheValid(cls.id, createCache(undefined, this.getCachedPaths(cls), this.getCachedProperties(cls)));
+		return isCacheValid(cls.id, this.createCache(cls));
 	}
 
 	cache(cls: T): void {
-		updateCache(cls.id, createCache(undefined, this.getCachedPaths(cls), this.getCachedProperties(cls)));
+		updateCache(cls.id, this.createCache(cls));
+	}
+
+	private createCache(cls: T): NgDocCachedData {
+		return createCache(undefined, this.getCachedPaths(cls), this.getCachedProperties(cls));
 	}
 
 	private getCachedPaths(cls: T): string[] {

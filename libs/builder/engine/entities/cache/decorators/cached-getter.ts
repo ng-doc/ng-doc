@@ -1,7 +1,6 @@
 import {cachedPropsInitializer} from '../cached-props-initializer';
 import {NgDocCacheAccessor, NgDocCachedType} from '../interfaces';
 
-
 /**
  * Decorator for cached properties, it will add the property name to the cachedProperties set
  *
@@ -11,9 +10,11 @@ export function CachedGetter<TClass, TProperty, TCachedType extends NgDocCachedT
 	accessor?: Partial<NgDocCacheAccessor<TCachedType, TProperty>>,
 ) {
 	return (target: (this: TClass) => TProperty, context: ClassGetterDecoratorContext<TClass, TProperty>) => {
-		return function (this: TClass): TProperty {
-			cachedPropsInitializer(this, context.name.toString(), accessor)
+		context.addInitializer(function (this: TClass): void {
+			cachedPropsInitializer(this, context.name.toString(), accessor);
+		});
 
+		return function (this: TClass): TProperty {
 			return target.call(this);
 		};
 	};

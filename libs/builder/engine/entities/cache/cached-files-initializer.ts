@@ -14,7 +14,7 @@ export function cachedFilesInitializer<TProperty, TCachedType extends NgDocCache
 
 	if (!castedThis.__cachedFiles) {
 		Object.defineProperty(castedThis, '__cachedFiles', {
-			value: new Map(),
+			value: new Set(),
 		});
 	}
 

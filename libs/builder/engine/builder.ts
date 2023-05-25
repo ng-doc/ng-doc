@@ -145,7 +145,7 @@ export class NgDocBuilder {
 			// Build touched entities and their dependencies
 			concatMap((entities: NgDocEntity[]) =>
 				forkJoinOrEmpty(
-					buildCandidates(entities).map((entity: NgDocEntity) => {
+					buildCandidates(this.entities, entities).map((entity: NgDocEntity) => {
 						return entity.destroyed ? of([]) : entity.buildArtifacts();
 					}),
 				).pipe(

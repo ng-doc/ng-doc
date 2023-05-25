@@ -10,9 +10,11 @@ export function CachedProperty<TClass, TProperty, TCachedType extends NgDocCache
 	accessor?: Partial<NgDocCacheAccessor<TCachedType, TProperty>>,
 ) {
 	return (target: undefined | TClass, context: ClassFieldDecoratorContext<TClass, TProperty>) => {
-		return function (this: TClass, initialValue: TProperty): TProperty {
+		context.addInitializer(function (this: TClass): void {
 			cachedPropsInitializer(this, context.name.toString(), accessor);
+		});
 
+		return function (this: TClass, initialValue: TProperty): TProperty {
 			return initialValue;
 		};
 	};

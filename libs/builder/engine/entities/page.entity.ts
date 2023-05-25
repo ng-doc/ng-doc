@@ -35,9 +35,9 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return `${this.parent ? this.parent.url + '/' : ''}${this.route}`;
 	}
 
-	override get cachedFilePaths(): string[] {
-		return super.cachedFilePaths.concat([this.mdPath]);
-	}
+	// override get cachedFilePaths(): string[] {
+	// 	return super.cachedFilePaths.concat([this.mdPath]);
+	// }
 
 	override get isRoot(): boolean {
 		return !this.target?.category;
