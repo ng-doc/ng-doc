@@ -15,7 +15,7 @@ export function createProject(options?: ProjectOptions): Project {
 			incremental: true,
 			declaration: false,
 			skipLibCheck: true,
-			moduleResolution: ModuleResolutionKind.NodeNext,
+			moduleResolution: ModuleResolutionKind.NodeJs,
 			isolatedModules: true,
 			noEmit: true,
 			types: [],

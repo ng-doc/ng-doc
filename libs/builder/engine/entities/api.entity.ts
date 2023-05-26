@@ -9,8 +9,10 @@ import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocApiPageEntity} from './api-page.entity';
 import {NgDocApiScopeEntity} from './api-scope.entity';
+import {CachedEntity} from './cache/decorators';
 import {NgDocCategoryEntity} from './category.entity';
 
+@CachedEntity()
 export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 	override moduleFileName: string = `${uniqueName('ng-doc-api-list')}.module.ts`;
 	override parent?: NgDocCategoryEntity;

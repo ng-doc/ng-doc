@@ -4,9 +4,11 @@ import {RouterModule} from "@angular/router";
 import {CommonModule} from '@angular/common';
 import {NgDocDemoAssets, NgDocPageModule, NgDocRootPage} from '@ng-doc/app';
 import {NgDocPageType} from '@ng-doc/core';
-import pageContent from '!!raw-loader!{{ page.builtPagePath }}';
+
+const pageContent: string = `{{ pageContent | toTemplateString }}`
 
 @Component({
+	selector: 'ng-doc-page-{{ page.fullRoute | kebabCase }}',
 	template: `<ng-doc-page></ng-doc-page>`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [{provide: NgDocRootPage, useExisting: DynamicComponent}],

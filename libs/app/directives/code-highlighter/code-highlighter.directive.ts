@@ -26,7 +26,7 @@ export class NgDocCodeHighlighterDirective implements OnChanges {
 
 	ngOnChanges(): void {
 		if (this.code) {
-			const result: HighlightResult = highlight.highlight(this.language, this.code);
+			const result: HighlightResult = highlight.highlight(this.code, {language: this.language});
 
 			this.elementRef.nativeElement.innerHTML = result.value ?? this.html;
 		} else {
