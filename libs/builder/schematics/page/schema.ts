@@ -28,9 +28,9 @@ export interface NgDocBuildPageSchema extends SchematicArgv {
 	order?: number;
 	/**
 	 * Provide true if you are going to use demo, playground on the page,
-	 * then generator will generate module and dependencies file (alias is `-d`)
+	 * then generator will generate module file (alias is `-m`)
 	 */
-	demo?: boolean;
+	module?: boolean;
 	/**
 	 * If parameter was provided, generator will import first parent category automatically (alias is `-c`)
 	 */

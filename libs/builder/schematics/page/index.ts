@@ -20,7 +20,7 @@ import {findClosestFile} from '../../helpers/find-closest-file';
 import {extractDefaultExportName} from '../utils/extract-default-export-name';
 import {NgDocBuildPageSchema} from './schema';
 
-const demoTemplates: string[] = ['ng-doc.module.ts.template', 'ng-doc.dependencies.ts.template'];
+const demoTemplates: string[] = ['ng-doc.module.ts.template'];
 
 /**
  * Generates a NgDocPage
@@ -46,7 +46,7 @@ export function build(options: NgDocBuildPageSchema): Rule {
 				apply(url('./files'), [
 					filter(
 						(path: string) =>
-							(demoTemplates.includes(basename(path)) && options.demo) ||
+							(demoTemplates.includes(basename(path)) && options.module) ||
 							!demoTemplates.includes(basename(path)),
 					),
 					applyTemplates({

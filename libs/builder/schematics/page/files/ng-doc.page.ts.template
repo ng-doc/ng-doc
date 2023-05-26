@@ -1,5 +1,6 @@
 import {NgDocPage} from '@ng-doc/core';<% if (importPath && categoryName) { %>
-import <%= categoryName %> from '<%= importPath %>';<% } %>
+import <%= categoryName %> from '<%= importPath %>';<% } %><% if (module) { %>
+import {<%= pageName %>Module} from './ng-doc.module';<% } %>
 
 const <%= pageName %>: NgDocPage = {
 	title: `<%= title %>`,
@@ -7,7 +8,8 @@ const <%= pageName %>: NgDocPage = {
 	route: `<%= route %>`,<% } %><% if (importPath && categoryName) { %>
 	category: <%= categoryName %>,<% } %><% if (order) { %>
     order: <%= order %>,<% } %><% if (keyword) { %>
-    keyword: `<%= keyword %>`,<% } %>
+    keyword: `<%= keyword %>`,<% } %><% if (module) { %>
+    module: <%= pageName %>Module,<% } %>
 };
 
 export default <%= pageName %>;

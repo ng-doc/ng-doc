@@ -15,11 +15,6 @@
 			"description": "Generates NgDoc API entity",
 			"factory": "./api/index#build",
 			"schema": "./api/schema.json"
-		},
-		"dependencies": {
-			"description": "Generates NgDoc dependencies entity",
-			"factory": "./dependencies/index#build",
-			"schema": "./dependencies/schema.json"
 		}
 	}
 }
