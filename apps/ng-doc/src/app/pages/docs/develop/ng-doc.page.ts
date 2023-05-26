@@ -18,7 +18,7 @@ export const DevelopPage: NgDocPage = {
   keyword: 'DevelopPage',
   module: DevelopPageModule,
   // Add your demos that you are going to use in the page here
-  demo: {DevelopDemoComponent, ButtonDemoComponent},
+  demos: {DevelopDemoComponent, ButtonDemoComponent},
 };
 
 export default DevelopPage;

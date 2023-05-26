@@ -13,7 +13,7 @@ const DemoPage: NgDocPage = {
   // Add your module here
   module: DemoPageModule,
   // And all demos that you'd like to use
-  demo: {ButtonDemoComponent},
+  demos: {ButtonDemoComponent},
 };
 
 export default DemoPage;

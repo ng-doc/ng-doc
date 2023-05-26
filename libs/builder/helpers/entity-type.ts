@@ -1,10 +1,4 @@
-import {
-	NgDocApiEntity,
-	NgDocApiPageEntity,
-	NgDocApiScopeEntity,
-	NgDocCategoryEntity,
-	NgDocPageEntity,
-} from '../engine';
+import {NgDocApiEntity, NgDocApiPageEntity, NgDocApiScopeEntity, NgDocCategoryEntity, NgDocPageEntity} from '../engine';
 import {NgDocFileEntity} from '../engine/entities/abstractions/file.entity';
 import {NgDocNavigationEntity} from '../engine/entities/abstractions/navigation.entity';
 import {NgDocRouteEntity} from '../engine/entities/abstractions/route.entity';

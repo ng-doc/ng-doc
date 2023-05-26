@@ -7,7 +7,7 @@ with them.
 ## Creating a playground
 
 To create a playground, you need to create a `ng-doc.dependencies.ts` file and `NgModule` in your
-page folder, you can read more about how to do this in the `*EntitiesDependencies` article.
+page folder, you can read more about how to do this in the `*EntitiesPage` article.
 
 ## Configuration
 
@@ -174,7 +174,6 @@ export default PageDependencies;
 ## See Also
 
 - `*EntitiesPage`
-- `*EntitiesDependencies`
 - `*CustomizationTypeControls`
 
 {% endindex %}

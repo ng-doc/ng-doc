@@ -2,9 +2,7 @@ import {NgDocPage} from '@ng-doc/core';
 
 import CustomizationCategory from '../ng-doc.category';
 import {FloatingCircleComponent} from './floating-circle/floating-circle.component';
-import {
-  FloatingCirclePositionControlComponent
-} from './floating-circle-position-control/floating-circle-position-control.component';
+import {FloatingCirclePositionControlComponent} from './floating-circle-position-control/floating-circle-position-control.component';
 import {TypeControlsPageModule} from './ng-doc.module';
 
 const TypeControlsPage: NgDocPage = {
@@ -14,7 +12,7 @@ const TypeControlsPage: NgDocPage = {
   order: 4,
   keyword: 'CustomizationTypeControls',
   module: TypeControlsPageModule,
-  demo: {FloatingCircleComponent, FloatingCirclePositionControlComponent},
+  demos: {FloatingCircleComponent, FloatingCirclePositionControlComponent},
   playgrounds: {
     FloatingCircle: {
       target: FloatingCircleComponent,

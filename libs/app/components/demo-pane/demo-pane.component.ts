@@ -37,7 +37,7 @@ export class NgDocDemoPaneComponent implements OnInit {
 	private getDemo(): NgDocContent<object> | undefined {
 		if (this.componentName) {
 			const component: Type<unknown> | undefined =
-				this.rootPage.page?.demo && this.rootPage.page.demo[this.componentName];
+				this.rootPage.page?.demos && this.rootPage.page.demos[this.componentName];
 
 			return component ? new PolymorpheusComponent(component as Type<object>) : undefined;
 		}

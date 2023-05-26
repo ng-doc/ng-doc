@@ -6,7 +6,7 @@ import {ClassDeclaration, Expression, Node, ObjectLiteralElementLike, ObjectLite
  * @param objectExpression
  */
 export function getDemoClassDeclarations(objectExpression: ObjectLiteralExpression): ClassDeclaration[] {
-	const demoProperty: ObjectLiteralElementLike | undefined = objectExpression.getProperty('demo');
+	const demoProperty: ObjectLiteralElementLike | undefined = objectExpression.getProperty('demos');
 
 	if (
 		demoProperty &&

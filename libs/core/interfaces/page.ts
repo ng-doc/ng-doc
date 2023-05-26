@@ -24,7 +24,7 @@ export interface NgDocPage extends NgDocBaseEntity {
 	 * The page demo components should be on object where key it's
 	 * the component's class name and value it's class constructor
 	 */
-	demo?: Record<string, Type<unknown> | any>;
+	demos?: Record<string, Type<unknown> | any>;
 	/**
 	 * The page playgrounds should be on object where key it's the
 	 * playground's name and value its playground configuration

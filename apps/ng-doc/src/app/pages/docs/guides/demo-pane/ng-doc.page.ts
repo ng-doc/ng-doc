@@ -12,7 +12,7 @@ const DemoPanePage: NgDocPage = {
   keyword: 'GuidesDemoPane',
   module: DemoPanePageModule,
   // Add your demos that you are going to use in the page here
-  demo: {ButtonDemoComponent},
+  demos: {ButtonDemoComponent},
 };
 
 export default DemoPanePage;

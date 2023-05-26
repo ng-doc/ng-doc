@@ -33,7 +33,7 @@ export async function buildFileEntity(sourceFile: SourceFile, tsconfig: string, 
 		 */
 		if (objectLiteralExpression) {
 			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('module')?.getText() ?? '');
-			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('demo')?.getText() ?? '');
+			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('demos')?.getText() ?? '');
 			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('playgrounds')?.getText() ?? '');
 		}
 	}

@@ -5,7 +5,9 @@ import {Expression, Node, ObjectLiteralElementLike, ObjectLiteralExpression} fro
  *
  * @param objectLiteralExpression - The object literal expression of the page
  */
-export function getPlaygroundsExpression(objectLiteralExpression: ObjectLiteralExpression): ObjectLiteralExpression | undefined {
+export function getPlaygroundsExpression(
+	objectLiteralExpression: ObjectLiteralExpression,
+): ObjectLiteralExpression | undefined {
 	if (objectLiteralExpression) {
 		const property: ObjectLiteralElementLike | undefined = objectLiteralExpression.getProperty('playgrounds');
 

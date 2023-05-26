@@ -58,6 +58,40 @@ export const MyAwesomePage: NgDocPage = {
 export default MyAwesomePage;
 ```
 
+## Dependencies
+
+NgDoc doesn't know anything about your project, so you need to tell it what dependencies your page
+has. It's necessary if you have demos or playgrounds on your page. To do this, you need to generate a
+page file with the `--module` (alias is `-m`) option, which will create a page and a module file
+for it, and then you can import the dependencies into the module file.
+
+```bash
+ng g @ng-doc/builder:page "Installation" -m
+```
+
+You can also create a module file manually, but you need to import it into the page file.
+
+```typescript fileName="ng-doc.page.ts"
+import {NgDocPage} from '@ng-doc/core';
+import {MyModule} from '../my.module';
+
+export const MyAwesomePage: NgDocPage = {
+  module: MyModule,
+};
+
+export default MyAwesomePage;
+```
+
+## Module
+
+The module that you need to pass in the `module` field should be Angular `NgModule`.
+
+What `NgModule` should include:
+
+- `imports` - should contain all the dependencies that you need for your demos and playgrounds
+- `declarations` - a list of demos that you have created specifically for this page
+- `exports` - a list of modules that are needed for the playgrounds
+
 ## Creating a content
 
 Once you've created a page, you can start adding content to your `mdFile`, describing cool things
@@ -73,7 +107,6 @@ render content dynamically, see `*GuidesTemplating` for more details.
 ## See also
 
 - `*EntitiesCategory`
-- `*EntitiesDependencies`
 - `*GuidesTemplating`
 - `*GuidesDemo`
 
