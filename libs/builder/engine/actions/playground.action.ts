@@ -18,7 +18,7 @@ export function playgroundAction(pId: string): NgDocAction {
 	return (project: Project, page: NgDocPageEntity): NgDocActionOutput => {
 		try {
 			const playgroundsExpression: ObjectLiteralExpression | undefined =
-				page.pageDependencies?.getPlaygroundsExpression();
+				page.playgroundsExpression;
 
 			if (!playgroundsExpression) {
 				throw new Error(

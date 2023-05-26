@@ -3,8 +3,8 @@ import {NgDocDemoAssets} from '@ng-doc/app';
 
 export const demoAssets: NgDocDemoAssets = {
 {% set i = 0 %}
-	{%- for componentName, assets in componentsAssets %}
-	{{ componentName }}: [
+	{%- for demoName, assets in demoAssets %}
+	{{ demoName }}: [
 		{%- for asset in assets | notEmptyAssets %}
 		{title: '{{ asset.title }}', codeType: '{{ asset.type }}', code: `{{ asset.output | toTemplateString }}`},
 	{%- set i = i + 1 %}

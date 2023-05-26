@@ -36,7 +36,7 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 	}
 
 	get configuration(): NgDocPlaygroundConfig | undefined {
-		return this.rootPage.dependencies?.playgrounds?.[this.id];
+		return this.rootPage.page?.playgrounds?.[this.id];
 	}
 
 	private getPropertiesFormValues<K extends keyof T>(): Record<K, NgDocExtractedValue> {

@@ -27,9 +27,7 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 			this.target = require(this.pathToCompiledFile).default;
 
 			if (!this.target) {
-				new Error(
-					`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`,
-				);
+				new Error(`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`);
 			}
 		} catch (e: unknown) {
 			return throwError(e);

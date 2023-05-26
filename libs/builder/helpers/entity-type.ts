@@ -3,7 +3,6 @@ import {
 	NgDocApiPageEntity,
 	NgDocApiScopeEntity,
 	NgDocCategoryEntity,
-	NgDocDependenciesEntity,
 	NgDocPageEntity,
 } from '../engine';
 import {NgDocFileEntity} from '../engine/entities/abstractions/file.entity';
@@ -17,14 +16,6 @@ import {Constructable} from '../types';
  */
 export function isPageEntity(page: InstanceType<Constructable>): page is NgDocPageEntity {
 	return page instanceof NgDocPageEntity;
-}
-
-/**
- *
- * @param dependency
- */
-export function isDependencyEntity(dependency: InstanceType<Constructable>): dependency is NgDocDependenciesEntity {
-	return dependency instanceof NgDocDependenciesEntity;
 }
 
 /**

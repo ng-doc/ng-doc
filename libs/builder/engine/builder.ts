@@ -21,13 +21,7 @@ import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
 import {bufferDebounce, progress} from '../operators';
 import {bufferUntilOnce} from '../operators/buffer-until-once';
 import {forkJoinOrEmpty} from '../operators/fork-join-or-empty';
-import {
-	NgDocApiEntity,
-	NgDocCategoryEntity,
-	NgDocDependenciesEntity,
-	NgDocPageEntity,
-	NgDocSkeletonEntity,
-} from './entities';
+import {NgDocApiEntity, NgDocCategoryEntity, NgDocPageEntity, NgDocSkeletonEntity} from './entities';
 import {NgDocEntity} from './entities/abstractions/entity';
 import {NgDocFileEntity} from './entities/abstractions/file.entity';
 import {invalidateCacheIfNeeded, NgDocCache} from './entities/cache';
@@ -36,7 +30,7 @@ import {entityLifeCycle} from './entity-life-cycle';
 import {NgDocEntityStore} from './entity-store';
 import {buildCandidates} from './functions/build-candidates';
 import {NgDocRenderer} from './renderer';
-import {API_PATTERN, CATEGORY_PATTERN, PAGE_DEPENDENCY_PATTERN, PAGE_PATTERN} from './variables';
+import {API_PATTERN, CATEGORY_PATTERN, PAGE_PATTERN} from './variables';
 import {NgDocWatcher} from './watcher';
 
 export class NgDocBuilder {
@@ -63,7 +57,6 @@ export class NgDocBuilder {
 				.map((pagesPath: string) => [
 					path.join(pagesPath, PAGE_PATTERN),
 					path.join(pagesPath, CATEGORY_PATTERN),
-					path.join(pagesPath, PAGE_DEPENDENCY_PATTERN),
 					path.join(pagesPath, API_PATTERN),
 				])
 				.flat(),
@@ -72,7 +65,6 @@ export class NgDocBuilder {
 		const entities: Observable<NgDocEntity[]> = merge(
 			entityLifeCycle(this, this.project, watcher, PAGE_PATTERN, NgDocPageEntity),
 			entityLifeCycle(this, this.project, watcher, CATEGORY_PATTERN, NgDocCategoryEntity),
-			entityLifeCycle(this, this.project, watcher, PAGE_DEPENDENCY_PATTERN, NgDocDependenciesEntity),
 			entityLifeCycle(this, this.project, watcher, API_PATTERN, NgDocApiEntity),
 		).pipe(
 			bufferUntilOnce(watcher.onReady()),

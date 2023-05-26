@@ -2,13 +2,14 @@
 import {NgModule, Component, ViewChild, Type, ViewContainerRef} from '@angular/core';
 import {NgDocBasePlayground, providePlaygroundDemo} from '@ng-doc/app';
 // noinspection ES6UnusedImports
-import pageDependencies from '{{ dependencies.importPath }}'; import {CommonModule} from '@angular/common';
+import pageEntity from '{{ page.importPath }}'; import {CommonModule} from '@angular/common';
 
 {% set components = [] -%}
 {%- set index = 1 %}
+{%- set playgrounds = page.playgroundsExpression %}
 
-{%- for id in dependencies.playgroundIds -%}
-{%- set playgrounds = dependencies.getPlaygroundsExpression() %}
+{%- for id in page.playgroundIds -%}
+
 {%- set target = playgrounds | getTargetForPlayground(id) %}
 {%- set template = playgrounds | getTemplateForPlayground(id) %}
 {%- set content = playgrounds | getContentForPlayground(id) %}
@@ -29,13 +30,13 @@ import pageDependencies from '{{ dependencies.importPath }}'; import {CommonModu
 export class {{ comp.name }} extends NgDocBasePlayground {
 	static readonly selector: string = '{{ comp.selector }}';
 
-	@ViewChild(pageDependencies.playgrounds['{{ id }}'].target, {static: true})
+	@ViewChild(pageEntity.playgrounds['{{ id }}'].target, {static: true})
 	readonly playground?: Type<unknown>;
 
-	@ViewChild(pageDependencies.playgrounds['{{ id }}'].target, {static: true, read: ViewContainerRef})
+	@ViewChild(pageEntity.playgrounds['{{ id }}'].target, {static: true, read: ViewContainerRef})
 	readonly viewContainerRef: ViewContainerRef;
 
-	data: any = pageDependencies.playgrounds['{{ id }}'].data;
+	data: any = pageEntity.playgrounds['{{ id }}'].data;
 
 	constructor() {
 		super();
@@ -49,7 +50,7 @@ export class {{ comp.name }} extends NgDocBasePlayground {
 @NgModule({
 	imports: [
 		CommonModule,
-		pageDependencies.module,
+		...(pageEntity.module ? [pageEntity.module] : []),
 	],
 	declarations: [
 		{%- for comp in components %}
