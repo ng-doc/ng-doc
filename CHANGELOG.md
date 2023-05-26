@@ -1,3 +1,10 @@
+## [16.2.1](https://github.com/ng-doc/ng-doc/compare/v16.2.0...v16.2.1) (2023-05-26)
+
+
+### Bug Fixes
+
+* **builder:** the builder throws an error if the demo code has certain javascript characters ([cf86d3b](https://github.com/ng-doc/ng-doc/commit/cf86d3b83a5dd18f386d443ae53f77da35271218))
+
 # [16.2.0](https://github.com/ng-doc/ng-doc/compare/v16.1.1...v16.2.0) (2023-05-25)
 
 
