@@ -1,3 +1,3 @@
 import {SchematicArgv} from '../../schematic-argv';
 
-export type NgDocNoDepsSchema = SchematicArgv
+export type NgDocNoDepsSchema = SchematicArgv;
