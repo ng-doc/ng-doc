@@ -15,6 +15,11 @@
 			"description": "Generates NgDoc API entity",
 			"factory": "./api/index#build",
 			"schema": "./api/schema.json"
+		},
+		"no-dependencies-migration": {
+			"description": "Moves all dependencies from ng-doc.dependencies.ts to ng-doc.page.ts",
+			"factory": "./migrations/no-dependencies-migration/index#migrate",
+			"schema": "./migrations/no-dependencies-migration/schema.json"
 		}
 	}
 }

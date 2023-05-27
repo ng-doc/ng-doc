@@ -10,7 +10,7 @@ import {SchematicArgv} from '../schematic-argv';
  *
  * Here is an example showing how you can call a generator with all parameters
  * ```bash
- * ng g @ng-doc/builder:page MyPage -r custom-route -d -c -o 1
+ * ng g @ng-doc/builder:page MyPage -r custom-route -m -c -o 1
  * ```
  */
 export interface NgDocBuildPageSchema extends SchematicArgv {
