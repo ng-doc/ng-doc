@@ -24,9 +24,7 @@ import {NgDocNoDepsSchema} from './schema';
  */
 export function migrate(options: NgDocNoDepsSchema): Rule {
 	return (tree: Tree) => {
-		setActiveProject(
-			createProject(tree, options.path ?? './', ['**/**/ng-doc.dependencies.ts', '**/**/ng-doc.page.ts']),
-		);
+		setActiveProject(createProject(tree, options.path, ['**/**/ng-doc.dependencies.ts', '**/**/ng-doc.page.ts']));
 
 		const sourceFiles = getSourceFiles('**/**/ng-doc.dependencies.ts');
 
@@ -48,7 +46,7 @@ export function migrate(options: NgDocNoDepsSchema): Rule {
 			migrateProperty(objectExpression, pageObjectExpression, 'demo', 'demos');
 			migrateProperty(objectExpression, pageObjectExpression, 'playgrounds');
 
-			sourceFile.delete()
+			sourceFile.delete();
 		}
 
 		saveActiveProject();
@@ -133,7 +131,7 @@ function isChildOf(node: Node, parent: Node): boolean {
 		return true;
 	}
 
-	const p = node.getParent()
+	const p = node.getParent();
 
 	if (p) {
 		return isChildOf(p, parent);

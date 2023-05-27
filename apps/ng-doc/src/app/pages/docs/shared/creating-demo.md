@@ -13,9 +13,8 @@ import {ButtonDemoComponent} from '../demos/button-demo/button-demo.component';
 
 export const MyAwesomePage: NgDocPage = {
   module: MyModule,
-  demos: {ButtonDemoComponent}
+  demos: {ButtonDemoComponent},
 };
 
 export default MyAwesomePage;
 ```
-

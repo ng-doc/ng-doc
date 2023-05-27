@@ -38,7 +38,7 @@
 			"alias": "c"
 		},
 		"order": {
-			"type": "boolean",
+			"type": "number",
 			"description": "Order page in sidebar",
 			"alias": "o"
 		}

@@ -8,10 +8,7 @@ import {ClassDeclaration, Expression, Node, ObjectLiteralElementLike, ObjectLite
 export function getDemoClassDeclarations(objectExpression: ObjectLiteralExpression): ClassDeclaration[] {
 	const demoProperty: ObjectLiteralElementLike | undefined = objectExpression.getProperty('demos');
 
-	if (
-		demoProperty &&
-		(Node.isPropertyAssignment(demoProperty) || Node.isShorthandPropertyAssignment(demoProperty))
-	) {
+	if (demoProperty && (Node.isPropertyAssignment(demoProperty) || Node.isShorthandPropertyAssignment(demoProperty))) {
 		const initializer: Expression | undefined = demoProperty.getInitializer();
 
 		if (initializer && initializer instanceof ObjectLiteralExpression) {

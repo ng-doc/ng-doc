@@ -15,7 +15,7 @@ import {
 import {join, relative} from 'path';
 
 import {CATEGORY_NAME} from '../../engine/variables';
-import {findClosestFile} from '../../helpers/find-closest-file';
+import {findClosestFile} from '../utils';
 import {extractDefaultExportName} from '../utils/extract-default-export-name';
 import {NgDocBuildCategorySchema} from './schema';
 
@@ -29,10 +29,10 @@ export function build(options: NgDocBuildCategorySchema): Rule {
 	return (host: Tree) => {
 		const path: string = join(options.path, `/${dasherize(options.title)}`);
 		const closestCategoryFile: string | null = options.category
-			? findClosestFile(options.path, CATEGORY_NAME)
+			? findClosestFile(host, options.path, CATEGORY_NAME)
 			: null;
 		const categoryConstantName: string | null =
-			options.category && closestCategoryFile ? extractDefaultExportName(closestCategoryFile) : null;
+			options.category && closestCategoryFile ? extractDefaultExportName(host, closestCategoryFile) : null;
 		const categoryImportPath: string | null = closestCategoryFile
 			? relative(path, closestCategoryFile).replace(/.ts$/, '')
 			: null;
