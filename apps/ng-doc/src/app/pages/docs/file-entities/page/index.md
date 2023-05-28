@@ -58,12 +58,21 @@ export const MyAwesomePage: NgDocPage = {
 export default MyAwesomePage;
 ```
 
-## Dependencies
+## Creating a content
 
-NgDoc doesn't know anything about your project, so you need to tell it what dependencies your page
-has. It's necessary if you have demos or playgrounds on your page. To do this, you need to generate a
-page file with the `--module` (alias is `-m`) option, which will create a page and a module file
-for it, and then you can import the dependencies into the module file.
+Once you've created a page, you can start adding content to your `mdFile`, describing cool things
+about your application, and so on. NgDoc automatically collects all of your page's dependencies and
+rebuilds page if needed.
+
+Your page content fully supports the `markdown` syntax, but it is
+extended with the `nunjucks` engine which allows you to reuse one template for multiple pages, or
+render content dynamically, see `*GuidesTemplating` for more details.
+
+## Module
+
+If you are gonna create demos on the page and prefer non-standalone components,
+then you need to create a module that will declare your demos components, to do this you can use
+the `--module` (alias is `-m`) option, which will create a page and a module file for it.
 
 ```bash
 ng g @ng-doc/builder:page "Installation" -m
@@ -76,31 +85,11 @@ import {NgDocPage} from '@ng-doc/core';
 import {MyModule} from '../my.module';
 
 export const MyAwesomePage: NgDocPage = {
-  module: MyModule,
+  imports: [MyModule],
 };
 
 export default MyAwesomePage;
 ```
-
-## Module
-
-The module that you need to pass in the `module` field should be Angular `NgModule`.
-
-What `NgModule` should include:
-
-- `imports` - should contain all the dependencies that you need for your demos and playgrounds
-- `declarations` - a list of demos that you have created specifically for this page
-- `exports` - a list of modules that are needed for the playgrounds
-
-## Creating a content
-
-Once you've created a page, you can start adding content to your `mdFile`, describing cool things
-about your application, and so on. NgDoc automatically collects all of your page's dependencies and
-rebuilds page if needed.
-
-Your page content fully supports the `markdown` syntax, but it is
-extended with the `nunjucks` engine which allows you to reuse one template for multiple pages, or
-render content dynamically, see `*GuidesTemplating` for more details.
 
 {% index false %}
 

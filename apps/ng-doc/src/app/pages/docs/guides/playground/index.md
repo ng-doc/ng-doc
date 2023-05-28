@@ -6,12 +6,7 @@ with them.
 
 ## Creating a playground
 
-To create a playground, you need to create a `ng-doc.dependencies.ts` file and `NgModule` in your
-page folder, you can read more about how to do this in the `*EntitiesPage` article.
-
-## Configuration
-
-In the `ng-doc.dependencies.ts` file, add the `playgrounds` field, which must match the
+In the `ng-doc.page.ts` file, add the `playgrounds` field, which must match the
 `NgDocPlaygroundConfig` interface. A playground config is a regular object whose key is the name of
 the playground (which you should use to display it on the page) and whose value is the config
 itself, for example:
@@ -22,17 +17,20 @@ itself, for example:
 
 > **Note**
 > If you don't need to render all possible selectors of your component, you can use the `selector`
-> field
-> to specify the selectors that you want to see in your playground.
+> field to specify the selectors that you want to see in your playground.
+
+> **Note**
+> If your target component is standalone, you don't need to import anything, NgDoc will care about it.
 
 ```typescript fileName="ng-doc.dependencies.ts"
-import {NgDocDependencies} from '@ng-doc/core';
-import {NgDocTagComponent} from '@ng-doc/ui-kit';
+import {NgDocPage} from '@ng-doc/core';
+import {NgDocTagModule, NgDocTagComponent} from '@ng-doc/ui-kit';
 
 import {PageModule} from './ng-doc.module';
 
-const PageDependencies: NgDocDependencies = {
-  module: PageModule,
+const MyAwesomePage: NgDocPage = {
+  // Import modules of your target components if they are not standalone
+  imports: [NgDocTagModule],
   playgrounds: {
     TagPlayground: {
       target: NgDocTagComponent,
@@ -41,7 +39,7 @@ const PageDependencies: NgDocDependencies = {
   },
 };
 
-export default PageDependencies;
+export default MyAwesomePage;
 ```
 
 - `target` - The Angular Component/Directive class that will be used for the playground (make sure
@@ -57,24 +55,7 @@ export default PageDependencies;
   possible selector.
 
 In this example, we created a playground for the `NgDocTagComponent`, to make it work,
-we also need to export its module from the `PageModule`.
-
-> **Note**
-> If you are using any other components in your playground, you must also export their modules from
-> your page module.
-
-```typescript fileName="ng-doc.module.ts"
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
-import {NgDocTagModule} from '@ng-doc/ui-kit';
-
-@NgModule({
-  imports: [CommonModule],
-  // Just export all modules that are needed for your playgrounds
-  exports: [NgDocTagModule],
-})
-export class PageModule {}
-```
+we also need to import the `NgDocTagModule` in the `imports` field of the page.
 
 ## Displaying
 
@@ -86,8 +67,7 @@ from `NgDocActions`, passing the key of your playground to it as follows
 ```
 
 NgDoc will recognize `@Input` field types and creates controls for them, which allow you to change
-their
-values and see how the component changes.
+their values and see how the component changes.
 
 {{ NgDocActions.playground("TagPlayground") }}
 
@@ -106,14 +86,16 @@ Some components may support displaying other child components with `ng-content`,
 optional, or you just want to make some content in the playground optional, to do this you can use
 the `content` field in your playground configuration, for example:
 
+> **Note**
+> If you provide some component in the `content` field, you must import its module in the `imports` field,
+> if this component is standalone, you must import its component class.
+
 ```typescript fileName="ng-doc.dependencies.ts"
 import {NgDocDependencies} from '@ng-doc/core';
-import {NgDocTagComponent} from '@ng-doc/ui-kit';
-
-import {PageModule} from './ng-doc.module';
+import {NgDocTagComponent, NgDocIconModule} from '@ng-doc/ui-kit';
 
 const PageDependencies: NgDocDependencies = {
-  module: PageModule,
+  imports: [NgDocTagModule, NgDocIconModule],
   playgrounds: {
     TagIconPlayground: {
       target: NgDocTagComponent,
@@ -149,10 +131,8 @@ and put any data you want in it, to use it in your template, for example like th
 import {NgDocDependencies} from '@ng-doc/core';
 import {NgDocTagComponent} from '@ng-doc/ui-kit';
 
-import {PageModule} from './ng-doc.module';
-
 const PageDependencies: NgDocDependencies = {
-  module: PageModule,
+  imports: [NgDocTagModule],
   playgrounds: {
     TagDataPlayground: {
       target: NgDocTagComponent,

@@ -2,7 +2,10 @@
 export default {
 	displayName: 'builder',
 	preset: '../../jest.preset.js',
-	globals: {},
+	globals: {
+		Uint8Array: Uint8Array,
+		ArrayBuffer: ArrayBuffer
+	},
 	transform: {
 		'^.+\\.[tj]s$': [
 			'ts-jest',
