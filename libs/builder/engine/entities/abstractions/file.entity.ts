@@ -1,8 +1,7 @@
-import * as fs from 'fs';
 import minimatch from 'minimatch';
 import * as path from 'path';
 import {Observable, of, throwError} from 'rxjs';
-import {ObjectLiteralExpression, OutputFile, SyntaxKind} from 'ts-morph';
+import {ObjectLiteralExpression, SyntaxKind} from 'ts-morph';
 
 import {getObjectExpressionFromDefault, isCategoryEntity} from '../../../helpers';
 import {CATEGORY_PATTERN} from '../../variables';
@@ -65,12 +64,5 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 
 	override removeArtifacts() {
 		super.removeArtifacts();
-
-		this.sourceFile
-			.getEmitOutput()
-			.getOutputFiles()
-			.forEach((file: OutputFile) => {
-				fs.existsSync(file.getFilePath()) && fs.unlinkSync(file.getFilePath());
-			});
 	}
 }

@@ -4,7 +4,7 @@ export default {
 	preset: '../../jest.preset.js',
 	globals: {
 		Uint8Array: Uint8Array,
-		ArrayBuffer: ArrayBuffer
+		ArrayBuffer: ArrayBuffer,
 	},
 	transform: {
 		'^.+\\.[tj]s$': [

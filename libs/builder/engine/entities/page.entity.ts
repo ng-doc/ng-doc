@@ -158,10 +158,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 					this.playgroundsExpression = getPlaygroundsExpression(this.objectExpression);
 					this.demoClassDeclarations = getDemoClassDeclarations(this.objectExpression);
 					this.playgroundClassDeclarations = getPlaygroundTargets(this.objectExpression);
-
-					this.standalone = [...this.demoClassDeclarations, ...this.playgroundClassDeclarations].filter(
-						(cls: ClassDeclaration) => isStandalone(cls),
-					);
 				}
 			}),
 			catchError((error: unknown) => {
@@ -260,10 +256,12 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	}
 
 	private fillAssets(): Observable<void> {
-		if (this.objectExpression) {
-			const classDeclarations: ClassDeclaration[] = getDemoClassDeclarations(this.objectExpression);
+		this.standalone = [...this.demoClassDeclarations, ...this.playgroundClassDeclarations].filter(
+			(cls: ClassDeclaration) => isStandalone(cls),
+		);
 
-			this.componentAssets = classDeclarations
+		if (this.objectExpression) {
+			this.componentAssets = this.demoClassDeclarations
 				.map((classDeclarations: ClassDeclaration) =>
 					getComponentAsset(classDeclarations, this.context.inlineStyleLanguage, this.assetsFolder),
 				)
