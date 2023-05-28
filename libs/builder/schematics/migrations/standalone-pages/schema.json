@@ -1,7 +1,7 @@
 {
 	"$schema": "http://json-schema.org/schema",
-	"$id": "NoDependenciesMigration",
-	"title": "NoDependenciesMigration schematic",
+	"$id": "StandalonePagesMigration",
+	"title": "StandalonePagesMigration schematic",
 	"type": "object",
 	"properties": {
 		"path": {

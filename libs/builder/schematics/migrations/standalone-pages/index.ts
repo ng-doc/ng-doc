@@ -15,14 +15,14 @@ import {
 } from 'ng-morph';
 import * as path from 'path';
 
-import {NgDocNoDepsSchema} from './schema';
+import {NgDocStandalonePagesSchema} from './schema';
 
 /**
  * Moves all dependencies from `ng-doc.dependencies.ts` to `ng-doc.page.ts` and removes the `ng-doc.dependencies.ts` file.
  *
  * @param options
  */
-export function migrate(options: NgDocNoDepsSchema): Rule {
+export function migrate(options: NgDocStandalonePagesSchema): Rule {
 	return (tree: Tree) => {
 		setActiveProject(createProject(tree, options.path, ['**/**/ng-doc.dependencies.ts', '**/**/ng-doc.page.ts']));
 
@@ -42,7 +42,13 @@ export function migrate(options: NgDocNoDepsSchema): Rule {
 				continue;
 			}
 
-			migrateProperty(objectExpression, pageObjectExpression, 'module');
+			migrateProperty(
+				objectExpression,
+				pageObjectExpression,
+				'module',
+				'imports',
+				(initializer: string) => `[${initializer}]`,
+			);
 			migrateProperty(objectExpression, pageObjectExpression, 'demo', 'demos');
 			migrateProperty(objectExpression, pageObjectExpression, 'playgrounds');
 
@@ -73,12 +79,14 @@ function getObjectExpressionFromDefault(sourceFile: SourceFile): ObjectLiteralEx
  * @param destination
  * @param propertyName
  * @param newPropertyName
+ * @param initializer
  */
 function migrateProperty(
 	original: ObjectLiteralExpression,
 	destination: ObjectLiteralExpression,
 	propertyName: string,
 	newPropertyName: string = propertyName,
+	initializer: (initializer: string) => string = (initializer: string) => initializer,
 ): void {
 	const sourceFile = original.getSourceFile();
 	const property = original.getProperty(propertyName);
@@ -89,12 +97,24 @@ function migrateProperty(
 
 	if (property) {
 		if (Node.isPropertyAssignment(property) || Node.isShorthandPropertyAssignment(property)) {
-			const structure = property.getStructure();
+			if (Node.isPropertyAssignment(property)) {
+				const structure = property.getStructure();
 
-			destination.addProperty({
-				...structure,
-				name: newPropertyName,
-			});
+				destination.addProperty({
+					...structure,
+					name: newPropertyName,
+					initializer: initializer(structure.initializer as string),
+				});
+			}
+
+			if (Node.isShorthandPropertyAssignment(property)) {
+				const structure = property.getStructure();
+
+				destination.addProperty({
+					...structure,
+					name: newPropertyName,
+				});
+			}
 
 			const imports: ImportDeclaration[] = sourceFile
 				.getImportDeclarations()

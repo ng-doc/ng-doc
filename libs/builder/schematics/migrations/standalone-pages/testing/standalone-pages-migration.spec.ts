@@ -5,7 +5,7 @@ import {join} from 'path';
 
 const collectionPath: string = join(__dirname, '../../../collection.json');
 
-describe('no-dependencies-migration', () => {
+describe('standalone-pages-migration', () => {
 	let host: UnitTestTree;
 	let runner: SchematicTestRunner;
 
@@ -49,7 +49,7 @@ export default DevelopPage;
 		);
 		saveActiveProject();
 
-		const tree: UnitTestTree = await runner.runSchematic('no-dependencies-migration', {}, host);
+		const tree: UnitTestTree = await runner.runSchematic('standalone-pages-migration', {}, host);
 
 		expect(tree.get('page1/ng-doc.dependencies.ts')).toBeNull();
 		expect(tree.readContent('page1/ng-doc.page.ts')).toEqual(`import {NgDocPage} from '@ng-doc/core';
@@ -60,7 +60,7 @@ import { DevelopDemoComponent } from './develop-demo/develop-demo.component';
 export const DevelopPage: NgDocPage = {
   title: 'Develop',
   mdFile: './index.md',
-    module: DevelopPageModule,
+    imports: [DevelopPageModule],
     demos: {DevelopDemoComponent, ButtonDemoComponent}
 };
 
@@ -125,7 +125,7 @@ export default DevelopPage;
 		);
 		saveActiveProject();
 
-		const tree: UnitTestTree = await runner.runSchematic('no-dependencies-migration', {}, host);
+		const tree: UnitTestTree = await runner.runSchematic('standalone-pages-migration', {}, host);
 
 		expect(tree.get('page1/ng-doc.dependencies.ts')).toBeNull();
 		expect(tree.readContent('page1/ng-doc.page.ts')).toEqual(`import {NgDocPage} from '@ng-doc/core';
@@ -135,7 +135,7 @@ import { NgDocTagComponent } from '@ng-doc/ui-kit';
 export const DevelopPage: NgDocPage = {
   title: 'Develop',
   mdFile: './index.md',
-    module: PlaygroundModule,
+    imports: [PlaygroundModule],
     playgrounds: {
             TagPlayground: {
               target: NgDocTagComponent,
