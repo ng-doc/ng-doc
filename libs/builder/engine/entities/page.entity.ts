@@ -3,16 +3,18 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {forkJoin, from, Observable, of} from 'rxjs';
 import {catchError, map, mapTo, switchMap, tap} from 'rxjs/operators';
-import {ClassDeclaration, Node, ObjectLiteralExpression, PropertyAssignment} from 'ts-morph';
+import {ClassDeclaration, ObjectLiteralExpression} from 'ts-morph';
 
 import {
 	editFileInRepoUrl,
 	formatCode,
 	getComponentAsset,
 	getDemoClassDeclarations,
-	getObjectExpressionFromDefault,
 	getPageType,
+	getPlaygroundsIds,
+	getPlaygroundTargets,
 	getTargetForPlayground,
+	isStandalone,
 	marked,
 	processHtml,
 	slash,
@@ -30,8 +32,10 @@ import {NgDocCategoryEntity} from './category.entity';
 
 @CachedEntity()
 export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
-	objectExpression: ObjectLiteralExpression | undefined;
 	playgroundsExpression: ObjectLiteralExpression | undefined;
+	demoClassDeclarations: ClassDeclaration[] = [];
+	playgroundClassDeclarations: ClassDeclaration[] = [];
+	standalone: ClassDeclaration[] = [];
 
 	override parent?: NgDocCategoryEntity;
 	override compilable: boolean = true;
@@ -122,12 +126,11 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	}
 
 	get playgroundIds(): string[] {
-		return (
-			this.playgroundsExpression
-				?.getProperties()
-				.filter(Node.isPropertyAssignment)
-				.map((p: PropertyAssignment) => p.getName()) ?? []
-		);
+		return this.playgroundsExpression ? getPlaygroundsIds(this.playgroundsExpression) : [];
+	}
+
+	get hasImports(): boolean {
+		return !!this.objectExpression?.getProperty('imports');
 	}
 
 	override dependenciesChanged() {
@@ -150,8 +153,16 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 				}
 
 				this.parent = this.getParentFromCategory();
-				this.objectExpression = getObjectExpressionFromDefault(this.sourceFile);
-				this.playgroundsExpression = this.objectExpression && getPlaygroundsExpression(this.objectExpression);
+
+				if (this.objectExpression) {
+					this.playgroundsExpression = getPlaygroundsExpression(this.objectExpression);
+					this.demoClassDeclarations = getDemoClassDeclarations(this.objectExpression);
+					this.playgroundClassDeclarations = getPlaygroundTargets(this.objectExpression);
+
+					this.standalone = [...this.demoClassDeclarations, ...this.playgroundClassDeclarations].filter(
+						(cls: ClassDeclaration) => isStandalone(cls),
+					);
+				}
 			}),
 			catchError((error: unknown) => {
 				this.readyToBuild = false;
@@ -180,6 +191,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 						NgDocActions: new NgDocActions(this),
 					},
 					dependenciesStore: this.dependencies,
+					filters: false,
 				})
 				.pipe(
 					map((output: string) => marked(output, this)),

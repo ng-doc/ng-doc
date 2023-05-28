@@ -41,12 +41,14 @@ export class NgDocRenderer {
 			{autoescape: false},
 		);
 
-		objectKeys(filters).forEach(
-			(filter: keyof typeof filters) => (environment = environment.addFilter(filter, filters[filter])),
-		);
+		if (options?.filters !== false) {
+			objectKeys(filters).forEach(
+				(filter: keyof typeof filters) => (environment = environment.addFilter(filter, filters[filter])),
+			);
 
-		environment.addGlobal('Node', Node);
-		environment.addExtension('NgDocIndexExtension', new NgDocIndexExtension())
+			environment.addGlobal('Node', Node);
+		}
+		environment.addExtension('NgDocIndexExtension', new NgDocIndexExtension());
 
 		return environment;
 	}

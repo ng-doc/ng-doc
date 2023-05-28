@@ -17,10 +17,14 @@ describe('page', () => {
 	});
 
 	it('should generate page entity', async () => {
-		const tree: UnitTestTree = await runner.runSchematic('page', {
-			path: 'test',
-			title: 'my-page',
-		}, host);
+		const tree: UnitTestTree = await runner.runSchematic(
+			'page',
+			{
+				path: 'test',
+				title: 'my-page',
+			},
+			host,
+		);
 
 		expect(tree.exists('test/my-page/index.md')).toBe(true);
 		expect(tree.readText('test/my-page/ng-doc.page.ts')).toBe(`import {NgDocPage} from '@ng-doc/core';
@@ -31,15 +35,19 @@ const MyPagePage: NgDocPage = {
 };
 
 export default MyPagePage;
-`)
+`);
 	});
 
 	it('should generate page entity with custom route', async () => {
-		const tree: UnitTestTree = await runner.runSchematic('page', {
-			path: 'test',
-			title: 'my-page',
-			route: 'custom-route',
-		}, host);
+		const tree: UnitTestTree = await runner.runSchematic(
+			'page',
+			{
+				path: 'test',
+				title: 'my-page',
+				route: 'custom-route',
+			},
+			host,
+		);
 
 		expect(tree.exists('test/my-page/index.md')).toBe(true);
 		expect(tree.readText('test/my-page/ng-doc.page.ts')).toBe(`import {NgDocPage} from '@ng-doc/core';
@@ -51,15 +59,19 @@ const MyPagePage: NgDocPage = {
 };
 
 export default MyPagePage;
-`)
-	})
+`);
+	});
 
 	it('should generate page entity with order', async () => {
-		const tree: UnitTestTree = await runner.runSchematic('page', {
-			path: 'test',
-			title: 'my-page',
-			order: 1,
-		}, host);
+		const tree: UnitTestTree = await runner.runSchematic(
+			'page',
+			{
+				path: 'test',
+				title: 'my-page',
+				order: 1,
+			},
+			host,
+		);
 
 		expect(tree.exists('test/my-page/index.md')).toBe(true);
 		expect(tree.readText('test/my-page/ng-doc.page.ts')).toBe(`import {NgDocPage} from '@ng-doc/core';
@@ -72,14 +84,18 @@ const MyPagePage: NgDocPage = {
 
 export default MyPagePage;
 `);
-	})
+	});
 
 	it('should generate page entity with module', async () => {
-		const tree: UnitTestTree = await runner.runSchematic('page', {
-			path: 'test',
-			title: 'my-page',
-			module: true,
-		}, host);
+		const tree: UnitTestTree = await runner.runSchematic(
+			'page',
+			{
+				path: 'test',
+				title: 'my-page',
+				module: true,
+			},
+			host,
+		);
 
 		expect(tree.exists('test/my-page/index.md')).toBe(true);
 		expect(tree.readText('test/my-page/ng-doc.module.ts')).toBe(`import {NgModule} from '@angular/core';
@@ -102,25 +118,32 @@ const MyPagePage: NgDocPage = {
 };
 
 export default MyPagePage;
-`)
-	})
+`);
+	});
 
 	it('should generate page entity with category', async () => {
-		createSourceFile('test/parent-category/ng-doc.category.ts', `import {NgDocCategory} from '@ng-doc/core';
+		createSourceFile(
+			'test/parent-category/ng-doc.category.ts',
+			`import {NgDocCategory} from '@ng-doc/core';
 
 const ParentCategory: NgDocCategory = {
 \ttitle: 'parent-category',
 };
 
 export default ParentCategory;
-`)
+`,
+		);
 		saveActiveProject();
 
-		const tree: UnitTestTree = await runner.runSchematic('page', {
-			path: 'test/parent-category',
-			title: 'my-page',
-			category: true,
-		}, host);
+		const tree: UnitTestTree = await runner.runSchematic(
+			'page',
+			{
+				path: 'test/parent-category',
+				title: 'my-page',
+				category: true,
+			},
+			host,
+		);
 
 		expect(tree.exists('test/parent-category/my-page/index.md')).toBe(true);
 		expect(tree.readText('test/parent-category/my-page/ng-doc.page.ts')).toBe(`import {NgDocPage} from '@ng-doc/core';
@@ -134,5 +157,5 @@ const MyPagePage: NgDocPage = {
 
 export default MyPagePage;
 `);
-	})
+	});
 });

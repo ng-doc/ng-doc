@@ -17,10 +17,14 @@ describe('category', () => {
 	});
 
 	it('should generate category entity', async () => {
-		const tree: UnitTestTree = await runner.runSchematic('category', {
-			path: 'test',
-			title: 'my-category',
-		}, host);
+		const tree: UnitTestTree = await runner.runSchematic(
+			'category',
+			{
+				path: 'test',
+				title: 'my-category',
+			},
+			host,
+		);
 
 		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
 
@@ -29,15 +33,19 @@ const MyCategoryCategory: NgDocCategory = {
 };
 
 export default MyCategoryCategory;
-`)
+`);
 	});
 
 	it('should generate category entity with route', async () => {
-		const tree: UnitTestTree = await runner.runSchematic('category', {
-			path: 'test',
-			title: 'my-category',
-			route: 'my-category',
-		}, host);
+		const tree: UnitTestTree = await runner.runSchematic(
+			'category',
+			{
+				path: 'test',
+				title: 'my-category',
+				route: 'my-category',
+			},
+			host,
+		);
 
 		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
 
@@ -47,15 +55,19 @@ const MyCategoryCategory: NgDocCategory = {
 };
 
 export default MyCategoryCategory;
-`)
-	})
+`);
+	});
 
 	it('should generate category entity with order', async () => {
-		const tree: UnitTestTree = await runner.runSchematic('category', {
-			path: 'test',
-			title: 'my-category',
-			order: 5,
-		}, host);
+		const tree: UnitTestTree = await runner.runSchematic(
+			'category',
+			{
+				path: 'test',
+				title: 'my-category',
+				order: 5,
+			},
+			host,
+		);
 
 		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
 
@@ -65,15 +77,19 @@ const MyCategoryCategory: NgDocCategory = {
 };
 
 export default MyCategoryCategory;
-`)
-	})
+`);
+	});
 
 	it('should generate expandable category entity', async () => {
-		const tree: UnitTestTree = await runner.runSchematic('category', {
-			path: 'test',
-			title: 'my-category',
-			expandable: true,
-		}, host);
+		const tree: UnitTestTree = await runner.runSchematic(
+			'category',
+			{
+				path: 'test',
+				title: 'my-category',
+				expandable: true,
+			},
+			host,
+		);
 
 		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
 
@@ -83,15 +99,19 @@ const MyCategoryCategory: NgDocCategory = {
 };
 
 export default MyCategoryCategory;
-`)
-	})
+`);
+	});
 
 	it('should generate category entity with expanded property', async () => {
-		const tree: UnitTestTree = await runner.runSchematic('category', {
-			path: 'test',
-			title: 'my-category',
-			expanded: true,
-		}, host);
+		const tree: UnitTestTree = await runner.runSchematic(
+			'category',
+			{
+				path: 'test',
+				title: 'my-category',
+				expanded: true,
+			},
+			host,
+		);
 
 		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
 
@@ -101,27 +121,35 @@ const MyCategoryCategory: NgDocCategory = {
 };
 
 export default MyCategoryCategory;
-`)
-	})
+`);
+	});
 
 	it('should import parent category', async () => {
-		createSourceFile('test/parent-category/ng-doc.category.ts', `import {NgDocCategory} from '@ng-doc/core';
+		createSourceFile(
+			'test/parent-category/ng-doc.category.ts',
+			`import {NgDocCategory} from '@ng-doc/core';
 
 const ParentCategory: NgDocCategory = {
 \ttitle: 'parent-category',
 };
 
 export default ParentCategory;
-`)
+`,
+		);
 		saveActiveProject();
 
-		const tree: UnitTestTree = await runner.runSchematic('category', {
-			path: 'test/parent-category',
-			title: 'child-category',
-			category: true,
-		}, host);
+		const tree: UnitTestTree = await runner.runSchematic(
+			'category',
+			{
+				path: 'test/parent-category',
+				title: 'child-category',
+				category: true,
+			},
+			host,
+		);
 
-		expect(tree.readText('test/parent-category/child-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
+		expect(tree.readText('test/parent-category/child-category/ng-doc.category.ts'))
+			.toBe(`import {NgDocCategory} from '@ng-doc/core';
 import ParentCategory from '../ng-doc.category';
 
 const ChildCategoryCategory: NgDocCategory = {
@@ -130,6 +158,6 @@ const ChildCategoryCategory: NgDocCategory = {
 };
 
 export default ChildCategoryCategory;
-`)
-	})
+`);
+	});
 });

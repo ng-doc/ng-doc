@@ -1,15 +1,14 @@
 import {NgDocPage} from '@ng-doc/core';
-import {NgDocTagComponent} from '@ng-doc/ui-kit';
+import {NgDocIconModule, NgDocTagComponent, NgDocTagModule} from '@ng-doc/ui-kit';
 
 import GuidesCategory from '../ng-doc.category';
-import {PlaygroundModule} from './ng-doc.module';
 
 const PlaygroundPage: NgDocPage = {
   title: `Playground`,
   mdFile: './index.md',
   category: GuidesCategory,
   keyword: 'GuidesPlayground',
-  module: PlaygroundModule,
+  imports: [NgDocTagModule, NgDocIconModule],
   playgrounds: {
     TagPlayground: {
       target: NgDocTagComponent,

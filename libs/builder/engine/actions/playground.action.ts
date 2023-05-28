@@ -1,9 +1,10 @@
+import {Component, Directive} from '@angular/core';
 import {escapeHtml, NgDocPlaygroundProperties} from '@ng-doc/core';
-import {ClassDeclaration, Decorator, Node, ObjectLiteralExpression, Project} from 'ts-morph';
+import {ClassDeclaration, ObjectLiteralExpression, Project} from 'ts-morph';
 
-import {getPlaygroundClassProperties, getTargetForPlayground} from '../../helpers';
+import {directiveDecorator, getPlaygroundClassProperties, getTargetForPlayground} from '../../helpers';
+import {componentDecorator} from '../../helpers/angular/component-decorator';
 import {NgDocActionOutput} from '../../interfaces';
-import {componentDecoratorResolver} from '../../resolvers/component-decorator.resolver';
 import {NgDocAction} from '../../types';
 import {NgDocPageEntity} from '../entities/page.entity';
 
@@ -31,12 +32,9 @@ export function playgroundAction(pId: string): NgDocAction {
 				throw new Error(`Playground action didn't find the class declaration for the current target.`);
 			}
 
-			const decorator: Decorator | undefined =
-				declaration.getDecorator('Component') ?? declaration.getDecorator('Directive');
-			const decoratorArgument: Node | undefined = decorator?.getArguments()[0];
-			const selectors: string = Node.isObjectLiteralExpression(decoratorArgument)
-				? componentDecoratorResolver(decoratorArgument).selector?.replace(/[\n\s]/gm, '') ?? ''
-				: '';
+			const decorator: Component | Directive | undefined =
+				componentDecorator(declaration) ?? directiveDecorator(declaration);
+			const selectors: string = decorator?.selector?.replace(/[\n\s]/gm, '') ?? '';
 
 			const playgroundData: NgDocPlaygroundProperties = getPlaygroundClassProperties(declaration);
 

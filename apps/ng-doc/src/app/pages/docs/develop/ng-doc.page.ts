@@ -1,4 +1,5 @@
 import {NgDocAngularEntities, NgDocDeclarations, NgDocPage} from '@ng-doc/core';
+import {NgDocButtonModule, NgDocPaneModule} from '@ng-doc/ui-kit';
 
 import {ButtonDemoComponent} from './button-demo/button-demo.component';
 import {DevelopDemoComponent} from './develop-demo/develop-demo.component';
@@ -16,8 +17,7 @@ export const DevelopPage: NgDocPage = {
     },
   },
   keyword: 'DevelopPage',
-  module: DevelopPageModule,
-  // Add your demos that you are going to use in the page here
+  imports: [DevelopPageModule, NgDocPaneModule, NgDocButtonModule],
   demos: {DevelopDemoComponent, ButtonDemoComponent},
 };
 

@@ -2,7 +2,11 @@
 import {NgModule, Component, ViewChild, Type, ViewContainerRef} from '@angular/core';
 import {NgDocBasePlayground, providePlaygroundDemo} from '@ng-doc/app';
 // noinspection ES6UnusedImports
-import pageEntity from '{{ page.importPath }}'; import {CommonModule} from '@angular/common';
+import pageEntity from '{{ page.importPath }}';
+import {CommonModule} from '@angular/common';
+{%- for standalone in page.standalone %}
+{{ standalone | declarationImport }}
+{%- endfor %}
 
 {% set components = [] -%}
 {%- set index = 1 %}
@@ -50,7 +54,12 @@ export class {{ comp.name }} extends NgDocBasePlayground {
 @NgModule({
 	imports: [
 		CommonModule,
-		...(pageEntity.module ? [pageEntity.module] : []),
+		{%- if page.hasImports %}
+		...pageEntity.imports,
+		{%- endif %}
+		{%- for standalone in page.standalone %}
+		{{ standalone.getName() }},
+		{%- endfor %}
 	],
 	declarations: [
 		{%- for comp in components %}

@@ -30,7 +30,7 @@ import {entityLifeCycle} from './entity-life-cycle';
 import {NgDocEntityStore} from './entity-store';
 import {buildCandidates} from './functions/build-candidates';
 import {NgDocRenderer} from './renderer';
-import {API_PATTERN, CATEGORY_PATTERN, PAGE_PATTERN} from './variables';
+import {API_PATTERN, CATEGORY_PATTERN, GLOBALS, PAGE_PATTERN} from './variables';
 import {NgDocWatcher} from './watcher';
 
 export class NgDocBuilder {
@@ -43,6 +43,7 @@ export class NgDocBuilder {
 
 	constructor(readonly context: NgDocBuilderContext) {
 		this.project = createProject({tsConfigFilePath: this.context.tsConfig});
+		GLOBALS.workspaceRoot = this.context.context.workspaceRoot;
 	}
 
 	run(): Observable<void> {

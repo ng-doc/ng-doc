@@ -29,6 +29,6 @@ const Api: NgDocApi = {
 };
 
 export default Api;
-`)
+`);
 	});
 });

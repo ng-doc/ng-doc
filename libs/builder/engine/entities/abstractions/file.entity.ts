@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import minimatch from 'minimatch';
 import * as path from 'path';
 import {Observable, of, throwError} from 'rxjs';
-import {OutputFile, SyntaxKind} from 'ts-morph';
+import {ObjectLiteralExpression, OutputFile, SyntaxKind} from 'ts-morph';
 
 import {getObjectExpressionFromDefault, isCategoryEntity} from '../../../helpers';
 import {CATEGORY_PATTERN} from '../../variables';
@@ -14,6 +14,7 @@ import {NgDocSourceFileEntity} from './source-file.entity';
  * Entity for file end points that generate modules and components.
  */
 export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
+	objectExpression: ObjectLiteralExpression | undefined;
 	/**
 	 * Entity target.
 	 */
@@ -25,8 +26,9 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 		try {
 			delete require.cache[require.resolve(this.pathToCompiledFile)];
 			this.target = require(this.pathToCompiledFile).default;
+			this.objectExpression = getObjectExpressionFromDefault(this.sourceFile);
 
-			if (!this.target) {
+			if (!this.target || !this.objectExpression) {
 				new Error(`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`);
 			}
 		} catch (e: unknown) {
@@ -39,7 +41,7 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 	}
 
 	protected getParentFromCategory(): NgDocCategoryEntity | undefined {
-		const sourceFilePath: string | undefined = getObjectExpressionFromDefault(this.sourceFile)
+		const sourceFilePath: string | undefined = this.objectExpression
 			?.getProperty('category')
 			?.getChildrenOfKind(SyntaxKind.Identifier)
 			?.pop()

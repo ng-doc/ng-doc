@@ -32,7 +32,8 @@ export async function buildFileEntity(sourceFile: SourceFile, tsconfig: string, 
 		 * We use regex to remove the properties because ts-morph does it slowly
 		 */
 		if (objectLiteralExpression) {
-			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('module')?.getText() ?? '');
+			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('imports')?.getText() ?? '');
+			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('providers')?.getText() ?? '');
 			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('demos')?.getText() ?? '');
 			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('playgrounds')?.getText() ?? '');
 		}

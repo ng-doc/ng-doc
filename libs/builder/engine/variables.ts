@@ -1,5 +1,8 @@
 import * as path from 'path';
 
+export const GLOBALS = {
+	workspaceRoot: '',
+};
 export const PAGE_NAME: string = 'ng-doc.page.ts';
 export const CATEGORY_NAME: string = 'ng-doc.category.ts';
 export const PAGE_DEPENDENCIES_NAME: string = 'ng-doc.dependencies.ts';
