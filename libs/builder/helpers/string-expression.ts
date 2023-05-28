@@ -6,5 +6,5 @@
  * @template T
  */
 export function stringExpression<T>(expression: string): T {
-  return new Function('return ' + expression)();
+	return new Function('return ' + expression)();
 }

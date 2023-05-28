@@ -10,9 +10,7 @@ import {NgDocSupportedDeclarations} from '../../types';
 export function declarationImport(declaration: NgDocSupportedDeclarations): string {
 	if (declaration.isExported()) {
 		const filePath: string = declaration.getSourceFile().getFilePath();
-		const relativeImport: string = path
-			.relative(GLOBALS.workspaceRoot, filePath)
-			.replace(/.ts$/, '')
+		const relativeImport: string = path.relative(GLOBALS.workspaceRoot, filePath).replace(/.ts$/, '');
 
 		return `import {${declaration.getName()}} from '${relativeImport}';`;
 	}

@@ -10,7 +10,8 @@ import {componentDecorator, directiveDecorator} from './angular';
  */
 export function extractSelectors(declaration: NgDocSupportedDeclarations): string[] {
 	if (Node.isClassDeclaration(declaration)) {
-		const decorator: Component | Directive | undefined = componentDecorator(declaration) ?? directiveDecorator(declaration);
+		const decorator: Component | Directive | undefined =
+			componentDecorator(declaration) ?? directiveDecorator(declaration);
 
 		if (decorator) {
 			return decorator.selector?.split(',').map((s: string) => s.trim()) ?? [];

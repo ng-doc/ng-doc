@@ -114,7 +114,7 @@ import {MyPagePageModule} from './ng-doc.module';
 const MyPagePage: NgDocPage = {
 \ttitle: \`my-page\`,
 \tmdFile: './index.md',
-    module: MyPagePageModule,
+    imports: [MyPagePageModule],
 };
 
 export default MyPagePage;

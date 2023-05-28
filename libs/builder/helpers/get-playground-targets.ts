@@ -11,5 +11,5 @@ import {getPlaygroundsIds} from './get-playgrounds-ids';
 export function getPlaygroundTargets(expression: ObjectLiteralExpression): ClassDeclaration[] {
 	const ids: string[] = getPlaygroundsIds(expression);
 
-	return ids.map((id: string) => getTargetForPlayground(expression, id)).filter(isPresent)
+	return ids.map((id: string) => getTargetForPlayground(expression, id)).filter(isPresent);
 }
