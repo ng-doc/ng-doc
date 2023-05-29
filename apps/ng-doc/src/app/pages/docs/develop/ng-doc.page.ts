@@ -1,9 +1,7 @@
 import {NgDocAngularEntities, NgDocDeclarations, NgDocPage} from '@ng-doc/core';
-import {NgDocButtonModule, NgDocPaneModule} from '@ng-doc/ui-kit';
 
 import {ButtonDemoComponent} from './button-demo/button-demo.component';
 import {DevelopDemoComponent} from './develop-demo/develop-demo.component';
-import {DevelopPageModule} from './ng-doc.module';
 
 export const DevelopPage: NgDocPage = {
   title: 'Develop',
@@ -17,7 +15,7 @@ export const DevelopPage: NgDocPage = {
     },
   },
   keyword: 'DevelopPage',
-  imports: [DevelopPageModule, NgDocPaneModule, NgDocButtonModule],
+  imports: [],
   demos: {DevelopDemoComponent, ButtonDemoComponent},
 };
 

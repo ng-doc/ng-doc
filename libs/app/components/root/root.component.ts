@@ -1,3 +1,4 @@
+import {AsyncPipe, NgIf} from '@angular/common';
 import {
 	AfterViewInit,
 	ChangeDetectionStrategy,
@@ -8,8 +9,9 @@ import {
 	ViewChild,
 } from '@angular/core';
 import {NgDocSidebarService} from '@ng-doc/app/services/sidebar';
-import {NgDocContent, NgDocHorizontalAlign, NgDocSidenavComponent} from '@ng-doc/ui-kit';
+import {NgDocContent, NgDocHorizontalAlign, NgDocLetDirective, NgDocSidenavComponent} from '@ng-doc/ui-kit';
 import {UntilDestroy} from '@ngneat/until-destroy';
+import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 import {combineLatest, merge, NEVER, Observable, of} from 'rxjs';
 import {delay, filter, map, mapTo, startWith} from 'rxjs/operators';
 
@@ -27,7 +29,8 @@ import {delay, filter, map, mapTo, startWith} from 'rxjs/operators';
  * ```
  */
 @Directive({
-	selector: '[ngDocCustomNavbar]',
+    selector: '[ngDocCustomNavbar]',
+    standalone: true,
 })
 export class NgDocCustomNavbarDirective {}
 
@@ -45,16 +48,25 @@ export class NgDocCustomNavbarDirective {}
  * ```
  */
 @Directive({
-	selector: '[ngDocCustomSidebar]',
+    selector: '[ngDocCustomSidebar]',
+    standalone: true,
 })
 export class NgDocCustomSidebarDirective {}
 
 @Component({
-	selector: 'ng-doc-root',
-	templateUrl: './root.component.html',
-	styleUrls: ['./root.component.scss'],
-	providers: [],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'ng-doc-root',
+    templateUrl: './root.component.html',
+    styleUrls: ['./root.component.scss'],
+    providers: [],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgDocLetDirective,
+        NgDocSidenavComponent,
+        NgIf,
+        PolymorpheusModule,
+        AsyncPipe,
+    ],
 })
 @UntilDestroy()
 export class NgDocRootComponent implements AfterViewInit {

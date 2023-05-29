@@ -1,4 +1,5 @@
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
+import {AsyncPipe, KeyValuePipe, NgFor, NgIf} from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -11,15 +12,26 @@ import {
 	Output,
 	SimpleChanges,
 } from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule} from '@angular/forms';
 import {getTokenForType, isPlaygroundProperty} from '@ng-doc/app/helpers';
 import {NgDocProvidedTypeControl} from '@ng-doc/app/interfaces';
 import {extractValueOrThrow, isPresent, objectKeys} from '@ng-doc/core';
 import {NgDocPlaygroundContent, NgDocPlaygroundProperties, NgDocPlaygroundProperty} from '@ng-doc/core/interfaces';
+import {
+	NgDocBindPipe,
+	NgDocButtonComponent,
+	NgDocCheckboxComponent,
+	NgDocIconComponent,
+	NgDocRunPipe,
+	NgDocTextComponent,
+	NgDocTextRightDirective,
+	NgDocTooltipDirective,
+} from '@ng-doc/ui-kit';
 import {Observable} from 'rxjs';
 import {pluck} from 'rxjs/operators';
 
 import {NgDocPlaygroundForm} from '../playground-form';
+import {NgDocPlaygroundPropertyComponent} from '../playground-property/playground-property.component';
 import {NgDocPlaygroundPropertyControl} from '../playground-property-control';
 
 @Component({
@@ -27,6 +39,23 @@ import {NgDocPlaygroundPropertyControl} from '../playground-property-control';
 	templateUrl: './playground-properties.component.html',
 	styleUrls: ['./playground-properties.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [
+		NgDocTextComponent,
+		NgDocButtonComponent,
+		NgDocCheckboxComponent,
+		FormsModule,
+		NgDocTooltipDirective,
+		NgDocIconComponent,
+		NgDocTextRightDirective,
+		NgIf,
+		NgFor,
+		NgDocPlaygroundPropertyComponent,
+		AsyncPipe,
+		KeyValuePipe,
+		NgDocBindPipe,
+		NgDocRunPipe,
+	],
 })
 export class NgDocPlaygroundPropertiesComponent<
 	P extends NgDocPlaygroundProperties,

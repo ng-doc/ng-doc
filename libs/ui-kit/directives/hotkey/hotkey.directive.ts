@@ -9,7 +9,8 @@ import {filter, share} from 'rxjs/operators';
 const KEYUP_EVENT: Observable<Event> = fromEvent(document, 'keyup').pipe(share());
 
 @Directive({
-	selector: '[ngDocHotkey]',
+    selector: '[ngDocHotkey]',
+    standalone: true,
 })
 @UntilDestroy()
 export class NgDocHotkeyDirective {

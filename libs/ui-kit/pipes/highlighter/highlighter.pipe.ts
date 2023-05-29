@@ -6,7 +6,8 @@ export interface NgDocHighlightPosition {
 }
 
 @Pipe({
-	name: 'ngDocHighlighterPipe',
+    name: 'ngDocHighlighterPipe',
+    standalone: true,
 })
 export class NgDocHighlighterPipe implements PipeTransform {
 	transform(input: string, positions: NgDocHighlightPosition[]): string {

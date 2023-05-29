@@ -1,16 +1,31 @@
+import {NgFor, NgIf, NgTemplateOutlet} from '@angular/common';
 import {ChangeDetectionStrategy, Component, HostBinding, Input, OnInit, Type} from '@angular/core';
 import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
+import {NgDocCodeComponent} from '@ng-doc/app/components/code';
+import {NgDocDemoDisplayerComponent} from '@ng-doc/app/components/demo-displayer';
 import {NgDocDemoAsset} from '@ng-doc/app/interfaces';
 import {asArray} from '@ng-doc/core/helpers/as-array';
 import {NgDocDemoActionOptions} from '@ng-doc/core/interfaces';
+import {NgDocTabComponent, NgDocTabGroupComponent} from '@ng-doc/ui-kit';
 import {NgDocContent} from '@ng-doc/ui-kit/types';
-import {PolymorpheusComponent} from '@tinkoff/ng-polymorpheus';
+import {PolymorpheusComponent, PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 
 @Component({
 	selector: 'ng-doc-demo',
 	templateUrl: './demo.component.html',
 	styleUrls: ['./demo.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [
+		NgIf,
+		NgDocDemoDisplayerComponent,
+		NgTemplateOutlet,
+		NgFor,
+		NgDocCodeComponent,
+		NgDocTabGroupComponent,
+		NgDocTabComponent,
+		PolymorpheusModule,
+	],
 })
 export class NgDocDemoComponent implements OnInit {
 	@Input()

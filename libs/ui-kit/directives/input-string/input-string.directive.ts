@@ -6,10 +6,11 @@ import {UntilDestroy} from '@ngneat/until-destroy';
 
 /** Directive converts any input data or model to text */
 @Directive({
-	selector: `input[ngDocInputString]`,
-	providers: [
-		{provide: NgDocBaseInput, useExisting: NgDocInputStringDirective},
-	],
+    selector: `input[ngDocInputString]`,
+    providers: [
+        { provide: NgDocBaseInput, useExisting: NgDocInputStringDirective },
+    ],
+    standalone: true,
 })
 @UntilDestroy()
 export class NgDocInputStringDirective extends NgDocBaseInput<string> {

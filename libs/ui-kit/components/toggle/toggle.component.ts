@@ -22,6 +22,7 @@ import {filter, last, map, pairwise, startWith, switchMap, takeUntil, tap} from 
 	templateUrl: './toggle.component.html',
 	styleUrls: ['./toggle.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
 })
 @UntilDestroy()
 export class NgDocToggleComponent<T> extends FlControlSelector<T> implements OnInit, ControlValueAccessor {

@@ -1,3 +1,4 @@
+import {NgIf} from '@angular/common';
 import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 import {NgDocHorizontalAlign, NgDocOverlayRelativePosition, NgDocVerticalAlign} from '@ng-doc/ui-kit/types';
 
@@ -6,6 +7,8 @@ import {NgDocHorizontalAlign, NgDocOverlayRelativePosition, NgDocVerticalAlign} 
 	templateUrl: './overlay-pointer.component.html',
 	styleUrls: ['./overlay-pointer.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [NgIf],
 })
 export class NgDocOverlayPointerComponent {
 	@Input()

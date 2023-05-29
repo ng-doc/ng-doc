@@ -6,6 +6,7 @@ import {distinctUntilChanged, filter, map} from 'rxjs/operators';
 
 @Directive({
 	selector: '[ngDocRouteActive]',
+	standalone: true,
 })
 @UntilDestroy()
 export class NgDocRouteActiveDirective {

@@ -13,6 +13,9 @@ import {
 	OnInit,
 	ViewChild,
 } from '@angular/core';
+import {NgDocFocusControlComponent} from '@ng-doc/ui-kit/components/focus-control';
+import {NgDocOverlayPointerComponent} from '@ng-doc/ui-kit/components/overlay-pointer';
+import {NgDocEventSwitcherDirective} from '@ng-doc/ui-kit/directives/event-switcher';
 import {NgDocFocusCatcherDirective} from '@ng-doc/ui-kit/directives/focus-catcher';
 import {toElement} from '@ng-doc/ui-kit/helpers';
 import {NgDocOverlayConfig, NgDocOverlayContainer} from '@ng-doc/ui-kit/interfaces';
@@ -26,7 +29,7 @@ import {
 	NgDocVerticalAlign,
 } from '@ng-doc/ui-kit/types';
 import {NgDocFocusUtils, NgDocOverlayUtils} from '@ng-doc/ui-kit/utils';
-import {PolymorpheusOutletDirective} from '@tinkoff/ng-polymorpheus';
+import {PolymorpheusModule, PolymorpheusOutletDirective} from '@tinkoff/ng-polymorpheus';
 import {Observable, Subject} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
 
@@ -35,6 +38,14 @@ import {distinctUntilChanged} from 'rxjs/operators';
 	templateUrl: './overlay-container.component.html',
 	styleUrls: ['./overlay-container.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [
+		NgDocOverlayPointerComponent,
+		NgDocEventSwitcherDirective,
+		NgDocFocusControlComponent,
+		NgDocFocusCatcherDirective,
+		PolymorpheusModule,
+	],
 })
 export class NgDocOverlayContainerComponent implements NgDocOverlayContainer, OnInit, OnDestroy {
 	@ViewChild('contentContainer', {read: ElementRef, static: true})

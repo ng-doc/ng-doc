@@ -1,6 +1,5 @@
 export * from './base-playground';
 export * from './playground.component';
-export * from './playground.module';
 export * from './playground-demo/playground-demo.component';
 export * from './playground-form';
 export * from './playground-properties/playground-properties.component';

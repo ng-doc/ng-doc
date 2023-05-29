@@ -1,3 +1,4 @@
+import {NgFor, NgIf} from '@angular/common';
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
@@ -5,14 +6,19 @@ import {extractValue} from '@ng-doc/core/helpers/extract-value';
 import {objectKeys} from '@ng-doc/core/helpers/object-keys';
 import {NgDocPlaygroundConfig, NgDocPlaygroundProperties} from '@ng-doc/core/interfaces';
 import {NgDocExtractedValue} from '@ng-doc/core/types';
+import {NgDocAsArrayPipe} from '@ng-doc/ui-kit';
 
+import {NgDocPlaygroundDemoComponent} from './playground-demo/playground-demo.component';
 import {NgDocPlaygroundForm} from './playground-form';
+import {NgDocPlaygroundPropertiesComponent} from './playground-properties/playground-properties.component';
 
 @Component({
 	selector: 'ng-doc-playground',
 	templateUrl: './playground.component.html',
 	styleUrls: ['./playground.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [NgIf, NgDocPlaygroundPropertiesComponent, NgFor, NgDocPlaygroundDemoComponent, NgDocAsArrayPipe],
 })
 export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties>
 	implements OnInit

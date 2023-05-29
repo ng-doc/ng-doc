@@ -1,11 +1,11 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {NgDocButtonModule} from '@ng-doc/ui-kit';
+import {NgDocButtonComponent} from '@ng-doc/ui-kit';
 import {NgDocNotifyService} from '@ng-doc/ui-kit/services/notify';
 
 @Component({
   selector: 'ng-doc-button-inline-demo',
   standalone: true,
-  imports: [NgDocButtonModule],
+  imports: [NgDocButtonComponent],
   template: `
     <!-- NgDocHTMLSnippetStart(Button Template) -->
     <button ng-doc-button-flat color="orange" (click)="clickEvent()">Just a button</button>

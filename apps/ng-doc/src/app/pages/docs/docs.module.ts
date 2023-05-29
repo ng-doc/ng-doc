@@ -12,8 +12,8 @@ import {DocsComponent} from './docs.component';
       {path: '', redirectTo: 'getting-started/installation', pathMatch: 'full'},
       {path: '', component: DocsComponent, children: NG_DOC_ROUTING},
     ]),
+    DocsComponent,
   ],
-  declarations: [DocsComponent],
   exports: [RouterModule],
 })
 export class DocsModule {}

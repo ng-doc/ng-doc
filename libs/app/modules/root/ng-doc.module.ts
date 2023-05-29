@@ -1,7 +1,7 @@
 import {OverlayModule} from '@angular/cdk/overlay';
 import {HttpClientModule} from '@angular/common/http';
 import {APP_INITIALIZER, ModuleWithProviders, NgModule, Optional} from '@angular/core';
-import {NgDocRootModule} from '@ng-doc/app/components/root';
+import {NgDocRootComponent} from '@ng-doc/app/components/root';
 import {NG_DOC_DARK_PURPLE_THEME, NG_DOC_NIGHT_THEME, NG_DOC_STORE_THEME_KEY} from '@ng-doc/app/constants';
 import {isDarkOsTheme} from '@ng-doc/app/helpers';
 import {NgDocApplicationConfig, NgDocTheme} from '@ng-doc/app/interfaces';
@@ -12,8 +12,8 @@ import {asArray} from '@ng-doc/core/helpers/as-array';
 import {NgDocUiKitRootModule} from '@ng-doc/ui-kit/modules/root';
 
 @NgModule({
-	imports: [HttpClientModule, OverlayModule, NgDocUiKitRootModule.forRoot()],
-	exports: [NgDocRootModule, NgDocUiKitRootModule],
+	imports: [HttpClientModule, OverlayModule, NgDocUiKitRootModule.forRoot(), NgDocRootComponent],
+	exports: [NgDocUiKitRootModule, NgDocRootComponent],
 })
 export class NgDocModule {
 	static forRoot(config?: NgDocApplicationConfig): ModuleWithProviders<NgDocModule> {
