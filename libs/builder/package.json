@@ -27,7 +27,7 @@
 		"find-cache-dir": "3.3.2",
 		"crypto": "1.0.1",
 		"tslib": "^2.3.0",
-		"ts-morph": "18.0.0"
+		"ng-morph": "^2.2.3"
 	},
 	"publishConfig": {
 		"access": "public"
