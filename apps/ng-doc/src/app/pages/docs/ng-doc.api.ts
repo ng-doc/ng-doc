@@ -11,10 +11,7 @@ export const api: NgDocApi = {
     {
       name: '@ng-doc/builder',
       route: 'builder',
-      include: [
-        'libs/builder/interfaces/**.ts',
-        'libs/builder/types/**.ts',
-      ],
+      include: ['libs/builder/interfaces/**.ts', 'libs/builder/types/**.ts'],
     },
     {
       name: '@ng-doc/ui-kit',
