@@ -24,6 +24,7 @@ import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input, OnCh
 		`,
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
 })
 export class NgDocSmoothResizeComponent implements OnChanges {
 	@Input()

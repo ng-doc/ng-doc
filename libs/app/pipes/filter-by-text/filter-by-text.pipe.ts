@@ -2,6 +2,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
 	name: 'ngDocFilterByText',
+	standalone: true,
 })
 export class NgDocFilterByTextPipe<T> implements PipeTransform {
 	transform(

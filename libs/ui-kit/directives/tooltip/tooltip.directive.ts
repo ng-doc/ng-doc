@@ -28,6 +28,7 @@ import {filter, switchMap, takeUntil} from 'rxjs/operators';
 @Directive({
 	selector: '[ngDocTooltip]',
 	exportAs: 'ngDocTooltip',
+	standalone: true,
 })
 @UntilDestroy()
 export class NgDocTooltipDirective implements AfterViewInit, OnDestroy {

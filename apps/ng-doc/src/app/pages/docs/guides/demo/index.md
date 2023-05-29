@@ -65,7 +65,6 @@ To customize only specific demo, you can provide CSS class to the options of the
 ## See Also
 
 - `*EntitiesPage`
-- `*EntitiesDependencies`
 - `*GuidesDemoPane`
 - `*GuidesPlayground`
 - `*GuidesSnippets`

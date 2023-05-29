@@ -3,6 +3,7 @@ import {Directive, HostBinding, Input} from '@angular/core';
 @Directive({
 	selector: '[ngDocFocusable]',
 	exportAs: 'ngDocFocusable',
+	standalone: true,
 })
 export class NgDocFocusableDirective {
 	@Input('ngDocFocusable')

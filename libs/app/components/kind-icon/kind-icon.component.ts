@@ -5,6 +5,7 @@ import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/c
 	template: '{{kind[0]}}',
 	styleUrls: ['./kind-icon.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
 })
 export class NgDocKindIconComponent {
 	@Input()

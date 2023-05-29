@@ -5,5 +5,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 	template: '',
 	styleUrls: ['./line.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
 })
 export class NgDocLineComponent {}

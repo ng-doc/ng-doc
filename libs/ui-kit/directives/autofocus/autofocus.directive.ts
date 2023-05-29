@@ -3,6 +3,7 @@ import {NgDocFocusUtils} from '@ng-doc/ui-kit/utils';
 
 @Directive({
 	selector: '[ngDocAutofocus]',
+	standalone: true,
 })
 export class NgDocAutofocusDirective implements OnInit {
 	@Input()

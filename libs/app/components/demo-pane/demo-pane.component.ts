@@ -1,16 +1,38 @@
+import {NgFor, NgIf, NgTemplateOutlet} from '@angular/common';
 import {ChangeDetectionStrategy, Component, HostBinding, Input, OnInit, Type} from '@angular/core';
 import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
+import {NgDocCodeComponent} from '@ng-doc/app/components/code';
 import {NgDocDemoAsset} from '@ng-doc/app/interfaces';
 import {asArray} from '@ng-doc/core/helpers/as-array';
 import {NgDocDemoPaneActionOptions} from '@ng-doc/core/interfaces';
+import {
+	NgDocPaneBackDirective,
+	NgDocPaneComponent,
+	NgDocPaneFrontDirective,
+	NgDocTabComponent,
+	NgDocTabGroupComponent,
+} from '@ng-doc/ui-kit';
 import {NgDocContent} from '@ng-doc/ui-kit/types';
-import {PolymorpheusComponent} from '@tinkoff/ng-polymorpheus';
+import {PolymorpheusComponent, PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 
 @Component({
 	selector: 'ng-doc-demo-pane',
 	templateUrl: './demo-pane.component.html',
 	styleUrls: ['./demo-pane.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [
+		NgDocPaneComponent,
+		NgTemplateOutlet,
+		NgDocPaneBackDirective,
+		NgDocPaneFrontDirective,
+		PolymorpheusModule,
+		NgIf,
+		NgFor,
+		NgDocCodeComponent,
+		NgDocTabGroupComponent,
+		NgDocTabComponent,
+	],
 })
 export class NgDocDemoPaneComponent implements OnInit {
 	@Input()
@@ -37,7 +59,7 @@ export class NgDocDemoPaneComponent implements OnInit {
 	private getDemo(): NgDocContent<object> | undefined {
 		if (this.componentName) {
 			const component: Type<unknown> | undefined =
-				this.rootPage.dependencies?.demo && this.rootPage.dependencies.demo[this.componentName];
+				this.rootPage.page?.demos && this.rootPage.page.demos[this.componentName];
 
 			return component ? new PolymorpheusComponent(component as Type<object>) : undefined;
 		}

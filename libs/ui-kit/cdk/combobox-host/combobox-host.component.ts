@@ -20,6 +20,8 @@ import {
 	NgDocOverlayHost,
 } from '@ng-doc/ui-kit/classes';
 import {NgDocDropdownComponent} from '@ng-doc/ui-kit/components/dropdown';
+import {NgDocDropdownHandlerDirective} from '@ng-doc/ui-kit/directives/dropdown-handler';
+import {NgDocFocusCatcherDirective} from '@ng-doc/ui-kit/directives/focus-catcher';
 import {ngDocZoneOptimize} from '@ng-doc/ui-kit/observables';
 import {NgDocDisplayValueFunction, NgDocOverlayPosition} from '@ng-doc/ui-kit/types';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
@@ -62,6 +64,8 @@ import {filter} from 'rxjs/operators';
 		},
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [NgDocFocusCatcherDirective, NgDocDropdownHandlerDirective],
 })
 @UntilDestroy()
 export class NgDocComboboxHostComponent<T>

@@ -36,6 +36,7 @@ import {UntilDestroy} from '@ngneat/until-destroy';
 	styleUrls: ['./dropdown.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [NgDocOverlayService],
+	standalone: true,
 })
 @UntilDestroy()
 export class NgDocDropdownComponent implements OnChanges, OnDestroy {

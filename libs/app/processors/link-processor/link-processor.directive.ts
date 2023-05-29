@@ -5,6 +5,7 @@ import {NgDocHtmlProcessor} from '@ng-doc/app/processors/html-processor';
 
 @Directive({
 	selector: '[ngDocLinkProcessor]',
+	standalone: true,
 })
 export class NgDocLinkProcessorDirective extends NgDocHtmlProcessor<NgDocPageLinkComponent> {
 	constructor(

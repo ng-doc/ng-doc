@@ -6,6 +6,7 @@ import {NgDocContent} from '@ng-doc/ui-kit/types';
 	template: '',
 	styleUrls: ['./tab.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
 })
 export class NgDocTabComponent<T> {
 	@Input()

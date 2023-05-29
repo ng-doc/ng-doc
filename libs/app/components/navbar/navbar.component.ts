@@ -1,8 +1,17 @@
+import {AsyncPipe, NgIf} from '@angular/common';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Inject, Input, NgZone} from '@angular/core';
+import {NgDocSearchComponent} from '@ng-doc/app/components/search';
 import {NgDocSidebarService} from '@ng-doc/app/services';
-import {NgDocContent, ngDocZoneOptimize} from '@ng-doc/ui-kit';
+import {
+	NgDocButtonIconComponent,
+	NgDocContent,
+	NgDocIconComponent,
+	NgDocLetDirective,
+	ngDocZoneOptimize,
+} from '@ng-doc/ui-kit';
 import {WINDOW} from '@ng-web-apis/common';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
+import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 import {combineLatest, fromEvent} from 'rxjs';
 import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
 
@@ -14,6 +23,16 @@ import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
 	templateUrl: './navbar.component.html',
 	styleUrls: ['./navbar.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [
+		NgDocLetDirective,
+		PolymorpheusModule,
+		NgIf,
+		NgDocSearchComponent,
+		NgDocButtonIconComponent,
+		NgDocIconComponent,
+		AsyncPipe,
+	],
 })
 @UntilDestroy()
 export class NgDocNavbarComponent {

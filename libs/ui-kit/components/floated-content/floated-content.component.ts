@@ -17,6 +17,7 @@ import {BaseElement, NgDocHorizontalAlign} from '@ng-doc/ui-kit/types';
 	template: ` <ng-content></ng-content> `,
 	styleUrls: ['./floated-content.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
 })
 export class NgDocFloatedContentComponent implements AfterViewChecked {
 	@Input()

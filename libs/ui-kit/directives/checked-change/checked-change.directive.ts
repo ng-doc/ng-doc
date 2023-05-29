@@ -2,6 +2,7 @@ import {Directive, ElementRef, EventEmitter, HostListener, Input, Output, Render
 
 @Directive({
 	selector: 'input[ngDocChecked], input[ngDocCheckedChange]',
+	standalone: true,
 })
 export class NgDocCheckedChangeDirective {
 	@Input()

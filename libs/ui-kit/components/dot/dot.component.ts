@@ -6,6 +6,7 @@ import {NgDocPaletteColor, NgDocSize} from '@ng-doc/ui-kit/types';
 	template: ``,
 	styleUrls: ['./dot.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
 })
 export class NgDocDotComponent {
 	@Input()

@@ -4,6 +4,7 @@ import {NgDocSelectionHostDirective} from './selection-host.directive';
 
 @Directive({
 	selector: '[ngDocSelectionOrigin]',
+	standalone: true,
 })
 export class NgDocSelectionOriginDirective implements OnChanges, OnDestroy {
 	@Input('ngDocSelectionOrigin')

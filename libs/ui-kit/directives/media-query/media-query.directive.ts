@@ -7,6 +7,7 @@ import {distinctUntilChanged, pluck, takeUntil} from 'rxjs/operators';
 @Directive({
 	selector: '[ngDocMediaQuery]',
 	exportAs: 'ngDocMediaQuery',
+	standalone: true,
 })
 @UntilDestroy()
 export class NgDocMediaQueryDirective implements OnChanges {

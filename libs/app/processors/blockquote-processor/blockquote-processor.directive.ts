@@ -5,6 +5,7 @@ import {NgDocBlockquoteComponent, NgDocBlockquoteType} from '@ng-doc/ui-kit';
 
 @Directive({
 	selector: '[ngDocBlockquoteProcessor]',
+	standalone: true,
 })
 export class NgDocBlockquoteProcessorDirective extends NgDocHtmlProcessor<NgDocBlockquoteComponent> {
 	constructor(

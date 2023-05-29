@@ -4,6 +4,7 @@ import {NgDocLetContext} from './let-context';
 
 @Directive({
 	selector: '[ngDocLet]',
+	standalone: true,
 })
 export class NgDocLetDirective<T> {
 	@Input()

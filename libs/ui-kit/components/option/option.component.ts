@@ -24,6 +24,7 @@ import {FL_CONTROL_HOST, FlCompareHost, FlControlHost, FlControlSelector} from '
 		},
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
 })
 export class NgDocOptionComponent<T> extends FlControlSelector<T> implements NgDocListItem, OnDestroy {
 	@HostBinding('attr.data-ng-doc-hover')
