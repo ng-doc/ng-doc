@@ -1,16 +1,14 @@
 # [16.3.0-beta.1](https://github.com/ng-doc/ng-doc/compare/v16.2.1...v16.3.0-beta.1) (2023-05-29)
 
-
 ### Bug Fixes
 
-* **ng-doc:** `ng-doc` doesn't forget pages that have been moved to another directory ([c433a10](https://github.com/ng-doc/ng-doc/commit/c433a1007d07716833de2a987f9be63c7dc73a7a))
-* **ng-doc:** release trigger ([e7ac592](https://github.com/ng-doc/ng-doc/commit/e7ac592fc2f5ddadceb6633d13d6a3790b4eeb00))
-* **project:** dependency injection error after update to 15.10.0 ([cc41f44](https://github.com/ng-doc/ng-doc/commit/cc41f448054d73b9961f8a7be7689b4195a23c1f))
-
+- **ng-doc:** `ng-doc` doesn't forget pages that have been moved to another directory ([c433a10](https://github.com/ng-doc/ng-doc/commit/c433a1007d07716833de2a987f9be63c7dc73a7a))
+- **ng-doc:** release trigger ([e7ac592](https://github.com/ng-doc/ng-doc/commit/e7ac592fc2f5ddadceb6633d13d6a3790b4eeb00))
+- **project:** dependency injection error after update to 15.10.0 ([cc41f44](https://github.com/ng-doc/ng-doc/commit/cc41f448054d73b9961f8a7be7689b4195a23c1f))
 
 ### Features
 
-* **project:** pages now are standalone, which means you can import/register Angular dependencies in the page itself and if  you use standalone components, you don't need to import anything! Please see migration guide to know how to migrate ([#57](https://github.com/ng-doc/ng-doc/issues/57))! ([#56](https://github.com/ng-doc/ng-doc/issues/56)) ([21e6c17](https://github.com/ng-doc/ng-doc/commit/21e6c17741080d0590ea5942e9d62150b199ae12)), closes [#42](https://github.com/ng-doc/ng-doc/issues/42) [#52](https://github.com/ng-doc/ng-doc/issues/52)
+- **project:** pages now are standalone, which means you can import/register Angular dependencies in the page itself and if you use standalone components, you don't need to import anything! Please see migration guide to know how to migrate ([#57](https://github.com/ng-doc/ng-doc/issues/57))! ([#56](https://github.com/ng-doc/ng-doc/issues/56)) ([21e6c17](https://github.com/ng-doc/ng-doc/commit/21e6c17741080d0590ea5942e9d62150b199ae12)), closes [#42](https://github.com/ng-doc/ng-doc/issues/42) [#52](https://github.com/ng-doc/ng-doc/issues/52)
 
 ## [16.2.1](https://github.com/ng-doc/ng-doc/compare/v16.2.0...v16.2.1) (2023-05-26)
 
