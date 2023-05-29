@@ -26,17 +26,17 @@ import {debounceTime, filter, map, pairwise, switchMap, take, takeUntil, tap} fr
 export class NgDocPaneFrontDirective {}
 
 @Directive({
-    selector: '[ngDocPaneBack]',
-    standalone: true,
+	selector: '[ngDocPaneBack]',
+	standalone: true,
 })
 export class NgDocPaneBackDirective {}
 
 @Component({
-    selector: 'ng-doc-pane',
-    templateUrl: './pane.component.html',
-    styleUrls: ['./pane.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
+	selector: 'ng-doc-pane',
+	templateUrl: './pane.component.html',
+	styleUrls: ['./pane.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
 })
 @UntilDestroy()
 export class NgDocPaneComponent implements OnChanges, OnInit {

@@ -9,13 +9,8 @@ import {NgDocStringControlComponent} from './string-control.component';
 const provider: Provider = provideTypeControl('string', NgDocStringControlComponent, {order: 20});
 
 @NgModule({
-    imports: [
-    CommonModule,
-    FormsModule,
-    FlControlSilencerModule,
-    NgDocStringControlComponent,
-],
-    providers: [provider],
-    exports: [NgDocStringControlComponent],
+	imports: [CommonModule, FormsModule, FlControlSilencerModule, NgDocStringControlComponent],
+	providers: [provider],
+	exports: [NgDocStringControlComponent],
 })
 export class NgDocStringControlModule {}

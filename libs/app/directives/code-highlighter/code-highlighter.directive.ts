@@ -7,8 +7,8 @@ highlight.registerLanguage('html', xml);
 highlight.registerLanguage('xml', xml);
 
 @Directive({
-    selector: 'code[ngDocCodeHighlighter]',
-    standalone: true,
+	selector: 'code[ngDocCodeHighlighter]',
+	standalone: true,
 })
 export class NgDocCodeHighlighterDirective implements OnChanges {
 	@Input('ngDocCodeHighlighter')

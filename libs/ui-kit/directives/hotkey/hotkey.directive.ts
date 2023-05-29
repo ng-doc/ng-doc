@@ -9,8 +9,8 @@ import {filter, share} from 'rxjs/operators';
 const KEYUP_EVENT: Observable<Event> = fromEvent(document, 'keyup').pipe(share());
 
 @Directive({
-    selector: '[ngDocHotkey]',
-    standalone: true,
+	selector: '[ngDocHotkey]',
+	standalone: true,
 })
 @UntilDestroy()
 export class NgDocHotkeyDirective {
@@ -20,9 +20,7 @@ export class NgDocHotkeyDirective {
 	@Output('ngDocHotkey')
 	callback: EventEmitter<void> = new EventEmitter<void>();
 
-	constructor(
-		private readonly ngZone: NgZone,
-	) {
+	constructor(private readonly ngZone: NgZone) {
 		KEYUP_EVENT.pipe(
 			filter(isKeyboardEvent),
 			filter((event: KeyboardEvent) =>

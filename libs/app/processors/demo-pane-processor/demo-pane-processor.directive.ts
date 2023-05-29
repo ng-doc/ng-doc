@@ -6,8 +6,8 @@ import {UntilDestroy} from '@ngneat/until-destroy';
 
 /** Processor replaces html node with `NgDocDemoPaneComponent` to display demo */
 @Directive({
-    selector: '[ngDocDemoPaneProcessor]',
-    standalone: true,
+	selector: '[ngDocDemoPaneProcessor]',
+	standalone: true,
 })
 @UntilDestroy()
 export class NgDocDemoPaneProcessorDirective extends NgDocHtmlProcessor<NgDocDemoPaneComponent> {

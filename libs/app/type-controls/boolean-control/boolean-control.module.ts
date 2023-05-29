@@ -7,8 +7,8 @@ import {NgDocBooleanControlComponent} from './boolean-control.component';
 const provider: Provider = provideTypeControl('boolean', NgDocBooleanControlComponent, {hideLabel: true, order: 40});
 
 @NgModule({
-    imports: [CommonModule, NgDocBooleanControlComponent],
-    providers: [provider],
-    exports: [NgDocBooleanControlComponent],
+	imports: [CommonModule, NgDocBooleanControlComponent],
+	providers: [provider],
+	exports: [NgDocBooleanControlComponent],
 })
 export class NgDocBooleanControlModule {}

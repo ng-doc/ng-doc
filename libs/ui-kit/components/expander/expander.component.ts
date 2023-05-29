@@ -6,13 +6,13 @@ import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 
 /** Component helps to expand or collapse content */
 @Component({
-    animations: [preventInitialChildAnimations, expandCollapseAnimation],
-    selector: 'ng-doc-expander',
-    templateUrl: './expander.component.html',
-    styleUrls: ['./expander.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [NgIf, PolymorpheusModule],
+	animations: [preventInitialChildAnimations, expandCollapseAnimation],
+	selector: 'ng-doc-expander',
+	templateUrl: './expander.component.html',
+	styleUrls: ['./expander.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [NgIf, PolymorpheusModule],
 })
 export class NgDocExpanderComponent {
 	/** Change expand state */

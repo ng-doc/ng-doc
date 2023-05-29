@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import {GLOBALS} from '../../engine';
+import {GLOBALS} from '../../engine/variables';
 import {NgDocSupportedDeclarations} from '../../types';
 
 /**

@@ -2,8 +2,8 @@ import {Directive, ElementRef, Input, OnChanges, OnInit, Renderer2, SimpleChange
 
 /** Directive rotates host with transition */
 @Directive({
-    selector: '[ngDocRotator]',
-    standalone: true,
+	selector: '[ngDocRotator]',
+	standalone: true,
 })
 export class NgDocRotatorDirective implements OnChanges, OnInit {
 	/** Rotator state */

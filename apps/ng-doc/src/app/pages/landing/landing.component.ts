@@ -14,6 +14,13 @@ highlight.registerLanguage('bash', bash);
 	styleUrls: ['./landing.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	standalone: true,
-	imports: [BackgroundComponent, RouterLink, NgDocIconComponent, NgDocTextComponent, NgDocButtonComponent, NgDocMediaQueryDirective],
+	imports: [
+		BackgroundComponent,
+		RouterLink,
+		NgDocIconComponent,
+		NgDocTextComponent,
+		NgDocButtonComponent,
+		NgDocMediaQueryDirective,
+	],
 })
 export class LandingComponent {}

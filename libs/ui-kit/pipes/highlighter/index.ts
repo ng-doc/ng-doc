@@ -1,2 +1,1 @@
-
 export * from './highlighter.pipe';

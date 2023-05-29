@@ -30,12 +30,12 @@ const DARK_PALETTE = [
 ];
 
 @Component({
-    selector: 'ng-doc-background',
-    templateUrl: './background.component.html',
-    styleUrls: ['./background.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [NgIf, NgFor],
+	selector: 'ng-doc-background',
+	templateUrl: './background.component.html',
+	styleUrls: ['./background.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [NgIf, NgFor],
 })
 @UntilDestroy()
 export class BackgroundComponent implements OnInit, OnDestroy {

@@ -9,13 +9,8 @@ import {NgDocNumberControlComponent} from './number-control.component';
 const provider: Provider = provideTypeControl('number', NgDocNumberControlComponent, {order: 30});
 
 @NgModule({
-    imports: [
-    CommonModule,
-    FormsModule,
-    FlControlSilencerModule,
-    NgDocNumberControlComponent,
-],
-    providers: [provider],
-    exports: [NgDocNumberControlComponent],
+	imports: [CommonModule, FormsModule, FlControlSilencerModule, NgDocNumberControlComponent],
+	providers: [provider],
+	exports: [NgDocNumberControlComponent],
 })
 export class NgDocNumberControlModule {}

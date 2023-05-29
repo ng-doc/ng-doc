@@ -1,7 +1,7 @@
 import {ExportedDeclarations, Project} from 'ts-morph';
 
 import {declarationFolderName} from '../declaration-folder-name';
-import {createProject} from '../typescript';
+import {createProject} from '../typescript/create-project';
 
 describe('declarationFolderName', () => {
 	let project: Project;

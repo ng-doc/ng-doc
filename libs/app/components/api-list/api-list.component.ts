@@ -33,33 +33,33 @@ interface ApiFilterForm {
 }
 
 @Component({
-    selector: 'ng-doc-api-list',
-    templateUrl: './api-list.component.html',
-    styleUrls: ['./api-list.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [
-        NgDocTextComponent,
-        NgIf,
-        FormsModule,
-        ReactiveFormsModule,
-        NgDocLabelComponent,
-        NgDocInputWrapperComponent,
-        NgDocIconComponent,
-        NgDocInputStringDirective,
-        NgDocAutofocusDirective,
-        NgDocComboboxComponent,
-        NgDocDataDirective,
-        NgDocListComponent,
-        NgFor,
-        NgDocOptionComponent,
-        NgTemplateOutlet,
-        NgDocKindIconComponent,
-        NgDocTextLeftDirective,
-        NgDocTooltipDirective,
-        RouterLink,
-        AsyncPipe,
-    ],
+	selector: 'ng-doc-api-list',
+	templateUrl: './api-list.component.html',
+	styleUrls: ['./api-list.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [
+		NgDocTextComponent,
+		NgIf,
+		FormsModule,
+		ReactiveFormsModule,
+		NgDocLabelComponent,
+		NgDocInputWrapperComponent,
+		NgDocIconComponent,
+		NgDocInputStringDirective,
+		NgDocAutofocusDirective,
+		NgDocComboboxComponent,
+		NgDocDataDirective,
+		NgDocListComponent,
+		NgFor,
+		NgDocOptionComponent,
+		NgTemplateOutlet,
+		NgDocKindIconComponent,
+		NgDocTextLeftDirective,
+		NgDocTooltipDirective,
+		RouterLink,
+		AsyncPipe,
+	],
 })
 @UntilDestroy()
 export class NgDocApiListComponent {
@@ -131,9 +131,7 @@ export class NgDocApiListComponent {
 	@ngDocMakePure
 	get types(): string[] {
 		return asArray(
-			new Set(
-				this.apiList.flatMap((api: NgDocApiList) => api.items).flatMap((item: NgDocApiListItem) => item.type),
-			),
+			new Set(this.apiList.flatMap((api: NgDocApiList) => api.items).flatMap((item: NgDocApiListItem) => item.type)),
 		).sort();
 	}
 }

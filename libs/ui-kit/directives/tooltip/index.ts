@@ -1,2 +1,1 @@
 export * from './tooltip.directive';
-

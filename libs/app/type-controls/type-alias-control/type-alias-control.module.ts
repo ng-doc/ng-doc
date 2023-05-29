@@ -9,13 +9,8 @@ import {NgDocTypeAliasControlComponent} from './type-alias-control.component';
 const provider: Provider = provideTypeControl('NgDocTypeAlias', NgDocTypeAliasControlComponent, {order: 10});
 
 @NgModule({
-    imports: [
-    CommonModule,
-    NgDocComboboxModule,
-    FormsModule,
-    NgDocTypeAliasControlComponent,
-],
-    providers: [provider],
-    exports: [NgDocTypeAliasControlComponent],
+	imports: [CommonModule, NgDocComboboxModule, FormsModule, NgDocTypeAliasControlComponent],
+	providers: [provider],
+	exports: [NgDocTypeAliasControlComponent],
 })
 export class NgDocTypeAliasControlModule {}

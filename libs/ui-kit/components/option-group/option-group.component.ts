@@ -20,12 +20,12 @@ import {startWith} from 'rxjs/operators';
 export class NgDocOptionGroupHeaderDirective {}
 
 @Component({
-    selector: 'ng-doc-option-group',
-    templateUrl: './option-group.component.html',
-    styleUrls: ['./option-group.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [NgIf, NgDocTextComponent],
+	selector: 'ng-doc-option-group',
+	templateUrl: './option-group.component.html',
+	styleUrls: ['./option-group.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [NgIf, NgDocTextComponent],
 })
 @UntilDestroy()
 export class NgDocOptionGroupComponent<T> implements AfterContentInit {

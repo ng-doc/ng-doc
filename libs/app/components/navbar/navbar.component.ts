@@ -7,7 +7,7 @@ import {
 	NgDocContent,
 	NgDocIconComponent,
 	NgDocLetDirective,
-	ngDocZoneOptimize
+	ngDocZoneOptimize,
 } from '@ng-doc/ui-kit';
 import {WINDOW} from '@ng-web-apis/common';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
@@ -19,20 +19,20 @@ import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
  * Navbar component for ng-doc application
  */
 @Component({
-    selector: 'ng-doc-navbar',
-    templateUrl: './navbar.component.html',
-    styleUrls: ['./navbar.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [
-        NgDocLetDirective,
-        PolymorpheusModule,
-        NgIf,
-        NgDocSearchComponent,
-        NgDocButtonIconComponent,
-        NgDocIconComponent,
-        AsyncPipe,
-    ],
+	selector: 'ng-doc-navbar',
+	templateUrl: './navbar.component.html',
+	styleUrls: ['./navbar.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [
+		NgDocLetDirective,
+		PolymorpheusModule,
+		NgIf,
+		NgDocSearchComponent,
+		NgDocButtonIconComponent,
+		NgDocIconComponent,
+		AsyncPipe,
+	],
 })
 @UntilDestroy()
 export class NgDocNavbarComponent {
