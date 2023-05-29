@@ -12,12 +12,12 @@ function prepare(pluginConfig, {logger}) {
 		const pkg = fs.readFileSync(`${path.join(packageDir, 'package.json')}`);
 		const packageJson = JSON.parse(String(pkg));
 
-		if (packageJson.page) {
-			Object.keys(packageJson.page).forEach((key) => {
+		if (packageJson.dependencies) {
+			Object.keys(packageJson.dependencies).forEach((key) => {
 				if (localPackages.includes(key)) {
 					logger.log('Update %s version to %s', key, packageJson.version);
 
-					packageJson.page[key] = `${packageJson.version}`;
+					packageJson.dependencies[key] = `${packageJson.version}`;
 				}
 			});
 		}
