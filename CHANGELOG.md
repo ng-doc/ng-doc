@@ -1,3 +1,10 @@
+# [16.3.0-beta.3](https://github.com/ng-doc/ng-doc/compare/v16.3.0-beta.2...v16.3.0-beta.3) (2023-05-29)
+
+
+### Bug Fixes
+
+* **builder:** add missing dependencies ([cf7d42a](https://github.com/ng-doc/ng-doc/commit/cf7d42a768dffaabbc3a2d0ceda5974ec5f887eb))
+
 # [16.3.0-beta.2](https://github.com/ng-doc/ng-doc/compare/v16.3.0-beta.1...v16.3.0-beta.2) (2023-05-29)
 
 
