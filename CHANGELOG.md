@@ -1,3 +1,15 @@
+# [16.3.0](https://github.com/ng-doc/ng-doc/compare/v16.2.1...v16.3.0) (2023-05-29)
+
+
+### Bug Fixes
+
+* **builder:** add missing dependencies ([cf7d42a](https://github.com/ng-doc/ng-doc/commit/cf7d42a768dffaabbc3a2d0ceda5974ec5f887eb))
+
+
+### Features
+
+* **project:** pages now are standalone, which means you can import/register Angular dependencies in the page itself and if  you use standalone components, you don't need to import anything! Please see migration guide to know how to migrate ([#57](https://github.com/ng-doc/ng-doc/issues/57))! ([#56](https://github.com/ng-doc/ng-doc/issues/56)) ([21e6c17](https://github.com/ng-doc/ng-doc/commit/21e6c17741080d0590ea5942e9d62150b199ae12)), closes [#42](https://github.com/ng-doc/ng-doc/issues/42) [#52](https://github.com/ng-doc/ng-doc/issues/52)
+
 ## [16.2.1](https://github.com/ng-doc/ng-doc/compare/v16.2.0...v16.2.1) (2023-05-26)
 
 
