@@ -1,3 +1,11 @@
+## [16.3.2](https://github.com/ng-doc/ng-doc/compare/v16.3.1...v16.3.2) (2023-05-29)
+
+
+### Bug Fixes
+
+* **builder:** update `@orama/*` packages to the stable ones ([7a3159f](https://github.com/ng-doc/ng-doc/commit/7a3159f5982841718d6e2e08f3b4bf12d961046a))
+* **builder:** update version of `rxjs` dependency which will install the latest version of `tslib` ([16fde16](https://github.com/ng-doc/ng-doc/commit/16fde16a5fcc1c4761b9dc78f3895be0d3225e3b))
+
 ## [16.3.1](https://github.com/ng-doc/ng-doc/compare/v16.3.0...v16.3.1) (2023-05-29)
 
 
