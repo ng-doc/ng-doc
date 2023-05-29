@@ -25,7 +25,9 @@
 		"cosmiconfig": "8.1.0",
 		"cosmiconfig-typescript-swc-loader": "0.0.2",
 		"find-cache-dir": "3.3.2",
-		"crypto": "1.0.1"
+		"crypto": "1.0.1",
+		"tslib": "^2.3.0",
+		"ng-morph": "^2.2.3"
 	},
 	"publishConfig": {
 		"access": "public"
