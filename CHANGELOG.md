@@ -1,3 +1,10 @@
+# [16.3.0-beta.2](https://github.com/ng-doc/ng-doc/compare/v16.3.0-beta.1...v16.3.0-beta.2) (2023-05-29)
+
+
+### Bug Fixes
+
+* **semantic-release:** bump version ([d0f1862](https://github.com/ng-doc/ng-doc/commit/d0f18629d1d99afbf4f8ba5a34db227a05a84bbc))
+
 # [16.3.0-beta.1](https://github.com/ng-doc/ng-doc/compare/v16.2.1...v16.3.0-beta.1) (2023-05-29)
 
 ### Bug Fixes
