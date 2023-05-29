@@ -40,9 +40,9 @@ import {
 		NgDocTooltipDirective,
 		NgDocIconComponent,
 		NgDocBlockquoteProcessorDirective,
+		NgDocIconProcessorDirective,
 		NgDocLinkProcessorDirective,
 		NgDocCodeProcessorDirective,
-		NgDocIconProcessorDirective,
 		NgDocTooltipProcessorDirective,
 		NgDocDemoProcessorDirective,
 		NgDocDemoPaneProcessorDirective,
@@ -59,6 +59,7 @@ import {
 export class NgDocPageComponent {
 	readonly prevPage?: NgDocNavigation;
 	readonly nextPage?: NgDocNavigation;
+
 	constructor(
 		@Inject(NG_DOC_CONTEXT)
 		private readonly context: NgDocContext,
