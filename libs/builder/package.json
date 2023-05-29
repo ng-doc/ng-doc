@@ -10,7 +10,7 @@
 		"@angular-devkit/architect": ">=0.1600.0",
 		"chokidar": "3.5.3",
 		"minimatch": "5.1.0",
-		"rxjs": "^6.6.7",
+		"rxjs": "^7.0.0",
 		"ts-morph": "18.0.0",
 		"nunjucks": "3.2.4",
 		"@orama/orama": "1.0.0-beta.16",

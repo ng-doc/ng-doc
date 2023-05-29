@@ -2,7 +2,7 @@ import {NgDocPageType} from '@ng-doc/core';
 import {NgDocPageIndex} from '@ng-doc/core/interfaces';
 import {create} from '@orama/orama';
 import {defaultHtmlSchema, NodeContent, populate} from '@orama/plugin-parsedoc';
-import {from} from 'rxjs';
+import {firstValueFrom, from} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 
 import {importEsModule} from './import-es-module';
@@ -109,7 +109,6 @@ function transformFn(node: NodeContent): NodeContent {
  * @param html
  */
 async function removeNotIndexableContent(html: string): Promise<string> {
-	return from(importEsModule<typeof import('@ng-doc/utils')>('@ng-doc/utils'))
-		.pipe(switchMap((utils: typeof import('@ng-doc/utils')) => utils.removeNotIndexableContent(html)))
-		.toPromise();
+	return firstValueFrom(from(importEsModule<typeof import('@ng-doc/utils')>('@ng-doc/utils'))
+		.pipe(switchMap((utils: typeof import('@ng-doc/utils')) => utils.removeNotIndexableContent(html))));
 }
