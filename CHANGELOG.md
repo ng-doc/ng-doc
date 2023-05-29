@@ -1,3 +1,10 @@
+## [16.3.1](https://github.com/ng-doc/ng-doc/compare/v16.3.0...v16.3.1) (2023-05-29)
+
+
+### Bug Fixes
+
+* **app:** some icons are not displayed ([689b194](https://github.com/ng-doc/ng-doc/commit/689b1947fd5adcf6fa496e39f117a168cdde0353))
+
 # [16.3.0](https://github.com/ng-doc/ng-doc/compare/v16.2.1...v16.3.0) (2023-05-29)
 
 
