@@ -1,6 +1,13 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {RouterLink} from '@angular/router';
-import {NgDocButtonComponent, NgDocIconComponent, NgDocMediaQueryDirective, NgDocTextComponent} from '@ng-doc/ui-kit';
+import {
+	NgDocButtonComponent,
+	NgDocIconComponent,
+	NgDocMediaQueryDirective,
+	NgDocTextComponent,
+	NgDocTextLeftDirective,
+	NgDocTextRightDirective,
+} from '@ng-doc/ui-kit';
 import highlight from 'highlight.js/lib/core';
 import bash from 'highlight.js/lib/languages/bash';
 
@@ -19,6 +26,8 @@ highlight.registerLanguage('bash', bash);
 		RouterLink,
 		NgDocIconComponent,
 		NgDocTextComponent,
+		NgDocTextLeftDirective,
+		NgDocTextRightDirective,
 		NgDocButtonComponent,
 		NgDocMediaQueryDirective,
 	],
