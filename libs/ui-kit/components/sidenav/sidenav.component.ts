@@ -1,6 +1,8 @@
 import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
+import {NgIf} from '@angular/common';
 import {ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
 import {NgDocContent, NgDocHorizontalAlign} from '@ng-doc/ui-kit/types';
+import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 
 @Component({
 	animations: [
@@ -46,6 +48,8 @@ import {NgDocContent, NgDocHorizontalAlign} from '@ng-doc/ui-kit/types';
 	templateUrl: './sidenav.component.html',
 	styleUrls: ['./sidenav.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [PolymorpheusModule, NgIf],
 })
 export class NgDocSidenavComponent {
 	/**

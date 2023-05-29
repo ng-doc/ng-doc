@@ -21,6 +21,7 @@ import {filter, startWith, switchMap} from 'rxjs/operators';
 	template: '',
 	styleUrls: ['./icon.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
 })
 export class NgDocIconComponent implements OnChanges, OnInit {
 	/** Icon name */

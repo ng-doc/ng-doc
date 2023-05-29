@@ -7,6 +7,7 @@ export interface NgDocHighlightPosition {
 
 @Pipe({
 	name: 'ngDocHighlighterPipe',
+	standalone: true,
 })
 export class NgDocHighlighterPipe implements PipeTransform {
 	transform(input: string, positions: NgDocHighlightPosition[]): string {
@@ -16,10 +17,9 @@ export class NgDocHighlighterPipe implements PipeTransform {
 				const {start, length} = position;
 				const end = start + length;
 
-				input = `${input.slice(0, start)}<mark class="ng-doc-mark">${input.slice(
-					start,
+				input = `${input.slice(0, start)}<mark class="ng-doc-mark">${input.slice(start, end)}</mark>${input.slice(
 					end,
-				)}</mark>${input.slice(end)}`;
+				)}`;
 			});
 
 		return input;

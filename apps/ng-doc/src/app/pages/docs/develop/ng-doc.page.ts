@@ -1,5 +1,8 @@
 import {NgDocAngularEntities, NgDocDeclarations, NgDocPage} from '@ng-doc/core';
 
+import {ButtonDemoComponent} from './button-demo/button-demo.component';
+import {DevelopDemoComponent} from './develop-demo/develop-demo.component';
+
 export const DevelopPage: NgDocPage = {
   title: 'Develop',
   mdFile: './index.md.nunj',
@@ -12,6 +15,8 @@ export const DevelopPage: NgDocPage = {
     },
   },
   keyword: 'DevelopPage',
+  imports: [],
+  demos: {DevelopDemoComponent, ButtonDemoComponent},
 };
 
 export default DevelopPage;

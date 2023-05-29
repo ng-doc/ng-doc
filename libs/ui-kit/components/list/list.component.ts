@@ -13,6 +13,7 @@ import {delayWhen, filter, repeat, takeUntil} from 'rxjs/operators';
 	templateUrl: './list.component.html',
 	styleUrls: ['./list.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
 })
 @UntilDestroy()
 export class NgDocListComponent<T> {

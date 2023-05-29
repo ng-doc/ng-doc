@@ -1,13 +1,17 @@
+import {NgFor} from '@angular/common';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, RouterLink} from '@angular/router';
 import {NgDocRootPage} from '@ng-doc/app/classes';
 import {isPresent} from '@ng-doc/core/helpers/is-present';
+import {NgDocButtonIconComponent, NgDocIconComponent, NgDocTextComponent} from '@ng-doc/ui-kit';
 
 @Component({
 	selector: 'ng-doc-breadcrumb',
 	templateUrl: './breadcrumb.component.html',
 	styleUrls: ['./breadcrumb.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [NgDocButtonIconComponent, RouterLink, NgDocIconComponent, NgFor, NgDocTextComponent],
 })
 export class NgDocBreadcrumbComponent {
 	breadcrumbs: string[] = [];

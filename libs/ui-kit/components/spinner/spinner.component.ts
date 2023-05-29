@@ -6,6 +6,7 @@ import {NgDocSize} from '@ng-doc/ui-kit/types';
 	templateUrl: './spinner.component.html',
 	styleUrls: ['./spinner.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
 })
 export class NgDocSpinnerComponent {
 	@Input()

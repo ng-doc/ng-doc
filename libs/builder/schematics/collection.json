@@ -16,10 +16,10 @@
 			"factory": "./api/index#build",
 			"schema": "./api/schema.json"
 		},
-		"dependencies": {
-			"description": "Generates NgDoc dependencies entity",
-			"factory": "./dependencies/index#build",
-			"schema": "./dependencies/schema.json"
+		"standalone-pages-migration": {
+			"description": "Moves all dependencies from ng-doc.dependencies.ts to ng-doc.page.ts",
+			"factory": "./migrations/standalone-pages/index#migrate",
+			"schema": "./migrations/standalone-pages/schema.json"
 		}
 	}
 }

@@ -1,8 +1,10 @@
 import {animate, style, transition, trigger} from '@angular/animations';
+import {NgIf} from '@angular/common';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {NG_DOC_DARK_PURPLE_THEME, NG_DOC_NIGHT_THEME} from '@ng-doc/app/constants';
 import {NgDocTheme} from '@ng-doc/app/interfaces';
 import {NgDocThemeService} from '@ng-doc/app/services';
+import {NgDocButtonIconComponent, NgDocIconComponent, NgDocTooltipDirective} from '@ng-doc/ui-kit';
 
 @Component({
 	animations: [
@@ -35,6 +37,8 @@ import {NgDocThemeService} from '@ng-doc/app/services';
 	templateUrl: './theme-toggle.component.html',
 	styleUrls: ['./theme-toggle.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [NgDocButtonIconComponent, NgDocTooltipDirective, NgIf, NgDocIconComponent],
 })
 export class NgDocThemeToggleComponent {
 	protected readonly themes: Array<NgDocTheme | undefined> = [NG_DOC_NIGHT_THEME, NG_DOC_DARK_PURPLE_THEME, undefined];

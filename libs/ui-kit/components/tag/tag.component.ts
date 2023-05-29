@@ -6,6 +6,7 @@ import {NgDocColor, NgDocPaletteColor, NgDocTagSize} from '@ng-doc/ui-kit/types'
 	templateUrl: './tag.component.html',
 	styleUrls: ['./tag.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
 })
 export class NgDocTagComponent {
 	@Input()

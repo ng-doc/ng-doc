@@ -6,9 +6,7 @@ import {
 	CATEGORY_PATTERN,
 	NgDocApiEntity,
 	NgDocCategoryEntity,
-	NgDocDependenciesEntity,
 	NgDocPageEntity,
-	PAGE_DEPENDENCY_PATTERN,
 	PAGE_PATTERN,
 } from '../engine';
 import {NgDocEntity} from '../engine/entities/abstractions/entity';
@@ -22,8 +20,6 @@ export function getEntityConstructor(path: string): Constructor<NgDocEntity> {
 		return NgDocPageEntity;
 	} else if (minimatch(path, CATEGORY_PATTERN)) {
 		return NgDocCategoryEntity;
-	} else if (minimatch(path, PAGE_DEPENDENCY_PATTERN)) {
-		return NgDocDependenciesEntity;
 	} else if (minimatch(path, API_PATTERN)) {
 		return NgDocApiEntity;
 	} else {

@@ -6,6 +6,7 @@ import {NgDocSelectionOriginDirective} from './selection-origin.directive';
 
 @Directive({
 	selector: '[ngDocSelectionHost]',
+	standalone: true,
 })
 export class NgDocSelectionHostDirective {
 	private origins: Set<NgDocSelectionOriginDirective> = new Set<NgDocSelectionOriginDirective>();

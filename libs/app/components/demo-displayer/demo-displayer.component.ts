@@ -1,12 +1,34 @@
 import {Clipboard} from '@angular/cdk/clipboard';
+import {NgIf, NgTemplateOutlet} from '@angular/common';
 import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
-import {NgDocContent} from '@ng-doc/ui-kit';
+import {NgDocCodeComponent} from '@ng-doc/app/components/code';
+import {NgDocCodeHighlighterDirective} from '@ng-doc/app/directives/code-highlighter';
+import {
+	NgDocButtonIconComponent,
+	NgDocContent,
+	NgDocExpanderComponent,
+	NgDocIconComponent,
+	NgDocSmoothResizeComponent,
+	NgDocTooltipDirective,
+} from '@ng-doc/ui-kit';
 
 @Component({
 	selector: 'ng-doc-demo-displayer',
 	templateUrl: './demo-displayer.component.html',
 	styleUrls: ['./demo-displayer.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [
+		NgIf,
+		NgTemplateOutlet,
+		NgDocButtonIconComponent,
+		NgDocTooltipDirective,
+		NgDocSmoothResizeComponent,
+		NgDocIconComponent,
+		NgDocExpanderComponent,
+		NgDocCodeComponent,
+		NgDocCodeHighlighterDirective,
+	],
 })
 export class NgDocDemoDisplayerComponent {
 	@Input()

@@ -5,6 +5,7 @@ import {NgDocHtmlProcessor} from '@ng-doc/app/processors/html-processor';
 
 @Directive({
 	selector: '[ngDocPlaygroundProcessor]',
+	standalone: true,
 })
 export class NgDocPlaygroundProcessorDirective extends NgDocHtmlProcessor<NgDocPlaygroundComponent> {
 	constructor(

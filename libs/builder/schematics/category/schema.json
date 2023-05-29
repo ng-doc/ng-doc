@@ -33,7 +33,7 @@
 			"alias": "c"
 		},
 		"order": {
-			"type": "boolean",
+			"type": "number",
 			"description": "Order category in sidebar",
 			"alias": "o"
 		},

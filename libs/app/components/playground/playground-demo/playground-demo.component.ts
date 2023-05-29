@@ -1,3 +1,4 @@
+import {AsyncPipe} from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
@@ -14,6 +15,7 @@ import {
 	ViewContainerRef,
 } from '@angular/core';
 import {FormGroup} from '@angular/forms';
+import {NgDocDemoDisplayerComponent} from '@ng-doc/app/components/demo-displayer';
 import {getPlaygroundDemoToken} from '@ng-doc/app/helpers';
 import {NgDocFormPartialValue} from '@ng-doc/app/types';
 import {buildPlaygroundDemoTemplate} from '@ng-doc/core/helpers/build-playground-demo-template';
@@ -33,6 +35,8 @@ import {NgDocPlaygroundForm} from '../playground-form';
 	templateUrl: './playground-demo.component.html',
 	styleUrls: ['./playground-demo.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [NgDocDemoDisplayerComponent, AsyncPipe],
 })
 @UntilDestroy()
 export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties>

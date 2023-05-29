@@ -1,3 +1,4 @@
+import {NgIf} from '@angular/common';
 import {
 	AfterContentInit,
 	ChangeDetectionStrategy,
@@ -8,10 +9,14 @@ import {
 	QueryList,
 } from '@angular/core';
 import {NgDocOptionComponent} from '@ng-doc/ui-kit/components/option';
+import {NgDocTextComponent} from '@ng-doc/ui-kit/components/text';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {startWith} from 'rxjs/operators';
 
-@Directive({selector: '[ngDocOptionGroupHeader]'})
+@Directive({
+	selector: '[ngDocOptionGroupHeader]',
+	standalone: true,
+})
 export class NgDocOptionGroupHeaderDirective {}
 
 @Component({
@@ -19,6 +24,8 @@ export class NgDocOptionGroupHeaderDirective {}
 	templateUrl: './option-group.component.html',
 	styleUrls: ['./option-group.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [NgIf, NgDocTextComponent],
 })
 @UntilDestroy()
 export class NgDocOptionGroupComponent<T> implements AfterContentInit {

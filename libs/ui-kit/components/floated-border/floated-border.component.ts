@@ -5,5 +5,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 	template: ` <ng-content></ng-content> `,
 	styleUrls: ['./floated-border.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
 })
 export class NgDocFloatedBorderComponent {}

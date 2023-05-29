@@ -3,6 +3,7 @@ import {NgDocDropdownComponent} from '@ng-doc/ui-kit/components/dropdown';
 
 @Directive({
 	selector: '[ngDocDropdownHandler]',
+	standalone: true,
 })
 export class NgDocDropdownHandlerDirective {
 	@Input('ngDocDropdownHandler')

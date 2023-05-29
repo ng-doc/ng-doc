@@ -1,12 +1,12 @@
 import {CommonModule} from '@angular/common';
 import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
-import {NgDocContent, NgDocOrientation, NgDocTextModule} from '@ng-doc/ui-kit';
+import {NgDocContent, NgDocOrientation} from '@ng-doc/ui-kit';
 import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 
 @Component({
 	selector: 'ng-doc-tile',
 	standalone: true,
-	imports: [CommonModule, NgDocTextModule, PolymorpheusModule],
+	imports: [CommonModule, PolymorpheusModule],
 	template: `
 		<div class="ng-doc-tile-media" *ngIf="media">
 			<ng-container *polymorpheusOutlet="media">{{ media }}</ng-container>

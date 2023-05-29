@@ -13,12 +13,15 @@ import {FormControl} from '@angular/forms';
 import {isPlaygroundProperty} from '@ng-doc/app/helpers';
 import {NgDocProvidedTypeControl, NgDocTypeControl, NgDocTypeControlProviderOptions} from '@ng-doc/app/interfaces';
 import {NgDocPlaygroundContent, NgDocPlaygroundProperty} from '@ng-doc/core/interfaces';
+import {NgDocLabelComponent, NgDocTooltipDirective} from '@ng-doc/ui-kit';
 
 @Component({
 	selector: 'ng-doc-playground-property',
 	templateUrl: './playground-property.component.html',
 	styleUrls: ['./playground-property.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [NgDocLabelComponent, NgDocTooltipDirective],
 })
 export class NgDocPlaygroundPropertyComponent implements OnChanges {
 	@Input()

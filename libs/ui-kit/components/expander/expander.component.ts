@@ -1,6 +1,8 @@
+import {NgIf} from '@angular/common';
 import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
 import {expandCollapseAnimation, preventInitialChildAnimations} from '@ng-doc/ui-kit/animations';
 import {NgDocContent} from '@ng-doc/ui-kit/types';
+import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 
 /** Component helps to expand or collapse content */
 @Component({
@@ -9,6 +11,8 @@ import {NgDocContent} from '@ng-doc/ui-kit/types';
 	templateUrl: './expander.component.html',
 	styleUrls: ['./expander.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [NgIf, PolymorpheusModule],
 })
 export class NgDocExpanderComponent {
 	/** Change expand state */

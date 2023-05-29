@@ -1,8 +1,19 @@
+import {NgIf} from '@angular/common';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input, OnInit} from '@angular/core';
 import {Event, NavigationEnd, Router} from '@angular/router';
+import {NgDocRouteActiveDirective} from '@ng-doc/app/directives/route-active';
 import {NgDocNavigation} from '@ng-doc/app/interfaces';
+import {
+	NgDocDotComponent,
+	NgDocExpanderComponent,
+	NgDocIconComponent,
+	NgDocRotatorDirective,
+	NgDocTextComponent,
+	NgDocTextLeftDirective,
+} from '@ng-doc/ui-kit';
 import {NgDocContent} from '@ng-doc/ui-kit/types';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
+import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 import {filter, startWith} from 'rxjs/operators';
 
 @Component({
@@ -10,6 +21,18 @@ import {filter, startWith} from 'rxjs/operators';
 	templateUrl: './sidebar-category.component.html',
 	styleUrls: ['./sidebar-category.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [
+		NgDocRouteActiveDirective,
+		NgIf,
+		NgDocDotComponent,
+		NgDocTextComponent,
+		NgDocIconComponent,
+		NgDocTextLeftDirective,
+		NgDocRotatorDirective,
+		NgDocExpanderComponent,
+		PolymorpheusModule,
+	],
 })
 @UntilDestroy()
 export class NgDocSidebarCategoryComponent implements OnInit {

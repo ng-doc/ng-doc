@@ -1,3 +1,4 @@
+import {NgFor, NgIf} from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -33,6 +34,8 @@ const DARK_PALETTE = [
 	templateUrl: './background.component.html',
 	styleUrls: ['./background.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [NgIf, NgFor],
 })
 @UntilDestroy()
 export class BackgroundComponent implements OnInit, OnDestroy {

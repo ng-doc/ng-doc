@@ -1,12 +1,12 @@
 import {Component} from '@angular/core';
 import {asArray, NgDocStyleType} from '@ng-doc/core';
 import * as path from 'path';
-import {ClassDeclaration, Decorator, Node} from 'ts-morph';
+import {ClassDeclaration} from 'ts-morph';
 
 import {NgDocRenderer} from '../engine/renderer';
 import {NgDocAsset} from '../interfaces';
-import {componentDecoratorResolver} from '../resolvers/component-decorator.resolver';
 import {NgDocComponentAsset} from '../types';
+import {componentDecorator} from './angular';
 import {buildAssets} from './build-assets';
 import {formatCode} from './format-code';
 import {slash} from './slash';
@@ -22,11 +22,9 @@ export function getComponentAsset(
 	inlineStyleLang: NgDocStyleType,
 	outDir: string,
 ): NgDocComponentAsset {
-	const decorator: Decorator | undefined = classDeclaration.getDecorator('Component');
-	const decoratorArgument: Node | undefined = decorator?.getArguments()[0];
+	const decoratorData: Component | undefined = componentDecorator(classDeclaration);
 
-	if (Node.isObjectLiteralExpression(decoratorArgument)) {
-		const decoratorData: Component = componentDecoratorResolver(decoratorArgument);
+	if (decoratorData) {
 		const filePath: string = classDeclaration.getSourceFile().getFilePath();
 		const fileDir: string = path.dirname(filePath);
 
