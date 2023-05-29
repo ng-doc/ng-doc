@@ -1,37 +1,66 @@
-# [16.0.0-beta.3](https://github.com/ng-doc/ng-doc/compare/v16.0.0-beta.2...v16.0.0-beta.3) (2023-05-09)
-
-
-### Bug Fixes
-
-* **app:** api list filter is too small on mobile devices ([c1d7668](https://github.com/ng-doc/ng-doc/commit/c1d766835ac0805a84d8df9de57b9341c544e680))
-* **app:** search doesn't work in `ES2022` projects ([dec2325](https://github.com/ng-doc/ng-doc/commit/dec2325aad0ff0bb95d636ea0d8c116a02bee07d))
-
-# [16.0.0-beta.2](https://github.com/ng-doc/ng-doc/compare/v16.0.0-beta.1...v16.0.0-beta.2) (2023-05-09)
-
-
-### Features
-
-* **app:** update angular dependencies ([c4e1da6](https://github.com/ng-doc/ng-doc/commit/c4e1da65746f659c147fb68fa2abdf23ffb6087d))
-
-# [16.0.0-beta.1](https://github.com/ng-doc/ng-doc/compare/v15.13.0...v16.0.0-beta.1) (2023-05-09)
-
+## [16.2.1](https://github.com/ng-doc/ng-doc/compare/v16.2.0...v16.2.1) (2023-05-26)
 
 ### Bug Fixes
 
-* **ng-doc:** `ng-doc` doesn't forget pages that have been moved to another directory ([c433a10](https://github.com/ng-doc/ng-doc/commit/c433a1007d07716833de2a987f9be63c7dc73a7a))
-* **ng-doc:** release trigger ([e7ac592](https://github.com/ng-doc/ng-doc/commit/e7ac592fc2f5ddadceb6633d13d6a3790b4eeb00))
-* **project:** dependency injection error after update to 15.10.0 ([cc41f44](https://github.com/ng-doc/ng-doc/commit/cc41f448054d73b9961f8a7be7689b4195a23c1f))
+- **builder:** the builder throws an error if the demo code has certain javascript characters ([cf86d3b](https://github.com/ng-doc/ng-doc/commit/cf86d3b83a5dd18f386d443ae53f77da35271218))
 
+# [16.2.0](https://github.com/ng-doc/ng-doc/compare/v16.1.1...v16.2.0) (2023-05-25)
 
 ### Features
 
-* **project:** angular 16 support ([f785944](https://github.com/ng-doc/ng-doc/commit/f7859446c63e4a1208047080751c122133153708))
-* **project:** angular 16 support ([3b4f6d4](https://github.com/ng-doc/ng-doc/commit/3b4f6d437427fb65b4eb117523b0009e1602fb5a)), closes [#43](https://github.com/ng-doc/ng-doc/issues/43)
+- **builder:** cache is here! Now NgDoc caches build results and next time it will use them or rebuild only necessary pages instead of rebuilding everything from scratch ([83a6caa](https://github.com/ng-doc/ng-doc/commit/83a6caa22af8b2909f2ab1785a1377da2924a850)), closes [#44](https://github.com/ng-doc/ng-doc/issues/44)
 
+## [16.1.1](https://github.com/ng-doc/ng-doc/compare/v16.1.0...v16.1.1) (2023-05-21)
+
+### Bug Fixes
+
+- **core:** playgrounds cannot import `formatHtml` function dynamically ([e58b5ea](https://github.com/ng-doc/ng-doc/commit/e58b5ea7696fb8409166a5c5f05a8b2c5cac11c9))
+
+# [16.1.0](https://github.com/ng-doc/ng-doc/compare/v16.0.2...v16.1.0) (2023-05-21)
+
+### Bug Fixes
+
+- **app:** `arrow-up`, `arrow-down` hotkeys don't work for the search input ([ea58bd5](https://github.com/ng-doc/ng-doc/commit/ea58bd56372ea231ea1b8ad370f4515ca256deca))
+- **app:** browser console has various warnings ([a41927e](https://github.com/ng-doc/ng-doc/commit/a41927eea9bcf48987159bba059f548a54e199f0))
+
+### Features
+
+- **builder:** add experimental esbuild support, now you can configure the builder by specifying `angularBuilder` property in the `ng-doc.config.ts` file ([57f40a2](https://github.com/ng-doc/ng-doc/commit/57f40a28604fa9965ca306a2aba6019b7eac1348)), closes [#42](https://github.com/ng-doc/ng-doc/issues/42)
+- **builder:** external packages now can be provided in the configuration file, to make them available in your code for file entities ([4f0c1b2](https://github.com/ng-doc/ng-doc/commit/4f0c1b2e87b9ec1a10efafff3ec0d5d83321202d))
+- **builder:** the current state of the build is now displayed in the console ([#49](https://github.com/ng-doc/ng-doc/issues/49)) ([9e8f4bf](https://github.com/ng-doc/ng-doc/commit/9e8f4bf16d7a2985c7c894f6e1d735e891df65ab))
+
+### Performance Improvements
+
+- **app:** `@orama/*` packages that are using for search have been updated, resulting in a reduced size of the main bundle. However, now it is necessary to manually import the stemmer from `@orama/stemmers` for languages other than English ([8a0f69c](https://github.com/ng-doc/ng-doc/commit/8a0f69c1f3279f230f953e2dc8fb4b08b236022a))
+
+## [16.0.2](https://github.com/ng-doc/ng-doc/compare/v16.0.1...v16.0.2) (2023-05-10)
+
+### Bug Fixes
+
+- **app:** footer is not at the bottom of the page if its content is smaller than the screen height ([ec5b768](https://github.com/ng-doc/ng-doc/commit/ec5b7686bd4ca47135bc857b7426c8e0bb461a39))
+
+## [16.0.1](https://github.com/ng-doc/ng-doc/compare/v16.0.0...v16.0.1) (2023-05-09)
+
+### Bug Fixes
+
+- **project:** bump version ([28c6b03](https://github.com/ng-doc/ng-doc/commit/28c6b03e89ee3d44d8c066873bfb340dd201f876))
+
+# [16.0.0](https://github.com/ng-doc/ng-doc/compare/v15.13.0...v16.0.0) (2023-05-09)
+
+### Bug Fixes
+
+- **app:** api list filter is too small on mobile devices ([c1d7668](https://github.com/ng-doc/ng-doc/commit/c1d766835ac0805a84d8df9de57b9341c544e680))
+- **app:** search doesn't work in `ES2022` projects ([dec2325](https://github.com/ng-doc/ng-doc/commit/dec2325aad0ff0bb95d636ea0d8c116a02bee07d))
+
+### Features
+
+- **app:** update angular dependencies ([c4e1da6](https://github.com/ng-doc/ng-doc/commit/c4e1da65746f659c147fb68fa2abdf23ffb6087d))
+- **project:** angular 16 support ([f785944](https://github.com/ng-doc/ng-doc/commit/f7859446c63e4a1208047080751c122133153708))
+- **project:** angular 16 support ([3b4f6d4](https://github.com/ng-doc/ng-doc/commit/3b4f6d437427fb65b4eb117523b0009e1602fb5a)), closes [#43](https://github.com/ng-doc/ng-doc/issues/43)
 
 ### BREAKING CHANGES
 
-* **project:** Angular 16
+- **project:** Angular 16
 
 # [15.13.0](https://github.com/skoropadas/ng-doc/compare/v15.12.0...v15.13.0) (2023-04-29)
 

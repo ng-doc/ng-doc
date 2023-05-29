@@ -11,7 +11,7 @@ import {NgDocSidebarService} from '@ng-doc/app/services/sidebar';
 import {NgDocContent, NgDocHorizontalAlign, NgDocSidenavComponent} from '@ng-doc/ui-kit';
 import {UntilDestroy} from '@ngneat/until-destroy';
 import {combineLatest, merge, NEVER, Observable, of} from 'rxjs';
-import {delay, filter, map, mapTo, startWith, tap} from 'rxjs/operators';
+import {delay, filter, map, mapTo, startWith} from 'rxjs/operators';
 
 /**
  * Directive uses for providing custom navbar, you should mark element with this directive

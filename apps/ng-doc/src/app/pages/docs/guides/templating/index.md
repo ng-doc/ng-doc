@@ -158,6 +158,7 @@ NgDoc supports default blockquotes and some custom blockquotes, for example, you
 > **Warning**
 > This is warning blockquote
 ```
+
 > Default blockquote
 
 > **Note**

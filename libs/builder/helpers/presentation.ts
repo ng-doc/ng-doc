@@ -11,9 +11,7 @@ import {
 	ReadonlyableNode,
 	Scope,
 	ScopeableNode,
-	StaticableNode,
 	TypeAliasDeclaration,
-	TypeFormatFlags,
 	VariableDeclaration,
 } from 'ts-morph';
 

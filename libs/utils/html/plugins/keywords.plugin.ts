@@ -10,7 +10,7 @@ import {hasLinkAncestor, isCodeNode} from '../helpers';
 
 const languages: string[] = ['typescript', 'ts'];
 
-export type AddUsedKeyword = (keyword: string) => void;
+export type AddKeyword = (keyword: string) => void;
 export type GetKeyword = (keyword: string) => NgDocKeyword | undefined;
 
 /**
@@ -18,9 +18,14 @@ export type GetKeyword = (keyword: string) => NgDocKeyword | undefined;
  * @param entityStore
  * @param entity
  * @param addUsedKeyword
+ * @param addPotentialKeyword
  * @param getKeyword
  */
-export default function keywordsPlugin(addUsedKeyword?: AddUsedKeyword, getKeyword?: GetKeyword) {
+export default function keywordsPlugin(
+	addUsedKeyword?: AddKeyword,
+	addPotentialKeyword?: AddKeyword,
+	getKeyword?: GetKeyword,
+) {
 	return (tree: Element) =>
 		visitParents(tree, 'element', (node: Element, ancestors: Element[]) => {
 			if (!isCodeNode(node)) {
@@ -32,7 +37,7 @@ export default function keywordsPlugin(addUsedKeyword?: AddUsedKeyword, getKeywo
 
 			if (isInlineCode || languages.includes(lang)) {
 				visitParents(node, 'text', (node: Text, ancestors: Element[]) => {
-					if (hasLinkAncestor(ancestors) || !getKeyword || !addUsedKeyword) {
+					if (hasLinkAncestor(ancestors) || !getKeyword || !addUsedKeyword || !addPotentialKeyword) {
 						return;
 					}
 
@@ -40,7 +45,7 @@ export default function keywordsPlugin(addUsedKeyword?: AddUsedKeyword, getKeywo
 					const index: number = parent.children.indexOf(node);
 
 					// Parse the text for words that we can convert to links
-					const nodes: any[] = getNodes(node, parent, isInlineCode, addUsedKeyword, getKeyword);
+					const nodes: any[] = getNodes(node, parent, isInlineCode, addUsedKeyword, addPotentialKeyword, getKeyword);
 					// Replace the text node with the links and leftover text nodes
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
@@ -60,13 +65,15 @@ export default function keywordsPlugin(addUsedKeyword?: AddUsedKeyword, getKeywo
  * @param inlineLink
  * @param e
  * @param addUsedKeyword
+ * @param addPotentialKeyword
  * @param getKeyword
  */
 function getNodes(
 	node: Text,
 	parent: Element,
 	inlineLink: boolean,
-	addUsedKeyword: AddUsedKeyword,
+	addUsedKeyword: AddKeyword,
+	addPotentialKeyword: AddKeyword,
 	getKeyword: GetKeyword,
 ): Array<Element | Text> {
 	const KeywordRegExp: RegExp = /([A-Za-z0-9_.-/*]+)/;
@@ -75,11 +82,11 @@ function getNodes(
 		.split(KeywordRegExp)
 		.filter((word: string) => word.length)
 		.map((word: string) => {
-			if (KeywordRegExp.test(word)) {
-				addUsedKeyword(word);
-			}
-
 			const keyword: NgDocKeyword | undefined = getKeyword(word);
+
+			if (KeywordRegExp.test(word)) {
+				keyword ? addUsedKeyword(word) : addPotentialKeyword(word);
+			}
 
 			if (inlineLink && /^\*\w+/gm.test(word) && !keyword) {
 				console.log(`\n${chalk.blue('NgDoc:')} ${chalk.yellow(`Keyword "${word}" is missing.`)}`);

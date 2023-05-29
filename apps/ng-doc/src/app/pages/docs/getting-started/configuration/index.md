@@ -14,7 +14,49 @@ exported by default and match `NgDocConfiguration` interface.
 import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
-	// ...
+  // ...
+};
+
+export default config;
+```
+
+## ESBuild builder
+
+> **Warning**
+> This feature is experimental and may not work as expected.
+> For more information, see [this guide](https://angular.io/guide/esbuild)
+
+By default, NgDoc uses `webpack` to build and serve the documentation application, but you can also use
+`esbuild`, to switch to `esbuild` you need to specify `angularBuilder` property in your
+`ng-doc.config.ts` file, it will enable `esbuild` builder for `build` target and `vite` + `esbuild`
+for `serve` target.
+
+```typescript fileName="ng-doc.config.ts"
+import {NgDocConfiguration} from '@ng-doc/builder';
+
+const config: NgDocConfiguration = {
+  angularBuilder: 'esbuild',
+};
+
+export default config;
+```
+
+## External packages in guides
+
+Sometimes you may need to use external packages in your `ng-doc.page.ts`, for example, to load some file and
+display it in the guide via `data` field. If you try to use `fs` or `path` packages, you will get an error,
+because these packages are not available by default.
+
+To solve this problem, you need to specify `externalPackages` property in your `ng-doc.config.ts` file,
+it will be passed to `esbuild` as `external` option.
+
+```typescript fileName="ng-doc.config.ts"
+import {NgDocConfiguration} from '@ng-doc/builder';
+
+const config: NgDocConfiguration = {
+  guide: {
+    externalPackages: ['fs', 'path']
+  },
 };
 
 export default config;
@@ -37,11 +79,11 @@ After that, NgDoc will start displaying links for editing and viewing the source
 import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
-	repoConfig: {
-		url: 'https://github.com/ng-doc/ng-doc',
-		mainBranch: 'main',
-		releaseBranch: 'release',
-	},
+  repoConfig: {
+    url: 'https://github.com/ng-doc/ng-doc',
+    mainBranch: 'main',
+    releaseBranch: 'release',
+  },
 };
 
 export default config;
@@ -74,21 +116,21 @@ import {NgDocRootModule} from '@ng-doc/app/components/root';
 import {NgDocSidebarModule} from '@ng-doc/app/components/sidebar';
 
 @NgModule({
-	imports: [
-		CommonModule,
-		NgDocNavbarModule,
-		NgDocSidebarModule,
-		NgDocModule.forRoot(),
-		NgDocGeneratedModule.forRoot(),
-		RouterModule.forChild([
-			{
-				path: '',
-				children: NG_DOC_ROUTING,
-			},
-		]),
-	],
-	declarations: [DocsComponent],
-	exports: [RouterModule],
+  imports: [
+    CommonModule,
+    NgDocNavbarModule,
+    NgDocSidebarModule,
+    NgDocModule.forRoot(),
+    NgDocGeneratedModule.forRoot(),
+    RouterModule.forChild([
+      {
+        path: '',
+        children: NG_DOC_ROUTING,
+      },
+    ]),
+  ],
+  declarations: [DocsComponent],
+  exports: [RouterModule],
 })
 export class DocsModule {}
 ```
@@ -102,20 +144,20 @@ Same for the component, we just move the content that NgDoc adds by default to `
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
-	selector: 'ng-doc-docs',
-	template: `
-		<ng-doc-root>
-			<ng-doc-navbar [leftContent]="leftContent">
-				<ng-template #leftContent>
-					<h3 style="margin: 0">MyAwesomeDoc</h3>
-				</ng-template>
-			</ng-doc-navbar>
-			<ng-doc-sidebar></ng-doc-sidebar>
-			<router-outlet></router-outlet>
-		</ng-doc-root>
-	`,
-	styleUrls: ['./docs.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'ng-doc-docs',
+  template: `
+    <ng-doc-root>
+      <ng-doc-navbar [leftContent]="leftContent">
+        <ng-template #leftContent>
+          <h3 style="margin: 0">MyAwesomeDoc</h3>
+        </ng-template>
+      </ng-doc-navbar>
+      <ng-doc-sidebar></ng-doc-sidebar>
+      <router-outlet></router-outlet>
+    </ng-doc-root>
+  `,
+  styleUrls: ['./docs.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocsComponent {}
 ```
@@ -132,17 +174,17 @@ import {RouterModule} from '@angular/router';
 import {AppComponent} from './app.component';
 
 @NgModule({
-	declarations: [AppComponent],
-	imports: [
-		BrowserModule,
-		RouterModule.forRoot([
-			{
-				path: 'docs',
-				loadChildren: () => import('./docs/docs.module').then((m: typeof import('./docs/docs.module')) => m.DocsModule),
-			},
-		]),
-	],
-	bootstrap: [AppComponent],
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    RouterModule.forRoot([
+      {
+        path: 'docs',
+        loadChildren: () => import('./docs/docs.module').then((m: typeof import('./docs/docs.module')) => m.DocsModule),
+      },
+    ]),
+  ],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
 ```
@@ -156,7 +198,7 @@ need to specify the `routePrefix` property in `ng-doc.config.ts` file.
 import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
-	routePrefix: 'docs',
+  routePrefix: 'docs',
 };
 
 export default config;

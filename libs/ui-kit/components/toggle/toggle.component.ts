@@ -63,23 +63,14 @@ export class NgDocToggleComponent<T> extends FlControlSelector<T> implements OnI
 
 						return fromEvent(document.body, 'mousemove').pipe(
 							pairwise(),
-							map(
-								([newEvent, oldEvent]: [Event, Event]) =>
-									[newEvent, oldEvent] as [MouseEvent, MouseEvent],
-							),
-							map(
-								([newEvent, oldEvent]: [MouseEvent, MouseEvent]) => oldEvent.clientX - newEvent.clientX,
-							),
+							map(([newEvent, oldEvent]: [Event, Event]) => [newEvent, oldEvent] as [MouseEvent, MouseEvent]),
+							map(([newEvent, oldEvent]: [MouseEvent, MouseEvent]) => oldEvent.clientX - newEvent.clientX),
 							filter((deltaX: number) => deltaX !== 0),
 							tap((deltaX: number) => this.changeCirclePosition(deltaX)),
 							startWith(null),
 							takeUntil(fromEvent(document.body, 'mouseup').pipe(tap(() => this.setDragging(false)))),
 							last(),
-							tap(
-								() =>
-									this.circle &&
-									this.renderer.setStyle(this.circle.nativeElement, 'transition', transition),
-							),
+							tap(() => this.circle && this.renderer.setStyle(this.circle.nativeElement, 'transition', transition)),
 						);
 					}),
 					untilDestroyed(this),
@@ -118,8 +109,7 @@ export class NgDocToggleComponent<T> extends FlControlSelector<T> implements OnI
 				NgDocPositionUtils.getElementPosition(this.wrapper.nativeElement).x +
 				this.wrapper.nativeElement.offsetWidth / 2;
 			const circleCenterLeft: number =
-				NgDocPositionUtils.getElementPosition(this.circle.nativeElement).x +
-				this.circle.nativeElement.offsetWidth / 2;
+				NgDocPositionUtils.getElementPosition(this.circle.nativeElement).x + this.circle.nativeElement.offsetWidth / 2;
 			circleCenterLeft > wrapperMiddle ? this.select() : this.deselect();
 			this.setState(!!this.checked);
 		}

@@ -1,9 +1,8 @@
 import {isPresent} from '@ng-doc/core';
-import * as console from 'console';
 import * as esbuild from 'esbuild';
 import * as fs from 'fs';
 import * as path from 'path';
-import {from, merge, Observable, of} from 'rxjs';
+import {forkJoin, from, merge, Observable, of} from 'rxjs';
 import {
 	catchError,
 	concatMap,
@@ -11,17 +10,16 @@ import {
 	map,
 	mapTo,
 	mergeMap,
-	share,
 	startWith,
 	switchMap,
 	takeUntil,
 	tap,
 } from 'rxjs/operators';
-import {InterfaceDeclaration, Project, SourceFile} from 'ts-morph';
+import {Project, SourceFile} from 'ts-morph';
 
 import {createProject, emitBuiltOutput, isFileEntity} from '../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../interfaces';
-import {bufferDebounce} from '../operators';
+import {bufferDebounce, progress} from '../operators';
 import {bufferUntilOnce} from '../operators/buffer-until-once';
 import {forkJoinOrEmpty} from '../operators/fork-join-or-empty';
 import {
@@ -33,6 +31,8 @@ import {
 } from './entities';
 import {NgDocEntity} from './entities/abstractions/entity';
 import {NgDocFileEntity} from './entities/abstractions/file.entity';
+import {invalidateCacheIfNeeded, NgDocCache} from './entities/cache';
+import {NgDocIndexesEntity} from './entities/indexes.entity';
 import {entityLifeCycle} from './entity-life-cycle';
 import {NgDocEntityStore} from './entity-store';
 import {buildCandidates} from './functions/build-candidates';
@@ -43,7 +43,9 @@ import {NgDocWatcher} from './watcher';
 export class NgDocBuilder {
 	readonly entities: NgDocEntityStore = new NgDocEntityStore();
 	readonly skeleton: NgDocSkeletonEntity = new NgDocSkeletonEntity(this, this.context);
+	readonly indexes: NgDocIndexesEntity = new NgDocIndexesEntity(this, this.context);
 	readonly renderer: NgDocRenderer = new NgDocRenderer();
+	readonly cache: NgDocCache = new NgDocCache(this.context.config?.cache !== false);
 	readonly project: Project;
 
 	constructor(readonly context: NgDocBuilderContext) {
@@ -51,7 +53,11 @@ export class NgDocBuilder {
 	}
 
 	run(): Observable<void> {
-		fs.rmSync(this.context.buildPath, {recursive: true, force: true});
+		if (this.context.config?.cache !== false && invalidateCacheIfNeeded(this.context.cachedFiles)) {
+			// do nothing
+		} else {
+			fs.rmSync(this.context.buildPath, {recursive: true, force: true});
+		}
 
 		const watcher: NgDocWatcher = new NgDocWatcher(
 			this.context.pagesPaths
@@ -76,6 +82,7 @@ export class NgDocBuilder {
 		);
 
 		return entities.pipe(
+			progress('Compiling entities...'),
 			tap(() => this.context.context.reportRunning()),
 			mergeMap((entities: NgDocEntity[]) => {
 				/*
@@ -126,12 +133,7 @@ export class NgDocBuilder {
 													),
 													startWith(null),
 													mapTo(entity),
-													takeUntil(
-														merge(
-															entity.onDestroy(),
-															watcher.onChange(...entity.rootFiles),
-														),
-													),
+													takeUntil(merge(entity.onDestroy(), watcher.onChange(...entity.rootFiles))),
 											  ),
 									),
 							  )
@@ -140,20 +142,28 @@ export class NgDocBuilder {
 				);
 			}),
 			bufferDebounce(50),
+			progress('Building documentation...'),
 			map((entities: Array<NgDocEntity | null>) => entities.filter(isPresent)),
 			tap(() => this.entities.updateKeywordMap(this.context.config.keywords)),
+			// Build only entities that are not cached or have changed
+			map((entities: NgDocEntity[]) => entities.filter((entity: NgDocEntity) => !this.cache.isCacheValid(entity))),
 			// Build touched entities and their dependencies
 			concatMap((entities: NgDocEntity[]) =>
 				forkJoinOrEmpty(
-					buildCandidates(entities).map((entity: NgDocEntity) => {
+					buildCandidates(this.entities, entities).map((entity: NgDocEntity) => {
 						return entity.destroyed ? of([]) : entity.buildArtifacts();
 					}),
 				).pipe(
 					switchMap((output: NgDocBuiltOutput[][]) =>
-						this.skeleton
-							.buildArtifacts()
-							.pipe(map((skeleton: NgDocBuiltOutput[]) => [...output.flat(), ...skeleton])),
+						forkJoin([this.skeleton.buildArtifacts(), this.indexes.buildArtifacts()]).pipe(
+							map(([skeleton, indexes]: [NgDocBuiltOutput[], NgDocBuiltOutput[]]) => [
+								...output.flat(),
+								...skeleton,
+								...indexes,
+							]),
+						),
 					),
+					progress('Emitting files...'),
 					tap((output: NgDocBuiltOutput[]) => {
 						/*
 							We emit files and only after that delete destroyed ones, because otherwise
@@ -164,11 +174,12 @@ export class NgDocBuilder {
 					}),
 				),
 			),
+			progress(),
 			mapTo(void 0),
 			catchError((e: Error) => {
 				this.context.context.logger.error(`NgDoc error: ${e.message}\n${e.stack}`);
 
-				return of(void 0);
+				return of(void 0).pipe(progress());
 			}),
 			finalize(() => watcher.close()),
 		) as unknown as Observable<void>;
@@ -195,6 +206,7 @@ export class NgDocBuilder {
 				bundle: true,
 				format: 'cjs',
 				treeShaking: true,
+				external: this.context.config.guide?.externalPackages,
 				outbase: this.context.context.workspaceRoot,
 				outdir: CACHE_PATH,
 			}),

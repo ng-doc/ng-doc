@@ -50,9 +50,9 @@ describe('filterByScope', () => {
 		const declaration: ClassDeclaration = sourceFile.getClassOrThrow('Test');
 
 		expect(
-			filterByScope(declaration.getProperties(), [Scope.Private, Scope.Protected]).map((property: PropertyDeclaration) =>
-				property.getName(),
+			filterByScope(declaration.getProperties(), [Scope.Private, Scope.Protected]).map(
+				(property: PropertyDeclaration) => property.getName(),
 			),
 		).toStrictEqual(['privateProperty1', 'privateProperty2', 'protectedProperty1', 'protectedProperty2']);
-	})
+	});
 });

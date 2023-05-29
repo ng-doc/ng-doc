@@ -5,9 +5,12 @@
 		"forceConsistentCasingInFileNames": true,
 		"strict": true,
 		"noImplicitOverride": true,
+		"noUnusedLocals": true,
 		"noPropertyAccessFromIndexSignature": true,
 		"noImplicitReturns": true,
 		"noFallthroughCasesInSwitch": true,
+		"experimentalDecorators": false,
+		"emitDecoratorMetadata": false,
 		"target": "es2019",
 		"lib": ["es2020"],
 		"esModuleInterop": true

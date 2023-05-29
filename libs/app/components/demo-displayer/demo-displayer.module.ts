@@ -3,11 +3,11 @@ import {NgModule} from '@angular/core';
 import {NgDocCodeModule} from '@ng-doc/app/components/code';
 import {NgDocCodeHighlighterModule} from '@ng-doc/app/directives/code-highlighter';
 import {
-    NgDocButtonIconModule,
-    NgDocExpanderModule,
-    NgDocIconModule,
-    NgDocSmoothResizeModule,
-    NgDocTooltipModule
+	NgDocButtonIconModule,
+	NgDocExpanderModule,
+	NgDocIconModule,
+	NgDocSmoothResizeModule,
+	NgDocTooltipModule,
 } from '@ng-doc/ui-kit';
 import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 

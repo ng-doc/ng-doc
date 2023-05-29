@@ -9,8 +9,10 @@ import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocApiPageEntity} from './api-page.entity';
 import {NgDocApiScopeEntity} from './api-scope.entity';
+import {CachedEntity} from './cache/decorators';
 import {NgDocCategoryEntity} from './category.entity';
 
+@CachedEntity()
 export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 	override moduleFileName: string = `${uniqueName('ng-doc-api-list')}.module.ts`;
 	override parent?: NgDocCategoryEntity;
@@ -67,9 +69,7 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		return super.update().pipe(
 			tap(() => {
 				if (!this.title) {
-					throw new Error(
-						`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`,
-					);
+					throw new Error(`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`);
 				}
 
 				this.parent = this.getParentFromCategory();

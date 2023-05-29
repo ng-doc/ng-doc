@@ -3,16 +3,18 @@ import {asArray} from '@ng-doc/core';
 import {isRouteEntity} from '../../helpers';
 import {NgDocEntity} from '../entities/abstractions/entity';
 import {NgDocRouteEntity} from '../entities/abstractions/route.entity';
+import {NgDocEntityStore} from '../entity-store';
 
 /**
  * Returns list of entities that should be rebuilt based on the provided list (including themselves).
  * List is creating based on relationships between entities and used keywords.
  *
+ * @param entityStore
  * @param entities - List of source entities
  * @returns List of entities that should be rebuilt (including source entities)
  */
-export function buildCandidates(entities: NgDocEntity[]): NgDocEntity[] {
-	const entitiesFromStore: NgDocEntity[] = asArray(entities[0]?.builder.entities.asArray());
+export function buildCandidates(entityStore: NgDocEntityStore, entities: NgDocEntity[]): NgDocEntity[] {
+	const entitiesFromStore: NgDocEntity[] = asArray(entityStore.asArray());
 	const candidates: NgDocEntity[] = asArray(
 		new Set(entities.map((buildable: NgDocEntity) => [buildable, ...buildable.buildCandidates]).flat()),
 	);
@@ -27,7 +29,12 @@ export function buildCandidates(entities: NgDocEntity[]): NgDocEntity[] {
 
 	const candidatesByKeywords: NgDocEntity[] = entitiesFromStore.filter(
 		(entity: NgDocEntity) =>
-			isRouteEntity(entity) && candidatesKeywords.some((keyword: string) => entity.usedKeywords.has(keyword)),
+			// Check if entity is route and has keywords that are used by candidates
+			candidatesKeywords.some(
+				(keyword: string) => entity.potentialKeywords.has(keyword) || entity.usedKeywords.has(keyword),
+			) ||
+			// Check if one of the used keywords is outdated
+			asArray(entity.usedKeywords).some((keyword: string) => !entityStore.getByKeyword(keyword)),
 	);
 
 	return asArray(new Set([...candidates, ...candidatesByKeywords])).sort(prioritySort);

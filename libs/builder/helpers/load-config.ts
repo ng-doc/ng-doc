@@ -9,7 +9,7 @@ import {NgDocConfiguration} from '../interfaces';
  *
  * @param searchFrom
  */
-export function loadConfig(searchFrom: string): NgDocConfiguration {
+export function loadConfig(searchFrom: string): [string, NgDocConfiguration] {
 	const moduleName: string = 'ng-doc';
 
 	const explorerSync: PublicExplorerSync = cosmiconfigSync(moduleName, {
@@ -20,5 +20,5 @@ export function loadConfig(searchFrom: string): NgDocConfiguration {
 	});
 	const searchedFor: CosmiconfigResult | null = explorerSync.search(searchFrom);
 
-	return searchedFor ? searchedFor.config : {};
+	return [searchedFor?.filepath ?? '', searchedFor?.config ?? {}];
 }

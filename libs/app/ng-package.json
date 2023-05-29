@@ -9,6 +9,7 @@
 		"@ng-doc/core",
 		"@ng-doc/ui-kit",
 		"@orama/plugin-match-highlight",
+		"@orama/stemmers",
 		"highlight.js",
 		"js-beautify"
 	]

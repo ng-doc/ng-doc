@@ -26,9 +26,7 @@ export class NgDocPageComponent {
 	}
 
 	private flatPages(items: NgDocNavigation[]): NgDocNavigation[] {
-		return items
-			.map((item: NgDocNavigation) => [item.children?.length ? this.flatPages(item.children) : item])
-			.flat(2);
+		return items.map((item: NgDocNavigation) => [item.children?.length ? this.flatPages(item.children) : item]).flat(2);
 	}
 
 	private get url(): string {

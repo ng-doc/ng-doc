@@ -1,4 +1,3 @@
-import {QueryList} from '@angular/core';
 import {Observable, of} from 'rxjs';
 
 export const EMPTY_ARRAY: [] = [];

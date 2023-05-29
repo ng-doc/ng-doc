@@ -3,7 +3,6 @@ import {
 	Component,
 	ComponentRef,
 	HostBinding,
-	Injector,
 	Input,
 	OnChanges,
 	SimpleChanges,
@@ -39,8 +38,6 @@ export class NgDocPlaygroundPropertyComponent implements OnChanges {
 
 	protected option?: NgDocTypeControlProviderOptions;
 	private propertyTypeControl?: ComponentRef<NgDocTypeControl>;
-
-	constructor(private readonly injector: Injector) {}
 
 	ngOnChanges({property, control, typeControl}: SimpleChanges): void {
 		if ((property || control || typeControl) && this.property && this.typeControl) {

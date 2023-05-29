@@ -2,7 +2,7 @@
 	<span class="ng-doc-code-file-name" ng-doc-text>{{ fileName }}</span>
 </div>
 <div class="ng-doc-code-body">
-	<div class="ng-doc-code-wrapper" [innerHTML]="html" ngDocLinkProcessor *ngIf="html"></div>
+	<div class="ng-doc-code-wrapper" [innerHTML]="html | ngDocSanitizeHtml" ngDocLinkProcessor *ngIf="html"></div>
 	<div class="ng-doc-code-wrapper" *ngIf="!html">
 		<ng-content></ng-content>
 	</div>

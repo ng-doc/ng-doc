@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {NgDocSelectionModule} from '@ng-doc/ui-kit/components/selection';
-import {NgDocSmoothResizeModule} from "@ng-doc/ui-kit/components/smooth-resize";
+import {NgDocSmoothResizeModule} from '@ng-doc/ui-kit/components/smooth-resize';
 import {NgDocTextModule} from '@ng-doc/ui-kit/components/text';
 import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 

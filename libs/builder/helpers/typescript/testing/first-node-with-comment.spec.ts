@@ -1,9 +1,6 @@
-import {ClassDeclaration, MethodDeclaration, Project, PropertyDeclaration, Scope, SourceFile} from 'ts-morph';
+import {ClassDeclaration, Project, SourceFile} from 'ts-morph';
 
 import {createProject} from '../create-project';
-import {displayType} from '../display-type';
-import {filterByScope} from '../filter-by-scope';
-import {filterByStatic} from '../filter-by-static';
 import {firstNodeWithComment} from '../first-node-with-comment';
 
 //*

@@ -7,22 +7,23 @@ and how to create a custom search.
 
 By default, the search is configured to search in English. If your documentation is in another
 language, you can change the language of the search to match your documentation.
-To do so, you need to provide the preferred language to the `provideSearchEngine` function
-in your root module.
+To do so, you need to import stemmer from `@orama/stemmers` package and provide it to the
+`provideSearchEngine` function in your root module.
 
 ```ts fileName="app.module.ts"
 import {NgModule} from '@angular/core';
 import {NgDocDefaultSearchEngine, provideSearchEngine} from '@ng-doc/app';
 
 import {AppComponent} from './app.component';
+import {stemmer} from '@orama/stemmers/dutch';
 
 @NgModule({
-	declarations: [AppComponent],
-	imports: [
-		// ...
-	],
-	providers: [provideSearchEngine(NgDocDefaultSearchEngine, {language: 'dutch'})],
-	bootstrap: [AppComponent],
+  declarations: [AppComponent],
+  imports: [
+    // ...
+  ],
+  providers: [provideSearchEngine(NgDocDefaultSearchEngine, {stemmer})],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
 ```
@@ -41,12 +42,12 @@ import {NgDocDefaultSearchEngine, provideSearchEngine} from '@ng-doc/app';
 import {AppComponent} from './app.component';
 
 @NgModule({
-	declarations: [AppComponent],
-	imports: [
-		// ...
-	],
-	providers: [provideSearchEngine(NgDocDefaultSearchEngine, {limit: 20})],
-	bootstrap: [AppComponent],
+  declarations: [AppComponent],
+  imports: [
+    // ...
+  ],
+  providers: [provideSearchEngine(NgDocDefaultSearchEngine, {limit: 20})],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
 ```
@@ -80,42 +81,42 @@ import {from, Observable} from 'rxjs';
 import {map, shareReplay, switchMap} from 'rxjs/operators';
 
 export class CustomSearchEngine extends NgDocSearchEngine {
-	// Load indexes from assets
-	indexes: Observable<NgDocPageIndex[]> = from(fetch(`assets/ng-doc/indexes.json`)).pipe(
-		switchMap((response: Response) => response.json() as Promise<NgDocPageIndex[]>),
-		// Use `shareReplay(1)` to cache the response and avoid making multiple requests
-		shareReplay(1),
-	);
+  // Load indexes from assets
+  indexes: Observable<NgDocPageIndex[]> = from(fetch(`assets/ng-doc/indexes.json`)).pipe(
+    switchMap((response: Response) => response.json() as Promise<NgDocPageIndex[]>),
+    // Use `shareReplay(1)` to cache the response and avoid making multiple requests
+    shareReplay(1),
+  );
 
-	search(query: string): Observable<NgDocSearchResult[]> {
-		return this.indexes.pipe(map((indexes: NgDocPageIndex[]) => this.filterIndexes(indexes, query)));
-	}
+  search(query: string): Observable<NgDocSearchResult[]> {
+    return this.indexes.pipe(map((indexes: NgDocPageIndex[]) => this.filterIndexes(indexes, query)));
+  }
 
-	private filterIndexes(indexes: NgDocPageIndex[], query: string): NgDocSearchResult[] {
-		return (
-			indexes
-				// Filter indexes by query
-				.filter((index: NgDocPageIndex) => index.content.toLowerCase().includes(query.toLowerCase()))
-				// Get first 10 results, you can remove this line to get all results
-				// it's recommended to limit the number of results to avoid performance issues
-				.slice(0, 10)
-				// Map indexes to search results
-				.map((index: NgDocPageIndex) => ({
-					index,
-					// You can provide a list of positions where the query was found in the title
-					// then the search component will highlight them
-					positions: {
-						// Provide the key of the section where the query was found and it's position
-						content: [
-							{
-								start: index.content.toLowerCase().indexOf(query.toLowerCase()),
-								length: query.length,
-							},
-						],
-					},
-				}))
-		);
-	}
+  private filterIndexes(indexes: NgDocPageIndex[], query: string): NgDocSearchResult[] {
+    return (
+      indexes
+        // Filter indexes by query
+        .filter((index: NgDocPageIndex) => index.content.toLowerCase().includes(query.toLowerCase()))
+        // Get first 10 results, you can remove this line to get all results
+        // it's recommended to limit the number of results to avoid performance issues
+        .slice(0, 10)
+        // Map indexes to search results
+        .map((index: NgDocPageIndex) => ({
+          index,
+          // You can provide a list of positions where the query was found in the title
+          // then the search component will highlight them
+          positions: {
+            // Provide the key of the section where the query was found and it's position
+            content: [
+              {
+                start: index.content.toLowerCase().indexOf(query.toLowerCase()),
+                length: query.length,
+              },
+            ],
+          },
+        }))
+    );
+  }
 }
 ```
 
@@ -129,12 +130,12 @@ import {provideSearchEngine} from '@ng-doc/app';
 import {AppComponent} from './app.component';
 
 @NgModule({
-	declarations: [AppComponent],
-	imports: [
-		// ...
-	],
-	providers: [provideSearchEngine(CustomSearchEngine)],
-	bootstrap: [AppComponent],
+  declarations: [AppComponent],
+  imports: [
+    // ...
+  ],
+  providers: [provideSearchEngine(CustomSearchEngine)],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
 ```
