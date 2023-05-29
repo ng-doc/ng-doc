@@ -1,14 +1,60 @@
+import {NgIf} from '@angular/common';
 import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
-import {Router, UrlTree} from '@angular/router';
+import {Router, RouterLink, UrlTree} from '@angular/router';
 import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
+import {NgDocBreadcrumbComponent} from '@ng-doc/app/components/breadcrumb';
+import {NgDocTocComponent} from '@ng-doc/app/components/toc';
 import {NgDocContext, NgDocNavigation} from '@ng-doc/app/interfaces';
+import {NgDocSanitizeHtmlPipe} from '@ng-doc/app/pipes/sanitize-html';
+import {
+	NgDocBlockquoteProcessorDirective,
+	NgDocCodeProcessorDirective,
+	NgDocDemoPaneProcessorDirective,
+	NgDocDemoProcessorDirective,
+	NgDocIconProcessorDirective,
+	NgDocLinkProcessorDirective,
+	NgDocPlaygroundProcessorDirective,
+	NgDocTooltipProcessorDirective,
+} from '@ng-doc/app/processors';
 import {NG_DOC_CONTEXT} from '@ng-doc/app/tokens';
+import {
+	NgDocButtonIconComponent,
+	NgDocIconComponent,
+	NgDocMediaQueryDirective,
+	NgDocTextComponent,
+	NgDocTextLeftDirective,
+	NgDocTextRightDirective,
+	NgDocTooltipDirective,
+} from '@ng-doc/ui-kit';
 
 @Component({
 	selector: 'ng-doc-page',
 	templateUrl: './page.component.html',
 	styleUrls: ['./page.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [
+		NgIf,
+		NgDocBreadcrumbComponent,
+		NgDocButtonIconComponent,
+		NgDocTooltipDirective,
+		NgDocIconComponent,
+		NgDocBlockquoteProcessorDirective,
+		NgDocLinkProcessorDirective,
+		NgDocCodeProcessorDirective,
+		NgDocIconProcessorDirective,
+		NgDocTooltipProcessorDirective,
+		NgDocDemoProcessorDirective,
+		NgDocDemoPaneProcessorDirective,
+		NgDocPlaygroundProcessorDirective,
+		RouterLink,
+		NgDocTextComponent,
+		NgDocTextLeftDirective,
+		NgDocTextRightDirective,
+		NgDocMediaQueryDirective,
+		NgDocTocComponent,
+		NgDocSanitizeHtmlPipe,
+	],
 })
 export class NgDocPageComponent {
 	readonly prevPage?: NgDocNavigation;

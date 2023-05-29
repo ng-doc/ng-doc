@@ -9,6 +9,7 @@ import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 @Directive({
 	selector: '[ngDocFocusCatcher]',
 	exportAs: 'ngDocFocusCatcher',
+	standalone: true,
 })
 @UntilDestroy()
 export class NgDocFocusCatcherDirective {

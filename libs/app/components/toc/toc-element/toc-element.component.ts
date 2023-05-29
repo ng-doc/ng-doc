@@ -5,6 +5,7 @@ import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input} from
 	templateUrl: './toc-element.component.html',
 	styleUrls: ['./toc-element.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
 })
 export class NgDocTocElementComponent {
 	@Input()

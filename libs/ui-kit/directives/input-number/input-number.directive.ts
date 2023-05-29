@@ -7,6 +7,7 @@ import {UntilDestroy} from '@ngneat/until-destroy';
 @Directive({
 	selector: `input[ngDocInputNumber]`,
 	providers: [{provide: NgDocBaseInput, useExisting: NgDocInputNumberDirective}],
+	standalone: true,
 })
 @UntilDestroy()
 export class NgDocInputNumberDirective extends NgDocBaseInput<number> {

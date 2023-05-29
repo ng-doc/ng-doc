@@ -6,6 +6,7 @@ import {NgDocSize} from '@ng-doc/ui-kit/types';
 	templateUrl: './button-icon.component.html',
 	styleUrls: ['./button-icon.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
 })
 export class NgDocButtonIconComponent {
 	@Input()

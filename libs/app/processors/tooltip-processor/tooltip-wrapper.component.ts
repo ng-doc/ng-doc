@@ -7,6 +7,7 @@ import {
 	Input,
 	ViewChild,
 } from '@angular/core';
+import {NgDocTooltipDirective} from '@ng-doc/ui-kit';
 
 @Component({
 	selector: 'ng-doc-tooltip-wrapper',
@@ -29,6 +30,8 @@ import {
 		`,
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [NgDocTooltipDirective],
 })
 export class NgDocTooltipWrapperComponent implements AfterViewInit {
 	@Input()

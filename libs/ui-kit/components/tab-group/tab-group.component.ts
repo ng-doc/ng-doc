@@ -1,3 +1,4 @@
+import {NgFor} from '@angular/common';
 import {
 	AfterContentInit,
 	AfterViewInit,
@@ -11,7 +12,14 @@ import {
 	ViewChildren,
 } from '@angular/core';
 import {tabFadeAnimation} from '@ng-doc/ui-kit/animations';
+import {
+	NgDocSelectionComponent,
+	NgDocSelectionHostDirective,
+	NgDocSelectionOriginDirective,
+} from '@ng-doc/ui-kit/components/selection';
+import {NgDocSmoothResizeComponent} from '@ng-doc/ui-kit/components/smooth-resize';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
+import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 import {startWith} from 'rxjs/operators';
 
 import {NgDocTabComponent} from './tab/tab.component';
@@ -22,6 +30,15 @@ import {NgDocTabComponent} from './tab/tab.component';
 	templateUrl: './tab-group.component.html',
 	styleUrls: ['./tab-group.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [
+		NgDocSelectionHostDirective,
+		NgDocSelectionComponent,
+		NgFor,
+		NgDocSelectionOriginDirective,
+		PolymorpheusModule,
+		NgDocSmoothResizeComponent,
+	],
 })
 @UntilDestroy()
 export class NgDocTabGroupComponent<T> implements AfterContentInit, AfterViewInit {

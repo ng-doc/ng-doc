@@ -4,6 +4,7 @@ import {NgDocExtractedValue} from '@ng-doc/core/types/extracted-value';
 
 @Pipe({
 	name: 'ngDocExtractValue',
+	standalone: true,
 })
 export class NgDocExtractValuePipe implements PipeTransform {
 	transform(value: string): NgDocExtractedValue {

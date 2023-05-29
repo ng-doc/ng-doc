@@ -1,3 +1,4 @@
+import {NgIf} from '@angular/common';
 import {
 	AfterContentChecked,
 	ChangeDetectionStrategy,
@@ -17,6 +18,8 @@ import {NgDocTextRightDirective} from './text-right.directive';
 	templateUrl: './text.component.html',
 	styleUrls: ['./text.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [NgIf],
 })
 export class NgDocTextComponent implements AfterContentChecked {
 	/** Text size */

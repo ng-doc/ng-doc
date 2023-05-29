@@ -1,11 +1,32 @@
 import {Clipboard} from '@angular/cdk/clipboard';
+import {NgIf} from '@angular/common';
 import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input} from '@angular/core';
+import {NgDocSanitizeHtmlPipe} from '@ng-doc/app/pipes/sanitize-html';
+import {NgDocLinkProcessorDirective} from '@ng-doc/app/processors/link-processor';
+import {
+	NgDocButtonIconComponent,
+	NgDocIconComponent,
+	NgDocSmoothResizeComponent,
+	NgDocTextComponent,
+	NgDocTooltipDirective,
+} from '@ng-doc/ui-kit';
 
 @Component({
 	selector: 'ng-doc-code',
 	templateUrl: './code.component.html',
 	styleUrls: ['./code.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [
+		NgIf,
+		NgDocTextComponent,
+		NgDocLinkProcessorDirective,
+		NgDocButtonIconComponent,
+		NgDocTooltipDirective,
+		NgDocSmoothResizeComponent,
+		NgDocIconComponent,
+		NgDocSanitizeHtmlPipe,
+	],
 })
 export class NgDocCodeComponent {
 	@Input()

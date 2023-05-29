@@ -68,12 +68,34 @@ Your page content fully supports the `markdown` syntax, but it is
 extended with the `nunjucks` engine which allows you to reuse one template for multiple pages, or
 render content dynamically, see `*GuidesTemplating` for more details.
 
+## Module
+
+If you are gonna create demos on the page and prefer non-standalone components,
+then you need to create a module that will declare your demos components, to do this you can use
+the `--module` (alias is `-m`) option, which will create a page and a module file for it.
+
+```bash
+ng g @ng-doc/builder:page "Installation" -m
+```
+
+You can also create a module file manually, but you need to import it into the page file.
+
+```typescript fileName="ng-doc.page.ts"
+import {NgDocPage} from '@ng-doc/core';
+import {MyModule} from '../my.module';
+
+export const MyAwesomePage: NgDocPage = {
+  imports: [MyModule],
+};
+
+export default MyAwesomePage;
+```
+
 {% index false %}
 
 ## See also
 
 - `*EntitiesCategory`
-- `*EntitiesDependencies`
 - `*GuidesTemplating`
 - `*GuidesDemo`
 

@@ -6,6 +6,7 @@ import {NgDocTooltipWrapperComponent} from './tooltip-wrapper.component';
 
 @Directive({
 	selector: '[ngDocTooltipProcessor]',
+	standalone: true,
 })
 export class NgDocTooltipProcessorDirective extends NgDocHtmlProcessor<NgDocTooltipWrapperComponent> {
 	constructor(

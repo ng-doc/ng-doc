@@ -19,7 +19,7 @@ import {
 	typeAliasPresentation,
 	variablePresentation,
 } from '../presentation';
-import {createProject} from '../typescript';
+import {createProject} from '../typescript/create-project';
 
 describe('presentation', () => {
 	let project: Project;

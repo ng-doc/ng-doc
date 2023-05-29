@@ -9,6 +9,7 @@ import {fromEvent, merge} from 'rxjs';
 
 @Directive({
 	selector: '[ngDocEventSwitcher]',
+	standalone: true,
 })
 @UntilDestroy()
 export class NgDocEventSwitcherDirective implements OnInit {

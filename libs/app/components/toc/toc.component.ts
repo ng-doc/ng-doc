@@ -1,4 +1,4 @@
-import {DOCUMENT} from '@angular/common';
+import {DOCUMENT, NgFor} from '@angular/common';
 import {
 	AfterViewInit,
 	ChangeDetectionStrategy,
@@ -30,6 +30,8 @@ import {NgDocTocElementComponent} from './toc-element/toc-element.component';
 	templateUrl: './toc.component.html',
 	styleUrls: ['./toc.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [NgFor, NgDocTocElementComponent],
 })
 @UntilDestroy()
 export class NgDocTocComponent implements OnChanges, AfterViewInit {

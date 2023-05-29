@@ -5,6 +5,7 @@ import {NgDocIconComponent, NgDocIconSize} from '@ng-doc/ui-kit';
 
 @Directive({
 	selector: '[ngDocIconProcessor]',
+	standalone: true,
 })
 export class NgDocIconProcessorDirective extends NgDocHtmlProcessor<NgDocIconComponent> {
 	constructor(

@@ -1,3 +1,4 @@
+import {AsyncPipe, NgFor, NgIf, NgTemplateOutlet} from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -6,11 +7,34 @@ import {
 	HostBinding,
 	Input,
 	Optional,
-	ViewChild
+	ViewChild,
 } from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {RouterLink} from '@angular/router';
 import {NgDocSearchEngine} from '@ng-doc/app/classes/search-engine';
 import {NgDocSearchResult} from '@ng-doc/app/interfaces';
-import {NgDocHighlightPosition, observableState, StatedObservable} from '@ng-doc/ui-kit';
+import {NgDocSanitizeHtmlPipe} from '@ng-doc/app/pipes';
+import {
+	NgDocAutofocusDirective,
+	NgDocButtonIconComponent,
+	NgDocDataListComponent,
+	NgDocDropdownComponent,
+	NgDocDropdownOriginDirective,
+	NgDocFocusCatcherDirective,
+	NgDocHighlighterPipe,
+	NgDocHighlightPosition,
+	NgDocHotkeyDirective,
+	NgDocIconComponent,
+	NgDocInputStringDirective,
+	NgDocInputWrapperComponent,
+	NgDocLetDirective,
+	NgDocRunPipe,
+	NgDocSpinnerComponent,
+	NgDocTagComponent,
+	NgDocTextComponent,
+	observableState,
+	StatedObservable,
+} from '@ng-doc/ui-kit';
 import {NgDocListHost} from '@ng-doc/ui-kit/classes';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {BehaviorSubject, NEVER} from 'rxjs';
@@ -26,6 +50,32 @@ import {skip, switchMap} from 'rxjs/operators';
 			provide: NgDocListHost,
 			useExisting: forwardRef(() => NgDocSearchComponent),
 		},
+	],
+	standalone: true,
+	imports: [
+		NgDocLetDirective,
+		NgIf,
+		NgDocButtonIconComponent,
+		NgDocDropdownOriginDirective,
+		NgDocIconComponent,
+		NgDocDropdownComponent,
+		NgDocInputWrapperComponent,
+		NgDocInputStringDirective,
+		FormsModule,
+		NgDocAutofocusDirective,
+		NgTemplateOutlet,
+		NgDocFocusCatcherDirective,
+		NgDocHotkeyDirective,
+		NgDocTagComponent,
+		NgDocDataListComponent,
+		RouterLink,
+		NgDocTextComponent,
+		NgFor,
+		NgDocSpinnerComponent,
+		AsyncPipe,
+		NgDocHighlighterPipe,
+		NgDocRunPipe,
+		NgDocSanitizeHtmlPipe,
 	],
 })
 @UntilDestroy()

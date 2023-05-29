@@ -1,7 +1,8 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgDocTypeControl} from '@ng-doc/app';
 import {EMPTY_FUNCTION} from '@ng-doc/core';
+import {NgDocInputStringDirective, NgDocInputWrapperComponent, NgDocLabelComponent} from '@ng-doc/ui-kit';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 
 import {FloatingCirclePosition} from '../floating-circle/floating-circle.component';
@@ -11,6 +12,14 @@ import {FloatingCirclePosition} from '../floating-circle/floating-circle.compone
   templateUrl: './floating-circle-position-control.component.html',
   styleUrls: ['./floating-circle-position-control.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    NgDocLabelComponent,
+    NgDocInputWrapperComponent,
+    NgDocInputStringDirective,
+  ],
 })
 @UntilDestroy()
 export class FloatingCirclePositionControlComponent implements NgDocTypeControl {

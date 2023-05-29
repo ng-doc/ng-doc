@@ -9,6 +9,7 @@ import {NgDocSelectionHostDirective} from './selection-host.directive';
 	template: '',
 	styleUrls: ['./selection.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
 })
 @UntilDestroy()
 export class NgDocSelectionComponent implements AfterViewInit {

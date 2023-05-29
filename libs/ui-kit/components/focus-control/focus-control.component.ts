@@ -1,5 +1,6 @@
 import {DOCUMENT} from '@angular/common';
 import {ChangeDetectionStrategy, Component, Inject, Input} from '@angular/core';
+import {NgDocFocusableDirective} from '@ng-doc/ui-kit/directives/focusable';
 import {NgDocFocusUtils} from '@ng-doc/ui-kit/utils';
 
 @Component({
@@ -11,6 +12,8 @@ import {NgDocFocusUtils} from '@ng-doc/ui-kit/utils';
 	`,
 	styles: [':host {width: 100%}'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [NgDocFocusableDirective],
 })
 export class NgDocFocusControlComponent {
 	@Input()

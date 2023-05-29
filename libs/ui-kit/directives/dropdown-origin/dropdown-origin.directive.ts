@@ -11,6 +11,7 @@ import {NgDocOverlayHost} from '@ng-doc/ui-kit/classes/overlay-host';
 			useExisting: NgDocDropdownOriginDirective,
 		},
 	],
+	standalone: true,
 })
 export class NgDocDropdownOriginDirective extends CdkOverlayOrigin implements NgDocOverlayHost {
 	constructor(public origin: ElementRef<HTMLElement>) {

@@ -1,3 +1,4 @@
+import {NgIf} from '@angular/common';
 import {
 	AfterViewChecked,
 	ChangeDetectionStrategy,
@@ -13,11 +14,15 @@ import {
 } from '@angular/core';
 import {NgDocBaseInput} from '@ng-doc/ui-kit/classes/base-input';
 import {NgDocInputHost} from '@ng-doc/ui-kit/classes/input-host';
+import {NgDocFloatedBorderComponent} from '@ng-doc/ui-kit/components/floated-border';
+import {NgDocFloatedContentComponent} from '@ng-doc/ui-kit/components/floated-content';
+import {NgDocWrapperComponent} from '@ng-doc/ui-kit/components/wrapper';
 import {ngDocMakePure} from '@ng-doc/ui-kit/decorators';
 import {NgDocFocusCatcherDirective} from '@ng-doc/ui-kit/directives/focus-catcher';
 import {NgDocContextWithImplicit} from '@ng-doc/ui-kit/interfaces';
 import {NgDocContent, NgDocTextAlign} from '@ng-doc/ui-kit/types';
 import {UntilDestroy} from '@ngneat/until-destroy';
+import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 import {FL_CONTROL_HOST, FlControl, FlControlHost} from 'flex-controls';
 
 @Component({
@@ -31,6 +36,15 @@ import {FL_CONTROL_HOST, FlControl, FlControlHost} from 'flex-controls';
 		},
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [
+		NgDocWrapperComponent,
+		NgDocFocusCatcherDirective,
+		NgDocFloatedBorderComponent,
+		NgIf,
+		PolymorpheusModule,
+		NgDocFloatedContentComponent,
+	],
 })
 @UntilDestroy()
 export class NgDocInputWrapperComponent<T, B = unknown> implements AfterViewChecked, NgDocInputHost<T> {

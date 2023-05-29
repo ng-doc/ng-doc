@@ -2,7 +2,6 @@
 export default {
 	displayName: 'builder',
 	preset: '../../jest.preset.js',
-	globals: {},
 	transform: {
 		'^.+\\.[tj]s$': [
 			'ts-jest',

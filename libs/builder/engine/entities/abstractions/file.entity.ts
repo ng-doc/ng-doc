@@ -1,10 +1,9 @@
-import * as fs from 'fs';
 import minimatch from 'minimatch';
 import * as path from 'path';
 import {Observable, of, throwError} from 'rxjs';
-import {OutputFile, SyntaxKind} from 'ts-morph';
+import {ObjectLiteralExpression, SyntaxKind} from 'ts-morph';
 
-import {isCategoryEntity} from '../../../helpers';
+import {getObjectExpressionFromDefault, isCategoryEntity} from '../../../helpers';
 import {CATEGORY_PATTERN} from '../../variables';
 import {NgDocCategoryEntity} from '../category.entity';
 import {NgDocEntity} from './entity';
@@ -14,6 +13,7 @@ import {NgDocSourceFileEntity} from './source-file.entity';
  * Entity for file end points that generate modules and components.
  */
 export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
+	objectExpression: ObjectLiteralExpression | undefined;
 	/**
 	 * Entity target.
 	 */
@@ -25,11 +25,10 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 		try {
 			delete require.cache[require.resolve(this.pathToCompiledFile)];
 			this.target = require(this.pathToCompiledFile).default;
+			this.objectExpression = getObjectExpressionFromDefault(this.sourceFile);
 
-			if (!this.target) {
-				new Error(
-					`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`,
-				);
+			if (!this.target || !this.objectExpression) {
+				new Error(`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`);
 			}
 		} catch (e: unknown) {
 			return throwError(e);
@@ -41,7 +40,7 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 	}
 
 	protected getParentFromCategory(): NgDocCategoryEntity | undefined {
-		const sourceFilePath: string | undefined = this.getObjectExpressionFromDefault()
+		const sourceFilePath: string | undefined = this.objectExpression
 			?.getProperty('category')
 			?.getChildrenOfKind(SyntaxKind.Identifier)
 			?.pop()
@@ -65,12 +64,5 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 
 	override removeArtifacts() {
 		super.removeArtifacts();
-
-		this.sourceFile
-			.getEmitOutput()
-			.getOutputFiles()
-			.forEach((file: OutputFile) => {
-				fs.existsSync(file.getFilePath()) && fs.unlinkSync(file.getFilePath());
-			});
 	}
 }

@@ -1,5 +1,9 @@
+import {NgIf} from '@angular/common';
 import {AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Optional} from '@angular/core';
 import {NgDocInputHost} from '@ng-doc/ui-kit/classes/input-host';
+import {NgDocButtonIconComponent} from '@ng-doc/ui-kit/components/button-icon';
+import {NgDocIconComponent} from '@ng-doc/ui-kit/components/icon';
+import {NgDocFocusableDirective} from '@ng-doc/ui-kit/directives/focusable';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {FL_CONTROL_HOST, FlControl, FlControlHost} from 'flex-controls';
 
@@ -8,6 +12,8 @@ import {FL_CONTROL_HOST, FlControl, FlControlHost} from 'flex-controls';
 	templateUrl: './clear-control.component.html',
 	styleUrls: ['./clear-control.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [NgIf, NgDocButtonIconComponent, NgDocFocusableDirective, NgDocIconComponent],
 })
 @UntilDestroy()
 export class NgDocClearControlComponent<T> extends FlControl<T> implements AfterContentInit {

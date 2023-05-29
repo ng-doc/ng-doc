@@ -7,6 +7,7 @@ export interface FloatingCirclePosition {
 
 @Component({
   selector: 'ng-doc-floating-circle',
+  standalone: true,
   templateUrl: './floating-circle.component.html',
   styleUrls: ['./floating-circle.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

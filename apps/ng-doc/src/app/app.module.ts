@@ -8,11 +8,16 @@ import {
 	NgDocModule,
 	NgDocNavbarModule,
 	NgDocSidebarModule,
-	NgDocThemeToggleModule,
+	NgDocThemeToggleComponent,
 	provideSearchEngine,
 } from '@ng-doc/app';
 import {NgDocGeneratedModule} from '@ng-doc/generated';
-import {NgDocButtonIconModule, NgDocIconModule, NgDocMediaQueryModule, NgDocTooltipModule} from '@ng-doc/ui-kit';
+import {
+	NgDocButtonIconComponent,
+	NgDocIconComponent,
+	NgDocMediaQueryDirective,
+	NgDocTooltipDirective,
+} from '@ng-doc/ui-kit';
 
 import {AppComponent} from './app.component';
 
@@ -50,11 +55,11 @@ import {AppComponent} from './app.component';
 		),
 		NgDocNavbarModule,
 		NgDocSidebarModule,
-		NgDocButtonIconModule,
-		NgDocIconModule,
-		NgDocTooltipModule,
-		NgDocThemeToggleModule,
-		NgDocMediaQueryModule,
+		NgDocMediaQueryDirective,
+		NgDocButtonIconComponent,
+		NgDocThemeToggleComponent,
+		NgDocTooltipDirective,
+		NgDocIconComponent,
 	],
 	providers: [provideSearchEngine(NgDocDefaultSearchEngine)],
 	bootstrap: [AppComponent],
