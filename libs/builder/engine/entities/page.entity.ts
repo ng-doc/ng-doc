@@ -35,7 +35,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	playgroundsExpression: ObjectLiteralExpression | undefined;
 	demoClassDeclarations: ClassDeclaration[] = [];
 	playgroundClassDeclarations: ClassDeclaration[] = [];
-	standalone: ClassDeclaration[] = [];
+	standalonePlaygroundKeys: string[] = [];
 
 	override parent?: NgDocCategoryEntity;
 	override compilable: boolean = true;
@@ -157,7 +157,21 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 				if (this.objectExpression) {
 					this.playgroundsExpression = getPlaygroundsExpression(this.objectExpression);
 					this.demoClassDeclarations = getDemoClassDeclarations(this.objectExpression);
-					this.playgroundClassDeclarations = getPlaygroundTargets(this.objectExpression);
+					this.playgroundClassDeclarations = asArray(new Set(getPlaygroundTargets(this.objectExpression)));
+
+					this.standalonePlaygroundKeys = asArray(this.playgroundIds
+						.reduce((keys: Map<ClassDeclaration, string>, id: string) => {
+							if (this.playgroundsExpression) {
+								const target: ClassDeclaration | undefined = getTargetForPlayground(this.playgroundsExpression, id);
+
+								if (target && isStandalone(target)) {
+									keys.set(target, id);
+								}
+							}
+
+							return keys;
+						}, new Map<ClassDeclaration, string>)
+						.values());
 				}
 			}),
 			catchError((error: unknown) => {
@@ -256,10 +270,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	}
 
 	private fillAssets(): Observable<void> {
-		this.standalone = [...this.demoClassDeclarations, ...this.playgroundClassDeclarations].filter(
-			(cls: ClassDeclaration) => isStandalone(cls),
-		);
-
 		if (this.objectExpression) {
 			this.componentAssets = this.demoClassDeclarations
 				.map((classDeclarations: ClassDeclaration) =>
