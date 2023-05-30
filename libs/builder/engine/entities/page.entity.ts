@@ -133,12 +133,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return !!this.objectExpression?.getProperty('imports');
 	}
 
-	override dependenciesChanged() {
-		super.dependenciesChanged();
-
-		this.getTargets().forEach((target: ClassDeclaration) => target.getSourceFile().refreshFromFileSystem());
-	}
-
 	override update(): Observable<void> {
 		return super.update().pipe(
 			tap(() => {
@@ -173,6 +167,8 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 						}, new Map<ClassDeclaration, string>)
 						.values());
 				}
+
+
 			}),
 			catchError((error: unknown) => {
 				this.readyToBuild = false;
@@ -193,6 +189,8 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
+			this.playgroundClassDeclarations.forEach((target: ClassDeclaration) => target.getSourceFile().refreshFromFileSystemSync());
+
 			const page: Observable<string> = this.builder.renderer
 				.render(this.target.mdFile, {
 					scope: this.sourceFileFolder,
@@ -261,12 +259,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 					filePath: this.playgroundsPath,
 				})),
 			);
-	}
-
-	private getTargets(): ClassDeclaration[] {
-		return this.playgroundIds
-			.map((pId: string) => this.playgroundsExpression && getTargetForPlayground(this.playgroundsExpression, pId))
-			.filter(isPresent);
 	}
 
 	private fillAssets(): Observable<void> {

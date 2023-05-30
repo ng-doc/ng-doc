@@ -38,7 +38,7 @@ export class NgDocBuilder {
 	readonly skeleton: NgDocSkeletonEntity = new NgDocSkeletonEntity(this, this.context);
 	readonly indexes: NgDocIndexesEntity = new NgDocIndexesEntity(this, this.context);
 	readonly renderer: NgDocRenderer = new NgDocRenderer();
-	readonly cache: NgDocCache = new NgDocCache(this.context.config?.cache !== false);
+	readonly cache: NgDocCache = new NgDocCache(!!this.context.config?.cache);
 	readonly project: Project;
 
 	constructor(readonly context: NgDocBuilderContext) {

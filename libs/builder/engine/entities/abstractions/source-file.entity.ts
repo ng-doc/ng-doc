@@ -1,5 +1,5 @@
 import path from 'path';
-import {from, Observable} from 'rxjs';
+import {forkJoin, Observable} from 'rxjs';
 import {mapTo} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
@@ -63,7 +63,11 @@ export abstract class NgDocSourceFileEntity extends NgDocEntity {
 
 	override emit(): Observable<void> {
 		if (!this.destroyed) {
-			return from(this.sourceFile.refreshFromFileSystem()).pipe(mapTo(void 0));
+			return forkJoin(
+				[this.sourceFile, ...this.sourceFile.getReferencedSourceFiles()].map((sourceFile: SourceFile) =>
+					sourceFile.refreshFromFileSystem(),
+				),
+			).pipe(mapTo(void 0));
 		}
 		return super.emit();
 	}
