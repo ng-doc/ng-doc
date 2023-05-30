@@ -4,9 +4,6 @@ import {NgDocBasePlayground, providePlaygroundDemo} from '@ng-doc/app';
 // noinspection ES6UnusedImports
 import pageEntity from '{{ page.importPath }}';
 import {CommonModule} from '@angular/common';
-{%- for standalone in page.standalone %}
-{{ standalone | declarationImport }}
-{%- endfor %}
 
 {% set components = [] -%}
 {%- set index = 1 %}
@@ -57,8 +54,8 @@ export class {{ comp.name }} extends NgDocBasePlayground {
 		{%- if page.hasImports %}
 		...pageEntity.imports,
 		{%- endif %}
-		{%- for standalone in page.standalone %}
-		{{ standalone.getName() }},
+		{%- for key in page.standalonePlaygroundKeys %}
+		pageEntity.playgrounds['{{ key }}'].target,
 		{%- endfor %}
 	],
 	declarations: [
