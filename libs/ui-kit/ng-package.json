@@ -6,5 +6,5 @@
 		"styleIncludePaths": ["styles"]
 	},
 	"assets": ["assets"],
-	"allowedNonPeerDependencies": ["@ng-doc/core"]
+	"allowedNonPeerDependencies": ["@ng-doc/core", "@angular/cdk"]
 }
