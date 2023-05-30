@@ -1,3 +1,10 @@
+## [16.3.3](https://github.com/ng-doc/ng-doc/compare/v16.3.2...v16.3.3) (2023-05-30)
+
+
+### Bug Fixes
+
+* **builder:** playground doesn`t change components inputs in production if production target builds application from dist folder ([3fd3060](https://github.com/ng-doc/ng-doc/commit/3fd30603aae2e2666caaf724cc2c00d8f98edb1d))
+
 ## [16.3.2](https://github.com/ng-doc/ng-doc/compare/v16.3.1...v16.3.2) (2023-05-29)
 
 
