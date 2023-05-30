@@ -1,3 +1,12 @@
+## [16.3.4](https://github.com/ng-doc/ng-doc/compare/v16.3.3...v16.3.4) (2023-05-30)
+
+
+### Bug Fixes
+
+* **builder:** add `@angular/cdk` to the dependencies of the `ui-kit` package ([9fb07e6](https://github.com/ng-doc/ng-doc/commit/9fb07e66b3849d95a6beb4786ffa2e99d28809fb))
+* **builder:** disable `cache` feature by default as it is unstable for the production ([89a04dc](https://github.com/ng-doc/ng-doc/commit/89a04dcc600d3f38f595c564dbab92de5826b8ea))
+* **builder:** playground doesn't update inputs based on source code changes in development mode ([f9a5966](https://github.com/ng-doc/ng-doc/commit/f9a5966764b9e52f20603fb27b594299b106e26d))
+
 ## [16.3.3](https://github.com/ng-doc/ng-doc/compare/v16.3.2...v16.3.3) (2023-05-30)
 
 
