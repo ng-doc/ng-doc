@@ -1,4 +1,4 @@
-import minimatch from 'minimatch';
+import {minimatch} from 'minimatch';
 import * as path from 'path';
 import {Observable, of, throwError} from 'rxjs';
 import {ObjectLiteralExpression, SyntaxKind} from 'ts-morph';

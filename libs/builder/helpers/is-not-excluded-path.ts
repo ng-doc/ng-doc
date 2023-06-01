@@ -1,5 +1,6 @@
 import {asArray} from '@ng-doc/core';
-import minimatch from 'minimatch';
+import {minimatch} from 'minimatch';
+import {miniPattern} from './mini-pattern';
 
 /**
  *
@@ -7,5 +8,5 @@ import minimatch from 'minimatch';
  * @param excluded
  */
 export function isNotExcludedPath(path: string, excluded: string[]): boolean {
-	return asArray(excluded).every((e: string) => !minimatch(path, e));
+	return asArray(excluded).every((e: string) => !minimatch(path, miniPattern(e)));
 }

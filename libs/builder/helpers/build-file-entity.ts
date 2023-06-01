@@ -1,6 +1,6 @@
 import {escapeRegexp} from '@ng-doc/core';
 import * as esbuild from 'esbuild';
-import minimatch from 'minimatch';
+import {minimatch} from 'minimatch';
 import * as path from 'path';
 import {ObjectLiteralExpression, SourceFile} from 'ts-morph';
 
