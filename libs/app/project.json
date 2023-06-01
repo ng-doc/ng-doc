@@ -7,7 +7,7 @@
 	"targets": {
 		"pre-build": {
 			"executor": "@nx/angular:package",
-			"outputs": ["dist/libs/app"],
+			"outputs": ["{workspaceRoot}/dist/libs/app"],
 			"options": {
 				"project": "libs/app/ng-package.json",
 				"updateBuildableProjectDepsInPackageJson": false
@@ -24,7 +24,7 @@
 		},
 		"build": {
 			"executor": "nx:run-commands",
-			"outputs": ["dist/libs/app/styles", "dist/libs/app/assets/themes"],
+			"outputs": ["{workspaceRoot}/dist/libs/app/styles", "{workspaceRoot}/dist/libs/app/assets/themes"],
 			"options": {
 				"commands": [
 					"sass --no-source-map libs/app/styles/main.scss dist/libs/app/styles/main.css",
@@ -47,7 +47,7 @@
 		},
 		"test": {
 			"executor": "@nx/jest:jest",
-			"outputs": ["coverage/libs/app"],
+			"outputs": ["{workspaceRoot}/coverage/libs/app"],
 			"options": {
 				"jestConfig": "libs/app/jest.config.ts",
 				"passWithNoTests": true

@@ -24,7 +24,10 @@
 		},
 		"build": {
 			"executor": "nx:run-commands",
-			"outputs": ["dist/libs/builder/browser/schema.json", "dist/libs/builder/dev-server/schema.json"],
+			"outputs": [
+				"{workspaceRoot}/dist/libs/builder/browser/schema.json",
+				"{workspaceRoot}/dist/libs/builder/dev-server/schema.json"
+			],
 			"options": {
 				"commands": [
 					"node build-schema.js --from=\"libs/builder/**/*(browser|dev-server)/schema.json\" --to=\"dist/libs/builder\""
@@ -57,7 +60,7 @@
 		},
 		"test": {
 			"executor": "@nx/jest:jest",
-			"outputs": ["coverage/libs/builder"],
+			"outputs": ["{workspaceRoot}/coverage/libs/builder"],
 			"options": {
 				"jestConfig": "libs/builder/jest.config.ts",
 				"passWithNoTests": true,
