@@ -1,5 +1,6 @@
 import {asArray} from '@ng-doc/core';
 import {minimatch} from 'minimatch';
+
 import {miniPattern} from './mini-pattern';
 
 /**
