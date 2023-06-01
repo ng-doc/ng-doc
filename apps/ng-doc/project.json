@@ -125,7 +125,7 @@
 		},
 		"test": {
 			"executor": "@nx/jest:jest",
-			"outputs": ["coverage/apps/ng-doc"],
+			"outputs": ["{workspaceRoot}/coverage/apps/ng-doc"],
 			"options": {
 				"jestConfig": "apps/ng-doc/jest.config.ts",
 				"passWithNoTests": true

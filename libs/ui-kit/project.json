@@ -7,7 +7,7 @@
 	"targets": {
 		"pre-build": {
 			"executor": "@nx/angular:package",
-			"outputs": ["dist/libs/ui-kit"],
+			"outputs": ["{workspaceRoot}/dist/libs/ui-kit"],
 			"options": {
 				"project": "libs/ui-kit/ng-package.json",
 				"updateBuildableProjectDepsInPackageJson": false
@@ -24,7 +24,7 @@
 		},
 		"build": {
 			"executor": "nx:run-commands",
-			"outputs": ["dist/libs/ui-kit/styles"],
+			"outputs": ["{workspaceRoot}/dist/libs/ui-kit/styles"],
 			"options": {
 				"commands": ["sass --no-source-map libs/ui-kit/styles/main.scss dist/libs/ui-kit/styles/main.css"]
 			}
@@ -37,7 +37,7 @@
 		},
 		"test": {
 			"executor": "@nx/jest:jest",
-			"outputs": ["coverage/libs/ui-kit"],
+			"outputs": ["{workspaceRoot}/coverage/libs/ui-kit"],
 			"options": {
 				"jestConfig": "libs/ui-kit/jest.config.ts",
 				"passWithNoTests": true
