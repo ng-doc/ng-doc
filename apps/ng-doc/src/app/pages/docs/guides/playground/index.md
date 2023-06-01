@@ -153,11 +153,11 @@ export default PageDependencies;
 
 ## Directives
 
-You can also create playgrounds for directives, like for components:
+You can also create playgrounds for directives in the same way as for components:
 
 ```typescript fileName="ng-doc.page.ts"
 import {NgDocPage} from '@ng-doc/core';
-import {NgDocTagModule, NgDocTagComponent} from '@ng-doc/ui-kit';
+import {NgDocRotatorDirective} from '@ng-doc/ui-kit';
 
 import {PageModule} from './ng-doc.module';
 
