@@ -63,7 +63,6 @@
 		"chokidar": "3.5.3",
 		"cosmiconfig": "8.1.0",
 		"cosmiconfig-typescript-swc-loader": "0.0.2",
-		"crypto": "1.0.1",
 		"css-what": "6.1.0",
 		"esbuild": "0.17.8",
 		"eslint-plugin-jsdoc": "^39.6.2",
