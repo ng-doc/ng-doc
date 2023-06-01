@@ -4,7 +4,6 @@ import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {filter} from 'rxjs/operators';
 
 import {miniPattern} from '../helpers';
-import {miniPattern} from '../helpers';
 
 export class NgDocWatcher {
 	private readonly watcher: chokidar.FSWatcher;
