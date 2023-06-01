@@ -1,3 +1,11 @@
+## [16.3.5](https://github.com/ng-doc/ng-doc/compare/v16.3.4...v16.3.5) (2023-06-01)
+
+
+### Bug Fixes
+
+* **builder:** builder doesn't see file changes on Windows machines ([673bf83](https://github.com/ng-doc/ng-doc/commit/673bf83836acc6d4344de1ed452a54d75fb7f43a))
+* **builder:** builder doesn't see file changes on Windows machines ([e82a7cc](https://github.com/ng-doc/ng-doc/commit/e82a7cc5129537603b86f75c1ffe932a1d97a4c0))
+
 ## [16.3.4](https://github.com/ng-doc/ng-doc/compare/v16.3.3...v16.3.4) (2023-05-30)
 
 
