@@ -1,7 +1,8 @@
 import * as chokidar from 'chokidar';
-import minimatch from 'minimatch';
+import {minimatch} from 'minimatch';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {filter} from 'rxjs/operators';
+import {miniPattern} from '../helpers';
 
 export class NgDocWatcher {
 	private readonly watcher: chokidar.FSWatcher;
@@ -35,19 +36,21 @@ export class NgDocWatcher {
 
 	onAdd(...filterPaths: string[]): Observable<string> {
 		return this.add$.pipe(
-			filter((path: string) => !filterPaths || filterPaths.some((p: string) => minimatch(path, p))),
+			filter((path: string) => !filterPaths || filterPaths.some((p: string) => minimatch(path, miniPattern(p)))),
 		);
 	}
 
 	onChange(...filterPaths: string[]): Observable<string> {
+
+
 		return this.change$.pipe(
-			filter((path: string) => !filterPaths || filterPaths.some((p: string) => minimatch(path, p))),
+			filter((path: string) => !filterPaths || filterPaths.some((p: string) => minimatch(path, miniPattern(p)))),
 		);
 	}
 
 	onUnlink(...filterPaths: string[]): Observable<string> {
 		return this.unlink$.pipe(
-			filter((path: string) => !filterPaths || filterPaths.some((p: string) => minimatch(path, p))),
+			filter((path: string) => !filterPaths || filterPaths.some((p: string) => minimatch(path, miniPattern(p)))),
 		);
 	}
 

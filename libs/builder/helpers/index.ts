@@ -27,6 +27,7 @@ export * from './import-es-module';
 export * from './is-not-excluded-path';
 export * from './is-supported-declaration';
 export * from './marked';
+export * from './mini-pattern';
 export * from './no-empty';
 export * from './no-line-breaks';
 export * from './not-empty-assets';

@@ -77,7 +77,7 @@
 		"highlight.js": "11.5.1",
 		"js-beautify": "1.14.7",
 		"marked": "4.0.18",
-		"minimatch": "5.1.0",
+		"minimatch": "9.0.1",
 		"ng-morph": "^2.2.3",
 		"nunjucks": "3.2.4",
 		"posthtml-parser": "0.11.0",

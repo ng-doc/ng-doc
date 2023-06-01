@@ -1,4 +1,4 @@
-import minimatch from 'minimatch';
+import {minimatch} from 'minimatch';
 import {Constructor} from 'ts-morph';
 
 import {
