@@ -20,9 +20,10 @@ itself, for example:
 > field to specify the selectors that you want to see in your playground.
 
 > **Note**
-> If your target component is standalone, you don't need to import anything, NgDoc will care about it.
+> If your target component is standalone, you don't need to import anything, NgDoc will care about
+> it.
 
-```typescript fileName="ng-doc.dependencies.ts"
+```typescript fileName="ng-doc.page.ts"
 import {NgDocPage} from '@ng-doc/core';
 import {NgDocTagModule, NgDocTagComponent} from '@ng-doc/ui-kit';
 
@@ -87,10 +88,11 @@ optional, or you just want to make some content in the playground optional, to d
 the `content` field in your playground configuration, for example:
 
 > **Note**
-> If you provide some component in the `content` field, you must import its module in the `imports` field,
+> If you provide some component in the `content` field, you must import its module in the `imports`
+> field,
 > if this component is standalone, you must import its component class.
 
-```typescript fileName="ng-doc.dependencies.ts"
+```typescript fileName="ng-doc.page.ts"
 import {NgDocDependencies} from '@ng-doc/core';
 import {NgDocTagComponent, NgDocIconModule} from '@ng-doc/ui-kit';
 
@@ -127,7 +129,7 @@ content.
 To make your playgrounds more lively and dynamic you can use `data` field,
 and put any data you want in it, to use it in your template, for example like that:
 
-```typescript fileName="ng-doc.dependencies.ts"
+```typescript fileName="ng-doc.page.ts"
 import {NgDocDependencies} from '@ng-doc/core';
 import {NgDocTagComponent} from '@ng-doc/ui-kit';
 
@@ -148,6 +150,31 @@ export default PageDependencies;
 ```
 
 {{ NgDocActions.playground("TagDataPlayground") }}
+
+## Directives
+
+You can also create playgrounds for directives, like for components:
+
+```typescript fileName="ng-doc.page.ts"
+import {NgDocPage} from '@ng-doc/core';
+import {NgDocTagModule, NgDocTagComponent} from '@ng-doc/ui-kit';
+
+import {PageModule} from './ng-doc.module';
+
+const MyAwesomePage: NgDocPage = {
+  playgrounds: {
+    RotatorPlayground: {
+      // We don't import anything else, because `NgDocRotatorDirective` is standalone
+      target: NgDocRotatorDirective,
+      template: `<button ngDocRotator>Button</button>`,
+    },
+  },
+};
+
+export default MyAwesomePage;
+```
+
+{{ NgDocActions.playground("RotatorPlayground") }}
 
 {% index false %}
 
