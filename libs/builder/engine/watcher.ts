@@ -2,6 +2,8 @@ import * as chokidar from 'chokidar';
 import {minimatch} from 'minimatch';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {filter} from 'rxjs/operators';
+
+import {miniPattern} from '../helpers';
 import {miniPattern} from '../helpers';
 
 export class NgDocWatcher {
@@ -41,8 +43,6 @@ export class NgDocWatcher {
 	}
 
 	onChange(...filterPaths: string[]): Observable<string> {
-
-
 		return this.change$.pipe(
 			filter((path: string) => !filterPaths || filterPaths.some((p: string) => minimatch(path, miniPattern(p)))),
 		);
