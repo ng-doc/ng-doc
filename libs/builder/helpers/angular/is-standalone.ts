@@ -1,7 +1,8 @@
-import {Component} from '@angular/core';
+import {Component, Directive} from '@angular/core';
 import {ClassDeclaration} from 'ts-morph';
 
 import {componentDecorator} from './component-decorator';
+import {directiveDecorator} from './directive-decorator';
 
 /**
  *
@@ -9,7 +10,7 @@ import {componentDecorator} from './component-decorator';
  * @param notFoundResult
  */
 export function isStandalone(cls: ClassDeclaration, notFoundResult: boolean = false): boolean {
-	const decorator: Component | undefined = componentDecorator(cls);
+	const decorator: Component | Directive | undefined = componentDecorator(cls) ?? directiveDecorator(cls);
 
 	return decorator?.standalone ?? notFoundResult;
 }

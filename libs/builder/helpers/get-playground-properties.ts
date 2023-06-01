@@ -150,3 +150,19 @@ export function getPlaygroundClassProperties(declaration: ClassDeclaration): NgD
 			return properties;
 		}, {});
 }
+
+/**
+ *
+ * @param declaration
+ */
+export function getPlaygroundTemplateInputs(declaration: ClassDeclaration): Record<string, string> {
+	const properties: NgDocPlaygroundProperties = getPlaygroundClassProperties(declaration);
+
+	return Object.keys(properties).reduce((inputs: Record<string, string>, property: string) => {
+		const inputName: string = properties[property].name;
+
+		inputs[inputName] = `properties['${property}']`;
+
+		return inputs;
+	}, {});
+}

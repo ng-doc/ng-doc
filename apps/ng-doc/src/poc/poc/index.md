@@ -2,3 +2,5 @@
 ## NgDoc folder
 .ng-doc
 ```
+
+{{ NgDocActions.playground("BtnPlayground") }}

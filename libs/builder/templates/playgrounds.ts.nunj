@@ -1,5 +1,12 @@
 // @ts-nocheck
-import {NgModule, Component, ViewChild, Type, ViewContainerRef} from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	NgModule,
+	Type,
+	ViewChild,
+	ViewContainerRef
+} from '@angular/core';
 import {NgDocBasePlayground, providePlaygroundDemo} from '@ng-doc/app';
 // noinspection ES6UnusedImports
 import pageEntity from '{{ page.importPath }}';
@@ -14,6 +21,7 @@ import {CommonModule} from '@angular/common';
 {%- set target = playgrounds | getTargetForPlayground(id) %}
 {%- set template = playgrounds | getTemplateForPlayground(id) %}
 {%- set content = playgrounds | getContentForPlayground(id) %}
+{%- set inputs = target | getPlaygroundTemplateInputs %}
 
 	{%- if target %}
 	{%- set selectors = target | extractSelectors %}
@@ -25,8 +33,9 @@ import {CommonModule} from '@angular/common';
 @Component({
 	selector: 'ng-doc-playground-{{ index }}',
 	template: `
-		{{template | buildPlaygroundDemoTemplate(selector, content) }}
+		{{ template | buildPlaygroundDemoTemplate(selector, content, inputs) }}
 	`,
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class {{ comp.name }} extends NgDocBasePlayground {
 	static readonly selector: string = '{{ comp.selector }}';

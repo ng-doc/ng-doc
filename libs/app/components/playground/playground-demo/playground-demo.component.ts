@@ -1,7 +1,6 @@
 import {AsyncPipe} from '@angular/common';
 import {
 	ChangeDetectionStrategy,
-	ChangeDetectorRef,
 	Component,
 	ComponentRef,
 	InjectionToken,
@@ -99,9 +98,8 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 		}
 
 		if (data) {
-			Object.assign(this.demoRef?.instance.playground ?? {}, data.properties);
-			Object.assign(this.demoRef?.instance.content ?? {}, data.content);
-			this.demoRef?.instance?.viewContainerRef?.injector.get(ChangeDetectorRef)?.markForCheck();
+			this.demoRef?.setInput('properties', data.properties ?? {});
+			this.demoRef?.setInput('content', data.content ?? {});
 		}
 
 		this.updateCodeView();

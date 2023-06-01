@@ -30,6 +30,7 @@ export {
 	getMethodChain,
 	getOverriddenMember,
 	getPlaygroundClassProperties,
+	getPlaygroundTemplateInputs,
 	getPropertyChain,
 	getTargetForPlayground,
 	getTemplateForPlayground,
