@@ -1,3 +1,10 @@
+## [16.3.6](https://github.com/ng-doc/ng-doc/compare/v16.3.5...v16.3.6) (2023-06-02)
+
+
+### Bug Fixes
+
+* **project:** minimatch has wrong version in dependencies ([d271d02](https://github.com/ng-doc/ng-doc/commit/d271d0225c1f210e32e69c1a94dd3df049532728))
+
 ## [16.3.5](https://github.com/ng-doc/ng-doc/compare/v16.3.4...v16.3.5) (2023-06-01)
 
 
