@@ -25,6 +25,7 @@ import {NgDocAsset, NgDocBuiltOutput} from '../../interfaces';
 import {forkJoinOrEmpty} from '../../operators';
 import {NgDocComponentAsset} from '../../types';
 import {NgDocActions} from '../actions';
+import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {CachedEntity} from './cache/decorators';
@@ -182,25 +183,24 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	protected override build(): Observable<NgDocBuiltOutput[]> {
 		return this.isReadyForBuild
 			? this.fillAssets().pipe(
-					switchMap(() => forkJoin([this.buildModule(), this.buildPlaygrounds(), this.buildDemoAssets()])),
-			  )
+				switchMap(() => forkJoin([this.buildModule(), this.buildPlaygrounds(), this.buildDemoAssets()])),
+			)
 			: of([]);
 	}
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
 			this.playgroundClassDeclarations.forEach((target: ClassDeclaration) => target.getSourceFile().refreshFromFileSystemSync());
-
-			const page: Observable<string> = this.builder.renderer
-				.render(this.target.mdFile, {
-					scope: this.sourceFileFolder,
-					context: {
-						NgDocPage: this.target,
-						NgDocActions: new NgDocActions(this),
-					},
-					dependenciesStore: this.dependencies,
-					filters: false,
-				})
+			const template: string = renderTemplate(this.target.mdFile, {
+				scope: this.sourceFileFolder,
+				context: {
+					NgDocPage: this.target,
+					NgDocActions: new NgDocActions(this),
+				},
+				dependenciesStore: this.dependencies,
+				filters: false,
+			})
+			const page: Observable<string> = of(template)
 				.pipe(
 					map((output: string) => marked(output, this)),
 					switchMap((html: string) => processHtml(this, html)),
@@ -221,44 +221,38 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 				);
 
 			return page.pipe(
-				switchMap((pageContent: string) =>
-					this.builder.renderer
-						.render('./page.module.ts.nunj', {
-							context: {
-								page: this,
-								pageContent,
-							},
-						})
-						.pipe(map((output: string) => ({content: output, filePath: this.modulePath}))),
+				map((pageContent: string) =>
+					renderTemplate('./page.module.ts.nunj', {
+						context: {
+							page: this,
+							pageContent,
+						},
+					})
 				),
+				map((content: string) => ({content, filePath: this.modulePath}))
 			);
 		}
 		return of();
 	}
 
 	private buildDemoAssets(): Observable<NgDocBuiltOutput> {
-		return this.builder.renderer
-			.render('./demo-assets.ts.nunj', {
-				context: {
-					demoAssets: this.componentAssets,
-				},
-			})
-			.pipe(map((output: string) => ({content: output, filePath: this.demoAssetsPath})));
+		const content: string = renderTemplate('./demo-assets.ts.nunj', {
+			context: {
+				demoAssets: this.componentAssets,
+			},
+		});
+
+		return of({content, filePath: this.demoAssetsPath});
 	}
 
 	private buildPlaygrounds(): Observable<NgDocBuiltOutput> {
-		return this.builder.renderer
-			.render('./playgrounds.ts.nunj', {
-				context: {
-					page: this,
-				},
-			})
-			.pipe(
-				map((output: string) => ({
-					content: formatCode(output, 'TypeScript'),
-					filePath: this.playgroundsPath,
-				})),
-			);
+		const content: string = renderTemplate('./playgrounds.ts.nunj', {
+			context: {
+				page: this,
+			},
+		});
+
+		return of({content: formatCode(content, 'TypeScript'), filePath: this.playgroundsPath});
 	}
 
 	private fillAssets(): Observable<void> {

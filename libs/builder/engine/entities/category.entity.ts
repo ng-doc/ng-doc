@@ -1,10 +1,11 @@
 import {asArray, NgDocCategory} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
-import {catchError, map, tap} from 'rxjs/operators';
+import {catchError, tap} from 'rxjs/operators';
 
 import {isCategoryEntity, isPageEntity} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
+import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {CachedEntity} from './cache/decorators';
@@ -98,13 +99,13 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			return this.builder.renderer
-				.render('./category.module.ts.nunj', {
-					context: {
-						category: this,
-					},
-				})
-				.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
+			const content: string = renderTemplate('./category.module.ts.nunj', {
+				context: {
+					category: this,
+				},
+			});
+
+			return of({content, filePath: this.modulePath});
 		}
 		return of();
 	}

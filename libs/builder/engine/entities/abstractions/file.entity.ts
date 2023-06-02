@@ -1,6 +1,6 @@
 import {minimatch} from 'minimatch';
 import * as path from 'path';
-import {Observable, of, throwError} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {ObjectLiteralExpression, SyntaxKind} from 'ts-morph';
 
 import {getObjectExpressionFromDefault, isCategoryEntity} from '../../../helpers';
@@ -22,16 +22,12 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 	override update(): Observable<void> {
 		this.readyToBuild = false;
 
-		try {
-			delete require.cache[require.resolve(this.pathToCompiledFile)];
-			this.target = require(this.pathToCompiledFile).default;
-			this.objectExpression = getObjectExpressionFromDefault(this.sourceFile);
+		delete require.cache[require.resolve(this.pathToCompiledFile)];
+		this.target = require(this.pathToCompiledFile).default;
+		this.objectExpression = getObjectExpressionFromDefault(this.sourceFile);
 
-			if (!this.target || !this.objectExpression) {
-				new Error(`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`);
-			}
-		} catch (e: unknown) {
-			return throwError(e);
+		if (!this.target || !this.objectExpression) {
+			new Error(`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`);
 		}
 
 		this.readyToBuild = true;

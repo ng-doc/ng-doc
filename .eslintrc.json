@@ -55,15 +55,17 @@
 			"files": ["*.ts", "*.tsx"],
 			"extends": ["plugin:@nx/typescript"],
 			"rules": {
+				"@typescript-eslint/explicit-function-return-type": "error",
 				"@typescript-eslint/typedef": [
 					"error",
 					{
+						"arrowParameter": false,
+						"memberVariableDeclaration": true,
+						"objectDestructuring": false,
 						"parameter": true,
-						"arrowParameter": true,
 						"propertyDeclaration": true,
 						"variableDeclaration": false,
-						"variableDeclarationIgnoreFunction": true,
-						"memberVariableDeclaration": true
+						"variableDeclarationIgnoreFunction": true
 					}
 				],
 				"@typescript-eslint/consistent-type-definitions": ["error", "interface"],

@@ -3,8 +3,17 @@ import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 
-import {generateApiEntities, getKindType, isApiPageEntity, isApiScopeEntity, slash, uniqueName} from '../../helpers';
+import {
+	buildFileEntity,
+	generateApiEntities,
+	getKindType,
+	isApiPageEntity,
+	isApiScopeEntity,
+	slash,
+	uniqueName,
+} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
+import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocApiPageEntity} from './api-page.entity';
@@ -59,7 +68,7 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		this.children.forEach((child: NgDocEntity) => child.destroy());
 
 		return this.emit().pipe(
-			switchMap(() => this.builder.emit(this.sourceFile)),
+			switchMap(() => buildFileEntity(this.sourceFile, this.context.tsConfig, this.context.context.workspaceRoot)),
 			switchMap(() => this.update()),
 			map(() => generateApiEntities(this)),
 		);
@@ -89,13 +98,13 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			return this.builder.renderer
-				.render('./api.module.ts.nunj', {
-					context: {
-						api: this,
-					},
-				})
-				.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
+			const content: string = renderTemplate('./api.module.ts.nunj', {
+				context: {
+					api: this,
+				},
+			});
+
+			return of({content, filePath: this.modulePath});
 		}
 		return of();
 	}

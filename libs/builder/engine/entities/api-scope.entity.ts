@@ -1,11 +1,11 @@
 import {asArray, NgDocApiScope} from '@ng-doc/core';
 import {forkJoin, Observable, of} from 'rxjs';
-import {map} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
 import {isPageEntity, uniqueName} from '../../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocBuilder} from '../builder';
+import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocRouteEntity} from './abstractions/route.entity';
 import {NgDocApiEntity} from './api.entity';
@@ -93,13 +93,13 @@ export class NgDocApiScopeEntity extends NgDocRouteEntity<NgDocApiScope> {
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			return this.builder.renderer
-				.render('./api-scope.module.ts.nunj', {
-					context: {
-						scope: this,
-					},
-				})
-				.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
+			const content: string = renderTemplate('./api-scope.module.ts.nunj', {
+				context: {
+					scope: this,
+				},
+			});
+
+			return of({content, filePath: this.modulePath});
 		}
 		return of();
 	}

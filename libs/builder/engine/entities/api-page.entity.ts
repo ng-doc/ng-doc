@@ -13,15 +13,16 @@ import {
 	uniqueName,
 	viewFileInRepoUrl,
 } from '../../helpers';
+import {isSupportedDeclaration} from '../../helpers';
 import {buildIndexes} from '../../helpers/build-indexes';
-import {isSupportedDeclaration} from '../../helpers/is-supported-declaration';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
-import {NgDocSupportedDeclarations} from '../../types/supported-declarations';
+import {NgDocSupportedDeclarations} from '../../types';
 import {NgDocBuilder} from '../builder';
+import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocRouteEntity} from './abstractions/route.entity';
 import {NgDocApiScopeEntity} from './api-scope.entity';
-import {CachedEntity} from './cache/decorators';
+import {CachedEntity} from './cache';
 
 @CachedEntity()
 export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
@@ -116,34 +117,34 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	}
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
-		const page: Observable<string> = this.builder.renderer
-			.render('./api-page.html.nunj', {
-				context: {
-					declaration: this.declaration,
-					scope: this.parent.target,
-				},
-			})
-			.pipe(
-				switchMap((output: string) => processHtml(this, output)),
-				switchMap((content: string) =>
-					from(
-						buildIndexes({
-							title: this.title,
-							content,
-							pageType: getPageType(this),
-							breadcrumbs: this.breadcrumbs,
-							route: this.fullRoute,
-						}),
-					).pipe(
-						tap((indexes: NgDocPageIndex[]) => this.indexes.push(...indexes)),
-						mapTo(content),
-					),
+		const template: string = renderTemplate('./api-page.html.nunj', {
+			context: {
+				declaration: this.declaration,
+				scope: this.parent.target,
+			},
+		});
+
+		const page: Observable<string> = of(template).pipe(
+			switchMap((output: string) => processHtml(this, output)),
+			switchMap((content: string) =>
+				from(
+					buildIndexes({
+						title: this.title,
+						content,
+						pageType: getPageType(this),
+						breadcrumbs: this.breadcrumbs,
+						route: this.fullRoute,
+					}),
+				).pipe(
+					tap((indexes: NgDocPageIndex[]) => this.indexes.push(...indexes)),
+					mapTo(content),
 				),
-			);
+			),
+		);
 
 		return page.pipe(
-			switchMap((pageContent: string) =>
-				this.builder.renderer.render('./api-page.module.ts.nunj', {
+			map((pageContent: string) =>
+				renderTemplate('./api-page.module.ts.nunj', {
 					context: {page: this, pageContent},
 				}),
 			),
@@ -161,7 +162,6 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 			(declaration: NgDocSupportedDeclarations) => declaration.getName() === this.declarationName,
 		);
 
-		// Doesnr work?
 		if (!this.declaration) {
 			this.destroy();
 		}
