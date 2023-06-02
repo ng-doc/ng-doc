@@ -10,6 +10,7 @@
 			"rules": {
 				"jsdoc/require-param-type": "off",
 				"jsdoc/require-returns-type": "off",
+				"jsdoc/require-returns": "off",
 				"tsdoc/syntax": "warn",
 				"simple-import-sort/imports": "error",
 				"simple-import-sort/exports": "error",
@@ -55,7 +56,6 @@
 			"files": ["*.ts", "*.tsx"],
 			"extends": ["plugin:@nx/typescript"],
 			"rules": {
-				"@typescript-eslint/explicit-function-return-type": "error",
 				"@typescript-eslint/typedef": [
 					"error",
 					{

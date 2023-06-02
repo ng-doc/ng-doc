@@ -5,9 +5,9 @@ import {NgDocEntity} from '../entities/abstractions/entity';
 import {NgDocEntityStore} from '../entity-store';
 
 /**
+ * Operator that collects garbage from the entity store after each source emission.
  *
- * @param {...any} additionalEntities
- * @param store
+ * @param store - The entity store.
  */
 export function collectGarbage<T>(store: NgDocEntityStore): OperatorFunction<T, T> {
 	return (source: Observable<T>) =>

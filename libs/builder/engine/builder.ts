@@ -2,7 +2,7 @@ import {isPresent} from '@ng-doc/core';
 import * as fs from 'fs';
 import * as path from 'path';
 import {mergeMap, Observable, of} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {Project} from 'ts-morph';
 
 import {createProject, printProgress} from '../helpers';
@@ -67,11 +67,6 @@ export class NgDocBuilder {
 					),
 					taskForMany('Emitting...', emit()),
 					collectGarbage(this.entities),
-					catchError((e: Error) => {
-						console.error(e);
-
-						return of(void 0);
-					}),
 				),
 			),
 			map(() => void 0),

@@ -11,12 +11,13 @@ import {API_PATTERN, CATEGORY_PATTERN, PAGE_PATTERN} from './variables';
 import {NgDocWatcher} from './watcher';
 
 /**
+ * Emits new entities if they are added or changed. Also emits destroyed entities if their root files are unlinked.
+ * This function not only creates the entities based on the file path, but also creates the child entities recursively
+ * if it's can be done.
  *
- * @param builder
- * @param project
- * @param watcher
- * @param path
- * @param EntityConstructor
+ * @param builder - The builder instance.
+ * @param project - The project instance.
+ * @param watcher - The watcher instance.
  */
 export function entityEmitter(
 	builder: NgDocBuilder,
@@ -46,24 +47,20 @@ export function entityEmitter(
 			).pipe(startWith(entities)),
 		),
 		mergeMap((entities: NgDocEntity[]) =>
-			forkJoinOrEmpty(entities.map((entity: NgDocEntity) => childGenerator(entity, watcher))).pipe(
-				map((entities: NgDocEntity[][]) => entities.flat()),
-			),
+			forkJoinOrEmpty(entities.map(childGenerator)).pipe(map((entities: NgDocEntity[][]) => entities.flat())),
 		),
 	);
 }
 
 /**
+ * Creates the child entities recursively.
  *
- * @param entity
- * @param watcher
+ * @param entity - The entity to create the children for.
  */
-function childGenerator(entity: NgDocEntity, watcher: NgDocWatcher): Observable<NgDocEntity[]> {
+function childGenerator(entity: NgDocEntity): Observable<NgDocEntity[]> {
 	return entity.childrenGenerator().pipe(
 		progress('Loading entities...'),
-		switchMap((children: NgDocEntity[]) =>
-			forkJoinOrEmpty(children.map((child: NgDocEntity) => childGenerator(child, watcher))),
-		),
+		switchMap((children: NgDocEntity[]) => forkJoinOrEmpty(children.map(childGenerator))),
 		map((children: NgDocEntity[][]) => [entity, children].flat(2)),
 		tap((entities: NgDocEntity[]) => entities.forEach((e: NgDocEntity) => entity.builder.entities.set(e.id, e))),
 	);

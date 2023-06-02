@@ -154,22 +154,22 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 					this.demoClassDeclarations = getDemoClassDeclarations(this.objectExpression);
 					this.playgroundClassDeclarations = asArray(new Set(getPlaygroundTargets(this.objectExpression)));
 
-					this.standalonePlaygroundKeys = asArray(this.playgroundIds
-						.reduce((keys: Map<ClassDeclaration, string>, id: string) => {
-							if (this.playgroundsExpression) {
-								const target: ClassDeclaration | undefined = getTargetForPlayground(this.playgroundsExpression, id);
+					this.standalonePlaygroundKeys = asArray(
+						this.playgroundIds
+							.reduce((keys: Map<ClassDeclaration, string>, id: string) => {
+								if (this.playgroundsExpression) {
+									const target: ClassDeclaration | undefined = getTargetForPlayground(this.playgroundsExpression, id);
 
-								if (target && isStandalone(target)) {
-									keys.set(target, id);
+									if (target && isStandalone(target)) {
+										keys.set(target, id);
+									}
 								}
-							}
 
-							return keys;
-						}, new Map<ClassDeclaration, string>)
-						.values());
+								return keys;
+							}, new Map<ClassDeclaration, string>())
+							.values(),
+					);
 				}
-
-
 			}),
 			catchError((error: unknown) => {
 				this.readyToBuild = false;
@@ -183,14 +183,16 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	protected override build(): Observable<NgDocBuiltOutput[]> {
 		return this.isReadyForBuild
 			? this.fillAssets().pipe(
-				switchMap(() => forkJoin([this.buildModule(), this.buildPlaygrounds(), this.buildDemoAssets()])),
-			)
+					switchMap(() => forkJoin([this.buildModule(), this.buildPlaygrounds(), this.buildDemoAssets()])),
+			  )
 			: of([]);
 	}
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			this.playgroundClassDeclarations.forEach((target: ClassDeclaration) => target.getSourceFile().refreshFromFileSystemSync());
+			this.playgroundClassDeclarations.forEach((target: ClassDeclaration) =>
+				target.getSourceFile().refreshFromFileSystemSync(),
+			);
 			const template: string = renderTemplate(this.target.mdFile, {
 				scope: this.sourceFileFolder,
 				context: {
@@ -199,26 +201,25 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 				},
 				dependenciesStore: this.dependencies,
 				filters: false,
-			})
-			const page: Observable<string> = of(template)
-				.pipe(
-					map((output: string) => marked(output, this)),
-					switchMap((html: string) => processHtml(this, html)),
-					switchMap((content: string) =>
-						from(
-							buildIndexes({
-								title: this.title,
-								content,
-								pageType: getPageType(this),
-								breadcrumbs: this.breadcrumbs,
-								route: this.fullRoute,
-							}),
-						).pipe(
-							tap((indexes: NgDocPageIndex[]) => this.indexes.push(...indexes)),
-							mapTo(content),
-						),
+			});
+			const page: Observable<string> = of(template).pipe(
+				map((output: string) => marked(output, this)),
+				switchMap((html: string) => processHtml(this, html)),
+				switchMap((content: string) =>
+					from(
+						buildIndexes({
+							title: this.title,
+							content,
+							pageType: getPageType(this),
+							breadcrumbs: this.breadcrumbs,
+							route: this.fullRoute,
+						}),
+					).pipe(
+						tap((indexes: NgDocPageIndex[]) => this.indexes.push(...indexes)),
+						mapTo(content),
 					),
-				);
+				),
+			);
 
 			return page.pipe(
 				map((pageContent: string) =>
@@ -227,9 +228,9 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 							page: this,
 							pageContent,
 						},
-					})
+					}),
 				),
-				map((content: string) => ({content, filePath: this.modulePath}))
+				map((content: string) => ({content, filePath: this.modulePath})),
 			);
 		}
 		return of();

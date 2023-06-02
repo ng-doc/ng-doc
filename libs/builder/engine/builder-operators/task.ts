@@ -4,10 +4,12 @@ import {forkJoinOrEmpty, progress} from '../../operators';
 import {errorHandler} from '../../operators/error-handler';
 
 /**
+ * Task operator that runs the provided operator on each value of the source.
+ * It also filters the values if the filter function is provided, shows the progress and handles the errors.
  *
- * @param name
- * @param operator
- * @param filter
+ * @param name - The name of the task (for progress).
+ * @param operator - The operator to run on each value of the source.
+ * @param filter - The filter function to filter the values of the source.
  */
 export function task<T, R>(
 	name: string,
@@ -27,10 +29,12 @@ export function task<T, R>(
 }
 
 /**
+ * Task operator that runs the provided operator on the source with all the values.
+ * It also filters the values if the filter function is provided, shows the progress and handles the errors.
  *
- * @param name
- * @param operator
- * @param filter
+ * @param name - The name of the task (for progress).
+ * @param operator - The operator to run on the source.
+ * @param filter - The filter function to filter the values of the source.
  */
 export function taskForMany<T, R>(
 	name: string,

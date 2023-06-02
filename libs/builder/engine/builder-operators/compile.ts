@@ -5,9 +5,10 @@ import {buildFileEntity, isSourceFileEntity} from '../../helpers';
 import {NgDocEntity} from '../entities/abstractions/entity';
 
 /**
+ * Operator that compiles the source file only if it is a `NgDocSourceFileEntity`.
  *
- * @param tsConfig
- * @param root
+ * @param tsConfig - The path to the TypeScript configuration file.
+ * @param root - The root path of the project.
  */
 export function compile(tsConfig: string, root: string): OperatorFunction<NgDocEntity, NgDocEntity> {
 	return (source: Observable<NgDocEntity>) =>
