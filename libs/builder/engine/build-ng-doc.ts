@@ -70,7 +70,7 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 		mergeMap((entities: NgDocEntity[]) =>
 			of(entities).pipe(
 				task('Updating source files...', refresh(), ifNotDestroyed),
-				taskForMany(undefined, addBuildCandidates(store), ifNotDestroyed),
+				taskForMany('Collecting affected files...', addBuildCandidates(store), ifNotDestroyed),
 				task('Compiling...', compile(), isReadyForBuild),
 				task('Loading...', load(), isReadyForBuild),
 				dependencyChanges(watcher),
