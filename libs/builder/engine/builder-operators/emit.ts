@@ -8,5 +8,5 @@ import {NgDocBuiltOutput} from '../../interfaces';
  * Operator that emits the built output after each source emission.
  */
 export function emit(): OperatorFunction<NgDocBuiltOutput[], NgDocBuiltOutput[]> {
-	return (source: Observable<NgDocBuiltOutput[]>) => source.pipe(tap((e: NgDocBuiltOutput[]) => emitBuiltOutput(...e)));
+	return (source: Observable<NgDocBuiltOutput[]>) => source.pipe(tap((e: NgDocBuiltOutput[]) => emitBuiltOutput(e)));
 }

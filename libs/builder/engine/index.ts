@@ -1,5 +1,5 @@
 export * from './actions';
-export * from './builder';
+export * from './build-ng-doc';
 export * from './builder-operators';
 export * from './entities';
 export * from './nunjucks';

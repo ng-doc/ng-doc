@@ -22,5 +22,5 @@ export function printProgress(text?: string): void {
  * @param error - The error to print.
  */
 export function printError(error: Error): void {
-	spinner.fail(`${error}`);
+	spinner.fail(`NgDoc ${error}`);
 }

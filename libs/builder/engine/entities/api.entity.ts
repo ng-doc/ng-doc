@@ -1,7 +1,7 @@
 import {NgDocApi, NgDocApiList} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {map, switchMap, tap} from 'rxjs/operators';
 
 import {
 	buildFileEntity,
@@ -67,32 +67,31 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 	override childrenGenerator(): Observable<NgDocEntity[]> {
 		this.children.forEach((child: NgDocEntity) => child.destroy());
 
-		return this.emit().pipe(
+		return this.refreshImpl().pipe(
 			switchMap(() => buildFileEntity(this.sourceFile, this.context.tsConfig, this.context.context.workspaceRoot)),
-			switchMap(() => this.update()),
+			switchMap(() => this.loadImpl()),
 			map(() => generateApiEntities(this)),
 		);
 	}
 
-	override update(): Observable<void> {
-		return super.update().pipe(
-			tap(() => {
-				if (!this.title) {
-					throw new Error(`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`);
-				}
+	override loadImpl(): Observable<void> {
+		return super.loadImpl().pipe(
+			tap({
+				next: () => {
+					if (!this.title) {
+						throw new Error(
+							`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`,
+						);
+					}
 
-				this.parent = this.getParentFromCategory();
-			}),
-			catchError((error: unknown) => {
-				this.readyToBuild = false;
-				this.context.context.logger.error(`\n${String(error)}`);
-
-				return of(void 0);
+					this.parent = this.getParentFromCategory();
+				},
+				error: () => (this.hasErrors = true),
 			}),
 		);
 	}
 
-	protected override build(): Observable<NgDocBuiltOutput[]> {
+	protected override buildImpl(): Observable<NgDocBuiltOutput[]> {
 		return this.isReadyForBuild ? forkJoin([this.buildModule(), this.buildApiList()]) : of([]);
 	}
 

@@ -1,7 +1,7 @@
-import {asArray, NgDocCategory} from '@ng-doc/core';
+import {asArray, isPresent, NgDocCategory} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
-import {catchError, tap} from 'rxjs/operators';
+import {tap} from 'rxjs/operators';
 
 import {isCategoryEntity, isPageEntity} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
@@ -32,11 +32,10 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 	}
 
 	override get canBeBuilt(): boolean {
-		return (
-			!!this.target &&
-			(!this.target.onlyForTags ||
-				asArray(this.target.onlyForTags).includes(this.context.context.target?.configuration ?? ''))
-		);
+		return isPresent(this.target)
+			? !this.target.onlyForTags ||
+					asArray(this.target.onlyForTags).includes(this.context.context.target?.configuration ?? '')
+			: true;
 	}
 
 	override get isRoot(): boolean {
@@ -75,8 +74,8 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 		return this.target?.expanded ?? false;
 	}
 
-	override update(): Observable<void> {
-		return super.update().pipe(
+	override loadImpl(): Observable<void> {
+		return super.loadImpl().pipe(
 			tap(() => {
 				if (!this.title) {
 					throw new Error(`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`);
@@ -84,16 +83,10 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 
 				this.parent = this.getParentFromCategory();
 			}),
-			catchError((error: unknown) => {
-				this.readyToBuild = false;
-				this.context.context.logger.error(`\n${String(error)}`);
-
-				return of(void 0);
-			}),
 		);
 	}
 
-	protected override build(): Observable<NgDocBuiltOutput[]> {
+	protected override buildImpl(): Observable<NgDocBuiltOutput[]> {
 		return this.isReadyForBuild ? forkJoin([this.buildModule()]) : of([]);
 	}
 

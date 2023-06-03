@@ -14,10 +14,22 @@ import {NgDocEntityStore} from '../entity-store';
  * @returns List of entities that should be rebuilt (including source entities)
  */
 export function buildCandidates(entityStore: NgDocEntityStore, entities: NgDocEntity[]): NgDocEntity[] {
+	/*
+	 * If there are no entities to build, return empty array.
+	 * This is needed because `candidatesByKeywords` may return outdated entities if there are no entities to build
+	 * then the message about outdated keywords will be shown.
+	 */
+	if (!entities.length) {
+		return [];
+	}
+
 	const entitiesFromStore: NgDocEntity[] = asArray(entityStore.asArray());
+	// Get all candidates from entities and their build candidates
 	const candidates: NgDocEntity[] = asArray(
 		new Set(entities.map((buildable: NgDocEntity) => [buildable, ...buildable.buildCandidates]).flat()),
 	);
+
+	// Get all keywords from candidates
 	const candidatesKeywords: string[] = asArray(
 		new Set<string>(
 			candidates

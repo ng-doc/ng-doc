@@ -8,21 +8,21 @@ import {
 	declarationFolderName,
 	editFileInRepoUrl,
 	getPageType,
+	isSupportedDeclaration,
 	processHtml,
 	slash,
 	uniqueName,
 	viewFileInRepoUrl,
 } from '../../helpers';
-import {isSupportedDeclaration} from '../../helpers';
 import {buildIndexes} from '../../helpers/build-indexes';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
 import {NgDocSupportedDeclarations} from '../../types';
-import {NgDocBuilder} from '../builder';
+import {NgDocEntityStore} from '../entity-store';
 import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocRouteEntity} from './abstractions/route.entity';
 import {NgDocApiScopeEntity} from './api-scope.entity';
-import {CachedEntity} from './cache';
+import {CachedEntity, NgDocCache} from './cache';
 
 @CachedEntity()
 export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
@@ -31,17 +31,16 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	override readonly physical: boolean = false;
 	override readonly id: string = uniqueName(`${this.sourceFilePath}}#${this.declarationName}`);
 	override folderName: string = '';
-	protected override readyToBuild: boolean = true;
-
 	constructor(
-		override readonly builder: NgDocBuilder,
-		override readonly sourceFile: SourceFile,
+		override readonly store: NgDocEntityStore,
+		override readonly cache: NgDocCache,
 		override readonly context: NgDocBuilderContext,
+		override readonly sourceFile: SourceFile,
 		override parent: NgDocApiScopeEntity,
 		readonly declarationName: string,
 		readonly index: number,
 	) {
-		super(builder, sourceFile, context);
+		super(store, cache, context, sourceFile);
 
 		this.updateDeclaration();
 	}
@@ -57,7 +56,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 			: '';
 	}
 
-	override emit(): Observable<void> {
+	protected override refreshImpl(): Observable<void> {
 		/**
 		 * Just refresh source file, we don't need to emit it
 		 */
@@ -104,13 +103,13 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 		return [this.declarationName];
 	}
 
-	override update(): Observable<void> {
+	protected override loadImpl(): Observable<void> {
 		this.updateDeclaration();
 
 		return of(void 0);
 	}
 
-	protected override build(): Observable<NgDocBuiltOutput[]> {
+	protected override buildImpl(): Observable<NgDocBuiltOutput[]> {
 		return this.isReadyForBuild
 			? forkJoin([this.buildModule()]).pipe(map((output: Array<NgDocBuiltOutput | null>) => output.filter(isPresent)))
 			: of([]);

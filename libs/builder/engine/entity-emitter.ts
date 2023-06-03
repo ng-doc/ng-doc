@@ -1,3 +1,4 @@
+import {NgDocBuilderContext} from '@ng-doc/builder';
 import {merge, Observable} from 'rxjs';
 import {map, mergeMap, startWith, switchMap, take, tap} from 'rxjs/operators';
 import {Project} from 'ts-morph';
@@ -5,8 +6,9 @@ import {Project} from 'ts-morph';
 import {getEntityConstructor} from '../helpers';
 import {forkJoinOrEmpty, progress} from '../operators';
 import {Constructable} from '../types';
-import {NgDocBuilder} from './builder';
 import {NgDocEntity} from './entities/abstractions/entity';
+import {NgDocCache} from './entities/cache';
+import {NgDocEntityStore} from './entity-store';
 import {API_PATTERN, CATEGORY_PATTERN, PAGE_PATTERN} from './variables';
 import {NgDocWatcher} from './watcher';
 
@@ -15,12 +17,16 @@ import {NgDocWatcher} from './watcher';
  * This function not only creates the entities based on the file path, but also creates the child entities recursively
  * if it's can be done.
  *
- * @param builder - The builder instance.
+ * @param store - The entity store.
+ * @param cache - The cache instance.
+ * @param context - The builder context.
  * @param project - The project instance.
  * @param watcher - The watcher instance.
  */
 export function entityEmitter(
-	builder: NgDocBuilder,
+	store: NgDocEntityStore,
+	cache: NgDocCache,
+	context: NgDocBuilderContext,
 	project: Project,
 	watcher: NgDocWatcher,
 ): Observable<NgDocEntity[]> {
@@ -32,7 +38,7 @@ export function entityEmitter(
 			paths.map((p: string) => {
 				const EntityConstructor: Constructable<NgDocEntity> = getEntityConstructor(p);
 
-				return new EntityConstructor(builder, project.addSourceFileAtPath(p), builder.context);
+				return new EntityConstructor(store, cache, context, project.addSourceFileAtPath(p));
 			}),
 		),
 		mergeMap((entities: NgDocEntity[]) =>
@@ -62,6 +68,6 @@ function childGenerator(entity: NgDocEntity): Observable<NgDocEntity[]> {
 		progress('Loading entities...'),
 		switchMap((children: NgDocEntity[]) => forkJoinOrEmpty(children.map(childGenerator))),
 		map((children: NgDocEntity[][]) => [entity, children].flat(2)),
-		tap((entities: NgDocEntity[]) => entities.forEach((e: NgDocEntity) => entity.builder.entities.set(e.id, e))),
+		tap((entities: NgDocEntity[]) => entities.forEach((e: NgDocEntity) => entity.store.set(e.id, e))),
 	);
 }

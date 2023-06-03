@@ -12,11 +12,15 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 	readonly parent: undefined = undefined;
 	readonly buildCandidates: NgDocEntity[] = [];
 
-	override update(): Observable<void> {
+	protected override refreshImpl(): Observable<void> {
 		return of(void 0);
 	}
 
-	protected build(): Observable<NgDocBuiltOutput[]> {
+	protected override loadImpl(): Observable<void> {
+		return of(void 0);
+	}
+
+	protected buildImpl(): Observable<NgDocBuiltOutput[]> {
 		return forkJoin([this.buildIndexFile(), this.buildGeneratedModule(), this.buildRoutes(), this.buildContext()]);
 	}
 
@@ -49,10 +53,6 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 	}
 
 	private get rootEntitiesForBuild(): NgDocEntity[] {
-		return this.builder.entities.asArray().filter((entity: NgDocEntity) => entity.isRoot && this.isReady(entity));
-	}
-
-	private isReady(entity: NgDocEntity): boolean {
-		return entity.isReadyForBuild;
+		return this.store.asArray().filter((entity: NgDocEntity) => entity.isRoot && this.isReadyForBuild);
 	}
 }

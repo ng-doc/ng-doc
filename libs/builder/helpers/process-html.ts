@@ -18,6 +18,6 @@ export async function processHtml(entity: NgDocEntity, html: string): Promise<st
 		route: isRouteEntity(entity) ? entity.fullRoute : undefined,
 		addUsedKeyword: entity.usedKeywords.add.bind(entity.usedKeywords),
 		addPotentialKeyword: entity.potentialKeywords.add.bind(entity.potentialKeywords),
-		getKeyword: entity.builder.entities.getByKeyword.bind(entity.builder.entities),
+		getKeyword: entity.store.getByKeyword.bind(entity.store),
 	});
 }

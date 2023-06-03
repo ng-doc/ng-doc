@@ -2,7 +2,7 @@ import {asArray, isPresent, NgDocPage, NgDocPageIndex} from '@ng-doc/core';
 import * as fs from 'fs';
 import * as path from 'path';
 import {forkJoin, from, Observable, of} from 'rxjs';
-import {catchError, map, mapTo, switchMap, tap} from 'rxjs/operators';
+import {map, mapTo, switchMap, tap} from 'rxjs/operators';
 import {ClassDeclaration, ObjectLiteralExpression} from 'ts-morph';
 
 import {
@@ -67,12 +67,11 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return undefined;
 	}
 
-	override get canBeBuilt(): boolean {
-		return (
-			!!this.target &&
-			(!this.target.onlyForTags ||
-				asArray(this.target.onlyForTags).includes(this.context.context.target?.configuration ?? ''))
-		);
+	protected override get canBeBuilt(): boolean {
+		return isPresent(this.target)
+			? !this.target.onlyForTags ||
+					asArray(this.target.onlyForTags).includes(this.context.context.target?.configuration ?? '')
+			: true;
 	}
 
 	override get order(): number | undefined {
@@ -134,53 +133,52 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return !!this.objectExpression?.getProperty('imports');
 	}
 
-	override update(): Observable<void> {
-		return super.update().pipe(
-			tap(() => {
-				if (!isPresent(this.target?.mdFile) || !fs.existsSync(this.mdPath)) {
-					throw new Error(
-						`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you define mdFile property correctly and .md file exists.`,
-					);
-				}
+	override loadImpl(): Observable<void> {
+		return super.loadImpl().pipe(
+			tap({
+				next: () => {
+					if (!isPresent(this.target?.mdFile) || !fs.existsSync(this.mdPath)) {
+						throw new Error(
+							`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you define mdFile property correctly and .md file exists.`,
+						);
+					}
 
-				if (!this.title) {
-					throw new Error(`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`);
-				}
+					if (!this.title) {
+						throw new Error(
+							`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`,
+						);
+					}
 
-				this.parent = this.getParentFromCategory();
+					this.parent = this.getParentFromCategory();
 
-				if (this.objectExpression) {
-					this.playgroundsExpression = getPlaygroundsExpression(this.objectExpression);
-					this.demoClassDeclarations = getDemoClassDeclarations(this.objectExpression);
-					this.playgroundClassDeclarations = asArray(new Set(getPlaygroundTargets(this.objectExpression)));
+					if (this.objectExpression) {
+						this.playgroundsExpression = getPlaygroundsExpression(this.objectExpression);
+						this.demoClassDeclarations = getDemoClassDeclarations(this.objectExpression);
+						this.playgroundClassDeclarations = asArray(new Set(getPlaygroundTargets(this.objectExpression)));
 
-					this.standalonePlaygroundKeys = asArray(
-						this.playgroundIds
-							.reduce((keys: Map<ClassDeclaration, string>, id: string) => {
-								if (this.playgroundsExpression) {
-									const target: ClassDeclaration | undefined = getTargetForPlayground(this.playgroundsExpression, id);
+						this.standalonePlaygroundKeys = asArray(
+							this.playgroundIds
+								.reduce((keys: Map<ClassDeclaration, string>, id: string) => {
+									if (this.playgroundsExpression) {
+										const target: ClassDeclaration | undefined = getTargetForPlayground(this.playgroundsExpression, id);
 
-									if (target && isStandalone(target)) {
-										keys.set(target, id);
+										if (target && isStandalone(target)) {
+											keys.set(target, id);
+										}
 									}
-								}
 
-								return keys;
-							}, new Map<ClassDeclaration, string>())
-							.values(),
-					);
-				}
-			}),
-			catchError((error: unknown) => {
-				this.readyToBuild = false;
-				this.context.context.logger.error(`\n\n${String(error)}`);
-
-				return of(void 0);
+									return keys;
+								}, new Map<ClassDeclaration, string>())
+								.values(),
+						);
+					}
+				},
+				error: () => (this.hasErrors = true),
 			}),
 		);
 	}
 
-	protected override build(): Observable<NgDocBuiltOutput[]> {
+	protected override buildImpl(): Observable<NgDocBuiltOutput[]> {
 		return this.isReadyForBuild
 			? this.fillAssets().pipe(
 					switchMap(() => forkJoin([this.buildModule(), this.buildPlaygrounds(), this.buildDemoAssets()])),

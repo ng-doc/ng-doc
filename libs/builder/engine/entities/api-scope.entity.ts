@@ -4,28 +4,28 @@ import {SourceFile} from 'ts-morph';
 
 import {isPageEntity, uniqueName} from '../../helpers';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
-import {NgDocBuilder} from '../builder';
+import {NgDocEntityStore} from '../entity-store';
 import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocRouteEntity} from './abstractions/route.entity';
 import {NgDocApiEntity} from './api.entity';
+import {NgDocCache} from './cache';
 import {CachedEntity} from './cache/decorators';
 import {NgDocPageEntity} from './page.entity';
 
 @CachedEntity()
 export class NgDocApiScopeEntity extends NgDocRouteEntity<NgDocApiScope> {
 	override readonly physical: boolean = false;
-	protected override readyToBuild: boolean = true;
 	override id: string = uniqueName(`${this.sourceFilePath}#${this.target.route}`);
-
 	constructor(
-		override readonly builder: NgDocBuilder,
-		override readonly sourceFile: SourceFile,
+		override readonly store: NgDocEntityStore,
+		override readonly cache: NgDocCache,
 		override readonly context: NgDocBuilderContext,
+		override readonly sourceFile: SourceFile,
 		override parent: NgDocApiEntity,
 		override target: NgDocApiScope,
 	) {
-		super(builder, sourceFile, context);
+		super(store, cache, context, sourceFile);
 	}
 
 	override get rootFiles(): string[] {
@@ -78,16 +78,16 @@ export class NgDocApiScopeEntity extends NgDocRouteEntity<NgDocApiScope> {
 		return this.childEntities;
 	}
 
-	override emit(): Observable<void> {
+	override refreshImpl(): Observable<void> {
 		// Emitting source file is not necessary for this type of entity
 		return of(void 0);
 	}
 
-	override update(): Observable<void> {
+	override loadImpl(): Observable<void> {
 		return of(void 0);
 	}
 
-	protected override build(): Observable<NgDocBuiltOutput[]> {
+	protected override buildImpl(): Observable<NgDocBuiltOutput[]> {
 		return this.isReadyForBuild ? forkJoin([this.buildModule()]) : of([]);
 	}
 

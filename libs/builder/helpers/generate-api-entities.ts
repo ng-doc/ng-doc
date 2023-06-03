@@ -19,9 +19,10 @@ export function generateApiEntities(apiRootEntity: NgDocApiEntity): Array<NgDocA
 		apiRootEntity.target?.scopes
 			.map((scope: NgDocApiScope) => {
 				const scopeEntity: NgDocApiScopeEntity = new NgDocApiScopeEntity(
-					apiRootEntity.builder,
-					apiRootEntity.sourceFile,
+					apiRootEntity.store,
+					apiRootEntity.cache,
 					apiRootEntity.context,
+					apiRootEntity.sourceFile,
 					apiRootEntity,
 					scope,
 				);
@@ -42,7 +43,8 @@ export function generateApiEntities(apiRootEntity: NgDocApiEntity): Array<NgDocA
 			})
 			.flat() ?? [];
 
-	apiRootEntity.builder.project
+	apiRootEntity.sourceFile
+		.getProject()
 		.addSourceFilesAtPaths(paths)
 		.map((sourceFile: SourceFile) => sourceFile.getExportedDeclarations())
 		.reduce(
@@ -68,9 +70,10 @@ export function generateApiEntities(apiRootEntity: NgDocApiEntity): Array<NgDocA
 					const count: number = duplicates.get(name) ?? 0;
 
 					const page: NgDocApiPageEntity = new NgDocApiPageEntity(
-						apiRootEntity.builder,
-						sourceFile,
+						apiRootEntity.store,
+						apiRootEntity.cache,
 						apiRootEntity.context,
+						sourceFile,
 						scope,
 						name,
 						count,

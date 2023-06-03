@@ -19,9 +19,7 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 	 */
 	target?: T;
 
-	override update(): Observable<void> {
-		this.readyToBuild = false;
-
+	protected override loadImpl(): Observable<void> {
 		delete require.cache[require.resolve(this.pathToCompiledFile)];
 		this.target = require(this.pathToCompiledFile).default;
 		this.objectExpression = getObjectExpressionFromDefault(this.sourceFile);
@@ -29,8 +27,6 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 		if (!this.target || !this.objectExpression) {
 			new Error(`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`);
 		}
-
-		this.readyToBuild = true;
 
 		return of(void 0);
 	}
@@ -45,12 +41,13 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 			?.getFilePath();
 
 		if (sourceFilePath && minimatch(sourceFilePath, CATEGORY_PATTERN) && sourceFilePath !== this.sourceFilePath) {
-			const parent: NgDocEntity | undefined = this.builder.get(
+			const parent: NgDocEntity | undefined = this.store.get(
 				path.relative(this.context.context.workspaceRoot, sourceFilePath),
 			);
 
-			return isCategoryEntity(parent) ? parent : undefined;
+			return isCategoryEntity(parent) && parent.isReadyForBuild ? parent : undefined;
 		}
+
 		return undefined;
 	}
 

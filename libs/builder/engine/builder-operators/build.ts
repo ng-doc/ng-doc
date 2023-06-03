@@ -26,10 +26,10 @@ export function build(
 			tap(() => store.updateKeywordMap(config.keywords)),
 			map((entities: NgDocEntity[]) => buildCandidates(store, entities)),
 			switchMap((entities: NgDocEntity[]) =>
-				forkJoinOrEmpty(entities.map((e: NgDocEntity) => e.buildArtifacts().pipe(errorHandler()))),
+				forkJoinOrEmpty(entities.map((e: NgDocEntity) => e.build().pipe(errorHandler([])))),
 			),
 			switchMap((output: NgDocBuiltOutput[][]) =>
-				forkJoinOrEmpty(additionalEntities.map((e: NgDocEntity) => e.buildArtifacts())).pipe(
+				forkJoinOrEmpty(additionalEntities.map((e: NgDocEntity) => e.build())).pipe(
 					map((additionalOutput: NgDocBuiltOutput[][]) => [...output, ...additionalOutput].flat()),
 				),
 			),
