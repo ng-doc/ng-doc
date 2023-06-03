@@ -9,6 +9,7 @@ import {NgDocBuilderContext} from '../interfaces';
 import {progress} from '../operators';
 import {build, collectGarbage, compile, emit, load, refresh} from './builder-operators';
 import {dependencyChanges} from './builder-operators/dependency-changes';
+import {printOutput} from './builder-operators/print-output';
 import {task, taskForMany} from './builder-operators/task';
 import {NgDocSkeletonEntity} from './entities';
 import {NgDocEntity} from './entities/abstractions/entity';
@@ -47,7 +48,7 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 	const ifNotCached = (entity: NgDocEntity) => isReadyForBuild(entity) && !cache.isCacheValid(entity);
 
 	// Clean build path if cache is not enabled
-	if (context.config?.cache && invalidateCacheIfNeeded(context.cachedFiles)) {
+	if (!!context.config?.cache && invalidateCacheIfNeeded(context.cachedFiles)) {
 		// do nothing
 	} else {
 		fs.rmSync(context.buildPath, {recursive: true, force: true});
@@ -69,7 +70,7 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 		mergeMap((entities: NgDocEntity[]) =>
 			of(entities).pipe(
 				task('Updating source files...', refresh(), ifNotDestroyed),
-				task('Compiling...', compile(context.tsConfig, context.context.workspaceRoot), isReadyForBuild),
+				task('Compiling...', compile(), isReadyForBuild),
 				task('Loading...', load(), isReadyForBuild),
 				dependencyChanges(watcher),
 				taskForMany('Building...', build(store, context.config, ...globalEntities), ifNotCached),
@@ -77,6 +78,7 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 				collectGarbage(store),
 			),
 		),
+		printOutput(store),
 		map(() => void 0),
 		progress(),
 	);

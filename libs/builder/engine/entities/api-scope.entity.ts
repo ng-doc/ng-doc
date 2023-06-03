@@ -83,6 +83,10 @@ export class NgDocApiScopeEntity extends NgDocRouteEntity<NgDocApiScope> {
 		return of(void 0);
 	}
 
+	override compile(): Observable<void> {
+		return of(void 0);
+	}
+
 	override loadImpl(): Observable<void> {
 		return of(void 0);
 	}

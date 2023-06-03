@@ -14,7 +14,6 @@ import {NgDocPageEntity} from './page.entity';
 @CachedEntity()
 export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 	override parent?: NgDocCategoryEntity;
-	override compilable: boolean = true;
 
 	override get route(): string {
 		const folderName: string = path.basename(path.dirname(this.sourceFile.getFilePath()));
@@ -74,11 +73,11 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 		return this.target?.expanded ?? false;
 	}
 
-	override loadImpl(): Observable<void> {
+	protected override loadImpl(): Observable<void> {
 		return super.loadImpl().pipe(
 			tap(() => {
 				if (!this.title) {
-					throw new Error(`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`);
+					throw new Error(`Failed to load category. Make sure that you have a "title" property.`);
 				}
 
 				this.parent = this.getParentFromCategory();

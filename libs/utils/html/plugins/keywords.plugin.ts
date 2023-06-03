@@ -1,12 +1,12 @@
 import {NG_DOC_ELEMENT} from '@ng-doc/core/constants/defaults.js';
 import {NgDocKeyword} from '@ng-doc/core/interfaces';
-import chalk from 'chalk';
 import {Element, Text} from 'hast';
 import {isElement} from 'hast-util-is-element';
 import {toString} from 'hast-util-to-string';
 import {SKIP, visitParents} from 'unist-util-visit-parents';
 
 import {hasLinkAncestor, isCodeNode} from '../helpers';
+import {NgDocHtmlPostProcessorConfig} from '../html-post-processor';
 
 const languages: string[] = ['typescript', 'ts'];
 
@@ -15,17 +15,11 @@ export type GetKeyword = (keyword: string) => NgDocKeyword | undefined;
 
 /**
  *
- * @param entityStore
- * @param entity
- * @param addUsedKeyword
- * @param addPotentialKeyword
- * @param getKeyword
+ * @param config
  */
-export default function keywordsPlugin(
-	addUsedKeyword?: AddKeyword,
-	addPotentialKeyword?: AddKeyword,
-	getKeyword?: GetKeyword,
-) {
+export default function keywordsPlugin(config: NgDocHtmlPostProcessorConfig) {
+	const {addUsedKeyword, addPotentialKeyword, getKeyword} = config;
+
 	return (tree: Element) =>
 		visitParents(tree, 'element', (node: Element, ancestors: Element[]) => {
 			if (!isCodeNode(node)) {
@@ -45,7 +39,7 @@ export default function keywordsPlugin(
 					const index: number = parent.children.indexOf(node);
 
 					// Parse the text for words that we can convert to links
-					const nodes: any[] = getNodes(node, parent, isInlineCode, addUsedKeyword, addPotentialKeyword, getKeyword);
+					const nodes: any[] = getNodes(node, parent, isInlineCode, config);
 					// Replace the text node with the links and leftover text nodes
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
@@ -61,22 +55,21 @@ export default function keywordsPlugin(
  *
  * @param node
  * @param parent
- * @param entityStore
  * @param inlineLink
- * @param e
- * @param addUsedKeyword
- * @param addPotentialKeyword
- * @param getKeyword
+ * @param config
  */
 function getNodes(
 	node: Text,
 	parent: Element,
 	inlineLink: boolean,
-	addUsedKeyword: AddKeyword,
-	addPotentialKeyword: AddKeyword,
-	getKeyword: GetKeyword,
+	config: NgDocHtmlPostProcessorConfig,
 ): Array<Element | Text> {
 	const KeywordRegExp: RegExp = /([A-Za-z0-9_.-/*]+)/;
+	const {addUsedKeyword, addPotentialKeyword, getKeyword, raiseError} = config;
+
+	if (!getKeyword || !addUsedKeyword || !addPotentialKeyword) {
+		throw new Error('Missing config');
+	}
 
 	return toString(node)
 		.split(KeywordRegExp)
@@ -89,7 +82,7 @@ function getNodes(
 			}
 
 			if (inlineLink && /^\*\w+/gm.test(word) && !keyword) {
-				console.log(`\n${chalk.blue('NgDoc:')} ${chalk.yellow(`Keyword "${word}" is missing.`)}`);
+				raiseError(new Error(`Keyword "${word}" is missing.`));
 			}
 
 			// Convert code tag to link if it's a link to the page entity

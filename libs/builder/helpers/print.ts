@@ -17,10 +17,28 @@ export function printProgress(text?: string): void {
 }
 
 /**
+ * Prints an info message.
+ *
+ * @param info - The info to print.
+ */
+export function printInfo(info: string): void {
+	spinner.info(info);
+}
+
+/**
+ * Prints a warning message.
+ *
+ * @param warn - The warning to print.
+ */
+export function printWarning(warn: string): void {
+	spinner.warn(warn);
+}
+
+/**
  * Prints an error message.
  *
  * @param error - The error to print.
  */
-export function printError(error: Error): void {
-	spinner.fail(`NgDoc ${error}`);
+export function printError(error: string): void {
+	spinner.fail(error);
 }

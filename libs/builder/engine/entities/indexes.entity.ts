@@ -13,14 +13,6 @@ export class NgDocIndexesEntity extends NgDocEntity {
 	readonly parent: undefined = undefined;
 	readonly buildCandidates: NgDocEntity[] = [];
 
-	protected override refreshImpl(): Observable<void> {
-		return of(void 0);
-	}
-
-	protected override loadImpl(): Observable<void> {
-		return of(void 0);
-	}
-
 	protected buildImpl(): Observable<NgDocBuiltOutput[]> {
 		return this.buildIndexes();
 	}

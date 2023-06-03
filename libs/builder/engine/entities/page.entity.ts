@@ -39,7 +39,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	standalonePlaygroundKeys: string[] = [];
 
 	override parent?: NgDocCategoryEntity;
-	override compilable: boolean = true;
 	private componentAssets: NgDocComponentAsset = {};
 
 	override get route(): string {
@@ -133,20 +132,18 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return !!this.objectExpression?.getProperty('imports');
 	}
 
-	override loadImpl(): Observable<void> {
+	protected override loadImpl(): Observable<void> {
 		return super.loadImpl().pipe(
 			tap({
 				next: () => {
 					if (!isPresent(this.target?.mdFile) || !fs.existsSync(this.mdPath)) {
 						throw new Error(
-							`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you define mdFile property correctly and .md file exists.`,
+							`Failed to load page. Make sure that you define "mdFile" property correctly and .md file exists.`,
 						);
 					}
 
 					if (!this.title) {
-						throw new Error(
-							`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`,
-						);
+						throw new Error(`Failed to load page. Make sure that you have a "title" property.`);
 					}
 
 					this.parent = this.getParentFromCategory();
@@ -173,7 +170,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 						);
 					}
 				},
-				error: () => (this.hasErrors = true),
+				error: (e: Error) => this.errors.push(e),
 			}),
 		);
 	}

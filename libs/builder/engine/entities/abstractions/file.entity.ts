@@ -1,9 +1,10 @@
 import {minimatch} from 'minimatch';
 import * as path from 'path';
-import {Observable, of} from 'rxjs';
+import {defer, from, Observable, of} from 'rxjs';
+import {map, tap} from 'rxjs/operators';
 import {ObjectLiteralExpression, SyntaxKind} from 'ts-morph';
 
-import {getObjectExpressionFromDefault, isCategoryEntity} from '../../../helpers';
+import {buildFileEntity, getObjectExpressionFromDefault, isCategoryEntity} from '../../../helpers';
 import {CATEGORY_PATTERN} from '../../variables';
 import {NgDocCategoryEntity} from '../category.entity';
 import {NgDocEntity} from './entity';
@@ -19,16 +20,21 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 	 */
 	target?: T;
 
-	protected override loadImpl(): Observable<void> {
-		delete require.cache[require.resolve(this.pathToCompiledFile)];
-		this.target = require(this.pathToCompiledFile).default;
-		this.objectExpression = getObjectExpressionFromDefault(this.sourceFile);
+	/**
+	 * Runs when the source file was updated, can be used to load target file.
+	 */
+	protected loadImpl(): Observable<void> {
+		return defer(() => {
+			delete require.cache[require.resolve(this.pathToCompiledFile)];
+			this.target = require(this.pathToCompiledFile).default;
+			this.objectExpression = getObjectExpressionFromDefault(this.sourceFile);
 
-		if (!this.target || !this.objectExpression) {
-			new Error(`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have exported it as default.`);
-		}
+			if (!this.target || !this.objectExpression) {
+				new Error(`Failed to load object. Make sure that you have exported it as default.`);
+			}
 
-		return of(void 0);
+			return of(void 0);
+		});
 	}
 
 	protected getParentFromCategory(): NgDocCategoryEntity | undefined {
@@ -49,6 +55,26 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 		}
 
 		return undefined;
+	}
+
+	/**
+	 * Compiles the source file
+	 */
+	compile(): Observable<void> {
+		return from(buildFileEntity(this.sourceFile, this.context.tsConfig, this.context.context.workspaceRoot)).pipe(
+			map(() => void 0),
+			tap({
+				error: (e: Error) => this.errors.push(e),
+			}),
+		);
+	}
+
+	load(): Observable<void> {
+		return this.loadImpl().pipe(
+			tap({
+				error: (e: Error) => this.errors.push(e),
+			}),
+		);
 	}
 
 	override destroy(): void {

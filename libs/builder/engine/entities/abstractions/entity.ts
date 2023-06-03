@@ -59,9 +59,15 @@ export abstract class NgDocEntity {
 	readonly physical: boolean = true;
 
 	/**
-	 * Indicates is entity has errors during preparation
+	 * List of errors that were occurred during the build process
 	 */
-	hasErrors: boolean = false;
+	errors: Error[] = [];
+
+	/**
+	 * List of warnings that were occurred during the build process
+	 */
+	warnings: Error[] = [];
+
 	private destroy$: Subject<void> = new Subject<void>();
 
 	/**
@@ -139,7 +145,7 @@ export abstract class NgDocEntity {
 	 * @type {boolean}
 	 */
 	get isReadyForBuild(): boolean {
-		return !this.destroyed && !this.hasErrors && this.canBeBuilt;
+		return !this.destroyed && !this.errors.length && this.canBeBuilt;
 	}
 
 	get logger(): logging.LoggerApi {
@@ -152,16 +158,6 @@ export abstract class NgDocEntity {
 	}
 
 	/**
-	 * Runs when the source file was updated, can be used refresh source file in the typescript project
-	 */
-	protected abstract refreshImpl(): Observable<void>;
-
-	/**
-	 * Runs when the source file was updated, can be used to load target file etc.
-	 */
-	protected abstract loadImpl(): Observable<void>;
-
-	/**
 	 * Build all artifacts that need for application.
 	 * This is the last method in the build process, should return output that should be emitted to the file system
 	 */
@@ -171,29 +167,13 @@ export abstract class NgDocEntity {
 	 * Method called by NgDocBuilder when one or more dependencies have changed
 	 */
 	dependenciesChanged(): void {
-		this.hasErrors = false;
+		// Reset error and warnings, because dependency changes could fix them
+		this.warnings = [];
+		this.errors = [];
 	}
 
 	childrenGenerator(): Observable<NgDocEntity[]> {
 		return of([]);
-	}
-
-	refresh(): Observable<void> {
-		this.hasErrors = false;
-
-		return this.refreshImpl().pipe(
-			tap({
-				error: () => (this.hasErrors = true),
-			}),
-		);
-	}
-
-	load(): Observable<void> {
-		return this.loadImpl().pipe(
-			tap({
-				error: () => (this.hasErrors = true),
-			}),
-		);
 	}
 
 	build(): Observable<NgDocBuiltOutput[]> {
@@ -205,7 +185,7 @@ export abstract class NgDocEntity {
 		return this.buildImpl().pipe(
 			tap({
 				next: () => this.cache.cache(this),
-				error: () => (this.hasErrors = true),
+				error: (e: Error) => this.errors.push(e),
 			}),
 		);
 	}

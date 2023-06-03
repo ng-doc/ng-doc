@@ -61,6 +61,10 @@ export class NgDocEntityStore extends Map<string, NgDocEntity> {
 		});
 	}
 
+	getAllWithErrorsOrWarnings(): NgDocEntity[] {
+		return this.asArray().filter((entity: NgDocEntity) => entity.errors.length || entity.warnings.length);
+	}
+
 	private addKeyword(key: string, keyword: NgDocKeyword): void {
 		this.keywordMap.set(key, [...asArray(this.keywordMap.get(key)), keyword]);
 	}

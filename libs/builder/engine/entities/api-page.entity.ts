@@ -103,6 +103,10 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 		return [this.declarationName];
 	}
 
+	override compile(): Observable<void> {
+		return of(void 0);
+	}
+
 	protected override loadImpl(): Observable<void> {
 		this.updateDeclaration();
 

@@ -1,6 +1,6 @@
 import path from 'path';
 import {forkJoin, Observable} from 'rxjs';
-import {mapTo} from 'rxjs/operators';
+import {mapTo, tap} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
 import {slash} from '../../../helpers';
@@ -16,11 +16,6 @@ export abstract class NgDocSourceFileEntity extends NgDocEntity {
 	 */
 	override readonly id: string = this.sourceFilePath;
 
-	/**
-	 * Indicates whether the entity's source file can be compiled
-	 */
-	readonly compilable: boolean = false;
-
 	constructor(
 		override readonly store: NgDocEntityStore,
 		override readonly cache: NgDocCache,
@@ -29,7 +24,6 @@ export abstract class NgDocSourceFileEntity extends NgDocEntity {
 	) {
 		super(store, cache, context);
 	}
-
 	/**
 	 * Files that are watched for changes to rebuild entity or remove it
 	 */
@@ -63,12 +57,27 @@ export abstract class NgDocSourceFileEntity extends NgDocEntity {
 		return path.join(CACHE_PATH, relativePath.replace(/\.ts$/, '.js'));
 	}
 
-	protected override refreshImpl(): Observable<void> {
+	/**
+	 * Runs when the source file was updated, can be used refresh source file in the typescript project
+	 */
+	protected refreshImpl(): Observable<void> {
 		return forkJoin(
 			[this.sourceFile, ...this.sourceFile.getReferencedSourceFiles()].map((sourceFile: SourceFile) =>
 				sourceFile.refreshFromFileSystem(),
 			),
 		).pipe(mapTo(void 0));
+	}
+
+	refresh(): Observable<void> {
+		// Reset warnings and errors because it's the first step of the build process
+		this.warnings = [];
+		this.errors = [];
+
+		return this.refreshImpl().pipe(
+			tap({
+				error: (e: Error) => this.errors.push(e),
+			}),
+		);
 	}
 
 	override destroy(): void {

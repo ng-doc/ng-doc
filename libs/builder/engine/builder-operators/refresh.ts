@@ -1,6 +1,7 @@
-import {Observable, OperatorFunction} from 'rxjs';
+import {Observable, of, OperatorFunction} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 
+import {isSourceFileEntity} from '../../helpers';
 import {NgDocEntity} from '../entities/abstractions/entity';
 
 /**
@@ -8,5 +9,13 @@ import {NgDocEntity} from '../entities/abstractions/entity';
  */
 export function refresh(): OperatorFunction<NgDocEntity, NgDocEntity> {
 	return (source: Observable<NgDocEntity>) =>
-		source.pipe(switchMap((e: NgDocEntity) => e.refresh().pipe(map(() => e))));
+		source.pipe(
+			switchMap((e: NgDocEntity) => {
+				if (isSourceFileEntity(e)) {
+					return e.refresh().pipe(map(() => e));
+				}
+
+				return of(e);
+			}),
+		);
 }

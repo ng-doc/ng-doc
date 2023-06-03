@@ -1,4 +1,5 @@
 import {NgDocBuilderContext} from '@ng-doc/builder';
+import {asArray} from '@ng-doc/core';
 import {merge, Observable} from 'rxjs';
 import {map, mergeMap, startWith, switchMap, take, tap} from 'rxjs/operators';
 import {Project} from 'ts-morph';
@@ -54,6 +55,11 @@ export function entityEmitter(
 		),
 		mergeMap((entities: NgDocEntity[]) =>
 			forkJoinOrEmpty(entities.map(childGenerator)).pipe(map((entities: NgDocEntity[][]) => entities.flat())),
+		),
+		map((entities: NgDocEntity[]) =>
+			// Add the entities with errors or warnings to the output.
+			// This is necessary to try to build them again.
+			asArray(new Set(entities.concat(store.getAllWithErrorsOrWarnings()))),
 		),
 	);
 }
