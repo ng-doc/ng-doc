@@ -7,7 +7,7 @@ jest.mock('fs');
 describe('emitBuiltOutput', () => {
 	beforeEach(() => {
 		vol.reset();
-	})
+	});
 
 	it('should emit file', () => {
 		const filePath: string = '/path/to/file.html';
@@ -21,9 +21,9 @@ describe('emitBuiltOutput', () => {
 		]);
 
 		expect(vol.toJSON()).toStrictEqual({
-			[filePath]: fileContent
+			[filePath]: fileContent,
 		});
-	})
+	});
 
 	it('should emit multiple files', () => {
 		const filePath1: string = '/path/to/file1.html';
@@ -44,7 +44,7 @@ describe('emitBuiltOutput', () => {
 
 		expect(vol.toJSON()).toStrictEqual({
 			[filePath1]: fileContent1,
-			[filePath2]: fileContent2
+			[filePath2]: fileContent2,
 		});
-	})
-})
+	});
+});

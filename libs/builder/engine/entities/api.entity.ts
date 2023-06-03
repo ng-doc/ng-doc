@@ -63,6 +63,12 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		return [];
 	}
 
+	override setParentDynamically(): void {
+		super.setParentDynamically();
+
+		this.parent = this.getParentFromCategory();
+	}
+
 	override childrenGenerator(): Observable<NgDocEntity[]> {
 		this.children.forEach((child: NgDocEntity) => child.destroy());
 
@@ -82,8 +88,6 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 							`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`,
 						);
 					}
-
-					this.parent = this.getParentFromCategory();
 				},
 				error: (e: Error) => this.errors.push(e),
 			}),

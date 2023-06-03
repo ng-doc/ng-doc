@@ -73,14 +73,18 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 		return this.target?.expanded ?? false;
 	}
 
+	override setParentDynamically(): void {
+		super.setParentDynamically();
+
+		this.parent = this.getParentFromCategory();
+	}
+
 	protected override loadImpl(): Observable<void> {
 		return super.loadImpl().pipe(
 			tap(() => {
 				if (!this.title) {
 					throw new Error(`Failed to load category. Make sure that you have a "title" property.`);
 				}
-
-				this.parent = this.getParentFromCategory();
 			}),
 		);
 	}

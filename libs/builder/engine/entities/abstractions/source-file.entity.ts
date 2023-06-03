@@ -24,6 +24,7 @@ export abstract class NgDocSourceFileEntity extends NgDocEntity {
 	) {
 		super(store, cache, context);
 	}
+
 	/**
 	 * Files that are watched for changes to rebuild entity or remove it
 	 */

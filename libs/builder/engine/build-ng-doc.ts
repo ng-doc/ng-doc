@@ -7,7 +7,7 @@ import {Project} from 'ts-morph';
 import {createProject, printProgress} from '../helpers';
 import {NgDocBuilderContext} from '../interfaces';
 import {progress} from '../operators';
-import {build, collectGarbage, compile, emit, load, refresh} from './builder-operators';
+import {addBuildCandidates, build, collectGarbage, compile, emit, load, refresh} from './builder-operators';
 import {dependencyChanges} from './builder-operators/dependency-changes';
 import {printOutput} from './builder-operators/print-output';
 import {task, taskForMany} from './builder-operators/task';
@@ -70,6 +70,7 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 		mergeMap((entities: NgDocEntity[]) =>
 			of(entities).pipe(
 				task('Updating source files...', refresh(), ifNotDestroyed),
+				taskForMany(undefined, addBuildCandidates(store), ifNotDestroyed),
 				task('Compiling...', compile(), isReadyForBuild),
 				task('Loading...', load(), isReadyForBuild),
 				dependencyChanges(watcher),

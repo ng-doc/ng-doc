@@ -20,6 +20,12 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 	 */
 	target?: T;
 
+	protected override refreshImpl(): Observable<void> {
+		return super
+			.refreshImpl()
+			.pipe(tap(() => (this.objectExpression = getObjectExpressionFromDefault(this.sourceFile))));
+	}
+
 	/**
 	 * Runs when the source file was updated, can be used to load target file.
 	 */
@@ -27,7 +33,6 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 		return defer(() => {
 			delete require.cache[require.resolve(this.pathToCompiledFile)];
 			this.target = require(this.pathToCompiledFile).default;
-			this.objectExpression = getObjectExpressionFromDefault(this.sourceFile);
 
 			if (!this.target || !this.objectExpression) {
 				new Error(`Failed to load object. Make sure that you have exported it as default.`);
@@ -75,6 +80,10 @@ export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
 				error: (e: Error) => this.errors.push(e),
 			}),
 		);
+	}
+
+	setParentDynamically(): void {
+		// No implementation
 	}
 
 	override destroy(): void {

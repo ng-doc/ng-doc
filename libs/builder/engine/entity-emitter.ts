@@ -57,9 +57,17 @@ export function entityEmitter(
 			forkJoinOrEmpty(entities.map(childGenerator)).pipe(map((entities: NgDocEntity[][]) => entities.flat())),
 		),
 		map((entities: NgDocEntity[]) =>
-			// Add the entities with errors or warnings to the output.
-			// This is necessary to try to build them again.
-			asArray(new Set(entities.concat(store.getAllWithErrorsOrWarnings()))),
+			asArray(
+				new Set(
+					entities.concat(
+						/*
+				 	Add the entities with errors or warnings to the output.
+				 	This is necessary to try to build them again.
+				 */
+						...store.getAllWithErrorsOrWarnings(),
+					),
+				),
+			),
 		),
 	);
 }

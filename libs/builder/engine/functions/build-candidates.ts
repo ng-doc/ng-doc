@@ -1,4 +1,4 @@
-import {asArray} from '@ng-doc/core';
+import {asArray, unique} from '@ng-doc/core';
 
 import {isRouteEntity} from '../../helpers';
 import {NgDocEntity} from '../entities/abstractions/entity';
@@ -23,20 +23,18 @@ export function buildCandidates(entityStore: NgDocEntityStore, entities: NgDocEn
 		return [];
 	}
 
-	const entitiesFromStore: NgDocEntity[] = asArray(entityStore.asArray());
+	const entitiesFromStore: NgDocEntity[] = entityStore.asArray();
 	// Get all candidates from entities and their build candidates
-	const candidates: NgDocEntity[] = asArray(
-		new Set(entities.map((buildable: NgDocEntity) => [buildable, ...buildable.buildCandidates]).flat()),
+	const candidates: NgDocEntity[] = unique(
+		entities.map((buildable: NgDocEntity) => [buildable, ...buildable.buildCandidates]).flat(),
 	);
 
 	// Get all keywords from candidates
-	const candidatesKeywords: string[] = asArray(
-		new Set<string>(
-			candidates
-				.filter(isRouteEntity)
-				.map((candidate: NgDocRouteEntity) => candidate.keywords)
-				.flat(),
-		),
+	const candidatesKeywords: string[] = unique(
+		candidates
+			.filter(isRouteEntity)
+			.map((candidate: NgDocRouteEntity) => candidate.keywords)
+			.flat(),
 	);
 
 	const candidatesByKeywords: NgDocEntity[] = entitiesFromStore.filter(
@@ -49,7 +47,7 @@ export function buildCandidates(entityStore: NgDocEntityStore, entities: NgDocEn
 			asArray(entity.usedKeywords).some((keyword: string) => !entityStore.getByKeyword(keyword)),
 	);
 
-	return asArray(new Set([...candidates, ...candidatesByKeywords])).sort(prioritySort);
+	return unique(candidates, candidatesByKeywords).sort(prioritySort);
 }
 
 // Sort entities by parent-child relationship, children should be first, parents should be last

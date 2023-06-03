@@ -1,3 +1,4 @@
+export * from './add-build-candidates';
 export * from './build';
 export * from './collect-garbage';
 export * from './compile';

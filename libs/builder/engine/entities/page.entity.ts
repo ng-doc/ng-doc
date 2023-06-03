@@ -132,6 +132,12 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return !!this.objectExpression?.getProperty('imports');
 	}
 
+	override setParentDynamically(): void {
+		super.setParentDynamically();
+
+		this.parent = this.getParentFromCategory();
+	}
+
 	protected override loadImpl(): Observable<void> {
 		return super.loadImpl().pipe(
 			tap({
@@ -145,8 +151,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 					if (!this.title) {
 						throw new Error(`Failed to load page. Make sure that you have a "title" property.`);
 					}
-
-					this.parent = this.getParentFromCategory();
 
 					if (this.objectExpression) {
 						this.playgroundsExpression = getPlaygroundsExpression(this.objectExpression);
