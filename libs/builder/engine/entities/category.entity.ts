@@ -1,4 +1,5 @@
 import {asArray, isPresent, NgDocCategory} from '@ng-doc/core';
+import fs from 'fs';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
@@ -104,5 +105,13 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 			return of({content, filePath: this.modulePath});
 		}
 		return of();
+	}
+
+	override removeArtifacts() {
+		super.removeArtifacts();
+
+		if (fs.existsSync(this.modulePath)) {
+			fs.unlinkSync(this.modulePath);
+		}
 	}
 }
