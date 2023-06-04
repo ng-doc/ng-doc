@@ -1,10 +1,19 @@
 import {NgDocApi, NgDocApiList} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {map, switchMap, tap} from 'rxjs/operators';
 
-import {generateApiEntities, getKindType, isApiPageEntity, isApiScopeEntity, slash, uniqueName} from '../../helpers';
+import {
+	buildFileEntity,
+	generateApiEntities,
+	getKindType,
+	isApiPageEntity,
+	isApiScopeEntity,
+	slash,
+	uniqueName,
+} from '../../helpers';
 import {NgDocBuiltOutput} from '../../interfaces';
+import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {NgDocApiPageEntity} from './api-page.entity';
@@ -16,7 +25,6 @@ import {NgDocCategoryEntity} from './category.entity';
 export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 	override moduleFileName: string = `${uniqueName('ng-doc-api-list')}.module.ts`;
 	override parent?: NgDocCategoryEntity;
-	override compilable: boolean = true;
 
 	override get route(): string {
 		return this.target?.route ?? 'api';
@@ -55,47 +63,50 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		return [];
 	}
 
+	override setParentDynamically(): void {
+		super.setParentDynamically();
+
+		this.parent = this.getParentFromCategory();
+	}
+
 	override childrenGenerator(): Observable<NgDocEntity[]> {
 		this.children.forEach((child: NgDocEntity) => child.destroy());
 
-		return this.emit().pipe(
-			switchMap(() => this.builder.emit(this.sourceFile)),
-			switchMap(() => this.update()),
+		return this.refreshImpl().pipe(
+			switchMap(() => buildFileEntity(this.sourceFile, this.context.tsConfig, this.context.context.workspaceRoot)),
+			switchMap(() => this.loadImpl()),
 			map(() => generateApiEntities(this)),
 		);
 	}
 
-	override update(): Observable<void> {
-		return super.update().pipe(
-			tap(() => {
-				if (!this.title) {
-					throw new Error(`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`);
-				}
-
-				this.parent = this.getParentFromCategory();
-			}),
-			catchError((error: unknown) => {
-				this.readyToBuild = false;
-				this.context.context.logger.error(`\n${String(error)}`);
-
-				return of(void 0);
+	override loadImpl(): Observable<void> {
+		return super.loadImpl().pipe(
+			tap({
+				next: () => {
+					if (!this.title) {
+						throw new Error(
+							`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`,
+						);
+					}
+				},
+				error: (e: Error) => this.errors.push(e),
 			}),
 		);
 	}
 
-	protected override build(): Observable<NgDocBuiltOutput[]> {
+	protected override buildImpl(): Observable<NgDocBuiltOutput[]> {
 		return this.isReadyForBuild ? forkJoin([this.buildModule(), this.buildApiList()]) : of([]);
 	}
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			return this.builder.renderer
-				.render('./api.module.ts.nunj', {
-					context: {
-						api: this,
-					},
-				})
-				.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
+			const content: string = renderTemplate('./api.module.ts.nunj', {
+				context: {
+					api: this,
+				},
+			});
+
+			return of({content, filePath: this.modulePath});
 		}
 		return of();
 	}

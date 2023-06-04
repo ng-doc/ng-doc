@@ -1,4 +1,4 @@
-/* Just export filters from this file, they will be included to the template renderer automatically */
+/* Just re-export filters from this file, they will be included to the template renderer automatically */
 
 export {
 	accessorPresentation,
@@ -45,5 +45,5 @@ export {
 	toTemplateString,
 	typeAliasPresentation,
 	variablePresentation,
-} from '../helpers';
+} from '../../helpers';
 export {buildPlaygroundDemoTemplate, kebabCase, objectKeys} from '@ng-doc/core';

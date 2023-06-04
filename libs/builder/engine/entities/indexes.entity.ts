@@ -13,16 +13,12 @@ export class NgDocIndexesEntity extends NgDocEntity {
 	readonly parent: undefined = undefined;
 	readonly buildCandidates: NgDocEntity[] = [];
 
-	override update(): Observable<void> {
-		return of(void 0);
-	}
-
-	protected build(): Observable<NgDocBuiltOutput[]> {
+	protected buildImpl(): Observable<NgDocBuiltOutput[]> {
 		return this.buildIndexes();
 	}
 
 	private buildIndexes(): Observable<NgDocBuiltOutput[]> {
-		const allIndexes: NgDocPageIndex[] = this.builder.entities
+		const allIndexes: NgDocPageIndex[] = this.store
 			.asArray()
 			.map((entity: NgDocEntity) => entity.indexes)
 			.flat();

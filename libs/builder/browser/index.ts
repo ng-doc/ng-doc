@@ -7,10 +7,10 @@ import {
 } from '@angular-devkit/architect';
 import {buildWebpackBrowser} from '@angular-devkit/build-angular/src/builders/browser';
 import {buildEsbuildBrowser} from '@angular-devkit/build-angular/src/builders/browser-esbuild';
-import {Observable} from 'rxjs';
+import {firstValueFrom, Observable} from 'rxjs';
 import {first} from 'rxjs/operators';
 
-import {NgDocBuilder} from '../engine/builder';
+import {buildNgDoc} from '../engine/build-ng-doc';
 import {createBuilderContext} from '../helpers';
 import {NgDocBuilderContext, NgDocSchema} from '../interfaces';
 
@@ -25,10 +25,9 @@ export async function runBrowser(options: NgDocSchema, context: BuilderContext):
 	const browserTarget: Target | null = options.browserTarget ? targetFromTargetString(options.browserTarget) : null;
 	const targetOptions: any = browserTarget ? await context.getTargetOptions(browserTarget) : (options as any);
 	const builderContext: NgDocBuilderContext = createBuilderContext(targetOptions, options, context);
-	const builder: NgDocBuilder = new NgDocBuilder(builderContext);
-	const runner: Observable<void> = builder.run();
+	const runner: Observable<void> = buildNgDoc(builderContext);
 
-	await runner.pipe(first()).toPromise();
+	await firstValueFrom(runner.pipe(first()));
 
 	return builderContext.config.angularBuilder === 'esbuild'
 		? fromAsyncIterable(buildEsbuildBrowser(options as any, context)).toPromise()

@@ -12,7 +12,7 @@ export class GlowParticle {
 		public vy: number = Math.random() * 1.5,
 	) {}
 
-	animate(ctx: CanvasRenderingContext2D, stageWidth: number, stageHeight: number) {
+	animate(ctx: CanvasRenderingContext2D, stageWidth: number, stageHeight: number): void {
 		this.sinValue += 0.01;
 		this.radius += Math.sin(this.sinValue);
 		this.x += this.vx;

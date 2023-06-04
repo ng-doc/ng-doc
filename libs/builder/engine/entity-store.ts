@@ -48,7 +48,7 @@ export class NgDocEntityStore extends Map<string, NgDocEntity> {
 		});
 
 		this.asArray().forEach((entity: NgDocEntity) => {
-			if (isRouteEntity(entity) && !entity.destroyed) {
+			if (isRouteEntity(entity) && entity.isReadyForBuild) {
 				entity.keywords.forEach((keyword: string) =>
 					this.addKeyword(keyword, {
 						title: entity.title,
@@ -59,6 +59,10 @@ export class NgDocEntityStore extends Map<string, NgDocEntity> {
 				);
 			}
 		});
+	}
+
+	getAllWithErrorsOrWarnings(): NgDocEntity[] {
+		return this.asArray().filter((entity: NgDocEntity) => entity.errors.length || entity.warnings.length);
 	}
 
 	private addKeyword(key: string, keyword: NgDocKeyword): void {

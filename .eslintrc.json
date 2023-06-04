@@ -10,6 +10,7 @@
 			"rules": {
 				"jsdoc/require-param-type": "off",
 				"jsdoc/require-returns-type": "off",
+				"jsdoc/require-returns": "off",
 				"tsdoc/syntax": "warn",
 				"simple-import-sort/imports": "error",
 				"simple-import-sort/exports": "error",
@@ -58,12 +59,13 @@
 				"@typescript-eslint/typedef": [
 					"error",
 					{
+						"arrowParameter": false,
+						"memberVariableDeclaration": true,
+						"objectDestructuring": false,
 						"parameter": true,
-						"arrowParameter": true,
 						"propertyDeclaration": true,
 						"variableDeclaration": false,
-						"variableDeclarationIgnoreFunction": true,
-						"memberVariableDeclaration": true
+						"variableDeclarationIgnoreFunction": true
 					}
 				],
 				"@typescript-eslint/consistent-type-definitions": ["error", "interface"],

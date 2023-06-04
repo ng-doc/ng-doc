@@ -2,9 +2,9 @@ import {BuilderContext, createBuilder, Target, targetFromTargetString} from '@an
 import {BuilderOutputLike} from '@angular-devkit/architect/src/api';
 import {DevServerBuilderOutput, serveWebpackBrowser} from '@angular-devkit/build-angular/src/builders/dev-server';
 import {combineLatest, from, Observable, of} from 'rxjs';
-import {first, map, shareReplay, switchMap, switchMapTo} from 'rxjs/operators';
+import {first, map, shareReplay, switchMap} from 'rxjs/operators';
 
-import {NgDocBuilder} from '../engine/builder';
+import {buildNgDoc} from '../engine/build-ng-doc';
 import {createBuilderContext} from '../helpers';
 import {NgDocBuilderContext, NgDocSchema} from '../interfaces';
 
@@ -20,8 +20,7 @@ export function runDevServer(options: NgDocSchema, context: BuilderContext): Obs
 	return (browserTarget ? from(context.getTargetOptions(browserTarget)) : of(options as unknown as any)).pipe(
 		switchMap((targetOptions: any) => {
 			const builderContext: NgDocBuilderContext = createBuilderContext(targetOptions, options, context);
-			const builder: NgDocBuilder = new NgDocBuilder(builderContext);
-			const runner: Observable<void> = builder.run().pipe(shareReplay(1));
+			const runner: Observable<void> = buildNgDoc(builderContext).pipe(shareReplay(1));
 
 			if (builderContext.config.angularBuilder === 'esbuild') {
 				// This is a hack to make sure that the dev server uses the esbuild builder
@@ -33,7 +32,7 @@ export function runDevServer(options: NgDocSchema, context: BuilderContext): Obs
 
 			return runner.pipe(
 				first(),
-				switchMapTo(
+				switchMap(() =>
 					combineLatest([runner, serveWebpackBrowser(options, context)]).pipe(
 						map(([_, devServerOutput]: [void, DevServerBuilderOutput]) => devServerOutput),
 					),

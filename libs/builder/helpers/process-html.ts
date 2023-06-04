@@ -16,8 +16,9 @@ export async function processHtml(entity: NgDocEntity, html: string): Promise<st
 	return utils.htmlPostProcessor(html, {
 		headings: entity.context.config.guide?.anchorHeadings,
 		route: isRouteEntity(entity) ? entity.fullRoute : undefined,
+		raiseError: entity.warnings.push.bind(entity.warnings),
 		addUsedKeyword: entity.usedKeywords.add.bind(entity.usedKeywords),
 		addPotentialKeyword: entity.potentialKeywords.add.bind(entity.potentialKeywords),
-		getKeyword: entity.builder.entities.getByKeyword.bind(entity.builder.entities),
+		getKeyword: entity.store.getByKeyword.bind(entity.store),
 	});
 }
