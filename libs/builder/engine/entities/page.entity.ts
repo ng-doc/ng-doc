@@ -2,7 +2,7 @@ import {asArray, isPresent, NgDocPage, NgDocPageIndex} from '@ng-doc/core';
 import * as fs from 'fs';
 import * as path from 'path';
 import {forkJoin, from, Observable, of} from 'rxjs';
-import {catchError, map, mapTo, switchMap, tap} from 'rxjs/operators';
+import {map, mapTo, switchMap, tap} from 'rxjs/operators';
 import {ClassDeclaration, ObjectLiteralExpression} from 'ts-morph';
 
 import {
@@ -25,6 +25,7 @@ import {NgDocAsset, NgDocBuiltOutput} from '../../interfaces';
 import {forkJoinOrEmpty} from '../../operators';
 import {NgDocComponentAsset} from '../../types';
 import {NgDocActions} from '../actions';
+import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {CachedEntity} from './cache/decorators';
@@ -38,7 +39,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	standalonePlaygroundKeys: string[] = [];
 
 	override parent?: NgDocCategoryEntity;
-	override compilable: boolean = true;
 	private componentAssets: NgDocComponentAsset = {};
 
 	override get route(): string {
@@ -66,12 +66,11 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return undefined;
 	}
 
-	override get canBeBuilt(): boolean {
-		return (
-			!!this.target &&
-			(!this.target.onlyForTags ||
-				asArray(this.target.onlyForTags).includes(this.context.context.target?.configuration ?? ''))
-		);
+	protected override get canBeBuilt(): boolean {
+		return isPresent(this.target)
+			? !this.target.onlyForTags ||
+					asArray(this.target.onlyForTags).includes(this.context.context.target?.configuration ?? '')
+			: true;
 	}
 
 	override get order(): number | undefined {
@@ -133,53 +132,54 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return !!this.objectExpression?.getProperty('imports');
 	}
 
-	override update(): Observable<void> {
-		return super.update().pipe(
-			tap(() => {
-				if (!isPresent(this.target?.mdFile) || !fs.existsSync(this.mdPath)) {
-					throw new Error(
-						`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you define mdFile property correctly and .md file exists.`,
-					);
-				}
+	override setParentDynamically(): void {
+		super.setParentDynamically();
 
-				if (!this.title) {
-					throw new Error(`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`);
-				}
+		this.parent = this.getParentFromCategory();
+	}
 
-				this.parent = this.getParentFromCategory();
+	protected override loadImpl(): Observable<void> {
+		return super.loadImpl().pipe(
+			tap({
+				next: () => {
+					if (!isPresent(this.target?.mdFile) || !fs.existsSync(this.mdPath)) {
+						throw new Error(
+							`Failed to load page. Make sure that you define "mdFile" property correctly and .md file exists.`,
+						);
+					}
 
-				if (this.objectExpression) {
-					this.playgroundsExpression = getPlaygroundsExpression(this.objectExpression);
-					this.demoClassDeclarations = getDemoClassDeclarations(this.objectExpression);
-					this.playgroundClassDeclarations = asArray(new Set(getPlaygroundTargets(this.objectExpression)));
+					if (!this.title) {
+						throw new Error(`Failed to load page. Make sure that you have a "title" property.`);
+					}
 
-					this.standalonePlaygroundKeys = asArray(this.playgroundIds
-						.reduce((keys: Map<ClassDeclaration, string>, id: string) => {
-							if (this.playgroundsExpression) {
-								const target: ClassDeclaration | undefined = getTargetForPlayground(this.playgroundsExpression, id);
+					if (this.objectExpression) {
+						this.playgroundsExpression = getPlaygroundsExpression(this.objectExpression);
+						this.demoClassDeclarations = getDemoClassDeclarations(this.objectExpression);
+						this.playgroundClassDeclarations = asArray(new Set(getPlaygroundTargets(this.objectExpression)));
 
-								if (target && isStandalone(target)) {
-									keys.set(target, id);
-								}
-							}
+						this.standalonePlaygroundKeys = asArray(
+							this.playgroundIds
+								.reduce((keys: Map<ClassDeclaration, string>, id: string) => {
+									if (this.playgroundsExpression) {
+										const target: ClassDeclaration | undefined = getTargetForPlayground(this.playgroundsExpression, id);
 
-							return keys;
-						}, new Map<ClassDeclaration, string>)
-						.values());
-				}
+										if (target && isStandalone(target)) {
+											keys.set(target, id);
+										}
+									}
 
-
-			}),
-			catchError((error: unknown) => {
-				this.readyToBuild = false;
-				this.context.context.logger.error(`\n\n${String(error)}`);
-
-				return of(void 0);
+									return keys;
+								}, new Map<ClassDeclaration, string>())
+								.values(),
+						);
+					}
+				},
+				error: (e: Error) => this.errors.push(e),
 			}),
 		);
 	}
 
-	protected override build(): Observable<NgDocBuiltOutput[]> {
+	protected override buildImpl(): Observable<NgDocBuiltOutput[]> {
 		return this.isReadyForBuild
 			? this.fillAssets().pipe(
 					switchMap(() => forkJoin([this.buildModule(), this.buildPlaygrounds(), this.buildDemoAssets()])),
@@ -189,76 +189,70 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			this.playgroundClassDeclarations.forEach((target: ClassDeclaration) => target.getSourceFile().refreshFromFileSystemSync());
-
-			const page: Observable<string> = this.builder.renderer
-				.render(this.target.mdFile, {
-					scope: this.sourceFileFolder,
-					context: {
-						NgDocPage: this.target,
-						NgDocActions: new NgDocActions(this),
-					},
-					dependenciesStore: this.dependencies,
-					filters: false,
-				})
-				.pipe(
-					map((output: string) => marked(output, this)),
-					switchMap((html: string) => processHtml(this, html)),
-					switchMap((content: string) =>
-						from(
-							buildIndexes({
-								title: this.title,
-								content,
-								pageType: getPageType(this),
-								breadcrumbs: this.breadcrumbs,
-								route: this.fullRoute,
-							}),
-						).pipe(
-							tap((indexes: NgDocPageIndex[]) => this.indexes.push(...indexes)),
-							mapTo(content),
-						),
+			this.playgroundClassDeclarations.forEach((target: ClassDeclaration) =>
+				target.getSourceFile().refreshFromFileSystemSync(),
+			);
+			const template: string = renderTemplate(this.target.mdFile, {
+				scope: this.sourceFileFolder,
+				context: {
+					NgDocPage: this.target,
+					NgDocActions: new NgDocActions(this),
+				},
+				dependenciesStore: this.dependencies,
+				filters: false,
+			});
+			const page: Observable<string> = of(template).pipe(
+				map((output: string) => marked(output, this)),
+				switchMap((html: string) => processHtml(this, html)),
+				switchMap((content: string) =>
+					from(
+						buildIndexes({
+							title: this.title,
+							content,
+							pageType: getPageType(this),
+							breadcrumbs: this.breadcrumbs,
+							route: this.fullRoute,
+						}),
+					).pipe(
+						tap((indexes: NgDocPageIndex[]) => this.indexes.push(...indexes)),
+						mapTo(content),
 					),
-				);
+				),
+			);
 
 			return page.pipe(
-				switchMap((pageContent: string) =>
-					this.builder.renderer
-						.render('./page.module.ts.nunj', {
-							context: {
-								page: this,
-								pageContent,
-							},
-						})
-						.pipe(map((output: string) => ({content: output, filePath: this.modulePath}))),
+				map((pageContent: string) =>
+					renderTemplate('./page.module.ts.nunj', {
+						context: {
+							page: this,
+							pageContent,
+						},
+					}),
 				),
+				map((content: string) => ({content, filePath: this.modulePath})),
 			);
 		}
 		return of();
 	}
 
 	private buildDemoAssets(): Observable<NgDocBuiltOutput> {
-		return this.builder.renderer
-			.render('./demo-assets.ts.nunj', {
-				context: {
-					demoAssets: this.componentAssets,
-				},
-			})
-			.pipe(map((output: string) => ({content: output, filePath: this.demoAssetsPath})));
+		const content: string = renderTemplate('./demo-assets.ts.nunj', {
+			context: {
+				demoAssets: this.componentAssets,
+			},
+		});
+
+		return of({content, filePath: this.demoAssetsPath});
 	}
 
 	private buildPlaygrounds(): Observable<NgDocBuiltOutput> {
-		return this.builder.renderer
-			.render('./playgrounds.ts.nunj', {
-				context: {
-					page: this,
-				},
-			})
-			.pipe(
-				map((output: string) => ({
-					content: formatCode(output, 'TypeScript'),
-					filePath: this.playgroundsPath,
-				})),
-			);
+		const content: string = renderTemplate('./playgrounds.ts.nunj', {
+			context: {
+				page: this,
+			},
+		});
+
+		return of({content: formatCode(content, 'TypeScript'), filePath: this.playgroundsPath});
 	}
 
 	private fillAssets(): Observable<void> {

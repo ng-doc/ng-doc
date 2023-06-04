@@ -8,20 +8,21 @@ import {
 	declarationFolderName,
 	editFileInRepoUrl,
 	getPageType,
+	isSupportedDeclaration,
 	processHtml,
 	slash,
 	uniqueName,
 	viewFileInRepoUrl,
 } from '../../helpers';
 import {buildIndexes} from '../../helpers/build-indexes';
-import {isSupportedDeclaration} from '../../helpers/is-supported-declaration';
 import {NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
-import {NgDocSupportedDeclarations} from '../../types/supported-declarations';
-import {NgDocBuilder} from '../builder';
+import {NgDocSupportedDeclarations} from '../../types';
+import {NgDocEntityStore} from '../entity-store';
+import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocRouteEntity} from './abstractions/route.entity';
 import {NgDocApiScopeEntity} from './api-scope.entity';
-import {CachedEntity} from './cache/decorators';
+import {CachedEntity, NgDocCache} from './cache';
 
 @CachedEntity()
 export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
@@ -30,17 +31,16 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	override readonly physical: boolean = false;
 	override readonly id: string = uniqueName(`${this.sourceFilePath}}#${this.declarationName}`);
 	override folderName: string = '';
-	protected override readyToBuild: boolean = true;
-
 	constructor(
-		override readonly builder: NgDocBuilder,
-		override readonly sourceFile: SourceFile,
+		override readonly store: NgDocEntityStore,
+		override readonly cache: NgDocCache,
 		override readonly context: NgDocBuilderContext,
+		override readonly sourceFile: SourceFile,
 		override parent: NgDocApiScopeEntity,
 		readonly declarationName: string,
 		readonly index: number,
 	) {
-		super(builder, sourceFile, context);
+		super(store, cache, context, sourceFile);
 
 		this.updateDeclaration();
 	}
@@ -56,7 +56,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 			: '';
 	}
 
-	override emit(): Observable<void> {
+	protected override refreshImpl(): Observable<void> {
 		/**
 		 * Just refresh source file, we don't need to emit it
 		 */
@@ -103,47 +103,51 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 		return [this.declarationName];
 	}
 
-	override update(): Observable<void> {
+	override compile(): Observable<void> {
+		return of(void 0);
+	}
+
+	protected override loadImpl(): Observable<void> {
 		this.updateDeclaration();
 
 		return of(void 0);
 	}
 
-	protected override build(): Observable<NgDocBuiltOutput[]> {
+	protected override buildImpl(): Observable<NgDocBuiltOutput[]> {
 		return this.isReadyForBuild
 			? forkJoin([this.buildModule()]).pipe(map((output: Array<NgDocBuiltOutput | null>) => output.filter(isPresent)))
 			: of([]);
 	}
 
 	private buildModule(): Observable<NgDocBuiltOutput> {
-		const page: Observable<string> = this.builder.renderer
-			.render('./api-page.html.nunj', {
-				context: {
-					declaration: this.declaration,
-					scope: this.parent.target,
-				},
-			})
-			.pipe(
-				switchMap((output: string) => processHtml(this, output)),
-				switchMap((content: string) =>
-					from(
-						buildIndexes({
-							title: this.title,
-							content,
-							pageType: getPageType(this),
-							breadcrumbs: this.breadcrumbs,
-							route: this.fullRoute,
-						}),
-					).pipe(
-						tap((indexes: NgDocPageIndex[]) => this.indexes.push(...indexes)),
-						mapTo(content),
-					),
+		const template: string = renderTemplate('./api-page.html.nunj', {
+			context: {
+				declaration: this.declaration,
+				scope: this.parent.target,
+			},
+		});
+
+		const page: Observable<string> = of(template).pipe(
+			switchMap((output: string) => processHtml(this, output)),
+			switchMap((content: string) =>
+				from(
+					buildIndexes({
+						title: this.title,
+						content,
+						pageType: getPageType(this),
+						breadcrumbs: this.breadcrumbs,
+						route: this.fullRoute,
+					}),
+				).pipe(
+					tap((indexes: NgDocPageIndex[]) => this.indexes.push(...indexes)),
+					mapTo(content),
 				),
-			);
+			),
+		);
 
 		return page.pipe(
-			switchMap((pageContent: string) =>
-				this.builder.renderer.render('./api-page.module.ts.nunj', {
+			map((pageContent: string) =>
+				renderTemplate('./api-page.module.ts.nunj', {
 					context: {page: this, pageContent},
 				}),
 			),
@@ -161,7 +165,6 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 			(declaration: NgDocSupportedDeclarations) => declaration.getName() === this.declarationName,
 		);
 
-		// Doesnr work?
 		if (!this.declaration) {
 			this.destroy();
 		}

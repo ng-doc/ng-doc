@@ -16,6 +16,7 @@ import sluggerPlugin from './plugins/slugger.plugin';
 export interface NgDocHtmlPostProcessorConfig {
 	headings?: NgDocHeading[];
 	route?: string;
+	raiseError: (e: Error) => void;
 	addUsedKeyword?: AddKeyword;
 	addPotentialKeyword?: AddKeyword;
 	getKeyword?: GetKeyword;
@@ -35,7 +36,7 @@ export async function htmlPostProcessor(html: string, config: NgDocHtmlPostProce
 		.use(sluggerPlugin, config.headings)
 		.use(rehypeMinifyWhitespace)
 		.use(autolinkHeadingPlugin, config.route)
-		.use(keywordsPlugin, config.addUsedKeyword, config.addPotentialKeyword, config.getKeyword)
+		.use(keywordsPlugin, config)
 		.use(markElementsPlugin)
 		.use(markCodeBlocksPlugin)
 		.process(html)

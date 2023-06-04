@@ -6,7 +6,7 @@ import {addImports, editImports, getImports, ImportDeclaration, ImportSpecifier}
  * @param namedImport
  * @param moduleSpecifier
  */
-export function addUniqueImport(filePath: string, namedImport: string, moduleSpecifier: string) {
+export function addUniqueImport(filePath: string, namedImport: string, moduleSpecifier: string): void {
 	const existingNamedImport: ImportDeclaration[] = getImports(filePath, {
 		namedImports: namedImport,
 		moduleSpecifier,
