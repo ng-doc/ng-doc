@@ -1,6 +1,6 @@
 import {NgDocPage} from '@ng-doc/core';
 
-import TestCategoryCategory from '../test-category/ng-doc.category';
+import TestCategoryCategory from '../ng-doc.category';
 
 const PocPage: NgDocPage = {
 	title: `poc`,
