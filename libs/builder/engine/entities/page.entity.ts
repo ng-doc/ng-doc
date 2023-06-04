@@ -278,12 +278,4 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 
 		return of(void 0);
 	}
-
-	override removeArtifacts() {
-		super.removeArtifacts();
-
-		if (fs.existsSync(this.folderPath)) {
-			fs.rmSync(this.folderPath, {recursive: true, force: true});
-		}
-	}
 }
