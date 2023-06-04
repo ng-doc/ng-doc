@@ -82,7 +82,7 @@ function getNodes(
 			}
 
 			if (inlineLink && /^\*\w+/gm.test(word) && !keyword) {
-				raiseError(new Error(`Keyword "${word}" is missing.`));
+				raiseError(new Error(`Route with keyword "${word}" is missing.`));
 			}
 
 			// Convert code tag to link if it's a link to the page entity

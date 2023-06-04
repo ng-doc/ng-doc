@@ -19,7 +19,7 @@ function bufferAndFilter(
 ): Observable<string[]> {
 	return source$.pipe(
 		bufferUntilOnce(ready$),
-		bufferDebounce(50),
+		bufferDebounce(10),
 		map((paths: string[][]) => paths.flat()),
 		map((paths: string[]) => paths.filter((path) => patterns.some((p: string) => minimatch(path, miniPattern(p))))),
 		filter((paths: string[]) => paths.length > 0),

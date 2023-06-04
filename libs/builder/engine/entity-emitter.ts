@@ -5,7 +5,7 @@ import {map, mergeMap, startWith, switchMap, take, tap} from 'rxjs/operators';
 import {Project} from 'ts-morph';
 
 import {getEntityConstructor} from '../helpers';
-import {forkJoinOrEmpty, progress} from '../operators';
+import {bufferDebounce, forkJoinOrEmpty, progress} from '../operators';
 import {Constructable} from '../types';
 import {NgDocEntity} from './entities/abstractions/entity';
 import {NgDocCache} from './entities/cache';
@@ -80,6 +80,8 @@ export function entityEmitter(
 
 			return of(entities);
 		}),
+		bufferDebounce(10),
+		map((entities: NgDocEntity[][]) => entities.flat()),
 		map((entities: NgDocEntity[]) =>
 			asArray(
 				new Set(

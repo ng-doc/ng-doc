@@ -1,9 +1,6 @@
-import {isPresent} from '@ng-doc/core';
 import {mergeMap, of, OperatorFunction} from 'rxjs';
-import {map} from 'rxjs/operators';
 
 import {forkJoinOrEmpty, progress} from '../../operators';
-import {errorHandler} from '../../operators/error-handler';
 
 /**
  * Task operator that runs the provided operator on each value of the source.
@@ -27,9 +24,7 @@ export function task<T, R>(
 			mergeMap((values) => {
 				const filtered = filter ? values.filter(filter) : values;
 
-				return forkJoinOrEmpty(filtered.map((v) => of(v).pipe(operator, errorHandler(null)))).pipe(
-					map((result: Array<R | null>) => result.filter(isPresent)),
-				);
+				return forkJoinOrEmpty(filtered.map((v) => of(v).pipe(operator)));
 			}),
 		);
 	};
@@ -57,7 +52,7 @@ export function taskForMany<T, R>(
 			mergeMap((values) => {
 				const filtered = filter ? values.filter(filter) : values;
 
-				return of(filtered).pipe(operator, errorHandler([]));
+				return of(filtered).pipe(operator);
 			}),
 		);
 	};

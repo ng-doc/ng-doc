@@ -43,9 +43,7 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 	];
 
 	// Filters for tasks
-	const ifNotDestroyed = (entity: NgDocEntity) => !entity.destroyed;
-	const isReadyForBuild = (entity: NgDocEntity) => entity.isReadyForBuild;
-	const ifNotCached = (entity: NgDocEntity) => isReadyForBuild(entity) && !cache.isCacheValid(entity);
+	const ifNotCached = (entity: NgDocEntity) => !cache.isCacheValid(entity);
 
 	// Clean build path if cache is not enabled
 	if (!!context.config?.cache && invalidateCacheIfNeeded(context.cachedFiles)) {
@@ -69,10 +67,10 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 	return entityEmitter(store, cache, context, project, watcher).pipe(
 		mergeMap((entities: NgDocEntity[]) =>
 			of(entities).pipe(
-				task('Updating source files...', refresh(), ifNotDestroyed),
-				taskForMany('Collecting affected files...', addBuildCandidates(store), ifNotDestroyed),
-				task('Compiling...', compile(), isReadyForBuild),
-				task('Loading...', load(), isReadyForBuild),
+				task('Updating source files...', refresh()),
+				taskForMany('Collecting affected files...', addBuildCandidates(store)),
+				task('Compiling...', compile()),
+				task('Loading...', load()),
 				dependencyChanges(watcher),
 				taskForMany('Building...', build(store, context.config, ...globalEntities), ifNotCached),
 				taskForMany('Emitting...', emit()),

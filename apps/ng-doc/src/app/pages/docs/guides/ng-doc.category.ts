@@ -7,4 +7,3 @@ const GuidesCategory: NgDocCategory = {
 };
 
 export default GuidesCategory;
-

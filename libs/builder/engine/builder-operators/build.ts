@@ -24,7 +24,7 @@ export function build(
 	return (source: Observable<NgDocEntity[]>) =>
 		source.pipe(
 			tap(() => store.updateKeywordMap(config.keywords)),
-			map((entities: NgDocEntity[]) => buildCandidates(store, entities)),
+			map((entities: NgDocEntity[]) => buildCandidates(store, entities).filter((e: NgDocEntity) => e.isReadyForBuild)),
 			switchMap((entities: NgDocEntity[]) =>
 				forkJoinOrEmpty(entities.map((e: NgDocEntity) => e.build().pipe(errorHandler([])))),
 			),
@@ -33,5 +33,6 @@ export function build(
 					map((additionalOutput: NgDocBuiltOutput[][]) => [...output, ...additionalOutput].flat()),
 				),
 			),
+			errorHandler([]),
 		);
 }

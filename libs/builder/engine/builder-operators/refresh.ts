@@ -2,6 +2,7 @@ import {Observable, of, OperatorFunction} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 
 import {isSourceFileEntity} from '../../helpers';
+import {errorHandler} from '../../operators/error-handler';
 import {NgDocEntity} from '../entities/abstractions/entity';
 
 /**
@@ -11,8 +12,11 @@ export function refresh(): OperatorFunction<NgDocEntity, NgDocEntity> {
 	return (source: Observable<NgDocEntity>) =>
 		source.pipe(
 			switchMap((e: NgDocEntity) => {
-				if (isSourceFileEntity(e)) {
-					return e.refresh().pipe(map(() => e));
+				if (isSourceFileEntity(e) && !e.destroyed) {
+					return e.refresh().pipe(
+						map(() => e),
+						errorHandler(e),
+					);
 				}
 
 				return of(e);

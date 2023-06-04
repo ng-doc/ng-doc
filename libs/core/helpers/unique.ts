@@ -6,5 +6,5 @@ import {asArray} from './as-array';
  * @param items - arrays of items
  */
 export function unique<T>(...items: T[][]): T[] {
-	return asArray(new Set(...items));
+	return asArray(new Set(items.flat()));
 }

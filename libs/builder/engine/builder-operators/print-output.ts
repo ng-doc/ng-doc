@@ -1,7 +1,7 @@
 import {Observable, OperatorFunction} from 'rxjs';
 import {tap} from 'rxjs/operators';
 
-import {printError, printInfo, printWarning} from '../../helpers';
+import {printError, printWarning} from '../../helpers';
 import {NgDocEntity} from '../entities/abstractions/entity';
 import {NgDocEntityStore} from '../entity-store';
 
@@ -17,7 +17,7 @@ export function printOutput<T>(store: NgDocEntityStore): OperatorFunction<T, T> 
 				const entitiesWithErrors: NgDocEntity[] = store.getAllWithErrorsOrWarnings().sort(sortEntities);
 
 				if (entitiesWithErrors.length > 0) {
-					printInfo(`NgDoc: ${entitiesWithErrors.length} entities with problems:`);
+					printError(`NgDoc: ${entitiesWithErrors.length} entities with problems:`);
 
 					entitiesWithErrors.forEach((entity: NgDocEntity) => {
 						const printIdFunc = entity.errors.length ? printError : printWarning;
