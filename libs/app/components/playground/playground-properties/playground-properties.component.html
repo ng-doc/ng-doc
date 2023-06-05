@@ -24,7 +24,7 @@
 			<h5 class="ng-doc-title" ng-doc-text>Settings</h5>
 			<ng-doc-playground-property
 				*ngFor="let propertyControl of propertyControls"
-				[name]="propertyControl.property.name"
+				[name]="propertyControl.property.inputName"
 				[property]="propertyControl.property"
 				[typeControl]="propertyControl.typeControl"
 				[control]="getFormControl | ngDocBind: this | ngDocRun: 'properties': propertyControl.propertyName"

@@ -19,7 +19,6 @@ export {
 	getClassAccessors,
 	getClassMethods,
 	getClassProperties,
-	getContentForPlayground,
 	getDeclarationType,
 	getImplementedMember,
 	getInheritedParent,
@@ -29,10 +28,7 @@ export {
 	getMemberParent,
 	getMethodChain,
 	getOverriddenMember,
-	getPlaygroundClassProperties,
 	getPropertyChain,
-	getTargetForPlayground,
-	getTemplateForPlayground,
 	groupAccessors,
 	marked,
 	methodPresentation,
@@ -45,4 +41,4 @@ export {
 	typeAliasPresentation,
 	variablePresentation,
 } from '../../helpers';
-export {buildPlaygroundDemoTemplate, kebabCase, objectKeys} from '@ng-doc/core';
+export {kebabCase, objectKeys, unique} from '@ng-doc/core';

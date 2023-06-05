@@ -19,10 +19,10 @@ import {FlControl, FlControlSilencerModule} from 'flex-controls';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	standalone: true,
 	imports: [
+		FormsModule,
 		NgDocInputWrapperComponent,
 		FlControlSilencerModule,
 		NgDocInputStringDirective,
-		FormsModule,
 		NgIf,
 		NgDocButtonIconComponent,
 		NgDocFocusableDirective,
@@ -42,5 +42,9 @@ export class NgDocStringControlComponent extends FlControl<string> implements Ng
 
 	changeModel(value: string | null): void {
 		this.updateModel(value === null && this.default ? this.defaultValue : value);
+	}
+
+	override writeValue(value: string | null) {
+		super.writeValue(value);
 	}
 }

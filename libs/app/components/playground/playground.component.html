@@ -16,5 +16,16 @@
 			[form]="formGroup"
 		>
 		</ng-doc-playground-demo>
+
+		<ng-doc-playground-demo
+			*ngIf="pipeName"
+			[id]="id"
+			[pipeName]="pipeName"
+			[properties]="properties"
+			[configuration]="configuration"
+			[recreateDemo]="recreateDemo"
+			[form]="formGroup"
+		>
+		</ng-doc-playground-demo>
 	</ng-doc-playground-properties>
 </ng-container>

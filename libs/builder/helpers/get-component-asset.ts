@@ -6,7 +6,7 @@ import {ClassDeclaration} from 'ts-morph';
 import {renderTemplate} from '../engine/nunjucks';
 import {NgDocAsset} from '../interfaces';
 import {NgDocComponentAsset} from '../types';
-import {componentDecorator} from './angular';
+import {getComponentDecorator} from './angular';
 import {buildAssets} from './build-assets';
 import {formatCode} from './format-code';
 import {slash} from './slash';
@@ -22,7 +22,7 @@ export function getComponentAsset(
 	inlineStyleLang: NgDocStyleType,
 	outDir: string,
 ): NgDocComponentAsset {
-	const decoratorData: Component | undefined = componentDecorator(classDeclaration);
+	const decoratorData: Component | undefined = getComponentDecorator(classDeclaration);
 
 	if (decoratorData) {
 		const filePath: string = classDeclaration.getSourceFile().getFilePath();

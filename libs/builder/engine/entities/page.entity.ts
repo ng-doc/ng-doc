@@ -6,22 +6,21 @@ import {map, mapTo, switchMap, tap} from 'rxjs/operators';
 import {ClassDeclaration, ObjectLiteralExpression} from 'ts-morph';
 
 import {
+	buildPlaygroundMetadata,
 	editFileInRepoUrl,
 	formatCode,
 	getComponentAsset,
 	getDemoClassDeclarations,
 	getPageType,
+	getPlaygroundById,
 	getPlaygroundsIds,
-	getPlaygroundTargets,
-	getTargetForPlayground,
-	isStandalone,
 	marked,
 	processHtml,
 	slash,
 } from '../../helpers';
 import {buildIndexes} from '../../helpers/build-indexes';
-import {getPlaygroundsExpression} from '../../helpers/get-playgrounds-expression';
-import {NgDocAsset, NgDocBuiltOutput} from '../../interfaces';
+import {getPlaygroundsExpression} from '../../helpers/playground/get-playgrounds-expression';
+import {NgDocAsset, NgDocBuiltOutput, NgDocPlaygroundMetadata} from '../../interfaces';
 import {forkJoinOrEmpty} from '../../operators';
 import {NgDocComponentAsset} from '../../types';
 import {NgDocActions} from '../actions';
@@ -35,8 +34,7 @@ import {NgDocCategoryEntity} from './category.entity';
 export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	playgroundsExpression: ObjectLiteralExpression | undefined;
 	demoClassDeclarations: ClassDeclaration[] = [];
-	playgroundClassDeclarations: ClassDeclaration[] = [];
-	standalonePlaygroundKeys: string[] = [];
+	playgroundMetadata: Record<string, NgDocPlaygroundMetadata> = {};
 
 	override parent?: NgDocCategoryEntity;
 	private componentAssets: NgDocComponentAsset = {};
@@ -138,42 +136,38 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		this.parent = this.getParentFromCategory();
 	}
 
+	override dependenciesChanged(): void {
+		super.dependenciesChanged();
+
+		// Refresh source file from file system to make sure that it is up-to-date
+		Object.keys(this.playgroundMetadata).forEach((id: string) =>
+			this.playgroundMetadata[id].class.getSourceFile().refreshFromFileSystemSync(),
+		);
+
+		this.updatePlaygroundMetadata();
+	}
+
 	protected override loadImpl(): Observable<void> {
 		return super.loadImpl().pipe(
+			map(() => {
+				if (!isPresent(this.target?.mdFile) || !fs.existsSync(this.mdPath)) {
+					throw new Error(
+						`Failed to load page. Make sure that you define "mdFile" property correctly and .md file exists.`,
+					);
+				}
+
+				if (!this.title) {
+					throw new Error(`Failed to load page. Make sure that you have a "title" property.`);
+				}
+
+				if (this.objectExpression) {
+					this.playgroundsExpression = getPlaygroundsExpression(this.objectExpression);
+					this.demoClassDeclarations = getDemoClassDeclarations(this.objectExpression);
+
+					this.updatePlaygroundMetadata();
+				}
+			}),
 			tap({
-				next: () => {
-					if (!isPresent(this.target?.mdFile) || !fs.existsSync(this.mdPath)) {
-						throw new Error(
-							`Failed to load page. Make sure that you define "mdFile" property correctly and .md file exists.`,
-						);
-					}
-
-					if (!this.title) {
-						throw new Error(`Failed to load page. Make sure that you have a "title" property.`);
-					}
-
-					if (this.objectExpression) {
-						this.playgroundsExpression = getPlaygroundsExpression(this.objectExpression);
-						this.demoClassDeclarations = getDemoClassDeclarations(this.objectExpression);
-						this.playgroundClassDeclarations = asArray(new Set(getPlaygroundTargets(this.objectExpression)));
-
-						this.standalonePlaygroundKeys = asArray(
-							this.playgroundIds
-								.reduce((keys: Map<ClassDeclaration, string>, id: string) => {
-									if (this.playgroundsExpression) {
-										const target: ClassDeclaration | undefined = getTargetForPlayground(this.playgroundsExpression, id);
-
-										if (target && isStandalone(target)) {
-											keys.set(target, id);
-										}
-									}
-
-									return keys;
-								}, new Map<ClassDeclaration, string>())
-								.values(),
-						);
-					}
-				},
 				error: (e: Error) => this.errors.push(e),
 			}),
 		);
@@ -187,11 +181,24 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 			: of([]);
 	}
 
+	private updatePlaygroundMetadata(): void {
+		this.playgroundMetadata = this.playgroundIds.reduce(
+			(metadata: Record<string, NgDocPlaygroundMetadata>, id: string) => {
+				if (this.playgroundsExpression) {
+					const playground: ObjectLiteralExpression | undefined = getPlaygroundById(this.playgroundsExpression, id);
+
+					if (playground) {
+						metadata[id] = buildPlaygroundMetadata(id, playground);
+					}
+				}
+				return metadata;
+			},
+			{},
+		);
+	}
+
 	private buildModule(): Observable<NgDocBuiltOutput> {
 		if (this.target) {
-			this.playgroundClassDeclarations.forEach((target: ClassDeclaration) =>
-				target.getSourceFile().refreshFromFileSystemSync(),
-			);
 			const template: string = renderTemplate(this.target.mdFile, {
 				scope: this.sourceFileFolder,
 				context: {

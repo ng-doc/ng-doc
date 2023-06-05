@@ -33,6 +33,5 @@ export function build(
 					map((additionalOutput: NgDocBuiltOutput[][]) => [...output, ...additionalOutput].flat()),
 				),
 			),
-			errorHandler([]),
 		);
 }

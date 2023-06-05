@@ -4,6 +4,7 @@ export * from './builder-context';
 export * from './built-output';
 export * from './configuration';
 export * from './path-anchor';
+export * from './playground-metadata';
 export * from './renderer-options';
 export * from './repo-config';
 export * from './schema';

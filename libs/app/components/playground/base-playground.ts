@@ -1,4 +1,4 @@
-import {Directive, Type, ViewContainerRef} from '@angular/core';
+import {Directive, Input, Type, ViewContainerRef} from '@angular/core';
 import {NgDocPlaygroundConfig} from '@ng-doc/core/interfaces';
 
 /**
@@ -10,6 +10,12 @@ export abstract class NgDocBasePlayground implements Pick<NgDocPlaygroundConfig,
 	abstract readonly playground?: Type<unknown>;
 	abstract readonly viewContainerRef?: ViewContainerRef;
 
-	data: Record<string, unknown> = {};
+	@Input()
+	properties: Record<string, any> = {};
+
+	@Input()
+	data: Record<string, any> = {};
+
+	@Input()
 	content: any = {};
 }
