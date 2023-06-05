@@ -27,8 +27,8 @@ export default function sluggerPlugin(addAnchor: (anchor: NgDocEntityAnchor) => 
 			const dataToSlug: string | undefined = isHeading
 				? toString(node)
 				: isSlugAttribute
-					? String(node.properties?.['dataslug'])
-					: undefined;
+				? String(node.properties?.['dataslug'])
+				: undefined;
 
 			if (dataToSlug) {
 				if (node.properties) {

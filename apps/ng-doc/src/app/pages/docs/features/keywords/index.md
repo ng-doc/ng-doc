@@ -91,7 +91,7 @@ separated by a dot or a hash sign.
 > **Note**
 > Anchors are not case-sensitive, so you can use any case you want.
 
-```markdown
+```markdown fileName="index.md"
 Guide`s anchors:
 
 - Link to the section in guides - `*GettingStartedInstallation#Manual`
