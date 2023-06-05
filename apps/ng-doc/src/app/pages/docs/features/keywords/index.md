@@ -89,15 +89,17 @@ To make your keywords more accurate, you can use anchors, which are specified af
 separated by a dot or a hash sign.
 
 > **Note**
-> Anchors are not case-sensitive, so you can use any case you want.
+> NgDoc uses `githubSlugger` under the hood to generate anchors, so you can read more about it in
+> the official documentation. Also, the anchors are not case-sensitive, so you can use any case you
+> want.
 
 ```markdown fileName="index.md"
-Guide`s anchors:
+### Guide`s anchors
 
 - Link to the section in guides - `*GettingStartedInstallation#Manual`
 - Link to the section in guides - `*GettingStartedInstallation#Automatic-Recommended`
 
-API`s anchors:
+### API`s anchors
 
 - Link to the "Properties" section in the API - `NgDocBaseInput#Properties`
 - Link to the specific property in the API - `NgDocBaseInput.ngControl`
@@ -108,12 +110,12 @@ API`s anchors:
 - Link to the method in the API - `NgDocBaseInput.focus`
 ```
 
-Guide`s anchors:
+### Guide`s anchors
 
 - Link to the section in guides - `*GettingStartedInstallation#Manual`
 - Link to the section in guides - `*GettingStartedInstallation#Automatic-Recommended`
 
-API`s anchors:
+### API`s anchors
 
 - Link to the "Properties" section in the API - `NgDocBaseInput#Properties`
 - Link to the specific property in the API - `NgDocBaseInput.ngControl`
