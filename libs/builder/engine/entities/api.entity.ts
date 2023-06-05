@@ -12,7 +12,7 @@ import {
 	slash,
 	uniqueName,
 } from '../../helpers';
-import {NgDocBuiltOutput} from '../../interfaces';
+import {NgDocBuildOutput, NgDocEntityKeyword} from '../../interfaces';
 import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
@@ -59,7 +59,7 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		return path.join(this.context.apiPath, this.route);
 	}
 
-	override get keywords(): string[] {
+	override get keywords(): NgDocEntityKeyword[] {
 		return [];
 	}
 
@@ -94,11 +94,11 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		);
 	}
 
-	protected override buildImpl(): Observable<NgDocBuiltOutput[]> {
+	protected override buildImpl(): Observable<NgDocBuildOutput[]> {
 		return this.isReadyForBuild ? forkJoin([this.buildModule(), this.buildApiList()]) : of([]);
 	}
 
-	private buildModule(): Observable<NgDocBuiltOutput> {
+	private buildModule(): Observable<NgDocBuildOutput> {
 		if (this.target) {
 			const content: string = renderTemplate('./api.module.ts.nunj', {
 				context: {
@@ -111,7 +111,7 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		return of();
 	}
 
-	private buildApiList(): Observable<NgDocBuiltOutput> {
+	private buildApiList(): Observable<NgDocBuildOutput> {
 		const apiItems: NgDocApiList[] = this.children
 			.filter(isApiScopeEntity)
 			.sort((a: NgDocApiScopeEntity, b: NgDocApiScopeEntity) => (b.order ?? 0) - (a.order ?? 0))

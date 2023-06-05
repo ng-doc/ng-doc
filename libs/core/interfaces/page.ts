@@ -21,9 +21,9 @@ export interface NgDocPage extends NgDocBaseEntity {
 	 */
 	onlyForTags?: string[];
 	/**
-	 * Custom keyword that uses to create links to this page (`title` by default)
+	 * Custom keyword that uses to create links to this page
 	 */
-	keyword?: string;
+	keyword?: string | string[];
 	/**
 	 * Any custom data that you can provide for the page and use on it via `NgDocPage.data`
 	 */

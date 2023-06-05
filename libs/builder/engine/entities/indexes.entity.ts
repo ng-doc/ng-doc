@@ -3,7 +3,7 @@ import path from 'path';
 import {Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-import {NgDocBuiltOutput} from '../../interfaces';
+import {NgDocBuildOutput} from '../../interfaces';
 import {NgDocEntity} from './abstractions/entity';
 
 export class NgDocIndexesEntity extends NgDocEntity {
@@ -13,11 +13,11 @@ export class NgDocIndexesEntity extends NgDocEntity {
 	readonly parent: undefined = undefined;
 	readonly buildCandidates: NgDocEntity[] = [];
 
-	protected buildImpl(): Observable<NgDocBuiltOutput[]> {
+	protected buildImpl(): Observable<NgDocBuildOutput[]> {
 		return this.buildIndexes();
 	}
 
-	private buildIndexes(): Observable<NgDocBuiltOutput[]> {
+	private buildIndexes(): Observable<NgDocBuildOutput[]> {
 		const allIndexes: NgDocPageIndex[] = this.store
 			.asArray()
 			.map((entity: NgDocEntity) => entity.indexes)

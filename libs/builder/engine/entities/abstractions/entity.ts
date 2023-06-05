@@ -4,7 +4,7 @@ import {Observable, of, Subject} from 'rxjs';
 import {take, tap} from 'rxjs/operators';
 
 import {ObservableSet} from '../../../classes';
-import {NgDocBuilderContext, NgDocBuiltOutput} from '../../../interfaces';
+import {NgDocBuilderContext, NgDocBuildOutput} from '../../../interfaces';
 import {NgDocEntityStore} from '../../entity-store';
 import {NgDocCache} from '../cache';
 import {CachedFilesGetter, CachedProperty} from '../cache/decorators';
@@ -161,7 +161,7 @@ export abstract class NgDocEntity {
 	 * Build all artifacts that need for application.
 	 * This is the last method in the build process, should return output that should be emitted to the file system
 	 */
-	protected abstract buildImpl(): Observable<NgDocBuiltOutput[]>;
+	protected abstract buildImpl(): Observable<NgDocBuildOutput[]>;
 
 	/**
 	 * Method called by NgDocBuilder when one or more dependencies have changed
@@ -176,7 +176,7 @@ export abstract class NgDocEntity {
 		return of([]);
 	}
 
-	build(): Observable<NgDocBuiltOutput[]> {
+	build(): Observable<NgDocBuildOutput[]> {
 		// Clear all indexes and used keywords before build
 		this.usedKeywords.clear();
 		this.potentialKeywords.clear();

@@ -9,6 +9,7 @@ import {NgDocBuilderContext} from '../interfaces';
 import {progress} from '../operators';
 import {addBuildCandidates, build, collectGarbage, compile, emit, load, refresh} from './builder-operators';
 import {dependencyChanges} from './builder-operators/dependency-changes';
+import {postProcess} from './builder-operators/post-process';
 import {printOutput} from './builder-operators/print-output';
 import {task, taskForMany} from './builder-operators/task';
 import {NgDocSkeletonEntity} from './entities';
@@ -37,10 +38,8 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 	const project: Project = createProject({tsConfigFilePath: context.tsConfig});
 
 	// Global entities that should be built after each build cycle
-	const globalEntities: NgDocEntity[] = [
-		new NgDocSkeletonEntity(store, cache, context),
-		new NgDocIndexesEntity(store, cache, context),
-	];
+	const skeletonEntity: NgDocSkeletonEntity = new NgDocSkeletonEntity(store, cache, context);
+	const indexesEntity: NgDocIndexesEntity = new NgDocIndexesEntity(store, cache, context);
 
 	// Filters for tasks
 	const ifNotCached = (entity: NgDocEntity) => !cache.isCacheValid(entity);
@@ -72,7 +71,8 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 				task('Compiling...', compile()),
 				task('Loading...', load()),
 				dependencyChanges(watcher),
-				taskForMany('Building...', build(store, context.config, ...globalEntities), ifNotCached),
+				taskForMany('Building...', build(store, context.config, skeletonEntity), ifNotCached),
+				taskForMany('Post-processing...', postProcess(store, context.config, indexesEntity)),
 				taskForMany('Emitting...', emit()),
 				collectGarbage(store),
 			),

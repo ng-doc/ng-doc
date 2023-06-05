@@ -4,7 +4,7 @@ import {forkJoin, Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
 
 import {isCategoryEntity, isPageEntity} from '../../helpers';
-import {NgDocBuiltOutput} from '../../interfaces';
+import {NgDocBuildOutput, NgDocEntityKeyword} from '../../interfaces';
 import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
@@ -53,7 +53,7 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 		return asArray(this.children.values()).filter(isCategoryEntity);
 	}
 
-	override get keywords(): string[] {
+	override get keywords(): NgDocEntityKeyword[] {
 		return [];
 	}
 
@@ -89,11 +89,11 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 		);
 	}
 
-	protected override buildImpl(): Observable<NgDocBuiltOutput[]> {
+	protected override buildImpl(): Observable<NgDocBuildOutput[]> {
 		return this.isReadyForBuild ? forkJoin([this.buildModule()]) : of([]);
 	}
 
-	private buildModule(): Observable<NgDocBuiltOutput> {
+	private buildModule(): Observable<NgDocBuildOutput> {
 		if (this.target) {
 			const content: string = renderTemplate('./category.module.ts.nunj', {
 				context: {
