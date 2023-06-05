@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import {mergeMap, Observable, of} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {Project} from 'ts-morph';
 
 import {createProject, printProgress} from '../helpers';
@@ -28,6 +28,7 @@ import {NgDocWatcher} from './watcher';
  * @param context - The builder context.
  */
 export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
+	console.time('Total time');
 	printProgress('Initializing...');
 
 	// Set global variables
@@ -79,6 +80,7 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 		),
 		printOutput(store),
 		map(() => void 0),
+		tap(() => console.timeEnd('Total time')),
 		progress(),
 	);
 }

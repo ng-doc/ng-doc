@@ -92,21 +92,33 @@ separated by a dot or a hash sign.
 > Anchors are not case-sensitive, so you can use any case you want.
 
 ```markdown
-Guide's anchors:
-
-- Link to manual installation - `*GettingStartedInstallation#Manual`
-- Link to automatic installation - `*GettingStartedInstallation#Automatic-Recommended`
-
-API's anchors:
-
-- Link to e - `*EntitiesAPI#NgDocPage`
-```
+Guide`s anchors:
 
 - Link to the section in guides - `*GettingStartedInstallation#Manual`
 - Link to the section in guides - `*GettingStartedInstallation#Automatic-Recommended`
 
+API`s anchors:
+
 - Link to the "Properties" section in the API - `NgDocBaseInput#Properties`
 - Link to the specific property in the API - `NgDocBaseInput.ngControl`
+- Link to the specific parameter of the constructor in the
+  API - `NgDocInputStringDirective.elementRef`
+- Link to the getter in the API - `NgDocBaseInput.get-disabled`
+- Link to the setter in the API - `NgDocBaseInput.set-disabled`
+- Link to the method in the API - `NgDocBaseInput.focus`
+```
+
+Guide`s anchors:
+
+- Link to the section in guides - `*GettingStartedInstallation#Manual`
+- Link to the section in guides - `*GettingStartedInstallation#Automatic-Recommended`
+
+API`s anchors:
+
+- Link to the "Properties" section in the API - `NgDocBaseInput#Properties`
+- Link to the specific property in the API - `NgDocBaseInput.ngControl`
+- Link to the specific parameter of the constructor in the
+  API - `NgDocInputStringDirective.elementRef`
 - Link to the getter in the API - `NgDocBaseInput.get-disabled`
 - Link to the setter in the API - `NgDocBaseInput.set-disabled`
 - Link to the method in the API - `NgDocBaseInput.focus`

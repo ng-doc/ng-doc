@@ -84,12 +84,16 @@ function getNodes(
 				: word;
 
 			const keyword: NgDocKeyword | undefined = getKeyword(formattedWord);
+			const rootKeyword: NgDocKeyword | undefined = getKeyword(match?.groups?.['keyword'] || '');
 
 			if (keywordAnchorRegexp.test(word)) {
 				keyword ? addUsedKeyword(word) : addPotentialKeyword(word);
 			}
 
-			if (inlineLink && /^\*\w+/gm.test(word) && !keyword) {
+			const notFoundGuideKeyword: boolean = /^\*\w+/gm.test(word) && !keyword;
+			const notFoundApiKeyword: boolean = !!rootKeyword && !!match?.groups?.['anchor'] && !keyword;
+
+			if (inlineLink && (notFoundGuideKeyword || notFoundApiKeyword)) {
 				raiseError(new Error(`Route with keyword "${word}" is missing.`));
 			}
 
