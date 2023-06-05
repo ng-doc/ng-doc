@@ -17,7 +17,10 @@ import {FormGroup} from '@angular/forms';
 import {NgDocDemoDisplayerComponent} from '@ng-doc/app/components/demo-displayer';
 import {getPlaygroundDemoToken} from '@ng-doc/app/helpers';
 import {NgDocFormPartialValue} from '@ng-doc/app/types';
-import {buildPlaygroundDemoTemplate} from '@ng-doc/core/helpers/build-playground-demo-template';
+import {
+	buildPlaygroundDemoPipeTemplate,
+	buildPlaygroundDemoTemplate,
+} from '@ng-doc/core/helpers/build-playground-demo-template';
 import {formatHtml} from '@ng-doc/core/helpers/format-html';
 import {objectKeys} from '@ng-doc/core/helpers/object-keys';
 import {NgDocPlaygroundConfig, NgDocPlaygroundProperties, NgDocPlaygroundProperty} from '@ng-doc/core/interfaces';
@@ -43,6 +46,9 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 {
 	@Input()
 	id: string = '';
+
+	@Input()
+	pipeName: string = '';
 
 	@Input()
 	selector: string = '';
@@ -81,7 +87,9 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 
 			if (demoInjector) {
 				const demos: Array<typeof NgDocBasePlayground> = this.injector.get(demoInjector, []);
-				this.playgroundDemo = demos.find((demo: typeof NgDocBasePlayground) => demo.selector === this.selector);
+				this.playgroundDemo = demos.find(
+					(demo: typeof NgDocBasePlayground) => demo.selector === this.selector || demo.selector === this.pipeName,
+				);
 			}
 
 			this.updateDemo();
@@ -113,17 +121,24 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 				this.demoRef = this.demoOutlet?.createComponent(this.playgroundDemo as unknown as Type<NgDocBasePlayground>);
 			}
 
-			this.demoRef?.changeDetectorRef.markForCheck();
+			this.demoRef?.changeDetectorRef.detectChanges();
 		}
 	}
 
 	private updateCodeView(): void {
-		const template: string = buildPlaygroundDemoTemplate(
-			this.configuration?.template ?? '',
-			this.selector,
-			this.getActiveContent(),
-			this.getActiveInputs(),
-		);
+		const template: string = this.pipeName
+			? buildPlaygroundDemoPipeTemplate(
+					this.configuration?.template ?? '',
+					this.pipeName,
+					this.getActiveContent(),
+					this.getActiveInputs(),
+			  )
+			: buildPlaygroundDemoTemplate(
+					this.configuration?.template ?? '',
+					this.selector,
+					this.getActiveContent(),
+					this.getActiveInputs(),
+			  );
 
 		this.code = formatHtml(template);
 	}
@@ -151,7 +166,7 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 				const inputValue: string = isString ? `'${value}'` : `${JSON.stringify(value)}`;
 
 				if ((property.default ?? '') !== inputValue) {
-					result[property.name] = inputValue;
+					result[property.inputName] = inputValue;
 				}
 			}
 

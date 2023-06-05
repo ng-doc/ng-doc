@@ -1,39 +1,25 @@
 // @ts-nocheck
-import {
-	ChangeDetectionStrategy,
-	Component,
-	NgModule,
-	Type,
-	ViewChild,
-	ViewContainerRef
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, NgModule, Type, ViewChild, ViewContainerRef} from '@angular/core';
 import {NgDocBasePlayground, providePlaygroundDemo} from '@ng-doc/app';
 // noinspection ES6UnusedImports
 import pageEntity from '{{ page.importPath }}';
 import {CommonModule} from '@angular/common';
 
-{% set components = [] -%}
+{%- set components = [] %}
 {%- set index = 1 %}
-{%- set playgrounds = page.playgroundsExpression %}
+{%- set playgrounds = page.playgroundMetadata %}
 
-{%- for id in page.playgroundIds -%}
 
-{%- set target = playgrounds | getTargetForPlayground(id) %}
-{%- set template = playgrounds | getTemplateForPlayground(id) %}
-{%- set content = playgrounds | getContentForPlayground(id) %}
-{%- set inputs = target | getPlaygroundTemplateInputs %}
+{%- for id, metadata in playgrounds -%}
 
-	{%- if target %}
-	{%- set selectors = target | extractSelectors %}
-
-		{%- for selector in selectors %}
-			{%- set comp = {id: id, name: 'PlaygroundComponent' + index, selector: selector } %}
-			{%- set components = (components.push(comp), components) %}
+{%- for selector, template in metadata.templateForComponents %}
+{%- set comp = {id: id, name: 'PlaygroundComponent' + index, selector: selector } %}
+{%- set components = (components.push(comp), components) %}
 
 @Component({
 	selector: 'ng-doc-playground-{{ index }}',
 	template: `
-		{{ template | buildPlaygroundDemoTemplate(selector, content, inputs) }}
+		{{ template }}
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -52,9 +38,8 @@ export class {{ comp.name }} extends NgDocBasePlayground {
 		super();
 	}
 }
-			{%- set index = index + 1 -%}
-		{%- endfor %}
-	{%- endif %}
+{%- set index = index + 1 -%}
+{%- endfor %}
 {%- endfor %}
 
 @NgModule({
@@ -63,8 +48,10 @@ export class {{ comp.name }} extends NgDocBasePlayground {
 		{%- if page.hasImports %}
 		...pageEntity.imports,
 		{%- endif %}
-		{%- for key in page.standalonePlaygroundKeys %}
-		pageEntity.playgrounds['{{ key }}'].target,
+		{%- for id, metadata in playgrounds -%}
+		{%- if metadata.standalone %}
+		pageEntity.playgrounds['{{ id }}'].target,
+		{%- endif %}
 		{%- endfor %}
 	],
 	declarations: [

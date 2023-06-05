@@ -123,7 +123,7 @@ export class NgDocPlaygroundPropertiesComponent<
 					if (isPresent(bOrder)) {
 						return 1;
 					}
-					return a.property.name.localeCompare(b.property.name);
+					return a.property.inputName.localeCompare(b.property.inputName);
 				});
 		}
 	}
@@ -140,7 +140,7 @@ export class NgDocPlaygroundPropertiesComponent<
 
 		if (!typeControl && isDevMode()) {
 			console.warn(
-				`NgDocPlayground didn't find the control for the @Input "${property.name}", the type "${type}" was not recognized'`,
+				`NgDocPlayground didn't find the control for the @Input "${property.inputName}", the type "${type}" was not recognized'`,
 			);
 		}
 

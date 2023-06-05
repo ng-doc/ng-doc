@@ -176,6 +176,41 @@ export default MyAwesomePage;
 
 {{ NgDocActions.playground("RotatorPlayground") }}
 
+## Pipes
+
+It's also possible to create playgrounds for pipes, let's say we have a simple `FormatDatePipe`:
+
+```typescript fileName="format-date.pipe.ts" file="./format-date.pipe.ts"
+
+```
+
+In the same way as for components and directives, you need to use the `target` field to specify the
+pipe class, and the `template` field to specify the template for the playground:
+
+> **Warning**
+> If your pipe has parameters, you must not provide values for them in the template, because NgDoc
+> will bind them to the playground controls.
+
+```typescript fileName="ng-doc.page.ts"
+import {NgDocPage} from '@ng-doc/core';
+import {FormatDatePipe} from './format-date.pipe';
+
+import {PageModule} from './ng-doc.module';
+
+const MyAwesomePage: NgDocPage = {
+  playgrounds: {
+    DatePipePlayground: {
+      target: FormatDatePipe,
+      template: `{{ "{{'2023-06-05T08:00:00.000Z' | formatDate}}" | safe }}`,
+    },
+  },
+};
+
+export default MyAwesomePage;
+```
+
+{{ NgDocActions.playground("DatePipePlayground") }}
+
 {% index false %}
 
 ## See Also
