@@ -1,4 +1,4 @@
-@import "../../styles/mixins";
+@import '../../styles/mixins';
 
 .ng-doc-tooltip {
 	--ng-doc-overlay-background: var(--ng-doc-base-11);
@@ -14,5 +14,9 @@
 		overflow-y: auto;
 
 		--ng-doc-text: var(--ng-doc-base-0);
+
+		p {
+			margin: 0;
+		}
 	}
 }

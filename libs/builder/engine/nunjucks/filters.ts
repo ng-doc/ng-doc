@@ -1,4 +1,4 @@
-/* Just export filters from this file, they will be included to the template renderer automatically */
+/* Just re-export filters from this file, they will be included to the template renderer automatically */
 
 export {
 	accessorPresentation,
@@ -19,7 +19,6 @@ export {
 	getClassAccessors,
 	getClassMethods,
 	getClassProperties,
-	getContentForPlayground,
 	getDeclarationType,
 	getImplementedMember,
 	getInheritedParent,
@@ -29,10 +28,7 @@ export {
 	getMemberParent,
 	getMethodChain,
 	getOverriddenMember,
-	getPlaygroundClassProperties,
 	getPropertyChain,
-	getTargetForPlayground,
-	getTemplateForPlayground,
 	groupAccessors,
 	marked,
 	methodPresentation,
@@ -44,5 +40,5 @@ export {
 	toTemplateString,
 	typeAliasPresentation,
 	variablePresentation,
-} from '../helpers';
-export {buildPlaygroundDemoTemplate, kebabCase, objectKeys} from '@ng-doc/core';
+} from '../../helpers';
+export {kebabCase, objectKeys, unique} from '@ng-doc/core';

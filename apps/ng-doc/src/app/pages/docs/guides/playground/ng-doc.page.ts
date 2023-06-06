@@ -1,7 +1,8 @@
 import {NgDocPage} from '@ng-doc/core';
-import {NgDocIconComponent, NgDocTagComponent} from '@ng-doc/ui-kit';
+import {NgDocIconComponent, NgDocRotatorDirective, NgDocTagComponent} from '@ng-doc/ui-kit';
 
 import GuidesCategory from '../ng-doc.category';
+import {FormatDatePipe} from './format-date.pipe';
 
 const PlaygroundPage: NgDocPage = {
   title: `Playground`,
@@ -34,6 +35,14 @@ const PlaygroundPage: NgDocPage = {
       data: {
         array: [1, 2, 3],
       },
+    },
+    RotatorPlayground: {
+      target: NgDocRotatorDirective,
+      template: `<button ngDocRotator>Button</button>`,
+    },
+    DatePipePlayground: {
+      target: FormatDatePipe,
+      template: `{{'2023-06-05T08:00:00.000Z' | formatDate}}`,
     },
   },
 };

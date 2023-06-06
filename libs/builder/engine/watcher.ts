@@ -1,9 +1,30 @@
 import * as chokidar from 'chokidar';
 import {minimatch} from 'minimatch';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
-import {filter} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
 
 import {miniPattern} from '../helpers';
+import {bufferDebounce, bufferUntilOnce} from '../operators';
+
+/**
+ *
+ * @param source$
+ * @param ready$
+ * @param patterns
+ */
+function bufferAndFilter(
+	source$: Observable<string>,
+	ready$: Observable<unknown>,
+	patterns: string[],
+): Observable<string[]> {
+	return source$.pipe(
+		bufferUntilOnce(ready$),
+		bufferDebounce(10),
+		map((paths: string[][]) => paths.flat()),
+		map((paths: string[]) => paths.filter((path) => patterns.some((p: string) => minimatch(path, miniPattern(p))))),
+		filter((paths: string[]) => paths.length > 0),
+	);
+}
 
 export class NgDocWatcher {
 	private readonly watcher: chokidar.FSWatcher;
@@ -31,30 +52,16 @@ export class NgDocWatcher {
 		return this;
 	}
 
-	unwatch(paths: string | readonly string[]): void {
-		this.watcher.unwatch(paths);
+	onAdd(...filterPaths: string[]): Observable<string[]> {
+		return bufferAndFilter(this.add$, this.ready$, filterPaths);
 	}
 
-	onAdd(...filterPaths: string[]): Observable<string> {
-		return this.add$.pipe(
-			filter((path: string) => !filterPaths || filterPaths.some((p: string) => minimatch(path, miniPattern(p)))),
-		);
+	onChange(...filterPaths: string[]): Observable<string[]> {
+		return bufferAndFilter(this.change$, this.ready$, filterPaths);
 	}
 
-	onChange(...filterPaths: string[]): Observable<string> {
-		return this.change$.pipe(
-			filter((path: string) => !filterPaths || filterPaths.some((p: string) => minimatch(path, miniPattern(p)))),
-		);
-	}
-
-	onUnlink(...filterPaths: string[]): Observable<string> {
-		return this.unlink$.pipe(
-			filter((path: string) => !filterPaths || filterPaths.some((p: string) => minimatch(path, miniPattern(p)))),
-		);
-	}
-
-	onReady(): Observable<void> {
-		return this.ready$;
+	onUnlink(...filterPaths: string[]): Observable<string[]> {
+		return bufferAndFilter(this.unlink$, this.ready$, filterPaths);
 	}
 
 	close(): void {

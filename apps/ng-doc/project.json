@@ -73,11 +73,11 @@
 			"defaultConfiguration": "production",
 			"dependsOn": [
 				{
-					"target": "link-core"
+					"target": "link-libs"
 				}
 			]
 		},
-		"link-core": {
+		"link-libs": {
 			"executor": "nx:run-commands",
 			"options": {
 				"commands": [
@@ -107,7 +107,7 @@
 			"defaultConfiguration": "development",
 			"dependsOn": [
 				{
-					"target": "link-core"
+					"target": "link-libs"
 				}
 			]
 		},

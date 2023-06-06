@@ -2,6 +2,7 @@ import {NgDocApiEntity, NgDocApiPageEntity, NgDocApiScopeEntity, NgDocCategoryEn
 import {NgDocFileEntity} from '../engine/entities/abstractions/file.entity';
 import {NgDocNavigationEntity} from '../engine/entities/abstractions/navigation.entity';
 import {NgDocRouteEntity} from '../engine/entities/abstractions/route.entity';
+import {NgDocSourceFileEntity} from '../engine/entities/abstractions/source-file.entity';
 import {Constructable} from '../types';
 
 /**
@@ -18,6 +19,14 @@ export function isPageEntity(page: InstanceType<Constructable>): page is NgDocPa
  */
 export function isCategoryEntity(page: InstanceType<Constructable>): page is NgDocCategoryEntity {
 	return page instanceof NgDocCategoryEntity;
+}
+
+/**
+ *
+ * @param page
+ */
+export function isSourceFileEntity(page: InstanceType<Constructable>): page is NgDocSourceFileEntity {
+	return page instanceof NgDocSourceFileEntity;
 }
 
 /**

@@ -1,10 +1,7 @@
-import {Component, Directive} from '@angular/core';
-import {escapeHtml, NgDocPlaygroundProperties} from '@ng-doc/core';
-import {ClassDeclaration, ObjectLiteralExpression, Project} from 'ts-morph';
+import {escapeHtml} from '@ng-doc/core';
+import {Project} from 'ts-morph';
 
-import {directiveDecorator, getPlaygroundClassProperties, getTargetForPlayground} from '../../helpers';
-import {componentDecorator} from '../../helpers/angular/component-decorator';
-import {NgDocActionOutput} from '../../interfaces';
+import {NgDocActionOutput, NgDocPlaygroundMetadata} from '../../interfaces';
 import {NgDocAction} from '../../types';
 import {NgDocPageEntity} from '../entities/page.entity';
 
@@ -17,38 +14,21 @@ import {NgDocPageEntity} from '../entities/page.entity';
  */
 export function playgroundAction(pId: string): NgDocAction {
 	return (project: Project, page: NgDocPageEntity): NgDocActionOutput => {
-		try {
-			const playgroundsExpression: ObjectLiteralExpression | undefined = page.playgroundsExpression;
+		const metadata: NgDocPlaygroundMetadata | undefined = page.playgroundMetadata[pId];
 
-			if (!playgroundsExpression) {
-				throw new Error(
-					`Can't find the playground configuration for "${page.route}" page. Make sure that you configured the "${pId}" playground correctly.`,
-				);
-			}
-
-			const declaration: ClassDeclaration | undefined = getTargetForPlayground(playgroundsExpression, pId);
-
-			if (!declaration) {
-				throw new Error(`Playground action didn't find the class declaration for the current target.`);
-			}
-
-			const decorator: Component | Directive | undefined =
-				componentDecorator(declaration) ?? directiveDecorator(declaration);
-			const selectors: string = decorator?.selector?.replace(/[\n\s]/gm, '') ?? '';
-
-			const playgroundData: NgDocPlaygroundProperties = getPlaygroundClassProperties(declaration);
-
+		if (metadata) {
 			return {
 				output: `<ng-doc-playground id="${pId}" indexable="false">
-							<div id="selectors">${selectors}</div>
-							<div id="data">${escapeHtml(JSON.stringify(playgroundData))}</div>
+							<div id="selectors">${metadata.selector ?? ''}</div>
+							<div id="pipeName">${metadata.name ?? ''}</div>
+							<div id="data">${escapeHtml(JSON.stringify(metadata.properties))}</div>
 						</ng-doc-playground>`,
-				dependencies: [declaration.getSourceFile().getFilePath()],
+				dependencies: [metadata.class.getSourceFile().getFilePath()],
 			};
-		} catch (e) {
-			page.logger.error(`Error while executing "playground" action: ${e}`);
-
-			return {output: ``};
+		} else {
+			throw new Error(
+				`Metadata for playground "${pId}" not found. Make sure that you configured the playgrounds correctly.`,
+			);
 		}
 	};
 }

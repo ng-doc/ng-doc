@@ -20,7 +20,7 @@
 				<th indexable="false">
 					{{ decoratorsMacro.render(method.getDecorators()) if method.getDecorators }}
 					{{ tagsMacro.render(method, 'modifier') }}
-					<h3>{{ method.getName() }}()</h3>
+					<h3 dataSlugType="member">{{ method.getName() }}()</h3>
 					<div class="ng-doc-node-details">
 						{%- if inheritedFrom %}
 							inherited from <code>{{ inheritedFrom.getName() }}</code>

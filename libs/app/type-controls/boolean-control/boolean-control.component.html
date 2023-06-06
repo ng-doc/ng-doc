@@ -1,1 +1,6 @@
-<ng-doc-checkbox [ngDocTooltip]="description" [canOpen]="!!description">{{ name }}</ng-doc-checkbox>
+<ng-doc-checkbox [ngDocTooltip]="tooltipTemplate" [canOpen]="!!description">
+	{{ name }}
+	<ng-template #tooltipTemplate>
+		<div [innerHTML]="description | ngDocSanitizeHtml"></div>
+	</ng-template>
+</ng-doc-checkbox>

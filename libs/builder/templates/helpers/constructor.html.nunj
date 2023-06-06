@@ -24,7 +24,7 @@
 				<td>
 					{%- if parameters.length %}
 						<h5 class="no-anchor" indexable="false">Parameters</h5>
-						{{ parametersMacro.render(parameters, constructor) }}
+						{{ parametersMacro.render(parameters, constructor, true) }}
 					{%- endif %}
 				</td>
 			</tr>
