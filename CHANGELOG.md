@@ -1,3 +1,10 @@
+## [16.4.2](https://github.com/ng-doc/ng-doc/compare/v16.4.1...v16.4.2) (2023-06-06)
+
+
+### Bug Fixes
+
+* **app:** playgrounds break with an injector error when creating ([2edf223](https://github.com/ng-doc/ng-doc/commit/2edf22371106ffbfc898fee1937d55e683be579b))
+
 ## [16.4.1](https://github.com/ng-doc/ng-doc/compare/v16.4.0...v16.4.1) (2023-06-06)
 
 
