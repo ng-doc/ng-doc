@@ -13,7 +13,6 @@
 				"index": "apps/ng-doc/src/index.html",
 				"main": "apps/ng-doc/src/main.ts",
 				"polyfills": "apps/ng-doc/src/polyfills.ts",
-				"tsConfig": "apps/ng-doc/tsconfig.build.json",
 				"inlineStyleLanguage": "scss",
 				"assets": [
 					"apps/ng-doc/src/assets",
@@ -39,6 +38,7 @@
 			},
 			"configurations": {
 				"production": {
+					"tsConfig": "apps/ng-doc/tsconfig.build.json",
 					"budgets": [
 						{
 							"type": "initial",
@@ -98,7 +98,8 @@
 			"executor": "./dist/libs/builder:dev-server",
 			"configurations": {
 				"production": {
-					"browserTarget": "ng-doc:build:production"
+					"browserTarget": "ng-doc:build:production",
+					"tsConfig": "apps/ng-doc/tsconfig.build.json"
 				},
 				"development": {
 					"browserTarget": "ng-doc:build:development"

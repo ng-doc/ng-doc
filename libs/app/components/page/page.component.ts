@@ -22,7 +22,7 @@ import {
 	NgDocBooleanControlComponent,
 	NgDocNumberControlComponent,
 	NgDocStringControlComponent,
-	NgDocTypeAliasControlComponent
+	NgDocTypeAliasControlComponent,
 } from '@ng-doc/app/type-controls';
 import {
 	NgDocButtonIconComponent,
@@ -67,7 +67,7 @@ import {
 		provideTypeControl('string', NgDocStringControlComponent, {order: 20}),
 		provideTypeControl('number', NgDocNumberControlComponent, {order: 30}),
 		provideTypeControl('boolean', NgDocBooleanControlComponent, {hideLabel: true, order: 40}),
-	]
+	],
 })
 export class NgDocPageComponent {
 	readonly prevPage?: NgDocNavigation;

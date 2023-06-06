@@ -7,9 +7,6 @@ import {NgDocPage, NgDocPageType} from '@ng-doc/core';
 import pageEntity from '{{ page.importPath }}';
 import {PlaygroundsModule} from './playgrounds';
 import demoAssets from '{{ page.demoAssetsImport }}';
-{%- for standalone in page.standalone %}
-{{ standalone | declarationImport }}
-{%- endfor %}
 
 const pageContent: string = `{{ pageContent | toTemplateString }}`
 
@@ -18,6 +15,14 @@ const pageContent: string = `{{ pageContent | toTemplateString }}`
 	selector: 'ng-doc-page-{{ page.fullRoute | kebabCase }}',
 	template: `<ng-doc-page></ng-doc-page>`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	standalone: true,
+	imports: [
+		NgDocPageComponent,
+		{%- if page.hasImports %}
+		...pageEntity.imports,
+		{%- endif %}
+		PlaygroundsModule,
+	],
 	providers: [{provide: NgDocRootPage, useExisting: DynamicComponent}],
 })
 export class DynamicComponent extends NgDocRootPage {
@@ -42,24 +47,13 @@ export class DynamicComponent extends NgDocRootPage {
 }
 
 @NgModule({
-	declarations: [
-		DynamicComponent,
-	],
 	imports: [
 		CommonModule,
-		{%- if page.hasImports %}
-		...pageEntity.imports,
-		{%- endif %}
-		NgDocPageComponent,
-		PlaygroundsModule,
 		RouterModule.forChild([{
 			path: '',
 			component: DynamicComponent,
 			title: '{{ page.title }}',
 		}]),
-		{%- for standalone in page.standalone %}
-		{{ standalone.getName() }},
-		{%- endfor %}
 	],
 	providers: pageEntity.providers,
 	exports: [RouterModule]

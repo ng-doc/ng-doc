@@ -27,7 +27,7 @@ import {NgDocPlaygroundConfig, NgDocPlaygroundProperties, NgDocPlaygroundPropert
 import {NgDocExtractedValue} from '@ng-doc/core/types';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {Observable, of, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {startWith, takeUntil} from 'rxjs/operators';
 
 import {NgDocBasePlayground} from '../base-playground';
 import {NgDocPlaygroundForm} from '../playground-form';
@@ -95,7 +95,7 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 			this.updateDemo();
 
 			this.form?.valueChanges
-				.pipe(takeUntil(this.unsubscribe$), untilDestroyed(this))
+				.pipe(takeUntil(this.unsubscribe$), untilDestroyed(this), startWith(this.form?.value))
 				.subscribe((data: NgDocFormPartialValue<typeof this.form>) => this.updateDemo(data));
 		}
 	}

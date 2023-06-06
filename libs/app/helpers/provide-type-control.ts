@@ -20,15 +20,21 @@ export function provideTypeControl(
 ): Provider {
 	const token: InjectionToken<NgDocProvidedTypeControl> = new InjectionToken<NgDocProvidedTypeControl>(
 		`NG_DOC_TYPE_CONTROL_${type}`,
+		{
+			providedIn: 'root',
+			factory: () => {
+				return {
+					control,
+					options,
+				};
+			}
+		}
 	);
 	tokenStore.set(type, token);
 
 	return {
-		provide: token,
-		useValue: {
-			control,
-			options,
-		},
+		provide: 'nothing',
+		useValue: null,
 	};
 }
 
