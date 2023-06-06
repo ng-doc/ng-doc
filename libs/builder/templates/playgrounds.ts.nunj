@@ -21,6 +21,16 @@ import {CommonModule} from '@angular/common';
 	template: `
 		{{ template }}
 	`,
+	standalone: true,
+	imports: [
+		CommonModule,
+		{%- if page.hasImports %}
+		...pageEntity.imports,
+		{%- endif %}
+		{%- if metadata.standalone %}
+		pageEntity.playgrounds['{{ id }}'].target,
+		{%- endif %}
+	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class {{ comp.name }} extends NgDocBasePlayground {
@@ -45,16 +55,6 @@ export class {{ comp.name }} extends NgDocBasePlayground {
 @NgModule({
 	imports: [
 		CommonModule,
-		{%- if page.hasImports %}
-		...pageEntity.imports,
-		{%- endif %}
-		{%- for id, metadata in playgrounds -%}
-		{%- if metadata.standalone %}
-		pageEntity.playgrounds['{{ id }}'].target,
-		{%- endif %}
-		{%- endfor %}
-	],
-	declarations: [
 		{%- for comp in components %}
 		{{ comp.name }},
 		{%- endfor %}

@@ -1,4 +1,4 @@
-import {ComponentRef, Directive, ElementRef, OnInit, Type, ViewContainerRef} from '@angular/core';
+import {ComponentRef, Directive, ElementRef, inject, Injector, OnInit, Type, ViewContainerRef} from '@angular/core';
 import {NgDocProcessorOptions} from '@ng-doc/app/interfaces';
 
 /**
@@ -7,6 +7,8 @@ import {NgDocProcessorOptions} from '@ng-doc/app/interfaces';
  */
 @Directive()
 export abstract class NgDocHtmlProcessor<T> implements OnInit {
+	injector: Injector = inject(Injector);
+
 	protected constructor(
 		protected readonly elementRef: ElementRef<HTMLElement>,
 		protected readonly viewContainerRef: ViewContainerRef,
@@ -21,6 +23,7 @@ export abstract class NgDocHtmlProcessor<T> implements OnInit {
 			// create component
 			const componentRef: ComponentRef<T> = this.viewContainerRef.createComponent(this.component, {
 				projectableNodes: options.content,
+				injector: this.injector,
 			});
 
 			// set component options
