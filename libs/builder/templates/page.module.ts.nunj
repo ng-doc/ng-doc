@@ -2,7 +2,7 @@
 import {Component, NgModule, ChangeDetectionStrategy} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
-import {NgDocPageModule, NgDocRootPage, NgDocDemoAssets} from '@ng-doc/app';
+import {NgDocPageComponent, NgDocRootPage, NgDocDemoAssets} from '@ng-doc/app';
 import {NgDocPage, NgDocPageType} from '@ng-doc/core';
 import pageEntity from '{{ page.importPath }}';
 import {PlaygroundsModule} from './playgrounds';
@@ -50,7 +50,7 @@ export class DynamicComponent extends NgDocRootPage {
 		{%- if page.hasImports %}
 		...pageEntity.imports,
 		{%- endif %}
-		NgDocPageModule,
+		NgDocPageComponent,
 		PlaygroundsModule,
 		RouterModule.forChild([{
 			path: '',
