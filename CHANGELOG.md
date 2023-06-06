@@ -1,3 +1,10 @@
+## [16.4.1](https://github.com/ng-doc/ng-doc/compare/v16.4.0...v16.4.1) (2023-06-06)
+
+
+### Bug Fixes
+
+* **app:** playgrounds can't find type controls ([953a08b](https://github.com/ng-doc/ng-doc/commit/953a08bbe7e48d3df17da4395716912d95aea907))
+
 # [16.4.0](https://github.com/ng-doc/ng-doc/compare/v16.3.6...v16.4.0) (2023-06-06)
 
 
