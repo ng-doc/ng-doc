@@ -4,6 +4,7 @@ import * as path from 'path';
 import {Observable} from 'rxjs';
 
 import {isRouteEntity, slash} from '../../../helpers';
+import {CachedProperty} from '../cache';
 import {NgDocModuleEntity} from './module.entity';
 
 export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T> {
@@ -25,6 +26,7 @@ export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T>
 	/**
 	 * The list of anchors for the current entity, that can be used to create keywords
 	 */
+	@CachedProperty()
 	anchors: NgDocEntityAnchor[] = [];
 
 	/**
