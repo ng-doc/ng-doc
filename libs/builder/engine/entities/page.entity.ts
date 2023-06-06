@@ -1,11 +1,12 @@
-import {asArray, isPresent, NgDocPage, NgDocPageIndex} from '@ng-doc/core';
+import {asArray, isPresent, NgDocEntityAnchor, NgDocPage, NgDocPageIndex} from '@ng-doc/core';
 import * as fs from 'fs';
 import * as path from 'path';
 import {forkJoin, from, Observable, of} from 'rxjs';
-import {map, mapTo, switchMap, tap} from 'rxjs/operators';
+import {map, switchMap, tap} from 'rxjs/operators';
 import {ClassDeclaration, ObjectLiteralExpression} from 'ts-morph';
 
 import {
+	buildEntityKeyword,
 	buildPlaygroundMetadata,
 	editFileInRepoUrl,
 	formatCode,
@@ -13,14 +14,15 @@ import {
 	getDemoClassDeclarations,
 	getPageType,
 	getPlaygroundById,
+	getPlaygroundsExpression,
 	getPlaygroundsIds,
 	marked,
+	postProcessHtml,
 	processHtml,
 	slash,
 } from '../../helpers';
 import {buildIndexes} from '../../helpers/build-indexes';
-import {getPlaygroundsExpression} from '../../helpers/playground/get-playgrounds-expression';
-import {NgDocAsset, NgDocBuiltOutput, NgDocPlaygroundMetadata} from '../../interfaces';
+import {NgDocAsset, NgDocBuildOutput, NgDocEntityKeyword, NgDocPlaygroundMetadata} from '../../interfaces';
 import {forkJoinOrEmpty} from '../../operators';
 import {NgDocComponentAsset} from '../../types';
 import {NgDocActions} from '../actions';
@@ -75,8 +77,23 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return this.target?.order;
 	}
 
-	override get keywords(): string[] {
-		return [...asArray(this.target?.keyword)].map((k: string) => `*${k}`);
+	override get keywords(): NgDocEntityKeyword[] {
+		const rootKeywords: NgDocEntityKeyword[] = [...asArray(this.target?.keyword)].map((key: string) => ({
+			key: `*${key}`,
+			title: this.title,
+			path: this.fullRoute,
+		}));
+
+		return [
+			...rootKeywords,
+			...rootKeywords
+				.map((keyword: NgDocEntityKeyword) =>
+					this.anchors.map((anchor: NgDocEntityAnchor) =>
+						buildEntityKeyword(keyword.key, keyword.title, keyword.path, anchor),
+					),
+				)
+				.flat(),
+		];
 	}
 
 	/**
@@ -173,11 +190,9 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		);
 	}
 
-	protected override buildImpl(): Observable<NgDocBuiltOutput[]> {
+	protected override buildImpl(): Observable<NgDocBuildOutput[]> {
 		return this.isReadyForBuild
-			? this.fillAssets().pipe(
-					switchMap(() => forkJoin([this.buildModule(), this.buildPlaygrounds(), this.buildDemoAssets()])),
-			  )
+			? forkJoin([this.buildModule(), this.buildPlaygrounds(), this.buildDemoAssets()])
 			: of([]);
 	}
 
@@ -197,62 +212,56 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		);
 	}
 
-	private buildModule(): Observable<NgDocBuiltOutput> {
-		if (this.target) {
-			const template: string = renderTemplate(this.target.mdFile, {
-				scope: this.sourceFileFolder,
-				context: {
-					NgDocPage: this.target,
-					NgDocActions: new NgDocActions(this),
-				},
-				dependenciesStore: this.dependencies,
-				filters: false,
-			});
-			const page: Observable<string> = of(template).pipe(
-				map((output: string) => marked(output, this)),
-				switchMap((html: string) => processHtml(this, html)),
-				switchMap((content: string) =>
-					from(
-						buildIndexes({
-							title: this.title,
-							content,
-							pageType: getPageType(this),
-							breadcrumbs: this.breadcrumbs,
-							route: this.fullRoute,
-						}),
-					).pipe(
-						tap((indexes: NgDocPageIndex[]) => this.indexes.push(...indexes)),
-						mapTo(content),
-					),
-				),
-			);
-
-			return page.pipe(
-				map((pageContent: string) =>
-					renderTemplate('./page.module.ts.nunj', {
-						context: {
-							page: this,
-							pageContent,
-						},
-					}),
-				),
-				map((content: string) => ({content, filePath: this.modulePath})),
-			);
+	private buildModule(): Observable<NgDocBuildOutput> {
+		if (!this.target) {
+			throw new Error(`Failed to build page. Make sure that you define page configuration property correctly.`);
 		}
-		return of();
-	}
 
-	private buildDemoAssets(): Observable<NgDocBuiltOutput> {
-		const content: string = renderTemplate('./demo-assets.ts.nunj', {
+		const template: string = renderTemplate(this.target.mdFile, {
+			scope: this.sourceFileFolder,
 			context: {
-				demoAssets: this.componentAssets,
+				NgDocPage: this.target,
+				NgDocActions: new NgDocActions(this),
 			},
+			dependenciesStore: this.dependencies,
+			filters: false,
 		});
 
-		return of({content, filePath: this.demoAssetsPath});
+		return of(template).pipe(
+			map((output: string) => marked(output, this)),
+			switchMap((html: string) => processHtml(this, html)),
+			map((content: string) => ({
+				content,
+				filePath: this.modulePath,
+				postProcessFn: (content: string) =>
+					from(postProcessHtml(this, content)).pipe(
+						switchMap((content: string) =>
+							from(
+								buildIndexes({
+									title: this.title,
+									content,
+									pageType: getPageType(this),
+									breadcrumbs: this.breadcrumbs,
+									route: this.fullRoute,
+								}),
+							).pipe(
+								tap((indexes: NgDocPageIndex[]) => this.indexes.push(...indexes)),
+								map(() =>
+									renderTemplate('./page.module.ts.nunj', {
+										context: {
+											page: this,
+											pageContent: content,
+										},
+									}),
+								),
+							),
+						),
+					),
+			})),
+		);
 	}
 
-	private buildPlaygrounds(): Observable<NgDocBuiltOutput> {
+	private buildPlaygrounds(): Observable<NgDocBuildOutput> {
 		const content: string = renderTemplate('./playgrounds.ts.nunj', {
 			context: {
 				page: this,
@@ -262,7 +271,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return of({content: formatCode(content, 'TypeScript'), filePath: this.playgroundsPath});
 	}
 
-	private fillAssets(): Observable<void> {
+	private buildDemoAssets(): Observable<NgDocBuildOutput> {
 		if (this.objectExpression) {
 			this.componentAssets = this.demoClassDeclarations
 				.map((classDeclarations: ClassDeclaration) =>
@@ -280,9 +289,37 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 						),
 					),
 				),
-			).pipe(mapTo(void 0));
+			).pipe(
+				map(() => ({
+					content: '',
+					filePath: this.demoAssetsPath,
+					postProcessFn: (content: string) =>
+						of(content).pipe(
+							switchMap(() =>
+								forkJoinOrEmpty(
+									Object.keys(this.componentAssets).map((key: string) =>
+										forkJoinOrEmpty(
+											this.componentAssets[key].map((asset: NgDocAsset) =>
+												from(postProcessHtml(this, asset.output)).pipe(
+													tap((output: string) => (asset.output = output)),
+												),
+											),
+										),
+									),
+								),
+							),
+							map(() =>
+								renderTemplate('./demo-assets.ts.nunj', {
+									context: {
+										demoAssets: this.componentAssets,
+									},
+								}),
+							),
+						),
+				})),
+			);
 		}
 
-		return of(void 0);
+		return of({content: '', filePath: this.demoAssetsPath});
 	}
 }

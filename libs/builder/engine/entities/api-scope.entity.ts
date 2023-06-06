@@ -3,7 +3,7 @@ import {forkJoin, Observable, of} from 'rxjs';
 import {SourceFile} from 'ts-morph';
 
 import {isPageEntity, uniqueName} from '../../helpers';
-import {NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
+import {NgDocBuilderContext, NgDocBuildOutput, NgDocEntityKeyword} from '../../interfaces';
 import {NgDocEntityStore} from '../entity-store';
 import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
@@ -41,7 +41,7 @@ export class NgDocApiScopeEntity extends NgDocRouteEntity<NgDocApiScope> {
 		return this.target.route;
 	}
 
-	override get keywords(): string[] {
+	override get keywords(): NgDocEntityKeyword[] {
 		return [];
 	}
 
@@ -91,11 +91,11 @@ export class NgDocApiScopeEntity extends NgDocRouteEntity<NgDocApiScope> {
 		return of(void 0);
 	}
 
-	protected override buildImpl(): Observable<NgDocBuiltOutput[]> {
+	protected override buildImpl(): Observable<NgDocBuildOutput[]> {
 		return this.isReadyForBuild ? forkJoin([this.buildModule()]) : of([]);
 	}
 
-	private buildModule(): Observable<NgDocBuiltOutput> {
+	private buildModule(): Observable<NgDocBuildOutput> {
 		if (this.target) {
 			const content: string = renderTemplate('./api-scope.module.ts.nunj', {
 				context: {

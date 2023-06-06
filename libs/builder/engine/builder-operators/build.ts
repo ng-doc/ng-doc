@@ -1,7 +1,7 @@
 import {Observable, OperatorFunction} from 'rxjs';
-import {map, switchMap, tap} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 
-import {NgDocBuiltOutput, NgDocConfiguration} from '../../interfaces';
+import {NgDocBuildOutput, NgDocConfiguration} from '../../interfaces';
 import {forkJoinOrEmpty} from '../../operators';
 import {errorHandler} from '../../operators/error-handler';
 import {NgDocEntity} from '../entities/abstractions/entity';
@@ -20,17 +20,16 @@ export function build(
 	store: NgDocEntityStore,
 	config: NgDocConfiguration,
 	...additionalEntities: NgDocEntity[]
-): OperatorFunction<NgDocEntity[], NgDocBuiltOutput[]> {
+): OperatorFunction<NgDocEntity[], NgDocBuildOutput[]> {
 	return (source: Observable<NgDocEntity[]>) =>
 		source.pipe(
-			tap(() => store.updateKeywordMap(config.keywords)),
 			map((entities: NgDocEntity[]) => buildCandidates(store, entities).filter((e: NgDocEntity) => e.isReadyForBuild)),
 			switchMap((entities: NgDocEntity[]) =>
 				forkJoinOrEmpty(entities.map((e: NgDocEntity) => e.build().pipe(errorHandler([])))),
 			),
-			switchMap((output: NgDocBuiltOutput[][]) =>
+			switchMap((output: NgDocBuildOutput[][]) =>
 				forkJoinOrEmpty(additionalEntities.map((e: NgDocEntity) => e.build())).pipe(
-					map((additionalOutput: NgDocBuiltOutput[][]) => [...output, ...additionalOutput].flat()),
+					map((additionalOutput: NgDocBuildOutput[][]) => [...output, ...additionalOutput].flat()),
 				),
 			),
 		);

@@ -1,5 +1,7 @@
-import {asArray} from '@ng-doc/core';
+import {NgDocBuildOutput, NgDocEntityKeyword} from '@ng-doc/builder';
+import {asArray, NgDocEntityAnchor} from '@ng-doc/core';
 import * as path from 'path';
+import {Observable} from 'rxjs';
 
 import {isRouteEntity, slash} from '../../../helpers';
 import {NgDocModuleEntity} from './module.entity';
@@ -18,7 +20,12 @@ export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T>
 	/**
 	 * Keywords that will be used to create links to the current entity on the pages
 	 */
-	abstract keywords: string[];
+	abstract keywords: NgDocEntityKeyword[];
+
+	/**
+	 * The list of anchors for the current entity, that can be used to create keywords
+	 */
+	anchors: NgDocEntityAnchor[] = [];
 
 	/**
 	 * Url for to the source file to the current page, that can be used to open it in repository and edit
@@ -46,5 +53,11 @@ export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T>
 	 */
 	get breadcrumbs(): string[] {
 		return isRouteEntity(this.parent) ? [...asArray(this?.parent?.breadcrumbs), this.title] : [this.title];
+	}
+
+	override build(): Observable<NgDocBuildOutput[]> {
+		this.anchors = [];
+
+		return super.build();
 	}
 }

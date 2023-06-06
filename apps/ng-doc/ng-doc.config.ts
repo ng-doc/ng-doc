@@ -22,6 +22,10 @@ const NgDocConfig: NgDocConfiguration = {
 			title: 'highlight.js',
 			path: 'https://highlightjs.org/',
 		},
+		githubSlugger: {
+			title: 'github-slugger',
+			path: 'https://github.com/Flet/github-slugger',
+		},
 		ngDocFeatureRequest: {
 			title: 'NgDoc Feature Request',
 			path: 'https://github.com/ng-doc/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Enhancement&template=feature_request.yaml&title=%5BFeature%5D+',

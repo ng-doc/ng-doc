@@ -1,4 +1,7 @@
-```gitignore fileName=".gitignore"
-## NgDoc folder
-.ng-doc
+```typescript
+NgDocDefaultSearchEngine.search;
 ```
+
+`NgDocDefaultSearchEngine.search`
+`NgDocDefaultSearchEngine.Methods`
+`NgDocDefaultSearchEngine#methods`

@@ -1,21 +1,23 @@
-import {asArray, isPresent, NgDocPageIndex} from '@ng-doc/core';
+import {asArray, isPresent, NgDocEntityAnchor, NgDocPageIndex} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, from, Observable, of} from 'rxjs';
 import {map, mapTo, switchMap, tap} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
 import {
+	buildEntityKeyword,
 	declarationFolderName,
 	editFileInRepoUrl,
 	getPageType,
 	isSupportedDeclaration,
+	postProcessHtml,
 	processHtml,
 	slash,
 	uniqueName,
 	viewFileInRepoUrl,
 } from '../../helpers';
 import {buildIndexes} from '../../helpers/build-indexes';
-import {NgDocBuilderContext, NgDocBuiltOutput} from '../../interfaces';
+import {NgDocBuilderContext, NgDocBuildOutput, NgDocEntityKeyword} from '../../interfaces';
 import {NgDocSupportedDeclarations} from '../../types';
 import {NgDocEntityStore} from '../entity-store';
 import {renderTemplate} from '../nunjucks';
@@ -29,8 +31,9 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	declaration?: NgDocSupportedDeclarations;
 
 	override readonly physical: boolean = false;
-	override readonly id: string = uniqueName(`${this.sourceFilePath}}#${this.declarationName}`);
+	override readonly id: string = uniqueName(`${this.sourceFilePath}#${this.declarationName}`);
 	override folderName: string = '';
+
 	constructor(
 		override readonly store: NgDocEntityStore,
 		override readonly cache: NgDocCache,
@@ -99,8 +102,18 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 		return [];
 	}
 
-	override get keywords(): string[] {
-		return [this.declarationName];
+	override get keywords(): NgDocEntityKeyword[] {
+		return [
+			{
+				key: this.declarationName,
+				title: this.declarationName,
+				path: this.fullRoute,
+			},
+		].concat(
+			this.anchors.map((anchor: NgDocEntityAnchor) =>
+				buildEntityKeyword(this.declarationName, this.declarationName, this.fullRoute, anchor),
+			),
+		);
 	}
 
 	override compile(): Observable<void> {
@@ -113,13 +126,13 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 		return of(void 0);
 	}
 
-	protected override buildImpl(): Observable<NgDocBuiltOutput[]> {
+	protected override buildImpl(): Observable<NgDocBuildOutput[]> {
 		return this.isReadyForBuild
-			? forkJoin([this.buildModule()]).pipe(map((output: Array<NgDocBuiltOutput | null>) => output.filter(isPresent)))
+			? forkJoin([this.buildModule()]).pipe(map((output: Array<NgDocBuildOutput | null>) => output.filter(isPresent)))
 			: of([]);
 	}
 
-	private buildModule(): Observable<NgDocBuiltOutput> {
+	private buildModule(): Observable<NgDocBuildOutput> {
 		const template: string = renderTemplate('./api-page.html.nunj', {
 			context: {
 				declaration: this.declaration,
@@ -127,31 +140,36 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 			},
 		});
 
-		const page: Observable<string> = of(template).pipe(
+		return of(template).pipe(
 			switchMap((output: string) => processHtml(this, output)),
-			switchMap((content: string) =>
-				from(
-					buildIndexes({
-						title: this.title,
-						content,
-						pageType: getPageType(this),
-						breadcrumbs: this.breadcrumbs,
-						route: this.fullRoute,
-					}),
-				).pipe(
-					tap((indexes: NgDocPageIndex[]) => this.indexes.push(...indexes)),
-					mapTo(content),
-				),
-			),
-		);
-
-		return page.pipe(
-			map((pageContent: string) =>
-				renderTemplate('./api-page.module.ts.nunj', {
-					context: {page: this, pageContent},
-				}),
-			),
-			map((output: string) => ({content: output, filePath: this.modulePath})),
+			map((output: string) => ({
+				content: output,
+				filePath: this.modulePath,
+				postProcessFn: (content: string) =>
+					from(postProcessHtml(this, content)).pipe(
+						switchMap((content: string) =>
+							from(
+								buildIndexes({
+									title: this.title,
+									content,
+									pageType: getPageType(this),
+									breadcrumbs: this.breadcrumbs,
+									route: this.fullRoute,
+								}),
+							).pipe(
+								tap((indexes: NgDocPageIndex[]) => this.indexes.push(...indexes)),
+								map(() =>
+									renderTemplate('./api-page.module.ts.nunj', {
+										context: {
+											page: this,
+											pageContent: content,
+										},
+									}),
+								),
+							),
+						),
+					),
+			})),
 		);
 	}
 

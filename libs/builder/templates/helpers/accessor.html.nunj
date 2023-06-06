@@ -22,7 +22,8 @@
 					<th indexable="false">
 						{{ decoratorsMacro.render(accessor.getDecorators()) if accessor.getDecorators }}
 						{{ tagsMacro.render(accessor, 'modifier') }}
-						<h3>{{ modifierMacro.render(type) }} {{ accessor.getName() }}</h3>
+						<h3 dataSlugType="member"
+							dataSlugTitle="{{ accessor.getName() }}">{{ modifierMacro.render(type) }} {{ accessor.getName() }}</h3>
 						<div class="ng-doc-node-details">
 							{%- if inheritedFrom %}
 								inherited from <code>{{ inheritedFrom.getName() }}</code>

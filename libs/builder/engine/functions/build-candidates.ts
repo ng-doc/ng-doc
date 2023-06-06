@@ -34,7 +34,8 @@ export function buildCandidates(entityStore: NgDocEntityStore, entities: NgDocEn
 		candidates
 			.filter(isRouteEntity)
 			.map((candidate: NgDocRouteEntity) => candidate.keywords)
-			.flat(),
+			.flat()
+			.map((keyword) => keyword.key),
 	);
 
 	const candidatesByKeywords: NgDocEntity[] = entitiesFromStore.filter(

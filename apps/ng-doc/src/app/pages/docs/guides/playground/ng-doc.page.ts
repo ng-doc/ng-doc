@@ -38,7 +38,7 @@ const PlaygroundPage: NgDocPage = {
     },
     RotatorPlayground: {
       target: NgDocRotatorDirective,
-      template: `<div ngDocRotator style="height: 20px; width: 20px; background-color: red">Button</div>`,
+      template: `<button ngDocRotator>Button</button>`,
     },
     DatePipePlayground: {
       target: FormatDatePipe,

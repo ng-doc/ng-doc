@@ -20,7 +20,7 @@
 				{% set implementedMember = property | getImplementedMember %}
 				{% set docNode = propertyChain | firstNodeWithComment %}
 
-				<tr>
+				<tr dataSlug="{{ property.getName() }}" dataSlugType="member">
 					<td indexable="false">
 						{{ decoratorsMacro.render(property.getDecorators(), true) if property.getDecorators }}
 						{{ tagsMacro.render(property, "badge") }}{{ property.getName() }}

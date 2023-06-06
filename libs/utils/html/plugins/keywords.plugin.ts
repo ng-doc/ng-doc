@@ -64,7 +64,8 @@ function getNodes(
 	inlineLink: boolean,
 	config: NgDocHtmlPostProcessorConfig,
 ): Array<Element | Text> {
-	const KeywordRegExp: RegExp = /([A-Za-z0-9_.-/*]+)/;
+	const KeywordRegExp: RegExp = /([A-Za-z0-9_\-*]+[.#]?[A-Za-z0-9_\-*$]+)/g;
+	const keywordAnchorRegexp: RegExp = /^(?<keyword>[A-Za-z0-9_\-*]+)((?<delimiter>[.#])(?<anchor>[A-Za-z0-9_\-*$]+))?$/;
 	const {addUsedKeyword, addPotentialKeyword, getKeyword, raiseError} = config;
 
 	if (!getKeyword || !addUsedKeyword || !addPotentialKeyword) {
@@ -75,13 +76,24 @@ function getNodes(
 		.split(KeywordRegExp)
 		.filter((word: string) => word.length)
 		.map((word: string) => {
-			const keyword: NgDocKeyword | undefined = getKeyword(word);
+			const match: RegExpMatchArray | null = word.match(keywordAnchorRegexp);
+			const formattedWord: string = match
+				? `${match.groups?.['keyword']}${match.groups?.['delimiter'] || ''}${
+						match.groups?.['anchor']?.toLowerCase() || ''
+				  }`
+				: word;
 
-			if (KeywordRegExp.test(word)) {
+			const keyword: NgDocKeyword | undefined = getKeyword(formattedWord);
+			const rootKeyword: NgDocKeyword | undefined = getKeyword(match?.groups?.['keyword'] || '');
+
+			if (keywordAnchorRegexp.test(word)) {
 				keyword ? addUsedKeyword(word) : addPotentialKeyword(word);
 			}
 
-			if (inlineLink && /^\*\w+/gm.test(word) && !keyword) {
+			const notFoundGuideKeyword: boolean = /^\*\w+/gm.test(word) && !keyword;
+			const notFoundApiKeyword: boolean = !!rootKeyword && !!match?.groups?.['anchor'] && !keyword;
+
+			if (inlineLink && (notFoundGuideKeyword || notFoundApiKeyword)) {
 				raiseError(new Error(`Route with keyword "${word}" is missing.`));
 			}
 
@@ -107,6 +119,7 @@ function getNodes(
  * @param text
  * @param href
  * @param type
+ * @param anchor
  */
 function createLinkNode(text: string, href: string, type?: string): Element {
 	return {

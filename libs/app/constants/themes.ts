@@ -1,7 +1,7 @@
 import {NgDocTheme} from '@ng-doc/app/interfaces';
 
 /**
- * Dark theme. You can set it manually by calling `NgDocThemeService.setTheme` method.
+ * Dark theme. You can set it manually by calling `NgDocThemeService.set` method.
  *
  * ```typescript
  * import {Component} from '@angular/core';
@@ -34,7 +34,7 @@ import {NgDocTheme} from '@ng-doc/app/interfaces';
 export const NG_DOC_NIGHT_THEME: NgDocTheme = {id: 'ng-doc-night', path: 'assets/ng-doc/app/themes/ng-doc-night.css'};
 
 /**
- * Dark purple theme. You can set it manually by calling `NgDocThemeService.setTheme` method.
+ * Dark purple theme. You can set it manually by calling `NgDocThemeService.set` method.
  *
  * ```typescript
  * import {Component} from '@angular/core';

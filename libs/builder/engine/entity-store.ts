@@ -1,3 +1,4 @@
+import {NgDocEntityKeyword} from '@ng-doc/builder';
 import {asArray, NgDocGlobalKeyword, NgDocKeyword, objectKeys} from '@ng-doc/core';
 
 import {getKeywordTypeFromEntity, isApiPageEntity, isRouteEntity} from '../helpers';
@@ -49,10 +50,10 @@ export class NgDocEntityStore extends Map<string, NgDocEntity> {
 
 		this.asArray().forEach((entity: NgDocEntity) => {
 			if (isRouteEntity(entity) && entity.isReadyForBuild) {
-				entity.keywords.forEach((keyword: string) =>
-					this.addKeyword(keyword, {
-						title: entity.title,
-						path: entity.fullRoute,
+				entity.keywords.forEach((keyword: NgDocEntityKeyword) =>
+					this.addKeyword(keyword.key, {
+						title: keyword.title,
+						path: keyword.path,
 						type: getKeywordTypeFromEntity(entity),
 						isCodeLink: isApiPageEntity(entity),
 					}),
