@@ -1,3 +1,12 @@
+# [16.4.0](https://github.com/ng-doc/ng-doc/compare/v16.3.6...v16.4.0) (2023-06-06)
+
+
+### Features
+
+* **builder:** builder and error/warning output have been improved, now the builder is more stable and it's easier to understand where you are haveing problems ([#61](https://github.com/ng-doc/ng-doc/issues/61)) ([7d11c79](https://github.com/ng-doc/ng-doc/commit/7d11c7971b5cf65ecd7b964155602480e91f0dcc))
+* **project:** add support for directives and pipes to playgrounds ([#62](https://github.com/ng-doc/ng-doc/issues/62)) ([28b0930](https://github.com/ng-doc/ng-doc/commit/28b0930ba4a7bda271e83a7526c1f747dceb26b7)), closes [#60](https://github.com/ng-doc/ng-doc/issues/60)
+* **project:** now you can specify the anchors for the keywords that can create a link to the page's section or API member  ([#63](https://github.com/ng-doc/ng-doc/issues/63)) ([a16d5d4](https://github.com/ng-doc/ng-doc/commit/a16d5d48a0411fc5d048f7131a3f1d007c936989)), closes [#2](https://github.com/ng-doc/ng-doc/issues/2)
+
 ## [16.3.6](https://github.com/ng-doc/ng-doc/compare/v16.3.5...v16.3.6) (2023-06-02)
 
 
