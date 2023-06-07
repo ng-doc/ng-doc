@@ -1,10 +1,11 @@
-import {asArray, NgDocCategory} from '@ng-doc/core';
+import {asArray, isPresent, NgDocCategory} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, Observable, of} from 'rxjs';
-import {catchError, map, tap} from 'rxjs/operators';
+import {tap} from 'rxjs/operators';
 
 import {isCategoryEntity, isPageEntity} from '../../helpers';
-import {NgDocBuiltOutput} from '../../interfaces';
+import {NgDocBuildOutput, NgDocEntityKeyword} from '../../interfaces';
+import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
 import {CachedEntity} from './cache/decorators';
@@ -13,7 +14,6 @@ import {NgDocPageEntity} from './page.entity';
 @CachedEntity()
 export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 	override parent?: NgDocCategoryEntity;
-	override compilable: boolean = true;
 
 	override get route(): string {
 		const folderName: string = path.basename(path.dirname(this.sourceFile.getFilePath()));
@@ -31,11 +31,10 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 	}
 
 	override get canBeBuilt(): boolean {
-		return (
-			!!this.target &&
-			(!this.target.onlyForTags ||
-				asArray(this.target.onlyForTags).includes(this.context.context.target?.configuration ?? ''))
-		);
+		return isPresent(this.target)
+			? !this.target.onlyForTags ||
+					asArray(this.target.onlyForTags).includes(this.context.context.target?.configuration ?? '')
+			: true;
 	}
 
 	override get isRoot(): boolean {
@@ -54,7 +53,7 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 		return asArray(this.children.values()).filter(isCategoryEntity);
 	}
 
-	override get keywords(): string[] {
+	override get keywords(): NgDocEntityKeyword[] {
 		return [];
 	}
 
@@ -74,37 +73,35 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 		return this.target?.expanded ?? false;
 	}
 
-	override update(): Observable<void> {
-		return super.update().pipe(
+	override setParentDynamically(): void {
+		super.setParentDynamically();
+
+		this.parent = this.getParentFromCategory();
+	}
+
+	protected override loadImpl(): Observable<void> {
+		return super.loadImpl().pipe(
 			tap(() => {
 				if (!this.title) {
-					throw new Error(`Failed to load ${this.sourceFile.getFilePath()}. Make sure that you have a title property.`);
+					throw new Error(`Failed to load category. Make sure that you have a "title" property.`);
 				}
-
-				this.parent = this.getParentFromCategory();
-			}),
-			catchError((error: unknown) => {
-				this.readyToBuild = false;
-				this.context.context.logger.error(`\n${String(error)}`);
-
-				return of(void 0);
 			}),
 		);
 	}
 
-	protected override build(): Observable<NgDocBuiltOutput[]> {
+	protected override buildImpl(): Observable<NgDocBuildOutput[]> {
 		return this.isReadyForBuild ? forkJoin([this.buildModule()]) : of([]);
 	}
 
-	private buildModule(): Observable<NgDocBuiltOutput> {
+	private buildModule(): Observable<NgDocBuildOutput> {
 		if (this.target) {
-			return this.builder.renderer
-				.render('./category.module.ts.nunj', {
-					context: {
-						category: this,
-					},
-				})
-				.pipe(map((output: string) => ({content: output, filePath: this.modulePath})));
+			const content: string = renderTemplate('./category.module.ts.nunj', {
+				context: {
+					category: this,
+				},
+			});
+
+			return of({content, filePath: this.modulePath});
 		}
 		return of();
 	}

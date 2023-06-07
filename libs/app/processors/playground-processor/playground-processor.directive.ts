@@ -2,6 +2,7 @@ import {Directive, ElementRef, ViewContainerRef} from '@angular/core';
 import {NgDocPlaygroundComponent} from '@ng-doc/app/components/playground';
 import {NgDocProcessorOptions} from '@ng-doc/app/interfaces';
 import {NgDocHtmlProcessor} from '@ng-doc/app/processors/html-processor';
+import {isPresent} from '@ng-doc/core';
 
 @Directive({
 	selector: '[ngDocPlaygroundProcessor]',
@@ -19,10 +20,12 @@ export class NgDocPlaygroundProcessorDirective extends NgDocHtmlProcessor<NgDocP
 		return {
 			inputs: {
 				id: element.getAttribute('id') || undefined,
-				properties: JSON.parse(element.querySelector('#data')?.textContent ?? '') || undefined,
+				properties: JSON.parse(element.querySelector('#data')?.textContent?.replace(/\n/g, '\\n') ?? '') || undefined,
+				pipeName: element.querySelector('#pipeName')?.textContent || undefined,
 				selectors: (element.querySelector('#selectors')?.textContent || '')
 					.split(',')
-					.map((selector: string) => selector.trim()),
+					.map((selector: string) => selector.trim())
+					.filter(isPresent),
 			},
 		};
 	}

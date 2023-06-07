@@ -5,7 +5,6 @@ const NgDocConfig: NgDocConfiguration = {
 	pages: 'apps/ng-doc/src/app',
 	routePrefix: 'docs',
 	tsConfig: 'apps/ng-doc/tsconfig.app.json',
-	cache: false,
 	repoConfig: {
 		url: 'https://github.com/ng-doc/ng-doc',
 		mainBranch: 'main',
@@ -23,9 +22,17 @@ const NgDocConfig: NgDocConfiguration = {
 			title: 'highlight.js',
 			path: 'https://highlightjs.org/',
 		},
+		githubSlugger: {
+			title: 'github-slugger',
+			path: 'https://github.com/Flet/github-slugger',
+		},
 		ngDocFeatureRequest: {
 			title: 'NgDoc Feature Request',
 			path: 'https://github.com/ng-doc/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Enhancement&template=feature_request.yaml&title=%5BFeature%5D+',
+		},
+		ngDocBugReport: {
+			title: 'NgDoc Bug Report',
+			path: 'https://github.com/ng-doc/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Bug&projects=&template=bug_report.yaml&title=%5BBug%5D+',
 		},
 	},
 	guide: {

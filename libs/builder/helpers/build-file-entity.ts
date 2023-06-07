@@ -1,6 +1,6 @@
 import {escapeRegexp} from '@ng-doc/core';
 import * as esbuild from 'esbuild';
-import minimatch from 'minimatch';
+import {minimatch} from 'minimatch';
 import * as path from 'path';
 import {ObjectLiteralExpression, SourceFile} from 'ts-morph';
 
@@ -20,9 +20,9 @@ export async function buildFileEntity(sourceFile: SourceFile, tsconfig: string, 
 	const outPath: string = path.join(CACHE_PATH, p).replace(/\.ts$/, '.js');
 
 	/**
-	 * Remove module, demo and playgrounds properties from the default export
+	 * Remove `imports`, `providers`, `demos` and `playgrounds` properties from the default export
 	 * if the file is a page. This is done to prevent compiling the page dependencies
-	 * that are not needed for the NgDoc builder
+	 * that are not needed for the NgDoc builder to work or may cause performance issues.
 	 *
 	 */
 	if (minimatch(p, PAGE_PATTERN)) {

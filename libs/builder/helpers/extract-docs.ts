@@ -35,7 +35,7 @@ export function extractDocs(node: JSDocableNode, customTag?: string): string {
 		})
 		.join('');
 
-	return marked(docs);
+	return marked(docs).trim();
 }
 
 /**
@@ -74,7 +74,7 @@ export function extractParameterDocs(node: JSDocableNode, paramName: string): st
 		})
 		.join('');
 
-	return marked(docs);
+	return marked(docs).trim();
 }
 
 /**

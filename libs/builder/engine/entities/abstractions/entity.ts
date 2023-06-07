@@ -1,11 +1,12 @@
 import {logging} from '@angular-devkit/core';
 import {NgDocPageIndex} from '@ng-doc/core';
 import {Observable, of, Subject} from 'rxjs';
-import {catchError, take, tap} from 'rxjs/operators';
+import {take, tap} from 'rxjs/operators';
 
 import {ObservableSet} from '../../../classes';
-import {NgDocBuilderContext, NgDocBuiltOutput} from '../../../interfaces';
-import {NgDocBuilder} from '../../builder';
+import {NgDocBuilderContext, NgDocBuildOutput} from '../../../interfaces';
+import {NgDocEntityStore} from '../../entity-store';
+import {NgDocCache} from '../cache';
 import {CachedFilesGetter, CachedProperty} from '../cache/decorators';
 
 /**
@@ -57,10 +58,17 @@ export abstract class NgDocEntity {
 	 */
 	readonly physical: boolean = true;
 
-	private destroy$: Subject<void> = new Subject<void>();
+	/**
+	 * List of errors that were occurred during the build process
+	 */
+	errors: Error[] = [];
 
-	/** Indicates when current entity could be built */
-	protected readyToBuild: boolean = false;
+	/**
+	 * List of warnings that were occurred during the build process
+	 */
+	warnings: Error[] = [];
+
+	private destroy$: Subject<void> = new Subject<void>();
 
 	/**
 	 * Files that are watched for changes to rebuild entity or remove it
@@ -82,10 +90,10 @@ export abstract class NgDocEntity {
 	 */
 	abstract readonly buildCandidates: NgDocEntity[];
 
-	constructor(readonly builder: NgDocBuilder, readonly context: NgDocBuilderContext) {}
+	constructor(readonly store: NgDocEntityStore, readonly cache: NgDocCache, readonly context: NgDocBuilderContext) {}
 
-	/** Indicates if the current entity can be built */
-	get canBeBuilt(): boolean {
+	/** Indicates when current entity could be built */
+	protected get canBeBuilt(): boolean {
 		return true;
 	}
 
@@ -103,7 +111,7 @@ export abstract class NgDocEntity {
 	 * Contains all children of the current entity.
 	 */
 	get children(): NgDocEntity[] {
-		return this.builder.entities.asArray().filter((entity: NgDocEntity) => entity.parent === this && !entity.destroyed);
+		return this.store.asArray().filter((entity: NgDocEntity) => entity.parent === this && !entity.destroyed);
 	}
 
 	/**
@@ -133,12 +141,11 @@ export abstract class NgDocEntity {
 
 	/**
 	 * Should return if this entity is ready to build
-	 * Using for build process to skip entityStore that is not ready for build
 	 *
 	 * @type {boolean}
 	 */
 	get isReadyForBuild(): boolean {
-		return this.readyToBuild && !this.destroyed && this.canBeBuilt;
+		return !this.destroyed && !this.errors.length && this.canBeBuilt;
 	}
 
 	get logger(): logging.LoggerApi {
@@ -154,44 +161,33 @@ export abstract class NgDocEntity {
 	 * Build all artifacts that need for application.
 	 * This is the last method in the build process, should return output that should be emitted to the file system
 	 */
-	protected abstract build(): Observable<NgDocBuiltOutput[]>;
-
-	/**
-	 * Runs when the source file was updated, can be used to refresh target file etc.
-	 */
-	abstract update(): Observable<void>;
+	protected abstract buildImpl(): Observable<NgDocBuildOutput[]>;
 
 	/**
 	 * Method called by NgDocBuilder when one or more dependencies have changed
 	 */
 	dependenciesChanged(): void {
-		this.readyToBuild = true;
+		// Reset error and warnings, because dependency changes could fix them
+		this.warnings = [];
+		this.errors = [];
 	}
 
 	childrenGenerator(): Observable<NgDocEntity[]> {
 		return of([]);
 	}
 
-	buildArtifacts(): Observable<NgDocBuiltOutput[]> {
+	build(): Observable<NgDocBuildOutput[]> {
 		// Clear all indexes and used keywords before build
 		this.usedKeywords.clear();
 		this.potentialKeywords.clear();
 		this.indexes = [];
 
-		return this.build().pipe(
-			tap(() => this.builder.cache.cache(this)),
-			catchError((e: Error) => {
-				this.logger.error(`Error during processing "${this.id}"\n${e.message}\n${e.stack}`);
-				this.readyToBuild = false;
-
-				return of([]);
+		return this.buildImpl().pipe(
+			tap({
+				next: () => this.cache.cache(this),
+				error: (e: Error) => this.errors.push(e),
 			}),
 		);
-	}
-
-	emit(): Observable<void> {
-		// No implementation
-		return of(void 0);
 	}
 
 	removeArtifacts(): void {
@@ -206,7 +202,6 @@ export abstract class NgDocEntity {
 	destroy(): void {
 		this.children.forEach((entity: NgDocEntity) => !entity.physical && entity.destroy());
 
-		this.readyToBuild = false;
 		this.destroyed = true;
 		this.destroy$.next();
 	}

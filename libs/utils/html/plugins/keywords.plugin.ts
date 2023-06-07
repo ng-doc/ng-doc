@@ -1,12 +1,12 @@
 import {NG_DOC_ELEMENT} from '@ng-doc/core/constants/defaults.js';
 import {NgDocKeyword} from '@ng-doc/core/interfaces';
-import chalk from 'chalk';
 import {Element, Text} from 'hast';
 import {isElement} from 'hast-util-is-element';
 import {toString} from 'hast-util-to-string';
 import {SKIP, visitParents} from 'unist-util-visit-parents';
 
 import {hasLinkAncestor, isCodeNode} from '../helpers';
+import {NgDocHtmlPostProcessorConfig} from '../html-post-processor';
 
 const languages: string[] = ['typescript', 'ts'];
 
@@ -15,17 +15,11 @@ export type GetKeyword = (keyword: string) => NgDocKeyword | undefined;
 
 /**
  *
- * @param entityStore
- * @param entity
- * @param addUsedKeyword
- * @param addPotentialKeyword
- * @param getKeyword
+ * @param config
  */
-export default function keywordsPlugin(
-	addUsedKeyword?: AddKeyword,
-	addPotentialKeyword?: AddKeyword,
-	getKeyword?: GetKeyword,
-) {
+export default function keywordsPlugin(config: NgDocHtmlPostProcessorConfig) {
+	const {addUsedKeyword, addPotentialKeyword, getKeyword} = config;
+
 	return (tree: Element) =>
 		visitParents(tree, 'element', (node: Element, ancestors: Element[]) => {
 			if (!isCodeNode(node)) {
@@ -45,7 +39,7 @@ export default function keywordsPlugin(
 					const index: number = parent.children.indexOf(node);
 
 					// Parse the text for words that we can convert to links
-					const nodes: any[] = getNodes(node, parent, isInlineCode, addUsedKeyword, addPotentialKeyword, getKeyword);
+					const nodes: any[] = getNodes(node, parent, isInlineCode, config);
 					// Replace the text node with the links and leftover text nodes
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
@@ -61,35 +55,46 @@ export default function keywordsPlugin(
  *
  * @param node
  * @param parent
- * @param entityStore
  * @param inlineLink
- * @param e
- * @param addUsedKeyword
- * @param addPotentialKeyword
- * @param getKeyword
+ * @param config
  */
 function getNodes(
 	node: Text,
 	parent: Element,
 	inlineLink: boolean,
-	addUsedKeyword: AddKeyword,
-	addPotentialKeyword: AddKeyword,
-	getKeyword: GetKeyword,
+	config: NgDocHtmlPostProcessorConfig,
 ): Array<Element | Text> {
-	const KeywordRegExp: RegExp = /([A-Za-z0-9_.-/*]+)/;
+	const KeywordRegExp: RegExp = /([A-Za-z0-9_\-*]+[.#]?[A-Za-z0-9_\-*$]+)/g;
+	const keywordAnchorRegexp: RegExp = /^(?<keyword>[A-Za-z0-9_\-*]+)((?<delimiter>[.#])(?<anchor>[A-Za-z0-9_\-*$]+))?$/;
+	const {addUsedKeyword, addPotentialKeyword, getKeyword, raiseError} = config;
+
+	if (!getKeyword || !addUsedKeyword || !addPotentialKeyword) {
+		throw new Error('Missing config');
+	}
 
 	return toString(node)
 		.split(KeywordRegExp)
 		.filter((word: string) => word.length)
 		.map((word: string) => {
-			const keyword: NgDocKeyword | undefined = getKeyword(word);
+			const match: RegExpMatchArray | null = word.match(keywordAnchorRegexp);
+			const formattedWord: string = match
+				? `${match.groups?.['keyword']}${match.groups?.['delimiter'] || ''}${
+						match.groups?.['anchor']?.toLowerCase() || ''
+				  }`
+				: word;
 
-			if (KeywordRegExp.test(word)) {
+			const keyword: NgDocKeyword | undefined = getKeyword(formattedWord);
+			const rootKeyword: NgDocKeyword | undefined = getKeyword(match?.groups?.['keyword'] || '');
+
+			if (keywordAnchorRegexp.test(word)) {
 				keyword ? addUsedKeyword(word) : addPotentialKeyword(word);
 			}
 
-			if (inlineLink && /^\*\w+/gm.test(word) && !keyword) {
-				console.log(`\n${chalk.blue('NgDoc:')} ${chalk.yellow(`Keyword "${word}" is missing.`)}`);
+			const notFoundGuideKeyword: boolean = /^\*\w+/gm.test(word) && !keyword;
+			const notFoundApiKeyword: boolean = !!rootKeyword && !!match?.groups?.['anchor'] && !keyword;
+
+			if (inlineLink && (notFoundGuideKeyword || notFoundApiKeyword)) {
+				raiseError(new Error(`Route with keyword "${word}" is missing.`));
 			}
 
 			// Convert code tag to link if it's a link to the page entity
@@ -114,6 +119,7 @@ function getNodes(
  * @param text
  * @param href
  * @param type
+ * @param anchor
  */
 function createLinkNode(text: string, href: string, type?: string): Element {
 	return {

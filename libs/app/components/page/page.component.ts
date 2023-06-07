@@ -4,6 +4,7 @@ import {Router, RouterLink, UrlTree} from '@angular/router';
 import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
 import {NgDocBreadcrumbComponent} from '@ng-doc/app/components/breadcrumb';
 import {NgDocTocComponent} from '@ng-doc/app/components/toc';
+import {provideTypeControl} from '@ng-doc/app/helpers';
 import {NgDocContext, NgDocNavigation} from '@ng-doc/app/interfaces';
 import {NgDocSanitizeHtmlPipe} from '@ng-doc/app/pipes/sanitize-html';
 import {
@@ -17,6 +18,12 @@ import {
 	NgDocTooltipProcessorDirective,
 } from '@ng-doc/app/processors';
 import {NG_DOC_CONTEXT} from '@ng-doc/app/tokens';
+import {
+	NgDocBooleanControlComponent,
+	NgDocNumberControlComponent,
+	NgDocStringControlComponent,
+	NgDocTypeAliasControlComponent,
+} from '@ng-doc/app/type-controls';
 import {
 	NgDocButtonIconComponent,
 	NgDocIconComponent,
@@ -40,9 +47,9 @@ import {
 		NgDocTooltipDirective,
 		NgDocIconComponent,
 		NgDocBlockquoteProcessorDirective,
+		NgDocIconProcessorDirective,
 		NgDocLinkProcessorDirective,
 		NgDocCodeProcessorDirective,
-		NgDocIconProcessorDirective,
 		NgDocTooltipProcessorDirective,
 		NgDocDemoProcessorDirective,
 		NgDocDemoPaneProcessorDirective,
@@ -55,10 +62,17 @@ import {
 		NgDocTocComponent,
 		NgDocSanitizeHtmlPipe,
 	],
+	providers: [
+		provideTypeControl('NgDocTypeAlias', NgDocTypeAliasControlComponent, {order: 10}),
+		provideTypeControl('string', NgDocStringControlComponent, {order: 20}),
+		provideTypeControl('number', NgDocNumberControlComponent, {order: 30}),
+		provideTypeControl('boolean', NgDocBooleanControlComponent, {hideLabel: true, order: 40}),
+	],
 })
 export class NgDocPageComponent {
 	readonly prevPage?: NgDocNavigation;
 	readonly nextPage?: NgDocNavigation;
+
 	constructor(
 		@Inject(NG_DOC_CONTEXT)
 		private readonly context: NgDocContext,

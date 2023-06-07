@@ -3,10 +3,10 @@ import {asArray, NgDocStyleType} from '@ng-doc/core';
 import * as path from 'path';
 import {ClassDeclaration} from 'ts-morph';
 
-import {NgDocRenderer} from '../engine/renderer';
+import {renderTemplate} from '../engine/nunjucks';
 import {NgDocAsset} from '../interfaces';
 import {NgDocComponentAsset} from '../types';
-import {componentDecorator} from './angular';
+import {getComponentDecorator} from './angular';
 import {buildAssets} from './build-assets';
 import {formatCode} from './format-code';
 import {slash} from './slash';
@@ -22,7 +22,7 @@ export function getComponentAsset(
 	inlineStyleLang: NgDocStyleType,
 	outDir: string,
 ): NgDocComponentAsset {
-	const decoratorData: Component | undefined = componentDecorator(classDeclaration);
+	const decoratorData: Component | undefined = getComponentDecorator(classDeclaration);
 
 	if (decoratorData) {
 		const filePath: string = classDeclaration.getSourceFile().getFilePath();
@@ -46,14 +46,12 @@ export function getComponentAsset(
 				return {
 					...asset,
 					code,
-					output: new NgDocRenderer()
-						.renderSync('./code.html.nunj', {
-							context: {
-								code,
-								lang: asset.type,
-							},
-						})
-						.trim(),
+					output: renderTemplate('./code.html.nunj', {
+						context: {
+							code,
+							lang: asset.type,
+						},
+					}).trim(),
 					outputPath: slash(path.join(outDir, classDeclaration.getName() ?? '', asset.type, `${asset.name}${i}.html`)),
 				};
 			}),

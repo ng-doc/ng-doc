@@ -13,36 +13,63 @@ import {objectKeys} from './object-keys';
  * @param selector
  * @param content
  * @param inputs
+ * @param preview
  */
 export function buildPlaygroundDemoTemplate(
 	template: string,
 	selector: string,
 	content: Record<string, string>,
 	inputs?: Record<string, string>,
+	preview: boolean = true,
 ): string {
 	const parser: NgDocHtmlParser = new NgDocHtmlParser(template);
-	const selectors: Selector[] = CSSWhat.parse(selector)[0];
+	const selectors: Selector[] | undefined = CSSWhat.parse(selector)[0];
 
-	const rootElement: NodeTag | undefined = parser.find(NG_DOC_DYNAMIC_SELECTOR) ?? parser.find(selector);
+	if (selectors) {
+		const rootElement: NodeTag | undefined = parser.find(NG_DOC_DYNAMIC_SELECTOR) ?? parser.find(selector);
 
-	if (rootElement) {
-		rootElement.attrs = {};
-		parser.setAttributesFromSelectors(rootElement, selectors);
+		if (rootElement) {
+			parser.setAttributesFromSelectors(rootElement, selectors);
 
-		if (String(rootElement.tag).toLowerCase() === NG_DOC_DYNAMIC_SELECTOR.toLowerCase()) {
-			rootElement.tag =
-				(selectors.find((selector: Selector) => selector.type === SelectorType.Tag) as TagSelector)?.name ?? 'div';
+			if (String(rootElement.tag).toLowerCase() === NG_DOC_DYNAMIC_SELECTOR.toLowerCase()) {
+				rootElement.tag =
+					(selectors.find((selector: Selector) => selector.type === SelectorType.Tag) as TagSelector)?.name ?? 'div';
+			}
+
+			inputs && parser.fillAngularAttributes(rootElement, inputs);
 		}
-
-		inputs && parser.fillAngularAttributes(rootElement, inputs);
 	}
 
 	return (
-		replaceContent(parser.serialize(), content ?? {}, !!inputs)
+		replaceContent(parser.serialize(), content ?? {}, preview)
 			.replace(/=""/g, '')
-			// Remove empty lines
+			// Removes empty lines
 			.replace(/^\s*\n/gm, '')
 	);
+}
+
+/**
+ *
+ * @param template
+ * @param name
+ * @param content
+ * @param inputs
+ * @param preview
+ */
+export function buildPlaygroundDemoPipeTemplate(
+	template: string,
+	name: string,
+	content: Record<string, string>,
+	inputs?: Record<string, string>,
+	preview: boolean = true,
+): string {
+	const preparedTemplate: string = buildPlaygroundDemoTemplate(template, '', content, inputs, preview);
+	const listOfParameters: string = objectKeys(inputs ?? {})
+		.map((key: string) => `:${inputs?.[key]}`)
+		.join('')
+		.trim();
+
+	return preparedTemplate.replace(new RegExp(`\\| ${name}`, 'gm'), `| ${name}${listOfParameters}`);
 }
 
 /**

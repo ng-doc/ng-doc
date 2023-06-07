@@ -7,13 +7,6 @@
 	"cli": {
 		"packageManager": "npm"
 	},
-	"implicitDependencies": {
-		"package.json": {
-			"dependencies": "*",
-			"devDependencies": "*"
-		},
-		".eslintrc.json": "*"
-	},
 	"tasksRunnerOptions": {
 		"default": {
 			"runner": "nx-cloud",
@@ -44,10 +37,16 @@
 			"inputs": ["default", "{workspaceRoot}/.eslintrc.json"]
 		},
 		"build": {
-			"dependsOn": ["pre-build"]
+			"dependsOn": ["pre-build"],
+			"inputs": ["production", "^production"]
 		},
 		"pre-build": {
 			"dependsOn": ["^build"]
 		}
+	},
+	"namedInputs": {
+		"default": ["{projectRoot}/**/*", "sharedGlobals"],
+		"sharedGlobals": [],
+		"production": ["default"]
 	}
 }

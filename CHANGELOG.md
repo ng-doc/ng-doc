@@ -1,24 +1,68 @@
-# [16.3.0-beta.3](https://github.com/ng-doc/ng-doc/compare/v16.3.0-beta.2...v16.3.0-beta.3) (2023-05-29)
-
-
-### Bug Fixes
-
-* **builder:** add missing dependencies ([cf7d42a](https://github.com/ng-doc/ng-doc/commit/cf7d42a768dffaabbc3a2d0ceda5974ec5f887eb))
-
-# [16.3.0-beta.2](https://github.com/ng-doc/ng-doc/compare/v16.3.0-beta.1...v16.3.0-beta.2) (2023-05-29)
-
+## [16.4.2](https://github.com/ng-doc/ng-doc/compare/v16.4.1...v16.4.2) (2023-06-06)
 
 ### Bug Fixes
 
-* **semantic-release:** bump version ([d0f1862](https://github.com/ng-doc/ng-doc/commit/d0f18629d1d99afbf4f8ba5a34db227a05a84bbc))
+- **app:** playgrounds break with an injector error when creating ([2edf223](https://github.com/ng-doc/ng-doc/commit/2edf22371106ffbfc898fee1937d55e683be579b))
 
-# [16.3.0-beta.1](https://github.com/ng-doc/ng-doc/compare/v16.2.1...v16.3.0-beta.1) (2023-05-29)
+## [16.4.1](https://github.com/ng-doc/ng-doc/compare/v16.4.0...v16.4.1) (2023-06-06)
 
 ### Bug Fixes
 
-- **ng-doc:** `ng-doc` doesn't forget pages that have been moved to another directory ([c433a10](https://github.com/ng-doc/ng-doc/commit/c433a1007d07716833de2a987f9be63c7dc73a7a))
-- **ng-doc:** release trigger ([e7ac592](https://github.com/ng-doc/ng-doc/commit/e7ac592fc2f5ddadceb6633d13d6a3790b4eeb00))
-- **project:** dependency injection error after update to 15.10.0 ([cc41f44](https://github.com/ng-doc/ng-doc/commit/cc41f448054d73b9961f8a7be7689b4195a23c1f))
+- **app:** playgrounds can't find type controls ([953a08b](https://github.com/ng-doc/ng-doc/commit/953a08bbe7e48d3df17da4395716912d95aea907))
+
+# [16.4.0](https://github.com/ng-doc/ng-doc/compare/v16.3.6...v16.4.0) (2023-06-06)
+
+### Features
+
+- **builder:** builder and error/warning output have been improved, now the builder is more stable and it's easier to understand where you are haveing problems ([#61](https://github.com/ng-doc/ng-doc/issues/61)) ([7d11c79](https://github.com/ng-doc/ng-doc/commit/7d11c7971b5cf65ecd7b964155602480e91f0dcc))
+- **project:** add support for directives and pipes to playgrounds ([#62](https://github.com/ng-doc/ng-doc/issues/62)) ([28b0930](https://github.com/ng-doc/ng-doc/commit/28b0930ba4a7bda271e83a7526c1f747dceb26b7)), closes [#60](https://github.com/ng-doc/ng-doc/issues/60)
+- **project:** now you can specify the anchors for the keywords that can create a link to the page's section or API member ([#63](https://github.com/ng-doc/ng-doc/issues/63)) ([a16d5d4](https://github.com/ng-doc/ng-doc/commit/a16d5d48a0411fc5d048f7131a3f1d007c936989)), closes [#2](https://github.com/ng-doc/ng-doc/issues/2)
+
+## [16.3.6](https://github.com/ng-doc/ng-doc/compare/v16.3.5...v16.3.6) (2023-06-02)
+
+### Bug Fixes
+
+- **project:** minimatch has wrong version in dependencies ([d271d02](https://github.com/ng-doc/ng-doc/commit/d271d0225c1f210e32e69c1a94dd3df049532728))
+
+## [16.3.5](https://github.com/ng-doc/ng-doc/compare/v16.3.4...v16.3.5) (2023-06-01)
+
+### Bug Fixes
+
+- **builder:** builder doesn't see file changes on Windows machines ([673bf83](https://github.com/ng-doc/ng-doc/commit/673bf83836acc6d4344de1ed452a54d75fb7f43a))
+- **builder:** builder doesn't see file changes on Windows machines ([e82a7cc](https://github.com/ng-doc/ng-doc/commit/e82a7cc5129537603b86f75c1ffe932a1d97a4c0))
+
+## [16.3.4](https://github.com/ng-doc/ng-doc/compare/v16.3.3...v16.3.4) (2023-05-30)
+
+### Bug Fixes
+
+- **builder:** add `@angular/cdk` to the dependencies of the `ui-kit` package ([9fb07e6](https://github.com/ng-doc/ng-doc/commit/9fb07e66b3849d95a6beb4786ffa2e99d28809fb))
+- **builder:** disable `cache` feature by default as it is unstable for the production ([89a04dc](https://github.com/ng-doc/ng-doc/commit/89a04dcc600d3f38f595c564dbab92de5826b8ea))
+- **builder:** playground doesn't update inputs based on source code changes in development mode ([f9a5966](https://github.com/ng-doc/ng-doc/commit/f9a5966764b9e52f20603fb27b594299b106e26d))
+
+## [16.3.3](https://github.com/ng-doc/ng-doc/compare/v16.3.2...v16.3.3) (2023-05-30)
+
+### Bug Fixes
+
+- **builder:** playground doesn`t change components inputs in production if production target builds application from dist folder ([3fd3060](https://github.com/ng-doc/ng-doc/commit/3fd30603aae2e2666caaf724cc2c00d8f98edb1d))
+
+## [16.3.2](https://github.com/ng-doc/ng-doc/compare/v16.3.1...v16.3.2) (2023-05-29)
+
+### Bug Fixes
+
+- **builder:** update `@orama/*` packages to the stable ones ([7a3159f](https://github.com/ng-doc/ng-doc/commit/7a3159f5982841718d6e2e08f3b4bf12d961046a))
+- **builder:** update version of `rxjs` dependency which will install the latest version of `tslib` ([16fde16](https://github.com/ng-doc/ng-doc/commit/16fde16a5fcc1c4761b9dc78f3895be0d3225e3b))
+
+## [16.3.1](https://github.com/ng-doc/ng-doc/compare/v16.3.0...v16.3.1) (2023-05-29)
+
+### Bug Fixes
+
+- **app:** some icons are not displayed ([689b194](https://github.com/ng-doc/ng-doc/commit/689b1947fd5adcf6fa496e39f117a168cdde0353))
+
+# [16.3.0](https://github.com/ng-doc/ng-doc/compare/v16.2.1...v16.3.0) (2023-05-29)
+
+### Bug Fixes
+
+- **builder:** add missing dependencies ([cf7d42a](https://github.com/ng-doc/ng-doc/commit/cf7d42a768dffaabbc3a2d0ceda5974ec5f887eb))
 
 ### Features
 

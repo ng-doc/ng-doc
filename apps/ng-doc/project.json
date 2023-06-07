@@ -13,7 +13,6 @@
 				"index": "apps/ng-doc/src/index.html",
 				"main": "apps/ng-doc/src/main.ts",
 				"polyfills": "apps/ng-doc/src/polyfills.ts",
-				"tsConfig": "apps/ng-doc/tsconfig.build.json",
 				"inlineStyleLanguage": "scss",
 				"assets": [
 					"apps/ng-doc/src/assets",
@@ -39,6 +38,7 @@
 			},
 			"configurations": {
 				"production": {
+					"tsConfig": "apps/ng-doc/tsconfig.build.json",
 					"budgets": [
 						{
 							"type": "initial",
@@ -73,11 +73,11 @@
 			"defaultConfiguration": "production",
 			"dependsOn": [
 				{
-					"target": "link-core"
+					"target": "link-libs"
 				}
 			]
 		},
-		"link-core": {
+		"link-libs": {
 			"executor": "nx:run-commands",
 			"options": {
 				"commands": [
@@ -98,7 +98,8 @@
 			"executor": "./dist/libs/builder:dev-server",
 			"configurations": {
 				"production": {
-					"browserTarget": "ng-doc:build:production"
+					"browserTarget": "ng-doc:build:production",
+					"tsConfig": "apps/ng-doc/tsconfig.build.json"
 				},
 				"development": {
 					"browserTarget": "ng-doc:build:development"
@@ -107,7 +108,7 @@
 			"defaultConfiguration": "development",
 			"dependsOn": [
 				{
-					"target": "link-core"
+					"target": "link-libs"
 				}
 			]
 		},
@@ -125,7 +126,7 @@
 		},
 		"test": {
 			"executor": "@nx/jest:jest",
-			"outputs": ["coverage/apps/ng-doc"],
+			"outputs": ["{workspaceRoot}/coverage/apps/ng-doc"],
 			"options": {
 				"jestConfig": "apps/ng-doc/jest.config.ts",
 				"passWithNoTests": true

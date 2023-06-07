@@ -119,7 +119,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 			});
 	}
 
-	resize() {
+	resize(): void {
 		if (this.context) {
 			this.stageWidth = this.elementRef.nativeElement.offsetWidth;
 			this.stageHeight = this.elementRef.nativeElement.offsetHeight;
@@ -132,7 +132,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	animate() {
+	animate(): void {
 		this.animationId = window.requestAnimationFrame(this.animate.bind(this));
 
 		if (this.context) {
@@ -145,7 +145,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	setCompositionOperation(compositionOperation: GlobalCompositeOperation) {
+	setCompositionOperation(compositionOperation: GlobalCompositeOperation): void {
 		if (this.context) {
 			this.context.globalCompositeOperation = compositionOperation;
 		}
@@ -155,7 +155,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 		this.animationId && window.cancelAnimationFrame(this.animationId);
 	}
 
-	private createCircles() {
+	private createCircles(): void {
 		let currentColor = 0;
 		this.particles = [];
 

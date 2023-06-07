@@ -20,9 +20,10 @@ itself, for example:
 > field to specify the selectors that you want to see in your playground.
 
 > **Note**
-> If your target component is standalone, you don't need to import anything, NgDoc will care about it.
+> If your target component is standalone, you don't need to import anything, NgDoc will care about
+> it.
 
-```typescript fileName="ng-doc.dependencies.ts"
+```typescript fileName="ng-doc.page.ts"
 import {NgDocPage} from '@ng-doc/core';
 import {NgDocTagModule, NgDocTagComponent} from '@ng-doc/ui-kit';
 
@@ -87,10 +88,11 @@ optional, or you just want to make some content in the playground optional, to d
 the `content` field in your playground configuration, for example:
 
 > **Note**
-> If you provide some component in the `content` field, you must import its module in the `imports` field,
+> If you provide some component in the `content` field, you must import its module in the `imports`
+> field,
 > if this component is standalone, you must import its component class.
 
-```typescript fileName="ng-doc.dependencies.ts"
+```typescript fileName="ng-doc.page.ts"
 import {NgDocDependencies} from '@ng-doc/core';
 import {NgDocTagComponent, NgDocIconModule} from '@ng-doc/ui-kit';
 
@@ -127,7 +129,7 @@ content.
 To make your playgrounds more lively and dynamic you can use `data` field,
 and put any data you want in it, to use it in your template, for example like that:
 
-```typescript fileName="ng-doc.dependencies.ts"
+```typescript fileName="ng-doc.page.ts"
 import {NgDocDependencies} from '@ng-doc/core';
 import {NgDocTagComponent} from '@ng-doc/ui-kit';
 
@@ -148,6 +150,66 @@ export default PageDependencies;
 ```
 
 {{ NgDocActions.playground("TagDataPlayground") }}
+
+## Directives
+
+You can also create playgrounds for directives in the same way as for components:
+
+```typescript fileName="ng-doc.page.ts"
+import {NgDocPage} from '@ng-doc/core';
+import {NgDocRotatorDirective} from '@ng-doc/ui-kit';
+
+import {PageModule} from './ng-doc.module';
+
+const MyAwesomePage: NgDocPage = {
+  playgrounds: {
+    RotatorPlayground: {
+      // We don't import anything else, because `NgDocRotatorDirective` is standalone
+      target: NgDocRotatorDirective,
+      template: `<button ngDocRotator>Button</button>`,
+    },
+  },
+};
+
+export default MyAwesomePage;
+```
+
+{{ NgDocActions.playground("RotatorPlayground") }}
+
+## Pipes
+
+It's also possible to create playgrounds for pipes, let's say we have a simple `FormatDatePipe`:
+
+```typescript fileName="format-date.pipe.ts" file="./format-date.pipe.ts"
+
+```
+
+In the same way as for components and directives, you need to use the `target` field to specify the
+pipe class, and the `template` field to specify the template for the playground:
+
+> **Warning**
+> If your pipe has parameters, you must not provide values for them in the template, because NgDoc
+> will bind them to the playground controls.
+
+```typescript fileName="ng-doc.page.ts"
+import {NgDocPage} from '@ng-doc/core';
+import {FormatDatePipe} from './format-date.pipe';
+
+import {PageModule} from './ng-doc.module';
+
+const MyAwesomePage: NgDocPage = {
+  playgrounds: {
+    DatePipePlayground: {
+      target: FormatDatePipe,
+      template: `{{ "{{'2023-06-05T08:00:00.000Z' | formatDate}}" | safe }}`,
+    },
+  },
+};
+
+export default MyAwesomePage;
+```
+
+{{ NgDocActions.playground("DatePipePlayground") }}
 
 {% index false %}
 
