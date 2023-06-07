@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import {finalize, mergeMap, Observable, of} from 'rxjs';
+import {combineLatestWith, finalize, from, mergeMap, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Project} from 'ts-morph';
 
@@ -33,7 +33,7 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 	// Set global variables
 	GLOBALS.workspaceRoot = context.context.workspaceRoot;
 
-	const store: NgDocEntityStore = new NgDocEntityStore();
+	const store: NgDocEntityStore = new NgDocEntityStore(context.config);
 	const cache: NgDocCache = new NgDocCache(!!context.config?.cache);
 	const project: Project = createProject({tsConfigFilePath: context.tsConfig});
 
@@ -64,6 +64,8 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 
 	// The main build cycle
 	return entityEmitter(store, cache, context, project, watcher).pipe(
+		combineLatestWith(from(store.loadGlobalKeywords())),
+		map(([entities]) => entities),
 		mergeMap((entities: NgDocEntity[]) =>
 			of(entities).pipe(
 				task('Updating source files...', refresh()),
