@@ -1,3 +1,10 @@
+## [16.4.3](https://github.com/ng-doc/ng-doc/compare/v16.4.2...v16.4.3) (2023-06-07)
+
+
+### Bug Fixes
+
+* **builder:** application `build` command doesn't exit ([7928134](https://github.com/ng-doc/ng-doc/commit/79281347a43ee998d44796fa285fbc924eee548d)), closes [#64](https://github.com/ng-doc/ng-doc/issues/64)
+
 ## [16.4.2](https://github.com/ng-doc/ng-doc/compare/v16.4.1...v16.4.2) (2023-06-06)
 
 
