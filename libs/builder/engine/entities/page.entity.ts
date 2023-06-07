@@ -29,7 +29,7 @@ import {NgDocActions} from '../actions';
 import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
-import {CachedEntity} from './cache/decorators';
+import {CachedEntity, CachedFilesGetter} from './cache/decorators';
 import {NgDocCategoryEntity} from './category.entity';
 
 @CachedEntity()
@@ -123,6 +123,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, 'assets'));
 	}
 
+	@CachedFilesGetter()
 	get demoAssetsPath(): string {
 		return path.join(this.folderPath, 'component-assets.ts');
 	}
@@ -135,6 +136,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return this.assets.length ? this.demoAssetsImport : undefined;
 	}
 
+	@CachedFilesGetter()
 	get playgroundsPath(): string {
 		return path.join(this.folderPath, 'playgrounds.ts');
 	}
