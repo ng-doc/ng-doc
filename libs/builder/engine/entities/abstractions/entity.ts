@@ -184,10 +184,13 @@ export abstract class NgDocEntity {
 
 		return this.buildImpl().pipe(
 			tap({
-				next: () => this.cache.cache(this),
 				error: (e: Error) => this.errors.push(e),
 			}),
 		);
+	}
+
+	updateCache(): void {
+		this.cache.cache(this);
 	}
 
 	removeArtifacts(): void {

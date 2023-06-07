@@ -7,7 +7,16 @@ import {Project} from 'ts-morph';
 import {createProject, printProgress} from '../helpers';
 import {NgDocBuilderContext} from '../interfaces';
 import {progress} from '../operators';
-import {addBuildCandidates, build, collectGarbage, compile, emit, load, refresh} from './builder-operators';
+import {
+	addBuildCandidates,
+	build,
+	collectGarbage,
+	compile,
+	emit,
+	load,
+	refresh,
+	updateCache,
+} from './builder-operators';
 import {dependencyChanges} from './builder-operators/dependency-changes';
 import {postProcess} from './builder-operators/post-process';
 import {printOutput} from './builder-operators/print-output';
@@ -77,6 +86,7 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 				collectGarbage(store),
 			),
 		),
+		updateCache(store),
 		printOutput(store),
 		map(() => void 0),
 		finalize(() => watcher.close()),

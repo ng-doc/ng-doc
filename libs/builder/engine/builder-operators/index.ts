@@ -6,3 +6,4 @@ export * from './emit';
 export * from './load';
 export * from './refresh';
 export * from './task';
+export * from './update-cache';
