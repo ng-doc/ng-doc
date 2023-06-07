@@ -1,3 +1,15 @@
+## [16.4.3-beta.1](https://github.com/ng-doc/ng-doc/compare/v16.4.2...v16.4.3-beta.1) (2023-06-07)
+
+
+### Bug Fixes
+
+* **builder:** application `build` command doesn't exit ([7928134](https://github.com/ng-doc/ng-doc/commit/79281347a43ee998d44796fa285fbc924eee548d)), closes [#64](https://github.com/ng-doc/ng-doc/issues/64)
+* **builder:** the cache is not invalidated after removing `.ng-doc` folder ([c20e479](https://github.com/ng-doc/ng-doc/commit/c20e479af6e8ad3dc23382b4a3942f54063d7714))
+* **ng-doc:** `ng-doc` doesn't forget pages that have been moved to another directory ([c433a10](https://github.com/ng-doc/ng-doc/commit/c433a1007d07716833de2a987f9be63c7dc73a7a))
+* **ng-doc:** release trigger ([e7ac592](https://github.com/ng-doc/ng-doc/commit/e7ac592fc2f5ddadceb6633d13d6a3790b4eeb00))
+* **project:** dependency injection error after update to 15.10.0 ([cc41f44](https://github.com/ng-doc/ng-doc/commit/cc41f448054d73b9961f8a7be7689b4195a23c1f))
+* **semantic-release:** bump version ([d0f1862](https://github.com/ng-doc/ng-doc/commit/d0f18629d1d99afbf4f8ba5a34db227a05a84bbc))
+
 ## [16.4.2](https://github.com/ng-doc/ng-doc/compare/v16.4.1...v16.4.2) (2023-06-06)
 
 ### Bug Fixes
