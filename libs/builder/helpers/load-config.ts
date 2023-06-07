@@ -16,7 +16,7 @@ export function loadConfig(searchFrom: string): [string, NgDocConfiguration] {
 		searchPlaces: [`${moduleName}.config.ts`],
 		loaders: {
 			'.ts': TypeScriptLoader({
-				swc: true
+				swc: true,
 			}),
 		},
 	});

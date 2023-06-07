@@ -1,5 +1,5 @@
-import {NgDocConfiguration, NgDocEntityKeyword, NgDocKeywordLoader} from '@ng-doc/builder';
-import {asArray, NgDocGlobalKeyword, NgDocKeyword, objectKeys} from '@ng-doc/core';
+import {NgDocConfiguration, NgDocEntityKeyword} from '@ng-doc/builder';
+import {asArray, NgDocGlobalKeyword, NgDocKeyword, NgDocKeywordsLoader, objectKeys} from '@ng-doc/core';
 
 import {getKeywordTypeFromEntity, isApiPageEntity, isRouteEntity} from '../helpers';
 import {NgDocEntity} from './entities/abstractions/entity';
@@ -37,29 +37,24 @@ export class NgDocEntityStore extends Map<string, NgDocEntity> {
 	}
 
 	async loadGlobalKeywords(): Promise<void> {
-		const keywordLoaders: NgDocKeywordLoader[] = asArray(this.config?.keywordLoaders);
+		const keywordLoaders: NgDocKeywordsLoader[] = asArray(this.config?.keywordsLoaders);
 		const keywords: Array<Record<string, NgDocGlobalKeyword>> = await Promise.all(
-			keywordLoaders.map((loader: NgDocKeywordLoader) => loader()),
+			keywordLoaders.map((loader: NgDocKeywordsLoader) => loader()),
 		);
 
-		keywords.forEach((keywords: Record<string, NgDocGlobalKeyword>) => {
+		keywords.concat(this.config?.keywords ?? {}).forEach((keywords: Record<string, NgDocGlobalKeyword>) => {
 			objectKeys(keywords).forEach((key: string) => {
-				const globalKeyword: NgDocGlobalKeyword | undefined = keywords[key];
+				const keyword: NgDocGlobalKeyword | undefined = keywords[key];
 
-				if (globalKeyword) {
-					this.globalKeywords.set(key, this.globalKeywordToKeyword(globalKeyword));
+				if (keyword) {
+					this.globalKeywords.set(key, {
+						title: keyword.title ?? key,
+						path: keyword.url,
+						description: keyword.description,
+						isCodeLink: !!keyword.isCodeLink,
+					});
 				}
 			});
-		})
-
-		objectKeys(this.config?.keywords ?? {}).forEach((key: string) => {
-			if (this.config?.keywords) {
-				const globalKeyword: NgDocGlobalKeyword | undefined = this.config?.keywords[key];
-
-				if (globalKeyword) {
-					this.globalKeywords.set(key, this.globalKeywordToKeyword(globalKeyword));
-				}
-			}
 		});
 	}
 
@@ -86,13 +81,5 @@ export class NgDocEntityStore extends Map<string, NgDocEntity> {
 
 	private addKeyword(key: string, keyword: NgDocKeyword): void {
 		this.keywordMap.set(key, [...asArray(this.keywordMap.get(key)), keyword]);
-	}
-
-	private globalKeywordToKeyword(keyword: NgDocGlobalKeyword): NgDocKeyword {
-		return {
-			title: keyword.title ?? keyword.path,
-			path: keyword.path,
-			isCodeLink: !!keyword.isCodeLink,
-		};
 	}
 }

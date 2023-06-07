@@ -1,7 +1,6 @@
-import {NgDocHeading} from '@ng-doc/core';
+import {NgDocHeading, NgDocKeywordsLoader} from '@ng-doc/core';
 import {NgDocGlobalKeyword} from '@ng-doc/core/interfaces/keyword-map';
 
-import {NgDocKeywordLoader} from '../types';
 import {NgDocRepoConfig} from './repo-config';
 
 /**
@@ -29,7 +28,7 @@ export interface NgDocConfiguration {
 	/**
 	 * List of async loaders that will be used to load the global keywords.
 	 */
-	keywordLoaders?: NgDocKeywordLoader[];
+	keywordsLoaders?: NgDocKeywordsLoader[];
 	/**
 	 * List of the global keywords, to create link to foreign websites
 	 */

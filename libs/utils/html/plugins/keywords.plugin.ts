@@ -64,8 +64,8 @@ function getNodes(
 	inlineLink: boolean,
 	config: NgDocHtmlPostProcessorConfig,
 ): Array<Element | Text> {
-	const KeywordRegExp: RegExp = /([A-Za-z0-9_\-*]+[.#]?[A-Za-z0-9_\-*$]+)/g;
-	const keywordAnchorRegexp: RegExp = /^(?<keyword>[A-Za-z0-9_\-*]+)((?<delimiter>[.#])(?<anchor>[A-Za-z0-9_\-*$]+))?$/;
+	const KeywordRegExp: RegExp = /([*A-Za-z0-9_$@]+[.#]?[A-Za-z0-9_-]+)/g;
+	const keywordAnchorRegexp: RegExp = /^(?<keyword>[*A-Za-z0-9_$@]+)((?<delimiter>[.#])(?<anchor>[A-Za-z0-9_-]+))?$/;
 	const {addUsedKeyword, addPotentialKeyword, getKeyword, raiseError} = config;
 
 	if (!getKeyword || !addUsedKeyword || !addPotentialKeyword) {
@@ -109,7 +109,7 @@ function getNodes(
 
 			// Add link inside the code if it's a link to the API entity
 			return keyword
-				? createLinkNode(inlineLink ? keyword.title : word, keyword.path, keyword.type)
+				? createLinkNode(inlineLink ? keyword.title : word, keyword.path, keyword.type, keyword.description)
 				: {type: 'text', value: word};
 		});
 }
@@ -119,13 +119,18 @@ function getNodes(
  * @param text
  * @param href
  * @param type
- * @param anchor
+ * @param description
  */
-function createLinkNode(text: string, href: string, type?: string): Element {
+function createLinkNode(text: string, href: string, type?: string, description?: string): Element {
 	return {
 		type: 'element',
 		tagName: 'a',
-		properties: {href: href, class: ['ng-doc-code-anchor', NG_DOC_ELEMENT], 'data-link-type': type},
+		properties: {
+			href: href,
+			class: ['ng-doc-code-anchor', NG_DOC_ELEMENT],
+			'data-link-type': type,
+			ngDocTooltip: description,
+		},
 		children: [{type: 'text', value: text}],
 	};
 }

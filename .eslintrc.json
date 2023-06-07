@@ -40,6 +40,10 @@
 							{
 								"sourceTag": "lib:utils",
 								"onlyDependOnLibsWithTags": ["lib:core"]
+							},
+							{
+								"sourceTag": "lib:keywords-loaders",
+								"onlyDependOnLibsWithTags": ["lib:core"]
 							}
 						]
 					}

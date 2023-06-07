@@ -48,6 +48,7 @@
 
 .ng-doc-node-details {
 	@include ng-doc-font();
+	--ng-doc-code-line-height: var(--ng-doc-line-height);
 
 	--ng-doc-font-size: 14px;
 	--ng-doc-text: var(--ng-doc-text-muted);

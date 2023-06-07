@@ -1,4 +1,5 @@
 import {NgDocConfiguration} from '@ng-doc/builder';
+import {ngKeywordsLoader} from '@ng-doc/keywords-loaders';
 
 const NgDocConfig: NgDocConfiguration = {
 	angularBuilder: 'webpack',
@@ -10,29 +11,30 @@ const NgDocConfig: NgDocConfiguration = {
 		mainBranch: 'main',
 		releaseBranch: 'release',
 	},
+	keywordsLoaders: [ngKeywordsLoader()],
 	keywords: {
 		nunjucks: {
-			path: 'https://mozilla.github.io/nunjucks/',
+			url: 'https://mozilla.github.io/nunjucks/',
 		},
 		tsdoc: {
 			title: 'TsDoc',
-			path: 'https://tsdoc.org/',
+			url: 'https://tsdoc.org/',
 		},
 		highlightjs: {
 			title: 'highlight.js',
-			path: 'https://highlightjs.org/',
+			url: 'https://highlightjs.org/',
 		},
 		githubSlugger: {
 			title: 'github-slugger',
-			path: 'https://github.com/Flet/github-slugger',
+			url: 'https://github.com/Flet/github-slugger',
 		},
 		ngDocFeatureRequest: {
 			title: 'NgDoc Feature Request',
-			path: 'https://github.com/ng-doc/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Enhancement&template=feature_request.yaml&title=%5BFeature%5D+',
+			url: 'https://github.com/ng-doc/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Enhancement&template=feature_request.yaml&title=%5BFeature%5D+',
 		},
 		ngDocBugReport: {
 			title: 'NgDoc Bug Report',
-			path: 'https://github.com/ng-doc/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Bug&projects=&template=bug_report.yaml&title=%5BBug%5D+',
+			url: 'https://github.com/ng-doc/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Bug&projects=&template=bug_report.yaml&title=%5BBug%5D+',
 		},
 	},
 	guide: {
