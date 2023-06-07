@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import {mergeMap, Observable, of} from 'rxjs';
+import {finalize, mergeMap, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Project} from 'ts-morph';
 
@@ -79,6 +79,7 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 		),
 		printOutput(store),
 		map(() => void 0),
+		finalize(() => watcher.close()),
 		progress(),
 	);
 }
