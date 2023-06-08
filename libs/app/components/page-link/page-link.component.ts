@@ -31,7 +31,7 @@ export class NgDocPageLinkComponent implements OnInit {
 	}
 
 	get path(): string {
-		return this.href.split('#')[0];
+		return !this.isExternalLink ? this.href.split('#')[0] : this.href;
 	}
 
 	get fragment(): string {
