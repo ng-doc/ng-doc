@@ -13,12 +13,14 @@ export function ifNotCachedOrInvalid(cache: NgDocCache, store: NgDocEntityStore)
 	return (entity: NgDocEntity) => {
 		const cacheIsInvalid: boolean = !cache.isCacheValid(entity);
 
-		const keywordIsMissing: boolean = asArray(entity.usedKeywords)
-			.some((keyword: string) => !store.getByKeyword(keyword));
+		const keywordIsMissing: boolean = asArray(entity.usedKeywords).some(
+			(keyword: string) => !store.getByKeyword(keyword),
+		);
 
-		const keywordAppears: boolean = asArray(entity.potentialKeywords)
-			.some((keyword: string) => !!store.getByKeyword(keyword));
+		const keywordAppears: boolean = asArray(entity.potentialKeywords).some(
+			(keyword: string) => !!store.getByKeyword(keyword),
+		);
 
 		return cacheIsInvalid || keywordIsMissing || keywordAppears;
-	}
+	};
 }

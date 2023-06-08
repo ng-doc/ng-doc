@@ -9,10 +9,12 @@ type AsArrayType<T> = T | T[] | Iterable<T> | null | undefined;
  * @param {...any} items
  */
 export function asArray<T>(...items: Array<AsArrayType<T>>): T[] {
-	return items.map((data: AsArrayType<T>) => {
-		if (!isPresent(data)) {
-			return [];
-		}
-		return Array.isArray(data) ? data : isIterable(data) ? Array.from(data) : [data];
-	}).flat()
+	return items
+		.map((data: AsArrayType<T>) => {
+			if (!isPresent(data)) {
+				return [];
+			}
+			return Array.isArray(data) ? data : isIterable(data) ? Array.from(data) : [data];
+		})
+		.flat();
 }
