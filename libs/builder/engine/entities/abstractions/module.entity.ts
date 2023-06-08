@@ -1,6 +1,7 @@
 import * as path from 'path';
 
 import {slash} from '../../../helpers';
+import {CachedFilesGetter} from '../cache';
 import {NgDocFileEntity} from './file.entity';
 
 export abstract class NgDocModuleEntity<T> extends NgDocFileEntity<T> {
@@ -25,6 +26,7 @@ export abstract class NgDocModuleEntity<T> extends NgDocFileEntity<T> {
 	 *
 	 * @type {string}
 	 */
+	@CachedFilesGetter()
 	get modulePath(): string {
 		return path.join(this.folderPath, this.moduleFileName);
 	}
