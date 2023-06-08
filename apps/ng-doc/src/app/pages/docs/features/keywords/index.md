@@ -101,12 +101,12 @@ API's member.
 > any case you want.
 
 ```markdown fileName="index.md"
-### Page anchors
+**Page anchors**
 
 - Link to the section in guides - `*GettingStartedInstallation#Manual`
 - Link to the section in guides - `*GettingStartedInstallation#Automatic-Recommended`
 
-### API anchors
+**API anchors**
 
 - Link to the "Properties" section in the API - `NgDocBaseInput#Properties`
 - Link to the specific property in the API - `NgDocBaseInput.ngControl`
@@ -117,12 +117,12 @@ API's member.
 - Link to the method in the API - `NgDocBaseInput.focus`
 ```
 
-### Page anchors
+**Page anchors**
 
 - Link to the section in guides - `*GettingStartedInstallation#Manual`
 - Link to the section in guides - `*GettingStartedInstallation#Automatic-Recommended`
 
-### API anchors
+**API anchors**
 
 - Link to the "Properties" section in the API - `NgDocBaseInput#Properties`
 - Link to the specific property in the API - `NgDocBaseInput.ngControl`
@@ -136,28 +136,32 @@ API's member.
 
 There are two types of keywords: **Page** keywords and **API** keywords.
 
-**Page keyword**:
+#### Page keyword
 
 - Can be used to create links to other pages (**Guides**).
 - Always **start with asterisk** (`*`).
 - **Cannot** be used to create links to API pages of internal documentation.
 - The keyword used is **mandatory** - if the keyword is unknown, the builder will throw a warning.
 - The keyword of the Page and its Anchor are concatenated with a hash (`#`).
-- The Page's Anchor **is not** case-sensitive.
+- The Anchor **is not** case-sensitive.
 
-**API keyword**:
+#### API keyword
 
 - Can be used to create links to **API pages** of **internal** documentation.
 - Has **no prefix**.
 - **Cannot be** used to create links to other pages (Guides).
 - The keyword is an API **declaration** name.
 - The Anchor is a declaration's **member** name.
-- The Anchor **is case-sensitive**.
+- The Anchor **is case-sensitive** if it's a member name.
 - The Anchor for **getters** and **setters** should be prefixed with `get-` or `set-`.
 - The builder **doesn't throw** a warning if the keyword is unknown.
 - The builder **does throw** a warning if it knows the keyword, but its Anchor is unknown.
+- The Anchor can be used to link section of the API page:
+  - Always **start with asterisk** (`*`).
+  - The keyword of the API Page and its Anchor are concatenated with a hash (`#`).
+  - The Anchor **is not** case-sensitive.
 
-**Global keyword**:
+#### Global keyword
 
 - Can be used to create links to **external** documentation.
 - Can be defined in the **configuration file**.

@@ -12,30 +12,32 @@ const NgDocConfig: NgDocConfiguration = {
 		mainBranch: 'main',
 		releaseBranch: 'release',
 	},
-	keywordsLoaders: [ngKeywordsLoader()],
 	keywords: {
-		nunjucks: {
-			url: 'https://mozilla.github.io/nunjucks/',
-		},
-		tsdoc: {
-			title: 'TsDoc',
-			url: 'https://tsdoc.org/',
-		},
-		highlightjs: {
-			title: 'highlight.js',
-			url: 'https://highlightjs.org/',
-		},
-		githubSlugger: {
-			title: 'github-slugger',
-			url: 'https://github.com/Flet/github-slugger',
-		},
-		ngDocFeatureRequest: {
-			title: 'NgDoc Feature Request',
-			url: 'https://github.com/ng-doc/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Enhancement&template=feature_request.yaml&title=%5BFeature%5D+',
-		},
-		ngDocBugReport: {
-			title: 'NgDoc Bug Report',
-			url: 'https://github.com/ng-doc/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Bug&projects=&template=bug_report.yaml&title=%5BBug%5D+',
+		loaders: [ngKeywordsLoader()],
+		keywords: {
+			nunjucks: {
+				url: 'https://mozilla.github.io/nunjucks/',
+			},
+			tsdoc: {
+				title: 'TsDoc',
+				url: 'https://tsdoc.org/',
+			},
+			highlightjs: {
+				title: 'highlight.js',
+				url: 'https://highlightjs.org/',
+			},
+			githubSlugger: {
+				title: 'github-slugger',
+				url: 'https://github.com/Flet/github-slugger',
+			},
+			ngDocFeatureRequest: {
+				title: 'NgDoc Feature Request',
+				url: 'https://github.com/ng-doc/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Enhancement&template=feature_request.yaml&title=%5BFeature%5D+',
+			},
+			ngDocBugReport: {
+				title: 'NgDoc Bug Report',
+				url: 'https://github.com/ng-doc/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Bug&projects=&template=bug_report.yaml&title=%5BBug%5D+',
+			},
 		},
 	},
 	guide: {
