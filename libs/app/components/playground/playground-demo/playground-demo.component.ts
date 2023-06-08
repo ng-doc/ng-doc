@@ -26,7 +26,7 @@ import {objectKeys} from '@ng-doc/core/helpers/object-keys';
 import {NgDocPlaygroundConfig, NgDocPlaygroundProperties, NgDocPlaygroundProperty} from '@ng-doc/core/interfaces';
 import {NgDocExtractedValue} from '@ng-doc/core/types';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {Observable, of, Subject} from 'rxjs';
+import {from,Observable, of, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
 
 import {NgDocBasePlayground} from '../base-playground';
@@ -140,7 +140,7 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 					this.getActiveInputs(),
 			  );
 
-		this.code = formatHtml(template);
+		this.code = from(formatHtml(template));
 	}
 
 	private getActiveContent(): Record<string, string> {
