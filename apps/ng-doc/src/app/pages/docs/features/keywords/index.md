@@ -7,7 +7,7 @@ as a result, mentions of certain entities or pages will turn into links automati
 > Keywords are case-sensitive and only support PascalCase, so if you want to create a link to
 > an entity you must specify the correct case of the entity name.
 
-## Auto-Generated keywords
+## API keywords
 
 NgDoc automatically generates keywords for all declarations specified in `ng-doc.api.ts` (
 see `*EntitiesAPI` for how to create it), for example, if you have a class declaration that's called
@@ -59,7 +59,11 @@ Link to the page: `*MyCustomKeyword`
 
 ## Global keywords
 
-Sometimes it is necessary to create links to third-party documentation or just to other sites,
+> **Note**
+> You can also load keywords from external sources, you can read about it in the
+> `*FeaturesKeywordsLoaders` article.
+
+Sometimes it is necessary to create links to third-party documentation or just to other web-sites,
 to create such links you can use global keywords that can be declared in the configuration file,
 you can read about it in the `*GettingStartedConfiguration` article.
 
@@ -68,8 +72,10 @@ import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
   keywords: {
-    google: {
-      path: 'https://google.com/',
+    keywords: {
+      google: {
+        path: 'https://google.com/',
+      },
     },
   },
 };
@@ -95,12 +101,12 @@ API's member.
 > any case you want.
 
 ```markdown fileName="index.md"
-### Guide's anchors
+### Page anchors
 
 - Link to the section in guides - `*GettingStartedInstallation#Manual`
 - Link to the section in guides - `*GettingStartedInstallation#Automatic-Recommended`
 
-### API's anchors
+### API anchors
 
 - Link to the "Properties" section in the API - `NgDocBaseInput#Properties`
 - Link to the specific property in the API - `NgDocBaseInput.ngControl`
@@ -111,12 +117,12 @@ API's member.
 - Link to the method in the API - `NgDocBaseInput.focus`
 ```
 
-### Guide's anchors
+### Page anchors
 
 - Link to the section in guides - `*GettingStartedInstallation#Manual`
 - Link to the section in guides - `*GettingStartedInstallation#Automatic-Recommended`
 
-### API's anchors
+### API anchors
 
 - Link to the "Properties" section in the API - `NgDocBaseInput#Properties`
 - Link to the specific property in the API - `NgDocBaseInput.ngControl`
@@ -125,6 +131,38 @@ API's member.
 - Link to the getter in the API - `NgDocBaseInput.get-disabled`
 - Link to the setter in the API - `NgDocBaseInput.set-disabled`
 - Link to the method in the API - `NgDocBaseInput.focus`
+
+## Definitions of keywords
+
+There are two types of keywords: **Page** keywords and **API** keywords.
+
+**Page keyword**:
+
+- Can be used to create links to other pages (**Guides**).
+- Always **start with asterisk** (`*`).
+- **Cannot** be used to create links to API pages of internal documentation.
+- The keyword used is **mandatory** - if the keyword is unknown, the builder will throw a warning.
+- The keyword of the Page and its Anchor are concatenated with a hash (`#`).
+- The Page's Anchor **is not** case-sensitive.
+
+**API keyword**:
+
+- Can be used to create links to **API pages** of **internal** documentation.
+- Has **no prefix**.
+- **Cannot be** used to create links to other pages (Guides).
+- The keyword is an API **declaration** name.
+- The Anchor is a declaration's **member** name.
+- The Anchor **is case-sensitive**.
+- The Anchor for **getters** and **setters** should be prefixed with `get-` or `set-`.
+- The builder **doesn't throw** a warning if the keyword is unknown.
+- The builder **does throw** a warning if it knows the keyword, but its Anchor is unknown.
+
+**Global keyword**:
+
+- Can be used to create links to **external** documentation.
+- Can be defined in the **configuration file**.
+- It can be either a **Page** keyword or an **API** keyword.
+- It **inherits** the rules of the keyword type it is defined as.
 
 ## See also
 

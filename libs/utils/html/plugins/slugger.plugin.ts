@@ -6,6 +6,8 @@ import {headingRank} from 'hast-util-heading-rank';
 import {toString} from 'hast-util-to-string';
 import {visit} from 'unist-util-visit';
 
+import {attrValue} from '../helpers';
+
 /**
  *
  * @param tree
@@ -14,7 +16,7 @@ import {visit} from 'unist-util-visit';
  */
 export default function sluggerPlugin(addAnchor: (anchor: NgDocEntityAnchor) => void, headings?: NgDocHeading[]) {
 	headings = headings || ['h1', 'h2', 'h3', 'h4'];
-	const slugger = new GithubSlugger();
+	const slugger: GithubSlugger = new GithubSlugger();
 
 	return (tree: Root) => {
 		slugger.reset();
@@ -22,29 +24,23 @@ export default function sluggerPlugin(addAnchor: (anchor: NgDocEntityAnchor) => 
 		visit(tree, 'element', (node: Element) => {
 			const isHeading =
 				headingRank(node) && !hasProperty(node, 'id') && headings?.includes(node.tagName.toLowerCase() as NgDocHeading);
-			const isSlugAttribute = hasProperty(node, 'dataslug');
+			const attrSlug: string | undefined = attrValue(node, 'dataSlug');
+			const attrSlugTitle: string | undefined = attrValue(node, 'dataSlugTitle');
+			const attrSlugType: string | undefined = attrValue(node, 'dataSlugType');
 
-			const dataToSlug: string | undefined = isHeading
-				? toString(node)
-				: isSlugAttribute
-				? String(node.properties?.['dataslug'])
-				: undefined;
+			const dataToSlug: string | undefined = isHeading ? toString(node) : attrSlug;
 
 			if (dataToSlug) {
 				if (node.properties) {
-					const slug: string = slugger.slug(dataToSlug);
-					const slugTitle: string | undefined = node.properties?.['dataslugtitle']
-						? String(node.properties['dataslugtitle'])
-						: undefined;
+					const id: string = attrSlug && attrSlugType === 'member' ? attrSlug : slugger.slug(dataToSlug);
 
-					node.properties['id'] = slug;
+					node.properties['id'] = id;
 
 					addAnchor({
-						anchor: slug,
-						title: slugTitle || dataToSlug,
+						anchor: id,
+						title: attrSlugTitle || dataToSlug,
 						type:
-							(isHeading && node.properties?.['dataslugtype'] !== 'member') ||
-							(isSlugAttribute && node.properties?.['dataslugtype'] === 'heading')
+							(isHeading && attrSlugType !== 'member') || (attrSlug && attrSlugType === 'heading')
 								? 'heading'
 								: 'member',
 					});

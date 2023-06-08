@@ -77,13 +77,8 @@ function getNodes(
 		.filter((word: string) => word.length)
 		.map((word: string) => {
 			const match: RegExpMatchArray | null = word.match(keywordAnchorRegexp);
-			const formattedWord: string = match
-				? `${match.groups?.['keyword']}${match.groups?.['delimiter'] || ''}${
-						match.groups?.['anchor']?.toLowerCase() || ''
-				  }`
-				: word;
 
-			const keyword: NgDocKeyword | undefined = getKeyword(formattedWord);
+			const keyword: NgDocKeyword | undefined = getKeyword(word);
 			const rootKeyword: NgDocKeyword | undefined = getKeyword(match?.groups?.['keyword'] || '');
 
 			if (keywordAnchorRegexp.test(word)) {

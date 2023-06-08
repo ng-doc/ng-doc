@@ -26,13 +26,9 @@ export interface NgDocConfiguration {
 	 */
 	routePrefix?: string;
 	/**
-	 * List of async loaders that will be used to load the global keywords.
+	 * The configuration for the global keywords.
 	 */
-	keywordsLoaders?: NgDocKeywordsLoader[];
-	/**
-	 * List of the global keywords, to create link to foreign websites
-	 */
-	keywords?: Record<string, NgDocGlobalKeyword>;
+	keywords?: NgDocKeywordsConfiguration;
 	/**
 	 * The repository configuration.
 	 * If it is defined, Ngoc will use it to display the "Suggest edits" button, and "View source" button, on each page.
@@ -42,7 +38,6 @@ export interface NgDocConfiguration {
 	 * The path to the tsconfig file (NgDoc uses tsconfig of your application by default, but you can override it)
 	 */
 	tsConfig?: string;
-
 	/**
 	 * The configuration for the guides
 	 */
@@ -63,4 +58,18 @@ export interface NgDocGuideConfiguration {
 	 * then you should add `fs` to this list, to make sure that the `fs` package will be available in the guide.
 	 */
 	externalPackages?: string[];
+}
+
+/**
+ * The configuration for the global keywords.
+ */
+export interface NgDocKeywordsConfiguration {
+	/**
+	 * List of async loaders that will be used to load the global keywords.
+	 */
+	loaders?: NgDocKeywordsLoader[];
+	/**
+	 * List of the global keywords, to create link to foreign websites
+	 */
+	keywords?: Record<string, NgDocGlobalKeyword>;
 }

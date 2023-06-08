@@ -23,6 +23,7 @@ export * from './get-page-type';
 export * from './import-es-module';
 export * from './is-not-excluded-path';
 export * from './is-supported-declaration';
+export * from './keyword-key';
 export * from './marked';
 export * from './mini-pattern';
 export * from './no-empty';
