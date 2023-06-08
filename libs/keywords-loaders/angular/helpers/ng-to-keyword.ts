@@ -14,7 +14,7 @@ export function ngPageToKeyword(page: NgPage, version?: NgVersion): Array<[strin
 	const path: string = `${getNgHost(version)}/${page.path}`;
 	const isCodeLink: boolean = ngApiPageTypes.includes(page.type);
 	const key: string = isCodeLink ? page.title : page.title.replace(/\n/g, '');
-	const description: string = `External link to the "${page.title}" page in the Angular documentation.`;
+	const description: string = `External link the Angular documentation.`;
 
 	switch (page.type) {
 		case 'decorator':
