@@ -190,7 +190,9 @@ export abstract class NgDocEntity {
 	}
 
 	updateCache(): void {
-		this.cache.cache(this);
+		if (this.isReadyForBuild && !this.warnings.length) {
+			this.cache.cache(this);
+		}
 	}
 
 	removeArtifacts(): void {
