@@ -23,6 +23,11 @@ export const api: NgDocApi = {
       route: 'core',
       include: 'libs/core/**/*.ts',
     },
+    {
+      name: '@ng-doc/keywords-loaders',
+      route: 'keywords-loaders',
+      include: 'libs/keywords-loaders/index.ts',
+    },
   ],
 };
 

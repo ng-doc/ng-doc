@@ -105,6 +105,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return `${this.parent ? this.parent.url + '/' : ''}${this.route}`;
 	}
 
+	@CachedFilesGetter()
 	get mdPath(): string {
 		return path.join(this.sourceFileFolder, this.target?.mdFile ?? '');
 	}

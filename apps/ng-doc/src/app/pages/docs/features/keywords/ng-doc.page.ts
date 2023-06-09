@@ -7,6 +7,7 @@ const KeywordsPage: NgDocPage = {
   mdFile: './index.md',
   category: FeaturesCategory,
   keyword: 'FeaturesKeywords',
+  order: 2,
 };
 
 export default KeywordsPage;

@@ -48,9 +48,16 @@ import {
 		NgDocIconComponent,
 		NgDocBlockquoteProcessorDirective,
 		NgDocIconProcessorDirective,
+		/**
+		 * The order of the directives is important.
+		 * The higher the directive is in the list, the later it will be run.
+		 *
+		 * So here we want to render demos first, after that we want to render links
+		 * and bind tooltips to them.
+		 */
+		NgDocTooltipProcessorDirective,
 		NgDocLinkProcessorDirective,
 		NgDocCodeProcessorDirective,
-		NgDocTooltipProcessorDirective,
 		NgDocDemoProcessorDirective,
 		NgDocDemoPaneProcessorDirective,
 		NgDocPlaygroundProcessorDirective,

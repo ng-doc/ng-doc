@@ -3,6 +3,7 @@ import {NgIf} from '@angular/common';
 import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input} from '@angular/core';
 import {NgDocSanitizeHtmlPipe} from '@ng-doc/app/pipes/sanitize-html';
 import {NgDocLinkProcessorDirective} from '@ng-doc/app/processors/link-processor';
+import {NgDocTooltipProcessorDirective} from '@ng-doc/app/processors/tooltip-processor';
 import {
 	NgDocButtonIconComponent,
 	NgDocIconComponent,
@@ -20,12 +21,13 @@ import {
 	imports: [
 		NgIf,
 		NgDocTextComponent,
-		NgDocLinkProcessorDirective,
 		NgDocButtonIconComponent,
 		NgDocTooltipDirective,
 		NgDocSmoothResizeComponent,
 		NgDocIconComponent,
 		NgDocSanitizeHtmlPipe,
+		NgDocTooltipProcessorDirective,
+		NgDocLinkProcessorDirective,
 	],
 })
 export class NgDocCodeComponent {

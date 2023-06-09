@@ -2,7 +2,6 @@ import {ConnectedOverlayPositionChange, FlexibleConnectedPositionStrategy, Overl
 import {Location} from '@angular/common';
 import {NgZone} from '@angular/core';
 import {Event, NavigationEnd, Router} from '@angular/router';
-import {EMPTY_OBSERVABLE} from '@ng-doc/core/constants/empty';
 import {isPresent} from '@ng-doc/core/helpers/is-present';
 import {toElement} from '@ng-doc/ui-kit/helpers';
 import {NgDocOverlayConfig, NgDocOverlayContainer} from '@ng-doc/ui-kit/interfaces';
@@ -27,9 +26,7 @@ export class NgDocOverlayRef<T = unknown> {
 		this.afterOpen()
 			.pipe(
 				switchMap(() => this.ngZone.runOutsideAngular(() => this.overlayRef.outsidePointerEvents())),
-				filter(
-					(event: MouseEvent) => !!this.overlayConfig.closeIfOutsideClick && this.outsideClickChecker(event),
-				),
+				filter((event: MouseEvent) => !!this.overlayConfig.closeIfOutsideClick && this.outsideClickChecker(event)),
 				ngDocZoneOptimize(this.ngZone),
 			)
 			.subscribe(() => this.close());
@@ -128,7 +125,7 @@ export class NgDocOverlayRef<T = unknown> {
 		return this.overlayContainer.animationEvent.pipe(
 			filter((event: NgDocOverlayAnimationEvent) => event === 'beforeOpen'),
 			take(1),
-			switchMap(() => EMPTY_OBSERVABLE),
+			map(() => void 0),
 		);
 	}
 
@@ -136,15 +133,13 @@ export class NgDocOverlayRef<T = unknown> {
 		return this.overlayContainer.animationEvent.pipe(
 			filter((event: NgDocOverlayAnimationEvent) => event === 'afterOpen'),
 			take(1),
-			switchMap(() => EMPTY_OBSERVABLE),
+			map(() => void 0),
 		);
 	}
 
 	beforeClose(): Observable<T | null> {
 		return merge(
-			this.overlayContainer.animationEvent.pipe(
-				filter((event: NgDocOverlayAnimationEvent) => event === 'beforeClose'),
-			),
+			this.overlayContainer.animationEvent.pipe(filter((event: NgDocOverlayAnimationEvent) => event === 'beforeClose')),
 			this.overlayRef.detachments(),
 		).pipe(
 			take(1),
@@ -154,9 +149,7 @@ export class NgDocOverlayRef<T = unknown> {
 
 	afterClose(): Observable<T | null> {
 		return merge(
-			this.overlayContainer.animationEvent.pipe(
-				filter((event: NgDocOverlayAnimationEvent) => event === 'afterClose'),
-			),
+			this.overlayContainer.animationEvent.pipe(filter((event: NgDocOverlayAnimationEvent) => event === 'afterClose')),
 			this.overlayRef.detachments(),
 		).pipe(
 			take(1),

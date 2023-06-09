@@ -1,0 +1,56 @@
+{
+	"name": "keywords-loaders",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "libs/keywords-loaders",
+	"projectType": "library",
+	"targets": {
+		"pre-build": {
+			"executor": "@nx/rollup:rollup",
+			"outputs": ["{options.outputPath}"],
+			"options": {
+				"outputPath": "dist/libs/keywords-loaders",
+				"project": "libs/keywords-loaders/package.json",
+				"main": "libs/keywords-loaders/index.ts",
+				"tsConfig": "libs/keywords-loaders/tsconfig.lib.json",
+				"assets": [
+					{
+						"glob": "**/*.md",
+						"input": "libs/keywords-loaders",
+						"output": "./"
+					}
+				],
+				"updateBuildableProjectDepsInPackageJson": false,
+				"generateExportsField": true
+			}
+		},
+		"build": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": []
+			}
+		},
+		"lint": {
+			"executor": "@nx/linter:eslint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": ["libs/keywords-loaders/**/*.ts"]
+			}
+		},
+		"test": {
+			"executor": "@nx/jest:jest",
+			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+			"options": {
+				"jestConfig": "libs/keywords-loaders/jest.config.ts",
+				"passWithNoTests": true
+			},
+			"configurations": {
+				"ci": {
+					"ci": true,
+					"codeCoverage": true
+				}
+			}
+		}
+	},
+	"tags": ["type:lib", "lib:keywords-loaders"],
+	"implicitDependencies": ["core"]
+}

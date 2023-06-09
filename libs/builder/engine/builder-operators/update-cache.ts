@@ -5,8 +5,9 @@ import {NgDocEntity} from '../entities/abstractions/entity';
 import {NgDocEntityStore} from '../entity-store';
 
 /**
+ * Operator that updates cache of all entities in the store
  *
- * @param store
+ * @param store - store to update cache for
  */
 export function updateCache<T>(store: NgDocEntityStore): OperatorFunction<T, T> {
 	return (source: Observable<T>) =>

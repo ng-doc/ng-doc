@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import {finalize, mergeMap, Observable, of} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {combineLatestWith, finalize, from, mergeMap, Observable, of} from 'rxjs';
+import {map, tap} from 'rxjs/operators';
 import {Project} from 'ts-morph';
 
 import {createProject, printProgress} from '../helpers';
@@ -27,6 +27,7 @@ import {invalidateCacheIfNeeded, NgDocCache} from './entities/cache';
 import {NgDocIndexesEntity} from './entities/indexes.entity';
 import {entityEmitter} from './entity-emitter';
 import {NgDocEntityStore} from './entity-store';
+import {ifNotCachedOrInvalid} from './functions';
 import {API_PATTERN, CATEGORY_PATTERN, GLOBALS, PAGE_PATTERN} from './variables';
 import {NgDocWatcher} from './watcher';
 
@@ -42,16 +43,13 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 	// Set global variables
 	GLOBALS.workspaceRoot = context.context.workspaceRoot;
 
-	const store: NgDocEntityStore = new NgDocEntityStore();
+	const store: NgDocEntityStore = new NgDocEntityStore(context.config);
 	const cache: NgDocCache = new NgDocCache(!!context.config?.cache);
 	const project: Project = createProject({tsConfigFilePath: context.tsConfig});
 
 	// Global entities that should be built after each build cycle
 	const skeletonEntity: NgDocSkeletonEntity = new NgDocSkeletonEntity(store, cache, context);
 	const indexesEntity: NgDocIndexesEntity = new NgDocIndexesEntity(store, cache, context);
-
-	// Filters for tasks
-	const ifNotCached = (entity: NgDocEntity) => !cache.isCacheValid(entity);
 
 	// Clean build path if cache is not enabled
 	if (!!context.config?.cache && invalidateCacheIfNeeded(context.cachedFiles)) {
@@ -73,6 +71,8 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 
 	// The main build cycle
 	return entityEmitter(store, cache, context, project, watcher).pipe(
+		combineLatestWith(from(store.loadGlobalKeywords())),
+		map(([entities]) => entities),
 		mergeMap((entities: NgDocEntity[]) =>
 			of(entities).pipe(
 				task('Updating source files...', refresh()),
@@ -80,7 +80,8 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 				task('Compiling...', compile()),
 				task('Loading...', load()),
 				dependencyChanges(watcher),
-				taskForMany('Building...', build(store, context.config, skeletonEntity), ifNotCached),
+				tap(() => store.updateKeywordMap()),
+				taskForMany('Building...', build(store, context.config, skeletonEntity), ifNotCachedOrInvalid(cache, store)),
 				taskForMany('Post-processing...', postProcess(store, context.config, indexesEntity)),
 				taskForMany('Emitting...', emit()),
 				collectGarbage(store),
