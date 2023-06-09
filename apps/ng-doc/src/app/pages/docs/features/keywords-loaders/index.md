@@ -116,7 +116,7 @@ keywords.
 import {NgDocKeywordsLoader} from '@ng-doc/core';
 
 export function myKeywordsLoader(): NgDocKeywordsLoader {
-  return async (keywords: string[]) => {
+  return async () => {
     return Promise.resolve({
       googleKeyword: {
         title: 'Google',
