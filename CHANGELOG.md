@@ -1,3 +1,10 @@
+# [16.5.0-beta.2](https://github.com/ng-doc/ng-doc/compare/v16.5.0-beta.1...v16.5.0-beta.2) (2023-06-09)
+
+
+### Bug Fixes
+
+* **keywords-loaders:** fix release cycle for the `keywords-loaders` library ([a1dbda9](https://github.com/ng-doc/ng-doc/commit/a1dbda92a017fe19732d8120d70c74780c2825fc))
+
 # [16.5.0-beta.1](https://github.com/ng-doc/ng-doc/compare/v16.4.3...v16.5.0-beta.1) (2023-06-09)
 
 
