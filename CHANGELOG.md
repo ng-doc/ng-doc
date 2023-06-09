@@ -1,3 +1,30 @@
+# [16.5.0](https://github.com/ng-doc/ng-doc/compare/v16.4.3...v16.5.0) (2023-06-09)
+
+
+### Bug Fixes
+
+* **builder:** anchor is removed for external links ([f0a62b4](https://github.com/ng-doc/ng-doc/commit/f0a62b464e58179adaaf5fe2a49f1be5e317feb1))
+* **builder:** application `build` command doesn't exit ([cf83777](https://github.com/ng-doc/ng-doc/commit/cf837779757f28b1a8e55de7f7b63bdbff00095e)), closes [#64](https://github.com/ng-doc/ng-doc/issues/64)
+* **builder:** builder doesn't collect exported declarations from barrel files ([553291c](https://github.com/ng-doc/ng-doc/commit/553291c6a8232c595218e81f3fe2bdf05633faac))
+* **builder:** builder doesn't rebuild page after changes if it was restored from cache ([295e3ee](https://github.com/ng-doc/ng-doc/commit/295e3eececa7ec80bbb8b09f6e8c2b424f736524))
+* **builder:** entities with errors or warnings are cached ([57a4648](https://github.com/ng-doc/ng-doc/commit/57a46484d936a7ee008f40eb4b8d3a2de2cde01f))
+* **builder:** the cache is not invalidated after removing `.ng-doc` folder ([7ccc0be](https://github.com/ng-doc/ng-doc/commit/7ccc0be9e9644d12de683cdad6d4d902a5addd38)), closes [#58](https://github.com/ng-doc/ng-doc/issues/58)
+* **builder:** the delay of the tooltip before opening has been increased to 1 second ([bfc67cc](https://github.com/ng-doc/ng-doc/commit/bfc67cccb7f9e4c22c139c19c25437b50a929a75))
+
+
+### Features
+
+* **app:** external links now display the special icon ([ebc7b46](https://github.com/ng-doc/ng-doc/commit/ebc7b4696a0debefc485caf8a18cd4e89f63bad3))
+* **builder:** add `keywordLoaders` to the builder configuration file that allows you to specify async loaders for global keywords ([1ef5f74](https://github.com/ng-doc/ng-doc/commit/1ef5f742bf8310c5f7b12c370017c914d7335bb3))
+* **project:** add `ngDocKeywordsLoader` to integrate your documentation with third-party documentation that was created with NgDoc ([6968045](https://github.com/ng-doc/ng-doc/commit/696804504c9d3483e69ca0191a90a285b42c3a52))
+* **project:** add `ngKeywordsLoader` to integrate your documentation with the Angular documentation ([a0d3863](https://github.com/ng-doc/ng-doc/commit/a0d3863e8eba1e4ec3022d3ef9ada7b32aa7e0b9))
+
+
+### Performance Improvements
+
+* **app:** `js-beautify` library was replaces with `esthetic` library, which reduces the bundle size and improves html formatting for playgrounds ([bb17556](https://github.com/ng-doc/ng-doc/commit/bb17556bd65ec369e634cf7a593e77f6ae922903))
+* **core:** remove `rxjs` dependency that affects the bundle size ([2368a00](https://github.com/ng-doc/ng-doc/commit/2368a00b59b3c2b9b3929f39eeb7049bd0bc97ba))
+
 ## [16.4.3](https://github.com/ng-doc/ng-doc/compare/v16.4.2...v16.4.3) (2023-06-07)
 
 
