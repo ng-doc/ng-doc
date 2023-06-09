@@ -1,3 +1,10 @@
+## [16.5.1](https://github.com/ng-doc/ng-doc/compare/v16.5.0...v16.5.1) (2023-06-09)
+
+
+### Bug Fixes
+
+* **builder:** config loader requires `swc` packages ([7a4b06a](https://github.com/ng-doc/ng-doc/commit/7a4b06ae36a1a85cc7290e43fb91b5249bd91faf))
+
 # [16.5.0](https://github.com/ng-doc/ng-doc/compare/v16.4.3...v16.5.0) (2023-06-09)
 
 
