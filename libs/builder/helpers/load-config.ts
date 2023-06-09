@@ -15,9 +15,7 @@ export function loadConfig(searchFrom: string): [string, NgDocConfiguration] {
 	const explorerSync: PublicExplorerSync = cosmiconfigSync(moduleName, {
 		searchPlaces: [`${moduleName}.config.ts`],
 		loaders: {
-			'.ts': TypeScriptLoader({
-				swc: true,
-			}),
+			'.ts': TypeScriptLoader(),
 		},
 	});
 	const searchedFor: CosmiconfigResult | null = explorerSync.search(searchFrom);
