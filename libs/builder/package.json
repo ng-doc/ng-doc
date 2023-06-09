@@ -23,7 +23,7 @@
 		"esbuild": "0.17.8",
 		"@microsoft/tsdoc": "0.14.2",
 		"cosmiconfig": "8.1.0",
-		"cosmiconfig-typescript-swc-loader": "0.0.2",
+		"cosmiconfig-typescript-loader": "4.3.0",
 		"find-cache-dir": "3.3.2",
 		"tslib": "^2.3.0",
 		"ng-morph": "^2.2.3"

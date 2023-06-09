@@ -16,8 +16,7 @@
 		"@ng-doc/ui-kit": "0.0.0",
 		"@orama/plugin-match-highlight": "1.0.2",
 		"@orama/stemmers": "1.0.2",
-		"highlight.js": "11.5.1",
-		"js-beautify": "1.14.7"
+		"highlight.js": "11.5.1"
 	},
 	"publishConfig": {
 		"access": "public"

@@ -36,7 +36,7 @@ ol#{$class} {
 ul li#{$class},
 ol li#{$class} {
 	line-height: 1.5rem;
-	margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
+	margin-bottom: calc(var(--ng-doc-base-gutter) + var(--ng-doc-base-gutter) / 2);
 }
 
 ul ul#{$class},
@@ -109,6 +109,7 @@ pre#{$class} {
 		font-family: var(--ng-doc-code-font);
 		font-size: var(--ng-doc-code-font-size);
 		font-weight: var(--ng-doc-code-font-weight);
+		line-height: var(--ng-doc-code-line-height);
 		border: var(--ng-doc-code-border);
 		background-color: var(--ng-doc-code-background, inherit);
 	}
@@ -123,6 +124,7 @@ pre#{$class} {
 	font-family: var(--ng-doc-code-font);
 	font-size: var(--ng-doc-code-font-size);
 	font-weight: var(--ng-doc-code-font-weight);
+	line-height: var(--ng-doc-line-height);
 	white-space: nowrap;
 }
 

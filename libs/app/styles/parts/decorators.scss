@@ -1,13 +1,19 @@
 .ng-doc-decorators-group {
 	display: flex;
+	margin-bottom: calc(var(--ng-doc-base-gutter) / 2);
+
+	code {
+		--ng-doc-line-height: 18px;
+	}
 
 	&.column {
 		flex-direction: column;
 		align-items: flex-start;
+		margin-bottom: 0;
 
-		.ng-doc-tag {
+		code {
 			margin: 0;
-			margin-bottom: var(--ng-doc-base-gutter);
+			margin-bottom: calc(var(--ng-doc-base-gutter) / 2);
 		}
 	}
 }

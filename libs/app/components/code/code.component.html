@@ -2,13 +2,18 @@
 	<span class="ng-doc-code-file-name" ng-doc-text>{{ fileName }}</span>
 </div>
 <div class="ng-doc-code-body">
-	<div class="ng-doc-code-wrapper" [innerHTML]="html | ngDocSanitizeHtml" ngDocLinkProcessor *ngIf="html"></div>
+	<div
+		class="ng-doc-code-wrapper"
+		[innerHTML]="html | ngDocSanitizeHtml"
+		ngDocLinkProcessor
+		ngDocTooltipProcessor
+		*ngIf="html"
+	></div>
 	<div class="ng-doc-code-wrapper" *ngIf="!html">
 		<ng-content></ng-content>
 	</div>
 
 	<button
-
 		class="ng-doc-copy-button"
 		ng-doc-button-icon
 		*ngIf="copyButton"
@@ -18,7 +23,7 @@
 	>
 		<ng-template #tooltipContent>
 			<ng-doc-smooth-resize [trigger]="tooltipText">
-				{{tooltipText}}
+				{{ tooltipText }}
 			</ng-doc-smooth-resize>
 		</ng-template>
 		<ng-doc-icon icon="copy"></ng-doc-icon>

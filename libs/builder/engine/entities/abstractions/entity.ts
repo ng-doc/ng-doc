@@ -48,6 +48,10 @@ export abstract class NgDocEntity {
 	 * Collection of all file dependencies of the current entity.
 	 * This property is using to watch for changes in this dependencies list and rebuild current buildable.
 	 */
+	@CachedProperty({
+		get: (value: string[]) => new ObservableSet<string>(value),
+		set: (value: ObservableSet<string>) => value.asArray(),
+	})
 	readonly dependencies: ObservableSet<string> = new ObservableSet<string>();
 
 	/**
@@ -184,10 +188,15 @@ export abstract class NgDocEntity {
 
 		return this.buildImpl().pipe(
 			tap({
-				next: () => this.cache.cache(this),
 				error: (e: Error) => this.errors.push(e),
 			}),
 		);
+	}
+
+	updateCache(): void {
+		if (this.isReadyForBuild && !this.warnings.length) {
+			this.cache.cache(this);
+		}
 	}
 
 	removeArtifacts(): void {

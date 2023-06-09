@@ -1,6 +1,6 @@
 import {NgDocPageIndex} from '@ng-doc/core';
 import path from 'path';
-import {Observable, of} from 'rxjs';
+import {forkJoin, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import {NgDocBuildOutput} from '../../interfaces';
@@ -14,22 +14,26 @@ export class NgDocIndexesEntity extends NgDocEntity {
 	readonly buildCandidates: NgDocEntity[] = [];
 
 	protected buildImpl(): Observable<NgDocBuildOutput[]> {
-		return this.buildIndexes();
+		return forkJoin([this.buildIndexes(), this.buildExportedKeywords()]);
 	}
 
-	private buildIndexes(): Observable<NgDocBuildOutput[]> {
+	private buildIndexes(): Observable<NgDocBuildOutput> {
 		const allIndexes: NgDocPageIndex[] = this.store
 			.asArray()
 			.map((entity: NgDocEntity) => entity.indexes)
 			.flat();
 
 		return of(allIndexes).pipe(
-			map((pageIndexes: NgDocPageIndex[]) => [
-				{
-					content: JSON.stringify(pageIndexes, null, 2),
-					filePath: path.join(this.context.assetsPath, 'indexes.json'),
-				},
-			]),
+			map((pageIndexes: NgDocPageIndex[]) => ({
+				content: JSON.stringify(pageIndexes, null, 2),
+				filePath: path.join(this.context.assetsPath, 'indexes.json'),
+			})),
 		);
+	}
+
+	private buildExportedKeywords(): Observable<NgDocBuildOutput> {
+		const content: string = JSON.stringify(this.store.getKeywords());
+
+		return of({content, filePath: path.join(this.context.assetsPath, 'keywords.json')});
 	}
 }

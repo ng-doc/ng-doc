@@ -6,6 +6,10 @@ export class ObservableSet<T> {
 	private collection: Set<T> = new Set();
 	private changes$: ReplaySubject<void> = new ReplaySubject<void>();
 
+	constructor(values?: T[]) {
+		values && this.add(...values);
+	}
+
 	asArray(): T[] {
 		return asArray(this.collection);
 	}

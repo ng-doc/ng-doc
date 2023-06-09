@@ -22,7 +22,7 @@ export function postProcess(
 ): OperatorFunction<NgDocBuildOutput[], NgDocBuildOutput[]> {
 	return (source: Observable<NgDocBuildOutput[]>) =>
 		source.pipe(
-			tap(() => store.updateKeywordMap(config.keywords)),
+			tap(() => store.updateKeywordMap()),
 			switchMap((outputs: NgDocBuildOutput[]) =>
 				forkJoinOrEmpty(
 					outputs.map((output: NgDocBuildOutput) => handlePostProcess(output).pipe(errorHandler(output))),

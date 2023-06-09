@@ -26,6 +26,9 @@ module.exports = {
 					{
 						pkgRoot: 'dist/libs/app',
 					},
+					{
+						pkgRoot: 'dist/libs/keywords-loaders',
+					},
 				],
 			},
 		],
@@ -39,6 +42,7 @@ module.exports = {
 					'dist/libs/ui-kit',
 					'dist/libs/builder',
 					'dist/libs/app',
+					'dist/libs/keywords-loaders',
 				],
 			},
 		],
@@ -54,6 +58,7 @@ module.exports = {
 					'dist/libs/ui-kit',
 					'dist/libs/builder',
 					'dist/libs/app',
+					'dist/libs/keywords-loaders',
 				],
 			},
 		],
