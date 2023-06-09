@@ -157,7 +157,6 @@ There are two types of keywords: **Page** keywords and **API** keywords.
 - The builder **doesn't throw** a warning if the keyword is unknown.
 - The builder **does throw** a warning if it knows the keyword, but its Anchor is unknown.
 - The Anchor can be used to link section of the API page:
-  - Always **start with asterisk** (`*`).
   - The keyword of the API Page and its Anchor are concatenated with a hash (`#`).
   - The Anchor **is not** case-sensitive.
 

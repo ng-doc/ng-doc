@@ -20,6 +20,25 @@ const config: NgDocConfiguration = {
 export default config;
 ```
 
+## Documentation folder
+
+By default, NgDoc uses your project's `sourceRoot` folder defined in `angular.json` file
+to search for documentation pages, but you can also change it by specifying `pages` property
+in your `ng-doc.config.ts` file.
+
+After that NgDoc will search for documentation pages in the specified folder and its subfolders.
+
+```typescript fileName="ng-doc.config.ts"
+import {NgDocConfiguration} from '@ng-doc/builder';
+
+const config: NgDocConfiguration = {
+  pages: 'libs/my-lib/src'
+};
+
+export default config;
+```
+
+
 ## ESBuild builder
 
 > **Warning**
