@@ -6,7 +6,7 @@ import {isElement, isText, lineBreak, textElement} from '../helpers';
 /**
  * Adds lines to code blocks
  */
-export default function highlightLinesPlugin() {
+export default function codeBlockLinesPlugin() {
 	return (tree: Root) => {
 		visit(tree, 'element', (node: Element, _i, parent: Root | Element | null) => {
 			if (parent?.type === 'element' && parent.tagName === 'pre' && node.tagName === 'code') {
@@ -65,7 +65,7 @@ function addLines(node: Element, lines: Element[] = [], copyParent?: boolean): E
  * @param children - The children the line should have initially
  */
 function createLine(...children: ElementContent[]): Element {
-	return {type: 'element', tagName: 'span', properties: {className: 'line'}, children};
+	return {type: 'element', tagName: 'span', properties: {class: ['line']}, children};
 }
 
 /**

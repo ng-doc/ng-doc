@@ -78,7 +78,7 @@
 					padding: 0 calc(var(--ng-doc-base-gutter) * 2);
 
 					&.highlighted {
-						background: var(--ng-doc-code-highlight, rgba(var(--ng-doc-primary-rgb), 0.15));
+						background: var(--ng-doc-code-highlight-background, rgba(var(--ng-doc-primary-rgb), 0.15));
 
 						&:before {
 							content: '';
@@ -87,7 +87,7 @@
 							left: 0;
 							width: 4px;
 							height: 100%;
-							background: var(--ng-doc-primary);
+							background: var(--ng-doc-code-highlight-border, var(--ng-doc-primary));
 						}
 					}
 				}
