@@ -1,7 +1,7 @@
-import {NgDocAsset} from '@ng-doc/builder';
 import {NgDocStyleType} from '@ng-doc/core';
 import {vol} from 'memfs';
 
+import {NgDocAsset} from '../../interfaces';
 import {buildAssets} from '../build-assets';
 
 jest.mock('fs');

@@ -50,11 +50,11 @@ function addLines(node: Element, lines: Element[] = [], copyParent?: boolean): E
 				i !== split.length - 1 && lines.push(createLine());
 			});
 		} else if (isElement(child) && child.children.some(hasLineBreak)) {
-			addLines(child, lines, true)
+			addLines(child, lines, true);
 		} else {
 			line().children.push(child);
 		}
-	})
+	});
 
 	return lines;
 }

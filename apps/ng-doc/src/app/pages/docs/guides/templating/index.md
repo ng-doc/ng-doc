@@ -111,7 +111,7 @@ To load specific lines from the file, you can provide them at the end of the `fi
 for example, to load lines from 5 to 11, you can write the following
 
 ````markdown fileName="index.md"
-```typescript file="./ng-doc.page.ts#"L5-L11
+```typescript file="./ng-doc.page.ts"#L5-L11
 
 ```
 ````
@@ -123,7 +123,7 @@ for example, to load lines from 5 to 11, you can write the following
 To load one line, you can write this
 
 ````markdown fileName="index.md"
-```typescript file="./ng-doc.page.ts#"L13
+```typescript file="./ng-doc.page.ts"#L13
 
 ```
 ````
@@ -135,7 +135,7 @@ To load one line, you can write this
 And to load from a specific line to the end of the file, you can write the following
 
 ````markdown fileName="index.md"
-```typescript file="./ng-doc.page.ts#"L5-
+```typescript file="./ng-doc.page.ts"#L5-
 
 ```
 ````
