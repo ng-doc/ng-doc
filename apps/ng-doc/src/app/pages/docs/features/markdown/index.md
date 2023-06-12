@@ -3,7 +3,30 @@
 NgDoc uses `markdown` to render your pages, but we have added some additional features to make
 your documentation more readable and understandable.
 
-## Code block
+## Blockquotes
+
+NgDoc supports default blockquotes and some custom blockquotes, for example, you can use
+`Note` and `Warning` blockquotes to highlight some important information in your guides
+
+```markdown fileName="index.md"
+> Default blockquote
+
+> **Note**
+> This is note blockquote
+
+> **Warning**
+> This is warning blockquote
+```
+
+> Default blockquote
+
+> **Note**
+> This is note blockquote
+
+> **Warning**
+> This is warning blockquote
+
+## Code blocks
 
 Code blocks are supported by default as in `markdown`, but we have added some additional features.
 
@@ -54,8 +77,7 @@ const NicePage: NgDocPage = {
 export default NicePage;
 ```
 
-
-### Defining a File name
+### File name
 
 You can specify `fileName` attribute to render the code block with a file name
 
@@ -120,26 +142,3 @@ And to load from a specific line to the end of the file, you can write the follo
 ```typescript file="./ng-doc.page.ts"#L5-
 
 ```
-
-### Blockquotes
-
-NgDoc supports default blockquotes and some custom blockquotes, for example, you can use
-`Note` and `Warning` blockquotes to highlight some important information in your guides
-
-```markdown fileName="index.md"
-> Default blockquote
-
-> **Note**
-> This is note blockquote
-
-> **Warning**
-> This is warning blockquote
-```
-
-> Default blockquote
-
-> **Note**
-> This is note blockquote
-
-> **Warning**
-> This is warning blockquote

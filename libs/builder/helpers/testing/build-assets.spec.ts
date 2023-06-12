@@ -7,12 +7,11 @@ import {buildAssets} from '../build-assets';
 jest.mock('fs');
 
 describe('buildAssets', () => {
-
 	beforeEach(() => {
 		console.error = jest.fn();
 
 		vol.reset();
-	})
+	});
 
 	it('should return an empty array if the file does not exist', () => {
 		const filePath: string = '/path/to/file.html';
@@ -21,14 +20,14 @@ describe('buildAssets', () => {
 
 		expect(console.error).toHaveBeenCalled();
 		expect(result).toEqual([]);
-	})
+	});
 
 	it('should return an array with a single asset if the file does not contain snippets', () => {
 		const filePath: string = '/path/to/file.html';
 		const styleType: NgDocStyleType = 'CSS';
 		const fileContent: string = 'file content';
 		vol.fromJSON({
-			[filePath]: fileContent
+			[filePath]: fileContent,
 		});
 		const result: Array<Omit<NgDocAsset, 'outputPath'>> = buildAssets(filePath, styleType);
 
@@ -40,9 +39,9 @@ describe('buildAssets', () => {
 				code: fileContent,
 				output: fileContent,
 				type: 'HTML',
-			}
+			},
 		]);
-	})
+	});
 
 	it('should return an array with a single asset if the file contains one snippet', () => {
 		const filePath: string = '/path/to/file.html';
@@ -54,7 +53,7 @@ describe('buildAssets', () => {
 			<!-- NgDocHTMLSnippetEnd -->
 		`;
 		vol.fromJSON({
-			[filePath]: fileContent
+			[filePath]: fileContent,
 		});
 		const result: Array<Omit<NgDocAsset, 'outputPath'>> = buildAssets(filePath, styleType);
 
@@ -66,9 +65,9 @@ describe('buildAssets', () => {
 				code: snippetContent,
 				output: snippetContent,
 				type: 'HTML',
-			}
+			},
 		]);
-	})
+	});
 
 	it('should return only one snippet if the file contains multiple snippets without name', () => {
 		const filePath: string = '/path/to/file.html';
@@ -84,7 +83,7 @@ describe('buildAssets', () => {
 			<!-- NgDocHTMLSnippetEnd -->
 		`;
 		vol.fromJSON({
-			[filePath]: fileContent
+			[filePath]: fileContent,
 		});
 		const result: Array<Omit<NgDocAsset, 'outputPath'>> = buildAssets(filePath, styleType);
 
@@ -96,9 +95,9 @@ describe('buildAssets', () => {
 				code: snippetContent1,
 				output: snippetContent1,
 				type: 'HTML',
-			}
+			},
 		]);
-	})
+	});
 
 	it('should return an array with multiple assets if the file contains multiple snippets with name', () => {
 		const filePath: string = '/path/to/file.html';
@@ -114,7 +113,7 @@ describe('buildAssets', () => {
 			<!-- NgDocHTMLSnippetEnd(Snippet2) -->
 		`;
 		vol.fromJSON({
-			[filePath]: fileContent
+			[filePath]: fileContent,
 		});
 		const result: Array<Omit<NgDocAsset, 'outputPath'>> = buildAssets(filePath, styleType);
 
@@ -134,7 +133,7 @@ describe('buildAssets', () => {
 				code: snippetContent2,
 				output: snippetContent2,
 				type: 'HTML',
-			}
+			},
 		]);
-	})
-})
+	});
+});

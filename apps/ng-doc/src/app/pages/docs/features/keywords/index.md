@@ -37,7 +37,7 @@ We have added a special prefix `*` to use page keywords to notify you of outdate
 create keyword for the page, specify your preferred keyword in your page configuration in
 the `keyword` field.
 
-```typescript fileName="ng-doc.page.ts"
+```typescript fileName="ng-doc.page.ts" {8}
 import {NgDocPage} from '@ng-doc/core';
 
 export const MyAwesomePage: NgDocPage = {

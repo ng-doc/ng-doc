@@ -45,14 +45,14 @@ You can use categories to structure your documentation (see the `*EntitiesCatego
 for details on how to create one). To add a category to your page, you can use the `category` field,
 just import category and put it in the `category` field, just like that:
 
-```typescript fileName="ng-doc.page.ts"
+```typescript fileName="ng-doc.page.ts" {2,7}
 import {NgDocPage} from '@ng-doc/core';
 import MyAwesomeCategory from '../ng-doc.category';
 
 export const MyAwesomePage: NgDocPage = {
   title: 'MyAwesomePage',
-  category: MyAwesomeCategory,
   mdFile: './index.md',
+  category: MyAwesomeCategory,
 };
 
 export default MyAwesomePage;

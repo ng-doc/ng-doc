@@ -36,7 +36,7 @@ export class MyClass {}
 You can also add links to other APIs using the `@see` tag and keywords, NgDoc will display them in a
 special **See Also** section.
 
-```typescript fileName="my-class.ts"
+```typescript fileName="my-class.ts" {11-12}
 /**
  * Lorem Ipsum is simply dummy text of the printing and typesetting industry.
  * Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
@@ -60,7 +60,7 @@ render
 the usage notes after the main documentation and API of your entity.
 All content you write after the `@usageNotes` tag will be related to it.
 
-```typescript fileName="my-class.ts"
+```typescript fileName="my-class.ts" {11}
 /**
  * Lorem Ipsum is simply dummy text of the printing and typesetting industry.
  * Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,

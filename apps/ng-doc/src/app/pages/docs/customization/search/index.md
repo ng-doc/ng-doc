@@ -10,7 +10,7 @@ language, you can change the language of the search to match your documentation.
 To do so, you need to import stemmer from `@orama/stemmers` package and provide it to the
 `provideSearchEngine` function in your root module.
 
-```ts fileName="app.module.ts"
+```ts fileName="app.module.ts" {12}
 import {NgModule} from '@angular/core';
 import {NgDocDefaultSearchEngine, provideSearchEngine} from '@ng-doc/app';
 
@@ -35,7 +35,7 @@ object to the `provideSearchEngine` function in your root module.
 
 For example, increasing the number of results returned by the search engine:
 
-```ts fileName="app.module.ts"
+```ts fileName="app.module.ts" {11}
 import {NgModule} from '@angular/core';
 import {NgDocDefaultSearchEngine, provideSearchEngine} from '@ng-doc/app';
 
@@ -123,7 +123,7 @@ export class CustomSearchEngine extends NgDocSearchEngine {
 After you have created your search engine, you need to provide it in your root module using
 `provideSearchEngine` function.
 
-```ts fileName="app.module.ts"
+```ts fileName="app.module.ts" {11}
 import {NgModule} from '@angular/core';
 import {provideSearchEngine} from '@ng-doc/app';
 

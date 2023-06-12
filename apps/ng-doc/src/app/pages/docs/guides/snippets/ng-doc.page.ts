@@ -1,7 +1,7 @@
 import {NgDocPage} from '@ng-doc/core';
 
 import GuidesCategory from '../ng-doc.category';
-import {ButtonInlineDemoComponent} from './demos/button-inline-demo/button-inline-demo.component';
+import {ButtonInlineDemoComponent} from './demos/button-inline-demo.component';
 
 const SnippetsPage: NgDocPage = {
   title: 'Snippets',

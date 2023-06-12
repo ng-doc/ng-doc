@@ -12,17 +12,18 @@ export default function highlightCodeLines() {
 			if (parent?.type === 'element' && parent.tagName === 'pre' && node.tagName === 'code') {
 				const highlightedLines: number[] = JSON.parse(attrValue(node, 'highlightedLines') ?? '[]');
 
-				highlightedLines.length && node.children.forEach((child: ElementContent, i: number) => {
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					if (isElement(child) && child.properties.class?.includes('line')) {
-						if (highlightedLines.includes(i + 1)) {
-							// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-							// @ts-ignore
-							child.properties.class.push('highlighted');
+				highlightedLines.length &&
+					node.children.forEach((child: ElementContent, i: number) => {
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
+						if (isElement(child) && child.properties.class?.includes('line')) {
+							if (highlightedLines.includes(i + 1)) {
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore
+								child.properties.class.push('highlighted');
+							}
 						}
-					}
-				})
+					});
 			}
 		});
 	};

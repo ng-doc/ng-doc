@@ -14,10 +14,10 @@ import {NgDocNotifyService} from '@ng-doc/ui-kit/services/notify';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonInlineDemoComponent {
-  /* NgDocCodeSnippetStart(Constructor Block) */
+  /* NgDocCodeSnippetStart(ClassConstructor) */
   constructor(private readonly notifyService: NgDocNotifyService) {}
 
-  /* NgDocCodeSnippetEnd(Constructor Block) */
+  /* NgDocCodeSnippetEnd(ClassConstructor) */
 
   /* NgDocCodeSnippetStart(clickEvent) */
   clickEvent(): void {
