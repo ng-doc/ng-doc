@@ -1,5 +1,6 @@
 .ng-doc-decorators-group {
 	display: flex;
+	gap: var(--ng-doc-base-gutter);
 	margin-bottom: calc(var(--ng-doc-base-gutter) / 2);
 
 	code {
@@ -9,11 +10,11 @@
 	&.column {
 		flex-direction: column;
 		align-items: flex-start;
+		gap: calc(var(--ng-doc-base-gutter) / 2);
 		margin-bottom: 0;
 
 		code {
 			margin: 0;
-			margin-bottom: calc(var(--ng-doc-base-gutter) / 2);
 		}
 	}
 }
