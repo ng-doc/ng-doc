@@ -1,3 +1,10 @@
+## [16.6.1](https://github.com/ng-doc/ng-doc/compare/v16.6.0...v16.6.1) (2023-06-14)
+
+
+### Bug Fixes
+
+* **app:** the code block is not displayed correctly in playgrounds ([a0e6d92](https://github.com/ng-doc/ng-doc/commit/a0e6d929d4ce55baa19fdcc24f421b8d78f29ad5))
+
 # [16.6.0](https://github.com/ng-doc/ng-doc/compare/v16.5.1...v16.6.0) (2023-06-14)
 
 
