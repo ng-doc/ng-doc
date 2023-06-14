@@ -1,3 +1,18 @@
+# [16.6.0](https://github.com/ng-doc/ng-doc/compare/v16.5.1...v16.6.0) (2023-06-14)
+
+
+### Bug Fixes
+
+* **app:** decorators in API pages are displayed without a gap ([e697bd0](https://github.com/ng-doc/ng-doc/commit/e697bd0961b84cd777a5acedea95068436c59d1a))
+
+
+### Features
+
+* **app:** the copy button in the code block is now visible only when you hover the cursor ([18fae7e](https://github.com/ng-doc/ng-doc/commit/18fae7ebd2238cdb87305c772d82fec7ce278ef7))
+* **builder:** add lines highlighter. You can use this feature to highlight any line of code inside your code blocks ([66bd91f](https://github.com/ng-doc/ng-doc/commit/66bd91f1b2aae90343111411c90f9f590c25c039))
+* **builder:** add option to change the output folder for the documentation application ([4069b47](https://github.com/ng-doc/ng-doc/commit/4069b47972d0e972bba2d12330d7965f45b97de9)), closes [#65](https://github.com/ng-doc/ng-doc/issues/65)
+* **builder:** builder adds lines to the code blocks ([c3cefcb](https://github.com/ng-doc/ng-doc/commit/c3cefcba5d538cdd4e9d1a4ac7eb99928947df41))
+
 ## [16.5.1](https://github.com/ng-doc/ng-doc/compare/v16.5.0...v16.5.1) (2023-06-09)
 
 
