@@ -63,8 +63,8 @@
 			height: 100%;
 
 			code {
-				display: grid;
-				padding: calc(var(--ng-doc-base-gutter) * 2) 0 !important;
+				display: block;
+				padding: calc(var(--ng-doc-base-gutter) * 2);
 				width: 100%;
 				font-family: var(--ng-doc-code-font);
 				font-size: var(--ng-doc-code-font-size);
@@ -72,6 +72,11 @@
 				max-height: var(--ng-doc-code-max-height);
 				overflow: auto;
 				height: 100%;
+
+				&.code-lines {
+					display: grid;
+					padding: calc(var(--ng-doc-base-gutter) * 2) 0;
+				}
 
 				.line {
 					position: relative;

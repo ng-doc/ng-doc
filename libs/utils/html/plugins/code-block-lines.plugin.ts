@@ -10,6 +10,9 @@ export default function codeBlockLinesPlugin() {
 	return (tree: Root) => {
 		visit(tree, 'element', (node: Element, _i, parent: Root | Element | null) => {
 			if (parent?.type === 'element' && parent.tagName === 'pre' && node.tagName === 'code') {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				node.properties['className'] = [...(node.properties?.['className'] ?? []), 'code-lines'];
 				// Wraps each line in a span
 				node.children = addLines(node);
 
