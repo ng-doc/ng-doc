@@ -20,6 +20,15 @@ export interface NgDocConfiguration {
 	 * List of paths to your documentation location (e.g. "src/app")
 	 */
 	pages?: string | string[];
+
+	/**
+	 * The path to the output directory, where the documentation will be generated. (e.g. 'src')
+	 *
+	 * Remember that if you change this path, you also need to change the following:
+	 * - Change the path to the `@ng-doc/generated` directory in `tsconfig.json`
+	 * - Change the path to the `.ng-doc/app-name/assets` folder in `angular.json`
+	 */
+	outDir?: string;
 	/**
 	 * Route prefix uses to add some additional route segment before documentation pages,
 	 * you can use it e.g. to wrap documentation with additional route like "docs".
