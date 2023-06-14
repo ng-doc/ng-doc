@@ -26,7 +26,7 @@ If you want to use a component that is not standalone, then you need to create
 a module that will declare this component and import it into the page module
 and register it in the `demos` field of the page.
 
-```typescript fileName="ng-doc.page.ts"
+```typescript fileName="ng-doc.page.ts" {6}
 import {NgDocPage} from '@ng-doc/core';
 import {ButtonDemoModule} from '../demos/button-demo/button-demo.module';
 import {ButtonDemoComponent} from '../demos/button-demo/button-demo.component';

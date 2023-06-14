@@ -56,7 +56,7 @@ the `include` field.
 Don't like that the API section is at the top? You can also add a category to it to better
 structure your documentation articles.
 
-```typescript fileName="ng-doc.api.ts"
+```typescript fileName="ng-doc.api.ts" {2,6}
 import {NgDocApi} from '@ng-doc/core';
 import MyAwesomeCategory from '../ng-doc.category';
 
@@ -80,11 +80,6 @@ export default api;
 As mentioned above, NgDoc will generate documentation for all exported declarations it finds using
 the `include` field, to see how you can write documentation for various declarations, see
 the `*ContentApiTemplating` article.
-
-## Examples of output
-
-If you would like to see what the output of the API looks like, you can look at the API example
-for the following entities `NgDocPageEntity`, `NgDocApiPageEntity`.
 
 ## Multiple API configurations
 

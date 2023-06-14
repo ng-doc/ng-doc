@@ -55,7 +55,7 @@ export class AppModule {}
 A theme is just a set of overridden CSS variables that NgDoc uses, for example, our `night` theme
 looks like this, which allows you to enable dark mode.
 
-```scss file=../../../../../../../../libs/app/styles/themes/ng-doc-night.scss fileName="ng-doc-night.scss"
+```scss file="../../../../../../../../libs/app/styles/themes/ng-doc-night.scss" fileName="ng-doc-night.scss"
 
 ```
 
@@ -64,7 +64,7 @@ looks like this, which allows you to enable dark mode.
 Once you have created your theme, you can use `NgDocThemeService` to apply it to your application.
 Just put your theme id to the `set` method.
 
-```typescript fileName="app.component.ts"
+```typescript fileName="app.component.ts" {8}
 import {NgDocThemeService} from '@ng-doc/app';
 
 @Component({})
@@ -87,7 +87,7 @@ module.
 > You can also provide `auto` value to the `defaultThemeId` field, then NgDoc will automatically
 > select the theme based on the user's system settings.
 
-```typescript fileName="app.module.ts"
+```typescript fileName="app.module.ts" {7}
 import {NgModule} from '@angular/core';
 import {NgDocModule} from '@ng-doc/app';
 import {AppComponent} from './app.component';
@@ -114,7 +114,7 @@ the `forRoot` method of the module ` NgDocModule`.
 
 For example, you can set the dark theme by default as follows
 
-```typescript fileName="app.module.ts"
+```typescript fileName="app.module.ts" {7}
 import {NgModule} from '@angular/core';
 import {NgDocModule, NG_DOC_NIGHT_THEME} from '@ng-doc/app';
 import {AppComponent} from './app.component';

@@ -41,7 +41,7 @@ export function getComponentAsset(
 
 		return {
 			[classDeclaration.getName() ?? '']: assets.map((asset: Omit<NgDocAsset, 'outputPath'>, i: number) => {
-				const code: string = formatCode(asset.output, asset.type);
+				const code: string = formatCode(asset.output, asset.type).trim();
 
 				return {
 					...asset,

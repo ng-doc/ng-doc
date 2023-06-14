@@ -38,12 +38,35 @@ const config: NgDocConfiguration = {
 export default config;
 ```
 
+## Output folder
+
+You can also change the output folder for the documentation application by specifying `outDir`,
+this folder is used for storing generated pages and modules.
+
+```typescript fileName="ng-doc.config.ts"
+import {NgDocConfiguration} from '@ng-doc/builder';
+
+const config: NgDocConfiguration = {
+  outDir: 'src'
+};
+
+export default config;
+````
+
+After that NgDoc will generated and store everything inside `src/.ng-doc/app-name` folder.
+But remember that you should not commit this folder to your repository, and also update
+the following things:
+
+- Update the path to the `@ng-doc/generated` directory in `tsconfig.json` paths section.
+- Update the path to the `.ng-doc/app-name/assets` folder in `angular.json`
+
 
 ## ESBuild builder
 
 > **Warning**
 > This feature is experimental and may not work as expected.
 > For more information, see [this guide](https://angular.io/guide/esbuild)
+> Also, see following issues: [Markdown content not updating](https://github.com/ng-doc/ng-doc/issues/65)
 
 By default, NgDoc uses `webpack` to build and serve the documentation application, but you can also use
 `esbuild`, to switch to `esbuild` you need to specify `angularBuilder` property in your

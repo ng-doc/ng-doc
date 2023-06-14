@@ -6,7 +6,7 @@ const CachePage: NgDocPage = {
   title: `Cache`,
   mdFile: './index.md',
   category: FeaturesCategory,
-  order: 1,
+  order: 2,
 };
 
 export default CachePage;

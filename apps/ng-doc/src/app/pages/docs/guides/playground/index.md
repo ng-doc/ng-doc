@@ -92,7 +92,7 @@ the `content` field in your playground configuration, for example:
 > field,
 > if this component is standalone, you must import its component class.
 
-```typescript fileName="ng-doc.page.ts"
+```typescript fileName="ng-doc.page.ts" {11,15-18}
 import {NgDocDependencies} from '@ng-doc/core';
 import {NgDocTagComponent, NgDocIconModule} from '@ng-doc/ui-kit';
 

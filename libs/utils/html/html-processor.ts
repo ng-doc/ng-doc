@@ -8,6 +8,8 @@ import rehypeStringify from 'rehype-stringify';
 import {unified, VFileWithOutput} from 'unified';
 
 import autolinkHeadingPlugin from './plugins/autolink-headings.plugin';
+import codeBlockLinesPlugin from './plugins/code-block-lines.plugin';
+import highlightCodeLines from './plugins/highlight-code-lines';
 import sluggerPlugin from './plugins/slugger.plugin';
 
 export interface NgDocHtmlProcessorConfig {
@@ -28,6 +30,8 @@ export async function htmlProcessor(html: string, config: NgDocHtmlProcessorConf
 		.use(rehypeStringify)
 		.use(rehypeFormat)
 		.use(rehypeHighlight, {ignoreMissing: true, languages: {twig}})
+		.use(codeBlockLinesPlugin)
+		.use(highlightCodeLines)
 		.use(sluggerPlugin, config.addAnchor, config.headings)
 		.use(rehypeMinifyWhitespace)
 		.use(autolinkHeadingPlugin, config.route)
