@@ -31,5 +31,6 @@ export const ngDocContextProvider: Provider = {
 			{{ nav(entity) }},
 			{%- endfor %}
 		],
+		sandbox: {{ sandbox | dump |safe if sandbox else '{}' }}
 	}
 }

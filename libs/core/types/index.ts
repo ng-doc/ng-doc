@@ -7,4 +7,5 @@ export * from './heading';
 export * from './keyword-type';
 export * from './keywords-loader';
 export * from './page-type';
+export * from './sandbox';
 export * from './style-type';

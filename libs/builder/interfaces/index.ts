@@ -1,5 +1,4 @@
 export * from './action-output';
-export * from './asset';
 export * from './builder-context';
 export * from './code-block-options';
 export * from './configuration';

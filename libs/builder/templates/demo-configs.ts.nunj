@@ -1,0 +1,18 @@
+// @ts-nocheck
+import {NgDocDemoConfigs} from '@ng-doc/core';
+
+export const demoConfigs: NgDocDemoConfigs = {
+{%- for demoName, config in demoConfigs %}
+{{ demoName }}: {
+	assets: [
+	{%- for asset in config.assets %}
+	{%- if not asset.isEmpty %}
+	{title: '{{ asset.title }}', codeType: '{{ asset.codeType }}', code: `{{ asset.code | toTemplateString }}`},
+	{%- endif %}
+	{%- endfor %}
+	],
+},
+{%- endfor %}
+}
+
+export default demoConfigs;

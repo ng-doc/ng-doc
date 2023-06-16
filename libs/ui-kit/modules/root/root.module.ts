@@ -12,7 +12,7 @@ export class NgDocUiKitRootModule {
 			providers: [
 				{
 					provide: NG_DOC_ASSETS_PATH,
-					useValue: config?.assetsPath ?? 'assets/ng-doc/ui-kit',
+					useValue: config?.assetsPath.replace(/\/&/, '') ?? 'assets/ng-doc/ui-kit',
 				},
 				{
 					provide: HTTP_INTERCEPTORS,

@@ -2,7 +2,7 @@ import {NgDocStyleType} from '@ng-doc/core';
 import {vol} from 'memfs';
 
 import {NgDocAsset} from '../../interfaces';
-import {buildAssets} from '../build-assets';
+import {buildDemoAssets} from '../build-demo-assets';
 
 jest.mock('fs');
 
@@ -16,7 +16,7 @@ describe('buildAssets', () => {
 	it('should return an empty array if the file does not exist', () => {
 		const filePath: string = '/path/to/file.html';
 		const styleType: NgDocStyleType = 'CSS';
-		const result: Array<Omit<NgDocAsset, 'outputPath'>> = buildAssets(filePath, styleType);
+		const result: Array<Omit<NgDocAsset, 'outputPath'>> = buildDemoAssets(filePath, styleType);
 
 		expect(console.error).toHaveBeenCalled();
 		expect(result).toEqual([]);
@@ -29,7 +29,7 @@ describe('buildAssets', () => {
 		vol.fromJSON({
 			[filePath]: fileContent,
 		});
-		const result: Array<Omit<NgDocAsset, 'outputPath'>> = buildAssets(filePath, styleType);
+		const result: Array<Omit<NgDocAsset, 'outputPath'>> = buildDemoAssets(filePath, styleType);
 
 		expect(result).toStrictEqual([
 			{
@@ -55,7 +55,7 @@ describe('buildAssets', () => {
 		vol.fromJSON({
 			[filePath]: fileContent,
 		});
-		const result: Array<Omit<NgDocAsset, 'outputPath'>> = buildAssets(filePath, styleType);
+		const result: Array<Omit<NgDocAsset, 'outputPath'>> = buildDemoAssets(filePath, styleType);
 
 		expect(result).toStrictEqual([
 			{
@@ -85,7 +85,7 @@ describe('buildAssets', () => {
 		vol.fromJSON({
 			[filePath]: fileContent,
 		});
-		const result: Array<Omit<NgDocAsset, 'outputPath'>> = buildAssets(filePath, styleType);
+		const result: Array<Omit<NgDocAsset, 'outputPath'>> = buildDemoAssets(filePath, styleType);
 
 		expect(result).toStrictEqual([
 			{
@@ -115,7 +115,7 @@ describe('buildAssets', () => {
 		vol.fromJSON({
 			[filePath]: fileContent,
 		});
-		const result: Array<Omit<NgDocAsset, 'outputPath'>> = buildAssets(filePath, styleType);
+		const result: Array<Omit<NgDocAsset, 'outputPath'>> = buildDemoAssets(filePath, styleType);
 
 		expect(result).toStrictEqual([
 			{

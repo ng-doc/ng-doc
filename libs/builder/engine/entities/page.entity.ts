@@ -1,4 +1,16 @@
-import {asArray, isPresent, NgDocEntityAnchor, NgDocPage, NgDocPageIndex} from '@ng-doc/core';
+import {
+	asArray,
+	isPresent,
+	NgDocDemoAsset,
+	NgDocDemoConfig,
+	NgDocDemoConfigs,
+	NgDocEntityAnchor,
+	NgDocPage,
+	NgDocPageIndex,
+	NgDocSandboxAsset,
+	NgDocSandboxConfiguration,
+} from '@ng-doc/core';
+import crypto from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
 import {forkJoin, from, Observable, of} from 'rxjs';
@@ -6,11 +18,12 @@ import {map, switchMap, tap} from 'rxjs/operators';
 import {ClassDeclaration, ObjectLiteralExpression} from 'ts-morph';
 
 import {
+	buildDemoConfig,
 	buildEntityKeyword,
 	buildPlaygroundMetadata,
+	buildSandboxAssets,
 	editFileInRepoUrl,
 	formatCode,
-	getComponentAsset,
 	getDemoClassDeclarations,
 	getPageType,
 	getPlaygroundById,
@@ -22,9 +35,8 @@ import {
 	slash,
 } from '../../helpers';
 import {buildIndexes} from '../../helpers/build-indexes';
-import {NgDocAsset, NgDocBuildOutput, NgDocEntityKeyword, NgDocPlaygroundMetadata} from '../../interfaces';
+import {NgDocBuildOutput, NgDocEntityKeyword, NgDocPlaygroundMetadata} from '../../interfaces';
 import {forkJoinOrEmpty} from '../../operators';
-import {NgDocComponentAsset} from '../../types';
 import {NgDocActions} from '../actions';
 import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
@@ -37,9 +49,9 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	playgroundsExpression: ObjectLiteralExpression | undefined;
 	demoClassDeclarations: ClassDeclaration[] = [];
 	playgroundMetadata: Record<string, NgDocPlaygroundMetadata> = {};
+	demoConfigs: NgDocDemoConfigs = {};
 
 	override parent?: NgDocCategoryEntity;
-	private componentAssets: NgDocComponentAsset = {};
 
 	override get route(): string {
 		const folderName: string = path.basename(path.dirname(this.sourceFile.getFilePath()));
@@ -53,6 +65,10 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 
 	override get title(): string {
 		return this.target?.title ?? '';
+	}
+
+	get sandbox(): NgDocSandboxConfiguration | undefined {
+		return this.target?.sandbox;
 	}
 
 	override get buildCandidates(): NgDocEntity[] {
@@ -96,6 +112,10 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		];
 	}
 
+	get sandboxId(): string {
+		return crypto.createHash('md5').update(this.id).digest('hex');
+	}
+
 	/**
 	 * Returns full url from the root
 	 *
@@ -114,27 +134,18 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return path.dirname(this.mdPath);
 	}
 
-	get assets(): NgDocAsset[] {
-		return Object.keys(this.componentAssets)
-			.map((key: string) => this.componentAssets[key])
-			.flat();
-	}
-
-	get assetsFolder(): string {
-		return path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, 'assets'));
+	@CachedFilesGetter()
+	get demoConfigsPath(): string {
+		return path.join(this.folderPath, 'demo.ts');
 	}
 
 	@CachedFilesGetter()
-	get demoAssetsPath(): string {
-		return path.join(this.folderPath, 'component-assets.ts');
+	get sandboxAssetPath(): string {
+		return path.join(this.context.assetsPath, 'sandbox', `${this.sandboxId}.json`);
 	}
 
-	get demoAssetsImport(): string {
-		return slash(path.relative(this.context.context.workspaceRoot, path.join(this.folderPath, 'component-assets')));
-	}
-
-	get demoAssets(): string | undefined {
-		return this.assets.length ? this.demoAssetsImport : undefined;
+	get demoConfigsImport(): string {
+		return slash(path.relative(this.context.context.workspaceRoot, this.demoConfigsPath.replace(/\.ts$/, '')));
 	}
 
 	@CachedFilesGetter()
@@ -165,6 +176,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		);
 
 		this.updatePlaygroundMetadata();
+		this.updateDemoConfigs();
 	}
 
 	protected override loadImpl(): Observable<void> {
@@ -185,6 +197,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 					this.demoClassDeclarations = getDemoClassDeclarations(this.objectExpression);
 
 					this.updatePlaygroundMetadata();
+					this.updateDemoConfigs();
 				}
 			}),
 			tap({
@@ -195,7 +208,12 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 
 	protected override buildImpl(): Observable<NgDocBuildOutput[]> {
 		return this.isReadyForBuild
-			? forkJoin([this.buildModule(), this.buildPlaygrounds(), this.buildDemoAssets()])
+			? forkJoin([
+					this.buildModule(),
+					this.buildPlaygrounds(),
+					this.buildDemoConfigs(),
+					this.buildSandboxAssets(),
+			  ]).pipe(map((res) => res.filter(isPresent)))
 			: of([]);
 	}
 
@@ -213,6 +231,22 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 			},
 			{},
 		);
+	}
+
+	private updateDemoConfigs(): void {
+		this.demoConfigs = {};
+
+		this.demoClassDeclarations.forEach((classDeclarations: ClassDeclaration) => {
+			const classFolder: string = classDeclarations.getSourceFile().getDirectoryPath();
+			const configs: NgDocDemoConfigs = buildDemoConfig(classDeclarations, this.context.inlineStyleLanguage);
+
+			this.demoConfigs = {...this.demoConfigs, ...configs};
+
+			// Add demo dependencies to the page
+			Object.values(configs).forEach((config: NgDocDemoConfig) =>
+				this.dependencies.add(...Object.keys(config.files ?? {}).map((p: string) => path.join(classFolder, p))),
+			);
+		});
 	}
 
 	private buildModule(): Observable<NgDocBuildOutput> {
@@ -274,55 +308,54 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return of({content: formatCode(content, 'TypeScript'), filePath: this.playgroundsPath});
 	}
 
-	private buildDemoAssets(): Observable<NgDocBuildOutput> {
-		if (this.objectExpression) {
-			this.componentAssets = this.demoClassDeclarations
-				.map((classDeclarations: ClassDeclaration) =>
-					getComponentAsset(classDeclarations, this.context.inlineStyleLanguage, this.assetsFolder),
-				)
-				.reduce((acc: NgDocComponentAsset, curr: NgDocComponentAsset) => ({...acc, ...curr}), {});
-
-			this.dependencies.add(...this.assets.map((asset: NgDocAsset) => asset.originalPath));
-
-			return forkJoinOrEmpty(
-				Object.keys(this.componentAssets).map((key: string) =>
-					forkJoinOrEmpty(
-						this.componentAssets[key].map((asset: NgDocAsset) =>
-							from(processHtml(this, asset.output)).pipe(tap((output: string) => (asset.output = output))),
-						),
+	private buildDemoConfigs(): Observable<NgDocBuildOutput> {
+		return forkJoinOrEmpty(
+			Object.keys(this.demoConfigs).map((key: string) =>
+				forkJoinOrEmpty(
+					this.demoConfigs[key].assets.map((asset: NgDocDemoAsset) =>
+						from(processHtml(this, asset.code)).pipe(tap((output: string) => (asset.code = output))),
 					),
 				),
-			).pipe(
-				map(() => ({
-					content: '',
-					filePath: this.demoAssetsPath,
-					postProcessFn: (content: string) =>
-						of(content).pipe(
-							switchMap(() =>
-								forkJoinOrEmpty(
-									Object.keys(this.componentAssets).map((key: string) =>
-										forkJoinOrEmpty(
-											this.componentAssets[key].map((asset: NgDocAsset) =>
-												from(postProcessHtml(this, asset.output)).pipe(
-													tap((output: string) => (asset.output = output)),
-												),
-											),
+			),
+		).pipe(
+			map(() => ({
+				content: '',
+				filePath: this.demoConfigsPath,
+				postProcessFn: (content: string) =>
+					of(content).pipe(
+						switchMap(() =>
+							forkJoinOrEmpty(
+								Object.keys(this.demoConfigs).map((key: string) =>
+									forkJoinOrEmpty(
+										this.demoConfigs[key].assets.map((asset: NgDocDemoAsset) =>
+											from(postProcessHtml(this, asset.code)).pipe(tap((output: string) => (asset.code = output))),
 										),
 									),
 								),
 							),
-							map(() =>
-								renderTemplate('./demo-assets.ts.nunj', {
-									context: {
-										demoAssets: this.componentAssets,
-									},
-								}),
-							),
 						),
-				})),
-			);
+						map(() =>
+							renderTemplate('./demo-configs.ts.nunj', {
+								context: {
+									demoConfigs: this.demoConfigs,
+								},
+							}),
+						),
+					),
+			})),
+		);
+	}
+
+	private buildSandboxAssets(): Observable<NgDocBuildOutput | null> {
+		const assets: Record<string, NgDocSandboxAsset> = buildSandboxAssets(this);
+
+		if (Object.keys(assets).length === 0) {
+			return of(null);
 		}
 
-		return of({content: '', filePath: this.demoAssetsPath});
+		return of({
+			content: JSON.stringify(assets),
+			filePath: this.sandboxAssetPath,
+		});
 	}
 }

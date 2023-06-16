@@ -1,0 +1,14 @@
+<button
+	*ngDocLet="(expanded ? 'Collapse' : 'Expand') as text"
+	ng-doc-button-icon
+	(click)="expanded = !expanded; expandedChange.emit(expanded)"
+	[ngDocTooltip]="tooltipContent"
+	[delay]="500"
+>
+	<ng-template #tooltipContent>
+		<ng-doc-smooth-resize [trigger]="text">
+			{{text}}
+		</ng-doc-smooth-resize>
+	</ng-template>
+	<ng-doc-icon icon="code"></ng-doc-icon>
+</button>

@@ -2,7 +2,7 @@ import {NgFor, NgIf, NgTemplateOutlet} from '@angular/common';
 import {ChangeDetectionStrategy, Component, HostBinding, Input, OnInit, Type} from '@angular/core';
 import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
 import {NgDocCodeComponent} from '@ng-doc/app/components/code';
-import {NgDocDemoAsset} from '@ng-doc/app/interfaces';
+import {NgDocDemoAsset} from '@ng-doc/core';
 import {asArray} from '@ng-doc/core/helpers/as-array';
 import {NgDocDemoPaneActionOptions} from '@ng-doc/core/interfaces';
 import {
@@ -69,7 +69,7 @@ export class NgDocDemoPaneComponent implements OnInit {
 
 	private getAssets(): NgDocDemoAsset[] {
 		if (this.componentName) {
-			return ((this.rootPage.demoAssets && this.rootPage.demoAssets[this.componentName]) ?? []).filter(
+			return ((this.rootPage.demoConfigs && this.rootPage.demoConfigs[this.componentName].assets) ?? []).filter(
 				(asset: NgDocDemoAsset) => !this.options.tabs?.length || asArray(this.options.tabs).includes(asset.title),
 			);
 		}

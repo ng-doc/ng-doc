@@ -1,5 +1,5 @@
 <ng-container *ngIf="options.container ?? true; else demoTemplate">
-	<ng-doc-demo-displayer [codeContent]="codeContent" [expanded]="!!options.expanded">
+	<ng-doc-demo-displayer [componentName]="componentName" [codeContent]="codeContent" [expanded]="!!options.expanded" [config]="config">
 		<ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
 		<ng-template #codeContent>
 			<ng-container *ngIf="assets.length === 1">

@@ -1,5 +1,6 @@
 import {Component, Type} from '@angular/core';
 import {NgDocPlaygroundConfig} from '@ng-doc/core/interfaces/playground-config';
+import {NgDocSandboxConfiguration} from '@ng-doc/core/interfaces/sandbox-configuration';
 
 import {NgDocBaseEntity} from './base-entity';
 import {NgDocCategory} from './category';
@@ -47,4 +48,9 @@ export interface NgDocPage extends NgDocBaseEntity {
 	 * playground's name and value its playground configuration
 	 */
 	playgrounds?: Record<string, NgDocPlaygroundConfig>;
+	/**
+	 * The sandbox configuration for the page's demos.
+	 * You can use it to add or override default sandbox configuration defined in the `ng-doc.config.ts`
+	 */
+	sandbox?: NgDocSandboxConfiguration;
 }

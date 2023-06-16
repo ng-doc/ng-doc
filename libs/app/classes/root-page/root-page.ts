@@ -1,5 +1,4 @@
-import {NgDocDemoAssets} from '@ng-doc/app/interfaces';
-import {NgDocPage, NgDocPageType} from '@ng-doc/core';
+import {NgDocDemoConfigs, NgDocPage, NgDocPageType} from '@ng-doc/core';
 
 /**
  * Base class for NgDoc page
@@ -35,7 +34,11 @@ export abstract class NgDocRootPage {
 	abstract readonly page?: NgDocPage;
 
 	/**
+	 * The page sandbox id
+	 */
+	abstract readonly sandboxId?: string;
+	/**
 	 * The page demo assets that have code examples of the demo components
 	 */
-	abstract readonly demoAssets?: NgDocDemoAssets;
+	abstract readonly demoConfigs?: NgDocDemoConfigs;
 }

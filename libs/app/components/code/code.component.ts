@@ -1,16 +1,18 @@
-import {Clipboard} from '@angular/cdk/clipboard';
 import {NgIf} from '@angular/common';
-import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input} from '@angular/core';
+import {
+	AfterViewInit,
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
+	Component,
+	ElementRef,
+	HostBinding,
+	Input
+} from '@angular/core';
+import {CopyButtonComponent} from '@ng-doc/app/components/copy-button';
 import {NgDocSanitizeHtmlPipe} from '@ng-doc/app/pipes/sanitize-html';
 import {NgDocLinkProcessorDirective} from '@ng-doc/app/processors/link-processor';
 import {NgDocTooltipProcessorDirective} from '@ng-doc/app/processors/tooltip-processor';
-import {
-	NgDocButtonIconComponent,
-	NgDocIconComponent,
-	NgDocSmoothResizeComponent,
-	NgDocTextComponent,
-	NgDocTooltipDirective,
-} from '@ng-doc/ui-kit';
+import {NgDocTextComponent} from '@ng-doc/ui-kit';
 
 @Component({
 	selector: 'ng-doc-code',
@@ -21,16 +23,13 @@ import {
 	imports: [
 		NgIf,
 		NgDocTextComponent,
-		NgDocButtonIconComponent,
-		NgDocTooltipDirective,
-		NgDocSmoothResizeComponent,
-		NgDocIconComponent,
 		NgDocSanitizeHtmlPipe,
 		NgDocTooltipProcessorDirective,
 		NgDocLinkProcessorDirective,
+		CopyButtonComponent,
 	],
 })
-export class NgDocCodeComponent {
+export class NgDocCodeComponent implements AfterViewInit {
 	@Input()
 	html: string = '';
 
@@ -43,9 +42,7 @@ export class NgDocCodeComponent {
 	@Input()
 	lineNumbers: boolean = false;
 
-	tooltipText: string = '';
-
-	constructor(private elementRef: ElementRef<HTMLElement>, private readonly clipboard: Clipboard) {}
+	constructor(private elementRef: ElementRef<HTMLElement>, private changeDetectorRef: ChangeDetectorRef) {}
 
 	@HostBinding('attr.data-ng-doc-has-header')
 	get hasHeader(): boolean {
@@ -56,7 +53,8 @@ export class NgDocCodeComponent {
 		return this.elementRef?.nativeElement.querySelector('code') ?? null;
 	}
 
-	copyCode(): void {
-		this.clipboard.copy(this.codeElement?.textContent ?? '');
+	ngAfterViewInit(): void {
+		// We need to run change detection manually here, because we need to wait for the code to be rendered.
+		this.changeDetectorRef.detectChanges();
 	}
 }

@@ -4,7 +4,7 @@
 	margin: var(--ng-doc-code-margin);
 
 	&:hover {
-		.ng-doc-copy-button {
+		ng-doc-copy-button {
 			opacity: 1;
 		}
 	}
@@ -37,7 +37,7 @@
 		height: 100%;
 	}
 
-	.ng-doc-copy-button {
+	ng-doc-copy-button {
 		position: absolute;
 		top: var(--ng-doc-base-gutter);
 		right: var(--ng-doc-base-gutter);

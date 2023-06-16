@@ -1,5 +1,7 @@
 /* Just re-export filters from this file, they will be included to the template renderer automatically */
 
+import * as path from 'path';
+
 export {
 	accessorPresentation,
 	constructorPresentation,
@@ -34,7 +36,6 @@ export {
 	methodPresentation,
 	noEmpty,
 	noLineBreaks,
-	notEmptyAssets,
 	sortByNodesName,
 	sortNavigationEntities,
 	toTemplateString,
@@ -42,3 +43,12 @@ export {
 	variablePresentation,
 } from '../../helpers';
 export {kebabCase, objectKeys, unique} from '@ng-doc/core';
+
+/**
+ *
+ * @param target
+ * @param base
+ */
+export function relativeTo(target: string, base: string): string {
+	return path.relative(base, target);
+}

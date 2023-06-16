@@ -1,0 +1,77 @@
+{
+	"$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+	"cli": {
+		"analytics": "1e1de97b-a744-405a-8b5a-0397bb3d01ce"
+	},
+	"newProjectRoot": "projects",
+	"projects": {
+		"demo": {
+			"architect": {
+				"build": {
+					"builder": "@angular-devkit/build-angular:browser",
+					"configurations": {
+						"development": {
+							"buildOptimizer": false,
+							"extractLicenses": false,
+							"namedChunks": true,
+							"optimization": false,
+							"sourceMap": true,
+							"vendorChunk": true
+						},
+						"production": {
+							"aot": true,
+							"buildOptimizer": true,
+							"extractLicenses": true,
+							"fileReplacements": [
+								{
+									"replace": "src/environments/environment.ts",
+									"with": "src/environments/environment.prod.ts"
+								}
+							],
+							"namedChunks": false,
+							"optimization": true,
+							"outputHashing": "all",
+							"sourceMap": false,
+							"vendorChunk": false
+						}
+					},
+					"options": {
+						"assets": [
+							{
+								"glob": "**/*",
+								"input": "dist/libs/ui-kit/assets",
+								"output": "assets/ng-doc/ui-kit"
+							}
+						],
+						"index": "src/index.html",
+						"main": "src/main.ts",
+						"outputPath": "dist/demo",
+						"scripts": [],
+						"styles": [
+							"src/styles.scss"
+						],
+						"tsConfig": "tsconfig.json"
+					}
+				},
+				"serve": {
+					"builder": "@angular-devkit/build-angular:dev-server",
+					"configurations": {
+						"development": {
+							"browserTarget": "demo:build:development"
+						},
+						"production": {
+							"browserTarget": "demo:build:production"
+						}
+					},
+					"defaultConfiguration": "development"
+				}
+			},
+			"prefix": "app",
+			"projectType": "application",
+			"root": "",
+			"schematics": {},
+			"sourceRoot": "src"
+		}
+	},
+	"version": 1
+}

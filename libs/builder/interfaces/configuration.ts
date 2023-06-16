@@ -1,4 +1,4 @@
-import {NgDocHeading, NgDocKeywordsLoader} from '@ng-doc/core';
+import {NgDocHeading, NgDocKeywordsLoader, NgDocSandboxConfiguration} from '@ng-doc/core';
 import {NgDocGlobalKeyword} from '@ng-doc/core/interfaces/keyword-map';
 
 import {NgDocRepoConfig} from './repo-config';
@@ -51,6 +51,10 @@ export interface NgDocConfiguration {
 	 * The configuration for the guides
 	 */
 	guide?: NgDocGuideConfiguration;
+	/**
+	 * The configuration for the sandbox
+	 */
+	sandbox?: NgDocSandboxConfiguration;
 }
 
 /**

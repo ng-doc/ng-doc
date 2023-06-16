@@ -6,5 +6,11 @@
 		"styleIncludePaths": ["styles"]
 	},
 	"assets": ["assets"],
-	"allowedNonPeerDependencies": ["@ng-doc/core", "@angular/cdk"]
+	"allowedNonPeerDependencies": [
+		"@ng-doc/core",
+		"@angular/cdk",
+		"@ngneat/until-destroy",
+		"flex-controls",
+		"@tinkoff/ng-polymorpheus"
+	]
 }

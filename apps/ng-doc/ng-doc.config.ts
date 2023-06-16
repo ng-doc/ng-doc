@@ -43,6 +43,32 @@ const NgDocConfig: NgDocConfiguration = {
 	guide: {
 		anchorHeadings: ['h1', 'h2', 'h3', 'h4'],
 	},
+	sandbox: {
+		stackblitz: {
+			files: {
+				'package.json': './sandbox/package.json',
+			},
+			dependencies: {
+				'@ng-doc/ui-kit': 'latest',
+				'@angular/cdk': '^16.0.0',
+				'@ngneat/until-destroy': '9.2.0',
+				'flex-controls': '2.0.1',
+				'@tinkoff/ng-polymorpheus': '4.0.11',
+			},
+		},
+		codesandbox: {
+			files: {
+				'package.json': './sandbox/package.json',
+			},
+			dependencies: {
+				'@ng-doc/ui-kit': 'latest',
+				'@angular/cdk': '^16.0.0',
+				'@ngneat/until-destroy': '9.2.0',
+				'flex-controls': '2.0.1',
+				'@tinkoff/ng-polymorpheus': '4.0.11',
+			},
+		}
+	},
 };
 
 export default NgDocConfig;

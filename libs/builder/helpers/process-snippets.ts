@@ -69,7 +69,7 @@ function findSnippet(
  *
  * @param code
  */
-function removeSnippetsInCode(code: string): string {
+export function removeSnippetsInCode(code: string): string {
 	return code
 		.replace(HTMLSnippetStart, '')
 		.replace(StylesSnippetStart, '')

@@ -5,6 +5,7 @@ import {NgDocConfiguration} from './configuration';
 
 export interface NgDocBuilderContext {
 	tsConfig: string;
+	configPath: string;
 	config: NgDocConfiguration;
 	context: BuilderContext;
 	inlineStyleLanguage: NgDocStyleType;

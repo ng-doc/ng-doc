@@ -2,11 +2,11 @@
 import {Component, NgModule, ChangeDetectionStrategy} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
-import {NgDocPageComponent, NgDocRootPage, NgDocDemoAssets} from '@ng-doc/app';
-import {NgDocPage, NgDocPageType} from '@ng-doc/core';
+import {NgDocPageComponent, NgDocRootPage} from '@ng-doc/app';
+import {NgDocDemoConfigs, NgDocPage, NgDocPageType} from '@ng-doc/core';
 import pageEntity from '{{ page.importPath }}';
 import {PlaygroundsModule} from './playgrounds';
-import demoAssets from '{{ page.demoAssetsImport }}';
+import demoConfigs from '{{ page.demoConfigsImport }}';
 
 const pageContent: string = `{{ pageContent | toTemplateString }}`
 
@@ -39,7 +39,8 @@ export class DynamicComponent extends NgDocRootPage {
 	{%- endif %}
 
 	readonly page?: NgDocPage = pageEntity;
-	readonly demoAssets: NgDocDemoAssets = demoAssets;
+	readonly sandboxId?: string = '{{ page.sandboxId }}';
+	readonly demoConfigs: NgDocDemoConfigs = demoConfigs;
 
 	constructor() {
 		super();

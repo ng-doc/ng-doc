@@ -27,7 +27,9 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 	private buildContext(): Observable<NgDocBuildOutput> {
 		const entities: NgDocEntity[] = this.rootEntitiesForBuild;
 
-		const content: string = renderTemplate('./context.ts.nunj', {context: {entities}});
+		const content: string = renderTemplate('./context.ts.nunj', {
+			context: {entities, sandbox: this.context.config.sandbox},
+		});
 
 		return of({content, filePath: path.join(this.context.buildPath, 'ng-doc.context.ts')});
 	}
