@@ -11,6 +11,7 @@ import {
 
 import {extractDocs, extractParameterDocs} from '../extract-docs';
 import {displayType} from '../typescript';
+import {getPlaygroundInputName} from './get-playground-input-name';
 
 /**
  *
@@ -21,12 +22,7 @@ export function getPlaygroundComponentInputs(declaration: ClassDeclaration): NgD
 		.getProperties()
 		.filter((property: PropertyDeclaration) => !!property.getDecorator('Input'))
 		.reduce((properties: NgDocPlaygroundProperties, property: PropertyDeclaration) => {
-			const inputName: string =
-				property
-					.getDecorator('Input')
-					?.getArguments()[0]
-					?.getText()
-					.replace(/^["']|['"]$/g, '') ?? property.getName();
+			const inputName: string = getPlaygroundInputName(property);
 
 			return {...properties, ...propOrParamToPlaygroundProperty(property, inputName)};
 		}, {});
