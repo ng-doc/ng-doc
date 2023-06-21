@@ -1,3 +1,10 @@
+## [16.6.3](https://github.com/ng-doc/ng-doc/compare/v16.6.2...v16.6.3) (2023-06-21)
+
+
+### Bug Fixes
+
+* **builder:** build gets stuck if there are no file entities ([388eda0](https://github.com/ng-doc/ng-doc/commit/388eda069b173c5190154d95537da49c7b1525d2)), closes [#67](https://github.com/ng-doc/ng-doc/issues/67)
+
 ## [16.6.2](https://github.com/ng-doc/ng-doc/compare/v16.6.1...v16.6.2) (2023-06-21)
 
 
