@@ -1,3 +1,11 @@
+## [16.6.2](https://github.com/ng-doc/ng-doc/compare/v16.6.1...v16.6.2) (2023-06-21)
+
+
+### Bug Fixes
+
+* **builder:** playgrounds autogeneration does not support Angular 16 required inputs ([c36a348](https://github.com/ng-doc/ng-doc/commit/c36a348397a4b9101bedcd63b182c51184177c21)), closes [#68](https://github.com/ng-doc/ng-doc/issues/68)
+* **keywords-loaders:** remove warning about experimental fetch method ([9c72b0b](https://github.com/ng-doc/ng-doc/commit/9c72b0bf35d10a4ad7e539a87823fcef7340a079))
+
 ## [16.6.1](https://github.com/ng-doc/ng-doc/compare/v16.6.0...v16.6.1) (2023-06-14)
 
 
