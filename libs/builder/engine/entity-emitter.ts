@@ -5,7 +5,7 @@ import {map, mergeMap, startWith, switchMap, take, tap} from 'rxjs/operators';
 import {Project} from 'ts-morph';
 
 import {getEntityConstructor} from '../helpers';
-import {bufferDebounce, forkJoinOrEmpty, progress} from '../operators';
+import {bufferDebounce, bufferUntilOnce, forkJoinOrEmpty, progress} from '../operators';
 import {Constructable} from '../types';
 import {NgDocEntity} from './entities/abstractions/entity';
 import {NgDocCache} from './entities/cache';
@@ -35,6 +35,9 @@ export function entityEmitter(
 		watcher.onAdd(PAGE_PATTERN, CATEGORY_PATTERN, API_PATTERN),
 		watcher.onChange(PAGE_PATTERN, CATEGORY_PATTERN, API_PATTERN),
 	).pipe(
+		bufferUntilOnce(watcher.onReady()),
+		bufferDebounce(10),
+		map((paths: string[][][]) => unique(paths.flat(2))),
 		map((paths: string[]) =>
 			paths.map((p: string) => {
 				const EntityConstructor: Constructable<NgDocEntity> = getEntityConstructor(p);
