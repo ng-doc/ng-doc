@@ -9,9 +9,9 @@ import {
 	TypeFormatFlags,
 } from 'ts-morph';
 
+import {getInputName} from '../angular';
 import {extractDocs, extractParameterDocs} from '../extract-docs';
 import {displayType} from '../typescript';
-import {getPlaygroundInputName} from './get-playground-input-name';
 
 /**
  *
@@ -22,7 +22,7 @@ export function getPlaygroundComponentInputs(declaration: ClassDeclaration): NgD
 		.getProperties()
 		.filter((property: PropertyDeclaration) => !!property.getDecorator('Input'))
 		.reduce((properties: NgDocPlaygroundProperties, property: PropertyDeclaration) => {
-			const inputName: string = getPlaygroundInputName(property);
+			const inputName: string = getInputName(property);
 
 			return {...properties, ...propOrParamToPlaygroundProperty(property, inputName)};
 		}, {});
