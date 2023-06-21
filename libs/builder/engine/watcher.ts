@@ -4,7 +4,7 @@ import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
 
 import {miniPattern} from '../helpers';
-import {bufferDebounce, bufferUntilOnce} from '../operators';
+import {bufferDebounce} from '../operators';
 
 /**
  *
@@ -14,13 +14,10 @@ import {bufferDebounce, bufferUntilOnce} from '../operators';
  */
 function bufferAndFilter(
 	source$: Observable<string>,
-	ready$: Observable<unknown>,
 	patterns: string[],
 ): Observable<string[]> {
 	return source$.pipe(
-		bufferUntilOnce(ready$),
 		bufferDebounce(10),
-		map((paths: string[][]) => paths.flat()),
 		map((paths: string[]) => paths.filter((path) => patterns.some((p: string) => minimatch(path, miniPattern(p))))),
 		filter((paths: string[]) => paths.length > 0),
 	);
@@ -53,15 +50,19 @@ export class NgDocWatcher {
 	}
 
 	onAdd(...filterPaths: string[]): Observable<string[]> {
-		return bufferAndFilter(this.add$, this.ready$, filterPaths);
+		return bufferAndFilter(this.add$, filterPaths);
 	}
 
 	onChange(...filterPaths: string[]): Observable<string[]> {
-		return bufferAndFilter(this.change$, this.ready$, filterPaths);
+		return bufferAndFilter(this.change$, filterPaths);
 	}
 
 	onUnlink(...filterPaths: string[]): Observable<string[]> {
-		return bufferAndFilter(this.unlink$, this.ready$, filterPaths);
+		return bufferAndFilter(this.unlink$, filterPaths);
+	}
+
+	onReady(): Observable<void> {
+		return this.ready$.asObservable();
 	}
 
 	close(): void {
