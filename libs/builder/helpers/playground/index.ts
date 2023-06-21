@@ -1,6 +1,7 @@
 export * from './build-playground-metadata';
 export * from './get-content-for-playground';
 export * from './get-playground-by-id';
+export * from './get-playground-input-name';
 export * from './get-playground-inputs';
 export * from './get-playground-template-inputs';
 export * from './get-playgrounds-expression';
