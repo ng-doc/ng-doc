@@ -1,3 +1,10 @@
+## [16.6.4](https://github.com/ng-doc/ng-doc/compare/v16.6.3...v16.6.4) (2023-06-24)
+
+
+### Bug Fixes
+
+* **builder:** parsimmon package is not installed after adding ng-doc to the project ([b5a030b](https://github.com/ng-doc/ng-doc/commit/b5a030b0d8772f51d6e161ff15364488194d5a4f))
+
 ## [16.6.3](https://github.com/ng-doc/ng-doc/compare/v16.6.2...v16.6.3) (2023-06-21)
 
 
