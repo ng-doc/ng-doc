@@ -26,7 +26,7 @@
 		"cosmiconfig-typescript-loader": "4.3.0",
 		"find-cache-dir": "3.3.2",
 		"tslib": "^2.3.0",
-		"ng-morph": "^2.2.3",
+		"ng-morph": "2.2.5",
 		"parsimmon": "^1.18.1"
 	},
 	"publishConfig": {
