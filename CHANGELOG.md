@@ -1,3 +1,10 @@
+## [16.6.5](https://github.com/ng-doc/ng-doc/compare/v16.6.4...v16.6.5) (2023-06-26)
+
+
+### Bug Fixes
+
+* **project:** add schematic fails on brand new angular 16.1 app ([a6dd29d](https://github.com/ng-doc/ng-doc/commit/a6dd29dacefa07d118d72074c9f267e18d6915a6)), closes [#69](https://github.com/ng-doc/ng-doc/issues/69)
+
 ## [16.6.4](https://github.com/ng-doc/ng-doc/compare/v16.6.3...v16.6.4) (2023-06-24)
 
 
