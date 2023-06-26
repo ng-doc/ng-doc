@@ -1,7 +1,10 @@
 # {{ NgDocPage.title }}
 
-Before installing the library, you will need the Angular application that you will use to display
-your documentation.
+NgDoc is just a library, so first you need to create an Angular application that will be used to
+display documentation, it can be a separate application or an existing one.
+
+When you install NgDoc, it will be integrated into the build process of your application, and will generate
+pages and components based on you code, that can be used in your application to display documentation.
 
 ## Automatic (recommended)
 
@@ -149,6 +152,7 @@ import {RouterModule} from '@angular/router';
 import {NgDocModule, provideSearchEngine, NgDocDefaultSearchEngine} from '@ng-doc/app';
 import {NG_DOC_ROUTING, NgDocGeneratedModule} from '@ng-doc/generated';
 import {NgDocUiKitRootModule} from '@ng-doc/ui-kit';
+import {NgDocNavbarModule, NgDocSidebarModule} from '@ng-doc/app';
 
 import {AppComponent} from './app.component';
 
@@ -164,6 +168,9 @@ import {AppComponent} from './app.component';
     NgDocGeneratedModule.forRoot(),
     // Add generated routes
     RouterModule.forRoot(NG_DOC_ROUTING),
+    // Import NavBar, Sidebar components
+    NgDocNavbarModule,
+    NgDocSidebarModule,
   ],
   // Add search engine to the providers
   providers: [provideSearchEngine(NgDocDefaultSearchEngine)],

@@ -7,12 +7,27 @@ how it works, what it can do and how it looks.
 
 ## Motivation
 
-The project was created to facilitate and speed up the process of writing documentation, for
-example, the documentation for your API is collected from the code and comments to it, which makes
-it relevant even without using the library, and the guides use the `markdown` format, which
-allows your users to read it even without switching to the website, which makes it more useful.
+While working on different projects at various companies or creating open-source projects, I often
+encountered the need to create documentation for my library to make it easier for other developers
+to understand, explore different examples, and use various functions. When it comes to Angular
+libraries, the options are limited. Usually, I had to choose between StoryBook and Compodoc, or use
+a tool that is not tightly coupled with the codebase and allows writing guides similar to GitBook.
 
-## How it works?
+StoryBook and Compodoc didn't satisfy me because the former required writing a lot of boilerplate
+code and extensive configuration, while the latter only generated API documentation, which often
+wasn't suitable, especially for open-source projects.
+
+In my understanding, good project documentation should consist of guides with usage examples and API
+documentation generated based on the code. It would be desirable for them to work together,
+referring to each other in the necessary places. However, I also believe that documentation, like
+writing tests, is not always a fun task, so I want to make this process as simple and fast
+as possible and, in the future, only add new examples and edit existing ones when updating the
+codebase.
+
+Hence, the desire to create a tool that would automate as much of the routine work as possible,
+while allowing easy and, most importantly, quick documentation writing for projects.
+
+## How does it work?
 
 NgDoc consists of several libraries, first of all, it uses its own Angular Builder, which is
 embedded in the build process to render documentation, it generates components, routes for your
@@ -23,7 +38,7 @@ NgDoc does not create an Angular application, it only generates pages and provid
 to make your documentation look cool! This is actually one of the positives because you can modify
 your application however you like, or integrate the documentation into an existing application.
 
-## What next?
+## What's next?
 
-We are going to improve the library further, adding new features and fixes to it and to start using
+I'm going to improve the library further, adding new features and fixes to it and to start using
 the library, see the `*GettingStartedInstallation` article.
