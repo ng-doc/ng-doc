@@ -12,6 +12,8 @@ In order to create a page you can use special schematic, you can call it even wi
 it will ask questions and show hints for required properties. You can find all available options in
 the interface `NgDocBuildPageSchema`
 
+{% include "../../shared/schematic-exec-path.md" %}
+
 ```bash
 ng g @ng-doc/builder:page "Installation"
 ```

@@ -1,3 +1,3 @@
 export interface SchematicArgv {
-	path: string;
+	path?: string;
 }

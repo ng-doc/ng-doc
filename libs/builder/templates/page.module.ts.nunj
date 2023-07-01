@@ -52,7 +52,7 @@ export class DynamicComponent extends NgDocRootPage {
 		RouterModule.forChild([{
 			path: '',
 			component: DynamicComponent,
-			title: '{{ page.title }}',
+			title: `{{ page.title | toTemplateString }}`,
 		}]),
 	],
 	providers: pageEntity.providers,

@@ -22,11 +22,13 @@ import {NgDocBuildApiSchema} from './schema';
  */
 export function build(options: NgDocBuildApiSchema): Rule {
 	return (host: Tree) => {
+		const execPath: string = options?.path ?? '';
+
 		return chain([
 			mergeWith(
 				apply(url('./files'), [
 					applyTemplates({...options}),
-					move(options.path),
+					move(execPath),
 					forEach((fileEntry: FileEntry) => {
 						if (host.exists(fileEntry.path)) {
 							host.overwrite(fileEntry.path, fileEntry.content);

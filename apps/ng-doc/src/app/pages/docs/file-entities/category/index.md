@@ -12,6 +12,8 @@ To create a category you can use special schematic, you can call it even without
 it will ask questions and show hints for required properties. You can find all available options in
 the interface `NgDocBuildCategorySchema`
 
+{% include "../../shared/schematic-exec-path.md" %}
+
 ```bash
 ng g @ng-doc/builder:category "Getting Started"
 ```
