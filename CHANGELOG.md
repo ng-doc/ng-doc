@@ -1,3 +1,13 @@
+## [16.6.6](https://github.com/ng-doc/ng-doc/compare/v16.6.5...v16.6.6) (2023-07-01)
+
+
+### Bug Fixes
+
+* **builder:** fix tests ([0aca03c](https://github.com/ng-doc/ng-doc/commit/0aca03cb1121ec8418abf1f8bfd8908f714c452f))
+* **builder:** generated files via schematics have some miss alignments ([062cb0d](https://github.com/ng-doc/ng-doc/commit/062cb0d60d7becfd3523a58369667d9229b2c613))
+* **builder:** schematics don't work in the root folder of the repository ([2caeef6](https://github.com/ng-doc/ng-doc/commit/2caeef6821f72cc7b2263d6959037466f95c7e96)), closes [#71](https://github.com/ng-doc/ng-doc/issues/71)
+* **builder:** some symbols in the page and category titles cause a built error ([d230811](https://github.com/ng-doc/ng-doc/commit/d23081109d9f75aab4d3e532031161d49616ebfd)), closes [#73](https://github.com/ng-doc/ng-doc/issues/73)
+
 ## [16.6.5](https://github.com/ng-doc/ng-doc/compare/v16.6.4...v16.6.5) (2023-06-26)
 
 
