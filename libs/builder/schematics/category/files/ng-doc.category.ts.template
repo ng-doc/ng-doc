@@ -3,8 +3,8 @@ import <%= categoryName %> from '<%= importPath %>';<% } %>
 
 const <%= constantName %>: NgDocCategory = {
 	title: '<%= title %>',<% if (route) { %>
-    route: `<%= route %>`,<% } %><% if (importPath && categoryName) { %>
-    category: <%= categoryName %>,<% } %><% if (expanded) { %>
+	route: `<%= route %>`,<% } %><% if (importPath && categoryName) { %>
+	category: <%= categoryName %>,<% } %><% if (expanded) { %>
 	expanded: <%= expanded %>,<% } %><% if (expandable) { %>
 	expandable: <%= expandable %>,<% } %><% if (order) { %>
 	order: `<%= order %>`,<% } %>
