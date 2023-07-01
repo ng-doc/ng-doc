@@ -51,7 +51,7 @@ export default MyCategoryCategory;
 
 const MyCategoryCategory: NgDocCategory = {
 \ttitle: 'my-category',
-    route: \`my-category\`,
+\troute: \`my-category\`,
 };
 
 export default MyCategoryCategory;
@@ -154,7 +154,7 @@ import ParentCategory from '../ng-doc.category';
 
 const ChildCategoryCategory: NgDocCategory = {
 \ttitle: 'child-category',
-    category: ParentCategory,
+\tcategory: ParentCategory,
 };
 
 export default ChildCategoryCategory;
