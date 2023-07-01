@@ -30,9 +30,10 @@ const demoTemplates: string[] = ['ng-doc.module.ts.template'];
  */
 export function build(options: NgDocBuildPageSchema): Rule {
 	return (host: Tree) => {
-		const path: string = join(options.path, `/${dasherize(options.title)}`);
+		const execPath: string = options?.path ?? '';
+		const path: string = join(execPath, `/${dasherize(options.title)}`);
 		const closestCategoryFile: string | null = options.category
-			? findClosestFile(host, options.path, CATEGORY_NAME)
+			? findClosestFile(host, execPath, CATEGORY_NAME)
 			: null;
 		const pageName: string = classify(options.title + 'Page');
 		const categoryConstantName: string | null =

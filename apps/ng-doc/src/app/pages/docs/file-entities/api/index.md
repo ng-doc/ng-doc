@@ -9,6 +9,8 @@ else.
 To create an API entity, you can use a special schematic, it will generate `ng-doc.api.ts` file for
 you in the current directory.
 
+{% include "../../shared/schematic-exec-path.md" %}
+
 ```bash
 ng g @ng-doc/builder:api
 ```
