@@ -79,7 +79,7 @@ export default MyPagePage;
 const MyPagePage: NgDocPage = {
 \ttitle: \`my-page\`,
 \tmdFile: './index.md',
-    order: 1,
+\torder: 1,
 };
 
 export default MyPagePage;
@@ -114,7 +114,7 @@ import {MyPagePageModule} from './ng-doc.module';
 const MyPagePage: NgDocPage = {
 \ttitle: \`my-page\`,
 \tmdFile: './index.md',
-    imports: [MyPagePageModule],
+\timports: [MyPagePageModule],
 };
 
 export default MyPagePage;
