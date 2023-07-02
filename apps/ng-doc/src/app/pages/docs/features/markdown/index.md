@@ -32,7 +32,7 @@ Code blocks are supported by default as in `markdown`, but we have added some ad
 
 ### Name
 
-To add a name to your code block, you can specify the `name` attribute, for example like this:
+To add a name to your code block, you can specify the `name` parameter, for example like this:
 
 ````markdown name="index.md"
 ```typescript name="my-file.ts"
@@ -46,25 +46,46 @@ const myVar = 'Hello world';
 
 ### Groups
 
-Several code blocks can be grouped together, for this you need to specify the `group` and `name` attributes,
+Several code blocks can be grouped together, for this you need to specify the `group` and `name` parameters,
 for each code block you want to group, for example, to group two code blocks, you can write
 the following
 
 ````markdown name="index.md"
-```typescript group="my-group" name="world"
+```typescript group="my-group1" name="world"
 const myVar = 'Hi world!';
 ```
 
-```typescript group="my-group" name="mom"
+```typescript group="my-group1" name="mom"
 const myVar = 'Hi Mom!';
 ```
 ````
 
-```typescript group="my-group" name="world"
+```typescript group="my-group1" name="world"
 const myVar = 'Hi world!';
 ```
 
-```typescript group="my-group" name="mom"
+```typescript group="my-group1" name="mom"
+const myVar = 'Hi Mom!';
+```
+
+By default, first tab will be active, but you can specify the active tab by adding `active` parameter
+to change that.
+
+````markdown name="index.md"
+```typescript group="my-group2" name="world"
+const myVar = 'Hi world!';
+```
+
+```typescript group="my-group2" name="mom" active
+const myVar = 'Hi Mom!';
+```
+````
+
+```typescript group="my-group2" name="world"
+const myVar = 'Hi world!';
+```
+
+```typescript group="my-group2" name="mom" active
 const myVar = 'Hi Mom!';
 ```
 
@@ -117,7 +138,7 @@ export default NicePage;
 
 ### Loading code from a file
 
-You can also load the code from a file, for this you need to specify the `file` attribute,
+You can also load the code from a file, for this you need to specify the `file` parameter,
 and the path to the file **relative** to your template
 
 ````markdown name="index.md"
@@ -130,7 +151,7 @@ and the path to the file **relative** to your template
 
 ```
 
-To load specific lines from the file, you can provide them at the end of the `file` attribute,
+To load specific lines from the file, you can provide them at the end of the `file` parameter,
 for example, to load lines from 5 to 11, you can write the following
 
 ````markdown name="index.md"
