@@ -41,9 +41,9 @@ import {NgDocTabComponent} from './tab/tab.component';
 	],
 })
 @UntilDestroy()
-export class NgDocTabGroupComponent<T> implements AfterContentInit, AfterViewInit {
+export class NgDocTabGroupComponent<T = number> implements AfterContentInit, AfterViewInit {
 	@Input()
-	openedTab?: T;
+	openedTab!: T;
 
 	@ViewChildren('headerTab')
 	tabElements: QueryList<ElementRef> = new QueryList<ElementRef>();

@@ -18,22 +18,25 @@ export abstract class NgDocHtmlProcessor<T> implements OnInit {
 
 	ngOnInit(): void {
 		this.elementRef.nativeElement.querySelectorAll(this.selector).forEach((elementNode: Element) => {
-			const options: NgDocProcessorOptions<T> = this.extractComponentOptions(elementNode);
+			// check if element node has a parent node because it can be removed by another processor
+			if (elementNode.parentNode) {
+				const replaceElement: Element = this.replaceElement(elementNode);
+				const options: NgDocProcessorOptions<T> = this.extractComponentOptions(elementNode, this.elementRef.nativeElement);
 
-			// create component
-			const componentRef: ComponentRef<T> = this.viewContainerRef.createComponent(this.component, {
-				projectableNodes: options.content,
-				injector: this.injector,
-			});
+				// create component
+				const componentRef: ComponentRef<T> = this.viewContainerRef.createComponent(this.component, {
+					projectableNodes: options.content,
+					injector: this.injector,
+				});
 
-			// set component options
-			Object.assign(componentRef.instance as object, options.inputs);
+				// set component options
+				Object.assign(componentRef.instance as object, options.inputs);
 
-			// replace element node with component node
-			const replaceElement: Element = this.replaceElement(elementNode);
-			replaceElement.parentNode?.replaceChild(componentRef.location.nativeElement, replaceElement);
+				// replace element node with component node
+				replaceElement.parentNode?.replaceChild(componentRef.location.nativeElement, replaceElement);
 
-			componentRef.changeDetectorRef.markForCheck();
+				componentRef.changeDetectorRef.markForCheck();
+			}
 		});
 	}
 
@@ -41,5 +44,5 @@ export abstract class NgDocHtmlProcessor<T> implements OnInit {
 		return element;
 	}
 
-	protected abstract extractComponentOptions(element: Element): NgDocProcessorOptions<T>;
+	protected abstract extractComponentOptions(element: Element, root: HTMLElement): NgDocProcessorOptions<T>;
 }

@@ -20,10 +20,8 @@ const WARNING_ANCHOR: string = '<p><strong>Warning</strong>';
 export function marked(markdown: string, page?: NgDocPageEntity): string {
 	const renderer: markedRender.RendererObject = {
 		code(code: string, lang: string | undefined): string {
-			const {language, file, fileName, highlightedLines, fileLineStart, fileLineEnd}: NgDocCodeBlockParams =
+			const {language, file, name, highlightedLines, fileLineStart, fileLineEnd, group, active}: NgDocCodeBlockParams =
 				parseCodeBlockParams(lang?.trim() ?? 'typescript');
-
-			// file path regexp
 
 			if (file && page) {
 				const relativeFilePath: string = path.join(page.mdFolder, file);
@@ -38,10 +36,12 @@ export function marked(markdown: string, page?: NgDocPageEntity): string {
 				code = fileContent;
 			}
 
-			return `<pre><code class="language-${language ?? 'ts'}"
+			const codeElement: string =  `<pre><code class="language-${language ?? 'ts'}"
 	      lang="${language}"
-	      fileName="${fileName ?? ''}"
+	      name="${!group && name ? name : ''}"
 	      highlightedLines="${JSON.stringify(highlightedLines ?? [])}">${escapeHtml(code)}</code></pre>`;
+
+			return group ? `<ng-doc-tab group="${group}" name="${name}" ${active ? 'active' : ''}>${codeElement}</ng-doc-tab>` : codeElement;
 		},
 		blockquote(quote: string): string {
 			if (new RegExp(`^${NOTE_ANCHOR}`).test(quote)) {

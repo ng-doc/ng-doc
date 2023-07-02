@@ -27,7 +27,7 @@ displayed in the demo's code tab.
 
 So, let's say you have a component with the following code
 
-```typescript file="./demos/button-inline-demo.component.ts" fileName="button-inline-demo.component.ts" {10,12,17,20,22,27}
+```typescript file="./demos/button-inline-demo.component.ts" name="button-inline-demo.component.ts" {10,12,17,20,22,27}
 
 ```
 

@@ -23,7 +23,7 @@ itself, for example:
 > If your target component is standalone, you don't need to import anything, NgDoc will care about
 > it.
 
-```typescript fileName="ng-doc.page.ts"
+```typescript name="ng-doc.page.ts"
 import {NgDocPage} from '@ng-doc/core';
 import {NgDocTagModule, NgDocTagComponent} from '@ng-doc/ui-kit';
 
@@ -63,7 +63,7 @@ we also need to import the `NgDocTagModule` in the `imports` field of the page.
 To display the created playground on the page, you should use the `playground` method
 from `NgDocActions`, passing the key of your playground to it as follows
 
-```twig fileName="index.md"
+```twig name="index.md"
 {{'{{ NgDocActions.playground("TagPlayground") }}' | safe }}
 ```
 
@@ -92,7 +92,7 @@ the `content` field in your playground configuration, for example:
 > field,
 > if this component is standalone, you must import its component class.
 
-```typescript fileName="ng-doc.page.ts" {11,15-18}
+```typescript name="ng-doc.page.ts" {11,15-18}
 import {NgDocDependencies} from '@ng-doc/core';
 import {NgDocTagComponent, NgDocIconModule} from '@ng-doc/ui-kit';
 
@@ -129,7 +129,7 @@ content.
 To make your playgrounds more lively and dynamic you can use `data` field,
 and put any data you want in it, to use it in your template, for example like that:
 
-```typescript fileName="ng-doc.page.ts"
+```typescript name="ng-doc.page.ts"
 import {NgDocDependencies} from '@ng-doc/core';
 import {NgDocTagComponent} from '@ng-doc/ui-kit';
 
@@ -155,7 +155,7 @@ export default PageDependencies;
 
 You can also create playgrounds for directives in the same way as for components:
 
-```typescript fileName="ng-doc.page.ts"
+```typescript name="ng-doc.page.ts"
 import {NgDocPage} from '@ng-doc/core';
 import {NgDocRotatorDirective} from '@ng-doc/ui-kit';
 
@@ -180,7 +180,7 @@ export default MyAwesomePage;
 
 It's also possible to create playgrounds for pipes, let's say we have a simple `FormatDatePipe`:
 
-```typescript fileName="format-date.pipe.ts" file="./format-date.pipe.ts"
+```typescript name="format-date.pipe.ts" file="./format-date.pipe.ts"
 
 ```
 
@@ -191,7 +191,7 @@ pipe class, and the `template` field to specify the template for the playground:
 > If your pipe has parameters, you must not provide values for them in the template, because NgDoc
 > will bind them to the playground controls.
 
-```typescript fileName="ng-doc.page.ts"
+```typescript name="ng-doc.page.ts"
 import {NgDocPage} from '@ng-doc/core';
 import {FormatDatePipe} from './format-date.pipe';
 

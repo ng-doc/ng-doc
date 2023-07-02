@@ -23,7 +23,7 @@ export class NgDocCodeProcessorDirective extends NgDocHtmlProcessor<NgDocCodeCom
 		return {
 			inputs: {
 				copyButton: element.getAttribute('copyButton') !== 'false',
-				fileName: element.getAttribute('fileName') || undefined,
+				name: element.getAttribute('name') || undefined,
 				lineNumbers: element.getAttribute('lineNumbers') !== 'false',
 			},
 			content: [[element.closest('pre') ?? element]],

@@ -10,7 +10,7 @@ You can use it to focus your users on the code or demo first.
 To display the created demo on the page, you should use the `demoPane` method from `NgDocActions`,
 passing the name of your component to it as follows
 
-```twig fileName="index.md"
+```twig name="index.md"
 {{'{{ NgDocActions.demoPane("ButtonDemoComponent") }}' | safe }}
 ```
 
@@ -24,7 +24,7 @@ The demo action also supports some options that can be passed as the second para
 conform to the `NgDocDemoPaneActionOptions` interface. For example, displaying a code pane by
 default and only html tab.
 
-```twig fileName="index.md"
+```twig name="index.md"
 {{'{{ NgDocActions.demoPane("ButtonDemoComponent", {expanded: true, tabs: ["HTML"]}) }}' | safe }}
 ```
 
@@ -36,7 +36,7 @@ You can also customize the styles of the demo pane. To do this, need to provide 
 variables
 from your `styles.scss` file.
 
-```scss fileName="styles.scss"
+```scss name="styles.scss"
 :root {
   // Fixed height for all demo panes
   --ng-doc-demo-pain-height: 300px;
@@ -61,7 +61,7 @@ from your `styles.scss` file.
 To customize only specific demo pane, you can provide CSS class to the options of the `demoPane`
 method.
 
-```twig fileName="index.md"
+```twig name="index.md"
 {{'{{ NgDocActions.demoPane("ButtonDemoComponent", {class: "my-demo-pane"}) }}' | safe }}
 ```
 

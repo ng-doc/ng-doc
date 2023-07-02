@@ -17,7 +17,7 @@
 
 		.ng-doc-tab {
 			position: relative;
-			padding: calc(var(--ng-doc-base-gutter) * 2);
+			padding: calc(var(--ng-doc-base-gutter) / 2 * 3) calc(var(--ng-doc-base-gutter) * 2);
 			cursor: pointer;
 			white-space: nowrap;
 

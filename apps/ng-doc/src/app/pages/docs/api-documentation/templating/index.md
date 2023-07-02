@@ -17,7 +17,7 @@ syntax, so we can use any of its functions to make your documentation more prett
 The main part of the documentation should be written in a comment to the entity, in the following
 form.
 
-```typescript fileName="my-class.ts"
+```typescript name="my-class.ts"
 /**
  * Lorem Ipsum is simply dummy text of the printing and typesetting industry.
  * Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
@@ -36,7 +36,7 @@ export class MyClass {}
 You can also add links to other APIs using the `@see` tag and keywords, NgDoc will display them in a
 special **See Also** section.
 
-```typescript fileName="my-class.ts" {11-12}
+```typescript name="my-class.ts" {11-12}
 /**
  * Lorem Ipsum is simply dummy text of the printing and typesetting industry.
  * Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
@@ -60,7 +60,7 @@ render
 the usage notes after the main documentation and API of your entity.
 All content you write after the `@usageNotes` tag will be related to it.
 
-```typescript fileName="my-class.ts" {11}
+```typescript name="my-class.ts" {11}
 /**
  * Lorem Ipsum is simply dummy text of the printing and typesetting industry.
  * Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
@@ -87,7 +87,7 @@ to add documentation to the parameters, use the `@param` tag and parameter name.
 > **Note**
 > Class and interface methods do not support tags like `@see` and `@usageNotes`
 
-```typescript fileName="my-class.ts"
+```typescript name="my-class.ts"
 export class MyClass {
   /**
    * My awesome docs for the

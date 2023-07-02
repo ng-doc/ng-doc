@@ -27,7 +27,7 @@
 				[name]="propertyControl.property.inputName"
 				[property]="propertyControl.property"
 				[typeControl]="propertyControl.typeControl"
-				[control]="getFormControl | ngDocBind: this | ngDocRun: 'properties': propertyControl.propertyName"
+				[control]="getFormControl | bind: this | execute: 'properties': propertyControl.propertyName"
 			>
 			</ng-doc-playground-property>
 		</ng-container>
@@ -39,7 +39,7 @@
 				[name]="content.value.label"
 				[property]="content.value"
 				[typeControl]="contentTypeControl"
-				[control]="getFormControl | ngDocBind: this | ngDocRun: 'content': content.key"
+				[control]="getFormControl | bind: this | execute: 'content': content.key"
 			>
 			</ng-doc-playground-property>
 		</ng-container>
