@@ -13,7 +13,7 @@ export function parseCodeBlockParams(options: string): NgDocCodeBlockParams {
 			P.regexp(/[a-zA-Z-]+/)
 				.skip(P.optWhitespace)
 				.map((language) => ({language})),
-		content: () => P.regexp(/[a-zA-Z0-9\\./\-_]+/).wrap(P.string('"'), P.string('"')),
+		content: () => P.regexp(/.+?(?=")/).wrap(P.string('"'), P.string('"')),
 		number: () => P.digits.map(Number),
 
 		// File Parsers
