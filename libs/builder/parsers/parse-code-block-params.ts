@@ -10,7 +10,7 @@ import {NgDocCodeBlockParams} from '../interfaces';
 export function parseCodeBlockParams(options: string): NgDocCodeBlockParams {
 	const parser = P.createLanguage({
 		language: () =>
-			P.regexp(/[a-zA-Z]+/)
+			P.regexp(/[a-zA-Z-]+/)
 				.skip(P.optWhitespace)
 				.map((language) => ({language})),
 		content: () => P.regexp(/[a-zA-Z0-9\\./\-_]+/).wrap(P.string('"'), P.string('"')),
@@ -44,11 +44,22 @@ export function parseCodeBlockParams(options: string): NgDocCodeBlockParams {
 
 		// Main Parsers
 		lineNumbers: () => P.string('lineNumbers').map(() => ({lineNumbers: true})),
+		name: (p) =>
+			P.string('name')
+				.then(P.string('='))
+				.then(p['content'])
+				.map((name) => ({name})),
+		group: (p) =>
+			P.string('group')
+				.then(P.string('='))
+				.then(p['content'])
+				.map((group) => ({group})),
+		active: () => P.string('active').map(() => ({active: true})),
 		fileName: (p) =>
 			P.string('fileName')
 				.then(P.string('='))
 				.then(p['content'])
-				.map((fileName) => ({fileName})),
+				.map((name) => ({name})),
 		file: (p) =>
 			P.seq(
 				p['filePath'],
@@ -65,7 +76,7 @@ export function parseCodeBlockParams(options: string): NgDocCodeBlockParams {
 
 		// Combined Parsers
 		paramsParser: (p: P.Language) =>
-			p['lineNumbers'].or(p['fileName']).or(p['file']).or(p['highlightedLines']).sepBy(P.whitespace),
+			p['lineNumbers'].or(p['fileName']).or(p['file']).or(p['name']).or(p['group']).or(p['active']).or(p['highlightedLines']).sepBy(P.whitespace),
 		languageWithParamsParser: (p) => P.seq(p['language'], p['paramsParser']).map((v) => v.flat()),
 	});
 

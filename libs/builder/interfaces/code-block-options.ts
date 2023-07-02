@@ -1,7 +1,9 @@
 export interface NgDocCodeBlockParams {
 	language?: string;
 	lineNumbers?: boolean;
-	fileName?: string;
+	name?: string;
+	group?: string;
+	active?: boolean;
 	file?: string;
 	fileLineStart?: number;
 	fileLineEnd?: number;

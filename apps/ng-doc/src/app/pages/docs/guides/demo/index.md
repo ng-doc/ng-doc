@@ -10,7 +10,7 @@ the code and usage first, and only then read the documentation.
 To display the created demo on the page, you should use the `demo` method from `NgDocActions`,
 passing the name of your component to it as follows
 
-```twig fileName="index.md"
+```twig name="index.md"
 {{'{{ NgDocActions.demo("ButtonDemoComponent") }}' | safe }}
 ```
 
@@ -25,7 +25,7 @@ The demo action also supports some options that can be passed as the second para
 conform to the `NgDocDemoActionOptions` interface. For example, displaying a demo without a
 container.
 
-```twig fileName="index.md"
+```twig name="index.md"
 {{'{{ NgDocActions.demo("ButtonDemoComponent", {container: false}) }}' | safe }}
 ```
 
@@ -43,7 +43,7 @@ You can customize the demo component via CSS variables.
 > **Warning**
 > Be careful `--ng-doc-demo-displayer-*` variables will be applied to all playgrounds as well.
 
-```scss fileName="styles.scss"
+```scss name="styles.scss"
 :root {
   // Demo border
   --ng-doc-demo-displayer-border: 1px solid #ccc;
@@ -56,7 +56,7 @@ You can customize the demo component via CSS variables.
 
 To customize only specific demo, you can provide CSS class to the options of the `demo` method.
 
-```twig fileName="index.md"
+```twig name="index.md"
 {{'{{ NgDocActions.demo("ButtonDemoComponent", {class: "my-demo"}) }}' | safe }}
 ```
 

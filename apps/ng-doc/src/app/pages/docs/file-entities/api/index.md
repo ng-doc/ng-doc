@@ -28,7 +28,7 @@ Let's see how an example of a basic API configuration looks like.
 > The paths you pass to the `include` and `exclude` fields must be passed relative to your project
 > root path
 
-```typescript fileName="ng-doc.api.ts"
+```typescript name="ng-doc.api.ts"
 import {NgDocApi} from '@ng-doc/core';
 
 export const api: NgDocApi = {
@@ -58,7 +58,7 @@ the `include` field.
 Don't like that the API section is at the top? You can also add a category to it to better
 structure your documentation articles.
 
-```typescript fileName="ng-doc.api.ts" {2,6}
+```typescript name="ng-doc.api.ts" {2,6}
 import {NgDocApi} from '@ng-doc/core';
 import MyAwesomeCategory from '../ng-doc.category';
 

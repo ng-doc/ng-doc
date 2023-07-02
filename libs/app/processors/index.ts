@@ -6,4 +6,5 @@ export * from '@ng-doc/app/processors/html-processor';
 export * from '@ng-doc/app/processors/icon-processor';
 export * from '@ng-doc/app/processors/link-processor';
 export * from '@ng-doc/app/processors/playground-processor';
+export * from '@ng-doc/app/processors/tabs-processor';
 export * from '@ng-doc/app/processors/tooltip-processor';

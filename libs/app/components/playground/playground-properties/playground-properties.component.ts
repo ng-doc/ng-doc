@@ -21,8 +21,8 @@ import {
 	NgDocBindPipe,
 	NgDocButtonComponent,
 	NgDocCheckboxComponent,
+	NgDocExecutePipe,
 	NgDocIconComponent,
-	NgDocRunPipe,
 	NgDocTextComponent,
 	NgDocTextRightDirective,
 	NgDocTooltipDirective,
@@ -54,7 +54,7 @@ import {NgDocPlaygroundPropertyControl} from '../playground-property-control';
 		AsyncPipe,
 		KeyValuePipe,
 		NgDocBindPipe,
-		NgDocRunPipe,
+		NgDocExecutePipe,
 	],
 })
 export class NgDocPlaygroundPropertiesComponent<

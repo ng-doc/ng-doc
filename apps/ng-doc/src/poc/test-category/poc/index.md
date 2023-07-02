@@ -1,10 +1,7 @@
-```typescript {2,3,4}
-@Component({
-	template: `
-    <!-- NgDocHTMLSnippetStart(Button Template) -->
-    <button ng-doc-button-flat color="orange" (click)="clickEvent()">Just a button</button>
-    <!-- NgDocHTMLSnippetEnd(Button Template) -->
-  `,
-	changeDetection: ChangeDetectionStrategy.OnPush,
-})
+```bash group="1" name="Angular"
+ng add @ng-doc/add
+```
+
+```bash group="1" name="Nx"
+nx add @ng-doc/add
 ```

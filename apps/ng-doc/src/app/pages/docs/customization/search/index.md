@@ -10,7 +10,7 @@ language, you can change the language of the search to match your documentation.
 To do so, you need to import stemmer from `@orama/stemmers` package and provide it to the
 `provideSearchEngine` function in your root module.
 
-```ts fileName="app.module.ts" {12}
+```ts name="app.module.ts" {12}
 import {NgModule} from '@angular/core';
 import {NgDocDefaultSearchEngine, provideSearchEngine} from '@ng-doc/app';
 
@@ -35,7 +35,7 @@ object to the `provideSearchEngine` function in your root module.
 
 For example, increasing the number of results returned by the search engine:
 
-```ts fileName="app.module.ts" {11}
+```ts name="app.module.ts" {11}
 import {NgModule} from '@angular/core';
 import {NgDocDefaultSearchEngine, provideSearchEngine} from '@ng-doc/app';
 
@@ -57,7 +57,7 @@ export class AppModule {}
 By default, builder creates indexes for all content of the documentation except code blocks.
 If you want to exclude some content from the search, you can wrap in special `nunjucks` block:
 
-```twig fileName="index.md"
+```twig name="index.md"
 {{'{% index false %}' | safe }}
 ## Not indexed section
 The content of this section will not be indexed by the builder.
@@ -74,7 +74,7 @@ To do so, you need to implement the `NgDocSearchEngine` class and provide it via
 > To get data for search, you can load indexes via HTTP, by default they can be loaded from assets
 > using `assets/ng-doc/indexes.json` url.
 
-```ts fileName="custom-search-engine.ts"
+```ts name="custom-search-engine.ts"
 import {NgDocSearchEngine, NgDocSearchResult} from '@ng-doc/app';
 import {NgDocPageIndex} from '@ng-doc/core';
 import {from, Observable} from 'rxjs';
@@ -123,7 +123,7 @@ export class CustomSearchEngine extends NgDocSearchEngine {
 After you have created your search engine, you need to provide it in your root module using
 `provideSearchEngine` function.
 
-```ts fileName="app.module.ts" {11}
+```ts name="app.module.ts" {11}
 import {NgModule} from '@angular/core';
 import {provideSearchEngine} from '@ng-doc/app';
 

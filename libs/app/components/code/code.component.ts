@@ -38,7 +38,7 @@ export class NgDocCodeComponent {
 	copyButton: boolean = true;
 
 	@Input()
-	fileName?: string;
+	name?: string;
 
 	@Input()
 	lineNumbers: boolean = false;
@@ -49,7 +49,7 @@ export class NgDocCodeComponent {
 
 	@HostBinding('attr.data-ng-doc-has-header')
 	get hasHeader(): boolean {
-		return !!this.fileName;
+		return !!this.name;
 	}
 
 	get codeElement(): HTMLElement | null {

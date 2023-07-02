@@ -2,7 +2,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {FunctionType} from '@ng-doc/core';
 
 @Pipe({
-	name: 'ngDocBind',
+	name: 'bind',
 	standalone: true,
 })
 export class NgDocBindPipe implements PipeTransform {

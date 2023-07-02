@@ -14,7 +14,7 @@ import {
 	NgDocDemoProcessorDirective,
 	NgDocIconProcessorDirective,
 	NgDocLinkProcessorDirective,
-	NgDocPlaygroundProcessorDirective,
+	NgDocPlaygroundProcessorDirective, NgDocTabsProcessorDirective,
 	NgDocTooltipProcessorDirective,
 } from '@ng-doc/app/processors';
 import {NG_DOC_CONTEXT} from '@ng-doc/app/tokens';
@@ -61,6 +61,7 @@ import {
 		NgDocDemoProcessorDirective,
 		NgDocDemoPaneProcessorDirective,
 		NgDocPlaygroundProcessorDirective,
+		NgDocTabsProcessorDirective,
 		RouterLink,
 		NgDocTextComponent,
 		NgDocTextLeftDirective,

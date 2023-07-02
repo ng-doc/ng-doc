@@ -93,7 +93,7 @@
 							ng-doc-text
 							[innerHTML]="
 								(item.index.section
-									| ngDocHighlighterPipe: (getPositions | ngDocRun: 'section':item)
+									| ngDocHighlighterPipe: (getPositions | execute: 'section':item)
 									| ngDocSanitizeHtml) || item.index.title
 							"
 						></h5>
@@ -101,7 +101,7 @@
 							*ngIf="item.index.content"
 							class="ng-doc-search-content"
 							[innerHTML]="
-								item.index.content | ngDocHighlighterPipe: (getPositions | ngDocRun: 'content':item) | ngDocSanitizeHtml
+								item.index.content | ngDocHighlighterPipe: (getPositions | execute: 'content':item) | ngDocSanitizeHtml
 							"
 							ng-doc-text
 						></div>

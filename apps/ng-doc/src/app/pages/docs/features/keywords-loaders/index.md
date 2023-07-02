@@ -26,7 +26,7 @@ npm i @ng-doc/keywords-loaders --save-dev
 To integrate your documentation with the Angular documentation, you need to open
 your `ng-doc.config.ts` file, and import `ngKeywordsLoader` to the `keywordsLoaders` array:
 
-```typescript fileName="ng-doc.config.ts"
+```typescript name="ng-doc.config.ts"
 import {NgDocConfiguration} from '@ng-doc/builder';
 import {ngKeywordsLoader} from '@ng-doc/keywords-loaders';
 
@@ -42,7 +42,7 @@ export default config;
 After that, when you run your app, all your usages of Angular keywords, in code blocks and inline
 code, will be converted to links to the Angular documentation.
 
-```markdown fileName="index.md"
+```markdown name="index.md"
 Check this out: `Component` or `@Component` or `ChangeDetectorRef`.
 ```
 
@@ -54,7 +54,7 @@ To integrate your documentation with third-party NgDoc documentation, you need t
 your `ng-doc.config.ts` file, and import `ngDocKeywordsLoader` to the `keywordsLoaders` array
 and provide the base config:
 
-```typescript fileName="ng-doc.config.ts"
+```typescript name="ng-doc.config.ts"
 import {NgDocConfiguration} from '@ng-doc/builder';
 import {ngDocKeywordsLoader} from '@ng-doc/keywords-loaders';
 
@@ -79,7 +79,7 @@ warning in the console.
 You can also integrate guides of the third-party documentation, and provide a prefix if
 you want not to conflict with your own guides keywords:
 
-```typescript fileName="ng-doc.config.ts"
+```typescript name="ng-doc.config.ts"
 import {NgDocConfiguration} from '@ng-doc/builder';
 import {ngDocKeywordsLoader} from '@ng-doc/keywords-loaders';
 
@@ -101,7 +101,7 @@ export default config;
 After that, you should be able to use the keywords from the third-party NgDoc documentation,
 the anchors are also supported:
 
-```markdown fileName="index.md"
+```markdown name="index.md"
 Check this link: `*ExtraDocGettingStartedInstallation`.
 Or this one with anchor: `*ExtraDocGettingStartedInstallation#Manual`.
 ```
@@ -130,7 +130,7 @@ export function myKeywordsLoader(): NgDocKeywordsLoader {
 After that, you need to add the loader to the `keywordsLoaders` array in the
 `ng-doc.config.ts` file:
 
-```typescript fileName="ng-doc.config.ts"
+```typescript name="ng-doc.config.ts"
 import {NgDocConfiguration} from '@ng-doc/builder';
 import {myKeywordsLoader} from './my-keywords-loader';
 
@@ -144,6 +144,6 @@ const config: NgDocConfiguration = {
 And that's it! Now, when you run your app, all your usages of the `googleKeyword`
 keyword, will be converted to links to the Google website.
 
-```markdown fileName="index.md"
+```markdown name="index.md"
 Check this out: `googleKeyword`.
 ```

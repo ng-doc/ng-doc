@@ -94,4 +94,9 @@
 
 	/* Sidenav */
 	--ng-doc-sidenav-width: 300px;
+
+	/* Tabs */
+	--ng-doc-tabs-margin: calc(var(--ng-doc-base-gutter) * 4) 0px;
+	--ng-doc-tabs-border: 1px solid var(--ng-doc-base-2);
+	--ng-doc-tabs-border-radius: var(--ng-doc-base-gutter)
 }

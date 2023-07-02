@@ -15,7 +15,7 @@ your documentation application.
 > If you're going to create your own `sidebar` or `navbar` we recommend you to reuse
 > the variables below.
 
-```scss fileName="styles.css"
+```scss name="styles.css"
 :root {
   // `auto` - will stretch the app to the full width of the screen
   --ng-doc-app-max-width: auto;
@@ -35,7 +35,7 @@ and its style.
 > parent layout
 > to restrict the height of the `NgDocNavbarComponent` or custom `navbar` component.
 
-```scss fileName="styles.css"
+```scss name="styles.css"
 :root {
   // Background color of the `navbar`
   --ng-doc-navbar-background: var(--ng-doc-base-0);
@@ -57,7 +57,7 @@ and its style.
 The `NgDocNavbarComponent` can be customized by adding your own content. You can do this
 by providing `ng-template` to the one of its inputs like on the example below:
 
-```html fileName="app.component.html"
+```html name="app.component.html"
 <ng-doc-navbar [leftContent]="brand" [rightContent]="controls">
   <ng-template #brand>
     <img src="assets/images/brand.svg" />
@@ -82,7 +82,7 @@ If you want to replace the `NgDocNavbarComponent` with your own `navbar`, then j
 `<ng-doc-navbar>` tag from the `app.component.html` file, add your own `navbar` component,
 and mark it with `NgDocCustomNavbarDirective` directive like on the example below:
 
-```html fileName="app.component.html"
+```html name="app.component.html"
 <ng-doc-root>
   <my-custom-navbar ngDocCustomNavbar></my-custom-navbar>
 
@@ -98,7 +98,7 @@ on mobile devices.
 To open and close the `sidebar` you can use the `NgDocSidebarService` service, inject it into your
 component and call the `toggle()` method.
 
-```typescript fileName="my-custom-navbar.component.ts"
+```typescript name="my-custom-navbar.component.ts"
 import {Component} from '@angular/core';
 import {NgDocSidebarService} from '@ng-doc/app';
 
@@ -122,7 +122,7 @@ The `sidebar` is the left bar of the documentation application, it can be custom
 with
 your own `sidebar`. Below is a list of all the available variables that affect the `sidebar` layout:
 
-```scss fileName="styles.css"
+```scss name="styles.css"
 :root {
   // Background color of the `navbar`
   --ng-doc-sidebar-background: var(--ng-doc-base-0);
@@ -147,7 +147,7 @@ If you want to replace the `NgDocSidebarComponent` with your own `sidebar`, then
 `<ng-doc-sidebar>` tag from the `app.component.html` file, add your own `sidebar` component,
 and mark it with `NgDocCustomSidebarDirective` directive like on the example below:
 
-```html fileName="app.component.html"
+```html name="app.component.html"
 <ng-doc-root>
     <ng-doc-navbar></ng-doc-sidebar>
 
@@ -160,7 +160,7 @@ To implement your own `sidebar` you will need a list of categories and pages of 
 You can get this list by injecting the `NG_DOC_CONTEXT` token, which returns the `NgDocContext`
 object.
 
-```typescript fileName="my-custom-sidebar.component.ts"
+```typescript name="my-custom-sidebar.component.ts"
 import {Component, Inject} from '@angular/core';
 import {NG_DOC_CONTEXT, NgDocContext} from '@ng-doc/app';
 

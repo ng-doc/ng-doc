@@ -10,7 +10,7 @@ exported by default and match `NgDocConfiguration` interface.
 > **Note** You can create a configuration file in the root of your repository or in the root of the
 > documentation application.
 
-```typescript fileName="ng-doc.config.ts"
+```typescript name="ng-doc.config.ts"
 import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
@@ -28,7 +28,7 @@ in your `ng-doc.config.ts` file.
 
 After that NgDoc will search for documentation pages in the specified folder and its subfolders.
 
-```typescript fileName="ng-doc.config.ts"
+```typescript name="ng-doc.config.ts"
 import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
@@ -43,7 +43,7 @@ export default config;
 You can also change the output folder for the documentation application by specifying `outDir`,
 this folder is used for storing generated pages and modules.
 
-```typescript fileName="ng-doc.config.ts"
+```typescript name="ng-doc.config.ts"
 import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
@@ -73,7 +73,7 @@ By default, NgDoc uses `webpack` to build and serve the documentation applicatio
 `ng-doc.config.ts` file, it will enable `esbuild` builder for `build` target and `vite` + `esbuild`
 for `serve` target.
 
-```typescript fileName="ng-doc.config.ts"
+```typescript name="ng-doc.config.ts"
 import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
@@ -92,7 +92,7 @@ because these packages are not available by default.
 To solve this problem, you need to specify `externalPackages` property in your `ng-doc.config.ts` file,
 it will be passed to `esbuild` as `external` option.
 
-```typescript fileName="ng-doc.config.ts"
+```typescript name="ng-doc.config.ts"
 import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
@@ -117,7 +117,7 @@ After that, NgDoc will start displaying links for editing and viewing the source
 > NgDoc supports only GitHub repositories, you can ask for support for other repositories by
 > creating an issue in our `ngDocFeatureRequest` page.
 
-```typescript fileName="ng-doc.config.ts"
+```typescript name="ng-doc.config.ts"
 import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
@@ -147,7 +147,7 @@ new `DocsModule`
 and made it a child, in the future we will also do lazy loading so as not to load dependencies that
 other pages do not need.
 
-```typescript fileName="docs.module.ts"
+```typescript name="docs.module.ts"
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
@@ -182,7 +182,7 @@ export class DocsModule {}
 Same for the component, we just move the content that NgDoc adds by default to `AppComponent` to
 `DocsComponent`.
 
-```typescript fileName="docs.component.ts"
+```typescript name="docs.component.ts"
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
@@ -208,7 +208,7 @@ export class DocsComponent {}
 
 Now you need to add lazy loading for DocsModule and set a route for it
 
-```typescript fileName="app.module.ts"
+```typescript name="app.module.ts"
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router';
@@ -236,7 +236,7 @@ export class AppModule {}
 NgDoc generates links automatically, and doesn't know what route the parent page will have, so you
 need to specify the `routePrefix` property in `ng-doc.config.ts` file.
 
-```typescript fileName="ng-doc.config.ts"
+```typescript name="ng-doc.config.ts"
 import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
