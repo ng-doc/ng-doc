@@ -24,7 +24,7 @@ import {NgDocBuilderContext, NgDocSchema} from '../interfaces';
 export async function runBrowser(options: NgDocSchema, context: BuilderContext): Promise<any> {
 	const browserTarget: Target | null = options.browserTarget ? targetFromTargetString(options.browserTarget) : null;
 	const targetOptions: any = browserTarget ? await context.getTargetOptions(browserTarget) : (options as any);
-	const builderContext: NgDocBuilderContext = createBuilderContext(targetOptions, options, context);
+	const builderContext: NgDocBuilderContext = createBuilderContext(targetOptions, context);
 	const runner: Observable<void> = buildNgDoc(builderContext);
 
 	await firstValueFrom(runner.pipe(first()));

@@ -153,7 +153,7 @@
 		"jest-preset-angular": "^13.1.0",
 		"lint-staged": "^12.4.2",
 		"lodash": "^4.17.21",
-		"memfs": "^3.5.1",
+		"memfs": "^4.2.0",
 		"mock-fs": "^5.2.0",
 		"ng-packagr": "16.0.0",
 		"nx": "16.1.3",
