@@ -1,3 +1,17 @@
+# [16.7.0](https://github.com/ng-doc/ng-doc/compare/v16.6.6...v16.7.0) (2023-07-02)
+
+
+### Bug Fixes
+
+* **builder:** code blocks parameters don't support some characters ([b91d26f](https://github.com/ng-doc/ng-doc/commit/b91d26f97d2fe02f0fd708d27f6659d560736d70))
+* **builder:** code blocks parameters don't support some characters ([77a989c](https://github.com/ng-doc/ng-doc/commit/77a989cabbec7f06ecb31e2acd266ad2c56ce1a9))
+
+
+### Features
+
+* **project:** code blocks can now be grouped using tabs ([f9d2ef1](https://github.com/ng-doc/ng-doc/commit/f9d2ef1f270f4f61773bb73699216e38ec17b6bb))
+* **project:** code blocks can now be grouped using tabs ([11c0ed1](https://github.com/ng-doc/ng-doc/commit/11c0ed143aa8c098e28e03943437382f2a6767f2))
+
 ## [16.6.6](https://github.com/ng-doc/ng-doc/compare/v16.6.5...v16.6.6) (2023-07-01)
 
 
