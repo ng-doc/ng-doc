@@ -10,7 +10,7 @@ describe('parseCodeBlockParams', () => {
 	});
 
 	it('should parse fileName', () => {
-		expect(parseCodeBlockParams('fileName="test.ts"')).toStrictEqual({fileName: 'test.ts'});
+		expect(parseCodeBlockParams('fileName="test.ts"')).toStrictEqual({name: 'test.ts'});
 	});
 
 	it('should parse file', () => {
@@ -48,7 +48,7 @@ describe('parseCodeBlockParams', () => {
 	it('should parse fileName with dots and dashes', () => {
 		expect(parseCodeBlockParams('typescript fileName="ng-doc.config.ts"')).toStrictEqual({
 			language: 'typescript',
-			fileName: 'ng-doc.config.ts',
+			name: 'ng-doc.config.ts',
 		});
 	});
 
