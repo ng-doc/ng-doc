@@ -12,11 +12,15 @@ To install the NgDoc, you can use the command below.
 This command will automatically install and add the library to your project,
 and configure it.
 
-```bash
+```bash group="install" name="Angular"
 ng add @ng-doc/add
 ```
 
-By default NgDoc uses your project's `sourceRoot` as the directory where you should create
+```bash group="install" name="Nx"
+npm install @ng-doc/add && npx nx g @ng-doc/add:ng-add
+```
+
+By default, NgDoc uses your project's `sourceRoot` as the directory where you should create
 documentation, you can always change this, see the `*GettingStartedConfiguration` article for more
 details
 
@@ -30,11 +34,11 @@ npm i @ng-doc/{core,builder,ui-kit,app}
 
 ### Adding builders
 
-First of all you need to add builders from NgDoc library to your application, open `angular.json`
-file, and replace `browser` and `dev-server` builders for `build` and `serve` targets with
+First of all you need to add builders from NgDoc library to your application,
+replace `browser` and `dev-server` builders for `build` and `serve` targets with
 alternatives from the NgDoc as shown in the example below
 
-```json name="angular.json"
+```json group="builders" name="Angular (angular.json)"
 {
   "projects": {
     "my-project": {
@@ -51,12 +55,25 @@ alternatives from the NgDoc as shown in the example below
 }
 ```
 
+```json group="builders" name="Nx (project.json)"
+{
+  "targets": {
+    "build": {
+      "executor": "@ng-doc/builder:browser"
+    },
+    "serve": {
+      "executor": "@ng-doc/builder:dev-server"
+    }
+  }
+}
+```
+
 ### Importing styles
 
-You will also need to import the global styles provided by the library.
-To do that edit you `angular.json` file, or add them to you `styles` file
+You will also need to import the global styles provided by the library
+by adding them to your `styles` array.
 
-```json name="angular.json"
+```json group="styles" name="Angular (angular.json)"
 {
   "projects": {
     "my-project": {
@@ -66,6 +83,20 @@ To do that edit you `angular.json` file, or add them to you `styles` file
             "styles": ["node_modules/@ng-doc/app/styles/global.css"]
           }
         }
+      }
+    }
+  }
+}
+```
+
+```json group="styles" name="Nx (project.json)"
+{
+  "targets": {
+    "build": {
+      "options": {
+        "styles": [
+          "node_modules/@ng-doc/app/styles/global.css"
+        ]
       }
     }
   }
@@ -85,14 +116,13 @@ because NgDoc regenerates them every time the application is launched.
 ### Adding assets
 
 The NgDoc libraries come with assets that include various icons, fonts, themes, and other very
-useful things. You also need to include them, for this add the following code to your `angular.json`
-file.
+useful things. You also need to add them to your application's assets.
 
-```json name="angular.json"
+```json group="assets" name="Angular (angular.json)"
 {
   "projects": {
     "my-project": {
-      "architect": {
+      "targets": {
         "build": {
           "options": {
             "assets": [
@@ -108,12 +138,40 @@ file.
               },
               {
                 "glob": "**/*",
-                "input": ".ng-doc/project-name/assets",
+                "input": ".ng-doc/<project-name>/assets",
                 "output": "assets/ng-doc"
               }
             ]
           }
         }
+      }
+    }
+  }
+}
+```
+
+```json group="assets" name="Nx (project.json)"
+{
+  "targets": {
+    "build": {
+      "options": {
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "node_modules/@ng-doc/ui-kit/assets",
+            "output": "assets/ng-doc/ui-kit"
+          },
+          {
+            "glob": "**/*",
+            "input": "node_modules/@ng-doc/app/assets",
+            "output": "assets/ng-doc/app"
+          },
+          {
+            "glob": "**/*",
+            "input": ".ng-doc/<project-name>/assets",
+            "output": "assets/ng-doc"
+          }
+        ]
       }
     }
   }
@@ -132,8 +190,8 @@ the generated files and `allowSyntheticDefaultImports` option.
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@ng-doc/generated": [".ng-doc/project-folder-name/index.ts"],
-      "@ng-doc/generated/*": [".ng-doc/project-folder-name/*"]
+      "@ng-doc/generated": [".ng-doc/<project-name>/index.ts"],
+      "@ng-doc/generated/*": [".ng-doc/<project-name>/*"]
     }
   }
 }
