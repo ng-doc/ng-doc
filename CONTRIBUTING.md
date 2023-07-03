@@ -12,6 +12,7 @@ smooth collaboration, please follow the guidelines below.
 - [Coding Guidelines](#coding-guidelines)
 - [Code of Conduct](#code-of-conduct)
 - [Useful commands](#useful-commands)
+- [How to release](#how-to-release)
 
 ## How to Contribute
 
@@ -76,16 +77,31 @@ npm i
 nx s
 ```
 
-## Run all tests
+### Run all tests
 
 ```bash
 npx nx run-many --all --target=test
 ```
 
-## Run linting
+### Run linting
 
 ```bash
 npx nx run-many --all --target=lint
 ```
+
+## How to release
+
+Release cycle is fully automated. All you need to do is to push all changes to the `main` branch and merge
+it to the `release` branch. After that, the release process will start automatically.
+
+Automated release process releases only commits that have the following commit types:
+
+- `feat` - for new features
+- `fix` - for bug fixes
+- `perf` - for performance improvements
+- `revert` - for reverting changes
+
+All other commits will be ignored for the release, but new version of the demo application will be published,
+so if you just update documentation with commits with `docs` type, new version of the demo application will be published.
 
 Happy contributing!
