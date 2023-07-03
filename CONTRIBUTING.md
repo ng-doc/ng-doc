@@ -13,6 +13,7 @@ smooth collaboration, please follow the guidelines below.
 - [Code of Conduct](#code-of-conduct)
 - [Useful commands](#useful-commands)
 - [How to release](#how-to-release)
+- [How to release beta version](#how-to-release-beta-version)
 
 ## How to Contribute
 
@@ -103,5 +104,12 @@ Automated release process releases only commits that have the following commit t
 
 All other commits will be ignored for the release, but new version of the demo application will be published,
 so if you just update documentation with commits with `docs` type, new version of the demo application will be published.
+
+## How to release beta version
+
+First you need to make sure that `beta` branch is up-to-date with the `release` branch.
+To do that, merge `release` branch to the `beta` branch. After that, you can push your changes to the `main` branch
+and merge it to the `beta` branch. After that, the release process will start automatically
+and new beta version will be published.
 
 Happy contributing!
