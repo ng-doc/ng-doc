@@ -20,7 +20,7 @@ import {NgDocBuildApiSchema} from './schema';
  * @param {NgDocBuildPageSchema} options - The options to generate the API
  * @returns {Rule} Angular Schematic Rule
  */
-export function build(options: NgDocBuildApiSchema): Rule {
+export function generate(options: NgDocBuildApiSchema): Rule {
 	return (host: Tree) => {
 		const execPath: string = options?.path ?? '';
 

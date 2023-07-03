@@ -25,7 +25,7 @@ import {NgDocBuildCategorySchema} from './schema';
  * @param {NgDocBuildCategorySchema} options - The options to generate the category
  * @returns {Rule} Angular Schematic Rule
  */
-export function build(options: NgDocBuildCategorySchema): Rule {
+export function generate(options: NgDocBuildCategorySchema): Rule {
 	return (host: Tree) => {
 		const execPath: string = options?.path ?? '';
 

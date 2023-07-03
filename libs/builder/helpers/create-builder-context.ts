@@ -3,7 +3,7 @@ import {json} from '@angular-devkit/core';
 import {asArray, NgDocStyleType} from '@ng-doc/core';
 import * as path from 'path';
 
-import {NgDocBuilderContext, NgDocConfiguration, NgDocSchema} from '../interfaces';
+import {NgDocBuilderContext, NgDocConfiguration} from '../interfaces';
 import {loadConfig} from './load-config';
 
 /**
@@ -15,7 +15,6 @@ import {loadConfig} from './load-config';
  */
 export function createBuilderContext(
 	targetOptions: json.JsonObject,
-	options: NgDocSchema,
 	context: BuilderContext,
 ): NgDocBuilderContext {
 	const projectRoot: string = path.dirname(targetOptions['main'] as string);

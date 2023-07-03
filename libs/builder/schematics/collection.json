@@ -3,17 +3,17 @@
 	"schematics": {
 		"category": {
 			"description": "Generates NgDoc Category entity",
-			"factory": "./category/index#build",
+			"factory": "./category/index#generate",
 			"schema": "./category/schema.json"
 		},
 		"page": {
 			"description": "Generates NgDoc Page entity",
-			"factory": "./page/index#build",
+			"factory": "./page/index#generate",
 			"schema": "./page/schema.json"
 		},
 		"api": {
 			"description": "Generates NgDoc API entity",
-			"factory": "./api/index#build",
+			"factory": "./api/index#generate",
 			"schema": "./api/schema.json"
 		},
 		"standalone-pages-migration": {
