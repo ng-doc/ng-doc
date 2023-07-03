@@ -1,4 +1,4 @@
-import {classify, dasherize} from '@angular-devkit/core/src/utils/strings';
+import {dasherize} from '@angular-devkit/core/src/utils/strings';
 import {
 	apply,
 	applyTemplates,
@@ -17,7 +17,6 @@ import {basename, join, relative} from 'path';
 
 import {CATEGORY_NAME} from '../../engine/variables';
 import {findClosestFile} from '../utils';
-import {extractDefaultExportName} from '../utils/extract-default-export-name';
 import {NgDocBuildPageSchema} from './schema';
 
 const demoTemplates: string[] = ['ng-doc.module.ts.template'];
@@ -30,17 +29,10 @@ const demoTemplates: string[] = ['ng-doc.module.ts.template'];
  */
 export function generate(options: NgDocBuildPageSchema): Rule {
 	return (host: Tree) => {
-		const execPath: string = options?.path ?? '';
-		const path: string = join(execPath, `/${dasherize(options.title)}`);
-		const closestCategoryFile: string | null = options.category
-			? findClosestFile(host, execPath, CATEGORY_NAME)
-			: null;
-		const pageName: string = classify(options.title + 'Page');
-		const categoryConstantName: string | null =
-			options.category && closestCategoryFile ? extractDefaultExportName(host, closestCategoryFile) : null;
-		const categoryImportPath: string | null = closestCategoryFile
-			? relative(path, closestCategoryFile).replace(/.ts$/, '')
-			: null;
+		const execPath = options?.path ?? '';
+		const path = join(execPath, `/${dasherize(options.title)}`);
+		const closestCategoryFile = options.category && findClosestFile(host, execPath, CATEGORY_NAME);
+		const importPath = closestCategoryFile && relative(path, closestCategoryFile).replace(/.ts$/, '');
 
 		return chain([
 			mergeWith(
@@ -51,9 +43,7 @@ export function generate(options: NgDocBuildPageSchema): Rule {
 					),
 					applyTemplates({
 						...options,
-						categoryName: categoryConstantName,
-						importPath: categoryImportPath,
-						pageName,
+						importPath,
 						keyword: options.keyword,
 					}),
 					move(path),

@@ -1,5 +1,14 @@
 import {NgDocBaseEntity} from './base-entity';
 
+/**
+ * Defines the category configuration object
+ *
+ * @param config - The category configuration object
+ */
+export function category(config: NgDocCategory): NgDocCategory {
+	return config;
+}
+
 export interface NgDocCategory extends NgDocBaseEntity {
 	/** The parent category */
 	category?: NgDocCategory;

@@ -4,6 +4,15 @@ import {NgDocGlobalKeyword} from '@ng-doc/core/interfaces/keyword-map';
 import {NgDocRepoConfig} from './repo-config';
 
 /**
+ * Defines the global keywords for the application
+ *
+ * @param config - The global keywords configuration
+ */
+export function config(config: NgDocConfiguration): NgDocConfiguration {
+	return config;
+}
+
+/**
  * NgDoc configuration interface, that configure NgDoc library
  */
 export interface NgDocConfiguration {

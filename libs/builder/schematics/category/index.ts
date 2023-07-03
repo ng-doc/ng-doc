@@ -1,4 +1,4 @@
-import {classify, dasherize} from '@angular-devkit/core/src/utils/strings';
+import {dasherize} from '@angular-devkit/core/src/utils/strings';
 import {
 	apply,
 	applyTemplates,
@@ -16,7 +16,6 @@ import {join, relative} from 'path';
 
 import {CATEGORY_NAME} from '../../engine/variables';
 import {findClosestFile} from '../utils';
-import {extractDefaultExportName} from '../utils/extract-default-export-name';
 import {NgDocBuildCategorySchema} from './schema';
 
 /**
@@ -33,18 +32,14 @@ export function generate(options: NgDocBuildCategorySchema): Rule {
 		const closestCategoryFile: string | null = options.category
 			? findClosestFile(host, options?.path ?? '', CATEGORY_NAME)
 			: null;
-		const categoryConstantName: string | null =
-			options.category && closestCategoryFile ? extractDefaultExportName(host, closestCategoryFile) : null;
-		const categoryImportPath: string | null = closestCategoryFile
+		const importPath: string | null = closestCategoryFile
 			? relative(path, closestCategoryFile).replace(/.ts$/, '')
 			: null;
-
-		options.constantName = `${classify(options.title)}Category`;
 
 		return chain([
 			mergeWith(
 				apply(url('./files'), [
-					applyTemplates({...options, categoryName: categoryConstantName, importPath: categoryImportPath}),
+					applyTemplates({...options, importPath}),
 					move(path),
 					forEach((fileEntry: FileEntry) => {
 						if (host.exists(fileEntry.path)) {
