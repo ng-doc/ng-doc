@@ -3,7 +3,7 @@ import {ngKeywordsLoader} from '@ng-doc/keywords-loaders';
 
 const NgDocConfig: NgDocConfiguration = {
 	angularBuilder: 'webpack',
-	pages: 'apps/ng-doc/src/app',
+	pages: 'apps/ng-doc/docs',
 	routePrefix: 'docs',
 	tsConfig: 'apps/ng-doc/tsconfig.app.json',
 	cache: false,
