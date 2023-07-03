@@ -66,8 +66,9 @@ ng add @ng-doc/add
 
 ## Contributing
 
-Contributing features or bugs is currently closed, but it will soon reopen once we finish the guide that will provide
-detailed instructions on how to do it. This does not apply to documentation edits, which are still highly encouraged! :)
+Contributions are what make the open source community such an amazing place to be learn, inspire,
+and create. Any contributions you make are **greatly appreciated**. Please read the
+[Contributing Guidelines](CONTRIBUTING.md) for more information.
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
