@@ -1,3 +1,11 @@
+## [16.7.1](https://github.com/ng-doc/ng-doc/compare/v16.7.0...v16.7.1) (2023-07-03)
+
+
+### Bug Fixes
+
+* **builder:** generated links for the accessors via keywords have incorrect label ([da70a1b](https://github.com/ng-doc/ng-doc/commit/da70a1b9b28d24f7c1aa52d333ea6cdd609472be))
+* **builder:** some code presentations or files that were loaded to the code blocks have empty line at the end ([7382b73](https://github.com/ng-doc/ng-doc/commit/7382b73e5aef03da52c67abc59decf9a69fa9e15))
+
 # [16.7.0](https://github.com/ng-doc/ng-doc/compare/v16.6.6...v16.7.0) (2023-07-02)
 
 
