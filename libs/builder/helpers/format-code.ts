@@ -12,7 +12,7 @@ export function formatCode(code: string, codeType: NgDocCodeType = 'TypeScript')
 	try {
 		const parser: Options['parser'] | undefined = getPrettierParserFromCodeType(codeType);
 
-		return require('prettier').format(code, {parser});
+		return require('prettier').format(code, {parser}).trim();
 	} catch (e) {
 		return code;
 	}

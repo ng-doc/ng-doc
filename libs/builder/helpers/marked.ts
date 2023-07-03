@@ -29,7 +29,8 @@ export function marked(markdown: string, page?: NgDocPageEntity): string {
 					.readFileSync(relativeFilePath ?? '', 'utf8')
 					.split(EOL)
 					.slice(fileLineStart, fileLineEnd)
-					.join(EOL);
+					.join(EOL)
+					.trim();
 
 				page.dependencies.add(relativeFilePath);
 
