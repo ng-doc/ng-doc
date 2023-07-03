@@ -109,7 +109,7 @@ so if you just update documentation with commits with `docs` type, new version o
 
 First you need to make sure that `beta` branch is up-to-date with the `release` branch.
 To do that, merge `release` branch to the `beta` branch. After that, you can push your changes to the `main` branch
-and merge it to the `beta` branch. After that, the release process will start automatically
+and merge it to the `beta` branch. The release process will start automatically
 and new beta version will be published.
 
 Happy contributing!
