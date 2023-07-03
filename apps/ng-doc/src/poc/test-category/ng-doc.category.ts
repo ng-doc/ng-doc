@@ -1,7 +1,5 @@
-import {NgDocCategory} from '@ng-doc/core';
+import {category} from '@ng-doc/core';
 
-const TestCategoryCategory: NgDocCategory = {
+export default category({
 	title: 'test-category',
-};
-
-export default TestCategoryCategory;
+});

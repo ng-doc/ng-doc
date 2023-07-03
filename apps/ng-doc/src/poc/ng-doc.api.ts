@@ -1,8 +1,6 @@
-import {NgDocApi} from '@ng-doc/core';
+import {api} from '@ng-doc/core';
 
-export const api: NgDocApi = {
+export default api({
 	title: 'API References',
 	scopes: [],
-};
-
-export default api;
+});

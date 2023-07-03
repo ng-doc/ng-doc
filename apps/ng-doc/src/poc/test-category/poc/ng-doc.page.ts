@@ -1,9 +1,7 @@
-import {NgDocPage} from '@ng-doc/core';
+import {page} from '@ng-doc/core';
 
-const PocPage: NgDocPage = {
+export default page({
 	title: `poc`,
 	mdFile: './index.md',
 	keyword: 'Poc',
-};
-
-export default PocPage;
+});
