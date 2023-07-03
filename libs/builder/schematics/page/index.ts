@@ -28,7 +28,7 @@ const demoTemplates: string[] = ['ng-doc.module.ts.template'];
  * @param {NgDocBuildPageSchema} options - The options to generate the page
  * @returns {Rule} Angular Schematic Rule
  */
-export function build(options: NgDocBuildPageSchema): Rule {
+export function generate(options: NgDocBuildPageSchema): Rule {
 	return (host: Tree) => {
 		const execPath: string = options?.path ?? '';
 		const path: string = join(execPath, `/${dasherize(options.title)}`);
