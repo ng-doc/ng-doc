@@ -3,8 +3,10 @@
 NgDoc is just a library, so first you need to create an Angular application that will be used to
 display documentation, it can be a separate application or an existing one.
 
-When you install NgDoc, it will be integrated into the build process of your application, and will generate
-pages and components based on you code, that can be used in your application to display documentation.
+When you install NgDoc, it will be integrated into the build process of your application, and will
+generate
+pages and components based on you code, that can be used in your application to display
+documentation.
 
 ## Automatic (recommended)
 
@@ -94,9 +96,7 @@ by adding them to your `styles` array.
   "targets": {
     "build": {
       "options": {
-        "styles": [
-          "node_modules/@ng-doc/app/styles/global.css"
-        ]
+        "styles": ["node_modules/@ng-doc/app/styles/global.css"]
       }
     }
   }
@@ -207,10 +207,14 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
-import {NgDocModule, provideSearchEngine, NgDocDefaultSearchEngine} from '@ng-doc/app';
+import {
+  NgDocDefaultSearchEngine,
+  NgDocModule,
+  NgDocNavbarModule,
+  NgDocSidebarModule,
+  provideSearchEngine,
+} from '@ng-doc/app';
 import {NG_DOC_ROUTING, NgDocGeneratedModule} from '@ng-doc/generated';
-import {NgDocUiKitRootModule} from '@ng-doc/ui-kit';
-import {NgDocNavbarModule, NgDocSidebarModule} from '@ng-doc/app';
 
 import {AppComponent} from './app.component';
 
@@ -225,7 +229,12 @@ import {AppComponent} from './app.component';
     // Generated module that contains all generated pages
     NgDocGeneratedModule.forRoot(),
     // Add generated routes
-    RouterModule.forRoot(NG_DOC_ROUTING),
+    RouterModule.forRoot(NG_DOC_ROUTING, {
+      // Enable anchor scrolling
+      scrollPositionRestoration: 'enabled',
+      anchorScrolling: 'enabled',
+      scrollOffset: [0, 70],
+    }),
     // Import NavBar, Sidebar components
     NgDocNavbarModule,
     NgDocSidebarModule,
