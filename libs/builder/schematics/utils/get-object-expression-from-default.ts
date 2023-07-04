@@ -1,4 +1,4 @@
-import {ExportedDeclarations, Node, ObjectLiteralExpression, SourceFile, SyntaxKind,} from 'ng-morph';
+import {ExportedDeclarations, Node, ObjectLiteralExpression, SourceFile, SyntaxKind} from 'ng-morph';
 
 /**
  *

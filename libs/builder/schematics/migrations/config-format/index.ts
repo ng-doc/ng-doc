@@ -21,12 +21,9 @@ import {NgDocConfigFormatSchema} from './schema';
  */
 export function migrate(options: NgDocConfigFormatSchema): Rule {
 	return (tree: Tree) => {
-		setActiveProject(createProject(tree, options.path, [
-			PAGE_PATTERN,
-			CATEGORY_PATTERN,
-			API_PATTERN,
-			'**/**/ng-doc.config.ts',
-		]));
+		setActiveProject(
+			createProject(tree, options.path, [PAGE_PATTERN, CATEGORY_PATTERN, API_PATTERN, '**/**/ng-doc.config.ts']),
+		);
 
 		const sourceFiles = getSourceFiles('**/*.ts');
 
@@ -42,7 +39,6 @@ export function migrate(options: NgDocConfigFormatSchema): Rule {
 			} else if (minimatch(path, '**/**/ng-doc.config.ts')) {
 				migrateConfig(sourceFile, 'NgDocConfiguration', 'config', '@ng-doc/builder');
 			}
-
 		}
 
 		saveActiveProject();
@@ -66,11 +62,12 @@ function migrateConfig(sourceFile: SourceFile, intName: string, fnName: string, 
 			return;
 		}
 
-		const importDeclaration = sourceFile.getImportDeclarations()
-				.find((id) => id.getModuleSpecifierValue() === module)
-			?? sourceFile.addImportDeclarations([{moduleSpecifier: module}])[0];
+		const importDeclaration =
+			sourceFile.getImportDeclarations().find((id) => id.getModuleSpecifierValue() === module) ??
+			sourceFile.addImportDeclarations([{moduleSpecifier: module}])[0];
 
-		importDeclaration.getNamedImports()
+		importDeclaration
+			.getNamedImports()
 			.filter((ni) => ni.getName() === intName)
 			.forEach((ni) => ni.remove());
 
@@ -89,6 +86,6 @@ function migrateConfig(sourceFile: SourceFile, intName: string, fnName: string, 
 		const exportKeyword = 'export default';
 		const index = text.indexOf(exportKeyword);
 
-		sourceFile.replaceText([index, index + exportKeyword.length], '\nexport default')
+		sourceFile.replaceText([index, index + exportKeyword.length], '\nexport default');
 	}
 }
