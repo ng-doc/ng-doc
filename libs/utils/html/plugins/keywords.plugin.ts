@@ -64,7 +64,8 @@ function getNodes(
 	inlineLink: boolean,
 	config: NgDocHtmlPostProcessorConfig,
 ): Array<Element | Text> {
-	const KeywordRegExp: RegExp = /([*A-Za-z0-9_$@]+[.#]?[A-Za-z0-9_-]+)/g;
+	const regexp: string = '([*A-Za-z0-9_$@]+[.#]?[A-Za-z0-9_-]+)';
+	const KeywordRegExp: RegExp = inlineLink ? new RegExp(`^${regexp}$`, 'g') : new RegExp(regexp, 'g');
 	const keywordAnchorRegexp: RegExp = /^(?<keyword>[*A-Za-z0-9_$@]+)((?<delimiter>[.#])(?<anchor>[A-Za-z0-9_-]+))?$/;
 	const {addUsedKeyword, addPotentialKeyword, getKeyword, raiseError} = config;
 
