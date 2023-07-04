@@ -6,17 +6,17 @@ import {FloatingCirclePositionControlComponent} from './floating-circle-position
 import {FloatingCirclePositionControlModule} from './floating-circle-position-control/floating-circle-position-control.module';
 
 export default page({
-	title: 'Type Controls',
-	mdFile: './index.md',
-	category: CustomizationCategory,
-	order: 4,
-	keyword: 'CustomizationTypeControls',
-	imports: [FloatingCirclePositionControlModule],
-	demos: {FloatingCircleComponent, FloatingCirclePositionControlComponent},
-	playgrounds: {
-		FloatingCircle: {
-			target: FloatingCircleComponent,
-			template: '<ng-doc-selector></ng-doc-selector>',
-		},
-	},
+  title: 'Type Controls',
+  mdFile: './index.md',
+  category: CustomizationCategory,
+  order: 4,
+  keyword: 'CustomizationTypeControls',
+  imports: [FloatingCirclePositionControlModule],
+  demos: {FloatingCircleComponent, FloatingCirclePositionControlComponent},
+  playgrounds: {
+    FloatingCircle: {
+      target: FloatingCircleComponent,
+      template: '<ng-doc-selector></ng-doc-selector>',
+    },
+  },
 });

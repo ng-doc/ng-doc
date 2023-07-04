@@ -11,13 +11,11 @@ exported by default and match `NgDocConfiguration` interface.
 > documentation application.
 
 ```typescript name="ng-doc.config.ts"
-import {NgDocConfiguration} from '@ng-doc/builder';
+import {config} from '@ng-doc/builder';
 
-const config: NgDocConfiguration = {
+export default config({
   // ...
-};
-
-export default config;
+});
 ```
 
 ## Documentation folder
@@ -29,13 +27,11 @@ in your `ng-doc.config.ts` file.
 After that NgDoc will search for documentation pages in the specified folder and its subfolders.
 
 ```typescript name="ng-doc.config.ts"
-import {NgDocConfiguration} from '@ng-doc/builder';
+import {config} from '@ng-doc/builder';
 
-const config: NgDocConfiguration = {
-  pages: 'libs/my-lib/src'
-};
-
-export default config;
+export default config({
+  pages: 'libs/my-lib/src',
+});
 ```
 
 ## Output folder
@@ -44,14 +40,12 @@ You can also change the output folder for the documentation application by speci
 this folder is used for storing generated pages and modules.
 
 ```typescript name="ng-doc.config.ts"
-import {NgDocConfiguration} from '@ng-doc/builder';
+import {config} from '@ng-doc/builder';
 
-const config: NgDocConfiguration = {
-  outDir: 'src'
-};
-
-export default config;
-````
+export default config({
+  outDir: 'src',
+});
+```
 
 After that NgDoc will generated and store everything inside `src/.ng-doc/app-name` folder.
 But remember that you should not commit this folder to your repository, and also update
@@ -60,48 +54,48 @@ the following things:
 - Update the path to the `@ng-doc/generated` directory in `tsconfig.json` paths section.
 - Update the path to the `.ng-doc/app-name/assets` folder in `angular.json`
 
-
 ## ESBuild builder
 
 > **Warning**
 > This feature is experimental and may not work as expected.
 > For more information, see [this guide](https://angular.io/guide/esbuild)
-> Also, see following issues: [Markdown content not updating](https://github.com/ng-doc/ng-doc/issues/65)
+> Also, see following
+> issues: [Markdown content not updating](https://github.com/ng-doc/ng-doc/issues/65)
 
-By default, NgDoc uses `webpack` to build and serve the documentation application, but you can also use
+By default, NgDoc uses `webpack` to build and serve the documentation application, but you can also
+use
 `esbuild`, to switch to `esbuild` you need to specify `angularBuilder` property in your
 `ng-doc.config.ts` file, it will enable `esbuild` builder for `build` target and `vite` + `esbuild`
 for `serve` target.
 
 ```typescript name="ng-doc.config.ts"
-import {NgDocConfiguration} from '@ng-doc/builder';
+import {config} from '@ng-doc/builder';
 
-const config: NgDocConfiguration = {
+export default config({
   angularBuilder: 'esbuild',
-};
-
-export default config;
+});
 ```
 
 ## External packages in guides
 
-Sometimes you may need to use external packages in your `ng-doc.page.ts`, for example, to load some file and
-display it in the guide via `data` field. If you try to use `fs` or `path` packages, you will get an error,
+Sometimes you may need to use external packages in your `ng-doc.page.ts`, for example, to load some
+file and
+display it in the guide via `data` field. If you try to use `fs` or `path` packages, you will get an
+error,
 because these packages are not available by default.
 
-To solve this problem, you need to specify `externalPackages` property in your `ng-doc.config.ts` file,
+To solve this problem, you need to specify `externalPackages` property in your `ng-doc.config.ts`
+file,
 it will be passed to `esbuild` as `external` option.
 
 ```typescript name="ng-doc.config.ts"
-import {NgDocConfiguration} from '@ng-doc/builder';
+import {config} from '@ng-doc/builder';
 
-const config: NgDocConfiguration = {
+export default config({
   guide: {
-    externalPackages: ['fs', 'path']
+    externalPackages: ['fs', 'path'],
   },
-};
-
-export default config;
+});
 ```
 
 ## Configuring repository
@@ -118,17 +112,15 @@ After that, NgDoc will start displaying links for editing and viewing the source
 > creating an issue in our `ngDocFeatureRequest` page.
 
 ```typescript name="ng-doc.config.ts"
-import {NgDocConfiguration} from '@ng-doc/builder';
+import {config} from '@ng-doc/builder';
 
-const config: NgDocConfiguration = {
+export default config({
   repoConfig: {
     url: 'https://github.com/ng-doc/ng-doc',
     mainBranch: 'main',
     releaseBranch: 'release',
   },
-};
-
-export default config;
+});
 ```
 
 ## Documentation route
@@ -237,13 +229,11 @@ NgDoc generates links automatically, and doesn't know what route the parent page
 need to specify the `routePrefix` property in `ng-doc.config.ts` file.
 
 ```typescript name="ng-doc.config.ts"
-import {NgDocConfiguration} from '@ng-doc/builder';
+import {config} from '@ng-doc/builder';
 
-const config: NgDocConfiguration = {
+export default config({
   routePrefix: 'docs',
-};
-
-export default config;
+});
 ```
 
 That's it, now you should be able to see your documentation on new route!
