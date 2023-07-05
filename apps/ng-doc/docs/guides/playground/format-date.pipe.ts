@@ -14,13 +14,14 @@ export class FormatDatePipe implements PipeTransform {
    */
   transform(value: string, display: 'date' | 'time' | 'datetime' = 'datetime', utc: boolean): string {
     const date: Date = new Date(value);
+    const timeZone: 'UTC' | undefined = utc ? 'UTC' : undefined;
 
     if (display === 'date') {
-      return date.toLocaleDateString('en-US', {timeZone: utc ? 'UTC' : undefined});
+      return date.toLocaleDateString('en-US', {timeZone});
     } else if (display === 'time') {
-      return date.toLocaleTimeString('en-US', {timeZone: utc ? 'UTC' : undefined});
+      return date.toLocaleTimeString('en-US', {timeZone});
     } else {
-      return date.toLocaleString('en-US', {timeZone: utc ? 'UTC' : undefined});
+      return date.toLocaleString('en-US', {timeZone});
     }
   }
 }

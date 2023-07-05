@@ -9,8 +9,6 @@ export interface NgDocPlaygroundProperty {
 	inputName: string;
 	/** Commend for the property */
 	description?: string;
-	/** Values that uses for the property initialization */
-	default?: string;
 	/** List of possible options, it can be list of Type Alias items */
 	options?: string[];
 }

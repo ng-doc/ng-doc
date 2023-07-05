@@ -23,23 +23,6 @@
 			"options": {
 				"parser": "typescript"
 			}
-		},
-		{
-			"files": [
-				"*.md.nunj"
-			],
-			"options": {
-				"parser": "markdown"
-			}
-		},
-		{
-			"files": [
-				"*.md"
-			],
-			"options": {
-				"parser": "markdown",
-				"tabWidth": 2
-			}
 		}
 	]
 }
