@@ -3,6 +3,7 @@ export * from './build-playground-demo-template';
 export * from './capitalize';
 export * from './escape-html';
 export * from './escape-regexp';
+export * from './extract-function-defaults';
 export * from './extract-value';
 export * from './is-iterable';
 export * from './is-keyboard-event';

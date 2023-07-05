@@ -19,7 +19,7 @@ export function dependencyChanges(watcher: NgDocWatcher): OperatorFunction<NgDoc
 
 				return filtered.length
 					? merge(
-							...entities.map((e: NgDocEntity) =>
+							...filtered.map((e: NgDocEntity) =>
 								e.dependencies.changes().pipe(
 									switchMap((dependencies: string[]) =>
 										watcher

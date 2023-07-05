@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, ComponentRef, Directive, ElementRef, Input, OnChanges} from '@angular/core';
+import {ChangeDetectorRef, Directive, ElementRef, Input, OnChanges} from '@angular/core';
 
 @Directive({
 	selector: '[ngDocBtn]',

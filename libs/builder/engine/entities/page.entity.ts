@@ -185,6 +185,10 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 					this.demoClassDeclarations = getDemoClassDeclarations(this.objectExpression);
 
 					this.updatePlaygroundMetadata();
+
+					Object.keys(this.playgroundMetadata).map((id: string) => this.playgroundMetadata[id].class)
+						.concat(this.demoClassDeclarations)
+						.forEach((classDeclaration: ClassDeclaration) => this.dependencies.add(classDeclaration.getSourceFile().getFilePath()));
 				}
 			}),
 			tap({

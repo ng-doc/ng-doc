@@ -1,4 +1,4 @@
-import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
+import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
 import {AsyncPipe, KeyValuePipe, NgFor, NgIf} from '@angular/common';
 import {
 	ChangeDetectionStrategy,
@@ -28,7 +28,7 @@ import {
 	NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
 import {Observable} from 'rxjs';
-import {pluck} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 
 import {NgDocPlaygroundForm} from '../playground-form';
 import {NgDocPlaygroundPropertyComponent} from '../playground-property/playground-property.component';
@@ -72,6 +72,9 @@ export class NgDocPlaygroundPropertiesComponent<
 	dynamicContent?: C;
 
 	@Input()
+	defaultValues?: Record<string, unknown>;
+
+	@Input()
 	recreateDemo: boolean = false;
 
 	@Output()
@@ -87,7 +90,9 @@ export class NgDocPlaygroundPropertiesComponent<
 	protected contentTypeControl?: NgDocProvidedTypeControl = this.getControlForType('boolean');
 
 	constructor(protected readonly breakpointObserver: BreakpointObserver, private injector: Injector) {
-		this.observer = this.breakpointObserver.observe(this.breakpoints).pipe(pluck('matches'));
+		this.observer = this.breakpointObserver
+			.observe(this.breakpoints)
+			.pipe(map((state: BreakpointState) => state.matches));
 	}
 
 	ngOnChanges({properties}: SimpleChanges): void {

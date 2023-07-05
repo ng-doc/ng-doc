@@ -18,8 +18,10 @@ export class ObservableSet<T> {
 	}
 
 	add(...values: T[]): void {
-		values.forEach((value: T) => this.collection.add(value));
-		values.length && this.changes$.next();
+		if (values.some((value: T) => !this.collection.has(value))) {
+			values.forEach((value: T) => this.collection.add(value));
+			values.length && this.changes$.next();
+		}
 	}
 
 	delete(value: T): void {

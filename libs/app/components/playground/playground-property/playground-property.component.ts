@@ -37,14 +37,17 @@ export class NgDocPlaygroundPropertyComponent implements OnChanges {
 	@Input()
 	control?: FormControl;
 
+	@Input()
+	defaultValue?: unknown;
+
 	@ViewChild('propertyOutlet', {read: ViewContainerRef, static: true})
 	propertyOutlet?: ViewContainerRef;
 
 	protected option?: NgDocTypeControlProviderOptions;
 	private propertyTypeControl?: ComponentRef<NgDocTypeControl>;
 
-	ngOnChanges({property, control, typeControl}: SimpleChanges): void {
-		if ((property || control || typeControl) && this.property && this.typeControl) {
+	ngOnChanges({property, control, typeControl, defaultValue}: SimpleChanges): void {
+		if ((property || control || typeControl || defaultValue) && this.property && this.typeControl) {
 			this.propertyTypeControl?.destroy();
 			this.propertyTypeControl = undefined;
 
@@ -55,19 +58,17 @@ export class NgDocPlaygroundPropertyComponent implements OnChanges {
 				this.propertyTypeControl.instance.options = isPlaygroundProperty(this.property)
 					? this.property.options
 					: undefined;
-				this.propertyTypeControl.instance.default = isPlaygroundProperty(this.property)
-					? this.property.default
-					: undefined;
+				this.propertyTypeControl.instance.default = this.defaultValue;
 				this.propertyTypeControl.instance.writeValue(this.control?.value);
 
 				this.option = this.typeControl.options;
 			}
-		}
 
-		if (control) {
-			this.control?.registerOnChange((value: string) => this.propertyTypeControl?.instance?.writeValue(value));
-			this.propertyTypeControl?.instance.registerOnChange((value: unknown) => this.control?.setValue(value));
-			this.propertyTypeControl?.instance.registerOnTouched(() => this.control?.markAsTouched());
+			if (this.control) {
+				this.control?.registerOnChange((value: string) => this.propertyTypeControl?.instance?.writeValue(value));
+				this.propertyTypeControl?.instance.registerOnChange((value: unknown) => this.control?.setValue(value));
+				this.propertyTypeControl?.instance.registerOnTouched(() => this.control?.markAsTouched());
+			}
 		}
 	}
 

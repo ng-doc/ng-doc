@@ -22,8 +22,7 @@ import {
 	buildPlaygroundDemoTemplate,
 } from '@ng-doc/core/helpers/build-playground-demo-template';
 import {objectKeys} from '@ng-doc/core/helpers/object-keys';
-import {NgDocPlaygroundConfig, NgDocPlaygroundProperties, NgDocPlaygroundProperty} from '@ng-doc/core/interfaces';
-import {NgDocExtractedValue} from '@ng-doc/core/types';
+import {NgDocPlaygroundConfig, NgDocPlaygroundProperties} from '@ng-doc/core/interfaces';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {from, Observable, of, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
@@ -77,7 +76,7 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 	constructor(private readonly injector: Injector) {}
 
 	ngOnChanges({form, id}: SimpleChanges): void {
-		if (form && id) {
+		if (form || id) {
 			this.unsubscribe$.next();
 
 			const demoInjector: InjectionToken<Array<typeof NgDocBasePlayground>> | undefined = getPlaygroundDemoToken(
@@ -153,20 +152,14 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 	}
 
 	private getActiveInputs(): Record<string, string> {
-		const formData: Record<string, NgDocExtractedValue> =
-			(this.form?.controls.properties.value as Record<string, NgDocExtractedValue>) ?? {};
+		const formData: Record<string, unknown> = (this.form?.controls.properties.value as Record<string, unknown>) ?? {};
 
 		return objectKeys(formData).reduce((result: Record<string, string>, key: string) => {
-			const property: NgDocPlaygroundProperty | undefined = this.properties?.[key];
+			const value: unknown = formData[key];
+			const property: unknown | undefined = this.demoRef?.instance?.defaultValues[key];
 
-			if (property) {
-				const value: NgDocExtractedValue = formData[key];
-				const isString: boolean = typeof value === 'string';
-				const inputValue: string = isString ? `'${value}'` : `${JSON.stringify(value)}`;
-
-				if ((property.default ?? '') !== inputValue) {
-					result[property.inputName] = inputValue;
-				}
+			if (property !== value) {
+				result[key] = JSON.stringify(value).replace(/"/g, `'`);
 			}
 
 			return result;

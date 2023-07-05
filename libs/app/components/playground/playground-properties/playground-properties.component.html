@@ -1,4 +1,4 @@
-<div class="ng-doc-playground-properties-wrapper" [class.vertical]="observer | async">
+<div class="ng-doc-playground-properties-wrapper" [class.vertical]="observer | async" *ngIf="defaultValues">
 	<div class="ng-doc-playground-demos">
 		<ng-content></ng-content>
 	</div>
@@ -27,6 +27,7 @@
 				[name]="propertyControl.property.inputName"
 				[property]="propertyControl.property"
 				[typeControl]="propertyControl.typeControl"
+				[defaultValue]="defaultValues[propertyControl.propertyName]"
 				[control]="getFormControl | bind: this | execute: 'properties': propertyControl.propertyName"
 			>
 			</ng-doc-playground-property>

@@ -4,6 +4,7 @@ import {NgDocBasePlayground, providePlaygroundDemo} from '@ng-doc/app';
 // noinspection ES6UnusedImports
 import pageEntity from '{{ page.importPath }}';
 import {CommonModule} from '@angular/common';
+import {Constructor} from '@ng-doc/core';
 
 {%- set components = [] %}
 {%- set index = 1 %}
@@ -38,6 +39,7 @@ export class {{ comp.name }} extends NgDocBasePlayground {
 
 	@ViewChild(pageEntity.playgrounds['{{ id }}'].target, {static: true})
 	readonly playground?: Type<unknown>;
+	readonly playgroundInstance?: Constructor<unknown> = pageEntity.playgrounds['{{ id }}'].target;
 
 	@ViewChild(pageEntity.playgrounds['{{ id }}'].target, {static: true, read: ViewContainerRef})
 	readonly viewContainerRef: ViewContainerRef;

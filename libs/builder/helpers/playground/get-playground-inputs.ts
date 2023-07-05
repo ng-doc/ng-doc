@@ -60,7 +60,6 @@ function propOrParamToPlaygroundProperty(
 		[propOrParam.getName()]: {
 			inputName: inputName ?? propOrParam.getName(),
 			type,
-			default: propOrParam.getInitializer()?.getText() ?? defaultForType(type),
 			description: Node.isPropertyDeclaration(propOrParam)
 				? extractDocs(propOrParam)
 				: extractParameterDocs(propOrParam.getParentIfKindOrThrow(SyntaxKind.MethodDeclaration), propOrParam.getName()),
@@ -72,17 +71,4 @@ function propOrParamToPlaygroundProperty(
 				),
 		},
 	};
-}
-
-/**
- *
- * @param type
- */
-function defaultForType(type: string): string {
-	switch (type) {
-		case 'boolean':
-			return 'false';
-		default:
-			return 'undefined';
-	}
 }
