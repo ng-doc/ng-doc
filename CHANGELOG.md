@@ -1,3 +1,13 @@
+## [16.7.2](https://github.com/ng-doc/ng-doc/compare/v16.7.1...v16.7.2) (2023-07-05)
+
+
+### Bug Fixes
+
+* **builder:** playgrounds do not dynamically update the list of inputs when the `dev-server` is running, and used class is included in the API list ([d25a410](https://github.com/ng-doc/ng-doc/commit/d25a41063db76cbd6bea99a3cb4886c444269139))
+* **playgrounds:** playgrounds do not recognize dynamic default values, such as the result of a function call or a value from a constructor variable ([dd5381b](https://github.com/ng-doc/ng-doc/commit/dd5381b4dbd3c418fa98faf7cec4c1a86dd8c249)), closes [#76](https://github.com/ng-doc/ng-doc/issues/76)
+* **ui-kit:** the text of the tabs overlaps with the overlay created by the sidebar ([d66f649](https://github.com/ng-doc/ng-doc/commit/d66f649d7fa3c1a80b85ab24594ec3e9254d3bcd))
+* **utils:** keywords used in the inline code are processed not as a whole, but by attempting to find occurrences ([024f43f](https://github.com/ng-doc/ng-doc/commit/024f43fdc4828d7b6c30d1ae884335c59e8c2fef))
+
 ## [16.7.1](https://github.com/ng-doc/ng-doc/compare/v16.7.0...v16.7.1) (2023-07-03)
 
 
