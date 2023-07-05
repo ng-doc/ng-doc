@@ -27,7 +27,7 @@ export function playgroundAction(pId: string): NgDocAction {
 			};
 		} else {
 			throw new Error(
-				`Metadata for playground "${pId}" not found. Make sure that you configured the playgrounds correctly.`,
+				`Metadata for playground "${pId}" not found. Make sure that you configured the playgrounds correctly or using correct playground id.`,
 			);
 		}
 	};

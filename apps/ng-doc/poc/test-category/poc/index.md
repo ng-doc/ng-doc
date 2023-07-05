@@ -1,1 +1,1 @@
-{{ NgDocActions.playground("DatePipePlayground") }}
+{{ NgDocActions.playground("TagPlayground") }}

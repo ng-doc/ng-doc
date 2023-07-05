@@ -1,15 +1,14 @@
 import {NgDocPage} from '@ng-doc/core';
-
-import {FormatDatePipe} from './format-date.pipe';
+import {NgDocTagComponent} from '@ng-doc/ui-kit';
 
 const PocPage: NgDocPage = {
 	title: `poc`,
 	mdFile: './index.md',
 	keyword: 'Poc',
 	playgrounds: {
-		DatePipePlayground: {
-			target: FormatDatePipe,
-			template: `{{'2023-06-05T08:00:00.000Z' | formatDate}}`,
+		TagPlayground: {
+			target: NgDocTagComponent,
+			template: `<ng-doc-selector>Tag</ng-doc-selector>`,
 		},
 	},
 };
