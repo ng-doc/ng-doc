@@ -1,9 +1,9 @@
 import {NgFor, NgIf} from '@angular/common';
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
 import {objectKeys} from '@ng-doc/core/helpers/object-keys';
-import {NgDocPlaygroundConfig, NgDocPlaygroundProperties} from '@ng-doc/core/interfaces';
+import {NgDocPlaygroundConfig, NgDocPlaygroundOptions, NgDocPlaygroundProperties} from '@ng-doc/core/interfaces';
 import {NgDocAsArrayPipe} from '@ng-doc/ui-kit';
 
 import {NgDocPlaygroundDemoComponent} from './playground-demo/playground-demo.component';
@@ -19,21 +19,38 @@ import {NgDocPlaygroundPropertiesComponent} from './playground-properties/playgr
 	imports: [NgIf, NgDocPlaygroundPropertiesComponent, NgFor, NgDocPlaygroundDemoComponent, NgDocAsArrayPipe],
 })
 export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties>
-	implements AfterViewInit
+	implements OnInit, AfterViewInit
 {
+	@Input({required: true})
 	id: string = '';
+
+	@Input()
 	pipeName: string = '';
+
+	@Input()
 	selectors: string[] = [];
+
+	@Input()
 	properties?: T;
-	formGroup!: FormGroup<NgDocPlaygroundForm>;
+
+	@Input()
+	options: NgDocPlaygroundOptions = {};
+
 	recreateDemo: boolean = false;
+	formGroup!: FormGroup<NgDocPlaygroundForm>;
 	defaultValues?: Record<string, unknown>;
+	configuration!: NgDocPlaygroundConfig;
 
 	constructor(
 		private readonly rootPage: NgDocRootPage,
 		private readonly formBuilder: FormBuilder,
 		private readonly changeDetectorRef: ChangeDetectorRef,
 	) {}
+
+	ngOnInit(): void {
+		// Join configuration with options
+		this.configuration = Object.assign({}, this.rootPage.page?.playgrounds?.[this.id], this.options);
+	}
 
 	ngAfterViewInit(): void {
 		const propertiesForm: FormGroup = this.formBuilder.group(this.getPropertiesFormValues());
@@ -45,25 +62,26 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 		});
 		// `patchValue` is needed to set `undefined` values, otherwise they will be ignored by the Angular form
 		this.formGroup.patchValue({
-			properties: this.getPropertiesFormValues(),
+			properties: Object.assign({}, this.getPropertiesFormValues(), this.configuration.inputs),
 			content: this.getContentFormValues(),
 		});
 
 		this.changeDetectorRef.detectChanges();
 	}
 
-	get configuration(): NgDocPlaygroundConfig | undefined {
-		return this.rootPage.page?.playgrounds?.[this.id];
-	}
-
 	private getPropertiesFormValues(): Record<string, unknown> {
-		return objectKeys(this.properties ?? {}).reduce((controls: Record<string, unknown>, key: string) => {
-			if (this.properties) {
-				controls[key] = this.defaultValues ? this.defaultValues[key] : undefined;
-			}
+		const formValues: Record<string, unknown> = objectKeys(this.properties ?? {}).reduce(
+			(controls: Record<string, unknown>, key: string) => {
+				if (this.properties) {
+					controls[key] = this.defaultValues ? this.defaultValues[key] : undefined;
+				}
 
-			return controls;
-		}, {} as Record<string, unknown>);
+				return controls;
+			},
+			{} as Record<string, unknown>,
+		);
+
+		return Object.assign({}, formValues, this.configuration.defaults);
 	}
 
 	private getContentFormValues(): Record<string, boolean> {

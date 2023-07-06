@@ -1,5 +1,6 @@
 import {ComponentRef, Directive, ElementRef, inject, Injector, OnInit, Type, ViewContainerRef} from '@angular/core';
 import {NgDocProcessorOptions} from '@ng-doc/app/interfaces';
+import {objectKeys} from '@ng-doc/core';
 
 /**
  * Base processor class to create a processor directive that will be used to replace
@@ -21,7 +22,10 @@ export abstract class NgDocHtmlProcessor<T> implements OnInit {
 			// check if element node has a parent node because it can be removed by another processor
 			if (elementNode.parentNode) {
 				const replaceElement: Element = this.replaceElement(elementNode);
-				const options: NgDocProcessorOptions<T> = this.extractComponentOptions(elementNode, this.elementRef.nativeElement);
+				const options: NgDocProcessorOptions<T> = this.extractComponentOptions(
+					elementNode,
+					this.elementRef.nativeElement,
+				);
 
 				// create component
 				const componentRef: ComponentRef<T> = this.viewContainerRef.createComponent(this.component, {
@@ -30,7 +34,7 @@ export abstract class NgDocHtmlProcessor<T> implements OnInit {
 				});
 
 				// set component options
-				Object.assign(componentRef.instance as object, options.inputs);
+				objectKeys(options.inputs).forEach((key: keyof T) => componentRef.setInput(key as string, options.inputs[key]));
 
 				// replace element node with component node
 				replaceElement.parentNode?.replaceChild(componentRef.location.nativeElement, replaceElement);

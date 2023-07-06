@@ -26,6 +26,7 @@ export class NgDocPlaygroundProcessorDirective extends NgDocHtmlProcessor<NgDocP
 					.split(',')
 					.map((selector: string) => selector.trim())
 					.filter(isPresent),
+				options: JSON.parse(element.querySelector('#options')?.textContent ?? '') || {},
 			},
 		};
 	}

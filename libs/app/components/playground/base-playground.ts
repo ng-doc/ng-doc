@@ -14,12 +14,13 @@ export abstract class NgDocBasePlayground implements Pick<NgDocPlaygroundConfig,
 	abstract readonly playground?: Type<any>;
 	abstract readonly playgroundInstance?: Constructor<unknown>;
 	abstract readonly viewContainerRef?: ViewContainerRef;
+	abstract readonly configData: Record<string, unknown>;
 
 	@Input()
 	properties: Record<string, any> = {};
 
 	@Input()
-	data: Record<string, any> = {};
+	actionData: Record<string, unknown> = {};
 
 	@Input()
 	content: any = {};
@@ -52,5 +53,9 @@ export abstract class NgDocBasePlayground implements Pick<NgDocPlaygroundConfig,
 		if (!this.playgroundContainer.defaultValues) {
 			this.playgroundContainer.defaultValues = this.defaultValues;
 		}
+	}
+
+	get data(): any {
+		return Object.assign({}, this.configData, this.actionData);
 	}
 }

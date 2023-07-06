@@ -17,12 +17,14 @@ import {FormGroup} from '@angular/forms';
 import {NgDocDemoDisplayerComponent} from '@ng-doc/app/components/demo-displayer';
 import {formatHtml, getPlaygroundDemoToken} from '@ng-doc/app/helpers';
 import {NgDocFormPartialValue} from '@ng-doc/app/types';
+import {stringify} from '@ng-doc/core';
 import {
 	buildPlaygroundDemoPipeTemplate,
 	buildPlaygroundDemoTemplate,
 } from '@ng-doc/core/helpers/build-playground-demo-template';
 import {objectKeys} from '@ng-doc/core/helpers/object-keys';
 import {NgDocPlaygroundConfig, NgDocPlaygroundProperties} from '@ng-doc/core/interfaces';
+import {NgDocLetDirective, NgDocSmoothResizeComponent} from '@ng-doc/ui-kit';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {from, Observable, of, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
@@ -36,7 +38,7 @@ import {NgDocPlaygroundForm} from '../playground-form';
 	styleUrls: ['./playground-demo.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	standalone: true,
-	imports: [NgDocDemoDisplayerComponent, AsyncPipe],
+	imports: [NgDocDemoDisplayerComponent, AsyncPipe, NgDocSmoothResizeComponent, NgDocLetDirective],
 })
 @UntilDestroy()
 export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties>
@@ -63,6 +65,9 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 	@Input()
 	form!: FormGroup<NgDocPlaygroundForm>;
 
+	@Input()
+	expanded: boolean = false;
+
 	@ViewChild('demoOutlet', {static: true, read: ViewContainerRef})
 	demoOutlet?: ViewContainerRef;
 
@@ -85,6 +90,7 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 
 			if (demoInjector) {
 				const demos: Array<typeof NgDocBasePlayground> = this.injector.get(demoInjector, []);
+
 				this.playgroundDemo = demos.find(
 					(demo: typeof NgDocBasePlayground) => demo.selector === this.selector || demo.selector === this.pipeName,
 				);
@@ -106,6 +112,7 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 		if (data) {
 			this.demoRef?.setInput('properties', data.properties ?? {});
 			this.demoRef?.setInput('content', data.content ?? {});
+			this.demoRef?.setInput('actionData', this.configuration?.data ?? {});
 		}
 
 		this.updateCodeView();
@@ -159,7 +166,7 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 			const property: unknown | undefined = this.demoRef?.instance?.defaultValues[key];
 
 			if (property !== value) {
-				result[key] = JSON.stringify(value).replace(/"/g, `'`);
+				result[key] = stringify(value).replace(/"/g, `'`);
 			}
 
 			return result;
