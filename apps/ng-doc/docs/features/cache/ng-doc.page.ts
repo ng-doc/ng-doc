@@ -6,5 +6,5 @@ export default page({
   title: `Cache`,
   mdFile: './index.md',
   category: FeaturesCategory,
-  order: 2,
+  order: 3,
 });

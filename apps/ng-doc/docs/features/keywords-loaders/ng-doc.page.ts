@@ -7,5 +7,5 @@ export default page({
   mdFile: './index.md',
   category: FeaturesCategory,
   keyword: 'FeaturesKeywordsLoaders',
-  order: 4,
+  order: 5,
 });

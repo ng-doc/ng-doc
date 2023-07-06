@@ -21,7 +21,7 @@ describe('category', () => {
 			'category',
 			{
 				path: 'test',
-				title: 'my-category',
+				title: 'My Category',
 			},
 			host,
 		);
@@ -29,7 +29,7 @@ describe('category', () => {
 		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {category} from '@ng-doc/core';
 
 export default category({
-\ttitle: 'my-category',
+\ttitle: 'My Category',
 });
 `);
 	});

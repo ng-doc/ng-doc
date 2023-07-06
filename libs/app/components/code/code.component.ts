@@ -2,8 +2,7 @@ import {Clipboard} from '@angular/cdk/clipboard';
 import {NgIf} from '@angular/common';
 import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input} from '@angular/core';
 import {NgDocSanitizeHtmlPipe} from '@ng-doc/app/pipes/sanitize-html';
-import {NgDocLinkProcessorDirective} from '@ng-doc/app/processors/link-processor';
-import {NgDocTooltipProcessorDirective} from '@ng-doc/app/processors/tooltip-processor';
+import {NgDocPageProcessorDirective} from '@ng-doc/app/processors/page-processor';
 import {
 	NgDocButtonIconComponent,
 	NgDocIconComponent,
@@ -26,8 +25,7 @@ import {
 		NgDocSmoothResizeComponent,
 		NgDocIconComponent,
 		NgDocSanitizeHtmlPipe,
-		NgDocTooltipProcessorDirective,
-		NgDocLinkProcessorDirective,
+		NgDocPageProcessorDirective,
 	],
 })
 export class NgDocCodeComponent {

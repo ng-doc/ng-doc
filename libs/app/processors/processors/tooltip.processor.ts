@@ -7,6 +7,7 @@ import {
 	Input,
 	ViewChild,
 } from '@angular/core';
+import {NgDocPageProcessor} from '@ng-doc/app/interfaces';
 import {NgDocTooltipDirective} from '@ng-doc/ui-kit';
 
 @Component({
@@ -33,7 +34,7 @@ import {NgDocTooltipDirective} from '@ng-doc/ui-kit';
 	standalone: true,
 	imports: [NgDocTooltipDirective],
 })
-export class NgDocTooltipWrapperComponent implements AfterViewInit {
+class NgDocTooltipWrapperComponent implements AfterViewInit {
 	@Input()
 	content?: string;
 
@@ -54,3 +55,14 @@ export class NgDocTooltipWrapperComponent implements AfterViewInit {
 		}
 	}
 }
+
+export const tooltipProcessor: NgDocPageProcessor<NgDocTooltipWrapperComponent> = {
+	component: NgDocTooltipWrapperComponent,
+	selector: '[ngDocTooltip]',
+	extractOptions: (element: Element) => ({
+		inputs: {
+			content: element.getAttribute('ngDocTooltip') ?? '',
+		},
+		content: [[element.cloneNode(true)]],
+	}),
+};

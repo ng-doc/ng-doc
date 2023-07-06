@@ -5,6 +5,7 @@ import {NgDocRootComponent} from '@ng-doc/app/components/root';
 import {NG_DOC_DARK_PURPLE_THEME, NG_DOC_NIGHT_THEME, NG_DOC_STORE_THEME_KEY} from '@ng-doc/app/constants';
 import {isDarkOsTheme} from '@ng-doc/app/helpers';
 import {NgDocApplicationConfig, NgDocTheme} from '@ng-doc/app/interfaces';
+import {NG_DOC_DEFAULT_PAGE_PROCESSORS} from '@ng-doc/app/processors';
 import {NgDocStoreService} from '@ng-doc/app/services/store';
 import {NgDocThemeService} from '@ng-doc/app/services/theme';
 import {NG_DOC_DEFAULT_THEME_ID, NG_DOC_THEME} from '@ng-doc/app/tokens';
@@ -47,6 +48,7 @@ export class NgDocModule {
 					multi: true,
 					deps: [NgDocThemeService, NgDocStoreService, [new Optional(), NG_DOC_DEFAULT_THEME_ID]],
 				},
+				...NG_DOC_DEFAULT_PAGE_PROCESSORS,
 			],
 		};
 	}

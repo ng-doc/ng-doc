@@ -21,7 +21,7 @@ describe('page', () => {
 			'page',
 			{
 				path: 'test',
-				title: 'my-page',
+				title: 'My Page',
 			},
 			host,
 		);
@@ -30,7 +30,7 @@ describe('page', () => {
 		expect(tree.readText('test/my-page/ng-doc.page.ts')).toBe(`import {page} from '@ng-doc/core';
 
 export default page({
-\ttitle: \`my-page\`,
+\ttitle: \`My Page\`,
 \tmdFile: './index.md',
 });
 `);
