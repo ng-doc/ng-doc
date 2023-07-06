@@ -1,5 +1,5 @@
 import {page} from '@ng-doc/core';
-import {NgDocIconComponent, NgDocRotatorDirective, NgDocTagComponent} from '@ng-doc/ui-kit';
+import {NgDocButtonComponent, NgDocIconComponent, NgDocRotatorDirective, NgDocTagComponent} from '@ng-doc/ui-kit';
 
 import GuidesCategory from '../ng-doc.category';
 import {FormatDatePipe} from './format-date.pipe';
@@ -43,6 +43,11 @@ export default page({
     DatePipePlayground: {
       target: FormatDatePipe,
       template: `{{'2023-06-05T08:00:00.000Z' | formatDate}}`,
+    },
+    ButtonPlayground: {
+      target: NgDocButtonComponent,
+      template: `<ng-doc-selector>{{data.label}}</ng-doc-selector>`,
+      data: {label: 'Button'},
     },
   },
 });

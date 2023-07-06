@@ -1,4 +1,4 @@
-import {NgDocDemoActionOptions, NgDocDemoPaneActionOptions} from '@ng-doc/core';
+import {NgDocDemoActionOptions, NgDocDemoPaneActionOptions, NgDocPlaygroundOptions} from '@ng-doc/core';
 
 import {NgDocActionOutput} from '../interfaces';
 import {NgDocAction} from '../types';
@@ -18,8 +18,8 @@ export class NgDocActions {
 		return this.performAction(demoPaneAction(className, options)).output;
 	}
 
-	playground(playgroundId: string): string {
-		const output: NgDocActionOutput = this.performAction(playgroundAction(playgroundId));
+	playground(playgroundId: string, options?: NgDocPlaygroundOptions): string {
+		const output: NgDocActionOutput = this.performAction(playgroundAction(playgroundId, options));
 
 		return output.output;
 	}

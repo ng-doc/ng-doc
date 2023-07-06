@@ -1,7 +1,7 @@
 import {asArray, isPresent, NgDocEntityAnchor, NgDocPageIndex} from '@ng-doc/core';
 import * as path from 'path';
 import {forkJoin, from, Observable, of} from 'rxjs';
-import {map, mapTo, switchMap, tap} from 'rxjs/operators';
+import {map, switchMap, tap} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
 import {
@@ -63,8 +63,10 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 		/**
 		 * Just refresh source file, we don't need to emit it
 		 */
+		this.sourceFile.refreshFromFileSystemSync();
+		this.updateDeclaration();
 
-		return from(this.sourceFile.refreshFromFileSystem()).pipe(mapTo(void 0));
+		return of(void 0);
 	}
 
 	override get title(): string {
@@ -121,8 +123,6 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	}
 
 	protected override loadImpl(): Observable<void> {
-		this.updateDeclaration();
-
 		return of(void 0);
 	}
 

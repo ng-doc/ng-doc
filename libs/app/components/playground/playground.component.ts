@@ -1,11 +1,9 @@
 import {NgFor, NgIf} from '@angular/common';
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
-import {extractValue} from '@ng-doc/core/helpers/extract-value';
 import {objectKeys} from '@ng-doc/core/helpers/object-keys';
-import {NgDocPlaygroundConfig, NgDocPlaygroundProperties} from '@ng-doc/core/interfaces';
-import {NgDocExtractedValue} from '@ng-doc/core/types';
+import {NgDocPlaygroundConfig, NgDocPlaygroundOptions, NgDocPlaygroundProperties} from '@ng-doc/core/interfaces';
 import {NgDocAsArrayPipe} from '@ng-doc/ui-kit';
 
 import {NgDocPlaygroundDemoComponent} from './playground-demo/playground-demo.component';
@@ -21,18 +19,40 @@ import {NgDocPlaygroundPropertiesComponent} from './playground-properties/playgr
 	imports: [NgIf, NgDocPlaygroundPropertiesComponent, NgFor, NgDocPlaygroundDemoComponent, NgDocAsArrayPipe],
 })
 export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties>
-	implements OnInit
+	implements OnInit, AfterViewInit
 {
+	@Input({required: true})
 	id: string = '';
-	pipeName: string = '';
-	selectors: string[] = [];
-	properties?: T;
-	formGroup!: FormGroup<NgDocPlaygroundForm>;
-	recreateDemo: boolean = false;
 
-	constructor(private readonly rootPage: NgDocRootPage, private readonly formBuilder: FormBuilder) {}
+	@Input()
+	pipeName: string = '';
+
+	@Input()
+	selectors: string[] = [];
+
+	@Input()
+	properties?: T;
+
+	@Input()
+	options: NgDocPlaygroundOptions = {};
+
+	recreateDemo: boolean = false;
+	formGroup!: FormGroup<NgDocPlaygroundForm>;
+	defaultValues?: Record<string, unknown>;
+	configuration!: NgDocPlaygroundConfig;
+
+	constructor(
+		private readonly rootPage: NgDocRootPage,
+		private readonly formBuilder: FormBuilder,
+		private readonly changeDetectorRef: ChangeDetectorRef,
+	) {}
 
 	ngOnInit(): void {
+		// Join configuration with options
+		this.configuration = Object.assign({}, this.rootPage.page?.playgrounds?.[this.id], this.options);
+	}
+
+	ngAfterViewInit(): void {
 		const propertiesForm: FormGroup = this.formBuilder.group(this.getPropertiesFormValues());
 		const contentForm: FormGroup = this.formBuilder.group(this.getContentFormValues());
 
@@ -40,20 +60,28 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 			properties: propertiesForm,
 			content: contentForm,
 		});
+		// `patchValue` is needed to set `undefined` values, otherwise they will be ignored by the Angular form
+		this.formGroup.patchValue({
+			properties: Object.assign({}, this.getPropertiesFormValues(), this.configuration.inputs),
+			content: this.getContentFormValues(),
+		});
+
+		this.changeDetectorRef.detectChanges();
 	}
 
-	get configuration(): NgDocPlaygroundConfig | undefined {
-		return this.rootPage.page?.playgrounds?.[this.id];
-	}
+	private getPropertiesFormValues(): Record<string, unknown> {
+		const formValues: Record<string, unknown> = objectKeys(this.properties ?? {}).reduce(
+			(controls: Record<string, unknown>, key: string) => {
+				if (this.properties) {
+					controls[key] = this.defaultValues ? this.defaultValues[key] : undefined;
+				}
 
-	private getPropertiesFormValues<K extends keyof T>(): Record<K, NgDocExtractedValue> {
-		return objectKeys(this.properties ?? {}).reduce((controls: Record<K, NgDocExtractedValue>, key: K) => {
-			if (this.properties) {
-				controls[key] = extractValue(this.properties[key]?.default ?? 'undefined');
-			}
+				return controls;
+			},
+			{} as Record<string, unknown>,
+		);
 
-			return controls;
-		}, {} as Record<K, NgDocExtractedValue>);
+		return Object.assign({}, formValues, this.configuration.defaults);
 	}
 
 	private getContentFormValues(): Record<string, boolean> {
@@ -68,7 +96,7 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 	}
 
 	resetForm(): void {
-		this.formGroup?.reset({
+		this.formGroup?.patchValue({
 			properties: this.getPropertiesFormValues(),
 			content: this.getContentFormValues(),
 		});

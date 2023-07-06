@@ -11,6 +11,8 @@
 	margin-inline-end: 0;
 	margin: calc(var(--ng-doc-base-gutter) * 4) 0;
 
+	--ng-doc-code-margin: var(--ng-doc-base-gutter) 0;
+
 	&[data-ng-doc-type='note'] {
 		background-color: var(--ng-doc-light-blue-10);
 		border-left-color: var(--ng-doc-light-blue-100);

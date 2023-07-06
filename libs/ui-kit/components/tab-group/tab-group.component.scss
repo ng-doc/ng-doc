@@ -24,7 +24,6 @@
 			.ng-doc-tab-text {
 				@include ng-doc-font();
 				position: relative;
-				z-index: 3;
 				--ng-doc-font-size: 14px;
 				--ng-doc-font-weight: 700;
 			}

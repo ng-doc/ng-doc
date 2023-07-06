@@ -81,6 +81,35 @@ It can't recognize complex types such as `Interface`, `Class` or `Enum`, but you
 own custom controls for them to teach NgDoc doing that, read more about it in
 the `*CustomizationTypeControls`.
 
+## Multiple selectors
+
+If your component has multiple selectors, NgDoc will create a view for each of them, to make it
+work correctly, you need to use the `ng-doc-selector` tag in your template, which will be replaced
+with the selector of your component.
+
+> **Note**
+> If you don't need to render all possible selectors of your component, you can use the `selectors`
+> field in the playground configuration or action call to specify the selectors that you want to see
+> in your playground.
+
+```typescript name="ng-doc.page.ts" {8}
+import {NgDocPage} from '@ng-doc/core';
+import {NgDocButtonComponent} from '@ng-doc/ui-kit';
+
+const MyAwesomePage: NgDocPage = {
+  playgrounds: {
+    TagPlayground: {
+      target: NgDocButtonComponent,
+      template: `<ng-doc-selector>Button</ng-doc-selector>`,
+    },
+  },
+};
+
+export default MyAwesomePage;
+```
+
+{{ NgDocActions.playground("ButtonPlayground") }}
+
 ## Optional content
 
 Some components may support displaying other child components with `ng-content`, and they may be
@@ -210,6 +239,34 @@ export default MyAwesomePage;
 ```
 
 {{ NgDocActions.playground("DatePipePlayground") }}
+
+## Configuration
+
+Each playground can be configured both in the `ng-doc.page.ts` file and when calling the rendering
+function `NgDocActions.playground`. In this case, the configuration from the template will overwrite
+the configuration in `ng-doc.page.ts`. You can find all available options in the
+`NgDocPlaygroundOptions` interface.
+
+> **Warning**
+> Please be careful with the closing brackets `}` in your template, because it can be
+> interpreted as the end of the `nunjucks` expression.
+> ```twig name="index.md"
+> // Will not work
+> {{ '{{ NgDocActions.playground("My", {inputs: {a:1}}) }}' | safe }}
+> 
+> // To fix it, you need to add a space after the closing bracket
+> {{ '{{ NgDocActions.playground("My", {inputs: {a:1} }) }}' | safe }}
+> ```
+
+
+For example, you can display a component without the side panel and with modified default input
+values like this:
+
+```twig name="index.md"
+{{ '{{ NgDocActions.playground("ButtonPlayground", {hideSidePanel: true, selectors: "button[ng-doc-button-flat]", inputs: {size: "small"}, data: {label: "Small Button"} }) }}' | safe }}
+```
+
+{{ NgDocActions.playground("ButtonPlayground", {hideSidePanel: true, selectors: "button[ng-doc-button-flat]", inputs: {size: "small"}, data: {label: "Small Button"} }) }}
 
 {% index false %}
 

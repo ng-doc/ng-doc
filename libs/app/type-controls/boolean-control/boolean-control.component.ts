@@ -13,7 +13,12 @@ import {FlControlHost, provideControlHost} from 'flex-controls';
 	standalone: true,
 	imports: [NgDocCheckboxComponent, NgDocTooltipDirective, NgDocSanitizeHtmlPipe],
 })
-export class NgDocBooleanControlComponent extends FlControlHost<string | undefined> implements NgDocTypeControl {
+export class NgDocBooleanControlComponent
+	extends FlControlHost<boolean | undefined>
+	implements NgDocTypeControl<boolean | undefined>
+{
+	default?: boolean;
+
 	name: string = '';
 	description: string = '';
 
@@ -21,5 +26,13 @@ export class NgDocBooleanControlComponent extends FlControlHost<string | undefin
 		super();
 
 		this.controlChange.subscribe(() => this.onTouched());
+	}
+
+	get defaultValue(): boolean | undefined {
+		return Object.prototype.hasOwnProperty.call(this, 'default') ? this.default : false;
+	}
+
+	override updateModel(obj: boolean | null | undefined) {
+		super.updateModel(obj ? obj : !this.defaultValue ? this.defaultValue : false);
 	}
 }

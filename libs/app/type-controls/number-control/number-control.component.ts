@@ -1,8 +1,7 @@
 import {NgIf} from '@angular/common';
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {NgDocTypeControl} from '@ng-doc/app/interfaces';
-import {extractValue} from '@ng-doc/core/helpers/extract-value';
 import {
 	NgDocButtonIconComponent,
 	NgDocFocusableDirective,
@@ -29,18 +28,15 @@ import {FlControl, FlControlSilencerModule} from 'flex-controls';
 		NgDocIconComponent,
 	],
 })
-export class NgDocNumberControlComponent extends FlControl<number> implements NgDocTypeControl {
-	default: string | undefined;
+export class NgDocNumberControlComponent extends FlControl<number> implements NgDocTypeControl<number> {
+	@Input()
+	default?: number;
 
 	constructor() {
 		super();
 	}
 
-	get defaultValue(): number | null {
-		return this.default ? (extractValue(this.default) as number) : null;
-	}
-
 	changeModel(value: number | null): void {
-		this.updateModel(value === null && this.default ? this.defaultValue : value);
+		this.updateModel(value === null && this.default ? this.default : value);
 	}
 }

@@ -3,6 +3,8 @@
 		[form]="formGroup"
 		[properties]="properties"
 		[dynamicContent]="configuration.content"
+		[hideSidePanel]="configuration.hideSidePanel ?? false"
+		[defaultValues]="defaultValues"
 		[(recreateDemo)]="recreateDemo"
 		(resetForm)="resetForm()"
 	>
@@ -14,6 +16,7 @@
 			[configuration]="configuration"
 			[recreateDemo]="recreateDemo"
 			[form]="formGroup"
+			[expanded]="configuration.expanded ?? false"
 		>
 		</ng-doc-playground-demo>
 

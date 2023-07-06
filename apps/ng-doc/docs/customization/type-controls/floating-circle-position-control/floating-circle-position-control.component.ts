@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgDocTypeControl} from '@ng-doc/app';
 import {EMPTY_FUNCTION} from '@ng-doc/core';
@@ -22,7 +22,10 @@ import {FloatingCirclePosition} from '../floating-circle/floating-circle.compone
   ],
 })
 @UntilDestroy()
-export class FloatingCirclePositionControlComponent implements NgDocTypeControl {
+export class FloatingCirclePositionControlComponent implements NgDocTypeControl<FloatingCirclePosition> {
+  @Input()
+  default: FloatingCirclePosition | undefined;
+
   model: FormGroup<{
     top: FormControl<string | null>;
     left: FormControl<string | null>;

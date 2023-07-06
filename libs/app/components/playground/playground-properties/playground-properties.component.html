@@ -1,8 +1,8 @@
-<div class="ng-doc-playground-properties-wrapper" [class.vertical]="observer | async">
+<div class="ng-doc-playground-properties-wrapper" [class.vertical]="observer | async" *ngIf="defaultValues">
 	<div class="ng-doc-playground-demos">
 		<ng-content></ng-content>
 	</div>
-	<div class="ng-doc-playground-properties">
+	<div class="ng-doc-playground-properties" *ngIf="!hideSidePanel">
 		<div class="ng-doc-playground-header">
 			<h4 ng-doc-text>Playground</h4>
 			<button ng-doc-button color="red" (click)="resetForm.emit()">Reset</button>
@@ -27,6 +27,7 @@
 				[name]="propertyControl.property.inputName"
 				[property]="propertyControl.property"
 				[typeControl]="propertyControl.typeControl"
+				[defaultValue]="defaultValues[propertyControl.propertyName]"
 				[control]="getFormControl | bind: this | execute: 'properties': propertyControl.propertyName"
 			>
 			</ng-doc-playground-property>

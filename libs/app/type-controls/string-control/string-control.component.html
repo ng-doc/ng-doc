@@ -7,9 +7,9 @@
 			[ngDocFocusable]="false"
 			[disabled]="disabled"
 			[rounded]="false"
-			(click)="updateModel(defaultValue)"
+			(click)="updateModel(default ?? null)"
 			(focusout)="onTouched()"
-			*ngIf="model && model !== defaultValue"
+			*ngIf="model && model !== default"
 		>
 			<ng-doc-icon icon="x"></ng-doc-icon>
 		</button>
