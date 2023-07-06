@@ -31,14 +31,12 @@ the page configuration must correspond to the `NgDocPage` type, you can read mor
 properties in the documentation for the type, below is an example of the minimum page configuration.
 
 ```typescript name="ng-doc.page.ts"
-import {NgDocPage} from '@ng-doc/core';
+import {page} from '@ng-doc/core';
 
-export const MyAwesomePage: NgDocPage = {
+export default page({
   title: 'MyAwesomePage',
   mdFile: './index.md',
-};
-
-export default MyAwesomePage;
+});
 ```
 
 ## Adding a category
@@ -48,16 +46,14 @@ for details on how to create one). To add a category to your page, you can use t
 just import category and put it in the `category` field, just like that:
 
 ```typescript name="ng-doc.page.ts" {2,7}
-import {NgDocPage} from '@ng-doc/core';
+import {page} from '@ng-doc/core';
 import MyAwesomeCategory from '../ng-doc.category';
 
-export const MyAwesomePage: NgDocPage = {
+export default page({
   title: 'MyAwesomePage',
   mdFile: './index.md',
   category: MyAwesomeCategory,
-};
-
-export default MyAwesomePage;
+});
 ```
 
 ## Creating a content
@@ -83,14 +79,12 @@ ng g @ng-doc/builder:page "Installation" -m
 You can also create a module file manually, but you need to import it into the page file.
 
 ```typescript name="ng-doc.page.ts"
-import {NgDocPage} from '@ng-doc/core';
+import {page} from '@ng-doc/core';
 import {MyModule} from '../my.module';
 
-export const MyAwesomePage: NgDocPage = {
+export default page({
   imports: [MyModule],
-};
-
-export default MyAwesomePage;
+});
 ```
 
 {% index false %}

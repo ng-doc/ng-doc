@@ -44,7 +44,7 @@ export class {{ comp.name }} extends NgDocBasePlayground {
 	@ViewChild(pageEntity.playgrounds['{{ id }}'].target, {static: true, read: ViewContainerRef})
 	readonly viewContainerRef: ViewContainerRef;
 
-	data: any = pageEntity.playgrounds['{{ id }}'].data;
+	readonly configData: any = pageEntity.playgrounds['{{ id }}'].data;
 
 	constructor() {
 		super();

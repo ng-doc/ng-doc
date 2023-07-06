@@ -3,7 +3,5 @@ import {CommonModule} from '@angular/common';
 
 @NgModule({
 	imports: [CommonModule],
-	// Declare you demo components here
-	declarations: [],
 })
-export class <%= pageName %>Module {}
+export class PageModule {}

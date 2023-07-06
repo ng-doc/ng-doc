@@ -28,6 +28,13 @@
 			}
 		},
 		{
+			"files": ["docs/**/*.ts"],
+			"rules": {
+				"@angular-eslint/component-selector": "off",
+				"@angular-eslint/directive-selector": "off"
+			}
+		},
+		{
 			"files": ["*.html"],
 			"extends": ["plugin:@nx/angular-template"],
 			"rules": {}

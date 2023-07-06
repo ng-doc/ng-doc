@@ -46,7 +46,8 @@ const myVar = 'Hello world';
 
 ### Groups
 
-Several code blocks can be grouped together, for this you need to specify the `group` and `name` parameters,
+Several code blocks can be grouped together, for this you need to specify the `group` and `name`
+parameters,
 for each code block you want to group, for example, to group two code blocks, you can write
 the following
 
@@ -68,7 +69,8 @@ const myVar = 'Hi world!';
 const myVar = 'Hi Mom!';
 ```
 
-By default, first tab will be active, but you can specify the active tab by adding `active` parameter
+By default, first tab will be active, but you can specify the active tab by adding `active`
+parameter
 to change that.
 
 ````markdown name="index.md"
@@ -109,7 +111,8 @@ const myVar = 'Hello world';
 console.log(myVar);
 ```
 
-You can also highlight multiple lines, or lines range, for example, to highlight lines 1, 8 and from 3
+You can also highlight multiple lines, or lines range, for example, to highlight lines 1, 8 and from
+3
 to 6, you can write the following
 
 ````markdown name="index.md"
@@ -126,14 +129,12 @@ export default NicePage;
 ````
 
 ```typescript {1,3-6,8}
-import {NgDocPage} from '@ng-doc/core';
+import {page} from '@ng-doc/core';
 
-const NicePage: NgDocPage = {
+export default page({
   title: `What a nice page!`,
   mdFile: './index.md',
-};
-
-export default NicePage;
+});
 ```
 
 ### Loading code from a file

@@ -24,12 +24,12 @@ itself, for example:
 > it.
 
 ```typescript name="ng-doc.page.ts"
-import {NgDocPage} from '@ng-doc/core';
+import {page} from '@ng-doc/core';
 import {NgDocTagModule, NgDocTagComponent} from '@ng-doc/ui-kit';
 
 import {PageModule} from './ng-doc.module';
 
-const MyAwesomePage: NgDocPage = {
+export default page({
   // Import modules of your target components if they are not standalone
   imports: [NgDocTagModule],
   playgrounds: {
@@ -38,9 +38,7 @@ const MyAwesomePage: NgDocPage = {
       template: `<ng-doc-selector>Tag Label</ng-doc-selector>`,
     },
   },
-};
-
-export default MyAwesomePage;
+});
 ```
 
 - `target` - The Angular Component/Directive class that will be used for the playground (make sure
@@ -81,6 +79,33 @@ It can't recognize complex types such as `Interface`, `Class` or `Enum`, but you
 own custom controls for them to teach NgDoc doing that, read more about it in
 the `*CustomizationTypeControls`.
 
+## Multiple selectors
+
+If your component has multiple selectors, NgDoc will create a view for each of them, to make it
+work correctly, you need to use the `ng-doc-selector` tag in your template, which will be replaced
+with the selector of your component.
+
+> **Note**
+> If you don't need to render all possible selectors of your component, you can use the `selectors`
+> field in the playground configuration or action call to specify the selectors that you want to see
+> in your playground.
+
+```typescript name="ng-doc.page.ts" {8}
+import {page} from '@ng-doc/core';
+import {NgDocButtonComponent} from '@ng-doc/ui-kit';
+
+export default page({
+  playgrounds: {
+    TagPlayground: {
+      target: NgDocButtonComponent,
+      template: `<ng-doc-selector>Button</ng-doc-selector>`,
+    },
+  },
+});
+```
+
+{{ NgDocActions.playground("ButtonPlayground") }}
+
 ## Optional content
 
 Some components may support displaying other child components with `ng-content`, and they may be
@@ -93,10 +118,10 @@ the `content` field in your playground configuration, for example:
 > if this component is standalone, you must import its component class.
 
 ```typescript name="ng-doc.page.ts" {11,15-18}
-import {NgDocDependencies} from '@ng-doc/core';
+import {page} from '@ng-doc/core';
 import {NgDocTagComponent, NgDocIconModule} from '@ng-doc/ui-kit';
 
-const PageDependencies: NgDocDependencies = {
+export default page({
   imports: [NgDocTagModule, NgDocIconModule],
   playgrounds: {
     TagIconPlayground: {
@@ -114,9 +139,7 @@ const PageDependencies: NgDocDependencies = {
       },
     },
   },
-};
-
-export default PageDependencies;
+});
 ```
 
 NgDoc will create new control in the `Content` section that allows you to display or hide dynamic
@@ -130,10 +153,10 @@ To make your playgrounds more lively and dynamic you can use `data` field,
 and put any data you want in it, to use it in your template, for example like that:
 
 ```typescript name="ng-doc.page.ts"
-import {NgDocDependencies} from '@ng-doc/core';
+import {page} from '@ng-doc/core';
 import {NgDocTagComponent} from '@ng-doc/ui-kit';
 
-const PageDependencies: NgDocDependencies = {
+export default page({
   imports: [NgDocTagModule],
   playgrounds: {
     TagDataPlayground: {
@@ -144,9 +167,7 @@ const PageDependencies: NgDocDependencies = {
       },
     },
   },
-};
-
-export default PageDependencies;
+});
 ```
 
 {{ NgDocActions.playground("TagDataPlayground") }}
@@ -156,12 +177,12 @@ export default PageDependencies;
 You can also create playgrounds for directives in the same way as for components:
 
 ```typescript name="ng-doc.page.ts"
-import {NgDocPage} from '@ng-doc/core';
+import {page} from '@ng-doc/core';
 import {NgDocRotatorDirective} from '@ng-doc/ui-kit';
 
 import {PageModule} from './ng-doc.module';
 
-const MyAwesomePage: NgDocPage = {
+export default page({
   playgrounds: {
     RotatorPlayground: {
       // We don't import anything else, because `NgDocRotatorDirective` is standalone
@@ -169,9 +190,7 @@ const MyAwesomePage: NgDocPage = {
       template: `<button ngDocRotator>Button</button>`,
     },
   },
-};
-
-export default MyAwesomePage;
+});
 ```
 
 {{ NgDocActions.playground("RotatorPlayground") }}
@@ -192,24 +211,55 @@ pipe class, and the `template` field to specify the template for the playground:
 > will bind them to the playground controls.
 
 ```typescript name="ng-doc.page.ts"
-import {NgDocPage} from '@ng-doc/core';
+import {page} from '@ng-doc/core';
 import {FormatDatePipe} from './format-date.pipe';
 
 import {PageModule} from './ng-doc.module';
 
-const MyAwesomePage: NgDocPage = {
+export default page({
   playgrounds: {
     DatePipePlayground: {
       target: FormatDatePipe,
       template: `{{ "{{'2023-06-05T08:00:00.000Z' | formatDate}}" | safe }}`,
     },
   },
-};
-
-export default MyAwesomePage;
+});
 ```
 
 {{ NgDocActions.playground("DatePipePlayground") }}
+
+## Configuration
+
+Each playground can be configured both in the `ng-doc.page.ts` file and when calling the rendering
+function `NgDocActions.playground`. In this case, the configuration from the template will overwrite
+the configuration in `ng-doc.page.ts`. You can find all available options in the
+`NgDocPlaygroundOptions` interface.
+
+> **Warning**
+> Please be careful with the closing brackets `}` in your template, because it can be
+> interpreted as the end of the `nunjucks` expression.
+>
+> ```twig name="index.md"
+> // Will not work
+> {{ '{{ NgDocActions.playground("My", {inputs: {a:1}}) }}' | safe }}
+>
+> // To fix it, you need to add a space after the closing bracket
+> {{ '{{ NgDocActions.playground("My", {inputs: {a:1} }) }}' | safe }}
+> ```
+
+For example, you can display a component without the side panel and with modified default input
+values like this:
+
+```twig name="index.md"
+{{ '{{ NgDocActions.playground("ButtonPlayground", {hideSidePanel: true, selectors: "button[ng-doc-button-flat]", inputs: {size: "small"}, data: {label: "Small Button"} }) }}' | safe }}
+```
+
+{{ NgDocActions.playground("ButtonPlayground", {
+  hideSidePanel: true,
+  selectors: "button[ng-doc-button-flat]",
+  inputs: {size: "small"},
+  data: {label: "Small Button"}
+}) }}
 
 {% index false %}
 

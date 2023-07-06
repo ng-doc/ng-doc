@@ -1,5 +1,4 @@
-export interface NgDocProcessorOptions<T> {
-	anchor?: Element;
+export interface NgDocProcessorOptions<T, K extends keyof T = keyof T> {
 	content?: Node[][];
-	inputs: Partial<T>;
+	inputs?: Partial<Record<K, T[K]>>;
 }

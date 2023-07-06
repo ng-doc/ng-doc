@@ -23,6 +23,6 @@
 			"options": {
 				"parser": "typescript"
 			}
-		}
+		},
 	]
 }

@@ -1,13 +1,11 @@
-import {NgDocPage} from '@ng-doc/core';
+import {page} from '@ng-doc/core';
 
 import FeaturesCategory from '../ng-doc.category';
 
-const MarkdownPage: NgDocPage = {
+export default page({
   title: `Markdown`,
   mdFile: './index.md',
   category: FeaturesCategory,
   order: 1,
   keyword: 'FeaturesMarkdown',
-};
-
-export default MarkdownPage;
+});

@@ -5,8 +5,7 @@
 	<div
 		class="ng-doc-code-wrapper"
 		[innerHTML]="html | ngDocSanitizeHtml"
-		ngDocLinkProcessor
-		ngDocTooltipProcessor
+		ngDocPageProcessor
 		*ngIf="html"
 	></div>
 	<div class="ng-doc-code-wrapper" *ngIf="!html">
