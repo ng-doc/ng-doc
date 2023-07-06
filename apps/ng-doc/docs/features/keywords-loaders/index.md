@@ -21,22 +21,21 @@ npm i @ng-doc/keywords-loaders --save-dev
 
 > **Note**
 > This loader integrates only API, it doesn't integrate the Angular guides, tutorials, etc.
-> It also has some options for configuring, e.g. you can specify the version of the Angular documentation.
+> It also has some options for configuring, e.g. you can specify the version of the Angular
+> documentation.
 
 To integrate your documentation with the Angular documentation, you need to open
 your `ng-doc.config.ts` file, and import `ngKeywordsLoader` to the `keywordsLoaders` array:
 
 ```typescript name="ng-doc.config.ts"
-import {NgDocConfiguration} from '@ng-doc/builder';
+import {config} from '@ng-doc/builder';
 import {ngKeywordsLoader} from '@ng-doc/keywords-loaders';
 
-const config: NgDocConfiguration = {
+export default config({
   keywords: {
     loaders: [ngKeywordsLoader()],
   },
-};
-
-export default config;
+});
 ```
 
 After that, when you run your app, all your usages of Angular keywords, in code blocks and inline
@@ -55,10 +54,10 @@ your `ng-doc.config.ts` file, and import `ngDocKeywordsLoader` to the `keywordsL
 and provide the base config:
 
 ```typescript name="ng-doc.config.ts"
-import {NgDocConfiguration} from '@ng-doc/builder';
+import {config} from '@ng-doc/builder';
 import {ngDocKeywordsLoader} from '@ng-doc/keywords-loaders';
 
-const config: NgDocConfiguration = {
+export default config({
   keywords: {
     loaders: [
       ngDocKeywordsLoader({
@@ -66,9 +65,7 @@ const config: NgDocConfiguration = {
       }),
     ],
   },
-};
-
-export default config;
+});
 ```
 
 After that, NgDoc will try to load the keywords everytime when you start your app,
@@ -80,10 +77,10 @@ You can also integrate guides of the third-party documentation, and provide a pr
 you want not to conflict with your own guides keywords:
 
 ```typescript name="ng-doc.config.ts"
-import {NgDocConfiguration} from '@ng-doc/builder';
+import {config} from '@ng-doc/builder';
 import {ngDocKeywordsLoader} from '@ng-doc/keywords-loaders';
 
-const config: NgDocConfiguration = {
+export default config({
   keywords: {
     loaders: [
       ngDocKeywordsLoader({
@@ -93,9 +90,7 @@ const config: NgDocConfiguration = {
       }),
     ],
   },
-};
-
-export default config;
+});
 ```
 
 After that, you should be able to use the keywords from the third-party NgDoc documentation,
@@ -131,14 +126,14 @@ After that, you need to add the loader to the `keywordsLoaders` array in the
 `ng-doc.config.ts` file:
 
 ```typescript name="ng-doc.config.ts"
-import {NgDocConfiguration} from '@ng-doc/builder';
+import {config} from '@ng-doc/builder';
 import {myKeywordsLoader} from './my-keywords-loader';
 
-const config: NgDocConfiguration = {
+export default config({
   keywords: {
     loaders: [myKeywordsLoader()],
   },
-};
+});
 ```
 
 And that's it! Now, when you run your app, all your usages of the `googleKeyword`

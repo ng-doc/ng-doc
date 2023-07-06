@@ -26,13 +26,11 @@ describe('category', () => {
 			host,
 		);
 
-		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
+		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {category} from '@ng-doc/core';
 
-const MyCategoryCategory: NgDocCategory = {
+export default category({
 \ttitle: 'my-category',
-};
-
-export default MyCategoryCategory;
+});
 `);
 	});
 
@@ -42,19 +40,17 @@ export default MyCategoryCategory;
 			{
 				path: 'test',
 				title: 'my-category',
-				route: 'my-category',
+				route: 'my-route',
 			},
 			host,
 		);
 
-		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
+		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {category} from '@ng-doc/core';
 
-const MyCategoryCategory: NgDocCategory = {
+export default category({
 \ttitle: 'my-category',
-\troute: \`my-category\`,
-};
-
-export default MyCategoryCategory;
+\troute: \`my-route\`,
+});
 `);
 	});
 
@@ -69,14 +65,12 @@ export default MyCategoryCategory;
 			host,
 		);
 
-		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
+		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {category} from '@ng-doc/core';
 
-const MyCategoryCategory: NgDocCategory = {
+export default category({
 \ttitle: 'my-category',
 \torder: \`5\`,
-};
-
-export default MyCategoryCategory;
+});
 `);
 	});
 
@@ -91,14 +85,12 @@ export default MyCategoryCategory;
 			host,
 		);
 
-		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
+		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {category} from '@ng-doc/core';
 
-const MyCategoryCategory: NgDocCategory = {
+export default category({
 \ttitle: 'my-category',
 \texpandable: true,
-};
-
-export default MyCategoryCategory;
+});
 `);
 	});
 
@@ -113,14 +105,12 @@ export default MyCategoryCategory;
 			host,
 		);
 
-		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
+		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {category} from '@ng-doc/core';
 
-const MyCategoryCategory: NgDocCategory = {
+export default category({
 \ttitle: 'my-category',
 \texpanded: true,
-};
-
-export default MyCategoryCategory;
+});
 `);
 	});
 
@@ -149,15 +139,13 @@ export default ParentCategory;
 		);
 
 		expect(tree.readText('test/parent-category/child-category/ng-doc.category.ts'))
-			.toBe(`import {NgDocCategory} from '@ng-doc/core';
-import ParentCategory from '../ng-doc.category';
+			.toBe(`import {category} from '@ng-doc/core';
+import parentCategory from '../ng-doc.category';
 
-const ChildCategoryCategory: NgDocCategory = {
+export default category({
 \ttitle: 'child-category',
-\tcategory: ParentCategory,
-};
-
-export default ChildCategoryCategory;
+\tcategory: parentCategory,
+});
 `);
 	});
 });

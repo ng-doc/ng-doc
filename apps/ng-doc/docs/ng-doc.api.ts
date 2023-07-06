@@ -1,6 +1,6 @@
-import {NgDocApi} from '@ng-doc/core';
+import {api} from '@ng-doc/core';
 
-export const api: NgDocApi = {
+export default api({
   title: 'API References',
   scopes: [
     {
@@ -11,14 +11,8 @@ export const api: NgDocApi = {
     {
       name: '@ng-doc/builder',
       route: 'builder',
-      include: [
-        'libs/builder/interfaces/**.ts',
-        'libs/builder/types/**.ts',
-        'libs/builder/schematics/**/*.ts',
-      ],
-      exclude: [
-        'libs/builder/**/**.spec.ts',
-      ]
+      include: ['libs/builder/interfaces/**.ts', 'libs/builder/types/**.ts', 'libs/builder/schematics/**/*.ts'],
+      exclude: ['libs/builder/**/**.spec.ts'],
     },
     {
       name: '@ng-doc/ui-kit',
@@ -36,6 +30,4 @@ export const api: NgDocApi = {
       include: 'libs/keywords-loaders/index.ts',
     },
   ],
-};
-
-export default api;
+});

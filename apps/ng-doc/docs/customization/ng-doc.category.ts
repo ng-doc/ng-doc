@@ -1,9 +1,7 @@
-import {NgDocCategory} from '@ng-doc/core';
+import {category} from '@ng-doc/core';
 
-const CustomizationCategory: NgDocCategory = {
+export default category({
   title: 'Customization',
   order: 6,
   expandable: true,
-};
-
-export default CustomizationCategory;
+});

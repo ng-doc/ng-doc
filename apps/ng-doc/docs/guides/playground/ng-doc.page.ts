@@ -1,15 +1,10 @@
-import {NgDocPage} from '@ng-doc/core';
-import {
-  NgDocButtonComponent,
-  NgDocIconComponent,
-  NgDocRotatorDirective,
-  NgDocTagComponent
-} from '@ng-doc/ui-kit';
+import {page} from '@ng-doc/core';
+import {NgDocButtonComponent, NgDocIconComponent, NgDocRotatorDirective, NgDocTagComponent} from '@ng-doc/ui-kit';
 
 import GuidesCategory from '../ng-doc.category';
 import {FormatDatePipe} from './format-date.pipe';
 
-const PlaygroundPage: NgDocPage = {
+export default page({
   title: `Playground`,
   mdFile: './index.md',
   category: GuidesCategory,
@@ -52,9 +47,7 @@ const PlaygroundPage: NgDocPage = {
     ButtonPlayground: {
       target: NgDocButtonComponent,
       template: `<ng-doc-selector>{{data.label}}</ng-doc-selector>`,
-      data: {label: 'Button'}
-    }
+      data: {label: 'Button'},
+    },
   },
-};
-
-export default PlaygroundPage;
+});

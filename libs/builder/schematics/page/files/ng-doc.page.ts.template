@@ -1,15 +1,13 @@
-import {NgDocPage} from '@ng-doc/core';<% if (importPath && categoryName) { %>
-import <%= categoryName %> from '<%= importPath %>';<% } %><% if (module) { %>
-import {<%= pageName %>Module} from './ng-doc.module';<% } %>
+import {page} from '@ng-doc/core';<% if (importPath) { %>
+import parentCategory from '<%= importPath %>';<% } %><% if (module) { %>
+import {PageModule} from './ng-doc.module';<% } %>
 
-const <%= pageName %>: NgDocPage = {
+export default page({
 	title: `<%= title %>`,
 	mdFile: './index.md',<% if (route) { %>
-	route: `<%= route %>`,<% } %><% if (importPath && categoryName) { %>
-	category: <%= categoryName %>,<% } %><% if (order) { %>
+	route: `<%= route %>`,<% } %><% if (importPath) { %>
+	category: parentCategory,<% } %><% if (module) { %>
+	imports: [PageModule],<% } %><% if (order) { %>
 	order: <%= order %>,<% } %><% if (keyword) { %>
-	keyword: `<%= keyword %>`,<% } %><% if (module) { %>
-	imports: [<%= pageName %>Module],<% } %>
-};
-
-export default <%= pageName %>;
+	keyword: `<%= keyword %>`,<% } %>
+});

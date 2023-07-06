@@ -1,7 +1,7 @@
-import {NgDocConfiguration} from '@ng-doc/builder';
+import {config} from '@ng-doc/builder';
 import {ngKeywordsLoader} from '@ng-doc/keywords-loaders';
 
-const NgDocConfig: NgDocConfiguration = {
+export default config({
 	angularBuilder: 'webpack',
 	pages: 'apps/ng-doc/docs',
 	routePrefix: 'docs',
@@ -43,6 +43,4 @@ const NgDocConfig: NgDocConfiguration = {
 	guide: {
 		anchorHeadings: ['h1', 'h2', 'h3', 'h4'],
 	},
-};
-
-export default NgDocConfig;
+});
