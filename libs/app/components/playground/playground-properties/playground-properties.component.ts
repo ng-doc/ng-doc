@@ -75,6 +75,9 @@ export class NgDocPlaygroundPropertiesComponent<
 	defaultValues?: Record<string, unknown>;
 
 	@Input()
+	hideSidePanel: boolean = false;
+
+	@Input()
 	recreateDemo: boolean = false;
 
 	@Output()

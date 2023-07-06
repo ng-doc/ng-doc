@@ -6,7 +6,7 @@ import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input, OnCh
 		trigger('resizeAnimation', [
 			transition('void <=> *', []),
 			transition('* <=> *', [
-				style({height: '{{startHeight}}px', width: '{{startWidth}}px', opacity: '{{startOpacity}}'}),
+				style({height: '{{startHeight}}px', width: '{{startWidth}}px'}),
 				animate('.225s ease-in-out'),
 			]),
 		]),
@@ -27,7 +27,7 @@ import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input, OnCh
 	standalone: true,
 })
 export class NgDocSmoothResizeComponent implements OnChanges {
-	@Input()
+	@Input({required: true})
 	trigger: unknown;
 
 	@Input()
@@ -36,10 +36,10 @@ export class NgDocSmoothResizeComponent implements OnChanges {
 	@HostBinding('@resizeAnimation')
 	resizeAnimation?: {
 		value: unknown;
-		params: {startHeight: number; startWidth: number; startOpacity: number};
+		params: {startHeight: number; startWidth: number};
 	} = {
 		value: 0,
-		params: {startHeight: 0, startWidth: 0, startOpacity: 0},
+		params: {startHeight: 0, startWidth: 0},
 	};
 
 	constructor(private readonly element: ElementRef<HTMLElement>) {}
@@ -50,7 +50,6 @@ export class NgDocSmoothResizeComponent implements OnChanges {
 			params: {
 				startHeight: this.element.nativeElement.clientHeight,
 				startWidth: this.element.nativeElement.clientWidth,
-				startOpacity: this.animateOpacity ? 0 : 1,
 			},
 		};
 	}
