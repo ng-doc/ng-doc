@@ -1,9 +1,10 @@
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {NgDocTooltipDirective} from '@ng-doc/ui-kit';
 
 @Component({
   selector: 'image-viewer',
   standalone: true,
+  imports: [NgDocTooltipDirective],
   template: `<img [src]="src" [alt]="alt" [ngDocTooltip]="title" [delay]="0" />`,
   styles: [
     `
@@ -26,7 +27,7 @@ import {NgDocTooltipDirective} from '@ng-doc/ui-kit';
       }
     `,
   ],
-  imports: [NgDocTooltipDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImageViewerComponent {
   @Input()
