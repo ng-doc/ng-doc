@@ -18,12 +18,14 @@ import {displayType} from '../typescript';
  * @param declaration
  */
 export function getPlaygroundComponentInputs(declaration: ClassDeclaration): NgDocPlaygroundProperties {
-	return declaration
-		.getProperties()
+	const componentParentClass = declaration.getBaseClass();
+	const componentParentClassProperties = componentParentClass?.getProperties() ?? [];
+	const componentProperties = declaration.getProperties();
+
+	return [...componentParentClassProperties, ...componentProperties]
 		.filter((property: PropertyDeclaration) => !!property.getDecorator('Input'))
 		.reduce((properties: NgDocPlaygroundProperties, property: PropertyDeclaration) => {
 			const inputName: string = getInputName(property);
-
 			return {...properties, ...propOrParamToPlaygroundProperty(property, inputName)};
 		}, {});
 }
