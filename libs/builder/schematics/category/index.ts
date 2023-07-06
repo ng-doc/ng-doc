@@ -15,7 +15,7 @@ import {
 import {join, relative} from 'path';
 
 import {CATEGORY_NAME} from '../../engine/variables';
-import {findClosestFile} from '../utils';
+import {findClosestFile, getTitle} from '../utils';
 import {NgDocBuildCategorySchema} from './schema';
 
 /**
@@ -26,8 +26,9 @@ import {NgDocBuildCategorySchema} from './schema';
  */
 export function generate(options: NgDocBuildCategorySchema): Rule {
 	return (host: Tree) => {
-		const execPath: string = options?.path ?? '';
+		options.title = getTitle(options.title);
 
+		const execPath: string = options?.path ?? '';
 		const path: string = join(execPath, `/${dasherize(options.title)}`);
 		const closestCategoryFile: string | null = options.category
 			? findClosestFile(host, options?.path ?? '', CATEGORY_NAME)

@@ -146,4 +146,24 @@ export default page({
 });
 `);
 	});
+
+	it('should remove slashed from title', async () => {
+		const tree: UnitTestTree = await runner.runSchematic(
+			'page',
+			{
+				path: 'test',
+				title: '/folder/my-page/',
+			},
+			host,
+		);
+
+		expect(tree.exists('test/folder-my-page/index.md')).toBe(true);
+		expect(tree.readText('test/folder-my-page/ng-doc.page.ts')).toBe(`import {page} from '@ng-doc/core';
+
+export default page({
+\ttitle: \`folder-my-page\`,
+\tmdFile: './index.md',
+});
+`);
+	});
 });

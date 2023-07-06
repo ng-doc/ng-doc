@@ -16,7 +16,7 @@ import {
 import {basename, join, relative} from 'path';
 
 import {CATEGORY_NAME} from '../../engine/variables';
-import {findClosestFile} from '../utils';
+import {findClosestFile, getTitle} from '../utils';
 import {NgDocBuildPageSchema} from './schema';
 
 const demoTemplates: string[] = ['ng-doc.module.ts.template'];
@@ -29,6 +29,8 @@ const demoTemplates: string[] = ['ng-doc.module.ts.template'];
  */
 export function generate(options: NgDocBuildPageSchema): Rule {
 	return (host: Tree) => {
+		options.title = getTitle(options.title);
+
 		const execPath = options?.path ?? '';
 		const path = join(execPath, `/${dasherize(options.title)}`);
 		const closestCategoryFile = options.category && findClosestFile(host, execPath, CATEGORY_NAME);

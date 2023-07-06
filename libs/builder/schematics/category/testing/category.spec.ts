@@ -148,4 +148,22 @@ export default category({
 });
 `);
 	});
+
+	it('should remove slashes from the title', async () => {
+		const tree: UnitTestTree = await runner.runSchematic(
+			'category',
+			{
+				path: 'test',
+				title: '/folder/my-category/',
+			},
+			host,
+		);
+
+		expect(tree.readText('test/folder-my-category/ng-doc.category.ts')).toBe(`import {category} from '@ng-doc/core';
+
+export default category({
+\ttitle: 'folder-my-category',
+});
+`);
+	})
 });
