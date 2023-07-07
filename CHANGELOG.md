@@ -1,3 +1,10 @@
+## [16.8.1](https://github.com/ng-doc/ng-doc/compare/v16.8.0...v16.8.1) (2023-07-07)
+
+
+### Bug Fixes
+
+* **playgrounds:** playground does not display inputs defined in parent classes ([#81](https://github.com/ng-doc/ng-doc/issues/81)) ([31b882a](https://github.com/ng-doc/ng-doc/commit/31b882a0279db793fe9defe092dccde05f69cb54))
+
 # [16.8.0](https://github.com/ng-doc/ng-doc/compare/v16.7.2...v16.8.0) (2023-07-07)
 
 
