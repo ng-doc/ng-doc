@@ -1,3 +1,18 @@
+# [16.8.0](https://github.com/ng-doc/ng-doc/compare/v16.7.2...v16.8.0) (2023-07-07)
+
+
+### Bug Fixes
+
+* **schematics:** using slashes in the `title` leads to changing the final directory where the generated file will be placed ([1436ff9](https://github.com/ng-doc/ng-doc/commit/1436ff9c34161291967bb281d40aa21c38433648))
+
+
+### Features
+
+* **page-processors:** page processor is now a public API and can be used for dynamically creating components within pages, check documentation for more details ([8f98d6e](https://github.com/ng-doc/ng-doc/commit/8f98d6e9eeedf0618b90b106e03c808fb480b2ce))
+* **playgrounds:** add more opportunities to configure playgrounds, making them more dynamic and reusable ([#80](https://github.com/ng-doc/ng-doc/issues/80)) ([cc661fb](https://github.com/ng-doc/ng-doc/commit/cc661fbb23e14e41f6949091204a671893453a6e))
+* **project:** configuration format simplification for all NgDoc files like `ng-doc.page.ts`, `ng-doc.category.ts`, `ng-doc.api.ts` and `ng-doc.config.ts`. Please read migrations article to know how to migrate to the new conifg format ([e12f4a4](https://github.com/ng-doc/ng-doc/commit/e12f4a4335909e949c55397768a6f68158a3a40f)), closes [#75](https://github.com/ng-doc/ng-doc/issues/75)
+* **schematics:** add `--name` flag for `page` and `category` schematics that can be used to provide variable name ([4188b7b](https://github.com/ng-doc/ng-doc/commit/4188b7bf8a50b3b4e041e1c40909c7a3c43b05ff)), closes [#75](https://github.com/ng-doc/ng-doc/issues/75)
+
 ## [16.7.2](https://github.com/ng-doc/ng-doc/compare/v16.7.1...v16.7.2) (2023-07-05)
 
 
