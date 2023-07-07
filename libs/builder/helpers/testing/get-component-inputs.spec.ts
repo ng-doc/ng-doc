@@ -19,10 +19,12 @@ describe('getComponentInputs', () => {
 				{
 					propertyName: 'myTestProperty',
 					initializer: "'abcd'",
+					type: 'String',
 				},
 				{
 					propertyName: 'myOtherTestProperty',
 					initializer: "'abcd'",
+					type: 'String',
 				},
 			];
 			fixture.thenInputsShouldHaveFollowingNamesAndInitializers(expectedTestView);
@@ -38,25 +40,31 @@ describe('getComponentInputs', () => {
 				{
 					initializer: "['azerty', 123, false]",
 					propertyName: 'mySecondTestProperty',
+					type: '(string | number | boolean)[]',
 				},
 				{
 					propertyName: 'myThirdTestProperty',
+					type: 'String',
 				},
 				{
 					initializer: "{ name: 'Thomas' }",
 					propertyName: 'myFourthTestProperty',
+					type: '{ name: string; }',
 				},
 				{
 					initializer: "'efgh'",
 					propertyName: 'myOtherTestProperty',
+					type: 'String',
 				},
 				{
 					initializer: "'Lorem ipsum'",
 					propertyName: 'myFutureOverriddenTestProperty',
+					type: 'String',
 				},
 				{
 					initializer: "'abcd'",
 					propertyName: 'myTestProperty',
+					type: 'String',
 				},
 			];
 			fixture.thenInputsShouldHaveFollowingNamesAndInitializers(expectedTestView);
@@ -72,25 +80,32 @@ describe('getComponentInputs', () => {
 				{
 					initializer: "['azerty', 123, false]",
 					propertyName: 'mySecondTestProperty',
+					type: '(string | number | boolean)[]',
 				},
 				{
 					propertyName: 'myThirdTestProperty',
+					initializer: undefined,
+					type: 'String',
 				},
 				{
 					initializer: "{ name: 'Thomas' }",
 					propertyName: 'myFourthTestProperty',
+					type: '{ name: string; }',
 				},
 				{
-					initializer: "'efgh'",
+					initializer: 'false',
 					propertyName: 'myOtherTestProperty',
+					type: 'Boolean',
 				},
 				{
 					initializer: "'Lorem ipsum'",
 					propertyName: 'myFutureOverriddenTestProperty',
+					type: 'String',
 				},
 				{
 					initializer: "'abcd'",
 					propertyName: 'myTestProperty',
+					type: 'String',
 				},
 			];
 			fixture.thenInputsShouldHaveFollowingNamesAndInitializers(expectedTestView);
@@ -104,26 +119,32 @@ describe('getComponentInputs', () => {
 				{
 					initializer: "'override_with_initial_value'",
 					propertyName: 'myThirdTestProperty',
+					type: 'String',
 				},
 				{
 					initializer: "'Overridden Lorem ipsum'",
 					propertyName: 'myFutureOverriddenTestProperty',
+					type: 'String',
 				},
 				{
 					initializer: "['azerty', 123, false]",
 					propertyName: 'mySecondTestProperty',
+					type: '(string | number | boolean)[]',
 				},
 				{
 					initializer: "{ name: 'Thomas' }",
 					propertyName: 'myFourthTestProperty',
+					type: '{ name: string; }',
 				},
 				{
-					initializer: "'efgh'",
+					initializer: 'false',
 					propertyName: 'myOtherTestProperty',
+					type: 'Boolean',
 				},
 				{
 					initializer: "'abcd'",
 					propertyName: 'myTestProperty',
+					type: 'String',
 				},
 			];
 			fixture.thenInputsShouldHaveFollowingNamesAndInitializers(expectedTestView);
@@ -133,6 +154,7 @@ describe('getComponentInputs', () => {
 
 interface InputsTestView {
 	propertyName: string;
+	type: string;
 	initializer?: undefined | string;
 }
 
@@ -240,7 +262,7 @@ const createFixture = () => {
 					notAnAngularInput = 'test'
 
 					@Input()
-					override myOtherTestProperty = 'efgh'
+					override myOtherTestProperty: boolean = false
 
 					@Input()
 					myFutureOverriddenTestProperty = 'Lorem ipsum';
@@ -269,6 +291,7 @@ const createFixture = () => {
 			const realTestView: InputsTestView[] = componentInputs.map((p) => ({
 				propertyName: p.getName(),
 				initializer: p.getInitializer()?.getText(),
+				type: p.getType().getApparentType().getText(),
 			}));
 			expect(realTestView).toEqual(expectedTestView);
 		},
