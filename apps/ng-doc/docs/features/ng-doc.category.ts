@@ -1,6 +1,8 @@
-import {category} from '@ng-doc/core';
+import {NgDocCategory} from '@ng-doc/core';
 
-export default category({
+const FeaturesCategory: NgDocCategory = {
   title: 'Features',
   order: 5,
-});
+};
+
+export default FeaturesCategory;

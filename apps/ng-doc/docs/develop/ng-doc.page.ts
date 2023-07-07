@@ -1,9 +1,9 @@
-import {NgDocAngularEntities, NgDocDeclarations, page} from '@ng-doc/core';
+import {NgDocAngularEntities, NgDocDeclarations, NgDocPage} from '@ng-doc/core';
 
 import {ButtonDemoComponent} from './button-demo/button-demo.component';
 import {DevelopDemoComponent} from './develop-demo/develop-demo.component';
 
-export default page({
+export const DevelopPage: NgDocPage = {
   title: 'Develop',
   mdFile: './index.md.nunj',
   onlyForTags: ['development'],
@@ -17,4 +17,6 @@ export default page({
   keyword: 'DevelopPage',
   imports: [],
   demos: {DevelopDemoComponent, ButtonDemoComponent},
-});
+};
+
+export default DevelopPage;

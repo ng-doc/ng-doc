@@ -1,7 +1,7 @@
-import {page} from '@ng-doc/core';
+import {NgDocPage} from '@ng-doc/core';
 import {NgDocTagComponent} from '@ng-doc/ui-kit';
 
-export default page({
+const PocPage: NgDocPage = {
 	title: `poc`,
 	mdFile: './index.md',
 	keyword: 'Poc',
@@ -11,4 +11,6 @@ export default page({
 			template: `<ng-doc-selector>Tag</ng-doc-selector>`,
 		},
 	},
-});
+};
+
+export default PocPage;

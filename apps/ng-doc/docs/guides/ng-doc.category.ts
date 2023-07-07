@@ -1,7 +1,9 @@
-import {category} from '@ng-doc/core';
+import {NgDocCategory} from '@ng-doc/core';
 
-export default category({
+const GuidesCategory: NgDocCategory = {
   title: 'Guides',
   order: 3,
   expandable: true,
-});
+};
+
+export default GuidesCategory;

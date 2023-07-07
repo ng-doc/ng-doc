@@ -32,11 +32,13 @@ properties in the documentation for the type, below is an example of the minimum
 configuration.
 
 ```typescript name="ng-doc.category.ts"
-import {category} from '@ng-doc/core';
+import {NgDocCategory} from '@ng-doc/core';
 
-export default category({
+export const MyAwesomeCategory: NgDocCategory = {
   title: 'MyAwesomeCategory',
-});
+};
+
+export default MyAwesomeCategory;
 ```
 
 {% index false %}

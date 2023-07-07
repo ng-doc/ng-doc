@@ -27,12 +27,14 @@ describe('page', () => {
 		);
 
 		expect(tree.exists('test/my-page/index.md')).toBe(true);
-		expect(tree.readText('test/my-page/ng-doc.page.ts')).toBe(`import {page} from '@ng-doc/core';
+		expect(tree.readText('test/my-page/ng-doc.page.ts')).toBe(`import {NgDocPage} from '@ng-doc/core';
 
-export default page({
+const MyPagePage: NgDocPage = {
 \ttitle: \`My Page\`,
 \tmdFile: './index.md',
-});
+};
+
+export default MyPagePage;
 `);
 	});
 
@@ -48,13 +50,15 @@ export default page({
 		);
 
 		expect(tree.exists('test/my-page/index.md')).toBe(true);
-		expect(tree.readText('test/my-page/ng-doc.page.ts')).toBe(`import {page} from '@ng-doc/core';
+		expect(tree.readText('test/my-page/ng-doc.page.ts')).toBe(`import {NgDocPage} from '@ng-doc/core';
 
-export default page({
+const MyPagePage: NgDocPage = {
 \ttitle: \`my-page\`,
 \tmdFile: './index.md',
 \troute: \`custom-route\`,
-});
+};
+
+export default MyPagePage;
 `);
 	});
 
@@ -70,13 +74,15 @@ export default page({
 		);
 
 		expect(tree.exists('test/my-page/index.md')).toBe(true);
-		expect(tree.readText('test/my-page/ng-doc.page.ts')).toBe(`import {page} from '@ng-doc/core';
+		expect(tree.readText('test/my-page/ng-doc.page.ts')).toBe(`import {NgDocPage} from '@ng-doc/core';
 
-export default page({
+const MyPagePage: NgDocPage = {
 \ttitle: \`my-page\`,
 \tmdFile: './index.md',
 \torder: 1,
-});
+};
+
+export default MyPagePage;
 `);
 	});
 
@@ -97,17 +103,21 @@ import {CommonModule} from '@angular/common';
 
 @NgModule({
 \timports: [CommonModule],
+\t// Declare you demo components here
+\tdeclarations: [],
 })
-export class PageModule {}
+export class MyPagePageModule {}
 `);
-		expect(tree.readText('test/my-page/ng-doc.page.ts')).toBe(`import {page} from '@ng-doc/core';
-import {PageModule} from './ng-doc.module';
+		expect(tree.readText('test/my-page/ng-doc.page.ts')).toBe(`import {NgDocPage} from '@ng-doc/core';
+import {MyPagePageModule} from './ng-doc.module';
 
-export default page({
+const MyPagePage: NgDocPage = {
 \ttitle: \`my-page\`,
 \tmdFile: './index.md',
-\timports: [PageModule],
-});
+\timports: [MyPagePageModule],
+};
+
+export default MyPagePage;
 `);
 	});
 
@@ -136,14 +146,16 @@ export default ParentCategory;
 		);
 
 		expect(tree.exists('test/parent-category/my-page/index.md')).toBe(true);
-		expect(tree.readText('test/parent-category/my-page/ng-doc.page.ts')).toBe(`import {page} from '@ng-doc/core';
-import parentCategory from '../ng-doc.category';
+		expect(tree.readText('test/parent-category/my-page/ng-doc.page.ts')).toBe(`import {NgDocPage} from '@ng-doc/core';
+import ParentCategory from '../ng-doc.category';
 
-export default page({
+const MyPagePage: NgDocPage = {
 \ttitle: \`my-page\`,
 \tmdFile: './index.md',
-\tcategory: parentCategory,
-});
+\tcategory: ParentCategory,
+};
+
+export default MyPagePage;
 `);
 	});
 

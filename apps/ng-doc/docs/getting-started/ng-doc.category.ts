@@ -1,6 +1,8 @@
-import {category} from '@ng-doc/core';
+import {NgDocCategory} from '@ng-doc/core';
 
-export default category({
+export const GettingStartedCategory: NgDocCategory = {
   title: 'Getting Started',
   order: 1,
-});
+};
+
+export default GettingStartedCategory;

@@ -1,8 +1,10 @@
-import {category} from '@ng-doc/core';
+import {NgDocCategory} from '@ng-doc/core';
 
-export default category({
+const ApiCategory: NgDocCategory = {
   title: 'API Documentation',
   route: 'api-documentation',
   expandable: true,
   order: 4,
-});
+};
+
+export default ApiCategory;
