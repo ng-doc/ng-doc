@@ -10,13 +10,11 @@
 					flex-direction: column;
 					align-items: center;
 
-					h1,
-					p {
+					h1, p {
 						text-align: center;
 					}
 
-					.greeting-buttons,
-					.greeting-shields {
+					.greeting-buttons, .greeting-shields {
 						justify-content: center;
 					}
 				}

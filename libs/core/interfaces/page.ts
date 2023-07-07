@@ -5,15 +5,6 @@ import {NgDocBaseEntity} from './base-entity';
 import {NgDocCategory} from './category';
 
 /**
- * Defines the page configuration object
- *
- * @param config - The page configuration object
- */
-export function page(config: NgDocPage): NgDocPage {
-	return config;
-}
-
-/**
  * Page configuration interface, that should be used to describe configuration of the page
  */
 export interface NgDocPage extends NgDocBaseEntity {

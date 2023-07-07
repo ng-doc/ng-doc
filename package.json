@@ -12,7 +12,8 @@
 		"serve": "nx serve",
 		"start": "npm-watch",
 		"build": "nx build",
-		"test": "nx test",
+		"lint": "npx nx run-many --all --target=lint",
+		"test": "npx nx run-many --all --target=test",
 		"build:analyze": "nx build --stats-json --named-chunks && webpack-bundle-analyzer dist/apps/ng-doc/stats.json",
 		"prepare": "node ./prepare.js"
 	},

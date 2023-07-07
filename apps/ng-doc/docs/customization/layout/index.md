@@ -148,9 +148,8 @@ If you want to replace the `NgDocSidebarComponent` with your own `sidebar`, then
 and mark it with `NgDocCustomSidebarDirective` directive like on the example below:
 
 ```html name="app.component.html"
-
 <ng-doc-root>
-  <ng-doc-navbar></ng-doc-sidebar>
+    <ng-doc-navbar></ng-doc-sidebar>
 
     <my-custom-sidebar ngDocCustomSidebar></my-custom-sidebar>
     <router-outlet></router-outlet>

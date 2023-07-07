@@ -1,6 +1,7 @@
 import {Rule, Tree} from '@angular-devkit/schematics';
 import {
 	createProject,
+	ExportedDeclarations,
 	getSourceFiles,
 	ImportDeclaration,
 	ImportSpecifier,
@@ -9,10 +10,11 @@ import {
 	QuoteKind,
 	saveActiveProject,
 	setActiveProject,
+	SourceFile,
+	SyntaxKind,
 } from 'ng-morph';
 import * as path from 'path';
 
-import {getObjectExpressionFromDefault} from '../../utils';
 import {NgDocStandalonePagesSchema} from './schema';
 
 /**
@@ -55,6 +57,20 @@ export function migrate(options: NgDocStandalonePagesSchema): Rule {
 
 		saveActiveProject();
 	};
+}
+
+/**
+ *
+ * @param sourceFile
+ */
+function getObjectExpressionFromDefault(sourceFile: SourceFile): ObjectLiteralExpression | undefined {
+	const defaultExport: ExportedDeclarations | undefined = sourceFile.getExportedDeclarations()?.get('default')?.[0];
+
+	if (Node.isVariableDeclaration(defaultExport)) {
+		return defaultExport?.getFirstChildByKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+	}
+
+	return undefined;
 }
 
 /**

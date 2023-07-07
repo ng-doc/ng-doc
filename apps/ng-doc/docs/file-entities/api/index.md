@@ -29,9 +29,9 @@ Let's see how an example of a basic API configuration looks like.
 > root path
 
 ```typescript name="ng-doc.api.ts"
-import {api} from '@ng-doc/core';
+import {NgDocApi} from '@ng-doc/core';
 
-export default api({
+export const api: NgDocApi = {
   title: 'API Reference',
   scopes: [
     {
@@ -40,7 +40,9 @@ export default api({
       include: 'path/to/my-library/source/files/**/*.ts',
     },
   ],
-});
+};
+
+export default api;
 ```
 
 In the `include` field, you can specify a mask in order to add one or several files, you can also
@@ -57,10 +59,10 @@ Don't like that the API section is at the top? You can also add a category to it
 structure your documentation articles.
 
 ```typescript name="ng-doc.api.ts" {2,6}
-import {api} from '@ng-doc/core';
+import {NgDocApi} from '@ng-doc/core';
 import MyAwesomeCategory from '../ng-doc.category';
 
-export default api({
+export const api: NgDocApi = {
   title: 'API Reference',
   category: MyAwesomeCategory,
   scopes: [
@@ -70,7 +72,9 @@ export default api({
       include: 'path/to/my-library/source/files/**/*.ts',
     },
   ],
-});
+};
+
+export default api;
 ```
 
 ## Writing documentation for declarations

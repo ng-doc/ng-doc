@@ -26,11 +26,13 @@ describe('category', () => {
 			host,
 		);
 
-		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {category} from '@ng-doc/core';
+		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
 
-export default category({
+const MyCategoryCategory: NgDocCategory = {
 \ttitle: 'My Category',
-});
+};
+
+export default MyCategoryCategory;
 `);
 	});
 
@@ -40,17 +42,19 @@ export default category({
 			{
 				path: 'test',
 				title: 'my-category',
-				route: 'my-route',
+				route: 'my-category',
 			},
 			host,
 		);
 
-		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {category} from '@ng-doc/core';
+		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
 
-export default category({
+const MyCategoryCategory: NgDocCategory = {
 \ttitle: 'my-category',
-\troute: \`my-route\`,
-});
+\troute: \`my-category\`,
+};
+
+export default MyCategoryCategory;
 `);
 	});
 
@@ -65,12 +69,14 @@ export default category({
 			host,
 		);
 
-		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {category} from '@ng-doc/core';
+		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
 
-export default category({
+const MyCategoryCategory: NgDocCategory = {
 \ttitle: 'my-category',
 \torder: \`5\`,
-});
+};
+
+export default MyCategoryCategory;
 `);
 	});
 
@@ -85,12 +91,14 @@ export default category({
 			host,
 		);
 
-		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {category} from '@ng-doc/core';
+		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
 
-export default category({
+const MyCategoryCategory: NgDocCategory = {
 \ttitle: 'my-category',
 \texpandable: true,
-});
+};
+
+export default MyCategoryCategory;
 `);
 	});
 
@@ -105,12 +113,14 @@ export default category({
 			host,
 		);
 
-		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {category} from '@ng-doc/core';
+		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
 
-export default category({
+const MyCategoryCategory: NgDocCategory = {
 \ttitle: 'my-category',
 \texpanded: true,
-});
+};
+
+export default MyCategoryCategory;
 `);
 	});
 
@@ -139,13 +149,15 @@ export default ParentCategory;
 		);
 
 		expect(tree.readText('test/parent-category/child-category/ng-doc.category.ts'))
-			.toBe(`import {category} from '@ng-doc/core';
-import parentCategory from '../ng-doc.category';
+			.toBe(`import {NgDocCategory} from '@ng-doc/core';
+import ParentCategory from '../ng-doc.category';
 
-export default category({
+const ChildCategoryCategory: NgDocCategory = {
 \ttitle: 'child-category',
-\tcategory: parentCategory,
-});
+\tcategory: ParentCategory,
+};
+
+export default ChildCategoryCategory;
 `);
 	});
 
@@ -159,11 +171,79 @@ export default category({
 			host,
 		);
 
-		expect(tree.readText('test/folder-my-category/ng-doc.category.ts')).toBe(`import {category} from '@ng-doc/core';
+		expect(tree.readText('test/folder-my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
 
-export default category({
+const FolderMyCategoryCategory: NgDocCategory = {
 \ttitle: 'folder-my-category',
-});
+};
+
+export default FolderMyCategoryCategory;
 `);
+	})
+
+	it('should throw error if title has forbidden characters and --name was not provided', async () => {
+		try {
+			await runner.runSchematic(
+				'page',
+				{
+					path: 'test',
+					title: 'Пейжд',
+				},
+				host,
+			);
+		} catch (e) {
+			expect((e as Error).message).toBeTruthy();
+		}
+	})
+
+	it('should throw error if name has forbidden characters', async () => {
+		try {
+			await runner.runSchematic(
+				'category',
+				{
+					path: 'test',
+					title: 'category',
+					name: 'Категория',
+				},
+				host,
+			);
+		} catch (e) {
+			expect((e as Error).message).toBeTruthy();
+		}
+	})
+
+	it('should not throw error if title has forbidden characters and --name was provided', async () => {
+		const tree: UnitTestTree = await runner.runSchematic(
+			'category',
+			{
+				path: 'test',
+				title: 'Категория',
+				name: 'category',
+			},
+			host,
+		);
+
+		expect(tree.readText('test/category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
+
+const category: NgDocCategory = {
+\ttitle: 'Категория',
+};
+
+export default category;
+`);
+	})
+
+	it('should remove "category" word from folder path if --name was provided', async () => {
+		const tree: UnitTestTree = await runner.runSchematic(
+			'category',
+			{
+				path: 'test',
+				title: 'Test Category',
+				name: 'MyCategory',
+			},
+			host,
+		);
+
+		expect(tree.exists('test/my/ng-doc.category.ts')).toBe(true);
 	})
 });

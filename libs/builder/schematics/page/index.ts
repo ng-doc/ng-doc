@@ -1,4 +1,4 @@
-import {dasherize} from '@angular-devkit/core/src/utils/strings';
+import {classify, dasherize} from '@angular-devkit/core/src/utils/strings';
 import {
 	apply,
 	applyTemplates,
@@ -16,7 +16,8 @@ import {
 import {basename, join, relative} from 'path';
 
 import {CATEGORY_NAME} from '../../engine/variables';
-import {findClosestFile, getTitle} from '../utils';
+import {findClosestFile, getTitle, varNameValidation} from '../utils';
+import {extractDefaultExportName} from '../utils/extract-default-export-name';
 import {NgDocBuildPageSchema} from './schema';
 
 const demoTemplates: string[] = ['ng-doc.module.ts.template'];
@@ -31,10 +32,19 @@ export function generate(options: NgDocBuildPageSchema): Rule {
 	return (host: Tree) => {
 		options.title = getTitle(options.title);
 
-		const execPath = options?.path ?? '';
-		const path = join(execPath, `/${dasherize(options.title)}`);
-		const closestCategoryFile = options.category && findClosestFile(host, execPath, CATEGORY_NAME);
-		const importPath = closestCategoryFile && relative(path, closestCategoryFile).replace(/.ts$/, '');
+		const pageName: string = options.name ?? classify(options.title + 'Page');
+
+		varNameValidation(pageName);
+
+		const execPath: string = options?.path ?? '';
+		const pageFolder: string = dasherize(options.name ?? '').replace(/-page$/, '') || dasherize(options.title);
+		const path: string = join(execPath, `/${pageFolder}`);
+		const closestCategoryFile: string | null =
+			(options.category && findClosestFile(host, execPath, CATEGORY_NAME)) || null;
+		const categoryConstantName: string | null =
+			(options.category && closestCategoryFile && extractDefaultExportName(host, closestCategoryFile)) || null;
+		const categoryImportPath: string | null =
+			(closestCategoryFile && relative(path, closestCategoryFile).replace(/.ts$/, '')) || null;
 
 		return chain([
 			mergeWith(
@@ -45,7 +55,9 @@ export function generate(options: NgDocBuildPageSchema): Rule {
 					),
 					applyTemplates({
 						...options,
-						importPath,
+						categoryName: categoryConstantName,
+						importPath: categoryImportPath,
+						pageName,
 						keyword: options.keyword,
 					}),
 					move(path),

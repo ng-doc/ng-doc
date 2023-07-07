@@ -1,11 +1,13 @@
-import {category} from '@ng-doc/core';<% if (importPath) { %>
-import parentCategory from '<%= importPath %>';<% } %>
+import {NgDocCategory} from '@ng-doc/core';<% if (importPath && parentCategoryName) { %>
+import <%= parentCategoryName %> from '<%= importPath %>';<% } %>
 
-export default category({
+const <%= categoryName %>: NgDocCategory = {
 	title: '<%= title %>',<% if (route) { %>
-	route: `<%= route %>`,<% } %><% if (importPath) { %>
-	category: parentCategory,<% } %><% if (expanded) { %>
+	route: `<%= route %>`,<% } %><% if (importPath && parentCategoryName) { %>
+	category: <%= parentCategoryName %>,<% } %><% if (expanded) { %>
 	expanded: <%= expanded %>,<% } %><% if (expandable) { %>
 	expandable: <%= expandable %>,<% } %><% if (order) { %>
 	order: `<%= order %>`,<% } %>
-});
+};
+
+export default <%= categoryName %>;

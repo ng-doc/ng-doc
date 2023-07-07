@@ -19,6 +19,10 @@ export interface NgDocBuildPageSchema extends SchematicArgv {
 	 */
 	title: string;
 	/**
+	 * Name of the page variable (alias is `-n`, title in PascalCase by default)
+	 */
+	name?: string;
+	/**
 	 * Custom route for the page (alias is `-r`, parent folder name by default)
 	 */
 	route?: string;

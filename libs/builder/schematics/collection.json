@@ -20,11 +20,6 @@
 			"description": "Moves all dependencies from ng-doc.dependencies.ts to ng-doc.page.ts",
 			"factory": "./migrations/standalone-pages/index#migrate",
 			"schema": "./migrations/standalone-pages/schema.json"
-		},
-		"config-format-migration": {
-			"description": "Migrates all file entities to the new config format",
-			"factory": "./migrations/config-format/index#migrate",
-			"schema": "./migrations/config-format/schema.json"
 		}
 	}
 }

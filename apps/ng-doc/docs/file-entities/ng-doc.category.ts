@@ -1,7 +1,9 @@
-import {category} from '@ng-doc/core';
+import {NgDocCategory} from '@ng-doc/core';
 
-export default category({
+const EntitiesCategory: NgDocCategory = {
   title: 'File Entities',
   expandable: true,
   order: 2,
-});
+};
+
+export default EntitiesCategory;

@@ -1,11 +1,13 @@
-import {page} from '@ng-doc/core';
+import {NgDocPage} from '@ng-doc/core';
 
 import FeaturesCategory from '../ng-doc.category';
 
-export default page({
+const KeywordsLoadersPage: NgDocPage = {
   title: `Keywords Loaders`,
   mdFile: './index.md',
   category: FeaturesCategory,
   keyword: 'FeaturesKeywordsLoaders',
   order: 5,
-});
+};
+
+export default KeywordsLoadersPage;
