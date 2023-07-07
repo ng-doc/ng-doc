@@ -43,15 +43,17 @@ to enable it only for one page, or inside your `app.module.ts` if you want to en
 pages:
 
 ```typescript name="ng-doc.page.ts"
-import {page} from '@ng-doc/core';
+import {NgDocPage} from '@ng-doc/core';
 import {providePageProcessor} from '@ng-doc/app';
 import {imageProcessor} from './image.processor';
 
-export default page({
+const MyPage: NgDocPage = {
   title: `MyPage`,
   mdFile: './index.md',
   providers: [providePageProcessor(imageProcessor)],
-});
+};
+
+export default MyPage;
 ```
 
 After that if you use `<img>` elements using HTML or Markdown syntax, they will be replaced with the

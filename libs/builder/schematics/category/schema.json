@@ -44,7 +44,8 @@
 		},
 		"expanded": {
 			"type": "boolean",
-			"description": "Determine if the category is expanded"
+			"description": "Determine if the category is expanded",
+			"alias": "x"
 		}
 	}
 }
