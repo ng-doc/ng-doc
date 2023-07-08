@@ -1,6 +1,13 @@
 name: ⚙️ Lint
 
-on: workflow_call
+on:
+    workflow_call:
+        inputs:
+            base:
+                type: string
+                description: Base branch
+                required: false
+                default: 'remotes/origin/main'
 
 jobs:
     lint:
@@ -13,4 +20,4 @@ jobs:
                 uses: ./.github/actions/nodejs
 
             -   name: Lint
-                run: npx nx affected --target=lint --quiet=true --base=origin/main --parallel
+                run: npx nx affected --target=lint --quiet=true --parallel --base=${{ inputs.base }}

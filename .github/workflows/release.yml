@@ -27,7 +27,7 @@ jobs:
                 uses: ./.github/actions/nodejs
 
             -   name: Build Projects
-                run: npx nx affected --target=build --configuration=ci --base=origin/main --parallel
+                run: npx nx affected --target=build --configuration=ci --parallel
 
             -   name: Uploading Artifacts
                 uses: actions/upload-artifact@v3
