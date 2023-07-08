@@ -89,6 +89,27 @@ const myVar = 'Hi world!';
 const myVar = 'Hi Mom!';
 ```
 
+### Icons
+
+You can add icons to your code blocks, for this you need to specify
+the `icon` parameter, this will fork for groups and single code blocks, for example, to add
+icon to a single code block, you can write the following.
+
+> **Note**
+> To know how to add your own icons, please read `*Icons` article.
+
+````markdown name="index.md"
+```typescript name="my.component.ts" icon="angular"
+@Component()
+export class MyComponent {}
+```
+````
+
+```typescript name="my.component.ts" icon="angular"
+@Component()
+export class MyComponent {}
+```
+
 ### Lines highlighting
 
 You can highlight specific lines in your code block, for this you need to specify the line numbers

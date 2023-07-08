@@ -15,6 +15,7 @@ export const tabsProcessor: NgDocPageProcessor<NgDocTabsComponent> = {
 		const mappedTabs: NgDocTab[] = tabs.map((tab: Element) => ({
 			title: tab.getAttribute('name') ?? '',
 			content: tab,
+			icon: tab.getAttribute('icon') || undefined,
 			active: tab.hasAttribute('active'),
 		}));
 

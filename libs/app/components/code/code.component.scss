@@ -29,6 +29,10 @@
 			--ng-doc-text: var(--ng-doc-code-header-color);
 			--ng-doc-font-weight: 600;
 			--ng-doc-font-size: 14px;
+
+			ng-doc-icon {
+				margin-right: calc(var(--ng-doc-base-gutter) / 2);
+			}
 		}
 	}
 

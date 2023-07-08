@@ -1,6 +1,7 @@
 <ng-doc-tab-group [openedTab]="getActiveIndex | execute: tabs">
 	<ng-doc-tab *ngFor="let tab of tabs; let i = index" [label]="label" [content]="content" [id]="i">
 		<ng-template #label>
+			<ng-doc-icon [customIcon]="tab.icon" *ngIf="tab.icon"></ng-doc-icon>
 			{{tab.title}}
 		</ng-template>
 		<ng-template #content>

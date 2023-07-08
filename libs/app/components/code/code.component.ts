@@ -39,6 +39,9 @@ export class NgDocCodeComponent {
 	name?: string;
 
 	@Input()
+	icon?: string;
+
+	@Input()
 	lineNumbers: boolean = false;
 
 	tooltipText: string = '';
@@ -47,7 +50,7 @@ export class NgDocCodeComponent {
 
 	@HostBinding('attr.data-ng-doc-has-header')
 	get hasHeader(): boolean {
-		return !!this.name;
+		return !!this.name || !!this.icon;
 	}
 
 	get codeElement(): HTMLElement | null {

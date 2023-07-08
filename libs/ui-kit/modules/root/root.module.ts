@@ -2,7 +2,7 @@ import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {ModuleWithProviders, NgModule} from '@angular/core';
 import {NgDocCacheInterceptor} from '@ng-doc/ui-kit/interceptors';
 import {NgDocUiConfig} from '@ng-doc/ui-kit/interfaces';
-import {NG_DOC_ASSETS_PATH} from '@ng-doc/ui-kit/tokens';
+import {NG_DOC_ASSETS_PATH, NG_DOC_CUSTOM_ICONS_PATH} from '@ng-doc/ui-kit/tokens';
 
 @NgModule({})
 export class NgDocUiKitRootModule {
@@ -13,6 +13,10 @@ export class NgDocUiKitRootModule {
 				{
 					provide: NG_DOC_ASSETS_PATH,
 					useValue: config?.assetsPath ?? 'assets/ng-doc/ui-kit',
+				},
+				{
+					provide: NG_DOC_CUSTOM_ICONS_PATH,
+					useValue: config?.customIconsPath ?? 'assets/icons',
 				},
 				{
 					provide: HTTP_INTERCEPTORS,

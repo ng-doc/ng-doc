@@ -79,4 +79,11 @@ describe('parseCodeBlockParams', () => {
 			highlightedLines: [1, 2, 3, 4, 5, 6, 7],
 		});
 	});
+
+	it('should parse icon', () => {
+		expect(parseCodeBlockParams('ts icon="icon"')).toStrictEqual({
+			language: 'ts',
+			icon: 'icon',
+		});
+	})
 });

@@ -14,11 +14,11 @@ To install the NgDoc, you can use the command below.
 This command will automatically install and add the library to your project,
 and configure it.
 
-```bash group="install" name="Angular"
+```bash group="install" name="Angular" icon="angular"
 ng add @ng-doc/add
 ```
 
-```bash group="install" name="Nx"
+```bash group="install" name="Nx" icon="nx"
 npm install @ng-doc/add && npx nx g @ng-doc/add:ng-add
 ```
 
@@ -40,7 +40,7 @@ First of all you need to add builders from NgDoc library to your application,
 replace `browser` and `dev-server` builders for `build` and `serve` targets with
 alternatives from the NgDoc as shown in the example below
 
-```json group="builders" name="Angular (angular.json)"
+```json group="builders" name="Angular (angular.json)" icon="angular"
 {
   "projects": {
     "my-project": {
@@ -57,7 +57,7 @@ alternatives from the NgDoc as shown in the example below
 }
 ```
 
-```json group="builders" name="Nx (project.json)"
+```json group="builders" name="Nx (project.json)" icon="nx"
 {
   "targets": {
     "build": {
@@ -75,7 +75,7 @@ alternatives from the NgDoc as shown in the example below
 You will also need to import the global styles provided by the library
 by adding them to your `styles` array.
 
-```json group="styles" name="Angular (angular.json)"
+```json group="styles" name="Angular (angular.json)" icon="angular"
 {
   "projects": {
     "my-project": {
@@ -91,7 +91,7 @@ by adding them to your `styles` array.
 }
 ```
 
-```json group="styles" name="Nx (project.json)"
+```json group="styles" name="Nx (project.json)" icon="nx"
 {
   "targets": {
     "build": {
@@ -118,7 +118,7 @@ because NgDoc regenerates them every time the application is launched.
 The NgDoc libraries come with assets that include various icons, fonts, themes, and other very
 useful things. You also need to add them to your application's assets.
 
-```json group="assets" name="Angular (angular.json)"
+```json group="assets" name="Angular (angular.json)" icon="angular"
 {
   "projects": {
     "my-project": {
@@ -150,7 +150,7 @@ useful things. You also need to add them to your application's assets.
 }
 ```
 
-```json group="assets" name="Nx (project.json)"
+```json group="assets" name="Nx (project.json)" icon="nx"
 {
   "targets": {
     "build": {
