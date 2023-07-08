@@ -7,7 +7,7 @@ on:
                 type: string
                 description: Base branch
                 required: false
-                default: 'remotes/origin/main'
+                default: 'main'
 
 jobs:
     lint:
@@ -16,8 +16,10 @@ jobs:
             -   name: Checkout
                 uses: actions/checkout@v2
 
+            -   run: git fetch origin ${{ inputs.base }}
+
             -   name: Setup Node.js
                 uses: ./.github/actions/nodejs
 
             -   name: Lint
-                run: npx nx affected --target=lint --quiet=true --parallel --base=${{ inputs.base }}
+                run: npx nx affected --target=lint --quiet=true --parallel --base=remotes/origin/${{ inputs.base }}
