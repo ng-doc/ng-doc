@@ -30,11 +30,8 @@ jobs:
             - name: Extract artifact
               run: tar -xvf artifacts/ng-doc.tar
 
-            - name: Remove artifact archive
-              run: rm -rf artifacts/ng-doc.tar
-
             - name: Deploy
               if: success()
               run: |
-                  aws s3 sync ./artifacts s3://ng-doc
+                  aws s3 sync ./dist/apps/ng-doc/ s3://ng-doc
                   AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths "/*"
