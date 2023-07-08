@@ -6,12 +6,12 @@ jobs:
     lint:
         uses: ./.github/workflows/lint.yml
         with:
-            base: ${{github.event.pull_request.base.ref}}
+            base: remotes/origin/${{github.event.pull_request.base.ref}}
     tests:
         uses: ./.github/workflows/tests.yml
         with:
-            base: ${{github.event.pull_request.base.ref}}
+            base: remotes/origin/${{github.event.pull_request.base.ref}}
     build:
         uses: ./.github/workflows/build.yml
         with:
-            base: ${{github.event.pull_request.base.ref}}
+            base: remotes/origin/${{github.event.pull_request.base.ref}}
