@@ -1,4 +1,4 @@
-name: Tests
+name: ⚙️ Tests
 
 on: workflow_call
 
@@ -6,17 +6,11 @@ jobs:
     tests:
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout
-              uses: actions/checkout@v2
+            -   name: Checkout
+                uses: actions/checkout@v2
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v3
-              with:
-                  cache: npm
-                  node-version: 18
+            -   name: Setup Node.js
+                uses: ./.github/actions/nodejs
 
-            - name: Install Dependencies
-              run: npm ci
-
-            - name: Test
-              run: npx nx run-many --all --target=test --configuration=ci
+            -   name: Test
+                run: npx nx affected --target=test --configuration=ci --base=origin/main --parallel
