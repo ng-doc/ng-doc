@@ -21,4 +21,4 @@ jobs:
                 uses: ./.github/actions/nodejs
 
             -   name: Test
-                run: npx nx affected --target=test --configuration=ci --parallel --base=${{ inputs.base }}
+                run: npx nx affected --target=test --configuration=ci --parallel -- --base=${{ inputs.base }}

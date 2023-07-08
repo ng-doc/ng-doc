@@ -20,4 +20,4 @@ jobs:
                 uses: ./.github/actions/nodejs
 
             -   name: Build
-                run: npx nx affected --target=build --parallel --base=${{ inputs.base }}
+                run: npx nx affected --target=build --parallel -- --base=${{ inputs.base }}
