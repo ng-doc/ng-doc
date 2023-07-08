@@ -1,4 +1,4 @@
-name: ⚙️ Lint
+name: ⚙️ Test
 
 on:
     workflow_call:
@@ -10,7 +10,7 @@ on:
                 default: 'main'
 
 jobs:
-    lint:
+    test:
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
@@ -21,5 +21,5 @@ jobs:
             -   name: Setup Node.js
                 uses: ./.github/actions/nodejs
 
-            -   name: Lint
-                run: npx nx affected --target=lint --quiet=true --parallel --base=remotes/origin/${{ inputs.base }}
+            -   name: Test
+                run: npx nx affected --target=test --configuration=ci --parallel --base=remotes/origin/${{ inputs.base }}

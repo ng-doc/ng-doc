@@ -1,22 +1,25 @@
-name: Build
+name: ⚙️ Build
 
-on: workflow_call
+on:
+    workflow_call:
+        inputs:
+            base:
+                type: string
+                description: Base branch
+                required: false
+                default: 'main'
 
 jobs:
-    tests:
+    build:
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout
-              uses: actions/checkout@v2
+            -   name: Checkout
+                uses: actions/checkout@v2
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v3
-              with:
-                  cache: npm
-                  node-version: 18
+            -   run: git fetch origin ${{ inputs.base }}
 
-            - name: Install Dependencies
-              run: npm ci
+            -   name: Setup Node.js
+                uses: ./.github/actions/nodejs
 
-            - name: Build
-              run: npx nx run-many --all --target=build
+            -   name: Build
+                run: npx nx affected --target=build --parallel --base=remotes/origin/${{ inputs.base }}
