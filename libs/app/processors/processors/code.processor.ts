@@ -9,6 +9,7 @@ export const codeProcessor: NgDocPageProcessor<NgDocCodeComponent> = {
 		inputs: {
 			copyButton: element.getAttribute('copyButton') !== 'false',
 			name: element.getAttribute('name') || undefined,
+			icon: element.getAttribute('icon') || undefined,
 			lineNumbers: element.getAttribute('lineNumbers') !== 'false',
 		},
 		content: [[element.closest('pre') ?? element]],

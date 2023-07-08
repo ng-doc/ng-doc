@@ -20,8 +20,17 @@ const WARNING_ANCHOR: string = '<p><strong>Warning</strong>';
 export function marked(markdown: string, page?: NgDocPageEntity): string {
 	const renderer: markedRender.RendererObject = {
 		code(code: string, lang: string | undefined): string {
-			const {language, file, name, highlightedLines, fileLineStart, fileLineEnd, group, active}: NgDocCodeBlockParams =
-				parseCodeBlockParams(lang?.trim() ?? 'typescript');
+			const {
+				language,
+				file,
+				name,
+				highlightedLines,
+				fileLineStart,
+				fileLineEnd,
+				group,
+				active,
+				icon,
+			}: NgDocCodeBlockParams = parseCodeBlockParams(lang?.trim() ?? 'typescript');
 
 			if (file && page) {
 				const relativeFilePath: string = path.join(page.mdFolder, file);
@@ -37,12 +46,17 @@ export function marked(markdown: string, page?: NgDocPageEntity): string {
 				code = fileContent;
 			}
 
-			const codeElement: string =  `<pre><code class="language-${language ?? 'ts'}"
+			const codeElement: string = `<pre><code class="language-${language ?? 'ts'}"
 	      lang="${language}"
 	      name="${!group && name ? name : ''}"
+	      icon="${!group && icon ? icon : ''}"
 	      highlightedLines="${JSON.stringify(highlightedLines ?? [])}">${escapeHtml(code)}</code></pre>`;
 
-			return group ? `<ng-doc-tab group="${group}" name="${name}" ${active ? 'active' : ''}>${codeElement}</ng-doc-tab>` : codeElement;
+			return group
+				? `<ng-doc-tab group="${group}" name="${name}" icon="${icon ?? ''}" ${
+						active ? 'active' : ''
+				  }>${codeElement}</ng-doc-tab>`
+				: codeElement;
 		},
 		blockquote(quote: string): string {
 			if (new RegExp(`^${NOTE_ANCHOR}`).test(quote)) {

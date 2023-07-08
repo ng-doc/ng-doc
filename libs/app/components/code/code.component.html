@@ -1,5 +1,8 @@
 <div class="ng-doc-code-header" *ngIf="hasHeader">
-	<span class="ng-doc-code-file-name" ng-doc-text>{{ name }}</span>
+	<span class="ng-doc-code-file-name" ng-doc-text>
+		<ng-doc-icon [customIcon]="icon" *ngIf="icon"></ng-doc-icon>
+		{{ name }}
+	</span>
 </div>
 <div class="ng-doc-code-body">
 	<div

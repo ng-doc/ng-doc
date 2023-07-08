@@ -5,6 +5,7 @@ export interface NgDocCodeBlockParams {
 	group?: string;
 	active?: boolean;
 	file?: string;
+	icon?: string;
 	fileLineStart?: number;
 	fileLineEnd?: number;
 	highlightedLines?: number[];

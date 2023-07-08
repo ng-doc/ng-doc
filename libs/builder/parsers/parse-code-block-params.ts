@@ -8,6 +8,12 @@ import {NgDocCodeBlockParams} from '../interfaces';
  * @param options - Options string to parse
  */
 export function parseCodeBlockParams(options: string): NgDocCodeBlockParams {
+	const keyValueParser = (key: string, p: P.Language, mappedKey?: string) =>
+			P.string(key)
+				.then(P.string('='))
+				.then(p['content'])
+				.map((value) => ({[mappedKey ?? key]: value}));
+
 	const parser = P.createLanguage({
 		language: () =>
 			P.regexp(/[a-zA-Z-]+/)
@@ -32,11 +38,6 @@ export function parseCodeBlockParams(options: string): NgDocCodeBlockParams {
 				.map((num) => num - 1)
 				.map((fileLineStart) => ({fileLineStart, fileLineEnd: fileLineStart + 1})),
 		lineParams: (p) => p['fileLineRange'].or(p['fileLineStart']).fallback({}),
-		filePath: (p) =>
-			P.string('file')
-				.then(P.string('='))
-				.then(p['content'])
-				.map((file) => ({file})),
 		highlightedLinesRange: (p) =>
 			P.seqMap(p['number'].skip(P.string('-')), p['number'], (start, end) =>
 				[...Array(end + 1).keys()].slice(start - end - 1),
@@ -44,22 +45,12 @@ export function parseCodeBlockParams(options: string): NgDocCodeBlockParams {
 
 		// Main Parsers
 		lineNumbers: () => P.string('lineNumbers').map(() => ({lineNumbers: true})),
-		name: (p) =>
-			P.string('name')
-				.then(P.string('='))
-				.then(p['content'])
-				.map((name) => ({name})),
-		group: (p) =>
-			P.string('group')
-				.then(P.string('='))
-				.then(p['content'])
-				.map((group) => ({group})),
+		filePath: (p) => keyValueParser('file', p),
+		name: (p) => keyValueParser('name', p),
+		group: (p) => keyValueParser('group', p),
+		fileName: (p) => keyValueParser('fileName', p, 'name'),
+		icon: (p) => keyValueParser('icon', p),
 		active: () => P.string('active').map(() => ({active: true})),
-		fileName: (p) =>
-			P.string('fileName')
-				.then(P.string('='))
-				.then(p['content'])
-				.map((name) => ({name})),
 		file: (p) =>
 			P.seq(
 				p['filePath'],
@@ -76,7 +67,7 @@ export function parseCodeBlockParams(options: string): NgDocCodeBlockParams {
 
 		// Combined Parsers
 		paramsParser: (p: P.Language) =>
-			p['lineNumbers'].or(p['fileName']).or(p['file']).or(p['name']).or(p['group']).or(p['active']).or(p['highlightedLines']).sepBy(P.whitespace),
+			p['lineNumbers'].or(p['fileName']).or(p['file']).or(p['name']).or(p['group']).or(p['active']).or(p['icon']).or(p['highlightedLines']).sepBy(P.whitespace),
 		languageWithParamsParser: (p) => P.seq(p['language'], p['paramsParser']).map((v) => v.flat()),
 	});
 
