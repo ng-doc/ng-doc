@@ -11,13 +11,11 @@ jobs:
     lint:
         uses: ./.github/workflows/lint.yml
         with:
-            base: release~1
-            head: release
+            head: ${GITHUB_REF##*/}
     test:
         uses: ./.github/workflows/test.yml
         with:
-            base: release~1
-            head: release
+            head: ${GITHUB_REF##*/}
 
     release:
         runs-on: ubuntu-latest
@@ -29,11 +27,13 @@ jobs:
                     fetch-depth: 0
                     token: ${{ secrets.SEMANTIC_RELEASE }}
 
+            -   run: git fetch origin ${{ inputs.base }}
+
             -   name: Setup Node.js
                 uses: ./.github/actions/nodejs
 
             -   name: Build Projects
-                run: npx nx affected --target=build --configuration=ci --parallel
+                run: npx nx affected --target=build --configuration=ci --parallel --base=remotes/origin/main --head=${GITHUB_REF##*/}
 
             -   name: Uploading Artifacts
                 uses: actions/upload-artifact@v3
