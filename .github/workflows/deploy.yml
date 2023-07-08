@@ -27,6 +27,9 @@ jobs:
                   workflow: release.yml
                   workflow_conclusion: success
 
+            - name: Extract artifact
+              run: tar -xvf ng-doc.tar
+
             - name: Deploy
               if: success()
               run: |
