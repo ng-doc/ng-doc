@@ -11,5 +11,3 @@ if (environment.production) {
 platformBrowserDynamic()
 	.bootstrapModule(AppModule)
 	.catch((err: unknown) => console.error(err));
-
-export const test = 'test';
