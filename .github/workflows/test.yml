@@ -8,6 +8,11 @@ on:
                 description: Base branch
                 required: false
                 default: 'main'
+            head:
+                type: string
+                description: Head branch
+                required: false
+                default: 'HEAD'
 
 jobs:
     test:
@@ -22,4 +27,4 @@ jobs:
                 uses: ./.github/actions/nodejs
 
             -   name: Test
-                run: npx nx affected --target=test --configuration=ci --parallel --base=remotes/origin/${{ inputs.base }}
+                run: npx nx affected --target=test --configuration=ci --parallel --base=remotes/origin/${{ inputs.base }} --head=${{ inputs.head }}

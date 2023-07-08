@@ -10,8 +10,14 @@ on:
 jobs:
     lint:
         uses: ./.github/workflows/lint.yml
+        with:
+            base: release~1
+            head: release
     test:
         uses: ./.github/workflows/test.yml
+        with:
+            base: release~1
+            head: release
 
     release:
         runs-on: ubuntu-latest

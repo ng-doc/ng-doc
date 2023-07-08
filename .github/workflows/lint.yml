@@ -8,6 +8,11 @@ on:
                 description: Base branch
                 required: false
                 default: 'main'
+            head:
+                type: string
+                description: Head branch
+                required: false
+                default: 'HEAD'
 
 jobs:
     lint:
@@ -22,4 +27,4 @@ jobs:
                 uses: ./.github/actions/nodejs
 
             -   name: Lint
-                run: npx nx affected --target=lint --quiet=true --parallel --base=remotes/origin/${{ inputs.base }}
+                run: npx nx affected --target=lint --quiet=true --parallel --base=remotes/origin/${{ inputs.base }} --head=${{ inputs.head }}

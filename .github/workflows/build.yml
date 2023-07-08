@@ -8,6 +8,11 @@ on:
                 description: Base branch
                 required: false
                 default: 'main'
+            head:
+                type: string
+                description: Head branch
+                required: false
+                default: 'HEAD'
 
 jobs:
     build:
@@ -22,4 +27,4 @@ jobs:
                 uses: ./.github/actions/nodejs
 
             -   name: Build
-                run: npx nx affected --target=build --parallel --base=remotes/origin/${{ inputs.base }}
+                run: npx nx affected --target=build --parallel --base=remotes/origin/${{ inputs.base }} --head=${{ inputs.head }}
