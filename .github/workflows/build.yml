@@ -1,6 +1,13 @@
 name: ⚙️ Build
 
-on: workflow_call
+on:
+    workflow_call:
+        inputs:
+            base:
+                type: string
+                description: Base branch
+                required: false
+                default: 'remotes/origin/main'
 
 jobs:
     build:
@@ -13,4 +20,4 @@ jobs:
                 uses: ./.github/actions/nodejs
 
             -   name: Build
-                run: npx nx affected --target=build --base=origin/main --parallel
+                run: npx nx affected --target=build --parallel --base=${{ inputs.base }}

@@ -1,6 +1,14 @@
 name: ⚙️ Tests
 
-on: workflow_call
+on:
+    workflow_call:
+        inputs:
+            base:
+                type: string
+                description: Base branch
+                required: false
+                default: 'remotes/origin/main'
+
 
 jobs:
     tests:
@@ -13,4 +21,4 @@ jobs:
                 uses: ./.github/actions/nodejs
 
             -   name: Test
-                run: npx nx affected --target=test --configuration=ci --base=origin/main --parallel
+                run: npx nx affected --target=test --configuration=ci --parallel --base=${{ inputs.base }}
