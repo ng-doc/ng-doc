@@ -1,4 +1,4 @@
-name: Release
+name: 📦 Release
 
 on:
     push:
@@ -10,12 +10,12 @@ on:
 jobs:
     lint:
         uses: ./.github/workflows/lint.yml
-    tests:
-        uses: ./.github/workflows/tests.yml
+    test:
+        uses: ./.github/workflows/test.yml
 
     release:
         runs-on: ubuntu-latest
-        needs: [ lint, tests ]
+        needs: [ lint, test ]
         steps:
             -   name: Checkout
                 uses: actions/checkout@v2

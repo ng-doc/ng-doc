@@ -1,4 +1,4 @@
-name: Deploy Documentation
+name: 📚 Deploy
 
 on:
     workflow_run:
