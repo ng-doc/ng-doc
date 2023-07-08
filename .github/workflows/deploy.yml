@@ -27,6 +27,12 @@ jobs:
                   workflow: release.yml
                   workflow_conclusion: success
 
+            - name: Extract artifact
+              run: tar -xvf artifacts/ng-doc.tar
+
+            - name: Remove artifact archive
+              run: rm -rf artifacts/ng-doc.tar
+
             - name: Deploy
               if: success()
               run: |
