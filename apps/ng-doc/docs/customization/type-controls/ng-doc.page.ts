@@ -9,7 +9,6 @@ const TypeControlsPage: NgDocPage = {
   title: 'Type Controls',
   mdFile: './index.md',
   category: CustomizationCategory,
-  order: 4,
   keyword: 'CustomizationTypeControls',
   imports: [FloatingCirclePositionControlModule],
   demos: {FloatingCircleComponent, FloatingCirclePositionControlComponent},

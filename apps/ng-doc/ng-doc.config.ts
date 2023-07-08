@@ -38,6 +38,10 @@ const NgDocConfig: NgDocConfiguration = {
 				title: 'NgDoc Bug Report',
 				url: 'https://github.com/ng-doc/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Bug&projects=&template=bug_report.yaml&title=%5BBug%5D+',
 			},
+			featherIcons: {
+				title: 'Feather Icons Pack',
+				url: 'https://feathericons.com/',
+			}
 		},
 	},
 	guide: {
