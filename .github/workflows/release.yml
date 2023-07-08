@@ -35,11 +35,14 @@ jobs:
             -   name: Build Projects
                 run: npx nx affected --target=build --configuration=ci --parallel --base=remotes/origin/main --head=${GITHUB_REF##*/}
 
+            -   name: Tar Artifacts
+                run: tar -cvf ng-doc.tar dist/apps/ng-doc
+
             -   name: Uploading Artifacts
                 uses: actions/upload-artifact@v3
                 with:
                     name: artifacts
-                    path: dist/apps/ng-doc
+                    path: ng-doc.tar
 
             -   name: Release
                 env:
