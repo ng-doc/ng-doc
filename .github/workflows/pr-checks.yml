@@ -1,4 +1,4 @@
-name: PR Checks
+name: 📝 PR Checks
 
 on: [pull_request]
 
@@ -7,8 +7,8 @@ jobs:
         uses: ./.github/workflows/lint.yml
         with:
             base: remotes/origin/${{github.event.pull_request.base.ref}}
-    tests:
-        uses: ./.github/workflows/tests.yml
+    test:
+        uses: ./.github/workflows/test.yml
         with:
             base: remotes/origin/${{github.event.pull_request.base.ref}}
     build:
