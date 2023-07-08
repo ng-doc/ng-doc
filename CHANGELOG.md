@@ -1,3 +1,16 @@
+# [16.9.0](https://github.com/ng-doc/ng-doc/compare/v16.8.1...v16.9.0) (2023-07-08)
+
+
+### Features
+
+* **ui-kit:** add icons support for code blocks and code block groups ([687b4cc](https://github.com/ng-doc/ng-doc/commit/687b4cc35772d6758995f8183ac03c8d9a157817))
+* **ui-kit:** add the ability to add custom icons to the documentation ([30c4012](https://github.com/ng-doc/ng-doc/commit/30c40120c9b20401ba011865c4cbb737f1c6b6a5))
+
+
+### Performance Improvements
+
+* **ui-kit:** remove all unused icon from `ui-kit` library ([8b01fec](https://github.com/ng-doc/ng-doc/commit/8b01fec513f817114caf658db0827c5fd12a2bf1))
+
 ## [16.8.1](https://github.com/ng-doc/ng-doc/compare/v16.8.0...v16.8.1) (2023-07-07)
 
 
