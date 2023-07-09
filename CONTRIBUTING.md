@@ -75,19 +75,28 @@ npm i
 ### Run demo application
 
 ```bash
-nx s
+npm run serve
+```
+
+### Run demo application for POC
+
+You can find all files in `apps/ng-doc/poc` and play with them to see how your feature/bugfix works.
+It's useful when you want to quickly test something without starting the whole demo application.
+
+```bash
+npm run poc
 ```
 
 ### Run all tests
 
 ```bash
-npx nx run-many --all --target=test
+npm run test
 ```
 
 ### Run linting
 
 ```bash
-npx nx run-many --all --target=lint
+npm run lint
 ```
 
 ## How to release
