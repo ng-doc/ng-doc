@@ -7,7 +7,7 @@ const <%= categoryName %>: NgDocCategory = {
 	category: <%= parentCategoryName %>,<% } %><% if (expanded) { %>
 	expanded: <%= expanded %>,<% } %><% if (expandable) { %>
 	expandable: <%= expandable %>,<% } %><% if (order) { %>
-	order: `<%= order %>`,<% } %>
+	order: <%= order %>,<% } %>
 };
 
 export default <%= categoryName %>;
