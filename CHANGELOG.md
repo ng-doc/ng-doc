@@ -1,3 +1,16 @@
+# [16.10.0](https://github.com/ng-doc/ng-doc/compare/v16.9.0...v16.10.0) (2023-07-18)
+
+
+### Bug Fixes
+
+* **app:** `search` and `menu icons are missed for the mobile view ([886e1ae](https://github.com/ng-doc/ng-doc/commit/886e1ae4166da61fd77df85991dd8437ef16f28f))
+* **schematics:** `order` property in generate category has a string type ([b5aa730](https://github.com/ng-doc/ng-doc/commit/b5aa730424dee55249746749ad72dc78f2927b49))
+
+
+### Features
+
+* **builder:** add ability to set different ng-doc configuration files for different build targets ([bb0c8d0](https://github.com/ng-doc/ng-doc/commit/bb0c8d04167ca3456c1f6813b07cb923bec0e57d))
+
 # [16.9.0](https://github.com/ng-doc/ng-doc/compare/v16.8.1...v16.9.0) (2023-07-08)
 
 
