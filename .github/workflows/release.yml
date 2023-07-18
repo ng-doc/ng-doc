@@ -22,10 +22,10 @@ jobs:
         needs: [ lint, test ]
         steps:
             -   name: Checkout
-                uses: actions/checkout@v2
+                uses: actions/checkout@v3
                 with:
                     fetch-depth: 0
-                    token: ${{ secrets.GITHUB_TOKEN }}
+                    token: ${{ secrets.SEMANTIC_RELEASE }}
 
             -   run: git fetch origin ${{ inputs.base }}
 
@@ -46,6 +46,6 @@ jobs:
 
             -   name: Release
                 env:
-                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE }}
                     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
                 run: npx semantic-release
