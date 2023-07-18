@@ -1,10 +1,9 @@
 import {NgDocPage} from '@ng-doc/core';
 import {NgDocTagComponent} from '@ng-doc/ui-kit';
 
-const PocPage: NgDocPage = {
-	title: `poc`,
+const Page: NgDocPage = {
+	title: `Just a Page`,
 	mdFile: './index.md',
-	keyword: 'Poc',
 	playgrounds: {
 		TagPlayground: {
 			target: NgDocTagComponent,
@@ -13,4 +12,4 @@ const PocPage: NgDocPage = {
 	},
 };
 
-export default PocPage;
+export default Page;

@@ -104,6 +104,12 @@
 				},
 				"development": {
 					"browserTarget": "ng-doc:build:development"
+				},
+				"poc": {
+					"browserTarget": "ng-doc:build:development",
+					"ngDoc": {
+						"config": "apps/ng-doc/ng-doc.config.poc.ts"
+					}
 				}
 			},
 			"defaultConfiguration": "development",

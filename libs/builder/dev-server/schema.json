@@ -5,7 +5,13 @@
 	"type": "object",
 	"properties": {
 		"ngDoc": {
-			"type": "object"
+			"type": "object",
+			"properties": {
+				"config": {
+					"type": "string",
+					"optional": true
+				}
+			}
 		}
 	},
 	"additionalProperties": true

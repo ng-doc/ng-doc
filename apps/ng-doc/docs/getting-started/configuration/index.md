@@ -20,6 +20,51 @@ const config: NgDocConfiguration = {
 export default config;
 ```
 
+## Configuration for target
+
+You can also specify different configuration files for different build targets, for example, you can
+specify different configurations for `build` and `serve` targets. To do that, you need to
+specify `config` property in your app configuration file, after that NgDoc will use this configuration
+file instead of searching for `ng-doc.config.ts` file.
+
+```json group="config" name="Angular (angular.json)" icon="angular"
+{
+  "projects": {
+    "my-project": {
+      "architect": {
+        "serve": {
+          "builder": "@ng-doc/builder:dev-server",
+          "configurations": {
+            "development": {
+              "ngDoc": {
+                "config": "src/ng-doc.config.for-dev.ts"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+```json group="config" name="Nx (project.json)" icon="nx"
+{
+  "targets": {
+    "serve": {
+      "executor": "@ng-doc/builder:dev-server",
+      "configurations": {
+        "development": {
+          "ngDoc": {
+            "config": "src/ng-doc.config.for-dev.ts"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
 ## Documentation folder
 
 By default, NgDoc uses your project's `sourceRoot` folder defined in `angular.json` file
@@ -32,7 +77,7 @@ After that NgDoc will search for documentation pages in the specified folder and
 import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
-  pages: 'libs/my-lib/src'
+  pages: 'libs/my-lib/src',
 };
 
 export default config;
@@ -47,11 +92,11 @@ this folder is used for storing generated pages and modules.
 import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
-  outDir: 'src'
+  outDir: 'src',
 };
 
 export default config;
-````
+```
 
 After that NgDoc will generated and store everything inside `src/.ng-doc/app-name` folder.
 But remember that you should not commit this folder to your repository, and also update
@@ -60,15 +105,16 @@ the following things:
 - Update the path to the `@ng-doc/generated` directory in `tsconfig.json` paths section.
 - Update the path to the `.ng-doc/app-name/assets` folder in `angular.json`
 
-
 ## ESBuild builder
 
 > **Warning**
 > This feature is experimental and may not work as expected.
 > For more information, see [this guide](https://angular.io/guide/esbuild)
-> Also, see following issues: [Markdown content not updating](https://github.com/ng-doc/ng-doc/issues/65)
+> Also, see following
+> issues: [Markdown content not updating](https://github.com/ng-doc/ng-doc/issues/65)
 
-By default, NgDoc uses `webpack` to build and serve the documentation application, but you can also use
+By default, NgDoc uses `webpack` to build and serve the documentation application, but you can also
+use
 `esbuild`, to switch to `esbuild` you need to specify `angularBuilder` property in your
 `ng-doc.config.ts` file, it will enable `esbuild` builder for `build` target and `vite` + `esbuild`
 for `serve` target.
@@ -85,11 +131,14 @@ export default config;
 
 ## External packages in guides
 
-Sometimes you may need to use external packages in your `ng-doc.page.ts`, for example, to load some file and
-display it in the guide via `data` field. If you try to use `fs` or `path` packages, you will get an error,
+Sometimes you may need to use external packages in your `ng-doc.page.ts`, for example, to load some
+file and
+display it in the guide via `data` field. If you try to use `fs` or `path` packages, you will get an
+error,
 because these packages are not available by default.
 
-To solve this problem, you need to specify `externalPackages` property in your `ng-doc.config.ts` file,
+To solve this problem, you need to specify `externalPackages` property in your `ng-doc.config.ts`
+file,
 it will be passed to `esbuild` as `external` option.
 
 ```typescript name="ng-doc.config.ts"
@@ -97,7 +146,7 @@ import {NgDocConfiguration} from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
   guide: {
-    externalPackages: ['fs', 'path']
+    externalPackages: ['fs', 'path'],
   },
 };
 

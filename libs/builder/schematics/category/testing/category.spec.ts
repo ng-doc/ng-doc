@@ -73,7 +73,7 @@ export default MyCategoryCategory;
 
 const MyCategoryCategory: NgDocCategory = {
 \ttitle: 'my-category',
-\torder: \`5\`,
+\torder: 5,
 };
 
 export default MyCategoryCategory;

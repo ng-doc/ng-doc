@@ -10,6 +10,7 @@
 		"ng": "nx",
 		"postinstall": "node ./decorate-angular-cli.js",
 		"serve": "nx serve",
+		"poc": "nx run ng-doc:serve:poc",
 		"start": "npm-watch",
 		"build": "nx build",
 		"lint": "npx nx run-many --all --target=lint",
