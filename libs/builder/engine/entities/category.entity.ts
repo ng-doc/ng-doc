@@ -1,10 +1,10 @@
 import {asArray, isPresent, NgDocCategory} from '@ng-doc/core';
 import * as path from 'path';
-import {forkJoin, Observable, of} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
 
 import {isCategoryEntity, isPageEntity} from '../../helpers';
-import {NgDocBuildOutput, NgDocEntityKeyword} from '../../interfaces';
+import {NgDocBuildResult, NgDocEntityKeyword} from '../../interfaces';
 import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
@@ -89,20 +89,17 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 		);
 	}
 
-	protected override buildImpl(): Observable<NgDocBuildOutput[]> {
-		return this.isReadyForBuild ? forkJoin([this.buildModule()]) : of([]);
-	}
+	override build(): Observable<NgDocBuildResult<string>> {
+		const result: string = renderTemplate('./category.module.ts.nunj', {
+			context: {
+				category: this,
+			},
+		});
 
-	private buildModule(): Observable<NgDocBuildOutput> {
-		if (this.target) {
-			const content: string = renderTemplate('./category.module.ts.nunj', {
-				context: {
-					category: this,
-				},
-			});
-
-			return of({content, filePath: this.modulePath});
-		}
-		return of();
+		return of({
+			result,
+			entity: this,
+			toBuilderOutput: async (content: string) => ({content, filePath: this.modulePath}),
+		});
 	}
 }

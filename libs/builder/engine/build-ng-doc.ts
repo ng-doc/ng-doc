@@ -18,10 +18,12 @@ import {
 	updateCache,
 } from './builder-operators';
 import {dependencyChanges} from './builder-operators/dependency-changes';
+import {postBuild} from './builder-operators/post-build';
 import {postProcess} from './builder-operators/post-process';
 import {printOutput} from './builder-operators/print-output';
 import {task, taskForMany} from './builder-operators/task';
-import {NgDocSkeletonEntity} from './entities';
+import {toBuilderOutput} from './builder-operators/to-builder-output';
+import {NgDocKeywordsEntity, NgDocSkeletonEntity} from './entities';
 import {NgDocEntity} from './entities/abstractions/entity';
 import {invalidateCacheIfNeeded, NgDocCache} from './entities/cache';
 import {NgDocIndexesEntity} from './entities/indexes.entity';
@@ -50,6 +52,7 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 	// Global entities that should be built after each build cycle
 	const skeletonEntity: NgDocSkeletonEntity = new NgDocSkeletonEntity(store, cache, context);
 	const indexesEntity: NgDocIndexesEntity = new NgDocIndexesEntity(store, cache, context);
+	const keywordEntity: NgDocKeywordsEntity = new NgDocKeywordsEntity(store, cache, context);
 
 	// Clean build path if cache is not enabled
 	if (!!context.config?.cache && invalidateCacheIfNeeded(context.cachedFiles)) {
@@ -82,7 +85,9 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 				dependencyChanges(watcher),
 				tap(() => store.updateKeywordMap()),
 				taskForMany('Building...', build(store, context.config, skeletonEntity), ifNotCachedOrInvalid(cache, store)),
-				taskForMany('Post-processing...', postProcess(store, context.config, indexesEntity)),
+				taskForMany('Post-build...', postBuild()),
+				taskForMany('Post-processing...', postProcess(store, context.config, indexesEntity, keywordEntity)),
+				taskForMany(undefined, toBuilderOutput()),
 				taskForMany('Emitting...', emit()),
 				collectGarbage(store),
 			),

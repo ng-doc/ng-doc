@@ -3,6 +3,6 @@
 {% if usageNotes %}
 	<h2>Usage Notes</h2>
 	<section>
-		{{ usageNotes | marked }}
+		{{ usageNotes | markdownToHtml }}
 	</section>
 {% endif %}

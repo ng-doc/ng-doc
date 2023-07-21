@@ -24,6 +24,11 @@ export class ObservableSet<T> {
 		}
 	}
 
+	fill(...values: T[]): void {
+		this.collection.clear();
+		this.add(...values);
+	}
+
 	delete(value: T): void {
 		this.collection.delete(value);
 		this.changes$.next();

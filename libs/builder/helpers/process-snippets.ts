@@ -16,8 +16,8 @@ const TypeScriptSnippetEnd: (group?: string, escape?: boolean) => RegExp = (grou
 /**
  *	Finds and return all the snippets in the given string.
  *
- * @param {string} content - Content
- * @returns {NgDocSnippet[]} - Array of snippets
+ * @param content - Content
+ * @returns - Array of snippets
  */
 export function processSnippets(content: string): NgDocSnippet[] {
 	return [
@@ -28,11 +28,12 @@ export function processSnippets(content: string): NgDocSnippet[] {
 }
 
 /**
+ * Finds the snippets in the given content.
  *
- * @param content
- * @param type
- * @param snippetStart
- * @param snippetEnd
+ * @param content - Content
+ * @param type - Snippet type
+ * @param snippetStart - Snippet start
+ * @param snippetEnd - Snippet end
  */
 function findSnippet(
 	content: string,
@@ -66,8 +67,9 @@ function findSnippet(
 }
 
 /**
+ * Removes the snippets from the given code.
  *
- * @param code
+ * @param code - Code
  */
 function removeSnippetsInCode(code: string): string {
 	return code

@@ -1,9 +1,8 @@
 import {Observable, OperatorFunction} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 
-import {NgDocBuildOutput, NgDocConfiguration} from '../../interfaces';
+import {NgDocBuildResult, NgDocConfiguration} from '../../interfaces';
 import {forkJoinOrEmpty} from '../../operators';
-import {errorHandler} from '../../operators/error-handler';
 import {NgDocEntity} from '../entities/abstractions/entity';
 import {NgDocEntityStore} from '../entity-store';
 import {buildCandidates} from '../functions/build-candidates';
@@ -20,16 +19,24 @@ export function build(
 	store: NgDocEntityStore,
 	config: NgDocConfiguration,
 	...additionalEntities: NgDocEntity[]
-): OperatorFunction<NgDocEntity[], NgDocBuildOutput[]> {
+): OperatorFunction<NgDocEntity[], NgDocBuildResult[]> {
 	return (source: Observable<NgDocEntity[]>) =>
 		source.pipe(
 			map((entities: NgDocEntity[]) => buildCandidates(store, entities).filter((e: NgDocEntity) => e.isReadyForBuild)),
 			switchMap((entities: NgDocEntity[]) =>
-				forkJoinOrEmpty(entities.map((e: NgDocEntity) => e.build().pipe(errorHandler([])))),
+				forkJoinOrEmpty(entities.map((e: NgDocEntity) => {
+					e.beforeBuild();
+
+					return e.build()
+				})),
 			),
-			switchMap((output: NgDocBuildOutput[][]) =>
-				forkJoinOrEmpty(additionalEntities.map((e: NgDocEntity) => e.build())).pipe(
-					map((additionalOutput: NgDocBuildOutput[][]) => [...output, ...additionalOutput].flat()),
+			switchMap((output: NgDocBuildResult[]) =>
+				forkJoinOrEmpty(additionalEntities.map((e: NgDocEntity) => {
+					e.beforeBuild();
+
+					return e.build();
+				})).pipe(
+					map((additionalOutput: NgDocBuildResult[]) => output.concat(additionalOutput).flat()),
 				),
 			),
 		);

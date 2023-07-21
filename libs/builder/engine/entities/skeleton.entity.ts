@@ -1,9 +1,12 @@
 import path from 'path';
-import {forkJoin, Observable, of} from 'rxjs';
+import {Observable, of} from 'rxjs';
 
-import {NgDocBuildOutput} from '../../interfaces';
+import {NgDocBuildResult} from '../../interfaces';
 import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
+import {NgDocGeneratedModuleEntity} from './generated-module.entity';
+import {NgDocIndexFileEntity} from './index-file.entity';
+import {NgDocRoutesEntity} from './routes.entity';
 
 export class NgDocSkeletonEntity extends NgDocEntity {
 	readonly id: string = 'NgDocSkeletonEntity';
@@ -12,39 +15,29 @@ export class NgDocSkeletonEntity extends NgDocEntity {
 	readonly parent: undefined = undefined;
 	readonly buildCandidates: NgDocEntity[] = [];
 
-	protected buildImpl(): Observable<NgDocBuildOutput[]> {
-		return forkJoin([this.buildIndexFile(), this.buildGeneratedModule(), this.buildRoutes(), this.buildContext()]);
+	override childrenGenerator(): Observable<NgDocEntity[]> {
+		return of([
+			new NgDocRoutesEntity(this.store, this.cache, this.context, this),
+			new NgDocIndexFileEntity(this.store, this.cache, this.context, this),
+			new NgDocGeneratedModuleEntity(this.store, this.cache, this.context, this),
+		]);
 	}
 
-	private buildRoutes(): Observable<NgDocBuildOutput> {
+	build(): Observable<NgDocBuildResult<string>> {
 		const entities: NgDocEntity[] = this.rootEntitiesForBuild;
+		const result: string = renderTemplate('./context.ts.nunj', {context: {entities}});
 
-		const content: string = renderTemplate('./routing.ts.nunj', {context: {entities}});
-
-		return of({content, filePath: path.join(this.context.buildPath, 'ng-doc.routing.ts')});
+		return of({
+			result,
+			entity: this,
+			toBuilderOutput: async (content: string) => ({
+				content,
+				filePath: path.join(this.context.buildPath, 'ng-doc.context.ts'),
+			}),
+		});
 	}
 
-	private buildContext(): Observable<NgDocBuildOutput> {
-		const entities: NgDocEntity[] = this.rootEntitiesForBuild;
-
-		const content: string = renderTemplate('./context.ts.nunj', {context: {entities}});
-
-		return of({content, filePath: path.join(this.context.buildPath, 'ng-doc.context.ts')});
-	}
-
-	private buildIndexFile(): Observable<NgDocBuildOutput> {
-		const content: string = renderTemplate('./index.ts.nunj');
-
-		return of({content, filePath: path.join(this.context.buildPath, 'index.ts')});
-	}
-
-	private buildGeneratedModule(): Observable<NgDocBuildOutput> {
-		const content: string = renderTemplate('./ng-doc.generated.module.ts.nunj');
-
-		return of({content, filePath: path.join(this.context.buildPath, 'ng-doc.generated.module.ts')});
-	}
-
-	private get rootEntitiesForBuild(): NgDocEntity[] {
+	get rootEntitiesForBuild(): NgDocEntity[] {
 		return this.store.asArray().filter((e: NgDocEntity) => e.isRoot && e.isReadyForBuild);
 	}
 }
