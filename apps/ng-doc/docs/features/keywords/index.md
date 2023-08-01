@@ -74,7 +74,8 @@ const config: NgDocConfiguration = {
   keywords: {
     keywords: {
       google: {
-        path: 'https://google.com/',
+        title: 'Google', // optional, will use the key of the object if not provided
+        url: 'https://google.com/',
       },
     },
   },
