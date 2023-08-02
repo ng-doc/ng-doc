@@ -33,7 +33,7 @@ export class NgDocApiListEntity extends NgDocEntity {
 	}
 
 	build(): Observable<NgDocBuildResult<NgDocApiList[]>> {
-		const result: NgDocApiList[] = this.children
+		const result: NgDocApiList[] = this.parent.children
 			.filter(isApiScopeEntity)
 			.sort((a: NgDocApiScopeEntity, b: NgDocApiScopeEntity) => (b.order ?? 0) - (a.order ?? 0))
 			.map((scope: NgDocApiScopeEntity) => ({

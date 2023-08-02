@@ -72,11 +72,9 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 			switchMap(() => buildFileEntity(this.sourceFile, this.context.tsConfig, this.context.context.workspaceRoot)),
 			switchMap(() => this.loadImpl()),
 			map(() => generateApiEntities(this)),
-			map((entities: NgDocEntity[]) => {
-				entities.push(new NgDocApiListEntity(this.store, this.cache, this.context, this));
-
-				return entities;
-			}),
+			map((entities: NgDocEntity[]) =>
+				entities.concat(new NgDocApiListEntity(this.store, this.cache, this.context, this)),
+			),
 		);
 	}
 
