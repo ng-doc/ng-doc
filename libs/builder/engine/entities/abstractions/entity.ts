@@ -1,10 +1,10 @@
 import {logging} from '@angular-devkit/core';
 import {NgDocPageIndex} from '@ng-doc/core';
 import {Observable, of, Subject} from 'rxjs';
-import {take, tap} from 'rxjs/operators';
+import {take} from 'rxjs/operators';
 
 import {ObservableSet} from '../../../classes';
-import {NgDocBuilderContext, NgDocBuildOutput} from '../../../interfaces';
+import {NgDocBuilderContext, NgDocBuildResult} from '../../../interfaces';
 import {NgDocEntityStore} from '../../entity-store';
 import {NgDocCache} from '../cache';
 import {CachedFilesGetter, CachedProperty} from '../cache/decorators';
@@ -75,14 +75,14 @@ export abstract class NgDocEntity {
 	private destroy$: Subject<void> = new Subject<void>();
 
 	/**
-	 * Files that are watched for changes to rebuild entity or remove it
-	 */
-	abstract readonly rootFiles: string[];
-
-	/**
 	 * Indicates when it's root entity and should be used for rooted components.
 	 */
 	abstract readonly isRoot: boolean;
+
+	/**
+	 * Files that are watched for changes to rebuild entity or remove it
+	 */
+	abstract readonly rootFiles: string[];
 
 	/**
 	 * Should return the parent of the current entity
@@ -131,7 +131,7 @@ export abstract class NgDocEntity {
 	 * @type {Array<NgDocEntity>}
 	 */
 	get childEntities(): NgDocEntity[] {
-		return [...this.children, ...this.children.map((child: NgDocEntity) => child.childEntities).flat()];
+		return this.children.concat(this.children.map((child: NgDocEntity) => child.childEntities).flat());
 	}
 
 	/**
@@ -162,12 +162,6 @@ export abstract class NgDocEntity {
 	}
 
 	/**
-	 * Build all artifacts that need for application.
-	 * This is the last method in the build process, should return output that should be emitted to the file system
-	 */
-	protected abstract buildImpl(): Observable<NgDocBuildOutput[]>;
-
-	/**
 	 * Method called by NgDocBuilder when one or more dependencies have changed
 	 */
 	dependenciesChanged(): void {
@@ -180,18 +174,18 @@ export abstract class NgDocEntity {
 		return of([]);
 	}
 
-	build(): Observable<NgDocBuildOutput[]> {
+	beforeBuild(): void {
 		// Clear all indexes and used keywords before build
 		this.usedKeywords.clear();
 		this.potentialKeywords.clear();
 		this.indexes = [];
-
-		return this.buildImpl().pipe(
-			tap({
-				error: (e: Error) => this.errors.push(e),
-			}),
-		);
 	}
+
+	/**
+	 * Build all artifacts that need for application.
+	 * This is the last method in the build process, should return output that should be emitted to the file system
+	 */
+	abstract build(): Observable<NgDocBuildResult<any, any>>;
 
 	updateCache(): void {
 		if (this.isReadyForBuild && !this.warnings.length) {

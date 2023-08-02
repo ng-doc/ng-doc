@@ -5,7 +5,7 @@ import {NgDocRouteEntity} from './route.entity';
 /**
  * Entity for pages that are using for navigation in the sidebar.
  */
-export abstract class NgDocNavigationEntity<T> extends NgDocRouteEntity<T> {
+export abstract class NgDocNavigationEntity<TTarget> extends NgDocRouteEntity<TTarget> {
 	/**
 	 * Indicates when current entity is using for page navigation.
 	 */

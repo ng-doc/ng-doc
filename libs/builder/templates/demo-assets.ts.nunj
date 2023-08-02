@@ -5,9 +5,11 @@ export const demoAssets: NgDocDemoAssets = {
 {% set i = 0 %}
 	{%- for demoName, assets in demoAssets %}
 	{{ demoName }}: [
-		{%- for asset in assets | notEmptyAssets %}
-		{title: '{{ asset.title }}', codeType: '{{ asset.type }}', code: `{{ asset.output | toTemplateString }}`},
-	{%- set i = i + 1 %}
+		{%- for asset in assets %}
+		{%- if not asset.isEmpty %}
+		{title: '{{ asset.title }}', codeType: '{{ asset.type }}', code: `{{ asset.code | toTemplateString }}`},
+		{%- set i = i + 1 %}
+		{%- endif %}
 		{%- endfor %}
 	],
 	{%- endfor %}

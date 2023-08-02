@@ -10,14 +10,17 @@ const HTMLSnippetEnd: (group?: string, escape?: boolean) => RegExp = (group: str
 	new RegExp(`^.*(<!--\\s*NgDocHTMLSnippetEnd(\\(${escape ? escapeRegexp(group) : group}\\))?\\s*-->).*$`, 'gm');
 const StylesSnippetEnd: (group?: string, escape?: boolean) => RegExp = (group: string = '', escape: boolean = true) =>
 	new RegExp(`^.*(\\/\\*\\s*NgDocStyleSnippetEnd(\\(${escape ? escapeRegexp(group) : group}\\))?\\s*\\*\\/).*$`, 'gm');
-const TypeScriptSnippetEnd: (group?: string, escape?: boolean) => RegExp = (group: string = '', escape: boolean = true) =>
+const TypeScriptSnippetEnd: (group?: string, escape?: boolean) => RegExp = (
+	group: string = '',
+	escape: boolean = true,
+) =>
 	new RegExp(`^.*(\\/\\*\\s*NgDocCodeSnippetEnd(\\(${escape ? escapeRegexp(group) : group}\\))?\\s*\\*\\/).*$`, 'gm');
 
 /**
  *	Finds and return all the snippets in the given string.
  *
- * @param {string} content - Content
- * @returns {NgDocSnippet[]} - Array of snippets
+ * @param content - Content
+ * @returns - Array of snippets
  */
 export function processSnippets(content: string): NgDocSnippet[] {
 	return [
@@ -28,11 +31,12 @@ export function processSnippets(content: string): NgDocSnippet[] {
 }
 
 /**
+ * Finds the snippets in the given content.
  *
- * @param content
- * @param type
- * @param snippetStart
- * @param snippetEnd
+ * @param content - Content
+ * @param type - Snippet type
+ * @param snippetStart - Snippet start
+ * @param snippetEnd - Snippet end
  */
 function findSnippet(
 	content: string,
@@ -40,14 +44,13 @@ function findSnippet(
 	snippetStart: RegExp,
 	snippetEnd: (group?: string) => RegExp,
 ): NgDocSnippet[] {
-	let snippetCounter: number = 0;
 	const snippets: NgDocSnippet[] = [];
 	const startRegexp: RegExp = new RegExp(snippetStart);
 	let matchStart: RegExpExecArray | null;
 
 	// eslint-disable-next-line no-cond-assign
 	while ((matchStart = startRegexp.exec(content))) {
-		const group: string = matchStart[2] ? matchStart[2].slice(1, matchStart[2].length - 1) : `Code Snippet ${++snippetCounter}`;
+		const group = matchStart[2]?.slice(1, matchStart[2].length - 1);
 		const matchEnd: RegExpExecArray | null = snippetEnd(group).exec(content);
 
 		if (matchEnd) {
@@ -66,8 +69,9 @@ function findSnippet(
 }
 
 /**
+ * Removes the snippets from the given code.
  *
- * @param code
+ * @param code - Code
  */
 function removeSnippetsInCode(code: string): string {
 	return code

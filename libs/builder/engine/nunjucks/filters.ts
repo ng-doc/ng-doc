@@ -30,7 +30,7 @@ export {
 	getOverriddenMember,
 	getPropertyChain,
 	groupAccessors,
-	marked,
+	markdownToHtml,
 	methodPresentation,
 	noEmpty,
 	noLineBreaks,

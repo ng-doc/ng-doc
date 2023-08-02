@@ -1,1 +1,3 @@
-{{ NgDocActions.playground("TagPlayground") }}
+{{ NgDocActions.playground("BtnPlayground") }}
+
+`*AnotherPage`
