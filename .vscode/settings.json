@@ -1,0 +1,9 @@
+{
+    "files.autoSave": "off",
+    "eslint.format.enable": true,
+    "editor.formatOnSave": true,
+    "eslint.run": "onSave",
+    "[typescript]": {
+        "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+    },
+}

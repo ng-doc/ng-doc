@@ -103,7 +103,8 @@
 					"tsConfig": "apps/ng-doc/tsconfig.build.json"
 				},
 				"development": {
-					"browserTarget": "ng-doc:build:development"
+					"browserTarget": "ng-doc:build:development",
+					"allowedHosts": ["localhost", ".gitpod.io"]
 				},
 				"poc": {
 					"browserTarget": "ng-doc:build:development",
