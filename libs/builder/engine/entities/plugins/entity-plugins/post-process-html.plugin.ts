@@ -7,7 +7,7 @@ import {NgDocEntityPlugin} from '../types';
 export function postProcessHtmlPlugin(): NgDocEntityPlugin<string> {
 	return {
 		id: 'postProcessHtmlPlugin',
-		implementation: async (data, entity) => {
+		execute: async (data, entity) => {
 			return postProcessHtml(data, entity);
 		},
 	};

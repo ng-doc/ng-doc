@@ -19,7 +19,7 @@ export async function processHtml(html: string, entity: NgDocEntity): Promise<st
 		headings: entity?.context.config.guide?.anchorHeadings,
 		route: isRouteEntity(entity) ? entity.fullRoute : undefined,
 		raiseError: entity?.warnings.push.bind(entity.warnings) ?? EMPTY_FUNCTION,
-		addAnchor: (anchor: NgDocEntityAnchor) => isRouteEntity(entity) ? entity.anchors.push(anchor) : undefined,
+		addAnchor: (anchor: NgDocEntityAnchor) => (isRouteEntity(entity) ? entity.anchors.push(anchor) : undefined),
 	});
 }
 

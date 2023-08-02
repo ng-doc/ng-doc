@@ -1,15 +1,15 @@
+import {NgDocApiList} from '@ng-doc/core';
 import * as path from 'path';
 import {Observable, of} from 'rxjs';
 
-import {NgDocBuilderContext, NgDocBuildResult} from '../../interfaces';
-import {NgDocEntity} from './abstractions/entity';
-import {CachedEntity, CachedFilesGetter, NgDocCache} from './cache';
-import {NgDocEntityStore} from '../entity-store';
-import {NgDocApiEntity} from './api.entity';
 import {getKindType, isApiPageEntity, isApiScopeEntity, slash} from '../../helpers';
-import {NgDocApiScopeEntity} from './api-scope.entity';
+import {NgDocBuilderContext, NgDocBuildResult} from '../../interfaces';
+import {NgDocEntityStore} from '../entity-store';
+import {NgDocEntity} from './abstractions/entity';
+import {NgDocApiEntity} from './api.entity';
 import {NgDocApiPageEntity} from './api-page.entity';
-import {NgDocApiList} from '@ng-doc/core';
+import {NgDocApiScopeEntity} from './api-scope.entity';
+import {CachedEntity, CachedFilesGetter, NgDocCache} from './cache';
 
 @CachedEntity()
 export class NgDocApiListEntity extends NgDocEntity {

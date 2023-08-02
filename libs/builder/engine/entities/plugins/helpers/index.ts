@@ -1,1 +1,1 @@
-export * from './run-plugins';
+export * from './execute-plugins';

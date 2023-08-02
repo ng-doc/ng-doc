@@ -6,7 +6,7 @@ import {NgDocEntityPlugin} from '../types';
 export function addToDependenciesPlugin(): NgDocEntityPlugin<string> {
 	return {
 		id: 'addToDependenciesPlugin',
-		implementation: async (data, entity) => {
+		execute: async (data, entity) => {
 			entity.dependencies.add(data);
 
 			return data;

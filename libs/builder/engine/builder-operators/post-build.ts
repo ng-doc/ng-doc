@@ -5,7 +5,7 @@ import {map, switchMap} from 'rxjs/operators';
 import {NgDocBuildResult} from '../../interfaces';
 import {forkJoinOrEmpty} from '../../operators';
 import {errorHandler} from '../../operators/error-handler';
-import {runPlugins} from '../entities/plugins';
+import {executePlugins} from '../entities/plugins';
 
 /**
  *
@@ -24,7 +24,7 @@ export function postBuild<T extends NgDocBuildResult>(): OperatorFunction<T[], T
  * @param output
  */
 function handlePostBuild<T extends NgDocBuildResult>(output: T): Observable<T> {
-	return runPlugins(output.result, output.entity, asArray(output.postBuildPlugins)).pipe(
+	return executePlugins(output.result, output.entity, asArray(output.postBuildPlugins)).pipe(
 		map((result) => Object.assign({}, output, {result})),
 	);
 }

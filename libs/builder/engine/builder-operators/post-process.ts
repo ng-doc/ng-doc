@@ -6,7 +6,7 @@ import {NgDocBuildResult, NgDocConfiguration} from '../../interfaces';
 import {forkJoinOrEmpty} from '../../operators';
 import {errorHandler} from '../../operators/error-handler';
 import {NgDocEntity} from '../entities/abstractions/entity';
-import {runPlugins} from '../entities/plugins';
+import {executePlugins} from '../entities/plugins';
 import {NgDocEntityStore} from '../entity-store';
 
 /**
@@ -50,7 +50,7 @@ export function postProcess<T extends NgDocBuildResult>(
  * @param output
  */
 function handlePostProcess<T extends NgDocBuildResult>(output: T): Observable<T> {
-	return runPlugins(output.result, output.entity, asArray(output.postProcessPlugins)).pipe(
+	return executePlugins(output.result, output.entity, asArray(output.postProcessPlugins)).pipe(
 		map((result) => Object.assign({}, output, {result})),
 	);
 }

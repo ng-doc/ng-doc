@@ -8,7 +8,7 @@ import {NgDocEntityPlugin} from '../types';
 export function extractSnippetsPlugin(): NgDocEntityPlugin<NgDocAsset[]> {
 	return {
 		id: 'extractSnippetsPlugin',
-		implementation: async (data, entity) => {
+		execute: async (data, entity) => {
 			return data
 				.map((asset) => {
 					const snippets = snippetsFromAsset(asset, entity.context.inlineStyleLanguage);

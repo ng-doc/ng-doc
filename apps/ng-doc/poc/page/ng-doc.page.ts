@@ -11,8 +11,8 @@ const Page: NgDocPage = {
 		BtnPlayground: {
 			target: BtnDirective,
 			template: `<ng-doc-selector></ng-doc-selector>`,
-		}
-	}
+		},
+	},
 };
 
 export default Page;

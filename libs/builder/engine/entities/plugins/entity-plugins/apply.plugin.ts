@@ -22,11 +22,11 @@ export function applyPlugin<T, R, TEntity extends NgDocEntity = NgDocEntity>(
 ): NgDocEntityPlugin<T, TEntity> {
 	return {
 		id: 'apply-plugins',
-		implementation: async (data: T, entity: TEntity): Promise<T> => {
+		execute: async (data: T, entity: TEntity): Promise<T> => {
 			const apply = async (data: R) => {
 				for (const plugin of plugins(data)) {
 					// eslint-disable-next-line no-await-in-loop
-					data = await plugin.implementation(data, entity);
+					data = await plugin.execute(data, entity);
 				}
 
 				return data;

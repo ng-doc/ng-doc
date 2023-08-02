@@ -9,8 +9,6 @@ import {getComponentSourceFiles} from './get-component-source-files';
  *
  * @param cls - The class declaration.
  */
-export function getComponentAssets(
-	cls: ClassDeclaration,
-): NgDocAsset[] {
+export function getComponentAssets(cls: ClassDeclaration): NgDocAsset[] {
 	return getComponentSourceFiles(cls).map((filePath: string) => buildFileAsset(filePath));
 }

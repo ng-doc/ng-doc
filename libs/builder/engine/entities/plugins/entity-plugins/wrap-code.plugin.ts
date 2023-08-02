@@ -8,7 +8,7 @@ import {NgDocEntityPlugin} from '../types';
 export function wrapCodePlugin(lang: string): NgDocEntityPlugin<string> {
 	return {
 		id: 'wrapCodePlugin',
-		implementation: async (code) => {
+		execute: async (code) => {
 			return renderTemplate('./code.html.nunj', {
 				context: {code, lang: lang.toLowerCase() || 'ts'},
 			}).trim();

@@ -10,7 +10,7 @@ import {NgDocEntityPlugin} from '../types';
  * @param entity
  * @param plugins
  */
-export function runPlugins<T, TEntity extends NgDocEntity>(
+export function executePlugins<T, TEntity extends NgDocEntity>(
 	data: T,
 	entity: TEntity,
 	plugins: Array<NgDocEntityPlugin<T>>,
@@ -18,7 +18,7 @@ export function runPlugins<T, TEntity extends NgDocEntity>(
 	return plugins.reduce(
 		(acc, plugin) =>
 			acc.pipe(
-				switchMap((data) => plugin.implementation(data, entity)),
+				switchMap((data) => plugin.execute(data, entity)),
 				catchError((e: unknown) => {
 					throw new Error(`Error while applying plugin "${plugin.id}" to entity "${entity.id}": ${e}`);
 				}),

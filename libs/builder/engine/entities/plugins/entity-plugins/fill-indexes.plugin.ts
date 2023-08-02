@@ -11,7 +11,7 @@ import {NgDocEntityPlugin} from '../types';
 export function fillIndexesPlugin(): NgDocEntityPlugin<string, NgDocRouteEntity> {
 	return {
 		id: 'fillIndexesPlugin',
-		implementation: async (data, entity) => {
+		execute: async (data, entity) => {
 			const indexes: NgDocPageIndex[] = await buildIndexes({
 				title: entity.title,
 				content: data,

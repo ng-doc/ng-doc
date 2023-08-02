@@ -7,5 +7,5 @@ import {NgDocAsset, NgDocComponentAsset} from '@ng-doc/builder';
 export function assetsFromComponentAsset(componentAssets: NgDocComponentAsset): NgDocAsset[] {
 	return Object.keys(componentAssets)
 		.map((key: string) => componentAssets[key])
-		.flat()
+		.flat();
 }

@@ -1,7 +1,7 @@
 import {Observable, OperatorFunction} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 
-import {NgDocBuildResult, NgDocConfiguration} from '../../interfaces';
+import {NgDocBuildResult} from '../../interfaces';
 import {forkJoinOrEmpty} from '../../operators';
 import {NgDocEntity} from '../entities/abstractions/entity';
 import {NgDocEntityStore} from '../entity-store';
@@ -12,12 +12,10 @@ import {buildCandidates} from '../functions/build-candidates';
  * keyword relationships, and returns the built artifacts.
  *
  * @param store - The entity store.
- * @param config - The NgDoc configuration.
  * @param additionalEntities - Additional entities to build.
  */
 export function build(
 	store: NgDocEntityStore,
-	config: NgDocConfiguration,
 	...additionalEntities: NgDocEntity[]
 ): OperatorFunction<NgDocEntity[], NgDocBuildResult[]> {
 	return (source: Observable<NgDocEntity[]>) =>
