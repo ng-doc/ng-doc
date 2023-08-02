@@ -26,16 +26,12 @@ export function postProcess<T extends NgDocBuildResult>(
 		source.pipe(
 			tap(() => store.updateKeywordMap()),
 			switchMap((outputs: T[]) =>
-				forkJoinOrEmpty(
-					outputs.map((output: T) => handlePostProcess(output).pipe(errorHandler(output))),
-				).pipe(
+				forkJoinOrEmpty(outputs.map((output: T) => handlePostProcess(output).pipe(errorHandler(output)))).pipe(
 					switchMap((postProcessedOutputs: T[]) =>
 						forkJoinOrEmpty(additionalEntities.map((e) => e.build() as Observable<T>)).pipe(
 							switchMap((additionalOutputs: T[]) =>
 								forkJoinOrEmpty(
-									additionalOutputs.map((output: T) =>
-										handlePostProcess(output).pipe(errorHandler(output)),
-									),
+									additionalOutputs.map((output: T) => handlePostProcess(output).pipe(errorHandler(output))),
 								),
 							),
 							map((additionalPostProcessedOutputs: T[]) => [

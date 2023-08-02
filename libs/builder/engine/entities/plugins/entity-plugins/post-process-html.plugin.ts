@@ -10,5 +10,5 @@ export function postProcessHtmlPlugin(): NgDocEntityPlugin<string> {
 		implementation: async (data, entity) => {
 			return postProcessHtml(data, entity);
 		},
-	}
+	};
 }

@@ -10,8 +10,6 @@ import {forkJoinOrEmpty} from '../../operators';
 export function toBuilderOutput<T extends NgDocBuildResult>(): OperatorFunction<T[], NgDocBuilderOutput[]> {
 	return (source: Observable<T[]>) =>
 		source.pipe(
-			switchMap((outputs: T[]) =>
-				forkJoinOrEmpty(outputs.map((output: T) => output.toBuilderOutput(output.result))),
-			),
+			switchMap((outputs: T[]) => forkJoinOrEmpty(outputs.map((output: T) => output.toBuilderOutput(output.result)))),
 		);
 }
