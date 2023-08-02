@@ -13,7 +13,7 @@ import {NgDocPageEntity} from '../entities/page.entity';
  */
 export function playgroundAction(pId: string, options?: NgDocPlaygroundOptions): NgDocAction {
 	return (project: Project, page: NgDocPageEntity): NgDocActionOutput => {
-		const metadata: NgDocPlaygroundMetadata | undefined = page.playgroundMetadata[pId];
+		const metadata: NgDocPlaygroundMetadata | undefined = page.playgroundEntity.metadata[pId];
 
 		if (metadata) {
 			return {
@@ -26,9 +26,7 @@ export function playgroundAction(pId: string, options?: NgDocPlaygroundOptions):
 				dependencies: [metadata.class.getSourceFile().getFilePath()],
 			};
 		} else {
-			throw new Error(
-				`Metadata for playground "${pId}" not found. Make sure that you configured the playgrounds correctly or using correct playground id.`,
-			);
+			return {output: ''};
 		}
 	};
 }

@@ -13,12 +13,12 @@ import {NgDocSourceFileEntity} from './source-file.entity';
 /**
  * Entity for file end points that generate modules and components.
  */
-export abstract class NgDocFileEntity<T> extends NgDocSourceFileEntity {
+export abstract class NgDocFileEntity<TTarget> extends NgDocSourceFileEntity {
 	objectExpression: ObjectLiteralExpression | undefined;
 	/**
 	 * Entity target.
 	 */
-	target?: T;
+	target?: TTarget;
 
 	protected override refreshImpl(): Observable<void> {
 		return super

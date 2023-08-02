@@ -1,13 +1,12 @@
-import {NgDocBuildOutput, NgDocEntityKeyword} from '@ng-doc/builder';
+import {NgDocEntityKeyword} from '@ng-doc/builder';
 import {asArray, NgDocEntityAnchor} from '@ng-doc/core';
 import * as path from 'path';
-import {Observable} from 'rxjs';
 
 import {isRouteEntity, slash} from '../../../helpers';
 import {CachedProperty} from '../cache';
 import {NgDocModuleEntity} from './module.entity';
 
-export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T> {
+export abstract class NgDocRouteEntity<TTarget = unknown> extends NgDocModuleEntity<TTarget> {
 	/**
 	 * The route for the current entity.
 	 */
@@ -57,9 +56,9 @@ export abstract class NgDocRouteEntity<T = unknown> extends NgDocModuleEntity<T>
 		return isRouteEntity(this.parent) ? [...asArray(this?.parent?.breadcrumbs), this.title] : [this.title];
 	}
 
-	override build(): Observable<NgDocBuildOutput[]> {
+	override beforeBuild(): void {
 		this.anchors = [];
 
-		return super.build();
+		return super.beforeBuild();
 	}
 }

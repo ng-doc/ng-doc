@@ -6,7 +6,7 @@ import {FunctionType} from '@ng-doc/core';
 	standalone: true,
 })
 export class NgDocExecutePipe implements PipeTransform {
-	transform<R, F extends FunctionType<R>>(fn: F, ...args: Parameters<F>): R {
+	transform<F extends FunctionType>(fn: F, ...args: Parameters<F>): ReturnType<F> {
 		return fn(...args);
 	}
 }

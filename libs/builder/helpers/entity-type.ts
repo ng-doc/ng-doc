@@ -73,6 +73,6 @@ export function isApiScopeEntity(page: InstanceType<Constructable>): page is NgD
  *
  * @param page
  */
-export function isRouteEntity(page: InstanceType<Constructable>): page is NgDocRouteEntity<unknown> {
+export function isRouteEntity(page: InstanceType<Constructable>): page is NgDocRouteEntity {
 	return page instanceof NgDocRouteEntity;
 }

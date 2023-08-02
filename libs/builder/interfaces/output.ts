@@ -1,7 +1,4 @@
-import {Observable} from 'rxjs';
-
-export interface NgDocBuildOutput {
+export interface NgDocBuilderOutput {
 	content: string;
 	filePath: string;
-	postProcessFn?: (content: string) => Observable<string>;
 }

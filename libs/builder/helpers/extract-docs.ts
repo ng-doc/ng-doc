@@ -11,7 +11,7 @@ import {asArray} from '@ng-doc/core';
 import {JSDoc, JSDocableNode} from 'ts-morph';
 
 import {TsDocFormatter} from '../engine/ts-doc-formatter';
-import {marked} from './marked';
+import {markdownToHtml} from './markdown-to-html';
 
 /**
  *
@@ -35,7 +35,7 @@ export function extractDocs(node: JSDocableNode, customTag?: string): string {
 		})
 		.join('');
 
-	return marked(docs).trim();
+	return markdownToHtml(docs).trim();
 }
 
 /**
@@ -52,7 +52,7 @@ export function extractSeeDocs(node: JSDocableNode): string[] {
 
 			return context.docComment.seeBlocks
 				.map((seeBlock: DocBlock) => TsDocFormatter.renderDocNode(seeBlock))
-				.map((block: string) => marked(block));
+				.map((block: string) => markdownToHtml(block));
 		})
 		.flat();
 }
@@ -74,7 +74,7 @@ export function extractParameterDocs(node: JSDocableNode, paramName: string): st
 		})
 		.join('');
 
-	return marked(docs).trim();
+	return markdownToHtml(docs).trim();
 }
 
 /**
