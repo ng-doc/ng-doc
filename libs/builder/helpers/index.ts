@@ -1,6 +1,6 @@
 export * from './angular';
-export * from './build-assets';
 export * from './build-entity-keyword';
+export * from './build-file-assets';
 export * from './build-file-entity';
 export * from './code-type-from-ext';
 export * from './create-builder-context';
