@@ -1,5 +1,5 @@
 import {asArray, NgDocApiScope} from '@ng-doc/core';
-import {EMPTY, Observable, of} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {SourceFile} from 'ts-morph';
 
 import {isPageEntity, uniqueName} from '../../helpers';
@@ -109,7 +109,7 @@ export class NgDocApiScopeEntity extends NgDocRouteEntity<NgDocApiScope> {
 			});
 		}
 
-		return EMPTY;
+		throw new Error(`The entity "${this.id}" is not loaded.`);
 	}
 
 	override destroy(): void {

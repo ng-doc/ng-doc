@@ -1,7 +1,8 @@
-import {NgDocAsset} from '../interfaces';
-import {processSnippets} from './process-snippets';
-import {codeTypeFromExt} from './code-type-from-ext';
 import {NgDocStyleType} from '@ng-doc/core';
+
+import {NgDocAsset} from '../interfaces';
+import {codeTypeFromExt} from './code-type-from-ext';
+import {processSnippets} from './process-snippets';
 
 /**
  * Finds all snippets in an asset and returns them as assets.
@@ -14,14 +15,14 @@ export function snippetsFromAsset(asset: NgDocAsset, inlineStylesType: NgDocStyl
 	const codeType = codeTypeFromExt(asset.filePath);
 	const isStylesFile = ['CSS', 'SCSS', 'LESS', 'SASS'].includes(codeType.toUpperCase());
 
-	return snippets.map(({content, name, type}) => ({
-		...asset,
-		code: content,
-		title: name,
-		type: type === 'styles'
-			? isStylesFile
-				? codeType
-				: inlineStylesType
-			: type,
-	}));
+	return snippets.map(({content, name, type}) => {
+		const cType = type === 'styles' ? (isStylesFile ? codeType : inlineStylesType) : type;
+
+		return {
+			...asset,
+			code: content,
+			title: name ?? cType,
+			type: cType,
+		};
+	});
 }

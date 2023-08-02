@@ -1,6 +1,6 @@
 import {asArray, NgDocEntityAnchor} from '@ng-doc/core';
 import * as path from 'path';
-import {EMPTY, Observable, of} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {SourceFile} from 'ts-morph';
 
 import {
@@ -123,7 +123,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	}
 
 	override build(): Observable<NgDocBuildResult<string, this>> {
-		if (this.target) {
+		if (this.parent.target) {
 			const result = renderTemplate('./api-page.html.nunj', {
 				context: {
 					declaration: this.declaration,
@@ -148,7 +148,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 			});
 		}
 
-		return EMPTY;
+		throw new Error(`The entity "${this.id}" is not loaded.`);
 	}
 
 	private updateDeclaration(): asserts this is this & {declaration: NgDocSupportedDeclarations} {

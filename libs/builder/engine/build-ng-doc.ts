@@ -23,7 +23,13 @@ import {postProcess} from './builder-operators/post-process';
 import {printOutput} from './builder-operators/print-output';
 import {task, taskForMany} from './builder-operators/task';
 import {toBuilderOutput} from './builder-operators/to-builder-output';
-import {NgDocKeywordsEntity, NgDocSkeletonEntity} from './entities';
+import {
+	NgDocContextEntity,
+	NgDocGeneratedModuleEntity,
+	NgDocIndexFileEntity,
+	NgDocKeywordsEntity,
+	NgDocRoutesEntity,
+} from './entities';
 import {NgDocEntity} from './entities/abstractions/entity';
 import {invalidateCacheIfNeeded, NgDocCache} from './entities/cache';
 import {NgDocIndexesEntity} from './entities/indexes.entity';
@@ -50,7 +56,13 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 	const project: Project = createProject({tsConfigFilePath: context.tsConfig});
 
 	// Global entities that should be built after each build cycle
-	const skeletonEntity: NgDocSkeletonEntity = new NgDocSkeletonEntity(store, cache, context);
+	const globalEntities = [
+		new NgDocContextEntity(store, cache, context),
+		new NgDocGeneratedModuleEntity(store, cache, context),
+		new NgDocIndexFileEntity(store, cache, context),
+		new NgDocRoutesEntity(store, cache, context),
+	];
+
 	const indexesEntity: NgDocIndexesEntity = new NgDocIndexesEntity(store, cache, context);
 	const keywordEntity: NgDocKeywordsEntity = new NgDocKeywordsEntity(store, cache, context);
 
@@ -84,7 +96,7 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 				task('Loading...', load()),
 				dependencyChanges(watcher),
 				tap(() => store.updateKeywordMap()),
-				taskForMany('Building...', build(store, context.config, skeletonEntity), ifNotCachedOrInvalid(cache, store)),
+				taskForMany('Building...', build(store, context.config, ...globalEntities), ifNotCachedOrInvalid(cache, store)),
 				taskForMany('Post-build...', postBuild()),
 				taskForMany('Post-processing...', postProcess(store, context.config, indexesEntity, keywordEntity)),
 				taskForMany(undefined, toBuilderOutput()),

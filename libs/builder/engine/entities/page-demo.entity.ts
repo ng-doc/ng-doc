@@ -1,5 +1,5 @@
 import path from 'path';
-import {EMPTY, Observable, of} from 'rxjs';
+import {Observable, of} from 'rxjs';
 
 import {getComponentAssets, getDemoClassDeclarations} from '../../helpers';
 import {NgDocAsset, NgDocBuilderContext, NgDocBuildResult} from '../../interfaces';
@@ -10,11 +10,13 @@ import {NgDocEntity} from './abstractions/entity';
 import {CachedEntity, CachedFilesGetter, NgDocCache} from './cache';
 import {NgDocPageEntity} from './page.entity';
 import {
-	addToDependenciesPlugin, extractSnippetsPlugin,
+	addToDependenciesPlugin,
+	extractSnippetsPlugin,
 	forArrayItems,
 	forObjectValue,
 	forObjectValues,
 	postProcessHtmlPlugin,
+	processHtmlPlugin,
 } from './plugins';
 import {applyPlugin} from './plugins/entity-plugins/apply.plugin';
 import {wrapCodePlugin} from './plugins/entity-plugins/wrap-code.plugin';
@@ -43,7 +45,7 @@ export class NgDocPageDemoEntity extends NgDocEntity {
 
 	@CachedFilesGetter()
 	get outputPath(): string {
-		return path.join(this.parent.folderPath, 'component-assets.ts');
+		return path.join(this.parent.folderPath, 'demo-assets.ts');
 	}
 
 	build(): Observable<NgDocBuildResult<NgDocComponentAsset>> {
@@ -69,7 +71,7 @@ export class NgDocPageDemoEntity extends NgDocEntity {
 					applyPlugin<NgDocComponentAsset, NgDocAsset[]>(forObjectValues(), () => [
 						extractSnippetsPlugin(),
 						applyPlugin(forArrayItems(), (asset) => [
-							applyPlugin(forObjectValue('code'), () => [wrapCodePlugin(asset.type)]),
+							applyPlugin(forObjectValue('code'), () => [wrapCodePlugin(asset.type), processHtmlPlugin()]),
 							applyPlugin(forObjectValue('filePath'), () => [addToDependenciesPlugin()]),
 						]),
 					]),
@@ -77,13 +79,13 @@ export class NgDocPageDemoEntity extends NgDocEntity {
 				postProcessPlugins: [
 					applyPlugin<NgDocComponentAsset, NgDocAsset[]>(forObjectValues(), () => [
 						applyPlugin(forArrayItems(), (asset) => [
-							applyPlugin(forObjectValue('code'), () => [postProcessHtmlPlugin()])
+							applyPlugin(forObjectValue('code'), () => [postProcessHtmlPlugin()]),
 						]),
 					]),
-				]
+				],
 			});
 		}
 
-		return EMPTY;
+		throw new Error(`The entity "${this.id}" is not loaded.`);
 	}
 }

@@ -2,13 +2,13 @@
 import {ChangeDetectionStrategy, Component, NgModule, Type, ViewChild, ViewContainerRef} from '@angular/core';
 import {NgDocBasePlayground, providePlaygroundDemo} from '@ng-doc/app';
 // noinspection ES6UnusedImports
-import pageEntity from '{{ page.importPath }}';
+import pageEntity from '{{ targetImportPath }}';
 import {CommonModule} from '@angular/common';
 import {Constructor} from '@ng-doc/core';
 
 {%- set components = [] %}
 {%- set index = 1 %}
-{%- set playgrounds = page.playgroundMetadata %}
+{%- set playgrounds = playgroundMetadata %}
 
 
 {%- for id, metadata in playgrounds -%}
@@ -25,7 +25,7 @@ import {Constructor} from '@ng-doc/core';
 	standalone: true,
 	imports: [
 		CommonModule,
-		{%- if page.hasImports %}
+		{%- if hasImports %}
 		...pageEntity.imports,
 		{%- endif %}
 		{%- if metadata.standalone %}

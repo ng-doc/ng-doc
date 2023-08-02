@@ -6,9 +6,7 @@ import {isRouteEntity, slash} from '../../../helpers';
 import {CachedProperty} from '../cache';
 import {NgDocModuleEntity} from './module.entity';
 
-export abstract class NgDocRouteEntity<TTarget = unknown> extends NgDocModuleEntity<
-	TTarget
-> {
+export abstract class NgDocRouteEntity<TTarget = unknown> extends NgDocModuleEntity<TTarget> {
 	/**
 	 * The route for the current entity.
 	 */

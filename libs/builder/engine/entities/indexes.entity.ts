@@ -23,7 +23,7 @@ export class NgDocIndexesEntity extends NgDocEntity {
 			entity: this,
 			toBuilderOutput: async (content: NgDocPageIndex[]) => ({
 				content: JSON.stringify(content, null, 2),
-				filePath: path.join(this.context.buildPath, 'ng-doc.indexes.json'),
+				filePath: path.join(this.context.assetsPath, 'indexes.json'),
 			}),
 		});
 	}

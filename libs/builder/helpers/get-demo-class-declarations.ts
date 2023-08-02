@@ -12,25 +12,23 @@ export function getDemoClassDeclarations(objectExpression: ObjectLiteralExpressi
 		const initializer: Expression | undefined = demoProperty.getInitializer();
 
 		if (Node.isObjectLiteralExpression(initializer)) {
-			return initializer
-				.getProperties()
-				.reduce((acc: Record<string, ClassDeclaration>, property) => {
-					const classDeclaration = property.getType().getSymbol()?.getValueDeclaration();
+			return initializer.getProperties().reduce((acc: Record<string, ClassDeclaration>, property) => {
+				const classDeclaration = property.getType().getSymbol()?.getValueDeclaration();
 
-					if (Node.isClassDeclaration(classDeclaration)) {
-						if (Node.isSpreadAssignment(property) && classDeclaration.getName()) {
-							const className = classDeclaration.getName();
+				if (Node.isClassDeclaration(classDeclaration)) {
+					if (Node.isShorthandPropertyAssignment(property) && classDeclaration.getName()) {
+						const className = classDeclaration.getName();
 
-							if (isPresent(className)) {
-								acc[className] = classDeclaration;
-							}
-						} else if (Node.isPropertyAssignment(property)) {
-							acc[property.getName()] = classDeclaration;
+						if (isPresent(className)) {
+							acc[className] = classDeclaration;
 						}
+					} else if (Node.isPropertyAssignment(property)) {
+						acc[property.getName()] = classDeclaration;
 					}
+				}
 
-					return acc;
-				}, {});
+				return acc;
+			}, {});
 		}
 	}
 

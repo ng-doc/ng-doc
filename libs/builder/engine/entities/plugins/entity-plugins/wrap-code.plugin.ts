@@ -10,7 +10,7 @@ export function wrapCodePlugin(lang: string): NgDocEntityPlugin<string> {
 		id: 'wrapCodePlugin',
 		implementation: async (code) => {
 			return renderTemplate('./code.html.nunj', {
-				context: {code, lang},
+				context: {code, lang: lang.toLowerCase() || 'ts'},
 			}).trim();
 		},
 	};

@@ -6,7 +6,7 @@ import {NgDocPageComponent, NgDocRootPage, NgDocDemoAssets} from '@ng-doc/app';
 import {NgDocPage, NgDocPageType} from '@ng-doc/core';
 import pageEntity from '{{ page.importPath }}';
 import {PlaygroundsModule} from './playgrounds';
-import demoAssets from '{{ page.demoAssetsImport }}';
+import demoAssets from './demo-assets';
 
 const pageContent: string = `{{ pageContent | toTemplateString }}`
 

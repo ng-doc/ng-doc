@@ -5,15 +5,8 @@ import {Observable, of} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
 import {ObjectLiteralExpression} from 'ts-morph';
 
-import {
-	buildEntityKeyword,
-	buildPlaygroundMetadata,
-	editFileInRepoUrl,
-	getPlaygroundById,
-	getPlaygroundsExpression,
-	getPlaygroundsIds,
-} from '../../helpers';
-import {NgDocBuildResult, NgDocEntityKeyword, NgDocPlaygroundMetadata} from '../../interfaces';
+import {buildEntityKeyword, editFileInRepoUrl, getPlaygroundsIds} from '../../helpers';
+import {NgDocBuildResult, NgDocEntityKeyword} from '../../interfaces';
 import {NgDocActions} from '../actions';
 import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
@@ -27,7 +20,6 @@ import {fillIndexesPlugin, markdownToHtmlPlugin, postProcessHtmlPlugin, processH
 @CachedEntity()
 export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	playgroundsExpression: ObjectLiteralExpression | undefined;
-	playgroundMetadata: Record<string, NgDocPlaygroundMetadata> = {};
 
 	override parent?: NgDocCategoryEntity;
 
@@ -104,11 +96,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return path.dirname(this.mdPath);
 	}
 
-	@CachedFilesGetter()
-	get playgroundsPath(): string {
-		return path.join(this.folderPath, 'playgrounds.ts');
-	}
-
 	get playgroundIds(): string[] {
 		return this.playgroundsExpression ? getPlaygroundsIds(this.playgroundsExpression) : [];
 	}
@@ -125,13 +112,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 
 	override dependenciesChanged(): void {
 		super.dependenciesChanged();
-
-		// Refresh source file from file system to make sure that it is up-to-date
-		Object.keys(this.playgroundMetadata).forEach((id: string) =>
-			this.playgroundMetadata[id].class.getSourceFile().refreshFromFileSystemSync(),
-		);
-
-		this.updatePlaygroundMetadata();
 	}
 
 	override childrenGenerator(): Observable<NgDocEntity[]> {
@@ -139,6 +119,12 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 			new NgDocPageDemoEntity(this.store, this.cache, this.context, this),
 			new NgDocPagePlaygroundEntity(this.store, this.cache, this.context, this),
 		]);
+	}
+
+	get playgroundEntity(): NgDocPagePlaygroundEntity {
+		return this.children.find(
+			(child: NgDocEntity) => child instanceof NgDocPagePlaygroundEntity,
+		) as NgDocPagePlaygroundEntity;
 	}
 
 	protected override loadImpl(): Observable<void> {
@@ -152,12 +138,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 
 				if (!this.title) {
 					throw new Error(`Failed to load page. Make sure that you have a "title" property.`);
-				}
-
-				if (this.objectExpression) {
-					this.playgroundsExpression = getPlaygroundsExpression(this.objectExpression);
-
-					this.updatePlaygroundMetadata();
 				}
 			}),
 			tap({
@@ -181,33 +161,16 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 			result,
 			entity: this,
 			toBuilderOutput: async (content: string) => ({
-				content,
+				content: renderTemplate('./page.module.ts.nunj', {
+					context: {
+						page: this,
+						pageContent: content,
+					},
+				}),
 				filePath: this.modulePath,
 			}),
-			postBuildPlugins: [
-				markdownToHtmlPlugin(),
-				processHtmlPlugin(),
-			],
-			postProcessPlugins: [
-				postProcessHtmlPlugin(),
-				fillIndexesPlugin(),
-			]
+			postBuildPlugins: [markdownToHtmlPlugin(), processHtmlPlugin()],
+			postProcessPlugins: [postProcessHtmlPlugin(), fillIndexesPlugin()],
 		});
-	}
-
-	private updatePlaygroundMetadata(): void {
-		this.playgroundMetadata = this.playgroundIds.reduce(
-			(metadata: Record<string, NgDocPlaygroundMetadata>, id: string) => {
-				if (this.playgroundsExpression) {
-					const playground: ObjectLiteralExpression | undefined = getPlaygroundById(this.playgroundsExpression, id);
-
-					if (playground) {
-						metadata[id] = buildPlaygroundMetadata(id, playground);
-					}
-				}
-				return metadata;
-			},
-			{},
-		);
 	}
 }

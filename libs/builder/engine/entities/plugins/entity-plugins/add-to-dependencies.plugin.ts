@@ -13,3 +13,7 @@ export function addToDependenciesPlugin(): NgDocEntityPlugin<string> {
 		},
 	};
 }
+
+// snippet:ts
+
+// snippet:ts

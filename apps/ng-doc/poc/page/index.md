@@ -1,1 +1,1 @@
-{{ NgDocActions.playground("TagPlayground") }}
+{{ NgDocActions.playground("BtnPlayground") }}

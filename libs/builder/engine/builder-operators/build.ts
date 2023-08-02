@@ -24,20 +24,22 @@ export function build(
 		source.pipe(
 			map((entities: NgDocEntity[]) => buildCandidates(store, entities).filter((e: NgDocEntity) => e.isReadyForBuild)),
 			switchMap((entities: NgDocEntity[]) =>
-				forkJoinOrEmpty(entities.map((e: NgDocEntity) => {
-					e.beforeBuild();
+				forkJoinOrEmpty(
+					entities.map((e: NgDocEntity) => {
+						e.beforeBuild();
 
-					return e.build()
-				})),
+						return e.build();
+					}),
+				),
 			),
 			switchMap((output: NgDocBuildResult[]) =>
-				forkJoinOrEmpty(additionalEntities.map((e: NgDocEntity) => {
-					e.beforeBuild();
+				forkJoinOrEmpty(
+					buildCandidates(store, additionalEntities).map((e: NgDocEntity) => {
+						e.beforeBuild();
 
-					return e.build();
-				})).pipe(
-					map((additionalOutput: NgDocBuildResult[]) => output.concat(additionalOutput).flat()),
-				),
+						return e.build();
+					}),
+				).pipe(map((additionalOutput: NgDocBuildResult[]) => output.concat(additionalOutput).flat())),
 			),
 		);
 }

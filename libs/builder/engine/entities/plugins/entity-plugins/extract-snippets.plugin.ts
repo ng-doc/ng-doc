@@ -9,13 +9,13 @@ export function extractSnippetsPlugin(): NgDocEntityPlugin<NgDocAsset[]> {
 	return {
 		id: 'extractSnippetsPlugin',
 		implementation: async (data, entity) => {
-			const snippets = [];
+			return data
+				.map((asset) => {
+					const snippets = snippetsFromAsset(asset, entity.context.inlineStyleLanguage);
 
-			for (const asset of data) {
-				snippets.push(...snippetsFromAsset(asset, entity.context.inlineStyleLanguage));
-			}
-
-			return data.concat(snippets);
+					return snippets.length ? snippets : [asset];
+				})
+				.flat();
 		},
 	};
 }

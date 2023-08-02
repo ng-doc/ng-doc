@@ -1,34 +1,18 @@
 import * as path from 'path';
 import {Observable, of} from 'rxjs';
 
-import {NgDocBuilderContext, NgDocBuildResult} from '../../interfaces';
-import {NgDocEntityStore} from '../entity-store';
+import {NgDocBuildResult} from '../../interfaces';
 import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
-import {CachedEntity, CachedFilesGetter, NgDocCache} from './cache';
-import {NgDocSkeletonEntity} from './skeleton.entity';
+import {CachedEntity, CachedFilesGetter} from './cache';
 
 @CachedEntity()
 export class NgDocGeneratedModuleEntity extends NgDocEntity {
-	override id: string = `${this.parent.id}#generatedModule`;
+	override id: string = `NgDocGeneratedModule`;
 	override isRoot: boolean = false;
-
-	constructor(
-		override readonly store: NgDocEntityStore,
-		override readonly cache: NgDocCache,
-		override readonly context: NgDocBuilderContext,
-		readonly parent: NgDocSkeletonEntity,
-	) {
-		super(store, cache, context);
-	}
-
-	override get rootFiles(): string[] {
-		return [];
-	}
-
-	override get buildCandidates(): NgDocEntity[] {
-		return [this.parent];
-	}
+	readonly parent: undefined = undefined;
+	override rootFiles: string[] = [];
+	override buildCandidates: NgDocEntity[] = [];
 
 	@CachedFilesGetter()
 	get outputPath(): string {

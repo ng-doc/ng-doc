@@ -10,7 +10,10 @@ const HTMLSnippetEnd: (group?: string, escape?: boolean) => RegExp = (group: str
 	new RegExp(`^.*(<!--\\s*NgDocHTMLSnippetEnd(\\(${escape ? escapeRegexp(group) : group}\\))?\\s*-->).*$`, 'gm');
 const StylesSnippetEnd: (group?: string, escape?: boolean) => RegExp = (group: string = '', escape: boolean = true) =>
 	new RegExp(`^.*(\\/\\*\\s*NgDocStyleSnippetEnd(\\(${escape ? escapeRegexp(group) : group}\\))?\\s*\\*\\/).*$`, 'gm');
-const TypeScriptSnippetEnd: (group?: string, escape?: boolean) => RegExp = (group: string = '', escape: boolean = true) =>
+const TypeScriptSnippetEnd: (group?: string, escape?: boolean) => RegExp = (
+	group: string = '',
+	escape: boolean = true,
+) =>
 	new RegExp(`^.*(\\/\\*\\s*NgDocCodeSnippetEnd(\\(${escape ? escapeRegexp(group) : group}\\))?\\s*\\*\\/).*$`, 'gm');
 
 /**
@@ -41,14 +44,13 @@ function findSnippet(
 	snippetStart: RegExp,
 	snippetEnd: (group?: string) => RegExp,
 ): NgDocSnippet[] {
-	let snippetCounter: number = 0;
 	const snippets: NgDocSnippet[] = [];
 	const startRegexp: RegExp = new RegExp(snippetStart);
 	let matchStart: RegExpExecArray | null;
 
 	// eslint-disable-next-line no-cond-assign
 	while ((matchStart = startRegexp.exec(content))) {
-		const group: string = matchStart[2] ? matchStart[2].slice(1, matchStart[2].length - 1) : `Code Snippet ${++snippetCounter}`;
+		const group = matchStart[2]?.slice(1, matchStart[2].length - 1);
 		const matchEnd: RegExpExecArray | null = snippetEnd(group).exec(content);
 
 		if (matchEnd) {
