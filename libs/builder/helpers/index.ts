@@ -33,6 +33,7 @@ export * from './playground';
 export * from './presentation';
 export * from './print';
 export * from './process-html';
+export * from './process-legacy-snippets';
 export * from './process-snippets';
 export * from './repo-link';
 export * from './slash';
