@@ -36,6 +36,7 @@ export * from './print';
 export * from './process-html';
 export * from './process-legacy-snippets';
 export * from './process-snippets';
+export * from './remove-lines-from-code';
 export * from './repo-link';
 export * from './slash';
 export * from './snippets-from-asset';

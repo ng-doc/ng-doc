@@ -68,5 +68,6 @@ To customize only specific demo, you can provide CSS class to the options of the
 - `*GuidesDemoPane`
 - `*GuidesPlayground`
 - `*GuidesSnippets`
+- `*IgnoringFileLines`
 
 {% endindex %}

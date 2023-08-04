@@ -207,3 +207,7 @@ And to load from a specific line to the end of the file, you can write the follo
 ```typescript file="./ng-doc.page.ts"#L5-
 
 ```
+
+## See also
+
+- `*IgnoringFileLines`

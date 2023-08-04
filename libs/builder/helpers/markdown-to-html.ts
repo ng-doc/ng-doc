@@ -5,6 +5,8 @@ import {marked} from 'marked';
 import {EOL} from 'node:os';
 import * as path from 'path';
 
+import {removeLinesFromCode} from './remove-lines-from-code';
+
 const NOTE_ANCHOR: string = '<p><strong>Note</strong>';
 const WARNING_ANCHOR: string = '<p><strong>Warning</strong>';
 
@@ -43,7 +45,7 @@ export function markdownToHtml(markdown: string, context?: string, addDependency
 
 				addDependency && addDependency(relativeFilePath);
 
-				code = fileContent;
+				code = removeLinesFromCode(fileContent);
 			}
 
 			const codeElement: string = `<pre><code class="language-${language ?? 'ts'}"
