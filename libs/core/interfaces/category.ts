@@ -9,4 +9,5 @@ export interface NgDocCategory extends NgDocBaseEntity {
 	expandable?: boolean;
 	/** Determines whether the category should be expanded by default */
 	expanded?: boolean;
+	route?: string;
 }
