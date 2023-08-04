@@ -16,14 +16,16 @@ export function snippetsFromAsset(asset: NgDocAsset, inlineStylesType: NgDocStyl
 	const codeType = codeTypeFromExt(asset.filePath);
 	const isStylesFile = ['CSS', 'SCSS', 'LESS', 'SASS'].includes(codeType.toUpperCase());
 
-	return snippets.map(({content, name, type}) => {
-		const cType = type === 'styles' ? (isStylesFile ? codeType : inlineStylesType) : type;
+	return snippets.map(({code, title, lang, icon, opened}, i) => {
+		const language = lang === 'styles' ? (isStylesFile ? codeType : inlineStylesType) : lang;
 
 		return {
 			...asset,
-			code: content,
-			title: name ?? cType,
-			type: cType,
+			code,
+			title: title ?? `Snippet #${i + 1}`,
+			icon,
+			opened,
+			lang: language,
 		};
 	});
 }

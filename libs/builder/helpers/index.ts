@@ -14,6 +14,7 @@ export * from './extract-selectors';
 export * from './filter-useless-members';
 export * from './format-code';
 export * from './generate-api-entities';
+export * from './get-code-type-from-lang';
 export * from './get-declaration-type';
 export * from './get-demo-class-declarations';
 export * from './get-entity-constructor';

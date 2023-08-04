@@ -1,7 +1,6 @@
 import {escapeRegexp} from '@ng-doc/core/helpers/escape-regexp';
 
 import {NgDocSnippet} from '../interfaces/snippet';
-import {NgDocSnippetType} from '../types';
 
 const HTMLSnippetStart: RegExp = /^.*(<!--\s*NgDocHTMLSnippetStart(\(.+\))?\s*-->).*$/gm;
 const StylesSnippetStart: RegExp = /^.*(\/\*\s*NgDocStyleSnippetStart(\(.+\))?\s*\*\/).*$/gm;
@@ -41,7 +40,7 @@ export function processLegacySnippets(content: string): NgDocSnippet[] {
  */
 function findSnippet(
 	content: string,
-	type: NgDocSnippetType,
+	type: string,
 	snippetStart: RegExp,
 	snippetEnd: (group?: string) => RegExp,
 ): NgDocSnippet[] {
@@ -59,9 +58,9 @@ function findSnippet(
 
 			if (snippetCode) {
 				snippets.push({
-					content: removeSnippetsInCode(snippetCode),
-					name: group,
-					type,
+					code: removeSnippetsInCode(snippetCode),
+					title: group,
+					lang: type,
 				});
 			}
 		}

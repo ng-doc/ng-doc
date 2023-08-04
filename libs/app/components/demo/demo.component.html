@@ -7,13 +7,17 @@
 			</ng-container>
 
 			<ng-container *ngIf="assets.length > 1">
-				<ng-doc-tab-group [openedTab]="options.defaultTab">
+				<ng-doc-tab-group [openedTab]="(getOpenedAssetId | execute: assets) ?? options.defaultTab">
 					<ng-doc-tab
 						*ngFor="let asset of assets"
 						[id]="asset.title"
-						[label]="asset.title"
+						[label]="label"
 						[content]="assetContent"
 					>
+						<ng-template #label>
+								<ng-doc-icon [customIcon]="asset.icon" *ngIf="asset.icon"></ng-doc-icon>
+								{{ asset.title }}
+						</ng-template>
 						<ng-template #assetContent>
 							<ng-doc-code [html]="asset.code"></ng-doc-code>
 						</ng-template>

@@ -2,6 +2,7 @@ import * as path from 'path';
 
 export const GLOBALS = {
 	workspaceRoot: '',
+	relative: (p: string) => path.relative(GLOBALS.workspaceRoot, p),
 };
 export const PAGE_NAME: string = 'ng-doc.page.ts';
 export const CATEGORY_NAME: string = 'ng-doc.category.ts';
