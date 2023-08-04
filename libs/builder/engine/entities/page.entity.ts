@@ -1,4 +1,4 @@
-import {asArray, isPresent, NgDocEntityAnchor, NgDocPage} from '@ng-doc/core';
+import {asArray, isPresent, isRoute, NgDocEntityAnchor, NgDocPage} from '@ng-doc/core';
 import * as fs from 'fs';
 import * as path from 'path';
 import {Observable, of} from 'rxjs';
@@ -23,7 +23,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	override get route(): string {
 		const folderName: string = path.basename(path.dirname(this.sourceFile.getFilePath()));
 
-		return this.target?.route ?? folderName;
+		return (isRoute(this.target?.route) ? this.target?.route.path : this.target?.route) ?? folderName;
 	}
 
 	override get isRoot(): boolean {

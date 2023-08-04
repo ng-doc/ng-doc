@@ -7,4 +7,5 @@ export interface NgDocApi extends NgDocBaseEntity {
 	scopes: NgDocApiScope[];
 	/** The page category */
 	category?: NgDocCategory;
+	route?: string;
 }
