@@ -60,6 +60,8 @@ export class NgDocPagePlaygroundEntity extends NgDocEntity {
 
 	private getMetadata(): Record<string, NgDocPlaygroundMetadata> {
 		if (this.parent.objectExpression) {
+			this.parent.refreshDependencies();
+
 			const expression = getPlaygroundsExpression(this.parent.objectExpression);
 
 			if (expression) {

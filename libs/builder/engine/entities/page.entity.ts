@@ -3,9 +3,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {Observable, of} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
-import {ObjectLiteralExpression} from 'ts-morph';
 
-import {buildEntityKeyword, editFileInRepoUrl, getPlaygroundsIds} from '../../helpers';
+import {buildEntityKeyword, editFileInRepoUrl} from '../../helpers';
 import {NgDocBuildResult, NgDocEntityKeyword} from '../../interfaces';
 import {NgDocActions} from '../actions';
 import {renderTemplate} from '../nunjucks';
@@ -19,8 +18,6 @@ import {fillIndexesPlugin, markdownToHtmlPlugin, postProcessHtmlPlugin, processH
 
 @CachedEntity()
 export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
-	playgroundsExpression: ObjectLiteralExpression | undefined;
-
 	override parent?: NgDocCategoryEntity;
 
 	override get route(): string {
@@ -96,10 +93,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 		return path.dirname(this.mdPath);
 	}
 
-	get playgroundIds(): string[] {
-		return this.playgroundsExpression ? getPlaygroundsIds(this.playgroundsExpression) : [];
-	}
-
 	get hasImports(): boolean {
 		return !!this.objectExpression?.getProperty('imports');
 	}
@@ -172,5 +165,14 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 			postBuildPlugins: [markdownToHtmlPlugin(), processHtmlPlugin()],
 			postProcessPlugins: [postProcessHtmlPlugin(), fillIndexesPlugin()],
 		});
+	}
+
+	refreshDependencies(): void {
+		this.objectExpression
+			?.getSourceFile()
+			.getReferencedSourceFiles()
+			.forEach((sourceFile) => {
+				sourceFile.refreshFromFileSystemSync();
+			});
 	}
 }

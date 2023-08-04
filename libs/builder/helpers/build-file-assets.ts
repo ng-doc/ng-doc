@@ -1,3 +1,4 @@
+import {GLOBALS} from '@ng-doc/builder';
 import {NgDocCodeType} from '@ng-doc/core';
 import * as fs from 'fs';
 
@@ -17,7 +18,7 @@ export function buildFileAsset(filePath: string): NgDocAsset {
 		title: codeType,
 		code: fileContent,
 		isEmpty: !fileContent,
-		filePath,
-		type: codeType,
+		filePath: GLOBALS.relative(filePath),
+		lang: codeType,
 	};
 }

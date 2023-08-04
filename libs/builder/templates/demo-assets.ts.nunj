@@ -2,13 +2,20 @@
 import {NgDocDemoAssets} from '@ng-doc/app';
 
 export const demoAssets: NgDocDemoAssets = {
-{% set i = 0 %}
 	{%- for demoName, assets in demoAssets %}
 	{{ demoName }}: [
 		{%- for asset in assets %}
 		{%- if not asset.isEmpty %}
-		{title: '{{ asset.title }}', codeType: '{{ asset.type }}', code: `{{ asset.code | toTemplateString }}`},
-		{%- set i = i + 1 %}
+		{
+			title: '{{ asset.title }}',
+			code: `{{ asset.code | toTemplateString }}`,
+			{%- if asset.icon %}
+			icon: '{{ asset.icon }}',
+			{%- endif %}
+			{%- if asset.opened %}
+			opened: true,
+			{%- endif %}
+		},
 		{%- endif %}
 		{%- endfor %}
 	],

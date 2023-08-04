@@ -6,17 +6,17 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 	standalone: true,
 	imports: [CommonModule],
 	template: `
-		<!-- NgDocHTMLSnippetStart(HTML) -->
+		<!-- snippet "Test" -->
 		<p>demo works!</p>
-		<!-- NgDocHTMLSnippetEnd(HTML) -->
+		<!-- snippet -->
 	`,
 	styles: [],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoComponent {
 	method(): void {
-		/* NgDocCodeSnippetStart(TypeScript) */
+		/* snippet "TypeScript" */
 		console.log('demo');
-		/* NgDocCodeSnippetEnd(TypeScript) */
+		/* snippet */
 	}
 }

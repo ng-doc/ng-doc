@@ -52,6 +52,7 @@ export class NgDocPageDemoEntity extends NgDocEntity {
 		const objectExpression = this.parent.objectExpression;
 
 		if (objectExpression) {
+			this.parent.refreshDependencies();
 			const classDeclarations = getDemoClassDeclarations(objectExpression);
 
 			const componentAssets: NgDocComponentAsset = Object.keys(classDeclarations).reduce(
@@ -71,7 +72,7 @@ export class NgDocPageDemoEntity extends NgDocEntity {
 					applyPlugin<NgDocComponentAsset, NgDocAsset[]>(forObjectValues(), () => [
 						extractSnippetsPlugin(),
 						applyPlugin(forArrayItems(), (asset) => [
-							applyPlugin(forObjectValue('code'), () => [wrapCodePlugin(asset.type), processHtmlPlugin()]),
+							applyPlugin(forObjectValue('code'), () => [wrapCodePlugin(asset.lang), processHtmlPlugin()]),
 							applyPlugin(forObjectValue('filePath'), () => [addToDependenciesPlugin()]),
 						]),
 					]),

@@ -5,4 +5,8 @@
 	.ng-doc-example {
 		padding: calc(var(--ng-doc-base-gutter) * 3);
 	}
+
+	ng-doc-icon {
+		margin-right: calc(var(--ng-doc-base-gutter) / 2);
+	}
 }
