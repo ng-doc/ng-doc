@@ -157,5 +157,6 @@ On the following example you can see how to use snippets in your demos and how t
 
 - `*GuidesDemo`
 - `*GuidesDemoPane`
+- `*IgnoringFileLines`
 
 {% endindex %}
