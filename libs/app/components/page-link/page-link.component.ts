@@ -1,6 +1,6 @@
 import {NgIf, NgTemplateOutlet} from '@angular/common';
-import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit} from '@angular/core';
-import {RouterLink} from '@angular/router';
+import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, OnInit} from '@angular/core';
+import {Params, RouterLink} from '@angular/router';
 import {NgDocIconComponent} from '@ng-doc/ui-kit';
 
 @Component({
@@ -11,8 +11,8 @@ import {NgDocIconComponent} from '@ng-doc/ui-kit';
 	standalone: true,
 	imports: [NgIf, RouterLink, NgTemplateOutlet, NgDocIconComponent],
 })
-export class NgDocPageLinkComponent implements OnInit {
-	@Input()
+export class NgDocPageLinkComponent implements OnInit, OnChanges {
+	@Input({required: true})
 	href: string = '';
 
 	@Input()
@@ -20,10 +20,17 @@ export class NgDocPageLinkComponent implements OnInit {
 
 	protected isInCode: boolean = false;
 
+	private link: HTMLAnchorElement | undefined;
+
 	constructor(private elementRef: ElementRef<HTMLElement>) {}
 
 	ngOnInit(): void {
 		this.isInCode = this.elementRef.nativeElement.closest('code') !== null;
+	}
+
+	ngOnChanges(): void {
+		this.link = document.createElement('a');
+		this.link.href = this.href;
 	}
 
 	get isExternalLink(): boolean {
@@ -31,10 +38,26 @@ export class NgDocPageLinkComponent implements OnInit {
 	}
 
 	get path(): string {
-		return !this.isExternalLink ? this.href.split('#')[0] : this.href;
+		return (!this.isExternalLink ? this.link?.pathname : this.href) ?? '';
 	}
 
-	get fragment(): string {
-		return this.href.split('#')[1];
+	get fragment(): string | undefined {
+		return this.link?.hash.replace(/^#/, '') || undefined;
+	}
+
+	get queryParams(): Params {
+		const params: Params = {};
+		const query: string = this.link?.search.replace(/^\?/, '') ?? '';
+
+		if (query) {
+			const queryParts: string[] = query.split('&');
+
+			for (const queryPart of queryParts) {
+				const [key, value] = queryPart.split('=');
+				params[key] = value;
+			}
+		}
+
+		return params;
 	}
 }
