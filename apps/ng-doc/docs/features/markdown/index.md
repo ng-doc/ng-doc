@@ -95,8 +95,7 @@ You can add icons to your code blocks, for this you need to specify
 the `icon` parameter, this will fork for groups and single code blocks, for example, to add
 icon to a single code block, you can write the following.
 
-> **Note**
-> To know how to add your own icons, please read `*Icons` article.
+{% include "../../shared/registering-icons.md" %}
 
 ````markdown name="index.md"
 ```typescript name="my.component.ts" icon="angular"
@@ -208,3 +207,7 @@ And to load from a specific line to the end of the file, you can write the follo
 ```typescript file="./ng-doc.page.ts"#L5-
 
 ```
+
+## See also
+
+- `*IgnoringFileLines`

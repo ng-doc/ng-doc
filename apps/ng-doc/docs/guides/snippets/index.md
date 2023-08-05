@@ -1,37 +1,153 @@
 # {{ NgDocPage.title }}
 
-Snippets are a way to display a part of your code in the demos, and they are very useful
+Snippets are a way to display a part of your code in the demos, they are very useful
 when you want to show a specific part of your code.
-
-## Available Snippets
-
-There are 3 types of snippets that you can use
-
-- `TypeScript` - To display a part of your `typescript` code
-  - `/* NgDocCodeSnippetStart(Title) */` - Start of the snippet
-  - `/* NgDocCodeSnippetEnd(Title) */` - End of the snippet
-- `HTML` - To display a part of your `html` code
-  - `<!-- NgDocHTMLSnippetStart(Title) -->` - Start of the snippet
-  - `<!-- NgDocHTMLSnippetEnd(Title) -->` - End of the snippet
-- `Styles` - To display a part of your `styles` code
-  - `/* NgDocStyleSnippetStart(Title) */` - Start of the snippet
-  - `/* NgDocStyleSnippetEnd(Title) */` - End of the snippet
 
 ## Usage
 
 Snippets look like comments, and you can use them in any of your demos, and they will be
-displayed in the demo's code tab.
+displayed in the demo's code tab. For example, in your demo code you can leave a comment to
+create a snippet like this:
 
 > **Note**
 > Snippets also work for components with multiple files
 
-So, let's say you have a component with the following code
-
-```typescript file="./demos/button-inline-demo.component.ts" name="button-inline-demo.component.ts" {10,12,17,20,22,27}
-
+```typescript name="demo.component.ts"
+@Component({/* ... */})
+export class DemoComponent {
+    onClick(): void {
+        // snippet
+        console.log('Hello world');
+        // snippet
+    }
+}
 ```
 
-NgDoc will render its code like below
+## Title
+
+To give a title to your snippet, you can use the following syntax:
+
+```typescript name="demo.component.ts"
+@Component({/* ... */})
+export class DemoComponent {
+    onClick(): void {
+        // snippet "My Custom Title"
+        console.log('Hello world');
+        // snippet
+    }
+}
+```
+
+## Icon
+
+To specify an icon to your snippet, you can add `icon` parameter to your snippet, for example:
+
+{% include "../../shared/registering-icons.md" %}
+
+```typescript name="demo.component.ts"
+@Component({/* ... */})
+export class DemoComponent {
+    onClick(): void {
+        // snippet icon="angular"
+        console.log('Hello world');
+        // snippet
+    }
+}
+```
+
+## Opened by default
+
+If you have several snippets in your demo, first one will be opened by default, but you can
+change that by adding `opened` parameter to your snippet, for example:
+
+```typescript name="demo.component.ts"
+// snippet
+@Component({/* ... */})
+// snippet
+export class DemoComponent {
+    onClick(): void {
+        // snippet "My Snippet" opened
+        console.log('Hello world');
+        // snippet
+    }
+}
+```
+
+You can also do that by providing your snippet title to the `defaultTab` property of the
+`demo` or `demoPane` method, for example:
+
+> **Note**
+> `defaultTab` property has priority over `opened` snippet parameter.
+
+```twig name="index.md"
+{{ '{{ NgDocActions.demo("DemoComponent", {defaultTab: "My Snippet"}) }}' | safe }}
+```
+
+## Nested snippets
+
+You can also nest snippets, but to do so, you need to give an id to your snippet,
+the id is used to identify the start and end of the snippet, for example:
+
+```typescript name="demo.component.ts"
+@Component({/* ... */})
+export class DemoComponent {
+    onClick(): void {
+        // snippet#s1
+        console.log('Hello world!');
+        // snippet#s2
+        console.log('Hello Mom!');
+        // snippet#s2
+        // snippet#s1
+    }
+}
+```
+
+So the snippet with id `s1` will include the code between `// snippet#s1` and `// snippet#s1`
+including the snippet with id `s2`, and the snippet with id `s2` will include the code between
+`// snippet#s2` and `// snippet#s2`.
+
+## Language
+
+Snippets language is automatically detected based on the comment type, e.g. `<!-- snippet -->`
+will be detected as `html` and `// snippet` or `/* snippet */` will be detected as `typescript`,
+in your stylesheets you can also use `// snippet` but then you need to specify the language
+like on the following example:
+
+```typescript name="demo.component.ts"
+@Component({
+  styles: [`
+    // snippet:css
+    .my-class {
+        color: red;
+    }
+    // snippet
+  `]
+})
+export class DemoComponent {}
+```
+
+If you are using nested snippets, you must specify the language after the snippet id, for example:
+
+```typescript name="demo.component.ts"
+@Component({
+  styles: [`
+    // snippet#s1:css
+    .my-class {
+        color: red;
+    }
+    // snippet#s1
+  `]
+})
+export class DemoComponent {}
+```
+
+## Example
+
+On the following example you can see how to use snippets in your demos and how they are displayed
+
+```typescript file="./demos/button-inline-demo.component.ts" name="button-inline-demo.component.ts" {10,12,17,20,23,25}
+
+```
 
 {{ NgDocActions.demo("ButtonInlineDemoComponent", {expanded: true}) }}
 
@@ -41,5 +157,6 @@ NgDoc will render its code like below
 
 - `*GuidesDemo`
 - `*GuidesDemoPane`
+- `*IgnoringFileLines`
 
 {% endindex %}

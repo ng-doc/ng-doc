@@ -1,11 +1,10 @@
-import {asArray, isPresent, NgDocEntityAnchor, NgDocPage} from '@ng-doc/core';
+import {asArray, isPresent, isRoute, NgDocEntityAnchor, NgDocPage} from '@ng-doc/core';
 import * as fs from 'fs';
 import * as path from 'path';
 import {Observable, of} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
-import {ObjectLiteralExpression} from 'ts-morph';
 
-import {buildEntityKeyword, editFileInRepoUrl, getPlaygroundsIds} from '../../helpers';
+import {buildEntityKeyword, editFileInRepoUrl} from '../../helpers';
 import {NgDocBuildResult, NgDocEntityKeyword} from '../../interfaces';
 import {NgDocActions} from '../actions';
 import {renderTemplate} from '../nunjucks';
@@ -19,14 +18,12 @@ import {fillIndexesPlugin, markdownToHtmlPlugin, postProcessHtmlPlugin, processH
 
 @CachedEntity()
 export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
-	playgroundsExpression: ObjectLiteralExpression | undefined;
-
 	override parent?: NgDocCategoryEntity;
 
 	override get route(): string {
 		const folderName: string = path.basename(path.dirname(this.sourceFile.getFilePath()));
 
-		return this.target?.route ?? folderName;
+		return (isRoute(this.target?.route) ? this.target?.route.path : this.target?.route) ?? folderName;
 	}
 
 	override get isRoot(): boolean {
@@ -94,10 +91,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 
 	get mdFolder(): string {
 		return path.dirname(this.mdPath);
-	}
-
-	get playgroundIds(): string[] {
-		return this.playgroundsExpression ? getPlaygroundsIds(this.playgroundsExpression) : [];
 	}
 
 	get hasImports(): boolean {
@@ -172,5 +165,14 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 			postBuildPlugins: [markdownToHtmlPlugin(), processHtmlPlugin()],
 			postProcessPlugins: [postProcessHtmlPlugin(), fillIndexesPlugin()],
 		});
+	}
+
+	refreshDependencies(): void {
+		this.objectExpression
+			?.getSourceFile()
+			.getReferencedSourceFiles()
+			.forEach((sourceFile) => {
+				sourceFile.refreshFromFileSystemSync();
+			});
 	}
 }

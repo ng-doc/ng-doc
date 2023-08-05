@@ -11,3 +11,5 @@ export * from './playground-metadata';
 export * from './renderer-options';
 export * from './repo-config';
 export * from './schema';
+export * from './snippet';
+export * from './snippet-config';

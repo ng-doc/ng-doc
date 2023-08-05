@@ -1,3 +1,3 @@
-{{ NgDocActions.playground("BtnPlayground") }}
+{{ NgDocActions.demo("DemoComponent") }}
 
 `*AnotherPage`

@@ -16,7 +16,7 @@ import {
 	forObjectValue,
 	forObjectValues,
 	postProcessHtmlPlugin,
-	processHtmlPlugin,
+	processHtmlPlugin, removeLinesPlugin,
 } from './plugins';
 import {applyPlugin} from './plugins/entity-plugins/apply.plugin';
 import {wrapCodePlugin} from './plugins/entity-plugins/wrap-code.plugin';
@@ -52,6 +52,7 @@ export class NgDocPageDemoEntity extends NgDocEntity {
 		const objectExpression = this.parent.objectExpression;
 
 		if (objectExpression) {
+			this.parent.refreshDependencies();
 			const classDeclarations = getDemoClassDeclarations(objectExpression);
 
 			const componentAssets: NgDocComponentAsset = Object.keys(classDeclarations).reduce(
@@ -70,8 +71,9 @@ export class NgDocPageDemoEntity extends NgDocEntity {
 				postBuildPlugins: [
 					applyPlugin<NgDocComponentAsset, NgDocAsset[]>(forObjectValues(), () => [
 						extractSnippetsPlugin(),
+						removeLinesPlugin(),
 						applyPlugin(forArrayItems(), (asset) => [
-							applyPlugin(forObjectValue('code'), () => [wrapCodePlugin(asset.type), processHtmlPlugin()]),
+							applyPlugin(forObjectValue('code'), () => [wrapCodePlugin(asset.lang), processHtmlPlugin()]),
 							applyPlugin(forObjectValue('filePath'), () => [addToDependenciesPlugin()]),
 						]),
 					]),

@@ -1,84 +1,69 @@
-import {escapeRegexp} from '@ng-doc/core/helpers/escape-regexp';
+import {escapeRegexp} from '@ng-doc/core';
 
-import {NgDocSnippet} from '../interfaces/snippet';
-import {NgDocSnippetType} from '../types';
+import {NgDocSnippet} from '../interfaces';
+import {parseSnippet} from '../parsers/parse-snippet';
+import {formatCode} from './format-code';
+import {getCodeTypeFromLang} from './get-code-type-from-lang';
 
-const HTMLSnippetStart: RegExp = /^.*(<!--\s*NgDocHTMLSnippetStart(\(.+\))?\s*-->).*$/gm;
-const StylesSnippetStart: RegExp = /^.*(\/\*\s*NgDocStyleSnippetStart(\(.+\))?\s*\*\/).*$/gm;
-const TypeScriptSnippetStart: RegExp = /^.*(\/\*\s*NgDocCodeSnippetStart(\(.+\))?\s*\*\/).*$/gm;
-const HTMLSnippetEnd: (group?: string, escape?: boolean) => RegExp = (group: string = '', escape: boolean = true) =>
-	new RegExp(`^.*(<!--\\s*NgDocHTMLSnippetEnd(\\(${escape ? escapeRegexp(group) : group}\\))?\\s*-->).*$`, 'gm');
-const StylesSnippetEnd: (group?: string, escape?: boolean) => RegExp = (group: string = '', escape: boolean = true) =>
-	new RegExp(`^.*(\\/\\*\\s*NgDocStyleSnippetEnd(\\(${escape ? escapeRegexp(group) : group}\\))?\\s*\\*\\/).*$`, 'gm');
-const TypeScriptSnippetEnd: (group?: string, escape?: boolean) => RegExp = (
-	group: string = '',
-	escape: boolean = true,
-) =>
-	new RegExp(`^.*(\\/\\*\\s*NgDocCodeSnippetEnd(\\(${escape ? escapeRegexp(group) : group}\\))?\\s*\\*\\/).*$`, 'gm');
+const snippet = (id?: string | null) =>
+	id
+		? new RegExp(
+				`\\n?\\r?^.*((\\/\\/|<!--|\\/\\*)\\s*)(snippet#${escapeRegexp(id)}.*?(?=(-->|\\*\\/)?))\\s*(-->|\\*\\/)?$`,
+				'gm',
+		  )
+		: new RegExp(`\\n?\\r?^.*((\\/\\/|<!--|\\/\\*)\\s*)(snippet.*?(?=(-->|\\*\\/)?))\\s*(-->|\\*\\/)?$`, 'gm');
 
 /**
- *	Finds and return all the snippets in the given string.
  *
- * @param content - Content
- * @returns - Array of snippets
+ * @param code
  */
-export function processSnippets(content: string): NgDocSnippet[] {
-	return [
-		...findSnippet(content, 'HTML', HTMLSnippetStart, HTMLSnippetEnd),
-		...findSnippet(content, 'styles', StylesSnippetStart, StylesSnippetEnd),
-		...findSnippet(content, 'TypeScript', TypeScriptSnippetStart, TypeScriptSnippetEnd),
-	];
-}
-
-/**
- * Finds the snippets in the given content.
- *
- * @param content - Content
- * @param type - Snippet type
- * @param snippetStart - Snippet start
- * @param snippetEnd - Snippet end
- */
-function findSnippet(
-	content: string,
-	type: NgDocSnippetType,
-	snippetStart: RegExp,
-	snippetEnd: (group?: string) => RegExp,
-): NgDocSnippet[] {
-	const snippets: NgDocSnippet[] = [];
-	const startRegexp: RegExp = new RegExp(snippetStart);
-	let matchStart: RegExpExecArray | null;
+export function processSnippets(code: string): NgDocSnippet[] {
+	const result: NgDocSnippet[] = [];
+	const endings: Set<number> = new Set();
+	const startRegexp = snippet();
+	let match: RegExpExecArray | null;
 
 	// eslint-disable-next-line no-cond-assign
-	while ((matchStart = startRegexp.exec(content))) {
-		const group = matchStart[2]?.slice(1, matchStart[2].length - 1);
-		const matchEnd: RegExpExecArray | null = snippetEnd(group).exec(content);
+	while ((match = startRegexp.exec(code))) {
+		if (!endings.has(match.index)) {
+			const config = parseSnippet(match[3].trim());
 
-		if (matchEnd) {
-			const snippetCode: string = content.slice(matchStart.index + matchStart[0].length, matchEnd.index).trim();
+			if (config) {
+				const isHTMLComment = match[2] === '<!--';
+				const {id, title, lang, icon, opened} = config;
+				const endRegexp = snippet(id);
 
-			if (snippetCode) {
-				snippets.push({
-					content: removeSnippetsInCode(snippetCode),
-					name: group,
-					type,
-				});
+				endRegexp.lastIndex = match.index + match[0].length;
+
+				const matchEnd = endRegexp.exec(code);
+
+				if (matchEnd) {
+					endings.add(matchEnd.index);
+
+					const snippetCode = code.slice(match.index + match[0].length, matchEnd.index);
+					const language = lang || (isHTMLComment ? 'html' : 'ts');
+
+					if (snippetCode) {
+						result.push({
+							title,
+							lang: language,
+							icon,
+							opened,
+							code: formatCode(removeSnippets(snippetCode), getCodeTypeFromLang(language)).trim(),
+						});
+					}
+				}
 			}
 		}
 	}
-	return snippets;
+
+	return result;
 }
 
 /**
- * Removes the snippets from the given code.
  *
- * @param code - Code
+ * @param code
  */
-function removeSnippetsInCode(code: string): string {
-	return code
-		.replace(HTMLSnippetStart, '')
-		.replace(StylesSnippetStart, '')
-		.replace(TypeScriptSnippetStart, '')
-		.replace(HTMLSnippetEnd('.*', false), '')
-		.replace(StylesSnippetEnd('.*', false), '')
-		.replace(TypeScriptSnippetEnd('.*', false), '');
+function removeSnippets(code: string): string {
+	return code.replace(snippet(), '');
 }
