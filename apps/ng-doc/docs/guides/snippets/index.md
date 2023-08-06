@@ -141,11 +141,28 @@ If you are using nested snippets, you must specify the language after the snippe
 export class DemoComponent {}
 ```
 
+## Loading snippet from file
+
+Snippet code can be loaded from a file, to do so, you need to use `snippet-from-file` comment,
+this version of the snippet also supports `title`, `icon`, `opened` and `language` parameters,
+for example:
+
+> **Warning**
+> Path is relative to the demo file. Snippets in loaded files are not supported and will be ignored.
+
+```typescript name="demo.component.ts"
+// snippet-from-file="./another.component.ts"
+@Component({/* ... */})
+export class DemoComponent {
+    onClick(): void {}
+}
+```
+
 ## Example
 
 On the following example you can see how to use snippets in your demos and how they are displayed
 
-```typescript file="./demos/button-inline-demo.component.ts" name="button-inline-demo.component.ts" {10,12,17,20,23,25}
+```typescript file="./demos/button-inline-demo.component.ts" name="button-inline-demo.component.ts" {5,12,14,19,22,25,27}
 
 ```
 

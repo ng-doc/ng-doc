@@ -2,6 +2,8 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {NgDocButtonComponent} from '@ng-doc/ui-kit';
 import {NgDocNotifyService} from '@ng-doc/ui-kit/services/notify';
 
+// snippet-from-file="../ng-doc.page.ts"
+
 @Component({
 	selector: 'ng-doc-button-inline-demo',
 	standalone: true,
