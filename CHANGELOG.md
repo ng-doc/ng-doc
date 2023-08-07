@@ -1,3 +1,21 @@
+# [16.11.0](https://github.com/ng-doc/ng-doc/compare/v16.10.0...v16.11.0) (2023-08-07)
+
+
+### Bug Fixes
+
+* **playgrounds:** the component created in the playground with the set values of `defaults` or `inputs` receives `undefined` in the `ngOnChanges` hook for the set inputs ([2b21918](https://github.com/ng-doc/ng-doc/commit/2b2191845b20fbbb9acd66c633725d049895ea1d))
+* **schematics:** schematics incorrectly import parent category on Windows ([59293ee](https://github.com/ng-doc/ng-doc/commit/59293ee9d8ff6a6bf2676bee52062b7b94b0ef28))
+
+
+### Features
+
+* **builder:** add support for `ng-doc-ignore-line` comment to remove some lines of code from demo or code blocks ([#93](https://github.com/ng-doc/ng-doc/issues/93)) ([8b668b2](https://github.com/ng-doc/ng-doc/commit/8b668b270558cc375993c337560b64b3b3dae83a)), closes [#83](https://github.com/ng-doc/ng-doc/issues/83)
+* **builder:** add support for `Route` interface for the `route` property of the page configuration ([#94](https://github.com/ng-doc/ng-doc/issues/94)) ([65c1bd7](https://github.com/ng-doc/ng-doc/commit/65c1bd7288288dd74070e1bdf1ff785e250bb264)), closes [#89](https://github.com/ng-doc/ng-doc/issues/89)
+* **builder:** add support for loading snippets from files ([f8889db](https://github.com/ng-doc/ng-doc/commit/f8889dbcfcc5cd6ec3c76c7dc61d3721706f69df))
+* **builder:** add support for query parameters for the keywords ([#95](https://github.com/ng-doc/ng-doc/issues/95)) ([d0da419](https://github.com/ng-doc/ng-doc/commit/d0da4195685bff617e0782bf1157c3c94ad332d8)), closes [#86](https://github.com/ng-doc/ng-doc/issues/86)
+* **builder:** add support for the keywords for the API configuration ([4166685](https://github.com/ng-doc/ng-doc/commit/416668519a72943ce1a1f293f304bc2146d1910f))
+* **demo:** the snippets have been reworked and their syntax has been changed also new features have been added, such as icons, language switching, etc. The previous syntax is still supported, but it is recommended to migrate to the new one ([#92](https://github.com/ng-doc/ng-doc/issues/92)) ([2cc98cf](https://github.com/ng-doc/ng-doc/commit/2cc98cfa2b41d2d81df00334b5052a49ef7002f6))
+
 # [16.10.0](https://github.com/ng-doc/ng-doc/compare/v16.9.0...v16.10.0) (2023-07-18)
 
 
