@@ -1,3 +1,5 @@
+import {Route} from '@angular/router';
+
 /**
  * Base interface for the NgDoc file entity
  */
@@ -9,7 +11,7 @@ export interface NgDocBaseEntity {
 	/**
 	 * The route of the entity (current sourceFileFolder name by default)
 	 */
-	route?: string;
+	route?: string | Route;
 
 	/**
 	 * Order is using for sorting entities in the sidebar

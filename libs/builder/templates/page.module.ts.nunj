@@ -3,10 +3,10 @@ import {Component, NgModule, ChangeDetectionStrategy} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {NgDocPageComponent, NgDocRootPage, NgDocDemoAssets} from '@ng-doc/app';
-import {NgDocPage, NgDocPageType} from '@ng-doc/core';
+import {NgDocPage, NgDocPageType, isRoute} from '@ng-doc/core';
 import pageEntity from '{{ page.importPath }}';
 import {PlaygroundsModule} from './playgrounds';
-import demoAssets from '{{ page.demoAssetsImport }}';
+import demoAssets from './demo-assets';
 
 const pageContent: string = `{{ pageContent | toTemplateString }}`
 
@@ -50,6 +50,7 @@ export class DynamicComponent extends NgDocRootPage {
 	imports: [
 		CommonModule,
 		RouterModule.forChild([{
+			...(isRoute(pageEntity.route) ? pageEntity.route : {}),
 			path: '',
 			component: DynamicComponent,
 			title: `{{ page.title | toTemplateString }}`,

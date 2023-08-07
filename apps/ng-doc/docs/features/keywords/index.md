@@ -74,7 +74,8 @@ const config: NgDocConfiguration = {
   keywords: {
     keywords: {
       google: {
-        path: 'https://google.com/',
+        title: 'Google', // optional, will use the key of the object if not provided
+        url: 'https://google.com/',
       },
     },
   },
@@ -131,6 +132,17 @@ API's member.
 - Link to the getter in the API - `NgDocBaseInput.get-disabled`
 - Link to the setter in the API - `NgDocBaseInput.set-disabled`
 - Link to the method in the API - `NgDocBaseInput.focus`
+
+## Query parameters
+
+You can also use query parameters in your keywords like you would do in a regular URL, for example,
+you can create a link to the API List page and specify the query parameter to filter the list.
+
+```markdown name="index.md"
+Link to the API List page with query parameter: `*ApiReferences?type=Class`
+```
+
+Link to the API List page with query parameter: `*ApiReferences?type=Class`
 
 ## Definitions of keywords
 

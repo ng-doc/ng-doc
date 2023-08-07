@@ -1,11 +1,11 @@
 import {NgDocCodeBlockParams, parseCodeBlockParams} from '@ng-doc/builder';
 import {escapeHtml} from '@ng-doc/core';
 import * as fs from 'fs';
-import {marked as markedRender} from 'marked';
+import {marked} from 'marked';
 import {EOL} from 'node:os';
 import * as path from 'path';
 
-import {NgDocPageEntity} from '../engine';
+import {removeLinesFromCode} from './remove-lines-from-code';
 
 const NOTE_ANCHOR: string = '<p><strong>Note</strong>';
 const WARNING_ANCHOR: string = '<p><strong>Warning</strong>';
@@ -16,9 +16,11 @@ const WARNING_ANCHOR: string = '<p><strong>Warning</strong>';
  * @param markdown
  * @param contextFolder
  * @param page
+ * @param context
+ * @param addDependency
  */
-export function marked(markdown: string, page?: NgDocPageEntity): string {
-	const renderer: markedRender.RendererObject = {
+export function markdownToHtml(markdown: string, context?: string, addDependency?: (dep: string) => void): string {
+	const renderer: marked.RendererObject = {
 		code(code: string, lang: string | undefined): string {
 			const {
 				language,
@@ -32,8 +34,8 @@ export function marked(markdown: string, page?: NgDocPageEntity): string {
 				icon,
 			}: NgDocCodeBlockParams = parseCodeBlockParams(lang?.trim() ?? 'typescript');
 
-			if (file && page) {
-				const relativeFilePath: string = path.join(page.mdFolder, file);
+			if (file && context) {
+				const relativeFilePath: string = path.join(context, file);
 				const fileContent: string = fs
 					.readFileSync(relativeFilePath ?? '', 'utf8')
 					.split(EOL)
@@ -41,9 +43,9 @@ export function marked(markdown: string, page?: NgDocPageEntity): string {
 					.join(EOL)
 					.trim();
 
-				page.dependencies.add(relativeFilePath);
+				addDependency && addDependency(relativeFilePath);
 
-				code = fileContent;
+				code = removeLinesFromCode(fileContent);
 			}
 
 			const codeElement: string = `<pre><code class="language-${language ?? 'ts'}"
@@ -77,7 +79,7 @@ export function marked(markdown: string, page?: NgDocPageEntity): string {
 		},
 	};
 
-	markedRender.use({renderer});
+	marked.use({renderer});
 
-	return markedRender.parse(markdown, {headerIds: false});
+	return marked.parse(markdown, {headerIds: false});
 }

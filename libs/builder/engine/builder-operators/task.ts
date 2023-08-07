@@ -42,7 +42,7 @@ export function task<T, R>(
  * @param filter - The filter function to filter the values of the source.
  */
 export function taskForMany<T, R>(
-	name: string,
+	name: string | undefined,
 	operator: OperatorFunction<T[], R[]>,
 	filter?: (value: T) => boolean,
 ): OperatorFunction<T[], R[]> {

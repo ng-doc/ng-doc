@@ -4,7 +4,7 @@ import {slash} from '../../../helpers';
 import {CachedFilesGetter} from '../cache';
 import {NgDocFileEntity} from './file.entity';
 
-export abstract class NgDocModuleEntity<T> extends NgDocFileEntity<T> {
+export abstract class NgDocModuleEntity<TTarget> extends NgDocFileEntity<TTarget> {
 	/**
 	 * Title of the module file.
 	 */

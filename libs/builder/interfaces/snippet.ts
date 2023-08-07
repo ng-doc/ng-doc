@@ -1,7 +1,7 @@
-import {NgDocSnippetType} from '../types';
-
 export interface NgDocSnippet {
-	content: string;
-	name: string;
-	type: NgDocSnippetType;
+	lang: string;
+	code: string;
+	opened?: boolean;
+	icon?: string;
+	title?: string;
 }

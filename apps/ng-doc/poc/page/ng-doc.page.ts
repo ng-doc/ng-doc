@@ -1,13 +1,16 @@
 import {NgDocPage} from '@ng-doc/core';
-import {NgDocTagComponent} from '@ng-doc/ui-kit';
+import {NgDocIconComponent} from '@ng-doc/ui-kit';
+
+import {DemoComponent} from './demo.component';
 
 const Page: NgDocPage = {
 	title: `Just a Page`,
 	mdFile: './index.md',
+	demos: {DemoComponent},
 	playgrounds: {
-		TagPlayground: {
-			target: NgDocTagComponent,
-			template: `<ng-doc-selector>Tag</ng-doc-selector>`,
+		BtnPlayground: {
+			target: NgDocIconComponent,
+			template: `<ng-doc-selector></ng-doc-selector>`,
 		},
 	},
 };

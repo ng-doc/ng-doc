@@ -106,7 +106,7 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 
 	private updateDemo(data?: NgDocFormPartialValue<typeof this.form>): void {
 		if (this.recreateDemo || !this.demoRef) {
-			this.renderDemo();
+			this.createDemo();
 		}
 
 		if (data) {
@@ -118,15 +118,11 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 		this.updateCodeView();
 	}
 
-	private renderDemo(): void {
+	private createDemo(): void {
 		if (this.playgroundDemo) {
 			this.demoRef?.destroy();
-
-			if (this.playgroundDemo) {
-				this.demoRef = this.demoOutlet?.createComponent(this.playgroundDemo as unknown as Type<NgDocBasePlayground>);
-			}
-
-			this.demoRef?.changeDetectorRef.detectChanges();
+			this.demoRef = this.demoOutlet?.createComponent(this.playgroundDemo as unknown as Type<NgDocBasePlayground>);
+			this.demoRef?.changeDetectorRef.markForCheck();
 		}
 	}
 

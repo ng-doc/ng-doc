@@ -1,22 +1,14 @@
-import {NgDocApi, NgDocApiList} from '@ng-doc/core';
+import {asArray, NgDocApi} from '@ng-doc/core';
 import * as path from 'path';
-import {forkJoin, Observable, of} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {map, switchMap, tap} from 'rxjs/operators';
 
-import {
-	buildFileEntity,
-	generateApiEntities,
-	getKindType,
-	isApiPageEntity,
-	isApiScopeEntity,
-	slash,
-	uniqueName,
-} from '../../helpers';
-import {NgDocBuildOutput, NgDocEntityKeyword} from '../../interfaces';
+import {buildFileEntity, generateApiEntities, uniqueName} from '../../helpers';
+import {NgDocBuildResult, NgDocEntityKeyword} from '../../interfaces';
 import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
 import {NgDocNavigationEntity} from './abstractions/navigation.entity';
-import {NgDocApiPageEntity} from './api-page.entity';
+import {NgDocApiListEntity} from './api-list.entity';
 import {NgDocApiScopeEntity} from './api-scope.entity';
 import {CachedEntity} from './cache/decorators';
 import {NgDocCategoryEntity} from './category.entity';
@@ -59,8 +51,16 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		return path.join(this.context.apiPath, this.route);
 	}
 
+	override get builtChildren(): NgDocEntity[] {
+		return super.builtChildren.filter((child: NgDocEntity) => child instanceof NgDocApiScopeEntity);
+	}
+
 	override get keywords(): NgDocEntityKeyword[] {
-		return [];
+		return [...asArray(this.target?.keyword)].map((key: string) => ({
+			key: `*${key}`,
+			title: this.title,
+			path: this.fullRoute,
+		}));
 	}
 
 	override setParentDynamically(): void {
@@ -76,6 +76,9 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 			switchMap(() => buildFileEntity(this.sourceFile, this.context.tsConfig, this.context.context.workspaceRoot)),
 			switchMap(() => this.loadImpl()),
 			map(() => generateApiEntities(this)),
+			map((entities: NgDocEntity[]) =>
+				entities.concat(new NgDocApiListEntity(this.store, this.cache, this.context, this)),
+			),
 		);
 	}
 
@@ -94,39 +97,24 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		);
 	}
 
-	protected override buildImpl(): Observable<NgDocBuildOutput[]> {
-		return this.isReadyForBuild ? forkJoin([this.buildModule(), this.buildApiList()]) : of([]);
-	}
-
-	private buildModule(): Observable<NgDocBuildOutput> {
+	override build(): Observable<NgDocBuildResult<string>> {
 		if (this.target) {
-			const content: string = renderTemplate('./api.module.ts.nunj', {
+			const result = renderTemplate('./api.module.ts.nunj', {
 				context: {
 					api: this,
 				},
 			});
 
-			return of({content, filePath: this.modulePath});
+			return of({
+				result,
+				entity: this,
+				toBuilderOutput: async (content: string) => ({
+					content,
+					filePath: this.modulePath,
+				}),
+			});
 		}
-		return of();
-	}
 
-	private buildApiList(): Observable<NgDocBuildOutput> {
-		const apiItems: NgDocApiList[] = this.children
-			.filter(isApiScopeEntity)
-			.sort((a: NgDocApiScopeEntity, b: NgDocApiScopeEntity) => (b.order ?? 0) - (a.order ?? 0))
-			.map((scope: NgDocApiScopeEntity) => ({
-				title: scope.title,
-				items: scope.children.filter(isApiPageEntity).map((page: NgDocApiPageEntity) => ({
-					route: slash(path.join(scope.route, page.route)),
-					type: (page.declaration && getKindType(page.declaration)) ?? '',
-					name: page.declaration?.getName() ?? '',
-				})),
-			}));
-
-		return of({
-			content: JSON.stringify(apiItems, undefined, 2),
-			filePath: path.join(this.folderPath, 'ng-doc.api-list.json'),
-		});
+		throw new Error(`The entity "${this.id}" is not loaded.`);
 	}
 }

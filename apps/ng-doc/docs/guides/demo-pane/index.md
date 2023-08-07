@@ -73,5 +73,6 @@ method.
 - `*GuidesDemoPane`
 - `*GuidesPlayground`
 - `*GuidesSnippets`
+- `*IgnoringFileLines`
 
 {% endindex %}

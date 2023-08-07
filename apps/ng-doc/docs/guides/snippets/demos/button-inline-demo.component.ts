@@ -2,27 +2,28 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {NgDocButtonComponent} from '@ng-doc/ui-kit';
 import {NgDocNotifyService} from '@ng-doc/ui-kit/services/notify';
 
+// snippet-from-file="../ng-doc.page.ts"
+
 @Component({
-  selector: 'ng-doc-button-inline-demo',
-  standalone: true,
-  imports: [NgDocButtonComponent],
-  template: `
-    <!-- NgDocHTMLSnippetStart(Button Template) -->
-    <button ng-doc-button-flat color="orange" (click)="clickEvent()">Just a button</button>
-    <!-- NgDocHTMLSnippetEnd(Button Template) -->
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+	selector: 'ng-doc-button-inline-demo',
+	standalone: true,
+	imports: [NgDocButtonComponent],
+	template: `
+		<!-- snippet "Button Template" icon="angular" -->
+		<button ng-doc-button-flat color="orange" (click)="clickEvent()">Just a button</button>
+		<!-- snippet -->
+	`,
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonInlineDemoComponent {
-  /* NgDocCodeSnippetStart(ClassConstructor) */
-  constructor(private readonly notifyService: NgDocNotifyService) {}
+	// snippet "Injecting NotificationService" opened
+	constructor(private readonly notifyService: NgDocNotifyService) {}
 
-  /* NgDocCodeSnippetEnd(ClassConstructor) */
+	// snippet
 
-  /* NgDocCodeSnippetStart(clickEvent) */
-  clickEvent(): void {
-    this.notifyService.notify('Button was clicked!');
-  }
-
-  /* NgDocCodeSnippetEnd(clickEvent) */
+	clickEvent(): void {
+		// snippet "Open Notification"
+		this.notifyService.notify('Button was clicked!');
+		// snippet
+	}
 }

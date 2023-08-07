@@ -1,14 +1,24 @@
 // @ts-nocheck
-import {ChangeDetectionStrategy, Component, NgModule, Type, ViewChild, ViewContainerRef} from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component, inject,
+	InjectionToken,
+	NgModule,
+	Type,
+	ViewChild,
+	ViewContainerRef
+} from '@angular/core';
 import {NgDocBasePlayground, providePlaygroundDemo} from '@ng-doc/app';
 // noinspection ES6UnusedImports
-import pageEntity from '{{ page.importPath }}';
+import pageEntity from '{{ targetImportPath }}';
 import {CommonModule} from '@angular/common';
 import {Constructor} from '@ng-doc/core';
 
+const PLAYGROUND_COMPONENT = new InjectionToken<Type<any>>('PLAYGROUND_COMPONENT')
+
 {%- set components = [] %}
 {%- set index = 1 %}
-{%- set playgrounds = page.playgroundMetadata %}
+{%- set playgrounds = playgroundMetadata %}
 
 
 {%- for id, metadata in playgrounds -%}
@@ -25,21 +35,21 @@ import {Constructor} from '@ng-doc/core';
 	standalone: true,
 	imports: [
 		CommonModule,
-		{%- if page.hasImports %}
+		{%- if hasImports %}
 		...pageEntity.imports,
 		{%- endif %}
 		{%- if metadata.standalone %}
 		pageEntity.playgrounds['{{ id }}'].target,
 		{%- endif %}
 	],
+	providers: [{
+		provide: PLAYGROUND_COMPONENT,
+		useClass: pageEntity.playgrounds['{{ id }}'].target,
+	}],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class {{ comp.name }} extends NgDocBasePlayground {
 	static readonly selector: string = '{{ comp.selector }}';
-
-	@ViewChild(pageEntity.playgrounds['{{ id }}'].target, {static: true})
-	readonly playground?: Type<unknown>;
-	readonly playgroundInstance?: Constructor<unknown> = pageEntity.playgrounds['{{ id }}'].target;
 
 	@ViewChild(pageEntity.playgrounds['{{ id }}'].target, {static: true, read: ViewContainerRef})
 	readonly viewContainerRef: ViewContainerRef;
@@ -47,7 +57,7 @@ export class {{ comp.name }} extends NgDocBasePlayground {
 	readonly configData: any = pageEntity.playgrounds['{{ id }}'].data;
 
 	constructor() {
-		super();
+		super(inject(PLAYGROUND_COMPONENT), pageEntity.playgrounds['{{ id }}'].target);
 	}
 }
 {%- set index = index + 1 -%}

@@ -1,9 +1,9 @@
 import {asArray, NgDocApiScope} from '@ng-doc/core';
-import {forkJoin, Observable, of} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {SourceFile} from 'ts-morph';
 
 import {isPageEntity, uniqueName} from '../../helpers';
-import {NgDocBuilderContext, NgDocBuildOutput, NgDocEntityKeyword} from '../../interfaces';
+import {NgDocBuilderContext, NgDocBuildResult, NgDocEntityKeyword} from '../../interfaces';
 import {NgDocEntityStore} from '../entity-store';
 import {renderTemplate} from '../nunjucks';
 import {NgDocEntity} from './abstractions/entity';
@@ -91,21 +91,25 @@ export class NgDocApiScopeEntity extends NgDocRouteEntity<NgDocApiScope> {
 		return of(void 0);
 	}
 
-	protected override buildImpl(): Observable<NgDocBuildOutput[]> {
-		return this.isReadyForBuild ? forkJoin([this.buildModule()]) : of([]);
-	}
-
-	private buildModule(): Observable<NgDocBuildOutput> {
+	override build(): Observable<NgDocBuildResult<string>> {
 		if (this.target) {
-			const content: string = renderTemplate('./api-scope.module.ts.nunj', {
+			const result = renderTemplate('./api-scope.module.ts.nunj', {
 				context: {
 					scope: this,
 				},
 			});
 
-			return of({content, filePath: this.modulePath});
+			return of({
+				result,
+				entity: this,
+				toBuilderOutput: async (content: string) => ({
+					content,
+					filePath: this.modulePath,
+				}),
+			});
 		}
-		return of();
+
+		throw new Error(`The entity "${this.id}" is not loaded.`);
 	}
 
 	override destroy(): void {

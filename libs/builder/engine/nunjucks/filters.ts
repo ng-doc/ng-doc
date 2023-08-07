@@ -30,7 +30,7 @@ export {
 	getOverriddenMember,
 	getPropertyChain,
 	groupAccessors,
-	marked,
+	markdownToHtml,
 	methodPresentation,
 	noEmpty,
 	noLineBreaks,
@@ -41,4 +41,4 @@ export {
 	typeAliasPresentation,
 	variablePresentation,
 } from '../../helpers';
-export {kebabCase, objectKeys, unique} from '@ng-doc/core';
+export {isRoute,kebabCase, objectKeys, unique} from '@ng-doc/core';
