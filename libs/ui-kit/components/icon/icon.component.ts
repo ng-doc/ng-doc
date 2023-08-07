@@ -12,8 +12,8 @@ import {
 import {NgDocCacheInterceptor} from '@ng-doc/ui-kit/interceptors';
 import {NG_DOC_ASSETS_PATH, NG_DOC_CUSTOM_ICONS_PATH} from '@ng-doc/ui-kit/tokens';
 import {NgDocIconSize} from '@ng-doc/ui-kit/types';
-import {Subject} from 'rxjs';
-import {startWith, switchMap} from 'rxjs/operators';
+import {of, Subject} from 'rxjs';
+import {catchError, startWith, switchMap} from 'rxjs/operators';
 
 @Component({
 	selector: 'ng-doc-icon',
@@ -56,7 +56,13 @@ export class NgDocIconComponent implements OnChanges, OnInit {
 					this.httpClient.get(this.href, {
 						responseType: 'text',
 						params: {[NgDocCacheInterceptor.TOKEN]: 'true'},
-					}),
+					}).pipe(
+						catchError((e: Error) => {
+							console.error(e);
+
+							return of('')
+						})
+					)
 				),
 			)
 			.subscribe((svg: string) => (this.elementRef.nativeElement.innerHTML = svg));

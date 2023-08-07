@@ -1,6 +1,6 @@
 import {NgDocPage} from '@ng-doc/core';
+import {NgDocIconComponent} from '@ng-doc/ui-kit';
 
-import {BtnDirective} from './btn.directive';
 import {DemoComponent} from './demo.component';
 
 const Page: NgDocPage = {
@@ -9,7 +9,7 @@ const Page: NgDocPage = {
 	demos: {DemoComponent},
 	playgrounds: {
 		BtnPlayground: {
-			target: BtnDirective,
+			target: NgDocIconComponent,
 			template: `<ng-doc-selector></ng-doc-selector>`,
 		},
 	},

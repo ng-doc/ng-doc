@@ -46,18 +46,6 @@ export class NgDocPageLinkComponent implements OnInit, OnChanges {
 	}
 
 	get queryParams(): Params {
-		const params: Params = {};
-		const query: string = this.link?.search.replace(/^\?/, '') ?? '';
-
-		if (query) {
-			const queryParts: string[] = query.split('&');
-
-			for (const queryPart of queryParts) {
-				const [key, value] = queryPart.split('=');
-				params[key] = value;
-			}
-		}
-
-		return params;
+		return Object.fromEntries(new URLSearchParams(this.link?.search.replace(/^\?/, '') ?? '').entries());
 	}
 }

@@ -13,7 +13,7 @@
 		"strict": true,
 		"target": "es2022",
 		"module": "esnext",
-		"lib": ["es2019", "dom"],
+		"lib": ["es2019", "dom", "dom.iterable"],
 		"skipLibCheck": true,
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
