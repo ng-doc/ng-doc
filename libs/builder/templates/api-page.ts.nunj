@@ -1,7 +1,6 @@
 // @ts-nocheck
-import {ChangeDetectionStrategy, Component, NgModule, Type} from "@angular/core";
-import {RouterModule} from "@angular/router";
-import {CommonModule} from '@angular/common';
+import {ChangeDetectionStrategy, Component, Type} from "@angular/core";
+import {Routes} from "@angular/router";
 import {NgDocDemoAssets, NgDocPageComponent, NgDocRootPage} from '@ng-doc/app';
 import {NgDocPageType} from '@ng-doc/core';
 
@@ -9,8 +8,10 @@ const pageContent: string = `{{ pageContent | toTemplateString }}`
 
 @Component({
 	selector: 'ng-doc-page-{{ page.fullRoute | kebabCase }}',
+	standalone: true,
 	template: `<ng-doc-page></ng-doc-page>`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgDocPageComponent],
 	providers: [{provide: NgDocRootPage, useExisting: DynamicComponent}],
 })
 export class DynamicComponent extends NgDocRootPage {
@@ -31,18 +32,10 @@ export class DynamicComponent extends NgDocRootPage {
 	}
 }
 
-@NgModule({
-	declarations: [DynamicComponent],
-	imports: [
-		CommonModule,
-		NgDocPageComponent,
-		RouterModule.forChild([{
-			path: '',
-			component: DynamicComponent,
-			title: `{{ page.title | toTemplateString }}`,
-		}]),
-	],
-	exports: [RouterModule]
-})
-export class DynamicModule {
-}
+const routes: Routes = [{
+	path: '',
+	component: DynamicComponent,
+	title: `{{ page.title | toTemplateString }}`,
+}];
+
+export default routes;

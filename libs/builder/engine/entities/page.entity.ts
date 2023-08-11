@@ -154,7 +154,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 			result,
 			entity: this,
 			toBuilderOutput: async (content: string) => ({
-				content: renderTemplate('./page.module.ts.nunj', {
+				content: renderTemplate('./page.ts.nunj', {
 					context: {
 						page: this,
 						pageContent: content,

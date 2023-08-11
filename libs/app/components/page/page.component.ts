@@ -4,10 +4,10 @@ import {Router, RouterLink, UrlTree} from '@angular/router';
 import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
 import {NgDocBreadcrumbComponent} from '@ng-doc/app/components/breadcrumb';
 import {NgDocTocComponent} from '@ng-doc/app/components/toc';
-import {provideTypeControl} from '@ng-doc/app/helpers';
 import {NgDocContext, NgDocNavigation} from '@ng-doc/app/interfaces';
 import {NgDocSanitizeHtmlPipe} from '@ng-doc/app/pipes/sanitize-html';
 import {NgDocPageProcessorDirective} from '@ng-doc/app/processors';
+import {provideTypeControl} from '@ng-doc/app/providers/type-control';
 import {NG_DOC_CONTEXT} from '@ng-doc/app/tokens';
 import {
 	NgDocBooleanControlComponent,

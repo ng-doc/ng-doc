@@ -15,7 +15,8 @@ import {
 } from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {NgDocDemoDisplayerComponent} from '@ng-doc/app/components/demo-displayer';
-import {formatHtml, getPlaygroundDemoToken} from '@ng-doc/app/helpers';
+import {formatHtml} from '@ng-doc/app/helpers';
+import {getPlaygroundDemoToken} from '@ng-doc/app/providers/playground-demo';
 import {NgDocFormPartialValue} from '@ng-doc/app/types';
 import {stringify} from '@ng-doc/core';
 import {

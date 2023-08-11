@@ -99,7 +99,7 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 
 	override build(): Observable<NgDocBuildResult<string>> {
 		if (this.target) {
-			const result = renderTemplate('./api.module.ts.nunj', {
+			const result = renderTemplate('./api-list.ts.nunj', {
 				context: {
 					api: this,
 				},

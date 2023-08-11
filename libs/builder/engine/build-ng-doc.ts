@@ -25,7 +25,6 @@ import {task, taskForMany} from './builder-operators/task';
 import {toBuilderOutput} from './builder-operators/to-builder-output';
 import {
 	NgDocContextEntity,
-	NgDocGeneratedModuleEntity,
 	NgDocIndexFileEntity,
 	NgDocKeywordsEntity,
 	NgDocRoutesEntity,
@@ -58,7 +57,6 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 	// Global entities that should be built after each build cycle
 	const globalEntities = [
 		new NgDocContextEntity(store, cache, context),
-		new NgDocGeneratedModuleEntity(store, cache, context),
 		new NgDocIndexFileEntity(store, cache, context),
 		new NgDocRoutesEntity(store, cache, context),
 	];

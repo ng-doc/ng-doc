@@ -1,11 +1,10 @@
 // @ts-nocheck
-import {Component, NgModule, ChangeDetectionStrategy} from '@angular/core';
-import {RouterModule} from '@angular/router';
-import {CommonModule} from '@angular/common';
-import {NgDocPageComponent, NgDocRootPage, NgDocDemoAssets} from '@ng-doc/app';
-import {NgDocPage, NgDocPageType, isRoute} from '@ng-doc/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Routes} from '@angular/router';
+import {NgDocDemoAssets, NgDocPageComponent, NgDocRootPage} from '@ng-doc/app';
+import {isRoute, NgDocPage, NgDocPageType} from '@ng-doc/core';
 import pageEntity from '{{ page.importPath }}';
-import {PlaygroundsModule} from './playgrounds';
+import {PLAYGROUND_COMPONENTS, PLAYGROUND_PROVIDERS} from './playgrounds';
 import demoAssets from './demo-assets';
 
 const pageContent: string = `{{ pageContent | toTemplateString }}`
@@ -13,31 +12,31 @@ const pageContent: string = `{{ pageContent | toTemplateString }}`
 
 @Component({
 	selector: 'ng-doc-page-{{ page.fullRoute | kebabCase }}',
+	standalone: true,
 	template: `<ng-doc-page></ng-doc-page>`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	standalone: true,
 	imports: [
 		NgDocPageComponent,
 		{%- if page.hasImports %}
 		...pageEntity.imports,
 		{%- endif %}
-		PlaygroundsModule,
+		...PLAYGROUND_COMPONENTS,
 	],
-	providers: [{provide: NgDocRootPage, useExisting: DynamicComponent}],
+	providers: [
+		{provide: NgDocRootPage, useExisting: DynamicComponent},
+		PLAYGROUND_PROVIDERS,
+		(pageEntity.providers ?? []),
+	],
 })
 export class DynamicComponent extends NgDocRootPage {
 	readonly routePrefix: string = '{{ page.context.config.routePrefix }}';
 	readonly pageType: NgDocPageType = 'guide';
 	readonly pageContent: string = pageContent;
-
 	{%- if page.editSourceFileUrl %}
 	readonly editSourceFileUrl: string = '{{ page.editSourceFileUrl }}';
-	{%- endif %}
-
-	{%- if page.viewSourceFileUrl %}
+	{%- endif %}{%- if page.viewSourceFileUrl %}
 	readonly viewSourceFileUrl: string = '{{ page.viewSourceFileUrl }}';
-	{%- endif %}
-
+	{%- endif -%}
 	readonly page?: NgDocPage = pageEntity;
 	readonly demoAssets: NgDocDemoAssets = demoAssets;
 
@@ -46,19 +45,12 @@ export class DynamicComponent extends NgDocRootPage {
 	}
 }
 
-@NgModule({
-	imports: [
-		CommonModule,
-		RouterModule.forChild([{
-			...(isRoute(pageEntity.route) ? pageEntity.route : {}),
-			path: '',
-			component: DynamicComponent,
-			title: `{{ page.title | toTemplateString }}`,
-		}]),
-	],
-	providers: pageEntity.providers,
-	exports: [RouterModule]
-})
-export class DynamicModule {
-}
+const routes: Routes = [{
+	...(isRoute(pageEntity.route) ? pageEntity.route : {}),
+	path: '',
+	component: DynamicComponent,
+	title: `{{ page.title | toTemplateString }}`,
+}]
+
+export default routes;
 

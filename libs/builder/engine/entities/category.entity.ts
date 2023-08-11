@@ -90,7 +90,7 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 	}
 
 	override build(): Observable<NgDocBuildResult<string>> {
-		const result: string = renderTemplate('./category.module.ts.nunj', {
+		const result: string = renderTemplate('./category.ts.nunj', {
 			context: {
 				category: this,
 			},

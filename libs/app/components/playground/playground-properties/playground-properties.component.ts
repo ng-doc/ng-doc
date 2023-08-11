@@ -13,8 +13,9 @@ import {
 	SimpleChanges,
 } from '@angular/core';
 import {FormControl, FormGroup, FormsModule} from '@angular/forms';
-import {getTokenForType, isPlaygroundProperty} from '@ng-doc/app/helpers';
+import {isPlaygroundProperty} from '@ng-doc/app/helpers';
 import {NgDocProvidedTypeControl} from '@ng-doc/app/interfaces';
+import {getTokenForType} from '@ng-doc/app/providers/type-control';
 import {extractValueOrThrow, isPresent, objectKeys} from '@ng-doc/core';
 import {NgDocPlaygroundContent, NgDocPlaygroundProperties, NgDocPlaygroundProperty} from '@ng-doc/core/interfaces';
 import {

@@ -93,7 +93,7 @@ export class NgDocApiScopeEntity extends NgDocRouteEntity<NgDocApiScope> {
 
 	override build(): Observable<NgDocBuildResult<string>> {
 		if (this.target) {
-			const result = renderTemplate('./api-scope.module.ts.nunj', {
+			const result = renderTemplate('./api-scope.ts.nunj', {
 				context: {
 					scope: this,
 				},
