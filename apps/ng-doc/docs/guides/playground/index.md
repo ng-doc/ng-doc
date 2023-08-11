@@ -30,8 +30,6 @@ import {NgDocTagModule, NgDocTagComponent} from '@ng-doc/ui-kit';
 import {PageModule} from './ng-doc.module';
 
 const MyAwesomePage: NgDocPage = {
-  // Import modules of your target components if they are not standalone
-  imports: [NgDocTagModule],
   playgrounds: {
     TagPlayground: {
       target: NgDocTagComponent,
@@ -43,10 +41,8 @@ const MyAwesomePage: NgDocPage = {
 export default MyAwesomePage;
 ```
 
-- `target` - The Angular Component/Directive class that will be used for the playground (make sure
-  you export the module of this
-  component from the **module of your page** (`PageModule` in the current example), otherwise
-  Angular will not be able to create it)
+- `target` - The Angular Component/Directive class that will be used for the playground (you
+  should import its module in the `imports` field if it's not standalone)
 - `template` - The template that will be used for the playground, you can use the Angular syntax
   inside,
   but it's value cannot be provided dynamically, so you can't use variables or functions there,
@@ -54,9 +50,6 @@ export default MyAwesomePage;
 - `<ng-doc-selector>` - is a unique tag that will be dynamically replaced with your component's
   selector, and if your component has multiple selectors, NgDoc will also create a view for each
   possible selector.
-
-In this example, we created a playground for the `NgDocTagComponent`, to make it work,
-we also need to import the `NgDocTagModule` in the `imports` field of the page.
 
 ## Displaying
 
@@ -117,16 +110,15 @@ optional, or you just want to make some content in the playground optional, to d
 the `content` field in your playground configuration, for example:
 
 > **Note**
-> If you provide some component in the `content` field, you must import its module in the `imports`
-> field,
-> if this component is standalone, you must import its component class.
+> If you provide some component in the `content` field, you must import it in the `imports`
+> field, if this component is not standalone you must import its module.
 
 ```typescript name="ng-doc.page.ts" {11,15-18}
 import {NgDocDependencies} from '@ng-doc/core';
-import {NgDocTagComponent, NgDocIconModule} from '@ng-doc/ui-kit';
+import {NgDocTagComponent, NgDocIconComponent} from '@ng-doc/ui-kit';
 
 const PageDependencies: NgDocDependencies = {
-  imports: [NgDocTagModule, NgDocIconModule],
+  imports: [NgDocIconComponent],
   playgrounds: {
     TagIconPlayground: {
       target: NgDocTagComponent,
@@ -163,7 +155,6 @@ import {NgDocDependencies} from '@ng-doc/core';
 import {NgDocTagComponent} from '@ng-doc/ui-kit';
 
 const PageDependencies: NgDocDependencies = {
-  imports: [NgDocTagModule],
   playgrounds: {
     TagDataPlayground: {
       target: NgDocTagComponent,

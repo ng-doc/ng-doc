@@ -22,19 +22,18 @@ project.
 ### Registering a theme
 
 Once you have created a theme file, you need to register it, you can do this by passing a list of
-your themes to the `forRoot` method of the `NgDocModule` module
+your themes to the NgDoc configuration for the app.
 
-Your theme value must match the `NgDocTheme` interface.
+```typescript name="main.ts"
+import {bootstrapApplication} from '@angular/platform-browser';
+import {provideNgDocAppConfig} from '@ng-doc/app';
 
-```typescript name="app.module.ts"
-import {NgModule} from '@angular/core';
-import {NgDocModule} from '@ng-doc/app';
+import {AppComponent} from './app/app.component';
 import {AppComponent} from './app.component';
 
-@NgModule({
-  declarations: [AppComponent],
-  imports: [
-    NgDocModule.forRoot({
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideNgDocAppConfig({
       themes: [
         {
           // Your theme ID that you can use to enable theme
@@ -45,9 +44,7 @@ import {AppComponent} from './app.component';
       ],
     }),
   ],
-  bootstrap: [AppComponent],
-})
-export class AppModule {}
+}).catch((err: unknown) => console.error(err));
 ```
 
 ### Theme content
@@ -80,24 +77,23 @@ export class AppComponent {
 ## Theme by default
 
 If you don't need the functionality to switch themes on the fly and would like to set a default
-theme, then you can do this by passing a theme id to the `forRoot` method of the `NgDocModule`
-module.
+theme, then you can do this by passing a theme id to the `defaultThemeId` field of the NgDoc
+configuration.
 
 > **Note**
 > You can also provide `auto` value to the `defaultThemeId` field, then NgDoc will automatically
-> select the theme based on the user's system settings.
+> select the theme based on the user's OS settings.
 
-```typescript name="app.module.ts" {7}
-import {NgModule} from '@angular/core';
-import {NgDocModule} from '@ng-doc/app';
+```typescript name="main.ts" {8}
+import {bootstrapApplication} from '@angular/platform-browser';
+import {provideNgDocAppConfig} from '@ng-doc/app';
+
+import {AppComponent} from './app/app.component';
 import {AppComponent} from './app.component';
 
-@NgModule({
-  declarations: [AppComponent],
-  imports: [NgDocModule.forRoot({defaultThemeId: 'custom-theme'})],
-  bootstrap: [AppComponent],
-})
-export class AppModule {}
+bootstrapApplication(AppComponent, {
+  providers: [provideNgDocAppConfig({defaultThemeId: 'custom-theme'})],
+}).catch((err: unknown) => console.error(err));
 ```
 
 ## Themes out of the box
@@ -109,22 +105,25 @@ NgDoc comes with following themes out of the box:
 - Dark Purple theme (`NG_DOC_DARK_PURPLE_THEME`)
 
 The light theme is set by default and has no `id`, while other themes are optional and can be
-loaded using the `NgDocThemeService` service, or set by default using the `defaultThemeId` field in
-the `forRoot` method of the module ` NgDocModule`.
+loaded using the `NgDocThemeService` service, or set by default using the `defaultThemeId` for
+the configuration of the documentation app.
 
 For example, you can set the dark theme by default as follows
 
-```typescript name="app.module.ts" {7}
-import {NgModule} from '@angular/core';
-import {NgDocModule, NG_DOC_NIGHT_THEME} from '@ng-doc/app';
+```typescript name="main.ts" {7}
+import {bootstrapApplication} from '@angular/platform-browser';
+import {provideNgDocAppConfig} from '@ng-doc/app';
+
+import {AppComponent} from './app/app.component';
 import {AppComponent} from './app.component';
 
-@NgModule({
-  declarations: [AppComponent],
-  imports: [NgDocModule.forRoot({defaultThemeId: NG_DOC_NIGHT_THEME.id})],
-  bootstrap: [AppComponent],
-})
-export class AppModule {}
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideNgDocAppConfig({
+      defaultThemeId: NG_DOC_NIGHT_THEME.id,
+    }),
+  ],
+}).catch((err: unknown) => console.error(err));
 ```
 
 ## Code highlighting

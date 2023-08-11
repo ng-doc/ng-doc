@@ -32,35 +32,28 @@ when one of the positions was changed.
 
 ## Registering Type Control
 
-To make it available for playgrounds, it must be declared and registered in `AppModule`, to do this,
-create a module for this component in which it will be declared and registered as a type control,
-this will allow you to simply import the module in the `AppModule` in the future.
+To make it available for playgrounds, it must be provided on the root level of your application,
+you can do this by providing it in the `providers` array by using the `provideTypeControl` function.
 
-```typescript file="./floating-circle-position-control/floating-circle-position-control.module.ts" name="floating-circle-position-control.module.ts"
+```typescript name="main.ts"
+import {bootstrapApplication} from '@angular/platform-browser';
+import {AppComponent} from './app/app.component';
+import {provideTypeControl} from '@ng-doc/app';
 
-```
-
-And now you can import your module into your root module to make it available for playgrounds.
-
-```typescript name="app.module.ts"
-import {NgModule} from '@angular/core';
-import {FloatingCirclePositionControlModule} from './floating-circle-position-control/floating-circle-position-control.module';
-
-import {AppComponent} from './app.component';
-
-@NgModule({
-  declarations: [AppComponent],
-  imports: [FloatingCirclePositionControlModule],
-  bootstrap: [AppComponent],
-})
-export class AppModule {}
+bootstrapApplication(AppComponent, {
+  providers: [
+    // Registering type control `FloatingCirclePositionControlComponent` for `FloatingCirclePosition` type
+    provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {
+      hideLabel: true,
+    }),
+  ],
+}).catch((err: unknown) => console.error(err));
 ```
 
 ## Using Type Control in the playground
 
-Now all you need to do is import your type control's module into `AppModule`, after which you can
-create a playground for the `FloatingCircleComponent` component, in which the `position` input will
-be replaced by your type control, and you can start playing with `position` values.
+That's all, now if you create a playground for the `FloatingCircleComponent` component,
+`position` input will be replaced by your type control, and you can start playing with `position` values.
 
 {{ NgDocActions.playground("FloatingCircle") }}
 
@@ -68,15 +61,18 @@ be replaced by your type control, and you can start playing with `position` valu
 
 In the example above, we registered a type control for the `FloatingCirclePosition` type like this:
 
-```typescript name="floating-circle-position-control.module.ts"
-@NgModule({
+```typescript name="main.ts"
+import {bootstrapApplication} from '@angular/platform-browser';
+import {AppComponent} from './app/app.component';
+import {provideTypeControl} from '@ng-doc/app';
+
+bootstrapApplication(AppComponent, {
   providers: [
     provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {
       hideLabel: true,
     }),
   ],
-})
-export class FloatingCirclePositionControlModule {}
+}).catch((err: unknown) => console.error(err));
 ```
 
 And it worked, but you should remember, that NgDoc is sensitive to the type name, so if you change
@@ -99,8 +95,12 @@ Then you will need to register a new type control for the `FloatingCirclePositio
 and make sure that your type control can handle `undefined` values. You can register multiple types
 for a single type control at the same time, for example:
 
-```typescript name="floating-circle-position-control.module.ts"
-@NgModule({
+```typescript name="main.ts"
+import {bootstrapApplication} from '@angular/platform-browser';
+import {AppComponent} from './app/app.component';
+import {provideTypeControl} from '@ng-doc/app';
+
+bootstrapApplication(AppComponent, {
   providers: [
     provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {
       hideLabel: true,
@@ -109,8 +109,7 @@ for a single type control at the same time, for example:
       hideLabel: true,
     }),
   ],
-})
-export class FloatingCirclePositionControlModule {}
+}).catch((err: unknown) => console.error(err));
 ```
 
 ## Ordering
@@ -119,15 +118,18 @@ NgDoc orders type controls by the order property which is set in the `provideTyp
 and the name of the `@Input` property, so if you want to change the order of your type control,
 you can do it by changing the order property.
 
-```typescript name="floating-circle-position-control.module.ts"
-@NgModule({
+```typescript name="main.ts"
+import {bootstrapApplication} from '@angular/platform-browser';
+import {AppComponent} from './app/app.component';
+import {provideTypeControl} from '@ng-doc/app';
+
+bootstrapApplication(AppComponent, {
   providers: [
     provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {
       order: 1,
     }),
   ],
-})
-export class FloatingCirclePositionControlModule {}
+}).catch((err: unknown) => console.error(err));
 ```
 
 Below is a list of order values for the types that are already registered in NgDoc, so you can

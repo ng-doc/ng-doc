@@ -8,48 +8,34 @@ and how to create a custom search.
 By default, the search is configured to search in English. If your documentation is in another
 language, you can change the language of the search to match your documentation.
 To do so, you need to import stemmer from `@orama/stemmers` package and provide it to the
-`provideSearchEngine` function in your root module.
+`provideSearchEngine` function.
 
-```ts name="app.module.ts" {12}
-import {NgModule} from '@angular/core';
+```ts name="main.ts" {3,7}
+import {bootstrapApplication} from '@angular/platform-browser';
 import {NgDocDefaultSearchEngine, provideSearchEngine} from '@ng-doc/app';
-
-import {AppComponent} from './app.component';
 import {stemmer} from '@orama/stemmers/dutch';
+import {AppComponent} from './app/app.component';
 
-@NgModule({
-  declarations: [AppComponent],
-  imports: [
-    // ...
-  ],
+bootstrapApplication(AppComponent, {
   providers: [provideSearchEngine(NgDocDefaultSearchEngine, {stemmer})],
-  bootstrap: [AppComponent],
-})
-export class AppModule {}
+}).catch((err: unknown) => console.error(err));
 ```
 
 ## Configuration
 
 You can configure the default search engine by providing the `NgDocDefaultSearchEngineOptions`
-object to the `provideSearchEngine` function in your root module.
+object to the `provideSearchEngine` function.
 
 For example, increasing the number of results returned by the search engine:
 
-```ts name="app.module.ts" {11}
-import {NgModule} from '@angular/core';
+```ts name="main.ts" {6}
+import {bootstrapApplication} from '@angular/platform-browser';
 import {NgDocDefaultSearchEngine, provideSearchEngine} from '@ng-doc/app';
+import {AppComponent} from './app/app.component';
 
-import {AppComponent} from './app.component';
-
-@NgModule({
-  declarations: [AppComponent],
-  imports: [
-    // ...
-  ],
+bootstrapApplication(AppComponent, {
   providers: [provideSearchEngine(NgDocDefaultSearchEngine, {limit: 20})],
-  bootstrap: [AppComponent],
-})
-export class AppModule {}
+}).catch((err: unknown) => console.error(err));
 ```
 
 ## Avoiding Indexing
@@ -68,7 +54,7 @@ The content of this section will not be indexed by the builder.
 
 You can create your own search engine that will be used by the `NgDocSearchComponent` in the navbar.
 To do so, you need to implement the `NgDocSearchEngine` class and provide it via
-`provideSearchEngine` function in your root module.
+`provideSearchEngine` function.
 
 > **Note**
 > To get data for search, you can load indexes via HTTP, by default they can be loaded from assets
@@ -120,22 +106,14 @@ export class CustomSearchEngine extends NgDocSearchEngine {
 }
 ```
 
-After you have created your search engine, you need to provide it in your root module using
-`provideSearchEngine` function.
+After you have created your search engine, you need to provide using `provideSearchEngine` function.
 
-```ts name="app.module.ts" {11}
-import {NgModule} from '@angular/core';
+```ts name="main.ts" {11}
+import {bootstrapApplication} from '@angular/platform-browser';
 import {provideSearchEngine} from '@ng-doc/app';
+import {AppComponent} from './app/app.component';
 
-import {AppComponent} from './app.component';
-
-@NgModule({
-  declarations: [AppComponent],
-  imports: [
-    // ...
-  ],
+bootstrapApplication(AppComponent, {
   providers: [provideSearchEngine(CustomSearchEngine)],
-  bootstrap: [AppComponent],
-})
-export class AppModule {}
+}).catch((err: unknown) => console.error(err));
 ```

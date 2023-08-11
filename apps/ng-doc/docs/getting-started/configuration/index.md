@@ -86,7 +86,7 @@ export default config;
 ## Output folder
 
 You can also change the output folder for the documentation application by specifying `outDir`,
-this folder is used for storing generated pages and modules.
+this folder is used for storing generated pages and other NgDoc files.
 
 ```typescript name="ng-doc.config.ts"
 import {NgDocConfiguration} from '@ng-doc/builder';
@@ -186,45 +186,8 @@ By default, the documentation is located at the root of the application router a
 like `localhost:4200/getting-started`, but sometimes you may need to move it to a different route
 to display other pages of the application as a landing page or something like that.
 
-To do this, you need to create a separate component and module with routing that will be responsible
-for displaying the documentation, for example:
-
-### Module
-
-As far as you can see, we just moved the import of NgDoc modules from `AppModule` to a
-new `DocsModule`
-and made it a child, in the future we will also do lazy loading so as not to load dependencies that
-other pages do not need.
-
-```typescript name="docs.module.ts"
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
-import {NG_DOC_ROUTING, NgDocGeneratedModule} from '@ng-doc/generated';
-import {DocsComponent} from './docs.component';
-import {NgDocNavbarModule} from '@ng-doc/app/components/navbar';
-import {NgDocRootModule} from '@ng-doc/app/components/root';
-import {NgDocSidebarModule} from '@ng-doc/app/components/sidebar';
-
-@NgModule({
-  imports: [
-    CommonModule,
-    NgDocNavbarModule,
-    NgDocSidebarModule,
-    NgDocModule.forRoot(),
-    NgDocGeneratedModule.forRoot(),
-    RouterModule.forChild([
-      {
-        path: '',
-        children: NG_DOC_ROUTING,
-      },
-    ]),
-  ],
-  declarations: [DocsComponent],
-  exports: [RouterModule],
-})
-export class DocsModule {}
-```
+To do this, you need to create a component with routing that will be responsible
+for displaying the documentation.
 
 ### Component
 
@@ -233,6 +196,7 @@ Same for the component, we just move the content that NgDoc adds by default to `
 
 ```typescript name="docs.component.ts"
 import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Routes} from '@angular/router';
 
 @Component({
   selector: 'ng-doc-docs',
@@ -251,33 +215,44 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocsComponent {}
+
+const routes: Routes = [
+  {
+    path: '',
+    component: DocsComponent,
+    children: NG_DOC_ROUTING,
+  },
+];
+
+export default routes;
 ```
 
-### Routing in AppModule
+### Global routing configuration
 
-Now you need to add lazy loading for DocsModule and set a route for it
+Now you need to add lazy loading for DocsComponent and set a route for it
 
-```typescript name="app.module.ts"
-import {NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
-import {RouterModule} from '@angular/router';
+```typescript name="main.ts"
+import {bootstrapApplication} from '@angular/platform-browser';
+import {provideRouter, withInMemoryScrolling} from '@angular/router';
 
-import {AppComponent} from './app.component';
+import {AppComponent} from './app/app.component';
 
-@NgModule({
-  declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    RouterModule.forRoot([
-      {
-        path: 'docs',
-        loadChildren: () => import('./docs/docs.module').then((m: typeof import('./docs/docs.module')) => m.DocsModule),
-      },
-    ]),
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideRouter(
+      [
+        {
+          path: 'docs',
+          loadChildren: () => import('./docs/docs.component'),
+        },
+      ],
+      withInMemoryScrolling({
+        scrollPositionRestoration: 'enabled',
+        anchorScrolling: 'enabled',
+      }),
+    ),
   ],
-  bootstrap: [AppComponent],
-})
-export class AppModule {}
+}).catch((err: unknown) => console.error(err));
 ```
 
 ### Configure NgDoc route prefix

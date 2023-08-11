@@ -39,13 +39,13 @@ the `<img>` element
 and define them as inputs for our component.
 
 Now we need to register our Page Processor, you can do it in the `ng-doc.page.ts` file, if you want
-to enable it only for one page, or inside your `app.module.ts` if you want to enable it for all
+to enable it only for one page, or inside your `main.ts` if you want to enable it for all
 pages:
 
 > **Warning**
 > Be careful when you register your Page Processors, `providePageProcessor` function uses `multi: true`,
-> so if you register your Page Processor in the `ng-doc.page.ts` file and in the `app.module.ts` file,
-> all processors from the `app.module.ts` file will be ignored.
+> so if you register your Page Processor in the `ng-doc.page.ts` file and in the `main.ts` file,
+> all processors from the `main.ts` file will be ignored.
 
 ```typescript name="ng-doc.page.ts"
 import {NgDocPage} from '@ng-doc/core';
