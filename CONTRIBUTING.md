@@ -17,12 +17,14 @@ smooth collaboration, please follow the guidelines below.
 
 ## How to Contribute
 
-1. Fork the repository and create your branch from the `main` branch.
-2. Make your changes and test them thoroughly.
-3. Ensure your code follows our coding guidelines (see [Coding Guidelines](#coding-guidelines)).
-4. Commit your changes and provide a descriptive commit message.
-5. Push your changes to your forked repository.
-6. Submit a pull request to the `main` branch of our repository.
+1. Connect to [Gitpod](https://gitpod.io). If you don't have an account, create one with the Github provider (it's free!)
+2. Create a new workspace inside Gitpod.
+![Gitpod config workspace startup](https://github.com/ng-doc/ng-doc/assets/89700030/2d05d145-d668-4a82-b50f-e5041a79c114)
+3. Create a new branch for your feature/bugfix.
+4. Ensure your code follows our coding guidelines (see [Coding Guidelines](#coding-guidelines)).
+5. Commit your changes and provide a descriptive commit message.
+6. Push your changes to your forked repository (if you try to push on NgDoc repo directly, you will be prompted to fork the repo).
+7. Submit a pull request to the `main` branch of our repository.
 
 ## Pull Requests
 
