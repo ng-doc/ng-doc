@@ -1,20 +1,28 @@
+import {vol} from 'memfs';
+
 import {processSnippets} from '../process-snippets';
 
+jest.mock('fs');
+
 describe('processSnippets', () => {
+	beforeEach(() => {
+		vol.reset();
+	});
+
 	describe('JS and CSS snippets', () => {
 		describe('inline comment', () => {
 			it('should extract snippet', () => {
 				const code = `
 			function test() {
 				// snippet
-				console.log('test');
+				console.log(123);
 				// snippet
 			}
 		`;
 
 				expect(processSnippets(code)).toEqual([
 					{
-						code: `console.log('test');`,
+						code: `console.log(123);`,
 						lang: 'ts',
 					},
 				]);
@@ -24,21 +32,21 @@ describe('processSnippets', () => {
 				const code = `
 			function test() {
 				// snippet
-				console.log('test1');
+				console.log(1);
 				// snippet
 				// snippet
-				console.log('test2');
+				console.log(2);
 				// snippet
 			}
 		`;
 
 				expect(processSnippets(code)).toEqual([
 					{
-						code: `console.log('test1');`,
+						code: `console.log(1);`,
 						lang: 'ts',
 					},
 					{
-						code: `console.log('test2');`,
+						code: `console.log(2);`,
 						lang: 'ts',
 					},
 				]);
@@ -48,9 +56,9 @@ describe('processSnippets', () => {
 				const code = `
 			function test() {
 				// snippet#1
-				console.log('test1');
+				console.log(1);
 				// snippet#2
-				console.log('test2');
+				console.log(2);
 				// snippet#2
 				// snippet#1
 			}
@@ -58,12 +66,12 @@ describe('processSnippets', () => {
 
 				expect(processSnippets(code)).toEqual([
 					{
-						code: `console.log('test1');
-console.log('test2');`,
+						code: `console.log(1);
+console.log(2);`,
 						lang: 'ts',
 					},
 					{
-						code: `console.log('test2');`,
+						code: `console.log(2);`,
 						lang: 'ts',
 					},
 				]);
@@ -73,14 +81,14 @@ console.log('test2');`,
 				const code = `
 			function test() {
 				// snippet:js
-				console.log('test1');
+				console.log(1);
 				// snippet
 			}
 		`;
 
 				expect(processSnippets(code)).toEqual([
 					{
-						code: `console.log('test1');`,
+						code: `console.log(1);`,
 						lang: 'js',
 					},
 				]);
@@ -90,14 +98,14 @@ console.log('test2');`,
 				const code = `
 			function test() {
 				// snippet "Title"
-				console.log('test1');
+				console.log(1);
 				// snippet
 			}
 		`;
 
 				expect(processSnippets(code)).toEqual([
 					{
-						code: `console.log('test1');`,
+						code: `console.log(1);`,
 						lang: 'ts',
 						title: 'Title',
 					},
@@ -108,14 +116,14 @@ console.log('test2');`,
 				const code = `
 			function test() {
 				// snippet opened
-				console.log('test1');
+				console.log(1);
 				// snippet
 			}
 		`;
 
 				expect(processSnippets(code)).toEqual([
 					{
-						code: `console.log('test1');`,
+						code: `console.log(1);`,
 						lang: 'ts',
 						opened: true,
 					},
@@ -126,14 +134,14 @@ console.log('test2');`,
 				const code = `
 			function test() {
 				// snippet:js "Title"
-				console.log('test1');
+				console.log(1);
 				// snippet
 			}
 		`;
 
 				expect(processSnippets(code)).toEqual([
 					{
-						code: `console.log('test1');`,
+						code: `console.log(1);`,
 						lang: 'js',
 						title: 'Title',
 					},
@@ -144,92 +152,129 @@ console.log('test2');`,
 				const code = `
 			function test() {
 				// snippet icon="angular"
-				console.log('test1');
+				console.log(1);
 				// snippet
 			}
 		`;
 
 				expect(processSnippets(code)).toEqual([
 					{
-						code: `console.log('test1');`,
+						code: `console.log(1);`,
 						lang: 'ts',
 						icon: 'angular',
 					},
 				]);
 			});
-		});
 
-		describe('block comment', () => {
-			it('should extract snippet', () => {
+			it('should load snippet from file', () => {
+				vol.fromJSON({
+					'/demo/test.ts': `console.log(123);`,
+				});
+
 				const code = `
-			function test() {
-				/* snippet */
-				console.log('test');
-				/* snippet */
-			}
-		`;
+				function test() {
+					// snippet-from-file="./test.ts"
+				}
+			`;
 
-				expect(processSnippets(code)).toEqual([
-					{
-						code: `console.log('test');`,
-						lang: 'ts',
-					},
-				]);
-			});
-
-			it('should extract multiple snippets', () => {
-				const code = `
-			function test() {
-				/* snippet */
-				console.log('test1');
-				/* snippet */
-				/* snippet */
-				console.log('test2');
-				/* snippet */
-			}
-		`;
-
-				expect(processSnippets(code)).toEqual([
-					{
-						code: `console.log('test1');`,
-						lang: 'ts',
-					},
-					{
-						code: `console.log('test2');`,
-						lang: 'ts',
-					},
-				]);
-			});
-
-			it('should extract nested snippets with id', () => {
-				const code = `
-			function test() {
-				/* snippet#1 */
-				console.log('test1');
-				/* snippet#2 */
-				console.log('test2');
-				/* snippet#2 */
-				/* snippet#1 */
-			}
-		`;
-
-				expect(processSnippets(code)).toEqual([
-					{
-						code: `console.log('test1');\nconsole.log('test2');`,
-						lang: 'ts',
-					},
-					{
-						code: `console.log('test2');`,
-						lang: 'ts',
-					},
-				]);
-			});
-		});
+				expect(processSnippets(code, '/demo')).toEqual([{
+					code: `console.log(123);`,
+					lang: 'ts',
+					title: 'test.ts',
+				}]);
+			})
+		})
 	});
 
-	describe('HTML snippets', () => {
+	describe('block comment', () => {
 		it('should extract snippet', () => {
 			const code = `
+			function test() {
+				/* snippet */
+				console.log(123);
+				/* snippet */
+			}
+		`;
+
+			expect(processSnippets(code)).toEqual([
+				{
+					code: `console.log(123);`,
+					lang: 'ts',
+				},
+			]);
+		});
+
+		it('should extract multiple snippets', () => {
+			const code = `
+			function test() {
+				/* snippet */
+				console.log(1);
+				/* snippet */
+				/* snippet */
+				console.log(2);
+				/* snippet */
+			}
+		`;
+
+			expect(processSnippets(code)).toEqual([
+				{
+					code: `console.log(1);`,
+					lang: 'ts',
+				},
+				{
+					code: `console.log(2);`,
+					lang: 'ts',
+				},
+			]);
+		});
+
+		it('should extract nested snippets with id', () => {
+			const code = `
+			function test() {
+				/* snippet#1 */
+				console.log(1);
+				/* snippet#2 */
+				console.log(2);
+				/* snippet#2 */
+				/* snippet#1 */
+			}
+		`;
+
+			expect(processSnippets(code)).toEqual([
+				{
+					code: `console.log(1);\nconsole.log(2);`,
+					lang: 'ts',
+				},
+				{
+					code: `console.log(2);`,
+					lang: 'ts',
+				},
+			]);
+		});
+
+		it('should load snippet from file', () => {
+			vol.fromJSON({
+				'/demo/test.ts': `console.log(123);`,
+			});
+
+			const code = `
+				function test() {
+					/* snippet-from-file="./test.ts" */
+				}
+			`;
+
+			expect(processSnippets(code, '/demo')).toEqual([{
+				code: `console.log(123);`,
+				lang: 'ts',
+				title: 'test.ts',
+			}]);
+		})
+	});
+});
+
+describe('HTML snippets', () => {
+	it('should extract snippet', () => {
+		const code = `
 			<div>
 				<!-- snippet -->
 				<p>test</p>
@@ -237,16 +282,16 @@ console.log('test2');`,
 			</div>
 		`;
 
-			expect(processSnippets(code)).toEqual([
-				{
-					code: `<p>test</p>`,
-					lang: 'html',
-				},
-			]);
-		});
+		expect(processSnippets(code)).toEqual([
+			{
+				code: `<p>test</p>`,
+				lang: 'html',
+			},
+		]);
+	});
 
-		it('should extract multiple snippets', () => {
-			const code = `
+	it('should extract multiple snippets', () => {
+		const code = `
 			<div>
 				<!-- snippet -->
 				<p>test1</p>
@@ -257,20 +302,20 @@ console.log('test2');`,
 			</div>
 		`;
 
-			expect(processSnippets(code)).toEqual([
-				{
-					code: `<p>test1</p>`,
-					lang: 'html',
-				},
-				{
-					code: `<p>test2</p>`,
-					lang: 'html',
-				},
-			]);
-		});
+		expect(processSnippets(code)).toEqual([
+			{
+				code: `<p>test1</p>`,
+				lang: 'html',
+			},
+			{
+				code: `<p>test2</p>`,
+				lang: 'html',
+			},
+		]);
+	});
 
-		it('should extract nested snippets with id', () => {
-			const code = `
+	it('should extract nested snippets with id', () => {
+		const code = `
 			<div>
 				<!-- snippet#1 -->
 				<p>test1</p>
@@ -281,20 +326,20 @@ console.log('test2');`,
 			</div>
 		`;
 
-			expect(processSnippets(code)).toEqual([
-				{
-					code: `<p>test1</p>\n<p>test2</p>`,
-					lang: 'html',
-				},
-				{
-					code: `<p>test2</p>`,
-					lang: 'html',
-				},
-			]);
-		});
+		expect(processSnippets(code)).toEqual([
+			{
+				code: `<p>test1</p>\n<p>test2</p>`,
+				lang: 'html',
+			},
+			{
+				code: `<p>test2</p>`,
+				lang: 'html',
+			},
+		]);
+	});
 
-		it('should extract title from snippet', () => {
-			const code = `
+	it('should extract title from snippet', () => {
+		const code = `
 			<div>
 				<!-- snippet "Title" -->
 				<p>test1</p>
@@ -302,17 +347,17 @@ console.log('test2');`,
 			</div>
 		`;
 
-			expect(processSnippets(code)).toEqual([
-				{
-					code: `<p>test1</p>`,
-					lang: 'html',
-					title: 'Title',
-				},
-			]);
-		});
+		expect(processSnippets(code)).toEqual([
+			{
+				code: `<p>test1</p>`,
+				lang: 'html',
+				title: 'Title',
+			},
+		]);
+	});
 
-		it('should extract title and lang from snippet', () => {
-			const code = `
+	it('should extract title and lang from snippet', () => {
+		const code = `
 			<div>
 				<!-- snippet:xml "Title" -->
 				<p>test1</p>
@@ -320,17 +365,17 @@ console.log('test2');`,
 			</div>
 		`;
 
-			expect(processSnippets(code)).toEqual([
-				{
-					code: `<p>test1</p>`,
-					lang: 'xml',
-					title: 'Title',
-				},
-			]);
-		});
+		expect(processSnippets(code)).toEqual([
+			{
+				code: `<p>test1</p>`,
+				lang: 'xml',
+				title: 'Title',
+			},
+		]);
+	});
 
-		it('should extract icon from snippet', () => {
-			const code = `
+	it('should extract icon from snippet', () => {
+		const code = `
 			<div>
 				<!-- snippet icon="angular" -->
 				<p>test1</p>
@@ -338,17 +383,17 @@ console.log('test2');`,
 			</div>
 		`;
 
-			expect(processSnippets(code)).toEqual([
-				{
-					code: `<p>test1</p>`,
-					lang: 'html',
-					icon: 'angular',
-				},
-			]);
-		});
+		expect(processSnippets(code)).toEqual([
+			{
+				code: `<p>test1</p>`,
+				lang: 'html',
+				icon: 'angular',
+			},
+		]);
+	});
 
-		it('should extract title, lang and icon from snippet', () => {
-			const code = `
+	it('should extract title, lang and icon from snippet', () => {
+		const code = `
 			<div>
 				<!-- snippet:xml "Title" icon="angular" -->
 				<p>test1</p>
@@ -356,14 +401,31 @@ console.log('test2');`,
 			</div>
 		`;
 
-			expect(processSnippets(code)).toEqual([
-				{
-					code: `<p>test1</p>`,
-					lang: 'xml',
-					title: 'Title',
-					icon: 'angular',
-				},
-			]);
-		});
+		expect(processSnippets(code)).toEqual([
+			{
+				code: `<p>test1</p>`,
+				lang: 'xml',
+				title: 'Title',
+				icon: 'angular',
+			},
+		]);
 	});
+
+	it('should load snippet from file', () => {
+		vol.fromJSON({
+			'/demo/test.html': `<p>test</p>`,
+		});
+
+		const code = `
+			<div>
+				<!-- snippet-from-file="./test.html" -->
+			</div>
+		`;
+
+		expect(processSnippets(code, '/demo')).toEqual([{
+			code: `<p>test</p>`,
+			lang: 'html',
+			title: 'test.html',
+		}]);
+	})
 });

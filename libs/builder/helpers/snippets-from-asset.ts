@@ -1,4 +1,5 @@
 import {NgDocStyleType} from '@ng-doc/core';
+import path from 'path';
 
 import {NgDocAsset} from '../interfaces';
 import {codeTypeFromExt} from './code-type-from-ext';
@@ -12,7 +13,7 @@ import {processSnippets} from './process-snippets';
  * @param inlineStylesType - Inline styles type
  */
 export function snippetsFromAsset(asset: NgDocAsset, inlineStylesType: NgDocStyleType): NgDocAsset[] {
-	const snippets = processLegacySnippets(asset.code).concat(processSnippets(asset.code));
+	const snippets = processLegacySnippets(asset.code).concat(processSnippets(asset.code, path.dirname(asset.filePath)));
 	const codeType = codeTypeFromExt(asset.filePath);
 	const isStylesFile = ['CSS', 'SCSS', 'LESS', 'SASS'].includes(codeType.toUpperCase());
 

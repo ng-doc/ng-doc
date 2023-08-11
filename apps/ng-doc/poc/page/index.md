@@ -1,3 +1,3 @@
-{{ NgDocActions.demo("DemoComponent") }}
+{{ NgDocActions.playground("BtnPlayground", {defaults: {icon: 'arrow-left'} }) }}
 
-`*AnotherPage`
+`*AnotherPage?key=value&key2=value2`

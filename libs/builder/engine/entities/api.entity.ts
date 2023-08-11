@@ -1,4 +1,4 @@
-import {NgDocApi} from '@ng-doc/core';
+import {asArray, NgDocApi} from '@ng-doc/core';
 import * as path from 'path';
 import {Observable, of} from 'rxjs';
 import {map, switchMap, tap} from 'rxjs/operators';
@@ -56,7 +56,11 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 	}
 
 	override get keywords(): NgDocEntityKeyword[] {
-		return [];
+		return [...asArray(this.target?.keyword)].map((key: string) => ({
+			key: `*${key}`,
+			title: this.title,
+			path: this.fullRoute,
+		}));
 	}
 
 	override setParentDynamically(): void {

@@ -1,5 +1,5 @@
 import {NgFor, NgIf} from '@angular/common';
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
 import {objectKeys} from '@ng-doc/core/helpers/object-keys';
@@ -19,7 +19,7 @@ import {NgDocPlaygroundPropertiesComponent} from './playground-properties/playgr
 	imports: [NgIf, NgDocPlaygroundPropertiesComponent, NgFor, NgDocPlaygroundDemoComponent, NgDocAsArrayPipe],
 })
 export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties>
-	implements OnInit, AfterViewInit
+	implements OnChanges
 {
 	@Input({required: true})
 	id: string = '';
@@ -41,15 +41,13 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 	defaultValues?: Record<string, unknown>;
 	configuration!: NgDocPlaygroundConfig;
 
-	constructor(
-		private readonly rootPage: NgDocRootPage,
-		private readonly formBuilder: FormBuilder,
-		private readonly changeDetectorRef: ChangeDetectorRef,
-	) {}
+	constructor(private readonly rootPage: NgDocRootPage, private readonly formBuilder: FormBuilder) {}
 
-	ngOnInit(): void {
-		// Join configuration with options
-		this.configuration = Object.assign({}, this.rootPage.page?.playgrounds?.[this.id], this.options);
+	ngOnChanges({options}: SimpleChanges) {
+		if (options) {
+			// Join configuration with options
+			this.configuration = Object.assign({}, this.rootPage.page?.playgrounds?.[this.id], this.options);
+		}
 	}
 
 	ngAfterViewInit(): void {
@@ -65,8 +63,6 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 			properties: Object.assign({}, this.getPropertiesFormValues(), this.configuration.inputs),
 			content: this.getContentFormValues(),
 		});
-
-		this.changeDetectorRef.detectChanges();
 	}
 
 	private getPropertiesFormValues(): Record<string, unknown> {
@@ -92,7 +88,6 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 
 			return controls;
 		}, {} as Record<keyof T, boolean>);
-		return {};
 	}
 
 	resetForm(): void {

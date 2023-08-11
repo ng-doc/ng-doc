@@ -16,6 +16,8 @@ export function parseSnippet(string: string): NgDocSnippetConfig | undefined {
 		title: {title: string | undefined};
 		opened: {opened: boolean | undefined};
 		snippet: NgDocSnippetConfig;
+		snippetFromFile: NgDocSnippetConfig;
+		anySnippet: NgDocSnippetConfig;
 	}>({
 		keyword: () => P.string('snippet'),
 		id: () => P.string('#').then(P.regexp(/[a-zA-Z0-9-]+/)).fallback(null).map((id) => ({id})),
@@ -30,10 +32,17 @@ export function parseSnippet(string: string): NgDocSnippetConfig | undefined {
 				lang,
 				P.whitespace.then(title.or(icon).or(opened).sepBy(P.whitespace)).fallback([]),
 			).map(([id, lang, rest]) => ({...id, ...lang, ...Object.assign({}, ...rest)}))
-		)
+		),
+		snippetFromFile: ({lang, icon, title, opened}) =>
+			P.seq(
+				param('snippet-from-file', 'fromFile'),
+				lang,
+				P.whitespace.then(title.or(icon).or(opened).sepBy(P.whitespace)).fallback([]),
+			).map(([id, lang, rest]) => ({...id, ...lang, ...Object.assign({}, ...rest)})),
+		anySnippet: ({snippet, snippetFromFile}) => snippetFromFile.or(snippet),
 	});
 
-	const result = parser.snippet.parse(string);
+	const result = parser.anySnippet.parse(string);
 
 	return result.status ? result.value : undefined;
 }

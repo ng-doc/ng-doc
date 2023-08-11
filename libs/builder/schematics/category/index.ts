@@ -15,6 +15,7 @@ import {
 import {join, relative} from 'path';
 
 import {CATEGORY_NAME} from '../../engine/variables';
+import {slash} from '../../helpers/slash';
 import {findClosestFile, getTitle, varNameValidation} from '../utils';
 import {extractDefaultExportName} from '../utils/extract-default-export-name';
 import {NgDocBuildCategorySchema} from './schema';
@@ -42,7 +43,7 @@ export function generate(options: NgDocBuildCategorySchema): Rule {
 		const parentCategoryName: string | null =
 			options.category && closestCategoryFile ? extractDefaultExportName(host, closestCategoryFile) : null;
 		const categoryImportPath: string | null = closestCategoryFile
-			? relative(path, closestCategoryFile).replace(/.ts$/, '')
+			? slash(relative(path, closestCategoryFile)).replace(/.ts$/, '')
 			: null;
 
 		return chain([
