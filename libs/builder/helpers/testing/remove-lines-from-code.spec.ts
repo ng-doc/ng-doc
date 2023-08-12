@@ -21,7 +21,7 @@ describe('removeLinesFromCode', () => {
 			`;
 
 			expect(removeLinesFromCode(code).trim()).toEqual('const a = 1;');
-		})
+		});
 	});
 
 	describe('HTML', () => {
@@ -44,8 +44,8 @@ describe('removeLinesFromCode', () => {
 			`;
 
 			expect(removeLinesFromCode(code).trim()).toEqual('<div>1</div>');
-		})
-	})
+		});
+	});
 
 	describe('CSS', () => {
 		it('should remove one lines from the code', () => {
@@ -68,5 +68,5 @@ describe('removeLinesFromCode', () => {
 
 			expect(removeLinesFromCode(code).trim()).toEqual('.a {color: red;}');
 		});
-	})
-})
+	});
+});

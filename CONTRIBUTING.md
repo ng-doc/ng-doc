@@ -19,7 +19,7 @@ smooth collaboration, please follow the guidelines below.
 
 1. Connect to [Gitpod](https://gitpod.io). If you don't have an account, create one with the Github provider (it's free!)
 2. Create a new workspace inside Gitpod.
-![Gitpod config workspace startup](https://github.com/ng-doc/ng-doc/assets/89700030/2d05d145-d668-4a82-b50f-e5041a79c114)
+   ![Gitpod config workspace startup](https://github.com/ng-doc/ng-doc/assets/89700030/2d05d145-d668-4a82-b50f-e5041a79c114)
 3. Create a new branch for your feature/bugfix.
 4. Ensure your code follows our coding guidelines (see [Coding Guidelines](#coding-guidelines)).
 5. Commit your changes and provide a descriptive commit message.

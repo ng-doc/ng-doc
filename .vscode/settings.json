@@ -1,9 +1,10 @@
 {
-    "files.autoSave": "off",
-    "eslint.format.enable": true,
-    "editor.formatOnSave": true,
-    "eslint.run": "onSave",
-    "[typescript]": {
-        "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
-    },
+	"files.autoSave": "off",
+	"eslint.format.enable": true,
+	"editor.formatOnSave": true,
+	"eslint.run": "onSave",
+	"[typescript]": {
+		"editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+	},
+	"vs-code-prettier-eslint.prettierLast": true
 }

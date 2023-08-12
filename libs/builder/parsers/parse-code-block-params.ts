@@ -31,9 +31,7 @@ export function parseCodeBlockParams(options: string): NgDocCodeBlockParams {
 				.map((fileLineStart) => ({fileLineStart, fileLineEnd: fileLineStart + 1})),
 		lineParams: (p) => p['fileLineRange'].or(p['fileLineStart']).fallback({}),
 		highlightedLinesRange: () =>
-			P.seqMap(number.skip(P.string('-')), number, (start, end) =>
-				[...Array(end + 1).keys()].slice(start - end - 1),
-			),
+			P.seqMap(number.skip(P.string('-')), number, (start, end) => [...Array(end + 1).keys()].slice(start - end - 1)),
 
 		// Main Parsers
 		lineNumbers: () => P.string('lineNumbers').map(() => ({lineNumbers: true})),
@@ -59,7 +57,15 @@ export function parseCodeBlockParams(options: string): NgDocCodeBlockParams {
 
 		// Combined Parsers
 		paramsParser: (p: P.Language) =>
-			p['lineNumbers'].or(p['fileName']).or(p['file']).or(p['name']).or(p['group']).or(p['active']).or(p['icon']).or(p['highlightedLines']).sepBy(P.whitespace),
+			p['lineNumbers']
+				.or(p['fileName'])
+				.or(p['file'])
+				.or(p['name'])
+				.or(p['group'])
+				.or(p['active'])
+				.or(p['icon'])
+				.or(p['highlightedLines'])
+				.sepBy(P.whitespace),
 		languageWithParamsParser: (p) => P.seq(p['language'], p['paramsParser']).map((v) => v.flat()),
 	});
 
