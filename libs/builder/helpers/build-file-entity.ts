@@ -2,7 +2,7 @@ import {escapeRegexp} from '@ng-doc/core';
 import * as esbuild from 'esbuild';
 import {minimatch} from 'minimatch';
 import * as path from 'path';
-import {Node,ObjectLiteralExpression, SourceFile} from 'ts-morph';
+import {Node, ObjectLiteralExpression, SourceFile} from 'ts-morph';
 
 import {CACHE_PATH, PAGE_PATTERN} from '../engine';
 import {getObjectExpressionFromDefault} from './typescript';
@@ -37,7 +37,7 @@ export async function buildFileEntity(sourceFile: SourceFile, tsconfig: string, 
 			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('playgrounds')?.getText() ?? '');
 
 			if (objectLiteralExpression.getProperty('route')) {
-				const route = objectLiteralExpression.getProperty('route')
+				const route = objectLiteralExpression.getProperty('route');
 
 				if (Node.isPropertyAssignment(route)) {
 					const routeValue = route.getInitializer();
@@ -47,7 +47,7 @@ export async function buildFileEntity(sourceFile: SourceFile, tsconfig: string, 
 							if (Node.isPropertyAssignment(prop) && prop.getName() !== 'path') {
 								code = replaceCodeProperty(code, prop.getText());
 							}
-						})
+						});
 					}
 				}
 			}

@@ -27,10 +27,7 @@ export abstract class NgDocBasePlayground implements Pick<NgDocPlaygroundConfig,
 	private playgroundContainer: NgDocPlaygroundComponent = inject(NgDocPlaygroundComponent);
 	private changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
-	protected constructor(
-		private playground?: Type<any>,
-		private playgroundInstance?: Constructor<unknown>,
-	) {
+	protected constructor(private playground?: Type<any>, private playgroundInstance?: Constructor<unknown>) {
 		this.changeDetectorRef.detach();
 		/*
 		 * Extract default values from playground properties. We do this in `ngOnInit` because in this case
@@ -62,7 +59,7 @@ export abstract class NgDocBasePlayground implements Pick<NgDocPlaygroundConfig,
 		 */
 		Promise.resolve().then(() => {
 			this.changeDetectorRef.reattach();
-		})
+		});
 	}
 
 	get data(): any {

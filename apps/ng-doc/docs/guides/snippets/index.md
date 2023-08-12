@@ -13,13 +13,15 @@ create a snippet like this:
 > Snippets also work for components with multiple files
 
 ```typescript name="demo.component.ts"
-@Component({/* ... */})
+@Component({
+  /* ... */
+})
 export class DemoComponent {
-    onClick(): void {
-        // snippet
-        console.log('Hello world');
-        // snippet
-    }
+  onClick(): void {
+    // snippet
+    console.log('Hello world');
+    // snippet
+  }
 }
 ```
 
@@ -28,13 +30,15 @@ export class DemoComponent {
 To give a title to your snippet, you can use the following syntax:
 
 ```typescript name="demo.component.ts"
-@Component({/* ... */})
+@Component({
+  /* ... */
+})
 export class DemoComponent {
-    onClick(): void {
-        // snippet "My Custom Title"
-        console.log('Hello world');
-        // snippet
-    }
+  onClick(): void {
+    // snippet "My Custom Title"
+    console.log('Hello world');
+    // snippet
+  }
 }
 ```
 
@@ -45,13 +49,15 @@ To specify an icon to your snippet, you can add `icon` parameter to your snippet
 {% include "../../shared/registering-icons.md" %}
 
 ```typescript name="demo.component.ts"
-@Component({/* ... */})
+@Component({
+  /* ... */
+})
 export class DemoComponent {
-    onClick(): void {
-        // snippet icon="angular"
-        console.log('Hello world');
-        // snippet
-    }
+  onClick(): void {
+    // snippet icon="angular"
+    console.log('Hello world');
+    // snippet
+  }
 }
 ```
 
@@ -62,22 +68,23 @@ change that by adding `opened` parameter to your snippet, for example:
 
 ```typescript name="demo.component.ts"
 // snippet
-@Component({/* ... */})
+@Component({
+  /* ... */
+})
 // snippet
 export class DemoComponent {
-    onClick(): void {
-        // snippet "My Snippet" opened
-        console.log('Hello world');
-        // snippet
-    }
+  onClick(): void {
+    // snippet "My Snippet" opened
+    console.log('Hello world');
+    // snippet
+  }
 }
 ```
 
 You can also do that by providing your snippet title to the `defaultTab` property of the
 `demo` or `demoPane` method, for example:
 
-> **Note**
-> `defaultTab` property has priority over `opened` snippet parameter.
+> **Note** > `defaultTab` property has priority over `opened` snippet parameter.
 
 ```twig name="index.md"
 {{ '{{ NgDocActions.demo("DemoComponent", {defaultTab: "My Snippet"}) }}' | safe }}
@@ -89,16 +96,18 @@ You can also nest snippets, but to do so, you need to give an id to your snippet
 the id is used to identify the start and end of the snippet, for example:
 
 ```typescript name="demo.component.ts"
-@Component({/* ... */})
+@Component({
+  /* ... */
+})
 export class DemoComponent {
-    onClick(): void {
-        // snippet#s1
-        console.log('Hello world!');
-        // snippet#s2
-        console.log('Hello Mom!');
-        // snippet#s2
-        // snippet#s1
-    }
+  onClick(): void {
+    // snippet#s1
+    console.log('Hello world!');
+    // snippet#s2
+    console.log('Hello Mom!');
+    // snippet#s2
+    // snippet#s1
+  }
 }
 ```
 
@@ -115,13 +124,15 @@ like on the following example:
 
 ```typescript name="demo.component.ts"
 @Component({
-  styles: [`
-    // snippet:css
-    .my-class {
+  styles: [
+    `
+      // snippet:css
+      .my-class {
         color: red;
-    }
-    // snippet
-  `]
+      }
+      // snippet
+    `,
+  ],
 })
 export class DemoComponent {}
 ```
@@ -130,13 +141,15 @@ If you are using nested snippets, you must specify the language after the snippe
 
 ```typescript name="demo.component.ts"
 @Component({
-  styles: [`
-    // snippet#s1:css
-    .my-class {
+  styles: [
+    `
+      // snippet#s1:css
+      .my-class {
         color: red;
-    }
-    // snippet#s1
-  `]
+      }
+      // snippet#s1
+    `,
+  ],
 })
 export class DemoComponent {}
 ```
@@ -152,9 +165,11 @@ for example:
 
 ```typescript name="demo.component.ts"
 // snippet-from-file="./another.component.ts"
-@Component({/* ... */})
+@Component({
+  /* ... */
+})
 export class DemoComponent {
-    onClick(): void {}
+  onClick(): void {}
 }
 ```
 

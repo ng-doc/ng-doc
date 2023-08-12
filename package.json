@@ -85,7 +85,7 @@
 		"parsimmon": "^1.18.1",
 		"posthtml-parser": "0.11.0",
 		"posthtml-render": "3.0.0",
-		"prettier": "2.6.2",
+		"prettier": "2.8.8",
 		"rehype": "12.0.1",
 		"rehype-format": "4.0.1",
 		"rehype-highlight": "6.0.0",

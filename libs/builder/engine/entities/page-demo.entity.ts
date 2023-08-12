@@ -16,7 +16,8 @@ import {
 	forObjectValue,
 	forObjectValues,
 	postProcessHtmlPlugin,
-	processHtmlPlugin, removeLinesPlugin,
+	processHtmlPlugin,
+	removeLinesPlugin,
 } from './plugins';
 import {applyPlugin} from './plugins/entity-plugins/apply.plugin';
 import {wrapCodePlugin} from './plugins/entity-plugins/wrap-code.plugin';

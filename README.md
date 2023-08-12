@@ -18,6 +18,7 @@
 [![GitHub Workflow Status][build-shield]][build-url]
 [![NPM][npm-shield]][npm-url]
 [![MIT License][license-shield]][license-url]
+
   </p>
 </div>
 
@@ -48,6 +49,7 @@ NgDoc allows you to do the following things:
 ## Installation
 
 To know how to install and use NgDoc, please check our [documentation](https://ng-doc.com/).
+
 <!-- CONTRIBUTING -->
 
 ## Contributing
@@ -55,6 +57,8 @@ To know how to install and use NgDoc, please check our [documentation](https://n
 Contributions are what make the open source community such an amazing place to be learn, inspire,
 and create. Any contributions you make are **greatly appreciated**. Please read the
 [Contributing Guidelines](CONTRIBUTING.md) for more information.
+
+To make sure you're following the Coding Guidelines, this repository has a [Gitpod](https://gitpod.io) configuration that sets up a workspace for you, with all the necessary extensions installed and configured. Moreover, it's free!
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

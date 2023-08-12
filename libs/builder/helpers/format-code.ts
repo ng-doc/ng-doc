@@ -15,8 +15,8 @@ export function formatCode(code: string, codeType: NgDocCodeType | null = 'TypeS
 			const config = require('prettier').resolveConfig.sync(process.cwd());
 
 			return require('prettier')
-					.format(code, {...config, parser, embeddedLanguageFormatting: 'auto'})
-					.trim()
+				.format(code, {...config, parser, embeddedLanguageFormatting: 'auto'})
+				.trim();
 		}
 
 		return code.trim();

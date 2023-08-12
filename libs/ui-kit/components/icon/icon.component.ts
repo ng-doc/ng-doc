@@ -53,16 +53,18 @@ export class NgDocIconComponent implements OnChanges, OnInit {
 			.pipe(
 				startWith(null),
 				switchMap(() =>
-					this.httpClient.get(this.href, {
-						responseType: 'text',
-						params: {[NgDocCacheInterceptor.TOKEN]: 'true'},
-					}).pipe(
-						catchError((e: Error) => {
-							console.error(e);
-
-							return of('')
+					this.httpClient
+						.get(this.href, {
+							responseType: 'text',
+							params: {[NgDocCacheInterceptor.TOKEN]: 'true'},
 						})
-					)
+						.pipe(
+							catchError((e: Error) => {
+								console.error(e);
+
+								return of('');
+							}),
+						),
 				),
 			)
 			.subscribe((svg: string) => (this.elementRef.nativeElement.innerHTML = svg));

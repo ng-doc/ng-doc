@@ -11,7 +11,9 @@ in the example below, the constructor will be hidden if you display the code in 
 load its code from a file.
 
 ```typescript name="demo.component.ts"
-@Component({/* ... */})
+@Component({
+  /* ... */
+})
 export class DemoComponent {
   // ng-doc-ignore-line
   constructor() {}
@@ -26,7 +28,9 @@ You can also hide multiple lines, for example, to hide 5 lines after the comment
 the following:
 
 ```typescript name="demo.component.ts"
-@Component({/* ... */})
+@Component({
+  /* ... */
+})
 export class DemoComponent {
   // ng-doc-ignore-line 5
   constructor() {}
