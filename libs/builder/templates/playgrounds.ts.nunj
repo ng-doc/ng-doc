@@ -1,20 +1,9 @@
 // @ts-nocheck
-import {
-	ChangeDetectionStrategy,
-	Component, inject,
-	InjectionToken,
-	NgModule,
-	Type,
-	ViewChild,
-	ViewContainerRef
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, NgModule, Type, ViewChild, ViewContainerRef} from '@angular/core';
 import {NgDocBasePlayground, providePlaygroundDemo} from '@ng-doc/app';
 // noinspection ES6UnusedImports
 import pageEntity from '{{ targetImportPath }}';
 import {CommonModule} from '@angular/common';
-import {Constructor} from '@ng-doc/core';
-
-const PLAYGROUND_COMPONENT = new InjectionToken<Type<any>>('PLAYGROUND_COMPONENT')
 
 {%- set components = [] %}
 {%- set index = 1 %}
@@ -42,14 +31,13 @@ const PLAYGROUND_COMPONENT = new InjectionToken<Type<any>>('PLAYGROUND_COMPONENT
 		pageEntity.playgrounds['{{ id }}'].target,
 		{%- endif %}
 	],
-	providers: [{
-		provide: PLAYGROUND_COMPONENT,
-		useClass: pageEntity.playgrounds['{{ id }}'].target,
-	}],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class {{ comp.name }} extends NgDocBasePlayground {
 	static readonly selector: string = '{{ comp.selector }}';
+
+	@ViewChild(pageEntity.playgrounds['{{ id }}'].target, {static: true})
+	readonly playground: Type<any>;
 
 	@ViewChild(pageEntity.playgrounds['{{ id }}'].target, {static: true, read: ViewContainerRef})
 	readonly viewContainerRef: ViewContainerRef;
@@ -57,7 +45,7 @@ export class {{ comp.name }} extends NgDocBasePlayground {
 	readonly configData: any = pageEntity.playgrounds['{{ id }}'].data;
 
 	constructor() {
-		super(inject(PLAYGROUND_COMPONENT), pageEntity.playgrounds['{{ id }}'].target);
+		super(pageEntity.playgrounds['{{ id }}'].target);
 	}
 }
 {%- set index = index + 1 -%}
