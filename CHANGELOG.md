@@ -1,3 +1,10 @@
+## [16.11.1](https://github.com/ng-doc/ng-doc/compare/v16.11.0...v16.11.1) (2023-08-13)
+
+
+### Bug Fixes
+
+* **project:** providers inside a component is not recognized in playgrounds ([fcf8298](https://github.com/ng-doc/ng-doc/commit/fcf8298ecbde5fd09c909790247b49998d7f379d)), closes [#96](https://github.com/ng-doc/ng-doc/issues/96)
+
 # [16.11.0](https://github.com/ng-doc/ng-doc/compare/v16.10.0...v16.11.0) (2023-08-07)
 
 
