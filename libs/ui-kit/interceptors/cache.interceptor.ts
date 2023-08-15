@@ -1,4 +1,10 @@
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse} from '@angular/common/http';
+import {
+	HttpEvent,
+	HttpHandler,
+	HttpInterceptor,
+	HttpRequest,
+	HttpResponse,
+} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {shareReplay, tap} from 'rxjs/operators';
@@ -6,7 +12,10 @@ import {shareReplay, tap} from 'rxjs/operators';
 @Injectable()
 export class NgDocCacheInterceptor implements HttpInterceptor {
 	static readonly TOKEN: string = Math.random().toString(36).slice(-8);
-	private cache: Map<string, Observable<HttpEvent<unknown>>> = new Map<string, Observable<HttpEvent<unknown>>>();
+	private cache: Map<string, Observable<HttpEvent<unknown>>> = new Map<
+		string,
+		Observable<HttpEvent<unknown>>
+	>();
 
 	intercept<T>(request: HttpRequest<T>, next: HttpHandler): Observable<HttpEvent<T>> {
 		// Only GET requests can be cached
@@ -20,9 +29,9 @@ export class NgDocCacheInterceptor implements HttpInterceptor {
 		}
 
 		// Return cached response
-		const cachedRequest: Observable<HttpEvent<T>> | undefined = this.cache.get(request.url) as Observable<
-			HttpEvent<T>
-		>;
+		const cachedRequest: Observable<HttpEvent<T>> | undefined = this.cache.get(
+			request.url,
+		) as Observable<HttpEvent<T>>;
 
 		if (cachedRequest) {
 			return cachedRequest;

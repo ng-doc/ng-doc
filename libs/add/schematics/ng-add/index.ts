@@ -1,6 +1,11 @@
 import {chain, Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
 import {NodePackageInstallTask, RunSchematicTask} from '@angular-devkit/schematics/tasks';
-import {addPackageJsonDependency, createProject, removePackageJsonDependency, setActiveProject} from 'ng-morph';
+import {
+	addPackageJsonDependency,
+	createProject,
+	removePackageJsonDependency,
+	setActiveProject,
+} from 'ng-morph';
 
 import {NG_DOC_VERSION} from './constants/version';
 import {Schema} from './schema';

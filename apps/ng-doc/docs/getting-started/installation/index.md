@@ -209,10 +209,10 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
 import {
   NgDocDefaultSearchEngine,
-  provideNgDocAppConfig,
-  NgDocRootComponent,
   NgDocNavbarComponent,
+  NgDocRootComponent,
   NgDocSidebarComponent,
+  provideNgDocAppConfig,
   provideSearchEngine,
 } from '@ng-doc/app';
 import {NG_DOC_ROUTING, provideNgDocContext} from '@ng-doc/generated';

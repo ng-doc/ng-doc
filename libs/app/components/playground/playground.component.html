@@ -6,8 +6,7 @@
 		[hideSidePanel]="configuration.hideSidePanel ?? false"
 		[defaultValues]="defaultValues"
 		[(recreateDemo)]="recreateDemo"
-		(resetForm)="resetForm()"
-	>
+		(resetForm)="resetForm()">
 		<ng-doc-playground-demo
 			*ngFor="let selector of configuration.selectors ?? selectors | asArray"
 			[id]="id"
@@ -16,8 +15,7 @@
 			[configuration]="configuration"
 			[recreateDemo]="recreateDemo"
 			[form]="formGroup"
-			[expanded]="configuration.expanded ?? false"
-		>
+			[expanded]="configuration.expanded ?? false">
 		</ng-doc-playground-demo>
 
 		<ng-doc-playground-demo
@@ -27,8 +25,7 @@
 			[properties]="properties"
 			[configuration]="configuration"
 			[recreateDemo]="recreateDemo"
-			[form]="formGroup"
-		>
+			[form]="formGroup">
 		</ng-doc-playground-demo>
 	</ng-doc-playground-properties>
 </ng-container>

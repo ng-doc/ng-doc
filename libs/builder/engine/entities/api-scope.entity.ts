@@ -17,6 +17,7 @@ import {NgDocPageEntity} from './page.entity';
 export class NgDocApiScopeEntity extends NgDocRouteEntity<NgDocApiScope> {
 	override readonly physical: boolean = false;
 	override id: string = uniqueName(`${this.sourceFilePath}#${this.target.route}`);
+
 	constructor(
 		override readonly store: NgDocEntityStore,
 		override readonly cache: NgDocCache,

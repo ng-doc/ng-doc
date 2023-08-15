@@ -40,9 +40,13 @@ export class NgDocIconComponent implements OnChanges, OnInit {
 
 	private readonly reload$: Subject<void> = new Subject<void>();
 	private readonly assetsPath: string = inject(NG_DOC_ASSETS_PATH, {optional: true}) ?? '';
-	private readonly customIconsPath: string = inject(NG_DOC_CUSTOM_ICONS_PATH, {optional: true}) ?? '';
+	private readonly customIconsPath: string =
+		inject(NG_DOC_CUSTOM_ICONS_PATH, {optional: true}) ?? '';
 
-	constructor(private readonly elementRef: ElementRef<HTMLElement>, private readonly httpClient: HttpClient) {}
+	constructor(
+		private readonly elementRef: ElementRef<HTMLElement>,
+		private readonly httpClient: HttpClient,
+	) {}
 
 	ngOnChanges(): void {
 		this.reload$.next();
@@ -53,16 +57,18 @@ export class NgDocIconComponent implements OnChanges, OnInit {
 			.pipe(
 				startWith(null),
 				switchMap(() =>
-					this.httpClient.get(this.href, {
-						responseType: 'text',
-						params: {[NgDocCacheInterceptor.TOKEN]: 'true'},
-					}).pipe(
-						catchError((e: Error) => {
-							console.error(e);
-
-							return of('')
+					this.httpClient
+						.get(this.href, {
+							responseType: 'text',
+							params: {[NgDocCacheInterceptor.TOKEN]: 'true'},
 						})
-					)
+						.pipe(
+							catchError((e: Error) => {
+								console.error(e);
+
+								return of('');
+							}),
+						),
 				),
 			)
 			.subscribe((svg: string) => (this.elementRef.nativeElement.innerHTML = svg));

@@ -1,6 +1,7 @@
 <div class="ng-doc-side-bar-wrapper">
 	<ng-container *ngFor="let item of getNavigation()">
-		<ng-container *ngTemplateOutlet="sidebarTemplate; context: {item: this.item, root: true}"></ng-container>
+		<ng-container
+			*ngTemplateOutlet="sidebarTemplate; context: {item: this.item, root: true}"></ng-container>
 	</ng-container>
 
 	<ng-template let-item="item" let-root="root" #sidebarTemplate>
@@ -11,13 +12,14 @@
 				[expandable]="!!item?.expandable"
 				[expanded]="!!item?.expanded || !item?.expandable"
 				[isRoot]="!!root"
-				[content]="categoryContent"
-			>
+				[content]="categoryContent">
 				<ng-template #categoryContent>
 					<ng-container *ngFor="let child of getNavigation(item)">
 						<ng-container
-							*ngTemplateOutlet="sidebarTemplate; context: {item: child, root: false}"
-						></ng-container>
+							*ngTemplateOutlet="
+								sidebarTemplate;
+								context: {item: child, root: false}
+							"></ng-container>
 					</ng-container>
 				</ng-template>
 			</ng-doc-sidebar-category>

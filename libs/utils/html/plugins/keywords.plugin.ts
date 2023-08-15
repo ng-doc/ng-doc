@@ -31,7 +31,12 @@ export default function keywordsPlugin(config: NgDocHtmlPostProcessorConfig) {
 
 			if (isInlineCode || languages.includes(lang)) {
 				visitParents(node, 'text', (node: Text, ancestors: Element[]) => {
-					if (hasLinkAncestor(ancestors) || !getKeyword || !addUsedKeyword || !addPotentialKeyword) {
+					if (
+						hasLinkAncestor(ancestors) ||
+						!getKeyword ||
+						!addUsedKeyword ||
+						!addPotentialKeyword
+					) {
 						return;
 					}
 
@@ -65,8 +70,11 @@ function getNodes(
 	config: NgDocHtmlPostProcessorConfig,
 ): Array<Element | Text> {
 	const regexp: string = '([*A-Za-z0-9_$@]+[.#]?[A-Za-z0-9_-]+(?:\\?.+)?)';
-	const KeywordRegExp: RegExp = inlineLink ? new RegExp(`^${regexp}$`, 'g') : new RegExp(regexp, 'g');
-	const keywordAnchorRegexp: RegExp = /^(?<keyword>[*A-Za-z0-9_$@]+)((?<delimiter>[.#])(?<anchor>[A-Za-z0-9_-]+))?(?<queryParams>(?:\?.+))?$/;
+	const KeywordRegExp: RegExp = inlineLink
+		? new RegExp(`^${regexp}$`, 'g')
+		: new RegExp(regexp, 'g');
+	const keywordAnchorRegexp: RegExp =
+		/^(?<keyword>[*A-Za-z0-9_$@]+)((?<delimiter>[.#])(?<anchor>[A-Za-z0-9_-]+))?(?<queryParams>(?:\?.+))?$/;
 	const {addUsedKeyword, addPotentialKeyword, getKeyword, raiseError} = config;
 
 	if (!getKeyword || !addUsedKeyword || !addPotentialKeyword) {
@@ -105,7 +113,12 @@ function getNodes(
 
 			// Add link inside the code if it's a link to the API entity
 			return keyword
-				? createLinkNode(inlineLink ? keyword.title : word, keyword.path, keyword.type, keyword.description)
+				? createLinkNode(
+						inlineLink ? keyword.title : word,
+						keyword.path,
+						keyword.type,
+						keyword.description,
+				  )
 				: {type: 'text', value: word};
 		});
 }

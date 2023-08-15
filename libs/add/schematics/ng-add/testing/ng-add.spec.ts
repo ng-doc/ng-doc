@@ -118,7 +118,8 @@ describe('ng-add', () => {
 
 		const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
-		expect(tree.readContent('test/app/app.module.ts')).toEqual(`import { provideSearchEngine, NgDocDefaultSearchEngine } from "@ng-doc/app";
+		expect(tree.readContent('test/app/app.module.ts'))
+			.toEqual(`import { provideSearchEngine, NgDocDefaultSearchEngine } from "@ng-doc/app";
 import { NgDocModule } from "@ng-doc/app";
 import { NG_DOC_ROUTING, NgDocGeneratedModule } from "@ng-doc/generated";
 import { RouterModule } from "@angular/router";

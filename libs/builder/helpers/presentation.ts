@@ -25,13 +25,14 @@ import {displayReturnType, displayType} from './typescript';
 export function constructorPresentation(constructor: ConstructorDeclaration): string {
 	const parameters: string = constructor.getParameters().map(parameterPresentation).join(', \n	');
 
-	const presentation: string = [
-		scopePresentation(constructor),
-		`constructor(\n	${parameters}\n):`,
-		displayReturnType(constructor),
-	]
-		.filter(isPresent)
-		.join(' ') + ';';
+	const presentation: string =
+		[
+			scopePresentation(constructor),
+			`constructor(\n	${parameters}\n):`,
+			displayReturnType(constructor),
+		]
+			.filter(isPresent)
+			.join(' ') + ';';
 
 	return formatCode(presentation, 'TypeScript');
 }
@@ -46,9 +47,14 @@ export function accessorPresentation(accessor: AccessorDeclaration): string {
 	const header: string = Node.isGetAccessorDeclaration(accessor)
 		? `${accessor.getName()}():`
 		: `${accessor.getName()}(${parameters})`;
-	const returnType: string = Node.isGetAccessorDeclaration(accessor) ? displayReturnType(accessor) : '';
+	const returnType: string = Node.isGetAccessorDeclaration(accessor)
+		? displayReturnType(accessor)
+		: '';
 
-	const presentation: string = [staticPresentation(accessor), scopePresentation(accessor), prefix, header, returnType].filter(isPresent).join(' ') + ';';
+	const presentation: string =
+		[staticPresentation(accessor), scopePresentation(accessor), prefix, header, returnType]
+			.filter(isPresent)
+			.join(' ') + ';';
 
 	return formatCode(presentation, 'TypeScript');
 }
@@ -60,7 +66,13 @@ export function accessorPresentation(accessor: AccessorDeclaration): string {
 export function methodPresentation(method: MethodDeclaration): string {
 	const parameters: string = method.getParameters().map(parameterPresentation).join(', ');
 
-	const presentation: string =  [memberModifiers(method), staticPresentation(method), scopePresentation(method), `${method.getName()}(${parameters}):`, `${displayReturnType(method)};`]
+	const presentation: string = [
+		memberModifiers(method),
+		staticPresentation(method),
+		scopePresentation(method),
+		`${method.getName()}(${parameters}):`,
+		`${displayReturnType(method)};`,
+	]
 		.filter(isPresent)
 		.join(' ');
 
@@ -74,7 +86,11 @@ export function methodPresentation(method: MethodDeclaration): string {
 export function functionPresentation(fnc: FunctionDeclaration): string {
 	const parameters: string = fnc.getParameters().map(parameterPresentation).join(', ');
 
-	const presentation: string =  ['function', `${fnc.getName()}(${parameters}):`, `${displayReturnType(fnc)};`]
+	const presentation: string = [
+		'function',
+		`${fnc.getName()}(${parameters}):`,
+		`${displayReturnType(fnc)};`,
+	]
 		.filter(isPresent)
 		.join(' ');
 
@@ -88,7 +104,7 @@ export function functionPresentation(fnc: FunctionDeclaration): string {
 export function typeAliasPresentation(typeAlias: TypeAliasDeclaration): string {
 	const presentation: string = `type ${typeAlias.getName()} = ${displayType(typeAlias)};`;
 
-	return formatCode(presentation, "TypeScript");
+	return formatCode(presentation, 'TypeScript');
 }
 
 /**
@@ -96,7 +112,7 @@ export function typeAliasPresentation(typeAlias: TypeAliasDeclaration): string {
  * @param variable
  */
 export function variablePresentation(variable: VariableDeclaration): string {
-	const presentation: string =  [
+	const presentation: string = [
 		variable.getVariableStatement()?.getDeclarationKind() ?? 'const',
 		`${variable.getName()}:`,
 		`${displayType(variable)};`,

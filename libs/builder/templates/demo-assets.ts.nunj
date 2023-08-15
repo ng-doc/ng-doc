@@ -2,24 +2,24 @@
 import {NgDocDemoAssets} from '@ng-doc/app';
 
 export const demoAssets: NgDocDemoAssets = {
-	{%- for demoName, assets in demoAssets %}
-	{{ demoName }}: [
-		{%- for asset in assets %}
-		{%- if not asset.isEmpty %}
-		{
-			title: '{{ asset.title }}',
-			code: `{{ asset.code | toTemplateString }}`,
-			{%- if asset.icon %}
-			icon: '{{ asset.icon }}',
-			{%- endif %}
-			{%- if asset.opened %}
-			opened: true,
-			{%- endif %}
-		},
+{%- for demoName, assets in demoAssets %}
+{{ demoName }}: [
+	{%- for asset in assets %}
+	{%- if not asset.isEmpty %}
+	{
+		title: '{{ asset.title }}',
+		code: `{{ asset.code | toTemplateString }}`,
+		{%- if asset.icon %}
+		icon: '{{ asset.icon }}',
 		{%- endif %}
-		{%- endfor %}
-	],
+		{%- if asset.opened %}
+		opened: true,
+		{%- endif %}
+	},
+	{%- endif %}
 	{%- endfor %}
+],
+{%- endfor %}
 }
 
 export default demoAssets;

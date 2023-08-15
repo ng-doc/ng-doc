@@ -42,8 +42,9 @@ import {NgDocPlaygroundForm} from '../playground-form';
 	imports: [NgDocDemoDisplayerComponent, AsyncPipe, NgDocSmoothResizeComponent, NgDocLetDirective],
 })
 @UntilDestroy()
-export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties>
-	implements OnChanges, OnDestroy
+export class NgDocPlaygroundDemoComponent<
+	T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties,
+> implements OnChanges, OnDestroy
 {
 	@Input()
 	id: string = '';
@@ -85,15 +86,15 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 		if (form || id) {
 			this.unsubscribe$.next();
 
-			const demoInjector: InjectionToken<Array<typeof NgDocBasePlayground>> | undefined = getPlaygroundDemoToken(
-				this.id,
-			);
+			const demoInjector: InjectionToken<Array<typeof NgDocBasePlayground>> | undefined =
+				getPlaygroundDemoToken(this.id);
 
 			if (demoInjector) {
 				const demos: Array<typeof NgDocBasePlayground> = this.injector.get(demoInjector, []);
 
 				this.playgroundDemo = demos.find(
-					(demo: typeof NgDocBasePlayground) => demo.selector === this.selector || demo.selector === this.pipeName,
+					(demo: typeof NgDocBasePlayground) =>
+						demo.selector === this.selector || demo.selector === this.pipeName,
 				);
 			}
 
@@ -122,7 +123,9 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 	private createDemo(): void {
 		if (this.playgroundDemo) {
 			this.demoRef?.destroy();
-			this.demoRef = this.demoOutlet?.createComponent(this.playgroundDemo as unknown as Type<NgDocBasePlayground>);
+			this.demoRef = this.demoOutlet?.createComponent(
+				this.playgroundDemo as unknown as Type<NgDocBasePlayground>,
+			);
 			this.demoRef?.changeDetectorRef.markForCheck();
 		}
 	}
@@ -146,7 +149,8 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 	}
 
 	private getActiveContent(): Record<string, string> {
-		const formData: Record<string, boolean> = (this.form?.controls.content.value as Record<string, boolean>) ?? {};
+		const formData: Record<string, boolean> =
+			(this.form?.controls.content.value as Record<string, boolean>) ?? {};
 
 		return objectKeys(formData).reduce((result: Record<string, string>, key: string) => {
 			result[key] = formData[key] ? this.configuration?.content?.[key].template ?? '' : '';
@@ -156,7 +160,8 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 	}
 
 	private getActiveInputs(): Record<string, string> {
-		const formData: Record<string, unknown> = (this.form?.controls.properties.value as Record<string, unknown>) ?? {};
+		const formData: Record<string, unknown> =
+			(this.form?.controls.properties.value as Record<string, unknown>) ?? {};
 
 		return objectKeys(formData).reduce((result: Record<string, string>, key: string) => {
 			const value: unknown = formData[key];

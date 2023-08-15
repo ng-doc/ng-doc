@@ -35,7 +35,14 @@ export class GlowParticle {
 		}
 
 		ctx.beginPath();
-		const g = ctx.createRadialGradient(this.x, this.y, this.radius * 0.01, this.x, this.y, this.radius);
+		const g = ctx.createRadialGradient(
+			this.x,
+			this.y,
+			this.radius * 0.01,
+			this.x,
+			this.y,
+			this.radius,
+		);
 		g.addColorStop(0, `rgba(${this.rgb.r}, ${this.rgb.g}, ${this.rgb.b}, ${this.rgb.a ?? 1})`);
 		g.addColorStop(1, `rgba(${this.rgb.r}, ${this.rgb.g}, ${this.rgb.b}, 0)`);
 		ctx.fillStyle = g;

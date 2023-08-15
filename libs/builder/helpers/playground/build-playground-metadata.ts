@@ -1,9 +1,18 @@
 import {Component, Directive, Pipe} from '@angular/core';
-import {buildPlaygroundDemoPipeTemplate, buildPlaygroundDemoTemplate, NgDocPlaygroundProperties} from '@ng-doc/core';
+import {
+	buildPlaygroundDemoPipeTemplate,
+	buildPlaygroundDemoTemplate,
+	NgDocPlaygroundProperties,
+} from '@ng-doc/core';
 import {ClassDeclaration, ObjectLiteralExpression} from 'ts-morph';
 
 import {NgDocPlaygroundMetadata} from '../../interfaces';
-import {getComponentDecorator, getDirectiveDecorator, getPipeDecorator, isStandalone} from '../angular';
+import {
+	getComponentDecorator,
+	getDirectiveDecorator,
+	getPipeDecorator,
+	isStandalone,
+} from '../angular';
 import {extractSelectors} from '../extract-selectors';
 import {getContentForPlayground} from './get-content-for-playground';
 import {getPlaygroundComponentInputs, getPlaygroundPipeInputs} from './get-playground-inputs';
@@ -17,7 +26,10 @@ import {getTemplateForPlayground} from './get-template-for-playground';
  * @param id - The id of the playground
  * @param playground - The playground object
  */
-export function buildPlaygroundMetadata(id: string, playground: ObjectLiteralExpression): NgDocPlaygroundMetadata {
+export function buildPlaygroundMetadata(
+	id: string,
+	playground: ObjectLiteralExpression,
+): NgDocPlaygroundMetadata {
 	const target: ClassDeclaration | undefined = getTargetForPlayground(playground);
 
 	if (!target) {
@@ -50,7 +62,13 @@ export function buildPlaygroundMetadata(id: string, playground: ObjectLiteralExp
 				(templateForComponents: Record<string, string>, selector: string) => {
 					return {
 						...templateForComponents,
-						[selector]: buildPlaygroundDemoTemplate(template, selector, content, templateInputs, false),
+						[selector]: buildPlaygroundDemoTemplate(
+							template,
+							selector,
+							content,
+							templateInputs,
+							false,
+						),
 					};
 				},
 				{},
@@ -68,7 +86,9 @@ export function buildPlaygroundMetadata(id: string, playground: ObjectLiteralExp
 			name,
 			standalone,
 			template,
-			templateForComponents: {[name]: buildPlaygroundDemoPipeTemplate(template, name, content, templateInputs, false)},
+			templateForComponents: {
+				[name]: buildPlaygroundDemoPipeTemplate(template, name, content, templateInputs, false),
+			},
 			class: target,
 			properties,
 			content,

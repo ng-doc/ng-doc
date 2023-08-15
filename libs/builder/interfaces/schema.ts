@@ -3,5 +3,5 @@ export interface NgDocSchema {
 	main: string;
 	ngDoc: {
 		config: string;
-	}
+	};
 }

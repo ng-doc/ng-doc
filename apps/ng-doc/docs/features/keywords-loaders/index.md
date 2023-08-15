@@ -21,7 +21,8 @@ npm i @ng-doc/keywords-loaders --save-dev
 
 > **Note**
 > This loader integrates only API, it doesn't integrate the Angular guides, tutorials, etc.
-> It also has some options for configuring, e.g. you can specify the version of the Angular documentation.
+> It also has some options for configuring, e.g. you can specify the version of the Angular
+> documentation.
 
 To integrate your documentation with the Angular documentation, you need to open
 your `ng-doc.config.ts` file, and import `ngKeywordsLoader` to the `keywordsLoaders` array:

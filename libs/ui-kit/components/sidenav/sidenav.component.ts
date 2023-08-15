@@ -1,6 +1,13 @@
 import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
 import {NgIf} from '@angular/common';
-import {ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	EventEmitter,
+	HostBinding,
+	Input,
+	Output,
+} from '@angular/core';
 import {NgDocContent, NgDocHorizontalAlign} from '@ng-doc/ui-kit/types';
 import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 
@@ -10,19 +17,43 @@ import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 			state('false', style({display: 'none'})),
 			transition('left => false', [
 				style({transform: 'translateX(0)', opacity: 1}),
-				animate('220ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({transform: 'translateX(-100%)', opacity: 0})),
+				animate(
+					'220ms cubic-bezier(0.25, 0.8, 0.25, 1)',
+					style({
+						transform: 'translateX(-100%)',
+						opacity: 0,
+					}),
+				),
 			]),
 			transition('false => left', [
 				style({transform: 'translateX(-100%)', opacity: 0, display: 'block'}),
-				animate('220ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({transform: 'translateX(0)', opacity: 1})),
+				animate(
+					'220ms cubic-bezier(0.25, 0.8, 0.25, 1)',
+					style({
+						transform: 'translateX(0)',
+						opacity: 1,
+					}),
+				),
 			]),
 			transition('right => false', [
 				style({transform: 'translateX(0)', opacity: 1}),
-				animate('220ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({transform: 'translateX(100%)', opacity: 0})),
+				animate(
+					'220ms cubic-bezier(0.25, 0.8, 0.25, 1)',
+					style({
+						transform: 'translateX(100%)',
+						opacity: 0,
+					}),
+				),
 			]),
 			transition('false => right', [
 				style({transform: 'translateX(100%)', opacity: 0, display: 'block'}),
-				animate('220ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({transform: 'translateX(0)', opacity: 1})),
+				animate(
+					'220ms cubic-bezier(0.25, 0.8, 0.25, 1)',
+					style({
+						transform: 'translateX(0)',
+						opacity: 1,
+					}),
+				),
 			]),
 		]),
 		trigger('sidenavContentAnimation', [

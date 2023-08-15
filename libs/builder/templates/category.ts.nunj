@@ -1,11 +1,10 @@
 // @ts-nocheck
-import {NgModule} from "@angular/core";
-import {RouterModule, Routes} from "@angular/router";
+import {Routes} from "@angular/router";
 
 const routes: Routes = [
 	{%- if category.builtChildren.length %}
-	{path: '', redirectTo: '{{ category.builtChildren[0].route }}', pathMatch: 'full' },
-	{%- endif  %}
+	{path: '', redirectTo: '{{ category.builtChildren[0].route }}', pathMatch: 'full'},
+	{%- endif %}
 	{
 		path: '',
 		title: `{{ category.title | toTemplateString }}`,

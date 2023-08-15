@@ -10,8 +10,7 @@
 					ngDocInputString
 					[formControl]="formGroup.controls.filter"
 					placeholder="Type the name"
-					ngDocAutofocus
-				/>
+					ngDocAutofocus />
 			</ng-doc-input-wrapper>
 		</label>
 
@@ -20,11 +19,11 @@
 				[formControl]="formGroup.controls.scope"
 				[valueContent]="comboboxScopeItem"
 				[readonly]="true"
-				placeholder="Choose the scope"
-			>
+				placeholder="Choose the scope">
 				<ng-doc-list *ngDocData>
 					<ng-doc-option *ngFor="let scope of scopes" [value]="scope">
-						<ng-container *ngTemplateOutlet="comboboxScopeItem; context: {$implicit: scope}"></ng-container>
+						<ng-container
+							*ngTemplateOutlet="comboboxScopeItem; context: {$implicit: scope}"></ng-container>
 					</ng-doc-option>
 				</ng-doc-list>
 				<ng-template let-value #comboboxScopeItem>
@@ -38,11 +37,11 @@
 				[formControl]="formGroup.controls.type"
 				[valueContent]="comboboxTypeItem"
 				[readonly]="true"
-				placeholder="Choose the entity type"
-			>
+				placeholder="Choose the entity type">
 				<ng-doc-list *ngDocData>
 					<ng-doc-option *ngFor="let type of types" [value]="type">
-						<ng-container *ngTemplateOutlet="comboboxTypeItem; context: {$implicit: type}"></ng-container>
+						<ng-container
+							*ngTemplateOutlet="comboboxTypeItem; context: {$implicit: type}"></ng-container>
 					</ng-doc-option>
 				</ng-doc-list>
 				<ng-template let-value #comboboxTypeItem>
@@ -51,8 +50,7 @@
 							[kind]="value"
 							[ngDocTooltip]="value"
 							[positions]="['left-center', 'right-center']"
-							ngDocTextLeft
-						>
+							ngDocTextLeft>
 						</ng-doc-kind-icon>
 						{{ value }}
 					</div>

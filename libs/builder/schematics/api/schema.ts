@@ -9,4 +9,4 @@ import {SchematicArgv} from '../schematic-argv';
  * ```
  *
  */
-export type NgDocBuildApiSchema = SchematicArgv
+export type NgDocBuildApiSchema = SchematicArgv;

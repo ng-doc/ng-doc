@@ -24,5 +24,5 @@ export function provideNgDocUiKitConfig(config?: NgDocUiConfig): Provider[] {
 			useClass: NgDocCacheInterceptor,
 			multi: true,
 		},
-	]
+	];
 }

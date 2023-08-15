@@ -16,7 +16,8 @@ import {
 	forObjectValue,
 	forObjectValues,
 	postProcessHtmlPlugin,
-	processHtmlPlugin, removeLinesPlugin,
+	processHtmlPlugin,
+	removeLinesPlugin,
 } from './plugins';
 import {applyPlugin} from './plugins/entity-plugins/apply.plugin';
 import {wrapCodePlugin} from './plugins/entity-plugins/wrap-code.plugin';
@@ -73,7 +74,10 @@ export class NgDocPageDemoEntity extends NgDocEntity {
 						extractSnippetsPlugin(),
 						removeLinesPlugin(),
 						applyPlugin(forArrayItems(), (asset) => [
-							applyPlugin(forObjectValue('code'), () => [wrapCodePlugin(asset.lang), processHtmlPlugin()]),
+							applyPlugin(forObjectValue('code'), () => [
+								wrapCodePlugin(asset.lang),
+								processHtmlPlugin(),
+							]),
 							applyPlugin(forObjectValue('filePath'), () => [addToDependenciesPlugin()]),
 						]),
 					]),

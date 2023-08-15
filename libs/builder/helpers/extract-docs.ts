@@ -29,7 +29,9 @@ export function extractDocs(node: JSDocableNode, customTag?: string): string {
 
 			return customTag
 				? TsDocFormatter.renderDocNodes(
-						context.docComment.customBlocks.filter((block: DocBlock) => block.blockTag.tagName === customTag),
+						context.docComment.customBlocks.filter(
+							(block: DocBlock) => block.blockTag.tagName === customTag,
+						),
 				  )
 				: TsDocFormatter.renderDocNode(context.docComment.summarySection);
 		})
@@ -68,7 +70,8 @@ export function extractParameterDocs(node: JSDocableNode, paramName: string): st
 	const docs: string = jsDocs
 		.map((doc: JSDoc) => {
 			const context: ParserContext = parser.parseString(doc.getText());
-			const paramBlock: DocParamBlock | undefined = context.docComment.params.tryGetBlockByName(paramName);
+			const paramBlock: DocParamBlock | undefined =
+				context.docComment.params.tryGetBlockByName(paramName);
 
 			return paramBlock ? TsDocFormatter.renderDocNode(paramBlock.content) : '';
 		})
@@ -82,7 +85,11 @@ export function extractParameterDocs(node: JSDocableNode, paramName: string): st
  */
 function getTsDocConfiguration(): TSDocConfiguration {
 	const customTags: TSDocTagDefinition[] = [
-		new TSDocTagDefinition({tagName: '@usageNotes', syntaxKind: TSDocTagSyntaxKind.BlockTag, allowMultiple: false}),
+		new TSDocTagDefinition({
+			tagName: '@usageNotes',
+			syntaxKind: TSDocTagSyntaxKind.BlockTag,
+			allowMultiple: false,
+		}),
 	];
 
 	const configuration: TSDocConfiguration = new TSDocConfiguration();

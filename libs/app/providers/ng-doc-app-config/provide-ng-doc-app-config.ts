@@ -1,5 +1,9 @@
 import {APP_INITIALIZER, Optional, Provider} from '@angular/core';
-import {NG_DOC_DARK_PURPLE_THEME, NG_DOC_NIGHT_THEME, NG_DOC_STORE_THEME_KEY} from '@ng-doc/app/constants';
+import {
+	NG_DOC_DARK_PURPLE_THEME,
+	NG_DOC_NIGHT_THEME,
+	NG_DOC_STORE_THEME_KEY,
+} from '@ng-doc/app/constants';
 import {isDarkOsTheme} from '@ng-doc/app/helpers';
 import {NgDocApplicationConfig, NgDocTheme} from '@ng-doc/app/interfaces';
 import {NG_DOC_DEFAULT_PAGE_PROCESSORS} from '@ng-doc/app/processors';
@@ -26,7 +30,11 @@ export function provideNgDocAppConfig(config?: NgDocApplicationConfig): Provider
 		})),
 		{
 			provide: APP_INITIALIZER,
-			useFactory: (themeService: NgDocThemeService, store: NgDocStoreService, defaultThemeId: string | 'auto') => {
+			useFactory: (
+				themeService: NgDocThemeService,
+				store: NgDocStoreService,
+				defaultThemeId: string | 'auto',
+			) => {
 				return () => {
 					const themeId: string | null = store.get(NG_DOC_STORE_THEME_KEY);
 
@@ -41,5 +49,5 @@ export function provideNgDocAppConfig(config?: NgDocApplicationConfig): Provider
 			deps: [NgDocThemeService, NgDocStoreService, [new Optional(), NG_DOC_DEFAULT_THEME_ID]],
 		},
 		...NG_DOC_DEFAULT_PAGE_PROCESSORS,
-	]
+	];
 }

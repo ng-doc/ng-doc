@@ -13,14 +13,14 @@
 	--ng-doc-font-size: 14px;
 
 	@each $color-name, $color-value in $ng-doc-palette-colors {
-		&[data-ng-doc-color='#{$color-name}'][data-ng-doc-mod="default"] {
+		&[data-ng-doc-color='#{$color-name}'][data-ng-doc-mod='default'] {
 			--ng-doc-tag-background: var(--ng-doc-#{$color-name}-100);
 			--ng-doc-tag-color: var(--ng-doc-white);
 		}
 	}
 
 	@each $color-name, $color-value in $ng-doc-palette-colors {
-		&[data-ng-doc-color='#{$color-name}'][data-ng-doc-mod="light"] {
+		&[data-ng-doc-color='#{$color-name}'][data-ng-doc-mod='light'] {
 			--ng-doc-tag-background: var(--ng-doc-#{$color-name}-10);
 			--ng-doc-tag-color: var(--ng-doc-#{$color-name}-140);
 		}

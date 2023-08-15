@@ -1,5 +1,13 @@
 import {AsyncPipe, NgIf} from '@angular/common';
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Inject, Input, NgZone} from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
+	Component,
+	HostBinding,
+	Inject,
+	Input,
+	NgZone,
+} from '@angular/core';
 import {NgDocSearchComponent} from '@ng-doc/app/components/search';
 import {NgDocSidebarService} from '@ng-doc/app/services';
 import {

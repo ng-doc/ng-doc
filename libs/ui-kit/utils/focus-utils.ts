@@ -4,7 +4,10 @@ export class NgDocFocusUtils {
 			return false;
 		}
 
-		if ((element instanceof HTMLElement && element.isContentEditable) || element.getAttribute('tabIndex') === '0') {
+		if (
+			(element instanceof HTMLElement && element.isContentEditable) ||
+			element.getAttribute('tabIndex') === '0'
+		) {
 			return true;
 		}
 
@@ -26,7 +29,11 @@ export class NgDocFocusUtils {
 		}
 	}
 
-	static getClosestKeyboardFocusable(initial: HTMLElement, root: Node, forward: boolean = true): HTMLElement | null {
+	static getClosestKeyboardFocusable(
+		initial: HTMLElement,
+		root: Node,
+		forward: boolean = true,
+	): HTMLElement | null {
 		if (!root.ownerDocument) {
 			return null;
 		}
@@ -57,7 +64,11 @@ export class NgDocFocusUtils {
 	}
 
 	static focusClosestElement(initial: HTMLElement, root: Node, forward: boolean = true): void {
-		const focusable: HTMLElement | null = NgDocFocusUtils.getClosestKeyboardFocusable(initial, root, forward);
+		const focusable: HTMLElement | null = NgDocFocusUtils.getClosestKeyboardFocusable(
+			initial,
+			root,
+			forward,
+		);
 		if (focusable) {
 			focusable.focus();
 		}

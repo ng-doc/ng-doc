@@ -7,7 +7,7 @@ const IconsPage: NgDocPage = {
 	mdFile: './index.md',
 	category: CustomizationCategory,
 	order: 4,
-	keyword: 'Icons'
+	keyword: 'Icons',
 };
 
 export default IconsPage;

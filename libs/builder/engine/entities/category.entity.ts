@@ -33,7 +33,9 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 	override get canBeBuilt(): boolean {
 		return isPresent(this.target)
 			? !this.target.onlyForTags ||
-					asArray(this.target.onlyForTags).includes(this.context.context.target?.configuration ?? '')
+					asArray(this.target.onlyForTags).includes(
+						this.context.context.target?.configuration ?? '',
+					)
 			: true;
 	}
 

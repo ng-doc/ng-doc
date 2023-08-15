@@ -37,17 +37,24 @@ export function addSearchEngine(options: Schema): Rule {
 				return;
 			}
 
-			const buildOptions: Record<string, JsonValue | undefined> = getProjectTargetOptions(project, 'build');
+			const buildOptions: Record<string, JsonValue | undefined> = getProjectTargetOptions(
+				project,
+				'build',
+			);
 
 			setActiveProject(createProject(tree, '/', ['**/*.ts', '**/*.json']));
 
 			const mainModule: ClassDeclaration = getMainModule(buildOptions['main'] as string);
 
-			addImports(mainModule.getSourceFile().getFilePath(), [{
-				namedImports: ['provideSearchEngine', 'NgDocDefaultSearchEngine'],
-				moduleSpecifier: '@ng-doc/app',
-			}]);
-			addProviderToNgModule(mainModule, 'provideSearchEngine(NgDocDefaultSearchEngine)', {unique: true});
+			addImports(mainModule.getSourceFile().getFilePath(), [
+				{
+					namedImports: ['provideSearchEngine', 'NgDocDefaultSearchEngine'],
+					moduleSpecifier: '@ng-doc/app',
+				},
+			]);
+			addProviderToNgModule(mainModule, 'provideSearchEngine(NgDocDefaultSearchEngine)', {
+				unique: true,
+			});
 
 			saveActiveProject();
 			logger.info('✅ Done!');

@@ -9,11 +9,11 @@ export interface NgDocPageProcessor<T> {
 	/**
 	 * Target component to replace html nodes with.
 	 */
-	component: Type<T>,
+	component: Type<T>;
 	/**
 	 * Selector to find html nodes to replace.
 	 */
-	selector: string,
+	selector: string;
 	/**
 	 * Extract options for Angular component from html node.
 	 *
@@ -26,5 +26,5 @@ export interface NgDocPageProcessor<T> {
 	 *
 	 * @param element - Html node to replace.
 	 */
-	nodeToReplace?: (element: Element) => Element,
+	nodeToReplace?: (element: Element) => Element;
 }

@@ -24,7 +24,8 @@ export default config;
 
 You can also specify different configuration files for different build targets, for example, you can
 specify different configurations for `build` and `serve` targets. To do that, you need to
-specify `config` property in your app configuration file, after that NgDoc will use this configuration
+specify `config` property in your app configuration file, after that NgDoc will use this
+configuration
 file instead of searching for `ng-doc.config.ts` file.
 
 ```json group="config" name="Angular (angular.json)" icon="angular"

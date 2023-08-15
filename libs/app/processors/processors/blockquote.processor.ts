@@ -10,4 +10,4 @@ export const blockquoteProcessor: NgDocPageProcessor<NgDocBlockquoteComponent> =
 			type: (element.getAttribute('type') as NgDocBlockquoteType) || 'default',
 		},
 	}),
-}
+};

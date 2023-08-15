@@ -68,8 +68,7 @@ by providing `ng-template` to the one of its inputs like on the example below:
       size="large"
       href="https://github.com/me/my-repo"
       target="_blank"
-      ngDocTooltip="Check my repo"
-    >
+      ngDocTooltip="Check my repo">
       <ng-doc-icon icon="github" [size]="24"></ng-doc-icon>
     </a>
   </ng-template>

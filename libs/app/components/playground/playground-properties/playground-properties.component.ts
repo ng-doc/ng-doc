@@ -17,7 +17,11 @@ import {isPlaygroundProperty} from '@ng-doc/app/helpers';
 import {NgDocProvidedTypeControl} from '@ng-doc/app/interfaces';
 import {getTokenForType} from '@ng-doc/app/providers/type-control';
 import {extractValueOrThrow, isPresent, objectKeys} from '@ng-doc/core';
-import {NgDocPlaygroundContent, NgDocPlaygroundProperties, NgDocPlaygroundProperty} from '@ng-doc/core/interfaces';
+import {
+	NgDocPlaygroundContent,
+	NgDocPlaygroundProperties,
+	NgDocPlaygroundProperty,
+} from '@ng-doc/core/interfaces';
 import {
 	NgDocBindPipe,
 	NgDocButtonComponent,
@@ -93,7 +97,10 @@ export class NgDocPlaygroundPropertiesComponent<
 	protected propertyControls: NgDocPlaygroundPropertyControl[] = [];
 	protected contentTypeControl?: NgDocProvidedTypeControl = this.getControlForType('boolean');
 
-	constructor(protected readonly breakpointObserver: BreakpointObserver, private injector: Injector) {
+	constructor(
+		protected readonly breakpointObserver: BreakpointObserver,
+		private injector: Injector,
+	) {
 		this.observer = this.breakpointObserver
 			.observe(this.breakpoints)
 			.pipe(map((state: BreakpointState) => state.matches));
@@ -174,7 +181,8 @@ export class NgDocPlaygroundPropertiesComponent<
 			}
 
 			if (optionsIsValid) {
-				const token: InjectionToken<NgDocProvidedTypeControl> | undefined = getTokenForType('NgDocTypeAlias');
+				const token: InjectionToken<NgDocProvidedTypeControl> | undefined =
+					getTokenForType('NgDocTypeAlias');
 
 				return token ? this.injector.get(token) : undefined;
 			}

@@ -94,9 +94,16 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 				task('Loading...', load()),
 				dependencyChanges(watcher),
 				tap(() => store.updateKeywordMap()),
-				taskForMany('Building...', build(store, ...globalEntities), ifNotCachedOrInvalid(cache, store)),
+				taskForMany(
+					'Building...',
+					build(store, ...globalEntities),
+					ifNotCachedOrInvalid(cache, store),
+				),
 				taskForMany('Post-build...', postBuild()),
-				taskForMany('Post-processing...', postProcess(store, context.config, indexesEntity, keywordEntity)),
+				taskForMany(
+					'Post-processing...',
+					postProcess(store, context.config, indexesEntity, keywordEntity),
+				),
 				taskForMany(undefined, toBuilderOutput()),
 				taskForMany('Emitting...', emit()),
 				collectGarbage(store),

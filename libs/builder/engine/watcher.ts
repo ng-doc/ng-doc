@@ -12,13 +12,12 @@ import {bufferDebounce} from '../operators';
  * @param ready$
  * @param patterns
  */
-function bufferAndFilter(
-	source$: Observable<string>,
-	patterns: string[],
-): Observable<string[]> {
+function bufferAndFilter(source$: Observable<string>, patterns: string[]): Observable<string[]> {
 	return source$.pipe(
 		bufferDebounce(10),
-		map((paths: string[]) => paths.filter((path) => patterns.some((p: string) => minimatch(path, miniPattern(p))))),
+		map((paths: string[]) =>
+			paths.filter((path) => patterns.some((p: string) => minimatch(path, miniPattern(p)))),
+		),
 		filter((paths: string[]) => paths.length > 0),
 	);
 }

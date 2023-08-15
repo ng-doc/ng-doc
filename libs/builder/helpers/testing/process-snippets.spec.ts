@@ -177,13 +177,15 @@ console.log(2);`,
 				}
 			`;
 
-				expect(processSnippets(code, '/demo')).toEqual([{
-					code: `console.log(123);`,
-					lang: 'ts',
-					title: 'test.ts',
-				}]);
-			})
-		})
+				expect(processSnippets(code, '/demo')).toEqual([
+					{
+						code: `console.log(123);`,
+						lang: 'ts',
+						title: 'test.ts',
+					},
+				]);
+			});
+		});
 	});
 
 	describe('block comment', () => {
@@ -263,12 +265,14 @@ console.log(2);`,
 				}
 			`;
 
-			expect(processSnippets(code, '/demo')).toEqual([{
-				code: `console.log(123);`,
-				lang: 'ts',
-				title: 'test.ts',
-			}]);
-		})
+			expect(processSnippets(code, '/demo')).toEqual([
+				{
+					code: `console.log(123);`,
+					lang: 'ts',
+					title: 'test.ts',
+				},
+			]);
+		});
 	});
 });
 
@@ -422,10 +426,12 @@ describe('HTML snippets', () => {
 			</div>
 		`;
 
-		expect(processSnippets(code, '/demo')).toEqual([{
-			code: `<p>test</p>`,
-			lang: 'html',
-			title: 'test.html',
-		}]);
-	})
+		expect(processSnippets(code, '/demo')).toEqual([
+			{
+				code: `<p>test</p>`,
+				lang: 'html',
+				title: 'test.html',
+			},
+		]);
+	});
 });

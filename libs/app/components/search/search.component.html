@@ -8,8 +8,7 @@
 				panelClass="ng-doc-search-dropdown"
 				width="100%"
 				height="80vh"
-				#inputDropdown
-			>
+				#inputDropdown>
 				<ng-template #dropdownContent>
 					<div class="ng-doc-search-wrapper">
 						<ng-doc-input-wrapper [leftContent]="leftContent" ngDocDropdownOrigin>
@@ -23,8 +22,7 @@
 								placeholder="Search..."
 								ngDocAutofocus
 								[selectAll]="true"
-								#inputElement
-							/>
+								#inputElement />
 						</ng-doc-input-wrapper>
 						<ng-container *ngTemplateOutlet="searchResults"></ng-container>
 					</div>
@@ -41,8 +39,7 @@
 			ngDocFocusCatcher
 			(focusEvent)="inputElement.value ? dropdown.open() : null"
 			(click)="inputElement.value ? dropdown.open() : null"
-			#input
-		>
+			#input>
 			<ng-template #leftContent>
 				<ng-doc-icon icon="search"></ng-doc-icon>
 			</ng-template>
@@ -53,8 +50,7 @@
 				placeholder="Search..."
 				[ngDocHotkey]="{ctrlKey: false, altKey: false, shiftKey: false, code: 'Slash'}"
 				(ngDocHotkey)="inputElement.focus(); inputElement.select()"
-				#inputElement
-			/>
+				#inputElement />
 			<ng-template #rightContent>
 				<ng-doc-tag class="search-hotkey">/</ng-doc-tag>
 			</ng-template>
@@ -63,8 +59,7 @@
 				positions="bottom-right"
 				[width]="input.elementRef.nativeElement.offsetWidth"
 				maxHeight="calc(95vh - var(--ng-doc-navbar-height)"
-				#dropdown
-			>
+				#dropdown>
 				<
 			</ng-doc-dropdown>
 		</ng-doc-input-wrapper>
@@ -72,9 +67,15 @@
 
 	<ng-template #searchResults>
 		<div class="ng-doc-search-result-content" [attr.data-ng-doc-mod]="mod">
-			<ng-doc-data-list [items]="state?.result ?? []" [itemContent]="itemContent" [emptyContent]="emptyContent">
+			<ng-doc-data-list
+				[items]="state?.result ?? []"
+				[itemContent]="itemContent"
+				[emptyContent]="emptyContent">
 				<ng-template let-item #itemContent>
-					<a class="ng-doc-search-option" [routerLink]="item.index.route" [fragment]="item.index.fragment">
+					<a
+						class="ng-doc-search-option"
+						[routerLink]="item.index.route"
+						[fragment]="item.index.fragment">
 						<div class="ng-doc-search-option-header">
 							<ng-doc-tag size="small" [attr.data-ng-doc-page-type]="item.index.pageType">
 								{{ item.index.pageType }}
@@ -82,7 +83,9 @@
 							<span class="ng-doc-search-option-breadcrumbs" ng-doc-text>
 								<ng-container *ngFor="let breadcrum of item.index.breadcrumbs; let i = index">
 									<span>{{ breadcrum }}</span>
-									<span class="ng-doc-search-option-breadcrumb-divider" *ngIf="i !== item.index.breadcrumbs.length - 1"
+									<span
+										class="ng-doc-search-option-breadcrumb-divider"
+										*ngIf="i !== item.index.breadcrumbs.length - 1"
 										>/</span
 									>
 								</ng-container>
@@ -95,23 +98,25 @@
 								(item.index.section
 									| ngDocHighlighterPipe: (getPositions | execute: 'section':item)
 									| ngDocSanitizeHtml) || item.index.title
-							"
-						></h5>
+							"></h5>
 						<div
 							*ngIf="item.index.content"
 							class="ng-doc-search-content"
 							[innerHTML]="
-								item.index.content | ngDocHighlighterPipe: (getPositions | execute: 'content':item) | ngDocSanitizeHtml
+								item.index.content
+									| ngDocHighlighterPipe: (getPositions | execute: 'content':item)
+									| ngDocSanitizeHtml
 							"
-							ng-doc-text
-						></div>
+							ng-doc-text></div>
 					</a>
 				</ng-template>
 				<ng-template #emptyContent>
 					<ng-container *ngIf="!state?.pending">
 						<div class="ng-doc-search-empty">
 							<ng-container *ngIf="query$.value.length">Nothing found</ng-container>
-							<ng-container *ngIf="!query$.value.length">Please enter your search query</ng-container>
+							<ng-container *ngIf="!query$.value.length"
+								>Please enter your search query
+							</ng-container>
 						</div>
 					</ng-container>
 					<ng-container *ngIf="state?.pending">

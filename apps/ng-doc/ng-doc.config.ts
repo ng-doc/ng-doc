@@ -41,7 +41,7 @@ const NgDocConfig: NgDocConfiguration = {
 			featherIcons: {
 				title: 'Feather Icons Pack',
 				url: 'https://feathericons.com/',
-			}
+			},
 		},
 	},
 	guide: {

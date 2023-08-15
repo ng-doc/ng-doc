@@ -1,5 +1,9 @@
 import {InjectionToken, Provider} from '@angular/core';
-import {NgDocProvidedTypeControl, NgDocTypeControl, NgDocTypeControlProviderOptions} from '@ng-doc/app/interfaces';
+import {
+	NgDocProvidedTypeControl,
+	NgDocTypeControl,
+	NgDocTypeControlProviderOptions,
+} from '@ng-doc/app/interfaces';
 import {Constructor} from '@ng-doc/core';
 
 const tokenStore: Map<string, InjectionToken<NgDocProvidedTypeControl>> = new Map<
@@ -18,18 +22,16 @@ export function provideTypeControl(
 	control: Constructor<NgDocTypeControl>,
 	options?: NgDocTypeControlProviderOptions,
 ): Provider {
-	const token: InjectionToken<NgDocProvidedTypeControl> = new InjectionToken<NgDocProvidedTypeControl>(
-		`NG_DOC_TYPE_CONTROL_${type}`,
-		{
+	const token: InjectionToken<NgDocProvidedTypeControl> =
+		new InjectionToken<NgDocProvidedTypeControl>(`NG_DOC_TYPE_CONTROL_${type}`, {
 			providedIn: 'root',
 			factory: () => {
 				return {
 					control,
 					options,
 				};
-			}
-		}
-	);
+			},
+		});
 	tokenStore.set(type, token);
 
 	return {
@@ -43,6 +45,8 @@ export function provideTypeControl(
  *
  * @param type - type for searched control (e.g. `string`)
  */
-export function getTokenForType(type: string): InjectionToken<NgDocProvidedTypeControl> | undefined {
+export function getTokenForType(
+	type: string,
+): InjectionToken<NgDocProvidedTypeControl> | undefined {
 	return tokenStore.get(type);
 }

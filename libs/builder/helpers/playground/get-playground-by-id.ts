@@ -5,8 +5,12 @@ import {Expression, Node, ObjectLiteralElementLike, ObjectLiteralExpression} fro
  * @param expression
  * @param playgroundId
  */
-export function getPlaygroundById(expression: ObjectLiteralExpression, playgroundId: string): ObjectLiteralExpression | undefined {
-	const playgroundExpression: ObjectLiteralElementLike | undefined = expression.getProperty(playgroundId);
+export function getPlaygroundById(
+	expression: ObjectLiteralExpression,
+	playgroundId: string,
+): ObjectLiteralExpression | undefined {
+	const playgroundExpression: ObjectLiteralElementLike | undefined =
+		expression.getProperty(playgroundId);
 
 	if (Node.isPropertyAssignment(playgroundExpression)) {
 		const playgroundInitializer: Expression | undefined = playgroundExpression.getInitializer();
@@ -16,5 +20,5 @@ export function getPlaygroundById(expression: ObjectLiteralExpression, playgroun
 		}
 	}
 
-	return undefined
+	return undefined;
 }

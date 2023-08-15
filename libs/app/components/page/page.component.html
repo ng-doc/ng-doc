@@ -6,8 +6,7 @@
 			*ngIf="rootPage.editSourceFileUrl"
 			[href]="rootPage.editSourceFileUrl"
 			target="_blank"
-			ngDocTooltip="Suggest Edits"
-		>
+			ngDocTooltip="Suggest Edits">
 			<ng-doc-icon icon="edit-2"></ng-doc-icon>
 		</a>
 		<a
@@ -15,8 +14,7 @@
 			*ngIf="rootPage.viewSourceFileUrl"
 			[href]="rootPage.viewSourceFileUrl"
 			target="_blank"
-			ngDocTooltip="View Source"
-		>
+			ngDocTooltip="View Source">
 			<ng-doc-icon icon="code"></ng-doc-icon>
 		</a>
 	</div>
@@ -25,8 +23,7 @@
 		class="ng-doc-page-wrapper"
 		[innerHTML]="rootPage.pageContent | ngDocSanitizeHtml"
 		ngDocPageProcessor
-		#pageContainer
-	></div>
+		#pageContainer></div>
 
 	<div class="ng-doc-navigation-controls" *ngIf="rootPage.pageType === 'guide'">
 		<a class="ng-doc-prev-page" *ngIf="prevPage" [routerLink]="prevPage.route">
@@ -48,7 +45,6 @@
 
 <ng-template
 	[ngDocMediaQuery]="[mediaQuery.breakpoints.Large, mediaQuery.breakpoints.XLarge]"
-	#mediaQuery="ngDocMediaQuery"
->
+	#mediaQuery="ngDocMediaQuery">
 	<ng-doc-toc [pageContainer]="pageContainer"></ng-doc-toc>
 </ng-template>

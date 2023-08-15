@@ -12,11 +12,10 @@
 						*ngFor="let asset of assets"
 						[id]="asset.title"
 						[label]="label"
-						[content]="assetContent"
-					>
+						[content]="assetContent">
 						<ng-template #label>
-								<ng-doc-icon [customIcon]="asset.icon" *ngIf="asset.icon"></ng-doc-icon>
-								{{ asset.title }}
+							<ng-doc-icon [customIcon]="asset.icon" *ngIf="asset.icon"></ng-doc-icon>
+							{{ asset.title }}
 						</ng-template>
 						<ng-template #assetContent>
 							<ng-doc-code [html]="asset.code"></ng-doc-code>

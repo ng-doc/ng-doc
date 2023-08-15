@@ -59,7 +59,15 @@ export function parseCodeBlockParams(options: string): NgDocCodeBlockParams {
 
 		// Combined Parsers
 		paramsParser: (p: P.Language) =>
-			p['lineNumbers'].or(p['fileName']).or(p['file']).or(p['name']).or(p['group']).or(p['active']).or(p['icon']).or(p['highlightedLines']).sepBy(P.whitespace),
+			p['lineNumbers']
+				.or(p['fileName'])
+				.or(p['file'])
+				.or(p['name'])
+				.or(p['group'])
+				.or(p['active'])
+				.or(p['icon'])
+				.or(p['highlightedLines'])
+				.sepBy(P.whitespace),
 		languageWithParamsParser: (p) => P.seq(p['language'], p['paramsParser']).map((v) => v.flat()),
 	});
 

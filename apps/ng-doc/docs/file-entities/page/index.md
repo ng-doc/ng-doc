@@ -19,7 +19,8 @@ ng g @ng-doc/builder:page "Installation"
 ```
 
 This command will create a folder with your page name and generate `ng-doc.page.ts` and `index.md`
-files inside, you can also provide additional parameters to the schematic, for example, you can specify
+files inside, you can also provide additional parameters to the schematic, for example, you can
+specify
 `--category` (alias is `-c`) option to import parent category into your page automatically.
 
 ## Configuration

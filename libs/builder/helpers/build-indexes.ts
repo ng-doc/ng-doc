@@ -26,7 +26,7 @@ export async function buildIndexes(config: NgDocIndexBuilderConfig): Promise<NgD
 	const db = await create({
 		schema: {
 			...defaultHtmlSchema,
-		}
+		},
 	});
 
 	const indexableContent: string = await removeNotIndexableContent(config.content);
@@ -55,7 +55,8 @@ export async function buildIndexes(config: NgDocIndexBuilderConfig): Promise<NgD
 						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 						// @ts-ignore
 						fragment: section?.properties && section.properties['id'],
-						content: doc.content.toString() === '%%API_NAME_ANCHOR%%' ? undefined : doc.content.toString(),
+						content:
+							doc.content.toString() === '%%API_NAME_ANCHOR%%' ? undefined : doc.content.toString(),
 					});
 				}
 			}
@@ -80,7 +81,11 @@ function isIndexable(doc?: typeof defaultHtmlSchema): boolean {
 function isHeading(doc: typeof defaultHtmlSchema): boolean {
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
-	return ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(doc.type) && !!doc?.properties && !!doc.properties['id'];
+	return (
+		['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(doc.type) &&
+		!!doc?.properties &&
+		!!doc.properties['id']
+	);
 }
 
 /**
@@ -109,6 +114,9 @@ function transformFn(node: NodeContent): NodeContent {
  * @param html
  */
 async function removeNotIndexableContent(html: string): Promise<string> {
-	return firstValueFrom(from(importEsModule<typeof import('@ng-doc/utils')>('@ng-doc/utils'))
-		.pipe(switchMap((utils: typeof import('@ng-doc/utils')) => utils.removeNotIndexableContent(html))));
+	return firstValueFrom(
+		from(importEsModule<typeof import('@ng-doc/utils')>('@ng-doc/utils')).pipe(
+			switchMap((utils: typeof import('@ng-doc/utils')) => utils.removeNotIndexableContent(html)),
+		),
+	);
 }

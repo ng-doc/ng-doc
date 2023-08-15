@@ -6,8 +6,11 @@ import {FlBaseControlHost} from 'flex-controls/interfaces';
 export abstract class NgDocBaseInput<T> extends FlControl<T> {
 	elementRef: ElementRef<HTMLInputElement> = inject(ElementRef);
 	private renderer: Renderer2 = inject(Renderer2);
+
 	protected constructor() {
-		super(inject<FlBaseControlHost<T, T> | undefined>(FL_CONTROL_HOST, {optional: true}) || undefined);
+		super(
+			inject<FlBaseControlHost<T, T> | undefined>(FL_CONTROL_HOST, {optional: true}) || undefined,
+		);
 	}
 
 	@HostBinding('class')

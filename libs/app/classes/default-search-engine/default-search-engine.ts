@@ -45,7 +45,6 @@ interface SearchSchema extends Document {
 	content: 'string';
 }
 
-
 /**
  * Search engine for the documentation, it loads the index and provides a search method.
  */
@@ -64,7 +63,7 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 				components: {
 					afterInsert: [afterInsert],
 					tokenizer: {
-						stemmer: options?.stemmer
+						stemmer: options?.stemmer,
 					},
 				},
 			}),
@@ -101,20 +100,28 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 			),
 			map((result: SearchResultWithHighlight) =>
 				result.hits.map((hit: SearchResultWithHighlight['hits'][0]) => {
-					const keys: Array<keyof NgDocPageIndex> = objectKeys(hit.positions) as unknown as Array<keyof NgDocPageIndex>;
+					const keys: Array<keyof NgDocPageIndex> = objectKeys(hit.positions) as unknown as Array<
+						keyof NgDocPageIndex
+					>;
 
 					return {
 						index: hit.document as unknown as NgDocPageIndex,
-						positions: keys.reduce((acc: Record<keyof NgDocPageIndex, NgDocHighlightPosition[]>, key: keyof NgDocPageIndex) => {
-							// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-							// @ts-ignore
-							acc[key] = [...asArray(acc[key]), ...Object.values(hit.positions[key]).flat()];
+						positions: keys.reduce(
+							(
+								acc: Record<keyof NgDocPageIndex, NgDocHighlightPosition[]>,
+								key: keyof NgDocPageIndex,
+							) => {
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore
+								acc[key] = [...asArray(acc[key]), ...Object.values(hit.positions[key]).flat()];
 
-							return acc;
-						}, {} as any) as Partial<Record<keyof NgDocPageIndex, NgDocHighlightPosition[]>>,
-					}
-				})
-			)
+								return acc;
+							},
+							{} as any,
+						) as Partial<Record<keyof NgDocPageIndex, NgDocHighlightPosition[]>>,
+					};
+				}),
+			),
 		);
 	}
 

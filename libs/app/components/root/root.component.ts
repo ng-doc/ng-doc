@@ -9,7 +9,12 @@ import {
 	ViewChild,
 } from '@angular/core';
 import {NgDocSidebarService} from '@ng-doc/app/services/sidebar';
-import {NgDocContent, NgDocHorizontalAlign, NgDocLetDirective, NgDocSidenavComponent} from '@ng-doc/ui-kit';
+import {
+	NgDocContent,
+	NgDocHorizontalAlign,
+	NgDocLetDirective,
+	NgDocSidenavComponent,
+} from '@ng-doc/ui-kit';
 import {UntilDestroy} from '@ngneat/until-destroy';
 import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 import {combineLatest, merge, NEVER, Observable, of} from 'rxjs';
@@ -100,9 +105,10 @@ export class NgDocRootComponent implements AfterViewInit {
 		this.sidenavState$ = combineLatest([
 			this.sidebarService.isMobileMode(),
 			this.sidenav
-				? merge(this.sidenav.beforeOpen.pipe(mapTo(true)), this.sidenav.afterClose.pipe(mapTo(false))).pipe(
-						startWith(false),
-				  )
+				? merge(
+						this.sidenav.beforeOpen.pipe(mapTo(true)),
+						this.sidenav.afterClose.pipe(mapTo(false)),
+				  ).pipe(startWith(false))
 				: of(true),
 		]).pipe(
 			filter(([isMobile, opened]: [boolean, boolean]) => !opened || (opened && !isMobile)),

@@ -3,10 +3,12 @@ import {
 	blockquoteProcessor,
 	codeProcessor,
 	demoPaneProcessor,
-	demoProcessor, iconProcessor,
+	demoProcessor,
+	iconProcessor,
 	linkProcessor,
-	playgroundProcessor, tabsProcessor,
-	tooltipProcessor
+	playgroundProcessor,
+	tabsProcessor,
+	tooltipProcessor,
 } from '@ng-doc/app/processors/processors';
 import {providePageProcessor} from '@ng-doc/app/tokens';
 

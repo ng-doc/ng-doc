@@ -26,17 +26,20 @@ export class NgDocHtmlParser {
 
 		while (nodes.length) {
 			const shiftNode: Node | undefined = nodes.shift();
-			const node: NodeTag | undefined = !isPresent(shiftNode) || !isNodeTag(shiftNode) ? undefined : shiftNode;
+			const node: NodeTag | undefined =
+				!isPresent(shiftNode) || !isNodeTag(shiftNode) ? undefined : shiftNode;
 
 			if (
 				tagSelectors.every(
-					(tagSelector: TagSelector) => tagSelector.name.toLowerCase() === String(node?.tag).toLowerCase(),
+					(tagSelector: TagSelector) =>
+						tagSelector.name.toLowerCase() === String(node?.tag).toLowerCase(),
 				) &&
 				attrSelectors.every((attrSelector: AttributeSelector) => {
 					const attrValue: unknown = node && node.attrs && node?.attrs[attrSelector.name];
 
 					return (
-						Object.keys(node?.attrs ?? {}).includes(attrSelector.name) && attrValue === attrSelector.value
+						Object.keys(node?.attrs ?? {}).includes(attrSelector.name) &&
+						attrValue === attrSelector.value
 					);
 				})
 			) {

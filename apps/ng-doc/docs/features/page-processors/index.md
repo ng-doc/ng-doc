@@ -43,7 +43,8 @@ to enable it only for one page, or inside your `main.ts` if you want to enable i
 pages:
 
 > **Warning**
-> Be careful when you register your Page Processors, `providePageProcessor` function uses `multi: true`,
+> Be careful when you register your Page Processors, `providePageProcessor` function
+> uses `multi: true`,
 > so if you register your Page Processor in the `ng-doc.page.ts` file and in the `main.ts` file,
 > all processors from the `main.ts` file will be ignored.
 
@@ -87,7 +88,8 @@ Now we need to create a Page Processor that will wrap all `<table>` elements wit
 
 ```
 
-After that when you register your processor all `<table>` elements will be wrapped with our `CustomTableComponent`:
+After that when you register your processor all `<table>` elements will be wrapped with
+our `CustomTableComponent`:
 
 ```markdown name="index.md"
 | Syntax    | Description |

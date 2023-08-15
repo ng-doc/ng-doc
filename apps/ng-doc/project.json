@@ -34,7 +34,13 @@
 				],
 				"styles": ["apps/ng-doc/src/styles.scss"],
 				"scripts": [],
-				"allowedCommonJsDependencies": ["@ng-doc/core", "posthtml-parser", "posthtml-render", "js-beautify", "chalk"]
+				"allowedCommonJsDependencies": [
+					"@ng-doc/core",
+					"posthtml-parser",
+					"posthtml-render",
+					"js-beautify",
+					"chalk"
+				]
 			},
 			"configurations": {
 				"production": {

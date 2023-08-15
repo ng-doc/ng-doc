@@ -1,4 +1,3 @@
-
 {% set docNode = declaration %}
 {% if Node.isClassDeclaration(declaration) -%}
 	{% include "api/class.html.nunj" %}

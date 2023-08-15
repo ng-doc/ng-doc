@@ -75,14 +75,18 @@ export class CustomSearchEngine extends NgDocSearchEngine {
   );
 
   search(query: string): Observable<NgDocSearchResult[]> {
-    return this.indexes.pipe(map((indexes: NgDocPageIndex[]) => this.filterIndexes(indexes, query)));
+    return this.indexes.pipe(
+      map((indexes: NgDocPageIndex[]) => this.filterIndexes(indexes, query)),
+    );
   }
 
   private filterIndexes(indexes: NgDocPageIndex[], query: string): NgDocSearchResult[] {
     return (
       indexes
         // Filter indexes by query
-        .filter((index: NgDocPageIndex) => index.content.toLowerCase().includes(query.toLowerCase()))
+        .filter((index: NgDocPageIndex) =>
+          index.content.toLowerCase().includes(query.toLowerCase()),
+        )
         // Get first 10 results, you can remove this line to get all results
         // it's recommended to limit the number of results to avoid performance issues
         .slice(0, 10)

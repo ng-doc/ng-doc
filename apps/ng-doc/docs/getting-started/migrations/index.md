@@ -1,6 +1,7 @@
 # {{ NgDocPage.title }}
 
-This page contains information about migrating from previous versions of NgDoc to the current version.
+This page contains information about migrating from previous versions of NgDoc to the current
+version.
 
 ## Migrating to >= v16.3
 

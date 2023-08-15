@@ -85,5 +85,5 @@ describe('parseCodeBlockParams', () => {
 			language: 'ts',
 			icon: 'icon',
 		});
-	})
+	});
 });

@@ -16,6 +16,7 @@ import {NgDocButtonIconComponent, NgDocIconComponent, NgDocTextComponent} from '
 export class NgDocBreadcrumbComponent {
 	breadcrumbs: string[] = [];
 	home: string;
+
 	constructor(private readonly rootPage: NgDocRootPage, private readonly route: ActivatedRoute) {
 		this.home = this.rootPage.routePrefix || '/';
 		this.breadcrumbs = this.route.pathFromRoot

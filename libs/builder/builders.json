@@ -1,15 +1,15 @@
 {
-  "$schema": "../../node_modules/@angular-devkit/architect/src/builders-schema.json",
-  "builders": {
-	  "browser": {
-		  "implementation": "./browser/index.js",
-		  "schema": "./browser/schema.json",
-		  "description": "NgDoc browser"
-	  },
-	  "dev-server": {
-		  "implementation": "./dev-server/index.js",
-		  "schema": "./dev-server/schema.json",
-		  "description": "NgDoc dev server"
-	  }
-  }
+	"$schema": "../../node_modules/@angular-devkit/architect/src/builders-schema.json",
+	"builders": {
+		"browser": {
+			"implementation": "./browser/index.js",
+			"schema": "./browser/schema.json",
+			"description": "NgDoc browser"
+		},
+		"dev-server": {
+			"implementation": "./dev-server/index.js",
+			"schema": "./dev-server/schema.json",
+			"description": "NgDoc dev server"
+		}
+	}
 }

@@ -14,7 +14,12 @@ import {CachedEntity, CachedFilesGetter} from './cache/decorators';
 import {NgDocCategoryEntity} from './category.entity';
 import {NgDocPageDemoEntity} from './page-demo.entity';
 import {NgDocPagePlaygroundEntity} from './page-playground.entity';
-import {fillIndexesPlugin, markdownToHtmlPlugin, postProcessHtmlPlugin, processHtmlPlugin} from './plugins';
+import {
+	fillIndexesPlugin,
+	markdownToHtmlPlugin,
+	postProcessHtmlPlugin,
+	processHtmlPlugin,
+} from './plugins';
 
 @CachedEntity()
 export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
@@ -23,7 +28,9 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	override get route(): string {
 		const folderName: string = path.basename(path.dirname(this.sourceFile.getFilePath()));
 
-		return (isRoute(this.target?.route) ? this.target?.route.path : this.target?.route) ?? folderName;
+		return (
+			(isRoute(this.target?.route) ? this.target?.route.path : this.target?.route) ?? folderName
+		);
 	}
 
 	override get isRoot(): boolean {
@@ -40,7 +47,11 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 
 	override get editSourceFileUrl(): string | undefined {
 		if (this.context.config.repoConfig) {
-			return editFileInRepoUrl(this.context.config.repoConfig, this.mdPath, this.route.toLowerCase());
+			return editFileInRepoUrl(
+				this.context.config.repoConfig,
+				this.mdPath,
+				this.route.toLowerCase(),
+			);
 		}
 		return undefined;
 	}
@@ -48,7 +59,9 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	protected override get canBeBuilt(): boolean {
 		return isPresent(this.target)
 			? !this.target.onlyForTags ||
-					asArray(this.target.onlyForTags).includes(this.context.context.target?.configuration ?? '')
+					asArray(this.target.onlyForTags).includes(
+						this.context.context.target?.configuration ?? '',
+					)
 			: true;
 	}
 
@@ -57,11 +70,13 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	}
 
 	override get keywords(): NgDocEntityKeyword[] {
-		const rootKeywords: NgDocEntityKeyword[] = [...asArray(this.target?.keyword)].map((key: string) => ({
-			key: `*${key}`,
-			title: this.title,
-			path: this.fullRoute,
-		}));
+		const rootKeywords: NgDocEntityKeyword[] = [...asArray(this.target?.keyword)].map(
+			(key: string) => ({
+				key: `*${key}`,
+				title: this.title,
+				path: this.fullRoute,
+			}),
+		);
 
 		return [
 			...rootKeywords,

@@ -4,7 +4,11 @@ import {Schema} from '../schema';
  *
  * @param options
  */
-export function getNgDocAssets(options: Schema): Array<{output: string; input: string; glob: string}> {
+export function getNgDocAssets(options: Schema): Array<{
+	output: string;
+	input: string;
+	glob: string;
+}> {
 	return [
 		{
 			glob: '**/*',

@@ -1,10 +1,12 @@
-<ng-doc-root [sidebar]="!isLandingPage" [noWidthLimit]="isLandingPage" [footerContent]="footerContent">
+<ng-doc-root
+	[sidebar]="!isLandingPage"
+	[noWidthLimit]="isLandingPage"
+	[footerContent]="footerContent">
 	<ng-doc-navbar
 		[leftContent]="leftContent"
 		[rightContent]="rightContent"
 		[hamburger]="!isLandingPage"
-		[search]="!isLandingPage"
-	>
+		[search]="!isLandingPage">
 		<ng-template #leftContent>
 			<a class="brand" routerLink="/">
 				<h3>
@@ -16,8 +18,7 @@
 							ngDocMediaQuery.breakpoints.Medium,
 							ngDocMediaQuery.breakpoints.Large,
 							ngDocMediaQuery.breakpoints.XLarge
-						]"
-					>
+						]">
 						<span class="brand-title-ng">Ng</span>
 						<span class="brand-title-doc">Doc</span>
 					</ng-template>
@@ -32,8 +33,7 @@
 					ng-doc-button-icon
 					ngDocTooltip="Repository on GitHub"
 					size="large"
-					target="_blank"
-				>
+					target="_blank">
 					<ng-doc-icon [size]="24" customIcon="github"></ng-doc-icon>
 				</a>
 			</div>

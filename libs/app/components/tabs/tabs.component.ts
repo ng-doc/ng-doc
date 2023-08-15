@@ -7,7 +7,7 @@ import {
 	NgDocExecutePipe,
 	NgDocIconComponent,
 	NgDocTabComponent,
-	NgDocTabGroupComponent
+	NgDocTabGroupComponent,
 } from '@ng-doc/ui-kit';
 
 @Component({

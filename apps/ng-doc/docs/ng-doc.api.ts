@@ -12,7 +12,11 @@ export const api: NgDocApi = {
 		{
 			name: '@ng-doc/builder',
 			route: 'builder',
-			include: ['libs/builder/interfaces/**.ts', 'libs/builder/types/**.ts', 'libs/builder/schematics/**/*.ts'],
+			include: [
+				'libs/builder/interfaces/**.ts',
+				'libs/builder/types/**.ts',
+				'libs/builder/schematics/**/*.ts',
+			],
 			exclude: ['libs/builder/**/**.spec.ts'],
 		},
 		{

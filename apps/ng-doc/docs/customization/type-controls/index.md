@@ -53,7 +53,8 @@ bootstrapApplication(AppComponent, {
 ## Using Type Control in the playground
 
 That's all, now if you create a playground for the `FloatingCircleComponent` component,
-`position` input will be replaced by your type control, and you can start playing with `position` values.
+`position` input will be replaced by your type control, and you can start playing with `position`
+values.
 
 {{ NgDocActions.playground("FloatingCircle") }}
 
@@ -105,9 +106,13 @@ bootstrapApplication(AppComponent, {
     provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {
       hideLabel: true,
     }),
-    provideTypeControl('FloatingCirclePosition | undefined', FloatingCirclePositionControlComponent, {
-      hideLabel: true,
-    }),
+    provideTypeControl(
+      'FloatingCirclePosition | undefined',
+      FloatingCirclePositionControlComponent,
+      {
+        hideLabel: true,
+      },
+    ),
   ],
 }).catch((err: unknown) => console.error(err));
 ```

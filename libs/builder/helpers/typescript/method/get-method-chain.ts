@@ -1,4 +1,10 @@
-import {ClassDeclaration, InterfaceDeclaration, MethodDeclaration, MethodSignature, Node} from 'ts-morph';
+import {
+	ClassDeclaration,
+	InterfaceDeclaration,
+	MethodDeclaration,
+	MethodSignature,
+	Node,
+} from 'ts-morph';
 
 import {forAllClasses} from '../class';
 import {forAllInterfaces} from '../interface/for-all-interfaces';
@@ -7,7 +13,9 @@ import {forAllInterfaces} from '../interface/for-all-interfaces';
  *
  * @param method
  */
-export function getMethodChain(method: MethodDeclaration): Array<MethodDeclaration | MethodSignature> {
+export function getMethodChain(
+	method: MethodDeclaration,
+): Array<MethodDeclaration | MethodSignature> {
 	const parent: Node | undefined = method.getParent();
 	const methods: Array<MethodDeclaration | MethodSignature> = [];
 

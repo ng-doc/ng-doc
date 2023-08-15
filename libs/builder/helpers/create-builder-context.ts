@@ -19,8 +19,16 @@ export function createBuilderContext(
 	configFilePath?: string,
 ): NgDocBuilderContext {
 	const projectRoot: string = path.dirname(targetOptions['main'] as string);
-	const [configPath, config]: [string, NgDocConfiguration] = loadConfig(configFilePath ?? projectRoot, !configFilePath);
-	const buildPath: string = path.join(context.workspaceRoot, config.outDir ?? '', '.ng-doc', context.target?.project ?? 'app');
+	const [configPath, config]: [string, NgDocConfiguration] = loadConfig(
+		configFilePath ?? projectRoot,
+		!configFilePath,
+	);
+	const buildPath: string = path.join(
+		context.workspaceRoot,
+		config.outDir ?? '',
+		'.ng-doc',
+		context.target?.project ?? 'app',
+	);
 
 	return {
 		tsConfig: config?.tsConfig ?? String(targetOptions['tsConfig']),

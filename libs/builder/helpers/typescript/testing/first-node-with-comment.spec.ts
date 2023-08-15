@@ -39,5 +39,5 @@ describe('firstNodeWithComment', () => {
 		const declarations: ClassDeclaration[] = sourceFile.getClasses();
 
 		expect(firstNodeWithComment(declarations).getName()).toBe(`Test2`);
-	})
+	});
 });

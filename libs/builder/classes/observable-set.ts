@@ -13,6 +13,7 @@ export class ObservableSet<T> {
 	asArray(): T[] {
 		return asArray(this.collection);
 	}
+
 	changes(): Observable<T[]> {
 		return this.changes$.pipe(map(() => asArray(this.collection)));
 	}

@@ -34,7 +34,9 @@ export class NgDocThemeService {
 		if (this.defaultThemeId === 'auto') {
 			fromEvent<MediaQueryList>(window.matchMedia('(prefers-color-scheme: dark)'), 'change')
 				.pipe(takeUntil(this.disableAutoTheme$), untilDestroyed(this))
-				.subscribe((event: MediaQueryList) => this.set(event.matches ? NG_DOC_NIGHT_THEME.id : undefined, false))
+				.subscribe((event: MediaQueryList) =>
+					this.set(event.matches ? NG_DOC_NIGHT_THEME.id : undefined, false),
+				);
 		}
 	}
 
@@ -61,7 +63,9 @@ export class NgDocThemeService {
 		save && this.disableAutoTheme$.next();
 
 		if (id !== 'day' && id) {
-			const theme: NgDocTheme | undefined = this.themes.find((theme: NgDocTheme) => theme.id === id);
+			const theme: NgDocTheme | undefined = this.themes.find(
+				(theme: NgDocTheme) => theme.id === id,
+			);
 
 			if (!theme) {
 				console.warn(
@@ -109,6 +113,7 @@ export class NgDocThemeService {
 		this.linkElement?.remove();
 		this.linkElement = undefined;
 	}
+
 	private createLinkIfNoExists(): void {
 		if (!this.linkElement) {
 			this.linkElement = this.document.createElement('link');

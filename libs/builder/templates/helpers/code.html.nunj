@@ -1,3 +1,4 @@
 {% macro render(code, language = "typescript", copyButton = true) -%}
-	<pre><code lang="{{ language | lower }}" class="language-{{ language | lower }}">{{ code | escape }}</code></pre>
+	<pre><code lang="{{ language | lower }}"
+						 class="language-{{ language | lower }}">{{ code | escape }}</code></pre>
 {%- endmacro %}

@@ -73,7 +73,9 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		this.children.forEach((child: NgDocEntity) => child.destroy());
 
 		return this.refreshImpl().pipe(
-			switchMap(() => buildFileEntity(this.sourceFile, this.context.tsConfig, this.context.context.workspaceRoot)),
+			switchMap(() =>
+				buildFileEntity(this.sourceFile, this.context.tsConfig, this.context.context.workspaceRoot),
+			),
 			switchMap(() => this.loadImpl()),
 			map(() => generateApiEntities(this)),
 			map((entities: NgDocEntity[]) =>

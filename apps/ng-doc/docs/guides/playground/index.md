@@ -241,14 +241,14 @@ the configuration in `ng-doc.page.ts`. You can find all available options in the
 > **Warning**
 > Please be careful with the closing brackets `}` in your template, because it can be
 > interpreted as the end of the `nunjucks` expression.
+>
 > ```twig name="index.md"
 > // Will not work
 > {{ '{{ NgDocActions.playground("My", {inputs: {a:1}}) }}' | safe }}
-> 
+>
 > // To fix it, you need to add a space after the closing bracket
 > {{ '{{ NgDocActions.playground("My", {inputs: {a:1} }) }}' | safe }}
 > ```
-
 
 For example, you can display a component without the side panel and with modified default input
 values like this:
@@ -257,7 +257,8 @@ values like this:
 {{ '{{ NgDocActions.playground("ButtonPlayground", {hideSidePanel: true, selectors: "button[ng-doc-button-flat]", inputs: {size: "small"}, data: {label: "Small Button"} }) }}' | safe }}
 ```
 
-{{ NgDocActions.playground("ButtonPlayground", {hideSidePanel: true, selectors: "button[ng-doc-button-flat]", inputs: {size: "small"}, data: {label: "Small Button"} }) }}
+{{ NgDocActions.playground("ButtonPlayground", {hideSidePanel: true, selectors: "
+button[ng-doc-button-flat]", inputs: {size: "small"}, data: {label: "Small Button"} }) }}
 
 {% index false %}
 

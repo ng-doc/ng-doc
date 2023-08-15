@@ -15,7 +15,7 @@ export interface ObservableState<T, E = Error> {
  * @param retry
  */
 export function observableState<T, E = Error>(
-	retry?: Observable<unknown>
+	retry?: Observable<unknown>,
 ): OperatorFunction<T, ObservableState<T, E>> {
 	return (source: Observable<T>) => {
 		let state: ObservableState<T, E> = {
@@ -28,19 +28,18 @@ export function observableState<T, E = Error>(
 			switchMap(() =>
 				source.pipe(
 					// Map result of observable
-					map((result: T) => ({ result, pending: false })),
+					map((result: T) => ({result, pending: false})),
 					// Map error of observable
-					catchError((error: E) => of({ result: null, error, pending: false })),
+					catchError((error: E) => of({result: null, error, pending: false})),
 					// Start from pending state and clear error
-					startWith({ error: null, pending: true }),
+					startWith({error: null, pending: true}),
 					// Merge the current state with new state
 					tap(
-						(updatedState: Partial<ObservableState<T, E>>) =>
-							(state = { ...state, ...updatedState })
+						(updatedState: Partial<ObservableState<T, E>>) => (state = {...state, ...updatedState}),
 					),
-					map(() => state)
-				)
-			)
+					map(() => state),
+				),
+			),
 		);
 	};
 }

@@ -1,7 +1,11 @@
 import {getProjectTargetOptions} from '@angular/cdk/schematics';
 import {JsonArray, JsonValue} from '@angular-devkit/core';
 import {Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
-import {ProjectDefinition, updateWorkspace, WorkspaceDefinition} from '@schematics/angular/utility/workspace';
+import {
+	ProjectDefinition,
+	updateWorkspace,
+	WorkspaceDefinition,
+} from '@schematics/angular/utility/workspace';
 
 import {getNgDocAssets} from '../constants/assets';
 import {Schema} from '../schema';
@@ -29,11 +33,16 @@ export function addAssets(options: Schema): Rule {
 					return;
 				}
 
-				const targetOptions: Record<string, JsonValue | undefined> = getProjectTargetOptions(project, 'build');
+				const targetOptions: Record<string, JsonValue | undefined> = getProjectTargetOptions(
+					project,
+					'build',
+				);
 
 				const assets: JsonArray | undefined = targetOptions['assets'] as JsonArray | undefined;
 
-				targetOptions['assets'] = Array.from(new Set([...getNgDocAssets(options), ...(assets ?? [])]));
+				targetOptions['assets'] = Array.from(
+					new Set([...getNgDocAssets(options), ...(assets ?? [])]),
+				);
 
 				logger.info('✅ Done!');
 			} catch (e) {

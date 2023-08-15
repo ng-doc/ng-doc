@@ -3,8 +3,8 @@ import {Routes} from "@angular/router";
 
 const routes: Routes = [
 	{%- if scope.builtChildren.length %}
-	{path: '', redirectTo: '{{ scope.builtChildren[0].route }}', pathMatch: 'full' },
-	{%- endif  %}
+	{path: '', redirectTo: '{{ scope.builtChildren[0].route }}', pathMatch: 'full'},
+	{%- endif %}
 	{
 		path: '',
 		title: '{{ scope.title }}',

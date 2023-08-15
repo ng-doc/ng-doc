@@ -6,5 +6,6 @@ export interface NgDocListItem extends Highlightable {}
 
 export abstract class NgDocListItem implements Highlightable {
 	abstract elementRef: ElementRef<HTMLElement> | HTMLElement;
+
 	abstract selectByUser(): void;
 }

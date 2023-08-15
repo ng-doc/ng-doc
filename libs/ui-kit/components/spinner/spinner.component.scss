@@ -1,17 +1,17 @@
 :host {
 	display: inline-block;
 
-	&[data-ng-doc-size="small"] {
+	&[data-ng-doc-size='small'] {
 		width: calc(var(--ng-doc-base-gutter) * 3);
 		height: calc(var(--ng-doc-base-gutter) * 3);
 	}
 
-	&[data-ng-doc-size="medium"] {
+	&[data-ng-doc-size='medium'] {
 		width: calc(var(--ng-doc-base-gutter) * 5);
 		height: calc(var(--ng-doc-base-gutter) * 5);
 	}
 
-	&[data-ng-doc-size="large"] {
+	&[data-ng-doc-size='large'] {
 		width: calc(var(--ng-doc-base-gutter) * 8);
 		height: calc(var(--ng-doc-base-gutter) * 8);
 	}
@@ -24,7 +24,6 @@
 			stroke-linecap: round;
 			animation: dash 1.5s ease-in-out infinite;
 		}
-
 	}
 
 	@keyframes rotate {
