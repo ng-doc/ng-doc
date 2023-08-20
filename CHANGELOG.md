@@ -1,3 +1,15 @@
+# [16.12.0](https://github.com/ng-doc/ng-doc/compare/v16.11.1...v16.12.0) (2023-08-20)
+
+
+### Bug Fixes
+
+* **project:** providers inside a component is not recognized in playgrounds ([26705a6](https://github.com/ng-doc/ng-doc/commit/26705a6f548627813953428afdc0aa7c709a785a)), closes [#96](https://github.com/ng-doc/ng-doc/issues/96)
+
+
+### Features
+
+* **playgrounds:** add `controls` property to playgrounds to define inputs that NgDoc doesn't recognize, and `hiddenInputs` to hide specific inputs in the playground ([1cdcca9](https://github.com/ng-doc/ng-doc/commit/1cdcca9aad52f805baadb7ab3c1db8981a42cb49)), closes [#97](https://github.com/ng-doc/ng-doc/issues/97)
+
 ## [16.11.1](https://github.com/ng-doc/ng-doc/compare/v16.11.0...v16.11.1) (2023-08-13)
 
 
