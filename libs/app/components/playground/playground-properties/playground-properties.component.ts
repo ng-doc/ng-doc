@@ -60,13 +60,15 @@ import {NgDocPlaygroundPropertyControl} from '../playground-property-control';
 export class NgDocPlaygroundPropertiesComponent<
 	P extends NgDocPlaygroundProperties,
 	C extends Record<string, NgDocPlaygroundContent>,
-> implements OnChanges
-{
+> implements OnChanges {
 	@Input()
 	form!: FormGroup<NgDocPlaygroundForm>;
 
 	@Input()
 	properties?: P;
+
+	@Input()
+	ignoreInputs?: string[] = [];
 
 	@Input()
 	dynamicContent?: C;
@@ -101,6 +103,7 @@ export class NgDocPlaygroundPropertiesComponent<
 	ngOnChanges({properties}: SimpleChanges): void {
 		if (properties && this.properties) {
 			this.propertyControls = objectKeys(this.properties)
+				.filter((key: keyof P) => this.ignoreInputs?.includes(String(key)) !== true)
 				.map((key: keyof P) => {
 					if (this.properties) {
 						const property: NgDocPlaygroundProperty = this.properties[key];

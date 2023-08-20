@@ -34,7 +34,7 @@ export async function buildFileEntity(sourceFile: SourceFile, tsconfig: string, 
 			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('imports')?.getText() ?? '');
 			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('providers')?.getText() ?? '');
 			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('demos')?.getText() ?? '');
-			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('playgrounds')?.getText() ?? '');
+			code = removePlaygroundTarget(code, objectLiteralExpression);
 
 			if (objectLiteralExpression.getProperty('route')) {
 				const route = objectLiteralExpression.getProperty('route')
@@ -72,6 +72,33 @@ export async function buildFileEntity(sourceFile: SourceFile, tsconfig: string, 
 	await sourceFile.refreshFromFileSystem();
 
 	return outPath;
+}
+
+/**
+ *
+ * @param code
+ * @param objectLiteralExpression
+ */
+function removePlaygroundTarget(code: string, objectLiteralExpression: ObjectLiteralExpression): string {
+	const playgrounds = objectLiteralExpression.getProperty('playgrounds');
+
+	if (Node.isPropertyAssignment(playgrounds)) {
+		const playgroundsValue = playgrounds.getInitializer();
+
+		if (Node.isObjectLiteralExpression(playgroundsValue)) {
+			playgroundsValue.getProperties().forEach((prop) => {
+				if (Node.isPropertyAssignment(prop)) {
+					const playground = prop.getInitializer();
+
+					if (Node.isObjectLiteralExpression(playground)) {
+						code = replaceCodeProperty(code, playground.getProperty('target')?.getText() ?? '');
+					}
+				}
+			})
+		}
+	}
+
+	return code;
 }
 
 /**

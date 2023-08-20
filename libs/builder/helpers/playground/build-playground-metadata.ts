@@ -16,8 +16,9 @@ import {getTemplateForPlayground} from './get-template-for-playground';
  *
  * @param id - The id of the playground
  * @param playground - The playground object
+ * @param additionalProps
  */
-export function buildPlaygroundMetadata(id: string, playground: ObjectLiteralExpression): NgDocPlaygroundMetadata {
+export function buildPlaygroundMetadata(id: string, playground: ObjectLiteralExpression, additionalProps?: NgDocPlaygroundProperties): NgDocPlaygroundMetadata {
 	const target: ClassDeclaration | undefined = getTargetForPlayground(playground);
 
 	if (!target) {
@@ -39,7 +40,7 @@ export function buildPlaygroundMetadata(id: string, playground: ObjectLiteralExp
 
 	if ('selector' in decorator) {
 		const selector: string = decorator.selector!.replace(/[\n\s]/gm, '');
-		const properties: NgDocPlaygroundProperties = getPlaygroundComponentInputs(target);
+		const properties: NgDocPlaygroundProperties = {...getPlaygroundComponentInputs(target), ...additionalProps};
 		const templateInputs: Record<string, string> = getPlaygroundTemplateInputs(properties);
 
 		return {

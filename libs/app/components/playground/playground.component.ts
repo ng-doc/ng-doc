@@ -1,5 +1,5 @@
 import {NgFor, NgIf} from '@angular/common';
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
 import {objectKeys} from '@ng-doc/core/helpers/object-keys';
@@ -19,7 +19,7 @@ import {NgDocPlaygroundPropertiesComponent} from './playground-properties/playgr
 	imports: [NgIf, NgDocPlaygroundPropertiesComponent, NgFor, NgDocPlaygroundDemoComponent, NgDocAsArrayPipe],
 })
 export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties>
-	implements OnChanges
+	implements OnChanges, AfterViewInit
 {
 	@Input({required: true})
 	id: string = '';
