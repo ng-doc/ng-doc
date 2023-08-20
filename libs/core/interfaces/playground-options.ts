@@ -27,6 +27,10 @@ export interface NgDocPlaygroundOptions {
 	 */
 	defaults?: Record<string, unknown>;
 	/**
+	 * List of inputs that will be hidden in the playground (e.g. `['myInputName']`)
+	 */
+	hiddenInputs?: string[];
+	/**
 	 * Custom data that you can use in the templates (e.g. `{{data.providedProperty}}`)
 	 */
 	data?: Record<string, unknown>;

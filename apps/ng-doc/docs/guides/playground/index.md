@@ -250,14 +250,14 @@ the configuration in `ng-doc.page.ts`. You can find all available options in the
 > **Warning**
 > Please be careful with the closing brackets `}` in your template, because it can be
 > interpreted as the end of the `nunjucks` expression.
+>
 > ```twig name="index.md"
 > // Will not work
 > {{ '{{ NgDocActions.playground("My", {inputs: {a:1}}) }}' | safe }}
-> 
+>
 > // To fix it, you need to add a space after the closing bracket
 > {{ '{{ NgDocActions.playground("My", {inputs: {a:1} }) }}' | safe }}
 > ```
-
 
 For example, you can display a component without the side panel and with modified default input
 values like this:
@@ -266,9 +266,42 @@ values like this:
 {{ '{{ NgDocActions.playground("ButtonPlayground", {hideSidePanel: true, selectors: "button[ng-doc-button-flat]", inputs: {size: "small"}, data: {label: "Small Button"} }) }}' | safe }}
 ```
 
-{{ NgDocActions.playground("ButtonPlayground", {hideSidePanel: true, selectors: "button[ng-doc-button-flat]", inputs: {size: "small"}, data: {label: "Small Button"} }) }}
+{{ NgDocActions.playground("ButtonPlayground", {hideSidePanel: true, selectors: "
+button[ng-doc-button-flat]", inputs: {size: "small"}, data: {label: "Small Button"} }) }}
 
 {% index false %}
+
+## Unrecognized inputs
+
+NgDoc does not automatically recognize some inputs, such as inputs defined within the `@Component`
+decorator using the `inputs` property. To make NgDoc display them, you need to manually specify them
+in the playground configuration, for example:
+
+> **Note**
+> You can also provide `NgDocPlaygroundControlConfig` instead of the type, to customize the control
+> for this input.
+
+```typescript name="ng-doc.page.ts"
+import {NgDocDependencies} from '@ng-doc/core';
+import {NgDocTagComponent} from '@ng-doc/ui-kit';
+
+const PageDependencies: NgDocDependencies = {
+  imports: [NgDocTagModule],
+  playgrounds: {
+    TagDataPlayground: {
+      target: NgDocTagComponent,
+      template: `<ng-doc-selector>My Tag</ng-doc-selector>`,
+      controls: {
+        // Key is the name of the input, value is the type of the input
+        myInput: 'string',
+        anotherInput: 'number',
+      },
+    },
+  },
+};
+
+export default PageDependencies;
+```
 
 ## See Also
 
