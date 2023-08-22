@@ -6,7 +6,7 @@
 	"targets": {
 		"pre-build": {
 			"executor": "@nx/rollup:rollup",
-			"outputs": ["{options.outputPath}"],
+			"outputs": ["{workspaceRoot}/dist/{projectRoot}"],
 			"options": {
 				"outputPath": "dist/libs/utils",
 				"project": "libs/utils/package.json",
