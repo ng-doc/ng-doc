@@ -74,6 +74,9 @@ export class NgDocPlaygroundPropertiesComponent<
 	properties?: P;
 
 	@Input()
+	ignoreInputs?: string[] = [];
+
+	@Input()
 	dynamicContent?: C;
 
 	@Input()
@@ -109,6 +112,7 @@ export class NgDocPlaygroundPropertiesComponent<
 	ngOnChanges({properties}: SimpleChanges): void {
 		if (properties && this.properties) {
 			this.propertyControls = objectKeys(this.properties)
+				.filter((key: keyof P) => this.ignoreInputs?.includes(String(key)) !== true)
 				.map((key: keyof P) => {
 					if (this.properties) {
 						const property: NgDocPlaygroundProperty = this.properties[key];

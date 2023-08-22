@@ -7,7 +7,7 @@
 	"targets": {
 		"pre-build": {
 			"executor": "@nx/angular:package",
-			"outputs": ["{workspaceRoot}/dist/libs/ui-kit"],
+			"outputs": ["{workspaceRoot}/dist/{projectRoot}"],
 			"options": {
 				"project": "libs/ui-kit/ng-package.json",
 				"updateBuildableProjectDepsInPackageJson": false
