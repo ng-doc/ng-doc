@@ -5,7 +5,6 @@ export * from './escape-html';
 export * from './escape-regexp';
 export * from './extract-function-defaults';
 export * from './extract-value';
-export * from './filter-object';
 export * from './is-iterable';
 export * from './is-keyboard-event';
 export * from './is-node-tag';

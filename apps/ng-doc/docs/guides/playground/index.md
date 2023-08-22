@@ -266,8 +266,12 @@ values like this:
 {{ '{{ NgDocActions.playground("ButtonPlayground", {hideSidePanel: true, selectors: "button[ng-doc-button-flat]", inputs: {size: "small"}, data: {label: "Small Button"} }) }}' | safe }}
 ```
 
-{{ NgDocActions.playground("ButtonPlayground", {hideSidePanel: true, selectors: "
-button[ng-doc-button-flat]", inputs: {size: "small"}, data: {label: "Small Button"} }) }}
+{{ NgDocActions.playground("ButtonPlayground", {
+hideSidePanel: true,
+selectors: "button[ng-doc-button-flat]",
+inputs: {size: "small"},
+data: {label: "Small Button"} })
+}}
 
 {% index false %}
 
