@@ -6,7 +6,7 @@
 	"targets": {
 		"pre-build": {
 			"executor": "@nx/js:tsc",
-			"outputs": ["{options.outputPath}"],
+			"outputs": ["{workspaceRoot}/dist/{projectRoot}"],
 			"options": {
 				"outputPath": "dist/libs/core",
 				"main": "libs/core/index.ts",
