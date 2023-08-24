@@ -33,7 +33,7 @@ jobs:
                 uses: ./.github/actions/nodejs
 
             -   name: Build Projects
-                run: npx nx affected --target=build --parallel --base=remotes/origin/main --head=${GITHUB_REF##*/}
+                run: npx nx run-many --all --target=build --configuration=ci --parallel
 
             -   name: Tar Artifacts
                 run: tar -cvf ng-doc.tar dist/apps/ng-doc
