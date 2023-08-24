@@ -5,7 +5,7 @@ import {NgDocProcessorOptions} from './processor-options';
 /**
  * Interface to create a processor that will be used to replace html nodes with an Angular component.
  */
-export interface NgDocPageProcessor<T> {
+export interface NgDocPageProcessor<T = unknown> {
 	/**
 	 * Target component to replace html nodes with.
 	 */

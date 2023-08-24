@@ -79,11 +79,13 @@ function isIndexable(doc?: typeof defaultHtmlSchema): boolean {
  * @param doc
  */
 function isHeading(doc: typeof defaultHtmlSchema): boolean {
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
 	return (
 		['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(doc.type) &&
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
 		!!doc?.properties &&
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
 		!!doc.properties['id']
 	);
 }

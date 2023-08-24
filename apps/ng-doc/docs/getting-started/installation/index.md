@@ -202,18 +202,66 @@ the generated files and `allowSyntheticDefaultImports` option.
 Import the global library-provided modules into your application's root `AppModule`,
 and add `NgDocDefaultSearchEngine` to the providers section to enable search.
 
+```typescript name="Stnadalone APP (main.ts)" group="imports"
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {enableProdMode} from '@angular/core';
+import {bootstrapApplication} from '@angular/platform-browser';
+import {provideAnimations} from '@angular/platform-browser/animations';
+import {provideRouter, withInMemoryScrolling} from '@angular/router';
+import {
+  NG_DOC_DEFAULT_PAGE_PROCESSORS,
+  NgDocDefaultSearchEngine,
+  provideNgDocApp,
+} from '@ng-doc/app';
+import {NG_DOC_ROUTING, provideNgDocContext} from '@ng-doc/generated';
+
+import {AppComponent} from './app/app.component';
+import {environment} from './environments/environment';
+
+if (environment.production) {
+  enableProdMode();
+}
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    // Provide context of the generated documentation
+    provideNgDocContext(),
+    // Provide default configuration for the documentation app
+    provideNgDocApp({
+      searchEngine: {
+        engine: NgDocDefaultSearchEngine,
+      },
+      pageProcessors: NG_DOC_DEFAULT_PAGE_PROCESSORS,
+    }),
+    // Provide animations
+    provideAnimations(),
+    // Provide HttpClient with interceptors (NgDoc uses interceptors)
+    provideHttpClient(withInterceptorsFromDi()),
+    // Add generated routes to the application
+    provideRouter(
+      NG_DOC_ROUTING,
+      // Enable anchor scrolling
+      withInMemoryScrolling({
+        scrollPositionRestoration: 'enabled',
+        anchorScrolling: 'enabled',
+      }),
+    ),
+  ],
+}).catch((err: unknown) => console.error(err));
+```
+
 ```typescript name="Module APP (app.module.ts)" group="imports"
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
 import {
+  NG_DOC_DEFAULT_PAGE_PROCESSORS,
   NgDocDefaultSearchEngine,
   NgDocNavbarComponent,
   NgDocRootComponent,
   NgDocSidebarComponent,
-  provideNgDocAppConfig,
-  provideSearchEngine,
+  provideNgDocApp,
 } from '@ng-doc/app';
 import {NG_DOC_ROUTING, provideNgDocContext} from '@ng-doc/generated';
 
@@ -239,62 +287,19 @@ import {AppComponent} from './app.component';
     NgDocSidebarComponent,
   ],
   providers: [
-    // Provide configuration for the documentation app
-    provideNgDocAppConfig(),
-    // Provide configuration for the UI Kit
-    provideNgDocUiKitConfig(),
+    // Provide default configuration for the documentation app
+    provideNgDocApp({
+      searchEngine: {
+        engine: NgDocDefaultSearchEngine,
+      },
+      pageProcessors: NG_DOC_DEFAULT_PAGE_PROCESSORS,
+    }),
     // Provide context of the generated documentation
     provideNgDocContext(),
-    // Add search engine to the providers
-    provideSearchEngine(NgDocDefaultSearchEngine),
   ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
-```
-
-```typescript name="Stnadalone APP (main.ts)" group="imports"
-import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
-import {enableProdMode} from '@angular/core';
-import {bootstrapApplication} from '@angular/platform-browser';
-import {provideAnimations} from '@angular/platform-browser/animations';
-import {provideRouter, withInMemoryScrolling} from '@angular/router';
-import {NgDocDefaultSearchEngine, provideNgDocAppConfig, provideSearchEngine} from '@ng-doc/app';
-import {NG_DOC_ROUTING, provideNgDocContext} from '@ng-doc/generated';
-import {provideNgDocUiKitConfig} from '@ng-doc/ui-kit';
-
-import {AppComponent} from './app/app.component';
-import {environment} from './environments/environment';
-
-if (environment.production) {
-  enableProdMode();
-}
-
-bootstrapApplication(AppComponent, {
-  providers: [
-    // Provide context of the generated documentation
-    provideNgDocContext(),
-    // Provide configuration for the documentation app
-    provideNgDocAppConfig(),
-    // Provide configuration for the UI Kit
-    provideNgDocUiKitConfig(),
-    // Add search engine to the providers
-    provideSearchEngine(NgDocDefaultSearchEngine),
-    // Provide animations
-    provideAnimations(),
-    // Provide HttpClient with interceptors (NgDoc uses interceptors)
-    provideHttpClient(withInterceptorsFromDi()),
-    // Add generated routes to the application
-    provideRouter(
-      NG_DOC_ROUTING,
-      // Enable anchor scrolling
-      withInMemoryScrolling({
-        scrollPositionRestoration: 'enabled',
-        anchorScrolling: 'enabled',
-      }),
-    ),
-  ],
-}).catch((err: unknown) => console.error(err));
 ```
 
 ### Adding application layout

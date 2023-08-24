@@ -56,7 +56,7 @@
 		"@orama/orama": "1.0.2",
 		"@orama/plugin-match-highlight": "1.0.2",
 		"@orama/plugin-parsedoc": "1.0.2",
-		"@orama/stemmers": "^1.0.2",
+		"@orama/stemmers": "1.0.2",
 		"@schematics/angular": "16.0.0",
 		"@stackblitz/sdk": "1.6.0",
 		"@tinkoff/ng-polymorpheus": "4.0.11",
