@@ -1,3 +1,10 @@
+## [16.12.1](https://github.com/ng-doc/ng-doc/compare/v16.12.0...v16.12.1) (2023-08-24)
+
+
+### Bug Fixes
+
+* **builder:** app cannot be built if some of the playground properties imports entity from Angular package ([dc57891](https://github.com/ng-doc/ng-doc/commit/dc57891ee6f5beabfa3e66c2293fa20b2f297373)), closes [#99](https://github.com/ng-doc/ng-doc/issues/99)
+
 # [16.12.0](https://github.com/ng-doc/ng-doc/compare/v16.11.1...v16.12.0) (2023-08-20)
 
 
