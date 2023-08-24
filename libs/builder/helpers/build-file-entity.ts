@@ -80,6 +80,8 @@ export async function buildFileEntity(sourceFile: SourceFile, tsconfig: string, 
  * @param objectLiteralExpression
  */
 function removePlaygroundTarget(code: string, objectLiteralExpression: ObjectLiteralExpression): string {
+	// List of properties that should not be removed
+	const keepProperties: string[] = ['controls'];
 	const playgrounds = objectLiteralExpression.getProperty('playgrounds');
 
 	if (Node.isPropertyAssignment(playgrounds)) {
@@ -91,7 +93,11 @@ function removePlaygroundTarget(code: string, objectLiteralExpression: ObjectLit
 					const playground = prop.getInitializer();
 
 					if (Node.isObjectLiteralExpression(playground)) {
-						code = replaceCodeProperty(code, playground.getProperty('target')?.getText() ?? '');
+						playground.getProperties().forEach((playgroundProp) => {
+							if (Node.isPropertyAssignment(playgroundProp) && !keepProperties.includes(playgroundProp.getName())) {
+								code = replaceCodeProperty(code, playgroundProp.getText());
+							}
+						})
 					}
 				}
 			})
