@@ -129,30 +129,6 @@ const config: NgDocConfiguration = {
 export default config;
 ```
 
-## External packages in guides
-
-Sometimes you may need to use external packages in your `ng-doc.page.ts`, for example, to load some
-file and
-display it in the guide via `data` field. If you try to use `fs` or `path` packages, you will get an
-error,
-because these packages are not available by default.
-
-To solve this problem, you need to specify `externalPackages` property in your `ng-doc.config.ts`
-file,
-it will be passed to `esbuild` as `external` option.
-
-```typescript name="ng-doc.config.ts"
-import {NgDocConfiguration} from '@ng-doc/builder';
-
-const config: NgDocConfiguration = {
-  guide: {
-    externalPackages: ['fs', 'path'],
-  },
-};
-
-export default config;
-```
-
 ## Configuring repository
 
 If you are creating an open source project and would like to receive suggestions for improving the

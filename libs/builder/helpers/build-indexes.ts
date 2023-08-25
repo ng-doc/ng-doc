@@ -5,7 +5,7 @@ import {defaultHtmlSchema, NodeContent, populate} from '@orama/plugin-parsedoc';
 import {firstValueFrom, from} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 
-import {importEsModule} from './import-es-module';
+import {importEsm} from './import-esm';
 
 export interface NgDocIndexBuilderConfig {
 	title: string;
@@ -109,6 +109,6 @@ function transformFn(node: NodeContent): NodeContent {
  * @param html
  */
 async function removeNotIndexableContent(html: string): Promise<string> {
-	return firstValueFrom(from(importEsModule<typeof import('@ng-doc/utils')>('@ng-doc/utils'))
+	return firstValueFrom(from(importEsm<typeof import('@ng-doc/utils')>('@ng-doc/utils'))
 		.pipe(switchMap((utils: typeof import('@ng-doc/utils')) => utils.removeNotIndexableContent(html))));
 }
