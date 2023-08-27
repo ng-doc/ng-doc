@@ -1,8 +1,15 @@
-import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {Directive, EmbeddedViewRef, Input, OnChanges, TemplateRef, ViewContainerRef} from '@angular/core';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {Subject} from 'rxjs';
-import {distinctUntilChanged, pluck, takeUntil} from 'rxjs/operators';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import {
+	Directive,
+	EmbeddedViewRef,
+	Input,
+	OnChanges,
+	TemplateRef,
+	ViewContainerRef,
+} from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Subject } from 'rxjs';
+import { distinctUntilChanged, pluck, takeUntil } from 'rxjs/operators';
 
 @Directive({
 	selector: '[ngDocMediaQuery]',
@@ -30,14 +37,19 @@ export class NgDocMediaQueryDirective implements OnChanges {
 
 		this.breakpointObserver
 			.observe(this.match)
-			.pipe(pluck('matches'), distinctUntilChanged(), takeUntil(this.unsubscribe$), untilDestroyed(this))
+			.pipe(
+				pluck('matches'),
+				distinctUntilChanged(),
+				takeUntil(this.unsubscribe$),
+				untilDestroyed(this),
+			)
 			.subscribe((matches: boolean) => {
 				this.viewRef?.destroy();
 				this.viewRef = undefined;
 
 				if (matches) {
 					this.viewRef = this.viewContainerRef.createEmbeddedView(this.templateRef);
-					this.viewRef.detectChanges();
+					this.viewRef.markForCheck();
 				}
 			});
 	}

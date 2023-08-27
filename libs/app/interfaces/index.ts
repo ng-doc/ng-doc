@@ -2,6 +2,7 @@ export * from './context';
 export * from './demo-assets';
 export * from './navigation';
 export * from './page-processor';
+export * from './page-skeleton';
 export * from './processor-options';
 export * from './provided-type-control';
 export * from './search-result';

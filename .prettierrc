@@ -3,7 +3,6 @@
 	"trailingComma": "all",
 	"endOfLine": "lf",
 	"semi": true,
-	"bracketSpacing": false,
 	"bracketSameLine": true,
 	"overrides": [
 		{

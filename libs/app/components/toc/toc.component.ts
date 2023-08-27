@@ -1,29 +1,27 @@
-import {DOCUMENT, NgFor} from '@angular/common';
+import { DOCUMENT, NgFor } from '@angular/common';
 import {
 	AfterViewInit,
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
 	ElementRef,
-	Inject,
+	inject,
 	Input,
 	NgZone,
-	OnChanges,
 	QueryList,
 	Renderer2,
 	ViewChild,
 	ViewChildren,
 } from '@angular/core';
-import {Event as REvent, Router, Scroll} from '@angular/router';
-import {generateToc} from '@ng-doc/app/helpers';
-import {NgDocTocItem} from '@ng-doc/app/interfaces';
-import {isPresent} from '@ng-doc/core/helpers/is-present';
-import {ngDocZoneOptimize} from '@ng-doc/ui-kit';
-import {UntilDestroy} from '@ngneat/until-destroy';
-import {fromEvent, merge, Observable} from 'rxjs';
-import {debounceTime, distinctUntilChanged, filter, map, startWith} from 'rxjs/operators';
+import { Event as REvent, Router, Scroll } from '@angular/router';
+import { NgDocPageToc, NgDocTocItem } from '@ng-doc/app/interfaces';
+import { isPresent } from '@ng-doc/core/helpers/is-present';
+import { NgDocMediaQueryDirective, ngDocZoneOptimize } from '@ng-doc/ui-kit';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { fromEvent, merge, Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, startWith } from 'rxjs/operators';
 
-import {NgDocTocElementComponent} from './toc-element/toc-element.component';
+import { NgDocTocElementComponent } from './toc-element/toc-element.component';
 
 @Component({
 	selector: 'ng-doc-toc',
@@ -31,65 +29,52 @@ import {NgDocTocElementComponent} from './toc-element/toc-element.component';
 	styleUrls: ['./toc.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	standalone: true,
-	imports: [NgFor, NgDocTocElementComponent],
+	imports: [NgFor, NgDocTocElementComponent, NgDocMediaQueryDirective],
 })
 @UntilDestroy()
-export class NgDocTocComponent implements OnChanges, AfterViewInit {
+export class NgDocTocComponent implements AfterViewInit, NgDocPageToc {
 	@Input()
-	pageContainer?: HTMLElement;
+	tableOfContent: NgDocTocItem[] = [];
 
-	@ViewChild('selection', {static: true, read: ElementRef})
+	@ViewChild('selection', { read: ElementRef })
 	selection?: ElementRef<HTMLElement>;
 
 	@ViewChildren(NgDocTocElementComponent)
 	elements: QueryList<NgDocTocElementComponent> = new QueryList<NgDocTocElementComponent>();
 
-	map: NgDocTocItem[] = [];
 	activeItem?: NgDocTocItem;
 
-	constructor(
-		@Inject(DOCUMENT)
-		private readonly document: Document,
-		private readonly ngZone: NgZone,
-		private readonly changeDetectorRef: ChangeDetectorRef,
-		private readonly renderer: Renderer2,
-		private readonly router: Router,
-	) {}
-
-	ngOnChanges(): void {
-		/**
-		 * We need to use `Promise.resolve().then()` here because we need to wait for the `pageContainer` to be rendered
-		 * and processed by the processors
-		 */
-		Promise.resolve().then(() => {
-			if (this.pageContainer) {
-				this.map = generateToc(this.pageContainer);
-				this.changeDetectorRef.detectChanges();
-			}
-		});
-	}
+	protected readonly document: Document = inject(DOCUMENT);
+	protected readonly ngZone: NgZone = inject(NgZone);
+	protected readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
+	protected readonly renderer: Renderer2 = inject(Renderer2);
+	protected readonly router: Router = inject(Router);
 
 	ngAfterViewInit(): void {
 		const scrollSelection: Observable<NgDocTocItem> = fromEvent(this.document, 'scroll').pipe(
+			filter(() => !!this.tableOfContent.length),
 			map((event: Event) => (event.target as Document).scrollingElement as HTMLElement),
 			startWith(this.document.scrollingElement as HTMLElement),
-			filter(() => !!this.map.length),
 			map((target: HTMLElement) => {
-				const percentage: number = (target.scrollTop * 100) / (target.scrollHeight - target.offsetHeight);
+				const percentage: number =
+					(target.scrollTop * 100) / (target.scrollHeight - target.offsetHeight);
 				const selectionLine: number = target.scrollTop + (target.offsetHeight * percentage) / 100;
 
-				return this.map.reduce((pTarget: NgDocTocItem, cTarget: NgDocTocItem) => {
+				return this.tableOfContent.reduce((pTarget: NgDocTocItem, cTarget: NgDocTocItem) => {
 					const pTop: number = pTarget.element.getBoundingClientRect().top + target.scrollTop;
 					const cTop: number = cTarget.element.getBoundingClientRect().top + target.scrollTop;
 
-					return Math.abs(cTop - selectionLine) < Math.abs(pTop - selectionLine) ? cTarget : pTarget;
+					return Math.abs(cTop - selectionLine) < Math.abs(pTop - selectionLine)
+						? cTarget
+						: pTarget;
 				});
 			}),
 		);
+
 		const routerSelection: Observable<NgDocTocItem> = this.router.events.pipe(
 			map((event: REvent) => {
 				if (event instanceof Scroll) {
-					const item: NgDocTocItem | undefined = this.map.find((item: NgDocTocItem) =>
+					const item: NgDocTocItem | undefined = this.tableOfContent.find((item: NgDocTocItem) =>
 						item.path.includes(event.routerEvent.url),
 					);
 
@@ -104,24 +89,33 @@ export class NgDocTocComponent implements OnChanges, AfterViewInit {
 			debounceTime(20),
 		);
 
-		Promise.resolve().then(() => {
-			merge(scrollSelection, routerSelection)
-				.pipe(distinctUntilChanged(), ngDocZoneOptimize(this.ngZone))
-				.subscribe(this.select.bind(this));
-		});
+		const elementsChanges = this.elements.changes.pipe(
+			map(() => this.activeItem),
+			filter(isPresent),
+		);
+
+		merge(merge(scrollSelection, routerSelection).pipe(distinctUntilChanged()), elementsChanges)
+			.pipe(ngDocZoneOptimize(this.ngZone), untilDestroyed(this))
+			.subscribe(this.select.bind(this));
 	}
 
-	private select(item: NgDocTocItem): void {
-		const index: number = this.map.indexOf(item);
+	/**
+	 * Selects the item in the table of content.
+	 *
+	 * @param item - Item to select.
+	 */
+	protected select(item: NgDocTocItem): void {
+		const index: number = this.tableOfContent.indexOf(item);
 
 		if (this.selection) {
-			const element: HTMLElement | undefined = this.elements.toArray()[index]?.elementRef.nativeElement;
+			const element: HTMLElement | undefined =
+				this.elements.toArray()[index]?.elementRef.nativeElement;
 
 			if (element) {
 				this.renderer.setStyle(this.selection.nativeElement, 'top', `${element.offsetTop}px`);
 				this.renderer.setStyle(this.selection.nativeElement, 'height', `${element.offsetHeight}px`);
 
-				element.scrollIntoView({block: 'nearest'});
+				element.scrollIntoView({ block: 'nearest' });
 			}
 		}
 

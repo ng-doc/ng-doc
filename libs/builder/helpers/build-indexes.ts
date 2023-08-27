@@ -1,11 +1,11 @@
-import {NgDocPageType} from '@ng-doc/core';
-import {NgDocPageIndex} from '@ng-doc/core/interfaces';
-import {create} from '@orama/orama';
-import {defaultHtmlSchema, NodeContent, populate} from '@orama/plugin-parsedoc';
-import {firstValueFrom, from} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
+import { NgDocPageType } from '@ng-doc/core';
+import { NgDocPageIndex } from '@ng-doc/core/interfaces';
+import { create } from '@orama/orama';
+import { defaultHtmlSchema, NodeContent, populate } from '@orama/plugin-parsedoc';
+import { firstValueFrom, from } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
-import {importEsm} from './import-esm';
+import { importEsm } from './import-esm';
 
 export interface NgDocIndexBuilderConfig {
 	title: string;
@@ -79,11 +79,13 @@ function isIndexable(doc?: typeof defaultHtmlSchema): boolean {
  * @param doc
  */
 function isHeading(doc: typeof defaultHtmlSchema): boolean {
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
 	return (
 		['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(doc.type) &&
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
 		!!doc?.properties &&
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
 		!!doc.properties['id']
 	);
 }
@@ -103,7 +105,7 @@ function transformFn(node: NodeContent): NodeContent {
 		case 'b':
 		case 'p':
 		case 'ul':
-			return {...node, raw: `<p>${node.content}</p>`};
+			return { ...node, raw: `<p>${node.content}</p>` };
 		default:
 			return node;
 	}
