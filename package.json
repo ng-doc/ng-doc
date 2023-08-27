@@ -171,11 +171,5 @@
 		"typescript": "5.0.4",
 		"webpack-bundle-analyzer": "^4.7.0",
 		"yargs": "^17.5.1"
-	},
-	"lint-staged": {
-		"*": [
-			"nx affected:lint --fix --quiet=true --base=main --head=HEAD",
-			"nx format:write --base=main --head=HEAD"
-		]
 	}
 }
