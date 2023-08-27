@@ -137,7 +137,7 @@ to 6, you can write the following
 
 ````markdown name="index.md"
 ```typescript {1,3-5,8}
-import {NgDocPage} from '@ng-doc/core';
+import { NgDocPage } from '@ng-doc/core';
 
 const NicePage: NgDocPage = {
   title: `What a nice page!`,
@@ -149,7 +149,7 @@ export default NicePage;
 ````
 
 ```typescript {1,3-6,8}
-import {NgDocPage} from '@ng-doc/core';
+import { NgDocPage } from '@ng-doc/core';
 
 const NicePage: NgDocPage = {
   title: `What a nice page!`,

@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {NgDocTooltipDirective} from '@ng-doc/ui-kit';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { NgDocTooltipDirective } from '@ng-doc/ui-kit';
 
 @Component({
 	selector: 'image-viewer',

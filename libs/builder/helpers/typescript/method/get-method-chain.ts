@@ -6,8 +6,8 @@ import {
 	Node,
 } from 'ts-morph';
 
-import {forAllClasses} from '../class';
-import {forAllInterfaces} from '../interface/for-all-interfaces';
+import { forAllClasses } from '../class';
+import { forAllInterfaces } from '../interface/for-all-interfaces';
 
 /**
  *

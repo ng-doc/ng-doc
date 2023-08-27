@@ -11,10 +11,10 @@ But you can change this location by setting the `customIconsPath` option
 when you configuration for the ui-kit.
 
 ```ts name="main.ts"
-import {bootstrapApplication} from '@angular/platform-browser';
-import {provideNgDocUiKitConfig} from '@ng-doc/ui-kit';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideNgDocUiKitConfig } from '@ng-doc/ui-kit';
 
-import {AppComponent} from './app/app.component';
+import { AppComponent } from './app/app.component';
 
 bootstrapApplication(AppComponent, {
   providers: [

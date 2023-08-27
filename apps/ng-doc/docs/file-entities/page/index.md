@@ -32,7 +32,7 @@ the page configuration must correspond to the `NgDocPage` type, you can read mor
 properties in the documentation for the type, below is an example of the minimum page configuration.
 
 ```typescript name="ng-doc.page.ts"
-import {NgDocPage} from '@ng-doc/core';
+import { NgDocPage } from '@ng-doc/core';
 
 const MyAwesomePage: NgDocPage = {
   title: 'MyAwesomePage',
@@ -49,7 +49,7 @@ for details on how to create one). To add a category to your page, you can use t
 just import category and put it in the `category` field, just like that:
 
 ```typescript name="ng-doc.page.ts" {2,7}
-import {NgDocPage} from '@ng-doc/core';
+import { NgDocPage } from '@ng-doc/core';
 import MyAwesomeCategory from '../ng-doc.category';
 
 const MyAwesomePage: NgDocPage = {
@@ -92,8 +92,8 @@ use Angular, you can move it to a separate file so that the variable file does n
 imports.
 
 ```typescript {2,10} name="Will not work" group="separate-files"
-import {NgDocPage} from '@ng-doc/core';
-import {ControlsVariable} from '../file-with-angular-dependencies';
+import { NgDocPage } from '@ng-doc/core';
+import { ControlsVariable } from '../file-with-angular-dependencies';
 
 const MyAwesomePage: NgDocPage = {
   // ...
@@ -111,8 +111,8 @@ export default MyAwesomePage;
 ```
 
 ```typescript {2,10} name="Will work" group="separate-files"
-import {NgDocPage} from '@ng-doc/core';
-import {ControlsVariable} from '../file-without-angular';
+import { NgDocPage } from '@ng-doc/core';
+import { ControlsVariable } from '../file-without-angular';
 
 const MyAwesomePage: NgDocPage = {
   // ...
@@ -139,7 +139,7 @@ dependencies will be handled correctly on the builder side.
 
 ```typescript {1} name="ng-doc.page.ts"
 import '@angular/compiler';
-import {NgDocPage} from '@ng-doc/core';
+import { NgDocPage } from '@ng-doc/core';
 
 const MyAwesomePage: NgDocPage = {
   // ...

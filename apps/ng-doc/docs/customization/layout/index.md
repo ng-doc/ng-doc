@@ -98,8 +98,8 @@ To open and close the `sidebar` you can use the `NgDocSidebarService` service, i
 component and call the `toggle()` method.
 
 ```typescript name="my-custom-navbar.component.ts"
-import {Component} from '@angular/core';
-import {NgDocSidebarService} from '@ng-doc/app';
+import { Component } from '@angular/core';
+import { NgDocSidebarService } from '@ng-doc/app';
 
 @Component({
   selector: 'my-custom-navbar',
@@ -160,8 +160,8 @@ You can get this list by injecting the `NG_DOC_CONTEXT` token, which returns the
 object.
 
 ```typescript name="my-custom-sidebar.component.ts"
-import {Component, Inject} from '@angular/core';
-import {NG_DOC_CONTEXT, NgDocContext} from '@ng-doc/app';
+import { Component, Inject } from '@angular/core';
+import { NG_DOC_CONTEXT, NgDocContext } from '@ng-doc/app';
 
 @Component({
   selector: 'my-custom-sidebar',

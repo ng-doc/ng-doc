@@ -11,7 +11,7 @@ exported by default and match `NgDocConfiguration` interface.
 > documentation application.
 
 ```typescript name="ng-doc.config.ts"
-import {NgDocConfiguration} from '@ng-doc/builder';
+import { NgDocConfiguration } from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
   // ...
@@ -75,7 +75,7 @@ in your `ng-doc.config.ts` file.
 After that NgDoc will search for documentation pages in the specified folder and its subfolders.
 
 ```typescript name="ng-doc.config.ts"
-import {NgDocConfiguration} from '@ng-doc/builder';
+import { NgDocConfiguration } from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
   pages: 'libs/my-lib/src',
@@ -90,7 +90,7 @@ You can also change the output folder for the documentation application by speci
 this folder is used for storing generated pages and other NgDoc files.
 
 ```typescript name="ng-doc.config.ts"
-import {NgDocConfiguration} from '@ng-doc/builder';
+import { NgDocConfiguration } from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
   outDir: 'src',
@@ -121,7 +121,7 @@ use
 for `serve` target.
 
 ```typescript name="ng-doc.config.ts"
-import {NgDocConfiguration} from '@ng-doc/builder';
+import { NgDocConfiguration } from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
   angularBuilder: 'esbuild',
@@ -144,7 +144,7 @@ After that, NgDoc will start displaying links for editing and viewing the source
 > creating an issue in our `ngDocFeatureRequest` page.
 
 ```typescript name="ng-doc.config.ts"
-import {NgDocConfiguration} from '@ng-doc/builder';
+import { NgDocConfiguration } from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
   repoConfig: {
@@ -172,8 +172,8 @@ Same for the component, we just move the content that NgDoc adds by default to `
 `DocsComponent`.
 
 ```typescript name="docs.component.ts"
-import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {Routes} from '@angular/router';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Routes } from '@angular/router';
 
 @Component({
   selector: 'ng-doc-docs',
@@ -209,10 +209,10 @@ export default routes;
 Now you need to add lazy loading for DocsComponent and set a route for it
 
 ```typescript name="main.ts"
-import {bootstrapApplication} from '@angular/platform-browser';
-import {provideRouter, withInMemoryScrolling} from '@angular/router';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideRouter, withInMemoryScrolling } from '@angular/router';
 
-import {AppComponent} from './app/app.component';
+import { AppComponent } from './app/app.component';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -238,7 +238,7 @@ NgDoc generates links automatically, and doesn't know what route the parent page
 need to specify the `routePrefix` property in `ng-doc.config.ts` file.
 
 ```typescript name="ng-doc.config.ts"
-import {NgDocConfiguration} from '@ng-doc/builder';
+import { NgDocConfiguration } from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
   routePrefix: 'docs',

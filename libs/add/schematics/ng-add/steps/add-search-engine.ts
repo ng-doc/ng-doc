@@ -1,8 +1,8 @@
-import {getProjectTargetOptions} from '@angular/cdk/schematics';
-import {JsonValue} from '@angular-devkit/core';
-import {ProjectDefinition, WorkspaceDefinition} from '@angular-devkit/core/src/workspace';
-import {Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
-import {getWorkspace} from '@schematics/angular/utility/workspace';
+import { getProjectTargetOptions } from '@angular/cdk/schematics';
+import { JsonValue } from '@angular-devkit/core';
+import { ProjectDefinition, WorkspaceDefinition } from '@angular-devkit/core/src/workspace';
+import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { getWorkspace } from '@schematics/angular/utility/workspace';
 import {
 	addImports,
 	addProviderToNgModule,
@@ -13,8 +13,8 @@ import {
 	setActiveProject,
 } from 'ng-morph';
 
-import {Schema} from '../schema';
-import {getProject} from '../utils/get-project';
+import { Schema } from '../schema';
+import { getProject } from '../utils/get-project';
 
 /**
  *

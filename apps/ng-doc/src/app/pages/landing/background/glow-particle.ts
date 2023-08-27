@@ -7,7 +7,7 @@ export class GlowParticle {
 		public x: number,
 		public y: number,
 		public radius: number,
-		public rgb: {r: number; g: number; b: number; a?: number},
+		public rgb: { r: number; g: number; b: number; a?: number },
 		public vx: number = Math.random() * 1.5,
 		public vy: number = Math.random() * 1.5,
 	) {}

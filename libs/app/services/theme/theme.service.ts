@@ -1,12 +1,12 @@
-import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable, Optional} from '@angular/core';
-import {NG_DOC_NIGHT_THEME, NG_DOC_STORE_THEME_KEY} from '@ng-doc/app/constants';
-import {NgDocTheme} from '@ng-doc/app/interfaces';
-import {NgDocStoreService} from '@ng-doc/app/services/store';
-import {NG_DOC_DEFAULT_THEME_ID, NG_DOC_THEME} from '@ng-doc/app/tokens';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {fromEvent, Observable, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import { DOCUMENT } from '@angular/common';
+import { Inject, Injectable, Optional } from '@angular/core';
+import { NG_DOC_NIGHT_THEME, NG_DOC_STORE_THEME_KEY } from '@ng-doc/app/constants';
+import { NgDocTheme } from '@ng-doc/app/interfaces';
+import { NgDocStoreService } from '@ng-doc/app/services/store';
+import { NG_DOC_DEFAULT_THEME_ID, NG_DOC_THEME } from '@ng-doc/app/tokens';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { fromEvent, Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * Service for managing themes.

@@ -1,11 +1,11 @@
-import {NgDocSearchEngine} from '@ng-doc/app/classes/search-engine';
-import {NgDocSearchResult} from '@ng-doc/app/interfaces';
-import {asArray} from '@ng-doc/core/helpers/as-array';
-import {objectKeys} from '@ng-doc/core/helpers/object-keys';
-import {NgDocPageIndex} from '@ng-doc/core/interfaces';
-import {NgDocHighlightPosition} from '@ng-doc/ui-kit';
-import {create, insertMultiple, Orama} from '@orama/orama';
-import {Document} from '@orama/orama/dist/types';
+import { NgDocSearchEngine } from '@ng-doc/app/classes/search-engine';
+import { NgDocSearchResult } from '@ng-doc/app/interfaces';
+import { asArray } from '@ng-doc/core/helpers/as-array';
+import { objectKeys } from '@ng-doc/core/helpers/object-keys';
+import { NgDocPageIndex } from '@ng-doc/core/interfaces';
+import { NgDocHighlightPosition } from '@ng-doc/ui-kit';
+import { create, insertMultiple, Orama } from '@orama/orama';
+import { Document } from '@orama/orama/dist/types';
 import {
 	afterInsert,
 	OramaWithHighlight,
@@ -13,8 +13,8 @@ import {
 	searchWithHighlight,
 } from '@orama/plugin-match-highlight';
 import * as stemmer from '@orama/stemmers';
-import {from, Observable} from 'rxjs';
-import {map, shareReplay, switchMap} from 'rxjs/operators';
+import { from, Observable } from 'rxjs';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 
 /**
  * Options for the `NgDocDefaultSearchEngine`.
@@ -91,7 +91,7 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 			switchMap((db: OramaWithHighlight) =>
 				searchWithHighlight(db, {
 					term: query,
-					boost: {title: 4, section: 2},
+					boost: { title: 4, section: 2 },
 					properties: ['section', 'content'],
 					tolerance: this.options?.tolerance,
 					exact: this.options?.exact,

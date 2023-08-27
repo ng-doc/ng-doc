@@ -1,5 +1,5 @@
-import {NgDocKeyword} from '@ng-doc/core';
-import fetch, {Response} from 'node-fetch';
+import { NgDocKeyword } from '@ng-doc/core';
+import fetch, { Response } from 'node-fetch';
 
 /**
  *

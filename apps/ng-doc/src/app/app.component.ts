@@ -1,14 +1,18 @@
-import {ChangeDetectionStrategy, Component, HostBinding} from '@angular/core';
-import {RouterLink, RouterOutlet} from '@angular/router';
-import {NgDocNavbarComponent, NgDocSidebarComponent, NgDocThemeToggleComponent} from '@ng-doc/app';
-import {NgDocRootComponent} from '@ng-doc/app/components/root';
+import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import {
+	NgDocNavbarComponent,
+	NgDocSidebarComponent,
+	NgDocThemeToggleComponent,
+} from '@ng-doc/app';
+import { NgDocRootComponent } from '@ng-doc/app/components/root';
 import {
 	NgDocButtonIconComponent,
 	NgDocIconComponent,
 	NgDocMediaQueryDirective,
 	NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
-import {preventInitialChildAnimations} from '@ng-doc/ui-kit/animations';
+import { preventInitialChildAnimations } from '@ng-doc/ui-kit/animations';
 
 @Component({
 	animations: [preventInitialChildAnimations],

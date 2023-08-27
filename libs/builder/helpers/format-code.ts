@@ -1,5 +1,5 @@
-import {NgDocCodeType} from '@ng-doc/core';
-import {Options} from 'prettier';
+import { NgDocCodeType } from '@ng-doc/core';
+import { Options } from 'prettier';
 
 /**
  *	Format code with Prettier
@@ -15,7 +15,7 @@ export function formatCode(code: string, codeType: NgDocCodeType | null = 'TypeS
 			const config = require('prettier').resolveConfig.sync(process.cwd());
 
 			return require('prettier')
-				.format(code, {...config, parser, embeddedLanguageFormatting: 'auto'})
+				.format(code, { ...config, parser, embeddedLanguageFormatting: 'auto' })
 				.trim();
 		}
 

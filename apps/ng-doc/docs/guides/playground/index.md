@@ -24,10 +24,10 @@ itself, for example:
 > it.
 
 ```typescript name="ng-doc.page.ts"
-import {NgDocPage} from '@ng-doc/core';
-import {NgDocTagModule, NgDocTagComponent} from '@ng-doc/ui-kit';
+import { NgDocPage } from '@ng-doc/core';
+import { NgDocTagModule, NgDocTagComponent } from '@ng-doc/ui-kit';
 
-import {PageModule} from './ng-doc.module';
+import { PageModule } from './ng-doc.module';
 
 const MyAwesomePage: NgDocPage = {
   playgrounds: {
@@ -86,8 +86,8 @@ with the selector of your component.
 > in your playground.
 
 ```typescript name="ng-doc.page.ts" {8}
-import {NgDocPage} from '@ng-doc/core';
-import {NgDocButtonComponent} from '@ng-doc/ui-kit';
+import { NgDocPage } from '@ng-doc/core';
+import { NgDocButtonComponent } from '@ng-doc/ui-kit';
 
 const MyAwesomePage: NgDocPage = {
   playgrounds: {
@@ -114,8 +114,8 @@ the `content` field in your playground configuration, for example:
 > field, if this component is not standalone you must import its module.
 
 ```typescript name="ng-doc.page.ts" {11,15-18}
-import {NgDocDependencies} from '@ng-doc/core';
-import {NgDocTagComponent, NgDocIconComponent} from '@ng-doc/ui-kit';
+import { NgDocDependencies } from '@ng-doc/core';
+import { NgDocTagComponent, NgDocIconComponent } from '@ng-doc/ui-kit';
 
 const PageDependencies: NgDocDependencies = {
   imports: [NgDocIconComponent],
@@ -151,8 +151,8 @@ To make your playgrounds more lively and dynamic you can use `data` field,
 and put any data you want in it, to use it in your template, for example like that:
 
 ```typescript name="ng-doc.page.ts"
-import {NgDocDependencies} from '@ng-doc/core';
-import {NgDocTagComponent} from '@ng-doc/ui-kit';
+import { NgDocDependencies } from '@ng-doc/core';
+import { NgDocTagComponent } from '@ng-doc/ui-kit';
 
 const PageDependencies: NgDocDependencies = {
   playgrounds: {
@@ -176,10 +176,10 @@ export default PageDependencies;
 You can also create playgrounds for directives in the same way as for components:
 
 ```typescript name="ng-doc.page.ts"
-import {NgDocPage} from '@ng-doc/core';
-import {NgDocRotatorDirective} from '@ng-doc/ui-kit';
+import { NgDocPage } from '@ng-doc/core';
+import { NgDocRotatorDirective } from '@ng-doc/ui-kit';
 
-import {PageModule} from './ng-doc.module';
+import { PageModule } from './ng-doc.module';
 
 const MyAwesomePage: NgDocPage = {
   playgrounds: {
@@ -212,10 +212,10 @@ pipe class, and the `template` field to specify the template for the playground:
 > will bind them to the playground controls.
 
 ```typescript name="ng-doc.page.ts"
-import {NgDocPage} from '@ng-doc/core';
-import {FormatDatePipe} from './format-date.pipe';
+import { NgDocPage } from '@ng-doc/core';
+import { FormatDatePipe } from './format-date.pipe';
 
-import {PageModule} from './ng-doc.module';
+import { PageModule } from './ng-doc.module';
 
 const MyAwesomePage: NgDocPage = {
   playgrounds: {
@@ -277,8 +277,8 @@ in the playground configuration, for example:
 > for this input.
 
 ```typescript name="ng-doc.page.ts"
-import {NgDocDependencies} from '@ng-doc/core';
-import {NgDocTagComponent} from '@ng-doc/ui-kit';
+import { NgDocDependencies } from '@ng-doc/core';
+import { NgDocTagComponent } from '@ng-doc/ui-kit';
 
 const PageDependencies: NgDocDependencies = {
   imports: [NgDocTagModule],

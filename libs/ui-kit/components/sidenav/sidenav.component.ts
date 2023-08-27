@@ -1,5 +1,5 @@
-import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
-import {NgIf} from '@angular/common';
+import { animate, AnimationEvent, state, style, transition, trigger } from '@angular/animations';
+import { NgIf } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -8,15 +8,15 @@ import {
 	Input,
 	Output,
 } from '@angular/core';
-import {NgDocContent, NgDocHorizontalAlign} from '@ng-doc/ui-kit/types';
-import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
+import { NgDocContent, NgDocHorizontalAlign } from '@ng-doc/ui-kit/types';
+import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 
 @Component({
 	animations: [
 		trigger('sidenavAnimation', [
-			state('false', style({display: 'none'})),
+			state('false', style({ display: 'none' })),
 			transition('left => false', [
-				style({transform: 'translateX(0)', opacity: 1}),
+				style({ transform: 'translateX(0)', opacity: 1 }),
 				animate(
 					'220ms cubic-bezier(0.25, 0.8, 0.25, 1)',
 					style({
@@ -26,7 +26,7 @@ import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 				),
 			]),
 			transition('false => left', [
-				style({transform: 'translateX(-100%)', opacity: 0, display: 'block'}),
+				style({ transform: 'translateX(-100%)', opacity: 0, display: 'block' }),
 				animate(
 					'220ms cubic-bezier(0.25, 0.8, 0.25, 1)',
 					style({
@@ -36,7 +36,7 @@ import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 				),
 			]),
 			transition('right => false', [
-				style({transform: 'translateX(0)', opacity: 1}),
+				style({ transform: 'translateX(0)', opacity: 1 }),
 				animate(
 					'220ms cubic-bezier(0.25, 0.8, 0.25, 1)',
 					style({
@@ -46,7 +46,7 @@ import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 				),
 			]),
 			transition('false => right', [
-				style({transform: 'translateX(100%)', opacity: 0, display: 'block'}),
+				style({ transform: 'translateX(100%)', opacity: 0, display: 'block' }),
 				animate(
 					'220ms cubic-bezier(0.25, 0.8, 0.25, 1)',
 					style({
@@ -64,14 +64,14 @@ import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 					width: 'calc(100% - var(--ng-doc-sidenav-width))',
 				}),
 			),
-			state('false', style({'margin-left': '0', width: '100%'})),
+			state('false', style({ 'margin-left': '0', width: '100%' })),
 			transition('true => false', animate('220ms cubic-bezier(0.25, 0.8, 0.25, 1)')),
 			transition('false => true', animate('220ms cubic-bezier(0.25, 0.8, 0.25, 1)')),
 		]),
 		trigger('backdropFade', [
 			transition(':enter', [
-				style({opacity: 0}),
-				animate('220ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({opacity: 1})),
+				style({ opacity: 0 }),
+				animate('220ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({ opacity: 1 })),
 			]),
 		]),
 	],

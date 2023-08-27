@@ -1,7 +1,7 @@
-import {Type} from '@angular/core';
+import { Type } from '@angular/core';
 
-import {NgDocNavigation} from './navigation';
-import {NgDocTocItem} from './toc-item';
+import { NgDocNavigation } from './navigation';
+import { NgDocTocItem } from './toc-item';
 
 /**
  * Interface for page navigation implementation

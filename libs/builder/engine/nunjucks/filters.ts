@@ -41,4 +41,4 @@ export {
 	typeAliasPresentation,
 	variablePresentation,
 } from '../../helpers';
-export {isRoute, kebabCase, objectKeys, unique} from '@ng-doc/core';
+export { isRoute, kebabCase, objectKeys, unique } from '@ng-doc/core';

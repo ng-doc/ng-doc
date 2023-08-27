@@ -1,19 +1,19 @@
-import {asArray, isPresent, isRoute, NgDocEntityAnchor, NgDocPage} from '@ng-doc/core';
+import { asArray, isPresent, isRoute, NgDocEntityAnchor, NgDocPage } from '@ng-doc/core';
 import * as fs from 'fs';
 import * as path from 'path';
-import {Observable, of} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
-import {buildEntityKeyword, editFileInRepoUrl} from '../../helpers';
-import {NgDocBuildResult, NgDocEntityKeyword} from '../../interfaces';
-import {NgDocActions} from '../actions';
-import {renderTemplate} from '../nunjucks';
-import {NgDocEntity} from './abstractions/entity';
-import {NgDocNavigationEntity} from './abstractions/navigation.entity';
-import {CachedEntity, CachedFilesGetter} from './cache/decorators';
-import {NgDocCategoryEntity} from './category.entity';
-import {NgDocPageDemoEntity} from './page-demo.entity';
-import {NgDocPagePlaygroundEntity} from './page-playground.entity';
+import { buildEntityKeyword, editFileInRepoUrl } from '../../helpers';
+import { NgDocBuildResult, NgDocEntityKeyword } from '../../interfaces';
+import { NgDocActions } from '../actions';
+import { renderTemplate } from '../nunjucks';
+import { NgDocEntity } from './abstractions/entity';
+import { NgDocNavigationEntity } from './abstractions/navigation.entity';
+import { CachedEntity, CachedFilesGetter } from './cache/decorators';
+import { NgDocCategoryEntity } from './category.entity';
+import { NgDocPageDemoEntity } from './page-demo.entity';
+import { NgDocPagePlaygroundEntity } from './page-playground.entity';
 import {
 	fillIndexesPlugin,
 	markdownToHtmlPlugin,

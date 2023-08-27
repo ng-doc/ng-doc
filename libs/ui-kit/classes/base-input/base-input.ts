@@ -1,6 +1,6 @@
-import {Directive, ElementRef, HostBinding, inject, Renderer2} from '@angular/core';
-import {FL_CONTROL_HOST, FlControl} from 'flex-controls';
-import {FlBaseControlHost} from 'flex-controls/interfaces';
+import { Directive, ElementRef, HostBinding, inject, Renderer2 } from '@angular/core';
+import { FL_CONTROL_HOST, FlControl } from 'flex-controls';
+import { FlBaseControlHost } from 'flex-controls/interfaces';
 
 @Directive()
 export abstract class NgDocBaseInput<T> extends FlControl<T> {
@@ -9,7 +9,7 @@ export abstract class NgDocBaseInput<T> extends FlControl<T> {
 
 	protected constructor() {
 		super(
-			inject<FlBaseControlHost<T, T> | undefined>(FL_CONTROL_HOST, {optional: true}) || undefined,
+			inject<FlBaseControlHost<T, T> | undefined>(FL_CONTROL_HOST, { optional: true }) || undefined,
 		);
 	}
 

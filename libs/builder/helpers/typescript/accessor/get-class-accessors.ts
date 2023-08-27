@@ -1,4 +1,4 @@
-import {asArray} from '@ng-doc/core';
+import { asArray } from '@ng-doc/core';
 import {
 	AccessorDeclaration,
 	ClassDeclaration,
@@ -6,7 +6,7 @@ import {
 	SetAccessorDeclaration,
 } from 'ts-morph';
 
-import {forAllClasses} from '../class';
+import { forAllClasses } from '../class';
 
 /**
  *

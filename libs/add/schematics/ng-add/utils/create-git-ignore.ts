@@ -1,4 +1,4 @@
-import {createSourceFile} from 'ng-morph';
+import { createSourceFile } from 'ng-morph';
 
 /**
  *

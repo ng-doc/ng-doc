@@ -1,15 +1,15 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgDocTypeControl} from '@ng-doc/app';
-import {EMPTY_FUNCTION} from '@ng-doc/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgDocTypeControl } from '@ng-doc/app';
+import { EMPTY_FUNCTION } from '@ng-doc/core';
 import {
 	NgDocInputStringDirective,
 	NgDocInputWrapperComponent,
 	NgDocLabelComponent,
 } from '@ng-doc/ui-kit';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import {FloatingCirclePosition} from '../floating-circle/floating-circle.component';
+import { FloatingCirclePosition } from '../floating-circle/floating-circle.component';
 
 @Component({
 	selector: 'ng-doc-floating-circle-position-control',
@@ -64,7 +64,7 @@ export class FloatingCirclePositionControlComponent
 				left: null,
 				...(obj ? obj : {}),
 			},
-			{emitEvent: false},
+			{ emitEvent: false },
 		);
 	}
 }

@@ -7,9 +7,9 @@ import {
 	OnInit,
 	ViewContainerRef,
 } from '@angular/core';
-import {NgDocPageProcessor, NgDocProcessorOptions} from '@ng-doc/app/interfaces';
-import {NG_DOC_PAGE_CUSTOM_PROCESSOR, NG_DOC_PAGE_PROCESSOR} from '@ng-doc/app/tokens';
-import {asArray, objectKeys} from '@ng-doc/core';
+import { NgDocPageProcessor, NgDocProcessorOptions } from '@ng-doc/app/interfaces';
+import { NG_DOC_PAGE_CUSTOM_PROCESSOR, NG_DOC_PAGE_PROCESSOR } from '@ng-doc/app/tokens';
+import { asArray, objectKeys } from '@ng-doc/core';
 
 /**
  * Base processor class to create a processor directive that will be used to replace
@@ -21,9 +21,9 @@ import {asArray, objectKeys} from '@ng-doc/core';
 })
 export class NgDocPageProcessorDirective implements OnInit {
 	processors: Array<NgDocPageProcessor<unknown>> =
-		inject<Array<NgDocPageProcessor<unknown>>>(NG_DOC_PAGE_PROCESSOR, {optional: true}) ?? [];
+		inject<Array<NgDocPageProcessor<unknown>>>(NG_DOC_PAGE_PROCESSOR, { optional: true }) ?? [];
 	customProcessors: Array<NgDocPageProcessor<unknown>> =
-		inject<Array<NgDocPageProcessor<unknown>>>(NG_DOC_PAGE_CUSTOM_PROCESSOR, {optional: true}) ??
+		inject<Array<NgDocPageProcessor<unknown>>>(NG_DOC_PAGE_CUSTOM_PROCESSOR, { optional: true }) ??
 		[];
 	injector: Injector = inject(Injector);
 

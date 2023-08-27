@@ -1,10 +1,10 @@
 import * as chokidar from 'chokidar';
-import {minimatch} from 'minimatch';
-import {Observable, ReplaySubject, Subject} from 'rxjs';
-import {filter, map} from 'rxjs/operators';
+import { minimatch } from 'minimatch';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
-import {miniPattern} from '../helpers';
-import {bufferDebounce} from '../operators';
+import { miniPattern } from '../helpers';
+import { bufferDebounce } from '../operators';
 
 /**
  *

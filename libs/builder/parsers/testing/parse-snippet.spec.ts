@@ -1,4 +1,4 @@
-import {parseSnippet} from '../parse-snippet';
+import { parseSnippet } from '../parse-snippet';
 
 describe('parseSnippet', () => {
 	it('should parse simple snippet', () => {

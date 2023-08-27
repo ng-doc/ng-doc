@@ -1,5 +1,5 @@
-import {InjectionToken, Provider} from '@angular/core';
-import {NgDocPageProcessor} from '@ng-doc/app/interfaces';
+import { InjectionToken, Provider } from '@angular/core';
+import { NgDocPageProcessor } from '@ng-doc/app/interfaces';
 
 export const NG_DOC_PAGE_PROCESSOR: InjectionToken<NgDocPageProcessor<unknown>> =
 	new InjectionToken<NgDocPageProcessor<unknown>>('NG_DOC_PAGE_PROCESSOR');

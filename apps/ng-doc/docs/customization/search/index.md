@@ -11,13 +11,13 @@ To do so, you need to import stemmer from `@orama/stemmers` package and provide 
 `provideSearchEngine` function.
 
 ```ts name="main.ts" {3,7}
-import {bootstrapApplication} from '@angular/platform-browser';
-import {NgDocDefaultSearchEngine, provideSearchEngine} from '@ng-doc/app';
-import {stemmer} from '@orama/stemmers/dutch';
-import {AppComponent} from './app/app.component';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { NgDocDefaultSearchEngine, provideSearchEngine } from '@ng-doc/app';
+import { stemmer } from '@orama/stemmers/dutch';
+import { AppComponent } from './app/app.component';
 
 bootstrapApplication(AppComponent, {
-  providers: [provideSearchEngine(NgDocDefaultSearchEngine, {stemmer})],
+  providers: [provideSearchEngine(NgDocDefaultSearchEngine, { stemmer })],
 }).catch((err: unknown) => console.error(err));
 ```
 
@@ -29,12 +29,12 @@ object to the `provideSearchEngine` function.
 For example, increasing the number of results returned by the search engine:
 
 ```ts name="main.ts" {6}
-import {bootstrapApplication} from '@angular/platform-browser';
-import {NgDocDefaultSearchEngine, provideSearchEngine} from '@ng-doc/app';
-import {AppComponent} from './app/app.component';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { NgDocDefaultSearchEngine, provideSearchEngine } from '@ng-doc/app';
+import { AppComponent } from './app/app.component';
 
 bootstrapApplication(AppComponent, {
-  providers: [provideSearchEngine(NgDocDefaultSearchEngine, {limit: 20})],
+  providers: [provideSearchEngine(NgDocDefaultSearchEngine, { limit: 20 })],
 }).catch((err: unknown) => console.error(err));
 ```
 
@@ -61,10 +61,10 @@ To do so, you need to implement the `NgDocSearchEngine` class and provide it via
 > using `assets/ng-doc/indexes.json` url.
 
 ```ts name="custom-search-engine.ts"
-import {NgDocSearchEngine, NgDocSearchResult} from '@ng-doc/app';
-import {NgDocPageIndex} from '@ng-doc/core';
-import {from, Observable} from 'rxjs';
-import {map, shareReplay, switchMap} from 'rxjs/operators';
+import { NgDocSearchEngine, NgDocSearchResult } from '@ng-doc/app';
+import { NgDocPageIndex } from '@ng-doc/core';
+import { from, Observable } from 'rxjs';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 
 export class CustomSearchEngine extends NgDocSearchEngine {
   // Load indexes from assets
@@ -113,9 +113,9 @@ export class CustomSearchEngine extends NgDocSearchEngine {
 After you have created your search engine, you need to provide using `provideSearchEngine` function.
 
 ```ts name="main.ts" {11}
-import {bootstrapApplication} from '@angular/platform-browser';
-import {provideSearchEngine} from '@ng-doc/app';
-import {AppComponent} from './app/app.component';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideSearchEngine } from '@ng-doc/app';
+import { AppComponent } from './app/app.component';
 
 bootstrapApplication(AppComponent, {
   providers: [provideSearchEngine(CustomSearchEngine)],

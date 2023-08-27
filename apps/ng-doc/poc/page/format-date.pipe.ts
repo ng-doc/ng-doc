@@ -1,4 +1,4 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
 	name: 'formatDate',
@@ -21,11 +21,11 @@ export class FormatDatePipe implements PipeTransform {
 		const timeZone: 'UTC' | undefined = utc ? 'UTC' : undefined;
 
 		if (display === 'date') {
-			return date.toLocaleDateString('en-US', {timeZone});
+			return date.toLocaleDateString('en-US', { timeZone });
 		} else if (display === 'time') {
-			return date.toLocaleTimeString('en-US', {timeZone});
+			return date.toLocaleTimeString('en-US', { timeZone });
 		} else {
-			return date.toLocaleString('en-US', {timeZone});
+			return date.toLocaleString('en-US', { timeZone });
 		}
 	}
 }

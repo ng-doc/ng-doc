@@ -1,4 +1,4 @@
-import {AsyncPipe} from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -13,25 +13,25 @@ import {
 	ViewChild,
 	ViewContainerRef,
 } from '@angular/core';
-import {FormGroup} from '@angular/forms';
-import {NgDocDemoDisplayerComponent} from '@ng-doc/app/components/demo-displayer';
-import {formatHtml} from '@ng-doc/app/helpers';
-import {getPlaygroundDemoToken} from '@ng-doc/app/providers/playground-demo';
-import {NgDocFormPartialValue} from '@ng-doc/app/types';
-import {stringify} from '@ng-doc/core';
+import { FormGroup } from '@angular/forms';
+import { NgDocDemoDisplayerComponent } from '@ng-doc/app/components/demo-displayer';
+import { formatHtml } from '@ng-doc/app/helpers';
+import { getPlaygroundDemoToken } from '@ng-doc/app/providers/playground-demo';
+import { NgDocFormPartialValue } from '@ng-doc/app/types';
+import { stringify } from '@ng-doc/core';
 import {
 	buildPlaygroundDemoPipeTemplate,
 	buildPlaygroundDemoTemplate,
 } from '@ng-doc/core/helpers/build-playground-demo-template';
-import {objectKeys} from '@ng-doc/core/helpers/object-keys';
-import {NgDocPlaygroundConfig, NgDocPlaygroundProperties} from '@ng-doc/core/interfaces';
-import {NgDocLetDirective, NgDocSmoothResizeComponent} from '@ng-doc/ui-kit';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {from, Observable, of, Subject} from 'rxjs';
-import {startWith, takeUntil} from 'rxjs/operators';
+import { objectKeys } from '@ng-doc/core/helpers/object-keys';
+import { NgDocPlaygroundConfig, NgDocPlaygroundProperties } from '@ng-doc/core/interfaces';
+import { NgDocLetDirective, NgDocSmoothResizeComponent } from '@ng-doc/ui-kit';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { from, Observable, of, Subject } from 'rxjs';
+import { startWith, takeUntil } from 'rxjs/operators';
 
-import {NgDocBasePlayground} from '../base-playground';
-import {NgDocPlaygroundForm} from '../playground-form';
+import { NgDocBasePlayground } from '../base-playground';
+import { NgDocPlaygroundForm } from '../playground-form';
 
 @Component({
 	selector: 'ng-doc-playground-demo',
@@ -70,7 +70,7 @@ export class NgDocPlaygroundDemoComponent<
 	@Input()
 	expanded: boolean = false;
 
-	@ViewChild('demoOutlet', {static: true, read: ViewContainerRef})
+	@ViewChild('demoOutlet', { static: true, read: ViewContainerRef })
 	demoOutlet?: ViewContainerRef;
 
 	playgroundDemo?: typeof NgDocBasePlayground;
@@ -82,7 +82,7 @@ export class NgDocPlaygroundDemoComponent<
 
 	constructor(private readonly injector: Injector) {}
 
-	ngOnChanges({form, id}: SimpleChanges): void {
+	ngOnChanges({ form, id }: SimpleChanges): void {
 		if (form || id) {
 			this.unsubscribe$.next();
 

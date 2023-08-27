@@ -1,4 +1,4 @@
-import {NgDocTheme} from '@ng-doc/app/interfaces';
+import { NgDocTheme } from '@ng-doc/app/interfaces';
 
 /**
  * Dark theme. You can set it manually by calling `NgDocThemeService.set` method.

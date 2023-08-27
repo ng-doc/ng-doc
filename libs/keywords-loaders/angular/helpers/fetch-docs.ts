@@ -1,8 +1,8 @@
-import fetch, {Response} from 'node-fetch';
+import fetch, { Response } from 'node-fetch';
 
-import {NgResponse} from '../interfaces';
-import {NgVersion} from '../types';
-import {getNgHost} from './get-ng-host';
+import { NgResponse } from '../interfaces';
+import { NgVersion } from '../types';
+import { getNgHost } from './get-ng-host';
 
 /**
  *

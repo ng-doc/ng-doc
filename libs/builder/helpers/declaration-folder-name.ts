@@ -1,4 +1,4 @@
-import {ExportedDeclarations, Node} from 'ts-morph';
+import { ExportedDeclarations, Node } from 'ts-morph';
 
 /**
  *

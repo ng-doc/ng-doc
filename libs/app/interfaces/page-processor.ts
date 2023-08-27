@@ -1,6 +1,6 @@
-import {Type} from '@angular/core';
+import { Type } from '@angular/core';
 
-import {NgDocProcessorOptions} from './processor-options';
+import { NgDocProcessorOptions } from './processor-options';
 
 /**
  * Interface to create a processor that will be used to replace html nodes with an Angular component.

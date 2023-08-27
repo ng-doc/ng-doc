@@ -25,11 +25,11 @@ Once you have created a theme file, you need to register it, you can do this by 
 your themes to the NgDoc configuration for the app.
 
 ```typescript name="main.ts"
-import {bootstrapApplication} from '@angular/platform-browser';
-import {provideNgDocAppConfig} from '@ng-doc/app';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideNgDocAppConfig } from '@ng-doc/app';
 
-import {AppComponent} from './app/app.component';
-import {AppComponent} from './app.component';
+import { AppComponent } from './app/app.component';
+import { AppComponent } from './app.component';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -62,7 +62,7 @@ Once you have created your theme, you can use `NgDocThemeService` to apply it to
 Just put your theme id to the `set` method.
 
 ```typescript name="app.component.ts" {8}
-import {NgDocThemeService} from '@ng-doc/app';
+import { NgDocThemeService } from '@ng-doc/app';
 
 @Component({})
 export class AppComponent {
@@ -85,14 +85,14 @@ configuration.
 > select the theme based on the user's OS settings.
 
 ```typescript name="main.ts" {8}
-import {bootstrapApplication} from '@angular/platform-browser';
-import {provideNgDocAppConfig} from '@ng-doc/app';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideNgDocAppConfig } from '@ng-doc/app';
 
-import {AppComponent} from './app/app.component';
-import {AppComponent} from './app.component';
+import { AppComponent } from './app/app.component';
+import { AppComponent } from './app.component';
 
 bootstrapApplication(AppComponent, {
-  providers: [provideNgDocAppConfig({defaultThemeId: 'custom-theme'})],
+  providers: [provideNgDocAppConfig({ defaultThemeId: 'custom-theme' })],
 }).catch((err: unknown) => console.error(err));
 ```
 
@@ -111,11 +111,11 @@ the configuration of the documentation app.
 For example, you can set the dark theme by default as follows
 
 ```typescript name="main.ts" {7}
-import {bootstrapApplication} from '@angular/platform-browser';
-import {provideNgDocAppConfig} from '@ng-doc/app';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideNgDocAppConfig } from '@ng-doc/app';
 
-import {AppComponent} from './app/app.component';
-import {AppComponent} from './app.component';
+import { AppComponent } from './app/app.component';
+import { AppComponent } from './app.component';
 
 bootstrapApplication(AppComponent, {
   providers: [

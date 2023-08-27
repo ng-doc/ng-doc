@@ -1,6 +1,6 @@
-import {vol} from 'memfs';
+import { vol } from 'memfs';
 
-import {processSnippets} from '../process-snippets';
+import { processSnippets } from '../process-snippets';
 
 jest.mock('fs');
 

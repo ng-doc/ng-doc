@@ -1,10 +1,10 @@
-import {InjectionToken, Provider} from '@angular/core';
+import { InjectionToken, Provider } from '@angular/core';
 import {
 	NgDocProvidedTypeControl,
 	NgDocTypeControl,
 	NgDocTypeControlProviderOptions,
 } from '@ng-doc/app/interfaces';
-import {Constructor} from '@ng-doc/core';
+import { Constructor } from '@ng-doc/core';
 
 const tokenStore: Map<string, InjectionToken<NgDocProvidedTypeControl>> = new Map<
 	string,

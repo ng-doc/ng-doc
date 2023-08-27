@@ -7,8 +7,8 @@ import {
 	Input,
 	ViewChild,
 } from '@angular/core';
-import {NgDocPageProcessor} from '@ng-doc/app/interfaces';
-import {NgDocTooltipDirective} from '@ng-doc/ui-kit';
+import { NgDocPageProcessor } from '@ng-doc/app/interfaces';
+import { NgDocTooltipDirective } from '@ng-doc/ui-kit';
 
 @Component({
 	selector: 'ng-doc-tooltip-wrapper',
@@ -39,7 +39,7 @@ class NgDocTooltipWrapperComponent implements AfterViewInit {
 
 	protected tooltipElement: HTMLElement | null = null;
 
-	@ViewChild('contentProjection', {read: ElementRef, static: true})
+	@ViewChild('contentProjection', { read: ElementRef, static: true })
 	private contentProjection?: ElementRef<HTMLElement>;
 
 	constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}

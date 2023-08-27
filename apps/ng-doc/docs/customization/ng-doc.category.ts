@@ -1,4 +1,4 @@
-import {NgDocCategory} from '@ng-doc/core';
+import { NgDocCategory } from '@ng-doc/core';
 
 const CustomizationCategory: NgDocCategory = {
 	title: 'Customization',

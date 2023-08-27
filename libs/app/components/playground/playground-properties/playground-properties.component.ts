@@ -1,5 +1,5 @@
-import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
-import {AsyncPipe, KeyValuePipe, NgFor, NgIf} from '@angular/common';
+import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
+import { AsyncPipe, KeyValuePipe, NgFor, NgIf } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -12,11 +12,11 @@ import {
 	Output,
 	SimpleChanges,
 } from '@angular/core';
-import {FormControl, FormGroup, FormsModule} from '@angular/forms';
-import {isPlaygroundProperty} from '@ng-doc/app/helpers';
-import {NgDocProvidedTypeControl} from '@ng-doc/app/interfaces';
-import {getTokenForType} from '@ng-doc/app/providers/type-control';
-import {extractValueOrThrow, isPresent, objectKeys} from '@ng-doc/core';
+import { FormControl, FormGroup, FormsModule } from '@angular/forms';
+import { isPlaygroundProperty } from '@ng-doc/app/helpers';
+import { NgDocProvidedTypeControl } from '@ng-doc/app/interfaces';
+import { getTokenForType } from '@ng-doc/app/providers/type-control';
+import { extractValueOrThrow, isPresent, objectKeys } from '@ng-doc/core';
 import {
 	NgDocPlaygroundContent,
 	NgDocPlaygroundProperties,
@@ -32,12 +32,12 @@ import {
 	NgDocTextRightDirective,
 	NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import {NgDocPlaygroundForm} from '../playground-form';
-import {NgDocPlaygroundPropertyComponent} from '../playground-property/playground-property.component';
-import {NgDocPlaygroundPropertyControl} from '../playground-property-control';
+import { NgDocPlaygroundForm } from '../playground-form';
+import { NgDocPlaygroundPropertyComponent } from '../playground-property/playground-property.component';
+import { NgDocPlaygroundPropertyControl } from '../playground-property-control';
 
 @Component({
 	selector: 'ng-doc-playground-properties',
@@ -109,7 +109,7 @@ export class NgDocPlaygroundPropertiesComponent<
 			.pipe(map((state: BreakpointState) => state.matches));
 	}
 
-	ngOnChanges({properties}: SimpleChanges): void {
+	ngOnChanges({ properties }: SimpleChanges): void {
 		if (properties && this.properties) {
 			this.propertyControls = objectKeys(this.properties)
 				.filter((key: keyof P) => this.ignoreInputs?.includes(String(key)) !== true)

@@ -1,7 +1,7 @@
-import {asArray, NgDocEntityAnchor} from '@ng-doc/core';
+import { asArray, NgDocEntityAnchor } from '@ng-doc/core';
 import * as path from 'path';
-import {Observable, of} from 'rxjs';
-import {SourceFile} from 'ts-morph';
+import { Observable, of } from 'rxjs';
+import { SourceFile } from 'ts-morph';
 
 import {
 	buildEntityKeyword,
@@ -12,15 +12,15 @@ import {
 	uniqueName,
 	viewFileInRepoUrl,
 } from '../../helpers';
-import {NgDocBuilderContext, NgDocBuildResult, NgDocEntityKeyword} from '../../interfaces';
-import {NgDocSupportedDeclarations} from '../../types';
-import {NgDocEntityStore} from '../entity-store';
-import {renderTemplate} from '../nunjucks';
-import {NgDocEntity} from './abstractions/entity';
-import {NgDocRouteEntity} from './abstractions/route.entity';
-import {NgDocApiScopeEntity} from './api-scope.entity';
-import {CachedEntity, NgDocCache} from './cache';
-import {fillIndexesPlugin, postProcessHtmlPlugin, processHtmlPlugin} from './plugins';
+import { NgDocBuilderContext, NgDocBuildResult, NgDocEntityKeyword } from '../../interfaces';
+import { NgDocSupportedDeclarations } from '../../types';
+import { NgDocEntityStore } from '../entity-store';
+import { renderTemplate } from '../nunjucks';
+import { NgDocEntity } from './abstractions/entity';
+import { NgDocRouteEntity } from './abstractions/route.entity';
+import { NgDocApiScopeEntity } from './api-scope.entity';
+import { CachedEntity, NgDocCache } from './cache';
+import { fillIndexesPlugin, postProcessHtmlPlugin, processHtmlPlugin } from './plugins';
 
 @CachedEntity()
 export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
@@ -156,7 +156,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 		throw new Error(`The entity "${this.id}" is not loaded.`);
 	}
 
-	private updateDeclaration(): asserts this is this & {declaration: NgDocSupportedDeclarations} {
+	private updateDeclaration(): asserts this is this & { declaration: NgDocSupportedDeclarations } {
 		const declarations: NgDocSupportedDeclarations[] = [
 			...asArray(this.sourceFile.getExportedDeclarations().get(this.declarationName)),
 			...asArray(this.sourceFile.getExportedDeclarations().get('default')),

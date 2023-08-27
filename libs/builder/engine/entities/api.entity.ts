@@ -1,17 +1,17 @@
-import {asArray, NgDocApi} from '@ng-doc/core';
+import { asArray, NgDocApi } from '@ng-doc/core';
 import * as path from 'path';
-import {Observable, of} from 'rxjs';
-import {map, switchMap, tap} from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 
-import {buildFileEntity, generateApiEntities, uniqueName} from '../../helpers';
-import {NgDocBuildResult, NgDocEntityKeyword} from '../../interfaces';
-import {renderTemplate} from '../nunjucks';
-import {NgDocEntity} from './abstractions/entity';
-import {NgDocNavigationEntity} from './abstractions/navigation.entity';
-import {NgDocApiListEntity} from './api-list.entity';
-import {NgDocApiScopeEntity} from './api-scope.entity';
-import {CachedEntity} from './cache/decorators';
-import {NgDocCategoryEntity} from './category.entity';
+import { buildFileEntity, generateApiEntities, uniqueName } from '../../helpers';
+import { NgDocBuildResult, NgDocEntityKeyword } from '../../interfaces';
+import { renderTemplate } from '../nunjucks';
+import { NgDocEntity } from './abstractions/entity';
+import { NgDocNavigationEntity } from './abstractions/navigation.entity';
+import { NgDocApiListEntity } from './api-list.entity';
+import { NgDocApiScopeEntity } from './api-scope.entity';
+import { CachedEntity } from './cache/decorators';
+import { NgDocCategoryEntity } from './category.entity';
 
 @CachedEntity()
 export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {

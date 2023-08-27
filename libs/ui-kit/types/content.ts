@@ -1,5 +1,5 @@
-import {Injector, StaticProvider, TemplateRef, Type} from '@angular/core';
-import {NG_DOC_COMPONENT_CONTEXT} from '@ng-doc/ui-kit/tokens';
+import { Injector, StaticProvider, TemplateRef, Type } from '@angular/core';
+import { NG_DOC_COMPONENT_CONTEXT } from '@ng-doc/ui-kit/tokens';
 import {
 	PolymorpheusComponent,
 	PolymorpheusHandler,

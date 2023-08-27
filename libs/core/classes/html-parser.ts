@@ -1,10 +1,10 @@
 import * as CSSWhat from 'css-what';
-import {AttributeSelector, SelectorType} from 'css-what';
-import {Selector, TagSelector} from 'css-what/lib/es/types';
-import {Node, NodeTag, parser} from 'posthtml-parser';
-import {render} from 'posthtml-render';
+import { AttributeSelector, SelectorType } from 'css-what';
+import { Selector, TagSelector } from 'css-what/lib/es/types';
+import { Node, NodeTag, parser } from 'posthtml-parser';
+import { render } from 'posthtml-render';
 
-import {asArray, isNodeTag, isPresent, objectKeys} from '../helpers';
+import { asArray, isNodeTag, isPresent, objectKeys } from '../helpers';
 
 export class NgDocHtmlParser {
 	private readonly parsedHTML: Node[];

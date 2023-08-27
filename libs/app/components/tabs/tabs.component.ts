@@ -1,7 +1,7 @@
-import {CommonModule} from '@angular/common';
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {NgDocTab} from '@ng-doc/app/interfaces';
-import {NgDocSanitizeHtmlPipe} from '@ng-doc/app/pipes';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { NgDocTab } from '@ng-doc/app/interfaces';
+import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes';
 import {
 	NgDocBindPipe,
 	NgDocExecutePipe,

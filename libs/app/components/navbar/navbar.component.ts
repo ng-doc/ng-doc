@@ -1,4 +1,4 @@
-import {AsyncPipe, NgIf} from '@angular/common';
+import { AsyncPipe, NgIf } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
@@ -8,8 +8,8 @@ import {
 	Input,
 	NgZone,
 } from '@angular/core';
-import {NgDocSearchComponent} from '@ng-doc/app/components/search';
-import {NgDocSidebarService} from '@ng-doc/app/services';
+import { NgDocSearchComponent } from '@ng-doc/app/components/search';
+import { NgDocSidebarService } from '@ng-doc/app/services';
 import {
 	NgDocButtonIconComponent,
 	NgDocContent,
@@ -17,11 +17,11 @@ import {
 	NgDocLetDirective,
 	ngDocZoneOptimize,
 } from '@ng-doc/ui-kit';
-import {WINDOW} from '@ng-web-apis/common';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
-import {combineLatest, fromEvent} from 'rxjs';
-import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
+import { WINDOW } from '@ng-web-apis/common';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
+import { combineLatest, fromEvent } from 'rxjs';
+import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
 
 /**
  * Navbar component for ng-doc application

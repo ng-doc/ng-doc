@@ -5,9 +5,9 @@ import {
 	HttpRequest,
 	HttpResponse,
 } from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {shareReplay, tap} from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { shareReplay, tap } from 'rxjs/operators';
 
 @Injectable()
 export class NgDocCacheInterceptor implements HttpInterceptor {

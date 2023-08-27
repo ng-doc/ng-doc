@@ -23,7 +23,7 @@
 				<ng-doc-list *ngDocData>
 					<ng-doc-option *ngFor="let scope of scopes" [value]="scope">
 						<ng-container
-							*ngTemplateOutlet="comboboxScopeItem; context: {$implicit: scope}"></ng-container>
+							*ngTemplateOutlet="comboboxScopeItem; context: { $implicit: scope }"></ng-container>
 					</ng-doc-option>
 				</ng-doc-list>
 				<ng-template let-value #comboboxScopeItem>
@@ -41,7 +41,7 @@
 				<ng-doc-list *ngDocData>
 					<ng-doc-option *ngFor="let type of types" [value]="type">
 						<ng-container
-							*ngTemplateOutlet="comboboxTypeItem; context: {$implicit: type}"></ng-container>
+							*ngTemplateOutlet="comboboxTypeItem; context: { $implicit: type }"></ng-container>
 					</ng-doc-option>
 				</ng-doc-list>
 				<ng-template let-value #comboboxTypeItem>

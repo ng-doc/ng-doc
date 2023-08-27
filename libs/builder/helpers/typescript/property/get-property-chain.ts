@@ -6,8 +6,8 @@ import {
 	PropertySignature,
 } from 'ts-morph';
 
-import {forAllClasses} from '../class';
-import {forAllInterfaces} from '../interface';
+import { forAllClasses } from '../class';
+import { forAllInterfaces } from '../interface';
 
 /**
  *

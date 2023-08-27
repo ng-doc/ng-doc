@@ -1,4 +1,4 @@
-import {isPresent} from '@ng-doc/core';
+import { isPresent } from '@ng-doc/core';
 import {
 	AccessorDeclaration,
 	ConstructorDeclaration,
@@ -15,8 +15,8 @@ import {
 	VariableDeclaration,
 } from 'ts-morph';
 
-import {formatCode} from './format-code';
-import {displayReturnType, displayType} from './typescript';
+import { formatCode } from './format-code';
+import { displayReturnType, displayType } from './typescript';
 
 /**
  *

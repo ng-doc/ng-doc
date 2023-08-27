@@ -203,20 +203,20 @@ Import the global library-provided modules into your application's root `AppModu
 and add `NgDocDefaultSearchEngine` to the providers section to enable search.
 
 ```typescript name="Stnadalone APP (main.ts)" group="imports"
-import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
-import {enableProdMode} from '@angular/core';
-import {bootstrapApplication} from '@angular/platform-browser';
-import {provideAnimations} from '@angular/platform-browser/animations';
-import {provideRouter, withInMemoryScrolling} from '@angular/router';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { enableProdMode } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import {
   NG_DOC_DEFAULT_PAGE_PROCESSORS,
   NgDocDefaultSearchEngine,
   provideNgDocApp,
 } from '@ng-doc/app';
-import {NG_DOC_ROUTING, provideNgDocContext} from '@ng-doc/generated';
+import { NG_DOC_ROUTING, provideNgDocContext } from '@ng-doc/generated';
 
-import {AppComponent} from './app/app.component';
-import {environment} from './environments/environment';
+import { AppComponent } from './app/app.component';
+import { environment } from './environments/environment';
 
 if (environment.production) {
   enableProdMode();
@@ -251,10 +251,10 @@ bootstrapApplication(AppComponent, {
 ```
 
 ```typescript name="Module APP (app.module.ts)" group="imports"
-import {NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {RouterModule} from '@angular/router';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
 import {
   NG_DOC_DEFAULT_PAGE_PROCESSORS,
   NgDocDefaultSearchEngine,
@@ -263,9 +263,9 @@ import {
   NgDocSidebarComponent,
   provideNgDocApp,
 } from '@ng-doc/app';
-import {NG_DOC_ROUTING, provideNgDocContext} from '@ng-doc/generated';
+import { NG_DOC_ROUTING, provideNgDocContext } from '@ng-doc/generated';
 
-import {AppComponent} from './app.component';
+import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [AppComponent],

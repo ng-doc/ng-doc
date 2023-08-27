@@ -5,11 +5,11 @@ import {
 	NgDocCategoryEntity,
 	NgDocPageEntity,
 } from '../engine';
-import {NgDocFileEntity} from '../engine/entities/abstractions/file.entity';
-import {NgDocNavigationEntity} from '../engine/entities/abstractions/navigation.entity';
-import {NgDocRouteEntity} from '../engine/entities/abstractions/route.entity';
-import {NgDocSourceFileEntity} from '../engine/entities/abstractions/source-file.entity';
-import {Constructable} from '../types';
+import { NgDocFileEntity } from '../engine/entities/abstractions/file.entity';
+import { NgDocNavigationEntity } from '../engine/entities/abstractions/navigation.entity';
+import { NgDocRouteEntity } from '../engine/entities/abstractions/route.entity';
+import { NgDocSourceFileEntity } from '../engine/entities/abstractions/source-file.entity';
+import { Constructable } from '../types';
 
 /**
  *

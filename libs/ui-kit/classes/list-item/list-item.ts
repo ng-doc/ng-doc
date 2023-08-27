@@ -1,5 +1,5 @@
-import {Highlightable} from '@angular/cdk/a11y';
-import {ElementRef} from '@angular/core';
+import { Highlightable } from '@angular/cdk/a11y';
+import { ElementRef } from '@angular/core';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface NgDocListItem extends Highlightable {}

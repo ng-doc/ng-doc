@@ -1,4 +1,4 @@
-import {SchematicArgv} from '../schematic-argv';
+import { SchematicArgv } from '../schematic-argv';
 
 /**
  * The interface describes the possible parameters for generating the API entity,

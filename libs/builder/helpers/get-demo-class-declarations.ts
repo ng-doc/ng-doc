@@ -1,4 +1,4 @@
-import {isPresent} from '@ng-doc/core';
+import { isPresent } from '@ng-doc/core';
 import {
 	ClassDeclaration,
 	Expression,

@@ -1,4 +1,4 @@
-import {Node, TypeFormatFlags} from 'ts-morph';
+import { Node, TypeFormatFlags } from 'ts-morph';
 
 /**
  *

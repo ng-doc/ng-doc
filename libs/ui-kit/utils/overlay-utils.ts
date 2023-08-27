@@ -1,5 +1,5 @@
-import {ConnectedPosition, ConnectionPositionPair} from '@angular/cdk/overlay';
-import {asArray} from '@ng-doc/core/helpers/as-array';
+import { ConnectedPosition, ConnectionPositionPair } from '@angular/cdk/overlay';
+import { asArray } from '@ng-doc/core/helpers/as-array';
 import {
 	NgDocHorizontalAlign,
 	NgDocOverlayPosition,
@@ -111,7 +111,7 @@ export class NgDocOverlayUtils {
 	}
 
 	static toConnectedPosition(position: NgDocOverlayPosition): ConnectedPosition {
-		return typeof position === 'string' ? {...POSITION_DESCRIPTION[position]} : {...position};
+		return typeof position === 'string' ? { ...POSITION_DESCRIPTION[position] } : { ...position };
 	}
 
 	static toConnectedPositions(positions: NgDocOverlayPosition[]): ConnectedPosition[] {

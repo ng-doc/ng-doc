@@ -6,12 +6,12 @@ import {
 	TSDocTagDefinition,
 	TSDocTagSyntaxKind,
 } from '@microsoft/tsdoc';
-import {ParserContext} from '@microsoft/tsdoc/lib/parser/ParserContext';
-import {asArray} from '@ng-doc/core';
-import {JSDoc, JSDocableNode} from 'ts-morph';
+import { ParserContext } from '@microsoft/tsdoc/lib/parser/ParserContext';
+import { asArray } from '@ng-doc/core';
+import { JSDoc, JSDocableNode } from 'ts-morph';
 
-import {TsDocFormatter} from '../engine/ts-doc-formatter';
-import {markdownToHtml} from './markdown-to-html';
+import { TsDocFormatter } from '../engine/ts-doc-formatter';
+import { markdownToHtml } from './markdown-to-html';
 
 /**
  *

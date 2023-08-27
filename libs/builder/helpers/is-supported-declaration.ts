@@ -1,6 +1,6 @@
-import {ExportedDeclarations, Node} from 'ts-morph';
+import { ExportedDeclarations, Node } from 'ts-morph';
 
-import {NgDocSupportedDeclarations} from '../types/supported-declarations';
+import { NgDocSupportedDeclarations } from '../types/supported-declarations';
 
 /**
  *

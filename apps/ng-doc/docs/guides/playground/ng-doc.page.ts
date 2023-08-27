@@ -1,4 +1,4 @@
-import {NgDocPage} from '@ng-doc/core';
+import { NgDocPage } from '@ng-doc/core';
 import {
 	NgDocButtonComponent,
 	NgDocIconComponent,
@@ -7,7 +7,7 @@ import {
 } from '@ng-doc/ui-kit';
 
 import GuidesCategory from '../ng-doc.category';
-import {FormatDatePipe} from './format-date.pipe';
+import { FormatDatePipe } from './format-date.pipe';
 
 const PlaygroundPage: NgDocPage = {
 	title: `Playground`,
@@ -52,7 +52,7 @@ const PlaygroundPage: NgDocPage = {
 		ButtonPlayground: {
 			target: NgDocButtonComponent,
 			template: `<ng-doc-selector>{{data.label}}</ng-doc-selector>`,
-			data: {label: 'Button'},
+			data: { label: 'Button' },
 		},
 	},
 };

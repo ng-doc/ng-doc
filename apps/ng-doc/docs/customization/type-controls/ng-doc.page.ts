@@ -1,9 +1,9 @@
-import {provideTypeControl} from '@ng-doc/app';
-import {NgDocPage} from '@ng-doc/core';
+import { provideTypeControl } from '@ng-doc/app';
+import { NgDocPage } from '@ng-doc/core';
 
 import CustomizationCategory from '../ng-doc.category';
-import {FloatingCircleComponent} from './floating-circle/floating-circle.component';
-import {FloatingCirclePositionControlComponent} from './floating-circle-position-control/floating-circle-position-control.component';
+import { FloatingCircleComponent } from './floating-circle/floating-circle.component';
+import { FloatingCirclePositionControlComponent } from './floating-circle-position-control/floating-circle-position-control.component';
 
 const TypeControlsPage: NgDocPage = {
 	title: 'Type Controls',
@@ -15,7 +15,7 @@ const TypeControlsPage: NgDocPage = {
 			hideLabel: true,
 		}),
 	],
-	demos: {FloatingCircleComponent, FloatingCirclePositionControlComponent},
+	demos: { FloatingCircleComponent, FloatingCirclePositionControlComponent },
 	playgrounds: {
 		FloatingCircle: {
 			target: FloatingCircleComponent,

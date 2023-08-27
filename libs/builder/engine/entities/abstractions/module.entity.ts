@@ -1,8 +1,8 @@
 import * as path from 'path';
 
-import {slash} from '../../../helpers';
-import {CachedFilesGetter} from '../cache';
-import {NgDocFileEntity} from './file.entity';
+import { slash } from '../../../helpers';
+import { CachedFilesGetter } from '../cache';
+import { NgDocFileEntity } from './file.entity';
 
 export abstract class NgDocModuleEntity<TTarget> extends NgDocFileEntity<TTarget> {
 	/**

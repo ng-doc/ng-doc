@@ -1,7 +1,7 @@
 import * as P from 'parsimmon';
 
-import {NgDocCodeBlockParams} from '../interfaces';
-import {number, param} from './helpers';
+import { NgDocCodeBlockParams } from '../interfaces';
+import { number, param } from './helpers';
 
 /**
  * Code block options parser
@@ -13,7 +13,7 @@ export function parseCodeBlockParams(options: string): NgDocCodeBlockParams {
 		language: () =>
 			P.regexp(/[a-zA-Z-]+/)
 				.skip(P.optWhitespace)
-				.map((language) => ({language})),
+				.map((language) => ({ language })),
 		// File Parsers
 		fileLineNumber: () => P.string('L').then(P.digits).map(Number),
 		fileLineRange: (p) =>
@@ -22,13 +22,13 @@ export function parseCodeBlockParams(options: string): NgDocCodeBlockParams {
 					.then(p['fileLineNumber'])
 					.map((num) => num - 1),
 				P.string('-').then(p['fileLineNumber'].fallback(undefined)),
-				(fileLineStart, fileLineEnd) => ({fileLineStart, fileLineEnd}),
+				(fileLineStart, fileLineEnd) => ({ fileLineStart, fileLineEnd }),
 			),
 		fileLineStart: (p) =>
 			P.string('#')
 				.then(p['fileLineNumber'])
 				.map((num) => num - 1)
-				.map((fileLineStart) => ({fileLineStart, fileLineEnd: fileLineStart + 1})),
+				.map((fileLineStart) => ({ fileLineStart, fileLineEnd: fileLineStart + 1 })),
 		lineParams: (p) => p['fileLineRange'].or(p['fileLineStart']).fallback({}),
 		highlightedLinesRange: () =>
 			P.seqMap(number.skip(P.string('-')), number, (start, end) =>
@@ -36,18 +36,18 @@ export function parseCodeBlockParams(options: string): NgDocCodeBlockParams {
 			),
 
 		// Main Parsers
-		lineNumbers: () => P.string('lineNumbers').map(() => ({lineNumbers: true})),
+		lineNumbers: () => P.string('lineNumbers').map(() => ({ lineNumbers: true })),
 		filePath: () => param('file'),
 		name: () => param('name'),
 		group: () => param('group'),
 		fileName: () => param('fileName', 'name'),
 		icon: () => param('icon'),
-		active: () => P.string('active').map(() => ({active: true})),
+		active: () => P.string('active').map(() => ({ active: true })),
 		file: (p) =>
 			P.seq(
 				p['filePath'],
-				p['lineParams'].map(({fileLineStart, fileLineEnd}) => ({fileLineStart, fileLineEnd})),
-			).map(([file, lineParams]) => ({...file, ...lineParams})),
+				p['lineParams'].map(({ fileLineStart, fileLineEnd }) => ({ fileLineStart, fileLineEnd })),
+			).map(([file, lineParams]) => ({ ...file, ...lineParams })),
 
 		highlightedLines: (p) =>
 			p['highlightedLinesRange']
@@ -55,7 +55,7 @@ export function parseCodeBlockParams(options: string): NgDocCodeBlockParams {
 				.sepBy(P.string(',').then(P.optWhitespace))
 				.wrap(P.string('{'), P.string('}'))
 				.map((a) => Array.from(new Set(a.flat())))
-				.map((highlightedLines) => ({highlightedLines})),
+				.map((highlightedLines) => ({ highlightedLines })),
 
 		// Combined Parsers
 		paramsParser: (p: P.Language) =>
@@ -75,7 +75,7 @@ export function parseCodeBlockParams(options: string): NgDocCodeBlockParams {
 
 	if (result.status) {
 		return result.value.reduce(
-			(acc: NgDocCodeBlockParams, cur: Partial<NgDocCodeBlockParams>) => ({...acc, ...cur}),
+			(acc: NgDocCodeBlockParams, cur: Partial<NgDocCodeBlockParams>) => ({ ...acc, ...cur }),
 			{},
 		);
 	}
@@ -84,7 +84,7 @@ export function parseCodeBlockParams(options: string): NgDocCodeBlockParams {
 
 	if (result.status) {
 		return result.value.reduce(
-			(acc: NgDocCodeBlockParams, cur: Partial<NgDocCodeBlockParams>) => ({...acc, ...cur}),
+			(acc: NgDocCodeBlockParams, cur: Partial<NgDocCodeBlockParams>) => ({ ...acc, ...cur }),
 			{},
 		);
 	}

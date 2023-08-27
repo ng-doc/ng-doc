@@ -1,6 +1,6 @@
-import {NgDocPageProcessor} from '@ng-doc/app/interfaces';
+import { NgDocPageProcessor } from '@ng-doc/app/interfaces';
 
-import {CustomTableComponent} from './custom-table.component';
+import { CustomTableComponent } from './custom-table.component';
 
 export const tableProcessor: NgDocPageProcessor<CustomTableComponent> = {
 	component: CustomTableComponent,

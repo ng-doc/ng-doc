@@ -7,10 +7,10 @@ import {
 	Type,
 	ViewContainerRef,
 } from '@angular/core';
-import {Constructor, extractFunctionDefaults} from '@ng-doc/core';
-import {NgDocPlaygroundConfig} from '@ng-doc/core/interfaces';
+import { Constructor, extractFunctionDefaults } from '@ng-doc/core';
+import { NgDocPlaygroundConfig } from '@ng-doc/core/interfaces';
 
-import {NgDocPlaygroundComponent} from './playground.component';
+import { NgDocPlaygroundComponent } from './playground.component';
 
 /**
  * Base class for playgrounds components.

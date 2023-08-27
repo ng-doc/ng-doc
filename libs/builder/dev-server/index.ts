@@ -4,17 +4,17 @@ import {
 	Target,
 	targetFromTargetString,
 } from '@angular-devkit/architect';
-import {BuilderOutputLike} from '@angular-devkit/architect/src/api';
+import { BuilderOutputLike } from '@angular-devkit/architect/src/api';
 import {
 	DevServerBuilderOutput,
 	serveWebpackBrowser,
 } from '@angular-devkit/build-angular/src/builders/dev-server';
-import {combineLatest, from, Observable, of} from 'rxjs';
-import {first, map, shareReplay, switchMap} from 'rxjs/operators';
+import { combineLatest, from, Observable, of } from 'rxjs';
+import { first, map, shareReplay, switchMap } from 'rxjs/operators';
 
-import {buildNgDoc} from '../engine/build-ng-doc';
-import {createBuilderContext} from '../helpers';
-import {NgDocBuilderContext, NgDocSchema} from '../interfaces';
+import { buildNgDoc } from '../engine/build-ng-doc';
+import { createBuilderContext } from '../helpers';
+import { NgDocBuilderContext, NgDocSchema } from '../interfaces';
 
 /**
  * Attach NgDocBuilder and run DevServer

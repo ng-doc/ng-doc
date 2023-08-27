@@ -1,6 +1,6 @@
-import type {Observable, OperatorFunction} from 'rxjs';
-import {of} from 'rxjs';
-import {catchError, map, startWith, switchMap, tap} from 'rxjs/operators';
+import type { Observable, OperatorFunction } from 'rxjs';
+import { of } from 'rxjs';
+import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators';
 
 export type StatedObservable<T, E = Error> = Observable<ObservableState<T, E>>;
 
@@ -28,14 +28,15 @@ export function observableState<T, E = Error>(
 			switchMap(() =>
 				source.pipe(
 					// Map result of observable
-					map((result: T) => ({result, pending: false})),
+					map((result: T) => ({ result, pending: false })),
 					// Map error of observable
-					catchError((error: E) => of({result: null, error, pending: false})),
+					catchError((error: E) => of({ result: null, error, pending: false })),
 					// Start from pending state and clear error
-					startWith({error: null, pending: true}),
+					startWith({ error: null, pending: true }),
 					// Merge the current state with new state
 					tap(
-						(updatedState: Partial<ObservableState<T, E>>) => (state = {...state, ...updatedState}),
+						(updatedState: Partial<ObservableState<T, E>>) =>
+							(state = { ...state, ...updatedState }),
 					),
 					map(() => state),
 				),

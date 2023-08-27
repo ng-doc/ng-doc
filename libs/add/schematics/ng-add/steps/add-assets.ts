@@ -1,15 +1,15 @@
-import {getProjectTargetOptions} from '@angular/cdk/schematics';
-import {JsonArray, JsonValue} from '@angular-devkit/core';
-import {Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
+import { getProjectTargetOptions } from '@angular/cdk/schematics';
+import { JsonArray, JsonValue } from '@angular-devkit/core';
+import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import {
 	ProjectDefinition,
 	updateWorkspace,
 	WorkspaceDefinition,
 } from '@schematics/angular/utility/workspace';
 
-import {getNgDocAssets} from '../constants/assets';
-import {Schema} from '../schema';
-import {getProject} from '../utils/get-project';
+import { getNgDocAssets } from '../constants/assets';
+import { Schema } from '../schema';
+import { getProject } from '../utils/get-project';
 
 /**
  *

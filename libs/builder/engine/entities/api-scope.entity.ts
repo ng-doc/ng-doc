@@ -1,17 +1,17 @@
-import {asArray, NgDocApiScope} from '@ng-doc/core';
-import {Observable, of} from 'rxjs';
-import {SourceFile} from 'ts-morph';
+import { asArray, NgDocApiScope } from '@ng-doc/core';
+import { Observable, of } from 'rxjs';
+import { SourceFile } from 'ts-morph';
 
-import {isPageEntity, uniqueName} from '../../helpers';
-import {NgDocBuilderContext, NgDocBuildResult, NgDocEntityKeyword} from '../../interfaces';
-import {NgDocEntityStore} from '../entity-store';
-import {renderTemplate} from '../nunjucks';
-import {NgDocEntity} from './abstractions/entity';
-import {NgDocRouteEntity} from './abstractions/route.entity';
-import {NgDocApiEntity} from './api.entity';
-import {NgDocCache} from './cache';
-import {CachedEntity} from './cache/decorators';
-import {NgDocPageEntity} from './page.entity';
+import { isPageEntity, uniqueName } from '../../helpers';
+import { NgDocBuilderContext, NgDocBuildResult, NgDocEntityKeyword } from '../../interfaces';
+import { NgDocEntityStore } from '../entity-store';
+import { renderTemplate } from '../nunjucks';
+import { NgDocEntity } from './abstractions/entity';
+import { NgDocRouteEntity } from './abstractions/route.entity';
+import { NgDocApiEntity } from './api.entity';
+import { NgDocCache } from './cache';
+import { CachedEntity } from './cache/decorators';
+import { NgDocPageEntity } from './page.entity';
 
 @CachedEntity()
 export class NgDocApiScopeEntity extends NgDocRouteEntity<NgDocApiScope> {

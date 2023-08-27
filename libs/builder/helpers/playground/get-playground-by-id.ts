@@ -1,4 +1,4 @@
-import {Expression, Node, ObjectLiteralElementLike, ObjectLiteralExpression} from 'ts-morph';
+import { Expression, Node, ObjectLiteralElementLike, ObjectLiteralExpression } from 'ts-morph';
 
 /**
  *

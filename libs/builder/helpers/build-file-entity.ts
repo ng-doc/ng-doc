@@ -1,11 +1,11 @@
-import {escapeRegexp} from '@ng-doc/core';
+import { escapeRegexp } from '@ng-doc/core';
 import * as esbuild from 'esbuild';
-import {minimatch} from 'minimatch';
+import { minimatch } from 'minimatch';
 import * as path from 'path';
-import {Node, ObjectLiteralExpression, SourceFile} from 'ts-morph';
+import { Node, ObjectLiteralExpression, SourceFile } from 'ts-morph';
 
-import {CACHE_PATH, PAGE_PATTERN} from '../engine';
-import {getObjectExpressionFromDefault} from './typescript';
+import { CACHE_PATH, PAGE_PATTERN } from '../engine';
+import { getObjectExpressionFromDefault } from './typescript';
 
 /**
  * Builds file entity and returns the path to the built file

@@ -1,24 +1,24 @@
-import {Component, Directive, Pipe} from '@angular/core';
+import { Component, Directive, Pipe } from '@angular/core';
 import {
 	buildPlaygroundDemoPipeTemplate,
 	buildPlaygroundDemoTemplate,
 	NgDocPlaygroundProperties,
 } from '@ng-doc/core';
-import {ClassDeclaration, ObjectLiteralExpression} from 'ts-morph';
+import { ClassDeclaration, ObjectLiteralExpression } from 'ts-morph';
 
-import {NgDocPlaygroundMetadata} from '../../interfaces';
+import { NgDocPlaygroundMetadata } from '../../interfaces';
 import {
 	getComponentDecorator,
 	getDirectiveDecorator,
 	getPipeDecorator,
 	isStandalone,
 } from '../angular';
-import {extractSelectors} from '../extract-selectors';
-import {getContentForPlayground} from './get-content-for-playground';
-import {getPlaygroundComponentInputs, getPlaygroundPipeInputs} from './get-playground-inputs';
-import {getPlaygroundTemplateInputs} from './get-playground-template-inputs';
-import {getTargetForPlayground} from './get-target-for-playground';
-import {getTemplateForPlayground} from './get-template-for-playground';
+import { extractSelectors } from '../extract-selectors';
+import { getContentForPlayground } from './get-content-for-playground';
+import { getPlaygroundComponentInputs, getPlaygroundPipeInputs } from './get-playground-inputs';
+import { getPlaygroundTemplateInputs } from './get-playground-template-inputs';
+import { getTargetForPlayground } from './get-target-for-playground';
+import { getTemplateForPlayground } from './get-template-for-playground';
 
 /**
  * Collects all the information about a playground that is needed to render and build it.

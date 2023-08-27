@@ -48,7 +48,7 @@
 				[(ngModel)]="searchTerm"
 				(ngModelChange)="query$.next($event); dropdown.open()"
 				placeholder="Search..."
-				[ngDocHotkey]="{ctrlKey: false, altKey: false, shiftKey: false, code: 'Slash'}"
+				[ngDocHotkey]="{ ctrlKey: false, altKey: false, shiftKey: false, code: 'Slash' }"
 				(ngDocHotkey)="inputElement.focus(); inputElement.select()"
 				#inputElement />
 			<ng-template #rightContent>

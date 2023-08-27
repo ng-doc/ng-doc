@@ -1,4 +1,4 @@
-import {NgDocPageProcessor} from '@ng-doc/app/interfaces';
+import { NgDocPageProcessor } from '@ng-doc/app/interfaces';
 import {
 	blockquoteProcessor,
 	codeProcessor,

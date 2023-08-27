@@ -1,7 +1,7 @@
-import {objectKeys} from '@ng-doc/core';
+import { objectKeys } from '@ng-doc/core';
 
-import {NgDocEntity} from '../../abstractions/entity';
-import {NgDocEntityPlugin} from '../types';
+import { NgDocEntity } from '../../abstractions/entity';
+import { NgDocEntityPlugin } from '../types';
 
 type ApplyFn<T, TEntity extends NgDocEntity> = (data: T, entity: TEntity) => Promise<T>;
 type TransformFn<T, R, TEntity extends NgDocEntity> = (

@@ -1,5 +1,5 @@
 <div
 	*ngIf="expanded || from"
-	[@expandCollapse]="{value: expanded, params: {from: from + 'px', opacity: from ? 1 : 0}}">
+	[@expandCollapse]="{ value: expanded, params: { from: from + 'px', opacity: from ? 1 : 0 } }">
 	<ng-container *polymorpheusOutlet="content as text">{{ text }}</ng-container>
 </div>

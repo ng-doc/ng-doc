@@ -1,7 +1,7 @@
-import {HostTree} from '@angular-devkit/schematics';
-import {SchematicTestRunner, UnitTestTree} from '@angular-devkit/schematics/testing';
-import {createProject, createSourceFile, saveActiveProject, setActiveProject} from 'ng-morph';
-import {join} from 'path';
+import { HostTree } from '@angular-devkit/schematics';
+import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { createProject, createSourceFile, saveActiveProject, setActiveProject } from 'ng-morph';
+import { join } from 'path';
 
 const collectionPath: string = join(__dirname, '../../collection.json');
 

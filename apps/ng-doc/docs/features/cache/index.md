@@ -17,7 +17,7 @@ Cache is disabled by default, but you can enable it by setting `cache` option to
 `ng-doc.config.ts` file. (see `*GettingStartedConfiguration` article to know how to create it)
 
 ```typescript name="ng-doc.config.ts"
-import {NgDocConfiguration} from '@ng-doc/builder';
+import { NgDocConfiguration } from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
   cache: true,

@@ -49,9 +49,9 @@ pages:
 > all processors from the `main.ts` file will be ignored.
 
 ```typescript name="ng-doc.page.ts"
-import {NgDocPage} from '@ng-doc/core';
-import {providePageProcessor} from '@ng-doc/app';
-import {imageProcessor} from './image.processor';
+import { NgDocPage } from '@ng-doc/core';
+import { providePageProcessor } from '@ng-doc/app';
+import { imageProcessor } from './image.processor';
 
 const MyPage: NgDocPage = {
   title: `MyPage`,

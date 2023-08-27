@@ -1,4 +1,4 @@
-import {removeLinesFromCode} from '../remove-lines-from-code';
+import { removeLinesFromCode } from '../remove-lines-from-code';
 
 describe('removeLinesFromCode', () => {
 	describe('TypeScript', () => {

@@ -1,4 +1,4 @@
-import {NgDocApi} from '@ng-doc/core';
+import { NgDocApi } from '@ng-doc/core';
 
 const api: NgDocApi = {
 	title: 'API References',

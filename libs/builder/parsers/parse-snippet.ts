@@ -1,7 +1,7 @@
 import * as P from 'parsimmon';
 
-import {NgDocSnippetConfig} from '../interfaces';
-import {param, paramValue} from './helpers';
+import { NgDocSnippetConfig } from '../interfaces';
+import { param, paramValue } from './helpers';
 
 /**
  *
@@ -10,11 +10,11 @@ import {param, paramValue} from './helpers';
 export function parseSnippet(string: string): NgDocSnippetConfig | undefined {
 	const parser = P.createLanguage<{
 		keyword: string;
-		id: {id: string | null};
-		lang: {lang: string | undefined};
+		id: { id: string | null };
+		lang: { lang: string | undefined };
 		icon: Record<'icon', string>;
-		title: {title: string | undefined};
-		opened: {opened: boolean | undefined};
+		title: { title: string | undefined };
+		opened: { opened: boolean | undefined };
 		snippet: NgDocSnippetConfig;
 		snippetFromFile: NgDocSnippetConfig;
 		anySnippet: NgDocSnippetConfig;
@@ -24,35 +24,35 @@ export function parseSnippet(string: string): NgDocSnippetConfig | undefined {
 			P.string('#')
 				.then(P.regexp(/[a-zA-Z0-9-]+/))
 				.fallback(null)
-				.map((id) => ({id})),
+				.map((id) => ({ id })),
 		lang: () =>
 			P.string(':')
 				.then(P.regexp(/[a-zA-Z0-9-]+/))
 				.fallback(undefined)
-				.map((lang) => ({lang})),
+				.map((lang) => ({ lang })),
 		icon: () => param('icon'),
-		title: () => paramValue().map((title) => ({title})),
+		title: () => paramValue().map((title) => ({ title })),
 		opened: () =>
 			P.string('opened')
 				.result(true)
 				.fallback(undefined)
-				.map((opened) => ({opened})),
+				.map((opened) => ({ opened })),
 
-		snippet: ({keyword, id, lang, icon, title, opened}) =>
+		snippet: ({ keyword, id, lang, icon, title, opened }) =>
 			keyword.then(
 				P.seq(
 					id,
 					lang,
 					P.whitespace.then(title.or(icon).or(opened).sepBy(P.whitespace)).fallback([]),
-				).map(([id, lang, rest]) => ({...id, ...lang, ...Object.assign({}, ...rest)})),
+				).map(([id, lang, rest]) => ({ ...id, ...lang, ...Object.assign({}, ...rest) })),
 			),
-		snippetFromFile: ({lang, icon, title, opened}) =>
+		snippetFromFile: ({ lang, icon, title, opened }) =>
 			P.seq(
 				param('snippet-from-file', 'fromFile'),
 				lang,
 				P.whitespace.then(title.or(icon).or(opened).sepBy(P.whitespace)).fallback([]),
-			).map(([id, lang, rest]) => ({...id, ...lang, ...Object.assign({}, ...rest)})),
-		anySnippet: ({snippet, snippetFromFile}) => snippetFromFile.or(snippet),
+			).map(([id, lang, rest]) => ({ ...id, ...lang, ...Object.assign({}, ...rest) })),
+		anySnippet: ({ snippet, snippetFromFile }) => snippetFromFile.or(snippet),
 	});
 
 	const result = parser.anySnippet.parse(string);

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 export interface FloatingCirclePosition {
 	top?: string | null;
@@ -14,5 +14,5 @@ export interface FloatingCirclePosition {
 })
 export class FloatingCircleComponent {
 	@Input()
-	position: FloatingCirclePosition = {top: '10px', left: '10px'};
+	position: FloatingCirclePosition = { top: '10px', left: '10px' };
 }

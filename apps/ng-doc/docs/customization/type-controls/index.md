@@ -36,9 +36,9 @@ To make it available for playgrounds, it must be provided on the root level of y
 you can do this by providing it in the `providers` array by using the `provideTypeControl` function.
 
 ```typescript name="main.ts"
-import {bootstrapApplication} from '@angular/platform-browser';
-import {AppComponent} from './app/app.component';
-import {provideTypeControl} from '@ng-doc/app';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
+import { provideTypeControl } from '@ng-doc/app';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -63,9 +63,9 @@ values.
 In the example above, we registered a type control for the `FloatingCirclePosition` type like this:
 
 ```typescript name="main.ts"
-import {bootstrapApplication} from '@angular/platform-browser';
-import {AppComponent} from './app/app.component';
-import {provideTypeControl} from '@ng-doc/app';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
+import { provideTypeControl } from '@ng-doc/app';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -88,7 +88,7 @@ the type of the `position` input and make it possible to be `undefined`:
 })
 export class FloatingCircleComponent {
   @Input()
-  position?: FloatingCirclePosition = {top: '10px', left: '10px'};
+  position?: FloatingCirclePosition = { top: '10px', left: '10px' };
 }
 ```
 
@@ -97,9 +97,9 @@ and make sure that your type control can handle `undefined` values. You can regi
 for a single type control at the same time, for example:
 
 ```typescript name="main.ts"
-import {bootstrapApplication} from '@angular/platform-browser';
-import {AppComponent} from './app/app.component';
-import {provideTypeControl} from '@ng-doc/app';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
+import { provideTypeControl } from '@ng-doc/app';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -124,9 +124,9 @@ and the name of the `@Input` property, so if you want to change the order of you
 you can do it by changing the order property.
 
 ```typescript name="main.ts"
-import {bootstrapApplication} from '@angular/platform-browser';
-import {AppComponent} from './app/app.component';
-import {provideTypeControl} from '@ng-doc/app';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
+import { provideTypeControl } from '@ng-doc/app';
 
 bootstrapApplication(AppComponent, {
   providers: [

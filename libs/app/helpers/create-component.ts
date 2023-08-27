@@ -15,7 +15,7 @@ export function createComponent<T>(
 
 	if (inputs) {
 		Object.entries(inputs).forEach(([key, value]) => {
-			componentRef.setInput(key, value)
+			componentRef.setInput(key, value);
 		});
 	}
 
