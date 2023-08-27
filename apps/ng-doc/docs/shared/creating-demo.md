@@ -13,7 +13,7 @@ import {NgDocPage} from '@ng-doc/core';
 import {MyModule} from '../my.module';
 import {ButtonDemoComponent} from '../demos/button-demo/button-demo.component';
 
-export const MyAwesomePage: NgDocPage = {
+const MyAwesomePage: NgDocPage = {
   demos: {ButtonDemoComponent},
 };
 
@@ -31,7 +31,7 @@ import {NgDocPage} from '@ng-doc/core';
 import {ButtonDemoModule} from '../demos/button-demo/button-demo.module';
 import {ButtonDemoComponent} from '../demos/button-demo/button-demo.component';
 
-export const MyAwesomePage: NgDocPage = {
+const MyAwesomePage: NgDocPage = {
   imports: [ButtonDemoModule],
   demos: {ButtonDemoComponent},
 };

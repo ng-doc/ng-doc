@@ -2,7 +2,7 @@ import {escapeRegexp} from '@ng-doc/core';
 import * as esbuild from 'esbuild';
 import {minimatch} from 'minimatch';
 import * as path from 'path';
-import {Node,ObjectLiteralExpression, SourceFile} from 'ts-morph';
+import {Node, ObjectLiteralExpression, SourceFile} from 'ts-morph';
 
 import {CACHE_PATH, PAGE_PATTERN} from '../engine';
 import {getObjectExpressionFromDefault} from './typescript';
@@ -17,7 +17,7 @@ import {getObjectExpressionFromDefault} from './typescript';
 export async function buildFileEntity(sourceFile: SourceFile, tsconfig: string, outbase: string): Promise<string> {
 	let code: string = sourceFile.getFullText();
 	const p: string = path.relative(outbase, sourceFile.getFilePath());
-	const outPath: string = path.join(CACHE_PATH, p).replace(/\.ts$/, '.js');
+	const outPath: string = path.join(CACHE_PATH, p).replace(/\.ts$/, '.mjs');
 
 	/**
 	 * Remove `imports`, `providers`, `demos` and `playgrounds` properties from the default export
@@ -63,12 +63,14 @@ export async function buildFileEntity(sourceFile: SourceFile, tsconfig: string, 
 		},
 		tsconfig,
 		bundle: true,
-		format: 'cjs',
+		format: 'esm',
 		treeShaking: true,
+		packages: 'external',
 		outbase,
 		outfile: outPath,
 	});
 
+	// Restore the file from the file system
 	await sourceFile.refreshFromFileSystem();
 
 	return outPath;
@@ -81,7 +83,7 @@ export async function buildFileEntity(sourceFile: SourceFile, tsconfig: string, 
  */
 function removePlaygroundTarget(code: string, objectLiteralExpression: ObjectLiteralExpression): string {
 	// List of properties that should not be removed
-	const keepProperties: string[] = ['controls'];
+	const keepProperties: string[] = ['controls', 'data'];
 	const playgrounds = objectLiteralExpression.getProperty('playgrounds');
 
 	if (Node.isPropertyAssignment(playgrounds)) {

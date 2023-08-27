@@ -30,7 +30,7 @@ p#{$class} {
 
 ul#{$class},
 ol#{$class} {
-	margin: calc(var(--ng-doc-base-gutter) * 4) 0;
+	margin: calc(var(--ng-doc-base-gutter) * 2) 0;
 }
 
 ul li#{$class},

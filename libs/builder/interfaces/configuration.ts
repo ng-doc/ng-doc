@@ -61,12 +61,6 @@ export interface NgDocGuideConfiguration {
 	 * Defines a list of the heading levels for which the anchor will be generated.
 	 */
 	anchorHeadings?: NgDocHeading[];
-	/**
-	 * Defines a list of the external packages that can be used in the guide entity.
-	 * For example, if you use `fs` package in some function that is used for generating some value for `data` field,
-	 * then you should add `fs` to this list, to make sure that the `fs` package will be available in the guide.
-	 */
-	externalPackages?: string[];
 }
 
 /**

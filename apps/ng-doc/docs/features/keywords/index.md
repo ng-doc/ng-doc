@@ -40,7 +40,7 @@ the `keyword` field.
 ```typescript name="ng-doc.page.ts" {8}
 import {NgDocPage} from '@ng-doc/core';
 
-export const MyAwesomePage: NgDocPage = {
+const MyAwesomePage: NgDocPage = {
   title: 'My Awesome Page',
   mdFile: './index.md',
   // This keyword can be used to create a link to the page
