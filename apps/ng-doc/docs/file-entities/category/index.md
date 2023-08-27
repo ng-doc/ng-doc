@@ -34,7 +34,7 @@ configuration.
 ```typescript name="ng-doc.category.ts"
 import {NgDocCategory} from '@ng-doc/core';
 
-export const MyAwesomeCategory: NgDocCategory = {
+const MyAwesomeCategory: NgDocCategory = {
   title: 'MyAwesomeCategory',
 };
 

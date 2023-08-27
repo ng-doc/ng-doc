@@ -34,7 +34,7 @@ properties in the documentation for the type, below is an example of the minimum
 ```typescript name="ng-doc.page.ts"
 import {NgDocPage} from '@ng-doc/core';
 
-export const MyAwesomePage: NgDocPage = {
+const MyAwesomePage: NgDocPage = {
   title: 'MyAwesomePage',
   mdFile: './index.md',
 };
@@ -52,7 +52,7 @@ just import category and put it in the `category` field, just like that:
 import {NgDocPage} from '@ng-doc/core';
 import MyAwesomeCategory from '../ng-doc.category';
 
-export const MyAwesomePage: NgDocPage = {
+const MyAwesomePage: NgDocPage = {
   title: 'MyAwesomePage',
   mdFile: './index.md',
   category: MyAwesomeCategory,
@@ -70,6 +70,83 @@ rebuilds page if needed.
 Your page content fully supports the `markdown` syntax, but it is
 extended with the `nunjucks` engine which allows you to reuse one template for multiple pages, or
 render content dynamically, see `*GuidesTemplating` for more details.
+
+## Angular dependencies
+
+Some page configuration fields can take values that depend on Angular packages, for example, the
+`demos` field, which should contain a list of Angular components. This works because NgDoc trims the
+data in these fields when used on the builder side to increase compilation speed and dynamic loading
+of such pages.
+
+NgDoc doesn't trim all fields, only those that are not needed during the page build phase on the
+builder side. For example, the `controls` field that you can use for each of the playgrounds is not
+trimmed because it is required on the builder side. If you try to dynamically set the value of this
+field based on a variable that depends on the Angular library, you will likely encounter an error.
+
+You have several ways to work around this:
+
+### Separate file
+
+If the variable does not depend on Angular but is only located in a file with other entities that
+use Angular, you can move it to a separate file so that the variable file does not contain Angular
+imports.
+
+```typescript {2,10} name="Will not work" group="separate-files"
+import {NgDocPage} from '@ng-doc/core';
+import {ControlsVariable} from '../file-with-angular-dependencies';
+
+const MyAwesomePage: NgDocPage = {
+  // ...
+  playgrounds: {
+    MyPlayground: {
+      // ...
+      controls: {
+        ...ControlsVariable,
+      },
+    },
+  },
+};
+
+export default MyAwesomePage;
+```
+
+```typescript {2,10} name="Will work" group="separate-files"
+import {NgDocPage} from '@ng-doc/core';
+import {ControlsVariable} from '../file-without-angular';
+
+const MyAwesomePage: NgDocPage = {
+  // ...
+  playgrounds: {
+    MyPlayground: {
+      // ...
+      controls: {
+        ...ControlsVariable,
+      },
+    },
+  },
+};
+
+export default MyAwesomePage;
+```
+
+### Import compiler
+
+Alternatively, you can import `@angular/compiler` in your page file `ng-doc.page.ts`, so Angular
+dependencies will be handled correctly on the builder side.
+
+> **Warning**
+> This method may slow down the builder or cause additional errors, so use it as a last resort.
+
+```typescript {1} name="ng-doc.page.ts"
+import '@angular/compiler';
+import {NgDocPage} from '@ng-doc/core';
+
+const MyAwesomePage: NgDocPage = {
+  // ...
+};
+
+export default MyAwesomePage;
+```
 
 {% index false %}
 

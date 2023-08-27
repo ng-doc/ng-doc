@@ -21,7 +21,7 @@ export async function buildFileEntity(
 ): Promise<string> {
 	let code: string = sourceFile.getFullText();
 	const p: string = path.relative(outbase, sourceFile.getFilePath());
-	const outPath: string = path.join(CACHE_PATH, p).replace(/\.ts$/, '.js');
+	const outPath: string = path.join(CACHE_PATH, p).replace(/\.ts$/, '.mjs');
 
 	/**
 	 * Remove `imports`, `providers`, `demos` and `playgrounds` properties from the default export
@@ -77,12 +77,14 @@ export async function buildFileEntity(
 		},
 		tsconfig,
 		bundle: true,
-		format: 'cjs',
+		format: 'esm',
 		treeShaking: true,
+		packages: 'external',
 		outbase,
 		outfile: outPath,
 	});
 
+	// Restore the file from the file system
 	await sourceFile.refreshFromFileSystem();
 
 	return outPath;
@@ -97,6 +99,8 @@ function removePlaygroundTarget(
 	code: string,
 	objectLiteralExpression: ObjectLiteralExpression,
 ): string {
+	// List of properties that should not be removed
+	const keepProperties: string[] = ['controls', 'data'];
 	const playgrounds = objectLiteralExpression.getProperty('playgrounds');
 
 	if (Node.isPropertyAssignment(playgrounds)) {
@@ -108,7 +112,14 @@ function removePlaygroundTarget(
 					const playground = prop.getInitializer();
 
 					if (Node.isObjectLiteralExpression(playground)) {
-						code = replaceCodeProperty(code, playground.getProperty('target')?.getText() ?? '');
+						playground.getProperties().forEach((playgroundProp) => {
+							if (
+								Node.isPropertyAssignment(playgroundProp) &&
+								!keepProperties.includes(playgroundProp.getName())
+							) {
+								code = replaceCodeProperty(code, playgroundProp.getText());
+							}
+						});
 					}
 				}
 			});

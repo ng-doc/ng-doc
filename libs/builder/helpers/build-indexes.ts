@@ -5,7 +5,7 @@ import {defaultHtmlSchema, NodeContent, populate} from '@orama/plugin-parsedoc';
 import {firstValueFrom, from} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 
-import {importEsModule} from './import-es-module';
+import {importEsm} from './import-esm';
 
 export interface NgDocIndexBuilderConfig {
 	title: string;
@@ -79,13 +79,11 @@ function isIndexable(doc?: typeof defaultHtmlSchema): boolean {
  * @param doc
  */
 function isHeading(doc: typeof defaultHtmlSchema): boolean {
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
 	return (
 		['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(doc.type) &&
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
 		!!doc?.properties &&
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
 		!!doc.properties['id']
 	);
 }
@@ -117,7 +115,7 @@ function transformFn(node: NodeContent): NodeContent {
  */
 async function removeNotIndexableContent(html: string): Promise<string> {
 	return firstValueFrom(
-		from(importEsModule<typeof import('@ng-doc/utils')>('@ng-doc/utils')).pipe(
+		from(importEsm<typeof import('@ng-doc/utils')>('@ng-doc/utils')).pipe(
 			switchMap((utils: typeof import('@ng-doc/utils')) => utils.removeNotIndexableContent(html)),
 		),
 	);

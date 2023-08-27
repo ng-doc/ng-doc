@@ -31,7 +31,7 @@ Let's see how an example of a basic API configuration looks like.
 ```typescript name="ng-doc.api.ts"
 import {NgDocApi} from '@ng-doc/core';
 
-export const api: NgDocApi = {
+const api: NgDocApi = {
   title: 'API Reference',
   scopes: [
     {
@@ -62,7 +62,7 @@ structure your documentation articles.
 import {NgDocApi} from '@ng-doc/core';
 import MyAwesomeCategory from '../ng-doc.category';
 
-export const api: NgDocApi = {
+const api: NgDocApi = {
   title: 'API Reference',
   category: MyAwesomeCategory,
   scopes: [
