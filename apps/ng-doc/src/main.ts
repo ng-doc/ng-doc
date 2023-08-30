@@ -8,6 +8,9 @@ import {
 	NG_DOC_DEFAULT_PAGE_SKELETON,
 	NgDocDefaultSearchEngine,
 	provideNgDocApp,
+	providePageProcessor,
+	providePageSkeleton,
+	provideSearchEngine,
 } from '@ng-doc/app';
 import { provideNgDocContext } from '@ng-doc/generated';
 
@@ -21,13 +24,10 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
 	providers: [
 		provideNgDocContext(),
-		provideNgDocApp({
-			searchEngine: {
-				engine: NgDocDefaultSearchEngine,
-			},
-			pageProcessors: NG_DOC_DEFAULT_PAGE_PROCESSORS,
-			skeleton: NG_DOC_DEFAULT_PAGE_SKELETON,
-		}),
+		provideNgDocApp(),
+		provideSearchEngine(NgDocDefaultSearchEngine),
+		providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON),
+		providePageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS),
 		provideAnimations(),
 		provideHttpClient(withInterceptorsFromDi()),
 		provideRouter(
@@ -42,7 +42,11 @@ bootstrapApplication(AppComponent, {
 					pathMatch: 'full',
 					data: { hideSidebar: true },
 				},
-				{ path: '**', redirectTo: 'docs/getting-started/installation', pathMatch: 'full' },
+				{
+					path: '**',
+					redirectTo: 'docs/getting-started/installation',
+					pathMatch: 'full',
+				},
 			],
 			withInMemoryScrolling({
 				scrollPositionRestoration: 'enabled',

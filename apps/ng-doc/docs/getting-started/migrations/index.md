@@ -12,7 +12,8 @@ bundle for applications that don't use all features of NgDoc or want to customiz
 
 - `NgDocSidebarModule`, `NgDocNavbarModule` were removed, now you need to import
   `NgDocSidebarComponent`, `NgDocNavbarComponent`.
-- `NgDocModule`, `NgDocUiKitRootModule`, `provideSearchEngine` were removed, all configurations can be provided by using
+- `NgDocModule`, `NgDocUiKitRootModule`, `provideSearchEngine` were removed, all configurations can
+  be provided by using
   `provideNgDocApp` function.
 - `NgDocGeneratedModule` was removed, now you need to use `provideNgDocContext` function to provide
   context of the generated documentation.

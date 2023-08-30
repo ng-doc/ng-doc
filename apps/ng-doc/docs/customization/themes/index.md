@@ -26,14 +26,14 @@ your themes to the NgDoc configuration for the app.
 
 ```typescript name="main.ts"
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideNgDocAppConfig } from '@ng-doc/app';
+import { provideNgDocApp } from '@ng-doc/app';
 
 import { AppComponent } from './app/app.component';
 import { AppComponent } from './app.component';
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideNgDocAppConfig({
+    provideNgDocApp({
       themes: [
         {
           // Your theme ID that you can use to enable theme
@@ -86,13 +86,13 @@ configuration.
 
 ```typescript name="main.ts" {8}
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideNgDocAppConfig } from '@ng-doc/app';
+import { provideNgDocApp } from '@ng-doc/app';
 
 import { AppComponent } from './app/app.component';
 import { AppComponent } from './app.component';
 
 bootstrapApplication(AppComponent, {
-  providers: [provideNgDocAppConfig({ defaultThemeId: 'custom-theme' })],
+  providers: [provideNgDocApp({ defaultThemeId: 'custom-theme' })],
 }).catch((err: unknown) => console.error(err));
 ```
 
@@ -112,14 +112,14 @@ For example, you can set the dark theme by default as follows
 
 ```typescript name="main.ts" {7}
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideNgDocAppConfig } from '@ng-doc/app';
+import { provideNgDocApp } from '@ng-doc/app';
 
 import { AppComponent } from './app/app.component';
 import { AppComponent } from './app.component';
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideNgDocAppConfig({
+    provideNgDocApp({
       defaultThemeId: NG_DOC_NIGHT_THEME.id,
     }),
   ],

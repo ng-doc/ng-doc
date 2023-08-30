@@ -6,22 +6,22 @@ import { FloatingCircleComponent } from './floating-circle/floating-circle.compo
 import { FloatingCirclePositionControlComponent } from './floating-circle-position-control/floating-circle-position-control.component';
 
 const TypeControlsPage: NgDocPage = {
-	title: 'Type Controls',
-	mdFile: './index.md',
-	category: CustomizationCategory,
-	keyword: 'CustomizationTypeControls',
-	providers: [
-		provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {
-			hideLabel: true,
-		}),
-	],
-	demos: { FloatingCircleComponent, FloatingCirclePositionControlComponent },
-	playgrounds: {
-		FloatingCircle: {
-			target: FloatingCircleComponent,
-			template: '<ng-doc-selector></ng-doc-selector>',
-		},
-	},
+  title: 'Type Controls',
+  mdFile: './index.md',
+  category: CustomizationCategory,
+  keyword: 'CustomizationTypeControls',
+  providers: [
+    provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {
+      hideLabel: true,
+    }),
+  ],
+  demos: { FloatingCircleComponent, FloatingCirclePositionControlComponent },
+  playgrounds: {
+    FloatingCircle: {
+      target: FloatingCircleComponent,
+      template: '<ng-doc-selector></ng-doc-selector>',
+    },
+  },
 };
 
 export default TypeControlsPage;

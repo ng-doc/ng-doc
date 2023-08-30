@@ -29,7 +29,7 @@ Let's see how an example of a basic API configuration looks like.
 > root path
 
 ```typescript name="ng-doc.api.ts"
-import {NgDocApi} from '@ng-doc/core';
+import { NgDocApi } from '@ng-doc/core';
 
 const api: NgDocApi = {
   title: 'API Reference',
@@ -59,7 +59,7 @@ Don't like that the API section is at the top? You can also add a category to it
 structure your documentation articles.
 
 ```typescript name="ng-doc.api.ts" {2,6}
-import {NgDocApi} from '@ng-doc/core';
+import { NgDocApi } from '@ng-doc/core';
 import MyAwesomeCategory from '../ng-doc.category';
 
 const api: NgDocApi = {

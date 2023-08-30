@@ -20,7 +20,7 @@ export interface NgDocPageNavigation {
 /**
  * Interface for page breadcrumb implementation
  */
-export interface NgDocPageBreadcrumb {
+export interface NgDocPageBreadcrumbs {
 	/**
 	 * Breadcrumb items
 	 */
@@ -46,7 +46,7 @@ export interface NgDocPageSkeleton {
 	/**
 	 * Page breadcrumbs.
 	 */
-	breadcrumbs?: Type<NgDocPageBreadcrumb>;
+	breadcrumbs?: Type<NgDocPageBreadcrumbs>;
 	/**
 	 * Bottom page navigation.
 	 */

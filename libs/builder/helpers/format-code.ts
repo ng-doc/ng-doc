@@ -4,15 +4,19 @@ import { Options } from 'prettier';
 /**
  *	Format code with Prettier
  *
- * @param {string} code Code to format
- * @param {NgDocCodeType} codeType Type of code
- * @returns {string} Formatted code
+ * @param code - Code to format
+ * @param codeType - Type of code
+ * @param options - Prettier options
  */
-export function formatCode(code: string, codeType: NgDocCodeType | null = 'TypeScript'): string {
+export function formatCode(
+	code: string,
+	codeType: NgDocCodeType | null = 'TypeScript',
+	options?: Options,
+): string {
 	try {
 		if (codeType) {
 			const parser: Options['parser'] | undefined = getPrettierParserFromCodeType(codeType);
-			const config = require('prettier').resolveConfig.sync(process.cwd());
+			const config = require('prettier').resolveConfig.sync(process.cwd(), { editorconfig: true });
 
 			return require('prettier')
 				.format(code, { ...config, parser, embeddedLanguageFormatting: 'auto' })
@@ -43,6 +47,8 @@ function getPrettierParserFromCodeType(codeType: NgDocCodeType): Options['parser
 		case 'TypeScript':
 		case 'JavaScript':
 			return 'typescript';
+		case 'Markdown':
+			return 'markdown';
 		default:
 			return undefined;
 	}

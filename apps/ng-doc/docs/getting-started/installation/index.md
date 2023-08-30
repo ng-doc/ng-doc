@@ -210,8 +210,12 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import {
   NG_DOC_DEFAULT_PAGE_PROCESSORS,
+  NG_DOC_DEFAULT_PAGE_SKELETON,
   NgDocDefaultSearchEngine,
   provideNgDocApp,
+  providePageProcessor,
+  providePageSkeleton,
+  provideSearchEngine,
 } from '@ng-doc/app';
 import { NG_DOC_ROUTING, provideNgDocContext } from '@ng-doc/generated';
 
@@ -227,12 +231,10 @@ bootstrapApplication(AppComponent, {
     // Provide context of the generated documentation
     provideNgDocContext(),
     // Provide default configuration for the documentation app
-    provideNgDocApp({
-      searchEngine: {
-        engine: NgDocDefaultSearchEngine,
-      },
-      pageProcessors: NG_DOC_DEFAULT_PAGE_PROCESSORS,
-    }),
+    provideNgDocApp(),
+    provideSearchEngine(NgDocDefaultSearchEngine),
+    providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON),
+    providePageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS),
     // Provide animations
     provideAnimations(),
     // Provide HttpClient with interceptors (NgDoc uses interceptors)
@@ -257,11 +259,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import {
   NG_DOC_DEFAULT_PAGE_PROCESSORS,
+  NG_DOC_DEFAULT_PAGE_SKELETON,
   NgDocDefaultSearchEngine,
   NgDocNavbarComponent,
   NgDocRootComponent,
   NgDocSidebarComponent,
   provideNgDocApp,
+  providePageProcessor,
+  providePageSkeleton,
+  provideSearchEngine,
 } from '@ng-doc/app';
 import { NG_DOC_ROUTING, provideNgDocContext } from '@ng-doc/generated';
 
@@ -287,15 +293,13 @@ import { AppComponent } from './app.component';
     NgDocSidebarComponent,
   ],
   providers: [
-    // Provide default configuration for the documentation app
-    provideNgDocApp({
-      searchEngine: {
-        engine: NgDocDefaultSearchEngine,
-      },
-      pageProcessors: NG_DOC_DEFAULT_PAGE_PROCESSORS,
-    }),
     // Provide context of the generated documentation
     provideNgDocContext(),
+    // Provide default configuration for the documentation app
+    provideNgDocApp(),
+    provideSearchEngine(NgDocDefaultSearchEngine),
+    providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON),
+    providePageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS),
   ],
   bootstrap: [AppComponent],
 })

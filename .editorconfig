@@ -2,7 +2,6 @@
 root = true
 
 [*]
-end_of_line = lf
 charset = utf-8
 indent_style = tab
 indent_size = 2
@@ -16,4 +15,7 @@ ij_typescript_use_double_quotes = false
 
 [*.md]
 trim_trailing_whitespace = false
+indent_style = space
+
+[apps/ng-doc/docs/**/*]
 indent_style = space

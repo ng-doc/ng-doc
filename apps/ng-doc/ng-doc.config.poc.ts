@@ -1,4 +1,4 @@
-import {NgDocConfiguration} from '@ng-doc/builder';
+import { NgDocConfiguration } from '@ng-doc/builder';
 
 const NgDocConfig: NgDocConfiguration = {
 	angularBuilder: 'webpack',

@@ -2,7 +2,7 @@ import { NgFor } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgDocRootPage } from '@ng-doc/app/classes';
-import { NgDocPageBreadcrumb } from '@ng-doc/app/interfaces';
+import { NgDocPageBreadcrumbs } from '@ng-doc/app/interfaces';
 import { NgDocButtonIconComponent, NgDocIconComponent, NgDocTextComponent } from '@ng-doc/ui-kit';
 
 @Component({
@@ -13,7 +13,7 @@ import { NgDocButtonIconComponent, NgDocIconComponent, NgDocTextComponent } from
 	imports: [NgDocButtonIconComponent, RouterLink, NgDocIconComponent, NgFor, NgDocTextComponent],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocBreadcrumbComponent implements NgDocPageBreadcrumb {
+export class NgDocBreadcrumbComponent implements NgDocPageBreadcrumbs {
 	@Input()
 	breadcrumbs: string[] = [];
 

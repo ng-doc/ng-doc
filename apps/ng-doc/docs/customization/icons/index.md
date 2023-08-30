@@ -12,14 +12,16 @@ when you configuration for the ui-kit.
 
 ```ts name="main.ts"
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideNgDocUiKitConfig } from '@ng-doc/ui-kit';
+import { provideNgDocApp } from '@ng-doc/ui-kit';
 
 import { AppComponent } from './app/app.component';
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideNgDocUiKitConfig({
-      customIconsPath: 'assets/my-icons',
+    provideNgDocApp({
+      uikit: {
+        customIconsPath: 'assets/my-icons',
+      },
     }),
   ],
 }).catch((err: unknown) => console.error(err));

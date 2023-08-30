@@ -13,7 +13,7 @@ import { addAssets } from './steps/add-assets';
 import { addGitIgnore } from './steps/add-git-ignore';
 import { addJsDependencies } from './steps/add-js-dependencies';
 import { addLayout } from './steps/add-layout';
-import { addNgDocModules } from './steps/add-ng-doc-modules';
+import { addNgDocAppConfig } from './steps/add-ng-doc-app-config';
 import { addSearchEngine } from './steps/add-search-engine';
 import { addStyles } from './steps/add-styles';
 import { addTsconfigPaths } from './steps/add-tsconfig-paths';
@@ -50,7 +50,7 @@ export function ngAddSetupProject(options: Schema): Rule {
 		addStyles(options),
 		addAssets(options),
 		addJsDependencies(options),
-		addNgDocModules(options),
+		addNgDocAppConfig(options),
 		addSearchEngine(options),
 		addLayout(options),
 		addTsconfigPaths(options),
