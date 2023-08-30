@@ -34,9 +34,9 @@ export interface NgDocApplicationConfig {
 }
 
 /**
- * Provides
+ * Provides the NgDoc application configuration.
  *
- * @param config -
+ * @param config - The optional application configuration.
  */
 export function provideNgDocApp(config?: NgDocApplicationConfig): Provider[] {
 	return [
