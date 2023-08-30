@@ -9,7 +9,7 @@
 	border-left: 4px solid var(--ng-doc-base-3);
 	margin-inline-start: 0;
 	margin-inline-end: 0;
-	margin: calc(var(--ng-doc-base-gutter) * 4) 0;
+	margin: var(--ng-doc-blockquote-margin);
 
 	--ng-doc-code-margin: var(--ng-doc-base-gutter) 0;
 
