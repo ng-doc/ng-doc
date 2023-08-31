@@ -36,6 +36,10 @@ const NG_DOC_PROVIDERS: ImportConstant[] = [
 		imports: [{ name: 'provideNgDocContext', path: GENERATED_PATH }],
 	},
 	{
+		initializer: 'provideNgDocApp()',
+		imports: [{ name: 'provideNgDocApp', path: '@ng-doc/app' }],
+	},
+	{
 		initializer: 'provideSearchEngine(NgDocDefaultSearchEngine)',
 		imports: [
 			{ name: 'provideSearchEngine', path: '@ng-doc/app' },
