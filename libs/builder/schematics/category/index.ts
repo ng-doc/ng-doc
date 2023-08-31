@@ -15,7 +15,8 @@ import {
 import {join, relative} from 'path';
 
 import {CATEGORY_NAME} from '../../engine/variables';
-import {findClosestFile} from '../utils';
+import {slash} from '../../helpers/slash';
+import {findClosestFile, getTitle, varNameValidation} from '../utils';
 import {extractDefaultExportName} from '../utils/extract-default-export-name';
 import {NgDocBuildCategorySchema} from './schema';
 
@@ -25,24 +26,35 @@ import {NgDocBuildCategorySchema} from './schema';
  * @param {NgDocBuildCategorySchema} options - The options to generate the category
  * @returns {Rule} Angular Schematic Rule
  */
-export function build(options: NgDocBuildCategorySchema): Rule {
+export function generate(options: NgDocBuildCategorySchema): Rule {
 	return (host: Tree) => {
-		const path: string = join(options.path, `/${dasherize(options.title)}`);
+		options.title = getTitle(options.title);
+
+		const categoryName: string = options.name ?? `${classify(options.title)}Category`;
+
+		varNameValidation(categoryName);
+
+		const execPath: string = options?.path ?? '';
+		const categoryFolder: string = dasherize(options.name ?? '').replace(/-category$/, '') || dasherize(options.title);
+		const path: string = join(execPath, `/${categoryFolder}`);
 		const closestCategoryFile: string | null = options.category
-			? findClosestFile(host, options.path, CATEGORY_NAME)
+			? findClosestFile(host, options?.path ?? '', CATEGORY_NAME)
 			: null;
-		const categoryConstantName: string | null =
+		const parentCategoryName: string | null =
 			options.category && closestCategoryFile ? extractDefaultExportName(host, closestCategoryFile) : null;
 		const categoryImportPath: string | null = closestCategoryFile
-			? relative(path, closestCategoryFile).replace(/.ts$/, '')
+			? slash(relative(path, closestCategoryFile)).replace(/.ts$/, '')
 			: null;
-
-		options.constantName = `${classify(options.title)}Category`;
 
 		return chain([
 			mergeWith(
 				apply(url('./files'), [
-					applyTemplates({...options, categoryName: categoryConstantName, importPath: categoryImportPath}),
+					applyTemplates({
+						...options,
+						categoryName,
+						parentCategoryName,
+						importPath: categoryImportPath,
+					}),
 					move(path),
 					forEach((fileEntry: FileEntry) => {
 						if (host.exists(fileEntry.path)) {

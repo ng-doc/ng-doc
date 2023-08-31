@@ -1,8 +1,7 @@
 import {NgIf} from '@angular/common';
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {NgDocTypeControl} from '@ng-doc/app/interfaces';
-import {extractValue} from '@ng-doc/core/helpers/extract-value';
 import {
 	NgDocButtonIconComponent,
 	NgDocFocusableDirective,
@@ -29,19 +28,16 @@ import {FlControl, FlControlSilencerModule} from 'flex-controls';
 		NgDocIconComponent,
 	],
 })
-export class NgDocStringControlComponent extends FlControl<string> implements NgDocTypeControl {
+export class NgDocStringControlComponent extends FlControl<string> implements NgDocTypeControl<string> {
+	@Input()
 	default?: string;
 
 	constructor() {
 		super();
 	}
 
-	get defaultValue(): string | null {
-		return this.default ? (extractValue(this.default) as string) : null;
-	}
-
 	changeModel(value: string | null): void {
-		this.updateModel(value === null && this.default ? this.defaultValue : value);
+		this.updateModel(value === null && this.default ? this.default : value);
 	}
 
 	override writeValue(value: string | null) {

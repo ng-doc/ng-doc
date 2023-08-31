@@ -6,7 +6,7 @@ import {NgDocDemoDisplayerComponent} from '@ng-doc/app/components/demo-displayer
 import {NgDocDemoAsset} from '@ng-doc/app/interfaces';
 import {asArray} from '@ng-doc/core/helpers/as-array';
 import {NgDocDemoActionOptions} from '@ng-doc/core/interfaces';
-import {NgDocTabComponent, NgDocTabGroupComponent} from '@ng-doc/ui-kit';
+import {NgDocExecutePipe, NgDocIconComponent, NgDocTabComponent, NgDocTabGroupComponent} from '@ng-doc/ui-kit';
 import {NgDocContent} from '@ng-doc/ui-kit/types';
 import {PolymorpheusComponent, PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
 
@@ -25,6 +25,8 @@ import {PolymorpheusComponent, PolymorpheusModule} from '@tinkoff/ng-polymorpheu
 		NgDocTabGroupComponent,
 		NgDocTabComponent,
 		PolymorpheusModule,
+		NgDocIconComponent,
+		NgDocExecutePipe,
 	],
 })
 export class NgDocDemoComponent implements OnInit {
@@ -47,6 +49,10 @@ export class NgDocDemoComponent implements OnInit {
 	ngOnInit(): void {
 		this.demo = this.getDemo();
 		this.assets = this.getAssets();
+	}
+
+	getOpenedAssetId(assets: NgDocDemoAsset[]): string | undefined {
+		return assets.find((asset: NgDocDemoAsset) => asset.opened)?.title;
 	}
 
 	private getDemo(): NgDocContent<object> | undefined {

@@ -1,10 +1,9 @@
 import {NgFor, NgIf, NgTemplateOutlet} from '@angular/common';
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {NgDocKindIconComponent} from '@ng-doc/app/components/kind-icon';
 import {NgDocTypeControl} from '@ng-doc/app/interfaces';
 import {NgDocExtractValuePipe} from '@ng-doc/app/pipes/extract-value';
-import {extractValue} from '@ng-doc/core/helpers/extract-value';
 import {
 	NgDocButtonIconComponent,
 	NgDocComboboxComponent,
@@ -46,16 +45,14 @@ import {FlControl} from 'flex-controls';
 		NgDocExtractValuePipe,
 	],
 })
-export class NgDocTypeAliasControlComponent<T> extends FlControl<T> implements NgDocTypeControl {
-	default?: string;
+export class NgDocTypeAliasControlComponent<T> extends FlControl<T> implements NgDocTypeControl<T> {
+	@Input()
+	default?: T;
+
 	options?: string[];
 
 	constructor() {
 		super();
-	}
-
-	get defaultValue(): T | null {
-		return this.default ? (extractValue(this.default) as unknown as T) : null;
 	}
 
 	typeOf(value: unknown): string {
@@ -63,6 +60,6 @@ export class NgDocTypeAliasControlComponent<T> extends FlControl<T> implements N
 	}
 
 	changeModel(value: T | null): void {
-		this.updateModel(value === null && this.default ? this.defaultValue : value);
+		this.updateModel(value === null && this.default ? this.default : value);
 	}
 }

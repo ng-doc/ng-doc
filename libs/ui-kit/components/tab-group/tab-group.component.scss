@@ -17,14 +17,13 @@
 
 		.ng-doc-tab {
 			position: relative;
-			padding: calc(var(--ng-doc-base-gutter) * 2);
+			padding: calc(var(--ng-doc-base-gutter) / 2 * 3) calc(var(--ng-doc-base-gutter) * 2);
 			cursor: pointer;
 			white-space: nowrap;
 
 			.ng-doc-tab-text {
 				@include ng-doc-font();
 				position: relative;
-				z-index: 3;
 				--ng-doc-font-size: 14px;
 				--ng-doc-font-weight: 700;
 			}

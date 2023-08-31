@@ -1,41 +1,192 @@
-# [16.5.0-beta.2](https://github.com/ng-doc/ng-doc/compare/v16.5.0-beta.1...v16.5.0-beta.2) (2023-06-09)
-
-
-### Bug Fixes
-
-* **keywords-loaders:** fix release cycle for the `keywords-loaders` library ([a1dbda9](https://github.com/ng-doc/ng-doc/commit/a1dbda92a017fe19732d8120d70c74780c2825fc))
-
-# [16.5.0-beta.1](https://github.com/ng-doc/ng-doc/compare/v16.4.3...v16.5.0-beta.1) (2023-06-09)
-
+## [16.12.1](https://github.com/ng-doc/ng-doc/compare/v16.12.0...v16.12.1) (2023-08-24)
 
 ### Bug Fixes
 
-* **builder:** anchor is removed for external links ([f0a62b4](https://github.com/ng-doc/ng-doc/commit/f0a62b464e58179adaaf5fe2a49f1be5e317feb1))
-* **builder:** application `build` command doesn't exit ([cf83777](https://github.com/ng-doc/ng-doc/commit/cf837779757f28b1a8e55de7f7b63bdbff00095e)), closes [#64](https://github.com/ng-doc/ng-doc/issues/64)
-* **builder:** builder doesn't collect exported declarations from barrel files ([553291c](https://github.com/ng-doc/ng-doc/commit/553291c6a8232c595218e81f3fe2bdf05633faac))
-* **builder:** builder doesn't rebuild page after changes if it was restored from cache ([295e3ee](https://github.com/ng-doc/ng-doc/commit/295e3eececa7ec80bbb8b09f6e8c2b424f736524))
-* **builder:** entities with errors or warnings are cached ([57a4648](https://github.com/ng-doc/ng-doc/commit/57a46484d936a7ee008f40eb4b8d3a2de2cde01f))
-* **builder:** the cache is not invalidated after removing `.ng-doc` folder ([7ccc0be](https://github.com/ng-doc/ng-doc/commit/7ccc0be9e9644d12de683cdad6d4d902a5addd38)), closes [#58](https://github.com/ng-doc/ng-doc/issues/58)
-* **builder:** the cache is not invalidated after removing `.ng-doc` folder ([c20e479](https://github.com/ng-doc/ng-doc/commit/c20e479af6e8ad3dc23382b4a3942f54063d7714))
-* **builder:** the delay of the tooltip before opening has been increased to 1 second ([bfc67cc](https://github.com/ng-doc/ng-doc/commit/bfc67cccb7f9e4c22c139c19c25437b50a929a75))
-* **ng-doc:** `ng-doc` doesn't forget pages that have been moved to another directory ([c433a10](https://github.com/ng-doc/ng-doc/commit/c433a1007d07716833de2a987f9be63c7dc73a7a))
-* **ng-doc:** release trigger ([e7ac592](https://github.com/ng-doc/ng-doc/commit/e7ac592fc2f5ddadceb6633d13d6a3790b4eeb00))
-* **project:** dependency injection error after update to 15.10.0 ([cc41f44](https://github.com/ng-doc/ng-doc/commit/cc41f448054d73b9961f8a7be7689b4195a23c1f))
-* **semantic-release:** bump version ([d0f1862](https://github.com/ng-doc/ng-doc/commit/d0f18629d1d99afbf4f8ba5a34db227a05a84bbc))
+- **builder:** app cannot be built if some of the playground properties imports entity from Angular package ([dc57891](https://github.com/ng-doc/ng-doc/commit/dc57891ee6f5beabfa3e66c2293fa20b2f297373)), closes [#99](https://github.com/ng-doc/ng-doc/issues/99)
 
+# [16.12.0](https://github.com/ng-doc/ng-doc/compare/v16.11.1...v16.12.0) (2023-08-20)
+
+### Bug Fixes
+
+- **project:** providers inside a component is not recognized in playgrounds ([26705a6](https://github.com/ng-doc/ng-doc/commit/26705a6f548627813953428afdc0aa7c709a785a)), closes [#96](https://github.com/ng-doc/ng-doc/issues/96)
 
 ### Features
 
-* **app:** external links now display the special icon ([ebc7b46](https://github.com/ng-doc/ng-doc/commit/ebc7b4696a0debefc485caf8a18cd4e89f63bad3))
-* **builder:** add `keywordLoaders` to the builder configuration file that allows you to specify async loaders for global keywords ([1ef5f74](https://github.com/ng-doc/ng-doc/commit/1ef5f742bf8310c5f7b12c370017c914d7335bb3))
-* **project:** add `ngDocKeywordsLoader` to integrate your documentation with third-party documentation that was created with NgDoc ([6968045](https://github.com/ng-doc/ng-doc/commit/696804504c9d3483e69ca0191a90a285b42c3a52))
-* **project:** add `ngKeywordsLoader` to integrate your documentation with the Angular documentation ([a0d3863](https://github.com/ng-doc/ng-doc/commit/a0d3863e8eba1e4ec3022d3ef9ada7b32aa7e0b9))
+- **playgrounds:** add `controls` property to playgrounds to define inputs that NgDoc doesn't recognize, and `hiddenInputs` to hide specific inputs in the playground ([1cdcca9](https://github.com/ng-doc/ng-doc/commit/1cdcca9aad52f805baadb7ab3c1db8981a42cb49)), closes [#97](https://github.com/ng-doc/ng-doc/issues/97)
 
+## [16.11.1](https://github.com/ng-doc/ng-doc/compare/v16.11.0...v16.11.1) (2023-08-13)
+
+### Bug Fixes
+
+- **project:** providers inside a component is not recognized in playgrounds ([fcf8298](https://github.com/ng-doc/ng-doc/commit/fcf8298ecbde5fd09c909790247b49998d7f379d)), closes [#96](https://github.com/ng-doc/ng-doc/issues/96)
+
+# [16.11.0](https://github.com/ng-doc/ng-doc/compare/v16.10.0...v16.11.0) (2023-08-07)
+
+### Bug Fixes
+
+- **playgrounds:** the component created in the playground with the set values of `defaults` or `inputs` receives `undefined` in the `ngOnChanges` hook for the set inputs ([2b21918](https://github.com/ng-doc/ng-doc/commit/2b2191845b20fbbb9acd66c633725d049895ea1d))
+- **schematics:** schematics incorrectly import parent category on Windows ([59293ee](https://github.com/ng-doc/ng-doc/commit/59293ee9d8ff6a6bf2676bee52062b7b94b0ef28))
+
+### Features
+
+- **builder:** add support for `ng-doc-ignore-line` comment to remove some lines of code from demo or code blocks ([#93](https://github.com/ng-doc/ng-doc/issues/93)) ([8b668b2](https://github.com/ng-doc/ng-doc/commit/8b668b270558cc375993c337560b64b3b3dae83a)), closes [#83](https://github.com/ng-doc/ng-doc/issues/83)
+- **builder:** add support for `Route` interface for the `route` property of the page configuration ([#94](https://github.com/ng-doc/ng-doc/issues/94)) ([65c1bd7](https://github.com/ng-doc/ng-doc/commit/65c1bd7288288dd74070e1bdf1ff785e250bb264)), closes [#89](https://github.com/ng-doc/ng-doc/issues/89)
+- **builder:** add support for loading snippets from files ([f8889db](https://github.com/ng-doc/ng-doc/commit/f8889dbcfcc5cd6ec3c76c7dc61d3721706f69df))
+- **builder:** add support for query parameters for the keywords ([#95](https://github.com/ng-doc/ng-doc/issues/95)) ([d0da419](https://github.com/ng-doc/ng-doc/commit/d0da4195685bff617e0782bf1157c3c94ad332d8)), closes [#86](https://github.com/ng-doc/ng-doc/issues/86)
+- **builder:** add support for the keywords for the API configuration ([4166685](https://github.com/ng-doc/ng-doc/commit/416668519a72943ce1a1f293f304bc2146d1910f))
+- **demo:** the snippets have been reworked and their syntax has been changed also new features have been added, such as icons, language switching, etc. The previous syntax is still supported, but it is recommended to migrate to the new one ([#92](https://github.com/ng-doc/ng-doc/issues/92)) ([2cc98cf](https://github.com/ng-doc/ng-doc/commit/2cc98cfa2b41d2d81df00334b5052a49ef7002f6))
+
+# [16.10.0](https://github.com/ng-doc/ng-doc/compare/v16.9.0...v16.10.0) (2023-07-18)
+
+### Bug Fixes
+
+- **app:** `search` and `menu icons are missed for the mobile view ([886e1ae](https://github.com/ng-doc/ng-doc/commit/886e1ae4166da61fd77df85991dd8437ef16f28f))
+- **schematics:** `order` property in generate category has a string type ([b5aa730](https://github.com/ng-doc/ng-doc/commit/b5aa730424dee55249746749ad72dc78f2927b49))
+
+### Features
+
+- **builder:** add ability to set different ng-doc configuration files for different build targets ([bb0c8d0](https://github.com/ng-doc/ng-doc/commit/bb0c8d04167ca3456c1f6813b07cb923bec0e57d))
+
+# [16.9.0](https://github.com/ng-doc/ng-doc/compare/v16.8.1...v16.9.0) (2023-07-08)
+
+### Features
+
+- **ui-kit:** add icons support for code blocks and code block groups ([687b4cc](https://github.com/ng-doc/ng-doc/commit/687b4cc35772d6758995f8183ac03c8d9a157817))
+- **ui-kit:** add the ability to add custom icons to the documentation ([30c4012](https://github.com/ng-doc/ng-doc/commit/30c40120c9b20401ba011865c4cbb737f1c6b6a5))
 
 ### Performance Improvements
 
-* **app:** `js-beautify` library was replaces with `esthetic` library, which reduces the bundle size and improves html formatting for playgrounds ([bb17556](https://github.com/ng-doc/ng-doc/commit/bb17556bd65ec369e634cf7a593e77f6ae922903))
-* **core:** remove `rxjs` dependency that affects the bundle size ([2368a00](https://github.com/ng-doc/ng-doc/commit/2368a00b59b3c2b9b3929f39eeb7049bd0bc97ba))
+- **ui-kit:** remove all unused icon from `ui-kit` library ([8b01fec](https://github.com/ng-doc/ng-doc/commit/8b01fec513f817114caf658db0827c5fd12a2bf1))
+
+## [16.8.1](https://github.com/ng-doc/ng-doc/compare/v16.8.0...v16.8.1) (2023-07-07)
+
+### Bug Fixes
+
+- **playgrounds:** playground does not display inputs defined in parent classes ([#81](https://github.com/ng-doc/ng-doc/issues/81)) ([31b882a](https://github.com/ng-doc/ng-doc/commit/31b882a0279db793fe9defe092dccde05f69cb54))
+
+# [16.8.0](https://github.com/ng-doc/ng-doc/compare/v16.7.2...v16.8.0) (2023-07-07)
+
+### Bug Fixes
+
+- **schematics:** using slashes in the `title` leads to changing the final directory where the generated file will be placed ([1436ff9](https://github.com/ng-doc/ng-doc/commit/1436ff9c34161291967bb281d40aa21c38433648))
+
+### Features
+
+- **page-processors:** page processor is now a public API and can be used for dynamically creating components within pages, check documentation for more details ([8f98d6e](https://github.com/ng-doc/ng-doc/commit/8f98d6e9eeedf0618b90b106e03c808fb480b2ce))
+- **playgrounds:** add more opportunities to configure playgrounds, making them more dynamic and reusable ([#80](https://github.com/ng-doc/ng-doc/issues/80)) ([cc661fb](https://github.com/ng-doc/ng-doc/commit/cc661fbb23e14e41f6949091204a671893453a6e))
+- **project:** configuration format simplification for all NgDoc files like `ng-doc.page.ts`, `ng-doc.category.ts`, `ng-doc.api.ts` and `ng-doc.config.ts`. Please read migrations article to know how to migrate to the new conifg format ([e12f4a4](https://github.com/ng-doc/ng-doc/commit/e12f4a4335909e949c55397768a6f68158a3a40f)), closes [#75](https://github.com/ng-doc/ng-doc/issues/75)
+- **schematics:** add `--name` flag for `page` and `category` schematics that can be used to provide variable name ([4188b7b](https://github.com/ng-doc/ng-doc/commit/4188b7bf8a50b3b4e041e1c40909c7a3c43b05ff)), closes [#75](https://github.com/ng-doc/ng-doc/issues/75)
+
+## [16.7.2](https://github.com/ng-doc/ng-doc/compare/v16.7.1...v16.7.2) (2023-07-05)
+
+### Bug Fixes
+
+- **builder:** playgrounds do not dynamically update the list of inputs when the `dev-server` is running, and used class is included in the API list ([d25a410](https://github.com/ng-doc/ng-doc/commit/d25a41063db76cbd6bea99a3cb4886c444269139))
+- **playgrounds:** playgrounds do not recognize dynamic default values, such as the result of a function call or a value from a constructor variable ([dd5381b](https://github.com/ng-doc/ng-doc/commit/dd5381b4dbd3c418fa98faf7cec4c1a86dd8c249)), closes [#76](https://github.com/ng-doc/ng-doc/issues/76)
+- **ui-kit:** the text of the tabs overlaps with the overlay created by the sidebar ([d66f649](https://github.com/ng-doc/ng-doc/commit/d66f649d7fa3c1a80b85ab24594ec3e9254d3bcd))
+- **utils:** keywords used in the inline code are processed not as a whole, but by attempting to find occurrences ([024f43f](https://github.com/ng-doc/ng-doc/commit/024f43fdc4828d7b6c30d1ae884335c59e8c2fef))
+
+## [16.7.1](https://github.com/ng-doc/ng-doc/compare/v16.7.0...v16.7.1) (2023-07-03)
+
+### Bug Fixes
+
+- **builder:** generated links for the accessors via keywords have incorrect label ([da70a1b](https://github.com/ng-doc/ng-doc/commit/da70a1b9b28d24f7c1aa52d333ea6cdd609472be))
+- **builder:** some code presentations or files that were loaded to the code blocks have empty line at the end ([7382b73](https://github.com/ng-doc/ng-doc/commit/7382b73e5aef03da52c67abc59decf9a69fa9e15))
+
+# [16.7.0](https://github.com/ng-doc/ng-doc/compare/v16.6.6...v16.7.0) (2023-07-02)
+
+### Bug Fixes
+
+- **builder:** code blocks parameters don't support some characters ([b91d26f](https://github.com/ng-doc/ng-doc/commit/b91d26f97d2fe02f0fd708d27f6659d560736d70))
+- **builder:** code blocks parameters don't support some characters ([77a989c](https://github.com/ng-doc/ng-doc/commit/77a989cabbec7f06ecb31e2acd266ad2c56ce1a9))
+
+### Features
+
+- **project:** code blocks can now be grouped using tabs ([f9d2ef1](https://github.com/ng-doc/ng-doc/commit/f9d2ef1f270f4f61773bb73699216e38ec17b6bb))
+- **project:** code blocks can now be grouped using tabs ([11c0ed1](https://github.com/ng-doc/ng-doc/commit/11c0ed143aa8c098e28e03943437382f2a6767f2))
+
+## [16.6.6](https://github.com/ng-doc/ng-doc/compare/v16.6.5...v16.6.6) (2023-07-01)
+
+### Bug Fixes
+
+- **builder:** fix tests ([0aca03c](https://github.com/ng-doc/ng-doc/commit/0aca03cb1121ec8418abf1f8bfd8908f714c452f))
+- **builder:** generated files via schematics have some miss alignments ([062cb0d](https://github.com/ng-doc/ng-doc/commit/062cb0d60d7becfd3523a58369667d9229b2c613))
+- **builder:** schematics don't work in the root folder of the repository ([2caeef6](https://github.com/ng-doc/ng-doc/commit/2caeef6821f72cc7b2263d6959037466f95c7e96)), closes [#71](https://github.com/ng-doc/ng-doc/issues/71)
+- **builder:** some symbols in the page and category titles cause a built error ([d230811](https://github.com/ng-doc/ng-doc/commit/d23081109d9f75aab4d3e532031161d49616ebfd)), closes [#73](https://github.com/ng-doc/ng-doc/issues/73)
+
+## [16.6.5](https://github.com/ng-doc/ng-doc/compare/v16.6.4...v16.6.5) (2023-06-26)
+
+### Bug Fixes
+
+- **project:** add schematic fails on brand new angular 16.1 app ([a6dd29d](https://github.com/ng-doc/ng-doc/commit/a6dd29dacefa07d118d72074c9f267e18d6915a6)), closes [#69](https://github.com/ng-doc/ng-doc/issues/69)
+
+## [16.6.4](https://github.com/ng-doc/ng-doc/compare/v16.6.3...v16.6.4) (2023-06-24)
+
+### Bug Fixes
+
+- **builder:** parsimmon package is not installed after adding ng-doc to the project ([b5a030b](https://github.com/ng-doc/ng-doc/commit/b5a030b0d8772f51d6e161ff15364488194d5a4f))
+
+## [16.6.3](https://github.com/ng-doc/ng-doc/compare/v16.6.2...v16.6.3) (2023-06-21)
+
+### Bug Fixes
+
+- **builder:** build gets stuck if there are no file entities ([388eda0](https://github.com/ng-doc/ng-doc/commit/388eda069b173c5190154d95537da49c7b1525d2)), closes [#67](https://github.com/ng-doc/ng-doc/issues/67)
+
+## [16.6.2](https://github.com/ng-doc/ng-doc/compare/v16.6.1...v16.6.2) (2023-06-21)
+
+### Bug Fixes
+
+- **builder:** playgrounds autogeneration does not support Angular 16 required inputs ([c36a348](https://github.com/ng-doc/ng-doc/commit/c36a348397a4b9101bedcd63b182c51184177c21)), closes [#68](https://github.com/ng-doc/ng-doc/issues/68)
+- **keywords-loaders:** remove warning about experimental fetch method ([9c72b0b](https://github.com/ng-doc/ng-doc/commit/9c72b0bf35d10a4ad7e539a87823fcef7340a079))
+
+## [16.6.1](https://github.com/ng-doc/ng-doc/compare/v16.6.0...v16.6.1) (2023-06-14)
+
+### Bug Fixes
+
+- **app:** the code block is not displayed correctly in playgrounds ([a0e6d92](https://github.com/ng-doc/ng-doc/commit/a0e6d929d4ce55baa19fdcc24f421b8d78f29ad5))
+
+# [16.6.0](https://github.com/ng-doc/ng-doc/compare/v16.5.1...v16.6.0) (2023-06-14)
+
+### Bug Fixes
+
+- **app:** decorators in API pages are displayed without a gap ([e697bd0](https://github.com/ng-doc/ng-doc/commit/e697bd0961b84cd777a5acedea95068436c59d1a))
+
+### Features
+
+- **app:** the copy button in the code block is now visible only when you hover the cursor ([18fae7e](https://github.com/ng-doc/ng-doc/commit/18fae7ebd2238cdb87305c772d82fec7ce278ef7))
+- **builder:** add lines highlighter. You can use this feature to highlight any line of code inside your code blocks ([66bd91f](https://github.com/ng-doc/ng-doc/commit/66bd91f1b2aae90343111411c90f9f590c25c039))
+- **builder:** add option to change the output folder for the documentation application ([4069b47](https://github.com/ng-doc/ng-doc/commit/4069b47972d0e972bba2d12330d7965f45b97de9)), closes [#65](https://github.com/ng-doc/ng-doc/issues/65)
+- **builder:** builder adds lines to the code blocks ([c3cefcb](https://github.com/ng-doc/ng-doc/commit/c3cefcba5d538cdd4e9d1a4ac7eb99928947df41))
+
+## [16.5.1](https://github.com/ng-doc/ng-doc/compare/v16.5.0...v16.5.1) (2023-06-09)
+
+### Bug Fixes
+
+- **builder:** config loader requires `swc` packages ([7a4b06a](https://github.com/ng-doc/ng-doc/commit/7a4b06ae36a1a85cc7290e43fb91b5249bd91faf))
+
+# [16.5.0](https://github.com/ng-doc/ng-doc/compare/v16.4.3...v16.5.0) (2023-06-09)
+
+### Bug Fixes
+
+- **builder:** anchor is removed for external links ([f0a62b4](https://github.com/ng-doc/ng-doc/commit/f0a62b464e58179adaaf5fe2a49f1be5e317feb1))
+- **builder:** application `build` command doesn't exit ([cf83777](https://github.com/ng-doc/ng-doc/commit/cf837779757f28b1a8e55de7f7b63bdbff00095e)), closes [#64](https://github.com/ng-doc/ng-doc/issues/64)
+- **builder:** builder doesn't collect exported declarations from barrel files ([553291c](https://github.com/ng-doc/ng-doc/commit/553291c6a8232c595218e81f3fe2bdf05633faac))
+- **builder:** builder doesn't rebuild page after changes if it was restored from cache ([295e3ee](https://github.com/ng-doc/ng-doc/commit/295e3eececa7ec80bbb8b09f6e8c2b424f736524))
+- **builder:** entities with errors or warnings are cached ([57a4648](https://github.com/ng-doc/ng-doc/commit/57a46484d936a7ee008f40eb4b8d3a2de2cde01f))
+- **builder:** the cache is not invalidated after removing `.ng-doc` folder ([7ccc0be](https://github.com/ng-doc/ng-doc/commit/7ccc0be9e9644d12de683cdad6d4d902a5addd38)), closes [#58](https://github.com/ng-doc/ng-doc/issues/58)
+- **builder:** the delay of the tooltip before opening has been increased to 1 second ([bfc67cc](https://github.com/ng-doc/ng-doc/commit/bfc67cccb7f9e4c22c139c19c25437b50a929a75))
+
+### Features
+
+- **app:** external links now display the special icon ([ebc7b46](https://github.com/ng-doc/ng-doc/commit/ebc7b4696a0debefc485caf8a18cd4e89f63bad3))
+- **builder:** add `keywordLoaders` to the builder configuration file that allows you to specify async loaders for global keywords ([1ef5f74](https://github.com/ng-doc/ng-doc/commit/1ef5f742bf8310c5f7b12c370017c914d7335bb3))
+- **project:** add `ngDocKeywordsLoader` to integrate your documentation with third-party documentation that was created with NgDoc ([6968045](https://github.com/ng-doc/ng-doc/commit/696804504c9d3483e69ca0191a90a285b42c3a52))
+- **project:** add `ngKeywordsLoader` to integrate your documentation with the Angular documentation ([a0d3863](https://github.com/ng-doc/ng-doc/commit/a0d3863e8eba1e4ec3022d3ef9ada7b32aa7e0b9))
+
+### Performance Improvements
+
+- **app:** `js-beautify` library was replaces with `esthetic` library, which reduces the bundle size and improves html formatting for playgrounds ([bb17556](https://github.com/ng-doc/ng-doc/commit/bb17556bd65ec369e634cf7a593e77f6ae922903))
+- **core:** remove `rxjs` dependency that affects the bundle size ([2368a00](https://github.com/ng-doc/ng-doc/commit/2368a00b59b3c2b9b3929f39eeb7049bd0bc97ba))
 
 ## [16.4.3](https://github.com/ng-doc/ng-doc/compare/v16.4.2...v16.4.3) (2023-06-07)
 

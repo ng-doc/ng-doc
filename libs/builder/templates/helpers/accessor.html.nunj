@@ -22,7 +22,7 @@
 					<th indexable="false">
 						{{ decoratorsMacro.render(accessor.getDecorators()) if accessor.getDecorators }}
 						{{ tagsMacro.render(accessor, 'modifier') }}
-						<h3 dataSlug="{{ type + '-' + accessor.getName() }}" dataSlugType="member">
+						<h3 dataSlug="{{ type + '-' + accessor.getName() }}" dataSlugType="member" dataSlugTitle="{{ accessor.getName() }}">
 							{{ modifierMacro.render(type) }} {{ accessor.getName() }}
 						</h3>
 						<div class="ng-doc-node-details">

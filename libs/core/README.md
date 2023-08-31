@@ -1,25 +1,23 @@
-[![GitHub Workflow Status][build-shield]][build-url]
-[![NPM][npm-shield]][npm-url]
-[![MIT License][license-shield]][license-url]
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/ng-doc/ng-doc">
-    <img src="https://ng-doc.com/assets/images/ng-doc.svg?raw=true" alt="Logo" height="100px">
+    <img src="https://ng-doc.com/assets/images/ng-doc.svg?raw=true" alt="Logo" height="150px">
   </a>
 
-<h3 align="center">NgDoc</h3>
-
+<h1 align="center" style="margin-bottom: 0; border-bottom: 0">NgDoc</h1>
   <p align="center">
     Create user-friendly documentation for your projects with ease!
     <br />
-    <a href="https://ng-doc.com/"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/ng-doc/ng-doc/issues">Report Bug</a>
+    <a href="https://ng-doc.com/">Documentation</a>
     ·
-    <a href="https://github.com/ng-doc/ng-doc/issues">Request Feature</a>
+    <a href="https://github.com/ng-doc/ng-doc/issues/new/choose">Report Bug</a>
+    ·
+    <a href="https://github.com/ng-doc/ng-doc/issues/new/choose">Request Feature</a>
+
+[![GitHub Workflow Status][build-shield]][build-url]
+[![NPM][npm-shield]][npm-url]
+[![MIT License][license-shield]][license-url]
   </p>
 </div>
 

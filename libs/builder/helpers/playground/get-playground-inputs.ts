@@ -9,6 +9,7 @@ import {
 	TypeFormatFlags,
 } from 'ts-morph';
 
+import {getComponentInputs, getInputName} from '../angular';
 import {extractDocs, extractParameterDocs} from '../extract-docs';
 import {displayType} from '../typescript';
 
@@ -17,19 +18,13 @@ import {displayType} from '../typescript';
  * @param declaration
  */
 export function getPlaygroundComponentInputs(declaration: ClassDeclaration): NgDocPlaygroundProperties {
-	return declaration
-		.getProperties()
-		.filter((property: PropertyDeclaration) => !!property.getDecorator('Input'))
-		.reduce((properties: NgDocPlaygroundProperties, property: PropertyDeclaration) => {
-			const inputName: string =
-				property
-					.getDecorator('Input')
-					?.getArguments()[0]
-					?.getText()
-					.replace(/^["']|['"]$/g, '') ?? property.getName();
-
+	return getComponentInputs(declaration).reduce(
+		(properties: NgDocPlaygroundProperties, property: PropertyDeclaration) => {
+			const inputName: string = getInputName(property);
 			return {...properties, ...propOrParamToPlaygroundProperty(property, inputName)};
-		}, {});
+		},
+		{},
+	);
 }
 
 /**
@@ -64,7 +59,6 @@ function propOrParamToPlaygroundProperty(
 		[propOrParam.getName()]: {
 			inputName: inputName ?? propOrParam.getName(),
 			type,
-			default: propOrParam.getInitializer()?.getText() ?? defaultForType(type),
 			description: Node.isPropertyDeclaration(propOrParam)
 				? extractDocs(propOrParam)
 				: extractParameterDocs(propOrParam.getParentIfKindOrThrow(SyntaxKind.MethodDeclaration), propOrParam.getName()),
@@ -76,17 +70,4 @@ function propOrParamToPlaygroundProperty(
 				),
 		},
 	};
-}
-
-/**
- *
- * @param type
- */
-function defaultForType(type: string): string {
-	switch (type) {
-		case 'boolean':
-			return 'false';
-		default:
-			return 'undefined';
-	}
 }

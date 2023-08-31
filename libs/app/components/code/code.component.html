@@ -1,12 +1,14 @@
 <div class="ng-doc-code-header" *ngIf="hasHeader">
-	<span class="ng-doc-code-file-name" ng-doc-text>{{ fileName }}</span>
+	<span class="ng-doc-code-file-name" ng-doc-text>
+		<ng-doc-icon [customIcon]="icon" *ngIf="icon"></ng-doc-icon>
+		{{ name }}
+	</span>
 </div>
 <div class="ng-doc-code-body">
 	<div
 		class="ng-doc-code-wrapper"
 		[innerHTML]="html | ngDocSanitizeHtml"
-		ngDocLinkProcessor
-		ngDocTooltipProcessor
+		ngDocPageProcessor
 		*ngIf="html"
 	></div>
 	<div class="ng-doc-code-wrapper" *ngIf="!html">

@@ -21,7 +21,7 @@ describe('page', () => {
 			'page',
 			{
 				path: 'test',
-				title: 'my-page',
+				title: 'My Page',
 			},
 			host,
 		);
@@ -30,7 +30,7 @@ describe('page', () => {
 		expect(tree.readText('test/my-page/ng-doc.page.ts')).toBe(`import {NgDocPage} from '@ng-doc/core';
 
 const MyPagePage: NgDocPage = {
-\ttitle: \`my-page\`,
+\ttitle: \`My Page\`,
 \tmdFile: './index.md',
 };
 
@@ -79,7 +79,7 @@ export default MyPagePage;
 const MyPagePage: NgDocPage = {
 \ttitle: \`my-page\`,
 \tmdFile: './index.md',
-    order: 1,
+\torder: 1,
 };
 
 export default MyPagePage;
@@ -114,7 +114,7 @@ import {MyPagePageModule} from './ng-doc.module';
 const MyPagePage: NgDocPage = {
 \ttitle: \`my-page\`,
 \tmdFile: './index.md',
-    imports: [MyPagePageModule],
+\timports: [MyPagePageModule],
 };
 
 export default MyPagePage;
@@ -158,4 +158,94 @@ const MyPagePage: NgDocPage = {
 export default MyPagePage;
 `);
 	});
+
+	it('should remove slashed from title', async () => {
+		const tree: UnitTestTree = await runner.runSchematic(
+			'page',
+			{
+				path: 'test',
+				title: '/folder/my-page/',
+			},
+			host,
+		);
+
+		expect(tree.exists('test/folder-my-page/index.md')).toBe(true);
+		expect(tree.readText('test/folder-my-page/ng-doc.page.ts')).toBe(`import {NgDocPage} from '@ng-doc/core';
+
+const FolderMyPagePage: NgDocPage = {
+\ttitle: \`folder-my-page\`,
+\tmdFile: './index.md',
+};
+
+export default FolderMyPagePage;
+`);
+	});
+
+	it('should throw error if title has forbidden characters and --name was not provided', async () => {
+		try {
+			await runner.runSchematic(
+				'page',
+				{
+					path: 'test',
+					title: 'Пейжд',
+				},
+				host,
+			);
+		} catch (e) {
+			expect((e as Error).message).toBeTruthy();
+		}
+	})
+
+	it('should throw error if name has forbidden characters', async () => {
+		try {
+			await runner.runSchematic(
+				'page',
+				{
+					path: 'test',
+					title: 'page',
+					name: 'Пейжд',
+				},
+				host,
+			);
+		} catch (e) {
+			expect((e as Error).message).toBeTruthy();
+		}
+	})
+
+	it('should not throw error if title has forbidden characters and --name was provided', async () => {
+		const tree: UnitTestTree = await runner.runSchematic(
+			'page',
+			{
+				path: 'test',
+				title: 'Пейжд',
+				name: 'page',
+			},
+			host,
+		);
+
+		expect(tree.exists('test/page/index.md')).toBe(true);
+		expect(tree.readText('test/page/ng-doc.page.ts')).toBe(`import {NgDocPage} from '@ng-doc/core';
+
+const page: NgDocPage = {
+\ttitle: \`Пейжд\`,
+\tmdFile: './index.md',
+};
+
+export default page;
+`);
+	})
+
+	it('should remove "page" word from folder path if --name was provided', async () => {
+		const tree: UnitTestTree = await runner.runSchematic(
+			'page',
+			{
+				path: 'test',
+				title: 'Test Page',
+				name: 'MyPage',
+			},
+			host,
+		);
+
+		expect(tree.exists('test/my/ng-doc.page.ts')).toBe(true);
+	})
 });

@@ -1,6 +1,6 @@
 import path from 'path';
-import {forkJoin, Observable} from 'rxjs';
-import {mapTo, tap} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {tap} from 'rxjs/operators';
 import {SourceFile} from 'ts-morph';
 
 import {slash} from '../../../helpers';
@@ -29,7 +29,7 @@ export abstract class NgDocSourceFileEntity extends NgDocEntity {
 	 * Files that are watched for changes to rebuild entity or remove it
 	 */
 	override get rootFiles(): string[] {
-		return [this.sourceFilePath];
+		return [this.sourceFile.getFilePath()];
 	}
 
 	get sourceFilePath(): string {
@@ -62,11 +62,11 @@ export abstract class NgDocSourceFileEntity extends NgDocEntity {
 	 * Runs when the source file was updated, can be used refresh source file in the typescript project
 	 */
 	protected refreshImpl(): Observable<void> {
-		return forkJoin(
-			[this.sourceFile, ...this.sourceFile.getReferencedSourceFiles()].map((sourceFile: SourceFile) =>
-				sourceFile.refreshFromFileSystem(),
-			),
-		).pipe(mapTo(void 0));
+		[this.sourceFile, ...this.sourceFile.getReferencedSourceFiles()].forEach((sourceFile: SourceFile) =>
+			sourceFile.refreshFromFileSystemSync(),
+		);
+
+		return of(void 0);
 	}
 
 	refresh(): Observable<void> {

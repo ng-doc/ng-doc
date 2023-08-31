@@ -3,7 +3,7 @@ import {ControlValueAccessor} from '@angular/forms';
 /**
  * Interface describing Type Control
  */
-export interface NgDocTypeControl extends ControlValueAccessor {
+export interface NgDocTypeControl<T = unknown> extends ControlValueAccessor {
 	/**
 	 * The name of the input for which it is created
 	 */
@@ -15,7 +15,7 @@ export interface NgDocTypeControl extends ControlValueAccessor {
 	/**
 	 * The default value of the input
 	 */
-	default?: string;
+	default?: T;
 	/**
 	 * The list of possible values, it usually works only for Type Aliases which has several values
 	 */

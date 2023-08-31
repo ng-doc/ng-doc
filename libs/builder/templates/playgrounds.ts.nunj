@@ -2,12 +2,12 @@
 import {ChangeDetectionStrategy, Component, NgModule, Type, ViewChild, ViewContainerRef} from '@angular/core';
 import {NgDocBasePlayground, providePlaygroundDemo} from '@ng-doc/app';
 // noinspection ES6UnusedImports
-import pageEntity from '{{ page.importPath }}';
+import pageEntity from '{{ targetImportPath }}';
 import {CommonModule} from '@angular/common';
 
 {%- set components = [] %}
 {%- set index = 1 %}
-{%- set playgrounds = page.playgroundMetadata %}
+{%- set playgrounds = playgroundMetadata %}
 
 
 {%- for id, metadata in playgrounds -%}
@@ -24,7 +24,7 @@ import {CommonModule} from '@angular/common';
 	standalone: true,
 	imports: [
 		CommonModule,
-		{%- if page.hasImports %}
+		{%- if hasImports %}
 		...pageEntity.imports,
 		{%- endif %}
 		{%- if metadata.standalone %}
@@ -37,15 +37,15 @@ export class {{ comp.name }} extends NgDocBasePlayground {
 	static readonly selector: string = '{{ comp.selector }}';
 
 	@ViewChild(pageEntity.playgrounds['{{ id }}'].target, {static: true})
-	readonly playground?: Type<unknown>;
+	readonly playground: Type<any>;
 
 	@ViewChild(pageEntity.playgrounds['{{ id }}'].target, {static: true, read: ViewContainerRef})
 	readonly viewContainerRef: ViewContainerRef;
 
-	data: any = pageEntity.playgrounds['{{ id }}'].data;
+	readonly configData: any = pageEntity.playgrounds['{{ id }}'].data;
 
 	constructor() {
-		super();
+		super(pageEntity.playgrounds['{{ id }}'].target);
 	}
 }
 {%- set index = index + 1 -%}

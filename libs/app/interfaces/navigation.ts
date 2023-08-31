@@ -9,4 +9,6 @@ export interface NgDocNavigation extends NgDocBaseEntity {
 	expanded?: boolean;
 	/** Children of the navigation item */
 	children?: NgDocNavigation[];
+	/** The route of the entity (current sourceFileFolder name by default) */
+	route: string;
 }

@@ -6,7 +6,7 @@
 	"printWidth": 120,
 	"semi": true,
 	"bracketSpacing": false,
-	"jsxBracketSameLine": true,
+	"bracketSameLine": true,
 	"overrides": [
 		{
 			"files": [
@@ -22,23 +22,6 @@
 			],
 			"options": {
 				"parser": "typescript"
-			}
-		},
-		{
-			"files": [
-				"*.md.nunj"
-			],
-			"options": {
-				"parser": "markdown"
-			}
-		},
-		{
-			"files": [
-				"*.md"
-			],
-			"options": {
-				"parser": "markdown",
-				"tabWidth": 2
 			}
 		}
 	]

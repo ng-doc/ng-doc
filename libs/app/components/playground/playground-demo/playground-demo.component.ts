@@ -17,13 +17,14 @@ import {FormGroup} from '@angular/forms';
 import {NgDocDemoDisplayerComponent} from '@ng-doc/app/components/demo-displayer';
 import {formatHtml, getPlaygroundDemoToken} from '@ng-doc/app/helpers';
 import {NgDocFormPartialValue} from '@ng-doc/app/types';
+import {stringify} from '@ng-doc/core';
 import {
 	buildPlaygroundDemoPipeTemplate,
 	buildPlaygroundDemoTemplate,
 } from '@ng-doc/core/helpers/build-playground-demo-template';
 import {objectKeys} from '@ng-doc/core/helpers/object-keys';
-import {NgDocPlaygroundConfig, NgDocPlaygroundProperties, NgDocPlaygroundProperty} from '@ng-doc/core/interfaces';
-import {NgDocExtractedValue} from '@ng-doc/core/types';
+import {NgDocPlaygroundConfig, NgDocPlaygroundProperties} from '@ng-doc/core/interfaces';
+import {NgDocLetDirective, NgDocSmoothResizeComponent} from '@ng-doc/ui-kit';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {from, Observable, of, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
@@ -37,7 +38,7 @@ import {NgDocPlaygroundForm} from '../playground-form';
 	styleUrls: ['./playground-demo.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	standalone: true,
-	imports: [NgDocDemoDisplayerComponent, AsyncPipe],
+	imports: [NgDocDemoDisplayerComponent, AsyncPipe, NgDocSmoothResizeComponent, NgDocLetDirective],
 })
 @UntilDestroy()
 export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties>
@@ -64,6 +65,9 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 	@Input()
 	form!: FormGroup<NgDocPlaygroundForm>;
 
+	@Input()
+	expanded: boolean = false;
+
 	@ViewChild('demoOutlet', {static: true, read: ViewContainerRef})
 	demoOutlet?: ViewContainerRef;
 
@@ -77,7 +81,7 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 	constructor(private readonly injector: Injector) {}
 
 	ngOnChanges({form, id}: SimpleChanges): void {
-		if (form && id) {
+		if (form || id) {
 			this.unsubscribe$.next();
 
 			const demoInjector: InjectionToken<Array<typeof NgDocBasePlayground>> | undefined = getPlaygroundDemoToken(
@@ -86,6 +90,7 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 
 			if (demoInjector) {
 				const demos: Array<typeof NgDocBasePlayground> = this.injector.get(demoInjector, []);
+
 				this.playgroundDemo = demos.find(
 					(demo: typeof NgDocBasePlayground) => demo.selector === this.selector || demo.selector === this.pipeName,
 				);
@@ -101,26 +106,23 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 
 	private updateDemo(data?: NgDocFormPartialValue<typeof this.form>): void {
 		if (this.recreateDemo || !this.demoRef) {
-			this.renderDemo();
+			this.createDemo();
 		}
 
 		if (data) {
 			this.demoRef?.setInput('properties', data.properties ?? {});
 			this.demoRef?.setInput('content', data.content ?? {});
+			this.demoRef?.setInput('actionData', this.configuration?.data ?? {});
 		}
 
 		this.updateCodeView();
 	}
 
-	private renderDemo(): void {
+	private createDemo(): void {
 		if (this.playgroundDemo) {
 			this.demoRef?.destroy();
-
-			if (this.playgroundDemo) {
-				this.demoRef = this.demoOutlet?.createComponent(this.playgroundDemo as unknown as Type<NgDocBasePlayground>);
-			}
-
-			this.demoRef?.changeDetectorRef.detectChanges();
+			this.demoRef = this.demoOutlet?.createComponent(this.playgroundDemo as unknown as Type<NgDocBasePlayground>);
+			this.demoRef?.changeDetectorRef.markForCheck();
 		}
 	}
 
@@ -153,20 +155,14 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 	}
 
 	private getActiveInputs(): Record<string, string> {
-		const formData: Record<string, NgDocExtractedValue> =
-			(this.form?.controls.properties.value as Record<string, NgDocExtractedValue>) ?? {};
+		const formData: Record<string, unknown> = (this.form?.controls.properties.value as Record<string, unknown>) ?? {};
 
 		return objectKeys(formData).reduce((result: Record<string, string>, key: string) => {
-			const property: NgDocPlaygroundProperty | undefined = this.properties?.[key];
+			const value: unknown = formData[key];
+			const property: unknown | undefined = this.demoRef?.instance?.defaultValues[key];
 
-			if (property) {
-				const value: NgDocExtractedValue = formData[key];
-				const isString: boolean = typeof value === 'string';
-				const inputValue: string = isString ? `'${value}'` : `${JSON.stringify(value)}`;
-
-				if ((property.default ?? '') !== inputValue) {
-					result[property.inputName] = inputValue;
-				}
+			if (property !== value) {
+				result[key] = stringify(value).replace(/"/g, `'`);
 			}
 
 			return result;

@@ -1,6 +1,8 @@
 export * from './action-output';
 export * from './asset';
+export * from './build-result';
 export * from './builder-context';
+export * from './code-block-options';
 export * from './configuration';
 export * from './entity-keyword';
 export * from './output';
@@ -9,3 +11,5 @@ export * from './playground-metadata';
 export * from './renderer-options';
 export * from './repo-config';
 export * from './schema';
+export * from './snippet';
+export * from './snippet-config';

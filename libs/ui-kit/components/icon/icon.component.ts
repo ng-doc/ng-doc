@@ -4,17 +4,16 @@ import {
 	Component,
 	ElementRef,
 	HostBinding,
-	Inject,
+	inject,
 	Input,
 	OnChanges,
 	OnInit,
-	Optional,
 } from '@angular/core';
 import {NgDocCacheInterceptor} from '@ng-doc/ui-kit/interceptors';
-import {NG_DOC_ASSETS_PATH} from '@ng-doc/ui-kit/tokens';
+import {NG_DOC_ASSETS_PATH, NG_DOC_CUSTOM_ICONS_PATH} from '@ng-doc/ui-kit/tokens';
 import {NgDocIconSize} from '@ng-doc/ui-kit/types';
-import {Subject} from 'rxjs';
-import {filter, startWith, switchMap} from 'rxjs/operators';
+import {of, Subject} from 'rxjs';
+import {catchError, startWith, switchMap} from 'rxjs/operators';
 
 @Component({
 	selector: 'ng-doc-icon',
@@ -29,18 +28,21 @@ export class NgDocIconComponent implements OnChanges, OnInit {
 	@HostBinding('attr.data-ng-doc-icon')
 	icon: string = '';
 
+	/** Custom icon name, if not set, `icon` will be used */
+	@Input()
+	@HostBinding('attr.data-ng-doc-custom-icon')
+	customIcon: string = '';
+
 	/** Icon size */
 	@Input()
 	@HostBinding('attr.data-ng-doc-size')
 	size: NgDocIconSize = 16;
 
-	private reload$: Subject<void> = new Subject<void>();
+	private readonly reload$: Subject<void> = new Subject<void>();
+	private readonly assetsPath: string = inject(NG_DOC_ASSETS_PATH, {optional: true}) ?? '';
+	private readonly customIconsPath: string = inject(NG_DOC_CUSTOM_ICONS_PATH, {optional: true}) ?? '';
 
-	constructor(
-		private readonly elementRef: ElementRef<HTMLElement>,
-		private readonly httpClient: HttpClient,
-		@Inject(NG_DOC_ASSETS_PATH) @Optional() private assetsPath: string,
-	) {}
+	constructor(private readonly elementRef: ElementRef<HTMLElement>, private readonly httpClient: HttpClient) {}
 
 	ngOnChanges(): void {
 		this.reload$.next();
@@ -50,18 +52,25 @@ export class NgDocIconComponent implements OnChanges, OnInit {
 		this.reload$
 			.pipe(
 				startWith(null),
-				filter(() => !!this.icon),
 				switchMap(() =>
 					this.httpClient.get(this.href, {
 						responseType: 'text',
 						params: {[NgDocCacheInterceptor.TOKEN]: 'true'},
-					}),
+					}).pipe(
+						catchError((e: Error) => {
+							console.error(e);
+
+							return of('')
+						})
+					)
 				),
 			)
 			.subscribe((svg: string) => (this.elementRef.nativeElement.innerHTML = svg));
 	}
 
 	get href(): string {
-		return `${this.assetsPath}/icons/${this.size}/${this.icon}.svg#${this.icon}`;
+		return this.customIcon
+			? `${this.customIconsPath}/${this.customIcon}.svg#${this.customIcon}`
+			: `${this.assetsPath}/icons/${this.size}/${this.icon}.svg#${this.icon}`;
 	}
 }

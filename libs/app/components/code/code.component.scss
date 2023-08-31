@@ -3,6 +3,12 @@
 	display: block;
 	margin: var(--ng-doc-code-margin);
 
+	&:hover {
+		.ng-doc-copy-button {
+			opacity: 1;
+		}
+	}
+
 	&[data-ng-doc-has-header='true'] {
 		--ng-doc-code-border-radius: 0 0 var(--ng-doc-base-gutter) var(--ng-doc-base-gutter);
 		--ng-doc-code-shadow: none;
@@ -23,6 +29,10 @@
 			--ng-doc-text: var(--ng-doc-code-header-color);
 			--ng-doc-font-weight: 600;
 			--ng-doc-font-size: 14px;
+
+			ng-doc-icon {
+				margin-right: calc(var(--ng-doc-base-gutter) / 2);
+			}
 		}
 	}
 
@@ -36,6 +46,7 @@
 		top: var(--ng-doc-base-gutter);
 		right: var(--ng-doc-base-gutter);
 		transition: var(--ng-doc-transition);
+		opacity: 0;
 
 		--ng-doc-icon-color: var(--ng-doc-text-muted);
 		--ng-doc-button-background: transparent;
@@ -56,6 +67,7 @@
 			height: 100%;
 
 			code {
+				display: block;
 				padding: calc(var(--ng-doc-base-gutter) * 2);
 				width: 100%;
 				font-family: var(--ng-doc-code-font);
@@ -64,6 +76,30 @@
 				max-height: var(--ng-doc-code-max-height);
 				overflow: auto;
 				height: 100%;
+
+				&.code-lines {
+					display: grid;
+					padding: calc(var(--ng-doc-base-gutter) * 2) 0;
+				}
+
+				.line {
+					position: relative;
+					padding: 0 calc(var(--ng-doc-base-gutter) * 2);
+
+					&.highlighted {
+						background: var(--ng-doc-code-highlight-background, rgba(var(--ng-doc-primary-rgb), 0.15));
+
+						&:before {
+							content: '';
+							position: absolute;
+							top: 0;
+							left: 0;
+							width: 2px;
+							height: 100%;
+							background: var(--ng-doc-code-highlight-border, var(--ng-doc-primary));
+						}
+					}
+				}
 			}
 		}
 	}

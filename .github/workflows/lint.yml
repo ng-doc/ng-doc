@@ -1,22 +1,30 @@
-name: Lint
+name: ⚙️ Lint
 
-on: workflow_call
+on:
+    workflow_call:
+        inputs:
+            base:
+                type: string
+                description: Base branch
+                required: false
+                default: 'main'
+            head:
+                type: string
+                description: Head branch
+                required: false
+                default: 'HEAD'
 
 jobs:
     lint:
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout
-              uses: actions/checkout@v2
+            -   name: Checkout
+                uses: actions/checkout@v3
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v3
-              with:
-                  cache: npm
-                  node-version: 18
+            -   run: git fetch origin ${{ inputs.base }}
 
-            - name: Install Dependencies
-              run: npm ci
+            -   name: Setup Node.js
+                uses: ./.github/actions/nodejs
 
-            - name: Lint
-              run: npx nx run-many --all --target=lint --quiet=true
+            -   name: Lint
+                run: npx nx affected --target=lint --quiet=true --parallel --base=remotes/origin/${{ inputs.base }} --head=${{ inputs.head }}

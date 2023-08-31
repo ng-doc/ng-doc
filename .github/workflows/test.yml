@@ -1,0 +1,30 @@
+name: ⚙️ Test
+
+on:
+    workflow_call:
+        inputs:
+            base:
+                type: string
+                description: Base branch
+                required: false
+                default: 'main'
+            head:
+                type: string
+                description: Head branch
+                required: false
+                default: 'HEAD'
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v3
+
+            -   run: git fetch origin ${{ inputs.base }}
+
+            -   name: Setup Node.js
+                uses: ./.github/actions/nodejs
+
+            -   name: Test
+                run: npx nx affected --target=test --configuration=ci --parallel --base=remotes/origin/${{ inputs.base }} --head=${{ inputs.head }}

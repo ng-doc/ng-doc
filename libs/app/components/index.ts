@@ -14,5 +14,6 @@ export * from '@ng-doc/app/components/root';
 export * from '@ng-doc/app/components/search';
 export * from '@ng-doc/app/components/search-result';
 export * from '@ng-doc/app/components/sidebar';
+export * from '@ng-doc/app/components/tabs';
 export * from '@ng-doc/app/components/theme-toggle';
 export * from '@ng-doc/app/components/toc';

@@ -64,8 +64,9 @@ function getNodes(
 	inlineLink: boolean,
 	config: NgDocHtmlPostProcessorConfig,
 ): Array<Element | Text> {
-	const KeywordRegExp: RegExp = /([*A-Za-z0-9_$@]+[.#]?[A-Za-z0-9_-]+)/g;
-	const keywordAnchorRegexp: RegExp = /^(?<keyword>[*A-Za-z0-9_$@]+)((?<delimiter>[.#])(?<anchor>[A-Za-z0-9_-]+))?$/;
+	const regexp: string = '([*A-Za-z0-9_$@]+[.#]?[A-Za-z0-9_-]+(?:\\?.+)?)';
+	const KeywordRegExp: RegExp = inlineLink ? new RegExp(`^${regexp}$`, 'g') : new RegExp(regexp, 'g');
+	const keywordAnchorRegexp: RegExp = /^(?<keyword>[*A-Za-z0-9_$@]+)((?<delimiter>[.#])(?<anchor>[A-Za-z0-9_-]+))?(?<queryParams>(?:\?.+))?$/;
 	const {addUsedKeyword, addPotentialKeyword, getKeyword, raiseError} = config;
 
 	if (!getKeyword || !addUsedKeyword || !addPotentialKeyword) {
@@ -76,16 +77,16 @@ function getNodes(
 		.split(KeywordRegExp)
 		.filter((word: string) => word.length)
 		.map((word: string) => {
+			const pureKeyword: string = word.split('?')[0];
 			const match: RegExpMatchArray | null = word.match(keywordAnchorRegexp);
-
-			const keyword: NgDocKeyword | undefined = getKeyword(word);
+			const keyword: NgDocKeyword | undefined = getKeyword(pureKeyword);
 			const rootKeyword: NgDocKeyword | undefined = getKeyword(match?.groups?.['keyword'] || '');
 
-			if (keywordAnchorRegexp.test(word)) {
-				keyword ? addUsedKeyword(word) : addPotentialKeyword(word);
+			if (keywordAnchorRegexp.test(pureKeyword)) {
+				keyword ? addUsedKeyword(pureKeyword) : addPotentialKeyword(pureKeyword);
 			}
 
-			const notFoundGuideKeyword: boolean = /^\*\w+/gm.test(word) && !keyword;
+			const notFoundGuideKeyword: boolean = /^\*\w+/gm.test(pureKeyword) && !keyword;
 			const notFoundApiKeyword: boolean = !!rootKeyword && !!match?.groups?.['anchor'] && !keyword;
 
 			if (inlineLink && (notFoundGuideKeyword || notFoundApiKeyword)) {
@@ -95,7 +96,7 @@ function getNodes(
 			// Convert code tag to link if it's a link to the page entity
 			if (inlineLink && keyword?.isCodeLink === false) {
 				parent.tagName = 'a';
-				parent.properties = {href: keyword.path};
+				parent.properties = {href: `${keyword.path}${match?.groups?.['queryParams'] ?? ''}`};
 
 				return {type: 'text', value: keyword.title};
 			} else if (inlineLink && keyword && parent.properties) {

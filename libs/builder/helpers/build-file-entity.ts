@@ -2,7 +2,7 @@ import {escapeRegexp} from '@ng-doc/core';
 import * as esbuild from 'esbuild';
 import {minimatch} from 'minimatch';
 import * as path from 'path';
-import {ObjectLiteralExpression, SourceFile} from 'ts-morph';
+import {Node,ObjectLiteralExpression, SourceFile} from 'ts-morph';
 
 import {CACHE_PATH, PAGE_PATTERN} from '../engine';
 import {getObjectExpressionFromDefault} from './typescript';
@@ -23,7 +23,6 @@ export async function buildFileEntity(sourceFile: SourceFile, tsconfig: string, 
 	 * Remove `imports`, `providers`, `demos` and `playgrounds` properties from the default export
 	 * if the file is a page. This is done to prevent compiling the page dependencies
 	 * that are not needed for the NgDoc builder to work or may cause performance issues.
-	 *
 	 */
 	if (minimatch(p, PAGE_PATTERN)) {
 		const objectLiteralExpression: ObjectLiteralExpression | undefined = getObjectExpressionFromDefault(sourceFile);
@@ -35,7 +34,23 @@ export async function buildFileEntity(sourceFile: SourceFile, tsconfig: string, 
 			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('imports')?.getText() ?? '');
 			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('providers')?.getText() ?? '');
 			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('demos')?.getText() ?? '');
-			code = replaceCodeProperty(code, objectLiteralExpression.getProperty('playgrounds')?.getText() ?? '');
+			code = removePlaygroundTarget(code, objectLiteralExpression);
+
+			if (objectLiteralExpression.getProperty('route')) {
+				const route = objectLiteralExpression.getProperty('route')
+
+				if (Node.isPropertyAssignment(route)) {
+					const routeValue = route.getInitializer();
+
+					if (Node.isObjectLiteralExpression(routeValue)) {
+						routeValue.getProperties().forEach((prop) => {
+							if (Node.isPropertyAssignment(prop) && prop.getName() !== 'path') {
+								code = replaceCodeProperty(code, prop.getText());
+							}
+						})
+					}
+				}
+			}
 		}
 	}
 
@@ -57,6 +72,39 @@ export async function buildFileEntity(sourceFile: SourceFile, tsconfig: string, 
 	await sourceFile.refreshFromFileSystem();
 
 	return outPath;
+}
+
+/**
+ *
+ * @param code
+ * @param objectLiteralExpression
+ */
+function removePlaygroundTarget(code: string, objectLiteralExpression: ObjectLiteralExpression): string {
+	// List of properties that should not be removed
+	const keepProperties: string[] = ['controls'];
+	const playgrounds = objectLiteralExpression.getProperty('playgrounds');
+
+	if (Node.isPropertyAssignment(playgrounds)) {
+		const playgroundsValue = playgrounds.getInitializer();
+
+		if (Node.isObjectLiteralExpression(playgroundsValue)) {
+			playgroundsValue.getProperties().forEach((prop) => {
+				if (Node.isPropertyAssignment(prop)) {
+					const playground = prop.getInitializer();
+
+					if (Node.isObjectLiteralExpression(playground)) {
+						playground.getProperties().forEach((playgroundProp) => {
+							if (Node.isPropertyAssignment(playgroundProp) && !keepProperties.includes(playgroundProp.getName())) {
+								code = replaceCodeProperty(code, playgroundProp.getText());
+							}
+						})
+					}
+				}
+			})
+		}
+	}
+
+	return code;
 }
 
 /**

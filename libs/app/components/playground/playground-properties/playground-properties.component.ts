@@ -1,4 +1,4 @@
-import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
+import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
 import {AsyncPipe, KeyValuePipe, NgFor, NgIf} from '@angular/common';
 import {
 	ChangeDetectionStrategy,
@@ -21,14 +21,14 @@ import {
 	NgDocBindPipe,
 	NgDocButtonComponent,
 	NgDocCheckboxComponent,
+	NgDocExecutePipe,
 	NgDocIconComponent,
-	NgDocRunPipe,
 	NgDocTextComponent,
 	NgDocTextRightDirective,
 	NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
 import {Observable} from 'rxjs';
-import {pluck} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 
 import {NgDocPlaygroundForm} from '../playground-form';
 import {NgDocPlaygroundPropertyComponent} from '../playground-property/playground-property.component';
@@ -54,14 +54,13 @@ import {NgDocPlaygroundPropertyControl} from '../playground-property-control';
 		AsyncPipe,
 		KeyValuePipe,
 		NgDocBindPipe,
-		NgDocRunPipe,
+		NgDocExecutePipe,
 	],
 })
 export class NgDocPlaygroundPropertiesComponent<
 	P extends NgDocPlaygroundProperties,
 	C extends Record<string, NgDocPlaygroundContent>,
-> implements OnChanges
-{
+> implements OnChanges {
 	@Input()
 	form!: FormGroup<NgDocPlaygroundForm>;
 
@@ -69,7 +68,16 @@ export class NgDocPlaygroundPropertiesComponent<
 	properties?: P;
 
 	@Input()
+	ignoreInputs?: string[] = [];
+
+	@Input()
 	dynamicContent?: C;
+
+	@Input()
+	defaultValues?: Record<string, unknown>;
+
+	@Input()
+	hideSidePanel: boolean = false;
 
 	@Input()
 	recreateDemo: boolean = false;
@@ -87,12 +95,15 @@ export class NgDocPlaygroundPropertiesComponent<
 	protected contentTypeControl?: NgDocProvidedTypeControl = this.getControlForType('boolean');
 
 	constructor(protected readonly breakpointObserver: BreakpointObserver, private injector: Injector) {
-		this.observer = this.breakpointObserver.observe(this.breakpoints).pipe(pluck('matches'));
+		this.observer = this.breakpointObserver
+			.observe(this.breakpoints)
+			.pipe(map((state: BreakpointState) => state.matches));
 	}
 
 	ngOnChanges({properties}: SimpleChanges): void {
 		if (properties && this.properties) {
 			this.propertyControls = objectKeys(this.properties)
+				.filter((key: keyof P) => this.ignoreInputs?.includes(String(key)) !== true)
 				.map((key: keyof P) => {
 					if (this.properties) {
 						const property: NgDocPlaygroundProperty = this.properties[key];

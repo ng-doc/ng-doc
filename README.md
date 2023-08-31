@@ -1,8 +1,3 @@
-[![GitHub Workflow Status][build-shield]][build-url]
-[![NPM][npm-shield]][npm-url]
-[![MIT License][license-shield]][license-url]
-
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -10,17 +5,20 @@
     <img src="https://ng-doc.com/assets/images/ng-doc.svg?raw=true" alt="Logo" height="150px">
   </a>
 
-<h3 align="center">NgDoc</h3>
-
+<h1 align="center" style="margin-bottom: 0; border-bottom: 0">NgDoc</h1>
   <p align="center">
     Create user-friendly documentation for your projects with ease!
     <br />
-    <a href="https://ng-doc.com/"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/ng-doc/ng-doc/issues">Report Bug</a>
+    <a href="https://ng-doc.com/">Documentation</a>
     ·
-    <a href="https://github.com/ng-doc/ng-doc/issues">Request Feature</a>
+    <a href="https://github.com/ng-doc/ng-doc/issues/new/choose">Report Bug</a>
+    ·
+    <a href="https://github.com/ng-doc/ng-doc/issues/new/choose">Request Feature</a>
+
+[![GitHub Workflow Status][build-shield]][build-url]
+[![NPM][npm-shield]][npm-url]
+[![MIT License][license-shield]][license-url]
+
   </p>
 </div>
 
@@ -48,27 +46,17 @@ NgDoc allows you to do the following things:
 
 <!-- GETTING STARTED -->
 
-## Getting Started
+## Installation
 
-### Installation
-
-> **Warning**
-> This library was created for Angular 15+ projects, it may not work with previous versions
-
-First of all you need an Angular application which will be used to render the documentation, after
-that you can install NgDoc using the command below, it will automatically install all the necessary
-packages and configure your application.
-
-```bash
-ng add @ng-doc/add
-```
+To know how to install and use NgDoc, please check our [documentation](https://ng-doc.com/).
 
 <!-- CONTRIBUTING -->
 
 ## Contributing
 
-Contributing features or bugs is currently closed, but it will soon reopen once we finish the guide that will provide
-detailed instructions on how to do it. This does not apply to documentation edits, which are still highly encouraged! :)
+Contributions are what make the open source community such an amazing place to be learn, inspire,
+and create. Any contributions you make are **greatly appreciated**. Please read the
+[Contributing Guidelines](CONTRIBUTING.md) for more information.
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

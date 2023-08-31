@@ -8,6 +8,7 @@
 		"@ng-doc/core": "0.0.0",
 		"@ng-doc/utils": "0.0.0",
 		"@angular-devkit/architect": ">=0.1600.0",
+		"@angular-devkit/build-angular": ">=16.0.0",
 		"chokidar": "3.5.3",
 		"minimatch": "9.0.1",
 		"rxjs": "^7.0.0",
@@ -22,11 +23,12 @@
 		"highlight.js": "11.5.1",
 		"esbuild": "0.17.8",
 		"@microsoft/tsdoc": "0.14.2",
-		"cosmiconfig": "8.1.0",
-		"cosmiconfig-typescript-loader": "4.3.0",
+		"cosmiconfig": "8.2.0",
+		"cosmiconfig-typescript-loader": "5.0.0",
 		"find-cache-dir": "3.3.2",
 		"tslib": "^2.3.0",
-		"ng-morph": "^2.2.3"
+		"ng-morph": "2.2.5",
+		"parsimmon": "^1.18.1"
 	},
 	"publishConfig": {
 		"access": "public"

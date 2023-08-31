@@ -1,23 +1,18 @@
-import {asArray, isPresent, NgDocEntityAnchor, NgDocPageIndex} from '@ng-doc/core';
+import {asArray, NgDocEntityAnchor} from '@ng-doc/core';
 import * as path from 'path';
-import {forkJoin, from, Observable, of} from 'rxjs';
-import {map, mapTo, switchMap, tap} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
 import {SourceFile} from 'ts-morph';
 
 import {
 	buildEntityKeyword,
 	declarationFolderName,
 	editFileInRepoUrl,
-	getPageType,
 	isSupportedDeclaration,
-	postProcessHtml,
-	processHtml,
 	slash,
 	uniqueName,
 	viewFileInRepoUrl,
 } from '../../helpers';
-import {buildIndexes} from '../../helpers/build-indexes';
-import {NgDocBuilderContext, NgDocBuildOutput, NgDocEntityKeyword} from '../../interfaces';
+import {NgDocBuilderContext, NgDocBuildResult, NgDocEntityKeyword} from '../../interfaces';
 import {NgDocSupportedDeclarations} from '../../types';
 import {NgDocEntityStore} from '../entity-store';
 import {renderTemplate} from '../nunjucks';
@@ -25,6 +20,7 @@ import {NgDocEntity} from './abstractions/entity';
 import {NgDocRouteEntity} from './abstractions/route.entity';
 import {NgDocApiScopeEntity} from './api-scope.entity';
 import {CachedEntity, NgDocCache} from './cache';
+import {fillIndexesPlugin, postProcessHtmlPlugin, processHtmlPlugin} from './plugins';
 
 @CachedEntity()
 export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
@@ -63,8 +59,10 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 		/**
 		 * Just refresh source file, we don't need to emit it
 		 */
+		this.sourceFile.refreshFromFileSystemSync();
+		this.updateDeclaration();
 
-		return from(this.sourceFile.refreshFromFileSystem()).pipe(mapTo(void 0));
+		return of(void 0);
 	}
 
 	override get title(): string {
@@ -121,56 +119,36 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 	}
 
 	protected override loadImpl(): Observable<void> {
-		this.updateDeclaration();
-
 		return of(void 0);
 	}
 
-	protected override buildImpl(): Observable<NgDocBuildOutput[]> {
-		return this.isReadyForBuild
-			? forkJoin([this.buildModule()]).pipe(map((output: Array<NgDocBuildOutput | null>) => output.filter(isPresent)))
-			: of([]);
-	}
+	override build(): Observable<NgDocBuildResult<string, this>> {
+		if (this.parent.target) {
+			const result = renderTemplate('./api-page.html.nunj', {
+				context: {
+					declaration: this.declaration,
+					scope: this.parent.target,
+				},
+			});
 
-	private buildModule(): Observable<NgDocBuildOutput> {
-		const template: string = renderTemplate('./api-page.html.nunj', {
-			context: {
-				declaration: this.declaration,
-				scope: this.parent.target,
-			},
-		});
+			return of({
+				result,
+				entity: this,
+				toBuilderOutput: async (content: string) => ({
+					content: renderTemplate('./api-page.module.ts.nunj', {
+						context: {
+							page: this,
+							pageContent: content,
+						},
+					}),
+					filePath: this.modulePath,
+				}),
+				postBuildPlugins: [processHtmlPlugin()],
+				postProcessPlugins: [postProcessHtmlPlugin(), fillIndexesPlugin()],
+			});
+		}
 
-		return of(template).pipe(
-			switchMap((output: string) => processHtml(this, output)),
-			map((output: string) => ({
-				content: output,
-				filePath: this.modulePath,
-				postProcessFn: (content: string) =>
-					from(postProcessHtml(this, content)).pipe(
-						switchMap((content: string) =>
-							from(
-								buildIndexes({
-									title: this.title,
-									content,
-									pageType: getPageType(this),
-									breadcrumbs: this.breadcrumbs,
-									route: this.fullRoute,
-								}),
-							).pipe(
-								tap((indexes: NgDocPageIndex[]) => this.indexes.push(...indexes)),
-								map(() =>
-									renderTemplate('./api-page.module.ts.nunj', {
-										context: {
-											page: this,
-											pageContent: content,
-										},
-									}),
-								),
-							),
-						),
-					),
-			})),
-		);
+		throw new Error(`The entity "${this.id}" is not loaded.`);
 	}
 
 	private updateDeclaration(): asserts this is this & {declaration: NgDocSupportedDeclarations} {

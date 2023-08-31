@@ -9,7 +9,7 @@ import {RouterModule} from "@angular/router";
 		{%- endif  %}
 		{
 			path: '',
-			title: '{{ category.title }}',
+			title: `{{ category.title | toTemplateString }}`,
 			children: [
 				{%- for child in category.builtChildren %}
 				{
@@ -25,3 +25,5 @@ import {RouterModule} from "@angular/router";
 })
 export class DynamicModule {
 }
+
+// qu

@@ -3,10 +3,10 @@ import {ngKeywordsLoader} from '@ng-doc/keywords-loaders';
 
 const NgDocConfig: NgDocConfiguration = {
 	angularBuilder: 'webpack',
-	pages: 'apps/ng-doc/src/app',
+	pages: 'apps/ng-doc/docs',
 	routePrefix: 'docs',
 	tsConfig: 'apps/ng-doc/tsconfig.app.json',
-	cache: true,
+	cache: false,
 	repoConfig: {
 		url: 'https://github.com/ng-doc/ng-doc',
 		mainBranch: 'main',
@@ -38,6 +38,10 @@ const NgDocConfig: NgDocConfiguration = {
 				title: 'NgDoc Bug Report',
 				url: 'https://github.com/ng-doc/ng-doc/issues/new?assignees=skoropadas&labels=Type%3A+Bug&projects=&template=bug_report.yaml&title=%5BBug%5D+',
 			},
+			featherIcons: {
+				title: 'Feather Icons Pack',
+				url: 'https://feathericons.com/',
+			}
 		},
 	},
 	guide: {

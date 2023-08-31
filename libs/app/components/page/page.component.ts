@@ -7,16 +7,7 @@ import {NgDocTocComponent} from '@ng-doc/app/components/toc';
 import {provideTypeControl} from '@ng-doc/app/helpers';
 import {NgDocContext, NgDocNavigation} from '@ng-doc/app/interfaces';
 import {NgDocSanitizeHtmlPipe} from '@ng-doc/app/pipes/sanitize-html';
-import {
-	NgDocBlockquoteProcessorDirective,
-	NgDocCodeProcessorDirective,
-	NgDocDemoPaneProcessorDirective,
-	NgDocDemoProcessorDirective,
-	NgDocIconProcessorDirective,
-	NgDocLinkProcessorDirective,
-	NgDocPlaygroundProcessorDirective,
-	NgDocTooltipProcessorDirective,
-} from '@ng-doc/app/processors';
+import {NgDocPageProcessorDirective} from '@ng-doc/app/processors';
 import {NG_DOC_CONTEXT} from '@ng-doc/app/tokens';
 import {
 	NgDocBooleanControlComponent,
@@ -46,21 +37,6 @@ import {
 		NgDocButtonIconComponent,
 		NgDocTooltipDirective,
 		NgDocIconComponent,
-		NgDocBlockquoteProcessorDirective,
-		NgDocIconProcessorDirective,
-		/**
-		 * The order of the directives is important.
-		 * The higher the directive is in the list, the later it will be run.
-		 *
-		 * So here we want to render demos first, after that we want to render links
-		 * and bind tooltips to them.
-		 */
-		NgDocTooltipProcessorDirective,
-		NgDocLinkProcessorDirective,
-		NgDocCodeProcessorDirective,
-		NgDocDemoProcessorDirective,
-		NgDocDemoPaneProcessorDirective,
-		NgDocPlaygroundProcessorDirective,
 		RouterLink,
 		NgDocTextComponent,
 		NgDocTextLeftDirective,
@@ -68,6 +44,7 @@ import {
 		NgDocMediaQueryDirective,
 		NgDocTocComponent,
 		NgDocSanitizeHtmlPipe,
+		NgDocPageProcessorDirective,
 	],
 	providers: [
 		provideTypeControl('NgDocTypeAlias', NgDocTypeAliasControlComponent, {order: 10}),

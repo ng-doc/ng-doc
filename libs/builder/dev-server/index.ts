@@ -19,7 +19,7 @@ export function runDevServer(options: NgDocSchema, context: BuilderContext): Obs
 
 	return (browserTarget ? from(context.getTargetOptions(browserTarget)) : of(options as unknown as any)).pipe(
 		switchMap((targetOptions: any) => {
-			const builderContext: NgDocBuilderContext = createBuilderContext(targetOptions, options, context);
+			const builderContext: NgDocBuilderContext = createBuilderContext(targetOptions, context, options.ngDoc?.config);
 			const runner: Observable<void> = buildNgDoc(builderContext).pipe(shareReplay(1));
 
 			if (builderContext.config.angularBuilder === 'esbuild') {

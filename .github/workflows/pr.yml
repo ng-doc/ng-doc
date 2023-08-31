@@ -1,0 +1,17 @@
+name: 📝 PR Checks
+
+on: [pull_request]
+
+jobs:
+    lint:
+        uses: ./.github/workflows/lint.yml
+        with:
+            base: ${{github.event.pull_request.base.ref}}
+    test:
+        uses: ./.github/workflows/test.yml
+        with:
+            base: ${{github.event.pull_request.base.ref}}
+    build:
+        uses: ./.github/workflows/build.yml
+        with:
+            base: ${{github.event.pull_request.base.ref}}

@@ -1,4 +1,4 @@
-import {escapeHtml} from '@ng-doc/core';
+import {escapeHtml, NgDocPlaygroundOptions} from '@ng-doc/core';
 import {Project} from 'ts-morph';
 
 import {NgDocActionOutput, NgDocPlaygroundMetadata} from '../../interfaces';
@@ -6,15 +6,14 @@ import {NgDocAction} from '../../types';
 import {NgDocPageEntity} from '../entities/page.entity';
 
 /**
- *	Render playground point on the page, it will be rendered by the application
+ *	Renders playground point on the page, it will be rendered by the application
  *
- * @param {string} pId - Playground id in the config
- * @param {string} sourcePath - Path to typescript file
- * @returns {NgDocAction} - The action output
+ * @param pId - Playground id in the config
+ * @param options - Options for configuring the action
  */
-export function playgroundAction(pId: string): NgDocAction {
+export function playgroundAction(pId: string, options?: NgDocPlaygroundOptions): NgDocAction {
 	return (project: Project, page: NgDocPageEntity): NgDocActionOutput => {
-		const metadata: NgDocPlaygroundMetadata | undefined = page.playgroundMetadata[pId];
+		const metadata: NgDocPlaygroundMetadata | undefined = page.playgroundEntity.metadata[pId];
 
 		if (metadata) {
 			return {
@@ -22,13 +21,12 @@ export function playgroundAction(pId: string): NgDocAction {
 							<div id="selectors">${metadata.selector ?? ''}</div>
 							<div id="pipeName">${metadata.name ?? ''}</div>
 							<div id="data">${escapeHtml(JSON.stringify(metadata.properties))}</div>
+							<div id="options">${escapeHtml(JSON.stringify(options ?? {}))}</div>
 						</ng-doc-playground>`,
 				dependencies: [metadata.class.getSourceFile().getFilePath()],
 			};
 		} else {
-			throw new Error(
-				`Metadata for playground "${pId}" not found. Make sure that you configured the playgrounds correctly.`,
-			);
+			return {output: ''};
 		}
 	};
 }

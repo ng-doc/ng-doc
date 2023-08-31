@@ -1,0 +1,29 @@
+name: NgDoc action for Node.js
+description: Setup Node.js
+
+inputs:
+    node-version:
+        description: Node.js version
+        required: false
+        default: 18.x
+
+runs:
+    using: composite
+    steps:
+        -   name: Use Node.js ${{ inputs.node-version }}
+            uses: actions/setup-node@v3
+            with:
+                node-version: ${{ inputs.node-version }}
+                cache: npm
+
+        -   name: Cache NPM dependencies
+            uses: actions/cache@v3
+            id: cache-npm-dependencies
+            with:
+                path: node_modules
+                key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+        -   name: Install Dependencies
+            if: steps.cache-npm-dependencies.outputs.cache-hit != 'true'
+            shell: bash
+            run: npm ci

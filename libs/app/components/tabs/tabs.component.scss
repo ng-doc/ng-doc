@@ -1,0 +1,14 @@
+:host {
+	display: block;
+	border-radius: var(--ng-doc-tabs-border-radius);
+	border: var(--ng-doc-tabs-border);
+	margin: var(--ng-doc-tabs-margin);
+	overflow: hidden;
+
+	--ng-doc-code-margin: 0;
+	--ng-doc-code-border-radius: 0;
+
+	ng-doc-icon {
+		margin-right: calc(var(--ng-doc-base-gutter) / 2);
+	}
+}

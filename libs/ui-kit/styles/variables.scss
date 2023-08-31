@@ -34,7 +34,7 @@
 	--ng-doc-font-weight: 500;
 	--ng-doc-code-font: 'Source Code Pro', monospace;
 	--ng-doc-code-font-size: 14px;
-	--ng-doc-code-line-height: 18px;
+	--ng-doc-code-line-height: 20px;
 	--ng-doc-code-font-weight: 600;
 	--ng-doc-code-margin: calc(var(--ng-doc-base-gutter) * 4) 0px;
 	--ng-doc-text: var(--ng-doc-base-11);
@@ -94,4 +94,9 @@
 
 	/* Sidenav */
 	--ng-doc-sidenav-width: 300px;
+
+	/* Tabs */
+	--ng-doc-tabs-margin: calc(var(--ng-doc-base-gutter) * 4) 0px;
+	--ng-doc-tabs-border: 1px solid var(--ng-doc-base-2);
+	--ng-doc-tabs-border-radius: var(--ng-doc-base-gutter)
 }

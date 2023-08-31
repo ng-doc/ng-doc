@@ -1,9 +1,8 @@
 import {Observable, OperatorFunction} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 
-import {NgDocBuildOutput, NgDocConfiguration} from '../../interfaces';
+import {NgDocBuildResult} from '../../interfaces';
 import {forkJoinOrEmpty} from '../../operators';
-import {errorHandler} from '../../operators/error-handler';
 import {NgDocEntity} from '../entities/abstractions/entity';
 import {NgDocEntityStore} from '../entity-store';
 import {buildCandidates} from '../functions/build-candidates';
@@ -13,24 +12,32 @@ import {buildCandidates} from '../functions/build-candidates';
  * keyword relationships, and returns the built artifacts.
  *
  * @param store - The entity store.
- * @param config - The NgDoc configuration.
  * @param additionalEntities - Additional entities to build.
  */
 export function build(
 	store: NgDocEntityStore,
-	config: NgDocConfiguration,
 	...additionalEntities: NgDocEntity[]
-): OperatorFunction<NgDocEntity[], NgDocBuildOutput[]> {
+): OperatorFunction<NgDocEntity[], NgDocBuildResult[]> {
 	return (source: Observable<NgDocEntity[]>) =>
 		source.pipe(
 			map((entities: NgDocEntity[]) => buildCandidates(store, entities).filter((e: NgDocEntity) => e.isReadyForBuild)),
 			switchMap((entities: NgDocEntity[]) =>
-				forkJoinOrEmpty(entities.map((e: NgDocEntity) => e.build().pipe(errorHandler([])))),
-			),
-			switchMap((output: NgDocBuildOutput[][]) =>
-				forkJoinOrEmpty(additionalEntities.map((e: NgDocEntity) => e.build())).pipe(
-					map((additionalOutput: NgDocBuildOutput[][]) => [...output, ...additionalOutput].flat()),
+				forkJoinOrEmpty(
+					entities.map((e: NgDocEntity) => {
+						e.beforeBuild();
+
+						return e.build();
+					}),
 				),
+			),
+			switchMap((output: NgDocBuildResult[]) =>
+				forkJoinOrEmpty(
+					buildCandidates(store, additionalEntities).map((e: NgDocEntity) => {
+						e.beforeBuild();
+
+						return e.build();
+					}),
+				).pipe(map((additionalOutput: NgDocBuildResult[]) => output.concat(additionalOutput).flat())),
 			),
 		);
 }
