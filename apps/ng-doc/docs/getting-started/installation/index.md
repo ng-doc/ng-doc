@@ -197,10 +197,9 @@ the generated files and `allowSyntheticDefaultImports` option.
 }
 ```
 
-### Importing global modules
+### Configuring application
 
-Import the global library-provided modules into your application's root `AppModule`,
-and add `NgDocDefaultSearchEngine` to the providers section to enable search.
+Provide default configuration for the documentation app.
 
 ```typescript name="Stnadalone APP (main.ts)" group="imports"
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
