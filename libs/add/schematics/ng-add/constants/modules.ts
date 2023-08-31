@@ -17,6 +17,10 @@ export interface AppImports {
 
 export const NG_DOC_COMPONENT_IMPORTS: ImportConstant[] = [
 	{
+		initializer: 'NgDocRootComponent',
+		imports: [{ name: 'NgDocRootComponent', path: '@ng-doc/app' }],
+	},
+	{
 		initializer: 'NgDocNavbarComponent',
 		imports: [{ name: 'NgDocNavbarComponent', path: '@ng-doc/app' }],
 	},

@@ -145,13 +145,13 @@ import { AppComponent } from './app/app.component';
 		const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
 		expect(tree.readContent('test/app/app.component.ts'))
-			.toEqual(`import { NgDocNavbarComponent, NgDocSidebarComponent } from "@ng-doc/app";
+			.toEqual(`import { NgDocRootComponent, NgDocNavbarComponent, NgDocSidebarComponent } from "@ng-doc/app";
 import { Component } from '@angular/core';
 
 @Component({
 \ttemplateUrl: './app.template.html',
 \tstandalone: true,
-    imports: [NgDocNavbarComponent, NgDocSidebarComponent]
+    imports: [NgDocRootComponent, NgDocNavbarComponent, NgDocSidebarComponent]
 })
 export class AppComponent {}`);
 	});
