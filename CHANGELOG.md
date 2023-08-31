@@ -1,3 +1,24 @@
+# [16.13.0](https://github.com/ng-doc/ng-doc/compare/v16.12.1...v16.13.0) (2023-08-31)
+
+
+### Bug Fixes
+
+* **add:** schematic doesn't import `NgDocRootComponent` component ([c07b389](https://github.com/ng-doc/ng-doc/commit/c07b3894458da69f94922866fdceac72cd5564ec))
+* **add:** schematic doesn't provide `provideNgDocApp` configuration ([6d698d7](https://github.com/ng-doc/ng-doc/commit/6d698d77ce93ddc8c909366861d716b90a38e683))
+* **builder:** ESM page compilation ([#100](https://github.com/ng-doc/ng-doc/issues/100)) ([3a4b36a](https://github.com/ng-doc/ng-doc/commit/3a4b36ad676974b904519e7f6d70c5e5b83b308e))
+
+
+### Features
+
+* **project:** page layout components (page navigation, breadcrumbs, table of content) can be replaced with your own. Project was converted to standalone ([#101](https://github.com/ng-doc/ng-doc/issues/101)) ([d7aad28](https://github.com/ng-doc/ng-doc/commit/d7aad2899216490c6a1a0de64d09b10dfa3ebf15)), closes [#88](https://github.com/ng-doc/ng-doc/issues/88) [#66](https://github.com/ng-doc/ng-doc/issues/66)
+* **styles:** change margin of various page blocks to improve spacing and readability, add `--ng-doc-page-block-margin` variable that can be used to change it globally ([1441f89](https://github.com/ng-doc/ng-doc/commit/1441f8908bb2ddcdc41938280fea40d8d7f05f42))
+
+
+### BREAKING CHANGES
+
+* **project:** All modules were removed, you should use provider
+functions instead. Please read the "Migration" article to know more.
+
 ## [16.12.1](https://github.com/ng-doc/ng-doc/compare/v16.12.0...v16.12.1) (2023-08-24)
 
 
