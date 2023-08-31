@@ -1,0 +1,16 @@
+<div class="ng-doc-navigation-controls">
+	<a class="ng-doc-prev-page" *ngIf="prevPage" [routerLink]="prevPage.route">
+		<div class="ng-doc-navigation-page-label" ng-doc-text size="small">
+			<ng-doc-icon icon="arrow-left" ngDocTextLeft></ng-doc-icon>
+			Previous
+		</div>
+		<div class="ng-doc-navigation-page-title" ng-doc-text>{{ prevPage.title }}</div>
+	</a>
+	<a class="ng-doc-next-page" *ngIf="nextPage" [routerLink]="nextPage.route">
+		<div class="ng-doc-navigation-page-label" ng-doc-text size="small">
+			Next
+			<ng-doc-icon icon="arrow-right" ngDocTextRight></ng-doc-icon>
+		</div>
+		<div class="ng-doc-navigation-page-title" ng-doc-text>{{ nextPage.title }}</div>
+	</a>
+</div>

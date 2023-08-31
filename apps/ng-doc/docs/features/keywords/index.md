@@ -18,7 +18,7 @@ page of this declaration.
 For example here is the block code, that uses one of types from our Ui-Kit.
 
 ```typescript
-import {NgDocSize} from './size';
+import { NgDocSize } from './size';
 
 const size: NgDocSize = 'small';
 ```
@@ -38,9 +38,9 @@ create keyword for the page, specify your preferred keyword in your page configu
 the `keyword` field.
 
 ```typescript name="ng-doc.page.ts" {8}
-import {NgDocPage} from '@ng-doc/core';
+import { NgDocPage } from '@ng-doc/core';
 
-export const MyAwesomePage: NgDocPage = {
+const MyAwesomePage: NgDocPage = {
   title: 'My Awesome Page',
   mdFile: './index.md',
   // This keyword can be used to create a link to the page
@@ -68,7 +68,7 @@ to create such links you can use global keywords that can be declared in the con
 you can read about it in the `*GettingStartedConfiguration` article.
 
 ```typescript name="ng-doc.config.ts"
-import {NgDocConfiguration} from '@ng-doc/builder';
+import { NgDocConfiguration } from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
   keywords: {

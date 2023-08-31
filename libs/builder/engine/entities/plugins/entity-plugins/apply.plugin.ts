@@ -1,7 +1,7 @@
-import {objectKeys} from '@ng-doc/core';
+import { objectKeys } from '@ng-doc/core';
 
-import {NgDocEntity} from '../../abstractions/entity';
-import {NgDocEntityPlugin} from '../types';
+import { NgDocEntity } from '../../abstractions/entity';
+import { NgDocEntityPlugin } from '../types';
 
 type ApplyFn<T, TEntity extends NgDocEntity> = (data: T, entity: TEntity) => Promise<T>;
 type TransformFn<T, R, TEntity extends NgDocEntity> = (
@@ -9,6 +9,7 @@ type TransformFn<T, R, TEntity extends NgDocEntity> = (
 	apply: ApplyFn<R, TEntity>,
 	entity: TEntity,
 ) => Promise<T>;
+
 /**
  *
  * @param fn
@@ -53,7 +54,11 @@ export function forArrayItems<T, TEntity extends NgDocEntity>(): TransformFn<T[]
 /**
  *
  */
-export function forObjectValues<T, K extends keyof T, TEntity extends NgDocEntity>(): TransformFn<T, T[K], TEntity> {
+export function forObjectValues<T, K extends keyof T, TEntity extends NgDocEntity>(): TransformFn<
+	T,
+	T[K],
+	TEntity
+> {
 	return async (data: T, apply: ApplyFn<T[K], TEntity>, entity: TEntity): Promise<T> => {
 		const keys: K[] = objectKeys(data as object) as K[];
 

@@ -1,5 +1,9 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {NgDocPaneBackDirective, NgDocPaneComponent, NgDocPaneFrontDirective} from '@ng-doc/ui-kit';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  NgDocPaneBackDirective,
+  NgDocPaneComponent,
+  NgDocPaneFrontDirective,
+} from '@ng-doc/ui-kit';
 
 @Component({
   selector: 'ng-doc-develop-demo',

@@ -17,7 +17,7 @@
 			&:before {
 				position: relative;
 				display: block;
-				content: "";
+				content: '';
 				width: 0;
 				height: 0;
 				border: 8px solid transparent;
@@ -26,7 +26,7 @@
 			&:after {
 				position: absolute;
 				display: block;
-				content: "";
+				content: '';
 				width: 0;
 				height: 0;
 				border: 7px solid transparent;
@@ -42,8 +42,8 @@
 }
 
 /* Vertical positioning */
-:host[data-ng-doc-overlay-position="top"],
-:host[data-ng-doc-overlay-position="bottom"] {
+:host[data-ng-doc-overlay-position='top'],
+:host[data-ng-doc-overlay-position='bottom'] {
 	.ng-doc-overlay-pointer-wrapper {
 		min-width: calc(var(--ng-doc-base-gutter) * 4);
 	}
@@ -69,7 +69,7 @@
 	}
 }
 
-:host[data-ng-doc-overlay-position="top"] {
+:host[data-ng-doc-overlay-position='top'] {
 	.ng-doc-overlay-pointer-wrapper {
 		flex-direction: column-reverse;
 	}
@@ -79,7 +79,7 @@
 	}
 }
 
-:host[data-ng-doc-overlay-align="left"] {
+:host[data-ng-doc-overlay-align='left'] {
 	.ng-doc-overlay-pointer {
 		justify-content: flex-start;
 
@@ -89,7 +89,7 @@
 	}
 }
 
-:host[data-ng-doc-overlay-align="right"] {
+:host[data-ng-doc-overlay-align='right'] {
 	.ng-doc-overlay-pointer {
 		justify-content: flex-end;
 
@@ -100,8 +100,8 @@
 }
 
 /* Horizontal positioning */
-:host[data-ng-doc-overlay-position="left"],
-:host[data-ng-doc-overlay-position="right"] {
+:host[data-ng-doc-overlay-position='left'],
+:host[data-ng-doc-overlay-position='right'] {
 	.ng-doc-overlay-pointer-wrapper {
 		flex-direction: row;
 		min-height: calc(var(--ng-doc-base-gutter) * 4);
@@ -126,7 +126,7 @@
 	}
 }
 
-:host[data-ng-doc-overlay-position="left"] {
+:host[data-ng-doc-overlay-position='left'] {
 	.ng-doc-overlay-pointer-wrapper {
 		flex-direction: row-reverse;
 	}
@@ -136,7 +136,7 @@
 	}
 }
 
-:host[data-ng-doc-overlay-align="top"] {
+:host[data-ng-doc-overlay-align='top'] {
 	.ng-doc-overlay-pointer {
 		align-items: flex-start;
 
@@ -146,7 +146,7 @@
 	}
 }
 
-:host[data-ng-doc-overlay-align="bottom"] {
+:host[data-ng-doc-overlay-align='bottom'] {
 	.ng-doc-overlay-pointer {
 		align-items: flex-end;
 

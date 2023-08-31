@@ -1,4 +1,3 @@
-
 @import '../../styles/palette/palette';
 @import '../../styles/mixins';
 
@@ -11,7 +10,10 @@
 	border: 0;
 	cursor: pointer;
 	border-radius: calc(var(--ng-doc-base-gutter) / 2);
-	padding: var(--ng-doc-button-padding, var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2));
+	padding: var(
+		--ng-doc-button-padding,
+		var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2)
+	);
 	background-color: var(--ng-doc-button-background);
 	text-decoration: none;
 	--ng-doc-text: var(--ng-doc-button-color);

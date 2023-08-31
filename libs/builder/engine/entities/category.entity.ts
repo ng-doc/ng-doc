@@ -1,15 +1,15 @@
-import {asArray, isPresent, NgDocCategory} from '@ng-doc/core';
+import { asArray, isPresent, NgDocCategory } from '@ng-doc/core';
 import * as path from 'path';
-import {Observable, of} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
-import {isCategoryEntity, isPageEntity} from '../../helpers';
-import {NgDocBuildResult, NgDocEntityKeyword} from '../../interfaces';
-import {renderTemplate} from '../nunjucks';
-import {NgDocEntity} from './abstractions/entity';
-import {NgDocNavigationEntity} from './abstractions/navigation.entity';
-import {CachedEntity} from './cache/decorators';
-import {NgDocPageEntity} from './page.entity';
+import { isCategoryEntity, isPageEntity } from '../../helpers';
+import { NgDocBuildResult, NgDocEntityKeyword } from '../../interfaces';
+import { renderTemplate } from '../nunjucks';
+import { NgDocEntity } from './abstractions/entity';
+import { NgDocNavigationEntity } from './abstractions/navigation.entity';
+import { CachedEntity } from './cache/decorators';
+import { NgDocPageEntity } from './page.entity';
 
 @CachedEntity()
 export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
@@ -33,7 +33,9 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 	override get canBeBuilt(): boolean {
 		return isPresent(this.target)
 			? !this.target.onlyForTags ||
-					asArray(this.target.onlyForTags).includes(this.context.context.target?.configuration ?? '')
+					asArray(this.target.onlyForTags).includes(
+						this.context.context.target?.configuration ?? '',
+					)
 			: true;
 	}
 
@@ -90,7 +92,7 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 	}
 
 	override build(): Observable<NgDocBuildResult<string>> {
-		const result: string = renderTemplate('./category.module.ts.nunj', {
+		const result: string = renderTemplate('./category.ts.nunj', {
 			context: {
 				category: this,
 			},
@@ -99,7 +101,7 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 		return of({
 			result,
 			entity: this,
-			toBuilderOutput: async (content: string) => ({content, filePath: this.modulePath}),
+			toBuilderOutput: async (content: string) => ({ content, filePath: this.modulePath }),
 		});
 	}
 }

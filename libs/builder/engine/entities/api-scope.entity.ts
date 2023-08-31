@@ -1,22 +1,23 @@
-import {asArray, NgDocApiScope} from '@ng-doc/core';
-import {Observable, of} from 'rxjs';
-import {SourceFile} from 'ts-morph';
+import { asArray, NgDocApiScope } from '@ng-doc/core';
+import { Observable, of } from 'rxjs';
+import { SourceFile } from 'ts-morph';
 
-import {isPageEntity, uniqueName} from '../../helpers';
-import {NgDocBuilderContext, NgDocBuildResult, NgDocEntityKeyword} from '../../interfaces';
-import {NgDocEntityStore} from '../entity-store';
-import {renderTemplate} from '../nunjucks';
-import {NgDocEntity} from './abstractions/entity';
-import {NgDocRouteEntity} from './abstractions/route.entity';
-import {NgDocApiEntity} from './api.entity';
-import {NgDocCache} from './cache';
-import {CachedEntity} from './cache/decorators';
-import {NgDocPageEntity} from './page.entity';
+import { isPageEntity, uniqueName } from '../../helpers';
+import { NgDocBuilderContext, NgDocBuildResult, NgDocEntityKeyword } from '../../interfaces';
+import { NgDocEntityStore } from '../entity-store';
+import { renderTemplate } from '../nunjucks';
+import { NgDocEntity } from './abstractions/entity';
+import { NgDocRouteEntity } from './abstractions/route.entity';
+import { NgDocApiEntity } from './api.entity';
+import { NgDocCache } from './cache';
+import { CachedEntity } from './cache/decorators';
+import { NgDocPageEntity } from './page.entity';
 
 @CachedEntity()
 export class NgDocApiScopeEntity extends NgDocRouteEntity<NgDocApiScope> {
 	override readonly physical: boolean = false;
 	override id: string = uniqueName(`${this.sourceFilePath}#${this.target.route}`);
+
 	constructor(
 		override readonly store: NgDocEntityStore,
 		override readonly cache: NgDocCache,
@@ -93,7 +94,7 @@ export class NgDocApiScopeEntity extends NgDocRouteEntity<NgDocApiScope> {
 
 	override build(): Observable<NgDocBuildResult<string>> {
 		if (this.target) {
-			const result = renderTemplate('./api-scope.module.ts.nunj', {
+			const result = renderTemplate('./api-scope.ts.nunj', {
 				context: {
 					scope: this,
 				},

@@ -1,10 +1,11 @@
 :host {
 	display: block;
-	height: var(--ng-doc-demo-pain-height);
+	height: var(--ng-doc-demo-pane-height);
+	margin: var(--ng-doc-demo-pane-margin);
 
 	--ng-doc-code-margin: 0;
 	--ng-doc-code-border-radius: 0;
-	--ng-doc-smooth-resize-height: var(--ng-doc-demo-pain-height);
+	--ng-doc-smooth-resize-height: var(--ng-doc-demo-pane-height);
 	--ng-doc-smooth-resize-max-height: 100%;
 
 	ng-doc-tab-group,

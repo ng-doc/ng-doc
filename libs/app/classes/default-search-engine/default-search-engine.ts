@@ -1,11 +1,11 @@
-import {NgDocSearchEngine} from '@ng-doc/app/classes/search-engine';
-import {NgDocSearchResult} from '@ng-doc/app/interfaces';
-import {asArray} from '@ng-doc/core/helpers/as-array';
-import {objectKeys} from '@ng-doc/core/helpers/object-keys';
-import {NgDocPageIndex} from '@ng-doc/core/interfaces';
-import {NgDocHighlightPosition} from '@ng-doc/ui-kit';
-import {create, insertMultiple, Orama} from '@orama/orama';
-import {Document} from '@orama/orama/dist/types';
+import { NgDocSearchEngine } from '@ng-doc/app/classes/search-engine';
+import { NgDocSearchResult } from '@ng-doc/app/interfaces';
+import { asArray } from '@ng-doc/core/helpers/as-array';
+import { objectKeys } from '@ng-doc/core/helpers/object-keys';
+import { NgDocPageIndex } from '@ng-doc/core/interfaces';
+import { NgDocHighlightPosition } from '@ng-doc/ui-kit';
+import { create, insertMultiple, Orama } from '@orama/orama';
+import { Document } from '@orama/orama/dist/types';
 import {
 	afterInsert,
 	OramaWithHighlight,
@@ -13,8 +13,8 @@ import {
 	searchWithHighlight,
 } from '@orama/plugin-match-highlight';
 import * as stemmer from '@orama/stemmers';
-import {from, Observable} from 'rxjs';
-import {map, shareReplay, switchMap} from 'rxjs/operators';
+import { from, Observable } from 'rxjs';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 
 /**
  * Options for the `NgDocDefaultSearchEngine`.
@@ -45,7 +45,6 @@ interface SearchSchema extends Document {
 	content: 'string';
 }
 
-
 /**
  * Search engine for the documentation, it loads the index and provides a search method.
  */
@@ -64,7 +63,7 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 				components: {
 					afterInsert: [afterInsert],
 					tokenizer: {
-						stemmer: options?.stemmer
+						stemmer: options?.stemmer,
 					},
 				},
 			}),
@@ -92,7 +91,7 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 			switchMap((db: OramaWithHighlight) =>
 				searchWithHighlight(db, {
 					term: query,
-					boost: {title: 4, section: 2},
+					boost: { title: 4, section: 2 },
 					properties: ['section', 'content'],
 					tolerance: this.options?.tolerance,
 					exact: this.options?.exact,
@@ -101,20 +100,28 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 			),
 			map((result: SearchResultWithHighlight) =>
 				result.hits.map((hit: SearchResultWithHighlight['hits'][0]) => {
-					const keys: Array<keyof NgDocPageIndex> = objectKeys(hit.positions) as unknown as Array<keyof NgDocPageIndex>;
+					const keys: Array<keyof NgDocPageIndex> = objectKeys(hit.positions) as unknown as Array<
+						keyof NgDocPageIndex
+					>;
 
 					return {
 						index: hit.document as unknown as NgDocPageIndex,
-						positions: keys.reduce((acc: Record<keyof NgDocPageIndex, NgDocHighlightPosition[]>, key: keyof NgDocPageIndex) => {
-							// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-							// @ts-ignore
-							acc[key] = [...asArray(acc[key]), ...Object.values(hit.positions[key]).flat()];
+						positions: keys.reduce(
+							(
+								acc: Record<keyof NgDocPageIndex, NgDocHighlightPosition[]>,
+								key: keyof NgDocPageIndex,
+							) => {
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore
+								acc[key] = [...asArray(acc[key]), ...Object.values(hit.positions[key]).flat()];
 
-							return acc;
-						}, {} as any) as Partial<Record<keyof NgDocPageIndex, NgDocHighlightPosition[]>>,
-					}
-				})
-			)
+								return acc;
+							},
+							{} as any,
+						) as Partial<Record<keyof NgDocPageIndex, NgDocHighlightPosition[]>>,
+					};
+				}),
+			),
 		);
 	}
 

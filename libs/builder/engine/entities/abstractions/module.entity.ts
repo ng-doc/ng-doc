@@ -1,8 +1,8 @@
 import * as path from 'path';
 
-import {slash} from '../../../helpers';
-import {CachedFilesGetter} from '../cache';
-import {NgDocFileEntity} from './file.entity';
+import { slash } from '../../../helpers';
+import { CachedFilesGetter } from '../cache';
+import { NgDocFileEntity } from './file.entity';
 
 export abstract class NgDocModuleEntity<TTarget> extends NgDocFileEntity<TTarget> {
 	/**
@@ -30,13 +30,17 @@ export abstract class NgDocModuleEntity<TTarget> extends NgDocFileEntity<TTarget
 	get modulePath(): string {
 		return path.join(this.folderPath, this.moduleFileName);
 	}
+
 	/**
 	 * Returns relative paths to the module in generated folder that could be used for import
 	 *
 	 * @type {string}
 	 */
 	get moduleImport(): string {
-		return slash(path.relative(this.context.context.workspaceRoot, this.modulePath)).replace(/.ts$/, '');
+		return slash(path.relative(this.context.context.workspaceRoot, this.modulePath)).replace(
+			/.ts$/,
+			'',
+		);
 	}
 
 	override destroy(): void {

@@ -7,8 +7,8 @@ import {
 	Input,
 	ViewChild,
 } from '@angular/core';
-import {NgDocPageProcessor} from '@ng-doc/app/interfaces';
-import {NgDocTooltipDirective} from '@ng-doc/ui-kit';
+import { NgDocPageProcessor } from '@ng-doc/app/interfaces';
+import { NgDocTooltipDirective } from '@ng-doc/ui-kit';
 
 @Component({
 	selector: 'ng-doc-tooltip-wrapper',
@@ -18,8 +18,7 @@ import {NgDocTooltipDirective} from '@ng-doc/ui-kit';
 			[ngDocTooltip]="content ?? ''"
 			[displayOrigin]="tooltipElement ?? contentProjection"
 			[pointerOrigin]="tooltipElement ?? contentProjection"
-			#contentProjection
-		>
+			#contentProjection>
 			<ng-content></ng-content>
 		</div>
 	`,
@@ -40,14 +39,15 @@ class NgDocTooltipWrapperComponent implements AfterViewInit {
 
 	protected tooltipElement: HTMLElement | null = null;
 
-	@ViewChild('contentProjection', {read: ElementRef, static: true})
+	@ViewChild('contentProjection', { read: ElementRef, static: true })
 	private contentProjection?: ElementRef<HTMLElement>;
 
 	constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
 	ngAfterViewInit(): void {
 		if (this.contentProjection) {
-			const element: Element | null = this.contentProjection.nativeElement.querySelector('[ngDocTooltip]');
+			const element: Element | null =
+				this.contentProjection.nativeElement.querySelector('[ngDocTooltip]');
 
 			this.tooltipElement = element instanceof HTMLElement ? element : null;
 

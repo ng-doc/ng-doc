@@ -56,7 +56,7 @@
 		"@orama/orama": "1.0.2",
 		"@orama/plugin-match-highlight": "1.0.2",
 		"@orama/plugin-parsedoc": "1.0.2",
-		"@orama/stemmers": "^1.0.2",
+		"@orama/stemmers": "1.0.2",
 		"@schematics/angular": "16.0.0",
 		"@stackblitz/sdk": "1.6.0",
 		"@tinkoff/ng-polymorpheus": "4.0.11",
@@ -79,7 +79,7 @@
 		"highlight.js": "11.5.1",
 		"marked": "4.0.18",
 		"minimatch": "9.0.1",
-		"ng-morph": "2.2.5",
+		"ng-morph": "4.0.0",
 		"node-fetch": "2.6.11",
 		"nunjucks": "3.2.4",
 		"parsimmon": "^1.18.1",
@@ -94,7 +94,7 @@
 		"serve": "^14.2.0",
 		"svgo": "^2.8.0",
 		"ts-morph": "18.0.0",
-		"tslib": "^2.3.0",
+		"tslib": "^2.5.3",
 		"unist-util-filter": "4.0.1",
 		"unist-util-visit": "4.1.2",
 		"zone.js": "0.13.0"
@@ -171,11 +171,5 @@
 		"typescript": "5.0.4",
 		"webpack-bundle-analyzer": "^4.7.0",
 		"yargs": "^17.5.1"
-	},
-	"lint-staged": {
-		"*": [
-			"nx affected:lint --fix --quiet=true --base=main --head=HEAD",
-			"nx format:write --base=main --head=HEAD"
-		]
 	}
 }

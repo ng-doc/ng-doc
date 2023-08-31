@@ -1,10 +1,10 @@
-import {BuilderContext} from '@angular-devkit/architect';
-import {json} from '@angular-devkit/core';
-import {asArray, NgDocStyleType} from '@ng-doc/core';
+import { BuilderContext } from '@angular-devkit/architect';
+import { json } from '@angular-devkit/core';
+import { asArray, NgDocStyleType } from '@ng-doc/core';
 import * as path from 'path';
 
-import {NgDocBuilderContext, NgDocConfiguration} from '../interfaces';
-import {loadConfig} from './load-config';
+import { NgDocBuilderContext, NgDocConfiguration } from '../interfaces';
+import { loadConfig } from './load-config';
 
 /**
  * Creates builder context, with all the necessary information for the builder to work
@@ -19,8 +19,16 @@ export function createBuilderContext(
 	configFilePath?: string,
 ): NgDocBuilderContext {
 	const projectRoot: string = path.dirname(targetOptions['main'] as string);
-	const [configPath, config]: [string, NgDocConfiguration] = loadConfig(configFilePath ?? projectRoot, !configFilePath);
-	const buildPath: string = path.join(context.workspaceRoot, config.outDir ?? '', '.ng-doc', context.target?.project ?? 'app');
+	const [configPath, config]: [string, NgDocConfiguration] = loadConfig(
+		configFilePath ?? projectRoot,
+		!configFilePath,
+	);
+	const buildPath: string = path.join(
+		context.workspaceRoot,
+		config.outDir ?? '',
+		'.ng-doc',
+		context.target?.project ?? 'app',
+	);
 
 	return {
 		tsConfig: config?.tsConfig ?? String(targetOptions['tsConfig']),

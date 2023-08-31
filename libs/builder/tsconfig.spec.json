@@ -4,10 +4,7 @@
 		"outDir": "../../dist/out-tsc",
 		"module": "commonjs",
 		"types": ["jest", "node"],
-		"lib": [
-			"es2018",
-			"dom"
-		],
+		"lib": ["es2018", "dom"],
 		"allowJs": true
 	},
 	"include": ["jest.config.ts", "**/*.test.ts", "**/*.spec.ts", "**/*.d.ts"]

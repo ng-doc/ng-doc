@@ -1,20 +1,25 @@
-import {asArray, isPresent, isRoute, NgDocEntityAnchor, NgDocPage} from '@ng-doc/core';
+import { asArray, isPresent, isRoute, NgDocEntityAnchor, NgDocPage } from '@ng-doc/core';
 import * as fs from 'fs';
 import * as path from 'path';
-import {Observable, of} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
-import {buildEntityKeyword, editFileInRepoUrl} from '../../helpers';
-import {NgDocBuildResult, NgDocEntityKeyword} from '../../interfaces';
-import {NgDocActions} from '../actions';
-import {renderTemplate} from '../nunjucks';
-import {NgDocEntity} from './abstractions/entity';
-import {NgDocNavigationEntity} from './abstractions/navigation.entity';
-import {CachedEntity, CachedFilesGetter} from './cache/decorators';
-import {NgDocCategoryEntity} from './category.entity';
-import {NgDocPageDemoEntity} from './page-demo.entity';
-import {NgDocPagePlaygroundEntity} from './page-playground.entity';
-import {fillIndexesPlugin, markdownToHtmlPlugin, postProcessHtmlPlugin, processHtmlPlugin} from './plugins';
+import { buildEntityKeyword, editFileInRepoUrl } from '../../helpers';
+import { NgDocBuildResult, NgDocEntityKeyword } from '../../interfaces';
+import { NgDocActions } from '../actions';
+import { renderTemplate } from '../nunjucks';
+import { NgDocEntity } from './abstractions/entity';
+import { NgDocNavigationEntity } from './abstractions/navigation.entity';
+import { CachedEntity, CachedFilesGetter } from './cache/decorators';
+import { NgDocCategoryEntity } from './category.entity';
+import { NgDocPageDemoEntity } from './page-demo.entity';
+import { NgDocPagePlaygroundEntity } from './page-playground.entity';
+import {
+	fillIndexesPlugin,
+	markdownToHtmlPlugin,
+	postProcessHtmlPlugin,
+	processHtmlPlugin,
+} from './plugins';
 
 @CachedEntity()
 export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
@@ -23,7 +28,9 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	override get route(): string {
 		const folderName: string = path.basename(path.dirname(this.sourceFile.getFilePath()));
 
-		return (isRoute(this.target?.route) ? this.target?.route.path : this.target?.route) ?? folderName;
+		return (
+			(isRoute(this.target?.route) ? this.target?.route.path : this.target?.route) ?? folderName
+		);
 	}
 
 	override get isRoot(): boolean {
@@ -40,7 +47,11 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 
 	override get editSourceFileUrl(): string | undefined {
 		if (this.context.config.repoConfig) {
-			return editFileInRepoUrl(this.context.config.repoConfig, this.mdPath, this.route.toLowerCase());
+			return editFileInRepoUrl(
+				this.context.config.repoConfig,
+				this.mdPath,
+				this.route.toLowerCase(),
+			);
 		}
 		return undefined;
 	}
@@ -48,7 +59,9 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	protected override get canBeBuilt(): boolean {
 		return isPresent(this.target)
 			? !this.target.onlyForTags ||
-					asArray(this.target.onlyForTags).includes(this.context.context.target?.configuration ?? '')
+					asArray(this.target.onlyForTags).includes(
+						this.context.context.target?.configuration ?? '',
+					)
 			: true;
 	}
 
@@ -57,11 +70,13 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 	}
 
 	override get keywords(): NgDocEntityKeyword[] {
-		const rootKeywords: NgDocEntityKeyword[] = [...asArray(this.target?.keyword)].map((key: string) => ({
-			key: `*${key}`,
-			title: this.title,
-			path: this.fullRoute,
-		}));
+		const rootKeywords: NgDocEntityKeyword[] = [...asArray(this.target?.keyword)].map(
+			(key: string) => ({
+				key: `*${key}`,
+				title: this.title,
+				path: this.fullRoute,
+			}),
+		);
 
 		return [
 			...rootKeywords,
@@ -154,7 +169,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 			result,
 			entity: this,
 			toBuilderOutput: async (content: string) => ({
-				content: renderTemplate('./page.module.ts.nunj', {
+				content: renderTemplate('./page.ts.nunj', {
 					context: {
 						page: this,
 						pageContent: content,

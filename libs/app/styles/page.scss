@@ -23,16 +23,14 @@ article {
 			opacity: 0;
 			transition: var(--ng-doc-transition);
 		}
-
-
 	}
 
 	.ng-doc-page-wrapper > {
 		@include headings {
-				&:first-child {
-					margin-top: 0;
-				}
+			&:first-child {
+				margin-top: 0;
 			}
+		}
 	}
 
 	section#{$class} {
@@ -90,11 +88,5 @@ article {
 
 	pre code .ng-doc-code-anchor {
 		color: inherit;
-	}
-
-	ng-doc-demo,
-	ng-doc-demo-pane,
-	ng-doc-playground {
-		margin: calc(var(--ng-doc-base-gutter) * 4) 0;
 	}
 }

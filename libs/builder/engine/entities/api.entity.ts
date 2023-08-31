@@ -1,17 +1,17 @@
-import {asArray, NgDocApi} from '@ng-doc/core';
+import { asArray, NgDocApi } from '@ng-doc/core';
 import * as path from 'path';
-import {Observable, of} from 'rxjs';
-import {map, switchMap, tap} from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 
-import {buildFileEntity, generateApiEntities, uniqueName} from '../../helpers';
-import {NgDocBuildResult, NgDocEntityKeyword} from '../../interfaces';
-import {renderTemplate} from '../nunjucks';
-import {NgDocEntity} from './abstractions/entity';
-import {NgDocNavigationEntity} from './abstractions/navigation.entity';
-import {NgDocApiListEntity} from './api-list.entity';
-import {NgDocApiScopeEntity} from './api-scope.entity';
-import {CachedEntity} from './cache/decorators';
-import {NgDocCategoryEntity} from './category.entity';
+import { buildFileEntity, generateApiEntities, uniqueName } from '../../helpers';
+import { NgDocBuildResult, NgDocEntityKeyword } from '../../interfaces';
+import { renderTemplate } from '../nunjucks';
+import { NgDocEntity } from './abstractions/entity';
+import { NgDocNavigationEntity } from './abstractions/navigation.entity';
+import { NgDocApiListEntity } from './api-list.entity';
+import { NgDocApiScopeEntity } from './api-scope.entity';
+import { CachedEntity } from './cache/decorators';
+import { NgDocCategoryEntity } from './category.entity';
 
 @CachedEntity()
 export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
@@ -73,7 +73,9 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 		this.children.forEach((child: NgDocEntity) => child.destroy());
 
 		return this.refreshImpl().pipe(
-			switchMap(() => buildFileEntity(this.sourceFile, this.context.tsConfig, this.context.context.workspaceRoot)),
+			switchMap(() =>
+				buildFileEntity(this.sourceFile, this.context.tsConfig, this.context.context.workspaceRoot),
+			),
 			switchMap(() => this.loadImpl()),
 			map(() => generateApiEntities(this)),
 			map((entities: NgDocEntity[]) =>
@@ -99,7 +101,7 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 
 	override build(): Observable<NgDocBuildResult<string>> {
 		if (this.target) {
-			const result = renderTemplate('./api.module.ts.nunj', {
+			const result = renderTemplate('./api-list.ts.nunj', {
 				context: {
 					api: this,
 				},

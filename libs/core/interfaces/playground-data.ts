@@ -1,5 +1,5 @@
 /** List of playground properties, where key is't a name of property */
-export type NgDocPlaygroundProperties = Record<string, NgDocPlaygroundProperty>
+export type NgDocPlaygroundProperties = Record<string, NgDocPlaygroundProperty>;
 
 /** Playground property data */
 export interface NgDocPlaygroundProperty {

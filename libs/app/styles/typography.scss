@@ -3,6 +3,15 @@
 
 $class: $ng-doc-element;
 
+body {
+	--ng-doc-code-margin: var(--ng-doc-page-block-margin);
+	--ng-doc-blockquote-margin: var(--ng-doc-page-block-margin);
+	--ng-doc-tabs-margin: var(--ng-doc-page-block-margin);
+	--ng-doc-demo-margin: var(--ng-doc-page-block-margin);
+	--ng-doc-demo-pane-margin: var(--ng-doc-page-block-margin);
+	--ng-doc-playground-margin: var(--ng-doc-page-block-margin);
+}
+
 @mixin headings {
 	h1#{$class},
 	h2#{$class},
@@ -30,7 +39,7 @@ p#{$class} {
 
 ul#{$class},
 ol#{$class} {
-	margin: calc(var(--ng-doc-base-gutter) * 4) 0;
+	margin: var(--ng-doc-page-block-margin);
 }
 
 ul li#{$class},
@@ -49,8 +58,7 @@ ol ol#{$class} {
 
 blockquote#{$class} {
 	line-height: 1.5rem;
-	margin-top: 1.5rem;
-	margin-bottom: 1.5rem;
+	margin: var(--ng-doc-page-block-margin);
 }
 
 @include headings {
@@ -100,7 +108,7 @@ h6#{$class} {
 }
 
 pre#{$class} {
-	margin: var(--ng-doc-code-margin);
+	margin: var(--ng-doc-page-block-margin);
 
 	code#{$class} {
 		position: relative;
@@ -128,14 +136,6 @@ pre#{$class} {
 	white-space: nowrap;
 }
 
-.lead#{$class} {
-	font-size: 1.414rem;
-}
-
-.hug#{$class} {
-	margin-top: 0;
-}
-
 .ng-doc-table-wrapper {
 	overflow-x: auto;
 }
@@ -143,7 +143,7 @@ pre#{$class} {
 table#{$class} {
 	width: 100%;
 	border-spacing: 0;
-	margin: calc(var(--ng-doc-base-gutter) * 4) 0;
+	margin: var(--ng-doc-page-block-margin);
 
 	thead {
 		tr {

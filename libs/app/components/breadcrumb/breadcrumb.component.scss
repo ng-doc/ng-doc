@@ -3,13 +3,13 @@
 	align-items: center;
 	flex-wrap: wrap;
 	margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
-	opacity: .9;
+	opacity: 0.9;
 
 	.ng-doc-breadcrumb:not(:first-child) {
 		margin-right: var(--ng-doc-base-gutter);
 	}
 
 	.ng-doc-breadcrumb:not(:first-child):not(:last-child) {
-		opacity: .6;
+		opacity: 0.6;
 	}
 }

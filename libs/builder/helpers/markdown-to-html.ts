@@ -1,11 +1,11 @@
-import {NgDocCodeBlockParams, parseCodeBlockParams} from '@ng-doc/builder';
-import {escapeHtml} from '@ng-doc/core';
+import { NgDocCodeBlockParams, parseCodeBlockParams } from '@ng-doc/builder';
+import { escapeHtml } from '@ng-doc/core';
 import * as fs from 'fs';
-import {marked} from 'marked';
-import {EOL} from 'node:os';
+import { marked } from 'marked';
+import { EOL } from 'node:os';
 import * as path from 'path';
 
-import {removeLinesFromCode} from './remove-lines-from-code';
+import { removeLinesFromCode } from './remove-lines-from-code';
 
 const NOTE_ANCHOR: string = '<p><strong>Note</strong>';
 const WARNING_ANCHOR: string = '<p><strong>Warning</strong>';
@@ -19,7 +19,11 @@ const WARNING_ANCHOR: string = '<p><strong>Warning</strong>';
  * @param context
  * @param addDependency
  */
-export function markdownToHtml(markdown: string, context?: string, addDependency?: (dep: string) => void): string {
+export function markdownToHtml(
+	markdown: string,
+	context?: string,
+	addDependency?: (dep: string) => void,
+): string {
 	const renderer: marked.RendererObject = {
 		code(code: string, lang: string | undefined): string {
 			const {
@@ -52,7 +56,9 @@ export function markdownToHtml(markdown: string, context?: string, addDependency
 	      lang="${language}"
 	      name="${!group && name ? name : ''}"
 	      icon="${!group && icon ? icon : ''}"
-	      highlightedLines="${JSON.stringify(highlightedLines ?? [])}">${escapeHtml(code)}</code></pre>`;
+	      highlightedLines="${JSON.stringify(highlightedLines ?? [])}">${escapeHtml(
+				code,
+			)}</code></pre>`;
 
 			return group
 				? `<ng-doc-tab group="${group}" name="${name}" icon="${icon ?? ''}" ${
@@ -79,7 +85,7 @@ export function markdownToHtml(markdown: string, context?: string, addDependency
 		},
 	};
 
-	marked.use({renderer});
+	marked.use({ renderer });
 
-	return marked.parse(markdown, {headerIds: false});
+	return marked.parse(markdown, { headerIds: false });
 }

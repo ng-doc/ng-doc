@@ -1,7 +1,7 @@
 {% import "helpers/method.html.nunj" as method %}
 
 {% macro render(methods, originalParent) %}
-{%- for m in methods %}
-{{ method.render(m, originalParent) }}
-{% endfor -%}
+	{%- for m in methods %}
+		{{ method.render(m, originalParent) }}
+	{% endfor -%}
 {% endmacro %}

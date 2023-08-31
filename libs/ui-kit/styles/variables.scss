@@ -36,7 +36,6 @@
 	--ng-doc-code-font-size: 14px;
 	--ng-doc-code-line-height: 20px;
 	--ng-doc-code-font-weight: 600;
-	--ng-doc-code-margin: calc(var(--ng-doc-base-gutter) * 4) 0px;
 	--ng-doc-text: var(--ng-doc-base-11);
 	--ng-doc-text-inversed: var(--ng-doc-base-0);
 	--ng-doc-text-muted: var(--ng-doc-base-8);
@@ -98,5 +97,5 @@
 	/* Tabs */
 	--ng-doc-tabs-margin: calc(var(--ng-doc-base-gutter) * 4) 0px;
 	--ng-doc-tabs-border: 1px solid var(--ng-doc-base-2);
-	--ng-doc-tabs-border-radius: var(--ng-doc-base-gutter)
+	--ng-doc-tabs-border-radius: var(--ng-doc-base-gutter);
 }

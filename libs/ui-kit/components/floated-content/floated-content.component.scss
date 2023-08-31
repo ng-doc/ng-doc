@@ -6,11 +6,11 @@
 	height: 100%;
 	pointer-events: none;
 
-	&[data-ng-doc-align="left"] {
+	&[data-ng-doc-align='left'] {
 		left: 0;
 	}
 
-	&[data-ng-doc-align="right"] {
+	&[data-ng-doc-align='right'] {
 		right: 0;
 	}
 

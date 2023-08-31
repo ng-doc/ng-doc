@@ -1,11 +1,15 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgDocTypeControl} from '@ng-doc/app';
-import {EMPTY_FUNCTION} from '@ng-doc/core';
-import {NgDocInputStringDirective, NgDocInputWrapperComponent, NgDocLabelComponent} from '@ng-doc/ui-kit';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgDocTypeControl } from '@ng-doc/app';
+import { EMPTY_FUNCTION } from '@ng-doc/core';
+import {
+  NgDocInputStringDirective,
+  NgDocInputWrapperComponent,
+  NgDocLabelComponent,
+} from '@ng-doc/ui-kit';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import {FloatingCirclePosition} from '../floating-circle/floating-circle.component';
+import { FloatingCirclePosition } from '../floating-circle/floating-circle.component';
 
 @Component({
   selector: 'ng-doc-floating-circle-position-control',
@@ -22,7 +26,9 @@ import {FloatingCirclePosition} from '../floating-circle/floating-circle.compone
   ],
 })
 @UntilDestroy()
-export class FloatingCirclePositionControlComponent implements NgDocTypeControl<FloatingCirclePosition> {
+export class FloatingCirclePositionControlComponent
+  implements NgDocTypeControl<FloatingCirclePosition>
+{
   @Input()
   default: FloatingCirclePosition | undefined;
 
@@ -58,7 +64,7 @@ export class FloatingCirclePositionControlComponent implements NgDocTypeControl<
         left: null,
         ...(obj ? obj : {}),
       },
-      {emitEvent: false},
+      { emitEvent: false },
     );
   }
 }

@@ -1,6 +1,6 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {NgDocButtonComponent} from '@ng-doc/ui-kit';
-import {NgDocNotifyService} from '@ng-doc/ui-kit/services/notify';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { NgDocButtonComponent } from '@ng-doc/ui-kit';
+import { NgDocNotifyService } from '@ng-doc/ui-kit/services/notify';
 
 @Component({
   selector: 'ng-doc-button-inline-demo',

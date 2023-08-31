@@ -1,15 +1,24 @@
-import {Component, Directive, Pipe} from '@angular/core';
-import {buildPlaygroundDemoPipeTemplate, buildPlaygroundDemoTemplate, NgDocPlaygroundProperties} from '@ng-doc/core';
-import {ClassDeclaration, ObjectLiteralExpression} from 'ts-morph';
+import { Component, Directive, Pipe } from '@angular/core';
+import {
+	buildPlaygroundDemoPipeTemplate,
+	buildPlaygroundDemoTemplate,
+	NgDocPlaygroundProperties,
+} from '@ng-doc/core';
+import { ClassDeclaration, ObjectLiteralExpression } from 'ts-morph';
 
-import {NgDocPlaygroundMetadata} from '../../interfaces';
-import {getComponentDecorator, getDirectiveDecorator, getPipeDecorator, isStandalone} from '../angular';
-import {extractSelectors} from '../extract-selectors';
-import {getContentForPlayground} from './get-content-for-playground';
-import {getPlaygroundComponentInputs, getPlaygroundPipeInputs} from './get-playground-inputs';
-import {getPlaygroundTemplateInputs} from './get-playground-template-inputs';
-import {getTargetForPlayground} from './get-target-for-playground';
-import {getTemplateForPlayground} from './get-template-for-playground';
+import { NgDocPlaygroundMetadata } from '../../interfaces';
+import {
+	getComponentDecorator,
+	getDirectiveDecorator,
+	getPipeDecorator,
+	isStandalone,
+} from '../angular';
+import { extractSelectors } from '../extract-selectors';
+import { getContentForPlayground } from './get-content-for-playground';
+import { getPlaygroundComponentInputs, getPlaygroundPipeInputs } from './get-playground-inputs';
+import { getPlaygroundTemplateInputs } from './get-playground-template-inputs';
+import { getTargetForPlayground } from './get-target-for-playground';
+import { getTemplateForPlayground } from './get-template-for-playground';
 
 /**
  * Collects all the information about a playground that is needed to render and build it.
@@ -18,7 +27,11 @@ import {getTemplateForPlayground} from './get-template-for-playground';
  * @param playground - The playground object
  * @param additionalProps
  */
-export function buildPlaygroundMetadata(id: string, playground: ObjectLiteralExpression, additionalProps?: NgDocPlaygroundProperties): NgDocPlaygroundMetadata {
+export function buildPlaygroundMetadata(
+	id: string,
+	playground: ObjectLiteralExpression,
+	additionalProps?: NgDocPlaygroundProperties,
+): NgDocPlaygroundMetadata {
 	const target: ClassDeclaration | undefined = getTargetForPlayground(playground);
 
 	if (!target) {
@@ -40,7 +53,10 @@ export function buildPlaygroundMetadata(id: string, playground: ObjectLiteralExp
 
 	if ('selector' in decorator) {
 		const selector: string = decorator.selector!.replace(/[\n\s]/gm, '');
-		const properties: NgDocPlaygroundProperties = {...getPlaygroundComponentInputs(target), ...additionalProps};
+		const properties: NgDocPlaygroundProperties = {
+			...getPlaygroundComponentInputs(target),
+			...additionalProps,
+		};
 		const templateInputs: Record<string, string> = getPlaygroundTemplateInputs(properties);
 
 		return {
@@ -51,7 +67,13 @@ export function buildPlaygroundMetadata(id: string, playground: ObjectLiteralExp
 				(templateForComponents: Record<string, string>, selector: string) => {
 					return {
 						...templateForComponents,
-						[selector]: buildPlaygroundDemoTemplate(template, selector, content, templateInputs, false),
+						[selector]: buildPlaygroundDemoTemplate(
+							template,
+							selector,
+							content,
+							templateInputs,
+							false,
+						),
 					};
 				},
 				{},
@@ -69,7 +91,9 @@ export function buildPlaygroundMetadata(id: string, playground: ObjectLiteralExp
 			name,
 			standalone,
 			template,
-			templateForComponents: {[name]: buildPlaygroundDemoPipeTemplate(template, name, content, templateInputs, false)},
+			templateForComponents: {
+				[name]: buildPlaygroundDemoPipeTemplate(template, name, content, templateInputs, false),
+			},
 			class: target,
 			properties,
 			content,

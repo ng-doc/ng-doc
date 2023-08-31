@@ -1,17 +1,21 @@
 <div class="ng-doc-sidebar-category-wrapper">
 	<div class="ng-doc-sidebar-category-button" (click)="toggle()">
-		<div class="ng-doc-sidebar-category" [ngDocRouteActive]="category?.route ?? ''" activeClass="active" >
+		<div
+			class="ng-doc-sidebar-category"
+			[ngDocRouteActive]="category?.route ?? ''"
+			activeClass="active">
 			<ng-doc-dot *ngIf="!expandable"></ng-doc-dot>
-			<span
-				ng-doc-text
-				[color]="expandable ? 'normal' : 'muted'"
-			>
-				<ng-doc-icon icon="chevron-right" *ngIf="category?.expandable" [ngDocRotator]="expanded" ngDocTextLeft>
+			<span ng-doc-text [color]="expandable ? 'normal' : 'muted'">
+				<ng-doc-icon
+					icon="chevron-right"
+					*ngIf="category?.expandable"
+					[ngDocRotator]="expanded"
+					ngDocTextLeft>
 				</ng-doc-icon>
 				{{ category?.title }}
 			</span>
 		</div>
-<!--		<div ng-doc-text color="muted" size="small">Some description</div>-->
+		<!--		<div ng-doc-text color="muted" size="small">Some description</div>-->
 	</div>
 	<ng-doc-expander [expanded]="expanded" [content]="contentTemplate">
 		<ng-template #contentTemplate>
