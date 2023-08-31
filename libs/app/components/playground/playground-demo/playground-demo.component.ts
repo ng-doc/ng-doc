@@ -1,4 +1,4 @@
-import {AsyncPipe} from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -13,24 +13,25 @@ import {
 	ViewChild,
 	ViewContainerRef,
 } from '@angular/core';
-import {FormGroup} from '@angular/forms';
-import {NgDocDemoDisplayerComponent} from '@ng-doc/app/components/demo-displayer';
-import {formatHtml, getPlaygroundDemoToken} from '@ng-doc/app/helpers';
-import {NgDocFormPartialValue} from '@ng-doc/app/types';
-import {stringify} from '@ng-doc/core';
+import { FormGroup } from '@angular/forms';
+import { NgDocDemoDisplayerComponent } from '@ng-doc/app/components/demo-displayer';
+import { formatHtml } from '@ng-doc/app/helpers';
+import { getPlaygroundDemoToken } from '@ng-doc/app/providers/playground-demo';
+import { NgDocFormPartialValue } from '@ng-doc/app/types';
+import { stringify } from '@ng-doc/core';
 import {
 	buildPlaygroundDemoPipeTemplate,
 	buildPlaygroundDemoTemplate,
 } from '@ng-doc/core/helpers/build-playground-demo-template';
-import {objectKeys} from '@ng-doc/core/helpers/object-keys';
-import {NgDocPlaygroundConfig, NgDocPlaygroundProperties} from '@ng-doc/core/interfaces';
-import {NgDocLetDirective, NgDocSmoothResizeComponent} from '@ng-doc/ui-kit';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {from, Observable, of, Subject} from 'rxjs';
-import {startWith, takeUntil} from 'rxjs/operators';
+import { objectKeys } from '@ng-doc/core/helpers/object-keys';
+import { NgDocPlaygroundConfig, NgDocPlaygroundProperties } from '@ng-doc/core/interfaces';
+import { NgDocLetDirective, NgDocSmoothResizeComponent } from '@ng-doc/ui-kit';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { from, Observable, of, Subject } from 'rxjs';
+import { startWith, takeUntil } from 'rxjs/operators';
 
-import {NgDocBasePlayground} from '../base-playground';
-import {NgDocPlaygroundForm} from '../playground-form';
+import { NgDocBasePlayground } from '../base-playground';
+import { NgDocPlaygroundForm } from '../playground-form';
 
 @Component({
 	selector: 'ng-doc-playground-demo',
@@ -41,8 +42,9 @@ import {NgDocPlaygroundForm} from '../playground-form';
 	imports: [NgDocDemoDisplayerComponent, AsyncPipe, NgDocSmoothResizeComponent, NgDocLetDirective],
 })
 @UntilDestroy()
-export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties>
-	implements OnChanges, OnDestroy
+export class NgDocPlaygroundDemoComponent<
+	T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties,
+> implements OnChanges, OnDestroy
 {
 	@Input()
 	id: string = '';
@@ -68,7 +70,7 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 	@Input()
 	expanded: boolean = false;
 
-	@ViewChild('demoOutlet', {static: true, read: ViewContainerRef})
+	@ViewChild('demoOutlet', { static: true, read: ViewContainerRef })
 	demoOutlet?: ViewContainerRef;
 
 	playgroundDemo?: typeof NgDocBasePlayground;
@@ -80,19 +82,19 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 
 	constructor(private readonly injector: Injector) {}
 
-	ngOnChanges({form, id}: SimpleChanges): void {
+	ngOnChanges({ form, id }: SimpleChanges): void {
 		if (form || id) {
 			this.unsubscribe$.next();
 
-			const demoInjector: InjectionToken<Array<typeof NgDocBasePlayground>> | undefined = getPlaygroundDemoToken(
-				this.id,
-			);
+			const demoInjector: InjectionToken<Array<typeof NgDocBasePlayground>> | undefined =
+				getPlaygroundDemoToken(this.id);
 
 			if (demoInjector) {
 				const demos: Array<typeof NgDocBasePlayground> = this.injector.get(demoInjector, []);
 
 				this.playgroundDemo = demos.find(
-					(demo: typeof NgDocBasePlayground) => demo.selector === this.selector || demo.selector === this.pipeName,
+					(demo: typeof NgDocBasePlayground) =>
+						demo.selector === this.selector || demo.selector === this.pipeName,
 				);
 			}
 
@@ -121,7 +123,9 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 	private createDemo(): void {
 		if (this.playgroundDemo) {
 			this.demoRef?.destroy();
-			this.demoRef = this.demoOutlet?.createComponent(this.playgroundDemo as unknown as Type<NgDocBasePlayground>);
+			this.demoRef = this.demoOutlet?.createComponent(
+				this.playgroundDemo as unknown as Type<NgDocBasePlayground>,
+			);
 			this.demoRef?.changeDetectorRef.markForCheck();
 		}
 	}
@@ -145,7 +149,8 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 	}
 
 	private getActiveContent(): Record<string, string> {
-		const formData: Record<string, boolean> = (this.form?.controls.content.value as Record<string, boolean>) ?? {};
+		const formData: Record<string, boolean> =
+			(this.form?.controls.content.value as Record<string, boolean>) ?? {};
 
 		return objectKeys(formData).reduce((result: Record<string, string>, key: string) => {
 			result[key] = formData[key] ? this.configuration?.content?.[key].template ?? '' : '';
@@ -155,7 +160,8 @@ export class NgDocPlaygroundDemoComponent<T extends NgDocPlaygroundProperties = 
 	}
 
 	private getActiveInputs(): Record<string, string> {
-		const formData: Record<string, unknown> = (this.form?.controls.properties.value as Record<string, unknown>) ?? {};
+		const formData: Record<string, unknown> =
+			(this.form?.controls.properties.value as Record<string, unknown>) ?? {};
 
 		return objectKeys(formData).reduce((result: Record<string, string>, key: string) => {
 			const value: unknown = formData[key];

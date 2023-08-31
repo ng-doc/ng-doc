@@ -18,10 +18,10 @@ import {CommonModule} from '@angular/common';
 
 @Component({
 	selector: 'ng-doc-playground-{{ index }}',
+	standalone: true,
 	template: `
 		{{ template }}
 	`,
-	standalone: true,
 	imports: [
 		CommonModule,
 		{%- if hasImports %}
@@ -52,23 +52,14 @@ export class {{ comp.name }} extends NgDocBasePlayground {
 {%- endfor %}
 {%- endfor %}
 
-@NgModule({
-	imports: [
-		CommonModule,
-		{%- for comp in components %}
-		{{ comp.name }},
-		{%- endfor %}
-	],
-	providers: [
-		{%- for comp in components %}
-		providePlaygroundDemo('{{ comp.id }}', {{ comp.name }}),
-		{%- endfor %}
-	],
-	exports: [
-		{%- for comp in components %}
-		{{ comp.name }},
-		{%- endfor %}
-	],
-})
-export class PlaygroundsModule {
-}
+export const PLAYGROUND_COMPONENTS = [
+	{%- for comp in components %}
+	{{ comp.name }},
+	{%- endfor %}
+];
+
+export const PLAYGROUND_PROVIDERS = [
+	{%- for comp in components %}
+	providePlaygroundDemo('{{ comp.id }}', {{ comp.name }}),
+	{%- endfor %}
+];

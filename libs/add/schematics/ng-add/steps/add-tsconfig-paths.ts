@@ -1,16 +1,16 @@
-import {Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
+import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import {
 	ProjectDefinition,
 	TargetDefinition,
 	updateWorkspace,
 	WorkspaceDefinition,
 } from '@schematics/angular/utility/workspace';
-import {JSONFile} from 'ng-morph';
+import { JSONFile } from 'ng-morph';
 import * as path from 'path';
 
-import {GENERATED_PATH} from '../constants/modules';
-import {Schema} from '../schema';
-import {getProject} from '../utils/get-project';
+import { GENERATED_PATH } from '../constants/modules';
+import { Schema } from '../schema';
+import { getProject } from '../utils/get-project';
 
 /**
  *
@@ -72,7 +72,10 @@ function updateTsConfigPaths(tree: Tree, filePath: string, projectName: string):
 	const ext: string | undefined = json.get(['extends']);
 
 	if (paths || !ext) {
-		json.modify(['compilerOptions', 'paths', `${GENERATED_PATH}`], [`.ng-doc/${projectName}/index.ts`]);
+		json.modify(
+			['compilerOptions', 'paths', `${GENERATED_PATH}`],
+			[`.ng-doc/${projectName}/index.ts`],
+		);
 		json.modify(['compilerOptions', 'paths', `${GENERATED_PATH}/*`], [`.ng-doc/${projectName}/*`]);
 	} else if (ext) {
 		updateTsConfigPaths(tree, path.join(path.dirname(filePath), ext), projectName);

@@ -11,6 +11,6 @@ export async function formatHtml(html: string): Promise<string> {
 		wrap: 50,
 		markup: {
 			forceIndent: true,
-		}
+		},
 	});
 }

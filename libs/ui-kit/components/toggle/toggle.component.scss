@@ -23,13 +23,13 @@
 		}
 	}
 
-	&[data-checked="true"] {
+	&[data-checked='true'] {
 		.ng-doc-toggle-wrapper {
 			background-color: var(--ng-doc-primary);
 		}
 	}
 
-	&[data-ng-doc-dragging="true"] {
+	&[data-ng-doc-dragging='true'] {
 		cursor: grabbing;
 
 		.ng-doc-toggle-wrapper {
@@ -37,13 +37,13 @@
 		}
 	}
 
-	&[data-disabled="true"] {
+	&[data-disabled='true'] {
 		.ng-doc-toggle-wrapper {
 			background-color: var(--ng-doc-base-2);
 			cursor: unset;
 		}
 
-		&[data-checked="true"] {
+		&[data-checked='true'] {
 			.ng-doc-toggle-wrapper {
 				background-color: var(--ng-doc-base-3);
 			}

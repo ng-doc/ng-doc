@@ -1,4 +1,4 @@
-import {NgFor, NgIf} from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -9,24 +9,24 @@ import {
 	OnInit,
 	ViewChild,
 } from '@angular/core';
-import {NgDocTheme, NgDocThemeService} from '@ng-doc/app';
-import {ngDocZoneDetach} from '@ng-doc/ui-kit';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {fromEvent} from 'rxjs';
-import {debounceTime, startWith} from 'rxjs/operators';
+import { NgDocTheme, NgDocThemeService } from '@ng-doc/app';
+import { ngDocZoneDetach } from '@ng-doc/ui-kit';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { fromEvent } from 'rxjs';
+import { debounceTime, startWith } from 'rxjs/operators';
 
-import {GlowParticle} from './glow-particle';
+import { GlowParticle } from './glow-particle';
 
 const LIGHT_PALETTE = [
-	{r: 201, g: 70, b: 208}, // pink
-	{r: 45, g: 74, b: 227}, // blue
-	{r: 255, g: 255, b: 255}, // white
+	{ r: 201, g: 70, b: 208 }, // pink
+	{ r: 45, g: 74, b: 227 }, // blue
+	{ r: 255, g: 255, b: 255 }, // white
 ];
 
 const DARK_PALETTE = [
-	{r: 201, g: 70, b: 208}, // pink
-	{r: 45, g: 74, b: 227}, // blue
-	{r: 0, g: 0, b: 0}, // black
+	{ r: 201, g: 70, b: 208 }, // pink
+	{ r: 45, g: 74, b: 227 }, // blue
+	{ r: 0, g: 0, b: 0 }, // black
 ];
 
 @Component({
@@ -51,7 +51,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 	@Input()
 	showControls: boolean = false;
 
-	@ViewChild('canvas', {static: true})
+	@ViewChild('canvas', { static: true })
 	canvas!: ElementRef<HTMLCanvasElement>;
 
 	context?: CanvasRenderingContext2D | null;
@@ -91,7 +91,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 	private stageHeight: number = 0;
 	private particles: GlowParticle[] = [];
 	private animationId?: number;
-	private colors: Array<{r: number; g: number; b: number}> = LIGHT_PALETTE;
+	private colors: Array<{ r: number; g: number; b: number }> = LIGHT_PALETTE;
 
 	constructor(
 		private readonly elementRef: ElementRef<HTMLElement>,

@@ -1,4 +1,4 @@
-import {NgDocPage} from '@ng-doc/core';
+import { NgDocPage } from '@ng-doc/core';
 
 const AnotherPagePage: NgDocPage = {
 	title: `another-page`,

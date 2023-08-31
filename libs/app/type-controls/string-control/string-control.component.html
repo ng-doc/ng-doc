@@ -1,5 +1,5 @@
 <ng-doc-input-wrapper [rightContent]="rightContent" flControlSilencer>
-	<input ngDocInputString [ngModel]="model" (ngModelChange)="changeModel($event)">
+	<input ngDocInputString [ngModel]="model" (ngModelChange)="changeModel($event)" />
 	<ng-template #rightContent>
 		<button
 			ng-doc-button-icon
@@ -9,8 +9,7 @@
 			[rounded]="false"
 			(click)="updateModel(default ?? null)"
 			(focusout)="onTouched()"
-			*ngIf="model && model !== default"
-		>
+			*ngIf="model && model !== default">
 			<ng-doc-icon icon="x"></ng-doc-icon>
 		</button>
 	</ng-template>

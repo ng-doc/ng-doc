@@ -12,8 +12,7 @@
 				[over]="sidenavState?.over ?? false"
 				[align]="sidenavState?.align ?? 'left'"
 				[hasBackdrop]="sidenavState?.hasBackdrop ?? false"
-				(closeEvent)="sidebarService.hide()"
-			>
+				(closeEvent)="sidebarService.hide()">
 				<ng-template #sidebarContent>
 					<ng-content select="ng-doc-sidebar"></ng-content>
 					<ng-content select="[ngDocCustomSidebar]"></ng-content>

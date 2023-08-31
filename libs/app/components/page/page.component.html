@@ -1,13 +1,13 @@
 <article>
-	<ng-doc-breadcrumb *ngIf="rootPage.pageType === 'guide'"></ng-doc-breadcrumb>
+	<ng-container #pageBreadcrumbs></ng-container>
+
 	<div class="ng-doc-page-controls">
 		<a
 			ng-doc-button-icon
 			*ngIf="rootPage.editSourceFileUrl"
 			[href]="rootPage.editSourceFileUrl"
 			target="_blank"
-			ngDocTooltip="Suggest Edits"
-		>
+			ngDocTooltip="Suggest Edits">
 			<ng-doc-icon icon="edit-2"></ng-doc-icon>
 		</a>
 		<a
@@ -15,8 +15,7 @@
 			*ngIf="rootPage.viewSourceFileUrl"
 			[href]="rootPage.viewSourceFileUrl"
 			target="_blank"
-			ngDocTooltip="View Source"
-		>
+			ngDocTooltip="View Source">
 			<ng-doc-icon icon="code"></ng-doc-icon>
 		</a>
 	</div>
@@ -25,30 +24,9 @@
 		class="ng-doc-page-wrapper"
 		[innerHTML]="rootPage.pageContent | ngDocSanitizeHtml"
 		ngDocPageProcessor
-		#pageContainer
-	></div>
+		#pageContainer></div>
 
-	<div class="ng-doc-navigation-controls" *ngIf="rootPage.pageType === 'guide'">
-		<a class="ng-doc-prev-page" *ngIf="prevPage" [routerLink]="prevPage.route">
-			<div class="ng-doc-navigation-page-label" ng-doc-text size="small">
-				<ng-doc-icon icon="arrow-left" ngDocTextLeft></ng-doc-icon>
-				Previous
-			</div>
-			<div class="ng-doc-navigation-page-title" ng-doc-text>{{ prevPage.title }}</div>
-		</a>
-		<a class="ng-doc-next-page" *ngIf="nextPage" [routerLink]="nextPage.route">
-			<div class="ng-doc-navigation-page-label" ng-doc-text size="small">
-				Next
-				<ng-doc-icon icon="arrow-right" ngDocTextRight></ng-doc-icon>
-			</div>
-			<div class="ng-doc-navigation-page-title" ng-doc-text>{{ nextPage.title }}</div>
-		</a>
-	</div>
+	<ng-container #pageNavigation></ng-container>
 </article>
 
-<ng-template
-	[ngDocMediaQuery]="[mediaQuery.breakpoints.Large, mediaQuery.breakpoints.XLarge]"
-	#mediaQuery="ngDocMediaQuery"
->
-	<ng-doc-toc [pageContainer]="pageContainer"></ng-doc-toc>
-</ng-template>
+<ng-container #pageToc></ng-container>

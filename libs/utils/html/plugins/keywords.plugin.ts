@@ -1,12 +1,12 @@
-import {NG_DOC_ELEMENT} from '@ng-doc/core/constants/defaults.js';
-import {NgDocKeyword} from '@ng-doc/core/interfaces';
-import {Element, Text} from 'hast';
-import {isElement} from 'hast-util-is-element';
-import {toString} from 'hast-util-to-string';
-import {SKIP, visitParents} from 'unist-util-visit-parents';
+import { NG_DOC_ELEMENT } from '@ng-doc/core/constants/defaults.js';
+import { NgDocKeyword } from '@ng-doc/core/interfaces';
+import { Element, Text } from 'hast';
+import { isElement } from 'hast-util-is-element';
+import { toString } from 'hast-util-to-string';
+import { SKIP, visitParents } from 'unist-util-visit-parents';
 
-import {hasLinkAncestor, isCodeNode} from '../helpers';
-import {NgDocHtmlPostProcessorConfig} from '../html-post-processor';
+import { hasLinkAncestor, isCodeNode } from '../helpers';
+import { NgDocHtmlPostProcessorConfig } from '../html-post-processor';
 
 const languages: string[] = ['typescript', 'ts'];
 
@@ -18,7 +18,7 @@ export type GetKeyword = (keyword: string) => NgDocKeyword | undefined;
  * @param config
  */
 export default function keywordsPlugin(config: NgDocHtmlPostProcessorConfig) {
-	const {addUsedKeyword, addPotentialKeyword, getKeyword} = config;
+	const { addUsedKeyword, addPotentialKeyword, getKeyword } = config;
 
 	return (tree: Element) =>
 		visitParents(tree, 'element', (node: Element, ancestors: Element[]) => {
@@ -31,7 +31,12 @@ export default function keywordsPlugin(config: NgDocHtmlPostProcessorConfig) {
 
 			if (isInlineCode || languages.includes(lang)) {
 				visitParents(node, 'text', (node: Text, ancestors: Element[]) => {
-					if (hasLinkAncestor(ancestors) || !getKeyword || !addUsedKeyword || !addPotentialKeyword) {
+					if (
+						hasLinkAncestor(ancestors) ||
+						!getKeyword ||
+						!addUsedKeyword ||
+						!addPotentialKeyword
+					) {
 						return;
 					}
 
@@ -65,9 +70,12 @@ function getNodes(
 	config: NgDocHtmlPostProcessorConfig,
 ): Array<Element | Text> {
 	const regexp: string = '([*A-Za-z0-9_$@]+[.#]?[A-Za-z0-9_-]+(?:\\?.+)?)';
-	const KeywordRegExp: RegExp = inlineLink ? new RegExp(`^${regexp}$`, 'g') : new RegExp(regexp, 'g');
-	const keywordAnchorRegexp: RegExp = /^(?<keyword>[*A-Za-z0-9_$@]+)((?<delimiter>[.#])(?<anchor>[A-Za-z0-9_-]+))?(?<queryParams>(?:\?.+))?$/;
-	const {addUsedKeyword, addPotentialKeyword, getKeyword, raiseError} = config;
+	const KeywordRegExp: RegExp = inlineLink
+		? new RegExp(`^${regexp}$`, 'g')
+		: new RegExp(regexp, 'g');
+	const keywordAnchorRegexp: RegExp =
+		/^(?<keyword>[*A-Za-z0-9_$@]+)((?<delimiter>[.#])(?<anchor>[A-Za-z0-9_-]+))?(?<queryParams>(?:\?.+))?$/;
+	const { addUsedKeyword, addPotentialKeyword, getKeyword, raiseError } = config;
 
 	if (!getKeyword || !addUsedKeyword || !addPotentialKeyword) {
 		throw new Error('Missing config');
@@ -96,17 +104,22 @@ function getNodes(
 			// Convert code tag to link if it's a link to the page entity
 			if (inlineLink && keyword?.isCodeLink === false) {
 				parent.tagName = 'a';
-				parent.properties = {href: `${keyword.path}${match?.groups?.['queryParams'] ?? ''}`};
+				parent.properties = { href: `${keyword.path}${match?.groups?.['queryParams'] ?? ''}` };
 
-				return {type: 'text', value: keyword.title};
+				return { type: 'text', value: keyword.title };
 			} else if (inlineLink && keyword && parent.properties) {
 				parent.properties['class'] = [NG_DOC_ELEMENT, 'ng-doc-code-with-link'];
 			}
 
 			// Add link inside the code if it's a link to the API entity
 			return keyword
-				? createLinkNode(inlineLink ? keyword.title : word, keyword.path, keyword.type, keyword.description)
-				: {type: 'text', value: word};
+				? createLinkNode(
+						inlineLink ? keyword.title : word,
+						keyword.path,
+						keyword.type,
+						keyword.description,
+				  )
+				: { type: 'text', value: word };
 		});
 }
 
@@ -127,6 +140,6 @@ function createLinkNode(text: string, href: string, type?: string, description?:
 			'data-link-type': type,
 			ngDocTooltip: description,
 		},
-		children: [{type: 'text', value: text}],
+		children: [{ type: 'text', value: text }],
 	};
 }

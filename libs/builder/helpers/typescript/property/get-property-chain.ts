@@ -1,7 +1,13 @@
-import {ClassDeclaration, InterfaceDeclaration, Node, PropertyDeclaration, PropertySignature} from 'ts-morph';
+import {
+	ClassDeclaration,
+	InterfaceDeclaration,
+	Node,
+	PropertyDeclaration,
+	PropertySignature,
+} from 'ts-morph';
 
-import {forAllClasses} from '../class';
-import {forAllInterfaces} from '../interface';
+import { forAllClasses } from '../class';
+import { forAllInterfaces } from '../interface';
 
 /**
  *

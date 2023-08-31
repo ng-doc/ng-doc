@@ -1,7 +1,7 @@
-import {NgDocAngularEntities, NgDocDeclarations, NgDocPage} from '@ng-doc/core';
+import { NgDocAngularEntities, NgDocDeclarations, NgDocPage } from '@ng-doc/core';
 
-import {ButtonDemoComponent} from './button-demo/button-demo.component';
-import {DevelopDemoComponent} from './develop-demo/develop-demo.component';
+import { ButtonDemoComponent } from './button-demo/button-demo.component';
+import { DevelopDemoComponent } from './develop-demo/develop-demo.component';
 
 const DevelopPage: NgDocPage = {
   title: 'Develop',
@@ -16,7 +16,7 @@ const DevelopPage: NgDocPage = {
   },
   keyword: 'DevelopPage',
   imports: [],
-  demos: {DevelopDemoComponent, ButtonDemoComponent},
+  demos: { DevelopDemoComponent, ButtonDemoComponent },
 };
 
 export default DevelopPage;

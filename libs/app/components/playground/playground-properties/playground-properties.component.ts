@@ -1,5 +1,5 @@
-import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
-import {AsyncPipe, KeyValuePipe, NgFor, NgIf} from '@angular/common';
+import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
+import { AsyncPipe, KeyValuePipe, NgFor, NgIf } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -12,11 +12,16 @@ import {
 	Output,
 	SimpleChanges,
 } from '@angular/core';
-import {FormControl, FormGroup, FormsModule} from '@angular/forms';
-import {getTokenForType, isPlaygroundProperty} from '@ng-doc/app/helpers';
-import {NgDocProvidedTypeControl} from '@ng-doc/app/interfaces';
-import {extractValueOrThrow, isPresent, objectKeys} from '@ng-doc/core';
-import {NgDocPlaygroundContent, NgDocPlaygroundProperties, NgDocPlaygroundProperty} from '@ng-doc/core/interfaces';
+import { FormControl, FormGroup, FormsModule } from '@angular/forms';
+import { isPlaygroundProperty } from '@ng-doc/app/helpers';
+import { NgDocProvidedTypeControl } from '@ng-doc/app/interfaces';
+import { getTokenForType } from '@ng-doc/app/providers/type-control';
+import { extractValueOrThrow, isPresent, objectKeys } from '@ng-doc/core';
+import {
+	NgDocPlaygroundContent,
+	NgDocPlaygroundProperties,
+	NgDocPlaygroundProperty,
+} from '@ng-doc/core/interfaces';
 import {
 	NgDocBindPipe,
 	NgDocButtonComponent,
@@ -27,12 +32,12 @@ import {
 	NgDocTextRightDirective,
 	NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import {NgDocPlaygroundForm} from '../playground-form';
-import {NgDocPlaygroundPropertyComponent} from '../playground-property/playground-property.component';
-import {NgDocPlaygroundPropertyControl} from '../playground-property-control';
+import { NgDocPlaygroundForm } from '../playground-form';
+import { NgDocPlaygroundPropertyComponent } from '../playground-property/playground-property.component';
+import { NgDocPlaygroundPropertyControl } from '../playground-property-control';
 
 @Component({
 	selector: 'ng-doc-playground-properties',
@@ -60,7 +65,8 @@ import {NgDocPlaygroundPropertyControl} from '../playground-property-control';
 export class NgDocPlaygroundPropertiesComponent<
 	P extends NgDocPlaygroundProperties,
 	C extends Record<string, NgDocPlaygroundContent>,
-> implements OnChanges {
+> implements OnChanges
+{
 	@Input()
 	form!: FormGroup<NgDocPlaygroundForm>;
 
@@ -94,13 +100,16 @@ export class NgDocPlaygroundPropertiesComponent<
 	protected propertyControls: NgDocPlaygroundPropertyControl[] = [];
 	protected contentTypeControl?: NgDocProvidedTypeControl = this.getControlForType('boolean');
 
-	constructor(protected readonly breakpointObserver: BreakpointObserver, private injector: Injector) {
+	constructor(
+		protected readonly breakpointObserver: BreakpointObserver,
+		private injector: Injector,
+	) {
 		this.observer = this.breakpointObserver
 			.observe(this.breakpoints)
 			.pipe(map((state: BreakpointState) => state.matches));
 	}
 
-	ngOnChanges({properties}: SimpleChanges): void {
+	ngOnChanges({ properties }: SimpleChanges): void {
 		if (properties && this.properties) {
 			this.propertyControls = objectKeys(this.properties)
 				.filter((key: keyof P) => this.ignoreInputs?.includes(String(key)) !== true)
@@ -176,7 +185,8 @@ export class NgDocPlaygroundPropertiesComponent<
 			}
 
 			if (optionsIsValid) {
-				const token: InjectionToken<NgDocProvidedTypeControl> | undefined = getTokenForType('NgDocTypeAlias');
+				const token: InjectionToken<NgDocProvidedTypeControl> | undefined =
+					getTokenForType('NgDocTypeAlias');
 
 				return token ? this.injector.get(token) : undefined;
 			}

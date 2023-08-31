@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {RouterLink} from '@angular/router';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import {
 	NgDocButtonComponent,
 	NgDocIconComponent,
@@ -11,7 +11,7 @@ import {
 import highlight from 'highlight.js/lib/core';
 import bash from 'highlight.js/lib/languages/bash';
 
-import {BackgroundComponent} from './background/background.component';
+import { BackgroundComponent } from './background/background.component';
 
 highlight.registerLanguage('bash', bash);
 

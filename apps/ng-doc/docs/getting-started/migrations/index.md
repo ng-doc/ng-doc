@@ -1,6 +1,27 @@
 # {{ NgDocPage.title }}
 
-This page contains information about migrating from previous versions of NgDoc to the current version.
+This page contains information about migrating from previous versions of NgDoc to the current
+version.
+
+## Migration to >= v16.12
+
+In v16.12.0 all NgModules were removed. Application configuration was also simplified and changed.
+This was done to simplify API and add more flexibility to the application, now Application will
+use only components that YOU provided and nothing else which will reduce the size of the final
+bundle for applications that don't use all features of NgDoc or want to customize it.
+
+- `NgDocSidebarModule`, `NgDocNavbarModule` were removed, now you need to import
+  `NgDocSidebarComponent`, `NgDocNavbarComponent`.
+- `NgDocModule`, `NgDocUiKitRootModule` were removed, all configurations can
+  be provided by using `provideNgDocApp` function.
+- `NgDocGeneratedModule` was removed, now you need to use `provideNgDocContext` function to provide
+  context of the generated documentation.
+- `providePageProcessor` and `providePageSkeleton` functions were added, now you must use them to
+  provide page processor and page skeleton components.
+
+Please see updated `*GettingStartedInstallation#manual` articles for more information.
+
+###
 
 ## Migrating to >= v16.3
 

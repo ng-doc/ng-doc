@@ -1,6 +1,6 @@
-import type {Observable, OperatorFunction} from 'rxjs';
-import {of} from 'rxjs';
-import {catchError, map, startWith, switchMap, tap} from 'rxjs/operators';
+import type { Observable, OperatorFunction } from 'rxjs';
+import { of } from 'rxjs';
+import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators';
 
 export type StatedObservable<T, E = Error> = Observable<ObservableState<T, E>>;
 
@@ -15,7 +15,7 @@ export interface ObservableState<T, E = Error> {
  * @param retry
  */
 export function observableState<T, E = Error>(
-	retry?: Observable<unknown>
+	retry?: Observable<unknown>,
 ): OperatorFunction<T, ObservableState<T, E>> {
 	return (source: Observable<T>) => {
 		let state: ObservableState<T, E> = {
@@ -36,11 +36,11 @@ export function observableState<T, E = Error>(
 					// Merge the current state with new state
 					tap(
 						(updatedState: Partial<ObservableState<T, E>>) =>
-							(state = { ...state, ...updatedState })
+							(state = { ...state, ...updatedState }),
 					),
-					map(() => state)
-				)
-			)
+					map(() => state),
+				),
+			),
 		);
 	};
 }

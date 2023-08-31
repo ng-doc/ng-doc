@@ -1,8 +1,16 @@
-import {ChangeDetectorRef, Directive, inject, Input, OnInit, Type, ViewContainerRef} from '@angular/core';
-import {Constructor, extractFunctionDefaults} from '@ng-doc/core';
-import {NgDocPlaygroundConfig} from '@ng-doc/core/interfaces';
+import {
+	ChangeDetectorRef,
+	Directive,
+	inject,
+	Input,
+	OnInit,
+	Type,
+	ViewContainerRef,
+} from '@angular/core';
+import { Constructor, extractFunctionDefaults } from '@ng-doc/core';
+import { NgDocPlaygroundConfig } from '@ng-doc/core/interfaces';
 
-import {NgDocPlaygroundComponent} from './playground.component';
+import { NgDocPlaygroundComponent } from './playground.component';
 
 /**
  * Base class for playgrounds components.
@@ -38,15 +46,18 @@ export abstract class NgDocBasePlayground implements Pick<NgDocPlaygroundConfig,
 		 * input values provided from the template are not initialized yet, and we can read default values instead.
 		 */
 		if (this.playground) {
-			this.defaultValues = Object.keys(this.playground).reduce((values: Record<string, unknown>, key: string) => {
-				if (this.playground) {
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					values[key] = this.playground[key];
-				}
+			this.defaultValues = Object.keys(this.playground).reduce(
+				(values: Record<string, unknown>, key: string) => {
+					if (this.playground) {
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
+						values[key] = this.playground[key];
+					}
 
-				return values;
-			}, {});
+					return values;
+				},
+				{},
+			);
 		} else if (this.playgroundInstance) {
 			this.defaultValues = extractFunctionDefaults(this.playgroundInstance.prototype.transform);
 		} else {

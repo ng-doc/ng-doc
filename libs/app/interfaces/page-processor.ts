@@ -1,19 +1,19 @@
-import {Type} from '@angular/core';
+import { Type } from '@angular/core';
 
-import {NgDocProcessorOptions} from './processor-options';
+import { NgDocProcessorOptions } from './processor-options';
 
 /**
  * Interface to create a processor that will be used to replace html nodes with an Angular component.
  */
-export interface NgDocPageProcessor<T> {
+export interface NgDocPageProcessor<T = unknown> {
 	/**
 	 * Target component to replace html nodes with.
 	 */
-	component: Type<T>,
+	component: Type<T>;
 	/**
 	 * Selector to find html nodes to replace.
 	 */
-	selector: string,
+	selector: string;
 	/**
 	 * Extract options for Angular component from html node.
 	 *
@@ -26,5 +26,5 @@ export interface NgDocPageProcessor<T> {
 	 *
 	 * @param element - Html node to replace.
 	 */
-	nodeToReplace?: (element: Element) => Element,
+	nodeToReplace?: (element: Element) => Element;
 }

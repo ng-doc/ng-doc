@@ -19,8 +19,9 @@ ng g @ng-doc/builder:page "Installation"
 ```
 
 This command will create a folder with your page name and generate `ng-doc.page.ts` and `index.md`
-files inside, it also can generate some additional files, like Angular module and dependencies file,
-if you are going to show some demos on the page.
+files inside, you can also provide additional parameters to the schematic, for example, you can
+specify
+`--category` (alias is `-c`) option to import parent category into your page automatically.
 
 ## Configuration
 
@@ -31,7 +32,7 @@ the page configuration must correspond to the `NgDocPage` type, you can read mor
 properties in the documentation for the type, below is an example of the minimum page configuration.
 
 ```typescript name="ng-doc.page.ts"
-import {NgDocPage} from '@ng-doc/core';
+import { NgDocPage } from '@ng-doc/core';
 
 const MyAwesomePage: NgDocPage = {
   title: 'MyAwesomePage',
@@ -48,7 +49,7 @@ for details on how to create one). To add a category to your page, you can use t
 just import category and put it in the `category` field, just like that:
 
 ```typescript name="ng-doc.page.ts" {2,7}
-import {NgDocPage} from '@ng-doc/core';
+import { NgDocPage } from '@ng-doc/core';
 import MyAwesomeCategory from '../ng-doc.category';
 
 const MyAwesomePage: NgDocPage = {
@@ -69,29 +70,6 @@ rebuilds page if needed.
 Your page content fully supports the `markdown` syntax, but it is
 extended with the `nunjucks` engine which allows you to reuse one template for multiple pages, or
 render content dynamically, see `*GuidesTemplating` for more details.
-
-## Module
-
-If you are gonna create demos on the page and prefer non-standalone components,
-then you need to create a module that will declare your demos components, to do this you can use
-the `--module` (alias is `-m`) option, which will create a page and a module file for it.
-
-```bash
-ng g @ng-doc/builder:page "Installation" -m
-```
-
-You can also create a module file manually, but you need to import it into the page file.
-
-```typescript name="ng-doc.page.ts"
-import {NgDocPage} from '@ng-doc/core';
-import {MyModule} from '../my.module';
-
-const MyAwesomePage: NgDocPage = {
-  imports: [MyModule],
-};
-
-export default MyAwesomePage;
-```
 
 ## Angular dependencies
 
@@ -114,43 +92,42 @@ use Angular, you can move it to a separate file so that the variable file does n
 imports.
 
 ```typescript {2,10} name="Will not work" group="separate-files"
-import {NgDocPage} from '@ng-doc/core';
-import {ControlsVariable} from '../file-with-angular-dependencies';
+import { NgDocPage } from '@ng-doc/core';
+import { ControlsVariable } from '../file-with-angular-dependencies';
 
 const MyAwesomePage: NgDocPage = {
   // ...
   playgrounds: {
-      MyPlayground: {
-          // ...
-        controls: {
-            ...ControlsVariable,
-        }
-      }
-  }
+    MyPlayground: {
+      // ...
+      controls: {
+        ...ControlsVariable,
+      },
+    },
+  },
 };
 
 export default MyAwesomePage;
 ```
 
 ```typescript {2,10} name="Will work" group="separate-files"
-import {NgDocPage} from '@ng-doc/core';
-import {ControlsVariable} from '../file-without-angular';
+import { NgDocPage } from '@ng-doc/core';
+import { ControlsVariable } from '../file-without-angular';
 
 const MyAwesomePage: NgDocPage = {
   // ...
   playgrounds: {
-      MyPlayground: {
-          // ...
-        controls: {
-            ...ControlsVariable,
-        }
-      }
-  }
+    MyPlayground: {
+      // ...
+      controls: {
+        ...ControlsVariable,
+      },
+    },
+  },
 };
 
 export default MyAwesomePage;
 ```
-
 
 ### Import compiler
 
@@ -162,7 +139,7 @@ dependencies will be handled correctly on the builder side.
 
 ```typescript {1} name="ng-doc.page.ts"
 import '@angular/compiler';
-import {NgDocPage} from '@ng-doc/core';
+import { NgDocPage } from '@ng-doc/core';
 
 const MyAwesomePage: NgDocPage = {
   // ...

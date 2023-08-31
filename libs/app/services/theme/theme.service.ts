@@ -1,12 +1,12 @@
-import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable, Optional} from '@angular/core';
-import {NG_DOC_NIGHT_THEME, NG_DOC_STORE_THEME_KEY} from '@ng-doc/app/constants';
-import {NgDocTheme} from '@ng-doc/app/interfaces';
-import {NgDocStoreService} from '@ng-doc/app/services/store';
-import {NG_DOC_DEFAULT_THEME_ID, NG_DOC_THEME} from '@ng-doc/app/tokens';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {fromEvent, Observable, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import { DOCUMENT } from '@angular/common';
+import { Inject, Injectable, Optional } from '@angular/core';
+import { NG_DOC_NIGHT_THEME, NG_DOC_STORE_THEME_KEY } from '@ng-doc/app/constants';
+import { NgDocTheme } from '@ng-doc/app/interfaces';
+import { NgDocStoreService } from '@ng-doc/app/services/store';
+import { NG_DOC_DEFAULT_THEME_ID, NG_DOC_THEME } from '@ng-doc/app/tokens';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { fromEvent, Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * Service for managing themes.
@@ -34,7 +34,9 @@ export class NgDocThemeService {
 		if (this.defaultThemeId === 'auto') {
 			fromEvent<MediaQueryList>(window.matchMedia('(prefers-color-scheme: dark)'), 'change')
 				.pipe(takeUntil(this.disableAutoTheme$), untilDestroyed(this))
-				.subscribe((event: MediaQueryList) => this.set(event.matches ? NG_DOC_NIGHT_THEME.id : undefined, false))
+				.subscribe((event: MediaQueryList) =>
+					this.set(event.matches ? NG_DOC_NIGHT_THEME.id : undefined, false),
+				);
 		}
 	}
 
@@ -61,7 +63,9 @@ export class NgDocThemeService {
 		save && this.disableAutoTheme$.next();
 
 		if (id !== 'day' && id) {
-			const theme: NgDocTheme | undefined = this.themes.find((theme: NgDocTheme) => theme.id === id);
+			const theme: NgDocTheme | undefined = this.themes.find(
+				(theme: NgDocTheme) => theme.id === id,
+			);
 
 			if (!theme) {
 				console.warn(
@@ -109,6 +113,7 @@ export class NgDocThemeService {
 		this.linkElement?.remove();
 		this.linkElement = undefined;
 	}
+
 	private createLinkIfNoExists(): void {
 		if (!this.linkElement) {
 			this.linkElement = this.document.createElement('link');

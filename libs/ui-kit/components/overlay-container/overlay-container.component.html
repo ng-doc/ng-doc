@@ -3,13 +3,12 @@
 	[overlayAlign]="overlayAlign"
 	[withPointer]="!!config?.withPointer"
 	[ngDocEventSwitcher]="config?.viewContainerRef?.element?.nativeElement ?? null"
-	[events]="['focusin', 'focusout', 'keydown', 'scroll']"
->
-	<ng-doc-focus-control [focusHost]="this.config?.viewContainerRef?.element?.nativeElement ?? null" ngDocFocusCatcher>
+	[events]="['focusin', 'focusout', 'keydown', 'scroll']">
+	<ng-doc-focus-control
+		[focusHost]="this.config?.viewContainerRef?.element?.nativeElement ?? null"
+		ngDocFocusCatcher>
 		<div class="ng-doc-overlay-content" [tabIndex]="-1" #contentContainer>
-			<ng-container *polymorpheusOutlet="content as text;"
-			>{{text}}</ng-container
-			>
+			<ng-container *polymorpheusOutlet="content as text">{{ text }}</ng-container>
 		</div>
 	</ng-doc-focus-control>
 </ng-doc-overlay-pointer>

@@ -1,9 +1,15 @@
-import {NgDocApiEntity, NgDocApiPageEntity, NgDocApiScopeEntity, NgDocCategoryEntity, NgDocPageEntity} from '../engine';
-import {NgDocFileEntity} from '../engine/entities/abstractions/file.entity';
-import {NgDocNavigationEntity} from '../engine/entities/abstractions/navigation.entity';
-import {NgDocRouteEntity} from '../engine/entities/abstractions/route.entity';
-import {NgDocSourceFileEntity} from '../engine/entities/abstractions/source-file.entity';
-import {Constructable} from '../types';
+import {
+	NgDocApiEntity,
+	NgDocApiPageEntity,
+	NgDocApiScopeEntity,
+	NgDocCategoryEntity,
+	NgDocPageEntity,
+} from '../engine';
+import { NgDocFileEntity } from '../engine/entities/abstractions/file.entity';
+import { NgDocNavigationEntity } from '../engine/entities/abstractions/navigation.entity';
+import { NgDocRouteEntity } from '../engine/entities/abstractions/route.entity';
+import { NgDocSourceFileEntity } from '../engine/entities/abstractions/source-file.entity';
+import { Constructable } from '../types';
 
 /**
  *
@@ -25,7 +31,9 @@ export function isCategoryEntity(page: InstanceType<Constructable>): page is NgD
  *
  * @param page
  */
-export function isSourceFileEntity(page: InstanceType<Constructable>): page is NgDocSourceFileEntity {
+export function isSourceFileEntity(
+	page: InstanceType<Constructable>,
+): page is NgDocSourceFileEntity {
 	return page instanceof NgDocSourceFileEntity;
 }
 
@@ -33,7 +41,9 @@ export function isSourceFileEntity(page: InstanceType<Constructable>): page is N
  *
  * @param page
  */
-export function isNavigationEntity(page: InstanceType<Constructable>): page is NgDocNavigationEntity<unknown> {
+export function isNavigationEntity(
+	page: InstanceType<Constructable>,
+): page is NgDocNavigationEntity<unknown> {
 	return page instanceof NgDocNavigationEntity;
 }
 

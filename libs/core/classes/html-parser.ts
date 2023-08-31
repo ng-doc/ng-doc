@@ -1,10 +1,10 @@
 import * as CSSWhat from 'css-what';
-import {AttributeSelector, SelectorType} from 'css-what';
-import {Selector, TagSelector} from 'css-what/lib/es/types';
-import {Node, NodeTag, parser} from 'posthtml-parser';
-import {render} from 'posthtml-render';
+import { AttributeSelector, SelectorType } from 'css-what';
+import { Selector, TagSelector } from 'css-what/lib/es/types';
+import { Node, NodeTag, parser } from 'posthtml-parser';
+import { render } from 'posthtml-render';
 
-import {asArray, isNodeTag, isPresent, objectKeys} from '../helpers';
+import { asArray, isNodeTag, isPresent, objectKeys } from '../helpers';
 
 export class NgDocHtmlParser {
 	private readonly parsedHTML: Node[];
@@ -26,17 +26,20 @@ export class NgDocHtmlParser {
 
 		while (nodes.length) {
 			const shiftNode: Node | undefined = nodes.shift();
-			const node: NodeTag | undefined = !isPresent(shiftNode) || !isNodeTag(shiftNode) ? undefined : shiftNode;
+			const node: NodeTag | undefined =
+				!isPresent(shiftNode) || !isNodeTag(shiftNode) ? undefined : shiftNode;
 
 			if (
 				tagSelectors.every(
-					(tagSelector: TagSelector) => tagSelector.name.toLowerCase() === String(node?.tag).toLowerCase(),
+					(tagSelector: TagSelector) =>
+						tagSelector.name.toLowerCase() === String(node?.tag).toLowerCase(),
 				) &&
 				attrSelectors.every((attrSelector: AttributeSelector) => {
 					const attrValue: unknown = node && node.attrs && node?.attrs[attrSelector.name];
 
 					return (
-						Object.keys(node?.attrs ?? {}).includes(attrSelector.name) && attrValue === attrSelector.value
+						Object.keys(node?.attrs ?? {}).includes(attrSelector.name) &&
+						attrValue === attrSelector.value
 					);
 				})
 			) {
