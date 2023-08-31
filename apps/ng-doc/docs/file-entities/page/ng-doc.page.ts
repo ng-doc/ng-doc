@@ -1,8 +1,8 @@
-import {NgDocPage} from '@ng-doc/core';
+import { NgDocPage } from '@ng-doc/core';
 
 import EntitiesCategory from '../ng-doc.category';
 
-export const PagePage: NgDocPage = {
+const PagePage: NgDocPage = {
   title: 'Page',
   category: EntitiesCategory,
   mdFile: './index.md',

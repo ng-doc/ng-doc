@@ -1,5 +1,5 @@
-import {ConnectedPosition, ConnectionPositionPair} from '@angular/cdk/overlay';
-import {asArray} from '@ng-doc/core/helpers/as-array';
+import { ConnectedPosition, ConnectionPositionPair } from '@angular/cdk/overlay';
+import { asArray } from '@ng-doc/core/helpers/as-array';
 import {
 	NgDocHorizontalAlign,
 	NgDocOverlayPosition,
@@ -111,7 +111,7 @@ export class NgDocOverlayUtils {
 	}
 
 	static toConnectedPosition(position: NgDocOverlayPosition): ConnectedPosition {
-		return typeof position === 'string' ? {...POSITION_DESCRIPTION[position]} : {...position};
+		return typeof position === 'string' ? { ...POSITION_DESCRIPTION[position] } : { ...position };
 	}
 
 	static toConnectedPositions(positions: NgDocOverlayPosition[]): ConnectedPosition[] {
@@ -127,7 +127,9 @@ export class NgDocOverlayUtils {
 			NgDocOverlayUtils.overlayIsOutByX(position)
 				? NG_DOC_ARROW_MARGIN - 24
 				: origin.offsetWidth;
-		return (isVertical && !isCenter ? Math.max(NG_DOC_ARROW_MARGIN - width, 0) : 0) * offsetMultiplier;
+		return (
+			(isVertical && !isCenter ? Math.max(NG_DOC_ARROW_MARGIN - width, 0) : 0) * offsetMultiplier
+		);
 	}
 
 	static getOffsetY(origin: HTMLElement, position: ConnectedPosition): number {
@@ -139,7 +141,9 @@ export class NgDocOverlayUtils {
 			NgDocOverlayUtils.overlayIsOutByY(position)
 				? NG_DOC_ARROW_MARGIN - 24
 				: origin.offsetHeight;
-		return (!isVertical && !isCenter ? Math.max(NG_DOC_ARROW_MARGIN - height, 0) : 0) * offsetMultiplier;
+		return (
+			(!isVertical && !isCenter ? Math.max(NG_DOC_ARROW_MARGIN - height, 0) : 0) * offsetMultiplier
+		);
 	}
 
 	static overlayIsOutByX(position: ConnectedPosition): boolean {
@@ -164,7 +168,9 @@ export class NgDocOverlayUtils {
 	}
 
 	static getMarginMultiplier(position: ConnectedPosition): number {
-		return ['right', 'bottom'].includes(NgDocOverlayUtils.getRelativePosition(position) || '') ? 1 : -1;
+		return ['right', 'bottom'].includes(NgDocOverlayUtils.getRelativePosition(position) || '')
+			? 1
+			: -1;
 	}
 
 	static isVerticalPosition(position: ConnectedPosition): boolean {
@@ -175,7 +181,9 @@ export class NgDocOverlayUtils {
 		return position.overlayX === 'center' || position.overlayY === 'center';
 	}
 
-	static getPositionAlign(position: ConnectedPosition): NgDocHorizontalAlign | NgDocVerticalAlign | null {
+	static getPositionAlign(
+		position: ConnectedPosition,
+	): NgDocHorizontalAlign | NgDocVerticalAlign | null {
 		if (NgDocOverlayUtils.isVerticalPosition(position)) {
 			return position.overlayX === 'start' ? 'left' : position.overlayX === 'end' ? 'right' : null;
 		} else {
@@ -201,15 +209,17 @@ export class NgDocOverlayUtils {
 	}
 
 	static getOverlayPosition(positionPair: ConnectionPositionPair): NgDocOverlayPosition {
-		const existsPosition: NgDocOverlayPosition = Object.keys(POSITION_DESCRIPTION).find((key: string) => {
-			const positionDescription: ConnectedPosition = POSITION_DESCRIPTION[key];
-			return (
-				positionPair.originX === positionDescription.originX &&
-				positionPair.originY === positionDescription.originY &&
-				positionPair.overlayX === positionDescription.overlayX &&
-				positionPair.overlayY === positionDescription.overlayY
-			);
-		}) as NgDocOverlayPosition;
+		const existsPosition: NgDocOverlayPosition = Object.keys(POSITION_DESCRIPTION).find(
+			(key: string) => {
+				const positionDescription: ConnectedPosition = POSITION_DESCRIPTION[key];
+				return (
+					positionPair.originX === positionDescription.originX &&
+					positionPair.originY === positionDescription.originY &&
+					positionPair.overlayX === positionDescription.overlayX &&
+					positionPair.overlayY === positionDescription.overlayY
+				);
+			},
+		) as NgDocOverlayPosition;
 		return existsPosition ? existsPosition : positionPair;
 	}
 }

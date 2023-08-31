@@ -1,6 +1,6 @@
-import {NgDocPageProcessor} from '@ng-doc/app/interfaces';
+import { NgDocPageProcessor } from '@ng-doc/app/interfaces';
 
-import {ImageViewerComponent} from './image-viewer.component';
+import { ImageViewerComponent } from './image-viewer.component';
 
 export const imageProcessor: NgDocPageProcessor<ImageViewerComponent> = {
   component: ImageViewerComponent,

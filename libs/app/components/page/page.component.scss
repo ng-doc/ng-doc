@@ -1,6 +1,8 @@
 :host {
 	display: flex;
 
+	--ng-doc-toc-margin: calc(var(--ng-doc-base-gutter) * 3);
+
 	article {
 		position: relative;
 		width: var(--ng-doc-article-width, 100%);
@@ -14,56 +16,6 @@
 			grid-gap: var(--ng-doc-base-gutter);
 			top: 0;
 			right: 0;
-		}
-	}
-
-	ng-doc-toc {
-		--ng-doc-toc-margin: calc(var(--ng-doc-base-gutter) * 3);
-		flex-shrink: 0;
-	}
-
-	@media screen and (max-width: 1200px) {
-		ng-doc-toc {
-			display: none;
-		}
-	}
-
-	.ng-doc-navigation-controls {
-		display: flex;
-		margin-top: calc(var(--ng-doc-base-gutter) * 12);
-		border-top: 1px solid var(--ng-doc-base-2);
-		padding-top: calc(var(--ng-doc-base-gutter) * 2);
-
-		a {
-			display: flex;
-			flex-direction: column;
-			text-decoration: unset;
-			transition: var(--ng-doc-transition);
-			--ng-doc-button-hover-background: var(--ng-doc-base-1);
-			--ng-doc-button-active-background: var(--ng-doc-base-2);
-			--ng-doc-text: var(--ng-doc-base-10);
-			--ng-doc-icon-color: var(--ng-doc-text);
-
-			&:hover {
-				opacity: 0.6;
-			}
-
-			&.ng-doc-next-page {
-				margin-left: auto;
-			}
-
-			&.ng-doc-prev-page {
-				align-items: flex-start;
-			}
-
-			&.ng-doc-next-page {
-				align-items: flex-end;
-			}
-
-			.ng-doc-navigation-page-title {
-				--ng-doc-font-weight: 600;
-				--ng-doc-text: var(--ng-doc-link-color);
-			}
 		}
 	}
 }

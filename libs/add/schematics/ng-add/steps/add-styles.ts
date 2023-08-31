@@ -1,11 +1,15 @@
-import {getProjectTargetOptions} from '@angular/cdk/schematics';
-import {JsonArray, JsonValue} from '@angular-devkit/core';
-import {Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
-import {ProjectDefinition, updateWorkspace, WorkspaceDefinition} from '@schematics/angular/utility/workspace';
+import { getProjectTargetOptions } from '@angular/cdk/schematics';
+import { JsonArray, JsonValue } from '@angular-devkit/core';
+import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import {
+	ProjectDefinition,
+	updateWorkspace,
+	WorkspaceDefinition,
+} from '@schematics/angular/utility/workspace';
 
-import {NG_DOC_STYLES} from '../constants/styles';
-import {Schema} from '../schema';
-import {getProject} from '../utils/get-project';
+import { NG_DOC_STYLES } from '../constants/styles';
+import { Schema } from '../schema';
+import { getProject } from '../utils/get-project';
 
 /**
  *
@@ -29,7 +33,10 @@ export function addStyles(options: Schema): Rule {
 					return;
 				}
 
-				const targetOptions: Record<string, JsonValue | undefined> = getProjectTargetOptions(project, 'build');
+				const targetOptions: Record<string, JsonValue | undefined> = getProjectTargetOptions(
+					project,
+					'build',
+				);
 				const styles: JsonArray | undefined = targetOptions['styles'] as JsonArray | undefined;
 
 				targetOptions['styles'] = Array.from(new Set([...NG_DOC_STYLES, ...(styles ?? [])]));

@@ -68,8 +68,7 @@ by providing `ng-template` to the one of its inputs like on the example below:
       size="large"
       href="https://github.com/me/my-repo"
       target="_blank"
-      ngDocTooltip="Check my repo"
-    >
+      ngDocTooltip="Check my repo">
       <ng-doc-icon icon="github" [size]="24"></ng-doc-icon>
     </a>
   </ng-template>
@@ -99,8 +98,8 @@ To open and close the `sidebar` you can use the `NgDocSidebarService` service, i
 component and call the `toggle()` method.
 
 ```typescript name="my-custom-navbar.component.ts"
-import {Component} from '@angular/core';
-import {NgDocSidebarService} from '@ng-doc/app';
+import { Component } from '@angular/core';
+import { NgDocSidebarService } from '@ng-doc/app';
 
 @Component({
   selector: 'my-custom-navbar',
@@ -161,8 +160,8 @@ You can get this list by injecting the `NG_DOC_CONTEXT` token, which returns the
 object.
 
 ```typescript name="my-custom-sidebar.component.ts"
-import {Component, Inject} from '@angular/core';
-import {NG_DOC_CONTEXT, NgDocContext} from '@ng-doc/app';
+import { Component, Inject } from '@angular/core';
+import { NG_DOC_CONTEXT, NgDocContext } from '@ng-doc/app';
 
 @Component({
   selector: 'my-custom-sidebar',

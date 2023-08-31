@@ -12,6 +12,6 @@
 	"dependencies": {
 		"@angular/cdk": ">=16.0.0",
 		"@angular-devkit/schematics": ">=16.0.0",
-		"ng-morph": "2.2.5"
+		"ng-morph": "4.0.0"
 	}
 }

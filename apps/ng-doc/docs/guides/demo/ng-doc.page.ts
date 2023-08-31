@@ -1,7 +1,7 @@
-import {NgDocPage} from '@ng-doc/core';
+import { NgDocPage } from '@ng-doc/core';
 
 import GuidesCategory from '../ng-doc.category';
-import {ButtonDemoComponent} from './demos/button-demo/button-demo.component';
+import { ButtonDemoComponent } from './demos/button-demo/button-demo.component';
 
 const DemoPage: NgDocPage = {
   title: 'Demo',
@@ -9,7 +9,7 @@ const DemoPage: NgDocPage = {
   category: GuidesCategory,
   order: 2,
   keyword: 'GuidesDemo',
-  demos: {ButtonDemoComponent},
+  demos: { ButtonDemoComponent },
 };
 
 export default DemoPage;

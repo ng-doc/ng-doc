@@ -1,7 +1,7 @@
-import {asArray, NgDocEntityAnchor} from '@ng-doc/core';
+import { asArray, NgDocEntityAnchor } from '@ng-doc/core';
 import * as path from 'path';
-import {Observable, of} from 'rxjs';
-import {SourceFile} from 'ts-morph';
+import { Observable, of } from 'rxjs';
+import { SourceFile } from 'ts-morph';
 
 import {
 	buildEntityKeyword,
@@ -12,15 +12,15 @@ import {
 	uniqueName,
 	viewFileInRepoUrl,
 } from '../../helpers';
-import {NgDocBuilderContext, NgDocBuildResult, NgDocEntityKeyword} from '../../interfaces';
-import {NgDocSupportedDeclarations} from '../../types';
-import {NgDocEntityStore} from '../entity-store';
-import {renderTemplate} from '../nunjucks';
-import {NgDocEntity} from './abstractions/entity';
-import {NgDocRouteEntity} from './abstractions/route.entity';
-import {NgDocApiScopeEntity} from './api-scope.entity';
-import {CachedEntity, NgDocCache} from './cache';
-import {fillIndexesPlugin, postProcessHtmlPlugin, processHtmlPlugin} from './plugins';
+import { NgDocBuilderContext, NgDocBuildResult, NgDocEntityKeyword } from '../../interfaces';
+import { NgDocSupportedDeclarations } from '../../types';
+import { NgDocEntityStore } from '../entity-store';
+import { renderTemplate } from '../nunjucks';
+import { NgDocEntity } from './abstractions/entity';
+import { NgDocRouteEntity } from './abstractions/route.entity';
+import { NgDocApiScopeEntity } from './api-scope.entity';
+import { CachedEntity, NgDocCache } from './cache';
+import { fillIndexesPlugin, postProcessHtmlPlugin, processHtmlPlugin } from './plugins';
 
 @CachedEntity()
 export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
@@ -51,7 +51,12 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 
 	override get route(): string {
 		return this.declaration
-			? slash(path.join(declarationFolderName(this.declaration), this.declarationName + (this.index ? this.index : '')))
+			? slash(
+					path.join(
+						declarationFolderName(this.declaration),
+						this.declarationName + (this.index ? this.index : ''),
+					),
+			  )
 			: '';
 	}
 
@@ -124,7 +129,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 
 	override build(): Observable<NgDocBuildResult<string, this>> {
 		if (this.parent.target) {
-			const result = renderTemplate('./api-page.html.nunj', {
+			const result = renderTemplate('./api-page-content.html.nunj', {
 				context: {
 					declaration: this.declaration,
 					scope: this.parent.target,
@@ -135,7 +140,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 				result,
 				entity: this,
 				toBuilderOutput: async (content: string) => ({
-					content: renderTemplate('./api-page.module.ts.nunj', {
+					content: renderTemplate('./api-page.ts.nunj', {
 						context: {
 							page: this,
 							pageContent: content,
@@ -151,7 +156,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 		throw new Error(`The entity "${this.id}" is not loaded.`);
 	}
 
-	private updateDeclaration(): asserts this is this & {declaration: NgDocSupportedDeclarations} {
+	private updateDeclaration(): asserts this is this & { declaration: NgDocSupportedDeclarations } {
 		const declarations: NgDocSupportedDeclarations[] = [
 			...asArray(this.sourceFile.getExportedDeclarations().get(this.declarationName)),
 			...asArray(this.sourceFile.getExportedDeclarations().get('default')),

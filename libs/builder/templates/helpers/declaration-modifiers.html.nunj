@@ -7,7 +7,7 @@
 	{% set isStatic = declaration.isStatic and declaration.isStatic() %}
 	{% set isAsync = declaration.isAsync and declaration.isAsync() %}
 	{% set isReadonly = declaration.isReadonly and declaration.isReadonly() %}
-	{% set isProtected = declaration.getScope and declaration.getScope() == 'protected'  %}
+	{% set isProtected = declaration.getScope and declaration.getScope() == 'protected' %}
 	{% set tooltip = ["Protected" if isProtected, "Abstract" if isAbstract, 'Static' if isStatic, 'Async' if isAsync, 'Readonly' if isReadonly] | noEmpty | join(', ') %}
 
 	{%- if type == 'badge' %}

@@ -1,14 +1,19 @@
-import {minimatch} from 'minimatch';
+import { minimatch } from 'minimatch';
 import * as path from 'path';
-import {defer, from, Observable, of} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
-import {ObjectLiteralExpression, SyntaxKind} from 'ts-morph';
+import { defer, from, Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { ObjectLiteralExpression, SyntaxKind } from 'ts-morph';
 
-import {buildFileEntity, getObjectExpressionFromDefault, isCategoryEntity} from '../../../helpers';
-import {CATEGORY_PATTERN} from '../../variables';
-import {NgDocCategoryEntity} from '../category.entity';
-import {NgDocEntity} from './entity';
-import {NgDocSourceFileEntity} from './source-file.entity';
+import {
+	buildFileEntity,
+	getObjectExpressionFromDefault,
+	importFreshEsm,
+	isCategoryEntity,
+} from '../../../helpers';
+import { CATEGORY_PATTERN } from '../../variables';
+import { NgDocCategoryEntity } from '../category.entity';
+import { NgDocEntity } from './entity';
+import { NgDocSourceFileEntity } from './source-file.entity';
 
 /**
  * Entity for file end points that generate modules and components.
@@ -30,15 +35,12 @@ export abstract class NgDocFileEntity<TTarget> extends NgDocSourceFileEntity {
 	 * Runs when the source file was updated, can be used to load target file.
 	 */
 	protected loadImpl(): Observable<void> {
-		return defer(() => {
-			delete require.cache[require.resolve(this.pathToCompiledFile)];
-			this.target = require(this.pathToCompiledFile).default;
+		return defer(async () => {
+			this.target = (await importFreshEsm<{ default: TTarget }>(this.pathToCompiledFile)).default;
 
 			if (!this.target || !this.objectExpression) {
 				new Error(`Failed to load object. Make sure that you have exported it as default.`);
 			}
-
-			return of(void 0);
 		});
 	}
 
@@ -51,7 +53,11 @@ export abstract class NgDocFileEntity<TTarget> extends NgDocSourceFileEntity {
 			?.getSourceFile()
 			?.getFilePath();
 
-		if (sourceFilePath && minimatch(sourceFilePath, CATEGORY_PATTERN) && sourceFilePath !== this.sourceFilePath) {
+		if (
+			sourceFilePath &&
+			minimatch(sourceFilePath, CATEGORY_PATTERN) &&
+			sourceFilePath !== this.sourceFilePath
+		) {
 			const parent: NgDocEntity | undefined = this.store.get(
 				path.relative(this.context.context.workspaceRoot, sourceFilePath),
 			);
@@ -66,7 +72,9 @@ export abstract class NgDocFileEntity<TTarget> extends NgDocSourceFileEntity {
 	 * Compiles the source file
 	 */
 	compile(): Observable<void> {
-		return from(buildFileEntity(this.sourceFile, this.context.tsConfig, this.context.context.workspaceRoot)).pipe(
+		return from(
+			buildFileEntity(this.sourceFile, this.context.tsConfig, this.context.context.workspaceRoot),
+		).pipe(
 			map(() => void 0),
 			tap({
 				error: (e: Error) => this.errors.push(e),

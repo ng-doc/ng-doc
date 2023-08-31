@@ -1,16 +1,16 @@
-import {parseCodeBlockParams} from '../parse-code-block-params';
+import { parseCodeBlockParams } from '../parse-code-block-params';
 
 describe('parseCodeBlockParams', () => {
 	it('should parse language', () => {
-		expect(parseCodeBlockParams('ts')).toStrictEqual({language: 'ts'});
+		expect(parseCodeBlockParams('ts')).toStrictEqual({ language: 'ts' });
 	});
 
 	it('should parse lineNumbers', () => {
-		expect(parseCodeBlockParams('lineNumbers')).toStrictEqual({lineNumbers: true});
+		expect(parseCodeBlockParams('lineNumbers')).toStrictEqual({ lineNumbers: true });
 	});
 
 	it('should parse fileName', () => {
-		expect(parseCodeBlockParams('fileName="test.ts"')).toStrictEqual({name: 'test.ts'});
+		expect(parseCodeBlockParams('fileName="test.ts"')).toStrictEqual({ name: 'test.ts' });
 	});
 
 	it('should parse file', () => {
@@ -85,5 +85,5 @@ describe('parseCodeBlockParams', () => {
 			language: 'ts',
 			icon: 'icon',
 		});
-	})
+	});
 });

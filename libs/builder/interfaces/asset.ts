@@ -4,5 +4,5 @@ export interface NgDocAsset {
 	filePath: string;
 	isEmpty: boolean;
 	icon?: string;
-	lang: string
+	lang: string;
 }

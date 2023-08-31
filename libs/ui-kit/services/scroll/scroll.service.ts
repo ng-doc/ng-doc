@@ -1,12 +1,12 @@
-import {BlockScrollStrategy, ViewportRuler} from '@angular/cdk/overlay';
-import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable} from '@angular/core';
+import { BlockScrollStrategy, ViewportRuler } from '@angular/cdk/overlay';
+import { DOCUMENT } from '@angular/common';
+import { Inject, Injectable } from '@angular/core';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class NgDocScrollService {
-	scrollStrategy: BlockScrollStrategy;
+	private readonly scrollStrategy: BlockScrollStrategy;
 
 	constructor(
 		@Inject(DOCUMENT)

@@ -4,7 +4,6 @@ export * from './api-page.entity';
 export * from './api-scope.entity';
 export * from './category.entity';
 export * from './context.entity';
-export * from './generated-module.entity';
 export * from './index-file.entity';
 export * from './indexes.entity';
 export * from './keywords.entity';

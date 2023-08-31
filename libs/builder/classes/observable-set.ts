@@ -1,6 +1,6 @@
-import {asArray} from '@ng-doc/core';
-import {Observable, ReplaySubject} from 'rxjs';
-import {map} from 'rxjs/operators';
+import { asArray } from '@ng-doc/core';
+import { Observable, ReplaySubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export class ObservableSet<T> {
 	private collection: Set<T> = new Set();
@@ -13,6 +13,7 @@ export class ObservableSet<T> {
 	asArray(): T[] {
 		return asArray(this.collection);
 	}
+
 	changes(): Observable<T[]> {
 		return this.changes$.pipe(map(() => asArray(this.collection)));
 	}

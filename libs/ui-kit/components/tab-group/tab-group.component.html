@@ -6,8 +6,7 @@
 		*ngFor="let tab of tabs"
 		(click)="selectTab(tab)"
 		[ngDocSelectionOrigin]="tab === selectedTab"
-		#headerTab
-	>
+		#headerTab>
 		<div class="ng-doc-tab-text">
 			<ng-container *polymorpheusOutlet="tab.label; context: {}">{{ tab.label }}</ng-container>
 		</div>
@@ -16,6 +15,8 @@
 
 <div class="ng-doc-body-wrapper">
 	<ng-doc-smooth-resize [trigger]="selectedTab?.content ?? ''">
-		<div *polymorpheusOutlet="selectedTab?.content ?? '' as text; context: {}" @tabFadeAnimation>{{ text }}</div>
+		<div *polymorpheusOutlet="selectedTab?.content ?? '' as text; context: {}" @tabFadeAnimation>
+			{{ text }}
+		</div>
 	</ng-doc-smooth-resize>
 </div>

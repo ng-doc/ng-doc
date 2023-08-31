@@ -1,12 +1,14 @@
 :host {
-	position: relative;
-	width: var(--ng-doc-toc-width);
-
 	.ng-doc-toc-wrapper {
-		position: fixed;
-		overflow-y: auto;
-		height: calc(100% - var(--ng-doc-navbar-height) - var(--ng-doc-base-gutter) * 5);
+		position: relative;
 		width: var(--ng-doc-toc-width);
+
+		.ng-doc-toc-container {
+			position: fixed;
+			overflow-y: auto;
+			height: calc(100% - var(--ng-doc-navbar-height) - var(--ng-doc-base-gutter) * 5);
+			width: var(--ng-doc-toc-width);
+		}
 
 		.ng-doc-toc-selection {
 			position: absolute;

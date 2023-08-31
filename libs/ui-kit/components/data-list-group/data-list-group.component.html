@@ -3,15 +3,13 @@
 		<ng-doc-option-group *ngFor="let group of groupItems">
 			<span
 				*polymorpheusOutlet="groupContent as groupText; context: getGroupContext(group)"
-				ngDocOptionGroupHeader
-			>
+				ngDocOptionGroupHeader>
 				{{ groupText }}
 			</span>
 			<ng-doc-option
 				*ngFor="let item of groups.get(group); trackBy: trackByFn"
 				[value]="defineValueFn(item)"
-				[disabled]="itemDisabledFn(item)"
-			>
+				[disabled]="itemDisabledFn(item)">
 				<ng-container *polymorpheusOutlet="itemContent as text; context: getContext(item)">
 					{{ text }}
 				</ng-container>

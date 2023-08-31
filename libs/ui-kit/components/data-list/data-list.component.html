@@ -3,8 +3,7 @@
 		<ng-doc-option
 			*ngFor="let item of items; trackBy: trackByFn"
 			[value]="defineValueFn(item)"
-			[disabled]="itemDisabledFn(item)"
-		>
+			[disabled]="itemDisabledFn(item)">
 			<ng-container *polymorpheusOutlet="itemContent as text; context: getContext(item)">
 				{{ text }}
 			</ng-container>

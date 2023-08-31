@@ -8,17 +8,23 @@ to the application.
 
 By default, NgDoc expects icons to be located in the `assets/icons` folder.
 But you can change this location by setting the `customIconsPath` option
-when you provide the `NgDocUiKitModule`:
+when you configuration for the ui-kit.
 
-```ts name="app.module.ts"
-@NgModule({
-  imports: [
-    NgDocUiKitModule.forRoot({
-      customIconsPath: 'assets/my-icons',
+```ts name="main.ts"
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideNgDocApp } from '@ng-doc/ui-kit';
+
+import { AppComponent } from './app/app.component';
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideNgDocApp({
+      uikit: {
+        customIconsPath: 'assets/my-icons',
+      },
     }),
   ],
-})
-export class AppModule {}
+}).catch((err: unknown) => console.error(err));
 ```
 
 ## Adding custom icons
@@ -28,4 +34,3 @@ location you specified in the `customIconsPath` option (or in the default
 `assets/icons` folder) and put your SVG files there. All SVG files in this
 folder will be added to the icon registry, so if you have e.g. `my-icon.svg`
 you can use it as `my-icon` icon in the documentation application.
-

@@ -4,6 +4,7 @@
 	--ng-doc-code-background: var(--ng-doc-base-1);
 	--ng-doc-page-padding: calc(var(--ng-doc-base-gutter) * 3) var(--ng-doc-app-horizontal-padding);
 	--ng-doc-main-padding: var(--ng-doc-navbar-height) 0 0 0;
+	--ng-doc-page-block-margin: calc(var(--ng-doc-base-gutter) * 3) 0;
 
 	// Entities
 	--ng-doc-class-color: var(--ng-doc-pink-70);
@@ -39,7 +40,9 @@
 	--ng-doc-navbar-background: var(--ng-doc-base-0);
 	--ng-doc-navbar-height: calc(var(--ng-doc-base-gutter) * 7);
 	--ng-doc-navbar-horizontal-padding: var(--ng-doc-app-horizontal-padding);
-	--ng-doc-navbar-left-width: calc(var(--ng-doc-sidebar-width) - var(--ng-doc-navbar-horizontal-padding));
+	--ng-doc-navbar-left-width: calc(
+		var(--ng-doc-sidebar-width) - var(--ng-doc-navbar-horizontal-padding)
+	);
 
 	// Sidebar
 	--ng-doc-sidebar-width: 310px;

@@ -9,8 +9,7 @@
 		class="ng-doc-code-wrapper"
 		[innerHTML]="html | ngDocSanitizeHtml"
 		ngDocPageProcessor
-		*ngIf="html"
-	></div>
+		*ngIf="html"></div>
 	<div class="ng-doc-code-wrapper" *ngIf="!html">
 		<ng-content></ng-content>
 	</div>
@@ -21,8 +20,7 @@
 		*ngIf="copyButton"
 		(click)="copyCode(); tooltipText = 'Copied!'"
 		[ngDocTooltip]="tooltipContent"
-		(mouseenter)="tooltipText = 'Copy to clipboard'"
-	>
+		(mouseenter)="tooltipText = 'Copy to clipboard'">
 		<ng-template #tooltipContent>
 			<ng-doc-smooth-resize [trigger]="tooltipText">
 				{{ tooltipText }}

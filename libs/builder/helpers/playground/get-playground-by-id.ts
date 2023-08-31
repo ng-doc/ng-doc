@@ -1,4 +1,4 @@
-import {Expression, Node, ObjectLiteralElementLike, ObjectLiteralExpression} from 'ts-morph';
+import { Expression, Node, ObjectLiteralElementLike, ObjectLiteralExpression } from 'ts-morph';
 
 /**
  *
@@ -9,7 +9,8 @@ export function getPlaygroundById(
 	expression: ObjectLiteralExpression,
 	playgroundId: string,
 ): ObjectLiteralExpression | undefined {
-	const playgroundExpression: ObjectLiteralElementLike | undefined = expression.getProperty(playgroundId);
+	const playgroundExpression: ObjectLiteralElementLike | undefined =
+		expression.getProperty(playgroundId);
 
 	if (Node.isPropertyAssignment(playgroundExpression)) {
 		const playgroundInitializer: Expression | undefined = playgroundExpression.getInitializer();

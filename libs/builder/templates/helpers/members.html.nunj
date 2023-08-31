@@ -12,7 +12,7 @@
 			{% for member in members %}
 				<tr>
 					<td indexable="false" dataSlug="{{ member.getName() }}"
-						dataSlugType="member">{{ member.getName() }} </td>
+							dataSlugType="member">{{ member.getName() }} </td>
 					<td indexable="false"><code>{{ member.getValue() | dump }}</code></td>
 					<td>{{ member | extractDocs }} </td>
 				</tr>

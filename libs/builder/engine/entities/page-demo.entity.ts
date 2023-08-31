@@ -1,14 +1,14 @@
 import path from 'path';
-import {Observable, of} from 'rxjs';
+import { Observable, of } from 'rxjs';
 
-import {getComponentAssets, getDemoClassDeclarations} from '../../helpers';
-import {NgDocAsset, NgDocBuilderContext, NgDocBuildResult} from '../../interfaces';
-import {NgDocComponentAsset} from '../../types';
-import {NgDocEntityStore} from '../entity-store';
-import {renderTemplate} from '../nunjucks';
-import {NgDocEntity} from './abstractions/entity';
-import {CachedEntity, CachedFilesGetter, NgDocCache} from './cache';
-import {NgDocPageEntity} from './page.entity';
+import { getComponentAssets, getDemoClassDeclarations } from '../../helpers';
+import { NgDocAsset, NgDocBuilderContext, NgDocBuildResult } from '../../interfaces';
+import { NgDocComponentAsset } from '../../types';
+import { NgDocEntityStore } from '../entity-store';
+import { renderTemplate } from '../nunjucks';
+import { NgDocEntity } from './abstractions/entity';
+import { CachedEntity, CachedFilesGetter, NgDocCache } from './cache';
+import { NgDocPageEntity } from './page.entity';
 import {
 	addToDependenciesPlugin,
 	extractSnippetsPlugin,
@@ -16,10 +16,11 @@ import {
 	forObjectValue,
 	forObjectValues,
 	postProcessHtmlPlugin,
-	processHtmlPlugin, removeLinesPlugin,
+	processHtmlPlugin,
+	removeLinesPlugin,
 } from './plugins';
-import {applyPlugin} from './plugins/entity-plugins/apply.plugin';
-import {wrapCodePlugin} from './plugins/entity-plugins/wrap-code.plugin';
+import { applyPlugin } from './plugins/entity-plugins/apply.plugin';
+import { wrapCodePlugin } from './plugins/entity-plugins/wrap-code.plugin';
 
 @CachedEntity()
 export class NgDocPageDemoEntity extends NgDocEntity {
@@ -57,7 +58,7 @@ export class NgDocPageDemoEntity extends NgDocEntity {
 
 			const componentAssets: NgDocComponentAsset = Object.keys(classDeclarations).reduce(
 				(acc: NgDocComponentAsset, key: string) =>
-					Object.assign(acc, {[key]: getComponentAssets(classDeclarations[key])}),
+					Object.assign(acc, { [key]: getComponentAssets(classDeclarations[key]) }),
 				{},
 			);
 
@@ -65,7 +66,7 @@ export class NgDocPageDemoEntity extends NgDocEntity {
 				result: componentAssets,
 				entity: this,
 				toBuilderOutput: async (demoAssets: NgDocComponentAsset) => ({
-					content: renderTemplate('./demo-assets.ts.nunj', {context: {demoAssets}}),
+					content: renderTemplate('./demo-assets.ts.nunj', { context: { demoAssets } }),
 					filePath: this.outputPath,
 				}),
 				postBuildPlugins: [
@@ -73,7 +74,10 @@ export class NgDocPageDemoEntity extends NgDocEntity {
 						extractSnippetsPlugin(),
 						removeLinesPlugin(),
 						applyPlugin(forArrayItems(), (asset) => [
-							applyPlugin(forObjectValue('code'), () => [wrapCodePlugin(asset.lang), processHtmlPlugin()]),
+							applyPlugin(forObjectValue('code'), () => [
+								wrapCodePlugin(asset.lang),
+								processHtmlPlugin(),
+							]),
 							applyPlugin(forObjectValue('filePath'), () => [addToDependenciesPlugin()]),
 						]),
 					]),

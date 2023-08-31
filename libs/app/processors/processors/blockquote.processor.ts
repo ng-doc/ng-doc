@@ -1,5 +1,5 @@
-import {NgDocPageProcessor} from '@ng-doc/app/interfaces';
-import {NgDocBlockquoteComponent, NgDocBlockquoteType} from '@ng-doc/ui-kit';
+import { NgDocPageProcessor } from '@ng-doc/app/interfaces';
+import { NgDocBlockquoteComponent, NgDocBlockquoteType } from '@ng-doc/ui-kit';
 
 export const blockquoteProcessor: NgDocPageProcessor<NgDocBlockquoteComponent> = {
 	component: NgDocBlockquoteComponent,
@@ -10,4 +10,4 @@ export const blockquoteProcessor: NgDocPageProcessor<NgDocBlockquoteComponent> =
 			type: (element.getAttribute('type') as NgDocBlockquoteType) || 'default',
 		},
 	}),
-}
+};

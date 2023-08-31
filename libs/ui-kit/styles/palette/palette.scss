@@ -1,4 +1,4 @@
-@import "color-palette";
+@import 'color-palette';
 
 @function palette($palette-colors) {
 	$map: ();
@@ -13,23 +13,23 @@
 
 // Color palette link - https://colorscheme.ru/#39.1TvlDHw0w0
 $ng-doc-palette-colors: (
-	"red": #FF0000,
-	"pink": #FF0066,
-	"purple": #CC00CC,
-	"deep-purple": #9900CC,
-	"indigo": #6600CC,
-	"blue": #0066CC,
-	"light-blue": #0099CC,
-	"cian": #00CCCC,
-	"teal": #04BF8B,
-	"green": #00CC00,
-	"light-green": #00CC33,
-	"lime": #99FF00,
-	"yellow": #FFFF00,
-	"ember": #FFCC00,
-	"orange": #FF9900,
-	"deep-orange": #FF6600,
-	"grey": #1e1e1e,
+	'red': #ff0000,
+	'pink': #ff0066,
+	'purple': #cc00cc,
+	'deep-purple': #9900cc,
+	'indigo': #6600cc,
+	'blue': #0066cc,
+	'light-blue': #0099cc,
+	'cian': #00cccc,
+	'teal': #04bf8b,
+	'green': #00cc00,
+	'light-green': #00cc33,
+	'lime': #99ff00,
+	'yellow': #ffff00,
+	'ember': #ffcc00,
+	'orange': #ff9900,
+	'deep-orange': #ff6600,
+	'grey': #1e1e1e,
 );
 
 $ng-doc-palette: palette($ng-doc-palette-colors);

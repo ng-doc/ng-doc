@@ -1,7 +1,7 @@
-import {HostTree} from '@angular-devkit/schematics';
-import {SchematicTestRunner, UnitTestTree} from '@angular-devkit/schematics/testing';
-import {createProject, createSourceFile, saveActiveProject, setActiveProject} from 'ng-morph';
-import {join} from 'path';
+import { HostTree } from '@angular-devkit/schematics';
+import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { createProject, createSourceFile, saveActiveProject, setActiveProject } from 'ng-morph';
+import { join } from 'path';
 
 const collectionPath: string = join(__dirname, '../../collection.json');
 
@@ -26,7 +26,8 @@ describe('category', () => {
 			host,
 		);
 
-		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
+		expect(tree.readText('test/my-category/ng-doc.category.ts'))
+			.toBe(`import {NgDocCategory} from '@ng-doc/core';
 
 const MyCategoryCategory: NgDocCategory = {
 \ttitle: 'My Category',
@@ -47,7 +48,8 @@ export default MyCategoryCategory;
 			host,
 		);
 
-		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
+		expect(tree.readText('test/my-category/ng-doc.category.ts'))
+			.toBe(`import {NgDocCategory} from '@ng-doc/core';
 
 const MyCategoryCategory: NgDocCategory = {
 \ttitle: 'my-category',
@@ -69,7 +71,8 @@ export default MyCategoryCategory;
 			host,
 		);
 
-		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
+		expect(tree.readText('test/my-category/ng-doc.category.ts'))
+			.toBe(`import {NgDocCategory} from '@ng-doc/core';
 
 const MyCategoryCategory: NgDocCategory = {
 \ttitle: 'my-category',
@@ -91,7 +94,8 @@ export default MyCategoryCategory;
 			host,
 		);
 
-		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
+		expect(tree.readText('test/my-category/ng-doc.category.ts'))
+			.toBe(`import {NgDocCategory} from '@ng-doc/core';
 
 const MyCategoryCategory: NgDocCategory = {
 \ttitle: 'my-category',
@@ -113,7 +117,8 @@ export default MyCategoryCategory;
 			host,
 		);
 
-		expect(tree.readText('test/my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
+		expect(tree.readText('test/my-category/ng-doc.category.ts'))
+			.toBe(`import {NgDocCategory} from '@ng-doc/core';
 
 const MyCategoryCategory: NgDocCategory = {
 \ttitle: 'my-category',
@@ -171,7 +176,8 @@ export default ChildCategoryCategory;
 			host,
 		);
 
-		expect(tree.readText('test/folder-my-category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
+		expect(tree.readText('test/folder-my-category/ng-doc.category.ts'))
+			.toBe(`import {NgDocCategory} from '@ng-doc/core';
 
 const FolderMyCategoryCategory: NgDocCategory = {
 \ttitle: 'folder-my-category',
@@ -179,7 +185,7 @@ const FolderMyCategoryCategory: NgDocCategory = {
 
 export default FolderMyCategoryCategory;
 `);
-	})
+	});
 
 	it('should throw error if title has forbidden characters and --name was not provided', async () => {
 		try {
@@ -194,7 +200,7 @@ export default FolderMyCategoryCategory;
 		} catch (e) {
 			expect((e as Error).message).toBeTruthy();
 		}
-	})
+	});
 
 	it('should throw error if name has forbidden characters', async () => {
 		try {
@@ -210,7 +216,7 @@ export default FolderMyCategoryCategory;
 		} catch (e) {
 			expect((e as Error).message).toBeTruthy();
 		}
-	})
+	});
 
 	it('should not throw error if title has forbidden characters and --name was provided', async () => {
 		const tree: UnitTestTree = await runner.runSchematic(
@@ -223,7 +229,8 @@ export default FolderMyCategoryCategory;
 			host,
 		);
 
-		expect(tree.readText('test/category/ng-doc.category.ts')).toBe(`import {NgDocCategory} from '@ng-doc/core';
+		expect(tree.readText('test/category/ng-doc.category.ts'))
+			.toBe(`import {NgDocCategory} from '@ng-doc/core';
 
 const category: NgDocCategory = {
 \ttitle: 'Категория',
@@ -231,7 +238,7 @@ const category: NgDocCategory = {
 
 export default category;
 `);
-	})
+	});
 
 	it('should remove "category" word from folder path if --name was provided', async () => {
 		const tree: UnitTestTree = await runner.runSchematic(
@@ -245,5 +252,5 @@ export default category;
 		);
 
 		expect(tree.exists('test/my/ng-doc.category.ts')).toBe(true);
-	})
+	});
 });
