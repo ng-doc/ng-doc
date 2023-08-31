@@ -1,3 +1,28 @@
+# [16.13.0-beta.1](https://github.com/ng-doc/ng-doc/compare/v16.12.1...v16.13.0-beta.1) (2023-08-31)
+
+
+### Bug Fixes
+
+* **builder:** ESM page compilation ([#100](https://github.com/ng-doc/ng-doc/issues/100)) ([3a4b36a](https://github.com/ng-doc/ng-doc/commit/3a4b36ad676974b904519e7f6d70c5e5b83b308e))
+* **builder:** the cache is not invalidated after removing `.ng-doc` folder ([c20e479](https://github.com/ng-doc/ng-doc/commit/c20e479af6e8ad3dc23382b4a3942f54063d7714))
+* **keywords-loaders:** fix release cycle for the `keywords-loaders` library ([a1dbda9](https://github.com/ng-doc/ng-doc/commit/a1dbda92a017fe19732d8120d70c74780c2825fc))
+* **ng-doc:** `ng-doc` doesn't forget pages that have been moved to another directory ([c433a10](https://github.com/ng-doc/ng-doc/commit/c433a1007d07716833de2a987f9be63c7dc73a7a))
+* **ng-doc:** release trigger ([e7ac592](https://github.com/ng-doc/ng-doc/commit/e7ac592fc2f5ddadceb6633d13d6a3790b4eeb00))
+* **project:** dependency injection error after update to 15.10.0 ([cc41f44](https://github.com/ng-doc/ng-doc/commit/cc41f448054d73b9961f8a7be7689b4195a23c1f))
+* **semantic-release:** bump version ([d0f1862](https://github.com/ng-doc/ng-doc/commit/d0f18629d1d99afbf4f8ba5a34db227a05a84bbc))
+
+
+### Features
+
+* **project:** page layout components (page navigation, breadcrumbs, table of content) can be replaced with your own. Project was converted to standalone ([#101](https://github.com/ng-doc/ng-doc/issues/101)) ([d7aad28](https://github.com/ng-doc/ng-doc/commit/d7aad2899216490c6a1a0de64d09b10dfa3ebf15)), closes [#88](https://github.com/ng-doc/ng-doc/issues/88) [#66](https://github.com/ng-doc/ng-doc/issues/66)
+* **styles:** change margin of various page blocks to improve spacing and readability, add `--ng-doc-page-block-margin` variable that can be used to change it globally ([1441f89](https://github.com/ng-doc/ng-doc/commit/1441f8908bb2ddcdc41938280fea40d8d7f05f42))
+
+
+### BREAKING CHANGES
+
+* **project:** All modules were removed, you should use provider
+functions instead. Please read the "Migration" article to know more.
+
 ## [16.12.1](https://github.com/ng-doc/ng-doc/compare/v16.12.0...v16.12.1) (2023-08-24)
 
 ### Bug Fixes
