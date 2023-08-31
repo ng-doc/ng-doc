@@ -12,7 +12,7 @@ import { createTsConfigs } from '../utils/create-ts-configs';
 
 const collectionPath: string = join(__dirname, '../../collection.json');
 
-describe('ng-add', () => {
+describe('ng-add module app', () => {
 	let host: UnitTestTree;
 	let runner: SchematicTestRunner;
 
@@ -119,20 +119,17 @@ describe('ng-add', () => {
 		const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
 		expect(tree.readContent('test/app/app.module.ts'))
-			.toEqual(`import { provideSearchEngine, NgDocDefaultSearchEngine } from "@ng-doc/app";
-import { NgDocModule } from "@ng-doc/app";
-import { NG_DOC_ROUTING, NgDocGeneratedModule } from "@ng-doc/generated";
+			.toEqual(`import { NgDocNavbarComponent, NgDocSidebarComponent, provideSearchEngine, NgDocDefaultSearchEngine, providePageSkeleton, NG_DOC_DEFAULT_PAGE_SKELETON, providePageProcessor, NG_DOC_DEFAULT_PAGE_PROCESSORS } from "@ng-doc/app";
+import { NG_DOC_ROUTING, provideNgDocContext } from "@ng-doc/generated";
 import { RouterModule } from "@angular/router";
-import { NgDocSidebarModule } from "@ng-doc/app/components/sidebar";
-import { NgDocNavbarModule } from "@ng-doc/app/components/navbar";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import {NgModule} from '@angular/core';
-import {AppComponent} from './app.component';
+import { NgModule } from '@angular/core';
+import { AppComponent } from './app.component';
 
 @NgModule({declarations: [AppComponent],
-        imports: [BrowserAnimationsModule, NgDocNavbarModule, NgDocSidebarModule, RouterModule.forRoot(NG_DOC_ROUTING, {scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', scrollOffset: [0, 70]}), NgDocModule.forRoot(), NgDocGeneratedModule.forRoot()],
-        providers: [provideSearchEngine(NgDocDefaultSearchEngine)]
-    })
+    imports: [BrowserAnimationsModule, RouterModule.forRoot(NG_DOC_ROUTING, {scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', scrollOffset: [0, 70]}), NgDocNavbarComponent, NgDocSidebarComponent],
+    providers: [provideNgDocContext(), provideSearchEngine(NgDocDefaultSearchEngine), providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON), providePageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS)]
+})
 export class AppModule {}
 `);
 	});
@@ -204,9 +201,9 @@ export class AppModule {}
 function createMainFiles(): void {
 	createSourceFile(
 		'test/main.ts',
-		`import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
-  import {AppModule} from './app/app.module';
-  import {environment} from './environments/environment';
+		`import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+  import { AppModule } from './app/app.module';
+  import { environment } from './environments/environment';
 
   if (environment.production) {
     enableProdMode();
@@ -219,8 +216,8 @@ function createMainFiles(): void {
 
 	createSourceFile(
 		'test/app/app.module.ts',
-		`import {NgModule} from '@angular/core';
-import {AppComponent} from './app.component';
+		`import { NgModule } from '@angular/core';
+import { AppComponent } from './app.component';
 
 @NgModule({declarations: [AppComponent]})
 export class AppModule {}
@@ -229,8 +226,8 @@ export class AppModule {}
 
 	createSourceFile(
 		'test/app/app.component.ts',
-		`import {Component} from '@angular/core';
-import {AppComponent} from './app.component';
+		`import { Component } from '@angular/core';
+import { AppComponent } from './app.component';
 
 @Component({templateUrl: './app.template.html'})
 export class AppComponent {}`,

@@ -5,16 +5,21 @@ import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import {
 	addImportToNgModule,
-	ClassDeclaration,
+	addProviderToBootstrapApplicationFn,
+	addProviderToNgModule,
 	createProject,
+	getBootstrapApplicationFn,
+	getBootstrapFn,
 	getMainModule,
 	saveActiveProject,
 	setActiveProject,
 } from 'ng-morph';
+import { addImportToComponent } from 'ng-morph/ng/component/add-import-to-component';
 
-import { EntityImport, ImportModule, MAIN_MODULES } from '../constants/modules';
+import { EntityImport, ImportConstant, MODULE_APP, STANDALONE_APP } from '../constants/modules';
 import { Schema } from '../schema';
 import { addUniqueImport } from '../utils/add-unique-import';
+import { getAppComponent } from '../utils/get-app-component';
 import { getProject } from '../utils/get-project';
 
 /**
@@ -45,9 +50,83 @@ export function addNgDocAppConfig(options: Schema): Rule {
 
 			setActiveProject(createProject(tree, '/', ['**/*.ts', '**/*.json']));
 
-			const mainModule: ClassDeclaration = getMainModule(buildOptions['main'] as string);
+			const bootstrapApplicationFn = getBootstrapApplicationFn(buildOptions['main'] as string);
+			const bootstrapFn = getBootstrapFn(buildOptions['main'] as string);
 
-			importMainModules(mainModule);
+			if (bootstrapApplicationFn) {
+				const appComponent = getAppComponent(tree, buildOptions['main'] as string);
+
+				if (!appComponent) {
+					logger.error(
+						`❌ Could not find the root component. Please configure your application manually.`,
+					);
+
+					return;
+				}
+
+				STANDALONE_APP.providers.forEach((provider: ImportConstant) => {
+					addProviderToBootstrapApplicationFn(bootstrapApplicationFn, provider.initializer, {
+						unique: true,
+					});
+
+					provider.imports.forEach((providerImport: EntityImport) => {
+						addUniqueImport(
+							bootstrapApplicationFn.getSourceFile().getFilePath(),
+							providerImport.name,
+							providerImport.path,
+						);
+					});
+				});
+
+				STANDALONE_APP.imports.forEach((component: ImportConstant) => {
+					addImportToComponent(appComponent, component.initializer, { unique: true });
+
+					component.imports.forEach((componentImport: EntityImport) => {
+						addUniqueImport(
+							appComponent.getSourceFile().getFilePath(),
+							componentImport.name,
+							componentImport.path,
+						);
+					});
+				});
+			} else if (bootstrapFn) {
+				const mainModule = getMainModule(buildOptions['main'] as string);
+
+				if (!mainModule) {
+					logger.error(
+						`❌ Could not find the root module. Please configure your application manually.`,
+					);
+
+					return;
+				}
+
+				MODULE_APP.imports.forEach((module: ImportConstant) => {
+					addImportToNgModule(mainModule, module.initializer, { unique: true });
+
+					module.imports.forEach((mi: EntityImport) => {
+						addUniqueImport(mainModule.getSourceFile().getFilePath(), mi.name, mi.path);
+					});
+				});
+
+				MODULE_APP.providers.forEach((provider: ImportConstant) => {
+					addProviderToNgModule(mainModule, provider.initializer, { unique: true });
+
+					provider.imports.forEach((providerImport: EntityImport) => {
+						addUniqueImport(
+							mainModule.getSourceFile().getFilePath(),
+							providerImport.name,
+							providerImport.path,
+						);
+					});
+				});
+			} else {
+				logger.error(
+					`❌ Could not find the root module. Please configure your application manually.`,
+				);
+
+				return;
+			}
+
 			saveActiveProject();
 
 			logger.info('✅ Done!');
@@ -55,20 +134,4 @@ export function addNgDocAppConfig(options: Schema): Rule {
 			logger.error(`❌ Error: ${e}`);
 		}
 	};
-}
-
-/**
- *
- * @param mainModule
- */
-function importMainModules(mainModule: ClassDeclaration): void {
-	const mainModulePath: string = mainModule.getSourceFile().getFilePath();
-
-	MAIN_MODULES.forEach((module: ImportModule) => {
-		addImportToNgModule(mainModule, module.initializer, { unique: true });
-
-		module.imports.forEach((moduleImport: EntityImport) => {
-			addUniqueImport(mainModulePath, moduleImport.name, moduleImport.path);
-		});
-	});
 }

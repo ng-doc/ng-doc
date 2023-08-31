@@ -79,7 +79,7 @@
 		"highlight.js": "11.5.1",
 		"marked": "4.0.18",
 		"minimatch": "9.0.1",
-		"ng-morph": "2.2.5",
+		"ng-morph": "4.0.0",
 		"node-fetch": "2.6.11",
 		"nunjucks": "3.2.4",
 		"parsimmon": "^1.18.1",
@@ -94,7 +94,7 @@
 		"serve": "^14.2.0",
 		"svgo": "^2.8.0",
 		"ts-morph": "18.0.0",
-		"tslib": "^2.3.0",
+		"tslib": "^2.5.3",
 		"unist-util-filter": "4.0.1",
 		"unist-util-visit": "4.1.2",
 		"zone.js": "0.13.0"
