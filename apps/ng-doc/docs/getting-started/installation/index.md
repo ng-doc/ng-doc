@@ -212,7 +212,7 @@ import {
   NG_DOC_DEFAULT_PAGE_SKELETON,
   NgDocDefaultSearchEngine,
   provideNgDocApp,
-  providePageProcessor,
+  provideMainPageProcessor,
   providePageSkeleton,
   provideSearchEngine,
 } from '@ng-doc/app';
@@ -233,7 +233,7 @@ bootstrapApplication(AppComponent, {
     provideNgDocApp(),
     provideSearchEngine(NgDocDefaultSearchEngine),
     providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON),
-    providePageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS),
+    provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS),
     // Provide animations
     provideAnimations(),
     // Provide HttpClient with interceptors (NgDoc uses interceptors)
@@ -264,7 +264,7 @@ import {
   NgDocRootComponent,
   NgDocSidebarComponent,
   provideNgDocApp,
-  providePageProcessor,
+  provideMainPageProcessor,
   providePageSkeleton,
   provideSearchEngine,
 } from '@ng-doc/app';
@@ -298,7 +298,7 @@ import { AppComponent } from './app.component';
     provideNgDocApp(),
     provideSearchEngine(NgDocDefaultSearchEngine),
     providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON),
-    providePageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS),
+    provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS),
   ],
   bootstrap: [AppComponent],
 })

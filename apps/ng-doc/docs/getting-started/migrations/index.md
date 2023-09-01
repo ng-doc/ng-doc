@@ -21,7 +21,7 @@ NgDoc's schematics now also support standalone applications.
   be provided by using `provideNgDocApp` function.
 - `NgDocGeneratedModule` was removed, now you need to use `provideNgDocContext` function to provide
   context of the generated documentation.
-- `providePageProcessor` and `providePageSkeleton` functions were added, now you must use them to
+- `provideMainPageProcessor` and `providePageSkeleton` functions were added, now you must use them to
   provide default or your own page processors and page skeleton components.
 
 Please see updated `*GettingStartedInstallation#configuring-application` articles for more information how your
