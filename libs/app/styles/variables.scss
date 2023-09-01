@@ -40,7 +40,9 @@
 	--ng-doc-navbar-background: var(--ng-doc-base-0);
 	--ng-doc-navbar-height: calc(var(--ng-doc-base-gutter) * 7);
 	--ng-doc-navbar-horizontal-padding: var(--ng-doc-app-horizontal-padding);
-	--ng-doc-navbar-left-width: calc(var(--ng-doc-sidebar-width) - var(--ng-doc-navbar-horizontal-padding));
+	--ng-doc-navbar-left-width: calc(
+		var(--ng-doc-sidebar-width) - var(--ng-doc-navbar-horizontal-padding)
+	);
 
 	// Sidebar
 	--ng-doc-sidebar-width: 310px;
@@ -68,4 +70,8 @@
 	--ng-doc-api-tag-background: var(--ng-doc-red-10);
 	--ng-doc-guide-tag-color: var(--ng-doc-blue-100);
 	--ng-doc-guide-tag-background: var(--ng-doc-blue-10);
+
+	/* Tabs */
+	--ng-doc-tabs-margin: calc(var(--ng-doc-base-gutter) * 4) 0px;
+	--ng-doc-tabs-border-radius: var(--ng-doc-base-gutter);
 }

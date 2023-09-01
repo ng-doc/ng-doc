@@ -28,7 +28,7 @@
 		.ng-doc-code-file-name {
 			--ng-doc-text: var(--ng-doc-code-header-color);
 			--ng-doc-font-weight: 600;
-			--ng-doc-font-size: 14px;
+			--ng-doc-font-size: 13px;
 
 			ng-doc-icon {
 				margin-right: calc(var(--ng-doc-base-gutter) / 2);
@@ -50,8 +50,14 @@
 
 		--ng-doc-icon-color: var(--ng-doc-text-muted);
 		--ng-doc-button-background: transparent;
-		--ng-doc-button-hover-background: var(--ng-doc-code-copy-button-hover-background, var(--ng-doc-base-2));
-		--ng-doc-button-active-background: var(--ng-doc-code-copy-button-active-background, var(--ng-doc-base-3));
+		--ng-doc-button-hover-background: var(
+			--ng-doc-code-copy-button-hover-background,
+			var(--ng-doc-base-2)
+		);
+		--ng-doc-button-active-background: var(
+			--ng-doc-code-copy-button-active-background,
+			var(--ng-doc-base-3)
+		);
 	}
 
 	.ng-doc-code-wrapper {
@@ -87,7 +93,10 @@
 					padding: 0 calc(var(--ng-doc-base-gutter) * 2);
 
 					&.highlighted {
-						background: var(--ng-doc-code-highlight-background, rgba(var(--ng-doc-primary-rgb), 0.15));
+						background: var(
+							--ng-doc-code-highlight-background,
+							rgba(var(--ng-doc-primary-rgb), 0.15)
+						);
 
 						&:before {
 							content: '';
