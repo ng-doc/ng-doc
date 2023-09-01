@@ -1,3 +1,10 @@
+## [16.13.1](https://github.com/ng-doc/ng-doc/compare/v16.13.0...v16.13.1) (2023-09-01)
+
+
+### Bug Fixes
+
+* **processor:** add `provideMainPageProcessor` function ([ca3cd76](https://github.com/ng-doc/ng-doc/commit/ca3cd76ee195b89cd6bf18a196152edd1ae393c4))
+
 # [16.13.0](https://github.com/ng-doc/ng-doc/compare/v16.12.1...v16.13.0) (2023-08-31)
 
 
