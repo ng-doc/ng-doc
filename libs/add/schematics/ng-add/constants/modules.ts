@@ -54,9 +54,9 @@ const NG_DOC_PROVIDERS: ImportConstant[] = [
 		],
 	},
 	{
-		initializer: 'providePageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS)',
+		initializer: 'provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS)',
 		imports: [
-			{ name: 'providePageProcessor', path: '@ng-doc/app' },
+			{ name: 'provideMainPageProcessor', path: '@ng-doc/app' },
 			{ name: 'NG_DOC_DEFAULT_PAGE_PROCESSORS', path: '@ng-doc/app' },
 		],
 	},
