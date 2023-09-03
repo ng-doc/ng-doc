@@ -12,7 +12,7 @@ import { NgDocColor, NgDocSize } from '@ng-doc/ui-kit/types';
 export class NgDocButtonComponent {
 	@Input()
 	@HostBinding('attr.data-ng-doc-size')
-	size: NgDocSize = 'medium';
+	size: NgDocSize = 'small';
 
 	@Input()
 	@HostBinding('attr.data-ng-doc-color')

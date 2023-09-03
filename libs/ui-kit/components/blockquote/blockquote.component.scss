@@ -26,6 +26,12 @@
 		--ng-doc-icon-color: var(--ng-doc-warning);
 	}
 
+	&[data-ng-doc-type='alert'] {
+		--ng-doc-blockquote-background: var(--ng-doc-alert);
+		--ng-doc-blockquote-border-color: var(--ng-doc-alert);
+		--ng-doc-icon-color: var(--ng-doc-alert);
+	}
+
 	.ng-doc-blockquote-icon {
 		display: flex;
 		margin-right: calc(var(--ng-doc-base-gutter) * 2);

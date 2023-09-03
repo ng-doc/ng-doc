@@ -12,8 +12,8 @@ $colors: (
 		color: var(--ng-doc-warning-text),
 	),
 	'error': (
-		background: var(--ng-doc-error),
-		color: var(--ng-doc-error-text),
+		background: var(--ng-doc-alert),
+		color: var(--ng-doc-alert-text),
 	),
 	'link': (
 		background: var(--ng-doc-link-color),
