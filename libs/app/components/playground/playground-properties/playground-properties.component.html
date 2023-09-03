@@ -8,7 +8,9 @@
 	<div class="ng-doc-playground-properties" *ngIf="!hideSidePanel">
 		<div class="ng-doc-playground-header">
 			<h4 ng-doc-text>Playground</h4>
-			<button ng-doc-button color="red" (click)="resetForm.emit()">Reset</button>
+			<button ng-doc-button color="error" (click)="resetForm.emit()" *ngIf="showResetButton">
+				Reset
+			</button>
 		</div>
 		<div class="ng-doc-playground-setting">
 			<ng-doc-checkbox [(ngModel)]="recreateDemo" (ngModelChange)="recreateDemoChange.emit($event)">
