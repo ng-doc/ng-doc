@@ -1,7 +1,7 @@
 @import '../../styles/mixins';
 
 :host {
-	@include alpha-background(var(--ng-doc-blockquote-background, var(--ng-doc-base-10)), 0.1);
+	@include alpha-background(var(--ng-doc-blockquote-background, var(--ng-doc-base-9)), 0.1);
 	@include alpha-border(var(--ng-doc-blockquote-border-color), 0.2);
 	@include ng-doc-font();
 

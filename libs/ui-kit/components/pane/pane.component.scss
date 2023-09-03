@@ -15,7 +15,10 @@
 		position: relative;
 		display: flex;
 		width: 100%;
-		background-color: var(--ng-doc-pane-front-background, var(--ng-doc-pane-background, var(--ng-doc-base-1)));
+		background-color: var(
+			--ng-doc-pane-front-background,
+			var(--ng-doc-pane-background, var(--ng-doc-base-1))
+		);
 		overflow: hidden;
 		border-top-right-radius: var(--ng-doc-base-gutter);
 		border-bottom-right-radius: var(--ng-doc-base-gutter);
@@ -27,7 +30,10 @@
 		display: flex;
 		flex-shrink: 0;
 		width: 100%;
-		background-color: var(--ng-doc-pane-back-background, var(--ng-doc-pane-background, var(--ng-doc-base-1)));
+		background-color: var(
+			--ng-doc-pane-back-background,
+			var(--ng-doc-pane-background, var(--ng-doc-base-1))
+		);
 		overflow: hidden;
 		border-top-left-radius: var(--ng-doc-base-gutter);
 		border-bottom-left-radius: var(--ng-doc-base-gutter);
@@ -46,14 +52,14 @@
 		&:after {
 			content: '';
 			display: flex;
-			background: var(--ng-doc-base-11);
+			background: var(--ng-doc-base-10);
 			border-radius: 50px;
 			position: absolute;
 			width: 4px;
 			height: 20%;
-			margin-left: 6px;
 			top: 50%;
-			transform: translateY(-50%);
+			left: 50%;
+			transform: translateY(-50%) translateX(-50%);
 			opacity: 1;
 			transition: var(--ng-doc-transition) height;
 		}

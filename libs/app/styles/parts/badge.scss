@@ -29,26 +29,32 @@
 	text-transform: capitalize;
 
 	&[data-content='protected'] {
-		background-color: var(--ng-doc-base-8);
+		background-color: var(--ng-doc-protected-background);
+		color: var(--ng-doc-protected-color);
 	}
 
 	&[data-content='abstract'] {
-		background-color: var(--ng-doc-deep-orange-100);
+		background-color: var(--ng-doc-abstract-background);
+		color: var(--ng-doc-abstract-color);
 	}
 
 	&[data-content='static'] {
-		background-color: var(--ng-doc-pink-100);
+		background-color: var(--ng-doc-static-background);
+		color: var(--ng-doc-static-color);
 	}
 
 	&[data-content='async'] {
-		background-color: var(--ng-doc-green-100);
+		background-color: var(--ng-doc-async-background);
+		color: var(--ng-doc-async-color);
 	}
 
 	&[data-content='overriden'] {
-		background-color: var(--ng-doc-light-blue-100);
+		background-color: var(--ng-doc-overriden-background);
+		color: var(--ng-doc-overriden-color);
 	}
 
 	&[data-content='readonly'] {
-		background-color: var(--ng-doc-red-100);
+		background-color: var(--ng-doc-readonly-background);
+		color: var(--ng-doc-readonly-color);
 	}
 }

@@ -1,0 +1,22 @@
+$colors: (
+	'primary': (
+		background: var(--ng-doc-primary),
+		color: var(--ng-doc-primary-text),
+	),
+	'info': (
+		background: var(--ng-doc-info),
+		color: var(--ng-doc-info-text),
+	),
+	'warning': (
+		background: var(--ng-doc-warning),
+		color: var(--ng-doc-warning-text),
+	),
+	'error': (
+		background: var(--ng-doc-error),
+		color: var(--ng-doc-error-text),
+	),
+	'link': (
+		background: var(--ng-doc-link-color),
+		color: var(--ng-doc-primary-text),
+	),
+);

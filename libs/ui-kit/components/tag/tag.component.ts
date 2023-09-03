@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
-import {NgDocColor, NgDocPaletteColor, NgDocTagSize} from '@ng-doc/ui-kit/types';
+import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
+import { NgDocColor, NgDocTagSize } from '@ng-doc/ui-kit/types';
 
 @Component({
 	selector: 'ng-doc-tag',
@@ -11,7 +11,7 @@ import {NgDocColor, NgDocPaletteColor, NgDocTagSize} from '@ng-doc/ui-kit/types'
 export class NgDocTagComponent {
 	@Input()
 	@HostBinding('attr.data-ng-doc-color')
-	color: NgDocColor | NgDocPaletteColor = 'primary';
+	color: NgDocColor = 'primary';
 
 	@Input()
 	@HostBinding('attr.data-ng-doc-size')

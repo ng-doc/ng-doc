@@ -1,3 +1,5 @@
+@import '../../../ui-kit/styles/mixins';
+
 :host {
 	position: relative;
 	display: block;
@@ -89,23 +91,19 @@
 				}
 
 				.line {
-					position: relative;
 					padding: 0 calc(var(--ng-doc-base-gutter) * 2);
 
 					&.highlighted {
-						background: var(
-							--ng-doc-code-highlight-background,
-							rgba(var(--ng-doc-primary-rgb), 0.15)
-						);
+						@include alpha-background(var(--ng-doc-code-highlight-color), 0.05);
 
-						&:before {
+						&:after {
 							content: '';
 							position: absolute;
 							top: 0;
 							left: 0;
-							width: 2px;
+							width: 3px;
 							height: 100%;
-							background: var(--ng-doc-code-highlight-border, var(--ng-doc-primary));
+							background: var(--ng-doc-code-highlight-color);
 						}
 					}
 				}

@@ -1,3 +1,5 @@
+@import 'colors';
+
 @mixin ng-doc-font() {
 	font-family: var(--ng-doc-font-family);
 	font-variant: no-contextual;
@@ -18,18 +20,9 @@
 
 @mixin ng-doc-backdrop-filter($base-color: var(--ng-doc-base-0), $disableSelector: ':empty') {
 	&:not(#{$disableSelector}) {
-		backdrop-filter: blur(10px);
+		backdrop-filter: blur(20px);
 
-		&:before {
-			content: '';
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			background-color: $base-color;
-			opacity: 0.4;
-		}
+		@include alpha-background($base-color, 0.6);
 	}
 
 	@supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
@@ -40,5 +33,55 @@
 
 	&#{$disableSelector} {
 		background-color: $base-color;
+	}
+}
+
+@mixin alpha-background($color, $alpha) {
+	& {
+		position: relative;
+
+		&:before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: $color;
+			opacity: $alpha;
+			border-radius: inherit;
+			overflow: hidden;
+			pointer-events: none;
+		}
+	}
+}
+
+@mixin alpha-border($color, $alpha, $width: 1px) {
+	& {
+		position: relative;
+
+		&:after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			border: $width solid $color;
+			opacity: $alpha;
+			border-radius: inherit;
+			overflow: hidden;
+			pointer-events: none;
+		}
+	}
+}
+
+@mixin forEachColor($skip...) {
+	@each $color, $value in $colors {
+		@if not index($skip, $color) {
+			&[data-ng-doc-color='#{$color}'] {
+				@content (map-get($value, 'background'), map-get($value, 'color'));
+			}
+		}
 	}
 }

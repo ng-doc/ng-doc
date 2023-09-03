@@ -36,9 +36,9 @@
 	}
 
 	&[data-ng-doc-rounded='false'] {
-		--ng-doc-button-color: var(--ng-doc-grey-100);
-		--ng-doc-button-hover-color: var(--ng-doc-grey-130);
-		--ng-doc-button-active-color: var(--ng-doc-grey-160);
+		--ng-doc-button-color: var(--ng-doc-base-6);
+		--ng-doc-button-hover-color: var(--ng-doc-base-8);
+		--ng-doc-button-active-color: var(--ng-doc-base-10);
 		--ng-doc-button-hover-background: transparent;
 		--ng-doc-button-active-background: transparent;
 	}

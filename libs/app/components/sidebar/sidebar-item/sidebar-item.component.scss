@@ -21,7 +21,7 @@
 	}
 
 	&:hover:not(.active) {
-		--ng-doc-text: var(--ng-doc-grey-100);
+		--ng-doc-text: var(--ng-doc-text-muted);
 	}
 
 	&.active {

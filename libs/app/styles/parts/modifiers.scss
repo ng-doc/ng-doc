@@ -12,37 +12,37 @@
 	font-weight: 800;
 
 	&[data-content='protected'] {
-		color: var(--ng-doc-base-8);
+		color: var(--ng-doc-protected-background);
 	}
 
 	&[data-content='abstract'] {
-		color: var(--ng-doc-deep-orange-100);
+		color: var(--ng-doc-abstract-background);
 	}
 
 	&[data-content='static'] {
-		color: var(--ng-doc-pink-100);
+		color: var(--ng-doc-static-background);
 	}
 
 	&[data-content='async'] {
-		color: var(--ng-doc-green-100);
+		color: var(--ng-doc-async-background);
 	}
 
 	&[data-content='overriden'] {
-		color: var(--ng-doc-light-blue-100);
+		color: var(--ng-doc-overriden-background);
 	}
 
 	&[data-content='readonly'] {
-		color: var(--ng-doc-deep-orange-100);
+		color: var(--ng-doc-readonly-background);
 	}
 
 	&[data-content='get'] {
 		font-size: 16px;
-		color: var(--ng-doc-green-100);
+		color: var(--ng-doc-get-background);
 	}
 
 	&[data-content='set'] {
 		font-size: 16px;
-		color: var(--ng-doc-pink-100);
+		color: var(--ng-doc-set-background);
 	}
 }
 
