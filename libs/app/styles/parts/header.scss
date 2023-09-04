@@ -1,12 +1,10 @@
 @import '../mixins/headings';
+@import '../defaults';
+
+$class: $ng-doc-element;
 
 article {
-	header {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		margin-bottom: calc(var(--ng-doc-base-gutter) * 3);
-
+	header#{$class} {
 		.ng-doc-page-tags {
 			display: flex;
 			align-items: flex-start;

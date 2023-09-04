@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import { slash } from '../../../helpers';
+import { posix } from '../../../helpers';
 import { CachedFilesGetter } from '../cache';
 import { NgDocFileEntity } from './file.entity';
 
@@ -37,7 +37,7 @@ export abstract class NgDocModuleEntity<TTarget> extends NgDocFileEntity<TTarget
 	 * @type {string}
 	 */
 	get moduleImport(): string {
-		return slash(path.relative(this.context.context.workspaceRoot, this.modulePath)).replace(
+		return posix(path.relative(this.context.context.workspaceRoot, this.modulePath)).replace(
 			/.ts$/,
 			'',
 		);
