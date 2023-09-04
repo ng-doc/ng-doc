@@ -2,21 +2,21 @@
 import {Routes} from "@angular/router";
 
 const routes: Routes = [
-	{%- if scope.builtChildren.length %}
-	{path: '', redirectTo: '{{ scope.builtChildren[0].route }}', pathMatch: 'full'},
-	{%- endif %}
-	{
-		path: '',
-		title: '{{ scope.title }}',
-		children: [
-			{%- for page in scope.builtChildren %}
-			{
-				path: '{{ page.route }}',
-				loadChildren: () => import('{{ page.moduleImport }}')
-			},
-			{%- endfor %}
-		]
-	}
+    {%- if scope.builtChildren.length %}
+    {path: '', redirectTo: '{{ scope.builtChildren[0].route }}', pathMatch: 'full'},
+    {%- endif %}
+    {
+        path: '',
+        title: '{{ scope.title }}',
+        children: [
+            {%- for page in scope.builtChildren %}
+            {
+                path: '{{ page.route }}',
+                loadChildren: () => import('{{ page.moduleImport }}')
+            },
+            {%- endfor %}
+        ]
+    }
 ]
 
 export default routes;

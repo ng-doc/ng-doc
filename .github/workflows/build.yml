@@ -1,30 +1,30 @@
 name: ⚙️ Build
 
 on:
-    workflow_call:
-        inputs:
-            base:
-                type: string
-                description: Base branch
-                required: false
-                default: 'main'
-            head:
-                type: string
-                description: Head branch
-                required: false
-                default: 'HEAD'
+  workflow_call:
+    inputs:
+      base:
+        type: string
+        description: Base branch
+        required: false
+        default: 'main'
+      head:
+        type: string
+        description: Head branch
+        required: false
+        default: 'HEAD'
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-            -   name: Checkout
-                uses: actions/checkout@v3
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-            -   run: git fetch origin ${{ inputs.base }}
+      - run: git fetch origin ${{ inputs.base }}
 
-            -   name: Setup Node.js
-                uses: ./.github/actions/nodejs
+      - name: Setup Node.js
+        uses: ./.github/actions/nodejs
 
-            -   name: Build
-                run: npx nx affected --target=build --parallel --base=remotes/origin/${{ inputs.base }} --head=${{ inputs.head }}
+      - name: Build
+        run: npx nx affected --target=build --parallel --base=remotes/origin/${{ inputs.base }} --head=${{ inputs.head }}

@@ -1,4 +1,4 @@
-import {NgDocEntity} from '../../abstractions/entity';
+import { NgDocEntity } from '../../abstractions/entity';
 
 export interface NgDocEntityPlugin<T, TEntity extends NgDocEntity = NgDocEntity> {
 	id: string;

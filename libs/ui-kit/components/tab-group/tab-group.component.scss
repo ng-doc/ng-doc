@@ -4,6 +4,9 @@
 	display: flex;
 	flex-direction: column;
 	background: var(--ng-doc-tab-group-header-background, var(--ng-doc-tab-group-background));
+	border-radius: var(--ng-doc-tab-group-border-radius);
+	border: var(--ng-doc-tab-group-border);
+	overflow: hidden;
 
 	.ng-doc-tabs-wrapper {
 		@include ng-doc-font();
@@ -14,6 +17,7 @@
 		line-height: 18px;
 		font-size: 14px;
 		flex-shrink: 0;
+		background: var(--ng-doc-tab-group-tabs-background);
 
 		.ng-doc-tab {
 			position: relative;
@@ -35,5 +39,6 @@
 		background-color: var(--ng-doc-tab-group-background);
 		height: 100%;
 		overflow: hidden;
+		border-top: 1px solid var(--ng-doc-border-color);
 	}
 }

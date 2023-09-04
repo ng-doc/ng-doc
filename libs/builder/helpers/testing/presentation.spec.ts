@@ -10,7 +10,7 @@ import {
 	VariableDeclaration,
 } from 'ts-morph';
 
-import {formatCode} from '../format-code';
+import { formatCode } from '../format-code';
 import {
 	accessorPresentation,
 	constructorPresentation,
@@ -19,7 +19,7 @@ import {
 	typeAliasPresentation,
 	variablePresentation,
 } from '../presentation';
-import {createProject} from '../typescript/create-project';
+import { createProject } from '../typescript/create-project';
 
 describe('presentation', () => {
 	let project: Project;
@@ -77,7 +77,9 @@ describe('presentation', () => {
 			);
 			const declaration: FunctionDeclaration = sourceFile.getFunctionOrThrow('test');
 
-			expect(functionPresentation(declaration)).toBe(formatCode(`function test(param: boolean[] = [false]): string;`));
+			expect(functionPresentation(declaration)).toBe(
+				formatCode(`function test(param: boolean[] = [false]): string;`),
+			);
 		});
 
 		it('should display parameters array of objects value', () => {
@@ -107,7 +109,9 @@ describe('presentation', () => {
 			);
 			const declaration: FunctionDeclaration = sourceFile.getFunctionOrThrow('test');
 
-			expect(functionPresentation(declaration)).toBe(formatCode(`function test(@Inject() param: string): string;`));
+			expect(functionPresentation(declaration)).toBe(
+				formatCode(`function test(@Inject() param: string): string;`),
+			);
 		});
 
 		it('should display parameters mod', () => {
@@ -121,7 +125,9 @@ describe('presentation', () => {
 			);
 			const declaration: FunctionDeclaration = sourceFile.getFunctionOrThrow('test');
 
-			expect(functionPresentation(declaration)).toBe(formatCode(`function test(readonly param: string): string;`));
+			expect(functionPresentation(declaration)).toBe(
+				formatCode(`function test(readonly param: string): string;`),
+			);
 		});
 
 		it('should display question token for optional parameters', () => {
@@ -135,7 +141,9 @@ describe('presentation', () => {
 			);
 			const declaration: FunctionDeclaration = sourceFile.getFunctionOrThrow('test');
 
-			expect(functionPresentation(declaration)).toBe(formatCode(`function test(param?: string | undefined): string;`));
+			expect(functionPresentation(declaration)).toBe(
+				formatCode(`function test(param?: string | undefined): string;`),
+			);
 		});
 	});
 
@@ -149,7 +157,9 @@ describe('presentation', () => {
 				}
 			`,
 			);
-			const declaration: ConstructorDeclaration = sourceFile.getClassOrThrow('Test').getConstructors()[0];
+			const declaration: ConstructorDeclaration = sourceFile
+				.getClassOrThrow('Test')
+				.getConstructors()[0];
 
 			expect(constructorPresentation(declaration)).toBe(
 				formatCode(`constructor(\n\tparam1: string, \n\tparam2: boolean = false\n): Test;`),
@@ -165,7 +175,9 @@ describe('presentation', () => {
 				}
 			`,
 			);
-			const declaration: ConstructorDeclaration = sourceFile.getClassOrThrow('Test').getConstructors()[0];
+			const declaration: ConstructorDeclaration = sourceFile
+				.getClassOrThrow('Test')
+				.getConstructors()[0];
 
 			expect(constructorPresentation(declaration)).toBe(
 				formatCode(`constructor(\n\tprivate param1: string, \n\tparam2: boolean = false\n): Test;`),
@@ -181,7 +193,9 @@ describe('presentation', () => {
 				}
 			`,
 			);
-			const declaration: ConstructorDeclaration = sourceFile.getClassOrThrow('Test').getConstructors()[0];
+			const declaration: ConstructorDeclaration = sourceFile
+				.getClassOrThrow('Test')
+				.getConstructors()[0];
 
 			expect(constructorPresentation(declaration)).toBe(
 				formatCode(`constructor(\n\t@Inject() param: string\n): Test;`),
@@ -197,9 +211,13 @@ describe('presentation', () => {
 				}
 			`,
 			);
-			const declaration: ConstructorDeclaration = sourceFile.getClassOrThrow('Test').getConstructors()[0];
+			const declaration: ConstructorDeclaration = sourceFile
+				.getClassOrThrow('Test')
+				.getConstructors()[0];
 
-			expect(constructorPresentation(declaration)).toBe(formatCode(`constructor(\n\treadonly param: string\n): Test;`));
+			expect(constructorPresentation(declaration)).toBe(
+				formatCode(`constructor(\n\treadonly param: string\n): Test;`),
+			);
 		});
 
 		it('should display question token for optional parameters', () => {
@@ -211,7 +229,9 @@ describe('presentation', () => {
 				}
 			`,
 			);
-			const declaration: ConstructorDeclaration = sourceFile.getClassOrThrow('Test').getConstructors()[0];
+			const declaration: ConstructorDeclaration = sourceFile
+				.getClassOrThrow('Test')
+				.getConstructors()[0];
 
 			expect(constructorPresentation(declaration)).toBe(
 				formatCode(`constructor(\n\tparam?: string | undefined\n): Test;`),
@@ -227,10 +247,14 @@ describe('presentation', () => {
 				}
 			`,
 			);
-			const declaration: ConstructorDeclaration = sourceFile.getClassOrThrow('Test').getConstructors()[0];
+			const declaration: ConstructorDeclaration = sourceFile
+				.getClassOrThrow('Test')
+				.getConstructors()[0];
 
 			expect(constructorPresentation(declaration)).toBe(
-				formatCode(`constructor(\n\t@Inject() private readonly param?: boolean | undefined = false\n): Test;`),
+				formatCode(
+					`constructor(\n\t@Inject() private readonly param?: boolean | undefined = false\n): Test;`,
+				),
 			);
 		});
 	});
@@ -248,7 +272,9 @@ describe('presentation', () => {
 					}
 				`,
 				);
-				const declaration: GetAccessorDeclaration = sourceFile.getClassOrThrow('Test').getGetAccessors()[0];
+				const declaration: GetAccessorDeclaration = sourceFile
+					.getClassOrThrow('Test')
+					.getGetAccessors()[0];
 
 				expect(accessorPresentation(declaration)).toBe(formatCode(`get test(): string;`));
 			});
@@ -264,7 +290,9 @@ describe('presentation', () => {
 					}
 				`,
 				);
-				const declaration: GetAccessorDeclaration = sourceFile.getClassOrThrow('Test').getGetAccessors()[0];
+				const declaration: GetAccessorDeclaration = sourceFile
+					.getClassOrThrow('Test')
+					.getGetAccessors()[0];
 
 				expect(accessorPresentation(declaration)).toBe(formatCode(`private get test(): string;`));
 			});
@@ -280,7 +308,9 @@ describe('presentation', () => {
 					}
 				`,
 				);
-				const declaration: GetAccessorDeclaration = sourceFile.getClassOrThrow('Test').getGetAccessors()[0];
+				const declaration: GetAccessorDeclaration = sourceFile
+					.getClassOrThrow('Test')
+					.getGetAccessors()[0];
 
 				expect(accessorPresentation(declaration)).toBe(formatCode(`static get test(): string;`));
 			});
@@ -296,9 +326,13 @@ describe('presentation', () => {
 					}
 				`,
 				);
-				const declaration: GetAccessorDeclaration = sourceFile.getClassOrThrow('Test').getGetAccessors()[0];
+				const declaration: GetAccessorDeclaration = sourceFile
+					.getClassOrThrow('Test')
+					.getGetAccessors()[0];
 
-				expect(accessorPresentation(declaration)).toBe(formatCode(`get test(): readonly string[];`));
+				expect(accessorPresentation(declaration)).toBe(
+					formatCode(`get test(): readonly string[];`),
+				);
 			});
 
 			it('should display inherited type', () => {
@@ -312,7 +346,9 @@ describe('presentation', () => {
 					}
 				`,
 				);
-				const declaration: GetAccessorDeclaration = sourceFile.getClassOrThrow('Test').getGetAccessors()[0];
+				const declaration: GetAccessorDeclaration = sourceFile
+					.getClassOrThrow('Test')
+					.getGetAccessors()[0];
 
 				expect(accessorPresentation(declaration)).toBe(formatCode(`get test(): string;`));
 			});
@@ -328,7 +364,9 @@ describe('presentation', () => {
 					}
 				`,
 				);
-				const declaration: SetAccessorDeclaration = sourceFile.getClassOrThrow('Test').getSetAccessors()[0];
+				const declaration: SetAccessorDeclaration = sourceFile
+					.getClassOrThrow('Test')
+					.getSetAccessors()[0];
 
 				expect(accessorPresentation(declaration)).toBe(formatCode(`set test(value: string);`));
 			});
@@ -342,9 +380,13 @@ describe('presentation', () => {
 					}
 				`,
 				);
-				const declaration: SetAccessorDeclaration = sourceFile.getClassOrThrow('Test').getSetAccessors()[0];
+				const declaration: SetAccessorDeclaration = sourceFile
+					.getClassOrThrow('Test')
+					.getSetAccessors()[0];
 
-				expect(accessorPresentation(declaration)).toBe(formatCode(`private set test(value: string);`));
+				expect(accessorPresentation(declaration)).toBe(
+					formatCode(`private set test(value: string);`),
+				);
 			});
 
 			it('should display static', () => {
@@ -356,9 +398,13 @@ describe('presentation', () => {
 					}
 				`,
 				);
-				const declaration: SetAccessorDeclaration = sourceFile.getClassOrThrow('Test').getSetAccessors()[0];
+				const declaration: SetAccessorDeclaration = sourceFile
+					.getClassOrThrow('Test')
+					.getSetAccessors()[0];
 
-				expect(accessorPresentation(declaration)).toBe(formatCode(`static set test(value: string);`));
+				expect(accessorPresentation(declaration)).toBe(
+					formatCode(`static set test(value: string);`),
+				);
 			});
 
 			it('should display inherited type', () => {
@@ -370,9 +416,13 @@ describe('presentation', () => {
 					}
 				`,
 				);
-				const declaration: SetAccessorDeclaration = sourceFile.getClassOrThrow('Test').getSetAccessors()[0];
+				const declaration: SetAccessorDeclaration = sourceFile
+					.getClassOrThrow('Test')
+					.getSetAccessors()[0];
 
-				expect(accessorPresentation(declaration)).toBe(formatCode(`set test(value: string = 'string');`));
+				expect(accessorPresentation(declaration)).toBe(
+					formatCode(`set test(value: string = 'string');`),
+				);
 			});
 		});
 	});
@@ -403,7 +453,9 @@ describe('presentation', () => {
 			);
 			const declaration: MethodDeclaration = sourceFile.getClassOrThrow('Test').getMethods()[0];
 
-			expect(methodPresentation(declaration)).toBe(formatCode(`private test(param: string): void;`));
+			expect(methodPresentation(declaration)).toBe(
+				formatCode(`private test(param: string): void;`),
+			);
 		});
 
 		it('should display static', () => {
@@ -431,7 +483,9 @@ describe('presentation', () => {
 			);
 			const declaration: MethodDeclaration = sourceFile.getClassOrThrow('Test').getMethods()[0];
 
-			expect(methodPresentation(declaration)).toBe(formatCode(`abstract test(param: string): void;`));
+			expect(methodPresentation(declaration)).toBe(
+				formatCode(`abstract test(param: string): void;`),
+			);
 		});
 
 		it('should display async', () => {
@@ -445,7 +499,9 @@ describe('presentation', () => {
 			);
 			const declaration: MethodDeclaration = sourceFile.getClassOrThrow('Test').getMethods()[0];
 
-			expect(methodPresentation(declaration)).toBe(formatCode(`async test(param: string): Promise<void>;`));
+			expect(methodPresentation(declaration)).toBe(
+				formatCode(`async test(param: string): Promise<void>;`),
+			);
 		});
 
 		it('should display async and abstract together', () => {
@@ -459,7 +515,9 @@ describe('presentation', () => {
 			);
 			const declaration: MethodDeclaration = sourceFile.getClassOrThrow('Test').getMethods()[0];
 
-			expect(methodPresentation(declaration)).toBe(formatCode(`abstract async test(param: string): Promise<void>;`));
+			expect(methodPresentation(declaration)).toBe(
+				formatCode(`abstract async test(param: string): Promise<void>;`),
+			);
 		});
 
 		it('should display inherited return type', () => {
@@ -489,7 +547,9 @@ describe('presentation', () => {
 			);
 			const declaration: MethodDeclaration = sourceFile.getClassOrThrow('Test').getMethods()[0];
 
-			expect(methodPresentation(declaration)).toBe(formatCode(`test(param: string = 'test'): void;`));
+			expect(methodPresentation(declaration)).toBe(
+				formatCode(`test(param: string = 'test'): void;`),
+			);
 		});
 
 		it('should display inherited parameter type with multiple parameters', () => {
@@ -519,7 +579,9 @@ describe('presentation', () => {
 			);
 			const declaration: MethodDeclaration = sourceFile.getClassOrThrow('Test').getMethods()[0];
 
-			expect(methodPresentation(declaration)).toBe(formatCode(`test(@Inject() param: string): void;`));
+			expect(methodPresentation(declaration)).toBe(
+				formatCode(`test(@Inject() param: string): void;`),
+			);
 		});
 	});
 

@@ -1,4 +1,4 @@
-import {SchematicArgv} from '../schematic-argv';
+import { SchematicArgv } from '../schematic-argv';
 
 export interface NgDocBuildCategorySchema extends SchematicArgv {
 	/**

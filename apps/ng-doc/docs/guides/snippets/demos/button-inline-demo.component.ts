@@ -10,7 +10,7 @@ import { NgDocNotifyService } from '@ng-doc/ui-kit/services/notify';
   imports: [NgDocButtonComponent],
   template: `
     <!-- snippet "Button Template" icon="angular" -->
-    <button ng-doc-button-flat color="orange" (click)="clickEvent()">Just a button</button>
+    <button ng-doc-button-flat (click)="clickEvent()">Just a button</button>
     <!-- snippet -->
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,12 +1,19 @@
-import {ListKeyManager} from '@angular/cdk/a11y';
-import {ChangeDetectionStrategy, Component, ElementRef, Inject, NgZone, Optional} from '@angular/core';
-import {asArray} from '@ng-doc/core/helpers/as-array';
-import {NgDocListHost} from '@ng-doc/ui-kit/classes/list-host';
-import {NgDocListItem} from '@ng-doc/ui-kit/classes/list-item';
-import {toElement} from '@ng-doc/ui-kit/helpers';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {fromEvent, merge, NEVER} from 'rxjs';
-import {delayWhen, filter, repeat, takeUntil} from 'rxjs/operators';
+import { ListKeyManager } from '@angular/cdk/a11y';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	Inject,
+	NgZone,
+	Optional,
+} from '@angular/core';
+import { asArray } from '@ng-doc/core/helpers/as-array';
+import { NgDocListHost } from '@ng-doc/ui-kit/classes/list-host';
+import { NgDocListItem } from '@ng-doc/ui-kit/classes/list-item';
+import { toElement } from '@ng-doc/ui-kit/helpers';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { fromEvent, merge, NEVER } from 'rxjs';
+import { delayWhen, filter, repeat, takeUntil } from 'rxjs/operators';
 
 @Component({
 	selector: 'ng-doc-list',
@@ -25,7 +32,9 @@ export class NgDocListComponent<T> {
 		private ngZone: NgZone,
 		@Inject(NgDocListHost) @Optional() private listHost?: NgDocListHost,
 	) {
-		const origin: HTMLElement | null = this.listHost?.listHostOrigin ? toElement(this.listHost?.listHostOrigin) : null;
+		const origin: HTMLElement | null = this.listHost?.listHostOrigin
+			? toElement(this.listHost?.listHostOrigin)
+			: null;
 		const list: HTMLElement = toElement(this.elementRef);
 
 		merge(
@@ -58,7 +67,7 @@ export class NgDocListComponent<T> {
 				this.keyManager?.activeItem?.setActiveStyles();
 
 				if (this.keyManager?.activeItem)
-					toElement(this.keyManager?.activeItem.elementRef).scrollIntoView({block: 'nearest'});
+					toElement(this.keyManager?.activeItem.elementRef).scrollIntoView({ block: 'nearest' });
 			});
 	}
 

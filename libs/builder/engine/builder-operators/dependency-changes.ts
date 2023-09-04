@@ -1,9 +1,9 @@
-import {merge, mergeMap, Observable, of, OperatorFunction, switchMap, takeUntil} from 'rxjs';
-import {map, startWith, tap} from 'rxjs/operators';
+import { merge, mergeMap, Observable, of, OperatorFunction, switchMap, takeUntil } from 'rxjs';
+import { map, startWith, tap } from 'rxjs/operators';
 
-import {bufferDebounce} from '../../operators';
-import {NgDocEntity} from '../entities/abstractions/entity';
-import {NgDocWatcher} from '../watcher';
+import { bufferDebounce } from '../../operators';
+import { NgDocEntity } from '../entities/abstractions/entity';
+import { NgDocWatcher } from '../watcher';
 
 /**
  * Operator creates an additional observable that emits when the dependencies of the source observable change
@@ -11,7 +11,9 @@ import {NgDocWatcher} from '../watcher';
  *
  * @param watcher - The watcher instance.
  */
-export function dependencyChanges(watcher: NgDocWatcher): OperatorFunction<NgDocEntity[], NgDocEntity[]> {
+export function dependencyChanges(
+	watcher: NgDocWatcher,
+): OperatorFunction<NgDocEntity[], NgDocEntity[]> {
 	return (source: Observable<NgDocEntity[]>) =>
 		source.pipe(
 			mergeMap((entities: NgDocEntity[]) => {

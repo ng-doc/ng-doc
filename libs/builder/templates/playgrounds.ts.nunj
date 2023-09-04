@@ -1,5 +1,5 @@
 // @ts-nocheck
-import {ChangeDetectionStrategy, Component, NgModule, Type, ViewChild, ViewContainerRef} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Type, ViewChild, ViewContainerRef} from '@angular/core';
 import {NgDocBasePlayground, providePlaygroundDemo} from '@ng-doc/app';
 // noinspection ES6UnusedImports
 import pageEntity from '{{ targetImportPath }}';
@@ -17,49 +17,49 @@ import {CommonModule} from '@angular/common';
 {%- set components = (components.push(comp), components) %}
 
 @Component({
-	selector: 'ng-doc-playground-{{ index }}',
-	standalone: true,
-	template: `
+    selector: 'ng-doc-playground-{{ index }}',
+    standalone: true,
+    template: `
 		{{ template }}
 	`,
-	imports: [
-		CommonModule,
-		{%- if hasImports %}
-		...pageEntity.imports,
-		{%- endif %}
-		{%- if metadata.standalone %}
-		pageEntity.playgrounds['{{ id }}'].target,
-		{%- endif %}
-	],
-	changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        {%- if hasImports %}
+        ...pageEntity.imports,
+        {%- endif %}
+        {%- if metadata.standalone %}
+        pageEntity.playgrounds['{{ id }}'].target,
+        {%- endif %}
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class {{ comp.name }} extends NgDocBasePlayground {
-	static readonly selector: string = '{{ comp.selector }}';
+    static readonly selector: string = '{{ comp.selector }}';
 
-	@ViewChild(pageEntity.playgrounds['{{ id }}'].target, {static: true})
-	readonly playground: Type<any>;
+    @ViewChild(pageEntity.playgrounds['{{ id }}'].target, {static: true})
+    readonly playground: Type<any>;
 
-	@ViewChild(pageEntity.playgrounds['{{ id }}'].target, {static: true, read: ViewContainerRef})
-	readonly viewContainerRef: ViewContainerRef;
+    @ViewChild(pageEntity.playgrounds['{{ id }}'].target, {static: true, read: ViewContainerRef})
+    readonly viewContainerRef: ViewContainerRef;
 
-	readonly configData: any = pageEntity.playgrounds['{{ id }}'].data;
+    readonly configData: any = pageEntity.playgrounds['{{ id }}'].data;
 
-	constructor() {
-		super(pageEntity.playgrounds['{{ id }}'].target);
-	}
+    constructor() {
+        super(pageEntity.playgrounds['{{ id }}'].target);
+    }
 }
 {%- set index = index + 1 -%}
 {%- endfor %}
 {%- endfor %}
 
 export const PLAYGROUND_COMPONENTS = [
-	{%- for comp in components %}
-	{{ comp.name }},
-	{%- endfor %}
+    {%- for comp in components %}
+    {{ comp.name }},
+    {%- endfor %}
 ];
 
 export const PLAYGROUND_PROVIDERS = [
-	{%- for comp in components %}
-	providePlaygroundDemo('{{ comp.id }}', {{ comp.name }}),
-	{%- endfor %}
+    {%- for comp in components %}
+    providePlaygroundDemo('{{ comp.id }}', {{ comp.name }}),
+    {%- endfor %}
 ];

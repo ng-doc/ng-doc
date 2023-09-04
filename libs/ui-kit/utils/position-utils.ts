@@ -1,4 +1,4 @@
-import {Point} from '@angular/cdk/drag-drop';
+import { Point } from '@angular/cdk/drag-drop';
 
 export class NgDocPositionUtils {
 	/**
@@ -14,7 +14,8 @@ export class NgDocPositionUtils {
 		while (element) {
 			if (element === document.body) {
 				const documentElement: HTMLElement = document.documentElement;
-				xPos += documentElement.offsetLeft - documentElement.scrollLeft + documentElement.clientLeft;
+				xPos +=
+					documentElement.offsetLeft - documentElement.scrollLeft + documentElement.clientLeft;
 				yPos += documentElement.offsetTop - documentElement.scrollTop + documentElement.clientTop;
 				element = null;
 			} else {
@@ -24,7 +25,7 @@ export class NgDocPositionUtils {
 				element = NgDocPositionUtils.getOffsetParent(element) as HTMLElement;
 			}
 		}
-		return {x: xPos, y: yPos};
+		return { x: xPos, y: yPos };
 	}
 
 	/**

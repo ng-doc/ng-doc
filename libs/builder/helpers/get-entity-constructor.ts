@@ -1,5 +1,5 @@
-import {minimatch} from 'minimatch';
-import {Constructor} from 'ts-morph';
+import { minimatch } from 'minimatch';
+import { Constructor } from 'ts-morph';
 
 import {
 	API_PATTERN,
@@ -9,7 +9,7 @@ import {
 	NgDocPageEntity,
 	PAGE_PATTERN,
 } from '../engine';
-import {NgDocEntity} from '../engine/entities/abstractions/entity';
+import { NgDocEntity } from '../engine/entities/abstractions/entity';
 
 /**
  *

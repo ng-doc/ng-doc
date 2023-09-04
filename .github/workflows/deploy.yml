@@ -1,38 +1,38 @@
 name: 📚 Deploy
 
 on:
-    workflow_run:
-        workflows: [📦 Release]
-        types: [completed]
-        branches: [release]
+  workflow_run:
+    workflows: [📦 Release]
+    types: [completed]
+    branches: [release]
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        if: ${{ github.event.workflow_run.conclusion == 'success' }}
-        steps:
-            - name: Configure AWS Credentials
-              uses: aws-actions/configure-aws-credentials@v1
-              with:
-                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                  aws-region: eu-central-1
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
 
-            - name: Checkout
-              uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-            - name: Download artifact
-              uses: dawidd6/action-download-artifact@v2
-              with:
-                  workflow: release.yml
-                  workflow_conclusion: success
+      - name: Download artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: release.yml
+          workflow_conclusion: success
 
-            - name: Extract artifact
-              run: tar -xvf artifacts/ng-doc.tar
+      - name: Extract artifact
+        run: tar -xvf artifacts/ng-doc.tar
 
-            - name: Deploy
-              if: success()
-              run: |
-                  aws s3 rm s3://ng-doc --recursive
-                  aws s3 sync ./dist/apps/ng-doc s3://ng-doc
-                  AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths "/*"
+      - name: Deploy
+        if: success()
+        run: |
+          aws s3 rm s3://ng-doc --recursive
+          aws s3 sync ./dist/apps/ng-doc s3://ng-doc
+          AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths "/*"

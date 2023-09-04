@@ -1,13 +1,13 @@
-import {ClassDeclaration, InterfaceDeclaration, Node} from 'ts-morph';
+import { ClassDeclaration, InterfaceDeclaration, Node } from 'ts-morph';
 
-import {findBaseClass} from '../class';
-import {findInterface} from '../interface';
-import {findMember} from './find-member';
-import {getMemberParent} from './get-member-parent';
-import {NgDocClassMember, NgDocMemberType} from './member-type';
+import { findBaseClass } from '../class';
+import { findInterface } from '../interface';
+import { findMember } from './find-member';
+import { getMemberParent } from './get-member-parent';
+import { NgDocClassMember, NgDocMemberType } from './member-type';
 
 /**
- *	Returns member that was overridden by the provided one
+ *    Returns member that was overridden by the provided one
  *
  * @param member - Target member
  */
@@ -16,12 +16,15 @@ export function getOverriddenMember(member: NgDocMemberType): NgDocMemberType | 
 	const name: string = member.getName();
 
 	if (Node.isClassDeclaration(parent)) {
-		const baseClass: ClassDeclaration | undefined = findBaseClass(parent, (cls: ClassDeclaration) => {
-			const member: NgDocClassMember | undefined = findMember(cls, name);
-			const isAbstract: boolean = Node.isAbstractable(member) && member.isAbstract();
+		const baseClass: ClassDeclaration | undefined = findBaseClass(
+			parent,
+			(cls: ClassDeclaration) => {
+				const member: NgDocClassMember | undefined = findMember(cls, name);
+				const isAbstract: boolean = Node.isAbstractable(member) && member.isAbstract();
 
-			return !!member && !isAbstract;
-		});
+				return !!member && !isAbstract;
+			},
+		);
 
 		return baseClass && findMember(baseClass, name);
 	}

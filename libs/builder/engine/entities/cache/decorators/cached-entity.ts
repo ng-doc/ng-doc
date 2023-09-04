@@ -1,13 +1,13 @@
-import {asArray, Constructor} from '@ng-doc/core';
+import { asArray, Constructor } from '@ng-doc/core';
 
-import {NgDocCachedClass} from '../cache';
-import {loadCache} from '../helpers';
-import {NgDocCacheAccessor, NgDocCachedData, NgDocCachedType} from '../interfaces';
+import { NgDocCachedClass } from '../cache';
+import { loadCache } from '../helpers';
+import { NgDocCacheAccessor, NgDocCachedData, NgDocCachedType } from '../interfaces';
 
 /**
  * Decorator for cached entities, it will load the cache and assign the properties to the entity
  */
-export function CachedEntity<TClass extends Constructor<{id: string}>>() {
+export function CachedEntity<TClass extends Constructor<{ id: string }>>() {
 	return (Value: TClass, _context: ClassDecoratorContext<TClass>) => {
 		return class extends Value implements NgDocCachedClass {
 			__cachedProps?: Map<string, NgDocCacheAccessor<any, any>>;
@@ -19,11 +19,12 @@ export function CachedEntity<TClass extends Constructor<{id: string}>>() {
 				const cache: NgDocCachedData = loadCache(this.id);
 
 				asArray(this.__cachedProps?.keys()).forEach((property: string) => {
-					const accessor: NgDocCacheAccessor<NgDocCachedType> | undefined = this.__cachedProps?.get(property);
+					const accessor: NgDocCacheAccessor<NgDocCachedType> | undefined =
+						this.__cachedProps?.get(property);
 					const value: unknown = cache.properties?.[property];
 
 					if (Object.keys(cache?.properties ?? {}).includes(property) && accessor) {
-						Object.assign(this, {[property]: accessor.get(value as NgDocCachedType)});
+						Object.assign(this, { [property]: accessor.get(value as NgDocCachedType) });
 					}
 				});
 			}

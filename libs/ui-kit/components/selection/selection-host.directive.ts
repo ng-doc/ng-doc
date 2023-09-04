@@ -1,8 +1,8 @@
-import {Directive} from '@angular/core';
-import {Observable, ReplaySubject} from 'rxjs';
-import {distinctUntilChanged} from 'rxjs/operators';
+import { Directive } from '@angular/core';
+import { Observable, ReplaySubject } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 
-import {NgDocSelectionOriginDirective} from './selection-origin.directive';
+import { NgDocSelectionOriginDirective } from './selection-origin.directive';
 
 @Directive({
 	selector: '[ngDocSelectionHost]',
@@ -11,7 +11,9 @@ import {NgDocSelectionOriginDirective} from './selection-origin.directive';
 export class NgDocSelectionHostDirective {
 	private origins: Set<NgDocSelectionOriginDirective> = new Set<NgDocSelectionOriginDirective>();
 	private selected?: NgDocSelectionOriginDirective;
-	private selectedChange: ReplaySubject<HTMLElement | undefined> = new ReplaySubject<HTMLElement | undefined>();
+	private selectedChange: ReplaySubject<HTMLElement | undefined> = new ReplaySubject<
+		HTMLElement | undefined
+	>();
 
 	get selectedChange$(): Observable<HTMLElement | undefined> {
 		return this.selectedChange.pipe(distinctUntilChanged());
@@ -30,7 +32,8 @@ export class NgDocSelectionHostDirective {
 	}
 
 	changeSelected(origin: NgDocSelectionOriginDirective, selected: boolean): void {
-		this.selected = this.selected === origin || selected ? (selected ? origin : undefined) : this.selected;
+		this.selected =
+			this.selected === origin || selected ? (selected ? origin : undefined) : this.selected;
 		this.selectedChange.next(this.selected?.elementRef?.nativeElement ?? undefined);
 	}
 }

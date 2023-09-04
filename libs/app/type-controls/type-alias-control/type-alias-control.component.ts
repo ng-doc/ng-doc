@@ -1,9 +1,9 @@
-import {NgFor, NgIf, NgTemplateOutlet} from '@angular/common';
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {NgDocKindIconComponent} from '@ng-doc/app/components/kind-icon';
-import {NgDocTypeControl} from '@ng-doc/app/interfaces';
-import {NgDocExtractValuePipe} from '@ng-doc/app/pipes/extract-value';
+import { NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgDocKindIconComponent } from '@ng-doc/app/components/kind-icon';
+import { NgDocTypeControl } from '@ng-doc/app/interfaces';
+import { NgDocExtractValuePipe } from '@ng-doc/app/pipes/extract-value';
 import {
 	NgDocButtonIconComponent,
 	NgDocComboboxComponent,
@@ -17,7 +17,7 @@ import {
 	NgDocTextRightDirective,
 	NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
-import {FlControl} from 'flex-controls';
+import { FlControl } from 'flex-controls';
 
 @Component({
 	selector: 'ng-doc-type-alias-control',

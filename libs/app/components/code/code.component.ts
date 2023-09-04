@@ -1,8 +1,8 @@
-import {Clipboard} from '@angular/cdk/clipboard';
-import {NgIf} from '@angular/common';
-import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input} from '@angular/core';
-import {NgDocSanitizeHtmlPipe} from '@ng-doc/app/pipes/sanitize-html';
-import {NgDocPageProcessorDirective} from '@ng-doc/app/processors/page-processor';
+import { Clipboard } from '@angular/cdk/clipboard';
+import { NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input } from '@angular/core';
+import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes/sanitize-html';
+import { NgDocPageProcessorDirective } from '@ng-doc/app/processors/page-processor';
 import {
 	NgDocButtonIconComponent,
 	NgDocIconComponent,

@@ -24,7 +24,10 @@
 		},
 		"build": {
 			"executor": "nx:run-commands",
-			"outputs": ["{workspaceRoot}/dist/{projectRoot}/styles", "{workspaceRoot}/dist/{projectRoot}/assets/themes"],
+			"outputs": [
+				"{workspaceRoot}/dist/{projectRoot}/styles",
+				"{workspaceRoot}/dist/{projectRoot}/assets/themes"
+			],
 			"options": {
 				"commands": [
 					"sass --no-source-map libs/app/styles/main.scss dist/libs/app/styles/main.css",

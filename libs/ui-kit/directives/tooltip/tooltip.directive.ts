@@ -10,20 +10,20 @@ import {
 	Output,
 	ViewContainerRef,
 } from '@angular/core';
-import {asArray} from '@ng-doc/core/helpers/as-array';
-import {isPresent} from '@ng-doc/core/helpers/is-present';
-import {tooltipCloseAnimation, tooltipOpenAnimation} from '@ng-doc/ui-kit/animations';
-import {NgDocOverlayRef} from '@ng-doc/ui-kit/classes/overlay-ref';
-import {NgDocOverlayContainerComponent} from '@ng-doc/ui-kit/components/overlay-container';
-import {toElement} from '@ng-doc/ui-kit/helpers';
-import {ngDocZoneDetach, ngDocZoneOptimize} from '@ng-doc/ui-kit/observables';
-import {NgDocOverlayService} from '@ng-doc/ui-kit/services';
-import {NgDocOverlayStrategy} from '@ng-doc/ui-kit/services/overlay-strategy';
-import {BaseElement, NgDocContent, NgDocOverlayPosition} from '@ng-doc/ui-kit/types';
-import {NgDocOverlayUtils} from '@ng-doc/ui-kit/utils';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {EMPTY, fromEvent, merge, timer} from 'rxjs';
-import {filter, switchMap, takeUntil} from 'rxjs/operators';
+import { asArray } from '@ng-doc/core/helpers/as-array';
+import { isPresent } from '@ng-doc/core/helpers/is-present';
+import { tooltipCloseAnimation, tooltipOpenAnimation } from '@ng-doc/ui-kit/animations';
+import { NgDocOverlayRef } from '@ng-doc/ui-kit/classes/overlay-ref';
+import { NgDocOverlayContainerComponent } from '@ng-doc/ui-kit/components/overlay-container';
+import { toElement } from '@ng-doc/ui-kit/helpers';
+import { ngDocZoneDetach, ngDocZoneOptimize } from '@ng-doc/ui-kit/observables';
+import { NgDocOverlayService } from '@ng-doc/ui-kit/services';
+import { NgDocOverlayStrategy } from '@ng-doc/ui-kit/services/overlay-strategy';
+import { BaseElement, NgDocContent, NgDocOverlayPosition } from '@ng-doc/ui-kit/types';
+import { NgDocOverlayUtils } from '@ng-doc/ui-kit/utils';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { EMPTY, fromEvent, merge, timer } from 'rxjs';
+import { filter, switchMap, takeUntil } from 'rxjs/operators';
 
 @Directive({
 	selector: '[ngDocTooltip]',
@@ -104,7 +104,9 @@ export class NgDocTooltipDirective implements AfterViewInit, OnDestroy {
 		fromEvent(this.pointerOriginElement, 'mouseenter')
 			.pipe(
 				filter(() => this.canOpen && !this.isOpened),
-				switchMap(() => timer(this.delay).pipe(takeUntil(fromEvent(this.pointerOriginElement, 'mouseleave')))),
+				switchMap(() =>
+					timer(this.delay).pipe(takeUntil(fromEvent(this.pointerOriginElement, 'mouseleave'))),
+				),
 				ngDocZoneOptimize(this.ngZone),
 				untilDestroyed(this),
 			)
@@ -115,7 +117,9 @@ export class NgDocTooltipDirective implements AfterViewInit, OnDestroy {
 			fromEvent(this.pointerOriginElement, 'mouseleave'),
 			this.beforeOpen.pipe(
 				switchMap(() =>
-					isPresent(this.overlayRef) ? fromEvent(this.overlayRef.overlayRef.overlayElement, 'mouseleave') : EMPTY,
+					isPresent(this.overlayRef)
+						? fromEvent(this.overlayRef.overlayRef.overlayElement, 'mouseleave')
+						: EMPTY,
 				),
 			),
 		)
@@ -125,7 +129,9 @@ export class NgDocTooltipDirective implements AfterViewInit, OnDestroy {
 					timer(50).pipe(
 						takeUntil(fromEvent(this.pointerOriginElement, 'mouseenter')),
 						takeUntil(
-							isPresent(this.overlayRef) ? fromEvent(this.overlayRef.overlayRef.overlayElement, 'mouseenter') : EMPTY,
+							isPresent(this.overlayRef)
+								? fromEvent(this.overlayRef.overlayRef.overlayElement, 'mouseenter')
+								: EMPTY,
 						),
 					),
 				),
@@ -201,14 +207,20 @@ export class NgDocTooltipDirective implements AfterViewInit, OnDestroy {
 	}
 
 	private get pointerOriginElement(): HTMLElement {
-		return isPresent(this.pointerOrigin) ? toElement(this.pointerOrigin) : toElement(this.elementRef);
+		return isPresent(this.pointerOrigin)
+			? toElement(this.pointerOrigin)
+			: toElement(this.elementRef);
 	}
 
 	private get displayOriginElement(): HTMLElement {
-		return isPresent(this.displayOrigin) ? toElement(this.displayOrigin) : toElement(this.elementRef);
+		return isPresent(this.displayOrigin)
+			? toElement(this.displayOrigin)
+			: toElement(this.elementRef);
 	}
 
-	private getPositions(positions: NgDocOverlayPosition | NgDocOverlayPosition[]): NgDocOverlayPosition[] {
+	private getPositions(
+		positions: NgDocOverlayPosition | NgDocOverlayPosition[],
+	): NgDocOverlayPosition[] {
 		return NgDocOverlayUtils.getConnectedPosition(
 			!!positions && asArray(positions).length
 				? positions

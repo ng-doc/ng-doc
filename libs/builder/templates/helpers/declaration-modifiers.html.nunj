@@ -3,43 +3,43 @@
 {% import "helpers/modifier.html.nunj" as modifierMacro %}
 
 {%- macro render(declaration, type='tag') -%}
-	{% set isAbstract = declaration.isAbstract and declaration.isAbstract() %}
-	{% set isStatic = declaration.isStatic and declaration.isStatic() %}
-	{% set isAsync = declaration.isAsync and declaration.isAsync() %}
-	{% set isReadonly = declaration.isReadonly and declaration.isReadonly() %}
-	{% set isProtected = declaration.getScope and declaration.getScope() == 'protected' %}
-	{% set tooltip = ["Protected" if isProtected, "Abstract" if isAbstract, 'Static' if isStatic, 'Async' if isAsync, 'Readonly' if isReadonly] | noEmpty | join(', ') %}
+    {% set isAbstract = declaration.isAbstract and declaration.isAbstract() %}
+    {% set isStatic = declaration.isStatic and declaration.isStatic() %}
+    {% set isAsync = declaration.isAsync and declaration.isAsync() %}
+    {% set isReadonly = declaration.isReadonly and declaration.isReadonly() %}
+    {% set isProtected = declaration.getScope and declaration.getScope() == 'protected' %}
+    {% set tooltip = ["Protected" if isProtected, "Abstract" if isAbstract, 'Static' if isStatic, 'Async' if isAsync, 'Readonly' if isReadonly] | noEmpty | join(', ') %}
 
-	{%- if type == 'badge' %}
-		{%- if isAbstract or isStatic or isAsync or isReadonly or isProtected %}
-			<span class="ng-doc-badge-wrapper" ngDocTooltip="{{ tooltip }}" indexable="false">
+    {%- if type == 'badge' %}
+        {%- if isAbstract or isStatic or isAsync or isReadonly or isProtected %}
+            <span class="ng-doc-badge-wrapper" ngDocTooltip="{{ tooltip }}" indexable="false">
 				{{ badgeMacro.render("protected") if isProtected }}
-				{{ badgeMacro.render("abstract") if isAbstract }}
-				{{ badgeMacro.render("static") if isStatic }}
-				{{ badgeMacro.render("async") if isAsync }}
-				{{ badgeMacro.render("readonly") if isReadonly }}
+                {{ badgeMacro.render("abstract") if isAbstract }}
+                {{ badgeMacro.render("static") if isStatic }}
+                {{ badgeMacro.render("async") if isAsync }}
+                {{ badgeMacro.render("readonly") if isReadonly }}
 			</span>
-		{%- endif %}
+        {%- endif %}
 
-	{%- elseif type == 'modifier' %}
-		{%- if isAbstract or isStatic or isAsync or isReadonly or isProtected %}
-			<div class="ng-doc-modifiers-wrapper" indexable="false">
-				{{ modifierMacro.render("protected") if isProtected }}
-				{{ modifierMacro.render("abstract") if isAbstract }}
-				{{ modifierMacro.render("static") if isStatic }}
-				{{ modifierMacro.render("async") if isAsync }}
-				{{ modifierMacro.render("readonly") if isReadonly }}
-			</div>
-		{%- endif %}
-	{%- else %}
-		{%- if isAbstract or isStatic or isAsync or isReadonly or isProtected %}
-			<span class="ng-doc-tags-wrapper" indexable="false">
+    {%- elseif type == 'modifier' %}
+        {%- if isAbstract or isStatic or isAsync or isReadonly or isProtected %}
+            <div class="ng-doc-modifiers-wrapper" indexable="false">
+                {{ modifierMacro.render("protected") if isProtected }}
+                {{ modifierMacro.render("abstract") if isAbstract }}
+                {{ modifierMacro.render("static") if isStatic }}
+                {{ modifierMacro.render("async") if isAsync }}
+                {{ modifierMacro.render("readonly") if isReadonly }}
+            </div>
+        {%- endif %}
+    {%- else %}
+        {%- if isAbstract or isStatic or isAsync or isReadonly or isProtected %}
+            <span class="ng-doc-tags-wrapper" indexable="false">
 				{{ tagMacro.render("protected") if isProtected }}
-				{{ tagMacro.render("abstract") if isAbstract }}
-				{{ tagMacro.render("static") if isStatic }}
-				{{ tagMacro.render("async") if isAsync }}
-				{{ tagMacro.render("readonly") if isReadonly }}
+                {{ tagMacro.render("abstract") if isAbstract }}
+                {{ tagMacro.render("static") if isStatic }}
+                {{ tagMacro.render("async") if isAsync }}
+                {{ tagMacro.render("readonly") if isReadonly }}
 			</span>
-		{%- endif %}
-	{%- endif %}
+        {%- endif %}
+    {%- endif %}
 {%- endmacro -%}

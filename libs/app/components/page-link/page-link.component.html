@@ -1,4 +1,9 @@
-<a [class]="classes" [routerLink]="path" [fragment]="fragment" [queryParams]="queryParams" *ngIf="!isExternalLink">
+<a
+	[class]="classes"
+	[routerLink]="path"
+	[fragment]="fragment"
+	[queryParams]="queryParams"
+	*ngIf="!isExternalLink">
 	<ng-container *ngTemplateOutlet="content"></ng-container>
 </a>
 

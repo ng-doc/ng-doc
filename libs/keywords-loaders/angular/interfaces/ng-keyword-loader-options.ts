@@ -1,4 +1,4 @@
-import {NgVersion} from '../types';
+import { NgVersion } from '../types';
 
 export interface NgKeywordLoaderOptions {
 	version?: NgVersion;

@@ -1,29 +1,33 @@
 @import '../../../../node_modules/highlight.js/styles/github-dark';
 
 :root {
-	--ng-doc-base-0: var(--ng-doc-grey-180);
-	--ng-doc-base-1: var(--ng-doc-grey-170);
-	--ng-doc-base-2: var(--ng-doc-grey-160);
-	--ng-doc-base-3: var(--ng-doc-grey-150);
-	--ng-doc-base-4: var(--ng-doc-grey-150);
-	--ng-doc-base-5: var(--ng-doc-grey-140);
-	--ng-doc-base-6: var(--ng-doc-grey-130);
-	--ng-doc-base-7: var(--ng-doc-grey-120);
-	--ng-doc-base-8: var(--ng-doc-grey-110);
-	--ng-doc-base-9: var(--ng-doc-grey-100);
-	--ng-doc-base-10: var(--ng-doc-grey-90);
-	--ng-doc-base-11: var(--ng-doc-grey-80);
+	--ng-doc-base-0: #2b2b2b;
+	--ng-doc-base-1: #333333;
+	--ng-doc-base-2: #3a3a3a;
+	--ng-doc-base-3: #424242;
+	--ng-doc-base-4: #4b4b4b;
+	--ng-doc-base-5: #555555;
+	--ng-doc-base-6: #5e5e5e;
+	--ng-doc-base-7: #686868;
+	--ng-doc-base-8: #727272;
+	--ng-doc-base-9: #7d7d7d;
+	--ng-doc-base-10: #888888;
 	--ng-doc-text: #f6f6f6;
-	--ng-doc-shadow-color: rgb(var(--ng-doc-grey-rgb));
-	--ng-doc-link-color: var(--ng-doc-light-blue-100);
-	--ng-doc-link-color-rgb: var(--ng-doc-light-blue-rgb);
-	--ng-doc-primary: var(--ng-doc-ember-140);
-	--ng-doc-primary-rgb: var(--ng-doc-ember-rgb);
-	--ng-doc-mark-background: var(--ng-doc-blue-40);
+	--ng-doc-text-muted: var(--ng-doc-base-10);
+	--ng-doc-text-selection: rgba(110, 110, 110, 0.81);
+
+	--ng-doc-shadow-color: rgba(0, 0, 0, 0.4);
+	--ng-doc-link-color: #30a5ff;
+	--ng-doc-inline-code-background: #b9b9b9;
+
+	--ng-doc-primary: #faab00;
+	--ng-doc-info: #7095ff;
+
+	--ng-doc-mark-background: rgba(48, 165, 255, 0.3);
 	--ng-doc-search-result-color: #c6c6c6;
 
 	--ng-doc-api-tag-background: #ff5959;
 	--ng-doc-api-tag-color: var(--ng-doc-base-0);
-	--ng-doc-guide-tag-background: var(--ng-doc-ember-140);
+	--ng-doc-guide-tag-background: #faab00;
 	--ng-doc-guide-tag-color: var(--ng-doc-base-0);
 }

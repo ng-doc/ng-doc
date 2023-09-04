@@ -1,8 +1,8 @@
-import {Clipboard} from '@angular/cdk/clipboard';
-import {NgIf, NgTemplateOutlet} from '@angular/common';
-import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
-import {NgDocCodeComponent} from '@ng-doc/app/components/code';
-import {NgDocCodeHighlighterDirective} from '@ng-doc/app/directives/code-highlighter';
+import { Clipboard } from '@angular/cdk/clipboard';
+import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
+import { NgDocCodeComponent } from '@ng-doc/app/components/code';
+import { NgDocCodeHighlighterDirective } from '@ng-doc/app/directives/code-highlighter';
 import {
 	NgDocButtonIconComponent,
 	NgDocContent,

@@ -1,4 +1,4 @@
-import {ConnectedPosition} from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
 
 export type NgDocOverlayPosition =
 	| 'top-left'

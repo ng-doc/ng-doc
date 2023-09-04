@@ -1,10 +1,10 @@
-import {escapeHtml, NgDocDemoActionOptions} from '@ng-doc/core';
+import { escapeHtml, NgDocDemoActionOptions } from '@ng-doc/core';
 
-import {NgDocActionOutput} from '../../interfaces';
-import {NgDocAction} from '../../types';
+import { NgDocActionOutput } from '../../interfaces';
+import { NgDocAction } from '../../types';
 
 /**
- *	Render demo point on the page, it will be rendered by the application
+ *    Render demo point on the page, it will be rendered by the application
  *
  * @param componentName - The title of the component class to render
  * @param options - Options for configuring the action

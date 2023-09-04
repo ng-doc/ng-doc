@@ -5,18 +5,25 @@ import {
 	OverlayRef,
 	ScrollStrategyOptions,
 } from '@angular/cdk/overlay';
-import {ComponentPortal} from '@angular/cdk/portal';
-import {ComponentRef, Injectable, Injector, NgZone, Optional, StaticProvider} from '@angular/core';
-import {Router} from '@angular/router';
-import {asArray} from '@ng-doc/core/helpers/as-array';
-import {NgDocOverlayRef} from '@ng-doc/ui-kit/classes';
-import {NgDocOverlayConfig, NgDocOverlayContainer} from '@ng-doc/ui-kit/interfaces';
-import {NgDocContent, NgDocOverlayOrigin, NgDocOverlayPosition} from '@ng-doc/ui-kit/types';
-import {NgDocOverlayUtils} from '@ng-doc/ui-kit/utils';
-import {PolymorpheusComponent} from '@tinkoff/ng-polymorpheus';
-import {take} from 'rxjs/operators';
+import { ComponentPortal } from '@angular/cdk/portal';
+import {
+	ComponentRef,
+	Injectable,
+	Injector,
+	NgZone,
+	Optional,
+	StaticProvider,
+} from '@angular/core';
+import { Router } from '@angular/router';
+import { asArray } from '@ng-doc/core/helpers/as-array';
+import { NgDocOverlayRef } from '@ng-doc/ui-kit/classes';
+import { NgDocOverlayConfig, NgDocOverlayContainer } from '@ng-doc/ui-kit/interfaces';
+import { NgDocContent, NgDocOverlayOrigin, NgDocOverlayPosition } from '@ng-doc/ui-kit/types';
+import { NgDocOverlayUtils } from '@ng-doc/ui-kit/utils';
+import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
+import { take } from 'rxjs/operators';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class NgDocOverlayService {
 	constructor(
 		private overlay: Overlay,
@@ -26,7 +33,11 @@ export class NgDocOverlayService {
 		private router?: Router,
 	) {}
 
-	open<R>(content: NgDocContent, config: NgDocOverlayConfig, providers: StaticProvider[] = []): NgDocOverlayRef<R> {
+	open<R>(
+		content: NgDocContent,
+		config: NgDocOverlayConfig,
+		providers: StaticProvider[] = [],
+	): NgDocOverlayRef<R> {
 		const overlayRef: OverlayRef = this.createOverlay(config);
 		return this.attachTooltipContainer(content, overlayRef, config, providers);
 	}

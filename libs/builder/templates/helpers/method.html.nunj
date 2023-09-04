@@ -6,60 +6,60 @@
 {% import "helpers/no-content.html.nunj" as noContentMacro %}
 
 {% macro render(method, origin) %}
-	{% set parameters = method.getParameters() %}
-	{% set methodChain = method | getMethodChain %}
-	{% set inheritedFrom = method | getInheritedParent(origin) %}
-	{% set overriddenMember = method | getOverriddenMember %}
-	{% set implementedMember = method | getImplementedMember %}
-	{% set docNode = methodChain | firstNodeWithComment %}
+    {% set parameters = method.getParameters() %}
+    {% set methodChain = method | getMethodChain %}
+    {% set inheritedFrom = method | getInheritedParent(origin) %}
+    {% set overriddenMember = method | getOverriddenMember %}
+    {% set implementedMember = method | getImplementedMember %}
+    {% set docNode = methodChain | firstNodeWithComment %}
 
-	<div class="ng-doc-table-wrapper">
-		<table class="ng-doc-method-table">
-			<thead>
-			<tr>
-				<th indexable="false">
-					{{ decoratorsMacro.render(method.getDecorators()) if method.getDecorators }}
-					{{ tagsMacro.render(method, 'modifier') }}
-					<h3 dataSlugType="member">{{ method.getName() }}()</h3>
-					<div class="ng-doc-node-details">
-						{%- if inheritedFrom %}
-							inherited from <code>{{ inheritedFrom.getName() }}</code>
-						{%- elseif overriddenMember %}
-							overrides <code>{{ (overriddenMember | getMemberParent).getName() }}</code>
-						{%- elseif implementedMember %}
-							implements <code>{{ (implementedMember | getMemberParent).getName() }}</code>
-						{%- endif %}
-					</div>
-				</th>
-			</tr>
-			</thead>
-			<tbody>
-			<tr>
-				<td>
-					{% set description = docNode | extractDocs %}
+    <div class="ng-doc-table-wrapper">
+        <table class="ng-doc-method-table">
+            <thead>
+            <tr>
+                <th indexable="false">
+                    {{ decoratorsMacro.render(method.getDecorators()) if method.getDecorators }}
+                    {{ tagsMacro.render(method, 'modifier') }}
+                    <h3 dataSlugType="member">{{ method.getName() }}()</h3>
+                    <div class="ng-doc-node-details">
+                        {%- if inheritedFrom %}
+                            inherited from <code>{{ inheritedFrom.getName() }}</code>
+                        {%- elseif overriddenMember %}
+                            overrides <code>{{ (overriddenMember | getMemberParent).getName() }}</code>
+                        {%- elseif implementedMember %}
+                            implements <code>{{ (implementedMember | getMemberParent).getName() }}</code>
+                        {%- endif %}
+                    </div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    {% set description = docNode | extractDocs %}
 
-					{{ description if description else noContentMacro.render('No documentation has been provided.') }}
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<h5 class="no-anchor" indexable="false">Presentation</h5>
-					{{ codeMacro.render(method | methodPresentation, "typescript", false) }}
-				</td>
-			</tr>
-			<tr>
-				<td>
-					{%- if parameters.length %}
-						<h5 class="no-anchor" indexable="false">Parameters</h5>
-						{{ parametersMacro.render(parameters, docNode) }}
-					{%- endif %}
-					<h5 class="no-anchor" indexable="false">Returns</h5>
-					<p>
-						{{ typeMacro.returnType(method) }}
-					</p>
-				</td>
-			</tr>
-			</tbody>
-		</table>
-	</div>
+                    {{ description if description else noContentMacro.render('No documentation has been provided.') }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h5 class="no-anchor" indexable="false">Presentation</h5>
+                    {{ codeMacro.render(method | methodPresentation, "typescript", false) }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {%- if parameters.length %}
+                        <h5 class="no-anchor" indexable="false">Parameters</h5>
+                        {{ parametersMacro.render(parameters, docNode) }}
+                    {%- endif %}
+                    <h5 class="no-anchor" indexable="false">Returns</h5>
+                    <p>
+                        {{ typeMacro.returnType(method) }}
+                    </p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 {% endmacro %}

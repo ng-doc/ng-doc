@@ -1,8 +1,8 @@
-import {cosmiconfigSync, PublicExplorerSync} from 'cosmiconfig';
-import {CosmiconfigResult} from 'cosmiconfig/dist/types';
-import {TypeScriptLoader} from 'cosmiconfig-typescript-loader';
+import { cosmiconfigSync, PublicExplorerSync } from 'cosmiconfig';
+import { CosmiconfigResult } from 'cosmiconfig/dist/types';
+import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
 
-import {NgDocConfiguration} from '../interfaces';
+import { NgDocConfiguration } from '../interfaces';
 
 /**
  * Loads configuration from global configuration file
@@ -19,7 +19,9 @@ export function loadConfig(path: string, search: boolean = true): [string, NgDoc
 			'.ts': TypeScriptLoader(),
 		},
 	});
-	const searchedFor: CosmiconfigResult | null = search ? explorerSync.search(path) : explorerSync.load(path);
+	const searchedFor: CosmiconfigResult | null = search
+		? explorerSync.search(path)
+		: explorerSync.load(path);
 
 	return [searchedFor?.filepath ?? '', searchedFor?.config ?? {}];
 }

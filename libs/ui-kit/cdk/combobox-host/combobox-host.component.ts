@@ -19,12 +19,12 @@ import {
 	NgDocListHost,
 	NgDocOverlayHost,
 } from '@ng-doc/ui-kit/classes';
-import {NgDocDropdownComponent} from '@ng-doc/ui-kit/components/dropdown';
-import {NgDocDropdownHandlerDirective} from '@ng-doc/ui-kit/directives/dropdown-handler';
-import {NgDocFocusCatcherDirective} from '@ng-doc/ui-kit/directives/focus-catcher';
-import {ngDocZoneOptimize} from '@ng-doc/ui-kit/observables';
-import {NgDocDisplayValueFunction, NgDocOverlayPosition} from '@ng-doc/ui-kit/types';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
+import { NgDocDropdownComponent } from '@ng-doc/ui-kit/components/dropdown';
+import { NgDocDropdownHandlerDirective } from '@ng-doc/ui-kit/directives/dropdown-handler';
+import { NgDocFocusCatcherDirective } from '@ng-doc/ui-kit/directives/focus-catcher';
+import { ngDocZoneOptimize } from '@ng-doc/ui-kit/observables';
+import { NgDocDisplayValueFunction, NgDocOverlayPosition } from '@ng-doc/ui-kit/types';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
 	FL_CONTROL_HOST,
 	FL_DEFAULT_COMPARE,
@@ -34,7 +34,7 @@ import {
 	FlControlSelector,
 	provideControlHost,
 } from 'flex-controls';
-import {filter} from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 
 @Component({
 	selector: 'ng-doc-combobox-host',
@@ -84,7 +84,7 @@ export class NgDocComboboxHostComponent<T>
 	@Input()
 	displayValueFn: NgDocDisplayValueFunction<T> = String;
 
-	@ViewChild('origin', {read: ElementRef, static: true})
+	@ViewChild('origin', { read: ElementRef, static: true })
 	origin?: ElementRef<HTMLElement>;
 
 	@ContentChild(NgDocDropdownComponent)

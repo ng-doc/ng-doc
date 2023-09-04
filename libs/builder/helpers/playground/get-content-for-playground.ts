@@ -1,4 +1,4 @@
-import {Expression, Node, ObjectLiteralElementLike, ObjectLiteralExpression} from 'ts-morph';
+import { Expression, Node, ObjectLiteralElementLike, ObjectLiteralExpression } from 'ts-morph';
 
 /**
  *
@@ -6,7 +6,9 @@ import {Expression, Node, ObjectLiteralElementLike, ObjectLiteralExpression} fro
  * @param playgroundId
  * @param playground
  */
-export function getContentForPlayground(playground: ObjectLiteralExpression): Record<string, string> {
+export function getContentForPlayground(
+	playground: ObjectLiteralExpression,
+): Record<string, string> {
 	const content: ObjectLiteralElementLike | undefined = playground.getProperty('content');
 
 	if (Node.isPropertyAssignment(content)) {
@@ -20,10 +22,12 @@ export function getContentForPlayground(playground: ObjectLiteralExpression): Re
 						const initializer: Expression | undefined = property.getInitializer();
 
 						if (Node.isObjectLiteralExpression(initializer)) {
-							const templateProperty: ObjectLiteralElementLike | undefined = initializer.getProperty('template');
+							const templateProperty: ObjectLiteralElementLike | undefined =
+								initializer.getProperty('template');
 
 							if (Node.isPropertyAssignment(templateProperty)) {
-								const templateInitializer: Expression | undefined = templateProperty.getInitializer();
+								const templateInitializer: Expression | undefined =
+									templateProperty.getInitializer();
 
 								if (
 									Node.isStringLiteral(templateInitializer) ||

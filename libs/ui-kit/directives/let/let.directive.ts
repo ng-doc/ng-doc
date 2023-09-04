@@ -1,6 +1,6 @@
-import {Directive, Input, TemplateRef, ViewContainerRef} from '@angular/core';
+import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 
-import {NgDocLetContext} from './let-context';
+import { NgDocLetContext } from './let-context';
 
 @Directive({
 	selector: '[ngDocLet]',
@@ -17,7 +17,10 @@ export class NgDocLetDirective<T> {
 		this.viewContainer.createEmbeddedView(this.templateRef, new NgDocLetContext<T>(this));
 	}
 
-	static ngTemplateContextGuard<T>(_dir: NgDocLetDirective<T>, _ctx: unknown): _ctx is NgDocLetDirective<T> {
+	static ngTemplateContextGuard<T>(
+		_dir: NgDocLetDirective<T>,
+		_ctx: unknown,
+	): _ctx is NgDocLetDirective<T> {
 		return true;
 	}
 }

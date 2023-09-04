@@ -1,11 +1,11 @@
-import {NgDocEntityAnchor, NgDocHeading} from '@ng-doc/core';
+import { NgDocEntityAnchor, NgDocHeading } from '@ng-doc/core';
 import twig from 'highlight.js/lib/languages/twig';
 import rehypeFormat from 'rehype-format';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeMinifyWhitespace from 'rehype-minify-whitespace';
 import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
-import {unified, VFileWithOutput} from 'unified';
+import { unified, VFileWithOutput } from 'unified';
 
 import autolinkHeadingPlugin from './plugins/autolink-headings.plugin';
 import codeBlockLinesPlugin from './plugins/code-block-lines.plugin';
@@ -24,12 +24,15 @@ export interface NgDocHtmlProcessorConfig {
  * @param html
  * @param config
  */
-export async function htmlProcessor(html: string, config: NgDocHtmlProcessorConfig): Promise<string> {
+export async function htmlProcessor(
+	html: string,
+	config: NgDocHtmlProcessorConfig,
+): Promise<string> {
 	return unified()
-		.use(rehypeParse, {fragment: true})
+		.use(rehypeParse, { fragment: true })
 		.use(rehypeStringify)
 		.use(rehypeFormat)
-		.use(rehypeHighlight, {ignoreMissing: true, languages: {twig}})
+		.use(rehypeHighlight, { ignoreMissing: true, languages: { twig } })
 		.use(codeBlockLinesPlugin)
 		.use(highlightCodeLines)
 		.use(sluggerPlugin, config.addAnchor, config.headings)

@@ -1,4 +1,4 @@
-import {Node, PropertyDeclaration, SyntaxKind} from 'ts-morph';
+import { Node, PropertyDeclaration, SyntaxKind } from 'ts-morph';
 
 /**
  * Returns the name of the component input.
@@ -16,7 +16,9 @@ export function getInputName(property: PropertyDeclaration): string {
 		const inputAliasProperty = inputArgument.getProperty('alias');
 
 		if (Node.isPropertyAssignment(inputAliasProperty)) {
-			return inputAliasProperty.getInitializerIfKindOrThrow(SyntaxKind.StringLiteral).getLiteralText();
+			return inputAliasProperty
+				.getInitializerIfKindOrThrow(SyntaxKind.StringLiteral)
+				.getLiteralText();
 		}
 	}
 

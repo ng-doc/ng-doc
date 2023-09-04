@@ -1,7 +1,7 @@
-import {HostTree} from '@angular-devkit/schematics';
-import {SchematicTestRunner, UnitTestTree} from '@angular-devkit/schematics/testing';
-import {createProject, setActiveProject} from 'ng-morph';
-import {join} from 'path';
+import { HostTree } from '@angular-devkit/schematics';
+import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { createProject, setActiveProject } from 'ng-morph';
+import { join } from 'path';
 
 const collectionPath: string = join(__dirname, '../../collection.json');
 
@@ -17,7 +17,7 @@ describe('api', () => {
 	});
 
 	it('should generate api entity', async () => {
-		const tree: UnitTestTree = await runner.runSchematic('api', {path: 'test'}, host);
+		const tree: UnitTestTree = await runner.runSchematic('api', { path: 'test' }, host);
 
 		expect(tree.readText('test/ng-doc.api.ts')).toBe(`import {NgDocApi} from '@ng-doc/core';
 

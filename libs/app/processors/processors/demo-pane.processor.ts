@@ -1,5 +1,5 @@
-import {NgDocDemoPaneComponent} from '@ng-doc/app/components/demo-pane';
-import {NgDocPageProcessor} from '@ng-doc/app/interfaces';
+import { NgDocDemoPaneComponent } from '@ng-doc/app/components/demo-pane';
+import { NgDocPageProcessor } from '@ng-doc/app/interfaces';
 
 export const demoPaneProcessor: NgDocPageProcessor<NgDocDemoPaneComponent> = {
 	component: NgDocDemoPaneComponent,

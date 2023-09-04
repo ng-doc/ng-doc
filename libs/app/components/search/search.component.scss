@@ -4,7 +4,7 @@
 	--ng-doc-input-background-color: var(--ng-doc-base-1);
 	--ng-doc-input-border: none;
 	--ng-doc-input-border-hover: none;
-	--ng-doc-icon-color: var(--ng-doc-base-8);
+	--ng-doc-icon-color: var(--ng-doc-base-7);
 
 	&[data-ng-doc-mod='input'] {
 		width: 480px;
@@ -51,8 +51,8 @@
 	width: calc(var(--ng-doc-base-gutter) * 3);
 	height: calc(var(--ng-doc-base-gutter) * 3);
 	margin-right: var(--ng-doc-base-gutter);
-	--ng-doc-tag-border: 1px solid var(--ng-doc-base-7);
-	--ng-doc-tag-color: var(--ng-doc-base-7);
+	--ng-doc-tag-border: 1px solid var(--ng-doc-base-6);
+	--ng-doc-tag-color: var(--ng-doc-base-6);
 	--ng-doc-tag-background: transparent;
 }
 

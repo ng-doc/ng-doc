@@ -1,13 +1,13 @@
-import {ClassDeclaration, Project, PropertyDeclaration, Scope, SourceFile} from 'ts-morph';
+import { ClassDeclaration, Project, PropertyDeclaration, Scope, SourceFile } from 'ts-morph';
 
-import {createProject} from '../create-project';
-import {filterByScope} from '../filter-by-scope';
+import { createProject } from '../create-project';
+import { filterByScope } from '../filter-by-scope';
 
 describe('filterByScope', () => {
 	let project: Project;
 
 	beforeEach(() => {
-		project = createProject({useInMemoryFileSystem: true});
+		project = createProject({ useInMemoryFileSystem: true });
 	});
 
 	it('should return private members', () => {
@@ -27,8 +27,8 @@ describe('filterByScope', () => {
 		const declaration: ClassDeclaration = sourceFile.getClassOrThrow('Test');
 
 		expect(
-			filterByScope(declaration.getProperties(), Scope.Public).map((property: PropertyDeclaration) =>
-				property.getName(),
+			filterByScope(declaration.getProperties(), Scope.Public).map(
+				(property: PropertyDeclaration) => property.getName(),
 			),
 		).toStrictEqual(['publicProperty1', 'publicProperty2']);
 	});
@@ -53,6 +53,11 @@ describe('filterByScope', () => {
 			filterByScope(declaration.getProperties(), [Scope.Private, Scope.Protected]).map(
 				(property: PropertyDeclaration) => property.getName(),
 			),
-		).toStrictEqual(['privateProperty1', 'privateProperty2', 'protectedProperty1', 'protectedProperty2']);
+		).toStrictEqual([
+			'privateProperty1',
+			'privateProperty2',
+			'protectedProperty1',
+			'protectedProperty2',
+		]);
 	});
 });

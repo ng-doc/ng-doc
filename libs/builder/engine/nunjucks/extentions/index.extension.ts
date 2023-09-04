@@ -1,4 +1,4 @@
-import nunjucks, {Extension} from 'nunjucks';
+import nunjucks, { Extension } from 'nunjucks';
 
 export class NgDocIndexExtension implements Extension {
 	tags: string[] = ['index'];

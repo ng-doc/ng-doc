@@ -1,10 +1,10 @@
-import {Directive, EventEmitter, Input, NgZone, Output} from '@angular/core';
-import {isKeyboardEvent} from '@ng-doc/core/helpers/is-keyboard-event';
-import {objectKeys} from '@ng-doc/core/helpers/object-keys';
-import {ngDocZoneOptimize} from '@ng-doc/ui-kit/observables';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {fromEvent, Observable} from 'rxjs';
-import {filter, share} from 'rxjs/operators';
+import { Directive, EventEmitter, Input, NgZone, Output } from '@angular/core';
+import { isKeyboardEvent } from '@ng-doc/core/helpers/is-keyboard-event';
+import { objectKeys } from '@ng-doc/core/helpers/object-keys';
+import { ngDocZoneOptimize } from '@ng-doc/ui-kit/observables';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { fromEvent, Observable } from 'rxjs';
+import { filter, share } from 'rxjs/operators';
 
 const KEYUP_EVENT: Observable<Event> = fromEvent(document, 'keyup').pipe(share());
 

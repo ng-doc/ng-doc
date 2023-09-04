@@ -1,5 +1,13 @@
-import {NgZone} from '@angular/core';
-import {MonoTypeOperatorFunction, Observable, Observer, Operator, pipe, Subscriber, TeardownLogic} from 'rxjs';
+import { NgZone } from '@angular/core';
+import {
+	MonoTypeOperatorFunction,
+	Observable,
+	Observer,
+	Operator,
+	pipe,
+	Subscriber,
+	TeardownLogic,
+} from 'rxjs';
 
 class NgDocZoneDetachSourceOperator<T> implements Operator<T, T> {
 	constructor(private readonly ngZone: NgZone) {}

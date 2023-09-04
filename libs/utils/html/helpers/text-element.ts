@@ -1,9 +1,9 @@
-import {Text} from 'hast';
+import { Text } from 'hast';
 
 /**
  *
  * @param value
  */
 export function textElement(value: string): Text {
-	return {type: 'text', value};
+	return { type: 'text', value };
 }

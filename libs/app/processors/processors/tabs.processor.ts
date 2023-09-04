@@ -1,5 +1,5 @@
-import {NgDocTabsComponent} from '@ng-doc/app/components/tabs';
-import {NgDocPageProcessor, NgDocTab} from '@ng-doc/app/interfaces';
+import { NgDocTabsComponent } from '@ng-doc/app/components/tabs';
+import { NgDocPageProcessor, NgDocTab } from '@ng-doc/app/interfaces';
 
 export const tabsProcessor: NgDocPageProcessor<NgDocTabsComponent> = {
 	component: NgDocTabsComponent,

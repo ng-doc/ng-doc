@@ -1,8 +1,8 @@
-import {NgDocKeywordType, NgDocKindType} from '@ng-doc/core';
+import { NgDocKeywordType, NgDocKindType } from '@ng-doc/core';
 
-import {NgDocRouteEntity} from '../engine/entities/abstractions/route.entity';
-import {isApiPageEntity, isPageEntity} from './entity-type';
-import {getKindType} from './get-kind-type';
+import { NgDocRouteEntity } from '../engine/entities/abstractions/route.entity';
+import { isApiPageEntity, isPageEntity } from './entity-type';
+import { getKindType } from './get-kind-type';
 
 /**
  *
@@ -10,7 +10,8 @@ import {getKindType} from './get-kind-type';
  */
 export function getKeywordTypeFromEntity(entity: NgDocRouteEntity): NgDocKeywordType | undefined {
 	if (isApiPageEntity(entity)) {
-		const kindType: NgDocKindType | undefined = entity.declaration && getKindType(entity.declaration);
+		const kindType: NgDocKindType | undefined =
+			entity.declaration && getKindType(entity.declaration);
 
 		return kindType ?? 'api';
 	}

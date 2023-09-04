@@ -3,12 +3,12 @@
 {% import "helpers/members.html.nunj" as membersMacro %}
 
 {% block overview %}
-	{%- set members = declaration.getMembers() -%}
+    {%- set members = declaration.getMembers() -%}
 
-	{% if members.length -%}
-		<section>
-			<h2>Members</h2>
-			{{ membersMacro.render(members) }}
-		</section>
-	{%- endif %}
+    {% if members.length -%}
+        <section>
+            <h2>Members</h2>
+            {{ membersMacro.render(members) }}
+        </section>
+    {%- endif %}
 {% endblock %}

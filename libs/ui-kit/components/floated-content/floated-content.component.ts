@@ -8,9 +8,9 @@ import {
 	NgZone,
 	Renderer2,
 } from '@angular/core';
-import {ngDocMakePure} from '@ng-doc/ui-kit/decorators';
-import {toElement} from '@ng-doc/ui-kit/helpers';
-import {BaseElement, NgDocHorizontalAlign} from '@ng-doc/ui-kit/types';
+import { ngDocMakePure } from '@ng-doc/ui-kit/decorators';
+import { toElement } from '@ng-doc/ui-kit/helpers';
+import { BaseElement, NgDocHorizontalAlign } from '@ng-doc/ui-kit/types';
 
 @Component({
 	selector: '[ng-doc-floated-content]',
@@ -30,7 +30,11 @@ export class NgDocFloatedContentComponent implements AfterViewChecked {
 	@HostBinding('attr.data-ng-doc-align')
 	alignTo: NgDocHorizontalAlign = 'left';
 
-	constructor(private elementRef: ElementRef<HTMLElement>, private renderer: Renderer2, private ngZone: NgZone) {}
+	constructor(
+		private elementRef: ElementRef<HTMLElement>,
+		private renderer: Renderer2,
+		private ngZone: NgZone,
+	) {}
 
 	ngAfterViewChecked(): void {
 		if (this.bindTo && this.alignTo) {
@@ -43,7 +47,12 @@ export class NgDocFloatedContentComponent implements AfterViewChecked {
 	@ngDocMakePure
 	setPadding(padding: number): void {
 		if (this.bindTo && this.propertyName) {
-			this.renderer.setStyle(toElement(this.bindTo), this.propertyName, padding ? `${padding}px` : null, 2);
+			this.renderer.setStyle(
+				toElement(this.bindTo),
+				this.propertyName,
+				padding ? `${padding}px` : null,
+				2,
+			);
 		}
 	}
 }

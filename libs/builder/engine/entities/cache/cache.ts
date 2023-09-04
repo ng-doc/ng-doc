@@ -1,7 +1,7 @@
-import {asArray, Constructor, isPresent} from '@ng-doc/core';
+import { asArray, Constructor, isPresent } from '@ng-doc/core';
 
-import {createCache, isCacheValid, updateCache} from './helpers';
-import {NgDocCacheAccessor, NgDocCachedData, NgDocCachedType} from './interfaces';
+import { createCache, isCacheValid, updateCache } from './helpers';
+import { NgDocCacheAccessor, NgDocCachedData, NgDocCachedType } from './interfaces';
 
 export interface NgDocCachedClass {
 	__cachedProps?: Map<string, NgDocCacheAccessor<any, any>>;
@@ -9,7 +9,7 @@ export interface NgDocCachedClass {
 }
 
 export class NgDocCache<
-	T extends InstanceType<Constructor<{id: string}>> = InstanceType<
+	T extends InstanceType<Constructor<{ id: string }>> = InstanceType<
 		Constructor<{
 			id: string;
 		}>
@@ -49,17 +49,19 @@ export class NgDocCache<
 	private getCachedProperties(cls: T): Record<string, unknown> {
 		const cachedProperties: Record<string, unknown> = {};
 
-		asArray((cls as unknown as NgDocCachedClass).__cachedProps?.keys()).forEach((property: string) => {
-			const accessor: NgDocCacheAccessor<NgDocCachedType> | undefined = (
-				cls as unknown as NgDocCachedClass
-			).__cachedProps?.get(property);
+		asArray((cls as unknown as NgDocCachedClass).__cachedProps?.keys()).forEach(
+			(property: string) => {
+				const accessor: NgDocCacheAccessor<NgDocCachedType> | undefined = (
+					cls as unknown as NgDocCachedClass
+				).__cachedProps?.get(property);
 
-			if (accessor) {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
-				cachedProperties[property] = accessor.set(cls[property]);
-			}
-		});
+				if (accessor) {
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					cachedProperties[property] = accessor.set(cls[property]);
+				}
+			},
+		);
 
 		return cachedProperties;
 	}

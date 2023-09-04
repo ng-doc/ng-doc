@@ -1,5 +1,4 @@
 @import '../../styles/mixins';
-@import '../../styles/palette';
 
 :host {
 	display: inline-flex;
@@ -33,12 +32,6 @@
 	}
 
 	@include ng-doc-font();
-
-	@each $color-name, $color in $ng-doc-palette-colors {
-		&[data-ng-doc-color='#{$color-name}'] {
-			--ng-doc-checkbox-color: var(--ng-doc-#{$color-name}-100);
-		}
-	}
 }
 
 input {

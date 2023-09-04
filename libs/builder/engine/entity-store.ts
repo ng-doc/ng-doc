@@ -1,8 +1,14 @@
-import {NgDocConfiguration, NgDocEntityKeyword} from '@ng-doc/builder';
-import {asArray, NgDocGlobalKeyword, NgDocKeyword, NgDocKeywordsLoader, objectKeys} from '@ng-doc/core';
+import { NgDocConfiguration, NgDocEntityKeyword } from '@ng-doc/builder';
+import {
+	asArray,
+	NgDocGlobalKeyword,
+	NgDocKeyword,
+	NgDocKeywordsLoader,
+	objectKeys,
+} from '@ng-doc/core';
 
-import {getKeywordTypeFromEntity, isApiPageEntity, isRouteEntity, keywordKey} from '../helpers';
-import {NgDocEntity} from './entities/abstractions/entity';
+import { getKeywordTypeFromEntity, isApiPageEntity, isRouteEntity, keywordKey } from '../helpers';
+import { NgDocEntity } from './entities/abstractions/entity';
 
 export class NgDocEntityStore extends Map<string, NgDocEntity> {
 	private keywordMap: Map<string, NgDocKeyword> = new Map<string, NgDocKeyword>();
@@ -44,20 +50,22 @@ export class NgDocEntityStore extends Map<string, NgDocEntity> {
 			keywordLoaders.map((loader: NgDocKeywordsLoader) => loader()),
 		);
 
-		keywords.concat(this.config?.keywords?.keywords ?? {}).forEach((keywords: Record<string, NgDocGlobalKeyword>) => {
-			objectKeys(keywords).forEach((key: string) => {
-				const keyword: NgDocGlobalKeyword | undefined = keywords[key];
+		keywords
+			.concat(this.config?.keywords?.keywords ?? {})
+			.forEach((keywords: Record<string, NgDocGlobalKeyword>) => {
+				objectKeys(keywords).forEach((key: string) => {
+					const keyword: NgDocGlobalKeyword | undefined = keywords[key];
 
-				if (keyword) {
-					this.globalKeywords.set(keywordKey(key), {
-						title: keyword.title ?? key,
-						path: keyword.url,
-						description: keyword.description,
-						isCodeLink: !!keyword.isCodeLink,
-					});
-				}
+					if (keyword) {
+						this.globalKeywords.set(keywordKey(key), {
+							title: keyword.title ?? key,
+							path: keyword.url,
+							description: keyword.description,
+							isCodeLink: !!keyword.isCodeLink,
+						});
+					}
+				});
 			});
-		});
 	}
 
 	updateKeywordMap(): void {
@@ -78,7 +86,9 @@ export class NgDocEntityStore extends Map<string, NgDocEntity> {
 	}
 
 	getAllWithErrorsOrWarnings(): NgDocEntity[] {
-		return this.asArray().filter((entity: NgDocEntity) => entity.errors.length || entity.warnings.length);
+		return this.asArray().filter(
+			(entity: NgDocEntity) => entity.errors.length || entity.warnings.length,
+		);
 	}
 
 	getRootEntitiesForBuild(): NgDocEntity[] {

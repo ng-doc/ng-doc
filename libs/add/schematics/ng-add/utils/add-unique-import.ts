@@ -1,4 +1,4 @@
-import {addImports, editImports, getImports, ImportDeclaration, ImportSpecifier} from 'ng-morph';
+import { addImports, editImports, getImports, ImportDeclaration, ImportSpecifier } from 'ng-morph';
 
 /**
  *
@@ -6,7 +6,11 @@ import {addImports, editImports, getImports, ImportDeclaration, ImportSpecifier}
  * @param namedImport
  * @param moduleSpecifier
  */
-export function addUniqueImport(filePath: string, namedImport: string, moduleSpecifier: string): void {
+export function addUniqueImport(
+	filePath: string,
+	namedImport: string,
+	moduleSpecifier: string,
+): void {
 	const existingNamedImport: ImportDeclaration[] = getImports(filePath, {
 		namedImports: namedImport,
 		moduleSpecifier,
