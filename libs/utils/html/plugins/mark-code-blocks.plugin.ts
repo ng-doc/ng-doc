@@ -12,10 +12,10 @@ import { visit } from 'unist-util-visit';
 export default function markCodeBlocksPlugin(): any {
 	return (tree: Root) => {
 		visit(tree, 'element', (node: Element) => {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
 			if (
 				node.tagName === 'pre' &&
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
 				node.children?.some((child: Element) => child.tagName === 'code')
 			) {
 				if (node.properties) {
