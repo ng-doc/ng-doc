@@ -1,5 +1,5 @@
-import {NgDocRepoConfig} from '../interfaces';
-import {slash} from './slash';
+import { NgDocRepoConfig } from '../interfaces';
+import { posix } from './posix';
 
 /**
  *
@@ -11,14 +11,14 @@ import {slash} from './slash';
  * @param lineNumber
  */
 export function editFileInRepoUrl(
-	{url, mainBranch}: NgDocRepoConfig,
+	{ url, mainBranch }: NgDocRepoConfig,
 	filePath: string,
 	scope: string,
 	lineNumber?: number,
 ): string {
 	if (url && mainBranch) {
 		const rUrl = url.replace(/\/$/, '');
-		const fPath = slash(filePath).replace(/^\//, '');
+		const fPath = posix(filePath).replace(/^\//, '');
 
 		return `${rUrl}/edit/${mainBranch}/${fPath}?message=docs(${scope}): describe your changes here...${
 			lineNumber ? `#L${lineNumber}` : ''
@@ -37,13 +37,13 @@ export function editFileInRepoUrl(
  * @param lineNumber
  */
 export function viewFileInRepoUrl(
-	{url, releaseBranch}: NgDocRepoConfig,
+	{ url, releaseBranch }: NgDocRepoConfig,
 	filePath: string,
 	lineNumber?: number,
 ): string {
 	if (url && releaseBranch) {
 		const rUrl = url.replace(/\/$/, '');
-		const fPath = slash(filePath).replace(/^\//, '');
+		const fPath = posix(filePath).replace(/^\//, '');
 
 		return `${rUrl}/blob/${releaseBranch}/${fPath}${lineNumber ? `#L${lineNumber}` : ''}`;
 	}
