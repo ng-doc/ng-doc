@@ -1,5 +1,5 @@
-import {NgDocProvidedTypeControl} from '@ng-doc/app/interfaces';
-import {NgDocPlaygroundProperty} from '@ng-doc/core/interfaces';
+import { NgDocProvidedTypeControl } from '@ng-doc/app/interfaces';
+import { NgDocPlaygroundProperty } from '@ng-doc/core/interfaces';
 
 export interface NgDocPlaygroundPropertyControl {
 	propertyName: string;

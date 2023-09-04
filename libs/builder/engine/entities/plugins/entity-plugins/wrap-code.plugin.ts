@@ -1,5 +1,5 @@
-import {renderTemplate} from '../../../nunjucks';
-import {NgDocEntityPlugin} from '../types';
+import { renderTemplate } from '../../../nunjucks';
+import { NgDocEntityPlugin } from '../types';
 
 /**
  *
@@ -10,7 +10,7 @@ export function wrapCodePlugin(lang: string): NgDocEntityPlugin<string> {
 		id: 'wrapCodePlugin',
 		execute: async (code) => {
 			return renderTemplate('./code.html.nunj', {
-				context: {code, lang: lang.toLowerCase() || 'ts'},
+				context: { code, lang: lang.toLowerCase() || 'ts' },
 			}).trim();
 		},
 	};

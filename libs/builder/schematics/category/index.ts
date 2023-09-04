@@ -1,4 +1,4 @@
-import {classify, dasherize} from '@angular-devkit/core/src/utils/strings';
+import { classify, dasherize } from '@angular-devkit/core/src/utils/strings';
 import {
 	apply,
 	applyTemplates,
@@ -12,13 +12,13 @@ import {
 	Tree,
 	url,
 } from '@angular-devkit/schematics';
-import {join, relative} from 'path';
+import { join, relative } from 'path';
 
-import {CATEGORY_NAME} from '../../engine/variables';
-import {slash} from '../../helpers/slash';
-import {findClosestFile, getTitle, varNameValidation} from '../utils';
-import {extractDefaultExportName} from '../utils/extract-default-export-name';
-import {NgDocBuildCategorySchema} from './schema';
+import { CATEGORY_NAME } from '../../engine/variables';
+import { slash } from '../../helpers/slash';
+import { findClosestFile, getTitle, varNameValidation } from '../utils';
+import { extractDefaultExportName } from '../utils/extract-default-export-name';
+import { NgDocBuildCategorySchema } from './schema';
 
 /**
  * Generates a NgDocCategory
@@ -35,13 +35,16 @@ export function generate(options: NgDocBuildCategorySchema): Rule {
 		varNameValidation(categoryName);
 
 		const execPath: string = options?.path ?? '';
-		const categoryFolder: string = dasherize(options.name ?? '').replace(/-category$/, '') || dasherize(options.title);
+		const categoryFolder: string =
+			dasherize(options.name ?? '').replace(/-category$/, '') || dasherize(options.title);
 		const path: string = join(execPath, `/${categoryFolder}`);
 		const closestCategoryFile: string | null = options.category
 			? findClosestFile(host, options?.path ?? '', CATEGORY_NAME)
 			: null;
 		const parentCategoryName: string | null =
-			options.category && closestCategoryFile ? extractDefaultExportName(host, closestCategoryFile) : null;
+			options.category && closestCategoryFile
+				? extractDefaultExportName(host, closestCategoryFile)
+				: null;
 		const categoryImportPath: string | null = closestCategoryFile
 			? slash(relative(path, closestCategoryFile)).replace(/.ts$/, '')
 			: null;

@@ -12,7 +12,7 @@
 export function ngDocMakePure<T>(
 	_target: Object,
 	propertyKey: string,
-	{get, enumerable, value}: TypedPropertyDescriptor<T>,
+	{ get, enumerable, value }: TypedPropertyDescriptor<T>,
 ): TypedPropertyDescriptor<T> {
 	if (get) {
 		return {
@@ -20,7 +20,7 @@ export function ngDocMakePure<T>(
 			get(): T {
 				const value = get.call(this);
 
-				Object.defineProperty(this, propertyKey, {enumerable, value});
+				Object.defineProperty(this, propertyKey, { enumerable, value });
 
 				return value;
 			},
@@ -40,7 +40,10 @@ export function ngDocMakePure<T>(
 			let previousResult: any;
 
 			const patched = (...args: unknown[]) => {
-				if (previousArgs.length === args.length && args.every((arg, index) => arg === previousArgs[index])) {
+				if (
+					previousArgs.length === args.length &&
+					args.every((arg, index) => arg === previousArgs[index])
+				) {
 					return previousResult;
 				}
 

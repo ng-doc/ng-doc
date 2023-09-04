@@ -1,9 +1,9 @@
-import {Observable, OperatorFunction} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import { Observable, OperatorFunction } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
-import {printError, printWarning} from '../../helpers';
-import {NgDocEntity} from '../entities/abstractions/entity';
-import {NgDocEntityStore} from '../entity-store';
+import { printError, printWarning } from '../../helpers';
+import { NgDocEntity } from '../entities/abstractions/entity';
+import { NgDocEntityStore } from '../entity-store';
 
 /**
  * Prints all errors and warnings existing in the store
@@ -14,7 +14,9 @@ export function printOutput<T>(store: NgDocEntityStore): OperatorFunction<T, T> 
 	return (source: Observable<T>) =>
 		source.pipe(
 			tap(() => {
-				const entitiesWithErrors: NgDocEntity[] = store.getAllWithErrorsOrWarnings().sort(sortEntities);
+				const entitiesWithErrors: NgDocEntity[] = store
+					.getAllWithErrorsOrWarnings()
+					.sort(sortEntities);
 
 				if (entitiesWithErrors.length > 0) {
 					printError(`NgDoc: ${entitiesWithErrors.length} entities with problems:`);

@@ -1,10 +1,17 @@
-import {NgFor, NgIf, NgTemplateOutlet} from '@angular/common';
-import {ChangeDetectionStrategy, Component, HostBinding, Input, OnInit, Type} from '@angular/core';
-import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
-import {NgDocCodeComponent} from '@ng-doc/app/components/code';
-import {NgDocDemoAsset} from '@ng-doc/app/interfaces';
-import {asArray} from '@ng-doc/core/helpers/as-array';
-import {NgDocDemoPaneActionOptions} from '@ng-doc/core/interfaces';
+import { NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	HostBinding,
+	Input,
+	OnInit,
+	Type,
+} from '@angular/core';
+import { NgDocRootPage } from '@ng-doc/app/classes/root-page';
+import { NgDocCodeComponent } from '@ng-doc/app/components/code';
+import { NgDocDemoAsset } from '@ng-doc/app/interfaces';
+import { asArray } from '@ng-doc/core/helpers/as-array';
+import { NgDocDemoPaneActionOptions } from '@ng-doc/core/interfaces';
 import {
 	NgDocPaneBackDirective,
 	NgDocPaneComponent,
@@ -12,8 +19,8 @@ import {
 	NgDocTabComponent,
 	NgDocTabGroupComponent,
 } from '@ng-doc/ui-kit';
-import {NgDocContent} from '@ng-doc/ui-kit/types';
-import {PolymorpheusComponent, PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
+import { NgDocContent } from '@ng-doc/ui-kit/types';
+import { PolymorpheusComponent, PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 
 @Component({
 	selector: 'ng-doc-demo-pane',
@@ -69,8 +76,12 @@ export class NgDocDemoPaneComponent implements OnInit {
 
 	private getAssets(): NgDocDemoAsset[] {
 		if (this.componentName) {
-			return ((this.rootPage.demoAssets && this.rootPage.demoAssets[this.componentName]) ?? []).filter(
-				(asset: NgDocDemoAsset) => !this.options.tabs?.length || asArray(this.options.tabs).includes(asset.title),
+			return (
+				(this.rootPage.demoAssets && this.rootPage.demoAssets[this.componentName]) ??
+				[]
+			).filter(
+				(asset: NgDocDemoAsset) =>
+					!this.options.tabs?.length || asArray(this.options.tabs).includes(asset.title),
 			);
 		}
 

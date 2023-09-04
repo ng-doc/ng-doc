@@ -1,5 +1,5 @@
-import {Directive, HostListener, Input} from '@angular/core';
-import {NgDocDropdownComponent} from '@ng-doc/ui-kit/components/dropdown';
+import { Directive, HostListener, Input } from '@angular/core';
+import { NgDocDropdownComponent } from '@ng-doc/ui-kit/components/dropdown';
 
 @Directive({
 	selector: '[ngDocDropdownHandler]',

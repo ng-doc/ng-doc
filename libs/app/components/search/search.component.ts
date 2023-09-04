@@ -1,4 +1,4 @@
-import {AsyncPipe, NgFor, NgIf, NgTemplateOutlet} from '@angular/common';
+import { AsyncPipe, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -9,11 +9,11 @@ import {
 	Optional,
 	ViewChild,
 } from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {RouterLink} from '@angular/router';
-import {NgDocSearchEngine} from '@ng-doc/app/classes/search-engine';
-import {NgDocSearchResult} from '@ng-doc/app/interfaces';
-import {NgDocSanitizeHtmlPipe} from '@ng-doc/app/pipes';
+import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { NgDocSearchEngine } from '@ng-doc/app/classes/search-engine';
+import { NgDocSearchResult } from '@ng-doc/app/interfaces';
+import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes';
 import {
 	NgDocAutofocusDirective,
 	NgDocButtonIconComponent,
@@ -35,10 +35,10 @@ import {
 	observableState,
 	StatedObservable,
 } from '@ng-doc/ui-kit';
-import {NgDocListHost} from '@ng-doc/ui-kit/classes';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {BehaviorSubject, NEVER} from 'rxjs';
-import {skip, switchMap} from 'rxjs/operators';
+import { NgDocListHost } from '@ng-doc/ui-kit/classes';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { BehaviorSubject, NEVER } from 'rxjs';
+import { skip, switchMap } from 'rxjs/operators';
 
 @Component({
 	selector: 'ng-doc-search',
@@ -114,7 +114,10 @@ export class NgDocSearchComponent implements NgDocListHost {
 		return this.inputElement ?? this.elementRef;
 	}
 
-	getPositions<T extends NgDocSearchResult, K extends keyof T['positions']>(key: K, item: T): NgDocHighlightPosition[] {
+	getPositions<T extends NgDocSearchResult, K extends keyof T['positions']>(
+		key: K,
+		item: T,
+	): NgDocHighlightPosition[] {
 		return item.positions[key] ?? [];
 	}
 }

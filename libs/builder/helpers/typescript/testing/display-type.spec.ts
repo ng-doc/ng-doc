@@ -8,8 +8,8 @@ import {
 	TypeAliasDeclaration,
 } from 'ts-morph';
 
-import {createProject} from '../create-project';
-import {displayReturnType, displayType} from '../display-type';
+import { createProject } from '../create-project';
+import { displayReturnType, displayType } from '../display-type';
 
 describe('displayType', () => {
 	let project: Project;
@@ -226,7 +226,9 @@ describe('displayType', () => {
 				);
 				const declaration: ClassDeclaration = sourceFile.getClassOrThrow('Test');
 
-				expect(displayType(declaration.getMethodOrThrow('method').getParameterOrThrow('param'))).toBe(`string`);
+				expect(
+					displayType(declaration.getMethodOrThrow('method').getParameterOrThrow('param')),
+				).toBe(`string`);
 			});
 
 			it('should return the type of a optional parameter', () => {
@@ -242,9 +244,9 @@ describe('displayType', () => {
 				);
 				const declaration: ClassDeclaration = sourceFile.getClassOrThrow('Test');
 
-				expect(displayType(declaration.getMethodOrThrow('method').getParameterOrThrow('param'))).toBe(
-					`string | undefined`,
-				);
+				expect(
+					displayType(declaration.getMethodOrThrow('method').getParameterOrThrow('param')),
+				).toBe(`string | undefined`);
 			});
 
 			it('should return the type of a parameter with default value', () => {
@@ -260,7 +262,9 @@ describe('displayType', () => {
 				);
 				const declaration: ClassDeclaration = sourceFile.getClassOrThrow('Test');
 
-				expect(displayType(declaration.getMethodOrThrow('method').getParameterOrThrow('param'))).toBe(`string`);
+				expect(
+					displayType(declaration.getMethodOrThrow('method').getParameterOrThrow('param')),
+				).toBe(`string`);
 			});
 		});
 

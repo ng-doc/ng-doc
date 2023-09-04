@@ -1,13 +1,13 @@
-import {logging} from '@angular-devkit/core';
-import {NgDocPageIndex} from '@ng-doc/core';
-import {Observable, of, Subject} from 'rxjs';
-import {take} from 'rxjs/operators';
+import { logging } from '@angular-devkit/core';
+import { NgDocPageIndex } from '@ng-doc/core';
+import { Observable, of, Subject } from 'rxjs';
+import { take } from 'rxjs/operators';
 
-import {ObservableSet} from '../../../classes';
-import {NgDocBuilderContext, NgDocBuildResult} from '../../../interfaces';
-import {NgDocEntityStore} from '../../entity-store';
-import {NgDocCache} from '../cache';
-import {CachedFilesGetter, CachedProperty} from '../cache/decorators';
+import { ObservableSet } from '../../../classes';
+import { NgDocBuilderContext, NgDocBuildResult } from '../../../interfaces';
+import { NgDocEntityStore } from '../../entity-store';
+import { NgDocCache } from '../cache';
+import { CachedFilesGetter, CachedProperty } from '../cache/decorators';
 
 /**
  * Base entity class that all entities should extend.
@@ -94,7 +94,11 @@ export abstract class NgDocEntity {
 	 */
 	abstract readonly buildCandidates: NgDocEntity[];
 
-	constructor(readonly store: NgDocEntityStore, readonly cache: NgDocCache, readonly context: NgDocBuilderContext) {}
+	constructor(
+		readonly store: NgDocEntityStore,
+		readonly cache: NgDocCache,
+		readonly context: NgDocBuilderContext,
+	) {}
 
 	/** Indicates when current entity could be built */
 	protected get canBeBuilt(): boolean {
@@ -115,7 +119,9 @@ export abstract class NgDocEntity {
 	 * Contains all children of the current entity.
 	 */
 	get children(): NgDocEntity[] {
-		return this.store.asArray().filter((entity: NgDocEntity) => entity.parent === this && !entity.destroyed);
+		return this.store
+			.asArray()
+			.filter((entity: NgDocEntity) => entity.parent === this && !entity.destroyed);
 	}
 
 	/**
@@ -131,7 +137,9 @@ export abstract class NgDocEntity {
 	 * @type {Array<NgDocEntity>}
 	 */
 	get childEntities(): NgDocEntity[] {
-		return this.children.concat(this.children.map((child: NgDocEntity) => child.childEntities).flat());
+		return this.children.concat(
+			this.children.map((child: NgDocEntity) => child.childEntities).flat(),
+		);
 	}
 
 	/**

@@ -1,10 +1,10 @@
-import {NgDocEntityKeyword} from '@ng-doc/builder';
-import {asArray, NgDocEntityAnchor} from '@ng-doc/core';
+import { NgDocEntityKeyword } from '@ng-doc/builder';
+import { asArray, NgDocEntityAnchor } from '@ng-doc/core';
 import * as path from 'path';
 
-import {isRouteEntity, slash} from '../../../helpers';
-import {CachedProperty} from '../cache';
-import {NgDocModuleEntity} from './module.entity';
+import { isRouteEntity, slash } from '../../../helpers';
+import { CachedProperty } from '../cache';
+import { NgDocModuleEntity } from './module.entity';
 
 export abstract class NgDocRouteEntity<TTarget = unknown> extends NgDocModuleEntity<TTarget> {
 	/**
@@ -44,7 +44,9 @@ export abstract class NgDocRouteEntity<TTarget = unknown> extends NgDocModuleEnt
 
 	get fullRoute(): string {
 		const parentRoute: string =
-			this.parent instanceof NgDocRouteEntity ? this.parent.fullRoute : this.context.config.routePrefix ?? '';
+			this.parent instanceof NgDocRouteEntity
+				? this.parent.fullRoute
+				: this.context.config.routePrefix ?? '';
 
 		return slash(path.join('/', parentRoute, this.route));
 	}
@@ -53,7 +55,9 @@ export abstract class NgDocRouteEntity<TTarget = unknown> extends NgDocModuleEnt
 	 * Returns breadcrumbs for the current entity
 	 */
 	get breadcrumbs(): string[] {
-		return isRouteEntity(this.parent) ? [...asArray(this?.parent?.breadcrumbs), this.title] : [this.title];
+		return isRouteEntity(this.parent)
+			? [...asArray(this?.parent?.breadcrumbs), this.title]
+			: [this.title];
 	}
 
 	override beforeBuild(): void {

@@ -1,20 +1,25 @@
-import {asArray, NgDocApiScope} from '@ng-doc/core';
+import { asArray, NgDocApiScope } from '@ng-doc/core';
 import * as glob from 'glob';
-import {ExportedDeclarations, SourceFile} from 'ts-morph';
+import { ExportedDeclarations, SourceFile } from 'ts-morph';
 
-import {NgDocApiEntity, NgDocApiPageEntity, NgDocApiScopeEntity} from '../engine';
-import {NgDocSupportedDeclarations} from '../types';
-import {isSupportedDeclaration} from './is-supported-declaration';
+import { NgDocApiEntity, NgDocApiPageEntity, NgDocApiScopeEntity } from '../engine';
+import { NgDocSupportedDeclarations } from '../types';
+import { isSupportedDeclaration } from './is-supported-declaration';
 
 /**
  *
  * @param apiRootEntity
  */
-export function generateApiEntities(apiRootEntity: NgDocApiEntity): Array<NgDocApiScopeEntity | NgDocApiPageEntity> {
+export function generateApiEntities(
+	apiRootEntity: NgDocApiEntity,
+): Array<NgDocApiScopeEntity | NgDocApiPageEntity> {
 	const result: Array<NgDocApiScopeEntity | NgDocApiPageEntity> = [];
 	const scopes: Map<string, NgDocApiScopeEntity> = new Map();
 	const duplicatesInScope: Map<NgDocApiScopeEntity, Map<string, number>> = new Map();
-	const duplicatedDeclarations: Map<NgDocApiScopeEntity, Set<NgDocSupportedDeclarations>> = new Map();
+	const duplicatedDeclarations: Map<
+		NgDocApiScopeEntity,
+		Set<NgDocSupportedDeclarations>
+	> = new Map();
 
 	const paths: string[] =
 		apiRootEntity.target?.scopes
@@ -65,7 +70,9 @@ export function generateApiEntities(apiRootEntity: NgDocApiEntity): Array<NgDocA
 					const existing: NgDocSupportedDeclarations[] | undefined = current.get(key);
 					const supported: NgDocSupportedDeclarations[] = value.filter(isSupportedDeclaration);
 
-					existing ? current.set(key, asArray(new Set(existing.concat(supported)))) : current.set(key, supported);
+					existing
+						? current.set(key, asArray(new Set(existing.concat(supported))))
+						: current.set(key, supported);
 				});
 
 				acc.set(path, current);

@@ -1,5 +1,5 @@
-import {Directive, ElementRef, HostBinding, Input, OnChanges} from '@angular/core';
-import {HighlightResult} from 'highlight.js';
+import { Directive, ElementRef, HostBinding, Input, OnChanges } from '@angular/core';
+import { HighlightResult } from 'highlight.js';
 import highlight from 'highlight.js/lib/core';
 import xml from 'highlight.js/lib/languages/xml';
 
@@ -27,7 +27,7 @@ export class NgDocCodeHighlighterDirective implements OnChanges {
 
 	ngOnChanges(): void {
 		if (this.code) {
-			const result: HighlightResult = highlight.highlight(this.code, {language: this.language});
+			const result: HighlightResult = highlight.highlight(this.code, { language: this.language });
 
 			this.elementRef.nativeElement.innerHTML = result.value ?? this.html;
 		} else {

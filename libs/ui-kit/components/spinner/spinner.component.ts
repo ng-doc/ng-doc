@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
-import {NgDocSize} from '@ng-doc/ui-kit/types';
+import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
+import { NgDocSize } from '@ng-doc/ui-kit/types';
 
 @Component({
 	selector: 'ng-doc-spinner',

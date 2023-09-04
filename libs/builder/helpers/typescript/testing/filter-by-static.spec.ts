@@ -1,13 +1,19 @@
-import {ClassDeclaration, MethodDeclaration, Project, PropertyDeclaration, SourceFile} from 'ts-morph';
+import {
+	ClassDeclaration,
+	MethodDeclaration,
+	Project,
+	PropertyDeclaration,
+	SourceFile,
+} from 'ts-morph';
 
-import {createProject} from '../create-project';
-import {filterByStatic} from '../filter-by-static';
+import { createProject } from '../create-project';
+import { filterByStatic } from '../filter-by-static';
 
 describe('filterByScope', () => {
 	let project: Project;
 
 	beforeEach(() => {
-		project = createProject({useInMemoryFileSystem: true});
+		project = createProject({ useInMemoryFileSystem: true });
 	});
 
 	it('should return static property', () => {
@@ -23,7 +29,9 @@ describe('filterByScope', () => {
 		const declaration: ClassDeclaration = sourceFile.getClassOrThrow('Test');
 
 		expect(
-			filterByStatic(declaration.getProperties(), true).map((property: PropertyDeclaration) => property.getName()),
+			filterByStatic(declaration.getProperties(), true).map((property: PropertyDeclaration) =>
+				property.getName(),
+			),
 		).toStrictEqual(['property1']);
 	});
 
@@ -40,7 +48,9 @@ describe('filterByScope', () => {
 		const declaration: ClassDeclaration = sourceFile.getClassOrThrow('Test');
 
 		expect(
-			filterByStatic(declaration.getProperties(), false).map((property: PropertyDeclaration) => property.getName()),
+			filterByStatic(declaration.getProperties(), false).map((property: PropertyDeclaration) =>
+				property.getName(),
+			),
 		).toStrictEqual(['property2']);
 	});
 
@@ -57,7 +67,9 @@ describe('filterByScope', () => {
 		const declaration: ClassDeclaration = sourceFile.getClassOrThrow('Test');
 
 		expect(
-			filterByStatic(declaration.getMethods(), true).map((method: MethodDeclaration) => method.getName()),
+			filterByStatic(declaration.getMethods(), true).map((method: MethodDeclaration) =>
+				method.getName(),
+			),
 		).toStrictEqual(['method1']);
 	});
 
@@ -74,7 +86,9 @@ describe('filterByScope', () => {
 		const declaration: ClassDeclaration = sourceFile.getClassOrThrow('Test');
 
 		expect(
-			filterByStatic(declaration.getMethods(), false).map((method: MethodDeclaration) => method.getName()),
+			filterByStatic(declaration.getMethods(), false).map((method: MethodDeclaration) =>
+				method.getName(),
+			),
 		).toStrictEqual(['method2']);
 	});
 });

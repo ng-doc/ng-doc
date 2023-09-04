@@ -1,7 +1,7 @@
-import {asArray} from '@ng-doc/core';
-import {ClassDeclaration, PropertyDeclaration} from 'ts-morph';
+import { asArray } from '@ng-doc/core';
+import { ClassDeclaration, PropertyDeclaration } from 'ts-morph';
 
-import {forAllClasses} from '../class';
+import { forAllClasses } from '../class';
 
 /**
  *
@@ -14,7 +14,10 @@ export function getClassProperties(cls: ClassDeclaration): PropertyDeclaration[]
 		baseClass.getProperties().forEach((property: PropertyDeclaration) => {
 			const name: string = property.getName();
 
-			if (!properties.get(name) && (!property.isAbstract() || (property.isAbstract() && cls === baseClass))) {
+			if (
+				!properties.get(name) &&
+				(!property.isAbstract() || (property.isAbstract() && cls === baseClass))
+			) {
 				properties.set(name, property);
 			}
 		});

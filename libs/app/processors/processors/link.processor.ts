@@ -1,5 +1,5 @@
-import {NgDocPageLinkComponent} from '@ng-doc/app/components/page-link';
-import {NgDocPageProcessor} from '@ng-doc/app/interfaces';
+import { NgDocPageLinkComponent } from '@ng-doc/app/components/page-link';
+import { NgDocPageProcessor } from '@ng-doc/app/interfaces';
 
 export const linkProcessor: NgDocPageProcessor<NgDocPageLinkComponent> = {
 	component: NgDocPageLinkComponent,

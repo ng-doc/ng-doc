@@ -1,4 +1,4 @@
-import {Rule, Tree} from '@angular-devkit/schematics';
+import { Rule, Tree } from '@angular-devkit/schematics';
 import {
 	createProject,
 	ExportedDeclarations,
@@ -15,7 +15,7 @@ import {
 } from 'ng-morph';
 import * as path from 'path';
 
-import {NgDocStandalonePagesSchema} from './schema';
+import { NgDocStandalonePagesSchema } from './schema';
 
 /**
  * Moves all dependencies from `ng-doc.dependencies.ts` to `ng-doc.page.ts` and removes the `ng-doc.dependencies.ts` file.
@@ -24,12 +24,16 @@ import {NgDocStandalonePagesSchema} from './schema';
  */
 export function migrate(options: NgDocStandalonePagesSchema): Rule {
 	return (tree: Tree) => {
-		setActiveProject(createProject(tree, options.path, ['**/**/ng-doc.dependencies.ts', '**/**/ng-doc.page.ts']));
+		setActiveProject(
+			createProject(tree, options.path, ['**/**/ng-doc.dependencies.ts', '**/**/ng-doc.page.ts']),
+		);
 
 		const sourceFiles = getSourceFiles('**/**/ng-doc.dependencies.ts');
 
 		for (const sourceFile of sourceFiles) {
-			const pageSourceFile = getSourceFiles(path.join(sourceFile.getDirectoryPath(), 'ng-doc.page.ts'))[0];
+			const pageSourceFile = getSourceFiles(
+				path.join(sourceFile.getDirectoryPath(), 'ng-doc.page.ts'),
+			)[0];
 
 			if (!pageSourceFile) {
 				continue;
@@ -63,8 +67,12 @@ export function migrate(options: NgDocStandalonePagesSchema): Rule {
  *
  * @param sourceFile
  */
-function getObjectExpressionFromDefault(sourceFile: SourceFile): ObjectLiteralExpression | undefined {
-	const defaultExport: ExportedDeclarations | undefined = sourceFile.getExportedDeclarations()?.get('default')?.[0];
+function getObjectExpressionFromDefault(
+	sourceFile: SourceFile,
+): ObjectLiteralExpression | undefined {
+	const defaultExport: ExportedDeclarations | undefined = sourceFile
+		.getExportedDeclarations()
+		?.get('default')?.[0];
 
 	if (Node.isVariableDeclaration(defaultExport)) {
 		return defaultExport?.getFirstChildByKindOrThrow(SyntaxKind.ObjectLiteralExpression);
@@ -136,7 +144,9 @@ function migrateProperty(
 
 			destination
 				.getSourceFile()
-				.addImportDeclarations(imports.map((importDeclaration: ImportDeclaration) => importDeclaration.getStructure()));
+				.addImportDeclarations(
+					imports.map((importDeclaration: ImportDeclaration) => importDeclaration.getStructure()),
+				);
 		}
 	}
 }

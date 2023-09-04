@@ -1,8 +1,15 @@
-import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input} from '@angular/core';
-import {NgDocHorizontalAlign, NgDocPosition, NgDocVerticalAlign} from '@ng-doc/ui-kit/types';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
+import {
+	AfterViewInit,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	HostBinding,
+	Input,
+} from '@angular/core';
+import { NgDocHorizontalAlign, NgDocPosition, NgDocVerticalAlign } from '@ng-doc/ui-kit/types';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import {NgDocSelectionHostDirective} from './selection-host.directive';
+import { NgDocSelectionHostDirective } from './selection-host.directive';
 
 @Component({
 	selector: 'ng-doc-selection',

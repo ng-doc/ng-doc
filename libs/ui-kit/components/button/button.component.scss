@@ -65,7 +65,7 @@
 		--ng-doc-button-hover-background-opacity: 0.2;
 		--ng-doc-button-active-background-opacity: 0.3;
 
-		@include forEachColor() using ($background, $color) {
+		@include forEachColor() using($background, $color) {
 			--ng-doc-button-alpha-background: #{$background};
 			--ng-doc-button-color: #{$background};
 			--ng-doc-button-hover-color: #{$background};
@@ -77,7 +77,7 @@
 		--ng-doc-button-hover-background-opacity: 0.1;
 		--ng-doc-button-active-background-opacity: 0.2;
 
-		@include forEachColor() using ($background, $color) {
+		@include forEachColor() using($background, $color) {
 			--ng-doc-button-alpha-background: #{$background};
 			--ng-doc-button-color: #{$background};
 			--ng-doc-button-hover-color: #{$background};
@@ -90,7 +90,7 @@
 		--ng-doc-button-hover-background-opacity: 0.1;
 		--ng-doc-button-active-background-opacity: 0.2;
 
-		@include forEachColor() using ($background, $color) {
+		@include forEachColor() using($background, $color) {
 			--ng-doc-button-background: #{$background};
 			--ng-doc-button-color: #{$color};
 			--ng-doc-button-hover-color: #{$color};

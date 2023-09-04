@@ -1,6 +1,9 @@
-import {AnimationBuilder, AnimationMetadata, AnimationPlayer} from '@angular/animations';
-import {ConnectedOverlayPositionChange, FlexibleConnectedPositionStrategy} from '@angular/cdk/overlay';
-import {DOCUMENT} from '@angular/common';
+import { AnimationBuilder, AnimationMetadata, AnimationPlayer } from '@angular/animations';
+import {
+	ConnectedOverlayPositionChange,
+	FlexibleConnectedPositionStrategy,
+} from '@angular/cdk/overlay';
+import { DOCUMENT } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
@@ -13,13 +16,13 @@ import {
 	OnInit,
 	ViewChild,
 } from '@angular/core';
-import {NgDocFocusControlComponent} from '@ng-doc/ui-kit/components/focus-control';
-import {NgDocOverlayPointerComponent} from '@ng-doc/ui-kit/components/overlay-pointer';
-import {NgDocEventSwitcherDirective} from '@ng-doc/ui-kit/directives/event-switcher';
-import {NgDocFocusCatcherDirective} from '@ng-doc/ui-kit/directives/focus-catcher';
-import {toElement} from '@ng-doc/ui-kit/helpers';
-import {NgDocOverlayConfig, NgDocOverlayContainer} from '@ng-doc/ui-kit/interfaces';
-import {ngDocZoneOptimize} from '@ng-doc/ui-kit/observables';
+import { NgDocFocusControlComponent } from '@ng-doc/ui-kit/components/focus-control';
+import { NgDocOverlayPointerComponent } from '@ng-doc/ui-kit/components/overlay-pointer';
+import { NgDocEventSwitcherDirective } from '@ng-doc/ui-kit/directives/event-switcher';
+import { NgDocFocusCatcherDirective } from '@ng-doc/ui-kit/directives/focus-catcher';
+import { toElement } from '@ng-doc/ui-kit/helpers';
+import { NgDocOverlayConfig, NgDocOverlayContainer } from '@ng-doc/ui-kit/interfaces';
+import { ngDocZoneOptimize } from '@ng-doc/ui-kit/observables';
 import {
 	NgDocContent,
 	NgDocHorizontalAlign,
@@ -28,10 +31,10 @@ import {
 	NgDocOverlayRelativePosition,
 	NgDocVerticalAlign,
 } from '@ng-doc/ui-kit/types';
-import {NgDocFocusUtils, NgDocOverlayUtils} from '@ng-doc/ui-kit/utils';
-import {PolymorpheusModule, PolymorpheusOutletDirective} from '@tinkoff/ng-polymorpheus';
-import {Observable, Subject} from 'rxjs';
-import {distinctUntilChanged} from 'rxjs/operators';
+import { NgDocFocusUtils, NgDocOverlayUtils } from '@ng-doc/ui-kit/utils';
+import { PolymorpheusModule, PolymorpheusOutletDirective } from '@tinkoff/ng-polymorpheus';
+import { Observable, Subject } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
 	selector: 'ng-doc-overlay-container',
@@ -48,13 +51,13 @@ import {distinctUntilChanged} from 'rxjs/operators';
 	],
 })
 export class NgDocOverlayContainerComponent implements NgDocOverlayContainer, OnInit, OnDestroy {
-	@ViewChild('contentContainer', {read: ElementRef, static: true})
+	@ViewChild('contentContainer', { read: ElementRef, static: true })
 	contentContainer?: ElementRef<HTMLElement>;
 
 	@ViewChild(NgDocFocusCatcherDirective)
 	focusCatcher?: NgDocFocusCatcherDirective;
 
-	@ViewChild(PolymorpheusOutletDirective, {static: true})
+	@ViewChild(PolymorpheusOutletDirective, { static: true })
 	outlet?: PolymorpheusOutletDirective<object>;
 
 	@HostBinding('attr.data-ng-doc-overlay-position')
@@ -64,7 +67,8 @@ export class NgDocOverlayContainerComponent implements NgDocOverlayContainer, On
 	content: NgDocContent = '';
 
 	private currentPosition?: NgDocOverlayPosition;
-	private animationEvent$: Subject<NgDocOverlayAnimationEvent> = new Subject<NgDocOverlayAnimationEvent>();
+	private animationEvent$: Subject<NgDocOverlayAnimationEvent> =
+		new Subject<NgDocOverlayAnimationEvent>();
 	private isOpened: boolean = true;
 
 	constructor(
@@ -109,7 +113,9 @@ export class NgDocOverlayContainerComponent implements NgDocOverlayContainer, On
 
 	get overlayAlign(): NgDocHorizontalAlign | NgDocVerticalAlign | null {
 		return this.currentPosition
-			? NgDocOverlayUtils.getPositionAlign(NgDocOverlayUtils.toConnectedPosition(this.currentPosition))
+			? NgDocOverlayUtils.getPositionAlign(
+					NgDocOverlayUtils.toConnectedPosition(this.currentPosition),
+			  )
 			: null;
 	}
 
@@ -123,7 +129,10 @@ export class NgDocOverlayContainerComponent implements NgDocOverlayContainer, On
 
 	focus(): void {
 		if (this.contentContainer) {
-			NgDocFocusUtils.focusClosestElement(toElement(this.contentContainer), toElement(this.contentContainer));
+			NgDocFocusUtils.focusClosestElement(
+				toElement(this.contentContainer),
+				toElement(this.contentContainer),
+			);
 		}
 	}
 
@@ -132,7 +141,9 @@ export class NgDocOverlayContainerComponent implements NgDocOverlayContainer, On
 	}
 
 	private runAnimation(animation: AnimationMetadata[], close: boolean = false): void {
-		const player: AnimationPlayer = this.animationBuilder.build(animation).create(this.elementRef.nativeElement);
+		const player: AnimationPlayer = this.animationBuilder
+			.build(animation)
+			.create(this.elementRef.nativeElement);
 		player.onStart(() => this.animationEvent$.next(close ? 'beforeClose' : 'beforeOpen'));
 		player.onDone(() => this.animationEvent$.next(close ? 'afterClose' : 'afterOpen'));
 		player.play();

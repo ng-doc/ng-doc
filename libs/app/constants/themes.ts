@@ -9,11 +9,11 @@ import { NgDocTheme } from '@ng-doc/app/interfaces';
  *
  * @Component()
  * export class AppComponent {
- * 	constructor(
- * 	    private readonly themeService: NgDocThemeService,
- * 	) {
- * 	    this.themeService.setTheme(NG_DOC_NIGHT_THEME.id);
- * 	}
+ *    constructor(
+ *        private readonly themeService: NgDocThemeService,
+ *    ) {
+ *        this.themeService.setTheme(NG_DOC_NIGHT_THEME.id);
+ *    }
  * }
  * ```
  *
@@ -24,9 +24,9 @@ import { NgDocTheme } from '@ng-doc/app/interfaces';
  * import {AppComponent} from './app.component';
  *
  * @NgModule({
- * 	declarations: [AppComponent],
- * 	imports: [NgDocModule.forRoot({defaultTheme: NG_DOC_NIGHT_THEME.id})],
- * 	bootstrap: [AppComponent],
+ *    declarations: [AppComponent],
+ *    imports: [NgDocModule.forRoot({defaultTheme: NG_DOC_NIGHT_THEME.id})],
+ *    bootstrap: [AppComponent],
  * })
  * export class AppModule {}
  * ```

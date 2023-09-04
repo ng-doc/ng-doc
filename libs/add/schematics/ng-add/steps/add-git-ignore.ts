@@ -1,5 +1,5 @@
-import {Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
-import {updateWorkspace} from '@schematics/angular/utility/workspace';
+import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { updateWorkspace } from '@schematics/angular/utility/workspace';
 
 /**
  *
@@ -18,7 +18,9 @@ export function addGitIgnore(): Rule {
 				const gitignore: Buffer | null = tree.read('.gitignore');
 
 				if (!gitignore) {
-					logger.warn(`⚠️ ".gitignore" file was not found, please add ".ng-doc" folder into it manually.`);
+					logger.warn(
+						`⚠️ ".gitignore" file was not found, please add ".ng-doc" folder into it manually.`,
+					);
 
 					return;
 				}

@@ -7,35 +7,35 @@ import {NgDocPageType} from '@ng-doc/core';
 const pageContent: string = `{{ pageContent | toTemplateString }}`
 
 @Component({
-	selector: 'ng-doc-page-{{ page.fullRoute | kebabCase }}',
-	standalone: true,
-	template: `<ng-doc-page></ng-doc-page>`,
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgDocPageComponent],
-	providers: [{provide: NgDocRootPage, useExisting: DynamicComponent}],
+    selector: 'ng-doc-page-{{ page.fullRoute | kebabCase }}',
+    standalone: true,
+    template: `<ng-doc-page></ng-doc-page>`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgDocPageComponent],
+    providers: [{provide: NgDocRootPage, useExisting: DynamicComponent}],
 })
 export class DynamicComponent extends NgDocRootPage {
-	readonly routePrefix?: string = undefined;
-	readonly pageType: NgDocPageType = 'api';
-	{%- if page.editSourceFileUrl %}
-	readonly editSourceFileUrl: string = '{{ page.editSourceFileUrl }}';
-	{%- endif %}
-	{%- if page.viewSourceFileUrl %}
-	readonly viewSourceFileUrl: string = '{{ page.viewSourceFileUrl }}';
-	{%- endif %}
-	readonly pageContent: string = pageContent;
-	readonly demo: Record<string, Type<unknown>> | undefined = undefined;
-	readonly demoAssets: NgDocDemoAssets | undefined = undefined;
+    readonly routePrefix?: string = undefined;
+    readonly pageType: NgDocPageType = 'api';
+    {%- if page.editSourceFileUrl %}
+    readonly editSourceFileUrl: string = '{{ page.editSourceFileUrl }}';
+    {%- endif %}
+    {%- if page.viewSourceFileUrl %}
+    readonly viewSourceFileUrl: string = '{{ page.viewSourceFileUrl }}';
+    {%- endif %}
+    readonly pageContent: string = pageContent;
+    readonly demo: Record<string, Type<unknown>> | undefined = undefined;
+    readonly demoAssets: NgDocDemoAssets | undefined = undefined;
 
-	constructor() {
-		super();
-	}
+    constructor() {
+        super();
+    }
 }
 
 const routes: Routes = [{
-	path: '',
-	component: DynamicComponent,
-	title: `{{ page.title | toTemplateString }}`,
+    path: '',
+    component: DynamicComponent,
+    title: `{{ page.title | toTemplateString }}`,
 }];
 
 export default routes;

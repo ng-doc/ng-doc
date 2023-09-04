@@ -1,8 +1,8 @@
-import {Directive, ElementRef, Input, Renderer2} from '@angular/core';
-import {Event, IsActiveMatchOptions, NavigationEnd, Router} from '@angular/router';
-import {asArray} from '@ng-doc/core/helpers/as-array';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {distinctUntilChanged, filter, map} from 'rxjs/operators';
+import { Directive, ElementRef, Input, Renderer2 } from '@angular/core';
+import { Event, IsActiveMatchOptions, NavigationEnd, Router } from '@angular/router';
+import { asArray } from '@ng-doc/core/helpers/as-array';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 
 @Directive({
 	selector: '[ngDocRouteActive]',

@@ -1,5 +1,5 @@
-import {NgDocRepoConfig} from '../interfaces';
-import {slash} from './slash';
+import { NgDocRepoConfig } from '../interfaces';
+import { slash } from './slash';
 
 /**
  *
@@ -11,7 +11,7 @@ import {slash} from './slash';
  * @param lineNumber
  */
 export function editFileInRepoUrl(
-	{url, mainBranch}: NgDocRepoConfig,
+	{ url, mainBranch }: NgDocRepoConfig,
 	filePath: string,
 	scope: string,
 	lineNumber?: number,
@@ -37,7 +37,7 @@ export function editFileInRepoUrl(
  * @param lineNumber
  */
 export function viewFileInRepoUrl(
-	{url, releaseBranch}: NgDocRepoConfig,
+	{ url, releaseBranch }: NgDocRepoConfig,
 	filePath: string,
 	lineNumber?: number,
 ): string {

@@ -1,5 +1,5 @@
-import {NgDocPlaygroundProperties} from '@ng-doc/core';
-import {ClassDeclaration} from 'ts-morph';
+import { NgDocPlaygroundProperties } from '@ng-doc/core';
+import { ClassDeclaration } from 'ts-morph';
 
 export interface NgDocPlaygroundMetadata {
 	selector?: string;

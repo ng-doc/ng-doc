@@ -1,5 +1,5 @@
-import {Element, Root} from 'hast';
-import {visit} from 'unist-util-visit';
+import { Element, Root } from 'hast';
+import { visit } from 'unist-util-visit';
 
 /**
  * Add hljs class to `pre` elements that contain `code` elements
@@ -14,7 +14,10 @@ export default function markCodeBlocksPlugin(): any {
 		visit(tree, 'element', (node: Element) => {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
-			if (node.tagName === 'pre' && node.children?.some((child: Element) => child.tagName === 'code')) {
+			if (
+				node.tagName === 'pre' &&
+				node.children?.some((child: Element) => child.tagName === 'code')
+			) {
 				if (node.properties) {
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore

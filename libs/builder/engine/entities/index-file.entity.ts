@@ -1,10 +1,10 @@
 import * as path from 'path';
-import {Observable, of} from 'rxjs';
+import { Observable, of } from 'rxjs';
 
-import {NgDocBuildResult} from '../../interfaces';
-import {renderTemplate} from '../nunjucks';
-import {NgDocEntity} from './abstractions/entity';
-import {CachedEntity, CachedFilesGetter} from './cache';
+import { NgDocBuildResult } from '../../interfaces';
+import { renderTemplate } from '../nunjucks';
+import { NgDocEntity } from './abstractions/entity';
+import { CachedEntity, CachedFilesGetter } from './cache';
 
 @CachedEntity()
 export class NgDocIndexFileEntity extends NgDocEntity {

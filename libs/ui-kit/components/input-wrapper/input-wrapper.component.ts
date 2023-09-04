@@ -1,4 +1,4 @@
-import {NgIf} from '@angular/common';
+import { NgIf } from '@angular/common';
 import {
 	AfterViewChecked,
 	ChangeDetectionStrategy,
@@ -12,18 +12,18 @@ import {
 	Optional,
 	ViewChild,
 } from '@angular/core';
-import {NgDocBaseInput} from '@ng-doc/ui-kit/classes/base-input';
-import {NgDocInputHost} from '@ng-doc/ui-kit/classes/input-host';
-import {NgDocFloatedBorderComponent} from '@ng-doc/ui-kit/components/floated-border';
-import {NgDocFloatedContentComponent} from '@ng-doc/ui-kit/components/floated-content';
-import {NgDocWrapperComponent} from '@ng-doc/ui-kit/components/wrapper';
-import {ngDocMakePure} from '@ng-doc/ui-kit/decorators';
-import {NgDocFocusCatcherDirective} from '@ng-doc/ui-kit/directives/focus-catcher';
-import {NgDocContextWithImplicit} from '@ng-doc/ui-kit/interfaces';
-import {NgDocContent, NgDocTextAlign} from '@ng-doc/ui-kit/types';
-import {UntilDestroy} from '@ngneat/until-destroy';
-import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
-import {FL_CONTROL_HOST, FlControl, FlControlHost} from 'flex-controls';
+import { NgDocBaseInput } from '@ng-doc/ui-kit/classes/base-input';
+import { NgDocInputHost } from '@ng-doc/ui-kit/classes/input-host';
+import { NgDocFloatedBorderComponent } from '@ng-doc/ui-kit/components/floated-border';
+import { NgDocFloatedContentComponent } from '@ng-doc/ui-kit/components/floated-content';
+import { NgDocWrapperComponent } from '@ng-doc/ui-kit/components/wrapper';
+import { ngDocMakePure } from '@ng-doc/ui-kit/decorators';
+import { NgDocFocusCatcherDirective } from '@ng-doc/ui-kit/directives/focus-catcher';
+import { NgDocContextWithImplicit } from '@ng-doc/ui-kit/interfaces';
+import { NgDocContent, NgDocTextAlign } from '@ng-doc/ui-kit/types';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
+import { FL_CONTROL_HOST, FlControl, FlControlHost } from 'flex-controls';
 
 @Component({
 	selector: 'ng-doc-input-wrapper',
@@ -47,7 +47,9 @@ import {FL_CONTROL_HOST, FlControl, FlControlHost} from 'flex-controls';
 	],
 })
 @UntilDestroy()
-export class NgDocInputWrapperComponent<T, B = unknown> implements AfterViewChecked, NgDocInputHost<T> {
+export class NgDocInputWrapperComponent<T, B = unknown>
+	implements AfterViewChecked, NgDocInputHost<T>
+{
 	@Input()
 	blurContent: NgDocContent<NgDocContextWithImplicit<B | null>> = '';
 
@@ -70,7 +72,7 @@ export class NgDocInputWrapperComponent<T, B = unknown> implements AfterViewChec
 	@ContentChild(NgDocBaseInput)
 	inputControl?: FlControl<T>;
 
-	@ViewChild(NgDocFocusCatcherDirective, {static: true})
+	@ViewChild(NgDocFocusCatcherDirective, { static: true })
 	focusCatcher?: NgDocFocusCatcherDirective;
 
 	constructor(
@@ -87,7 +89,7 @@ export class NgDocInputWrapperComponent<T, B = unknown> implements AfterViewChec
 
 	@ngDocMakePure
 	getBlurContext($implicit: B | null): NgDocContextWithImplicit<B | null> {
-		return {$implicit};
+		return { $implicit };
 	}
 
 	@HostBinding('attr.data-ng-doc-input-disabled')

@@ -16,7 +16,7 @@ export interface NgDocIndexBuilderConfig {
 }
 
 /**
- *	Builds the indexes for a given content
+ *    Builds the indexes for a given content
  *
  * @param config
  */

@@ -1,15 +1,18 @@
-import {asArray} from '@ng-doc/core';
+import { asArray } from '@ng-doc/core';
 
-import {NgDocEntity} from '../entities/abstractions/entity';
-import {NgDocCache} from '../entities/cache';
-import {NgDocEntityStore} from '../entity-store';
+import { NgDocEntity } from '../entities/abstractions/entity';
+import { NgDocCache } from '../entities/cache';
+import { NgDocEntityStore } from '../entity-store';
 
 /**
  *
  * @param cache
  * @param store
  */
-export function ifNotCachedOrInvalid(cache: NgDocCache, store: NgDocEntityStore): (entity: NgDocEntity) => boolean {
+export function ifNotCachedOrInvalid(
+	cache: NgDocCache,
+	store: NgDocEntityStore,
+): (entity: NgDocEntity) => boolean {
 	return (entity: NgDocEntity) => {
 		const cacheIsInvalid: boolean = !cache.isCacheValid(entity);
 

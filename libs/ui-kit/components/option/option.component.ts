@@ -9,9 +9,9 @@ import {
 	OnDestroy,
 	Optional,
 } from '@angular/core';
-import {NgDocListItem} from '@ng-doc/ui-kit/classes/list-item';
-import {NgDocListComponent} from '@ng-doc/ui-kit/components/list';
-import {FL_CONTROL_HOST, FlCompareHost, FlControlHost, FlControlSelector} from 'flex-controls';
+import { NgDocListItem } from '@ng-doc/ui-kit/classes/list-item';
+import { NgDocListComponent } from '@ng-doc/ui-kit/components/list';
+import { FL_CONTROL_HOST, FlCompareHost, FlControlHost, FlControlSelector } from 'flex-controls';
 
 @Component({
 	selector: 'ng-doc-option',
@@ -26,7 +26,10 @@ import {FL_CONTROL_HOST, FlCompareHost, FlControlHost, FlControlSelector} from '
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	standalone: true,
 })
-export class NgDocOptionComponent<T> extends FlControlSelector<T> implements NgDocListItem, OnDestroy {
+export class NgDocOptionComponent<T>
+	extends FlControlSelector<T>
+	implements NgDocListItem, OnDestroy
+{
 	@HostBinding('attr.data-ng-doc-hover')
 	protected hovered: boolean = false;
 

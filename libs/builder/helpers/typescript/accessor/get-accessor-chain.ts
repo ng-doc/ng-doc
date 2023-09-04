@@ -7,9 +7,9 @@ import {
 	SetAccessorDeclaration,
 } from 'ts-morph';
 
-import {forAllClasses} from '../class';
-import {forAllInterfaces} from '../interface/for-all-interfaces';
-import {getInterfaceAccessors} from './get-interface-accessors';
+import { forAllClasses } from '../class';
+import { forAllInterfaces } from '../interface/for-all-interfaces';
+import { getInterfaceAccessors } from './get-interface-accessors';
 
 /**
  *

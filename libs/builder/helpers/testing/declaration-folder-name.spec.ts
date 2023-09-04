@@ -1,7 +1,7 @@
-import {ExportedDeclarations, Project} from 'ts-morph';
+import { ExportedDeclarations, Project } from 'ts-morph';
 
-import {declarationFolderName} from '../declaration-folder-name';
-import {createProject} from '../typescript/create-project';
+import { declarationFolderName } from '../declaration-folder-name';
+import { createProject } from '../typescript/create-project';
 
 describe('declarationFolderName', () => {
 	let project: Project;
@@ -110,8 +110,10 @@ describe('declarationFolderName', () => {
 		);
 		const declaration = sourceFile.getClassOrThrow('Test');
 
-		expect(declarationFolderName(declaration.getMethodOrThrow('method') as unknown as ExportedDeclarations)).toBe(
-			'unknowns',
-		);
+		expect(
+			declarationFolderName(
+				declaration.getMethodOrThrow('method') as unknown as ExportedDeclarations,
+			),
+		).toBe('unknowns');
 	});
 });

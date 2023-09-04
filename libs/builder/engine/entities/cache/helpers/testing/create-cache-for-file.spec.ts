@@ -1,6 +1,6 @@
-import {vol} from 'memfs';
+import { vol } from 'memfs';
 
-import {createCacheForFile} from '../create-cache-for-file';
+import { createCacheForFile } from '../create-cache-for-file';
 
 jest.mock('fs');
 

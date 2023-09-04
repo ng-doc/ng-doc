@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 const DEFAULT_SERIALIZE: (v: unknown) => string = (v: unknown) => String(v);
 

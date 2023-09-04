@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {NgDocContent} from '@ng-doc/ui-kit/types';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { NgDocContent } from '@ng-doc/ui-kit/types';
 
 @Component({
 	selector: 'ng-doc-tab',

@@ -1,7 +1,7 @@
-import {Element, ElementContent, Root} from 'hast';
-import {visit} from 'unist-util-visit';
+import { Element, ElementContent, Root } from 'hast';
+import { visit } from 'unist-util-visit';
 
-import {isElement, isText, lineBreak, textElement} from '../helpers';
+import { isElement, isText, lineBreak, textElement } from '../helpers';
 
 /**
  * Adds lines to code blocks
@@ -39,7 +39,8 @@ export default function codeBlockLinesPlugin() {
  * @param copyParent - Whether to copy the parent node to save the original node styles
  */
 function addLines(node: Element, lines: Element[] = [], copyParent?: boolean): Element[] {
-	const line = () => lines[lines.length - 1] ?? (lines.push(createLine()) && lines[lines.length - 1]);
+	const line = () =>
+		lines[lines.length - 1] ?? (lines.push(createLine()) && lines[lines.length - 1]);
 
 	node.children.forEach((child: ElementContent) => {
 		if (isText(child) && hasLineBreak(child)) {
@@ -47,7 +48,7 @@ function addLines(node: Element, lines: Element[] = [], copyParent?: boolean): E
 
 			split.forEach((content: string, i: number) => {
 				copyParent
-					? line().children.push({...node, children: [textElement(content)]})
+					? line().children.push({ ...node, children: [textElement(content)] })
 					: line().children.push(textElement(content));
 
 				i !== split.length - 1 && lines.push(createLine());
@@ -68,7 +69,7 @@ function addLines(node: Element, lines: Element[] = [], copyParent?: boolean): E
  * @param children - The children the line should have initially
  */
 function createLine(...children: ElementContent[]): Element {
-	return {type: 'element', tagName: 'span', properties: {class: ['line']}, children};
+	return { type: 'element', tagName: 'span', properties: { class: ['line'] }, children };
 }
 
 /**
@@ -77,5 +78,8 @@ function createLine(...children: ElementContent[]): Element {
  * @param node - The node to check
  */
 function hasLineBreak(node: ElementContent): boolean {
-	return (isText(node) && /\r?\n/.test(node.value)) || (isElement(node) && node.children.some(hasLineBreak));
+	return (
+		(isText(node) && /\r?\n/.test(node.value)) ||
+		(isElement(node) && node.children.some(hasLineBreak))
+	);
 }

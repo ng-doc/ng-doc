@@ -69,9 +69,9 @@ export abstract class NgDocBasePlayground implements Pick<NgDocPlaygroundConfig,
 		}
 
 		/*
-		 	This is a hack just to wait for the playground container to be initialized and only then
-		 	attach the change detector to have correct inputs values.
-		 */
+             This is a hack just to wait for the playground container to be initialized and only then
+             attach the change detector to have correct inputs values.
+         */
 		Promise.resolve().then(() => {
 			this.changeDetectorRef.reattach();
 		});

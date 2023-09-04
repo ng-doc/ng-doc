@@ -27,4 +27,4 @@ async function publish(pluginConfig, context) {
 	}
 }
 
-module.exports = {verify, prepare, addChannel, publish};
+module.exports = { verify, prepare, addChannel, publish };

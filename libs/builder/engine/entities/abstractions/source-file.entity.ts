@@ -1,14 +1,14 @@
 import path from 'path';
-import {Observable, of} from 'rxjs';
-import {tap} from 'rxjs/operators';
-import {SourceFile} from 'ts-morph';
+import { Observable, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { SourceFile } from 'ts-morph';
 
-import {slash} from '../../../helpers';
-import {NgDocBuilderContext} from '../../../interfaces';
-import {NgDocEntityStore} from '../../entity-store';
-import {CACHE_PATH} from '../../variables';
-import {NgDocCache} from '../cache';
-import {NgDocEntity} from './entity';
+import { slash } from '../../../helpers';
+import { NgDocBuilderContext } from '../../../interfaces';
+import { NgDocEntityStore } from '../../entity-store';
+import { CACHE_PATH } from '../../variables';
+import { NgDocCache } from '../cache';
+import { NgDocEntity } from './entity';
 
 export abstract class NgDocSourceFileEntity extends NgDocEntity {
 	/**
@@ -53,7 +53,10 @@ export abstract class NgDocSourceFileEntity extends NgDocEntity {
 	 * Returns import paths that can be used to import the current source file
 	 */
 	get pathToCompiledFile(): string {
-		const relativePath: string = path.relative(this.context.context.workspaceRoot, this.sourceFile.getFilePath());
+		const relativePath: string = path.relative(
+			this.context.context.workspaceRoot,
+			this.sourceFile.getFilePath(),
+		);
 
 		return path.join(CACHE_PATH, relativePath.replace(/\.ts$/, '.mjs'));
 	}
@@ -62,8 +65,8 @@ export abstract class NgDocSourceFileEntity extends NgDocEntity {
 	 * Runs when the source file was updated, can be used refresh source file in the typescript project
 	 */
 	protected refreshImpl(): Observable<void> {
-		[this.sourceFile, ...this.sourceFile.getReferencedSourceFiles()].forEach((sourceFile: SourceFile) =>
-			sourceFile.refreshFromFileSystemSync(),
+		[this.sourceFile, ...this.sourceFile.getReferencedSourceFiles()].forEach(
+			(sourceFile: SourceFile) => sourceFile.refreshFromFileSystemSync(),
 		);
 
 		return of(void 0);

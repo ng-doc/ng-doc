@@ -1,12 +1,12 @@
-import {isPresent} from '@ng-doc/core';
-import {ClassDeclaration, ExpressionWithTypeArguments, Node} from 'ts-morph';
+import { isPresent } from '@ng-doc/core';
+import { ClassDeclaration, ExpressionWithTypeArguments, Node } from 'ts-morph';
 
-import {findMember} from './find-member';
-import {getMemberParent} from './get-member-parent';
-import {NgDocClassMember, NgDocInterfaceMember, NgDocMemberType} from './member-type';
+import { findMember } from './find-member';
+import { getMemberParent } from './get-member-parent';
+import { NgDocClassMember, NgDocInterfaceMember, NgDocMemberType } from './member-type';
 
 /**
- *	Returns member that was implemented by the provided one
+ *    Returns member that was implemented by the provided one
  *
  * @param member - Target member
  */
