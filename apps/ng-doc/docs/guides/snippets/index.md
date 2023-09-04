@@ -84,7 +84,7 @@ export class DemoComponent {
 You can also do that by providing your snippet title to the `defaultTab` property of the
 `demo` or `demoPane` method, for example:
 
-> **Note** > `defaultTab` property has priority over `opened` snippet parameter.
+> **Note** `defaultTab` property has priority over `opened` snippet parameter.
 
 ```twig name="index.md"
 {{ '{{ NgDocActions.demo("DemoComponent", {defaultTab: "My Snippet"}) }}' | safe }}

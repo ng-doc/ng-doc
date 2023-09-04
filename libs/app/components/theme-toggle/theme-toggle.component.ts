@@ -10,6 +10,11 @@ import {
 	NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
 
+interface ToggleTheme {
+	name: string;
+	theme: NgDocTheme | 'auto' | undefined;
+}
+
 @Component({
 	animations: [
 		trigger('switchIcon', [
@@ -45,17 +50,29 @@ import {
 	imports: [NgDocButtonIconComponent, NgDocTooltipDirective, NgIf, NgDocIconComponent],
 })
 export class NgDocThemeToggleComponent {
-	protected readonly themes: Array<NgDocTheme | undefined> = [NG_DOC_NIGHT_THEME, undefined];
+	protected readonly themes: ToggleTheme[] = [
+		{ name: 'Auto', theme: 'auto' },
+		{ name: 'Light', theme: undefined },
+		{ name: 'Dark', theme: NG_DOC_NIGHT_THEME },
+	];
 
 	constructor(protected readonly themeService: NgDocThemeService) {}
 
-	get nextTheme(): NgDocTheme | undefined {
-		return this.themes[
-			(this.themes.indexOf(this.themeService.currentTheme) + 1) % this.themes.length
-		];
+	get currentTheme(): ToggleTheme {
+		const theme = this.themeService.currentTheme;
+
+		return this.themes.find(({ theme: t }) => t === theme) ?? this.themes[0];
+	}
+
+	get nextTheme(): ToggleTheme {
+		const index = this.themes.findIndex(({ theme }) => theme === this.themeService.currentTheme);
+
+		return this.themes[(index + 1) % this.themes.length];
 	}
 
 	toggleTheme(): void {
-		this.themeService.set(this.nextTheme?.id);
+		const { theme } = this.nextTheme;
+
+		this.themeService.set(theme === 'auto' ? theme : theme?.id);
 	}
 }

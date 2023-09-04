@@ -2,7 +2,8 @@
 	position: relative;
 	display: flex;
 	width: 100%;
-	border-radius: var(--ng-doc-base-gutter);
+	border-radius: var(--ng-doc-pane-border-radius, var(--ng-doc-base-gutter));
+	border: var(--ng-doc-pane-border, 1px solid var(--ng-doc-border-color));
 	overflow: hidden;
 
 	&[data-ng-doc-dragging='false'] {

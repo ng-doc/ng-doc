@@ -46,7 +46,7 @@
 	.ng-doc-backdrop {
 		@include ng-doc-backdrop-filter(rgba(0, 0, 0, 0.2), 'nothing');
 
-		position: fixed;
+		position: fixed !important;
 		left: 0;
 		top: 0;
 		width: 100%;

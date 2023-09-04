@@ -5,9 +5,12 @@
 
 	--ng-doc-code-margin: 0;
 	--ng-doc-code-border-radius: 0;
+	--ng-doc-code-border: none;
 	--ng-doc-smooth-resize-height: var(--ng-doc-demo-pane-height);
 	--ng-doc-smooth-resize-max-height: 100%;
 	--ng-doc-tab-group-tabs-background: var(--ng-doc-base-2);
+	--ng-doc-tab-group-border: none;
+	--ng-doc-tab-group-border-radius: 0;
 
 	ng-doc-tab-group,
 	ng-doc-code,

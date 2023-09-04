@@ -108,4 +108,8 @@
 
 	/* Sidenav */
 	--ng-doc-sidenav-width: 300px;
+
+	/* TabGroup */
+	--ng-doc-tab-group-border-radius: var(--ng-doc-base-gutter);
+	--ng-doc-tab-group-border: 1px solid var(--ng-doc-border-color);
 }

@@ -1,5 +1,11 @@
+@import '../../../ui-kit/styles/mixins';
+
 :host {
 	display: inline-block;
 	height: 40px;
 	width: 40px;
+
+	.letter {
+		@include ng-doc-heading-font();
+	}
 }

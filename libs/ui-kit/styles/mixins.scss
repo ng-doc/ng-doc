@@ -20,9 +20,8 @@
 
 @mixin ng-doc-backdrop-filter($base-color: var(--ng-doc-base-0), $disableSelector: ':empty') {
 	&:not(#{$disableSelector}) {
-		backdrop-filter: blur(20px);
-
 		@include alpha-background($base-color, 0.6);
+		backdrop-filter: blur(20px);
 	}
 
 	@supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
