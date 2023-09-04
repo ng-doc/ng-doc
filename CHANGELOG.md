@@ -1,3 +1,22 @@
+# [16.14.0](https://github.com/ng-doc/ng-doc/compare/v16.13.1...v16.14.0) (2023-09-04)
+
+
+### Bug Fixes
+
+* **app:** dark-purple theme was removed ([fb9cffe](https://github.com/ng-doc/ng-doc/commit/fb9cffe01f3f491c24717cc39175a9356effa2c8))
+* **app:** styles from ng-doc affect other components ([270eafd](https://github.com/ng-doc/ng-doc/commit/270eafd22b135355418d647de5e2914118ebe526))
+* **builder:** builder crashes with an error when trying to load files on Windows ([d564c84](https://github.com/ng-doc/ng-doc/commit/d564c84bc06fece6a6e0d60ab7dd1a6d1b98765e)), closes [#102](https://github.com/ng-doc/ng-doc/issues/102)
+
+
+### Features
+
+* **app:** code blocks and code block groups were redesigned ([a228922](https://github.com/ng-doc/ng-doc/commit/a2289227e367dcec723b08dc4062eae60fc3b36e))
+
+
+### BREAKING CHANGES
+
+* **app:** `dark-purple` theme was removed
+
 ## [16.13.1](https://github.com/ng-doc/ng-doc/compare/v16.13.0...v16.13.1) (2023-09-01)
 
 
