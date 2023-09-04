@@ -1,3 +1,21 @@
+# [16.15.0](https://github.com/ng-doc/ng-doc/compare/v16.14.0...v16.15.0) (2023-09-04)
+
+
+### Features
+
+* **app:** add `alert` blockquote type ([fbd607a](https://github.com/ng-doc/ng-doc/commit/fbd607a284118cc85bc01aa969c9aa35965d8f48))
+* **app:** blockquotes were redesigned ([64a8577](https://github.com/ng-doc/ng-doc/commit/64a8577923eb479aabf861004bf6eee3136c9164))
+* **app:** design has been updated, and now the elements better complement each other and are easier to customize ([96f540d](https://github.com/ng-doc/ng-doc/commit/96f540de8a5ba56ef7fb7ded22ccc7163091148c))
+* **app:** theme service has been improved, now you can enable or disable auto theming using `NgDocThemeService`, or define your own themes for auto theming ([5e7959f](https://github.com/ng-doc/ng-doc/commit/5e7959f4f0dafd2440dab59226df5e5f20bc4f3d))
+* **playground:** playground displays "Reset" button only if form is changed ([5d13545](https://github.com/ng-doc/ng-doc/commit/5d13545fcc9364ede8721575ab63f887f4c845a0))
+
+
+### BREAKING CHANGES
+
+* **app:** The CSS color palette variables
+`--ng-doc-<color>-<shade>` have been removed because they were redundant
+and mostly cluttered the CSS
+
 # [16.14.0](https://github.com/ng-doc/ng-doc/compare/v16.13.1...v16.14.0) (2023-09-04)
 
 
