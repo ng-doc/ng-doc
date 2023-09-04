@@ -7,6 +7,7 @@ import { NgDocThemeService } from '@ng-doc/app/services';
 import {
 	NgDocButtonIconComponent,
 	NgDocIconComponent,
+	NgDocSmoothResizeComponent,
 	NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
 
@@ -47,7 +48,13 @@ interface ToggleTheme {
 	styleUrls: ['./theme-toggle.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	standalone: true,
-	imports: [NgDocButtonIconComponent, NgDocTooltipDirective, NgIf, NgDocIconComponent],
+	imports: [
+		NgDocButtonIconComponent,
+		NgDocTooltipDirective,
+		NgIf,
+		NgDocIconComponent,
+		NgDocSmoothResizeComponent,
+	],
 })
 export class NgDocThemeToggleComponent {
 	protected readonly themes: ToggleTheme[] = [
@@ -59,12 +66,20 @@ export class NgDocThemeToggleComponent {
 	constructor(protected readonly themeService: NgDocThemeService) {}
 
 	get currentTheme(): ToggleTheme {
+		if (this.themeService.isAutoThemeEnabled) {
+			return this.themes[0];
+		}
+
 		const theme = this.themeService.currentTheme;
 
 		return this.themes.find(({ theme: t }) => t === theme) ?? this.themes[0];
 	}
 
 	get nextTheme(): ToggleTheme {
+		if (this.themeService.isAutoThemeEnabled) {
+			return this.themes[1];
+		}
+
 		const index = this.themes.findIndex(({ theme }) => theme === this.themeService.currentTheme);
 
 		return this.themes[(index + 1) % this.themes.length];
@@ -73,6 +88,10 @@ export class NgDocThemeToggleComponent {
 	toggleTheme(): void {
 		const { theme } = this.nextTheme;
 
-		this.themeService.set(theme === 'auto' ? theme : theme?.id);
+		if (theme === 'auto') {
+			this.themeService.enableAutoTheme(undefined, NG_DOC_NIGHT_THEME);
+		} else {
+			this.themeService.set(theme?.id);
+		}
 	}
 }

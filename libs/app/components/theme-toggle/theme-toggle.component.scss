@@ -6,6 +6,9 @@
 	width: 40px;
 
 	.letter {
-		@include ng-doc-heading-font();
+		@include ng-doc-font();
+
+		--ng-doc-font-size: 26px;
+		--ng-doc-font-weight: 600;
 	}
 }

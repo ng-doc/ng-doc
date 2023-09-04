@@ -1,4 +1,9 @@
-<button ng-doc-button-icon size="large" (click)="toggleTheme()" [ngDocTooltip]="nextTheme.name">
+<button ng-doc-button-icon size="large" (click)="toggleTheme()" [ngDocTooltip]="tooltipContent">
+	<ng-template #tooltipContent>
+		<ng-doc-smooth-resize [trigger]="nextTheme.name">
+			Set "{{ nextTheme.name }}" theme
+		</ng-doc-smooth-resize>
+	</ng-template>
 	<ng-doc-icon
 		[@switchIcon]="{ value: ':enter', params: { from: '-100%', to: '100%' } }"
 		icon="sun"
