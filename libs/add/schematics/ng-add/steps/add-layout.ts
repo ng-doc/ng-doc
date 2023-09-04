@@ -1,13 +1,13 @@
-import {getProjectTargetOptions} from '@angular/cdk/schematics';
-import {JsonValue} from '@angular-devkit/core';
-import {ProjectDefinition, WorkspaceDefinition} from '@angular-devkit/core/src/workspace';
-import {Rule, SchematicContext, Tree, UpdateRecorder} from '@angular-devkit/schematics';
-import {getWorkspace} from '@schematics/angular/utility/workspace';
+import { getProjectTargetOptions } from '@angular/cdk/schematics';
+import { JsonValue } from '@angular-devkit/core';
+import { ProjectDefinition, WorkspaceDefinition } from '@angular-devkit/core/src/workspace';
+import { Rule, SchematicContext, Tree, UpdateRecorder } from '@angular-devkit/schematics';
+import { getWorkspace } from '@schematics/angular/utility/workspace';
 
-import {APP_COMPONENT_CONTENT} from '../constants/app-component-content';
-import {Schema} from '../schema';
-import {getAppTemplatePath} from '../utils/get-app-template-path';
-import {getProject} from '../utils/get-project';
+import { APP_COMPONENT_CONTENT } from '../constants/app-component-content';
+import { Schema } from '../schema';
+import { getAppTemplatePath } from '../utils/get-app-template-path';
+import { getProject } from '../utils/get-project';
 
 /**
  *
@@ -32,8 +32,14 @@ export function addLayout(options: Schema): Rule {
 				return;
 			}
 
-			const buildOptions: Record<string, JsonValue | undefined> = getProjectTargetOptions(project, 'build');
-			const appTemplatePath: string | undefined = getAppTemplatePath(tree, buildOptions['main'] as string);
+			const buildOptions: Record<string, JsonValue | undefined> = getProjectTargetOptions(
+				project,
+				'build',
+			);
+			const appTemplatePath: string | undefined = getAppTemplatePath(
+				tree,
+				buildOptions['main'] as string,
+			);
 
 			if (!appTemplatePath) {
 				logger.error(

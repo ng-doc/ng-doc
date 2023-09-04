@@ -1,10 +1,10 @@
 import * as fs from 'fs';
 
-import {NgDocCachedData} from '../interfaces';
-import {createCache} from './create-cache';
-import {getCacheDirPath} from './get-cache-dir-path';
-import {isCacheValid} from './is-cache-valid';
-import {updateCache} from './update-cache';
+import { NgDocCachedData } from '../interfaces';
+import { createCache } from './create-cache';
+import { getCacheDirPath } from './get-cache-dir-path';
+import { isCacheValid } from './is-cache-valid';
+import { updateCache } from './update-cache';
 
 const CORE_CACHE_ID: string = 'ng-doc-core';
 
@@ -20,10 +20,10 @@ export function invalidateCacheIfNeeded(coreFiles: string[] = []): boolean {
 	const isValid: boolean = isCacheValid(CORE_CACHE_ID, cache);
 
 	if (!isValid) {
-		fs.rmSync(cacheDirPath, {recursive: true, force: true});
+		fs.rmSync(cacheDirPath, { recursive: true, force: true });
 	}
 
-	fs.mkdirSync(cacheDirPath, {recursive: true});
+	fs.mkdirSync(cacheDirPath, { recursive: true });
 	updateCache(CORE_CACHE_ID, cache);
 
 	return isValid;

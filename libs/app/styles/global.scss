@@ -39,15 +39,15 @@ body {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-	background: var(--ng-doc-base-6);
+	background: var(--ng-doc-base-5);
 	border-radius: calc(var(--ng-doc-base-gutter) * 2);
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-	background: var(--ng-doc-base-8);
+	background: var(--ng-doc-base-7);
 }
 
 ::selection {
-	background: rgba(var(--ng-doc-primary-rgb), 0.2);
+	background: var(--ng-doc-text-selection);
 }

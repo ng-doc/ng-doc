@@ -11,7 +11,11 @@
 				"outputPath": "dist/libs/add",
 				"main": "libs/add/schematics/index.ts",
 				"tsConfig": "libs/add/tsconfig.lib.json",
-				"assets": ["libs/add/*.md", "libs/add/schematics/**/*.json", "libs/add/schematics/**/files/**/*"],
+				"assets": [
+					"libs/add/*.md",
+					"libs/add/schematics/**/*.json",
+					"libs/add/schematics/**/files/**/*"
+				],
 				"updateBuildableProjectDepsInPackageJson": false
 			}
 		},

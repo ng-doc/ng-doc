@@ -3,8 +3,8 @@
  * @param currentConfig
  * @param hostConfig
  */
-import {isPresent} from '@ng-doc/core/helpers/is-present';
-import {NgDocOverlayProperties} from '@ng-doc/ui-kit/interfaces';
+import { isPresent } from '@ng-doc/core/helpers/is-present';
+import { NgDocOverlayProperties } from '@ng-doc/ui-kit/interfaces';
 
 /**
  *
@@ -17,10 +17,11 @@ export function mergeOverlayConfigs(
 	currentConfig: NgDocOverlayProperties,
 	hostConfig: NgDocOverlayProperties = {},
 ): NgDocOverlayProperties {
-	const configKeys: Iterable<keyof NgDocOverlayProperties> & Array<keyof NgDocOverlayProperties> = Object.keys({
-		...defaultConfig,
-		...currentConfig,
-	}) as Iterable<keyof NgDocOverlayProperties> & Array<keyof NgDocOverlayProperties>;
+	const configKeys: Iterable<keyof NgDocOverlayProperties> & Array<keyof NgDocOverlayProperties> =
+		Object.keys({
+			...defaultConfig,
+			...currentConfig,
+		}) as Iterable<keyof NgDocOverlayProperties> & Array<keyof NgDocOverlayProperties>;
 	const newConfig: NgDocOverlayProperties = {};
 
 	for (const key of configKeys) {

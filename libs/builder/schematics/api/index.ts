@@ -12,7 +12,7 @@ import {
 	url,
 } from '@angular-devkit/schematics';
 
-import {NgDocBuildApiSchema} from './schema';
+import { NgDocBuildApiSchema } from './schema';
 
 /**
  * Generates the NgDocApi entity
@@ -27,7 +27,7 @@ export function generate(options: NgDocBuildApiSchema): Rule {
 		return chain([
 			mergeWith(
 				apply(url('./files'), [
-					applyTemplates({...options}),
+					applyTemplates({ ...options }),
 					move(execPath),
 					forEach((fileEntry: FileEntry) => {
 						if (host.exists(fileEntry.path)) {

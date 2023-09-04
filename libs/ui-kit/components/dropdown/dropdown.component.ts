@@ -1,5 +1,9 @@
-import {Point} from '@angular/cdk/drag-drop';
-import {CdkOverlayOrigin, FlexibleConnectedPositionStrategy, PositionStrategy} from '@angular/cdk/overlay';
+import { Point } from '@angular/cdk/drag-drop';
+import {
+	CdkOverlayOrigin,
+	FlexibleConnectedPositionStrategy,
+	PositionStrategy,
+} from '@angular/cdk/overlay';
 import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
@@ -17,18 +21,18 @@ import {
 	SimpleChanges,
 	ViewContainerRef,
 } from '@angular/core';
-import {asArray} from '@ng-doc/core/helpers/as-array';
-import {dropdownOpenAnimation} from '@ng-doc/ui-kit/animations';
-import {NgDocOverlayHost} from '@ng-doc/ui-kit/classes/overlay-host';
-import {NgDocOverlayRef} from '@ng-doc/ui-kit/classes/overlay-ref';
-import {NgDocOverlayContainerComponent} from '@ng-doc/ui-kit/components/overlay-container';
-import {mergeOverlayConfigs, toElement} from '@ng-doc/ui-kit/helpers';
-import {NgDocOverlayConfig, NgDocOverlayProperties} from '@ng-doc/ui-kit/interfaces';
-import {ngDocZoneDetach} from '@ng-doc/ui-kit/observables';
-import {NgDocOverlayService} from '@ng-doc/ui-kit/services/overlay';
-import {NgDocContent, NgDocOverlayOrigin, NgDocOverlayPosition} from '@ng-doc/ui-kit/types';
-import {NgDocOverlayUtils} from '@ng-doc/ui-kit/utils';
-import {UntilDestroy} from '@ngneat/until-destroy';
+import { asArray } from '@ng-doc/core/helpers/as-array';
+import { dropdownOpenAnimation } from '@ng-doc/ui-kit/animations';
+import { NgDocOverlayHost } from '@ng-doc/ui-kit/classes/overlay-host';
+import { NgDocOverlayRef } from '@ng-doc/ui-kit/classes/overlay-ref';
+import { NgDocOverlayContainerComponent } from '@ng-doc/ui-kit/components/overlay-container';
+import { mergeOverlayConfigs, toElement } from '@ng-doc/ui-kit/helpers';
+import { NgDocOverlayConfig, NgDocOverlayProperties } from '@ng-doc/ui-kit/interfaces';
+import { ngDocZoneDetach } from '@ng-doc/ui-kit/observables';
+import { NgDocOverlayService } from '@ng-doc/ui-kit/services/overlay';
+import { NgDocContent, NgDocOverlayOrigin, NgDocOverlayPosition } from '@ng-doc/ui-kit/types';
+import { NgDocOverlayUtils } from '@ng-doc/ui-kit/utils';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
 @Component({
 	selector: 'ng-doc-dropdown',
@@ -118,16 +122,19 @@ export class NgDocDropdownComponent implements OnChanges, OnDestroy {
 		protected overlayHost?: NgDocOverlayHost,
 	) {}
 
-	ngOnChanges({origin}: SimpleChanges): void {
+	ngOnChanges({ origin }: SimpleChanges): void {
 		if (origin && origin.currentValue !== origin.previousValue) {
 			if (!origin.currentValue) {
 				this.origin = origin.previousValue as CdkOverlayOrigin | Point | null;
 			}
 
 			if (this.overlay) {
-				const positionStrategy: PositionStrategy | undefined = this.overlay.overlayRef.getConfig().positionStrategy;
+				const positionStrategy: PositionStrategy | undefined =
+					this.overlay.overlayRef.getConfig().positionStrategy;
 				if (positionStrategy instanceof FlexibleConnectedPositionStrategy && this.currentOrigin) {
-					this.overlay.overlayRef.updatePositionStrategy(positionStrategy.setOrigin(this.currentOrigin));
+					this.overlay.overlayRef.updatePositionStrategy(
+						positionStrategy.setOrigin(this.currentOrigin),
+					);
 				}
 			}
 		}
@@ -243,7 +250,11 @@ export class NgDocDropdownComponent implements OnChanges, OnDestroy {
 			openAnimation: dropdownOpenAnimation,
 			hasBackdrop: this.hasBackdrop,
 			...overlayProperties,
-			panelClass: ['ng-doc-dropdown', ...asArray(this.panelClass), ...asArray(this.overlayHost?.panelClass)],
+			panelClass: [
+				'ng-doc-dropdown',
+				...asArray(this.panelClass),
+				...asArray(this.overlayHost?.panelClass),
+			],
 		};
 	}
 

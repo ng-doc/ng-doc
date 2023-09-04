@@ -9,12 +9,16 @@ import {
 	ViewChild,
 	ViewContainerRef,
 } from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {isPlaygroundProperty} from '@ng-doc/app/helpers';
-import {NgDocProvidedTypeControl, NgDocTypeControl, NgDocTypeControlProviderOptions} from '@ng-doc/app/interfaces';
-import {NgDocSanitizeHtmlPipe} from '@ng-doc/app/pipes';
-import {NgDocPlaygroundContent, NgDocPlaygroundProperty} from '@ng-doc/core/interfaces';
-import {NgDocLabelComponent, NgDocTooltipDirective} from '@ng-doc/ui-kit';
+import { FormControl } from '@angular/forms';
+import { isPlaygroundProperty } from '@ng-doc/app/helpers';
+import {
+	NgDocProvidedTypeControl,
+	NgDocTypeControl,
+	NgDocTypeControlProviderOptions,
+} from '@ng-doc/app/interfaces';
+import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes';
+import { NgDocPlaygroundContent, NgDocPlaygroundProperty } from '@ng-doc/core/interfaces';
+import { NgDocLabelComponent, NgDocTooltipDirective } from '@ng-doc/ui-kit';
 
 @Component({
 	selector: 'ng-doc-playground-property',
@@ -40,13 +44,13 @@ export class NgDocPlaygroundPropertyComponent implements OnChanges {
 	@Input()
 	defaultValue?: unknown;
 
-	@ViewChild('propertyOutlet', {read: ViewContainerRef, static: true})
+	@ViewChild('propertyOutlet', { read: ViewContainerRef, static: true })
 	propertyOutlet?: ViewContainerRef;
 
 	protected option?: NgDocTypeControlProviderOptions;
 	private propertyTypeControl?: ComponentRef<NgDocTypeControl>;
 
-	ngOnChanges({property, control, typeControl, defaultValue}: SimpleChanges): void {
+	ngOnChanges({ property, control, typeControl, defaultValue }: SimpleChanges): void {
 		if ((property || control || typeControl || defaultValue) && this.property && this.typeControl) {
 			this.propertyTypeControl?.destroy();
 			this.propertyTypeControl = undefined;
@@ -65,8 +69,12 @@ export class NgDocPlaygroundPropertyComponent implements OnChanges {
 			}
 
 			if (this.control) {
-				this.control?.registerOnChange((value: string) => this.propertyTypeControl?.instance?.writeValue(value));
-				this.propertyTypeControl?.instance.registerOnChange((value: unknown) => this.control?.setValue(value));
+				this.control?.registerOnChange((value: string) =>
+					this.propertyTypeControl?.instance?.writeValue(value),
+				);
+				this.propertyTypeControl?.instance.registerOnChange((value: unknown) =>
+					this.control?.setValue(value),
+				);
 				this.propertyTypeControl?.instance.registerOnTouched(() => this.control?.markAsTouched());
 			}
 		}
@@ -78,6 +86,8 @@ export class NgDocPlaygroundPropertyComponent implements OnChanges {
 	}
 
 	get tooltipContent(): string {
-		return this.property && isPlaygroundProperty(this.property) ? this.property.description ?? '' : '';
+		return this.property && isPlaygroundProperty(this.property)
+			? this.property.description ?? ''
+			: '';
 	}
 }

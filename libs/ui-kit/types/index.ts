@@ -13,7 +13,6 @@ export * from './overlay-animation-event';
 export * from './overlay-origin';
 export * from './overlay-position';
 export * from './overlay-relative-position';
-export * from './palette-color';
 export * from './position';
 export * from './size';
 export * from './subscribable';

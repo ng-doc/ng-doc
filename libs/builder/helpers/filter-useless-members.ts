@@ -1,4 +1,4 @@
-import {NgDocMemberType} from './typescript';
+import { NgDocMemberType } from './typescript';
 
 const EXCLUDING_RULES: RegExp[] = [/^ɵ/];
 
@@ -8,5 +8,7 @@ const EXCLUDING_RULES: RegExp[] = [/^ɵ/];
  * @param members - List of members
  */
 export function filterUselessMembers<T extends NgDocMemberType>(members: T[]): T[] {
-	return members.filter((member: T) => !EXCLUDING_RULES.every((rule: RegExp) => rule.test(member.getName())));
+	return members.filter(
+		(member: T) => !EXCLUDING_RULES.every((rule: RegExp) => rule.test(member.getName())),
+	);
 }

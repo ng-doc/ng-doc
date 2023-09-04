@@ -1,4 +1,4 @@
-import {asArray} from '@ng-doc/core';
+import { asArray } from '@ng-doc/core';
 import {
 	AccessorDeclaration,
 	GetAccessorDeclaration,
@@ -7,7 +7,7 @@ import {
 	SetAccessorDeclaration,
 } from 'ts-morph';
 
-import {forAllInterfaces} from '../interface';
+import { forAllInterfaces } from '../interface';
 
 /**
  *

@@ -9,22 +9,28 @@ NgDoc supports default blockquotes and some custom blockquotes, for example, you
 `Note` and `Warning` blockquotes to highlight some important information in your guides
 
 ```markdown name="index.md"
-> Default blockquote
+> Default a blockquote
 
 > **Note**
-> This is note blockquote
+> This is a note blockquote
 
 > **Warning**
-> This is warning blockquote
+> This is a warning blockquote
+
+> **Alert**
+> This is an alert blockquote
 ```
 
-> Default blockquote
+> Default a blockquote
 
 > **Note**
-> This is note blockquote
+> This is a note blockquote
 
 > **Warning**
-> This is warning blockquote
+> This is a warning blockquote
+
+> **Alert**
+> This is an alert blockquote
 
 ## Code blocks
 

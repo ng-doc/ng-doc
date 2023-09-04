@@ -1,5 +1,5 @@
-import {NgDocCodeComponent} from '@ng-doc/app/components/code';
-import {NgDocPageProcessor} from '@ng-doc/app/interfaces';
+import { NgDocCodeComponent } from '@ng-doc/app/components/code';
+import { NgDocPageProcessor } from '@ng-doc/app/interfaces';
 
 export const codeProcessor: NgDocPageProcessor<NgDocCodeComponent> = {
 	component: NgDocCodeComponent,

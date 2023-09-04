@@ -1,12 +1,18 @@
-import {AsyncPipe, NgFor, NgIf, NgTemplateOutlet} from '@angular/common';
-import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {ActivatedRoute, ParamMap, Router, RouterLink} from '@angular/router';
-import {NgDocKindIconComponent} from '@ng-doc/app/components/kind-icon';
-import {NG_DOC_API_LIST_TOKEN} from '@ng-doc/app/tokens';
-import {NgDocFormPartialValue} from '@ng-doc/app/types';
-import {asArray} from '@ng-doc/core/helpers/as-array';
-import {NgDocApiList, NgDocApiListItem} from '@ng-doc/core/interfaces';
+import { AsyncPipe, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import {
+	FormBuilder,
+	FormControl,
+	FormGroup,
+	FormsModule,
+	ReactiveFormsModule,
+} from '@angular/forms';
+import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
+import { NgDocKindIconComponent } from '@ng-doc/app/components/kind-icon';
+import { NG_DOC_API_LIST_TOKEN } from '@ng-doc/app/tokens';
+import { NgDocFormPartialValue } from '@ng-doc/app/types';
+import { asArray } from '@ng-doc/core/helpers/as-array';
+import { NgDocApiList, NgDocApiListItem } from '@ng-doc/core/interfaces';
 import {
 	NgDocAutofocusDirective,
 	NgDocComboboxComponent,
@@ -21,10 +27,10 @@ import {
 	NgDocTextLeftDirective,
 	NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
-import {ngDocMakePure} from '@ng-doc/ui-kit/decorators';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {Observable} from 'rxjs';
-import {debounceTime, map, startWith} from 'rxjs/operators';
+import { ngDocMakePure } from '@ng-doc/ui-kit/decorators';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Observable } from 'rxjs';
+import { debounceTime, map, startWith } from 'rxjs/operators';
 
 interface ApiFilterForm {
 	filter: FormControl<string | null>;
@@ -131,7 +137,11 @@ export class NgDocApiListComponent {
 	@ngDocMakePure
 	get types(): string[] {
 		return asArray(
-			new Set(this.apiList.flatMap((api: NgDocApiList) => api.items).flatMap((item: NgDocApiListItem) => item.type)),
+			new Set(
+				this.apiList
+					.flatMap((api: NgDocApiList) => api.items)
+					.flatMap((item: NgDocApiListItem) => item.type),
+			),
 		).sort();
 	}
 }

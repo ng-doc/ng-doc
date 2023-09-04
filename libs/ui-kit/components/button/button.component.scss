@@ -1,8 +1,12 @@
-@import '../../styles/palette/palette';
 @import '../../styles/mixins';
 
 :host {
 	@include ng-doc-font();
+	@include alpha-background(
+		var(--ng-doc-button-alpha-background),
+		var(--ng-doc-button-background-opacity)
+	);
+
 	position: relative;
 	display: inline-flex;
 	align-items: center;
@@ -14,8 +18,8 @@
 		--ng-doc-button-padding,
 		var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2)
 	);
-	background-color: var(--ng-doc-button-background);
 	text-decoration: none;
+	background: var(--ng-doc-button-background);
 	--ng-doc-text: var(--ng-doc-button-color);
 	--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 2);
 	--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 3);
@@ -46,93 +50,51 @@
 
 	&:hover {
 		text-decoration: none;
-		background-color: var(--ng-doc-button-hover-background);
-		--ng-doc-button-color: var(--ng-doc-button-hover-color);
+
+		--ng-doc-button-background-opacity: var(--ng-doc-button-hover-background-opacity) !important;
+		--ng-doc-button-color: var(--ng-doc-button-hover-color) !important;
 	}
 
 	&:active {
-		background-color: var(--ng-doc-button-active-background);
-		--ng-doc-button-color: var(--ng-doc-button-active-color);
+		--ng-doc-button-background-opacity: var(--ng-doc-button-active-background-opacity) !important;
+		--ng-doc-button-color: var(--ng-doc-button-active-color) !important;
 	}
 
 	&[ng-doc-button] {
-		&[data-ng-doc-color='primary'] {
-			--ng-doc-button-background: rgba(var(--ng-doc-primary-rgb), 0.15);
-			--ng-doc-button-color: var(--ng-doc-text);
-			--ng-doc-button-hover-background: rgba(var(--ng-doc-primary-rgb), 0.25);
-			--ng-doc-button-active-background: rgba(var(--ng-doc-primary-rgb), 0.35);
-		}
+		--ng-doc-button-background-opacity: 0.1;
+		--ng-doc-button-hover-background-opacity: 0.2;
+		--ng-doc-button-active-background-opacity: 0.3;
 
-		&[data-ng-doc-color='link'] {
-			--ng-doc-button-background: rgba(var(--ng-doc-link-color-rgb), 0.15);
-			--ng-doc-button-color: var(--ng-doc-text);
-			--ng-doc-button-hover-background: rgba(var(--ng-doc-link-color-rgb), 0.25);
-			--ng-doc-button-active-background: rgba(var(--ng-doc-link-color-rgb), 0.35);
-		}
-
-		@each $color-name, $color-value in $ng-doc-palette-colors {
-			&[data-ng-doc-color='#{$color-name}'] {
-				--ng-doc-button-background: var(--ng-doc-#{$color-name}-10);
-				--ng-doc-button-color: var(--ng-doc-#{$color-name}-120);
-				--ng-doc-button-hover-background: var(--ng-doc-#{$color-name}-20);
-				--ng-doc-button-hover-color: var(--ng-doc-#{$color-name}-120);
-				--ng-doc-button-active-background: var(--ng-doc-#{$color-name}-30);
-				--ng-doc-button-active-color: var(--ng-doc-#{$color-name}-120);
-			}
+		@include forEachColor() using($background, $color) {
+			--ng-doc-button-alpha-background: #{$background};
+			--ng-doc-button-color: #{$background};
+			--ng-doc-button-hover-color: #{$background};
+			--ng-doc-button-active-color: #{$background};
 		}
 	}
 
 	&[ng-doc-button-text] {
-		&[data-ng-doc-color='primary'] {
-			--ng-doc-button-background: transparent;
-			--ng-doc-button-color: var(--ng-doc-primary);
-			--ng-doc-button-hover-background: rgba(var(--ng-doc-primary-rgb), 0.1);
-			--ng-doc-button-active-background: rgba(var(--ng-doc-primary-rgb), 0.25);
-		}
+		--ng-doc-button-hover-background-opacity: 0.1;
+		--ng-doc-button-active-background-opacity: 0.2;
 
-		&[data-ng-doc-color='link'] {
-			--ng-doc-button-background: transparent;
-			--ng-doc-button-color: var(--ng-doc-link-color);
-			--ng-doc-button-hover-background: rgba(var(--ng-doc-link-color-rgb), 0.1);
-			--ng-doc-button-active-background: rgba(var(--ng-doc-link-color-rgb), 0.25);
-		}
-
-		@each $color-name, $color-value in $ng-doc-palette-colors {
-			&[data-ng-doc-color='#{$color-name}'] {
-				--ng-doc-button-background: transparent;
-				--ng-doc-button-color: var(--ng-doc-#{$color-name}-100);
-				--ng-doc-button-hover-background: var(--ng-doc-#{$color-name}-10);
-				--ng-doc-button-hover-color: var(--ng-doc-#{$color-name}-100);
-				--ng-doc-button-active-background: var(--ng-doc-#{$color-name}-20);
-				--ng-doc-button-active-color: var(--ng-doc-#{$color-name}-100);
-			}
+		@include forEachColor() using($background, $color) {
+			--ng-doc-button-alpha-background: #{$background};
+			--ng-doc-button-color: #{$background};
+			--ng-doc-button-hover-color: #{$background};
+			--ng-doc-button-active-color: #{$background};
 		}
 	}
 
 	&[ng-doc-button-flat] {
-		&[data-ng-doc-color='primary'] {
-			--ng-doc-button-background: var(--ng-doc-primary);
-			--ng-doc-button-color: var(--ng-doc-primary-text);
-			--ng-doc-button-hover-background: rgba(var(--ng-doc-primary-rgb), 0.9);
-			--ng-doc-button-active-background: rgba(var(--ng-doc-primary-rgb), 0.8);
-		}
+		--ng-doc-button-alpha-background: var(--ng-doc-white);
+		--ng-doc-button-hover-background-opacity: 0.1;
+		--ng-doc-button-active-background-opacity: 0.2;
 
-		&[data-ng-doc-color='link'] {
-			--ng-doc-button-background: var(--ng-doc-link-color);
-			--ng-doc-button-color: var(--ng-doc-white);
-			--ng-doc-button-hover-background: rgba(var(--ng-doc-link-color-rgb), 0.9);
-			--ng-doc-button-active-background: rgba(var(--ng-doc-link-color-rgb), 0.8);
-		}
-
-		@each $color-name, $color-value in $ng-doc-palette-colors {
-			&[data-ng-doc-color='#{$color-name}'] {
-				--ng-doc-button-background: var(--ng-doc-#{$color-name}-100);
-				--ng-doc-button-color: var(--ng-doc-white);
-				--ng-doc-button-hover-background: var(--ng-doc-#{$color-name}-90);
-				--ng-doc-button-hover-color: var(--ng-doc-white);
-				--ng-doc-button-active-background: var(--ng-doc-#{$color-name}-80);
-				--ng-doc-button-active-color: var(--ng-doc-white);
-			}
+		@include forEachColor() using($background, $color) {
+			--ng-doc-button-background: #{$background};
+			--ng-doc-button-color: #{$color};
+			--ng-doc-button-hover-color: #{$color};
+			--ng-doc-button-active-color: #{$color};
 		}
 	}
 }

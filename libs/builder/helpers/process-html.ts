@@ -1,8 +1,8 @@
-import {EMPTY_FUNCTION, NgDocEntityAnchor} from '@ng-doc/core';
+import { EMPTY_FUNCTION, NgDocEntityAnchor } from '@ng-doc/core';
 
-import {NgDocEntity} from '../engine/entities/abstractions/entity';
-import {isRouteEntity} from './entity-type';
-import {importEsm} from './import-esm';
+import { NgDocEntity } from '../engine/entities/abstractions/entity';
+import { isRouteEntity } from './entity-type';
+import { importEsm } from './import-esm';
 
 type Utils = typeof import('@ng-doc/utils');
 
@@ -19,7 +19,8 @@ export async function processHtml(html: string, entity: NgDocEntity): Promise<st
 		headings: entity?.context.config.guide?.anchorHeadings,
 		route: isRouteEntity(entity) ? entity.fullRoute : undefined,
 		raiseError: entity?.warnings.push.bind(entity.warnings) ?? EMPTY_FUNCTION,
-		addAnchor: (anchor: NgDocEntityAnchor) => (isRouteEntity(entity) ? entity.anchors.push(anchor) : undefined),
+		addAnchor: (anchor: NgDocEntityAnchor) =>
+			isRouteEntity(entity) ? entity.anchors.push(anchor) : undefined,
 	});
 }
 

@@ -1,7 +1,7 @@
-import {NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
-import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
-import {NgDocIconComponent} from '@ng-doc/ui-kit/components/icon';
-import {NgDocBlockquoteType} from '@ng-doc/ui-kit/types';
+import { NgIf, NgSwitch, NgSwitchCase } from '@angular/common';
+import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
+import { NgDocIconComponent } from '@ng-doc/ui-kit/components/icon';
+import { NgDocBlockquoteType } from '@ng-doc/ui-kit/types';
 
 @Component({
 	selector: 'blockquote[ng-doc-blockquote]',

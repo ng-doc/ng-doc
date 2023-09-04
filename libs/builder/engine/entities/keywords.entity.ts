@@ -1,9 +1,9 @@
-import {NgDocKeyword} from '@ng-doc/core';
+import { NgDocKeyword } from '@ng-doc/core';
 import path from 'path';
-import {Observable, of} from 'rxjs';
+import { Observable, of } from 'rxjs';
 
-import {NgDocBuildResult} from '../../interfaces';
-import {NgDocEntity} from './abstractions/entity';
+import { NgDocBuildResult } from '../../interfaces';
+import { NgDocEntity } from './abstractions/entity';
 
 export class NgDocKeywordsEntity extends NgDocEntity {
 	readonly id: string = 'NgDocKeywordsEntity';

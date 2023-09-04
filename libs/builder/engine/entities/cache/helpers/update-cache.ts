@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import {NgDocCachedData} from '../interfaces';
-import {getCacheFilePath} from './get-cache-file-path';
+import { NgDocCachedData } from '../interfaces';
+import { getCacheFilePath } from './get-cache-file-path';
 
 /**
  * Updates cache for given files
@@ -16,7 +16,7 @@ export function updateCache(id: string, cache: NgDocCachedData): void {
 	const cacheDirPath: string = path.dirname(cacheFilePath);
 
 	if (!fs.existsSync(cacheDirPath)) {
-		fs.mkdirSync(cacheDirPath, {recursive: true});
+		fs.mkdirSync(cacheDirPath, { recursive: true });
 	}
 
 	fs.writeFileSync(cacheFilePath, JSON.stringify(cache, null, 2));

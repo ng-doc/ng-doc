@@ -1,3 +1,3 @@
-import {NgDocAsset} from '../interfaces';
+import { NgDocAsset } from '../interfaces';
 
 export type NgDocComponentAsset = Record<string, NgDocAsset[]>;

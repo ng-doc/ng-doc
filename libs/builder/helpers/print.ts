@@ -1,4 +1,4 @@
-import {Spinner} from '@angular/cli/src/utilities/spinner';
+import { Spinner } from '@angular/cli/src/utilities/spinner';
 
 const spinner: Spinner = new Spinner();
 

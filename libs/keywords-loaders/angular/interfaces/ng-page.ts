@@ -1,4 +1,4 @@
-import {NgApiPageType} from '../types';
+import { NgApiPageType } from '../types';
 
 export interface NgPage {
 	title: string;

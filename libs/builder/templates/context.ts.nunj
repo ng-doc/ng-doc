@@ -3,35 +3,35 @@ import {Provider} from '@angular/core';
 import {NG_DOC_CONTEXT} from '@ng-doc/app/tokens';
 
 export function provideNgDocContext(): Provider {
-	return {
-		provide: NG_DOC_CONTEXT,
-		useValue: {
-			navigation: [
-				{%- macro nav(entity) %}
-				{
-					title: `{{ entity.title | toTemplateString }}`,
-					route: '{{ entity.fullRoute }}',
-					{%- if entity.isCategory %}
-					expandable: {{ entity.expandable }},
-					expanded: {{ entity.expanded }},
-					{%- endif %}
-					{%- if entity.order %}
-					order: {{ entity.order }},
-					hidden: {{ "true" if entity.target.hidden else "false" }},
-					{%- endif %}
-					{%- if entity.isCategory %}
-					children: [
-						{%- for child in entity.navigationItems | sortNavigationEntities %}
-						{{ nav(child) }},
-						{%- endfor %}
-					]
-					{%- endif %}
-				}
-				{%- endmacro %}
-				{%- for entity in entities | sortNavigationEntities %}
-				{{ nav(entity) }},
-				{%- endfor %}
-			],
-		}
-	};
+    return {
+        provide: NG_DOC_CONTEXT,
+        useValue: {
+            navigation: [
+                {%- macro nav(entity) %}
+                {
+                    title: `{{ entity.title | toTemplateString }}`,
+                    route: '{{ entity.fullRoute }}',
+                    {%- if entity.isCategory %}
+                    expandable: {{ entity.expandable }},
+                    expanded: {{ entity.expanded }},
+                    {%- endif %}
+                    {%- if entity.order %}
+                    order: {{ entity.order }},
+                    hidden: {{ "true" if entity.target.hidden else "false" }},
+                    {%- endif %}
+                    {%- if entity.isCategory %}
+                    children: [
+                        {%- for child in entity.navigationItems | sortNavigationEntities %}
+                        {{ nav(child) }},
+                        {%- endfor %}
+                    ]
+                    {%- endif %}
+                }
+                {%- endmacro %}
+                {%- for entity in entities | sortNavigationEntities %}
+                {{ nav(entity) }},
+                {%- endfor %}
+            ],
+        }
+    };
 }

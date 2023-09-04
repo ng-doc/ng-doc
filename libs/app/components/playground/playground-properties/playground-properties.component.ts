@@ -88,6 +88,9 @@ export class NgDocPlaygroundPropertiesComponent<
 	@Input()
 	recreateDemo: boolean = false;
 
+	@Input()
+	showResetButton: boolean = false;
+
 	@Output()
 	recreateDemoChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 

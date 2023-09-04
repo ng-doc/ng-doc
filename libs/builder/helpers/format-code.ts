@@ -2,7 +2,7 @@ import { NgDocCodeType } from '@ng-doc/core';
 import { Options } from 'prettier';
 
 /**
- *	Format code with Prettier
+ *    Format code with Prettier
  *
  * @param code - Code to format
  * @param codeType - Type of code
@@ -30,7 +30,7 @@ export function formatCode(
 }
 
 /**
- *	Returns the parser for the given code type.
+ *    Returns the parser for the given code type.
  *
  * @param {NgDocCodeType} codeType Code type
  * @returns {string} Parser

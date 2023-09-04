@@ -10,6 +10,7 @@ export * from './is-keyboard-event';
 export * from './is-node-tag';
 export * from './is-present';
 export * from './is-route';
+export * from './is-same-object';
 export * from './kebab-case';
 export * from './object-keys';
 export * from './stringify';

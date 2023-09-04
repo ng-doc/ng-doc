@@ -1,4 +1,4 @@
-import {ObservableSet} from '../classes';
+import { ObservableSet } from '../classes';
 
 export interface NgDocRendererOptions<T> {
 	scope?: string;

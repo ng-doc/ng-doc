@@ -6,6 +6,7 @@
 		[dynamicContent]="configuration.content"
 		[hideSidePanel]="configuration.hideSidePanel ?? false"
 		[defaultValues]="defaultValues"
+		[showResetButton]="!isDefaultState()"
 		[(recreateDemo)]="recreateDemo"
 		(resetForm)="resetForm()">
 		<ng-doc-playground-demo

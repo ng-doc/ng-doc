@@ -1,7 +1,7 @@
-import {DOCUMENT} from '@angular/common';
-import {ChangeDetectionStrategy, Component, Inject, Input} from '@angular/core';
-import {NgDocFocusableDirective} from '@ng-doc/ui-kit/directives/focusable';
-import {NgDocFocusUtils} from '@ng-doc/ui-kit/utils';
+import { DOCUMENT } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
+import { NgDocFocusableDirective } from '@ng-doc/ui-kit/directives/focusable';
+import { NgDocFocusUtils } from '@ng-doc/ui-kit/utils';
 
 @Component({
 	selector: 'ng-doc-focus-control',

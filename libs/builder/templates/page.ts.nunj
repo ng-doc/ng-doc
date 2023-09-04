@@ -11,45 +11,45 @@ const pageContent: string = `{{ pageContent | toTemplateString }}`
 
 
 @Component({
-	selector: 'ng-doc-page-{{ page.fullRoute | kebabCase }}',
-	standalone: true,
-	template: `<ng-doc-page></ng-doc-page>`,
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [
-		NgDocPageComponent,
-		{%- if page.hasImports %}
-		...pageEntity.imports,
-		{%- endif %}
-		...PLAYGROUND_COMPONENTS,
-	],
-	providers: [
-		{provide: NgDocRootPage, useExisting: DynamicComponent},
-		PLAYGROUND_PROVIDERS,
-		(pageEntity.providers ?? []),
-	],
+    selector: 'ng-doc-page-{{ page.fullRoute | kebabCase }}',
+    standalone: true,
+    template: `<ng-doc-page></ng-doc-page>`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        NgDocPageComponent,
+        {%- if page.hasImports %}
+        ...pageEntity.imports,
+        {%- endif %}
+        ...PLAYGROUND_COMPONENTS,
+    ],
+    providers: [
+        {provide: NgDocRootPage, useExisting: DynamicComponent},
+        PLAYGROUND_PROVIDERS,
+        (pageEntity.providers ?? []),
+    ],
 })
 export class DynamicComponent extends NgDocRootPage {
-	readonly routePrefix: string = '{{ page.context.config.routePrefix }}';
-	readonly pageType: NgDocPageType = 'guide';
-	readonly pageContent: string = pageContent;
-	{%- if page.editSourceFileUrl %}
-	readonly editSourceFileUrl: string = '{{ page.editSourceFileUrl }}';
-	{%- endif %}{%- if page.viewSourceFileUrl %}
-	readonly viewSourceFileUrl: string = '{{ page.viewSourceFileUrl }}';
-	{%- endif -%}
-	readonly page?: NgDocPage = pageEntity;
-	readonly demoAssets: NgDocDemoAssets = demoAssets;
+    readonly routePrefix: string = '{{ page.context.config.routePrefix }}';
+    readonly pageType: NgDocPageType = 'guide';
+    readonly pageContent: string = pageContent;
+    {%- if page.editSourceFileUrl %}
+    readonly editSourceFileUrl: string = '{{ page.editSourceFileUrl }}';
+    {%- endif %}{%- if page.viewSourceFileUrl %}
+    readonly viewSourceFileUrl: string = '{{ page.viewSourceFileUrl }}';
+    {%- endif -%}
+    readonly page?: NgDocPage = pageEntity;
+    readonly demoAssets: NgDocDemoAssets = demoAssets;
 
-	constructor() {
-		super();
-	}
+    constructor() {
+        super();
+    }
 }
 
 const routes: Routes = [{
-	...(isRoute(pageEntity.route) ? pageEntity.route : {}),
-	path: '',
-	component: DynamicComponent,
-	title: `{{ page.title | toTemplateString }}`,
+    ...(isRoute(pageEntity.route) ? pageEntity.route : {}),
+    path: '',
+    component: DynamicComponent,
+    title: `{{ page.title | toTemplateString }}`,
 }]
 
 export default routes;

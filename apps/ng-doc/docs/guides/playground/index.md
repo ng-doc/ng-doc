@@ -260,8 +260,8 @@ values like this:
 {{ NgDocActions.playground("ButtonPlayground", {
 hideSidePanel: true,
 selectors: "button[ng-doc-button-flat]",
-inputs: {size: "small"},
-data: {label: "Small Button"} })
+inputs: {rounded: true},
+data: {label: "Rounded Button"} })
 }}
 
 {% index false %}

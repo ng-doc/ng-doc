@@ -1,15 +1,15 @@
 {% set docNode = declaration %}
 {% if Node.isClassDeclaration(declaration) -%}
-	{% include "api/class.html.nunj" %}
+    {% include "api/class.html.nunj" %}
 {%- elseif Node.isInterfaceDeclaration(declaration) -%}
-	{% include "api/interface.html.nunj" %}
+    {% include "api/interface.html.nunj" %}
 {%- elseif Node.isEnumDeclaration(declaration) -%}
-	{% include "api/enum.html.nunj" %}
+    {% include "api/enum.html.nunj" %}
 {%- elseif Node.isFunctionDeclaration(declaration) -%}
-	{% include "api/function.html.nunj" %}
+    {% include "api/function.html.nunj" %}
 {%- elseif Node.isTypeAliasDeclaration(declaration) -%}
-	{% include "api/type-alias.html.nunj" %}
+    {% include "api/type-alias.html.nunj" %}
 {%- elseif Node.isVariableDeclaration(declaration) -%}
-	{% set docNode = declaration.getVariableStatement() %}
-	{% include "api/variable.html.nunj" %}
+    {% set docNode = declaration.getVariableStatement() %}
+    {% include "api/variable.html.nunj" %}
 {%- endif -%}

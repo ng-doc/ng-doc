@@ -1,5 +1,5 @@
-import {Directive, ElementRef, Input, OnInit} from '@angular/core';
-import {NgDocFocusUtils} from '@ng-doc/ui-kit/utils';
+import { Directive, ElementRef, Input, OnInit } from '@angular/core';
+import { NgDocFocusUtils } from '@ng-doc/ui-kit/utils';
 
 @Directive({
 	selector: '[ngDocAutofocus]',

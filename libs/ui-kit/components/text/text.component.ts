@@ -1,4 +1,4 @@
-import {NgIf} from '@angular/common';
+import { NgIf } from '@angular/common';
 import {
 	AfterContentChecked,
 	ChangeDetectionStrategy,
@@ -8,10 +8,10 @@ import {
 	HostBinding,
 	Input,
 } from '@angular/core';
-import {NgDocSize, NgDocTextAlign, NgDocTextColor} from '@ng-doc/ui-kit/types';
+import { NgDocSize, NgDocTextAlign, NgDocTextColor } from '@ng-doc/ui-kit/types';
 
-import {NgDocTextLeftDirective} from './text-left.directive';
-import {NgDocTextRightDirective} from './text-right.directive';
+import { NgDocTextLeftDirective } from './text-left.directive';
+import { NgDocTextRightDirective } from './text-right.directive';
 
 @Component({
 	selector: '[ng-doc-text]',

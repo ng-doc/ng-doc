@@ -1,8 +1,5 @@
 @import '@angular/cdk/overlay-prebuilt.css';
 @import 'fonts';
-@import 'palette';
 @import 'variables';
 @import '../directives/tooltip/tooltip';
 @import '../services/notify/notify';
-
-@include palette-vars();

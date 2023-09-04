@@ -1,5 +1,5 @@
-import {NgDocPageProcessor} from '@ng-doc/app/interfaces';
-import {NgDocIconComponent, NgDocIconSize} from '@ng-doc/ui-kit';
+import { NgDocPageProcessor } from '@ng-doc/app/interfaces';
+import { NgDocIconComponent, NgDocIconSize } from '@ng-doc/ui-kit';
 
 export const iconProcessor: NgDocPageProcessor<NgDocIconComponent> = {
 	component: NgDocIconComponent,

@@ -1,6 +1,10 @@
-import {NgIf} from '@angular/common';
-import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
-import {NgDocHorizontalAlign, NgDocOverlayRelativePosition, NgDocVerticalAlign} from '@ng-doc/ui-kit/types';
+import { NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
+import {
+	NgDocHorizontalAlign,
+	NgDocOverlayRelativePosition,
+	NgDocVerticalAlign,
+} from '@ng-doc/ui-kit/types';
 
 @Component({
 	selector: 'ng-doc-overlay-pointer',

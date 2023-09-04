@@ -1,4 +1,4 @@
-import {codeTypeFromExt} from '../code-type-from-ext';
+import { codeTypeFromExt } from '../code-type-from-ext';
 
 describe('codeTypeFromExt', () => {
 	it('should return TypeScript for ts files', () => {

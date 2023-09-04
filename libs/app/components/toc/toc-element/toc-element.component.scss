@@ -1,3 +1,5 @@
+@import '../../../../ui-kit/styles/mixins';
+
 :host {
 	display: flex;
 	margin: 0;
@@ -18,10 +20,14 @@
 	}
 
 	a {
+		@include ng-doc-font();
+
 		padding: calc(var(--ng-doc-base-gutter) / 2);
 		color: inherit;
 		width: 100%;
 		text-decoration: none;
 		word-break: break-word;
+
+		--ng-doc-font-size: 14px;
 	}
 }

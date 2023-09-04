@@ -1,17 +1,17 @@
-import {NgDocBuilderContext} from '@ng-doc/builder';
-import {asArray, unique} from '@ng-doc/core';
-import {forkJoin, merge, Observable, of, takeUntil} from 'rxjs';
-import {map, mergeMap, startWith, switchMap, take, tap} from 'rxjs/operators';
-import {Project} from 'ts-morph';
+import { NgDocBuilderContext } from '@ng-doc/builder';
+import { asArray, unique } from '@ng-doc/core';
+import { forkJoin, merge, Observable, of, takeUntil } from 'rxjs';
+import { map, mergeMap, startWith, switchMap, take, tap } from 'rxjs/operators';
+import { Project } from 'ts-morph';
 
-import {getEntityConstructor} from '../helpers';
-import {bufferDebounce, bufferUntilOnce, forkJoinOrEmpty, progress} from '../operators';
-import {Constructable} from '../types';
-import {NgDocEntity} from './entities/abstractions/entity';
-import {NgDocCache} from './entities/cache';
-import {NgDocEntityStore} from './entity-store';
-import {API_PATTERN, CATEGORY_PATTERN, PAGE_PATTERN} from './variables';
-import {NgDocWatcher} from './watcher';
+import { getEntityConstructor } from '../helpers';
+import { bufferDebounce, bufferUntilOnce, forkJoinOrEmpty, progress } from '../operators';
+import { Constructable } from '../types';
+import { NgDocEntity } from './entities/abstractions/entity';
+import { NgDocCache } from './entities/cache';
+import { NgDocEntityStore } from './entity-store';
+import { API_PATTERN, CATEGORY_PATTERN, PAGE_PATTERN } from './variables';
+import { NgDocWatcher } from './watcher';
 
 /**
  * Emits new entities if they are added or changed. Also emits destroyed entities if their root files are unlinked.
@@ -41,7 +41,12 @@ export function entityEmitter(
 		map((paths: string[]) =>
 			paths.map((p: string) => {
 				const EntityConstructor: Constructable<NgDocEntity> = getEntityConstructor(p);
-				const entity: NgDocEntity = new EntityConstructor(store, cache, context, project.addSourceFileAtPath(p));
+				const entity: NgDocEntity = new EntityConstructor(
+					store,
+					cache,
+					context,
+					project.addSourceFileAtPath(p),
+				);
 
 				entity.store.set(entity.id, entity);
 
@@ -90,9 +95,9 @@ export function entityEmitter(
 				new Set(
 					entities.concat(
 						/*
-				 	Add the entities with errors or warnings to the output.
-				 	This is necessary to try to build them again.
-				 */
+                     Add the entities with errors or warnings to the output.
+                     This is necessary to try to build them again.
+                 */
 						...store.getAllWithErrorsOrWarnings(),
 					),
 				),
@@ -114,6 +119,8 @@ function childGenerator(entity: NgDocEntity): Observable<NgDocEntity[]> {
 				map((children2: NgDocEntity[][]) => children.concat(children2.flat())),
 			),
 		),
-		tap((entities: NgDocEntity[]) => entities.forEach((e: NgDocEntity) => entity.store.set(e.id, e))),
+		tap((entities: NgDocEntity[]) =>
+			entities.forEach((e: NgDocEntity) => entity.store.set(e.id, e)),
+		),
 	);
 }

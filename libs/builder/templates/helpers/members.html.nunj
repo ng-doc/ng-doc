@@ -1,23 +1,23 @@
 {% macro render(members) %}
-	<div class="ng-doc-table-wrapper">
-		<table>
-			<thead>
-			<tr indexable="false">
-				<th>Name</th>
-				<th>Value</th>
-				<th>Description</th>
-			</tr>
-			</thead>
-			<tbody>
-			{% for member in members %}
-				<tr>
-					<td indexable="false" dataSlug="{{ member.getName() }}"
-							dataSlugType="member">{{ member.getName() }} </td>
-					<td indexable="false"><code>{{ member.getValue() | dump }}</code></td>
-					<td>{{ member | extractDocs }} </td>
-				</tr>
-			{% endfor %}
-			</tbody>
-		</table>
-	</div>
+    <div class="ng-doc-table-wrapper">
+        <table>
+            <thead>
+            <tr indexable="false">
+                <th>Name</th>
+                <th>Value</th>
+                <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for member in members %}
+                <tr>
+                    <td indexable="false" dataSlug="{{ member.getName() }}"
+                        dataSlugType="member">{{ member.getName() }} </td>
+                    <td indexable="false"><code>{{ member.getValue() | dump }}</code></td>
+                    <td>{{ member | extractDocs }} </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endmacro %}

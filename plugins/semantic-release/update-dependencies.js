@@ -3,7 +3,7 @@ const path = require('path');
 
 /* The plugin updates dependencies between packages based on the generated semantic-release version */
 
-function prepare(pluginConfig, {logger}) {
+function prepare(pluginConfig, { logger }) {
 	const localPackages = collectPackageNames(pluginConfig.packages);
 
 	for (let packageDir of pluginConfig.packages) {
@@ -22,7 +22,10 @@ function prepare(pluginConfig, {logger}) {
 			});
 		}
 
-		fs.writeFileSync(`${path.join(packageDir, 'package.json')}`, JSON.stringify(packageJson, undefined, 2));
+		fs.writeFileSync(
+			`${path.join(packageDir, 'package.json')}`,
+			JSON.stringify(packageJson, undefined, 2),
+		);
 	}
 }
 
@@ -35,4 +38,4 @@ function collectPackageNames(packages) {
 	});
 }
 
-module.exports = {prepare};
+module.exports = { prepare };

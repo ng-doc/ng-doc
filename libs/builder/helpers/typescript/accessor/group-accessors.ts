@@ -1,7 +1,7 @@
-import {asArray} from '@ng-doc/core';
-import {AccessorDeclaration, Node} from 'ts-morph';
+import { asArray } from '@ng-doc/core';
+import { AccessorDeclaration, Node } from 'ts-morph';
 
-import {NgDocAccessor} from './accessor';
+import { NgDocAccessor } from './accessor';
 
 /**
  *
@@ -12,11 +12,11 @@ export function groupAccessors(accessors: AccessorDeclaration[]): NgDocAccessor[
 
 	accessors.forEach((accessor: AccessorDeclaration) => {
 		if (Node.isGetAccessorDeclaration(accessor)) {
-			map.set(accessor.getName(), {...map.get(accessor.getName()), get: accessor});
+			map.set(accessor.getName(), { ...map.get(accessor.getName()), get: accessor });
 		}
 
 		if (Node.isSetAccessorDeclaration(accessor)) {
-			map.set(accessor.getName(), {...map.get(accessor.getName()), set: accessor});
+			map.set(accessor.getName(), { ...map.get(accessor.getName()), set: accessor });
 		}
 	});
 

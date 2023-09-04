@@ -1,11 +1,14 @@
-import {ExpressionWithTypeArguments, InterfaceDeclaration, Node} from 'ts-morph';
+import { ExpressionWithTypeArguments, InterfaceDeclaration, Node } from 'ts-morph';
 
 /**
  *
  * @param int
  * @param fn
  */
-export function forAllInterfaces(int: InterfaceDeclaration, fn: (c: InterfaceDeclaration) => boolean | void): void {
+export function forAllInterfaces(
+	int: InterfaceDeclaration,
+	fn: (c: InterfaceDeclaration) => boolean | void,
+): void {
 	const baseInterface: InterfaceDeclaration | undefined = int;
 
 	if (!fn(baseInterface)) {
@@ -13,6 +16,8 @@ export function forAllInterfaces(int: InterfaceDeclaration, fn: (c: InterfaceDec
 			.getExtends()
 			.map((expr: ExpressionWithTypeArguments) => expr.getType().getSymbol()?.getDeclarations()[0])
 			.reverse()
-			.forEach((node: Node | undefined) => Node.isInterfaceDeclaration(node) && forAllInterfaces(node, fn));
+			.forEach(
+				(node: Node | undefined) => Node.isInterfaceDeclaration(node) && forAllInterfaces(node, fn),
+			);
 	}
 }

@@ -112,7 +112,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 		this.themeService
 			.themeChanges()
 			.pipe(startWith(this.themeService.currentTheme), untilDestroyed(this))
-			.subscribe((theme: NgDocTheme | undefined) => {
+			.subscribe((theme: NgDocTheme | 'auto' | undefined) => {
 				this.colors = theme ? DARK_PALETTE : LIGHT_PALETTE;
 				this.resize();
 				this.setCompositionOperation(theme ? 'multiply' : 'screen');

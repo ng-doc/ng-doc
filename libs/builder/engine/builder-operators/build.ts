@@ -1,11 +1,11 @@
-import {Observable, OperatorFunction} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
+import { Observable, OperatorFunction } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
-import {NgDocBuildResult} from '../../interfaces';
-import {forkJoinOrEmpty} from '../../operators';
-import {NgDocEntity} from '../entities/abstractions/entity';
-import {NgDocEntityStore} from '../entity-store';
-import {buildCandidates} from '../functions/build-candidates';
+import { NgDocBuildResult } from '../../interfaces';
+import { forkJoinOrEmpty } from '../../operators';
+import { NgDocEntity } from '../entities/abstractions/entity';
+import { NgDocEntityStore } from '../entity-store';
+import { buildCandidates } from '../functions/build-candidates';
 
 /**
  * Operator that updates the keyword map, builds the artifacts for each entity based on the
@@ -20,7 +20,9 @@ export function build(
 ): OperatorFunction<NgDocEntity[], NgDocBuildResult[]> {
 	return (source: Observable<NgDocEntity[]>) =>
 		source.pipe(
-			map((entities: NgDocEntity[]) => buildCandidates(store, entities).filter((e: NgDocEntity) => e.isReadyForBuild)),
+			map((entities: NgDocEntity[]) =>
+				buildCandidates(store, entities).filter((e: NgDocEntity) => e.isReadyForBuild),
+			),
 			switchMap((entities: NgDocEntity[]) =>
 				forkJoinOrEmpty(
 					entities.map((e: NgDocEntity) => {
@@ -37,7 +39,9 @@ export function build(
 
 						return e.build();
 					}),
-				).pipe(map((additionalOutput: NgDocBuildResult[]) => output.concat(additionalOutput).flat())),
+				).pipe(
+					map((additionalOutput: NgDocBuildResult[]) => output.concat(additionalOutput).flat()),
+				),
 			),
 		);
 }

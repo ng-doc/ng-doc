@@ -1,0 +1,40 @@
+$types: (
+	'string': (
+		background: var(--ng-doc-string-background),
+		color: var(--ng-doc-string-color),
+	),
+	'number': (
+		background: var(--ng-doc-number-background),
+		color: var(--ng-doc-number-color),
+	),
+	'boolean': (
+		background: var(--ng-doc-boolean-background),
+		color: var(--ng-doc-boolean-color),
+	),
+	'null': (
+		background: var(--ng-doc-null-background),
+		color: var(--ng-doc-null-color),
+	),
+	'undefined': (
+		background: var(--ng-doc-undefined-background),
+		color: var(--ng-doc-undefined-color),
+	),
+	'object': (
+		background: var(--ng-doc-object-background),
+		color: var(--ng-doc-object-color),
+	),
+);
+
+@mixin typeColors($attr, $background-prop: 'background-color', $color-prop: 'color') {
+	@each $name, $props in $types {
+		&[#{$attr}='#{$name}'] {
+			@if $background-prop {
+				#{$background-prop}: #{map-get($props, 'background')};
+			}
+
+			@if $color-prop {
+				#{$color-prop}: #{map-get($props, 'color')};
+			}
+		}
+	}
+}
