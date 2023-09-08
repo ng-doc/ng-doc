@@ -1,7 +1,7 @@
 import { NgDocPage } from '@ng-doc/core';
-import { NgDocIconComponent } from '@ng-doc/ui-kit';
 
 import { DemoComponent } from './demo.component';
+import { FormatDatePipe } from './format-date.pipe';
 
 const Page: NgDocPage = {
 	title: `Just a Page`,
@@ -9,8 +9,8 @@ const Page: NgDocPage = {
 	demos: { DemoComponent },
 	playgrounds: {
 		BtnPlayground: {
-			target: NgDocIconComponent,
-			template: `<ng-doc-selector></ng-doc-selector>`,
+			target: FormatDatePipe,
+			template: `{{'2023-06-05T08:00:00.000Z' | formatDate}}`,
 		},
 	},
 };

@@ -108,7 +108,7 @@ export class NgDocPageComponent implements AfterViewInit {
 		Promise.resolve().then(() => {
 			if (this.pageToc && this.skeleton.toc) {
 				createComponent(this.pageToc, this.skeleton.toc, {
-					tableOfContent: generateToc(this.pageContainer.nativeElement),
+					tableOfContent: generateToc(this.pageContainer.nativeElement) ?? [],
 				});
 			}
 		});
