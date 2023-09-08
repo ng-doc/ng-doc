@@ -60,6 +60,10 @@ export class NgDocTocComponent implements AfterViewInit, NgDocPageToc {
 					(target.scrollTop * 100) / (target.scrollHeight - target.offsetHeight);
 				const selectionLine: number = target.scrollTop + (target.offsetHeight * percentage) / 100;
 
+				if (!this.tableOfContent.length) {
+					return null;
+				}
+
 				return this.tableOfContent.reduce((pTarget: NgDocTocItem, cTarget: NgDocTocItem) => {
 					const pTop: number = pTarget.element.getBoundingClientRect().top + target.scrollTop;
 					const cTop: number = cTarget.element.getBoundingClientRect().top + target.scrollTop;
@@ -69,6 +73,7 @@ export class NgDocTocComponent implements AfterViewInit, NgDocPageToc {
 						: pTarget;
 				});
 			}),
+			filter(isPresent),
 		);
 
 		const routerSelection: Observable<NgDocTocItem> = this.router.events.pipe(

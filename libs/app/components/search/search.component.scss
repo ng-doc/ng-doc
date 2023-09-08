@@ -68,10 +68,11 @@
 	.ng-doc-search-option-header {
 		display: flex;
 		align-items: center;
+		margin-bottom: calc(var(--ng-doc-base-gutter) / 2);
 
 		ng-doc-tag {
 			text-transform: uppercase;
-			margin-right: calc(var(--ng-doc-base-gutter) / 2);
+			margin-right: var(--ng-doc-base-gutter);
 			--ng-doc-font-weight: 900;
 
 			&[data-ng-doc-page-type='guide'] {
