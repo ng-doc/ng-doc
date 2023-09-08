@@ -136,7 +136,7 @@ export class NgDocPlaygroundDemoComponent<
 					this.configuration?.template ?? '',
 					this.pipeName,
 					this.getActiveContent(),
-					this.getActiveInputs(),
+					this.getPipeActiveInputs(),
 			  )
 			: buildPlaygroundDemoTemplate(
 					this.configuration?.template ?? '',
@@ -173,6 +173,30 @@ export class NgDocPlaygroundDemoComponent<
 
 			return result;
 		}, {});
+	}
+
+	private getPipeActiveInputs(): Record<string, string> {
+		const formData: Record<string, unknown> =
+			(this.form?.controls.properties.value as Record<string, unknown>) ?? {};
+		let changedInputIndex: number = -1;
+
+		return objectKeys(formData)
+			.map((key: string, i: number) => {
+				const value: unknown = formData[key];
+				const defaultValue: unknown | undefined = this.demoRef?.instance?.defaultValues[key];
+
+				if (defaultValue !== value) {
+					changedInputIndex = i;
+				}
+
+				return key;
+			})
+			.slice(0, changedInputIndex + 1)
+			.reduce((result: Record<string, string>, key: string, i: number) => {
+				result[key] = stringify(formData[key]).replace(/"/g, `'`);
+
+				return result;
+			}, {});
 	}
 
 	ngOnDestroy(): void {
