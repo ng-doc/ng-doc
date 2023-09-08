@@ -74,6 +74,7 @@
 		"flex-controls": "2.0.1",
 		"github-slugger": "2.0.0",
 		"hast-util-has-property": "2.0.1",
+		"hast-util-heading": "^3.0.0",
 		"hast-util-heading-rank": "2.1.1",
 		"hast-util-to-string": "2.0.0",
 		"highlight.js": "11.5.1",

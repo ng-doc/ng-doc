@@ -1,13 +1,16 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe, DOCUMENT, NgIf } from '@angular/common';
 import {
 	AfterViewInit,
 	ChangeDetectionStrategy,
 	Component,
 	Directive,
 	HostBinding,
+	inject,
 	Input,
 	ViewChild,
 } from '@angular/core';
+import { Router, Scroll } from '@angular/router';
+import { shakeElement } from '@ng-doc/app/helpers';
 import { NgDocSidebarService } from '@ng-doc/app/services/sidebar';
 import {
 	NgDocContent,
@@ -15,7 +18,7 @@ import {
 	NgDocLetDirective,
 	NgDocSidenavComponent,
 } from '@ng-doc/ui-kit';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 import { combineLatest, merge, NEVER, Observable, of } from 'rxjs';
 import { delay, filter, map, mapTo, startWith } from 'rxjs/operators';
@@ -99,7 +102,24 @@ export class NgDocRootComponent implements AfterViewInit {
 		hasBackdrop: boolean;
 	}> = NEVER;
 
-	constructor(protected readonly sidebarService: NgDocSidebarService) {}
+	protected readonly router: Router = inject(Router);
+	protected readonly sidebarService: NgDocSidebarService = inject(NgDocSidebarService);
+	protected readonly document: Document = inject(DOCUMENT);
+
+	constructor() {
+		this.router.events
+			.pipe(
+				filter((event) => event instanceof Scroll),
+				map((event) => event as Scroll),
+				delay(300),
+				untilDestroyed(this),
+			)
+			.subscribe((event: Scroll) => {
+				const elem = document.querySelector(`#${event.anchor}`);
+
+				elem && shakeElement(elem);
+			});
+	}
 
 	ngAfterViewInit(): void {
 		this.sidenavState$ = combineLatest([

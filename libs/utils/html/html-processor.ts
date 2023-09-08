@@ -7,10 +7,11 @@ import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
 import { unified, VFileWithOutput } from 'unified';
 
-import autolinkHeadingPlugin from './plugins/autolink-headings.plugin';
-import codeBlockLinesPlugin from './plugins/code-block-lines.plugin';
+import autolinkHeading from './plugins/autolink-headings.plugin';
+import codeBlockLines from './plugins/code-block-lines.plugin';
 import highlightCodeLines from './plugins/highlight-code-lines';
-import sluggerPlugin from './plugins/slugger.plugin';
+import slugger from './plugins/slugger.plugin';
+import wrapSections from './plugins/wrap-sections.plugin';
 
 export interface NgDocHtmlProcessorConfig {
 	headings?: NgDocHeading[];
@@ -33,11 +34,12 @@ export async function htmlProcessor(
 		.use(rehypeStringify)
 		.use(rehypeFormat)
 		.use(rehypeHighlight, { ignoreMissing: true, languages: { twig } })
-		.use(codeBlockLinesPlugin)
+		.use(codeBlockLines)
 		.use(highlightCodeLines)
-		.use(sluggerPlugin, config.addAnchor, config.headings)
+		.use(slugger, config.addAnchor, config.headings)
+		.use(wrapSections)
 		.use(rehypeMinifyWhitespace)
-		.use(autolinkHeadingPlugin, config.route)
+		.use(autolinkHeading, config.route)
 		.process(html)
 		.then((file: VFileWithOutput<string>) => file.toString());
 }

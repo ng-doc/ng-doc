@@ -24,23 +24,17 @@
     {%- set accessors = declaration | getInterfaceAccessors | filterUselessMembers | sortByNodesName -%}
 
     {% if properties.length -%}
-        <section>
-            <h2>Properties</h2>
-            {{ propertiesMacro.render(properties, declaration) }}
-        </section>
+        <h2>Properties</h2>
+        {{ propertiesMacro.render(properties, declaration) }}
     {%- endif %}
 
     {% if accessors.length -%}
-        <section>
-            <h2>Accessors</h2>
-            {{ accessorsMacro.render(accessors, declaration) }}
-        </section>
+        <h2>Accessors</h2>
+        {{ accessorsMacro.render(accessors, declaration) }}
     {%- endif %}
 
     {% if methods.length -%}
-        <section>
-            <h2>Methods</h2>
-            {{ methodsMacro.render(methods, declaration) }}
-        </section>
+        <h2>Methods</h2>
+        {{ methodsMacro.render(methods, declaration) }}
     {%- endif %}
 {% endblock %}

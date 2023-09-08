@@ -9,7 +9,6 @@ import {
 	NgDocDefaultSearchEngine,
 	provideMainPageProcessor,
 	provideNgDocApp,
-	providePageProcessor,
 	providePageSkeleton,
 	provideSearchEngine,
 } from '@ng-doc/app';
