@@ -1,3 +1,12 @@
+## [16.15.1](https://github.com/ng-doc/ng-doc/compare/v16.15.0...v16.15.1) (2023-09-08)
+
+
+### Bug Fixes
+
+* **app:** playgrounds for pipes display changed inputs in demo's template in wrong order ([fb51e9d](https://github.com/ng-doc/ng-doc/commit/fb51e9d07d10ceaddd8d99a6678ac6fb3fa7c86f))
+* **app:** playgrounds for pipes don't display default values for inputs in the production ([4f2a271](https://github.com/ng-doc/ng-doc/commit/4f2a27175f8994bdffd77dde5442efb8ab15e6ec))
+* **app:** toc throws an error if page has no headings ([77334e5](https://github.com/ng-doc/ng-doc/commit/77334e58f1c98fa4baf3ca941c8b5c2606884e91))
+
 # [16.15.0](https://github.com/ng-doc/ng-doc/compare/v16.14.0...v16.15.0) (2023-09-04)
 
 
