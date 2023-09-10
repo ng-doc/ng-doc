@@ -27,7 +27,7 @@ let's create it.
 
 {{ NgDocActions.demo("FloatingCirclePositionControlComponent") }}
 
-As you can see, this is a typical `ControlValueAcessor` that processes new values and emits new ones
+As you can see, this is a typical `ControlValueAccessor` that processes new values and emits new ones
 when one of the positions was changed.
 
 ## Registering Type Control
