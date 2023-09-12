@@ -88,7 +88,7 @@ export class NgDocThemeService {
 			this.autoTheme = undefined;
 		}
 
-		if (id) {
+		if (id && id !== 'ng-doc-day') {
 			const theme: NgDocTheme | undefined = this.themes.find(
 				(theme: NgDocTheme) => theme.id === id,
 			);
