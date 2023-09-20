@@ -1,3 +1,20 @@
+# [16.16.0](https://github.com/ng-doc/ng-doc/compare/v16.15.1...v16.16.0) (2023-09-20)
+
+
+### Bug Fixes
+
+* **app:** theme service throws warning if light theme is selected by default ([f6ca077](https://github.com/ng-doc/ng-doc/commit/f6ca0776d7c69c228f5ab2886ac7f9deb743c36b))
+
+
+### Features
+
+* **project:** add fullscreen mode for demos ([c557f17](https://github.com/ng-doc/ng-doc/commit/c557f1770653550e4a3348ec2a23b884088f67e8)), closes [#84](https://github.com/ng-doc/ng-doc/issues/84)
+
+
+### Performance Improvements
+
+* **builder:** builder no longer writes files to disk if their content hasn't changed, which slightly speeds up the application rebuild process ([5a80548](https://github.com/ng-doc/ng-doc/commit/5a805487be43fce6d76d73d0396228cf6a746829))
+
 ## [16.15.1](https://github.com/ng-doc/ng-doc/compare/v16.15.0...v16.15.1) (2023-09-08)
 
 
