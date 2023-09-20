@@ -4,6 +4,7 @@ export * from '@ng-doc/app/components/code';
 export * from '@ng-doc/app/components/demo';
 export * from '@ng-doc/app/components/demo-displayer';
 export * from '@ng-doc/app/components/demo-pane';
+export * from '@ng-doc/app/components/fullscreen-button';
 export * from '@ng-doc/app/components/kind-icon';
 export * from '@ng-doc/app/components/link';
 export * from '@ng-doc/app/components/navbar';

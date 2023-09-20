@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { NgDocRootPage } from '@ng-doc/app/classes/root-page';
 import { NgDocCodeComponent } from '@ng-doc/app/components/code';
+import { NgDocFullscreenButtonComponent } from '@ng-doc/app/components/fullscreen-button';
 import { NgDocDemoAsset } from '@ng-doc/app/interfaces';
 import { asArray } from '@ng-doc/core/helpers/as-array';
 import { NgDocDemoPaneActionOptions } from '@ng-doc/core/interfaces';
@@ -39,6 +40,7 @@ import { PolymorpheusComponent, PolymorpheusModule } from '@tinkoff/ng-polymorph
 		NgDocCodeComponent,
 		NgDocTabGroupComponent,
 		NgDocTabComponent,
+		NgDocFullscreenButtonComponent,
 	],
 })
 export class NgDocDemoPaneComponent implements OnInit {

@@ -36,6 +36,14 @@ container.
 
 {{ NgDocActions.demo("ButtonDemoComponent", {container: false}) }}
 
+{% include "../../shared/fullscreen-demo.md" %}
+
+```twig name="index.md"
+{{'{{ NgDocActions.demo("ButtonDemoComponent", {fullscreenRoute: "button"}) }}' | safe }}
+```
+
+{{ NgDocActions.demo("ButtonDemoComponent", {fullscreenRoute: "button"}) }}
+
 ## Customization
 
 You can customize the demo component via CSS variables.

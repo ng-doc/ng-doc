@@ -1,1 +1,3 @@
-{{ NgDocActions.playground("BtnPlayground") }}
+# Section
+
+{{ NgDocActions.demoPane("DemoComponent", {fullscreenRoute: "demo1"}) }}

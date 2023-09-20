@@ -95,8 +95,6 @@ export class NgDocPlaygroundComponent<
 			properties: Object.assign({}, this.defaultProperties, this.configuration.inputs),
 			content: this.defaultContent,
 		});
-
-		console.log(this.configuration);
 	}
 
 	protected isDefaultState(): boolean {

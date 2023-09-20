@@ -28,5 +28,12 @@
 </ng-container>
 
 <ng-template #demoTemplate>
-	<ng-container *polymorpheusOutlet="demo ?? ''; context: {}"></ng-container>
+	<ng-template #fullscreenButton>
+		<ng-doc-fullscreen-button [route]="options.fullscreenRoute!"></ng-doc-fullscreen-button>
+	</ng-template>
+	<ng-container
+		*polymorpheusOutlet="
+			options.fullscreenRoute ? fullscreenButton : demo ?? '';
+			context: {}
+		"></ng-container>
 </ng-template>

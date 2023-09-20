@@ -29,4 +29,10 @@
 	<ng-container #pageNavigation></ng-container>
 </article>
 
+<ng-doc-dialog-outlet [config]="{ width: '100vw', height: '100vh' }">
+	<div class="ng-doc-fullscreen-wrapper">
+		<router-outlet></router-outlet>
+	</div>
+</ng-doc-dialog-outlet>
+
 <ng-container #pageToc></ng-container>

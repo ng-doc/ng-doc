@@ -18,6 +18,14 @@ NgDoc will create a demo panes with your component's code and demo, and show it 
 
 {{ NgDocActions.demoPane("ButtonDemoComponent") }}
 
+{% include "../../shared/fullscreen-demo.md" %}
+
+```twig name="index.md"
+{{'{{ NgDocActions.demoPane("ButtonDemoComponent", {fullscreenRoute: "button"}) }}' | safe }}
+```
+
+{{ NgDocActions.demoPane("ButtonDemoComponent", {fullscreenRoute: "button"}) }}
+
 ## Configuration
 
 The demo action also supports some options that can be passed as the second parameter and must
