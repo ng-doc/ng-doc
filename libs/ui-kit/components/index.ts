@@ -6,6 +6,7 @@ export * from '@ng-doc/ui-kit/components/clear-control';
 export * from '@ng-doc/ui-kit/components/combobox';
 export * from '@ng-doc/ui-kit/components/data-list';
 export * from '@ng-doc/ui-kit/components/data-list-group';
+export * from '@ng-doc/ui-kit/components/dialog-outlet';
 export * from '@ng-doc/ui-kit/components/dot';
 export * from '@ng-doc/ui-kit/components/dropdown';
 export * from '@ng-doc/ui-kit/components/expander';

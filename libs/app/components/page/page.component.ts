@@ -5,10 +5,11 @@ import {
 	Component,
 	ElementRef,
 	inject,
+	TemplateRef,
 	ViewChild,
 	ViewContainerRef,
 } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink, UrlTree } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet, UrlTree } from '@angular/router';
 import { NgDocRootPage } from '@ng-doc/app/classes/root-page';
 import { NgDocBreadcrumbComponent } from '@ng-doc/app/components/breadcrumb';
 import { NgDocTocComponent } from '@ng-doc/app/components/toc';
@@ -31,6 +32,7 @@ import {
 } from '@ng-doc/app/type-controls';
 import { isPresent } from '@ng-doc/core';
 import {
+	DialogOutletComponent,
 	NgDocButtonIconComponent,
 	NgDocIconComponent,
 	NgDocMediaQueryDirective,
@@ -39,6 +41,7 @@ import {
 	NgDocTextRightDirective,
 	NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
 @Component({
 	selector: 'ng-doc-page',
@@ -52,7 +55,6 @@ import {
 		NgDocButtonIconComponent,
 		NgDocTooltipDirective,
 		NgDocIconComponent,
-		RouterLink,
 		NgDocTextComponent,
 		NgDocTextLeftDirective,
 		NgDocTextRightDirective,
@@ -61,6 +63,8 @@ import {
 		NgDocSanitizeHtmlPipe,
 		NgDocPageProcessorDirective,
 		NgComponentOutlet,
+		RouterOutlet,
+		DialogOutletComponent,
 	],
 	providers: [
 		provideTypeControl('NgDocTypeAlias', NgDocTypeAliasControlComponent, { order: 10 }),
@@ -69,6 +73,7 @@ import {
 		provideTypeControl('boolean', NgDocBooleanControlComponent, { hideLabel: true, order: 40 }),
 	],
 })
+@UntilDestroy()
 export class NgDocPageComponent implements AfterViewInit {
 	@ViewChild('pageContainer', { read: ElementRef, static: true })
 	pageContainer!: ElementRef<HTMLElement>;
@@ -81,6 +86,9 @@ export class NgDocPageComponent implements AfterViewInit {
 
 	@ViewChild('pageToc', { read: ViewContainerRef })
 	pageToc?: ViewContainerRef;
+
+	@ViewChild('childOutlet')
+	childOutlet?: TemplateRef<never>;
 
 	protected rootPage: NgDocRootPage = inject(NgDocRootPage);
 	protected skeleton: NgDocPageSkeleton = inject(NG_DOC_PAGE_SKELETON);
