@@ -29,7 +29,9 @@
 	<ng-container #pageNavigation></ng-container>
 </article>
 
-<ng-doc-dialog-outlet [config]="{ width: '100vw', height: '100vh' }">
+<ng-doc-dialog-outlet
+	*ngIf="!rootPage.page?.disableFullscreenRoutes"
+	[config]="{ width: '100vw', height: '100vh' }">
 	<div class="ng-doc-fullscreen-wrapper">
 		<router-outlet></router-outlet>
 	</div>
