@@ -37,7 +37,7 @@ export class NgDocOptionComponent<T>
 		readonly elementRef: ElementRef<HTMLElement>,
 		protected override readonly changeDetectorRef: ChangeDetectorRef,
 		@Optional()
-		private readonly list: NgDocListComponent<T>,
+		private readonly list: NgDocListComponent,
 		@Inject(FlCompareHost)
 		@Optional()
 		protected override compareHost?: FlCompareHost<T | boolean | null>,

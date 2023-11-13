@@ -9,8 +9,7 @@
 			"executor": "@nx/angular:package",
 			"outputs": ["{workspaceRoot}/dist/{projectRoot}"],
 			"options": {
-				"project": "libs/app/ng-package.json",
-				"updateBuildableProjectDepsInPackageJson": false
+				"project": "libs/app/ng-package.json"
 			},
 			"configurations": {
 				"production": {
@@ -44,20 +43,18 @@
 				"outputPath": "dist/libs/app",
 				"main": "libs/app/schematics/index.ts",
 				"tsConfig": "libs/app/tsconfig.schematics.json",
-				"assets": ["libs/app/schematics/**/*.json", "libs/app/schematics/**/files/**/*"],
-				"updateBuildableProjectDepsInPackageJson": false
+				"assets": ["libs/app/schematics/**/*.json", "libs/app/schematics/**/files/**/*"]
 			}
 		},
 		"test": {
 			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/libs/app"],
 			"options": {
-				"jestConfig": "libs/app/jest.config.ts",
-				"passWithNoTests": true
+				"jestConfig": "libs/app/jest.config.ts"
 			}
 		},
 		"lint": {
-			"executor": "@nx/linter:eslint",
+			"executor": "@nx/eslint:lint",
 			"options": {
 				"lintFilePatterns": ["libs/app/**/*.ts", "libs/app/**/*.html"]
 			}

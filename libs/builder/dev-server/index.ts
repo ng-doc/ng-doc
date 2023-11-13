@@ -54,7 +54,7 @@ export function runDevServer(
 				first(),
 				switchMap(() =>
 					combineLatest([runner, serveWebpackBrowser(options, context)]).pipe(
-						map(([_, devServerOutput]: [void, DevServerBuilderOutput]) => devServerOutput),
+						map(([, devServerOutput]: [void, DevServerBuilderOutput]) => devServerOutput),
 					),
 				),
 			);

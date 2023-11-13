@@ -77,11 +77,7 @@
 				}
 			},
 			"defaultConfiguration": "production",
-			"dependsOn": [
-				{
-					"target": "link-libs"
-				}
-			]
+			"dependsOn": [{ "target": "link-libs" }]
 		},
 		"link-libs": {
 			"executor": "nx:run-commands",
@@ -94,12 +90,7 @@
 					"symlink-dir dist/libs/builder node_modules/@ng-doc/builder"
 				]
 			},
-			"dependsOn": [
-				{
-					"target": "build",
-					"dependencies": true
-				}
-			]
+			"dependsOn": [{ "projects": "dependencies", "target": "build" }]
 		},
 		"serve": {
 			"executor": "./dist/libs/builder:dev-server",
@@ -119,20 +110,16 @@
 				}
 			},
 			"defaultConfiguration": "development",
-			"dependsOn": [
-				{
-					"target": "link-libs"
-				}
-			]
+			"dependsOn": [{ "target": "link-libs" }]
 		},
 		"extract-i18n": {
 			"executor": "@angular-devkit/build-angular:extract-i18n",
 			"options": {
-				"browserTarget": "ng-doc:build"
+				"buildTarget": "ng-doc:build"
 			}
 		},
 		"lint": {
-			"executor": "@nx/linter:eslint",
+			"executor": "@nx/eslint:lint",
 			"options": {
 				"lintFilePatterns": ["apps/ng-doc/**/*.ts", "apps/ng-doc/**/*.html"]
 			}
@@ -141,8 +128,7 @@
 			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/apps/ng-doc"],
 			"options": {
-				"jestConfig": "apps/ng-doc/jest.config.ts",
-				"passWithNoTests": true
+				"jestConfig": "apps/ng-doc/jest.config.ts"
 			}
 		}
 	},

@@ -19,7 +19,7 @@
 						"output": "./"
 					}
 				],
-				"updateBuildableProjectDepsInPackageJson": false
+				"babelUpwardRootMode": true
 			}
 		},
 		"build": {
@@ -40,7 +40,7 @@
 			]
 		},
 		"lint": {
-			"executor": "@nx/linter:eslint",
+			"executor": "@nx/eslint:lint",
 			"outputs": ["{options.outputFile}"],
 			"options": {
 				"lintFilePatterns": ["libs/utils/**/*.ts"]
@@ -50,8 +50,7 @@
 			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
 			"options": {
-				"jestConfig": "libs/utils/jest.config.ts",
-				"passWithNoTests": true
+				"jestConfig": "libs/utils/jest.config.ts"
 			}
 		}
 	},

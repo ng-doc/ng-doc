@@ -6,13 +6,8 @@ import { Options } from 'prettier';
  *
  * @param code - Code to format
  * @param codeType - Type of code
- * @param options - Prettier options
  */
-export function formatCode(
-	code: string,
-	codeType: NgDocCodeType | null = 'TypeScript',
-	options?: Options,
-): string {
+export function formatCode(code: string, codeType: NgDocCodeType | null = 'TypeScript'): string {
 	try {
 		if (codeType) {
 			const parser: Options['parser'] | undefined = getPrettierParserFromCodeType(codeType);
