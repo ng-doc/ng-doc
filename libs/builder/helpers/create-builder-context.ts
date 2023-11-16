@@ -18,7 +18,7 @@ export function createBuilderContext(
 	context: BuilderContext,
 	configFilePath?: string,
 ): NgDocBuilderContext {
-	const projectRoot: string = path.dirname(targetOptions['main'] as string);
+	const projectRoot: string = path.dirname(targetOptions['browser'] as string);
 	const [configPath, config]: [string, NgDocConfiguration] = loadConfig(
 		configFilePath ?? projectRoot,
 		!configFilePath,

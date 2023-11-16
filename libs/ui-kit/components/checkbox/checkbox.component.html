@@ -3,9 +3,9 @@
 		<input
 			type="checkbox"
 			[disabled]="disabled"
-			[ngDocChecked]="checked"
-			(ngDocCheckedChange)="toggle(); onTouched()"
-			(blur)="onTouched()"
+			[ngDocChecked]="checked()"
+			(ngDocCheckedChange)="toggle(); touch()"
+			(blur)="touch()"
 			[ngDocFocusable]="false" />
 		<ng-doc-icon icon="minus" *ngIf="isIntermediate"></ng-doc-icon>
 		<ng-doc-icon icon="check" *ngIf="checked"></ng-doc-icon>

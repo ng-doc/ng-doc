@@ -1,17 +1,12 @@
-import {NgDocHeading, NgDocKeywordsLoader} from '@ng-doc/core';
-import {NgDocGlobalKeyword} from '@ng-doc/core/interfaces/keyword-map';
+import { NgDocHeading, NgDocKeywordsLoader } from '@ng-doc/core';
+import { NgDocGlobalKeyword } from '@ng-doc/core/interfaces/keyword-map';
 
-import {NgDocRepoConfig} from './repo-config';
+import { NgDocRepoConfig } from './repo-config';
 
 /**
  * NgDoc configuration interface, that configure NgDoc library
  */
 export interface NgDocConfiguration {
-	/**
-	 * The builder that will be used to build the Angular application. (`webpack` is used by default)
-	 * You can use `esbuild`, then NgDoc will also use `Vite` for the development server.
-	 */
-	angularBuilder?: 'esbuild' | 'webpack';
 	/**
 	 * Determines whether to use the cache or not. (enabled by default)
 	 */

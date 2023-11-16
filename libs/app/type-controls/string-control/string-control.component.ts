@@ -9,7 +9,7 @@ import {
 	NgDocInputStringDirective,
 	NgDocInputWrapperComponent,
 } from '@ng-doc/ui-kit';
-import { FlControl, FlControlSilencerModule } from 'flex-controls';
+import { DIControl, DIControlSilencerDirective } from 'di-controls';
 
 @Component({
 	selector: 'ng-doc-string-control',
@@ -20,16 +20,16 @@ import { FlControl, FlControlSilencerModule } from 'flex-controls';
 	imports: [
 		FormsModule,
 		NgDocInputWrapperComponent,
-		FlControlSilencerModule,
 		NgDocInputStringDirective,
 		NgIf,
 		NgDocButtonIconComponent,
 		NgDocFocusableDirective,
 		NgDocIconComponent,
+		DIControlSilencerDirective,
 	],
 })
 export class NgDocStringControlComponent
-	extends FlControl<string>
+	extends DIControl<string>
 	implements NgDocTypeControl<string>
 {
 	@Input()

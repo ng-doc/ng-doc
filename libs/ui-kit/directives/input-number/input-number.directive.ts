@@ -1,4 +1,4 @@
-import { Directive, ElementRef, forwardRef, HostListener } from '@angular/core';
+import { Directive, forwardRef, HostListener } from '@angular/core';
 import { isPresent } from '@ng-doc/core/helpers/is-present';
 import { NgDocBaseInput } from '@ng-doc/ui-kit/classes/base-input';
 import { toElement } from '@ng-doc/ui-kit/helpers';
@@ -13,21 +13,21 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 })
 @UntilDestroy()
 export class NgDocInputNumberDirective extends NgDocBaseInput<number> {
-	constructor(override elementRef: ElementRef<HTMLInputElement>) {
-		super();
+	constructor() {
+		super({
+			onIncomingUpdate: (value) => {
+				toElement(this.elementRef).value = isPresent(value) ? String(Number(value)) : '';
+			},
+		});
 	}
 
 	@HostListener('blur')
 	blurEvent(): void {
-		this.onTouched();
+		this.touch();
 	}
 
 	@HostListener('input')
 	inputEvent(): void {
 		this.updateModel(Number(this.elementRef.nativeElement.value));
-	}
-
-	protected override incomingUpdate(value: number | null): void {
-		toElement(this.elementRef).value = isPresent(value) ? String(Number(value)) : '';
 	}
 }

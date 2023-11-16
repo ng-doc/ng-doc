@@ -5,11 +5,9 @@ import {
 	ContentChild,
 	ElementRef,
 	forwardRef,
-	Inject,
+	inject,
 	Input,
 	NgZone,
-	Optional,
-	SkipSelf,
 	ViewChild,
 } from '@angular/core';
 import {
@@ -26,14 +24,15 @@ import { ngDocZoneOptimize } from '@ng-doc/ui-kit/observables';
 import { NgDocDisplayValueFunction, NgDocOverlayPosition } from '@ng-doc/ui-kit/types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
-	FL_CONTROL_HOST,
-	FL_DEFAULT_COMPARE,
-	FlCompareFunction,
-	FlCompareHost,
-	FlControlHost,
-	FlControlSelector,
-	provideControlHost,
-} from 'flex-controls';
+	DI_DEFAULT_COMPARE,
+	DICompareFunction,
+	DICompareHost,
+	DIControl,
+	DIStateControl,
+	injectHostControl,
+	provideCompareHost,
+	provideHostControl,
+} from 'di-controls';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -41,17 +40,14 @@ import { filter } from 'rxjs/operators';
 	templateUrl: './combobox-host.component.html',
 	styleUrls: ['./combobox-host.component.scss'],
 	providers: [
-		provideControlHost(forwardRef(() => NgDocComboboxHostComponent)),
+		provideHostControl(forwardRef(() => NgDocComboboxHostComponent)),
+		provideCompareHost(forwardRef(() => NgDocComboboxHostComponent)),
 		{
 			provide: NgDocOverlayHost,
 			useExisting: forwardRef(() => NgDocComboboxHostComponent),
 		},
 		{
 			provide: NgDocInputHost,
-			useExisting: forwardRef(() => NgDocComboboxHostComponent),
-		},
-		{
-			provide: FlCompareHost,
 			useExisting: forwardRef(() => NgDocComboboxHostComponent),
 		},
 		{
@@ -69,17 +65,17 @@ import { filter } from 'rxjs/operators';
 })
 @UntilDestroy()
 export class NgDocComboboxHostComponent<T>
-	extends FlControlHost<T>
+	extends DIControl<T>
 	implements
 		NgDocOverlayHost,
 		NgDocInputHost<string>,
-		FlCompareHost<T>,
+		DICompareHost<T>,
 		NgDocDisplayValueHost<T>,
 		NgDocListHost,
 		AfterContentInit
 {
 	@Input()
-	compareFn: FlCompareFunction<T> = FL_DEFAULT_COMPARE;
+	compareFn: DICompareFunction<T> = DI_DEFAULT_COMPARE;
 
 	@Input()
 	displayValueFn: NgDocDisplayValueFunction<T> = String;
@@ -95,28 +91,27 @@ export class NgDocComboboxHostComponent<T>
 
 	readonly positions: NgDocOverlayPosition[] = ['bottom-center', 'top-center'];
 
-	constructor(
-		protected ngZone: NgZone,
-		@Inject(FL_CONTROL_HOST)
-		@SkipSelf()
-		@Optional()
-		protected override host?: FlControlHost<T>,
-	) {
-		super(host);
+	protected readonly ngZone: NgZone = inject(NgZone);
+
+	constructor() {
+		super({
+			host: injectHostControl({ skipSelf: true, optional: true }),
+			onChildControlChange: (control) => {
+				if (control instanceof DIStateControl) {
+					this.dropdown?.close();
+				}
+			},
+		});
 	}
 
 	ngAfterContentInit(): void {
-		this.inputControl?.valueChange
+		this.inputControl?.changes
 			.pipe(
 				filter(() => !!this.inputControl?.isFocused),
 				untilDestroyed(this),
 				ngDocZoneOptimize(this.ngZone),
 			)
 			.subscribe(() => this.dropdown?.open());
-
-		this.typedControlChange(FlControlSelector)
-			.pipe(untilDestroyed(this))
-			.subscribe(() => this.dropdown?.close());
 	}
 
 	get listHostOrigin(): ElementRef<HTMLElement> | undefined {
