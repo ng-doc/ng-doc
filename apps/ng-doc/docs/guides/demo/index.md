@@ -44,6 +44,8 @@ container.
 
 {{ NgDocActions.demo("ButtonDemoComponent", {fullscreenRoute: "button"}) }}
 
+{% include "../../shared/disable-fullscreen-routes-demo.md" %}
+
 ## Customization
 
 You can customize the demo component via CSS variables.
