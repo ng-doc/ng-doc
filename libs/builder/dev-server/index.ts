@@ -7,7 +7,7 @@ import {
 import { BuilderOutputLike } from '@angular-devkit/architect/src/api';
 import {
 	DevServerBuilderOutput,
-	serveWebpackBrowser,
+	executeDevServer,
 } from '@angular-devkit/build-angular/src/builders/dev-server';
 import { combineLatest, from, Observable, of } from 'rxjs';
 import { first, map, shareReplay, switchMap } from 'rxjs/operators';
@@ -49,7 +49,7 @@ export function runDevServer(
 			return runner.pipe(
 				first(),
 				switchMap(() =>
-					combineLatest([runner, serveWebpackBrowser(options, context)]).pipe(
+					combineLatest([runner, executeDevServer(options, context)]).pipe(
 						map(([, devServerOutput]: [void, DevServerBuilderOutput]) => devServerOutput),
 					),
 				),
