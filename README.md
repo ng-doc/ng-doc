@@ -1,4 +1,3 @@
-<!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/ng-doc/ng-doc">
@@ -18,6 +17,7 @@
 [![GitHub Workflow Status][build-shield]][build-url]
 [![NPM][npm-shield]][npm-url]
 [![MIT License][license-shield]][license-url]
+
   </p>
 </div>
 
@@ -48,6 +48,7 @@ NgDoc allows you to do the following things:
 ## Installation
 
 To know how to install and use NgDoc, please check our [documentation](https://ng-doc.com/).
+
 <!-- CONTRIBUTING -->
 
 ## Contributing
