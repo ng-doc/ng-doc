@@ -1,3 +1,22 @@
+# [16.18.0-beta.1](https://github.com/ng-doc/ng-doc/compare/v16.17.0...v16.18.0-beta.1) (2023-11-18)
+
+
+### Bug Fixes
+
+* **builder:** the cache is not invalidated after removing `.ng-doc` folder ([c20e479](https://github.com/ng-doc/ng-doc/commit/c20e479af6e8ad3dc23382b4a3942f54063d7714))
+* **keywords-loaders:** fix release cycle for the `keywords-loaders` library ([a1dbda9](https://github.com/ng-doc/ng-doc/commit/a1dbda92a017fe19732d8120d70c74780c2825fc))
+* **ng-doc:** `ng-doc` doesn't forget pages that have been moved to another directory ([c433a10](https://github.com/ng-doc/ng-doc/commit/c433a1007d07716833de2a987f9be63c7dc73a7a))
+* **ng-doc:** release trigger ([e7ac592](https://github.com/ng-doc/ng-doc/commit/e7ac592fc2f5ddadceb6633d13d6a3790b4eeb00))
+* **project:** dependency injection error after update to 15.10.0 ([cc41f44](https://github.com/ng-doc/ng-doc/commit/cc41f448054d73b9961f8a7be7689b4195a23c1f))
+* **project:** fix "could not resolve *path*" error for the build target ([66a7b23](https://github.com/ng-doc/ng-doc/commit/66a7b236e8b1053a0f2be05ec35454bde172dc6c))
+* **semantic-release:** bump version ([d0f1862](https://github.com/ng-doc/ng-doc/commit/d0f18629d1d99afbf4f8ba5a34db227a05a84bbc))
+
+
+### Features
+
+* **project:** migrate to Angular 17 ([5e7e36e](https://github.com/ng-doc/ng-doc/commit/5e7e36eca2514f24d3fbd80262b9413bcc1c40e8))
+* **project:** update packages ([3542e64](https://github.com/ng-doc/ng-doc/commit/3542e642c0ace7cf194d902c8ed0722565c21217))
+
 # [16.17.0](https://github.com/ng-doc/ng-doc/compare/v16.16.0...v16.17.0) (2023-11-18)
 
 ### Features
