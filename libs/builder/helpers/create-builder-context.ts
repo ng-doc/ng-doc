@@ -8,7 +8,6 @@ import { loadConfig } from './load-config';
 
 /**
  * Creates builder context, with all the necessary information for the builder to work
- *
  * @param targetOptions - Target options
  * @param context - Builder context
  * @param configFilePath - Path to the configuration file if it exists

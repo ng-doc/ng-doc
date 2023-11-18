@@ -15,7 +15,6 @@ import { NgDocBuilderContext, NgDocSchema } from '../interfaces';
 
 /**
  * Attach NgDocWebpackPlugin before Angular Plugins
- *
  * @param options Builder configuration
  * @param context Builder context
  * @returns Observable of BrowserBuilderOutput

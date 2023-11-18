@@ -25,7 +25,6 @@ const demoTemplates: string[] = ['ng-doc.module.ts.template'];
 
 /**
  * Generates a NgDocPage
- *
  * @param {NgDocBuildPageSchema} options - The options to generate the page
  * @returns {Rule} Angular Schematic Rule
  */

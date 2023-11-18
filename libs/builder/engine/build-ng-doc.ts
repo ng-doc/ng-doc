@@ -41,7 +41,6 @@ import { NgDocWatcher } from './watcher';
 /**
  * Builds the documentation and emits files to the file system,
  * based on the changes in the source files.
- *
  * @param context - The builder context.
  */
 export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {

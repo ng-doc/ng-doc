@@ -16,7 +16,6 @@ import { NgDocBuildApiSchema } from './schema';
 
 /**
  * Generates the NgDocApi entity
- *
  * @param {NgDocBuildPageSchema} options - The options to generate the API
  * @returns {Rule} Angular Schematic Rule
  */

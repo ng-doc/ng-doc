@@ -8,7 +8,6 @@ import { processSnippets } from './process-snippets';
 
 /**
  * Finds all snippets in an asset and returns them as assets.
- *
  * @param asset - Asset
  * @param inlineStylesType - Inline styles type
  */

@@ -10,7 +10,6 @@ const CORE_CACHE_ID: string = 'ng-doc-core';
 
 /**
  * Checks the version of the current package and invalidates the cache if necessary
- *
  * @param coreFiles - list of core files, if they were changed, the cache will be invalidated
  */
 export function invalidateCacheIfNeeded(coreFiles: string[] = []): boolean {

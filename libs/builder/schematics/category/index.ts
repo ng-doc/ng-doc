@@ -22,7 +22,6 @@ import { NgDocBuildCategorySchema } from './schema';
 
 /**
  * Generates a NgDocCategory
- *
  * @param {NgDocBuildCategorySchema} options - The options to generate the category
  * @returns {Rule} Angular Schematic Rule
  */

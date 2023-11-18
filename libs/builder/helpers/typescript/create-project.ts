@@ -1,8 +1,7 @@
-import {ModuleKind, ModuleResolutionKind, Project, ProjectOptions} from 'ts-morph';
+import { ModuleKind, ModuleResolutionKind, Project, ProjectOptions } from 'ts-morph';
 
 /**
  * Creates typescript project
- *
  * @param {ProjectOptions} options - Projects option to override
  * @returns {Project} - The project
  */

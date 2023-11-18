@@ -1,8 +1,7 @@
-import {Tree} from '@angular-devkit/schematics';
+import { Tree } from '@angular-devkit/schematics';
 
 /**
  * Extracts the category name from the given file path.
- *
  * @param tree
  * @param {string} filePath The file path.
  * @returns {string | null} The category name.

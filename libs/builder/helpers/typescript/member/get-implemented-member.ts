@@ -7,7 +7,6 @@ import { NgDocClassMember, NgDocInterfaceMember, NgDocMemberType } from './membe
 
 /**
  *    Returns member that was implemented by the provided one
- *
  * @param member - Target member
  */
 export function getImplementedMember(member: NgDocMemberType): NgDocMemberType | undefined {

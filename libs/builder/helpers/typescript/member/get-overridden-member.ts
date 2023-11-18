@@ -8,7 +8,6 @@ import { NgDocClassMember, NgDocMemberType } from './member-type';
 
 /**
  *    Returns member that was overridden by the provided one
- *
  * @param member - Target member
  */
 export function getOverriddenMember(member: NgDocMemberType): NgDocMemberType | undefined {
