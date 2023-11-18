@@ -1,3 +1,15 @@
+# [17.0.0-beta.1](https://github.com/ng-doc/ng-doc/compare/v16.18.0-beta.1...v17.0.0-beta.1) (2023-11-18)
+
+
+### Features
+
+* **angular:** bump Angular version ([2945f16](https://github.com/ng-doc/ng-doc/commit/2945f163b39e779469311389727189a140451121))
+
+
+### BREAKING CHANGES
+
+* **angular:** Angular 17
+
 # [16.18.0-beta.1](https://github.com/ng-doc/ng-doc/compare/v16.17.0...v16.18.0-beta.1) (2023-11-18)
 
 
