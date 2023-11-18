@@ -1,13 +1,16 @@
-import {InterfaceDeclaration, Node, TypeElementTypes} from 'ts-morph';
+import { InterfaceDeclaration, Node, TypeElementTypes } from 'ts-morph';
 
-import {NgDocInterfaceMember} from '../member/member-type';
+import { NgDocInterfaceMember } from '../member/member-type';
 
 /**
  *
  * @param int
  * @param name
  */
-export function getInterfaceMember(int: InterfaceDeclaration, name: string): NgDocInterfaceMember | undefined {
+export function getInterfaceMember(
+	int: InterfaceDeclaration,
+	name: string,
+): NgDocInterfaceMember | undefined {
 	return (
 		int
 			.getMembers()

@@ -1,27 +1,86 @@
-# [16.13.0-beta.1](https://github.com/ng-doc/ng-doc/compare/v16.12.1...v16.13.0-beta.1) (2023-08-31)
-
-
-### Bug Fixes
-
-* **builder:** ESM page compilation ([#100](https://github.com/ng-doc/ng-doc/issues/100)) ([3a4b36a](https://github.com/ng-doc/ng-doc/commit/3a4b36ad676974b904519e7f6d70c5e5b83b308e))
-* **builder:** the cache is not invalidated after removing `.ng-doc` folder ([c20e479](https://github.com/ng-doc/ng-doc/commit/c20e479af6e8ad3dc23382b4a3942f54063d7714))
-* **keywords-loaders:** fix release cycle for the `keywords-loaders` library ([a1dbda9](https://github.com/ng-doc/ng-doc/commit/a1dbda92a017fe19732d8120d70c74780c2825fc))
-* **ng-doc:** `ng-doc` doesn't forget pages that have been moved to another directory ([c433a10](https://github.com/ng-doc/ng-doc/commit/c433a1007d07716833de2a987f9be63c7dc73a7a))
-* **ng-doc:** release trigger ([e7ac592](https://github.com/ng-doc/ng-doc/commit/e7ac592fc2f5ddadceb6633d13d6a3790b4eeb00))
-* **project:** dependency injection error after update to 15.10.0 ([cc41f44](https://github.com/ng-doc/ng-doc/commit/cc41f448054d73b9961f8a7be7689b4195a23c1f))
-* **semantic-release:** bump version ([d0f1862](https://github.com/ng-doc/ng-doc/commit/d0f18629d1d99afbf4f8ba5a34db227a05a84bbc))
-
+# [16.17.0](https://github.com/ng-doc/ng-doc/compare/v16.16.0...v16.17.0) (2023-11-18)
 
 ### Features
 
-* **project:** page layout components (page navigation, breadcrumbs, table of content) can be replaced with your own. Project was converted to standalone ([#101](https://github.com/ng-doc/ng-doc/issues/101)) ([d7aad28](https://github.com/ng-doc/ng-doc/commit/d7aad2899216490c6a1a0de64d09b10dfa3ebf15)), closes [#88](https://github.com/ng-doc/ng-doc/issues/88) [#66](https://github.com/ng-doc/ng-doc/issues/66)
-* **styles:** change margin of various page blocks to improve spacing and readability, add `--ng-doc-page-block-margin` variable that can be used to change it globally ([1441f89](https://github.com/ng-doc/ng-doc/commit/1441f8908bb2ddcdc41938280fea40d8d7f05f42))
+- **core,app:** can disable fullscreen routes in the page configuration ([0e31089](https://github.com/ng-doc/ng-doc/commit/0e31089ab79466336e256a0d98f33db52cc412cc)), closes [#106](https://github.com/ng-doc/ng-doc/issues/106)
 
+# [16.16.0](https://github.com/ng-doc/ng-doc/compare/v16.15.1...v16.16.0) (2023-09-20)
+
+### Bug Fixes
+
+- **app:** theme service throws warning if light theme is selected by default ([f6ca077](https://github.com/ng-doc/ng-doc/commit/f6ca0776d7c69c228f5ab2886ac7f9deb743c36b))
+
+### Features
+
+- **project:** add fullscreen mode for demos ([c557f17](https://github.com/ng-doc/ng-doc/commit/c557f1770653550e4a3348ec2a23b884088f67e8)), closes [#84](https://github.com/ng-doc/ng-doc/issues/84)
+
+### Performance Improvements
+
+- **builder:** builder no longer writes files to disk if their content hasn't changed, which slightly speeds up the application rebuild process ([5a80548](https://github.com/ng-doc/ng-doc/commit/5a805487be43fce6d76d73d0396228cf6a746829))
+
+## [16.15.1](https://github.com/ng-doc/ng-doc/compare/v16.15.0...v16.15.1) (2023-09-08)
+
+### Bug Fixes
+
+- **app:** playgrounds for pipes display changed inputs in demo's template in wrong order ([fb51e9d](https://github.com/ng-doc/ng-doc/commit/fb51e9d07d10ceaddd8d99a6678ac6fb3fa7c86f))
+- **app:** playgrounds for pipes don't display default values for inputs in the production ([4f2a271](https://github.com/ng-doc/ng-doc/commit/4f2a27175f8994bdffd77dde5442efb8ab15e6ec))
+- **app:** toc throws an error if page has no headings ([77334e5](https://github.com/ng-doc/ng-doc/commit/77334e58f1c98fa4baf3ca941c8b5c2606884e91))
+
+# [16.15.0](https://github.com/ng-doc/ng-doc/compare/v16.14.0...v16.15.0) (2023-09-04)
+
+### Features
+
+- **app:** add `alert` blockquote type ([fbd607a](https://github.com/ng-doc/ng-doc/commit/fbd607a284118cc85bc01aa969c9aa35965d8f48))
+- **app:** blockquotes were redesigned ([64a8577](https://github.com/ng-doc/ng-doc/commit/64a8577923eb479aabf861004bf6eee3136c9164))
+- **app:** design has been updated, and now the elements better complement each other and are easier to customize ([96f540d](https://github.com/ng-doc/ng-doc/commit/96f540de8a5ba56ef7fb7ded22ccc7163091148c))
+- **app:** theme service has been improved, now you can enable or disable auto theming using `NgDocThemeService`, or define your own themes for auto theming ([5e7959f](https://github.com/ng-doc/ng-doc/commit/5e7959f4f0dafd2440dab59226df5e5f20bc4f3d))
+- **playground:** playground displays "Reset" button only if form is changed ([5d13545](https://github.com/ng-doc/ng-doc/commit/5d13545fcc9364ede8721575ab63f887f4c845a0))
 
 ### BREAKING CHANGES
 
-* **project:** All modules were removed, you should use provider
-functions instead. Please read the "Migration" article to know more.
+- **app:** The CSS color palette variables
+  `--ng-doc-<color>-<shade>` have been removed because they were redundant
+  and mostly cluttered the CSS
+
+# [16.14.0](https://github.com/ng-doc/ng-doc/compare/v16.13.1...v16.14.0) (2023-09-04)
+
+### Bug Fixes
+
+- **app:** dark-purple theme was removed ([fb9cffe](https://github.com/ng-doc/ng-doc/commit/fb9cffe01f3f491c24717cc39175a9356effa2c8))
+- **app:** styles from ng-doc affect other components ([270eafd](https://github.com/ng-doc/ng-doc/commit/270eafd22b135355418d647de5e2914118ebe526))
+- **builder:** builder crashes with an error when trying to load files on Windows ([d564c84](https://github.com/ng-doc/ng-doc/commit/d564c84bc06fece6a6e0d60ab7dd1a6d1b98765e)), closes [#102](https://github.com/ng-doc/ng-doc/issues/102)
+
+### Features
+
+- **app:** code blocks and code block groups were redesigned ([a228922](https://github.com/ng-doc/ng-doc/commit/a2289227e367dcec723b08dc4062eae60fc3b36e))
+
+### BREAKING CHANGES
+
+- **app:** `dark-purple` theme was removed
+
+## [16.13.1](https://github.com/ng-doc/ng-doc/compare/v16.13.0...v16.13.1) (2023-09-01)
+
+### Bug Fixes
+
+- **processor:** add `provideMainPageProcessor` function ([ca3cd76](https://github.com/ng-doc/ng-doc/commit/ca3cd76ee195b89cd6bf18a196152edd1ae393c4))
+
+# [16.13.0](https://github.com/ng-doc/ng-doc/compare/v16.12.1...v16.13.0) (2023-08-31)
+
+### Bug Fixes
+
+- **add:** schematic doesn't import `NgDocRootComponent` component ([c07b389](https://github.com/ng-doc/ng-doc/commit/c07b3894458da69f94922866fdceac72cd5564ec))
+- **add:** schematic doesn't provide `provideNgDocApp` configuration ([6d698d7](https://github.com/ng-doc/ng-doc/commit/6d698d77ce93ddc8c909366861d716b90a38e683))
+- **builder:** ESM page compilation ([#100](https://github.com/ng-doc/ng-doc/issues/100)) ([3a4b36a](https://github.com/ng-doc/ng-doc/commit/3a4b36ad676974b904519e7f6d70c5e5b83b308e))
+
+### Features
+
+- **project:** page layout components (page navigation, breadcrumbs, table of content) can be replaced with your own. Project was converted to standalone ([#101](https://github.com/ng-doc/ng-doc/issues/101)) ([d7aad28](https://github.com/ng-doc/ng-doc/commit/d7aad2899216490c6a1a0de64d09b10dfa3ebf15)), closes [#88](https://github.com/ng-doc/ng-doc/issues/88) [#66](https://github.com/ng-doc/ng-doc/issues/66)
+- **styles:** change margin of various page blocks to improve spacing and readability, add `--ng-doc-page-block-margin` variable that can be used to change it globally ([1441f89](https://github.com/ng-doc/ng-doc/commit/1441f8908bb2ddcdc41938280fea40d8d7f05f42))
+
+### BREAKING CHANGES
+
+- **project:** All modules were removed, you should use provider
+  functions instead. Please read the "Migration" article to know more.
 
 ## [16.12.1](https://github.com/ng-doc/ng-doc/compare/v16.12.0...v16.12.1) (2023-08-24)
 

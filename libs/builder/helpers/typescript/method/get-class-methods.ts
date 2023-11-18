@@ -1,7 +1,7 @@
-import {asArray} from '@ng-doc/core';
-import {ClassDeclaration, MethodDeclaration} from 'ts-morph';
+import { asArray } from '@ng-doc/core';
+import { ClassDeclaration, MethodDeclaration } from 'ts-morph';
 
-import {forAllClasses} from '../class';
+import { forAllClasses } from '../class';
 
 /**
  *
@@ -14,7 +14,10 @@ export function getClassMethods(cls: ClassDeclaration): MethodDeclaration[] {
 		baseClass.getMethods().forEach((method: MethodDeclaration) => {
 			const name: string = method.getName();
 
-			if (!methods.get(name) && (!method.isAbstract() || (method.isAbstract() && cls === baseClass))) {
+			if (
+				!methods.get(name) &&
+				(!method.isAbstract() || (method.isAbstract() && cls === baseClass))
+			) {
 				methods.set(name, method);
 			}
 		});

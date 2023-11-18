@@ -8,6 +8,8 @@ export interface NgDocDemoActionOptions {
 	expanded?: boolean;
 	/** Tab name that should be opened by default */
 	defaultTab?: string;
+	/** If specified, fullscreen button will be displayed and will navigate to the specified route */
+	fullscreenRoute?: string;
 	/** List of tabs that should be displayed if they are not empty and exist */
 	tabs?: string | string[];
 	/** Class name that should be added to the container */
@@ -22,6 +24,8 @@ export interface NgDocDemoPaneActionOptions {
 	expanded?: boolean;
 	/** Tab name that should be opened by default */
 	defaultTab?: string;
+	/** If specified, fullscreen button will be displayed and will navigate to the specified route */
+	fullscreenRoute?: string;
 	/** List of tabs that should be displayed if they are not empty and exist */
 	tabs?: string | string[];
 	/** Class name that should be added to the container */

@@ -7,8 +7,7 @@ import * as path from 'path';
 
 import { removeLinesFromCode } from './remove-lines-from-code';
 
-const NOTE_ANCHOR: string = '<p><strong>Note</strong>';
-const WARNING_ANCHOR: string = '<p><strong>Warning</strong>';
+const blockquoteRegex: RegExp = /^<p><strong>(\w+)<\/strong>\s*/;
 
 /**
  *
@@ -67,16 +66,11 @@ export function markdownToHtml(
 				: codeElement;
 		},
 		blockquote(quote: string): string {
-			if (new RegExp(`^${NOTE_ANCHOR}`).test(quote)) {
-				return `<ng-doc-blockquote type="note">${quote.replace(
-					new RegExp(`^${NOTE_ANCHOR}\\s*`),
-					'<p>',
-				)}</ng-doc-blockquote>`;
-			}
+			const match = quote.match(blockquoteRegex);
 
-			if (new RegExp(`^${WARNING_ANCHOR}`).test(quote)) {
-				return `<ng-doc-blockquote type="warning">${quote.replace(
-					new RegExp(`^${WARNING_ANCHOR}\\s*`),
+			if (match) {
+				return `<ng-doc-blockquote type="${match[1].toLowerCase()}">${quote.replace(
+					blockquoteRegex,
 					'<p>',
 				)}</ng-doc-blockquote>`;
 			}

@@ -1,4 +1,4 @@
-import {NgDocPageType} from '../types';
+import { NgDocPageType } from '../types';
 
 export type NgDocPageInfos = Record<string, NgDocPageInfo>;
 

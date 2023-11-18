@@ -1,14 +1,18 @@
-import {ConnectedOverlayPositionChange, FlexibleConnectedPositionStrategy, OverlayRef} from '@angular/cdk/overlay';
-import {Location} from '@angular/common';
-import {NgZone} from '@angular/core';
-import {Event, NavigationEnd, Router} from '@angular/router';
-import {isPresent} from '@ng-doc/core/helpers/is-present';
-import {toElement} from '@ng-doc/ui-kit/helpers';
-import {NgDocOverlayConfig, NgDocOverlayContainer} from '@ng-doc/ui-kit/interfaces';
-import {fromSubscribe, ngDocZoneDetach, ngDocZoneOptimize} from '@ng-doc/ui-kit/observables';
-import {NgDocOverlayAnimationEvent} from '@ng-doc/ui-kit/types';
-import {fromEvent, merge, NEVER, Observable} from 'rxjs';
-import {debounceTime, filter, map, pairwise, switchMap, take, takeUntil} from 'rxjs/operators';
+import {
+	ConnectedOverlayPositionChange,
+	FlexibleConnectedPositionStrategy,
+	OverlayRef,
+} from '@angular/cdk/overlay';
+import { Location } from '@angular/common';
+import { NgZone } from '@angular/core';
+import { Event, NavigationEnd, Router } from '@angular/router';
+import { isPresent } from '@ng-doc/core/helpers/is-present';
+import { toElement } from '@ng-doc/ui-kit/helpers';
+import { NgDocOverlayConfig, NgDocOverlayContainer } from '@ng-doc/ui-kit/interfaces';
+import { fromSubscribe, ngDocZoneDetach, ngDocZoneOptimize } from '@ng-doc/ui-kit/observables';
+import { NgDocOverlayAnimationEvent } from '@ng-doc/ui-kit/types';
+import { fromEvent, merge, NEVER, Observable } from 'rxjs';
+import { debounceTime, filter, map, pairwise, switchMap, take, takeUntil } from 'rxjs/operators';
 
 export class NgDocOverlayRef<T = unknown> {
 	private overlayResult: T | null = null;
@@ -25,8 +29,13 @@ export class NgDocOverlayRef<T = unknown> {
 		/* Closes overlay when it was outside click */
 		this.afterOpen()
 			.pipe(
-				switchMap(() => this.ngZone.runOutsideAngular(() => this.overlayRef.outsidePointerEvents())),
-				filter((event: MouseEvent) => !!this.overlayConfig.closeIfOutsideClick && this.outsideClickChecker(event)),
+				switchMap(() =>
+					this.ngZone.runOutsideAngular(() => this.overlayRef.outsidePointerEvents()),
+				),
+				filter(
+					(event: MouseEvent) =>
+						!!this.overlayConfig.closeIfOutsideClick && this.outsideClickChecker(event),
+				),
 				ngDocZoneOptimize(this.ngZone),
 			)
 			.subscribe(() => this.close());
@@ -139,7 +148,9 @@ export class NgDocOverlayRef<T = unknown> {
 
 	beforeClose(): Observable<T | null> {
 		return merge(
-			this.overlayContainer.animationEvent.pipe(filter((event: NgDocOverlayAnimationEvent) => event === 'beforeClose')),
+			this.overlayContainer.animationEvent.pipe(
+				filter((event: NgDocOverlayAnimationEvent) => event === 'beforeClose'),
+			),
 			this.overlayRef.detachments(),
 		).pipe(
 			take(1),
@@ -149,7 +160,9 @@ export class NgDocOverlayRef<T = unknown> {
 
 	afterClose(): Observable<T | null> {
 		return merge(
-			this.overlayContainer.animationEvent.pipe(filter((event: NgDocOverlayAnimationEvent) => event === 'afterClose')),
+			this.overlayContainer.animationEvent.pipe(
+				filter((event: NgDocOverlayAnimationEvent) => event === 'afterClose'),
+			),
 			this.overlayRef.detachments(),
 		).pipe(
 			take(1),

@@ -1,4 +1,4 @@
-import {DOCUMENT} from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
@@ -14,10 +14,19 @@ import {
 	SimpleChanges,
 	ViewChild,
 } from '@angular/core';
-import {ngDocZoneOptimize} from '@ng-doc/ui-kit/observables';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {fromEvent, merge, Observable} from 'rxjs';
-import {debounceTime, filter, map, pairwise, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import { ngDocZoneOptimize } from '@ng-doc/ui-kit/observables';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { fromEvent, merge, Observable } from 'rxjs';
+import {
+	debounceTime,
+	filter,
+	map,
+	pairwise,
+	switchMap,
+	take,
+	takeUntil,
+	tap,
+} from 'rxjs/operators';
 
 @Directive({
 	selector: '[ngDocPaneFront]',
@@ -43,7 +52,7 @@ export class NgDocPaneComponent implements OnChanges, OnInit {
 	@Input()
 	expanded: boolean = false;
 
-	@ViewChild('resizer', {static: true})
+	@ViewChild('resizer', { static: true })
 	resizer?: ElementRef<HTMLElement>;
 
 	width: string = '0%';
@@ -110,7 +119,7 @@ export class NgDocPaneComponent implements OnChanges, OnInit {
 		this.addDelta(0);
 	}
 
-	ngOnChanges({expanded}: SimpleChanges): void {
+	ngOnChanges({ expanded }: SimpleChanges): void {
 		if (expanded) {
 			expanded.currentValue
 				? this.addDelta(this.elementRef.nativeElement.offsetWidth)
@@ -132,9 +141,13 @@ export class NgDocPaneComponent implements OnChanges, OnInit {
 
 	private addDelta(delta: number): void {
 		if (this.resizer) {
-			const maxWidth = this.elementRef.nativeElement.offsetWidth - this.resizer.nativeElement.offsetWidth;
+			const maxWidth =
+				this.elementRef.nativeElement.offsetWidth - this.resizer.nativeElement.offsetWidth;
 
-			this.width = `${Math.min(maxWidth, Math.max(0, this.resizer.nativeElement.offsetLeft + delta))}px`;
+			this.width = `${Math.min(
+				maxWidth,
+				Math.max(0, this.resizer.nativeElement.offsetLeft + delta),
+			)}px`;
 			this.changeDetectorRef.detectChanges();
 		}
 	}

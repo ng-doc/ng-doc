@@ -1,4 +1,4 @@
-import {DocBlockTag, DocExcerpt, DocNode, ExcerptKind} from '@microsoft/tsdoc';
+import { DocBlockTag, DocExcerpt, DocNode, ExcerptKind } from '@microsoft/tsdoc';
 
 const hiddenExcerptKinds: ExcerptKind[] = [ExcerptKind.BlockTag];
 

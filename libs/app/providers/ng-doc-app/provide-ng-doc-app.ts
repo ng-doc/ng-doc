@@ -1,11 +1,6 @@
 import { ViewportScroller } from '@angular/common';
 import { APP_INITIALIZER, Optional, Provider } from '@angular/core';
-import {
-	NG_DOC_DARK_PURPLE_THEME,
-	NG_DOC_NIGHT_THEME,
-	NG_DOC_STORE_THEME_KEY,
-} from '@ng-doc/app/constants';
-import { isDarkOsTheme } from '@ng-doc/app/helpers';
+import { NG_DOC_NIGHT_THEME, NG_DOC_STORE_THEME_KEY } from '@ng-doc/app/constants';
 import { NgDocTheme } from '@ng-doc/app/interfaces';
 import { NgDocStoreService, NgDocThemeService } from '@ng-doc/app/services';
 import { NG_DOC_DEFAULT_THEME_ID, NG_DOC_THEME } from '@ng-doc/app/tokens';
@@ -42,7 +37,6 @@ export function provideNgDocApp(config?: NgDocApplicationConfig): Provider[] {
 	return [
 		/* --- Themes --- */
 		{ provide: NG_DOC_THEME, useValue: NG_DOC_NIGHT_THEME, multi: true },
-		{ provide: NG_DOC_THEME, useValue: NG_DOC_DARK_PURPLE_THEME, multi: true },
 		...asArray(config?.themes).map((theme: NgDocTheme) => ({
 			provide: NG_DOC_THEME,
 			useValue: theme,
@@ -62,13 +56,16 @@ export function provideNgDocApp(config?: NgDocApplicationConfig): Provider[] {
 				defaultThemeId: string | 'auto',
 			) => {
 				return () => {
-					const themeId: string | null = store.get(NG_DOC_STORE_THEME_KEY);
+					const savedThemeId: string | null = store.get(NG_DOC_STORE_THEME_KEY);
 
-					if (defaultThemeId === 'auto' && !themeId) {
-						return themeService.set(isDarkOsTheme() ? NG_DOC_NIGHT_THEME.id : undefined, false);
+					if (
+						(defaultThemeId === 'auto' && !savedThemeId) ||
+						savedThemeId === NgDocThemeService.autoThemeId
+					) {
+						return themeService.enableAutoTheme(undefined, NG_DOC_NIGHT_THEME);
+					} else {
+						return themeService.set(savedThemeId ?? defaultThemeId, false);
 					}
-
-					return themeService.set(themeId ?? defaultThemeId, false);
 				};
 			},
 			multi: true,

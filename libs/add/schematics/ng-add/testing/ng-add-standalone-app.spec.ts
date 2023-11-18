@@ -119,7 +119,7 @@ describe('ng-add standalone app', () => {
 		const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
 		expect(tree.readContent('test/main.ts'))
-			.toEqual(`import { provideSearchEngine, NgDocDefaultSearchEngine, providePageSkeleton, NG_DOC_DEFAULT_PAGE_SKELETON, providePageProcessor, NG_DOC_DEFAULT_PAGE_PROCESSORS } from "@ng-doc/app";
+			.toEqual(`import { provideNgDocApp, provideSearchEngine, NgDocDefaultSearchEngine, providePageSkeleton, NG_DOC_DEFAULT_PAGE_SKELETON, provideMainPageProcessor, NG_DOC_DEFAULT_PAGE_PROCESSORS } from "@ng-doc/app";
 import { NG_DOC_ROUTING, provideNgDocContext } from "@ng-doc/generated";
 import { provideRouter, withInMemoryScrolling } from "@angular/router";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
@@ -132,7 +132,7 @@ import { AppComponent } from './app/app.component';
     enableProdMode();
   }
 
-  bootstrapApplication(AppComponent, {providers: [provideAnimations(), provideHttpClient(withInterceptorsFromDi()), provideRouter(NG_DOC_ROUTING, withInMemoryScrolling({scrollPositionRestoration: "enabled", anchorScrolling: "enabled"})), provideNgDocContext(), provideSearchEngine(NgDocDefaultSearchEngine), providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON), providePageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS)]})
+  bootstrapApplication(AppComponent, {providers: [provideAnimations(), provideHttpClient(withInterceptorsFromDi()), provideRouter(NG_DOC_ROUTING, withInMemoryScrolling({scrollPositionRestoration: "enabled", anchorScrolling: "enabled"})), provideNgDocContext(), provideNgDocApp(), provideSearchEngine(NgDocDefaultSearchEngine), providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON), provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS)]})
     .catch(err => console.log(err));
   `);
 	});
@@ -145,13 +145,13 @@ import { AppComponent } from './app/app.component';
 		const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
 		expect(tree.readContent('test/app/app.component.ts'))
-			.toEqual(`import { NgDocNavbarComponent, NgDocSidebarComponent } from "@ng-doc/app";
+			.toEqual(`import { NgDocRootComponent, NgDocNavbarComponent, NgDocSidebarComponent } from "@ng-doc/app";
 import { Component } from '@angular/core';
 
 @Component({
 \ttemplateUrl: './app.template.html',
 \tstandalone: true,
-    imports: [NgDocNavbarComponent, NgDocSidebarComponent]
+    imports: [NgDocRootComponent, NgDocNavbarComponent, NgDocSidebarComponent]
 })
 export class AppComponent {}`);
 	});

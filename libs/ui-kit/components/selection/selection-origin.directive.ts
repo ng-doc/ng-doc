@@ -1,6 +1,6 @@
-import {Directive, ElementRef, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
+import { Directive, ElementRef, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 
-import {NgDocSelectionHostDirective} from './selection-host.directive';
+import { NgDocSelectionHostDirective } from './selection-host.directive';
 
 @Directive({
 	selector: '[ngDocSelectionOrigin]',
@@ -17,7 +17,7 @@ export class NgDocSelectionOriginDirective implements OnChanges, OnDestroy {
 		this.selectionHost.addOrigin(this);
 	}
 
-	ngOnChanges({selected}: SimpleChanges): void {
+	ngOnChanges({ selected }: SimpleChanges): void {
 		if (selected) {
 			this.selectionHost.changeSelected(this, this.selected);
 		}

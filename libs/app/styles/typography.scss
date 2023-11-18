@@ -124,9 +124,10 @@ pre#{$class} {
 }
 
 *:not(pre) > code#{$class} {
+	@include alpha-background(var(--ng-doc-inline-code-background), 0.15);
+
 	vertical-align: bottom;
 	border-radius: calc(var(--ng-doc-base-gutter) / 2);
-	background-color: var(--ng-doc-inline-code-background);
 	color: var(--ng-doc-inline-code-color);
 	padding: calc(var(--ng-doc-base-gutter) / 4) var(--ng-doc-base-gutter);
 	font-family: var(--ng-doc-code-font);
@@ -209,6 +210,6 @@ a#{$class} {
 }
 
 mark.ng-doc-mark {
-	background-color: var(--ng-doc-mark-background, var(--ng-doc-ember-30));
+	background-color: var(--ng-doc-mark-background);
 	color: var(--ng-doc-mark-color, inherit);
 }

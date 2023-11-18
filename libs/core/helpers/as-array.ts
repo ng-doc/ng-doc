@@ -1,5 +1,5 @@
-import {isIterable} from './is-iterable';
-import {isPresent} from './is-present';
+import { isIterable } from './is-iterable';
+import { isPresent } from './is-present';
 
 type AsArrayType<T> = T | T[] | Iterable<T> | null | undefined;
 

@@ -1,4 +1,4 @@
-import {NgDocBaseEntity} from './base-entity';
+import { NgDocBaseEntity } from './base-entity';
 
 export interface NgDocCategory extends NgDocBaseEntity {
 	/** The parent category */

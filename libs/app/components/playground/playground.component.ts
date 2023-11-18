@@ -1,14 +1,26 @@
-import {NgFor, NgIf} from '@angular/common';
-import {AfterViewInit, ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {NgDocRootPage} from '@ng-doc/app/classes/root-page';
-import {objectKeys} from '@ng-doc/core/helpers/object-keys';
-import {NgDocPlaygroundConfig, NgDocPlaygroundOptions, NgDocPlaygroundProperties} from '@ng-doc/core/interfaces';
-import {NgDocAsArrayPipe} from '@ng-doc/ui-kit';
+import { NgFor, NgIf } from '@angular/common';
+import {
+	AfterViewInit,
+	ChangeDetectionStrategy,
+	Component,
+	Input,
+	OnChanges,
+	SimpleChanges,
+} from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { NgDocRootPage } from '@ng-doc/app/classes/root-page';
+import { isSameObject } from '@ng-doc/core';
+import { objectKeys } from '@ng-doc/core/helpers/object-keys';
+import {
+	NgDocPlaygroundConfig,
+	NgDocPlaygroundOptions,
+	NgDocPlaygroundProperties,
+} from '@ng-doc/core/interfaces';
+import { NgDocAsArrayPipe } from '@ng-doc/ui-kit';
 
-import {NgDocPlaygroundDemoComponent} from './playground-demo/playground-demo.component';
-import {NgDocPlaygroundForm} from './playground-form';
-import {NgDocPlaygroundPropertiesComponent} from './playground-properties/playground-properties.component';
+import { NgDocPlaygroundDemoComponent } from './playground-demo/playground-demo.component';
+import { NgDocPlaygroundForm } from './playground-form';
+import { NgDocPlaygroundPropertiesComponent } from './playground-properties/playground-properties.component';
 
 @Component({
 	selector: 'ng-doc-playground',
@@ -16,12 +28,19 @@ import {NgDocPlaygroundPropertiesComponent} from './playground-properties/playgr
 	styleUrls: ['./playground.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	standalone: true,
-	imports: [NgIf, NgDocPlaygroundPropertiesComponent, NgFor, NgDocPlaygroundDemoComponent, NgDocAsArrayPipe],
+	imports: [
+		NgIf,
+		NgDocPlaygroundPropertiesComponent,
+		NgFor,
+		NgDocPlaygroundDemoComponent,
+		NgDocAsArrayPipe,
+	],
 })
-export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties>
-	implements OnChanges, AfterViewInit
+export class NgDocPlaygroundComponent<
+	T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties,
+> implements OnChanges, AfterViewInit
 {
-	@Input({required: true})
+	@Input({ required: true })
 	id: string = '';
 
 	@Input()
@@ -41,18 +60,31 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 	defaultValues?: Record<string, unknown>;
 	configuration!: NgDocPlaygroundConfig;
 
-	constructor(private readonly rootPage: NgDocRootPage, private readonly formBuilder: FormBuilder) {}
+	private defaultProperties: Record<string, unknown> = {};
+	private defaultContent: Record<string, boolean> = {};
 
-	ngOnChanges({options}: SimpleChanges) {
+	constructor(
+		private readonly rootPage: NgDocRootPage,
+		private readonly formBuilder: FormBuilder,
+	) {}
+
+	ngOnChanges({ options }: SimpleChanges) {
 		if (options) {
 			// Join configuration with options
-			this.configuration = Object.assign({}, this.rootPage.page?.playgrounds?.[this.id], this.options);
+			this.configuration = Object.assign(
+				{},
+				this.rootPage.page?.playgrounds?.[this.id],
+				this.options,
+			);
 		}
 	}
 
 	ngAfterViewInit(): void {
-		const propertiesForm: FormGroup = this.formBuilder.group(this.getPropertiesFormValues());
-		const contentForm: FormGroup = this.formBuilder.group(this.getContentFormValues());
+		this.defaultProperties = this.getPropertiesFormValues();
+		this.defaultContent = this.getContentFormValues();
+
+		const propertiesForm: FormGroup = this.formBuilder.group(this.defaultProperties);
+		const contentForm: FormGroup = this.formBuilder.group(this.defaultContent);
 
 		this.formGroup = this.formBuilder.group({
 			properties: propertiesForm,
@@ -60,9 +92,20 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 		});
 		// `patchValue` is needed to set `undefined` values, otherwise they will be ignored by the Angular form
 		this.formGroup.patchValue({
-			properties: Object.assign({}, this.getPropertiesFormValues(), this.configuration.inputs),
-			content: this.getContentFormValues(),
+			properties: Object.assign({}, this.defaultProperties, this.configuration.inputs),
+			content: this.defaultContent,
 		});
+	}
+
+	protected isDefaultState(): boolean {
+		if (!this.formGroup) {
+			return false;
+		}
+
+		return (
+			isSameObject(this.formGroup.value.properties ?? {}, this.defaultValues ?? {}) &&
+			isSameObject(this.formGroup.value.content ?? {}, this.defaultContent ?? {})
+		);
 	}
 
 	private getPropertiesFormValues(): Record<string, unknown> {
@@ -81,19 +124,23 @@ export class NgDocPlaygroundComponent<T extends NgDocPlaygroundProperties = NgDo
 	}
 
 	private getContentFormValues(): Record<string, boolean> {
-		return objectKeys(this.configuration?.content ?? {}).reduce((controls: Record<string, boolean>, key: string) => {
-			if (this.configuration?.content) {
-				controls[key] = false;
-			}
+		return objectKeys(this.configuration?.content ?? {}).reduce(
+			(controls: Record<string, boolean>, key: string) => {
+				if (this.configuration?.content) {
+					controls[key] = false;
+				}
 
-			return controls;
-		}, {} as Record<keyof T, boolean>);
+				return controls;
+			},
+			{} as Record<keyof T, boolean>,
+		);
 	}
 
 	resetForm(): void {
+		this.formGroup.reset({}, { emitEvent: false });
 		this.formGroup?.patchValue({
-			properties: this.getPropertiesFormValues(),
-			content: this.getContentFormValues(),
+			properties: this.defaultProperties,
+			content: this.defaultContent,
 		});
 	}
 }

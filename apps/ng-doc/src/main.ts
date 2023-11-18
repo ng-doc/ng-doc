@@ -7,6 +7,7 @@ import {
 	NG_DOC_DEFAULT_PAGE_PROCESSORS,
 	NG_DOC_DEFAULT_PAGE_SKELETON,
 	NgDocDefaultSearchEngine,
+	provideMainPageProcessor,
 	provideNgDocApp,
 	providePageProcessor,
 	providePageSkeleton,
@@ -24,10 +25,10 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
 	providers: [
 		provideNgDocContext(),
-		provideNgDocApp(),
+		provideNgDocApp({ defaultThemeId: 'auto' }),
 		provideSearchEngine(NgDocDefaultSearchEngine),
 		providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON),
-		providePageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS),
+		provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS),
 		provideAnimations(),
 		provideHttpClient(withInterceptorsFromDi()),
 		provideRouter(

@@ -1,32 +1,45 @@
+@import 'mixins';
+
 :root {
 	--ng-doc-base-gutter: 8px;
 	--ng-doc-transition: 0.2s;
+	--ng-doc-text-selection: rgba(21, 88, 214, 0.15);
 
+	--ng-doc-white: #fff;
+	--ng-doc-black: #000;
 	--ng-doc-base-0: var(--ng-doc-white);
-	--ng-doc-base-1: var(--ng-doc-grey-10);
-	--ng-doc-base-2: var(--ng-doc-grey-20);
-	--ng-doc-base-3: var(--ng-doc-grey-30);
-	--ng-doc-base-4: var(--ng-doc-grey-40);
-	--ng-doc-base-5: var(--ng-doc-grey-50);
-	--ng-doc-base-6: var(--ng-doc-grey-60);
-	--ng-doc-base-7: var(--ng-doc-grey-70);
-	--ng-doc-base-8: var(--ng-doc-grey-90);
-	--ng-doc-base-9: var(--ng-doc-grey-100);
-	--ng-doc-base-10: var(--ng-doc-grey-110);
-	--ng-doc-base-11: var(--ng-doc-grey-180);
+	--ng-doc-base-1: #f6f6f6;
+	--ng-doc-base-2: #ebebeb;
+	--ng-doc-base-3: #dedede;
+	--ng-doc-base-4: #d1d1d1;
+	--ng-doc-base-5: #b8b8b8;
+	--ng-doc-base-6: #ababab;
+	--ng-doc-base-7: #9e9e9e;
+	--ng-doc-base-8: #919191;
+	--ng-doc-base-9: #858585;
+	--ng-doc-base-10: #6e6e6e;
 
-	--ng-doc-primary: var(--ng-doc-blue-100);
-	--ng-doc-primary-rgb: var(--ng-doc-blue-rgb);
+	// Main colors
+	--ng-doc-primary: #1558d6;
 	--ng-doc-primary-text: var(--ng-doc-white);
-	--ng-doc-hover: var(--ng-doc-ember-20);
-	--ng-doc-active: var(--ng-doc-ember-40);
+
+	--ng-doc-alert: #ff5959;
+	--ng-doc-alert-text: var(--ng-doc-white);
+
+	--ng-doc-warning: #ff9f1a;
+	--ng-doc-warning-text: var(--ng-doc-white);
+
+	--ng-doc-info: #3f68b5;
+	--ng-doc-info-text: var(--ng-doc-white);
 
 	--ng-doc-background: var(--ng-doc-base-0);
+	--ng-doc-hover-background: rgba(110, 110, 110, 0.09);
 	--ng-doc-border-size: 1px;
-	--ng-doc-border-color: var(--ng-doc-base-1);
-	--ng-doc-border-hover-color: var(--ng-doc-base-3);
+	--ng-doc-border-color: var(--ng-doc-base-3);
+	--ng-doc-border-hover-color: var(--ng-doc-base-5);
 	--ng-doc-shadow-color: rgba(0, 0, 0, 0.15);
 
+	// Font
 	--ng-doc-heading-font-family: 'Nunito', sans-serif;
 	--ng-doc-font-family: 'Nunito Sans', sans-serif;
 	--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 2);
@@ -36,20 +49,22 @@
 	--ng-doc-code-font-size: 14px;
 	--ng-doc-code-line-height: 20px;
 	--ng-doc-code-font-weight: 600;
-	--ng-doc-text: var(--ng-doc-base-11);
-	--ng-doc-text-inversed: var(--ng-doc-base-0);
+	--ng-doc-text: #111111;
 	--ng-doc-text-muted: var(--ng-doc-base-8);
 
+	// Mark
+	--ng-doc-mark-background: rgba(255, 222, 0, 0.3);
+
 	// Link
-	--ng-doc-link-color: var(--ng-doc-blue-100);
-	--ng-doc-link-color-rgb: var(--ng-doc-blue-rgb);
+	--ng-doc-link-color: var(--ng-doc-primary);
 
 	// Inline code
-	--ng-doc-inline-code-background: var(--ng-doc-base-2);
+	--ng-doc-inline-code-background: var(--ng-doc-base-9);
 	--ng-doc-inline-code-color: var(--ng-doc-text);
 
 	// NgDocButtonIconComponent
 	--ng-doc-button-background: trasparent;
+	--ng-doc-button-background-opacity: 0;
 	--ng-doc-button-color: var(--ng-doc-text);
 	--ng-doc-button-hover-background: var(--ng-doc-base-1);
 	--ng-doc-button-hover-color: var(--ng-doc-button-color);
@@ -84,7 +99,7 @@
 	--ng-doc-tag-color: var(--ng-doc-primary-text);
 
 	/* NgDocSelection */
-	--ng-doc-selection-border: 4px solid var(--ng-doc-primary);
+	--ng-doc-selection-border: 3px solid var(--ng-doc-primary);
 	--ng-doc-selection-background: transparent;
 
 	/* NgDocDot */
@@ -94,8 +109,7 @@
 	/* Sidenav */
 	--ng-doc-sidenav-width: 300px;
 
-	/* Tabs */
-	--ng-doc-tabs-margin: calc(var(--ng-doc-base-gutter) * 4) 0px;
-	--ng-doc-tabs-border: 1px solid var(--ng-doc-base-2);
-	--ng-doc-tabs-border-radius: var(--ng-doc-base-gutter);
+	/* TabGroup */
+	--ng-doc-tab-group-border-radius: var(--ng-doc-base-gutter);
+	--ng-doc-tab-group-border: 1px solid var(--ng-doc-border-color);
 }

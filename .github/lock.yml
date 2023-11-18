@@ -15,7 +15,7 @@ lockLabel: false
 
 # Comment to post before locking. Set to `false` to disable
 lockComment: >
-    This issue has been automatically locked due to inactivity. Please file a new issue if you are encountering a similar or related problem. Why locking? Having issues with the most up-to-date context.
+  This issue has been automatically locked due to inactivity. Please file a new issue if you are encountering a similar or related problem. Why locking? Having issues with the most up-to-date context.
 # Assign `resolved` as the reason for locking. Set to `false` to disable
 setLockReason: true
 
@@ -29,4 +29,4 @@ setLockReason: true
 #   lockLabel: outdated
 
 pulls:
-    daysUntilLock: 30
+  daysUntilLock: 30

@@ -56,4 +56,10 @@
 			}
 		}
 	}
+
+	ng-doc-input-wrapper {
+		ng-doc-icon {
+			--ng-doc-icon-color: var(--ng-doc-text-muted);
+		}
+	}
 }

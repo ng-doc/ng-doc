@@ -10,12 +10,12 @@ import {
 	Renderer2,
 	ViewChild,
 } from '@angular/core';
-import {ControlValueAccessor} from '@angular/forms';
-import {NgDocPositionUtils} from '@ng-doc/ui-kit/utils';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {FL_CONTROL_HOST, FlCompareHost, FlControlHost, FlControlSelector} from 'flex-controls';
-import {fromEvent} from 'rxjs';
-import {filter, last, map, pairwise, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
+import { ControlValueAccessor } from '@angular/forms';
+import { NgDocPositionUtils } from '@ng-doc/ui-kit/utils';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { FL_CONTROL_HOST, FlCompareHost, FlControlHost, FlControlSelector } from 'flex-controls';
+import { fromEvent } from 'rxjs';
+import { filter, last, map, pairwise, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'ng-doc-toggle',
@@ -25,11 +25,14 @@ import {filter, last, map, pairwise, startWith, switchMap, takeUntil, tap} from 
 	standalone: true,
 })
 @UntilDestroy()
-export class NgDocToggleComponent<T> extends FlControlSelector<T> implements OnInit, ControlValueAccessor {
-	@ViewChild('wrapper', {static: true})
+export class NgDocToggleComponent<T>
+	extends FlControlSelector<T>
+	implements OnInit, ControlValueAccessor
+{
+	@ViewChild('wrapper', { static: true })
 	private wrapper?: ElementRef<HTMLElement>;
 
-	@ViewChild('circle', {static: true})
+	@ViewChild('circle', { static: true })
 	private circle?: ElementRef<HTMLElement>;
 
 	@HostBinding('attr.data-ng-doc-dragging')
@@ -53,7 +56,8 @@ export class NgDocToggleComponent<T> extends FlControlSelector<T> implements OnI
 	override ngOnInit(): void {
 		super.ngOnInit();
 		if (this.wrapper && this.circle) {
-			this.maxPixelValue = this.wrapper.nativeElement.offsetWidth - this.circle.nativeElement.offsetWidth - 6;
+			this.maxPixelValue =
+				this.wrapper.nativeElement.offsetWidth - this.circle.nativeElement.offsetWidth - 6;
 			fromEvent(this.circle.nativeElement, 'mousedown')
 				.pipe(
 					filter(() => !this.disabled),
@@ -64,14 +68,26 @@ export class NgDocToggleComponent<T> extends FlControlSelector<T> implements OnI
 
 						return fromEvent(document.body, 'mousemove').pipe(
 							pairwise(),
-							map(([newEvent, oldEvent]: [Event, Event]) => [newEvent, oldEvent] as [MouseEvent, MouseEvent]),
-							map(([newEvent, oldEvent]: [MouseEvent, MouseEvent]) => oldEvent.clientX - newEvent.clientX),
+							map(
+								([newEvent, oldEvent]: [Event, Event]) =>
+									[newEvent, oldEvent] as [MouseEvent, MouseEvent],
+							),
+							map(
+								([newEvent, oldEvent]: [MouseEvent, MouseEvent]) =>
+									oldEvent.clientX - newEvent.clientX,
+							),
 							filter((deltaX: number) => deltaX !== 0),
 							tap((deltaX: number) => this.changeCirclePosition(deltaX)),
 							startWith(null),
-							takeUntil(fromEvent(document.body, 'mouseup').pipe(tap(() => this.setDragging(false)))),
+							takeUntil(
+								fromEvent(document.body, 'mouseup').pipe(tap(() => this.setDragging(false))),
+							),
 							last(),
-							tap(() => this.circle && this.renderer.setStyle(this.circle.nativeElement, 'transition', transition)),
+							tap(
+								() =>
+									this.circle &&
+									this.renderer.setStyle(this.circle.nativeElement, 'transition', transition),
+							),
 						);
 					}),
 					untilDestroyed(this),
@@ -95,8 +111,13 @@ export class NgDocToggleComponent<T> extends FlControlSelector<T> implements OnI
 	protected setState(isSelected: boolean): void {
 		isSelected
 			? this.circle &&
-			  this.renderer.setStyle(this.circle.nativeElement, 'transform', `translateX(${this.maxPixelValue}px)`)
-			: this.circle && this.renderer.setStyle(this.circle.nativeElement, 'transform', `translateX(0)`);
+			  this.renderer.setStyle(
+					this.circle.nativeElement,
+					'transform',
+					`translateX(${this.maxPixelValue}px)`,
+			  )
+			: this.circle &&
+			  this.renderer.setStyle(this.circle.nativeElement, 'transform', `translateX(0)`);
 	}
 
 	private setDragging(value: boolean): void {
@@ -110,7 +131,8 @@ export class NgDocToggleComponent<T> extends FlControlSelector<T> implements OnI
 				NgDocPositionUtils.getElementPosition(this.wrapper.nativeElement).x +
 				this.wrapper.nativeElement.offsetWidth / 2;
 			const circleCenterLeft: number =
-				NgDocPositionUtils.getElementPosition(this.circle.nativeElement).x + this.circle.nativeElement.offsetWidth / 2;
+				NgDocPositionUtils.getElementPosition(this.circle.nativeElement).x +
+				this.circle.nativeElement.offsetWidth / 2;
 			circleCenterLeft > wrapperMiddle ? this.select() : this.deselect();
 			this.setState(!!this.checked);
 		}
@@ -118,10 +140,19 @@ export class NgDocToggleComponent<T> extends FlControlSelector<T> implements OnI
 
 	private changeCirclePosition(delta: number): void {
 		if (this.wrapper && this.circle) {
-			const wrapperLeft: number = NgDocPositionUtils.getElementPosition(this.wrapper.nativeElement).x;
+			const wrapperLeft: number = NgDocPositionUtils.getElementPosition(
+				this.wrapper.nativeElement,
+			).x;
 			const circleLeft: number = NgDocPositionUtils.getElementPosition(this.circle.nativeElement).x;
-			const newPosition: number = Math.max(Math.min(circleLeft - wrapperLeft - 3 + delta, this.maxPixelValue), 0);
-			this.renderer.setStyle(this.circle.nativeElement, 'transform', `translateX(${newPosition}px)`);
+			const newPosition: number = Math.max(
+				Math.min(circleLeft - wrapperLeft - 3 + delta, this.maxPixelValue),
+				0,
+			);
+			this.renderer.setStyle(
+				this.circle.nativeElement,
+				'transform',
+				`translateX(${newPosition}px)`,
+			);
 		}
 	}
 }

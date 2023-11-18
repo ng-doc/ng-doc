@@ -1,10 +1,17 @@
-import {NgIf} from '@angular/common';
-import {ChangeDetectionStrategy, Component, HostBinding, Inject, Input, Optional} from '@angular/core';
-import {NgDocIconComponent} from '@ng-doc/ui-kit/components/icon';
-import {NgDocCheckedChangeDirective} from '@ng-doc/ui-kit/directives/checked-change';
-import {NgDocFocusableDirective} from '@ng-doc/ui-kit/directives/focusable';
-import {NgDocColor} from '@ng-doc/ui-kit/types';
-import {FL_CONTROL_HOST, FlCompareHost, FlControlHost, FlControlSelector} from 'flex-controls';
+import { NgIf } from '@angular/common';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	HostBinding,
+	Inject,
+	Input,
+	Optional,
+} from '@angular/core';
+import { NgDocIconComponent } from '@ng-doc/ui-kit/components/icon';
+import { NgDocCheckedChangeDirective } from '@ng-doc/ui-kit/directives/checked-change';
+import { NgDocFocusableDirective } from '@ng-doc/ui-kit/directives/focusable';
+import { NgDocColor } from '@ng-doc/ui-kit/types';
+import { FL_CONTROL_HOST, FlCompareHost, FlControlHost, FlControlSelector } from 'flex-controls';
 
 @Component({
 	selector: 'ng-doc-checkbox',

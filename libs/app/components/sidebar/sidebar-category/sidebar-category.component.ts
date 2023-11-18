@@ -1,8 +1,15 @@
-import {NgIf} from '@angular/common';
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input, OnInit} from '@angular/core';
-import {Event, NavigationEnd, Router} from '@angular/router';
-import {NgDocRouteActiveDirective} from '@ng-doc/app/directives/route-active';
-import {NgDocNavigation} from '@ng-doc/app/interfaces';
+import { NgIf } from '@angular/common';
+import {
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
+	Component,
+	HostBinding,
+	Input,
+	OnInit,
+} from '@angular/core';
+import { Event, NavigationEnd, Router } from '@angular/router';
+import { NgDocRouteActiveDirective } from '@ng-doc/app/directives/route-active';
+import { NgDocNavigation } from '@ng-doc/app/interfaces';
 import {
 	NgDocDotComponent,
 	NgDocExpanderComponent,
@@ -11,10 +18,10 @@ import {
 	NgDocTextComponent,
 	NgDocTextLeftDirective,
 } from '@ng-doc/ui-kit';
-import {NgDocContent} from '@ng-doc/ui-kit/types';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
-import {filter, startWith} from 'rxjs/operators';
+import { NgDocContent } from '@ng-doc/ui-kit/types';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
+import { filter, startWith } from 'rxjs/operators';
 
 @Component({
 	selector: 'ng-doc-sidebar-category',
@@ -53,7 +60,10 @@ export class NgDocSidebarCategoryComponent implements OnInit {
 	@Input()
 	expanded: boolean = true;
 
-	constructor(private readonly router: Router, private readonly changeDetectorRef: ChangeDetectorRef) {}
+	constructor(
+		private readonly router: Router,
+		private readonly changeDetectorRef: ChangeDetectorRef,
+	) {}
 
 	ngOnInit(): void {
 		/**

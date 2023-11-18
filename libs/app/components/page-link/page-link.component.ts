@@ -1,7 +1,14 @@
-import {NgIf, NgTemplateOutlet} from '@angular/common';
-import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, OnInit} from '@angular/core';
-import {Params, RouterLink} from '@angular/router';
-import {NgDocIconComponent} from '@ng-doc/ui-kit';
+import { NgIf, NgTemplateOutlet } from '@angular/common';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	Input,
+	OnChanges,
+	OnInit,
+} from '@angular/core';
+import { Params, RouterLink } from '@angular/router';
+import { NgDocIconComponent } from '@ng-doc/ui-kit';
 
 @Component({
 	selector: 'ng-doc-page-link',
@@ -12,7 +19,7 @@ import {NgDocIconComponent} from '@ng-doc/ui-kit';
 	imports: [NgIf, RouterLink, NgTemplateOutlet, NgDocIconComponent],
 })
 export class NgDocPageLinkComponent implements OnInit, OnChanges {
-	@Input({required: true})
+	@Input({ required: true })
 	href: string = '';
 
 	@Input()
@@ -46,6 +53,8 @@ export class NgDocPageLinkComponent implements OnInit, OnChanges {
 	}
 
 	get queryParams(): Params {
-		return Object.fromEntries(new URLSearchParams(this.link?.search.replace(/^\?/, '') ?? '').entries());
+		return Object.fromEntries(
+			new URLSearchParams(this.link?.search.replace(/^\?/, '') ?? '').entries(),
+		);
 	}
 }

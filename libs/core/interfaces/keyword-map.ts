@@ -1,4 +1,4 @@
-import {NgDocKeywordType} from '../types';
+import { NgDocKeywordType } from '../types';
 
 export interface NgDocKeyword {
 	title: string;

@@ -4,7 +4,14 @@
 </ng-doc-pane>
 
 <ng-template #demoTemplate>
-	<ng-container *polymorpheusOutlet="demo ?? ''; context: {}"></ng-container>
+	<ng-template #fullscreenButton>
+		<ng-doc-fullscreen-button [route]="options.fullscreenRoute!"></ng-doc-fullscreen-button>
+	</ng-template>
+	<ng-container
+		*polymorpheusOutlet="
+			options.fullscreenRoute ? fullscreenButton : demo ?? '';
+			context: {}
+		"></ng-container>
 </ng-template>
 
 <ng-template #codeContent>
@@ -14,7 +21,11 @@
 
 	<ng-container *ngIf="assets.length > 1">
 		<ng-doc-tab-group [openedTab]="options.defaultTab">
-			<ng-doc-tab *ngFor="let asset of assets" [id]="asset.title" [label]="asset.title" [content]="assetContent">
+			<ng-doc-tab
+				*ngFor="let asset of assets"
+				[id]="asset.title"
+				[label]="asset.title"
+				[content]="assetContent">
 				<ng-template #assetContent>
 					<ng-doc-code [html]="asset.code"></ng-doc-code>
 				</ng-template>

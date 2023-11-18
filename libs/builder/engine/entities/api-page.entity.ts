@@ -8,7 +8,7 @@ import {
 	declarationFolderName,
 	editFileInRepoUrl,
 	isSupportedDeclaration,
-	slash,
+	posix,
 	uniqueName,
 	viewFileInRepoUrl,
 } from '../../helpers';
@@ -51,7 +51,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
 
 	override get route(): string {
 		return this.declaration
-			? slash(
+			? posix(
 					path.join(
 						declarationFolderName(this.declaration),
 						this.declarationName + (this.index ? this.index : ''),

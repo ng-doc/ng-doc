@@ -1,4 +1,4 @@
-import {NgDocPlaygroundProperties} from '@ng-doc/core';
+import { NgDocPlaygroundProperties } from '@ng-doc/core';
 import {
 	ClassDeclaration,
 	Node,
@@ -9,19 +9,21 @@ import {
 	TypeFormatFlags,
 } from 'ts-morph';
 
-import {getComponentInputs, getInputName} from '../angular';
-import {extractDocs, extractParameterDocs} from '../extract-docs';
-import {displayType} from '../typescript';
+import { getComponentInputs, getInputName } from '../angular';
+import { extractDocs, extractParameterDocs } from '../extract-docs';
+import { displayType } from '../typescript';
 
 /**
  *
  * @param declaration
  */
-export function getPlaygroundComponentInputs(declaration: ClassDeclaration): NgDocPlaygroundProperties {
+export function getPlaygroundComponentInputs(
+	declaration: ClassDeclaration,
+): NgDocPlaygroundProperties {
 	return getComponentInputs(declaration).reduce(
 		(properties: NgDocPlaygroundProperties, property: PropertyDeclaration) => {
 			const inputName: string = getInputName(property);
-			return {...properties, ...propOrParamToPlaygroundProperty(property, inputName)};
+			return { ...properties, ...propOrParamToPlaygroundProperty(property, inputName) };
 		},
 		{},
 	);
@@ -37,7 +39,7 @@ export function getPlaygroundPipeInputs(declaration: ClassDeclaration): NgDocPla
 		.getParameters()
 		.slice(1)
 		.reduce((properties: NgDocPlaygroundProperties, parameter: ParameterDeclaration) => {
-			return {...properties, ...propOrParamToPlaygroundProperty(parameter)};
+			return { ...properties, ...propOrParamToPlaygroundProperty(parameter) };
 		}, {});
 }
 
@@ -61,12 +63,18 @@ function propOrParamToPlaygroundProperty(
 			type,
 			description: Node.isPropertyDeclaration(propOrParam)
 				? extractDocs(propOrParam)
-				: extractParameterDocs(propOrParam.getParentIfKindOrThrow(SyntaxKind.MethodDeclaration), propOrParam.getName()),
+				: extractParameterDocs(
+						propOrParam.getParentIfKindOrThrow(SyntaxKind.MethodDeclaration),
+						propOrParam.getName(),
+				  ),
 			options: propOrParam
 				.getType()
 				.getUnionTypes()
 				.map((type: Type) =>
-					type.getText(undefined, TypeFormatFlags.NoTruncation | TypeFormatFlags.UseSingleQuotesForStringLiteralType),
+					type.getText(
+						undefined,
+						TypeFormatFlags.NoTruncation | TypeFormatFlags.UseSingleQuotesForStringLiteralType,
+					),
 				),
 		},
 	};

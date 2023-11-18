@@ -1,7 +1,7 @@
-import {NgDocContent, NgDocOverlayAnimationEvent} from '@ng-doc/ui-kit/types';
-import {Observable} from 'rxjs';
+import { NgDocContent, NgDocOverlayAnimationEvent } from '@ng-doc/ui-kit/types';
+import { Observable } from 'rxjs';
 
-import {NgDocOverlayConfig} from './overlay-config';
+import { NgDocOverlayConfig } from './overlay-config';
 
 export interface NgDocOverlayContainer {
 	animationEvent: Observable<NgDocOverlayAnimationEvent>;

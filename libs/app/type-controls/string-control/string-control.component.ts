@@ -1,7 +1,7 @@
-import {NgIf} from '@angular/common';
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {NgDocTypeControl} from '@ng-doc/app/interfaces';
+import { NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgDocTypeControl } from '@ng-doc/app/interfaces';
 import {
 	NgDocButtonIconComponent,
 	NgDocFocusableDirective,
@@ -9,7 +9,7 @@ import {
 	NgDocInputStringDirective,
 	NgDocInputWrapperComponent,
 } from '@ng-doc/ui-kit';
-import {FlControl, FlControlSilencerModule} from 'flex-controls';
+import { FlControl, FlControlSilencerModule } from 'flex-controls';
 
 @Component({
 	selector: 'ng-doc-string-control',
@@ -28,7 +28,10 @@ import {FlControl, FlControlSilencerModule} from 'flex-controls';
 		NgDocIconComponent,
 	],
 })
-export class NgDocStringControlComponent extends FlControl<string> implements NgDocTypeControl<string> {
+export class NgDocStringControlComponent
+	extends FlControl<string>
+	implements NgDocTypeControl<string>
+{
 	@Input()
 	default?: string;
 

@@ -1,11 +1,11 @@
-import {Directive} from '@angular/core';
-import {ClassDeclaration, Decorator, Node, ObjectLiteralElementLike} from 'ts-morph';
+import { Directive } from '@angular/core';
+import { ClassDeclaration, Decorator, Node, ObjectLiteralElementLike } from 'ts-morph';
 
-import {stringExpression} from '../string-expression';
-import {getPropertyAssignment} from '../typescript';
+import { stringExpression } from '../string-expression';
+import { getPropertyAssignment } from '../typescript';
 
 /**
- *	Resolves the directive decorator and return its properties.
+ *    Resolves the directive decorator and return its properties.
  *
  * @param cls - class declaration
  */
@@ -14,8 +14,10 @@ export function getDirectiveDecorator(cls: ClassDeclaration): Directive | undefi
 	const decoratorArgument: Node | undefined = decorator?.getArguments()[0];
 
 	if (Node.isObjectLiteralExpression(decoratorArgument)) {
-		const standaloneProperty: ObjectLiteralElementLike | undefined = decoratorArgument.getProperty('standalone');
-		const selectorProperty: ObjectLiteralElementLike | undefined = decoratorArgument.getProperty('selector');
+		const standaloneProperty: ObjectLiteralElementLike | undefined =
+			decoratorArgument.getProperty('standalone');
+		const selectorProperty: ObjectLiteralElementLike | undefined =
+			decoratorArgument.getProperty('selector');
 
 		return {
 			standalone: stringExpression(getPropertyAssignment(standaloneProperty)),

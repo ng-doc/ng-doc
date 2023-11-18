@@ -1,3 +1,5 @@
+@import '../../../ui-kit/styles/mixins';
+
 :host {
 	position: relative;
 	display: block;
@@ -16,6 +18,7 @@
 
 	.ng-doc-code-wrapper {
 		--ng-doc-code-margin: 0;
+		--ng-doc-code-border: none;
 	}
 
 	.ng-doc-code-header {
@@ -24,11 +27,14 @@
 		padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
 		background: var(--ng-doc-code-header-background, var(--ng-doc-base-2));
 		border-radius: var(--ng-doc-base-gutter) var(--ng-doc-base-gutter) 0 0;
+		border-top: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
+		border-left: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
+		border-right: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
 
 		.ng-doc-code-file-name {
 			--ng-doc-text: var(--ng-doc-code-header-color);
 			--ng-doc-font-weight: 600;
-			--ng-doc-font-size: 14px;
+			--ng-doc-font-size: 13px;
 
 			ng-doc-icon {
 				margin-right: calc(var(--ng-doc-base-gutter) / 2);
@@ -39,6 +45,8 @@
 	.ng-doc-code-body {
 		position: relative;
 		height: 100%;
+		border-radius: var(--ng-doc-code-border-radius, var(--ng-doc-base-gutter));
+		border: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
 	}
 
 	.ng-doc-copy-button {
@@ -50,8 +58,14 @@
 
 		--ng-doc-icon-color: var(--ng-doc-text-muted);
 		--ng-doc-button-background: transparent;
-		--ng-doc-button-hover-background: var(--ng-doc-code-copy-button-hover-background, var(--ng-doc-base-2));
-		--ng-doc-button-active-background: var(--ng-doc-code-copy-button-active-background, var(--ng-doc-base-3));
+		--ng-doc-button-hover-background: var(
+			--ng-doc-code-copy-button-hover-background,
+			var(--ng-doc-base-2)
+		);
+		--ng-doc-button-active-background: var(
+			--ng-doc-code-copy-button-active-background,
+			var(--ng-doc-base-3)
+		);
 	}
 
 	.ng-doc-code-wrapper {
@@ -63,6 +77,7 @@
 			display: flex;
 			margin: var(--ng-doc-code-margin);
 			border-radius: var(--ng-doc-code-border-radius, var(--ng-doc-base-gutter));
+			border: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
 			overflow: hidden;
 			height: 100%;
 
@@ -83,20 +98,20 @@
 				}
 
 				.line {
-					position: relative;
 					padding: 0 calc(var(--ng-doc-base-gutter) * 2);
 
 					&.highlighted {
-						background: var(--ng-doc-code-highlight-background, rgba(var(--ng-doc-primary-rgb), 0.15));
+						@include alpha-background(var(--ng-doc-code-highlight-color), 0.05);
 
-						&:before {
+						&:after {
 							content: '';
 							position: absolute;
 							top: 0;
 							left: 0;
-							width: 2px;
+							width: 3px;
 							height: 100%;
-							background: var(--ng-doc-code-highlight-border, var(--ng-doc-primary));
+							background: var(--ng-doc-code-highlight-color);
+							opacity: 0.8;
 						}
 					}
 				}

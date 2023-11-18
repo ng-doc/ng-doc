@@ -1,4 +1,4 @@
-import {FormControl, FormGroup} from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 
 export interface NgDocPlaygroundForm {
 	properties: FormGroup<Record<string, FormControl<unknown>>>;

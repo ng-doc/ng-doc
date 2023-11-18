@@ -197,12 +197,11 @@ the generated files and `allowSyntheticDefaultImports` option.
 }
 ```
 
-### Importing global modules
+### Configuring application
 
-Import the global library-provided modules into your application's root `AppModule`,
-and add `NgDocDefaultSearchEngine` to the providers section to enable search.
+Provide default configuration for the documentation app.
 
-```typescript name="Stnadalone APP (main.ts)" group="imports"
+```typescript name="Standalone APP (main.ts)" group="imports"
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { enableProdMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
@@ -213,7 +212,7 @@ import {
   NG_DOC_DEFAULT_PAGE_SKELETON,
   NgDocDefaultSearchEngine,
   provideNgDocApp,
-  providePageProcessor,
+  provideMainPageProcessor,
   providePageSkeleton,
   provideSearchEngine,
 } from '@ng-doc/app';
@@ -234,7 +233,7 @@ bootstrapApplication(AppComponent, {
     provideNgDocApp(),
     provideSearchEngine(NgDocDefaultSearchEngine),
     providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON),
-    providePageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS),
+    provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS),
     // Provide animations
     provideAnimations(),
     // Provide HttpClient with interceptors (NgDoc uses interceptors)
@@ -265,7 +264,7 @@ import {
   NgDocRootComponent,
   NgDocSidebarComponent,
   provideNgDocApp,
-  providePageProcessor,
+  provideMainPageProcessor,
   providePageSkeleton,
   provideSearchEngine,
 } from '@ng-doc/app';
@@ -299,7 +298,7 @@ import { AppComponent } from './app.component';
     provideNgDocApp(),
     provideSearchEngine(NgDocDefaultSearchEngine),
     providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON),
-    providePageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS),
+    provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS),
   ],
   bootstrap: [AppComponent],
 })

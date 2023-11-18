@@ -1,4 +1,4 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
 export interface NgDocHighlightPosition {
 	start: number;
@@ -14,12 +14,13 @@ export class NgDocHighlighterPipe implements PipeTransform {
 		positions
 			.sort((a: NgDocHighlightPosition, b: NgDocHighlightPosition) => b.start - a.start)
 			.forEach((position: NgDocHighlightPosition) => {
-				const {start, length} = position;
+				const { start, length } = position;
 				const end = start + length;
 
-				input = `${input.slice(0, start)}<mark class="ng-doc-mark">${input.slice(start, end)}</mark>${input.slice(
+				input = `${input.slice(0, start)}<mark class="ng-doc-mark">${input.slice(
+					start,
 					end,
-				)}`;
+				)}</mark>${input.slice(end)}`;
 			});
 
 		return input;

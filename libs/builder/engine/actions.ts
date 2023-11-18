@@ -1,11 +1,15 @@
-import {NgDocDemoActionOptions, NgDocDemoPaneActionOptions, NgDocPlaygroundOptions} from '@ng-doc/core';
+import {
+	NgDocDemoActionOptions,
+	NgDocDemoPaneActionOptions,
+	NgDocPlaygroundOptions,
+} from '@ng-doc/core';
 
-import {NgDocActionOutput} from '../interfaces';
-import {NgDocAction} from '../types';
-import {demoAction} from './actions/demo.action';
-import {demoPaneAction} from './actions/demo-pane.action';
-import {playgroundAction} from './actions/playground.action';
-import {NgDocPageEntity} from './entities/page.entity';
+import { NgDocActionOutput } from '../interfaces';
+import { NgDocAction } from '../types';
+import { demoAction } from './actions/demo.action';
+import { demoPaneAction } from './actions/demo-pane.action';
+import { playgroundAction } from './actions/playground.action';
+import { NgDocPageEntity } from './entities/page.entity';
 
 export class NgDocActions {
 	constructor(private readonly page: NgDocPageEntity) {}

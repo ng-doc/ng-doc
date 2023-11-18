@@ -1,6 +1,6 @@
-import {NgDocTocItem} from '@ng-doc/app/interfaces';
-import {asArray} from '@ng-doc/core/helpers/as-array';
-import {NgDocHeading} from '@ng-doc/core/types';
+import { NgDocTocItem } from '@ng-doc/app/interfaces';
+import { asArray } from '@ng-doc/core/helpers/as-array';
+import { NgDocHeading } from '@ng-doc/core/types';
 
 /**
  * Generate table of contents, only for headings with id
@@ -19,7 +19,8 @@ export function generateToc(container: HTMLElement): NgDocTocItem[] {
 
 	return headingElements.reduce((map: NgDocTocItem[], heading: HTMLHeadingElement) => {
 		const headingLevel: number = levelFromTagName(heading);
-		const anchor: HTMLAnchorElement | null = heading.querySelector<HTMLAnchorElement>('a.ng-doc-header-link');
+		const anchor: HTMLAnchorElement | null =
+			heading.querySelector<HTMLAnchorElement>('a.ng-doc-header-link');
 
 		if (anchor) {
 			map.push({

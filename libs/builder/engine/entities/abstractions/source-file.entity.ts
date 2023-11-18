@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { SourceFile } from 'ts-morph';
 
-import { slash } from '../../../helpers';
+import { posix } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
 import { NgDocEntityStore } from '../../entity-store';
 import { CACHE_PATH } from '../../variables';
@@ -46,7 +46,7 @@ export abstract class NgDocSourceFileEntity extends NgDocEntity {
 	}
 
 	get importPath(): string {
-		return slash(this.sourceFilePath.replace(/.ts$/, ''));
+		return posix(this.sourceFilePath.replace(/.ts$/, ''));
 	}
 
 	/**

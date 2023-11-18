@@ -1,8 +1,8 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {NgDocTypeControl} from '@ng-doc/app/interfaces';
-import {NgDocSanitizeHtmlPipe} from '@ng-doc/app/pipes';
-import {NgDocCheckboxComponent, NgDocTooltipDirective} from '@ng-doc/ui-kit';
-import {FlControlHost, provideControlHost} from 'flex-controls';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { NgDocTypeControl } from '@ng-doc/app/interfaces';
+import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes';
+import { NgDocCheckboxComponent, NgDocTooltipDirective } from '@ng-doc/ui-kit';
+import { FlControlHost, provideControlHost } from 'flex-controls';
 
 @Component({
 	selector: 'ng-doc-boolean-control',

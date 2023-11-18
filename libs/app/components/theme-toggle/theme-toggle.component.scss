@@ -1,5 +1,14 @@
+@import '../../../ui-kit/styles/mixins';
+
 :host {
 	display: inline-block;
 	height: 40px;
 	width: 40px;
+
+	.letter {
+		@include ng-doc-font();
+
+		--ng-doc-font-size: 26px;
+		--ng-doc-font-weight: 600;
+	}
 }

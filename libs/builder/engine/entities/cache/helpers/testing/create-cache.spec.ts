@@ -1,7 +1,7 @@
-import {vol} from 'memfs';
+import { vol } from 'memfs';
 
-import {NgDocCachedData} from '../../interfaces';
-import {createCache} from '../create-cache';
+import { NgDocCachedData } from '../../interfaces';
+import { createCache } from '../create-cache';
 
 jest.mock('fs');
 
@@ -38,11 +38,11 @@ describe('createCache', () => {
 	});
 
 	it('should return a cache with properties if properties were provided', () => {
-		const result: NgDocCachedData = createCache(undefined, undefined, {property: 'value'});
+		const result: NgDocCachedData = createCache(undefined, undefined, { property: 'value' });
 
 		expect(result).toStrictEqual({
 			version: undefined,
-			properties: {property: 'value'},
+			properties: { property: 'value' },
 		});
 	});
 

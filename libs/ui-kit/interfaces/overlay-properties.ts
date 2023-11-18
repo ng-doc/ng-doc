@@ -1,5 +1,5 @@
-import {Direction, Directionality} from '@angular/cdk/bidi';
-import {NgDocOverlayOrigin, NgDocOverlayPosition} from '@ng-doc/ui-kit/types';
+import { Direction, Directionality } from '@angular/cdk/bidi';
+import { NgDocOverlayOrigin, NgDocOverlayPosition } from '@ng-doc/ui-kit/types';
 
 export interface NgDocOverlayProperties {
 	origin?: NgDocOverlayOrigin;

@@ -1,9 +1,9 @@
-import {KeyValuePipe, NgFor, NgIf} from '@angular/common';
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {RouterLink} from '@angular/router';
-import {NgDocKindIconComponent} from '@ng-doc/app/components/kind-icon';
-import {NgDocPageInfo} from '@ng-doc/core/interfaces';
-import {NgDocTextComponent, NgDocTooltipDirective} from '@ng-doc/ui-kit';
+import { KeyValuePipe, NgFor, NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { NgDocKindIconComponent } from '@ng-doc/app/components/kind-icon';
+import { NgDocPageInfo } from '@ng-doc/core/interfaces';
+import { NgDocTextComponent, NgDocTooltipDirective } from '@ng-doc/ui-kit';
 
 @Component({
 	selector: 'ng-doc-search-result',
@@ -11,7 +11,15 @@ import {NgDocTextComponent, NgDocTooltipDirective} from '@ng-doc/ui-kit';
 	styleUrls: ['./search-result.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	standalone: true,
-	imports: [NgIf, NgFor, NgDocTextComponent, RouterLink, NgDocKindIconComponent, NgDocTooltipDirective, KeyValuePipe],
+	imports: [
+		NgIf,
+		NgFor,
+		NgDocTextComponent,
+		RouterLink,
+		NgDocKindIconComponent,
+		NgDocTooltipDirective,
+		KeyValuePipe,
+	],
 })
 export class NgDocSearchResultComponent implements OnChanges {
 	@Input()
@@ -19,17 +27,20 @@ export class NgDocSearchResultComponent implements OnChanges {
 
 	groupedResult: Record<string, NgDocPageInfo[]> = {};
 
-	ngOnChanges({result}: SimpleChanges): void {
+	ngOnChanges({ result }: SimpleChanges): void {
 		if (result && this.result) {
-			this.groupedResult = this.result.reduce((grouped: Record<string, NgDocPageInfo[]>, item: NgDocPageInfo) => {
-				if (!grouped[item.type]) {
-					grouped[item.type] = [];
-				}
+			this.groupedResult = this.result.reduce(
+				(grouped: Record<string, NgDocPageInfo[]>, item: NgDocPageInfo) => {
+					if (!grouped[item.type]) {
+						grouped[item.type] = [];
+					}
 
-				grouped[item.type].push(item);
+					grouped[item.type].push(item);
 
-				return grouped;
-			}, {});
+					return grouped;
+				},
+				{},
+			);
 		}
 	}
 

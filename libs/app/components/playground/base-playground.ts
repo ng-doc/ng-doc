@@ -59,7 +59,17 @@ export abstract class NgDocBasePlayground implements Pick<NgDocPlaygroundConfig,
 				{},
 			);
 		} else if (this.playgroundInstance) {
-			this.defaultValues = extractFunctionDefaults(this.playgroundInstance.prototype.transform);
+			const defaults = extractFunctionDefaults(this.playgroundInstance.prototype.transform);
+
+			this.defaultValues = Object.keys(this.playgroundContainer.properties ?? {}).reduce(
+				(def: Record<string, unknown>, key: string, i: number) => {
+					// we do +1 because the first argument is the `value` of the transform function
+					def[key] = defaults[i + 1];
+
+					return def;
+				},
+				{},
+			);
 		} else {
 			throw new Error('Playground is not defined or initialized');
 		}
@@ -69,9 +79,9 @@ export abstract class NgDocBasePlayground implements Pick<NgDocPlaygroundConfig,
 		}
 
 		/*
-		 	This is a hack just to wait for the playground container to be initialized and only then
-		 	attach the change detector to have correct inputs values.
-		 */
+             This is a hack just to wait for the playground container to be initialized and only then
+             attach the change detector to have correct inputs values.
+         */
 		Promise.resolve().then(() => {
 			this.changeDetectorRef.reattach();
 		});

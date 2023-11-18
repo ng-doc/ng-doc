@@ -1,8 +1,8 @@
-import {Element, Root} from 'hast';
-import {isElement} from 'hast-util-is-element';
-import {visit} from 'unist-util-visit';
+import { Element, Root } from 'hast';
+import { isElement } from 'hast-util-is-element';
+import { visit } from 'unist-util-visit';
 
-import {hasClass} from '../helpers';
+import { hasClass } from '../helpers';
 
 const HEADINGS: string[] = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 const NO_ANCHOR_CLASS: string = 'no-anchor';

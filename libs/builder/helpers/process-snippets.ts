@@ -1,19 +1,24 @@
-import {escapeRegexp} from '@ng-doc/core';
+import { escapeRegexp } from '@ng-doc/core';
 import * as fs from 'fs';
 import path from 'path';
 
-import {NgDocSnippet} from '../interfaces';
-import {parseSnippet} from '../parsers/parse-snippet';
-import {formatCode} from './format-code';
-import {getCodeTypeFromLang} from './get-code-type-from-lang';
+import { NgDocSnippet } from '../interfaces';
+import { parseSnippet } from '../parsers/parse-snippet';
+import { formatCode } from './format-code';
+import { getCodeTypeFromLang } from './get-code-type-from-lang';
 
 const snippet = (id?: string | null) =>
 	id
 		? new RegExp(
-				`\\n?\\r?^.*((\\/\\/|<!--|\\/\\*)\\s*)(snippet#${escapeRegexp(id)}.*?(?=(-->|\\*\\/)?))\\s*(-->|\\*\\/)?$`,
+				`\\n?\\r?^.*((\\/\\/|<!--|\\/\\*)\\s*)(snippet#${escapeRegexp(
+					id,
+				)}.*?(?=(-->|\\*\\/)?))\\s*(-->|\\*\\/)?$`,
 				'gm',
 		  )
-		: new RegExp(`\\n?\\r?^.*((\\/\\/|<!--|\\/\\*)\\s*)(snippet.*?(?=(-->|\\*\\/)?))\\s*(-->|\\*\\/)?$`, 'gm');
+		: new RegExp(
+				`\\n?\\r?^.*((\\/\\/|<!--|\\/\\*)\\s*)(snippet.*?(?=(-->|\\*\\/)?))\\s*(-->|\\*\\/)?$`,
+				'gm',
+		  );
 
 /**
  * Process snippets from code
@@ -35,7 +40,7 @@ export function processSnippets(code: string, basePath?: string): NgDocSnippet[]
 			const config = parseSnippet(match[3].trim());
 
 			if (config) {
-				const {title, lang, icon, opened, fromFile} = config;
+				const { title, lang, icon, opened, fromFile } = config;
 
 				const language = lang || (isHTMLComment ? 'html' : 'ts');
 
@@ -55,7 +60,7 @@ export function processSnippets(code: string, basePath?: string): NgDocSnippet[]
 			const config = parseSnippet(match[3].trim());
 
 			if (config) {
-				const {id, title, lang, icon, opened} = config;
+				const { id, title, lang, icon, opened } = config;
 				const endRegexp = snippet(id);
 
 				endRegexp.lastIndex = match.index + match[0].length;

@@ -1,8 +1,8 @@
 import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
-import {unified, VFileWithOutput} from 'unified';
+import { unified, VFileWithOutput } from 'unified';
 
-import keywordsPlugin, {AddKeyword, GetKeyword} from './plugins/keywords.plugin';
+import keywordsPlugin, { AddKeyword, GetKeyword } from './plugins/keywords.plugin';
 import markCodeBlocksPlugin from './plugins/mark-code-blocks.plugin';
 import markElementsPlugin from './plugins/mark-elements.plugin';
 
@@ -18,9 +18,12 @@ export interface NgDocHtmlPostProcessorConfig {
  * @param html
  * @param config
  */
-export async function htmlPostProcessor(html: string, config: NgDocHtmlPostProcessorConfig): Promise<string> {
+export async function htmlPostProcessor(
+	html: string,
+	config: NgDocHtmlPostProcessorConfig,
+): Promise<string> {
 	return unified()
-		.use(rehypeParse, {fragment: true})
+		.use(rehypeParse, { fragment: true })
 		.use(rehypeStringify)
 		.use(keywordsPlugin, config)
 		.use(markElementsPlugin)

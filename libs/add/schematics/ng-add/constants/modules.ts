@@ -17,6 +17,10 @@ export interface AppImports {
 
 export const NG_DOC_COMPONENT_IMPORTS: ImportConstant[] = [
 	{
+		initializer: 'NgDocRootComponent',
+		imports: [{ name: 'NgDocRootComponent', path: '@ng-doc/app' }],
+	},
+	{
 		initializer: 'NgDocNavbarComponent',
 		imports: [{ name: 'NgDocNavbarComponent', path: '@ng-doc/app' }],
 	},
@@ -30,6 +34,10 @@ const NG_DOC_PROVIDERS: ImportConstant[] = [
 	{
 		initializer: 'provideNgDocContext()',
 		imports: [{ name: 'provideNgDocContext', path: GENERATED_PATH }],
+	},
+	{
+		initializer: 'provideNgDocApp()',
+		imports: [{ name: 'provideNgDocApp', path: '@ng-doc/app' }],
 	},
 	{
 		initializer: 'provideSearchEngine(NgDocDefaultSearchEngine)',
@@ -46,9 +54,9 @@ const NG_DOC_PROVIDERS: ImportConstant[] = [
 		],
 	},
 	{
-		initializer: 'providePageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS)',
+		initializer: 'provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS)',
 		imports: [
-			{ name: 'providePageProcessor', path: '@ng-doc/app' },
+			{ name: 'provideMainPageProcessor', path: '@ng-doc/app' },
 			{ name: 'NG_DOC_DEFAULT_PAGE_PROCESSORS', path: '@ng-doc/app' },
 		],
 	},

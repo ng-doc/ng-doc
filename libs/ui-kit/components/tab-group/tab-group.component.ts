@@ -1,4 +1,4 @@
-import {NgFor} from '@angular/common';
+import { NgFor } from '@angular/common';
 import {
 	AfterContentInit,
 	AfterViewInit,
@@ -11,18 +11,18 @@ import {
 	QueryList,
 	ViewChildren,
 } from '@angular/core';
-import {tabFadeAnimation} from '@ng-doc/ui-kit/animations';
+import { tabFadeAnimation } from '@ng-doc/ui-kit/animations';
 import {
 	NgDocSelectionComponent,
 	NgDocSelectionHostDirective,
 	NgDocSelectionOriginDirective,
 } from '@ng-doc/ui-kit/components/selection';
-import {NgDocSmoothResizeComponent} from '@ng-doc/ui-kit/components/smooth-resize';
-import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
-import {startWith} from 'rxjs/operators';
+import { NgDocSmoothResizeComponent } from '@ng-doc/ui-kit/components/smooth-resize';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
+import { startWith } from 'rxjs/operators';
 
-import {NgDocTabComponent} from './tab/tab.component';
+import { NgDocTabComponent } from './tab/tab.component';
 
 @Component({
 	animations: [tabFadeAnimation],

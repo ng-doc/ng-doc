@@ -7,6 +7,8 @@
 
 	--ng-doc-code-margin: 0;
 	--ng-doc-code-border-radius: 0;
+	--ng-doc-code-border: none;
+	--ng-doc-tab-group-header-background: var(--ng-doc-base-2);
 
 	ng-doc-icon {
 		margin-right: calc(var(--ng-doc-base-gutter) / 2);

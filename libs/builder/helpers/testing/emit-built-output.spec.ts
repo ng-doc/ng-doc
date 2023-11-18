@@ -1,6 +1,6 @@
-import {vol} from 'memfs';
+import { vol } from 'memfs';
 
-import {emitBuiltOutput} from '../emit-built-output';
+import { emitBuiltOutput } from '../emit-built-output';
 
 jest.mock('fs');
 

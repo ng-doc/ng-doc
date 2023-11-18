@@ -8,6 +8,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 	template: `
 		<!-- snippet "Test" -->
 		<p>demo works!</p>
+		123123
 		<!-- snippet -->
 	`,
 	styles: [],

@@ -1,11 +1,11 @@
 import * as CSSWhat from 'css-what';
-import {SelectorType} from 'css-what';
-import {Selector, TagSelector} from 'css-what/lib/es/types';
-import {NodeTag} from 'posthtml-parser';
+import { SelectorType } from 'css-what';
+import { Selector, TagSelector } from 'css-what/lib/es/types';
+import { NodeTag } from 'posthtml-parser';
 
-import {NgDocHtmlParser} from '../classes';
-import {NG_DOC_DYNAMIC_SELECTOR} from '../constants';
-import {objectKeys} from './object-keys';
+import { NgDocHtmlParser } from '../classes';
+import { NG_DOC_DYNAMIC_SELECTOR } from '../constants';
+import { objectKeys } from './object-keys';
 
 /**
  *
@@ -26,14 +26,19 @@ export function buildPlaygroundDemoTemplate(
 	const selectors: Selector[] | undefined = CSSWhat.parse(selector)[0];
 
 	if (selectors) {
-		const rootElement: NodeTag | undefined = parser.find(NG_DOC_DYNAMIC_SELECTOR) ?? parser.find(selector);
+		const rootElement: NodeTag | undefined =
+			parser.find(NG_DOC_DYNAMIC_SELECTOR) ?? parser.find(selector);
 
 		if (rootElement) {
 			parser.setAttributesFromSelectors(rootElement, selectors);
 
 			if (String(rootElement.tag).toLowerCase() === NG_DOC_DYNAMIC_SELECTOR.toLowerCase()) {
 				rootElement.tag =
-					(selectors.find((selector: Selector) => selector.type === SelectorType.Tag) as TagSelector)?.name ?? 'div';
+					(
+						selectors.find(
+							(selector: Selector) => selector.type === SelectorType.Tag,
+						) as TagSelector
+					)?.name ?? 'div';
 			}
 
 			inputs && parser.fillAngularAttributes(rootElement, inputs);
@@ -63,7 +68,13 @@ export function buildPlaygroundDemoPipeTemplate(
 	inputs?: Record<string, string>,
 	preview: boolean = true,
 ): string {
-	const preparedTemplate: string = buildPlaygroundDemoTemplate(template, '', content, inputs, preview);
+	const preparedTemplate: string = buildPlaygroundDemoTemplate(
+		template,
+		'',
+		content,
+		inputs,
+		preview,
+	);
 	const listOfParameters: string = objectKeys(inputs ?? {})
 		.map((key: string) => `:${inputs?.[key]}`)
 		.join('')
@@ -78,7 +89,11 @@ export function buildPlaygroundDemoPipeTemplate(
  * @param content
  * @param preview
  */
-function replaceContent(htmlData: string, content: Record<string, string>, preview?: boolean): string {
+function replaceContent(
+	htmlData: string,
+	content: Record<string, string>,
+	preview?: boolean,
+): string {
 	objectKeys(content).forEach((key: string) => {
 		const condition: string = preview
 			? content[key]
@@ -87,7 +102,10 @@ function replaceContent(htmlData: string, content: Record<string, string>, previ
 					${content[key]}
 				</ng-container>`.trim();
 
-		htmlData = htmlData.replace(new RegExp(`{{\\s*content.${key}\\s*}}`, 'gm'), condition ? `\n${condition}\n` : '');
+		htmlData = htmlData.replace(
+			new RegExp(`{{\\s*content.${key}\\s*}}`, 'gm'),
+			condition ? `\n${condition}\n` : '',
+		);
 	});
 
 	return htmlData;

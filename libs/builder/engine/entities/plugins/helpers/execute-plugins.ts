@@ -1,8 +1,8 @@
-import {Observable, of, switchMap} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import { Observable, of, switchMap } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
-import {NgDocEntity} from '../../abstractions/entity';
-import {NgDocEntityPlugin} from '../types';
+import { NgDocEntity } from '../../abstractions/entity';
+import { NgDocEntityPlugin } from '../types';
 
 /**
  *
@@ -20,7 +20,9 @@ export function executePlugins<T, TEntity extends NgDocEntity>(
 			acc.pipe(
 				switchMap((data) => plugin.execute(data, entity)),
 				catchError((e: unknown) => {
-					throw new Error(`Error while applying plugin "${plugin.id}" to entity "${entity.id}": ${e}`);
+					throw new Error(
+						`Error while applying plugin "${plugin.id}" to entity "${entity.id}": ${e}`,
+					);
 				}),
 			),
 		of(data),

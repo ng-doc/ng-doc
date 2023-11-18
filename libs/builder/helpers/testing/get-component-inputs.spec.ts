@@ -1,7 +1,7 @@
-import {Project, PropertyDeclaration, SourceFile} from 'ts-morph';
+import { Project, PropertyDeclaration, SourceFile } from 'ts-morph';
 
-import {getComponentInputs} from '../angular/get-component-inputs';
-import {createProject} from '../typescript/create-project';
+import { getComponentInputs } from '../angular/get-component-inputs';
+import { createProject } from '../typescript/create-project';
 
 /**
  *
@@ -19,7 +19,7 @@ describe('getComponentInputs', () => {
 	let project: Project;
 
 	beforeEach(() => {
-		project = createProject({useInMemoryFileSystem: true});
+		project = createProject({ useInMemoryFileSystem: true });
 	});
 
 	it('should return inputs of a component', () => {

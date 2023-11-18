@@ -14,13 +14,14 @@
 	cursor: pointer;
 	--ng-doc-icon-color: var(--ng-doc-text);
 	--ng-doc-dot-background: var(--ng-doc-base-4);
+	--ng-doc-font-weight: 500;
 
 	ng-doc-dot {
 		margin-right: calc(var(--ng-doc-base-gutter) * 2);
 	}
 
 	&:hover:not(.active) {
-		--ng-doc-text: var(--ng-doc-grey-100);
+		--ng-doc-text: var(--ng-doc-text-muted);
 	}
 
 	&.active {

@@ -1,6 +1,6 @@
-import {vol} from 'memfs';
+import { vol } from 'memfs';
 
-import {getCacheFilePath} from '../get-cache-file-path';
+import { getCacheFilePath } from '../get-cache-file-path';
 
 jest.mock('fs');
 

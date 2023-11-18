@@ -7,5 +7,11 @@
 	},
 	"files": ["index.ts"],
 	"include": ["schematics/**/*"],
-	"exclude": ["jest.config.ts", "**/*.spec.ts", "**/*.test.ts", "generated", "schematics/*/templates/**/*"]
+	"exclude": [
+		"jest.config.ts",
+		"**/*.spec.ts",
+		"**/*.test.ts",
+		"generated",
+		"schematics/*/templates/**/*"
+	]
 }

@@ -10,6 +10,14 @@ const DemoPanePage: NgDocPage = {
   order: 3,
   keyword: 'GuidesDemoPane',
   demos: { ButtonDemoComponent },
+  route: {
+    children: [
+      {
+        path: 'button',
+        component: ButtonDemoComponent,
+      },
+    ],
+  },
 };
 
 export default DemoPanePage;

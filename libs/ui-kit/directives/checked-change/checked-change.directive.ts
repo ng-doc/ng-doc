@@ -1,4 +1,12 @@
-import {Directive, ElementRef, EventEmitter, HostListener, Input, Output, Renderer2} from '@angular/core';
+import {
+	Directive,
+	ElementRef,
+	EventEmitter,
+	HostListener,
+	Input,
+	Output,
+	Renderer2,
+} from '@angular/core';
 
 @Directive({
 	selector: 'input[ngDocChecked], input[ngDocCheckedChange]',
@@ -14,12 +22,15 @@ export class NgDocCheckedChangeDirective {
 	@Output()
 	readonly ngDocCheckedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	constructor(private readonly element: ElementRef<HTMLInputElement>, private readonly renderer: Renderer2) {
+	constructor(
+		private readonly element: ElementRef<HTMLInputElement>,
+		private readonly renderer: Renderer2,
+	) {
 		this.updateProperty('checked', false);
 	}
 
 	@HostListener('change', ['$event.target'])
-	onChange({checked}: HTMLInputElement): void {
+	onChange({ checked }: HTMLInputElement): void {
 		this.updateProperty('indeterminate', false);
 		this.ngDocCheckedChange.emit(checked);
 	}

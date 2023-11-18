@@ -4,6 +4,7 @@
 	overflow: hidden;
 	--ng-doc-code-margin: 0;
 	--ng-doc-code-border-radius: 0;
+	--ng-doc-code-border: none;
 
 	&[data-ng-doc-border='true'] {
 		border: var(--ng-doc-demo-displayer-border);
@@ -30,5 +31,9 @@
 				margin-left: auto;
 			}
 		}
+	}
+
+	ng-doc-code {
+		border-top: 1px solid var(--ng-doc-border-color);
 	}
 }

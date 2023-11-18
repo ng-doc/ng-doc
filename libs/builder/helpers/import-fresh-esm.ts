@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { importEsm } from './import-esm';
+import { posix } from './posix';
 
 /**
  * Imports a module without caching it
@@ -19,7 +20,7 @@ export async function importFreshEsm<T>(modulePath: string): Promise<T> {
 	const newFilepath = `${filepath.replace(extRegex, '')}${Date.now()}${ext}`;
 
 	await fs.promises.writeFile(newFilepath, fileContent);
-	const module = await importEsm<T>(newFilepath);
+	const module = await importEsm<T>(posix(newFilepath));
 
 	fs.unlink(newFilepath, () => void 0);
 

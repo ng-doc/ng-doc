@@ -3,6 +3,10 @@
 :host {
 	display: flex;
 	flex-direction: column;
+	background: var(--ng-doc-tab-group-header-background, var(--ng-doc-tab-group-background));
+	border-radius: var(--ng-doc-tab-group-border-radius);
+	border: var(--ng-doc-tab-group-border);
+	overflow: hidden;
 
 	.ng-doc-tabs-wrapper {
 		@include ng-doc-font();
@@ -13,19 +17,19 @@
 		line-height: 18px;
 		font-size: 14px;
 		flex-shrink: 0;
-		background-color: var(--ng-doc-tab-group-header-background, var(--ng-doc-tab-group-background));
+		background: var(--ng-doc-tab-group-tabs-background);
 
 		.ng-doc-tab {
 			position: relative;
-			padding: calc(var(--ng-doc-base-gutter) / 2 * 3) calc(var(--ng-doc-base-gutter) * 2);
+			padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
 			cursor: pointer;
 			white-space: nowrap;
 
 			.ng-doc-tab-text {
 				@include ng-doc-font();
 				position: relative;
-				--ng-doc-font-size: 14px;
-				--ng-doc-font-weight: 700;
+				--ng-doc-font-size: 13px;
+				--ng-doc-font-weight: 600;
 			}
 		}
 	}
@@ -35,5 +39,6 @@
 		background-color: var(--ng-doc-tab-group-background);
 		height: 100%;
 		overflow: hidden;
+		border-top: 1px solid var(--ng-doc-border-color);
 	}
 }

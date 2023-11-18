@@ -43,6 +43,10 @@ $entities: (
 		background: var(--ng-doc-ng-module-decorator-background),
 		color: var(--ng-doc-ng-module-decorator-color),
 	),
+	'ng-doc-tag-selector': (
+		background: var(--ng-doc-selector-background),
+		color: var(--ng-doc-selector-color),
+	),
 );
 
 @mixin entitiesColors($attr, $background-prop: 'background-color', $color-prop: 'color') {

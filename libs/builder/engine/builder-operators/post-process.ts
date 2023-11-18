@@ -1,13 +1,13 @@
-import {asArray} from '@ng-doc/core';
-import {Observable, OperatorFunction} from 'rxjs';
-import {map, switchMap, tap} from 'rxjs/operators';
+import { asArray } from '@ng-doc/core';
+import { Observable, OperatorFunction } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 
-import {NgDocBuildResult, NgDocConfiguration} from '../../interfaces';
-import {forkJoinOrEmpty} from '../../operators';
-import {errorHandler} from '../../operators/error-handler';
-import {NgDocEntity} from '../entities/abstractions/entity';
-import {executePlugins} from '../entities/plugins';
-import {NgDocEntityStore} from '../entity-store';
+import { NgDocBuildResult, NgDocConfiguration } from '../../interfaces';
+import { forkJoinOrEmpty } from '../../operators';
+import { errorHandler } from '../../operators/error-handler';
+import { NgDocEntity } from '../entities/abstractions/entity';
+import { executePlugins } from '../entities/plugins';
+import { NgDocEntityStore } from '../entity-store';
 
 /**
  * Post-processes the build output.
@@ -26,12 +26,16 @@ export function postProcess<T extends NgDocBuildResult>(
 		source.pipe(
 			tap(() => store.updateKeywordMap()),
 			switchMap((outputs: T[]) =>
-				forkJoinOrEmpty(outputs.map((output: T) => handlePostProcess(output).pipe(errorHandler(output)))).pipe(
+				forkJoinOrEmpty(
+					outputs.map((output: T) => handlePostProcess(output).pipe(errorHandler(output))),
+				).pipe(
 					switchMap((postProcessedOutputs: T[]) =>
 						forkJoinOrEmpty(additionalEntities.map((e) => e.build() as Observable<T>)).pipe(
 							switchMap((additionalOutputs: T[]) =>
 								forkJoinOrEmpty(
-									additionalOutputs.map((output: T) => handlePostProcess(output).pipe(errorHandler(output))),
+									additionalOutputs.map((output: T) =>
+										handlePostProcess(output).pipe(errorHandler(output)),
+									),
 								),
 							),
 							map((additionalPostProcessedOutputs: T[]) => [
@@ -51,6 +55,6 @@ export function postProcess<T extends NgDocBuildResult>(
  */
 function handlePostProcess<T extends NgDocBuildResult>(output: T): Observable<T> {
 	return executePlugins(output.result, output.entity, asArray(output.postProcessPlugins)).pipe(
-		map((result) => Object.assign({}, output, {result})),
+		map((result) => Object.assign({}, output, { result })),
 	);
 }
