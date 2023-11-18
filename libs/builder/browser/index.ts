@@ -5,8 +5,7 @@ import {
 	Target,
 	targetFromTargetString,
 } from '@angular-devkit/architect';
-import { buildWebpackBrowser } from '@angular-devkit/build-angular/src/builders/browser';
-import { buildEsbuildBrowser } from '@angular-devkit/build-angular/src/builders/browser-esbuild';
+import { buildApplication } from '@angular-devkit/build-angular';
 import { firstValueFrom, Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 
@@ -22,8 +21,8 @@ import { NgDocBuilderContext, NgDocSchema } from '../interfaces';
  * @returns Observable of BrowserBuilderOutput
  */
 export async function runBrowser(options: NgDocSchema, context: BuilderContext): Promise<any> {
-	const browserTarget: Target | null = options.browserTarget
-		? targetFromTargetString(options.browserTarget)
+	const browserTarget: Target | null = options.buildTarget
+		? targetFromTargetString(options.buildTarget)
 		: null;
 	const targetOptions: any = browserTarget
 		? await context.getTargetOptions(browserTarget)
@@ -37,9 +36,7 @@ export async function runBrowser(options: NgDocSchema, context: BuilderContext):
 
 	await firstValueFrom(runner.pipe(first()));
 
-	return builderContext.config.angularBuilder === 'esbuild'
-		? fromAsyncIterable(buildEsbuildBrowser(options as any, context)).toPromise()
-		: await buildWebpackBrowser(options as any, context).toPromise();
+	return firstValueFrom(fromAsyncIterable(buildApplication(options as any, context)));
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

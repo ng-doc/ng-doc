@@ -17,7 +17,7 @@ import {
 	NgDocTextRightDirective,
 	NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
-import { FlControl } from 'flex-controls';
+import { DIControl } from 'di-controls';
 
 @Component({
 	selector: 'ng-doc-type-alias-control',
@@ -45,7 +45,7 @@ import { FlControl } from 'flex-controls';
 		NgDocExtractValuePipe,
 	],
 })
-export class NgDocTypeAliasControlComponent<T> extends FlControl<T> implements NgDocTypeControl<T> {
+export class NgDocTypeAliasControlComponent<T> extends DIControl<T> implements NgDocTypeControl<T> {
 	@Input()
 	default?: T;
 

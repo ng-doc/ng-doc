@@ -19,8 +19,8 @@
 						"output": "./"
 					}
 				],
-				"updateBuildableProjectDepsInPackageJson": false,
-				"generateExportsField": true
+				"generateExportsField": true,
+				"babelUpwardRootMode": true
 			}
 		},
 		"build": {
@@ -30,7 +30,7 @@
 			}
 		},
 		"lint": {
-			"executor": "@nx/linter:eslint",
+			"executor": "@nx/eslint:lint",
 			"outputs": ["{options.outputFile}"],
 			"options": {
 				"lintFilePatterns": ["libs/keywords-loaders/**/*.ts"]
@@ -40,14 +40,7 @@
 			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
 			"options": {
-				"jestConfig": "libs/keywords-loaders/jest.config.ts",
-				"passWithNoTests": true
-			},
-			"configurations": {
-				"ci": {
-					"ci": true,
-					"codeCoverage": true
-				}
+				"jestConfig": "libs/keywords-loaders/jest.config.ts"
 			}
 		}
 	},

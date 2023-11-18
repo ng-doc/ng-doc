@@ -18,8 +18,7 @@
 					"libs/builder/schematics/**/*.json",
 					"libs/builder/schematics/**/files/**/*",
 					"libs/builder/engine/post-processors/html-plugins/**/*"
-				],
-				"updateBuildableProjectDepsInPackageJson": false
+				]
 			}
 		},
 		"build": {
@@ -52,7 +51,7 @@
 			]
 		},
 		"lint": {
-			"executor": "@nx/linter:eslint",
+			"executor": "@nx/eslint:lint",
 			"outputs": ["{options.outputFile}"],
 			"options": {
 				"lintFilePatterns": ["libs/builder/**/*.ts"]
@@ -63,7 +62,6 @@
 			"outputs": ["{workspaceRoot}/coverage/libs/builder"],
 			"options": {
 				"jestConfig": "libs/builder/jest.config.ts",
-				"passWithNoTests": true,
 				"runInBand": true
 			}
 		}

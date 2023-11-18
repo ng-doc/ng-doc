@@ -106,30 +106,6 @@ the following things:
 - Update the path to the `@ng-doc/generated` directory in `tsconfig.json` paths section.
 - Update the path to the `.ng-doc/app-name/assets` folder in `angular.json`
 
-## ESBuild builder
-
-> **Warning**
-> This feature is experimental and may not work as expected.
-> For more information, see [this guide](https://angular.io/guide/esbuild)
-> Also, see following
-> issues: [Markdown content not updating](https://github.com/ng-doc/ng-doc/issues/65)
-
-By default, NgDoc uses `webpack` to build and serve the documentation application, but you can also
-use
-`esbuild`, to switch to `esbuild` you need to specify `angularBuilder` property in your
-`ng-doc.config.ts` file, it will enable `esbuild` builder for `build` target and `vite` + `esbuild`
-for `serve` target.
-
-```typescript name="ng-doc.config.ts"
-import { NgDocConfiguration } from '@ng-doc/builder';
-
-const config: NgDocConfiguration = {
-  angularBuilder: 'esbuild',
-};
-
-export default config;
-```
-
 ## Configuring repository
 
 If you are creating an open source project and would like to receive suggestions for improving the

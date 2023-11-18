@@ -1,4 +1,4 @@
-import { ScrollStrategy } from '@angular/cdk/overlay';
+import { OverlayRef, ScrollStrategy } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable, NgZone } from '@angular/core';
 import { toElement } from '@ng-doc/ui-kit/helpers';
@@ -9,12 +9,15 @@ import { filter, map, takeUntil, throttleTime } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class NgDocOverlayStrategy implements ScrollStrategy {
-	private overlayRef: any | null = null;
+	private overlayRef: OverlayRef | null = null;
 	private destroy$: Subject<void> = new Subject<void>();
 
-	constructor(@Inject(DOCUMENT) private documentRef: Document, private ngZone: NgZone) {}
+	constructor(
+		@Inject(DOCUMENT) private documentRef: Document,
+		private ngZone: NgZone,
+	) {}
 
-	attach(overlayRef: any): void {
+	attach(overlayRef: OverlayRef): void {
 		this.overlayRef = overlayRef;
 	}
 

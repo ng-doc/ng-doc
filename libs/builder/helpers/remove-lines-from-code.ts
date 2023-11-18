@@ -11,7 +11,7 @@ export function removeLinesFromCode(code: string): string {
 	let linesToIgnore = 0;
 
 	return lines
-		.reduce((lines, line, i) => {
+		.reduce((lines, line) => {
 			const match = IGNORE_COMMENT.exec(line);
 
 			if (match) {

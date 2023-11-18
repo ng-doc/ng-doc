@@ -1,16 +1,18 @@
-import { Directive, ElementRef, HostBinding, inject, Renderer2 } from '@angular/core';
-import { FL_CONTROL_HOST, FlControl } from 'flex-controls';
-import { FlBaseControlHost } from 'flex-controls/interfaces';
+import { Directive, ElementRef, HostBinding, inject } from '@angular/core';
+import { DIControl, injectHostControl } from 'di-controls';
+import { DIControlConfig } from 'di-controls/controls/control';
+import { Subject } from 'rxjs';
 
 @Directive()
-export abstract class NgDocBaseInput<T> extends FlControl<T> {
-	elementRef: ElementRef<HTMLInputElement> = inject(ElementRef);
-	private renderer: Renderer2 = inject(Renderer2);
+export abstract class NgDocBaseInput<T> extends DIControl<T> {
+	override readonly elementRef: ElementRef<HTMLInputElement> = inject(ElementRef);
+	readonly changes: Subject<void> = new Subject();
 
-	protected constructor() {
-		super(
-			inject<FlBaseControlHost<T, T> | undefined>(FL_CONTROL_HOST, { optional: true }) || undefined,
-		);
+	protected constructor(config?: DIControlConfig<T, T>) {
+		super({
+			host: injectHostControl({ optional: true }),
+			...config,
+		});
 	}
 
 	@HostBinding('class')
@@ -43,5 +45,11 @@ export abstract class NgDocBaseInput<T> extends FlControl<T> {
 		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		this.elementRef.nativeElement.offsetWidth;
 		this.renderer.addClass(this.elementRef.nativeElement, '-blink');
+	}
+
+	override updateModel(value: T | null) {
+		super.updateModel(value);
+
+		this.changes.next();
 	}
 }

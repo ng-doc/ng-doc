@@ -26,8 +26,8 @@ export function runDevServer(
 	options: NgDocSchema,
 	context: BuilderContext,
 ): Observable<BuilderOutputLike> {
-	const browserTarget: Target | null = options.browserTarget
-		? targetFromTargetString(options.browserTarget)
+	const browserTarget: Target | null = options.buildTarget
+		? targetFromTargetString(options.buildTarget)
 		: null;
 
 	return (
@@ -41,20 +41,17 @@ export function runDevServer(
 			);
 			const runner: Observable<void> = buildNgDoc(builderContext).pipe(shareReplay(1));
 
-			if (builderContext.config.angularBuilder === 'esbuild') {
-				// This is a hack to make sure that the dev server uses the esbuild builder
-				// instead of the webpack builder. This is necessary because Angular checks
-				// the builder name to determine which builder to use for the dev server.
-				// https://github.com/angular/angular-cli/blob/9d8f6289faefa7241212f9412e70717609ef47ad/packages/angular_devkit/build_angular/src/builders/dev-server/builder.ts#L48
-				context.getBuilderNameForTarget = async () =>
-					'@angular-devkit/build-angular:browser-esbuild';
-			}
+			// This is a hack to make sure that the dev server uses the esbuild builder
+			// instead of the webpack builder. This is necessary because Angular checks
+			// the builder name to determine which builder to use for the dev server.
+			// https://github.com/angular/angular-cli/blob/9d8f6289faefa7241212f9412e70717609ef47ad/packages/angular_devkit/build_angular/src/builders/dev-server/builder.ts#L48
+			context.getBuilderNameForTarget = async () => '@angular-devkit/build-angular:application';
 
 			return runner.pipe(
 				first(),
 				switchMap(() =>
 					combineLatest([runner, serveWebpackBrowser(options, context)]).pipe(
-						map(([_, devServerOutput]: [void, DevServerBuilderOutput]) => devServerOutput),
+						map(([, devServerOutput]: [void, DevServerBuilderOutput]) => devServerOutput),
 					),
 				),
 			);

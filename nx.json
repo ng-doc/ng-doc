@@ -1,20 +1,10 @@
 {
 	"$schema": "./node_modules/nx/schemas/nx-schema.json",
-	"npmScope": "ng-doc",
 	"affected": {
 		"defaultBase": "main"
 	},
 	"cli": {
 		"packageManager": "npm"
-	},
-	"tasksRunnerOptions": {
-		"default": {
-			"runner": "nx-cloud",
-			"options": {
-				"cacheableOperations": ["pre-build", "build", "schematics", "lint", "test", "e2e"],
-				"accessToken": "ZGIxMzcwOTUtZmYzMy00MzBhLWJiZmUtZmU3NDAxYTQ1MzcwfHJlYWQtd3JpdGU="
-			}
-		}
 	},
 	"generators": {
 		"@nx/angular:application": {
@@ -34,19 +24,39 @@
 	"defaultProject": "ng-doc",
 	"targetDefaults": {
 		"lint": {
-			"inputs": ["default", "{workspaceRoot}/.eslintrc.json"]
+			"inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
+			"cache": true
 		},
 		"build": {
 			"dependsOn": ["pre-build"],
-			"inputs": ["production", "^production"]
+			"inputs": ["production", "^production"],
+			"cache": true
 		},
 		"pre-build": {
-			"dependsOn": ["^build"]
+			"dependsOn": ["^build"],
+			"cache": true
+		},
+		"schematics": {
+			"cache": true
+		},
+		"@nx/jest:jest": {
+			"cache": true,
+			"inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
+			"options": {
+				"passWithNoTests": true
+			},
+			"configurations": {
+				"ci": {
+					"ci": true,
+					"codeCoverage": true
+				}
+			}
 		}
 	},
 	"namedInputs": {
 		"default": ["{projectRoot}/**/*", "sharedGlobals"],
 		"sharedGlobals": [],
-		"production": ["default"]
-	}
+		"production": ["default", "!{projectRoot}/src/test-setup.[jt]s"]
+	},
+	"nxCloudAccessToken": "ZGIxMzcwOTUtZmYzMy00MzBhLWJiZmUtZmU3NDAxYTQ1MzcwfHJlYWQtd3JpdGU="
 }

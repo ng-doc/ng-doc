@@ -7,8 +7,8 @@
 	"dependencies": {
 		"@ng-doc/core": "0.0.0",
 		"@ng-doc/utils": "0.0.0",
-		"@angular-devkit/architect": ">=0.1600.0",
-		"@angular-devkit/build-angular": ">=16.0.0",
+		"@angular-devkit/architect": ">=0.1700.0",
+		"@angular-devkit/build-angular": ">=17.0.0",
 		"chokidar": "3.5.3",
 		"minimatch": "9.0.1",
 		"rxjs": "^7.0.0",
@@ -26,7 +26,7 @@
 		"cosmiconfig": "8.2.0",
 		"cosmiconfig-typescript-loader": "5.0.0",
 		"find-cache-dir": "3.3.2",
-		"tslib": "^2.3.0",
+		"tslib": "^2.6.2",
 		"ng-morph": "4.0.0",
 		"parsimmon": "^1.18.1"
 	},
