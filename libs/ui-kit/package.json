@@ -5,7 +5,7 @@
 		"@angular/common": ">=17.0.0",
 		"@angular/core": ">=17.0.0",
 		"@ngneat/until-destroy": "9.2.0",
-		"flex-controls": "2.0.1",
+		"di-controls": "2.1.0",
 		"@tinkoff/ng-polymorpheus": "4.0.11",
 		"rxjs": "^7.0.0"
 	},
