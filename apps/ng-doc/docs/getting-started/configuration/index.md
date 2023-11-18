@@ -104,7 +104,7 @@ But remember that you should not commit this folder to your repository, and also
 the following things:
 
 - Update the path to the `@ng-doc/generated` directory in `tsconfig.json` paths section.
-- Update the path to the `.ng-doc/app-name/assets` folder in `angular.json`
+- Update the path to the `.ng-doc/app-name/assets` folder in `angular.json`np
 
 ## Configuring repository
 

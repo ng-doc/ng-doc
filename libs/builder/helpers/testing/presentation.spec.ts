@@ -62,7 +62,7 @@ describe('presentation', () => {
 			const declaration: FunctionDeclaration = sourceFile.getFunctionOrThrow('test');
 
 			expect(functionPresentation(declaration)).toBe(
-				formatCode(`function test(param: { value: boolean } = { value: false }): string;`),
+				formatCode(`function test(param: { value: boolean; } = {value: false}): string;`),
 			);
 		});
 
@@ -94,7 +94,7 @@ describe('presentation', () => {
 			const declaration: FunctionDeclaration = sourceFile.getFunctionOrThrow('test');
 
 			expect(functionPresentation(declaration)).toBe(
-				formatCode(`function test(param: { value: boolean }[] = [{ value: false }]): string;`),
+				formatCode(`function test(param: { value: boolean; }[] = [{value: false}]): string;`),
 			);
 		});
 
@@ -692,7 +692,7 @@ describe('presentation', () => {
 			);
 			const declaration: VariableDeclaration = sourceFile.getVariableDeclarationOrThrow('test');
 
-			expect(variablePresentation(declaration)).toBe(formatCode(`const test: 'test';`));
+			expect(variablePresentation(declaration)).toBe(formatCode(`const test: "test";`));
 		});
 
 		it('should display presentation with type', () => {
