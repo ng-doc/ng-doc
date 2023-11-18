@@ -1,3 +1,20 @@
+# [17.0.0-beta.2](https://github.com/ng-doc/ng-doc/compare/v17.0.0-beta.1...v17.0.0-beta.2) (2023-11-18)
+
+
+### Bug Fixes
+
+* **builder:** serveWebpackBrowser is not a function ([a23dd2d](https://github.com/ng-doc/ng-doc/commit/a23dd2d9c1f2e2b5f861909926073327171160a9))
+
+
+### Features
+
+* **angular:** bump Angular version ([47e3a24](https://github.com/ng-doc/ng-doc/commit/47e3a24bc831e28176ca82384abdb1e99fffa635))
+
+
+### BREAKING CHANGES
+
+* **angular:** Angular 17
+
 # [17.0.0-beta.1](https://github.com/ng-doc/ng-doc/compare/v16.18.0-beta.1...v17.0.0-beta.1) (2023-11-18)
 
 
