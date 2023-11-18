@@ -2,6 +2,7 @@ const verifyConditions = require('@semantic-release/npm').verifyConditions;
 const prepareNpm = require('@semantic-release/npm').prepare;
 const addChannelNpm = require('@semantic-release/npm').addChannel;
 const publishNpm = require('@semantic-release/npm').publish;
+const fs = require('fs');
 
 async function verify(pluginConfig, context) {
 	for (let config of pluginConfig.packages) {
@@ -11,6 +12,7 @@ async function verify(pluginConfig, context) {
 
 async function prepare(pluginConfig, context) {
 	for (let config of pluginConfig.packages) {
+		context.logger.log('HEHEHEHEY ' + JSON.stringify(fs.readdirSync(config.pkgRoot)));
 		await prepareNpm(config, context);
 	}
 }
