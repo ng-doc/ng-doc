@@ -1,4 +1,3 @@
-<!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/ng-doc/ng-doc">
