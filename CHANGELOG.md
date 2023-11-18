@@ -1,3 +1,10 @@
+# [16.17.0](https://github.com/ng-doc/ng-doc/compare/v16.16.0...v16.17.0) (2023-11-18)
+
+
+### Features
+
+* **core,app:** can disable fullscreen routes in the page configuration ([0e31089](https://github.com/ng-doc/ng-doc/commit/0e31089ab79466336e256a0d98f33db52cc412cc)), closes [#106](https://github.com/ng-doc/ng-doc/issues/106)
+
 # [16.16.0](https://github.com/ng-doc/ng-doc/compare/v16.15.1...v16.16.0) (2023-09-20)
 
 
