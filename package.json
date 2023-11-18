@@ -79,7 +79,7 @@
 		"highlight.js": "11.5.1",
 		"marked": "4.0.18",
 		"minimatch": "9.0.1",
-		"ng-morph": "4.0.0",
+		"ng-morph": "4.0.2",
 		"node-fetch": "2.6.11",
 		"nunjucks": "3.2.4",
 		"parsimmon": "^1.18.1",
