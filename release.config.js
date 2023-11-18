@@ -22,25 +22,25 @@ module.exports = {
 			{
 				packages: [
 					{
-						pkgRoot: 'dist/libs/add',
+						pkgRoot: './dist/libs/add',
 					},
 					{
-						pkgRoot: 'dist/libs/core',
+						pkgRoot: './dist/libs/core',
 					},
 					{
-						pkgRoot: 'dist/libs/utils',
+						pkgRoot: './dist/libs/utils',
 					},
 					{
-						pkgRoot: 'dist/libs/ui-kit',
+						pkgRoot: './dist/libs/ui-kit',
 					},
 					{
-						pkgRoot: 'dist/libs/builder',
+						pkgRoot: './dist/libs/builder',
 					},
 					{
-						pkgRoot: 'dist/libs/app',
+						pkgRoot: './dist/libs/app',
 					},
 					{
-						pkgRoot: 'dist/libs/keywords-loaders',
+						pkgRoot: './dist/libs/keywords-loaders',
 					},
 				],
 			},
@@ -49,13 +49,13 @@ module.exports = {
 			'./plugins/semantic-release/update-dependencies.js',
 			{
 				packages: [
-					'dist/libs/add',
-					'dist/libs/core',
-					'dist/libs/utils',
-					'dist/libs/ui-kit',
-					'dist/libs/builder',
-					'dist/libs/app',
-					'dist/libs/keywords-loaders',
+					'./dist/libs/add',
+					'./dist/libs/core',
+					'./dist/libs/utils',
+					'./dist/libs/ui-kit',
+					'./dist/libs/builder',
+					'./dist/libs/app',
+					'./dist/libs/keywords-loaders',
 				],
 			},
 		],
@@ -65,13 +65,13 @@ module.exports = {
 				original: 'package.json',
 				keys: ['keywords', 'author', 'repository', 'bugs', 'homepage', 'license'],
 				packages: [
-					'dist/libs/add',
-					'dist/libs/core',
-					'dist/libs/utils',
-					'dist/libs/ui-kit',
-					'dist/libs/builder',
-					'dist/libs/app',
-					'dist/libs/keywords-loaders',
+					'./dist/libs/add',
+					'./dist/libs/core',
+					'./dist/libs/utils',
+					'./dist/libs/ui-kit',
+					'./dist/libs/builder',
+					'./dist/libs/app',
+					'./dist/libs/keywords-loaders',
 				],
 			},
 		],

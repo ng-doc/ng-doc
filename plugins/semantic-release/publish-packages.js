@@ -11,7 +11,6 @@ async function verify(pluginConfig, context) {
 
 async function prepare(pluginConfig, context) {
 	for (let config of pluginConfig.packages) {
-		context.logger.log('HEHEHEHEY ' + JSON.stringify(config));
 		await prepareNpm(config, context);
 	}
 }
