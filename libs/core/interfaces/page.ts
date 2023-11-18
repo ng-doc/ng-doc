@@ -1,8 +1,8 @@
-import {Component, Type} from '@angular/core';
-import {NgDocPlaygroundConfig} from '@ng-doc/core/interfaces/playground-config';
+import { Component, Type } from '@angular/core';
+import { NgDocPlaygroundConfig } from '@ng-doc/core/interfaces/playground-config';
 
-import {NgDocBaseEntity} from './base-entity';
-import {NgDocCategory} from './category';
+import { NgDocBaseEntity } from './base-entity';
+import { NgDocCategory } from './category';
 
 /**
  * Page configuration interface, that should be used to describe configuration of the page
@@ -47,4 +47,12 @@ export interface NgDocPage extends NgDocBaseEntity {
 	 * playground's name and value its playground configuration
 	 */
 	playgrounds?: Record<string, NgDocPlaygroundConfig>;
+	/**
+	 * By default, the child routes of a page are shown in a fullscreen dialog.
+	 * Set disableFullscreenRoutes to false to handle them yourself with a <router-outlet />.
+	 * It can be used for example in a demo that requires to show nested routes.
+	 * Be careful however, only 1 router-outlet is allowed level, that can lead to collisions if
+	 * multiple demos on the same page require nested routes.
+	 */
+	disableFullscreenRoutes?: boolean;
 }

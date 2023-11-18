@@ -26,6 +26,8 @@ NgDoc will create a demo panes with your component's code and demo, and show it 
 
 {{ NgDocActions.demoPane("ButtonDemoComponent", {fullscreenRoute: "button"}) }}
 
+{% include "../../shared/disable-fullscreen-routes-demo.md" %}
+
 ## Configuration
 
 The demo action also supports some options that can be passed as the second parameter and must
