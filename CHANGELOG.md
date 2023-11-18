@@ -1,3 +1,10 @@
+# [17.0.0-beta.3](https://github.com/ng-doc/ng-doc/compare/v17.0.0-beta.2...v17.0.0-beta.3) (2023-11-18)
+
+
+### Bug Fixes
+
+* **builder:** replace flex-controls with di-controls ([465d62f](https://github.com/ng-doc/ng-doc/commit/465d62ff4ee982815717b6df430c415db58a0187))
+
 # [17.0.0-beta.2](https://github.com/ng-doc/ng-doc/compare/v17.0.0-beta.1...v17.0.0-beta.2) (2023-11-18)
 
 
