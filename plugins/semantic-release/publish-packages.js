@@ -12,7 +12,10 @@ async function verify(pluginConfig, context) {
 
 async function prepare(pluginConfig, context) {
 	for (let config of pluginConfig.packages) {
-		context.logger.log('HEHEHEHEY ' + JSON.stringify(fs.readdirSync(config.pkgRoot)));
+		context.logger.log('HEHEHEHEY ' + JSON.stringify(fs.readdirSync('dist')));
+		context.logger.log('HEHEHEHEY ' + JSON.stringify(fs.readdirSync('dist/apps')));
+		context.logger.log('HEHEHEHEY ' + JSON.stringify(fs.readdirSync('dist/libs')));
+		context.logger.log('HEHEHEHEY ' + JSON.stringify(fs.readdirSync('dist/libs/add')));
 		await prepareNpm(config, context);
 	}
 }
