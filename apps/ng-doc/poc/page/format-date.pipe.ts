@@ -7,7 +7,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class FormatDatePipe implements PipeTransform {
 	/**
 	 * Transform pipe method
-	 *
 	 * @param value - ISO date string
 	 * @param display - Display format
 	 * @param utc - Determines if the date should be displayed in UTC

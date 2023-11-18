@@ -7,7 +7,6 @@ import { NgDocPageEntity } from '../entities/page.entity';
 
 /**
  *    Renders playground point on the page, it will be rendered by the application
- *
  * @param pId - Playground id in the config
  * @param options - Options for configuring the action
  */

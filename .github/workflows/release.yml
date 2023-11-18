@@ -32,8 +32,11 @@ jobs:
       - name: Setup Node.js
         uses: ./.github/actions/nodejs
 
-      - name: Build Projects
-        run: npx nx run-many --all --target=build --configuration=ci --parallel
+      - name: Build Libraries
+        run: npx nx run-many --projects=tag:type:lib --target=build --configuration=ci --parallel
+
+      - name: Build Applications
+        run: npx nx run-many --projects=tag:type:app --target=build --configuration=ci --parallel
 
       - name: Tar Artifacts
         run: tar -cvf ng-doc.tar dist/apps/ng-doc

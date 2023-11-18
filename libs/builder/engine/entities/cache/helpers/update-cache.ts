@@ -7,7 +7,6 @@ import { getCacheFilePath } from './get-cache-file-path';
 /**
  * Updates cache for given files
  * This function creates object and writes it to cache file
- *
  * @param id - unique id for cache
  * @param cache - cache object
  */

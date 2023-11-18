@@ -6,7 +6,6 @@ import { getPropertyAssignment } from '../typescript';
 
 /**
  *    Resolves the pipe decorator and return its properties.
- *
  * @param cls - class declaration
  */
 export function getPipeDecorator(cls: ClassDeclaration): Pipe | undefined {

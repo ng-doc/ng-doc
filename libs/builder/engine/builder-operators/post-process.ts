@@ -12,7 +12,6 @@ import { NgDocEntityStore } from '../entity-store';
 /**
  * Post-processes the build output.
  * It is used to update the keyword map and to run the post-process function of each entity.
- *
  * @param store - The entity store.
  * @param config - The configuration.
  * @param additionalEntities - Additional entities to be build and post-processed.

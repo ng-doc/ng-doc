@@ -1,10 +1,9 @@
-import {ClassDeclaration, PropertyDeclaration} from 'ts-morph';
+import { ClassDeclaration, PropertyDeclaration } from 'ts-morph';
 
-import {forAllClasses} from '../typescript/class/for-all-classes';
+import { forAllClasses } from '../typescript/class/for-all-classes';
 
 /**
  * Retrieve all existing `@Input` of an Angular component, up through ascendant classes
- *
  * @param cls - ClassDeclaration
  * @param condition - (cls: ClassDeclaration) => boolean
  */

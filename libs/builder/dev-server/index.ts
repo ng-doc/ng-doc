@@ -18,7 +18,6 @@ import { NgDocBuilderContext, NgDocSchema } from '../interfaces';
 
 /**
  * Attach NgDocBuilder and run DevServer
- *
  * @param options Builder configuration
  * @param context Builder context
  */

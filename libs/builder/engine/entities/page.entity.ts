@@ -92,7 +92,6 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 
 	/**
 	 * Returns full url from the root
-	 *
 	 * @type {string}
 	 */
 	get url(): string {

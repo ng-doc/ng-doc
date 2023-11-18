@@ -6,7 +6,6 @@ import { NgDocConfiguration } from '../interfaces';
 
 /**
  * Loads configuration from global configuration file
- *
  * @param path - Path to the configuration file
  * @param search - Whether to search for the configuration file or not
  */

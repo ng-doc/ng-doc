@@ -107,7 +107,6 @@ export abstract class NgDocEntity {
 
 	/**
 	 * Recursively returns parents for the current entity
-	 *
 	 * @type {Array<NgDocEntity>}
 	 */
 	get parentEntities(): NgDocEntity[] {
@@ -133,7 +132,6 @@ export abstract class NgDocEntity {
 
 	/**
 	 * Recursively returns children for the current entity
-	 *
 	 * @type {Array<NgDocEntity>}
 	 */
 	get childEntities(): NgDocEntity[] {
@@ -144,7 +142,6 @@ export abstract class NgDocEntity {
 
 	/**
 	 * Returns `true` if current entity has children
-	 *
 	 * @type {boolean}
 	 */
 	get hasChildren(): boolean {
@@ -153,7 +150,6 @@ export abstract class NgDocEntity {
 
 	/**
 	 * Should return if this entity is ready to build
-	 *
 	 * @type {boolean}
 	 */
 	get isReadyForBuild(): boolean {
@@ -207,7 +203,6 @@ export abstract class NgDocEntity {
 
 	/**
 	 * Destroys current entity and clear all references
-	 *
 	 * @type {void}
 	 */
 	destroy(): void {

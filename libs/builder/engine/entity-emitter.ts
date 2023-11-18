@@ -17,7 +17,6 @@ import { NgDocWatcher } from './watcher';
  * Emits new entities if they are added or changed. Also emits destroyed entities if their root files are unlinked.
  * This function not only creates the entities based on the file path, but also creates the child entities recursively
  * if it's can be done.
- *
  * @param store - The entity store.
  * @param cache - The cache instance.
  * @param context - The builder context.
@@ -108,7 +107,6 @@ export function entityEmitter(
 
 /**
  * Creates the child entities recursively.
- *
  * @param entity - The entity to create the children for.
  */
 function childGenerator(entity: NgDocEntity): Observable<NgDocEntity[]> {

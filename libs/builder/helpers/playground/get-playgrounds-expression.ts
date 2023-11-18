@@ -2,7 +2,6 @@ import { Expression, Node, ObjectLiteralElementLike, ObjectLiteralExpression } f
 
 /**
  * Returns the playgrounds expression
- *
  * @param objectLiteralExpression - The object literal expression of the page
  */
 export function getPlaygroundsExpression(

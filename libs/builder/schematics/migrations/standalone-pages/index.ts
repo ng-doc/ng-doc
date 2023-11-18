@@ -19,7 +19,6 @@ import { NgDocStandalonePagesSchema } from './schema';
 
 /**
  * Moves all dependencies from `ng-doc.dependencies.ts` to `ng-doc.page.ts` and removes the `ng-doc.dependencies.ts` file.
- *
  * @param options
  */
 export function migrate(options: NgDocStandalonePagesSchema): Rule {

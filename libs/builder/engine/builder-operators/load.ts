@@ -1,13 +1,12 @@
-import {Observable, of, OperatorFunction} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
+import { Observable, of, OperatorFunction } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
-import {isFileEntity} from '../../helpers';
-import {errorHandler} from '../../operators/error-handler';
-import {NgDocEntity} from '../entities/abstractions/entity';
+import { isFileEntity } from '../../helpers';
+import { errorHandler } from '../../operators/error-handler';
+import { NgDocEntity } from '../entities/abstractions/entity';
 
 /**
  * Operator that runs the `update` method of the entity.
- *
  * @param store
  */
 export function load(): OperatorFunction<NgDocEntity, NgDocEntity> {

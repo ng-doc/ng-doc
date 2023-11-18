@@ -24,7 +24,6 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 
 	/**
 	 * Returns full url from the root
-	 *
 	 * @type {string}
 	 */
 	get url(): string {

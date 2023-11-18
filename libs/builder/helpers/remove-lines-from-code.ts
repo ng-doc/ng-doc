@@ -3,7 +3,6 @@ const IGNORE_COMMENT = /\n?\r?^.*((\/\/|<!--|\/\*)\s*)(ng-doc-ignore-line)(\s*([
 
 /**
  * Remove lines from code that are marked with `ng-doc-ignore-line`
- *
  * @param code - The code to remove lines from
  */
 export function removeLinesFromCode(code: string): string {

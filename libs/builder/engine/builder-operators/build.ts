@@ -10,7 +10,6 @@ import { buildCandidates } from '../functions/build-candidates';
 /**
  * Operator that updates the keyword map, builds the artifacts for each entity based on the
  * keyword relationships, and returns the built artifacts.
- *
  * @param store - The entity store.
  * @param additionalEntities - Additional entities to build.
  */

@@ -8,7 +8,6 @@ import {
 
 /**
  * Returns object expression from default export in the current sourceFile
- *
  * @param sourceFile - source file to get object expression from
  */
 export function getObjectExpressionFromDefault(

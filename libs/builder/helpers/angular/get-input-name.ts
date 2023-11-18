@@ -2,7 +2,6 @@ import { Node, PropertyDeclaration, SyntaxKind } from 'ts-morph';
 
 /**
  * Returns the name of the component input.
- *
  * @param property - The property declaration
  */
 export function getInputName(property: PropertyDeclaration): string {

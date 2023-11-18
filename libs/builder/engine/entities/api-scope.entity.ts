@@ -56,7 +56,6 @@ export class NgDocApiScopeEntity extends NgDocRouteEntity<NgDocApiScope> {
 
 	/**
 	 * Returns full url from the root
-	 *
 	 * @type {string}
 	 */
 	get url(): string {
