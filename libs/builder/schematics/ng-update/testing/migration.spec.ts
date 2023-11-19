@@ -5,7 +5,7 @@ import { join } from 'path';
 
 const collectionPath: string = join(__dirname, '../../migration.json');
 
-describe('standalone-pages-migration', () => {
+describe('project-migration', () => {
 	let host: UnitTestTree;
 	let runner: SchematicTestRunner;
 
@@ -119,7 +119,7 @@ describe('standalone-pages-migration', () => {
 		saveActiveProject();
 	});
 
-	it('should migrate to ng-doc 17', async () => {
+	it('should migrate angular.json', async () => {
 		const tree: UnitTestTree = await runner.runSchematic('migration-v17', {}, host);
 
 		expect(tree.get('page1/ng-doc.dependencies.ts')).toBeNull();
