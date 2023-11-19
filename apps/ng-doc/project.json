@@ -6,7 +6,7 @@
 	"prefix": "ng-doc",
 	"targets": {
 		"build": {
-			"executor": "./dist/libs/builder:browser",
+			"executor": "./dist/libs/builder:application",
 			"outputs": ["{options.outputPath}"],
 			"options": {
 				"outputPath": "dist/apps/ng-doc",
