@@ -2,9 +2,9 @@
 	"$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
 	"schematics": {
 		"migration-v17": {
-			"version": "17.0.0-beta.5",
+			"version": "17.0.0-beta.6",
 			"description": "Updates NgDoc to v17",
-			"factory": "./ng-update/ng17#update"
+			"factory": "./ng-update/index#update"
 		}
 	}
 }
