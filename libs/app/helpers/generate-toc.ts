@@ -4,7 +4,6 @@ import { NgDocHeading } from '@ng-doc/core/types';
 
 /**
  * Generate table of contents, only for headings with id
- *
  * @param container
  * @param headings
  */

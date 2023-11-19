@@ -119,7 +119,6 @@ export class NgDocOverlayRef<T = unknown> {
 
 	/**
 	 * Closes overlay
-	 *
 	 * @param closeResult
 	 */
 	close(closeResult?: T): void {

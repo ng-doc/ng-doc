@@ -4,7 +4,6 @@ export class NgDocPositionUtils {
 	/**
 	 * Getting the position of the element relative to the viewPort, this function is faster than BoundingClientRect,
 	 * it also takes into account the change in the position of the element through transform
-	 *
 	 * @param element
 	 */
 	static getElementPosition(element: HTMLElement | null): Point {
@@ -31,7 +30,6 @@ export class NgDocPositionUtils {
 	/**
 	 * An implementation of the element.offsetParent function, this implementation closes a bug in Firefox when it
 	 * returns an offsetParent for elements with position: fixed
-	 *
 	 * @param element
 	 */
 	static getOffsetParent(element: HTMLElement): HTMLElement | null {

@@ -106,7 +106,6 @@ export class NgDocTocComponent implements AfterViewInit, NgDocPageToc {
 
 	/**
 	 * Selects the item in the table of content.
-	 *
 	 * @param item - Item to select.
 	 */
 	protected select(item: NgDocTocItem): void {

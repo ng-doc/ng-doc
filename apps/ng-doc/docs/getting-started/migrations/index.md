@@ -3,6 +3,23 @@
 This page contains information about migrating from previous versions of NgDoc to the current
 version.
 
+## Migration to >= v17.0
+
+In v17.0.0, project was migrated to Angular v17, support of Webpack was removed, now it works only
+with Vite + Esbuild. To migrate automatically, you can run the following command:
+
+```bash
+ng update @ng-doc/{core,builder,ui-kit,app}@17
+```
+
+Manual migration steps:
+
+- replace `@ng-doc/builder:browser` builder for the build target with `@ng-doc/builder:application` builder
+- rename `main` property in `angular.json` to `browser`
+- covert `polyfills` property in `angular.json` to `polyfills` array
+- remove `buildOptimizer` and `vendorChunk` properties from `angular.json`
+- rename `buildTarget` properties in `angular.json` to `buildTarget`
+
 ## Migration to >= v16.13
 
 In v16.13.0 all NgModules were removed. Application configuration was changed.

@@ -1,5 +1,3 @@
-import { getProjectTargetOptions } from '@angular/cdk/schematics';
-import { JsonValue } from '@angular-devkit/core';
 import { ProjectDefinition, WorkspaceDefinition } from '@angular-devkit/core/src/workspace';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
@@ -20,6 +18,7 @@ import { EntityImport, ImportConstant, MODULE_APP, STANDALONE_APP } from '../con
 import { Schema } from '../schema';
 import { addUniqueImport } from '../utils/add-unique-import';
 import { getAppComponent } from '../utils/get-app-component';
+import { getMainPath } from '../utils/get-main-path';
 import { getProject } from '../utils/get-project';
 
 /**
@@ -43,18 +42,15 @@ export function addNgDocAppConfig(options: Schema): Rule {
 				return;
 			}
 
-			const buildOptions: Record<string, JsonValue | undefined> = getProjectTargetOptions(
-				project,
-				'build',
-			);
+			const mainPath: string = getMainPath(project);
 
 			setActiveProject(createProject(tree, '/', ['**/*.ts', '**/*.json']));
 
-			const bootstrapApplicationFn = getBootstrapApplicationFn(buildOptions['main'] as string);
-			const bootstrapFn = getBootstrapFn(buildOptions['main'] as string);
+			const bootstrapApplicationFn = getBootstrapApplicationFn(mainPath);
+			const bootstrapFn = getBootstrapFn(mainPath);
 
 			if (bootstrapApplicationFn) {
-				const appComponent = getAppComponent(tree, buildOptions['main'] as string);
+				const appComponent = getAppComponent(tree, mainPath);
 
 				if (!appComponent) {
 					logger.error(
@@ -90,7 +86,7 @@ export function addNgDocAppConfig(options: Schema): Rule {
 					});
 				});
 			} else if (bootstrapFn) {
-				const mainModule = getMainModule(buildOptions['main'] as string);
+				const mainModule = getMainModule(mainPath);
 
 				if (!mainModule) {
 					logger.error(
