@@ -4,6 +4,12 @@
 	"type": "commonjs",
 	"builders": "./builders.json",
 	"schematics": "./schematics/collection.json",
+	"ng-update": {
+		"migrations": "./schematics/migration.json",
+		"packageGroup": [
+			"ng-doc"
+		]
+	},
 	"dependencies": {
 		"@ng-doc/core": "0.0.0",
 		"@ng-doc/utils": "0.0.0",

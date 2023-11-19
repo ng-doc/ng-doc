@@ -208,7 +208,7 @@ export class AppComponent {}`);
 \t\t\t\t\t"aot": true
               \t}
               },
-              "builder": "@ng-doc/builder:browser"
+              "builder": "@ng-doc/builder:application"
           }
         }
     }

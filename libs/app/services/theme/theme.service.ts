@@ -53,7 +53,6 @@ export class NgDocThemeService {
 
 	/**
 	 * Enables automatic theme switching based on the user's operating system settings.
-	 *
 	 * @param light - Theme for light mode.
 	 * @param dark - Theme for dark mode.
 	 */
@@ -77,7 +76,6 @@ export class NgDocThemeService {
 
 	/**
 	 * Sets the theme by id.
-	 *
 	 * @param id - Theme id.
 	 * @param save - Whether to save the theme in the store to restore it when the page is reloaded. (`true` by default)
 	 */

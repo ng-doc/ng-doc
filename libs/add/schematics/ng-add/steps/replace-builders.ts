@@ -1,4 +1,4 @@
-import {Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
+import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import {
 	ProjectDefinition,
 	TargetDefinition,
@@ -6,8 +6,8 @@ import {
 	WorkspaceDefinition,
 } from '@schematics/angular/utility/workspace';
 
-import {Schema} from '../schema';
-import {getProject} from '../utils/get-project';
+import { Schema } from '../schema';
+import { getProject } from '../utils/get-project';
 
 /**
  *
@@ -34,10 +34,10 @@ export function replaceBuilders(options: Schema): Rule {
 				const serveTarget: TargetDefinition | undefined = project.targets.get('serve');
 
 				if (buildTarget) {
-					buildTarget.builder = '@ng-doc/builder:browser';
+					buildTarget.builder = '@ng-doc/builder:application';
 				} else {
 					logger.error(
-						`❌ "build" target was not found, please add "@ng-doc/builder:browser" builder manually.`,
+						`❌ "build" target was not found, please add "@ng-doc/builder:application" builder manually.`,
 					);
 				}
 

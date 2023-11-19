@@ -10,7 +10,6 @@ export const NG_DOC_PAGE_CUSTOM_PROCESSOR: InjectionToken<NgDocPageProcessor<unk
 /**
  * Provide a main processor to replace html nodes with an Angular component.
  * Main processors are run before custom processors.
- *
  * @param processors - The processor to provide.
  */
 export function provideMainPageProcessor<T>(
@@ -25,7 +24,6 @@ export function provideMainPageProcessor<T>(
 
 /**
  * Provide a processor to replace html nodes with an Angular component.
- *
  * @param processors - The processor to provide.
  */
 export function providePageProcessor<T>(

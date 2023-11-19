@@ -186,7 +186,7 @@ export class AppModule {}
 \t\t\t\t\t"aot": true
               \t}
               },
-              "builder": "@ng-doc/builder:browser"
+              "builder": "@ng-doc/builder:application"
           }
         }
     }

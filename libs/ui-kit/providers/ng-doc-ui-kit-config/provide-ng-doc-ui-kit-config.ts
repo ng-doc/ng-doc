@@ -6,7 +6,6 @@ import { NG_DOC_ASSETS_PATH, NG_DOC_CUSTOM_ICONS_PATH } from '@ng-doc/ui-kit/tok
 
 /**
  * Provides Base UI Kit configuration for the application root module.
- *
  * @param config - The UI Kit configuration.
  */
 export function provideNgDocUiKitConfig(config?: NgDocUiConfig): Provider[] {
