@@ -1,3 +1,17 @@
+# [17.0.0-beta.4](https://github.com/ng-doc/ng-doc/compare/v17.0.0-beta.3...v17.0.0-beta.4) (2023-11-19)
+
+
+### Bug Fixes
+
+* **builder:** fix build ([68a1d1e](https://github.com/ng-doc/ng-doc/commit/68a1d1ef70328befbb5259a8778550f7e3f82f1b))
+* **builder:** replace flex-controls with di-controls ([49cff30](https://github.com/ng-doc/ng-doc/commit/49cff303cccc1bd51c9cb2de1fec20b13b80bf58))
+
+
+### Features
+
+* **builder:** add automatic migration ([9c72508](https://github.com/ng-doc/ng-doc/commit/9c72508ca2862d1ea2895b2055058f92df8824c9))
+* **builder:** add automatic migration ([dab72a0](https://github.com/ng-doc/ng-doc/commit/dab72a018ed8cf18d81ab33e85d1c1196c9ec1c2))
+
 # [17.0.0-beta.3](https://github.com/ng-doc/ng-doc/compare/v17.0.0-beta.2...v17.0.0-beta.3) (2023-11-18)
 
 
