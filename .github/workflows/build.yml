@@ -27,7 +27,7 @@ jobs:
         uses: ./.github/actions/nodejs
 
       - name: Build Libraries
-        run: npx nx affected --projects=tag:type:lib --target=build --parallel --base=remotes/origin/${{ inputs.base }} --head=${{ inputs.head }}
+        run: npx nx run-many --projects=tag:type:lib --target=build --parallel --base=remotes/origin/${{ inputs.base }} --head=${{ inputs.head }}
 
       - name: Build Applications
-        run: npx nx affected --projects=tag:type:app --target=build --parallel --base=remotes/origin/${{ inputs.base }} --head=${{ inputs.head }}
+        run: npx nx run-many --projects=tag:type:app --target=build --parallel --base=remotes/origin/${{ inputs.base }} --head=${{ inputs.head }}
