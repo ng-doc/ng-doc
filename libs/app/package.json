@@ -2,16 +2,16 @@
 	"name": "@ng-doc/app",
 	"version": "0.0.1",
 	"peerDependencies": {
-		"@angular/common": ">=16.0.0",
-		"@angular/core": ">=16.0.0",
-		"@angular/cdk": ">=16.0.0",
-		"@angular/router": ">=16.0.0",
+		"@angular/common": ">=17.0.0",
+		"@angular/core": ">=17.0.0",
+		"@angular/cdk": ">=17.0.0",
+		"@angular/router": ">=17.0.0",
 		"@ng-web-apis/common": "2.0.1",
 		"rxjs": "^7.0.0",
-		"flex-controls": "2.0.1"
+		"di-controls": "2.1.0"
 	},
 	"dependencies": {
-		"tslib": "^2.3.0",
+		"tslib": "^2.6.2",
 		"@ng-doc/core": "0.0.0",
 		"@ng-doc/ui-kit": "0.0.0",
 		"@orama/plugin-match-highlight": "1.0.2",

@@ -1,10 +1,9 @@
-import {NgDocCachedData} from '../interfaces';
-import {createCacheForFile} from './create-cache-for-file';
-import {loadCache} from './load-cache';
+import { NgDocCachedData } from '../interfaces';
+import { createCacheForFile } from './create-cache-for-file';
+import { loadCache } from './load-cache';
 
 /**
  * Checks if cache is valid for given files
- *
  * @param id - unique id for cache
  * @param cache - cache object
  */

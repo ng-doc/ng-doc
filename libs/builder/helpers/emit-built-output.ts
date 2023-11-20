@@ -5,7 +5,6 @@ import { NgDocBuilderOutput } from '../interfaces';
 
 /**
  * Emits the built output to the file system.
- *
  * @param outputs - The outputs to emit.
  */
 export function emitBuiltOutput(outputs: NgDocBuilderOutput[]): void {

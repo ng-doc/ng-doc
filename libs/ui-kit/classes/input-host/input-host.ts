@@ -1,5 +1,5 @@
-import { FlControl } from 'flex-controls';
+import { NgDocBaseInput } from '@ng-doc/ui-kit/classes/base-input';
 
 export abstract class NgDocInputHost<T> {
-	abstract inputControl?: FlControl<T>;
+	abstract inputControl?: NgDocBaseInput<T>;
 }

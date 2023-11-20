@@ -1,7 +1,7 @@
 {
 	"$schema": "http://json-schema.org/draft-07/schema",
 	"title": "NgDocBuilder",
-	"description": "NgDocBuilder Browser Schema",
+	"description": "NgDocBuilder Application Schema",
 	"type": "object",
 	"properties": {
 		"ngDoc": {

@@ -5,7 +5,6 @@ import { visit } from 'unist-util-visit';
  * Add hljs class to `pre` elements that contain `code` elements
  *
  * We need this to allow customization of the code block style
- *
  * @param tree
  * @param headings
  */

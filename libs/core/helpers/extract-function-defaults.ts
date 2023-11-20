@@ -4,7 +4,6 @@ import { extractValue } from './extract-value';
 /**
  * Extracts the default values of a function parameters.
  * It returns an array of the default values because after minification the parameter names are lost.
- *
  * @param fn - Function to extract the default values from
  */
 export function extractFunctionDefaults(fn: FunctionType<unknown>): unknown[] {

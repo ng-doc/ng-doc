@@ -3,7 +3,6 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ContentChild,
-	ElementRef,
 	Input,
 	TemplateRef,
 } from '@angular/core';
@@ -18,14 +17,14 @@ import { NgDocInputStringDirective } from '@ng-doc/ui-kit/directives/input-strin
 import { NgDocContextWithImplicit } from '@ng-doc/ui-kit/interfaces';
 import { NgDocContent } from '@ng-doc/ui-kit/types';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
-import { FlControlHost, provideControlHost } from 'flex-controls';
+import { DIControl, provideHostControl } from 'di-controls';
 
 @Component({
 	selector: 'ng-doc-combobox',
 	templateUrl: './combobox.component.html',
 	styleUrls: ['./combobox.component.scss'],
 	providers: [
-		provideControlHost(NgDocComboboxComponent),
+		provideHostControl(NgDocComboboxComponent),
 		{
 			provide: NgDocListHost,
 			useExisting: NgDocComboboxComponent,
@@ -45,7 +44,7 @@ import { FlControlHost, provideControlHost } from 'flex-controls';
 		NgTemplateOutlet,
 	],
 })
-export class NgDocComboboxComponent<T> extends FlControlHost<T> implements NgDocListHost {
+export class NgDocComboboxComponent<T> extends DIControl<T> implements NgDocListHost {
 	@Input()
 	readonly: boolean = false;
 
@@ -64,7 +63,7 @@ export class NgDocComboboxComponent<T> extends FlControlHost<T> implements NgDoc
 	@ContentChild(NgDocDataDirective, { read: TemplateRef })
 	data: TemplateRef<never> | null = null;
 
-	constructor(private readonly elementRef: ElementRef<HTMLElement>) {
+	constructor() {
 		super();
 	}
 

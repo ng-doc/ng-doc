@@ -1,5 +1,5 @@
 export interface NgDocSchema {
-	browserTarget: string;
+	buildTarget: string;
 	main: string;
 	ngDoc: {
 		config: string;

@@ -22,7 +22,6 @@ import { getTemplateForPlayground } from './get-template-for-playground';
 
 /**
  * Collects all the information about a playground that is needed to render and build it.
- *
  * @param id - The id of the playground
  * @param playground - The playground object
  * @param additionalProps

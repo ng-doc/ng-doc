@@ -22,7 +22,7 @@ export function getNgDocAssets(options: Schema): Array<{
 		},
 		{
 			glob: '**/*',
-			input: `.ng-doc/${options.project}/assets`,
+			input: `ng-doc/${options.project}/assets`,
 			output: 'assets/ng-doc',
 		},
 	];

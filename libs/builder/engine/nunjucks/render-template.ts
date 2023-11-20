@@ -31,7 +31,6 @@ class NgDocRelativeLoader implements ILoader {
 
 /**
  * Renders a template with the given options via Nunjucks.
- *
  * @param template - The template path to render.
  * @param options - The options to render the template with.
  */

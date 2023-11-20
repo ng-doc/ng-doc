@@ -5,7 +5,6 @@ import { number, param } from './helpers';
 
 /**
  * Code block options parser
- *
  * @param options - Options string to parse
  */
 export function parseCodeBlockParams(options: string): NgDocCodeBlockParams {

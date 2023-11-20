@@ -31,7 +31,6 @@ export function providePlaygroundDemo(
 
 /**
  * Returns the token for the given playground id.
- *
  * @param playgroundId
  */
 export function getPlaygroundDemoToken<T>(playgroundId: string): InjectionToken<T[]> | undefined {

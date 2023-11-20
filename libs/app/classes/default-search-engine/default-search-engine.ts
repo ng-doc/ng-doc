@@ -83,7 +83,6 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 
 	/**
 	 * Search the documentation for the given query.
-	 *
 	 * @param query The query to search for.
 	 */
 	search(query: string): Observable<NgDocSearchResult[]> {

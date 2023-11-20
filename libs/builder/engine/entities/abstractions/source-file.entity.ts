@@ -38,7 +38,6 @@ export abstract class NgDocSourceFileEntity extends NgDocEntity {
 
 	/**
 	 * Returns relative path to a sourceFileFolder of the source file
-	 *
 	 * @type {string}
 	 */
 	get sourceFileFolder(): string {

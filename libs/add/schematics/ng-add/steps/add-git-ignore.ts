@@ -25,7 +25,7 @@ export function addGitIgnore(): Rule {
 					return;
 				}
 
-				tree.overwrite('.gitignore', `${gitignore}\n\n# NgDoc files\n.ng-doc`);
+				tree.overwrite('.gitignore', `${gitignore}\n\n# NgDoc files\n/ng-doc`);
 
 				logger.info('✅ Done!');
 			} catch (e) {

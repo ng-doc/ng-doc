@@ -5,7 +5,6 @@ import { printError } from '../helpers';
 
 /**
  * Handles errors and prints them to the console.
- *
  * @param errorResult - The result to return in case of an error.
  * @param print - Whether to print the error to the console.
  */

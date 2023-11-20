@@ -22,7 +22,6 @@ const snippet = (id?: string | null) =>
 
 /**
  * Process snippets from code
- *
  * @param code - code to process
  * @param basePath - base path to file
  */

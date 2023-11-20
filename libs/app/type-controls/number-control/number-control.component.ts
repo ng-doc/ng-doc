@@ -9,7 +9,7 @@ import {
 	NgDocInputNumberDirective,
 	NgDocInputWrapperComponent,
 } from '@ng-doc/ui-kit';
-import { FlControl, FlControlSilencerModule } from 'flex-controls';
+import { DIControl, DIControlSilencerDirective } from 'di-controls';
 
 @Component({
 	selector: 'ng-doc-number-control',
@@ -19,7 +19,7 @@ import { FlControl, FlControlSilencerModule } from 'flex-controls';
 	standalone: true,
 	imports: [
 		NgDocInputWrapperComponent,
-		FlControlSilencerModule,
+		DIControlSilencerDirective,
 		NgDocInputNumberDirective,
 		FormsModule,
 		NgIf,
@@ -29,7 +29,7 @@ import { FlControl, FlControlSilencerModule } from 'flex-controls';
 	],
 })
 export class NgDocNumberControlComponent
-	extends FlControl<number>
+	extends DIControl<number>
 	implements NgDocTypeControl<number>
 {
 	@Input()

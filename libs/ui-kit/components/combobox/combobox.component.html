@@ -3,7 +3,7 @@
 		ngDocFocusCatcher
 		[rightContent]="inputRightContent"
 		[blurContent]="hasValue ? valueContent : ''"
-		[blurContext]="model">
+		[blurContext]="model()">
 		<input ngDocInputString [readonly]="readonly" [placeholder]="placeholder" />
 		<ng-template #inputRightContent>
 			<ng-container *polymorpheusOutlet="rightContent"></ng-container>

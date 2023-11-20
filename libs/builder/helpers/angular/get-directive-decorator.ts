@@ -6,7 +6,6 @@ import { getPropertyAssignment } from '../typescript';
 
 /**
  *    Resolves the directive decorator and return its properties.
- *
  * @param cls - class declaration
  */
 export function getDirectiveDecorator(cls: ClassDeclaration): Directive | undefined {

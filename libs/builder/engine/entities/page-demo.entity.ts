@@ -84,7 +84,8 @@ export class NgDocPageDemoEntity extends NgDocEntity {
 				],
 				postProcessPlugins: [
 					applyPlugin<NgDocComponentAsset, NgDocAsset[]>(forObjectValues(), () => [
-						applyPlugin(forArrayItems(), (asset) => [
+						// eslint-disable-next-line @typescript-eslint/no-unused-vars
+						applyPlugin(forArrayItems(), (_) => [
 							applyPlugin(forObjectValue('code'), () => [postProcessHtmlPlugin()]),
 						]),
 					]),

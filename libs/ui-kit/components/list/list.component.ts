@@ -23,7 +23,7 @@ import { delayWhen, filter, repeat, takeUntil } from 'rxjs/operators';
 	standalone: true,
 })
 @UntilDestroy()
-export class NgDocListComponent<T> {
+export class NgDocListComponent {
 	private keyManager: ListKeyManager<NgDocListItem> | null = null;
 	private readonly items: Set<NgDocListItem> = new Set<NgDocListItem>();
 

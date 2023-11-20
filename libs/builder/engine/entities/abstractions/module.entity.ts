@@ -23,7 +23,6 @@ export abstract class NgDocModuleEntity<TTarget> extends NgDocFileEntity<TTarget
 
 	/**
 	 * Returns paths to the module in generated folder
-	 *
 	 * @type {string}
 	 */
 	@CachedFilesGetter()
@@ -33,7 +32,6 @@ export abstract class NgDocModuleEntity<TTarget> extends NgDocFileEntity<TTarget
 
 	/**
 	 * Returns relative paths to the module in generated folder that could be used for import
-	 *
 	 * @type {string}
 	 */
 	get moduleImport(): string {

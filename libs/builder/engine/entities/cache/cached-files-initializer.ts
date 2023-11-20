@@ -1,15 +1,11 @@
-import {NgDocCachedClass} from './cache';
-import {NgDocCachedType} from './interfaces';
+import { NgDocCachedClass } from './cache';
 
 /**
  *
  * @param cls
  * @param propName
  */
-export function cachedFilesInitializer<TProperty, TCachedType extends NgDocCachedType>(
-	cls: unknown,
-	propName: string,
-): void {
+export function cachedFilesInitializer(cls: unknown, propName: string): void {
 	const castedThis: NgDocCachedClass = cls as unknown as NgDocCachedClass;
 
 	if (!castedThis.__cachedFiles) {

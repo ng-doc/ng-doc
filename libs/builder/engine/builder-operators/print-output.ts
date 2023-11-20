@@ -7,7 +7,6 @@ import { NgDocEntityStore } from '../entity-store';
 
 /**
  * Prints all errors and warnings existing in the store
- *
  * @param store - The store to print warnings and errors from
  */
 export function printOutput<T>(store: NgDocEntityStore): OperatorFunction<T, T> {
@@ -45,7 +44,6 @@ export function printOutput<T>(store: NgDocEntityStore): OperatorFunction<T, T> 
 
 /**
  * Sorts entities by errors and warnings
- *
  * @param a - The first entity to compare
  * @param b - The second entity to compare
  */

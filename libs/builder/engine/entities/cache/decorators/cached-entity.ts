@@ -8,6 +8,7 @@ import { NgDocCacheAccessor, NgDocCachedData, NgDocCachedType } from '../interfa
  * Decorator for cached entities, it will load the cache and assign the properties to the entity
  */
 export function CachedEntity<TClass extends Constructor<{ id: string }>>() {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	return (Value: TClass, _context: ClassDecoratorContext<TClass>) => {
 		return class extends Value implements NgDocCachedClass {
 			__cachedProps?: Map<string, NgDocCacheAccessor<any, any>>;

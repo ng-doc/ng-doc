@@ -9,7 +9,6 @@ import { getObjectExpressionFromDefault } from './typescript';
 
 /**
  * Builds file entity and returns the path to the built file
- *
  * @param sourceFile - source file to build
  * @param tsconfig - path to tsconfig file
  * @param outbase - path to the outbase directory

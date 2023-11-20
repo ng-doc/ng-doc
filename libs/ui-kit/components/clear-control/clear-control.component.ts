@@ -1,18 +1,11 @@
 import { NgIf } from '@angular/common';
-import {
-	AfterContentInit,
-	ChangeDetectionStrategy,
-	ChangeDetectorRef,
-	Component,
-	Inject,
-	Optional,
-} from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgDocInputHost } from '@ng-doc/ui-kit/classes/input-host';
 import { NgDocButtonIconComponent } from '@ng-doc/ui-kit/components/button-icon';
 import { NgDocIconComponent } from '@ng-doc/ui-kit/components/icon';
 import { NgDocFocusableDirective } from '@ng-doc/ui-kit/directives/focusable';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { FL_CONTROL_HOST, FlControl, FlControlHost } from 'flex-controls';
+import { DIControl, injectHostControl } from 'di-controls';
 
 @Component({
 	selector: 'ng-doc-clear-control',
@@ -23,18 +16,20 @@ import { FL_CONTROL_HOST, FlControl, FlControlHost } from 'flex-controls';
 	imports: [NgIf, NgDocButtonIconComponent, NgDocFocusableDirective, NgDocIconComponent],
 })
 @UntilDestroy()
-export class NgDocClearControlComponent<T> extends FlControl<T> implements AfterContentInit {
-	constructor(
-		protected override changeDetectorRef: ChangeDetectorRef,
-		@Inject(FL_CONTROL_HOST) protected override host: FlControlHost<T>,
-		@Inject(NgDocInputHost) @Optional() protected inputHost?: NgDocInputHost<T>,
-	) {
-		super(host);
+export class NgDocClearControlComponent<T> extends DIControl<T> implements AfterContentInit {
+	protected readonly inputHost: NgDocInputHost<T> | null = inject(NgDocInputHost, {
+		optional: true,
+	});
+
+	constructor() {
+		super({
+			host: injectHostControl(),
+		});
 	}
 
 	ngAfterContentInit(): void {
 		if (this.inputHost?.inputControl) {
-			this.inputHost.inputControl.valueChange
+			this.inputHost.inputControl.changes
 				.pipe(untilDestroyed(this))
 				.subscribe(() => this.changeDetectorRef.detectChanges());
 		}
@@ -48,7 +43,4 @@ export class NgDocClearControlComponent<T> extends FlControl<T> implements After
 		this.inputHost?.inputControl?.writeValueFromHost(null);
 		this.updateModel(null);
 	}
-
-	// eslint-disable-next-line @typescript-eslint/no-empty-function
-	protected override incomingUpdate(): void {}
 }

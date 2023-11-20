@@ -7,9 +7,7 @@ import {
 	ContentChild,
 	ElementRef,
 	HostBinding,
-	Inject,
 	Input,
-	Optional,
 	ViewChild,
 } from '@angular/core';
 import { NgDocBaseInput } from '@ng-doc/ui-kit/classes/base-input';
@@ -23,7 +21,6 @@ import { NgDocContextWithImplicit } from '@ng-doc/ui-kit/interfaces';
 import { NgDocContent, NgDocTextAlign } from '@ng-doc/ui-kit/types';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
-import { FL_CONTROL_HOST, FlControl, FlControlHost } from 'flex-controls';
 
 @Component({
 	selector: 'ng-doc-input-wrapper',
@@ -70,7 +67,7 @@ export class NgDocInputWrapperComponent<T, B = unknown>
 	input?: NgDocBaseInput<T>;
 
 	@ContentChild(NgDocBaseInput)
-	inputControl?: FlControl<T>;
+	inputControl?: NgDocBaseInput<T>;
 
 	@ViewChild(NgDocFocusCatcherDirective, { static: true })
 	focusCatcher?: NgDocFocusCatcherDirective;
@@ -78,9 +75,6 @@ export class NgDocInputWrapperComponent<T, B = unknown>
 	constructor(
 		public elementRef: ElementRef<HTMLElement>,
 		protected changeDetectorRef: ChangeDetectorRef,
-		@Inject(FL_CONTROL_HOST)
-		@Optional()
-		protected controlHost?: FlControlHost<unknown>,
 	) {}
 
 	ngAfterViewChecked(): void {

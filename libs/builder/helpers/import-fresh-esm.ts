@@ -9,7 +9,6 @@ import { posix } from './posix';
  *
  * This is a workaround for the issue described here:
  * https://github.com/nodejs/modules/issues/307
- *
  * @param modulePath - The path to the module to import
  */
 export async function importFreshEsm<T>(modulePath: string): Promise<T> {

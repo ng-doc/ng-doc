@@ -17,7 +17,6 @@ export interface NgDocIndexBuilderConfig {
 
 /**
  *    Builds the indexes for a given content
- *
  * @param config
  */
 export async function buildIndexes(config: NgDocIndexBuilderConfig): Promise<NgDocPageIndex[]> {

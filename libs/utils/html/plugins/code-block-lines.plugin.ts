@@ -33,7 +33,6 @@ export default function codeBlockLinesPlugin() {
 
 /**
  * Adds lines to a node recursively and returns them
- *
  * @param node - The node to add lines to
  * @param lines - The current lines
  * @param copyParent - Whether to copy the parent node to save the original node styles
@@ -65,7 +64,6 @@ function addLines(node: Element, lines: Element[] = [], copyParent?: boolean): E
 
 /**
  * Creates a new line element
- *
  * @param children - The children the line should have initially
  */
 function createLine(...children: ElementContent[]): Element {
@@ -74,7 +72,6 @@ function createLine(...children: ElementContent[]): Element {
 
 /**
  * Checks if a node has a line break
- *
  * @param node - The node to check
  */
 function hasLineBreak(node: ElementContent): boolean {
