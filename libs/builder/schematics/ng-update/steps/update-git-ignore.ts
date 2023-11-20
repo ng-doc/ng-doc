@@ -13,7 +13,7 @@ export function updateGitIgnore(): Rule {
 				return;
 			}
 
-			gitignore = Buffer.from(gitignore.toString().replace(/.ng-doc/g, 'ng-doc'));
+			gitignore = Buffer.from(gitignore.toString().replace(/.ng-doc/g, '/ng-doc'));
 
 			tree.overwrite('.gitignore', gitignore);
 		});

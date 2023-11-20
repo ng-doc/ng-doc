@@ -176,7 +176,7 @@ Thumbs.db
 
 # Cache
 .angular
-ng-doc
+/ng-doc
 
 .nx/cache
 `);

@@ -88,17 +88,17 @@ describe('ng-add module app', () => {
   "compilerOptions": {
     "paths": {
       "@ng-doc/generated": [
-        ".ng-doc//index.ts"
+        "ng-doc//index.ts"
       ],
       "@ng-doc/generated/*": [
-        ".ng-doc//*"
+        "ng-doc//*"
       ]
     }
   }
 }`);
 	});
 
-	it('should add .ng-doc folder to gitignore tsconfig', async () => {
+	it('should add ng-doc folder to gitignore tsconfig', async () => {
 		const options: Schema = {
 			project: '',
 		};
@@ -108,7 +108,7 @@ describe('ng-add module app', () => {
 		expect(tree.readContent('.gitignore')).toEqual(`.cache
 
 # NgDoc files
-.ng-doc`);
+/ng-doc`);
 	});
 
 	it('should add NgDoc modules', async () => {
@@ -170,7 +170,7 @@ export class AppModule {}
                 },
                 {
                   "glob": "**/*",
-                  "input": ".ng-doc//assets",
+                  "input": "ng-doc//assets",
                   "output": "assets/ng-doc"
                 }
               ],

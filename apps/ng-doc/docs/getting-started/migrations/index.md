@@ -31,7 +31,7 @@ Vite doesn't see changes in folders that start with a dot, so you need to rename
 
 - rename assets `.ng-doc/ng-doc/assets` folder to `ng-doc/ng-doc/assets` in `angular.json`
 - change `@ng-doc/generated` path `.ng-doc/ng-doc/index.ts` in `tsconfig.json` to `ng-doc/ng-doc/index.ts`
-- replace `.ng-doc` folder name in `.gitignore` file with `ng-doc`
+- replace `.ng-doc` folder name in `.gitignore` file with `/ng-doc`
 
 ## Migration to >= v16.13
 
