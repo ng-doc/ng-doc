@@ -25,7 +25,7 @@ export function createBuilderContext(
 	const buildPath: string = path.join(
 		context.workspaceRoot,
 		config.outDir ?? '',
-		'.ng-doc',
+		'ng-doc',
 		context.target?.project ?? 'app',
 	);
 
