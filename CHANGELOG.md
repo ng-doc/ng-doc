@@ -1,3 +1,16 @@
+# [17.0.0-beta.8](https://github.com/ng-doc/ng-doc/compare/v17.0.0-beta.7...v17.0.0-beta.8) (2023-11-20)
+
+
+### Bug Fixes
+
+* **builder:** fix build ([9adcc8d](https://github.com/ng-doc/ng-doc/commit/9adcc8d96fa7ec5675ed4610d91fcdd8ece79152))
+* **builder:** fix build ([8a1fa20](https://github.com/ng-doc/ng-doc/commit/8a1fa20b9ed1f446127d156fc77038fc8bd1f1f6))
+
+
+### Features
+
+* **builder:** add additional migrations ([c4a67d0](https://github.com/ng-doc/ng-doc/commit/c4a67d00551100b2230385ce068c4d532549e054))
+
 # [17.0.0-beta.7](https://github.com/ng-doc/ng-doc/compare/v17.0.0-beta.6...v17.0.0-beta.7) (2023-11-19)
 
 
