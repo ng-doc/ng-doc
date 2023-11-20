@@ -1,3 +1,11 @@
+# [16.18.0](https://github.com/ng-doc/ng-doc/compare/v16.17.0...v16.18.0) (2023-11-20)
+
+
+### Features
+
+* **core,app:** can disable fullscreen routes in the page configuration ([a5849d2](https://github.com/ng-doc/ng-doc/commit/a5849d2144199ea3b3b0b45edbf49635e582ce17)), closes [#106](https://github.com/ng-doc/ng-doc/issues/106)
+* **project:** add Angular 17 support. Vite + ESBuild is now used by default, and support for Webpack has been removed. Please follow the migration instructions https://ng-doc.com/docs/getting-started/migrations ([#109](https://github.com/ng-doc/ng-doc/issues/109)) ([c40e247](https://github.com/ng-doc/ng-doc/commit/c40e2478a21d63465662927bd1f8ef129326cfbe))
+
 # [16.17.0](https://github.com/ng-doc/ng-doc/compare/v16.16.0...v16.17.0) (2023-11-18)
 
 
