@@ -1,3 +1,15 @@
+# [17.0.0](https://github.com/ng-doc/ng-doc/compare/v16.18.0...v17.0.0) (2023-11-20)
+
+
+### Continuous Integration
+
+* **angular:** add Angular 17 support. Vite + ESBuild is now used by default, and support for Webpack has been removed. Please follow the migration instructions https://ng-doc.com/docs/getting-started/migrations ([ca98292](https://github.com/ng-doc/ng-doc/commit/ca982921177f0103a4dba15d7ea315cb37e4c804)), closes [#109](https://github.com/ng-doc/ng-doc/issues/109)
+
+
+### BREAKING CHANGES
+
+* **angular:** Angular 17
+
 # [16.18.0](https://github.com/ng-doc/ng-doc/compare/v16.17.0...v16.18.0) (2023-11-20)
 
 
