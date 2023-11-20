@@ -1,3 +1,10 @@
+# [17.0.0-beta.9](https://github.com/ng-doc/ng-doc/compare/v17.0.0-beta.8...v17.0.0-beta.9) (2023-11-20)
+
+
+### Bug Fixes
+
+* **builder:** test migration ([da5afb5](https://github.com/ng-doc/ng-doc/commit/da5afb5eea26b1ad98dd15ba3bbe926fb6e40b40))
+
 # [17.0.0-beta.8](https://github.com/ng-doc/ng-doc/compare/v17.0.0-beta.7...v17.0.0-beta.8) (2023-11-20)
 
 
