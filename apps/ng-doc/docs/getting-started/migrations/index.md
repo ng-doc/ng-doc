@@ -8,6 +8,9 @@ version.
 In v17.0.0, project was migrated to Angular v17, support of Webpack was removed, now it works only
 with Vite + Esbuild. To migrate automatically, you can run the following command:
 
+> **Note**
+> After migration you also need to update other `@ng-doc/*` packages to v17.0.0
+
 ```bash group="migration-v17" name="Angular" icon="angular"
 ng update @ng-doc/builder
 ```
