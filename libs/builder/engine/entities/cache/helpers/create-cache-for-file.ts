@@ -3,7 +3,6 @@ import * as fs from 'fs';
 
 /**
  * Creates cache for given file
- *
  * @param filePath - path to file, for which cache should be created
  */
 export function createCacheForFile(filePath: string): string {

@@ -1,0 +1,10 @@
+{
+	"$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+	"schematics": {
+		"migration-v17": {
+			"version": "17.0.0",
+			"description": "Updates NgDoc to v17",
+			"factory": "./ng-update/index#update"
+		}
+	}
+}

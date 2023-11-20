@@ -1,19 +1,16 @@
 import {
 	ChangeDetectionStrategy,
-	ChangeDetectorRef,
 	Component,
 	ElementRef,
 	HostBinding,
-	Inject,
+	inject,
 	OnInit,
-	Optional,
-	Renderer2,
 	ViewChild,
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { NgDocPositionUtils } from '@ng-doc/ui-kit/utils';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { FL_CONTROL_HOST, FlCompareHost, FlControlHost, FlControlSelector } from 'flex-controls';
+import { DICompareHost, DIStateControl, injectHostControl } from 'di-controls';
 import { fromEvent } from 'rxjs';
 import { filter, last, map, pairwise, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 
@@ -26,7 +23,7 @@ import { filter, last, map, pairwise, startWith, switchMap, takeUntil, tap } fro
 })
 @UntilDestroy()
 export class NgDocToggleComponent<T>
-	extends FlControlSelector<T>
+	extends DIStateControl<T>
 	implements OnInit, ControlValueAccessor
 {
 	@ViewChild('wrapper', { static: true })
@@ -40,17 +37,14 @@ export class NgDocToggleComponent<T>
 
 	private maxPixelValue: number = 0;
 
-	constructor(
-		protected renderer: Renderer2,
-		protected override changeDetectorRef: ChangeDetectorRef,
-		@Inject(FlCompareHost)
-		@Optional()
-		protected override compareHost?: FlCompareHost<T | boolean | null>,
-		@Inject(FL_CONTROL_HOST)
-		@Optional()
-		protected override host?: FlControlHost<T>,
-	) {
-		super(compareHost, host);
+	constructor() {
+		super({
+			host: injectHostControl({ optional: true }),
+			compareHost: inject(DICompareHost, { optional: true }),
+			onIncomingUpdate: () => {
+				this.setState(!!this.checked());
+			},
+		});
 	}
 
 	override ngOnInit(): void {
@@ -98,11 +92,6 @@ export class NgDocToggleComponent<T>
 		}
 	}
 
-	protected override incomingUpdate(value: T | null): void {
-		super.incomingUpdate(value);
-		this.setState(!!this.checked);
-	}
-
 	override updateModel(value: boolean | T | null): void {
 		super.updateModel(value);
 		this.setState(!!this.checked);
@@ -133,7 +122,7 @@ export class NgDocToggleComponent<T>
 			const circleCenterLeft: number =
 				NgDocPositionUtils.getElementPosition(this.circle.nativeElement).x +
 				this.circle.nativeElement.offsetWidth / 2;
-			circleCenterLeft > wrapperMiddle ? this.select() : this.deselect();
+			circleCenterLeft > wrapperMiddle ? this.check() : this.uncheck();
 			this.setState(!!this.checked);
 		}
 	}

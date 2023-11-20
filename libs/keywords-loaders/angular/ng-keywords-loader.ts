@@ -9,7 +9,6 @@ import { NgKeywordLoaderOptions, NgPage, NgResponse } from './interfaces';
  * This loader will fetch the documentation from the Angular website and
  * extract the keywords from the API pages which will transform them all mentioning
  * of the Angular API into links to the Angular documentation.
- *
  * @param options
  */
 export function ngKeywordsLoader(options?: NgKeywordLoaderOptions): NgDocKeywordsLoader {

@@ -36,7 +36,6 @@ const TypeScriptSnippetEnd: (group?: string, escape?: boolean) => RegExp = (
 
 /**
  *    Finds and return all the snippets in the given string.
- *
  * @deprecated - Use `processSnippets` instead
  * @param content - Content
  * @returns - Array of snippets
@@ -51,7 +50,6 @@ export function processLegacySnippets(content: string): NgDocSnippet[] {
 
 /**
  * Finds the snippets in the given content.
- *
  * @param content - Content
  * @param type - Snippet type
  * @param snippetStart - Snippet start
@@ -91,7 +89,6 @@ function findSnippet(
 
 /**
  * Removes the snippets from the given code.
- *
  * @param code - Code
  */
 function removeSnippetsInCode(code: string): string {

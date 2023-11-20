@@ -1,17 +1,15 @@
 import {
 	ChangeDetectionStrategy,
-	ChangeDetectorRef,
 	Component,
 	ElementRef,
 	HostBinding,
 	HostListener,
-	Inject,
+	inject,
 	OnDestroy,
-	Optional,
 } from '@angular/core';
 import { NgDocListItem } from '@ng-doc/ui-kit/classes/list-item';
 import { NgDocListComponent } from '@ng-doc/ui-kit/components/list';
-import { FL_CONTROL_HOST, FlCompareHost, FlControlHost, FlControlSelector } from 'flex-controls';
+import { DICompareHost, DIStateControl, injectHostControl } from 'di-controls';
 
 @Component({
 	selector: 'ng-doc-option',
@@ -26,38 +24,33 @@ import { FL_CONTROL_HOST, FlCompareHost, FlControlHost, FlControlSelector } from
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	standalone: true,
 })
-export class NgDocOptionComponent<T>
-	extends FlControlSelector<T>
-	implements NgDocListItem, OnDestroy
-{
+export class NgDocOptionComponent<T> extends DIStateControl<T> implements NgDocListItem, OnDestroy {
 	@HostBinding('attr.data-ng-doc-hover')
 	protected hovered: boolean = false;
 
-	constructor(
-		readonly elementRef: ElementRef<HTMLElement>,
-		protected override readonly changeDetectorRef: ChangeDetectorRef,
-		@Optional()
-		private readonly list: NgDocListComponent<T>,
-		@Inject(FlCompareHost)
-		@Optional()
-		protected override compareHost?: FlCompareHost<T | boolean | null>,
-		@Inject(FL_CONTROL_HOST)
-		@Optional()
-		protected override host?: FlControlHost<T>,
-	) {
-		super(compareHost, host);
+	override readonly elementRef: ElementRef<HTMLElement> = inject(ElementRef);
+	protected readonly list: NgDocListComponent | null = inject(NgDocListComponent, {
+		optional: true,
+	});
+
+	constructor() {
+		super({
+			host: injectHostControl({ optional: true }),
+			compareHost: inject(DICompareHost, { optional: true }),
+		});
+
 		this.list?.registerItem(this);
 	}
 
 	@HostListener('click')
 	clickEvent(): void {
-		this.select();
+		this.check();
 	}
 
 	selectByUser(): void {
 		const anchor: HTMLAnchorElement | null = this.elementRef.nativeElement.querySelector('a');
 
-		anchor ? anchor.click() : this.select();
+		anchor ? anchor.click() : this.check();
 	}
 
 	setActiveStyles(): void {
@@ -70,8 +63,7 @@ export class NgDocOptionComponent<T>
 		this.changeDetectorRef.markForCheck();
 	}
 
-	override ngOnDestroy(): void {
-		super.ngOnDestroy();
+	ngOnDestroy(): void {
 		this.list?.unregisterItem(this);
 	}
 }

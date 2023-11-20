@@ -88,17 +88,17 @@ describe('ng-add standalone app', () => {
   "compilerOptions": {
     "paths": {
       "@ng-doc/generated": [
-        ".ng-doc//index.ts"
+        "ng-doc//index.ts"
       ],
       "@ng-doc/generated/*": [
-        ".ng-doc//*"
+        "ng-doc//*"
       ]
     }
   }
 }`);
 	});
 
-	it('should add .ng-doc folder to gitignore tsconfig', async () => {
+	it('should add ng-doc folder to gitignore tsconfig', async () => {
 		const options: Schema = {
 			project: '',
 		};
@@ -108,7 +108,7 @@ describe('ng-add standalone app', () => {
 		expect(tree.readContent('.gitignore')).toEqual(`.cache
 
 # NgDoc files
-.ng-doc`);
+/ng-doc`);
 	});
 
 	it('should add NgDoc providers', async () => {
@@ -192,7 +192,7 @@ export class AppComponent {}`);
                 },
                 {
                   "glob": "**/*",
-                  "input": ".ng-doc//assets",
+                  "input": "ng-doc//assets",
                   "output": "assets/ng-doc"
                 }
               ],
@@ -208,7 +208,7 @@ export class AppComponent {}`);
 \t\t\t\t\t"aot": true
               \t}
               },
-              "builder": "@ng-doc/builder:browser"
+              "builder": "@ng-doc/builder:application"
           }
         }
     }

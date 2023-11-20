@@ -8,7 +8,6 @@ import { NgDocEntityStore } from '../entity-store';
 /**
  * Returns list of entities that should be rebuilt based on the provided list (including themselves).
  * List is creating based on relationships between entities and used keywords.
- *
  * @param entityStore
  * @param entities - List of source entities
  * @returns List of entities that should be rebuilt (including source entities)

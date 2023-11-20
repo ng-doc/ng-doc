@@ -21,7 +21,4 @@ export class NgDocButtonComponent {
 	@Input()
 	@HostBinding('attr.data-ng-doc-rounded')
 	rounded: boolean = false;
-
-	@Input()
-	number: number = 123;
 }

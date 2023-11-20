@@ -1,6 +1,5 @@
 /**
  * Returns a dasherized title
- *
  * @param title - The title to dasherize
  */
 export function getTitle(title: string): string {

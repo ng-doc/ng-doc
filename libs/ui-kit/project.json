@@ -9,8 +9,7 @@
 			"executor": "@nx/angular:package",
 			"outputs": ["{workspaceRoot}/dist/{projectRoot}"],
 			"options": {
-				"project": "libs/ui-kit/ng-package.json",
-				"updateBuildableProjectDepsInPackageJson": false
+				"project": "libs/ui-kit/ng-package.json"
 			},
 			"configurations": {
 				"production": {
@@ -41,12 +40,11 @@
 			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/libs/ui-kit"],
 			"options": {
-				"jestConfig": "libs/ui-kit/jest.config.ts",
-				"passWithNoTests": true
+				"jestConfig": "libs/ui-kit/jest.config.ts"
 			}
 		},
 		"lint": {
-			"executor": "@nx/linter:eslint",
+			"executor": "@nx/eslint:lint",
 			"options": {
 				"lintFilePatterns": ["libs/ui-kit/**/*.ts", "libs/ui-kit/**/*.html"]
 			}

@@ -6,13 +6,13 @@
 	"prefix": "ng-doc",
 	"targets": {
 		"build": {
-			"executor": "./dist/libs/builder:browser",
+			"executor": "./dist/libs/builder:application",
 			"outputs": ["{options.outputPath}"],
 			"options": {
 				"outputPath": "dist/apps/ng-doc",
 				"index": "apps/ng-doc/src/index.html",
-				"main": "apps/ng-doc/src/main.ts",
-				"polyfills": "apps/ng-doc/src/polyfills.ts",
+				"browser": "apps/ng-doc/src/main.ts",
+				"polyfills": ["apps/ng-doc/src/polyfills.ts"],
 				"inlineStyleLanguage": "scss",
 				"assets": [
 					"apps/ng-doc/src/assets",
@@ -28,7 +28,7 @@
 					},
 					{
 						"glob": "**/*",
-						"input": ".ng-doc/ng-doc/assets",
+						"input": "ng-doc/ng-doc/assets",
 						"output": "assets/ng-doc"
 					}
 				],
@@ -68,20 +68,14 @@
 				},
 				"development": {
 					"tsConfig": "apps/ng-doc/tsconfig.app.json",
-					"buildOptimizer": false,
 					"optimization": false,
-					"vendorChunk": true,
 					"extractLicenses": false,
 					"sourceMap": true,
 					"namedChunks": true
 				}
 			},
 			"defaultConfiguration": "production",
-			"dependsOn": [
-				{
-					"target": "link-libs"
-				}
-			]
+			"dependsOn": [{ "target": "link-libs" }]
 		},
 		"link-libs": {
 			"executor": "nx:run-commands",
@@ -91,48 +85,41 @@
 					"symlink-dir dist/libs/core dist/libs/utils/node_modules/@ng-doc/core",
 					"symlink-dir dist/libs/utils dist/libs/builder/node_modules/@ng-doc/utils",
 					"symlink-dir dist/libs/keywords-loaders node_modules/@ng-doc/keywords-loaders",
-					"symlink-dir dist/libs/builder node_modules/@ng-doc/builder"
+					"symlink-dir dist/libs/builder node_modules/@ng-doc/builder",
+					"symlink-dir dist/libs/app node_modules/@ng-doc/app",
+					"symlink-dir dist/libs/ui-kit node_modules/@ng-doc/ui-kit"
 				]
 			},
-			"dependsOn": [
-				{
-					"target": "build",
-					"dependencies": true
-				}
-			]
+			"dependsOn": [{ "projects": "dependencies", "target": "build" }]
 		},
 		"serve": {
 			"executor": "./dist/libs/builder:dev-server",
 			"configurations": {
 				"production": {
-					"browserTarget": "ng-doc:build:production",
+					"buildTarget": "ng-doc:build:production",
 					"tsConfig": "apps/ng-doc/tsconfig.build.json"
 				},
 				"development": {
-					"browserTarget": "ng-doc:build:development"
+					"buildTarget": "ng-doc:build:development"
 				},
 				"poc": {
-					"browserTarget": "ng-doc:build:development",
+					"buildTarget": "ng-doc:build:development",
 					"ngDoc": {
 						"config": "apps/ng-doc/ng-doc.config.poc.ts"
 					}
 				}
 			},
 			"defaultConfiguration": "development",
-			"dependsOn": [
-				{
-					"target": "link-libs"
-				}
-			]
+			"dependsOn": [{ "target": "link-libs" }]
 		},
 		"extract-i18n": {
 			"executor": "@angular-devkit/build-angular:extract-i18n",
 			"options": {
-				"browserTarget": "ng-doc:build"
+				"buildTarget": "ng-doc:build"
 			}
 		},
 		"lint": {
-			"executor": "@nx/linter:eslint",
+			"executor": "@nx/eslint:lint",
 			"options": {
 				"lintFilePatterns": ["apps/ng-doc/**/*.ts", "apps/ng-doc/**/*.html"]
 			}
@@ -141,8 +128,7 @@
 			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/apps/ng-doc"],
 			"options": {
-				"jestConfig": "apps/ng-doc/jest.config.ts",
-				"passWithNoTests": true
+				"jestConfig": "apps/ng-doc/jest.config.ts"
 			}
 		}
 	},

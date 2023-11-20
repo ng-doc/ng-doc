@@ -8,7 +8,6 @@ import { loadConfig } from './load-config';
 
 /**
  * Creates builder context, with all the necessary information for the builder to work
- *
  * @param targetOptions - Target options
  * @param context - Builder context
  * @param configFilePath - Path to the configuration file if it exists
@@ -18,7 +17,7 @@ export function createBuilderContext(
 	context: BuilderContext,
 	configFilePath?: string,
 ): NgDocBuilderContext {
-	const projectRoot: string = path.dirname(targetOptions['main'] as string);
+	const projectRoot: string = path.dirname(targetOptions['browser'] as string);
 	const [configPath, config]: [string, NgDocConfiguration] = loadConfig(
 		configFilePath ?? projectRoot,
 		!configFilePath,
@@ -26,7 +25,7 @@ export function createBuilderContext(
 	const buildPath: string = path.join(
 		context.workspaceRoot,
 		config.outDir ?? '',
-		'.ng-doc',
+		'ng-doc',
 		context.target?.project ?? 'app',
 	);
 

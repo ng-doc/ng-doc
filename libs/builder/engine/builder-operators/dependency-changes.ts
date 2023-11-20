@@ -8,7 +8,6 @@ import { NgDocWatcher } from '../watcher';
 /**
  * Operator creates an additional observable that emits when the dependencies of the source observable change
  * and returns them as an array.
- *
  * @param watcher - The watcher instance.
  */
 export function dependencyChanges(

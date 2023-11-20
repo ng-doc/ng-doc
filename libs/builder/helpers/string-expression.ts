@@ -1,6 +1,5 @@
 /**
  * Runs string expression and return result
- *
  * @param {string} expression - expression to run
  * @returns {T} result of expression
  * @template T

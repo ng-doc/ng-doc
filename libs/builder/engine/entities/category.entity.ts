@@ -23,7 +23,6 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 
 	/**
 	 * Returns full url from the root
-	 *
 	 * @type {string}
 	 */
 	get url(): string {

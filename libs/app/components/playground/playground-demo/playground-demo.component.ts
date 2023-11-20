@@ -43,8 +43,9 @@ import { NgDocPlaygroundForm } from '../playground-form';
 })
 @UntilDestroy()
 export class NgDocPlaygroundDemoComponent<
-	T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties,
-> implements OnChanges, OnDestroy
+		T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties,
+	>
+	implements OnChanges, OnDestroy
 {
 	@Input()
 	id: string = '';
@@ -192,7 +193,7 @@ export class NgDocPlaygroundDemoComponent<
 				return key;
 			})
 			.slice(0, changedInputIndex + 1)
-			.reduce((result: Record<string, string>, key: string, i: number) => {
+			.reduce((result: Record<string, string>, key: string) => {
 				result[key] = stringify(formData[key]).replace(/"/g, `'`);
 
 				return result;

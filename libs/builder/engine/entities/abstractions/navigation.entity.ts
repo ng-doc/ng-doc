@@ -1,6 +1,6 @@
-import {isCategoryEntity} from '../../../helpers';
-import {NgDocEntity} from './entity';
-import {NgDocRouteEntity} from './route.entity';
+import { isCategoryEntity } from '../../../helpers';
+import { NgDocEntity } from './entity';
+import { NgDocRouteEntity } from './route.entity';
 
 /**
  * Entity for pages that are using for navigation in the sidebar.
@@ -24,7 +24,6 @@ export abstract class NgDocNavigationEntity<TTarget> extends NgDocRouteEntity<TT
 
 	/**
 	 * Returns is this category entity.
-	 *
 	 * @type {boolean}
 	 */
 	get isCategory(): boolean {
@@ -33,7 +32,6 @@ export abstract class NgDocNavigationEntity<TTarget> extends NgDocRouteEntity<TT
 
 	/**
 	 * Returns children of the current buildable that are using for page navigation
-	 *
 	 * @type {NgDocEntity[]}
 	 */
 	get navigationItems(): NgDocEntity[] {

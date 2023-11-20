@@ -1,12 +1,11 @@
-import {NgDocGlobalKeyword, NgDocKeyword, NgDocKeywordsLoader} from '@ng-doc/core';
+import { NgDocGlobalKeyword, NgDocKeyword, NgDocKeywordsLoader } from '@ng-doc/core';
 
-import {fetchKeywords} from './helpers';
-import {NgDocKeywordsLoaderOptions} from './interfaces';
+import { fetchKeywords } from './helpers';
+import { NgDocKeywordsLoaderOptions } from './interfaces';
 
 /**
  * Loads keywords from an external NgDoc documentation.
  * You can use it to integrate your documentation with another NgDoc documentation and use its API or Pages keywords.
- *
  * @param options - The options for the NgDoc keywords loader.
  */
 export function ngDocKeywordsLoader(options: NgDocKeywordsLoaderOptions): NgDocKeywordsLoader {

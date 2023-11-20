@@ -6,7 +6,6 @@ import { getPropertyAssignment } from '../typescript';
 
 /**
  *    Resolves the component decorator and return its properties.
- *
  * @param cls - class declaration
  */
 export function getComponentDecorator(cls: ClassDeclaration): Component | undefined {

@@ -3,7 +3,6 @@ import { createCacheForFile } from './create-cache-for-file';
 
 /**
  * Creates cache for given files, returns object with file path as key and md5 hash as value
- *
  * @param version - version of the current package
  * @param files - list of files, for which cache should be created
  * @param properties - properties, which should be cached

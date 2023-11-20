@@ -3,7 +3,6 @@ import * as path from 'path';
 
 /**
  *    Finds the closest file in the given path.
- *
  * @param tree
  * @param {string} currentFolder The current folder to search in.
  * @param {string} fileName The file name to search for.

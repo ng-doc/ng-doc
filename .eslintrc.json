@@ -6,7 +6,12 @@
 		{
 			"files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
 			"extends": ["prettier", "plugin:jsdoc/recommended"],
-			"plugins": ["eslint-plugin-jsdoc", "eslint-plugin-prefer-arrow", "simple-import-sort", "eslint-plugin-tsdoc"],
+			"plugins": [
+				"eslint-plugin-jsdoc",
+				"eslint-plugin-prefer-arrow",
+				"simple-import-sort",
+				"eslint-plugin-tsdoc"
+			],
 			"rules": {
 				"jsdoc/require-param-type": "off",
 				"jsdoc/require-returns-type": "off",
@@ -60,6 +65,7 @@
 			"files": ["*.ts", "*.tsx"],
 			"extends": ["plugin:@nx/typescript"],
 			"rules": {
+				"@typescript-eslint/no-explicit-any": "warn",
 				"@typescript-eslint/typedef": [
 					"error",
 					{

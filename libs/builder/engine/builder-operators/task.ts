@@ -1,6 +1,6 @@
-import {mergeMap, of, OperatorFunction} from 'rxjs';
+import { mergeMap, of, OperatorFunction } from 'rxjs';
 
-import {forkJoinOrEmpty, progress} from '../../operators';
+import { forkJoinOrEmpty, progress } from '../../operators';
 
 /**
  * Task operator that runs the provided operator on each value of the source.
@@ -8,7 +8,6 @@ import {forkJoinOrEmpty, progress} from '../../operators';
  *
  * The operator will be executed for each value that passes the filter function,
  * and return the values in the same order as they were in the source.
- *
  * @param name - The name of the task (for progress).
  * @param operator - The operator to run on each value of the source.
  * @param filter - The filter function to filter the values of the source.
@@ -36,7 +35,6 @@ export function task<T, R>(
  *
  * The operator will be executed for each value that passes the filter function,
  * and return the values in the same order as they were in the source.
- *
  * @param name - The name of the task (for progress).
  * @param operator - The operator to run on the source.
  * @param filter - The filter function to filter the values of the source.
