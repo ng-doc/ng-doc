@@ -28,7 +28,7 @@
 					},
 					{
 						"glob": "**/*",
-						"input": ".ng-doc/ng-doc/assets",
+						"input": "ng-doc/ng-doc/assets",
 						"output": "assets/ng-doc"
 					}
 				],

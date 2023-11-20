@@ -17,6 +17,43 @@ describe('project-migration', () => {
 
 		createSourceFile('package.json', '{"dependencies": {"@angular/core": "~13.0.0"}}');
 		createSourceFile(
+			'.gitignore',
+			`
+# System Files
+.DS_Store
+Thumbs.db
+
+# Cache
+.angular
+.ng-doc
+
+.nx/cache
+`,
+		);
+		createSourceFile(
+			'my-app/tsconfig.app.json',
+			`{
+ "extends": "../tsconfig.json",
+ "files": ["src/main.ts", "src/polyfills.ts"],
+ "include": ["src/**/*.d.ts"],
+ "exclude": ["**/*.test.ts", "**/*.spec.ts"]
+}
+`,
+		);
+		createSourceFile(
+			'tsconfig.json',
+			`{
+ "compilerOptions": {
+"paths": {
+  "@ng-doc/add": ["libs/add/src/index.ts"],
+  "@ng-doc/app": ["libs/app/index.ts"],
+  "@ng-doc/generated": [".ng-doc/ng17/index.ts"]
+ }
+ }
+}
+`,
+		);
+		createSourceFile(
 			'angular.json',
 			`{
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
@@ -37,10 +74,20 @@ describe('project-migration', () => {
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "zone.js",
-            "tsConfig": "tsconfig.app.json",
+            "tsConfig": "my-app/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "dist/libs/app/assets",
+                "output": "assets/ng-doc/app"
+              },
+              {
+      					"glob": "**/*",
+      					"input": ".ng-doc/ng-doc/assets",
+      					"output": "assets/ng-doc"
+      				}
             ],
             "styles": [
               "src/styles.css"
@@ -119,6 +166,39 @@ describe('project-migration', () => {
 		saveActiveProject();
 	});
 
+	it('should migrate .gitignore', async () => {
+		const tree: UnitTestTree = await runner.runSchematic('migration-v17', {}, host);
+
+		expect(tree.readContent('.gitignore')).toEqual(`
+# System Files
+.DS_Store
+Thumbs.db
+
+# Cache
+.angular
+ng-doc
+
+.nx/cache
+`);
+	});
+
+	it('should migrate tsconfig.json', async () => {
+		const tree: UnitTestTree = await runner.runSchematic('migration-v17', {}, host);
+
+		expect(tree.readContent('tsconfig.json')).toEqual(`{
+ "compilerOptions": {
+"paths": {
+  "@ng-doc/add": ["libs/add/src/index.ts"],
+  "@ng-doc/app": ["libs/app/index.ts"],
+  "@ng-doc/generated": [
+    "ng-doc/ng17/index.ts"
+  ]
+ }
+ }
+}
+`);
+	});
+
 	it('should migrate angular.json', async () => {
 		const tree: UnitTestTree = await runner.runSchematic('migration-v17', {}, host);
 
@@ -143,10 +223,20 @@ describe('project-migration', () => {
             "polyfills": [
               "zone.js"
             ],
-            "tsConfig": "tsconfig.app.json",
+            "tsConfig": "my-app/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "dist/libs/app/assets",
+                "output": "assets/ng-doc/app"
+              },
+              {
+                "glob": "**/*",
+                "input": "ng-doc/ng-doc/assets",
+                "output": "assets/ng-doc"
+              }
             ],
             "styles": [
               "src/styles.css"

@@ -70,6 +70,24 @@ export function updateAngularJson() {
 
 					delete target.options['browserTarget'];
 				}
+
+				if ('assets' in target.options) {
+					const assets: Array<string | { input: string }> = target.options['assets'] as Array<
+						string | { input: string }
+					>;
+					target.options['assets'] = assets.map((asset) => {
+						if (
+							asset &&
+							typeof asset === 'object' &&
+							'input' in asset &&
+							(asset.input as string).startsWith('.ng-doc')
+						) {
+							return { ...asset, input: asset.input.replace('.ng-doc', 'ng-doc') };
+						}
+
+						return asset;
+					});
+				}
 			}
 		}
 	});
