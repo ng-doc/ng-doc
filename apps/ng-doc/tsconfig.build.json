@@ -7,7 +7,7 @@
 			"@ng-doc/builder": ["dist/libs/builder/index"],
 			"@ng-doc/core": ["dist/libs/core/index"],
 			"@ng-doc/core/*": ["dist/libs/core/*"],
-			"@ng-doc/generated": [".ng-doc/ng-doc/index"],
+			"@ng-doc/generated": ["ng-doc/ng-doc/index"],
 			"@ng-doc/ui-kit": ["dist/libs/ui-kit/index"],
 			"@ng-doc/ui-kit/*": ["dist/libs/ui-kit/*"],
 			"@ng-doc/utils": ["dist/libs/utils/index"],
