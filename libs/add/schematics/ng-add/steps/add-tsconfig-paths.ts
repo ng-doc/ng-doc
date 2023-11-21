@@ -74,9 +74,9 @@ function updateTsConfigPaths(tree: Tree, filePath: string, projectName: string):
 	if (paths || !ext) {
 		json.modify(
 			['compilerOptions', 'paths', `${GENERATED_PATH}`],
-			[`ng-doc/${projectName}/index.ts`],
+			[`./ng-doc/${projectName}/index.ts`],
 		);
-		json.modify(['compilerOptions', 'paths', `${GENERATED_PATH}/*`], [`ng-doc/${projectName}/*`]);
+		json.modify(['compilerOptions', 'paths', `${GENERATED_PATH}/*`], [`./ng-doc/${projectName}/*`]);
 	} else if (ext) {
 		updateTsConfigPaths(tree, path.join(path.dirname(filePath), ext), projectName);
 	}
