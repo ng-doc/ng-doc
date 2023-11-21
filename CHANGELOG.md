@@ -1,3 +1,22 @@
+# [17.1.0](https://github.com/ng-doc/ng-doc/compare/v17.0.0...v17.1.0) (2023-11-21)
+
+
+### Bug Fixes
+
+* **add:** imports of default modules in some cases are added to the wrong file ([50f691a](https://github.com/ng-doc/ng-doc/commit/50f691aa2dc304d16bd3f9fabfb79a196730207e))
+* **add:** migration and adding ng-doc leads to warnings ([7cfe6d6](https://github.com/ng-doc/ng-doc/commit/7cfe6d6aadd190238d64639d0e69422a95928756))
+* **ui-kit:** fix ``@angular/cdk` version ([bd4573a](https://github.com/ng-doc/ng-doc/commit/bd4573a026228d5d6ea02e05c36dfe387f2ca58e))
+
+
+### Continuous Integration
+
+* **angular:** add Angular 17 support. Vite + ESBuild is now used by default, and support for Webpack has been removed. Please follow the migration instructions https://ng-doc.com/docs/getting-started/migrations ([b6bdd6d](https://github.com/ng-doc/ng-doc/commit/b6bdd6dbd46eb9c92698041d024499e44e6f322e)), closes [#109](https://github.com/ng-doc/ng-doc/issues/109)
+
+
+### BREAKING CHANGES
+
+* **angular:** Angular 17
+
 # [18.0.0](https://github.com/ng-doc/ng-doc/compare/v17.0.0...v18.0.0) (2023-11-21)
 
 
