@@ -1,5 +1,5 @@
 import { ProjectDefinition, WorkspaceDefinition } from '@angular-devkit/core/src/workspace';
-import { Rule, SchematicContext, Tree, UpdateRecorder } from '@angular-devkit/schematics';
+import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 
 import { APP_COMPONENT_CONTENT } from '../constants/app-component-content';
@@ -45,11 +45,7 @@ export function addLayout(options: Schema): Rule {
 			const html: Buffer | null = tree.read(appTemplatePath);
 
 			if (html) {
-				const recorder: UpdateRecorder = tree.beginUpdate(appTemplatePath);
-
-				recorder.remove(0, html.length);
-				recorder.insertLeft(0, APP_COMPONENT_CONTENT);
-				tree.commitUpdate(recorder);
+				tree.overwrite(appTemplatePath, APP_COMPONENT_CONTENT);
 
 				logger.info('✅ Done!');
 			}
