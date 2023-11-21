@@ -16,6 +16,7 @@ import { addLayout } from './steps/add-layout';
 import { addNgDocAppConfig } from './steps/add-ng-doc-app-config';
 import { addStyles } from './steps/add-styles';
 import { addTsconfigPaths } from './steps/add-tsconfig-paths';
+import { postInstall } from './steps/post-install';
 import { replaceBuilders } from './steps/replace-builders';
 import { updateAppTsConfig } from './steps/update-app-ts-config';
 
@@ -54,5 +55,6 @@ export function ngAddSetupProject(options: Schema): Rule {
 		addTsconfigPaths(options),
 		updateAppTsConfig(options),
 		addGitIgnore(),
+		postInstall(),
 	]);
 }
