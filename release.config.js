@@ -9,10 +9,7 @@ module.exports = {
 			'@semantic-release/commit-analyzer',
 			{
 				preset: 'angular',
-				releaseRules: [
-					{ breaking: true, scope: 'angular', release: 'major' },
-					{ breaking: true, release: 'minor' },
-				],
+				releaseRules: [{ breaking: true, release: 'minor' }],
 			},
 		],
 		'@semantic-release/release-notes-generator',
