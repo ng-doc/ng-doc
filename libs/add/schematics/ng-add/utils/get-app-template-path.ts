@@ -5,6 +5,7 @@
  */
 import { Tree } from '@angular-devkit/schematics';
 import { ClassDeclaration, Expression, Node, saveActiveProject } from 'ng-morph';
+import * as path from 'path';
 
 import { getAppComponent } from './get-app-component';
 import { getInitializer } from './get-initializer';
@@ -27,11 +28,12 @@ export function getAppTemplatePath(tree: Tree, mainPath: string): string | undef
 		'templateUrl',
 	);
 
-	const appComponentPath: string[] = appComponent.getSourceFile().getFilePath().split('/');
+	const appComponentDir: string = appComponent.getSourceFile().getDirectoryPath();
 
-	const templateUrlPath: string = `${appComponentPath
-		.splice(0, appComponentPath.length - 1)
-		.join('/')}/${templateInitializer?.getText().replace(/['"]/g, '')}`;
+	const templateUrlPath: string = path.join(
+		appComponentDir,
+		templateInitializer?.getText().replace(/['"]/g, '') ?? 'app.component.html',
+	);
 
 	saveActiveProject();
 
