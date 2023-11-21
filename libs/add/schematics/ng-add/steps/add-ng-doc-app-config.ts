@@ -9,8 +9,12 @@ import {
 	getBootstrapApplicationFn,
 	getBootstrapFn,
 	getMainModule,
+	Identifier,
+	Node,
+	ObjectLiteralExpression,
 	saveActiveProject,
 	setActiveProject,
+	SyntaxKind,
 } from 'ng-morph';
 import { addImportToComponent } from 'ng-morph/ng/component/add-import-to-component';
 
@@ -60,6 +64,13 @@ export function addNgDocAppConfig(options: Schema): Rule {
 					return;
 				}
 
+				const [, options = bootstrapApplicationFn.addArgument(`{providers: []}`)] =
+					bootstrapApplicationFn.getArguments();
+				if (!Node.isIdentifier(options) && !Node.isObjectLiteralExpression(options)) {
+					return;
+				}
+				const optionsObject = getOptionsObject(options);
+
 				STANDALONE_APP.providers.forEach((provider: ImportConstant) => {
 					addProviderToBootstrapApplicationFn(bootstrapApplicationFn, provider.initializer, {
 						unique: true,
@@ -67,7 +78,7 @@ export function addNgDocAppConfig(options: Schema): Rule {
 
 					provider.imports.forEach((providerImport: EntityImport) => {
 						addUniqueImport(
-							bootstrapApplicationFn.getSourceFile().getFilePath(),
+							optionsObject.getSourceFile().getFilePath(),
 							providerImport.name,
 							providerImport.path,
 						);
@@ -130,4 +141,18 @@ export function addNgDocAppConfig(options: Schema): Rule {
 			logger.error(`❌ Error: ${e}`);
 		}
 	};
+}
+
+/**
+ *
+ * @param options
+ */
+function getOptionsObject(options: Identifier | ObjectLiteralExpression): ObjectLiteralExpression {
+	if (Node.isObjectLiteralExpression(options)) {
+		return options;
+	}
+
+	const definition = options.getDefinitionNodes()[0];
+
+	return definition.getChildrenOfKind(SyntaxKind.ObjectLiteralExpression)[0];
 }
