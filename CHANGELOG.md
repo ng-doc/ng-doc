@@ -1,3 +1,10 @@
+## [17.1.1](https://github.com/ng-doc/ng-doc/compare/v17.1.0...v17.1.1) (2023-11-21)
+
+
+### Bug Fixes
+
+* **add:** automatic installation of the library does not add the default layout ([3c10464](https://github.com/ng-doc/ng-doc/commit/3c10464cd70abfff61c687b3fc40bacb0f7e1bdf))
+
 # [17.1.0](https://github.com/ng-doc/ng-doc/compare/v17.0.0...v17.1.0) (2023-11-21)
 
 
