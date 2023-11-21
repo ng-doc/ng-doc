@@ -30,7 +30,11 @@ export function updateTsConfig() {
 				if (paths) {
 					json.modify(
 						['compilerOptions', 'paths', `@ng-doc/generated`],
-						[`ng-doc/${projectName}/index.ts`],
+						[`./ng-doc/${projectName}/index.ts`],
+					);
+					json.modify(
+						['compilerOptions', 'paths', `@ng-doc/generated/*`],
+						[`./ng-doc/${projectName}/*`],
 					);
 				}
 			};

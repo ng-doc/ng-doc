@@ -88,10 +88,10 @@ describe('ng-add standalone app', () => {
   "compilerOptions": {
     "paths": {
       "@ng-doc/generated": [
-        "ng-doc//index.ts"
+        "./ng-doc//index.ts"
       ],
       "@ng-doc/generated/*": [
-        "ng-doc//*"
+        "./ng-doc//*"
       ]
     }
   }

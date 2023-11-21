@@ -47,7 +47,8 @@ Thumbs.db
 "paths": {
   "@ng-doc/add": ["libs/add/src/index.ts"],
   "@ng-doc/app": ["libs/app/index.ts"],
-  "@ng-doc/generated": [".ng-doc/ng17/index.ts"]
+  "@ng-doc/generated": [".ng-doc/ng17/index.ts"],
+  "@ng-doc/generated/*": [".ng-doc/ng17/*"]
  }
  }
 }
@@ -191,7 +192,10 @@ Thumbs.db
   "@ng-doc/add": ["libs/add/src/index.ts"],
   "@ng-doc/app": ["libs/app/index.ts"],
   "@ng-doc/generated": [
-    "ng-doc/ng17/index.ts"
+    "./ng-doc/ng17/index.ts"
+  ],
+  "@ng-doc/generated/*": [
+    "./ng-doc/ng17/*"
   ]
  }
  }

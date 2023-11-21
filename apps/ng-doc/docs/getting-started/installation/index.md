@@ -14,6 +14,8 @@ To install the NgDoc, you can use the command below.
 This command will automatically install and add the library to your project,
 and configure it.
 
+{% include "../../shared/generated-folder.md" %}
+
 ```bash group="install" name="Angular" icon="angular"
 ng add @ng-doc/add
 ```
@@ -184,6 +186,8 @@ NgDoc generates components for your documentation that you later need to import 
 application, NgDoc also uses synthetic imports that you need to enable,
 to do this, edit the tsconfig.json of the existing application by adding the path to
 the generated files and `allowSyntheticDefaultImports` option.
+
+{% include "../../shared/generated-folder.md" %}
 
 ```json name="tsconfig.json"
 {
