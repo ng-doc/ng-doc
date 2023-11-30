@@ -9,11 +9,16 @@
 			"executor": "./dist/libs/builder:application",
 			"outputs": ["{options.outputPath}"],
 			"options": {
-				"outputPath": "dist/apps/ng-doc",
+				"outputPath": "dist/ng-doc/browser",
 				"index": "apps/ng-doc/src/index.html",
 				"browser": "apps/ng-doc/src/main.ts",
-				"polyfills": ["apps/ng-doc/src/polyfills.ts"],
+				"polyfills": ["zone.js"],
 				"inlineStyleLanguage": "scss",
+				"server": "apps/ng-doc/src/main.server.ts",
+				"prerender": true,
+				"ssr": {
+					"entry": "apps/ng-doc/server.ts"
+				},
 				"assets": [
 					"apps/ng-doc/src/assets",
 					{
@@ -75,7 +80,11 @@
 				}
 			},
 			"defaultConfiguration": "production",
-			"dependsOn": [{ "target": "link-libs" }]
+			"dependsOn": [
+				{
+					"target": "link-libs"
+				}
+			]
 		},
 		"link-libs": {
 			"executor": "nx:run-commands",
@@ -90,7 +99,12 @@
 					"symlink-dir dist/libs/ui-kit node_modules/@ng-doc/ui-kit"
 				]
 			},
-			"dependsOn": [{ "projects": "dependencies", "target": "build" }]
+			"dependsOn": [
+				{
+					"projects": "dependencies",
+					"target": "build"
+				}
+			]
 		},
 		"serve": {
 			"executor": "./dist/libs/builder:dev-server",
@@ -110,7 +124,11 @@
 				}
 			},
 			"defaultConfiguration": "development",
-			"dependsOn": [{ "target": "link-libs" }]
+			"dependsOn": [
+				{
+					"target": "link-libs"
+				}
+			]
 		},
 		"extract-i18n": {
 			"executor": "@angular-devkit/build-angular:extract-i18n",
@@ -130,6 +148,65 @@
 			"options": {
 				"jestConfig": "apps/ng-doc/jest.config.ts"
 			}
+		},
+		"server": {
+			"executor": "@angular-devkit/build-angular:server",
+			"options": {
+				"outputPath": "dist/ng-doc/server",
+				"main": "apps/ng-doc/server.ts",
+				"tsConfig": "apps/ng-doc/tsconfig.server.json",
+				"inlineStyleLanguage": "scss"
+			},
+			"configurations": {
+				"production": {
+					"outputHashing": "media",
+					"fileReplacements": [
+						{
+							"replace": "apps/ng-doc/src/environments/environment.ts",
+							"with": "apps/ng-doc/src/environments/environment.prod.ts"
+						}
+					],
+					"sourceMap": true
+				},
+				"development": {
+					"optimization": false,
+					"sourceMap": true,
+					"extractLicenses": false
+				}
+			},
+			"defaultConfiguration": "production"
+		},
+		"serve-ssr": {
+			"executor": "./dist/libs/builder:ssr-dev-server",
+			"configurations": {
+				"development": {
+					"browserTarget": "ng-doc:build:development",
+					"serverTarget": "ng-doc:server:development"
+				},
+				"production": {
+					"browserTarget": "ng-doc:build:production",
+					"serverTarget": "ng-doc:server:production"
+				}
+			},
+			"defaultConfiguration": "development"
+		},
+		"prerender": {
+			"executor": "./dist/libs/builder:prerender",
+			"options": {
+				"browser": "apps/ng-doc/src/main.ts",
+				"routes": ["/"]
+			},
+			"configurations": {
+				"production": {
+					"browserTarget": "ng-doc:build:production",
+					"serverTarget": "ng-doc:server:production"
+				},
+				"development": {
+					"browserTarget": "ng-doc:build:development",
+					"serverTarget": "ng-doc:server:development"
+				}
+			},
+			"defaultConfiguration": "production"
 		}
 	},
 	"tags": ["type:app", "app:ng-doc"],

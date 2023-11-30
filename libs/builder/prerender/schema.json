@@ -1,0 +1,18 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema",
+	"title": "NgDocBuilder",
+	"description": "NgDocBuilder Prerender Schema",
+	"type": "object",
+	"properties": {
+		"ngDoc": {
+			"type": "object",
+			"properties": {
+				"config": {
+					"type": "string",
+					"optional": true
+				}
+			}
+		}
+	},
+	"additionalProperties": true
+}

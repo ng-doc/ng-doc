@@ -10,6 +10,16 @@
 			"implementation": "./dev-server/index.js",
 			"schema": "./dev-server/schema.json",
 			"description": "NgDoc Dev Server"
+		},
+		"prerender": {
+			"implementation": "./prerender/index.js",
+			"schema": "./prerender/schema.json",
+			"description": "NgDoc SSR Prerender"
+		},
+		"ssr-dev-server": {
+			"implementation": "./ssr-dev-server/index.js",
+			"schema": "./ssr-dev-server/schema.json",
+			"description": "NgDoc SSR Dev Server"
 		}
 	}
 }

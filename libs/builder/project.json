@@ -25,11 +25,13 @@
 			"executor": "nx:run-commands",
 			"outputs": [
 				"{workspaceRoot}/dist/libs/builder/application/schema.json",
-				"{workspaceRoot}/dist/libs/builder/dev-server/schema.json"
+				"{workspaceRoot}/dist/libs/builder/dev-server/schema.json",
+				"{workspaceRoot}/dist/libs/builder/prerender/schema.json",
+				"{workspaceRoot}/dist/libs/builder/ssr-dev-server/schema.json"
 			],
 			"options": {
 				"commands": [
-					"node build-schema.js --from=\"libs/builder/**/*(application|dev-server)/schema.json\" --to=\"dist/libs/builder\""
+					"node build-schema.js --from=\"libs/builder/**/*(application|dev-server|prerender|ssr-dev-server)/schema.json\" --to=\"dist/libs/builder\""
 				]
 			}
 		},
