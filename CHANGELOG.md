@@ -1,3 +1,12 @@
+## [17.1.3](https://github.com/ng-doc/ng-doc/compare/v17.1.2...v17.1.3) (2023-12-01)
+
+
+### Bug Fixes
+
+* **app:** inputs with type `string` display model incorrectly ([948dae6](https://github.com/ng-doc/ng-doc/commit/948dae6df8cb01f2238900446830f10666a2542e))
+* **builder:** playgrounds don't support `@Input` accessors ([d5c12c8](https://github.com/ng-doc/ng-doc/commit/d5c12c8f000f6c71b958c09b297dde0b8b331e28)), closes [#116](https://github.com/ng-doc/ng-doc/issues/116)
+* **core:** playground fails with errors for some specific input types ([1ec8668](https://github.com/ng-doc/ng-doc/commit/1ec86686728fae65bc17200370839dd99c8283c8))
+
 ## [17.1.2](https://github.com/ng-doc/ng-doc/compare/v17.1.1...v17.1.2) (2023-11-21)
 
 
