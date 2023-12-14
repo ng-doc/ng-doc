@@ -120,7 +120,11 @@
 					"buildTarget": "ng-doc:build:development",
 					"ngDoc": {
 						"config": "apps/ng-doc/ng-doc.config.poc.ts"
-					}
+					},
+					"optimization": false,
+					"extractLicenses": false,
+					"sourceMap": true,
+					"namedChunks": true
 				}
 			},
 			"defaultConfiguration": "development",
@@ -148,65 +152,6 @@
 			"options": {
 				"jestConfig": "apps/ng-doc/jest.config.ts"
 			}
-		},
-		"server": {
-			"executor": "@angular-devkit/build-angular:server",
-			"options": {
-				"outputPath": "dist/ng-doc/server",
-				"main": "apps/ng-doc/server.ts",
-				"tsConfig": "apps/ng-doc/tsconfig.server.json",
-				"inlineStyleLanguage": "scss"
-			},
-			"configurations": {
-				"production": {
-					"outputHashing": "media",
-					"fileReplacements": [
-						{
-							"replace": "apps/ng-doc/src/environments/environment.ts",
-							"with": "apps/ng-doc/src/environments/environment.prod.ts"
-						}
-					],
-					"sourceMap": true
-				},
-				"development": {
-					"optimization": false,
-					"sourceMap": true,
-					"extractLicenses": false
-				}
-			},
-			"defaultConfiguration": "production"
-		},
-		"serve-ssr": {
-			"executor": "./dist/libs/builder:ssr-dev-server",
-			"configurations": {
-				"development": {
-					"browserTarget": "ng-doc:build:development",
-					"serverTarget": "ng-doc:server:development"
-				},
-				"production": {
-					"browserTarget": "ng-doc:build:production",
-					"serverTarget": "ng-doc:server:production"
-				}
-			},
-			"defaultConfiguration": "development"
-		},
-		"prerender": {
-			"executor": "./dist/libs/builder:prerender",
-			"options": {
-				"browser": "apps/ng-doc/src/main.ts",
-				"routes": ["/"]
-			},
-			"configurations": {
-				"production": {
-					"browserTarget": "ng-doc:build:production",
-					"serverTarget": "ng-doc:server:production"
-				},
-				"development": {
-					"browserTarget": "ng-doc:build:development",
-					"serverTarget": "ng-doc:server:development"
-				}
-			},
-			"defaultConfiguration": "production"
 		}
 	},
 	"tags": ["type:app", "app:ng-doc"],

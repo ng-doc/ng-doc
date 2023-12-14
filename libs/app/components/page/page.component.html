@@ -20,11 +20,7 @@
 		</a>
 	</div>
 
-	<div
-		class="ng-doc-page-wrapper"
-		[innerHTML]="rootPage.pageContent | ngDocSanitizeHtml"
-		ngDocPageProcessor
-		#pageContainer></div>
+	<div class="ng-doc-page-wrapper" [ngDocPageProcessor]="rootPage.pageContent" #pageContainer></div>
 
 	<ng-container #pageNavigation></ng-container>
 </article>

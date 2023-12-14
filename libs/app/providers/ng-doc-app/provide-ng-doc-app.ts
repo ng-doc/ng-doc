@@ -4,7 +4,7 @@ import { NG_DOC_NIGHT_THEME, NG_DOC_STORE_THEME_KEY } from '@ng-doc/app/constant
 import { NgDocTheme } from '@ng-doc/app/interfaces';
 import { NgDocStoreService, NgDocThemeService } from '@ng-doc/app/services';
 import { NG_DOC_DEFAULT_THEME_ID, NG_DOC_THEME } from '@ng-doc/app/tokens';
-import { asArray } from '@ng-doc/core';
+import { asArray, isBrowser } from '@ng-doc/core';
 import { NgDocUiConfig, provideNgDocUiKitConfig } from '@ng-doc/ui-kit';
 
 /**
@@ -54,15 +54,15 @@ export function provideNgDocApp(config?: NgDocApplicationConfig): Provider[] {
 				store: NgDocStoreService,
 				defaultThemeId: string | 'auto',
 			) => {
-				return () => {
-					const savedThemeId: string | null = store.get(NG_DOC_STORE_THEME_KEY);
+				return async () => {
+					const savedThemeId: string | null = isBrowser ? store.get(NG_DOC_STORE_THEME_KEY) : null;
 
 					if (
 						(defaultThemeId === 'auto' && !savedThemeId) ||
 						savedThemeId === NgDocThemeService.autoThemeId
 					) {
 						return themeService.enableAutoTheme(undefined, NG_DOC_NIGHT_THEME);
-					} else {
+					} else if (isBrowser) {
 						return themeService.set(savedThemeId ?? defaultThemeId, false);
 					}
 				};

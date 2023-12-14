@@ -5,14 +5,13 @@
 	</span>
 </div>
 <div class="ng-doc-code-body">
-	<div
-		class="ng-doc-code-wrapper"
-		[innerHTML]="html | ngDocSanitizeHtml"
-		ngDocPageProcessor
-		*ngIf="html"></div>
-	<div class="ng-doc-code-wrapper" *ngIf="!html">
+	@if (html) {
+	<div class="ng-doc-code-wrapper" [ngDocPageProcessor]="html"></div>
+	} @else {
+	<div class="ng-doc-code-wrapper">
 		<ng-content></ng-content>
 	</div>
+	}
 
 	<button
 		class="ng-doc-copy-button"
