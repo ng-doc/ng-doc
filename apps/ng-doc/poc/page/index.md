@@ -1,1 +1,3 @@
 # Section
+
+{{ NgDocActions.playground("BtnPlayground") }}
