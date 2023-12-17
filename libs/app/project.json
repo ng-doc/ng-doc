@@ -54,10 +54,7 @@
 			}
 		},
 		"lint": {
-			"executor": "@nx/eslint:lint",
-			"options": {
-				"lintFilePatterns": ["libs/app/**/*.ts", "libs/app/**/*.html"]
-			}
+			"executor": "@nx/eslint:lint"
 		}
 	},
 	"tags": ["type:lib", "lib:app"],
