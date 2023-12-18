@@ -1,3 +1,10 @@
+# [17.2.0](https://github.com/ng-doc/ng-doc/compare/v17.1.3...v17.2.0) (2023-12-18)
+
+
+### Features
+
+* **project:** add SSR support ([#119](https://github.com/ng-doc/ng-doc/issues/119)) ([2e16359](https://github.com/ng-doc/ng-doc/commit/2e16359de6b5cc11d48459c0f9f30e26ac8084a2)), closes [#114](https://github.com/ng-doc/ng-doc/issues/114)
+
 ## [17.1.3](https://github.com/ng-doc/ng-doc/compare/v17.1.2...v17.1.3) (2023-12-01)
 
 
