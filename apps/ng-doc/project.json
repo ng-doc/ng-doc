@@ -9,7 +9,7 @@
 			"executor": "./dist/libs/builder:application",
 			"outputs": ["{options.outputPath}"],
 			"options": {
-				"outputPath": "dist/ng-doc/browser",
+				"outputPath": "dist/apps/ng-doc",
 				"index": "apps/ng-doc/src/index.html",
 				"browser": "apps/ng-doc/src/main.ts",
 				"polyfills": ["zone.js"],
