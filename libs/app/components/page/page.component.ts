@@ -1,10 +1,11 @@
 import { NgComponentOutlet, NgIf } from '@angular/common';
 import {
-	AfterViewInit,
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
 	inject,
+	OnInit,
+	Renderer2,
 	TemplateRef,
 	ViewChild,
 	ViewContainerRef,
@@ -20,7 +21,6 @@ import {
 	NgDocPageNavigation,
 	NgDocPageSkeleton,
 } from '@ng-doc/app/interfaces';
-import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes/sanitize-html';
 import { NgDocPageProcessorDirective } from '@ng-doc/app/processors';
 import { provideTypeControl } from '@ng-doc/app/providers/type-control';
 import { NG_DOC_CONTEXT, NG_DOC_PAGE_SKELETON } from '@ng-doc/app/tokens';
@@ -60,7 +60,6 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 		NgDocTextRightDirective,
 		NgDocMediaQueryDirective,
 		NgDocTocComponent,
-		NgDocSanitizeHtmlPipe,
 		NgDocPageProcessorDirective,
 		NgComponentOutlet,
 		RouterOutlet,
@@ -72,9 +71,10 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 		provideTypeControl('number', NgDocNumberControlComponent, { order: 30 }),
 		provideTypeControl('boolean', NgDocBooleanControlComponent, { hideLabel: true, order: 40 }),
 	],
+	host: { ngSkipHydration: 'true' },
 })
 @UntilDestroy()
-export class NgDocPageComponent implements AfterViewInit {
+export class NgDocPageComponent implements OnInit {
 	@ViewChild('pageContainer', { read: ElementRef, static: true })
 	pageContainer!: ElementRef<HTMLElement>;
 
@@ -84,7 +84,7 @@ export class NgDocPageComponent implements AfterViewInit {
 	@ViewChild('pageNavigation', { read: ViewContainerRef, static: true })
 	pageNavigation!: ViewContainerRef;
 
-	@ViewChild('pageToc', { read: ViewContainerRef })
+	@ViewChild('pageToc', { read: ViewContainerRef, static: true })
 	pageToc?: ViewContainerRef;
 
 	@ViewChild('childOutlet')
@@ -93,6 +93,7 @@ export class NgDocPageComponent implements AfterViewInit {
 	protected rootPage: NgDocRootPage = inject(NgDocRootPage);
 	protected skeleton: NgDocPageSkeleton = inject(NG_DOC_PAGE_SKELETON);
 	protected context: NgDocContext = inject(NG_DOC_CONTEXT);
+	protected renderer: Renderer2 = inject(Renderer2);
 	protected router: Router = inject(Router);
 
 	private breadcrumbs: string[] = inject(ActivatedRoute)
@@ -100,7 +101,7 @@ export class NgDocPageComponent implements AfterViewInit {
 		.map((route: ActivatedRoute) => route.snapshot.title)
 		.filter(isPresent);
 
-	ngAfterViewInit(): void {
+	ngOnInit(): void {
 		if (this.rootPage.pageType === 'guide') {
 			if (this.skeleton.breadcrumbs) {
 				createComponent(this.pageBreadcrumbs, this.skeleton.breadcrumbs, {
@@ -113,13 +114,11 @@ export class NgDocPageComponent implements AfterViewInit {
 			}
 		}
 
-		Promise.resolve().then(() => {
-			if (this.pageToc && this.skeleton.toc) {
-				createComponent(this.pageToc, this.skeleton.toc, {
-					tableOfContent: generateToc(this.pageContainer.nativeElement) ?? [],
-				});
-			}
-		});
+		if (this.pageToc && this.skeleton.toc) {
+			createComponent(this.pageToc, this.skeleton.toc, {
+				tableOfContent: generateToc(this.pageContainer.nativeElement) ?? [],
+			});
+		}
 	}
 
 	private navigationInputs(): NgDocPageNavigation {

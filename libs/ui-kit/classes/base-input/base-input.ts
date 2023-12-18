@@ -1,4 +1,5 @@
 import { Directive, ElementRef, HostBinding, inject } from '@angular/core';
+import { isBrowser } from '@ng-doc/core';
 import { DIControl, injectHostControl } from 'di-controls';
 import { DIControlConfig } from 'di-controls/controls/control';
 import { Subject } from 'rxjs';
@@ -25,7 +26,7 @@ export abstract class NgDocBaseInput<T> extends DIControl<T> {
 	}
 
 	get isFocused(): boolean {
-		return document.activeElement === this.elementRef.nativeElement;
+		return isBrowser ? document.activeElement === this.elementRef.nativeElement : false;
 	}
 
 	get isReadonly(): boolean {

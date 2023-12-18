@@ -3,13 +3,12 @@ import {
 	Directive,
 	EmbeddedViewRef,
 	Input,
-	OnChanges,
+	OnInit,
 	TemplateRef,
 	ViewContainerRef,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Subject } from 'rxjs';
-import { distinctUntilChanged, pluck, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, pluck } from 'rxjs/operators';
 
 @Directive({
 	selector: '[ngDocMediaQuery]',
@@ -17,13 +16,12 @@ import { distinctUntilChanged, pluck, takeUntil } from 'rxjs/operators';
 	standalone: true,
 })
 @UntilDestroy()
-export class NgDocMediaQueryDirective implements OnChanges {
+export class NgDocMediaQueryDirective implements OnInit {
 	@Input('ngDocMediaQuery')
 	match: string | string[] = [];
 
 	readonly breakpoints: typeof Breakpoints = Breakpoints;
 
-	private readonly unsubscribe$: Subject<void> = new Subject<void>();
 	private viewRef?: EmbeddedViewRef<unknown>;
 
 	constructor(
@@ -32,17 +30,10 @@ export class NgDocMediaQueryDirective implements OnChanges {
 		private readonly breakpointObserver: BreakpointObserver,
 	) {}
 
-	ngOnChanges(): void {
-		this.unsubscribe$.next();
-
+	ngOnInit(): void {
 		this.breakpointObserver
 			.observe(this.match)
-			.pipe(
-				pluck('matches'),
-				distinctUntilChanged(),
-				takeUntil(this.unsubscribe$),
-				untilDestroyed(this),
-			)
+			.pipe(pluck('matches'), distinctUntilChanged(), untilDestroyed(this))
 			.subscribe((matches: boolean) => {
 				this.viewRef?.destroy();
 				this.viewRef = undefined;

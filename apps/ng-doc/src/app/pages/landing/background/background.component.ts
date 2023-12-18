@@ -1,12 +1,12 @@
 import { NgFor, NgIf } from '@angular/common';
 import {
+	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
 	Input,
 	NgZone,
 	OnDestroy,
-	OnInit,
 	ViewChild,
 } from '@angular/core';
 import { NgDocTheme, NgDocThemeService } from '@ng-doc/app';
@@ -38,7 +38,7 @@ const DARK_PALETTE = [
 	imports: [NgIf, NgFor],
 })
 @UntilDestroy()
-export class BackgroundComponent implements OnInit, OnDestroy {
+export class BackgroundComponent implements OnDestroy {
 	@Input()
 	minRadius: number = 400;
 
@@ -97,26 +97,26 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 		private readonly elementRef: ElementRef<HTMLElement>,
 		private readonly ngZone: NgZone,
 		private readonly themeService: NgDocThemeService,
-	) {}
+	) {
+		afterNextRender(() => {
+			this.context = this.canvas.nativeElement.getContext('2d');
+			this.pixelRatio = window.devicePixelRatio > 1 ? 2 : 1;
 
-	ngOnInit(): void {
-		this.context = this.canvas.nativeElement.getContext('2d');
-		this.pixelRatio = window.devicePixelRatio > 1 ? 2 : 1;
+			this.animationId = window.requestAnimationFrame(this.animate.bind(this));
 
-		this.animationId = window.requestAnimationFrame(this.animate.bind(this));
+			fromEvent(window, 'resize')
+				.pipe(debounceTime(100), untilDestroyed(this), ngDocZoneDetach(this.ngZone))
+				.subscribe(() => this.resize());
 
-		fromEvent(window, 'resize')
-			.pipe(debounceTime(100), untilDestroyed(this), ngDocZoneDetach(this.ngZone))
-			.subscribe(() => this.resize());
-
-		this.themeService
-			.themeChanges()
-			.pipe(startWith(this.themeService.currentTheme), untilDestroyed(this))
-			.subscribe((theme: NgDocTheme | 'auto' | undefined) => {
-				this.colors = theme ? DARK_PALETTE : LIGHT_PALETTE;
-				this.resize();
-				this.setCompositionOperation(theme ? 'multiply' : 'screen');
-			});
+			this.themeService
+				.themeChanges()
+				.pipe(startWith(this.themeService.currentTheme), untilDestroyed(this))
+				.subscribe((theme: NgDocTheme | 'auto' | undefined) => {
+					this.colors = theme ? DARK_PALETTE : LIGHT_PALETTE;
+					this.resize();
+					this.setCompositionOperation(theme ? 'multiply' : 'screen');
+				});
+		});
 	}
 
 	resize(): void {

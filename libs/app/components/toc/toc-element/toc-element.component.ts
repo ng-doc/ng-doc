@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	HostBinding,
+	inject,
+	Input,
+} from '@angular/core';
 
 @Component({
 	selector: 'li[ng-doc-toc-element]',
@@ -19,5 +26,5 @@ export class NgDocTocElementComponent {
 	@HostBinding('attr.data-ng-doc-level')
 	level: number = 1;
 
-	constructor(readonly elementRef: ElementRef<HTMLElement>) {}
+	readonly elementRef: ElementRef<HTMLElement> = inject(ElementRef);
 }

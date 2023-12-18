@@ -44,10 +44,7 @@
 			}
 		},
 		"lint": {
-			"executor": "@nx/eslint:lint",
-			"options": {
-				"lintFilePatterns": ["libs/ui-kit/**/*.ts", "libs/ui-kit/**/*.html"]
-			}
+			"executor": "@nx/eslint:lint"
 		}
 	},
 	"tags": ["type:lib", "lib:ui-kit"]

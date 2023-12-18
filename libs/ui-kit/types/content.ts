@@ -1,4 +1,4 @@
-import { Injector, StaticProvider, TemplateRef, Type } from '@angular/core';
+import { Injector, TemplateRef, Type } from '@angular/core';
 import { NG_DOC_COMPONENT_CONTEXT } from '@ng-doc/ui-kit/tokens';
 import {
 	PolymorpheusComponent,
@@ -26,19 +26,14 @@ export class NgDocComponentContent<
 		super(component);
 	}
 
-	override createInjector(
-		injector: Injector,
-		context: C,
-		providers: StaticProvider[] = [],
-	): Injector {
+	override createInjector<C>(injector: Injector, useValue?: C): Injector {
 		return Injector.create({
 			parent: this.injectorRef || injector,
 			providers: [
 				{
 					provide: NG_DOC_COMPONENT_CONTEXT,
-					useValue: context,
+					useValue,
 				},
-				...providers,
 			],
 		});
 	}

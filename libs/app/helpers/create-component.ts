@@ -18,6 +18,4 @@ export function createComponent<T>(
 			componentRef.setInput(key, value);
 		});
 	}
-
-	componentRef.changeDetectorRef.detectChanges();
 }
