@@ -1,9 +1,10 @@
 import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable } from '@angular/core';
+import { afterNextRender, Inject, Injectable } from '@angular/core';
 import { NG_DOC_STORE_THEME_KEY } from '@ng-doc/app/constants';
 import { NgDocTheme } from '@ng-doc/app/interfaces';
 import { NgDocStoreService } from '@ng-doc/app/services/store';
 import { NG_DOC_THEME } from '@ng-doc/app/tokens';
+import { isBrowser } from '@ng-doc/core';
 import { WINDOW } from '@ng-web-apis/common';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { fromEvent, Observable, Subject } from 'rxjs';
@@ -32,9 +33,11 @@ export class NgDocThemeService {
 		private readonly themes: NgDocTheme[],
 		private readonly store: NgDocStoreService,
 	) {
-		fromEvent<MediaQueryList>(this.window.matchMedia('(prefers-color-scheme: dark)'), 'change')
-			.pipe(untilDestroyed(this))
-			.subscribe(() => this.setAutoTheme());
+		afterNextRender(() => {
+			fromEvent<MediaQueryList>(this.window.matchMedia('(prefers-color-scheme: dark)'), 'change')
+				.pipe(untilDestroyed(this))
+				.subscribe(() => this.setAutoTheme());
+		});
 	}
 
 	/**
@@ -147,7 +150,7 @@ export class NgDocThemeService {
 	}
 
 	private async setAutoTheme(): Promise<void> {
-		if (this.autoTheme !== undefined) {
+		if (this.autoTheme !== undefined && isBrowser) {
 			const isDark: boolean = this.window.matchMedia('(prefers-color-scheme: dark)').matches;
 			const [light, dark] = this.autoTheme;
 			this.store.set(NG_DOC_STORE_THEME_KEY, NgDocThemeService.autoThemeId);

@@ -55,8 +55,8 @@ export class NgDocSmoothResizeComponent implements OnChanges {
 		this.resizeAnimation = {
 			value: this.trigger,
 			params: {
-				startHeight: this.element.nativeElement.clientHeight,
-				startWidth: this.element.nativeElement.clientWidth,
+				startHeight: this.element.nativeElement.clientHeight || 0,
+				startWidth: this.element.nativeElement.clientWidth || 0,
 			},
 		};
 	}

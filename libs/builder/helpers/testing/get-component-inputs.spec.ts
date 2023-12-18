@@ -1,16 +1,16 @@
-import { Project, PropertyDeclaration, SourceFile } from 'ts-morph';
+import { Node, Project, SourceFile } from 'ts-morph';
 
-import { getComponentInputs } from '../angular/get-component-inputs';
+import { getComponentInputs, NgDocInputDeclaration } from '../angular/get-component-inputs';
 import { createProject } from '../typescript/create-project';
 
 /**
  *
  * @param inputs
  */
-function mapInputs(inputs: PropertyDeclaration[]) {
+function mapInputs(inputs: NgDocInputDeclaration[]) {
 	return inputs.map((p) => ({
 		propertyName: p.getName(),
-		initializer: p.getInitializer()?.getText(),
+		initializer: Node.isPropertyDeclaration(p) ? p.getInitializer()?.getText() : '',
 		type: p.getType().getApparentType().getText(),
 	}));
 }
@@ -82,6 +82,58 @@ describe('getComponentInputs', () => {
 			{
 				propertyName: 'parentInput',
 				initializer: "'123'",
+				type: 'String',
+			},
+		]);
+	});
+
+	it('should return inputs from getter', () => {
+		const sourceFile: SourceFile = project.createSourceFile(
+			'class.ts',
+			`
+				import { Component, Input } from '@angular/core';
+
+				@Component()
+				export class TestComponent {
+					@Input() get input1(): string {
+						return '1';
+					}
+				}
+			`,
+		);
+		const declaration = sourceFile.getClassOrThrow('TestComponent');
+		const inputs = getComponentInputs(declaration);
+
+		expect(mapInputs(inputs)).toEqual([
+			{
+				propertyName: 'input1',
+				initializer: '',
+				type: 'String',
+			},
+		]);
+	});
+
+	it('should return inputs from setter', () => {
+		const sourceFile: SourceFile = project.createSourceFile(
+			'class.ts',
+			`
+				import { Component, Input } from '@angular/core';
+
+				@Component()
+				export class TestComponent {
+					@Input() set input1(value: string) {
+						console.log(value);
+					}
+				}
+			`,
+		);
+		const declaration = sourceFile.getClassOrThrow('TestComponent');
+		const inputs = getComponentInputs(declaration);
+
+		expect(mapInputs(inputs)).toEqual([
+			{
+				propertyName: 'input1',
+				initializer: '',
 				type: 'String',
 			},
 		]);

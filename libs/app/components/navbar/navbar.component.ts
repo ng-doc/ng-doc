@@ -1,5 +1,6 @@
 import { AsyncPipe, NgIf } from '@angular/common';
 import {
+	afterNextRender,
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
@@ -41,6 +42,7 @@ import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
 		NgDocIconComponent,
 		AsyncPipe,
 	],
+	host: { ngSkipHydration: 'true' },
 })
 @UntilDestroy()
 export class NgDocNavbarComponent {
@@ -94,26 +96,28 @@ export class NgDocNavbarComponent {
 		private readonly changeDetectorRef: ChangeDetectorRef,
 		protected readonly sidebarService: NgDocSidebarService,
 	) {
-		combineLatest([
-			fromEvent(this.window, 'scroll').pipe(
-				map((e: Event) => ((e.target as Document)?.scrollingElement?.scrollTop ?? 0) > 0),
-				distinctUntilChanged(),
-				startWith(false),
-			),
-			this.sidebarService.isMobileMode(),
-			this.sidebarService.isExpanded(),
-		])
-			.pipe(
-				map(
-					([scrolled, isMobileMode, isExpanded]: [boolean, boolean, boolean]) =>
-						scrolled || (isMobileMode && isExpanded),
+		afterNextRender(() => {
+			combineLatest([
+				fromEvent(this.window, 'scroll').pipe(
+					map((e: Event) => ((e.target as Document)?.scrollingElement?.scrollTop ?? 0) > 0),
+					distinctUntilChanged(),
+					startWith(false),
+					ngDocZoneOptimize(this.ngZone),
 				),
-				ngDocZoneOptimize(this.ngZone),
-				untilDestroyed(this),
-			)
-			.subscribe((hasShadow: boolean) => {
-				this.hasShadow = hasShadow;
-				this.changeDetectorRef.markForCheck();
-			});
+				this.sidebarService.isMobileMode(),
+				this.sidebarService.isExpanded(),
+			])
+				.pipe(
+					map(
+						([scrolled, isMobileMode, isExpanded]: [boolean, boolean, boolean]) =>
+							scrolled || (isMobileMode && isExpanded),
+					),
+					untilDestroyed(this),
+				)
+				.subscribe((hasShadow: boolean) => {
+					this.hasShadow = hasShadow;
+					this.changeDetectorRef.markForCheck();
+				});
+		});
 	}
 }
