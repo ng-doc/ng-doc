@@ -1,3 +1,10 @@
+## [17.2.1](https://github.com/ng-doc/ng-doc/compare/v17.2.0...v17.2.1) (2023-12-27)
+
+
+### Bug Fixes
+
+* **add:** add schematics don't add HttpClient provider by default ([1dccda3](https://github.com/ng-doc/ng-doc/commit/1dccda344824e8793a98ea81b28ae8450e1c3c94))
+
 # [17.2.0](https://github.com/ng-doc/ng-doc/compare/v17.1.3...v17.2.0) (2023-12-18)
 
 
