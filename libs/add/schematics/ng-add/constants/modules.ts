@@ -32,6 +32,14 @@ export const NG_DOC_COMPONENT_IMPORTS: ImportConstant[] = [
 
 const NG_DOC_PROVIDERS: ImportConstant[] = [
 	{
+		initializer: 'provideHttpClient(withInterceptorsFromDi(), withFetch())',
+		imports: [
+			{ name: 'provideHttpClient', path: '@angular/common/http' },
+			{ name: 'withInterceptorsFromDi', path: '@angular/common/http' },
+			{ name: 'withFetch', path: '@angular/common/http' },
+		],
+	},
+	{
 		initializer: 'provideNgDocContext()',
 		imports: [{ name: 'provideNgDocContext', path: GENERATED_PATH }],
 	},
