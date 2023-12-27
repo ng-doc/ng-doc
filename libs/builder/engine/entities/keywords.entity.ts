@@ -20,7 +20,7 @@ export class NgDocKeywordsEntity extends NgDocEntity {
 			entity: this,
 			toBuilderOutput: async (content: Record<string, NgDocKeyword>) => ({
 				content: JSON.stringify(content),
-				filePath: path.join(this.context.assetsPath, 'keywords.json'),
+				filePath: path.join(this.context.outAssetsDir, 'keywords.json'),
 			}),
 		});
 	}

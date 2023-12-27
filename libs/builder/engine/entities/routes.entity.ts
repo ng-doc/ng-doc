@@ -21,7 +21,7 @@ export class NgDocRoutesEntity extends NgDocEntity {
 			entity: this,
 			toBuilderOutput: async (content: string) => ({
 				content,
-				filePath: path.join(this.context.buildPath, 'ng-doc.routing.ts'),
+				filePath: path.join(this.context.outBuildDir, 'ng-doc.routing.ts'),
 			}),
 		});
 	}

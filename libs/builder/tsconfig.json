@@ -12,7 +12,7 @@
 		"experimentalDecorators": false,
 		"emitDecoratorMetadata": false,
 		"target": "ES6",
-		"lib": ["es2020"],
+		"lib": ["ES2022"],
 		"esModuleInterop": true
 	},
 	"files": [],

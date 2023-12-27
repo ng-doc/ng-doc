@@ -12,7 +12,7 @@ import {
 import { combineLatest, from, Observable, of } from 'rxjs';
 import { first, map, shareReplay, switchMap } from 'rxjs/operators';
 
-import { buildNgDoc } from '../engine/build-ng-doc';
+import { newBuild } from '../engine/new-build';
 import { createBuilderContext } from '../helpers';
 import { NgDocBuilderContext, NgDocSchema } from '../interfaces';
 
@@ -38,7 +38,7 @@ export function runDevServer(
 				context,
 				options.ngDoc?.config,
 			);
-			const runner: Observable<void> = buildNgDoc(builderContext).pipe(shareReplay(1));
+			const runner: Observable<void> = newBuild(builderContext).pipe(shareReplay(1));
 
 			// This is a hack to make sure that the dev server uses the esbuild builder
 			// instead of the webpack builder. This is necessary because Angular checks

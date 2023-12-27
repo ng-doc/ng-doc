@@ -7,7 +7,7 @@ export class ObservableSet<T> {
 	private changes$: ReplaySubject<void> = new ReplaySubject<void>();
 
 	constructor(values?: T[]) {
-		values && this.add(...values);
+		this.collection = new Set(values);
 	}
 
 	asArray(): T[] {
@@ -21,7 +21,7 @@ export class ObservableSet<T> {
 	add(...values: T[]): void {
 		if (values.some((value: T) => !this.collection.has(value))) {
 			values.forEach((value: T) => this.collection.add(value));
-			values.length && this.changes$.next();
+			values && this.changes$.next();
 		}
 	}
 

@@ -24,7 +24,7 @@
 		"@orama/plugin-parsedoc": "1.0.2",
 		"posthtml-parser": "0.11.0",
 		"prettier": "2.8.8",
-		"glob": "8.1.0",
+		"fast-glob": "3.3.2",
 		"marked": "4.0.18",
 		"highlight.js": "11.5.1",
 		"esbuild": "0.19.5",

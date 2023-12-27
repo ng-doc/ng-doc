@@ -1,10 +1,11 @@
 import { BuilderContext } from '@angular-devkit/architect';
 import { json } from '@angular-devkit/core';
-import { asArray, NgDocStyleType } from '@ng-doc/core';
+import { NgDocStyleType } from '@ng-doc/core';
 import * as path from 'path';
 
 import { NgDocBuilderContext, NgDocConfiguration } from '../interfaces';
 import { loadConfig } from './load-config';
+import { createProject } from './typescript';
 
 /**
  * Creates builder context, with all the necessary information for the builder to work
@@ -28,17 +29,19 @@ export function createBuilderContext(
 		'ng-doc',
 		context.target?.project ?? 'app',
 	);
+	const tsConfig = config?.tsConfig ?? String(targetOptions['tsConfig']);
 
 	return {
-		tsConfig: config?.tsConfig ?? String(targetOptions['tsConfig']),
+		tsConfig,
+		project: createProject({ tsConfigFilePath: tsConfig }),
 		config,
 		context,
 		inlineStyleLanguage: (targetOptions?.['inlineStyleLanguage'] as NgDocStyleType) ?? 'CSS',
-		pagesPaths: config.pages?.length ? asArray(config.pages) : [projectRoot],
-		assetsPath: path.join(buildPath, 'assets'),
+		docsPath: path.resolve(config.docsPath ?? projectRoot),
+		outAssetsDir: path.join(buildPath, 'assets'),
 		cachedFiles: [configPath],
-		buildPath,
-		apiPath: path.join(buildPath, 'api'),
-		guidesPath: path.join(buildPath, 'guides'),
+		outBuildDir: buildPath,
+		outApiDir: path.join(buildPath, 'api'),
+		outGuidesDir: path.join(buildPath, 'guides'),
 	};
 }

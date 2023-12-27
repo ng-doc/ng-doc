@@ -12,9 +12,9 @@ export interface NgDocConfiguration {
 	 */
 	cache?: boolean;
 	/**
-	 * List of paths to your documentation location (e.g. "src/app")
+	 * Paths to your documentation location (e.g. "src/app")
 	 */
-	pages?: string | string[];
+	docsPath?: string;
 
 	/**
 	 * The path to the output directory, where the documentation will be generated. (e.g. 'src')

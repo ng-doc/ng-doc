@@ -1,17 +1,19 @@
 import { BuilderContext } from '@angular-devkit/architect';
 import { NgDocStyleType } from '@ng-doc/core';
+import { Project } from 'ts-morph';
 
 import { NgDocConfiguration } from './configuration';
 
 export interface NgDocBuilderContext {
 	tsConfig: string;
+	project: Project;
 	config: NgDocConfiguration;
 	context: BuilderContext;
 	inlineStyleLanguage: NgDocStyleType;
 	cachedFiles: string[];
-	pagesPaths: string[];
-	assetsPath: string;
-	buildPath: string;
-	apiPath: string;
-	guidesPath: string;
+	docsPath: string;
+	outAssetsDir: string;
+	outBuildDir: string;
+	outApiDir: string;
+	outGuidesDir: string;
 }

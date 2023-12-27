@@ -16,7 +16,7 @@ export class NgDocIndexFileEntity extends NgDocEntity {
 
 	@CachedFilesGetter()
 	get outputPath(): string {
-		return path.join(this.context.buildPath, 'index.ts');
+		return path.join(this.context.outBuildDir, 'index.ts');
 	}
 
 	build(): Observable<NgDocBuildResult<string>> {

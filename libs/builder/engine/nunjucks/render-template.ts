@@ -39,7 +39,7 @@ export function renderTemplate<T extends object>(
 	options?: NgDocRendererOptions<T>,
 ): string {
 	let environment: Environment = new Environment(
-		new NgDocRelativeLoader(options?.scope ?? TEMPLATES_PATH, options?.dependenciesStore),
+		new NgDocRelativeLoader(options?.scope ?? TEMPLATES_PATH, options?.dependencies),
 		{ autoescape: false },
 	);
 

@@ -2,9 +2,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { combineLatestWith, finalize, from, mergeMap, Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { Project } from 'ts-morph';
 
-import { createProject, printProgress } from '../helpers';
+import { printProgress } from '../helpers';
 import { NgDocBuilderContext } from '../interfaces';
 import { progress } from '../operators';
 import {
@@ -51,7 +50,6 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 
 	const store: NgDocEntityStore = new NgDocEntityStore(context.config);
 	const cache: NgDocCache = new NgDocCache(!!context.config?.cache);
-	const project: Project = createProject({ tsConfigFilePath: context.tsConfig });
 
 	// Global entities that should be built after each build cycle
 	const globalEntities = [
@@ -67,12 +65,12 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 	if (!!context.config?.cache && invalidateCacheIfNeeded(context.cachedFiles)) {
 		// do nothing
 	} else {
-		fs.rmSync(context.buildPath, { recursive: true, force: true });
+		fs.rmSync(context.outBuildDir, { recursive: true, force: true });
 	}
 
 	// Watch for changes in pages
 	const watcher: NgDocWatcher = new NgDocWatcher(
-		context.pagesPaths
+		[context.docsPath]
 			.map((pagesPath: string) => [
 				path.join(pagesPath, PAGE_PATTERN),
 				path.join(pagesPath, CATEGORY_PATTERN),
@@ -82,7 +80,7 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
 	);
 
 	// The main build cycle
-	return entityEmitter(store, cache, context, project, watcher).pipe(
+	return entityEmitter(store, cache, context, context.project, watcher).pipe(
 		combineLatestWith(from(store.loadGlobalKeywords())),
 		map(([entities]) => entities),
 		mergeMap((entities: NgDocEntity[]) =>

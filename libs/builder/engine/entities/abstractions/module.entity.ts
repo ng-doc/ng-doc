@@ -18,7 +18,7 @@ export abstract class NgDocModuleEntity<TTarget> extends NgDocFileEntity<TTarget
 	abstract folderName: string;
 
 	get folderPath(): string {
-		return path.join(this.parent?.folderPath ?? this.context.guidesPath, this.folderName);
+		return path.join(this.parent?.folderPath ?? this.context.outGuidesDir, this.folderName);
 	}
 
 	/**

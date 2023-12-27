@@ -53,6 +53,7 @@ export class NgDocPageDemoEntity extends NgDocEntity {
 		const objectExpression = this.parent.objectExpression;
 
 		if (objectExpression) {
+			// TODO: CHECK IF THIS IS NEEDED
 			this.parent.refreshDependencies();
 			const classDeclarations = getDemoClassDeclarations(objectExpression);
 

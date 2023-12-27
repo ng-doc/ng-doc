@@ -3,15 +3,15 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {Routes} from '@angular/router';
 import {NgDocDemoAssets, NgDocPageComponent, NgDocRootPage} from '@ng-doc/app';
 import {isRoute, NgDocPage, NgDocPageType} from '@ng-doc/core';
-import pageEntity from '{{ page.importPath }}';
+import pageEntity from '{{ entryImportPath }}';
 import {PLAYGROUND_COMPONENTS, PLAYGROUND_PROVIDERS} from './playgrounds';
 import demoAssets from './demo-assets';
 
-const pageContent: string = `{{ pageContent | toTemplateString }}`
+const pageContent: string = `{{ content | toTemplateString }}`
 
 
 @Component({
-    selector: 'ng-doc-page-{{ page.fullRoute | kebabCase }}',
+    selector: 'ng-doc-page',
     standalone: true,
     template: `<ng-doc-page></ng-doc-page>`,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,13 +29,13 @@ const pageContent: string = `{{ pageContent | toTemplateString }}`
     ],
 })
 export class DynamicComponent extends NgDocRootPage {
-    readonly routePrefix: string = '{{ page.context.config.routePrefix }}';
+    readonly routePrefix: string = '{{ routePrefix }}';
     readonly pageType: NgDocPageType = 'guide';
     readonly pageContent: string = pageContent;
-    {%- if page.editSourceFileUrl %}
-    readonly editSourceFileUrl: string = '{{ page.editSourceFileUrl }}';
-    {%- endif %}{%- if page.viewSourceFileUrl %}
-    readonly viewSourceFileUrl: string = '{{ page.viewSourceFileUrl }}';
+    {%- if editSourceFileUrl %}
+    readonly editSourceFileUrl: string = '{{ editSourceFileUrl }}';
+    {%- endif %}{%- if viewSourceFileUrl %}
+    readonly viewSourceFileUrl: string = '{{ viewSourceFileUrl }}';
     {%- endif -%}
     readonly page?: NgDocPage = pageEntity;
     readonly demoAssets: NgDocDemoAssets = demoAssets;

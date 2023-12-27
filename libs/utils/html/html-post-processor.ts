@@ -7,7 +7,7 @@ import markCodeBlocksPlugin from './plugins/mark-code-blocks.plugin';
 import markElementsPlugin from './plugins/mark-elements.plugin';
 
 export interface NgDocHtmlPostProcessorConfig {
-	raiseError: (e: Error) => void;
+	raiseError?: (e: Error) => void;
 	addUsedKeyword?: AddKeyword;
 	addPotentialKeyword?: AddKeyword;
 	getKeyword?: GetKeyword;

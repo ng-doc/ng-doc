@@ -160,7 +160,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 				NgDocPage: this.target,
 				NgDocActions: new NgDocActions(this),
 			},
-			dependenciesStore: this.dependencies,
+			dependencies: this.dependencies,
 			filters: false,
 		});
 

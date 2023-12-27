@@ -21,7 +21,7 @@ export class NgDocContextEntity extends NgDocEntity {
 			entity: this,
 			toBuilderOutput: async (content: string) => ({
 				content,
-				filePath: path.join(this.context.buildPath, 'ng-doc.context.ts'),
+				filePath: path.join(this.context.outBuildDir, 'ng-doc.context.ts'),
 			}),
 		});
 	}

@@ -15,7 +15,7 @@ import sluggerPlugin from './plugins/slugger.plugin';
 export interface NgDocHtmlProcessorConfig {
 	headings?: NgDocHeading[];
 	route?: string;
-	raiseError: (e: Error) => void;
+	raiseError?: (e: Error) => void;
 	addAnchor: (anchor: NgDocEntityAnchor) => void;
 }
 
