@@ -15,7 +15,7 @@ export class ObservableSet<T> {
 	}
 
 	changes(): Observable<T[]> {
-		return this.changes$.pipe(map(() => asArray(this.collection)));
+		return this.changes$.pipe(map(() => this.asArray()));
 	}
 
 	add(...values: T[]): void {

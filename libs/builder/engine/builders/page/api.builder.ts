@@ -5,6 +5,7 @@ import { startWith } from 'rxjs/operators';
 
 import { NgDocBuilderContext } from '../../../interfaces';
 import { Builder, runBuild, watchFile } from '../../core';
+import { EntryMetadata } from '../interfaces';
 
 /**
  *
@@ -14,10 +15,9 @@ import { Builder, runBuild, watchFile } from '../../core';
  */
 export function apiBuilder(
 	context: NgDocBuilderContext,
-	dir: string,
-	page: NgDocPage,
+	page: EntryMetadata<NgDocPage>,
 ): Builder<string> {
-	const mdPath = path.join(dir, page.mdFile);
+	const mdPath = path.join(page.dir, page.entry.mdFile);
 
 	return merge(watchFile(mdPath)).pipe(
 		startWith(void 0),

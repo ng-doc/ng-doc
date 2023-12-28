@@ -7,14 +7,13 @@ import { NgDocBuilderContext } from '../../../interfaces';
 import { Builder, runBuild, sequentialJobs, watchFile } from '../../core';
 import { onDependenciesChange } from '../../core/triggers/on-dependencies-change';
 import { renderTemplate } from '../../nunjucks';
+import { EntryMetadata } from '../interfaces';
 import { markdownToHtmlJob, postProcessHtmlJob, processHtmlJob } from '../shared';
 
 interface Config {
 	context: NgDocBuilderContext;
-	dir: string;
-	absoluteRoute: string;
 	mdPath: string;
-	page: NgDocPage;
+	page: EntryMetadata<NgDocPage>;
 }
 
 /**
@@ -29,13 +28,7 @@ interface Config {
  * @param context.mdPath
  * @param context.absoluteRoute
  */
-export function guideBuilder({
-	context,
-	dir,
-	absoluteRoute,
-	mdPath,
-	page,
-}: Config): Builder<string> {
+export function guideBuilder({ context, mdPath, page }: Config): Builder<string> {
 	const dependencies = new ObservableSet<string>();
 	const anchors = [] as NgDocEntityAnchor[];
 	const potentialKeywords = new Set<string>();
@@ -49,8 +42,8 @@ export function guideBuilder({
 				potentialKeywords.clear();
 				usedKeywords.clear();
 
-				const content = renderTemplate(page.mdFile, {
-					scope: dir,
+				const content = renderTemplate(page.entry.mdFile, {
+					scope: page.dir,
 					context: {
 						NgDocPage: page,
 						NgDocActions: undefined,
@@ -60,10 +53,10 @@ export function guideBuilder({
 				});
 
 				return sequentialJobs(content, [
-					markdownToHtmlJob(dir, dependencies),
+					markdownToHtmlJob(page.dir, dependencies),
 					processHtmlJob({
 						headings: context.config.guide?.anchorHeadings,
-						route: absoluteRoute,
+						route: page.absoluteRoute(),
 						addAnchor: anchors.push.bind(anchors),
 					}),
 					postProcessHtmlJob({
@@ -72,7 +65,7 @@ export function guideBuilder({
 					}),
 				]);
 			} catch (e) {
-				throw new Error(`Error while building guide page "${page.title}"`, { cause: e });
+				throw new Error(`Error while building guide page "${page.entry.title}"`, { cause: e });
 			}
 		}),
 	);

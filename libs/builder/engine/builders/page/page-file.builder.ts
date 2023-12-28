@@ -1,21 +1,16 @@
+import { createEntryMetadata } from '@ng-doc/builder';
 import { NgDocPage } from '@ng-doc/core';
 import { merge, takeUntil } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
-import { ObjectLiteralExpression, SourceFile } from 'ts-morph';
 
-import { buildFileEntity, getObjectExpressionFromDefault, importFreshEsm } from '../../../helpers';
+import { buildFileEntity, importFreshEsm } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
 import { Builder, runBuild, watchFile } from '../../core';
+import { EntryMetadata } from '../interfaces';
 
 interface Config {
 	context: NgDocBuilderContext;
 	pagePath: string;
-}
-
-interface Output {
-	page: NgDocPage;
-	sourceFile: SourceFile;
-	objectExpression: ObjectLiteralExpression;
 }
 
 /**
@@ -28,30 +23,21 @@ interface Output {
  * @param {string} path - The path of the file to build.
  * @returns {Builder<NgDocPage>} - A Builder Observable that emits a NgDocPage object whenever the file at the provided path changes.
  */
-export function pageFileBuilder({
-	context: { tsConfig, context, project },
-	pagePath,
-}: Config): Builder<Output> {
-	const sourceFile = project.addSourceFileAtPath(pagePath);
+export function pageFileBuilder({ context, pagePath }: Config): Builder<EntryMetadata<NgDocPage>> {
+	const sourceFile = context.project.addSourceFileAtPath(pagePath);
 
 	return merge(watchFile(pagePath, 'update')).pipe(
 		tap(() => sourceFile.refreshFromFileSystem()),
 		startWith(void 0),
 		runBuild(async () => {
-			const outPath = await buildFileEntity(sourceFile, tsConfig, context.workspaceRoot);
-			const objectExpression = getObjectExpressionFromDefault(sourceFile);
-
-			if (!objectExpression) {
-				throw new Error(
-					`No object expression found in ${pagePath}, make sure the file has a default export.`,
-				);
-			}
-
-			return {
-				page: (await importFreshEsm<{ default: NgDocPage }>(outPath)).default,
+			const outPath = await buildFileEntity(
 				sourceFile,
-				objectExpression,
-			};
+				context.tsConfig,
+				context.context.workspaceRoot,
+			);
+			const page = (await importFreshEsm<{ default: NgDocPage }>(outPath)).default;
+
+			return createEntryMetadata(context, page, sourceFile);
 		}),
 		takeUntil(watchFile(pagePath, 'delete')),
 	);

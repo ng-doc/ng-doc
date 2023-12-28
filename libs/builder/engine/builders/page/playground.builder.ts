@@ -19,12 +19,10 @@ import {
 	getPlaygroundsIds,
 } from '../../../helpers';
 import { Builder, FileOutput, watchFile } from '../../core';
+import { EntryMetadata } from '../interfaces';
 
 interface Options {
-	objectExpression: ObjectLiteralExpression;
-	page: NgDocPage;
-	dir: string;
-	outDir: string;
+	page: EntryMetadata<NgDocPage>;
 }
 
 /**
@@ -36,16 +34,11 @@ interface Options {
  * @param root0.page
  * @param root0.dir
  */
-export function playgroundBuilder({
-	objectExpression,
-	page,
-	dir,
-	outDir,
-}: Options): Builder<FileOutput> {
-	const references = Object.values(getDemoClassDeclarations(objectExpression)).map(
+export function playgroundBuilder({ page }: Options): Builder<FileOutput> {
+	const references = Object.values(getDemoClassDeclarations(page.objectExpression)).map(
 		(classDeclaration) => classDeclaration.getSourceFile(),
 	);
-	const outPath = path.join(outDir, 'playgrounds.ts');
+	const outPath = path.join(page.outDir, 'playgrounds.ts');
 
 	return merge(
 		...references.map((sourceFile) => watchFile(sourceFile.getFilePath(), 'update')),
@@ -58,15 +51,15 @@ export function playgroundBuilder({
 		}),
 		startWith(void 0),
 		runBuild(async () => {
-			const metadata = getMetadata(page, objectExpression);
+			const metadata = getMetadata(page.entry, page.objectExpression);
 
 			return {
 				filePath: outPath,
 				content: renderTemplate('./playgrounds.ts.nunj', {
 					context: {
 						playgroundMetadata: metadata,
-						hasImports: !!objectExpression?.getProperty('imports'),
-						entryImportPath: createImportPath(outDir, path.join(dir, PAGE_NAME)),
+						hasImports: !!page.objectExpression?.getProperty('imports'),
+						entryImportPath: createImportPath(page.outDir, path.join(page.dir, PAGE_NAME)),
 					},
 				}),
 			};

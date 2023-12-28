@@ -1,4 +1,10 @@
-import { emitFileOutput, pageBuilder, whenStackIsEmpty } from '@ng-doc/builder';
+import {
+	emitFileOutput,
+	getStructuredDocs,
+	pageBuilder,
+	PAGES_STORE,
+	whenStackIsEmpty,
+} from '@ng-doc/builder';
 import { sync } from 'fast-glob';
 import { minimatch } from 'minimatch';
 import path from 'path';
@@ -34,7 +40,12 @@ export function newBuild(context: NgDocBuilderContext): Observable<void> {
 			),
 		),
 		debounceTime(0),
-		tap(() => console.timeEnd('build')),
+		tap(() => {
+			const structure = getStructuredDocs(PAGES_STORE.asArray());
+
+			console.timeEnd('build');
+			console.log('structure', structure);
+		}),
 		filter(() => false),
 	);
 }

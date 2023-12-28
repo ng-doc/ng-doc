@@ -6,21 +6,21 @@ import {
 	renderTemplate,
 	runBuild,
 } from '@ng-doc/builder';
+import { NgDocPage } from '@ng-doc/core';
 import * as path from 'path';
 import { merge } from 'rxjs';
 import { debounceTime, startWith, tap } from 'rxjs/operators';
-import { ObjectLiteralExpression } from 'ts-morph';
 
 import { getDemoAssets, getDemoClassDeclarations } from '../../../helpers';
 import { Builder, FileOutput, watchFile } from '../../core';
+import { EntryMetadata } from '../interfaces';
 
 /**
  * Options for the demoAssetsBuilder function.
  */
 interface Options {
 	context: NgDocBuilderContext;
-	objectExpression: ObjectLiteralExpression;
-	outDir: string;
+	page: EntryMetadata<NgDocPage>;
 }
 
 /**
@@ -28,12 +28,8 @@ interface Options {
  * @param {Options} options - The options for the builder.
  * @returns {Builder<FileOutput>} A builder that outputs file outputs.
  */
-export function demoAssetsBuilder({
-	context,
-	objectExpression,
-	outDir,
-}: Options): Builder<FileOutput> {
-	const references = Object.values(getDemoClassDeclarations(objectExpression)).map(
+export function demoAssetsBuilder({ context, page }: Options): Builder<FileOutput> {
+	const references = Object.values(getDemoClassDeclarations(page.objectExpression)).map(
 		(classDeclaration) => classDeclaration.getSourceFile(),
 	);
 
@@ -51,7 +47,7 @@ export function demoAssetsBuilder({
 		}),
 		startWith(void 0),
 		runBuild(async () => {
-			const classDeclarations = getDemoClassDeclarations(objectExpression);
+			const classDeclarations = getDemoClassDeclarations(page.objectExpression);
 
 			const demoAssets: NgDocComponentAsset = Object.keys(classDeclarations).reduce(
 				(acc: NgDocComponentAsset, key: string) =>
@@ -72,7 +68,7 @@ export function demoAssetsBuilder({
 			}
 
 			return {
-				filePath: path.join(outDir, 'demo-assets.ts'),
+				filePath: path.join(page.outDir, 'demo-assets.ts'),
 				content: renderTemplate('./demo-assets.ts.nunj', { context: { demoAssets } }),
 			};
 		}),
