@@ -1,3 +1,5 @@
+import { finalize } from 'rxjs';
+
 import { NgDocBuilderContext } from '../../../interfaces';
 import { Builder, factory, FileOutput, whenDone } from '../../core';
 import { PAGES_STORE } from '../../stores';
@@ -29,7 +31,15 @@ export function pageBuilder(context: NgDocBuilderContext, pagePath: string): Bui
 				(pageComponent, demoAssets, playgrounds) => {
 					return [pageComponent, demoAssets, playgrounds];
 				},
+			).pipe(
+				finalize(() => {
+					PAGES_STORE.delete(page.absoluteRoute());
+					console.log('finalize', page.absoluteRoute());
+				}),
 			);
+		}),
+		finalize(() => {
+			console.log('finalize', pagePath);
 		}),
 	);
 }

@@ -24,9 +24,20 @@ export function watchFile(
 		 */
 		watcher
 			.subscribe(dirPath, (err, events) => {
-				const fileEvents = events.find(
-					(event) => event.path === filePath && (!type || asArray(type).includes(event.type)),
-				);
+				const fileEvents = events.find((event) => {
+					const isFolder = path.extname(event.path) === '';
+
+					if (
+						event.type === type &&
+						isFolder &&
+						event.type === 'delete' &&
+						filePath.startsWith(event.path)
+					) {
+						return true;
+					}
+
+					return event.path === filePath && (!type || asArray(type).includes(event.type));
+				});
 
 				// If there are any events for the file, emit them.
 				if (fileEvents) {
