@@ -1,3 +1,10 @@
+## [17.2.2](https://github.com/ng-doc/ng-doc/compare/v17.2.1...v17.2.2) (2024-01-07)
+
+
+### Bug Fixes
+
+* **app:** table of content is not displayed ([f08373d](https://github.com/ng-doc/ng-doc/commit/f08373d4cf169be8f1c31d07e05f5d2c8364da4d))
+
 ## [17.2.1](https://github.com/ng-doc/ng-doc/compare/v17.2.0...v17.2.1) (2023-12-27)
 
 
