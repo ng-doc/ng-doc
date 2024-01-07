@@ -2,11 +2,15 @@ import {
 	ComponentRef,
 	Directive,
 	ElementRef,
+	EventEmitter,
 	inject,
 	Injector,
 	Input,
+	OnChanges,
 	OnInit,
+	Output,
 	Renderer2,
+	SimpleChanges,
 	ViewContainerRef,
 } from '@angular/core';
 import { NgDocPageProcessor, NgDocProcessorOptions } from '@ng-doc/app/interfaces';
@@ -22,9 +26,12 @@ import { asArray, objectKeys } from '@ng-doc/core';
 	standalone: true,
 	host: { ngSkipHydration: 'true' },
 })
-export class NgDocPageProcessorDirective implements OnInit {
+export class NgDocPageProcessorDirective implements OnChanges, OnInit {
 	@Input({ required: true, alias: 'ngDocPageProcessor' })
 	html: string = '';
+
+	@Output()
+	afterRender: EventEmitter<void> = new EventEmitter<void>();
 
 	processors: Array<NgDocPageProcessor<unknown>> =
 		inject<Array<NgDocPageProcessor<unknown>>>(NG_DOC_PAGE_PROCESSOR, { optional: true }) ?? [];
@@ -37,9 +44,14 @@ export class NgDocPageProcessorDirective implements OnInit {
 	protected readonly injector: Injector = inject(Injector);
 	protected readonly renderer: Renderer2 = inject(Renderer2);
 
-	ngOnInit(): void {
-		this.renderer.setProperty(this.elementRef.nativeElement, 'innerHTML', this.html);
+	ngOnChanges({ html }: SimpleChanges) {
+		if (html) {
+			this.renderer.setProperty(this.elementRef.nativeElement, 'innerHTML', this.html);
+			this.afterRender.emit();
+		}
+	}
 
+	ngOnInit(): void {
 		asArray(this.processors, this.customProcessors).forEach(this.process.bind(this));
 	}
 

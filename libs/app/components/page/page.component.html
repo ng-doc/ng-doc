@@ -20,7 +20,11 @@
 		</a>
 	</div>
 
-	<div class="ng-doc-page-wrapper" [ngDocPageProcessor]="rootPage.pageContent" #pageContainer></div>
+	<div
+		class="ng-doc-page-wrapper"
+		[ngDocPageProcessor]="rootPage.pageContent"
+		(afterRender)="createToc()"
+		#pageContainer></div>
 
 	<ng-container #pageNavigation></ng-container>
 </article>
