@@ -107,7 +107,7 @@ export class NgDocTocComponent implements NgDocPageToc, OnInit {
 				);
 
 				merge(merge(scrollSelection, routerSelection).pipe(distinctUntilChanged()), elementsChanges)
-					.pipe(ngDocZoneOptimize(this.ngZone), untilDestroyed(this))
+					.pipe(debounceTime(0), ngDocZoneOptimize(this.ngZone), untilDestroyed(this))
 					.subscribe(this.select.bind(this));
 			},
 			{ phase: AfterRenderPhase.Write },

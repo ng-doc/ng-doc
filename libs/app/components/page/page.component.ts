@@ -113,7 +113,9 @@ export class NgDocPageComponent implements OnInit {
 				createComponent(this.pageNavigation, this.skeleton.navigation, this.navigationInputs());
 			}
 		}
+	}
 
+	createToc(): void {
 		if (this.pageToc && this.skeleton.toc) {
 			createComponent(this.pageToc, this.skeleton.toc, {
 				tableOfContent: generateToc(this.pageContainer.nativeElement) ?? [],
