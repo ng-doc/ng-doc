@@ -1,3 +1,10 @@
+## [17.2.3](https://github.com/ng-doc/ng-doc/compare/v17.2.2...v17.2.3) (2024-01-12)
+
+
+### Bug Fixes
+
+* **ui-kit:** update @ngneat/until-destroy dependency ([e2d1d5c](https://github.com/ng-doc/ng-doc/commit/e2d1d5cf240089e64bcb1dedb1fa6ab2fa9935d1)), closes [#127](https://github.com/ng-doc/ng-doc/issues/127)
+
 ## [17.2.2](https://github.com/ng-doc/ng-doc/compare/v17.2.1...v17.2.2) (2024-01-07)
 
 
