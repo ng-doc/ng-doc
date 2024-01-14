@@ -1,7 +1,7 @@
-import { createEntryMetadata } from '@ng-doc/builder';
+import { createEntryMetadata, PAGES_STORE } from '@ng-doc/builder';
 import { NgDocPage } from '@ng-doc/core';
-import { merge, takeUntil } from 'rxjs';
-import { startWith, tap } from 'rxjs/operators';
+import { finalize, merge, takeUntil } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 
 import { buildFileEntity, importFreshEsm } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
@@ -12,6 +12,8 @@ interface Config {
 	context: NgDocBuilderContext;
 	pagePath: string;
 }
+
+export const PAGE_FILE_BUILDER_TAG = 'PageFile';
 
 /**
  * A builder function for a page file.
@@ -27,18 +29,23 @@ export function pageFileBuilder({ context, pagePath }: Config): Builder<EntryMet
 	const sourceFile = context.project.addSourceFileAtPath(pagePath);
 
 	return merge(watchFile(pagePath, 'update')).pipe(
-		tap(() => sourceFile.refreshFromFileSystem()),
 		startWith(void 0),
-		runBuild(async () => {
+		runBuild(PAGE_FILE_BUILDER_TAG, async () => {
+			await sourceFile.refreshFromFileSystem();
+
 			const outPath = await buildFileEntity(
 				sourceFile,
 				context.tsConfig,
 				context.context.workspaceRoot,
 			);
 			const page = (await importFreshEsm<{ default: NgDocPage }>(outPath)).default;
+			const metadata = createEntryMetadata(context, page, sourceFile);
 
-			return createEntryMetadata(context, page, sourceFile);
+			PAGES_STORE.add(metadata.absoluteRoute(), metadata);
+
+			return metadata;
 		}),
 		takeUntil(watchFile(pagePath, 'delete')),
+		finalize(() => PAGES_STORE.delete(pagePath)),
 	);
 }

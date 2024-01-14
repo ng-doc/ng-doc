@@ -4,6 +4,8 @@
  */
 export class BuilderPending {
 	readonly state: 'pending' = 'pending' as const;
+
+	constructor(readonly tag: string) {}
 }
 
 /**
@@ -16,9 +18,10 @@ export class BuilderDone<T> {
 
 	/**
 	 * Creates a new instance of the BuilderDone class.
+	 * @param tag
 	 * @param {T} result The result of the builder process.
 	 */
-	constructor(readonly result: T) {}
+	constructor(readonly tag: string, readonly result: T) {}
 }
 
 /**
@@ -30,9 +33,10 @@ export class BuilderError {
 
 	/**
 	 * Creates a new instance of the BuilderError class.
+	 * @param tag
 	 * @param {Error[]} error The errors encountered during the builder process.
 	 */
-	constructor(readonly error: Error[]) {}
+	constructor(readonly tag: string, readonly error: Error[]) {}
 }
 /**
  * Represents the state of a builder. It can be one of the following:

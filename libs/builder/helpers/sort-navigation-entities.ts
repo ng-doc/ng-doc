@@ -1,24 +1,21 @@
+import { StructuredDoc } from '@ng-doc/builder';
 import { isPresent } from '@ng-doc/core/helpers/is-present';
-
-import { NgDocNavigationEntity } from '../engine/entities/abstractions/navigation.entity';
 
 /**
  *
- * @param entities
+ * @param entries
  */
-export function sortNavigationEntities<T>(
-	entities: Array<NgDocNavigationEntity<T>>,
-): Array<NgDocNavigationEntity<T>> {
-	return entities.sort((a: NgDocNavigationEntity<T>, b: NgDocNavigationEntity<T>) => {
-		if (isPresent(a.order) && isPresent(b.order)) {
-			return a.order - b.order;
+export function sortNavigationEntries(entries: StructuredDoc[]): StructuredDoc[] {
+	return entries.sort((a: StructuredDoc, b: StructuredDoc) => {
+		if (isPresent(a.item.entry.order) && isPresent(b.item.entry.order)) {
+			return a.item.entry.order - b.item.entry.order;
 		}
-		if (isPresent(a.order)) {
+		if (isPresent(a.item.entry.order)) {
 			return -1;
 		}
-		if (isPresent(b.order)) {
+		if (isPresent(b.item.entry.order)) {
 			return 1;
 		}
-		return a.title.localeCompare(b.title);
+		return a.item.entry.title.localeCompare(b.item.entry.title);
 	});
 }

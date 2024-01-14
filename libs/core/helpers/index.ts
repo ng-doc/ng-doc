@@ -15,4 +15,5 @@ export * from './is-same-object';
 export * from './kebab-case';
 export * from './object-keys';
 export * from './stringify';
+export * from './uid';
 export * from './unique';

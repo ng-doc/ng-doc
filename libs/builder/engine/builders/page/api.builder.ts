@@ -7,6 +7,7 @@ import { NgDocBuilderContext } from '../../../interfaces';
 import { Builder, runBuild, watchFile } from '../../core';
 import { EntryMetadata } from '../interfaces';
 
+export const PAGE_API_BUILDER_TAG = 'PageApi';
 /**
  *
  * @param context
@@ -21,7 +22,7 @@ export function apiBuilder(
 
 	return merge(watchFile(mdPath)).pipe(
 		startWith(void 0),
-		runBuild(async () => {
+		runBuild(PAGE_API_BUILDER_TAG, async () => {
 			return '';
 		}),
 	);

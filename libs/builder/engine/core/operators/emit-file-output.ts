@@ -10,14 +10,14 @@ import { BuilderDone, BuilderError, FileOutput, isBuilderDone } from '../types';
  * @returns An OperatorFunction that can be used in an RxJS pipe.
  */
 export function emitFileOutput(): OperatorFunction<
-	BuilderDone<FileOutput[]> | BuilderError,
-	BuilderDone<FileOutput[]> | BuilderError
+	BuilderDone<FileOutput> | BuilderError,
+	BuilderDone<FileOutput> | BuilderError
 > {
 	return (source) => {
 		return source.pipe(
 			tap((state) => {
 				if (isBuilderDone(state)) {
-					emitFiles(state.result);
+					emitFiles([state.result]);
 				}
 			}),
 		);

@@ -1,7 +1,7 @@
 import { asArray } from '@ng-doc/core';
 import watcher from '@parcel/watcher';
 import path from 'path';
-import { Observable } from 'rxjs';
+import { asyncScheduler, Observable, subscribeOn } from 'rxjs';
 
 /**
  * Function to watch a specific file for changes.
@@ -50,5 +50,8 @@ export function watchFile(
 		return () => {
 			unsubscribe();
 		};
-	});
+	}).pipe(
+		// Subscribe on the async scheduler to emit all events before building.
+		subscribeOn(asyncScheduler),
+	);
 }

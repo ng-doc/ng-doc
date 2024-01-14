@@ -23,6 +23,8 @@ interface Options {
 	page: EntryMetadata<NgDocPage>;
 }
 
+export const PAGE_DEMO_ASSETS_BUILDER_TAG = 'PageDemoAssets';
+
 /**
  * Builds demo assets for a given context, object expression, and output directory.
  * @param {Options} options - The options for the builder.
@@ -46,7 +48,7 @@ export function demoAssetsBuilder({ context, page }: Options): Builder<FileOutpu
 			});
 		}),
 		startWith(void 0),
-		runBuild(async () => {
+		runBuild(PAGE_DEMO_ASSETS_BUILDER_TAG, async () => {
 			const classDeclarations = getDemoClassDeclarations(page.objectExpression);
 
 			const demoAssets: NgDocComponentAsset = Object.keys(classDeclarations).reduce(

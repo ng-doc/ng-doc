@@ -8,7 +8,7 @@ import {
 import { NgDocPage, NgDocPlaygroundControlConfig, NgDocPlaygroundProperties } from '@ng-doc/core';
 import * as path from 'path';
 import { merge } from 'rxjs';
-import { debounceTime, startWith, tap } from 'rxjs/operators';
+import { debounceTime, startWith } from 'rxjs/operators';
 import { ObjectLiteralExpression } from 'ts-morph';
 
 import {
@@ -24,6 +24,8 @@ import { EntryMetadata } from '../interfaces';
 interface Options {
 	page: EntryMetadata<NgDocPage>;
 }
+
+export const PAGE_PLAYGROUND_BUILDER_TAG = 'PagePlayground';
 
 /**
  *
@@ -44,13 +46,12 @@ export function playgroundBuilder({ page }: Options): Builder<FileOutput> {
 		...references.map((sourceFile) => watchFile(sourceFile.getFilePath(), 'update')),
 	).pipe(
 		debounceTime(0),
-		tap(() => {
+		startWith(void 0),
+		runBuild(PAGE_PLAYGROUND_BUILDER_TAG, async () => {
 			references.forEach((sourceFile) => {
 				sourceFile.refreshFromFileSystemSync();
 			});
-		}),
-		startWith(void 0),
-		runBuild(async () => {
+
 			const metadata = getMetadata(page.entry, page.objectExpression);
 
 			return {

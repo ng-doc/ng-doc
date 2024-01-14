@@ -1,5 +1,5 @@
 import { createImportPath, PAGE_NAME } from '@ng-doc/builder';
-import { NgDocPage } from '@ng-doc/core';
+import { NgDocPage, uid } from '@ng-doc/core';
 import path from 'path';
 
 import { editFileInRepoUrl, viewFileInRepoUrl } from '../../../helpers';
@@ -14,6 +14,8 @@ interface Config {
 	context: NgDocBuilderContext;
 	page: EntryMetadata<NgDocPage>;
 }
+
+export const PAGE_COMPONENT_BUILDER_TAG = 'PageComponent';
 
 /**
  *
@@ -33,11 +35,13 @@ export function pageComponentBuilder({ context, page }: Config): Builder<FileOut
 	const outPath = path.join(page.outDir, 'page.ts');
 
 	return factory(
+		PAGE_COMPONENT_BUILDER_TAG,
 		[guideBuilder({ context, mdPath, page }), apiBuilder(context, page)],
 		(guide: string, api: string) => ({
 			filePath: outPath,
 			content: renderTemplate('./page.ts.nunj', {
 				context: {
+					id: uid(),
 					content: guide + api,
 					routePrefix: context.config.routePrefix,
 					page: page.entry,

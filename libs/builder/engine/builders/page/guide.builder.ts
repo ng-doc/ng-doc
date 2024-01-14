@@ -36,7 +36,7 @@ export function guideBuilder({ context, mdPath, page }: Config): Builder<string>
 
 	return merge(watchFile(mdPath), onDependenciesChange(dependencies)).pipe(
 		startWith(void 0),
-		runBuild(async () => {
+		runBuild('Guide', async () => {
 			try {
 				dependencies.clear();
 				potentialKeywords.clear();

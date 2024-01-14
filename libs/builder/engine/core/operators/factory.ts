@@ -27,11 +27,13 @@ import { distinctPending } from './distinct-pending';
  * The function combines the latest values from the Observables, checks for errors and pending states,
  * and then calls the provided function with the results of the successful Observables.
  * The result of the function is then mapped to a BuilderDone state.
+ * @param tag
  * @param builders - An array of Observables of BuilderState.
  * @param buildFn - A function that takes the results of the successful Observables and returns a Promise.
  * @returns An Observable of BuilderState.
  */
 export function factory<T, R>(
+	tag: string,
 	builders: readonly [...ObservableInputTuple<Array<BuilderState<T>>>],
 	buildFn: (...args: T[]) => Promise<R> | R,
 ): Observable<BuilderState<R>> {
@@ -50,7 +52,7 @@ export function factory<T, R>(
 			 * If any of the states are pending, return an Observable of BuilderPending.
 			 */
 			if (states.some(isBuilderPending)) {
-				return of(new BuilderPending());
+				return of(new BuilderPending(tag));
 			}
 
 			const errors = states.filter(isBuilderError);
@@ -59,7 +61,7 @@ export function factory<T, R>(
 			 * If there are any errors in the states, return an Observable of BuilderError.
 			 */
 			if (errors.length) {
-				return of(new BuilderError(asArray(...errors.map((error) => error.error))));
+				return of(new BuilderError(tag, asArray(...errors.map((error) => error.error))));
 			}
 
 			/**
@@ -71,10 +73,10 @@ export function factory<T, R>(
 			);
 
 			return (buildFnResult instanceof Promise ? from(buildFnResult) : of(buildFnResult)).pipe(
-				map((result) => new BuilderDone(result)),
+				map((result) => new BuilderDone(tag, result)),
 			);
 		}),
-		catchError((error: Error) => of(new BuilderError([error]))),
+		catchError((error: Error) => of(new BuilderError(tag, [error]))),
 		/**
 		 * Prevents emitting the pending state twice in a row.
 		 * This can happen if builders start working asynchronously based on some trigger.

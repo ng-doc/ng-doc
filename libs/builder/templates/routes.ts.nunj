@@ -1,0 +1,27 @@
+// @ts-nocheck
+import {Routes} from '@angular/router';
+
+export const NG_DOC_ROUTING: Routes = [
+	{%- macro route(entry) %}
+	{
+		path: '{{ entry.item.route }}',
+		title: `{{ entry.item.entry.title | toTemplateString }}`,
+		{%- if entry.children.length %}
+		children: [{
+			path: '',
+			redirectTo: '{{ entry.children[0].item.route }}',
+			pathMatch: 'full'
+		},
+			{%- for child in entry.children -%}
+			{{ route(child) }}
+			{%- endfor -%}
+		],
+		{%- else %}
+		loadChildren: () => import('./{{ curDir | createImportPath(entry.item.outDir + "/page.ts") }}'),
+		{%- endif %}
+	}
+	{%- endmacro %}
+	{%- for entry in entries %}
+	{{ route(entry) }},
+	{%- endfor %}
+];

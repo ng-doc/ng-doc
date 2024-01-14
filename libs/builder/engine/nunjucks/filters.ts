@@ -36,9 +36,10 @@ export {
 	noLineBreaks,
 	notEmptyAssets,
 	sortByNodesName,
-	sortNavigationEntities,
+	sortNavigationEntries,
 	toTemplateString,
 	typeAliasPresentation,
 	variablePresentation,
 } from '../../helpers';
+export { createImportPath } from '../builders/helpers';
 export { isRoute, kebabCase, objectKeys, unique } from '@ng-doc/core';

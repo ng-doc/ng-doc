@@ -7,29 +7,30 @@ export function provideNgDocContext(): Provider {
         provide: NG_DOC_CONTEXT,
         useValue: {
             navigation: [
-                {%- macro nav(entity) %}
+                {%- macro nav(entry) %}
                 {
-                    title: `{{ entity.title | toTemplateString }}`,
-                    route: '{{ entity.fullRoute }}',
-                    {%- if entity.isCategory %}
-                    expandable: {{ entity.expandable }},
-                    expanded: {{ entity.expanded }},
+                    title: `{{ entry.item.entry.title | toTemplateString }}`,
+                    route: '/{{ entry.item.absoluteRoute() }}',
+                    {%- if entry.children.length %}
+                    expandable: {{ entry.item.entry.expandable | default("true") }},
+                    expanded: {{ entry.item.entry.expanded | default("false") }},
                     {%- endif %}
-                    {%- if entity.order %}
-                    order: {{ entity.order }},
-                    hidden: {{ "true" if entity.target.hidden else "false" }},
+                    {%- if entry.item.order %}
+                    order: {{ entry.item.order }},
+                    hidden: {{ entry.item.entry.hidden | default("false") }},
                     {%- endif %}
-                    {%- if entity.isCategory %}
+                    {%- if entry.children.length %}
                     children: [
-                        {%- for child in entity.navigationItems | sortNavigationEntities %}
+                        {%- for child in entry.children | sortNavigationEntries %}
                         {{ nav(child) }},
                         {%- endfor %}
                     ]
                     {%- endif %}
                 }
                 {%- endmacro %}
-                {%- for entity in entities | sortNavigationEntities %}
-                {{ nav(entity) }},
+
+                {%- for entry in entries | sortNavigationEntries %}
+                {{ nav(entry) }},
                 {%- endfor %}
             ],
         }

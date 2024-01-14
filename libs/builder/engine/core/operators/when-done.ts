@@ -19,6 +19,7 @@ export function whenDone<T, O extends ObservableInput<any>>(
 ): OperatorFunction<BuilderState<T>, BuilderState<ObservedValueOf<O>>> {
 	return (source: Observable<BuilderState<T>>) =>
 		source.pipe(
+			// This will destroy the observable chain if the state is not a BuilderDone state
 			switchMap((state) => {
 				if (isBuilderDone(state)) {
 					return of(state.result).pipe(switchMap(project));
