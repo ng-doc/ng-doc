@@ -49,9 +49,16 @@ export abstract class NgDocBasePlayground implements Pick<NgDocPlaygroundConfig,
 			this.defaultValues = Object.keys(this.playground).reduce(
 				(values: Record<string, unknown>, key: string) => {
 					if (this.playground) {
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-ignore
-						values[key] = this.playground[key];
+						try {
+							// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+							// @ts-ignore
+							values[key] =
+								typeof this.playground[key] === 'function'
+									? this.playground[key]()
+									: this.playground[key];
+						} catch (e) {
+							// we do catch here because some of the playground properties can be getters and throw an error
+						}
 					}
 
 					return values;

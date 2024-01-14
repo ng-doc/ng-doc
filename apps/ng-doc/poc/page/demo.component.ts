@@ -1,5 +1,6 @@
+import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
 	selector: 'ng-doc-demo',
@@ -7,7 +8,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 	imports: [CommonModule],
 	template: `
 		<!-- snippet "Test" -->
-		{{ myInput }}
+		{{ signalInput() }}
 		<p>demo works!</p>
 		123123
 		<!-- snippet -->
@@ -16,14 +17,13 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoComponent {
-	val: string = '123';
-	@Input()
-	get myInput(): string {
-		return this.val;
-	}
+	// eslint-disable-next-line @typescript-eslint/typedef
+	signalInput = input<number, string>(123, { transform: coerceNumberProperty });
+	// eslint-disable-next-line @typescript-eslint/typedef
+	test = input<string>('test');
 
-	set myInput(value: string) {
-		this.val = value;
+	constructor() {
+		console.log('signalInput', this.signalInput, this.test);
 	}
 
 	method(): void {
