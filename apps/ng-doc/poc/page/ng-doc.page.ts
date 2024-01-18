@@ -6,14 +6,6 @@ const Page: NgDocPage = {
 	title: `Just a Page`,
 	mdFile: './index.md',
 	demos: { DemoComponent },
-	route: {
-		children: [
-			{
-				path: 'demo1',
-				component: DemoComponent,
-			},
-		],
-	},
 	playgrounds: {
 		BtnPlayground: {
 			target: DemoComponent,

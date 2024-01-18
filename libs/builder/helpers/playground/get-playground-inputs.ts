@@ -8,9 +8,9 @@ import {
 	TypeFormatFlags,
 } from 'ts-morph';
 
-import { getComponentInputs, getInputName, NgDocInputDeclaration } from '../angular';
+import { getComponentInputs, getInputName, getInputType, NgDocInputDeclaration } from '../angular';
 import { extractDocs, extractParameterDocs } from '../extract-docs';
-import { displayType } from '../typescript';
+import { formatType } from '../typescript';
 
 /**
  *
@@ -51,8 +51,8 @@ function propOrParamToPlaygroundProperty(
 	propOrParam: NgDocInputDeclaration | ParameterDeclaration,
 	inputName?: string,
 ): NgDocPlaygroundProperties {
-	const type: string = displayType(
-		propOrParam,
+	const type: string = formatType(
+		Node.isPropertyDeclaration(propOrParam) ? getInputType(propOrParam) : propOrParam.getType(),
 		TypeFormatFlags.NoTruncation | TypeFormatFlags.UseSingleQuotesForStringLiteralType,
 	);
 
