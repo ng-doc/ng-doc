@@ -1,6 +1,7 @@
 import { Node, Project, SourceFile } from 'ts-morph';
 
-import { getComponentInputs, NgDocInputDeclaration } from '../angular/get-component-inputs';
+import { NgDocInputDeclaration } from '../angular';
+import { getComponentInputs } from '../angular/get-component-inputs';
 import { createProject } from '../typescript/create-project';
 
 /**
