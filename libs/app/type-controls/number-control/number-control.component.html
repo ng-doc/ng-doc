@@ -1,5 +1,5 @@
 <ng-doc-input-wrapper diControlSilencer [rightContent]="rightContent">
-	<input ngDocInputNumber type="number" [ngModel]="model" (ngModelChange)="changeModel($event)" />
+	<input ngDocInputNumber type="number" [ngModel]="model()" (ngModelChange)="changeModel($event)" />
 	<ng-template #rightContent>
 		<button
 			ng-doc-button-icon

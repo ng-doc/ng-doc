@@ -1,4 +1,4 @@
-import { Node, TypeFormatFlags } from 'ts-morph';
+import { Node, Type, TypeFormatFlags } from 'ts-morph';
 
 /**
  *
@@ -11,7 +11,19 @@ export function displayType(
 ): string {
 	return Node.isTypeAliasDeclaration(node)
 		? node.getTypeNodeOrThrow().getText(undefined)
-		: node.getType().getText(undefined, typeFormatFlags);
+		: formatType(node.getType(), typeFormatFlags);
+}
+
+/**
+ *
+ * @param type
+ * @param typeFormatFlags
+ */
+export function formatType(
+	type: Type,
+	typeFormatFlags: TypeFormatFlags = TypeFormatFlags.NoTruncation,
+) {
+	return type.getText(undefined, typeFormatFlags);
 }
 
 /**
