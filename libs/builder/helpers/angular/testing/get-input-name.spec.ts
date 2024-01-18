@@ -225,4 +225,27 @@ describe('getInputName', () => {
 
 		expect(getInputName(input)).toBe('bar');
 	});
+
+	it('should return the name of the required signal input with alias', () => {
+		const sourceFile = project.createSourceFile(
+			'index.ts',
+			`
+			import {Component, input} from '@angular/core';
+
+			@Component({
+				selector: 'app-root',
+				template: '',
+			})
+			export class AppComponent {
+				foo = input.required<string>({alias: 'bar'});
+			}
+		`,
+			{ overwrite: true },
+		);
+
+		const component = sourceFile.getClassOrThrow('AppComponent');
+		const input = component.getPropertyOrThrow('foo');
+
+		expect(getInputName(input)).toBe('bar');
+	});
 });

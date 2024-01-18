@@ -85,4 +85,28 @@ describe('getInputType', () => {
 
 		expect(getInputType(input).getText()).toBe('number');
 	});
+
+	it('should return type for required input', () => {
+		const sourceFile = project.createSourceFile(
+			'index.ts',
+			`
+			import {Component, input} from '@angular/core';
+
+			@Component({
+				selector: 'app-root',
+				template: '',
+			})
+			export class AppComponent {
+				foo = input.required<string>();
+			}
+		`,
+			{ overwrite: true },
+		);
+
+		sourceFile.getProject().resolveSourceFileDependencies();
+		const component = sourceFile.getClassOrThrow('AppComponent');
+		const input = component.getPropertyOrThrow('foo');
+
+		expect(getInputType(input).getText()).toBe('string');
+	});
 });

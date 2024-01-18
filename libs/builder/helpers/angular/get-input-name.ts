@@ -30,7 +30,9 @@ export function getInputName(property: NgDocInputDeclaration): string {
 
 		if (Node.isInterfaceDeclaration(typeDeclaration) && Node.isPropertyDeclaration(property)) {
 			const inputInitializer = property.getInitializerIfKind(SyntaxKind.CallExpression);
-			const objectExpression = inputInitializer?.getArguments()[1];
+			const argumentsIndex =
+				inputInitializer?.getExpression().getText() === 'input.required' ? 0 : 1;
+			const objectExpression = inputInitializer?.getArguments()[argumentsIndex];
 
 			if (Node.isObjectLiteralExpression(objectExpression)) {
 				const inputAliasProperty = objectExpression.getProperty('alias');

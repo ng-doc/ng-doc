@@ -20,7 +20,7 @@ export class DemoComponent {
 	// eslint-disable-next-line @typescript-eslint/typedef
 	signalInput = input<number, string>(123, { transform: coerceNumberProperty });
 	// eslint-disable-next-line @typescript-eslint/typedef
-	test = input<string>('test');
+	test = input.required<string>();
 
 	constructor() {
 		console.log('signalInput', this.signalInput, this.test);
