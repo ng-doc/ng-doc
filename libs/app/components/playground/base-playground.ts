@@ -50,12 +50,13 @@ export abstract class NgDocBasePlayground implements Pick<NgDocPlaygroundConfig,
 				(values: Record<string, unknown>, key: string) => {
 					if (this.playground) {
 						try {
-							// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-							// @ts-ignore
 							values[key] =
+								// @ts-expect-error we do not know the type of the playground
 								typeof this.playground[key] === 'function'
-									? this.playground[key]()
-									: this.playground[key];
+									? // @ts-expect-error we do not know the type of the playground
+									  this.playground[key]()
+									: // @ts-expect-error we do not know the type of the playground
+									  this.playground[key];
 						} catch (e) {
 							// we do catch here because some of the playground properties can be getters and throw an error
 						}
