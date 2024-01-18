@@ -1,3 +1,10 @@
+# [17.3.0](https://github.com/ng-doc/ng-doc/compare/v17.2.3...v17.3.0) (2024-01-18)
+
+
+### Features
+
+* **builder:** add support for `input` signal ([#129](https://github.com/ng-doc/ng-doc/issues/129)) ([a4042af](https://github.com/ng-doc/ng-doc/commit/a4042afe14d5936ddbcf37f559421a8ea8026bc4))
+
 ## [17.2.3](https://github.com/ng-doc/ng-doc/compare/v17.2.2...v17.2.3) (2024-01-12)
 
 
