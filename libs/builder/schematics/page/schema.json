@@ -22,6 +22,11 @@
 			},
 			"x-prompt": "The title of your page (e.g. \"Getting Started\")?"
 		},
+		"name": {
+			"type": "string",
+			"description": "Name of the category variable (alias is `-n`, title in PascalCase by default)",
+			"alias": "n"
+		},
 		"route": {
 			"type": "string",
 			"description": "The route of the page",
