@@ -1,3 +1,10 @@
+## [17.3.1](https://github.com/ng-doc/ng-doc/compare/v17.3.0...v17.3.1) (2024-02-13)
+
+
+### Bug Fixes
+
+* **builder:** add missed name options in schemas ([#130](https://github.com/ng-doc/ng-doc/issues/130)) ([f35ed2c](https://github.com/ng-doc/ng-doc/commit/f35ed2c66452d731782a043c538fbca66a2adbe8))
+
 # [17.3.0](https://github.com/ng-doc/ng-doc/compare/v17.2.3...v17.3.0) (2024-01-18)
 
 
