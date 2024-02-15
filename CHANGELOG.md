@@ -1,3 +1,11 @@
+## [17.3.2](https://github.com/ng-doc/ng-doc/compare/v17.3.1...v17.3.2) (2024-02-15)
+
+
+### Bug Fixes
+
+* **ui-kit:** checkbox always displays checked state ([5f752fe](https://github.com/ng-doc/ng-doc/commit/5f752fe83d71b207edec82fcba2c7f629b5ea228))
+* **ui-kit:** remove redundant input in button component ([f0335dd](https://github.com/ng-doc/ng-doc/commit/f0335dddeb10f1b508d3d4f904e95ba71b647fd9))
+
 ## [17.3.1](https://github.com/ng-doc/ng-doc/compare/v17.3.0...v17.3.1) (2024-02-13)
 
 
