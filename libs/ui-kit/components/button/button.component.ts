@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostBinding, Input, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
 import { NgDocColor, NgDocSize } from '@ng-doc/ui-kit/types';
 
 @Component({
@@ -21,11 +21,4 @@ export class NgDocButtonComponent {
 	@Input()
 	@HostBinding('attr.data-ng-doc-rounded')
 	rounded: boolean = false;
-
-	// eslint-disable-next-line @typescript-eslint/typedef
-	signalInput = input<string>('signalInput');
-
-	constructor() {
-		console.log('signalInput', this.signalInput);
-	}
 }
