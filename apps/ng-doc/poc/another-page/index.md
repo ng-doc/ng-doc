@@ -9,8 +9,3 @@ asdasd
 asd
 asd
 asdasd
-
-asdasdas
-asd
-sdf12
-123123
