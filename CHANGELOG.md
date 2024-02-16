@@ -1,3 +1,10 @@
+# [17.4.0](https://github.com/ng-doc/ng-doc/compare/v17.3.2...v17.4.0) (2024-02-16)
+
+
+### Features
+
+* **builder:** add `excludeByTsDocsTags` function to filter out nodes based on TS documentation tags ([#131](https://github.com/ng-doc/ng-doc/issues/131)) ([2a55f57](https://github.com/ng-doc/ng-doc/commit/2a55f5717087309192bd0e012c9e707503b68d68))
+
 ## [17.3.2](https://github.com/ng-doc/ng-doc/compare/v17.3.1...v17.3.2) (2024-02-15)
 
 
