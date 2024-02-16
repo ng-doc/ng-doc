@@ -1,16 +1,17 @@
-import { createEntryMetadata, PAGES_STORE } from '@ng-doc/builder';
+import { createEntryMetadata, onDependenciesChange, PAGES_STORE } from '@ng-doc/builder';
 import { NgDocPage } from '@ng-doc/core';
 import { finalize, merge, takeUntil } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 
+import { ObservableSet } from '../../../classes';
 import { buildFileEntity, importFreshEsm } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
 import { Builder, runBuild, watchFile } from '../../core';
 import { EntryMetadata } from '../interfaces';
 
 interface Config {
-	context: NgDocBuilderContext;
-	pagePath: string;
+  context: NgDocBuilderContext;
+  pagePath: string;
 }
 
 export const PAGE_FILE_BUILDER_TAG = 'PageFile';
@@ -26,26 +27,44 @@ export const PAGE_FILE_BUILDER_TAG = 'PageFile';
  * @returns {Builder<NgDocPage>} - A Builder Observable that emits a NgDocPage object whenever the file at the provided path changes.
  */
 export function pageFileBuilder({ context, pagePath }: Config): Builder<EntryMetadata<NgDocPage>> {
-	const sourceFile = context.project.addSourceFileAtPath(pagePath);
+  const sourceFile = context.project.addSourceFileAtPath(pagePath);
+  const dependencies = new ObservableSet<string>();
 
-	return merge(watchFile(pagePath, 'update')).pipe(
-		startWith(void 0),
-		runBuild(PAGE_FILE_BUILDER_TAG, async () => {
-			await sourceFile.refreshFromFileSystem();
+  return merge(watchFile(pagePath, 'update'), onDependenciesChange(dependencies)).pipe(
+    startWith(void 0),
+    runBuild(PAGE_FILE_BUILDER_TAG, async () => {
+      dependencies.clear();
 
-			const outPath = await buildFileEntity(
-				sourceFile,
-				context.tsConfig,
-				context.context.workspaceRoot,
-			);
-			const page = (await importFreshEsm<{ default: NgDocPage }>(outPath)).default;
-			const metadata = createEntryMetadata(context, page, sourceFile);
+      await sourceFile.refreshFromFileSystem();
 
-			PAGES_STORE.add(metadata.absoluteRoute(), metadata);
+      const outPath = await buildFileEntity(
+        sourceFile,
+        context.tsConfig,
+        context.context.workspaceRoot,
+      );
+      const page = (await importFreshEsm<{ default: NgDocPage }>(outPath)).default;
+      const metadata = createEntryMetadata(context, page, sourceFile);
 
-			return metadata;
-		}),
-		takeUntil(watchFile(pagePath, 'delete')),
-		finalize(() => PAGES_STORE.delete(pagePath)),
-	);
+      addCategoriesToDependencies(metadata, dependencies);
+
+      PAGES_STORE.add(metadata.absoluteRoute(), metadata);
+
+      return metadata;
+    }),
+    takeUntil(watchFile(pagePath, 'delete')),
+    finalize(() => PAGES_STORE.delete(pagePath)),
+  );
+}
+
+/**
+ *
+ * @param metadata
+ * @param dependencies
+ */
+function addCategoriesToDependencies(metadata: EntryMetadata, dependencies: ObservableSet<string>) {
+  if (metadata.category) {
+    dependencies.add(metadata.category.sourceFile.getFilePath());
+
+    addCategoriesToDependencies(metadata.category, dependencies);
+  }
 }
