@@ -6,6 +6,7 @@ export {
 	declarationImport,
 	displayReturnType,
 	displayType,
+	excludeByTsDocsTags,
 	extractDocs,
 	extractParameterDocs,
 	extractSeeDocs,
