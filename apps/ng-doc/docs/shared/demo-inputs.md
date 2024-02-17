@@ -1,3 +1,9 @@
+## Inputs
+
+Вы так же можете добавить инпут поля вашему демо компоненту, а после передавать их значения при
+ренденринге демо, это даст вам большую переиспользуемость.
+
+```typescript name="button-demo.component.ts"
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { NgDocButtonComponent, NgDocColor } from '@ng-doc/ui-kit';
 
@@ -12,3 +18,4 @@ export class ButtonInlineDemoComponent {
   @Input()
   color: NgDocColor = 'primary';
 }
+```
