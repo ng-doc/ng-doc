@@ -17,7 +17,7 @@ passing the name of your component to it as follows
 NgDoc will separate your component's code into multiple tabs to make it easier to view, and show it
 like this
 
-{{ NgDocActions.demo("ButtonDemoComponent") }}
+{{ NgDocActions.demo("ButtonDemoComponent", {inputs: {color: 'alert'} }) }}
 
 ## Configuration
 
@@ -35,6 +35,14 @@ container.
 > components into the page template so that the user can interact with them.
 
 {{ NgDocActions.demo("ButtonDemoComponent", {container: false}) }}
+
+{% include "../../shared/demo-inputs.md" %}
+
+```twig name="index.md"
+{{'{{ NgDocActions.demo("ButtonInlineDemoComponent", {inputs: {color: "info"} }) }}' | safe }}
+```
+
+{{ NgDocActions.demo("ButtonInlineDemoComponent", {inputs: {color: "info"} }) }}
 
 {% include "../../shared/fullscreen-demo.md" %}
 

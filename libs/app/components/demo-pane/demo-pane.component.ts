@@ -1,4 +1,4 @@
-import { NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgComponentOutlet, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -20,8 +20,6 @@ import {
 	NgDocTabComponent,
 	NgDocTabGroupComponent,
 } from '@ng-doc/ui-kit';
-import { NgDocContent } from '@ng-doc/ui-kit/types';
-import { PolymorpheusComponent, PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 
 @Component({
 	selector: 'ng-doc-demo-pane',
@@ -34,13 +32,13 @@ import { PolymorpheusComponent, PolymorpheusModule } from '@tinkoff/ng-polymorph
 		NgTemplateOutlet,
 		NgDocPaneBackDirective,
 		NgDocPaneFrontDirective,
-		PolymorpheusModule,
 		NgIf,
 		NgFor,
 		NgDocCodeComponent,
 		NgDocTabGroupComponent,
 		NgDocTabComponent,
 		NgDocFullscreenButtonComponent,
+		NgComponentOutlet,
 	],
 })
 export class NgDocDemoPaneComponent implements OnInit {
@@ -50,7 +48,7 @@ export class NgDocDemoPaneComponent implements OnInit {
 	@Input()
 	options: NgDocDemoPaneActionOptions = {};
 
-	demo?: NgDocContent<object>;
+	demo?: Type<unknown>;
 	assets: NgDocDemoAsset[] = [];
 
 	constructor(private readonly rootPage: NgDocRootPage) {}
@@ -65,12 +63,9 @@ export class NgDocDemoPaneComponent implements OnInit {
 		this.assets = this.getAssets();
 	}
 
-	private getDemo(): NgDocContent<object> | undefined {
+	private getDemo(): Type<unknown> | undefined {
 		if (this.componentName) {
-			const component: Type<unknown> | undefined =
-				this.rootPage.page?.demos && this.rootPage.page.demos[this.componentName];
-
-			return component ? new PolymorpheusComponent(component as Type<object>) : undefined;
+			return this.rootPage.page?.demos && this.rootPage.page.demos[this.componentName];
 		}
 
 		return undefined;

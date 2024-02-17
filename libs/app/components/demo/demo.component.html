@@ -7,7 +7,7 @@
 			</ng-container>
 
 			<ng-container *ngIf="assets.length > 1">
-				<ng-doc-tab-group [openedTab]="(getOpenedAssetId | execute: assets) ?? options.defaultTab">
+				<ng-doc-tab-group [openedTab]="(getOpenedAssetId | execute : assets) ?? options.defaultTab">
 					<ng-doc-tab
 						*ngFor="let asset of assets"
 						[id]="asset.title"
@@ -28,12 +28,9 @@
 </ng-container>
 
 <ng-template #demoTemplate>
-	<ng-template #fullscreenButton>
-		<ng-doc-fullscreen-button [route]="options.fullscreenRoute!"></ng-doc-fullscreen-button>
-	</ng-template>
-	<ng-container
-		*polymorpheusOutlet="
-			options.fullscreenRoute ? fullscreenButton : demo ?? '';
-			context: {}
-		"></ng-container>
+	@if (options.fullscreenRoute) {
+	<ng-doc-fullscreen-button [route]="options.fullscreenRoute!"></ng-doc-fullscreen-button>
+	} @else if (demo) {
+	<ng-container *ngComponentOutlet="demo; inputs: options.inputs"></ng-container>
+	}
 </ng-template>

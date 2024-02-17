@@ -1,4 +1,4 @@
-import { NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgComponentOutlet, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -20,8 +20,6 @@ import {
 	NgDocTabComponent,
 	NgDocTabGroupComponent,
 } from '@ng-doc/ui-kit';
-import { NgDocContent } from '@ng-doc/ui-kit/types';
-import { PolymorpheusComponent, PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 
 @Component({
 	selector: 'ng-doc-demo',
@@ -37,10 +35,10 @@ import { PolymorpheusComponent, PolymorpheusModule } from '@tinkoff/ng-polymorph
 		NgDocCodeComponent,
 		NgDocTabGroupComponent,
 		NgDocTabComponent,
-		PolymorpheusModule,
 		NgDocIconComponent,
 		NgDocExecutePipe,
 		NgDocFullscreenButtonComponent,
+		NgComponentOutlet,
 	],
 })
 export class NgDocDemoComponent implements OnInit {
@@ -50,7 +48,7 @@ export class NgDocDemoComponent implements OnInit {
 	@Input()
 	options: NgDocDemoActionOptions = {};
 
-	demo?: NgDocContent<object>;
+	demo?: Type<unknown>;
 	assets: NgDocDemoAsset[] = [];
 
 	constructor(private readonly rootPage: NgDocRootPage) {}
@@ -69,12 +67,9 @@ export class NgDocDemoComponent implements OnInit {
 		return assets.find((asset: NgDocDemoAsset) => asset.opened)?.title;
 	}
 
-	private getDemo(): NgDocContent<object> | undefined {
+	private getDemo(): Type<unknown> | undefined {
 		if (this.componentName) {
-			const component: Type<unknown> | undefined =
-				this.rootPage.page?.demos && this.rootPage.page.demos[this.componentName];
-
-			return component ? new PolymorpheusComponent(component as Type<object>) : undefined;
+			return this.rootPage.page?.demos && this.rootPage.page.demos[this.componentName];
 		}
 
 		return undefined;
