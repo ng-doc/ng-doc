@@ -1,3 +1,10 @@
+# [17.5.0](https://github.com/ng-doc/ng-doc/compare/v17.4.0...v17.5.0) (2024-02-17)
+
+
+### Features
+
+* **builder:** add `inputs` property for `demo` and `demoPane` actions ([21a80cd](https://github.com/ng-doc/ng-doc/commit/21a80cdf52ade014afa388a5356ff6dc06264866)), closes [#132](https://github.com/ng-doc/ng-doc/issues/132)
+
 # [17.4.0](https://github.com/ng-doc/ng-doc/compare/v17.3.2...v17.4.0) (2024-02-16)
 
 
