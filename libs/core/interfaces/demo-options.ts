@@ -27,4 +27,4 @@ export interface NgDocDemoActionOptions extends NgDocBaseDemoOptions {
 /**
  * Possible options for `demoPane` action
  */
-export interface NgDocDemoPaneActionOptions extends NgDocBaseDemoOptions {}
+export type NgDocDemoPaneActionOptions = NgDocBaseDemoOptions;
