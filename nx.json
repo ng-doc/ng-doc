@@ -23,10 +23,6 @@
   },
   "defaultProject": "ng-doc",
   "targetDefaults": {
-    "lint": {
-      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
-      "cache": true
-    },
     "build": {
       "dependsOn": ["pre-build"],
       "inputs": ["production", "^production"],
@@ -51,6 +47,10 @@
           "codeCoverage": true
         }
       }
+    },
+    "@nx/eslint:lint": {
+      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
+      "cache": true
     }
   },
   "namedInputs": {
