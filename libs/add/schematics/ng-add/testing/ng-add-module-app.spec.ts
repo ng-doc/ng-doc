@@ -13,32 +13,32 @@ import { createTsConfigs } from '../utils/create-ts-configs';
 const collectionPath: string = join(__dirname, '../../collection.json');
 
 describe('ng-add module app', () => {
-	let host: UnitTestTree;
-	let runner: SchematicTestRunner;
+  let host: UnitTestTree;
+  let runner: SchematicTestRunner;
 
-	beforeEach(() => {
-		host = new UnitTestTree(new HostTree());
-		runner = new SchematicTestRunner('schematics', collectionPath);
+  beforeEach(() => {
+    host = new UnitTestTree(new HostTree());
+    runner = new SchematicTestRunner('schematics', collectionPath);
 
-		setActiveProject(createProject(host));
+    setActiveProject(createProject(host));
 
-		createSourceFile('package.json', '{"dependencies": {"@angular/core": "~13.0.0"}}');
-		createAngularJson();
-		createTsConfigs();
-		createGitIgnore();
-		createMainFiles();
-		saveActiveProject();
-	});
+    createSourceFile('package.json', '{"dependencies": {"@angular/core": "~13.0.0"}}');
+    createAngularJson();
+    createTsConfigs();
+    createGitIgnore();
+    createMainFiles();
+    saveActiveProject();
+  });
 
-	it('should add main modules in package.json', async () => {
-		const options: Schema = {
-			project: '',
-		};
+  it('should add main modules in package.json', async () => {
+    const options: Schema = {
+      project: '',
+    };
 
-		const tree: UnitTestTree = await runner.runSchematic('ng-add', options, host);
+    const tree: UnitTestTree = await runner.runSchematic('ng-add', options, host);
 
-		expect(tree.readContent('package.json')).toEqual(
-			`{
+    expect(tree.readContent('package.json')).toEqual(
+      `{
   "dependencies": {
     "@angular/core": "~13.0.0",
     "@ng-doc/app": "${NG_DOC_VERSION}",
@@ -47,27 +47,27 @@ describe('ng-add module app', () => {
     "@ng-doc/ui-kit": "${NG_DOC_VERSION}"
   }
 }`,
-		);
-	});
+    );
+  });
 
-	it('should replace content of the app components template', async () => {
-		const options: Schema = {
-			project: '',
-		};
+  it('should replace content of the app components template', async () => {
+    const options: Schema = {
+      project: '',
+    };
 
-		const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
+    const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
-		expect(tree.readContent('test/app/app.template.html')).toEqual(APP_COMPONENT_CONTENT);
-	});
+    expect(tree.readContent('test/app/app.template.html')).toEqual(APP_COMPONENT_CONTENT);
+  });
 
-	it('should update app tsconfig', async () => {
-		const options: Schema = {
-			project: '',
-		};
+  it('should update app tsconfig', async () => {
+    const options: Schema = {
+      project: '',
+    };
 
-		const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
+    const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
-		expect(tree.readContent('test/tsconfig.app.json')).toEqual(`
+    expect(tree.readContent('test/tsconfig.app.json')).toEqual(`
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true
@@ -75,16 +75,16 @@ describe('ng-add module app', () => {
   "extends": "../tsconfig.json"
 }
 `);
-	});
+  });
 
-	it('should update tsconfig', async () => {
-		const options: Schema = {
-			project: '',
-		};
+  it('should update tsconfig', async () => {
+    const options: Schema = {
+      project: '',
+    };
 
-		const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
+    const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
-		expect(tree.readContent('tsconfig.json')).toEqual(`{
+    expect(tree.readContent('tsconfig.json')).toEqual(`{
   "compilerOptions": {
     "paths": {
       "@ng-doc/generated": [
@@ -96,30 +96,31 @@ describe('ng-add module app', () => {
     }
   }
 }`);
-	});
+  });
 
-	it('should add ng-doc folder to gitignore tsconfig', async () => {
-		const options: Schema = {
-			project: '',
-		};
+  it('should add ng-doc folder to gitignore tsconfig', async () => {
+    const options: Schema = {
+      project: '',
+    };
 
-		const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
+    const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
-		expect(tree.readContent('.gitignore')).toEqual(`.cache
+    expect(tree.readContent('.gitignore')).toEqual(`.cache
 
 # NgDoc files
 /ng-doc`);
-	});
+  });
 
-	it('should add NgDoc modules', async () => {
-		const options: Schema = {
-			project: '',
-		};
+  it('should add NgDoc modules', async () => {
+    const options: Schema = {
+      project: '',
+    };
 
-		const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
+    const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
-		expect(tree.readContent('test/app/app.module.ts'))
-			.toEqual(`import { NgDocRootComponent, NgDocNavbarComponent, NgDocSidebarComponent, provideNgDocApp, provideSearchEngine, NgDocDefaultSearchEngine, providePageSkeleton, NG_DOC_DEFAULT_PAGE_SKELETON, provideMainPageProcessor, NG_DOC_DEFAULT_PAGE_PROCESSORS } from "@ng-doc/app";
+    expect(tree.readContent('test/app/app.module.ts'))
+      .toEqual(`import { provideHttpClient, withInterceptorsFromDi, withFetch } from "@angular/common/http";
+import { NgDocRootComponent, NgDocNavbarComponent, NgDocSidebarComponent, provideNgDocApp, provideSearchEngine, NgDocDefaultSearchEngine, providePageSkeleton, NG_DOC_DEFAULT_PAGE_SKELETON, provideMainPageProcessor, NG_DOC_DEFAULT_PAGE_PROCESSORS } from "@ng-doc/app";
 import { NG_DOC_ROUTING, provideNgDocContext } from "@ng-doc/generated";
 import { RouterModule } from "@angular/router";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -128,20 +129,20 @@ import { AppComponent } from './app.component';
 
 @NgModule({declarations: [AppComponent],
     imports: [BrowserAnimationsModule, RouterModule.forRoot(NG_DOC_ROUTING, {scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', scrollOffset: [0, 70]}), NgDocRootComponent, NgDocNavbarComponent, NgDocSidebarComponent],
-    providers: [provideNgDocContext(), provideNgDocApp(), provideSearchEngine(NgDocDefaultSearchEngine), providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON), provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS)]
+    providers: [provideHttpClient(withInterceptorsFromDi(), withFetch()), provideNgDocContext(), provideNgDocApp(), provideSearchEngine(NgDocDefaultSearchEngine), providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON), provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS)]
 })
 export class AppModule {}
 `);
-	});
+  });
 
-	it('should update angular.json', async () => {
-		const options: Schema = {
-			project: '',
-		};
+  it('should update angular.json', async () => {
+    const options: Schema = {
+      project: '',
+    };
 
-		const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
+    const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
-		expect(tree.readContent('angular.json')).toEqual(`
+    expect(tree.readContent('angular.json')).toEqual(`
 {
   "version": 1,
   "defaultProject": "demo",
@@ -192,16 +193,16 @@ export class AppModule {}
     }
   }
 }`);
-	});
+  });
 });
 
 /**
  *
  */
 function createMainFiles(): void {
-	createSourceFile(
-		'test/main.ts',
-		`import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+  createSourceFile(
+    'test/main.ts',
+    `import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
   import { AppModule } from './app/app.module';
   import { environment } from './environments/environment';
 
@@ -212,26 +213,26 @@ function createMainFiles(): void {
     .bootstrapModule(AppModule)
     .catch(err => console.log(err));
   `,
-	);
+  );
 
-	createSourceFile(
-		'test/app/app.module.ts',
-		`import { NgModule } from '@angular/core';
+  createSourceFile(
+    'test/app/app.module.ts',
+    `import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 
 @NgModule({declarations: [AppComponent]})
 export class AppModule {}
 `,
-	);
+  );
 
-	createSourceFile(
-		'test/app/app.component.ts',
-		`import { Component } from '@angular/core';
+  createSourceFile(
+    'test/app/app.component.ts',
+    `import { Component } from '@angular/core';
 import { AppComponent } from './app.component';
 
 @Component({templateUrl: './app.template.html'})
 export class AppComponent {}`,
-	);
+  );
 
-	createSourceFile('test/app/app.template.html', `<app></app>`);
+  createSourceFile('test/app/app.template.html', `<app></app>`);
 }

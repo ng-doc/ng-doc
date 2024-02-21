@@ -1,51 +1,56 @@
 {
-	"$schema": "http://json-schema.org/schema",
-	"$id": "NgDocPage",
-	"title": "NgDocPage schematic",
-	"type": "object",
-	"properties": {
-		"path": {
-			"type": "string",
-			"format": "path",
-			"$default": {
-				"$source": "workingDirectory"
-			},
-			"description": "The path at which to create the entity file, relative to the current workspace. Default is a folder with the same name as the component in the project root.",
-			"visible": false
-		},
-		"title": {
-			"type": "string",
-			"description": "The title of the page.",
-			"$default": {
-				"$source": "argv",
-				"index": 0
-			},
-			"x-prompt": "The title of your category (e.g. \"Getting Started\")?"
-		},
-		"route": {
-			"type": "string",
-			"description": "The route of the page",
-			"alias": "r"
-		},
-		"category": {
-			"type": "boolean",
-			"description": "Automatically import the category.",
-			"alias": "c"
-		},
-		"order": {
-			"type": "number",
-			"description": "Order category in sidebar",
-			"alias": "o"
-		},
-		"expandable": {
-			"type": "boolean",
-			"description": "Determine if the category is expandable",
-			"alias": "e"
-		},
-		"expanded": {
-			"type": "boolean",
-			"description": "Determine if the category is expanded",
-			"alias": "x"
-		}
-	}
+  "$schema": "http://json-schema.org/schema",
+  "$id": "NgDocPage",
+  "title": "NgDocPage schematic",
+  "type": "object",
+  "properties": {
+    "path": {
+      "type": "string",
+      "format": "path",
+      "$default": {
+        "$source": "workingDirectory"
+      },
+      "description": "The path at which to create the entity file, relative to the current workspace. Default is a folder with the same name as the component in the project root.",
+      "visible": false
+    },
+    "title": {
+      "type": "string",
+      "description": "The title of the page.",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "The title of your category (e.g. \"Getting Started\")?"
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the category variable (alias is `-n`, title in PascalCase by default)",
+      "alias": "n"
+    },
+    "route": {
+      "type": "string",
+      "description": "The route of the page",
+      "alias": "r"
+    },
+    "category": {
+      "type": "boolean",
+      "description": "Automatically import the category.",
+      "alias": "c"
+    },
+    "order": {
+      "type": "number",
+      "description": "Order category in sidebar",
+      "alias": "o"
+    },
+    "expandable": {
+      "type": "boolean",
+      "description": "Determine if the category is expandable",
+      "alias": "e"
+    },
+    "expanded": {
+      "type": "boolean",
+      "description": "Determine if the category is expanded",
+      "alias": "x"
+    }
+  }
 }

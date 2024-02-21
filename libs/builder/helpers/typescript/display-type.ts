@@ -1,4 +1,4 @@
-import { Node, TypeFormatFlags } from 'ts-morph';
+import { Node, Type, TypeFormatFlags } from 'ts-morph';
 
 /**
  *
@@ -6,12 +6,24 @@ import { Node, TypeFormatFlags } from 'ts-morph';
  * @param typeFormatFlags
  */
 export function displayType(
-	node: Node,
-	typeFormatFlags: TypeFormatFlags = TypeFormatFlags.NoTruncation,
+  node: Node,
+  typeFormatFlags: TypeFormatFlags = TypeFormatFlags.NoTruncation,
 ): string {
-	return Node.isTypeAliasDeclaration(node)
-		? node.getTypeNodeOrThrow().getText(undefined)
-		: node.getType().getText(undefined, typeFormatFlags);
+  return Node.isTypeAliasDeclaration(node)
+    ? node.getTypeNodeOrThrow().getText(undefined)
+    : formatType(node.getType(), typeFormatFlags);
+}
+
+/**
+ *
+ * @param type
+ * @param typeFormatFlags
+ */
+export function formatType(
+  type: Type,
+  typeFormatFlags: TypeFormatFlags = TypeFormatFlags.NoTruncation,
+) {
+  return type.getText(undefined, typeFormatFlags);
 }
 
 /**
@@ -20,11 +32,11 @@ export function displayType(
  * @param typeFormatFlags
  */
 export function displayReturnType(
-	node: Node,
-	typeFormatFlags: TypeFormatFlags = TypeFormatFlags.NoTruncation,
+  node: Node,
+  typeFormatFlags: TypeFormatFlags = TypeFormatFlags.NoTruncation,
 ): string {
-	if (Node.isReturnTyped(node)) {
-		return node.getReturnType().getText(undefined, typeFormatFlags);
-	}
-	return '';
+  if (Node.isReturnTyped(node)) {
+    return node.getReturnType().getText(undefined, typeFormatFlags);
+  }
+  return '';
 }

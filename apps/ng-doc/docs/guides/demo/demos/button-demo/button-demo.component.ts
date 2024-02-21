@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgDocButtonComponent } from '@ng-doc/ui-kit';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { NgDocButtonComponent, NgDocColor } from '@ng-doc/ui-kit';
 import { NgDocNotifyService } from '@ng-doc/ui-kit/services/notify';
 
 @Component({
@@ -11,6 +11,9 @@ import { NgDocNotifyService } from '@ng-doc/ui-kit/services/notify';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonDemoComponent {
+  @Input()
+  color: NgDocColor = 'primary';
+
   constructor(private readonly notifyService: NgDocNotifyService) {}
 
   clickEvent(): void {

@@ -6,22 +6,22 @@ import { ModuleKind, ModuleResolutionKind, Project, ProjectOptions } from 'ts-mo
  * @returns {Project} - The project
  */
 export function createProject(options?: ProjectOptions): Project {
-	return new Project({
-		...options,
-		compilerOptions: {
-			module: ModuleKind.CommonJS,
-			sourceMap: false,
-			incremental: true,
-			declaration: false,
-			skipLibCheck: true,
-			moduleResolution: ModuleResolutionKind.NodeJs,
-			isolatedModules: true,
-			noEmit: true,
-			types: [],
-			...options?.compilerOptions,
-		},
-		skipAddingFilesFromTsConfig: true,
-		skipFileDependencyResolution: false,
-		skipLoadingLibFiles: false,
-	});
+  return new Project({
+    ...options,
+    compilerOptions: {
+      module: ModuleKind.CommonJS,
+      sourceMap: false,
+      incremental: true,
+      declaration: false,
+      skipLibCheck: true,
+      moduleResolution: ModuleResolutionKind.NodeNext,
+      isolatedModules: true,
+      noEmit: true,
+      types: [],
+      ...options?.compilerOptions,
+    },
+    skipAddingFilesFromTsConfig: true,
+    skipFileDependencyResolution: false,
+    skipLoadingLibFiles: false,
+  });
 }

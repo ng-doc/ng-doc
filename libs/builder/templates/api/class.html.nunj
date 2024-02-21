@@ -32,10 +32,10 @@
 {% endblock %}
 
 {% block overview %}
-    {%- set constructors = declaration.getConstructors() | filterByScope("public") -%}
-    {%- set allProperties = declaration | getClassProperties | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
-    {%- set allMethods = declaration | getClassMethods | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
-    {%- set allAccessors = declaration | getClassAccessors | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
+    {%- set constructors = declaration.getConstructors() | filterByScope("public") | excludeByTsDocsTags('internal') -%}
+    {%- set allProperties = declaration | getClassProperties | excludeByTsDocsTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
+    {%- set allMethods = declaration | getClassMethods | excludeByTsDocsTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
+    {%- set allAccessors = declaration | getClassAccessors | excludeByTsDocsTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
 
     {%- set staticProperties = allProperties | filterByStatic(true) -%}
     {%- set staticAccessors = allAccessors | filterByStatic(true) -%}

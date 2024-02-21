@@ -1,16 +1,12 @@
 import {
-	ClassDeclaration,
-	GetAccessorDeclaration,
-	PropertyDeclaration,
-	SetAccessorDeclaration,
+  ClassDeclaration,
+  GetAccessorDeclaration,
+  PropertyDeclaration,
+  SetAccessorDeclaration,
 } from 'ts-morph';
 
 import { forAllClasses } from '../typescript/class/for-all-classes';
-
-export type NgDocInputDeclaration =
-	| PropertyDeclaration
-	| GetAccessorDeclaration
-	| SetAccessorDeclaration;
+import { isInput, NgDocInputDeclaration } from './is-input';
 
 /**
  * Retrieve all existing `@Input` of an Angular component, up through ascendant classes
@@ -18,27 +14,27 @@ export type NgDocInputDeclaration =
  * @param condition - (cls: ClassDeclaration) => boolean
  */
 export function getComponentInputs(cls: ClassDeclaration): NgDocInputDeclaration[] {
-	const properties: Map<string, NgDocInputDeclaration> = new Map();
+  const properties: Map<string, NgDocInputDeclaration> = new Map();
 
-	forAllClasses(cls, (c: ClassDeclaration) => {
-		c.getProperties().forEach((p: PropertyDeclaration) => {
-			if (!properties.has(p.getName()) && p.getDecorator('Input')) {
-				properties.set(p.getName(), p);
-			}
-		});
+  forAllClasses(cls, (c: ClassDeclaration) => {
+    c.getProperties().forEach((p: PropertyDeclaration) => {
+      if (!properties.has(p.getName()) && isInput(p)) {
+        properties.set(p.getName(), p);
+      }
+    });
 
-		c.getGetAccessors().forEach((p: GetAccessorDeclaration) => {
-			if (!properties.has(p.getName()) && p.getDecorator('Input')) {
-				properties.set(p.getName(), p);
-			}
-		});
+    c.getGetAccessors().forEach((p: GetAccessorDeclaration) => {
+      if (!properties.has(p.getName()) && isInput(p)) {
+        properties.set(p.getName(), p);
+      }
+    });
 
-		c.getSetAccessors().forEach((p: SetAccessorDeclaration) => {
-			if (!properties.has(p.getName()) && p.getDecorator('Input')) {
-				properties.set(p.getName(), p);
-			}
-		});
-	});
+    c.getSetAccessors().forEach((p: SetAccessorDeclaration) => {
+      if (!properties.has(p.getName()) && isInput(p)) {
+        properties.set(p.getName(), p);
+      }
+    });
+  });
 
-	return Array.from(properties.values());
+  return Array.from(properties.values());
 }

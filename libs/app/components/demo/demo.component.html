@@ -1,39 +1,36 @@
 <ng-container *ngIf="options.container ?? true; else demoTemplate">
-	<ng-doc-demo-displayer [codeContent]="codeContent" [expanded]="!!options.expanded">
-		<ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
-		<ng-template #codeContent>
-			<ng-container *ngIf="assets.length === 1">
-				<ng-doc-code *ngFor="let asset of assets" [html]="asset.code"></ng-doc-code>
-			</ng-container>
+  <ng-doc-demo-displayer [codeContent]="codeContent" [expanded]="!!options.expanded">
+    <ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
+    <ng-template #codeContent>
+      <ng-container *ngIf="assets.length === 1">
+        <ng-doc-code *ngFor="let asset of assets" [html]="asset.code"></ng-doc-code>
+      </ng-container>
 
-			<ng-container *ngIf="assets.length > 1">
-				<ng-doc-tab-group [openedTab]="(getOpenedAssetId | execute: assets) ?? options.defaultTab">
-					<ng-doc-tab
-						*ngFor="let asset of assets"
-						[id]="asset.title"
-						[label]="label"
-						[content]="assetContent">
-						<ng-template #label>
-							<ng-doc-icon [customIcon]="asset.icon" *ngIf="asset.icon"></ng-doc-icon>
-							{{ asset.title }}
-						</ng-template>
-						<ng-template #assetContent>
-							<ng-doc-code [html]="asset.code"></ng-doc-code>
-						</ng-template>
-					</ng-doc-tab>
-				</ng-doc-tab-group>
-			</ng-container>
-		</ng-template>
-	</ng-doc-demo-displayer>
+      <ng-container *ngIf="assets.length > 1">
+        <ng-doc-tab-group [openedTab]="(getOpenedAssetId | execute : assets) ?? options.defaultTab">
+          <ng-doc-tab
+            *ngFor="let asset of assets"
+            [id]="asset.title"
+            [label]="label"
+            [content]="assetContent">
+            <ng-template #label>
+              <ng-doc-icon [customIcon]="asset.icon" *ngIf="asset.icon"></ng-doc-icon>
+              {{ asset.title }}
+            </ng-template>
+            <ng-template #assetContent>
+              <ng-doc-code [html]="asset.code"></ng-doc-code>
+            </ng-template>
+          </ng-doc-tab>
+        </ng-doc-tab-group>
+      </ng-container>
+    </ng-template>
+  </ng-doc-demo-displayer>
 </ng-container>
 
 <ng-template #demoTemplate>
-	<ng-template #fullscreenButton>
-		<ng-doc-fullscreen-button [route]="options.fullscreenRoute!"></ng-doc-fullscreen-button>
-	</ng-template>
-	<ng-container
-		*polymorpheusOutlet="
-			options.fullscreenRoute ? fullscreenButton : demo ?? '';
-			context: {}
-		"></ng-container>
+  @if (options.fullscreenRoute) {
+  <ng-doc-fullscreen-button [route]="options.fullscreenRoute!"></ng-doc-fullscreen-button>
+  } @else if (demo) {
+  <ng-container *ngComponentOutlet="demo; inputs: options.inputs"></ng-container>
+  }
 </ng-template>

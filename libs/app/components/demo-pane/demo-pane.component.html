@@ -1,35 +1,32 @@
 <ng-doc-pane [expanded]="options.expanded ?? false">
-	<ng-container *ngTemplateOutlet="codeContent" ngDocPaneBack></ng-container>
-	<ng-container *ngTemplateOutlet="demoTemplate" ngDocPaneFront></ng-container>
+  <ng-container *ngTemplateOutlet="codeContent" ngDocPaneBack></ng-container>
+  <ng-container *ngTemplateOutlet="demoTemplate" ngDocPaneFront></ng-container>
 </ng-doc-pane>
 
 <ng-template #demoTemplate>
-	<ng-template #fullscreenButton>
-		<ng-doc-fullscreen-button [route]="options.fullscreenRoute!"></ng-doc-fullscreen-button>
-	</ng-template>
-	<ng-container
-		*polymorpheusOutlet="
-			options.fullscreenRoute ? fullscreenButton : demo ?? '';
-			context: {}
-		"></ng-container>
+  @if (options.fullscreenRoute) {
+  <ng-doc-fullscreen-button [route]="options.fullscreenRoute!"></ng-doc-fullscreen-button>
+  } @else if (demo) {
+  <ng-container *ngComponentOutlet="demo; inputs: options.inputs"></ng-container>
+  }
 </ng-template>
 
 <ng-template #codeContent>
-	<ng-container *ngIf="assets.length === 1">
-		<ng-doc-code *ngFor="let asset of assets" [html]="asset.code"></ng-doc-code>
-	</ng-container>
+  <ng-container *ngIf="assets.length === 1">
+    <ng-doc-code *ngFor="let asset of assets" [html]="asset.code"></ng-doc-code>
+  </ng-container>
 
-	<ng-container *ngIf="assets.length > 1">
-		<ng-doc-tab-group [openedTab]="options.defaultTab">
-			<ng-doc-tab
-				*ngFor="let asset of assets"
-				[id]="asset.title"
-				[label]="asset.title"
-				[content]="assetContent">
-				<ng-template #assetContent>
-					<ng-doc-code [html]="asset.code"></ng-doc-code>
-				</ng-template>
-			</ng-doc-tab>
-		</ng-doc-tab-group>
-	</ng-container>
+  <ng-container *ngIf="assets.length > 1">
+    <ng-doc-tab-group [openedTab]="options.defaultTab">
+      <ng-doc-tab
+        *ngFor="let asset of assets"
+        [id]="asset.title"
+        [label]="asset.title"
+        [content]="assetContent">
+        <ng-template #assetContent>
+          <ng-doc-code [html]="asset.code"></ng-doc-code>
+        </ng-template>
+      </ng-doc-tab>
+    </ng-doc-tab-group>
+  </ng-container>
 </ng-template>
