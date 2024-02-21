@@ -1,4 +1,4 @@
-import { getStructuredDocs, whenBuildersStackIsEmpty } from '@ng-doc/builder';
+import { getStructuredDocs, onRemoveFromStore, whenBuildersStackIsEmpty } from '@ng-doc/builder';
 import { merge } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
 
@@ -15,18 +15,18 @@ import { routesBuilder } from './routes.builder';
  * @param context
  */
 export function globalBuilders(context: NgDocBuilderContext): Builder<FileOutput> {
-	return merge(
-		indexBuilder(context),
-		whenBuildersStackIsEmpty([PAGE_FILE_BUILDER_TAG]).pipe(
-			debounceTime(0),
-			switchMap(() => {
-				const structuredDocs = getStructuredDocs(PAGES_STORE.asArray());
+  return merge(
+    indexBuilder(context),
+    merge(whenBuildersStackIsEmpty([PAGE_FILE_BUILDER_TAG]), onRemoveFromStore(PAGES_STORE)).pipe(
+      debounceTime(0),
+      switchMap(() => {
+        const structuredDocs = getStructuredDocs(PAGES_STORE.asArray());
 
-				return merge(
-					contextBuilder(context, structuredDocs),
-					routesBuilder(context, structuredDocs),
-				);
-			}),
-		),
-	);
+        return merge(
+          contextBuilder(context, structuredDocs),
+          routesBuilder(context, structuredDocs),
+        );
+      }),
+    ),
+  );
 }

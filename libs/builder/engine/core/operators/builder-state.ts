@@ -5,6 +5,7 @@ import {
   distinctUntilChanged,
   filter,
   map,
+  merge,
   Observable,
   of,
   OperatorFunction,
@@ -93,9 +94,10 @@ export function whenStackIsEmpty<T>(
 /**
  *
  * @param tags
+ * @param triggers
  */
 export function whenBuildersStackIsEmpty(tags?: string[]): Observable<void> {
-  return STACK_TICK.pipe(
+  return merge(STACK_TICK).pipe(
     map(() => {
       const stacks = tags
         ? tags.map((tag) => STACK.get(tag)).filter(isPresent)

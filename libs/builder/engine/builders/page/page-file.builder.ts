@@ -47,12 +47,12 @@ export function pageFileBuilder({ context, pagePath }: Config): Builder<EntryMet
 
       addCategoriesToDependencies(metadata, dependencies);
 
-      PAGES_STORE.add(metadata.absoluteRoute(), metadata);
+      PAGES_STORE.add(pagePath, metadata);
 
       return metadata;
     }),
-    takeUntil(watchFile(pagePath, 'delete')),
     finalize(() => PAGES_STORE.delete(pagePath)),
+    takeUntil(watchFile(pagePath, 'delete')),
   );
 }
 

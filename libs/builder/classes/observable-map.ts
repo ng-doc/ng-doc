@@ -3,36 +3,40 @@ import { Observable, ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export class ObservableMap<T> {
-	private collection: Map<string, T> = new Map();
-	private changes$: ReplaySubject<void> = new ReplaySubject<void>();
+  private collection: Map<string, T> = new Map();
+  private changes$: ReplaySubject<void> = new ReplaySubject<void>();
 
-	constructor(values?: Array<[string, T]>) {
-		this.collection = new Map(values);
-	}
+  constructor(values?: Array<[string, T]>) {
+    this.collection = new Map(values);
+  }
 
-	asArray(): T[] {
-		return asArray(this.collection.values());
-	}
+  get size(): number {
+    return this.collection.size;
+  }
 
-	changes(): Observable<T[]> {
-		return this.changes$.pipe(map(() => this.asArray()));
-	}
+  asArray(): T[] {
+    return asArray(this.collection.values());
+  }
 
-	add(id: string, value: T): void {
-		this.collection.set(id, value);
+  changes(): Observable<T[]> {
+    return this.changes$.pipe(map(() => this.asArray()));
+  }
 
-		this.changes$.next();
-	}
+  add(id: string, value: T): void {
+    this.collection.set(id, value);
 
-	delete(id: string): void {
-		this.collection.delete(id);
+    this.changes$.next();
+  }
 
-		this.changes$.next();
-	}
+  delete(id: string): void {
+    this.collection.delete(id);
 
-	clear(): void {
-		this.collection.clear();
+    this.changes$.next();
+  }
 
-		this.changes$.next();
-	}
+  clear(): void {
+    this.collection.clear();
+
+    this.changes$.next();
+  }
 }
