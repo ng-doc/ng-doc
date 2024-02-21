@@ -14,16 +14,13 @@ import { playgroundBuilder } from './playground.builder';
  * @param pagePath
  */
 export function pageBuilder(context: NgDocBuilderContext, pagePath: string): Builder<FileOutput> {
-	return pageFileBuilder({ context, pagePath }).pipe(
-		whenDone((page) => {
-			return merge(
-				pageComponentBuilder({
-					context,
-					page,
-				}),
-				demoAssetsBuilder({ context, page }),
-				playgroundBuilder({ page }),
-			);
-		}),
-	);
+  return pageFileBuilder({ context, pagePath }).pipe(
+    whenDone((page) => {
+      return merge(
+        pageComponentBuilder({ context, page }),
+        demoAssetsBuilder({ context, page }),
+        playgroundBuilder({ page }),
+      );
+    }),
+  );
 }
