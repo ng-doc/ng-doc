@@ -1,3 +1,10 @@
+## [17.5.1](https://github.com/ng-doc/ng-doc/compare/v17.5.0...v17.5.1) (2024-02-21)
+
+
+### Bug Fixes
+
+* **builder:** multiple API Configurations causes build error ([3389546](https://github.com/ng-doc/ng-doc/commit/33895468031007d43ca966ace815be5cfb9c9707)), closes [#133](https://github.com/ng-doc/ng-doc/issues/133)
+
 # [17.5.0](https://github.com/ng-doc/ng-doc/compare/v17.4.0...v17.5.0) (2024-02-17)
 
 
