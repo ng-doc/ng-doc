@@ -13,7 +13,7 @@ import { CachedEntity, CachedFilesGetter, NgDocCache } from './cache';
 
 @CachedEntity()
 export class NgDocApiListEntity extends NgDocEntity {
-	override id: string = `NgDocIndexFile`;
+	override id: string = `${this.parent.id}#NgDocApiList`;
 	override isRoot: boolean = false;
 	override rootFiles: string[] = [];
 	override buildCandidates: NgDocEntity[] = [];
