@@ -1,3 +1,4 @@
+import { asArray } from '@ng-doc/core';
 import path from 'path';
 import { SourceFile } from 'ts-morph';
 
@@ -47,6 +48,9 @@ export function createEntryMetadata<T extends Entry>(
       const parentRoutePrefix = parentRoute ? `${parentRoute}/` : '';
 
       return `${parentRoutePrefix || routePrefix}${this.route}`;
+    },
+    breadcrumbs: function (): string[] {
+      return asArray(this.category?.breadcrumbs(), this.entry.title);
     },
     category:
       entry.category && categorySourceFile
