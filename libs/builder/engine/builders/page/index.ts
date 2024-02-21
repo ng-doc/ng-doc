@@ -1,7 +1,7 @@
-import { merge } from 'rxjs';
+import { merge, takeUntil } from 'rxjs';
 
 import { NgDocBuilderContext } from '../../../interfaces';
-import { Builder, FileOutput, whenDone } from '../../core';
+import { Builder, FileOutput, watchFile, whenDone } from '../../core';
 import { demoAssetsBuilder } from './demo-assets.builder';
 import { pageComponentBuilder } from './page-component.builder';
 import { pageFileBuilder } from './page-file.builder';
@@ -22,5 +22,6 @@ export function pageBuilder(context: NgDocBuilderContext, pagePath: string): Bui
         playgroundBuilder({ page }),
       );
     }),
+    takeUntil(watchFile(pagePath)),
   );
 }
