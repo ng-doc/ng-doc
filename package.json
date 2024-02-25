@@ -58,7 +58,7 @@
 		"@angular/router": "17.1.0",
 		"@angular/ssr": "17.1.0",
 		"@microsoft/tsdoc": "0.14.2",
-		"@ng-web-apis/common": "2.0.1",
+		"@ng-web-apis/common": "3.0.6",
 		"@ngneat/until-destroy": "^10.0.0",
 		"@orama/orama": "1.0.2",
 		"@orama/plugin-match-highlight": "1.0.2",

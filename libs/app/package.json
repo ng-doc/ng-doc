@@ -6,7 +6,7 @@
 		"@angular/core": ">=17.0.0",
 		"@angular/cdk": ">=17.0.0",
 		"@angular/router": ">=17.0.0",
-		"@ng-web-apis/common": "2.0.1",
+		"@ng-web-apis/common": "3.0.6",
 		"rxjs": "^7.0.0",
 		"di-controls": "2.1.0"
 	},
