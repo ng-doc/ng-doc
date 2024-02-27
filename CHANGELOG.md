@@ -1,3 +1,10 @@
+## [17.5.2](https://github.com/ng-doc/ng-doc/compare/v17.5.1...v17.5.2) (2024-02-27)
+
+
+### Bug Fixes
+
+* **app:** search icon is not displayed in the navbar for mobile and tablet views ([dcd3d6d](https://github.com/ng-doc/ng-doc/commit/dcd3d6dfc28fe8b668eb66ab68fed6014a9b6ad5))
+
 ## [17.5.1](https://github.com/ng-doc/ng-doc/compare/v17.5.0...v17.5.1) (2024-02-21)
 
 
