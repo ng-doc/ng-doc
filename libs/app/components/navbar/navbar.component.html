@@ -1,4 +1,4 @@
-<div class="navbar-container" *ngDocLet="false as isMobileMode">
+<div class="navbar-container" *ngDocLet="sidebarService.isMobileMode() | async as isMobileMode">
 	<div class="ng-doc-navbar-left">
 		<ng-container *polymorpheusOutlet="leftContent"></ng-container>
 	</div>
