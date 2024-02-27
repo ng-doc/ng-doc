@@ -2,6 +2,8 @@ import { asArray } from '@ng-doc/core';
 import { Observable, ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+type DestroyFn = () => void;
+
 export class ObservableMap<T> {
   private collection: Map<string, T> = new Map();
   private changes$: ReplaySubject<void> = new ReplaySubject<void>();
@@ -22,10 +24,18 @@ export class ObservableMap<T> {
     return this.changes$.pipe(map(() => this.asArray()));
   }
 
-  add(id: string, value: T): void {
-    this.collection.set(id, value);
+  add(...items: Array<[string, T]>): DestroyFn {
+    items.forEach(([id, value]) => this.collection.set(id, value));
 
     this.changes$.next();
+
+    return () => {
+      items.forEach(([id]) => this.delete(id));
+    };
+  }
+
+  get(id: string): T | undefined {
+    return this.collection.get(id);
   }
 
   delete(id: string): void {

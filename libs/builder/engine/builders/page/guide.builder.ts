@@ -1,14 +1,22 @@
-import { NgDocEntityAnchor, NgDocPage } from '@ng-doc/core';
-import { merge } from 'rxjs';
+import { NgDocEntityAnchor, NgDocKeyword, NgDocPage } from '@ng-doc/core';
+import { finalize, merge } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 
 import { ObservableSet } from '../../../classes';
+import { buildEntityKeyword, keywordKey } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
-import { Builder, runBuild, sequentialJobs, watchFile } from '../../core';
+import {
+  Builder,
+  keywordsStore,
+  onKeywordsChange,
+  runBuild,
+  sequentialJobs,
+  watchFile,
+} from '../../core';
 import { onDependenciesChange } from '../../core/triggers/on-dependencies-change';
 import { renderTemplate } from '../../nunjucks';
 import { EntryMetadata } from '../interfaces';
-import { markdownToHtmlJob, postProcessHtmlJob, processHtmlJob } from '../shared';
+import { extractKeywordsJob, markdownToHtmlJob, processHtmlJob } from '../shared';
 
 interface Config {
   context: NgDocBuilderContext;
@@ -31,15 +39,19 @@ interface Config {
 export function guideBuilder({ context, mdPath, page }: Config): Builder<string> {
   const dependencies = new ObservableSet<string>();
   const anchors = [] as NgDocEntityAnchor[];
-  const potentialKeywords = new Set<string>();
   const usedKeywords = new Set<string>();
+  let destroyKeywords: () => void = () => {};
 
-  return merge(watchFile(mdPath), onDependenciesChange(dependencies)).pipe(
+  return merge(
+    watchFile(mdPath),
+    onDependenciesChange(dependencies),
+    onKeywordsChange(usedKeywords),
+  ).pipe(
     startWith(void 0),
     runBuild('Guide', async () => {
       try {
+        destroyKeywords();
         dependencies.clear();
-        potentialKeywords.clear();
         usedKeywords.clear();
 
         const content = renderTemplate(page.entry.mdFile, {
@@ -59,16 +71,49 @@ export function guideBuilder({ context, mdPath, page }: Config): Builder<string>
             route: page.absoluteRoute(),
             addAnchor: anchors.push.bind(anchors),
           }),
-          postProcessHtmlJob({
-            addPotentialKeyword: potentialKeywords.add.bind(potentialKeywords),
-            addUsedKeyword: usedKeywords.add.bind(usedKeywords),
-          }),
+          extractKeywordsJob({ addUsedKeyword: usedKeywords.add.bind(usedKeywords) }),
         ]);
+
+        destroyKeywords = keywordsStore.add(...getKeywords(page, anchors));
 
         return processedContent;
       } catch (cause) {
         throw new Error(`Error while building guide page "${page.entry.title}"`, { cause });
       }
     }),
+    finalize(destroyKeywords),
   );
+}
+
+/**
+ *
+ * @param page
+ * @param anchors
+ */
+function getKeywords(
+  page: EntryMetadata<NgDocPage>,
+  anchors: NgDocEntityAnchor[],
+): Array<[string, NgDocKeyword]> {
+  const key = `*${page.entry.keyword}`;
+  const rootKeyword: NgDocKeyword = {
+    title: page.entry.title,
+    path: page.absoluteRoute(),
+    type: 'guide',
+  };
+
+  return [
+    [keywordKey(key), rootKeyword],
+    ...anchors.map((anchor) => {
+      const entityKeyword = buildEntityKeyword(key, page.entry.title, page.absoluteRoute(), anchor);
+
+      return [
+        keywordKey(entityKeyword.key),
+        {
+          title: entityKeyword.title,
+          path: entityKeyword.path,
+          type: 'guide',
+        } satisfies NgDocKeyword,
+      ] satisfies [string, NgDocKeyword];
+    }),
+  ];
 }

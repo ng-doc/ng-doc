@@ -47,7 +47,7 @@ export function pageFileBuilder({ context, pagePath }: Config): Builder<EntryMet
 
       addCategoriesToDependencies(metadata, dependencies);
 
-      PAGES_STORE.add(pagePath, metadata);
+      PAGES_STORE.add([pagePath, metadata]);
 
       return metadata;
     }),

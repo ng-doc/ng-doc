@@ -6,54 +6,51 @@ import { toString } from 'hast-util-to-string';
 import { SKIP, visitParents } from 'unist-util-visit-parents';
 
 import { hasLinkAncestor, isCodeNode } from '../helpers';
-import { NgDocHtmlPostProcessorConfig } from '../html-post-processor';
 
 const languages: string[] = ['typescript', 'ts'];
 
 export type AddKeyword = (keyword: string) => void;
 export type GetKeyword = (keyword: string) => NgDocKeyword | undefined;
 
+interface Config {
+  addUsedKeyword?: AddKeyword;
+  getKeyword?: GetKeyword;
+}
+
 /**
  *
  * @param config
  */
-export default function keywordsPlugin(config: NgDocHtmlPostProcessorConfig) {
-	const { addUsedKeyword, addPotentialKeyword, getKeyword } = config;
+export default function keywordsPlugin(config: Config) {
+  return (tree: Element) =>
+    visitParents(tree, 'element', (node: Element, ancestors: Element[]) => {
+      if (!isCodeNode(node)) {
+        return;
+      }
 
-	return (tree: Element) =>
-		visitParents(tree, 'element', (node: Element, ancestors: Element[]) => {
-			if (!isCodeNode(node)) {
-				return;
-			}
+      const isInlineCode: boolean = !isElement(ancestors[ancestors.length - 1], 'pre');
+      const lang: string = node.properties?.['lang']?.toString() || '';
 
-			const isInlineCode: boolean = !isElement(ancestors[ancestors.length - 1], 'pre');
-			const lang: string = node.properties?.['lang']?.toString() || '';
+      if (isInlineCode || languages.includes(lang)) {
+        visitParents(node, 'text', (node: Text, ancestors: Element[]) => {
+          if (hasLinkAncestor(ancestors)) {
+            return;
+          }
 
-			if (isInlineCode || languages.includes(lang)) {
-				visitParents(node, 'text', (node: Text, ancestors: Element[]) => {
-					if (
-						hasLinkAncestor(ancestors) ||
-						!getKeyword ||
-						!addUsedKeyword ||
-						!addPotentialKeyword
-					) {
-						return;
-					}
+          const parent: Element = ancestors[ancestors.length - 1];
+          const index: number = parent.children.indexOf(node);
 
-					const parent: Element = ancestors[ancestors.length - 1];
-					const index: number = parent.children.indexOf(node);
-
-					// Parse the text for words that we can convert to links
-					const nodes: any[] = getNodes(node, parent, isInlineCode, config);
-					// Replace the text node with the links and leftover text nodes
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					Array.prototype.splice.apply(parent.children, [index, 1].concat(nodes));
-					// Do not visit this node's children or the newly added nodes
-					return [SKIP, index + nodes.length];
-				});
-			}
-		});
+          // Parse the text for words that we can convert to links
+          const nodes: any[] = getNodes(node, parent, isInlineCode, config);
+          // Replace the text node with the links and leftover text nodes
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          Array.prototype.splice.apply(parent.children, [index, 1].concat(nodes));
+          // Do not visit this node's children or the newly added nodes
+          return [SKIP, index + nodes.length];
+        });
+      }
+    });
 }
 
 /**
@@ -64,63 +61,59 @@ export default function keywordsPlugin(config: NgDocHtmlPostProcessorConfig) {
  * @param config
  */
 function getNodes(
-	node: Text,
-	parent: Element,
-	inlineLink: boolean,
-	config: NgDocHtmlPostProcessorConfig,
+  node: Text,
+  parent: Element,
+  inlineLink: boolean,
+  config: Config,
 ): Array<Element | Text> {
-	const regexp: string = '([*A-Za-z0-9_$@]+[.#]?[A-Za-z0-9_-]+(?:\\?.+)?)';
-	const KeywordRegExp: RegExp = inlineLink
-		? new RegExp(`^${regexp}$`, 'g')
-		: new RegExp(regexp, 'g');
-	const keywordAnchorRegexp: RegExp =
-		/^(?<keyword>[*A-Za-z0-9_$@]+)((?<delimiter>[.#])(?<anchor>[A-Za-z0-9_-]+))?(?<queryParams>(?:\?.+))?$/;
-	const { addUsedKeyword, addPotentialKeyword, getKeyword, raiseError } = config;
+  const regexp: string = '([*A-Za-z0-9_$@]+[.#]?[A-Za-z0-9_-]+(?:\\?.+)?)';
+  const KeywordRegExp: RegExp = inlineLink
+    ? new RegExp(`^${regexp}$`, 'g')
+    : new RegExp(regexp, 'g');
+  const keywordAnchorRegexp: RegExp =
+    /^(?<keyword>[*A-Za-z0-9_$@]+)((?<delimiter>[.#])(?<anchor>[A-Za-z0-9_-]+))?(?<queryParams>(?:\?.+))?$/;
+  const { addUsedKeyword, getKeyword } = config;
 
-	if (!getKeyword || !addUsedKeyword || !addPotentialKeyword) {
-		throw new Error('Missing config');
-	}
+  return toString(node)
+    .split(KeywordRegExp)
+    .filter((word: string) => word.length)
+    .map((word: string) => {
+      const pureKeyword: string = word.split('?')[0];
+      const match: RegExpMatchArray | null = word.match(keywordAnchorRegexp);
+      const keyword: NgDocKeyword | undefined = getKeyword?.(pureKeyword);
+      const rootKeyword: NgDocKeyword | undefined = getKeyword?.(match?.groups?.['keyword'] || '');
 
-	return toString(node)
-		.split(KeywordRegExp)
-		.filter((word: string) => word.length)
-		.map((word: string) => {
-			const pureKeyword: string = word.split('?')[0];
-			const match: RegExpMatchArray | null = word.match(keywordAnchorRegexp);
-			const keyword: NgDocKeyword | undefined = getKeyword(pureKeyword);
-			const rootKeyword: NgDocKeyword | undefined = getKeyword(match?.groups?.['keyword'] || '');
+      if (keywordAnchorRegexp.test(pureKeyword)) {
+        addUsedKeyword?.(pureKeyword);
+      }
 
-			if (keywordAnchorRegexp.test(pureKeyword)) {
-				keyword ? addUsedKeyword(pureKeyword) : addPotentialKeyword(pureKeyword);
-			}
+      const notFoundGuideKeyword: boolean = /^\*\w+/gm.test(pureKeyword) && !keyword;
+      const notFoundApiKeyword: boolean = !!rootKeyword && !!match?.groups?.['anchor'] && !keyword;
 
-			const notFoundGuideKeyword: boolean = /^\*\w+/gm.test(pureKeyword) && !keyword;
-			const notFoundApiKeyword: boolean = !!rootKeyword && !!match?.groups?.['anchor'] && !keyword;
+      if (inlineLink && (notFoundGuideKeyword || notFoundApiKeyword) && getKeyword) {
+        throw new Error(`Route with keyword "${word}" is missing.`);
+      }
 
-			if (inlineLink && (notFoundGuideKeyword || notFoundApiKeyword)) {
-				raiseError && raiseError(new Error(`Route with keyword "${word}" is missing.`));
-			}
+      // Convert code tag to link if it's a link to the page entity
+      if (inlineLink && keyword?.isCodeLink === false) {
+        parent.tagName = 'a';
+        parent.properties = { href: `${keyword.path}${match?.groups?.['queryParams'] ?? ''}` };
 
-			// Convert code tag to link if it's a link to the page entity
-			if (inlineLink && keyword?.isCodeLink === false) {
-				parent.tagName = 'a';
-				parent.properties = { href: `${keyword.path}${match?.groups?.['queryParams'] ?? ''}` };
+        return { type: 'text', value: keyword.title };
+      } else if (inlineLink && keyword && parent.properties) {
+        parent.properties['class'] = [NG_DOC_ELEMENT, 'ng-doc-code-with-link'];
+      }
 
-				return { type: 'text', value: keyword.title };
-			} else if (inlineLink && keyword && parent.properties) {
-				parent.properties['class'] = [NG_DOC_ELEMENT, 'ng-doc-code-with-link'];
-			}
-
-			// Add link inside the code if it's a link to the API entity
-			return keyword
-				? createLinkNode(
-						inlineLink ? keyword.title : word,
-						keyword.path,
-						keyword.type,
-						keyword.description,
-				  )
-				: { type: 'text', value: word };
-		});
+      // Add link inside the code if it's a link to the API entity
+      return keyword
+        ? createLinkNode(
+            inlineLink ? keyword.title : word,
+            keyword.path,
+            keyword.type,
+            keyword.description,
+          )
+        : { type: 'text', value: word };
+    });
 }
 
 /**
@@ -131,15 +124,15 @@ function getNodes(
  * @param description
  */
 function createLinkNode(text: string, href: string, type?: string, description?: string): Element {
-	return {
-		type: 'element',
-		tagName: 'a',
-		properties: {
-			href: href,
-			class: ['ng-doc-code-anchor', NG_DOC_ELEMENT],
-			'data-link-type': type,
-			ngDocTooltip: description,
-		},
-		children: [{ type: 'text', value: text }],
-	};
+  return {
+    type: 'element',
+    tagName: 'a',
+    properties: {
+      href: href,
+      class: ['ng-doc-code-anchor', NG_DOC_ELEMENT],
+      'data-link-type': type,
+      ngDocTooltip: description,
+    },
+    children: [{ type: 'text', value: text }],
+  };
 }

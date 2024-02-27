@@ -1,10 +1,10 @@
 import {
-	NgDocBuilderContext,
-	NgDocComponentAsset,
-	postProcessHtmlJob,
-	processHtmlJob,
-	renderTemplate,
-	runBuild,
+  extractKeywordsJob,
+  NgDocBuilderContext,
+  NgDocComponentAsset,
+  processHtmlJob,
+  renderTemplate,
+  runBuild,
 } from '@ng-doc/builder';
 import { NgDocPage } from '@ng-doc/core';
 import * as path from 'path';
@@ -19,8 +19,8 @@ import { EntryMetadata } from '../interfaces';
  * Options for the demoAssetsBuilder function.
  */
 interface Options {
-	context: NgDocBuilderContext;
-	page: EntryMetadata<NgDocPage>;
+  context: NgDocBuilderContext;
+  page: EntryMetadata<NgDocPage>;
 }
 
 export const PAGE_DEMO_ASSETS_BUILDER_TAG = 'PageDemoAssets';
@@ -31,48 +31,46 @@ export const PAGE_DEMO_ASSETS_BUILDER_TAG = 'PageDemoAssets';
  * @returns {Builder<FileOutput>} A builder that outputs file outputs.
  */
 export function demoAssetsBuilder({ context, page }: Options): Builder<FileOutput> {
-	const references = Object.values(getDemoClassDeclarations(page.objectExpression)).map(
-		(classDeclaration) => classDeclaration.getSourceFile(),
-	);
+  const references = Object.values(getDemoClassDeclarations(page.objectExpression)).map(
+    (classDeclaration) => classDeclaration.getSourceFile(),
+  );
 
-	const potentialKeywords = new Set<string>();
-	const usedKeywords = new Set<string>();
+  const usedKeywords = new Set<string>();
 
-	return merge(
-		...references.map((sourceFile) => watchFile(sourceFile.getFilePath(), 'update')),
-	).pipe(
-		debounceTime(0),
-		tap(() => {
-			references.forEach((sourceFile) => {
-				sourceFile.refreshFromFileSystemSync();
-			});
-		}),
-		startWith(void 0),
-		runBuild(PAGE_DEMO_ASSETS_BUILDER_TAG, async () => {
-			const classDeclarations = getDemoClassDeclarations(page.objectExpression);
+  return merge(
+    ...references.map((sourceFile) => watchFile(sourceFile.getFilePath(), 'update')),
+  ).pipe(
+    debounceTime(0),
+    tap(() => {
+      references.forEach((sourceFile) => {
+        sourceFile.refreshFromFileSystemSync();
+      });
+    }),
+    startWith(void 0),
+    runBuild(PAGE_DEMO_ASSETS_BUILDER_TAG, async () => {
+      usedKeywords.clear();
 
-			const demoAssets: NgDocComponentAsset = Object.keys(classDeclarations).reduce(
-				(acc: NgDocComponentAsset, key: string) =>
-					Object.assign(acc, {
-						[key]: getDemoAssets(classDeclarations[key], context.inlineStyleLanguage),
-					}),
-				{},
-			);
+      const classDeclarations = getDemoClassDeclarations(page.objectExpression);
 
-			for (const [, value] of Object.entries(demoAssets)) {
-				for (const asset of value) {
-					asset.code = await processHtmlJob({ addAnchor: () => {} })(asset.code);
-					asset.code = await postProcessHtmlJob({
-						addUsedKeyword: usedKeywords.add.bind(usedKeywords),
-						addPotentialKeyword: potentialKeywords.add.bind(potentialKeywords),
-					})(asset.code);
-				}
-			}
+      const demoAssets: NgDocComponentAsset = Object.keys(classDeclarations).reduce(
+        (acc: NgDocComponentAsset, key: string) =>
+          Object.assign(acc, {
+            [key]: getDemoAssets(classDeclarations[key], context.inlineStyleLanguage),
+          }),
+        {},
+      );
 
-			return {
-				filePath: path.join(page.outDir, 'demo-assets.ts'),
-				content: renderTemplate('./demo-assets.ts.nunj', { context: { demoAssets } }),
-			};
-		}),
-	);
+      for (const [, value] of Object.entries(demoAssets)) {
+        for (const asset of value) {
+          asset.code = await processHtmlJob({ addAnchor: () => {} })(asset.code);
+          asset.code = await extractKeywordsJob(usedKeywords.add.bind(usedKeywords))(asset.code);
+        }
+      }
+
+      return {
+        filePath: path.join(page.outDir, 'demo-assets.ts'),
+        content: renderTemplate('./demo-assets.ts.nunj', { context: { demoAssets } }),
+      };
+    }),
+  );
 }

@@ -1,18 +1,24 @@
-import { createImportPath, PAGE_NAME } from '@ng-doc/builder';
+import {
+  createImportPath,
+  keywordsStore,
+  PAGE_NAME,
+  whenBuildersStackIsEmpty,
+} from '@ng-doc/builder';
 import { NgDocPage, uid } from '@ng-doc/core';
 import path from 'path';
+import { switchMap } from 'rxjs/operators';
 
 import { editFileInRepoUrl, viewFileInRepoUrl } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
 import { Builder, factory, FileOutput } from '../../core';
 import { renderTemplate } from '../../nunjucks';
 import { EntryMetadata } from '../interfaces';
-import { apiBuilder } from './api.builder';
-import { guideBuilder } from './guide.builder';
+import { replaceKeywords } from '../shared/replace-keywords';
+import { PAGE_TEMPLATE_BUILDER_TAG, pageTemplateBuilder } from './page-template.builder';
 
 interface Config {
-	context: NgDocBuilderContext;
-	page: EntryMetadata<NgDocPage>;
+  context: NgDocBuilderContext;
+  page: EntryMetadata<NgDocPage>;
 }
 
 export const PAGE_COMPONENT_BUILDER_TAG = 'PageComponent';
@@ -31,29 +37,35 @@ export const PAGE_COMPONENT_BUILDER_TAG = 'PageComponent';
  * @param context.outDir
  */
 export function pageComponentBuilder({ context, page }: Config): Builder<FileOutput> {
-	const mdPath = path.join(page.dir, page.entry.mdFile);
-	const outPath = path.join(page.outDir, 'page.ts');
+  const mdPath = path.join(page.dir, page.entry.mdFile);
+  const outPath = path.join(page.outDir, 'page.ts');
 
-	return factory(
-		PAGE_COMPONENT_BUILDER_TAG,
-		[guideBuilder({ context, mdPath, page }), apiBuilder(context, page)],
-		(guide: string, api: string) => ({
-			filePath: outPath,
-			content: renderTemplate('./page.ts.nunj', {
-				context: {
-					id: uid(),
-					content: guide + api,
-					routePrefix: context.config.routePrefix,
-					page: page.entry,
-					entryImportPath: createImportPath(page.outDir, path.join(page.dir, PAGE_NAME)),
-					editSourceFileUrl: context.config.repoConfig
-						? editFileInRepoUrl(context.config.repoConfig, mdPath, page.route)
-						: undefined,
-					viewSourceFileUrl: context.config.repoConfig
-						? viewFileInRepoUrl(context.config.repoConfig, mdPath)
-						: undefined,
-				},
-			}),
-		}),
-	);
+  return whenBuildersStackIsEmpty([PAGE_TEMPLATE_BUILDER_TAG]).pipe(
+    switchMap(() =>
+      factory(
+        PAGE_COMPONENT_BUILDER_TAG,
+        [pageTemplateBuilder({ context, page })],
+        async (content: string) => ({
+          filePath: outPath,
+          content: renderTemplate('./page.ts.nunj', {
+            context: {
+              id: uid(),
+              content: await replaceKeywords(content, {
+                getKeyword: keywordsStore.get.bind(keywordsStore),
+              }),
+              routePrefix: context.config.routePrefix,
+              page: page.entry,
+              entryImportPath: createImportPath(page.outDir, path.join(page.dir, PAGE_NAME)),
+              editSourceFileUrl: context.config.repoConfig
+                ? editFileInRepoUrl(context.config.repoConfig, mdPath, page.route)
+                : undefined,
+              viewSourceFileUrl: context.config.repoConfig
+                ? viewFileInRepoUrl(context.config.repoConfig, mdPath)
+                : undefined,
+            },
+          }),
+        }),
+      ),
+    ),
+  );
 }
