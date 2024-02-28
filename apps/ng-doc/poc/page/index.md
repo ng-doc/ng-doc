@@ -9,3 +9,8 @@ kjhkjh
 
 `*AnotherPage`
 123
+qwe
+sd
+we
+
+`*AnotherPage#section1`

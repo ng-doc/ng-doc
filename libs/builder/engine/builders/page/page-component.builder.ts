@@ -45,26 +45,32 @@ export function pageComponentBuilder({ context, page }: Config): Builder<FileOut
       factory(
         PAGE_COMPONENT_BUILDER_TAG,
         [pageTemplateBuilder({ context, page })],
-        async (content: string) => ({
-          filePath: outPath,
-          content: renderTemplate('./page.ts.nunj', {
-            context: {
-              id: uid(),
-              content: await replaceKeywords(content, {
-                getKeyword: keywordsStore.get.bind(keywordsStore),
-              }),
-              routePrefix: context.config.routePrefix,
-              page: page.entry,
-              entryImportPath: createImportPath(page.outDir, path.join(page.dir, PAGE_NAME)),
-              editSourceFileUrl: context.config.repoConfig
-                ? editFileInRepoUrl(context.config.repoConfig, mdPath, page.route)
-                : undefined,
-              viewSourceFileUrl: context.config.repoConfig
-                ? viewFileInRepoUrl(context.config.repoConfig, mdPath)
-                : undefined,
-            },
-          }),
-        }),
+        async (html: string) => {
+          const content = await replaceKeywords(html, {
+            getKeyword: keywordsStore.get.bind(keywordsStore),
+          });
+          const entryImportPath = createImportPath(page.outDir, path.join(page.dir, PAGE_NAME));
+          const editSourceFileUrl =
+            context.config.repoConfig &&
+            editFileInRepoUrl(context.config.repoConfig, mdPath, page.route);
+          const viewSourceFileUrl =
+            context.config.repoConfig && viewFileInRepoUrl(context.config.repoConfig, mdPath);
+
+          return {
+            filePath: outPath,
+            content: renderTemplate('./page.ts.nunj', {
+              context: {
+                id: uid(),
+                content,
+                routePrefix: context.config.routePrefix,
+                page: page.entry,
+                entryImportPath,
+                editSourceFileUrl,
+                viewSourceFileUrl,
+              },
+            }),
+          };
+        },
       ),
     ),
   );

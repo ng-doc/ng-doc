@@ -108,5 +108,6 @@ export function whenBuildersStackIsEmpty(tags?: string[]): Observable<void> {
     distinctUntilChanged(),
     filter(Boolean),
     map(() => void 0),
+    subscribeOn(asyncScheduler),
   );
 }

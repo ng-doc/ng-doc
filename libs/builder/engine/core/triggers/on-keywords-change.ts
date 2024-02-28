@@ -1,5 +1,5 @@
 import { Observable, Subject } from 'rxjs';
-import { debounceTime, filter, map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 
 const KEYWORDS_CHANGE = new Subject<string[]>();
 
@@ -12,7 +12,6 @@ export function onKeywordsChange(...keywords: Array<Set<string>>): Observable<vo
     filter((changedKeywords) => {
       return keywords.some((k) => changedKeywords.some((c) => k.has(c)));
     }),
-    debounceTime(0),
     map(() => void 0),
   );
 }
@@ -21,6 +20,6 @@ export function onKeywordsChange(...keywords: Array<Set<string>>): Observable<vo
  *
  * @param {...any} keywords
  */
-export function triggerKeywordsChange(...keywords: Array<Set<string>>): void {
-  KEYWORDS_CHANGE.next(Array.from(new Set(keywords.map((k) => Array.from(k)).flat())));
+export function triggerKeywordsChange(...keywords: string[]): void {
+  KEYWORDS_CHANGE.next(keywords);
 }

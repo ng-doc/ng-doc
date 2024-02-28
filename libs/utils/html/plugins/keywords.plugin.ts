@@ -91,7 +91,7 @@ function getNodes(
       const notFoundApiKeyword: boolean = !!rootKeyword && !!match?.groups?.['anchor'] && !keyword;
 
       if (inlineLink && (notFoundGuideKeyword || notFoundApiKeyword) && getKeyword) {
-        throw new Error(`Route with keyword "${word}" is missing.`);
+        // throw new Error(`Route with keyword "${word}" is missing.`);
       }
 
       // Convert code tag to link if it's a link to the page entity

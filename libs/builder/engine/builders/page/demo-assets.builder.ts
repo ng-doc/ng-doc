@@ -63,7 +63,9 @@ export function demoAssetsBuilder({ context, page }: Options): Builder<FileOutpu
       for (const [, value] of Object.entries(demoAssets)) {
         for (const asset of value) {
           asset.code = await processHtmlJob({ addAnchor: () => {} })(asset.code);
-          asset.code = await extractKeywordsJob(usedKeywords.add.bind(usedKeywords))(asset.code);
+          asset.code = await extractKeywordsJob({
+            addUsedKeyword: usedKeywords.add.bind(usedKeywords),
+          })(asset.code);
         }
       }
 

@@ -11,6 +11,7 @@ import {
   onKeywordsChange,
   runBuild,
   sequentialJobs,
+  triggerKeywordsChange,
   watchFile,
 } from '../../core';
 import { onDependenciesChange } from '../../core/triggers/on-dependencies-change';
@@ -40,7 +41,7 @@ export function guideBuilder({ context, mdPath, page }: Config): Builder<string>
   const dependencies = new ObservableSet<string>();
   const anchors = [] as NgDocEntityAnchor[];
   const usedKeywords = new Set<string>();
-  let destroyKeywords: () => void = () => {};
+  let removeKeywords: () => void = () => {};
 
   return merge(
     watchFile(mdPath),
@@ -50,7 +51,7 @@ export function guideBuilder({ context, mdPath, page }: Config): Builder<string>
     startWith(void 0),
     runBuild('Guide', async () => {
       try {
-        destroyKeywords();
+        removeKeywords();
         dependencies.clear();
         usedKeywords.clear();
 
@@ -74,14 +75,19 @@ export function guideBuilder({ context, mdPath, page }: Config): Builder<string>
           extractKeywordsJob({ addUsedKeyword: usedKeywords.add.bind(usedKeywords) }),
         ]);
 
-        destroyKeywords = keywordsStore.add(...getKeywords(page, anchors));
+        const keywords = getKeywords(page, anchors);
+
+        if (keywords.length) {
+          removeKeywords = keywordsStore.add(...keywords);
+          triggerKeywordsChange(...(keywords.map(([key]) => key) as string[]));
+        }
 
         return processedContent;
       } catch (cause) {
         throw new Error(`Error while building guide page "${page.entry.title}"`, { cause });
       }
     }),
-    finalize(destroyKeywords),
+    finalize(removeKeywords),
   );
 }
 
@@ -94,6 +100,8 @@ function getKeywords(
   page: EntryMetadata<NgDocPage>,
   anchors: NgDocEntityAnchor[],
 ): Array<[string, NgDocKeyword]> {
+  if (!page.entry.keyword) return [];
+
   const key = `*${page.entry.keyword}`;
   const rootKeyword: NgDocKeyword = {
     title: page.entry.title,
