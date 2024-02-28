@@ -79,7 +79,7 @@ export function guideBuilder({ context, mdPath, page }: Config): Builder<string>
 
         if (keywords.length) {
           removeKeywords = keywordsStore.add(...keywords);
-          triggerKeywordsChange(...(keywords.map(([key]) => key) as string[]));
+          triggerKeywordsChange(...keywords.map(([key]) => key));
         }
 
         return processedContent;
