@@ -1,4 +1,5 @@
 import {
+  CacheStrategy,
   createImportPath,
   keywordsStore,
   PAGE_NAME,
@@ -32,6 +33,11 @@ export function pageComponentBuilder(config: Config): Builder<FileOutput> {
   const mdPath = path.join(page.dir, page.entry.mdFile);
   const outPath = path.join(page.outDir, 'page.ts');
 
+  const cacheStrategy = {
+    id: `${mdPath}#Component`,
+    action: 'skip',
+  } satisfies CacheStrategy<undefined, string>;
+
   return whenBuildersStackIsEmpty([PAGE_TEMPLATE_BUILDER_TAG]).pipe(
     switchMap(() =>
       factory(
@@ -63,6 +69,7 @@ export function pageComponentBuilder(config: Config): Builder<FileOutput> {
             }),
           };
         },
+        cacheStrategy,
       ),
     ),
   );

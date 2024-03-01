@@ -2,7 +2,7 @@ import { NgDocPage } from '@ng-doc/core';
 import path from 'path';
 
 import { NgDocBuilderContext } from '../../../interfaces';
-import { Builder, factory } from '../../core';
+import { Builder, CacheStrategy, factory } from '../../core';
 import { renderTemplate } from '../../nunjucks';
 import { EntryMetadata } from '../interfaces';
 import { apiBuilder } from './api.builder';
@@ -23,6 +23,13 @@ export function pageTemplateBuilder(config: Config): Builder<string> {
   const { context, page } = config;
   const mdPath = path.join(page.dir, page.entry.mdFile);
 
+  const cacheStrategy = {
+    id: `${mdPath}#Template`,
+    action: 'restore',
+    saveResult: (content) => content,
+    restoreResult: (content) => content,
+  } satisfies CacheStrategy<undefined, string>;
+
   return factory(
     PAGE_TEMPLATE_BUILDER_TAG,
     [guideBuilder({ context, mdPath, page }), apiBuilder(context, page)],
@@ -35,5 +42,6 @@ export function pageTemplateBuilder(config: Config): Builder<string> {
           ],
         },
       }),
+    cacheStrategy,
   );
 }

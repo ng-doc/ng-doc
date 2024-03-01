@@ -26,7 +26,6 @@ export type CacheStrategy<TData = unknown, TResult = unknown> = {
     }
   | {
       action: 'restore';
-      getData: () => TData;
       saveResult: (result: TResult) => string;
       restoreResult: (result: string) => TResult;
     }

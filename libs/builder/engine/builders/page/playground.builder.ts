@@ -1,4 +1,5 @@
 import {
+  CacheStrategy,
   createImportPath,
   NgDocPlaygroundMetadata,
   PAGE_NAME,
@@ -37,30 +38,39 @@ export function playgroundBuilder(config: Config): Builder<FileOutput> {
     (classDeclaration) => classDeclaration.getSourceFile(),
   );
   const outPath = path.join(page.outDir, 'playgrounds.ts');
+  const cacheStrategy = {
+    id: `${page.path}#Playground`,
+    action: 'skip',
+    files: () => [page.path, ...references.map((sourceFile) => sourceFile.getFilePath())],
+  } satisfies CacheStrategy<undefined, string>;
 
   return merge(
     ...references.map((sourceFile) => watchFile(sourceFile.getFilePath(), 'update')),
   ).pipe(
     debounceTime(0),
     startWith(void 0),
-    runBuild(PAGE_PLAYGROUND_BUILDER_TAG, async () => {
-      references.forEach((sourceFile) => {
-        sourceFile.refreshFromFileSystemSync();
-      });
+    runBuild(
+      PAGE_PLAYGROUND_BUILDER_TAG,
+      async () => {
+        references.forEach((sourceFile) => {
+          sourceFile.refreshFromFileSystemSync();
+        });
 
-      const metadata = getMetadata(page.entry, page.objectExpression);
+        const metadata = getMetadata(page.entry, page.objectExpression);
 
-      return {
-        filePath: outPath,
-        content: renderTemplate('./playgrounds.ts.nunj', {
-          context: {
-            playgroundMetadata: metadata,
-            hasImports: !!page.objectExpression?.getProperty('imports'),
-            entryImportPath: createImportPath(page.outDir, path.join(page.dir, PAGE_NAME)),
-          },
-        }),
-      };
-    }),
+        return {
+          filePath: outPath,
+          content: renderTemplate('./playgrounds.ts.nunj', {
+            context: {
+              playgroundMetadata: metadata,
+              hasImports: !!page.objectExpression?.getProperty('imports'),
+              entryImportPath: createImportPath(page.outDir, path.join(page.dir, PAGE_NAME)),
+            },
+          }),
+        };
+      },
+      cacheStrategy,
+    ),
   );
 }
 

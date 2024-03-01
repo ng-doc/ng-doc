@@ -44,9 +44,9 @@ export function guideBuilder(config: Config): Builder<string> {
   let removeKeywords: () => void = () => {};
 
   const cacheStrategy = {
-    id: mdPath,
+    id: `${mdPath}#Guide`,
     action: 'restore',
-    files: () => [mdPath, ...dependencies.asArray()],
+    files: () => [page.path, mdPath, ...dependencies.asArray()],
     getData: () => ({
       dependencies: dependencies.asArray(),
       anchors,

@@ -1,4 +1,5 @@
 import {
+  CacheStrategy,
   extractKeywordsJob,
   NgDocBuilderContext,
   NgDocComponentAsset,
@@ -36,8 +37,12 @@ export function demoAssetsBuilder(config: Config): Builder<FileOutput> {
   const references = Object.values(getDemoClassDeclarations(page.objectExpression)).map(
     (classDeclaration) => classDeclaration.getSourceFile(),
   );
-
   const usedKeywords = new Set<string>();
+  const cacheStrategy = {
+    id: `${page.path}#DemoAssets`,
+    action: 'skip',
+    files: () => [page.path, ...references.map((sourceFile) => sourceFile.getFilePath())],
+  } satisfies CacheStrategy<undefined, string>;
 
   return merge(
     ...references.map((sourceFile) => watchFile(sourceFile.getFilePath(), 'update')),
@@ -49,32 +54,38 @@ export function demoAssetsBuilder(config: Config): Builder<FileOutput> {
       });
     }),
     startWith(void 0),
-    runBuild(PAGE_DEMO_ASSETS_BUILDER_TAG, async () => {
-      usedKeywords.clear();
+    runBuild(
+      PAGE_DEMO_ASSETS_BUILDER_TAG,
+      async () => {
+        usedKeywords.clear();
 
-      const classDeclarations = getDemoClassDeclarations(page.objectExpression);
+        const classDeclarations = getDemoClassDeclarations(page.objectExpression);
 
-      const demoAssets: NgDocComponentAsset = Object.keys(classDeclarations).reduce(
-        (acc: NgDocComponentAsset, key: string) =>
-          Object.assign(acc, {
-            [key]: getDemoAssets(classDeclarations[key], context.inlineStyleLanguage),
-          }),
-        {},
-      );
+        const demoAssets: NgDocComponentAsset = Object.keys(classDeclarations).reduce(
+          (acc: NgDocComponentAsset, key: string) =>
+            Object.assign(acc, {
+              [key]: getDemoAssets(classDeclarations[key], context.inlineStyleLanguage),
+            }),
+          {},
+        );
 
-      for (const [, value] of Object.entries(demoAssets)) {
-        for (const asset of value) {
-          asset.code = await processHtmlJob({ addAnchor: () => {} })(asset.code);
-          asset.code = await extractKeywordsJob({
-            addUsedKeyword: usedKeywords.add.bind(usedKeywords),
-          })(asset.code);
+        for (const [, value] of Object.entries(demoAssets)) {
+          for (const asset of value) {
+            asset.code = await processHtmlJob({
+              addAnchor: () => {},
+            })(asset.code);
+            asset.code = await extractKeywordsJob({
+              addUsedKeyword: usedKeywords.add.bind(usedKeywords),
+            })(asset.code);
+          }
         }
-      }
 
-      return {
-        filePath: path.join(page.outDir, 'demo-assets.ts'),
-        content: renderTemplate('./demo-assets.ts.nunj', { context: { demoAssets } }),
-      };
-    }),
+        return {
+          filePath: path.join(page.outDir, 'demo-assets.ts'),
+          content: renderTemplate('./demo-assets.ts.nunj', { context: { demoAssets } }),
+        };
+      },
+      cacheStrategy,
+    ),
   );
 }

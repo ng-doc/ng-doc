@@ -10,9 +10,11 @@ import { isColdStart } from '../variables';
  * It will skip or restore the builder based on the strategy on the first run and
  * update the cache on every next run.
  * @param strategy - Cache strategy
+ * @param valid
  */
 export function handleCacheStrategy<T, TData>(
   strategy?: CacheStrategy<TData, T>,
+  valid: boolean = true,
 ): OperatorFunction<BuilderState<T>, BuilderState<T>> {
   return (source) => {
     if (!strategy) return source;
@@ -37,7 +39,7 @@ export function handleCacheStrategy<T, TData>(
 
     switch (strategy.action) {
       case 'skip':
-        if (cache && isColdStart() && isCacheValid(strategy.id, cache)) {
+        if (cache && valid && isColdStart() && isCacheValid(strategy.id, cache)) {
           const cache = loadCache<TData>(strategy.id);
 
           strategy.onCacheLoad?.(cache.data as TData);
@@ -48,7 +50,7 @@ export function handleCacheStrategy<T, TData>(
         return sourceWithCache;
       case 'restore':
         // Restore from cache if it's a first run
-        if (cache && isColdStart() && isCacheValid(strategy.id, cache)) {
+        if (cache && valid && isColdStart() && isCacheValid(strategy.id, cache)) {
           const cache = loadCache<TData>(strategy.id);
 
           strategy.onCacheLoad?.(cache.data as TData);

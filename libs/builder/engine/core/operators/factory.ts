@@ -57,7 +57,10 @@ export function factory<T, R, TCacheData>(
 
       return (buildFnResult instanceof Promise ? from(buildFnResult) : of(buildFnResult)).pipe(
         map((result) => new BuilderDone(tag, result)),
-        handleCacheStrategy<R, TCacheData>(cacheStrategy),
+        handleCacheStrategy<R, TCacheData>(
+          cacheStrategy,
+          (states as Array<BuilderDone<T>>).every(({ fromCache }) => fromCache),
+        ),
       );
     }),
     catchError((error: Error) => of(new BuilderError(tag, [error]))),

@@ -42,6 +42,7 @@ export function createEntryMetadata<T extends Entry>(
     outDir,
     sourceFile,
     objectExpression,
+    path: entryPath,
     absoluteRoute: function (): string {
       const routePrefix = context.config.routePrefix ? `${context.config.routePrefix}/` : '';
       const parentRoute = this.category?.absoluteRoute() ?? '';
