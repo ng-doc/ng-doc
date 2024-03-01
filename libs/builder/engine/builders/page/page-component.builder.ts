@@ -1,18 +1,20 @@
-import {
-  CacheStrategy,
-  createImportPath,
-  keywordsStore,
-  PAGE_NAME,
-  whenBuildersStackIsEmpty,
-} from '@ng-doc/builder';
 import { NgDocPage, uid } from '@ng-doc/core';
 import path from 'path';
 import { switchMap } from 'rxjs/operators';
 
 import { editFileInRepoUrl, viewFileInRepoUrl } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
-import { Builder, factory, FileOutput } from '../../core';
+import {
+  Builder,
+  CacheStrategy,
+  factory,
+  FileOutput,
+  keywordsStore,
+  whenBuildersStackIsEmpty,
+} from '../../core';
 import { renderTemplate } from '../../nunjucks';
+import { PAGE_NAME } from '../../variables';
+import { createImportPath } from '../helpers';
 import { EntryMetadata } from '../interfaces';
 import { replaceKeywords } from '../shared/replace-keywords';
 import { PAGE_TEMPLATE_BUILDER_TAG, pageTemplateBuilder } from './page-template.builder';

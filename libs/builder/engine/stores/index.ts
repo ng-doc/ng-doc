@@ -1,1 +1,2 @@
-export * from './pages-store';
+export * from './index-store';
+export * from './page-store';

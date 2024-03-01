@@ -4,11 +4,11 @@ import { map } from 'rxjs/operators';
 
 type DestroyFn = () => void;
 
-export class ObservableMap<T> {
-  private collection: Map<string, T> = new Map();
+export class ObservableMap<TKey, TValue> {
+  private collection: Map<TKey, TValue> = new Map();
   private changes$: ReplaySubject<void> = new ReplaySubject<void>();
 
-  constructor(values?: Array<[string, T]>) {
+  constructor(values?: Array<[TKey, TValue]>) {
     this.collection = new Map(values);
   }
 
@@ -16,30 +16,30 @@ export class ObservableMap<T> {
     return this.collection.size;
   }
 
-  asArray(): T[] {
+  asArray(): TValue[] {
     return asArray(this.collection.values());
   }
 
-  changes(): Observable<T[]> {
+  changes(): Observable<TValue[]> {
     return this.changes$.pipe(map(() => this.asArray()));
   }
 
-  add(...items: Array<[string, T]>): DestroyFn {
-    items.forEach(([id, value]) => this.collection.set(id, value));
+  add(...items: Array<[TKey, TValue]>): DestroyFn {
+    items.forEach(([key, value]) => this.collection.set(key, value));
 
     this.changes$.next();
 
     return () => {
-      items.forEach(([id]) => this.delete(id));
+      items.forEach(([key]) => this.delete(key));
     };
   }
 
-  get(id: string): T | undefined {
-    return this.collection.get(id);
+  get(key: TKey): TValue | undefined {
+    return this.collection.get(key);
   }
 
-  delete(id: string): void {
-    this.collection.delete(id);
+  delete(key: TKey): void {
+    this.collection.delete(key);
 
     this.changes$.next();
   }

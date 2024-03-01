@@ -1,4 +1,4 @@
-import { createEntryMetadata, onDependenciesChange, PAGES_STORE } from '@ng-doc/builder';
+import { createEntryMetadata, onDependenciesChange, PageStore } from '@ng-doc/builder';
 import { NgDocPage } from '@ng-doc/core';
 import { finalize, merge, takeUntil } from 'rxjs';
 import { startWith } from 'rxjs/operators';
@@ -47,11 +47,11 @@ export function pageFileBuilder(config: Config): Builder<EntryMetadata<NgDocPage
 
       addCategoriesToDependencies(metadata, dependencies);
 
-      PAGES_STORE.add([pagePath, metadata]);
+      PageStore.add([pagePath, metadata]);
 
       return metadata;
     }),
-    finalize(() => PAGES_STORE.delete(pagePath)),
+    finalize(() => PageStore.delete(pagePath)),
     takeUntil(watchFile(pagePath, 'delete')),
   );
 }

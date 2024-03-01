@@ -2,7 +2,7 @@ import { NgDocKeyword } from '@ng-doc/core';
 
 import { ObservableMap } from '../../../classes';
 
-class KeywordsStore extends ObservableMap<NgDocKeyword> {
+class KeywordsStore extends ObservableMap<string, NgDocKeyword> {
   constructor() {
     super();
   }
