@@ -3,9 +3,9 @@
  * This class is used when the builder is still in progress and the result is not yet available.
  */
 export class BuilderPending {
-	readonly state: 'pending' = 'pending' as const;
+  readonly state: 'pending' = 'pending' as const;
 
-	constructor(readonly tag: string) {}
+  constructor(readonly tag: string) {}
 }
 
 /**
@@ -14,14 +14,15 @@ export class BuilderPending {
  * @template T The type of the result.
  */
 export class BuilderDone<T> {
-	readonly state: 'done' = 'done' as const;
+  readonly state: 'done' = 'done' as const;
 
-	/**
-	 * Creates a new instance of the BuilderDone class.
-	 * @param tag
-	 * @param {T} result The result of the builder process.
-	 */
-	constructor(readonly tag: string, readonly result: T) {}
+  /**
+   * Creates a new instance of the BuilderDone class.
+   * @param tag
+   * @param {T} result The result of the builder process.
+   * @param fromCache Whether the result was restored from the cache.
+   */
+  constructor(readonly tag: string, readonly result: T, readonly fromCache: boolean = false) {}
 }
 
 /**
@@ -29,15 +30,16 @@ export class BuilderDone<T> {
  * This class is used when the builder has encountered an error.
  */
 export class BuilderError {
-	readonly state: 'error' = 'error' as const;
+  readonly state: 'error' = 'error' as const;
 
-	/**
-	 * Creates a new instance of the BuilderError class.
-	 * @param tag
-	 * @param {Error[]} error The errors encountered during the builder process.
-	 */
-	constructor(readonly tag: string, readonly error: Error[]) {}
+  /**
+   * Creates a new instance of the BuilderError class.
+   * @param tag
+   * @param {Error[]} error The errors encountered during the builder process.
+   */
+  constructor(readonly tag: string, readonly error: Error[]) {}
 }
+
 /**
  * Represents the state of a builder. It can be one of the following:
  * - BuilderPending: The builder is still in progress and the result is not yet available.
@@ -53,7 +55,7 @@ export type BuilderState<T = never> = BuilderPending | BuilderDone<T> | BuilderE
  * @returns {boolean} - Returns true if the state is a BuilderPending state, false otherwise.
  */
 export function isBuilderPending<T>(state: BuilderState<T>): state is BuilderPending {
-	return state instanceof BuilderPending;
+  return state instanceof BuilderPending;
 }
 
 /**
@@ -62,7 +64,7 @@ export function isBuilderPending<T>(state: BuilderState<T>): state is BuilderPen
  * @returns {boolean} - Returns true if the state is a BuilderDone state, false otherwise.
  */
 export function isBuilderDone<T>(state: BuilderState<T>): state is BuilderDone<T> {
-	return state instanceof BuilderDone;
+  return state instanceof BuilderDone;
 }
 
 /**
@@ -71,5 +73,5 @@ export function isBuilderDone<T>(state: BuilderState<T>): state is BuilderDone<T
  * @returns {boolean} - Returns true if the state is a BuilderError state, false otherwise.
  */
 export function isBuilderError<T>(state: BuilderState<T>): state is BuilderError {
-	return state instanceof BuilderError;
+  return state instanceof BuilderError;
 }

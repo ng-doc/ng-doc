@@ -10,13 +10,13 @@ import { getCacheFilePath } from './get-cache-file-path';
  * @param id - unique id for cache
  * @param cache - cache object
  */
-export function updateCache(id: string, cache: NgDocCachedData): void {
-	const cacheFilePath: string = getCacheFilePath(id);
-	const cacheDirPath: string = path.dirname(cacheFilePath);
+export function updateCache<TData>(id: string, cache: NgDocCachedData<TData>): void {
+  const cacheFilePath: string = getCacheFilePath(id);
+  const cacheDirPath: string = path.dirname(cacheFilePath);
 
-	if (!fs.existsSync(cacheDirPath)) {
-		fs.mkdirSync(cacheDirPath, { recursive: true });
-	}
+  if (!fs.existsSync(cacheDirPath)) {
+    fs.mkdirSync(cacheDirPath, { recursive: true });
+  }
 
-	fs.writeFileSync(cacheFilePath, JSON.stringify(cache, null, 2));
+  fs.writeFileSync(cacheFilePath, JSON.stringify(cache, null, 2));
 }

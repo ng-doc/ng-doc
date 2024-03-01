@@ -1,9 +1,9 @@
 import {
-	createImportPath,
-	NgDocPlaygroundMetadata,
-	PAGE_NAME,
-	renderTemplate,
-	runBuild,
+  createImportPath,
+  NgDocPlaygroundMetadata,
+  PAGE_NAME,
+  renderTemplate,
+  runBuild,
 } from '@ng-doc/builder';
 import { NgDocPage, NgDocPlaygroundControlConfig, NgDocPlaygroundProperties } from '@ng-doc/core';
 import * as path from 'path';
@@ -12,60 +12,56 @@ import { debounceTime, startWith } from 'rxjs/operators';
 import { ObjectLiteralExpression } from 'ts-morph';
 
 import {
-	buildPlaygroundMetadata,
-	getDemoClassDeclarations,
-	getPlaygroundById,
-	getPlaygroundsExpression,
-	getPlaygroundsIds,
+  buildPlaygroundMetadata,
+  getDemoClassDeclarations,
+  getPlaygroundById,
+  getPlaygroundsExpression,
+  getPlaygroundsIds,
 } from '../../../helpers';
 import { Builder, FileOutput, watchFile } from '../../core';
 import { EntryMetadata } from '../interfaces';
 
-interface Options {
-	page: EntryMetadata<NgDocPage>;
+interface Config {
+  page: EntryMetadata<NgDocPage>;
 }
 
 export const PAGE_PLAYGROUND_BUILDER_TAG = 'PagePlayground';
 
 /**
  *
- * @param root0
- * @param root0.objectExpression
- * @param root0.context
- * @param root0.outDir
- * @param root0.page
- * @param root0.dir
+ * @param config
  */
-export function playgroundBuilder({ page }: Options): Builder<FileOutput> {
-	const references = Object.values(getDemoClassDeclarations(page.objectExpression)).map(
-		(classDeclaration) => classDeclaration.getSourceFile(),
-	);
-	const outPath = path.join(page.outDir, 'playgrounds.ts');
+export function playgroundBuilder(config: Config): Builder<FileOutput> {
+  const { page } = config;
+  const references = Object.values(getDemoClassDeclarations(page.objectExpression)).map(
+    (classDeclaration) => classDeclaration.getSourceFile(),
+  );
+  const outPath = path.join(page.outDir, 'playgrounds.ts');
 
-	return merge(
-		...references.map((sourceFile) => watchFile(sourceFile.getFilePath(), 'update')),
-	).pipe(
-		debounceTime(0),
-		startWith(void 0),
-		runBuild(PAGE_PLAYGROUND_BUILDER_TAG, async () => {
-			references.forEach((sourceFile) => {
-				sourceFile.refreshFromFileSystemSync();
-			});
+  return merge(
+    ...references.map((sourceFile) => watchFile(sourceFile.getFilePath(), 'update')),
+  ).pipe(
+    debounceTime(0),
+    startWith(void 0),
+    runBuild(PAGE_PLAYGROUND_BUILDER_TAG, async () => {
+      references.forEach((sourceFile) => {
+        sourceFile.refreshFromFileSystemSync();
+      });
 
-			const metadata = getMetadata(page.entry, page.objectExpression);
+      const metadata = getMetadata(page.entry, page.objectExpression);
 
-			return {
-				filePath: outPath,
-				content: renderTemplate('./playgrounds.ts.nunj', {
-					context: {
-						playgroundMetadata: metadata,
-						hasImports: !!page.objectExpression?.getProperty('imports'),
-						entryImportPath: createImportPath(page.outDir, path.join(page.dir, PAGE_NAME)),
-					},
-				}),
-			};
-		}),
-	);
+      return {
+        filePath: outPath,
+        content: renderTemplate('./playgrounds.ts.nunj', {
+          context: {
+            playgroundMetadata: metadata,
+            hasImports: !!page.objectExpression?.getProperty('imports'),
+            entryImportPath: createImportPath(page.outDir, path.join(page.dir, PAGE_NAME)),
+          },
+        }),
+      };
+    }),
+  );
 }
 
 /**
@@ -74,32 +70,32 @@ export function playgroundBuilder({ page }: Options): Builder<FileOutput> {
  * @param objectExpression
  */
 function getMetadata(
-	page: NgDocPage,
-	objectExpression: ObjectLiteralExpression,
+  page: NgDocPage,
+  objectExpression: ObjectLiteralExpression,
 ): Record<string, NgDocPlaygroundMetadata> {
-	const expression = getPlaygroundsExpression(objectExpression);
+  const expression = getPlaygroundsExpression(objectExpression);
 
-	if (expression) {
-		return getPlaygroundsIds(expression).reduce(
-			(metadata: Record<string, NgDocPlaygroundMetadata>, id: string) => {
-				if (expression) {
-					const playground: ObjectLiteralExpression | undefined = getPlaygroundById(expression, id);
+  if (expression) {
+    return getPlaygroundsIds(expression).reduce(
+      (metadata: Record<string, NgDocPlaygroundMetadata>, id: string) => {
+        if (expression) {
+          const playground: ObjectLiteralExpression | undefined = getPlaygroundById(expression, id);
 
-					if (playground) {
-						metadata[id] = buildPlaygroundMetadata(
-							id,
-							playground,
-							controlsToProperties(page.playgrounds?.[id]?.controls ?? {}),
-						);
-					}
-				}
-				return metadata;
-			},
-			{},
-		);
-	}
+          if (playground) {
+            metadata[id] = buildPlaygroundMetadata(
+              id,
+              playground,
+              controlsToProperties(page.playgrounds?.[id]?.controls ?? {}),
+            );
+          }
+        }
+        return metadata;
+      },
+      {},
+    );
+  }
 
-	return {};
+  return {};
 }
 
 /**
@@ -107,22 +103,22 @@ function getMetadata(
  * @param controls
  */
 function controlsToProperties(
-	controls: Record<string, string | NgDocPlaygroundControlConfig>,
+  controls: Record<string, string | NgDocPlaygroundControlConfig>,
 ): NgDocPlaygroundProperties {
-	return Object.entries(controls).reduce(
-		(
-			properties: NgDocPlaygroundProperties,
-			[name, value]: [string, string | NgDocPlaygroundControlConfig],
-		) => {
-			properties[name] = {
-				inputName: typeof value === 'string' ? name : value.alias ?? name,
-				type: typeof value === 'string' ? value : value.type,
-				description: typeof value === 'string' ? undefined : value.description ?? undefined,
-				options: typeof value === 'string' ? undefined : value.options ?? undefined,
-			};
+  return Object.entries(controls).reduce(
+    (
+      properties: NgDocPlaygroundProperties,
+      [name, value]: [string, string | NgDocPlaygroundControlConfig],
+    ) => {
+      properties[name] = {
+        inputName: typeof value === 'string' ? name : value.alias ?? name,
+        type: typeof value === 'string' ? value : value.type,
+        description: typeof value === 'string' ? undefined : value.description ?? undefined,
+        options: typeof value === 'string' ? undefined : value.options ?? undefined,
+      };
 
-			return properties;
-		},
-		{},
-	);
+      return properties;
+    },
+    {},
+  );
 }

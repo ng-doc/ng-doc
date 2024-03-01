@@ -25,18 +25,10 @@ export const PAGE_COMPONENT_BUILDER_TAG = 'PageComponent';
 
 /**
  *
- * @param context.context
- * @param context
- * @param dir
- * @param page
- * @param context.dir
- * @param context.page
- * @param context.dirName
- * @param context.route
- * @param context.absoluteRoute
- * @param context.outDir
+ * @param config
  */
-export function pageComponentBuilder({ context, page }: Config): Builder<FileOutput> {
+export function pageComponentBuilder(config: Config): Builder<FileOutput> {
+  const { context, page } = config;
   const mdPath = path.join(page.dir, page.entry.mdFile);
   const outPath = path.join(page.outDir, 'page.ts');
 

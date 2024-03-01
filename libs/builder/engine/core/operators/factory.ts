@@ -7,26 +7,27 @@ import {
   BuilderError,
   BuilderPending,
   BuilderState,
+  CacheStrategy,
   isBuilderError,
   isBuilderPending,
 } from '../types';
 import { distinctPending } from './distinct-pending';
+import { handleCacheStrategy } from './handle-cache-strategy';
 
 /**
- * The factory function is used to create an Observable of BuilderState.
- * It takes an array of Observables of BuilderState and a function that returns a Promise.
- * The function combines the latest values from the Observables, checks for errors and pending states,
- * and then calls the provided function with the results of the successful Observables.
- * The result of the function is then mapped to a BuilderDone state.
+ * The factory function is a powerful tool for creating complex builders.
+ * It should be used when you need to build something based on the results of multiple other builders.
  * @param tag
  * @param builders - An array of Observables of BuilderState.
  * @param buildFn - A function that takes the results of the successful Observables and returns a Promise.
+ * @param cacheStrategy
  * @returns An Observable of BuilderState.
  */
-export function factory<T, R>(
+export function factory<T, R, TCacheData>(
   tag: string,
   builders: readonly [...ObservableInputTuple<Array<BuilderState<T>>>],
   buildFn: (...args: T[]) => Promise<R> | R,
+  cacheStrategy?: CacheStrategy<TCacheData, R>,
 ): Observable<BuilderState<R>> {
   return combineLatest(builders).pipe(
     switchMap((states: Array<BuilderState<T>>) => {
@@ -43,7 +44,7 @@ export function factory<T, R>(
        * If there are any errors in the states, return an Observable of BuilderError.
        */
       if (errors.length) {
-        return of(new BuilderError(tag, asArray(...errors.map((error) => error.error))));
+        return of(new BuilderError(tag, asArray(...errors.map(({ error }) => error))));
       }
 
       /**
@@ -51,11 +52,12 @@ export function factory<T, R>(
        * The result of the function is then mapped to a BuilderDone state.
        */
       const buildFnResult = buildFn(
-        ...(states as Array<BuilderDone<T>>).map((state) => state.result),
+        ...(states as Array<BuilderDone<T>>).map(({ result }) => result),
       );
 
       return (buildFnResult instanceof Promise ? from(buildFnResult) : of(buildFnResult)).pipe(
         map((result) => new BuilderDone(tag, result)),
+        handleCacheStrategy<R, TCacheData>(cacheStrategy),
       );
     }),
     catchError((error: Error) => of(new BuilderError(tag, [error]))),

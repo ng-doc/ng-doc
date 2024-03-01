@@ -1,17 +1,18 @@
 import { NgDocEntityAnchor, NgDocKeyword, NgDocPage } from '@ng-doc/core';
 import { finalize, merge } from 'rxjs';
-import { startWith } from 'rxjs/operators';
+import { startWith, tap } from 'rxjs/operators';
 
 import { ObservableSet } from '../../../classes';
 import { buildEntityKeyword, keywordKey } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
 import {
   Builder,
+  CacheStrategy,
   keywordsStore,
-  onKeywordsChange,
+  onKeywordsTouch,
   runBuild,
   sequentialJobs,
-  triggerKeywordsChange,
+  touchKeywords,
   watchFile,
 } from '../../core';
 import { onDependenciesChange } from '../../core/triggers/on-dependencies-change';
@@ -25,66 +26,87 @@ interface Config {
   page: EntryMetadata<NgDocPage>;
 }
 
+interface CacheData {
+  dependencies: string[];
+  anchors: NgDocEntityAnchor[];
+  usedKeywords: string[];
+}
+
 /**
  *
- * @param context.context
- * @param context
- * @param dir
- * @param page
- * @param context.dir
- * @param context.route
- * @param context.page
- * @param context.mdPath
- * @param context.absoluteRoute
+ * @param config
  */
-export function guideBuilder({ context, mdPath, page }: Config): Builder<string> {
+export function guideBuilder(config: Config): Builder<string> {
+  const { context, mdPath, page } = config;
   const dependencies = new ObservableSet<string>();
   const anchors = [] as NgDocEntityAnchor[];
   const usedKeywords = new Set<string>();
   let removeKeywords: () => void = () => {};
 
+  const cacheStrategy = {
+    id: mdPath,
+    action: 'restore',
+    files: () => [mdPath, ...dependencies.asArray()],
+    getData: () => ({
+      dependencies: dependencies.asArray(),
+      anchors,
+      usedKeywords: Array.from(usedKeywords),
+    }),
+    onCacheLoad: (data) => {
+      dependencies.add(...data.dependencies);
+      anchors.push(...data.anchors);
+      data.usedKeywords.forEach(usedKeywords.add.bind(usedKeywords));
+    },
+    saveResult: (content) => content,
+    restoreResult: (content) => content,
+  } satisfies CacheStrategy<CacheData, string>;
+
   return merge(
     watchFile(mdPath),
     onDependenciesChange(dependencies),
-    onKeywordsChange(usedKeywords),
+    onKeywordsTouch(usedKeywords),
   ).pipe(
     startWith(void 0),
-    runBuild('Guide', async () => {
-      try {
-        removeKeywords();
-        dependencies.clear();
-        usedKeywords.clear();
+    runBuild(
+      'Guide',
+      async () => {
+        try {
+          removeKeywords();
+          anchors.length = 0;
+          dependencies.clear();
+          usedKeywords.clear();
 
-        const content = renderTemplate(page.entry.mdFile, {
-          scope: page.dir,
-          context: {
-            NgDocPage: page,
-            NgDocActions: undefined,
-          },
-          dependencies,
-          filters: false,
-        });
+          const content = renderTemplate(page.entry.mdFile, {
+            scope: page.dir,
+            context: {
+              NgDocPage: page,
+              NgDocActions: undefined,
+            },
+            dependencies,
+            filters: false,
+          });
 
-        const processedContent = await sequentialJobs(content, [
-          markdownToHtmlJob(page.dir, dependencies),
-          processHtmlJob({
-            headings: context.config.guide?.anchorHeadings,
-            route: page.absoluteRoute(),
-            addAnchor: anchors.push.bind(anchors),
-          }),
-          extractKeywordsJob({ addUsedKeyword: usedKeywords.add.bind(usedKeywords) }),
-        ]);
-
-        const keywords = getKeywords(page, anchors);
-
-        if (keywords.length) {
-          removeKeywords = keywordsStore.add(...keywords);
-          triggerKeywordsChange(...keywords.map(([key]) => key));
+          return sequentialJobs(content, [
+            markdownToHtmlJob(page.dir, dependencies),
+            processHtmlJob({
+              headings: context.config.guide?.anchorHeadings,
+              route: page.absoluteRoute(),
+              addAnchor: anchors.push.bind(anchors),
+            }),
+            extractKeywordsJob({ addUsedKeyword: usedKeywords.add.bind(usedKeywords) }),
+          ]);
+        } catch (cause) {
+          throw new Error(`Error while building guide page "${page.entry.title}"`, { cause });
         }
+      },
+      cacheStrategy,
+    ),
+    tap(() => {
+      const keywords = getKeywords(page, anchors);
 
-        return processedContent;
-      } catch (cause) {
-        throw new Error(`Error while building guide page "${page.entry.title}"`, { cause });
+      if (keywords.length) {
+        removeKeywords = keywordsStore.add(...keywords);
+        touchKeywords(...keywords.map(([key]) => key));
       }
     }),
     finalize(removeKeywords),

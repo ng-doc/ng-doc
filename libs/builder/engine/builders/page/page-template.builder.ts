@@ -17,11 +17,10 @@ export const PAGE_TEMPLATE_BUILDER_TAG = 'PageComponent';
 
 /**
  *
- * @param root0
- * @param root0.context
- * @param root0.page
+ * @param config
  */
-export function pageTemplateBuilder({ context, page }: Config): Builder<string> {
+export function pageTemplateBuilder(config: Config): Builder<string> {
+  const { context, page } = config;
   const mdPath = path.join(page.dir, page.entry.mdFile);
 
   return factory(

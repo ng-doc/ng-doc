@@ -22,11 +22,11 @@ export const PAGE_FILE_BUILDER_TAG = 'PageFile';
  * This function returns a Builder Observable that emits a NgDocPage object whenever the file at the provided path changes.
  * The Builder Observable is created by merging an Observable that emits on file changes.
  * When the file changes, the build function is called, which compiles the TypeScript file, imports it as an ES module, and returns the default export.
- * @param {NgDocBuilderContext} { tsConfig, project, context } - The context for the builder, including the TypeScript configuration, the project, and the workspace root.
- * @param {string} path - The path of the file to build.
  * @returns {Builder<NgDocPage>} - A Builder Observable that emits a NgDocPage object whenever the file at the provided path changes.
+ * @param config - The configuration object for the builder.
  */
-export function pageFileBuilder({ context, pagePath }: Config): Builder<EntryMetadata<NgDocPage>> {
+export function pageFileBuilder(config: Config): Builder<EntryMetadata<NgDocPage>> {
+  const { context, pagePath } = config;
   const sourceFile = context.project.addSourceFileAtPath(pagePath);
   const dependencies = new ObservableSet<string>();
 

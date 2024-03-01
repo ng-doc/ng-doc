@@ -18,7 +18,7 @@ import { EntryMetadata } from '../interfaces';
 /**
  * Options for the demoAssetsBuilder function.
  */
-interface Options {
+interface Config {
   context: NgDocBuilderContext;
   page: EntryMetadata<NgDocPage>;
 }
@@ -28,9 +28,11 @@ export const PAGE_DEMO_ASSETS_BUILDER_TAG = 'PageDemoAssets';
 /**
  * Builds demo assets for a given context, object expression, and output directory.
  * @param {Options} options - The options for the builder.
+ * @param config
  * @returns {Builder<FileOutput>} A builder that outputs file outputs.
  */
-export function demoAssetsBuilder({ context, page }: Options): Builder<FileOutput> {
+export function demoAssetsBuilder(config: Config): Builder<FileOutput> {
+  const { context, page } = config;
   const references = Object.values(getDemoClassDeclarations(page.objectExpression)).map(
     (classDeclaration) => classDeclaration.getSourceFile(),
   );

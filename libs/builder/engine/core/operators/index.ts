@@ -4,6 +4,7 @@ export * from './emit-file-output';
 export * from './entries-emitter';
 export * from './factory';
 export * from './global-trigger';
+export * from './handle-cache-strategy';
 export * from './run-build';
 export * from './sequential-jobs';
 export * from './when-builders-done';

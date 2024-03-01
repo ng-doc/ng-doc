@@ -10,8 +10,9 @@ import {
 } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 
-import { BuilderState } from '../types';
+import { BuilderState, CacheStrategy } from '../types';
 import { builderState } from './builder-state';
+import { handleCacheStrategy } from './handle-cache-strategy';
 
 const builders = new Set<BehaviorSubject<boolean>>();
 
@@ -27,11 +28,13 @@ export function refreshBuildersStates(): void {
  *
  * @param tag
  * @param project
- * @param stage
+ * @param skipIf
+ * @param cacheStrategy
  */
 export function runBuild<T, O extends ObservableInput<any>>(
   tag: string,
   project: (value: T, index: number) => O,
+  cacheStrategy?: CacheStrategy<any, ObservedValueOf<O>>,
 ): OperatorFunction<T, BuilderState<ObservedValueOf<O>>> {
   const fresh = new BehaviorSubject<boolean>(true);
 
@@ -46,7 +49,13 @@ export function runBuild<T, O extends ObservableInput<any>>(
 
         return v;
       }),
-      switchMap((args: T) => of(args).pipe(switchMap(project), builderState(tag))),
+      switchMap((args: T) => {
+        return of(args).pipe(
+          switchMap(project),
+          builderState(tag),
+          handleCacheStrategy(cacheStrategy),
+        );
+      }),
       finalize(() => builders.delete(fresh)),
     );
 }

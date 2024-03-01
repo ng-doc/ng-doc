@@ -3,6 +3,7 @@ import {
   entriesEmitter,
   isBuilderDone,
   refreshBuildersStates,
+  setColdStartFalse,
   whenStackIsEmpty,
 } from '@ng-doc/builder';
 import { merge, Observable } from 'rxjs';
@@ -31,6 +32,7 @@ export function newBuild(context: NgDocBuilderContext): Observable<void> {
     emitFileOutput(),
     tap((output) => {
       refreshBuildersStates();
+      setColdStartFalse();
 
       console.log(
         count++,
