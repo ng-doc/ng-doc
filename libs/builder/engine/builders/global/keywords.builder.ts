@@ -6,7 +6,7 @@ import { NgDocBuilderContext } from '../../../interfaces';
 import {
   Builder,
   FileOutput,
-  IndexStore,
+  keywordsStore,
   onRemoveFromStore,
   runBuild,
   whenBuildersStackIsEmpty,
@@ -17,12 +17,15 @@ import { GUIDE_BUILDER_TAG } from '../page/guide.builder';
  *
  * @param context
  */
-export function searchIndexesBuilder(context: NgDocBuilderContext): Builder<FileOutput> {
-  return merge(whenBuildersStackIsEmpty([GUIDE_BUILDER_TAG]), onRemoveFromStore(IndexStore)).pipe(
+export function keywordsBuilder(context: NgDocBuilderContext): Builder<FileOutput> {
+  return merge(
+    whenBuildersStackIsEmpty([GUIDE_BUILDER_TAG]),
+    onRemoveFromStore(keywordsStore),
+  ).pipe(
     debounceTime(0),
-    runBuild('SearchIndexes', async () => ({
-      content: JSON.stringify(IndexStore.asArray(), null, 2),
-      filePath: path.join(context.outAssetsDir, 'indexes.json'),
+    runBuild('Keywords', async () => ({
+      content: JSON.stringify(Object.fromEntries(keywordsStore)),
+      filePath: path.join(context.outAssetsDir, 'keywords.json'),
     })),
   );
 }

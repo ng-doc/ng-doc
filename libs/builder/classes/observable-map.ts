@@ -16,6 +16,10 @@ export class ObservableMap<TKey, TValue> {
     return this.collection.size;
   }
 
+  *[Symbol.iterator](): IterableIterator<[TKey, TValue]> {
+    yield* this.collection;
+  }
+
   asArray(): TValue[] {
     return asArray(this.collection.values());
   }

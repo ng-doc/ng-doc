@@ -12,6 +12,10 @@ export class ObservableSet<T> {
     this.collection = new Set(values);
   }
 
+  get size(): number {
+    return this.collection.size;
+  }
+
   asArray(): T[] {
     return asArray(this.collection);
   }

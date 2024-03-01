@@ -6,7 +6,6 @@ export * from './core';
 export * from './entities';
 export * from './functions';
 export * from './nunjucks';
-export * from './stores';
 export * from './ts-doc-formatter';
 export * from './variables';
 export * from './watcher';
