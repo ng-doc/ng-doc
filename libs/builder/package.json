@@ -1,42 +1,42 @@
 {
-	"name": "@ng-doc/builder",
-	"version": "0.0.1",
-	"type": "commonjs",
-	"builders": "./builders.json",
-	"schematics": "./schematics/collection.json",
-	"ng-update": {
-		"migrations": "./schematics/migration.json",
-		"packageGroup": [
-			"ng-doc"
-		]
-	},
-	"dependencies": {
-		"@ng-doc/core": "0.0.0",
-		"@ng-doc/utils": "0.0.0",
-		"@angular-devkit/architect": ">=0.1700.0",
-		"@angular-devkit/build-angular": ">=17.0.0",
-		"chokidar": "3.5.3",
-		"minimatch": "9.0.1",
-		"rxjs": "^7.0.0",
-		"ts-morph": "20.0.0",
-		"nunjucks": "3.2.4",
-		"@orama/orama": "1.0.2",
-		"@orama/plugin-parsedoc": "1.0.2",
-		"posthtml-parser": "0.11.0",
-		"prettier": "2.8.8",
-		"fast-glob": "3.3.2",
-		"marked": "4.0.18",
-		"highlight.js": "11.5.1",
-		"esbuild": "0.19.5",
-		"@microsoft/tsdoc": "0.14.2",
-		"cosmiconfig": "8.2.0",
-		"cosmiconfig-typescript-loader": "5.0.0",
-		"find-cache-dir": "3.3.2",
-		"tslib": "^2.6.2",
-		"ng-morph": "4.0.3",
-		"parsimmon": "^1.18.1"
-	},
-	"publishConfig": {
-		"access": "public"
-	}
+  "name": "@ng-doc/builder",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "builders": "./builders.json",
+  "schematics": "./schematics/collection.json",
+  "ng-update": {
+    "migrations": "./schematics/migration.json",
+    "packageGroup": [
+      "ng-doc"
+    ]
+  },
+  "dependencies": {
+    "@ng-doc/core": "0.0.0",
+    "@ng-doc/utils": "0.0.0",
+    "@angular-devkit/architect": ">=0.1700.0",
+    "@angular-devkit/build-angular": ">=17.0.0",
+    "chokidar": "3.5.3",
+    "minimatch": "9.0.1",
+    "rxjs": "^7.0.0",
+    "ts-morph": "20.0.0",
+    "nunjucks": "3.2.4",
+    "@orama/orama": "1.0.2",
+    "@orama/plugin-parsedoc": "1.0.2",
+    "posthtml-parser": "0.11.0",
+    "prettier": "<4.0.0",
+    "fast-glob": "3.3.2",
+    "marked": "4.0.18",
+    "highlight.js": "11.5.1",
+    "esbuild": "0.19.5",
+    "@microsoft/tsdoc": "0.14.2",
+    "cosmiconfig": "8.2.0",
+    "cosmiconfig-typescript-loader": "5.0.0",
+    "find-cache-dir": "3.3.2",
+    "tslib": "^2.6.2",
+    "ng-morph": "4.0.3",
+    "parsimmon": "^1.18.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }
