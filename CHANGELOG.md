@@ -1,3 +1,10 @@
+## [17.5.3](https://github.com/ng-doc/ng-doc/compare/v17.5.2...v17.5.3) (2024-03-02)
+
+
+### Bug Fixes
+
+* **builder:** builder doesnt format the code if application uses prettier >=2.x.x ([4df1eda](https://github.com/ng-doc/ng-doc/commit/4df1eda986412ab800173f32450015fce4ce8e17)), closes [#136](https://github.com/ng-doc/ng-doc/issues/136)
+
 ## [17.5.2](https://github.com/ng-doc/ng-doc/compare/v17.5.1...v17.5.2) (2024-02-27)
 
 
