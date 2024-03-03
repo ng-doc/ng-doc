@@ -1,3 +1,10 @@
+## [17.5.4](https://github.com/ng-doc/ng-doc/compare/v17.5.3...v17.5.4) (2024-03-03)
+
+
+### Bug Fixes
+
+* **builder:** input signals that have `undefined` in type are not displayed in playgrounds ([07dd7f6](https://github.com/ng-doc/ng-doc/commit/07dd7f62c42766c8c8aeac021159f306a9a7729f)), closes [#137](https://github.com/ng-doc/ng-doc/issues/137)
+
 ## [17.5.3](https://github.com/ng-doc/ng-doc/compare/v17.5.2...v17.5.3) (2024-03-02)
 
 
