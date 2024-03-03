@@ -7,7 +7,7 @@
 	(ngModelChange)="changeModel($event)">
 	<ng-doc-list *ngDocData>
 		<ng-container *ngFor="let option of options">
-			<ng-container *ngIf="option | ngDocExtractValue as value">
+			<ng-container *ngIf="isManual ? option : (option | ngDocExtractValue) as value">
 				<ng-doc-option [value]="value">
 					<ng-container
 						*ngTemplateOutlet="valueTemplate; context: { $implicit: value }"></ng-container>

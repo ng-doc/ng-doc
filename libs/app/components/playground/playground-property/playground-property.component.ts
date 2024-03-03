@@ -63,6 +63,9 @@ export class NgDocPlaygroundPropertyComponent implements OnChanges {
 					? this.property.options
 					: undefined;
 				this.propertyTypeControl.instance.default = this.defaultValue;
+				this.propertyTypeControl.instance.isManual = isPlaygroundProperty(this.property)
+					? this.property.isManual
+					: undefined;
 				this.propertyTypeControl.instance.writeValue(this.control?.value);
 
 				this.option = this.typeControl.options;

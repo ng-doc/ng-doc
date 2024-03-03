@@ -51,6 +51,8 @@ export class NgDocTypeAliasControlComponent<T> extends DIControl<T> implements N
 
 	options?: string[];
 
+	isManual?: boolean;
+
 	constructor() {
 		super();
 	}

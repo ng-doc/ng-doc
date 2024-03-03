@@ -159,7 +159,10 @@ export class NgDocPlaygroundPropertiesComponent<
 		const type: string = property.type;
 		const typeControl: NgDocProvidedTypeControl | undefined =
 			this.getControlForType(type) ??
-			this.getControlForTypeAlias(isPlaygroundProperty(property) ? property.options : undefined);
+			this.getControlForTypeAlias(
+				isPlaygroundProperty(property) ? property.options : undefined,
+				property.isManual,
+			);
 
 		if (!typeControl && isDevMode()) {
 			console.warn(
@@ -176,15 +179,20 @@ export class NgDocPlaygroundPropertiesComponent<
 		return token ? this.injector.get(token) : undefined;
 	}
 
-	private getControlForTypeAlias(options?: string[]): NgDocProvidedTypeControl | undefined {
+	private getControlForTypeAlias(
+		options?: string[],
+		isManual?: boolean,
+	): NgDocProvidedTypeControl | undefined {
 		if (options && options.length) {
 			let optionsIsValid: boolean = true;
 
-			try {
-				// checking that all values are extractable
-				options.forEach((item: string) => extractValueOrThrow(item));
-			} catch {
-				optionsIsValid = false;
+			if (!isManual) {
+				try {
+					// checking that all values are extractable
+					options.forEach((item: string) => extractValueOrThrow(item));
+				} catch {
+					optionsIsValid = false;
+				}
 			}
 
 			if (optionsIsValid) {

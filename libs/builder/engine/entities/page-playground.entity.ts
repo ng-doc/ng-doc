@@ -112,6 +112,7 @@ export class NgDocPagePlaygroundEntity extends NgDocEntity {
 					type: typeof value === 'string' ? value : value.type,
 					description: typeof value === 'string' ? undefined : value.description ?? undefined,
 					options: typeof value === 'string' ? undefined : value.options ?? undefined,
+					isManual: true,
 				};
 
 				return properties;

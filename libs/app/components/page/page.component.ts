@@ -68,8 +68,14 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 	providers: [
 		provideTypeControl('NgDocTypeAlias', NgDocTypeAliasControlComponent, { order: 10 }),
 		provideTypeControl('string', NgDocStringControlComponent, { order: 20 }),
+		provideTypeControl('string | undefined', NgDocStringControlComponent, { order: 20 }),
 		provideTypeControl('number', NgDocNumberControlComponent, { order: 30 }),
+		provideTypeControl('number | undefined', NgDocNumberControlComponent, { order: 30 }),
 		provideTypeControl('boolean', NgDocBooleanControlComponent, { hideLabel: true, order: 40 }),
+		provideTypeControl('boolean | undefined', NgDocBooleanControlComponent, {
+			hideLabel: true,
+			order: 40,
+		}),
 	],
 	host: { ngSkipHydration: 'true' },
 })
