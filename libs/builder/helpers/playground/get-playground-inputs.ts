@@ -51,8 +51,11 @@ function propOrParamToPlaygroundProperty(
 	propOrParam: NgDocInputDeclaration | ParameterDeclaration,
 	inputName?: string,
 ): NgDocPlaygroundProperties {
+	const inputType = Node.isPropertyDeclaration(propOrParam)
+		? getInputType(propOrParam)
+		: propOrParam.getType();
 	const type: string = formatType(
-		Node.isPropertyDeclaration(propOrParam) ? getInputType(propOrParam) : propOrParam.getType(),
+		inputType,
 		TypeFormatFlags.NoTruncation | TypeFormatFlags.UseSingleQuotesForStringLiteralType,
 	);
 
@@ -68,9 +71,8 @@ function propOrParamToPlaygroundProperty(
 					: extractParameterDocs(
 							propOrParam.getParentIfKindOrThrow(SyntaxKind.MethodDeclaration),
 							propOrParam.getName(),
-					  ),
-			options: propOrParam
-				.getType()
+						),
+			options: inputType
 				.getUnionTypes()
 				.map((type: Type) =>
 					type.getText(

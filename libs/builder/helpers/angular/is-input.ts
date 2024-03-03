@@ -16,10 +16,6 @@ export type NgDocInputDeclaration =
  */
 export function isInput(p: NgDocInputDeclaration): boolean {
 	return isInputDecorator(p) || isInputSignal(p);
-
-	// const typeDeclaration = p.getType().getSymbol()?.getDeclarations()[0];
-	// const readType = p.getType().getTypeArguments()[0]
-	// 	return !!p.getDecorator('Input')
 }
 
 /**
