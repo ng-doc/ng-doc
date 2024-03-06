@@ -19,6 +19,8 @@ export function getComponentDecorator(cls: ClassDeclaration): Component | undefi
 			decoratorArgument.getProperty('selector');
 		const templateProperty: ObjectLiteralElementLike | undefined =
 			decoratorArgument.getProperty('templateUrl');
+		const styleUrlProperty: ObjectLiteralElementLike | undefined =
+			decoratorArgument.getProperty('styleUrl');
 		const styleUrlsProperty: ObjectLiteralElementLike | undefined =
 			decoratorArgument.getProperty('styleUrls');
 
@@ -26,6 +28,7 @@ export function getComponentDecorator(cls: ClassDeclaration): Component | undefi
 			standalone: stringExpression(getPropertyAssignment(standaloneProperty)),
 			selector: stringExpression(getPropertyAssignment(selectorProperty)),
 			templateUrl: stringExpression(getPropertyAssignment(templateProperty)),
+			styleUrl: stringExpression(getPropertyAssignment(styleUrlProperty)),
 			styleUrls: stringExpression(getPropertyAssignment(styleUrlsProperty)),
 		};
 	}

@@ -19,7 +19,9 @@ export function getComponentSourceFiles(cls: ClassDeclaration): string[] {
 		return asArray(
 			filePath,
 			decoratorData.templateUrl ? path.join(fileDir, decoratorData.templateUrl) : [],
-			asArray(decoratorData.styleUrls).map((styleUrl: string) => path.join(fileDir, styleUrl)),
+			asArray(decoratorData.styleUrls, decoratorData.styleUrl).map((styleUrl: string) =>
+				path.join(fileDir, styleUrl),
+			),
 		);
 	}
 
