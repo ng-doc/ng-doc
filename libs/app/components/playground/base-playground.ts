@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { Constructor, extractFunctionDefaults } from '@ng-doc/core';
 import { NgDocPlaygroundConfig } from '@ng-doc/core/interfaces';
+import { Observable, Subject, take } from 'rxjs';
 
 import { NgDocPlaygroundComponent } from './playground.component';
 
@@ -33,11 +34,17 @@ export abstract class NgDocBasePlayground implements Pick<NgDocPlaygroundConfig,
 
 	defaultValues: Record<string, unknown> = {};
 
+	private reattached: Subject<void> = new Subject<void>();
+
 	private playgroundContainer: NgDocPlaygroundComponent = inject(NgDocPlaygroundComponent);
-	private changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
+	protected changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
 	protected constructor(private playgroundInstance?: Constructor<unknown>) {
 		this.changeDetectorRef.detach();
+	}
+
+	get onReattached(): Observable<void> {
+		return this.reattached.pipe(take(1));
 	}
 
 	ngOnInit(): void {
@@ -54,9 +61,9 @@ export abstract class NgDocBasePlayground implements Pick<NgDocPlaygroundConfig,
 								// @ts-expect-error we do not know the type of the playground
 								typeof this.playground[key] === 'function'
 									? // @ts-expect-error we do not know the type of the playground
-									  this.playground[key]()
+										this.playground[key]()
 									: // @ts-expect-error we do not know the type of the playground
-									  this.playground[key];
+										this.playground[key];
 						} catch (e) {
 							// we do catch here because some of the playground properties can be getters and throw an error
 						}
@@ -92,6 +99,7 @@ export abstract class NgDocBasePlayground implements Pick<NgDocPlaygroundConfig,
          */
 		Promise.resolve().then(() => {
 			this.changeDetectorRef.reattach();
+			this.reattached.next();
 		});
 	}
 

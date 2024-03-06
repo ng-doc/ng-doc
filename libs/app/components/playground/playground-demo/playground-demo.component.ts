@@ -116,6 +116,12 @@ export class NgDocPlaygroundDemoComponent<
 			this.demoRef?.setInput('properties', data.properties ?? {});
 			this.demoRef?.setInput('content', data.content ?? {});
 			this.demoRef?.setInput('actionData', this.configuration?.data ?? {});
+
+			if (this.recreateDemo) {
+				this.demoRef?.instance.onReattached.subscribe(() => {
+					this.demoRef?.changeDetectorRef.detectChanges();
+				});
+			}
 		}
 
 		this.updateCodeView();
@@ -138,13 +144,13 @@ export class NgDocPlaygroundDemoComponent<
 					this.pipeName,
 					this.getActiveContent(),
 					this.getPipeActiveInputs(),
-			  )
+				)
 			: buildPlaygroundDemoTemplate(
 					this.configuration?.template ?? '',
 					this.selector,
 					this.getActiveContent(),
 					this.getActiveInputs(),
-			  );
+				);
 
 		this.code = from(formatHtml(template));
 	}
