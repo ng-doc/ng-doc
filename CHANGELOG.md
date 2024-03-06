@@ -1,3 +1,11 @@
+## [17.5.5](https://github.com/ng-doc/ng-doc/compare/v17.5.4...v17.5.5) (2024-03-06)
+
+
+### Bug Fixes
+
+* **demo:** demos don't extract code from the new `styleUrl` property ([b8061f0](https://github.com/ng-doc/ng-doc/commit/b8061f05f6df77ce434fe0ca153af7efbe2cce65)), closes [#140](https://github.com/ng-doc/ng-doc/issues/140)
+* **playgrounds:** recreating playground's demos doesn't work ([9b4bdb7](https://github.com/ng-doc/ng-doc/commit/9b4bdb7beef0026544a43d69e31be1787deb4219)), closes [#138](https://github.com/ng-doc/ng-doc/issues/138)
+
 ## [17.5.4](https://github.com/ng-doc/ng-doc/compare/v17.5.3...v17.5.4) (2024-03-03)
 
 
