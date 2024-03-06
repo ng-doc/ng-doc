@@ -15,8 +15,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoComponent {
-	constructor() {}
-
 	method(): void {
 		/* snippet "TypeScript" */
 		console.log('demo');

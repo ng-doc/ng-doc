@@ -1,7 +1,7 @@
 ## Inputs
 
-Вы так же можете добавить инпут поля вашему демо компоненту, а после передавать их значения при
-ренденринге демо, это даст вам большую переиспользуемость.
+You can also add input fields to your demo component and then pass their values during rendering of
+the demo. This will give you greater reusability.
 
 ```typescript name="button-demo.component.ts"
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
