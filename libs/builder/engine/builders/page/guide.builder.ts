@@ -1,7 +1,7 @@
-import { IndexStore } from '@ng-doc/builder';
+import { IndexStore, onKeywordsTouch } from '@ng-doc/builder';
 import { NgDocEntityAnchor, NgDocKeyword, NgDocPage } from '@ng-doc/core';
 import { finalize, merge } from 'rxjs';
-import { startWith, tap } from 'rxjs/operators';
+import { debounceTime, startWith, tap } from 'rxjs/operators';
 
 import { ObservableSet } from '../../../classes';
 import { buildEntityKeyword, keywordKey } from '../../../helpers';
@@ -68,8 +68,9 @@ export function guideBuilder(config: Config): Builder<string> {
   return merge(
     watchFile(mdPath),
     onDependenciesChange(dependencies),
-    // onKeywordsTouch(usedKeywords),
+    onKeywordsTouch(usedKeywords),
   ).pipe(
+    debounceTime(0),
     startWith(void 0),
     runBuild(
       GUIDE_BUILDER_TAG,
