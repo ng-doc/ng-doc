@@ -1,15 +1,9 @@
-import { getStructuredDocs } from '@ng-doc/builder';
+import { afterBuilders, getStructuredDocs } from '@ng-doc/builder';
 import { merge } from 'rxjs';
-import { debounceTime, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 import { NgDocBuilderContext } from '../../../interfaces';
-import {
-  Builder,
-  FileOutput,
-  onRemoveFromStore,
-  PageStore,
-  whenBuildersStackIsEmpty,
-} from '../../core';
+import { Builder, FileOutput, onRemoveFromStore, PageStore } from '../../core';
 import { PAGE_FILE_BUILDER_TAG } from '../page/page-file.builder';
 import { contextBuilder } from './context.builder';
 import { indexBuilder } from './index.builder';
@@ -26,8 +20,7 @@ export function globalBuilders(context: NgDocBuilderContext): Builder<FileOutput
     indexBuilder(context),
     searchIndexesBuilder(context),
     keywordsBuilder(context),
-    merge(whenBuildersStackIsEmpty([PAGE_FILE_BUILDER_TAG]), onRemoveFromStore(PageStore)).pipe(
-      debounceTime(0),
+    merge(afterBuilders([PAGE_FILE_BUILDER_TAG]), onRemoveFromStore(PageStore)).pipe(
       switchMap(() => {
         const structuredDocs = getStructuredDocs(PageStore.asArray());
 

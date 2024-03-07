@@ -10,7 +10,7 @@ import {
 import { NgDocPage } from '@ng-doc/core';
 import * as path from 'path';
 import { merge } from 'rxjs';
-import { debounceTime, startWith, tap } from 'rxjs/operators';
+import { startWith, tap } from 'rxjs/operators';
 
 import { getDemoAssets, getDemoClassDeclarations } from '../../../helpers';
 import { Builder, FileOutput, watchFile } from '../../core';
@@ -47,7 +47,6 @@ export function demoAssetsBuilder(config: Config): Builder<FileOutput> {
   return merge(
     ...references.map((sourceFile) => watchFile(sourceFile.getFilePath(), 'update')),
   ).pipe(
-    debounceTime(0),
     tap(() => {
       references.forEach((sourceFile) => {
         sourceFile.refreshFromFileSystemSync();

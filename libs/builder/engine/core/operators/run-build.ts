@@ -1,28 +1,9 @@
-import {
-  BehaviorSubject,
-  finalize,
-  Observable,
-  ObservableInput,
-  ObservedValueOf,
-  of,
-  OperatorFunction,
-  withLatestFrom,
-} from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { Observable, ObservableInput, ObservedValueOf, of, OperatorFunction } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 import { BuilderState, CacheStrategy } from '../types';
 import { builderState } from './builder-state';
 import { handleCacheStrategy } from './handle-cache-strategy';
-
-const builders = new Set<BehaviorSubject<boolean>>();
-
-/**
- * Refreshes the state of all builders.
- * By default, all builders can be run only once, but this function allows them to be run again.
- */
-export function refreshBuildersStates(): void {
-  builders.forEach((b) => b.next(true));
-}
 
 /**
  *
@@ -36,19 +17,8 @@ export function runBuild<T, O extends ObservableInput<any>>(
   project: (value: T, index: number) => O,
   cacheStrategy?: CacheStrategy<any, ObservedValueOf<O>>,
 ): OperatorFunction<T, BuilderState<ObservedValueOf<O>>> {
-  const fresh = new BehaviorSubject<boolean>(true);
-
-  builders.add(fresh);
-
   return (source: Observable<T>) =>
     source.pipe(
-      withLatestFrom(fresh),
-      filter(([, isFresh]) => isFresh),
-      map(([v]) => {
-        fresh.next(false);
-
-        return v;
-      }),
       switchMap((args: T) => {
         return of(args).pipe(
           switchMap(project),
@@ -56,6 +26,5 @@ export function runBuild<T, O extends ObservableInput<any>>(
           handleCacheStrategy(cacheStrategy),
         );
       }),
-      finalize(() => builders.delete(fresh)),
     );
 }

@@ -13,7 +13,7 @@ export class BuilderPending {
  * This class is used when the builder has finished and the result is available.
  * @template T The type of the result.
  */
-export class BuilderDone<T> {
+export class BuilderDone<TResult> {
   readonly state: 'done' = 'done' as const;
 
   /**
@@ -22,7 +22,11 @@ export class BuilderDone<T> {
    * @param {T} result The result of the builder process.
    * @param fromCache Whether the result was restored from the cache.
    */
-  constructor(readonly tag: string, readonly result: T, readonly fromCache: boolean = false) {}
+  constructor(
+    readonly tag: string,
+    readonly result: TResult,
+    readonly fromCache: boolean = false,
+  ) {}
 }
 
 /**
@@ -37,7 +41,10 @@ export class BuilderError {
    * @param tag
    * @param {Error[]} error The errors encountered during the builder process.
    */
-  constructor(readonly tag: string, readonly error: Error[]) {}
+  constructor(
+    readonly tag: string,
+    readonly error: Error[],
+  ) {}
 }
 
 /**
@@ -48,6 +55,7 @@ export class BuilderError {
  * @template T The type of the result when the builder is done.
  */
 export type BuilderState<T = never> = BuilderPending | BuilderDone<T> | BuilderError;
+export type EndStates<T = never> = BuilderDone<T> | BuilderError;
 
 /**
  * Type guard function to check if a given state is a BuilderPending state.

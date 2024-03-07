@@ -1,3 +1,4 @@
+import { asArray } from '@ng-doc/core';
 import fs from 'fs';
 import path from 'path';
 import { OperatorFunction } from 'rxjs';
@@ -10,18 +11,18 @@ import { BuilderDone, BuilderError, FileOutput, isBuilderDone } from '../types';
  * @returns An OperatorFunction that can be used in an RxJS pipe.
  */
 export function emitFileOutput(): OperatorFunction<
-	BuilderDone<FileOutput> | BuilderError,
-	BuilderDone<FileOutput> | BuilderError
+  BuilderDone<FileOutput> | BuilderError,
+  BuilderDone<FileOutput> | BuilderError
 > {
-	return (source) => {
-		return source.pipe(
-			tap((state) => {
-				if (isBuilderDone(state)) {
-					emitFiles([state.result]);
-				}
-			}),
-		);
-	};
+  return (source) => {
+    return source.pipe(
+      tap((state) => {
+        if (isBuilderDone(state)) {
+          emitFiles(asArray(state.result));
+        }
+      }),
+    );
+  };
 }
 
 /**
@@ -29,12 +30,12 @@ export function emitFileOutput(): OperatorFunction<
  * @param {FileOutput[]} files - An array of FileOutput objects to be written to the file system.
  */
 function emitFiles(files: FileOutput[]): void {
-	files.forEach((output: FileOutput) => {
-		const fileContent = fs.existsSync(output.filePath) && fs.readFileSync(output.filePath, 'utf-8');
+  files.forEach((output: FileOutput) => {
+    const fileContent = fs.existsSync(output.filePath) && fs.readFileSync(output.filePath, 'utf-8');
 
-		if (fileContent !== output.content) {
-			fs.mkdirSync(path.dirname(output.filePath), { recursive: true });
-			fs.writeFileSync(output.filePath, output.content);
-		}
-	});
+    if (fileContent !== output.content) {
+      fs.mkdirSync(path.dirname(output.filePath), { recursive: true });
+      fs.writeFileSync(output.filePath, output.content);
+    }
+  });
 }

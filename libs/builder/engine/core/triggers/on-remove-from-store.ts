@@ -1,4 +1,4 @@
-import { Observable, pairwise } from 'rxjs';
+import { asyncScheduler, Observable, pairwise, subscribeOn } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
 /**
@@ -17,5 +17,6 @@ export function onRemoveFromStore(store: {
     map(([prev, next]) => prev > next),
     filter(Boolean),
     map(() => void 0),
+    subscribeOn(asyncScheduler),
   );
 }

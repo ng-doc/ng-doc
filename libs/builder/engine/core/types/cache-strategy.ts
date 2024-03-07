@@ -3,7 +3,7 @@
  * `skip` strategy will skip the builder if cache is valid
  * `restore` strategy will restore the data from cache and return the result
  */
-export type CacheStrategy<TData = unknown, TResult = unknown> = {
+export type CacheStrategy<TData = unknown, TCache = unknown> = {
   /**
    * Unique id for cache
    */
@@ -26,7 +26,7 @@ export type CacheStrategy<TData = unknown, TResult = unknown> = {
     }
   | {
       action: 'restore';
-      saveResult: (result: TResult) => string;
-      restoreResult: (result: string) => TResult;
+      toCache: (result: TCache) => string;
+      fromCache: (result: string) => TCache;
     }
 );

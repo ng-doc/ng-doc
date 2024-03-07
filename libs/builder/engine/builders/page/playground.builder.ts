@@ -9,7 +9,7 @@ import {
 import { NgDocPage, NgDocPlaygroundControlConfig, NgDocPlaygroundProperties } from '@ng-doc/core';
 import * as path from 'path';
 import { merge } from 'rxjs';
-import { debounceTime, startWith } from 'rxjs/operators';
+import { startWith } from 'rxjs/operators';
 import { ObjectLiteralExpression } from 'ts-morph';
 
 import {
@@ -47,7 +47,6 @@ export function playgroundBuilder(config: Config): Builder<FileOutput> {
   return merge(
     ...references.map((sourceFile) => watchFile(sourceFile.getFilePath(), 'update')),
   ).pipe(
-    debounceTime(0),
     startWith(void 0),
     runBuild(
       PAGE_PLAYGROUND_BUILDER_TAG,

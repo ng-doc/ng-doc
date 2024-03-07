@@ -5,6 +5,15 @@ import { createCache, isCacheValid, loadCache, updateCache } from '../../entitie
 import { BuilderDone, BuilderState, CacheStrategy, isBuilderDone } from '../types';
 import { isColdStart } from '../variables';
 
+let isCacheEnabled: boolean = false;
+
+/**
+ * Disables cache for all builders.
+ */
+export function disableCache(): void {
+  isCacheEnabled = false;
+}
+
 /**
  * Handles cache provided cache strategy.
  * It will skip or restore the builder based on the strategy on the first run and
@@ -17,7 +26,7 @@ export function handleCacheStrategy<T, TData>(
   valid: boolean = true,
 ): OperatorFunction<BuilderState<T>, BuilderState<T>> {
   return (source) => {
-    if (!strategy) return source;
+    if (!strategy || !isCacheEnabled) return source;
 
     const cache = createCache(undefined, strategy.files?.(), strategy.getData?.() ?? {});
 
@@ -30,7 +39,7 @@ export function handleCacheStrategy<T, TData>(
               undefined,
               strategy.files?.(),
               strategy.getData?.() ?? {},
-              strategy.action === 'restore' ? strategy.saveResult(state.result) : undefined,
+              strategy.action === 'restore' ? strategy.toCache(state.result) : undefined,
             ),
           );
         }
@@ -56,7 +65,7 @@ export function handleCacheStrategy<T, TData>(
           strategy.onCacheLoad?.(cache.data as TData);
 
           return of(
-            new BuilderDone(strategy.id, strategy.restoreResult(cache.result ?? '') as T, true),
+            new BuilderDone(strategy.id, strategy.fromCache(cache.result ?? '') as T, true),
           );
         }
 

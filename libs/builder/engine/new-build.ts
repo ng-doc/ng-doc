@@ -1,16 +1,17 @@
 import {
+  disableCache,
   emitFileOutput,
   entriesEmitter,
   isBuilderDone,
-  refreshBuildersStates,
   setColdStartFalse,
   whenStackIsEmpty,
 } from '@ng-doc/builder';
 import { merge, Observable } from 'rxjs';
-import { debounceTime, map, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import { NgDocBuilderContext } from '../interfaces';
 import { globalBuilders } from './builders/global';
+import { resolveAsyncFileOutputs } from './core/operators/resolve-async-file-outputs';
 
 /**
  *
@@ -19,6 +20,10 @@ import { globalBuilders } from './builders/global';
 export function newBuild(context: NgDocBuilderContext): Observable<void> {
   let count = 0;
   console.time('build');
+
+  if (!context.config.cache) {
+    disableCache();
+  }
 
   return merge(entriesEmitter(context), globalBuilders(context)).pipe(
     tap((output) => {
@@ -29,9 +34,9 @@ export function newBuild(context: NgDocBuilderContext): Observable<void> {
       }
     }),
     whenStackIsEmpty(),
+    resolveAsyncFileOutputs(),
     emitFileOutput(),
     tap((output) => {
-      refreshBuildersStates();
       setColdStartFalse();
 
       console.log(
@@ -41,7 +46,6 @@ export function newBuild(context: NgDocBuilderContext): Observable<void> {
       );
     }),
     map(() => void 0),
-    debounceTime(0),
     tap(() => {
       console.timeEnd('build');
     }),

@@ -1,10 +1,10 @@
 import { merge, takeUntil } from 'rxjs';
 
 import { NgDocBuilderContext } from '../../../interfaces';
-import { Builder, FileOutput, watchFile, whenDone } from '../../core';
+import { AsyncFileOutput, Builder, FileOutput, watchFile, whenDone } from '../../core';
 import { demoAssetsBuilder } from './demo-assets.builder';
-import { pageComponentBuilder } from './page-component.builder';
 import { pageFileBuilder } from './page-file.builder';
+import { pageTemplateBuilder } from './page-template.builder';
 import { playgroundBuilder } from './playground.builder';
 
 /**
@@ -13,11 +13,14 @@ import { playgroundBuilder } from './playground.builder';
  * @param path
  * @param pagePath
  */
-export function pageBuilder(context: NgDocBuilderContext, pagePath: string): Builder<FileOutput> {
+export function pageBuilder(
+  context: NgDocBuilderContext,
+  pagePath: string,
+): Builder<AsyncFileOutput | FileOutput> {
   return pageFileBuilder({ context, pagePath }).pipe(
     whenDone((page) => {
       return merge(
-        pageComponentBuilder({ context, page }),
+        pageTemplateBuilder({ context, page }),
         demoAssetsBuilder({ context, page }),
         playgroundBuilder({ page }),
       );

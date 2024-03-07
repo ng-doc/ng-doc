@@ -1,8 +1,9 @@
 import { asArray } from '@ng-doc/core';
-import { combineLatest, from, map, Observable, ObservableInputTuple, of, switchMap } from 'rxjs';
+import { combineLatest, from, map, ObservableInputTuple, of, switchMap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import {
+  Builder,
   BuilderDone,
   BuilderError,
   BuilderPending,
@@ -13,6 +14,7 @@ import {
 } from '../types';
 import { distinctPending } from './distinct-pending';
 import { handleCacheStrategy } from './handle-cache-strategy';
+import { addToStack } from './stack';
 
 /**
  * The factory function is a powerful tool for creating complex builders.
@@ -20,7 +22,7 @@ import { handleCacheStrategy } from './handle-cache-strategy';
  * @param tag
  * @param builders - An array of Observables of BuilderState.
  * @param buildFn - A function that takes the results of the successful Observables and returns a Promise.
- * @param cacheStrategy
+ * @param cacheStrategy - An optional CacheStrategy object.
  * @returns An Observable of BuilderState.
  */
 export function factory<T, R, TCacheData>(
@@ -28,7 +30,7 @@ export function factory<T, R, TCacheData>(
   builders: readonly [...ObservableInputTuple<Array<BuilderState<T>>>],
   buildFn: (...args: T[]) => Promise<R> | R,
   cacheStrategy?: CacheStrategy<TCacheData, R>,
-): Observable<BuilderState<R>> {
+): Builder<R> {
   return combineLatest(builders).pipe(
     switchMap((states: Array<BuilderState<T>>) => {
       /**
@@ -69,5 +71,6 @@ export function factory<T, R, TCacheData>(
      * This can happen if builders start working asynchronously based on some trigger.
      */
     distinctPending(),
+    addToStack(tag),
   );
 }

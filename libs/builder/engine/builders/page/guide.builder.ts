@@ -11,7 +11,6 @@ import {
   Builder,
   CacheStrategy,
   keywordsStore,
-  onKeywordsTouch,
   runBuild,
   sequentialJobs,
   touchKeywords,
@@ -62,14 +61,14 @@ export function guideBuilder(config: Config): Builder<string> {
       anchors.push(...data.anchors);
       data.usedKeywords.forEach(usedKeywords.add.bind(usedKeywords));
     },
-    saveResult: (content) => content,
-    restoreResult: (content) => content,
+    toCache: (content) => content,
+    fromCache: (content) => content,
   } satisfies CacheStrategy<CacheData, string>;
 
   return merge(
     watchFile(mdPath),
     onDependenciesChange(dependencies),
-    onKeywordsTouch(usedKeywords),
+    // onKeywordsTouch(usedKeywords),
   ).pipe(
     startWith(void 0),
     runBuild(

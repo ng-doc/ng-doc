@@ -1,5 +1,5 @@
-import { map, merge, Observable } from 'rxjs';
-import { debounceTime, startWith, switchMap } from 'rxjs/operators';
+import { asyncScheduler, map, merge, Observable, subscribeOn } from 'rxjs';
+import { startWith, switchMap } from 'rxjs/operators';
 
 import { ObservableSet } from '../../../classes';
 import { watchFile } from '../watcher';
@@ -14,12 +14,11 @@ import { watchFile } from '../watcher';
  * @returns {Observable<void>} - An Observable that emits a void value whenever any of the files in the provided dependencies set changes.
  */
 export function onDependenciesChange(dependencies: ObservableSet<string>): Observable<void> {
-	return dependencies.changes().pipe(
-		startWith(dependencies.asArray()),
-		switchMap((deps: string[]) =>
-			merge(...deps.map((dep) => watchFile(dep, 'update').pipe(map(() => void 0)))).pipe(
-				debounceTime(0),
-			),
-		),
-	);
+  return dependencies.changes().pipe(
+    startWith(dependencies.asArray()),
+    switchMap((deps: string[]) =>
+      merge(...deps.map((dep) => watchFile(dep, 'update').pipe(map(() => void 0)))),
+    ),
+    subscribeOn(asyncScheduler),
+  );
 }
