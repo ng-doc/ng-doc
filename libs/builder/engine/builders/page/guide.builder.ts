@@ -1,11 +1,16 @@
-import { IndexStore, onKeywordsTouch } from '@ng-doc/builder';
+import {
+  createBuilder,
+  createMainTrigger,
+  createSecondaryTrigger,
+  isBuilderError,
+  onKeywordsTouch,
+} from '@ng-doc/builder';
 import { NgDocEntityAnchor, NgDocKeyword, NgDocPage } from '@ng-doc/core';
-import { finalize, merge } from 'rxjs';
-import { debounceTime, startWith, tap } from 'rxjs/operators';
+import { finalize, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 import { ObservableSet } from '../../../classes';
 import { buildEntityKeyword, keywordKey } from '../../../helpers';
-import { buildIndexes } from '../../../helpers/build-indexes';
 import { NgDocBuilderContext } from '../../../interfaces';
 import {
   Builder,
@@ -45,7 +50,6 @@ export function guideBuilder(config: Config): Builder<string> {
   const anchors = [] as NgDocEntityAnchor[];
   const usedKeywords = new Set<string>();
   let removeKeywords: () => void = () => {};
-  let removeIndexes: () => void = () => {};
 
   const cacheStrategy = {
     id: `${mdPath}#Guide`,
@@ -65,19 +69,12 @@ export function guideBuilder(config: Config): Builder<string> {
     fromCache: (content) => content,
   } satisfies CacheStrategy<CacheData, string>;
 
-  return merge(
-    watchFile(mdPath),
-    onDependenciesChange(dependencies),
-    onKeywordsTouch(usedKeywords),
-  ).pipe(
-    debounceTime(0),
-    startWith(void 0),
+  const builder = of(void 0).pipe(
     runBuild(
       GUIDE_BUILDER_TAG,
       async () => {
         try {
           removeKeywords();
-          removeIndexes();
           anchors.length = 0;
           dependencies.clear();
           usedKeywords.clear();
@@ -92,7 +89,7 @@ export function guideBuilder(config: Config): Builder<string> {
             filters: false,
           });
 
-          const proccessedContent = await sequentialJobs(content, [
+          return await sequentialJobs(content, [
             markdownToHtmlJob(page.dir, dependencies),
             processHtmlJob({
               headings: context.config.guide?.anchorHeadings,
@@ -101,25 +98,24 @@ export function guideBuilder(config: Config): Builder<string> {
             }),
             extractKeywordsJob({ addUsedKeyword: usedKeywords.add.bind(usedKeywords) }),
           ]);
-
-          removeIndexes = IndexStore.add(
-            ...(await buildIndexes({
-              content: proccessedContent,
-              title: page.entry.title,
-              breadcrumbs: page.breadcrumbs(),
-              pageType: 'guide',
-              route: page.absoluteRoute(),
-            })),
-          );
-
-          return proccessedContent;
         } catch (cause) {
           throw new Error(`Error while building guide page "${page.entry.title}"`, { cause });
         }
       },
       cacheStrategy,
     ),
-    tap(() => {
+  );
+
+  return createBuilder(
+    [
+      createMainTrigger(watchFile(mdPath, 'update'), onDependenciesChange(dependencies)),
+      createSecondaryTrigger(onKeywordsTouch(usedKeywords)),
+    ],
+    () => builder,
+  ).pipe(
+    tap((state) => {
+      if (isBuilderError(state)) return;
+
       const keywords = getKeywords(page, anchors);
 
       if (keywords.length) {
@@ -127,10 +123,7 @@ export function guideBuilder(config: Config): Builder<string> {
         touchKeywords(...keywords.map(([key]) => key));
       }
     }),
-    finalize(() => {
-      removeKeywords();
-      removeIndexes();
-    }),
+    finalize(removeKeywords),
   );
 }
 

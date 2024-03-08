@@ -1,6 +1,5 @@
 import { isPresent } from '@ng-doc/core';
 import {
-  asyncScheduler,
   filter,
   map,
   merge,
@@ -8,7 +7,6 @@ import {
   of,
   OperatorFunction,
   Subject,
-  subscribeOn,
   switchMap,
   tap,
 } from 'rxjs';
@@ -35,7 +33,7 @@ export function addToStack<T>(tag: string): OperatorFunction<BuilderState<T>, Bu
     return source.pipe(
       tap((state) => {
         state instanceof BuilderPending ? tagStack.add(id) : tagStack.delete(id);
-        //
+
         // state instanceof BuilderPending
         //   ? console.log('added:', tag, tagStack.size)
         //   : console.log('removed:', tag, tagStack.size);
@@ -114,6 +112,5 @@ export function afterBuilders(tags: string[]): Observable<void> {
       ),
     ),
     map(() => void 0),
-    subscribeOn(asyncScheduler),
   );
 }

@@ -1,7 +1,7 @@
 import { asArray, isPresent } from '@ng-doc/core';
 import watcher from '@parcel/watcher';
 import path from 'path';
-import { asyncScheduler, Observable, subscribeOn } from 'rxjs';
+import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
 import { watch } from './watch';
@@ -34,7 +34,5 @@ export function watchFile(
       });
     }),
     filter(isPresent),
-    // Subscribe on the async scheduler to emit all events before building.
-    subscribeOn(asyncScheduler),
   );
 }

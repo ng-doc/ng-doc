@@ -1,4 +1,5 @@
 export * from './builder-state';
+export * from './create-builder';
 export * from './distinct-pending';
 export * from './emit-file-output';
 export * from './entries-emitter';

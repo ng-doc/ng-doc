@@ -1,6 +1,8 @@
 import {
   CacheStrategy,
+  createBuilder,
   createImportPath,
+  createMainTrigger,
   NgDocPlaygroundMetadata,
   PAGE_NAME,
   renderTemplate,
@@ -8,8 +10,7 @@ import {
 } from '@ng-doc/builder';
 import { NgDocPage, NgDocPlaygroundControlConfig, NgDocPlaygroundProperties } from '@ng-doc/core';
 import * as path from 'path';
-import { merge } from 'rxjs';
-import { startWith } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { ObjectLiteralExpression } from 'ts-morph';
 
 import {
@@ -44,10 +45,7 @@ export function playgroundBuilder(config: Config): Builder<FileOutput> {
     files: () => [page.path, ...references.map((sourceFile) => sourceFile.getFilePath())],
   } satisfies CacheStrategy<undefined, string>;
 
-  return merge(
-    ...references.map((sourceFile) => watchFile(sourceFile.getFilePath(), 'update')),
-  ).pipe(
-    startWith(void 0),
+  const builder = of(void 0).pipe(
     runBuild(
       PAGE_PLAYGROUND_BUILDER_TAG,
       async () => {
@@ -70,6 +68,15 @@ export function playgroundBuilder(config: Config): Builder<FileOutput> {
       },
       cacheStrategy,
     ),
+  );
+
+  return createBuilder(
+    [
+      createMainTrigger(
+        ...references.map((sourceFile) => watchFile(sourceFile.getFilePath(), 'update')),
+      ),
+    ],
+    () => builder,
   );
 }
 

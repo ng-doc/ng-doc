@@ -1,5 +1,7 @@
 import {
   CacheStrategy,
+  createBuilder,
+  createMainTrigger,
   extractKeywordsJob,
   NgDocBuilderContext,
   NgDocComponentAsset,
@@ -9,8 +11,8 @@ import {
 } from '@ng-doc/builder';
 import { NgDocPage } from '@ng-doc/core';
 import * as path from 'path';
-import { merge } from 'rxjs';
-import { startWith, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 import { getDemoAssets, getDemoClassDeclarations } from '../../../helpers';
 import { Builder, FileOutput, watchFile } from '../../core';
@@ -44,15 +46,12 @@ export function demoAssetsBuilder(config: Config): Builder<FileOutput> {
     files: () => [page.path, ...references.map((sourceFile) => sourceFile.getFilePath())],
   } satisfies CacheStrategy<undefined, string>;
 
-  return merge(
-    ...references.map((sourceFile) => watchFile(sourceFile.getFilePath(), 'update')),
-  ).pipe(
+  const builder = of(void 0).pipe(
     tap(() => {
       references.forEach((sourceFile) => {
         sourceFile.refreshFromFileSystemSync();
       });
     }),
-    startWith(void 0),
     runBuild(
       PAGE_DEMO_ASSETS_BUILDER_TAG,
       async () => {
@@ -86,5 +85,14 @@ export function demoAssetsBuilder(config: Config): Builder<FileOutput> {
       },
       cacheStrategy,
     ),
+  );
+
+  return createBuilder(
+    [
+      createMainTrigger(
+        ...references.map((sourceFile) => watchFile(sourceFile.getFilePath(), 'update')),
+      ),
+    ],
+    () => builder,
   );
 }

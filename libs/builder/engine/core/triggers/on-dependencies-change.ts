@@ -1,4 +1,4 @@
-import { asyncScheduler, map, merge, Observable, subscribeOn } from 'rxjs';
+import { map, merge, Observable } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
 
 import { ObservableSet } from '../../../classes';
@@ -19,6 +19,5 @@ export function onDependenciesChange(dependencies: ObservableSet<string>): Obser
     switchMap((deps: string[]) =>
       merge(...deps.map((dep) => watchFile(dep, 'update').pipe(map(() => void 0)))),
     ),
-    subscribeOn(asyncScheduler),
   );
 }

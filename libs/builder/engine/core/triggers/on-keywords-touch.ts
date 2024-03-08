@@ -1,4 +1,4 @@
-import { asyncScheduler, Observable, Subject, subscribeOn } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
 const KEYWORDS_CHANGE = new Subject<string[]>();
@@ -13,7 +13,6 @@ export function onKeywordsTouch(...keywords: Array<Set<string>>): Observable<voi
       return keywords.some((k) => changedKeywords.some((c) => k.has(c)));
     }),
     map(() => void 0),
-    subscribeOn(asyncScheduler),
   );
 }
 

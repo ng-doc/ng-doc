@@ -1,13 +1,14 @@
-import { createImportPath, PAGE_NAME, replaceKeywords } from '@ng-doc/builder';
+import { createImportPath, IndexStore, PAGE_NAME, replaceKeywords } from '@ng-doc/builder';
 import { NgDocPage, uid } from '@ng-doc/core';
 import path from 'path';
+import { finalize } from 'rxjs';
 
 import { editFileInRepoUrl, viewFileInRepoUrl } from '../../../helpers';
+import { buildIndexes } from '../../../helpers/build-indexes';
 import { NgDocBuilderContext } from '../../../interfaces';
 import { AsyncFileOutput, Builder, CacheStrategy, factory, keywordsStore } from '../../core';
 import { renderTemplate } from '../../nunjucks';
 import { EntryMetadata } from '../interfaces';
-import { apiBuilder } from './api.builder';
 import { guideBuilder } from './guide.builder';
 
 interface Config {
@@ -24,25 +25,29 @@ export const PAGE_TEMPLATE_BUILDER_TAG = 'PageTemplate';
 export function pageTemplateBuilder(config: Config): Builder<AsyncFileOutput> {
   const { context, page } = config;
   const mdPath = path.join(page.dir, page.entry.mdFile);
-
   const cacheStrategy = {
     id: `${mdPath}#Template`,
     action: 'skip',
   } satisfies CacheStrategy<undefined, string>;
 
+  let removeIndexes: () => void = () => {};
+
   return factory(
     PAGE_TEMPLATE_BUILDER_TAG,
-    [guideBuilder({ context, mdPath, page }), apiBuilder(context, page)],
-    (guide: string, api: string) => {
+    [guideBuilder({ context, mdPath, page })],
+    (guide: string) => {
+      removeIndexes();
+
       const html = renderTemplate('./page-template.nunj', {
         context: {
           tabs: [
             { title: 'Guide', content: guide },
-            { title: 'API', content: api },
+            { title: 'API', content: '' },
           ],
         },
       });
 
+      // Replace keywords in the template at the end of the build process
       return async () => {
         const outPath = path.join(page.outDir, 'page.ts');
         const content = await replaceKeywords(html, {
@@ -54,6 +59,16 @@ export function pageTemplateBuilder(config: Config): Builder<AsyncFileOutput> {
           editFileInRepoUrl(context.config.repoConfig, mdPath, page.route);
         const viewSourceFileUrl =
           context.config.repoConfig && viewFileInRepoUrl(context.config.repoConfig, mdPath);
+
+        removeIndexes = IndexStore.add(
+          ...(await buildIndexes({
+            content,
+            title: page.entry.title,
+            breadcrumbs: page.breadcrumbs(),
+            pageType: 'guide',
+            route: page.absoluteRoute(),
+          })),
+        );
 
         return {
           filePath: outPath,
@@ -72,5 +87,5 @@ export function pageTemplateBuilder(config: Config): Builder<AsyncFileOutput> {
       };
     },
     cacheStrategy,
-  );
+  ).pipe(finalize(removeIndexes));
 }

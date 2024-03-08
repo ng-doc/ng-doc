@@ -1,7 +1,12 @@
-import { createEntryMetadata, onDependenciesChange, PageStore } from '@ng-doc/builder';
+import {
+  createBuilder,
+  createEntryMetadata,
+  createMainTrigger,
+  onDependenciesChange,
+  PageStore,
+} from '@ng-doc/builder';
 import { NgDocPage } from '@ng-doc/core';
-import { finalize, merge, takeUntil } from 'rxjs';
-import { startWith } from 'rxjs/operators';
+import { finalize, of, takeUntil } from 'rxjs';
 
 import { ObservableSet } from '../../../classes';
 import { buildFileEntity, importFreshEsm } from '../../../helpers';
@@ -30,8 +35,7 @@ export function pageFileBuilder(config: Config): Builder<EntryMetadata<NgDocPage
   const sourceFile = context.project.addSourceFileAtPath(pagePath);
   const dependencies = new ObservableSet<string>();
 
-  return merge(watchFile(pagePath, 'update'), onDependenciesChange(dependencies)).pipe(
-    startWith(void 0),
+  const builder = of(void 0).pipe(
     runBuild(PAGE_FILE_BUILDER_TAG, async () => {
       dependencies.clear();
 
@@ -51,6 +55,12 @@ export function pageFileBuilder(config: Config): Builder<EntryMetadata<NgDocPage
 
       return metadata;
     }),
+  );
+
+  return createBuilder(
+    [createMainTrigger(watchFile(pagePath, 'update'), onDependenciesChange(dependencies))],
+    () => builder,
+  ).pipe(
     finalize(() => PageStore.delete(pagePath)),
     takeUntil(watchFile(pagePath, 'delete')),
   );

@@ -1,7 +1,16 @@
 import path from 'path';
+import { of } from 'rxjs';
 
 import { NgDocBuilderContext } from '../../../interfaces';
-import { afterBuilders, Builder, FileOutput, keywordsStore, runBuild } from '../../core';
+import {
+  afterBuilders,
+  Builder,
+  createBuilder,
+  createSecondaryTrigger,
+  FileOutput,
+  keywordsStore,
+  runBuild,
+} from '../../core';
 import { PAGE_TEMPLATE_BUILDER_TAG } from '../page/page-template.builder';
 
 /**
@@ -9,10 +18,16 @@ import { PAGE_TEMPLATE_BUILDER_TAG } from '../page/page-template.builder';
  * @param context
  */
 export function keywordsBuilder(context: NgDocBuilderContext): Builder<FileOutput> {
-  return afterBuilders([PAGE_TEMPLATE_BUILDER_TAG]).pipe(
+  const builder = of(void 0).pipe(
     runBuild('Keywords', async () => ({
       content: JSON.stringify(Object.fromEntries(keywordsStore)),
       filePath: path.join(context.outAssetsDir, 'keywords.json'),
     })),
+  );
+
+  return createBuilder(
+    [createSecondaryTrigger(afterBuilders([PAGE_TEMPLATE_BUILDER_TAG]))],
+    () => builder,
+    false,
   );
 }
