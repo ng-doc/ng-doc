@@ -2,10 +2,10 @@
 import {ChangeDetectionStrategy, Component} from "@angular/core";
 import {Routes} from "@angular/router";
 import {NG_DOC_API_LIST_TOKEN, NgDocApiListComponent} from '@ng-doc/app';
-import apiList from './ng-doc.api-list.json';
+import apiList from './api-list.json';
 
 @Component({
-    selector: 'ng-doc-api-list-page-{{ api.route | kebabCase }}',
+    selector: 'ng-doc-api-list-page-{{ id }}',
     standalone: true,
     template: `<ng-doc-api-list></ng-doc-api-list>`,
     imports: [NgDocApiListComponent],
@@ -23,12 +23,6 @@ const routes: Routes = [
         path: '',
         component: DynamicComponent,
     },
-    {%- for scope in api.builtChildren %}
-    {
-        path: '{{ scope.route }}',
-        loadChildren: () => import('{{ scope.moduleImport }}')
-    },
-    {%- endfor %}
 ]
 
 export default routes;

@@ -5,7 +5,7 @@ import {
   isBuilderDone,
   onKeywordsTouch,
 } from '@ng-doc/builder';
-import { NgDocEntityAnchor, NgDocKeyword, NgDocPage } from '@ng-doc/core';
+import { NgDocEntityAnchor, NgDocKeyword, NgDocKeywordType } from '@ng-doc/core';
 import { finalize, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -22,14 +22,18 @@ import {
   watchFile,
 } from '../../core';
 import { onDependenciesChange } from '../../core/triggers/on-dependencies-change';
-import { renderTemplate } from '../../nunjucks';
 import { EntryMetadata } from '../interfaces';
 import { extractKeywordsJob, markdownToHtmlJob, processHtmlJob } from '../shared';
 
 interface Config {
+  tag: string;
   context: NgDocBuilderContext;
-  mdPath: string;
-  page: EntryMetadata<NgDocPage>;
+  mainFilePath: string;
+  cacheId: string;
+  entry: EntryMetadata;
+  keyword?: string;
+  keywordType: NgDocKeywordType;
+  getContent: (dependencies: ObservableSet<string>) => string;
 }
 
 interface CacheData {
@@ -38,23 +42,21 @@ interface CacheData {
   usedKeywords: string[];
 }
 
-export const GUIDE_BUILDER_TAG = 'Guide';
-
 /**
  *
  * @param config
  */
-export function guideBuilder(config: Config): Builder<string> {
-  const { context, mdPath, page } = config;
+export function contentBuilder(config: Config): Builder<string> {
+  const { tag, context, entry, cacheId, mainFilePath, getContent, keyword, keywordType } = config;
   const dependencies = new ObservableSet<string>();
   const anchors = [] as NgDocEntityAnchor[];
   const usedKeywords = new Set<string>();
   let removeKeywords: () => void = () => {};
 
   const cacheStrategy = {
-    id: `${mdPath}#Guide`,
+    id: cacheId,
     action: 'restore',
-    files: () => [page.path, mdPath, ...dependencies.asArray()],
+    files: () => [entry.path, mainFilePath, ...dependencies.asArray()],
     getData: () => ({
       dependencies: dependencies.asArray(),
       anchors,
@@ -71,39 +73,33 @@ export function guideBuilder(config: Config): Builder<string> {
 
   const builder = of(void 0).pipe(
     runBuild(
-      GUIDE_BUILDER_TAG,
+      tag,
       async () => {
         try {
           // Triggering the touch of the keywords before the build to trigger dependent builders
           // This is needed because keywords can be changed after the build
-          touchKeywords(...getKeywords(page, anchors).map(([key]) => key));
+          touchKeywords(...getKeywords(entry, anchors, keywordType, keyword).map(([key]) => key));
 
           removeKeywords();
           anchors.length = 0;
           dependencies.clear();
           usedKeywords.clear();
 
-          const content = renderTemplate(page.entry.mdFile, {
-            scope: page.dir,
-            context: {
-              NgDocPage: page,
-              NgDocActions: undefined,
-            },
-            dependencies,
-            filters: false,
-          });
+          const content = getContent(dependencies);
 
           return await sequentialJobs(content, [
-            markdownToHtmlJob(page.dir, dependencies),
+            markdownToHtmlJob(entry.dir, dependencies),
             processHtmlJob({
               headings: context.config.guide?.anchorHeadings,
-              route: page.absoluteRoute(),
+              route: entry.absoluteRoute(),
               addAnchor: anchors.push.bind(anchors),
             }),
             extractKeywordsJob({ addUsedKeyword: usedKeywords.add.bind(usedKeywords) }),
           ]);
         } catch (cause) {
-          throw new Error(`Error while building guide page "${page.entry.title}"`, { cause });
+          throw new Error(`Error while building entry "${entry.entry.title}" (${entry.path})`, {
+            cause,
+          });
         }
       },
       cacheStrategy,
@@ -112,14 +108,14 @@ export function guideBuilder(config: Config): Builder<string> {
 
   return createBuilder(
     [
-      createMainTrigger(watchFile(mdPath, 'update'), onDependenciesChange(dependencies)),
+      createMainTrigger(watchFile(mainFilePath, 'update'), onDependenciesChange(dependencies)),
       createSecondaryTrigger(onKeywordsTouch(usedKeywords)),
     ],
     () => builder,
   ).pipe(
     tap((state) => {
       if (isBuilderDone(state)) {
-        const keywords = getKeywords(page, anchors);
+        const keywords = getKeywords(entry, anchors, keywordType, keyword);
 
         if (keywords.length) {
           removeKeywords = keywordsStore.add(...keywords);
@@ -136,33 +132,43 @@ export function guideBuilder(config: Config): Builder<string> {
 
 /**
  *
- * @param page
+ * @param entry
+ * @param type
  * @param anchors
+ * @param mainKeyword
  */
 function getKeywords(
-  page: EntryMetadata<NgDocPage>,
+  entry: EntryMetadata,
   anchors: NgDocEntityAnchor[],
+  type: NgDocKeywordType,
+  mainKeyword?: string,
 ): Array<[string, NgDocKeyword]> {
-  if (!page.entry.keyword) return [];
+  if (!mainKeyword) return [];
 
-  const key = `*${page.entry.keyword}`;
+  const key = type === 'guide' ? `*${mainKeyword}` : mainKeyword;
+
   const rootKeyword: NgDocKeyword = {
-    title: page.entry.title,
-    path: page.absoluteRoute(),
-    type: 'guide',
+    title: entry.entry.title,
+    path: entry.absoluteRoute(),
+    type,
   };
 
   return [
     [keywordKey(key), rootKeyword],
     ...anchors.map((anchor) => {
-      const entityKeyword = buildEntityKeyword(key, page.entry.title, page.absoluteRoute(), anchor);
+      const entityKeyword = buildEntityKeyword(
+        key,
+        entry.entry.title,
+        entry.absoluteRoute(),
+        anchor,
+      );
 
       return [
         keywordKey(entityKeyword.key),
         {
           title: entityKeyword.title,
           path: entityKeyword.path,
-          type: 'guide',
+          type,
         } satisfies NgDocKeyword,
       ] satisfies [string, NgDocKeyword];
     }),

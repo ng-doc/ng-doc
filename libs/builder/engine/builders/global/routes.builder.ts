@@ -15,7 +15,7 @@ import {
 } from '../../core';
 import { renderTemplate } from '../../nunjucks';
 import { getStructuredDocs, StructuredDoc } from '../helpers';
-import { PAGE_FILE_BUILDER_TAG } from '../page/page-file.builder';
+import { PAGE_ENTRY_BUILDER_TAG } from '../page';
 
 /**
  *
@@ -31,7 +31,7 @@ export function contextAndRoutesBuilder(context: NgDocBuilderContext): Builder<F
   );
 
   return createBuilder(
-    [createSecondaryTrigger(afterBuilders([PAGE_FILE_BUILDER_TAG]), onRemoveFromStore(PageStore))],
+    [createSecondaryTrigger(afterBuilders([PAGE_ENTRY_BUILDER_TAG]), onRemoveFromStore(PageStore))],
     () => builder,
     false,
   );

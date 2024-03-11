@@ -1,5 +1,6 @@
 export * from './create-entry-metadata';
 export * from './create-import-path';
+export * from './create-template-post-processor';
 export * from './get-category-source-file';
 export * from './get-entry-relative-path';
 export * from './get-entry-route';

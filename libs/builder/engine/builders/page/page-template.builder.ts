@@ -1,15 +1,11 @@
-import { createImportPath, IndexStore, PAGE_NAME, replaceKeywords } from '@ng-doc/builder';
-import { NgDocPage, uid } from '@ng-doc/core';
+import { contentBuilder, createTemplatePostProcessor } from '@ng-doc/builder';
+import { NgDocPage } from '@ng-doc/core';
 import path from 'path';
-import { finalize } from 'rxjs';
 
-import { editFileInRepoUrl, viewFileInRepoUrl } from '../../../helpers';
-import { buildIndexes } from '../../../helpers/build-indexes';
 import { NgDocBuilderContext } from '../../../interfaces';
-import { AsyncFileOutput, Builder, CacheStrategy, factory, keywordsStore } from '../../core';
+import { AsyncFileOutput, Builder, CacheStrategy, factory } from '../../core';
 import { renderTemplate } from '../../nunjucks';
 import { EntryMetadata } from '../interfaces';
-import { guideBuilder } from './guide.builder';
 
 interface Config {
   context: NgDocBuilderContext;
@@ -17,6 +13,7 @@ interface Config {
 }
 
 export const PAGE_TEMPLATE_BUILDER_TAG = 'PageTemplate';
+export const GUIDE_BUILDER_TAG = 'Guide';
 
 /**
  *
@@ -30,62 +27,45 @@ export function pageTemplateBuilder(config: Config): Builder<AsyncFileOutput> {
     action: 'skip',
   } satisfies CacheStrategy<undefined, string>;
 
-  let removeIndexes: () => void = () => {};
-
-  return factory(
-    PAGE_TEMPLATE_BUILDER_TAG,
-    [guideBuilder({ context, mdPath, page })],
-    (guide: string) => {
-      removeIndexes();
-
-      const html = renderTemplate('./page-template.nunj', {
-        context: {
-          tabs: [
-            { title: 'Guide', content: guide },
-            { title: 'API', content: '' },
-          ],
-        },
-      });
-
-      // Replace keywords in the template at the end of the build process
-      return async () => {
-        const outPath = path.join(page.outDir, 'page.ts');
-        const content = await replaceKeywords(html, {
-          getKeyword: keywordsStore.get.bind(keywordsStore),
-        });
-        const entryImportPath = createImportPath(page.outDir, path.join(page.dir, PAGE_NAME));
-        const editSourceFileUrl =
-          context.config.repoConfig &&
-          editFileInRepoUrl(context.config.repoConfig, mdPath, page.route);
-        const viewSourceFileUrl =
-          context.config.repoConfig && viewFileInRepoUrl(context.config.repoConfig, mdPath);
-
-        removeIndexes = IndexStore.add(
-          ...(await buildIndexes({
-            content,
-            title: page.entry.title,
-            breadcrumbs: page.breadcrumbs(),
-            pageType: 'guide',
-            route: page.absoluteRoute(),
-          })),
-        );
-
-        return {
-          filePath: outPath,
-          content: renderTemplate('./page.ts.nunj', {
-            context: {
-              id: uid(),
-              content,
-              routePrefix: context.config.routePrefix,
-              page: page.entry,
-              entryImportPath,
-              editSourceFileUrl,
-              viewSourceFileUrl,
-            },
+  return createTemplatePostProcessor(
+    (postProcess) =>
+      factory(
+        PAGE_TEMPLATE_BUILDER_TAG,
+        [
+          contentBuilder({
+            tag: GUIDE_BUILDER_TAG,
+            context,
+            mainFilePath: mdPath,
+            cacheId: `${mdPath}#Guide`,
+            entry: page,
+            keyword: page.entry.keyword,
+            keywordType: 'guide',
+            getContent: (dependencies) =>
+              renderTemplate(page.entry.mdFile, {
+                scope: page.dir,
+                context: {
+                  NgDocPage: page,
+                  NgDocActions: undefined,
+                },
+                dependencies,
+                filters: false,
+              }),
           }),
-        };
-      };
-    },
-    cacheStrategy,
-  ).pipe(finalize(removeIndexes));
+        ],
+        (guide: string) => {
+          const html = renderTemplate('./page-template.nunj', {
+            context: {
+              tabs: [
+                { title: 'Guide', content: guide },
+                { title: 'API', content: '' },
+              ],
+            },
+          });
+
+          return postProcess(html);
+        },
+        cacheStrategy,
+      ),
+    { context, metadata: page, templatePath: mdPath },
+  );
 }

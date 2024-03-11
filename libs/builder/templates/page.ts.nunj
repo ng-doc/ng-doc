@@ -3,53 +3,71 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {Routes} from '@angular/router';
 import {NgDocDemoAssets, NgDocPageComponent, NgDocRootPage} from '@ng-doc/app';
 import {isRoute, NgDocPage, NgDocPageType} from '@ng-doc/core';
-import pageEntity from '{{ entryImportPath }}';
+{%- if importEntry %}
+import metadata from '{{ entryImportPath }}';
+{%- endif %}
+{%- if playgrounds %}
 import {PLAYGROUND_COMPONENTS, PLAYGROUND_PROVIDERS} from './playgrounds';
+{%- endif %}
+{%- if demoAssets %}
 import demoAssets from './demo-assets';
+{%- endif %}
 
 const pageContent: string = `{{ content | toTemplateString }}`
 
-
 @Component({
-    selector: 'ng-doc-page-{{ id }}',
-    standalone: true,
-    template: `<ng-doc-page></ng-doc-page>`,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        NgDocPageComponent,
-        {%- if page.hasImports %}
-        ...pageEntity.imports,
-        {%- endif %}
-        ...PLAYGROUND_COMPONENTS,
-    ],
-    providers: [
-        {provide: NgDocRootPage, useExisting: DynamicComponent},
-        PLAYGROUND_PROVIDERS,
-        (pageEntity.providers ?? []),
-    ],
+  selector: 'ng-doc-page-{{ id }}',
+  standalone: true,
+  template: `<ng-doc-page></ng-doc-page>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    NgDocPageComponent,
+      {%- if importEntry and page.hasImports %}
+    ...entry.imports,
+      {%- endif %}
+      {%- if playgrounds %}
+    ...PLAYGROUND_COMPONENTS,
+      {%- endif %}
+  ],
+  providers: [
+    {provide: NgDocRootPage, useExisting: DynamicComponent},
+      {%- if playgrounds %}
+    PLAYGROUND_PROVIDERS,
+      {%- endif %}
+      {%- if importEntry %}
+    (entry.providers ?? []),
+      {%- endif %}
+  ],
 })
 export class DynamicComponent extends NgDocRootPage {
-    readonly routePrefix: string = '{{ routePrefix }}';
-    readonly pageType: NgDocPageType = 'guide';
-    readonly pageContent: string = pageContent;
+  readonly routePrefix: string = '{{ routePrefix }}';
+  readonly pageType: NgDocPageType = '{{ pageType }}';
+  readonly pageContent: string = pageContent;
     {%- if editSourceFileUrl %}
-    readonly editSourceFileUrl: string = '{{ editSourceFileUrl }}';
-    {%- endif %}{%- if viewSourceFileUrl %}
-    readonly viewSourceFileUrl: string = '{{ viewSourceFileUrl }}';
+  readonly editSourceFileUrl: string = '{{ editSourceFileUrl }}';
+    {%- endif %}
+    {%- if viewSourceFileUrl %}
+  readonly viewSourceFileUrl: string = '{{ viewSourceFileUrl }}';
     {%- endif -%}
-    readonly page?: NgDocPage = pageEntity;
-    readonly demoAssets: NgDocDemoAssets = demoAssets;
+    {%- if importEntry %}
+  readonly page?: NgDocPage = entry;
+    {%- endif %}
+    {%- if demoAssets %}
+  readonly demoAssets: NgDocDemoAssets = demoAssets;
+    {%- endif %}
 
-    constructor() {
-        super();
-    }
+  constructor() {
+    super();
+  }
 }
 
 const routes: Routes = [{
-    ...(isRoute(pageEntity.route) ? pageEntity.route : {}),
-    path: '',
-    component: DynamicComponent,
-    title: `{{ page.title | toTemplateString }}`,
+    {%- if importEntry %}
+  ...(isRoute(entry.route) ? entry.route : {}),
+    {%- endif %}
+  path: '',
+  component: DynamicComponent,
+  title: `{{ page.title | toTemplateString }}`,
 }]
 
 export default routes;

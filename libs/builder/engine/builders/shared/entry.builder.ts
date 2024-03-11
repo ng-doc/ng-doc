@@ -1,28 +1,28 @@
-import {
-  createBuilder,
-  createEntryMetadata,
-  createMainTrigger,
-  onDependenciesChange,
-  PageStore,
-} from '@ng-doc/builder';
-import { NgDocPage } from '@ng-doc/core';
 import { finalize, of, takeUntil } from 'rxjs';
 
 import { ObservableSet } from '../../../classes';
 import { buildFileEntity, importFreshEsm } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
-import { Builder, runBuild, watchFile } from '../../core';
-import { EntryMetadata } from '../interfaces';
+import {
+  Builder,
+  createBuilder,
+  createMainTrigger,
+  onDependenciesChange,
+  PageStore,
+  runBuild,
+  watchFile,
+} from '../../core';
+import { createEntryMetadata } from '../helpers';
+import { EntryMetadata, PageEntry } from '../interfaces';
 
 interface Config {
+  tag: string;
   context: NgDocBuilderContext;
-  pagePath: string;
+  entryPath: string;
 }
 
-export const PAGE_FILE_BUILDER_TAG = 'PageFile';
-
 /**
- * A builder function for a page file.
+ * A builder function for a entry file.
  *
  * This function returns a Builder Observable that emits a NgDocPage object whenever the file at the provided path changes.
  * The Builder Observable is created by merging an Observable that emits on file changes.
@@ -30,13 +30,13 @@ export const PAGE_FILE_BUILDER_TAG = 'PageFile';
  * @returns {Builder<NgDocPage>} - A Builder Observable that emits a NgDocPage object whenever the file at the provided path changes.
  * @param config - The configuration object for the builder.
  */
-export function pageFileBuilder(config: Config): Builder<EntryMetadata<NgDocPage>> {
-  const { context, pagePath } = config;
-  const sourceFile = context.project.addSourceFileAtPath(pagePath);
+export function entryBuilder<T extends PageEntry>(config: Config): Builder<EntryMetadata<T>> {
+  const { tag, context, entryPath } = config;
+  const sourceFile = context.project.addSourceFileAtPath(entryPath);
   const dependencies = new ObservableSet<string>();
 
   const builder = of(void 0).pipe(
-    runBuild(PAGE_FILE_BUILDER_TAG, async () => {
+    runBuild(tag, async () => {
       dependencies.clear();
 
       await sourceFile.refreshFromFileSystem();
@@ -46,23 +46,23 @@ export function pageFileBuilder(config: Config): Builder<EntryMetadata<NgDocPage
         context.tsConfig,
         context.context.workspaceRoot,
       );
-      const page = (await importFreshEsm<{ default: NgDocPage }>(outPath)).default;
+      const page = (await importFreshEsm<{ default: T }>(outPath)).default;
       const metadata = createEntryMetadata(context, page, sourceFile);
 
       addCategoriesToDependencies(metadata, dependencies);
 
-      PageStore.add([pagePath, metadata]);
+      PageStore.add([entryPath, metadata]);
 
       return metadata;
     }),
   );
 
   return createBuilder(
-    [createMainTrigger(watchFile(pagePath, 'update'), onDependenciesChange(dependencies))],
+    [createMainTrigger(watchFile(entryPath, 'update'), onDependenciesChange(dependencies))],
     () => builder,
   ).pipe(
-    finalize(() => PageStore.delete(pagePath)),
-    takeUntil(watchFile(pagePath, 'delete')),
+    finalize(() => PageStore.delete(entryPath)),
+    takeUntil(watchFile(entryPath, 'delete')),
   );
 }
 

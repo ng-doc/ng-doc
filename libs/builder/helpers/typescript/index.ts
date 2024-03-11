@@ -6,6 +6,7 @@ export * from './display-type';
 export * from './exclude-by-ts-docs-tags';
 export * from './filter-by-scope';
 export * from './filter-by-static';
+export * from './find-declarations';
 export * from './first-node-with-comment';
 export * from './get-object-expression-from-default';
 export * from './interface';
