@@ -16,6 +16,8 @@ import { distinctPending } from './distinct-pending';
 import { handleCacheStrategy } from './handle-cache-strategy';
 import { addToStack } from './stack';
 
+let builderId: number = 0;
+
 /**
  * The factory function is a powerful tool for creating complex builders.
  * It should be used when you need to build something based on the results of multiple other builders.
@@ -31,6 +33,8 @@ export function factory<T, R, TCacheData>(
   buildFn: (...args: T[]) => Promise<R> | R,
   cacheStrategy?: CacheStrategy<TCacheData, R>,
 ): Builder<R> {
+  const id = builderId++;
+
   return combineLatest(builders).pipe(
     switchMap((states: Array<BuilderState<T>>) => {
       /**
@@ -60,6 +64,7 @@ export function factory<T, R, TCacheData>(
       return (buildFnResult instanceof Promise ? from(buildFnResult) : of(buildFnResult)).pipe(
         map((result) => new BuilderDone(tag, result)),
         handleCacheStrategy<R, TCacheData>(
+          id,
           cacheStrategy,
           (states as Array<BuilderDone<T>>).every(({ fromCache }) => fromCache),
         ),

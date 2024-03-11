@@ -1,10 +1,10 @@
-import { EMPTY, merge } from 'rxjs';
-import { debounceTime, filter, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { asyncScheduler, EMPTY, merge, subscribeOn } from 'rxjs';
+import { filter, map, startWith, switchMap, tap } from 'rxjs/operators';
 
-import { Builder, isMainTrigger, isSecondaryTrigger, Trigger } from '../types';
+import { Builder, isBuilderDone, isMainTrigger, isSecondaryTrigger, Trigger } from '../types';
 
 let builderId: number = 0;
-const triggersStack = new Set<number>();
+const blockedBuilders = new Set<number>();
 
 /**
  *
@@ -23,19 +23,25 @@ export function createBuilder<T>(
   const main = triggers.filter(isMainTrigger).map(({ trigger }) => trigger);
   const secondary = triggers.filter(isSecondaryTrigger).map(({ trigger }) => trigger);
 
-  const mainTrigger = (main ? merge(...main) : EMPTY).pipe(tap(() => triggersStack.clear()));
+  const mainTrigger = (main ? merge(...main) : EMPTY).pipe(tap(() => blockedBuilders.clear()));
   const secondaryTrigger = (secondary ? merge(...secondary) : EMPTY).pipe(
-    filter(() => !triggersStack.has(id)),
+    filter(() => !blockedBuilders.has(id)),
   );
 
   return merge(mainTrigger, secondaryTrigger).pipe(
-    debounceTime(0),
+    subscribeOn(asyncScheduler),
     autoStart ? startWith(void 0) : tap(),
     map(() => id),
     switchMap(() => {
-      triggersStack.add(id);
+      blockedBuilders.add(id);
 
-      return project();
+      return project().pipe(
+        tap((state) => {
+          if (isBuilderDone(state) && state.fromCache) {
+            blockedBuilders.delete(id);
+          }
+        }),
+      );
     }),
   );
 }

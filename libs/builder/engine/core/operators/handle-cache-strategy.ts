@@ -5,7 +5,7 @@ import { createCache, isCacheValid, loadCache, updateCache } from '../../entitie
 import { BuilderDone, BuilderState, CacheStrategy, isBuilderDone } from '../types';
 import { isColdStart } from '../variables';
 
-let isCacheEnabled: boolean = false;
+let isCacheEnabled: boolean = true;
 
 /**
  * Disables cache for all builders.
@@ -14,14 +14,18 @@ export function disableCache(): void {
   isCacheEnabled = false;
 }
 
+const restoredBuilders = new Set<number>();
+
 /**
  * Handles cache provided cache strategy.
  * It will skip or restore the builder based on the strategy on the first run and
  * update the cache on every next run.
+ * @param id
  * @param strategy - Cache strategy
  * @param valid
  */
 export function handleCacheStrategy<T, TData>(
+  id: number,
   strategy?: CacheStrategy<TData, T>,
   valid: boolean = true,
 ): OperatorFunction<BuilderState<T>, BuilderState<T>> {
@@ -46,30 +50,26 @@ export function handleCacheStrategy<T, TData>(
       }),
     );
 
+    // If the builder is already restored, return the source with cache.
+    // Since this function is called every time the builder is triggered (because of `switchMap` in
+    // `runBuild` function), we need to make sure that the builder is restored only once
+    if (restoredBuilders.has(id)) {
+      return sourceWithCache;
+    }
+
+    const isValid = cache && valid && isColdStart() && isCacheValid(strategy.id, cache);
+    const savedCache = loadCache<TData>(strategy.id);
+
+    savedCache.data && strategy.onCacheLoad?.(savedCache.data as TData);
+    restoredBuilders.add(id);
+
     switch (strategy.action) {
       case 'skip':
-        if (cache && valid && isColdStart() && isCacheValid(strategy.id, cache)) {
-          const cache = loadCache<TData>(strategy.id);
-
-          strategy.onCacheLoad?.(cache.data as TData);
-
-          return EMPTY;
-        }
-
-        return sourceWithCache;
+        return isValid ? EMPTY : sourceWithCache;
       case 'restore':
-        // Restore from cache if it's a first run
-        if (cache && valid && isColdStart() && isCacheValid(strategy.id, cache)) {
-          const cache = loadCache<TData>(strategy.id);
-
-          strategy.onCacheLoad?.(cache.data as TData);
-
-          return of(
-            new BuilderDone(strategy.id, strategy.fromCache(cache.result ?? '') as T, true),
-          );
-        }
-
-        return sourceWithCache;
+        return isValid
+          ? of(new BuilderDone(strategy.id, strategy.fromCache(savedCache.result ?? '') as T, true))
+          : sourceWithCache;
       default:
         return source;
     }

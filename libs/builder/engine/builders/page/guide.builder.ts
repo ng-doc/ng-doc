@@ -2,7 +2,7 @@ import {
   createBuilder,
   createMainTrigger,
   createSecondaryTrigger,
-  isBuilderError,
+  isBuilderDone,
   onKeywordsTouch,
 } from '@ng-doc/builder';
 import { NgDocEntityAnchor, NgDocKeyword, NgDocPage } from '@ng-doc/core';
@@ -74,6 +74,10 @@ export function guideBuilder(config: Config): Builder<string> {
       GUIDE_BUILDER_TAG,
       async () => {
         try {
+          // Triggering the touch of the keywords before the build to trigger dependent builders
+          // This is needed because keywords can be changed after the build
+          touchKeywords(...getKeywords(page, anchors).map(([key]) => key));
+
           removeKeywords();
           anchors.length = 0;
           dependencies.clear();
@@ -114,13 +118,16 @@ export function guideBuilder(config: Config): Builder<string> {
     () => builder,
   ).pipe(
     tap((state) => {
-      if (isBuilderError(state)) return;
+      if (isBuilderDone(state)) {
+        const keywords = getKeywords(page, anchors);
 
-      const keywords = getKeywords(page, anchors);
+        if (keywords.length) {
+          removeKeywords = keywordsStore.add(...keywords);
 
-      if (keywords.length) {
-        removeKeywords = keywordsStore.add(...keywords);
-        touchKeywords(...keywords.map(([key]) => key));
+          // Touching the keywords after the build run all builders that depend on
+          // the new keywords that might have been added
+          !state.fromCache && touchKeywords(...keywords.map(([key]) => key));
+        }
       }
     }),
     finalize(removeKeywords),

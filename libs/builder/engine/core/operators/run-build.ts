@@ -5,6 +5,8 @@ import { BuilderState, CacheStrategy } from '../types';
 import { builderState } from './builder-state';
 import { handleCacheStrategy } from './handle-cache-strategy';
 
+let builderId: number = 0;
+
 /**
  *
  * @param tag
@@ -17,13 +19,15 @@ export function runBuild<T, O extends ObservableInput<any>>(
   project: (value: T, index: number) => O,
   cacheStrategy?: CacheStrategy<any, ObservedValueOf<O>>,
 ): OperatorFunction<T, BuilderState<ObservedValueOf<O>>> {
+  const id = builderId++;
+
   return (source: Observable<T>) =>
     source.pipe(
       switchMap((args: T) => {
         return of(args).pipe(
           switchMap(project),
           builderState(tag),
-          handleCacheStrategy(cacheStrategy),
+          handleCacheStrategy(id, cacheStrategy),
         );
       }),
     );
