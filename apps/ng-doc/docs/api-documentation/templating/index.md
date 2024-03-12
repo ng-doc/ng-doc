@@ -1,6 +1,6 @@
 # {{ NgDocPage.title }}
 
-When you create `ng-doc.api.ts`, NgDoc will generate documentation for all exported entities in your
+When you create `ng-doc.metadata.ts`, NgDoc will generate documentation for all exported entities in your
 project, but they may not always be clear to your users, we will help you fix that in this article.
 
 Documentation for entities is very useful because it is right in the code, which means it can be

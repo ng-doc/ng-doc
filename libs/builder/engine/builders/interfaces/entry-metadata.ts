@@ -7,7 +7,6 @@ export interface EntryMetadata<T extends Entry = Entry> {
   dir: string;
   path: string;
   dirName: string;
-  relativePath: string;
   outDir: string;
   route: string;
   absoluteRoute: () => string;

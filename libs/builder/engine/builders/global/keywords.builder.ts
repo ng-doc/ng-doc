@@ -11,7 +11,7 @@ import {
   keywordsStore,
   runBuild,
 } from '../../core';
-import { PAGE_TEMPLATE_BUILDER_TAG } from '../page/page-template.builder';
+import { GUIDE_TEMPLATE_BUILDER_TAG } from '../page/guide-template.builder';
 
 /**
  *
@@ -26,7 +26,7 @@ export function keywordsBuilder(context: NgDocBuilderContext): Builder<FileOutpu
   );
 
   return createBuilder(
-    [createSecondaryTrigger(afterBuilders([PAGE_TEMPLATE_BUILDER_TAG]))],
+    [createSecondaryTrigger(afterBuilders([GUIDE_TEMPLATE_BUILDER_TAG]))],
     () => builder,
     false,
   );

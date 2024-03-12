@@ -6,20 +6,20 @@ else.
 
 ## Creating an API
 
-To create an API entity, you can use a special schematic, it will generate `ng-doc.api.ts` file for
+To create an API entity, you can use a special schematic, it will generate `ng-doc.metadata.ts` file for
 you in the current directory.
 
 {% include "../../shared/schematic-exec-path.md" %}
 
 ```bash
-ng g @ng-doc/builder:api
+ng g @ng-doc/builder:metadata
 ```
 
 ## Configuration
 
 {% include "../../shared/export-by-default.md" %}
 
-The `ng-doc.api.ts` file should contain your API configuration,
+The `ng-doc.metadata.ts` file should contain your API configuration,
 the API configuration must correspond to the `NgDocApi` type.
 
 Let's see how an example of a basic API configuration looks like.
@@ -28,10 +28,10 @@ Let's see how an example of a basic API configuration looks like.
 > The paths you pass to the `include` and `exclude` fields must be passed relative to your project
 > root path
 
-```typescript name="ng-doc.api.ts"
+```typescript name="ng-doc.metadata.ts"
 import { NgDocApi } from '@ng-doc/core';
 
-const api: NgDocApi = {
+const metadata: NgDocApi = {
   title: 'API Reference',
   scopes: [
     {
@@ -42,7 +42,7 @@ const api: NgDocApi = {
   ],
 };
 
-export default api;
+export default metadata;
 ```
 
 In the `include` field, you can specify a mask in order to add one or several files, you can also
@@ -58,11 +58,11 @@ the `include` field.
 Don't like that the API section is at the top? You can also add a category to it to better
 structure your documentation articles.
 
-```typescript name="ng-doc.api.ts" {2,6}
+```typescript name="ng-doc.metadata.ts" {2,6}
 import { NgDocApi } from '@ng-doc/core';
 import MyAwesomeCategory from '../ng-doc.category';
 
-const api: NgDocApi = {
+const metadata: NgDocApi = {
   title: 'API Reference',
   category: MyAwesomeCategory,
   scopes: [
@@ -74,7 +74,7 @@ const api: NgDocApi = {
   ],
 };
 
-export default api;
+export default metadata;
 ```
 
 ## Writing documentation for declarations
@@ -87,10 +87,10 @@ the `*ContentApiTemplating` article.
 
 By default, NgDoc is configured to work only with one API configuration file, but if it is necessary
 you can create multiple API configurations files. For multiple API configurations, you need to
-specify different value for the `route` field in the `ng-doc.api.ts` file otherwise you will
+specify different value for the `route` field in the `ng-doc.metadata.ts` file otherwise you will
 get a conflict between two API pages, because the `route` property is optional and if you don't
 specify
-it, NgDoc will use `api` as a default value.
+it, NgDoc will use `metadata` as a default value.
 
 {% index false %}
 

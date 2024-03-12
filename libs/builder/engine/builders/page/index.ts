@@ -5,7 +5,7 @@ import { NgDocBuilderContext } from '../../../interfaces';
 import { AsyncFileOutput, Builder, FileOutput, watchFile, whenDone } from '../../core';
 import { entryBuilder } from '../shared';
 import { demoAssetsBuilder } from './demo-assets.builder';
-import { pageTemplateBuilder } from './page-template.builder';
+import { guideTemplateBuilder } from './guide-template.builder';
 import { playgroundBuilder } from './playground.builder';
 
 export const PAGE_ENTRY_BUILDER_TAG = 'PageFile';
@@ -27,7 +27,7 @@ export function pageBuilder(
   }).pipe(
     whenDone((page) => {
       return merge(
-        pageTemplateBuilder({ context, page }),
+        guideTemplateBuilder({ context, page }),
         demoAssetsBuilder({ context, page }),
         playgroundBuilder({ page }),
       );

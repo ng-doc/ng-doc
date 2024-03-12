@@ -14,6 +14,7 @@ import {
   runBuild,
 } from '../../core';
 import { renderTemplate } from '../../nunjucks';
+import { API_ENTRY_BUILDER_TAG } from '../api-list';
 import { getStructuredDocs, StructuredDoc } from '../helpers';
 import { PAGE_ENTRY_BUILDER_TAG } from '../page';
 
@@ -31,7 +32,12 @@ export function contextAndRoutesBuilder(context: NgDocBuilderContext): Builder<F
   );
 
   return createBuilder(
-    [createSecondaryTrigger(afterBuilders([PAGE_ENTRY_BUILDER_TAG]), onRemoveFromStore(PageStore))],
+    [
+      createSecondaryTrigger(
+        afterBuilders([PAGE_ENTRY_BUILDER_TAG, API_ENTRY_BUILDER_TAG]),
+        onRemoveFromStore(PageStore),
+      ),
+    ],
     () => builder,
     false,
   );
@@ -48,7 +54,7 @@ function routesBuilder(
   context: NgDocBuilderContext,
   structuredDocs: StructuredDoc[],
 ): Builder<FileOutput> {
-  const outPath = path.join(context.outBuildDir, 'routes.ts');
+  const outPath = path.join(context.outDir, 'routes.ts');
 
   return of(null).pipe(
     runBuild(ROUTES_BUILDER_TAG, async () => {
@@ -57,7 +63,7 @@ function routesBuilder(
         content: renderTemplate('./routes.ts.nunj', {
           context: {
             entries: structuredDocs,
-            curDir: context.outBuildDir,
+            curDir: context.outDir,
           },
         }),
       };
@@ -76,7 +82,7 @@ function contextBuilder(
   context: NgDocBuilderContext,
   structuredDocs: StructuredDoc[],
 ): Builder<FileOutput> {
-  const outPath = path.join(context.outBuildDir, 'context.ts');
+  const outPath = path.join(context.outDir, 'context.ts');
 
   return of(null).pipe(
     runBuild(CONTEXT_BUILDER_TAG, async () => {

@@ -1,4 +1,4 @@
-import { uid } from '@ng-doc/core';
+import { NgDocPageType, uid } from '@ng-doc/core';
 import path from 'path';
 import { finalize } from 'rxjs';
 
@@ -16,6 +16,7 @@ interface Config {
   context: NgDocBuilderContext;
   metadata: EntryMetadata<PageEntry>;
   templatePath: string;
+  pageType: NgDocPageType;
   lineNumber?: number;
 }
 
@@ -30,7 +31,7 @@ export function createTemplatePostProcessor(
   builder: (postProcess: PostProcess) => Builder<AsyncFileOutput>,
   config: Config,
 ): Builder<AsyncFileOutput> {
-  const { context, metadata, templatePath, lineNumber } = config;
+  const { context, metadata, templatePath, pageType, lineNumber } = config;
   let removeIndexes: () => void = () => {};
 
   return builder((html: string) => {
@@ -55,7 +56,7 @@ export function createTemplatePostProcessor(
           content,
           title: metadata.entry.title,
           breadcrumbs: metadata.breadcrumbs(),
-          pageType: 'api',
+          pageType,
           route: metadata.absoluteRoute(),
         })),
       );
@@ -71,7 +72,7 @@ export function createTemplatePostProcessor(
             entryImportPath,
             editSourceFileUrl,
             viewSourceFileUrl,
-            pageType: 'api',
+            pageType,
           },
         }),
       };

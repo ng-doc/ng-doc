@@ -1,16 +1,19 @@
-import { NgDocApi } from '@ng-doc/core';
+import { PageStore, renderTemplate, watchFile } from '@ng-doc/builder';
+import { NgDocApiScope } from '@ng-doc/core';
+import { finalize, takeUntil } from 'rxjs';
 
 import { NgDocBuilderContext } from '../../../interfaces';
 import { NgDocSupportedDeclaration } from '../../../types';
 import { AsyncFileOutput, Builder, CacheStrategy, factory } from '../../core';
 import { createTemplatePostProcessor } from '../helpers';
-import { EntryMetadata } from '../interfaces';
+import { EntryMetadata, PageEntry } from '../interfaces';
 import { contentBuilder } from '../shared';
 
 interface Config {
   context: NgDocBuilderContext;
-  api: EntryMetadata<NgDocApi>;
+  metadata: EntryMetadata<PageEntry>;
   declaration: NgDocSupportedDeclaration;
+  scope?: NgDocApiScope;
 }
 
 export const API_PAGE_TEMPLATE_BUILDER_TAG = 'ApiPageTemplate';
@@ -21,12 +24,15 @@ export const API_BUILDER_TAG = 'Api';
  * @param config
  */
 export function apiPageTemplateBuilder(config: Config): Builder<AsyncFileOutput> {
-  const { context, api, declaration } = config;
+  const { context, metadata, declaration, scope } = config;
   const declPath = declaration.getSourceFile().getFilePath();
+  const pageKey = `${declPath}#${declaration.getName()}`;
   const cacheStrategy = {
     id: `${declPath}#Template`,
     action: 'skip',
   } satisfies CacheStrategy<undefined, string>;
+
+  PageStore.add([pageKey, metadata]);
 
   return createTemplatePostProcessor(
     (postProcess) =>
@@ -38,10 +44,16 @@ export function apiPageTemplateBuilder(config: Config): Builder<AsyncFileOutput>
             context,
             mainFilePath: declPath,
             cacheId: `${declPath}#Api`,
-            entry: api,
+            entry: metadata,
             keyword: declaration.getName(),
             keywordType: 'api',
-            getContent: () => '',
+            getContent: async () =>
+              renderTemplate('./api-page-content.html.nunj', {
+                context: {
+                  declaration: declaration,
+                  scope,
+                },
+              }),
           }),
         ],
         postProcess,
@@ -49,9 +61,13 @@ export function apiPageTemplateBuilder(config: Config): Builder<AsyncFileOutput>
       ),
     {
       context,
-      metadata: api,
+      metadata: metadata,
       templatePath: declPath,
+      pageType: 'api',
       lineNumber: declaration.getStartLineNumber(),
     },
+  ).pipe(
+    finalize(() => PageStore.delete(pageKey)),
+    takeUntil(watchFile(declPath, 'delete')),
   );
 }

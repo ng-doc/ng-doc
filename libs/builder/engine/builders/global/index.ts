@@ -2,9 +2,9 @@ import { merge } from 'rxjs';
 
 import { NgDocBuilderContext } from '../../../interfaces';
 import { Builder, FileOutput } from '../../core';
+import { contextAndRoutesBuilder } from './context-and-routes.builder';
 import { indexBuilder } from './index.builder';
 import { keywordsBuilder } from './keywords.builder';
-import { contextAndRoutesBuilder } from './routes.builder';
 import { searchIndexesBuilder } from './search-indexes.builder';
 
 /**

@@ -14,34 +14,34 @@ import { createProject } from './typescript';
  * @param configFilePath - Path to the configuration file if it exists
  */
 export function createBuilderContext(
-	targetOptions: json.JsonObject,
-	context: BuilderContext,
-	configFilePath?: string,
+  targetOptions: json.JsonObject,
+  context: BuilderContext,
+  configFilePath?: string,
 ): NgDocBuilderContext {
-	const projectRoot: string = path.dirname(targetOptions['browser'] as string);
-	const [configPath, config]: [string, NgDocConfiguration] = loadConfig(
-		configFilePath ?? projectRoot,
-		!configFilePath,
-	);
-	const buildPath: string = path.join(
-		context.workspaceRoot,
-		config.outDir ?? '',
-		'ng-doc',
-		context.target?.project ?? 'app',
-	);
-	const tsConfig = config?.tsConfig ?? String(targetOptions['tsConfig']);
+  const projectRoot: string = path.dirname(targetOptions['browser'] as string);
+  const [configPath, config]: [string, NgDocConfiguration] = loadConfig(
+    configFilePath ?? projectRoot,
+    !configFilePath,
+  );
+  const buildPath: string = path.join(
+    context.workspaceRoot,
+    config.outDir ?? '',
+    'ng-doc',
+    context.target?.project ?? 'app',
+  );
+  const tsConfig = config?.tsConfig ?? String(targetOptions['tsConfig']);
 
-	return {
-		tsConfig,
-		project: createProject({ tsConfigFilePath: tsConfig }),
-		config,
-		context,
-		inlineStyleLanguage: (targetOptions?.['inlineStyleLanguage'] as NgDocStyleType) ?? 'CSS',
-		docsPath: path.resolve(config.docsPath ?? projectRoot),
-		outAssetsDir: path.join(buildPath, 'assets'),
-		cachedFiles: [configPath],
-		outBuildDir: buildPath,
-		outApiDir: path.join(buildPath, 'api'),
-		outGuidesDir: path.join(buildPath, 'guides'),
-	};
+  return {
+    tsConfig,
+    project: createProject({ tsConfigFilePath: tsConfig }),
+    config,
+    context,
+    inlineStyleLanguage: (targetOptions?.['inlineStyleLanguage'] as NgDocStyleType) ?? 'CSS',
+    docsPath: path.resolve(config.docsPath ?? projectRoot),
+    outAssetsDir: path.join(buildPath, 'assets'),
+    cachedFiles: [configPath],
+    outDir: buildPath,
+    outApiDir: path.join(buildPath, 'api'),
+    outGuidesDir: path.join(buildPath, 'guides'),
+  };
 }

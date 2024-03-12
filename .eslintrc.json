@@ -71,7 +71,7 @@
           "error",
           {
             "arrowParameter": false,
-            "memberVariableDeclaration": true,
+            "memberVariableDeclaration": false,
             "objectDestructuring": false,
             "parameter": true,
             "propertyDeclaration": true,

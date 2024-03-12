@@ -11,7 +11,7 @@ interface Config {
  *
  * @param config
  */
-export function apiBuilder(config: Config): Builder<string> {
+export function apiContentBuilder(config: Config): Builder<string> {
   const { context, declaration } = config;
 
   return;

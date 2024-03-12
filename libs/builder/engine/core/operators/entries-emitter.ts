@@ -7,7 +7,7 @@ import { filter, map, startWith } from 'rxjs/operators';
 
 import { NgDocBuilderContext } from '../../../interfaces';
 import { pageBuilder } from '../../builders';
-import { apiListBuilder } from '../../builders/api-list';
+import { apiBuilder } from '../../builders/api-list';
 import { API_PATTERN, PAGE_PATTERN } from '../../variables';
 import { AsyncFileOutput, BuilderState, FileOutput } from '../types';
 import { watchFolder } from '../watcher';
@@ -19,7 +19,10 @@ import { watchFolder } from '../watcher';
 export function entriesEmitter(
   context: NgDocBuilderContext,
 ): Observable<BuilderState<FileOutput | AsyncFileOutput>> {
-  const entries = sync([path.join(context.docsPath, PAGE_PATTERN, API_PATTERN)]);
+  const entries = sync([
+    path.join(context.docsPath, PAGE_PATTERN),
+    path.join(context.docsPath, API_PATTERN),
+  ]);
 
   return watchFolder(context.docsPath, 'create').pipe(
     map((events) => events.map((event) => event.path)),
@@ -32,7 +35,7 @@ export function entriesEmitter(
           }
 
           if (minimatch(filePath, API_PATTERN)) {
-            return apiListBuilder(context, path.resolve(filePath));
+            return apiBuilder(context, path.resolve(filePath));
           }
 
           return null;

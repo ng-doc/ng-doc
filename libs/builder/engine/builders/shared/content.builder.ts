@@ -23,7 +23,7 @@ import {
 } from '../../core';
 import { onDependenciesChange } from '../../core/triggers/on-dependencies-change';
 import { EntryMetadata } from '../interfaces';
-import { extractKeywordsJob, markdownToHtmlJob, processHtmlJob } from '../shared';
+import { extractKeywordsJob, processHtmlJob } from '../shared';
 
 interface Config {
   tag: string;
@@ -33,7 +33,7 @@ interface Config {
   entry: EntryMetadata;
   keyword?: string;
   keywordType: NgDocKeywordType;
-  getContent: (dependencies: ObservableSet<string>) => string;
+  getContent: (dependencies: ObservableSet<string>) => Promise<string>;
 }
 
 interface CacheData {
@@ -85,10 +85,9 @@ export function contentBuilder(config: Config): Builder<string> {
           dependencies.clear();
           usedKeywords.clear();
 
-          const content = getContent(dependencies);
+          const content = await getContent(dependencies);
 
           return await sequentialJobs(content, [
-            markdownToHtmlJob(entry.dir, dependencies),
             processHtmlJob({
               headings: context.config.guide?.anchorHeadings,
               route: entry.absoluteRoute(),

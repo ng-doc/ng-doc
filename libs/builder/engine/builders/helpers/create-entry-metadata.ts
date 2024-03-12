@@ -6,6 +6,7 @@ import { getObjectExpressionFromDefault } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
 import { Entry, EntryMetadata } from '../interfaces';
 import { getCategorySourceFile } from './get-category-source-file';
+import { getEntryOutDir } from './get-entry-out-dir';
 import { getEntryRoute } from './get-entry-route';
 
 /**
@@ -19,13 +20,12 @@ export function createEntryMetadata<T extends Entry>(
   entry: T,
   sourceFile: SourceFile,
 ): EntryMetadata<T> {
+  const entryPath = sourceFile.getFilePath();
   const dir = sourceFile.getDirectoryPath();
   const dirName = path.basename(dir);
-  const route = getEntryRoute(entry) ?? dirName;
-  const entryPath = sourceFile.getFilePath();
+  const route = getEntryRoute(entry, entryPath);
   const categorySourceFile = entry.category && getCategorySourceFile(sourceFile);
-  const relativePath = path.relative(context.docsPath, dir);
-  const outDir = path.join(context.outGuidesDir, relativePath);
+  const outDir = getEntryOutDir(context, entry, entryPath);
   const objectExpression = getObjectExpressionFromDefault(sourceFile);
 
   if (!objectExpression) {
@@ -38,7 +38,6 @@ export function createEntryMetadata<T extends Entry>(
     dir,
     dirName,
     route,
-    relativePath,
     outDir,
     sourceFile,
     objectExpression,
@@ -48,7 +47,7 @@ export function createEntryMetadata<T extends Entry>(
       const parentRoute = this.category?.absoluteRoute() ?? '';
       const parentRoutePrefix = parentRoute ? `${parentRoute}/` : '';
 
-      return `${parentRoutePrefix || routePrefix}${this.route}`;
+      return `/${parentRoutePrefix || routePrefix}${this.route}`;
     },
     breadcrumbs: function (): string[] {
       return asArray(this.category?.breadcrumbs(), this.entry.title);

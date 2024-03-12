@@ -1,28 +1,28 @@
 import { NgDocApi, NgDocPage } from '@ng-doc/core';
 
-import { Entry, EntryMetadata } from '../interfaces';
+import { EntryMetadata } from '../interfaces';
 
 export interface StructuredDoc {
-	item: EntryMetadata<Entry>;
-	children?: StructuredDoc[];
+  item: EntryMetadata;
+  children?: StructuredDoc[];
 }
 
-type StructuredMap = Map<string, [StructuredMap, EntryMetadata<Entry>]>;
+type StructuredMap = Map<string, [StructuredMap, EntryMetadata]>;
 /**
  *
  * @param pages
  * @param items
  */
 export function getStructuredDocs(
-	items: Array<EntryMetadata<NgDocPage | NgDocApi>>,
+  items: Array<EntryMetadata<NgDocPage | NgDocApi>>,
 ): StructuredDoc[] {
-	const structuredMap: StructuredMap = new Map();
+  const structuredMap: StructuredMap = new Map();
 
-	items.forEach((item) => {
-		addLevel(structuredMap, createLevels(item));
-	});
+  items.forEach((item) => {
+    addLevel(structuredMap, createLevels(item));
+  });
 
-	return getStructuredDocsFromMap(structuredMap);
+  return getStructuredDocsFromMap(structuredMap);
 }
 
 /**
@@ -30,15 +30,15 @@ export function getStructuredDocs(
  * @param structuredMap
  */
 function getStructuredDocsFromMap(structuredMap: StructuredMap): StructuredDoc[] {
-	const structuredDocs: StructuredDoc[] = [];
+  const structuredDocs: StructuredDoc[] = [];
 
-	structuredMap.forEach(([map, item]) => {
-		const children = getStructuredDocsFromMap(map);
+  structuredMap.forEach(([map, item]) => {
+    const children = getStructuredDocsFromMap(map);
 
-		structuredDocs.push({ item, children });
-	});
+    structuredDocs.push({ item, children });
+  });
 
-	return structuredDocs;
+  return structuredDocs;
 }
 
 /**
@@ -46,31 +46,31 @@ function getStructuredDocsFromMap(structuredMap: StructuredMap): StructuredDoc[]
  * @param structuredMap
  * @param levels
  */
-function addLevel(structuredMap: StructuredMap, levels: Array<EntryMetadata<Entry>>): void {
-	const [level, ...rest] = levels;
+function addLevel(structuredMap: StructuredMap, levels: EntryMetadata[]): void {
+  const [level, ...rest] = levels;
 
-	if (level) {
-		const route = level.route;
-		const [map, item] = structuredMap.get(route) || [new Map(), level];
+  if (level) {
+    const route = level.route;
+    const [map, item] = structuredMap.get(route) || [new Map(), level];
 
-		structuredMap.set(route!, [map, item]);
+    structuredMap.set(route!, [map, item]);
 
-		addLevel(map, rest);
-	}
+    addLevel(map, rest);
+  }
 }
 
 /**
  *
  * @param item
  */
-function createLevels(item: EntryMetadata<Entry>): Array<EntryMetadata<Entry>> {
-	const levels: Array<EntryMetadata<Entry>> = [];
-	let level: EntryMetadata<Entry> | undefined = item;
+function createLevels(item: EntryMetadata): EntryMetadata[] {
+  const levels: EntryMetadata[] = [];
+  let level: EntryMetadata | undefined = item;
 
-	while (level) {
-		levels.unshift(level);
-		level = level.category;
-	}
+  while (level) {
+    levels.unshift(level);
+    level = level.category;
+  }
 
-	return levels;
+  return levels;
 }

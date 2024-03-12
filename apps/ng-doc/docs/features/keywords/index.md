@@ -9,7 +9,7 @@ as a result, mentions of certain entities or pages will turn into links automati
 
 ## API keywords
 
-NgDoc automatically generates keywords for all declarations specified in `ng-doc.api.ts` (
+NgDoc automatically generates keywords for all declarations specified in `ng-doc.metadata.ts` (
 see `*EntitiesAPI` for how to create it), for example, if you have a class declaration that's called
 `MyAwesomeClass`, NgDoc generates keyword `MyAwesomeClass` for it, this means that if you decide to
 mention this class as inline code or block code, NgDoc will automatically create a link to the API

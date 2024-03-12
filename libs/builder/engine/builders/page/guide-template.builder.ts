@@ -2,6 +2,7 @@ import { contentBuilder, createTemplatePostProcessor } from '@ng-doc/builder';
 import { NgDocPage } from '@ng-doc/core';
 import path from 'path';
 
+import { markdownToHtml } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
 import { AsyncFileOutput, Builder, CacheStrategy, factory } from '../../core';
 import { renderTemplate } from '../../nunjucks';
@@ -12,16 +13,17 @@ interface Config {
   page: EntryMetadata<NgDocPage>;
 }
 
-export const PAGE_TEMPLATE_BUILDER_TAG = 'PageTemplate';
+export const GUIDE_TEMPLATE_BUILDER_TAG = 'GuideTemplate';
 export const GUIDE_BUILDER_TAG = 'Guide';
 
 /**
  *
  * @param config
  */
-export function pageTemplateBuilder(config: Config): Builder<AsyncFileOutput> {
+export function guideTemplateBuilder(config: Config): Builder<AsyncFileOutput> {
   const { context, page } = config;
   const mdPath = path.join(page.dir, page.entry.mdFile);
+  const mdDir = path.dirname(mdPath);
   const cacheStrategy = {
     id: `${mdPath}#Template`,
     action: 'skip',
@@ -30,7 +32,7 @@ export function pageTemplateBuilder(config: Config): Builder<AsyncFileOutput> {
   return createTemplatePostProcessor(
     (postProcess) =>
       factory(
-        PAGE_TEMPLATE_BUILDER_TAG,
+        GUIDE_TEMPLATE_BUILDER_TAG,
         [
           contentBuilder({
             tag: GUIDE_BUILDER_TAG,
@@ -40,8 +42,8 @@ export function pageTemplateBuilder(config: Config): Builder<AsyncFileOutput> {
             entry: page,
             keyword: page.entry.keyword,
             keywordType: 'guide',
-            getContent: (dependencies) =>
-              renderTemplate(page.entry.mdFile, {
+            getContent: async (dependencies) => {
+              const mdContent = renderTemplate(page.entry.mdFile, {
                 scope: page.dir,
                 context: {
                   NgDocPage: page,
@@ -49,7 +51,10 @@ export function pageTemplateBuilder(config: Config): Builder<AsyncFileOutput> {
                 },
                 dependencies,
                 filters: false,
-              }),
+              });
+
+              return markdownToHtml(mdContent, mdDir, dependencies.add.bind(dependencies));
+            },
           }),
         ],
         (guide: string) => {
@@ -66,6 +71,6 @@ export function pageTemplateBuilder(config: Config): Builder<AsyncFileOutput> {
         },
         cacheStrategy,
       ),
-    { context, metadata: page, templatePath: mdPath },
+    { context, metadata: page, pageType: 'guide', templatePath: mdPath },
   );
 }

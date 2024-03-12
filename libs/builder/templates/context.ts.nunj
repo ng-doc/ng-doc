@@ -17,7 +17,7 @@ export function provideNgDocContext(): Provider {
                     {%- endif %}
                     {%- if entry.item.order %}
                     order: {{ entry.item.order }},
-                    hidden: {{ entry.item.entry.hidden | default("false") }},
+                    hidden: {{ entry.ite`m.entry.hidden | default("false") }},
                     {%- endif %}
                     {%- if entry.children.length %}
                     children: [
