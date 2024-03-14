@@ -21,7 +21,7 @@ let builderId: number = 0;
 /**
  * The factory function is a powerful tool for creating complex builders.
  * It should be used when you need to build something based on the results of multiple other builders.
- * @param tag
+ * @param tag - A string that identifies the builder.
  * @param builders - An array of Observables of BuilderState.
  * @param buildFn - A function that takes the results of the successful Observables and returns a Promise.
  * @param cacheStrategy - An optional CacheStrategy object.
@@ -61,8 +61,13 @@ export function factory<T, R, TCacheData>(
         ...(states as Array<BuilderDone<T>>).map(({ result }) => result),
       );
 
+      /**
+       * We don't use ObservableInput here because it opens the door to passing an Observable
+       * as the result of the build function which might break the cache strategy, and final state.
+       */
       return (buildFnResult instanceof Promise ? from(buildFnResult) : of(buildFnResult)).pipe(
         map((result) => new BuilderDone(tag, result)),
+        catchError((error: Error) => of(new BuilderError(tag, [error]))),
         handleCacheStrategy<R, TCacheData>(
           id,
           cacheStrategy,
@@ -70,7 +75,6 @@ export function factory<T, R, TCacheData>(
         ),
       );
     }),
-    catchError((error: Error) => of(new BuilderError(tag, [error]))),
     /**
      * Prevents emitting the pending state twice in a row.
      * This can happen if builders start working asynchronously based on some trigger.

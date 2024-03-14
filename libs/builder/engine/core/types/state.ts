@@ -57,6 +57,10 @@ export class BuilderError {
 export type BuilderState<T = never> = BuilderPending | BuilderDone<T> | BuilderError;
 export type EndStates<T = never> = BuilderDone<T> | BuilderError;
 
+export type BuilderStateTuple<T> = {
+  [K in keyof T]: T[K] extends BuilderState<infer R> ? R : never;
+};
+
 /**
  * Type guard function to check if a given state is a BuilderPending state.
  * @param {BuilderState<T>} state - The state to check.

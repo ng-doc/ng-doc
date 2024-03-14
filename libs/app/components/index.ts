@@ -11,6 +11,7 @@ export * from '@ng-doc/app/components/navbar';
 export * from '@ng-doc/app/components/page';
 export * from '@ng-doc/app/components/page-link';
 export * from '@ng-doc/app/components/page-navigation';
+export * from '@ng-doc/app/components/page-wrapper';
 export * from '@ng-doc/app/components/playground';
 export * from '@ng-doc/app/components/root';
 export * from '@ng-doc/app/components/search';

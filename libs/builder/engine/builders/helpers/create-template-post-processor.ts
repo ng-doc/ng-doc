@@ -27,10 +27,10 @@ type PostProcess = (html: string) => AsyncFileOutput;
  * @param builder
  * @param config
  */
-export function createTemplatePostProcessor(
-  builder: (postProcess: PostProcess) => Builder<AsyncFileOutput>,
+export function createTemplatePostProcessor<T>(
+  builder: (postProcess: PostProcess) => Builder<T>,
   config: Config,
-): Builder<AsyncFileOutput> {
+): Builder<T> {
   const { context, metadata, templatePath, pageType, lineNumber } = config;
   let removeIndexes: () => void = () => {};
 
@@ -39,7 +39,6 @@ export function createTemplatePostProcessor(
 
     // Replace keywords in the template at the end of the build process
     return async () => {
-      const outPath = path.join(metadata.outDir, 'page.ts');
       const content = await replaceKeywords(html, {
         getKeyword: keywordsStore.get.bind(keywordsStore),
       });
@@ -54,7 +53,7 @@ export function createTemplatePostProcessor(
       removeIndexes = IndexStore.add(
         ...(await buildIndexes({
           content,
-          title: metadata.entry.title,
+          title: metadata.title,
           breadcrumbs: metadata.breadcrumbs(),
           pageType,
           route: metadata.absoluteRoute(),
@@ -62,7 +61,7 @@ export function createTemplatePostProcessor(
       );
 
       return {
-        filePath: outPath,
+        filePath: metadata.outPath,
         content: renderTemplate('./page.ts.nunj', {
           context: {
             id: uid(),

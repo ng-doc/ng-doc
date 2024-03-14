@@ -1,10 +1,10 @@
-import { asArray, NgDocApiScope } from '@ng-doc/core';
+import { asArray, NgDocApi, NgDocApiScope } from '@ng-doc/core';
 import path from 'path';
 
 import { declarationFolderName } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
 import { NgDocSupportedDeclaration } from '../../../types';
-import { EntryMetadata, PageEntry } from '../interfaces';
+import { DeclarationEntry, EntryMetadata } from '../interfaces';
 
 /**
  *
@@ -16,9 +16,9 @@ import { EntryMetadata, PageEntry } from '../interfaces';
 export function createDeclarationMetadata(
   context: NgDocBuilderContext,
   declaration: NgDocSupportedDeclaration,
-  entry: EntryMetadata<PageEntry>,
+  entry: EntryMetadata<NgDocApi>,
   scope?: NgDocApiScope,
-): EntryMetadata<PageEntry> {
+): EntryMetadata<DeclarationEntry> {
   const dir = declaration.getSourceFile().getDirectoryPath();
   const dirName = path.basename(dir);
   const route = path.join(
@@ -29,24 +29,22 @@ export function createDeclarationMetadata(
       declaration.getName(),
     ),
   );
-  const outDir = route;
+  const outDir = path.join(context.outApiDir, route);
 
   return {
+    ...entry,
     dir,
     dirName,
     route,
     outDir,
+    parent: entry,
+    outPath: path.join(outDir, 'page.ts'),
+    title: declaration.getName() ?? '[Unknown]',
     sourceFile: declaration.getSourceFile(),
-    objectExpression: entry.objectExpression,
-    path: entry.path,
-    absoluteRoute: entry.absoluteRoute,
     breadcrumbs: () => [],
-    entry: entry.entry,
+    hidden: true,
+    entry: {
+      declaration,
+    },
   };
 }
-
-// api/ui-kit/classes/ButtonComponent
-// components/button/api/ButtonComponent
-
-// libs/ui-kit/components/button-component.ts#ButtonComponent$Api
-// libs/ui-kit/components/button-component.ts#ButtonComponent$Guide

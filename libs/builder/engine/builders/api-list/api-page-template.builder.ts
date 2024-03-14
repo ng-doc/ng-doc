@@ -1,18 +1,16 @@
-import { PageStore, renderTemplate, watchFile } from '@ng-doc/builder';
+import { DeclarationEntry, PageStore, renderTemplate, watchFile } from '@ng-doc/builder';
 import { NgDocApiScope } from '@ng-doc/core';
 import { finalize, takeUntil } from 'rxjs';
 
 import { NgDocBuilderContext } from '../../../interfaces';
-import { NgDocSupportedDeclaration } from '../../../types';
 import { AsyncFileOutput, Builder, CacheStrategy, factory } from '../../core';
 import { createTemplatePostProcessor } from '../helpers';
-import { EntryMetadata, PageEntry } from '../interfaces';
+import { EntryMetadata } from '../interfaces';
 import { contentBuilder } from '../shared';
 
 interface Config {
   context: NgDocBuilderContext;
-  metadata: EntryMetadata<PageEntry>;
-  declaration: NgDocSupportedDeclaration;
+  metadata: EntryMetadata<DeclarationEntry>;
   scope?: NgDocApiScope;
 }
 
@@ -24,7 +22,10 @@ export const API_BUILDER_TAG = 'Api';
  * @param config
  */
 export function apiPageTemplateBuilder(config: Config): Builder<AsyncFileOutput> {
-  const { context, metadata, declaration, scope } = config;
+  const { context, metadata, scope } = config;
+  const {
+    entry: { declaration },
+  } = metadata;
   const declPath = declaration.getSourceFile().getFilePath();
   const pageKey = `${declPath}#${declaration.getName()}`;
   const cacheStrategy = {
@@ -44,7 +45,7 @@ export function apiPageTemplateBuilder(config: Config): Builder<AsyncFileOutput>
             context,
             mainFilePath: declPath,
             cacheId: `${declPath}#Api`,
-            entry: metadata,
+            metadata,
             keyword: declaration.getName(),
             keywordType: 'api',
             getContent: async () =>
@@ -56,7 +57,7 @@ export function apiPageTemplateBuilder(config: Config): Builder<AsyncFileOutput>
               }),
           }),
         ],
-        postProcess,
+        async (html) => postProcess(html),
         cacheStrategy,
       ),
     {

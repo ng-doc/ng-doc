@@ -1,10 +1,30 @@
 import { NgDocApi, NgDocCategory, NgDocPage } from '@ng-doc/core';
 import { minimatch } from 'minimatch';
 
+import { NgDocSupportedDeclaration } from '../../../types';
 import { API_PATTERN, PAGE_PATTERN } from '../../variables';
+import { MarkdownFrontMatterData } from './markdown-front-matter-data';
 
-export type Entry = NgDocPage | NgDocCategory | NgDocApi;
-export type PageEntry = NgDocPage | NgDocApi;
+export interface MarkdownEntry {
+  metadata: MarkdownFrontMatterData;
+  mdPath: string;
+  content: string;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface DeclarationEntry {
+  declaration: NgDocSupportedDeclaration;
+}
+
+export type PageEntry = NgDocPage | NgDocApi | MarkdownEntry | DeclarationEntry;
+export type FileEntry = NgDocPage | NgDocApi | NgDocCategory;
+export type Entry = PageEntry | NgDocCategory;
+
+export type ParentEntry<T extends Entry> = T extends MarkdownEntry
+  ? NgDocPage
+  : T extends DeclarationEntry
+    ? NgDocApi
+    : NgDocCategory;
 
 /**
  *

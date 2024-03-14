@@ -1,3 +1,4 @@
+import { NgDocApi, NgDocPage } from '@ng-doc/core';
 import { finalize, of, takeUntil } from 'rxjs';
 
 import { ObservableSet } from '../../../classes';
@@ -13,7 +14,7 @@ import {
   watchFile,
 } from '../../core';
 import { createEntryMetadata } from '../helpers';
-import { EntryMetadata, PageEntry } from '../interfaces';
+import { EntryMetadata, FileEntry } from '../interfaces';
 
 interface Config {
   tag: string;
@@ -30,7 +31,9 @@ interface Config {
  * @returns {Builder<NgDocPage>} - A Builder Observable that emits a NgDocPage object whenever the file at the provided path changes.
  * @param config - The configuration object for the builder.
  */
-export function entryBuilder<T extends PageEntry>(config: Config): Builder<EntryMetadata<T>> {
+export function entryBuilder<T extends NgDocPage | NgDocApi>(
+  config: Config,
+): Builder<EntryMetadata<T>> {
   const { tag, context, entryPath } = config;
   const sourceFile = context.project.addSourceFileAtPath(entryPath);
   const dependencies = new ObservableSet<string>();
@@ -71,10 +74,13 @@ export function entryBuilder<T extends PageEntry>(config: Config): Builder<Entry
  * @param metadata
  * @param dependencies
  */
-function addCategoriesToDependencies(metadata: EntryMetadata, dependencies: ObservableSet<string>) {
-  if (metadata.category) {
-    dependencies.add(metadata.category.sourceFile.getFilePath());
+function addCategoriesToDependencies<T extends FileEntry>(
+  metadata: EntryMetadata<T>,
+  dependencies: ObservableSet<string>,
+) {
+  if (metadata.parent) {
+    dependencies.add(metadata.parent.sourceFile.getFilePath());
 
-    addCategoriesToDependencies(metadata.category, dependencies);
+    addCategoriesToDependencies(metadata.parent, dependencies);
   }
 }

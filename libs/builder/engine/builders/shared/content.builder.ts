@@ -4,6 +4,7 @@ import {
   createSecondaryTrigger,
   isBuilderDone,
   onKeywordsTouch,
+  PageEntry,
 } from '@ng-doc/builder';
 import { NgDocEntityAnchor, NgDocKeyword, NgDocKeywordType } from '@ng-doc/core';
 import { finalize, of } from 'rxjs';
@@ -30,7 +31,7 @@ interface Config {
   context: NgDocBuilderContext;
   mainFilePath: string;
   cacheId: string;
-  entry: EntryMetadata;
+  metadata: EntryMetadata<PageEntry>;
   keyword?: string;
   keywordType: NgDocKeywordType;
   getContent: (dependencies: ObservableSet<string>) => Promise<string>;
@@ -47,7 +48,8 @@ interface CacheData {
  * @param config
  */
 export function contentBuilder(config: Config): Builder<string> {
-  const { tag, context, entry, cacheId, mainFilePath, getContent, keyword, keywordType } = config;
+  const { tag, context, metadata, cacheId, mainFilePath, getContent, keyword, keywordType } =
+    config;
   const dependencies = new ObservableSet<string>();
   const anchors = [] as NgDocEntityAnchor[];
   const usedKeywords = new Set<string>();
@@ -56,7 +58,7 @@ export function contentBuilder(config: Config): Builder<string> {
   const cacheStrategy = {
     id: cacheId,
     action: 'restore',
-    files: () => [entry.path, mainFilePath, ...dependencies.asArray()],
+    files: () => [metadata.path, mainFilePath, ...dependencies.asArray()],
     getData: () => ({
       dependencies: dependencies.asArray(),
       anchors,
@@ -78,7 +80,9 @@ export function contentBuilder(config: Config): Builder<string> {
         try {
           // Triggering the touch of the keywords before the build to trigger dependent builders
           // This is needed because keywords can be changed after the build
-          touchKeywords(...getKeywords(entry, anchors, keywordType, keyword).map(([key]) => key));
+          touchKeywords(
+            ...getKeywords(metadata, anchors, keywordType, keyword).map(([key]) => key),
+          );
 
           removeKeywords();
           anchors.length = 0;
@@ -90,13 +94,13 @@ export function contentBuilder(config: Config): Builder<string> {
           return await sequentialJobs(content, [
             processHtmlJob({
               headings: context.config.guide?.anchorHeadings,
-              route: entry.absoluteRoute(),
+              route: metadata.absoluteRoute(),
               addAnchor: anchors.push.bind(anchors),
             }),
             extractKeywordsJob({ addUsedKeyword: usedKeywords.add.bind(usedKeywords) }),
           ]);
         } catch (cause) {
-          throw new Error(`Error while building entry "${entry.entry.title}" (${entry.path})`, {
+          throw new Error(`Error while building entry (${metadata.path})`, {
             cause,
           });
         }
@@ -114,7 +118,7 @@ export function contentBuilder(config: Config): Builder<string> {
   ).pipe(
     tap((state) => {
       if (isBuilderDone(state)) {
-        const keywords = getKeywords(entry, anchors, keywordType, keyword);
+        const keywords = getKeywords(metadata, anchors, keywordType, keyword);
 
         if (keywords.length) {
           removeKeywords = keywordsStore.add(...keywords);
@@ -137,7 +141,7 @@ export function contentBuilder(config: Config): Builder<string> {
  * @param mainKeyword
  */
 function getKeywords(
-  entry: EntryMetadata,
+  entry: EntryMetadata<PageEntry>,
   anchors: NgDocEntityAnchor[],
   type: NgDocKeywordType,
   mainKeyword?: string,
@@ -147,7 +151,7 @@ function getKeywords(
   const key = type === 'guide' ? `*${mainKeyword}` : mainKeyword;
 
   const rootKeyword: NgDocKeyword = {
-    title: entry.entry.title,
+    title: entry.title,
     path: entry.absoluteRoute(),
     type,
   };
@@ -155,12 +159,7 @@ function getKeywords(
   return [
     [keywordKey(key), rootKeyword],
     ...anchors.map((anchor) => {
-      const entityKeyword = buildEntityKeyword(
-        key,
-        entry.entry.title,
-        entry.absoluteRoute(),
-        anchor,
-      );
+      const entityKeyword = buildEntityKeyword(key, entry.title, entry.absoluteRoute(), anchor);
 
       return [
         keywordKey(entityKeyword.key),

@@ -7,6 +7,7 @@ export * from './factory';
 export * from './global-trigger';
 export * from './handle-cache-strategy';
 export * from './join-builder-states';
+export * from './merge-factory';
 export * from './run-build';
 export * from './sequential-jobs';
 export * from './stack';

@@ -28,6 +28,7 @@ export * from '@ng-doc/ui-kit/components/sidenav';
 export * from '@ng-doc/ui-kit/components/smooth-resize';
 export * from '@ng-doc/ui-kit/components/spinner';
 export * from '@ng-doc/ui-kit/components/tab-group';
+export * from '@ng-doc/ui-kit/components/tab-routes-group';
 export * from '@ng-doc/ui-kit/components/tag';
 export * from '@ng-doc/ui-kit/components/text';
 export * from '@ng-doc/ui-kit/components/toggle';

@@ -19,9 +19,9 @@ export const NG_DOC_ROUTING: Routes = [
 		{%- else %}
 		loadChildren: () => import('./{{ curDir | createImportPath(entry.item.outDir + "/page.ts") }}'),
 		{%- endif %}
-	}
+	},
 	{%- endmacro %}
 	{%- for entry in entries %}
-	{{ route(entry) }},
+	{{ route(entry) }}
 	{%- endfor %}
 ];

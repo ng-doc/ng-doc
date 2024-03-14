@@ -1,9 +1,8 @@
 import {
   createDeclarationMetadata,
+  DeclarationEntry,
   entryBuilder,
   EntryMetadata,
-  NgDocSupportedDeclaration,
-  PageEntry,
 } from '@ng-doc/builder';
 import { asArray, NgDocApi, NgDocApiScope } from '@ng-doc/core';
 import { merge } from 'rxjs';
@@ -36,22 +35,15 @@ export function apiBuilder(context: NgDocBuilderContext, apiPath: string): Build
               ).entries(),
             ).map(([id, declaration]) => [
               id,
-              [
-                scope,
-                declaration,
-                createDeclarationMetadata(context, declaration, metadata, scope),
-              ],
-            ]) as Array<
-              [string, [NgDocApiScope, NgDocSupportedDeclaration, EntryMetadata<PageEntry>]]
-            >,
+              [scope, createDeclarationMetadata(context, declaration, metadata, scope)],
+            ]) as Array<[string, [NgDocApiScope, EntryMetadata<DeclarationEntry>]]>,
         )
         .flat();
       const data = Array.from(new Map(declarations).values());
-      const pageBuilders = data.map(([scope, declaration, metadata]) =>
+      const pageBuilders = data.map(([scope, metadata]) =>
         apiPageTemplateBuilder({
           context,
           metadata,
-          declaration,
           scope,
         }),
       );

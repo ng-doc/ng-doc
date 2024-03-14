@@ -1,0 +1,11 @@
+@import '../../../styles/mixins';
+
+:host {
+  @include ng-doc-font();
+  position: relative;
+  padding: calc(var(--ng-doc-base-gutter) * 2);
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  font-weight: 700;
+}

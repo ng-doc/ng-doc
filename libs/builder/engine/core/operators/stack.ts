@@ -31,14 +31,21 @@ export function addToStack<T>(tag: string): OperatorFunction<BuilderState<T>, Bu
 
   return (source) => {
     return source.pipe(
-      tap((state) => {
-        state instanceof BuilderPending ? tagStack.add(id) : tagStack.delete(id);
+      tap({
+        next: (state) => {
+          state instanceof BuilderPending ? tagStack.add(id) : tagStack.delete(id);
 
-        // state instanceof BuilderPending
-        //   ? console.log('added:', tag, tagStack.size)
-        //   : console.log('removed:', tag, tagStack.size);
+          // state instanceof BuilderPending
+          //   ? console.log('added:', tag, tagStack.size)
+          //   : console.log('removed:', tag, tagStack.size);
 
-        STACK_TICK.next();
+          STACK_TICK.next();
+        },
+        complete: () => {
+          tagStack.delete(id);
+
+          STACK_TICK.next();
+        },
       }),
     );
   };

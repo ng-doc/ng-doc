@@ -1,0 +1,10 @@
+@import '../../../ui-kit/styles/mixins';
+
+ng-doc-tab-routes-group {
+  @include ng-doc-backdrop-filter(var(--ng-doc-navbar-background), '[data-glass-effect="false"]');
+
+  position: sticky !important;
+  top: var(--ng-doc-navbar-height);
+  z-index: 1;
+  margin-bottom: calc(var(--ng-doc-base-gutter) * 4);
+}

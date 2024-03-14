@@ -1,6 +1,5 @@
 import { renderTemplate } from '@ng-doc/builder';
 import { NgDocApi, uid } from '@ng-doc/core';
-import path from 'path';
 import { of } from 'rxjs';
 
 import { Builder, FileOutput, runBuild } from '../../core';
@@ -21,7 +20,7 @@ export function apiListComponentBuilder(config: Config): Builder<FileOutput> {
 
   return of(void 0).pipe(
     runBuild(API_LIST_COMPONENT_BUILDER_TAG, async () => ({
-      filePath: path.join(metadata.outDir, 'page.ts'),
+      filePath: metadata.outPath,
       content: renderTemplate('./api-list.ts.nunj', {
         context: {
           id: uid(),

@@ -3,23 +3,16 @@ import {
   createBuilder,
   createImportPath,
   createMainTrigger,
-  NgDocPlaygroundMetadata,
+  getPlaygroundMetadata,
   PAGE_NAME,
   renderTemplate,
   runBuild,
 } from '@ng-doc/builder';
-import { NgDocPage, NgDocPlaygroundControlConfig, NgDocPlaygroundProperties } from '@ng-doc/core';
+import { NgDocPage } from '@ng-doc/core';
 import * as path from 'path';
 import { of } from 'rxjs';
-import { ObjectLiteralExpression } from 'ts-morph';
 
-import {
-  buildPlaygroundMetadata,
-  getDemoClassDeclarations,
-  getPlaygroundById,
-  getPlaygroundsExpression,
-  getPlaygroundsIds,
-} from '../../../helpers';
+import { getDemoClassDeclarations } from '../../../helpers';
 import { Builder, FileOutput, watchFile } from '../../core';
 import { EntryMetadata } from '../interfaces';
 
@@ -53,13 +46,13 @@ export function playgroundBuilder(config: Config): Builder<FileOutput> {
           sourceFile.refreshFromFileSystemSync();
         });
 
-        const metadata = getMetadata(page.entry, page.objectExpression);
+        const playgroundMetadata = getPlaygroundMetadata(page.entry, page.objectExpression);
 
         return {
           filePath: outPath,
           content: renderTemplate('./playgrounds.ts.nunj', {
             context: {
-              playgroundMetadata: metadata,
+              playgroundMetadata,
               hasImports: !!page.objectExpression?.getProperty('imports'),
               entryImportPath: createImportPath(page.outDir, path.join(page.dir, PAGE_NAME)),
             },
@@ -77,64 +70,5 @@ export function playgroundBuilder(config: Config): Builder<FileOutput> {
       ),
     ],
     () => builder,
-  );
-}
-
-/**
- *
- * @param page
- * @param objectExpression
- */
-function getMetadata(
-  page: NgDocPage,
-  objectExpression: ObjectLiteralExpression,
-): Record<string, NgDocPlaygroundMetadata> {
-  const expression = getPlaygroundsExpression(objectExpression);
-
-  if (expression) {
-    return getPlaygroundsIds(expression).reduce(
-      (metadata: Record<string, NgDocPlaygroundMetadata>, id: string) => {
-        if (expression) {
-          const playground: ObjectLiteralExpression | undefined = getPlaygroundById(expression, id);
-
-          if (playground) {
-            metadata[id] = buildPlaygroundMetadata(
-              id,
-              playground,
-              controlsToProperties(page.playgrounds?.[id]?.controls ?? {}),
-            );
-          }
-        }
-        return metadata;
-      },
-      {},
-    );
-  }
-
-  return {};
-}
-
-/**
- *
- * @param controls
- */
-function controlsToProperties(
-  controls: Record<string, string | NgDocPlaygroundControlConfig>,
-): NgDocPlaygroundProperties {
-  return Object.entries(controls).reduce(
-    (
-      properties: NgDocPlaygroundProperties,
-      [name, value]: [string, string | NgDocPlaygroundControlConfig],
-    ) => {
-      properties[name] = {
-        inputName: typeof value === 'string' ? name : value.alias ?? name,
-        type: typeof value === 'string' ? value : value.type,
-        description: typeof value === 'string' ? undefined : value.description ?? undefined,
-        options: typeof value === 'string' ? undefined : value.options ?? undefined,
-      };
-
-      return properties;
-    },
-    {},
   );
 }

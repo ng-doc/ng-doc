@@ -1,16 +1,22 @@
-import { contentBuilder, createTemplatePostProcessor } from '@ng-doc/builder';
-import { NgDocPage } from '@ng-doc/core';
+import {
+  contentBuilder,
+  createTemplatePostProcessor,
+  MarkdownEntry,
+  NgDocActions,
+  renderTemplateString,
+  TemplateBuilderOutput,
+} from '@ng-doc/builder';
 import path from 'path';
 
 import { markdownToHtml } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
-import { AsyncFileOutput, Builder, CacheStrategy, factory } from '../../core';
-import { renderTemplate } from '../../nunjucks';
+import { Builder, CacheStrategy, factory } from '../../core';
 import { EntryMetadata } from '../interfaces';
 
 interface Config {
   context: NgDocBuilderContext;
-  page: EntryMetadata<NgDocPage>;
+  metadata: EntryMetadata<MarkdownEntry>;
+  keyword?: string;
 }
 
 export const GUIDE_TEMPLATE_BUILDER_TAG = 'GuideTemplate';
@@ -20,9 +26,9 @@ export const GUIDE_BUILDER_TAG = 'Guide';
  *
  * @param config
  */
-export function guideTemplateBuilder(config: Config): Builder<AsyncFileOutput> {
-  const { context, page } = config;
-  const mdPath = path.join(page.dir, page.entry.mdFile);
+export function guideTemplateBuilder(config: Config): Builder<TemplateBuilderOutput> {
+  const { context, metadata, keyword } = config;
+  const mdPath = metadata.entry.mdPath;
   const mdDir = path.dirname(mdPath);
   const cacheStrategy = {
     id: `${mdPath}#Template`,
@@ -39,15 +45,15 @@ export function guideTemplateBuilder(config: Config): Builder<AsyncFileOutput> {
             context,
             mainFilePath: mdPath,
             cacheId: `${mdPath}#Guide`,
-            entry: page,
-            keyword: page.entry.keyword,
+            metadata,
+            keyword,
             keywordType: 'guide',
             getContent: async (dependencies) => {
-              const mdContent = renderTemplate(page.entry.mdFile, {
-                scope: page.dir,
+              const mdContent = renderTemplateString(metadata.entry.content, {
+                scope: metadata.dir,
                 context: {
-                  NgDocPage: page,
-                  NgDocActions: undefined,
+                  NgDocPage: metadata.parent,
+                  NgDocActions: new NgDocActions(metadata, dependencies),
                 },
                 dependencies,
                 filters: false,
@@ -57,20 +63,14 @@ export function guideTemplateBuilder(config: Config): Builder<AsyncFileOutput> {
             },
           }),
         ],
-        (guide: string) => {
-          const html = renderTemplate('./page-template.nunj', {
-            context: {
-              tabs: [
-                { title: 'Guide', content: guide },
-                { title: 'API', content: '' },
-              ],
-            },
-          });
-
-          return postProcess(html);
+        async (output) => {
+          return {
+            metadata,
+            output: postProcess(output),
+          } satisfies TemplateBuilderOutput;
         },
         cacheStrategy,
       ),
-    { context, metadata: page, pageType: 'guide', templatePath: mdPath },
+    { context, metadata, pageType: 'guide', templatePath: mdPath },
   );
 }

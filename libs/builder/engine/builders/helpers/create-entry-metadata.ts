@@ -4,7 +4,7 @@ import { SourceFile } from 'ts-morph';
 
 import { getObjectExpressionFromDefault } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
-import { Entry, EntryMetadata } from '../interfaces';
+import { EntryMetadata, FileEntry } from '../interfaces';
 import { getCategorySourceFile } from './get-category-source-file';
 import { getEntryOutDir } from './get-entry-out-dir';
 import { getEntryRoute } from './get-entry-route';
@@ -15,7 +15,7 @@ import { getEntryRoute } from './get-entry-route';
  * @param entry
  * @param sourceFile
  */
-export function createEntryMetadata<T extends Entry>(
+export function createEntryMetadata<T extends FileEntry>(
   context: NgDocBuilderContext,
   entry: T,
   sourceFile: SourceFile,
@@ -39,20 +39,22 @@ export function createEntryMetadata<T extends Entry>(
     dirName,
     route,
     outDir,
+    outPath: path.join(outDir, 'page.ts'),
     sourceFile,
     objectExpression,
     path: entryPath,
+    title: entry.title,
+    order: entry.order,
     absoluteRoute: function (): string {
-      const routePrefix = context.config.routePrefix ? `${context.config.routePrefix}/` : '';
-      const parentRoute = this.category?.absoluteRoute() ?? '';
-      const parentRoutePrefix = parentRoute ? `${parentRoute}/` : '';
-
-      return `/${parentRoutePrefix || routePrefix}${this.route}`;
+      return path.join(
+        ...asArray(this.parent?.absoluteRoute() ?? context.config.routePrefix, this.route),
+      );
     },
     breadcrumbs: function (): string[] {
-      return asArray(this.category?.breadcrumbs(), this.entry.title);
+      return asArray(this.parent?.breadcrumbs(), this.entry.title);
     },
-    category:
+    // @ts-expect-error - This is a valid assignment
+    parent:
       entry.category && categorySourceFile
         ? createEntryMetadata(context, entry.category, categorySourceFile)
         : undefined,

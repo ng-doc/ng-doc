@@ -17,7 +17,7 @@ export function provideNgDocContext(): Provider {
                     {%- endif %}
                     {%- if entry.item.order %}
                     order: {{ entry.item.order }},
-                    hidden: {{ entry.ite`m.entry.hidden | default("false") }},
+                    hidden: {{ entry.item.entry.hidden | default("false") }},
                     {%- endif %}
                     {%- if entry.children.length %}
                     children: [
@@ -30,7 +30,9 @@ export function provideNgDocContext(): Provider {
                 {%- endmacro %}
 
                 {%- for entry in entries | sortNavigationEntries %}
+                {%- if not entry.item.hidden  %}
                 {{ nav(entry) }},
+                {%- endif %}
                 {%- endfor %}
             ],
         }

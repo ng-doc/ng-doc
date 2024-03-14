@@ -1,5 +1,3 @@
-import { NgDocApi, NgDocPage } from '@ng-doc/core';
-
 import { EntryMetadata } from '../interfaces';
 
 export interface StructuredDoc {
@@ -13,9 +11,7 @@ type StructuredMap = Map<string, [StructuredMap, EntryMetadata]>;
  * @param pages
  * @param items
  */
-export function getStructuredDocs(
-  items: Array<EntryMetadata<NgDocPage | NgDocApi>>,
-): StructuredDoc[] {
+export function getStructuredDocs(items: EntryMetadata[]): StructuredDoc[] {
   const structuredMap: StructuredMap = new Map();
 
   items.forEach((item) => {
@@ -69,7 +65,7 @@ function createLevels(item: EntryMetadata): EntryMetadata[] {
 
   while (level) {
     levels.unshift(level);
-    level = level.category;
+    level = level.parent;
   }
 
   return levels;

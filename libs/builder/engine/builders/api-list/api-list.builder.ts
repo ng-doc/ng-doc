@@ -1,4 +1,4 @@
-import { NgDocSupportedDeclaration } from '@ng-doc/builder';
+import { DeclarationEntry } from '@ng-doc/builder';
 import { asArray, NgDocApi, NgDocApiList, NgDocApiScope } from '@ng-doc/core';
 import path from 'path';
 import { of } from 'rxjs';
@@ -6,12 +6,12 @@ import { of } from 'rxjs';
 import { getKindType } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
 import { Builder, FileOutput, runBuild } from '../../core';
-import { EntryMetadata, PageEntry } from '../interfaces';
+import { EntryMetadata } from '../interfaces';
 
 interface Config {
   context: NgDocBuilderContext;
   metadata: EntryMetadata<NgDocApi>;
-  data: Array<[NgDocApiScope, NgDocSupportedDeclaration, EntryMetadata<PageEntry>]>;
+  data: Array<[NgDocApiScope, EntryMetadata<DeclarationEntry>]>;
 }
 
 export const API_LIST_BUILDER_TAG = 'ApiList';
@@ -37,22 +37,22 @@ export function apiListBuilder(config: Config): Builder<FileOutput> {
  * @param data
  */
 function buildApiList(
-  data: Array<[NgDocApiScope, NgDocSupportedDeclaration, EntryMetadata<PageEntry>]>,
+  data: Array<[NgDocApiScope, EntryMetadata<DeclarationEntry>]>,
 ): NgDocApiList[] {
-  const uniqScopes = data.reduce((lists, [scope, declaration, metadata]) => {
-    lists.set(scope, (lists.get(scope) ?? []).concat([[declaration, metadata]]));
+  const uniqScopes = data.reduce((lists, [scope, metadata]) => {
+    lists.set(scope, (lists.get(scope) ?? []).concat([metadata]));
 
     return lists;
-  }, new Map<NgDocApiScope, Array<[NgDocSupportedDeclaration, EntryMetadata<PageEntry>]>>());
+  }, new Map<NgDocApiScope, Array<[EntryMetadata<DeclarationEntry>]>>());
 
   return Array.from(uniqScopes.entries()).map(
     ([scope, items]) =>
       ({
         title: scope.name,
-        items: items.map(([declaration, metadata]) => ({
+        items: items.map(([metadata]) => ({
           route: metadata.absoluteRoute(),
-          type: getKindType(declaration) ?? '',
-          name: declaration.getName() ?? '[Unknown]',
+          type: getKindType(metadata.entry.declaration) ?? '',
+          name: metadata.entry.declaration.getName() ?? '[Unknown]',
         })),
       }) satisfies NgDocApiList,
   );

@@ -1,12 +1,6 @@
 import { AsyncPipe, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  inject,
-  Input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -35,7 +29,7 @@ import {
 } from '@ng-doc/ui-kit';
 import { ngDocMakePure } from '@ng-doc/ui-kit/decorators';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable, of, tap } from 'rxjs';
 import { debounceTime, map, startWith } from 'rxjs/operators';
 
 interface ApiFilterForm {
@@ -79,14 +73,13 @@ export class NgDocApiListComponent {
   segment?: string;
 
   protected formGroup: FormGroup<ApiFilterForm>;
-  protected api$: Observable<NgDocApiList[]>;
+  protected api$: Observable<NgDocApiList[]> = of([]);
   protected apiList: NgDocApiList[] = [];
 
   private readonly formBuilder = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly httpClient = inject(HttpClient);
-  private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   constructor() {
     this.formGroup = this.formBuilder.group({
@@ -113,12 +106,19 @@ export class NgDocApiListComponent {
         }),
       );
 
-    this.api$ = this.formGroup.valueChanges.pipe(
+    const apiList$ = this.httpClient
+      .get<NgDocApiList[]>(asArray('assets/ng-doc', this.segment, 'api-list.json').join('/'))
+      .pipe(tap((apiList) => (this.apiList = apiList)));
+
+    const filterChanges = this.formGroup.valueChanges.pipe(
       debounceTime(100),
       startWith(null),
       map(() => this.formGroup.value),
-      map((form: NgDocFormPartialValue<typeof this.formGroup>) =>
-        this.apiList
+    );
+
+    this.api$ = combineLatest([apiList$, filterChanges]).pipe(
+      map(([apiList, form]) =>
+        apiList
           .filter((api: NgDocApiList) => !form?.scope || api.title === form?.scope)
           .map((api: NgDocApiList) => ({
             ...api,
@@ -135,15 +135,7 @@ export class NgDocApiListComponent {
           }))
           .filter((api: NgDocApiList) => api.items.length),
       ),
-      untilDestroyed(this),
     );
-
-    this.httpClient
-      .get<NgDocApiList[]>(asArray('assets/ng-doc', this.segment, 'api-list.json').join('/'))
-      .subscribe((apiList: NgDocApiList[]) => {
-        this.apiList = apiList;
-        this.changeDetectorRef.markForCheck();
-      });
   }
 
   @ngDocMakePure
