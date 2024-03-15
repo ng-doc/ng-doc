@@ -39,7 +39,7 @@ npm i @ng-doc/{core,builder,ui-kit,app}
 ### Adding builders
 
 First of all you need to add builders from NgDoc library to your application,
-replace `browser` and `dev-server` builders for `build` and `serve` targets with
+replace `application` and `dev-server` builders for `build` and `serve` targets with
 alternatives from the NgDoc as shown in the example below
 
 ```json group="builders" name="Angular (angular.json)" icon="angular"
@@ -48,7 +48,7 @@ alternatives from the NgDoc as shown in the example below
     "my-project": {
       "architect": {
         "build": {
-          "builder": "@ng-doc/builder:browser"
+          "builder": "@ng-doc/builder:application"
         },
         "serve": {
           "builder": "@ng-doc/builder:dev-server"
@@ -63,7 +63,7 @@ alternatives from the NgDoc as shown in the example below
 {
   "targets": {
     "build": {
-      "executor": "@ng-doc/builder:browser"
+      "executor": "@ng-doc/builder:application"
     },
     "serve": {
       "executor": "@ng-doc/builder:dev-server"
