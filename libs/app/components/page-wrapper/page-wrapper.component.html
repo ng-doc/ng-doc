@@ -1,21 +1,25 @@
-<ng-container #pageBreadcrumbs></ng-container>
+<div class="ng-doc-page-wrapper">
+  <ng-container #pageBreadcrumbs></ng-container>
 
-<header [ngDocPageProcessor]="headerContent"></header>
+  <header [ngDocPageProcessor]="headerContent"></header>
 
-@if (routes.length > 1) {
-  <ng-doc-tab-routes-group>
-    @for (route of routes; track route) {
-      <a
-        ng-doc-tab-route
-        [routerLink]="['./' + route.path]"
-        routerLinkActive
-        [routerLinkActiveOptions]="{ exact: true }"
-        #rla="routerLinkActive"
-        [isActive]="rla.isActive">
-        {{ route.title }}
-      </a>
-    }
-  </ng-doc-tab-routes-group>
-}
+  @if (routes.length > 1) {
+    <ng-doc-tab-routes-group>
+      @for (route of routes; track route) {
+        <a
+          ng-doc-tab-route
+          [routerLink]="['./' + route.path]"
+          routerLinkActive
+          [routerLinkActiveOptions]="{ exact: true }"
+          #rla="routerLinkActive"
+          [isActive]="rla.isActive">
+          {{ route.title }}
+        </a>
+      }
+    </ng-doc-tab-routes-group>
+  }
 
-<router-outlet></router-outlet>
+  <router-outlet></router-outlet>
+</div>
+
+<ng-container #pageToc></ng-container>

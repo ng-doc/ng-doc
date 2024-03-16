@@ -13,6 +13,7 @@ import {
 import { Router, RouterOutlet, UrlTree } from '@angular/router';
 import { NgDocRootPage } from '@ng-doc/app/classes/root-page';
 import { NgDocBreadcrumbComponent } from '@ng-doc/app/components/breadcrumb';
+import { NgDocPageWrapperComponent } from '@ng-doc/app/components/page-wrapper';
 import { NgDocTocComponent } from '@ng-doc/app/components/toc';
 import { createComponent, generateToc } from '@ng-doc/app/helpers';
 import {
@@ -80,9 +81,6 @@ export class NgDocPageComponent implements OnInit {
   @ViewChild('pageNavigation', { read: ViewContainerRef, static: true })
   pageNavigation!: ViewContainerRef;
 
-  @ViewChild('pageToc', { read: ViewContainerRef, static: true })
-  pageToc?: ViewContainerRef;
-
   @ViewChild('childOutlet')
   childOutlet?: TemplateRef<never>;
 
@@ -91,6 +89,7 @@ export class NgDocPageComponent implements OnInit {
   protected context: NgDocContext = inject(NG_DOC_CONTEXT);
   protected renderer: Renderer2 = inject(Renderer2);
   protected router: Router = inject(Router);
+  protected pageWrapper: NgDocPageWrapperComponent = inject(NgDocPageWrapperComponent);
 
   ngOnInit(): void {
     if (this.rootPage.pageType === 'guide') {
@@ -101,8 +100,8 @@ export class NgDocPageComponent implements OnInit {
   }
 
   createToc(): void {
-    if (this.pageToc && this.skeleton.toc) {
-      createComponent(this.pageToc, this.skeleton.toc, {
+    if (this.pageWrapper.pageToc && this.skeleton.toc) {
+      createComponent(this.pageWrapper.pageToc, this.skeleton.toc, {
         tableOfContent: generateToc(this.pageContainer.nativeElement) ?? [],
       });
     }

@@ -1,29 +1,27 @@
 :host {
-	display: flex;
+  display: flex;
 
-	--ng-doc-toc-margin: calc(var(--ng-doc-base-gutter) * 5);
+  article {
+    position: relative;
+    width: var(--ng-doc-article-width, 100%);
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
 
-	article {
-		position: relative;
-		width: var(--ng-doc-article-width, 100%);
-		margin-left: auto;
-		margin-right: auto;
-		overflow: hidden;
-
-		.ng-doc-page-controls {
-			position: absolute;
-			display: flex;
-			grid-gap: var(--ng-doc-base-gutter);
-			top: 0;
-			right: 0;
-		}
-	}
+    .ng-doc-page-controls {
+      position: absolute;
+      display: flex;
+      grid-gap: var(--ng-doc-base-gutter);
+      top: 0;
+      right: 0;
+    }
+  }
 }
 
 .ng-doc-fullscreen-wrapper {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 100%;
-	height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }

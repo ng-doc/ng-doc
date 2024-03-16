@@ -49,6 +49,9 @@ export class NgDocPageWrapperComponent implements OnInit {
   @ViewChild('pageBreadcrumbs', { read: ViewContainerRef, static: true })
   pageBreadcrumbs!: ViewContainerRef;
 
+  @ViewChild('pageToc', { read: ViewContainerRef, static: true })
+  pageToc?: ViewContainerRef;
+
   protected skeleton: NgDocPageSkeleton = inject(NG_DOC_PAGE_SKELETON);
 
   private breadcrumbs: string[] = inject(ActivatedRoute)
