@@ -1,6 +1,6 @@
 import { NgDocPageType } from '@ng-doc/core';
 
-export interface MarkdownFrontMatterData {
+export interface MarkdownEntry {
   /**
    * The title of the page that will be used in the tab title
    */

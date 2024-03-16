@@ -3,13 +3,7 @@ import { minimatch } from 'minimatch';
 
 import { NgDocSupportedDeclaration } from '../../../types';
 import { API_PATTERN, PAGE_PATTERN } from '../../variables';
-import { MarkdownFrontMatterData } from './markdown-front-matter-data';
-
-export interface MarkdownEntry {
-  metadata: MarkdownFrontMatterData;
-  mdPath: string;
-  content: string;
-}
+import { MarkdownEntry } from './markdown-entry';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface DeclarationEntry {

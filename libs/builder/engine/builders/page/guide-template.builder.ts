@@ -2,6 +2,7 @@ import {
   contentBuilder,
   createTemplatePostProcessor,
   MarkdownEntry,
+  markdownFrontMatter,
   NgDocActions,
   renderTemplateString,
   TemplateBuilderOutput,
@@ -28,7 +29,7 @@ export const GUIDE_BUILDER_TAG = 'Guide';
  */
 export function guideTemplateBuilder(config: Config): Builder<TemplateBuilderOutput> {
   const { context, metadata, keyword } = config;
-  const mdPath = metadata.entry.mdPath;
+  const mdPath = metadata.path;
   const mdDir = path.dirname(mdPath);
   const cacheStrategy = {
     id: `${mdPath}#Template`,
@@ -49,7 +50,8 @@ export function guideTemplateBuilder(config: Config): Builder<TemplateBuilderOut
             keyword,
             keywordType: 'guide',
             getContent: async (dependencies) => {
-              const mdContent = renderTemplateString(metadata.entry.content, {
+              const { content } = markdownFrontMatter(metadata.path);
+              const mdContent = renderTemplateString(content, {
                 scope: metadata.dir,
                 context: {
                   NgDocPage: metadata.parent,

@@ -31,14 +31,14 @@ export function pageBuilder(
     whenDone((page) => {
       const markdownMetadata = createMarkdownMetadata(page);
       const pageTemplateBuilders = markdownMetadata.map((metadata) =>
-        guideTemplateBuilder({ context, metadata, keyword: metadata.entry.metadata.keyword }),
+        guideTemplateBuilder({ context, metadata, keyword: metadata.entry.keyword }),
       );
 
       return merge(
         pageWrapperBuilder({
           tag: GUIDE_PAGE_WRAPPER_BUILDER_TAG,
-          pageTemplateBuilders,
           metadata: page,
+          pageTemplateBuilders,
         }),
         demoAssetsBuilder({ context, page }),
         playgroundBuilder({ page }),

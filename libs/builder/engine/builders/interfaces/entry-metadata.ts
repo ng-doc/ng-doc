@@ -1,7 +1,8 @@
 import { NgDocApi, NgDocCategory, NgDocPage } from '@ng-doc/core';
 import { ObjectLiteralExpression, SourceFile } from 'ts-morph';
 
-import { DeclarationEntry, Entry, MarkdownEntry } from './entry';
+import { DeclarationEntry, Entry } from './entry';
+import { MarkdownEntry } from './markdown-entry';
 
 export interface EntryMetadata<T extends Entry = Entry> {
   dir: string;

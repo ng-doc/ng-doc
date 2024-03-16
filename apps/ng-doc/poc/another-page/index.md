@@ -1,5 +1,6 @@
 ---
 title: Guide
+keyword: AnotherPage
 ---
 
 It's time to write some awesome docs!

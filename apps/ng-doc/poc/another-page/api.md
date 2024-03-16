@@ -2,6 +2,7 @@
 title: API
 route: api
 icon: api
+keyword: AnotherApiPage
 ---
 
 ## API

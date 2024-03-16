@@ -1,9 +1,8 @@
 import { asArray, NgDocPage } from '@ng-doc/core';
-import fs from 'fs';
-import matter from 'gray-matter';
 import path from 'path';
 
-import { EntryMetadata, MarkdownEntry, MarkdownFrontMatterData } from '../interfaces';
+import { EntryMetadata, MarkdownEntry } from '../interfaces';
+import { markdownFrontMatter } from './markdown-front-matter';
 
 /**
  *
@@ -14,22 +13,19 @@ export function createMarkdownMetadata(
 ): Array<EntryMetadata<MarkdownEntry>> {
   return asArray(parent.entry.mdFile).map((mdFile, order) => {
     const mdPath = path.join(parent.dir, mdFile);
-    const markdown = fs.readFileSync(mdPath, 'utf-8');
-    const { data, content } = matter(markdown) as unknown as {
-      data: MarkdownFrontMatterData;
-      content: string;
-    };
+    const dir = path.dirname(mdPath);
+    const dirName = path.basename(dir);
+    const { data } = markdownFrontMatter<MarkdownEntry>(mdPath);
     const outDir = path.join(parent.outDir, data.route ?? 'index');
 
     return {
       ...parent,
-      entry: {
-        metadata: data,
-        mdPath,
-        content,
-      },
-      order,
+      entry: data,
+      path: mdPath,
+      dir,
+      dirName,
       parent,
+      order,
       title: data.title ?? parent.title,
       route: data.route ?? '',
       outDir,
