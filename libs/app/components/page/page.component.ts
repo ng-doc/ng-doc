@@ -10,7 +10,7 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
-import { ActivatedRoute, Router, RouterOutlet, UrlTree } from '@angular/router';
+import { Router, RouterOutlet, UrlTree } from '@angular/router';
 import { NgDocRootPage } from '@ng-doc/app/classes/root-page';
 import { NgDocBreadcrumbComponent } from '@ng-doc/app/components/breadcrumb';
 import { NgDocTocComponent } from '@ng-doc/app/components/toc';
@@ -30,7 +30,6 @@ import {
   NgDocStringControlComponent,
   NgDocTypeAliasControlComponent,
 } from '@ng-doc/app/type-controls';
-import { isPresent } from '@ng-doc/core';
 import {
   DialogOutletComponent,
   NgDocButtonIconComponent,
@@ -78,9 +77,6 @@ export class NgDocPageComponent implements OnInit {
   @ViewChild('pageContainer', { read: ElementRef, static: true })
   pageContainer!: ElementRef<HTMLElement>;
 
-  @ViewChild('pageBreadcrumbs', { read: ViewContainerRef, static: true })
-  pageBreadcrumbs!: ViewContainerRef;
-
   @ViewChild('pageNavigation', { read: ViewContainerRef, static: true })
   pageNavigation!: ViewContainerRef;
 
@@ -96,19 +92,8 @@ export class NgDocPageComponent implements OnInit {
   protected renderer: Renderer2 = inject(Renderer2);
   protected router: Router = inject(Router);
 
-  private breadcrumbs: string[] = inject(ActivatedRoute)
-    .pathFromRoot.filter((route: ActivatedRoute) => !route.snapshot.url.length)
-    .map((route: ActivatedRoute) => route.snapshot.title)
-    .filter(isPresent);
-
   ngOnInit(): void {
     if (this.rootPage.pageType === 'guide') {
-      if (this.skeleton.breadcrumbs) {
-        createComponent(this.pageBreadcrumbs, this.skeleton.breadcrumbs, {
-          breadcrumbs: this.breadcrumbs,
-        });
-      }
-
       if (this.skeleton.navigation) {
         createComponent(this.pageNavigation, this.skeleton.navigation, this.navigationInputs());
       }

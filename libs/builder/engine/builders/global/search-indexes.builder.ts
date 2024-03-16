@@ -1,5 +1,6 @@
 import path from 'path';
 import { of } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 import { NgDocBuilderContext } from '../../../interfaces';
 import {
@@ -23,5 +24,9 @@ export function searchIndexesBuilder(context: NgDocBuilderContext): Builder<File
     })),
   );
 
-  return createBuilder([createSecondaryTrigger(IndexStore.changes())], () => builder, false);
+  return createBuilder(
+    [createSecondaryTrigger(IndexStore.changes().pipe(debounceTime(100)))],
+    () => builder,
+    false,
+  );
 }

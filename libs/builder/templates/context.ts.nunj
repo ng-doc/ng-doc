@@ -1,9 +1,9 @@
 // @ts-nocheck
 import {Provider} from '@angular/core';
-import {NG_DOC_CONTEXT} from '@ng-doc/app/tokens';
+import {NG_DOC_CONTEXT, NG_DOC_ROUTE_PREFIX} from '@ng-doc/app/tokens';
 
-export function provideNgDocContext(): Provider {
-    return {
+export function provideNgDocContext(): Provider[] {
+    return [{
         provide: NG_DOC_CONTEXT,
         useValue: {
             navigation: [
@@ -36,5 +36,8 @@ export function provideNgDocContext(): Provider {
                 {%- endfor %}
             ],
         }
-    };
+    }, {
+      provide: NG_DOC_ROUTE_PREFIX,
+      useValue: '{{ routePrefix }}'
+    }];
 }

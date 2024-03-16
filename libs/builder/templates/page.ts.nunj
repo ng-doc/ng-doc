@@ -30,7 +30,7 @@ const pageContent: string = `{{ content | toTemplateString }}`
       {%- endif %}
   ],
   providers: [
-    {provide: NgDocRootPage, useExisting: DynamicComponent},
+    {provide: NgDocRootPage, useExisting: PageComponent},
       {%- if playgrounds %}
     PLAYGROUND_PROVIDERS,
       {%- endif %}
@@ -39,8 +39,7 @@ const pageContent: string = `{{ content | toTemplateString }}`
       {%- endif %}
   ],
 })
-export class DynamicComponent extends NgDocRootPage {
-  readonly routePrefix: string = '{{ routePrefix }}';
+export class PageComponent extends NgDocRootPage {
   readonly pageType: NgDocPageType = '{{ pageType }}';
   readonly pageContent: string = pageContent;
     {%- if editSourceFileUrl %}
@@ -66,7 +65,7 @@ const routes: Routes = [{
   ...(isRoute(entry.route) ? entry.route : {}),
     {%- endif %}
   path: '',
-  component: DynamicComponent,
+  component: PageComponent,
   title: `{{ page.title | toTemplateString }}`,
 }]
 

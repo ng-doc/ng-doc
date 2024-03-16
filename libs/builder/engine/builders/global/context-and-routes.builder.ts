@@ -91,6 +91,7 @@ function contextBuilder(
         content: renderTemplate('./context.ts.nunj', {
           context: {
             entries: structuredDocs,
+            routePrefix: context.config.routePrefix,
           },
         }),
       };

@@ -6,11 +6,6 @@ import { NgDocPage, NgDocPageType } from '@ng-doc/core';
  */
 export abstract class NgDocRootPage {
   /**
-   * Route prefix
-   */
-  abstract readonly routePrefix?: string;
-
-  /**
    * The type of the page
    */
   abstract readonly pageType: NgDocPageType;

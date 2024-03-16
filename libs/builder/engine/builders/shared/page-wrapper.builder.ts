@@ -26,6 +26,12 @@ export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput | Fi
     tag,
     pageTemplateBuilders,
     async (...templates) => {
+      const headerContent = renderTemplate('./page-header.html.nunj', {
+        context: {
+          page: metadata.entry,
+        },
+      });
+
       return {
         filePath: metadata.outPath,
         content: renderTemplate('./page-wrapper.ts.nunj', {
@@ -33,6 +39,7 @@ export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput | Fi
             id: uid(),
             metadata,
             entries: getPageWrapperPages(metadata, templates),
+            headerContent,
           },
         }),
       } satisfies FileOutput;

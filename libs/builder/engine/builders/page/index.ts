@@ -31,7 +31,7 @@ export function pageBuilder(
     whenDone((page) => {
       const markdownMetadata = createMarkdownMetadata(page);
       const pageTemplateBuilders = markdownMetadata.map((metadata) =>
-        guideTemplateBuilder({ context, metadata, keyword: page.entry.keyword }),
+        guideTemplateBuilder({ context, metadata, keyword: metadata.entry.metadata.keyword }),
       );
 
       return merge(

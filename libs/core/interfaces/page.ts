@@ -9,6 +9,10 @@ import { NgDocCategory } from './category';
  */
 export interface NgDocPage extends NgDocBaseEntity {
   /**
+   * The page description that will be shown under the title
+   */
+  description?: string;
+  /**
    * Path to the page markdown file
    */
   mdFile: string | string[];
@@ -20,10 +24,6 @@ export interface NgDocPage extends NgDocBaseEntity {
    *  Render the page only for specific build configuration
    */
   onlyForTags?: string[];
-  /**
-   * Custom keyword that uses to create links to this page
-   */
-  keyword?: string;
   /**
    * Any custom data that you can provide for the page and use on it via `NgDocPage.data`
    */
@@ -47,12 +47,6 @@ export interface NgDocPage extends NgDocBaseEntity {
    * playground's name and value its playground configuration
    */
   playgrounds?: Record<string, NgDocPlaygroundConfig>;
-  /**
-   * List of paths from root of the project to the API files that should be shown on the page
-   * Example: `libs/app/components/code/code.component.ts#NgDocCodeComponent` - to show only `NgDocCodeComponent` API
-   * Example: `libs/app/components/code/code.component.ts` - to show all exported APIs from the file
-   */
-  api?: string[];
   /**
    * By default, the child routes of a page are shown in a fullscreen dialog.
    * Set disableFullscreenRoutes to false to handle them yourself with a <router-outlet />.

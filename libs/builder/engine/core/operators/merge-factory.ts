@@ -65,7 +65,7 @@ export function mergeFactory<TCacheData, A extends ReadonlyArray<BuilderState<un
         }
 
         return new BuilderDone(
-          tag,
+          value.tag,
           mapper(value.result as [...BuilderStateTuple<A>][number]),
           value.fromCache,
         );

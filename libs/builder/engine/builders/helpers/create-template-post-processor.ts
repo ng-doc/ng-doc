@@ -49,16 +49,15 @@ export function createTemplatePostProcessor<T>(
       const viewSourceFileUrl =
         context.config.repoConfig &&
         viewFileInRepoUrl(context.config.repoConfig, templatePath, lineNumber);
+      const indexes = await buildIndexes({
+        content,
+        title: metadata.title,
+        breadcrumbs: metadata.breadcrumbs(),
+        pageType,
+        route: metadata.absoluteRoute(),
+      });
 
-      removeIndexes = IndexStore.add(
-        ...(await buildIndexes({
-          content,
-          title: metadata.title,
-          breadcrumbs: metadata.breadcrumbs(),
-          pageType,
-          route: metadata.absoluteRoute(),
-        })),
-      );
+      removeIndexes = IndexStore.add(...indexes);
 
       return {
         filePath: metadata.outPath,
@@ -66,7 +65,6 @@ export function createTemplatePostProcessor<T>(
           context: {
             id: uid(),
             content,
-            routePrefix: context.config.routePrefix,
             page: metadata.entry,
             entryImportPath,
             editSourceFileUrl,

@@ -69,13 +69,11 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
   }
 
   override get keywords(): NgDocEntityKeyword[] {
-    const rootKeywords: NgDocEntityKeyword[] = [...asArray(this.target?.keyword)].map(
-      (key: string) => ({
-        key: `*${key}`,
-        title: this.title,
-        path: this.fullRoute,
-      }),
-    );
+    const rootKeywords: NgDocEntityKeyword[] = [...asArray('')].map((key: string) => ({
+      key: `*${key}`,
+      title: this.title,
+      path: this.fullRoute,
+    }));
 
     return [
       ...rootKeywords,

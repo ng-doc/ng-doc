@@ -2,22 +2,24 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {Routes} from '@angular/router';
 import {NgDocPageWrapperComponent} from '@ng-doc/app';
 
+const headerContent: string = `{{ headerContent | toTemplateString }}`
 
 @Component({
   selector: 'ng-doc-page-wrapper-{{ id }}',
-  template: `<ng-doc-page-wrapper [routes]="routes"></ng-doc-page-wrapper>`,
+  template: `<ng-doc-page-wrapper [routes]="routes" [headerContent]="headerContent"></ng-doc-page-wrapper>`,
   imports: [NgDocPageWrapperComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
 })
-export class DynamicComponent {
+export class PageWrapperComponent {
     routes = routes[0].children!;
+    headerContent = headerContent;
 }
 
 
 const routes: Routes = [{
   path: '',
-  component: DynamicComponent,
+  component: PageWrapperComponent,
   title: `{{ metadata.title | toTemplateString }}`,
   children: [
     {%- for importPath, entry in entries  %}

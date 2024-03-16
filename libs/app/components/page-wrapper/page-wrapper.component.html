@@ -1,3 +1,7 @@
+<ng-container #pageBreadcrumbs></ng-container>
+
+<header [ngDocPageProcessor]="headerContent"></header>
+
 @if (routes.length > 1) {
   <ng-doc-tab-routes-group>
     @for (route of routes; track route) {
