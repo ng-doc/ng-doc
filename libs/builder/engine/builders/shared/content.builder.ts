@@ -2,9 +2,11 @@ import {
   createBuilder,
   createMainTrigger,
   createSecondaryTrigger,
+  extractKeywords,
   isBuilderDone,
   onKeywordsTouch,
   PageEntry,
+  processHtml,
 } from '@ng-doc/builder';
 import { NgDocEntityAnchor, NgDocKeyword, NgDocKeywordType } from '@ng-doc/core';
 import { finalize, of } from 'rxjs';
@@ -18,13 +20,11 @@ import {
   CacheStrategy,
   keywordsStore,
   runBuild,
-  sequentialJobs,
   touchKeywords,
   watchFile,
 } from '../../core';
 import { onDependenciesChange } from '../../core/triggers/on-dependencies-change';
 import { EntryMetadata } from '../interfaces';
-import { extractKeywordsJob, processHtmlJob } from '../shared';
 
 interface Config {
   tag: string;
@@ -89,16 +89,15 @@ export function contentBuilder(config: Config): Builder<string> {
           dependencies.clear();
           usedKeywords.clear();
 
-          const content = await getContent(dependencies);
+          let content = await getContent(dependencies);
 
-          return await sequentialJobs(content, [
-            processHtmlJob({
-              headings: context.config.guide?.anchorHeadings,
-              route: metadata.absoluteRoute(),
-              addAnchor: anchors.push.bind(anchors),
-            }),
-            extractKeywordsJob({ addUsedKeyword: usedKeywords.add.bind(usedKeywords) }),
-          ]);
+          content = await processHtml(content, {
+            headings: context.config.guide?.anchorHeadings,
+            route: metadata.absoluteRoute(),
+            addAnchor: anchors.push.bind(anchors),
+          });
+
+          return extractKeywords(content, { addUsedKeyword: usedKeywords.add.bind(usedKeywords) });
         } catch (cause) {
           throw new Error(`Error while building entry (${metadata.path})`, {
             cause,

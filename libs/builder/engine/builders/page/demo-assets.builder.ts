@@ -2,10 +2,10 @@ import {
   CacheStrategy,
   createBuilder,
   createMainTrigger,
-  extractKeywordsJob,
+  extractKeywords,
   NgDocBuilderContext,
   NgDocComponentAsset,
-  processHtmlJob,
+  processHtml,
   renderTemplate,
   runBuild,
 } from '@ng-doc/builder';
@@ -69,12 +69,12 @@ export function demoAssetsBuilder(config: Config): Builder<FileOutput> {
 
         for (const [, value] of Object.entries(demoAssets)) {
           for (const asset of value) {
-            asset.code = await processHtmlJob({
+            asset.code = await processHtml(asset.code, {
               addAnchor: () => {},
-            })(asset.code);
-            asset.code = await extractKeywordsJob({
+            });
+            asset.code = await extractKeywords(asset.code, {
               addUsedKeyword: usedKeywords.add.bind(usedKeywords),
-            })(asset.code);
+            });
           }
         }
 

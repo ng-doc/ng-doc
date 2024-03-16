@@ -9,7 +9,6 @@ export * from './handle-cache-strategy';
 export * from './join-builder-states';
 export * from './merge-factory';
 export * from './run-build';
-export * from './sequential-jobs';
 export * from './stack';
 export * from './when-builders-done';
 export * from './when-done';

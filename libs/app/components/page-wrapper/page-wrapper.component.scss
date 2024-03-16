@@ -6,6 +6,12 @@
 
   --ng-doc-toc-margin: calc(var(--ng-doc-base-gutter) * 5);
 
+  header ::ng-deep {
+    h1 {
+      margin-top: 0;
+    }
+  }
+
   ng-doc-tab-routes-group {
     position: sticky !important;
     top: var(--ng-doc-navbar-height);
