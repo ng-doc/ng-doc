@@ -37,6 +37,7 @@ export function pageBuilder(
       return merge(
         pageWrapperBuilder({
           tag: GUIDE_PAGE_WRAPPER_BUILDER_TAG,
+          context,
           metadata: page,
           pageTemplateBuilders,
         }),

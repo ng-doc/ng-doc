@@ -1,4 +1,4 @@
-import { createImportPath } from '@ng-doc/builder';
+import { createImportPath, NgDocBuilderContext } from '@ng-doc/builder';
 import { uid } from '@ng-doc/core';
 
 import { AsyncFileOutput, Builder, CacheStrategy, FileOutput, mergeFactory } from '../../core';
@@ -7,6 +7,7 @@ import { EntryMetadata, FileEntry, TemplateBuilderOutput } from '../interfaces';
 
 interface Config {
   tag: string;
+  context: NgDocBuilderContext;
   metadata: EntryMetadata<FileEntry>;
   pageTemplateBuilders: Array<Builder<TemplateBuilderOutput>>;
 }
@@ -16,7 +17,7 @@ interface Config {
  * @param config
  */
 export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput | FileOutput> {
-  const { tag, metadata, pageTemplateBuilders } = config;
+  const { tag, context, metadata, pageTemplateBuilders } = config;
   const cacheStrategy = {
     id: `${metadata.path}#PageWrapper`,
     action: 'skip',
@@ -26,7 +27,9 @@ export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput | Fi
     tag,
     pageTemplateBuilders,
     async (...templates) => {
-      const headerContent = renderTemplate('./page-header.html.nunj', {
+      const headerTemplatePath = context.config.guide?.headerTemplate;
+      const headerContent = renderTemplate(headerTemplatePath ?? './page-header.html.nunj', {
+        scope: headerTemplatePath ? context.context.workspaceRoot : undefined,
         context: {
           page: metadata.entry,
         },

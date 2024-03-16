@@ -9,3 +9,5 @@
   file.
 - added `description` field to the `NgDocPage` interface, it is used to specify the description of the
   doc page, and will be displayed in the doc page.
+- added `headerTemplate` property to guides configuration, it is used to specify the header template
+  for the guide page that can be used to customize header for each guide page.
