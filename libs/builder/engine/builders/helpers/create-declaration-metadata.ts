@@ -35,6 +35,7 @@ export function createDeclarationMetadata(
     ...entry,
     dir,
     dirName,
+    path: declaration.getSourceFile().getFilePath(),
     route,
     outDir,
     parent: entry,

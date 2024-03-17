@@ -3,14 +3,14 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {Routes} from '@angular/router';
 import {NgDocDemoAssets, NgDocPageComponent, NgDocRootPage} from '@ng-doc/app';
 import {isRoute, NgDocPage, NgDocPageType} from '@ng-doc/core';
-{%- if importEntry %}
-import metadata from '{{ entryImportPath }}';
+{%- if entryPath %}
+import entry from '{{ metadata.outDir | createImportPath(entryPath) }}';
 {%- endif %}
-{%- if playgrounds %}
-import {PLAYGROUND_COMPONENTS, PLAYGROUND_PROVIDERS} from './playgrounds';
+{%- if playgroundsPath %}
+import {PLAYGROUND_COMPONENTS, PLAYGROUND_PROVIDERS} from '{{ metadata.outDir | createImportPath(playgroundsPath) }}';
 {%- endif %}
-{%- if demoAssets %}
-import demoAssets from './demo-assets';
+{%- if demoAssetsPath %}
+import demoAssets from '{{ metadata.outDir | createImportPath(demoAssetsPath) }}';
 {%- endif %}
 
 const pageContent: string = `{{ content | toTemplateString }}`
@@ -22,10 +22,10 @@ const pageContent: string = `{{ content | toTemplateString }}`
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgDocPageComponent,
-      {%- if importEntry and page.hasImports %}
+      {%- if entryPath and entryHasImports %}
     ...entry.imports,
       {%- endif %}
-      {%- if playgrounds %}
+      {%- if playgroundsPath %}
     ...PLAYGROUND_COMPONENTS,
       {%- endif %}
   ],
@@ -34,7 +34,7 @@ const pageContent: string = `{{ content | toTemplateString }}`
       {%- if playgrounds %}
     PLAYGROUND_PROVIDERS,
       {%- endif %}
-      {%- if importEntry %}
+      {%- if entryPath %}
     (entry.providers ?? []),
       {%- endif %}
   ],
@@ -48,10 +48,10 @@ export class PageComponent extends NgDocRootPage {
     {%- if viewSourceFileUrl %}
   readonly viewSourceFileUrl: string = '{{ viewSourceFileUrl }}';
     {%- endif -%}
-    {%- if importEntry %}
+    {%- if entryPath %}
   readonly page?: NgDocPage = entry;
     {%- endif %}
-    {%- if demoAssets %}
+    {%- if demoAssetsPath %}
   readonly demoAssets: NgDocDemoAssets = demoAssets;
     {%- endif %}
 
@@ -61,12 +61,12 @@ export class PageComponent extends NgDocRootPage {
 }
 
 const routes: Routes = [{
-    {%- if importEntry %}
+    {%- if entryPath %}
   ...(isRoute(entry.route) ? entry.route : {}),
     {%- endif %}
   path: '',
   component: PageComponent,
-  title: `{{ page.title | toTemplateString }}`,
+  title: `{{ metadata.title | toTemplateString }}`,
 }]
 
 export default routes;

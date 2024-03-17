@@ -63,7 +63,6 @@ export function apiPageTemplateBuilder(config: Config): Builder<AsyncFileOutput>
     {
       context,
       metadata: metadata,
-      templatePath: declPath,
       pageType: 'api',
       lineNumber: declaration.getStartLineNumber(),
     },

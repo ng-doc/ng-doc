@@ -81,7 +81,15 @@ export function guideTemplateBuilder(config: Config): Builder<TemplateBuilderOut
           },
           cacheStrategy,
         ),
-      { context, metadata, pageType: 'guide', templatePath: mdPath },
+      {
+        context,
+        metadata,
+        pageType: 'guide',
+        entryPath: pageMetadata.path,
+        entryHasImports: !!pageMetadata.objectExpression.getProperty('imports'),
+        demoAssetsPath: path.join(pageMetadata.outDir, 'demo-assets.ts'),
+        playgroundsPath: path.join(pageMetadata.outDir, 'playgrounds.ts'),
+      },
     );
   }).pipe(takeUntil(watchFile(mdPath, 'delete')));
 }
