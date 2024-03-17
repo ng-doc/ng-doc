@@ -4,6 +4,7 @@ import {
   createSecondaryTrigger,
   extractKeywords,
   isBuilderDone,
+  keywordTitle,
   onKeywordsTouch,
   PageEntry,
   processHtml,
@@ -148,9 +149,10 @@ function getKeywords(
   if (!mainKeyword) return [];
 
   const key = type === 'guide' ? `*${mainKeyword}` : mainKeyword;
+  const title = keywordTitle(entry);
 
   const rootKeyword: NgDocKeyword = {
-    title: entry.title,
+    title,
     path: entry.absoluteRoute(),
     type,
   };
@@ -158,7 +160,7 @@ function getKeywords(
   return [
     [keywordKey(key), rootKeyword],
     ...anchors.map((anchor) => {
-      const entityKeyword = buildEntityKeyword(key, entry.title, entry.absoluteRoute(), anchor);
+      const entityKeyword = buildEntityKeyword(key, title, entry.absoluteRoute(), anchor);
 
       return [
         keywordKey(entityKeyword.key),

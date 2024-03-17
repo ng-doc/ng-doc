@@ -1,6 +1,8 @@
 import { NgDocApi, NgDocCategory, NgDocPage } from '@ng-doc/core';
+import { minimatch } from 'minimatch';
 import { ObjectLiteralExpression, SourceFile } from 'ts-morph';
 
+import { PAGE_PATTERN } from '../../variables';
 import { DeclarationEntry, Entry } from './entry';
 import { MarkdownEntry } from './markdown-entry';
 
@@ -27,3 +29,11 @@ export type ParentEntryMetadata<T extends Entry> = T extends MarkdownEntry
   : T extends DeclarationEntry
     ? EntryMetadata<NgDocApi>
     : EntryMetadata<NgDocCategory> | undefined;
+
+/**
+ *
+ * @param entry
+ */
+export function isPageEntryMetadata(entry: EntryMetadata): entry is EntryMetadata<NgDocPage> {
+  return minimatch(entry.path, PAGE_PATTERN);
+}
