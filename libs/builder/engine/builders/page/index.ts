@@ -1,9 +1,8 @@
-import { NgDocPage } from '@ng-doc/core';
+import { asArray, NgDocPage } from '@ng-doc/core';
 import { merge, takeUntil } from 'rxjs';
 
 import { NgDocBuilderContext } from '../../../interfaces';
 import { AsyncFileOutput, Builder, FileOutput, watchFile, whenDone } from '../../core';
-import { createMarkdownMetadata } from '../helpers';
 import { entryBuilder } from '../shared';
 import { pageWrapperBuilder } from '../shared/page-wrapper.builder';
 import { demoAssetsBuilder } from './demo-assets.builder';
@@ -29,9 +28,8 @@ export function pageBuilder(
     entryPath: pagePath,
   }).pipe(
     whenDone((page) => {
-      const markdownMetadata = createMarkdownMetadata(page);
-      const pageTemplateBuilders = markdownMetadata.map((metadata) =>
-        guideTemplateBuilder({ context, metadata, keyword: metadata.entry.keyword }),
+      const pageTemplateBuilders = asArray(page.entry.mdFile).map((mdFile) =>
+        guideTemplateBuilder({ context, pageMetadata: page, mdFile }),
       );
 
       return merge(

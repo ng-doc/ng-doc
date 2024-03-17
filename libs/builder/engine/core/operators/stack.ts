@@ -1,6 +1,7 @@
 import { isPresent } from '@ng-doc/core';
 import {
   filter,
+  finalize,
   map,
   merge,
   Observable,
@@ -41,11 +42,10 @@ export function addToStack<T>(tag: string): OperatorFunction<BuilderState<T>, Bu
 
           STACK_TICK.next();
         },
-        complete: () => {
-          tagStack.delete(id);
-
-          STACK_TICK.next();
-        },
+      }),
+      finalize(() => {
+        tagStack.delete(id);
+        STACK_TICK.next();
       }),
     );
   };
