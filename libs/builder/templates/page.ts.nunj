@@ -31,7 +31,7 @@ const pageContent: string = `{{ content | toTemplateString }}`
   ],
   providers: [
     {provide: NgDocRootPage, useExisting: PageComponent},
-      {%- if playgrounds %}
+      {%- if playgroundsPath %}
     PLAYGROUND_PROVIDERS,
       {%- endif %}
       {%- if entryPath %}

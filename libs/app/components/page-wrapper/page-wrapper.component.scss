@@ -6,6 +6,11 @@
 
   --ng-doc-toc-margin: calc(var(--ng-doc-base-gutter) * 5);
 
+  .ng-doc-page-wrapper {
+    width: 100%;
+    overflow: hidden;
+  }
+
   header ::ng-deep {
     h1 {
       margin-top: 0;
