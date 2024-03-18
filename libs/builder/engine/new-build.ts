@@ -8,7 +8,7 @@ import {
   whenStackIsEmpty,
 } from '@ng-doc/builder';
 import { from, merge, Observable, switchMap } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { debounceTime, map, tap } from 'rxjs/operators';
 
 import { NgDocBuilderContext } from '../interfaces';
 import { globalBuilders } from './builders/global';
@@ -57,9 +57,10 @@ export function newBuild(context: NgDocBuilderContext): Observable<void> {
         isBuilderDone(output) ? output.result.filePath : output.error,
       );
     }),
+    debounceTime(0),
     map(() => void 0),
     tap(() => {
-      // console.timeEnd('build');
+      console.timeEnd('build');
     }),
     // filter(() => false),
   );
