@@ -5,6 +5,6 @@
 {% block overview %}
     <section>
         <h2>Presentation</h2>
-        {{ codeMacro.render(api | variablePresentation, "typescript", false) }}
+        {{ codeMacro.render(declaration | variablePresentation, "typescript", false) }}
     </section>
 {% endblock %}

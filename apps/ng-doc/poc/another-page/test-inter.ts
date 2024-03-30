@@ -2,6 +2,9 @@ class Level1 {
   name: string = '';
 }
 
+/**
+ * MyClass description
+ */
 export class MyClass extends Level1 {
   myProp = 'myProp';
 
@@ -18,6 +21,9 @@ export class MyClass extends Level1 {
   }
 }
 
+/**
+ * MyClass description
+ */
 export interface MyInterface extends Te {
   myProp: string;
 
@@ -31,16 +37,22 @@ export interface Te {
   haha: number;
 }
 
+/**
+ * MyClass
+ */
 export enum MyEnum {
   value1,
   value2,
   value3 = 'value3',
 }
 
-export type MyType = {
+/**
+ * MyClass description
+ */
+export interface MyType {
   prop1: string;
   prop2: number;
-};
+}
 
 /**
  * My function
@@ -51,4 +63,7 @@ export function myFunction(param1: string, param2: number): void {
   console.log('myFunction');
 }
 
+/**
+ * MyClass description
+ */
 export const myVar = 'myVar';

@@ -4,6 +4,7 @@ import {
   entriesEmitter,
   isBuilderDone,
   loadGlobalKeywords,
+  printBuildProgress,
   setColdStartFalse,
   whenStackIsEmpty,
 } from '@ng-doc/builder';
@@ -11,6 +12,7 @@ import { from, merge, Observable, switchMap } from 'rxjs';
 import { debounceTime, map, tap } from 'rxjs/operators';
 
 import { NgDocBuilderContext } from '../interfaces';
+import { progress } from '../operators';
 import { globalBuilders } from './builders/global';
 import { resolveAsyncFileOutputs } from './core/operators/resolve-async-file-outputs';
 
@@ -32,12 +34,10 @@ export function newBuild(context: NgDocBuilderContext): Observable<void> {
 
   return emitter.pipe(
     tap((output) => {
-      // @ts-expect-error develop
-      console.log('preStack', output.tag, output.state, output.result?.filePath);
-      if (output.state === 'error') {
-        console.error(output.error);
-      }
-
+      // console .log('preStack', output.tag, output.state, output.result?.filePath);
+      // if (output.state === 'error') {
+      //   console.error(output.error);
+      // }
       // print all tags from STACK that are not empty
       // for (const [tag, stack] of STACK) {
       //   if (stack.size) {
@@ -45,6 +45,7 @@ export function newBuild(context: NgDocBuilderContext): Observable<void> {
       //   }
       // }
     }),
+    printBuildProgress(),
     whenStackIsEmpty(),
     resolveAsyncFileOutputs(),
     emitFileOutput(),
@@ -62,6 +63,7 @@ export function newBuild(context: NgDocBuilderContext): Observable<void> {
     tap(() => {
       console.timeEnd('build');
     }),
+    progress(),
     // filter(() => false),
-  );
+  ) as Observable<void>;
 }

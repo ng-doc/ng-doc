@@ -1,5 +1,4 @@
 export * from './angular';
-export * from './api';
 export * from './build-entity-keyword';
 export * from './build-file-assets';
 export * from './build-file-entity';

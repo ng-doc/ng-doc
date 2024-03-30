@@ -7,17 +7,24 @@
 {% import "helpers/accessors.html.nunj" as accessorsMacro %}
 {% import "helpers/modifier.html.nunj" as modifierMacro %}
 
+{% block modifier %}
+    {{ modifierMacro.render('abstract') if declaration.isAbstract() }}
+{% endblock %}
+
 {% block details %}
-    {%- if api.extends or api.implements.length %}
+    {% set extends = declaration.getExtends() %}
+    {% set implements = declaration.getImplements() %}
+
+    {% if extends or implements.length %}
         <div class="ng-doc-header-details" indexable="false">
-            {%- if api.extends %}
+            {% if extends %}
                 <span class="ng-doc-header-details-label">Extends</span>
-                {{ typeMacro.render(api.extends) }}
+                {{ typeMacro.type(extends) }}
             {%- endif %}
-            {%- if api.implements.length %}
+            {% if implements.length %}
                 <span class="ng-doc-header-details-label">Implements</span>
-                {%- for i in api.implements -%}
-                    {{ typeMacro.render(i) }}
+                {%- for i in implements -%}
+                    {{ typeMacro.type(i) }}
                 {%- endfor %}
             {%- endif %}
         </div>
@@ -25,6 +32,19 @@
 {% endblock %}
 
 {% block overview %}
+    {%- set constructors = declaration.getConstructors() | filterByScope("public") | excludeByTsDocsTags('internal') -%}
+    {%- set allProperties = declaration | getClassProperties | excludeByTsDocsTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
+    {%- set allMethods = declaration | getClassMethods | excludeByTsDocsTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
+    {%- set allAccessors = declaration | getClassAccessors | excludeByTsDocsTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
+
+    {%- set staticProperties = allProperties | filterByStatic(true) -%}
+    {%- set staticAccessors = allAccessors | filterByStatic(true) -%}
+    {%- set staticMethods = allMethods | filterByStatic(true) -%}
+    {%- set properties = allProperties | filterByStatic(false) -%}
+    {%- set accessors = allAccessors | filterByStatic(false) -%}
+    {%- set getAccessors = declaration.getGetAccessors() | filterByStatic(false) -%}
+    {%- set methods = allMethods | filterByStatic(false) -%}
+
     {% if constructors.length -%}
         <section>
             <h2>Constructor</h2>
@@ -32,45 +52,45 @@
         </section>
     {%- endif %}
 
-    {%- if api.staticProperties.length %}
+    {% if staticProperties.length -%}
         <section>
             <h2>Static Properties</h2>
-            {{ propertiesMacro.render(api.staticProperties) }}
+            {{ propertiesMacro.render(staticProperties, declaration) }}
         </section>
-    {% endif %}
+    {%- endif %}
 
-    {%- if api.properties.length %}
+    {% if properties.length -%}
         <section>
             <h2>Properties</h2>
-            {{ propertiesMacro.render(api.properties) }}
+            {{ propertiesMacro.render(properties, declaration) }}
         </section>
-    {% endif %}
+    {%- endif %}
 
-    {%- if api.staticAccessors.length %}
+    {% if staticAccessors.length -%}
         <section>
             <h2>Static Accessors</h2>
-            {{ accessorsMacro.render(api.staticAccessors) }}
+            {{ accessorsMacro.render(staticAccessors, declaration) }}
         </section>
-    {% endif %}
+    {%- endif %}
 
-    {%- if api.accessors.length %}
+    {% if accessors.length -%}
         <section>
             <h2>Accessors</h2>
-            {{ accessorsMacro.render(api.accessors) }}
+            {{ accessorsMacro.render(accessors, declaration) }}
         </section>
-    {% endif %}
+    {%- endif %}
 
-    {%- if api.staticMethods.length %}
+    {% if staticMethods.length -%}
         <section>
             <h2>Static Methods</h2>
-            {{ methodsMacro.render(api.staticMethods) }}
+            {{ methodsMacro.render(staticMethods, declaration) }}
         </section>
-    {% endif %}
+    {%- endif %}
 
-    {%- if api.methods.length %}
+    {% if methods.length -%}
         <section>
             <h2>Methods</h2>
-            {{ methodsMacro.render(api.methods) }}
+            {{ methodsMacro.render(methods, declaration) }}
         </section>
-    {% endif %}
+    {%- endif %}
 {% endblock %}

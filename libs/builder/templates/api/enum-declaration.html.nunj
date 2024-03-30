@@ -3,10 +3,12 @@
 {% import "helpers/members.html.nunj" as membersMacro %}
 
 {% block overview %}
-    {% if api.members.length -%}
+    {%- set members = declaration.getMembers() -%}
+
+    {% if members.length -%}
         <section>
             <h2>Members</h2>
-            {{ membersMacro.render(api.members) }}
+            {{ membersMacro.render(members) }}
         </section>
     {%- endif %}
 {% endblock %}

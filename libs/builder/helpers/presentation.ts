@@ -1,27 +1,35 @@
 import { isPresent } from '@ng-doc/core';
-
-import { FunctionApi, TypeAliasApi, VariableApi } from './api';
 import {
-  ConstructorApi,
-  GetAccessorApi,
-  MethodApi,
-  ParameterApi,
-  SetAccessorApi,
-} from './api/mappers';
+  AccessorDeclaration,
+  ConstructorDeclaration,
+  DecoratableNode,
+  Decorator,
+  FunctionDeclaration,
+  MethodDeclaration,
+  Node,
+  ParameterDeclaration,
+  ReadonlyableNode,
+  Scope,
+  ScopeableNode,
+  TypeAliasDeclaration,
+  VariableDeclaration,
+} from 'ts-morph';
+
 import { formatCode } from './format-code';
+import { displayReturnType, displayType } from './typescript';
 
 /**
  *
  * @param constructor
  */
-export function constructorPresentation(constructor: ConstructorApi): string {
-  const parameters: string = constructor.parameters.map(parameterPresentation).join(', \n	');
+export function constructorPresentation(constructor: ConstructorDeclaration): string {
+  const parameters: string = constructor.getParameters().map(parameterPresentation).join(', \n	');
 
   const presentation: string =
     [
       scopePresentation(constructor),
       `constructor(\n	${parameters}\n):`,
-      `${constructor.returnType};`,
+      displayReturnType(constructor),
     ]
       .filter(isPresent)
       .join(' ') + ';';
@@ -32,18 +40,19 @@ export function constructorPresentation(constructor: ConstructorApi): string {
 /**
  *
  * @param accessor
- * @param type
  */
-export function accessorPresentation(accessor: GetAccessorApi | SetAccessorApi): string {
-  const parameters: string = (accessor.kind === 'set' ? accessor.parameters : [])
-    .map(parameterPresentation)
-    .join(', ');
-  const header: string =
-    accessor.kind === 'get' ? `${accessor.name}():` : `${accessor.name}(${parameters})`;
-  const returnType: string = accessor.kind === 'get' ? accessor.returnType : '';
+export function accessorPresentation(accessor: AccessorDeclaration): string {
+  const parameters: string = accessor.getParameters().map(parameterPresentation).join(', ');
+  const prefix: string = Node.isGetAccessorDeclaration(accessor) ? 'get' : 'set';
+  const header: string = Node.isGetAccessorDeclaration(accessor)
+    ? `${accessor.getName()}():`
+    : `${accessor.getName()}(${parameters})`;
+  const returnType: string = Node.isGetAccessorDeclaration(accessor)
+    ? displayReturnType(accessor)
+    : '';
 
   const presentation: string =
-    [staticPresentation(accessor), scopePresentation(accessor), accessor.kind, header, returnType]
+    [staticPresentation(accessor), scopePresentation(accessor), prefix, header, returnType]
       .filter(isPresent)
       .join(' ') + ';';
 
@@ -54,15 +63,15 @@ export function accessorPresentation(accessor: GetAccessorApi | SetAccessorApi):
  *
  * @param method
  */
-export function methodPresentation(method: MethodApi): string {
-  const parameters: string = method.parameters.map(parameterPresentation).join(', ');
+export function methodPresentation(method: MethodDeclaration): string {
+  const parameters: string = method.getParameters().map(parameterPresentation).join(', ');
 
   const presentation: string = [
     memberModifiers(method),
     staticPresentation(method),
     scopePresentation(method),
-    `${method.name}(${parameters}):`,
-    `${method.returnType};`,
+    `${method.getName()}(${parameters}):`,
+    `${displayReturnType(method)};`,
   ]
     .filter(isPresent)
     .join(' ');
@@ -72,12 +81,16 @@ export function methodPresentation(method: MethodApi): string {
 
 /**
  *
- * @param fn
+ * @param fnc
  */
-export function functionPresentation(fn: FunctionApi): string {
-  const parameters: string = fn.parameters.map(parameterPresentation).join(', ');
+export function functionPresentation(fnc: FunctionDeclaration): string {
+  const parameters: string = fnc.getParameters().map(parameterPresentation).join(', ');
 
-  const presentation: string = ['function', `${fn.name}(${parameters}):`, `${fn.returnType};`]
+  const presentation: string = [
+    'function',
+    `${fnc.getName()}(${parameters}):`,
+    `${displayReturnType(fnc)};`,
+  ]
     .filter(isPresent)
     .join(' ');
 
@@ -88,8 +101,8 @@ export function functionPresentation(fn: FunctionApi): string {
  *
  * @param typeAlias
  */
-export function typeAliasPresentation(typeAlias: TypeAliasApi): string {
-  const presentation: string = `type ${typeAlias.name} = ${typeAlias.type};`;
+export function typeAliasPresentation(typeAlias: TypeAliasDeclaration): string {
+  const presentation: string = `type ${typeAlias.getName()} = ${displayType(typeAlias)};`;
 
   return formatCode(presentation, 'TypeScript');
 }
@@ -98,8 +111,12 @@ export function typeAliasPresentation(typeAlias: TypeAliasApi): string {
  *
  * @param variable
  */
-export function variablePresentation(variable: VariableApi): string {
-  const presentation: string = [variable.kind, `${variable.name}:`, `${variable.type};`]
+export function variablePresentation(variable: VariableDeclaration): string {
+  const presentation: string = [
+    variable.getVariableStatement()?.getDeclarationKind() ?? 'const',
+    `${variable.getName()}:`,
+    `${displayType(variable)};`,
+  ]
     .filter(isPresent)
     .join(' ');
 
@@ -110,13 +127,14 @@ export function variablePresentation(variable: VariableApi): string {
  *
  * @param parameter
  */
-function parameterPresentation(parameter: ParameterApi): string {
+function parameterPresentation(parameter: ParameterDeclaration): string {
   return [
-    decoratorsPresentation(parameter.decorators),
+    decoratorsPresentation(parameter),
+    scopePresentation(parameter),
     modPresentation(parameter),
-    parameter.name + (parameter.isOptional ? '?' : '') + ':',
-    parameter.type,
-    parameter.initializer ? `= ${parameter.initializer ?? ''}` : '',
+    parameter.getName() + (parameter.hasQuestionToken() ? '?' : '') + ':',
+    displayType(parameter),
+    parameter.getInitializer() ? `= ${parameter.getInitializer()?.getText() ?? ''}` : '',
   ]
     .filter(isPresent)
     .join(' ');
@@ -125,29 +143,28 @@ function parameterPresentation(parameter: ParameterApi): string {
 /**
  *
  * @param node
- * @param node.isProtected
  */
-function scopePresentation(node: { isProtected: boolean }): string {
-  return node.isProtected ? 'protected' : '';
+function scopePresentation(node: ScopeableNode): string {
+  return (node.getScope && node.getScope()?.replace(Scope.Public, '')) ?? '';
 }
 
 /**
  *
  * @param node
- * @param node.isStatic
  */
-function staticPresentation(node: { isStatic: boolean }): string {
-  return node.isStatic ? 'static' : '';
+function staticPresentation(node: Node): string {
+  return Node.isStaticable(node) && node.isStatic() ? 'static' : '';
 }
 
 /**
  *
  * @param member
- * @param member.isAbstract
- * @param member.isAsync
  */
-function memberModifiers(member: { isAbstract: boolean; isAsync: boolean }): string {
-  return [(member.isAbstract && 'abstract') || '', (member.isAsync && 'async') || '']
+function memberModifiers(member: Node): string {
+  return [
+    (Node.isAbstractable(member) && member.isAbstract() && 'abstract') || '',
+    (Node.isAsyncable(member) && member.isAsync() && 'async') || '',
+  ]
     .filter(isPresent)
     .join(' ');
 }
@@ -155,16 +172,18 @@ function memberModifiers(member: { isAbstract: boolean; isAsync: boolean }): str
 /**
  *
  * @param node
- * @param node.isReadonly
  */
-function modPresentation(node: { isReadonly: boolean }): string {
-  return (node.isReadonly && 'readonly') || '';
+function modPresentation(node: ReadonlyableNode): string {
+  return (node.isReadonly && node.isReadonly() && 'readonly') || '';
 }
 
 /**
  *
- * @param decorators
+ * @param node
  */
-function decoratorsPresentation(decorators: string[]): string {
-  return decorators.map((d) => `@${d}()`).join(' ');
+function decoratorsPresentation(node: DecoratableNode): string {
+  return node
+    .getDecorators()
+    .map((d: Decorator) => `@${d.getName()}()`)
+    .join(' ');
 }

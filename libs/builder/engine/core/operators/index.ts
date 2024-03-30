@@ -8,6 +8,7 @@ export * from './global-trigger';
 export * from './handle-cache-strategy';
 export * from './join-builder-states';
 export * from './merge-factory';
+export * from './print-build-progress';
 export * from './run-build';
 export * from './stack';
 export * from './when-builders-done';

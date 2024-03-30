@@ -1,7 +1,7 @@
 import { renderTemplate } from '@ng-doc/builder';
 import { kebabCase } from '@ng-doc/core';
+import { Node } from 'ts-morph';
 
-import { getApiForDeclaration } from '../../helpers/api/get-api-for-declaration';
 import { NgDocAction } from '../../types';
 
 /**
@@ -34,13 +34,15 @@ export function apiAction(declarationPath: string): NgDocAction {
       throw new Error(`NgDocAction.api error: Declaration not found: ${declarationPath}`);
     }
 
-    const api = getApiForDeclaration(declaration);
     const kindName = kebabCase(declaration.getKindName());
 
     return {
       output: renderTemplate(`./api/${kindName}.html.nunj`, {
         context: {
-          api,
+          declaration,
+          docNode: Node.isVariableDeclaration(declaration)
+            ? declaration.getVariableStatement()
+            : declaration,
         },
       }),
       dependencies: [sourceFilePath],

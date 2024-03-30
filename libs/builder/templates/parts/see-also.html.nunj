@@ -1,0 +1,23 @@
+{%- set seeDocs = docNode | extractSeeDocs %}
+
+{% set derivedClasses %}
+    {%- if declaration.getDerivedClasses %}
+        {%- set derived = declaration.getDerivedClasses() %}
+        {%- for cls in derived %}
+            <li><code>{{ cls.getName() }}</code> (extended)</li>
+        {%- endfor %}
+    {%- endif %}
+{% endset %}
+
+{%- if seeDocs.length or derivedClasses | trim %}
+    <section indexable="false">
+        <h2>See Also</h2>
+
+        <ul class="ng-doc-see-also">
+            {{ derivedClasses }}
+            {%- for see in seeDocs %}
+                <li>{{ see }}</li>
+            {%- endfor %}
+        </ul>
+    </section>
+{%- endif %}

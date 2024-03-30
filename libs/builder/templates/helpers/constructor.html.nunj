@@ -1,15 +1,17 @@
 {% import "helpers/code.html.nunj" as codeMacro %}
 {% import "helpers/parameters.html.nunj" as parametersMacro %}
 {% import "helpers/no-content.html.nunj" as noContentMacro %}
-{% import "helpers/docs-description.html.nunj" as docsDescription %}
 
 {% macro render(constructor) %}
+    {% set parameters = constructor.getParameters() %}
     <div class="ng-doc-table-wrapper">
         <table class="ng-doc-method-table">
             <tbody>
             <tr>
                 <td>
-                    {{ docsDescription.render(constructor.docs) }}
+                    {% set description = constructor | extractDocs %}
+
+                    {{ description if description else noContentMacro.render('No documentation has been provided.') }}
                 </td>
             </tr>
             <tr>
@@ -20,9 +22,9 @@
             </tr>
             <tr>
                 <td>
-                    {%- if constructor.parameters.length %}
+                    {%- if parameters.length %}
                         <h5 class="no-anchor" indexable="false">Parameters</h5>
-                        {{ parametersMacro.render(constructor.parameters, true) }}
+                        {{ parametersMacro.render(parameters, constructor, true) }}
                     {%- endif %}
                 </td>
             </tr>
