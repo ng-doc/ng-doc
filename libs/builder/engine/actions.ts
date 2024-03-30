@@ -1,4 +1,5 @@
 import {
+  minifyHtml,
   NgDocDemoActionOptions,
   NgDocDemoPaneActionOptions,
   NgDocPlaygroundOptions,
@@ -7,6 +8,7 @@ import {
 import { ObservableSet } from '../classes';
 import { NgDocActionOutput } from '../interfaces';
 import { NgDocAction } from '../types';
+import { apiAction } from './actions/api.action';
 import { demoAction } from './actions/demo.action';
 import { demoPaneAction } from './actions/demo-pane.action';
 import { playgroundAction } from './actions/playground.action';
@@ -27,9 +29,11 @@ export class NgDocActions {
   }
 
   playground(playgroundId: string, options?: NgDocPlaygroundOptions): string {
-    const output: NgDocActionOutput = this.performAction(playgroundAction(playgroundId, options));
+    return this.performAction(playgroundAction(playgroundId, options)).output;
+  }
 
-    return output.output;
+  api(declarationPath: string): string {
+    return this.performAction(apiAction(declarationPath)).output;
   }
 
   private performAction(action: NgDocAction): NgDocActionOutput {
@@ -37,6 +41,9 @@ export class NgDocActions {
 
     this.dependencies.add(...(output.dependencies ?? []));
 
-    return output;
+    return {
+      ...output,
+      output: minifyHtml(output.output),
+    };
   }
 }

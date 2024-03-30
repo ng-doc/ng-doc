@@ -1,15 +1,16 @@
 {
-	"name": "@ng-doc/core",
-	"version": "0.0.1",
-	"type": "commonjs",
-	"sideEffects": false,
-	"dependencies": {
-		"posthtml-render": "3.0.0",
-		"posthtml-parser": "0.11.0",
-		"css-what": "6.1.0",
-		"esthetic": "0.5.6-beta.1"
-	},
-	"publishConfig": {
-		"access": "public"
-	}
+  "name": "@ng-doc/core",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "sideEffects": false,
+  "dependencies": {
+    "posthtml-render": "3.0.0",
+    "posthtml-parser": "0.11.0",
+    "css-what": "6.1.0",
+    "html-minifier": "4.0.0",
+    "esthetic": "0.5.6-beta.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

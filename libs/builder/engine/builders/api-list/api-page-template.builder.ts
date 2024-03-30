@@ -1,7 +1,8 @@
 import { DeclarationEntry, PageStore, renderTemplate, watchFile } from '@ng-doc/builder';
-import { NgDocApiScope } from '@ng-doc/core';
+import { kebabCase, NgDocApiScope } from '@ng-doc/core';
 import { finalize, takeUntil } from 'rxjs';
 
+import { getApiForDeclaration } from '../../../helpers/api/get-api-for-declaration';
 import { NgDocBuilderContext } from '../../../interfaces';
 import { AsyncFileOutput, Builder, CacheStrategy, factory } from '../../core';
 import { createTemplatePostProcessor } from '../helpers';
@@ -51,7 +52,8 @@ export function apiPageTemplateBuilder(config: Config): Builder<AsyncFileOutput>
             getContent: async () =>
               renderTemplate('./api-page-content.html.nunj', {
                 context: {
-                  declaration: declaration,
+                  api: getApiForDeclaration(declaration),
+                  templateName: kebabCase(declaration.getKindName()),
                   scope,
                 },
               }),

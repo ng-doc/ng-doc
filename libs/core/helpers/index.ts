@@ -13,6 +13,7 @@ export * from './is-present';
 export * from './is-route';
 export * from './is-same-object';
 export * from './kebab-case';
+export * from './minify-html';
 export * from './object-keys';
 export * from './stringify';
 export * from './uid';

@@ -69,7 +69,13 @@ export function guideTemplateBuilder(config: Config): Builder<TemplateBuilderOut
                   filters: false,
                 });
 
-                return markdownToHtml(mdContent, mdDir, dependencies.add.bind(dependencies));
+                const html = await markdownToHtml(
+                  mdContent,
+                  mdDir,
+                  dependencies.add.bind(dependencies),
+                );
+
+                return html;
               },
             }),
           ],

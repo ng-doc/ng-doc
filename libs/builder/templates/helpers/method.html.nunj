@@ -3,42 +3,27 @@
 {% import "helpers/declaration-modifiers.html.nunj" as tagsMacro %}
 {% import "helpers/parameters.html.nunj" as parametersMacro %}
 {% import "helpers/decorators.html.nunj" as decoratorsMacro %}
-{% import "helpers/no-content.html.nunj" as noContentMacro %}
+{% import "helpers/docs-description.html.nunj" as docsDescription %}
+{% import "helpers/relation.html.nunj" as relationMacro %}
 
-{% macro render(method, origin) %}
-    {% set parameters = method.getParameters() %}
-    {% set methodChain = method | getMethodChain %}
-    {% set inheritedFrom = method | getInheritedParent(origin) %}
-    {% set overriddenMember = method | getOverriddenMember %}
-    {% set implementedMember = method | getImplementedMember %}
-    {% set docNode = methodChain | firstNodeWithComment %}
 
+{% macro render(method) %}
     <div class="ng-doc-table-wrapper">
         <table class="ng-doc-method-table">
             <thead>
             <tr>
                 <th indexable="false">
-                    {{ decoratorsMacro.render(method.getDecorators()) if method.getDecorators }}
+                    {{ decoratorsMacro.render(method.decorators) if method.decorators.length }}
                     {{ tagsMacro.render(method, 'modifier') }}
-                    <h3 dataSlugType="member">{{ method.getName() }}()</h3>
-                    <div class="ng-doc-node-details">
-                        {%- if inheritedFrom %}
-                            inherited from <code>{{ inheritedFrom.getName() }}</code>
-                        {%- elseif overriddenMember %}
-                            overrides <code>{{ (overriddenMember | getMemberParent).getName() }}</code>
-                        {%- elseif implementedMember %}
-                            implements <code>{{ (implementedMember | getMemberParent).getName() }}</code>
-                        {%- endif %}
-                    </div>
+                    <h3 dataSlugType="member">{{ method.name }}()</h3>
+                    {{ relationMacro.render(method) }}
                 </th>
             </tr>
             </thead>
             <tbody>
             <tr>
                 <td>
-                    {% set description = docNode | extractDocs %}
-
-                    {{ description if description else noContentMacro.render('No documentation has been provided.') }}
+                    {{ docsDescription.render(method.docs) }}
                 </td>
             </tr>
             <tr>
@@ -49,13 +34,13 @@
             </tr>
             <tr>
                 <td>
-                    {%- if parameters.length %}
+                    {%- if method.parameters.length %}
                         <h5 class="no-anchor" indexable="false">Parameters</h5>
-                        {{ parametersMacro.render(parameters, docNode) }}
+                        {{ parametersMacro.render(method.parameters) }}
                     {%- endif %}
                     <h5 class="no-anchor" indexable="false">Returns</h5>
                     <p>
-                        {{ typeMacro.returnType(method) }}
+                        {{ typeMacro.render(method.returnType) }}
                     </p>
                 </td>
             </tr>

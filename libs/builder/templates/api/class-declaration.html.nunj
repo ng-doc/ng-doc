@@ -1,0 +1,76 @@
+{% extends "api/base.html.nunj" %}
+
+{% import "helpers/type.html.nunj" as typeMacro %}
+{% import "helpers/constructor.html.nunj" as constructorMacro %}
+{% import "helpers/methods.html.nunj" as methodsMacro %}
+{% import "helpers/properties.html.nunj" as propertiesMacro %}
+{% import "helpers/accessors.html.nunj" as accessorsMacro %}
+{% import "helpers/modifier.html.nunj" as modifierMacro %}
+
+{% block details %}
+    {%- if api.extends or api.implements.length %}
+        <div class="ng-doc-header-details" indexable="false">
+            {%- if api.extends %}
+                <span class="ng-doc-header-details-label">Extends</span>
+                {{ typeMacro.render(api.extends) }}
+            {%- endif %}
+            {%- if api.implements.length %}
+                <span class="ng-doc-header-details-label">Implements</span>
+                {%- for i in api.implements -%}
+                    {{ typeMacro.render(i) }}
+                {%- endfor %}
+            {%- endif %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block overview %}
+    {% if constructors.length -%}
+        <section>
+            <h2>Constructor</h2>
+            {{ constructorMacro.render(constructors[0]) }}
+        </section>
+    {%- endif %}
+
+    {%- if api.staticProperties.length %}
+        <section>
+            <h2>Static Properties</h2>
+            {{ propertiesMacro.render(api.staticProperties) }}
+        </section>
+    {% endif %}
+
+    {%- if api.properties.length %}
+        <section>
+            <h2>Properties</h2>
+            {{ propertiesMacro.render(api.properties) }}
+        </section>
+    {% endif %}
+
+    {%- if api.staticAccessors.length %}
+        <section>
+            <h2>Static Accessors</h2>
+            {{ accessorsMacro.render(api.staticAccessors) }}
+        </section>
+    {% endif %}
+
+    {%- if api.accessors.length %}
+        <section>
+            <h2>Accessors</h2>
+            {{ accessorsMacro.render(api.accessors) }}
+        </section>
+    {% endif %}
+
+    {%- if api.staticMethods.length %}
+        <section>
+            <h2>Static Methods</h2>
+            {{ methodsMacro.render(api.staticMethods) }}
+        </section>
+    {% endif %}
+
+    {%- if api.methods.length %}
+        <section>
+            <h2>Methods</h2>
+            {{ methodsMacro.render(api.methods) }}
+        </section>
+    {% endif %}
+{% endblock %}

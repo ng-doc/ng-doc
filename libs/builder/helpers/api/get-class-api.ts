@@ -1,11 +1,19 @@
 import { asArray } from '@ng-doc/core';
-import { AbstractableNodeStructure, ClassDeclaration } from 'ts-morph';
+import { ClassDeclaration } from 'ts-morph';
 
-import { getAllMembers } from '../typescript/method/get-all-members';
-import { GetAccessorApi, mapGetAccessorApi } from './map-get-accessor-api';
-import { mapMethodApi, MethodApi } from './map-methos-api';
-import { mapPropertyApi, PropertyApi } from './map-property-api';
-import { mapSetAccessorApi, SetAccessorApi } from './map-set-accessor-api';
+import { getClassApiMembers } from './helpers/get-class-api-members';
+import {
+  ConstructorApi,
+  DocApi,
+  mapConstructorApi,
+  mapDecorators,
+  mapDocApi,
+  mapMethodApi,
+  mapPropertyApi,
+  MethodApi,
+  PropertyApi,
+} from './mappers';
+import { AccessorApi, mapAccessorApi } from './mappers/map-accessor';
 
 export interface ClassApi {
   name: string;
@@ -13,10 +21,14 @@ export interface ClassApi {
   isAbstract: boolean;
   decorators: string[];
   implements: string[];
+  docs: DocApi[];
+  constructors: ConstructorApi[];
+  staticProperties: PropertyApi[];
   properties: PropertyApi[];
+  staticMethods: MethodApi[];
   methods: MethodApi[];
-  getAccessors: GetAccessorApi[];
-  setAccessors: SetAccessorApi[];
+  staticAccessors: AccessorApi[];
+  accessors: AccessorApi[];
 }
 
 /**
@@ -25,38 +37,54 @@ export interface ClassApi {
  */
 export function getClassApi(declaration: ClassDeclaration): ClassApi {
   const structure = declaration.getStructure();
-  const filter = (node: AbstractableNodeStructure, cls: ClassDeclaration) =>
-    !node.isAbstract || (node.isAbstract && cls === declaration);
 
   return {
     name: structure.name ?? '[Unknown]',
     isAbstract: !!structure.isAbstract,
-    decorators: asArray(structure.decorators).map(({ name }) => name),
+    decorators: mapDecorators(asArray(structure.decorators)),
     implements: asArray(structure.implements).map(String),
-    extends: String(structure.extends),
-    getAccessors: getAllMembers(
+    extends: structure.extends ? String(structure.extends) : undefined,
+    docs: mapDocApi(structure),
+    constructors: asArray(declaration.getConstructors())
+      .filter((ctor) => ctor.getScope() !== 'private')
+      .map(mapConstructorApi),
+    staticAccessors: getClassApiMembers(
       declaration,
-      (structure) => asArray(structure.getAccessors).map(mapGetAccessorApi),
-      (member) => member.name,
-      filter,
+      (structure) =>
+        [...asArray(structure.getAccessors), ...asArray(structure.setAccessors)].filter(
+          ({ isStatic }) => isStatic,
+        ),
+      mapAccessorApi,
+      (member) => `${member.kind}#${member.name}`,
     ),
-    setAccessors: getAllMembers(
+    accessors: getClassApiMembers(
       declaration,
-      (structure) => asArray(structure.setAccessors).map(mapSetAccessorApi),
-      (member) => member.name,
-      filter,
+      (structure) =>
+        [...asArray(structure.getAccessors), ...asArray(structure.setAccessors)].filter(
+          ({ isStatic }) => isStatic,
+        ),
+      mapAccessorApi,
+      (member) => `${member.kind}#${member.name}`,
     ),
-    properties: getAllMembers(
+    staticProperties: getClassApiMembers(
       declaration,
-      (structure) => asArray(structure.properties).map(mapPropertyApi),
-      (member) => member.name,
-      filter,
+      (structure) => asArray(structure.properties?.filter(({ isStatic }) => isStatic)),
+      (members) => Array.from(members.values()).map(mapPropertyApi),
     ),
-    methods: getAllMembers(
+    properties: getClassApiMembers(
       declaration,
-      (structure) => asArray(structure.methods).map(mapMethodApi),
-      (member) => member.name,
-      filter,
+      (structure) => asArray(structure.properties?.filter(({ isStatic }) => !isStatic)),
+      (members) => Array.from(members.values()).map(mapPropertyApi),
+    ),
+    staticMethods: getClassApiMembers(
+      declaration,
+      (structure) => asArray(structure.methods?.filter(({ isStatic }) => isStatic)),
+      (members) => Array.from(members.values()).map(mapMethodApi),
+    ),
+    methods: getClassApiMembers(
+      declaration,
+      (structure) => asArray(structure.methods?.filter(({ isStatic }) => !isStatic)),
+      (members) => Array.from(members.values()).map(mapMethodApi),
     ),
   };
 }

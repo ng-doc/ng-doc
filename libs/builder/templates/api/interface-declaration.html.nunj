@@ -1,0 +1,33 @@
+{% extends "api/base.html.nunj" %}
+
+{% import "helpers/type.html.nunj" as typeMacro %}
+{% import "helpers/methods.html.nunj" as methodsMacro %}
+{% import "helpers/properties.html.nunj" as propertiesMacro %}
+{% import "helpers/accessors.html.nunj" as accessorsMacro %}
+
+{% block details %}
+    {% if api.extends.length %}
+        <div class="ng-doc-header-details" indexable="false">
+            <span class="ng-doc-header-details-label">Extends</span>
+            {%- for extend in api.extends -%}
+                {{ typeMacro.render(extend) }}
+            {%- endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block overview %}
+    {% if api.properties.length -%}
+        <section>
+            <h2>Properties</h2>
+            {{ propertiesMacro.render(api.properties) }}
+        </section>
+    {%- endif %}
+
+    {% if api.methods.length -%}
+        <section>
+            <h2>Methods</h2>
+            {{ methodsMacro.render(api.methods) }}
+        </section>
+    {%- endif %}
+{% endblock %}

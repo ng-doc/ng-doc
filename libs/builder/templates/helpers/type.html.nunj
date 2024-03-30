@@ -1,7 +1,3 @@
-{% macro type(node) -%}
-    <code indexable="false">{{ node | displayType | escape }}</code>
-{%- endmacro %}
-
-{%- macro returnType(node) -%}
-    <code indexable="false">{{ node | displayReturnType | escape }}</code>
+{% macro render(type) -%}
+    <code indexable="false">{{ type | escape }}</code>
 {%- endmacro %}

@@ -1,7 +1,8 @@
 import { Node, Type, TypeFormatFlags } from 'ts-morph';
 
 /**
- *
+ * Display type of the node.
+ * Structures don't return inferred types, so we need to get the type from the node.
  * @param node
  * @param typeFormatFlags
  */

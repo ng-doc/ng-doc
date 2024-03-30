@@ -20,6 +20,15 @@ import {
   processHtmlPlugin,
 } from './plugins';
 
+/**
+ * Represents a page entity
+ * @usageNotes
+ *
+ * notes of
+ * usages
+ * @publicApi
+ * @internal
+ */
 @CachedEntity()
 export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
   override parent?: NgDocCategoryEntity;

@@ -1,3 +1,5 @@
+{% import "helpers/docs-description.html.nunj" as docsDescription %}
+
 {% macro render(members) %}
     <div class="ng-doc-table-wrapper">
         <table>
@@ -11,10 +13,10 @@
             <tbody>
             {% for member in members %}
                 <tr>
-                    <td indexable="false" dataSlug="{{ member.getName() }}"
-                        dataSlugType="member">{{ member.getName() }} </td>
-                    <td indexable="false"><code>{{ member.getValue() | dump }}</code></td>
-                    <td>{{ member | extractDocs }} </td>
+                    <td indexable="false" dataSlug="{{ member.name }}"
+                        dataSlugType="member">{{ member.name }} </td>
+                    <td indexable="false"><code>{{ member.value | dump }}</code></td>
+                    <td>{{ docsDescription.render(member.docs) }}</td>
                 </tr>
             {% endfor %}
             </tbody>

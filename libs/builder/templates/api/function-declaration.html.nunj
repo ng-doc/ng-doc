@@ -4,17 +4,15 @@
 {% import "helpers/parameters.html.nunj" as parametersMacro %}
 
 {% block overview %}
-    {%- set parameters = declaration.getParameters() -%}
-
     <section>
         <h2>Presentation</h2>
-        {{ codeMacro.render(declaration | functionPresentation, "typescript", false) }}
+        {{ codeMacro.render(api | functionPresentation, "typescript", false) }}
     </section>
 
-    {% if parameters.length -%}
+    {% if api.parameters.length -%}
         <section>
             <h2>Parameters</h2>
-            {{ parametersMacro.render(parameters, declaration) }}
+            {{ parametersMacro.render(api.parameters) }}
         </section>
     {%- endif %}
 {% endblock %}

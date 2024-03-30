@@ -1,8 +1,0 @@
-{%- set usageNotes = docNode | extractDocs('@usageNotes') -%}
-
-{% if usageNotes %}
-    <h2>Usage Notes</h2>
-    <section>
-        {{ usageNotes | markdownToHtml }}
-    </section>
-{% endif %}

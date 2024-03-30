@@ -1,8 +1,11 @@
 {% import "helpers/type.html.nunj" as typeMacro %}
 {% import "helpers/declaration-modifiers.html.nunj" as tagsMacro %}
 {% import "helpers/decorators.html.nunj" as decoratorsMacro %}
+{% import "helpers/relation.html.nunj" as relationMacro %}
+{% import "helpers/docs-description.html.nunj" as docsDescription %}
+{% import "helpers/no-content.html.nunj" as noContentMacro %}
 
-{% macro render(parameters, origin, slugger) %}
+{% macro render(parameters, slugger) %}
     <div class="ng-doc-table-wrapper">
         <table class="ng-doc-parameters-table">
             <thead>
@@ -14,28 +17,22 @@
             </thead>
             <tbody>
             {%- for param in parameters %}
-                {% set paramChain = param | getPropertyChain %}
-                {% set inheritedFrom = param | getInheritedParent(origin) %}
-                {% set overriddenMember = param | getOverriddenMember %}
-                {% set implementedMember = param | getImplementedMember %}
-                {% set docNode = paramChain | firstNodeWithComment %}
-
-                <tr {{ 'dataSlug="'+param.getName()+'" dataSlugType="member"' if slugger }}>
+                <tr {{ 'dataSlug="'+param.name+'" dataSlugType="member"' if slugger }}>
                     <td indexable="false">
-                        {{ decoratorsMacro.render(param.getDecorators(), true) if param.getDecorators }}
-                        {{ tagsMacro.render(param, "badge") }}{{ param.getName() }}
-                        <div class="ng-doc-node-details">
-                            {%- if inheritedFrom %}
-                                inherited from <code>{{ inheritedFrom.getName() }}</code>
-                            {%- elseif overriddenMember %}
-                                overrides <code>{{ (overriddenMember | getMemberParent).getName() }}</code>
-                            {%- elseif implementedMember %}
-                                implements <code>{{ (implementedMember | getMemberParent).getName() }}</code>
-                            {%- endif %}
-                        </div>
+                        {{ decoratorsMacro.render(param.decorators, true) if param.decorators.length }}
+                        {{ tagsMacro.render(param, "badge") }}{{ param.name }}
+                        {{ relationMacro.render(param) }}
                     </td>
-                    <td>{{ typeMacro.type(param) }}</td>
-                    <td>{{ origin | extractParameterDocs(param.getName()) }}</td>
+                    <td>{{ typeMacro.render(param.type) }}</td>
+                    <td>
+                        {% if param.docs.length %}
+                            {% for doc in param.docs %}
+                                <p>{{ doc }}</p>
+                            {% endfor %}
+                        {% else %}
+                            {{ noContentMacro.render('No documentation has been provided.') }}
+                        {% endif %}
+                    </td>
                 </tr>
             {%- endfor %}
             </tbody>

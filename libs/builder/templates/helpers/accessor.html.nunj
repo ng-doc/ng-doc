@@ -5,45 +5,30 @@
 {% import "helpers/decorators.html.nunj" as decoratorsMacro %}
 {% import "helpers/no-content.html.nunj" as noContentMacro %}
 {% import "helpers/modifier.html.nunj" as modifierMacro %}
+{% import "helpers/relation.html.nunj" as relationMacro %}
+{% import "helpers/docs-description.html.nunj" as docsDescription %}
 
-{% macro render(accessor, origin) %}
-    {% macro renderAccessor(accessor, type, origin) %}
-        {% set parameters = accessor.getParameters() %}
-        {% set accessorChain = accessor | getAccessorChain %}
-        {% set inheritedFrom = accessor | getInheritedParent(origin) %}
-        {% set overriddenMember = accessor | getOverriddenMember %}
-        {% set implementedMember = accessor | getImplementedMember %}
-        {% set docNode = accessorChain | firstNodeWithComment %}
-
+{% macro render(accessor) %}
+    {% macro renderAccessor(accessor, type) %}
         <div class="ng-doc-table-wrapper">
             <table class="ng-doc-accessor-table">
                 <thead>
                 <tr>
                     <th indexable="false">
-                        {{ decoratorsMacro.render(accessor.getDecorators()) if accessor.getDecorators }}
+                        {{ decoratorsMacro.render(accessor.decorators) if accessor.decorators.length }}
                         {{ tagsMacro.render(accessor, 'modifier') }}
-                        <h3 dataSlug="{{ type + '-' + accessor.getName() }}" dataSlugType="member"
-                            dataSlugTitle="{{ accessor.getName() }}">
-                            {{ modifierMacro.render(type) }} {{ accessor.getName() }}
+                        <h3 dataSlug="{{ type + '-' + accessor.name }}" dataSlugType="member"
+                            dataSlugTitle="{{ accessor.name }}">
+                            {{ modifierMacro.render(type) }} {{ accessor.name }}
                         </h3>
-                        <div class="ng-doc-node-details">
-                            {%- if inheritedFrom %}
-                                inherited from <code>{{ inheritedFrom.getName() }}</code>
-                            {%- elseif overriddenMember %}
-                                overrides <code>{{ overriddenMember.getParent().getName() }}</code>
-                            {%- elseif implementedMember %}
-                                implements <code>{{ implementedMember.getParent().getName() }}</code>
-                            {%- endif %}
-                        </div>
+                        {{ relationMacro.render(accessor) }}
                     </th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
                     <td>
-                        {% set description = docNode | extractDocs %}
-
-                        {{ description if description else noContentMacro.render('No documentation has been provided.') }}
+                        {{ docsDescription.render(accessor.docs) }}
                     </td>
                 </tr>
                 <tr>
@@ -56,7 +41,7 @@
                     <td indexable="false">
                         <h5 class="no-anchor">Type</h5>
                         <p>
-                            {{ typeMacro.type(accessor) }}
+                            {{ typeMacro.render(accessor.returnType) }}
                         </p>
                     </td>
                 </tr>
@@ -66,6 +51,6 @@
     {% endmacro %}
 
 
-    {{ renderAccessor(accessor.get, "get", origin) if accessor.get }}
-    {{ renderAccessor(accessor.set, "set", origin) if accessor.set }}
+    {{ renderAccessor(accessor.get, "get") if accessor.get }}
+    {{ renderAccessor(accessor.set, "set") if accessor.set }}
 {% endmacro %}
