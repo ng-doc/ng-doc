@@ -3,12 +3,12 @@ import { uid } from '@ng-doc/core';
 
 import { AsyncFileOutput, Builder, CacheStrategy, FileOutput, mergeFactory } from '../../core';
 import { renderTemplate } from '../../nunjucks';
-import { EntryMetadata, FileEntry, TemplateBuilderOutput } from '../interfaces';
+import { EntryMetadata, TemplateBuilderOutput } from '../interfaces';
 
 interface Config {
   tag: string;
   context: NgDocBuilderContext;
-  metadata: EntryMetadata<FileEntry>;
+  metadata: EntryMetadata;
   pageTemplateBuilders: Array<Builder<TemplateBuilderOutput>>;
 }
 
@@ -43,6 +43,7 @@ export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput | Fi
             metadata,
             entries: getPageWrapperPages(metadata, templates),
             headerContent,
+            hasBreadcrumb: !!metadata.breadcrumbs().length,
           },
         }),
       } satisfies FileOutput;
@@ -57,10 +58,7 @@ export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput | Fi
  * @param pageMetadata
  * @param templates
  */
-function getPageWrapperPages(
-  pageMetadata: EntryMetadata<FileEntry>,
-  templates: TemplateBuilderOutput[],
-) {
+function getPageWrapperPages(pageMetadata: EntryMetadata, templates: TemplateBuilderOutput[]) {
   return templates.reduce(
     (pages, { metadata }) => ({
       ...pages,

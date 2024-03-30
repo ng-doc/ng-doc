@@ -1,5 +1,6 @@
 import {
   createDeclarationMetadata,
+  createDeclarationTabMetadata,
   DeclarationEntry,
   entryBuilder,
   EntryMetadata,
@@ -10,12 +11,13 @@ import { merge } from 'rxjs';
 import { findDeclarations } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
 import { Builder, FileOutput, whenDone } from '../../core';
+import { pageWrapperBuilder } from '../shared/page-wrapper.builder';
 import { apiListBuilder } from './api-list.builder';
 import { apiListComponentBuilder } from './api-list-component.builder';
 import { apiPageTemplateBuilder } from './api-page-template.builder';
 
 export const API_ENTRY_BUILDER_TAG = 'ApiFile';
-
+export const API_PAGE_WRAPPER_BUILDER_TAG = 'ApiPageWrapper';
 /**
  *
  * @param context
@@ -41,10 +43,18 @@ export function apiBuilder(context: NgDocBuilderContext, apiPath: string): Build
         .flat();
       const data = Array.from(new Map(declarations).values());
       const pageBuilders = data.map(([scope, metadata]) =>
-        apiPageTemplateBuilder({
+        pageWrapperBuilder({
+          tag: API_PAGE_WRAPPER_BUILDER_TAG,
           context,
           metadata,
-          scope,
+          pageTemplateBuilders: [
+            apiPageTemplateBuilder({
+              context,
+              metadata,
+              tabMetadata: createDeclarationTabMetadata(metadata, { title: 'API', folder: 'api' }),
+              scope,
+            }),
+          ],
         }),
       );
 

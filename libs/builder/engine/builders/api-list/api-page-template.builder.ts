@@ -1,17 +1,22 @@
-import { DeclarationEntry, PageStore, renderTemplate, watchFile } from '@ng-doc/builder';
 import { kebabCase, NgDocApiScope } from '@ng-doc/core';
 import { finalize, takeUntil } from 'rxjs';
 import { Node } from 'ts-morph';
 
 import { NgDocBuilderContext } from '../../../interfaces';
-import { AsyncFileOutput, Builder, CacheStrategy, factory } from '../../core';
-import { createTemplatePostProcessor } from '../helpers';
-import { EntryMetadata } from '../interfaces';
-import { contentBuilder } from '../shared';
+import { Builder, CacheStrategy, factory, PageStore, watchFile } from '../../core';
+import { renderTemplate } from '../../nunjucks';
+import {
+  DeclarationEntry,
+  DeclarationTabEntry,
+  EntryMetadata,
+  TemplateBuilderOutput,
+} from '../interfaces';
+import { contentBuilder, pageComponentBuilder } from '../shared';
 
 interface Config {
   context: NgDocBuilderContext;
   metadata: EntryMetadata<DeclarationEntry>;
+  tabMetadata: EntryMetadata<DeclarationTabEntry>;
   scope?: NgDocApiScope;
 }
 
@@ -22,8 +27,8 @@ export const API_BUILDER_TAG = 'Api';
  *
  * @param config
  */
-export function apiPageTemplateBuilder(config: Config): Builder<AsyncFileOutput> {
-  const { context, metadata, scope } = config;
+export function apiPageTemplateBuilder(config: Config): Builder<TemplateBuilderOutput> {
+  const { context, metadata, tabMetadata, scope } = config;
   const {
     entry: { declaration },
   } = metadata;
@@ -36,7 +41,7 @@ export function apiPageTemplateBuilder(config: Config): Builder<AsyncFileOutput>
 
   PageStore.add([pageKey, metadata]);
 
-  return createTemplatePostProcessor(
+  return pageComponentBuilder(
     (postProcess) =>
       factory(
         API_PAGE_TEMPLATE_BUILDER_TAG,
@@ -46,7 +51,7 @@ export function apiPageTemplateBuilder(config: Config): Builder<AsyncFileOutput>
             context,
             mainFilePath: declPath,
             cacheId: `${declPath}#Api`,
-            metadata,
+            metadata: tabMetadata,
             keyword: declaration.getName(),
             keywordType: 'api',
             getContent: async () =>
@@ -62,12 +67,17 @@ export function apiPageTemplateBuilder(config: Config): Builder<AsyncFileOutput>
               }),
           }),
         ],
-        async (html) => postProcess(html),
+        async (output) => {
+          return {
+            metadata: tabMetadata,
+            output: postProcess(output),
+          } satisfies TemplateBuilderOutput;
+        },
         cacheStrategy,
       ),
     {
       context,
-      metadata: metadata,
+      metadata: tabMetadata,
       pageType: 'api',
       lineNumber: declaration.getStartLineNumber(),
     },

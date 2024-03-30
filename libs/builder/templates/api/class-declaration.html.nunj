@@ -7,10 +7,6 @@
 {% import "helpers/accessors.html.nunj" as accessorsMacro %}
 {% import "helpers/modifier.html.nunj" as modifierMacro %}
 
-{% block modifier %}
-    {{ modifierMacro.render('abstract') if declaration.isAbstract() }}
-{% endblock %}
-
 {% block details %}
     {% set extends = declaration.getExtends() %}
     {% set implements = declaration.getImplements() %}

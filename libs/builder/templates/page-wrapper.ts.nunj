@@ -6,7 +6,7 @@ const headerContent: string = `{{ headerContent | toTemplateString }}`
 
 @Component({
   selector: 'ng-doc-page-wrapper-{{ id }}',
-  template: `<ng-doc-page-wrapper [routes]="routes" [headerContent]="headerContent"></ng-doc-page-wrapper>`,
+  template: `<ng-doc-page-wrapper [routes]="routes" [headerContent]="headerContent" [hasBreadcrumb]="hasBreadcrumb"></ng-doc-page-wrapper>`,
   imports: [NgDocPageWrapperComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true
@@ -14,6 +14,7 @@ const headerContent: string = `{{ headerContent | toTemplateString }}`
 export class PageWrapperComponent {
     routes = routes[0].children!;
     headerContent = headerContent;
+    hasBreadcrumb = {{ hasBreadcrumb }};
 }
 
 

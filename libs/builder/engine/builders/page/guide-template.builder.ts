@@ -1,23 +1,21 @@
-import {
-  contentBuilder,
-  createBuilder,
-  createMainTrigger,
-  createMarkdownMetadata,
-  createTemplatePostProcessor,
-  EntryMetadata,
-  markdownFrontMatter,
-  NgDocActions,
-  renderTemplateString,
-  TemplateBuilderOutput,
-  watchFile,
-} from '@ng-doc/builder';
+import { NgDocActions, renderTemplateString } from '@ng-doc/builder';
 import { NgDocPage } from '@ng-doc/core';
 import path from 'path';
 import { takeUntil } from 'rxjs';
 
 import { markdownToHtml } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
-import { Builder, CacheStrategy, factory } from '../../core';
+import {
+  Builder,
+  CacheStrategy,
+  createBuilder,
+  createMainTrigger,
+  factory,
+  watchFile,
+} from '../../core';
+import { createMarkdownMetadata, markdownFrontMatter } from '../helpers';
+import { EntryMetadata, TemplateBuilderOutput } from '../interfaces';
+import { contentBuilder, pageComponentBuilder } from '../shared';
 
 interface Config {
   context: NgDocBuilderContext;
@@ -44,7 +42,7 @@ export function guideTemplateBuilder(config: Config): Builder<TemplateBuilderOut
   return createBuilder([createMainTrigger(watchFile(mdPath, 'update'))], () => {
     const metadata = createMarkdownMetadata(pageMetadata, mdFile);
 
-    return createTemplatePostProcessor(
+    return pageComponentBuilder(
       (postProcess) =>
         factory(
           GUIDE_TEMPLATE_BUILDER_TAG,
@@ -69,11 +67,7 @@ export function guideTemplateBuilder(config: Config): Builder<TemplateBuilderOut
                   filters: false,
                 });
 
-                const html = await markdownToHtml(
-                  mdContent,
-                  mdDir,
-                  dependencies.add.bind(dependencies),
-                );
+                const html = markdownToHtml(mdContent, mdDir, dependencies.add.bind(dependencies));
 
                 return html;
               },

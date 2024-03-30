@@ -5,19 +5,6 @@
 {% import "helpers/properties.html.nunj" as propertiesMacro %}
 {% import "helpers/accessors.html.nunj" as accessorsMacro %}
 
-{% block details %}
-    {%- set extends = declaration.getExtends() -%}
-
-    {% if extends.length %}
-        <div class="ng-doc-header-details" indexable="false">
-            <span class="ng-doc-header-details-label">Extends</span>
-            {%- for i in extends -%}
-                {{ typeMacro.type(i) }}
-            {%- endfor %}
-        </div>
-    {% endif %}
-{% endblock %}
-
 {% block overview %}
     {%- set properties = declaration | getInterfaceProperties | filterUselessMembers | sortByNodesName -%}
     {%- set methods = declaration | getInterfaceMethods | filterUselessMembers | sortByNodesName -%}

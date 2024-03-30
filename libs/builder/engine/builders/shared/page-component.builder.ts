@@ -7,13 +7,12 @@ import { NgDocBuilderContext } from '../../../interfaces';
 import { AsyncFileOutput, Builder, IndexStore, keywordsStore } from '../../core';
 import { renderTemplate } from '../../nunjucks';
 import { EntryMetadata, PageEntry } from '../interfaces';
-import { replaceKeywords } from '../shared';
+import { replaceKeywords } from './index';
 
 interface Config {
   context: NgDocBuilderContext;
   metadata: EntryMetadata<PageEntry>;
   pageType: NgDocPageType;
-
   entryHasImports?: boolean;
   entryPath?: string;
   demoAssetsPath?: string;
@@ -28,7 +27,7 @@ type PostProcess = (html: string) => AsyncFileOutput;
  * @param builder
  * @param config
  */
-export function createTemplatePostProcessor<T>(
+export function pageComponentBuilder<T>(
   builder: (postProcess: PostProcess) => Builder<T>,
   config: Config,
 ): Builder<T> {

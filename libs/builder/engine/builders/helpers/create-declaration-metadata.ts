@@ -38,7 +38,8 @@ export function createDeclarationMetadata(
     path: declaration.getSourceFile().getFilePath(),
     route,
     outDir,
-    parent: entry,
+    // Having parent as undefined will force rendering list of routes flat
+    parent: undefined,
     outPath: path.join(outDir, 'page.ts'),
     title: declaration.getName() ?? '[Unknown]',
     sourceFile: declaration.getSourceFile(),

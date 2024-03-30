@@ -3,18 +3,6 @@
 
 {% set description = docNode | extractDocs %}
 
-<header>
-    {% include "parts/page-tags.html.nunj" %}
-    {% block modifier %}{% endblock %}
-
-    {% if not description %}
-        <!-- This is a hack to make the declaration name available to the search index. -->
-        <div style="display: none">%%API_NAME_ANCHOR%%</div>
-    {% endif %}
-
-    {% block details %}{% endblock %}
-</header>
-
 <section>
     {{ description if description else noContentMacro.render('No documentation has been provided.') }}
 </section>
@@ -22,6 +10,5 @@
 {% include "parts/see-also.html.nunj" %}
 
 {% block overview %}{% endblock %}
-
 
 {% include "parts/usage-notes.html.nunj" %}

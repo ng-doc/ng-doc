@@ -8,7 +8,7 @@ export interface MarkdownEntry {
   /**
    * Custom icon that will be used when page is displayed as a tab
    */
-  icon: string;
+  icon?: string;
   /**
    * The type of the page, will be used to modify the type of the keyword and type of th page in the search engine.
    *

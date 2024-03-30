@@ -1,9 +1,11 @@
 import { asArray } from '@ng-doc/core';
+import { minimatch } from 'minimatch';
 import path from 'path';
 import { SourceFile } from 'ts-morph';
 
 import { getObjectExpressionFromDefault } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
+import { CATEGORY_PATTERN } from '../../variables';
 import { EntryMetadata, FileEntry } from '../interfaces';
 import { getCategorySourceFile } from './get-category-source-file';
 import { getEntryOutDir } from './get-entry-out-dir';
@@ -27,6 +29,7 @@ export function createEntryMetadata<T extends FileEntry>(
   const categorySourceFile = entry.category && getCategorySourceFile(sourceFile);
   const outDir = getEntryOutDir(context, entry, entryPath);
   const objectExpression = getObjectExpressionFromDefault(sourceFile);
+  const isCategory = minimatch(entryPath, CATEGORY_PATTERN);
 
   if (!objectExpression) {
     throw new Error(
@@ -45,6 +48,7 @@ export function createEntryMetadata<T extends FileEntry>(
     path: entryPath,
     title: entry.title,
     order: entry.order,
+    nestedRoutes: !isCategory,
     absoluteRoute: function (): string {
       return path.join(
         ...asArray(this.parent?.absoluteRoute() ?? context.config.routePrefix, this.route),

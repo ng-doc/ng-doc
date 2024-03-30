@@ -22,7 +22,9 @@ export function provideNgDocContext(): Provider[] {
                     {%- if entry.children.length %}
                     children: [
                         {%- for child in entry.children | sortNavigationEntries %}
+                        {%- if not child.item.hidden  %}
                         {{ nav(child) }},
+                        {%- endif %}
                         {%- endfor %}
                     ]
                     {%- endif %}

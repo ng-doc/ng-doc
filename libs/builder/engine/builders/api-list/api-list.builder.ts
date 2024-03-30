@@ -43,14 +43,14 @@ function buildApiList(
     lists.set(scope, (lists.get(scope) ?? []).concat([metadata]));
 
     return lists;
-  }, new Map<NgDocApiScope, Array<[EntryMetadata<DeclarationEntry>]>>());
+  }, new Map<NgDocApiScope, Array<EntryMetadata<DeclarationEntry>>>());
 
   return Array.from(uniqScopes.entries()).map(
     ([scope, items]) =>
       ({
         title: scope.name,
-        items: items.map(([metadata]) => ({
-          route: metadata.absoluteRoute(),
+        items: items.map((metadata) => ({
+          route: `/${metadata.absoluteRoute()}`,
           type: getKindType(metadata.entry.declaration) ?? '',
           name: metadata.entry.declaration.getName() ?? '[Unknown]',
         })),

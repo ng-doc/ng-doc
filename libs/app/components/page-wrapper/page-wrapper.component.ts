@@ -46,6 +46,9 @@ export class NgDocPageWrapperComponent implements OnInit {
   @Input({ required: true })
   headerContent!: string;
 
+  @Input()
+  hasBreadcrumb = true;
+
   @ViewChild('pageBreadcrumbs', { read: ViewContainerRef, static: true })
   pageBreadcrumbs!: ViewContainerRef;
 
@@ -60,7 +63,7 @@ export class NgDocPageWrapperComponent implements OnInit {
     .filter(isPresent);
 
   ngOnInit(): void {
-    if (this.skeleton.breadcrumbs) {
+    if (this.skeleton.breadcrumbs && this.hasBreadcrumb) {
       createComponent(this.pageBreadcrumbs, this.skeleton.breadcrumbs, {
         breadcrumbs: this.breadcrumbs,
       });
