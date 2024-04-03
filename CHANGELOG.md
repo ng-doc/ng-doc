@@ -1,3 +1,10 @@
+## [17.5.6](https://github.com/ng-doc/ng-doc/compare/v17.5.5...v17.5.6) (2024-04-03)
+
+
+### Bug Fixes
+
+* **builder:** playgrounds break the build for the Angular 17.3 version ([54e8711](https://github.com/ng-doc/ng-doc/commit/54e87111bc7fae970370f03ea19f5aca822c1bdd)), closes [#144](https://github.com/ng-doc/ng-doc/issues/144)
+
 ## [17.5.5](https://github.com/ng-doc/ng-doc/compare/v17.5.4...v17.5.5) (2024-03-06)
 
 
