@@ -4,6 +4,7 @@ export * from './build-file-assets';
 export * from './build-file-entity';
 export * from './code-type-from-ext';
 export * from './create-builder-context';
+export * from './create-import-path';
 export * from './declaration-folder-name';
 export * from './demo';
 export * from './emit-built-output';
