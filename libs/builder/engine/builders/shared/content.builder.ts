@@ -4,7 +4,6 @@ import {
   createSecondaryTrigger,
   extractKeywords,
   isBuilderDone,
-  keywordTitle,
   onKeywordsTouch,
   PageEntry,
   processHtml,
@@ -149,7 +148,7 @@ function getKeywords(
   if (!mainKeyword) return [];
 
   const key = type === 'guide' ? `*${mainKeyword}` : mainKeyword;
-  const title = keywordTitle(entry);
+  const title = entry.keywordTitle;
 
   const rootKeyword: NgDocKeyword = {
     title,

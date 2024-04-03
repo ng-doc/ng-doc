@@ -14,6 +14,7 @@ export interface EntryMetadata<T extends Entry = Entry> {
   outPath: string;
   route: string;
   title: string;
+  keywordTitle: string;
   absoluteRoute: () => string;
   breadcrumbs: () => string[];
   sourceFile: SourceFile;

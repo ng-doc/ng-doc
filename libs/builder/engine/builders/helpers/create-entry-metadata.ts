@@ -47,6 +47,7 @@ export function createEntryMetadata<T extends FileEntry>(
     objectExpression,
     path: entryPath,
     title: entry.title,
+    keywordTitle: entry.title,
     order: entry.order,
     nestedRoutes: !isCategory,
     absoluteRoute: function (): string {

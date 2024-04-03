@@ -42,6 +42,7 @@ export function createDeclarationMetadata(
     parent: undefined,
     outPath: path.join(outDir, 'page.ts'),
     title: declaration.getName() ?? '[Unknown]',
+    keywordTitle: declaration.getName() ?? '[Unknown]',
     sourceFile: declaration.getSourceFile(),
     breadcrumbs: () => [],
     hidden: true,

@@ -1,5 +1,5 @@
-import {NgDocEntityKeyword} from '@ng-doc/builder';
-import {NgDocEntityAnchor} from '@ng-doc/core';
+import { NgDocEntityKeyword } from '@ng-doc/builder';
+import { NgDocEntityAnchor } from '@ng-doc/core';
 
 /**
  *
@@ -9,22 +9,20 @@ import {NgDocEntityAnchor} from '@ng-doc/core';
  * @param anchor
  */
 export function buildEntityKeyword(
-	key: string,
-	title: string,
-	path: string,
-	anchor: NgDocEntityAnchor,
+  key: string,
+  title: string,
+  path: string,
+  anchor: NgDocEntityAnchor,
 ): NgDocEntityKeyword {
-	if (anchor.type === 'heading') {
-		return {
-			key: `${key}#${anchor.anchor}`,
-			title: `${title} [${anchor.title}]`,
-			path: `${path}#${anchor.anchor}`,
-		};
-	} else {
-		return {
-			key: `${key}.${anchor.anchor}`,
-			title: `${title}.${anchor.title}`,
-			path: `${path}#${anchor.anchor}`,
-		};
-	}
+  return anchor.type === 'heading'
+    ? {
+        key: `${key}#${anchor.anchor}`,
+        title: `${title} [${anchor.title}]`,
+        path: `${path}#${anchor.anchor}`,
+      }
+    : {
+        key: `${key}.${anchor.anchor}`,
+        title: `${title}.${anchor.title}`,
+        path: `${path}#${anchor.anchor}`,
+      };
 }
