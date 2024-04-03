@@ -51,6 +51,7 @@ export class NgDocPagePlaygroundEntity extends NgDocEntity {
 				playgroundMetadata: this.metadata,
 				hasImports: this.parent.hasImports,
 				targetImportPath: this.parent.importPath,
+				outFolder: path.dirname(this.outputPath),
 			},
 		});
 

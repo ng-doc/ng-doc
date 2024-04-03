@@ -10,9 +10,6 @@ const Page: NgDocPage = {
 		BtnPlayground: {
 			target: DemoComponent,
 			template: `<ng-doc-selector></ng-doc-selector>`,
-			controls: {
-				size: { type: 'NgDocTypeAlias', options: ['s', 'm', 'l', 'xl'] },
-			},
 		},
 	},
 };
