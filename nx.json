@@ -1,8 +1,5 @@
 {
 	"$schema": "./node_modules/nx/schemas/nx-schema.json",
-	"affected": {
-		"defaultBase": "main"
-	},
 	"cli": {
 		"packageManager": "npm"
 	},
@@ -23,10 +20,6 @@
 	},
 	"defaultProject": "ng-doc",
 	"targetDefaults": {
-		"lint": {
-			"inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
-			"cache": true
-		},
 		"build": {
 			"dependsOn": ["pre-build"],
 			"inputs": ["production", "^production"],
@@ -51,6 +44,10 @@
 					"codeCoverage": true
 				}
 			}
+		},
+		"@nx/eslint:lint": {
+			"inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
+			"cache": true
 		}
 	},
 	"namedInputs": {
@@ -58,5 +55,7 @@
 		"sharedGlobals": [],
 		"production": ["default", "!{projectRoot}/src/test-setup.[jt]s"]
 	},
-	"nxCloudAccessToken": "ZGIxMzcwOTUtZmYzMy00MzBhLWJiZmUtZmU3NDAxYTQ1MzcwfHJlYWQtd3JpdGU="
+	"nxCloudAccessToken": "ZGIxMzcwOTUtZmYzMy00MzBhLWJiZmUtZmU3NDAxYTQ1MzcwfHJlYWQtd3JpdGU=",
+	"useInferencePlugins": false,
+	"defaultBase": "main"
 }
