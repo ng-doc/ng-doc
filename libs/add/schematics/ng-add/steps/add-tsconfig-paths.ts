@@ -22,7 +22,7 @@ export function addTsconfigPaths(options: Schema): Rule {
 			const logger = context.logger.createChild('add-tsconfig-paths');
 
 			context.logger.info(`[INFO]: TSConfig paths`);
-			logger.info(`🔄 Configuring TSConfig paths to allow import from ".ng-doc" folder...`);
+			logger.info(`🔄 Configuring TSConfig paths to allow import from "ng-doc" folder...`);
 
 			try {
 				const project: ProjectDefinition | undefined = getProject(options, workspace);

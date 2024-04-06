@@ -105,14 +105,14 @@ by adding them to your `styles` array.
 }
 ```
 
-### Adding .ng-doc folder to gitignore
+### Adding ng-doc folder to gitignore
 
-`.ng-doc` folder contains generated NgDoc files, you need to add it to your `.gitignore`,
+`ng-doc` folder contains generated NgDoc files, you need to add it to your `.gitignore`,
 because NgDoc regenerates them every time the application is launched.
 
 ```gitignore name=".gitignore"
 ## NgDoc folder
-.ng-doc
+/ng-doc
 ```
 
 ### Adding assets
@@ -140,7 +140,7 @@ useful things. You also need to add them to your application's assets.
               },
               {
                 "glob": "**/*",
-                "input": ".ng-doc/<project-name>/assets",
+                "input": "ng-doc/<project-name>/assets",
                 "output": "assets/ng-doc"
               }
             ]
@@ -170,7 +170,7 @@ useful things. You also need to add them to your application's assets.
           },
           {
             "glob": "**/*",
-            "input": ".ng-doc/<project-name>/assets",
+            "input": "ng-doc/<project-name>/assets",
             "output": "assets/ng-doc"
           }
         ]
@@ -194,8 +194,8 @@ the generated files and `allowSyntheticDefaultImports` option.
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@ng-doc/generated": [".ng-doc/<project-name>/index.ts"],
-      "@ng-doc/generated/*": [".ng-doc/<project-name>/*"]
+      "@ng-doc/generated": ["ng-doc/<project-name>/index.ts"],
+      "@ng-doc/generated/*": ["ng-doc/<project-name>/*"]
     }
   }
 }
