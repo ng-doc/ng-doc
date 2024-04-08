@@ -13,7 +13,7 @@ export function loadConfig(path: string, search: boolean = true): [string, NgDoc
 	const moduleName: string = 'ng-doc';
 
 	const explorerSync: PublicExplorerSync = cosmiconfigSync(moduleName, {
-		searchPlaces: [`${moduleName}.config.ts`],
+		searchPlaces: [`${moduleName}.config.ts`, `${moduleName}.config.js`],
 		loaders: {
 			'.ts': TypeScriptLoader(),
 		},
