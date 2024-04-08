@@ -1,3 +1,10 @@
+## [17.5.7](https://github.com/ng-doc/ng-doc/compare/v17.5.6...v17.5.7) (2024-04-08)
+
+
+### Bug Fixes
+
+* **builder:** builder configuration doesn't support .js extension ([94773ac](https://github.com/ng-doc/ng-doc/commit/94773acf33f9d26a0cead5b027313a7de982643c)), closes [#148](https://github.com/ng-doc/ng-doc/issues/148)
+
 ## [17.5.6](https://github.com/ng-doc/ng-doc/compare/v17.5.5...v17.5.6) (2024-04-03)
 
 
