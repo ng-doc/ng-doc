@@ -73,7 +73,7 @@
 		ng-doc-tag {
 			text-transform: uppercase;
 			margin-right: var(--ng-doc-base-gutter);
-			--ng-doc-font-weight: 900;
+			--ng-doc-font-weight: 500;
 
 			&[data-ng-doc-page-type='guide'] {
 				--ng-doc-tag-color: var(--ng-doc-guide-tag-color);
@@ -90,7 +90,6 @@
 			--ng-doc-text: var(--ng-doc-text-muted);
 			--ng-doc-font-size: 12px;
 			--ng-doc-line-height: 16px;
-			--ng-doc-font-weight: 600;
 
 			.ng-doc-search-option-breadcrumb-divider {
 				margin: 0 6px;
@@ -110,7 +109,6 @@
 		color: var(--ng-doc-search-result-color, var(--ng-doc-text));
 		--ng-doc-font-size: 14px;
 		--ng-doc-line-height: 19px;
-		--ng-doc-font-weight: 600;
 	}
 }
 
