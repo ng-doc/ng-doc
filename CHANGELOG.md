@@ -1,3 +1,10 @@
+# [17.6.0](https://github.com/ng-doc/ng-doc/compare/v17.5.7...v17.6.0) (2024-04-14)
+
+
+### Features
+
+* **ui:** nunito font was removed, now UI uses system fonts by default ([32d3e11](https://github.com/ng-doc/ng-doc/commit/32d3e11f953a950e58c50067e839bacddd4b14ca)), closes [#152](https://github.com/ng-doc/ng-doc/issues/152)
+
 ## [17.5.7](https://github.com/ng-doc/ng-doc/compare/v17.5.6...v17.5.7) (2024-04-08)
 
 
