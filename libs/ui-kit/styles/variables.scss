@@ -40,15 +40,20 @@
 	--ng-doc-shadow-color: rgba(0, 0, 0, 0.15);
 
 	// Font
-	--ng-doc-heading-font-family: 'Nunito', sans-serif;
-	--ng-doc-font-family: 'Nunito Sans', sans-serif;
+	--ng-doc-font-system: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+		Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+		'Segoe UI Symbol', 'Noto Color Emoji';
+	--ng-doc-font-system-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+		'Liberation Mono', 'Courier New', monospace;
+	--ng-doc-heading-font-family: var(--ng-doc-font-system);
+	--ng-doc-font-family: var(--ng-doc-font-system);
 	--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 2);
 	--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 3);
-	--ng-doc-font-weight: 500;
-	--ng-doc-code-font: 'Source Code Pro', monospace;
+	--ng-doc-font-weight: 400;
+	--ng-doc-code-font: var(--ng-doc-font-system-mono);
 	--ng-doc-code-font-size: 14px;
 	--ng-doc-code-line-height: 20px;
-	--ng-doc-code-font-weight: 600;
+	--ng-doc-code-font-weight: 400;
 	--ng-doc-text: #111111;
 	--ng-doc-text-muted: var(--ng-doc-base-8);
 
