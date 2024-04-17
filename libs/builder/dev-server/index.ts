@@ -8,6 +8,7 @@ import { first, map, shareReplay, switchMap } from 'rxjs/operators';
 import { buildNgDoc } from '../engine/build-ng-doc';
 import { createBuilderContext } from '../helpers';
 import { NgDocSchema } from '../interfaces';
+import { patchBuilderContext } from './patch-builder-context';
 
 /**
  * Attach NgDocBuilder and run DevServer
@@ -18,27 +19,17 @@ export function runDevServer(
 	options: NgDocSchema,
 	context: BuilderContext,
 ): Observable<BuilderOutputLike> {
-	// The DevServer uses EsBuild only for specific builder names.
-	// https://github.com/just-jeb/angular-builders/blob/dbf4d281a29c2f93d309bba0e155c3a22965130c/packages/custom-esbuild/src/dev-server/patch-builder-context.ts#L14-L47
-	const getBuilderNameForTargetBase = context.getBuilderNameForTarget;
-	context.getBuilderNameForTarget = async (target) => {
-		const builderName = await getBuilderNameForTargetBase(target);
-		if (builderName !== '@ng-doc/builder:application') return builderName;
-		return '@angular-devkit/build-angular:application';
-	};
-	const getTargetOptionsBase = context.getTargetOptions;
-	context.getTargetOptions = async (target) => {
-		const builderName = await context.getBuilderNameForTarget(target);
-		if (builderName !== '@angular-devkit/build-angular:application')
-			return getTargetOptionsBase(target);
-		const options: Partial<NgDocSchema> = await getTargetOptionsBase(target);
-		delete options.ngDoc;
-		return options as JsonObject;
-	};
+	const contextWithPatch = patchBuilderContext(context, {
+		mock: '@ng-doc/builder:application',
+		with: '@angular-devkit/build-angular:application',
+		optionsTransform: (options: Partial<NgDocSchema>) => {
+			delete options.ngDoc;
+		},
+	});
 
 	const target = options.buildTarget && targetFromTargetString(options.buildTarget);
 	const options$: Observable<JsonObject> = target
-		? from(getTargetOptionsBase(target))
+		? from(context.getTargetOptions(target))
 		: of(options as unknown as JsonObject);
 
 	return options$.pipe(
@@ -48,7 +39,7 @@ export function runDevServer(
 			return buildNgDoc$.pipe(
 				first(),
 				switchMap(() =>
-					combineLatest([buildNgDoc$, executeDevServer(options, context)]).pipe(
+					combineLatest([buildNgDoc$, executeDevServer(options, contextWithPatch)]).pipe(
 						map(([, devServerOutput]) => devServerOutput),
 					),
 				),
