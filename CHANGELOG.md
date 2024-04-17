@@ -1,3 +1,10 @@
+## [17.6.1](https://github.com/ng-doc/ng-doc/compare/v17.6.0...v17.6.1) (2024-04-17)
+
+
+### Bug Fixes
+
+* **builder:** imports in `ng-doc.routing.ts` lead to a build error for latest angular version ([61effbf](https://github.com/ng-doc/ng-doc/commit/61effbfdf14830780ec938f2bf322588758e481c)), closes [#154](https://github.com/ng-doc/ng-doc/issues/154)
+
 # [17.6.0](https://github.com/ng-doc/ng-doc/compare/v17.5.7...v17.6.0) (2024-04-14)
 
 
