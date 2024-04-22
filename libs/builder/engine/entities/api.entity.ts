@@ -103,6 +103,7 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
 			const result = renderTemplate('./api-list.ts.nunj', {
 				context: {
 					api: this,
+					outFolder: this.folderPath,
 				},
 			});
 
