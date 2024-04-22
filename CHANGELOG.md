@@ -1,3 +1,10 @@
+## [17.6.2](https://github.com/ng-doc/ng-doc/compare/v17.6.1...v17.6.2) (2024-04-22)
+
+
+### Bug Fixes
+
+* **builder:** imports in generated APIs lead to a build error for latest angular version ([1b4bdf6](https://github.com/ng-doc/ng-doc/commit/1b4bdf694f0c5bea6ca8f63cfe1c99f8363ce9f6))
+
 ## [17.6.1](https://github.com/ng-doc/ng-doc/compare/v17.6.0...v17.6.1) (2024-04-17)
 
 
