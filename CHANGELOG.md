@@ -1,3 +1,10 @@
+## [17.6.3](https://github.com/ng-doc/ng-doc/compare/v17.6.2...v17.6.3) (2024-04-24)
+
+
+### Bug Fixes
+
+* **app:** input aliasing selector renders in playground template using property name ([d7cf81e](https://github.com/ng-doc/ng-doc/commit/d7cf81e918e768eb4f2cb3f5f46047bc75285428)), closes [#155](https://github.com/ng-doc/ng-doc/issues/155)
+
 ## [17.6.2](https://github.com/ng-doc/ng-doc/compare/v17.6.1...v17.6.2) (2024-04-22)
 
 
