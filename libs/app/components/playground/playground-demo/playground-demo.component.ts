@@ -171,11 +171,12 @@ export class NgDocPlaygroundDemoComponent<
 			(this.form?.controls.properties.value as Record<string, unknown>) ?? {};
 
 		return objectKeys(formData).reduce((result: Record<string, string>, key: string) => {
+			const inputName = this.properties?.[key]?.inputName ?? key;
 			const value: unknown = formData[key];
 			const property: unknown | undefined = this.demoRef?.instance?.defaultValues[key];
 
 			if (property !== value) {
-				result[key] = stringify(value).replace(/"/g, `'`);
+				result[inputName] = stringify(value).replace(/"/g, `'`);
 			}
 
 			return result;
