@@ -9,7 +9,12 @@ const Page: NgDocPage = {
 	playgrounds: {
 		BtnPlayground: {
 			target: DemoComponent,
-			template: `<ng-doc-selector></ng-doc-selector>`,
+			template: `
+				<ng-doc-selector [element]="test"></ng-doc-selector>
+
+				<div #test>HAHA</div>
+			`,
+			hiddenInputs: ['element'],
 		},
 	},
 };
