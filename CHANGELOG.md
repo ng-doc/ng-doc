@@ -1,3 +1,10 @@
+## [17.6.4](https://github.com/ng-doc/ng-doc/compare/v17.6.3...v17.6.4) (2024-04-27)
+
+
+### Bug Fixes
+
+* **builder:** builder doesn't ignore inputs used for the component in the playground template ([75c89d0](https://github.com/ng-doc/ng-doc/commit/75c89d0632f55e1d525404421b3508ba3cc1c2a2)), closes [#156](https://github.com/ng-doc/ng-doc/issues/156)
+
 ## [17.6.3](https://github.com/ng-doc/ng-doc/compare/v17.6.2...v17.6.3) (2024-04-24)
 
 
