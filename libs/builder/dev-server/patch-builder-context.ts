@@ -13,20 +13,20 @@ import { BuilderContext } from '@angular-devkit/architect';
 export function patchBuilderContext(
 	context: BuilderContext,
 	config: {
-		mock: string;
+		mock: string[];
 		with: string;
 		optionsTransform: (options: any) => void;
 	},
 ): BuilderContext {
 	const getBuilderNameForTarget: typeof context.getBuilderNameForTarget = async (target) => {
 		const builderName = await context.getBuilderNameForTarget(target);
-		if (builderName !== config.mock) return builderName;
+		if (!config.mock.includes(builderName)) return builderName;
 		return config.with;
 	};
 
 	const getTargetOptions: typeof context.getTargetOptions = async (target) => {
 		const builderName = await context.getBuilderNameForTarget(target);
-		if (builderName !== config.mock) return context.getTargetOptions(target);
+		if (!config.mock.includes(builderName)) return context.getTargetOptions(target);
 		const options = await context.getTargetOptions(target);
 		config.optionsTransform(options);
 		return options;

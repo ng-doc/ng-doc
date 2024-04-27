@@ -20,7 +20,7 @@ export function runDevServer(
 	context: BuilderContext,
 ): Observable<BuilderOutputLike> {
 	const contextWithPatch = patchBuilderContext(context, {
-		mock: '@ng-doc/builder:application',
+		mock: ['@ng-doc/builder:application', './dist/libs/builder:application'],
 		with: '@angular-devkit/build-angular:application',
 		optionsTransform: (options: Partial<NgDocSchema>) => {
 			delete options.ngDoc;
