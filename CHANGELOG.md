@@ -1,3 +1,10 @@
+## [17.6.5](https://github.com/ng-doc/ng-doc/compare/v17.6.4...v17.6.5) (2024-04-30)
+
+
+### Bug Fixes
+
+* **builder:** playground templates do not support direct input directive binding (e.g., `<img [ngDocRotator]="true"/>`) ([ab8bcb2](https://github.com/ng-doc/ng-doc/commit/ab8bcb2303ceb01f023b05b442ae614de078a313))
+
 ## [17.6.4](https://github.com/ng-doc/ng-doc/compare/v17.6.3...v17.6.4) (2024-04-27)
 
 
