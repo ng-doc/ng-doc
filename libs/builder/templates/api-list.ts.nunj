@@ -26,7 +26,7 @@ const routes: Routes = [
     {%- for scope in api.builtChildren %}
     {
         path: '{{ scope.route }}',
-        loadChildren: () => import('{{ scope.moduleImport }}')
+        loadChildren: () => import('./{{ outFolder | createImportPath(scope.moduleImport) }}')
     },
     {%- endfor %}
 ]

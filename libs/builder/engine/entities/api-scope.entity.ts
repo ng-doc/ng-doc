@@ -96,6 +96,7 @@ export class NgDocApiScopeEntity extends NgDocRouteEntity<NgDocApiScope> {
 			const result = renderTemplate('./api-scope.ts.nunj', {
 				context: {
 					scope: this,
+					outFolder: this.folderPath,
 				},
 			});
 

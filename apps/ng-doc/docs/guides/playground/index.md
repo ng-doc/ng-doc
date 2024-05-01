@@ -103,6 +103,37 @@ export default MyAwesomePage;
 
 {{ NgDocActions.playground("ButtonPlayground") }}
 
+## Inputs used in the template
+
+If you are setting the value of an input using the template playground, NgDoc will ignore this input
+for the sidebar. Thus, you can pass references to HTML elements or other components into inputs
+using Angular syntax.
+
+> **Note**
+> However, if you simply want to set a default value for an input and still keep control in the
+> sidebar to manage its value, use the `NgDocPlaygroundOptions.inputs` or
+> `NgDocPlaygroundOptions.defaults` properties of the playground configuration.
+
+```typescript name="ng-doc.page.ts" {8-10}
+import { NgDocPage } from '@ng-doc/core';
+
+const MyAwesomePage: NgDocPage = {
+  playgrounds: {
+    TagPlayground: {
+      target: MyComponent,
+      template: `
+         You can also use "ng-doc-selector" here instead of your real selector
+        <my-component [input]="elementRef"></my-component>
+        
+        <input #elementRef value="Hello, World!">
+      `,
+    },
+  },
+};
+
+export default MyAwesomePage;
+```
+
 ## Optional content
 
 Some components may support displaying other child components with `ng-content`, and they may be

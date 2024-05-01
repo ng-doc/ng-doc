@@ -28,21 +28,23 @@ export class NgDocHtmlParser {
 			const shiftNode: Node | undefined = nodes.shift();
 			const node: NodeTag | undefined =
 				!isPresent(shiftNode) || !isNodeTag(shiftNode) ? undefined : shiftNode;
-
-			if (
+			const tagSelectorMatch: boolean =
 				tagSelectors.every(
-					(tagSelector: TagSelector) =>
-						tagSelector.name.toLowerCase() === String(node?.tag).toLowerCase(),
-				) &&
+					(tagSelector) => tagSelector.name.toLowerCase() === String(node?.tag).toLowerCase(),
+				) || !tagSelectors.length;
+			const attrSelectorsMatch: boolean =
 				attrSelectors.every((attrSelector: AttributeSelector) => {
-					const attrValue: unknown = node && node.attrs && node?.attrs[attrSelector.name];
+					const nodeAttrs = node?.attrs ?? {};
+					const hasAttr =
+						Object.keys(nodeAttrs).includes(attrSelector.name) ||
+						Object.keys(nodeAttrs).includes(`[${attrSelector.name}]`);
+					const attrValue: unknown =
+						nodeAttrs[attrSelector.name] ?? nodeAttrs[`[${attrSelector.name}]`];
 
-					return (
-						Object.keys(node?.attrs ?? {}).includes(attrSelector.name) &&
-						attrValue === attrSelector.value
-					);
-				})
-			) {
+					return (hasAttr && !attrSelector.value) || attrValue === attrSelector.value;
+				}) || !attrSelectors.length;
+
+			if (tagSelectorMatch && attrSelectorsMatch) {
 				return node;
 			} else {
 				nodes.push(...asArray(node?.content).flat());
@@ -72,8 +74,14 @@ export class NgDocHtmlParser {
 	}
 
 	setAttributesFromSelectors(element: NodeTag, selectors: Selector[]): void {
+		const elementAttrs = element.attrs ?? {};
+
 		selectors.forEach((selector: Selector) => {
-			if (selector.type === 'attribute') {
+			if (
+				selector.type === 'attribute' &&
+				!elementAttrs[selector.name] &&
+				!elementAttrs[`[${selector.name}]`]
+			) {
 				this.setAttribute(element, selector.name, selector.value);
 			}
 		});

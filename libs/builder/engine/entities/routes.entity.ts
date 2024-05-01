@@ -14,14 +14,17 @@ export class NgDocRoutesEntity extends NgDocEntity {
 
 	build(): Observable<NgDocBuildResult<string>> {
 		const entities: NgDocEntity[] = this.store.getRootEntitiesForBuild();
-		const result: string = renderTemplate('./routing.ts.nunj', { context: { entities } });
+		const outFolder: string = this.context.buildPath;
+		const result: string = renderTemplate('./routing.ts.nunj', {
+			context: { entities, outFolder },
+		});
 
 		return of({
 			result,
 			entity: this,
 			toBuilderOutput: async (content: string) => ({
 				content,
-				filePath: path.join(this.context.buildPath, 'ng-doc.routing.ts'),
+				filePath: path.join(outFolder, 'ng-doc.routing.ts'),
 			}),
 		});
 	}

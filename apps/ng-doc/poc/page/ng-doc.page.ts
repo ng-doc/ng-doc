@@ -1,4 +1,5 @@
 import { NgDocPage } from '@ng-doc/core';
+import { NgDocRotatorDirective } from '@ng-doc/ui-kit';
 
 import { DemoComponent } from './demo.component';
 
@@ -8,8 +9,11 @@ const Page: NgDocPage = {
 	demos: { DemoComponent },
 	playgrounds: {
 		BtnPlayground: {
-			target: DemoComponent,
-			template: `<ng-doc-selector></ng-doc-selector>`,
+			target: NgDocRotatorDirective,
+			template: `
+				<ng-doc-selector>123</ng-doc-selector>
+			`,
+			hiddenInputs: ['element'],
 		},
 	},
 };

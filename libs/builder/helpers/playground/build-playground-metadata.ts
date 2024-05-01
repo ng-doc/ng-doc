@@ -2,6 +2,7 @@ import { Component, Directive, Pipe } from '@angular/core';
 import {
 	buildPlaygroundDemoPipeTemplate,
 	buildPlaygroundDemoTemplate,
+	getAssignedInputs,
 	NgDocPlaygroundProperties,
 } from '@ng-doc/core';
 import { ClassDeclaration, ObjectLiteralExpression } from 'ts-morph';
@@ -52,17 +53,26 @@ export function buildPlaygroundMetadata(
 
 	if ('selector' in decorator) {
 		const selector: string = decorator.selector!.replace(/[\n\s]/gm, '');
-		const properties: NgDocPlaygroundProperties = {
+		const selectors: string[] = extractSelectors(target);
+		const assignedInputs: string[] = getAssignedInputs(template, selectors);
+		const properties: NgDocPlaygroundProperties = Object.entries({
 			...getPlaygroundComponentInputs(target),
 			...additionalProps,
-		};
+		}).reduce((acc: NgDocPlaygroundProperties, [key, value]) => {
+			// Skip the inputs that are already assigned in the template
+			if (!assignedInputs.includes(value.inputName ?? key)) {
+				return { ...acc, [key]: value };
+			}
+
+			return acc;
+		}, {} as NgDocPlaygroundProperties);
 		const templateInputs: Record<string, string> = getPlaygroundTemplateInputs(properties);
 
 		return {
 			selector: selector,
 			standalone,
 			template,
-			templateForComponents: extractSelectors(target).reduce(
+			templateForComponents: selectors.reduce(
 				(templateForComponents: Record<string, string>, selector: string) => {
 					return {
 						...templateForComponents,
