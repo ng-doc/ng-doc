@@ -45,8 +45,7 @@
 					"posthtml-render",
 					"js-beautify",
 					"chalk"
-				],
-				"ngDoc": { "config": "apps/ng-doc/ng-doc.config.ts" }
+				]
 			},
 			"configurations": {
 				"production": {
