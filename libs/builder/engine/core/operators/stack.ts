@@ -17,6 +17,8 @@ import { BuilderPending, BuilderState, EndStates, isBuilderPending } from '../ty
 
 let builderId = 0;
 
+// const BUILDER_STEPS = ['load-entry-files', '']
+
 export const STACK = new Map<string, Set<number>>();
 const STACK_TICK = new Subject<void>();
 

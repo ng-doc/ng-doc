@@ -7,7 +7,7 @@ keyword: { { NgDocPage.data.keyword } }
 
 # Class
 
-{{ NgDocActions.api(NgDocPage.data.declaration) }}
+{{ NgDocActions.api("apps/ng-doc/poc/another-page/test-inter.ts#MyClass") }}
 
 # Interface
 

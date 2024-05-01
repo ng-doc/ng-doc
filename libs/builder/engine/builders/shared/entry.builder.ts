@@ -74,8 +74,8 @@ export function entryBuilder<T extends NgDocPage | NgDocApi>(
  * @param metadata
  * @param dependencies
  */
-function addCategoriesToDependencies<T extends FileEntry>(
-  metadata: EntryMetadata<T>,
+function addCategoriesToDependencies(
+  metadata: EntryMetadata<FileEntry>,
   dependencies: ObservableSet<string>,
 ) {
   if (metadata.parent) {

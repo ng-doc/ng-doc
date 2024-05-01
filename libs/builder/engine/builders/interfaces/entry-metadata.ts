@@ -1,4 +1,4 @@
-import { NgDocCategory, NgDocPage } from '@ng-doc/core';
+import { NgDocApi, NgDocCategory, NgDocPage } from '@ng-doc/core';
 import { minimatch } from 'minimatch';
 import { ObjectLiteralExpression, SourceFile } from 'ts-morph';
 
@@ -25,13 +25,17 @@ export interface EntryMetadata<T extends Entry = Entry> {
   hidden?: boolean;
 }
 
-export type ParentEntryMetadata<T extends Entry> = T extends DeclarationTabEntry
-  ? EntryMetadata<DeclarationEntry>
-  : T extends MarkdownEntry
-    ? EntryMetadata<NgDocPage>
-    : T extends DeclarationEntry
-      ? undefined
-      : EntryMetadata<NgDocCategory> | undefined;
+export type ParentEntryMetadata<T extends Entry> = T extends NgDocPage
+  ? EntryMetadata<NgDocCategory> | undefined
+  : T extends NgDocApi
+    ? EntryMetadata<NgDocCategory> | undefined
+    : T extends DeclarationTabEntry
+      ? EntryMetadata<DeclarationEntry>
+      : T extends MarkdownEntry
+        ? EntryMetadata<NgDocPage>
+        : T extends DeclarationEntry
+          ? undefined
+          : EntryMetadata<NgDocCategory> | undefined;
 
 /**
  *
