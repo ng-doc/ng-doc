@@ -9,7 +9,7 @@ import {
 } from 'ts-morph';
 
 import { getComponentInputs, getInputName, getInputType, NgDocInputDeclaration } from '../angular';
-import { extractParameterDocs } from '../extract-docs';
+import { extractDocs, extractParameterDocs } from '../extract-docs';
 import { formatType } from '../typescript';
 
 /**
@@ -51,8 +51,11 @@ function propOrParamToPlaygroundProperty(
   propOrParam: NgDocInputDeclaration | ParameterDeclaration,
   inputName?: string,
 ): NgDocPlaygroundProperties {
+  const inputType = Node.isPropertyDeclaration(propOrParam)
+    ? getInputType(propOrParam)
+    : propOrParam.getType();
   const type: string = formatType(
-    Node.isPropertyDeclaration(propOrParam) ? getInputType(propOrParam) : propOrParam.getType(),
+    inputType,
     TypeFormatFlags.NoTruncation | TypeFormatFlags.UseSingleQuotesForStringLiteralType,
   );
 
@@ -64,13 +67,12 @@ function propOrParamToPlaygroundProperty(
         Node.isPropertyDeclaration(propOrParam) ||
         Node.isGetAccessorDeclaration(propOrParam) ||
         Node.isSetAccessorDeclaration(propOrParam)
-          ? propOrParam.getJsDocs()[0]?.getDescription()
+          ? extractDocs(propOrParam)
           : extractParameterDocs(
               propOrParam.getParentIfKindOrThrow(SyntaxKind.MethodDeclaration),
               propOrParam.getName(),
             ),
-      options: propOrParam
-        .getType()
+      options: inputType
         .getUnionTypes()
         .map((type: Type) =>
           type.getText(

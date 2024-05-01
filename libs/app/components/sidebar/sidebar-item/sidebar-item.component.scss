@@ -1,49 +1,49 @@
 @import '../../../../ui-kit/styles/mixins';
 
 :host {
-	display: block;
+  display: block;
 }
 
 .ng-doc-sidebar-link {
-	@include ng-doc-heading-font();
-	display: flex;
-	align-items: center;
-	padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-horizontal-padding)
-		var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
-	text-decoration: inherit;
-	cursor: pointer;
-	--ng-doc-icon-color: var(--ng-doc-text);
-	--ng-doc-dot-background: var(--ng-doc-base-4);
-	--ng-doc-font-weight: 500;
+  @include ng-doc-heading-font();
+  display: flex;
+  align-items: center;
+  padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-horizontal-padding)
+    var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
+  text-decoration: inherit;
+  cursor: pointer;
+  --ng-doc-icon-color: var(--ng-doc-text);
+  --ng-doc-dot-background: var(--ng-doc-base-4);
+  --ng-doc-font-weight: 400;
 
-	ng-doc-dot {
-		margin-right: calc(var(--ng-doc-base-gutter) * 2);
-	}
+  ng-doc-dot {
+    margin-right: calc(var(--ng-doc-base-gutter) * 2);
+  }
 
-	&:hover:not(.active) {
-		--ng-doc-text: var(--ng-doc-text-muted);
-	}
+  &:hover:not(.active) {
+    --ng-doc-text: var(--ng-doc-text-muted);
+  }
 
-	&.active {
-		--ng-doc-font-weight: 800;
-		--ng-doc-dot-background: var(--ng-doc-primary);
+  &.active {
+    --ng-doc-font-weight: 500;
+    --ng-doc-dot-background: var(--ng-doc-primary);
 
-		ng-doc-dot {
-			animation: animation 0.5s ease-out;
+    ng-doc-dot {
+      animation: animation 0.5s ease-out;
 
-			@keyframes animation {
-				0% {
-					transform: scale(1);
-				}
+      @keyframes animation {
+        0% {
+          transform: scale(1);
+        }
 
-				50% {
-					transform: scale(2);
-				}
+        50% {
+          transform: scale(2);
+        }
 
-				100% {
-					transform: scale(1);
-				}
-			}
-		}
-	}
+        100% {
+          transform: scale(1);
+        }
+      }
+    }
+  }
 }

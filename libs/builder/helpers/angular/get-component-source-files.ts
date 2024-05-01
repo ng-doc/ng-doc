@@ -10,18 +10,20 @@ import { getComponentDecorator } from './get-component-decorator';
  * @param cls - Class declaration.
  */
 export function getComponentSourceFiles(cls: ClassDeclaration): string[] {
-	const decoratorData: Component | undefined = getComponentDecorator(cls);
+  const decoratorData: Component | undefined = getComponentDecorator(cls);
 
-	if (decoratorData) {
-		const filePath: string = cls.getSourceFile().getFilePath();
-		const fileDir: string = path.dirname(filePath);
+  if (decoratorData) {
+    const filePath: string = cls.getSourceFile().getFilePath();
+    const fileDir: string = path.dirname(filePath);
 
-		return asArray(
-			filePath,
-			decoratorData.templateUrl ? path.join(fileDir, decoratorData.templateUrl) : [],
-			asArray(decoratorData.styleUrls).map((styleUrl: string) => path.join(fileDir, styleUrl)),
-		);
-	}
+    return asArray(
+      filePath,
+      decoratorData.templateUrl ? path.join(fileDir, decoratorData.templateUrl) : [],
+      asArray(decoratorData.styleUrls, decoratorData.styleUrl).map((styleUrl: string) =>
+        path.join(fileDir, styleUrl),
+      ),
+    );
+  }
 
-	return [];
+  return [];
 }

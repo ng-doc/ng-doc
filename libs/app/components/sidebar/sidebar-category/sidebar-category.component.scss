@@ -1,63 +1,63 @@
 :host {
-	display: flex;
-	flex-direction: column;
-	--ng-doc-sidebar-category-indent: calc(
-		var(--ng-doc-sidebar-item-indent) + calc(var(--ng-doc-base-gutter) * 2)
-	);
-	--ng-doc-icon-color: var(--ng-doc-text);
+  display: flex;
+  flex-direction: column;
+  --ng-doc-sidebar-category-indent: calc(
+    var(--ng-doc-sidebar-item-indent) + calc(var(--ng-doc-base-gutter) * 2)
+  );
+  --ng-doc-icon-color: var(--ng-doc-text);
 
-	&[data-ng-doc-expandable='false'] {
-		.ng-doc-sidebar-category-button {
-			padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-base-gutter)
-				var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
+  &[data-ng-doc-expandable='false'] {
+    .ng-doc-sidebar-category-button {
+      padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-base-gutter)
+        var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
 
-			.ng-doc-sidebar-category {
-				--ng-doc-font-weight: 600;
-			}
-		}
-	}
+      .ng-doc-sidebar-category {
+        --ng-doc-font-weight: 500;
+      }
+    }
+  }
 
-	&[data-ng-doc-expandable='true'] {
-		.ng-doc-sidebar-category-button {
-			padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-base-gutter)
-				var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
-			cursor: pointer;
-			border-radius: var(--ng-doc-base-gutter);
+  &[data-ng-doc-expandable='true'] {
+    .ng-doc-sidebar-category-button {
+      padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-base-gutter)
+        var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
+      cursor: pointer;
+      border-radius: var(--ng-doc-base-gutter);
 
-			&:hover {
-				background-color: var(--ng-doc-base-1);
-			}
-		}
-	}
+      &:hover {
+        background-color: var(--ng-doc-base-1);
+      }
+    }
+  }
 
-	.ng-doc-sidebar-category-button {
-		display: flex;
-		flex-direction: column;
+  .ng-doc-sidebar-category-button {
+    display: flex;
+    flex-direction: column;
 
-		.ng-doc-sidebar-category {
-			display: flex;
-			align-items: center;
-			--ng-doc-dot-background: var(--ng-doc-base-4);
-			--ng-doc-font-weight: 600;
+    .ng-doc-sidebar-category {
+      display: flex;
+      align-items: center;
+      --ng-doc-dot-background: var(--ng-doc-base-4);
+      --ng-doc-font-weight: 500;
 
-			ng-doc-dot {
-				margin-right: calc(var(--ng-doc-base-gutter) * 2);
-			}
+      ng-doc-dot {
+        margin-right: calc(var(--ng-doc-base-gutter) * 2);
+      }
 
-			&.active {
-				--ng-doc-font-weight: 700;
-				--ng-doc-dot-background: var(--ng-doc-primary);
-			}
-		}
+      &.active {
+        --ng-doc-font-weight: 600;
+        --ng-doc-dot-background: var(--ng-doc-primary);
+      }
+    }
 
-		span[ng-doc-text] {
-			flex-shrink: 0;
-			margin-right: var(--ng-doc-base-gutter);
-		}
-	}
+    span[ng-doc-text] {
+      flex-shrink: 0;
+      margin-right: var(--ng-doc-base-gutter);
+    }
+  }
 
-	.ng-doc-sidebar-category-children {
-		padding-bottom: calc(var(--ng-doc-base-gutter) * 2);
-		--ng-doc-sidebar-item-indent: var(--ng-doc-sidebar-category-indent);
-	}
+  .ng-doc-sidebar-category-children {
+    padding-bottom: calc(var(--ng-doc-base-gutter) * 2);
+    --ng-doc-sidebar-item-indent: var(--ng-doc-sidebar-category-indent);
+  }
 }

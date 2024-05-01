@@ -12,7 +12,7 @@ const routes: Routes = [
             {%- for page in scope.builtChildren %}
             {
                 path: '{{ page.route }}',
-                loadChildren: () => import('{{ page.moduleImport }}')
+                loadChildren: () => import('./{{ outFolder | createImportPath(page.moduleImport) }}')
             },
             {%- endfor %}
         ]

@@ -21,7 +21,7 @@ export interface NgDocConfiguration {
    *
    * Remember that if you change this path, you also need to change the following:
    * - Change the path to the `@ng-doc/generated` directory in `tsconfig.json`
-   * - Change the path to the `.ng-doc/app-name/assets` folder in `angular.json`
+   * - Change the path to the `ng-doc/app-name/assets` folder in `angular.json`
    */
   outDir?: string;
   /**
