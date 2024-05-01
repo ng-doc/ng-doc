@@ -1,3 +1,10 @@
+## [17.6.6](https://github.com/ng-doc/ng-doc/compare/v17.6.5...v17.6.6) (2024-05-01)
+
+
+### Bug Fixes
+
+* **builder:** eliminate dev-server schema validation error ([#153](https://github.com/ng-doc/ng-doc/issues/153)) ([68a9039](https://github.com/ng-doc/ng-doc/commit/68a903978db98ae5181b3b2891e3b4b3c2728159)), closes [#147](https://github.com/ng-doc/ng-doc/issues/147)
+
 ## [17.6.5](https://github.com/ng-doc/ng-doc/compare/v17.6.4...v17.6.5) (2024-04-30)
 
 
