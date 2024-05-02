@@ -47,6 +47,7 @@ export function apiBuilder(context: NgDocBuilderContext, apiPath: string): Build
           tag: API_PAGE_WRAPPER_BUILDER_TAG,
           context,
           metadata,
+          pageType: 'api',
           pageTemplateBuilders: [
             apiPageTemplateBuilder({
               context,

@@ -60,16 +60,14 @@ export function guideTemplateBuilder(config: Config): Builder<TemplateBuilderOut
                 const mdContent = renderTemplateString(content, {
                   scope: metadata.dir,
                   context: {
-                    NgDocPage: metadata.parent,
+                    NgDocPage: metadata.parent.entry,
                     NgDocActions: new NgDocActions(metadata, dependencies),
                   },
                   dependencies,
                   filters: false,
                 });
 
-                const html = markdownToHtml(mdContent, mdDir, dependencies.add.bind(dependencies));
-
-                return html;
+                return markdownToHtml(mdContent, mdDir, dependencies.add.bind(dependencies));
               },
             }),
           ],

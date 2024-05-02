@@ -28,6 +28,8 @@ export function watch(dirPath: string): Observable<watcher.Event[]> {
   watcher
     .subscribe(dirPath, (err, events) => {
       if (err) {
+        console.error(err);
+
         watcherSubject.error(err);
         return;
       }

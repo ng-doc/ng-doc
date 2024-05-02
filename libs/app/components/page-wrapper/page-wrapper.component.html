@@ -13,6 +13,9 @@
           [routerLinkActiveOptions]="{ exact: true }"
           #rla="routerLinkActive"
           [isActive]="rla.isActive">
+          @if (route.data?.['icon']; as icon) {
+            <ng-doc-icon [customIcon]="icon" />
+          }
           {{ route.title }}
         </a>
       }

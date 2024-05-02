@@ -1,13 +1,14 @@
 ---
 title: API
 route: api
-icon: api
 keyword: { { NgDocPage.data.keyword } }
 ---
 
+asd
+
 # Class
 
-{{ NgDocActions.api("apps/ng-doc/poc/another-page/test-inter.ts#MyClass") }}
+{{ NgDocActions.api(NgDocPage.data.declaration) }}
 
 # Interface
 

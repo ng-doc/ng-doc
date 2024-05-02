@@ -37,12 +37,13 @@ export function pageBuilder(
           tag: GUIDE_PAGE_WRAPPER_BUILDER_TAG,
           context,
           metadata: page,
+          pageType: 'guide',
           pageTemplateBuilders,
         }),
         demoAssetsBuilder({ context, page }),
         playgroundBuilder({ page }),
       );
     }),
-    takeUntil(watchFile(pagePath)),
+    takeUntil(watchFile(pagePath, 'delete')),
   );
 }

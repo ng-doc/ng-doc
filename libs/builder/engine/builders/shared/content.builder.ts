@@ -128,7 +128,7 @@ export function contentBuilder(config: Config): Builder<string> {
         }
       }
     }),
-    finalize(removeKeywords),
+    finalize(() => removeKeywords()),
   );
 }
 

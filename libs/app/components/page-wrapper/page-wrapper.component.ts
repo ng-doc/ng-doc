@@ -20,7 +20,11 @@ import { NgDocPageSkeleton } from '@ng-doc/app/interfaces';
 import { NgDocPageProcessorDirective } from '@ng-doc/app/processors';
 import { NG_DOC_PAGE_SKELETON } from '@ng-doc/app/tokens';
 import { isPresent } from '@ng-doc/core';
-import { NgDocTabRouteComponent, NgDocTabRoutesGroupComponent } from '@ng-doc/ui-kit';
+import {
+  NgDocIconComponent,
+  NgDocTabRouteComponent,
+  NgDocTabRoutesGroupComponent,
+} from '@ng-doc/ui-kit';
 
 @Component({
   selector: 'ng-doc-page-wrapper',
@@ -33,6 +37,7 @@ import { NgDocTabRouteComponent, NgDocTabRoutesGroupComponent } from '@ng-doc/ui
     NgDocTabRoutesGroupComponent,
     RouterLinkActive,
     NgDocPageProcessorDirective,
+    NgDocIconComponent,
   ],
   templateUrl: './page-wrapper.component.html',
   styleUrl: './page-wrapper.component.scss',

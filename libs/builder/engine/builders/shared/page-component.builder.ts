@@ -4,7 +4,7 @@ import { finalize } from 'rxjs';
 import { editFileInRepoUrl, viewFileInRepoUrl } from '../../../helpers';
 import { buildIndexes } from '../../../helpers/build-indexes';
 import { NgDocBuilderContext } from '../../../interfaces';
-import { AsyncFileOutput, Builder, IndexStore, keywordsStore } from '../../core';
+import { AsyncFileOutput, Builder, IndexStore } from '../../core';
 import { renderTemplate } from '../../nunjucks';
 import { EntryMetadata, PageEntry } from '../interfaces';
 import { replaceKeywords } from './index';
@@ -48,9 +48,7 @@ export function pageComponentBuilder<T>(
 
     // Replace keywords in the template at the end of the build process
     return async () => {
-      const content = await replaceKeywords(html, {
-        getKeyword: keywordsStore.get.bind(keywordsStore),
-      });
+      const content = await replaceKeywords(html);
       const editSourceFileUrl =
         context.config.repoConfig &&
         editFileInRepoUrl(context.config.repoConfig, metadata.path, metadata.route, lineNumber);
@@ -85,5 +83,5 @@ export function pageComponentBuilder<T>(
         }),
       };
     };
-  }).pipe(finalize(removeIndexes));
+  }).pipe(finalize(() => removeIndexes));
 }

@@ -1,6 +1,5 @@
-import type { ReplaceKeywordsConfig } from '@ng-doc/utils';
-
 import { importEsm } from '../../../helpers';
+import { keywordsStore } from '../../core';
 
 type Utils = typeof import('@ng-doc/utils');
 
@@ -10,11 +9,10 @@ type Utils = typeof import('@ng-doc/utils');
  * @param getKeyword
  * @param config
  */
-export async function replaceKeywords(
-  html: string,
-  config: ReplaceKeywordsConfig,
-): Promise<string> {
+export async function replaceKeywords(html: string): Promise<string> {
   const utils: Utils = await importEsm<Utils>('@ng-doc/utils');
 
-  return utils.replaceKeywords(html, config);
+  return utils.replaceKeywords(html, {
+    getKeyword: keywordsStore.get.bind(keywordsStore),
+  });
 }
