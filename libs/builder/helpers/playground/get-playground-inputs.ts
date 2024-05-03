@@ -9,7 +9,7 @@ import {
 } from 'ts-morph';
 
 import { getComponentInputs, getInputName, getInputType, NgDocInputDeclaration } from '../angular';
-import { extractDocs, extractParameterDocs } from '../extract-docs';
+import { getJsDocDescription, getJsDocParam } from '../get-js-doc';
 import { formatType } from '../typescript';
 
 /**
@@ -67,8 +67,8 @@ function propOrParamToPlaygroundProperty(
         Node.isPropertyDeclaration(propOrParam) ||
         Node.isGetAccessorDeclaration(propOrParam) ||
         Node.isSetAccessorDeclaration(propOrParam)
-          ? extractDocs(propOrParam)
-          : extractParameterDocs(
+          ? getJsDocDescription(propOrParam)
+          : getJsDocParam(
               propOrParam.getParentIfKindOrThrow(SyntaxKind.MethodDeclaration),
               propOrParam.getName(),
             ),

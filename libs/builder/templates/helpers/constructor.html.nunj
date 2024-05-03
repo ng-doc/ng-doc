@@ -9,7 +9,7 @@
             <tbody>
             <tr>
                 <td>
-                    {% set description = constructor | extractDocs %}
+                    {% set description = constructor | getJsDocDescription %}
 
                     {{ description if description else noContentMacro.render('No documentation has been provided.') }}
                 </td>

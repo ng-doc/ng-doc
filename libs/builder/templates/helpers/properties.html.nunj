@@ -35,7 +35,7 @@
                         </div>
                     </td>
                     <td>{{ typeMacro.type(property) }}</td>
-                    <td>{{ docNode | extractDocs }}</td>
+                    <td>{{ docNode | getJsDocDescription }}</td>
                 </tr>
             {%- endfor %}
             </tbody>

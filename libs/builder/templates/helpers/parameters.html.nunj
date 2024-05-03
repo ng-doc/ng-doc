@@ -35,7 +35,7 @@
                         </div>
                     </td>
                     <td>{{ typeMacro.type(param) }}</td>
-                    <td>{{ origin | extractParameterDocs(param.getName()) }}</td>
+                    <td>{{ origin | getJsDocParam(param.getName()) }}</td>
                 </tr>
             {%- endfor %}
             </tbody>

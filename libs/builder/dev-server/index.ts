@@ -6,7 +6,7 @@ import { combineLatest, from, Observable, of } from 'rxjs';
 import { first, map, shareReplay, switchMap } from 'rxjs/operators';
 
 import { newBuild } from '../engine/new-build';
-import { createBuilderContext } from '../helpers';
+import { createBuilderContext } from '../helpers/create-builder-context';
 import { NgDocSchema } from '../interfaces';
 import { patchBuilderContext } from './patch-builder-context';
 

@@ -1,4 +1,4 @@
-{%- set seeDocs = docNode | extractSeeDocs %}
+{%- set seeDocs = docNode | getJsDocTags('see') %}
 
 {% set derivedClasses %}
     {%- if declaration.getDerivedClasses %}

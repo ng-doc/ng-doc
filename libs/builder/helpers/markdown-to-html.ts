@@ -1,10 +1,11 @@
-import { NgDocCodeBlockParams, parseCodeBlockParams } from '@ng-doc/builder';
 import { escapeHtml } from '@ng-doc/core';
 import * as fs from 'fs';
 import { marked, RendererObject } from 'marked';
 import { EOL } from 'node:os';
 import * as path from 'path';
 
+import { NgDocCodeBlockParams } from '../interfaces';
+import { parseCodeBlockParams } from '../parsers';
 import { removeLinesFromCode } from './remove-lines-from-code';
 
 const blockquoteRegex: RegExp = /^<p><strong>(\w+)<\/strong>\s*/;

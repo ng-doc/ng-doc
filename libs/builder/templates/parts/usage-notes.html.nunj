@@ -1,4 +1,4 @@
-{%- set usageNotes = docNode | extractDocs('@usageNotes') -%}
+{%- set usageNotes = docNode | getJsDocTag('usageNotes') -%}
 
 {% if usageNotes %}
     <h2>Usage Notes</h2>

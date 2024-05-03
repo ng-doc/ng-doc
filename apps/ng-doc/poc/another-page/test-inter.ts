@@ -4,6 +4,9 @@ class Level1 {
 
 /**
  * MyClass description
+ * @usageNotes
+ *
+ * MyClass usage notes
  */
 export class MyClass extends Level1 {
   myProp = 'myProp';

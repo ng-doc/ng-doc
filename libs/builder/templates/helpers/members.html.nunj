@@ -14,7 +14,7 @@
                     <td indexable="false" dataSlug="{{ member.getName() }}"
                         dataSlugType="member">{{ member.getName() }} </td>
                     <td indexable="false"><code>{{ member.getValue() | dump }}</code></td>
-                    <td>{{ member | extractDocs }} </td>
+                    <td>{{ member | getJsDocDescription }} </td>
                 </tr>
             {% endfor %}
             </tbody>

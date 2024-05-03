@@ -1,7 +1,7 @@
 {% import "helpers/declaration-modifiers.html.nunj" as tagsMacro %}
 {% import "helpers/no-content.html.nunj" as noContentMacro %}
 
-{% set description = docNode | extractDocs %}
+{% set description = docNode | getJsDocDescription %}
 
 <section>
     {{ description if description else noContentMacro.render('No documentation has been provided.') }}
