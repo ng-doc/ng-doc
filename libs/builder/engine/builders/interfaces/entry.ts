@@ -11,14 +11,14 @@ export interface DeclarationEntry {
 
 export type DeclarationTabEntry = MarkdownEntry & DeclarationEntry;
 
-export type PageEntry =
+export type ContentEntry =
   | NgDocPage
   | NgDocApi
   | MarkdownEntry
   | DeclarationEntry
   | DeclarationTabEntry;
 export type FileEntry = NgDocPage | NgDocApi | NgDocCategory;
-export type Entry = PageEntry | NgDocCategory;
+export type Entry = ContentEntry | NgDocCategory;
 
 /**
  *

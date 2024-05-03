@@ -5,7 +5,7 @@ import { imageProcessor } from '../../docs/features/page-processors/demos/image.
 
 const AnotherPagePage: NgDocPage = {
   title: `Another Page`,
-  description: `This is another page for the POC. It's a simple page with a simple description.`,
+  description: `This is another page for the POC. It's a simple page with a simple bomb.`,
   mdFile: ['./index.md', './api.md'],
   providers: [providePageProcessor(imageProcessor)],
   data: {

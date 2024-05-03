@@ -1,11 +1,11 @@
 import {
+  ContentEntry,
   createBuilder,
   createMainTrigger,
   createSecondaryTrigger,
   extractKeywords,
   isBuilderDone,
   onKeywordsTouch,
-  PageEntry,
   processHtml,
 } from '@ng-doc/builder';
 import { NgDocEntityAnchor, NgDocKeyword, NgDocKeywordType } from '@ng-doc/core';
@@ -31,7 +31,7 @@ interface Config {
   context: NgDocBuilderContext;
   mainFilePath: string;
   cacheId: string;
-  metadata: EntryMetadata<PageEntry>;
+  metadata: EntryMetadata<ContentEntry>;
   keyword?: string;
   keywordType: NgDocKeywordType;
   getContent: (dependencies: ObservableSet<string>) => Promise<string>;
@@ -140,7 +140,7 @@ export function contentBuilder(config: Config): Builder<string> {
  * @param mainKeyword
  */
 function getKeywords(
-  entry: EntryMetadata<PageEntry>,
+  entry: EntryMetadata<ContentEntry>,
   anchors: NgDocEntityAnchor[],
   type: NgDocKeywordType,
   mainKeyword?: string,

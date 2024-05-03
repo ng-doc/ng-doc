@@ -6,12 +6,12 @@ import { buildIndexes } from '../../../helpers/build-indexes';
 import { NgDocBuilderContext } from '../../../interfaces';
 import { AsyncFileOutput, Builder, IndexStore } from '../../core';
 import { renderTemplate } from '../../nunjucks';
-import { EntryMetadata, PageEntry } from '../interfaces';
+import { ContentEntry, EntryMetadata } from '../interfaces';
 import { replaceKeywords } from './index';
 
 interface Config {
   context: NgDocBuilderContext;
-  metadata: EntryMetadata<PageEntry>;
+  metadata: EntryMetadata<ContentEntry>;
   pageType: NgDocPageType;
   entryHasImports?: boolean;
   entryPath?: string;
