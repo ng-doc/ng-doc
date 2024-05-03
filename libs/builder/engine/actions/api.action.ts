@@ -43,6 +43,9 @@ export function apiAction(declarationPath: string): NgDocAction {
           docNode: Node.isVariableDeclaration(declaration)
             ? declaration.getVariableStatement()
             : declaration,
+          hideDescription: true,
+          hideSeeAlso: true,
+          hideUsageNotes: true,
         },
       }),
       dependencies: [sourceFilePath],

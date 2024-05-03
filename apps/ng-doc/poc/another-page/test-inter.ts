@@ -9,6 +9,17 @@ class Level1 {
  * MyClass usage notes
  */
 export class MyClass extends Level1 {
+  /**
+   * Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+   * Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+   * Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+   * Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+   * Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+   * Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+   * Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+   * Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+   * Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+   */
   myProp = 'myProp';
 
   get myGetter(): string {

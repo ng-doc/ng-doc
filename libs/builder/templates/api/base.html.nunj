@@ -1,14 +1,20 @@
 {% import "helpers/declaration-modifiers.html.nunj" as tagsMacro %}
 {% import "helpers/no-content.html.nunj" as noContentMacro %}
 
-{% set description = docNode | getJsDocDescription %}
+{% if not hideDescription %}
+    {% set description = docNode | getJsDocDescription %}
 
-<section>
-    {{ description if description else noContentMacro.render('No documentation has been provided.') }}
-</section>
+    <section>
+        {{ description if description else noContentMacro.render('No documentation has been provided.') }}
+    </section>
+{% endif %}
 
-{% include "parts/see-also.html.nunj" %}
+{% if not hideSeeAlso %}
+    {% include "parts/see-also.html.nunj" %}
+{% endif %}
 
 {% block overview %}{% endblock %}
 
-{% include "parts/usage-notes.html.nunj" %}
+{% if not hideUsageNotes %}
+    {% include "parts/usage-notes.html.nunj" %}
+{% endif %}

@@ -11,3 +11,12 @@
   doc page, and will be displayed in the doc page header.
 - added `headerTemplate` property to guides configuration, it is used to specify the header template
   for the guide page that can be used to customize header for each guide page.
+
+TODO:
+
+- sticky columns for name in APIS
+- rework search
+- redesign the app
+- sticky demos in playground
+- rework landing page + add reusable components for creating landings
+- fix themes migrate to CSS files
