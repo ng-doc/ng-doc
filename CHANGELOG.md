@@ -1,3 +1,10 @@
+## [17.6.7](https://github.com/ng-doc/ng-doc/compare/v17.6.6...v17.6.7) (2024-05-03)
+
+
+### Bug Fixes
+
+* **builder:** setting `hidden: true` for the page doesn't have an effect ([6cf9aaa](https://github.com/ng-doc/ng-doc/commit/6cf9aaa62c17a38747393fe2590e60308a1f8c2d)), closes [#158](https://github.com/ng-doc/ng-doc/issues/158)
+
 ## [17.6.6](https://github.com/ng-doc/ng-doc/compare/v17.6.5...v17.6.6) (2024-05-01)
 
 
