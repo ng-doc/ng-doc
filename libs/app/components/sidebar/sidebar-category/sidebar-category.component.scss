@@ -10,10 +10,6 @@
     .ng-doc-sidebar-category-button {
       padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-base-gutter)
         var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
-
-      .ng-doc-sidebar-category {
-        --ng-doc-font-weight: 500;
-      }
     }
   }
 
@@ -38,7 +34,6 @@
       display: flex;
       align-items: center;
       --ng-doc-dot-background: var(--ng-doc-base-4);
-      --ng-doc-font-weight: 500;
       --ng-doc-text: var(--ng-doc-heading-color);
 
       ng-doc-dot {

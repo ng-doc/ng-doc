@@ -79,6 +79,7 @@ export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput> {
                 entries,
                 headerContent: content,
                 hasBreadcrumb: !!metadata.breadcrumbs().length,
+                pageType,
               },
             }),
           };

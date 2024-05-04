@@ -4,27 +4,19 @@ import {
   Component,
   ElementRef,
   inject,
-  OnInit,
-  Renderer2,
   TemplateRef,
   ViewChild,
-  ViewContainerRef,
 } from '@angular/core';
-import { Router, RouterOutlet, UrlTree } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { NgDocRootPage } from '@ng-doc/app/classes/root-page';
 import { NgDocBreadcrumbComponent } from '@ng-doc/app/components/breadcrumb';
 import { NgDocPageWrapperComponent } from '@ng-doc/app/components/page-wrapper';
 import { NgDocTocComponent } from '@ng-doc/app/components/toc';
 import { createComponent, generateToc } from '@ng-doc/app/helpers';
-import {
-  NgDocContext,
-  NgDocNavigation,
-  NgDocPageNavigation,
-  NgDocPageSkeleton,
-} from '@ng-doc/app/interfaces';
-import { NgDocPageProcessorDirective } from '@ng-doc/app/processors';
+import { NgDocPageSkeleton } from '@ng-doc/app/interfaces';
+import { NgDocPageProcessorComponent } from '@ng-doc/app/processors';
 import { provideTypeControl } from '@ng-doc/app/providers/type-control';
-import { NG_DOC_CONTEXT, NG_DOC_PAGE_SKELETON } from '@ng-doc/app/tokens';
+import { NG_DOC_PAGE_SKELETON } from '@ng-doc/app/tokens';
 import {
   NgDocBooleanControlComponent,
   NgDocNumberControlComponent,
@@ -60,7 +52,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
     NgDocTextRightDirective,
     NgDocMediaQueryDirective,
     NgDocTocComponent,
-    NgDocPageProcessorDirective,
+    NgDocPageProcessorComponent,
     NgComponentOutlet,
     RouterOutlet,
     DialogOutletComponent,
@@ -74,30 +66,17 @@ import { UntilDestroy } from '@ngneat/until-destroy';
   host: { ngSkipHydration: 'true' },
 })
 @UntilDestroy()
-export class NgDocPageComponent implements OnInit {
+export class NgDocPageComponent {
   @ViewChild('pageContainer', { read: ElementRef, static: true })
   pageContainer!: ElementRef<HTMLElement>;
-
-  @ViewChild('pageNavigation', { read: ViewContainerRef, static: true })
-  pageNavigation!: ViewContainerRef;
 
   @ViewChild('childOutlet')
   childOutlet?: TemplateRef<never>;
 
   protected rootPage: NgDocRootPage = inject(NgDocRootPage);
   protected skeleton: NgDocPageSkeleton = inject(NG_DOC_PAGE_SKELETON);
-  protected context: NgDocContext = inject(NG_DOC_CONTEXT);
-  protected renderer: Renderer2 = inject(Renderer2);
-  protected router: Router = inject(Router);
-  protected pageWrapper: NgDocPageWrapperComponent = inject(NgDocPageWrapperComponent);
 
-  ngOnInit(): void {
-    if (this.rootPage.pageType === 'guide') {
-      if (this.skeleton.navigation) {
-        createComponent(this.pageNavigation, this.skeleton.navigation, this.navigationInputs());
-      }
-    }
-  }
+  protected pageWrapper: NgDocPageWrapperComponent = inject(NgDocPageWrapperComponent);
 
   createToc(): void {
     if (this.pageWrapper.pageToc && this.skeleton.toc) {
@@ -105,29 +84,5 @@ export class NgDocPageComponent implements OnInit {
         tableOfContent: generateToc(this.pageContainer.nativeElement) ?? [],
       });
     }
-  }
-
-  private navigationInputs(): NgDocPageNavigation {
-    const flatItems = (items: NgDocNavigation[]): NgDocNavigation[] =>
-      items
-        .map((item: NgDocNavigation) => [item.children?.length ? flatItems(item.children) : item])
-        .flat(2);
-    const flatPages: NgDocNavigation[] = flatItems(this.context.navigation);
-
-    return {
-      prevPage:
-        flatPages[flatPages.findIndex((item: NgDocNavigation) => this.url === item.route) - 1],
-      nextPage:
-        flatPages[flatPages.findIndex((item: NgDocNavigation) => this.url === item.route) + 1],
-    };
-  }
-
-  private get url(): string {
-    const urlTree: UrlTree = this.router.parseUrl(this.router.url);
-
-    urlTree.queryParams = {};
-    urlTree.fragment = null;
-
-    return urlTree.toString();
   }
 }

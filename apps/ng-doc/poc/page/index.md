@@ -11,3 +11,5 @@ we
 123
 
 `*AnotherPage#section1`
+
+{{ NgDocActions.demo("DemoComponent") }}

@@ -6,7 +6,7 @@ import { ButtonInlineDemoComponent } from './demos/button-inline-demo/button-inl
 
 const DemoPage: NgDocPage = {
   title: 'Demo',
-  mdFile: './index.md',
+  mdFile: ['./index.md', './api.md'],
   category: GuidesCategory,
   order: 2,
   keyword: 'GuidesDemo',

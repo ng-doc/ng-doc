@@ -10,16 +10,17 @@ import {
 } from '@angular/core';
 import {
   ActivatedRoute,
+  Router,
   RouterLink,
   RouterLinkActive,
   RouterOutlet,
   Routes,
 } from '@angular/router';
 import { createComponent } from '@ng-doc/app/helpers';
-import { NgDocPageSkeleton } from '@ng-doc/app/interfaces';
-import { NgDocPageProcessorDirective } from '@ng-doc/app/processors';
-import { NG_DOC_PAGE_SKELETON } from '@ng-doc/app/tokens';
-import { isPresent } from '@ng-doc/core';
+import { NgDocNavigation, NgDocPageNavigation } from '@ng-doc/app/interfaces';
+import { NgDocPageProcessorComponent } from '@ng-doc/app/processors';
+import { NG_DOC_CONTEXT, NG_DOC_PAGE_SKELETON } from '@ng-doc/app/tokens';
+import { isPresent, NgDocPageType } from '@ng-doc/core';
 import {
   NgDocIconComponent,
   NgDocTabRouteComponent,
@@ -36,13 +37,12 @@ import {
     NgDocTabRouteComponent,
     NgDocTabRoutesGroupComponent,
     RouterLinkActive,
-    NgDocPageProcessorDirective,
+    NgDocPageProcessorComponent,
     NgDocIconComponent,
   ],
   templateUrl: './page-wrapper.component.html',
   styleUrl: './page-wrapper.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { ngSkipHydration: 'true' },
 })
 export class NgDocPageWrapperComponent implements OnInit {
   @Input({ required: true })
@@ -54,13 +54,22 @@ export class NgDocPageWrapperComponent implements OnInit {
   @Input()
   hasBreadcrumb = true;
 
+  @Input()
+  pageType: NgDocPageType = 'guide';
+
   @ViewChild('pageBreadcrumbs', { read: ViewContainerRef, static: true })
   pageBreadcrumbs!: ViewContainerRef;
 
   @ViewChild('pageToc', { read: ViewContainerRef, static: true })
   pageToc?: ViewContainerRef;
 
-  protected skeleton: NgDocPageSkeleton = inject(NG_DOC_PAGE_SKELETON);
+  @ViewChild('pageNavigation', { read: ViewContainerRef, static: true })
+  pageNavigation!: ViewContainerRef;
+
+  protected skeleton = inject(NG_DOC_PAGE_SKELETON);
+  protected router = inject(Router);
+  protected route = inject(ActivatedRoute);
+  protected context = inject(NG_DOC_CONTEXT);
 
   private breadcrumbs: string[] = inject(ActivatedRoute)
     .pathFromRoot.filter((route: ActivatedRoute) => !route.snapshot.url.length)
@@ -73,5 +82,30 @@ export class NgDocPageWrapperComponent implements OnInit {
         breadcrumbs: this.breadcrumbs,
       });
     }
+
+    if (this.pageType === 'guide') {
+      if (this.skeleton.navigation) {
+        createComponent(this.pageNavigation, this.skeleton.navigation, this.navigationInputs());
+      }
+    }
+  }
+
+  private navigationInputs(): NgDocPageNavigation {
+    const url =
+      '/' +
+      this.route.pathFromRoot
+        .map((route: ActivatedRoute) => route.snapshot.url)
+        .flat()
+        .join('/');
+    const flatItems = (items: NgDocNavigation[]): NgDocNavigation[] =>
+      items
+        .map((item: NgDocNavigation) => [item.children?.length ? flatItems(item.children) : item])
+        .flat(2);
+    const flatPages: NgDocNavigation[] = flatItems(this.context.navigation);
+
+    return {
+      prevPage: flatPages[flatPages.findIndex((item: NgDocNavigation) => url === item.route) - 1],
+      nextPage: flatPages[flatPages.findIndex((item: NgDocNavigation) => url === item.route) + 1],
+    };
   }
 }

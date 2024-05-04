@@ -1,6 +1,7 @@
 import {
+  ChangeDetectionStrategy,
+  Component,
   ComponentRef,
-  Directive,
   ElementRef,
   EventEmitter,
   inject,
@@ -21,12 +22,14 @@ import { asArray, objectKeys } from '@ng-doc/core';
  * Base processor class to create a processor directive that will be used to replace
  * html nodes with an Angular component.
  */
-@Directive({
+@Component({
   selector: '[ngDocPageProcessor]',
   standalone: true,
+  template: '<ng-content></ng-content>',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { ngSkipHydration: 'true' },
 })
-export class NgDocPageProcessorDirective implements OnChanges, OnInit {
+export class NgDocPageProcessorComponent implements OnChanges, OnInit {
   @Input({ required: true, alias: 'ngDocPageProcessor' })
   html: string = '';
 

@@ -23,8 +23,6 @@
   (afterRender)="createToc()"
   #pageContainer></div>
 
-<ng-container #pageNavigation></ng-container>
-
 <ng-doc-dialog-outlet
   *ngIf="!rootPage.page?.disableFullscreenRoutes"
   [config]="{ width: '100vw', height: '100vh' }">

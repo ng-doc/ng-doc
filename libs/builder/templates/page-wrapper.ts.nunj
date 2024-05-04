@@ -1,12 +1,14 @@
+// @ts-nocheck
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {Routes} from '@angular/router';
 import {NgDocPageWrapperComponent} from '@ng-doc/app';
+import {NgDocPageType} from '@ng-doc/core';
 
 const headerContent: string = `{{ headerContent | toTemplateString }}`
 
 @Component({
   selector: 'ng-doc-page-wrapper-{{ id }}',
-  template: `<ng-doc-page-wrapper [routes]="routes" [headerContent]="headerContent" [hasBreadcrumb]="hasBreadcrumb"></ng-doc-page-wrapper>`,
+  template: `<ng-doc-page-wrapper [routes]="routes" [headerContent]="headerContent" [hasBreadcrumb]="hasBreadcrumb" [pageType]="pageType"></ng-doc-page-wrapper>`,
   imports: [NgDocPageWrapperComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true
@@ -14,6 +16,7 @@ const headerContent: string = `{{ headerContent | toTemplateString }}`
 export class PageWrapperComponent {
     routes = routes[0].children!;
     headerContent = headerContent;
+    pageType: NgDocPageType = '{{ pageType }}';
     hasBreadcrumb = {{ hasBreadcrumb }};
 }
 

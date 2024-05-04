@@ -6,26 +6,33 @@
 
 .ng-doc-sidebar-link {
   @include ng-doc-heading-font();
+  @include alpha-background(transparent, 1);
+
   display: flex;
   align-items: center;
   padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-horizontal-padding)
     var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
   text-decoration: inherit;
   cursor: pointer;
+  border-radius: var(--ng-doc-base-gutter);
+
   --ng-doc-icon-color: var(--ng-doc-text);
   --ng-doc-dot-background: var(--ng-doc-base-4);
   --ng-doc-font-weight: 400;
 
   ng-doc-dot {
     margin-right: calc(var(--ng-doc-base-gutter) * 2);
+    z-index: 1;
   }
 
   &:hover:not(.active) {
-    --ng-doc-text: var(--ng-doc-text-muted);
+    @include alpha-background(var(--ng-doc-base-1), 1);
   }
 
   &.active {
-    --ng-doc-font-weight: 500;
+    @include alpha-background(var(--ng-doc-primary), 0.07);
+
+    --ng-doc-text: var(--ng-doc-primary);
     --ng-doc-dot-background: var(--ng-doc-primary);
 
     ng-doc-dot {

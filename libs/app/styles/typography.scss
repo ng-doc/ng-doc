@@ -65,7 +65,7 @@ blockquote#{$class} {
   @include ng-doc-heading-font();
   margin: calc(var(--ng-doc-base-gutter) * 7) 0 0;
   --ng-doc-line-height: 1.5rem;
-  --ng-doc-font-weight: 700;
+  --ng-doc-font-weight: 600;
   overflow-wrap: anywhere;
   --ng-doc-text: var(--ng-doc-heading-color);
 
@@ -94,10 +94,15 @@ h3#{$class} {
   --ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 3);
 }
 
-h4#{$class},
+h4#{$class} {
+  --ng-doc-font-size: 20px;
+  --ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 2);
+  margin: calc(var(--ng-doc-base-gutter) * 2) 0;
+}
+
 h5#{$class},
 h6#{$class} {
-  --ng-doc-font-size: 20px;
+  --ng-doc-font-size: 16px;
   --ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 2);
   margin: calc(var(--ng-doc-base-gutter) * 2) 0;
 }

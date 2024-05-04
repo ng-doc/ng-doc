@@ -101,7 +101,7 @@ function getNodes(
 
         return { type: 'text', value: keyword.title };
       } else if (inlineLink && keyword && parent.properties) {
-        parent.properties['class'] = [NG_DOC_ELEMENT, 'ng-doc-code-with-link'];
+        parent.properties['className'] = [NG_DOC_ELEMENT, 'ng-doc-code-with-link'];
       }
 
       // Add link inside the code if it's a link to the API entity

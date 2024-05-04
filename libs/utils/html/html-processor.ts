@@ -10,6 +10,7 @@ import { unified, VFileWithOutput } from 'unified';
 import autolinkHeadingPlugin from './plugins/autolink-headings.plugin';
 import codeBlockLinesPlugin from './plugins/code-block-lines.plugin';
 import highlightCodeLines from './plugins/highlight-code-lines';
+import markElementsPlugin from './plugins/mark-elements.plugin';
 import sluggerPlugin from './plugins/slugger.plugin';
 
 export interface NgDocHtmlProcessorConfig {
@@ -38,6 +39,7 @@ export async function htmlProcessor(
     .use(sluggerPlugin, config.addAnchor, config.headings)
     .use(rehypeMinifyWhitespace)
     .use(autolinkHeadingPlugin, config.route)
+    .use(markElementsPlugin)
     .process(html)
     .then((file: VFileWithOutput<string>) => file.toString());
 }

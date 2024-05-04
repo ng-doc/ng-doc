@@ -295,8 +295,6 @@ inputs: {rounded: true},
 data: {label: "Rounded Button"} })
 }}
 
-{% index false %}
-
 ## Unrecognized inputs
 
 NgDoc does not automatically recognize some inputs, such as inputs defined within the `@Component`
@@ -353,6 +351,8 @@ const MyAwesomePage: NgDocPage = {
 
 export default MyAwesomePage;
 ```
+
+{% index false %}
 
 ## See Also
 
