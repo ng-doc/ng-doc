@@ -17,7 +17,7 @@ export function createDeclarationMetadata(
   context: NgDocBuilderContext,
   declaration: NgDocSupportedDeclaration,
   entry: EntryMetadata<NgDocApi>,
-  scope?: NgDocApiScope,
+  scope: NgDocApiScope,
 ): EntryMetadata<DeclarationEntry> {
   const dir = declaration.getSourceFile().getDirectoryPath();
   const dirName = path.basename(dir);
@@ -25,7 +25,7 @@ export function createDeclarationMetadata(
     ...asArray(
       entry.route ?? 'api',
       declarationFolderName(declaration),
-      scope?.route,
+      scope.route,
       declaration.getName(),
     ),
   );
@@ -48,6 +48,7 @@ export function createDeclarationMetadata(
     hidden: true,
     entry: {
       declaration,
+      scope,
     },
   };
 }

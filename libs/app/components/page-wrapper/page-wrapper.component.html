@@ -1,7 +1,7 @@
-<div class="ng-doc-page-wrapper">
+<article class="ngde">
   <ng-container #pageBreadcrumbs></ng-container>
 
-  <header [ngDocPageProcessor]="headerContent"></header>
+  <header class="ng-doc-page-header ngde" [ngDocPageProcessor]="headerContent"></header>
 
   @if (routes.length > 1) {
     <ng-doc-tab-routes-group>
@@ -23,6 +23,6 @@
   }
 
   <router-outlet></router-outlet>
-</div>
+</article>
 
 <ng-container #pageToc></ng-container>

@@ -8,6 +8,7 @@ import { pageWrapperBuilder } from '../shared/page-wrapper.builder';
 import { demoAssetsBuilder } from './demo-assets.builder';
 import { guideTemplateBuilder } from './guide-template.builder';
 import { playgroundBuilder } from './playground.builder';
+import { renderPageHeader } from './render-page-header';
 
 export const PAGE_ENTRY_BUILDER_TAG = 'PageFile';
 export const GUIDE_PAGE_WRAPPER_BUILDER_TAG = 'GuidePageWrapper';
@@ -39,6 +40,7 @@ export function pageBuilder(
           metadata: page,
           pageType: 'guide',
           pageTemplateBuilders,
+          getHeaderContent: () => renderPageHeader({ context, metadata: page }),
         }),
         demoAssetsBuilder({ context, page }),
         playgroundBuilder({ page }),

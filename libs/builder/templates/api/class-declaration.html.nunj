@@ -1,31 +1,10 @@
 {% extends "api/base.html.nunj" %}
 
-{% import "helpers/type.html.nunj" as typeMacro %}
 {% import "helpers/constructor.html.nunj" as constructorMacro %}
 {% import "helpers/methods.html.nunj" as methodsMacro %}
 {% import "helpers/properties.html.nunj" as propertiesMacro %}
 {% import "helpers/accessors.html.nunj" as accessorsMacro %}
 {% import "helpers/modifier.html.nunj" as modifierMacro %}
-
-{% block details %}
-    {% set extends = declaration.getExtends() %}
-    {% set implements = declaration.getImplements() %}
-
-    {% if extends or implements.length %}
-        <div class="ng-doc-header-details" indexable="false">
-            {% if extends %}
-                <span class="ng-doc-header-details-label">Extends</span>
-                {{ typeMacro.type(extends) }}
-            {%- endif %}
-            {% if implements.length %}
-                <span class="ng-doc-header-details-label">Implements</span>
-                {%- for i in implements -%}
-                    {{ typeMacro.type(i) }}
-                {%- endfor %}
-            {%- endif %}
-        </div>
-    {% endif %}
-{% endblock %}
 
 {% block overview %}
     {%- set constructors = declaration.getConstructors() | filterByScope("public") | excludeByTsDocsTags('internal') -%}

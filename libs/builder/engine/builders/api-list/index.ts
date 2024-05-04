@@ -15,6 +15,7 @@ import { pageWrapperBuilder } from '../shared/page-wrapper.builder';
 import { apiListBuilder } from './api-list.builder';
 import { apiListComponentBuilder } from './api-list-component.builder';
 import { apiPageTemplateBuilder } from './api-page-template.builder';
+import { renderApiHeader } from './render-api-header';
 
 export const API_ENTRY_BUILDER_TAG = 'ApiFile';
 export const API_PAGE_WRAPPER_BUILDER_TAG = 'ApiPageWrapper';
@@ -56,6 +57,7 @@ export function apiBuilder(context: NgDocBuilderContext, apiPath: string): Build
               scope,
             }),
           ],
+          getHeaderContent: () => renderApiHeader({ metadata }),
         }),
       );
 

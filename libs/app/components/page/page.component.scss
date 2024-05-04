@@ -1,20 +1,13 @@
 :host {
   display: flex;
+  flex-direction: column;
 
-  article {
-    position: relative;
-    width: var(--ng-doc-article-width, 100%);
-    margin-left: auto;
-    margin-right: auto;
-    overflow: hidden;
-
-    .ng-doc-page-controls {
-      position: absolute;
-      display: flex;
-      grid-gap: var(--ng-doc-base-gutter);
-      top: 0;
-      right: 0;
-    }
+  .ng-doc-page-controls {
+    position: absolute;
+    display: flex;
+    grid-gap: var(--ng-doc-base-gutter);
+    top: 0;
+    right: 0;
   }
 }
 

@@ -1,7 +1,12 @@
 import {
+  createBuilder,
   createImportPath,
+  createSecondaryTrigger,
+  extractKeywords,
   IndexStore,
   NgDocBuilderContext,
+  onKeywordsTouch,
+  processHtml,
   replaceKeywords,
 } from '@ng-doc/builder';
 import { NgDocPageType, uid } from '@ng-doc/core';
@@ -17,6 +22,7 @@ interface Config {
   context: NgDocBuilderContext;
   metadata: EntryMetadata;
   pageType: NgDocPageType;
+  getHeaderContent: () => string;
   pageTemplateBuilders: Array<Builder<TemplateBuilderOutput>>;
 }
 
@@ -25,62 +31,68 @@ interface Config {
  * @param config
  */
 export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput> {
-  const { tag, context, metadata, pageTemplateBuilders, pageType } = config;
+  const { context, tag, metadata, pageTemplateBuilders, pageType, getHeaderContent } = config;
   const cacheStrategy = {
     id: `${metadata.path}#PageWrapper`,
     action: 'skip',
   } satisfies CacheStrategy<undefined, string>;
+  const usedKeywords = new Set<string>();
   let removeIndexes: () => void = () => {};
 
-  return mergeFactory(
-    tag,
-    pageTemplateBuilders,
-    async (...templates) => {
-      removeIndexes();
+  const builder = () =>
+    mergeFactory(
+      tag,
+      pageTemplateBuilders,
+      async (...templates) => {
+        removeIndexes();
+        usedKeywords.clear();
 
-      const headerTemplatePath = context.config.guide?.headerTemplate;
-      const headerContent = renderTemplate(headerTemplatePath ?? './page-header.html.nunj', {
-        scope: headerTemplatePath ? context.context.workspaceRoot : undefined,
-        context: {
-          page: metadata.entry,
-        },
-      });
-      const entries = getPageWrapperPages(metadata, templates);
-
-      return async () => {
-        // TODO: maybe move replacing keywords and building indexes to a separate entity to reuse it in page-component.builder.ts
-        const content = await replaceKeywords(headerContent);
-        const indexes = await buildIndexes({
-          content,
-          title: metadata.title,
-          breadcrumbs: metadata.breadcrumbs(),
-          pageType,
+        const headerContent = await processHtml(getHeaderContent(), {
+          headings: context.config.guide?.anchorHeadings,
           route: metadata.absoluteRoute(),
         });
+        await extractKeywords(headerContent, {
+          addUsedKeyword: usedKeywords.add.bind(usedKeywords),
+        });
 
-        removeIndexes = IndexStore.add(...indexes);
+        const entries = getPageWrapperPages(metadata, templates);
 
-        return {
-          filePath: metadata.outPath,
-          content: renderTemplate('./page-wrapper.ts.nunj', {
-            context: {
-              id: uid(),
-              metadata,
-              entries,
-              headerContent,
-              hasBreadcrumb: !!metadata.breadcrumbs().length,
-            },
-          }),
+        return async () => {
+          // TODO: maybe move replacing keywords and building indexes to a separate entity to reuse it in page-component.builder.ts
+          const content = await replaceKeywords(headerContent);
+          const indexes = await buildIndexes({
+            content,
+            title: metadata.title,
+            breadcrumbs: metadata.breadcrumbs(),
+            pageType,
+            route: metadata.absoluteRoute(),
+          });
+
+          removeIndexes = IndexStore.add(...indexes);
+
+          return {
+            filePath: metadata.outPath,
+            content: renderTemplate('./page-wrapper.ts.nunj', {
+              context: {
+                id: uid(),
+                metadata,
+                entries,
+                headerContent: content,
+                hasBreadcrumb: !!metadata.breadcrumbs().length,
+              },
+            }),
+          };
         };
-      };
-    },
-    cacheStrategy,
-    ({ output }) => output,
-  ).pipe(
-    finalize(() => {
-      removeIndexes();
-    }),
-  );
+      },
+      cacheStrategy,
+      ({ output }) => output,
+    ).pipe(
+      finalize(() => {
+        removeIndexes();
+      }),
+    );
+
+  return createBuilder([createSecondaryTrigger(onKeywordsTouch(usedKeywords))], builder, true);
 }
 
 /**

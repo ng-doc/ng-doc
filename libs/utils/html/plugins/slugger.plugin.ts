@@ -15,43 +15,47 @@ import { attrValue } from '../helpers';
  * @param headings
  */
 export default function sluggerPlugin(
-	addAnchor: (anchor: NgDocEntityAnchor) => void,
-	headings?: NgDocHeading[],
+  addAnchor?: (anchor: NgDocEntityAnchor) => void,
+  headings?: NgDocHeading[],
 ) {
-	headings = headings || ['h1', 'h2', 'h3', 'h4'];
-	const slugger: GithubSlugger = new GithubSlugger();
+  if (!addAnchor) {
+    return () => {};
+  }
 
-	return (tree: Root) => {
-		slugger.reset();
+  headings = headings || ['h1', 'h2', 'h3', 'h4'];
+  const slugger: GithubSlugger = new GithubSlugger();
 
-		visit(tree, 'element', (node: Element) => {
-			const isHeading =
-				headingRank(node) &&
-				!hasProperty(node, 'id') &&
-				headings?.includes(node.tagName.toLowerCase() as NgDocHeading);
-			const attrSlug: string | undefined = attrValue(node, 'dataSlug');
-			const attrSlugTitle: string | undefined = attrValue(node, 'dataSlugTitle');
-			const attrSlugType: string | undefined = attrValue(node, 'dataSlugType');
+  return (tree: Root) => {
+    slugger.reset();
 
-			const dataToSlug: string | undefined = isHeading ? toString(node) : attrSlug;
+    visit(tree, 'element', (node: Element) => {
+      const isHeading =
+        headingRank(node) &&
+        !hasProperty(node, 'id') &&
+        headings?.includes(node.tagName.toLowerCase() as NgDocHeading);
+      const attrSlug: string | undefined = attrValue(node, 'dataSlug');
+      const attrSlugTitle: string | undefined = attrValue(node, 'dataSlugTitle');
+      const attrSlugType: string | undefined = attrValue(node, 'dataSlugType');
 
-			if (dataToSlug) {
-				if (node.properties) {
-					const id: string =
-						attrSlug && attrSlugType === 'member' ? attrSlug : slugger.slug(dataToSlug);
+      const dataToSlug: string | undefined = isHeading ? toString(node) : attrSlug;
 
-					node.properties['id'] = id;
+      if (dataToSlug) {
+        if (node.properties) {
+          const id: string =
+            attrSlug && attrSlugType === 'member' ? attrSlug : slugger.slug(dataToSlug);
 
-					addAnchor({
-						anchor: id,
-						title: attrSlugTitle || dataToSlug,
-						type:
-							(isHeading && attrSlugType !== 'member') || (attrSlug && attrSlugType === 'heading')
-								? 'heading'
-								: 'member',
-					});
-				}
-			}
-		});
-	};
+          node.properties['id'] = id;
+
+          addAnchor({
+            anchor: id,
+            title: attrSlugTitle || dataToSlug,
+            type:
+              (isHeading && attrSlugType !== 'member') || (attrSlug && attrSlugType === 'heading')
+                ? 'heading'
+                : 'member',
+          });
+        }
+      }
+    });
+  };
 }

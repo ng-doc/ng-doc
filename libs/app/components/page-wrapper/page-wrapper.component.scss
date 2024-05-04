@@ -6,8 +6,11 @@
 
   --ng-doc-toc-margin: calc(var(--ng-doc-base-gutter) * 5);
 
-  .ng-doc-page-wrapper {
-    width: 100%;
+  article {
+    position: relative;
+    width: var(--ng-doc-article-width, 100%);
+    margin-left: auto;
+    margin-right: auto;
     overflow: hidden;
   }
 
@@ -23,5 +26,9 @@
     margin-bottom: calc(var(--ng-doc-base-gutter) * 4);
     background: var(--ng-doc-navbar-background);
     z-index: 1;
+  }
+
+  .ng-doc-page-header {
+    margin-bottom: calc(var(--ng-doc-base-gutter) * 3);
   }
 }

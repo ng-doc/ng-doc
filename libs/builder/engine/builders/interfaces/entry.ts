@@ -1,4 +1,4 @@
-import { NgDocApi, NgDocCategory, NgDocPage } from '@ng-doc/core';
+import { NgDocApi, NgDocApiScope, NgDocCategory, NgDocPage } from '@ng-doc/core';
 import { minimatch } from 'minimatch';
 
 import { NgDocSupportedDeclaration } from '../../../types';
@@ -7,6 +7,7 @@ import { MarkdownEntry } from './markdown-entry';
 
 export interface DeclarationEntry {
   declaration: NgDocSupportedDeclaration;
+  scope: NgDocApiScope;
 }
 
 export type DeclarationTabEntry = MarkdownEntry & DeclarationEntry;

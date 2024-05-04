@@ -14,9 +14,18 @@
 
 TODO:
 
+- FIX API PAGES
 - sticky columns for name in APIS
 - rework search
 - redesign the app
 - sticky demos in playground
+- make TOC work on mobile
 - rework landing page + add reusable components for creating landings
 - fix themes migrate to CSS files
+- add support for substring keywords
+
+Inspirations:
+https://mui.com/base-ui/react-autocomplete/
+https://mintlify.com/docs/quickstart
+https://docs.t4stack.com/
+https://docs.astro.build/en/concepts/why-astro/

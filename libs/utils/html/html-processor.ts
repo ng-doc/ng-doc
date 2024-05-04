@@ -13,10 +13,10 @@ import highlightCodeLines from './plugins/highlight-code-lines';
 import sluggerPlugin from './plugins/slugger.plugin';
 
 export interface NgDocHtmlProcessorConfig {
-	headings?: NgDocHeading[];
-	route?: string;
-	raiseError?: (e: Error) => void;
-	addAnchor: (anchor: NgDocEntityAnchor) => void;
+  headings?: NgDocHeading[];
+  route?: string;
+  raiseError?: (e: Error) => void;
+  addAnchor?: (anchor: NgDocEntityAnchor) => void;
 }
 
 /**
@@ -25,19 +25,19 @@ export interface NgDocHtmlProcessorConfig {
  * @param config
  */
 export async function htmlProcessor(
-	html: string,
-	config: NgDocHtmlProcessorConfig,
+  html: string,
+  config: NgDocHtmlProcessorConfig,
 ): Promise<string> {
-	return unified()
-		.use(rehypeParse, { fragment: true })
-		.use(rehypeStringify)
-		.use(rehypeFormat)
-		.use(rehypeHighlight, { ignoreMissing: true, languages: { twig } })
-		.use(codeBlockLinesPlugin)
-		.use(highlightCodeLines)
-		.use(sluggerPlugin, config.addAnchor, config.headings)
-		.use(rehypeMinifyWhitespace)
-		.use(autolinkHeadingPlugin, config.route)
-		.process(html)
-		.then((file: VFileWithOutput<string>) => file.toString());
+  return unified()
+    .use(rehypeParse, { fragment: true })
+    .use(rehypeStringify)
+    .use(rehypeFormat)
+    .use(rehypeHighlight, { ignoreMissing: true, languages: { twig } })
+    .use(codeBlockLinesPlugin)
+    .use(highlightCodeLines)
+    .use(sluggerPlugin, config.addAnchor, config.headings)
+    .use(rehypeMinifyWhitespace)
+    .use(autolinkHeadingPlugin, config.route)
+    .process(html)
+    .then((file: VFileWithOutput<string>) => file.toString());
 }

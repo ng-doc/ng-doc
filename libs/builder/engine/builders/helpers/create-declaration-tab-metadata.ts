@@ -28,6 +28,7 @@ export function createDeclarationTabMetadata(
     outDir,
     entry: {
       declaration: entry.entry.declaration,
+      scope: entry.entry.scope,
       title: tab.title,
       route: tab.route,
       type: 'api',
