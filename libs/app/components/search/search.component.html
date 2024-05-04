@@ -1,132 +1,25 @@
-<ng-container *ngDocLet="search$ | async as state">
-	<ng-container *ngIf="mod === 'icon'; else searchInput">
-		<button ng-doc-button-icon size="large" (click)="inputDropdown.toggle()" ngDocDropdownOrigin>
-			<ng-doc-icon icon="search" [size]="24"></ng-doc-icon>
+<ng-container
+  [ngDocHotkey]="{ ctrlKey: false, altKey: false, shiftKey: false, code: 'Slash' }"
+  (ngDocHotkey)="open()">
+  <ng-container *ngIf="mod === 'icon'; else searchInput">
+    <button ng-doc-button-icon size="large" (click)="open()" ngDocDropdownOrigin>
+      <ng-doc-icon icon="search" [size]="24"></ng-doc-icon>
+    </button>
+  </ng-container>
 
-			<ng-doc-dropdown
-				[content]="dropdownContent"
-				panelClass="ng-doc-search-dropdown"
-				width="100%"
-				height="80vh"
-				#inputDropdown>
-				<ng-template #dropdownContent>
-					<div class="ng-doc-search-wrapper">
-						<ng-doc-input-wrapper [leftContent]="leftContent" ngDocDropdownOrigin>
-							<ng-template #leftContent>
-								<ng-doc-icon icon="search"></ng-doc-icon>
-							</ng-template>
-							<input
-								ngDocInputString
-								[(ngModel)]="searchTerm"
-								(ngModelChange)="query$.next($event)"
-								placeholder="Search..."
-								ngDocAutofocus
-								[selectAll]="true"
-								#inputElement />
-						</ng-doc-input-wrapper>
-						<ng-container *ngTemplateOutlet="searchResults"></ng-container>
-					</div>
-				</ng-template>
-			</ng-doc-dropdown>
-		</button>
-	</ng-container>
-
-	<ng-template #searchInput>
-		<ng-doc-input-wrapper
-			[leftContent]="leftContent"
-			[rightContent]="rightContent"
-			ngDocDropdownOrigin
-			ngDocFocusCatcher
-			(focusEvent)="inputElement.value ? dropdown.open() : null"
-			(click)="inputElement.value ? dropdown.open() : null"
-			#input>
-			<ng-template #leftContent>
-				<ng-doc-icon icon="search"></ng-doc-icon>
-			</ng-template>
-			<input
-				ngDocInputString
-				[(ngModel)]="searchTerm"
-				(ngModelChange)="query$.next($event); dropdown.open()"
-				placeholder="Search..."
-				[ngDocHotkey]="{ ctrlKey: false, altKey: false, shiftKey: false, code: 'Slash' }"
-				(ngDocHotkey)="inputElement.focus(); inputElement.select()"
-				#inputElement />
-			<ng-template #rightContent>
-				<ng-doc-tag class="search-hotkey">/</ng-doc-tag>
-			</ng-template>
-			<ng-doc-dropdown
-				[content]="searchResults"
-				positions="bottom-right"
-				[width]="input.elementRef.nativeElement.offsetWidth"
-				maxHeight="calc(95vh - var(--ng-doc-navbar-height)"
-				#dropdown>
-				<
-			</ng-doc-dropdown>
-		</ng-doc-input-wrapper>
-	</ng-template>
-
-	<ng-template #searchResults>
-		<div class="ng-doc-search-result-content" [attr.data-ng-doc-mod]="mod">
-			<ng-doc-data-list
-				[items]="state?.result ?? []"
-				[itemContent]="itemContent"
-				[emptyContent]="emptyContent">
-				<ng-template let-item #itemContent>
-					<a
-						class="ng-doc-search-option"
-						[routerLink]="item.index.route"
-						[fragment]="item.index.fragment">
-						<div class="ng-doc-search-option-header">
-							<ng-doc-tag size="small" [attr.data-ng-doc-page-type]="item.index.pageType">
-								{{ item.index.pageType }}
-							</ng-doc-tag>
-							<span class="ng-doc-search-option-breadcrumbs" ng-doc-text>
-								<ng-container *ngFor="let breadcrum of item.index.breadcrumbs; let i = index">
-									<span>{{ breadcrum }}</span>
-									<span
-										class="ng-doc-search-option-breadcrumb-divider"
-										*ngIf="i !== item.index.breadcrumbs.length - 1"
-										>/</span
-									>
-								</ng-container>
-							</span>
-						</div>
-						<h5
-							class="ng-doc-search-section-title"
-							ng-doc-text
-							[innerHTML]="
-								(item.index.section
-									| ngDocHighlighterPipe: (getPositions | execute: 'section':item)
-									| ngDocSanitizeHtml) || item.index.title
-							"></h5>
-						<div
-							*ngIf="item.index.content"
-							class="ng-doc-search-content"
-							[innerHTML]="
-								item.index.content
-									| ngDocHighlighterPipe: (getPositions | execute: 'content':item)
-									| ngDocSanitizeHtml
-							"
-							ng-doc-text></div>
-					</a>
-				</ng-template>
-				<ng-template #emptyContent>
-					<ng-container *ngIf="!state?.pending">
-						<div class="ng-doc-search-empty">
-							<ng-container *ngIf="query$.value.length">Nothing found</ng-container>
-							<ng-container *ngIf="!query$.value.length"
-								>Please enter your search query
-							</ng-container>
-						</div>
-					</ng-container>
-					<ng-container *ngIf="state?.pending">
-						<div class="ng-doc-search-progress">
-							<ng-doc-spinner size="small"></ng-doc-spinner>
-							Searching...
-						</div>
-					</ng-container>
-				</ng-template>
-			</ng-doc-data-list>
-		</div>
-	</ng-template>
+  <ng-template #searchInput>
+    <ng-doc-input-wrapper
+      [leftContent]="leftContent"
+      [rightContent]="rightContent"
+      ngDocDropdownOrigin
+      (click)="open()">
+      <ng-template #leftContent>
+        <ng-doc-icon icon="search"></ng-doc-icon>
+      </ng-template>
+      <input ngDocInputString readonly placeholder="Search..." />
+      <ng-template #rightContent>
+        <ng-doc-tag class="search-hotkey">/</ng-doc-tag>
+      </ng-template>
+    </ng-doc-input-wrapper>
+  </ng-template>
 </ng-container>

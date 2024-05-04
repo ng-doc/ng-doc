@@ -15,6 +15,7 @@ export * from '@ng-doc/app/components/page-wrapper';
 export * from '@ng-doc/app/components/playground';
 export * from '@ng-doc/app/components/root';
 export * from '@ng-doc/app/components/search';
+export * from '@ng-doc/app/components/search-dialog';
 export * from '@ng-doc/app/components/search-result';
 export * from '@ng-doc/app/components/sidebar';
 export * from '@ng-doc/app/components/tabs';

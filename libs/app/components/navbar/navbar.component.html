@@ -4,13 +4,10 @@
   </div>
   <div class="ng-doc-navbar-center">
     <ng-container *polymorpheusOutlet="centerContent"></ng-container>
-    @if (search && !isMobileMode) {
-      <ng-doc-search></ng-doc-search>
-    }
   </div>
   <div class="ng-doc-navbar-right">
-    @if (search && isMobileMode) {
-      <ng-doc-search mod="icon"></ng-doc-search>
+    @if (search) {
+      <ng-doc-search [mod]="isMobileMode ? 'icon' : 'input'"></ng-doc-search>
     }
     <ng-container *polymorpheusOutlet="rightContent"></ng-container>
     <button

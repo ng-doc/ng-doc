@@ -12,7 +12,8 @@
 - added `headerTemplate` property to guides configuration, it is used to specify the header template
   for the guide page that can be used to customize header for each guide page.
 - Slightly redesigned the app
-- Reworked the search, now it's fullscreen and has a better design.
+- Reworked search, now it's fullscreen and has a better design.
+- Orama search that's used as a primary search engine was updated to `2.0.17` version.
 
 TODO:
 
