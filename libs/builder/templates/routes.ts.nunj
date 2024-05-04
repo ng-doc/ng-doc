@@ -5,7 +5,7 @@ export const NG_DOC_ROUTING: Routes = [
 	{%- macro route(entry) %}
 	{
 		path: '{{ entry.item.route }}',
-		title: `{{ entry.item.entry.title | toTemplateString }}`,
+		title: `{{ entry.item.title | toTemplateString }}`,
 		{%- if entry.children.length %}
 		children: [{
 			path: '',

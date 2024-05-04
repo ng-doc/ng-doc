@@ -4,19 +4,15 @@ import { switchMap } from 'rxjs/operators';
 
 import { NgDocBuilderContext } from '../../../interfaces';
 import {
-  afterBuilders,
   Builder,
   createBuilder,
-  createSecondaryTrigger,
+  createMainTrigger,
   FileOutput,
-  onRemoveFromStore,
   PageStore,
   runBuild,
 } from '../../core';
 import { renderTemplate } from '../../nunjucks';
-import { API_ENTRY_BUILDER_TAG } from '../api-list';
 import { getStructuredDocs, StructuredDoc } from '../helpers';
-import { PAGE_ENTRY_BUILDER_TAG } from '../page';
 
 /**
  *
@@ -31,16 +27,7 @@ export function contextAndRoutesBuilder(context: NgDocBuilderContext): Builder<F
     }),
   );
 
-  return createBuilder(
-    [
-      createSecondaryTrigger(
-        afterBuilders([PAGE_ENTRY_BUILDER_TAG, API_ENTRY_BUILDER_TAG]),
-        onRemoveFromStore(PageStore),
-      ),
-    ],
-    () => builder,
-    false,
-  );
+  return createBuilder([createMainTrigger(PageStore.changes())], () => builder, false);
 }
 
 export const ROUTES_BUILDER_TAG = 'Routes';
