@@ -1,6 +1,6 @@
 import path from 'path';
 import { merge, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { debounceTime, switchMap } from 'rxjs/operators';
 
 import { NgDocBuilderContext } from '../../../interfaces';
 import {
@@ -27,7 +27,11 @@ export function contextAndRoutesBuilder(context: NgDocBuilderContext): Builder<F
     }),
   );
 
-  return createBuilder([createMainTrigger(PageStore.changes())], () => builder, false);
+  return createBuilder(
+    [createMainTrigger(PageStore.changes().pipe(debounceTime(100)))],
+    () => builder,
+    false,
+  );
 }
 
 export const ROUTES_BUILDER_TAG = 'Routes';

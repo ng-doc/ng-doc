@@ -4,212 +4,207 @@
 $class: $ng-doc-element;
 
 body {
-	--ng-doc-code-margin: var(--ng-doc-page-block-margin);
-	--ng-doc-blockquote-margin: var(--ng-doc-page-block-margin);
-	--ng-doc-tabs-margin: var(--ng-doc-page-block-margin);
-	--ng-doc-demo-margin: var(--ng-doc-page-block-margin);
-	--ng-doc-demo-pane-margin: var(--ng-doc-page-block-margin);
-	--ng-doc-playground-margin: var(--ng-doc-page-block-margin);
+  --ng-doc-code-margin: var(--ng-doc-page-block-margin);
+  --ng-doc-blockquote-margin: var(--ng-doc-page-block-margin);
+  --ng-doc-tabs-margin: var(--ng-doc-page-block-margin);
+  --ng-doc-demo-margin: var(--ng-doc-page-block-margin);
+  --ng-doc-demo-pane-margin: var(--ng-doc-page-block-margin);
+  --ng-doc-playground-margin: var(--ng-doc-page-block-margin);
 }
 
 @mixin headings {
-	h1#{$class},
-	h2#{$class},
-	h3#{$class},
-	h4#{$class},
-	h5#{$class},
-	h6#{$class} {
-		@content;
-	}
+  h1#{$class},
+  h2#{$class},
+  h3#{$class},
+  h4#{$class},
+  h5#{$class},
+  h6#{$class} {
+    @content;
+  }
 }
 
 html {
-	-webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
 }
 
 iframe#{$class} {
-	width: 100%;
-	border: 0;
+  width: 100%;
+  border: 0;
 }
 
 p#{$class} {
-	line-height: calc(var(--ng-doc-base-gutter) * 3);
-	margin: calc(var(--ng-doc-base-gutter) * 2) 0;
+  line-height: calc(var(--ng-doc-base-gutter) * 3);
+  margin: calc(var(--ng-doc-base-gutter) * 2) 0;
 }
 
 ul#{$class},
 ol#{$class} {
-	margin: var(--ng-doc-page-block-margin);
+  margin: var(--ng-doc-page-block-margin);
 }
 
 ul li#{$class},
 ol li#{$class} {
-	line-height: 1.5rem;
-	margin-bottom: calc(var(--ng-doc-base-gutter) + var(--ng-doc-base-gutter) / 2);
+  line-height: 1.5rem;
+  margin-bottom: calc(var(--ng-doc-base-gutter) + var(--ng-doc-base-gutter) / 2);
 }
 
 ul ul#{$class},
 ol ul#{$class},
 ul ol#{$class},
 ol ol#{$class} {
-	margin-top: calc(var(--ng-doc-base-gutter) * 2);
-	margin-bottom: 0;
+  margin-top: calc(var(--ng-doc-base-gutter) * 2);
+  margin-bottom: 0;
 }
 
 blockquote#{$class} {
-	line-height: 1.5rem;
-	margin: var(--ng-doc-page-block-margin);
+  line-height: 1.5rem;
+  margin: var(--ng-doc-page-block-margin);
 }
 
 @include headings {
-	@include ng-doc-heading-font();
-	margin: calc(var(--ng-doc-base-gutter) * 9) 0 0;
-	--ng-doc-line-height: 1.5rem;
-	--ng-doc-font-weight: 800;
-	overflow-wrap: anywhere;
+  @include ng-doc-heading-font();
+  margin: calc(var(--ng-doc-base-gutter) * 7) 0 0;
+  --ng-doc-line-height: 1.5rem;
+  --ng-doc-font-weight: 700;
+  overflow-wrap: anywhere;
+  --ng-doc-text: var(--ng-doc-heading-color);
 
-	& + h1#{$class},
-	& + h2#{$class},
-	& + h3#{$class},
-	& + h4#{$class},
-	& + h5#{$class},
-	& + h6#{$class} {
-		margin-top: calc(var(--ng-doc-base-gutter) * 2);
-	}
+  & + h1#{$class},
+  & + h2#{$class},
+  & + h3#{$class},
+  & + h4#{$class},
+  & + h5#{$class},
+  & + h6#{$class} {
+    margin-top: calc(var(--ng-doc-base-gutter) * 2);
+  }
 }
 
 h1#{$class} {
-	--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 5);
-	--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 5);
-	--ng-doc-font-weight: 900;
+  --ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 4);
+  --ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 4);
 }
 
 h2#{$class} {
-	--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 4);
-	--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 5);
+  --ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 3);
+  --ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 4);
 }
 
 h3#{$class} {
-	--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 3);
-	--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 4);
+  --ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 2.5);
+  --ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 3);
 }
 
-h4#{$class} {
-	--ng-doc-font-size: 20px;
-	--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 4);
-	margin: calc(var(--ng-doc-base-gutter) * 2) 0;
-}
-
+h4#{$class},
 h5#{$class},
 h6#{$class} {
-	--ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 2);
-	--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 3);
-	margin: calc(var(--ng-doc-base-gutter) * 2) 0;
+  --ng-doc-font-size: 20px;
+  --ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 2);
+  margin: calc(var(--ng-doc-base-gutter) * 2) 0;
 }
 
 pre#{$class} {
-	margin: var(--ng-doc-page-block-margin);
+  margin: var(--ng-doc-page-block-margin);
 
-	code#{$class} {
-		position: relative;
-		white-space: unset;
-		box-shadow: var(--ng-doc-code-shadow);
-		font-family: var(--ng-doc-code-font);
-		font-size: var(--ng-doc-code-font-size);
-		font-weight: var(--ng-doc-code-font-weight);
-		line-height: var(--ng-doc-code-line-height);
-		border: var(--ng-doc-code-border);
-		background-color: var(--ng-doc-code-background, inherit);
-	}
+  code#{$class} {
+    position: relative;
+    white-space: unset;
+    box-shadow: var(--ng-doc-code-shadow);
+    font-family: var(--ng-doc-code-font);
+    font-size: var(--ng-doc-code-font-size);
+    font-weight: var(--ng-doc-code-font-weight);
+    line-height: var(--ng-doc-code-line-height);
+    border: var(--ng-doc-code-border);
+    background-color: var(--ng-doc-code-background, inherit);
+  }
 }
 
 *:not(pre) > code#{$class} {
-	@include alpha-background(var(--ng-doc-inline-code-background), 0.15);
+  @include alpha-background(var(--ng-doc-inline-code-background), 0.15);
 
-	vertical-align: bottom;
-	border-radius: calc(var(--ng-doc-base-gutter) / 2);
-	color: var(--ng-doc-inline-code-color);
-	padding: calc(var(--ng-doc-base-gutter) / 4) var(--ng-doc-base-gutter);
-	font-family: var(--ng-doc-code-font);
-	font-size: var(--ng-doc-code-font-size);
-	font-weight: var(--ng-doc-code-font-weight);
-	line-height: var(--ng-doc-line-height);
-	white-space: nowrap;
+  vertical-align: bottom;
+  border-radius: calc(var(--ng-doc-base-gutter) / 2);
+  color: var(--ng-doc-inline-code-color);
+  padding: calc(var(--ng-doc-base-gutter) / 4) var(--ng-doc-base-gutter);
+  font-family: var(--ng-doc-code-font);
+  font-size: var(--ng-doc-code-font-size);
+  font-weight: var(--ng-doc-code-font-weight);
+  line-height: var(--ng-doc-line-height);
+  white-space: nowrap;
 }
 
 .ng-doc-table-wrapper {
-	overflow-x: auto;
+  overflow-x: auto;
 }
 
 table#{$class} {
-	width: 100%;
-	border-spacing: 0;
-	margin: var(--ng-doc-page-block-margin);
+  width: 100%;
+  border-spacing: 0;
+  margin: var(--ng-doc-page-block-margin);
 
-	thead {
-		tr {
-			th {
-				padding: var(--ng-doc-base-gutter);
-				background-color: var(--ng-doc-base-1);
-				text-align: left;
+  thead {
+    tr {
+      th {
+        padding: var(--ng-doc-base-gutter);
+        background-color: var(--ng-doc-base-1);
+        text-align: left;
 
-				&:first-child {
-					border-top-left-radius: var(--ng-doc-base-gutter);
-					border-bottom-left-radius: var(--ng-doc-base-gutter);
-					padding-left: calc(var(--ng-doc-base-gutter) * 4);
-				}
+        &:first-child {
+          border-top-left-radius: var(--ng-doc-base-gutter);
+          border-bottom-left-radius: var(--ng-doc-base-gutter);
+          padding-left: calc(var(--ng-doc-base-gutter) * 4);
+        }
 
-				&:last-child {
-					padding-right: calc(var(--ng-doc-base-gutter) * 4);
-					border-top-right-radius: var(--ng-doc-base-gutter);
-					border-bottom-right-radius: var(--ng-doc-base-gutter);
-				}
+        &:last-child {
+          padding-right: calc(var(--ng-doc-base-gutter) * 4);
+          border-top-right-radius: var(--ng-doc-base-gutter);
+          border-bottom-right-radius: var(--ng-doc-base-gutter);
+        }
 
-				@include headings {
-					margin-top: 0;
-					margin-bottom: 0;
-				}
-			}
-		}
-	}
+        @include headings {
+          margin-top: 0;
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
 
-	tbody {
-		tr {
-			td {
-				padding: calc(var(--ng-doc-base-gutter) * 2);
-				vertical-align: top;
-				border-bottom: 1px solid var(--ng-doc-base-1);
+  tbody {
+    tr {
+      td {
+        padding: calc(var(--ng-doc-base-gutter) * 2);
+        vertical-align: top;
+        border-bottom: 1px solid var(--ng-doc-base-1);
 
-				&:first-child {
-					padding-left: calc(var(--ng-doc-base-gutter) * 4);
-				}
+        &:first-child {
+          padding-left: calc(var(--ng-doc-base-gutter) * 4);
+        }
 
-				&:last-child {
-					padding-right: calc(var(--ng-doc-base-gutter) * 4);
-				}
+        &:last-child {
+          padding-right: calc(var(--ng-doc-base-gutter) * 4);
+        }
 
-				table {
-					margin: calc(var(--ng-doc-base-gutter) * 2) 0;
-				}
-			}
-		}
-	}
+        table {
+          margin: calc(var(--ng-doc-base-gutter) * 2) 0;
+        }
+      }
+    }
+  }
 
-	@include headings {
-		margin: 0 0 calc(var(--ng-doc-base-gutter) * 2);
-	}
+  @include headings {
+    margin: 0 0 calc(var(--ng-doc-base-gutter) * 2);
+  }
 }
 
 a#{$class} {
-	text-decoration: none;
-	color: var(--ng-doc-link-color);
+  text-decoration: none;
+  color: var(--ng-doc-link-color);
 
-	&:hover {
-		text-decoration: underline;
-	}
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 mark.ng-doc-mark {
-	background-color: var(--ng-doc-mark-background);
-	color: var(--ng-doc-mark-color, inherit);
+  background-color: var(--ng-doc-mark-background);
+  color: var(--ng-doc-mark-color, inherit);
 }

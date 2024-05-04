@@ -46,6 +46,7 @@
   --ng-doc-font-system-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     'Liberation Mono', 'Courier New', monospace;
   --ng-doc-heading-font-family: var(--ng-doc-font-system);
+  --ng-doc-heading-color: #111111;
   --ng-doc-font-family: var(--ng-doc-font-system);
   --ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 2);
   --ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 3);
@@ -54,7 +55,7 @@
   --ng-doc-code-font-size: 14px;
   --ng-doc-code-line-height: 20px;
   --ng-doc-code-font-weight: 400;
-  --ng-doc-text: #111111;
+  --ng-doc-text: rgb(78 78 78);
   --ng-doc-text-muted: var(--ng-doc-base-8);
 
   // Mark
@@ -104,7 +105,7 @@
   --ng-doc-tag-color: var(--ng-doc-primary-text);
 
   /* NgDocSelection */
-  --ng-doc-selection-border: 3px solid var(--ng-doc-primary);
+  --ng-doc-selection-border: 2px solid var(--ng-doc-primary);
   --ng-doc-selection-background: transparent;
 
   /* NgDocDot */
