@@ -1,44 +1,44 @@
 <div class="ng-doc-demo-wrapper" *ngIf="container; else demoTemplate">
-	<div class="ng-doc-demo-container">
-		<div class="ng-doc-demo">
-			<ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
-		</div>
-		<div class="ng-doc-demo-controls">
-			<button
-				class="ng-doc-copy-button"
-				*ngIf="!codeContent"
-				ng-doc-button-icon
-				(click)="copyCode(); copyTooltipText = 'Copied!'"
-				[ngDocTooltip]="tooltipContent"
-				(mouseenter)="copyTooltipText = 'Copy to clipboard'">
-				<ng-template #tooltipContent>
-					<ng-doc-smooth-resize [trigger]="copyTooltipText">
-						{{ copyTooltipText }}
-					</ng-doc-smooth-resize>
-				</ng-template>
-				<ng-doc-icon icon="copy"></ng-doc-icon>
-			</button>
-			<button ng-doc-button-icon (click)="expanded = !expanded" [ngDocTooltip]="tooltipContent">
-				<ng-template #tooltipContent>
-					<ng-doc-smooth-resize [trigger]="expandTooltipText">
-						{{ expandTooltipText }}
-					</ng-doc-smooth-resize>
-				</ng-template>
-				<ng-doc-icon icon="code"></ng-doc-icon>
-			</button>
-		</div>
-	</div>
-	<ng-doc-expander [content]="codeContent ? codeContent : expanderContent" [expanded]="expanded">
-		<ng-template #expanderContent>
-			<ng-doc-code [copyButton]="false">
-				<pre class="hljs ngde">
-					<code class="ngde" [ngDocCodeHighlighter]="code" [language]="'html'"></code>
-				</pre>
-			</ng-doc-code>
-		</ng-template>
-	</ng-doc-expander>
+  <div class="ng-doc-demo-container">
+    <div class="ng-doc-demo">
+      <ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
+    </div>
+    <div class="ng-doc-demo-controls">
+      <button
+        class="ng-doc-copy-button"
+        *ngIf="!codeContent"
+        ng-doc-button-icon
+        (click)="copyCode(); copyTooltipText = 'Copied!'"
+        [ngDocTooltip]="tooltipContent"
+        (mouseenter)="copyTooltipText = 'Copy to clipboard'">
+        <ng-template #tooltipContent>
+          <ng-doc-smooth-resize [trigger]="copyTooltipText">
+            {{ copyTooltipText }}
+          </ng-doc-smooth-resize>
+        </ng-template>
+        <ng-doc-icon icon="copy"></ng-doc-icon>
+      </button>
+      <button ng-doc-button-icon (click)="expanded = !expanded" [ngDocTooltip]="tooltipContent">
+        <ng-template #tooltipContent>
+          <ng-doc-smooth-resize [trigger]="expandTooltipText">
+            {{ expandTooltipText }}
+          </ng-doc-smooth-resize>
+        </ng-template>
+        <ng-doc-icon icon="code"></ng-doc-icon>
+      </button>
+    </div>
+  </div>
+  <!--	<ng-doc-expander [content]="codeContent ? codeContent : expanderContent" [expanded]="expanded">-->
+  <!--		<ng-template #expanderContent>-->
+  <!--			<ng-doc-code [copyButton]="false">-->
+  <!--				<pre class="hljs ngde">-->
+  <!--					<code class="ngde" [ngDocCodeHighlighter]="code" [language]="'html'"></code>-->
+  <!--				</pre>-->
+  <!--			</ng-doc-code>-->
+  <!--		</ng-template>-->
+  <!--	</ng-doc-expander>-->
 </div>
 
 <ng-template #demoTemplate>
-	<ng-content></ng-content>
+  <ng-content></ng-content>
 </ng-template>

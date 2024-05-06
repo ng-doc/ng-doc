@@ -20,7 +20,7 @@ import {
 import { Event as REvent, Router, Scroll } from '@angular/router';
 import { NgDocPageToc, NgDocTocItem } from '@ng-doc/app/interfaces';
 import { isPresent } from '@ng-doc/core/helpers/is-present';
-import { NgDocMediaQueryDirective, ngDocZoneOptimize } from '@ng-doc/ui-kit';
+import { ngDocZoneOptimize } from '@ng-doc/ui-kit';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { fromEvent, merge, Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, startWith } from 'rxjs/operators';
@@ -33,7 +33,7 @@ import { NgDocTocElementComponent } from './toc-element/toc-element.component';
   styleUrls: ['./toc.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [NgFor, NgDocTocElementComponent, NgDocMediaQueryDirective],
+  imports: [NgFor, NgDocTocElementComponent],
 })
 @UntilDestroy()
 export class NgDocTocComponent implements NgDocPageToc, OnInit {

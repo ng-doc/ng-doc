@@ -19,7 +19,7 @@
 
 <div
   class="ng-doc-page-wrapper"
-  [ngDocPageProcessor]="rootPage.pageContent"
+  [ngDocPageProcessor]="rootPage.pageContent | ngDocSanitizeHtml"
   (afterRender)="createToc()"
   #pageContainer></div>
 

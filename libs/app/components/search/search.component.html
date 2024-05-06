@@ -8,18 +8,10 @@
   </ng-container>
 
   <ng-template #searchInput>
-    <ng-doc-input-wrapper
-      [leftContent]="leftContent"
-      [rightContent]="rightContent"
-      ngDocDropdownOrigin
-      (click)="open()">
-      <ng-template #leftContent>
-        <ng-doc-icon icon="search"></ng-doc-icon>
-      </ng-template>
-      <input ngDocInputString readonly placeholder="Search..." />
-      <ng-template #rightContent>
-        <ng-doc-tag class="search-hotkey">/</ng-doc-tag>
-      </ng-template>
+    <ng-doc-input-wrapper ngDocDropdownOrigin>
+      <ng-doc-icon icon="search" ngDocInputWrapperLeft></ng-doc-icon>
+      <input ngDocInputString readonly placeholder="Search..." (click)="open()" />
+      <ng-doc-tag class="search-hotkey" ngDocInputWrapperRight>/</ng-doc-tag>
     </ng-doc-input-wrapper>
   </ng-template>
 </ng-container>

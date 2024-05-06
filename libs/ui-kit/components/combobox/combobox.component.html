@@ -1,18 +1,17 @@
 <ng-doc-combobox-host>
-	<ng-doc-input-wrapper
-		ngDocFocusCatcher
-		[rightContent]="inputRightContent"
-		[blurContent]="hasValue ? valueContent : ''"
-		[blurContext]="model()">
-		<input ngDocInputString [readonly]="readonly" [placeholder]="placeholder" />
-		<ng-template #inputRightContent>
-			<ng-container *polymorpheusOutlet="rightContent"></ng-container>
-			<ng-doc-clear-control *ngIf="clearButton"></ng-doc-clear-control>
-		</ng-template>
-		<ng-doc-dropdown [content]="dropdownContent" [closeIfInnerClick]="true">
-			<ng-template #dropdownContent>
-				<ng-container *ngTemplateOutlet="data"></ng-container>
-			</ng-template>
-		</ng-doc-dropdown>
-	</ng-doc-input-wrapper>
+  <ng-doc-input-wrapper
+    ngDocFocusCatcher
+    [blurContent]="hasValue ? valueContent : ''"
+    [blurContext]="model()">
+    <input ngDocInputString [readonly]="readonly" [placeholder]="placeholder" />
+    <ng-container ngDocInputWrapperLeft>
+      <ng-container *polymorpheusOutlet="rightContent"></ng-container>
+      <ng-doc-clear-control *ngIf="clearButton"></ng-doc-clear-control>
+    </ng-container>
+    <ng-doc-dropdown [content]="dropdownContent" [closeIfInnerClick]="true">
+      <ng-template #dropdownContent>
+        <ng-container *ngTemplateOutlet="data"></ng-container>
+      </ng-template>
+    </ng-doc-dropdown>
+  </ng-doc-input-wrapper>
 </ng-doc-combobox-host>

@@ -5,21 +5,26 @@
   markdown files for a single doc page, they will be displayed as tabs in the doc page.
 - you can also specify the `title`, `icon`, `type` and `keyword` fields in the markdown file using
   Markdown front matter syntax to customize tabs.
-- `title` field is now always displayed in the doc page, you don't need to specify it in the markdown
+- `title` field is now always displayed in the doc page, you don't need to specify it in the
+  markdown
   file.
-- added `description` field to the `NgDocPage` interface, it is used to specify the description of the
+- added `description` field to the `NgDocPage` interface, it is used to specify the description of
+  the
   doc page, and will be displayed in the doc page header.
 - added `headerTemplate` property to guides configuration, it is used to specify the header template
   for the guide page that can be used to customize header for each guide page.
 - Slightly redesigned the app
-- Reworked search, now it's fullscreen and has a better design.
+- Reworked search, now it's fullscreen and works the same way for the Desktop and Mobile.
 - Orama search that's used as a primary search engine was updated to `2.0.17` version.
+- Bunch of different fixes that resolve interface glitches and improve hydration and performance of
+  the app.
+- `leftContent`, `rightContent` and `centerContent` inputs were replaced with attribute selectors
+  like `ngDocNavbarLeft`, `ngdocNavbarRight` and `ngDocNavbarCenter` in the `ng-doc-navbar`
+  component to support hydration.
 
 TODO:
 
-- FIX API PAGES
 - sticky columns for name in APIS
-- rework search
 - redesign the app
 - sticky demos in playground
 - make TOC work on mobile
@@ -28,6 +33,7 @@ TODO:
 - add support for substring keywords
 - click on anchor should copy the link
 - fix edit links to repo
+- image viewer
 
 Inspirations:
 https://mui.com/base-ui/react-autocomplete/

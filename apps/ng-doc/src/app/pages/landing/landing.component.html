@@ -1,66 +1,57 @@
 <section class="greeting" id="greeting">
-	<ng-doc-background style="opacity: 0.4"></ng-doc-background>
-	<div class="section-container">
-		<div class="container row space-between">
-			<div class="greeting-content">
-				<h1 ng-doc-text>Documentation for<br />Angular projects</h1>
-				<p ng-doc-text>Create user-friendly documentation for your projects with ease!</p>
-				<div class="greeting-buttons">
-					<a [rounded]="true" [routerLink]="['docs']" ng-doc-button-flat size="large">
-						<span ng-doc-text>
-							Quick start
-							<ng-doc-icon [size]="24" customIcon="zap" ngDocTextLeft></ng-doc-icon>
-						</span>
-					</a>
-				</div>
-				<div class="greeting-shields">
-					<a href="https://www.npmjs.com/package/@ng-doc/builder" target="_blank">
-						<img src="https://img.shields.io/npm/v/@ng-doc/builder.svg?style=for-the-badge" />
-					</a>
+  <ng-doc-background style="opacity: 0.4"></ng-doc-background>
+  <div class="section-container">
+    <div class="container row space-between">
+      <div class="greeting-content">
+        <h1 ng-doc-text>Documentation for<br />Angular projects</h1>
+        <p ng-doc-text>Create user-friendly documentation for your projects with ease!</p>
+        <div class="greeting-buttons">
+          <a [rounded]="true" [routerLink]="['docs']" ng-doc-button-flat size="large">
+            <span ng-doc-text>
+              Quick start
+              <ng-doc-icon [size]="24" customIcon="zap" ngDocTextLeft></ng-doc-icon>
+            </span>
+          </a>
+        </div>
+        <div class="greeting-shields">
+          <a href="https://www.npmjs.com/package/@ng-doc/builder" target="_blank">
+            <img src="https://img.shields.io/npm/v/@ng-doc/builder.svg?style=for-the-badge" />
+          </a>
 
-					<a href="https://github.com/ng-doc/ng-doc/stargazers" target="_blank">
-						<img src="https://img.shields.io/github/stars/ng-doc/ng-doc?style=for-the-badge" />
-					</a>
+          <a href="https://github.com/ng-doc/ng-doc/stargazers" target="_blank">
+            <img src="https://img.shields.io/github/stars/ng-doc/ng-doc?style=for-the-badge" />
+          </a>
 
-					<a href="https://github.com/ng-doc/ng-doc/blob/main/LICENSE" target="_blank">
-						<img
-							src="https://img.shields.io/github/license/ng-doc/ng-doc.svg?style=for-the-badge" />
-					</a>
-				</div>
-			</div>
+          <a href="https://github.com/ng-doc/ng-doc/blob/main/LICENSE" target="_blank">
+            <img
+              src="https://img.shields.io/github/license/ng-doc/ng-doc.svg?style=for-the-badge" />
+          </a>
+        </div>
+      </div>
 
-			<ng-template
-				#mediaQuery="ngDocMediaQuery"
-				[ngDocMediaQuery]="[
-					mediaQuery.breakpoints.XLarge,
-					mediaQuery.breakpoints.Large,
-					mediaQuery.breakpoints.Medium,
-					mediaQuery.breakpoints.Small
-				]">
-				<figure>
-					<video [muted]="'muted'" autoplay loop playsinline>
-						<source src="https://assets.ng-doc.com/ng-doc-in-action.mp4" type="video/mp4" />
-						You need a browser that supports HTML5 video to view this video.
-					</video>
-				</figure>
-			</ng-template>
-		</div>
-	</div>
+      <figure>
+        <video [muted]="'muted'" autoplay loop playsinline>
+          <source src="https://assets.ng-doc.com/ng-doc-in-action.mp4" type="video/mp4" />
+          You need a browser that supports HTML5 video to view this video.
+        </video>
+      </figure>
+    </div>
+  </div>
 </section>
 
 <section class="try-it" id="try-it">
-	<div class="section-container">
-		<h1 ng-doc-text>Try it out for yourself!</h1>
-		<p class="description" ng-doc-text>
-			You can try out NgDoc right now! Here is a simple example of how you can create a
-			documentation for your project.
-		</p>
-		<div class="container">
-			<iframe
-				src="https://stackblitz.com/edit/node-pw2tyk?embed=1&file=src/app/docs/button/index.md&hideNavigation=1">
-			</iframe>
-		</div>
-	</div>
+  <div class="section-container">
+    <h1 ng-doc-text>Try it out for yourself!</h1>
+    <p class="description" ng-doc-text>
+      You can try out NgDoc right now! Here is a simple example of how you can create a
+      documentation for your project.
+    </p>
+    <div class="container">
+      <iframe
+        src="https://stackblitz.com/edit/node-pw2tyk?embed=1&file=src/app/docs/button/index.md&hideNavigation=1">
+      </iframe>
+    </div>
+  </div>
 </section>
 
 <!--<section id="features" class="features">-->

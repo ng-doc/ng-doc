@@ -1,99 +1,90 @@
-import { NgIf } from '@angular/common';
+import { Location, NgIf, NgTemplateOutlet } from '@angular/common';
 import {
-	ChangeDetectionStrategy,
-	ChangeDetectorRef,
-	Component,
-	HostBinding,
-	Input,
-	OnInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  HostBinding,
+  inject,
+  Input,
 } from '@angular/core';
-import { Event, NavigationEnd, Router } from '@angular/router';
 import { NgDocRouteActiveDirective } from '@ng-doc/app/directives/route-active';
 import { NgDocNavigation } from '@ng-doc/app/interfaces';
 import {
-	NgDocDotComponent,
-	NgDocExpanderComponent,
-	NgDocIconComponent,
-	NgDocRotatorDirective,
-	NgDocTextComponent,
-	NgDocTextLeftDirective,
+  NgDocContent,
+  NgDocDotComponent,
+  NgDocExpanderComponent,
+  NgDocIconComponent,
+  NgDocRotatorDirective,
+  NgDocTextComponent,
+  NgDocTextLeftDirective,
 } from '@ng-doc/ui-kit';
-import { NgDocContent } from '@ng-doc/ui-kit/types';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
-import { filter, startWith } from 'rxjs/operators';
 
 @Component({
-	selector: 'ng-doc-sidebar-category',
-	templateUrl: './sidebar-category.component.html',
-	styleUrls: ['./sidebar-category.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	standalone: true,
-	imports: [
-		NgDocRouteActiveDirective,
-		NgIf,
-		NgDocDotComponent,
-		NgDocTextComponent,
-		NgDocIconComponent,
-		NgDocTextLeftDirective,
-		NgDocRotatorDirective,
-		NgDocExpanderComponent,
-		PolymorpheusModule,
-	],
+  selector: 'ng-doc-sidebar-category',
+  templateUrl: './sidebar-category.component.html',
+  styleUrls: ['./sidebar-category.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    NgDocRouteActiveDirective,
+    NgIf,
+    NgDocDotComponent,
+    NgDocTextComponent,
+    NgDocIconComponent,
+    NgDocTextLeftDirective,
+    NgDocRotatorDirective,
+    NgDocExpanderComponent,
+    PolymorpheusModule,
+    NgTemplateOutlet,
+  ],
 })
 @UntilDestroy()
-export class NgDocSidebarCategoryComponent implements OnInit {
-	@Input()
-	category?: NgDocNavigation;
+export class NgDocSidebarCategoryComponent {
+  @Input({ required: true })
+  category!: NgDocNavigation;
 
-	@Input()
-	@HostBinding('attr.data-ng-doc-is-root')
-	isRoot: boolean = false;
+  @Input()
+  @HostBinding('attr.data-ng-doc-is-root')
+  isRoot: boolean = false;
 
-	@Input()
-	content: NgDocContent = '';
+  @Input()
+  content: NgDocContent = '';
 
-	@Input()
-	@HostBinding('attr.data-ng-doc-expandable')
-	expandable: boolean = true;
+  @Input()
+  @HostBinding('attr.data-ng-doc-expandable')
+  expandable: boolean = true;
 
-	@Input()
-	expanded: boolean = true;
+  @Input()
+  expanded: boolean = true;
 
-	constructor(
-		private readonly router: Router,
-		private readonly changeDetectorRef: ChangeDetectorRef,
-	) {}
+  protected readonly location = inject(Location);
+  protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
-	ngOnInit(): void {
-		/**
-		 * We need to update this component every time a navigation occurs to expand the category if its child node is currently rendered
-		 */
-		this.router.events
-			.pipe(
-				filter((event: Event) => event instanceof NavigationEnd),
-				startWith(null),
-				filter(() => this.router.url.includes(this.category?.route ?? '', 0)),
-				untilDestroyed(this),
-			)
-			.subscribe(() => this.expand());
-	}
+  constructor() {
+    this.location.onUrlChange(() => {
+      if (this.location.path().includes(this.category.route ?? '', 0)) {
+        this.expand();
+      }
+    });
+  }
 
-	toggle(): void {
-		this.expanded ? this.collapse() : this.expand();
-	}
+  toggle(): void {
+    this.expanded ? this.collapse() : this.expand();
+  }
 
-	expand(): void {
-		if (this.category?.expandable) {
-			this.expanded = true;
-			this.changeDetectorRef.markForCheck();
-		}
-	}
+  expand(): void {
+    if (this.category?.expandable) {
+      this.expanded = true;
+      this.changeDetectorRef.markForCheck();
+    }
+  }
 
-	collapse(): void {
-		if (this.category?.expandable) {
-			this.expanded = false;
-			this.changeDetectorRef.markForCheck();
-		}
-	}
+  collapse(): void {
+    if (this.category?.expandable) {
+      this.expanded = false;
+      this.changeDetectorRef.markForCheck();
+    }
+  }
 }

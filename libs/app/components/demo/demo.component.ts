@@ -40,6 +40,7 @@ import {
     NgDocFullscreenButtonComponent,
     NgComponentOutlet,
   ],
+  host: { ngSkipHydration: 'false' },
 })
 export class NgDocDemoComponent implements OnInit {
   @Input()

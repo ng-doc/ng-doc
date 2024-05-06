@@ -4,16 +4,17 @@ import {
   ComponentRef,
   ElementRef,
   EventEmitter,
+  HostBinding,
   inject,
   Injector,
   Input,
   OnChanges,
-  OnInit,
   Output,
   Renderer2,
   SimpleChanges,
   ViewContainerRef,
 } from '@angular/core';
+import { SafeHtml } from '@angular/platform-browser';
 import { NgDocPageProcessor, NgDocProcessorOptions } from '@ng-doc/app/interfaces';
 import { NG_DOC_PAGE_CUSTOM_PROCESSOR, NG_DOC_PAGE_PROCESSOR } from '@ng-doc/app/tokens';
 import { asArray, objectKeys } from '@ng-doc/core';
@@ -27,11 +28,11 @@ import { asArray, objectKeys } from '@ng-doc/core';
   standalone: true,
   template: '<ng-content></ng-content>',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { ngSkipHydration: 'true' },
 })
-export class NgDocPageProcessorComponent implements OnChanges, OnInit {
+export class NgDocPageProcessorComponent implements OnChanges {
   @Input({ required: true, alias: 'ngDocPageProcessor' })
-  html: string = '';
+  @HostBinding('innerHTML')
+  html: SafeHtml = '';
 
   @Output()
   afterRender: EventEmitter<void> = new EventEmitter<void>();
@@ -47,15 +48,13 @@ export class NgDocPageProcessorComponent implements OnChanges, OnInit {
   protected readonly injector: Injector = inject(Injector);
   protected readonly renderer: Renderer2 = inject(Renderer2);
 
-  ngOnChanges({ html }: SimpleChanges) {
+  ngOnChanges({ html }: SimpleChanges): void {
     if (html) {
-      this.renderer.setProperty(this.elementRef.nativeElement, 'innerHTML', this.html);
-      this.afterRender.emit();
+      Promise.resolve().then(() => {
+        asArray(this.processors, this.customProcessors).forEach(this.process.bind(this));
+        this.afterRender.emit();
+      });
     }
-  }
-
-  ngOnInit(): void {
-    asArray(this.processors, this.customProcessors).forEach(this.process.bind(this));
   }
 
   private process<T>(processor: NgDocPageProcessor<T>): void {
@@ -94,7 +93,7 @@ export class NgDocPageProcessorComponent implements OnChanges, OnInit {
             replaceElement,
           );
 
-          componentRef.changeDetectorRef.markForCheck();
+          componentRef.changeDetectorRef.detectChanges();
         }
       },
     );

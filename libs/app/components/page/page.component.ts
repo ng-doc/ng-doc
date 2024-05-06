@@ -14,6 +14,7 @@ import { NgDocPageWrapperComponent } from '@ng-doc/app/components/page-wrapper';
 import { NgDocTocComponent } from '@ng-doc/app/components/toc';
 import { createComponent, generateToc } from '@ng-doc/app/helpers';
 import { NgDocPageSkeleton } from '@ng-doc/app/interfaces';
+import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes';
 import { NgDocPageProcessorComponent } from '@ng-doc/app/processors';
 import { provideTypeControl } from '@ng-doc/app/providers/type-control';
 import { NG_DOC_PAGE_SKELETON } from '@ng-doc/app/tokens';
@@ -27,7 +28,6 @@ import {
   DialogOutletComponent,
   NgDocButtonIconComponent,
   NgDocIconComponent,
-  NgDocMediaQueryDirective,
   NgDocTextComponent,
   NgDocTextLeftDirective,
   NgDocTextRightDirective,
@@ -50,12 +50,12 @@ import { UntilDestroy } from '@ngneat/until-destroy';
     NgDocTextComponent,
     NgDocTextLeftDirective,
     NgDocTextRightDirective,
-    NgDocMediaQueryDirective,
     NgDocTocComponent,
     NgDocPageProcessorComponent,
     NgComponentOutlet,
     RouterOutlet,
     DialogOutletComponent,
+    NgDocSanitizeHtmlPipe,
   ],
   providers: [
     provideTypeControl('NgDocTypeAlias', NgDocTypeAliasControlComponent, { order: 10 }),

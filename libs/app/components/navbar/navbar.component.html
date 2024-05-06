@@ -1,21 +1,16 @@
-<div class="navbar-container" *ngDocLet="sidebarService.isMobileMode() | async as isMobileMode">
+<div class="navbar-container">
   <div class="ng-doc-navbar-left">
-    <ng-container *polymorpheusOutlet="leftContent"></ng-container>
+    <ng-content select="[ngDocNavbarleft]"></ng-content>
   </div>
   <div class="ng-doc-navbar-center">
-    <ng-container *polymorpheusOutlet="centerContent"></ng-container>
+    <ng-content select="[ngDocNavbarCenter]"></ng-content>
   </div>
   <div class="ng-doc-navbar-right">
     @if (search) {
-      <ng-doc-search [mod]="isMobileMode ? 'icon' : 'input'"></ng-doc-search>
+      <ng-doc-search [mod]="'input'"></ng-doc-search>
     }
-    <ng-container *polymorpheusOutlet="rightContent"></ng-container>
-    <button
-      class="ng-doc-menu"
-      *ngIf="isMobileMode && hamburger"
-      ng-doc-button-icon
-      size="large"
-      (click)="sidebarService.toggle()">
+    <ng-content select="[ngDocNavbarRight]"></ng-content>
+    <button class="ng-doc-menu" ng-doc-button-icon size="large" (click)="sidebarService.toggle()">
       <ng-doc-icon icon="menu" [size]="24"></ng-doc-icon>
     </button>
   </div>

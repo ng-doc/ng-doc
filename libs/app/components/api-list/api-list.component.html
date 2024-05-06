@@ -2,10 +2,8 @@
 <div class="ng-doc-api-list-wrapper" *ngIf="api$ | async as api">
   <form class="ng-doc-api-filter" [formGroup]="formGroup">
     <label class="ng-doc-api-filter-item" ng-doc-label="Filter">
-      <ng-doc-input-wrapper [leftContent]="leftContent">
-        <ng-template #leftContent>
-          <ng-doc-icon icon="search"></ng-doc-icon>
-        </ng-template>
+      <ng-doc-input-wrapper>
+        <ng-doc-icon icon="search" ngDocInputWrapperLeft></ng-doc-icon>
         <input
           ngDocInputString
           [formControl]="formGroup.controls.filter"

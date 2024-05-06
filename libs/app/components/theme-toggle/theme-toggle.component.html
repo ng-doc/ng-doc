@@ -1,23 +1,23 @@
-<button ng-doc-button-icon size="large" (click)="toggleTheme()" [ngDocTooltip]="tooltipContent">
-	<ng-template #tooltipContent>
-		<ng-doc-smooth-resize [trigger]="nextTheme.name">
-			Set "{{ nextTheme.name }}" theme
-		</ng-doc-smooth-resize>
-	</ng-template>
-	<ng-doc-icon
-		[@switchIcon]="{ value: ':enter', params: { from: '-100%', to: '100%' } }"
-		icon="sun"
-		[size]="24"
-		*ngIf="nextTheme === themes[1]"></ng-doc-icon>
-	<ng-doc-icon
-		[@switchIcon]="{ value: ':enter', params: { from: '-100%', to: '100%' } }"
-		icon="moon"
-		[size]="24"
-		*ngIf="nextTheme === themes[2]"></ng-doc-icon>
-	<div
-		class="letter"
-		[@switchIcon]="{ value: ':enter', params: { from: '-100%', to: '100%' } }"
-		*ngIf="nextTheme === themes[0]">
-		A
-	</div>
+<button ng-doc-button-icon size="large">
+  <!--	<ng-template #tooltipContent>-->
+  <!--		<ng-doc-smooth-resize [trigger]="nextTheme.name">-->
+  <!--			Set "{{ nextTheme.name }}" theme-->
+  <!--		</ng-doc-smooth-resize>-->
+  <!--	</ng-template>-->
+  <!--	<ng-doc-icon-->
+  <!--		[@switchIcon]="{ value: ':enter', params: { from: '-100%', to: '100%' } }"-->
+  <!--		icon="sun"-->
+  <!--		[size]="24"-->
+  <!--		*ngIf="nextTheme === themes[1]"></ng-doc-icon>-->
+  <!--	<ng-doc-icon-->
+  <!--		[@switchIcon]="{ value: ':enter', params: { from: '-100%', to: '100%' } }"-->
+  <!--		icon="moon"-->
+  <!--		[size]="24"-->
+  <!--		*ngIf="nextTheme === themes[2]"></ng-doc-icon>-->
+  <!--	<div-->
+  <!--		class="letter"-->
+  <!--		[@switchIcon]="{ value: ':enter', params: { from: '-100%', to: '100%' } }"-->
+  <!--		*ngIf="nextTheme === themes[0]">-->
+  <!--		A-->
+  <!--	</div>-->
 </button>

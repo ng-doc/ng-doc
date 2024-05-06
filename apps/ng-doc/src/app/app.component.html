@@ -1,49 +1,32 @@
 <ng-doc-root
-	[sidebar]="!isLandingPage"
-	[noWidthLimit]="isLandingPage"
-	[footerContent]="footerContent">
-	<ng-doc-navbar
-		[leftContent]="leftContent"
-		[rightContent]="rightContent"
-		[hamburger]="!isLandingPage"
-		[search]="!isLandingPage">
-		<ng-template #leftContent>
-			<a class="brand" routerLink="/">
-				<h3>
-					<img src="assets/images/ng-doc.svg" />
-					<ng-template
-						#ngDocMediaQuery="ngDocMediaQuery"
-						[ngDocMediaQuery]="[
-							ngDocMediaQuery.breakpoints.Small,
-							ngDocMediaQuery.breakpoints.Medium,
-							ngDocMediaQuery.breakpoints.Large,
-							ngDocMediaQuery.breakpoints.XLarge
-						]">
-						<span class="brand-title-ng">Ng</span>
-						<span class="brand-title-doc">Doc</span>
-					</ng-template>
-				</h3>
-			</a>
-		</ng-template>
-		<ng-template #rightContent>
-			<div @preventInitialChild class="ng-doc-header-controls">
-				<ng-doc-theme-toggle></ng-doc-theme-toggle>
-				<a
-					href="https://github.com/ng-doc/ng-doc"
-					ng-doc-button-icon
-					ngDocTooltip="Repository on GitHub"
-					size="large"
-					target="_blank">
-					<ng-doc-icon [size]="24" customIcon="github"></ng-doc-icon>
-				</a>
-			</div>
-		</ng-template>
-	</ng-doc-navbar>
+  [sidebar]="!isLandingPage"
+  [noWidthLimit]="isLandingPage"
+  [footerContent]="footerContent">
+  <ng-doc-navbar [hamburger]="!isLandingPage">
+    <a class="brand" routerLink="/" ngDocNavbarleft>
+      <h3>
+        <img src="assets/images/ng-doc.svg" />
+        <span class="brand-title-ng">Ng</span>
+        <span class="brand-title-doc">Doc</span>
+      </h3>
+    </a>
+    <div @preventInitialChild class="ng-doc-header-controls" ngDocNavbarRight>
+      <ng-doc-theme-toggle></ng-doc-theme-toggle>
+      <a
+        href="https://github.com/ng-doc/ng-doc"
+        ng-doc-button-icon
+        ngDocTooltip="Repository on GitHub"
+        size="large"
+        target="_blank">
+        <ng-doc-icon [size]="24" customIcon="github"></ng-doc-icon>
+      </a>
+    </div>
+  </ng-doc-navbar>
 
-	<ng-doc-sidebar></ng-doc-sidebar>
-	<router-outlet></router-outlet>
+  <ng-doc-sidebar></ng-doc-sidebar>
+  <router-outlet></router-outlet>
 
-	<ng-template #footerContent>
-		<div class="ng-doc-footer">MIT © 2023 Aleksandr Skoropad</div>
-	</ng-template>
+  <ng-template #footerContent>
+    <div class="ng-doc-footer">MIT © 2023 Aleksandr Skoropad</div>
+  </ng-template>
 </ng-doc-root>

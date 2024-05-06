@@ -8,6 +8,15 @@
   &[data-ng-doc-mod='input'] {
     width: 240px;
   }
+
+  ng-doc-input-wrapper {
+    cursor: pointer;
+
+    ng-doc-icon,
+    ng-doc-tag {
+      cursor: pointer;
+    }
+  }
 }
 
 .search-hotkey {

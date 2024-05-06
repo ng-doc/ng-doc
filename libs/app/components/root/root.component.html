@@ -1,28 +1,21 @@
-<ng-container *ngDocLet="!!(sidebarService.isMobileMode() | async) as isMobileMode">
-	<div class="ng-doc-root-wrapper" [class.collapsable]="isMobileMode">
-		<div class="ng-doc-header">
-			<ng-content select="ng-doc-navbar"></ng-content>
-			<ng-content select="[ngDocCustomNavbar]"></ng-content>
-		</div>
-		<main *ngDocLet="sidebar && !!(sidebarService.isExpanded() | async) as opened">
-			<ng-doc-sidenav
-				*ngDocLet="sidenavState$ | async as sidenavState"
-				[sidebar]="sidebarContent"
-				[opened]="opened"
-				[over]="sidenavState?.over ?? false"
-				[align]="sidenavState?.align ?? 'left'"
-				[hasBackdrop]="sidenavState?.hasBackdrop ?? false"
-				(closeEvent)="sidebarService.hide()">
-				<ng-template #sidebarContent>
-					<ng-content select="ng-doc-sidebar"></ng-content>
-					<ng-content select="[ngDocCustomSidebar]"></ng-content>
-				</ng-template>
+<ng-container>
+  <div class="ng-doc-root-wrapper">
+    <div class="ng-doc-header">
+      <ng-content select="ng-doc-navbar"></ng-content>
+      <ng-content select="[ngDocCustomNavbar]"></ng-content>
+    </div>
+    <main>
+      <ng-doc-sidenav [sidebar]="sidebarContent">
+        <ng-template #sidebarContent>
+          <ng-content select="ng-doc-sidebar"></ng-content>
+          <ng-content select="[ngDocCustomSidebar]"></ng-content>
+        </ng-template>
 
-				<ng-content></ng-content>
-			</ng-doc-sidenav>
-		</main>
-		<footer *ngIf="footerContent">
-			<ng-container *polymorpheusOutlet="footerContent as text"> {{ text }} </ng-container>
-		</footer>
-	</div>
+        <ng-content></ng-content>
+      </ng-doc-sidenav>
+    </main>
+    <footer *ngIf="footerContent">
+      <ng-container *polymorpheusOutlet="footerContent as text"> {{ text }} </ng-container>
+    </footer>
+  </div>
 </ng-container>

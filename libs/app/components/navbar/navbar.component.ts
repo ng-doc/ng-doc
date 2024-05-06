@@ -13,7 +13,6 @@ import { NgDocSearchComponent } from '@ng-doc/app/components/search';
 import { NgDocSidebarService } from '@ng-doc/app/services';
 import {
   NgDocButtonIconComponent,
-  NgDocContent,
   NgDocIconComponent,
   NgDocLetDirective,
   ngDocZoneOptimize,
@@ -42,28 +41,9 @@ import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
     NgDocIconComponent,
     AsyncPipe,
   ],
-  host: { ngSkipHydration: 'true' },
 })
 @UntilDestroy()
 export class NgDocNavbarComponent {
-  /**
-   * Content for left side of navbar
-   */
-  @Input()
-  leftContent: NgDocContent = '';
-
-  /**
-   * Content for center side of navbar
-   */
-  @Input()
-  centerContent: NgDocContent = '';
-
-  /**
-   * Content for right side of navbar
-   */
-  @Input()
-  rightContent: NgDocContent = '';
-
   /**
    * Show search input
    */
@@ -104,14 +84,10 @@ export class NgDocNavbarComponent {
           startWith(false),
           ngDocZoneOptimize(this.ngZone),
         ),
-        this.sidebarService.isMobileMode(),
         this.sidebarService.isExpanded(),
       ])
         .pipe(
-          map(
-            ([scrolled, isMobileMode, isExpanded]: [boolean, boolean, boolean]) =>
-              scrolled || (isMobileMode && isExpanded),
-          ),
+          map(([scrolled, isExpanded]: [boolean, boolean]) => scrolled || isExpanded),
           untilDestroyed(this),
         )
         .subscribe((hasShadow: boolean) => {
