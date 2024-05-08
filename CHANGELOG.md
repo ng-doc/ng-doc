@@ -1,3 +1,10 @@
+## [17.6.8](https://github.com/ng-doc/ng-doc/compare/v17.6.7...v17.6.8) (2024-05-08)
+
+
+### Bug Fixes
+
+* **app:** table of contents link does not work properly with `baseHref` ([f65fc1f](https://github.com/ng-doc/ng-doc/commit/f65fc1ffc11b36297377621bea6f7695816f20f7)), closes [#159](https://github.com/ng-doc/ng-doc/issues/159)
+
 ## [17.6.7](https://github.com/ng-doc/ng-doc/compare/v17.6.6...v17.6.7) (2024-05-03)
 
 
