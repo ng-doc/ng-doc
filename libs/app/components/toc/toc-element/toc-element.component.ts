@@ -6,6 +6,7 @@ import {
 	inject,
 	Input,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
 	selector: 'li[ng-doc-toc-element]',
@@ -13,10 +14,14 @@ import {
 	styleUrls: ['./toc-element.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	standalone: true,
+	imports: [RouterLink],
 })
 export class NgDocTocElementComponent {
 	@Input()
-	href: string = '';
+	path: string = '';
+
+	@Input()
+	hash: string = '';
 
 	@Input()
 	@HostBinding('attr.data-ng-doc-selected')

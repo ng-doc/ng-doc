@@ -25,7 +25,8 @@ export function generateToc(container: HTMLElement): NgDocTocItem[] {
 			map.push({
 				title: heading.textContent?.trim() ?? '',
 				element: heading,
-				path: anchor.pathname + anchor.hash,
+				path: anchor.pathname,
+				hash: anchor.hash.replace('#', ''),
 				level: levels.indexOf(headingLevel) + 1,
 			});
 		}

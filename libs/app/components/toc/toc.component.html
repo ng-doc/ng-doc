@@ -3,13 +3,14 @@
 		<div class="ng-doc-toc-selection" #selection></div>
 		<ul class="ng-doc-toc">
 			@for (item of tableOfContent; track item) {
-			<li
-				ng-doc-toc-element
-				[href]="item.path"
-				[level]="item.level"
-				[selected]="item === activeItem()">
-				{{ item.title }}
-			</li>
+				<li
+					ng-doc-toc-element
+					[path]="item.path"
+					[hash]="item.hash"
+					[level]="item.level"
+					[selected]="item === activeItem()">
+					{{ item.title }}
+				</li>
 			}
 		</ul>
 	</div>
