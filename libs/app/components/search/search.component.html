@@ -1,17 +1,13 @@
 <ng-container
   [ngDocHotkey]="{ ctrlKey: false, altKey: false, shiftKey: false, code: 'Slash' }"
   (ngDocHotkey)="open()">
-  <ng-container *ngIf="mod === 'icon'; else searchInput">
-    <button ng-doc-button-icon size="large" (click)="open()" ngDocDropdownOrigin>
-      <ng-doc-icon icon="search" [size]="24"></ng-doc-icon>
-    </button>
-  </ng-container>
+  <button ng-doc-button-icon size="large" (click)="open()" ngDocDropdownOrigin>
+    <ng-doc-icon icon="search" [size]="24"></ng-doc-icon>
+  </button>
 
-  <ng-template #searchInput>
-    <ng-doc-input-wrapper ngDocDropdownOrigin>
-      <ng-doc-icon icon="search" ngDocInputWrapperLeft></ng-doc-icon>
-      <input ngDocInputString readonly placeholder="Search..." (click)="open()" />
-      <ng-doc-tag class="search-hotkey" ngDocInputWrapperRight>/</ng-doc-tag>
-    </ng-doc-input-wrapper>
-  </ng-template>
+  <ng-doc-input-wrapper ngDocDropdownOrigin>
+    <ng-doc-icon icon="search" ngDocInputWrapperLeft></ng-doc-icon>
+    <input ngDocInputString readonly placeholder="Search..." (click)="open()" />
+    <ng-doc-tag class="search-hotkey" ngDocInputWrapperRight>/</ng-doc-tag>
+  </ng-doc-input-wrapper>
 </ng-container>

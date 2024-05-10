@@ -5,7 +5,11 @@
       <ng-content select="[ngDocCustomNavbar]"></ng-content>
     </div>
     <main>
-      <ng-doc-sidenav [sidebar]="sidebarContent">
+      <ng-doc-sidenav
+        [sidebar]="sidebarContent"
+        [opened]="(sidebarService.isExpanded() | async) ?? true"
+        [hasBackdrop]="sidebarService.isMobile"
+        (closeEvent)="sidebarService.hide()">
         <ng-template #sidebarContent>
           <ng-content select="ng-doc-sidebar"></ng-content>
           <ng-content select="[ngDocCustomSidebar]"></ng-content>
@@ -15,7 +19,7 @@
       </ng-doc-sidenav>
     </main>
     <footer *ngIf="footerContent">
-      <ng-container *polymorpheusOutlet="footerContent as text"> {{ text }} </ng-container>
+      <ng-container *polymorpheusOutlet="footerContent as text"> {{ text }}</ng-container>
     </footer>
   </div>
 </ng-container>

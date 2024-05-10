@@ -10,15 +10,18 @@
   }
 
   .ng-doc-sidenav {
+    position: fixed;
     width: var(--ng-doc-sidenav-width);
     flex-shrink: 0;
     z-index: 5;
-    transition: box-shadow var(--ng-doc-transition);
+    transition: left var(--ng-doc-transition);
   }
 
   .ng-doc-sidenav-content {
-    width: 100%;
+    margin-left: var(--ng-doc-sidenav-width);
+    width: calc(100% - var(--ng-doc-sidenav-width));
     padding: var(--ng-doc-sidenav-content-padding);
+    transition: margin-left var(--ng-doc-transition);
   }
 
   .ng-doc-backdrop {
@@ -29,6 +32,27 @@
     top: 0;
     width: 100%;
     height: 100%;
-    z-index: 1;
+    z-index: 2;
+  }
+
+  @media (max-width: 1024px) {
+    &[data-ng-doc-opened='true'] {
+      .ng-doc-sidenav {
+        right: 0;
+        transition: right var(--ng-doc-transition);
+        --ng-doc-sidebar-shadow: var(--ng-doc-shadow-color) -5px 5px 20px -5px;
+      }
+    }
+
+    .ng-doc-sidenav {
+      transition: unset;
+      left: unset;
+      right: calc(var(--ng-doc-sidenav-width) * -1);
+    }
+
+    .ng-doc-sidenav-content {
+      margin-left: 0;
+      width: 100%;
+    }
   }
 }

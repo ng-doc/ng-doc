@@ -3,7 +3,10 @@
     <ng-container *polymorpheusOutlet="sidebar"></ng-container>
   </div>
   <div class="ng-doc-sidenav-content">
-    <div class="ng-doc-backdrop" @backdropFade *ngIf="false"></div>
+    @if (opened && hasBackdrop) {
+      <div class="ng-doc-backdrop" @backdropFade (click)="closeEvent.emit()"></div>
+    }
+
     <ng-content></ng-content>
   </div>
 </div>

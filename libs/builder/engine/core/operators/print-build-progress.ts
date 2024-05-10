@@ -13,7 +13,7 @@ export function printBuildProgress<T>(): OperatorFunction<T, T> {
       tap(() => {
         const tasksLeft = Array.from(STACK.values()).reduce((acc, stack) => acc + stack.size, 0);
 
-        printProgress(`Building... (${tasksLeft})`);
+        printProgress(`Building... (${tasksLeft} tasks left)`);
       }),
     );
 }

@@ -1,10 +1,13 @@
-import { Breakpoints } from '@angular/cdk/layout';
 import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { inject, Injectable } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router } from '@angular/router';
+import { ngDocZoneOptimize } from '@ng-doc/ui-kit';
 import { NgDocScrollService } from '@ng-doc/ui-kit/services/scroll';
+import { WINDOW } from '@ng-web-apis/common';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, fromEvent, Observable, share } from 'rxjs';
+import { filter, startWith } from 'rxjs/operators';
 
 /**
  * Service for sidebar, it can be used to hide/show sidebar or to check if sidebar is collapsable.
@@ -14,15 +17,54 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 @UntilDestroy()
 export class NgDocSidebarService {
-  readonly breakpoints: string[] = [Breakpoints.XSmall, Breakpoints.Small];
-  protected readonly expanded: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  protected readonly expanded = new BehaviorSubject<boolean>(false);
+  protected readonly document = inject(DOCUMENT);
+  protected readonly window = inject(WINDOW);
+  protected readonly router = inject(Router);
+  protected readonly scroll = inject(NgDocScrollService);
 
-  constructor(
-    @Inject(DOCUMENT)
-    protected readonly document: Document,
-    protected readonly router: Router,
-    protected readonly scroll: NgDocScrollService,
-  ) {}
+  constructor() {
+    const windowResize = fromEvent(this.window, 'resize').pipe(
+      takeUntilDestroyed(),
+      startWith(null),
+      share(),
+    );
+
+    windowResize
+      .pipe(
+        filter(() => this.expanded.value && this.isMobile),
+        ngDocZoneOptimize(),
+        takeUntilDestroyed(),
+      )
+      .subscribe(() => this.hide());
+
+    windowResize
+      .pipe(
+        filter(() => !this.expanded.value && !this.isMobile),
+        ngDocZoneOptimize(),
+        takeUntilDestroyed(),
+      )
+      .subscribe(() => this.show());
+
+    windowResize
+      .pipe(
+        filter(() => this.expanded.value && !this.isMobile),
+        ngDocZoneOptimize(),
+        takeUntilDestroyed(),
+      )
+      .subscribe(() => this.scroll.unblock());
+
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd && this.expanded.value && this.isMobile),
+        takeUntilDestroyed(),
+      )
+      .subscribe(() => this.hide());
+  }
+
+  get isMobile(): boolean {
+    return this.window.innerWidth < 1024;
+  }
 
   /**
    * Indicates if sidebar is visible, based on the show/hide methods.
@@ -37,7 +79,7 @@ export class NgDocSidebarService {
   show(): void {
     if (!this.expanded.value) {
       this.expanded.next(true);
-      this.scroll.block();
+      this.isMobile && this.scroll.block();
     }
   }
 
@@ -47,7 +89,7 @@ export class NgDocSidebarService {
   hide(): void {
     if (this.expanded.value) {
       this.expanded.next(false);
-      this.scroll.unblock();
+      this.isMobile && this.scroll.unblock();
     }
   }
 

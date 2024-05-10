@@ -49,4 +49,10 @@
   .ng-doc-menu {
     margin-left: calc(var(--ng-doc-base-gutter) * 2);
   }
+
+  @media (min-width: 1024px) {
+    .ng-doc-menu {
+      display: none;
+    }
+  }
 }

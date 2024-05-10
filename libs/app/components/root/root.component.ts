@@ -4,9 +4,11 @@ import {
   Component,
   Directive,
   HostBinding,
+  inject,
   Input,
   ViewChild,
 } from '@angular/core';
+import { NgDocSidebarService } from '@ng-doc/app/services';
 import { NgDocContent, NgDocLetDirective, NgDocSidenavComponent } from '@ng-doc/ui-kit';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
@@ -83,4 +85,6 @@ export class NgDocRootComponent {
 
   @ViewChild(NgDocSidenavComponent)
   sidenav?: NgDocSidenavComponent;
+
+  protected readonly sidebarService = inject(NgDocSidebarService);
 }

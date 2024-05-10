@@ -24,7 +24,7 @@ export function provideNgDocApp(config?: NgDocApplicationConfig): Provider[] {
       multi: true,
       deps: [ViewportScroller],
       useFactory: (viewportScroller: ViewportScroller) => {
-        return () => viewportScroller.setOffset([0, 64]);
+        return () => viewportScroller.setOffset([0, 120]);
       },
     },
 

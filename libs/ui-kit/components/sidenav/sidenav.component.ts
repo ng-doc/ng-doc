@@ -1,6 +1,14 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
+import { AsyncPipe, NgIf } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostBinding,
+  Input,
+  Output,
+} from '@angular/core';
+import { NgDocLetDirective } from '@ng-doc/ui-kit/directives';
 import { NgDocContent } from '@ng-doc/ui-kit/types';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 
@@ -18,7 +26,7 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
   styleUrls: ['./sidenav.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [PolymorpheusModule, NgIf],
+  imports: [PolymorpheusModule, NgIf, AsyncPipe, NgDocLetDirective],
 })
 export class NgDocSidenavComponent {
   /**
@@ -40,4 +48,7 @@ export class NgDocSidenavComponent {
    */
   @Input()
   hasBackdrop: boolean = true;
+
+  @Output()
+  closeEvent: EventEmitter<void> = new EventEmitter<void>();
 }

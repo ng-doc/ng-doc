@@ -5,16 +5,26 @@
   --ng-doc-input-border-hover: none;
   --ng-doc-icon-color: var(--ng-doc-base-7);
 
-  &[data-ng-doc-mod='input'] {
-    width: 240px;
-  }
-
   ng-doc-input-wrapper {
     cursor: pointer;
 
     ng-doc-icon,
     ng-doc-tag {
       cursor: pointer;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    ng-doc-input-wrapper {
+      display: none;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    width: 240px;
+
+    button[ng-doc-button-icon] {
+      display: none;
     }
   }
 }

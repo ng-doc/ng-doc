@@ -7,7 +7,7 @@
   </div>
   <div class="ng-doc-navbar-right">
     @if (search) {
-      <ng-doc-search [mod]="'input'"></ng-doc-search>
+      <ng-doc-search></ng-doc-search>
     }
     <ng-content select="[ngDocNavbarRight]"></ng-content>
     <button class="ng-doc-menu" ng-doc-button-icon size="large" (click)="sidebarService.toggle()">

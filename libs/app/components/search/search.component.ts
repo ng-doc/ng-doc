@@ -1,5 +1,5 @@
 import { AsyncPipe, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, HostBinding, inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { NgDocSearchDialogComponent } from '@ng-doc/app/components/search-dialog';
@@ -58,10 +58,6 @@ import {
   ],
 })
 export class NgDocSearchComponent {
-  @Input()
-  @HostBinding('attr.data-ng-doc-mod')
-  mod: 'input' | 'icon' = 'input';
-
   protected readonly dialog = inject(NgDocDialogService);
 
   open(): void {
