@@ -14,11 +14,14 @@
 - Slightly redesigned the app
 - Reworked search, now it's fullscreen and works the same way for the Desktop and Mobile.
 - Orama search that's used as a primary search engine was updated to `2.0.17` version.
-- Bunch of different fixes that resolve interface glitches and highly improve hydration and performance of
+- Bunch of different fixes that resolve interface glitches and highly improve hydration and
+  performance of
   the app.
 - `leftContent`, `rightContent` and `centerContent` inputs were replaced with attribute selectors
   like `ngDocNavbarLeft`, `ngdocNavbarRight` and `ngDocNavbarCenter` in the `ng-doc-navbar`
 - Demos in playgrounds are now sticky
+- Themes feature was changed to fix glitch that occurs when SSR is enabled, now you should used
+- CSS/SCSS files to define your themes, registration is not needed anymore.
 
 TODO:
 

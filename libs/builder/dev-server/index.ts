@@ -6,6 +6,7 @@ import { combineLatest, from, Observable, of } from 'rxjs';
 import { first, map, shareReplay, switchMap } from 'rxjs/operators';
 
 import { newBuild } from '../engine/new-build';
+import { transformIndexHtml } from '../engine/transform-index-html';
 import { createBuilderContext } from '../helpers/create-builder-context';
 import { NgDocSchema } from '../interfaces';
 import { patchBuilderContext } from './patch-builder-context';
@@ -39,9 +40,10 @@ export function runDevServer(
       return buildNgDoc$.pipe(
         first(),
         switchMap(() =>
-          combineLatest([buildNgDoc$, executeDevServer(options, contextWithPatch)]).pipe(
-            map(([, devServerOutput]) => devServerOutput),
-          ),
+          combineLatest([
+            buildNgDoc$,
+            executeDevServer(options, contextWithPatch, { indexHtml: transformIndexHtml }),
+          ]).pipe(map(([, devServerOutput]) => devServerOutput)),
         ),
       );
     }),

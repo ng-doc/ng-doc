@@ -10,6 +10,7 @@ import { firstValueFrom, Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 
 import { newBuild } from '../engine/new-build';
+import { transformIndexHtml } from '../engine/transform-index-html';
 import { createBuilderContext } from '../helpers/create-builder-context';
 import { NgDocBuilderContext, NgDocSchema } from '../interfaces';
 
@@ -35,7 +36,11 @@ export async function runBrowser(options: NgDocSchema, context: BuilderContext):
 
   await firstValueFrom(runner.pipe(first()));
 
-  return firstValueFrom(fromAsyncIterable(buildApplication(options as any, context)));
+  return firstValueFrom(
+    fromAsyncIterable(
+      buildApplication(options as any, context, { indexHtmlTransformer: transformIndexHtml }),
+    ),
+  );
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

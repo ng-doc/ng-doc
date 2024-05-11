@@ -1,70 +1,71 @@
 {
-	"name": "builder",
-	"$schema": "../../node_modules/nx/schemas/project-schema.json",
-	"sourceRoot": "libs/builder",
-	"projectType": "library",
-	"targets": {
-		"pre-build": {
-			"executor": "@nx/js:tsc",
-			"outputs": ["{workspaceRoot}/dist/{projectRoot}"],
-			"options": {
-				"outputPath": "dist/libs/builder",
-				"main": "libs/builder/index.ts",
-				"tsConfig": "libs/builder/tsconfig.lib.json",
-				"assets": [
-					"libs/builder/README.md",
-					"libs/builder/templates/**/*",
-					"libs/builder/builders.json",
-					"libs/builder/schematics/**/*.json",
-					"libs/builder/schematics/**/files/**/*",
-					"libs/builder/engine/post-processors/html-plugins/**/*"
-				]
-			}
-		},
-		"build": {
-			"executor": "nx:run-commands",
-			"outputs": [
-				"{workspaceRoot}/dist/libs/builder/application/schema.json",
-				"{workspaceRoot}/dist/libs/builder/dev-server/schema.json",
-				"{workspaceRoot}/dist/libs/builder/prerender/schema.json",
-				"{workspaceRoot}/dist/libs/builder/ssr-dev-server/schema.json"
-			],
-			"options": {
-				"commands": [
-					"node build-schema.js --from=\"libs/builder/**/*(application|dev-server|prerender|ssr-dev-server)/schema.json\" --to=\"dist/libs/builder\""
-				]
-			}
-		},
-		"schematics": {
-			"executor": "nx:run-commands",
-			"options": {
-				"commands": []
-			}
-		},
-		"publish": {
-			"executor": "nx:run-commands",
-			"options": {
-				"command": "node tools/scripts/publish.mjs builder {args.ver} {args.tag}"
-			},
-			"dependsOn": [
-				{
-					"target": "build"
-				}
-			]
-		},
-		"lint": {
-			"executor": "@nx/eslint:lint",
-			"outputs": ["{options.outputFile}"]
-		},
-		"test": {
-			"executor": "@nx/jest:jest",
-			"outputs": ["{workspaceRoot}/coverage/libs/builder"],
-			"options": {
-				"jestConfig": "libs/builder/jest.config.ts",
-				"runInBand": true
-			}
-		}
-	},
-	"tags": ["type:lib", "lib:builder"],
-	"implicitDependencies": ["!app", "utils"]
+  "name": "builder",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/builder",
+  "projectType": "library",
+  "targets": {
+    "pre-build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "outputPath": "dist/libs/builder",
+        "main": "libs/builder/index.ts",
+        "tsConfig": "libs/builder/tsconfig.lib.json",
+        "assets": [
+          "libs/builder/README.md",
+          "libs/builder/templates/**/*",
+          "libs/builder/builders.json",
+          "libs/builder/scripts/**/*",
+          "libs/builder/schematics/**/*.json",
+          "libs/builder/schematics/**/files/**/*",
+          "libs/builder/engine/post-processors/html-plugins/**/*"
+        ]
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{workspaceRoot}/dist/libs/builder/application/schema.json",
+        "{workspaceRoot}/dist/libs/builder/dev-server/schema.json",
+        "{workspaceRoot}/dist/libs/builder/prerender/schema.json",
+        "{workspaceRoot}/dist/libs/builder/ssr-dev-server/schema.json"
+      ],
+      "options": {
+        "commands": [
+          "node build-schema.js --from=\"libs/builder/**/*(application|dev-server|prerender|ssr-dev-server)/schema.json\" --to=\"dist/libs/builder\""
+        ]
+      }
+    },
+    "schematics": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": []
+      }
+    },
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node tools/scripts/publish.mjs builder {args.ver} {args.tag}"
+      },
+      "dependsOn": [
+        {
+          "target": "build"
+        }
+      ]
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/builder"],
+      "options": {
+        "jestConfig": "libs/builder/jest.config.ts",
+        "runInBand": true
+      }
+    }
+  },
+  "tags": ["type:lib", "lib:builder"],
+  "implicitDependencies": ["!app", "utils"]
 }

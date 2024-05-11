@@ -119,7 +119,7 @@ pre#{$class} {
     font-weight: var(--ng-doc-code-font-weight);
     line-height: var(--ng-doc-code-line-height);
     border: var(--ng-doc-code-border);
-    background-color: var(--ng-doc-code-background, inherit);
+    background-color: var(--ng-doc-code-background, inherit) !important;
   }
 }
 
