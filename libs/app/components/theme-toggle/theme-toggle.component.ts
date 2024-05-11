@@ -36,11 +36,6 @@ export class NgDocThemeToggleComponent {
   protected readonly documentElement = inject(DOCUMENT).documentElement;
   protected readonly themeService = inject(NgDocThemeService);
 
-  constructor() {
-    console.log(this.currentTheme);
-    console.log(this.documentElement.getAttribute('data-theme'));
-  }
-
   get currentTheme(): ToggleTheme {
     const theme = this.documentElement.getAttribute('data-theme');
 
