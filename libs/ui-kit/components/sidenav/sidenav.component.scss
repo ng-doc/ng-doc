@@ -3,6 +3,13 @@
 :host {
   width: 100%;
 
+  &[data-ng-doc-sidebar='false'] {
+    .ng-doc-sidenav-content {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+
   .ng-doc-sidenav-wrapper {
     position: relative;
     display: flex;

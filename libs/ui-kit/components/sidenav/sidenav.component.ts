@@ -27,6 +27,9 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [PolymorpheusModule, NgIf, AsyncPipe, NgDocLetDirective],
+  host: {
+    '[attr.data-ng-doc-sidebar]': '!!sidebar',
+  },
 })
 export class NgDocSidenavComponent {
   /**

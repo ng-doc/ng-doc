@@ -1,6 +1,13 @@
 :host {
   display: flex;
   justify-content: space-between;
+  --ng-doc-page-sticky-offset: var(--ng-doc-navbar-height);
+
+  &[data-ng-doc-page-tabs='true'] {
+    --ng-doc-page-sticky-offset: calc(
+      var(--ng-doc-navbar-height) + var(--ng-doc-page-wrapper-tabs-height)
+    );
+  }
 
   --ng-doc-toc-margin: calc(var(--ng-doc-base-gutter) * 5);
 
@@ -25,6 +32,7 @@
     margin-bottom: calc(var(--ng-doc-base-gutter) * 4);
     background: var(--ng-doc-navbar-background);
     z-index: 1;
+    height: var(--ng-doc-page-wrapper-tabs-height);
   }
 
   .ng-doc-page-header {

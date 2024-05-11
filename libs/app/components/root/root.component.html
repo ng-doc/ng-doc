@@ -6,7 +6,7 @@
     </div>
     <main>
       <ng-doc-sidenav
-        [sidebar]="sidebarContent"
+        [sidebar]="sidebar ? sidebarContent : null"
         [opened]="(sidebarService.isExpanded() | async) ?? true"
         [hasBackdrop]="sidebarService.isMobile"
         (closeEvent)="sidebarService.hide()">

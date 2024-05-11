@@ -40,6 +40,6 @@ export class AppComponent {
 
   @HostBinding('attr.data-ng-doc-is-landing')
   get isLandingPage(): boolean {
-    return this.location.path() === '/';
+    return this.location.path() === '';
   }
 }

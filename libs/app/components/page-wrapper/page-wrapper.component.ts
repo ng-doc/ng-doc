@@ -45,6 +45,9 @@ import {
   templateUrl: './page-wrapper.component.html',
   styleUrl: './page-wrapper.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[attr.data-ng-doc-page-tabs]': 'routes.length > 1',
+  },
 })
 export class NgDocPageWrapperComponent implements OnInit {
   @Input({ required: true })
