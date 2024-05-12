@@ -29,7 +29,6 @@ TODO:
 - redesign the app
 - make TOC work on mobile
 - rework landing page + add reusable components for creating landings
-- fix themes migrate to CSS files
 - add support for substring keywords
 - click on anchor should copy the link
 - fix edit links to repo

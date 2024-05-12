@@ -10,7 +10,8 @@
   transition: var(--ng-doc-transition) border;
 
   &.has-border {
-    border-bottom: 1px solid var(--ng-doc-base-4);
+    border-bottom: var(--ng-doc-navbar-border,);
+    box-shadow: var(--ng-doc-shadow-color) 0 5px 20px -5px;
   }
 
   .navbar-container {
@@ -23,7 +24,6 @@
   }
 
   .ng-doc-navbar-left,
-  .ng-doc-navbar-center,
   .ng-doc-navbar-right {
     display: flex;
     align-items: center;
@@ -33,12 +33,6 @@
     justify-content: flex-start;
     width: 100%;
     max-width: var(--ng-doc-navbar-left-width);
-  }
-
-  .ng-doc-navbar-center {
-    padding: 0 var(--ng-doc-app-horizontal-padding);
-    justify-content: flex-start;
-    max-width: calc(100% - var(--ng-doc-toc-width));
   }
 
   .ng-doc-navbar-right {

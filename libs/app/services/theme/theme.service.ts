@@ -4,6 +4,7 @@ import { NG_DOC_STORE_THEME_KEY } from '@ng-doc/app/constants';
 import { NgDocStoreService } from '@ng-doc/app/services/store';
 import { WINDOW } from '@ng-web-apis/common';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { Observable, Subject } from 'rxjs';
 
 /**
  * Service for managing themes.
@@ -14,6 +15,7 @@ export class NgDocThemeService {
   protected readonly window = inject(WINDOW);
   protected readonly document = inject(DOCUMENT);
   protected readonly store = inject(NgDocStoreService);
+  protected readonly change$ = new Subject<string | null>();
   protected readonly documentElement = this.document.documentElement;
 
   /**
@@ -21,6 +23,10 @@ export class NgDocThemeService {
    */
   get currentTheme(): string | null {
     return document.documentElement.getAttribute('data-theme');
+  }
+
+  themeChanges(): Observable<string | null> {
+    return this.change$.asObservable();
   }
 
   /**
@@ -33,5 +39,6 @@ export class NgDocThemeService {
       : this.documentElement.removeAttribute('data-theme');
 
     this.store.set(NG_DOC_STORE_THEME_KEY, id ?? '');
+    this.change$.next(id ?? null);
   }
 }

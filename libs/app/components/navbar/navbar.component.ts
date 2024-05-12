@@ -87,7 +87,10 @@ export class NgDocNavbarComponent {
         this.sidebarService.isExpanded(),
       ])
         .pipe(
-          map(([scrolled, isExpanded]: [boolean, boolean]) => scrolled || isExpanded),
+          map(
+            ([scrolled, isExpanded]: [boolean, boolean]) =>
+              scrolled || (isExpanded && this.sidebarService.isMobile),
+          ),
           untilDestroyed(this),
         )
         .subscribe((hasShadow: boolean) => {

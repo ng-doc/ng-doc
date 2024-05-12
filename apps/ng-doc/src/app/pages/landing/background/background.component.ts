@@ -109,14 +109,14 @@ export class BackgroundComponent implements OnDestroy {
         .pipe(debounceTime(100), untilDestroyed(this), ngDocZoneDetach(this.ngZone))
         .subscribe(() => this.resize());
 
-      // this.themeService
-      //   .themeChanges()
-      //   .pipe(startWith(this.themeService.currentTheme), untilDestroyed(this))
-      //   .subscribe((theme: NgDocTheme | 'auto' | undefined) => {
-      //     this.colors = theme ? DARK_PALETTE : LIGHT_PALETTE;
-      //     this.resize();
-      //     this.setCompositionOperation(theme ? 'multiply' : 'screen');
-      //   });
+      this.themeService
+        .themeChanges()
+        .pipe(startWith(this.themeService.currentTheme), untilDestroyed(this))
+        .subscribe((theme: string | null) => {
+          this.colors = theme ? DARK_PALETTE : LIGHT_PALETTE;
+          this.resize();
+          this.setCompositionOperation(theme ? 'multiply' : 'screen');
+        });
     });
   }
 

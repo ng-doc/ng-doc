@@ -1,6 +1,7 @@
 import { NgComponentOutlet, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   inject,
@@ -75,6 +76,7 @@ export class NgDocPageComponent {
 
   protected rootPage: NgDocRootPage = inject(NgDocRootPage);
   protected skeleton: NgDocPageSkeleton = inject(NG_DOC_PAGE_SKELETON);
+  protected changeDetectorRef = inject(ChangeDetectorRef);
 
   protected pageWrapper: NgDocPageWrapperComponent = inject(NgDocPageWrapperComponent);
 
@@ -83,6 +85,8 @@ export class NgDocPageComponent {
       createComponent(this.pageWrapper.pageToc, this.skeleton.toc, {
         tableOfContent: generateToc(this.pageContainer.nativeElement) ?? [],
       });
+
+      this.changeDetectorRef.detectChanges();
     }
   }
 }

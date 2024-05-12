@@ -1,121 +1,123 @@
 @import '../../../ui-kit/styles/mixins';
 
 :host {
-	position: relative;
-	display: block;
-	margin: var(--ng-doc-code-margin);
+  position: relative;
+  display: block;
+  margin: var(--ng-doc-code-margin);
 
-	&:hover {
-		.ng-doc-copy-button {
-			opacity: 1;
-		}
-	}
+  &:hover {
+    .ng-doc-copy-button {
+      opacity: 1;
+    }
+  }
 
-	&[data-ng-doc-has-header='true'] {
-		--ng-doc-code-border-radius: 0 0 var(--ng-doc-base-gutter) var(--ng-doc-base-gutter);
-		--ng-doc-code-shadow: none;
-	}
+  &[data-ng-doc-has-header='true'] {
+    --ng-doc-code-border-radius: 0 0 var(--ng-doc-base-gutter) var(--ng-doc-base-gutter);
+    --ng-doc-code-shadow: none;
+  }
 
-	.ng-doc-code-wrapper {
-		--ng-doc-code-margin: 0;
-		--ng-doc-code-border: none;
-	}
+  .ng-doc-code-wrapper {
+    --ng-doc-code-margin: 0;
+    --ng-doc-code-border: none;
+  }
 
-	.ng-doc-code-header {
-		display: flex;
-		align-items: center;
-		padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
-		background: var(--ng-doc-code-header-background, var(--ng-doc-base-2));
-		border-radius: var(--ng-doc-base-gutter) var(--ng-doc-base-gutter) 0 0;
-		border-top: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
-		border-left: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
-		border-right: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
+  .ng-doc-code-header {
+    display: flex;
+    align-items: center;
+    padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
+    background: var(--ng-doc-code-header-background, var(--ng-doc-base-2));
+    border-radius: var(--ng-doc-base-gutter) var(--ng-doc-base-gutter) 0 0;
+    border-top: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
+    border-left: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
+    border-right: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
 
-		.ng-doc-code-file-name {
-			--ng-doc-text: var(--ng-doc-code-header-color);
-			--ng-doc-font-weight: 600;
-			--ng-doc-font-size: 13px;
+    .ng-doc-code-file-name {
+      --ng-doc-text: var(--ng-doc-code-header-color);
+      --ng-doc-font-weight: 600;
+      --ng-doc-font-size: 13px;
 
-			ng-doc-icon {
-				margin-right: calc(var(--ng-doc-base-gutter) / 2);
-			}
-		}
-	}
+      ng-doc-icon {
+        margin-right: calc(var(--ng-doc-base-gutter) / 2);
+      }
+    }
+  }
 
-	.ng-doc-code-body {
-		position: relative;
-		height: 100%;
-		border-radius: var(--ng-doc-code-border-radius, var(--ng-doc-base-gutter));
-		border: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
-	}
+  .ng-doc-code-body {
+    position: relative;
+    height: 100%;
+    border-radius: var(--ng-doc-code-border-radius, var(--ng-doc-base-gutter));
+    border: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
+  }
 
-	.ng-doc-copy-button {
-		position: absolute;
-		top: var(--ng-doc-base-gutter);
-		right: var(--ng-doc-base-gutter);
-		transition: var(--ng-doc-transition);
-		opacity: 0;
+  .ng-doc-copy-button {
+    position: absolute;
+    top: var(--ng-doc-base-gutter);
+    right: var(--ng-doc-base-gutter);
+    transition: var(--ng-doc-transition);
+    opacity: 0;
 
-		--ng-doc-icon-color: var(--ng-doc-text-muted);
-		--ng-doc-button-background: transparent;
-		--ng-doc-button-hover-background: var(
-			--ng-doc-code-copy-button-hover-background,
-			var(--ng-doc-base-2)
-		);
-		--ng-doc-button-active-background: var(
-			--ng-doc-code-copy-button-active-background,
-			var(--ng-doc-base-3)
-		);
-	}
+    --ng-doc-icon-color: var(--ng-doc-text-muted);
+    --ng-doc-button-background: transparent;
+    --ng-doc-button-hover-background: var(
+      --ng-doc-code-copy-button-hover-background,
+      var(--ng-doc-base-2)
+    );
+    --ng-doc-button-active-background: var(
+      --ng-doc-code-copy-button-active-background,
+      var(--ng-doc-base-3)
+    );
+  }
 
-	.ng-doc-code-wrapper {
-		height: 100%;
-	}
+  .ng-doc-code-wrapper {
+    height: 100%;
+  }
 
-	::ng-deep {
-		pre {
-			display: flex;
-			margin: var(--ng-doc-code-margin);
-			border-radius: var(--ng-doc-code-border-radius, var(--ng-doc-base-gutter));
-			border: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
-			overflow: hidden;
-			height: 100%;
+  .ng-doc-code-body {
+    ::ng-deep {
+      pre {
+        display: flex;
+        margin: var(--ng-doc-code-margin);
+        border-radius: var(--ng-doc-code-border-radius, var(--ng-doc-base-gutter));
+        border: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
+        overflow: hidden;
+        height: 100%;
 
-			code {
-				display: block;
-				padding: calc(var(--ng-doc-base-gutter) * 2);
-				width: 100%;
-				font-family: var(--ng-doc-code-font);
-				font-size: var(--ng-doc-code-font-size);
-				line-height: var(--ng-doc-code-line-height);
-				max-height: var(--ng-doc-code-max-height);
-				overflow: auto;
-				height: 100%;
+        code {
+          display: block;
+          padding: calc(var(--ng-doc-base-gutter) * 2);
+          width: 100%;
+          font-family: var(--ng-doc-code-font);
+          font-size: var(--ng-doc-code-font-size);
+          line-height: var(--ng-doc-code-line-height);
+          max-height: var(--ng-doc-code-max-height);
+          overflow: auto;
+          height: 100%;
 
-				&.code-lines {
-					display: grid;
-					padding: calc(var(--ng-doc-base-gutter) * 2) 0;
-				}
+          &.code-lines {
+            display: grid;
+            padding: calc(var(--ng-doc-base-gutter) * 2) 0;
+          }
 
-				.line {
-					padding: 0 calc(var(--ng-doc-base-gutter) * 2);
+          .line {
+            padding: 0 calc(var(--ng-doc-base-gutter) * 2);
 
-					&.highlighted {
-						@include alpha-background(var(--ng-doc-code-highlight-color), 0.05);
+            &.highlighted {
+              @include alpha-background(var(--ng-doc-code-highlight-color), 0.05);
 
-						&:after {
-							content: '';
-							position: absolute;
-							top: 0;
-							left: 0;
-							width: 3px;
-							height: 100%;
-							background: var(--ng-doc-code-highlight-color);
-							opacity: 0.8;
-						}
-					}
-				}
-			}
-		}
-	}
+              &:after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 3px;
+                height: 100%;
+                background: var(--ng-doc-code-highlight-color);
+                opacity: 0.8;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }

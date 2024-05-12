@@ -55,6 +55,7 @@
       transition: unset;
       left: unset;
       right: calc(var(--ng-doc-sidenav-width) * -1);
+      top: var(--ng-doc-navbar-height);
     }
 
     .ng-doc-sidenav-content {

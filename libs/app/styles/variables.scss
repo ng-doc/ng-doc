@@ -78,6 +78,7 @@
   --ng-doc-navbar-left-width: calc(
     var(--ng-doc-sidebar-width) - var(--ng-doc-navbar-horizontal-padding)
   );
+  --ng-doc-navbar-border: 1px solid var(--ng-doc-base-3);
 
   // Sidebar
   --ng-doc-sidebar-width: 310px;

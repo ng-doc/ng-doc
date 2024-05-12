@@ -1,4 +1,5 @@
 import {
+  ApplicationRef,
   ChangeDetectionStrategy,
   Component,
   ComponentRef,
@@ -45,6 +46,7 @@ export class NgDocPageProcessorComponent implements OnChanges {
 
   protected readonly elementRef: ElementRef<HTMLElement> = inject(ElementRef);
   protected readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
+  protected readonly applicationRef = inject(ApplicationRef);
   protected readonly injector: Injector = inject(Injector);
   protected readonly renderer: Renderer2 = inject(Renderer2);
 
@@ -52,6 +54,7 @@ export class NgDocPageProcessorComponent implements OnChanges {
     if (html) {
       Promise.resolve().then(() => {
         asArray(this.processors, this.customProcessors).forEach(this.process.bind(this));
+        this.applicationRef.tick();
         this.afterRender.emit();
       });
     }
@@ -93,7 +96,7 @@ export class NgDocPageProcessorComponent implements OnChanges {
             replaceElement,
           );
 
-          componentRef.changeDetectorRef.detectChanges();
+          componentRef.changeDetectorRef.markForCheck();
         }
       },
     );
