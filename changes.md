@@ -30,7 +30,6 @@ TODO:
 - rework landing page + add reusable components for creating landings
 - add support for substring keywords
 - click on anchor should copy the link
-- fix edit links to repo
 - image viewer
 - docs for theming
 - fix big tables on mobile for guides

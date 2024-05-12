@@ -1,4 +1,5 @@
 import { NgDocPageType, uid } from '@ng-doc/core';
+import path from 'path';
 import { finalize } from 'rxjs';
 
 import { editFileInRepoUrl, viewFileInRepoUrl } from '../../../helpers';
@@ -51,10 +52,19 @@ export function pageComponentBuilder<T>(
       const content = await replaceKeywords(html);
       const editSourceFileUrl =
         context.config.repoConfig &&
-        editFileInRepoUrl(context.config.repoConfig, metadata.path, metadata.route, lineNumber);
+        editFileInRepoUrl(
+          context.config.repoConfig,
+          path.relative(context.context.workspaceRoot, metadata.path),
+          metadata.route,
+          lineNumber,
+        );
       const viewSourceFileUrl =
         context.config.repoConfig &&
-        viewFileInRepoUrl(context.config.repoConfig, metadata.path, lineNumber);
+        viewFileInRepoUrl(
+          context.config.repoConfig,
+          path.relative(context.context.workspaceRoot, metadata.path),
+          lineNumber,
+        );
       const indexes = await buildIndexes({
         content,
         title: metadata.title,
