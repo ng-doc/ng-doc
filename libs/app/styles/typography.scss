@@ -120,6 +120,7 @@ pre#{$class} {
     line-height: var(--ng-doc-code-line-height);
     border: var(--ng-doc-code-border);
     background-color: var(--ng-doc-code-background, inherit) !important;
+    -webkit-font-smoothing: auto;
   }
 }
 
@@ -131,7 +132,7 @@ pre#{$class} {
   color: var(--ng-doc-inline-code-color);
   padding: calc(var(--ng-doc-base-gutter) / 4) var(--ng-doc-base-gutter);
   font-family: var(--ng-doc-code-font);
-  font-size: var(--ng-doc-code-font-size);
+  font-size: 14px;
   font-weight: var(--ng-doc-code-font-weight);
   line-height: var(--ng-doc-line-height);
   white-space: nowrap;

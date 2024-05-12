@@ -33,6 +33,7 @@ TODO:
 - fix edit links to repo
 - image viewer
 - docs for theming
+- fix big tables on mobile for guides
 
 Inspirations:
 https://mui.com/base-ui/react-autocomplete/
