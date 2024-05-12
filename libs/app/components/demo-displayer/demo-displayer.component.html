@@ -8,6 +8,7 @@
         class="ng-doc-copy-button"
         *ngIf="!codeContent"
         ng-doc-button-icon
+        [rounded]="false"
         (click)="copyCode(); copyTooltipText = 'Copied!'"
         [ngDocTooltip]="tooltipContent"
         (mouseenter)="copyTooltipText = 'Copy to clipboard'">
@@ -18,7 +19,11 @@
         </ng-template>
         <ng-doc-icon icon="copy"></ng-doc-icon>
       </button>
-      <button ng-doc-button-icon (click)="expanded = !expanded" [ngDocTooltip]="tooltipContent">
+      <button
+        ng-doc-button-icon
+        [rounded]="false"
+        (click)="expanded = !expanded"
+        [ngDocTooltip]="tooltipContent">
         <ng-template #tooltipContent>
           <ng-doc-smooth-resize [trigger]="expandTooltipText">
             {{ expandTooltipText }}
