@@ -5,7 +5,7 @@
             <tr indexable="false">
                 <th>Name</th>
                 <th>Value</th>
-                <th>Description</th>
+                <th style="min-width: 300px;">Description</th>
             </tr>
             </thead>
             <tbody>

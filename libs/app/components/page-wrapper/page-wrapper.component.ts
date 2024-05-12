@@ -16,10 +16,9 @@ import {
   RouterOutlet,
   Routes,
 } from '@angular/router';
+import { NgDocPageHeaderComponent } from '@ng-doc/app/components/page-header';
 import { createComponent } from '@ng-doc/app/helpers';
 import { NgDocNavigation, NgDocPageNavigation } from '@ng-doc/app/interfaces';
-import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes';
-import { NgDocPageProcessorComponent } from '@ng-doc/app/processors';
 import { NG_DOC_CONTEXT, NG_DOC_PAGE_SKELETON } from '@ng-doc/app/tokens';
 import { isPresent, NgDocPageType } from '@ng-doc/core';
 import {
@@ -38,9 +37,8 @@ import {
     NgDocTabRouteComponent,
     NgDocTabRoutesGroupComponent,
     RouterLinkActive,
-    NgDocPageProcessorComponent,
     NgDocIconComponent,
-    NgDocSanitizeHtmlPipe,
+    NgDocPageHeaderComponent,
   ],
   templateUrl: './page-wrapper.component.html',
   styleUrl: './page-wrapper.component.scss',

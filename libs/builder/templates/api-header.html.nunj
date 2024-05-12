@@ -1,4 +1,3 @@
-{% import "helpers/tag.html.nunj" as tagMacro %}
 {% import "helpers/type.html.nunj" as typeMacro %}
 
 {% set selectors = declaration | extractSelectors %}
@@ -12,7 +11,7 @@
         <li>
             <span>Selectors:</span>
             {% for selector in selectors %}
-                {{ tagMacro.render(selector, "ng-doc-tag-selector") }}
+                <code>{{ selector }}</code>
             {%- endfor %}
         </li>
     {% endif %}

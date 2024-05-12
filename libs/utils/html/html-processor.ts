@@ -12,6 +12,7 @@ import codeBlockLinesPlugin from './plugins/code-block-lines.plugin';
 import highlightCodeLines from './plugins/highlight-code-lines';
 import markElementsPlugin from './plugins/mark-elements.plugin';
 import sluggerPlugin from './plugins/slugger.plugin';
+import wrapTablePlugin from './plugins/table-wrapper';
 
 export interface NgDocHtmlProcessorConfig {
   headings?: NgDocHeading[];
@@ -36,6 +37,7 @@ export async function htmlProcessor(
     .use(rehypeHighlight, { ignoreMissing: true, languages: { twig } })
     .use(codeBlockLinesPlugin)
     .use(highlightCodeLines)
+    .use(wrapTablePlugin)
     .use(sluggerPlugin, config.addAnchor, config.headings)
     .use(rehypeMinifyWhitespace)
     .use(autolinkHeadingPlugin, config.route)

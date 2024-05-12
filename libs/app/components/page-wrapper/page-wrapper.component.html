@@ -1,9 +1,7 @@
 <article class="ngde">
   <ng-container #pageBreadcrumbs></ng-container>
 
-  <header
-    class="ng-doc-page-header ngde"
-    [ngDocPageProcessor]="headerContent | ngDocSanitizeHtml"></header>
+  <ng-doc-page-header [headerContent]="headerContent" />
 
   @if (routes.length > 1) {
     <ng-doc-tab-routes-group>

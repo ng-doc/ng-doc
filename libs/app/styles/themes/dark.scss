@@ -1,13 +1,4 @@
-:root[data-theme='auto'] {
-  @media (prefers-color-scheme: dark) {
-    @import '../../../../node_modules/highlight.js/styles/github-dark';
-  }
-}
-
-:root[data-theme='dark'] {
-  @import '../../../../node_modules/highlight.js/styles/github-dark';
-}
-
+// dark theme
 @mixin theme {
   --ng-doc-base-rgb: 43 43 43;
   --ng-doc-base-0: #2b2b2b;
@@ -43,12 +34,26 @@
   --ng-doc-navbar-border: 1px solid var(--ng-doc-base-4);
 }
 
-:root[data-theme='dark'] {
-  @include theme();
+// highlight.js styles when using auto theme
+:root[data-theme='auto'] {
+  @media (prefers-color-scheme: dark) {
+    @import '../../../../node_modules/highlight.js/styles/github-dark';
+  }
 }
 
+// highlight.js styles when using dark theme
+:root[data-theme='dark'] {
+  @import '../../../../node_modules/highlight.js/styles/github-dark';
+}
+
+// ng-doc styles when using auto theme
 :root[data-theme='auto'] {
   @media (prefers-color-scheme: dark) {
     @include theme();
   }
+}
+
+// ng-doc styles when using dark theme
+:root[data-theme='dark'] {
+  @include theme();
 }

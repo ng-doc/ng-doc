@@ -1,19 +1,28 @@
-table.ng-doc-properties-table {
-	.ng-doc-properties-table-name {
-		width: 25%;
-	}
-
-	.ng-doc-properties-table-type {
-		width: 25%;
-	}
+.ng-doc-table-wrapper {
+  overflow: auto;
 }
 
-table.ng-doc-parameters-table {
-	.ng-doc-parameters-table-name {
-		width: 25%;
-	}
+table.ng-doc-api-table {
+  overflow: scroll;
 
-	.ng-doc-parameters-table-type {
-		width: 25%;
-	}
+  .ng-doc-api-table-name {
+    width: 25%;
+  }
+
+  .ng-doc-api-table-type {
+    width: 25%;
+  }
+
+  .ng-doc-api-table-description {
+    min-width: 300px;
+  }
+
+  tr {
+    th:first-child,
+    td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+    }
+  }
 }

@@ -52,7 +52,7 @@ bootstrapApplication(AppComponent, {
 A theme is just a set of overridden CSS variables that NgDoc uses, for example, our `night` theme
 looks like this, which allows you to enable dark mode.
 
-```scss file="../../../../../libs/app/styles/themes/ng-doc-night.scss" name="ng-doc-night.scss"
+```scss file="../../../../../libs/app/styles/themes/dark.scss" name="dark.scss"
 
 ```
 
