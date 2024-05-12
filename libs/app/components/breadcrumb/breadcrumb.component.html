@@ -1,9 +1,7 @@
-<a class="ng-doc-breadcrumb" [routerLink]="[home]" ng-doc-button-icon>
-	<ng-doc-icon icon="home"></ng-doc-icon>
+<a class="ng-doc-breadcrumb ng-doc-breadcrumb-home" [routerLink]="[home]" ng-doc-button-icon>
+  <ng-doc-icon icon="home"></ng-doc-icon>
 </a>
 <span class="ng-doc-breadcrumb" *ngFor="let item of breadcrumbs">
-	<span ng-doc-text>
-		<ng-doc-icon icon="chevron-right"></ng-doc-icon>
-		{{ item }}
-	</span>
+  <ng-doc-icon icon="chevron-right"></ng-doc-icon>
+  {{ item }}
 </span>

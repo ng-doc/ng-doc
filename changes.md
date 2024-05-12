@@ -26,7 +26,6 @@
 TODO:
 
 - sticky columns for name in APIS
-- redesign the app
 - make TOC work on mobile
 - rework landing page + add reusable components for creating landings
 - add support for substring keywords
