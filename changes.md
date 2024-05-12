@@ -32,6 +32,7 @@ TODO:
 - click on anchor should copy the link
 - image viewer
 - docs for theming
+- keywords for selectors
 
 Inspirations:
 https://mui.com/base-ui/react-autocomplete/

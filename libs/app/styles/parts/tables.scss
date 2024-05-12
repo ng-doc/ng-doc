@@ -5,6 +5,13 @@
 table.ng-doc-api-table {
   overflow: scroll;
 
+  &.no-padding {
+    tbody tr td,
+    thead tr th {
+      padding-left: 0;
+    }
+  }
+
   .ng-doc-api-table-name {
     width: 25%;
   }

@@ -1,38 +1,50 @@
 {% import "helpers/type.html.nunj" as typeMacro %}
 
-{% set selectors = declaration | extractSelectors %}
-
 {% include "parts/page-tags.html.nunj" %}
 
 <h1>{{ declaration.getName() }}</h1>
 
-<ul class="ng-doc-declaration-details">
-    {% if selectors.length %}
-        <li>
-            <span>Selectors:</span>
-            {% for selector in selectors %}
-                <code>{{ selector }}</code>
-            {%- endfor %}
-        </li>
-    {% endif %}
-    {% if Node.isClassDeclaration(declaration) %}
-        {% set extends = declaration.getExtends() %}
-        {% set implements = declaration.getImplements() %}
+{% if Node.isClassDeclaration(declaration) %}
+    {% set selectors = declaration | extractSelectors %}
+    {% set extends = declaration.getExtends() %}
+    {% set implements = declaration.getImplements() %}
 
-        {% if extends %}
-            <li>
-                <span>Extends:</span>
-                {{ typeMacro.type(extends) }}
-            </li>
-        {%- endif %}
+    {% if selectors.length or extends or implements.length %}
+        <table class="ng-doc-api-table no-padding">
+            <tbody>
+            {% if selectors.length %}
+                <tr>
+                    <td>Selectors:</td>
+                    <td>
+                        {% for selector in selectors %}
+                            <code>{{ selector }}</code>
+                        {%- endfor %}
+                    </td>
+                </tr>
+            {% endif %}
+            {% if Node.isClassDeclaration(declaration) %}
+                {% set extends = declaration.getExtends() %}
+                {% set implements = declaration.getImplements() %}
 
-        {% if implements.length %}
-            <li>
-                <span>Implements:</span>
-                {%- for i in implements -%}
-                    {{ typeMacro.type(i) }}
-                {%- endfor %}
-            </li>
-        {%- endif %}
+                {% if extends %}
+                    <tr>
+                        <td>Extends:</td>
+                        <td>{{ typeMacro.type(extends) }}</td>
+                    </tr>
+                {%- endif %}
+
+                {% if implements.length %}
+                    <tr>
+                        <td>Implements:</td>
+                        <td>
+                            {%- for i in implements -%}
+                                {{ typeMacro.type(i) }}
+                            {%- endfor %}
+                        </td>
+                    </tr>
+                {%- endif %}
+            {% endif %}
+            </tbody>
+        </table>
     {% endif %}
-</ul>
+{% endif %}

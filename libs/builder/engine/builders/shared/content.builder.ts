@@ -139,6 +139,7 @@ export function contentBuilder(config: Config): Builder<string> {
  * @param anchors
  * @param mainKeyword
  */
+// TODO: This function should be passed as a parameter to the content builder
 function getKeywords(
   entry: EntryMetadata<ContentEntry>,
   anchors: NgDocEntityAnchor[],
