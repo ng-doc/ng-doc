@@ -32,6 +32,9 @@ TODO:
 - click on anchor should copy the link
 - image viewer
 - docs for theming
+- update schematics for page generation based on the new API
+- add more actions for API to be able to generate better page details
+- fix breadcrumbs don't show category
 - keywords for selectors
 
 Inspirations:
