@@ -1,4 +1,4 @@
-import { NgDocEntityAnchor, NgDocHeading } from '@ng-doc/core';
+import { NgDocHeading, NgDocPageAnchor } from '@ng-doc/core';
 import GithubSlugger from 'github-slugger';
 import { Element, Root } from 'hast';
 import { hasProperty } from 'hast-util-has-property';
@@ -15,7 +15,7 @@ import { attrValue } from '../helpers';
  * @param headings
  */
 export default function sluggerPlugin(
-  addAnchor?: (anchor: NgDocEntityAnchor) => void,
+  addAnchor?: (anchor: NgDocPageAnchor) => void,
   headings?: NgDocHeading[],
 ) {
   if (!addAnchor) {

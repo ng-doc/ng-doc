@@ -1,5 +1,5 @@
-export interface NgDocEntityKeyword {
-	key: string;
-	title: string;
-	path: string;
+export interface NgDocPageKeyword {
+  key: string;
+  title: string;
+  path: string;
 }

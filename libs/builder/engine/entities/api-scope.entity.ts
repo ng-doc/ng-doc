@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import { SourceFile } from 'ts-morph';
 
 import { isPageEntity, uniqueName } from '../../helpers';
-import { NgDocBuilderContext, NgDocBuildResult, NgDocEntityKeyword } from '../../interfaces';
+import { NgDocBuilderContext, NgDocBuildResult, NgDocPageKeyword } from '../../interfaces';
 import { NgDocEntityStore } from '../entity-store';
 import { renderTemplate } from '../nunjucks';
 import { NgDocEntity } from './abstractions/entity';
@@ -42,7 +42,7 @@ export class NgDocApiScopeEntity extends NgDocRouteEntity<NgDocApiScope> {
     return this.target.route;
   }
 
-  override get keywords(): NgDocEntityKeyword[] {
+  override get keywords(): NgDocPageKeyword[] {
     return [];
   }
 

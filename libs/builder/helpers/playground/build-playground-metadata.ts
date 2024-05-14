@@ -14,7 +14,7 @@ import {
   getPipeDecorator,
   isStandalone,
 } from '../angular';
-import { extractSelectors } from '../extract-selectors';
+import { extractSelectors, getPipeName } from '../extract-selectors';
 import { getContentForPlayground } from './get-content-for-playground';
 import { getPlaygroundComponentInputs, getPlaygroundPipeInputs } from './get-playground-inputs';
 import { getPlaygroundTemplateInputs } from './get-playground-template-inputs';
@@ -50,6 +50,7 @@ export function buildPlaygroundMetadata(
   const template: string = getTemplateForPlayground(playground);
   const content: Record<string, string> = getContentForPlayground(playground);
   const standalone: boolean = isStandalone(target);
+  const pipeName = getPipeName(target);
 
   if ('selector' in decorator) {
     const selector: string = decorator.selector!.replace(/[\n\s]/gm, '');
@@ -91,17 +92,22 @@ export function buildPlaygroundMetadata(
       properties,
       content,
     };
-  } else if ('name' in decorator) {
-    const name: string = decorator.name!.replace(/[\n\s]/gm, '');
+  } else if (pipeName) {
     const properties: NgDocPlaygroundProperties = getPlaygroundPipeInputs(target);
     const templateInputs: Record<string, string> = getPlaygroundTemplateInputs(properties);
 
     return {
-      name,
+      name: pipeName,
       standalone,
       template,
       templateForComponents: {
-        [name]: buildPlaygroundDemoPipeTemplate(template, name, content, templateInputs, false),
+        [pipeName]: buildPlaygroundDemoPipeTemplate(
+          template,
+          pipeName,
+          content,
+          templateInputs,
+          false,
+        ),
       },
       class: target,
       properties,

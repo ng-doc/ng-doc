@@ -1,5 +1,6 @@
 import { NG_DOC_ELEMENT } from '@ng-doc/core/constants/defaults.js';
-import { NgDocKeyword } from '@ng-doc/core/interfaces';
+import { NgDocKeyword, NgDocKeywordLanguage } from '@ng-doc/core/interfaces';
+import { KEYWORD_ALLOWED_LANGUAGES } from '@ng-doc/core/interfaces/keyword-map.js';
 import { Element, Text } from 'hast';
 import { isElement } from 'hast-util-is-element';
 import { toString } from 'hast-util-to-string';
@@ -7,7 +8,11 @@ import { SKIP, visitParents } from 'unist-util-visit-parents';
 
 import { hasLinkAncestor, isCodeNode } from '../helpers';
 
-const languages: string[] = ['typescript', 'ts'];
+const ALWAYS_ALLOWED_LANGUAGES: string[] = ['typescript', 'ts'];
+const LANGUAGES: string[] = ['typescript', 'ts', ...KEYWORD_ALLOWED_LANGUAGES];
+const SPLIT_REGEXP: RegExp = /([*A-Za-z0-9_$@\-[\]]+(?:[.#][A-Za-z0-9_-]+)?(?:\?[\w=&]+)?)/;
+const MATCH_KEYWORD_REGEXP: RegExp =
+  /(?<key>[*A-Za-z0-9_$@\-[\]]+)((?<delimiter>[.#])(?<anchor>[A-Za-z0-9_-]+))?(?<queryParams>\?[\w=&]+)?/;
 
 export type AddKeyword = (keyword: string) => void;
 export type GetKeyword = (keyword: string) => NgDocKeyword | undefined;
@@ -29,9 +34,9 @@ export default function keywordsPlugin(config: Config) {
       }
 
       const isInlineCode: boolean = !isElement(ancestors[ancestors.length - 1], 'pre');
-      const lang: string = node.properties?.['lang']?.toString() || '';
+      const lang = node.properties?.['lang']?.toString() ?? '';
 
-      if (isInlineCode || languages.includes(lang)) {
+      if (isInlineCode || LANGUAGES.includes(lang)) {
         visitParents(node, 'text', (node: Text, ancestors: Element[]) => {
           if (hasLinkAncestor(ancestors)) {
             return;
@@ -41,7 +46,7 @@ export default function keywordsPlugin(config: Config) {
           const index: number = parent.children.indexOf(node);
 
           // Parse the text for words that we can convert to links
-          const nodes: any[] = getNodes(node, parent, isInlineCode, config);
+          const nodes: any[] = getNodes(node, parent, isInlineCode, config, lang);
           // Replace the text node with the links and leftover text nodes
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
@@ -57,57 +62,76 @@ export default function keywordsPlugin(config: Config) {
  *
  * @param node
  * @param parent
- * @param inlineLink
+ * @param isInlineCode
  * @param config
+ * @param language
  */
 function getNodes(
   node: Text,
   parent: Element,
-  inlineLink: boolean,
+  isInlineCode: boolean,
   config: Config,
+  language: string,
 ): Array<Element | Text> {
-  const regexp: string = '([*A-Za-z0-9_$@]+[.#]?[A-Za-z0-9_-]+(?:\\?.+)?)';
-  const KeywordRegExp: RegExp = inlineLink
-    ? new RegExp(`^${regexp}$`, 'g')
-    : new RegExp(regexp, 'g');
-  const keywordAnchorRegexp: RegExp =
-    /^(?<keyword>[*A-Za-z0-9_$@]+)((?<delimiter>[.#])(?<anchor>[A-Za-z0-9_-]+))?(?<queryParams>(?:\?.+))?$/;
   const { addUsedKeyword, getKeyword } = config;
 
   return toString(node)
-    .split(KeywordRegExp)
-    .filter((word: string) => word.length)
+    .split(SPLIT_REGEXP)
     .map((word: string) => {
-      const pureKeyword: string = word.split('?')[0];
-      const match: RegExpMatchArray | null = word.match(keywordAnchorRegexp);
-      const keyword: NgDocKeyword | undefined = getKeyword?.(pureKeyword);
-      const rootKeyword: NgDocKeyword | undefined = getKeyword?.(match?.groups?.['keyword'] || '');
+      const match = word.match(MATCH_KEYWORD_REGEXP);
 
-      if (keywordAnchorRegexp.test(pureKeyword)) {
-        addUsedKeyword?.(pureKeyword);
+      if (!match) {
+        return { type: 'text', value: word };
       }
 
-      const notFoundGuideKeyword: boolean = /^\*\w+/gm.test(pureKeyword) && !keyword;
-      const notFoundApiKeyword: boolean = !!rootKeyword && !!match?.groups?.['anchor'] && !keyword;
+      const {
+        key = '',
+        delimiter = '',
+        anchor = '',
+        queryParams = '',
+      } = match.groups as { key: string; delimiter: string; anchor: string; queryParams: string };
+      const usedKeyword = `${key}${delimiter}${anchor?.toLowerCase()}`;
+      const rootKeyword = getKeyword?.(key);
+      const keyword = getKeyword?.(usedKeyword);
+      const isGuideKeyword = key.startsWith('*');
+      const isLanguageAllowed =
+        (!keyword?.languages && ALWAYS_ALLOWED_LANGUAGES.includes(language)) ||
+        !!keyword?.languages?.includes(language as NgDocKeywordLanguage);
 
-      if (inlineLink && (notFoundGuideKeyword || notFoundApiKeyword) && getKeyword) {
+      // If language of code block is not allowed, return the word as is
+      if (!isInlineCode && keyword && !isLanguageAllowed) {
+        return { type: 'text', value: word };
+      }
+
+      addUsedKeyword?.(usedKeyword);
+
+      const notFoundGuideKeyword: boolean = isGuideKeyword && !keyword;
+      const notFoundApiAnchorKeyword: boolean = !!rootKeyword && !!anchor && !keyword;
+
+      if (getKeyword && isInlineCode && (notFoundGuideKeyword || notFoundApiAnchorKeyword)) {
+        // TODO: Enabled
         // throw new Error(`Route with keyword "${word}" is missing.`);
       }
 
-      // Convert code tag to link if it's a link to the page entity
-      if (inlineLink && keyword?.isCodeLink === false) {
-        parent.tagName = 'a';
-        parent.properties = { href: `${keyword.path}${match?.groups?.['queryParams'] ?? ''}` };
+      // Convert code tag to a link tag or highlight it with a class
+      if (parent.properties) {
+        if (isInlineCode && keyword?.type === 'link') {
+          parent.tagName = 'a';
+          parent.properties = {
+            href: `${keyword.path}${queryParams ?? ''}`,
+            className: [NG_DOC_ELEMENT],
+          };
 
-        return { type: 'text', value: keyword.title };
-      } else if (inlineLink && keyword && parent.properties) {
-        parent.properties['className'] = [NG_DOC_ELEMENT, 'ng-doc-code-with-link'];
+          return { type: 'text', value: keyword.title };
+        } else if (isInlineCode && keyword) {
+          parent.properties['className'] = [NG_DOC_ELEMENT, 'ng-doc-code-with-link'];
+        }
       }
 
       // Add link inside the code if it's a link to the API entity
       return keyword
         ? createLinkNode(
-            inlineLink ? keyword.title : word,
+            isInlineCode ? keyword.title : word,
             keyword.path,
             keyword.type,
             keyword.description,

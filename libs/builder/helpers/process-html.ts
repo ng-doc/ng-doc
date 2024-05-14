@@ -1,4 +1,4 @@
-import { EMPTY_FUNCTION, NgDocEntityAnchor } from '@ng-doc/core';
+import { EMPTY_FUNCTION, NgDocPageAnchor } from '@ng-doc/core';
 
 import { NgDocEntity } from '../engine/entities/abstractions/entity';
 import { isRouteEntity } from './entity-type';
@@ -18,7 +18,7 @@ export async function processHtml(html: string, entity: NgDocEntity): Promise<st
     headings: entity?.context.config.guide?.anchorHeadings,
     route: isRouteEntity(entity) ? entity.fullRoute : undefined,
     raiseError: entity?.warnings.push.bind(entity.warnings) ?? EMPTY_FUNCTION,
-    addAnchor: (anchor: NgDocEntityAnchor) =>
+    addAnchor: (anchor: NgDocPageAnchor) =>
       isRouteEntity(entity) ? entity.anchors.push(anchor) : undefined,
   });
 }

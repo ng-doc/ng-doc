@@ -16,6 +16,7 @@ import {
 import { createMarkdownMetadata, markdownFrontMatter } from '../helpers';
 import { EntryMetadata, TemplateBuilderOutput } from '../interfaces';
 import { contentBuilder, pageComponentBuilder } from '../shared';
+import { buildGuideKeywords } from './build-guide-keywords';
 
 interface Config {
   context: NgDocBuilderContext;
@@ -53,8 +54,7 @@ export function guideTemplateBuilder(config: Config): Builder<TemplateBuilderOut
               mainFilePath: mdPath,
               cacheId: `${mdPath}#Guide`,
               metadata,
-              keyword: metadata.entry.keyword,
-              keywordType: 'guide',
+              getKeywords: buildGuideKeywords(metadata),
               getContent: async (dependencies) => {
                 const { content } = markdownFrontMatter(metadata.path);
                 const mdContent = renderTemplateString(content, {

@@ -7,7 +7,7 @@ import {
 } from '@ng-doc/core';
 
 import { ObservableMap } from '../../../classes';
-import { keywordKey } from '../../../helpers';
+import { formatKeywordKey } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
 
 export const keywordsStore = new ObservableMap<string, NgDocKeyword>();
@@ -30,12 +30,12 @@ export async function loadGlobalKeywords(context: NgDocBuilderContext): Promise<
 
         if (keyword) {
           keywordsStore.add([
-            keywordKey(key),
+            formatKeywordKey(key),
             {
               title: keyword.title ?? key,
               path: keyword.url,
               description: keyword.description,
-              isCodeLink: !!keyword.isCodeLink,
+              type: keyword.type,
             },
           ]);
         }

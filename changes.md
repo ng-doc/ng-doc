@@ -23,6 +23,8 @@
   registration is not needed anymore.
 - Sidenav and sidebar APIs were changed to support hydration and SSR.
 - All tables become scrollable if they are too wide. First column for API tables is sticky.
+- Add support for nested types for keyword usages, it means long inline code that use several types inside will be displayed correctly. This feature highly improves readability of the API types.
+- Component/Directive/Pipe selectors now are used as keywords by default, they'll be automatically converted to links inside inline code or code blocks with the `HTML` language specified.
 
 TODO:
 
@@ -36,6 +38,7 @@ TODO:
 - add more actions for API to be able to generate better page details
 - fix breadcrumbs don't show category
 - keywords for selectors
+- improve cache by using lmdb library
 
 Inspirations:
 https://mui.com/base-ui/react-autocomplete/

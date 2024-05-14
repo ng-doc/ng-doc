@@ -1,11 +1,11 @@
-import { asArray, isPresent, isRoute, NgDocEntityAnchor, NgDocPage } from '@ng-doc/core';
+import { asArray, isPresent, isRoute, NgDocPage, NgDocPageAnchor } from '@ng-doc/core';
 import * as fs from 'fs';
 import * as path from 'path';
 import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
-import { buildEntityKeyword, editFileInRepoUrl } from '../../helpers';
-import { NgDocBuildResult, NgDocEntityKeyword } from '../../interfaces';
+import { constructPageKeyword, editFileInRepoUrl } from '../../helpers';
+import { NgDocBuildResult, NgDocPageKeyword } from '../../interfaces';
 import { renderTemplate } from '../nunjucks';
 import { NgDocEntity } from './abstractions/entity';
 import { NgDocNavigationEntity } from './abstractions/navigation.entity';
@@ -77,8 +77,8 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
     return this.target?.order;
   }
 
-  override get keywords(): NgDocEntityKeyword[] {
-    const rootKeywords: NgDocEntityKeyword[] = [...asArray('')].map((key: string) => ({
+  override get keywords(): NgDocPageKeyword[] {
+    const rootKeywords: NgDocPageKeyword[] = [...asArray('')].map((key: string) => ({
       key: `*${key}`,
       title: this.title,
       path: this.fullRoute,
@@ -87,9 +87,9 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
     return [
       ...rootKeywords,
       ...rootKeywords
-        .map((keyword: NgDocEntityKeyword) =>
-          this.anchors.map((anchor: NgDocEntityAnchor) =>
-            buildEntityKeyword(keyword.key, keyword.title, keyword.path, anchor),
+        .map((keyword: NgDocPageKeyword) =>
+          this.anchors.map((anchor: NgDocPageAnchor) =>
+            constructPageKeyword(keyword.key, keyword.title, keyword.path, anchor),
           ),
         )
         .flat(),

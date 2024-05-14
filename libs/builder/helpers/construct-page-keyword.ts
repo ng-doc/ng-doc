@@ -1,5 +1,5 @@
-import { NgDocEntityKeyword } from '@ng-doc/builder';
-import { NgDocEntityAnchor } from '@ng-doc/core';
+import { NgDocPageKeyword } from '@ng-doc/builder';
+import { NgDocPageAnchor } from '@ng-doc/core';
 
 /**
  *
@@ -8,12 +8,12 @@ import { NgDocEntityAnchor } from '@ng-doc/core';
  * @param path
  * @param anchor
  */
-export function buildEntityKeyword(
+export function constructPageKeyword(
   key: string,
   title: string,
   path: string,
-  anchor: NgDocEntityAnchor,
-): NgDocEntityKeyword {
+  anchor: NgDocPageAnchor,
+): NgDocPageKeyword {
   return anchor.type === 'heading'
     ? {
         key: `${key}#${anchor.anchor}`,

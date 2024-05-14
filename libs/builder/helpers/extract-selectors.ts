@@ -1,8 +1,8 @@
-import { Component, Directive } from '@angular/core';
+import { Component, Directive, Pipe } from '@angular/core';
 import { Node } from 'ts-morph';
 
 import { NgDocSupportedDeclaration } from '../types';
-import { getComponentDecorator, getDirectiveDecorator } from './angular';
+import { getComponentDecorator, getDirectiveDecorator, getPipeDecorator } from './angular';
 
 /**
  *
@@ -19,4 +19,20 @@ export function extractSelectors(declaration: NgDocSupportedDeclaration): string
   }
 
   return [];
+}
+
+/**
+ *
+ * @param declaration
+ */
+export function getPipeName(declaration: NgDocSupportedDeclaration): string | undefined {
+  if (Node.isClassDeclaration(declaration)) {
+    const decorator: Pipe | undefined = getPipeDecorator(declaration);
+
+    if (decorator) {
+      return decorator.name;
+    }
+  }
+
+  return undefined;
 }

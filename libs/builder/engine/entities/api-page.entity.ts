@@ -1,10 +1,10 @@
-import { asArray, NgDocEntityAnchor } from '@ng-doc/core';
+import { asArray, NgDocPageAnchor } from '@ng-doc/core';
 import * as path from 'path';
 import { Observable, of } from 'rxjs';
 import { SourceFile } from 'ts-morph';
 
 import {
-  buildEntityKeyword,
+  constructPageKeyword,
   declarationFolderName,
   editFileInRepoUrl,
   isSupportedDeclaration,
@@ -12,7 +12,7 @@ import {
   uniqueName,
   viewFileInRepoUrl,
 } from '../../helpers';
-import { NgDocBuilderContext, NgDocBuildResult, NgDocEntityKeyword } from '../../interfaces';
+import { NgDocBuilderContext, NgDocBuildResult, NgDocPageKeyword } from '../../interfaces';
 import { NgDocSupportedDeclaration } from '../../types';
 import { NgDocEntityStore } from '../entity-store';
 import { renderTemplate } from '../nunjucks';
@@ -105,7 +105,7 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
     return [];
   }
 
-  override get keywords(): NgDocEntityKeyword[] {
+  override get keywords(): NgDocPageKeyword[] {
     return [
       {
         key: this.declarationName,
@@ -113,8 +113,8 @@ export class NgDocApiPageEntity extends NgDocRouteEntity<never> {
         path: this.fullRoute,
       },
     ].concat(
-      this.anchors.map((anchor: NgDocEntityAnchor) =>
-        buildEntityKeyword(this.declarationName, this.declarationName, this.fullRoute, anchor),
+      this.anchors.map((anchor: NgDocPageAnchor) =>
+        constructPageKeyword(this.declarationName, this.declarationName, this.fullRoute, anchor),
       ),
     );
   }

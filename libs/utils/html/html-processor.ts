@@ -1,4 +1,4 @@
-import { NgDocEntityAnchor, NgDocHeading } from '@ng-doc/core';
+import { NgDocHeading, NgDocPageAnchor } from '@ng-doc/core';
 import twig from 'highlight.js/lib/languages/twig';
 import rehypeFormat from 'rehype-format';
 import rehypeHighlight from 'rehype-highlight';
@@ -18,7 +18,7 @@ export interface NgDocHtmlProcessorConfig {
   headings?: NgDocHeading[];
   route?: string;
   raiseError?: (e: Error) => void;
-  addAnchor?: (anchor: NgDocEntityAnchor) => void;
+  addAnchor?: (anchor: NgDocPageAnchor) => void;
 }
 
 /**

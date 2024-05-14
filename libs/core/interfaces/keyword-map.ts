@@ -1,11 +1,13 @@
-import { NgDocKeywordType } from '../types';
+export const KEYWORD_ALLOWED_LANGUAGES = ['html'] as const;
+export type NgDocKeywordLanguage = (typeof KEYWORD_ALLOWED_LANGUAGES)[number];
+export type NgDocKeywordType = 'link';
 
 export interface NgDocKeyword {
   title: string;
   path: string;
   description?: string;
   type?: NgDocKeywordType;
-  isCodeLink?: boolean;
+  languages?: NgDocKeywordLanguage[];
 }
 
 /**
@@ -26,7 +28,7 @@ export interface NgDocGlobalKeyword {
    */
   description?: string;
   /**
-   * Determines whether the keyword is a code link.
+   * Determines how the keyword should be displayed. (rendered as a link in inline code by default)
    */
-  isCodeLink?: boolean;
+  type?: NgDocKeywordType;
 }

@@ -12,6 +12,7 @@ import {
   TemplateBuilderOutput,
 } from '../interfaces';
 import { contentBuilder, pageComponentBuilder } from '../shared';
+import { buildApiKeywords } from './build-api-keywords';
 
 interface Config {
   context: NgDocBuilderContext;
@@ -52,8 +53,7 @@ export function apiPageTemplateBuilder(config: Config): Builder<TemplateBuilderO
             mainFilePath: declPath,
             cacheId: `${declPath}#Api`,
             metadata: tabMetadata,
-            keyword: declaration.getName(),
-            keywordType: 'api',
+            getKeywords: buildApiKeywords(metadata),
             getContent: async () =>
               renderTemplate('./api-page-content.html.nunj', {
                 context: {

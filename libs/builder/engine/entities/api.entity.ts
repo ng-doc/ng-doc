@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 
 import { buildFileEntity, generateApiEntities, uniqueName } from '../../helpers';
-import { NgDocBuildResult, NgDocEntityKeyword } from '../../interfaces';
+import { NgDocBuildResult, NgDocPageKeyword } from '../../interfaces';
 import { renderTemplate } from '../nunjucks';
 import { NgDocEntity } from './abstractions/entity';
 import { NgDocNavigationEntity } from './abstractions/navigation.entity';
@@ -54,7 +54,7 @@ export class NgDocApiEntity extends NgDocNavigationEntity<NgDocApi> {
     return super.builtChildren.filter((child: NgDocEntity) => child instanceof NgDocApiScopeEntity);
   }
 
-  override get keywords(): NgDocEntityKeyword[] {
+  override get keywords(): NgDocPageKeyword[] {
     return [...asArray(this.target?.keyword)].map((key: string) => ({
       key: `*${key}`,
       title: this.title,

@@ -8,12 +8,11 @@ import {
   onKeywordsTouch,
   processHtml,
 } from '@ng-doc/builder';
-import { NgDocEntityAnchor, NgDocKeyword, NgDocKeywordType } from '@ng-doc/core';
+import { NgDocKeyword, NgDocPageAnchor } from '@ng-doc/core';
 import { finalize, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { ObservableSet } from '../../../classes';
-import { buildEntityKeyword, keywordKey } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
 import {
   Builder,
@@ -32,14 +31,13 @@ interface Config {
   mainFilePath: string;
   cacheId: string;
   metadata: EntryMetadata<ContentEntry>;
-  keyword?: string;
-  keywordType: NgDocKeywordType;
   getContent: (dependencies: ObservableSet<string>) => Promise<string>;
+  getKeywords: (anchors: NgDocPageAnchor[]) => Array<[string, NgDocKeyword]>;
 }
 
 interface CacheData {
   dependencies: string[];
-  anchors: NgDocEntityAnchor[];
+  anchors: NgDocPageAnchor[];
   usedKeywords: string[];
 }
 
@@ -48,10 +46,9 @@ interface CacheData {
  * @param config
  */
 export function contentBuilder(config: Config): Builder<string> {
-  const { tag, context, metadata, cacheId, mainFilePath, getContent, keyword, keywordType } =
-    config;
+  const { tag, context, metadata, cacheId, mainFilePath, getContent, getKeywords } = config;
   const dependencies = new ObservableSet<string>();
-  const anchors = [] as NgDocEntityAnchor[];
+  const anchors = [] as NgDocPageAnchor[];
   const usedKeywords = new Set<string>();
   let removeKeywords: () => void = () => {};
 
@@ -80,9 +77,7 @@ export function contentBuilder(config: Config): Builder<string> {
         try {
           // Triggering the touch of the keywords before the build to trigger dependent builders
           // This is needed because keywords can be changed after the build
-          touchKeywords(
-            ...getKeywords(metadata, anchors, keywordType, keyword).map(([key]) => key),
-          );
+          touchKeywords(...getKeywords(anchors).map(([key]) => key));
 
           removeKeywords();
           anchors.length = 0;
@@ -117,7 +112,7 @@ export function contentBuilder(config: Config): Builder<string> {
   ).pipe(
     tap((state) => {
       if (isBuilderDone(state)) {
-        const keywords = getKeywords(metadata, anchors, keywordType, keyword);
+        const keywords = getKeywords(anchors);
 
         if (keywords.length) {
           removeKeywords = keywordsStore.add(...keywords);
@@ -130,46 +125,4 @@ export function contentBuilder(config: Config): Builder<string> {
     }),
     finalize(() => removeKeywords()),
   );
-}
-
-/**
- *
- * @param entry
- * @param type
- * @param anchors
- * @param mainKeyword
- */
-// TODO: This function should be passed as a parameter to the content builder
-function getKeywords(
-  entry: EntryMetadata<ContentEntry>,
-  anchors: NgDocEntityAnchor[],
-  type: NgDocKeywordType,
-  mainKeyword?: string,
-): Array<[string, NgDocKeyword]> {
-  if (!mainKeyword) return [];
-
-  const key = type === 'guide' ? `*${mainKeyword}` : mainKeyword;
-  const title = entry.keywordTitle;
-
-  const rootKeyword: NgDocKeyword = {
-    title,
-    path: entry.absoluteRoute(),
-    type,
-  };
-
-  return [
-    [keywordKey(key), rootKeyword],
-    ...anchors.map((anchor) => {
-      const entityKeyword = buildEntityKeyword(key, title, entry.absoluteRoute(), anchor);
-
-      return [
-        keywordKey(entityKeyword.key),
-        {
-          title: entityKeyword.title,
-          path: entityKeyword.path,
-          type,
-        } satisfies NgDocKeyword,
-      ] satisfies [string, NgDocKeyword];
-    }),
-  ];
 }
