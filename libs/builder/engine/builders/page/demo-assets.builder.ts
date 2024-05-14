@@ -1,4 +1,5 @@
 import {
+  AsyncFileOutput,
   CacheStrategy,
   createBuilder,
   createMainTrigger,
@@ -7,6 +8,7 @@ import {
   NgDocComponentAsset,
   processHtml,
   renderTemplate,
+  replaceKeywords,
   runBuild,
 } from '@ng-doc/builder';
 import { NgDocPage } from '@ng-doc/core';
@@ -15,7 +17,7 @@ import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { getDemoAssets, getDemoClassDeclarations } from '../../../helpers';
-import { Builder, FileOutput, watchFile } from '../../core';
+import { Builder, watchFile } from '../../core';
 import { EntryMetadata } from '../interfaces';
 
 /**
@@ -32,9 +34,9 @@ export const PAGE_DEMO_ASSETS_BUILDER_TAG = 'PageDemoAssets';
  * Builds demo assets for a given context, object expression, and output directory.
  * @param {Options} options - The options for the builder.
  * @param config
- * @returns {Builder<FileOutput>} A builder that outputs file outputs.
+ * @returns {Builder<AsyncFileOutput>} A builder that outputs file outputs.
  */
-export function demoAssetsBuilder(config: Config): Builder<FileOutput> {
+export function demoAssetsBuilder(config: Config): Builder<AsyncFileOutput> {
   const { context, page } = config;
   const references = Object.values(getDemoClassDeclarations(page.objectExpression)).map(
     (classDeclaration) => classDeclaration.getSourceFile(),
@@ -78,9 +80,17 @@ export function demoAssetsBuilder(config: Config): Builder<FileOutput> {
           }
         }
 
-        return {
-          filePath: path.join(page.outDir, 'demo-assets.ts'),
-          content: renderTemplate('./demo-assets.ts.nunj', { context: { demoAssets } }),
+        return async () => {
+          for (const [, value] of Object.entries(demoAssets)) {
+            for (const asset of value) {
+              asset.code = await replaceKeywords(asset.code);
+            }
+          }
+
+          return {
+            filePath: path.join(page.outDir, 'demo-assets.ts'),
+            content: renderTemplate('./demo-assets.ts.nunj', { context: { demoAssets } }),
+          };
         };
       },
       cacheStrategy,
