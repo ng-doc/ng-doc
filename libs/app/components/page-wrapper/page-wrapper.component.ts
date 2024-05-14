@@ -75,7 +75,7 @@ export class NgDocPageWrapperComponent implements OnInit {
   protected context = inject(NG_DOC_CONTEXT);
 
   private breadcrumbs: string[] = inject(ActivatedRoute)
-    .pathFromRoot.filter((route: ActivatedRoute) => !route.snapshot.url.length)
+    .pathFromRoot.filter((route: ActivatedRoute) => !!route.snapshot.url.length)
     .map((route: ActivatedRoute) => route.snapshot.title)
     .filter(isPresent);
 
