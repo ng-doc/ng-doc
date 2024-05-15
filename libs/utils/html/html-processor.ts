@@ -7,7 +7,7 @@ import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
 import { unified, VFileWithOutput } from 'unified';
 
-import autolinkHeadingPlugin from './plugins/autolink-headings.plugin';
+import autolinkHeadingPlugin from './plugins/add-heading-anchors.plugin';
 import codeBlockLinesPlugin from './plugins/code-block-lines.plugin';
 import highlightCodeLines from './plugins/highlight-code-lines';
 import markElementsPlugin from './plugins/mark-elements.plugin';

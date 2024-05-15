@@ -14,12 +14,13 @@ $class: $ng-doc-element;
 article {
   @include headings {
     &:hover {
-      .ng-doc-header-link {
+      .ng-doc-anchor {
         opacity: 1;
       }
     }
 
-    .ng-doc-header-link {
+    .ng-doc-anchor {
+      margin-left: var(--ng-doc-base-gutter);
       opacity: 0;
       transition: var(--ng-doc-transition);
     }

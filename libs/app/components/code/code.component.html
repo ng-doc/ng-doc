@@ -13,19 +13,10 @@
     </div>
   }
 
-  <button
+  <ng-doc-copy-button
     class="ng-doc-copy-button"
-    ng-doc-button-icon
-    [rounded]="false"
-    *ngIf="copyButton"
-    (click)="copyCode(); tooltipText = 'Copied!'"
-    [ngDocTooltip]="tooltipContent"
-    (mouseenter)="tooltipText = 'Copy to clipboard'">
-    <ng-template #tooltipContent>
-      <ng-doc-smooth-resize [trigger]="tooltipText">
-        {{ tooltipText }}
-      </ng-doc-smooth-resize>
-    </ng-template>
+    [text]="this.codeElement?.textContent ?? ''"
+    *ngIf="copyButton">
     <ng-doc-icon icon="copy"></ng-doc-icon>
-  </button>
+  </ng-doc-copy-button>
 </div>

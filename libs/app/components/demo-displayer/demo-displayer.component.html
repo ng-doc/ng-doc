@@ -4,21 +4,9 @@
       <ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
     </div>
     <div class="ng-doc-demo-controls">
-      <button
-        class="ng-doc-copy-button"
-        *ngIf="!codeContent"
-        ng-doc-button-icon
-        [rounded]="false"
-        (click)="copyCode(); copyTooltipText = 'Copied!'"
-        [ngDocTooltip]="tooltipContent"
-        (mouseenter)="copyTooltipText = 'Copy to clipboard'">
-        <ng-template #tooltipContent>
-          <ng-doc-smooth-resize [trigger]="copyTooltipText">
-            {{ copyTooltipText }}
-          </ng-doc-smooth-resize>
-        </ng-template>
+      <ng-doc-copy-button *ngIf="!codeContent" [text]="code">
         <ng-doc-icon icon="copy"></ng-doc-icon>
-      </button>
+      </ng-doc-copy-button>
       <button
         ng-doc-button-icon
         [rounded]="false"

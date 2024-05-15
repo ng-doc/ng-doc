@@ -1,6 +1,6 @@
-import { Clipboard } from '@angular/cdk/clipboard';
 import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input } from '@angular/core';
+import { NgDocCopyButtonComponent } from '@ng-doc/app/components/copy-button';
 import { NgDocPageProcessorComponent } from '@ng-doc/app/processors/page-processor';
 import {
   NgDocButtonIconComponent,
@@ -24,6 +24,7 @@ import {
     NgDocSmoothResizeComponent,
     NgDocIconComponent,
     NgDocPageProcessorComponent,
+    NgDocCopyButtonComponent,
   ],
 })
 export class NgDocCodeComponent {
@@ -42,12 +43,7 @@ export class NgDocCodeComponent {
   @Input()
   lineNumbers: boolean = false;
 
-  tooltipText: string = '';
-
-  constructor(
-    private elementRef: ElementRef<HTMLElement>,
-    private readonly clipboard: Clipboard,
-  ) {}
+  constructor(private elementRef: ElementRef<HTMLElement>) {}
 
   @HostBinding('attr.data-ng-doc-has-header')
   get hasHeader(): boolean {
@@ -56,9 +52,5 @@ export class NgDocCodeComponent {
 
   get codeElement(): HTMLElement | null {
     return this.elementRef?.nativeElement.querySelector('code') ?? null;
-  }
-
-  copyCode(): void {
-    this.clipboard.copy(this.codeElement?.textContent ?? '');
   }
 }

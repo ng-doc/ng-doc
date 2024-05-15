@@ -25,6 +25,7 @@
 - All tables become scrollable if they are too wide. First column for API tables is sticky.
 - Add support for nested types for keyword usages, it means long inline code that use several types inside will be displayed correctly. This feature highly improves readability of the API types.
 - Component/Directive/Pipe selectors now are used as keywords by default, they'll be automatically converted to API links inside inline code or code blocks with the `HTML` language specified.
+- Heading anchors are now copied to the clipboard when clicked instead of navigating to the anchor.
 
 TODO:
 
