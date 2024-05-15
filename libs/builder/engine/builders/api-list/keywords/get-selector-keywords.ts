@@ -21,14 +21,16 @@ export function getSelectorKeywords(
         },
       ]);
 
-      // Add attribute selectors as keywords, this is also necessary to make them available for code blocks with highlighting
-      if (selector.includes('[')) {
-        const key = selector.replace(/[[\]]/g, '');
+      // Add attribute selectors as keywords, this is also necessary to make them available for code blocks with highlighting.
+      // We take the last part of the selector, which is probably the most important one.
+      // It's not perfect, but at least it makes it work most of the time.
+      const attributeSelector = selector.match(/\[(?<selector>[\w-]+)\]$/)?.groups?.['selector'];
 
+      if (attributeSelector) {
         acc.push([
-          key,
+          attributeSelector,
           {
-            title: key,
+            title: attributeSelector,
             path: entry.absoluteRoute(),
             languages: ['html'],
           },
