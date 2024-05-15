@@ -1,40 +1,40 @@
 :host {
-	&[data-ng-doc-no-width-limit='true'] {
-		.ng-doc-root-wrapper {
-			main {
-				max-width: none;
-			}
-		}
-	}
+  &[data-ng-doc-no-width-limit='true'] {
+    .ng-doc-root-wrapper {
+      main {
+        max-width: none;
+      }
+    }
+  }
 
-	.ng-doc-root-wrapper {
-		display: flex;
-		flex-direction: column;
-		height: 100%;
+  .ng-doc-root-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
-		main {
-			display: flex;
-			width: 100%;
-			margin-left: auto;
-			margin-right: auto;
-			max-width: var(--ng-doc-app-max-width);
-			padding: var(--ng-doc-main-padding);
+    main {
+      display: flex;
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: var(--ng-doc-app-max-width);
+      padding: var(--ng-doc-main-padding);
 
-			--ng-doc-sidenav-top: var(--ng-doc-navbar-height);
-			--ng-doc-sidenav-width: var(--ng-doc-sidebar-width);
-			--ng-doc-sidenav-content-padding: var(--ng-doc-page-padding);
-		}
+      --ng-doc-sidenav-top: var(--ng-doc-navbar-height);
+      --ng-doc-sidenav-width: var(--ng-doc-sidebar-width);
+      --ng-doc-sidenav-content-padding: var(--ng-doc-page-padding);
+    }
 
-		footer {
-			margin-top: auto;
-		}
+    footer {
+      margin-top: auto;
+    }
 
-		.ng-doc-header {
-			position: fixed;
-			top: 0;
-			height: var(--ng-doc-navbar-height);
-			width: 100%;
-			z-index: 10;
-		}
-	}
+    .ng-doc-header {
+      position: fixed;
+      top: 0;
+      height: var(--ng-doc-navbar-height);
+      width: 100%;
+      z-index: 15;
+    }
+  }
 }
