@@ -1,9 +1,5 @@
-<ng-doc-smooth-resize *ngDocLet="code | async as codeContent" [trigger]="codeContent">
-	<ng-doc-demo-displayer
-		[code]="codeContent ?? ''"
-		[border]="false"
-		[expanded]="expanded"
-		language="html">
-		<ng-container #demoOutlet></ng-container>
-	</ng-doc-demo-displayer>
+<ng-doc-smooth-resize [trigger]="code">
+  <ng-doc-demo-displayer [code]="code" [border]="false" [expanded]="expanded" language="html">
+    <ng-container #demoOutlet></ng-container>
+  </ng-doc-demo-displayer>
 </ng-doc-smooth-resize>

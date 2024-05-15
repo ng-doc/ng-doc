@@ -1,8 +1,10 @@
 import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ComponentRef,
+  inject,
   InjectionToken,
   Injector,
   Input,
@@ -27,7 +29,7 @@ import { objectKeys } from '@ng-doc/core/helpers/object-keys';
 import { NgDocPlaygroundConfig, NgDocPlaygroundProperties } from '@ng-doc/core/interfaces';
 import { NgDocLetDirective, NgDocSmoothResizeComponent } from '@ng-doc/ui-kit';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { from, Observable, of, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { startWith, takeUntil } from 'rxjs/operators';
 
 import { NgDocBasePlayground } from '../base-playground';
@@ -76,14 +78,15 @@ export class NgDocPlaygroundDemoComponent<
 
   playgroundDemo?: typeof NgDocBasePlayground;
 
-  code: Observable<string> = of('');
+  protected code = '';
+
+  protected readonly injector = inject(Injector);
+  protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   private demoRef?: ComponentRef<NgDocBasePlayground>;
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private readonly injector: Injector) {}
-
-  ngOnChanges({ form, id }: SimpleChanges): void {
+  async ngOnChanges({ form, id }: SimpleChanges): Promise<void> {
     if (form || id) {
       this.unsubscribe$.next();
 
@@ -99,7 +102,7 @@ export class NgDocPlaygroundDemoComponent<
         );
       }
 
-      this.updateDemo();
+      await this.updateDemo();
 
       this.form?.valueChanges
         .pipe(takeUntil(this.unsubscribe$), untilDestroyed(this), startWith(this.form?.value))
@@ -107,7 +110,7 @@ export class NgDocPlaygroundDemoComponent<
     }
   }
 
-  private updateDemo(data?: NgDocFormPartialValue<typeof this.form>): void {
+  private async updateDemo(data?: NgDocFormPartialValue<typeof this.form>): Promise<void> {
     if (this.recreateDemo || !this.demoRef) {
       this.createDemo();
     }
@@ -124,7 +127,7 @@ export class NgDocPlaygroundDemoComponent<
       }
     }
 
-    this.updateCodeView();
+    await this.updateCodeView();
   }
 
   private createDemo(): void {
@@ -137,7 +140,7 @@ export class NgDocPlaygroundDemoComponent<
     }
   }
 
-  private updateCodeView(): void {
+  private async updateCodeView(): Promise<void> {
     const template: string = this.pipeName
       ? buildPlaygroundDemoPipeTemplate(
           this.configuration?.template ?? '',
@@ -152,7 +155,8 @@ export class NgDocPlaygroundDemoComponent<
           this.getActiveInputs(),
         );
 
-    this.code = from(formatHtml(template));
+    this.code = await formatHtml(template);
+    this.changeDetectorRef.markForCheck();
   }
 
   private getActiveContent(): Record<string, string> {
