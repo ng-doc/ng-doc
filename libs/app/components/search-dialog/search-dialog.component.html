@@ -7,11 +7,14 @@
       [selectAll]="true"
       placeholder="Find or ask anything..."
       [(ngModel)]="searchTerm"
-      (ngModelChange)="data.search($event)"
+      (ngModelChange)="search($event)"
       #inputElement />
   </ng-doc-input-wrapper>
 
-  <div class="ng-doc-search-result-content" *ngIf="data.searchResults | async as state">
+  <div
+    class="ng-doc-search-result-content"
+    *ngIf="data.searchResults | async as state"
+    #resultContent>
     <ng-doc-data-list
       [items]="state?.result ?? []"
       [itemContent]="itemContent"
