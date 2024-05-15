@@ -88,7 +88,7 @@ method.
 ## See Also
 
 - `*EntitiesPage`
-- `*GuidesDemoPane`
+- `*GuidesDemo`
 - `*GuidesPlayground`
 - `*GuidesSnippets`
 - `*IgnoringFileLines`

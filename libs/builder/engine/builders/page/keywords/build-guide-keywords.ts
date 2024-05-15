@@ -1,8 +1,8 @@
 import { NgDocKeyword, NgDocPageAnchor } from '@ng-doc/core';
 
-import { formatKeywordKey } from '../../../helpers';
-import { EntryMetadata, MarkdownEntry } from '../interfaces';
-import { getPageAnchorKeywords } from './keywords/get-page-anchor-keywords';
+import { formatKeywordKey } from '../../../../helpers';
+import { EntryMetadata, MarkdownEntry } from '../../interfaces';
+import { getPageAnchorKeywords } from './get-page-anchor-keywords';
 
 /**
  *

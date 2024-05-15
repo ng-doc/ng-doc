@@ -16,7 +16,7 @@ import {
 import { createMarkdownMetadata, markdownFrontMatter } from '../helpers';
 import { EntryMetadata, TemplateBuilderOutput } from '../interfaces';
 import { contentBuilder, pageComponentBuilder } from '../shared';
-import { buildGuideKeywords } from './build-guide-keywords';
+import { buildGuideKeywords } from './keywords/build-guide-keywords';
 
 interface Config {
   context: NgDocBuilderContext;

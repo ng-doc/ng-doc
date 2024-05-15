@@ -1,5 +1,6 @@
 ---
 title: Guide
+keyword: 'GuidesDemo'
 ---
 
 What is documentation without a demo right? Sometimes we all like to look at

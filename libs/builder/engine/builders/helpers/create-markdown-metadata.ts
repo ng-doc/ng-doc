@@ -27,7 +27,7 @@ export function createMarkdownMetadata(
     dirName,
     parent,
     title: data.title ?? parent.title,
-    keywordTitle: parent.title + (data.title ? ` - ${data.title}` : ''),
+    keywordTitle: data.route ? parent.title + (data.title ? ` - ${data.title}` : '') : parent.title,
     route: data.route ?? '',
     outDir,
     outPath: path.join(outDir, 'page.ts'),
