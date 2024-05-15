@@ -1,7 +1,8 @@
 import { NgDocKeyword, NgDocPageAnchor } from '@ng-doc/core';
 
-import { constructPageKeyword, formatKeywordKey } from '../../../helpers';
+import { formatKeywordKey } from '../../../helpers';
 import { EntryMetadata, MarkdownEntry } from '../interfaces';
+import { getPageAnchorKeywords } from './keywords/get-page-anchor-keywords';
 
 /**
  *
@@ -23,17 +24,6 @@ export function buildGuideKeywords(
       type: 'link',
     };
 
-    const anchorKeywords = anchors.map((anchor) => {
-      const pageKeyword = constructPageKeyword(key, title, entry.absoluteRoute(), anchor);
-      const anchorKeyword: NgDocKeyword = {
-        title: pageKeyword.title,
-        path: pageKeyword.path,
-        type: 'link',
-      };
-
-      return [formatKeywordKey(pageKeyword.key), anchorKeyword];
-    }) satisfies Array<[string, NgDocKeyword]>;
-
-    return [[formatKeywordKey(key), guideKeyword], ...anchorKeywords];
+    return [[formatKeywordKey(key), guideKeyword], ...getPageAnchorKeywords(entry, anchors)];
   };
 }

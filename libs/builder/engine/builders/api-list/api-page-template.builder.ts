@@ -12,7 +12,7 @@ import {
   TemplateBuilderOutput,
 } from '../interfaces';
 import { contentBuilder, pageComponentBuilder } from '../shared';
-import { buildApiKeywords } from './build-api-keywords';
+import { buildApiKeywords } from './keywords/build-api-keywords';
 
 interface Config {
   context: NgDocBuilderContext;
