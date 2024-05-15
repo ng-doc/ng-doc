@@ -9,10 +9,10 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { NgDocSearchEngine } from '@ng-doc/app/classes';
 import { NgDocSearchResult } from '@ng-doc/app/interfaces';
 import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes';
 import {
+  NG_DOC_DIALOG_DATA,
   NgDocAutofocusDirective,
   NgDocDataListComponent,
   NgDocDropdownComponent,
@@ -27,14 +27,16 @@ import {
   NgDocSpinnerComponent,
   NgDocTagComponent,
   NgDocTextComponent,
-  observableState,
   popupAnimation,
   StatedObservable,
 } from '@ng-doc/ui-kit';
 import { NgDocListHost, NgDocOverlayRef } from '@ng-doc/ui-kit/classes';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { BehaviorSubject, NEVER } from 'rxjs';
-import { skip, switchMap } from 'rxjs/operators';
+
+export interface NgDocSearchDialogData {
+  term: string;
+  search: (query: string) => void;
+  searchResults: StatedObservable<NgDocSearchResult[]>;
+}
 
 @Component({
   animations: [popupAnimation],
@@ -72,31 +74,17 @@ import { skip, switchMap } from 'rxjs/operators';
     '[@popupAnimation]': 'true',
   },
 })
-@UntilDestroy()
 export class NgDocSearchDialogComponent implements NgDocListHost {
   @ViewChild('inputElement', { read: ElementRef })
   inputElement?: ElementRef<HTMLElement>;
 
   protected searchTerm: string = '';
-  protected readonly query$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  protected readonly search$: StatedObservable<NgDocSearchResult[]>;
-
   protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  protected readonly searchEngine = inject(NgDocSearchEngine, { optional: true });
   protected readonly overlayRef = inject(NgDocOverlayRef);
+  protected readonly data = inject<NgDocSearchDialogData>(NG_DOC_DIALOG_DATA);
 
   constructor() {
-    if (!this.searchEngine) {
-      throw new Error(`NgDoc: Search engine is not provided,
-			please check this article: https://ng-doc.com/docs/getting-started/installation#configuring-application
-			to learn how to provide it.`);
-    }
-
-    this.search$ = this.query$.pipe(
-      skip(1),
-      switchMap((term: string) => this.searchEngine?.search(term).pipe(observableState()) ?? NEVER),
-      untilDestroyed(this),
-    );
+    this.searchTerm = this.data.term;
   }
 
   getPositions<T extends NgDocSearchResult, K extends keyof T['positions']>(

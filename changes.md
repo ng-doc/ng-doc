@@ -31,7 +31,6 @@ TODO:
 
 - make TOC work on mobile
 - rework landing page + add reusable components for creating landings
-- click on anchor should copy the link
 - image viewer
 - docs for theming
 - update schematics for page generation based on the new API

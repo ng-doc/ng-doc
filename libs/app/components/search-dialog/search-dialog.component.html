@@ -4,13 +4,14 @@
     <input
       ngDocInputString
       ngDocAutofocus
+      [selectAll]="true"
       placeholder="Find or ask anything..."
       [(ngModel)]="searchTerm"
-      (ngModelChange)="query$.next($event)"
+      (ngModelChange)="data.search($event)"
       #inputElement />
   </ng-doc-input-wrapper>
 
-  <div class="ng-doc-search-result-content" *ngIf="search$ | async as state">
+  <div class="ng-doc-search-result-content" *ngIf="data.searchResults | async as state">
     <ng-doc-data-list
       [items]="state?.result ?? []"
       [itemContent]="itemContent"
@@ -58,10 +59,8 @@
       <ng-template #emptyContent>
         <ng-container *ngIf="!state?.pending">
           <div class="ng-doc-search-empty">
-            <ng-container *ngIf="query$.value.length">Nothing found</ng-container>
-            <ng-container *ngIf="!query$.value.length"
-              >Please enter your search query
-            </ng-container>
+            <ng-container *ngIf="searchTerm.length">Nothing found</ng-container>
+            <ng-container *ngIf="!searchTerm.length">Please enter your search query </ng-container>
           </div>
         </ng-container>
         <ng-container *ngIf="state?.pending">
