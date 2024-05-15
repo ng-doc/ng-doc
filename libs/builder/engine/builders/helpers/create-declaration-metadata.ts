@@ -44,7 +44,9 @@ export function createDeclarationMetadata(
     title: declaration.getName() ?? '[Unknown]',
     keywordTitle: declaration.getName() ?? '[Unknown]',
     sourceFile: declaration.getSourceFile(),
-    breadcrumbs: () => [],
+    breadcrumbs: function (): string[] {
+      return [entry.title, scope.name, this.title];
+    },
     hidden: true,
     entry: {
       declaration,
