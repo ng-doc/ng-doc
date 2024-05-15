@@ -31,6 +31,12 @@ export default function addHeadingAnchors(route?: string): any {
           },
           children: [],
         });
+
+        node.properties = {
+          ...node.properties,
+          href: `${route}#${node.properties['id']}`,
+          headingLink: 'true',
+        };
       }
     });
 }

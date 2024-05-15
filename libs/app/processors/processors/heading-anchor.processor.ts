@@ -7,6 +7,7 @@ export const headingAnchorProcessor: NgDocPageProcessor<NgDocHeadingAnchorCompon
   extractOptions: (element: Element) => ({
     inputs: {
       classes: element.getAttribute('class')?.split(' ') || [],
+      href: element.getAttribute('href') || '',
       anchor: element.getAttribute('anchor') || '',
     },
   }),

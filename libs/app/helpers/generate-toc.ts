@@ -8,30 +8,29 @@ import { NgDocHeading } from '@ng-doc/core/types';
  * @param headings
  */
 export function generateToc(container: HTMLElement): NgDocTocItem[] {
-	const headings: NgDocHeading[] = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+  const headings: NgDocHeading[] = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 
-	const headingElements: HTMLHeadingElement[] = Array.from(
-		container.querySelectorAll<HTMLHeadingElement>(headings.join(', ')),
-	).filter((heading: HTMLHeadingElement) => heading.id);
+  const headingElements: HTMLHeadingElement[] = Array.from(
+    container.querySelectorAll<HTMLHeadingElement>(headings.join(', ')),
+  ).filter((heading: HTMLHeadingElement) => heading.id);
 
-	const levels: number[] = asArray(new Set(headingElements.map(levelFromTagName).sort()));
+  const levels: number[] = asArray(new Set(headingElements.map(levelFromTagName).sort()));
 
-	return headingElements.reduce((map: NgDocTocItem[], heading: HTMLHeadingElement) => {
-		const headingLevel: number = levelFromTagName(heading);
-		const anchor: HTMLAnchorElement | null =
-			heading.querySelector<HTMLAnchorElement>('a.ng-doc-header-link');
+  return headingElements.reduce((map: NgDocTocItem[], heading: HTMLHeadingElement) => {
+    const headingLevel: number = levelFromTagName(heading);
+    const isHeadingLink = heading.getAttribute('headingLink') === 'true';
 
-		if (anchor) {
-			map.push({
-				title: heading.textContent?.trim() ?? '',
-				element: heading,
-				path: anchor.pathname + anchor.hash,
-				level: levels.indexOf(headingLevel) + 1,
-			});
-		}
+    if (isHeadingLink) {
+      map.push({
+        title: heading.textContent?.trim() ?? '',
+        element: heading,
+        path: heading.getAttribute('href') ?? '',
+        level: levels.indexOf(headingLevel) + 1,
+      });
+    }
 
-		return map;
-	}, []);
+    return map;
+  }, []);
 }
 
 /**
@@ -39,5 +38,5 @@ export function generateToc(container: HTMLElement): NgDocTocItem[] {
  * @param heading
  */
 function levelFromTagName(heading: HTMLHeadingElement): number {
-	return Number(heading.tagName.toLowerCase().replace(/[a-z]*/g, '') || 1);
+  return Number(heading.tagName.toLowerCase().replace(/[a-z]*/g, '') || 1);
 }
