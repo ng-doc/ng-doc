@@ -24,19 +24,17 @@
 - Sidenav and sidebar APIs were changed to support hydration and SSR.
 - All tables become scrollable if they are too wide. First column for API tables is sticky.
 - Add support for nested types for keyword usages, it means long inline code that use several types inside will be displayed correctly. This feature highly improves readability of the API types.
-- Component/Directive/Pipe selectors now are used as keywords by default, they'll be automatically converted to links inside inline code or code blocks with the `HTML` language specified.
+- Component/Directive/Pipe selectors now are used as keywords by default, they'll be automatically converted to API links inside inline code or code blocks with the `HTML` language specified.
 
 TODO:
 
 - make TOC work on mobile
 - rework landing page + add reusable components for creating landings
-- add support for substring keywords
 - click on anchor should copy the link
 - image viewer
 - docs for theming
 - update schematics for page generation based on the new API
 - add more actions for API to be able to generate better page details
-- fix breadcrumbs don't show category
 - improve cache by using lmdb library
 
 Inspirations:
