@@ -15,54 +15,52 @@
         {% set implementedMember = accessor | getImplementedMember %}
         {% set docNode = accessorChain | firstNodeWithComment %}
 
-        <div class="ng-doc-table-wrapper">
-            <table class="ng-doc-accessor-table">
-                <thead>
-                <tr>
-                    <th indexable="false">
-                        {{ decoratorsMacro.render(accessor.getDecorators()) if accessor.getDecorators }}
-                        {{ tagsMacro.render(accessor, 'modifier') }}
-                        <h3 dataSlug="{{ type + '-' + accessor.getName() }}" dataSlugType="member"
-                            dataSlugTitle="{{ accessor.getName() }}">
-                            {{ modifierMacro.render(type) }} {{ accessor.getName() }}
-                        </h3>
-                        <div class="ng-doc-node-details">
-                            {%- if inheritedFrom %}
-                                inherited from <code>{{ inheritedFrom.getName() }}</code>
-                            {%- elseif overriddenMember %}
-                                overrides <code>{{ overriddenMember.getParent().getName() }}</code>
-                            {%- elseif implementedMember %}
-                                implements <code>{{ implementedMember.getParent().getName() }}</code>
-                            {%- endif %}
-                        </div>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>
-                        {% set description = docNode | getJsDocDescription %}
+        <table>
+            <thead>
+            <tr>
+                <th indexable="false">
+                    {{ decoratorsMacro.render(accessor.getDecorators()) if accessor.getDecorators }}
+                    {{ tagsMacro.render(accessor, 'modifier') }}
+                    <h3 dataSlug="{{ type + '-' + accessor.getName() }}" dataSlugType="member"
+                        dataSlugTitle="{{ accessor.getName() }}">
+                        {{ modifierMacro.render(type) }} {{ accessor.getName() }}
+                    </h3>
+                    <div class="ng-doc-node-details">
+                        {%- if inheritedFrom %}
+                            inherited from <code>{{ inheritedFrom.getName() }}</code>
+                        {%- elseif overriddenMember %}
+                            overrides <code>{{ overriddenMember.getParent().getName() }}</code>
+                        {%- elseif implementedMember %}
+                            implements <code>{{ implementedMember.getParent().getName() }}</code>
+                        {%- endif %}
+                    </div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    {% set description = docNode | getJsDocDescription %}
 
-                        {{ description if description else noContentMacro.render('No documentation has been provided.') }}
-                    </td>
-                </tr>
-                <tr>
-                    <td indexable="false">
-                        <h5 class="no-anchor">Presentation</h5>
-                        {{ codeMacro.render(accessor | accessorPresentation, "typescript", false) }}
-                    </td>
-                </tr>
-                <tr>
-                    <td indexable="false">
-                        <h5 class="no-anchor">Type</h5>
-                        <p>
-                            {{ typeMacro.type(accessor) }}
-                        </p>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+                    {{ description if description else noContentMacro.render('No documentation has been provided.') }}
+                </td>
+            </tr>
+            <tr>
+                <td indexable="false">
+                    <h5 class="no-anchor">Presentation</h5>
+                    {{ codeMacro.render(accessor | accessorPresentation, "typescript", false) }}
+                </td>
+            </tr>
+            <tr>
+                <td indexable="false">
+                    <h5 class="no-anchor">Type</h5>
+                    <p>
+                        {{ typeMacro.type(accessor) }}
+                    </p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     {% endmacro %}
 
 

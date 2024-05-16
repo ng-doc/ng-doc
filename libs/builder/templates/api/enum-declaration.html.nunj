@@ -6,9 +6,7 @@
     {%- set members = declaration.getMembers() -%}
 
     {% if members.length -%}
-        <section>
-            <h2>Members</h2>
-            {{ membersMacro.render(members) }}
-        </section>
+        <h2>Members</h2>
+        {{ membersMacro.render(members) }}
     {%- endif %}
 {% endblock %}

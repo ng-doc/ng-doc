@@ -1,0 +1,9 @@
+{% if Node.isClassDeclaration(declaration) %}
+    {% include "api/details/class-declaration.html.nunj" %}
+{% elseif Node.isInterfaceDeclaration(declaration) %}
+    {% include "api/details/interface-declaration.html.nunj" %}
+{% elseif Node.isFunctionDeclaration(declaration) %}
+    {% include "api/details/function-declaration.html.nunj" %}
+{% elseif Node.isTypeAliasDeclaration(declaration) %}
+    {% include "api/details/type-alias-declaration.html.nunj" %}
+{% endif %}

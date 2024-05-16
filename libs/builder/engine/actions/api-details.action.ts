@@ -1,6 +1,5 @@
 import { renderTemplate } from '@ng-doc/builder';
 import { kebabCase } from '@ng-doc/core';
-import { Node } from 'ts-morph';
 
 import { NgDocAction } from '../../types';
 
@@ -8,14 +7,14 @@ import { NgDocAction } from '../../types';
  *
  * @param declarationPath
  */
-export function apiAction(declarationPath: string): NgDocAction {
+export function apiDetailsAction(declarationPath: string): NgDocAction {
   return (entry) => {
     const [sourceFilePath, name] = declarationPath.split('#');
     const project = entry.sourceFile.getProject();
 
     if (!sourceFilePath || !name) {
       throw new Error(
-        `NgDocAction.api error: Invalid declaration path: ${declarationPath}; expected format: path/to/file.ts#declarationName`,
+        `NgDocAction.apiDetails error: Invalid declaration path: ${declarationPath}; expected format: path/to/file.ts#declarationName`,
       );
     }
 
@@ -32,22 +31,16 @@ export function apiAction(declarationPath: string): NgDocAction {
 
     if (!declarationNodes || !declaration) {
       throw new Error(
-        `NgDocAction.api error: Declaration not found ("${declarationPath}") make sure it's exported`,
+        `NgDocAction.apiDetails error: Declaration not found ("${declarationPath}") make sure it's exported`,
       );
     }
 
     const kindName = kebabCase(declaration.getKindName());
 
     return {
-      output: renderTemplate(`./api/${kindName}.html.nunj`, {
+      output: renderTemplate(`./api/details/${kindName}.html.nunj`, {
         context: {
           declaration,
-          docNode: Node.isVariableDeclaration(declaration)
-            ? declaration.getVariableStatement()
-            : declaration,
-          hideDescription: true,
-          hideSeeAlso: true,
-          hideUsageNotes: true,
         },
       }),
       dependencies: [sourceFilePath],

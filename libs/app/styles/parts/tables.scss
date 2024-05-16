@@ -8,28 +8,48 @@ table.ng-doc-api-table {
   &.no-padding {
     tbody tr td,
     thead tr th {
-      padding-left: 0;
+      padding: var(--ng-doc-base-gutter);
+
+      &:first-child {
+        padding-left: 0;
+      }
     }
   }
 
-  .ng-doc-api-table-name {
+  &.sticky {
+    tr {
+      th:first-child,
+      td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+      }
+    }
+  }
+
+  &.first-colum-highlighted {
+    tr {
+      td:first-child {
+        color: var(--ng-doc-heading-color);
+      }
+    }
+  }
+
+  tr th.ng-doc-api-table-name {
     width: 25%;
   }
 
-  .ng-doc-api-table-type {
+  tr th.ng-doc-api-table-type {
     width: 25%;
   }
 
-  .ng-doc-api-table-description {
+  tr th.ng-doc-api-table-description {
     min-width: 300px;
   }
 
   tr {
-    th:first-child,
-    td:first-child {
-      position: sticky;
-      left: 0;
-      z-index: 1;
+    td > *:not(:last-child) {
+      margin-right: var(--ng-doc-base-gutter);
     }
   }
 }

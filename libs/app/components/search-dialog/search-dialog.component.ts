@@ -79,7 +79,7 @@ export class NgDocSearchDialogComponent implements NgDocListHost {
   inputElement!: ElementRef<HTMLElement>;
 
   @ViewChild('resultContent', { read: ElementRef })
-  resultContent!: ElementRef<HTMLElement>;
+  resultContent?: ElementRef<HTMLElement>;
 
   protected searchTerm: string = '';
   protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -92,7 +92,10 @@ export class NgDocSearchDialogComponent implements NgDocListHost {
 
   search(query: string): void {
     this.data.search(query);
-    this.resultContent.nativeElement.scrollTop = 0;
+
+    if (this.resultContent) {
+      this.resultContent.nativeElement.scrollTop = 0;
+    }
   }
 
   getPositions<T extends NgDocSearchResult, K extends keyof T['positions']>(

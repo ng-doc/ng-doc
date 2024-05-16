@@ -156,14 +156,12 @@ table#{$class} {
 
         &:first-child {
           border-top-left-radius: var(--ng-doc-base-gutter);
-          border-bottom-left-radius: var(--ng-doc-base-gutter);
           padding-left: calc(var(--ng-doc-base-gutter) * 3);
         }
 
         &:last-child {
           padding-right: calc(var(--ng-doc-base-gutter) * 3);
           border-top-right-radius: var(--ng-doc-base-gutter);
-          border-bottom-right-radius: var(--ng-doc-base-gutter);
         }
 
         @include headings {
@@ -177,7 +175,7 @@ table#{$class} {
   tbody {
     tr {
       td {
-        padding: var(--ng-doc-base-gutter);
+        padding: calc(var(--ng-doc-base-gutter) * 2);
         vertical-align: top;
         border-bottom: 1px solid var(--ng-doc-base-2);
         background-color: var(--ng-doc-background);

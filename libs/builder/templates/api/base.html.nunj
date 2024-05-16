@@ -4,9 +4,7 @@
 {% if not hideDescription %}
     {% set description = docNode | getJsDocDescription %}
 
-    <section>
-        {{ description if description else noContentMacro.render('No documentation has been provided.') }}
-    </section>
+    {{ description if description else noContentMacro.render('No documentation has been provided.') }}
 {% endif %}
 
 {% if not hideSeeAlso %}

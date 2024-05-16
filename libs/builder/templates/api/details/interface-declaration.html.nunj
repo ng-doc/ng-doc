@@ -1,0 +1,27 @@
+{% import "helpers/type.html.nunj" as typeMacro %}
+
+{% set typeParameters %}
+    {% include "api/details/helpers/type-parameters.html.nunj" %}
+{% endset %}
+{% set hasTypeParameters = typeParameters | trim | length %}
+
+{% set extends = declaration.getExtends() %}
+
+{% if hasTypeParameters or extends.length %}
+    <table class="ng-doc-api-table no-padding">
+        <tbody>
+        {{ typeParameters }}
+
+        {% if extends.length %}
+            <tr>
+                <td indexable="false">Extends:</td>
+                <td>
+                    {%- for e in extends -%}
+                        {{ typeMacro.type(e) }}
+                    {%- endfor %}
+                </td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+{% endif %}

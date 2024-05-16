@@ -1,0 +1,6 @@
+{% if extends %}
+    <tr>
+        <td indexable="false">Extends:</td>
+        <td>{{ typeMacro.type(extends) }}</td>
+    </tr>
+{%- endif %}

@@ -9,6 +9,7 @@ import { ObservableSet } from '../classes';
 import { NgDocActionOutput } from '../interfaces';
 import { NgDocAction } from '../types';
 import { apiAction } from './actions/api.action';
+import { apiDetailsAction } from './actions/api-details.action';
 import { demoAction } from './actions/demo.action';
 import { demoPaneAction } from './actions/demo-pane.action';
 import { playgroundAction } from './actions/playground.action';
@@ -34,6 +35,10 @@ export class NgDocActions {
 
   api(declarationPath: string): string {
     return this.performAction(apiAction(declarationPath)).output;
+  }
+
+  apiDetails(declarationPath: string): string {
+    return this.performAction(apiDetailsAction(declarationPath)).output;
   }
 
   private performAction(action: NgDocAction): NgDocActionOutput {

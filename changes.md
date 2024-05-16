@@ -26,6 +26,9 @@
 - Add support for nested types for keyword usages, it means long inline code that use several types inside will be displayed correctly. This feature highly improves readability of the API types.
 - Component/Directive/Pipe selectors now are used as keywords by default, they'll be automatically converted to API links inside inline code or code blocks with the `HTML` language specified.
 - Heading anchors are now copied to the clipboard when clicked instead of navigating to the anchor.
+- added a new `NgDocActions.api` method that generates API tables for the provided declaration path.
+- added a new `NgDocActions.apiDetails` method that generates API details with information about generic types, decorators, selectors, etc.
+- API now displays function and method overloads
 
 TODO:
 

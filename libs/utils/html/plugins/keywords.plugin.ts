@@ -10,9 +10,9 @@ import { hasLinkAncestor, isCodeNode } from '../helpers';
 
 const ALWAYS_ALLOWED_LANGUAGES: string[] = ['typescript', 'ts'];
 const LANGUAGES: string[] = ['typescript', 'ts', ...KEYWORD_ALLOWED_LANGUAGES];
-const SPLIT_REGEXP: RegExp = /([*A-Za-z0-9_$@\-[\]]+(?:[.#][A-Za-z0-9_-]+)?(?:\?[\w=&]+)?)/;
+const SPLIT_REGEXP: RegExp = /([*A-Za-z0-9_$@-]+(?:[.#][A-Za-z0-9_-]+)?(?:\?[\w=&]+)?)/;
 const MATCH_KEYWORD_REGEXP: RegExp =
-  /(?<key>[*A-Za-z0-9_$@\-[\]]+)((?<delimiter>[.#])(?<anchor>[A-Za-z0-9_-]+))?(?<queryParams>\?[\w=&]+)?/;
+  /(?<key>[*A-Za-z0-9_$@-]+)((?<delimiter>[.#])(?<anchor>[A-Za-z0-9_-]+))?(?<queryParams>\?[\w=&]+)?/;
 
 export type AddKeyword = (keyword: string) => void;
 export type GetKeyword = (keyword: string) => NgDocKeyword | undefined;
