@@ -8,6 +8,7 @@ import {
   setColdStartFalse,
   whenStackIsEmpty,
 } from '@ng-doc/builder';
+import fs from 'fs';
 import { from, merge, Observable, switchMap } from 'rxjs';
 import { debounceTime, map, tap } from 'rxjs/operators';
 
@@ -15,6 +16,7 @@ import { NgDocBuilderContext } from '../interfaces';
 import { progress } from '../operators';
 import { globalBuilders } from './builders/global';
 import { resolveAsyncFileOutputs } from './core/operators/resolve-async-file-outputs';
+import { invalidateCacheIfNeeded } from './entities/cache';
 
 /**
  *
@@ -26,6 +28,12 @@ export function newBuild(context: NgDocBuilderContext): Observable<void> {
 
   if (!context.config.cache) {
     disableCache();
+  }
+
+  if (!!context.config?.cache && invalidateCacheIfNeeded(context.cachedFiles)) {
+    // do nothing
+  } else {
+    fs.rmSync(context.outDir, { recursive: true, force: true });
   }
 
   const emitter = from(loadGlobalKeywords(context)).pipe(

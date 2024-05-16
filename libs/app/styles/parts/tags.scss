@@ -1,29 +1,28 @@
 @import '../mixins/entities-colors';
 
 .ng-doc-tags-wrapper {
-	line-height: 22px;
+  line-height: 22px;
 }
 
 .ng-doc-tag {
-	display: inline-block;
-	padding: 0 var(--ng-doc-base-gutter);
-	font-size: 14px;
-	border-radius: var(--ng-doc-base-gutter);
-	background-color: var(--ng-doc-base-2);
-	color: var(--ng-doc-text);
-	vertical-align: middle;
-	white-space: nowrap;
-	font-weight: 600;
+  display: inline-block;
+  padding: 0 var(--ng-doc-base-gutter);
+  font-size: 14px;
+  border-radius: var(--ng-doc-base-gutter);
+  background-color: var(--ng-doc-base-2);
+  color: var(--ng-doc-text);
+  vertical-align: middle;
+  white-space: nowrap;
 
-	& + .ng-doc-tag {
-		margin-left: var(--ng-doc-base-gutter);
-	}
+  & + .ng-doc-tag {
+    margin-left: var(--ng-doc-base-gutter);
+  }
 
-	&[data-content='ng-doc-scope'] {
-		padding: 0;
-		background-color: transparent;
-		color: var(--ng-doc-text);
-	}
+  &[data-content='ng-doc-scope'] {
+    padding: 0;
+    background-color: transparent;
+    color: var(--ng-doc-text);
+  }
 
-	@include entitiesColors('data-content');
+  @include entitiesColors('data-content');
 }

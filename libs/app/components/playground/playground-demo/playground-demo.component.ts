@@ -20,12 +20,12 @@ import { NgDocDemoDisplayerComponent } from '@ng-doc/app/components/demo-display
 import { formatHtml } from '@ng-doc/app/helpers';
 import { getPlaygroundDemoToken } from '@ng-doc/app/providers/playground-demo';
 import { NgDocFormPartialValue } from '@ng-doc/app/types';
-import { stringify } from '@ng-doc/core';
 import {
   buildPlaygroundDemoPipeTemplate,
   buildPlaygroundDemoTemplate,
 } from '@ng-doc/core/helpers/build-playground-demo-template';
 import { objectKeys } from '@ng-doc/core/helpers/object-keys';
+import { stringify } from '@ng-doc/core/helpers/stringify';
 import { NgDocPlaygroundConfig, NgDocPlaygroundProperties } from '@ng-doc/core/interfaces';
 import { NgDocLetDirective, NgDocSmoothResizeComponent } from '@ng-doc/ui-kit';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';

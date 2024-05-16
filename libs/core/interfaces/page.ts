@@ -1,8 +1,8 @@
 import { Component, Type } from '@angular/core';
-import { NgDocPlaygroundConfig } from '@ng-doc/core/interfaces/playground-config';
 
 import { NgDocBaseEntity } from './base-entity';
 import { NgDocCategory } from './category';
+import { NgDocPlaygroundConfig } from './playground-config';
 
 /**
  * Page configuration interface, that should be used to describe configuration of the page

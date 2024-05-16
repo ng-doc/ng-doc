@@ -29,6 +29,7 @@ export * from './is-not-excluded-path';
 export * from './is-supported-declaration';
 export * from './markdown-to-html';
 export * from './mini-pattern';
+export * from './minify-html';
 export * from './no-empty';
 export * from './no-line-breaks';
 export * from './not-empty-assets';

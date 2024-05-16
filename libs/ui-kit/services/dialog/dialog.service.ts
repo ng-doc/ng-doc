@@ -1,6 +1,6 @@
 import { GlobalPositionStrategy } from '@angular/cdk/overlay';
 import { inject, Injectable, InjectionToken } from '@angular/core';
-import { asArray } from '@ng-doc/core';
+import { asArray } from '@ng-doc/core/helpers/as-array';
 import { NgDocOverlayRef } from '@ng-doc/ui-kit/classes';
 import { NgDocOverlayContainerComponent } from '@ng-doc/ui-kit/components/overlay-container';
 import { NgDocOverlayService } from '@ng-doc/ui-kit/services/overlay';

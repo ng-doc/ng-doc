@@ -20,7 +20,8 @@ import { NgDocPageHeaderComponent } from '@ng-doc/app/components/page-header';
 import { createComponent } from '@ng-doc/app/helpers';
 import { NgDocNavigation, NgDocPageNavigation } from '@ng-doc/app/interfaces';
 import { NG_DOC_CONTEXT, NG_DOC_PAGE_SKELETON } from '@ng-doc/app/tokens';
-import { isPresent, NgDocPageType } from '@ng-doc/core';
+import { isPresent } from '@ng-doc/core/helpers/is-present';
+import { NgDocPageType } from '@ng-doc/core/types';
 import {
   NgDocIconComponent,
   NgDocTabRouteComponent,

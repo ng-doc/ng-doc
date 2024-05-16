@@ -7,8 +7,9 @@ import {
   Type,
   ViewContainerRef,
 } from '@angular/core';
-import { Constructor, extractFunctionDefaults } from '@ng-doc/core';
+import { extractFunctionDefaults } from '@ng-doc/core/helpers/extract-function-defaults';
 import { NgDocPlaygroundConfig } from '@ng-doc/core/interfaces';
+import { Constructor } from '@ng-doc/core/types';
 import { Observable, Subject, take } from 'rxjs';
 
 import { NgDocPlaygroundComponent } from './playground.component';

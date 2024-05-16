@@ -1,5 +1,6 @@
 import { NgDocDemoAssets } from '@ng-doc/app/interfaces';
-import { NgDocPage, NgDocPageType } from '@ng-doc/core';
+import { NgDocPage } from '@ng-doc/core/interfaces';
+import { NgDocPageType } from '@ng-doc/core/types';
 
 /**
  * Base class for NgDoc page

@@ -1,11 +1,11 @@
 import {
-  minifyHtml,
   NgDocDemoActionOptions,
   NgDocDemoPaneActionOptions,
   NgDocPlaygroundOptions,
 } from '@ng-doc/core';
 
 import { ObservableSet } from '../classes';
+import { minifyHtml } from '../helpers';
 import { NgDocActionOutput } from '../interfaces';
 import { NgDocAction } from '../types';
 import { apiAction } from './actions/api.action';

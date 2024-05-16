@@ -18,7 +18,8 @@ import {
 import { SafeHtml } from '@angular/platform-browser';
 import { NgDocPageProcessor, NgDocProcessorOptions } from '@ng-doc/app/interfaces';
 import { NG_DOC_PAGE_CUSTOM_PROCESSOR, NG_DOC_PAGE_PROCESSOR } from '@ng-doc/app/tokens';
-import { asArray, objectKeys } from '@ng-doc/core';
+import { asArray } from '@ng-doc/core/helpers/as-array';
+import { objectKeys } from '@ng-doc/core/helpers/object-keys';
 
 /**
  * Base processor class to create a processor directive that will be used to replace

@@ -16,7 +16,9 @@ import { FormControl, FormGroup, FormsModule } from '@angular/forms';
 import { isPlaygroundProperty } from '@ng-doc/app/helpers';
 import { NgDocProvidedTypeControl } from '@ng-doc/app/interfaces';
 import { getTokenForType } from '@ng-doc/app/providers/type-control';
-import { extractValueOrThrow, isPresent, objectKeys } from '@ng-doc/core';
+import { extractValueOrThrow } from '@ng-doc/core/helpers/extract-value';
+import { isPresent } from '@ng-doc/core/helpers/is-present';
+import { objectKeys } from '@ng-doc/core/helpers/object-keys';
 import {
   NgDocPlaygroundContent,
   NgDocPlaygroundProperties,
