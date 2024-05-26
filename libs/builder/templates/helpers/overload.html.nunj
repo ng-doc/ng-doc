@@ -8,8 +8,8 @@
         {% set docNode = overload %}
         {% set parameters = overload.getParameters() %}
 
-        <table>
-            <thead>
+        <table class="ng-doc-overload-table">
+            <thead indexable="false">
             <tr>
                 <th>Overload #{{ loop.index }}</th>
             </tr>

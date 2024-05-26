@@ -1,3 +1,5 @@
+@import '../../../ui-kit/styles/mixins';
+
 .ng-doc-table-wrapper {
   overflow: auto;
 }
@@ -51,5 +53,11 @@ table.ng-doc-api-table {
     td > *:not(:last-child) {
       margin-right: var(--ng-doc-base-gutter);
     }
+  }
+}
+
+table.ng-doc-overload-table {
+  tr th {
+    @include alpha-background(var(--ng-doc-warning), 0.1);
   }
 }
