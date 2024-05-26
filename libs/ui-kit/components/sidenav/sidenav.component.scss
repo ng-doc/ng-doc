@@ -18,6 +18,7 @@
 
   .ng-doc-sidenav {
     position: fixed;
+    top: var(--ng-doc-navbar-height);
     width: var(--ng-doc-sidenav-width);
     flex-shrink: 0;
     z-index: 10;

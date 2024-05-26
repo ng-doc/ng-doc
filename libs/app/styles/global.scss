@@ -19,6 +19,12 @@ body {
   background-color: rgba(0, 0, 0, 0.56);
 }
 
+.ng-doc-global-scrollblock {
+  position: relative;
+  overflow: hidden;
+  padding-right: var(--ng-doc-base-gutter);
+}
+
 *,
 *:before,
 *:after {

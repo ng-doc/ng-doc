@@ -98,6 +98,7 @@
   // Table of contents
   --ng-doc-toc-width: 280px;
   --ng-doc-toc-indent: var(--ng-doc-base-gutter);
+  --ng-doc-toc-top-padding: calc(var(--ng-doc-base-gutter) * 3);
 
   // Search
   --ng-doc-search-result-color: #454545;
