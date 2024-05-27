@@ -1,3 +1,10 @@
+## [17.6.10](https://github.com/ng-doc/ng-doc/compare/v17.6.9...v17.6.10) (2024-05-27)
+
+
+### Bug Fixes
+
+* **builder:** cannot read properties of undefined (reading 'relative') ([42506f5](https://github.com/ng-doc/ng-doc/commit/42506f545f2363b3c87f042d51f166d2df105c31))
+
 ## [17.6.9](https://github.com/ng-doc/ng-doc/compare/v17.6.8...v17.6.9) (2024-05-27)
 
 
