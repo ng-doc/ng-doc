@@ -5,7 +5,7 @@ import { JsonObject } from '@angular-devkit/core';
 import { combineLatest, from, Observable, of } from 'rxjs';
 import { first, map, shareReplay, switchMap } from 'rxjs/operators';
 
-import { buildNgDoc } from '../engine/build-ng-doc';
+import { buildNgDoc } from '../engine';
 import { createBuilderContext } from '../helpers';
 import { NgDocSchema } from '../interfaces';
 import { patchBuilderContext } from './patch-builder-context';
