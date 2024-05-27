@@ -1,3 +1,10 @@
+## [17.6.9](https://github.com/ng-doc/ng-doc/compare/v17.6.8...v17.6.9) (2024-05-27)
+
+
+### Bug Fixes
+
+* **app:** category imports break a build for Angular 17.3 and above ([e4163d4](https://github.com/ng-doc/ng-doc/commit/e4163d4079f1f61e1f77d8455e4f553d65c32eaf))
+
 ## [17.6.8](https://github.com/ng-doc/ng-doc/compare/v17.6.7...v17.6.8) (2024-05-08)
 
 
