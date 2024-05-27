@@ -1,7 +1,7 @@
-import { GLOBALS } from '@ng-doc/builder';
 import { NgDocCodeType } from '@ng-doc/core';
 import * as fs from 'fs';
 
+import { GLOBALS } from '../engine/variables';
 import { NgDocAsset } from '../interfaces';
 import { codeTypeFromExt } from './code-type-from-ext';
 
