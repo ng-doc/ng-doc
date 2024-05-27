@@ -57,7 +57,11 @@ table.ng-doc-api-table {
 }
 
 table.ng-doc-overload-table {
-  tr th {
-    @include alpha-background(var(--ng-doc-warning), 0.1);
+  thead {
+    tr th {
+      @include alpha-background(var(--ng-doc-warning), 0.1);
+
+      background: unset;
+    }
   }
 }

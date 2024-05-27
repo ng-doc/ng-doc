@@ -1,11 +1,9 @@
 import {
   createBuilder,
   createImportPath,
-  createSecondaryTrigger,
-  extractKeywords,
   IndexStore,
   NgDocBuilderContext,
-  onKeywordsTouch,
+  postProcessHtml,
   processHtml,
   replaceKeywords,
 } from '@ng-doc/builder';
@@ -51,7 +49,7 @@ export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput> {
           headings: context.config.guide?.anchorHeadings,
           route: metadata.absoluteRoute(),
         });
-        await extractKeywords(headerContent, {
+        await postProcessHtml(headerContent, {
           addUsedKeyword: usedKeywords.add.bind(usedKeywords),
         });
 
@@ -93,7 +91,7 @@ export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput> {
       }),
     );
 
-  return createBuilder([createSecondaryTrigger(onKeywordsTouch(usedKeywords))], builder, true);
+  return createBuilder([], builder, true);
 }
 
 /**

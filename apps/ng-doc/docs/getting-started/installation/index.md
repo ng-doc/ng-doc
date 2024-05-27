@@ -2,6 +2,7 @@
 
 `[ngDocRotator]`
 `ngDocRotator`
+`NgDocButtonComponent`
 
 ```html
 <div [ngDocRotator]="true"></div>

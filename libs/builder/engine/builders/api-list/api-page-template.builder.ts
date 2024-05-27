@@ -67,10 +67,10 @@ export function apiPageTemplateBuilder(config: Config): Builder<TemplateBuilderO
               }),
           }),
         ],
-        async (output) => {
+        async (content) => {
           return {
             metadata: tabMetadata,
-            output: postProcess(output),
+            output: postProcess(content),
           } satisfies TemplateBuilderOutput;
         },
         cacheStrategy,
@@ -82,7 +82,9 @@ export function apiPageTemplateBuilder(config: Config): Builder<TemplateBuilderO
       lineNumber: declaration.getStartLineNumber(),
     },
   ).pipe(
-    finalize(() => PageStore.delete(pageKey)),
     takeUntil(watchFile(declPath, 'delete')),
+    finalize(() => {
+      PageStore.delete(pageKey);
+    }),
   );
 }

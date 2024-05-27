@@ -3,9 +3,9 @@ import {
   CacheStrategy,
   createBuilder,
   createMainTrigger,
-  extractKeywords,
   NgDocBuilderContext,
   NgDocComponentAsset,
+  postProcessHtml,
   processHtml,
   renderTemplate,
   replaceKeywords,
@@ -74,7 +74,7 @@ export function demoAssetsBuilder(config: Config): Builder<AsyncFileOutput> {
             asset.code = await processHtml(asset.code, {
               addAnchor: () => {},
             });
-            asset.code = await extractKeywords(asset.code, {
+            asset.code = await postProcessHtml(asset.code, {
               addUsedKeyword: usedKeywords.add.bind(usedKeywords),
             });
           }

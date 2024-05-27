@@ -1,6 +1,6 @@
 import path from 'path';
-import { merge, of } from 'rxjs';
-import { debounceTime, switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 import { NgDocBuilderContext } from '../../../interfaces';
 import {
@@ -12,28 +12,10 @@ import {
   runBuild,
 } from '../../core';
 import { renderTemplate } from '../../nunjucks';
-import { getStructuredDocs, StructuredDoc } from '../helpers';
+import { getStructuredDocs } from '../helpers';
 
-/**
- *
- * @param context
- */
-export function contextAndRoutesBuilder(context: NgDocBuilderContext): Builder<FileOutput> {
-  const builder = of(void 0).pipe(
-    switchMap(() => {
-      const structuredDocs = getStructuredDocs(PageStore.asArray());
-
-      return merge(contextBuilder(context, structuredDocs), routesBuilder(context, structuredDocs));
-    }),
-  );
-
-  return createBuilder(
-    [createMainTrigger(PageStore.changes().pipe(debounceTime(100)))],
-    () => builder,
-    false,
-  );
-}
-
+// doesnt navigate to
+///http://localhost:4200/docs/api/classes/ui-kit/NgDocButtonComponent
 export const ROUTES_BUILDER_TAG = 'Routes';
 
 /**
@@ -41,14 +23,13 @@ export const ROUTES_BUILDER_TAG = 'Routes';
  * @param context
  * @param structuredDocs
  */
-function routesBuilder(
-  context: NgDocBuilderContext,
-  structuredDocs: StructuredDoc[],
-): Builder<FileOutput> {
+export function routesBuilder(context: NgDocBuilderContext): Builder<FileOutput> {
   const outPath = path.join(context.outDir, 'routes.ts');
 
-  return of(null).pipe(
+  const builder = of(null).pipe(
     runBuild(ROUTES_BUILDER_TAG, async () => {
+      const structuredDocs = getStructuredDocs(PageStore.asArray());
+
       return {
         filePath: outPath,
         content: renderTemplate('./routes.ts.nunj', {
@@ -60,6 +41,12 @@ function routesBuilder(
       };
     }),
   );
+
+  return createBuilder(
+    [createMainTrigger(PageStore.changes().pipe(debounceTime(200)))],
+    () => builder,
+    false,
+  );
 }
 
 export const CONTEXT_BUILDER_TAG = 'Context';
@@ -69,14 +56,13 @@ export const CONTEXT_BUILDER_TAG = 'Context';
  * @param context
  * @param structuredDocs
  */
-function contextBuilder(
-  context: NgDocBuilderContext,
-  structuredDocs: StructuredDoc[],
-): Builder<FileOutput> {
+export function contextBuilder(context: NgDocBuilderContext): Builder<FileOutput> {
   const outPath = path.join(context.outDir, 'context.ts');
 
-  return of(null).pipe(
+  const builder = of(null).pipe(
     runBuild(CONTEXT_BUILDER_TAG, async () => {
+      const structuredDocs = getStructuredDocs(PageStore.asArray());
+
       return {
         filePath: outPath,
         content: renderTemplate('./context.ts.nunj', {
@@ -87,5 +73,11 @@ function contextBuilder(
         }),
       };
     }),
+  );
+
+  return createBuilder(
+    [createMainTrigger(PageStore.changes().pipe(debounceTime(200)))],
+    () => builder,
+    false,
   );
 }

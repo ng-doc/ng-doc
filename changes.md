@@ -28,7 +28,7 @@
 - Heading anchors are now copied to the clipboard when clicked instead of navigating to the anchor.
 - added a new `NgDocActions.api` method that generates API tables for the provided declaration path.
 - added a new `NgDocActions.apiDetails` method that generates API details with information about generic types, decorators, selectors, etc.
-- API now displays function and method overloads
+- API references now display function and method overloads
 
 TODO:
 
@@ -39,6 +39,7 @@ TODO:
 - update schematics for page generation based on the new API
 - add more actions for API to be able to generate better page details
 - improve cache by using lmdb library
+- check order of API properties modificators
 
 Inspirations:
 https://mui.com/base-ui/react-autocomplete/

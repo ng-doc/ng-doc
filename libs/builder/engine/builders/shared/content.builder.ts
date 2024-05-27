@@ -3,9 +3,9 @@ import {
   createBuilder,
   createMainTrigger,
   createSecondaryTrigger,
-  extractKeywords,
   isBuilderDone,
   onKeywordsTouch,
+  postProcessHtml,
   processHtml,
 } from '@ng-doc/builder';
 import { NgDocKeyword, NgDocPageAnchor } from '@ng-doc/core';
@@ -50,6 +50,7 @@ export function contentBuilder(config: Config): Builder<string> {
   const dependencies = new ObservableSet<string>();
   const anchors = [] as NgDocPageAnchor[];
   const usedKeywords = new Set<string>();
+  let keywords = new Map<string, NgDocKeyword>();
   let removeKeywords: () => void = () => {};
 
   const cacheStrategy = {
@@ -77,7 +78,7 @@ export function contentBuilder(config: Config): Builder<string> {
         try {
           // Triggering the touch of the keywords before the build to trigger dependent builders
           // This is needed because keywords can be changed after the build
-          touchKeywords(...getKeywords(anchors).map(([key]) => key));
+          touchKeywords(...keywords.keys());
 
           removeKeywords();
           anchors.length = 0;
@@ -92,7 +93,9 @@ export function contentBuilder(config: Config): Builder<string> {
             addAnchor: anchors.push.bind(anchors),
           });
 
-          return extractKeywords(content, { addUsedKeyword: usedKeywords.add.bind(usedKeywords) });
+          keywords = new Map(getKeywords(anchors));
+
+          return postProcessHtml(content, { addUsedKeyword: usedKeywords.add.bind(usedKeywords) });
         } catch (cause) {
           throw new Error(`Error while building entry (${metadata.path})`, {
             cause,
@@ -106,23 +109,25 @@ export function contentBuilder(config: Config): Builder<string> {
   return createBuilder(
     [
       createMainTrigger(watchFile(mainFilePath, 'update'), onDependenciesChange(dependencies)),
-      createSecondaryTrigger(onKeywordsTouch(usedKeywords)),
+      createSecondaryTrigger(onKeywordsTouch(usedKeywords, keywords.has.bind(keywords))),
     ],
     () => builder,
   ).pipe(
     tap((state) => {
       if (isBuilderDone(state)) {
-        const keywords = getKeywords(anchors);
-
-        if (keywords.length) {
+        if (keywords.size) {
           removeKeywords = keywordsStore.add(...keywords);
 
           // Touching the keywords after the build run all builders that depend on
           // the new keywords that might have been added
-          !state.fromCache && touchKeywords(...keywords.map(([key]) => key));
+          !state.fromCache && touchKeywords(...keywords.keys());
         }
       }
     }),
-    finalize(() => removeKeywords()),
+    finalize(() => {
+      removeKeywords();
+
+      console.log('DESTROY CONTENT BUILDER', metadata.path);
+    }),
   );
 }

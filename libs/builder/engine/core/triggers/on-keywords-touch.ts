@@ -6,11 +6,15 @@ const KEYWORDS_CHANGE = new Subject<string[]>();
 /**
  *
  * @param {...any} keywords
+ * @param exclude
  */
-export function onKeywordsTouch(...keywords: Array<Set<string>>): Observable<void> {
+export function onKeywordsTouch(
+  keywords: Set<string>,
+  exclude: (key: string) => boolean = () => false,
+): Observable<void> {
   return KEYWORDS_CHANGE.pipe(
     filter((changedKeywords) => {
-      return keywords.some((k) => changedKeywords.some((c) => k.has(c)));
+      return changedKeywords.some((c) => !exclude(c) && keywords.has(c));
     }),
     map(() => void 0),
   );
