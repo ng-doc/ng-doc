@@ -12,11 +12,10 @@ function buildSchema(from, to) {
 
 	schemas.forEach((schemaPath) => {
 		const builder = basename(dirname(schemaPath));
-		const builderFolder = builder === 'application' ? 'app-shell' : builder;
 		const schema = loadSchema(schemaPath);
 		const schemaName = basename(schemaPath);
 		const originalSchema = loadSchema(
-			`./node_modules/@angular-devkit/build-angular/src/builders/${builderFolder}/schema.json`,
+			`./node_modules/@angular/build/src/builders/${builder}/schema.json`,
 		);
 		const newSchema = merge(originalSchema, schema);
 		const newSchemaPath = join(to, builder, schemaName);
