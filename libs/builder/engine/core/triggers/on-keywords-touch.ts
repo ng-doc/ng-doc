@@ -1,6 +1,8 @@
 import { Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
+import { isColdStart } from '../variables';
+
 const KEYWORDS_CHANGE = new Subject<string[]>();
 
 /**
@@ -14,7 +16,7 @@ export function onKeywordsTouch(
 ): Observable<void> {
   return KEYWORDS_CHANGE.pipe(
     filter((changedKeywords) => {
-      return changedKeywords.some((c) => !exclude(c) && keywords.has(c));
+      return !isColdStart() && changedKeywords.some((c) => !exclude(c) && keywords.has(c));
     }),
     map(() => void 0),
   );

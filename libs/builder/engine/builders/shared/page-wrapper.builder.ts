@@ -1,8 +1,10 @@
 import {
   createBuilder,
   createImportPath,
+  createSecondaryTrigger,
   IndexStore,
   NgDocBuilderContext,
+  onKeywordsTouch,
   postProcessHtml,
   processHtml,
   replaceKeywords,
@@ -91,7 +93,7 @@ export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput> {
       }),
     );
 
-  return createBuilder([], builder, true);
+  return createBuilder([createSecondaryTrigger(onKeywordsTouch(usedKeywords))], builder, true);
 }
 
 /**
