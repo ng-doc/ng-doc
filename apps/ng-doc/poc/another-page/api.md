@@ -8,26 +8,26 @@ asd
 
 # Class
 
-{{ NgDocActions.api(NgDocPage.data.declaration) }}
+{{ NgDocApi.api(NgDocPage.data.declaration) }}
 
 # Interface
 
-{{ NgDocActions.api("apps/ng-doc/poc/another-page/test-inter.ts#MyInterface") }}
+{{ NgDocApi.api("apps/ng-doc/poc/another-page/test-inter.ts#MyInterface") }}
 
 # Enum
 
-{{ NgDocActions.api("apps/ng-doc/poc/another-page/test-inter.ts#MyEnum") }}
+{{ NgDocApi.api("apps/ng-doc/poc/another-page/test-inter.ts#MyEnum") }}
 
 # Type
 
-{{ NgDocActions.api("apps/ng-doc/poc/another-page/test-inter.ts#MyType") }}
+{{ NgDocApi.api("apps/ng-doc/poc/another-page/test-inter.ts#MyType") }}
 
 # Function
 
-{{ NgDocActions.api("apps/ng-doc/poc/another-page/test-inter.ts#myFunction") }}
+{{ NgDocApi.api("apps/ng-doc/poc/another-page/test-inter.ts#myFunction") }}
 
 # Variable
 
-{{ NgDocActions.api("apps/ng-doc/poc/another-page/test-inter.ts#myVar") }}
+{{ NgDocApi.api("apps/ng-doc/poc/another-page/test-inter.ts#myVar") }}
 
 asd

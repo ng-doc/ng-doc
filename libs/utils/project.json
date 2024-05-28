@@ -12,6 +12,7 @@
         "project": "libs/utils/package.json",
         "main": "libs/utils/index.ts",
         "tsConfig": "libs/utils/tsconfig.lib.json",
+        "external": "all",
         "assets": [
           {
             "glob": "**/*.md",

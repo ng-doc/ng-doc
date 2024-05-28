@@ -1,4 +1,4 @@
-import { concatMap, EMPTY, forkJoin, from, of, OperatorFunction, switchMap } from 'rxjs';
+import { concatAll, concatMap, EMPTY, forkJoin, from, of, OperatorFunction } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import {
@@ -40,11 +40,7 @@ export function resolveAsyncFileOutputs(): OperatorFunction<
           return EMPTY;
         }
 
-        return forkJoin(result).pipe(
-          switchMap((outputs) => {
-            return of(...outputs);
-          }),
-        );
+        return forkJoin(result).pipe(concatAll());
       }),
     );
 }
