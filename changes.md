@@ -25,10 +25,16 @@
 - All tables become scrollable if they are too wide. First column for API tables is sticky.
 - Add support for nested types for keyword usages, it means long inline code that use several types inside will be displayed correctly. This feature highly improves readability of the API types.
 - Component/Directive/Pipe selectors now are used as keywords by default, they'll be automatically converted to API links inside inline code or code blocks with the `HTML` language specified.
-- Heading anchors are now copied to the clipboard when clicked instead of navigating to the anchor.
-- added a new `NgDocActions.api` method that generates API tables for the provided declaration path.
-- added a new `NgDocActions.apiDetails` method that generates API details with information about generic types, decorators, selectors, etc.
+- Heading anchors are now copied to the clipboard when clicked instead of navigating.
+- added a new `NgDocApi` class that you can use in your guides to display API tables for the provided declaration path.
+- added a new `NgDocApi.api` method that generates API tables for the provided declaration path.
+- added a new `NgDocApi.details` method that generates API details with information about generic types, decorators, selectors, etc.
 - API references now display function and method overloads
+- added a new `JSDoc` class that you can use in your guides to display JSDoc comments for the provided declaration path.
+- added new `JSDoc.description` method that returns the JSDoc description for the provided declaration path.
+- added new `JSDoc.tag` method that returns the JSDoc tag description for the provided declaration path.
+- added new `JSDoc.tags` method that returns the JSDoc tags for the provided declaration path.
+- added new `JSDoc.hasTag` method that returns true if the provided declaration path has the specified JSDoc tag.
 
 TODO:
 

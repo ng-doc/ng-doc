@@ -1,4 +1,4 @@
-import { NgDocActions, renderTemplateString } from '@ng-doc/builder';
+import { JSDoc, NgDocActions, NgDocApi, renderTemplateString } from '@ng-doc/builder';
 import { NgDocPage } from '@ng-doc/core';
 import path from 'path';
 import { takeUntil } from 'rxjs';
@@ -62,6 +62,8 @@ export function guideTemplateBuilder(config: Config): Builder<TemplateBuilderOut
                   context: {
                     NgDocPage: metadata.parent.entry,
                     NgDocActions: new NgDocActions(metadata, dependencies),
+                    NgDocApi: new NgDocApi(metadata, dependencies),
+                    JSDoc: new JSDoc(metadata, dependencies),
                   },
                   dependencies,
                   filters: false,

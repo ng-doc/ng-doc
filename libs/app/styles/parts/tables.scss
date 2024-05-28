@@ -2,6 +2,11 @@
 
 .ng-doc-table-wrapper {
   overflow: auto;
+  margin: var(--ng-doc-page-block-margin);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 table.ng-doc-api-table {

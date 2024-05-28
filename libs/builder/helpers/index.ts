@@ -16,6 +16,7 @@ export * from './format-code';
 export * from './format-keyword-key';
 export * from './generate-api-entities';
 export * from './get-code-type-from-lang';
+export * from './get-declaration-by-path';
 export * from './get-declaration-type';
 export * from './get-demo-class-declarations';
 export * from './get-entity-constructor';

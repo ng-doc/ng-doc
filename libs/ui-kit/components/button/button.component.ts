@@ -4,6 +4,7 @@ import { NgDocColor, NgDocSize } from '@ng-doc/ui-kit/types';
 /**
  * `NgDocButtonComponent` is a reusable button component with customizable properties.
  * It can be used as a regular button, a flat button, or a text button.
+ *
  * @example
  * ```html
  * <button ng-doc-button [size]="'large'" [color]="'secondary'" [rounded]="true">Click me</button>

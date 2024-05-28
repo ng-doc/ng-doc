@@ -1,16 +1,19 @@
-import { getPlaygroundMetadata } from '@ng-doc/builder';
 import { escapeHtml, NgDocPlaygroundOptions } from '@ng-doc/core';
 
-import { NgDocActionOutput, NgDocPlaygroundMetadata } from '../../interfaces';
-import { NgDocAction } from '../../types';
+import { getPlaygroundMetadata } from '../../../index';
+import { NgDocPlaygroundMetadata } from '../../../interfaces';
+import { NgDocAction } from '../../../types';
 
 /**
  *    Renders playground point on the page, it will be rendered by the application
  * @param pId - Playground id in the config
  * @param options - Options for configuring the action
  */
-export function playgroundAction(pId: string, options?: NgDocPlaygroundOptions): NgDocAction {
-  return (page): NgDocActionOutput => {
+export function playgroundAction(
+  pId: string,
+  options?: NgDocPlaygroundOptions,
+): NgDocAction<string> {
+  return (page) => {
     const playgroundMetadata = getPlaygroundMetadata(page.parent.entry, page.objectExpression);
     const metadata: NgDocPlaygroundMetadata | undefined = playgroundMetadata[pId];
 
