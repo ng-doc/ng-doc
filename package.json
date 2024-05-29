@@ -104,7 +104,7 @@
     "rxjs": "^7.0.0",
     "serve": "^14.2.0",
     "svgo": "^2.8.0",
-    "ts-morph": "20.0.0",
+    "ts-morph": "22.0.0",
     "tslib": "^2.6.2",
     "unist-util-filter": "4.0.1",
     "unist-util-visit": "4.1.2",
