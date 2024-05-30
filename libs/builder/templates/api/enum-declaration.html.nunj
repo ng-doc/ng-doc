@@ -3,7 +3,7 @@
 {% import "helpers/members.html.nunj" as membersMacro %}
 
 {% block overview %}
-    {%- set members = declaration.getMembers() -%}
+    {%- set members = declaration.getMembers() | excludeByJsDocTags('internal') -%}
 
     {% if members.length -%}
         <h2>Members</h2>

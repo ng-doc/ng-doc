@@ -7,10 +7,10 @@
 {% import "helpers/modifier.html.nunj" as modifierMacro %}
 
 {% block overview %}
-    {%- set constructors = declaration.getConstructors() | filterByScope("public") | excludeByTsDocsTags('internal') -%}
-    {%- set allProperties = declaration | getClassProperties | excludeByTsDocsTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
-    {%- set allMethods = declaration | getClassMethods | excludeByTsDocsTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
-    {%- set allAccessors = declaration | getClassAccessors | excludeByTsDocsTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
+    {%- set constructors = declaration.getConstructors() | filterByScope("public") | excludeByJsDocTags('internal') -%}
+    {%- set allProperties = declaration | getClassProperties | excludeByJsDocTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
+    {%- set allMethods = declaration | getClassMethods | excludeByJsDocTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
+    {%- set allAccessors = declaration | getClassAccessors | excludeByJsDocTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
 
     {%- set staticProperties = allProperties | filterByStatic(true) -%}
     {%- set staticAccessors = allAccessors | filterByStatic(true) -%}

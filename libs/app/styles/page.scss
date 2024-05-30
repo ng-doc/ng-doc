@@ -39,8 +39,6 @@ article {
   }
 
   header#{$class} {
-    margin-bottom: calc(var(--ng-doc-base-gutter) * 3);
-
     .ng-doc-declaration-details {
       list-style: none;
       padding: 0;

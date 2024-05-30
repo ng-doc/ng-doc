@@ -41,6 +41,7 @@
 - Component/Directive/Pipe selectors now are used as keywords by default, they'll be automatically
   converted to API links inside inline code or code blocks with the `HTML` language specified.
 - Added support for `@deprecated` JSDoc tag
+- Added support for `@internal` JSDoc tag
 - added a new `NgDocApi` class that you can use in your guides to display API tables for the
   provided declaration path.
 - added a new `NgDocApi.api` method that generates API tables for the provided declaration path.

@@ -6,7 +6,7 @@ export {
   declarationImport,
   displayReturnType,
   displayType,
-  excludeByTsDocsTags,
+  excludeByJsDocTags,
   extractSelectors,
   filterByScope,
   filterByStatic,

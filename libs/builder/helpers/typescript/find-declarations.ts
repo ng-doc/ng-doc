@@ -3,6 +3,7 @@ import { sync } from 'fast-glob';
 import { ExportedDeclarations, Project, SourceFile } from 'ts-morph';
 
 import { NgDocSupportedDeclaration } from '../../types';
+import { isPublicDeclaration } from '../is-public-declaration';
 import { isSupportedDeclaration } from '../is-supported-declaration';
 
 /**
@@ -31,7 +32,7 @@ export function findDeclarations(
     .map((sourceFile: SourceFile) => Array.from(sourceFile.getExportedDeclarations().values()))
     .flat(2)
     .reduce((acc: Map<string, NgDocSupportedDeclaration>, declaration: ExportedDeclarations) => {
-      if (isSupportedDeclaration(declaration)) {
+      if (isSupportedDeclaration(declaration) && isPublicDeclaration(declaration)) {
         const filePath = declaration.getSourceFile().getFilePath();
         const name = declaration.getName();
 

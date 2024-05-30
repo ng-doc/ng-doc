@@ -26,6 +26,7 @@ export * from './get-page-type';
 export * from './import-esm';
 export * from './import-fresh-esm';
 export * from './is-not-excluded-path';
+export * from './is-public-declaration';
 export * from './is-supported-declaration';
 export * from './markdown-to-html';
 export * from './mini-pattern';
