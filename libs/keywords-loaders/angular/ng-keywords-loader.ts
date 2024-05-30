@@ -12,24 +12,30 @@ import { NgKeywordLoaderOptions, NgPage, NgResponse } from './interfaces';
  * @param options
  */
 export function ngKeywordsLoader(options?: NgKeywordLoaderOptions): NgDocKeywordsLoader {
-	return async () => {
-		const { pages }: NgResponse = await fetchDocs(options?.version);
+  return async () => {
+    try {
+      const { pages }: NgResponse = await fetchDocs(options?.version);
 
-		return pages
-			.filter((page: NgPage) => page.path.startsWith('api'))
-			.filter((page: NgPage) => ngApiPageTypes.includes(page.type))
-			.map((page: NgPage) => ngPageToKeyword(page, options?.version))
-			.flat()
-			.reduce(
-				(
-					keywords: Record<string, NgDocGlobalKeyword>,
-					[key, keyword]: [string, NgDocGlobalKeyword],
-				) => {
-					keywords[key] = keyword;
+      return pages
+        .filter((page: NgPage) => page.path.startsWith('api'))
+        .filter((page: NgPage) => ngApiPageTypes.includes(page.type))
+        .map((page: NgPage) => ngPageToKeyword(page, options?.version))
+        .flat()
+        .reduce(
+          (
+            keywords: Record<string, NgDocGlobalKeyword>,
+            [key, keyword]: [string, NgDocGlobalKeyword],
+          ) => {
+            keywords[key] = keyword;
 
-					return keywords;
-				},
-				{},
-			);
-	};
+            return keywords;
+          },
+          {},
+        );
+    } catch (error: unknown) {
+      console.error(`Failed to load Angular keywords: ${error}`);
+
+      return {};
+    }
+  };
 }

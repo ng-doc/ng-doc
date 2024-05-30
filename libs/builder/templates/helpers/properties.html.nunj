@@ -1,6 +1,7 @@
 {% import "helpers/type.html.nunj" as typeMacro %}
 {% import "helpers/declaration-modifiers.html.nunj" as tagsMacro %}
 {% import "helpers/decorators.html.nunj" as decoratorsMacro %}
+{% import "helpers/deprecated.html.nunj" as deprecatedMacro %}
 
 {% macro render(properties, origin) %}
     <table class="ng-doc-api-table sticky first-colum-highlighted">
@@ -19,10 +20,10 @@
             {% set implementedMember = property | getImplementedMember %}
             {% set docNode = propertyChain | firstNodeWithComment %}
 
-            <tr dataSlug="{{ property.getName() }}" dataSlugType="member">
+            <tr class="{{ deprecatedMacro.class(property) }}" dataSlug="{{ property.getName() }}" dataSlugType="member">
                 <td indexable="false">
                     {{ decoratorsMacro.render(property.getDecorators(), true) if property.getDecorators }}
-                    {{ property.getName() }}{{ tagsMacro.render(property, "badge") }}
+                    <span>{{ property.getName() }}{{ tagsMacro.render(property, "badge") }}</span>
                     <div class="ng-doc-node-details">
                         {%- if inheritedFrom %}
                             inherited from <code>{{ inheritedFrom.getName() }}</code>
@@ -36,7 +37,12 @@
                     </div>
                 </td>
                 <td>{{ typeMacro.type(property) }}</td>
-                <td>{{ docNode | getJsDocDescription }}</td>
+                <td>
+                    <div class="ng-doc-api-status">
+                        {{ deprecatedMacro.render(property) }}
+                    </div>
+                    {{ docNode | getJsDocDescription }}
+                </td>
             </tr>
         {%- endfor %}
         </tbody>

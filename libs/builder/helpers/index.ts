@@ -18,7 +18,6 @@ export * from './generate-api-entities';
 export * from './get-code-type-from-lang';
 export * from './get-declaration-by-path';
 export * from './get-declaration-type';
-export * from './get-demo-class-declarations';
 export * from './get-entity-constructor';
 export * from './get-js-doc';
 export * from './get-keyword-type-from-entity';

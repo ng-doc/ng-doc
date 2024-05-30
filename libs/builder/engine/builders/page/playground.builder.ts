@@ -12,7 +12,7 @@ import { NgDocPage } from '@ng-doc/core';
 import * as path from 'path';
 import { of } from 'rxjs';
 
-import { getDemoClassDeclarations } from '../../../helpers';
+import { getPlaygroundsClassDeclarations } from '../../../helpers';
 import { Builder, FileOutput, watchFile } from '../../core';
 import { EntryMetadata } from '../interfaces';
 
@@ -28,7 +28,7 @@ export const PAGE_PLAYGROUND_BUILDER_TAG = 'PagePlayground';
  */
 export function playgroundBuilder(config: Config): Builder<FileOutput> {
   const { page } = config;
-  const references = Object.values(getDemoClassDeclarations(page.objectExpression)).map(
+  const references = getPlaygroundsClassDeclarations(page.objectExpression()).map(
     (classDeclaration) => classDeclaration.getSourceFile(),
   );
   const outPath = path.join(page.outDir, 'playgrounds.ts');
@@ -46,14 +46,14 @@ export function playgroundBuilder(config: Config): Builder<FileOutput> {
           sourceFile.refreshFromFileSystemSync();
         });
 
-        const playgroundMetadata = getPlaygroundMetadata(page.entry, page.objectExpression);
+        const playgroundMetadata = getPlaygroundMetadata(page.entry, page.objectExpression());
 
         return {
           filePath: outPath,
           content: renderTemplate('./playgrounds.ts.nunj', {
             context: {
               playgroundMetadata,
-              hasImports: !!page.objectExpression?.getProperty('imports'),
+              hasImports: !!page.objectExpression().getProperty('imports'),
               entryImportPath: createImportPath(page.outDir, path.join(page.dir, PAGE_NAME)),
             },
           }),

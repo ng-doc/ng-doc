@@ -1,64 +1,45 @@
+import { GLOBALS } from '@ng-doc/builder';
 import * as watcher from '@parcel/watcher';
-import * as path from 'path';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { filter, map, share } from 'rxjs/operators';
 
-const WATCHER_POOL = new Map<string, Observable<watcher.Event[]>>();
-const WATCHER_POOL_COUNT = new Map<string, number>();
+let WATCHER: Observable<watcher.Event[]> | null = null;
 
 /**
  *
  * @param dirPath
  */
 export function watch(dirPath: string): Observable<watcher.Event[]> {
-  const parentDir = Array.from(WATCHER_POOL.keys()).find((p) =>
-    path.relative(dirPath, p).startsWith('..'),
-  );
+  if (!WATCHER) {
+    let unsubscribe = () => {};
 
-  if (parentDir) {
-    return WATCHER_POOL.get(parentDir)!.pipe(
-      map((events) => events.filter((event) => event.path.startsWith(dirPath))),
-      filter((events) => events.length > 0),
-    );
-  }
+    WATCHER = new Observable<watcher.Event[]>((subscriber) => {
+      watcher
+        .subscribe(
+          GLOBALS.workspaceRoot,
+          (err, events) => {
+            if (err) {
+              console.error(err);
+              subscriber.error(err);
 
-  const watcherSubject = new Subject<watcher.Event[]>();
-  let unsubscribe = () => {};
+              return;
+            }
 
-  watcher
-    .subscribe(dirPath, (err, events) => {
-      if (err) {
-        console.error(err);
-
-        watcherSubject.error(err);
-        return;
-      }
-
-      watcherSubject.next(events);
-    })
-    .then((unsub) => (unsubscribe = unsub.unsubscribe));
-
-  WATCHER_POOL.set(
-    dirPath,
-    new Observable<watcher.Event[]>((subscriber) => {
-      watcherSubject.subscribe(subscriber);
-
-      WATCHER_POOL_COUNT.set(dirPath, (WATCHER_POOL_COUNT.get(dirPath) || 0) + 1);
+            subscriber.next(events);
+          },
+          { ignore: ['node_modules'] },
+        )
+        .then((unsub) => (unsubscribe = unsub.unsubscribe));
 
       return () => {
-        const count = WATCHER_POOL_COUNT.get(dirPath)! - 1;
-
-        if (count === 0) {
-          unsubscribe();
-          watcherSubject.complete();
-          WATCHER_POOL.delete(dirPath);
-          WATCHER_POOL_COUNT.delete(dirPath);
-        } else {
-          WATCHER_POOL_COUNT.set(dirPath, count);
-        }
+        unsubscribe();
+        WATCHER = null;
       };
-    }).pipe(share()),
-  );
+    }).pipe(share());
+  }
 
-  return WATCHER_POOL.get(dirPath)!;
+  return WATCHER.pipe(
+    map((events) => events.filter((event) => event.path.endsWith(dirPath))),
+    filter((events) => events.length > 0),
+  );
 }

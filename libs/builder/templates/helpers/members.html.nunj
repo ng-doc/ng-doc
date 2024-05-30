@@ -1,3 +1,5 @@
+{% import "helpers/deprecated.html.nunj" as deprecatedMacro %}
+
 {% macro render(members) %}
     <table class="ng-doc-api-table sticky first-colum-highlighted">
         <thead>
@@ -9,11 +11,17 @@
         </thead>
         <tbody>
         {% for member in members %}
-            <tr>
+            <tr class="{{ deprecatedMacro.class(member) }}">
                 <td indexable="false" dataSlug="{{ member.getName() }}"
                     dataSlugType="member">{{ member.getName() }} </td>
                 <td indexable="false"><code>{{ member.getValue() | dump }}</code></td>
-                <td>{{ member | getJsDocDescription }} </td>
+                <td>
+                    <div class="ng-doc-api-status">
+                        {{ deprecatedMacro.render(member) }}
+                    </div>
+
+                    {{ member | getJsDocDescription }}
+                </td>
             </tr>
         {% endfor %}
         </tbody>

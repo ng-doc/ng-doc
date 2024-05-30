@@ -86,7 +86,7 @@ export function guideTemplateBuilder(config: Config): Builder<TemplateBuilderOut
         metadata,
         pageType: 'guide',
         entryPath: pageMetadata.path,
-        entryHasImports: !!pageMetadata.objectExpression.getProperty('imports'),
+        entryHasImports: !!pageMetadata.objectExpression().getProperty('imports'),
         demoAssetsPath: path.join(pageMetadata.outDir, 'demo-assets.ts'),
         playgroundsPath: path.join(pageMetadata.outDir, 'playgrounds.ts'),
       },

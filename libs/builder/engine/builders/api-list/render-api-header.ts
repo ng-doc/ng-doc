@@ -13,10 +13,14 @@ interface Config {
  */
 export function renderApiHeader(config: Config): string {
   const { metadata } = config;
+  const declaration = metadata.entry.declaration;
 
   return renderTemplate('./api-header.html.nunj', {
     context: {
-      declaration: metadata.entry.declaration,
+      declaration,
+      docNode: Node.isVariableDeclaration(declaration)
+        ? declaration.getVariableStatement()
+        : declaration,
       scope: metadata.entry.scope,
       Node: Node,
     },

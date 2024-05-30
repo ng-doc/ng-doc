@@ -32,6 +32,7 @@ export {
   getOverriddenMember,
   getPropertyChain,
   groupAccessors,
+  hasJsDocTag,
   markdownToHtml,
   methodPresentation,
   noEmpty,

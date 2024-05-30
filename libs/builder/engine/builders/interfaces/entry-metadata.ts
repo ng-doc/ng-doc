@@ -1,5 +1,6 @@
 import { NgDocApi, NgDocCategory, NgDocPage } from '@ng-doc/core';
 import { minimatch } from 'minimatch';
+import { Observable } from 'rxjs';
 import { ObjectLiteralExpression, SourceFile } from 'ts-morph';
 
 import { PAGE_PATTERN } from '../../variables';
@@ -17,8 +18,10 @@ export interface EntryMetadata<T extends Entry = Entry> {
   keywordTitle: string;
   absoluteRoute: () => string;
   breadcrumbs: () => string[];
+  refresh: () => Promise<void>;
+  selfDestroy: Observable<void>;
   sourceFile: SourceFile;
-  objectExpression: ObjectLiteralExpression;
+  objectExpression: () => ObjectLiteralExpression;
   parent: ParentEntryMetadata<T>;
   entry: T;
   order?: number;

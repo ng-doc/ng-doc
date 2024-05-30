@@ -39,9 +39,6 @@ article {
   }
 
   header#{$class} {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
     margin-bottom: calc(var(--ng-doc-base-gutter) * 3);
 
     .ng-doc-declaration-details {

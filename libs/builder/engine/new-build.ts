@@ -2,6 +2,7 @@ import {
   disableCache,
   emitFileOutput,
   entriesEmitter,
+  GLOBALS,
   isBuilderDone,
   loadGlobalKeywords,
   printBuildProgress,
@@ -25,6 +26,9 @@ import { invalidateCacheIfNeeded } from './entities/cache';
 export function newBuild(context: NgDocBuilderContext): Observable<void> {
   let count = 0;
   console.time('build');
+
+  // Set global variables
+  GLOBALS.workspaceRoot = context.context.workspaceRoot;
 
   if (!context.config.cache) {
     disableCache();

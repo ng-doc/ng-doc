@@ -6,7 +6,7 @@
 {% set hasTypeParameters = typeParameters | trim | length %}
 
 {% if hasTypeParameters %}
-    <table class="ng-doc-api-table no-padding">
+    <table class="ng-doc-api-table no-padding no-full-width">
         <tbody>
         {{ typeParameters }}
         </tbody>

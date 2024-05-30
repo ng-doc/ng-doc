@@ -12,6 +12,10 @@
 table.ng-doc-api-table {
   overflow: scroll;
 
+  &.no-full-width {
+    width: unset;
+  }
+
   &.no-padding {
     tbody tr td,
     thead tr th {

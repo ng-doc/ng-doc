@@ -5,6 +5,7 @@
 {% import "helpers/decorators.html.nunj" as decoratorsMacro %}
 {% import "helpers/no-content.html.nunj" as noContentMacro %}
 {% import "helpers/modifier.html.nunj" as modifierMacro %}
+{% import "helpers/deprecated.html.nunj" as deprecatedMacro %}
 
 {% macro render(accessor, origin) %}
     {% macro renderAccessor(accessor, type, origin) %}
@@ -15,7 +16,7 @@
         {% set implementedMember = accessor | getImplementedMember %}
         {% set docNode = accessorChain | firstNodeWithComment %}
 
-        <table>
+        <table class="{{ deprecatedMacro.class(method) }}">
             <thead>
             <tr>
                 <th indexable="false">
@@ -40,6 +41,10 @@
             <tbody>
             <tr>
                 <td>
+                    <div class="ng-doc-api-status">
+                        {{ deprecatedMacro.render(method) }}
+                    </div>
+
                     {% set description = docNode | getJsDocDescription %}
 
                     {{ description if description else noContentMacro.render('No documentation has been provided.') }}

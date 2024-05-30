@@ -1,10 +1,8 @@
 import {
   createBuilder,
   createImportPath,
-  createSecondaryTrigger,
   IndexStore,
   NgDocBuilderContext,
-  onKeywordsTouch,
   postProcessHtml,
   processHtml,
   replaceKeywords,
@@ -93,7 +91,14 @@ export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput> {
       }),
     );
 
-  return createBuilder([createSecondaryTrigger(onKeywordsTouch(usedKeywords))], builder, true);
+  // This trigger destroys child content builder. HEADER builder should be moved to a separate builder to avoid that
+  return createBuilder(
+    [
+      /*createSecondaryTrigger(onKeywordsTouch(usedKeywords))*/
+    ],
+    builder,
+    true,
+  );
 }
 
 /**

@@ -8,7 +8,7 @@
 {% set extends = declaration.getExtends() %}
 
 {% if hasTypeParameters or extends.length %}
-    <table class="ng-doc-api-table no-padding">
+    <table class="ng-doc-api-table no-padding no-full-width">
         <tbody>
         {{ typeParameters }}
 

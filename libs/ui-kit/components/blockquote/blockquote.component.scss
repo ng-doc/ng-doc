@@ -1,43 +1,47 @@
 @import '../../styles/mixins';
 
 :host {
-	@include alpha-background(var(--ng-doc-blockquote-background, var(--ng-doc-base-9)), 0.1);
-	@include alpha-border(var(--ng-doc-blockquote-border-color, var(--ng-doc-base-9)), 0.2);
-	@include ng-doc-font();
+  @include alpha-background(var(--ng-doc-blockquote-background, var(--ng-doc-base-9)), 0.1);
+  @include alpha-border(var(--ng-doc-blockquote-border-color, var(--ng-doc-base-9)), 0.2);
+  @include ng-doc-font();
 
-	position: relative;
-	display: flex;
-	padding: calc(var(--ng-doc-base-gutter) * 2);
-	border-radius: var(--ng-doc-base-gutter);
-	margin: var(--ng-doc-blockquote-margin);
-	overflow: hidden;
+  position: relative;
+  display: flex;
+  padding: calc(var(--ng-doc-base-gutter) * 2);
+  border-radius: var(--ng-doc-base-gutter);
+  margin: var(--ng-doc-blockquote-margin);
+  overflow: hidden;
 
-	--ng-doc-code-margin: var(--ng-doc-base-gutter) 0;
+  --ng-doc-code-margin: var(--ng-doc-base-gutter) 0;
 
-	&[data-ng-doc-type='note'] {
-		--ng-doc-blockquote-background: var(--ng-doc-info);
-		--ng-doc-blockquote-border-color: var(--ng-doc-info);
-		--ng-doc-icon-color: var(--ng-doc-info);
-	}
+  &[data-ng-doc-type='note'] {
+    --ng-doc-blockquote-background: var(--ng-doc-info);
+    --ng-doc-blockquote-border-color: var(--ng-doc-info);
+    --ng-doc-icon-color: var(--ng-doc-info);
+  }
 
-	&[data-ng-doc-type='warning'] {
-		--ng-doc-blockquote-background: var(--ng-doc-warning);
-		--ng-doc-blockquote-border-color: var(--ng-doc-warning);
-		--ng-doc-icon-color: var(--ng-doc-warning);
-	}
+  &[data-ng-doc-type='warning'] {
+    --ng-doc-blockquote-background: var(--ng-doc-warning);
+    --ng-doc-blockquote-border-color: var(--ng-doc-warning);
+    --ng-doc-icon-color: var(--ng-doc-warning);
+  }
 
-	&[data-ng-doc-type='alert'] {
-		--ng-doc-blockquote-background: var(--ng-doc-alert);
-		--ng-doc-blockquote-border-color: var(--ng-doc-alert);
-		--ng-doc-icon-color: var(--ng-doc-alert);
-	}
+  &[data-ng-doc-type='alert'] {
+    --ng-doc-blockquote-background: var(--ng-doc-alert);
+    --ng-doc-blockquote-border-color: var(--ng-doc-alert);
+    --ng-doc-icon-color: var(--ng-doc-alert);
+  }
 
-	.ng-doc-blockquote-icon {
-		display: flex;
-		margin-right: calc(var(--ng-doc-base-gutter) * 2);
-	}
+  .ng-doc-blockquote-icon {
+    display: flex;
+    margin-right: calc(var(--ng-doc-base-gutter) * 2);
+  }
 
-	::ng-deep p {
-		margin: 0;
-	}
+  .ng-doc-blockquote {
+    text-decoration: none;
+  }
+
+  ::ng-deep p {
+    margin: 0;
+  }
 }

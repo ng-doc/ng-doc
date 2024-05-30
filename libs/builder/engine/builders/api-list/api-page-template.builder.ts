@@ -1,5 +1,5 @@
 import { kebabCase, NgDocApiScope } from '@ng-doc/core';
-import { finalize, takeUntil } from 'rxjs';
+import { finalize, merge, takeUntil } from 'rxjs';
 import { Node } from 'ts-morph';
 
 import { NgDocBuilderContext } from '../../../interfaces';
@@ -54,8 +54,13 @@ export function apiPageTemplateBuilder(config: Config): Builder<TemplateBuilderO
             cacheId: `${declPath}#Api`,
             metadata: tabMetadata,
             getKeywords: buildApiKeywords(metadata),
-            getContent: async () =>
-              renderTemplate('./api-page-content.html.nunj', {
+            getContent: async () => {
+              await metadata.refresh();
+
+              // refreshed declaration
+              const declaration = metadata.entry.declaration;
+
+              return renderTemplate('./api-page-content.html.nunj', {
                 context: {
                   declaration,
                   docNode: Node.isVariableDeclaration(declaration)
@@ -64,7 +69,8 @@ export function apiPageTemplateBuilder(config: Config): Builder<TemplateBuilderO
                   templateName: kebabCase(declaration.getKindName()),
                   scope,
                 },
-              }),
+              });
+            },
           }),
         ],
         async (content) => {
@@ -82,9 +88,11 @@ export function apiPageTemplateBuilder(config: Config): Builder<TemplateBuilderO
       lineNumber: declaration.getStartLineNumber(),
     },
   ).pipe(
-    takeUntil(watchFile(declPath, 'delete')),
+    takeUntil(merge(watchFile(declPath, 'delete'), metadata.selfDestroy)),
     finalize(() => {
       PageStore.delete(pageKey);
+
+      console.log('API page template builder destroyed', pageKey);
     }),
   );
 }

@@ -19,7 +19,7 @@
 {% set implements = declaration.getImplements() %}
 
 {% if hasTypeParameters or hasDecorators or hasSelectors or extends or implements.length %}
-    <table class="ng-doc-api-table no-padding">
+    <table class="ng-doc-api-table no-padding no-full-width">
         <tbody>
         {{ decorators }}
         {{ typeParameters }}

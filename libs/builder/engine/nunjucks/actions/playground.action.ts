@@ -14,7 +14,7 @@ export function playgroundAction(
   options?: NgDocPlaygroundOptions,
 ): NgDocAction<string> {
   return (page) => {
-    const playgroundMetadata = getPlaygroundMetadata(page.parent.entry, page.objectExpression);
+    const playgroundMetadata = getPlaygroundMetadata(page.parent.entry, page.objectExpression());
     const metadata: NgDocPlaygroundMetadata | undefined = playgroundMetadata[pId];
 
     if (metadata) {

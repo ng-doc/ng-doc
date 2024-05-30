@@ -38,7 +38,7 @@ export const PAGE_DEMO_ASSETS_BUILDER_TAG = 'PageDemoAssets';
  */
 export function demoAssetsBuilder(config: Config): Builder<AsyncFileOutput> {
   const { context, page } = config;
-  const references = Object.values(getDemoClassDeclarations(page.objectExpression)).map(
+  const references = Object.values(getDemoClassDeclarations(page.objectExpression())).map(
     (classDeclaration) => classDeclaration.getSourceFile(),
   );
   const usedKeywords = new Set<string>();
@@ -59,7 +59,7 @@ export function demoAssetsBuilder(config: Config): Builder<AsyncFileOutput> {
       async () => {
         usedKeywords.clear();
 
-        const classDeclarations = getDemoClassDeclarations(page.objectExpression);
+        const classDeclarations = getDemoClassDeclarations(page.objectExpression());
 
         const demoAssets: NgDocComponentAsset = Object.keys(classDeclarations).reduce(
           (acc: NgDocComponentAsset, key: string) =>

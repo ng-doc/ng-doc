@@ -1,6 +1,7 @@
 import { asArray } from '@ng-doc/core';
 import { minimatch } from 'minimatch';
 import path from 'path';
+import { NEVER } from 'rxjs';
 import { SourceFile } from 'ts-morph';
 
 import { getObjectExpressionFromDefault } from '../../../helpers';
@@ -28,14 +29,7 @@ export function createEntryMetadata<T extends FileEntry>(
   const route = getEntryRoute(entry, entryPath);
   const categorySourceFile = entry.category && getCategorySourceFile(sourceFile);
   const outDir = getEntryOutDir(context, entry, entryPath);
-  const objectExpression = getObjectExpressionFromDefault(sourceFile);
   const isCategory = minimatch(entryPath, CATEGORY_PATTERN);
-
-  if (!objectExpression) {
-    throw new Error(
-      `No object expression found in ${entryPath}, make sure the file has a default export.`,
-    );
-  }
 
   return {
     dir,
@@ -44,7 +38,17 @@ export function createEntryMetadata<T extends FileEntry>(
     outDir,
     outPath: path.join(outDir, 'page.ts'),
     sourceFile,
-    objectExpression,
+    objectExpression: () => {
+      const objectExpression = getObjectExpressionFromDefault(sourceFile);
+
+      if (!objectExpression) {
+        throw new Error(
+          `No object expression found in ${entryPath}, make sure the file has a default export.`,
+        );
+      }
+
+      return objectExpression;
+    },
     path: entryPath,
     title: entry.title,
     keywordTitle: entry.title,
@@ -58,6 +62,8 @@ export function createEntryMetadata<T extends FileEntry>(
     breadcrumbs: function (): string[] {
       return asArray(this.parent?.breadcrumbs(), this.entry.title);
     },
+    refresh: async function (): Promise<void> {},
+    selfDestroy: NEVER,
     // @ts-expect-error - This is a valid assignment
     parent:
       entry.category && categorySourceFile

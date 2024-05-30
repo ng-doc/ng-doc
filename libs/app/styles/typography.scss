@@ -134,7 +134,7 @@ pre#{$class} {
   font-family: var(--ng-doc-code-font);
   font-size: 14px;
   font-weight: var(--ng-doc-code-font-weight);
-  line-height: var(--ng-doc-line-height);
+  line-height: var(--ng-doc-code-line-height, var(--ng-doc-line-height));
   white-space: nowrap;
 }
 
