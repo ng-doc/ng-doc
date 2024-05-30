@@ -16,7 +16,7 @@
         {% set implementedMember = accessor | getImplementedMember %}
         {% set docNode = accessorChain | firstNodeWithComment %}
 
-        <table class="{{ deprecatedMacro.class(method) }}">
+        <table class="{{ deprecatedMacro.class(accessor) }}">
             <thead>
             <tr>
                 <th indexable="false">
@@ -42,7 +42,7 @@
             <tr>
                 <td>
                     <div class="ng-doc-api-status">
-                        {{ deprecatedMacro.render(method) }}
+                        {{ deprecatedMacro.render(accessor) }}
                     </div>
 
                     {% set description = docNode | getJsDocDescription %}
