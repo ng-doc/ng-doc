@@ -14,6 +14,10 @@
   & > *:first-child {
     margin-top: 0 !important;
   }
+
+  &:empty {
+    display: none;
+  }
 }
 
 .ng-doc-deprecated-notes {

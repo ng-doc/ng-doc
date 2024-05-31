@@ -14,6 +14,8 @@
   markdown file.
 - added `description` field to the `NgDocPage` interface, it is used to specify the description of
   the doc page, and will be displayed in the page header.
+- Add support for nested types for keyword usages, it means long inline code that use several types
+  inside will be displayed correctly. This feature highly improves readability of the API types.
 - added `headerTemplate` property to guides configuration, it is used to specify the header template
   for the guide page that can be used to customize header for each guide page.
 - Bunch of different fixes that resolve interface glitches and highly improve hydration and
@@ -36,18 +38,16 @@
 
 ## API
 
-- Add support for nested types for keyword usages, it means long inline code that use several types
-  inside will be displayed correctly. This feature highly improves readability of the API types.
 - Component/Directive/Pipe selectors now are used as keywords by default, they'll be automatically
   converted to API links inside inline code or code blocks with the `HTML` language specified.
 - Added support for `@deprecated` JSDoc tag
 - Added support for `@internal` JSDoc tag
-- added a new `NgDocApi` class that you can use in your guides to display API tables for the
+- added a new `NgDocApi` class that you can use in your guides to display API info for the
   provided declaration path.
 - added a new `NgDocApi.api` method that generates API tables for the provided declaration path.
 - added a new `NgDocApi.details` method that generates API details with information about generic
-  types, decorators, selectors, etc.
-- API references now display function and method overloads
+  types, decorators, selectors, etc. based on the provided declaration type.
+- API now displays function and method overloads
 - added a new `JSDoc` class that you can use in your guides to display JSDoc comments for the
   provided declaration path.
 - added new `JSDoc.description` method that returns the JSDoc description for the provided
@@ -65,9 +65,9 @@ TODO:
 - image viewer
 - docs for theming
 - update schematics for page generation based on the new API
-- add more actions for API to be able to generate better page details
 - improve cache by using lmdb library
 - check order of API properties modificators
+- home icon in breadcrumbs
 
 Inspirations:
 https://mui.com/base-ui/react-autocomplete/
