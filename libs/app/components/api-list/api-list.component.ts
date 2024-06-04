@@ -1,6 +1,6 @@
 import { AsyncPipe, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, Signal } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -15,6 +15,8 @@ import { asArray } from '@ng-doc/core/helpers/as-array';
 import { NgDocApiList, NgDocApiListItem } from '@ng-doc/core/interfaces';
 import {
   NgDocAutofocusDirective,
+  NgDocButtonComponent,
+  NgDocButtonToggleComponent,
   NgDocComboboxComponent,
   NgDocDataDirective,
   NgDocIconComponent,
@@ -23,14 +25,13 @@ import {
   NgDocLabelComponent,
   NgDocListComponent,
   NgDocOptionComponent,
+  NgDocRadioGroupDirective,
   NgDocTextComponent,
   NgDocTextLeftDirective,
   NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
-import { ngDocMakePure } from '@ng-doc/ui-kit/decorators';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { combineLatest, Observable, of, tap } from 'rxjs';
-import { debounceTime, map, startWith } from 'rxjs/operators';
+import { startWith } from 'rxjs/operators';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 
 interface ApiFilterForm {
   filter: FormControl<string | null>;
@@ -65,16 +66,21 @@ interface ApiFilterForm {
     NgDocTooltipDirective,
     RouterLink,
     AsyncPipe,
+    NgDocButtonComponent,
+    NgDocRadioGroupDirective,
+    NgDocButtonToggleComponent,
   ],
 })
-@UntilDestroy()
 export class NgDocApiListComponent {
-  @Input()
-  segment?: string;
+  segment = input<string>();
+
+  apiList: Signal<NgDocApiList[]>;
+  filteredApiList: Signal<NgDocApiList[]>;
+  filter: Signal<any>;
+  scopes: Signal<string[]>;
+  types: Signal<string[]>;
 
   protected formGroup: FormGroup<ApiFilterForm>;
-  protected api$: Observable<NgDocApiList[]> = of([]);
-  protected apiList: NgDocApiList[] = [];
 
   private readonly formBuilder = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
@@ -88,7 +94,29 @@ export class NgDocApiListComponent {
       type: [''],
     });
 
-    this.route.queryParamMap.pipe(untilDestroyed(this)).subscribe((paramMap: ParamMap) =>
+    this.filter = toSignal(this.formGroup.valueChanges.pipe(startWith(this.formGroup.value)), {
+      initialValue: this.formGroup.value,
+    });
+    this.apiList = toSignal(
+      this.httpClient.get<NgDocApiList[]>(
+        asArray('assets/ng-doc', this.segment(), 'api-list.json').join('/'),
+      ),
+      { initialValue: [] },
+    );
+    this.scopes = computed(() =>
+      asArray(new Set(this.apiList().flatMap((api: NgDocApiList) => api.title))).sort(),
+    );
+    this.types = computed(() =>
+      asArray(
+        new Set(
+          this.apiList()
+            .flatMap((api: NgDocApiList) => api.items)
+            .flatMap((item: NgDocApiListItem) => item.type),
+        ),
+      ).sort(),
+    );
+
+    this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((paramMap: ParamMap) =>
       this.formGroup.setValue({
         filter: paramMap.get('filter') || null,
         scope: paramMap.get('scope') || null,
@@ -97,7 +125,7 @@ export class NgDocApiListComponent {
     );
 
     this.formGroup.valueChanges
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed())
       .subscribe((formValue: NgDocFormPartialValue<typeof this.formGroup>) =>
         this.router.navigate([], {
           relativeTo: this.route,
@@ -106,51 +134,25 @@ export class NgDocApiListComponent {
         }),
       );
 
-    const apiList$ = this.httpClient
-      .get<NgDocApiList[]>(asArray('assets/ng-doc', this.segment, 'api-list.json').join('/'))
-      .pipe(tap((apiList) => (this.apiList = apiList)));
+    this.filteredApiList = computed(() => {
+      const { filter, scope, type } = this.filter();
 
-    const filterChanges = this.formGroup.valueChanges.pipe(
-      debounceTime(100),
-      startWith(null),
-      map(() => this.formGroup.value),
-    );
-
-    this.api$ = combineLatest([apiList$, filterChanges]).pipe(
-      map(([apiList, form]) =>
-        apiList
-          .filter((api: NgDocApiList) => !form?.scope || api.title === form?.scope)
-          .map((api: NgDocApiList) => ({
-            ...api,
-            items: api.items
-              .filter(
-                (item: NgDocApiListItem) =>
-                  item.name.toLowerCase().includes(form?.filter?.toLowerCase() ?? '') &&
-                  (!form?.type || item.type === form?.type),
-              )
-              .sort(
-                (a: NgDocApiListItem, b: NgDocApiListItem) =>
-                  a.type.localeCompare(b.type) || a.name.localeCompare(b.name),
-              ),
-          }))
-          .filter((api: NgDocApiList) => api.items.length),
-      ),
-    );
-  }
-
-  @ngDocMakePure
-  get scopes(): string[] {
-    return asArray(new Set(this.apiList.flatMap((api: NgDocApiList) => api.title))).sort();
-  }
-
-  @ngDocMakePure
-  get types(): string[] {
-    return asArray(
-      new Set(
-        this.apiList
-          .flatMap((api: NgDocApiList) => api.items)
-          .flatMap((item: NgDocApiListItem) => item.type),
-      ),
-    ).sort();
+      return this.apiList()
+        .filter((api: NgDocApiList) => !scope || api.title === scope)
+        .map((api: NgDocApiList) => ({
+          ...api,
+          items: api.items
+            .filter(
+              (item: NgDocApiListItem) =>
+                item.name.toLowerCase().includes(filter?.toLowerCase() ?? '') &&
+                (!type || item.type === type),
+            )
+            .sort(
+              (a: NgDocApiListItem, b: NgDocApiListItem) =>
+                a.type.localeCompare(b.type) || a.name.localeCompare(b.name),
+            ),
+        }))
+        .filter((api: NgDocApiList) => api.items.length);
+    });
   }
 }

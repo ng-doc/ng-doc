@@ -35,6 +35,7 @@
 - Sidenav and sidebar APIs were changed to support hydration and SSR.
 - All tables become scrollable if they are too wide. First column for API tables is sticky.
 - Heading anchors are now copied to the clipboard when clicked instead of navigating.
+- API References page has been reworked
 
 ## API
 
@@ -68,6 +69,7 @@ TODO:
 - improve cache by using lmdb library
 - check order of API properties modificators
 - home icon in breadcrumbs
+- indexes for NgDocOverlayRef are not correct
 
 Inspirations:
 https://mui.com/base-ui/react-autocomplete/

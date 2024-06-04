@@ -2,22 +2,28 @@
 @import '../../styles/mixins/type-colors';
 
 :host {
-	display: inline-block;
-	width: calc(var(--ng-doc-base-gutter) * 2);
-	height: calc(var(--ng-doc-base-gutter) * 2);
-	border-radius: calc(var(--ng-doc-base-gutter) / 4);
-	font-size: 13px;
-	text-align: center;
-	line-height: calc(var(--ng-doc-base-gutter) * 2);
-	text-transform: uppercase;
-	flex-shrink: 0;
-	font-weight: 700;
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border-radius: calc(var(--ng-doc-base-gutter) / 2);
+  font-size: 13px;
+  text-align: center;
+  line-height: 22px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  font-weight: 700;
 
-	&[data-ng-doc-type='declaration'] {
-		@include entitiesColors('data-ng-doc-kind');
-	}
+  &[data-ng-doc-size='small'] {
+    width: calc(var(--ng-doc-base-gutter) * 2);
+    height: calc(var(--ng-doc-base-gutter) * 2);
+    line-height: calc(var(--ng-doc-base-gutter) * 2);
+  }
 
-	&[data-ng-doc-type='type'] {
-		@include typeColors('data-ng-doc-kind');
-	}
+  &[data-ng-doc-type='declaration'] {
+    @include entitiesColors('data-ng-doc-kind');
+  }
+
+  &[data-ng-doc-type='type'] {
+    @include typeColors('data-ng-doc-kind');
+  }
 }

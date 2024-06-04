@@ -1,65 +1,80 @@
 :host {
-	h1 {
-		margin-top: 0;
-	}
+  h1 {
+    margin-top: 0;
+  }
 
-	.ng-doc-api-list-wrapper {
-		.ng-doc-api-filter {
-			display: flex;
-			margin-top: calc(var(--ng-doc-base-gutter) * 3);
-			flex-wrap: wrap;
-			gap: calc(var(--ng-doc-base-gutter) * 2);
+  .ng-doc-filter-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: calc(var(--ng-doc-base-gutter) * 2);
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
 
-			.ng-doc-api-filter-item {
-				width: 200px;
-			}
-		}
+    .ng-doc-filter-button {
+      ng-doc-kind-icon {
+        margin-right: var(--ng-doc-base-gutter);
+      }
+    }
+  }
 
-		.ng-doc-api-list {
-			margin-top: calc(var(--ng-doc-base-gutter) * 2);
+  .ng-doc-api-list-wrapper {
+    .ng-doc-api-filter {
+      display: flex;
+      margin-top: calc(var(--ng-doc-base-gutter) * 3);
+      flex-wrap: wrap;
+      gap: calc(var(--ng-doc-base-gutter) * 2);
 
-			.ng-doc-api-scope {
-				display: flex;
-				flex-direction: column;
+      .ng-doc-api-filter-item {
+        width: 200px;
+      }
+    }
 
-				.ng-doc-scope-items {
-					margin-top: calc(var(--ng-doc-base-gutter) * 3);
-					list-style: none;
-					padding: 0;
+    .ng-doc-api-list {
+      margin-top: calc(var(--ng-doc-base-gutter) * 2);
 
-					.ng-doc-scope-item {
-						margin: var(--ng-doc-base-gutter) 0;
-						float: left;
-						width: 33%;
-						overflow: hidden;
-						min-width: 330px;
-						text-overflow: ellipsis;
-						white-space: nowrap;
+      .ng-doc-api-scope {
+        display: flex;
+        flex-direction: column;
 
-						.ng-doc-scope-item-link {
-							display: flex;
-							align-items: center;
-							color: var(--ng-doc-text);
-							text-decoration: none;
+        .ng-doc-scope-items {
+          margin-top: calc(var(--ng-doc-base-gutter) * 3);
+          list-style: none;
+          padding: 0;
 
-							&:hover {
-								text-decoration: underline;
-							}
+          .ng-doc-scope-item {
+            margin: var(--ng-doc-base-gutter) 0;
+            float: left;
+            width: 33%;
+            overflow: hidden;
+            min-width: 330px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
 
-							ng-doc-kind-icon {
-								margin-right: var(--ng-doc-base-gutter);
-								text-decoration: none !important;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+            .ng-doc-scope-item-link {
+              display: flex;
+              align-items: center;
+              color: var(--ng-doc-text);
+              text-decoration: none;
 
-	ng-doc-input-wrapper {
-		ng-doc-icon {
-			--ng-doc-icon-color: var(--ng-doc-text-muted);
-		}
-	}
+              &:hover {
+                text-decoration: underline;
+              }
+
+              ng-doc-kind-icon {
+                margin-right: var(--ng-doc-base-gutter);
+                text-decoration: none !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  ng-doc-input-wrapper {
+    ng-doc-icon {
+      --ng-doc-icon-color: var(--ng-doc-text-muted);
+    }
+  }
 }
