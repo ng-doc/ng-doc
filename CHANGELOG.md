@@ -1,3 +1,10 @@
+## [17.6.11](https://github.com/ng-doc/ng-doc/compare/v17.6.10...v17.6.11) (2024-06-06)
+
+
+### Bug Fixes
+
+* **app:** home icon in breadcrumb has invalid path ([8a9bb7e](https://github.com/ng-doc/ng-doc/commit/8a9bb7eacc539796b44afa69191193b476d40e58)), closes [#167](https://github.com/ng-doc/ng-doc/issues/167)
+
 ## [17.6.10](https://github.com/ng-doc/ng-doc/compare/v17.6.9...v17.6.10) (2024-05-27)
 
 
