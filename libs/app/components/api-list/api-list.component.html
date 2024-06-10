@@ -1,6 +1,7 @@
 <h1 ng-doc-text>API References</h1>
 <div class="ng-doc-api-list-wrapper">
   <form [formGroup]="formGroup">
+    <h3>Declaration types</h3>
     <ul class="ng-doc-filter-list" ngDocRadioGroup formControlName="type">
       @for (type of types(); track type) {
         <li>
@@ -12,59 +13,28 @@
       }
     </ul>
 
-    <ng-doc-input-wrapper>
+    <h3>Scopes</h3>
+    <ul class="ng-doc-filter-list" ngDocRadioGroup formControlName="scope">
+      @for (scope of scopes(); track scope) {
+        <li>
+          <button class="ng-doc-filter-button" ng-doc-button-toggle [value]="scope">
+            {{ scope }}
+          </button>
+        </li>
+      }
+    </ul>
+
+    <h3>Filter</h3>
+    <ng-doc-input-wrapper class="ng-doc-api-list-filter-input">
       <ng-doc-icon icon="search" ngDocInputWrapperLeft></ng-doc-icon>
-      <input ngDocInputString formControlName="filter" placeholder="Filter" ngDocAutofocus />
+      <input
+        ngDocInputString
+        formControlName="filter"
+        placeholder="Declaration name..."
+        ngDocAutofocus />
     </ng-doc-input-wrapper>
-
-    <!--    <label class="ng-doc-api-filter-item" ng-doc-label="Filter">-->
-
-    <!--    </label>-->
-
-    <!--    <label class="ng-doc-api-filter-item" ng-doc-label="Scope" *ngIf="scopes.length">-->
-    <!--      <ng-doc-combobox-->
-    <!--        [formControl]="formGroup.controls.scope"-->
-    <!--        [valueContent]="comboboxScopeItem"-->
-    <!--        [readonly]="true"-->
-    <!--        placeholder="Choose the scope">-->
-    <!--        <ng-doc-list *ngDocData>-->
-    <!--          <ng-doc-option *ngFor="let scope of scopes" [value]="scope">-->
-    <!--            <ng-container-->
-    <!--              *ngTemplateOutlet="comboboxScopeItem; context: { $implicit: scope }"></ng-container>-->
-    <!--          </ng-doc-option>-->
-    <!--        </ng-doc-list>-->
-    <!--        <ng-template let-value #comboboxScopeItem>-->
-    <!--          {{ value }}-->
-    <!--        </ng-template>-->
-    <!--      </ng-doc-combobox>-->
-    <!--    </label>-->
-
-    <!--    <label class="ng-doc-api-filter-item" ng-doc-label="Type" *ngIf="types.length">-->
-    <!--      <ng-doc-combobox-->
-    <!--        [formControl]="formGroup.controls.type"-->
-    <!--        [valueContent]="comboboxTypeItem"-->
-    <!--        [readonly]="true"-->
-    <!--        placeholder="Choose the entity type">-->
-    <!--        <ng-doc-list *ngDocData>-->
-    <!--          <ng-doc-option *ngFor="let type of types" [value]="type">-->
-    <!--            <ng-container-->
-    <!--              *ngTemplateOutlet="comboboxTypeItem; context: { $implicit: type }"></ng-container>-->
-    <!--          </ng-doc-option>-->
-    <!--        </ng-doc-list>-->
-    <!--        <ng-template let-value #comboboxTypeItem>-->
-    <!--          <div ng-doc-text>-->
-    <!--            <ng-doc-kind-icon-->
-    <!--              [kind]="value"-->
-    <!--              [ngDocTooltip]="value"-->
-    <!--              [positions]="['left-center', 'right-center']"-->
-    <!--              ngDocTextLeft>-->
-    <!--            </ng-doc-kind-icon>-->
-    <!--            {{ value }}-->
-    <!--          </div>-->
-    <!--        </ng-template>-->
-    <!--      </ng-doc-combobox>-->
-    <!--    </label>-->
   </form>
+
   <div class="ng-doc-api-list">
     <div class="ng-doc-api-scope" *ngFor="let scope of filteredApiList()">
       <h3 class="ng-doc-scope-title" ng-doc-text>{{ scope.title }}</h3>

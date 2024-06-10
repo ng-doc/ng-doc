@@ -17,6 +17,6 @@ export class NgDocButtonToggleComponent<T> extends DIStateControl<T> {
 
   @HostListener('click')
   clickEvent() {
-    this.check();
+    this.updateModel(this.checked() ? null : this.value);
   }
 }

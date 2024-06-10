@@ -1,3 +1,5 @@
+@import '../../../ui-kit/styles/mixins';
+
 :host {
   h1 {
     margin-top: 0;
@@ -5,20 +7,42 @@
 
   .ng-doc-filter-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: calc(var(--ng-doc-base-gutter) * 2);
-    flex-wrap: wrap;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--ng-doc-base-gutter);
     list-style: none;
     padding: 0;
 
+    @container api-list-wrapper (max-width: 775px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @container api-list-wrapper (max-width: 600px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @container api-list-wrapper (max-width: 500px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @container api-list-wrapper (max-width: 350px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+
     .ng-doc-filter-button {
+      justify-content: flex-start;
+      text-wrap: nowrap;
+      width: 100%;
+
       ng-doc-kind-icon {
         margin-right: var(--ng-doc-base-gutter);
       }
     }
   }
 
+  .ng-doc-api-list-filter-input {
+    max-width: 450px;
+  }
+
   .ng-doc-api-list-wrapper {
+    container: api-list-wrapper / inline-size;
+
     .ng-doc-api-filter {
       display: flex;
       margin-top: calc(var(--ng-doc-base-gutter) * 3);
@@ -43,7 +67,6 @@
           padding: 0;
 
           .ng-doc-scope-item {
-            margin: var(--ng-doc-base-gutter) 0;
             float: left;
             width: 33%;
             overflow: hidden;
@@ -52,13 +75,19 @@
             white-space: nowrap;
 
             .ng-doc-scope-item-link {
+              @include alpha-background(var(--ng-doc-scope-item-link-background), 0.1);
               display: flex;
               align-items: center;
+              border-left: 1px solid var(--ng-doc-border-color);
+              padding: var(--ng-doc-base-gutter);
               color: var(--ng-doc-text);
               text-decoration: none;
 
               &:hover {
-                text-decoration: underline;
+                color: var(--ng-doc-heading-color);
+                border-left-color: var(--ng-doc-primary);
+
+                --ng-doc-scope-item-link-background: var(--ng-doc-primary);
               }
 
               ng-doc-kind-icon {
