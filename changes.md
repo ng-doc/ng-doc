@@ -68,7 +68,6 @@ TODO:
 - update schematics for page generation based on the new API
 - improve cache by using lmdb library
 - check order of API properties modificators
-- home icon in breadcrumbs
 - indexes for NgDocOverlayRef are not correct
 
 Inspirations:
