@@ -1,6 +1,7 @@
 import { AsyncPipe, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, input, Signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
   FormControl,
@@ -31,7 +32,6 @@ import {
   NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
 import { startWith } from 'rxjs/operators';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 
 interface ApiFilterForm {
   filter: FormControl<string | null>;
