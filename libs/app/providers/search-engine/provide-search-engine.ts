@@ -16,6 +16,6 @@ export function provideSearchEngine<E extends Constructor<NgDocSearchEngine>>(
 ): Provider {
   return {
     provide: NgDocSearchEngine,
-    useValue: new engine(...args),
+    useFactory: () => new engine(...args),
   };
 }

@@ -53,6 +53,7 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
 
   constructor(private options?: NgDocDefaultSearchEngineOptions) {
     super();
+
     this.db$ = from(
       create({
         schema: {
