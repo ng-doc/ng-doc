@@ -9,6 +9,7 @@ export * from '@ng-doc/app/components/fullscreen-button';
 export * from '@ng-doc/app/components/heading-anchor';
 export * from '@ng-doc/app/components/kind-icon';
 export * from '@ng-doc/app/components/link';
+export * from '@ng-doc/app/components/mermaid-viewer';
 export * from '@ng-doc/app/components/navbar';
 export * from '@ng-doc/app/components/page';
 export * from '@ng-doc/app/components/page-header';

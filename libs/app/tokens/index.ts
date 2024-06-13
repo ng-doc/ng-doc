@@ -1,4 +1,5 @@
 export * from './context';
+export * from './mermaid';
 export * from './page-processor';
 export * from './page-skeleton';
 export * from './route-prefix';

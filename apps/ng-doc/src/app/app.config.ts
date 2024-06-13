@@ -8,6 +8,7 @@ import {
   NG_DOC_DEFAULT_PAGE_SKELETON,
   NgDocDefaultSearchEngine,
   provideMainPageProcessor,
+  provideMermaid,
   provideNgDocApp,
   providePageSkeleton,
   provideSearchEngine,
@@ -22,6 +23,7 @@ export const appConfig: ApplicationConfig = {
     provideSearchEngine(NgDocDefaultSearchEngine),
     providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON),
     provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS),
+    provideMermaid(),
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi(), withFetch()),
     provideRouter(

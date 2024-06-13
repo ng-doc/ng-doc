@@ -2,7 +2,6 @@ import { DOCUMENT } from '@angular/common';
 import { inject, Injectable } from '@angular/core';
 import { NG_DOC_STORE_THEME_KEY } from '@ng-doc/app/constants';
 import { NgDocStoreService } from '@ng-doc/app/services/store';
-import { WINDOW } from '@ng-web-apis/common';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Observable, Subject } from 'rxjs';
 
@@ -12,7 +11,6 @@ import { Observable, Subject } from 'rxjs';
 @Injectable()
 @UntilDestroy()
 export class NgDocThemeService {
-  protected readonly window = inject(WINDOW);
   protected readonly document = inject(DOCUMENT);
   protected readonly store = inject(NgDocStoreService);
   protected readonly change$ = new Subject<string | null>();

@@ -1,5 +1,5 @@
-import { NG_DOC_ELEMENT } from '@ng-doc/core/constants/defaults.js';
-import { asArray } from '@ng-doc/core/helpers/as-array.js';
+import { NG_DOC_ELEMENT } from '@ng-doc/core';
+import { asArray } from '@ng-doc/core';
 import { Element, Root } from 'hast';
 import { visit } from 'unist-util-visit';
 

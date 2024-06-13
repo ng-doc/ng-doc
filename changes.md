@@ -5,6 +5,8 @@
 
 ## General
 
+- added support for Mermaid diagrams in markdown files, you can now use Mermaid syntax inside
+  code blocks with the `mermaid` language specified
 - `keyword` field was removed from the `NgDocPage` interface.
 - `mdFile` field is now support array of paths, you can specify multiple
   markdown files for a single doc page, they will be displayed as tabs in the doc page.
@@ -21,6 +23,7 @@
 - Bunch of different fixes that resolve interface glitches and highly improve hydration and
   performance of the app.
 - Orama search that's used as a primary search engine was updated to `2.0.17` version.
+- `NgDocProcessorOptions` now infers the type of the signal inputs correctly.
 
 ## UI
 

@@ -22,10 +22,6 @@ export class DemoComponent {
   // eslint-disable-next-line @typescript-eslint/typedef
   test = input.required<string>();
 
-  constructor() {
-    console.log('signalInput', this.signalInput, this.test);
-  }
-
   method(): void {
     /* snippet "TypeScript" */
     console.log('demo');

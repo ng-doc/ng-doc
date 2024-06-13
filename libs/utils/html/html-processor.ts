@@ -11,6 +11,7 @@ import autolinkHeadingPlugin from './plugins/add-heading-anchors.plugin';
 import codeBlockLinesPlugin from './plugins/code-block-lines.plugin';
 import highlightCodeLines from './plugins/highlight-code-lines';
 import markElementsPlugin from './plugins/mark-elements.plugin';
+import mermaidPlugin from './plugins/mermaid.plugin';
 import sluggerPlugin from './plugins/slugger.plugin';
 import wrapTablePlugin from './plugins/table-wrapper';
 
@@ -34,6 +35,7 @@ export async function htmlProcessor(
     .use(rehypeParse, { fragment: true })
     .use(rehypeStringify)
     .use(rehypeFormat)
+    .use(mermaidPlugin)
     .use(rehypeHighlight, { ignoreMissing: true, languages: { twig } })
     .use(codeBlockLinesPlugin)
     .use(highlightCodeLines)

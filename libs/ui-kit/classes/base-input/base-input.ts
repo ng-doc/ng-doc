@@ -1,5 +1,5 @@
+import { DOCUMENT } from '@angular/common';
 import { Directive, ElementRef, HostBinding, inject } from '@angular/core';
-import { isBrowser } from '@ng-doc/core/helpers/is-browser';
 import { DIControl, injectHostControl } from 'di-controls';
 import { DIControlConfig } from 'di-controls/controls/control';
 import { Subject } from 'rxjs';
@@ -8,6 +8,8 @@ import { Subject } from 'rxjs';
 export abstract class NgDocBaseInput<T> extends DIControl<T> {
   override readonly elementRef: ElementRef<HTMLInputElement> = inject(ElementRef);
   readonly changes: Subject<void> = new Subject();
+
+  protected readonly document = inject(DOCUMENT);
 
   protected constructor(config?: DIControlConfig<T, T>) {
     super({
@@ -26,7 +28,7 @@ export abstract class NgDocBaseInput<T> extends DIControl<T> {
   }
 
   get isFocused(): boolean {
-    return isBrowser ? document.activeElement === this.elementRef.nativeElement : false;
+    return this.document.activeElement === this.elementRef.nativeElement;
   }
 
   get isReadonly(): boolean {

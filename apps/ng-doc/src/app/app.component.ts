@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, HostBinding, inject } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import {
   NgDocNavbarComponent,
   NgDocSidebarComponent,
@@ -13,7 +13,6 @@ import {
   NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
 import { preventInitialChildAnimations } from '@ng-doc/ui-kit/animations';
-import { WINDOW } from '@ng-web-apis/common';
 
 @Component({
   animations: [preventInitialChildAnimations],
@@ -35,7 +34,6 @@ import { WINDOW } from '@ng-web-apis/common';
   ],
 })
 export class AppComponent {
-  protected readonly window: Window = inject(WINDOW);
   protected readonly location = inject(Location);
 
   @HostBinding('attr.data-ng-doc-is-landing')

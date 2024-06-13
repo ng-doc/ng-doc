@@ -1,6 +1,6 @@
-import { NG_DOC_ELEMENT } from '@ng-doc/core/constants/defaults.js';
-import { NgDocKeyword, NgDocKeywordLanguage } from '@ng-doc/core/interfaces';
-import { KEYWORD_ALLOWED_LANGUAGES } from '@ng-doc/core/interfaces/keyword-map.js';
+import { NG_DOC_ELEMENT } from '@ng-doc/core';
+import { NgDocKeyword, NgDocKeywordLanguage } from '@ng-doc/core';
+import { KEYWORD_ALLOWED_LANGUAGES } from '@ng-doc/core';
 import { Element, Text } from 'hast';
 import { isElement } from 'hast-util-is-element';
 import { toString } from 'hast-util-to-string';

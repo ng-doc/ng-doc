@@ -19,6 +19,8 @@ export * from '@ng-doc/ui-kit/components/input-wrapper';
 export * from '@ng-doc/ui-kit/components/label';
 export * from '@ng-doc/ui-kit/components/line';
 export * from '@ng-doc/ui-kit/components/list';
+export * from '@ng-doc/ui-kit/components/magnifier';
+export * from '@ng-doc/ui-kit/components/magnifier-controller';
 export * from '@ng-doc/ui-kit/components/option';
 export * from '@ng-doc/ui-kit/components/option-group';
 export * from '@ng-doc/ui-kit/components/overlay-container';

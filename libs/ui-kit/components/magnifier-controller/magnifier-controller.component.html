@@ -1,0 +1,57 @@
+<div class="ng-doc-controls-row">
+  <button
+    class="ng-doc-button-up"
+    ng-doc-button-icon-raised
+    [rounded]="false"
+    (click)="magnifier().incrementY(50)">
+    <ng-doc-icon icon="chevron-right" />
+  </button>
+  <button
+    class="ng-doc-button-zoom-in"
+    ng-doc-button-icon-raised
+    [rounded]="false"
+    (click)="magnifier().zoom(200)">
+    <ng-doc-icon icon="zoom-in" />
+  </button>
+</div>
+
+<div class="ng-doc-controls-row">
+  <button
+    class="ng-doc-button-left"
+    ng-doc-button-icon-raised
+    [rounded]="false"
+    (click)="magnifier().incrementX(50)">
+    <ng-doc-icon icon="chevron-right" />
+  </button>
+  <button
+    class="ng-doc-button-center"
+    ng-doc-button-icon-raised
+    [rounded]="false"
+    (click)="magnifier().reset()">
+    <ng-doc-icon icon="maximize" />
+  </button>
+  <button
+    class="ng-doc-button-right"
+    ng-doc-button-icon-raised
+    [rounded]="false"
+    (click)="magnifier().incrementX(-50)">
+    <ng-doc-icon icon="chevron-right" />
+  </button>
+</div>
+
+<div class="ng-doc-controls-row">
+  <button
+    class="ng-doc-button-down"
+    ng-doc-button-icon-raised
+    [rounded]="false"
+    (click)="magnifier().incrementY(-50)">
+    <ng-doc-icon icon="chevron-right" />
+  </button>
+  <button
+    class="ng-doc-button-zoom-out"
+    ng-doc-button-icon-raised
+    [rounded]="false"
+    (click)="magnifier().zoom(-200)">
+    <ng-doc-icon icon="zoom-out" />
+  </button>
+</div>

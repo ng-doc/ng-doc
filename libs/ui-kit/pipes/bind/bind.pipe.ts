@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { FunctionType } from '@ng-doc/core/types';
+import { FunctionType } from '@ng-doc/core';
 
 @Pipe({
   name: 'bind',

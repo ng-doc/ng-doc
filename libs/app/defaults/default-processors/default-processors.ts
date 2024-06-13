@@ -6,7 +6,7 @@ import {
   demoProcessor,
   headingAnchorProcessor,
   iconProcessor,
-  linkProcessor,
+  mermaidProcessor,
   playgroundProcessor,
   tabsProcessor,
   tooltipProcessor,
@@ -17,11 +17,11 @@ export const NG_DOC_DEFAULT_PAGE_PROCESSORS: NgDocPageProcessor[] = [
    * The order of the directives is important.
    * The higher the directive is in the list, the earlier it will be run.
    */
+  iconProcessor,
   headingAnchorProcessor,
   blockquoteProcessor,
-  iconProcessor,
   tooltipProcessor,
-  linkProcessor,
+  mermaidProcessor,
   codeProcessor,
   demoProcessor,
   demoPaneProcessor,

@@ -1,0 +1,38 @@
+:host {
+  position: relative;
+  display: block;
+  border: var(--ng-doc-mermaid-viewer-border, 1px solid var(--ng-doc-border-color));
+  margin: var(--ng-doc-mermaid-viewer-margin, var(--ng-doc-page-block-margin));
+  background: var(--ng-doc-mermaid-viewer-background, var(--ng-doc-base-8));
+  border-radius: var(--ng-doc-mermaid-viewer-border-radius, var(--ng-doc-base-gutter));
+  min-height: 150px;
+
+  ng-doc-magnifier-controller {
+    position: absolute;
+    bottom: calc(var(--ng-doc-base-gutter) * 2);
+    right: calc(var(--ng-doc-base-gutter) * 2);
+  }
+
+  .ng-doc-mermaid-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: calc(var(--ng-doc-base-gutter) * 2);
+  }
+
+  .ng-doc-mermaid-preloader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 120px;
+  }
+
+  .ng-doc-mermaid-error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 120px;
+    color: var(--ng-doc-alert);
+  }
+}
