@@ -1,7 +1,7 @@
 ## Builder
 
-- the core of the builder was rewritten to support multiple markdown files,
-  now it also should rebuild the changed files faster
+- the core of the builder was rewritten to support multiple markdown files, `chokidar` was replaced
+  with `@parcel/watcher` so builder should react to changes a bit faster now
 
 ## General
 
@@ -66,13 +66,14 @@
 
 TODO:
 
-- make TOC work on mobile
 - rework landing page + add reusable components for creating landings
 - docs for theming
+- docs for mermaid diagrams
 - update schematics for page generation based on the new API
 - improve cache by using lmdb library
 - check order of API properties modificators
 - indexes for NgDocOverlayRef are not correct
+- add parsing of the `angular.dev` for the angular keyword loader
 
 Inspirations:
 https://mui.com/base-ui/react-autocomplete/
