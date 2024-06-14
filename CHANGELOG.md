@@ -1,3 +1,10 @@
+## [17.6.12](https://github.com/ng-doc/ng-doc/compare/v17.6.11...v17.6.12) (2024-06-14)
+
+
+### Bug Fixes
+
+* allows customizing the title of the API page ([#170](https://github.com/ng-doc/ng-doc/issues/170)) ([0bc22b5](https://github.com/ng-doc/ng-doc/commit/0bc22b5d4b585db2963b9d597f6549e15e8342af))
+
 ## [17.6.11](https://github.com/ng-doc/ng-doc/compare/v17.6.10...v17.6.11) (2024-06-06)
 
 
