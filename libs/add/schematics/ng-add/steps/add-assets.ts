@@ -41,7 +41,7 @@ export function addAssets(options: Schema): Rule {
 				const assets: JsonArray | undefined = targetOptions['assets'] as JsonArray | undefined;
 
 				targetOptions['assets'] = Array.from(
-					new Set([...getNgDocAssets(options), ...(assets ?? [])]),
+					new Set([...getNgDocAssets(options, workspace), ...(assets ?? [])]),
 				);
 
 				logger.info('✅ Done!');

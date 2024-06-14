@@ -88,10 +88,10 @@ describe('ng-add module app', () => {
   "compilerOptions": {
     "paths": {
       "@ng-doc/generated": [
-        "./ng-doc//index.ts"
+        "./ng-doc/demo/index.ts"
       ],
       "@ng-doc/generated/*": [
-        "./ng-doc//*"
+        "./ng-doc/demo/*"
       ]
     }
   }
@@ -171,7 +171,7 @@ export class AppModule {}
                 },
                 {
                   "glob": "**/*",
-                  "input": "ng-doc//assets",
+                  "input": "ng-doc/demo/assets",
                   "output": "assets/ng-doc"
                 }
               ],
