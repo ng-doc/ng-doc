@@ -1,5 +1,5 @@
 import { AsyncPipe, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
 import {
 	FormBuilder,
 	FormControl,
@@ -69,6 +69,7 @@ interface ApiFilterForm {
 })
 @UntilDestroy()
 export class NgDocApiListComponent {
+	@Input() title: string = 'API Reference';
 	formGroup: FormGroup<ApiFilterForm>;
 	api$: Observable<NgDocApiList[]>;
 
