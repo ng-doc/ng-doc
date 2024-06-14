@@ -1,14 +1,23 @@
+import { WorkspaceDefinition } from '@schematics/angular/utility/workspace';
+
 import { Schema } from '../schema';
+import { getProjectName } from '../utils/get-project-name';
 
 /**
  *
  * @param options
+ * @param workspace
  */
-export function getNgDocAssets(options: Schema): Array<{
+export function getNgDocAssets(
+	options: Schema,
+	workspace: WorkspaceDefinition,
+): Array<{
 	output: string;
 	input: string;
 	glob: string;
 }> {
+	const projectName = getProjectName(options, workspace);
+
 	return [
 		{
 			glob: '**/*',
@@ -22,7 +31,7 @@ export function getNgDocAssets(options: Schema): Array<{
 		},
 		{
 			glob: '**/*',
-			input: `ng-doc/${options.project}/assets`,
+			input: `ng-doc/${projectName}/assets`,
 			output: 'assets/ng-doc',
 		},
 	];
