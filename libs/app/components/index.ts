@@ -7,6 +7,7 @@ export * from '@ng-doc/app/components/demo-displayer';
 export * from '@ng-doc/app/components/demo-pane';
 export * from '@ng-doc/app/components/fullscreen-button';
 export * from '@ng-doc/app/components/heading-anchor';
+export * from '@ng-doc/app/components/image-viewer';
 export * from '@ng-doc/app/components/kind-icon';
 export * from '@ng-doc/app/components/link';
 export * from '@ng-doc/app/components/mermaid-viewer';

@@ -6,6 +6,7 @@ import {
   demoProcessor,
   headingAnchorProcessor,
   iconProcessor,
+  imageProcessor,
   linkProcessor,
   mermaidProcessor,
   playgroundProcessor,
@@ -29,4 +30,5 @@ export const NG_DOC_DEFAULT_PAGE_PROCESSORS: NgDocPageProcessor[] = [
   demoPaneProcessor,
   playgroundProcessor,
   tabsProcessor,
+  imageProcessor,
 ];

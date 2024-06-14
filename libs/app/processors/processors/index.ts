@@ -4,6 +4,7 @@ export * from './demo.processor';
 export * from './demo-pane.processor';
 export * from './heading-anchor.processor';
 export * from './icon.processor';
+export * from './image.processor';
 export * from './link.processor';
 export * from './mermaid.processor';
 export * from './playground.processor';

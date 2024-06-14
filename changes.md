@@ -31,6 +31,8 @@
 - Reworked search, now it's fullscreen and works the same way for the Desktop and Mobile.
 - `leftContent`, `rightContent` and `centerContent` inputs were replaced with attribute selectors
   like `ngDocNavbarLeft`, `ngdocNavbarRight` and `ngDocNavbarCenter` in the `ng-doc-navbar`
+- Added an image viewer, all images in the markdown files are now clickable and can be viewed in a
+  fullscreen mode.
 - Demos in playgrounds are now sticky
 - Themes feature was changed to fix glitch that occurs when SSR is enabled, now you should used
   CSS/SCSS files to define your themes and import them directly to your `style.css` file,
@@ -66,7 +68,6 @@ TODO:
 
 - make TOC work on mobile
 - rework landing page + add reusable components for creating landings
-- image viewer
 - docs for theming
 - update schematics for page generation based on the new API
 - improve cache by using lmdb library
