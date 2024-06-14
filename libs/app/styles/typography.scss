@@ -67,7 +67,11 @@ blockquote#{$class} {
   --ng-doc-line-height: 1.5rem;
   --ng-doc-font-weight: 600;
   overflow-wrap: anywhere;
-  --ng-doc-text: var(--ng-doc-heading-color);
+  color: var(--ng-doc-heading-color);
+
+  &.ng-doc-secondary-heading {
+    color: var(--ng-doc-text);
+  }
 
   & + h1#{$class},
   & + h2#{$class},

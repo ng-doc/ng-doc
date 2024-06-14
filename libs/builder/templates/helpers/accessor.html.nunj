@@ -52,13 +52,13 @@
             </tr>
             <tr>
                 <td indexable="false">
-                    <h5 class="no-anchor">Presentation</h5>
+                    <h5 class="no-anchor ng-doc-secondary-heading">Presentation</h5>
                     {{ codeMacro.render(accessor | accessorPresentation, "typescript", false) }}
                 </td>
             </tr>
             <tr>
                 <td indexable="false">
-                    <h5 class="no-anchor">Type</h5>
+                    <h5 class="no-anchor ng-doc-secondary-heading">Type</h5>
                     <p>
                         {{ typeMacro.type(accessor) }}
                     </p>

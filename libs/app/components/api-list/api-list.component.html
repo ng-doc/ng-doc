@@ -1,28 +1,32 @@
 <h1 ng-doc-text>API References</h1>
 <div class="ng-doc-api-list-wrapper">
   <form [formGroup]="formGroup">
-    <h3>Declaration types</h3>
-    <ul class="ng-doc-filter-list" ngDocRadioGroup formControlName="type">
-      @for (type of types(); track type) {
-        <li>
-          <button class="ng-doc-filter-button" ng-doc-button-toggle [value]="type">
-            <ng-doc-kind-icon [kind]="type" size="medium"></ng-doc-kind-icon>
-            {{ type }}
-          </button>
-        </li>
-      }
-    </ul>
+    @if (types().length) {
+      <h3>Declaration types</h3>
+      <ul class="ng-doc-filter-list" ngDocRadioGroup formControlName="type">
+        @for (type of types(); track type) {
+          <li>
+            <button class="ng-doc-filter-button" ng-doc-button-toggle [value]="type">
+              <ng-doc-kind-icon [kind]="type" size="medium"></ng-doc-kind-icon>
+              {{ type }}
+            </button>
+          </li>
+        }
+      </ul>
+    }
 
-    <h3>Scopes</h3>
-    <ul class="ng-doc-filter-list" ngDocRadioGroup formControlName="scope">
-      @for (scope of scopes(); track scope) {
-        <li>
-          <button class="ng-doc-filter-button" ng-doc-button-toggle [value]="scope">
-            {{ scope }}
-          </button>
-        </li>
-      }
-    </ul>
+    @if (scopes().length) {
+      <h3>Scopes</h3>
+      <ul class="ng-doc-filter-list" ngDocRadioGroup formControlName="scope">
+        @for (scope of scopes(); track scope) {
+          <li>
+            <button class="ng-doc-filter-button" ng-doc-button-toggle [value]="scope">
+              {{ scope }}
+            </button>
+          </li>
+        }
+      </ul>
+    }
 
     <h3>Filter</h3>
     <ng-doc-input-wrapper class="ng-doc-api-list-filter-input">

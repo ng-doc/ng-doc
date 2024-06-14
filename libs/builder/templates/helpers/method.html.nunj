@@ -50,17 +50,17 @@
         </tr>
         <tr>
             <td>
-                <h5 class="no-anchor" indexable="false">Presentation</h5>
+                <h5 class="no-anchor ng-doc-secondary-heading" indexable="false">Presentation</h5>
                 {{ codeMacro.render(method | methodPresentation, "typescript", false) }}
             </td>
         </tr>
         <tr>
             <td>
                 {%- if parameters.length %}
-                    <h5 class="no-anchor" indexable="false">Parameters</h5>
+                    <h5 class="no-anchor ng-doc-secondary-heading" indexable="false">Parameters</h5>
                     {{ parametersMacro.render(parameters, docNode) }}
                 {%- endif %}
-                <h5 class="no-anchor" indexable="false">Returns</h5>
+                <h5 class="no-anchor ng-doc-secondary-heading" indexable="false">Returns</h5>
                 <p>
                     {{ typeMacro.returnType(method) }}
                 </p>
