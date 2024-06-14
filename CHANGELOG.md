@@ -1,3 +1,10 @@
+## [17.6.13](https://github.com/ng-doc/ng-doc/compare/v17.6.12...v17.6.13) (2024-06-14)
+
+
+### Bug Fixes
+
+* **ng-add:** undefined project in assets and tsconfig paths ([#160](https://github.com/ng-doc/ng-doc/issues/160)) ([df214a3](https://github.com/ng-doc/ng-doc/commit/df214a38fe8a8eb773b02f78c6ccdfad8029c017)), closes [#115](https://github.com/ng-doc/ng-doc/issues/115)
+
 ## [17.6.12](https://github.com/ng-doc/ng-doc/compare/v17.6.11...v17.6.12) (2024-06-14)
 
 
