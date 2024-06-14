@@ -11,6 +11,7 @@ import * as path from 'path';
 import { GENERATED_PATH } from '../constants/modules';
 import { Schema } from '../schema';
 import { getProject } from '../utils/get-project';
+import { getProjectName } from '../utils/get-project-name';
 
 /**
  *
@@ -35,19 +36,20 @@ export function addTsconfigPaths(options: Schema): Rule {
 
 				const buildTarget: TargetDefinition | undefined = project.targets.get('build');
 				const serveTarget: TargetDefinition | undefined = project.targets.get('serve');
+				const projectName = getProjectName(options, workspace);
 
 				if (buildTarget) {
 					const tsConfigPath: string | undefined =
 						buildTarget.options && (buildTarget.options['tsConfig'] as string);
 
-					tsConfigPath && updateTsConfigPaths(tree, String(tsConfigPath), options.project);
+					tsConfigPath && updateTsConfigPaths(tree, String(tsConfigPath), projectName);
 				}
 
 				if (serveTarget) {
 					const tsConfigPath: string | undefined =
 						serveTarget.options && (serveTarget.options['tsConfig'] as string);
 
-					tsConfigPath && updateTsConfigPaths(tree, String(tsConfigPath), options.project);
+					tsConfigPath && updateTsConfigPaths(tree, String(tsConfigPath), projectName);
 				}
 
 				logger.info('✅ Done!');
