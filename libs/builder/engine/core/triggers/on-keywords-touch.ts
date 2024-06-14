@@ -8,15 +8,16 @@ const KEYWORDS_CHANGE = new Subject<string[]>();
 /**
  *
  * @param {...any} keywords
+ * @param include
  * @param exclude
  */
 export function onKeywordsTouch(
-  keywords: Set<string>,
+  include: (key: string) => boolean,
   exclude: (key: string) => boolean = () => false,
 ): Observable<void> {
   return KEYWORDS_CHANGE.pipe(
     filter((changedKeywords) => {
-      return !isColdStart() && changedKeywords.some((c) => !exclude(c) && keywords.has(c));
+      return !isColdStart() && changedKeywords.some((c) => !exclude(c) && include(c));
     }),
     map(() => void 0),
   );

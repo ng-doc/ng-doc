@@ -2,10 +2,12 @@ import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
 import { unified, VFileWithOutput } from 'unified';
 
-import keywordsPlugin, { AddKeyword } from './plugins/keywords.plugin';
+import keywordsPlugin from './plugins/keywords.plugin';
 
-export interface PostProcessHtmlConfig {
-  addUsedKeyword: AddKeyword;
+export interface PostProcessHtmlOutput {
+  content: string;
+  usedKeywords: string[];
+  error?: unknown;
 }
 
 /**
@@ -15,14 +17,19 @@ export interface PostProcessHtmlConfig {
  * @param config.addUsedKeyword
  * @param addUsedKeyword
  */
-export async function postProcessHtml(
-  html: string,
-  { addUsedKeyword }: PostProcessHtmlConfig,
-): Promise<string> {
-  return unified()
-    .use(rehypeParse, { fragment: true })
-    .use(rehypeStringify)
-    .use(keywordsPlugin, { addUsedKeyword })
-    .process(html)
-    .then((file: VFileWithOutput<string>) => file.toString());
+export async function postProcessHtml(html: string): Promise<PostProcessHtmlOutput> {
+  const usedKeywords = new Set<string>();
+
+  try {
+    const content = await unified()
+      .use(rehypeParse, { fragment: true })
+      .use(rehypeStringify)
+      .use(keywordsPlugin, { addUsedKeyword: usedKeywords.add.bind(usedKeywords) })
+      .process(html)
+      .then((file: VFileWithOutput<string>) => file.toString());
+
+    return { content, usedKeywords: Array.from(usedKeywords) };
+  } catch (error) {
+    return { content: html, usedKeywords: [], error };
+  }
 }

@@ -8,7 +8,7 @@ import { Observable, Subject } from 'rxjs';
 /**
  * Service for managing themes.
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 @UntilDestroy()
 export class NgDocThemeService {
   protected readonly document = inject(DOCUMENT);

@@ -1,15 +1,16 @@
 {
-	"$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
-	"dest": "../../dist/libs/app",
-	"lib": {
-		"entryFile": "./index.ts",
-		"styleIncludePaths": ["./styles"]
-	},
-	"allowedNonPeerDependencies": [
-		"@ng-doc/core",
-		"@ng-doc/ui-kit",
-		"@orama/plugin-match-highlight",
-		"@orama/stemmers",
-		"highlight.js"
-	]
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/libs/app",
+  "lib": {
+    "entryFile": "./index.ts",
+    "styleIncludePaths": ["./styles"]
+  },
+  "allowedNonPeerDependencies": [
+    "@ng-doc/core",
+    "@ng-doc/ui-kit",
+    "@orama/plugin-match-highlight",
+    "@orama/stemmers",
+    "highlight.js",
+    "mermaid"
+  ]
 }

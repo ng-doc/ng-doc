@@ -1,7 +1,7 @@
 ---
 title: API
 route: api
-keyword: { { NgDocPage.data.keyword } }
+keyword: AnotherPageApi
 ---
 
 asd

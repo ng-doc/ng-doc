@@ -34,7 +34,7 @@ export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput> {
     id: `${metadata.path}#PageWrapper`,
     action: 'skip',
   } satisfies CacheStrategy<undefined, string>;
-  const usedKeywords = new Set<string>();
+  let usedKeywords = new Set<string>();
   let removeIndexes: () => void = () => {};
 
   const builder = () =>
@@ -45,19 +45,19 @@ export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput> {
         removeIndexes();
         usedKeywords.clear();
 
-        const headerContent = await processHtml(getHeaderContent(), {
+        const processed = await processHtml(getHeaderContent(), {
           headings: context.config.guide?.anchorHeadings,
           route: metadata.absoluteRoute(),
         });
-        await postProcessHtml(headerContent, {
-          addUsedKeyword: usedKeywords.add.bind(usedKeywords),
-        });
+        const postProcessed = await postProcessHtml(processed.content);
+
+        usedKeywords = new Set(postProcessed.usedKeywords);
 
         const entries = getPageWrapperPages(metadata, templates);
 
         return async () => {
           // TODO: maybe move replacing keywords and building indexes to a separate entity to reuse it in page-component.builder.ts
-          const content = await replaceKeywords(headerContent);
+          const content = await replaceKeywords(postProcessed.content);
           const indexes = await buildIndexes({
             content,
             title: metadata.title,

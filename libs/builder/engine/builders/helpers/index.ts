@@ -8,6 +8,7 @@ export * from './get-entry-out-dir';
 export * from './get-entry-relative-path';
 export * from './get-entry-route';
 export * from './get-playground-metadata';
+export * from './get-scoped-keyword';
 export * from './get-structured-docs';
 export * from './markdown-front-matter';
 export * from './post-process-html';

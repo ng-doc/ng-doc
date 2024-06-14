@@ -18,11 +18,11 @@ export function constructPageKeyword(
     ? {
         key: `${key}#${anchor.anchor}`,
         title: `${title} [${anchor.title}]`,
-        path: `${path}#${anchor.anchor}`,
+        path: `${path}#${anchor.anchorId}`,
       }
     : {
         key: `${key}.${anchor.anchor}`,
         title: `${title}.${anchor.title}`,
-        path: `${path}#${anchor.anchor}`,
+        path: `${path}#${anchor.anchorId}`,
       };
 }

@@ -31,7 +31,7 @@
     top: var(--ng-doc-navbar-height);
     margin-bottom: calc(var(--ng-doc-base-gutter) * 4);
     background: var(--ng-doc-navbar-background);
-    z-index: 1;
+    z-index: 10;
     height: var(--ng-doc-page-wrapper-tabs-height);
   }
 

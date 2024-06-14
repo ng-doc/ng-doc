@@ -37,7 +37,7 @@ interface Config {
 
 interface CacheData {
   dependencies: string[];
-  anchors: NgDocPageAnchor[];
+  keywords: Array<[string, NgDocKeyword]>;
   usedKeywords: string[];
 }
 
@@ -48,8 +48,7 @@ interface CacheData {
 export function contentBuilder(config: Config): Builder<string> {
   const { tag, context, metadata, cacheId, mainFilePath, getContent, getKeywords } = config;
   const dependencies = new ObservableSet<string>();
-  const anchors = [] as NgDocPageAnchor[];
-  const usedKeywords = new Set<string>();
+  let usedKeywords = new Set<string>();
   let keywords = new Map<string, NgDocKeyword>();
   let removeKeywords: () => void = () => {};
 
@@ -59,13 +58,13 @@ export function contentBuilder(config: Config): Builder<string> {
     files: () => [metadata.path, mainFilePath, ...dependencies.asArray()],
     getData: () => ({
       dependencies: dependencies.asArray(),
-      anchors,
+      keywords: Array.from(keywords),
       usedKeywords: Array.from(usedKeywords),
     }),
     onCacheLoad: (data) => {
       dependencies.add(...data.dependencies);
-      anchors.push(...data.anchors);
-      data.usedKeywords.forEach(usedKeywords.add.bind(usedKeywords));
+      keywords = new Map(data.keywords);
+      usedKeywords = new Set(data.usedKeywords);
     },
     toCache: (content) => content,
     fromCache: (content) => content,
@@ -81,21 +80,27 @@ export function contentBuilder(config: Config): Builder<string> {
           touchKeywords(...keywords.keys());
 
           removeKeywords();
-          anchors.length = 0;
           dependencies.clear();
           usedKeywords.clear();
 
-          let content = await getContent(dependencies);
-
-          content = await processHtml(content, {
+          const { content, anchors, error } = await processHtml(await getContent(dependencies), {
             headings: context.config.guide?.anchorHeadings,
             route: metadata.absoluteRoute(),
-            addAnchor: anchors.push.bind(anchors),
           });
+
+          if (error) {
+            throw new Error(`Error while processing html (${metadata.path})`, {
+              cause: error,
+            });
+          }
 
           keywords = new Map(getKeywords(anchors));
 
-          return postProcessHtml(content, { addUsedKeyword: usedKeywords.add.bind(usedKeywords) });
+          const postProcessed = await postProcessHtml(content);
+
+          usedKeywords = new Set(postProcessed.usedKeywords);
+
+          return postProcessed.content;
         } catch (cause) {
           throw new Error(`Error while building entry (${metadata.path})`, {
             cause,
@@ -109,7 +114,9 @@ export function contentBuilder(config: Config): Builder<string> {
   return createBuilder(
     [
       createMainTrigger(watchFile(mainFilePath, 'update'), onDependenciesChange(dependencies)),
-      createSecondaryTrigger(onKeywordsTouch(usedKeywords, keywords.has.bind(keywords))),
+      createSecondaryTrigger(
+        onKeywordsTouch(usedKeywords.has.bind(usedKeywords), keywords.has.bind(keywords)),
+      ),
     ],
     () => builder,
   ).pipe(
@@ -126,8 +133,6 @@ export function contentBuilder(config: Config): Builder<string> {
     }),
     finalize(() => {
       removeKeywords();
-
-      console.log('DESTROY CONTENT BUILDER', metadata.path);
     }),
   );
 }

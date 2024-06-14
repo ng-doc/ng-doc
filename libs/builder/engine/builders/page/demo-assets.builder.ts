@@ -60,7 +60,6 @@ export function demoAssetsBuilder(config: Config): Builder<AsyncFileOutput> {
         usedKeywords.clear();
 
         const classDeclarations = getDemoClassDeclarations(page.objectExpression());
-
         const demoAssets: NgDocComponentAsset = Object.keys(classDeclarations).reduce(
           (acc: NgDocComponentAsset, key: string) =>
             Object.assign(acc, {
@@ -71,12 +70,21 @@ export function demoAssetsBuilder(config: Config): Builder<AsyncFileOutput> {
 
         for (const [, value] of Object.entries(demoAssets)) {
           for (const asset of value) {
-            asset.code = await processHtml(asset.code, {
-              addAnchor: () => {},
-            });
-            asset.code = await postProcessHtml(asset.code, {
-              addUsedKeyword: usedKeywords.add.bind(usedKeywords),
-            });
+            const processed = await processHtml(asset.code, {});
+
+            if (processed.error) {
+              throw processed.error;
+            }
+
+            const postProcessed = await postProcessHtml(processed.content);
+
+            if (postProcessed.error) {
+              throw postProcessed.error;
+            }
+
+            postProcessed.usedKeywords.forEach((keyword) => usedKeywords.add(keyword));
+
+            asset.code = postProcessed.content;
           }
         }
 

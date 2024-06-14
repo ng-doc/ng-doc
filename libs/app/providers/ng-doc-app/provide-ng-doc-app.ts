@@ -1,6 +1,5 @@
 import { ViewportScroller } from '@angular/common';
 import { APP_INITIALIZER, Provider } from '@angular/core';
-import { NgDocThemeService } from '@ng-doc/app/services/theme';
 import { NgDocUiConfig, provideNgDocUiKitConfig } from '@ng-doc/ui-kit';
 
 /**
@@ -31,6 +30,5 @@ export function provideNgDocApp(config?: NgDocApplicationConfig): Provider[] {
 
     /* --- UiKit --- */
     ...provideNgDocUiKitConfig(config?.uiKit),
-    NgDocThemeService,
   ];
 }

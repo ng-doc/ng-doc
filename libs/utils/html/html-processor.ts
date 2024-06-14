@@ -18,8 +18,12 @@ import wrapTablePlugin from './plugins/table-wrapper';
 export interface NgDocHtmlProcessorConfig {
   headings?: NgDocHeading[];
   route?: string;
-  raiseError?: (e: Error) => void;
-  addAnchor?: (anchor: NgDocPageAnchor) => void;
+}
+
+export interface NgDocHtmlProcessorOutput {
+  content: string;
+  anchors: NgDocPageAnchor[];
+  error?: unknown;
 }
 
 /**
@@ -30,20 +34,28 @@ export interface NgDocHtmlProcessorConfig {
 export async function htmlProcessor(
   html: string,
   config: NgDocHtmlProcessorConfig,
-): Promise<string> {
-  return unified()
-    .use(rehypeParse, { fragment: true })
-    .use(rehypeStringify)
-    .use(rehypeFormat)
-    .use(mermaidPlugin)
-    .use(rehypeHighlight, { ignoreMissing: true, languages: { twig } })
-    .use(codeBlockLinesPlugin)
-    .use(highlightCodeLines)
-    .use(wrapTablePlugin)
-    .use(sluggerPlugin, config.addAnchor, config.headings)
-    .use(rehypeMinifyWhitespace)
-    .use(autolinkHeadingPlugin, config.route)
-    .use(markElementsPlugin)
-    .process(html)
-    .then((file: VFileWithOutput<string>) => file.toString());
+): Promise<NgDocHtmlProcessorOutput> {
+  const anchors = new Set<NgDocPageAnchor>();
+
+  try {
+    const content = await unified()
+      .use(rehypeParse, { fragment: true })
+      .use(rehypeStringify)
+      .use(rehypeFormat)
+      .use(mermaidPlugin)
+      .use(rehypeHighlight, { ignoreMissing: true, languages: { twig } })
+      .use(codeBlockLinesPlugin)
+      .use(highlightCodeLines)
+      .use(wrapTablePlugin)
+      .use(sluggerPlugin, anchors.add.bind(anchors), config.headings)
+      .use(rehypeMinifyWhitespace)
+      .use(autolinkHeadingPlugin, config.route)
+      .use(markElementsPlugin)
+      .process(html)
+      .then((file: VFileWithOutput<string>) => file.toString());
+
+    return { content, anchors: Array.from(anchors) };
+  } catch (error) {
+    return { content: html, anchors: [], error };
+  }
 }

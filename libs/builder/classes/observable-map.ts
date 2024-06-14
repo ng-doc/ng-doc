@@ -20,6 +20,10 @@ export class ObservableMap<TKey, TValue> {
     yield* this.collection;
   }
 
+  keys(): TKey[] {
+    return asArray(this.collection.keys());
+  }
+
   asArray(): TValue[] {
     return asArray(this.collection.values());
   }

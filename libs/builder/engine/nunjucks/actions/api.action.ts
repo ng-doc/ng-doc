@@ -13,6 +13,7 @@ export function apiAction(declarationPath: string): NgDocAction<string> {
   return (entry) => {
     const project = entry.sourceFile.getProject();
     const declaration = getDeclarationByPath(project, declarationPath);
+    const declarationName = declaration.getName() || '[Unknown]';
     const kindName = kebabCase(declaration.getKindName());
     const output = renderTemplate(`./api/${kindName}.html.nunj`, {
       context: {
@@ -27,7 +28,9 @@ export function apiAction(declarationPath: string): NgDocAction<string> {
     });
 
     return {
-      output: minifyHtml(output),
+      output: minifyHtml(
+        `<ng-doc-keyword-scope id="${declarationName}" title="${declarationName}">${output}</ng-doc-keyword-scope>`,
+      ),
       dependencies: [declaration.getSourceFile().getFilePath()],
     };
   };

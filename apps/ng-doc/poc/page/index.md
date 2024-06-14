@@ -12,6 +12,8 @@ we
 
 `*AnotherPage#section1`
 
+`MyInterface.haha`
+
 ```mermaid
 graph TB
     A & B--> C & D

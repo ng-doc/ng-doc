@@ -94,7 +94,7 @@ export class NgDocSearchComponent {
       hasBackdrop: true,
       backdropClass: 'ng-doc-blur-backdrop',
       panelClass: 'ng-doc-transparent-dialog',
-      positionStrategy: this.dialog.positionStrategy().centerHorizontally().top(),
+      positionStrategy: this.dialog.positionStrategy().centerHorizontally().top('5vh'),
       data: {
         term: this.query.value,
         search: (query: string) => this.query.next(query),
