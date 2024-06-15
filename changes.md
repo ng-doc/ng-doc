@@ -72,7 +72,6 @@ TODO:
 - update schematics for page generation based on the new API
 - improve cache by using lmdb library
 - check order of API properties modificators
-- indexes for NgDocOverlayRef are not correct
 - add parsing of the `angular.dev` for the angular keyword loader
 
 Inspirations:

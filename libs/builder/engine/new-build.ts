@@ -4,7 +4,6 @@ import {
   entriesEmitter,
   GLOBALS,
   isBuilderDone,
-  keywordsStore,
   loadGlobalKeywords,
   printBuildProgress,
   setColdStartFalse,
@@ -70,8 +69,6 @@ export function newBuild(context: NgDocBuilderContext): Observable<void> {
         output.state,
         isBuilderDone(output) ? output.result.filePath : output.error,
       );
-
-      console.log(keywordsStore.keys());
     }),
     debounceTime(0),
     map(() => void 0),
