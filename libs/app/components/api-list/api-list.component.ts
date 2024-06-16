@@ -72,6 +72,7 @@ interface ApiFilterForm {
   ],
 })
 export class NgDocApiListComponent {
+  title = input<string>('API References');
   segment = input<string>();
 
   apiList: Signal<NgDocApiList[]>;

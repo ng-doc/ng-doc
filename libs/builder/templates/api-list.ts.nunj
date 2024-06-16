@@ -4,20 +4,20 @@ import {Routes} from "@angular/router";
 import {NgDocApiListComponent} from '@ng-doc/app';
 
 @Component({
-    selector: 'ng-doc-api-list-page-{{ id }}',
-    standalone: true,
-    template: `<ng-doc-api-list segment="{{ segment }}"></ng-doc-api-list>`,
-    imports: [NgDocApiListComponent],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'ng-doc-api-list-page-{{ id }}',
+  standalone: true,
+  template: `<ng-doc-api-list title="{{ title }}" segment="{{ segment }}"></ng-doc-api-list>`,
+  imports: [NgDocApiListComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DynamicComponent {
 }
 
 const routes: Routes = [
-    {
-        path: '',
-        component: DynamicComponent,
-    },
+  {
+    path: '',
+    component: DynamicComponent,
+  },
 ]
 
 export default routes;

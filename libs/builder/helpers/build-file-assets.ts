@@ -1,7 +1,7 @@
-import { GLOBALS } from '@ng-doc/builder';
 import { NgDocCodeType } from '@ng-doc/core';
 import * as fs from 'fs';
 
+import { GLOBALS } from '../engine/variables';
 import { NgDocAsset } from '../interfaces';
 import { codeTypeFromExt } from './code-type-from-ext';
 
@@ -10,14 +10,14 @@ import { codeTypeFromExt } from './code-type-from-ext';
  * @param filePath - The path to the file.
  */
 export function buildFileAsset(filePath: string): NgDocAsset {
-	const fileContent: string = fs.readFileSync(filePath, 'utf8').trim();
-	const codeType: NgDocCodeType = codeTypeFromExt(filePath);
+  const fileContent: string = fs.readFileSync(filePath, 'utf8').trim();
+  const codeType: NgDocCodeType = codeTypeFromExt(filePath);
 
-	return {
-		title: codeType,
-		code: fileContent,
-		isEmpty: !fileContent,
-		filePath: GLOBALS.relative(filePath),
-		lang: codeType,
-	};
+  return {
+    title: codeType,
+    code: fileContent,
+    isEmpty: !fileContent,
+    filePath: GLOBALS.relative(filePath),
+    lang: codeType,
+  };
 }

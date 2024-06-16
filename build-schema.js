@@ -8,28 +8,28 @@ const fs = require('fs');
 const argv = yargs(hideBin(process.argv)).argv;
 
 function buildSchema(from, to) {
-	const schemas = glob.sync(from);
+  const schemas = glob.sync(from);
 
-	schemas.forEach((schemaPath) => {
-		const builder = basename(dirname(schemaPath));
-		const schema = loadSchema(schemaPath);
-		const schemaName = basename(schemaPath);
-		const originalSchema = loadSchema(
-			`./node_modules/@angular-devkit/build-angular/src/builders/${builder}/schema.json`,
-		);
-		const newSchema = merge(originalSchema, schema);
-		const newSchemaPath = join(to, builder, schemaName);
+  schemas.forEach((schemaPath) => {
+    const builder = basename(dirname(schemaPath));
+    const schema = loadSchema(schemaPath);
+    const schemaName = basename(schemaPath);
+    const originalSchema = loadSchema(
+      `./node_modules/@angular/build/src/builders/${builder}/schema.json`,
+    );
+    const newSchema = merge(originalSchema, schema);
+    const newSchemaPath = join(to, builder, schemaName);
 
-		fs.writeFileSync(newSchemaPath, JSON.stringify(newSchema, null, 2), 'utf-8');
-	});
+    fs.writeFileSync(newSchemaPath, JSON.stringify(newSchema, null, 2), 'utf-8');
+  });
 }
 
 function loadSchema(path) {
-	return JSON.parse(fs.readFileSync(path, { encoding: 'utf-8' }));
+  return JSON.parse(fs.readFileSync(path, { encoding: 'utf-8' }));
 }
 
 if (argv.from && argv.to) {
-	buildSchema(argv.from, argv.to);
+  buildSchema(argv.from, argv.to);
 }
 
 module.exports = { buildSchema };
