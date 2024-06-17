@@ -32,7 +32,7 @@ export default function addHeadingAnchors(route?: string): any {
 
         node.properties = {
           ...node.properties,
-          href: `${route}#${node.properties['id']}`,
+          href: route,
           headingLink: 'true',
         };
       }

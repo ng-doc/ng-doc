@@ -18,15 +18,14 @@ export function generateToc(container: HTMLElement): NgDocTocItem[] {
 
   return headingElements.reduce((map: NgDocTocItem[], heading: HTMLHeadingElement) => {
     const headingLevel: number = levelFromTagName(heading);
-    const anchor: HTMLAnchorElement | null =
-      heading.querySelector<HTMLAnchorElement>('a.ng-doc-header-link');
+    const isHeadingLink = heading.getAttribute('headingLink') === 'true';
 
-    if (anchor) {
+    if (isHeadingLink) {
       map.push({
         title: heading.textContent?.trim() ?? '',
         element: heading,
-        path: anchor.pathname,
-        hash: anchor.hash.replace('#', ''),
+        path: heading.getAttribute('href') ?? '',
+        hash: heading.id,
         level: levels.indexOf(headingLevel) + 1,
       });
     }
