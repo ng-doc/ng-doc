@@ -1,3 +1,10 @@
+## [17.6.14](https://github.com/ng-doc/ng-doc/compare/v17.6.13...v17.6.14) (2024-06-17)
+
+
+### Bug Fixes
+
+* **app:** anchor scrolling doesn't work for Chinese and Cyrillic characters ([5cb20e2](https://github.com/ng-doc/ng-doc/commit/5cb20e2f09f20b2b7cf8deef418e762a8970b6e5)), closes [#172](https://github.com/ng-doc/ng-doc/issues/172)
+
 ## [17.6.13](https://github.com/ng-doc/ng-doc/compare/v17.6.12...v17.6.13) (2024-06-14)
 
 
