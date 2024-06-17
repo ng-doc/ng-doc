@@ -10,6 +10,7 @@ import {
 	Renderer2,
 } from '@angular/core';
 import { Params, RouterLink } from '@angular/router';
+import { NgDocDecodeUriComponentPipe } from '@ng-doc/app/pipes';
 import { NgDocIconComponent } from '@ng-doc/ui-kit';
 
 @Component({
@@ -18,7 +19,7 @@ import { NgDocIconComponent } from '@ng-doc/ui-kit';
 	styleUrls: ['./page-link.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	standalone: true,
-	imports: [NgIf, RouterLink, NgTemplateOutlet, NgDocIconComponent],
+	imports: [NgIf, RouterLink, NgTemplateOutlet, NgDocIconComponent, NgDocDecodeUriComponentPipe],
 })
 export class NgDocPageLinkComponent implements OnInit, OnChanges {
 	@Input({ required: true })
