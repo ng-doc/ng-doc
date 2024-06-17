@@ -1,7 +1,7 @@
 <a
 	[class]="classes"
 	[routerLink]="path"
-	[fragment]="fragment"
+	[fragment]="fragment ?? '' | decodeUriComponent"
 	[queryParams]="queryParams"
 	*ngIf="!isExternalLink">
 	<ng-container *ngTemplateOutlet="content"></ng-container>
