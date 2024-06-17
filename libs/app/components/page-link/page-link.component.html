@@ -1,17 +1,17 @@
 <a
-	[class]="classes"
-	[routerLink]="path"
-	[fragment]="fragment"
-	[queryParams]="queryParams"
-	*ngIf="!isExternalLink">
-	<ng-container *ngTemplateOutlet="content"></ng-container>
+  [class]="classes"
+  [routerLink]="path"
+  [fragment]="fragment ?? '' | decodeUriComponent"
+  [queryParams]="queryParams"
+  *ngIf="!isExternalLink">
+  <ng-container *ngTemplateOutlet="content"></ng-container>
 </a>
 
 <a [class]="classes" [href]="path" *ngIf="isExternalLink" target="_blank">
-	<ng-container *ngTemplateOutlet="content"></ng-container>
-	<ng-doc-icon icon="external-link" *ngIf="!isInCode"></ng-doc-icon>
+  <ng-container *ngTemplateOutlet="content"></ng-container>
+  <ng-doc-icon icon="external-link" *ngIf="!isInCode"></ng-doc-icon>
 </a>
 
 <ng-template #content>
-	<ng-content></ng-content>
+  <ng-content></ng-content>
 </ng-template>

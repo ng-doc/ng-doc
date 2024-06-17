@@ -1,6 +1,6 @@
 <a
   [routerLink]="[]"
-  [fragment]="hash"
+  [fragment]="hash | decodeUriComponent"
   [style.padding-left]="'calc(var(--ng-doc-toc-indent) * ' + level + ')'">
   <ng-content></ng-content>
 </a>

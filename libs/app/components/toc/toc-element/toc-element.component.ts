@@ -7,6 +7,7 @@ import {
   Input,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { NgDocDecodeUriComponentPipe } from '@ng-doc/app/pipes/decode-uri-component';
 
 @Component({
   selector: 'li[ng-doc-toc-element]',
@@ -14,7 +15,7 @@ import { RouterLink } from '@angular/router';
   styleUrls: ['./toc-element.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, NgDocDecodeUriComponentPipe],
 })
 export class NgDocTocElementComponent {
   @Input()
