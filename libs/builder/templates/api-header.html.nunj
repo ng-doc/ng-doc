@@ -1,11 +1,11 @@
-{% import "helpers/deprecated.html.nunj" as deprecatedMacro %}
+{% import "helpers/status.html.nunj" as statusMacro %}
 
 {% include "parts/page-tags.html.nunj" %}
 
-<h1 class="{{ deprecatedMacro.class(docNode) }}">
+<h1 class="{{ statusMacro.class(docNode) }}">
     {{ declaration.getName() }}
 </h1>
 
-{{ deprecatedMacro.render(docNode) }}
+{{ statusMacro.render(docNode) }}
 
 {% include "api/details.html.nunj" %}

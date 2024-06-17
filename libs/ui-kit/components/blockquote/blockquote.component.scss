@@ -32,6 +32,12 @@
     --ng-doc-icon-color: var(--ng-doc-alert);
   }
 
+  &[data-ng-doc-type='success'] {
+    --ng-doc-blockquote-background: var(--ng-doc-success);
+    --ng-doc-blockquote-border-color: var(--ng-doc-success);
+    --ng-doc-icon-color: var(--ng-doc-success);
+  }
+
   .ng-doc-blockquote-icon {
     display: flex;
     margin-right: calc(var(--ng-doc-base-gutter) * 2);

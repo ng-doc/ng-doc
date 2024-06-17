@@ -1,14 +1,21 @@
 @if (type !== 'default') {
   <div class="ng-doc-blockquote-icon">
-    @switch (type) {
-      @case ('note') {
-        <ng-doc-icon icon="info" size="24"></ng-doc-icon>
-      }
-      @case ('warning') {
-        <ng-doc-icon icon="alert-triangle" size="24"></ng-doc-icon>
-      }
-      @case ('alert') {
-        <ng-doc-icon icon="alert-circle" size="24"></ng-doc-icon>
+    @if (icon) {
+      <ng-doc-icon [icon]="icon" size="24"></ng-doc-icon>
+    } @else {
+      @switch (type) {
+        @case ('note') {
+          <ng-doc-icon icon="info" size="24"></ng-doc-icon>
+        }
+        @case ('warning') {
+          <ng-doc-icon icon="alert-triangle" size="24"></ng-doc-icon>
+        }
+        @case ('success') {
+          <ng-doc-icon icon="check" size="24"></ng-doc-icon>
+        }
+        @case ('alert') {
+          <ng-doc-icon icon="alert-circle" size="24"></ng-doc-icon>
+        }
       }
     }
   </div>

@@ -5,7 +5,7 @@
 {% import "helpers/decorators.html.nunj" as decoratorsMacro %}
 {% import "helpers/no-content.html.nunj" as noContentMacro %}
 {% import "helpers/overload.html.nunj" as overloadMacro %}
-{% import "helpers/deprecated.html.nunj" as deprecatedMacro %}
+{% import "helpers/status.html.nunj" as statusMacro %}
 
 {% macro render(method, origin) %}
     {% set parameters = method.getParameters() %}
@@ -16,7 +16,7 @@
     {% set docNode = methodChain | firstNodeWithComment %}
     {% set overloads = method.getOverloads() if method.getOverloads else [] %}
 
-    <table class="{{ deprecatedMacro.class(method) }}">
+    <table class="{{ statusMacro.class(method) }}">
         <thead>
         <tr>
             <th indexable="false">
@@ -40,7 +40,7 @@
         <tr>
             <td>
                 <div class="ng-doc-api-status">
-                    {{ deprecatedMacro.render(method) }}
+                    {{ statusMacro.render(method) }}
                 </div>
 
                 {% set description = docNode | getJsDocDescription %}

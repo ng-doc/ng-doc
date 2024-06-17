@@ -24,6 +24,7 @@
   performance of the app.
 - Orama search that's used as a primary search engine was updated to `2.0.17` version.
 - `NgDocProcessorOptions` now infers the type of the signal inputs correctly.
+- Added a success type for the blockquote
 
 ## UI
 
@@ -46,8 +47,11 @@
 
 - Component/Directive/Pipe selectors now are used as keywords by default, they'll be automatically
   converted to API links inside inline code or code blocks with the `HTML` language specified.
-- Added support for `@deprecated` JSDoc tag
 - Added support for `@internal` JSDoc tag
+- Added support for `@deprecated` JSDoc tag
+- Added support for `@experimental` JSDoc tag
+- Added support for `@alpha` JSDoc tag
+- Added support for `@beta` JSDoc tag
 - added a new `NgDocApi` class that you can use in your guides to display API info for the
   provided declaration path.
 - added a new `NgDocApi.api` method that generates API tables for the provided declaration path.

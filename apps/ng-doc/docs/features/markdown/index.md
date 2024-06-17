@@ -19,6 +19,9 @@ NgDoc supports default blockquotes and some custom blockquotes, for example, you
 
 > **Alert**
 > This is an alert blockquote
+
+> **Success**
+> This is an success blockquote
 ```
 
 > Default a blockquote
@@ -31,6 +34,9 @@ NgDoc supports default blockquotes and some custom blockquotes, for example, you
 
 > **Alert**
 > This is an alert blockquote
+
+> **Success**
+> This is an success blockquote
 
 ## Code blocks
 
