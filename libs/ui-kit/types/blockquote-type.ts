@@ -1,1 +1,1 @@
-export type NgDocBlockquoteType = 'note' | 'warning' | 'default';
+export type NgDocBlockquoteType = 'note' | 'warning' | 'default' | 'alert';
