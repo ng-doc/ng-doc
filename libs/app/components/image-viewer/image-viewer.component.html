@@ -1,7 +1,7 @@
 <ng-content></ng-content>
 
 <ng-template #image>
-  <div class="ng-doc-image-container" (click)="overlayRef?.close()" [style.padding.px]="padding">
+  <div class="ng-doc-image-container" (click)="overlayRef?.close()">
     <img class="ng-doc-scaled-image" [src]="src()" [alt]="alt()" />
   </div>
 </ng-template>

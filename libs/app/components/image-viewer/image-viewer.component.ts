@@ -1,4 +1,4 @@
-import { animate, style } from '@angular/animations';
+import { animate, group, query, style } from '@angular/animations';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -33,7 +33,6 @@ export class NgDocImageViewerComponent {
   protected readonly overlay = inject(NgDocOverlayService);
   protected readonly element = inject(ElementRef<HTMLElement>).nativeElement;
   protected readonly changeDetectorRef = inject(ChangeDetectorRef);
-  protected readonly padding = 16;
   protected overlayRef?: NgDocOverlayRef;
 
   @HostListener('click')
@@ -65,15 +64,13 @@ export class NgDocImageViewerComponent {
       ],
       closeAnimation: [
         style({ position: 'fixed', width: '100%', height: '100%', top: '0', left: '0' }),
-        animate(
-          '300ms cubic-bezier(0.25, 0.8, 0.25, 1)',
-          style({
-            width: width + this.padding + 2,
-            height: height + this.padding * 2,
-            top: top - this.padding,
-            left: left - this.padding,
-          }),
-        ),
+        group([
+          animate('300ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({ width, height, top, left })),
+          query(
+            '.ng-doc-image-container',
+            animate('300ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({ padding: 0 })),
+          ),
+        ]),
       ],
     });
 
