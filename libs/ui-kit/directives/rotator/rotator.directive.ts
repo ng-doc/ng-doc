@@ -2,7 +2,6 @@ import { Directive, HostBinding, Input } from '@angular/core';
 
 /**
  * Directive rotates host with transition
- * @alpha Documentation is in alpha state
  */
 @Directive({
   selector: '[ngDocRotator]',
