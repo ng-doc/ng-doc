@@ -25,6 +25,7 @@ export function apiListComponentBuilder(config: Config): Builder<FileOutput> {
         context: {
           id: uid(),
           segment: metadata.entry.route,
+          title: metadata.entry.title,
         },
       }),
     })),
