@@ -116,7 +116,7 @@
     "@angular/build": "18.0.1",
     "@angular-devkit/core": "18.0.1",
     "@angular-eslint/eslint-plugin": "17.3.0",
-    "@angular-eslintn/eslint-plugin-template": "17.3.0",
+    "@angular-eslint/eslint-plugin-template": "17.3.0",
     "@angular-eslint/template-parser": "17.3.0",
     "@angular/cli": "~18.0.1",
     "@angular/compiler-cli": "18.0.0",
