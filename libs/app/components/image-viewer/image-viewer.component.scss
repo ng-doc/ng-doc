@@ -13,7 +13,7 @@
 
   & > ::ng-deep {
     img {
-      width: 100%;
+      max-width: 100%;
       vertical-align: middle;
       border-radius: var(--ng-doc-base-gutter);
       overflow: hidden;
@@ -31,7 +31,6 @@
 
   .ng-doc-scaled-image {
     cursor: zoom-out;
-    width: 100%;
     max-width: 100%;
     max-height: 100%;
   }
