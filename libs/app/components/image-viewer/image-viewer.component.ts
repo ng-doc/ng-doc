@@ -52,15 +52,21 @@ export class NgDocImageViewerComponent {
       backdropClass: 'ng-doc-blur-backdrop',
       openAnimation: [
         style({ position: 'fixed', width, height, top, left }),
-        animate(
-          '300ms cubic-bezier(0.25, 0.8, 0.25, 1)',
-          style({
-            width: '100%',
-            height: '100%',
-            top: '0',
-            left: '0',
-          }),
-        ),
+        group([
+          animate(
+            '300ms cubic-bezier(0.25, 0.8, 0.25, 1)',
+            style({
+              width: '100%',
+              height: '100%',
+              top: '0',
+              left: '0',
+            }),
+          ),
+          query('.ng-doc-image-container', [
+            style({ padding: 0 }),
+            animate('300ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({ padding: '16px' })),
+          ]),
+        ]),
       ],
       closeAnimation: [
         style({ position: 'fixed', width: '100%', height: '100%', top: '0', left: '0' }),

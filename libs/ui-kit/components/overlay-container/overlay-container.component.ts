@@ -5,6 +5,7 @@ import {
 } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -51,7 +52,9 @@ import { distinctUntilChanged } from 'rxjs/operators';
     PolymorpheusModule,
   ],
 })
-export class NgDocOverlayContainerComponent implements NgDocOverlayContainer, OnInit, OnDestroy {
+export class NgDocOverlayContainerComponent
+  implements NgDocOverlayContainer, OnInit, AfterViewInit, OnDestroy
+{
   @Input()
   content: NgDocContent = '';
 
@@ -84,7 +87,6 @@ export class NgDocOverlayContainerComponent implements NgDocOverlayContainer, On
   ) {}
 
   ngOnInit(): void {
-    this.runAnimation(this.config?.openAnimation || []);
     if (this.config?.positionStrategy instanceof FlexibleConnectedPositionStrategy) {
       this.config.positionStrategy.positionChanges
         .pipe(
@@ -100,6 +102,10 @@ export class NgDocOverlayContainerComponent implements NgDocOverlayContainer, On
           this.changeDetectorRef.markForCheck();
         });
     }
+  }
+
+  ngAfterViewInit(): void {
+    this.runAnimation(this.config?.openAnimation || []);
   }
 
   @HostBinding('attr.data-ng-doc-overlay-with-contact-border')
