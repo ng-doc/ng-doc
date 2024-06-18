@@ -6,7 +6,7 @@ const page: NgDocPage = {
   title: `SSR`,
   mdFile: './index.md',
   category: GettingStartedCategory,
-  order: 2,
+  order: 3,
   keyword: 'SSRPage',
 };
 
