@@ -1,7 +1,7 @@
 import { EMPTY, of, OperatorFunction } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { createCache, isCacheValid, loadCache, updateCache } from '../../entities/cache';
+import { createCache, isCacheValid, loadCache, updateCache } from '../../cache';
 import { BuilderDone, BuilderState, CacheStrategy, isBuilderDone } from '../types';
 import { isColdStart } from '../variables';
 

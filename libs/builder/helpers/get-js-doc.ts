@@ -1,7 +1,7 @@
 import { asArray, isPresent } from '@ng-doc/core';
 import { JSDocableNode } from 'ts-morph';
 
-import { markdownToHtml } from './markdown-to-html';
+import { UTILS } from './utils';
 
 /**
  *
@@ -14,7 +14,7 @@ export function getJsDocDescription(node: JSDocableNode): string {
     .map(({ description }) => description)
     .join('');
 
-  return markdownToHtml(description).trim();
+  return UTILS.markdownToHtml(description).trim();
 }
 
 /**
@@ -31,7 +31,7 @@ export function getJsDocTag(node: JSDocableNode, tagName: string): string {
     .map((tag) => tag?.text)
     .join('');
 
-  return markdownToHtml(tag).trim();
+  return UTILS.markdownToHtml(tag).trim();
 }
 
 /**
@@ -48,7 +48,7 @@ export function getJsDocTags(node: JSDocableNode, tagName: string): string[] {
     .filter(isPresent)
     .map((tag) => tag?.text);
 
-  return tags.map((tag) => markdownToHtml(String(tag)).trim());
+  return tags.map((tag) => UTILS.markdownToHtml(String(tag)).trim());
 }
 
 /**
@@ -84,7 +84,7 @@ export function getJsDocParam(node: JSDocableNode, paramName: string): string {
     .map((tag) => getParameter(String(tag.text)).description)
     .join('');
 
-  return markdownToHtml(param).trim();
+  return UTILS.markdownToHtml(param).trim();
 }
 
 /**

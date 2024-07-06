@@ -1,32 +1,35 @@
-# Section
+<a routerLink="./">test</a>
+<a [routerLink]="['/']">test2</a>
+<a href="http://google.com">google</a>
 
-nnn
+[Api](/docs/api)
 
-`*AnotherPage`
-`*AnotherApiPage`
-123
-qwe
-sd
-we
-123
+> **Warning**
+> This is a warning.
 
-`*AnotherPage#section1`
 
-`MyInterface.haha`
 
-```mermaid
-graph TB
-    A & B--> C & D
+```html
+<div>test</div>
+<div>test</div>
+
+@if (true) {
+  <div>test</div>
+}
 ```
 
-```mermaid
-graph TD
-   A(Coffee machine <br>not working) --> B{Machine has power?}
-   B -->|No| H(Plug in and turn on)
-   B -->|Yes| C{Out of beans or water?} -->|Yes| G(Refill beans and water)
-   C -->|No| D{Filter warning?} -->|Yes| I(Replace or clean filter)
-   D -->|No| F(Send for repair)
-
+```typescript
+@Component({
+  selector: 'ng-doc-dem',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+    <!-- snippet "Test" -->
+    <p>demo works!</p>
+    123123
+    <!-- snippet -->
+  `,
+})
+export class DemoComponent {
+}
 ```
-
-{{ NgDocActions.demo("DemoComponent") }}

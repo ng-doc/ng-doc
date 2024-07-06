@@ -16,11 +16,11 @@ export default function highlightCodeLines() {
           node.children.forEach((child: ElementContent, i: number) => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            if (isElement(child) && child.properties.class?.includes('line')) {
+            if (isElement(child) && child.properties.className?.includes('line')) {
               if (highlightedLines.includes(i + 1)) {
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
-                child.properties.class.push('highlighted');
+                child.properties.className.push('highlighted');
               }
             }
           });

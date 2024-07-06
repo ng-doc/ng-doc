@@ -1,6 +1,7 @@
 export * from './as-array';
 export * from './build-playground-demo-template';
 export * from './capitalize';
+export * from './escape-angular';
 export * from './escape-html';
 export * from './escape-regexp';
 export * from './extract-function-defaults';
@@ -14,6 +15,7 @@ export * from './is-route';
 export * from './is-same-object';
 export * from './kebab-case';
 export * from './object-keys';
+export * from './remove-lines-from-code';
 export * from './stringify';
 export * from './uid';
 export * from './unique';

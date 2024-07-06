@@ -52,9 +52,6 @@ export class NgDocPageWrapperComponent implements OnInit {
   @Input({ required: true })
   routes!: Routes;
 
-  @Input({ required: true })
-  headerContent!: string;
-
   @Input()
   hasBreadcrumb = true;
 

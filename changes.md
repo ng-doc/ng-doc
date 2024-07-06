@@ -77,6 +77,7 @@ TODO:
 - improve cache by using lmdb library
 - check order of API properties modificators
 - add parsing of the `angular.dev` for the angular keyword loader
+- migrate to shiki for syntax highlighting
 
 Inspirations:
 https://mui.com/base-ui/react-autocomplete/

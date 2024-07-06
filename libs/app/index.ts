@@ -5,6 +5,7 @@ export * from '@ng-doc/app/defaults';
 export * from '@ng-doc/app/directives';
 export * from '@ng-doc/app/helpers';
 export * from '@ng-doc/app/interfaces';
+export * from '@ng-doc/app/page-components';
 export * from '@ng-doc/app/pipes';
 export * from '@ng-doc/app/processors';
 export * from '@ng-doc/app/providers';

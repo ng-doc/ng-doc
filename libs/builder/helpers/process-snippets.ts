@@ -3,9 +3,9 @@ import * as fs from 'fs';
 import path from 'path';
 
 import { NgDocSnippet } from '../interfaces';
-import { parseSnippet } from '../parsers/parse-snippet';
 import { formatCode } from './format-code';
 import { getCodeTypeFromLang } from './get-code-type-from-lang';
+import { UTILS } from './utils';
 
 const snippet = (id?: string | null) =>
 	id
@@ -36,7 +36,7 @@ export function processSnippets(code: string, basePath?: string): NgDocSnippet[]
 		const isHTMLComment = match[2] === '<!--';
 
 		if (match[3]?.includes('snippet-from-file=') && basePath) {
-			const config = parseSnippet(match[3].trim());
+			const config = UTILS.parseSnippet(match[3].trim());
 
 			if (config) {
 				const { title, lang, icon, opened, fromFile } = config;
@@ -56,7 +56,7 @@ export function processSnippets(code: string, basePath?: string): NgDocSnippet[]
 				}
 			}
 		} else if (!endings.has(match.index)) {
-			const config = parseSnippet(match[3].trim());
+			const config = UTILS.parseSnippet(match[3].trim());
 
 			if (config) {
 				const { id, title, lang, icon, opened } = config;

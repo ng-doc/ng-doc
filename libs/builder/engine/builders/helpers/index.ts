@@ -11,5 +11,3 @@ export * from './get-playground-metadata';
 export * from './get-scoped-keyword';
 export * from './get-structured-docs';
 export * from './markdown-front-matter';
-export * from './post-process-html';
-export * from './process-html';

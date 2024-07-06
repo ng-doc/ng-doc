@@ -10,10 +10,6 @@ export abstract class NgDocRootPage {
    * The type of the page
    */
   abstract readonly pageType: NgDocPageType;
-  /**
-   * Html content of the page
-   */
-  abstract readonly pageContent: string;
 
   /**
    * Edit URL that can be used to edit the page source file in the repository

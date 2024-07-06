@@ -1,4 +1,4 @@
-import { escapeHtml, NgDocDemoActionOptions } from '@ng-doc/core';
+import { NgDocDemoActionOptions } from '@ng-doc/core';
 
 import { NgDocAction } from '../../../types';
 
@@ -14,9 +14,7 @@ export function demoAction(
 ): NgDocAction<string> {
   return () => {
     return {
-      output: `<ng-doc-demo componentName="${componentName}" indexable="false">
-						<div id="options">${escapeHtml(JSON.stringify(options ?? {}))}</div>
-					</ng-doc-demo>`,
+      output: `<ng-doc-demo componentName="${componentName}" indexable="false" [options]="${JSON.stringify(options ?? {})}"></ng-doc-demo>`,
     };
   };
 }

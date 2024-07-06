@@ -1,7 +1,12 @@
 // @ts-nocheck
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {Routes} from '@angular/router';
-import {NgDocDemoAssets, NgDocPageComponent, NgDocRootPage} from '@ng-doc/app';
+import {
+  NG_DOC_PAGE_SHARABLE_COMPONENTS,
+  NgDocDemoAssets,
+  NgDocPageComponent,
+  NgDocRootPage,
+} from '@ng-doc/app';
 import {isRoute, NgDocPage, NgDocPageType} from '@ng-doc/core';
 {%- if entryPath %}
 import entry from '{{ metadata.outDir | createImportPath(entryPath) }}';
@@ -13,15 +18,14 @@ import {PLAYGROUND_COMPONENTS, PLAYGROUND_PROVIDERS} from '{{ metadata.outDir | 
 import demoAssets from '{{ metadata.outDir | createImportPath(demoAssetsPath) }}';
 {%- endif %}
 
-const pageContent: string = `{{ content | toTemplateString }}`
-
 @Component({
   selector: 'ng-doc-page-{{ id }}',
   standalone: true,
-  template: `<ng-doc-page></ng-doc-page>`,
+  template: `<ng-doc-page>{{content | toTemplateString }}</ng-doc-page>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgDocPageComponent,
+    ...NG_DOC_PAGE_SHARABLE_COMPONENTS,
       {%- if entryPath and entryHasImports %}
     ...entry.imports,
       {%- endif %}
@@ -41,7 +45,6 @@ const pageContent: string = `{{ content | toTemplateString }}`
 })
 export class PageComponent extends NgDocRootPage {
   readonly pageType: NgDocPageType = '{{ pageType }}';
-  readonly pageContent: string = pageContent;
     {%- if editSourceFileUrl %}
   readonly editSourceFileUrl: string = '{{ editSourceFileUrl }}';
     {%- endif %}

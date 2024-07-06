@@ -5,10 +5,7 @@ import {
   createMainTrigger,
   NgDocBuilderContext,
   NgDocComponentAsset,
-  postProcessHtml,
-  processHtml,
   renderTemplate,
-  replaceKeywords,
   runBuild,
 } from '@ng-doc/builder';
 import { NgDocPage } from '@ng-doc/core';
@@ -16,7 +13,7 @@ import * as path from 'path';
 import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { getDemoAssets, getDemoClassDeclarations } from '../../../helpers';
+import { getDemoAssets, getDemoClassDeclarations, UTILS } from '../../../helpers';
 import { Builder, watchFile } from '../../core';
 import { EntryMetadata } from '../interfaces';
 
@@ -70,13 +67,13 @@ export function demoAssetsBuilder(config: Config): Builder<AsyncFileOutput> {
 
         for (const [, value] of Object.entries(demoAssets)) {
           for (const asset of value) {
-            const processed = await processHtml(asset.code, {});
+            const processed = await UTILS.htmlProcessor(asset.code, {});
 
             if (processed.error) {
               throw processed.error;
             }
 
-            const postProcessed = await postProcessHtml(processed.content);
+            const postProcessed = await UTILS.postProcessHtml(processed.content);
 
             if (postProcessed.error) {
               throw postProcessed.error;
@@ -91,7 +88,7 @@ export function demoAssetsBuilder(config: Config): Builder<AsyncFileOutput> {
         return async () => {
           for (const [, value] of Object.entries(demoAssets)) {
             for (const asset of value) {
-              asset.code = await replaceKeywords(asset.code);
+              asset.code = await UTILS.replaceKeywords(asset.code);
             }
           }
 

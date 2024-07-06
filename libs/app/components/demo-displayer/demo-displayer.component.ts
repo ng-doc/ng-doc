@@ -30,6 +30,9 @@ import {
     NgDocCodeHighlighterDirective,
     NgDocCopyButtonComponent,
   ],
+  host: {
+    ngSkipHydration: 'true',
+  }
 })
 export class NgDocDemoDisplayerComponent {
   @Input()

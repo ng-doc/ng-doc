@@ -10,7 +10,7 @@ const NO_ANCHOR_CLASS: string = 'no-anchor';
  * @param options
  * @param route
  */
-export default function addHeadingAnchors(route?: string): any {
+export default function addHeadingAnchorsPlugin(route?: string): any {
   return (tree: Root) =>
     visit(tree, 'element', (node: Element) => {
       if (

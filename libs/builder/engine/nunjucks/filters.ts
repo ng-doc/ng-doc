@@ -1,4 +1,5 @@
 /* Just re-export filters from this file, they will be included to the template renderer automatically */
+import { UTILS } from '../../helpers';
 
 export {
   accessorPresentation,
@@ -33,7 +34,6 @@ export {
   getPropertyChain,
   groupAccessors,
   hasJsDocTag,
-  markdownToHtml,
   methodPresentation,
   noEmpty,
   noLineBreaks,
@@ -46,3 +46,6 @@ export {
 } from '../../helpers';
 export { createImportPath } from '../builders/helpers';
 export { isRoute, kebabCase, objectKeys, unique } from '@ng-doc/core';
+
+export const markdownToHtml: typeof UTILS.markdownToHtml = (markdown: string) =>
+  UTILS.markdownToHtml(markdown);

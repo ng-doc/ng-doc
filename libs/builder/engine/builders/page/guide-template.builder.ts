@@ -3,7 +3,7 @@ import { NgDocPage } from '@ng-doc/core';
 import path from 'path';
 import { takeUntil } from 'rxjs';
 
-import { markdownToHtml } from '../../../helpers';
+import { UTILS } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
 import {
   Builder,
@@ -34,7 +34,7 @@ export const GUIDE_BUILDER_TAG = 'Guide';
 export function guideTemplateBuilder(config: Config): Builder<TemplateBuilderOutput> {
   const { context, mdFile, pageMetadata } = config;
   const mdPath = path.join(pageMetadata.dir, mdFile);
-  const mdDir = path.dirname(mdPath);
+  // const mdDir = path.dirname(mdPath);
   const cacheStrategy = {
     id: `${mdPath}#Template`,
     action: 'skip',
@@ -69,7 +69,9 @@ export function guideTemplateBuilder(config: Config): Builder<TemplateBuilderOut
                   filters: false,
                 });
 
-                return markdownToHtml(mdContent, mdDir, dependencies.add.bind(dependencies));
+                const c = UTILS.markdownToHtml(mdContent);
+
+                return c
               },
             }),
           ],

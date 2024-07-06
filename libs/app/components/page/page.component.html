@@ -19,9 +19,9 @@
 
 <div
   class="ng-doc-page-wrapper"
-  [ngDocPageProcessor]="rootPage.pageContent | ngDocSanitizeHtml"
-  (afterRender)="createToc()"
-  #pageContainer></div>
+  #pageContainer>
+  <ng-content></ng-content>
+</div>
 
 <ng-doc-dialog-outlet
   *ngIf="!rootPage.page?.disableFullscreenRoutes"

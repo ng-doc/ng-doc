@@ -2,10 +2,8 @@ import { NgDocPageType } from '@ng-doc/core';
 import { NgDocPageIndex } from '@ng-doc/core/interfaces';
 import { create } from '@orama/orama';
 import { defaultHtmlSchema, NodeContent, populate } from '@orama/plugin-parsedoc';
-import { firstValueFrom, from } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 
-import { importEsm } from './import-esm';
+import { UTILS } from './utils';
 
 export interface NgDocIndexBuilderConfig {
   title: string;
@@ -28,7 +26,7 @@ export async function buildIndexes(config: NgDocIndexBuilderConfig): Promise<NgD
     },
   });
 
-  const indexableContent: string = await removeNotIndexableContent(config.content);
+  const indexableContent: string = await UTILS.removeNotIndexableContent(config.content);
 
   await populate(db, indexableContent, 'html', {
     transformFn: (node: NodeContent) => transformFn(node),
@@ -109,16 +107,4 @@ function transformFn(node: NodeContent): NodeContent {
     default:
       return node;
   }
-}
-
-/**
- *
- * @param html
- */
-async function removeNotIndexableContent(html: string): Promise<string> {
-  return firstValueFrom(
-    from(importEsm<typeof import('@ng-doc/utils')>('@ng-doc/utils')).pipe(
-      switchMap((utils: typeof import('@ng-doc/utils')) => utils.removeNotIndexableContent(html)),
-    ),
-  );
 }

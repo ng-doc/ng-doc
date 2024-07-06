@@ -1,16 +1,18 @@
-<a
-  [class]="classes"
-  [routerLink]="path"
-  [fragment]="fragment ?? '' | decodeUriComponent"
-  [queryParams]="queryParams"
-  *ngIf="!isExternalLink">
-  <ng-container *ngTemplateOutlet="content"></ng-container>
-</a>
-
-<a [class]="classes" [href]="path" *ngIf="isExternalLink" target="_blank">
-  <ng-container *ngTemplateOutlet="content"></ng-container>
-  <ng-doc-icon icon="external-link" *ngIf="!isInCode"></ng-doc-icon>
-</a>
+@if (isExternalLink) {
+  <a [class]="classes" [href]="path" *ngIf="isExternalLink" target="_blank">
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+    <ng-doc-icon icon="external-link" *ngIf="!isInCode"></ng-doc-icon>
+  </a>
+} @else {
+  <a
+    [class]="classes"
+    [routerLink]="path"
+    [fragment]="(fragment ?? '' | decodeUriComponent) || undefined"
+    [queryParams]="queryParams"
+    *ngIf="!isExternalLink">
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+  </a>
+}
 
 <ng-template #content>
   <ng-content></ng-content>

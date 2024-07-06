@@ -1,12 +1,5 @@
 import { NgComponentOutlet, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostBinding,
-  Input,
-  OnInit,
-  Type,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, Signal, Type } from '@angular/core';
 import { NgDocRootPage } from '@ng-doc/app/classes/root-page';
 import { NgDocCodeComponent } from '@ng-doc/app/components/code';
 import { NgDocDemoDisplayerComponent } from '@ng-doc/app/components/demo-displayer';
@@ -40,52 +33,43 @@ import {
     NgDocFullscreenButtonComponent,
     NgComponentOutlet,
   ],
+  host: {
+    '[class]': 'this.options().class ?? ""',
+  },
 })
-export class NgDocDemoComponent implements OnInit {
-  @Input()
-  componentName?: string;
+export class NgDocDemoComponent {
+  componentName = input.required<string>();
+  options = input<NgDocDemoActionOptions>({});
 
-  @Input()
-  options: NgDocDemoActionOptions = {};
+  demo: Signal<Type<unknown>>;
+  assets: Signal<NgDocDemoAsset[]>;
+  openedAssetId: Signal<string | undefined>;
 
-  demo?: Type<unknown>;
-  assets: NgDocDemoAsset[] = [];
+  constructor(private readonly rootPage: NgDocRootPage) {
+    this.demo = computed(() => {
+      if (this.componentName) {
+        return this.rootPage.page?.demos && this.rootPage.page.demos[this.componentName()];
+      }
 
-  constructor(private readonly rootPage: NgDocRootPage) {}
+      return null;
+    });
 
-  @HostBinding('class')
-  protected get classes(): string | string[] {
-    return this.options.class ?? '';
-  }
+    this.assets = computed(() => {
+      if (this.componentName) {
+        return (
+          (this.rootPage.demoAssets && this.rootPage.demoAssets[this.componentName()]) ??
+          []
+        ).filter(
+          (asset: NgDocDemoAsset) =>
+            !this.options().tabs?.length || asArray(this.options().tabs).includes(asset.title),
+        );
+      }
 
-  ngOnInit(): void {
-    this.demo = this.getDemo();
-    this.assets = this.getAssets();
-  }
+      return [];
+    });
 
-  getOpenedAssetId(assets: NgDocDemoAsset[]): string | undefined {
-    return assets.find((asset: NgDocDemoAsset) => asset.opened)?.title;
-  }
-
-  private getDemo(): Type<unknown> | undefined {
-    if (this.componentName) {
-      return this.rootPage.page?.demos && this.rootPage.page.demos[this.componentName];
-    }
-
-    return undefined;
-  }
-
-  private getAssets(): NgDocDemoAsset[] {
-    if (this.componentName) {
-      return (
-        (this.rootPage.demoAssets && this.rootPage.demoAssets[this.componentName]) ??
-        []
-      ).filter(
-        (asset: NgDocDemoAsset) =>
-          !this.options.tabs?.length || asArray(this.options.tabs).includes(asset.title),
-      );
-    }
-
-    return [];
+    this.openedAssetId = computed(
+      () => this.assets().find((asset: NgDocDemoAsset) => asset.opened)?.title ?? this.options().defaultTab,
+    );
   }
 }

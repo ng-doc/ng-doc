@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostBinding, inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { NgDocCopyButtonComponent } from '@ng-doc/app/components/copy-button';
 import { NgDocButtonIconComponent, NgDocIconComponent } from '@ng-doc/ui-kit';
 import { LOCATION } from '@ng-web-apis/common';
@@ -18,10 +18,6 @@ import { LOCATION } from '@ng-web-apis/common';
 export class NgDocHeadingAnchorComponent {
   @Input({ required: true })
   anchor!: string;
-
-  @Input()
-  @HostBinding('class')
-  classes: string[] = [];
 
   protected readonly location = inject(LOCATION);
 

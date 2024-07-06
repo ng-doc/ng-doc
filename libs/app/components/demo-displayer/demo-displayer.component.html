@@ -21,15 +21,7 @@
       </button>
     </div>
   </div>
-  <ng-doc-expander [content]="codeContent ? codeContent : expanderContent" [expanded]="expanded">
-    <ng-template #expanderContent>
-      <ng-doc-code [copyButton]="false">
-        <pre class="hljs ngde">
-  					<code class="ngde" [ngDocCodeHighlighter]="code" [language]="'html'"></code>
-  				</pre>
-      </ng-doc-code>
-    </ng-template>
-  </ng-doc-expander>
+  <ng-doc-expander [content]="codeContent" [expanded]="expanded"/>
 </div>
 
 <ng-template #demoTemplate>

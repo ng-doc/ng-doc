@@ -1,10 +1,10 @@
 import { renderTemplate } from '@ng-doc/builder';
 import { NgDocStyleType } from '@ng-doc/core';
+import { removeLinesFromCode } from '@ng-doc/core/helpers/remove-lines-from-code';
 import { ClassDeclaration } from 'ts-morph';
 
 import { NgDocAsset } from '../../interfaces';
 import { buildFileAsset } from '../build-file-assets';
-import { removeLinesFromCode } from '../remove-lines-from-code';
 import { snippetsFromAsset } from '../snippets-from-asset';
 import { getComponentSourceFiles } from './get-component-source-files';
 

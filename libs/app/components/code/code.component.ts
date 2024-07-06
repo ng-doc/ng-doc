@@ -1,7 +1,6 @@
 import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input } from '@angular/core';
 import { NgDocCopyButtonComponent } from '@ng-doc/app/components/copy-button';
-import { NgDocPageProcessorComponent } from '@ng-doc/app/processors/page-processor';
 import {
   NgDocButtonIconComponent,
   NgDocIconComponent,
@@ -23,7 +22,6 @@ import {
     NgDocTooltipDirective,
     NgDocSmoothResizeComponent,
     NgDocIconComponent,
-    NgDocPageProcessorComponent,
     NgDocCopyButtonComponent,
   ],
 })

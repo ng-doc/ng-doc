@@ -6,7 +6,7 @@ import keywordsPlugin, { GetKeyword } from './plugins/keywords.plugin';
 import markCodeBlocksPlugin from './plugins/mark-code-blocks.plugin';
 
 export interface ReplaceKeywordsConfig {
-  getKeyword: GetKeyword;
+  getKeyword?: GetKeyword;
 }
 
 /**
@@ -18,8 +18,10 @@ export interface ReplaceKeywordsConfig {
  */
 export async function replaceKeywords(
   html: string,
-  { getKeyword }: ReplaceKeywordsConfig,
+  config?: ReplaceKeywordsConfig,
 ): Promise<string> {
+  const { getKeyword } = config || {};
+
   return unified()
     .use(rehypeParse, { fragment: true })
     .use(rehypeStringify)

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
-  selector: 'ng-doc-demo',
+  selector: 'ng-doc-dem',
   standalone: true,
   imports: [CommonModule],
   template: `

@@ -3,13 +3,11 @@ import {
   createImportPath,
   IndexStore,
   NgDocBuilderContext,
-  postProcessHtml,
-  processHtml,
-  replaceKeywords,
 } from '@ng-doc/builder';
 import { NgDocPageType, uid } from '@ng-doc/core';
 import { finalize } from 'rxjs';
 
+import { UTILS } from '../../../helpers';
 import { buildIndexes } from '../../../helpers/build-indexes';
 import { AsyncFileOutput, Builder, CacheStrategy, mergeFactory } from '../../core';
 import { renderTemplate } from '../../nunjucks';
@@ -45,11 +43,11 @@ export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput> {
         removeIndexes();
         usedKeywords.clear();
 
-        const processed = await processHtml(getHeaderContent(), {
+        const processed = await UTILS.htmlProcessor(getHeaderContent(), {
           headings: context.config.guide?.anchorHeadings,
           route: metadata.absoluteRoute(),
         });
-        const postProcessed = await postProcessHtml(processed.content);
+        const postProcessed = await UTILS.postProcessHtml(processed.content);
 
         usedKeywords = new Set(postProcessed.usedKeywords);
 
@@ -57,7 +55,7 @@ export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput> {
 
         return async () => {
           // TODO: maybe move replacing keywords and building indexes to a separate entity to reuse it in page-component.builder.ts
-          const content = await replaceKeywords(postProcessed.content);
+          const content = await UTILS.replaceKeywords(postProcessed.content);
           const indexes = await buildIndexes({
             content,
             title: metadata.title,

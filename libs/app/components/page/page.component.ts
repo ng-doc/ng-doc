@@ -16,7 +16,6 @@ import { NgDocTocComponent } from '@ng-doc/app/components/toc';
 import { createComponent, generateToc } from '@ng-doc/app/helpers';
 import { NgDocPageSkeleton } from '@ng-doc/app/interfaces';
 import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes';
-import { NgDocPageProcessorComponent } from '@ng-doc/app/processors';
 import { provideTypeControl } from '@ng-doc/app/providers/type-control';
 import { NG_DOC_PAGE_SKELETON } from '@ng-doc/app/tokens';
 import {
@@ -52,7 +51,6 @@ import { UntilDestroy } from '@ngneat/until-destroy';
     NgDocTextLeftDirective,
     NgDocTextRightDirective,
     NgDocTocComponent,
-    NgDocPageProcessorComponent,
     NgComponentOutlet,
     RouterOutlet,
     DialogOutletComponent,
@@ -64,7 +62,6 @@ import { UntilDestroy } from '@ngneat/until-destroy';
     provideTypeControl('number', NgDocNumberControlComponent, { order: 30 }),
     provideTypeControl('boolean', NgDocBooleanControlComponent, { hideLabel: true, order: 40 }),
   ],
-  host: { ngSkipHydration: 'true' },
 })
 @UntilDestroy()
 export class NgDocPageComponent {

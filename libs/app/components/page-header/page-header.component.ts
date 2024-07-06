@@ -1,12 +1,10 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes';
-import { NgDocPageProcessorComponent } from '@ng-doc/app/processors';
 
 @Component({
   selector: 'ng-doc-page-header',
   standalone: true,
-  imports: [CommonModule, NgDocPageProcessorComponent, NgDocSanitizeHtmlPipe],
+  imports: [NgDocSanitizeHtmlPipe],
   templateUrl: './page-header.component.html',
   styleUrl: './page-header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,7 +12,4 @@ import { NgDocPageProcessorComponent } from '@ng-doc/app/processors';
     ngSkipHydration: 'true',
   },
 })
-export class NgDocPageHeaderComponent {
-  @Input({ required: true })
-  headerContent!: string;
-}
+export class NgDocPageHeaderComponent {}

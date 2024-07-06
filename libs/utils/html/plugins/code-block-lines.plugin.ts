@@ -1,3 +1,4 @@
+import { asArray } from '@ng-doc/core';
 import { Element, ElementContent, Root } from 'hast';
 import { visit } from 'unist-util-visit';
 
@@ -12,7 +13,7 @@ export default function codeBlockLinesPlugin() {
       if (isCodeBlock(parent, node)) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        node.properties['className'] = [...(node.properties?.['className'] ?? []), 'code-lines'];
+        node.properties['className'] = asArray(node.properties?.['className'], 'code-lines');
         // Wraps each line in a span
         node.children = addLines(node);
 
@@ -67,7 +68,7 @@ function addLines(node: Element, lines: Element[] = [], copyParent?: boolean): E
  * @param children - The children the line should have initially
  */
 function createLine(...children: ElementContent[]): Element {
-  return { type: 'element', tagName: 'span', properties: { class: ['line'] }, children };
+  return { type: 'element', tagName: 'span', properties: { className: ['line'] }, children };
 }
 
 /**

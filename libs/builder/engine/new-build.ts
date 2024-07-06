@@ -10,14 +10,15 @@ import {
   whenStackIsEmpty,
 } from '@ng-doc/builder';
 import fs from 'fs';
-import { from, merge, Observable, switchMap } from 'rxjs';
+import { forkJoin, merge, Observable, switchMap } from 'rxjs';
 import { debounceTime, map, tap } from 'rxjs/operators';
 
+import { importUtils } from '../helpers';
 import { NgDocBuilderContext } from '../interfaces';
 import { progress } from '../operators';
 import { globalBuilders } from './builders/global';
+import { invalidateCacheIfNeeded } from './cache';
 import { resolveAsyncFileOutputs } from './core/operators/resolve-async-file-outputs';
-import { invalidateCacheIfNeeded } from './entities/cache';
 
 /**
  *
@@ -40,7 +41,7 @@ export function newBuild(context: NgDocBuilderContext): Observable<void> {
     fs.rmSync(context.outDir, { recursive: true, force: true });
   }
 
-  const emitter = from(loadGlobalKeywords(context)).pipe(
+  const emitter = forkJoin([loadGlobalKeywords(context), importUtils()]).pipe(
     switchMap(() => merge(entriesEmitter(context), globalBuilders(context))),
   );
 

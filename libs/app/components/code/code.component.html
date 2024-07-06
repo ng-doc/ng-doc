@@ -6,7 +6,7 @@
 </div>
 <div class="ng-doc-code-body">
   @if (html) {
-    <div class="ng-doc-code-wrapper" [ngDocPageProcessor]="html"></div>
+    <div class="ng-doc-code-wrapper" [innerHTML]="html"></div>
   } @else {
     <div class="ng-doc-code-wrapper">
       <ng-content></ng-content>
