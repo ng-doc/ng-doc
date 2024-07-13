@@ -2,8 +2,8 @@ import {
   createBuilder,
   createImportPath,
   IndexStore,
+  keywordsStore,
   NgDocBuilderContext,
-  replaceKeywords,
 } from '@ng-doc/builder';
 import { NgDocPageType, uid } from '@ng-doc/core';
 import { finalize } from 'rxjs';
@@ -58,7 +58,9 @@ export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput> {
 
         return async () => {
           // TODO: maybe move replacing keywords and building indexes to a separate entity to reuse it in page-component.builder.ts
-          const content = await replaceKeywords(postProcessed.content);
+          const content = await UTILS.replaceKeywords(postProcessed.content, {
+            getKeyword: keywordsStore.get.bind(keywordsStore),
+          });
           const indexes = await buildIndexes({
             content,
             title: metadata.title,

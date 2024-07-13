@@ -3,10 +3,10 @@ import {
   CacheStrategy,
   createBuilder,
   createMainTrigger,
+  keywordsStore,
   NgDocBuilderContext,
   NgDocComponentAsset,
   renderTemplate,
-  replaceKeywords,
   runBuild,
 } from '@ng-doc/builder';
 import { NgDocPage } from '@ng-doc/core';
@@ -92,7 +92,9 @@ export function demoAssetsBuilder(config: Config): Builder<AsyncFileOutput> {
         return async () => {
           for (const [, value] of Object.entries(demoAssets)) {
             for (const asset of value) {
-              asset.code = await replaceKeywords(asset.code);
+              asset.code = await UTILS.replaceKeywords(asset.code, {
+                getKeyword: keywordsStore.get.bind(keywordsStore),
+              });
             }
           }
 

@@ -55,6 +55,7 @@ export function markdownToHtml(
         JSON.stringify({
           name: !group ? name : undefined,
           icon: !group ? icon : undefined,
+          language: language ?? 'ts',
           highlightedlines: JSON.stringify(highlightedLines),
         }).replace(/"/g, '\\"'),
       );

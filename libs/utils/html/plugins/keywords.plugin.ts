@@ -8,8 +8,8 @@ import { SKIP, visitParents } from 'unist-util-visit-parents';
 
 import { hasLinkAncestor, isCodeNode } from '../helpers';
 
-const ALWAYS_ALLOWED_LANGUAGES: string[] = ['typescript', 'ts'];
-const LANGUAGES: string[] = ['typescript', 'ts', ...KEYWORD_ALLOWED_LANGUAGES];
+const ALWAYS_ALLOWED_LANGUAGES: string[] = ['typescript', 'ts', 'angular-ts'];
+const LANGUAGES: string[] = ['typescript', 'ts', 'angular-ts', ...KEYWORD_ALLOWED_LANGUAGES];
 const SPLIT_REGEXP: RegExp = /([*A-Za-z0-9_$@-]+(?:[.#][A-Za-z0-9_-]+)?(?:\?[\w=&]+)?)/;
 const MATCH_KEYWORD_REGEXP: RegExp =
   /(?<key>[*A-Za-z0-9_$@-]+)((?<delimiter>[.#])(?<anchor>[A-Za-z0-9_-]+))?(?<queryParams>\?[\w=&]+)?/;
@@ -34,7 +34,7 @@ export default function keywordsPlugin(config: Config) {
       }
 
       const isInlineCode: boolean = !isElement(ancestors[ancestors.length - 1], 'pre');
-      const lang = node.properties?.['lang']?.toString() ?? '';
+      const lang = ancestors[ancestors.length - 1].properties?.['language']?.toString() ?? '';
 
       if (isInlineCode || LANGUAGES.includes(lang)) {
         visitParents(node, 'text', (node: Text, ancestors: Element[]) => {

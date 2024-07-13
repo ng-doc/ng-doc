@@ -2,13 +2,12 @@ import { NgDocPageType, uid } from '@ng-doc/core';
 import path from 'path';
 import { finalize } from 'rxjs';
 
-import { editFileInRepoUrl, viewFileInRepoUrl } from '../../../helpers';
+import { editFileInRepoUrl, UTILS, viewFileInRepoUrl } from '../../../helpers';
 import { buildIndexes } from '../../../helpers/build-indexes';
 import { NgDocBuilderContext } from '../../../interfaces';
-import { AsyncFileOutput, Builder, IndexStore } from '../../core';
+import { AsyncFileOutput, Builder, IndexStore, keywordsStore } from '../../core';
 import { renderTemplate } from '../../nunjucks';
 import { ContentEntry, EntryMetadata } from '../interfaces';
-import { replaceKeywords } from './index';
 
 interface Config {
   context: NgDocBuilderContext;
@@ -49,7 +48,9 @@ export function pageComponentBuilder<T>(
 
     // Replace keywords in the template at the end of the build process
     return async () => {
-      const content = await replaceKeywords(html);
+      const content = await UTILS.replaceKeywords(html, {
+        getKeyword: keywordsStore.get.bind(keywordsStore),
+      });
       const editSourceFileUrl =
         context.config.repoConfig &&
         editFileInRepoUrl(
