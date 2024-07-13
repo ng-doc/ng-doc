@@ -46,7 +46,7 @@ export async function processHtml(
       // @ts-expect-error - rehype-shiki types are not up to date
       .use(rehypeShiki, {
         defaultLanguage: 'typescript',
-        fallbackLanguage: 'typescript',
+        fallbackLanguage: 'text',
         parseMetaString: (meta: string) => JSON.parse(meta?.replace(/\\/g, '') || '{}'),
         themes: {
           light: config.lightTheme ?? 'github-light',
