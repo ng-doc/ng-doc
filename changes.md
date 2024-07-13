@@ -5,6 +5,8 @@
 
 ## General
 
+- highlight.js was replaced with shiki to support angular inline template highlighting, it will change
+  list of available languages and the way you configure themes
 - added support for Mermaid diagrams in markdown files, you can now use Mermaid syntax inside
   code blocks with the `mermaid` language specified
 - `keyword` field was removed from the `NgDocPage` interface.

@@ -91,8 +91,6 @@ export function apiPageTemplateBuilder(config: Config): Builder<TemplateBuilderO
     takeUntil(merge(watchFile(declPath, 'delete'), metadata.selfDestroy)),
     finalize(() => {
       PageStore.delete(pageKey);
-
-      console.log('API page template builder destroyed', pageKey);
     }),
   );
 }

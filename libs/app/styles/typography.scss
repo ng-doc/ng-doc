@@ -111,10 +111,10 @@ h6#{$class} {
   margin: calc(var(--ng-doc-base-gutter) * 2) 0;
 }
 
-pre#{$class} {
+pre.shiki {
   margin: var(--ng-doc-page-block-margin);
 
-  code#{$class} {
+  code {
     position: relative;
     white-space: unset;
     box-shadow: var(--ng-doc-code-shadow);
@@ -125,6 +125,10 @@ pre#{$class} {
     border: var(--ng-doc-code-border);
     background-color: var(--ng-doc-code-background, inherit) !important;
     -webkit-font-smoothing: auto;
+
+    span {
+      background-color: var(--ng-doc-code-background, inherit) !important;
+    }
   }
 }
 

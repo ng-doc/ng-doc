@@ -7,7 +7,7 @@ import * as path from 'path';
 import { NgDocCodeBlockParams } from '../interfaces';
 import { parseCodeBlockParams } from '../parsers';
 import { removeLinesFromCode } from './remove-lines-from-code';
-
+import { UTILS } from './utils';
 const blockquoteRegex: RegExp = /^<p><strong>(\w+)<\/strong>\s*/;
 
 /**
@@ -51,14 +51,17 @@ export function markdownToHtml(
 
         code = removeLinesFromCode(fileContent);
       }
+      const metaString = UTILS.stringifyEntities(
+        JSON.stringify({
+          name: !group ? name : undefined,
+          icon: !group ? icon : undefined,
+          highlightedlines: JSON.stringify(highlightedLines),
+        }).replace(/"/g, '\\"'),
+      );
 
       const codeElement: string = `<pre><code class="language-${language ?? 'ts'}"
 	      lang="${language}"
-	      name="${!group && name ? name : ''}"
-	      icon="${!group && icon ? icon : ''}"
-	      highlightedLines="${JSON.stringify(highlightedLines ?? [])}">${escapeHtml(
-          code,
-        )}</code></pre>`;
+	      metastring="${metaString}"">${escapeHtml(code)}</code></pre>`;
 
       return group
         ? `<ng-doc-tab group="${group}" name="${name}" icon="${icon ?? ''}" ${

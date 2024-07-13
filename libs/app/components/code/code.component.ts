@@ -40,9 +40,6 @@ export class NgDocCodeComponent {
   @Input()
   icon?: string;
 
-  @Input()
-  lineNumbers: boolean = false;
-
   constructor(private elementRef: ElementRef<HTMLElement>) {}
 
   @HostBinding('attr.data-ng-doc-has-header')

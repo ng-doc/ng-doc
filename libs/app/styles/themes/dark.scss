@@ -34,26 +34,22 @@
   --ng-doc-navbar-border: 1px solid var(--ng-doc-base-4);
 }
 
-// highlight.js styles when using auto theme
-:root[data-theme='auto'] {
-  @media (prefers-color-scheme: dark) {
-    @import '../../../../node_modules/highlight.js/styles/github-dark';
+@mixin shiki-theme {
+  .shiki,
+  .shiki span {
+    color: var(--shiki-dark) !important;
   }
 }
 
-// highlight.js styles when using dark theme
-:root[data-theme='dark'] {
-  @import '../../../../node_modules/highlight.js/styles/github-dark';
-}
-
-// ng-doc styles when using auto theme
 :root[data-theme='auto'] {
   @media (prefers-color-scheme: dark) {
     @include theme();
+    @include shiki-theme();
   }
 }
 
 // ng-doc styles when using dark theme
 :root[data-theme='dark'] {
   @include theme();
+  @include shiki-theme();
 }

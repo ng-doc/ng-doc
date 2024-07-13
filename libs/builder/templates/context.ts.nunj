@@ -1,6 +1,6 @@
 // @ts-nocheck
-import {Provider} from '@angular/core';
-import {NG_DOC_CONTEXT, NG_DOC_ROUTE_PREFIX} from '@ng-doc/app/tokens';
+import { Provider } from '@angular/core';
+import { NG_DOC_CONTEXT, NG_DOC_ROUTE_PREFIX, NG_DOC_SHIKI_THEME } from '@ng-doc/app/tokens';
 
 export function provideNgDocContext(): Provider[] {
   return [{
@@ -22,7 +22,7 @@ export function provideNgDocContext(): Provider[] {
             {%- if entry.children.length %}
           children: [
               {%- for child in entry.children | sortNavigationEntries %}
-              {%- if not child.item.hidden  %}
+              {%- if not child.item.hidden %}
               {{ nav(child) }},
               {%- endif %}
               {%- endfor %}
@@ -32,14 +32,20 @@ export function provideNgDocContext(): Provider[] {
           {%- endmacro %}
 
           {%- for entry in entries | sortNavigationEntries %}
-          {%- if not entry.item.hidden  %}
+          {%- if not entry.item.hidden %}
           {{ nav(entry) }},
           {%- endif %}
           {%- endfor %}
       ],
-    }
+    },
   }, {
     provide: NG_DOC_ROUTE_PREFIX,
-    useValue: '{{ routePrefix }}'
+    useValue: '{{ routePrefix }}',
+  }, {
+    provide: NG_DOC_SHIKI_THEME,
+    useValue: {
+      light: '{{ shikiThemeLight }}',
+      dark: '{{ shikiThemeDark }}',
+    },
   }];
 }

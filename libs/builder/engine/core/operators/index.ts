@@ -4,7 +4,6 @@ export * from './distinct-pending';
 export * from './emit-file-output';
 export * from './entries-emitter';
 export * from './factory';
-export * from './global-trigger';
 export * from './handle-cache-strategy';
 export * from './join-builder-states';
 export * from './merge-factory';

@@ -1,32 +1,31 @@
-# Section
+```angular-ts name="test.ts" {2}
+import { coerceNumberProperty } from '@angular/cdk/coercion';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-nnn
+@Component({
+  selector: 'ng-doc-demo',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+    <!-- snippet "Test" -->
+    <p>demo works!</p>
+    123123
+    <!-- snippet -->
+  `,
+  styles: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class DemoComponent {
+  // eslint-disable-next-line @typescript-eslint/typedef
+  signalInput = input<number, string>(123, { transform: coerceNumberProperty });
+  // eslint-disable-next-line @typescript-eslint/typedef
+  test = input.required<string>();
 
-`*AnotherPage`
-`*AnotherApiPage`
-123
-qwe
-sd
-we
-123
-
-`*AnotherPage#section1`
-
-`MyInterface.haha`
-
-```mermaid
-graph TB
-    A & B--> C & D
+  method(): void {
+    /* snippet "TypeScript" */
+    console.log('demo');
+    /* snippet */
+  }
+}
 ```
-
-```mermaid
-graph TD
-   A(Coffee machine <br>not working) --> B{Machine has power?}
-   B -->|No| H(Plug in and turn on)
-   B -->|Yes| C{Out of beans or water?} -->|Yes| G(Refill beans and water)
-   C -->|No| D{Filter warning?} -->|Yes| I(Replace or clean filter)
-   D -->|No| F(Send for repair)
-
-```
-
-{{ NgDocActions.demo("DemoComponent") }}

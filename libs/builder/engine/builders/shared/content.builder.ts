@@ -5,14 +5,13 @@ import {
   createSecondaryTrigger,
   isBuilderDone,
   onKeywordsTouch,
-  postProcessHtml,
-  processHtml,
 } from '@ng-doc/builder';
 import { NgDocKeyword, NgDocPageAnchor } from '@ng-doc/core';
 import { finalize, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { ObservableSet } from '../../../classes';
+import { UTILS } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
 import {
   Builder,
@@ -83,10 +82,15 @@ export function contentBuilder(config: Config): Builder<string> {
           dependencies.clear();
           usedKeywords.clear();
 
-          const { content, anchors, error } = await processHtml(await getContent(dependencies), {
-            headings: context.config.guide?.anchorHeadings,
-            route: metadata.absoluteRoute(),
-          });
+          const { content, anchors, error } = await UTILS.processHtml(
+            await getContent(dependencies),
+            {
+              headings: context.config.guide?.anchorHeadings,
+              route: metadata.absoluteRoute(),
+              lightTheme: config.context.config.shiki?.themes.light,
+              darkTheme: config.context.config.shiki?.themes.dark,
+            },
+          );
 
           if (error) {
             throw new Error(`Error while processing html (${metadata.path})`, {
@@ -96,7 +100,7 @@ export function contentBuilder(config: Config): Builder<string> {
 
           keywords = new Map(getKeywords(anchors));
 
-          const postProcessed = await postProcessHtml(content);
+          const postProcessed = await UTILS.postProcessHtml(content);
 
           usedKeywords = new Set(postProcessed.usedKeywords);
 

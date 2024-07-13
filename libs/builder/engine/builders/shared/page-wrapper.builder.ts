@@ -3,13 +3,12 @@ import {
   createImportPath,
   IndexStore,
   NgDocBuilderContext,
-  postProcessHtml,
-  processHtml,
   replaceKeywords,
 } from '@ng-doc/builder';
 import { NgDocPageType, uid } from '@ng-doc/core';
 import { finalize } from 'rxjs';
 
+import { UTILS } from '../../../helpers';
 import { buildIndexes } from '../../../helpers/build-indexes';
 import { AsyncFileOutput, Builder, CacheStrategy, mergeFactory } from '../../core';
 import { renderTemplate } from '../../nunjucks';
@@ -45,11 +44,13 @@ export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput> {
         removeIndexes();
         usedKeywords.clear();
 
-        const processed = await processHtml(getHeaderContent(), {
+        const processed = await UTILS.processHtml(getHeaderContent(), {
           headings: context.config.guide?.anchorHeadings,
           route: metadata.absoluteRoute(),
+          lightTheme: config.context.config.shiki?.themes.light,
+          darkTheme: config.context.config.shiki?.themes.dark,
         });
-        const postProcessed = await postProcessHtml(processed.content);
+        const postProcessed = await UTILS.postProcessHtml(processed.content);
 
         usedKeywords = new Set(postProcessed.usedKeywords);
 

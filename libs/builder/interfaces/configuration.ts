@@ -46,6 +46,15 @@ export interface NgDocConfiguration {
    * The configuration for the guides
    */
   guide?: NgDocGuideConfiguration;
+  /**
+   * Shiki configuration
+   */
+  shiki?: {
+    themes: {
+      light: string;
+      dark: string;
+    };
+  };
 }
 
 /**

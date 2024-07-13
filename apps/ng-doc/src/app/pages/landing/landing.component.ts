@@ -7,12 +7,8 @@ import {
   NgDocTextLeftDirective,
   NgDocTextRightDirective,
 } from '@ng-doc/ui-kit';
-import highlight from 'highlight.js/lib/core';
-import bash from 'highlight.js/lib/languages/bash';
 
 import { BackgroundComponent } from './background/background.component';
-
-highlight.registerLanguage('bash', bash);
 
 @Component({
   selector: 'ng-doc-landing',

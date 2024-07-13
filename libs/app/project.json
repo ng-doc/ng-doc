@@ -30,7 +30,8 @@
       "options": {
         "commands": [
           "sass --no-source-map libs/app/styles/main.scss dist/libs/app/styles/main.css",
-          "sass --no-source-map libs/app/styles/global.scss dist/libs/app/styles/global.css"
+          "sass --no-source-map libs/app/styles/global.scss dist/libs/app/styles/global.css",
+          "sass --no-source-map libs/app/styles/themes/dark.scss dist/libs/app/styles/themes/dark.css"
         ]
       }
     },
