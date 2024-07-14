@@ -8,7 +8,7 @@ component or directive or whatever you want to show.
 If you prefer standalone components then you don't need to do anything special,
 just create a component and register it in the `demos` field of the page.
 
-```typescript name="ng-doc.page.ts"
+```angular-ts name="ng-doc.page.ts"
 import { NgDocPage } from '@ng-doc/core';
 import { MyModule } from '../my.module';
 import { ButtonDemoComponent } from '../demos/button-demo/button-demo.component';

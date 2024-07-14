@@ -7,11 +7,9 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <!-- snippet "Test" -->
     {{ signalInput() }}
     <p>demo works!</p>
     123123
-    <!-- snippet -->
   `,
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,8 +21,6 @@ export class DemoComponent {
   test = input.required<string>();
 
   method(): void {
-    /* snippet "TypeScript" */
     console.log('demo');
-    /* snippet */
   }
 }

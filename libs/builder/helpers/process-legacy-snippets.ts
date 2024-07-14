@@ -42,9 +42,9 @@ const TypeScriptSnippetEnd: (group?: string, escape?: boolean) => RegExp = (
  */
 export function processLegacySnippets(content: string): NgDocSnippet[] {
   return [
-    ...findSnippet(content, 'HTML', HTMLSnippetStart, HTMLSnippetEnd),
+    ...findSnippet(content, 'angular-html', HTMLSnippetStart, HTMLSnippetEnd),
     ...findSnippet(content, 'styles', StylesSnippetStart, StylesSnippetEnd),
-    ...findSnippet(content, 'TypeScript', TypeScriptSnippetStart, TypeScriptSnippetEnd),
+    ...findSnippet(content, 'angular-ts', TypeScriptSnippetStart, TypeScriptSnippetEnd),
   ];
 }
 

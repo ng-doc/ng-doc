@@ -7,7 +7,7 @@ export const demoProcessor: NgDocPageProcessor<NgDocDemoComponent> = {
   extractOptions: (element: Element) => ({
     inputs: {
       componentName: element.getAttribute('componentName') || undefined,
-      options: JSON.parse(element.querySelector('#options')?.textContent ?? '') ?? {},
+      options: JSON.parse(element.querySelector('#options')?.textContent ?? '{}'),
     },
   }),
 };

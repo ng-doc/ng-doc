@@ -5,7 +5,7 @@ import { JsonObject } from '@angular-devkit/core';
 import { combineLatest, from, Observable, of } from 'rxjs';
 import { first, map, shareReplay, switchMap } from 'rxjs/operators';
 
-import { newBuild } from '../engine/new-build';
+import { buildNgDoc } from '../engine/build-ng-doc';
 import { transformIndexHtml } from '../engine/transform-index-html';
 import { createBuilderContext } from '../helpers/create-builder-context';
 import { NgDocSchema } from '../interfaces';
@@ -36,7 +36,7 @@ export function runDevServer(
   return options$.pipe(
     switchMap((targetOptions) => {
       const builderContext = createBuilderContext(targetOptions, context, options.ngDoc?.config);
-      const buildNgDoc$ = newBuild(builderContext).pipe(shareReplay(1));
+      const buildNgDoc$ = buildNgDoc(builderContext).pipe(shareReplay(1));
       return buildNgDoc$.pipe(
         first(),
         switchMap(() =>

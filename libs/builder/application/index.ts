@@ -9,7 +9,7 @@ import { buildApplication } from '@angular-devkit/build-angular';
 import { firstValueFrom, Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 
-import { newBuild } from '../engine/new-build';
+import { buildNgDoc } from '../engine/build-ng-doc';
 import { transformIndexHtml } from '../engine/transform-index-html';
 import { createBuilderContext } from '../helpers/create-builder-context';
 import { NgDocBuilderContext, NgDocSchema } from '../interfaces';
@@ -32,7 +32,7 @@ export async function runBrowser(options: NgDocSchema, context: BuilderContext):
     context,
     options.ngDoc?.config,
   );
-  const runner: Observable<void> = newBuild(builderContext);
+  const runner: Observable<void> = buildNgDoc(builderContext);
 
   await firstValueFrom(runner.pipe(first()));
 

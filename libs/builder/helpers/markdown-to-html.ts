@@ -55,14 +55,13 @@ export function markdownToHtml(
         JSON.stringify({
           name: !group ? name : undefined,
           icon: !group ? icon : undefined,
-          language: language ?? 'ts',
           highlightedlines: JSON.stringify(highlightedLines),
         }).replace(/"/g, '\\"'),
       );
 
       const codeElement: string = `<pre><code class="language-${language ?? 'ts'}"
 	      lang="${language}"
-	      metastring="${metaString}"">${escapeHtml(code)}</code></pre>`;
+	      metastring="${metaString}">${escapeHtml(code)}</code></pre>`;
 
       return group
         ? `<ng-doc-tab group="${group}" name="${name}" icon="${icon ?? ''}" ${

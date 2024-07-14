@@ -1,6 +1,5 @@
 import { NgDocHeading, NgDocPageAnchor } from '@ng-doc/core';
 import rehypeShiki from '@shikijs/rehype';
-import rehypeFormat from 'rehype-format';
 import rehypeMinifyWhitespace from 'rehype-minify-whitespace';
 import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
@@ -41,12 +40,12 @@ export async function processHtml(
     const content = await unified()
       .use(rehypeParse, { fragment: true })
       .use(rehypeStringify)
-      .use(rehypeFormat)
       .use(mermaidPlugin)
       // @ts-expect-error - rehype-shiki types are not up to date
       .use(rehypeShiki, {
-        defaultLanguage: 'typescript',
+        defaultLanguage: 'ts',
         fallbackLanguage: 'text',
+        addLanguageClass: true,
         parseMetaString: (meta: string) => JSON.parse(meta?.replace(/\\/g, '') || '{}'),
         themes: {
           light: config.lightTheme ?? 'github-light',

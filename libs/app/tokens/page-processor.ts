@@ -12,8 +12,8 @@ export const NG_DOC_PAGE_CUSTOM_PROCESSOR: InjectionToken<NgDocPageProcessor<unk
  * Main processors are run before custom processors.
  * @param processors - The processor to provide.
  */
-export function provideMainPageProcessor<T>(
-  processors: NgDocPageProcessor<T> | Array<NgDocPageProcessor<T>>,
+export function provideMainPageProcessor(
+  processors: NgDocPageProcessor<unknown> | Array<NgDocPageProcessor<unknown>>,
 ): Provider[] {
   return asArray(processors).map((processor) => ({
     provide: NG_DOC_PAGE_PROCESSOR,

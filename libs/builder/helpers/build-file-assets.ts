@@ -18,6 +18,6 @@ export function buildFileAsset(filePath: string): NgDocAsset {
     code: fileContent,
     isEmpty: !fileContent,
     filePath: GLOBALS.relative(filePath),
-    lang: codeType,
+    lang: codeType.replace('TypeScript', 'angular-ts').replace('HTML', 'angular-html'),
   };
 }

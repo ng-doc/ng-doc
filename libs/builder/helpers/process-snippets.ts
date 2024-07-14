@@ -8,17 +8,17 @@ import { formatCode } from './format-code';
 import { getCodeTypeFromLang } from './get-code-type-from-lang';
 
 const snippet = (id?: string | null) =>
-	id
-		? new RegExp(
-				`\\n?\\r?^.*((\\/\\/|<!--|\\/\\*)\\s*)(snippet#${escapeRegexp(
-					id,
-				)}.*?(?=(-->|\\*\\/)?))\\s*(-->|\\*\\/)?$`,
-				'gm',
-		  )
-		: new RegExp(
-				`\\n?\\r?^.*((\\/\\/|<!--|\\/\\*)\\s*)(snippet.*?(?=(-->|\\*\\/)?))\\s*(-->|\\*\\/)?$`,
-				'gm',
-		  );
+  id
+    ? new RegExp(
+        `\\n?\\r?^.*((\\/\\/|<!--|\\/\\*)\\s*)(snippet#${escapeRegexp(
+          id,
+        )}.*?(?=(-->|\\*\\/)?))\\s*(-->|\\*\\/)?$`,
+        'gm',
+      )
+    : new RegExp(
+        `\\n?\\r?^.*((\\/\\/|<!--|\\/\\*)\\s*)(snippet.*?(?=(-->|\\*\\/)?))\\s*(-->|\\*\\/)?$`,
+        'gm',
+      );
 
 /**
  * Process snippets from code
@@ -26,67 +26,67 @@ const snippet = (id?: string | null) =>
  * @param basePath - base path to file
  */
 export function processSnippets(code: string, basePath?: string): NgDocSnippet[] {
-	const result: NgDocSnippet[] = [];
-	const endings: Set<number> = new Set();
-	const startRegexp = snippet();
-	let match: RegExpExecArray | null;
+  const result: NgDocSnippet[] = [];
+  const endings: Set<number> = new Set();
+  const startRegexp = snippet();
+  let match: RegExpExecArray | null;
 
-	// eslint-disable-next-line no-cond-assign
-	while ((match = startRegexp.exec(code))) {
-		const isHTMLComment = match[2] === '<!--';
+  // eslint-disable-next-line no-cond-assign
+  while ((match = startRegexp.exec(code))) {
+    const isHTMLComment = match[2] === '<!--';
 
-		if (match[3]?.includes('snippet-from-file=') && basePath) {
-			const config = parseSnippet(match[3].trim());
+    if (match[3]?.includes('snippet-from-file=') && basePath) {
+      const config = parseSnippet(match[3].trim());
 
-			if (config) {
-				const { title, lang, icon, opened, fromFile } = config;
+      if (config) {
+        const { title, lang, icon, opened, fromFile } = config;
 
-				const language = lang || (isHTMLComment ? 'html' : 'ts');
+        const language = lang || (isHTMLComment ? 'angular-html' : 'angular-ts');
 
-				if (fromFile) {
-					const snippetCode = fs.readFileSync(path.join(basePath, fromFile), 'utf-8');
+        if (fromFile) {
+          const snippetCode = fs.readFileSync(path.join(basePath, fromFile), 'utf-8');
 
-					result.push({
-						title: title ?? path.basename(fromFile),
-						lang: language,
-						icon,
-						opened,
-						code: formatCode(removeSnippets(snippetCode), getCodeTypeFromLang(language)).trim(),
-					});
-				}
-			}
-		} else if (!endings.has(match.index)) {
-			const config = parseSnippet(match[3].trim());
+          result.push({
+            title: title ?? path.basename(fromFile),
+            lang: language,
+            icon,
+            opened,
+            code: formatCode(removeSnippets(snippetCode), getCodeTypeFromLang(language)).trim(),
+          });
+        }
+      }
+    } else if (!endings.has(match.index)) {
+      const config = parseSnippet(match[3].trim());
 
-			if (config) {
-				const { id, title, lang, icon, opened } = config;
-				const endRegexp = snippet(id);
+      if (config) {
+        const { id, title, lang, icon, opened } = config;
+        const endRegexp = snippet(id);
 
-				endRegexp.lastIndex = match.index + match[0].length;
+        endRegexp.lastIndex = match.index + match[0].length;
 
-				const matchEnd = endRegexp.exec(code);
+        const matchEnd = endRegexp.exec(code);
 
-				if (matchEnd) {
-					endings.add(matchEnd.index);
+        if (matchEnd) {
+          endings.add(matchEnd.index);
 
-					const snippetCode = code.slice(match.index + match[0].length, matchEnd.index);
-					const language = lang || (isHTMLComment ? 'html' : 'ts');
+          const snippetCode = code.slice(match.index + match[0].length, matchEnd.index);
+          const language = lang || (isHTMLComment ? 'angular-html' : 'angular-ts');
 
-					if (snippetCode) {
-						result.push({
-							title,
-							lang: language,
-							icon,
-							opened,
-							code: formatCode(removeSnippets(snippetCode), getCodeTypeFromLang(language)).trim(),
-						});
-					}
-				}
-			}
-		}
-	}
+          if (snippetCode) {
+            result.push({
+              title,
+              lang: language,
+              icon,
+              opened,
+              code: formatCode(removeSnippets(snippetCode), getCodeTypeFromLang(language)).trim(),
+            });
+          }
+        }
+      }
+    }
+  }
 
-	return result;
+  return result;
 }
 
 /**
@@ -94,5 +94,5 @@ export function processSnippets(code: string, basePath?: string): NgDocSnippet[]
  * @param code
  */
 function removeSnippets(code: string): string {
-	return code.replace(snippet(), '');
+  return code.replace(snippet(), '');
 }

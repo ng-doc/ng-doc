@@ -24,7 +24,7 @@ import { resolveAsyncFileOutputs } from './core/operators/resolve-async-file-out
  *
  * @param context
  */
-export function newBuild(context: NgDocBuilderContext): Observable<void> {
+export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
   let count = 0;
   console.time('build');
 

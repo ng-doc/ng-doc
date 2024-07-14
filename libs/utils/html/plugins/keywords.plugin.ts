@@ -1,4 +1,4 @@
-import { NG_DOC_ELEMENT } from '@ng-doc/core';
+import { asArray, NG_DOC_ELEMENT } from '@ng-doc/core';
 import { NgDocKeyword, NgDocKeywordLanguage } from '@ng-doc/core';
 import { KEYWORD_ALLOWED_LANGUAGES } from '@ng-doc/core';
 import { Element, Text } from 'hast';
@@ -34,7 +34,10 @@ export default function keywordsPlugin(config: Config) {
       }
 
       const isInlineCode: boolean = !isElement(ancestors[ancestors.length - 1], 'pre');
-      const lang = ancestors[ancestors.length - 1].properties?.['language']?.toString() ?? '';
+      const lang =
+        asArray((node.properties?.['className'] as string[]) ?? [])
+          .find((className) => className.startsWith('language-'))
+          ?.replace('language-', '') ?? '';
 
       if (isInlineCode || LANGUAGES.includes(lang)) {
         visitParents(node, 'text', (node: Text, ancestors: Element[]) => {
