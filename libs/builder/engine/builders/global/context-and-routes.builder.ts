@@ -69,8 +69,8 @@ export function contextBuilder(context: NgDocBuilderContext): Builder<FileOutput
           context: {
             entries: structuredDocs,
             routePrefix: context.config.routePrefix,
-            shikiThemeLight: context.config.shiki?.themes.light ?? 'github-light',
-            shikiThemeDark: context.config.shiki?.themes.dark ?? 'github-dark',
+            shikiThemeLight: context.config.shiki?.themes.light,
+            shikiThemeDark: context.config.shiki?.themes.dark,
           },
         }),
       };

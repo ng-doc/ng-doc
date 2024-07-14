@@ -30,21 +30,21 @@ export class NgDocHighlighterService {
   async initialize(config?: NgDocHighlighterConfig): Promise<void> {
     this.highlighter = (await createHighlighterCore({
       themes: [
-        import('shiki/themes/github-light.mjs'),
-        import('shiki/themes/github-dark.mjs'),
+        import('shiki/themes/catppuccin-latte.mjs'),
+        import('shiki/themes/ayu-dark.mjs'),
         ...(config?.themes ?? []),
       ],
-      langs: [import('shiki/langs/html.mjs')],
+      langs: [import('shiki/langs/angular-html.mjs')],
       loadWasm: getWasm,
     })) as HighlighterGeneric<string, string>;
   }
 
   highlight(code: string): string {
     return this.highlighter!.codeToHtml(code, {
-      lang: 'html',
+      lang: 'angular-html',
       themes: {
-        light: this.theme.light,
-        dark: this.theme.dark,
+        light: this.theme.light || 'catppuccin-latte',
+        dark: this.theme.dark || 'ayu-dark',
       },
     });
   }

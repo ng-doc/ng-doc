@@ -48,8 +48,8 @@ export async function processHtml(
         addLanguageClass: true,
         parseMetaString: (meta: string) => JSON.parse(meta?.replace(/\\/g, '') || '{}'),
         themes: {
-          light: config.lightTheme ?? 'github-light',
-          dark: config.darkTheme ?? 'github-dark',
+          light: config.lightTheme ?? 'catppuccin-latte',
+          dark: config.darkTheme ?? 'ayu-dark',
         },
       })
       .use(highlightCodeLines)

@@ -36,7 +36,7 @@ export function apiPageTemplateBuilder(config: Config): Builder<TemplateBuilderO
   const declPath = declaration.getSourceFile().getFilePath();
   const pageKey = `${declPath}#${declaration.getName()}`;
   const cacheStrategy = {
-    id: `${declPath}#Template`,
+    id: `${declPath}#ApiTemplate`,
     action: 'skip',
   } satisfies CacheStrategy<undefined, string>;
 

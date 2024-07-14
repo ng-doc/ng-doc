@@ -85,7 +85,14 @@
   }
 
   &[ng-doc-button-flat] {
+    background: color-mix(
+      in srgb,
+      var(--ng-doc-button-background),
+      black var(--ng-doc-button-background-opacity)
+    );
+
     --ng-doc-button-background: var(--ng-doc-white);
+    --ng-doc-button-background-opacity: 0%;
     --ng-doc-button-hover-background-opacity: 10%;
     --ng-doc-button-active-background-opacity: 20%;
 
