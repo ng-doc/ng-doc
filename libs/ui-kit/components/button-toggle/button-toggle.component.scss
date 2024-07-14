@@ -2,11 +2,6 @@
 
 :host {
   @include ng-doc-font();
-  @include alpha-background(
-    var(--ng-doc-button-alpha-background),
-    var(--ng-doc-button-background-opacity)
-  );
-
   position: relative;
   display: inline-flex;
   align-items: center;

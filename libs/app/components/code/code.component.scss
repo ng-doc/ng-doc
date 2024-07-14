@@ -1,5 +1,3 @@
-@import '../../../ui-kit/styles/mixins';
-
 :host {
   position: relative;
   display: block;
@@ -95,7 +93,16 @@
             padding: 0 calc(var(--ng-doc-base-gutter) * 2);
 
             &.highlighted {
-              @include alpha-background(var(--ng-doc-code-highlight-color), 0.1);
+              position: relative;
+              background: color-mix(
+                in srgb,
+                var(--ng-doc-code-highlight-color),
+                transparent 90%
+              ) !important;
+
+              span {
+                background: transparent !important;
+              }
 
               &:after {
                 content: '';

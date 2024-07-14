@@ -133,8 +133,6 @@ pre.shiki {
 }
 
 *:not(pre) > code#{$class} {
-  @include alpha-background(var(--ng-doc-inline-code-background), 0.15);
-
   vertical-align: bottom;
   border-radius: calc(var(--ng-doc-base-gutter) / 2);
   color: var(--ng-doc-inline-code-color);
@@ -143,6 +141,7 @@ pre.shiki {
   font-size: 14px;
   font-weight: var(--ng-doc-code-font-weight);
   line-height: var(--ng-doc-code-line-height, var(--ng-doc-line-height));
+  background: color-mix(in srgb, var(--ng-doc-inline-code-background) 15%, transparent);
   white-space: nowrap;
 }
 

@@ -14,7 +14,7 @@ const CORE_CACHE_ID: string = 'ng-doc-core';
  */
 export function invalidateCacheIfNeeded(coreFiles: string[] = []): boolean {
   const cacheDirPath: string = getCacheDirPath();
-  const version: string = require('../../../../package.json').version;
+  const version: string = require('../../../package.json').version;
   const cache: NgDocCachedData = createCache(version, coreFiles);
   const isValid: boolean = isCacheValid(CORE_CACHE_ID, cache);
 

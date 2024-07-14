@@ -1,8 +1,6 @@
 @import '../../styles/mixins';
 
 :host {
-  @include alpha-background(var(--ng-doc-blockquote-background, var(--ng-doc-base-9)), 0.1);
-  @include alpha-border(var(--ng-doc-blockquote-border-color, var(--ng-doc-base-9)), 0.2);
   @include ng-doc-font();
 
   position: relative;
@@ -10,6 +8,13 @@
   padding: calc(var(--ng-doc-base-gutter) * 2);
   border-radius: var(--ng-doc-base-gutter);
   margin: var(--ng-doc-blockquote-margin);
+  background: color-mix(
+    in srgb,
+    var(--ng-doc-blockquote-background, var(--ng-doc-base-9)),
+    transparent 90%
+  );
+  border: 1px solid
+    color-mix(in srgb, var(--ng-doc-blockquote-border-color, var(--ng-doc-base-9)), transparent 80%);
   overflow: hidden;
 
   --ng-doc-code-margin: var(--ng-doc-base-gutter) 0;

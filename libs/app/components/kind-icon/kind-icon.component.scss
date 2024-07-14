@@ -3,10 +3,6 @@
 @import '../../../ui-kit/styles/mixins';
 
 :host {
-  @include alpha-background(
-    var(--ng-doc-kind-icon-alpha-background),
-    var(--ng-doc-kind-icon-alpha-background-opacity, 0.15)
-  );
   display: inline-block;
   width: 22px;
   height: 22px;
@@ -17,7 +13,12 @@
   text-transform: uppercase;
   flex-shrink: 0;
   font-weight: 700;
-  color: var(--ng-doc-kind-icon-alpha-background);
+  color: var(--ng-doc-kind-icon-background);
+  background: color-mix(
+    in srgb,
+    var(--ng-doc-kind-icon-background) var(--ng-doc-kind-icon-background-opacity, 15%),
+    transparent
+  );
 
   &[data-ng-doc-size='small'] {
     width: calc(var(--ng-doc-base-gutter) * 2);
@@ -26,10 +27,10 @@
   }
 
   &[data-ng-doc-type='declaration'] {
-    @include entitiesColors('data-ng-doc-kind', '--ng-doc-kind-icon-alpha-background', null);
+    @include entitiesColors('data-ng-doc-kind', '--ng-doc-kind-icon-background', null);
   }
 
   &[data-ng-doc-type='type'] {
-    @include typeColors('data-ng-doc-kind', '--ng-doc-kind-icon-alpha-background', null);
+    @include typeColors('data-ng-doc-kind', '--ng-doc-kind-icon-background', null);
   }
 }

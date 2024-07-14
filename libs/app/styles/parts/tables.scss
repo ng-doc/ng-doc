@@ -1,5 +1,3 @@
-@import '../../../ui-kit/styles/mixins';
-
 .ng-doc-table-wrapper {
   overflow: auto;
   margin: var(--ng-doc-page-block-margin);
@@ -68,9 +66,7 @@ table.ng-doc-api-table {
 table.ng-doc-overload-table {
   thead {
     tr th {
-      @include alpha-background(var(--ng-doc-warning), 0.1);
-
-      background: unset;
+      background: color-mix(in srgb, var(--ng-doc-warning) 10%, transparent);
     }
   }
 }
