@@ -168,8 +168,6 @@ Thumbs.db
   });
 
   it('should migrate ng-doc.page.ts', async () => {
-    const tree: UnitTestTree = await runner.runSchematic('migration-v18', {}, host);
-
     host.create(
       'page/index.md',
       `
@@ -192,7 +190,22 @@ export default Page;
 
     saveActiveProject();
 
-    expect(tree.readContent('page/index.md')).toEqual(``);
-    expect(tree.readContent('page/ng-doc.page.ts')).toEqual(``);
+    const tree: UnitTestTree = await runner.runSchematic('migration-v18', {}, host);
+
+    expect(tree.readContent('page/index.md')).toEqual(`---
+keyword: 'MyPage'
+---
+
+    Content`);
+    expect(tree.readContent('page/ng-doc.page.ts'))
+      .toEqual(`import { NgDocPage } from '@ng-doc/core';
+
+const Page: NgDocPage = {
+  title: \`Page\`,
+  mdFile: './index.md'
+};
+
+export default Page;
+`);
   });
 });

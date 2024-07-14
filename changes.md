@@ -75,7 +75,6 @@ TODO:
 - rework landing page + add reusable components for creating landings
 - docs for theming
 - docs for mermaid diagrams
-- update schematics for page generation based on the new API
 - improve cache by using lmdb library
 - check order of API properties modificators
 - add parsing of the `angular.dev` for the angular keyword loader

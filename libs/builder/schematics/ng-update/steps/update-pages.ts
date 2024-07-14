@@ -6,6 +6,7 @@ import {
   getSourceFiles,
   Node,
   ObjectLiteralExpression,
+  saveActiveProject,
   setActiveProject,
   SourceFile,
   SyntaxKind,
@@ -32,6 +33,8 @@ export function updatePages(): Rule {
         removeTitleFromMarkdown(tree, objectExpression);
         moveKeywordIntoMarkdown(tree, objectExpression);
       }
+
+      saveActiveProject();
     });
   };
 }
@@ -61,7 +64,7 @@ function getObjectExpressionFromDefault(
  */
 function removeTitleFromMarkdown(tree: Tree, objectExpression: ObjectLiteralExpression) {
   const directoryPath = objectExpression.getSourceFile().getDirectoryPath();
-  const mdPathProperty = objectExpression.getProperty('mdPath');
+  const mdPathProperty = objectExpression.getProperty('mdFile');
 
   if (mdPathProperty && Node.isPropertyAssignment(mdPathProperty)) {
     const mdPathValue = mdPathProperty.getInitializer()?.getText();
@@ -71,7 +74,7 @@ function removeTitleFromMarkdown(tree: Tree, objectExpression: ObjectLiteralExpr
       const mdFile = tree.readText(mdPath);
 
       if (mdFile) {
-        const newMdFile = mdFile.replace(/^#?(\s)*{{(\s)*NgDocPage\.title(\s)*}}/m, '');
+        const newMdFile = mdFile.replace(/^\s*#?(\s)*{{(\s)*NgDocPage\.title(\s)*}}/m, '');
 
         tree.overwrite(mdPath, newMdFile);
       }
@@ -86,7 +89,7 @@ function removeTitleFromMarkdown(tree: Tree, objectExpression: ObjectLiteralExpr
  */
 function moveKeywordIntoMarkdown(tree: Tree, objectExpression: ObjectLiteralExpression) {
   const directoryPath = objectExpression.getSourceFile().getDirectoryPath();
-  const mdPathProperty = objectExpression.getProperty('mdPath');
+  const mdPathProperty = objectExpression.getProperty('mdFile');
   const keywordProperty = objectExpression.getProperty('keyword');
 
   if (
@@ -107,6 +110,8 @@ function moveKeywordIntoMarkdown(tree: Tree, objectExpression: ObjectLiteralExpr
 
         tree.overwrite(mdPath, newMdFile);
       }
+
+      keywordProperty.remove();
     }
   }
 }
