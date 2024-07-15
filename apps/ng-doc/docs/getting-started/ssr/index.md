@@ -1,4 +1,6 @@
-# {{ NgDocPage.title }}
+---
+keyword: 'SSRPage'
+---
 
 NgDoc fully supports server-side rendering (SSR) of your documentation. This
 means that you can generate static HTML files for your documentation and host

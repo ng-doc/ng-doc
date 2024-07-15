@@ -6,7 +6,6 @@ const KeywordsLoadersPage: NgDocPage = {
   title: `Keywords Loaders`,
   mdFile: './index.md',
   category: FeaturesCategory,
-  keyword: 'FeaturesKeywordsLoaders',
   order: 5,
 };
 

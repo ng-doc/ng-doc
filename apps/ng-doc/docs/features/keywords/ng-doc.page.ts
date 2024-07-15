@@ -6,7 +6,6 @@ const KeywordsPage: NgDocPage = {
   title: 'Keywords',
   mdFile: './index.md',
   category: FeaturesCategory,
-  keyword: 'FeaturesKeywords',
   order: 4,
 };
 

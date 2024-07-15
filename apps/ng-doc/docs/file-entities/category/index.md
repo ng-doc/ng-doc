@@ -1,4 +1,6 @@
-# {{ NgDocPage.title }}
+---
+keyword: 'EntitiesCategory'
+---
 
 Categories allow you to structure your documentation not only at the sidebar but also at the routing
 level because each child page or category will have a routing based on its parent

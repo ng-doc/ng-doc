@@ -21,7 +21,8 @@
     "dev:ssr": "ng run ng-doc:serve-ssr",
     "serve:ssr": "node dist/ng-doc/server/main.js",
     "build:ssr": "ng build && ng run ng-doc:server",
-    "prerender": "ng run ng-doc:prerender"
+    "prerender": "ng run ng-doc:prerender",
+    "migr": "ng g ./dist/libs/builder:ng-update"
   },
   "keywords": [
     "angular",

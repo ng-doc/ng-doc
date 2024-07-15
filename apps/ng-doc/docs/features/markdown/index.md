@@ -1,4 +1,6 @@
-# {{ NgDocPage.title }}
+---
+keyword: 'FeaturesMarkdown'
+---
 
 NgDoc uses `markdown` to render your pages, but we have added some additional features to make
 your documentation more readable and understandable.

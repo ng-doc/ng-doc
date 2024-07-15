@@ -1,4 +1,6 @@
-# {{ NgDocPage.title }}
+---
+keyword: 'CustomizationTypeControls'
+---
 
 Playgrounds can recognize some simple types and create controls for them dynamically, but for inputs
 that have more complex types such as an interface or a class, this will not work, the fact is that

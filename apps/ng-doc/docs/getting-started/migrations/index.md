@@ -1,5 +1,3 @@
-# {{ NgDocPage.title }}
-
 This page contains information about migrating from previous versions of NgDoc to the current
 version.
 

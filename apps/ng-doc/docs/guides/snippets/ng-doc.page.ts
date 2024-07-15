@@ -8,7 +8,6 @@ const SnippetsPage: NgDocPage = {
   mdFile: './index.md',
   category: GuidesCategory,
   order: 4,
-  keyword: 'GuidesSnippets',
   demos: { ButtonInlineDemoComponent },
 };
 

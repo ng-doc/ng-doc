@@ -6,7 +6,6 @@ const PagePage: NgDocPage = {
   title: 'Page',
   category: EntitiesCategory,
   mdFile: './index.md',
-  keyword: 'EntitiesPage',
   order: 1,
 };
 

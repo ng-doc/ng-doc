@@ -13,7 +13,6 @@ const PlaygroundPage: NgDocPage = {
   title: `Playground`,
   mdFile: './index.md',
   category: GuidesCategory,
-  keyword: 'GuidesPlayground',
   imports: [NgDocIconComponent],
   playgrounds: {
     TagPlayground: {

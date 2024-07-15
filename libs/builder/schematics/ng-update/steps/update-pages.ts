@@ -77,6 +77,8 @@ function removeTitleFromMarkdown(tree: Tree, objectExpression: ObjectLiteralExpr
         const newMdFile = mdFile.replace(/^\s*#?(\s)*{{(\s)*NgDocPage\.title(\s)*}}/m, '');
 
         tree.overwrite(mdPath, newMdFile);
+
+        console.log('Removed title from:', mdPath);
       }
     }
   }
@@ -112,6 +114,8 @@ function moveKeywordIntoMarkdown(tree: Tree, objectExpression: ObjectLiteralExpr
       }
 
       keywordProperty.remove();
+
+      console.log('Moved keyword into:', mdPath);
     }
   }
 }

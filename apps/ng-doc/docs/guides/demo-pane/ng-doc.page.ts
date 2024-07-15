@@ -9,7 +9,6 @@ const DemoPanePage: NgDocPage = {
   mdFile: './index.md',
   category: GuidesCategory,
   order: 3,
-  keyword: 'GuidesDemoPane',
   demos: { ButtonDemoComponent, ButtonInlineDemoComponent },
   route: {
     children: [

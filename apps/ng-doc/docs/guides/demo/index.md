@@ -1,5 +1,4 @@
 ---
-title: Guide
 keyword: 'GuidesDemo'
 ---
 

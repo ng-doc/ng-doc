@@ -1,4 +1,6 @@
-# {{ NgDocPage.title }}
+---
+keyword: 'CustomizationThemes'
+---
 
 This article only scratches the surface of theme creation, we won't dive into the details of all the
 variables in it, when its API stabilizes we'll cover other topics in more detail.

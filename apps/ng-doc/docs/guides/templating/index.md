@@ -1,4 +1,6 @@
-# {{ NgDocPage.title }}
+---
+keyword: 'GuidesTemplating'
+---
 
 Templates of your pages fully support `markdown` format and even more, you can reuse templates,
 divide them into small ones, import, inherit and much more, below we will talk about what templates

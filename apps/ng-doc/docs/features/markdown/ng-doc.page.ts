@@ -7,7 +7,6 @@ const MarkdownPage: NgDocPage = {
   mdFile: './index.md',
   category: FeaturesCategory,
   order: 1,
-  keyword: 'FeaturesMarkdown',
 };
 
 export default MarkdownPage;

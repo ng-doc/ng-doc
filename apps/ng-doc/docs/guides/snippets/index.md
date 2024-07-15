@@ -1,4 +1,6 @@
-# {{ NgDocPage.title }}
+---
+keyword: 'GuidesSnippets'
+---
 
 Snippets are a way to display a part of your code in the demos, they are very useful
 when you want to show a specific part of your code.

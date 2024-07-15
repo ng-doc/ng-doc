@@ -10,7 +10,6 @@ const PageProcessorsPage: NgDocPage = {
   mdFile: './index.md',
   category: parentCategory,
   order: 2,
-  keyword: 'PageProcessors',
   providers: [providePageProcessor(imageProcessor), providePageProcessor(tableProcessor)],
 };
 

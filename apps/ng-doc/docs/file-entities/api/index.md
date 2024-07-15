@@ -1,4 +1,6 @@
-# {{ NgDocPage.title }}
+---
+keyword: 'EntitiesAPI'
+---
 
 The API entity is one of the most powerful features in NgDoc, it allows you to generate an API pages
 for any entities in your project, it can be classes, interfaces, functions, variables, or anything

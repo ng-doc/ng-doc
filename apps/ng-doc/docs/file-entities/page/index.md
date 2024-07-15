@@ -1,4 +1,6 @@
-# {{ NgDocPage.title }}
+---
+keyword: 'EntitiesPage'
+---
 
 The page is the main building block of your guides, which you can use to describe some
 cool features of your project, show various demos, write guides and do many other things

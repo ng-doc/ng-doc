@@ -1,4 +1,6 @@
-# {{ NgDocPage.title }}
+---
+keyword: 'FeaturesKeywordsLoaders'
+---
 
 Keywords loaders it's a way to lazy-load your global keywords.
 It can be used to load keywords from external APIs or from the local file system.

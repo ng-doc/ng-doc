@@ -1,4 +1,6 @@
-# {{ NgDocPage.title }}
+---
+keyword: 'PageProcessors'
+---
 
 Page Processor is a really powerful feature of NgDoc. It allows you to replace HTML elements
 with Angular components. This is how NgDoc renders different components inside your documentation

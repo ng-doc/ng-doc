@@ -6,7 +6,6 @@ const TemplatingPage: NgDocPage = {
   title: 'Templating',
   mdFile: './index.md',
   category: GuidesCategory,
-  keyword: 'GuidesTemplating',
   order: 1,
 };
 

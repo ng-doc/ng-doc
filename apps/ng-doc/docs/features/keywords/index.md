@@ -1,4 +1,6 @@
-# {{ NgDocPage.title }}
+---
+keyword: 'FeaturesKeywords'
+---
 
 Keywords allow you not to tie your documentation to certain links, as well as make it more dynamic,
 as a result, mentions of certain entities or pages will turn into links automatically.

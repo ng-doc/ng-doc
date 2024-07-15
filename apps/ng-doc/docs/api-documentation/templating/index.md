@@ -1,4 +1,6 @@
-# {{ NgDocPage.title }}
+---
+keyword: 'ContentApiTemplating'
+---
 
 When you create `ng-doc.metadata.ts`, NgDoc will generate documentation for all exported entities in your
 project, but they may not always be clear to your users, we will help you fix that in this article.

@@ -1,3 +1,7 @@
+---
+keyword: 'GuidesPlayground'
+---
+
 The Playground is another cool feature that NgDoc provides out of the box, it's especially handy for
 creating dynamic demos of your components and directives, to give your users the opportunity to play
 with them.

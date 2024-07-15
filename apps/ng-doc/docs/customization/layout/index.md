@@ -1,5 +1,3 @@
-# {{ NgDocPage.title }}
-
 This article will help you to customize layout of the documentation app.
 
 ## Customization

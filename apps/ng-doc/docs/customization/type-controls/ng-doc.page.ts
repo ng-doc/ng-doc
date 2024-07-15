@@ -9,7 +9,6 @@ const TypeControlsPage: NgDocPage = {
   title: 'Type Controls',
   mdFile: './index.md',
   category: CustomizationCategory,
-  keyword: 'CustomizationTypeControls',
   providers: [
     provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {
       hideLabel: true,

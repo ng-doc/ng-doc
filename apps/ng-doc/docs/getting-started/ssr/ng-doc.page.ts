@@ -7,7 +7,6 @@ const page: NgDocPage = {
   mdFile: './index.md',
   category: GettingStartedCategory,
   order: 3,
-  keyword: 'SSRPage',
 };
 
 export default page;

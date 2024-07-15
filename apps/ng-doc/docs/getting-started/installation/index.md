@@ -1,4 +1,6 @@
-# {{ NgDocPage.title }}
+---
+keyword: 'GettingStartedInstallation'
+---
 
 NgDoc is just a library, so first you need to create an Angular application that will be used to
 display documentation, it can be a separate application or an existing one.

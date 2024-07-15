@@ -1,5 +1,3 @@
-# {{ NgDocPage.title }}
-
 > **Warning**
 > This feature is unstable! Please use it with caution and report any issues you
 > find! `ngDocBugReport`

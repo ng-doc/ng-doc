@@ -1,4 +1,6 @@
-# {{ NgDocPage.title }}
+---
+keyword: 'GettingStartedConfiguration'
+---
 
 This section describes how you can configure certain functions of the library.
 
