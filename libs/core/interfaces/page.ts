@@ -55,6 +55,4 @@ export interface NgDocPage extends NgDocBaseEntity {
    * multiple demos on the same page require nested routes.
    */
   disableFullscreenRoutes?: boolean;
-  // TODO: REMOVE
-  keyword?: string;
 }
