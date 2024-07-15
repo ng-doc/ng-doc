@@ -15,10 +15,6 @@
     margin-right: var(--ng-doc-base-gutter);
   }
 
-  .ng-doc-breadcrumb:not(:first-child):not(:last-child) {
-    opacity: 0.6;
-  }
-
   ng-doc-icon[icon='chevron-right'] {
     margin-right: var(--ng-doc-base-gutter);
   }
