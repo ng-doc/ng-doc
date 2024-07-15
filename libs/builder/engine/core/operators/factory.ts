@@ -69,7 +69,7 @@ export function factory<T, R, TCacheData>(
         map((result) => new BuilderDone(tag, result)),
         catchError((error: Error) => of(new BuilderError(tag, [error]))),
         handleCacheStrategy<R, TCacheData>(
-          id,
+          `factory${id}`,
           cacheStrategy,
           (states as Array<BuilderDone<T>>).every(({ fromCache }) => fromCache),
         ),

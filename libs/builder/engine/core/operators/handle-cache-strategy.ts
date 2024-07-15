@@ -14,7 +14,7 @@ export function disableCache(): void {
   isCacheEnabled = false;
 }
 
-const restoredBuilders = new Set<number>();
+const restoredBuilders = new Set<string>();
 
 /**
  * Handles cache provided cache strategy.
@@ -25,7 +25,7 @@ const restoredBuilders = new Set<number>();
  * @param valid
  */
 export function handleCacheStrategy<T, TData>(
-  id: number,
+  id: string,
   strategy?: CacheStrategy<TData, T>,
   valid: boolean = true,
 ): OperatorFunction<BuilderState<T>, BuilderState<T>> {

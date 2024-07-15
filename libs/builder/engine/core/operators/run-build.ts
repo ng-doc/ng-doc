@@ -27,7 +27,7 @@ export function runBuild<T, O extends ObservableInput<any>>(
         return of(args).pipe(
           switchMap(project),
           builderState(tag),
-          handleCacheStrategy(id, cacheStrategy),
+          handleCacheStrategy(`runBuild${id}`, cacheStrategy),
         );
       }),
     );

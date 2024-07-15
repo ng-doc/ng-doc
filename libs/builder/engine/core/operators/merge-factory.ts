@@ -77,7 +77,7 @@ export function mergeFactory<TCacheData, A extends ReadonlyArray<BuilderState<un
         const buildFn = from(project(...results)).pipe(
           builderState(tag),
           handleCacheStrategy<T, TCacheData>(
-            id,
+            `mergeFactory${id}`,
             cacheStrategy,
             buffer.every(({ fromCache }) => fromCache),
           ),
