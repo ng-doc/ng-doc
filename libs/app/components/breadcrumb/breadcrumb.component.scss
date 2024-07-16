@@ -4,6 +4,7 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  gap: var(--ng-doc-base-gutter);
   margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
   opacity: 0.9;
 
@@ -11,11 +12,5 @@
     @include ng-doc-font();
     display: flex;
     align-items: center;
-
-    margin-right: var(--ng-doc-base-gutter);
-  }
-
-  ng-doc-icon[icon='chevron-right'] {
-    margin-right: var(--ng-doc-base-gutter);
   }
 }
