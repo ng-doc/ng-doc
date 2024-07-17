@@ -1,36 +1,8 @@
 ---
-keyword: 'GettingStartedInstallation'
+title: Manual
+route: manual
+keyword: InstallationManualPage
 ---
-
-NgDoc is just a library, so first you need to create an Angular application that will be used to
-display documentation, it can be a separate application or an existing one.
-
-When you install NgDoc, it will be integrated into the build process of your application, and will
-generate
-pages and components based on you code, that can be used in your application to display
-documentation.
-
-## Automatic (recommended)
-
-To install the NgDoc, you can use the command below.
-This command will automatically install and add the library to your project,
-and configure it.
-
-{% include "../../shared/generated-folder.md" %}
-
-```bash group="install" name="Angular" icon="angular"
-ng add @ng-doc/add
-```
-
-```bash group="install" name="Nx" icon="nx"
-npm install @ng-doc/add && npx nx g @ng-doc/add:ng-add
-```
-
-By default, NgDoc uses your project's `sourceRoot` as the directory where you should create
-documentation, you can always change this, see the `*GettingStartedConfiguration` article for more
-details
-
-## Manual
 
 Install the NgDoc via npm
 

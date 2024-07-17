@@ -31,7 +31,6 @@ export function createDeclarationTabMetadata(
       scope: entry.entry.scope,
       title: tab.title,
       route: tab.route,
-      type: 'api',
     },
     parent: entry,
     outPath: path.join(outDir, 'page.ts'),
