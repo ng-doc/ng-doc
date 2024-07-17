@@ -1,4 +1,4 @@
-import { Spinner } from '@angular/cli/src/utilities/spinner';
+import { Spinner } from '@angular-devkit/build-angular/src/utils/spinner';
 
 const spinner: Spinner = new Spinner();
 
@@ -20,7 +20,7 @@ export function printProgress(text?: string): void {
  * @param info - The info to print.
  */
 export function printInfo(info: string): void {
-	spinner.info(info);
+	spinner.start(info);
 }
 
 /**
@@ -28,7 +28,7 @@ export function printInfo(info: string): void {
  * @param warn - The warning to print.
  */
 export function printWarning(warn: string): void {
-	spinner.warn(warn);
+	spinner.fail(warn);
 }
 
 /**
