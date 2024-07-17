@@ -1,3 +1,10 @@
+## [17.6.15](https://github.com/ng-doc/ng-doc/compare/v17.6.14...v17.6.15) (2024-07-17)
+
+
+### Bug Fixes
+
+* **builder:** add support for Angular 18.1 ([30365c7](https://github.com/ng-doc/ng-doc/commit/30365c7d29be0c58b1c7c9fe9c94ff13d53f3d74)), closes [#189](https://github.com/ng-doc/ng-doc/issues/189)
+
 ## [17.6.14](https://github.com/ng-doc/ng-doc/compare/v17.6.13...v17.6.14) (2024-06-17)
 
 
