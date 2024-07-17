@@ -13,13 +13,12 @@ import fs from 'fs';
 import { forkJoin, merge, Observable, switchMap } from 'rxjs';
 import { debounceTime, map, tap } from 'rxjs/operators';
 
-import { importUtils } from '../helpers';
+import { importEsm, importUtils } from '../helpers';
 import { NgDocBuilderContext } from '../interfaces';
 import { progress } from '../operators';
 import { globalBuilders } from './builders/global';
 import { invalidateCacheIfNeeded } from './cache';
 import { resolveAsyncFileOutputs } from './core/operators/resolve-async-file-outputs';
-
 /**
  *
  * @param context
@@ -41,9 +40,11 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
     fs.rmSync(context.outDir, { recursive: true, force: true });
   }
 
-  const emitter = forkJoin([loadGlobalKeywords(context), importUtils()]).pipe(
-    switchMap(() => merge(entriesEmitter(context), globalBuilders(context))),
-  );
+  const emitter = forkJoin([
+    loadGlobalKeywords(context),
+    importUtils(),
+    importEsm('@angular/compiler'),
+  ]).pipe(switchMap(() => merge(entriesEmitter(context), globalBuilders(context))));
 
   return emitter.pipe(
     tap((output) => {
