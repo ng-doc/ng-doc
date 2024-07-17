@@ -6,29 +6,29 @@ import { join } from 'path';
 const collectionPath: string = join(__dirname, '../../collection.json');
 
 describe('page', () => {
-	let host: UnitTestTree;
-	let runner: SchematicTestRunner;
+  let host: UnitTestTree;
+  let runner: SchematicTestRunner;
 
-	beforeEach(() => {
-		host = new UnitTestTree(new HostTree());
-		runner = new SchematicTestRunner('schematics', collectionPath);
+  beforeEach(() => {
+    host = new UnitTestTree(new HostTree());
+    runner = new SchematicTestRunner('schematics', collectionPath);
 
-		setActiveProject(createProject(host));
-	});
+    setActiveProject(createProject(host));
+  });
 
-	it('should generate page entity', async () => {
-		const tree: UnitTestTree = await runner.runSchematic(
-			'page',
-			{
-				path: 'test',
-				title: 'My Page',
-			},
-			host,
-		);
+  it('should generate page entity', async () => {
+    const tree: UnitTestTree = await runner.runSchematic(
+      'page',
+      {
+        path: 'test',
+        title: 'My Page',
+      },
+      host,
+    );
 
-		expect(tree.exists('test/my-page/index.md')).toBe(true);
-		expect(tree.readText('test/my-page/ng-doc.page.ts'))
-			.toBe(`import {NgDocPage} from '@ng-doc/core';
+    expect(tree.exists('test/my-page/index.md')).toBe(true);
+    expect(tree.readText('test/my-page/ng-doc.page.ts'))
+      .toBe(`import {NgDocPage} from '@ng-doc/core';
 
 const MyPagePage: NgDocPage = {
 \ttitle: \`My Page\`,
@@ -37,22 +37,22 @@ const MyPagePage: NgDocPage = {
 
 export default MyPagePage;
 `);
-	});
+  });
 
-	it('should generate page entity with custom route', async () => {
-		const tree: UnitTestTree = await runner.runSchematic(
-			'page',
-			{
-				path: 'test',
-				title: 'my-page',
-				route: 'custom-route',
-			},
-			host,
-		);
+  it('should generate page entity with custom route', async () => {
+    const tree: UnitTestTree = await runner.runSchematic(
+      'page',
+      {
+        path: 'test',
+        title: 'my-page',
+        route: 'custom-route',
+      },
+      host,
+    );
 
-		expect(tree.exists('test/my-page/index.md')).toBe(true);
-		expect(tree.readText('test/my-page/ng-doc.page.ts'))
-			.toBe(`import {NgDocPage} from '@ng-doc/core';
+    expect(tree.exists('test/my-page/index.md')).toBe(true);
+    expect(tree.readText('test/my-page/ng-doc.page.ts'))
+      .toBe(`import {NgDocPage} from '@ng-doc/core';
 
 const MyPagePage: NgDocPage = {
 \ttitle: \`my-page\`,
@@ -62,22 +62,22 @@ const MyPagePage: NgDocPage = {
 
 export default MyPagePage;
 `);
-	});
+  });
 
-	it('should generate page entity with order', async () => {
-		const tree: UnitTestTree = await runner.runSchematic(
-			'page',
-			{
-				path: 'test',
-				title: 'my-page',
-				order: 1,
-			},
-			host,
-		);
+  it('should generate page entity with order', async () => {
+    const tree: UnitTestTree = await runner.runSchematic(
+      'page',
+      {
+        path: 'test',
+        title: 'my-page',
+        order: 1,
+      },
+      host,
+    );
 
-		expect(tree.exists('test/my-page/index.md')).toBe(true);
-		expect(tree.readText('test/my-page/ng-doc.page.ts'))
-			.toBe(`import {NgDocPage} from '@ng-doc/core';
+    expect(tree.exists('test/my-page/index.md')).toBe(true);
+    expect(tree.readText('test/my-page/ng-doc.page.ts'))
+      .toBe(`import {NgDocPage} from '@ng-doc/core';
 
 const MyPagePage: NgDocPage = {
 \ttitle: \`my-page\`,
@@ -87,49 +87,44 @@ const MyPagePage: NgDocPage = {
 
 export default MyPagePage;
 `);
-	});
+  });
 
-	it('should generate page entity with module', async () => {
-		const tree: UnitTestTree = await runner.runSchematic(
-			'page',
-			{
-				path: 'test',
-				title: 'my-page',
-				module: true,
-			},
-			host,
-		);
+  it('should generate page entity with keyword', async () => {
+    const tree: UnitTestTree = await runner.runSchematic(
+      'page',
+      {
+        path: 'test',
+        title: 'my-page',
+        keyword: 'test',
+      },
+      host,
+    );
 
-		expect(tree.exists('test/my-page/index.md')).toBe(true);
-		expect(tree.readText('test/my-page/ng-doc.module.ts'))
-			.toBe(`import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-
-@NgModule({
-\timports: [CommonModule],
-\t// Declare you demo components here
-\tdeclarations: [],
-})
-export class MyPagePageModule {}
-`);
-		expect(tree.readText('test/my-page/ng-doc.page.ts'))
-			.toBe(`import {NgDocPage} from '@ng-doc/core';
-import {MyPagePageModule} from './ng-doc.module';
+    expect(tree.exists('test/my-page/index.md')).toBe(true);
+    expect(tree.readText('test/my-page/ng-doc.page.ts'))
+      .toBe(`import {NgDocPage} from '@ng-doc/core';
 
 const MyPagePage: NgDocPage = {
 \ttitle: \`my-page\`,
 \tmdFile: './index.md',
-\timports: [MyPagePageModule],
 };
 
 export default MyPagePage;
 `);
-	});
+    expect(tree.readText('test/my-page/index.md')).toBe(`
+---
+keyword: test
+---
 
-	it('should generate page entity with category', async () => {
-		createSourceFile(
-			'test/parent-category/ng-doc.category.ts',
-			`import {NgDocCategory} from '@ng-doc/core';
+
+It's time to write some awesome docs!
+`);
+  });
+
+  it('should generate page entity with category', async () => {
+    createSourceFile(
+      'test/parent-category/ng-doc.category.ts',
+      `import {NgDocCategory} from '@ng-doc/core';
 
 const ParentCategory: NgDocCategory = {
 \ttitle: 'parent-category',
@@ -137,22 +132,22 @@ const ParentCategory: NgDocCategory = {
 
 export default ParentCategory;
 `,
-		);
-		saveActiveProject();
+    );
+    saveActiveProject();
 
-		const tree: UnitTestTree = await runner.runSchematic(
-			'page',
-			{
-				path: 'test/parent-category',
-				title: 'my-page',
-				category: true,
-			},
-			host,
-		);
+    const tree: UnitTestTree = await runner.runSchematic(
+      'page',
+      {
+        path: 'test/parent-category',
+        title: 'my-page',
+        category: true,
+      },
+      host,
+    );
 
-		expect(tree.exists('test/parent-category/my-page/index.md')).toBe(true);
-		expect(tree.readText('test/parent-category/my-page/ng-doc.page.ts'))
-			.toBe(`import {NgDocPage} from '@ng-doc/core';
+    expect(tree.exists('test/parent-category/my-page/index.md')).toBe(true);
+    expect(tree.readText('test/parent-category/my-page/ng-doc.page.ts'))
+      .toBe(`import {NgDocPage} from '@ng-doc/core';
 import ParentCategory from '../ng-doc.category';
 
 const MyPagePage: NgDocPage = {
@@ -163,21 +158,21 @@ const MyPagePage: NgDocPage = {
 
 export default MyPagePage;
 `);
-	});
+  });
 
-	it('should remove slashed from title', async () => {
-		const tree: UnitTestTree = await runner.runSchematic(
-			'page',
-			{
-				path: 'test',
-				title: '/folder/my-page/',
-			},
-			host,
-		);
+  it('should remove slashed from title', async () => {
+    const tree: UnitTestTree = await runner.runSchematic(
+      'page',
+      {
+        path: 'test',
+        title: '/folder/my-page/',
+      },
+      host,
+    );
 
-		expect(tree.exists('test/folder-my-page/index.md')).toBe(true);
-		expect(tree.readText('test/folder-my-page/ng-doc.page.ts'))
-			.toBe(`import {NgDocPage} from '@ng-doc/core';
+    expect(tree.exists('test/folder-my-page/index.md')).toBe(true);
+    expect(tree.readText('test/folder-my-page/ng-doc.page.ts'))
+      .toBe(`import {NgDocPage} from '@ng-doc/core';
 
 const FolderMyPagePage: NgDocPage = {
 \ttitle: \`folder-my-page\`,
@@ -186,52 +181,52 @@ const FolderMyPagePage: NgDocPage = {
 
 export default FolderMyPagePage;
 `);
-	});
+  });
 
-	it('should throw error if title has forbidden characters and --name was not provided', async () => {
-		try {
-			await runner.runSchematic(
-				'page',
-				{
-					path: 'test',
-					title: 'Пейжд',
-				},
-				host,
-			);
-		} catch (e) {
-			expect((e as Error).message).toBeTruthy();
-		}
-	});
+  it('should throw error if title has forbidden characters and --name was not provided', async () => {
+    try {
+      await runner.runSchematic(
+        'page',
+        {
+          path: 'test',
+          title: 'Пейжд',
+        },
+        host,
+      );
+    } catch (e) {
+      expect((e as Error).message).toBeTruthy();
+    }
+  });
 
-	it('should throw error if name has forbidden characters', async () => {
-		try {
-			await runner.runSchematic(
-				'page',
-				{
-					path: 'test',
-					title: 'page',
-					name: 'Пейжд',
-				},
-				host,
-			);
-		} catch (e) {
-			expect((e as Error).message).toBeTruthy();
-		}
-	});
+  it('should throw error if name has forbidden characters', async () => {
+    try {
+      await runner.runSchematic(
+        'page',
+        {
+          path: 'test',
+          title: 'page',
+          name: 'Пейжд',
+        },
+        host,
+      );
+    } catch (e) {
+      expect((e as Error).message).toBeTruthy();
+    }
+  });
 
-	it('should not throw error if title has forbidden characters and --name was provided', async () => {
-		const tree: UnitTestTree = await runner.runSchematic(
-			'page',
-			{
-				path: 'test',
-				title: 'Пейжд',
-				name: 'page',
-			},
-			host,
-		);
+  it('should not throw error if title has forbidden characters and --name was provided', async () => {
+    const tree: UnitTestTree = await runner.runSchematic(
+      'page',
+      {
+        path: 'test',
+        title: 'Пейжд',
+        name: 'page',
+      },
+      host,
+    );
 
-		expect(tree.exists('test/page/index.md')).toBe(true);
-		expect(tree.readText('test/page/ng-doc.page.ts')).toBe(`import {NgDocPage} from '@ng-doc/core';
+    expect(tree.exists('test/page/index.md')).toBe(true);
+    expect(tree.readText('test/page/ng-doc.page.ts')).toBe(`import {NgDocPage} from '@ng-doc/core';
 
 const page: NgDocPage = {
 \ttitle: \`Пейжд\`,
@@ -240,19 +235,19 @@ const page: NgDocPage = {
 
 export default page;
 `);
-	});
+  });
 
-	it('should remove "page" word from folder path if --name was provided', async () => {
-		const tree: UnitTestTree = await runner.runSchematic(
-			'page',
-			{
-				path: 'test',
-				title: 'Test Page',
-				name: 'MyPage',
-			},
-			host,
-		);
+  it('should remove "page" word from folder path if --name was provided', async () => {
+    const tree: UnitTestTree = await runner.runSchematic(
+      'page',
+      {
+        path: 'test',
+        title: 'Test Page',
+        name: 'MyPage',
+      },
+      host,
+    );
 
-		expect(tree.exists('test/my/ng-doc.page.ts')).toBe(true);
-	});
+    expect(tree.exists('test/my/ng-doc.page.ts')).toBe(true);
+  });
 });

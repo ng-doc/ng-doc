@@ -32,11 +32,6 @@
       "description": "The route of the page",
       "alias": "r"
     },
-    "module": {
-      "type": "boolean",
-      "description": "Generate module for demos and playgrounds",
-      "alias": "m"
-    },
     "category": {
       "type": "boolean",
       "description": "Automatically import the category.",

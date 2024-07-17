@@ -1,4 +1,4 @@
-import {SchematicArgv} from '../schematic-argv';
+import { SchematicArgv } from '../schematic-argv';
 
 /**
  * The interface describes the possible parameters for generating the page,
@@ -14,32 +14,28 @@ import {SchematicArgv} from '../schematic-argv';
  * ```
  */
 export interface NgDocBuildPageSchema extends SchematicArgv {
-	/**
-	 * Title of the page (can be provided as string after command)
-	 */
-	title: string;
-	/**
-	 * Name of the page variable (alias is `-n`, title in PascalCase by default)
-	 */
-	name?: string;
-	/**
-	 * Custom route for the page (alias is `-r`, parent folder name by default)
-	 */
-	route?: string;
-	/**
-	 * Order of the page in sidebar (alias is `-o`, NgDoc sorting pages by name by default)
-	 */
-	order?: number;
-	/**
-	 * Provide true if you need add module file for the page (alias is `-m`)
-	 */
-	module?: boolean;
-	/**
-	 * If parameter was provided, generator will import first parent category automatically (alias is `-c`)
-	 */
-	category?: boolean;
-	/**
-	 * Keyword for the entity (alias is `-k`)
-	 */
-	keyword?: string;
+  /**
+   * Title of the page (can be provided as string after command)
+   */
+  title: string;
+  /**
+   * Name of the page variable (alias is `-n`, title in PascalCase by default)
+   */
+  name?: string;
+  /**
+   * Custom route for the page (alias is `-r`, parent folder name by default)
+   */
+  route?: string;
+  /**
+   * Order of the page in sidebar (alias is `-o`, NgDoc sorting pages by name by default)
+   */
+  order?: number;
+  /**
+   * If parameter was provided, generator will import first parent category automatically (alias is `-c`)
+   */
+  category?: boolean;
+  /**
+   * Keyword for the entity (alias is `-k`)
+   */
+  keyword?: string;
 }
