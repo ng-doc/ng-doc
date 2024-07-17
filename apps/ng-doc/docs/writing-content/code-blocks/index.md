@@ -141,27 +141,27 @@ and the path to the file **relative** to your template
 ```
 
 To load specific lines from the file, you can provide them at the end of the `file` parameter,
-for example, to load lines from 4 to 9, you can write the following
+for example, to load lines from 5 to 10, you can write the following
 
 ````markdown name="index.md"
-```typescript file="./ng-doc.page.ts"#L4-L9
+```typescript file="./ng-doc.page.ts"#L5-L10
 
 ```
 ````
 
-```typescript file="./ng-doc.page.ts"#L4-L9
+```typescript file="./ng-doc.page.ts"#L5-L10
 
 ```
 
 To load one line, you can write this
 
 ````markdown name="index.md"
-```typescript file="./ng-doc.page.ts"#L11
+```typescript file="./ng-doc.page.ts"#L12
 
 ```
 ````
 
-```typescript file="./ng-doc.page.ts"#L11
+```typescript file="./ng-doc.page.ts"#L12
 
 ```
 
