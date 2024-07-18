@@ -1,3 +1,10 @@
+## [17.6.16](https://github.com/ng-doc/ng-doc/compare/v17.6.15...v17.6.16) (2024-07-18)
+
+
+### Bug Fixes
+
+* **builder:** build failed after update to the latest Angular and NgDoc version ([cd28db6](https://github.com/ng-doc/ng-doc/commit/cd28db6881b0679af2e8c9003129d34c5429fa6b)), closes [#192](https://github.com/ng-doc/ng-doc/issues/192)
+
 ## [17.6.15](https://github.com/ng-doc/ng-doc/compare/v17.6.14...v17.6.15) (2024-07-17)
 
 
