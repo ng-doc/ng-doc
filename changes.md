@@ -76,8 +76,7 @@ TODO:
 - docs for theming
 - docs for mermaid diagrams
 - add parsing of the `angular.dev` for the angular keyword loader
-- check why builder doesn see new files
-- check if everything is fine with renaming
+- check that all packages are listed in the `package.json` file
 
 Inspirations:
 https://mui.com/base-ui/react-autocomplete/

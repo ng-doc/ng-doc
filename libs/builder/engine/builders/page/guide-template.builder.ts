@@ -35,13 +35,14 @@ export function guideTemplateBuilder(config: Config): Builder<TemplateBuilderOut
   const { context, mdFile, pageMetadata } = config;
   const mdPath = path.join(pageMetadata.dir, mdFile);
   const mdDir = path.dirname(mdPath);
-  const cacheStrategy = {
-    id: `${mdPath}#Template`,
-    action: 'skip',
-  } satisfies CacheStrategy<undefined, string>;
 
   return createBuilder([createMainTrigger(watchFile(mdPath, 'update'))], () => {
     const metadata = createMarkdownMetadata(pageMetadata, mdFile);
+    const cacheStrategy = {
+      id: `${metadata.path}#Template`,
+      action: 'skip',
+      files: () => [metadata.outPath],
+    } satisfies CacheStrategy<undefined, string>;
 
     return pageComponentBuilder(
       (postProcess) =>

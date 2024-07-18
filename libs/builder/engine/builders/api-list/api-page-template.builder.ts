@@ -36,8 +36,9 @@ export function apiPageTemplateBuilder(config: Config): Builder<TemplateBuilderO
   const declPath = declaration.getSourceFile().getFilePath();
   const pageKey = `${declPath}#${declaration.getName()}`;
   const cacheStrategy = {
-    id: `${declPath}#ApiTemplate`,
+    id: `${pageKey}#ApiTemplate`,
     action: 'skip',
+    files: () => [tabMetadata.outPath],
   } satisfies CacheStrategy<undefined, string>;
 
   PageStore.add([pageKey, metadata]);

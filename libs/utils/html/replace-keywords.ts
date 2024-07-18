@@ -1,6 +1,6 @@
 import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
-import { unified, VFileWithOutput } from 'unified';
+import { unified } from 'unified';
 
 import keywordsPlugin, { GetKeyword } from './plugins/keywords.plugin';
 
@@ -24,5 +24,5 @@ export async function replaceKeywords(
     .use(rehypeStringify)
     .use(keywordsPlugin, { getKeyword })
     .process(html)
-    .then((file: VFileWithOutput<string>) => file.toString());
+    .then((file) => file.toString());
 }

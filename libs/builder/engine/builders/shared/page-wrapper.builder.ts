@@ -32,6 +32,7 @@ export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput> {
   const cacheStrategy = {
     id: `${metadata.path}#PageWrapper`,
     action: 'skip',
+    files: () => [metadata.outPath],
   } satisfies CacheStrategy<undefined, string>;
   let usedKeywords = new Set<string>();
   let removeIndexes: () => void = () => {};

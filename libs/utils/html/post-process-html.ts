@@ -1,6 +1,6 @@
 import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
-import { unified, VFileWithOutput } from 'unified';
+import { unified } from 'unified';
 
 import keywordsPlugin from './plugins/keywords.plugin';
 
@@ -26,7 +26,7 @@ export async function postProcessHtml(html: string): Promise<PostProcessHtmlOutp
       .use(rehypeStringify)
       .use(keywordsPlugin, { addUsedKeyword: usedKeywords.add.bind(usedKeywords) })
       .process(html)
-      .then((file: VFileWithOutput<string>) => file.toString());
+      .then((file) => file.toString());
 
     return { content, usedKeywords: Array.from(usedKeywords) };
   } catch (error) {

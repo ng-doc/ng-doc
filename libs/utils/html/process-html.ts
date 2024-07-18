@@ -3,7 +3,7 @@ import rehypeShiki from '@shikijs/rehype';
 import rehypeMinifyWhitespace from 'rehype-minify-whitespace';
 import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
-import { unified, VFileWithOutput } from 'unified';
+import { unified } from 'unified';
 
 import autolinkHeadingPlugin from './plugins/add-heading-anchors.plugin';
 import highlightCodeLines from './plugins/highlight-code-lines';
@@ -41,7 +41,6 @@ export async function processHtml(
       .use(rehypeParse, { fragment: true })
       .use(rehypeStringify)
       .use(mermaidPlugin)
-      // @ts-expect-error - rehype-shiki types are not up to date
       .use(rehypeShiki, {
         defaultLanguage: 'ts',
         fallbackLanguage: 'text',
@@ -59,7 +58,7 @@ export async function processHtml(
       .use(autolinkHeadingPlugin, config.route)
       .use(markElementsPlugin)
       .process(html)
-      .then((file: VFileWithOutput<string>) => file.toString());
+      .then((file) => file.toString());
 
     return { content, anchors: Array.from(anchors) };
   } catch (error) {

@@ -35,7 +35,7 @@ export function playgroundBuilder(config: Config): Builder<FileOutput> {
   const cacheStrategy = {
     id: `${page.path}#Playground`,
     action: 'skip',
-    files: () => [page.path, ...references.map((sourceFile) => sourceFile.getFilePath())],
+    files: () => [page.path, outPath, ...references.map((sourceFile) => sourceFile.getFilePath())],
   } satisfies CacheStrategy<undefined, string>;
 
   const builder = of(void 0).pipe(

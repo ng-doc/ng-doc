@@ -1,5 +1,6 @@
 import {
   disableCache,
+  emitCache,
   emitFileOutput,
   entriesEmitter,
   GLOBALS,
@@ -19,6 +20,7 @@ import { progress } from '../operators';
 import { globalBuilders } from './builders/global';
 import { invalidateCacheIfNeeded } from './cache';
 import { resolveAsyncFileOutputs } from './core/operators/resolve-async-file-outputs';
+
 /**
  *
  * @param context
@@ -77,6 +79,7 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
     tap(() => {
       console.timeEnd('build');
     }),
+    emitCache(),
     progress(),
     // filter(() => false),
   ) as Observable<void>;

@@ -16,6 +16,8 @@ export function disableCache(): void {
 
 const restoredBuilders = new Set<string>();
 
+export const PENDING_CACHE: Array<() => void> = [];
+
 /**
  * Handles cache provided cache strategy.
  * It will skip or restore the builder based on the strategy on the first run and
@@ -37,13 +39,15 @@ export function handleCacheStrategy<T, TData>(
     const sourceWithCache = source.pipe(
       tap((state) => {
         if (isBuilderDone(state)) {
-          updateCache(
-            strategy.id,
-            createCache(
-              undefined,
-              strategy.files?.(),
-              strategy.getData?.() ?? {},
-              strategy.action === 'restore' ? strategy.toCache(state.result) : undefined,
+          PENDING_CACHE.push(() =>
+            updateCache(
+              strategy.id,
+              createCache(
+                undefined,
+                strategy.files?.(),
+                strategy.getData?.() ?? {},
+                strategy.action === 'restore' ? strategy.toCache(state.result) : undefined,
+              ),
             ),
           );
         }
@@ -57,7 +61,8 @@ export function handleCacheStrategy<T, TData>(
       return sourceWithCache;
     }
 
-    const isValid = cache && valid && isColdStart() && isCacheValid(strategy.id, cache);
+    const isCacheVal = isCacheValid(strategy.id, cache);
+    const isValid = cache && valid && isColdStart() && isCacheVal;
     const savedCache = loadCache<TData>(strategy.id);
 
     savedCache.data && strategy.onCacheLoad?.(savedCache.data as TData);

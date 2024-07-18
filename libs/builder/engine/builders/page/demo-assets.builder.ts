@@ -39,11 +39,12 @@ export function demoAssetsBuilder(config: Config): Builder<AsyncFileOutput> {
   const references = Object.values(getDemoClassDeclarations(page.objectExpression())).map(
     (classDeclaration) => classDeclaration.getSourceFile(),
   );
+  const outPath = path.join(page.outDir, 'demo-assets.ts');
   const usedKeywords = new Set<string>();
   const cacheStrategy = {
     id: `${page.path}#DemoAssets`,
     action: 'skip',
-    files: () => [page.path, ...references.map((sourceFile) => sourceFile.getFilePath())],
+    files: () => [page.path, outPath, ...references.map((sourceFile) => sourceFile.getFilePath())],
   } satisfies CacheStrategy<undefined, string>;
 
   const builder = of(void 0).pipe(
@@ -99,7 +100,7 @@ export function demoAssetsBuilder(config: Config): Builder<AsyncFileOutput> {
           }
 
           return {
-            filePath: path.join(page.outDir, 'demo-assets.ts'),
+            filePath: outPath,
             content: renderTemplate('./demo-assets.ts.nunj', { context: { demoAssets } }),
           };
         };

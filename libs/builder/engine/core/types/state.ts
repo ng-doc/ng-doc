@@ -21,11 +21,13 @@ export class BuilderDone<TResult> {
    * @param tag
    * @param {T} result The result of the builder process.
    * @param fromCache Whether the result was restored from the cache.
+   * @param afterEmit A function to execute after the result has been emitted.
    */
   constructor(
     readonly tag: string,
     readonly result: TResult,
     readonly fromCache: boolean = false,
+    readonly afterEmit?: () => void,
   ) {}
 }
 
