@@ -14,7 +14,7 @@ export function watchFolder(
   folderPath: string,
   type?: watcher.EventType | watcher.EventType[],
 ): Observable<watcher.Event[]> {
-  return watch(folderPath).pipe(
+  return watch(folderPath, true).pipe(
     map((events) => {
       /*
        * Subscribe to changes in the directory containing the file.

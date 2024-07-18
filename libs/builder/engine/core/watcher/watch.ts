@@ -7,9 +7,10 @@ let WATCHER: Observable<watcher.Event[]> | null = null;
 
 /**
  *
- * @param dirPath
+ * @param path
+ * @param dir
  */
-export function watch(dirPath: string): Observable<watcher.Event[]> {
+export function watch(path: string, dir?: boolean): Observable<watcher.Event[]> {
   if (!WATCHER) {
     let unsubscribe = () => {};
 
@@ -39,7 +40,11 @@ export function watch(dirPath: string): Observable<watcher.Event[]> {
   }
 
   return WATCHER.pipe(
-    map((events) => events.filter((event) => event.path.endsWith(dirPath))),
+    map((events) =>
+      events.filter((event) => {
+        return dir ? event.path.startsWith(path) : event.path.endsWith(path);
+      }),
+    ),
     filter((events) => events.length > 0),
   );
 }
