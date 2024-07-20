@@ -29,7 +29,7 @@
   ng-doc-tab-routes-group {
     position: sticky !important;
     top: var(--ng-doc-navbar-height);
-    margin-bottom: calc(var(--ng-doc-base-gutter) * 4);
+    margin: calc(var(--ng-doc-base-gutter) * 2) 0;
     background: var(--ng-doc-navbar-background);
     z-index: 10;
     height: var(--ng-doc-page-wrapper-tabs-height);

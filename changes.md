@@ -77,7 +77,6 @@
 TODO:
 
 - rework landing page + add reusable components for creating landings
-- docs for theming
 - add parsing of the `angular.dev` for the angular keyword loader
 - check that all packages are listed in the `package.json` file
 

@@ -8,7 +8,7 @@ import { NgDocAction } from '../../../types';
  * @param declarationPath
  * @param tagName
  */
-export function jsDocTagsAction(declarationPath: string, tagName: string): NgDocAction<string> {
+export function jsDocTagsAction(declarationPath: string, tagName: string): NgDocAction<string[]> {
   return (entry) => {
     const project = entry.sourceFile.getProject();
     const declaration = getDeclarationByPath(project, declarationPath);
@@ -17,7 +17,7 @@ export function jsDocTagsAction(declarationPath: string, tagName: string): NgDoc
       : getJsDocTags(declaration, tagName);
 
     return {
-      output: minifyHtml(output.join('\n\n')),
+      output: output.map(minifyHtml),
       dependencies: [declaration.getSourceFile().getFilePath()],
     };
   };

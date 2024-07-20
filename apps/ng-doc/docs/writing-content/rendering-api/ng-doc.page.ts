@@ -2,11 +2,10 @@ import { NgDocPage } from '@ng-doc/core';
 
 import WritingContentCategory from '../ng-doc.category';
 
-const CodeBlocksPage: NgDocPage = {
-  title: `Code blocks`,
+const RenderingAPIPage: NgDocPage = {
+  title: `Rendering API`,
   mdFile: './index.md',
   category: WritingContentCategory,
-  order: 4,
 };
 
-export default CodeBlocksPage;
+export default RenderingAPIPage;

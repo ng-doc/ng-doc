@@ -4,6 +4,10 @@ import { jsDocTagAction } from './actions/js-doc-tag.action';
 import { jsDocTagsAction } from './actions/js-doc-tags.action';
 import { BaseAction } from './base-action';
 
+/**
+ * @see 1
+ * @see 2
+ */
 export class JSDoc extends BaseAction {
   description(declarationPath: string): string {
     return this.perform(jsDocAction(declarationPath)).output;
@@ -13,7 +17,7 @@ export class JSDoc extends BaseAction {
     return this.perform(jsDocTagAction(declarationPath, tagName)).output;
   }
 
-  tags(declarationPath: string, tagName: string): string {
+  tags(declarationPath: string, tagName: string): string[] {
     return this.perform(jsDocTagsAction(declarationPath, tagName)).output;
   }
 

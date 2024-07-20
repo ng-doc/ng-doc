@@ -17,6 +17,9 @@ const NgDocConfig: NgDocConfiguration = {
       nunjucks: {
         url: 'https://mozilla.github.io/nunjucks/',
       },
+      mermaid: {
+        url: 'https://mermaid.js.org/',
+      },
       tsdoc: {
         title: 'TsDoc',
         url: 'https://tsdoc.org/',

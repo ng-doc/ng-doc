@@ -34,6 +34,7 @@
   --ng-doc-navbar-border: 1px solid var(--ng-doc-base-4);
 }
 
+// shiki theme to match dark theme
 @mixin shiki-theme {
   .shiki,
   .shiki span {
@@ -41,6 +42,7 @@
   }
 }
 
+// enable dark theme when using auto theme and prefers-color-scheme is dark
 :root[data-theme='auto'] {
   @media (prefers-color-scheme: dark) {
     @include theme();
@@ -48,7 +50,7 @@
   }
 }
 
-// ng-doc styles when using dark theme
+// apply dark theme when dark theme is selected
 :root[data-theme='dark'] {
   @include theme();
   @include shiki-theme();
