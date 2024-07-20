@@ -1,5 +1,5 @@
 :host {
-  display: block;
+  display: inline-block;
   cursor: zoom-in;
   transition: var(--ng-doc-transition);
 
@@ -31,7 +31,7 @@
 
   .ng-doc-scaled-image {
     cursor: zoom-out;
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
   }
 }

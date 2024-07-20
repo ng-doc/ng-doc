@@ -40,6 +40,11 @@ export class NgDocImageViewerComponent {
     this.overlayRef?.close();
 
     const { width, height, top, left } = this.element.getBoundingClientRect();
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    const ratio = Math.min(windowWidth / width, windowHeight / height);
+    const newWidth = width * ratio;
+    const newHeight = height * ratio;
 
     this.overlayRef = this.overlay.open(this.image(), {
       overlayContainer: NgDocOverlayContainerComponent,
@@ -51,15 +56,16 @@ export class NgDocImageViewerComponent {
       hasBackdrop: true,
       backdropClass: 'ng-doc-blur-backdrop',
       openAnimation: [
-        style({ position: 'fixed', width, height, top, left }),
+        style({ position: 'fixed', width, height, top, left, transform: 'translate(0%, 0)' }),
         group([
           animate(
             '300ms cubic-bezier(0.25, 0.8, 0.25, 1)',
             style({
-              width: '100%',
-              height: '100%',
-              top: '0',
-              left: '0',
+              width: `${newWidth}px`,
+              height: `${newHeight}px`,
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
             }),
           ),
           query('.ng-doc-image-container', [
@@ -69,9 +75,19 @@ export class NgDocImageViewerComponent {
         ]),
       ],
       closeAnimation: [
-        style({ position: 'fixed', width: '100%', height: '100%', top: '0', left: '0' }),
+        style({
+          position: 'fixed',
+          width: `${newWidth}px`,
+          height: `${newHeight}px`,
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+        }),
         group([
-          animate('300ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({ width, height, top, left })),
+          animate(
+            '300ms cubic-bezier(0.25, 0.8, 0.25, 1)',
+            style({ width, height, top, left, transform: 'translate(0%, 0)' }),
+          ),
           query(
             '.ng-doc-image-container',
             animate('300ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({ padding: 0 })),

@@ -4,7 +4,7 @@ import { NgDocPageProcessor } from '@ng-doc/app/interfaces';
 
 export const imageProcessor: NgDocPageProcessor<NgDocImageViewerComponent> = {
   component: NgDocImageViewerComponent,
-  selector: 'img',
+  selector: 'img:not([zoom="false"])',
   nodeToReplace: (element: Element, injector: Injector) => {
     const renderer: Renderer2 = injector.get(Renderer2);
     const anchor: Element = renderer.createElement('div');

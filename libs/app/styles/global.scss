@@ -31,34 +31,6 @@ body {
   box-sizing: border-box;
 }
 
-/* width */
-::-webkit-scrollbar {
-  width: var(--ng-doc-base-gutter);
-  height: var(--ng-doc-base-gutter);
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  &:hover {
-    background: rgba(0, 0, 0, 0.1);
-  }
-}
-
-::-webkit-scrollbar-corner {
-  background: transparent;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: var(--ng-doc-base-5);
-  border-radius: calc(var(--ng-doc-base-gutter) * 2);
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: var(--ng-doc-base-7);
-}
-
 ::selection {
   background: var(--ng-doc-text-selection);
 }
