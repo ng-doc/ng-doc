@@ -1,7 +1,5 @@
-<% if (keyword) { %>
----
+<% if (keyword) { %>---
 keyword: <%= keyword %>
----
-<% } %>
+---<% } %>
 
 It's time to write some awesome docs!

@@ -28,6 +28,10 @@
 - `NgDocProcessorOptions` now infers the type of the signal inputs correctly.
 - Added a success type for the blockquote
 
+## Schematics
+
+- `builder:page` schematic now auto generates a keyword for the page based on the title
+
 ## UI
 
 - Slightly redesigned the app
@@ -74,7 +78,6 @@ TODO:
 
 - rework landing page + add reusable components for creating landings
 - docs for theming
-- docs for mermaid diagrams
 - add parsing of the `angular.dev` for the angular keyword loader
 - check that all packages are listed in the `package.json` file
 

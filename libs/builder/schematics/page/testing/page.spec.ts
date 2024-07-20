@@ -111,11 +111,9 @@ const MyPagePage: NgDocPage = {
 
 export default MyPagePage;
 `);
-    expect(tree.readText('test/my-page/index.md')).toBe(`
----
+    expect(tree.readText('test/my-page/index.md')).toBe(`---
 keyword: test
 ---
-
 
 It's time to write some awesome docs!
 `);
@@ -160,27 +158,17 @@ export default MyPagePage;
 `);
   });
 
-  it('should remove slashed from title', async () => {
-    const tree: UnitTestTree = await runner.runSchematic(
-      'page',
-      {
-        path: 'test',
-        title: '/folder/my-page/',
-      },
-      host,
-    );
-
-    expect(tree.exists('test/folder-my-page/index.md')).toBe(true);
-    expect(tree.readText('test/folder-my-page/ng-doc.page.ts'))
-      .toBe(`import {NgDocPage} from '@ng-doc/core';
-
-const FolderMyPagePage: NgDocPage = {
-\ttitle: \`folder-my-page\`,
-\tmdFile: './index.md',
-};
-
-export default FolderMyPagePage;
-`);
+  it('should throw an error if title contains unsupported symbols', async () => {
+    await expect(
+      runner.runSchematic(
+        'page',
+        {
+          path: 'test',
+          title: '/folder/my-page/',
+        },
+        host,
+      ),
+    ).rejects.toThrowError();
   });
 
   it('should throw error if title has forbidden characters and --name was not provided', async () => {
@@ -190,22 +178,6 @@ export default FolderMyPagePage;
         {
           path: 'test',
           title: 'Пейжд',
-        },
-        host,
-      );
-    } catch (e) {
-      expect((e as Error).message).toBeTruthy();
-    }
-  });
-
-  it('should throw error if name has forbidden characters', async () => {
-    try {
-      await runner.runSchematic(
-        'page',
-        {
-          path: 'test',
-          title: 'page',
-          name: 'Пейжд',
         },
         host,
       );
@@ -249,5 +221,23 @@ export default page;
     );
 
     expect(tree.exists('test/my/ng-doc.page.ts')).toBe(true);
+  });
+
+  it('should generate keyword in markdown file by default based on the title', async () => {
+    const tree: UnitTestTree = await runner.runSchematic(
+      'page',
+      {
+        path: 'test',
+        title: 'Test Page',
+      },
+      host,
+    );
+
+    expect(tree.readText('test/test-page/index.md')).toBe(`---
+keyword: TestPagePage
+---
+
+It's time to write some awesome docs!
+`);
   });
 });

@@ -30,9 +30,10 @@ const demoTemplates: string[] = ['ng-doc.module.ts.template'];
  */
 export function generate(options: NgDocBuildPageSchema): Rule {
   return (host: Tree) => {
-    options.title = getTitle(options.title);
-
     const pageName: string = options.name ?? classify(options.title + 'Page');
+
+    options.title = getTitle(options.title);
+    options.keyword = options.keyword ?? pageName;
 
     varNameValidation(pageName);
 
