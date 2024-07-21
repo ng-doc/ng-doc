@@ -94,6 +94,7 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
         searchWithHighlight(db, {
           term: query,
           boost: { title: 4, section: 2 },
+          threshold: 0.3,
           properties: ['section', 'content'],
           tolerance: this.options?.tolerance,
           exact: this.options?.exact,
