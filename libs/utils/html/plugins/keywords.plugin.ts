@@ -112,8 +112,7 @@ function getNodes(
       const notFoundApiAnchorKeyword: boolean = !!rootKeyword && !!anchor && !keyword;
 
       if (getKeyword && isInlineCode && (notFoundGuideKeyword || notFoundApiAnchorKeyword)) {
-        // TODO: Enabled
-        // throw new Error(`Route with keyword "${word}" is missing.`);
+        throw new Error(`Route with keyword "${word}" is missing.`);
       }
 
       // Convert code tag to a link tag or highlight it with a class

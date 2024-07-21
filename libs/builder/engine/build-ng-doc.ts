@@ -4,7 +4,6 @@ import {
   emitFileOutput,
   entriesEmitter,
   GLOBALS,
-  isBuilderDone,
   loadGlobalKeywords,
   printBuildProgress,
   setColdStartFalse,
@@ -26,9 +25,6 @@ import { resolveAsyncFileOutputs } from './core/operators/resolve-async-file-out
  * @param context
  */
 export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
-  let count = 0;
-  console.time('build');
-
   // Set global variables
   GLOBALS.workspaceRoot = context.context.workspaceRoot;
 
@@ -49,38 +45,21 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
   ]).pipe(switchMap(() => merge(entriesEmitter(context), globalBuilders(context))));
 
   return emitter.pipe(
-    tap((output) => {
-      // console .log('preStack', output.tag, output.state, output.result?.filePath);
-      // if (output.state === 'error') {
-      //   console.error(output.error);
-      // }
-      // print all tags from STACK that are not empty
-      // for (const [tag, stack] of STACK) {
-      //   if (stack.size) {
-      //     console.log(tag, stack.size);
-      //   }
-      // }
-    }),
     printBuildProgress(),
     whenStackIsEmpty(),
     resolveAsyncFileOutputs(),
     emitFileOutput(),
-    tap((output) => {
+    tap(() => {
       setColdStartFalse();
-
-      console.log(
-        count++,
-        output.state,
-        isBuilderDone(output) ? output.result.filePath : output.error,
-      );
+      // console.log(
+      //   count++,
+      //   output.state,
+      //   isBuilderDone(output) ? output.result.filePath : output.error,
+      // );
     }),
     debounceTime(0),
     map(() => void 0),
-    tap(() => {
-      console.timeEnd('build');
-    }),
     emitCache(),
     progress(),
-    // filter(() => false),
   ) as Observable<void>;
 }

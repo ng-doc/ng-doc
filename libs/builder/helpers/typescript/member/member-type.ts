@@ -27,11 +27,3 @@ export function isClassMember(member: Node): member is ClassMember {
     Node.isSetAccessorDeclaration(member)
   );
 }
-
-/**
- *
- * @param member
- */
-export function isInterfaceMember(member: Node): member is InterfaceMember {
-  return Node.isMethodSignature(member) || Node.isPropertySignature(member);
-}

@@ -12,7 +12,6 @@ import {
 import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes';
 import { NgDocThemeService } from '@ng-doc/app/services/theme';
 import { NG_DOC_MERMAID } from '@ng-doc/app/tokens';
-// import type { Mermaid } from 'mermaid';
 import {
   MagnifierControllerComponent,
   NgDocMagnifierComponent,
@@ -61,7 +60,7 @@ export class NgDocMermaidViewerComponent implements OnInit {
 
     inject(NgDocThemeService)
       .themeChanges()
-      .subscribe(async (theme) => {
+      .subscribe(async () => {
         const { svg } = await this.mermaid.render(this.id, this.graph());
 
         this.html.set(svg);
