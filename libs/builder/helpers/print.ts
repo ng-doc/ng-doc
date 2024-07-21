@@ -1,4 +1,4 @@
-import { Spinner } from '@angular/cli/src/utilities/spinner';
+import { Spinner } from '@angular-devkit/build-angular/src/utils/spinner';
 
 const spinner: Spinner = new Spinner();
 
@@ -7,28 +7,12 @@ const spinner: Spinner = new Spinner();
  * @param text - The message to print.
  */
 export function printProgress(text?: string): void {
-	spinner.stop();
+  spinner.stop();
 
-	if (text) {
-		spinner.text = `NgDoc: ${text}`;
-		spinner.start();
-	}
-}
-
-/**
- * Prints an info message.
- * @param info - The info to print.
- */
-export function printInfo(info: string): void {
-	spinner.info(info);
-}
-
-/**
- * Prints a warning message.
- * @param warn - The warning to print.
- */
-export function printWarning(warn: string): void {
-	spinner.warn(warn);
+  if (text) {
+    spinner.text = `NgDoc: ${text}`;
+    spinner.start();
+  }
 }
 
 /**
@@ -36,5 +20,5 @@ export function printWarning(warn: string): void {
  * @param error - The error to print.
  */
 export function printError(error: string): void {
-	spinner.fail(error);
+  spinner.fail(error);
 }

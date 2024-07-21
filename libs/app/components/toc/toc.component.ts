@@ -1,7 +1,6 @@
 import { DOCUMENT, NgFor } from '@angular/common';
 import {
   afterNextRender,
-  AfterRenderPhase,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -55,8 +54,8 @@ export class NgDocTocComponent implements NgDocPageToc, OnInit {
   protected readonly router: Router = inject(Router);
 
   constructor() {
-    afterNextRender(
-      () => {
+    afterNextRender({
+      write: () => {
         const scrollSelection: Observable<NgDocTocItem> = fromEvent(this.document, 'scroll').pipe(
           filter(() => !!this.tableOfContent.length),
           map((event: Event) => (event.target as Document).scrollingElement as HTMLElement),
@@ -66,15 +65,12 @@ export class NgDocTocComponent implements NgDocPageToc, OnInit {
               (target.scrollTop * 100) / (target.scrollHeight - target.offsetHeight);
             const selectionLine: number =
               target.scrollTop + (target.offsetHeight * percentage) / 100;
-
             if (!this.tableOfContent.length) {
               return null;
             }
-
             return this.tableOfContent.reduce((pTarget: NgDocTocItem, cTarget: NgDocTocItem) => {
               const pTop: number = pTarget.element.getBoundingClientRect().top + target.scrollTop;
               const cTop: number = cTarget.element.getBoundingClientRect().top + target.scrollTop;
-
               return Math.abs(cTop - selectionLine) < Math.abs(pTop - selectionLine)
                 ? cTarget
                 : pTarget;
@@ -82,36 +78,30 @@ export class NgDocTocComponent implements NgDocPageToc, OnInit {
           }),
           filter(isPresent),
         );
-
         const routerSelection: Observable<NgDocTocItem> = this.router.events.pipe(
           map((event: REvent) => {
             if (event instanceof Scroll) {
               const item: NgDocTocItem | undefined = this.tableOfContent.find(
                 (item: NgDocTocItem) => item.path.includes(event.routerEvent.url),
               );
-
               if (item) {
                 return item;
               }
             }
-
             return null;
           }),
           filter(isPresent),
           debounceTime(20),
         );
-
         const elementsChanges = this.elements.changes.pipe(
           map(() => this.activeItem()),
           filter(isPresent),
         );
-
         merge(merge(scrollSelection, routerSelection).pipe(distinctUntilChanged()), elementsChanges)
           .pipe(debounceTime(0), ngDocZoneOptimize(this.ngZone), untilDestroyed(this))
           .subscribe(this.select.bind(this));
       },
-      { phase: AfterRenderPhase.Write },
-    );
+    });
   }
 
   ngOnInit(): void {

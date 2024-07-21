@@ -13,8 +13,8 @@
   "dependencies": {
     "@ng-doc/core": "0.0.0",
     "@ng-doc/utils": "0.0.0",
-    "@angular-devkit/architect": ">=0.1700.0",
-    "@angular-devkit/build-angular": ">=17.0.0",
+    "@angular-devkit/architect": ">=0.1801.0",
+    "@angular-devkit/build-angular": ">=18.1.0",
     "chokidar": "3.5.3",
     "minimatch": "9.0.1",
     "rxjs": "^7.0.0",
