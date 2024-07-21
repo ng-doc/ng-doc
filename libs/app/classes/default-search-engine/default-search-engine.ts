@@ -95,7 +95,7 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
           term: query,
           boost: { title: 4, section: 2 },
           threshold: 0.3,
-          properties: ['section', 'content'],
+          properties: ['title', 'section', 'content'],
           tolerance: this.options?.tolerance,
           exact: this.options?.exact,
           limit: this.options?.limit ?? 10,

@@ -80,7 +80,7 @@ export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput> {
                 metadata,
                 entries,
                 headerContent: content,
-                hasBreadcrumb: !!metadata.breadcrumbs().length,
+                hasBreadcrumb: pageType !== 'api' && !!metadata.breadcrumbs().length,
                 pageType,
               },
             }),

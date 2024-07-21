@@ -55,8 +55,7 @@ export async function buildIndexes(config: NgDocIndexBuilderConfig): Promise<NgD
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             fragment: section?.properties && section.properties['id'],
-            content:
-              doc.content.toString() === '%%API_NAME_ANCHOR%%' ? undefined : doc.content.toString(),
+            content: doc.content,
           });
         }
       }

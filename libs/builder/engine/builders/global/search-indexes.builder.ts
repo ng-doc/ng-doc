@@ -19,7 +19,7 @@ import {
 export function searchIndexesBuilder(context: NgDocBuilderContext): Builder<FileOutput> {
   const builder = of(void 0).pipe(
     runBuild('SearchIndexes', async () => ({
-      content: JSON.stringify(IndexStore.asArray(), null, 2),
+      content: JSON.stringify(IndexStore.asArray()),
       filePath: path.join(context.outAssetsDir, 'indexes.json'),
     })),
   );
