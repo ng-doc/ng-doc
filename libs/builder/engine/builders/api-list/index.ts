@@ -53,7 +53,10 @@ export function apiBuilder(context: NgDocBuilderContext, apiPath: string): Build
             apiPageTemplateBuilder({
               context,
               metadata,
-              tabMetadata: createDeclarationTabMetadata(metadata, { title: 'API', folder: 'api' }),
+              tabMetadata: createDeclarationTabMetadata(metadata, {
+                title: metadata.title,
+                folder: 'api',
+              }),
               scope,
             }),
           ],
