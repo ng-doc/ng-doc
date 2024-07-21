@@ -54,6 +54,33 @@ export function getJsDocTags(node: JSDocableNode, tagName: string): string[] {
 /**
  *
  * @param node
+ */
+export function getAllJsDocTags(node: JSDocableNode): Record<string, string[]> {
+  const jsDocs = asArray(node.getJsDocs()[0]);
+  const tags = jsDocs
+    .map((doc) => doc.getStructure())
+    .map((doc) => doc.tags)
+    .flat()
+    .filter(isPresent)
+    .reduce(
+      (acc, tag) => {
+        if (!acc[tag.tagName]) {
+          acc[tag.tagName] = [];
+        }
+
+        acc[tag.tagName].push(String(tag.text));
+
+        return acc;
+      },
+      {} as Record<string, string[]>,
+    );
+
+  return tags;
+}
+
+/**
+ *
+ * @param node
  * @param tagName
  */
 export function hasJsDocTag(node: JSDocableNode, tagName: string): boolean {

@@ -32,6 +32,29 @@ const InstallationPage: NgDocPage = {
 export default InstallationPage;
 ```
 
+## Page description
+
+The description of the page can be added as a JSDoc comment in the page configuration file.
+It will be displayed below the page header and will be common to all tabs of the page if they are
+present.
+
+> **Note**
+> You can use markdown in the description.
+
+```ts name="ng-doc.page.ts" {3-5}
+import { NgDocPage } from '@ng-doc/core';
+
+/**
+ * This page describes how to install the library.
+ */
+const InstallationPage: NgDocPage = {
+  title: 'Installation',
+  mdFile: './index.md',
+};
+
+export default InstallationPage;
+```
+
 ## Page tabs
 
 The content of the page should be inside a `markdown` file specified in the `mdFile` property of the
@@ -110,6 +133,27 @@ const InstallationPage: NgDocPage = {
   title: 'Installation',
   mdFile: './index.md',
   category: GettingStartedCategory,
+};
+
+export default InstallationPage;
+```
+
+## Adding status badge for a page
+
+You can add a different statuses for a page to display them in the sidebar. To do this, you need to
+use `@status` tag in your page configuration file. The `@status` tag should contain the status color
+that starts with `:` and the status text. To see all available statuses, check the `NgDocColor`
+type.
+
+```ts name="ng-doc.page.ts" {4}
+import { NgDocPage } from '@ng-doc/core';
+
+/**
+ * @status:info NEW
+ */
+const InstallationPage: NgDocPage = {
+  title: 'Installation',
+  mdFile: ['./index.md', './nx.md'],
 };
 
 export default InstallationPage;

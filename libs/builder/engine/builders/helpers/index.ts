@@ -10,4 +10,5 @@ export * from './get-entry-route';
 export * from './get-playground-metadata';
 export * from './get-scoped-keyword';
 export * from './get-structured-docs';
+export * from './get-variable-statement-from-object-literal-expression';
 export * from './markdown-front-matter';

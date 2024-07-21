@@ -9,10 +9,6 @@ import { NgDocPlaygroundConfig } from './playground-config';
  */
 export interface NgDocPage extends NgDocBaseEntity {
   /**
-   * The page description that will be shown under the title
-   */
-  description?: string;
-  /**
    * Path to the page markdown file
    */
   mdFile: string | string[];
@@ -55,13 +51,4 @@ export interface NgDocPage extends NgDocBaseEntity {
    * multiple demos on the same page require nested routes.
    */
   disableFullscreenRoutes?: boolean;
-  /**
-   * The page metadata.
-   * It will be available inside `NgDocNavigation`, so you can use this field
-   * to store any additional information about the page that can be used in
-   * a custom navigation component.
-   */
-  metadata?: Record<string, unknown> & {
-    tags?: string[];
-  };
 }

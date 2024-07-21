@@ -20,7 +20,8 @@ export function renderPageHeader(config: Config): string {
   return renderTemplate(headerTemplatePath ?? './page-header.html.nunj', {
     scope: headerTemplatePath ? context.context.workspaceRoot : undefined,
     context: {
-      page: metadata.entry,
+      NgDocPage: metadata.entry,
+      Metadata: metadata.jsDocMetadata(),
     },
   });
 }

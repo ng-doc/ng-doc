@@ -19,6 +19,7 @@ export function provideNgDocContext(): Provider[] {
           order: {{ entry.item.order }},
             {%- endif %}
           hidden: {{ entry.item.entry.hidden | default("false") }},
+          metadata: {{ entry.item.jsDocMetadata() | dump }},
             {%- if entry.children.length %}
           children: [
               {%- for child in entry.children | sortNavigationEntries %}

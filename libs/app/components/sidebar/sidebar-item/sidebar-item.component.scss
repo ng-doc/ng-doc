@@ -8,6 +8,7 @@
   @include ng-doc-heading-font();
   display: flex;
   align-items: center;
+  gap: var(--ng-doc-base-gutter);
   padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-horizontal-padding)
     var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
   text-decoration: inherit;
@@ -19,7 +20,7 @@
   --ng-doc-font-weight: 400;
 
   ng-doc-dot {
-    margin-right: calc(var(--ng-doc-base-gutter) * 2);
+    margin-right: var(--ng-doc-base-gutter);
     z-index: 1;
   }
 
@@ -49,5 +50,10 @@
         }
       }
     }
+  }
+
+  ng-doc-tag {
+    vertical-align: middle;
+    margin-left: var(--ng-doc-base-gutter);
   }
 }

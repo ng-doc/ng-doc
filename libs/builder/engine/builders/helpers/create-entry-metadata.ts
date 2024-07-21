@@ -1,16 +1,21 @@
-import { asArray } from '@ng-doc/core';
+import { asArray, JSDocMetadata } from '@ng-doc/core';
 import { minimatch } from 'minimatch';
 import path from 'path';
 import { NEVER } from 'rxjs';
 import { SourceFile } from 'ts-morph';
 
-import { getObjectExpressionFromDefault } from '../../../helpers';
+import {
+  getAllJsDocTags,
+  getJsDocDescription,
+  getObjectExpressionFromDefault,
+} from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
 import { CATEGORY_PATTERN } from '../../variables';
 import { EntryMetadata, FileEntry } from '../interfaces';
 import { getCategorySourceFile } from './get-category-source-file';
 import { getEntryOutDir } from './get-entry-out-dir';
 import { getEntryRoute } from './get-entry-route';
+import { getVariableStatementFromObjectLiteralExpression } from './get-variable-statement-from-object-literal-expression';
 
 /**
  *
@@ -54,6 +59,16 @@ export function createEntryMetadata<T extends FileEntry>(
     keywordTitle: entry.title,
     order: entry.order,
     nestedRoutes: !isCategory,
+    jsDocMetadata: function (): JSDocMetadata {
+      const statement = getVariableStatementFromObjectLiteralExpression(this.objectExpression());
+      const description = getJsDocDescription(statement);
+      const tags = getAllJsDocTags(statement);
+
+      return {
+        description,
+        tags,
+      };
+    },
     absoluteRoute: function (): string {
       return path.join(
         ...asArray(this.parent?.absoluteRoute() ?? context.config.routePrefix, this.route),

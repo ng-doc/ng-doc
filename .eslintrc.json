@@ -6,17 +6,11 @@
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "extends": ["prettier", "plugin:jsdoc/recommended"],
-      "plugins": [
-        "eslint-plugin-jsdoc",
-        "eslint-plugin-prefer-arrow",
-        "simple-import-sort",
-        "eslint-plugin-tsdoc"
-      ],
+      "plugins": ["eslint-plugin-jsdoc", "eslint-plugin-prefer-arrow", "simple-import-sort"],
       "rules": {
         "jsdoc/require-param-type": "off",
         "jsdoc/require-returns-type": "off",
         "jsdoc/require-returns": "off",
-        "tsdoc/syntax": "warn",
         "simple-import-sort/imports": "error",
         "simple-import-sort/exports": "error",
         "@nx/enforce-module-boundaries": [

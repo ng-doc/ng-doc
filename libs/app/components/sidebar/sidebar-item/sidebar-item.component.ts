@@ -1,7 +1,12 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgDocNavigation } from '@ng-doc/app/interfaces';
-import { NgDocDotComponent, NgDocTextComponent } from '@ng-doc/ui-kit';
+import {
+  NgDocColor,
+  NgDocDotComponent,
+  NgDocTagComponent,
+  NgDocTextComponent,
+} from '@ng-doc/ui-kit';
 
 @Component({
   selector: 'ng-doc-sidebar-item',
@@ -9,9 +14,17 @@ import { NgDocDotComponent, NgDocTextComponent } from '@ng-doc/ui-kit';
   styleUrls: ['./sidebar-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLinkActive, RouterLink, NgDocDotComponent, NgDocTextComponent],
+  imports: [RouterLinkActive, RouterLink, NgDocDotComponent, NgDocTextComponent, NgDocTagComponent],
 })
 export class NgDocSidebarItemComponent {
-  @Input({ required: true })
-  item!: NgDocNavigation;
+  item = input.required<NgDocNavigation>();
+  statuses = computed(() => {
+    const statuses = this.item().metadata?.tags['status'] ?? [];
+
+    return statuses.map((status) => {
+      const [type, text] = status.split(/\s+(.+)/);
+
+      return { type: type.replace(/^:/, '') as NgDocColor, text };
+    });
+  });
 }

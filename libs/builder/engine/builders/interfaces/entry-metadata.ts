@@ -1,4 +1,4 @@
-import { NgDocApi, NgDocCategory, NgDocPage } from '@ng-doc/core';
+import { JSDocMetadata, NgDocApi, NgDocCategory, NgDocPage } from '@ng-doc/core';
 import { minimatch } from 'minimatch';
 import { Observable } from 'rxjs';
 import { ObjectLiteralExpression, SourceFile } from 'ts-morph';
@@ -24,6 +24,7 @@ export interface EntryMetadata<T extends Entry = Entry> {
   objectExpression: () => ObjectLiteralExpression;
   parent: ParentEntryMetadata<T>;
   entry: T;
+  jsDocMetadata: () => JSDocMetadata;
   order?: number;
   hidden?: boolean;
 }

@@ -67,8 +67,7 @@ export interface NgDocGuideConfiguration {
   anchorHeadings?: NgDocHeading[];
   /**
    * Path from the project root to the header HTML template file.
-   * It can be used to customize the header of the guide page. It accepts `page` variable,
-   * which is the current page object and supports nunjucks templating.
+   * It can be used to customize the header of the guide page.
    */
   headerTemplate?: string;
 }
