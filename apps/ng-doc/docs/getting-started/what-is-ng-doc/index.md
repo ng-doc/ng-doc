@@ -39,4 +39,4 @@ your application however you like, or integrate the documentation into an existi
 ## What's next?
 
 I'm going to improve the library further, adding new features and fixes to it and to start using
-the library, see the `*GettingStartedInstallation` article.
+the library, see the `*InstallationAutomaticPage` article.

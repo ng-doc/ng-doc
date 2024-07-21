@@ -358,7 +358,6 @@ export default MyAwesomePage;
 
 ## See Also
 
-- `*EntitiesPage`
 - `*TypeControlsPage`
 
 {% endindex %}

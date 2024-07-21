@@ -98,7 +98,7 @@ export function contentBuilder(config: Config): Builder<string> {
             });
           }
 
-          keywords = new Map(getKeywords(anchors));
+          removeKeywords = keywordsStore.add(...new Map(getKeywords(anchors)));
 
           const postProcessed = await UTILS.postProcessHtml(content);
 

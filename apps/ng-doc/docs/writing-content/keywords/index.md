@@ -72,7 +72,7 @@ Link to the page: `*MyCustomKeyword`
 
 > **Note**
 > You can also load keywords from external sources, you can read about it in the
-> `*FeaturesKeywordsLoaders` article.
+> `*KeywordsLoadersPage` article.
 
 Sometimes it is necessary to create links to third-party documentation or just to other web-sites,
 to create such links you can use global keywords that can be declared in the configuration file,
@@ -131,8 +131,8 @@ API's member.
 
 **Page anchors**
 
-- Link to the section in guides - `*GettingStartedInstallation#Manual`
-- Link to the section in guides - `*GettingStartedInstallation#Automatic-Recommended`
+- Link to the section in guides - `*InstallationManualPage#Adding-application-layout`
+- Link to the section in guides - `*InstallationManualPage#Configuring-Application`
 
 **API anchors**
 

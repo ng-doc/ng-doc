@@ -106,6 +106,11 @@ function getNodes(
         return { type: 'text', value: word };
       }
 
+      // If the keyword is just an asterisk, return the word as is
+      if (isGuideKeyword && key.length === 1) {
+        return { type: 'text', value: word };
+      }
+
       addUsedKeyword?.(usedKeyword);
 
       const notFoundGuideKeyword: boolean = isGuideKeyword && !keyword;

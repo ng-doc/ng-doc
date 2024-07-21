@@ -48,51 +48,55 @@ export function pageComponentBuilder<T>(
 
     // Replace keywords in the template at the end of the build process
     return async () => {
-      const content = await UTILS.replaceKeywords(html, {
-        getKeyword: keywordsStore.get.bind(keywordsStore),
-      });
-      const editSourceFileUrl =
-        context.config.repoConfig &&
-        editFileInRepoUrl(
-          context.config.repoConfig,
-          path.relative(context.context.workspaceRoot, metadata.path),
-          metadata.route,
-          lineNumber,
-        );
-      const viewSourceFileUrl =
-        context.config.repoConfig &&
-        viewFileInRepoUrl(
-          context.config.repoConfig,
-          path.relative(context.context.workspaceRoot, metadata.path),
-          lineNumber,
-        );
-      const indexes = await buildIndexes({
-        content,
-        title: metadata.title,
-        breadcrumbs: metadata.breadcrumbs(),
-        pageType,
-        route: metadata.absoluteRoute(),
-      });
+      try {
+        const content = await UTILS.replaceKeywords(html, {
+          getKeyword: keywordsStore.get.bind(keywordsStore),
+        });
+        const editSourceFileUrl =
+          context.config.repoConfig &&
+          editFileInRepoUrl(
+            context.config.repoConfig,
+            path.relative(context.context.workspaceRoot, metadata.path),
+            metadata.route,
+            lineNumber,
+          );
+        const viewSourceFileUrl =
+          context.config.repoConfig &&
+          viewFileInRepoUrl(
+            context.config.repoConfig,
+            path.relative(context.context.workspaceRoot, metadata.path),
+            lineNumber,
+          );
+        const indexes = await buildIndexes({
+          content,
+          title: metadata.title,
+          breadcrumbs: metadata.breadcrumbs(),
+          pageType,
+          route: metadata.absoluteRoute(),
+        });
 
-      removeIndexes = IndexStore.add(...indexes);
+        removeIndexes = IndexStore.add(...indexes);
 
-      return {
-        filePath: metadata.outPath,
-        content: renderTemplate('./page.ts.nunj', {
-          context: {
-            id: uid(),
-            content,
-            metadata,
-            editSourceFileUrl,
-            viewSourceFileUrl,
-            pageType,
-            entryPath,
-            entryHasImports,
-            demoAssetsPath,
-            playgroundsPath,
-          },
-        }),
-      };
+        return {
+          filePath: metadata.outPath,
+          content: renderTemplate('./page.ts.nunj', {
+            context: {
+              id: uid(),
+              content,
+              metadata,
+              editSourceFileUrl,
+              viewSourceFileUrl,
+              pageType,
+              entryPath,
+              entryHasImports,
+              demoAssetsPath,
+              playgroundsPath,
+            },
+          }),
+        };
+      } catch (cause) {
+        throw new Error(`Failed to build page: file:///${metadata.path}`, { cause });
+      }
     };
   }).pipe(finalize(() => removeIndexes));
 }

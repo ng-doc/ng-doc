@@ -4,9 +4,10 @@ import {
   DeclarationEntry,
   entryBuilder,
   EntryMetadata,
+  keywordsStore,
 } from '@ng-doc/builder';
-import { asArray, NgDocApi, NgDocApiScope } from '@ng-doc/core';
-import { merge } from 'rxjs';
+import { asArray, EMPTY_FUNCTION, NgDocApi, NgDocApiScope } from '@ng-doc/core';
+import { finalize, merge } from 'rxjs';
 
 import { findDeclarations } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
@@ -19,14 +20,28 @@ import { renderApiHeader } from './render-api-header';
 
 export const API_ENTRY_BUILDER_TAG = 'ApiFile';
 export const API_PAGE_WRAPPER_BUILDER_TAG = 'ApiPageWrapper';
+
 /**
  *
  * @param context
  * @param apiPath
  */
 export function apiBuilder(context: NgDocBuilderContext, apiPath: string): Builder<FileOutput> {
+  let destroyFn = EMPTY_FUNCTION;
+
   return entryBuilder<NgDocApi>({ tag: API_ENTRY_BUILDER_TAG, context, entryPath: apiPath }).pipe(
     whenDone((metadata) => {
+      if (metadata.entry.keyword) {
+        destroyFn = keywordsStore.add([
+          `*${metadata.entry.keyword}`,
+          {
+            title: metadata.entry.title,
+            path: metadata.absoluteRoute(),
+            type: 'link',
+          },
+        ]);
+      }
+
       const declarations = metadata.entry.scopes
         .map(
           (scope) =>
@@ -70,5 +85,6 @@ export function apiBuilder(context: NgDocBuilderContext, apiPath: string): Build
         apiListComponentBuilder({ metadata }),
       );
     }),
+    finalize(() => destroyFn()),
   );
 }

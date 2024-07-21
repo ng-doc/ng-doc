@@ -20,8 +20,10 @@
   YAML front matter syntax to customize tabs.
 - `title` field is now always displayed in the doc page, you don't need to specify it in the
   markdown file.
-- added `description` field to the `NgDocPage` interface, it is used to specify the description of
-  the doc page, and will be displayed in the page header.
+- now you can specify description for the page using JSDoc comments for the page. It will be
+  displayed in the page header.
+- added ability to specify status badges for sidebar items, you can use JSDoc `@status` tag to
+  specify the status for the page configuration, provide color and text for the badge.
 - Add support for nested types for keyword usages, it means long inline code that use several types
   inside will be displayed correctly. This feature highly improves readability of the API types.
 - added `headerTemplate` property to guides configuration in `ng-doc.config.ts`, it is used to

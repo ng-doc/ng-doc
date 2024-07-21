@@ -158,7 +158,3 @@ const InstallationPage: NgDocPage = {
 
 export default InstallationPage;
 ```
-
-## See also
-
-- `*MarkdownSyntaxPage`

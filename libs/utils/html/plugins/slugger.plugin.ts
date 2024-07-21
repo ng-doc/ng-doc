@@ -38,7 +38,7 @@ export default function sluggerPlugin(
       const attrSlug: string | undefined = attrValue(node, 'dataSlug');
       const attrSlugTitle: string | undefined = attrValue(node, 'dataSlugTitle');
       const attrSlugType: string | undefined = attrValue(node, 'dataSlugType');
-      const dataToSlug: string | undefined = isHeading ? toString(node) : attrSlug;
+      const dataToSlug: string | undefined = isHeading ? toString(node).trim() : attrSlug;
 
       if (dataToSlug) {
         if (node.properties) {

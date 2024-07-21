@@ -6,6 +6,7 @@ import {
   GLOBALS,
   loadGlobalKeywords,
   printBuildProgress,
+  printErrors,
   setColdStartFalse,
   whenStackIsEmpty,
 } from '@ng-doc/builder';
@@ -52,11 +53,11 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
     tap(() => {
       setColdStartFalse();
       // console.log(
-      //   count++,
       //   output.state,
       //   isBuilderDone(output) ? output.result.filePath : output.error,
       // );
     }),
+    printErrors(),
     debounceTime(0),
     map(() => void 0),
     emitCache(),

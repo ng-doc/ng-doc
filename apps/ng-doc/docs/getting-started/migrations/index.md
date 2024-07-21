@@ -52,7 +52,7 @@ NgDoc's schematics now also support standalone applications.
 - `provideMainPageProcessor` and `providePageSkeleton` functions were added, now you must use them to
   provide default or your own page processors and page skeleton components.
 
-Please see updated `*GettingStartedInstallation#configuring-application` articles for more information how your
+Please see updated `*InstallationManualPage#configuring-application` articles for more information how your
 application should be configured.
 
 ###

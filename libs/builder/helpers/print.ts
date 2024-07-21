@@ -14,11 +14,3 @@ export function printProgress(text?: string): void {
     spinner.start();
   }
 }
-
-/**
- * Prints an error message.
- * @param error - The error to print.
- */
-export function printError(error: string): void {
-  spinner.fail(error);
-}
