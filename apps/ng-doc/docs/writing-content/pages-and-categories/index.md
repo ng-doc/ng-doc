@@ -38,12 +38,17 @@ The content of the page should be inside a `markdown` file specified in the `mdF
 page configuration. You can also specify paths to multiple files, so NgDoc will display them as
 multiple tabs on the page.
 
+> **Warning**
+> Even when using tabs, you still need to use `index.md`, it will be used as the first tab and
+> should not contain the `route` configuration. Therefore, if you navigate to the page, `index.md`
+> will be displayed by default.
+
 ```ts name="ng-doc.page.ts"
 import { NgDocPage } from '@ng-doc/core';
 
 const InstallationPage: NgDocPage = {
   title: 'Installation',
-  mdFile: ['./angular.md', './nx.md'],
+  mdFile: ['./index.md', './nx.md'],
 };
 
 export default InstallationPage;
@@ -52,12 +57,12 @@ export default InstallationPage;
 The `title`, `icon`, `route`, and other parameters for a tab can be specified within the file
 itself using metadata (check the `MarkdownEntry` interface to see all available properties):
 
-```md
+```md name="nx.md"
 ---
-title: Angular
-icon: angular
-route: angular
-keyword: InstallationAngularPage
+title: Nx
+icon: Nx
+route: nx
+keyword: InstallationNxPage
 ---
 
 ## Running CLI commands

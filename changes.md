@@ -1,15 +1,19 @@
 ## Builder
 
 - the core of the builder was rewritten to support multiple markdown files, `chokidar` was replaced
-  with `@parcel/watcher` so builder should react to changes a bit faster now
+  with `@parcel/watcher` so builder should react to changes a bit faster now. New builder
+  is now more granular and is splitted into many small builders allowing to trigger only the
+  changed parts, not all at once, this also improves cache performance, as when it is necessary to
+  rebuild files that have changed, data for some builders will be restored from the cache.
 
 ## General
 
-- highlight.js was replaced with shiki to support angular inline template highlighting, it will change
+- highlight.js was replaced with shiki to support angular inline template highlighting, it will
+  change
   list of available languages and the way you configure themes
 - added support for Mermaid diagrams in markdown files, you can now use Mermaid syntax inside
   code blocks with the `mermaid` language specified
-- `keyword` field was removed from the `NgDocPage` interface.
+- `keyword` field was removed from the `NgDocPage` interface, see Migration Guide for more details.
 - `mdFile` field is now support array of paths, you can specify multiple
   markdown files for a single doc page, they will be displayed as tabs in the doc page.
 - you can also specify the `title`, `icon`, `type` and `keyword` fields in the markdown file using
@@ -20,8 +24,9 @@
   the doc page, and will be displayed in the page header.
 - Add support for nested types for keyword usages, it means long inline code that use several types
   inside will be displayed correctly. This feature highly improves readability of the API types.
-- added `headerTemplate` property to guides configuration, it is used to specify the header template
-  for the guide page that can be used to customize header for each guide page.
+- added `headerTemplate` property to guides configuration in `ng-doc.config.ts`, it is used to
+  specify the header template for the guide page that can be used to customize header for each guide
+  page.
 - Bunch of different fixes that resolve interface glitches and highly improve hydration and
   performance of the app.
 - Orama search that's used as a primary search engine was updated to `2.0.17` version.
@@ -34,10 +39,10 @@
 
 ## UI
 
-- Slightly redesigned the app
+- Slightly update design of the app
 - Reworked search, now it's fullscreen and works the same way for the Desktop and Mobile.
 - `leftContent`, `rightContent` and `centerContent` inputs were replaced with attribute selectors
-  like `ngDocNavbarLeft`, `ngdocNavbarRight` and `ngDocNavbarCenter` in the `ng-doc-navbar`
+  like `ngDocNavbarLeft` and `ngDocNavbarRight` in the `ng-doc-navbar`, `centerContent` was removed
 - Added an image viewer, all images in the markdown files are now clickable and can be viewed in a
   fullscreen mode.
 - Demos in playgrounds are now sticky
@@ -45,7 +50,7 @@
   CSS/SCSS files to define your themes and import them directly to your `style.css` file,
   registration is not needed anymore.
 - Sidenav and sidebar APIs were changed to support hydration and SSR.
-- All tables become scrollable if they are too wide. First column for API tables is sticky.
+- All tables became scrollable if they are too wide. First column for API tables is sticky.
 - Heading anchors are now copied to the clipboard when clicked instead of navigating.
 - API References page has been reworked
 

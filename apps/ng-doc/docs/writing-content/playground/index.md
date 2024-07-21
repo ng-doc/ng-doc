@@ -74,7 +74,7 @@ or Type Alias types which are union of `string`, `number`, `boolean`.
 
 It can't recognize complex types such as `Interface`, `Class` or `Enum`, but you can create your
 own custom controls for them to teach NgDoc doing that, read more about it in
-the `*CustomizationTypeControls`.
+the `*TypeControlsPage`.
 
 ## Multiple selectors
 
@@ -359,6 +359,6 @@ export default MyAwesomePage;
 ## See Also
 
 - `*EntitiesPage`
-- `*CustomizationTypeControls`
+- `*TypeControlsPage`
 
 {% endindex %}

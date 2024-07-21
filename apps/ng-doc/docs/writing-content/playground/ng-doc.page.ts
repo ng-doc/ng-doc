@@ -1,3 +1,4 @@
+import { provideTypeControl } from '@ng-doc/app';
 import { NgDocPage } from '@ng-doc/core';
 import {
   NgDocButtonComponent,
@@ -7,14 +8,22 @@ import {
 } from '@ng-doc/ui-kit';
 
 import WritingContentCategory from '../ng-doc.category';
+import { FloatingCircleComponent } from './floating-circle/floating-circle.component';
+import { FloatingCirclePositionControlComponent } from './floating-circle-position-control/floating-circle-position-control.component';
 import { FormatDatePipe } from './format-date.pipe';
 
 const PlaygroundPage: NgDocPage = {
   title: `Playground`,
-  mdFile: './index.md',
+  mdFile: ['./index.md', './type-controls.md'],
   category: WritingContentCategory,
   imports: [NgDocIconComponent],
   order: 8,
+  providers: [
+    provideTypeControl('FloatingCirclePosition', FloatingCirclePositionControlComponent, {
+      hideLabel: true,
+    }),
+  ],
+  demos: { FloatingCircleComponent, FloatingCirclePositionControlComponent },
   playgrounds: {
     TagPlayground: {
       target: NgDocTagComponent,
@@ -53,6 +62,10 @@ const PlaygroundPage: NgDocPage = {
       target: NgDocButtonComponent,
       template: `<ng-doc-selector>{{data.label}}</ng-doc-selector>`,
       data: { label: 'Button' },
+    },
+    FloatingCircle: {
+      target: FloatingCircleComponent,
+      template: '<ng-doc-selector></ng-doc-selector>',
     },
   },
 };

@@ -1,5 +1,7 @@
 ---
-keyword: 'CustomizationTypeControls'
+title: Type Controls
+route: type-controls
+keyword: 'TypeControlsPage'
 ---
 
 Playgrounds can recognize some simple types and create controls for them dynamically, but for inputs

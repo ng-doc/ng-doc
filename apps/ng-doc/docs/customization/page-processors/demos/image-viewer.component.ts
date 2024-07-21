@@ -18,6 +18,7 @@ import { NgDocTooltipDirective } from '@ng-doc/ui-kit';
       }
 
       img {
+        width: 100%;
         max-height: 100px;
         transition: transform 0.2s ease-in-out;
       }
