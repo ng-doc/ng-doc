@@ -2,8 +2,6 @@
 keyword: 'GettingStartedConfiguration'
 ---
 
-This section describes how you can configure certain functions of the library.
-
 ## Configuration file
 
 The main library configuration can be done in `ng-doc.config.ts` configuration file, it should be

@@ -2,13 +2,14 @@ import { SchematicArgv } from '../schematic-argv';
 
 /**
  * The interface describes the possible parameters for generating the page,
- * the generator can be called by the command below
+ * the generator can be called by the command below 123
  *
  * ```bash
  * ng g @ng-doc/builder:page
  * ```
  *
  * Here is an example showing how you can call a generator with all parameters
+ *
  * ```bash
  * ng g @ng-doc/builder:page MyPage -r custom-route -m -c -o 1
  * ```

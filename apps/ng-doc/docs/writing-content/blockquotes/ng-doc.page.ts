@@ -3,7 +3,7 @@ import { NgDocPage } from '@ng-doc/core';
 import WritingContentCategory from '../ng-doc.category';
 
 /**
- * @status:success NEW FEATURES
+ * @status:success NEW STYLES
  */
 const BlockquotesPage: NgDocPage = {
   title: `Blockquotes`,
