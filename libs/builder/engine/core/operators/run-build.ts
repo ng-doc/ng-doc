@@ -1,4 +1,4 @@
-import { Observable, ObservableInput, ObservedValueOf, of, OperatorFunction } from 'rxjs';
+import { from, Observable, ObservableInput, ObservedValueOf, of, OperatorFunction } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { BuilderState, CacheStrategy } from '../types';
@@ -25,8 +25,7 @@ export function runBuild<T, O extends ObservableInput<any>>(
     source.pipe(
       switchMap((args: T) => {
         return of(args).pipe(
-          switchMap(project),
-          builderState(tag),
+          switchMap((args, index) => from(project(args, index)).pipe(builderState(tag))),
           handleCacheStrategy(`runBuild${id}`, cacheStrategy),
         );
       }),
