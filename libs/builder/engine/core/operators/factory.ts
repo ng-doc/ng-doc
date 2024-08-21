@@ -65,7 +65,7 @@ export function factory<T, R, TCacheData>(
        * We don't use ObservableInput here because it opens the door to passing an Observable
        * as the result of the build function which might break the cache strategy, and final state.
        */
-      return (buildFnResult instanceof Promise ? from(buildFnResult) : of(buildFnResult)).pipe(
+      return from(Promise.resolve(buildFnResult)).pipe(
         map((result) => new BuilderDone(tag, result)),
         catchError((error: Error) => of(new BuilderError(tag, [error]))),
         handleCacheStrategy<R, TCacheData>(
