@@ -37,7 +37,7 @@ export function createBuilderContext(
     config,
     context,
     inlineStyleLanguage: (targetOptions?.['inlineStyleLanguage'] as NgDocStyleType) ?? 'CSS',
-    docsPath: path.resolve(config.docsPath ?? projectRoot),
+    docsPath: config.docsPath ?? projectRoot,
     outAssetsDir: path.join(buildPath, 'assets'),
     cachedFiles: [configPath],
     outDir: buildPath,

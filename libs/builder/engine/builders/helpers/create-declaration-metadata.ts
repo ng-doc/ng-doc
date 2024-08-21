@@ -2,7 +2,7 @@ import { asArray, NgDocApi, NgDocApiScope } from '@ng-doc/core';
 import path from 'path';
 import { Subject } from 'rxjs';
 
-import { declarationFolderName, isSupportedDeclaration } from '../../../helpers';
+import { declarationFolderName, isSupportedDeclaration, posix } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
 import { NgDocSupportedDeclaration } from '../../../types';
 import { DeclarationEntry, EntryMetadata } from '../interfaces';
@@ -24,12 +24,14 @@ export function createDeclarationMetadata(
   const sourceFile = declaration.getSourceFile();
   const dir = sourceFile.getDirectoryPath();
   const dirName = path.basename(dir);
-  const route = path.join(
-    ...asArray(
-      entry.route ?? 'api',
-      declarationFolderName(declaration),
-      scope.route,
-      declaration.getName(),
+  const route = posix(
+    path.join(
+      ...asArray(
+        entry.route ?? 'api',
+        declarationFolderName(declaration),
+        scope.route,
+        declaration.getName(),
+      ),
     ),
   );
   const outDir = path.join(context.outApiDir, route);

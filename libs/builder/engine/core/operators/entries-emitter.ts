@@ -5,6 +5,7 @@ import path from 'path';
 import { merge, mergeMap, Observable } from 'rxjs';
 import { filter, map, startWith } from 'rxjs/operators';
 
+import { posix } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
 import { pageBuilder } from '../../builders';
 import { apiBuilder } from '../../builders/api-list';
@@ -20,8 +21,8 @@ export function entriesEmitter(
   context: NgDocBuilderContext,
 ): Observable<BuilderState<FileOutput | AsyncFileOutput>> {
   const entries = sync([
-    path.join(context.docsPath, PAGE_PATTERN),
-    path.join(context.docsPath, API_PATTERN),
+    posix(path.join(context.docsPath, PAGE_PATTERN)),
+    posix(path.join(context.docsPath, API_PATTERN)),
   ]);
 
   return watchFolder(context.docsPath, 'create').pipe(

@@ -8,6 +8,7 @@ import {
   getAllJsDocTags,
   getJsDocDescription,
   getObjectExpressionFromDefault,
+  posix,
 } from '../../../helpers';
 import { NgDocBuilderContext } from '../../../interfaces';
 import { CATEGORY_PATTERN } from '../../variables';
@@ -70,8 +71,10 @@ export function createEntryMetadata<T extends FileEntry>(
       };
     },
     absoluteRoute: function (): string {
-      return path.join(
-        ...asArray(this.parent?.absoluteRoute() ?? context.config.routePrefix, this.route),
+      return posix(
+        path.join(
+          ...asArray(this.parent?.absoluteRoute() ?? context.config.routePrefix, this.route),
+        ),
       );
     },
     breadcrumbs: function (): string[] {
