@@ -41,13 +41,14 @@ export async function processHtml(
       .use(rehypeParse, { fragment: true })
       .use(rehypeStringify)
       .use(mermaidPlugin)
+      // @ts-expect-error - rehype-shiki types are not up to date
       .use(rehypeShiki, {
         defaultLanguage: 'ts',
         fallbackLanguage: 'text',
         addLanguageClass: true,
         parseMetaString: (meta: string) => JSON.parse(meta?.replace(/\\/g, '') || '{}'),
         themes: {
-          light: config.lightTheme ?? 'catppuccin-latte',
+          light: config.lightTheme ?? 'github-light',
           dark: config.darkTheme ?? 'ayu-dark',
         },
       })

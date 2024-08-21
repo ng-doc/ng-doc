@@ -30,7 +30,7 @@ export class NgDocHighlighterService {
   async initialize(config?: NgDocHighlighterConfig): Promise<void> {
     this.highlighter = (await createHighlighterCore({
       themes: [
-        import('shiki/themes/catppuccin-latte.mjs'),
+        import('shiki/themes/github-light.mjs'),
         import('shiki/themes/ayu-dark.mjs'),
         ...(config?.themes ?? []),
       ],
@@ -43,7 +43,7 @@ export class NgDocHighlighterService {
     return this.highlighter!.codeToHtml(code, {
       lang: 'angular-html',
       themes: {
-        light: this.theme.light || 'catppuccin-latte',
+        light: this.theme.light || 'github-light',
         dark: this.theme.dark || 'ayu-dark',
       },
     });
