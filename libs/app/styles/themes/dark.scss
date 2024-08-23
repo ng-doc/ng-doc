@@ -1,0 +1,57 @@
+// dark theme
+@mixin theme {
+  --ng-doc-base-rgb: 43 43 43;
+  --ng-doc-base-0: #{darken(#2b2b2b, 5%)};
+  --ng-doc-base-1: #{darken(#333333, 5%)};
+  --ng-doc-base-2: #{darken(#3a3a3a, 5%)};
+  --ng-doc-base-3: #{darken(#424242, 5%)};
+  --ng-doc-base-4: #{darken(#4b4b4b, 5%)};
+  --ng-doc-base-5: #{darken(#555555, 5%)};
+  --ng-doc-base-6: #{darken(#5e5e5e, 5%)};
+  --ng-doc-base-7: #{darken(#686868, 5%)};
+  --ng-doc-base-8: #{darken(#727272, 5%)};
+  --ng-doc-base-9: #{darken(#7d7d7d, 5%)};
+  --ng-doc-base-10: #{darken(#888888, 5%)};
+  --ng-doc-heading-color: #e3e3e3;
+  --ng-doc-text: #a9a9a9;
+  --ng-doc-text-muted: var(--ng-doc-base-10);
+  --ng-doc-text-selection: rgba(110, 110, 110, 0.81);
+
+  --ng-doc-shadow-color: rgba(0, 0, 0, 0.4);
+  --ng-doc-link-color: #30a5ff;
+  --ng-doc-inline-code-background: #b9b9b9;
+
+  --ng-doc-primary: #faab00;
+  --ng-doc-info: #7095ff;
+
+  --ng-doc-mark-background: rgba(48, 165, 255, 0.3);
+  --ng-doc-search-result-color: #c6c6c6;
+
+  --ng-doc-api-tag-background: #ff5959;
+  --ng-doc-api-tag-color: var(--ng-doc-base-0);
+  --ng-doc-guide-tag-background: #faab00;
+  --ng-doc-guide-tag-color: var(--ng-doc-base-0);
+  --ng-doc-navbar-border: 1px solid var(--ng-doc-base-4);
+}
+
+// shiki theme to match dark theme
+@mixin shiki-theme {
+  .shiki,
+  .shiki span {
+    color: var(--shiki-dark) !important;
+  }
+}
+
+// enable dark theme when using auto theme and prefers-color-scheme is dark
+:root[data-theme='auto'] {
+  @media (prefers-color-scheme: dark) {
+    @include theme();
+    @include shiki-theme();
+  }
+}
+
+// apply dark theme when dark theme is selected
+:root[data-theme='dark'] {
+  @include theme();
+  @include shiki-theme();
+}

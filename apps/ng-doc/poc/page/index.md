@@ -1,3 +1,9 @@
-# Section
+---
+keyword: 'MyPage'
+---
 
-{{ NgDocActions.playground("BtnPlayground") }}
+asd
+{{ NgDocActions.demo("DemoComponent") }}
+asd
+
+Check this out: `Component` or `@Component` or `ChangeDetectorRef`.

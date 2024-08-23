@@ -1,40 +1,32 @@
-<article>
-	<ng-container #pageBreadcrumbs></ng-container>
+<div class="ng-doc-page-controls">
+  <a
+    ng-doc-button-icon
+    *ngIf="rootPage.editSourceFileUrl"
+    [href]="rootPage.editSourceFileUrl"
+    target="_blank"
+    ngDocTooltip="Suggest Edits">
+    <ng-doc-icon icon="edit-2"></ng-doc-icon>
+  </a>
+  <a
+    ng-doc-button-icon
+    *ngIf="rootPage.viewSourceFileUrl"
+    [href]="rootPage.viewSourceFileUrl"
+    target="_blank"
+    ngDocTooltip="View Source">
+    <ng-doc-icon icon="code"></ng-doc-icon>
+  </a>
+</div>
 
-	<div class="ng-doc-page-controls">
-		<a
-			ng-doc-button-icon
-			*ngIf="rootPage.editSourceFileUrl"
-			[href]="rootPage.editSourceFileUrl"
-			target="_blank"
-			ngDocTooltip="Suggest Edits">
-			<ng-doc-icon icon="edit-2"></ng-doc-icon>
-		</a>
-		<a
-			ng-doc-button-icon
-			*ngIf="rootPage.viewSourceFileUrl"
-			[href]="rootPage.viewSourceFileUrl"
-			target="_blank"
-			ngDocTooltip="View Source">
-			<ng-doc-icon icon="code"></ng-doc-icon>
-		</a>
-	</div>
-
-	<div
-		class="ng-doc-page-wrapper"
-		[ngDocPageProcessor]="rootPage.pageContent"
-		(afterRender)="createToc()"
-		#pageContainer></div>
-
-	<ng-container #pageNavigation></ng-container>
-</article>
+<div
+  class="ng-doc-page-wrapper"
+  [ngDocPageProcessor]="rootPage.pageContent | ngDocSanitizeHtml"
+  (afterRender)="createToc()"
+  #pageContainer></div>
 
 <ng-doc-dialog-outlet
-	*ngIf="!rootPage.page?.disableFullscreenRoutes"
-	[config]="{ width: '100vw', height: '100vh' }">
-	<div class="ng-doc-fullscreen-wrapper">
-		<router-outlet></router-outlet>
-	</div>
+  *ngIf="!rootPage.page?.disableFullscreenRoutes"
+  [config]="{ width: '100vw', height: '100vh' }">
+  <div class="ng-doc-fullscreen-wrapper">
+    <router-outlet></router-outlet>
+  </div>
 </ng-doc-dialog-outlet>
-
-<ng-container #pageToc></ng-container>

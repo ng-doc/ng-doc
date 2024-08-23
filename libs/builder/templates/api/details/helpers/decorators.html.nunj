@@ -1,0 +1,14 @@
+{% import "helpers/type.html.nunj" as typeMacro %}
+
+{% set decorators = declaration.getDecorators() %}
+
+{% if decorators.length %}
+    <tr>
+        <td indexable="false">Decorators:</td>
+        <td indexable="false">
+            {% for decorator in decorators %}
+                {{ typeMacro.render( '@' + decorator.getName()) }}
+            {%- endfor %}
+        </td>
+    </tr>
+{% endif %}

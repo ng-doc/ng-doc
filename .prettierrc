@@ -1,25 +1,25 @@
 {
-	"singleQuote": true,
-	"trailingComma": "all",
-	"endOfLine": "lf",
-	"semi": true,
-	"bracketSameLine": true,
-	"overrides": [
-		{
-			"files": [
-				"*.ts"
-			],
-			"options": {
-				"parser": "typescript"
-			}
-		},
-		{
-			"files": [
-				"*.ts.nunj"
-			],
-			"options": {
-				"parser": "typescript"
-			}
-		}
-	]
+  "editorconfig": true,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "semi": true,
+  "bracketSameLine": true,
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "options": {
+        "parser": "typescript"
+      }
+    },
+    {
+      "files": [
+        "*.ts.nunj"
+      ],
+      "options": {
+        "parser": "typescript"
+      }
+    }
+  ]
 }

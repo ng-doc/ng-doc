@@ -1,30 +1,22 @@
 <div class="ng-doc-code-header" *ngIf="hasHeader">
-	<span class="ng-doc-code-file-name" ng-doc-text>
-		<ng-doc-icon [customIcon]="icon" *ngIf="icon"></ng-doc-icon>
-		{{ name }}
-	</span>
+  <span class="ng-doc-code-file-name" ng-doc-text>
+    <ng-doc-icon [customIcon]="icon" *ngIf="icon"></ng-doc-icon>
+    {{ name }}
+  </span>
 </div>
 <div class="ng-doc-code-body">
-	@if (html) {
-		<div class="ng-doc-code-wrapper" [ngDocPageProcessor]="html"></div>
-	} @else {
-		<div class="ng-doc-code-wrapper">
-			<ng-content></ng-content>
-		</div>
-	}
+  @if (html) {
+    <div class="ng-doc-code-wrapper" [ngDocPageProcessor]="html | ngDocSanitizeHtml"></div>
+  } @else {
+    <div class="ng-doc-code-wrapper">
+      <ng-content></ng-content>
+    </div>
+  }
 
-	<button
-		class="ng-doc-copy-button"
-		ng-doc-button-icon
-		*ngIf="copyButton"
-		(click)="copyCode(); tooltipText = 'Copied!'"
-		[ngDocTooltip]="tooltipContent"
-		(mouseenter)="tooltipText = 'Copy to clipboard'">
-		<ng-template #tooltipContent>
-			<ng-doc-smooth-resize [trigger]="tooltipText">
-				{{ tooltipText }}
-			</ng-doc-smooth-resize>
-		</ng-template>
-		<ng-doc-icon icon="copy"></ng-doc-icon>
-	</button>
+  <ng-doc-copy-button
+    class="ng-doc-copy-button"
+    [text]="this.codeElement?.textContent ?? ''"
+    *ngIf="copyButton">
+    <ng-doc-icon icon="copy"></ng-doc-icon>
+  </ng-doc-copy-button>
 </div>

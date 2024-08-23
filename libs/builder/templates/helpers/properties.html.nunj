@@ -1,44 +1,50 @@
 {% import "helpers/type.html.nunj" as typeMacro %}
 {% import "helpers/declaration-modifiers.html.nunj" as tagsMacro %}
 {% import "helpers/decorators.html.nunj" as decoratorsMacro %}
+{% import "helpers/status.html.nunj" as statusMacro %}
 
 {% macro render(properties, origin) %}
-    <div class="ng-doc-table-wrapper">
-        <table class="ng-doc-properties-table">
-            <thead>
-            <tr indexable="false">
-                <th class="ng-doc-properties-table-name">Name</th>
-                <th class="ng-doc-properties-table-type">Type</th>
-                <th class="ng-doc-properties-table-description">Description</th>
-            </tr>
-            </thead>
-            <tbody>
-            {%- for property in properties %}
-                {% set propertyChain = property | getPropertyChain %}
-                {% set inheritedFrom = property | getInheritedParent(origin) %}
-                {% set overriddenMember = property | getOverriddenMember %}
-                {% set implementedMember = property | getImplementedMember %}
-                {% set docNode = propertyChain | firstNodeWithComment %}
+    <table class="ng-doc-api-table sticky first-colum-highlighted">
+        <thead>
+        <tr indexable="false">
+            <th class="ng-doc-api-table-name">Name</th>
+            <th class="ng-doc-api-table-type">Type</th>
+            <th class="ng-doc-api-table-description">Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        {%- for property in properties %}
+            {% set propertyChain = property | getPropertyChain %}
+            {% set inheritedFrom = property | getInheritedParent(origin) %}
+            {% set overriddenMember = property | getOverriddenMember %}
+            {% set implementedMember = property | getImplementedMember %}
+            {% set docNode = propertyChain | firstNodeWithComment %}
 
-                <tr dataSlug="{{ property.getName() }}" dataSlugType="member">
-                    <td indexable="false">
-                        {{ decoratorsMacro.render(property.getDecorators(), true) if property.getDecorators }}
-                        {{ tagsMacro.render(property, "badge") }}{{ property.getName() }}
-                        <div class="ng-doc-node-details">
-                            {%- if inheritedFrom %}
-                                inherited from <code>{{ inheritedFrom.getName() }}</code>
-                            {%- elseif overriddenMember %}
-                                overrides <code>{{ (overriddenMember | getMemberParent).getName() }}</code>
-                            {%- elseif implementedMember %}
-                                implements <code>{{ (implementedMember | getMemberParent).getName() }}</code>
-                            {%- endif %}
-                        </div>
-                    </td>
-                    <td>{{ typeMacro.type(property) }}</td>
-                    <td>{{ docNode | extractDocs }}</td>
-                </tr>
-            {%- endfor %}
-            </tbody>
-        </table>
-    </div>
+            <tr class="{{ statusMacro.class(property) }}" dataSlug="{{ property.getName() }}" dataSlugType="member">
+                <td indexable="false">
+                    {{ decoratorsMacro.render(property.getDecorators(), true) if property.getDecorators }}
+                    <span>{{ property.getName() }}{{ tagsMacro.render(property, "badge") }}</span>
+                    <div class="ng-doc-node-details">
+                        {%- if inheritedFrom %}
+                            inherited from <code>{{ inheritedFrom.getName() }}</code>
+                        {%- elseif overriddenMember %}
+                            overrides
+                            <code>{{ (overriddenMember | getMemberParent).getName() }}</code>
+                        {%- elseif implementedMember %}
+                            implements
+                            <code>{{ (implementedMember | getMemberParent).getName() }}</code>
+                        {%- endif %}
+                    </div>
+                </td>
+                <td>{{ typeMacro.type(property) }}</td>
+                <td>
+                    <div class="ng-doc-api-status">
+                        {{ statusMacro.render(property) }}
+                    </div>
+                    {{ docNode | getJsDocDescription }}
+                </td>
+            </tr>
+        {%- endfor %}
+        </tbody>
+    </table>
 {% endmacro %}

@@ -1,64 +1,59 @@
-import { Clipboard } from '@angular/cdk/clipboard';
 import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input } from '@angular/core';
-import { NgDocPageProcessorDirective } from '@ng-doc/app/processors/page-processor';
+import { NgDocCopyButtonComponent } from '@ng-doc/app/components/copy-button';
+import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes';
+import { NgDocPageProcessorComponent } from '@ng-doc/app/processors/page-processor';
+import { linkProcessor } from '@ng-doc/app/processors/processors/link';
+import { tooltipProcessor } from '@ng-doc/app/processors/processors/tooltip';
+import { provideMainPageProcessor } from '@ng-doc/app/tokens';
 import {
-	NgDocButtonIconComponent,
-	NgDocIconComponent,
-	NgDocSmoothResizeComponent,
-	NgDocTextComponent,
-	NgDocTooltipDirective,
+  NgDocButtonIconComponent,
+  NgDocIconComponent,
+  NgDocSmoothResizeComponent,
+  NgDocTextComponent,
+  NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
 
 @Component({
-	selector: 'ng-doc-code',
-	templateUrl: './code.component.html',
-	styleUrls: ['./code.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	standalone: true,
-	imports: [
-		NgIf,
-		NgDocTextComponent,
-		NgDocButtonIconComponent,
-		NgDocTooltipDirective,
-		NgDocSmoothResizeComponent,
-		NgDocIconComponent,
-		NgDocPageProcessorDirective,
-	],
+  selector: 'ng-doc-code',
+  templateUrl: './code.component.html',
+  styleUrls: ['./code.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    NgIf,
+    NgDocTextComponent,
+    NgDocButtonIconComponent,
+    NgDocTooltipDirective,
+    NgDocSmoothResizeComponent,
+    NgDocIconComponent,
+    NgDocPageProcessorComponent,
+    NgDocCopyButtonComponent,
+    NgDocSanitizeHtmlPipe,
+  ],
+  viewProviders: [provideMainPageProcessor([linkProcessor, tooltipProcessor])],
 })
 export class NgDocCodeComponent {
-	@Input()
-	html: string = '';
+  @Input()
+  html: string = '';
 
-	@Input()
-	copyButton: boolean = true;
+  @Input()
+  copyButton: boolean = true;
 
-	@Input()
-	name?: string;
+  @Input()
+  name?: string;
 
-	@Input()
-	icon?: string;
+  @Input()
+  icon?: string;
 
-	@Input()
-	lineNumbers: boolean = false;
+  constructor(private elementRef: ElementRef<HTMLElement>) {}
 
-	tooltipText: string = '';
+  @HostBinding('attr.data-ng-doc-has-header')
+  get hasHeader(): boolean {
+    return !!this.name || !!this.icon;
+  }
 
-	constructor(
-		private elementRef: ElementRef<HTMLElement>,
-		private readonly clipboard: Clipboard,
-	) {}
-
-	@HostBinding('attr.data-ng-doc-has-header')
-	get hasHeader(): boolean {
-		return !!this.name || !!this.icon;
-	}
-
-	get codeElement(): HTMLElement | null {
-		return this.elementRef?.nativeElement.querySelector('code') ?? null;
-	}
-
-	copyCode(): void {
-		this.clipboard.copy(this.codeElement?.textContent ?? '');
-	}
+  get codeElement(): HTMLElement | null {
+    return this.elementRef?.nativeElement.querySelector('code') ?? null;
+  }
 }

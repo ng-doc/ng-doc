@@ -1,112 +1,107 @@
 {
-	"root": true,
-	"ignorePatterns": ["**/*"],
-	"plugins": ["@nx"],
-	"overrides": [
-		{
-			"files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-			"extends": ["prettier", "plugin:jsdoc/recommended"],
-			"plugins": [
-				"eslint-plugin-jsdoc",
-				"eslint-plugin-prefer-arrow",
-				"simple-import-sort",
-				"eslint-plugin-tsdoc"
-			],
-			"rules": {
-				"jsdoc/require-param-type": "off",
-				"jsdoc/require-returns-type": "off",
-				"jsdoc/require-returns": "off",
-				"tsdoc/syntax": "warn",
-				"simple-import-sort/imports": "error",
-				"simple-import-sort/exports": "error",
-				"@nx/enforce-module-boundaries": [
-					"error",
-					{
-						"enforceBuildableLibDependency": true,
-						"allowCircularSelfDependency": true,
-						"allow": [],
-						"depConstraints": [
-							{
-								"sourceTag": "type:app",
-								"onlyDependOnLibsWithTags": ["type:lib"]
-							},
-							{
-								"sourceTag": "lib:app",
-								"onlyDependOnLibsWithTags": ["lib:builder", "lib:ui-kit", "lib:core"]
-							},
-							{
-								"sourceTag": "lib:builder",
-								"onlyDependOnLibsWithTags": ["lib:core", "lib:utils"]
-							},
-							{
-								"sourceTag": "lib:ui-kit",
-								"onlyDependOnLibsWithTags": ["lib:core"]
-							},
-							{
-								"sourceTag": "lib:utils",
-								"onlyDependOnLibsWithTags": ["lib:core"]
-							},
-							{
-								"sourceTag": "lib:keywords-loaders",
-								"onlyDependOnLibsWithTags": ["lib:core"]
-							}
-						]
-					}
-				],
-				"prefer-const": [
-					"error",
-					{
-						"destructuring": "any"
-					}
-				]
-			}
-		},
-		{
-			"files": ["*.ts", "*.tsx"],
-			"extends": ["plugin:@nx/typescript"],
-			"rules": {
-				"@typescript-eslint/no-explicit-any": "warn",
-				"@typescript-eslint/typedef": [
-					"error",
-					{
-						"arrowParameter": false,
-						"memberVariableDeclaration": true,
-						"objectDestructuring": false,
-						"parameter": true,
-						"propertyDeclaration": true,
-						"variableDeclaration": false,
-						"variableDeclarationIgnoreFunction": true
-					}
-				],
-				"@typescript-eslint/consistent-type-definitions": ["error", "interface"],
-				"@typescript-eslint/array-type": [
-					"error",
-					{
-						"default": "array-simple"
-					}
-				],
-				"@typescript-eslint/explicit-member-accessibility": [
-					"error",
-					{
-						"accessibility": "no-public",
-						"overrides": {
-							"constructors": "off"
-						}
-					}
-				],
-				"@typescript-eslint/no-inferrable-types": "off"
-			}
-		},
-		{
-			"files": ["*.js", "*.jsx"],
-			"extends": ["plugin:@nx/javascript"],
-			"rules": {}
-		},
-		{
-			"files": ["*.spec.ts"],
-			"rules": {
-				"@typescript-eslint/no-non-null-assertion": "off"
-			}
-		}
-	]
+  "root": true,
+  "ignorePatterns": ["**/*"],
+  "plugins": ["@nx"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "extends": ["prettier", "plugin:jsdoc/recommended"],
+      "plugins": ["eslint-plugin-jsdoc", "eslint-plugin-prefer-arrow", "simple-import-sort"],
+      "rules": {
+        "jsdoc/require-param-type": "off",
+        "jsdoc/require-returns-type": "off",
+        "jsdoc/require-returns": "off",
+        "simple-import-sort/imports": "error",
+        "simple-import-sort/exports": "error",
+        "@nx/enforce-module-boundaries": [
+          "error",
+          {
+            "enforceBuildableLibDependency": true,
+            "allowCircularSelfDependency": true,
+            "allow": [],
+            "depConstraints": [
+              {
+                "sourceTag": "type:app",
+                "onlyDependOnLibsWithTags": ["type:lib"]
+              },
+              {
+                "sourceTag": "lib:app",
+                "onlyDependOnLibsWithTags": ["lib:builder", "lib:ui-kit", "lib:core"]
+              },
+              {
+                "sourceTag": "lib:builder",
+                "onlyDependOnLibsWithTags": ["lib:core", "lib:utils"]
+              },
+              {
+                "sourceTag": "lib:ui-kit",
+                "onlyDependOnLibsWithTags": ["lib:core"]
+              },
+              {
+                "sourceTag": "lib:utils",
+                "onlyDependOnLibsWithTags": ["lib:core"]
+              },
+              {
+                "sourceTag": "lib:keywords-loaders",
+                "onlyDependOnLibsWithTags": ["lib:core"]
+              }
+            ]
+          }
+        ],
+        "prefer-const": [
+          "error",
+          {
+            "destructuring": "any"
+          }
+        ]
+      }
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": ["plugin:@nx/typescript"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/typedef": [
+          "error",
+          {
+            "arrowParameter": false,
+            "memberVariableDeclaration": false,
+            "objectDestructuring": false,
+            "parameter": true,
+            "propertyDeclaration": true,
+            "variableDeclaration": false,
+            "variableDeclarationIgnoreFunction": true
+          }
+        ],
+        "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
+        "@typescript-eslint/array-type": [
+          "error",
+          {
+            "default": "array-simple"
+          }
+        ],
+        "@typescript-eslint/explicit-member-accessibility": [
+          "error",
+          {
+            "accessibility": "no-public",
+            "overrides": {
+              "constructors": "off"
+            }
+          }
+        ],
+        "@typescript-eslint/no-inferrable-types": "off"
+      }
+    },
+    {
+      "files": ["*.js", "*.jsx"],
+      "extends": ["plugin:@nx/javascript"],
+      "rules": {}
+    },
+    {
+      "files": ["*.spec.ts"],
+      "rules": {
+        "@typescript-eslint/no-non-null-assertion": "off"
+      }
+    }
+  ]
 }

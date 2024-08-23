@@ -10,6 +10,6 @@ export * from '@ng-doc/ui-kit/directives/hotkey';
 export * from '@ng-doc/ui-kit/directives/input-number';
 export * from '@ng-doc/ui-kit/directives/input-string';
 export * from '@ng-doc/ui-kit/directives/let';
-export * from '@ng-doc/ui-kit/directives/media-query';
+export * from '@ng-doc/ui-kit/directives/radio-group';
 export * from '@ng-doc/ui-kit/directives/rotator';
 export * from '@ng-doc/ui-kit/directives/tooltip';

@@ -12,16 +12,17 @@ import { posix } from './posix';
  * @param modulePath - The path to the module to import
  */
 export async function importFreshEsm<T>(modulePath: string): Promise<T> {
-	const filepath = path.resolve(modulePath);
-	const fileContent = await fs.promises.readFile(filepath, 'utf8');
-	const ext = path.extname(filepath);
-	const extRegex = new RegExp(`\\${ext}$`);
-	const newFilepath = `${filepath.replace(extRegex, '')}${Date.now()}${ext}`;
+  const filepath = path.resolve(modulePath);
+  const fileContent = await fs.promises.readFile(filepath, 'utf8');
+  const ext = path.extname(filepath);
+  const extRegex = new RegExp(`\\${ext}$`);
+  const newFilepath = `${filepath.replace(extRegex, '')}${Date.now()}${ext}`;
 
-	await fs.promises.writeFile(newFilepath, fileContent);
-	const module = await importEsm<T>(posix(newFilepath));
+  await fs.promises.writeFile(newFilepath, fileContent);
 
-	fs.unlink(newFilepath, () => void 0);
+  const module = await importEsm<T>(posix(newFilepath));
 
-	return module;
+  fs.unlink(newFilepath, () => void 0);
+
+  return module;
 }

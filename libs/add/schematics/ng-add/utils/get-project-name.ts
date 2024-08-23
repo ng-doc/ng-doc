@@ -8,14 +8,14 @@ import { Schema } from '../schema';
  * @param workspace
  */
 export function getProjectName(options: Schema, workspace: WorkspaceDefinition): string {
-	const firstBuildableProjectName: string | undefined = Array.from(
-		workspace.projects.entries(),
-	).find(([, project]: [string, ProjectDefinition]) => project.targets.get('build'))?.[0];
+  const firstBuildableProjectName: string | undefined = Array.from(
+    workspace.projects.entries(),
+  ).find(([, project]: [string, ProjectDefinition]) => project.targets.get('build'))?.[0];
 
-	return (
-		options.project ||
-		workspace.extensions['defaultProject']?.toString() ||
-		firstBuildableProjectName ||
-		''
-	);
+  return (
+    options.project ||
+    workspace.extensions['defaultProject']?.toString() ||
+    firstBuildableProjectName ||
+    ''
+  );
 }

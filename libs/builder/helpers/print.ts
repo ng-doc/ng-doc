@@ -7,34 +7,10 @@ const spinner: Spinner = new Spinner();
  * @param text - The message to print.
  */
 export function printProgress(text?: string): void {
-	spinner.stop();
+  spinner.stop();
 
-	if (text) {
-		spinner.text = `NgDoc: ${text}`;
-		spinner.start();
-	}
-}
-
-/**
- * Prints an info message.
- * @param info - The info to print.
- */
-export function printInfo(info: string): void {
-	spinner.start(info);
-}
-
-/**
- * Prints a warning message.
- * @param warn - The warning to print.
- */
-export function printWarning(warn: string): void {
-	spinner.fail(warn);
-}
-
-/**
- * Prints an error message.
- * @param error - The error to print.
- */
-export function printError(error: string): void {
-	spinner.fail(error);
+  if (text) {
+    spinner.text = `NgDoc: ${text}`;
+    spinner.start();
+  }
 }

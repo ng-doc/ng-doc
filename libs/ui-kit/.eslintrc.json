@@ -1,30 +1,31 @@
 {
-	"extends": ["../../.eslintrc.json"],
-	"ignorePatterns": ["!**/*"],
-	"overrides": [
-		{
-			"files": ["*.ts"],
-			"extends": ["plugin:@nx/angular", "plugin:@angular-eslint/template/process-inline-templates"],
-			"rules": {
-				"@angular-eslint/directive-selector": [
-					"error",
-					{
-						"type": "attribute",
-						"prefix": "ngDoc",
-						"style": "camelCase"
-					}
-				],
-				"@angular-eslint/component-selector": "off",
-				"@angular-eslint/prefer-on-push-component-change-detection": ["error"],
-				"@typescript-eslint/no-inferrable-types": "off",
-				"@angular-eslint/no-input-rename": "off",
-				"@typescript-eslint/member-ordering": "off"
-			}
-		},
-		{
-			"files": ["*.html"],
-			"extends": ["plugin:@nx/angular-template"],
-			"rules": {}
-		}
-	]
+  "extends": ["../../.eslintrc.json"],
+  "ignorePatterns": ["!**/*"],
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "extends": ["plugin:@nx/angular", "plugin:@angular-eslint/template/process-inline-templates"],
+      "rules": {
+        "@angular-eslint/directive-selector": [
+          "error",
+          {
+            "type": "attribute",
+            "prefix": "ngDoc",
+            "style": "camelCase"
+          }
+        ],
+        "@angular-eslint/component-selector": "off",
+        "@angular-eslint/prefer-on-push-component-change-detection": ["error"],
+        "@typescript-eslint/no-inferrable-types": "off",
+        "@angular-eslint/no-input-rename": "off",
+        "@typescript-eslint/member-ordering": "off",
+        "@angular-eslint/no-host-metadata-property": "off"
+      }
+    },
+    {
+      "files": ["*.html"],
+      "extends": ["plugin:@nx/angular-template"],
+      "rules": {}
+    }
+  ]
 }

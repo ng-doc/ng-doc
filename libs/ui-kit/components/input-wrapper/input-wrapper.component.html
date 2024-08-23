@@ -1,40 +1,23 @@
 <ng-doc-wrapper ngDocFocusCatcher>
-	<ng-doc-floated-border>
-		<div
-			class="ng-doc-input-container"
-			(focusin)="emptyEvent()"
-			(focusout)="emptyEvent()"
-			[class.-input-hidden]="blurContentIsVisible"
-			#inputContainer>
-			<ng-content></ng-content>
-			<div class="ng-doc-blur-container ng-doc-input" *ngIf="blurContentIsVisible">
-				<div class="ng-doc-blur-content">
-					<ng-container
-						*polymorpheusOutlet="blurContent as text; context: getBlurContext(blurContext)">
-						{{ text }}
-					</ng-container>
-				</div>
-			</div>
-		</div>
-		<div
-			class="ng-doc-floated-content"
-			ng-doc-floated-content
-			[bindTo]="inputContainer"
-			propertyName="--ng-doc-input-padding-left"
-			alignTo="left">
-			<span class="ng-doc-content" *ngIf="leftContent">
-				<ng-container *polymorpheusOutlet="leftContent as text">{{ text }}</ng-container>
-			</span>
-		</div>
-		<div
-			class="ng-doc-floated-content"
-			ng-doc-floated-content
-			[bindTo]="inputContainer"
-			propertyName="--ng-doc-input-padding-right"
-			alignTo="right">
-			<span class="ng-doc-content" *ngIf="rightContent">
-				<ng-container *polymorpheusOutlet="rightContent as text">{{ text }}</ng-container>
-			</span>
-		</div>
-	</ng-doc-floated-border>
+  <ng-doc-floated-border>
+    <label
+      class="ng-doc-input-container"
+      (focusin)="emptyEvent()"
+      (focusout)="emptyEvent()"
+      [class.-input-hidden]="blurContentIsVisible">
+      <ng-content select="[ngDocInputWrapperLeft]"></ng-content>
+      <div class="ng-doc-original-input">
+        <ng-content></ng-content>
+        <div class="ng-doc-blur-container ng-doc-input" *ngIf="blurContentIsVisible">
+          <div class="ng-doc-blur-content">
+            <ng-container
+              *polymorpheusOutlet="blurContent as text; context: getBlurContext(blurContext)">
+              {{ text }}
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <ng-content select="[ngDocInputWrapperRight]"></ng-content>
+    </label>
+  </ng-doc-floated-border>
 </ng-doc-wrapper>

@@ -4,20 +4,20 @@ import { createProject } from '../../typescript';
 import { getInputType } from '../get-input-type';
 
 describe('getInputType', () => {
-	let project: Project;
+  let project: Project;
 
-	beforeEach(() => {
-		project = createProject({
-			compilerOptions: {
-				strict: true,
-			},
-		});
-	});
+  beforeEach(() => {
+    project = createProject({
+      compilerOptions: {
+        strict: true,
+      },
+    });
+  });
 
-	it('should return type for decorator input', () => {
-		const sourceFile = project.createSourceFile(
-			'index.ts',
-			`
+  it('should return type for decorator input', () => {
+    const sourceFile = project.createSourceFile(
+      'index.ts',
+      `
 			import {Component, Input} from '@angular/core';
 
 			@Component({
@@ -28,21 +28,21 @@ describe('getInputType', () => {
 				@Input() foo: string;
 			}
 		`,
-			{ overwrite: true },
-		);
+      { overwrite: true },
+    );
 
-		sourceFile.getProject().resolveSourceFileDependencies();
-		const component = sourceFile.getClassOrThrow('AppComponent');
-		const input = component.getPropertyOrThrow('foo');
+    sourceFile.getProject().resolveSourceFileDependencies();
+    const component = sourceFile.getClassOrThrow('AppComponent');
+    const input = component.getPropertyOrThrow('foo');
 
-		expect(getInputType(input).getText()).toBe('string');
-	});
+    expect(getInputType(input).getText()).toBe('string');
+  });
 
-	describe('signal', () => {
-		it('should return type for signature input without default value', () => {
-			const sourceFile = project.createSourceFile(
-				'index.ts',
-				`
+  describe('signal', () => {
+    it('should return type for signature input without default value', () => {
+      const sourceFile = project.createSourceFile(
+        'index.ts',
+        `
 			import {Component, input} from '@angular/core';
 
 			@Component({
@@ -53,20 +53,20 @@ describe('getInputType', () => {
 				foo = input<string>(');
 			}
 		`,
-				{ overwrite: true },
-			);
+        { overwrite: true },
+      );
 
-			sourceFile.getProject().resolveSourceFileDependencies();
-			const component = sourceFile.getClassOrThrow('AppComponent');
-			const input = component.getPropertyOrThrow('foo');
+      sourceFile.getProject().resolveSourceFileDependencies();
+      const component = sourceFile.getClassOrThrow('AppComponent');
+      const input = component.getPropertyOrThrow('foo');
 
-			expect(getInputType(input).getText()).toBe('string');
-		});
+      expect(getInputType(input).getText()).toBe('string');
+    });
 
-		it('should return inferred type for signature input', () => {
-			const sourceFile = project.createSourceFile(
-				'index.ts',
-				`
+    it('should return inferred type for signature input', () => {
+      const sourceFile = project.createSourceFile(
+        'index.ts',
+        `
 			import {Component, input} from '@angular/core';
 
 			@Component({
@@ -77,20 +77,20 @@ describe('getInputType', () => {
 				foo = input('foo');
 			}
 		`,
-				{ overwrite: true },
-			);
+        { overwrite: true },
+      );
 
-			sourceFile.getProject().resolveSourceFileDependencies();
-			const component = sourceFile.getClassOrThrow('AppComponent');
-			const input = component.getPropertyOrThrow('foo');
+      sourceFile.getProject().resolveSourceFileDependencies();
+      const component = sourceFile.getClassOrThrow('AppComponent');
+      const input = component.getPropertyOrThrow('foo');
 
-			expect(getInputType(input).getText()).toBe('string');
-		});
+      expect(getInputType(input).getText()).toBe('string');
+    });
 
-		it('should return type for input', () => {
-			const sourceFile = project.createSourceFile(
-				'index.ts',
-				`
+    it('should return type for input', () => {
+      const sourceFile = project.createSourceFile(
+        'index.ts',
+        `
 			import {Component, input, coerceNumberProperty} from '@angular/core';
 
 			@Component({
@@ -101,20 +101,20 @@ describe('getInputType', () => {
 				foo = input<number, string>(123, {transform: coerceNumberProperty});
 			}
 		`,
-				{ overwrite: true },
-			);
+        { overwrite: true },
+      );
 
-			sourceFile.getProject().resolveSourceFileDependencies();
-			const component = sourceFile.getClassOrThrow('AppComponent');
-			const input = component.getPropertyOrThrow('foo');
+      sourceFile.getProject().resolveSourceFileDependencies();
+      const component = sourceFile.getClassOrThrow('AppComponent');
+      const input = component.getPropertyOrThrow('foo');
 
-			expect(getInputType(input).getText()).toBe('number');
-		});
+      expect(getInputType(input).getText()).toBe('number');
+    });
 
-		it('should return type for required input', () => {
-			const sourceFile = project.createSourceFile(
-				'index.ts',
-				`
+    it('should return type for required input', () => {
+      const sourceFile = project.createSourceFile(
+        'index.ts',
+        `
 			import {Component, input} from '@angular/core';
 
 			@Component({
@@ -125,14 +125,14 @@ describe('getInputType', () => {
 				foo = input.required<string>();
 			}
 		`,
-				{ overwrite: true },
-			);
+        { overwrite: true },
+      );
 
-			sourceFile.getProject().resolveSourceFileDependencies();
-			const component = sourceFile.getClassOrThrow('AppComponent');
-			const input = component.getPropertyOrThrow('foo');
+      sourceFile.getProject().resolveSourceFileDependencies();
+      const component = sourceFile.getClassOrThrow('AppComponent');
+      const input = component.getPropertyOrThrow('foo');
 
-			expect(getInputType(input).getText()).toBe('string');
-		});
-	});
+      expect(getInputType(input).getText()).toBe('string');
+    });
+  });
 });

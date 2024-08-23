@@ -1,37 +1,26 @@
-import { Directive, ElementRef, HostBinding, Input, OnChanges } from '@angular/core';
-import { HighlightResult } from 'highlight.js';
-import highlight from 'highlight.js/lib/core';
-import xml from 'highlight.js/lib/languages/xml';
-
-highlight.registerLanguage('html', xml);
-highlight.registerLanguage('xml', xml);
+import { computed, Directive, ElementRef, inject, input, Signal } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NgDocHighlighterService } from '@ng-doc/app/services';
 
 @Directive({
-	selector: 'code[ngDocCodeHighlighter]',
-	standalone: true,
+  selector: '[ngDocHighlighter]',
+  standalone: true,
+  host: {
+    '[innerHTML]': 'highlightedCode()',
+  },
 })
-export class NgDocCodeHighlighterDirective implements OnChanges {
-	@Input('ngDocCodeHighlighter')
-	code: string = '';
+export class NgDocCodeHighlighterDirective {
+  code = input.required<string>({ alias: 'ngDocHighlighter' });
 
-	@Input()
-	html: string = '';
+  protected readonly highlightedCode: Signal<SafeHtml>;
 
-	@Input()
-	language: string = 'typescript';
+  protected readonly element = inject(ElementRef<HTMLElement>).nativeElement;
+  protected readonly highlighter = inject(NgDocHighlighterService);
+  protected readonly sanitizer = inject(DomSanitizer);
 
-	@HostBinding('class.hljs')
-	protected highlightJsClass: boolean = true;
-
-	constructor(private readonly elementRef: ElementRef<HTMLElement>) {}
-
-	ngOnChanges(): void {
-		if (this.code) {
-			const result: HighlightResult = highlight.highlight(this.code, { language: this.language });
-
-			this.elementRef.nativeElement.innerHTML = result.value ?? this.html;
-		} else {
-			this.elementRef.nativeElement.innerHTML = this.html;
-		}
-	}
+  constructor() {
+    this.highlightedCode = computed(() =>
+      this.sanitizer.bypassSecurityTrustHtml(this.highlighter.highlight(this.code())),
+    );
+  }
 }
