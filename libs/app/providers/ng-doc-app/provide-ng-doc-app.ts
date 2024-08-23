@@ -1,6 +1,7 @@
 import { ViewportScroller } from '@angular/common';
 import { APP_INITIALIZER, inject, Provider } from '@angular/core';
 import { NgDocHighlighterConfig, NgDocHighlighterService } from '@ng-doc/app/services/highlighter';
+import { NgDocThemeService } from '@ng-doc/app/services/theme';
 import { NgDocUiConfig, provideNgDocUiKitConfig } from '@ng-doc/ui-kit';
 
 /**
@@ -15,6 +16,10 @@ export interface NgDocApplicationConfig {
    * Shiki theme.
    */
   shiki?: NgDocHighlighterConfig;
+  /**
+   * Default theme id.
+   */
+  defaultThemeId?: 'light' | 'dark' | 'auto';
 }
 
 /**
@@ -32,7 +37,19 @@ export function provideNgDocApp(config?: NgDocApplicationConfig): Provider[] {
         return () => viewportScroller.setOffset([0, 120]);
       },
     },
-    /** --- Shiki --- */
+
+    /* --- Default theme --- */
+    {
+      provide: APP_INITIALIZER,
+      multi: true,
+      useFactory: () => {
+        const themeService = inject(NgDocThemeService);
+
+        return () => themeService.set(config?.defaultThemeId);
+      },
+    },
+
+    /* --- Shiki --- */
     {
       provide: APP_INITIALIZER,
       multi: true,

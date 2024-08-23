@@ -20,5 +20,16 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    "./styles/main.css": {
+      "style": "./styles/main.css"
+    },
+    "./styles/global.css": {
+      "style": "./styles/global.css"
+    },
+    "./styles/themes/dark.css": {
+      "style": "./styles/themes/dark.css"
+    }
   }
 }
