@@ -1,33 +1,33 @@
 <ng-container *ngIf="configuration">
-	<ng-doc-playground-properties
-		[form]="formGroup"
-		[properties]="properties"
-		[ignoreInputs]="configuration.hiddenInputs"
-		[dynamicContent]="configuration.content"
-		[hideSidePanel]="configuration.hideSidePanel ?? false"
-		[defaultValues]="defaultValues"
-		[showResetButton]="!isDefaultState()"
-		[(recreateDemo)]="recreateDemo"
-		(resetForm)="resetForm()">
-		<ng-doc-playground-demo
-			*ngFor="let selector of configuration.selectors ?? selectors | asArray"
-			[id]="id"
-			[selector]="selector"
-			[properties]="properties"
-			[configuration]="configuration"
-			[recreateDemo]="recreateDemo"
-			[form]="formGroup"
-			[expanded]="configuration.expanded ?? false">
-		</ng-doc-playground-demo>
+  <ng-doc-playground-properties
+    [form]="formGroup"
+    [properties]="properties"
+    [ignoreInputs]="configuration.hiddenInputs"
+    [dynamicContent]="configuration.content"
+    [hideSidePanel]="configuration.hideSidePanel ?? false"
+    [defaultValues]="defaultValues"
+    [showResetButton]="!isDefaultState()"
+    [(recreateDemo)]="recreateDemo"
+    (resetForm)="resetForm()">
+    <ng-doc-playground-demo
+      *ngFor="let selector of configuration.selectors ?? selectors | asArray"
+      [id]="id"
+      [selector]="selector"
+      [properties]="properties"
+      [configuration]="configuration"
+      [recreateDemo]="recreateDemo"
+      [form]="formGroup"
+      [expanded]="configuration.expanded ?? false">
+    </ng-doc-playground-demo>
 
-		<ng-doc-playground-demo
-			*ngIf="pipeName"
-			[id]="id"
-			[pipeName]="pipeName"
-			[properties]="properties"
-			[configuration]="configuration"
-			[recreateDemo]="recreateDemo"
-			[form]="formGroup">
-		</ng-doc-playground-demo>
-	</ng-doc-playground-properties>
+    <ng-doc-playground-demo
+      *ngIf="pipeName"
+      [id]="id"
+      [pipeName]="pipeName"
+      [properties]="properties"
+      [configuration]="configuration"
+      [recreateDemo]="recreateDemo"
+      [form]="formGroup">
+    </ng-doc-playground-demo>
+  </ng-doc-playground-properties>
 </ng-container>

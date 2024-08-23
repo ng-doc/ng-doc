@@ -1,19 +1,72 @@
-table.ng-doc-properties-table {
-	.ng-doc-properties-table-name {
-		width: 25%;
-	}
+.ng-doc-table-wrapper {
+  overflow: auto;
+  margin: var(--ng-doc-page-block-margin);
 
-	.ng-doc-properties-table-type {
-		width: 25%;
-	}
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
-table.ng-doc-parameters-table {
-	.ng-doc-parameters-table-name {
-		width: 25%;
-	}
+table.ng-doc-api-table {
+  overflow: scroll;
 
-	.ng-doc-parameters-table-type {
-		width: 25%;
-	}
+  &.no-full-width {
+    width: unset;
+  }
+
+  &.no-padding {
+    tbody tr td,
+    thead tr th {
+      padding: var(--ng-doc-base-gutter);
+
+      &:first-child {
+        padding-left: 0;
+      }
+    }
+  }
+
+  &.sticky {
+    tr {
+      th:first-child,
+      td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+      }
+    }
+  }
+
+  &.first-colum-highlighted {
+    tr {
+      td:first-child {
+        color: var(--ng-doc-heading-color);
+      }
+    }
+  }
+
+  tr th.ng-doc-api-table-name {
+    width: 25%;
+  }
+
+  tr th.ng-doc-api-table-type {
+    width: 25%;
+  }
+
+  tr th.ng-doc-api-table-description {
+    min-width: 300px;
+  }
+
+  tr {
+    td > *:not(:last-child) {
+      margin-right: var(--ng-doc-base-gutter);
+    }
+  }
+}
+
+table.ng-doc-overload-table {
+  thead {
+    tr th {
+      background: color-mix(in srgb, var(--ng-doc-warning) 10%, transparent);
+    }
+  }
 }

@@ -1,1 +1,1 @@
-export * from './page-processor.directive';
+export * from './page-processor.component';

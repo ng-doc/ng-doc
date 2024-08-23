@@ -1,9 +1,9 @@
-import {Element, ElementContent} from 'hast';
+import { Content, Element } from 'hast';
 
 /**
  *
  * @param node
  */
-export function isElement(node?: ElementContent): node is Element {
-	return node?.type === 'element';
+export function isElement(node?: Content): node is Element {
+  return node?.type === 'element';
 }

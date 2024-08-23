@@ -6,23 +6,23 @@ import { join } from 'path';
 const collectionPath: string = join(__dirname, '../../collection.json');
 
 describe('api', () => {
-	let host: UnitTestTree;
-	let runner: SchematicTestRunner;
+  let host: UnitTestTree;
+  let runner: SchematicTestRunner;
 
-	beforeEach(() => {
-		host = new UnitTestTree(new HostTree());
-		runner = new SchematicTestRunner('schematics', collectionPath);
+  beforeEach(() => {
+    host = new UnitTestTree(new HostTree());
+    runner = new SchematicTestRunner('schematics', collectionPath);
 
-		setActiveProject(createProject(host));
-	});
+    setActiveProject(createProject(host));
+  });
 
-	it('should generate api entity', async () => {
-		const tree: UnitTestTree = await runner.runSchematic('api', { path: 'test' }, host);
+  it('should generate api entity', async () => {
+    const tree: UnitTestTree = await runner.runSchematic('api', { path: 'test' }, host);
 
-		expect(tree.readText('test/ng-doc.api.ts')).toBe(`import {NgDocApi} from '@ng-doc/core';
+    expect(tree.readText('test/ng-doc.api.ts')).toBe(`import {NgDocApi} from '@ng-doc/core';
 
 const Api: NgDocApi = {
-\ttitle: 'API',
+\ttitle: 'API References',
 \tscopes: [
 \t\t// Add the paths to the source code of your project, based on which you want to generate the API here
 \t],
@@ -30,5 +30,5 @@ const Api: NgDocApi = {
 
 export default Api;
 `);
-	});
+  });
 });

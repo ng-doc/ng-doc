@@ -1,113 +1,115 @@
 :root {
-	--ng-doc-app-max-width: 1450px;
-	--ng-doc-app-horizontal-padding: calc(var(--ng-doc-base-gutter) * 3);
-	--ng-doc-code-background: var(--ng-doc-base-1);
-	--ng-doc-page-padding: calc(var(--ng-doc-base-gutter) * 3) var(--ng-doc-app-horizontal-padding);
-	--ng-doc-main-padding: var(--ng-doc-navbar-height) 0 0 0;
-	--ng-doc-page-block-margin: calc(var(--ng-doc-base-gutter) * 3) 0;
+  --ng-doc-app-max-width: 1450px;
+  --ng-doc-app-horizontal-padding: calc(var(--ng-doc-base-gutter) * 3);
+  --ng-doc-code-background: var(--ng-doc-base-1);
+  --ng-doc-page-padding: calc(var(--ng-doc-base-gutter) * 3) var(--ng-doc-app-horizontal-padding);
+  --ng-doc-main-padding: var(--ng-doc-navbar-height) 0 0 0;
+  --ng-doc-page-block-margin: calc(var(--ng-doc-base-gutter) * 3) 0;
+  --ng-doc-page-wrapper-tabs-height: calc(var(--ng-doc-base-gutter) * 6);
 
-	// Entities
-	--ng-doc-class-color: #fff;
-	--ng-doc-class-background: #e74c3c;
-	--ng-doc-interface-color: #fff;
-	--ng-doc-interface-background: #3498db;
-	--ng-doc-enum-color: #fff;
-	--ng-doc-enum-background: #2ecc71;
-	--ng-doc-variable-color: #fff;
-	--ng-doc-variable-background: #f1c40f;
-	--ng-doc-function-color: #fff;
-	--ng-doc-function-background: #27bd09;
-	--ng-doc-type-alias-color: #fff;
-	--ng-doc-type-alias-background: #3e69c5;
-	--ng-doc-selector-color: #fff;
-	--ng-doc-selector-background: #25ac5f;
+  // Entities
+  --ng-doc-class-color: #fff;
+  --ng-doc-class-background: #e74c3c;
+  --ng-doc-interface-color: #fff;
+  --ng-doc-interface-background: #3498db;
+  --ng-doc-enum-color: #fff;
+  --ng-doc-enum-background: #2ecc71;
+  --ng-doc-variable-color: #fff;
+  --ng-doc-variable-background: #f1c40f;
+  --ng-doc-function-color: #fff;
+  --ng-doc-function-background: #27bd09;
+  --ng-doc-type-alias-color: #fff;
+  --ng-doc-type-alias-background: #3e69c5;
+  --ng-doc-selector-color: #fff;
+  --ng-doc-selector-background: #25ac5f;
 
-	// Types
-	--ng-doc-string-color: #fff;
-	--ng-doc-string-background: #ff1150;
-	--ng-doc-number-color: #fff;
-	--ng-doc-number-background: #3498db;
-	--ng-doc-boolean-color: #fff;
-	--ng-doc-boolean-background: #2ecc71;
-	--ng-doc-null-color: #fff;
-	--ng-doc-null-background: #95a5a6;
-	--ng-doc-undefined-color: #fff;
-	--ng-doc-undefined-background: #bdc3c7;
-	--ng-doc-object-color: #fff;
-	--ng-doc-object-background: #f39c12;
+  // Types
+  --ng-doc-string-color: #fff;
+  --ng-doc-string-background: #ff1150;
+  --ng-doc-number-color: #fff;
+  --ng-doc-number-background: #3498db;
+  --ng-doc-boolean-color: #fff;
+  --ng-doc-boolean-background: #2ecc71;
+  --ng-doc-null-color: #fff;
+  --ng-doc-null-background: #95a5a6;
+  --ng-doc-undefined-color: #fff;
+  --ng-doc-undefined-background: #bdc3c7;
+  --ng-doc-object-color: #fff;
+  --ng-doc-object-background: #f39c12;
 
-	// Decorators
-	--ng-doc-component-decorator-color: #fff;
-	--ng-doc-component-decorator-background: #1abc9c;
-	--ng-doc-directive-decorator-color: #fff;
-	--ng-doc-directive-decorator-background: #e67e22;
-	--ng-doc-injectable-decorator-color: #fff;
-	--ng-doc-injectable-decorator-background: #9b59b6;
-	--ng-doc-pipe-decorator-color: #fff;
-	--ng-doc-pipe-decorator-background: #c0392b;
-	--ng-doc-ng-module-decorator-color: #fff;
-	--ng-doc-ng-module-decorator-background: #27ae60;
-	--ng-doc-input-decorator-color: #fff;
-	--ng-doc-input-decorator-background: #13a2da;
-	--ng-doc-output-decorator-color: #fff;
-	--ng-doc-output-decorator-background: #daa213;
+  // Decorators
+  --ng-doc-component-decorator-color: #fff;
+  --ng-doc-component-decorator-background: #1abc9c;
+  --ng-doc-directive-decorator-color: #fff;
+  --ng-doc-directive-decorator-background: #e67e22;
+  --ng-doc-injectable-decorator-color: #fff;
+  --ng-doc-injectable-decorator-background: #9b59b6;
+  --ng-doc-pipe-decorator-color: #fff;
+  --ng-doc-pipe-decorator-background: #c0392b;
+  --ng-doc-ng-module-decorator-color: #fff;
+  --ng-doc-ng-module-decorator-background: #27ae60;
+  --ng-doc-input-decorator-color: #fff;
+  --ng-doc-input-decorator-background: #13a2da;
+  --ng-doc-output-decorator-color: #fff;
+  --ng-doc-output-decorator-background: #daa213;
 
-	// Modifiers
+  // Modifiers
+  --ng-doc-abstract-background: #ff5f1a;
+  --ng-doc-abstract-color: #fff;
+  --ng-doc-async-background: #0de311;
+  --ng-doc-async-color: #fff;
+  --ng-doc-protected-background: var(--ng-doc-base-7);
+  --ng-doc-protected-color: #fff;
+  --ng-doc-static-background: #e30dbf;
+  --ng-doc-static-color: #fff;
+  --ng-doc-overriden-background: #0d78e3;
+  --ng-doc-overriden-color: #fff;
+  --ng-doc-readonly-background: #ff2020;
+  --ng-doc-readonly-color: #fff;
+  --ng-doc-get-background: #2ecc3b;
+  --ng-doc-get-color: #fff;
+  --ng-doc-set-background: #e30dbf;
+  --ng-doc-set-color: #fff;
 
-	--ng-doc-abstract-background: #ff5f1a;
-	--ng-doc-abstract-color: #fff;
-	--ng-doc-async-background: #0de311;
-	--ng-doc-async-color: #fff;
-	--ng-doc-protected-background: var(--ng-doc-base-7);
-	--ng-doc-protected-color: #fff;
-	--ng-doc-static-background: #e30dbf;
-	--ng-doc-static-color: #fff;
-	--ng-doc-overriden-background: #0d78e3;
-	--ng-doc-overriden-color: #fff;
-	--ng-doc-readonly-background: #ff2020;
-	--ng-doc-readonly-color: #fff;
-	--ng-doc-get-background: #2ecc3b;
-	--ng-doc-get-color: #fff;
-	--ng-doc-set-background: #e30dbf;
-	--ng-doc-set-color: #fff;
+  // Navbar
+  --ng-doc-navbar-background: var(--ng-doc-base-0);
+  --ng-doc-navbar-height: calc(var(--ng-doc-base-gutter) * 7);
+  --ng-doc-navbar-horizontal-padding: var(--ng-doc-app-horizontal-padding);
+  --ng-doc-navbar-left-width: calc(
+    var(--ng-doc-sidebar-width) - var(--ng-doc-navbar-horizontal-padding)
+  );
+  --ng-doc-navbar-border: 1px solid var(--ng-doc-base-3);
 
-	// Navbar
-	--ng-doc-navbar-background: var(--ng-doc-base-0);
-	--ng-doc-navbar-height: calc(var(--ng-doc-base-gutter) * 7);
-	--ng-doc-navbar-horizontal-padding: var(--ng-doc-app-horizontal-padding);
-	--ng-doc-navbar-left-width: calc(
-		var(--ng-doc-sidebar-width) - var(--ng-doc-navbar-horizontal-padding)
-	);
+  // Sidebar
+  --ng-doc-sidebar-width: 310px;
+  --ng-doc-sidebar-background: var(--ng-doc-base-0);
+  --ng-doc-sidebar-padding: calc(var(--ng-doc-base-gutter) * 2);
+  --ng-doc-sidebar-vetical-padding: var(--ng-doc-base-gutter);
+  --ng-doc-sidebar-horizontal-padding: var(--ng-doc-app-horizontal-padding);
 
-	// Sidebar
-	--ng-doc-sidebar-width: 310px;
-	--ng-doc-sidebar-background: var(--ng-doc-base-0);
-	--ng-doc-sidebar-padding: calc(var(--ng-doc-base-gutter) * 2);
-	--ng-doc-sidebar-vetical-padding: var(--ng-doc-base-gutter);
-	--ng-doc-sidebar-horizontal-padding: var(--ng-doc-app-horizontal-padding);
+  // DemoDisplayer
+  --ng-doc-demo-displayer-border: 1px solid var(--ng-doc-border-color);
+  --ng-doc-demo-displayer-border-radius: var(--ng-doc-base-gutter);
 
-	// DemoDisplayer
-	--ng-doc-demo-displayer-border: 1px solid var(--ng-doc-border-color);
-	--ng-doc-demo-displayer-border-radius: var(--ng-doc-base-gutter);
+  // Code
+  --ng-doc-code-max-height: 400px;
+  --ng-doc-code-highlight-color: var(--ng-doc-primary);
 
-	// Code
-	--ng-doc-code-max-height: 400px;
-	--ng-doc-code-highlight-color: var(--ng-doc-primary);
+  // Table of contents
+  --ng-doc-toc-width: 280px;
+  --ng-doc-toc-indent: var(--ng-doc-base-gutter);
+  --ng-doc-toc-top-padding: calc(var(--ng-doc-base-gutter) * 3);
 
-	// Table of contents
-	--ng-doc-toc-width: 280px;
-	--ng-doc-toc-indent: var(--ng-doc-base-gutter);
+  // Search
+  --ng-doc-search-result-color: #454545;
 
-	// Search
-	--ng-doc-search-result-color: #454545;
+  // Page type tags
+  --ng-doc-api-tag-color: #ff1111;
+  --ng-doc-api-tag-background: rgba(255, 17, 17, 0.15);
+  --ng-doc-guide-tag-color: #0086ff;
+  --ng-doc-guide-tag-background: rgba(0, 134, 255, 0.15);
 
-	// Page type tags
-	--ng-doc-api-tag-color: #ff1111;
-	--ng-doc-api-tag-background: rgba(255, 17, 17, 0.15);
-	--ng-doc-guide-tag-color: #0086ff;
-	--ng-doc-guide-tag-background: rgba(0, 134, 255, 0.15);
-
-	/* Tabs */
-	--ng-doc-tabs-margin: calc(var(--ng-doc-base-gutter) * 4) 0px;
-	--ng-doc-tabs-border-radius: var(--ng-doc-base-gutter);
+  /* Tabs */
+  --ng-doc-tabs-margin: calc(var(--ng-doc-base-gutter) * 4) 0px;
+  --ng-doc-tabs-border-radius: var(--ng-doc-base-gutter);
 }

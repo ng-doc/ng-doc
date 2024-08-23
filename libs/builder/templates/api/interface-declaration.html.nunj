@@ -1,0 +1,27 @@
+{% extends "api/base.html.nunj" %}
+
+{% import "helpers/type.html.nunj" as typeMacro %}
+{% import "helpers/methods.html.nunj" as methodsMacro %}
+{% import "helpers/properties.html.nunj" as propertiesMacro %}
+{% import "helpers/accessors.html.nunj" as accessorsMacro %}
+
+{% block overview %}
+    {%- set properties = declaration | getInterfaceProperties | excludeByJsDocTags('internal') | filterUselessMembers | sortByNodesName -%}
+    {%- set methods = declaration | getInterfaceMethods | excludeByJsDocTags('internal') | filterUselessMembers | sortByNodesName -%}
+    {%- set accessors = declaration | getInterfaceAccessors | excludeByJsDocTags('internal') | filterUselessMembers | sortByNodesName -%}
+
+    {% if properties.length -%}
+        <h2>Properties</h2>
+        {{ propertiesMacro.render(properties, declaration) }}
+    {%- endif %}
+
+    {% if accessors.length -%}
+        <h2>Accessors</h2>
+        {{ accessorsMacro.render(accessors, declaration) }}
+    {%- endif %}
+
+    {% if methods.length -%}
+        <h2>Methods</h2>
+        {{ methodsMacro.render(methods, declaration) }}
+    {%- endif %}
+{% endblock %}

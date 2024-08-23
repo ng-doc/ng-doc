@@ -1,17 +1,17 @@
 {
-	"name": "@ng-doc/add",
-	"version": "0.0.1",
-	"type": "commonjs",
-	"schematics": "./schematics/collection.json",
-	"ng-add": {
-		"save": true
-	},
-	"publishConfig": {
-		"access": "public"
-	},
-	"dependencies": {
-		"@angular/cdk": ">=17.0.0",
-		"@angular-devkit/schematics": ">=17.0.0",
-		"ng-morph": "4.0.3"
-	}
+  "name": "@ng-doc/add",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "schematics": "./schematics/collection.json",
+  "ng-add": {
+    "save": true
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@angular/cdk": ">=18.1.0",
+    "@angular-devkit/schematics": ">=18.1.0",
+    "ng-morph": "4.0.3"
+  }
 }

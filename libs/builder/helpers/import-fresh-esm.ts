@@ -19,6 +19,7 @@ export async function importFreshEsm<T>(modulePath: string): Promise<T> {
 	const newFilepath = `${filepath.replace(extRegex, '')}${Date.now()}${ext}`;
 
 	await fs.promises.writeFile(newFilepath, fileContent);
+
 	const module = await importEsm<T>(posix(newFilepath));
 
 	fs.unlink(newFilepath, () => void 0);

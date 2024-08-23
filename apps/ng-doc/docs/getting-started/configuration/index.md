@@ -1,6 +1,6 @@
-# {{ NgDocPage.title }}
-
-This section describes how you can configure certain functions of the library.
+---
+keyword: 'GettingStartedConfiguration'
+---
 
 ## Configuration file
 
@@ -82,6 +82,36 @@ const config: NgDocConfiguration = {
 };
 
 export default config;
+```
+
+## Customizing page header rendering
+
+Page header contains the title of the page and the description. You can customize the rendering of
+the header by providing a custom template in the `ng-doc.config.ts` file.
+
+> **Warning**
+> The template must be HTML file. It supports `nunjucks` but not `markdown`.
+
+```ts name="ng-doc.config.ts"
+import { NgDocConfiguration } from '@ng-doc/builder';
+
+const config: NgDocConfiguration = {
+  guide: {
+    headerTemplate: 'path/from/root/to/header-template.html',
+  },
+};
+
+export default config;
+```
+
+In the template file, you have access to the `NgDocPage` object, which contains the
+page configuration and `Metadata` object, which has `JSDocMetadata` type and contains
+the description and list of jsdoc tags.
+
+```twig name="header-template.html"
+<h1>{{ "{{ NgDocPage.title }}" | safe }}</h1>
+
+{{ "{{ Metadata.description }}" | safe }}
 ```
 
 ## Output folder

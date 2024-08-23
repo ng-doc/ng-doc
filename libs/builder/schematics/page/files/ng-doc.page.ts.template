@@ -7,8 +7,7 @@ const <%= pageName %>: NgDocPage = {
 	mdFile: './index.md',<% if (route) { %>
 	route: `<%= route %>`,<% } %><% if (importPath && categoryName) { %>
 	category: <%= categoryName %>,<% } %><% if (order) { %>
-	order: <%= order %>,<% } %><% if (keyword) { %>
-	keyword: `<%= keyword %>`,<% } %><% if (module) { %>
+	order: <%= order %>,<% } %><% if (module) { %>
 	imports: [<%= pageName %>Module],<% } %>
 };
 

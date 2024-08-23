@@ -1,1 +1,1 @@
-export type NgDocColor = 'primary' | 'warning' | 'info' | 'alert' | 'link';
+export type NgDocColor = 'primary' | 'warning' | 'info' | 'alert' | 'link' | 'success';

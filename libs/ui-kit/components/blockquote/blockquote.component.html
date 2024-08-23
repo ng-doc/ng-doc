@@ -1,10 +1,25 @@
-<div class="ng-doc-blockquote-icon" *ngIf="type !== 'default'">
-	<ng-container [ngSwitch]="type">
-		<ng-doc-icon *ngSwitchCase="'note'" icon="info" [size]="24"></ng-doc-icon>
-		<ng-doc-icon *ngSwitchCase="'warning'" icon="alert-triangle" [size]="24"></ng-doc-icon>
-		<ng-doc-icon *ngSwitchCase="'alert'" icon="alert-circle" [size]="24"></ng-doc-icon>
-	</ng-container>
-</div>
-<div>
-	<ng-content></ng-content>
+@if (type !== 'default') {
+  <div class="ng-doc-blockquote-icon">
+    @if (icon) {
+      <ng-doc-icon [icon]="icon" size="24"></ng-doc-icon>
+    } @else {
+      @switch (type) {
+        @case ('note') {
+          <ng-doc-icon icon="info" size="24"></ng-doc-icon>
+        }
+        @case ('warning') {
+          <ng-doc-icon icon="alert-triangle" size="24"></ng-doc-icon>
+        }
+        @case ('success') {
+          <ng-doc-icon icon="check" size="24"></ng-doc-icon>
+        }
+        @case ('alert') {
+          <ng-doc-icon icon="alert-circle" size="24"></ng-doc-icon>
+        }
+      }
+    }
+  </div>
+}
+<div class="ng-doc-blockquote">
+  <ng-content></ng-content>
 </div>

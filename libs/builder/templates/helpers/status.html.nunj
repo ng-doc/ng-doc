@@ -1,0 +1,37 @@
+{% macro render(member) %}
+    {% set deprecated = member | getJsDocTag('deprecated') %}
+    {% if deprecated %}
+        <ng-doc-blockquote type="warning" icon="activity">
+            <b>Deprecated</b>
+            {{ deprecated }}
+        </ng-doc-blockquote>
+    {% endif %}
+
+    {% set experimental = member | getJsDocTag('experimental') %}
+    {% if experimental %}
+        <ng-doc-blockquote type="alert" icon="activity">
+            <b>Experimental</b>
+            {{ experimental }}
+        </ng-doc-blockquote>
+    {% endif %}
+
+    {% set alpha = member | getJsDocTag('alpha') %}
+    {% if alpha %}
+        <ng-doc-blockquote type="alert" icon="activity">
+            <b>Alpha</b>
+            {{ alpha }}
+        </ng-doc-blockquote>
+    {% endif %}
+
+    {% set beta = member | getJsDocTag('beta') %}
+    {% if beta %}
+        <ng-doc-blockquote type="warning" icon="activity">
+            <b>Beta</b>
+            {{ beta }}
+        </ng-doc-blockquote>
+    {% endif %}
+{% endmacro %}
+
+{% macro class(member) -%}
+    {{ "ng-doc-deprecated" if member | hasJsDocTag('deprecated') }} {{ "ng-doc-alpha" if member | hasJsDocTag('alpha') }} {{ "ng-doc-beta" if member | hasJsDocTag('beta') }} {{ "ng-doc-experimental" if member | hasJsDocTag('experimental') }}
+{%- endmacro %}

@@ -1,21 +1,21 @@
 <label class="ng-doc-checkbox-wrapper">
-	<div class="ng-doc-checkbox">
-		<input
-			type="checkbox"
-			[disabled]="disabled"
-			[ngDocChecked]="checked()"
-			(ngDocCheckedChange)="toggle(); touch()"
-			(blur)="touch()"
-			[ngDocFocusable]="false" />
-		<ng-doc-icon icon="minus" *ngIf="isIntermediate"></ng-doc-icon>
-		<ng-doc-icon icon="check" *ngIf="checked()"></ng-doc-icon>
-	</div>
-	<div class="ng-doc-checkbox-content">
-		<span class="ng-doc-checkbox-icons">
-			<ng-content select="ng-doc-icon"></ng-content>
-		</span>
-		<div class="ng-doc-checkbox-text">
-			<ng-content></ng-content>
-		</div>
-	</div>
+  <div class="ng-doc-checkbox">
+    <input
+      type="checkbox"
+      [disabled]="disabled"
+      [ngDocChecked]="checked()"
+      (ngDocCheckedChange)="toggle(); touch()"
+      (blur)="touch()"
+      [ngDocFocusable]="false" />
+    <ng-doc-icon icon="minus" *ngIf="isIntermediate"></ng-doc-icon>
+    <ng-doc-icon icon="check" *ngIf="checked()"></ng-doc-icon>
+  </div>
+  <div class="ng-doc-checkbox-content">
+    <span class="ng-doc-checkbox-icons">
+      <ng-content select="ng-doc-icon"></ng-content>
+    </span>
+    <div class="ng-doc-checkbox-text">
+      <ng-content></ng-content>
+    </div>
+  </div>
 </label>

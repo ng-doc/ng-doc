@@ -4,31 +4,29 @@
 
 {% macro render(constructor) %}
     {% set parameters = constructor.getParameters() %}
-    <div class="ng-doc-table-wrapper">
-        <table class="ng-doc-method-table">
-            <tbody>
-            <tr>
-                <td>
-                    {% set description = constructor | extractDocs %}
+    <table>
+        <tbody>
+        <tr>
+            <td>
+                {% set description = constructor | getJsDocDescription %}
 
-                    {{ description if description else noContentMacro.render('No documentation has been provided.') }}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <h5 class="no-anchor" indexable="false">Presentation</h5>
-                    {{ codeMacro.render(constructor | constructorPresentation, "typescript", false) }}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    {%- if parameters.length %}
-                        <h5 class="no-anchor" indexable="false">Parameters</h5>
-                        {{ parametersMacro.render(parameters, constructor, true) }}
-                    {%- endif %}
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+                {{ description if description else noContentMacro.render('No documentation has been provided.') }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h5 class="no-anchor" indexable="false">Presentation</h5>
+                {{ codeMacro.render(constructor | constructorPresentation, "typescript", false) }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                {%- if parameters.length %}
+                    <h5 class="no-anchor" indexable="false">Parameters</h5>
+                    {{ parametersMacro.render(parameters, constructor, true) }}
+                {%- endif %}
+            </td>
+        </tr>
+        </tbody>
+    </table>
 {% endmacro %}

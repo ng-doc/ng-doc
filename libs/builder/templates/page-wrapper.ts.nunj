@@ -1,0 +1,42 @@
+// @ts-nocheck
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Routes} from '@angular/router';
+import {NgDocPageWrapperComponent} from '@ng-doc/app';
+import {NgDocPageType} from '@ng-doc/core';
+
+const headerContent: string = `{{ headerContent | toTemplateString }}`
+
+@Component({
+  selector: 'ng-doc-page-wrapper-{{ id }}',
+  template: `<ng-doc-page-wrapper [routes]="routes" [headerContent]="headerContent" [hasBreadcrumb]="hasBreadcrumb" [pageType]="pageType"></ng-doc-page-wrapper>`,
+  imports: [NgDocPageWrapperComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true
+})
+export class PageWrapperComponent {
+    routes = routes[0].children!;
+    headerContent = headerContent;
+    pageType: NgDocPageType = '{{ pageType }}';
+    hasBreadcrumb = {{ hasBreadcrumb }};
+}
+
+
+const routes: Routes = [{
+  path: '',
+  component: PageWrapperComponent,
+  title: `{{ metadata.title | toTemplateString }}`,
+  children: [
+    {%- for importPath, entry in entries  %}
+    {
+      path: '{{ entry.route }}',
+      loadChildren: () => import('./{{ importPath }}'),
+      title: '{{ entry.title | toTemplateString }}',
+      data: {
+        icon: '{{ entry.entry.icon }}',
+      }
+    },
+    {%- endfor %}
+  ]
+}]
+
+export default routes;

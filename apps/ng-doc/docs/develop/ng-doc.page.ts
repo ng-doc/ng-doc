@@ -14,7 +14,6 @@ const DevelopPage: NgDocPage = {
       angular: NgDocAngularEntities,
     },
   },
-  keyword: 'DevelopPage',
   imports: [],
   demos: { DevelopDemoComponent, ButtonDemoComponent },
 };

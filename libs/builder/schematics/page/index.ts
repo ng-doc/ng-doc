@@ -1,17 +1,17 @@
 import { classify, dasherize } from '@angular-devkit/core/src/utils/strings';
 import {
-	apply,
-	applyTemplates,
-	chain,
-	FileEntry,
-	filter,
-	forEach,
-	MergeStrategy,
-	mergeWith,
-	move,
-	Rule,
-	Tree,
-	url,
+  apply,
+  applyTemplates,
+  chain,
+  FileEntry,
+  filter,
+  forEach,
+  MergeStrategy,
+  mergeWith,
+  move,
+  Rule,
+  Tree,
+  url,
 } from '@angular-devkit/schematics';
 import { basename, join, relative } from 'path';
 
@@ -29,53 +29,50 @@ const demoTemplates: string[] = ['ng-doc.module.ts.template'];
  * @returns {Rule} Angular Schematic Rule
  */
 export function generate(options: NgDocBuildPageSchema): Rule {
-	return (host: Tree) => {
-		options.title = getTitle(options.title);
+  return (host: Tree) => {
+    const pageName: string = options.name ?? classify(options.title + 'Page');
 
-		const pageName: string = options.name ?? classify(options.title + 'Page');
+    options.title = getTitle(options.title);
+    options.keyword = options.keyword ?? pageName;
 
-		varNameValidation(pageName);
+    varNameValidation(pageName);
 
-		const execPath: string = options?.path ?? '';
-		const pageFolder: string =
-			dasherize(options.name ?? '').replace(/-page$/, '') || dasherize(options.title);
-		const path: string = join(execPath, `/${pageFolder}`);
-		const closestCategoryFile: string | null =
-			(options.category && findClosestFile(host, execPath, CATEGORY_NAME)) || null;
-		const categoryConstantName: string | null =
-			(options.category &&
-				closestCategoryFile &&
-				extractDefaultExportName(host, closestCategoryFile)) ||
-			null;
-		const categoryImportPath: string | null =
-			(closestCategoryFile && posix(relative(path, closestCategoryFile)).replace(/.ts$/, '')) ||
-			null;
+    const execPath: string = options?.path ?? '';
+    const pageFolder: string =
+      dasherize(options.name ?? '').replace(/-page$/, '') || dasherize(options.title);
+    const path: string = join(execPath, `/${pageFolder}`);
+    const closestCategoryFile: string | null =
+      (options.category && findClosestFile(host, execPath, CATEGORY_NAME)) || null;
+    const categoryConstantName: string | null =
+      (options.category &&
+        closestCategoryFile &&
+        extractDefaultExportName(host, closestCategoryFile)) ||
+      null;
+    const categoryImportPath: string | null =
+      (closestCategoryFile && posix(relative(path, closestCategoryFile)).replace(/.ts$/, '')) ||
+      null;
 
-		return chain([
-			mergeWith(
-				apply(url('./files'), [
-					filter(
-						(path: string) =>
-							(demoTemplates.includes(basename(path)) && options.module) ||
-							!demoTemplates.includes(basename(path)),
-					),
-					applyTemplates({
-						...options,
-						categoryName: categoryConstantName,
-						importPath: categoryImportPath,
-						pageName,
-						keyword: options.keyword,
-					}),
-					move(path),
-					forEach((fileEntry: FileEntry) => {
-						if (host.exists(fileEntry.path)) {
-							host.overwrite(fileEntry.path, fileEntry.content);
-						}
-						return fileEntry;
-					}),
-				]),
-				MergeStrategy.Overwrite,
-			),
-		]);
-	};
+    return chain([
+      mergeWith(
+        apply(url('./files'), [
+          filter((path: string) => !demoTemplates.includes(basename(path))),
+          applyTemplates({
+            ...options,
+            categoryName: categoryConstantName,
+            importPath: categoryImportPath,
+            pageName,
+            keyword: options.keyword,
+          }),
+          move(path),
+          forEach((fileEntry: FileEntry) => {
+            if (host.exists(fileEntry.path)) {
+              host.overwrite(fileEntry.path, fileEntry.content);
+            }
+            return fileEntry;
+          }),
+        ]),
+        MergeStrategy.Overwrite,
+      ),
+    ]);
+  };
 }

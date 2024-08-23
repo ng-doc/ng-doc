@@ -1,23 +1,29 @@
+{% import "helpers/status.html.nunj" as statusMacro %}
+
 {% macro render(members) %}
-    <div class="ng-doc-table-wrapper">
-        <table>
-            <thead>
-            <tr indexable="false">
-                <th>Name</th>
-                <th>Value</th>
-                <th>Description</th>
+    <table class="ng-doc-api-table sticky first-colum-highlighted">
+        <thead>
+        <tr indexable="false">
+            <th>Name</th>
+            <th>Value</th>
+            <th style="min-width: 300px;">Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for member in members %}
+            <tr class="{{ statusMacro.class(member) }}">
+                <td indexable="false" dataSlug="{{ member.getName() }}"
+                    dataSlugType="member">{{ member.getName() }} </td>
+                <td indexable="false"><code>{{ member.getValue() | dump }}</code></td>
+                <td>
+                    <div class="ng-doc-api-status">
+                        {{ statusMacro.render(member) }}
+                    </div>
+
+                    {{ member | getJsDocDescription }}
+                </td>
             </tr>
-            </thead>
-            <tbody>
-            {% for member in members %}
-                <tr>
-                    <td indexable="false" dataSlug="{{ member.getName() }}"
-                        dataSlugType="member">{{ member.getName() }} </td>
-                    <td indexable="false"><code>{{ member.getValue() | dump }}</code></td>
-                    <td>{{ member | extractDocs }} </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endmacro %}

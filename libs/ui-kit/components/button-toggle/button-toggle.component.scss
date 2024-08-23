@@ -1,0 +1,29 @@
+@import '../../styles/mixins';
+
+:host {
+  @include ng-doc-font();
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: calc(var(--ng-doc-base-gutter) / 2);
+  border: 1px solid var(--ng-doc-button-border-color, transparent);
+  padding: var(
+    --ng-doc-button-padding,
+    calc(var(--ng-doc-base-gutter) / 2) var(--ng-doc-base-gutter)
+  );
+  background: var(--ng-doc-button-background);
+
+  &:hover {
+    text-decoration: none;
+    border: 1px solid var(--ng-doc-button-hover-border-color, var(--ng-doc-base-3));
+  }
+
+  &[aria-checked='true'] {
+    border: 1px solid var(--ng-doc-button-hover-border-color, var(--ng-doc-base-3));
+    background: var(--ng-doc-button-checked-background, var(--ng-doc-base-1));
+
+    --ng-doc-text: var(--ng-doc-heading-color);
+  }
+}

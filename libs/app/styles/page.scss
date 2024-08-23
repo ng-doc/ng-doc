@@ -12,81 +12,82 @@
 $class: $ng-doc-element;
 
 article {
-	@include headings {
-		&:hover {
-			.ng-doc-header-link {
-				opacity: 1;
-			}
-		}
+  @include headings {
+    &:hover {
+      .ng-doc-anchor {
+        opacity: 1;
+      }
+    }
 
-		.ng-doc-header-link {
-			opacity: 0;
-			transition: var(--ng-doc-transition);
-		}
-	}
+    .ng-doc-anchor {
+      margin-left: var(--ng-doc-base-gutter);
+      opacity: 0;
+      transition: var(--ng-doc-transition);
+    }
+  }
 
-	.ng-doc-page-wrapper > {
-		@include headings {
-			&:first-child {
-				margin-top: 0;
-			}
-		}
-	}
+  .ng-doc-page-wrapper > {
+    @include headings {
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
 
-	section#{$class} {
-		margin-bottom: calc(var(--ng-doc-base-gutter) * 5);
-	}
+  section#{$class} {
+    margin-bottom: calc(var(--ng-doc-base-gutter) * 5);
+  }
 
-	header#{$class} {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		margin-bottom: calc(var(--ng-doc-base-gutter) * 3);
+  header#{$class} {
+    .ng-doc-declaration-details {
+      list-style: none;
+      padding: 0;
+    }
 
-		.ng-doc-page-tags {
-			display: inline-flex;
-			flex-wrap: wrap;
-			align-items: flex-start;
-			gap: var(--ng-doc-base-gutter);
-			margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
-			line-height: 22px;
-		}
+    .ng-doc-page-tags {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: var(--ng-doc-base-gutter);
+      margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
+      line-height: 22px;
+    }
 
-		h1#{$class} {
-			margin: 0;
-			margin-right: var(--ng-doc-base-gutter);
-		}
-	}
+    h1#{$class} {
+      margin: 0;
+      margin-right: var(--ng-doc-base-gutter);
+    }
+  }
 
-	th,
-	td {
-		p#{$class} {
-			margin: 0;
-		}
-	}
+  th,
+  td {
+    p#{$class} {
+      margin: 0;
+    }
+  }
 
-	.ng-doc-inline-header {
-		display: flex;
-		align-items: center;
+  .ng-doc-inline-header {
+    display: flex;
+    align-items: center;
 
-		@include headings {
-			margin-right: var(--ng-doc-base-gutter);
-		}
-	}
+    @include headings {
+      margin-right: var(--ng-doc-base-gutter);
+    }
+  }
 
-	.ng-doc-inline-delimiter {
-		font-weight: 700;
-		font-size: 14px;
-		opacity: 0.2;
-	}
+  .ng-doc-inline-delimiter {
+    font-weight: 700;
+    font-size: 14px;
+    opacity: 0.2;
+  }
 
-	.ng-doc-header-link {
-		display: inline-flex;
-		margin-left: var(--ng-doc-base-gutter);
-		vertical-align: middle;
-	}
+  .ng-doc-header-link {
+    display: inline-flex;
+    margin-left: var(--ng-doc-base-gutter);
+    vertical-align: middle;
+  }
 
-	pre code .ng-doc-code-anchor {
-		color: inherit;
-	}
+  pre code .ng-doc-code-anchor {
+    color: inherit;
+  }
 }

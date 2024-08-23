@@ -1,16 +1,17 @@
 import {
-	BuilderContext,
-	createBuilder,
-	fromAsyncIterable,
-	Target,
-	targetFromTargetString,
+  BuilderContext,
+  createBuilder,
+  fromAsyncIterable,
+  Target,
+  targetFromTargetString,
 } from '@angular-devkit/architect';
 import { buildApplication } from '@angular-devkit/build-angular';
 import { firstValueFrom, Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 
 import { buildNgDoc } from '../engine/build-ng-doc';
-import { createBuilderContext } from '../helpers';
+import { transformIndexHtml } from '../engine/transform-index-html';
+import { createBuilderContext } from '../helpers/create-builder-context';
 import { NgDocBuilderContext, NgDocSchema } from '../interfaces';
 
 /**
@@ -20,22 +21,26 @@ import { NgDocBuilderContext, NgDocSchema } from '../interfaces';
  * @returns Observable of BrowserBuilderOutput
  */
 export async function runBrowser(options: NgDocSchema, context: BuilderContext): Promise<any> {
-	const browserTarget: Target | null = options.buildTarget
-		? targetFromTargetString(options.buildTarget)
-		: null;
-	const targetOptions: any = browserTarget
-		? await context.getTargetOptions(browserTarget)
-		: (options as any);
-	const builderContext: NgDocBuilderContext = createBuilderContext(
-		targetOptions,
-		context,
-		options.ngDoc?.config,
-	);
-	const runner: Observable<void> = buildNgDoc(builderContext);
+  const browserTarget: Target | null = options.buildTarget
+    ? targetFromTargetString(options.buildTarget)
+    : null;
+  const targetOptions: any = browserTarget
+    ? await context.getTargetOptions(browserTarget)
+    : (options as any);
+  const builderContext: NgDocBuilderContext = createBuilderContext(
+    targetOptions,
+    context,
+    options.ngDoc?.config,
+  );
+  const runner: Observable<void> = buildNgDoc(builderContext);
 
-	await firstValueFrom(runner.pipe(first()));
+  await firstValueFrom(runner.pipe(first()));
 
-	return firstValueFrom(fromAsyncIterable(buildApplication(options as any, context)));
+  return firstValueFrom(
+    fromAsyncIterable(
+      buildApplication(options as any, context, { indexHtmlTransformer: transformIndexHtml }),
+    ),
+  );
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

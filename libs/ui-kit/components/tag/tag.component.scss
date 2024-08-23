@@ -1,39 +1,37 @@
 @import '../../styles/mixins';
 
 :host {
-	@include ng-doc-font();
-	@include alpha-background(
-		var(--ng-doc-tag-alpha-background),
-		var(--ng-doc-tag-background-opacity)
-	);
-	display: inline-block;
-	padding: 0 var(--ng-doc-base-gutter);
-	border-radius: calc(var(--ng-doc-base-gutter) / 2);
-	background-color: var(--ng-doc-tag-background);
-	border: var(--ng-doc-tag-border);
-	color: var(--ng-doc-tag-color);
-	--ng-doc-icon-color: var(--ng-doc-tag-color);
-	--ng-doc-font-size: 14px;
+  @include ng-doc-font();
+  display: inline-block;
+  padding: 0 var(--ng-doc-base-gutter);
+  border-radius: calc(var(--ng-doc-base-gutter) / 2);
+  border: var(--ng-doc-tag-border);
+  color: var(--ng-doc-tag-color);
+  background: color-mix(
+    in srgb,
+    var(--ng-doc-tag-background) var(--ng-doc-tag-background-opacity, 100%),
+    transparent
+  );
+  --ng-doc-icon-color: var(--ng-doc-tag-color);
+  --ng-doc-font-size: 14px;
 
-	&[data-ng-doc-size='small'] {
-		padding: 0 calc(var(--ng-doc-base-gutter) / 2);
-		border-radius: 6px;
-		--ng-doc-font-size: 10px;
-		--ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 2);
-	}
+  &[data-ng-doc-size='small'] {
+    padding: 0 calc(var(--ng-doc-base-gutter) / 2);
+    border-radius: 6px;
+    --ng-doc-font-size: 10px;
+    --ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 2);
+  }
 
-	@include forEachColor('primary') using($background, $color) {
-		--ng-doc-tag-background: #{$background};
-		--ng-doc-tag-color: #{$color};
-	}
+  @include forEachColor('primary') using($background, $color) {
+    --ng-doc-tag-background: #{$background};
+    --ng-doc-tag-color: #{$color};
+  }
 
-	&[data-ng-doc-mod='light'] {
-		--ng-doc-tag-background: trasparent;
-		--ng-doc-tag-background-opacity: 0.15;
+  &[data-ng-doc-mod='light'] {
+    --ng-doc-tag-background-opacity: 15%;
 
-		@include forEachColor() using($background, $color) {
-			--ng-doc-tag-alpha-background: #{$background};
-			--ng-doc-tag-color: #{$background};
-		}
-	}
+    @include forEachColor() using($background, $color) {
+      --ng-doc-tag-color: #{$background};
+    }
+  }
 }

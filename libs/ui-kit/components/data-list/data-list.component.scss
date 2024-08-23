@@ -1,17 +1,17 @@
 :host {
-	display: block;
-	height: 100%;
-	overflow: auto;
-	max-height: var(--ng-doc-list-size);
+  display: block;
+  height: 100%;
+  overflow: auto;
+  max-height: var(--ng-doc-list-size);
 }
 
 .ng-doc-empty-message {
-	padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
+  padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
 
-	--ng-doc-font-size: 13px;
-	--ng-doc-line-height: 22px;
+  --ng-doc-font-size: 14px;
+  --ng-doc-line-height: 22px;
 }
 
 ng-doc-checkbox {
-	pointer-events: none;
+  pointer-events: none;
 }

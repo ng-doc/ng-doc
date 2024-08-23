@@ -1,56 +1,67 @@
 @import '../../styles/mixins';
 
 :host {
-	width: 100%;
+  width: 100%;
 
-	&[data-ng-doc-align='right'] {
-		.ng-doc-sidenav-wrapper {
-			flex-direction: row-reverse;
-		}
-	}
+  &[data-ng-doc-sidebar='false'] {
+    .ng-doc-sidenav-content {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
 
-	&[data-ng-doc-over='true'] {
-		.ng-doc-sidenav-content {
-			min-width: 100%;
-		}
+  .ng-doc-sidenav-wrapper {
+    position: relative;
+    display: flex;
+    width: 100%;
+  }
 
-		&[data-ng-doc-align='left'] .ng-doc-sidenav {
-			--ng-doc-sidebar-shadow: var(--ng-doc-shadow-color) -5px 5px 20px -5px;
-		}
+  .ng-doc-sidenav {
+    position: fixed;
+    top: var(--ng-doc-navbar-height);
+    width: var(--ng-doc-sidenav-width);
+    flex-shrink: 0;
+    z-index: 10;
+    transition: left var(--ng-doc-transition);
+  }
 
-		&[data-ng-doc-align='right'] .ng-doc-sidenav {
-			--ng-doc-sidebar-shadow: var(--ng-doc-shadow-color) 0px 5px 20px -5px;
-		}
-	}
+  .ng-doc-sidenav-content {
+    margin-left: var(--ng-doc-sidenav-width);
+    width: calc(100% - var(--ng-doc-sidenav-width));
+    padding: var(--ng-doc-sidenav-content-padding);
+    transition: margin-left var(--ng-doc-transition);
+  }
 
-	.ng-doc-sidenav-wrapper {
-		position: relative;
-		display: flex;
-		width: 100%;
-	}
+  .ng-doc-backdrop {
+    @include ng-doc-backdrop-filter(rgba(0, 0, 0, 0.2), 'nothing');
 
-	.ng-doc-sidenav {
-		position: fixed;
-		top: var(--ng-doc-sidenav-top, 0);
-		width: var(--ng-doc-sidenav-width);
-		flex-shrink: 0;
-		z-index: 5;
-		transition: box-shadow var(--ng-doc-transition);
-	}
+    position: fixed !important;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9;
+  }
 
-	.ng-doc-sidenav-content {
-		width: 100%;
-		padding: var(--ng-doc-sidenav-content-padding);
-	}
+  @media (max-width: 1024px) {
+    &[data-ng-doc-opened='true'] {
+      .ng-doc-sidenav {
+        right: 0;
+        transition: right var(--ng-doc-transition);
+        --ng-doc-sidebar-shadow: var(--ng-doc-shadow-color) -5px 5px 20px -5px;
+      }
+    }
 
-	.ng-doc-backdrop {
-		@include ng-doc-backdrop-filter(rgba(0, 0, 0, 0.2), 'nothing');
+    .ng-doc-sidenav {
+      transition: unset;
+      left: unset;
+      right: calc(var(--ng-doc-sidenav-width) * -1);
+      top: var(--ng-doc-navbar-height);
+    }
 
-		position: fixed !important;
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: 100%;
-		z-index: 1;
-	}
+    .ng-doc-sidenav-content {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
 }

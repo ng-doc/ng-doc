@@ -1,14 +1,14 @@
 import { NgIf } from '@angular/common';
 import {
-	AfterViewChecked,
-	ChangeDetectionStrategy,
-	ChangeDetectorRef,
-	Component,
-	ContentChild,
-	ElementRef,
-	HostBinding,
-	Input,
-	ViewChild,
+  AfterViewChecked,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChild,
+  ElementRef,
+  HostBinding,
+  Input,
+  ViewChild,
 } from '@angular/core';
 import { NgDocBaseInput } from '@ng-doc/ui-kit/classes/base-input';
 import { NgDocInputHost } from '@ng-doc/ui-kit/classes/input-host';
@@ -23,82 +23,76 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 
 @Component({
-	selector: 'ng-doc-input-wrapper',
-	templateUrl: './input-wrapper.component.html',
-	styleUrls: ['./input-wrapper.component.scss'],
-	providers: [
-		{
-			provide: NgDocInputHost,
-			useExisting: NgDocInputWrapperComponent,
-		},
-	],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	standalone: true,
-	imports: [
-		NgDocWrapperComponent,
-		NgDocFocusCatcherDirective,
-		NgDocFloatedBorderComponent,
-		NgIf,
-		PolymorpheusModule,
-		NgDocFloatedContentComponent,
-	],
+  selector: 'ng-doc-input-wrapper',
+  templateUrl: './input-wrapper.component.html',
+  styleUrls: ['./input-wrapper.component.scss'],
+  providers: [
+    {
+      provide: NgDocInputHost,
+      useExisting: NgDocInputWrapperComponent,
+    },
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    NgDocWrapperComponent,
+    NgDocFocusCatcherDirective,
+    NgDocFloatedBorderComponent,
+    NgIf,
+    PolymorpheusModule,
+    NgDocFloatedContentComponent,
+  ],
 })
 @UntilDestroy()
 export class NgDocInputWrapperComponent<T, B = unknown>
-	implements AfterViewChecked, NgDocInputHost<T>
+  implements AfterViewChecked, NgDocInputHost<T>
 {
-	@Input()
-	blurContent: NgDocContent<NgDocContextWithImplicit<B | null>> = '';
+  @Input()
+  blurContent: NgDocContent<NgDocContextWithImplicit<B | null>> = '';
 
-	@Input()
-	blurContext: B | null = null;
+  @Input()
+  blurContext: B | null = null;
 
-	@Input()
-	leftContent: NgDocContent = '';
+  @Input()
+  @HostBinding('attr.data-ng-doc-align')
+  align: NgDocTextAlign = 'left';
 
-	@Input()
-	rightContent: NgDocContent = '';
+  @ContentChild(NgDocBaseInput)
+  input?: NgDocBaseInput<T>;
 
-	@Input()
-	@HostBinding('attr.data-ng-doc-align')
-	align: NgDocTextAlign = 'left';
+  @ContentChild(NgDocBaseInput)
+  inputControl?: NgDocBaseInput<T>;
 
-	@ContentChild(NgDocBaseInput)
-	input?: NgDocBaseInput<T>;
+  @ViewChild(NgDocFocusCatcherDirective, { static: true })
+  focusCatcher?: NgDocFocusCatcherDirective;
 
-	@ContentChild(NgDocBaseInput)
-	inputControl?: NgDocBaseInput<T>;
+  constructor(
+    public elementRef: ElementRef<HTMLElement>,
+    protected changeDetectorRef: ChangeDetectorRef,
+  ) {}
 
-	@ViewChild(NgDocFocusCatcherDirective, { static: true })
-	focusCatcher?: NgDocFocusCatcherDirective;
+  ngAfterViewChecked(): void {
+    this.changeDetectorRef.markForCheck();
+  }
 
-	constructor(
-		public elementRef: ElementRef<HTMLElement>,
-		protected changeDetectorRef: ChangeDetectorRef,
-	) {}
+  @ngDocMakePure
+  getBlurContext($implicit: B | null): NgDocContextWithImplicit<B | null> {
+    return { $implicit };
+  }
 
-	ngAfterViewChecked(): void {
-		this.changeDetectorRef.markForCheck();
-	}
+  @HostBinding('attr.data-ng-doc-input-disabled')
+  get disabled(): boolean {
+    return !!this.inputControl?.disabled;
+  }
 
-	@ngDocMakePure
-	getBlurContext($implicit: B | null): NgDocContextWithImplicit<B | null> {
-		return { $implicit };
-	}
+  inputHasValue(): boolean {
+    return !!this.inputControl?.hasValue;
+  }
 
-	@HostBinding('attr.data-ng-doc-input-disabled')
-	get disabled(): boolean {
-		return !!this.inputControl?.disabled;
-	}
+  get blurContentIsVisible(): boolean {
+    return !!this.blurContent && (!this.input?.isFocused || this.input?.isReadonly);
+  }
 
-	inputHasValue(): boolean {
-		return !!this.inputControl?.hasValue;
-	}
-
-	get blurContentIsVisible(): boolean {
-		return !!this.blurContent && (!this.input?.isFocused || this.input?.isReadonly);
-	}
-
-	// eslint-disable-next-line @typescript-eslint/no-empty-function
-	emptyEvent(): void {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  emptyEvent(): void {}
 }

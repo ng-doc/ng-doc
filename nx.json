@@ -1,61 +1,61 @@
 {
-	"$schema": "./node_modules/nx/schemas/nx-schema.json",
-	"cli": {
-		"packageManager": "npm"
-	},
-	"generators": {
-		"@nx/angular:application": {
-			"style": "scss",
-			"linter": "eslint",
-			"unitTestRunner": "jest",
-			"e2eTestRunner": "cypress"
-		},
-		"@nx/angular:library": {
-			"linter": "eslint",
-			"unitTestRunner": "jest"
-		},
-		"@nx/angular:component": {
-			"style": "scss"
-		}
-	},
-	"defaultProject": "ng-doc",
-	"targetDefaults": {
-		"build": {
-			"dependsOn": ["pre-build"],
-			"inputs": ["production", "^production"],
-			"cache": true
-		},
-		"pre-build": {
-			"dependsOn": ["^build"],
-			"cache": true
-		},
-		"schematics": {
-			"cache": true
-		},
-		"@nx/jest:jest": {
-			"cache": true,
-			"inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
-			"options": {
-				"passWithNoTests": true
-			},
-			"configurations": {
-				"ci": {
-					"ci": true,
-					"codeCoverage": true
-				}
-			}
-		},
-		"@nx/eslint:lint": {
-			"inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
-			"cache": true
-		}
-	},
-	"namedInputs": {
-		"default": ["{projectRoot}/**/*", "sharedGlobals"],
-		"sharedGlobals": [],
-		"production": ["default", "!{projectRoot}/src/test-setup.[jt]s"]
-	},
-	"nxCloudAccessToken": "ZGIxMzcwOTUtZmYzMy00MzBhLWJiZmUtZmU3NDAxYTQ1MzcwfHJlYWQtd3JpdGU=",
-	"useInferencePlugins": false,
-	"defaultBase": "main"
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "cli": {
+    "packageManager": "npm"
+  },
+  "generators": {
+    "@nx/angular:application": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nx/angular:library": {
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nx/angular:component": {
+      "style": "scss"
+    }
+  },
+  "defaultProject": "ng-doc",
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["pre-build"],
+      "inputs": ["production", "^production"],
+      "cache": true
+    },
+    "pre-build": {
+      "dependsOn": ["^build"],
+      "cache": true
+    },
+    "schematics": {
+      "cache": true
+    },
+    "@nx/jest:jest": {
+      "cache": true,
+      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
+      "options": {
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "@nx/eslint:lint": {
+      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
+      "cache": true
+    }
+  },
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "sharedGlobals": [],
+    "production": ["default", "!{projectRoot}/src/test-setup.[jt]s"]
+  },
+  "nxCloudAccessToken": "ZGIxMzcwOTUtZmYzMy00MzBhLWJiZmUtZmU3NDAxYTQ1MzcwfHJlYWQtd3JpdGU=",
+  "useInferencePlugins": false,
+  "defaultBase": "main"
 }

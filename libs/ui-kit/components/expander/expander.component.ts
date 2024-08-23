@@ -1,36 +1,39 @@
-import {NgIf} from '@angular/common';
-import {ChangeDetectionStrategy, Component, HostBinding, Input} from '@angular/core';
-import {expandCollapseAnimation, preventInitialChildAnimations} from '@ng-doc/ui-kit/animations';
-import {NgDocContent} from '@ng-doc/ui-kit/types';
-import {PolymorpheusModule} from '@tinkoff/ng-polymorpheus';
+import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { expandCollapseAnimation, preventInitialChildAnimations } from '@ng-doc/ui-kit/animations';
+import { NgDocContent } from '@ng-doc/ui-kit/types';
+import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 
 /** Component helps to expand or collapse content */
 @Component({
-	animations: [preventInitialChildAnimations, expandCollapseAnimation],
-	selector: 'ng-doc-expander',
-	templateUrl: './expander.component.html',
-	styleUrls: ['./expander.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	standalone: true,
-	imports: [NgIf, PolymorpheusModule],
+  animations: [preventInitialChildAnimations, expandCollapseAnimation],
+  selector: 'ng-doc-expander',
+  templateUrl: './expander.component.html',
+  styleUrls: ['./expander.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [NgIf, PolymorpheusModule, NgTemplateOutlet],
 })
-export class NgDocExpanderComponent {
-	/** Change expand state */
-	@Input()
-	expanded: boolean = false;
+export class NgDocExpanderComponent implements AfterViewInit {
+  /** Change expand state */
+  @Input()
+  expanded: boolean = false;
 
-	/** Expander content */
-	@Input()
-	content: NgDocContent = '';
+  /** Expander content */
+  @Input({ required: true })
+  content!: NgDocContent;
 
-	/** Closed height could be used to show preview of the content */
-	@Input()
-	from: number = 0;
+  /** Closed height could be used to show preview of the content */
+  @Input()
+  from: number = 0;
 
-	@HostBinding('@preventInitialChild')
-	preventInitialChild?: never;
+  protected animationDisabled = true;
 
-	toggle(): void {
-		this.expanded = !this.expanded;
-	}
+  ngAfterViewInit(): void {
+    this.animationDisabled = false;
+  }
+
+  toggle(): void {
+    this.expanded = !this.expanded;
+  }
 }

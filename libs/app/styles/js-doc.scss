@@ -1,0 +1,25 @@
+.ng-doc-deprecated {
+  text-decoration: line-through;
+
+  &:hover {
+    text-decoration: auto;
+  }
+}
+
+.ng-doc-api-status {
+  // inline-block and width 100% to prevent the status from text decoration
+  display: inline-block;
+  width: 100%;
+
+  & > *:first-child {
+    margin-top: 0 !important;
+  }
+
+  &:empty {
+    display: none;
+  }
+}
+
+.ng-doc-deprecated-notes {
+  color: var(--ng-doc-warning-text);
+}

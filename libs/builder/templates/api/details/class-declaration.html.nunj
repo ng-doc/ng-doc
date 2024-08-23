@@ -1,0 +1,47 @@
+{% import "helpers/type.html.nunj" as typeMacro %}
+
+{% set typeParameters %}
+    {% include "api/details/helpers/type-parameters.html.nunj" %}
+{% endset %}
+{% set hasTypeParameters = typeParameters | trim | length %}
+
+{% set decorators %}
+    {% include "api/details/helpers/decorators.html.nunj" %}
+{% endset %}
+{% set hasDecorators = decorators | trim | length %}
+
+{% set selectors %}
+    {% include "api/details/helpers/selectors.html.nunj" %}
+{% endset %}
+{% set hasSelectors = selectors | trim | length %}
+
+{% set extends = declaration.getExtends() %}
+{% set implements = declaration.getImplements() %}
+
+{% if hasTypeParameters or hasDecorators or hasSelectors or extends or implements.length %}
+    <table class="ng-doc-api-table no-padding no-full-width">
+        <tbody>
+        {{ decorators }}
+        {{ typeParameters }}
+        {{ selectors }}
+
+        {% if extends %}
+            <tr>
+                <td indexable="false">Extends:</td>
+                <td>{{ typeMacro.type(extends) }}</td>
+            </tr>
+        {%- endif %}
+
+        {% if implements.length %}
+            <tr>
+                <td indexable="false">Implements:</td>
+                <td>
+                    {%- for i in implements -%}
+                        {{ typeMacro.type(i) }}
+                    {%- endfor %}
+                </td>
+            </tr>
+        {%- endif %}
+        </tbody>
+    </table>
+{% endif %}

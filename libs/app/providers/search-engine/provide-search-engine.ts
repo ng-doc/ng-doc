@@ -1,6 +1,6 @@
 import { Provider } from '@angular/core';
 import { NgDocSearchEngine } from '@ng-doc/app/classes/search-engine';
-import { Constructor } from '@ng-doc/core';
+import { Constructor } from '@ng-doc/core/types';
 
 /**
  * Provides the `NgDocSearchEngine` to enable search in the documentation.
@@ -11,11 +11,11 @@ import { Constructor } from '@ng-doc/core';
  * @returns The provider for the search engine.
  */
 export function provideSearchEngine<E extends Constructor<NgDocSearchEngine>>(
-	engine: E,
-	...args: ConstructorParameters<E>
+  engine: E,
+  ...args: ConstructorParameters<E>
 ): Provider {
-	return {
-		provide: NgDocSearchEngine,
-		useValue: new engine(...args),
-	};
+  return {
+    provide: NgDocSearchEngine,
+    useFactory: () => new engine(...args),
+  };
 }

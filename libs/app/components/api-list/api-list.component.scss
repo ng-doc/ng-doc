@@ -1,65 +1,111 @@
 :host {
-	h1 {
-		margin-top: 0;
-	}
+  h1 {
+    margin-top: 0;
+  }
 
-	.ng-doc-api-list-wrapper {
-		.ng-doc-api-filter {
-			display: flex;
-			margin-top: calc(var(--ng-doc-base-gutter) * 3);
-			flex-wrap: wrap;
-			gap: calc(var(--ng-doc-base-gutter) * 2);
+  .ng-doc-filter-list {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--ng-doc-base-gutter);
+    list-style: none;
+    padding: 0;
 
-			.ng-doc-api-filter-item {
-				width: 200px;
-			}
-		}
+    @container api-list-wrapper (max-width: 775px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @container api-list-wrapper (max-width: 600px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @container api-list-wrapper (max-width: 500px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @container api-list-wrapper (max-width: 350px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
 
-		.ng-doc-api-list {
-			margin-top: calc(var(--ng-doc-base-gutter) * 2);
+    .ng-doc-filter-button {
+      justify-content: flex-start;
+      text-wrap: nowrap;
+      width: 100%;
 
-			.ng-doc-api-scope {
-				display: flex;
-				flex-direction: column;
+      ng-doc-kind-icon {
+        margin-right: var(--ng-doc-base-gutter);
+      }
+    }
+  }
 
-				.ng-doc-scope-items {
-					margin-top: calc(var(--ng-doc-base-gutter) * 3);
-					list-style: none;
-					padding: 0;
+  .ng-doc-api-list-filter-input {
+    max-width: 450px;
+  }
 
-					.ng-doc-scope-item {
-						margin: var(--ng-doc-base-gutter) 0;
-						float: left;
-						width: 33%;
-						overflow: hidden;
-						min-width: 330px;
-						text-overflow: ellipsis;
-						white-space: nowrap;
+  .ng-doc-api-list-wrapper {
+    container: api-list-wrapper / inline-size;
 
-						.ng-doc-scope-item-link {
-							display: flex;
-							align-items: center;
-							color: var(--ng-doc-text);
-							text-decoration: none;
+    .ng-doc-api-filter {
+      display: flex;
+      margin-top: calc(var(--ng-doc-base-gutter) * 3);
+      flex-wrap: wrap;
+      gap: calc(var(--ng-doc-base-gutter) * 2);
 
-							&:hover {
-								text-decoration: underline;
-							}
+      .ng-doc-api-filter-item {
+        width: 200px;
+      }
+    }
 
-							ng-doc-kind-icon {
-								margin-right: var(--ng-doc-base-gutter);
-								text-decoration: none !important;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+    .ng-doc-api-list {
+      margin-top: calc(var(--ng-doc-base-gutter) * 2);
 
-	ng-doc-input-wrapper {
-		ng-doc-icon {
-			--ng-doc-icon-color: var(--ng-doc-text-muted);
-		}
-	}
+      .ng-doc-api-scope {
+        display: flex;
+        flex-direction: column;
+
+        .ng-doc-scope-items {
+          margin-top: calc(var(--ng-doc-base-gutter) * 3);
+          list-style: none;
+          padding: 0;
+
+          .ng-doc-scope-item {
+            float: left;
+            width: 33%;
+            overflow: hidden;
+            min-width: 330px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+            .ng-doc-scope-item-link {
+              display: flex;
+              align-items: center;
+              border-left: 1px solid var(--ng-doc-border-color);
+              padding: var(--ng-doc-base-gutter);
+              color: var(--ng-doc-text);
+              background: color-mix(
+                in srgb,
+                var(--ng-doc-scope-item-link-background),
+                transparent 90%
+              );
+              text-decoration: none;
+
+              &:hover {
+                color: var(--ng-doc-heading-color);
+                border-left-color: var(--ng-doc-primary);
+
+                --ng-doc-scope-item-link-background: var(--ng-doc-primary);
+              }
+
+              ng-doc-kind-icon {
+                margin-right: var(--ng-doc-base-gutter);
+                text-decoration: none !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  ng-doc-input-wrapper {
+    ng-doc-icon {
+      --ng-doc-icon-color: var(--ng-doc-text-muted);
+    }
+  }
 }

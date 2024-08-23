@@ -1,4 +1,4 @@
-export interface NgDocActionOutput {
-	output: string;
-	dependencies?: string[];
+export interface NgDocActionOutput<T> {
+  output: T;
+  dependencies?: string[];
 }

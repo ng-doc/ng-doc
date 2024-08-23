@@ -1,0 +1,12 @@
+{% set selectors = declaration | extractSelectors %}
+
+{% if selectors.length %}
+    <tr>
+        <td indexable="false">Selectors:</td>
+        <td>
+            {% for selector in selectors %}
+                <code>{{ selector }}</code>
+            {%- endfor %}
+        </td>
+    </tr>
+{% endif %}

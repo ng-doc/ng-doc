@@ -1,0 +1,47 @@
+{% import "helpers/no-content.html.nunj" as noContentMacro %}
+{% import "helpers/parameters.html.nunj" as parametersMacro %}
+{% import "helpers/type.html.nunj" as typeMacro %}
+{% import "helpers/code.html.nunj" as codeMacro %}
+
+{% macro render(overloads) %}
+    {% for overload in overloads %}
+        {% set docNode = overload %}
+        {% set parameters = overload.getParameters() %}
+
+        <table class="ng-doc-overload-table">
+            <thead indexable="false">
+            <tr>
+                <th>Overload #{{ loop.index }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    {% set description = docNode | getJsDocDescription %}
+
+                    {{ description if description else noContentMacro.render('No documentation has been provided.') }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h5 class="no-anchor" indexable="false">Presentation</h5>
+                    {{ codeMacro.render(overload | methodPresentation, "typescript", false) }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {%- if parameters.length %}
+                        <h5 class="no-anchor" indexable="false">Parameters</h5>
+                        {{ parametersMacro.render(parameters, docNode) }}
+                    {%- endif %}
+                    <h5 class="no-anchor" indexable="false">Returns</h5>
+                    <p>
+                        {{ typeMacro.returnType(overload) }}
+                    </p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    {% endfor %}
+{% endmacro %}
+

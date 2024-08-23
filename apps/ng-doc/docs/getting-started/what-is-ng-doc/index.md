@@ -1,5 +1,3 @@
-# {{ NgDocPage.title }}
-
 NgDoc is a library for creating documentation for your Angular projects, it is injected into the
 build process of a regular Angular application and creates documentation that can be displayed in
 it. The current documentation is created using the library itself, so it's already an example of
@@ -41,4 +39,4 @@ your application however you like, or integrate the documentation into an existi
 ## What's next?
 
 I'm going to improve the library further, adding new features and fixes to it and to start using
-the library, see the `*GettingStartedInstallation` article.
+the library, see the `*InstallationAutomaticPage` article.

@@ -1,3 +1,4 @@
+export * from '@ng-doc/app/providers/mermaid';
 export * from '@ng-doc/app/providers/ng-doc-app';
 export * from '@ng-doc/app/providers/page-skeleton';
 export * from '@ng-doc/app/providers/playground-demo';

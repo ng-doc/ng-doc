@@ -1,7 +1,27 @@
-# {{ NgDocPage.title }}
-
 This page contains information about migrating from previous versions of NgDoc to the current
 version.
+
+## Migration to >= v18.0
+
+NgDoc 18 contains several migrations that can help migrate your documentation to the new version. To
+perform the migration, execute the following command:
+
+> **Note**
+> After migration you also need to update other `@ng-doc/*` packages to v17.0.0
+
+```bash group="migration-v18" name="Angular" icon="angular"
+ng update @ng-doc/builder
+```
+
+```bash group="migration-v18" name="Nx" icon="nx"
+nx migrate @ng-doc/builder
+```
+
+The migration should:
+
+- move `keyword` from `ng-doc.page.ts` to your page's markdown file
+- remove `# {{ '{{ NgDocPage.title }}' | safe }}` from the markdown file since the title is now
+  displayed by default.
 
 ## Migration to >= v17.0
 
@@ -21,7 +41,8 @@ nx migrate @ng-doc/builder
 
 ### Manual migration steps:
 
-- replace `@ng-doc/builder:browser` builder for the build target with `@ng-doc/builder:application` builder
+- replace `@ng-doc/builder:browser` builder for the build target with `@ng-doc/builder:application`
+  builder
 - rename `main` property in `angular.json` to `browser`
 - covert `polyfills` property in `angular.json` to `polyfills` array
 - remove `buildOptimizer` and `vendorChunk` properties from `angular.json`
@@ -30,7 +51,8 @@ nx migrate @ng-doc/builder
 Vite doesn't see changes in folders that start with a dot, so you need to rename `.ng-doc` folder:
 
 - rename assets `.ng-doc/ng-doc/assets` folder to `ng-doc/ng-doc/assets` in `angular.json`
-- change `@ng-doc/generated` path `.ng-doc/ng-doc/index.ts` in `tsconfig.json` to `ng-doc/ng-doc/index.ts`
+- change `@ng-doc/generated` path `.ng-doc/ng-doc/index.ts` in `tsconfig.json` to
+  `ng-doc/ng-doc/index.ts`
 - replace `.ng-doc` folder name in `.gitignore` file with `/ng-doc`
 
 ## Migration to >= v16.13
@@ -51,13 +73,13 @@ NgDoc's schematics now also support standalone applications.
   be provided by using `provideNgDocApp` function.
 - `NgDocGeneratedModule` was removed, now you need to use `provideNgDocContext` function to provide
   context of the generated documentation.
-- `provideMainPageProcessor` and `providePageSkeleton` functions were added, now you must use them to
+- `provideMainPageProcessor` and `providePageSkeleton` functions were added, now you must use them
+  to
   provide default or your own page processors and page skeleton components.
 
-Please see updated `*GettingStartedInstallation#configuring-application` articles for more information how your
+Please see updated `*InstallationManualPage#configuring-application` articles for more information
+how your
 application should be configured.
-
-###
 
 ## Migrating to >= v16.3
 

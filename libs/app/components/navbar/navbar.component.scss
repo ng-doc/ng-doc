@@ -1,51 +1,52 @@
 @import '../../../ui-kit/styles/mixins';
 
 :host {
-	@include ng-doc-backdrop-filter(var(--ng-doc-navbar-background), '[data-glass-effect="false"]');
-	position: relative;
-	display: flex;
-	justify-content: center;
-	height: 100%;
-	transition: var(--ng-doc-transition) box-shadow;
+  @include ng-doc-backdrop-filter(var(--ng-doc-navbar-background), '[data-glass-effect="false"]');
+  position: relative;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  border-bottom: 1px solid transparent;
+  transition: var(--ng-doc-transition) border;
 
-	&.has-shadow {
-		box-shadow: var(--ng-doc-shadow-color) 0 5px 20px -5px;
-	}
+  &.has-border {
+    border-bottom: var(--ng-doc-navbar-border,);
+    box-shadow: var(--ng-doc-shadow-color) 0 5px 20px -5px;
+  }
 
-	.navbar-container {
-		display: flex;
-		height: 100%;
-		width: 100%;
-		padding: 0 var(--ng-doc-navbar-horizontal-padding);
-		z-index: 10;
-		max-width: var(--ng-doc-app-max-width);
-	}
+  .navbar-container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    padding: 0 var(--ng-doc-navbar-horizontal-padding);
+    z-index: 10;
+    max-width: var(--ng-doc-app-max-width);
+  }
 
-	.ng-doc-navbar-left,
-	.ng-doc-navbar-center,
-	.ng-doc-navbar-right {
-		display: flex;
-		align-items: center;
-	}
+  .ng-doc-navbar-left,
+  .ng-doc-navbar-right {
+    display: flex;
+    align-items: center;
+  }
 
-	.ng-doc-navbar-left {
-		justify-content: flex-start;
-		width: 100%;
-		max-width: var(--ng-doc-navbar-left-width);
-	}
+  .ng-doc-navbar-left {
+    justify-content: flex-start;
+    width: 100%;
+    max-width: var(--ng-doc-navbar-left-width);
+  }
 
-	.ng-doc-navbar-center {
-		padding: 0 var(--ng-doc-app-horizontal-padding);
-		justify-content: flex-start;
-		max-width: calc(100% - var(--ng-doc-toc-width));
-	}
+  .ng-doc-navbar-right {
+    justify-content: flex-end;
+    margin-left: auto;
+  }
 
-	.ng-doc-navbar-right {
-		justify-content: flex-end;
-		margin-left: auto;
-	}
+  .ng-doc-menu {
+    margin-left: calc(var(--ng-doc-base-gutter) * 2);
+  }
 
-	.ng-doc-menu {
-		margin-left: calc(var(--ng-doc-base-gutter) * 2);
-	}
+  @media (min-width: 1024px) {
+    .ng-doc-menu {
+      display: none;
+    }
+  }
 }

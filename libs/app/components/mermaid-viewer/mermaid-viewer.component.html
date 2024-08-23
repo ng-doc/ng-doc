@@ -1,0 +1,13 @@
+@if (pending()) {
+  <div class="ng-doc-mermaid-preloader">
+    <ng-doc-spinner></ng-doc-spinner>
+  </div>
+} @else if (error()) {
+  <div class="ng-doc-mermaid-error">{{ error() }}</div>
+} @else {
+  <ng-doc-magnifier #magnifier>
+    <div class="ng-doc-mermaid-container" [innerHTML]="html() | ngDocSanitizeHtml"></div>
+  </ng-doc-magnifier>
+
+  <ng-doc-magnifier-controller [magnifier]="magnifier" />
+}
