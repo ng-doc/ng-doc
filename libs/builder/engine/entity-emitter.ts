@@ -35,7 +35,7 @@ export function entityEmitter(
 		watcher.onChange(PAGE_PATTERN, CATEGORY_PATTERN, API_PATTERN),
 	).pipe(
 		bufferUntilOnce(watcher.onReady()),
-		bufferDebounce(10),
+		bufferDebounce(100),
 		map((paths: string[][][]) => unique(paths.flat(2))),
 		map((paths: string[]) =>
 			paths.map((p: string) => {

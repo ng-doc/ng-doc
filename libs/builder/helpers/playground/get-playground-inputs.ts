@@ -3,15 +3,14 @@ import {
 	ClassDeclaration,
 	Node,
 	ParameterDeclaration,
-	PropertyDeclaration,
 	SyntaxKind,
 	Type,
 	TypeFormatFlags,
 } from 'ts-morph';
 
-import { getComponentInputs, getInputName } from '../angular';
+import { getComponentInputs, getInputName, getInputType, NgDocInputDeclaration } from '../angular';
 import { extractDocs, extractParameterDocs } from '../extract-docs';
-import { displayType } from '../typescript';
+import { formatType } from '../typescript';
 
 /**
  *
@@ -21,7 +20,7 @@ export function getPlaygroundComponentInputs(
 	declaration: ClassDeclaration,
 ): NgDocPlaygroundProperties {
 	return getComponentInputs(declaration).reduce(
-		(properties: NgDocPlaygroundProperties, property: PropertyDeclaration) => {
+		(properties: NgDocPlaygroundProperties, property: NgDocInputDeclaration) => {
 			const inputName: string = getInputName(property);
 			return { ...properties, ...propOrParamToPlaygroundProperty(property, inputName) };
 		},
@@ -49,11 +48,14 @@ export function getPlaygroundPipeInputs(declaration: ClassDeclaration): NgDocPla
  * @param inputName
  */
 function propOrParamToPlaygroundProperty(
-	propOrParam: PropertyDeclaration | ParameterDeclaration,
+	propOrParam: NgDocInputDeclaration | ParameterDeclaration,
 	inputName?: string,
 ): NgDocPlaygroundProperties {
-	const type: string = displayType(
-		propOrParam,
+	const inputType = Node.isPropertyDeclaration(propOrParam)
+		? getInputType(propOrParam)
+		: propOrParam.getType();
+	const type: string = formatType(
+		inputType,
 		TypeFormatFlags.NoTruncation | TypeFormatFlags.UseSingleQuotesForStringLiteralType,
 	);
 
@@ -61,14 +63,16 @@ function propOrParamToPlaygroundProperty(
 		[propOrParam.getName()]: {
 			inputName: inputName ?? propOrParam.getName(),
 			type,
-			description: Node.isPropertyDeclaration(propOrParam)
-				? extractDocs(propOrParam)
-				: extractParameterDocs(
-						propOrParam.getParentIfKindOrThrow(SyntaxKind.MethodDeclaration),
-						propOrParam.getName(),
-				  ),
-			options: propOrParam
-				.getType()
+			description:
+				Node.isPropertyDeclaration(propOrParam) ||
+				Node.isGetAccessorDeclaration(propOrParam) ||
+				Node.isSetAccessorDeclaration(propOrParam)
+					? extractDocs(propOrParam)
+					: extractParameterDocs(
+							propOrParam.getParentIfKindOrThrow(SyntaxKind.MethodDeclaration),
+							propOrParam.getName(),
+						),
+			options: inputType
 				.getUnionTypes()
 				.map((type: Type) =>
 					type.getText(

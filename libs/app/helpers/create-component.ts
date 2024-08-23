@@ -11,6 +11,8 @@ export function createComponent<T>(
 	component: Type<T>,
 	inputs?: object,
 ): void {
+	viewContainer.clear();
+
 	const componentRef = viewContainer.createComponent(component);
 
 	if (inputs) {
@@ -18,6 +20,4 @@ export function createComponent<T>(
 			componentRef.setInput(key, value);
 		});
 	}
-
-	componentRef.changeDetectorRef.detectChanges();
 }

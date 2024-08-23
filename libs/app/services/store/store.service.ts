@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { LOCAL_STORAGE } from '@ng-web-apis/common';
 
 const DEFAULT_SERIALIZE: (v: unknown) => string = (v: unknown) => String(v);
 
@@ -6,15 +7,19 @@ const DEFAULT_SERIALIZE: (v: unknown) => string = (v: unknown) => String(v);
 	providedIn: 'root',
 })
 export class NgDocStoreService {
+	protected readonly localStorage: Storage = inject(LOCAL_STORAGE);
+
 	set(key: string, data: string): void;
 	set<T>(key: string, data: T, serialize: (v: T) => string): void;
 	set<T>(key: string, data: T, serialize: (v: T) => string = DEFAULT_SERIALIZE): void {
-		return localStorage.setItem(key, serialize(data));
+		return this.localStorage.setItem(key, serialize(data));
 	}
 
 	get(key: string): string | null;
 	get<T>(key: string, deserialize: (v: string | null) => T): T;
 	get<T>(key: string, deserialize?: (v: string | null) => T): T | string | null {
-		return deserialize ? deserialize(localStorage.getItem(key)) : localStorage.getItem(key);
+		return deserialize
+			? deserialize(this.localStorage.getItem(key))
+			: this.localStorage.getItem(key);
 	}
 }

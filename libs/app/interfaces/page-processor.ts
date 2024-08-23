@@ -1,4 +1,4 @@
-import { Type } from '@angular/core';
+import { Injector, Type } from '@angular/core';
 
 import { NgDocProcessorOptions } from './processor-options';
 
@@ -23,6 +23,7 @@ export interface NgDocPageProcessor<T = unknown> {
 	/**
 	 * Can be used to find a node to replace instead of the node that was found by selector.
 	 * @param element - Html node to replace.
+	 * @param injector - Injector to get dependencies.
 	 */
-	nodeToReplace?: (element: Element) => Element;
+	nodeToReplace?: (element: Element, injector: Injector) => Element;
 }

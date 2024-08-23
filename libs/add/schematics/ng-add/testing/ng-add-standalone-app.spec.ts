@@ -57,7 +57,7 @@ describe('ng-add standalone app', () => {
 
 		const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
-		expect(tree.readContent('test/app/app.template.html')).toEqual(APP_COMPONENT_CONTENT);
+		expect(tree.readContent('test/app/app.component.html')).toEqual(APP_COMPONENT_CONTENT);
 	});
 
 	it('should update app tsconfig', async () => {
@@ -88,17 +88,17 @@ describe('ng-add standalone app', () => {
   "compilerOptions": {
     "paths": {
       "@ng-doc/generated": [
-        ".ng-doc//index.ts"
+        "./ng-doc/demo/index.ts"
       ],
       "@ng-doc/generated/*": [
-        ".ng-doc//*"
+        "./ng-doc/demo/*"
       ]
     }
   }
 }`);
 	});
 
-	it('should add .ng-doc folder to gitignore tsconfig', async () => {
+	it('should add ng-doc folder to gitignore tsconfig', async () => {
 		const options: Schema = {
 			project: '',
 		};
@@ -108,7 +108,7 @@ describe('ng-add standalone app', () => {
 		expect(tree.readContent('.gitignore')).toEqual(`.cache
 
 # NgDoc files
-.ng-doc`);
+/ng-doc`);
 	});
 
 	it('should add NgDoc providers', async () => {
@@ -118,23 +118,20 @@ describe('ng-add standalone app', () => {
 
 		const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
-		expect(tree.readContent('test/main.ts'))
+		expect(tree.readContent('test/app/app.config.ts'))
 			.toEqual(`import { provideNgDocApp, provideSearchEngine, NgDocDefaultSearchEngine, providePageSkeleton, NG_DOC_DEFAULT_PAGE_SKELETON, provideMainPageProcessor, NG_DOC_DEFAULT_PAGE_PROCESSORS } from "@ng-doc/app";
 import { NG_DOC_ROUTING, provideNgDocContext } from "@ng-doc/generated";
-import { provideRouter, withInMemoryScrolling } from "@angular/router";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi, withFetch } from "@angular/common/http";
 import { provideAnimations } from "@angular/platform-browser/animations";
-import { bootstrapApplication } from '@angular/platform-browser';
-import { environment } from './environments/environment';
-import { AppComponent } from './app/app.component';
+import { ApplicationConfig } from '@angular/core';
+import { provideRouter, withInMemoryScrolling } from '@angular/router';
 
-  if (environment.production) {
-    enableProdMode();
-  }
+import { routes } from './app.routes';
 
-  bootstrapApplication(AppComponent, {providers: [provideAnimations(), provideHttpClient(withInterceptorsFromDi()), provideRouter(NG_DOC_ROUTING, withInMemoryScrolling({scrollPositionRestoration: "enabled", anchorScrolling: "enabled"})), provideNgDocContext(), provideNgDocApp(), provideSearchEngine(NgDocDefaultSearchEngine), providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON), provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS)]})
-    .catch(err => console.log(err));
-  `);
+export const appConfig: ApplicationConfig = {
+  providers: [provideRouter(routes), provideAnimations(), provideHttpClient(withInterceptorsFromDi()), provideRouter(NG_DOC_ROUTING, withInMemoryScrolling({scrollPositionRestoration: "enabled", anchorScrolling: "enabled"})), provideHttpClient(withInterceptorsFromDi(), withFetch()), provideNgDocContext(), provideNgDocApp(), provideSearchEngine(NgDocDefaultSearchEngine), providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON), provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS)]
+};
+`);
 	});
 
 	it('should import main components', async () => {
@@ -147,13 +144,20 @@ import { AppComponent } from './app/app.component';
 		expect(tree.readContent('test/app/app.component.ts'))
 			.toEqual(`import { NgDocRootComponent, NgDocNavbarComponent, NgDocSidebarComponent } from "@ng-doc/app";
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
-\ttemplateUrl: './app.template.html',
-\tstandalone: true,
-    imports: [NgDocRootComponent, NgDocNavbarComponent, NgDocSidebarComponent]
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule, RouterOutlet, NgDocRootComponent, NgDocNavbarComponent, NgDocSidebarComponent],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
-export class AppComponent {}`);
+export class AppComponent {
+  title = 'ng17';
+}
+`);
 	});
 
 	it('should update angular.json', async () => {
@@ -192,7 +196,7 @@ export class AppComponent {}`);
                 },
                 {
                   "glob": "**/*",
-                  "input": ".ng-doc//assets",
+                  "input": "ng-doc/demo/assets",
                   "output": "assets/ng-doc"
                 }
               ],
@@ -224,28 +228,45 @@ function createMainFiles(): void {
 	createSourceFile(
 		'test/main.ts',
 		`import { bootstrapApplication } from '@angular/platform-browser';
-import { environment } from './environments/environment';
+import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
 
-  if (environment.production) {
-    enableProdMode();
-  }
-
-  bootstrapApplication(AppComponent)
-    .catch(err => console.log(err));
-  `,
+bootstrapApplication(AppComponent, appConfig)
+  .catch((err) => console.error(err));
+`,
 	);
 
 	createSourceFile(
 		'test/app/app.component.ts',
 		`import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
-	templateUrl: './app.template.html',
-	standalone: true,
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule, RouterOutlet],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
-export class AppComponent {}`,
+export class AppComponent {
+  title = 'ng17';
+}
+`,
 	);
 
-	createSourceFile('test/app/app.template.html', `<app></app>`);
+	createSourceFile(
+		'test/app/app.config.ts',
+		`import { ApplicationConfig } from '@angular/core';
+import { provideRouter } from '@angular/router';
+
+import { routes } from './app.routes';
+
+export const appConfig: ApplicationConfig = {
+  providers: [provideRouter(routes)]
+};
+`,
+	);
+
+	createSourceFile('test/app/app.component.html', `<app></app>`);
 }

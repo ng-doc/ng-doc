@@ -15,7 +15,7 @@ function buildSchema(from, to) {
 		const schema = loadSchema(schemaPath);
 		const schemaName = basename(schemaPath);
 		const originalSchema = loadSchema(
-			`./node_modules/@angular-devkit/build-angular/src/builders/${builder}/schema.json`,
+			`./node_modules/@angular/build/src/builders/${builder}/schema.json`,
 		);
 		const newSchema = merge(originalSchema, schema);
 		const newSchemaPath = join(to, builder, schemaName);

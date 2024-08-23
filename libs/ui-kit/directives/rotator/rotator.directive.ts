@@ -31,7 +31,7 @@ export class NgDocRotatorDirective implements OnChanges, OnInit {
 		private readonly renderer: Renderer2,
 	) {}
 
-	ngOnChanges({ rotated }: SimpleChanges): void {
+	ngOnChanges({ rotated, to }: SimpleChanges): void {
 		if (rotated) {
 			this.rotate(this.rotated ? this.to : this.from, true);
 		}

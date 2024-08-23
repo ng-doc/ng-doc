@@ -12,7 +12,7 @@
 				var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
 
 			.ng-doc-sidebar-category {
-				--ng-doc-font-weight: 600;
+				--ng-doc-font-weight: 500;
 			}
 		}
 	}
@@ -38,14 +38,14 @@
 			display: flex;
 			align-items: center;
 			--ng-doc-dot-background: var(--ng-doc-base-4);
-			--ng-doc-font-weight: 600;
+			--ng-doc-font-weight: 500;
 
 			ng-doc-dot {
 				margin-right: calc(var(--ng-doc-base-gutter) * 2);
 			}
 
 			&.active {
-				--ng-doc-font-weight: 700;
+				--ng-doc-font-weight: 600;
 				--ng-doc-dot-background: var(--ng-doc-primary);
 			}
 		}

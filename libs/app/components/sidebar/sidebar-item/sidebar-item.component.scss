@@ -14,7 +14,7 @@
 	cursor: pointer;
 	--ng-doc-icon-color: var(--ng-doc-text);
 	--ng-doc-dot-background: var(--ng-doc-base-4);
-	--ng-doc-font-weight: 500;
+	--ng-doc-font-weight: 400;
 
 	ng-doc-dot {
 		margin-right: calc(var(--ng-doc-base-gutter) * 2);
@@ -25,7 +25,7 @@
 	}
 
 	&.active {
-		--ng-doc-font-weight: 800;
+		--ng-doc-font-weight: 500;
 		--ng-doc-dot-background: var(--ng-doc-primary);
 
 		ng-doc-dot {

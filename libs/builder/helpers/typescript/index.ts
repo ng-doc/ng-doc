@@ -3,6 +3,7 @@ export * from './class';
 export * from './create-project';
 export * from './declaration-import';
 export * from './display-type';
+export * from './exclude-by-ts-docs-tags';
 export * from './filter-by-scope';
 export * from './filter-by-static';
 export * from './first-node-with-comment';

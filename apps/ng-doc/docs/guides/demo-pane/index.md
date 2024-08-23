@@ -18,6 +18,14 @@ NgDoc will create a demo panes with your component's code and demo, and show it 
 
 {{ NgDocActions.demoPane("ButtonDemoComponent") }}
 
+{% include "../../shared/demo-inputs.md" %}
+
+```twig name="index.md"
+{{'{{ NgDocActions.demoPane("ButtonInlineDemoComponent", {inputs: {color: "info"} }) }}' | safe }}
+```
+
+{{ NgDocActions.demoPane("ButtonInlineDemoComponent", {inputs: {color: "info"} }) }}
+
 {% include "../../shared/fullscreen-demo.md" %}
 
 ```twig name="index.md"

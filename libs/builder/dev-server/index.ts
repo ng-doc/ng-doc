@@ -1,20 +1,14 @@
-import {
-	BuilderContext,
-	createBuilder,
-	Target,
-	targetFromTargetString,
-} from '@angular-devkit/architect';
+import { BuilderContext, createBuilder, targetFromTargetString } from '@angular-devkit/architect';
 import { BuilderOutputLike } from '@angular-devkit/architect/src/api';
-import {
-	DevServerBuilderOutput,
-	executeDevServer,
-} from '@angular-devkit/build-angular/src/builders/dev-server';
+import { executeDevServer } from '@angular-devkit/build-angular/src/builders/dev-server';
+import { JsonObject } from '@angular-devkit/core';
 import { combineLatest, from, Observable, of } from 'rxjs';
 import { first, map, shareReplay, switchMap } from 'rxjs/operators';
 
-import { buildNgDoc } from '../engine/build-ng-doc';
+import { buildNgDoc } from '../engine';
 import { createBuilderContext } from '../helpers';
-import { NgDocBuilderContext, NgDocSchema } from '../interfaces';
+import { NgDocSchema } from '../interfaces';
+import { patchBuilderContext } from './patch-builder-context';
 
 /**
  * Attach NgDocBuilder and run DevServer
@@ -25,32 +19,28 @@ export function runDevServer(
 	options: NgDocSchema,
 	context: BuilderContext,
 ): Observable<BuilderOutputLike> {
-	const browserTarget: Target | null = options.buildTarget
-		? targetFromTargetString(options.buildTarget)
-		: null;
+	const contextWithPatch = patchBuilderContext(context, {
+		mock: ['@ng-doc/builder:application', './dist/libs/builder:application'],
+		with: '@angular-devkit/build-angular:application',
+		optionsTransform: (options: Partial<NgDocSchema>) => {
+			delete options.ngDoc;
+		},
+	});
 
-	return (
-		browserTarget ? from(context.getTargetOptions(browserTarget)) : of(options as unknown as any)
-	).pipe(
-		switchMap((targetOptions: any) => {
-			const builderContext: NgDocBuilderContext = createBuilderContext(
-				targetOptions,
-				context,
-				options.ngDoc?.config,
-			);
-			const runner: Observable<void> = buildNgDoc(builderContext).pipe(shareReplay(1));
+	const target = options.buildTarget && targetFromTargetString(options.buildTarget);
+	const options$: Observable<JsonObject> = target
+		? from(context.getTargetOptions(target))
+		: of(options as unknown as JsonObject);
 
-			// This is a hack to make sure that the dev server uses the esbuild builder
-			// instead of the webpack builder. This is necessary because Angular checks
-			// the builder name to determine which builder to use for the dev server.
-			// https://github.com/angular/angular-cli/blob/9d8f6289faefa7241212f9412e70717609ef47ad/packages/angular_devkit/build_angular/src/builders/dev-server/builder.ts#L48
-			context.getBuilderNameForTarget = async () => '@angular-devkit/build-angular:application';
-
-			return runner.pipe(
+	return options$.pipe(
+		switchMap((targetOptions) => {
+			const builderContext = createBuilderContext(targetOptions, context, options.ngDoc?.config);
+			const buildNgDoc$ = buildNgDoc(builderContext).pipe(shareReplay(1));
+			return buildNgDoc$.pipe(
 				first(),
 				switchMap(() =>
-					combineLatest([runner, executeDevServer(options, context)]).pipe(
-						map(([, devServerOutput]: [void, DevServerBuilderOutput]) => devServerOutput),
+					combineLatest([buildNgDoc$, executeDevServer(options, contextWithPatch)]).pipe(
+						map(([, devServerOutput]) => devServerOutput),
 					),
 				),
 			);

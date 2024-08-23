@@ -1,6 +1,6 @@
 {
 	"extends": "./tsconfig.json",
-	"files": ["src/main.ts", "src/polyfills.ts"],
+	"files": ["src/main.ts", "src/main.server.ts", "server.ts"],
 	"include": ["src/**/*.d.ts"],
 	"exclude": ["**/*.test.ts", "**/*.spec.ts"]
 }

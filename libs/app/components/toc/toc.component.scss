@@ -30,4 +30,10 @@
 			}
 		}
 	}
+
+	@media (max-width: 1200px) {
+		.ng-doc-toc-wrapper {
+			display: none;
+		}
+	}
 }

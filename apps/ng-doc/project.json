@@ -12,8 +12,13 @@
 				"outputPath": "dist/apps/ng-doc",
 				"index": "apps/ng-doc/src/index.html",
 				"browser": "apps/ng-doc/src/main.ts",
-				"polyfills": ["apps/ng-doc/src/polyfills.ts"],
+				"polyfills": ["zone.js"],
 				"inlineStyleLanguage": "scss",
+				"server": "apps/ng-doc/src/main.server.ts",
+				"prerender": true,
+				"ssr": {
+					"entry": "apps/ng-doc/server.ts"
+				},
 				"assets": [
 					"apps/ng-doc/src/assets",
 					{
@@ -75,7 +80,11 @@
 				}
 			},
 			"defaultConfiguration": "production",
-			"dependsOn": [{ "target": "link-libs" }]
+			"dependsOn": [
+				{
+					"target": "link-libs"
+				}
+			]
 		},
 		"link-libs": {
 			"executor": "nx:run-commands",
@@ -90,7 +99,12 @@
 					"symlink-dir dist/libs/ui-kit node_modules/@ng-doc/ui-kit"
 				]
 			},
-			"dependsOn": [{ "projects": "dependencies", "target": "build" }]
+			"dependsOn": [
+				{
+					"projects": "dependencies",
+					"target": "build"
+				}
+			]
 		},
 		"serve": {
 			"executor": "./dist/libs/builder:dev-server",
@@ -106,11 +120,19 @@
 					"buildTarget": "ng-doc:build:development",
 					"ngDoc": {
 						"config": "apps/ng-doc/ng-doc.config.poc.ts"
-					}
+					},
+					"optimization": false,
+					"extractLicenses": false,
+					"sourceMap": true,
+					"namedChunks": true
 				}
 			},
 			"defaultConfiguration": "development",
-			"dependsOn": [{ "target": "link-libs" }]
+			"dependsOn": [
+				{
+					"target": "link-libs"
+				}
+			]
 		},
 		"extract-i18n": {
 			"executor": "@angular-devkit/build-angular:extract-i18n",
@@ -119,10 +141,7 @@
 			}
 		},
 		"lint": {
-			"executor": "@nx/eslint:lint",
-			"options": {
-				"lintFilePatterns": ["apps/ng-doc/**/*.ts", "apps/ng-doc/**/*.html"]
-			}
+			"executor": "@nx/eslint:lint"
 		},
 		"test": {
 			"executor": "@nx/jest:jest",

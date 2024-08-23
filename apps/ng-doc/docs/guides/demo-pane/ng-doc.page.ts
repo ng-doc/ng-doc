@@ -2,6 +2,7 @@ import { NgDocPage } from '@ng-doc/core';
 
 import GuidesCategory from '../ng-doc.category';
 import { ButtonDemoComponent } from './demos/button-demo/button-demo.component';
+import { ButtonInlineDemoComponent } from './demos/button-inline-demo/button-inline-demo.component';
 
 const DemoPanePage: NgDocPage = {
   title: `Demo Pane`,
@@ -9,7 +10,7 @@ const DemoPanePage: NgDocPage = {
   category: GuidesCategory,
   order: 3,
   keyword: 'GuidesDemoPane',
-  demos: { ButtonDemoComponent },
+  demos: { ButtonDemoComponent, ButtonInlineDemoComponent },
   route: {
     children: [
       {

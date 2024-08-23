@@ -94,6 +94,7 @@ export class NgDocCategoryEntity extends NgDocNavigationEntity<NgDocCategory> {
 		const result: string = renderTemplate('./category.ts.nunj', {
 			context: {
 				category: this,
+				outFolder: path.dirname(this.modulePath),
 			},
 		});
 

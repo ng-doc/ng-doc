@@ -8,6 +8,9 @@ version.
 In v17.0.0, project was migrated to Angular v17, support of Webpack was removed, now it works only
 with Vite + Esbuild. To migrate automatically, you can run the following command:
 
+> **Note**
+> After migration you also need to update other `@ng-doc/*` packages to v17.0.0
+
 ```bash group="migration-v17" name="Angular" icon="angular"
 ng update @ng-doc/builder
 ```
@@ -28,7 +31,7 @@ Vite doesn't see changes in folders that start with a dot, so you need to rename
 
 - rename assets `.ng-doc/ng-doc/assets` folder to `ng-doc/ng-doc/assets` in `angular.json`
 - change `@ng-doc/generated` path `.ng-doc/ng-doc/index.ts` in `tsconfig.json` to `ng-doc/ng-doc/index.ts`
-- replace `.ng-doc` folder name in `.gitignore` file with `ng-doc`
+- replace `.ng-doc` folder name in `.gitignore` file with `/ng-doc`
 
 ## Migration to >= v16.13
 

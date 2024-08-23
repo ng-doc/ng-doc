@@ -11,4 +11,6 @@ export interface NgDocPlaygroundProperty {
 	description?: string;
 	/** List of possible options, it can be list of Type Alias items */
 	options?: string[];
+	/** Determines if the property is manually added by the user */
+	isManual?: boolean;
 }

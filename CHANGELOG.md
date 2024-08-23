@@ -1,113 +1,271 @@
-# [17.0.0-beta.9](https://github.com/ng-doc/ng-doc/compare/v17.0.0-beta.8...v17.0.0-beta.9) (2023-11-20)
-
-
-### Bug Fixes
-
-* **builder:** test migration ([da5afb5](https://github.com/ng-doc/ng-doc/commit/da5afb5eea26b1ad98dd15ba3bbe926fb6e40b40))
-
-# [17.0.0-beta.8](https://github.com/ng-doc/ng-doc/compare/v17.0.0-beta.7...v17.0.0-beta.8) (2023-11-20)
-
+## [17.6.16](https://github.com/ng-doc/ng-doc/compare/v17.6.15...v17.6.16) (2024-07-18)
 
 ### Bug Fixes
 
-* **builder:** fix build ([9adcc8d](https://github.com/ng-doc/ng-doc/commit/9adcc8d96fa7ec5675ed4610d91fcdd8ece79152))
-* **builder:** fix build ([8a1fa20](https://github.com/ng-doc/ng-doc/commit/8a1fa20b9ed1f446127d156fc77038fc8bd1f1f6))
+- **builder:** build failed after update to the latest Angular and NgDoc version ([cd28db6](https://github.com/ng-doc/ng-doc/commit/cd28db6881b0679af2e8c9003129d34c5429fa6b)), closes [#192](https://github.com/ng-doc/ng-doc/issues/192)
 
+## [17.6.15](https://github.com/ng-doc/ng-doc/compare/v17.6.14...v17.6.15) (2024-07-17)
+
+### Bug Fixes
+
+- **builder:** add support for Angular 18.1 ([30365c7](https://github.com/ng-doc/ng-doc/commit/30365c7d29be0c58b1c7c9fe9c94ff13d53f3d74)), closes [#189](https://github.com/ng-doc/ng-doc/issues/189)
+
+## [17.6.14](https://github.com/ng-doc/ng-doc/compare/v17.6.13...v17.6.14) (2024-06-17)
+
+### Bug Fixes
+
+- **app:** anchor scrolling doesn't work for Chinese and Cyrillic characters ([5cb20e2](https://github.com/ng-doc/ng-doc/commit/5cb20e2f09f20b2b7cf8deef418e762a8970b6e5)), closes [#172](https://github.com/ng-doc/ng-doc/issues/172)
+
+## [17.6.13](https://github.com/ng-doc/ng-doc/compare/v17.6.12...v17.6.13) (2024-06-14)
+
+### Bug Fixes
+
+- **ng-add:** undefined project in assets and tsconfig paths ([#160](https://github.com/ng-doc/ng-doc/issues/160)) ([df214a3](https://github.com/ng-doc/ng-doc/commit/df214a38fe8a8eb773b02f78c6ccdfad8029c017)), closes [#115](https://github.com/ng-doc/ng-doc/issues/115)
+
+## [17.6.12](https://github.com/ng-doc/ng-doc/compare/v17.6.11...v17.6.12) (2024-06-14)
+
+### Bug Fixes
+
+- allows customizing the title of the API page ([#170](https://github.com/ng-doc/ng-doc/issues/170)) ([0bc22b5](https://github.com/ng-doc/ng-doc/commit/0bc22b5d4b585db2963b9d597f6549e15e8342af))
+
+## [17.6.11](https://github.com/ng-doc/ng-doc/compare/v17.6.10...v17.6.11) (2024-06-06)
+
+### Bug Fixes
+
+- **app:** home icon in breadcrumb has invalid path ([8a9bb7e](https://github.com/ng-doc/ng-doc/commit/8a9bb7eacc539796b44afa69191193b476d40e58)), closes [#167](https://github.com/ng-doc/ng-doc/issues/167)
+
+## [17.6.10](https://github.com/ng-doc/ng-doc/compare/v17.6.9...v17.6.10) (2024-05-27)
+
+### Bug Fixes
+
+- **builder:** cannot read properties of undefined (reading 'relative') ([42506f5](https://github.com/ng-doc/ng-doc/commit/42506f545f2363b3c87f042d51f166d2df105c31))
+
+## [17.6.9](https://github.com/ng-doc/ng-doc/compare/v17.6.8...v17.6.9) (2024-05-27)
+
+### Bug Fixes
+
+- **app:** category imports break a build for Angular 17.3 and above ([e4163d4](https://github.com/ng-doc/ng-doc/commit/e4163d4079f1f61e1f77d8455e4f553d65c32eaf))
+
+## [17.6.8](https://github.com/ng-doc/ng-doc/compare/v17.6.7...v17.6.8) (2024-05-08)
+
+### Bug Fixes
+
+- **app:** table of contents link does not work properly with `baseHref` ([f65fc1f](https://github.com/ng-doc/ng-doc/commit/f65fc1ffc11b36297377621bea6f7695816f20f7)), closes [#159](https://github.com/ng-doc/ng-doc/issues/159)
+
+## [17.6.7](https://github.com/ng-doc/ng-doc/compare/v17.6.6...v17.6.7) (2024-05-03)
+
+### Bug Fixes
+
+- **builder:** setting `hidden: true` for the page doesn't have an effect ([6cf9aaa](https://github.com/ng-doc/ng-doc/commit/6cf9aaa62c17a38747393fe2590e60308a1f8c2d)), closes [#158](https://github.com/ng-doc/ng-doc/issues/158)
+
+## [17.6.6](https://github.com/ng-doc/ng-doc/compare/v17.6.5...v17.6.6) (2024-05-01)
+
+### Bug Fixes
+
+- **builder:** eliminate dev-server schema validation error ([#153](https://github.com/ng-doc/ng-doc/issues/153)) ([68a9039](https://github.com/ng-doc/ng-doc/commit/68a903978db98ae5181b3b2891e3b4b3c2728159)), closes [#147](https://github.com/ng-doc/ng-doc/issues/147)
+
+## [17.6.5](https://github.com/ng-doc/ng-doc/compare/v17.6.4...v17.6.5) (2024-04-30)
+
+### Bug Fixes
+
+- **builder:** playground templates do not support direct input directive binding (e.g., `<img [ngDocRotator]="true"/>`) ([ab8bcb2](https://github.com/ng-doc/ng-doc/commit/ab8bcb2303ceb01f023b05b442ae614de078a313))
+
+## [17.6.4](https://github.com/ng-doc/ng-doc/compare/v17.6.3...v17.6.4) (2024-04-27)
+
+### Bug Fixes
+
+- **builder:** builder doesn't ignore inputs used for the component in the playground template ([75c89d0](https://github.com/ng-doc/ng-doc/commit/75c89d0632f55e1d525404421b3508ba3cc1c2a2)), closes [#156](https://github.com/ng-doc/ng-doc/issues/156)
+
+## [17.6.3](https://github.com/ng-doc/ng-doc/compare/v17.6.2...v17.6.3) (2024-04-24)
+
+### Bug Fixes
+
+- **app:** input aliasing selector renders in playground template using property name ([d7cf81e](https://github.com/ng-doc/ng-doc/commit/d7cf81e918e768eb4f2cb3f5f46047bc75285428)), closes [#155](https://github.com/ng-doc/ng-doc/issues/155)
+
+## [17.6.2](https://github.com/ng-doc/ng-doc/compare/v17.6.1...v17.6.2) (2024-04-22)
+
+### Bug Fixes
+
+- **builder:** imports in generated APIs lead to a build error for latest angular version ([1b4bdf6](https://github.com/ng-doc/ng-doc/commit/1b4bdf694f0c5bea6ca8f63cfe1c99f8363ce9f6))
+
+## [17.6.1](https://github.com/ng-doc/ng-doc/compare/v17.6.0...v17.6.1) (2024-04-17)
+
+### Bug Fixes
+
+- **builder:** imports in `ng-doc.routing.ts` lead to a build error for latest angular version ([61effbf](https://github.com/ng-doc/ng-doc/commit/61effbfdf14830780ec938f2bf322588758e481c)), closes [#154](https://github.com/ng-doc/ng-doc/issues/154)
+
+# [17.6.0](https://github.com/ng-doc/ng-doc/compare/v17.5.7...v17.6.0) (2024-04-14)
 
 ### Features
 
-* **builder:** add additional migrations ([c4a67d0](https://github.com/ng-doc/ng-doc/commit/c4a67d00551100b2230385ce068c4d532549e054))
+- **ui:** nunito font was removed, now UI uses system fonts by default ([32d3e11](https://github.com/ng-doc/ng-doc/commit/32d3e11f953a950e58c50067e839bacddd4b14ca)), closes [#152](https://github.com/ng-doc/ng-doc/issues/152)
 
-# [17.0.0-beta.7](https://github.com/ng-doc/ng-doc/compare/v17.0.0-beta.6...v17.0.0-beta.7) (2023-11-19)
-
-
-### Bug Fixes
-
-* **builder:** fix migrations ([0b1e58e](https://github.com/ng-doc/ng-doc/commit/0b1e58eed826704880952100d6ebbff55b3b9882))
-
-# [17.0.0-beta.6](https://github.com/ng-doc/ng-doc/compare/v17.0.0-beta.5...v17.0.0-beta.6) (2023-11-19)
-
+## [17.5.7](https://github.com/ng-doc/ng-doc/compare/v17.5.6...v17.5.7) (2024-04-08)
 
 ### Bug Fixes
 
-* **builder:** fix migrations ([56a7b1c](https://github.com/ng-doc/ng-doc/commit/56a7b1cf7c621a20fc63d4030205c0bba276a2c6))
-* **builder:** fix migrations ([5aeab32](https://github.com/ng-doc/ng-doc/commit/5aeab3229643f5a494916e98b279787c852769bc))
+- **builder:** builder configuration doesn't support .js extension ([94773ac](https://github.com/ng-doc/ng-doc/commit/94773acf33f9d26a0cead5b027313a7de982643c)), closes [#148](https://github.com/ng-doc/ng-doc/issues/148)
 
-# [17.0.0-beta.5](https://github.com/ng-doc/ng-doc/compare/v17.0.0-beta.4...v17.0.0-beta.5) (2023-11-19)
-
+## [17.5.6](https://github.com/ng-doc/ng-doc/compare/v17.5.5...v17.5.6) (2024-04-03)
 
 ### Bug Fixes
 
-* **builder:** test migration ([26bee5e](https://github.com/ng-doc/ng-doc/commit/26bee5eb2bed588039ed80d995e41f60f8d25e4d))
+- **builder:** playgrounds break the build for the Angular 17.3 version ([54e8711](https://github.com/ng-doc/ng-doc/commit/54e87111bc7fae970370f03ea19f5aca822c1bdd)), closes [#144](https://github.com/ng-doc/ng-doc/issues/144)
 
-# [17.0.0-beta.4](https://github.com/ng-doc/ng-doc/compare/v17.0.0-beta.3...v17.0.0-beta.4) (2023-11-19)
-
+## [17.5.5](https://github.com/ng-doc/ng-doc/compare/v17.5.4...v17.5.5) (2024-03-06)
 
 ### Bug Fixes
 
-* **builder:** fix build ([68a1d1e](https://github.com/ng-doc/ng-doc/commit/68a1d1ef70328befbb5259a8778550f7e3f82f1b))
-* **builder:** replace flex-controls with di-controls ([49cff30](https://github.com/ng-doc/ng-doc/commit/49cff303cccc1bd51c9cb2de1fec20b13b80bf58))
+- **demo:** demos don't extract code from the new `styleUrl` property ([b8061f0](https://github.com/ng-doc/ng-doc/commit/b8061f05f6df77ce434fe0ca153af7efbe2cce65)), closes [#140](https://github.com/ng-doc/ng-doc/issues/140)
+- **playgrounds:** recreating playground's demos doesn't work ([9b4bdb7](https://github.com/ng-doc/ng-doc/commit/9b4bdb7beef0026544a43d69e31be1787deb4219)), closes [#138](https://github.com/ng-doc/ng-doc/issues/138)
 
+## [17.5.4](https://github.com/ng-doc/ng-doc/compare/v17.5.3...v17.5.4) (2024-03-03)
+
+### Bug Fixes
+
+- **builder:** input signals that have `undefined` in type are not displayed in playgrounds ([07dd7f6](https://github.com/ng-doc/ng-doc/commit/07dd7f62c42766c8c8aeac021159f306a9a7729f)), closes [#137](https://github.com/ng-doc/ng-doc/issues/137)
+
+## [17.5.3](https://github.com/ng-doc/ng-doc/compare/v17.5.2...v17.5.3) (2024-03-02)
+
+### Bug Fixes
+
+- **builder:** builder doesnt format the code if application uses prettier >=2.x.x ([4df1eda](https://github.com/ng-doc/ng-doc/commit/4df1eda986412ab800173f32450015fce4ce8e17)), closes [#136](https://github.com/ng-doc/ng-doc/issues/136)
+
+## [17.5.2](https://github.com/ng-doc/ng-doc/compare/v17.5.1...v17.5.2) (2024-02-27)
+
+### Bug Fixes
+
+- **app:** search icon is not displayed in the navbar for mobile and tablet views ([dcd3d6d](https://github.com/ng-doc/ng-doc/commit/dcd3d6dfc28fe8b668eb66ab68fed6014a9b6ad5))
+
+## [17.5.1](https://github.com/ng-doc/ng-doc/compare/v17.5.0...v17.5.1) (2024-02-21)
+
+### Bug Fixes
+
+- **builder:** multiple API Configurations causes build error ([3389546](https://github.com/ng-doc/ng-doc/commit/33895468031007d43ca966ace815be5cfb9c9707)), closes [#133](https://github.com/ng-doc/ng-doc/issues/133)
+
+# [17.5.0](https://github.com/ng-doc/ng-doc/compare/v17.4.0...v17.5.0) (2024-02-17)
 
 ### Features
 
-* **builder:** add automatic migration ([9c72508](https://github.com/ng-doc/ng-doc/commit/9c72508ca2862d1ea2895b2055058f92df8824c9))
-* **builder:** add automatic migration ([dab72a0](https://github.com/ng-doc/ng-doc/commit/dab72a018ed8cf18d81ab33e85d1c1196c9ec1c2))
+- **builder:** add `inputs` property for `demo` and `demoPane` actions ([21a80cd](https://github.com/ng-doc/ng-doc/commit/21a80cdf52ade014afa388a5356ff6dc06264866)), closes [#132](https://github.com/ng-doc/ng-doc/issues/132)
 
-# [17.0.0-beta.3](https://github.com/ng-doc/ng-doc/compare/v17.0.0-beta.2...v17.0.0-beta.3) (2023-11-18)
-
-
-### Bug Fixes
-
-* **builder:** replace flex-controls with di-controls ([465d62f](https://github.com/ng-doc/ng-doc/commit/465d62ff4ee982815717b6df430c415db58a0187))
-
-# [17.0.0-beta.2](https://github.com/ng-doc/ng-doc/compare/v17.0.0-beta.1...v17.0.0-beta.2) (2023-11-18)
-
-
-### Bug Fixes
-
-* **builder:** serveWebpackBrowser is not a function ([a23dd2d](https://github.com/ng-doc/ng-doc/commit/a23dd2d9c1f2e2b5f861909926073327171160a9))
-
+# [17.4.0](https://github.com/ng-doc/ng-doc/compare/v17.3.2...v17.4.0) (2024-02-16)
 
 ### Features
 
-* **angular:** bump Angular version ([47e3a24](https://github.com/ng-doc/ng-doc/commit/47e3a24bc831e28176ca82384abdb1e99fffa635))
+- **builder:** add `excludeByTsDocsTags` function to filter out nodes based on TS documentation tags ([#131](https://github.com/ng-doc/ng-doc/issues/131)) ([2a55f57](https://github.com/ng-doc/ng-doc/commit/2a55f5717087309192bd0e012c9e707503b68d68))
 
+## [17.3.2](https://github.com/ng-doc/ng-doc/compare/v17.3.1...v17.3.2) (2024-02-15)
+
+### Bug Fixes
+
+- **ui-kit:** checkbox always displays checked state ([5f752fe](https://github.com/ng-doc/ng-doc/commit/5f752fe83d71b207edec82fcba2c7f629b5ea228))
+- **ui-kit:** remove redundant input in button component ([f0335dd](https://github.com/ng-doc/ng-doc/commit/f0335dddeb10f1b508d3d4f904e95ba71b647fd9))
+
+## [17.3.1](https://github.com/ng-doc/ng-doc/compare/v17.3.0...v17.3.1) (2024-02-13)
+
+### Bug Fixes
+
+- **builder:** add missed name options in schemas ([#130](https://github.com/ng-doc/ng-doc/issues/130)) ([f35ed2c](https://github.com/ng-doc/ng-doc/commit/f35ed2c66452d731782a043c538fbca66a2adbe8))
+
+# [17.3.0](https://github.com/ng-doc/ng-doc/compare/v17.2.3...v17.3.0) (2024-01-18)
+
+### Features
+
+- **builder:** add support for `input` signal ([#129](https://github.com/ng-doc/ng-doc/issues/129)) ([a4042af](https://github.com/ng-doc/ng-doc/commit/a4042afe14d5936ddbcf37f559421a8ea8026bc4))
+
+## [17.2.3](https://github.com/ng-doc/ng-doc/compare/v17.2.2...v17.2.3) (2024-01-12)
+
+### Bug Fixes
+
+- **ui-kit:** update @ngneat/until-destroy dependency ([e2d1d5c](https://github.com/ng-doc/ng-doc/commit/e2d1d5cf240089e64bcb1dedb1fa6ab2fa9935d1)), closes [#127](https://github.com/ng-doc/ng-doc/issues/127)
+
+## [17.2.2](https://github.com/ng-doc/ng-doc/compare/v17.2.1...v17.2.2) (2024-01-07)
+
+### Bug Fixes
+
+- **app:** table of content is not displayed ([f08373d](https://github.com/ng-doc/ng-doc/commit/f08373d4cf169be8f1c31d07e05f5d2c8364da4d))
+
+## [17.2.1](https://github.com/ng-doc/ng-doc/compare/v17.2.0...v17.2.1) (2023-12-27)
+
+### Bug Fixes
+
+- **add:** add schematics don't add HttpClient provider by default ([1dccda3](https://github.com/ng-doc/ng-doc/commit/1dccda344824e8793a98ea81b28ae8450e1c3c94))
+
+# [17.2.0](https://github.com/ng-doc/ng-doc/compare/v17.1.3...v17.2.0) (2023-12-18)
+
+### Features
+
+- **project:** add SSR support ([#119](https://github.com/ng-doc/ng-doc/issues/119)) ([2e16359](https://github.com/ng-doc/ng-doc/commit/2e16359de6b5cc11d48459c0f9f30e26ac8084a2)), closes [#114](https://github.com/ng-doc/ng-doc/issues/114)
+
+## [17.1.3](https://github.com/ng-doc/ng-doc/compare/v17.1.2...v17.1.3) (2023-12-01)
+
+### Bug Fixes
+
+- **app:** inputs with type `string` display model incorrectly ([948dae6](https://github.com/ng-doc/ng-doc/commit/948dae6df8cb01f2238900446830f10666a2542e))
+- **builder:** playgrounds don't support `@Input` accessors ([d5c12c8](https://github.com/ng-doc/ng-doc/commit/d5c12c8f000f6c71b958c09b297dde0b8b331e28)), closes [#116](https://github.com/ng-doc/ng-doc/issues/116)
+- **core:** playground fails with errors for some specific input types ([1ec8668](https://github.com/ng-doc/ng-doc/commit/1ec86686728fae65bc17200370839dd99c8283c8))
+
+## [17.1.2](https://github.com/ng-doc/ng-doc/compare/v17.1.1...v17.1.2) (2023-11-21)
+
+### Bug Fixes
+
+- **add:** automatic installation of the library does not add the default layout ([544c66a](https://github.com/ng-doc/ng-doc/commit/544c66af47068c61d9b54985986f454a65aacf4c))
+
+## [17.1.1](https://github.com/ng-doc/ng-doc/compare/v17.1.0...v17.1.1) (2023-11-21)
+
+### Bug Fixes
+
+- **add:** automatic installation of the library does not add the default layout ([3c10464](https://github.com/ng-doc/ng-doc/commit/3c10464cd70abfff61c687b3fc40bacb0f7e1bdf))
+
+# [17.1.0](https://github.com/ng-doc/ng-doc/compare/v17.0.0...v17.1.0) (2023-11-21)
+
+### Bug Fixes
+
+- **add:** imports of default modules in some cases are added to the wrong file ([50f691a](https://github.com/ng-doc/ng-doc/commit/50f691aa2dc304d16bd3f9fabfb79a196730207e))
+- **add:** migration and adding ng-doc leads to warnings ([7cfe6d6](https://github.com/ng-doc/ng-doc/commit/7cfe6d6aadd190238d64639d0e69422a95928756))
+- **ui-kit:** fix ``@angular/cdk` version ([bd4573a](https://github.com/ng-doc/ng-doc/commit/bd4573a026228d5d6ea02e05c36dfe387f2ca58e))
+
+### Continuous Integration
+
+- **angular:** add Angular 17 support. Vite + ESBuild is now used by default, and support for Webpack has been removed. Please follow the migration instructions https://ng-doc.com/docs/getting-started/migrations ([b6bdd6d](https://github.com/ng-doc/ng-doc/commit/b6bdd6dbd46eb9c92698041d024499e44e6f322e)), closes [#109](https://github.com/ng-doc/ng-doc/issues/109)
 
 ### BREAKING CHANGES
 
-* **angular:** Angular 17
+- **angular:** Angular 17
 
-# [17.0.0-beta.1](https://github.com/ng-doc/ng-doc/compare/v16.18.0-beta.1...v17.0.0-beta.1) (2023-11-18)
-
-
-### Features
-
-* **angular:** bump Angular version ([2945f16](https://github.com/ng-doc/ng-doc/commit/2945f163b39e779469311389727189a140451121))
-
-
-### BREAKING CHANGES
-
-* **angular:** Angular 17
-
-# [16.18.0-beta.1](https://github.com/ng-doc/ng-doc/compare/v16.17.0...v16.18.0-beta.1) (2023-11-18)
-
+# [18.0.0](https://github.com/ng-doc/ng-doc/compare/v17.0.0...v18.0.0) (2023-11-21)
 
 ### Bug Fixes
 
-* **builder:** the cache is not invalidated after removing `.ng-doc` folder ([c20e479](https://github.com/ng-doc/ng-doc/commit/c20e479af6e8ad3dc23382b4a3942f54063d7714))
-* **keywords-loaders:** fix release cycle for the `keywords-loaders` library ([a1dbda9](https://github.com/ng-doc/ng-doc/commit/a1dbda92a017fe19732d8120d70c74780c2825fc))
-* **ng-doc:** `ng-doc` doesn't forget pages that have been moved to another directory ([c433a10](https://github.com/ng-doc/ng-doc/commit/c433a1007d07716833de2a987f9be63c7dc73a7a))
-* **ng-doc:** release trigger ([e7ac592](https://github.com/ng-doc/ng-doc/commit/e7ac592fc2f5ddadceb6633d13d6a3790b4eeb00))
-* **project:** dependency injection error after update to 15.10.0 ([cc41f44](https://github.com/ng-doc/ng-doc/commit/cc41f448054d73b9961f8a7be7689b4195a23c1f))
-* **project:** fix "could not resolve *path*" error for the build target ([66a7b23](https://github.com/ng-doc/ng-doc/commit/66a7b236e8b1053a0f2be05ec35454bde172dc6c))
-* **semantic-release:** bump version ([d0f1862](https://github.com/ng-doc/ng-doc/commit/d0f18629d1d99afbf4f8ba5a34db227a05a84bbc))
+- **add:** imports of default modules in some cases are added to the wrong file ([50f691a](https://github.com/ng-doc/ng-doc/commit/50f691aa2dc304d16bd3f9fabfb79a196730207e))
+- **add:** migration and adding ng-doc leads to warnings ([7cfe6d6](https://github.com/ng-doc/ng-doc/commit/7cfe6d6aadd190238d64639d0e69422a95928756))
+- **ui-kit:** fix ``@angular/cdk` version ([bd4573a](https://github.com/ng-doc/ng-doc/commit/bd4573a026228d5d6ea02e05c36dfe387f2ca58e))
 
+### Continuous Integration
+
+- **angular:** add Angular 17 support. Vite + ESBuild is now used by default, and support for Webpack has been removed. Please follow the migration instructions https://ng-doc.com/docs/getting-started/migrations ([b6bdd6d](https://github.com/ng-doc/ng-doc/commit/b6bdd6dbd46eb9c92698041d024499e44e6f322e)), closes [#109](https://github.com/ng-doc/ng-doc/issues/109)
+
+### BREAKING CHANGES
+
+- **angular:** Angular 17
+
+# [17.0.0](https://github.com/ng-doc/ng-doc/compare/v16.18.0...v17.0.0) (2023-11-20)
+
+### Continuous Integration
+
+- **angular:** add Angular 17 support. Vite + ESBuild is now used by default, and support for Webpack has been removed. Please follow the migration instructions https://ng-doc.com/docs/getting-started/migrations ([ca98292](https://github.com/ng-doc/ng-doc/commit/ca982921177f0103a4dba15d7ea315cb37e4c804)), closes [#109](https://github.com/ng-doc/ng-doc/issues/109)
+
+### BREAKING CHANGES
+
+- **angular:** Angular 17
+
+# [16.18.0](https://github.com/ng-doc/ng-doc/compare/v16.17.0...v16.18.0) (2023-11-20)
 
 ### Features
 
-* **project:** migrate to Angular 17 ([5e7e36e](https://github.com/ng-doc/ng-doc/commit/5e7e36eca2514f24d3fbd80262b9413bcc1c40e8))
-* **project:** update packages ([3542e64](https://github.com/ng-doc/ng-doc/commit/3542e642c0ace7cf194d902c8ed0722565c21217))
+- **core,app:** can disable fullscreen routes in the page configuration ([a5849d2](https://github.com/ng-doc/ng-doc/commit/a5849d2144199ea3b3b0b45edbf49635e582ce17)), closes [#106](https://github.com/ng-doc/ng-doc/issues/106)
+- **project:** add Angular 17 support. Vite + ESBuild is now used by default, and support for Webpack has been removed. Please follow the migration instructions https://ng-doc.com/docs/getting-started/migrations ([#109](https://github.com/ng-doc/ng-doc/issues/109)) ([c40e247](https://github.com/ng-doc/ng-doc/commit/c40e2478a21d63465662927bd1f8ef129326cfbe))
 
 # [16.17.0](https://github.com/ng-doc/ng-doc/compare/v16.16.0...v16.17.0) (2023-11-18)
 

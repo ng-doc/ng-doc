@@ -51,6 +51,7 @@ export class NgDocPagePlaygroundEntity extends NgDocEntity {
 				playgroundMetadata: this.metadata,
 				hasImports: this.parent.hasImports,
 				targetImportPath: this.parent.importPath,
+				outFolder: path.dirname(this.outputPath),
 			},
 		});
 
@@ -112,6 +113,7 @@ export class NgDocPagePlaygroundEntity extends NgDocEntity {
 					type: typeof value === 'string' ? value : value.type,
 					description: typeof value === 'string' ? undefined : value.description ?? undefined,
 					options: typeof value === 'string' ? undefined : value.options ?? undefined,
+					isManual: true,
 				};
 
 				return properties;

@@ -7,7 +7,7 @@ export const iconProcessor: NgDocPageProcessor<NgDocIconComponent> = {
 	extractOptions: (element: Element) => ({
 		inputs: {
 			icon: element.getAttribute('icon') ?? '',
-			size: (Number(element.getAttribute('size')) as NgDocIconSize) ?? 16,
+			size: (Number(element.getAttribute('size')) as NgDocIconSize) || 16,
 		},
 	}),
 };

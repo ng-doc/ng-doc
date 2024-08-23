@@ -1,7 +1,7 @@
 ## Disable fullscreen routes
 
 To disable the fullscreen mode and manage child routes yourself, you need to specify disableFullscreenRoutes in `ng-doc.page.ts`.
-You will then need a <router-outlet /> in your page (for example in the demo).
+You will then need a `<router-outlet />` in your page (for example in the demo).
 
 By default `disableFullscreenRoutes` is `false`.
 

@@ -103,6 +103,37 @@ export default MyAwesomePage;
 
 {{ NgDocActions.playground("ButtonPlayground") }}
 
+## Inputs used in the template
+
+If you are setting the value of an input using the template playground, NgDoc will ignore this input
+for the sidebar. Thus, you can pass references to HTML elements or other components into inputs
+using Angular syntax.
+
+> **Note**
+> However, if you simply want to set a default value for an input and still keep control in the
+> sidebar to manage its value, use the `NgDocPlaygroundOptions.inputs` or
+> `NgDocPlaygroundOptions.defaults` properties of the playground configuration.
+
+```typescript name="ng-doc.page.ts" {8-10}
+import { NgDocPage } from '@ng-doc/core';
+
+const MyAwesomePage: NgDocPage = {
+  playgrounds: {
+    TagPlayground: {
+      target: MyComponent,
+      template: `
+         You can also use "ng-doc-selector" here instead of your real selector
+        <my-component [input]="elementRef"></my-component>
+        
+        <input #elementRef value="Hello, World!">
+      `,
+    },
+  },
+};
+
+export default MyAwesomePage;
+```
+
 ## Optional content
 
 Some components may support displaying other child components with `ng-content`, and they may be
@@ -114,10 +145,10 @@ the `content` field in your playground configuration, for example:
 > field, if this component is not standalone you must import its module.
 
 ```typescript name="ng-doc.page.ts" {11,15-18}
-import { NgDocDependencies } from '@ng-doc/core';
+import { NgDocPage } from '@ng-doc/core';
 import { NgDocTagComponent, NgDocIconComponent } from '@ng-doc/ui-kit';
 
-const PageDependencies: NgDocDependencies = {
+const MyAwesomePage: NgDocPage = {
   imports: [NgDocIconComponent],
   playgrounds: {
     TagIconPlayground: {
@@ -137,7 +168,7 @@ const PageDependencies: NgDocDependencies = {
   },
 };
 
-export default PageDependencies;
+export default MyAwesomePage;
 ```
 
 NgDoc will create new control in the `Content` section that allows you to display or hide dynamic
@@ -151,10 +182,10 @@ To make your playgrounds more lively and dynamic you can use `data` field,
 and put any data you want in it, to use it in your template, for example like that:
 
 ```typescript name="ng-doc.page.ts"
-import { NgDocDependencies } from '@ng-doc/core';
+import { NgDocPage } from '@ng-doc/core';
 import { NgDocTagComponent } from '@ng-doc/ui-kit';
 
-const PageDependencies: NgDocDependencies = {
+const MyAwesomePage: NgDocPage = {
   playgrounds: {
     TagDataPlayground: {
       target: NgDocTagComponent,
@@ -166,7 +197,7 @@ const PageDependencies: NgDocDependencies = {
   },
 };
 
-export default PageDependencies;
+export default MyAwesomePage;
 ```
 
 {{ NgDocActions.playground("TagDataPlayground") }}
@@ -277,10 +308,10 @@ in the playground configuration, for example:
 > for this input.
 
 ```typescript name="ng-doc.page.ts"
-import { NgDocDependencies } from '@ng-doc/core';
+import { NgDocPage } from '@ng-doc/core';
 import { NgDocTagComponent } from '@ng-doc/ui-kit';
 
-const PageDependencies: NgDocDependencies = {
+const MyAwesomePage: NgDocPage = {
   imports: [NgDocTagModule],
   playgrounds: {
     TagDataPlayground: {
@@ -295,7 +326,32 @@ const PageDependencies: NgDocDependencies = {
   },
 };
 
-export default PageDependencies;
+export default MyAwesomePage;
+```
+
+For more complex types such as type aliases, you should specify the name of your type in the `type`
+field. If for any reason you don't have it, you can specify `NgDocTypeAlias`, an internal one that
+will prompt the playground to create a field with selectable values that you pass to `options`.
+
+```typescript name="ng-doc.page.ts"
+import { NgDocPage } from '@ng-doc/core';
+import { NgDocTagComponent } from '@ng-doc/ui-kit';
+
+const MyAwesomePage: NgDocPage = {
+  imports: [NgDocTagModule],
+  playgrounds: {
+    TagDataPlayground: {
+      target: NgDocTagComponent,
+      template: `<ng-doc-selector>My Tag</ng-doc-selector>`,
+      controls: {
+        size: { type: 'Size', options: ['small', 'medium', 'large'] },
+        color: { type: 'NgDocTypeAlias', options: ['primary', 'secondary', 'success', 'danger'] },
+      },
+    },
+  },
+};
+
+export default MyAwesomePage;
 ```
 
 ## See Also

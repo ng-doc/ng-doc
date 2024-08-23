@@ -1,19 +1,17 @@
-<ng-template
-	[ngDocMediaQuery]="[mediaQuery.breakpoints.Large, mediaQuery.breakpoints.XLarge]"
-	#mediaQuery="ngDocMediaQuery">
-	<div class="ng-doc-toc-wrapper">
-		<div class="ng-doc-toc-container">
-			<div class="ng-doc-toc-selection" #selection></div>
-			<ul class="ng-doc-toc">
+<div class="ng-doc-toc-wrapper">
+	<div class="ng-doc-toc-container">
+		<div class="ng-doc-toc-selection" #selection></div>
+		<ul class="ng-doc-toc">
+			@for (item of tableOfContent; track item) {
 				<li
-					*ngFor="let item of tableOfContent"
 					ng-doc-toc-element
-					[href]="item.path"
+					[path]="item.path"
+					[hash]="item.hash"
 					[level]="item.level"
-					[selected]="item === activeItem">
+					[selected]="item === activeItem()">
 					{{ item.title }}
 				</li>
-			</ul>
-		</div>
+			}
+		</ul>
 	</div>
-</ng-template>
+</div>

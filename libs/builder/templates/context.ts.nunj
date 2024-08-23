@@ -17,8 +17,8 @@ export function provideNgDocContext(): Provider {
                     {%- endif %}
                     {%- if entity.order %}
                     order: {{ entity.order }},
+										{%- endif %}
                     hidden: {{ "true" if entity.target.hidden else "false" }},
-                    {%- endif %}
                     {%- if entity.isCategory %}
                     children: [
                         {%- for child in entity.navigationItems | sortNavigationEntities %}

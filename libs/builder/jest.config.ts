@@ -10,6 +10,7 @@ export default {
 			},
 		],
 	},
+	setupFiles: ['../jest.polyfills.js'],
 	moduleFileExtensions: ['ts', 'js', 'html'],
 	coverageDirectory: '../../coverage/libs/builder',
 };

@@ -3,11 +3,14 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
+	inject,
 	Input,
 	OnChanges,
 	OnInit,
+	Renderer2,
 } from '@angular/core';
 import { Params, RouterLink } from '@angular/router';
+import { NgDocDecodeUriComponentPipe } from '@ng-doc/app/pipes';
 import { NgDocIconComponent } from '@ng-doc/ui-kit';
 
 @Component({
@@ -16,7 +19,7 @@ import { NgDocIconComponent } from '@ng-doc/ui-kit';
 	styleUrls: ['./page-link.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	standalone: true,
-	imports: [NgIf, RouterLink, NgTemplateOutlet, NgDocIconComponent],
+	imports: [NgIf, RouterLink, NgTemplateOutlet, NgDocIconComponent, NgDocDecodeUriComponentPipe],
 })
 export class NgDocPageLinkComponent implements OnInit, OnChanges {
 	@Input({ required: true })
@@ -29,14 +32,15 @@ export class NgDocPageLinkComponent implements OnInit, OnChanges {
 
 	private link: HTMLAnchorElement | undefined;
 
-	constructor(private elementRef: ElementRef<HTMLElement>) {}
+	private readonly elementRef: ElementRef<HTMLElement> = inject(ElementRef);
+	private readonly renderer: Renderer2 = inject(Renderer2);
 
 	ngOnInit(): void {
 		this.isInCode = this.elementRef.nativeElement.closest('code') !== null;
 	}
 
 	ngOnChanges(): void {
-		this.link = document.createElement('a');
+		this.link = this.renderer.createElement('a') as HTMLAnchorElement;
 		this.link.href = this.href;
 	}
 

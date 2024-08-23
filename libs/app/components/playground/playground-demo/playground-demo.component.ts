@@ -116,6 +116,12 @@ export class NgDocPlaygroundDemoComponent<
 			this.demoRef?.setInput('properties', data.properties ?? {});
 			this.demoRef?.setInput('content', data.content ?? {});
 			this.demoRef?.setInput('actionData', this.configuration?.data ?? {});
+
+			if (this.recreateDemo) {
+				this.demoRef?.instance.onReattached.subscribe(() => {
+					this.demoRef?.changeDetectorRef.detectChanges();
+				});
+			}
 		}
 
 		this.updateCodeView();
@@ -138,13 +144,13 @@ export class NgDocPlaygroundDemoComponent<
 					this.pipeName,
 					this.getActiveContent(),
 					this.getPipeActiveInputs(),
-			  )
+				)
 			: buildPlaygroundDemoTemplate(
 					this.configuration?.template ?? '',
 					this.selector,
 					this.getActiveContent(),
 					this.getActiveInputs(),
-			  );
+				);
 
 		this.code = from(formatHtml(template));
 	}
@@ -165,11 +171,12 @@ export class NgDocPlaygroundDemoComponent<
 			(this.form?.controls.properties.value as Record<string, unknown>) ?? {};
 
 		return objectKeys(formData).reduce((result: Record<string, string>, key: string) => {
+			const inputName = this.properties?.[key]?.inputName ?? key;
 			const value: unknown = formData[key];
 			const property: unknown | undefined = this.demoRef?.instance?.defaultValues[key];
 
 			if (property !== value) {
-				result[key] = stringify(value).replace(/"/g, `'`);
+				result[inputName] = stringify(value).replace(/"/g, `'`);
 			}
 
 			return result;

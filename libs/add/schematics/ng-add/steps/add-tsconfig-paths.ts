@@ -11,6 +11,7 @@ import * as path from 'path';
 import { GENERATED_PATH } from '../constants/modules';
 import { Schema } from '../schema';
 import { getProject } from '../utils/get-project';
+import { getProjectName } from '../utils/get-project-name';
 
 /**
  *
@@ -22,7 +23,7 @@ export function addTsconfigPaths(options: Schema): Rule {
 			const logger = context.logger.createChild('add-tsconfig-paths');
 
 			context.logger.info(`[INFO]: TSConfig paths`);
-			logger.info(`🔄 Configuring TSConfig paths to allow import from ".ng-doc" folder...`);
+			logger.info(`🔄 Configuring TSConfig paths to allow import from "ng-doc" folder...`);
 
 			try {
 				const project: ProjectDefinition | undefined = getProject(options, workspace);
@@ -35,19 +36,20 @@ export function addTsconfigPaths(options: Schema): Rule {
 
 				const buildTarget: TargetDefinition | undefined = project.targets.get('build');
 				const serveTarget: TargetDefinition | undefined = project.targets.get('serve');
+				const projectName = getProjectName(options, workspace);
 
 				if (buildTarget) {
 					const tsConfigPath: string | undefined =
 						buildTarget.options && (buildTarget.options['tsConfig'] as string);
 
-					tsConfigPath && updateTsConfigPaths(tree, String(tsConfigPath), options.project);
+					tsConfigPath && updateTsConfigPaths(tree, String(tsConfigPath), projectName);
 				}
 
 				if (serveTarget) {
 					const tsConfigPath: string | undefined =
 						serveTarget.options && (serveTarget.options['tsConfig'] as string);
 
-					tsConfigPath && updateTsConfigPaths(tree, String(tsConfigPath), options.project);
+					tsConfigPath && updateTsConfigPaths(tree, String(tsConfigPath), projectName);
 				}
 
 				logger.info('✅ Done!');
@@ -74,9 +76,9 @@ function updateTsConfigPaths(tree: Tree, filePath: string, projectName: string):
 	if (paths || !ext) {
 		json.modify(
 			['compilerOptions', 'paths', `${GENERATED_PATH}`],
-			[`.ng-doc/${projectName}/index.ts`],
+			[`./ng-doc/${projectName}/index.ts`],
 		);
-		json.modify(['compilerOptions', 'paths', `${GENERATED_PATH}/*`], [`.ng-doc/${projectName}/*`]);
+		json.modify(['compilerOptions', 'paths', `${GENERATED_PATH}/*`], [`./ng-doc/${projectName}/*`]);
 	} else if (ext) {
 		updateTsConfigPaths(tree, path.join(path.dirname(filePath), ext), projectName);
 	}

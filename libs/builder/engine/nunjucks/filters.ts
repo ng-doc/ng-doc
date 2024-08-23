@@ -3,9 +3,11 @@
 export {
 	accessorPresentation,
 	constructorPresentation,
+	createImportPath,
 	declarationImport,
 	displayReturnType,
 	displayType,
+	excludeByTsDocsTags,
 	extractDocs,
 	extractParameterDocs,
 	extractSeeDocs,

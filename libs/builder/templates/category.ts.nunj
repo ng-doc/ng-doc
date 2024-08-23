@@ -12,7 +12,7 @@ const routes: Routes = [
             {%- for child in category.builtChildren %}
             {
                 path: '{{ child.route }}',
-                loadChildren: () => import('{{ child.moduleImport }}')
+                loadChildren: () => import('./{{ outFolder | createImportPath(child.moduleImport) }}')
             },
             {%- endfor %}
         ]

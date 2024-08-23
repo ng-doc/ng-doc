@@ -74,7 +74,7 @@ blockquote#{$class} {
 	& + h4#{$class},
 	& + h5#{$class},
 	& + h6#{$class} {
-		margin-top: calc(var(--ng-doc-base-gutter) * 5);
+		margin-top: calc(var(--ng-doc-base-gutter) * 2);
 	}
 }
 

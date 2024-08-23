@@ -14,6 +14,8 @@ To install the NgDoc, you can use the command below.
 This command will automatically install and add the library to your project,
 and configure it.
 
+{% include "../../shared/generated-folder.md" %}
+
 ```bash group="install" name="Angular" icon="angular"
 ng add @ng-doc/add
 ```
@@ -37,7 +39,7 @@ npm i @ng-doc/{core,builder,ui-kit,app}
 ### Adding builders
 
 First of all you need to add builders from NgDoc library to your application,
-replace `browser` and `dev-server` builders for `build` and `serve` targets with
+replace `application` and `dev-server` builders for `build` and `serve` targets with
 alternatives from the NgDoc as shown in the example below
 
 ```json group="builders" name="Angular (angular.json)" icon="angular"
@@ -46,7 +48,7 @@ alternatives from the NgDoc as shown in the example below
     "my-project": {
       "architect": {
         "build": {
-          "builder": "@ng-doc/builder:browser"
+          "builder": "@ng-doc/builder:application"
         },
         "serve": {
           "builder": "@ng-doc/builder:dev-server"
@@ -61,7 +63,7 @@ alternatives from the NgDoc as shown in the example below
 {
   "targets": {
     "build": {
-      "executor": "@ng-doc/builder:browser"
+      "executor": "@ng-doc/builder:application"
     },
     "serve": {
       "executor": "@ng-doc/builder:dev-server"
@@ -103,14 +105,14 @@ by adding them to your `styles` array.
 }
 ```
 
-### Adding .ng-doc folder to gitignore
+### Adding ng-doc folder to gitignore
 
-`.ng-doc` folder contains generated NgDoc files, you need to add it to your `.gitignore`,
+`ng-doc` folder contains generated NgDoc files, you need to add it to your `.gitignore`,
 because NgDoc regenerates them every time the application is launched.
 
 ```gitignore name=".gitignore"
 ## NgDoc folder
-.ng-doc
+/ng-doc
 ```
 
 ### Adding assets
@@ -138,7 +140,7 @@ useful things. You also need to add them to your application's assets.
               },
               {
                 "glob": "**/*",
-                "input": ".ng-doc/<project-name>/assets",
+                "input": "ng-doc/<project-name>/assets",
                 "output": "assets/ng-doc"
               }
             ]
@@ -168,7 +170,7 @@ useful things. You also need to add them to your application's assets.
           },
           {
             "glob": "**/*",
-            "input": ".ng-doc/<project-name>/assets",
+            "input": "ng-doc/<project-name>/assets",
             "output": "assets/ng-doc"
           }
         ]
@@ -185,13 +187,15 @@ application, NgDoc also uses synthetic imports that you need to enable,
 to do this, edit the tsconfig.json of the existing application by adding the path to
 the generated files and `allowSyntheticDefaultImports` option.
 
+{% include "../../shared/generated-folder.md" %}
+
 ```json name="tsconfig.json"
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@ng-doc/generated": [".ng-doc/<project-name>/index.ts"],
-      "@ng-doc/generated/*": [".ng-doc/<project-name>/*"]
+      "@ng-doc/generated": ["ng-doc/<project-name>/index.ts"],
+      "@ng-doc/generated/*": ["ng-doc/<project-name>/*"]
     }
   }
 }

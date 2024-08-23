@@ -172,6 +172,7 @@ export class NgDocPageEntity extends NgDocNavigationEntity<NgDocPage> {
 					context: {
 						page: this,
 						pageContent: content,
+						outFolder: path.dirname(this.modulePath),
 					},
 				}),
 				filePath: this.modulePath,

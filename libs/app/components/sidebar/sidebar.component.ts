@@ -22,6 +22,7 @@ import { NgDocSidebarItemComponent } from './sidebar-item/sidebar-item.component
 		NgDocExecutePipe,
 		NgDocBindPipe,
 	],
+	host: { ngSkipHydration: 'true' },
 })
 export class NgDocSidebarComponent {
 	constructor(

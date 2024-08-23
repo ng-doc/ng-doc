@@ -1,7 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input } from '@angular/core';
-import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes/sanitize-html';
 import { NgDocPageProcessorDirective } from '@ng-doc/app/processors/page-processor';
 import {
 	NgDocButtonIconComponent,
@@ -24,7 +23,6 @@ import {
 		NgDocTooltipDirective,
 		NgDocSmoothResizeComponent,
 		NgDocIconComponent,
-		NgDocSanitizeHtmlPipe,
 		NgDocPageProcessorDirective,
 	],
 })
@@ -46,7 +44,10 @@ export class NgDocCodeComponent {
 
 	tooltipText: string = '';
 
-	constructor(private elementRef: ElementRef<HTMLElement>, private readonly clipboard: Clipboard) {}
+	constructor(
+		private elementRef: ElementRef<HTMLElement>,
+		private readonly clipboard: Clipboard,
+	) {}
 
 	@HostBinding('attr.data-ng-doc-has-header')
 	get hasHeader(): boolean {

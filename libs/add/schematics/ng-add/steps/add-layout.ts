@@ -1,12 +1,11 @@
-import { getProjectTargetOptions } from '@angular/cdk/schematics';
-import { JsonValue } from '@angular-devkit/core';
 import { ProjectDefinition, WorkspaceDefinition } from '@angular-devkit/core/src/workspace';
-import { Rule, SchematicContext, Tree, UpdateRecorder } from '@angular-devkit/schematics';
+import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 
 import { APP_COMPONENT_CONTENT } from '../constants/app-component-content';
 import { Schema } from '../schema';
 import { getAppTemplatePath } from '../utils/get-app-template-path';
+import { getMainPath } from '../utils/get-main-path';
 import { getProject } from '../utils/get-project';
 
 /**
@@ -32,16 +31,10 @@ export function addLayout(options: Schema): Rule {
 				return;
 			}
 
-			const buildOptions: Record<string, JsonValue | undefined> = getProjectTargetOptions(
-				project,
-				'build',
-			);
-			const appTemplatePath: string | undefined = getAppTemplatePath(
-				tree,
-				buildOptions['main'] as string,
-			);
+			const mainPath: string | undefined = getMainPath(project);
+			const appTemplatePath: string | undefined = getAppTemplatePath(tree, mainPath);
 
-			if (!appTemplatePath) {
+			if (!appTemplatePath || !mainPath) {
 				logger.error(
 					'❌ Could not find the default main template file for the project. Please replace the content of the root component with NgDoc layout manually.',
 				);
@@ -52,11 +45,7 @@ export function addLayout(options: Schema): Rule {
 			const html: Buffer | null = tree.read(appTemplatePath);
 
 			if (html) {
-				const recorder: UpdateRecorder = tree.beginUpdate(appTemplatePath);
-
-				recorder.remove(0, html.length);
-				recorder.insertLeft(0, APP_COMPONENT_CONTENT);
-				tree.commitUpdate(recorder);
+				tree.overwrite(appTemplatePath, APP_COMPONENT_CONTENT);
 
 				logger.info('✅ Done!');
 			}

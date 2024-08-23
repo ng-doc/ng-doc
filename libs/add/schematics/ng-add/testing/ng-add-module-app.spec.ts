@@ -88,17 +88,17 @@ describe('ng-add module app', () => {
   "compilerOptions": {
     "paths": {
       "@ng-doc/generated": [
-        ".ng-doc//index.ts"
+        "./ng-doc/demo/index.ts"
       ],
       "@ng-doc/generated/*": [
-        ".ng-doc//*"
+        "./ng-doc/demo/*"
       ]
     }
   }
 }`);
 	});
 
-	it('should add .ng-doc folder to gitignore tsconfig', async () => {
+	it('should add ng-doc folder to gitignore tsconfig', async () => {
 		const options: Schema = {
 			project: '',
 		};
@@ -108,7 +108,7 @@ describe('ng-add module app', () => {
 		expect(tree.readContent('.gitignore')).toEqual(`.cache
 
 # NgDoc files
-.ng-doc`);
+/ng-doc`);
 	});
 
 	it('should add NgDoc modules', async () => {
@@ -119,7 +119,8 @@ describe('ng-add module app', () => {
 		const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
 		expect(tree.readContent('test/app/app.module.ts'))
-			.toEqual(`import { NgDocRootComponent, NgDocNavbarComponent, NgDocSidebarComponent, provideNgDocApp, provideSearchEngine, NgDocDefaultSearchEngine, providePageSkeleton, NG_DOC_DEFAULT_PAGE_SKELETON, provideMainPageProcessor, NG_DOC_DEFAULT_PAGE_PROCESSORS } from "@ng-doc/app";
+			.toEqual(`import { provideHttpClient, withInterceptorsFromDi, withFetch } from "@angular/common/http";
+import { NgDocRootComponent, NgDocNavbarComponent, NgDocSidebarComponent, provideNgDocApp, provideSearchEngine, NgDocDefaultSearchEngine, providePageSkeleton, NG_DOC_DEFAULT_PAGE_SKELETON, provideMainPageProcessor, NG_DOC_DEFAULT_PAGE_PROCESSORS } from "@ng-doc/app";
 import { NG_DOC_ROUTING, provideNgDocContext } from "@ng-doc/generated";
 import { RouterModule } from "@angular/router";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -128,7 +129,7 @@ import { AppComponent } from './app.component';
 
 @NgModule({declarations: [AppComponent],
     imports: [BrowserAnimationsModule, RouterModule.forRoot(NG_DOC_ROUTING, {scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', scrollOffset: [0, 70]}), NgDocRootComponent, NgDocNavbarComponent, NgDocSidebarComponent],
-    providers: [provideNgDocContext(), provideNgDocApp(), provideSearchEngine(NgDocDefaultSearchEngine), providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON), provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS)]
+    providers: [provideHttpClient(withInterceptorsFromDi(), withFetch()), provideNgDocContext(), provideNgDocApp(), provideSearchEngine(NgDocDefaultSearchEngine), providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON), provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS)]
 })
 export class AppModule {}
 `);
@@ -170,7 +171,7 @@ export class AppModule {}
                 },
                 {
                   "glob": "**/*",
-                  "input": ".ng-doc//assets",
+                  "input": "ng-doc/demo/assets",
                   "output": "assets/ng-doc"
                 }
               ],

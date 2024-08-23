@@ -28,12 +28,9 @@
 </ng-container>
 
 <ng-template #demoTemplate>
-	<ng-template #fullscreenButton>
+	@if (options.fullscreenRoute) {
 		<ng-doc-fullscreen-button [route]="options.fullscreenRoute!"></ng-doc-fullscreen-button>
-	</ng-template>
-	<ng-container
-		*polymorpheusOutlet="
-			options.fullscreenRoute ? fullscreenButton : demo ?? '';
-			context: {}
-		"></ng-container>
+	} @else if (demo) {
+		<ng-container *ngComponentOutlet="demo; inputs: options.inputs"></ng-container>
+	}
 </ng-template>

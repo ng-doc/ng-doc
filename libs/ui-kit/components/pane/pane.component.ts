@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import {
+	afterNextRender,
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
@@ -10,7 +11,6 @@ import {
 	Input,
 	NgZone,
 	OnChanges,
-	OnInit,
 	SimpleChanges,
 	ViewChild,
 } from '@angular/core';
@@ -48,7 +48,7 @@ export class NgDocPaneBackDirective {}
 	standalone: true,
 })
 @UntilDestroy()
-export class NgDocPaneComponent implements OnChanges, OnInit {
+export class NgDocPaneComponent implements OnChanges {
 	@Input()
 	expanded: boolean = false;
 
@@ -66,55 +66,55 @@ export class NgDocPaneComponent implements OnChanges, OnInit {
 		private readonly changeDetectorRef: ChangeDetectorRef,
 		private readonly elementRef: ElementRef<HTMLElement>,
 		private readonly ngZone: NgZone,
-	) {}
-
-	ngOnInit(): void {
-		if (this.resizer) {
-			const mouseDown$ = fromEvent(this.resizer.nativeElement, 'mousedown').pipe(
-				tap(() => {
-					this.dragging = true;
-					this.changeDetectorRef.markForCheck();
-				}),
-			);
-
-			const mouseUp$ = fromEvent(this.document, 'mouseup').pipe(
-				tap(() => {
-					this.dragging = false;
-					this.changeDetectorRef.markForCheck();
-				}),
-			);
-
-			const mouseMove$ = (fromEvent(this.document, 'mousemove') as Observable<MouseEvent>).pipe(
-				map((event: MouseEvent) => event.clientX),
-				pairwise(),
-				map(([prev, next]: [number, number]) => next - prev),
-			);
-
-			mouseDown$
-				.pipe(
-					switchMap(() => {
-						const dragEvent$ = mouseMove$.pipe(takeUntil(mouseUp$));
-
-						const clickEvent$ = mouseUp$.pipe(
-							map(() => null),
-							takeUntil(mouseMove$),
-							take(1),
-						);
-
-						return merge(dragEvent$, clickEvent$);
+	) {
+		afterNextRender(() => {
+			if (this.resizer) {
+				const mouseDown$ = fromEvent(this.resizer.nativeElement, 'mousedown').pipe(
+					tap(() => {
+						this.dragging = true;
+						this.changeDetectorRef.markForCheck();
 					}),
-					filter((delta: number | null) => delta !== 0),
-					ngDocZoneOptimize(this.ngZone),
-					untilDestroyed(this),
-				)
-				.subscribe((delta: number | null) => {
-					delta === null ? this.toggle() : this.addDelta(delta);
-				});
-		}
+				);
 
-		fromEvent(window, 'resize')
-			.pipe(debounceTime(100), untilDestroyed(this), ngDocZoneOptimize(this.ngZone))
-			.subscribe(() => this.addDelta(0));
+				const mouseUp$ = fromEvent(this.document, 'mouseup').pipe(
+					tap(() => {
+						this.dragging = false;
+						this.changeDetectorRef.markForCheck();
+					}),
+				);
+
+				const mouseMove$ = (fromEvent(this.document, 'mousemove') as Observable<MouseEvent>).pipe(
+					map((event: MouseEvent) => event.clientX),
+					pairwise(),
+					map(([prev, next]: [number, number]) => next - prev),
+				);
+
+				mouseDown$
+					.pipe(
+						switchMap(() => {
+							const dragEvent$ = mouseMove$.pipe(takeUntil(mouseUp$));
+
+							const clickEvent$ = mouseUp$.pipe(
+								map(() => null),
+								takeUntil(mouseMove$),
+								take(1),
+							);
+
+							return merge(dragEvent$, clickEvent$);
+						}),
+						filter((delta: number | null) => delta !== 0),
+						ngDocZoneOptimize(this.ngZone),
+						untilDestroyed(this),
+					)
+					.subscribe((delta: number | null) => {
+						delta === null ? this.toggle() : this.addDelta(delta);
+					});
+			}
+
+			fromEvent(window, 'resize')
+				.pipe(debounceTime(100), untilDestroyed(this), ngDocZoneOptimize(this.ngZone))
+				.subscribe(() => this.addDelta(0));
+		});
 
 		this.addDelta(0);
 	}
@@ -148,6 +148,7 @@ export class NgDocPaneComponent implements OnChanges, OnInit {
 				maxWidth,
 				Math.max(0, this.resizer.nativeElement.offsetLeft + delta),
 			)}px`;
+
 			this.changeDetectorRef.detectChanges();
 		}
 	}

@@ -17,5 +17,5 @@ export class NgDocBreadcrumbComponent implements NgDocPageBreadcrumbs {
 	@Input()
 	breadcrumbs: string[] = [];
 
-	protected readonly home: string = inject(NgDocRootPage).routePrefix || '/';
+	protected readonly home: string = inject(NgDocRootPage).routePrefix || '';
 }

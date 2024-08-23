@@ -3,7 +3,6 @@
   <a href="https://github.com/ng-doc/ng-doc">
     <img src="https://ng-doc.com/assets/images/ng-doc.svg?raw=true" alt="Logo" height="150px">
   </a>
-
 <h1 align="center" style="margin-bottom: 0; border-bottom: 0">NgDoc</h1>
   <p align="center">
     Create user-friendly documentation for your projects with ease!
