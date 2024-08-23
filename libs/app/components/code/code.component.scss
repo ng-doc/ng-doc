@@ -40,13 +40,6 @@
     }
   }
 
-  .ng-doc-code-body {
-    position: relative;
-    height: 100%;
-    border-radius: var(--ng-doc-code-border-radius, var(--ng-doc-base-gutter));
-    border: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
-  }
-
   .ng-doc-copy-button {
     position: absolute;
     top: var(--ng-doc-base-gutter);
@@ -62,13 +55,16 @@
   }
 
   .ng-doc-code-body {
+    position: relative;
+    height: 100%;
+    border-radius: var(--ng-doc-code-border-radius, var(--ng-doc-base-gutter));
+    border: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
+    overflow: hidden;
+
     ::ng-deep {
       pre {
         display: flex;
         margin: var(--ng-doc-code-margin);
-        border-radius: var(--ng-doc-code-border-radius, var(--ng-doc-base-gutter));
-        border: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
-        overflow: hidden;
         height: 100%;
 
         code {

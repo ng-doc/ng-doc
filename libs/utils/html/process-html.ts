@@ -41,7 +41,6 @@ export async function processHtml(
       .use(rehypeParse, { fragment: true })
       .use(rehypeStringify)
       .use(mermaidPlugin)
-      // @ts-expect-error - rehype-shiki types are not up to date
       .use(rehypeShiki, {
         defaultLanguage: 'ts',
         fallbackLanguage: 'text',
