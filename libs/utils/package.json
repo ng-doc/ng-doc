@@ -17,6 +17,7 @@
     "@shikijs/rehype": "1.10.3",
     "chalk": "5.2.0",
     "shiki": "1.10.1",
+    "unified": "11.0.5",
     "stringify-entities": "4.0.4"
   },
   "publishConfig": {
