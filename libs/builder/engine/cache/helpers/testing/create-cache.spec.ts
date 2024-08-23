@@ -20,7 +20,8 @@ describe('createCache', () => {
 
     expect(result).toStrictEqual({
       version: undefined,
-      properties: undefined,
+      data: undefined,
+      result: undefined,
     });
   });
 
@@ -29,7 +30,8 @@ describe('createCache', () => {
 
     expect(result).toStrictEqual({
       version: undefined,
-      properties: undefined,
+      data: undefined,
+      result: undefined,
       files: {
         'folder/file1': '9a0364b9e99bb480dd25e1f0284c8555',
         'folder/file2': '9a0364b9e99bb480dd25e1f0284c8555',
@@ -42,7 +44,8 @@ describe('createCache', () => {
 
     expect(result).toStrictEqual({
       version: undefined,
-      properties: { property: 'value' },
+      result: undefined,
+      data: { property: 'value' },
     });
   });
 
@@ -51,7 +54,8 @@ describe('createCache', () => {
 
     expect(result).toStrictEqual({
       version: '1.0.0',
-      properties: undefined,
+      data: undefined,
+      result: undefined,
     });
   });
 });

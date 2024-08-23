@@ -5,16 +5,16 @@ import { firstNodeWithComment } from '../first-node-with-comment';
 
 //*
 describe('firstNodeWithComment', () => {
-	let project: Project;
+  let project: Project;
 
-	beforeEach(() => {
-		project = createProject({ useInMemoryFileSystem: true });
-	});
+  beforeEach(() => {
+    project = createProject({ useInMemoryFileSystem: true });
+  });
 
-	it('should return first node that has JSDoc comment', () => {
-		const sourceFile: SourceFile = project.createSourceFile(
-			'class.ts',
-			`
+  it('should return first node that has JSDoc comment', () => {
+    const sourceFile: SourceFile = project.createSourceFile(
+      'class.ts',
+      `
 				class Test {
 					method(param = 'string'): string {
 						return param;
@@ -35,9 +35,9 @@ describe('firstNodeWithComment', () => {
 
 				}
 			`,
-		);
-		const declarations: ClassDeclaration[] = sourceFile.getClasses();
+    );
+    const declarations: ClassDeclaration[] = sourceFile.getClasses();
 
-		expect(firstNodeWithComment(declarations).getName()).toBe(`Test2`);
-	});
+    expect(firstNodeWithComment(declarations)?.getName()).toBe(`Test2`);
+  });
 });

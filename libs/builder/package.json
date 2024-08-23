@@ -29,6 +29,7 @@
     "marked": "12.0.1",
     "esbuild": "0.19.12",
     "cosmiconfig": "8.2.0",
+    "@prettier/sync": "0.5.2",
     "cosmiconfig-typescript-loader": "5.0.0",
     "find-cache-dir": "3.3.2",
     "tslib": "^2.6.2",
