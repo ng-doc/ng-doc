@@ -59,19 +59,15 @@ export class AppComponent {
 
 ## Theme by default
 
-You can set the `defaultThemeId` field of the NgDoc configuration to `dark` or `auto` or any other
-theme id to set a default theme for your documentation project.
+In order to set the default theme, you need to add the `data-theme` attribute to the `html` element
+in the `index.html` file.
 
-```typescript name="main.ts" {8}
-import { bootstrapApplication } from '@angular/platform-browser';
-import { provideNgDocApp } from '@ng-doc/app';
-
-import { AppComponent } from './app/app.component';
-import { AppComponent } from './app.component';
-
-bootstrapApplication(AppComponent, {
-  providers: [provideNgDocApp({ defaultThemeId: 'auto' })],
-}).catch((err: unknown) => console.error(err));
+```html name="index.html" {8}
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head> </head>
+  <body></body>
+</html>
 ```
 
 ## Code highlighting theme
