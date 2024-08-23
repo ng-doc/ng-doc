@@ -1,5 +1,3 @@
-# {{ NgDocPage.title }}
-
 This article will help you to customize layout of the documentation app.
 
 ## Customization
@@ -55,23 +53,21 @@ and its style.
 ### Content
 
 The `NgDocNavbarComponent` can be customized by adding your own content. You can do this
-by providing `ng-template` to the one of its inputs like on the example below:
+by adding the `ngDocNavbarLeft` and `ngDocNavbarRight` attributes to the elements inside the
+`NgDocNavbarComponent`.
 
 ```html name="app.component.html"
-<ng-doc-navbar [leftContent]="brand" [rightContent]="controls">
-  <ng-template #brand>
-    <img src="assets/images/brand.svg" />
-  </ng-template>
-  <ng-template #controls>
-    <a
-      ng-doc-button-icon
-      size="large"
-      href="https://github.com/me/my-repo"
-      target="_blank"
-      ngDocTooltip="Check my repo">
-      <ng-doc-icon icon="github" [size]="24"></ng-doc-icon>
-    </a>
-  </ng-template>
+<ng-doc-navbar [rightContent]="controls">
+  <img src="assets/images/brand.svg" ngDocNavbarLeft />
+  <a
+    ngDocNavbarRight
+    ng-doc-button-icon
+    size="large"
+    href="https://github.com/me/my-repo"
+    target="_blank"
+    ngDocTooltip="Check my repo">
+    <ng-doc-icon icon="github" [size]="24"></ng-doc-icon>
+  </a>
 </ng-doc-navbar>
 ```
 
@@ -118,8 +114,8 @@ export class MyCustomNavbarComponent {
 ## Sidebar
 
 The `sidebar` is the left bar of the documentation application, it can be customized or replaced
-with
-your own `sidebar`. Below is a list of all the available variables that affect the `sidebar` layout:
+with your own `sidebar`. Below is a list of all the available variables that affect the `sidebar`
+layout:
 
 ```scss name="styles.css"
 :root {
@@ -147,8 +143,9 @@ If you want to replace the `NgDocSidebarComponent` with your own `sidebar`, then
 and mark it with `NgDocCustomSidebarDirective` directive like on the example below:
 
 ```html name="app.component.html"
+
 <ng-doc-root>
-    <ng-doc-navbar></ng-doc-sidebar>
+  <ng-doc-navbar></ng-doc-sidebar>
 
     <my-custom-sidebar ngDocCustomSidebar></my-custom-sidebar>
     <router-outlet></router-outlet>

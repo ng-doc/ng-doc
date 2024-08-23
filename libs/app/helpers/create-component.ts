@@ -7,17 +7,17 @@ import { Type, ViewContainerRef } from '@angular/core';
  * @param inputs
  */
 export function createComponent<T>(
-	viewContainer: ViewContainerRef,
-	component: Type<T>,
-	inputs?: object,
+  viewContainer: ViewContainerRef,
+  component: Type<T>,
+  inputs?: object,
 ): void {
-	viewContainer.clear();
+  viewContainer.clear();
 
-	const componentRef = viewContainer.createComponent(component);
+  const componentRef = viewContainer.createComponent(component);
 
-	if (inputs) {
-		Object.entries(inputs).forEach(([key, value]) => {
-			componentRef.setInput(key, value);
-		});
-	}
+  if (inputs) {
+    Object.entries(inputs).forEach(([key, value]) => {
+      componentRef.setInput(key, value);
+    });
+  }
 }

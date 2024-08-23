@@ -1,0 +1,119 @@
+:host {
+  display: block;
+  width: 800px;
+  max-width: 100%;
+
+  @media (max-width: 1024px) {
+    padding: calc(var(--ng-doc-base-gutter) * 5);
+  }
+
+  @media (max-width: 768px) {
+    padding: calc(var(--ng-doc-base-gutter) * 2);
+  }
+
+  --ng-doc-search-border-radius: var(--ng-doc-floated-border-radius);
+  --ng-doc-input-height: calc(var(--ng-doc-base-gutter) * 7);
+  --ng-doc-input-border: 1px solid var(--ng-doc-base-1);
+  --ng-doc-input-border-hover: 1px solid var(--ng-doc-base-1);
+  --ng-doc-floated-focus-border-color: transparent;
+
+  ng-doc-icon[icon='search'] {
+    --ng-doc-icon-width: calc(var(--ng-doc-base-gutter) * 6);
+  }
+
+  ng-doc-input-wrapper:not(:last-child) {
+    --ng-doc-floated-border-radius: var(--ng-doc-search-border-radius)
+      var(--ng-doc-search-border-radius) 0 0;
+  }
+
+  .ng-doc-search-dialog-container {
+    box-shadow:
+      rgba(0, 0, 0, 0) 0 0 0 0,
+      rgba(0, 0, 0, 0) 0 0 0 0,
+      rgba(0, 0, 0, 0.25) 0 25px 50px -12px;
+  }
+
+  .ng-doc-search-result-content {
+    max-height: 70vh;
+    overflow: auto;
+    background-color: var(--ng-doc-background);
+    border-radius: 0 0 var(--ng-doc-search-border-radius) var(--ng-doc-search-border-radius);
+
+    --ng-doc-option-padding: 0;
+
+    &[data-ng-doc-mod='icon'] {
+      .ng-doc-search-wrapper {
+        padding: calc(var(--ng-doc-base-gutter) * 2) 0;
+      }
+
+      .ng-doc-search-option {
+        padding: 12px 16px;
+      }
+    }
+  }
+
+  .ng-doc-search-option {
+    display: block;
+    padding: 12px 36px;
+    text-decoration: none;
+
+    .ng-doc-search-option-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: calc(var(--ng-doc-base-gutter) / 2);
+
+      ng-doc-tag {
+        text-transform: uppercase;
+        margin-right: var(--ng-doc-base-gutter);
+        --ng-doc-font-weight: 500;
+
+        &[data-ng-doc-page-type='guide'] {
+          --ng-doc-tag-color: var(--ng-doc-guide-tag-color);
+          --ng-doc-tag-background: var(--ng-doc-guide-tag-background);
+        }
+
+        &[data-ng-doc-page-type='api'] {
+          --ng-doc-tag-color: var(--ng-doc-api-tag-color);
+          --ng-doc-tag-background: var(--ng-doc-api-tag-background);
+        }
+      }
+
+      .ng-doc-search-option-breadcrumbs {
+        --ng-doc-text: var(--ng-doc-text-muted);
+        --ng-doc-font-size: 12px;
+        --ng-doc-line-height: 16px;
+
+        .ng-doc-search-option-breadcrumb-divider {
+          margin: 0 6px;
+        }
+      }
+    }
+
+    .ng-doc-search-section-title {
+      display: block;
+      color: var(--ng-doc-search-result-header-color, var(--ng-doc-text));
+      --ng-doc-line-height: 20px;
+      margin: 4px 0;
+    }
+
+    .ng-doc-search-content {
+      display: block;
+      color: var(--ng-doc-search-result-color, var(--ng-doc-text));
+      --ng-doc-font-size: 14px;
+      --ng-doc-line-height: 19px;
+    }
+  }
+
+  .ng-doc-search-empty {
+    padding: 0 22px;
+  }
+
+  .ng-doc-search-progress {
+    display: flex;
+    align-items: center;
+
+    ng-doc-spinner {
+      margin-right: var(--ng-doc-base-gutter);
+    }
+  }
+}

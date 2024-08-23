@@ -1,32 +1,34 @@
 <div class="ng-doc-side-bar-wrapper">
-	<ng-container *ngFor="let item of getNavigation | bind: this | execute">
-		<ng-container
-			*ngTemplateOutlet="sidebarTemplate; context: { item: this.item, root: true }"></ng-container>
-	</ng-container>
+  <ng-container *ngFor="let item of getNavigation | bind: this | execute">
+    <ng-container
+      *ngTemplateOutlet="sidebarTemplate; context: { item: this.item, root: true }"></ng-container>
+  </ng-container>
 
-	<ng-template let-item="item" let-root="root" #sidebarTemplate>
-		<ng-container *ngIf="item.children?.length; else itemTemplate">
-			<ng-doc-sidebar-category
-				*ngIf="!item.hidden"
-				[category]="item"
-				[expandable]="!!item?.expandable"
-				[expanded]="!!item?.expanded || !item?.expandable"
-				[isRoot]="!!root"
-				[content]="categoryContent">
-				<ng-template #categoryContent>
-					<ng-container *ngFor="let child of getNavigation | bind: this | execute: item">
-						<ng-container
-							*ngTemplateOutlet="
-								sidebarTemplate;
-								context: { item: child, root: false }
-							"></ng-container>
-					</ng-container>
-				</ng-template>
-			</ng-doc-sidebar-category>
-		</ng-container>
+  <ng-template let-item="item" let-root="root" #sidebarTemplate>
+    <ng-container *ngIf="item.children?.length; else itemTemplate">
+      <ng-doc-sidebar-category
+        *ngIf="!item.hidden"
+        [category]="item"
+        [expandable]="!!item?.expandable"
+        [expanded]="
+          !!item?.expanded || !item?.expandable || (matchRoute | bind: this | execute: item.route)
+        "
+        [isRoot]="!!root"
+        [content]="categoryContent">
+      </ng-doc-sidebar-category>
+      <ng-template #categoryContent>
+        <ng-container *ngFor="let child of getNavigation | bind: this | execute: item">
+          <ng-container
+            *ngTemplateOutlet="
+              sidebarTemplate;
+              context: { item: child, root: false }
+            "></ng-container>
+        </ng-container>
+      </ng-template>
+    </ng-container>
 
-		<ng-template #itemTemplate>
-			<ng-doc-sidebar-item [item]="item" *ngIf="!item.hidden"></ng-doc-sidebar-item>
-		</ng-template>
-	</ng-template>
+    <ng-template #itemTemplate>
+      <ng-doc-sidebar-item [item]="item" *ngIf="!item.hidden"></ng-doc-sidebar-item>
+    </ng-template>
+  </ng-template>
 </div>

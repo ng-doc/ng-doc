@@ -1,62 +1,62 @@
 {
-	"name": "app",
-	"$schema": "../../node_modules/nx/schemas/project-schema.json",
-	"projectType": "library",
-	"sourceRoot": "libs/app",
-	"prefix": "ng-doc",
-	"targets": {
-		"pre-build": {
-			"executor": "@nx/angular:package",
-			"outputs": ["{workspaceRoot}/dist/{projectRoot}"],
-			"options": {
-				"project": "libs/app/ng-package.json"
-			},
-			"configurations": {
-				"production": {
-					"tsConfig": "libs/app/tsconfig.lib.prod.json"
-				},
-				"development": {
-					"tsConfig": "libs/app/tsconfig.lib.json"
-				}
-			},
-			"defaultConfiguration": "production"
-		},
-		"build": {
-			"executor": "nx:run-commands",
-			"outputs": [
-				"{workspaceRoot}/dist/{projectRoot}/styles",
-				"{workspaceRoot}/dist/{projectRoot}/assets/themes"
-			],
-			"options": {
-				"commands": [
-					"sass --no-source-map libs/app/styles/main.scss dist/libs/app/styles/main.css",
-					"sass --no-source-map libs/app/styles/global.scss dist/libs/app/styles/global.css",
-					"sass --no-source-map libs/app/styles/themes:dist/libs/app/assets/themes"
-				]
-			}
-		},
-		"schematics": {
-			"executor": "@nx/js:tsc",
-			"outputs": ["{options.outputPath}"],
-			"options": {
-				"clean": false,
-				"outputPath": "dist/libs/app",
-				"main": "libs/app/schematics/index.ts",
-				"tsConfig": "libs/app/tsconfig.schematics.json",
-				"assets": ["libs/app/schematics/**/*.json", "libs/app/schematics/**/files/**/*"]
-			}
-		},
-		"test": {
-			"executor": "@nx/jest:jest",
-			"outputs": ["{workspaceRoot}/coverage/libs/app"],
-			"options": {
-				"jestConfig": "libs/app/jest.config.ts"
-			}
-		},
-		"lint": {
-			"executor": "@nx/eslint:lint"
-		}
-	},
-	"tags": ["type:lib", "lib:app"],
-	"implicitDependencies": ["builder"]
+  "name": "app",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/app",
+  "prefix": "ng-doc",
+  "targets": {
+    "pre-build": {
+      "executor": "@nx/angular:package",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "libs/app/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/app/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/app/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{workspaceRoot}/dist/{projectRoot}/styles",
+        "{workspaceRoot}/dist/{projectRoot}/assets/themes"
+      ],
+      "options": {
+        "commands": [
+          "sass --no-source-map libs/app/styles/main.scss dist/libs/app/styles/main.css",
+          "sass --no-source-map libs/app/styles/global.scss dist/libs/app/styles/global.css",
+          "sass --no-source-map libs/app/styles/themes/dark.scss dist/libs/app/styles/themes/dark.css"
+        ]
+      }
+    },
+    "schematics": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "clean": false,
+        "outputPath": "dist/libs/app",
+        "main": "libs/app/schematics/index.ts",
+        "tsConfig": "libs/app/tsconfig.schematics.json",
+        "assets": ["libs/app/schematics/**/*.json", "libs/app/schematics/**/files/**/*"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/app"],
+      "options": {
+        "jestConfig": "libs/app/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  },
+  "tags": ["type:lib", "lib:app"],
+  "implicitDependencies": ["builder"]
 }

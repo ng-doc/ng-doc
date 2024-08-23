@@ -1,28 +1,18 @@
 {% import "helpers/declaration-modifiers.html.nunj" as tagsMacro %}
 {% import "helpers/no-content.html.nunj" as noContentMacro %}
 
-{% set description = docNode | extractDocs %}
+{% if not hideDescription %}
+    {% set description = docNode | getJsDocDescription %}
 
-<header>
-    {% include "parts/page-tags.html.nunj" %}
-    {% block modifier %}{% endblock %}
-    <h1>{{ declaration.getName() }}</h1>
-
-    {% if not description %}
-        <!-- This is a hack to make the declaration name available to the search index. -->
-        <div style="display: none">%%API_NAME_ANCHOR%%</div>
-    {% endif %}
-
-    {% block details %}{% endblock %}
-</header>
-
-<section>
     {{ description if description else noContentMacro.render('No documentation has been provided.') }}
-</section>
+{% endif %}
 
-{% include "parts/see-also.html.nunj" %}
+{% if not hideSeeAlso %}
+    {% include "parts/see-also.html.nunj" %}
+{% endif %}
 
 {% block overview %}{% endblock %}
 
-
-{% include "parts/usage-notes.html.nunj" %}
+{% if not hideUsageNotes %}
+    {% include "parts/usage-notes.html.nunj" %}
+{% endif %}

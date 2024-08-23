@@ -1,0 +1,24 @@
+{% extends "api/base.html.nunj" %}
+
+{% import "helpers/code.html.nunj" as codeMacro %}
+{% import "helpers/parameters.html.nunj" as parametersMacro %}
+{% import "helpers/overload.html.nunj" as overloadMacro %}
+
+{% block overview %}
+    {%- set parameters = declaration.getParameters() -%}
+    {%- set overloads = declaration.getOverloads() -%}
+
+    <h2>Presentation</h2>
+    {{ codeMacro.render(declaration | functionPresentation, "typescript", false) }}
+
+    {% if parameters.length -%}
+        <h2>Parameters</h2>
+        {{ parametersMacro.render(parameters, declaration) }}
+    {%- endif %}
+
+    {% if overloads.length %}
+        <h2>Overloads</h2>
+        {{ overloadMacro.render(overloads) }}
+    {% endif %}
+
+{% endblock %}

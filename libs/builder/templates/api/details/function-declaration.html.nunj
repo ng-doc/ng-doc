@@ -1,0 +1,14 @@
+{% import "helpers/type.html.nunj" as typeMacro %}
+
+{% set typeParameters %}
+    {% include "api/details/helpers/type-parameters.html.nunj" %}
+{% endset %}
+{% set hasTypeParameters = typeParameters | trim | length %}
+
+{% if hasTypeParameters %}
+    <table class="ng-doc-api-table no-padding no-full-width">
+        <tbody>
+        {{ typeParameters }}
+        </tbody>
+    </table>
+{% endif %}

@@ -1,4 +1,6 @@
-# {{ NgDocPage.title }}
+---
+keyword: 'Icons'
+---
 
 In this article, you will learn how to add your custom icons to the documentation
 application. NgDoc uses `featherIcons`, but you can add your own icons

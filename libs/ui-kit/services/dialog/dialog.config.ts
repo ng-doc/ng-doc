@@ -1,3 +1,5 @@
 import { OverlayConfig } from '@angular/cdk/overlay';
 
-export type NgDocDialogConfig = Omit<OverlayConfig, 'positionStrategy' | 'scrollStrategy'>;
+export interface NgDocDialogConfig<D = unknown> extends OverlayConfig {
+  data?: D;
+}

@@ -43,3 +43,4 @@ Thumbs.db
 /ng-doc
 
 .nx/cache
+.nx/workspace-data

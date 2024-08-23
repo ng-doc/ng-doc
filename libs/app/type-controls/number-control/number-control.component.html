@@ -1,16 +1,16 @@
-<ng-doc-input-wrapper diControlSilencer [rightContent]="rightContent">
-	<input ngDocInputNumber type="number" [ngModel]="model()" (ngModelChange)="changeModel($event)" />
-	<ng-template #rightContent>
-		<button
-			ng-doc-button-icon
-			size="large"
-			[ngDocFocusable]="false"
-			[disabled]="disabled"
-			[rounded]="false"
-			(click)="updateModel(default ?? null)"
-			(focusout)="touch()"
-			*ngIf="model() && model() !== default">
-			<ng-doc-icon icon="x"></ng-doc-icon>
-		</button>
-	</ng-template>
+<ng-doc-input-wrapper diControlSilencer>
+  <input ngDocInputNumber type="number" [ngModel]="model()" (ngModelChange)="changeModel($event)" />
+
+  <button
+    ng-doc-button-icon-transparent
+    ngDocInputWrapperRight
+    size="large"
+    [ngDocFocusable]="false"
+    [disabled]="disabled"
+    [rounded]="false"
+    (click)="updateModel(default ?? null)"
+    (focusout)="touch()"
+    *ngIf="model() && model() !== default">
+    <ng-doc-icon icon="x"></ng-doc-icon>
+  </button>
 </ng-doc-input-wrapper>

@@ -1,9 +1,14 @@
 import { NgDocConfiguration } from '@ng-doc/builder';
+import { ngKeywordsLoader } from '@ng-doc/keywords-loaders';
 
 const NgDocConfig: NgDocConfiguration = {
-	pages: 'apps/ng-doc/poc',
-	routePrefix: 'docs',
-	tsConfig: 'apps/ng-doc/tsconfig.app.json',
+  docsPath: 'apps/ng-doc/poc',
+  routePrefix: 'docs',
+  tsConfig: 'apps/ng-doc/tsconfig.app.json',
+  cache: false,
+  keywords: {
+    loaders: [ngKeywordsLoader()],
+  },
 };
 
 export default NgDocConfig;

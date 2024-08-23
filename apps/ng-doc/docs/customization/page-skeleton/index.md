@@ -1,5 +1,3 @@
-# {{ NgDocPage.title }}
-
 Page skeleton is a list of components that are used to render the page, e.g.
 breadcrumbs, page navigation at the bottom, table of contents, etc.
 

@@ -1,3 +1,7 @@
 .ng-doc-dialog {
-	background: var(--ng-doc-background);
+  background: var(--ng-doc-background);
+}
+
+.ng-doc-transparent-dialog {
+  background: transparent;
 }

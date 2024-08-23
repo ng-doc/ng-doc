@@ -14,6 +14,7 @@ const api: NgDocApi = {
       route: 'builder',
       include: [
         'libs/builder/interfaces/**.ts',
+        'libs/builder/engine/**/*.ts',
         'libs/builder/types/**.ts',
         'libs/builder/schematics/**/*.ts',
       ],

@@ -1,0 +1,5 @@
+<h1 class="ngde">{{ NgDocPage.title }}</h1>
+
+{% if Metadata.description %}
+<p class="ngde">{{ Metadata.description }}</p>
+{% endif %}

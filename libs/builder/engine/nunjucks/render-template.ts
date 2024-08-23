@@ -11,22 +11,43 @@ import { NgDocIndexExtension } from './extentions';
 import * as filters from './filters';
 
 class NgDocRelativeLoader implements ILoader {
-	constructor(
-		private readonly path: string,
-		private readonly dependenciesStore?: ObservableSet<string>,
-	) {}
+  constructor(
+    private readonly path: string,
+    private readonly dependenciesStore?: ObservableSet<string>,
+  ) {}
 
-	getSource(name: string): LoaderSource {
-		const fullPath: string = path.join(this.path, name);
+  getSource(name: string): LoaderSource {
+    const fullPath: string = path.join(this.path, name);
 
-		this.dependenciesStore?.add(fullPath);
+    this.dependenciesStore?.add(fullPath);
 
-		return {
-			src: fs.readFileSync(fullPath, 'utf-8'),
-			path: fullPath,
-			noCache: true,
-		};
-	}
+    return {
+      src: fs.readFileSync(fullPath, 'utf-8'),
+      path: fullPath,
+      noCache: true,
+    };
+  }
+}
+
+/**
+ *
+ * @param scope
+ * @param dependencies
+ */
+function getEnvironment(scope: string, dependencies?: ObservableSet<string>): Environment {
+  let environment: Environment = new Environment(new NgDocRelativeLoader(scope, dependencies), {
+    autoescape: false,
+  });
+
+  objectKeys(filters).forEach(
+    (filter: keyof typeof filters) =>
+      (environment = environment.addFilter(filter, filters[filter])),
+  );
+
+  environment.addGlobal('Node', Node);
+  environment.addExtension('NgDocIndexExtension', new NgDocIndexExtension());
+
+  return environment;
 }
 
 /**
@@ -35,23 +56,30 @@ class NgDocRelativeLoader implements ILoader {
  * @param options - The options to render the template with.
  */
 export function renderTemplate<T extends object>(
-	template: string,
-	options?: NgDocRendererOptions<T>,
+  template: string,
+  options?: NgDocRendererOptions<T>,
 ): string {
-	let environment: Environment = new Environment(
-		new NgDocRelativeLoader(options?.scope ?? TEMPLATES_PATH, options?.dependenciesStore),
-		{ autoescape: false },
-	);
+  const environment: Environment = getEnvironment(
+    options?.scope ?? TEMPLATES_PATH,
+    options?.dependencies,
+  );
 
-	if (options?.filters !== false) {
-		objectKeys(filters).forEach(
-			(filter: keyof typeof filters) =>
-				(environment = environment.addFilter(filter, filters[filter])),
-		);
+  return environment.render(template, options?.context);
+}
 
-		environment.addGlobal('Node', Node);
-	}
-	environment.addExtension('NgDocIndexExtension', new NgDocIndexExtension());
+/**
+ * Renders a template string with the given options via Nunjucks.
+ * @param template - The template string to render.
+ * @param options - The options to render the template with.
+ */
+export function renderTemplateString<T extends object>(
+  template: string,
+  options: NgDocRendererOptions<T>,
+): string {
+  const environment: Environment = getEnvironment(
+    options?.scope ?? TEMPLATES_PATH,
+    options?.dependencies,
+  );
 
-	return environment.render(template, options?.context);
+  return environment.renderString(template, options?.context ?? {});
 }

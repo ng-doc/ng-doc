@@ -1,39 +1,40 @@
 :host {
-	.ng-doc-toc-wrapper {
-		position: relative;
-		width: var(--ng-doc-toc-width);
+  .ng-doc-toc-wrapper {
+    position: relative;
+    width: var(--ng-doc-toc-width);
 
-		.ng-doc-toc-container {
-			position: fixed;
-			overflow-y: auto;
-			height: calc(100% - var(--ng-doc-navbar-height) - var(--ng-doc-base-gutter) * 5);
-			width: var(--ng-doc-toc-width);
-		}
+    .ng-doc-toc-container {
+      position: fixed;
+      top: calc(var(--ng-doc-navbar-height) + var(--ng-doc-toc-top-padding));
+      overflow-y: auto;
+      height: calc(100% - var(--ng-doc-navbar-height) - var(--ng-doc-base-gutter) * 5);
+      width: var(--ng-doc-toc-width);
+    }
 
-		.ng-doc-toc-selection {
-			position: absolute;
-			transform: translateX(-50%);
-			width: calc(var(--ng-doc-base-gutter) / 2);
-			border-radius: calc(var(--ng-doc-base-gutter) / 2);
-			background-color: var(--ng-doc-primary);
-			left: calc(var(--ng-doc-toc-margin) + 1px);
-			transition: var(--ng-doc-transition);
-		}
+    .ng-doc-toc-selection {
+      position: absolute;
+      transform: translateX(-50%);
+      width: 3px;
+      border-radius: calc(var(--ng-doc-base-gutter) / 2);
+      background-color: var(--ng-doc-primary);
+      left: calc(var(--ng-doc-toc-margin) + 1px);
+      transition: var(--ng-doc-transition);
+    }
 
-		.ng-doc-toc {
-			list-style: none;
-			margin: 0 0 0 var(--ng-doc-toc-margin);
-			border-left: 1px solid var(--ng-doc-base-3);
-			padding: 0 0 0 var(--ng-doc-base-gutter);
+    .ng-doc-toc {
+      list-style: none;
+      margin: 0 0 0 var(--ng-doc-toc-margin);
+      border-left: 1px solid var(--ng-doc-base-3);
+      padding: 0 0 0 var(--ng-doc-base-gutter);
 
-			.ng-doc-page-map-item {
-			}
-		}
-	}
+      .ng-doc-page-map-item {
+      }
+    }
+  }
 
-	@media (max-width: 1200px) {
-		.ng-doc-toc-wrapper {
-			display: none;
-		}
-	}
+  @media (max-width: 1200px) {
+    .ng-doc-toc-wrapper {
+      display: none;
+    }
+  }
 }

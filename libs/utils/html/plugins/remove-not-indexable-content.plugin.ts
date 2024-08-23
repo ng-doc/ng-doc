@@ -9,16 +9,16 @@ import { isCodeNode } from '../helpers';
  * @param headings
  */
 export default function removeNotIndexableContentPlugin(): any {
-	return (tree: Root) => {
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		return filter(tree, { cascade: false }, (node: Element) => {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
-			const preWithCode: boolean = node?.tagName === 'pre' && node?.children?.some(isCodeNode);
-			const notIndexable: boolean = node?.properties?.['indexable'] === 'false';
+  return (tree: Root) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return filter(tree, { cascade: true }, (node: Element) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const preWithCode: boolean = node?.tagName === 'pre' && node?.children?.some(isCodeNode);
+      const notIndexable: boolean = node?.properties?.['indexable'] === 'false';
 
-			return !node?.tagName || (!preWithCode && !notIndexable);
-		});
-	};
+      return !node?.tagName || (!preWithCode && !notIndexable);
+    });
+  };
 }

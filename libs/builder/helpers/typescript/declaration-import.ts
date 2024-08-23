@@ -1,21 +1,21 @@
 import * as path from 'path';
 
 import { GLOBALS } from '../../engine/variables';
-import { NgDocSupportedDeclarations } from '../../types';
+import { NgDocSupportedDeclaration } from '../../types';
 
 /**
  *
  * @param declaration
  */
-export function declarationImport(declaration: NgDocSupportedDeclarations): string {
-	if (declaration.isExported()) {
-		const filePath: string = declaration.getSourceFile().getFilePath();
-		const relativeImport: string = path
-			.relative(GLOBALS.workspaceRoot, filePath)
-			.replace(/.ts$/, '');
+export function declarationImport(declaration: NgDocSupportedDeclaration): string {
+  if (declaration.isExported()) {
+    const filePath: string = declaration.getSourceFile().getFilePath();
+    const relativeImport: string = path
+      .relative(GLOBALS.workspaceRoot, filePath)
+      .replace(/.ts$/, '');
 
-		return `import {${declaration.getName()}} from '${relativeImport}';`;
-	}
+    return `import {${declaration.getName()}} from '${relativeImport}';`;
+  }
 
-	return '';
+  return '';
 }

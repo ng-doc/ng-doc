@@ -1,4 +1,6 @@
-# {{ NgDocPage.title }}
+---
+keyword: 'IgnoringFileLines'
+---
 
 Sometimes you need to hide some parts of your code to make it easier when you use demos or when
 you load code from a file via the `file` parameter in the code block. This helps to make your

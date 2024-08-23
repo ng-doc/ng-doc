@@ -1,29 +1,25 @@
 <div class="ng-doc-sidebar-category-wrapper">
-	<div class="ng-doc-sidebar-category-button" (click)="toggle()">
-		<div
-			class="ng-doc-sidebar-category"
-			[ngDocRouteActive]="category?.route ?? ''"
-			activeClass="active">
-			<ng-doc-dot *ngIf="!expandable"></ng-doc-dot>
-			<span ng-doc-text [color]="expandable ? 'normal' : 'muted'">
-				<ng-doc-icon
-					icon="chevron-right"
-					*ngIf="category?.expandable"
-					[ngDocRotator]="expanded"
-					ngDocTextLeft>
-				</ng-doc-icon>
-				{{ category?.title }}
-			</span>
-		</div>
-		<!--		<div ng-doc-text color="muted" size="small">Some description</div>-->
-	</div>
-	<ng-doc-expander [expanded]="expanded" [content]="contentTemplate">
-		<ng-template #contentTemplate>
-			<div class="ng-doc-sidebar-category-children">
-				<!--We wrap content via ng-template to save state of the child components -->
-				<ng-content></ng-content>
-				<ng-container *polymorpheusOutlet="content"></ng-container>
-			</div>
-		</ng-template>
-	</ng-doc-expander>
+  <div class="ng-doc-sidebar-category-button" (click)="toggle()">
+    <div class="ng-doc-sidebar-category" [ngDocRouteActive]="category.route" activeClass="active">
+      <ng-doc-dot *ngIf="!expandable"></ng-doc-dot>
+      <span ng-doc-text>
+        <ng-doc-icon
+          icon="chevron-right"
+          *ngIf="category.expandable"
+          [ngDocRotator]="expanded"
+          ngDocTextLeft>
+        </ng-doc-icon>
+        {{ category.title }}
+      </span>
+    </div>
+    <!--		<div ng-doc-text color="muted" size="small">Some description</div>-->
+  </div>
+  <ng-doc-expander [expanded]="expanded" [content]="contentTemplate" />
+  <ng-template #contentTemplate>
+    <div class="ng-doc-sidebar-category-children">
+      <!--We wrap content via ng-template to save state of the child components -->
+      <ng-content></ng-content>
+      <ng-container *polymorpheusOutlet="content as text">{{ text }}</ng-container>
+    </div>
+  </ng-template>
 </div>

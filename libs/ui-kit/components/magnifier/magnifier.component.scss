@@ -1,0 +1,9 @@
+:host {
+  display: block;
+  overflow: hidden;
+  cursor: default;
+
+  &[data-drag='true'] {
+    cursor: move;
+  }
+}

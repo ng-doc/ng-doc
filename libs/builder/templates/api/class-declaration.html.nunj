@@ -1,0 +1,57 @@
+{% extends "api/base.html.nunj" %}
+
+{% import "helpers/constructor.html.nunj" as constructorMacro %}
+{% import "helpers/methods.html.nunj" as methodsMacro %}
+{% import "helpers/properties.html.nunj" as propertiesMacro %}
+{% import "helpers/accessors.html.nunj" as accessorsMacro %}
+{% import "helpers/modifier.html.nunj" as modifierMacro %}
+
+{% block overview %}
+    {%- set constructors = declaration.getConstructors() | filterByScope("public") | excludeByJsDocTags('internal') -%}
+    {%- set allProperties = declaration | getClassProperties | excludeByJsDocTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
+    {%- set allMethods = declaration | getClassMethods | excludeByJsDocTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
+    {%- set allAccessors = declaration | getClassAccessors | excludeByJsDocTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
+
+    {%- set staticProperties = allProperties | filterByStatic(true) -%}
+    {%- set staticAccessors = allAccessors | filterByStatic(true) -%}
+    {%- set staticMethods = allMethods | filterByStatic(true) -%}
+    {%- set properties = allProperties | filterByStatic(false) -%}
+    {%- set accessors = allAccessors | filterByStatic(false) -%}
+    {%- set getAccessors = declaration.getGetAccessors() | filterByStatic(false) -%}
+    {%- set methods = allMethods | filterByStatic(false) -%}
+
+    {% if constructors.length -%}
+        <h2>Constructor</h2>
+        {{ constructorMacro.render(constructors[0]) }}
+    {%- endif %}
+
+    {% if staticProperties.length -%}
+        <h2>Static Properties</h2>
+        {{ propertiesMacro.render(staticProperties, declaration) }}
+    {%- endif %}
+
+    {% if properties.length -%}
+        <h2>Properties</h2>
+        {{ propertiesMacro.render(properties, declaration) }}
+    {%- endif %}
+
+    {% if staticAccessors.length -%}
+        <h2>Static Accessors</h2>
+        {{ accessorsMacro.render(staticAccessors, declaration) }}
+    {%- endif %}
+
+    {% if accessors.length -%}
+        <h2>Accessors</h2>
+        {{ accessorsMacro.render(accessors, declaration) }}
+    {%- endif %}
+
+    {% if staticMethods.length -%}
+        <h2>Static Methods</h2>
+        {{ methodsMacro.render(staticMethods, declaration) }}
+    {%- endif %}
+
+    {% if methods.length -%}
+        <h2>Methods</h2>
+        {{ methodsMacro.render(methods, declaration) }}
+    {%- endif %}
+{% endblock %}

@@ -1,5 +1,3 @@
-# {{NgDocPage.title}}
-
 This article describes how to customize the search functionality of the documentation
 and how to create a custom search.
 

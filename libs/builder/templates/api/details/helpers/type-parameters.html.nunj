@@ -1,0 +1,14 @@
+{% import "helpers/type.html.nunj" as typeMacro %}
+
+{% set typeParameters = declaration.getTypeParameters() %}
+
+{% if typeParameters.length %}
+    <tr>
+        <td indexable="false">Generic types:</td>
+        <td>
+            {% for typeParameter in typeParameters %}
+                {{ typeMacro.type(typeParameter) }}
+            {%- endfor %}
+        </td>
+    </tr>
+{% endif %}

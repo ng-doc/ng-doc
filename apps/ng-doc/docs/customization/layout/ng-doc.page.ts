@@ -6,7 +6,7 @@ const LayoutPage: NgDocPage = {
   title: `Layout`,
   mdFile: './index.md',
   category: CustomizationCategory,
-  order: 1,
+  order: 2,
 };
 
 export default LayoutPage;

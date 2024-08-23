@@ -1,9 +1,6 @@
-<a class="ng-doc-breadcrumb" [routerLink]="['/', home]" ng-doc-button-icon>
-	<ng-doc-icon icon="home"></ng-doc-icon>
-</a>
-<span class="ng-doc-breadcrumb" *ngFor="let item of breadcrumbs">
-	<span ng-doc-text>
-		<ng-doc-icon icon="chevron-right"></ng-doc-icon>
-		{{ item }}
-	</span>
-</span>
+@for (item of breadcrumbs; track item) {
+  @if (!$first) {
+    <ng-doc-icon icon="chevron-right"></ng-doc-icon>
+  }
+  {{ item }}
+}

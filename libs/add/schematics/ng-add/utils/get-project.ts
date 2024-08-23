@@ -9,10 +9,10 @@ import { getProjectName } from './get-project-name';
  * @param workspace
  */
 export function getProject(
-	options: Schema,
-	workspace: WorkspaceDefinition,
+  options: Schema,
+  workspace: WorkspaceDefinition,
 ): ProjectDefinition | undefined {
-	const projectName = getProjectName(options, workspace);
+  const projectName = getProjectName(options, workspace);
 
-	return workspace.projects.get(projectName);
+  return workspace.projects.get(projectName);
 }

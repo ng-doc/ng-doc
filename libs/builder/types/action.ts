@@ -1,6 +1,4 @@
-import { Project } from 'ts-morph';
-
-import { NgDocPageEntity } from '../engine';
+import { EntryMetadata, MarkdownEntry } from '../engine';
 import { NgDocActionOutput } from '../interfaces';
 
-export type NgDocAction = (project: Project, page: NgDocPageEntity) => NgDocActionOutput;
+export type NgDocAction<T> = (entry: EntryMetadata<MarkdownEntry>) => NgDocActionOutput<T>;

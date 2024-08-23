@@ -1,56 +1,58 @@
+import { DOCUMENT } from '@angular/common';
 import { Directive, ElementRef, HostBinding, inject } from '@angular/core';
-import { isBrowser } from '@ng-doc/core';
 import { DIControl, injectHostControl } from 'di-controls';
 import { DIControlConfig } from 'di-controls/controls/control';
 import { Subject } from 'rxjs';
 
 @Directive()
 export abstract class NgDocBaseInput<T> extends DIControl<T> {
-	override readonly elementRef: ElementRef<HTMLInputElement> = inject(ElementRef);
-	readonly changes: Subject<void> = new Subject();
+  override readonly elementRef: ElementRef<HTMLInputElement> = inject(ElementRef);
+  readonly changes: Subject<void> = new Subject();
 
-	protected constructor(config?: DIControlConfig<T, T>) {
-		super({
-			host: injectHostControl({ optional: true }),
-			...config,
-		});
-	}
+  protected readonly document = inject(DOCUMENT);
 
-	@HostBinding('class')
-	get hostClasses(): string {
-		return 'ng-doc-input';
-	}
+  protected constructor(config?: DIControlConfig<T, T>) {
+    super({
+      host: injectHostControl({ optional: true }),
+      ...config,
+    });
+  }
 
-	get placeholder(): string {
-		return this.elementRef.nativeElement.placeholder || '';
-	}
+  @HostBinding('class')
+  get hostClasses(): string {
+    return 'ng-doc-input';
+  }
 
-	get isFocused(): boolean {
-		return isBrowser ? document.activeElement === this.elementRef.nativeElement : false;
-	}
+  get placeholder(): string {
+    return this.elementRef.nativeElement.placeholder || '';
+  }
 
-	get isReadonly(): boolean {
-		return this.elementRef.nativeElement.readOnly;
-	}
+  get isFocused(): boolean {
+    return this.document.activeElement === this.elementRef.nativeElement;
+  }
 
-	get value(): string {
-		return this.elementRef.nativeElement.value;
-	}
+  get isReadonly(): boolean {
+    return this.elementRef.nativeElement.readOnly;
+  }
 
-	focus(): void {
-		this.elementRef.nativeElement.focus();
-	}
+  get value(): string {
+    return this.elementRef.nativeElement.value;
+  }
 
-	blink(): void {
-		this.renderer.removeClass(this.elementRef.nativeElement, '-blink');
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		this.elementRef.nativeElement.offsetWidth;
-		this.renderer.addClass(this.elementRef.nativeElement, '-blink');
-	}
+  focus(): void {
+    this.elementRef.nativeElement.focus();
+  }
 
-	override updateModel(value: T | null) {
-		super.updateModel(value);
+  blink(): void {
+    this.renderer.removeClass(this.elementRef.nativeElement, '-blink');
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    this.elementRef.nativeElement.offsetWidth;
+    this.renderer.addClass(this.elementRef.nativeElement, '-blink');
+  }
 
-		this.changes.next();
-	}
+  override updateModel(value: T | null) {
+    super.updateModel(value);
+
+    this.changes.next();
+  }
 }

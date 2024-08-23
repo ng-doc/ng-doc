@@ -1,4 +1,5 @@
 import { NgDocCodeType } from '@ng-doc/core';
+import { format, resolveConfig } from '@prettier/sync';
 import { Options } from 'prettier';
 
 /**
@@ -7,20 +8,20 @@ import { Options } from 'prettier';
  * @param codeType - Type of code
  */
 export function formatCode(code: string, codeType: NgDocCodeType | null = 'TypeScript'): string {
-	try {
-		if (codeType) {
-			const parser: Options['parser'] | undefined = getPrettierParserFromCodeType(codeType);
-			const config = require('prettier').resolveConfig.sync(process.cwd(), { editorconfig: true });
+  try {
+    if (codeType) {
+      const parser: Options['parser'] | undefined = getPrettierParserFromCodeType(codeType);
+      const config = resolveConfig(process.cwd(), { editorconfig: true });
 
-			return require('prettier')
-				.format(code, { ...config, parser, embeddedLanguageFormatting: 'auto' })
-				.trim();
-		}
+      return (
+        format(code, { ...config, parser, embeddedLanguageFormatting: 'auto' }) as unknown as string
+      ).trim();
+    }
 
-		return code.trim();
-	} catch (e) {
-		return code;
-	}
+    return code.trim();
+  } catch (e) {
+    return code;
+  }
 }
 
 /**
@@ -29,20 +30,20 @@ export function formatCode(code: string, codeType: NgDocCodeType | null = 'TypeS
  * @returns {string} Parser
  */
 function getPrettierParserFromCodeType(codeType: NgDocCodeType): Options['parser'] | undefined {
-	switch (codeType) {
-		case 'CSS':
-		case 'LESS':
-		case 'SCSS':
-		case 'SASS':
-			return 'css';
-		case 'HTML':
-			return 'html';
-		case 'TypeScript':
-		case 'JavaScript':
-			return 'typescript';
-		case 'Markdown':
-			return 'markdown';
-		default:
-			return undefined;
-	}
+  switch (codeType) {
+    case 'CSS':
+    case 'LESS':
+    case 'SCSS':
+    case 'SASS':
+      return 'css';
+    case 'HTML':
+      return 'html';
+    case 'TypeScript':
+    case 'JavaScript':
+      return 'typescript';
+    case 'Markdown':
+      return 'markdown';
+    default:
+      return undefined;
+  }
 }

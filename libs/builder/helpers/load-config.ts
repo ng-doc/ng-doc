@@ -10,17 +10,17 @@ import { NgDocConfiguration } from '../interfaces';
  * @param search - Whether to search for the configuration file or not
  */
 export function loadConfig(path: string, search: boolean = true): [string, NgDocConfiguration] {
-	const moduleName: string = 'ng-doc';
+  const moduleName: string = 'ng-doc';
 
-	const explorerSync: PublicExplorerSync = cosmiconfigSync(moduleName, {
-		searchPlaces: [`${moduleName}.config.ts`, `${moduleName}.config.js`],
-		loaders: {
-			'.ts': TypeScriptLoader(),
-		},
-	});
-	const searchedFor: CosmiconfigResult | null = search
-		? explorerSync.search(path)
-		: explorerSync.load(path);
+  const explorerSync: PublicExplorerSync = cosmiconfigSync(moduleName, {
+    searchPlaces: [`${moduleName}.config.ts`, `${moduleName}.config.js`],
+    loaders: {
+      '.ts': TypeScriptLoader(),
+    },
+  });
+  const searchedFor: CosmiconfigResult | null = search
+    ? explorerSync.search(path)
+    : explorerSync.load(path);
 
-	return [searchedFor?.filepath ?? '', searchedFor?.config ?? {}];
+  return [searchedFor?.filepath ?? '', searchedFor?.config ?? {}];
 }

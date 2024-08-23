@@ -1,31 +1,29 @@
 import { NgDocGlobalKeyword } from '@ng-doc/core';
 
-import { ngApiPageTypes } from '../constants';
 import { NgPage } from '../interfaces';
 import { NgVersion } from '../types';
-import { getNgHost } from './get-ng-host';
+import { getApiUrl } from './get-api-url';
 
 /**
  *
+ * @param packageName
  * @param page
  * @param version
  */
 export function ngPageToKeyword(
-	page: NgPage,
-	version?: NgVersion,
+  packageName: string,
+  page: NgPage,
+  version?: NgVersion,
 ): Array<[string, NgDocGlobalKeyword]> {
-	const path: string = `${getNgHost(version)}/${page.path}`;
-	const isCodeLink: boolean = ngApiPageTypes.includes(page.type);
-	const key: string = isCodeLink ? page.title : page.title.replace(/\n/g, '');
-	const description: string = `External link the Angular documentation.`;
+  const url: string = getApiUrl(packageName, page.name, version);
+  const description: string = `External link the Angular documentation.`;
+  const keywords: Array<[string, NgDocGlobalKeyword]> = [
+    [page.name, { title: page.name, url, description }],
+  ];
 
-	switch (page.type) {
-		case 'decorator':
-			return [
-				[page.title, { title: page.title, url: path, isCodeLink, description }],
-				[`@${page.title}`, { title: `@${page.title}`, url: path, isCodeLink, description }],
-			];
-		default:
-			return [[key, { title: page.title, url: path, isCodeLink, description }]];
-	}
+  if (page.type === 'decorator') {
+    keywords.push([`@${page.name}`, { title: `@${page.name}`, url, description }]);
+  }
+
+  return keywords;
 }
