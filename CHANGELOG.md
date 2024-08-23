@@ -1,3 +1,11 @@
+# [18.0.0-beta.2](https://github.com/ng-doc/ng-doc/compare/v18.0.0-beta.1...v18.0.0-beta.2) (2024-08-23)
+
+
+### Bug Fixes
+
+* **project:** package versions and various small bugs ([1fefbd4](https://github.com/ng-doc/ng-doc/commit/1fefbd4a461c3d236dfd2e8f87b70057b8e32320))
+* **project:** theme by default feature ([5debaab](https://github.com/ng-doc/ng-doc/commit/5debaab9155176cfb7d777190bbaaa79937b28cb))
+
 # [18.0.0-beta.1](https://github.com/ng-doc/ng-doc/compare/v17.6.16...v18.0.0-beta.1) (2024-08-23)
 
 
