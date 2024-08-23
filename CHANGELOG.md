@@ -1,3 +1,24 @@
+# [18.0.0](https://github.com/ng-doc/ng-doc/compare/v17.6.16...v18.0.0) (2024-08-23)
+
+
+### Bug Fixes
+
+* **project:** package versions and various small bugs ([1fefbd4](https://github.com/ng-doc/ng-doc/commit/1fefbd4a461c3d236dfd2e8f87b70057b8e32320))
+* **project:** sync package-lock.json ([39098d9](https://github.com/ng-doc/ng-doc/commit/39098d9723d6fa3eeaa043ba6070a43edb8b37bf))
+* **project:** theme by default feature ([5debaab](https://github.com/ng-doc/ng-doc/commit/5debaab9155176cfb7d777190bbaaa79937b28cb))
+
+
+### Features
+
+* **angular:** bump major version ([446d203](https://github.com/ng-doc/ng-doc/commit/446d203a4a8b9fc3f3b3d57a7ccb9d5588b4dde9))
+* ngDoc18 ([144fb19](https://github.com/ng-doc/ng-doc/commit/144fb19696f691741198abf9f103892bdd07296c))
+
+
+### BREAKING CHANGES
+
+* **angular:** bump major version
+* API changes
+
 ## [17.6.16](https://github.com/ng-doc/ng-doc/compare/v17.6.15...v17.6.16) (2024-07-18)
 
 
