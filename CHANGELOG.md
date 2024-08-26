@@ -1,3 +1,13 @@
+## [18.0.2](https://github.com/ng-doc/ng-doc/compare/v18.0.1...v18.0.2) (2024-08-26)
+
+
+### Bug Fixes
+
+* **app:** page tabs overlap sidebar on mobile ([ec2fe13](https://github.com/ng-doc/ng-doc/commit/ec2fe132ee612ab3cd9e280288e4cf3e50333223))
+* **app:** white glow on the sidebar when the dark theme is enabled on mobile ([1127d1c](https://github.com/ng-doc/ng-doc/commit/1127d1c5ffe9cc7a078b9bfacc685a9f9b187650))
+* **builder:** missing entries in routes in CI/CD ([92f706d](https://github.com/ng-doc/ng-doc/commit/92f706da4cdf61509f21649f7eacdaf7d47223a3))
+* **builder:** the app does not update when pages are added or removed ([6598ade](https://github.com/ng-doc/ng-doc/commit/6598aded7e4c3a0ad25487256fc811ca2adf759a))
+
 ## [18.0.1](https://github.com/ng-doc/ng-doc/compare/v18.0.0...v18.0.1) (2024-08-23)
 
 
