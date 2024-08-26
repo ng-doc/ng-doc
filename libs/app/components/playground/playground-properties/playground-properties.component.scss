@@ -24,7 +24,7 @@
       flex-direction: column;
       width: 100%;
       min-width: 0;
-      z-index: 5;
+      z-index: 4;
 
       top: calc(var(--ng-doc-page-sticky-offset) + var(--ng-doc-base-gutter));
     }
