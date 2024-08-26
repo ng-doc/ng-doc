@@ -1,5 +1,6 @@
 import { GLOBALS } from '@ng-doc/builder';
 import * as watcher from '@parcel/watcher';
+import { resolve } from 'path';
 import { Observable } from 'rxjs';
 import { filter, map, share } from 'rxjs/operators';
 
@@ -11,6 +12,8 @@ let WATCHER: Observable<watcher.Event[]> | null = null;
  * @param dir
  */
 export function watch(path: string, dir?: boolean): Observable<watcher.Event[]> {
+  path = resolve(path);
+
   if (!WATCHER) {
     let unsubscribe = () => {};
 
