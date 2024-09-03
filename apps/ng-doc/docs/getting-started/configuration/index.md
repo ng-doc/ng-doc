@@ -185,10 +185,8 @@ import { Routes } from '@angular/router';
   selector: 'ng-doc-docs',
   template: `
     <ng-doc-root>
-      <ng-doc-navbar [leftContent]="leftContent">
-        <ng-template #leftContent>
-          <h3 style="margin: 0">MyAwesomeDoc</h3>
-        </ng-template>
+      <ng-doc-navbar>
+        <h3 style="margin: 0" ngDocNavbarLeft>MyAwesomeDoc</h3>
       </ng-doc-navbar>
       <ng-doc-sidebar></ng-doc-sidebar>
       <router-outlet></router-outlet>
