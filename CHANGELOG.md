@@ -1,3 +1,10 @@
+## [18.0.3](https://github.com/ng-doc/ng-doc/compare/v18.0.2...v18.0.3) (2024-09-03)
+
+
+### Bug Fixes
+
+* **builder:** categories with the same folder name merges into one ([913af70](https://github.com/ng-doc/ng-doc/commit/913af701283f9f446fdbd32f13a7cf8d8821e74e)), closes [#204](https://github.com/ng-doc/ng-doc/issues/204)
+
 ## [18.0.2](https://github.com/ng-doc/ng-doc/compare/v18.0.1...v18.0.2) (2024-08-26)
 
 
