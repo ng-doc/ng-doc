@@ -1,3 +1,4 @@
+export * from './html/minify';
 export * from './html/post-process-html';
 export * from './html/process-html';
 export * from './html/remove-not-indexable-content';

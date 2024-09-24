@@ -41,6 +41,8 @@ export async function processHtml(
       .use(rehypeParse, { fragment: true })
       .use(rehypeStringify)
       .use(mermaidPlugin)
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       .use(rehypeShiki, {
         defaultLanguage: 'ts',
         fallbackLanguage: 'text',
