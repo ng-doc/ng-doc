@@ -1,3 +1,11 @@
+## [18.0.4](https://github.com/ng-doc/ng-doc/compare/v18.0.3...v18.0.4) (2024-09-24)
+
+
+### Bug Fixes
+
+* **add:** add schematic adds incorrect layout ([eb84266](https://github.com/ng-doc/ng-doc/commit/eb84266dcc70fe49d1bb97bfa07cbd6a30348100))
+* **builder:** remove html-minifier vulnerability ([a560471](https://github.com/ng-doc/ng-doc/commit/a56047113674551559f084b77091d2a50f51614c)), closes [#206](https://github.com/ng-doc/ng-doc/issues/206)
+
 ## [18.0.3](https://github.com/ng-doc/ng-doc/compare/v18.0.2...v18.0.3) (2024-09-03)
 
 
