@@ -1,3 +1,10 @@
+## [18.0.5](https://github.com/ng-doc/ng-doc/compare/v18.0.4...v18.0.5) (2024-09-24)
+
+
+### Bug Fixes
+
+* **builder:** generated folder is empty if a project doesn't contain pages ([4030683](https://github.com/ng-doc/ng-doc/commit/403068337c9031d70dc956757593eea53e8d5f48))
+
 ## [18.0.4](https://github.com/ng-doc/ng-doc/compare/v18.0.3...v18.0.4) (2024-09-24)
 
 
