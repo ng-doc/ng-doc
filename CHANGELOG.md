@@ -1,3 +1,10 @@
+## [18.0.8](https://github.com/ng-doc/ng-doc/compare/v18.0.7...v18.0.8) (2024-09-25)
+
+
+### Bug Fixes
+
+* **project:** bump patch version ([8845b9e](https://github.com/ng-doc/ng-doc/commit/8845b9ecc91351b8ada6c59947b6b65dcec822e7))
+
 ## [18.0.7](https://github.com/ng-doc/ng-doc/compare/v18.0.6...v18.0.7) (2024-09-24)
 
 
