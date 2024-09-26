@@ -1,5 +1,5 @@
 import { NgDocConfiguration } from '@ng-doc/builder';
-import { ngKeywordsLoader } from '@ng-doc/keywords-loaders';
+import { ngKeywordsLoader, rxjsKeywordsLoader } from '@ng-doc/keywords-loaders';
 
 const NgDocConfig: NgDocConfiguration = {
   docsPath: 'apps/ng-doc/docs',
@@ -12,7 +12,7 @@ const NgDocConfig: NgDocConfiguration = {
     releaseBranch: 'release',
   },
   keywords: {
-    loaders: [ngKeywordsLoader()],
+    loaders: [ngKeywordsLoader(), rxjsKeywordsLoader()],
     keywords: {
       nunjucks: {
         url: 'https://mozilla.github.io/nunjucks/',
