@@ -1,3 +1,10 @@
+## [18.0.9](https://github.com/ng-doc/ng-doc/compare/v18.0.8...v18.0.9) (2024-09-29)
+
+
+### Bug Fixes
+
+* **app:** treat links with `mailto:` prefix as external ([#215](https://github.com/ng-doc/ng-doc/issues/215)) ([23d7dee](https://github.com/ng-doc/ng-doc/commit/23d7dee60d733d341b5d837247324fe6e6ad0207)), closes [#194](https://github.com/ng-doc/ng-doc/issues/194)
+
 ## [18.0.8](https://github.com/ng-doc/ng-doc/compare/v18.0.7...v18.0.8) (2024-09-25)
 
 
