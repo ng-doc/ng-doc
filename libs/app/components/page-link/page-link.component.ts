@@ -45,7 +45,7 @@ export class NgDocPageLinkComponent implements OnInit, OnChanges {
   }
 
   get isExternalLink(): boolean {
-    return this.href.startsWith('http');
+    return this.href.startsWith('http') || this.href.startsWith('mailto:');
   }
 
   get path(): string {
