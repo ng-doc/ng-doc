@@ -1,3 +1,16 @@
+# [18.1.0](https://github.com/ng-doc/ng-doc/compare/v18.0.9...v18.1.0) (2024-09-30)
+
+
+### Bug Fixes
+
+* **app:** resolving properly anchor links when using base-href ([#217](https://github.com/ng-doc/ng-doc/issues/217)) ([005c575](https://github.com/ng-doc/ng-doc/commit/005c575e92fba675ca661922573b072e41af8cc1)), closes [#216](https://github.com/ng-doc/ng-doc/issues/216)
+* **keywords-loader:** adjust ng-keywords-loader to different api manifest structure ([#211](https://github.com/ng-doc/ng-doc/issues/211)) ([d9dc0aa](https://github.com/ng-doc/ng-doc/commit/d9dc0aa0d41242ef2b9c3824db6620ccc6a80b45)), closes [#210](https://github.com/ng-doc/ng-doc/issues/210)
+
+
+### Features
+
+* **keywords-loader:** add rxjs keywords loader ([#209](https://github.com/ng-doc/ng-doc/issues/209)) ([d96da81](https://github.com/ng-doc/ng-doc/commit/d96da817f7c3928cbd3e118bbdca7f4aebb50328))
+
 ## [18.0.9](https://github.com/ng-doc/ng-doc/compare/v18.0.8...v18.0.9) (2024-09-29)
 
 
