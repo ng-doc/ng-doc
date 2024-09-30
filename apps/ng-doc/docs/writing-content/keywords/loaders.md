@@ -53,6 +53,33 @@ Check this out: `Component` or `@Component` or `ChangeDetectorRef`.
 
 Check this out: `Component` or `@Component` or `ChangeDetectorRef`.
 
+### Integrating with the RxJS documentation
+
+To integrate your documentation with the RxJS documentation, you need to open
+your `ng-doc.config.ts` file, and import `rxjsKeywordsLoader` to the `keywordsLoaders` array:
+
+```typescript name="ng-doc.config.ts"
+import { NgDocConfiguration } from '@ng-doc/builder';
+import { rxjsKeywordsLoader } from '@ng-doc/keywords-loaders';
+
+const config: NgDocConfiguration = {
+  keywords: {
+    loaders: [rxjsKeywordsLoader()],
+  },
+};
+
+export default config;
+```
+
+After that, when you run your app, all your usages of RxJS keywords, in code blocks and inline
+code, will be converted to links to the RxJS documentation.
+
+```markdown name="index.md"
+Check this out: `Observable` or `map` or `switchMap`.
+```
+
+Check this out: `Observable` or `map` or `switchMap`.
+
 ### Integration with third-party NgDoc documentations
 
 To integrate your documentation with third-party NgDoc documentation, you need to open
