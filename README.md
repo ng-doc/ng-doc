@@ -20,7 +20,7 @@
 </div>
 
 <!-- ABOUT THE PROJECT -->
-<!-- 1 -->
+<!-- -->
 
 ## About The Project
 
