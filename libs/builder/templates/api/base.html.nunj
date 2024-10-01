@@ -7,6 +7,10 @@
     {{ description if description else noContentMacro.render('No documentation has been provided.') }}
 {% endif %}
 
+{% if not hideRemarks %}
+    {% include "parts/remarks.html.nunj" %}
+{% endif %}
+
 {% if not hideSeeAlso %}
     {% include "parts/see-also.html.nunj" %}
 {% endif %}
