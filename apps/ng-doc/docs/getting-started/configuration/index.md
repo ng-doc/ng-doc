@@ -78,7 +78,7 @@ After that NgDoc will search for documentation pages in the specified folder and
 import { NgDocConfiguration } from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
-  pages: 'libs/my-lib/src',
+  docsPath: 'libs/my-lib/src',
 };
 
 export default config;
