@@ -42,6 +42,10 @@
                         {{ statusMacro.render(property) }}
                     </div>
                     {{ docNode | getJsDocDescription }}
+
+                    {% if not hideRemarks %}
+                        {% include "parts/member-remarks.html.nunj" %}
+                    {% endif %}
                 </td>
             </tr>
         {%- endfor %}

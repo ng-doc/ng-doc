@@ -1,10 +1,8 @@
 {%- set remarks = docNode | getJsDocTags('remarks') -%}
 
 {% if remarks %}
-    <h2>Notes</h2>
-    <section>
+    <h5 class="no-anchor ng-doc-secondary-heading" indexable="false">Notes</h5>
     {%- for remark in remarks %}
         {{ remark | markdownToHtml }}
     {%- endfor %}
-    </section>
 {% endif %}
