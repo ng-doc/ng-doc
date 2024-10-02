@@ -21,9 +21,7 @@
 
                     {{ description if description else noContentMacro.render('No documentation has been provided.') }}
 
-                    {% if not hideRemarks %}
-                        {% include "parts/member-remarks.html.nunj" %}
-                    {% endif %}
+                    {% include "parts/member-remarks.html.nunj" %}
                 </td>
             </tr>
             <tr>

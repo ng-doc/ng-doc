@@ -43,9 +43,7 @@
                     </div>
                     {{ docNode | getJsDocDescription }}
 
-                    {% if not hideRemarks %}
-                        {% include "parts/member-remarks.html.nunj" %}
-                    {% endif %}
+                    {% include "parts/member-remarks.html.nunj" %}
                 </td>
             </tr>
         {%- endfor %}
