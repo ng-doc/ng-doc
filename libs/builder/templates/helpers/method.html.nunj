@@ -15,6 +15,7 @@
     {% set implementedMember = method | getImplementedMember %}
     {% set docNode = methodChain | firstNodeWithComment %}
     {% set overloads = method.getOverloads() if method.getOverloads else [] %}
+    {% set returnsTag = docNode | getJsDocTag('returns') %}
 
     <table class="{{ statusMacro.class(method) }}">
         <thead>
@@ -61,9 +62,14 @@
                     {{ parametersMacro.render(parameters, docNode) }}
                 {%- endif %}
                 <h5 class="no-anchor ng-doc-secondary-heading" indexable="false">Returns</h5>
-                <p>
+
+                <div class="ng-doc-returns">
                     {{ typeMacro.returnType(method) }}
-                </p>
+                    {%- if returnsTag.length %}
+                        <span> - </span>
+                        {{ returnsTag | markdownToHtml }}
+                    {%- endif %}
+                </div>
             </td>
         </tr>
 

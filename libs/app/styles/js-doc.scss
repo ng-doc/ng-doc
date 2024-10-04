@@ -23,3 +23,9 @@
 .ng-doc-deprecated-notes {
   color: var(--ng-doc-warning-text);
 }
+
+.ng-doc-returns {
+  display: flex;
+  align-items: start;
+  gap: calc(var(--ng-doc-base-gutter) * 1.5);
+}
