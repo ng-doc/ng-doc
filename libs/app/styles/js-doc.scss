@@ -28,4 +28,15 @@
   display: flex;
   align-items: start;
   gap: calc(var(--ng-doc-base-gutter) * 1.5);
+  margin: var(--ng-doc-page-block-margin);
+
+  p {
+    &:first-of-type {
+      margin-top: 0;
+    }
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
 }
