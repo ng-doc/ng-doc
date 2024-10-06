@@ -17,6 +17,10 @@
 
 {% block overview %}{% endblock %}
 
+{% if not hideExamples %}
+    {% include "parts/examples.html.nunj" %}
+{% endif %}
+
 {% if not hideUsageNotes %}
     {% include "parts/usage-notes.html.nunj" %}
 {% endif %}

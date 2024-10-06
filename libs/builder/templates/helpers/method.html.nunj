@@ -75,6 +75,8 @@
             </td>
         </tr>
 
+        {% include "parts/member-examples.html.nunj" %}
+
         {% if overloads.length %}
             <tr>
                 <td>

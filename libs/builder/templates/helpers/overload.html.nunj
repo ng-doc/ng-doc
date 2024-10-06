@@ -47,6 +47,9 @@
                     </div>
                 </td>
             </tr>
+
+            {% include "parts/member-examples.html.nunj" %}
+
             </tbody>
         </table>
     {% endfor %}

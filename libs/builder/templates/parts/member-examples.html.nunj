@@ -1,0 +1,12 @@
+{%- set examples = docNode | getJsDocTags('example') -%}
+
+{% if examples.length -%}
+    <tr indexable="false">
+        <td {% if examplesColSpan %}colspan="{{ examplesColSpan }}"{% endif %}>
+            <h5 class="no-anchor ng-doc-secondary-heading" indexable="false">Example usage</h5>
+            {% for example in examples -%}
+                {{ example }}
+            {%- endfor %}
+        </td>
+    </tr>
+{%- endif %}

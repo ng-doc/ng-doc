@@ -94,4 +94,8 @@ article {
   pre code .ng-doc-code-anchor {
     color: inherit;
   }
+
+  tr[data-slugtype='member']:has(+ tr:not([data-slugtype])) td {
+    border-bottom: none;
+  }
 }
