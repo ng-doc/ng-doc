@@ -35,7 +35,7 @@
     "tslib": "^2.6.2",
     "ng-morph": "4.0.3",
     "parsimmon": "^1.18.1",
-    "@parcel/watcher": "2.3.0"
+    "@parcel/watcher": "2.4.1"
   },
   "publishConfig": {
     "access": "public"
