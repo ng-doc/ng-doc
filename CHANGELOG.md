@@ -1,3 +1,18 @@
+# [18.2.0](https://github.com/ng-doc/ng-doc/compare/v18.1.1...v18.2.0) (2024-10-06)
+
+
+### Bug Fixes
+
+* **project:** single quote in page title breaks a build ([040b9b7](https://github.com/ng-doc/ng-doc/commit/040b9b7ff40781395af41398d29ac2907cf786b4)), closes [#223](https://github.com/ng-doc/ng-doc/issues/223)
+* update @parcel/watcher version ([#225](https://github.com/ng-doc/ng-doc/issues/225)) ([c7f5717](https://github.com/ng-doc/ng-doc/commit/c7f57174c057e66d6caf014b92a1c4f591c5e083)), closes [#222](https://github.com/ng-doc/ng-doc/issues/222)
+
+
+### Features
+
+* **builder:** add support for `[@example](https://github.com/example)` tag ([#229](https://github.com/ng-doc/ng-doc/issues/229)) ([5d7440f](https://github.com/ng-doc/ng-doc/commit/5d7440f48922fd50e65df721c2169584355cfe86)), closes [#221](https://github.com/ng-doc/ng-doc/issues/221)
+* **builder:** add support for `[@remarks](https://github.com/remarks)` tag ([#220](https://github.com/ng-doc/ng-doc/issues/220)) ([7958769](https://github.com/ng-doc/ng-doc/commit/79587690036c5c31fd5f372b5b77196e63c8d91e)), closes [#218](https://github.com/ng-doc/ng-doc/issues/218)
+* **builder:** add support for `[@returns](https://github.com/returns)` tag ([#228](https://github.com/ng-doc/ng-doc/issues/228)) ([8dd4fd1](https://github.com/ng-doc/ng-doc/commit/8dd4fd1a716da998b34e6f7f7fc946f9569cc3c3)), closes [#219](https://github.com/ng-doc/ng-doc/issues/219)
+
 ## [18.1.1](https://github.com/ng-doc/ng-doc/compare/v18.1.0...v18.1.1) (2024-10-01)
 
 
