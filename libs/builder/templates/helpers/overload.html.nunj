@@ -7,6 +7,7 @@
     {% for overload in overloads %}
         {% set docNode = overload %}
         {% set parameters = overload.getParameters() %}
+        {% set returnsTag = docNode | getJsDocTag('returns') %}
 
         <table class="ng-doc-overload-table">
             <thead indexable="false">
@@ -20,6 +21,8 @@
                     {% set description = docNode | getJsDocDescription %}
 
                     {{ description if description else noContentMacro.render('No documentation has been provided.') }}
+
+                    {% include "parts/member-remarks.html.nunj" %}
                 </td>
             </tr>
             <tr>
@@ -35,9 +38,13 @@
                         {{ parametersMacro.render(parameters, docNode) }}
                     {%- endif %}
                     <h5 class="no-anchor" indexable="false">Returns</h5>
-                    <p>
+                    <div class="ng-doc-returns">
                         {{ typeMacro.returnType(overload) }}
-                    </p>
+                        {%- if returnsTag.length %}
+                            <span> - </span>
+                            {{ returnsTag | markdownToHtml }}
+                        {%- endif %}
+                    </div>
                 </td>
             </tr>
 

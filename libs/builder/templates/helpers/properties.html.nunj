@@ -43,6 +43,8 @@
                         {{ statusMacro.render(property) }}
                     </div>
                     {{ docNode | getJsDocDescription }}
+
+                    {% include "parts/member-remarks.html.nunj" %}
                 </td>
             </tr>
 
