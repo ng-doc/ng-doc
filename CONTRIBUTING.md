@@ -72,6 +72,12 @@ If you have any questions or need further assistance, feel free to contact us.
 npm i
 ```
 
+### Build builders
+
+```bash
+nx run builder:build
+```
+
 ### Run demo application
 
 ```bash
