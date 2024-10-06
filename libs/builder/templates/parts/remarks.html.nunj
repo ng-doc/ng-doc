@@ -1,6 +1,6 @@
 {%- set remarks = docNode | getJsDocTags('remarks') -%}
 
-{% if remarks %}
+{% if remarks.length %}
     <h2>Notes</h2>
     <section>
     {%- for remark in remarks %}
