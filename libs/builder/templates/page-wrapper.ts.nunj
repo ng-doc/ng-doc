@@ -30,7 +30,7 @@ const routes: Routes = [{
     {
       path: '{{ entry.route }}',
       loadChildren: () => import('./{{ importPath }}'),
-      title: '{{ entry.title | toTemplateString }}',
+      title: `{{ entry.title | toTemplateString }}`,
       data: {
         icon: '{{ entry.entry.icon }}',
       }
