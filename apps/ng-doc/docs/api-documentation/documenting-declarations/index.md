@@ -83,6 +83,48 @@ them in a special **See Also** section.
 export class MyClass {}
 ```
 
+### @remarks
+
+To add additional content to the description as notes, you can use the `@remarks` tag, it will render the notes after the description of your entity.
+
+```typescript name="my-class.ts" {6-8}
+/**
+ * Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+ * Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+ * when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+ *
+ * @remarks This is a note that will be rendered under the description.
+ * @remarks
+ * This is an another note that will be rendered under the description.
+ *
+ */
+export class MyClass {}
+```
+
+### @example
+
+To add example usage section you can use `@example` tags, NgDoc will display them in **Example usage** section. The content of the `@example` tag can be any markdown.
+
+````typescript name="my-class.ts" {6-14}
+/**
+ * Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+ * Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+ * when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+ *
+ * @example
+ * ```typescript
+ * const myClass = new MyClass();
+ * ```
+ * @example
+ * Some other example
+ * ```html
+ * <my-class></my-class>
+ * ```
+ *
+ */
+export class MyClass {}
+````
+
 ### @usageNotes
 
 To separate the main text from the usage notes/examples, you can use the `@usageNotes` tag, it will

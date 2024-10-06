@@ -61,8 +61,12 @@ article {
 
   th,
   td {
-    p#{$class} {
-      margin: 0;
+    h5#{$class} + p#{$class},
+    p#{$class}:first-of-type {
+      margin-top: 0;
+    }
+    p#{$class}:last-of-type {
+      margin-bottom: 0;
     }
   }
 
@@ -89,5 +93,9 @@ article {
 
   pre code .ng-doc-code-anchor {
     color: inherit;
+  }
+
+  tr[data-slugtype='member']:has(+ tr:not([data-slugtype])) td {
+    border-bottom: none;
   }
 }
