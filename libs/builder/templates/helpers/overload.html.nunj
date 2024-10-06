@@ -21,6 +21,8 @@
                     {% set description = docNode | getJsDocDescription %}
 
                     {{ description if description else noContentMacro.render('No documentation has been provided.') }}
+
+                    {% include "parts/member-remarks.html.nunj" %}
                 </td>
             </tr>
             <tr>
