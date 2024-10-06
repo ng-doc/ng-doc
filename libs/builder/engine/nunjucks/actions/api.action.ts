@@ -25,6 +25,7 @@ export function apiAction(declarationPath: string): NgDocAction<string> {
         hideSeeAlso: true,
         hideUsageNotes: true,
         hideRemarks: true,
+        hideExamples: true,
       },
     });
 
