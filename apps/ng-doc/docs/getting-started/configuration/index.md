@@ -146,7 +146,7 @@ specify `repoConfig` that should match `NgDocRepoConfig` interface in your `ng-d
 After that, NgDoc will start displaying links for editing and viewing the source code of the page.
 
 > **Note**
-> NgDoc supports only GitHub repositories, you can ask for support for other repositories by
+> NgDoc supports only GitHub and GitLab repositories, you can ask for support for other repositories by
 > creating an issue in our `ngDocFeatureRequest` page.
 
 ```typescript name="ng-doc.config.ts"
@@ -157,6 +157,23 @@ const config: NgDocConfiguration = {
     url: 'https://github.com/ng-doc/ng-doc',
     mainBranch: 'main',
     releaseBranch: 'release',
+  },
+};
+
+export default config;
+```
+
+Using the `platform` property, you can specify the platform on which the repository is located, by default it is `github`.
+
+```typescript name="ng-doc.config.ts"
+import { NgDocConfiguration } from '@ng-doc/builder';
+
+const config: NgDocConfiguration = {
+  repoConfig: {
+    url: 'https://gitlab.com/ng-doc/ng-doc',
+    mainBranch: 'main',
+    releaseBranch: 'release',
+    platform: 'gitlab',
   },
 };
 
