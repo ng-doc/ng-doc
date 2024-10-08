@@ -1,3 +1,4 @@
+import { NgDocPlatform } from '../types';
 /**
  * The repository configuration interface.
  */
@@ -14,4 +15,8 @@ export interface NgDocRepoConfig {
 	 * The release branch name (e.g. "release"), uses to generate correct links for the "View source" button
 	 */
 	releaseBranch: string;
+	/**
+	 * The platform name (e.g. "github"/"gitlab")
+	 */
+	platform?: NgDocPlatform;
 }
