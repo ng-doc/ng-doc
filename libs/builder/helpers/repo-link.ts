@@ -11,21 +11,30 @@ import { posix } from './posix';
  * @param lineNumber
  */
 export function editFileInRepoUrl(
-	{ url, mainBranch }: NgDocRepoConfig,
-	filePath: string,
-	scope: string,
-	lineNumber?: number,
+    { url, mainBranch, platform = 'github' }: NgDocRepoConfig,
+    filePath: string,
+    scope: string,
+    lineNumber?: number,
 ): string {
-	if (url && mainBranch) {
-		const rUrl = url.replace(/\/$/, '');
-		const fPath = posix(filePath).replace(/^\//, '');
+    if (url && mainBranch) {
+        const rUrl = url.replace(/\/$/, '');
+        const fPath = posix(filePath).replace(/^\//, '');
+        let editUrl = '';
 
-		return `${rUrl}/edit/${mainBranch}/${fPath}?message=docs(${scope}): describe your changes here...${
-			lineNumber ? `#L${lineNumber}` : ''
-		}`;
-	}
+        if (platform === 'github') {
+            editUrl = `${rUrl}/edit/${mainBranch}/${fPath}?message=docs(${scope}): describe your changes here...${
+                lineNumber ? `#L${lineNumber}` : ''
+            }`;
+        } else if (platform === 'gitlab') {
+            editUrl = `${rUrl}/-/edit/${mainBranch}/${fPath}?message=docs(${scope}): describe your changes here...${
+                lineNumber ? `#L${lineNumber}` : ''
+            }`;
+        }
 
-	return filePath;
+        return editUrl;
+    }
+
+    return filePath;
 }
 
 /**
@@ -37,16 +46,23 @@ export function editFileInRepoUrl(
  * @param lineNumber
  */
 export function viewFileInRepoUrl(
-	{ url, releaseBranch }: NgDocRepoConfig,
-	filePath: string,
-	lineNumber?: number,
+    { url, releaseBranch, platform = 'github' }: NgDocRepoConfig,
+    filePath: string,
+    lineNumber?: number,
 ): string {
-	if (url && releaseBranch) {
-		const rUrl = url.replace(/\/$/, '');
-		const fPath = posix(filePath).replace(/^\//, '');
+    if (url && releaseBranch) {
+        const rUrl = url.replace(/\/$/, '');
+        const fPath = posix(filePath).replace(/^\//, '');
+        let viewUrl = '';
 
-		return `${rUrl}/blob/${releaseBranch}/${fPath}${lineNumber ? `#L${lineNumber}` : ''}`;
-	}
+        if (platform === 'github') {
+            viewUrl = `${rUrl}/blob/${releaseBranch}/${fPath}${lineNumber ? `#L${lineNumber}` : ''}`;
+        } else if (platform === 'gitlab') {
+            viewUrl = `${rUrl}/-/blob/${releaseBranch}/${fPath}${lineNumber ? `#L${lineNumber}` : ''}`;
+        }
 
-	return filePath;
+        return viewUrl;
+    }
+
+    return filePath;
 }
