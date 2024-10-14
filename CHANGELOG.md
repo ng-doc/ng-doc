@@ -1,3 +1,10 @@
+# [18.3.0](https://github.com/ng-doc/ng-doc/compare/v18.2.0...v18.3.0) (2024-10-14)
+
+
+### Features
+
+* **builder:** added support for gitlab repos ([#231](https://github.com/ng-doc/ng-doc/issues/231)) ([39b20db](https://github.com/ng-doc/ng-doc/commit/39b20dbe9c2275107adfacc818cec0f7fa48b5a9))
+
 # [18.2.0](https://github.com/ng-doc/ng-doc/compare/v18.1.1...v18.2.0) (2024-10-06)
 
 
