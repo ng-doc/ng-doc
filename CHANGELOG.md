@@ -1,3 +1,10 @@
+## [18.3.1](https://github.com/ng-doc/ng-doc/compare/v18.3.0...v18.3.1) (2024-11-26)
+
+
+### Bug Fixes
+
+* **project:** lock angular version to avoid dependency conflicts ([173063e](https://github.com/ng-doc/ng-doc/commit/173063e85aaa69e31f02521eac3243111ad64cd5))
+
 # [18.3.0](https://github.com/ng-doc/ng-doc/compare/v18.2.0...v18.3.0) (2024-10-14)
 
 
