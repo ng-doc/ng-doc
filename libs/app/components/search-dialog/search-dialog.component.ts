@@ -41,7 +41,6 @@ export interface NgDocSearchDialogData {
 @Component({
   animations: [popupAnimation],
   selector: 'ng-doc-search-dialog',
-  standalone: true,
   imports: [
     CommonModule,
     NgDocInputWrapperComponent,

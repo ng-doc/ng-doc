@@ -11,7 +11,6 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
   templateUrl: './expander.component.html',
   styleUrls: ['./expander.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [NgIf, PolymorpheusModule, NgTemplateOutlet],
 })
 export class NgDocExpanderComponent implements AfterViewInit {

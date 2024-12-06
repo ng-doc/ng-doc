@@ -20,7 +20,6 @@ import { preventInitialChildAnimations } from '@ng-doc/ui-kit/animations';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     NgDocRootComponent,
     NgDocNavbarComponent,

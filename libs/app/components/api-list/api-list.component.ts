@@ -44,7 +44,6 @@ interface ApiFilterForm {
   templateUrl: './api-list.component.html',
   styleUrls: ['./api-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     NgDocTextComponent,
     NgIf,

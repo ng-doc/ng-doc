@@ -40,7 +40,6 @@ import { NgDocPlaygroundForm } from '../playground-form';
   templateUrl: './playground-demo.component.html',
   styleUrls: ['./playground-demo.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [NgDocDemoDisplayerComponent, AsyncPipe, NgDocSmoothResizeComponent, NgDocLetDirective],
 })
 @UntilDestroy()

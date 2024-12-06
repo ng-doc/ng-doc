@@ -15,7 +15,6 @@ import { BackgroundComponent } from './background/background.component';
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     BackgroundComponent,
     RouterLink,

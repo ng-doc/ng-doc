@@ -26,7 +26,6 @@ import {
   templateUrl: './demo-pane.component.html',
   styleUrls: ['./demo-pane.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     NgDocPaneComponent,
     NgTemplateOutlet,

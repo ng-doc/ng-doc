@@ -30,7 +30,6 @@ import {
 
 @Component({
   selector: 'ng-doc-page-wrapper',
-  standalone: true,
   imports: [
     CommonModule,
     RouterOutlet,

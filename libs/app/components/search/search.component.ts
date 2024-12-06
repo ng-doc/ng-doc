@@ -40,7 +40,6 @@ import { shareReplay, skip, switchMap } from 'rxjs/operators';
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     NgDocLetDirective,
     NgIf,

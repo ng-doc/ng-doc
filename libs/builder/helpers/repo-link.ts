@@ -7,34 +7,35 @@ import { posix } from './posix';
  * @param repoConfig.url
  * @param repoConfig.mainBranch
  * @param filePath
+ * @param repoConfig.platform
  * @param scope
  * @param lineNumber
  */
 export function editFileInRepoUrl(
-    { url, mainBranch, platform = 'github' }: NgDocRepoConfig,
-    filePath: string,
-    scope: string,
-    lineNumber?: number,
+  { url, mainBranch, platform = 'github' }: NgDocRepoConfig,
+  filePath: string,
+  scope: string,
+  lineNumber?: number,
 ): string {
-    if (url && mainBranch) {
-        const rUrl = url.replace(/\/$/, '');
-        const fPath = posix(filePath).replace(/^\//, '');
-        let editUrl = '';
+  if (url && mainBranch) {
+    const rUrl = url.replace(/\/$/, '');
+    const fPath = posix(filePath).replace(/^\//, '');
+    let editUrl = '';
 
-        if (platform === 'github') {
-            editUrl = `${rUrl}/edit/${mainBranch}/${fPath}?message=docs(${scope}): describe your changes here...${
-                lineNumber ? `#L${lineNumber}` : ''
-            }`;
-        } else if (platform === 'gitlab') {
-            editUrl = `${rUrl}/-/edit/${mainBranch}/${fPath}?message=docs(${scope}): describe your changes here...${
-                lineNumber ? `#L${lineNumber}` : ''
-            }`;
-        }
-
-        return editUrl;
+    if (platform === 'github') {
+      editUrl = `${rUrl}/edit/${mainBranch}/${fPath}?message=docs(${scope}): describe your changes here...${
+        lineNumber ? `#L${lineNumber}` : ''
+      }`;
+    } else if (platform === 'gitlab') {
+      editUrl = `${rUrl}/-/edit/${mainBranch}/${fPath}?message=docs(${scope}): describe your changes here...${
+        lineNumber ? `#L${lineNumber}` : ''
+      }`;
     }
 
-    return filePath;
+    return editUrl;
+  }
+
+  return filePath;
 }
 
 /**
@@ -43,26 +44,27 @@ export function editFileInRepoUrl(
  * @param repoConfig.url
  * @param repoConfig.releaseBranch
  * @param filePath
+ * @param repoConfig.platform
  * @param lineNumber
  */
 export function viewFileInRepoUrl(
-    { url, releaseBranch, platform = 'github' }: NgDocRepoConfig,
-    filePath: string,
-    lineNumber?: number,
+  { url, releaseBranch, platform = 'github' }: NgDocRepoConfig,
+  filePath: string,
+  lineNumber?: number,
 ): string {
-    if (url && releaseBranch) {
-        const rUrl = url.replace(/\/$/, '');
-        const fPath = posix(filePath).replace(/^\//, '');
-        let viewUrl = '';
+  if (url && releaseBranch) {
+    const rUrl = url.replace(/\/$/, '');
+    const fPath = posix(filePath).replace(/^\//, '');
+    let viewUrl = '';
 
-        if (platform === 'github') {
-            viewUrl = `${rUrl}/blob/${releaseBranch}/${fPath}${lineNumber ? `#L${lineNumber}` : ''}`;
-        } else if (platform === 'gitlab') {
-            viewUrl = `${rUrl}/-/blob/${releaseBranch}/${fPath}${lineNumber ? `#L${lineNumber}` : ''}`;
-        }
-
-        return viewUrl;
+    if (platform === 'github') {
+      viewUrl = `${rUrl}/blob/${releaseBranch}/${fPath}${lineNumber ? `#L${lineNumber}` : ''}`;
+    } else if (platform === 'gitlab') {
+      viewUrl = `${rUrl}/-/blob/${releaseBranch}/${fPath}${lineNumber ? `#L${lineNumber}` : ''}`;
     }
 
-    return filePath;
+    return viewUrl;
+  }
+
+  return filePath;
 }

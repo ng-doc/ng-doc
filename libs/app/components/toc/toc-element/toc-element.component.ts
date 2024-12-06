@@ -14,7 +14,6 @@ import { NgDocDecodeUriComponentPipe } from '@ng-doc/app/pipes/decode-uri-compon
   templateUrl: './toc-element.component.html',
   styleUrls: ['./toc-element.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [RouterLink, NgDocDecodeUriComponentPipe],
 })
 export class NgDocTocElementComponent {

@@ -12,7 +12,6 @@ import { NgDocSidebarItemComponent } from './sidebar-item/sidebar-item.component
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     NgFor,
     NgTemplateOutlet,

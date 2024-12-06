@@ -18,7 +18,6 @@ import { LOCATION } from '@ng-web-apis/common';
   templateUrl: './page-link.component.html',
   styleUrls: ['./page-link.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [NgIf, RouterLink, NgTemplateOutlet, NgDocIconComponent, NgDocDecodeUriComponentPipe],
 })
 export class NgDocPageLinkComponent implements OnInit, OnChanges {

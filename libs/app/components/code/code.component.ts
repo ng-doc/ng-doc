@@ -19,7 +19,6 @@ import {
   templateUrl: './code.component.html',
   styleUrls: ['./code.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     NgIf,
     NgDocTextComponent,

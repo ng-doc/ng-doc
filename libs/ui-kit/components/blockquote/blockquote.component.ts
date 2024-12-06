@@ -8,7 +8,6 @@ import { NgDocBlockquoteType } from '@ng-doc/ui-kit/types';
   templateUrl: './blockquote.component.html',
   styleUrls: ['./blockquote.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [NgIf, NgSwitch, NgSwitchCase, NgDocIconComponent],
 })
 export class NgDocBlockquoteComponent {

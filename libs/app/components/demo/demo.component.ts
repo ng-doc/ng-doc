@@ -26,7 +26,6 @@ import {
   templateUrl: './demo.component.html',
   styleUrls: ['./demo.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     NgIf,
     NgDocDemoDisplayerComponent,

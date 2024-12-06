@@ -4,7 +4,6 @@ import { NgDocSelectionOriginDirective } from '@ng-doc/ui-kit/components/selecti
 
 @Component({
   selector: 'a[ng-doc-tab-route]',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './tab-route.component.html',
   styleUrl: './tab-route.component.scss',

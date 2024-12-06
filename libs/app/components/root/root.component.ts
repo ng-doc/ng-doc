@@ -57,7 +57,6 @@ export class NgDocCustomSidebarDirective {}
   styleUrls: ['./root.component.scss'],
   providers: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [NgDocLetDirective, NgDocSidenavComponent, NgIf, PolymorpheusModule, AsyncPipe],
 })
 @UntilDestroy()

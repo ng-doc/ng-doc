@@ -5,7 +5,6 @@ import { LOCATION } from '@ng-web-apis/common';
 
 @Component({
   selector: 'ng-doc-heading-anchor',
-  standalone: true,
   imports: [NgDocButtonIconComponent, NgDocIconComponent, NgDocCopyButtonComponent],
   template: `
     <ng-doc-copy-button [text]="href">

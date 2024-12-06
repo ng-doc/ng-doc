@@ -43,7 +43,6 @@ import { distinctUntilChanged } from 'rxjs/operators';
   templateUrl: './overlay-container.component.html',
   styleUrls: ['./overlay-container.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     NgDocOverlayPointerComponent,
     NgDocEventSwitcherDirective,

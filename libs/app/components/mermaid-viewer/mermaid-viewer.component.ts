@@ -23,7 +23,6 @@ let id = 0;
 
 @Component({
   selector: 'ng-doc-mermaid-viewer',
-  standalone: true,
   imports: [
     NgDocMagnifierComponent,
     MagnifierControllerComponent,

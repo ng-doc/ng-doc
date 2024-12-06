@@ -16,7 +16,6 @@ import { NgDocOverlayRef } from '@ng-doc/ui-kit/classes';
 
 @Component({
   selector: 'ng-doc-image-viewer',
-  standalone: true,
   imports: [NgTemplateOutlet],
   templateUrl: './image-viewer.component.html',
   styleUrl: './image-viewer.component.scss',

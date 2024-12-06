@@ -5,7 +5,6 @@ import { NgDocMagnifierComponent } from '@ng-doc/ui-kit/components/magnifier';
 
 @Component({
   selector: 'ng-doc-magnifier-controller',
-  standalone: true,
   imports: [NgDocButtonIconComponent, NgDocIconComponent],
   templateUrl: './magnifier-controller.component.html',
   styleUrl: './magnifier-controller.component.scss',
