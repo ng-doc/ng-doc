@@ -1,7 +1,7 @@
 import { NgDocKeywordsLoader } from '@ng-doc/core';
 
 import { fetchDocs, ngPageToKeyword } from './helpers';
-import { NgKeywordLoaderOptions, NgResponse } from './interfaces';
+import { NgKeywordLoaderOptions } from './interfaces';
 
 /**
  * Loads keywords from Angular documentation.
@@ -13,10 +13,10 @@ import { NgKeywordLoaderOptions, NgResponse } from './interfaces';
 export function ngKeywordsLoader(options?: NgKeywordLoaderOptions): NgDocKeywordsLoader {
   return async () => {
     try {
-      const packages: NgResponse = await fetchDocs(options?.version);
+      const packages = await fetchDocs(options?.version);
 
-      const keywords = Object.entries(packages).flatMap(([packageName, pages]) =>
-        pages.flatMap((page) => ngPageToKeyword(packageName, page, options?.version)),
+      const keywords = packages.flatMap(({ moduleName, entries }) =>
+        entries.flatMap((page) => ngPageToKeyword(moduleName, page, options?.version)),
       );
 
       return Object.fromEntries(keywords);

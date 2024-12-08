@@ -45,21 +45,12 @@ work.
 > in which you specify the keyword
 
 We have added a special prefix `*` to use page keywords to notify you of outdated links. So, to
-create keyword for the page, specify your preferred keyword in your page configuration in
-the `keyword` field.
+create keyword for the page, specify your preferred keyword in your page markdown file.
 
-```typescript name="ng-doc.page.ts" {8}
-import { NgDocPage } from '@ng-doc/core';
-
-const MyAwesomePage: NgDocPage = {
-  title: 'My Awesome Page',
-  mdFile: './index.md',
-  // This keyword can be used to create a link to the page
-  // (e.g. like that "*MyCustomKeyword")
-  keyword: `MyCustomKeyword`,
-};
-
-export default MyAwesomePage;
+```markdown name="index.md" {2}
+---
+keyword: MyCustomKeyword
+---
 ```
 
 After that, you can use this keyword to create a link to the page.

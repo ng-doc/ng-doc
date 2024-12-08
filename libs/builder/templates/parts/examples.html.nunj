@@ -1,0 +1,11 @@
+{%- set examples = docNode | getJsDocTags('example') -%}
+
+{% if examples.length -%}
+    <section indexable="false">
+        <h2>Example usage</h2>
+
+        {% for example in examples -%}
+            {{ example }}
+        {%- endfor %}
+    </section>
+{%- endif %}

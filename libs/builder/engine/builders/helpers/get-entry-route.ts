@@ -1,7 +1,7 @@
 import { isRoute } from '@ng-doc/core';
 import path from 'path';
 
-import { Entry, isApiEntry, isPageEntry } from '../interfaces';
+import { Entry, isApiEntry, isCategoryEntry, isPageEntry } from '../interfaces';
 
 /**
  *
@@ -17,6 +17,10 @@ export function getEntryRoute(entry: Entry, filePath: string): string {
 
   if (isApiEntry(entry, filePath)) {
     return entry.route ?? 'api';
+  }
+
+  if (isCategoryEntry(entry, filePath)) {
+    return entry.route ?? dirName;
   }
 
   return dirName;

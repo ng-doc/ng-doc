@@ -78,7 +78,7 @@ After that NgDoc will search for documentation pages in the specified folder and
 import { NgDocConfiguration } from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
-  pages: 'libs/my-lib/src',
+  docsPath: 'libs/my-lib/src',
 };
 
 export default config;
@@ -146,7 +146,7 @@ specify `repoConfig` that should match `NgDocRepoConfig` interface in your `ng-d
 After that, NgDoc will start displaying links for editing and viewing the source code of the page.
 
 > **Note**
-> NgDoc supports only GitHub repositories, you can ask for support for other repositories by
+> NgDoc supports only GitHub and GitLab repositories, you can ask for support for other repositories by
 > creating an issue in our `ngDocFeatureRequest` page.
 
 ```typescript name="ng-doc.config.ts"
@@ -157,6 +157,23 @@ const config: NgDocConfiguration = {
     url: 'https://github.com/ng-doc/ng-doc',
     mainBranch: 'main',
     releaseBranch: 'release',
+  },
+};
+
+export default config;
+```
+
+Using the `platform` property, you can specify the platform on which the repository is located, by default it is `github`.
+
+```typescript name="ng-doc.config.ts"
+import { NgDocConfiguration } from '@ng-doc/builder';
+
+const config: NgDocConfiguration = {
+  repoConfig: {
+    url: 'https://gitlab.com/ng-doc/ng-doc',
+    mainBranch: 'main',
+    releaseBranch: 'release',
+    platform: 'gitlab',
   },
 };
 
@@ -185,10 +202,8 @@ import { Routes } from '@angular/router';
   selector: 'ng-doc-docs',
   template: `
     <ng-doc-root>
-      <ng-doc-navbar [leftContent]="leftContent">
-        <ng-template #leftContent>
-          <h3 style="margin: 0">MyAwesomeDoc</h3>
-        </ng-template>
+      <ng-doc-navbar>
+        <h3 style="margin: 0" ngDocNavbarLeft>MyAwesomeDoc</h3>
       </ng-doc-navbar>
       <ng-doc-sidebar></ng-doc-sidebar>
       <router-outlet></router-outlet>

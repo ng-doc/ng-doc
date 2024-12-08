@@ -2,7 +2,7 @@ import { NgDocApi, NgDocApiScope, NgDocCategory, NgDocPage } from '@ng-doc/core'
 import { minimatch } from 'minimatch';
 
 import { NgDocSupportedDeclaration } from '../../../types';
-import { API_PATTERN, PAGE_PATTERN } from '../../variables';
+import { API_PATTERN, CATEGORY_PATTERN, PAGE_PATTERN } from '../../variables';
 import { MarkdownEntry } from './markdown-entry';
 
 export interface DeclarationEntry {
@@ -28,6 +28,15 @@ export type Entry = ContentEntry | NgDocCategory;
  */
 export function isPageEntry(entry: Entry, filePath: string): entry is NgDocPage {
   return minimatch(filePath, PAGE_PATTERN);
+}
+
+/**
+ *
+ * @param entry
+ * @param filePath
+ */
+export function isCategoryEntry(entry: Entry, filePath: string): entry is NgDocCategory {
+  return minimatch(filePath, CATEGORY_PATTERN);
 }
 
 /**

@@ -7,11 +7,11 @@ import {
   Input,
   OnChanges,
   OnInit,
-  Renderer2,
 } from '@angular/core';
 import { Params, RouterLink } from '@angular/router';
 import { NgDocDecodeUriComponentPipe } from '@ng-doc/app/pipes';
 import { NgDocIconComponent } from '@ng-doc/ui-kit';
+import { LOCATION } from '@ng-web-apis/common';
 
 @Component({
   selector: 'ng-doc-page-link',
@@ -30,22 +30,21 @@ export class NgDocPageLinkComponent implements OnInit, OnChanges {
 
   protected isInCode: boolean = false;
 
-  private link: HTMLAnchorElement | undefined;
+  private link: URL | undefined;
 
+  private readonly location = inject(LOCATION);
   private readonly elementRef: ElementRef<HTMLElement> = inject(ElementRef);
-  private readonly renderer: Renderer2 = inject(Renderer2);
 
   ngOnInit(): void {
     this.isInCode = this.elementRef.nativeElement.closest('code') !== null;
   }
 
   ngOnChanges(): void {
-    this.link = this.renderer.createElement('a') as HTMLAnchorElement;
-    this.link.href = this.href;
+    this.link = new URL(this.href, this.location.origin);
   }
 
   get isExternalLink(): boolean {
-    return this.href.startsWith('http');
+    return this.link?.origin !== this.location.origin;
   }
 
   get path(): string {
@@ -57,8 +56,6 @@ export class NgDocPageLinkComponent implements OnInit, OnChanges {
   }
 
   get queryParams(): Params {
-    return Object.fromEntries(
-      new URLSearchParams(this.link?.search.replace(/^\?/, '') ?? '').entries(),
-    );
+    return Object.fromEntries(this.link?.searchParams.entries() ?? []);
   }
 }

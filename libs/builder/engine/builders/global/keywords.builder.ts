@@ -33,6 +33,5 @@ export function keywordsBuilder(context: NgDocBuilderContext): Builder<FileOutpu
       ),
     ],
     () => builder,
-    false,
   );
 }

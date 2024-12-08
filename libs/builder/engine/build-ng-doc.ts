@@ -58,7 +58,7 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
       // );
     }),
     printErrors(),
-    debounceTime(0),
+    debounceTime(100),
     map(() => void 0),
     emitCache(),
     progress(),

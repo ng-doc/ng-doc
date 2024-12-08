@@ -290,10 +290,8 @@ menu, to do this open your `app.component.html` file and add the following code 
 
 ```html name="app.component.html"
 <ng-doc-root>
-  <ng-doc-navbar [leftContent]="leftContent">
-    <ng-template #leftContent>
-      <h3 class="brand" style="margin: 0">MyDocs</h3>
-    </ng-template>
+  <ng-doc-navbar>
+    <h3 class="brand" style="margin: 0" ngDocNavbarLeft>MyDocs</h3>
   </ng-doc-navbar>
   <ng-doc-sidebar></ng-doc-sidebar>
   <router-outlet></router-outlet>

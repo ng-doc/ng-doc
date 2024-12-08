@@ -25,8 +25,7 @@ export function searchIndexesBuilder(context: NgDocBuilderContext): Builder<File
   );
 
   return createBuilder(
-    [createSecondaryTrigger(IndexStore.changes().pipe(debounceTime(100)))],
+    [createSecondaryTrigger(IndexStore.changes().pipe(debounceTime(50)))],
     () => builder,
-    false,
   );
 }

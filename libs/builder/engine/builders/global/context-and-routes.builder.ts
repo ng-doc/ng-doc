@@ -43,9 +43,8 @@ export function routesBuilder(context: NgDocBuilderContext): Builder<FileOutput>
   );
 
   return createBuilder(
-    [createMainTrigger(PageStore.changes().pipe(debounceTime(200)))],
+    [createMainTrigger(PageStore.changes().pipe(debounceTime(50)))],
     () => builder,
-    false,
   );
 }
 
@@ -78,8 +77,7 @@ export function contextBuilder(context: NgDocBuilderContext): Builder<FileOutput
   );
 
   return createBuilder(
-    [createMainTrigger(PageStore.changes().pipe(debounceTime(200)))],
+    [createMainTrigger(PageStore.changes().pipe(debounceTime(50)))],
     () => builder,
-    false,
   );
 }
