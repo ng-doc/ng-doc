@@ -1,3 +1,10 @@
+# [18.5.0](https://github.com/ng-doc/ng-doc/compare/v18.4.0...v18.5.0) (2024-12-08)
+
+
+### Features
+
+* **angular:** bump major version ([c094454](https://github.com/ng-doc/ng-doc/commit/c0944540cbc7cb415a8385d1fb709622fa7e7c13))
+
 # [18.4.0](https://github.com/ng-doc/ng-doc/compare/v18.3.1...v18.4.0) (2024-12-08)
 
 
