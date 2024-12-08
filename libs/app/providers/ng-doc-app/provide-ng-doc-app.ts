@@ -1,5 +1,5 @@
 import { ViewportScroller } from '@angular/common';
-import { inject, provideAppInitializer, Provider } from '@angular/core';
+import { EnvironmentProviders, inject, provideAppInitializer, Provider } from '@angular/core';
 import { NgDocHighlighterConfig, NgDocHighlighterService } from '@ng-doc/app/services/highlighter';
 import { NgDocUiConfig, provideNgDocUiKitConfig } from '@ng-doc/ui-kit';
 
@@ -21,24 +21,18 @@ export interface NgDocApplicationConfig {
  * Provides the NgDoc application configuration.
  * @param config - The optional application configuration.
  */
-export function provideNgDocApp(config?: NgDocApplicationConfig): Provider[] {
+export function provideNgDocApp(
+  config?: NgDocApplicationConfig,
+): Array<EnvironmentProviders | Provider> {
   return [
     /* --- Viewport Scroller --- */
     provideAppInitializer(() => {
-      const initializerFn = ((viewportScroller: ViewportScroller) => {
-        return () => viewportScroller.setOffset([0, 120]);
-      })(inject(ViewportScroller));
-      return initializerFn();
+      inject(ViewportScroller).setOffset([0, 120]);
     }),
 
     /* --- Shiki --- */
-    provideAppInitializer(() => {
-      const initializerFn = (() => {
-        const highlighter = inject(NgDocHighlighterService);
-
-        return () => highlighter.initialize(config?.shiki);
-      })();
-      return initializerFn();
+    provideAppInitializer(async () => {
+      await inject(NgDocHighlighterService).initialize(config?.shiki);
     }),
 
     /* --- UiKit --- */

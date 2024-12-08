@@ -17,7 +17,6 @@ const pageContent: string = `{{ content | toTemplateString }}`
 
 @Component({
   selector: 'ng-doc-page-{{ id }}',
-  standalone: true,
   template: `<ng-doc-page></ng-doc-page>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
