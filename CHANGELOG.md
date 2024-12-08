@@ -1,3 +1,15 @@
+# [19.0.0](https://github.com/ng-doc/ng-doc/compare/v18.5.0...v19.0.0) (2024-12-08)
+
+
+### Features
+
+* **angular:** bump major version ([34aa025](https://github.com/ng-doc/ng-doc/commit/34aa025f509a67c847dd8873b7d2853cf913f3c1))
+
+
+### BREAKING CHANGES
+
+* **angular:** Angular 19 dependency
+
 # [18.5.0](https://github.com/ng-doc/ng-doc/compare/v18.4.0...v18.5.0) (2024-12-08)
 
 
