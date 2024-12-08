@@ -1,3 +1,15 @@
+# [18.4.0](https://github.com/ng-doc/ng-doc/compare/v18.3.1...v18.4.0) (2024-12-08)
+
+
+### Bug Fixes
+
+* **project:** lock angular version for the `add` package ([bd7202d](https://github.com/ng-doc/ng-doc/commit/bd7202dc27e3e9f8c70869734a233ae05057149c))
+
+
+### Features
+
+* **angular:** add support for Angular 19 ([ab392d4](https://github.com/ng-doc/ng-doc/commit/ab392d4bd25d74a2cc91a769735ef33c1b7b69c3)), closes [#247](https://github.com/ng-doc/ng-doc/issues/247)
+
 ## [18.3.1](https://github.com/ng-doc/ng-doc/compare/v18.3.0...v18.3.1) (2024-11-26)
 
 
