@@ -25,7 +25,6 @@ import { NgDocLabelComponent, NgDocTooltipDirective } from '@ng-doc/ui-kit';
   templateUrl: './playground-property.component.html',
   styleUrls: ['./playground-property.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [NgDocLabelComponent, NgDocTooltipDirective, NgDocSanitizeHtmlPipe],
 })
 export class NgDocPlaygroundPropertyComponent implements OnChanges {

@@ -4,7 +4,6 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'ng-doc-demo',
-  standalone: true,
   imports: [CommonModule],
   template: `
     {{ signalInput() }}

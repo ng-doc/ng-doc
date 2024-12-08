@@ -26,7 +26,6 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
   templateUrl: './sidebar-category.component.html',
   styleUrls: ['./sidebar-category.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     NgDocRouteActiveDirective,
     NgIf,

@@ -33,7 +33,6 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
     },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     NgDocWrapperComponent,
     NgDocFocusCatcherDirective,

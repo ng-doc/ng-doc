@@ -46,7 +46,6 @@ import { NgDocPlaygroundPropertyControl } from '../playground-property-control';
   templateUrl: './playground-properties.component.html',
   styleUrls: ['./playground-properties.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     NgDocTextComponent,
     NgDocButtonComponent,
