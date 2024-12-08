@@ -27,7 +27,6 @@ import { NgDocPlaygroundPropertiesComponent } from './playground-properties/play
   templateUrl: './playground.component.html',
   styleUrls: ['./playground.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     NgIf,
     NgDocPlaygroundPropertiesComponent,

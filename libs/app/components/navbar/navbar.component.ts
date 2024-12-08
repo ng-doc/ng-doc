@@ -31,7 +31,6 @@ import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     NgDocLetDirective,
     PolymorpheusModule,

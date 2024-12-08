@@ -5,7 +5,6 @@ import { NgDocPageProcessorComponent } from '@ng-doc/app/processors';
 
 @Component({
   selector: 'ng-doc-page-header',
-  standalone: true,
   imports: [CommonModule, NgDocPageProcessorComponent, NgDocSanitizeHtmlPipe],
   templateUrl: './page-header.component.html',
   styleUrl: './page-header.component.scss',

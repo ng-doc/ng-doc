@@ -32,7 +32,6 @@ function isWheelEvent(event: Event): event is WheelEvent {
 
 @Component({
   selector: 'ng-doc-magnifier',
-  standalone: true,
   imports: [],
   templateUrl: './magnifier.component.html',
   styleUrl: './magnifier.component.scss',

@@ -24,7 +24,6 @@ import { DIControl } from 'di-controls';
   templateUrl: './type-alias-control.component.html',
   styleUrls: ['./type-alias-control.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     NgDocComboboxComponent,
     FormsModule,

@@ -5,7 +5,6 @@ import {NgDocApiListComponent} from '@ng-doc/app';
 
 @Component({
   selector: 'ng-doc-api-list-page-{{ id }}',
-  standalone: true,
   template: `<ng-doc-api-list title="{{ title }}" segment="{{ segment }}"></ng-doc-api-list>`,
   imports: [NgDocApiListComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
