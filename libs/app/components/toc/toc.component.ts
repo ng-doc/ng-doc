@@ -31,7 +31,6 @@ import { NgDocTocElementComponent } from './toc-element/toc-element.component';
   templateUrl: './toc.component.html',
   styleUrls: ['./toc.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [NgFor, NgDocTocElementComponent],
 })
 @UntilDestroy()

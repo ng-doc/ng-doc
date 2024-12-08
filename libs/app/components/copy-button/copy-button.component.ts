@@ -8,7 +8,6 @@ import {
 
 @Component({
   selector: 'ng-doc-copy-button',
-  standalone: true,
   imports: [NgDocButtonIconComponent, NgDocTooltipDirective, NgDocSmoothResizeComponent],
   template: `
     <button

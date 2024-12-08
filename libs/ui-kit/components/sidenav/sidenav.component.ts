@@ -25,7 +25,6 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [PolymorpheusModule, NgIf, AsyncPipe, NgDocLetDirective],
   host: {
     '[attr.data-ng-doc-sidebar]': '!!sidebar',

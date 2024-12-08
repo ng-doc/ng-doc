@@ -41,7 +41,6 @@ import { UntilDestroy } from '@ngneat/until-destroy';
   templateUrl: './page.component.html',
   styleUrls: ['./page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     NgIf,
     NgDocBreadcrumbComponent,

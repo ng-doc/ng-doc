@@ -7,22 +7,21 @@ import { NgDocColor } from '@ng-doc/ui-kit/types';
 import { DICompareHost, DIStateControl, injectHostControl } from 'di-controls';
 
 @Component({
-	selector: 'ng-doc-checkbox',
-	templateUrl: './checkbox.component.html',
-	styleUrls: ['./checkbox.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	standalone: true,
-	imports: [NgDocCheckedChangeDirective, NgDocFocusableDirective, NgIf, NgDocIconComponent],
+  selector: 'ng-doc-checkbox',
+  templateUrl: './checkbox.component.html',
+  styleUrls: ['./checkbox.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgDocCheckedChangeDirective, NgDocFocusableDirective, NgIf, NgDocIconComponent],
 })
 export class NgDocCheckboxComponent<T> extends DIStateControl<T> {
-	@Input()
-	@HostBinding('attr.data-lu-color')
-	color: NgDocColor = 'primary';
+  @Input()
+  @HostBinding('attr.data-lu-color')
+  color: NgDocColor = 'primary';
 
-	constructor() {
-		super({
-			host: injectHostControl({ optional: true }),
-			compareHost: inject(DICompareHost, { optional: true }),
-		});
-	}
+  constructor() {
+    super({
+      host: injectHostControl({ optional: true }),
+      compareHost: inject(DICompareHost, { optional: true }),
+    });
+  }
 }

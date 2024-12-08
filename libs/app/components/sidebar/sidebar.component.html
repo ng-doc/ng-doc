@@ -1,7 +1,7 @@
 <div class="ng-doc-side-bar-wrapper">
   <ng-container *ngFor="let item of getNavigation | bind: this | execute">
     <ng-container
-      *ngTemplateOutlet="sidebarTemplate; context: { item: this.item, root: true }"></ng-container>
+      *ngTemplateOutlet="sidebarTemplate; context: { item: item, root: true }"></ng-container>
   </ng-container>
 
   <ng-template let-item="item" let-root="root" #sidebarTemplate>

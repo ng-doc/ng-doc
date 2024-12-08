@@ -30,7 +30,6 @@ import { NgDocTooltipDirective } from '@ng-doc/ui-kit';
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [NgDocTooltipDirective],
 })
 class NgDocTooltipWrapperComponent implements AfterViewInit {

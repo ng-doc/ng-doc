@@ -18,7 +18,6 @@ import {CommonModule} from '@angular/common';
 
 @Component({
     selector: 'ng-doc-playground-{{ index }}',
-    standalone: true,
     template: `
 		{{ template }}
 	`,

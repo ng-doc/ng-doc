@@ -18,7 +18,6 @@ interface ToggleTheme {
   templateUrl: './theme-toggle.component.html',
   styleUrls: ['./theme-toggle.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [
     NgDocButtonIconComponent,
     NgDocTooltipDirective,
