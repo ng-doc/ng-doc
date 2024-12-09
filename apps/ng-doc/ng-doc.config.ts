@@ -5,7 +5,7 @@ const NgDocConfig: NgDocConfiguration = {
   docsPath: 'apps/ng-doc/docs',
   routePrefix: 'docs',
   tsConfig: 'apps/ng-doc/tsconfig.app.json',
-  cache: true,
+  cache: false,
   repoConfig: {
     url: 'https://github.com/ng-doc/ng-doc',
     mainBranch: 'main',
