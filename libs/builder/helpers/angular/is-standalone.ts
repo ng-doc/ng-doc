@@ -11,8 +11,8 @@ import { getPipeDecorator } from './get-pipe-decorator';
  * @param notFoundResult
  */
 export function isStandalone(cls: ClassDeclaration): boolean {
-	const decorator: Component | Directive | Pipe | undefined =
-		getComponentDecorator(cls) ?? getDirectiveDecorator(cls) ?? getPipeDecorator(cls);
+  const decorator: Component | Directive | Pipe | undefined =
+    getComponentDecorator(cls) ?? getDirectiveDecorator(cls) ?? getPipeDecorator(cls);
 
-	return !!decorator?.standalone;
+  return decorator?.standalone === false;
 }
