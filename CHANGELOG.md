@@ -1,3 +1,11 @@
+## [19.0.1](https://github.com/ng-doc/ng-doc/compare/v19.0.0...v19.0.1) (2024-12-09)
+
+
+### Bug Fixes
+
+* **builder:** isStandalone helper does not work with Angular new default value ([6ed4afe](https://github.com/ng-doc/ng-doc/commit/6ed4afeeabf1cbec940f730429bd807f8adb2c65)), closes [#252](https://github.com/ng-doc/ng-doc/issues/252)
+* **builder:** isStandalone helper does not work with Angular new default value ([71af521](https://github.com/ng-doc/ng-doc/commit/71af521d2069b80a4487b948eb25de11ee53a662)), closes [#252](https://github.com/ng-doc/ng-doc/issues/252)
+
 # [19.0.0](https://github.com/ng-doc/ng-doc/compare/v18.5.0...v19.0.0) (2024-12-08)
 
 
