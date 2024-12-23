@@ -1,4 +1,5 @@
 export * from './accessor';
+export * from './call-signature';
 export * from './class';
 export * from './create-project';
 export * from './declaration-import';

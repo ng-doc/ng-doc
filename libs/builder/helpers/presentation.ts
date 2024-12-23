@@ -1,6 +1,7 @@
 import { isPresent } from '@ng-doc/core';
 import {
   AccessorDeclaration,
+  CallSignatureDeclaration,
   ConstructorDeclaration,
   DecoratableNode,
   Decorator,
@@ -12,6 +13,7 @@ import {
   Scope,
   ScopeableNode,
   TypeAliasDeclaration,
+  TypeParameterDeclaration,
   VariableDeclaration,
 } from 'ts-morph';
 
@@ -72,6 +74,24 @@ export function methodPresentation(method: MethodDeclaration): string {
     scopePresentation(method),
     `${method.getName()}(${parameters}):`,
     `${displayReturnType(method)};`,
+  ]
+    .filter(isPresent)
+    .join(' ');
+
+  return formatCode(presentation, 'TypeScript');
+}
+
+/**
+ *
+ * @param callSignature
+ */
+export function callSignaturePresentation(callSignature: CallSignatureDeclaration): string {
+  const parameters: string = callSignature.getParameters().map(parameterPresentation).join(', ');
+  const typeParameters = typeParametersPresentation(callSignature.getTypeParameters());
+
+  const presentation: string = [
+    `${typeParameters ? `<${typeParameters}>` : ''}(${parameters}):`,
+    `${displayReturnType(callSignature)};`,
   ]
     .filter(isPresent)
     .join(' ');
@@ -186,4 +206,12 @@ function decoratorsPresentation(node: DecoratableNode): string {
     .getDecorators()
     .map((d: Decorator) => `@${d.getName()}()`)
     .join(' ');
+}
+
+/**
+ *
+ * @param typeParameters
+ */
+function typeParametersPresentation(typeParameters: TypeParameterDeclaration[]): string {
+  return typeParameters.map((tp: TypeParameterDeclaration) => tp.getText()).join(', ');
 }
