@@ -1,3 +1,20 @@
+# [19.1.0](https://github.com/ng-doc/ng-doc/compare/v19.0.1...v19.1.0) (2024-12-23)
+
+
+### Bug Fixes
+
+* **app:** mermaid has no text inside shapes ([#254](https://github.com/ng-doc/ng-doc/issues/254)) ([6eef471](https://github.com/ng-doc/ng-doc/commit/6eef471af8034dd140ef433fa4b93190784b5164)), closes [#253](https://github.com/ng-doc/ng-doc/issues/253)
+* **builder:** at-rule (@) should not be evaluated inside code block ([cb4cd1e](https://github.com/ng-doc/ng-doc/commit/cb4cd1eb7d2088665de772b8924507b5e903576a)), closes [#232](https://github.com/ng-doc/ng-doc/issues/232)
+* **builder:** multi-line param documentation doesn't display correctly ([1300b07](https://github.com/ng-doc/ng-doc/commit/1300b073598bd1612746d9a17384bfa79c11c518)), closes [#240](https://github.com/ng-doc/ng-doc/issues/240)
+* **builder:** playground doesn't show values for user controls ([7185dc5](https://github.com/ng-doc/ng-doc/commit/7185dc50723b1c632bfcdc173d2dc3f9c6163dda)), closes [#235](https://github.com/ng-doc/ng-doc/issues/235)
+* **builder:** specifying API Reference Page route Causing Asset Not Found ([dac0b6d](https://github.com/ng-doc/ng-doc/commit/dac0b6dafa07afe343ca10d72d266565c1a08b7f)), closes [#236](https://github.com/ng-doc/ng-doc/issues/236)
+
+
+### Features
+
+* **app:** make collapsed sidebar links SEO-friendly ([3217d5a](https://github.com/ng-doc/ng-doc/commit/3217d5a31168a96c4950b0073a6bb12425e4c54e))
+* **builder:** add a call signatures support for interfaces API ([e132eaa](https://github.com/ng-doc/ng-doc/commit/e132eaa38a01fb39479b7314a355f4031eb9412d)), closes [#238](https://github.com/ng-doc/ng-doc/issues/238)
+
 ## [19.0.1](https://github.com/ng-doc/ng-doc/compare/v19.0.0...v19.0.1) (2024-12-09)
 
 
