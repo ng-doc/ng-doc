@@ -2,6 +2,32 @@ import { asArray, isPresent } from '@ng-doc/core';
 import { JSDocableNode } from 'ts-morph';
 
 import { markdownToHtml } from './markdown-to-html';
+import { TSDocParser } from '@microsoft/tsdoc';
+
+import { type DocNode, DocExcerpt } from '@microsoft/tsdoc';
+
+export class Formatter {
+  static renderDocNode(docNode: DocNode): string {
+    let result: string = '';
+    if (docNode) {
+      if (docNode instanceof DocExcerpt) {
+        result += docNode.content.toString();
+      }
+      for (const childNode of docNode.getChildNodes()) {
+        result += Formatter.renderDocNode(childNode);
+      }
+    }
+    return result;
+  }
+
+  static renderDocNodes(docNodes: readonly DocNode[]): string {
+    let result: string = '';
+    for (const docNode of docNodes) {
+      result += Formatter.renderDocNode(docNode);
+    }
+    return result;
+  }
+}
 
 /**
  *
@@ -9,12 +35,12 @@ import { markdownToHtml } from './markdown-to-html';
  */
 export function getJsDocDescription(node: JSDocableNode): string {
   const jsDocs = asArray(node.getJsDocs()[0]);
-  const description = jsDocs
-    .map((doc) => doc.getStructure())
-    .map(({ description }) => description)
-    .join('');
+  const tsdocParser = new TSDocParser();
+  const parserContext = tsdocParser.parseString(jsDocs[0]?.getText() ?? '');
 
-  return markdownToHtml(description).trim();
+  return markdownToHtml(
+    Formatter.renderDocNodes(parserContext.docComment.summarySection.getChildNodes()),
+  ).trim();
 }
 
 /**
