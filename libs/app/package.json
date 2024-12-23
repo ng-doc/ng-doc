@@ -16,7 +16,7 @@
     "@ng-doc/ui-kit": "0.0.0",
     "@orama/plugin-match-highlight": "2.0.17",
     "@orama/stemmers": "2.0.17",
-    "mermaid": "10.9.1"
+    "mermaid": "10.9.3"
   },
   "publishConfig": {
     "access": "public"
