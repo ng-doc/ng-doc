@@ -89,7 +89,7 @@
     "hast-util-heading-rank": "3.0.0",
     "hast-util-to-string": "3.0.0",
     "marked": "12.0.1",
-    "mermaid": "10.9.1",
+    "mermaid": "10.9.3",
     "minimatch": "9.0.1",
     "ng-morph": "4.8.4",
     "node-fetch": "2.6.11",
