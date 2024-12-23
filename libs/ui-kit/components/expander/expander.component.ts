@@ -22,6 +22,9 @@ export class NgDocExpanderComponent implements AfterViewInit {
   @Input({ required: true })
   content!: NgDocContent;
 
+  @Input()
+  collapseMod: 'remove' | 'hide' = 'remove';
+
   /** Closed height could be used to show preview of the content */
   @Input()
   from: number = 0;
