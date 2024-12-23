@@ -1,6 +1,16 @@
-import { AsyncPipe, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, computed, inject, input, Signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  OnInit,
+  Signal,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
@@ -16,19 +26,12 @@ import { asArray } from '@ng-doc/core/helpers/as-array';
 import { NgDocApiList, NgDocApiListItem } from '@ng-doc/core/interfaces';
 import {
   NgDocAutofocusDirective,
-  NgDocButtonComponent,
   NgDocButtonToggleComponent,
-  NgDocComboboxComponent,
-  NgDocDataDirective,
   NgDocIconComponent,
   NgDocInputStringDirective,
   NgDocInputWrapperComponent,
-  NgDocLabelComponent,
-  NgDocListComponent,
-  NgDocOptionComponent,
   NgDocRadioGroupDirective,
   NgDocTextComponent,
-  NgDocTextLeftDirective,
   NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
 import { startWith } from 'rxjs/operators';
@@ -49,32 +52,23 @@ interface ApiFilterForm {
     NgIf,
     FormsModule,
     ReactiveFormsModule,
-    NgDocLabelComponent,
     NgDocInputWrapperComponent,
     NgDocIconComponent,
     NgDocInputStringDirective,
     NgDocAutofocusDirective,
-    NgDocComboboxComponent,
-    NgDocDataDirective,
-    NgDocListComponent,
     NgFor,
-    NgDocOptionComponent,
-    NgTemplateOutlet,
     NgDocKindIconComponent,
-    NgDocTextLeftDirective,
     NgDocTooltipDirective,
     RouterLink,
-    AsyncPipe,
-    NgDocButtonComponent,
     NgDocRadioGroupDirective,
     NgDocButtonToggleComponent,
   ],
 })
-export class NgDocApiListComponent {
+export class NgDocApiListComponent implements OnInit {
   title = input<string>('API References');
   segment = input<string>();
 
-  apiList: Signal<NgDocApiList[]>;
+  apiList: WritableSignal<NgDocApiList[]> = signal([]);
   filteredApiList: Signal<NgDocApiList[]>;
   filter: Signal<any>;
   scopes: Signal<string[]>;
@@ -97,15 +91,11 @@ export class NgDocApiListComponent {
     this.filter = toSignal(this.formGroup.valueChanges.pipe(startWith(this.formGroup.value)), {
       initialValue: this.formGroup.value,
     });
-    this.apiList = toSignal(
-      this.httpClient.get<NgDocApiList[]>(
-        asArray('assets/ng-doc', this.segment(), 'api-list.json').join('/'),
-      ),
-      { initialValue: [] },
-    );
+
     this.scopes = computed(() =>
       asArray(new Set(this.apiList().flatMap((api: NgDocApiList) => api.title))).sort(),
     );
+
     this.types = computed(() =>
       asArray(
         new Set(
@@ -154,5 +144,11 @@ export class NgDocApiListComponent {
         }))
         .filter((api: NgDocApiList) => api.items.length);
     });
+  }
+
+  ngOnInit(): void {
+    this.httpClient
+      .get<NgDocApiList[]>(asArray('assets/ng-doc', this.segment(), 'api-list.json').join('/'))
+      .subscribe((apiList) => this.apiList.set(apiList));
   }
 }
