@@ -1,7 +1,32 @@
+import { TSDocParser } from '@microsoft/tsdoc';
+import { type DocNode, DocExcerpt } from '@microsoft/tsdoc';
 import { asArray, isPresent } from '@ng-doc/core';
 import { JSDocableNode } from 'ts-morph';
 
 import { markdownToHtml } from './markdown-to-html';
+
+export class Formatter {
+  static renderDocNode(docNode: DocNode): string {
+    let result: string = '';
+    if (docNode) {
+      if (docNode instanceof DocExcerpt) {
+        result += docNode.content.toString();
+      }
+      for (const childNode of docNode.getChildNodes()) {
+        result += Formatter.renderDocNode(childNode);
+      }
+    }
+    return result;
+  }
+
+  static renderDocNodes(docNodes: readonly DocNode[]): string {
+    let result: string = '';
+    for (const docNode of docNodes) {
+      result += Formatter.renderDocNode(docNode);
+    }
+    return result;
+  }
+}
 
 /**
  *
@@ -9,12 +34,12 @@ import { markdownToHtml } from './markdown-to-html';
  */
 export function getJsDocDescription(node: JSDocableNode): string {
   const jsDocs = asArray(node.getJsDocs()[0]);
-  const description = jsDocs
-    .map((doc) => doc.getStructure())
-    .map(({ description }) => description)
-    .join('');
+  const tsdocParser = new TSDocParser();
+  const parserContext = tsdocParser.parseString(jsDocs[0]?.getText() ?? '');
 
-  return markdownToHtml(description).trim();
+  return markdownToHtml(
+    Formatter.renderDocNodes(parserContext.docComment.summarySection.getChildNodes()),
+  ).trim();
 }
 
 /**
@@ -100,39 +125,12 @@ export function hasJsDocTag(node: JSDocableNode, tagName: string): boolean {
  */
 export function getJsDocParam(node: JSDocableNode, paramName: string): string {
   const jsDocs = asArray(node.getJsDocs()[0]);
-  const param = jsDocs
-    .map((doc) => doc.getStructure())
-    .map((doc) =>
-      doc.tags?.find(
-        (tag) => tag.tagName === 'param' && getParameter(String(tag.text)).name === paramName,
-      ),
-    )
-    .filter(isPresent)
-    .map((tag) => getParameter(String(tag.text)).description)
-    .join('');
+  const tsdocParser = new TSDocParser();
+  const parserContext = tsdocParser.parseString(jsDocs[0]?.getText() ?? '');
+
+  const param = Formatter.renderDocNodes(
+    parserContext.docComment.params.tryGetBlockByName(paramName)?.getChildNodes() ?? [],
+  );
 
   return markdownToHtml(param).trim();
-}
-
-/**
- * Returns the name and description of a parameter
- * @example
- * // input: "param1 - Test param1"
- * // output: ['param1', 'Test param1']
- *
- * // input: "param1 Test param1"
- * // output: ['param1', 'Test param1']
- * @param docs
- */
-function getParameter(docs: string): { name: string; description: string } {
-  const match = docs.match(/(?<name>\w*)((\s?-\s?)|(\s))(?<description>.*)/);
-
-  if (!match || !match.groups) {
-    return { name: '', description: '' };
-  }
-
-  return {
-    name: match.groups['name'].trim() ?? '',
-    description: match.groups['description'].trim() ?? '',
-  };
 }

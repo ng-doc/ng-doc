@@ -2,6 +2,7 @@
 
 export {
   accessorPresentation,
+  callSignaturePresentation,
   constructorPresentation,
   declarationImport,
   displayReturnType,
@@ -14,6 +15,7 @@ export {
   firstNodeWithComment,
   functionPresentation,
   getAccessorChain,
+  getCallSignatureChain,
   getClassAccessors,
   getClassMethods,
   getClassProperties,
@@ -21,6 +23,7 @@ export {
   getImplementedMember,
   getInheritedParent,
   getInterfaceAccessors,
+  getInterfaceCallSignatures,
   getInterfaceMethods,
   getInterfaceProperties,
   getJsDocDescription,

@@ -1,0 +1,70 @@
+{% import "helpers/code.html.nunj" as codeMacro %}
+{% import "helpers/type.html.nunj" as typeMacro %}
+{% import "helpers/declaration-modifiers.html.nunj" as tagsMacro %}
+{% import "helpers/parameters.html.nunj" as parametersMacro %}
+{% import "helpers/no-content.html.nunj" as noContentMacro %}
+{% import "helpers/status.html.nunj" as statusMacro %}
+
+{% macro render(callSignature, origin, name) %}
+  {% set parameters = callSignature.getParameters() %}
+  {% set callSignatureChain = callSignature | getCallSignatureChain %}
+  {% set inheritedFrom = callSignature | getInheritedParent(origin) %}
+  {% set docNode = callSignatureChain | firstNodeWithComment %}
+  {% set overloads = callSignature.getOverloads() if callSignature.getOverloads else [] %}
+  {% set returnsTag = docNode | getJsDocTag('returns') %}
+
+  <table class="{{ statusMacro.class(callSignature) }}">
+    <thead>
+    <tr>
+      <th indexable="false">
+        <h3 dataSlugType="member">{{ name }}</h3>
+        <div class="ng-doc-node-details">
+          {%- if inheritedFrom %}
+            inherited from <code>{{ inheritedFrom.getName() }}</code>
+          {%- endif %}
+        </div>
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>
+        <div class="ng-doc-api-status">
+          {{ statusMacro.render(callSignature) }}
+        </div>
+
+        {% set description = docNode | getJsDocDescription %}
+
+        {{ description if description else noContentMacro.render('No documentation has been provided.') }}
+
+        {% include "parts/member-remarks.html.nunj" %}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <h5 class="no-anchor ng-doc-secondary-heading" indexable="false">Presentation</h5>
+        {{ codeMacro.render(callSignature | callSignaturePresentation, "typescript", false) }}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        {%- if parameters.length %}
+          <h5 class="no-anchor ng-doc-secondary-heading" indexable="false">Parameters</h5>
+          {{ parametersMacro.render(parameters, docNode) }}
+        {%- endif %}
+        <h5 class="no-anchor ng-doc-secondary-heading" indexable="false">Returns</h5>
+
+        <div class="ng-doc-returns">
+          {{ typeMacro.returnType(callSignature) }}
+          {%- if returnsTag.length %}
+            <span> - </span>
+            {{ returnsTag | markdownToHtml }}
+          {%- endif %}
+        </div>
+      </td>
+    </tr>
+
+    {% include "parts/member-examples.html.nunj" %}
+    </tbody>
+  </table>
+{% endmacro %}
