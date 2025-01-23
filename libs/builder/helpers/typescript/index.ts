@@ -11,6 +11,7 @@ export * from './find-declarations';
 export * from './first-node-with-comment';
 export * from './get-object-expression-from-default';
 export * from './interface';
+export * from './is-named';
 export * from './member';
 export * from './method';
 export * from './node';
