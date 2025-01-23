@@ -30,9 +30,9 @@ export function getPropertyChain(
 		});
 
 		// TODO: Add interfaces
-	}
 
-	if (Node.isInterfaceDeclaration(parent)) {
+	} else if (Node.isInterfaceDeclaration(parent)) {
+
 		forAllInterfaces(parent, (int: InterfaceDeclaration) => {
 			const prop: PropertySignature | undefined = int.getProperty(name);
 
@@ -40,6 +40,12 @@ export function getPropertyChain(
 				properties.push(prop);
 			}
 		});
+
+	} else {
+
+		// type aliases etc don't have inheritance, so we just add the property itself
+		properties.push(property);
+
 	}
 
 	return properties;
