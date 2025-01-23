@@ -42,7 +42,7 @@
                         {%- endif %}
                     </div>
                 </td>
-                <td>{{ typeMacro.type(property) }}</td>
+                <td class="ng-doc-api-table-type">{{ typeMacro.type(property) }}</td>
                 <td>
                     <div class="ng-doc-api-status">
                         {{ statusMacro.render(property) }}
