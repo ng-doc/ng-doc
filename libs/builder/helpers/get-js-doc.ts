@@ -129,7 +129,7 @@ export function getJsDocParam(node: JSDocableNode, paramName: string): string {
   const parserContext = tsdocParser.parseString(jsDocs[0]?.getText() ?? '');
 
   const param = Formatter.renderDocNodes(
-    parserContext.docComment.params.tryGetBlockByName(paramName)?.getChildNodes() ?? [],
+    parserContext.docComment.params.tryGetBlockByName(paramName)?.content?.getChildNodes() ?? [],
   );
 
   return markdownToHtml(param).trim();
