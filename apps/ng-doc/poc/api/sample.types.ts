@@ -1,4 +1,9 @@
 
+export declare class DummyClass {
+  /** Find the first node with the specified title */
+  public findByTitle(title: string): object;
+}
+
 export type ResourceId = string;
 
 /**
