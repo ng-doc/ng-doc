@@ -1,5 +1,10 @@
-import { TSDocParser } from '@microsoft/tsdoc';
-import { type DocNode, DocExcerpt } from '@microsoft/tsdoc';
+import {
+  type DocNode,
+  DocErrorText,
+  DocExcerpt,
+  DocPlainText,
+  TSDocParser,
+} from '@microsoft/tsdoc';
 import { asArray, isPresent } from '@ng-doc/core';
 import { JSDocableNode } from 'ts-morph';
 
@@ -12,7 +17,7 @@ export class Formatter {
       if (docNode instanceof DocExcerpt) {
         result += docNode.content.toString();
       }
-      for (const childNode of docNode.getChildNodes()) {
+      for (const childNode of Formatter.filterOutStatusTag(docNode.getChildNodes())) {
         result += Formatter.renderDocNode(childNode);
       }
     }
@@ -24,6 +29,31 @@ export class Formatter {
     for (const docNode of docNodes) {
       result += Formatter.renderDocNode(docNode);
     }
+    return result;
+  }
+
+  private static filterOutStatusTag(docNodes: readonly DocNode[]): readonly DocNode[] {
+    if (docNodes.length < 2) return docNodes;
+
+    const result: DocNode[] = [];
+
+    for (let i = 0; i < docNodes.length; i += 2) {
+      const node1 = docNodes.at(i),
+        node2 = docNodes.at(i + 1);
+
+      if (
+        node1 instanceof DocErrorText &&
+        node1.text === '@' &&
+        node2 instanceof DocPlainText &&
+        node2.text.startsWith('status:')
+      ) {
+        continue;
+      }
+
+      if (node1) result.push(node1);
+      if (node2) result.push(node2);
+    }
+
     return result;
   }
 }
@@ -129,7 +159,7 @@ export function getJsDocParam(node: JSDocableNode, paramName: string): string {
   const parserContext = tsdocParser.parseString(jsDocs[0]?.getText() ?? '');
 
   const param = Formatter.renderDocNodes(
-    parserContext.docComment.params.tryGetBlockByName(paramName)?.getChildNodes() ?? [],
+    parserContext.docComment.params.tryGetBlockByName(paramName)?.content?.getChildNodes() ?? [],
   );
 
   return markdownToHtml(param).trim();
