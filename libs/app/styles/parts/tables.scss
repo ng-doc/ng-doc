@@ -52,6 +52,10 @@ table.ng-doc-api-table {
     width: 25%;
   }
 
+  tr td.ng-doc-api-table-type code {
+    white-space: normal;
+  }
+
   tr th.ng-doc-api-table-description {
     min-width: 300px;
   }

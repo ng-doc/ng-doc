@@ -62,7 +62,8 @@ export class Formatter {
  *
  * @param node
  */
-export function getJsDocDescription(node: JSDocableNode): string {
+export function getJsDocDescription(node: JSDocableNode | undefined): string {
+  if(!node) return '';
   const jsDocs = asArray(node.getJsDocs()[0]);
   const tsdocParser = new TSDocParser();
   const parserContext = tsdocParser.parseString(jsDocs[0]?.getText() ?? '');
@@ -77,7 +78,8 @@ export function getJsDocDescription(node: JSDocableNode): string {
  * @param node
  * @param tagName
  */
-export function getJsDocTag(node: JSDocableNode, tagName: string): string {
+export function getJsDocTag(node: JSDocableNode | undefined, tagName: string): string {
+  if(!node) return '';
   const jsDocs = asArray(node.getJsDocs()[0]);
   const tag = jsDocs
     .map((doc) => doc.getStructure())
@@ -94,7 +96,8 @@ export function getJsDocTag(node: JSDocableNode, tagName: string): string {
  * @param node
  * @param tagName
  */
-export function getJsDocTags(node: JSDocableNode, tagName: string): string[] {
+export function getJsDocTags(node: JSDocableNode | undefined, tagName: string): string[] {
+  if(!node) return [];
   const jsDocs = asArray(node.getJsDocs()[0]);
   const tags = jsDocs
     .map((doc) => doc.getStructure())
@@ -110,7 +113,8 @@ export function getJsDocTags(node: JSDocableNode, tagName: string): string[] {
  *
  * @param node
  */
-export function getAllJsDocTags(node: JSDocableNode): Record<string, string[]> {
+export function getAllJsDocTags(node: JSDocableNode | undefined): Record<string, string[]> {
+  if(!node) return {};
   const jsDocs = asArray(node.getJsDocs()[0]);
   const tags = jsDocs
     .map((doc) => doc.getStructure())
@@ -138,7 +142,8 @@ export function getAllJsDocTags(node: JSDocableNode): Record<string, string[]> {
  * @param node
  * @param tagName
  */
-export function hasJsDocTag(node: JSDocableNode, tagName: string): boolean {
+export function hasJsDocTag(node: JSDocableNode | undefined, tagName: string): boolean {
+  if(!node) return false;
   const jsDocs = asArray(node.getJsDocs()[0]);
 
   return jsDocs
@@ -153,7 +158,8 @@ export function hasJsDocTag(node: JSDocableNode, tagName: string): boolean {
  * @param node
  * @param paramName
  */
-export function getJsDocParam(node: JSDocableNode, paramName: string): string {
+export function getJsDocParam(node: JSDocableNode | undefined, paramName: string): string {
+  if(!node) return '';
   const jsDocs = asArray(node.getJsDocs()[0]);
   const tsdocParser = new TSDocParser();
   const parserContext = tsdocParser.parseString(jsDocs[0]?.getText() ?? '');

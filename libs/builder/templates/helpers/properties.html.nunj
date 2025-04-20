@@ -4,7 +4,8 @@
 {% import "helpers/status.html.nunj" as statusMacro %}
 {% set examplesColSpan = 3 %}
 
-{% macro render(properties, origin) %}
+{# mode='inheritedFrom' (classes/interfaces) or mode='definedIn' (type aliases) #}
+{% macro render(properties, origin, mode='inheritedFrom') %}
     <table class="ng-doc-api-table sticky first-colum-highlighted">
         <thead>
         <tr indexable="false">
@@ -16,6 +17,8 @@
         <tbody>
         {%- for property in properties %}
             {% set propertyChain = property | getPropertyChain %}
+            {% set definedIn = property | getDefinedInParent(origin) %}
+            {% set definedInHasName = definedIn | isNamed %}
             {% set inheritedFrom = property | getInheritedParent(origin) %}
             {% set overriddenMember = property | getOverriddenMember %}
             {% set implementedMember = property | getImplementedMember %}
@@ -26,7 +29,9 @@
                     {{ decoratorsMacro.render(property.getDecorators(), true) if property.getDecorators }}
                     <span>{{ property.getName() }}{{ tagsMacro.render(property, "badge") }}</span>
                     <div class="ng-doc-node-details">
-                        {%- if inheritedFrom %}
+                        {%- if mode == 'definedIn' and definedIn and definedInHasName %}
+                            defined in <code>{{ definedIn.getName() }}</code>
+                        {%- elseif mode == 'inheritedFrom' and inheritedFrom %}
                             inherited from <code>{{ inheritedFrom.getName() }}</code>
                         {%- elseif overriddenMember %}
                             overrides
@@ -37,7 +42,7 @@
                         {%- endif %}
                     </div>
                 </td>
-                <td>{{ typeMacro.type(property) }}</td>
+                <td class="ng-doc-api-table-type">{{ typeMacro.type(property) }}</td>
                 <td>
                     <div class="ng-doc-api-status">
                         {{ statusMacro.render(property) }}
