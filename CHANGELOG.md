@@ -1,3 +1,17 @@
+# [19.2.0](https://github.com/ng-doc/ng-doc/compare/v19.1.0...v19.2.0) (2025-04-20)
+
+
+### Bug Fixes
+
+* **add:** automatic project configuration doesn't work ([111965c](https://github.com/ng-doc/ng-doc/commit/111965c6069e2b9485e7e20d4891df5a48dc4824)), closes [#273](https://github.com/ng-doc/ng-doc/issues/273)
+* items inside collapsed expander were clickable ([#271](https://github.com/ng-doc/ng-doc/issues/271)) ([7a30f0f](https://github.com/ng-doc/ng-doc/commit/7a30f0f14b3e8b3a2a9585b840e9efeb5745493e))
+* status tag visible in description ([#270](https://github.com/ng-doc/ng-doc/issues/270)) ([bc764fa](https://github.com/ng-doc/ng-doc/commit/bc764fab9f3d800dbd23acc20c7249fc8a34dd17)), closes [#269](https://github.com/ng-doc/ng-doc/issues/269)
+
+
+### Features
+
+* properties tables for Type Alias Declarations ([#261](https://github.com/ng-doc/ng-doc/issues/261)) ([aa3b658](https://github.com/ng-doc/ng-doc/commit/aa3b65851d2956408333e64a90b5b4ad2fe7cb9a)), closes [#259](https://github.com/ng-doc/ng-doc/issues/259)
+
 # [19.1.0](https://github.com/ng-doc/ng-doc/compare/v19.0.1...v19.1.0) (2024-12-23)
 
 
