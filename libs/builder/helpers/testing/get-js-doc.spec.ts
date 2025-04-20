@@ -36,6 +36,39 @@ describe('presentation', () => {
 
       expect(getJsDocDescription(declaration)).toBe('<p>Test class</p>');
     });
+
+    it('should not return status tag in description', () => {
+      const sourceFile: SourceFile = project.createSourceFile(
+        'code.ts',
+        `
+        /**
+        * Test class
+        *
+        * @status:warning Test status
+        */
+        export class Test {}
+      `,
+      );
+      const declaration = sourceFile.getClassOrThrow('Test');
+
+      expect(getJsDocDescription(declaration)).toBe('<p>Test class</p>');
+    });
+
+    it('should not return status tag in description, even if part of paragraph', () => {
+      const sourceFile: SourceFile = project.createSourceFile(
+        'code.ts',
+        `
+        /**
+        * Test class
+        * @status:warning Test status
+        */
+        export class Test {}
+      `,
+      );
+      const declaration = sourceFile.getClassOrThrow('Test');
+
+      expect(getJsDocDescription(declaration)).toBe('<p>Test class</p>');
+    });
   });
 
   describe('getJsDocTag', () => {
