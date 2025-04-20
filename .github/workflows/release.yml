@@ -22,7 +22,7 @@ jobs:
     needs: [lint, test]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.SEMANTIC_RELEASE }}
@@ -42,7 +42,7 @@ jobs:
         run: tar -cvf ng-doc.tar dist/apps/ng-doc/browser
 
       - name: Uploading Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: artifacts
           path: ng-doc.tar
