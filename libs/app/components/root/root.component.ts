@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { NgDocSidebarService } from '@ng-doc/app/services';
 import { NgDocContent, NgDocLetDirective, NgDocSidenavComponent } from '@ng-doc/ui-kit';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 
 /**
@@ -59,7 +58,6 @@ export class NgDocCustomSidebarDirective {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgDocLetDirective, NgDocSidenavComponent, NgIf, PolymorpheusModule, AsyncPipe],
 })
-@UntilDestroy()
 export class NgDocRootComponent {
   /**
    * If `true` then the sidebar will be shown

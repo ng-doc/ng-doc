@@ -9,10 +9,9 @@ import {
   OnDestroy,
   ViewChild,
 } from '@angular/core';
-import { NgDocTheme } from '@ng-doc/app';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgDocThemeService } from '@ng-doc/app/services/theme';
 import { ngDocZoneDetach } from '@ng-doc/ui-kit';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { fromEvent } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
 
@@ -37,7 +36,6 @@ const DARK_PALETTE = [
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgIf, NgFor],
 })
-@UntilDestroy()
 export class BackgroundComponent implements OnDestroy {
   @Input()
   minRadius: number = 400;
@@ -105,12 +103,12 @@ export class BackgroundComponent implements OnDestroy {
       this.animationId = window.requestAnimationFrame(this.animate.bind(this));
 
       fromEvent(window, 'resize')
-        .pipe(debounceTime(100), untilDestroyed(this), ngDocZoneDetach(this.ngZone))
+        .pipe(debounceTime(100), ngDocZoneDetach(this.ngZone), takeUntilDestroyed())
         .subscribe(() => this.resize());
 
       this.themeService
         .themeChanges()
-        .pipe(startWith(this.themeService.currentTheme), untilDestroyed(this))
+        .pipe(startWith(this.themeService.currentTheme), takeUntilDestroyed())
         .subscribe((theme: string | null) => {
           this.colors = theme ? DARK_PALETTE : LIGHT_PALETTE;
           this.resize();

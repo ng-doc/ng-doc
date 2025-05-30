@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgDocTypeControl } from '@ng-doc/app';
 import { EMPTY_FUNCTION } from '@ng-doc/core';
@@ -7,7 +8,6 @@ import {
   NgDocInputWrapperComponent,
   NgDocLabelComponent,
 } from '@ng-doc/ui-kit';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { FloatingCirclePosition } from '../floating-circle/floating-circle.component';
 
@@ -25,7 +25,6 @@ import { FloatingCirclePosition } from '../floating-circle/floating-circle.compo
     NgDocInputStringDirective,
   ],
 })
-@UntilDestroy()
 export class FloatingCirclePositionControlComponent
   implements NgDocTypeControl<FloatingCirclePosition>
 {
@@ -45,7 +44,7 @@ export class FloatingCirclePositionControlComponent
 
   constructor() {
     this.model.valueChanges
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed())
       .subscribe((value: FloatingCirclePosition) => this.changed(value));
   }
 

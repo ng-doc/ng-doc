@@ -1,5 +1,5 @@
 import { asArray } from '@ng-doc/core';
-import { TypeAliasDeclaration, PropertySignature, SyntaxKind, TypeNode } from 'ts-morph';
+import { PropertySignature, SyntaxKind, TypeAliasDeclaration, TypeNode } from 'ts-morph';
 
 /**
  * Traverse all of the properties of a type alias declaration,
@@ -10,9 +10,9 @@ import { TypeAliasDeclaration, PropertySignature, SyntaxKind, TypeNode } from 't
  * - IntersectionTypes,
  * - TypeLiterals, and
  * - TypeReferences (which resolve to IntersectionTypes or TypeLiterals)
+ * @param ta
  */
 export function getTypeAliasProperties(ta: TypeAliasDeclaration): PropertySignature[] {
-
   const properties: Map<string, PropertySignature> = new Map<string, PropertySignature>();
 
   const signatures: PropertySignature[] = [];

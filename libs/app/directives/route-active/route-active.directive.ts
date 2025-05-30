@@ -1,49 +1,48 @@
-import { Directive, ElementRef, Input, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, inject, Input, Renderer2 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Event, IsActiveMatchOptions, NavigationEnd, Router } from '@angular/router';
 import { asArray } from '@ng-doc/core/helpers/as-array';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 
 @Directive({
-	selector: '[ngDocRouteActive]',
-	standalone: true,
+  selector: '[ngDocRouteActive]',
+  standalone: true,
 })
-@UntilDestroy()
 export class NgDocRouteActiveDirective {
-	@Input('ngDocRouteActive')
-	link: string = '';
+  @Input('ngDocRouteActive')
+  link: string = '';
 
-	@Input()
-	activeClass: string | string[] = [];
+  @Input()
+  activeClass: string | string[] = [];
 
-	@Input()
-	matchOptions: IsActiveMatchOptions = {
-		fragment: 'exact',
-		paths: 'subset',
-		queryParams: 'exact',
-		matrixParams: 'exact',
-	};
+  @Input()
+  matchOptions: IsActiveMatchOptions = {
+    fragment: 'exact',
+    paths: 'subset',
+    queryParams: 'exact',
+    matrixParams: 'exact',
+  };
 
-	constructor(
-		private readonly elementRef: ElementRef<HTMLElement>,
-		private readonly router: Router,
-		private readonly renderer: Renderer2,
-	) {
-		this.router.events
-			.pipe(
-				filter((event: Event) => event instanceof NavigationEnd),
-				map(() => this.router.isActive(this.link, this.matchOptions)),
-				distinctUntilChanged(),
-				untilDestroyed(this),
-			)
-			.subscribe((isActive: boolean) => {
-				isActive
-					? asArray(this.activeClass).forEach((cls: string) =>
-							this.renderer.addClass(this.elementRef.nativeElement, cls),
-					  )
-					: asArray(this.activeClass).forEach((cls: string) =>
-							this.renderer.removeClass(this.elementRef.nativeElement, cls),
-					  );
-			});
-	}
+  constructor() {
+    const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    const router = inject(Router);
+    const renderer = inject(Renderer2);
+
+    router.events
+      .pipe(
+        filter((event: Event) => event instanceof NavigationEnd),
+        map(() => router.isActive(this.link, this.matchOptions)),
+        distinctUntilChanged(),
+        takeUntilDestroyed(),
+      )
+      .subscribe((isActive: boolean) => {
+        isActive
+          ? asArray(this.activeClass).forEach((cls: string) =>
+              renderer.addClass(elementRef.nativeElement, cls),
+            )
+          : asArray(this.activeClass).forEach((cls: string) =>
+              renderer.removeClass(elementRef.nativeElement, cls),
+            );
+      });
+  }
 }

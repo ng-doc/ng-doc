@@ -9,6 +9,7 @@ import {
   Input,
   NgZone,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgDocSearchComponent } from '@ng-doc/app/components/search';
 import { NgDocSidebarService } from '@ng-doc/app/services';
 import {
@@ -18,7 +19,6 @@ import {
   ngDocZoneOptimize,
 } from '@ng-doc/ui-kit';
 import { WINDOW } from '@ng-web-apis/common';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 import { combineLatest, fromEvent } from 'rxjs';
 import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
@@ -41,7 +41,6 @@ import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
     AsyncPipe,
   ],
 })
-@UntilDestroy()
 export class NgDocNavbarComponent {
   /**
    * Show search input
@@ -90,7 +89,7 @@ export class NgDocNavbarComponent {
             ([scrolled, isExpanded]: [boolean, boolean]) =>
               scrolled || (isExpanded && this.sidebarService.isMobile),
           ),
-          untilDestroyed(this),
+          takeUntilDestroyed(),
         )
         .subscribe((hasShadow: boolean) => {
           this.hasBorder = hasShadow;

@@ -10,6 +10,7 @@ import {
   NgZone,
   ViewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   NgDocBaseInput,
   NgDocDisplayValueHost,
@@ -22,7 +23,6 @@ import { NgDocDropdownHandlerDirective } from '@ng-doc/ui-kit/directives/dropdow
 import { NgDocFocusCatcherDirective } from '@ng-doc/ui-kit/directives/focus-catcher';
 import { ngDocZoneOptimize } from '@ng-doc/ui-kit/observables';
 import { NgDocDisplayValueFunction, NgDocOverlayPosition } from '@ng-doc/ui-kit/types';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   DI_DEFAULT_COMPARE,
   DICompareFunction,
@@ -62,7 +62,6 @@ import { filter } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgDocFocusCatcherDirective, NgDocDropdownHandlerDirective],
 })
-@UntilDestroy()
 export class NgDocComboboxHostComponent<T>
   extends DIControl<T>
   implements
@@ -107,8 +106,8 @@ export class NgDocComboboxHostComponent<T>
     this.inputControl?.changes
       .pipe(
         filter(() => !!this.inputControl?.isFocused),
-        untilDestroyed(this),
         ngDocZoneOptimize(this.ngZone),
+        takeUntilDestroyed(this['destroyRef']),
       )
       .subscribe(() => this.dropdown?.open());
   }

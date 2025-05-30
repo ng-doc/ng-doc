@@ -1,10 +1,10 @@
 import { NgIf } from '@angular/common';
 import { AfterContentInit, ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgDocInputHost } from '@ng-doc/ui-kit/classes/input-host';
 import { NgDocButtonIconComponent } from '@ng-doc/ui-kit/components/button-icon';
 import { NgDocIconComponent } from '@ng-doc/ui-kit/components/icon';
 import { NgDocFocusableDirective } from '@ng-doc/ui-kit/directives/focusable';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DIControl, injectHostControl } from 'di-controls';
 
 @Component({
@@ -14,7 +14,6 @@ import { DIControl, injectHostControl } from 'di-controls';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgIf, NgDocButtonIconComponent, NgDocFocusableDirective, NgDocIconComponent],
 })
-@UntilDestroy()
 export class NgDocClearControlComponent<T> extends DIControl<T> implements AfterContentInit {
   protected readonly inputHost: NgDocInputHost<T> | null = inject(NgDocInputHost, {
     optional: true,
@@ -29,7 +28,7 @@ export class NgDocClearControlComponent<T> extends DIControl<T> implements After
   ngAfterContentInit(): void {
     if (this.inputHost?.inputControl) {
       this.inputHost.inputControl.changes
-        .pipe(untilDestroyed(this))
+        .pipe(takeUntilDestroyed(this['destroyRef']))
         .subscribe(() => this.changeDetectorRef.detectChanges());
     }
   }
