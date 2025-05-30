@@ -34,7 +34,6 @@ import {
   NgDocTextRightDirective,
   NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
-import { UntilDestroy } from '@ngneat/until-destroy';
 
 @Component({
   selector: 'ng-doc-page',
@@ -65,7 +64,6 @@ import { UntilDestroy } from '@ngneat/until-destroy';
   ],
   host: { ngSkipHydration: 'true' },
 })
-@UntilDestroy()
 export class NgDocPageComponent {
   @ViewChild('pageContainer', { read: ElementRef, static: true })
   pageContainer!: ElementRef<HTMLElement>;

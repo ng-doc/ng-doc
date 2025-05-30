@@ -18,7 +18,6 @@ import {
   NgDocTextComponent,
   NgDocTextLeftDirective,
 } from '@ng-doc/ui-kit';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 
 @Component({
@@ -39,7 +38,6 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
     NgTemplateOutlet,
   ],
 })
-@UntilDestroy()
 export class NgDocSidebarCategoryComponent {
   @Input({ required: true })
   category!: NgDocNavigation;

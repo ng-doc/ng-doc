@@ -19,7 +19,6 @@ import { ngDocMakePure } from '@ng-doc/ui-kit/decorators';
 import { NgDocFocusCatcherDirective } from '@ng-doc/ui-kit/directives/focus-catcher';
 import { NgDocContextWithImplicit } from '@ng-doc/ui-kit/interfaces';
 import { NgDocContent, NgDocTextAlign } from '@ng-doc/ui-kit/types';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 
 @Component({
@@ -42,7 +41,6 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
     NgDocFloatedContentComponent,
   ],
 })
-@UntilDestroy()
 export class NgDocInputWrapperComponent<T, B = unknown>
   implements AfterViewChecked, NgDocInputHost<T>
 {

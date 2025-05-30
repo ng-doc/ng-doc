@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   ElementRef,
   inject,
   Input,
@@ -16,11 +17,11 @@ import {
   ViewChildren,
   WritableSignal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Event as REvent, Router, Scroll } from '@angular/router';
 import { NgDocPageToc, NgDocTocItem } from '@ng-doc/app/interfaces';
 import { isPresent } from '@ng-doc/core/helpers/is-present';
 import { ngDocZoneOptimize } from '@ng-doc/ui-kit';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { fromEvent, merge, Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, startWith } from 'rxjs/operators';
 
@@ -33,7 +34,6 @@ import { NgDocTocElementComponent } from './toc-element/toc-element.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgFor, NgDocTocElementComponent],
 })
-@UntilDestroy()
 export class NgDocTocComponent implements NgDocPageToc, OnInit {
   @Input()
   tableOfContent: NgDocTocItem[] = [];
@@ -51,6 +51,7 @@ export class NgDocTocComponent implements NgDocPageToc, OnInit {
   protected readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
   protected readonly renderer: Renderer2 = inject(Renderer2);
   protected readonly router: Router = inject(Router);
+  protected readonly destroyRef = inject(DestroyRef);
 
   constructor() {
     afterNextRender({
@@ -97,7 +98,11 @@ export class NgDocTocComponent implements NgDocPageToc, OnInit {
           filter(isPresent),
         );
         merge(merge(scrollSelection, routerSelection).pipe(distinctUntilChanged()), elementsChanges)
-          .pipe(debounceTime(0), ngDocZoneOptimize(this.ngZone), untilDestroyed(this))
+          .pipe(
+            debounceTime(0),
+            ngDocZoneOptimize(this.ngZone),
+            takeUntilDestroyed(this.destroyRef),
+          )
           .subscribe(this.select.bind(this));
       },
     });
