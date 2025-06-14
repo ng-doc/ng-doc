@@ -1,15 +1,15 @@
 import {
-	apply,
-	applyTemplates,
-	chain,
-	FileEntry,
-	forEach,
-	MergeStrategy,
-	mergeWith,
-	move,
-	Rule,
-	Tree,
-	url,
+  apply,
+  applyTemplates,
+  chain,
+  FileEntry,
+  forEach,
+  MergeStrategy,
+  mergeWith,
+  move,
+  Rule,
+  Tree,
+  url,
 } from '@angular-devkit/schematics';
 
 import { NgDocBuildApiSchema } from './schema';
@@ -20,23 +20,23 @@ import { NgDocBuildApiSchema } from './schema';
  * @returns {Rule} Angular Schematic Rule
  */
 export function generate(options: NgDocBuildApiSchema): Rule {
-	return (host: Tree) => {
-		const execPath: string = options?.path ?? '';
+  return (host: Tree) => {
+    const execPath: string = options?.path ?? '';
 
-		return chain([
-			mergeWith(
-				apply(url('./files'), [
-					applyTemplates({ ...options }),
-					move(execPath),
-					forEach((fileEntry: FileEntry) => {
-						if (host.exists(fileEntry.path)) {
-							host.overwrite(fileEntry.path, fileEntry.content);
-						}
-						return fileEntry;
-					}),
-				]),
-				MergeStrategy.Overwrite,
-			),
-		]);
-	};
+    return chain([
+      mergeWith(
+        apply(url('./files'), [
+          applyTemplates({ ...options }),
+          move(execPath),
+          forEach((fileEntry: FileEntry) => {
+            if (host.exists(fileEntry.path)) {
+              host.overwrite(fileEntry.path, fileEntry.content);
+            }
+            return fileEntry;
+          }),
+        ]),
+        MergeStrategy.Overwrite,
+      ),
+    ]);
+  };
 }

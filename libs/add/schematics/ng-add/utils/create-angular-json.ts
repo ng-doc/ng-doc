@@ -1,12 +1,12 @@
-import {createSourceFile} from 'ng-morph';
+import { createSourceFile } from 'ng-morph';
 
 /**
  *
  */
 export function createAngularJson(): void {
-	createSourceFile(
-		'angular.json',
-		`
+  createSourceFile(
+    'angular.json',
+    `
 {
   "version": 1,
   "defaultProject": "demo",
@@ -33,5 +33,5 @@ export function createAngularJson(): void {
     }
   }
 }`,
-	);
+  );
 }

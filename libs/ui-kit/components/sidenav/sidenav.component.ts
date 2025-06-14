@@ -1,5 +1,4 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { AsyncPipe, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,7 +7,6 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { NgDocLetDirective } from '@ng-doc/ui-kit/directives';
 import { NgDocContent } from '@ng-doc/ui-kit/types';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 
@@ -25,7 +23,7 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PolymorpheusModule, NgIf, AsyncPipe, NgDocLetDirective],
+  imports: [PolymorpheusModule],
   host: {
     '[attr.data-ng-doc-sidebar]': '!!sidebar',
   },

@@ -1,11 +1,11 @@
-import {NgDocNavigation} from './navigation';
+import { NgDocNavigation } from './navigation';
 
 /**
  * Application context
  */
 export interface NgDocContext {
-	/**
-	 * List of navigation items
-	 */
-	navigation: NgDocNavigation[];
+  /**
+   * List of navigation items
+   */
+  navigation: NgDocNavigation[];
 }

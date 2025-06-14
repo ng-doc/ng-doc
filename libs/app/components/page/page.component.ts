@@ -1,4 +1,4 @@
-import { NgComponentOutlet, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -10,9 +10,7 @@ import {
 } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NgDocRootPage } from '@ng-doc/app/classes/root-page';
-import { NgDocBreadcrumbComponent } from '@ng-doc/app/components/breadcrumb';
 import { NgDocPageWrapperComponent } from '@ng-doc/app/components/page-wrapper';
-import { NgDocTocComponent } from '@ng-doc/app/components/toc';
 import { createComponent, generateToc } from '@ng-doc/app/helpers';
 import { NgDocPageSkeleton } from '@ng-doc/app/interfaces';
 import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes';
@@ -29,9 +27,6 @@ import {
   DialogOutletComponent,
   NgDocButtonIconComponent,
   NgDocIconComponent,
-  NgDocTextComponent,
-  NgDocTextLeftDirective,
-  NgDocTextRightDirective,
   NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
 
@@ -42,16 +37,10 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgIf,
-    NgDocBreadcrumbComponent,
     NgDocButtonIconComponent,
     NgDocTooltipDirective,
     NgDocIconComponent,
-    NgDocTextComponent,
-    NgDocTextLeftDirective,
-    NgDocTextRightDirective,
-    NgDocTocComponent,
     NgDocPageProcessorComponent,
-    NgComponentOutlet,
     RouterOutlet,
     DialogOutletComponent,
     NgDocSanitizeHtmlPipe,

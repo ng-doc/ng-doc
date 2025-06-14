@@ -5,6 +5,9 @@ import { ChangeDetectorRef, Directive, ElementRef, Input, OnChanges } from '@ang
   standalone: true,
 })
 export class BtnDirective implements OnChanges {
+  /**
+   * @link http://ng-doc.io/docs/guide/directives
+   */
   @Input('ngDocBtn')
   text: string = '234';
 

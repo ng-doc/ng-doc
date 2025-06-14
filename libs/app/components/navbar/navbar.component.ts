@@ -1,4 +1,3 @@
-import { AsyncPipe, NgIf } from '@angular/common';
 import {
   afterNextRender,
   ChangeDetectionStrategy,
@@ -14,12 +13,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgDocSearchComponent } from '@ng-doc/app/components/search';
 import { NgDocSidebarService } from '@ng-doc/app/services';
-import {
-  NgDocButtonIconComponent,
-  NgDocIconComponent,
-  NgDocLetDirective,
-  ngDocZoneOptimize,
-} from '@ng-doc/ui-kit';
+import { NgDocButtonIconComponent, NgDocIconComponent, ngDocZoneOptimize } from '@ng-doc/ui-kit';
 import { WINDOW } from '@ng-web-apis/common';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 import { combineLatest, fromEvent } from 'rxjs';
@@ -33,15 +27,7 @@ import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    NgDocLetDirective,
-    PolymorpheusModule,
-    NgIf,
-    NgDocSearchComponent,
-    NgDocButtonIconComponent,
-    NgDocIconComponent,
-    AsyncPipe,
-  ],
+  imports: [PolymorpheusModule, NgDocSearchComponent, NgDocButtonIconComponent, NgDocIconComponent],
 })
 export class NgDocNavbarComponent {
   /**

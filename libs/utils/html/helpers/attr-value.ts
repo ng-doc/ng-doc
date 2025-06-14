@@ -1,4 +1,4 @@
-import {Element} from 'hast';
+import { Element } from 'hast';
 
 /**
  *
@@ -6,7 +6,7 @@ import {Element} from 'hast';
  * @param attr
  */
 export function attrValue(node: Element, attr: string): string | undefined {
-	const attrKey: string = attr.toLowerCase();
+  const attrKey: string = attr.toLowerCase();
 
-	return node.properties?.[attrKey] ? String(node.properties[attrKey]) : undefined;
+  return node.properties?.[attrKey] ? String(node.properties[attrKey]) : undefined;
 }

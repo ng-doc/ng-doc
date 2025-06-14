@@ -1,9 +1,9 @@
 import {
-	ExportedDeclarations,
-	Node,
-	ObjectLiteralExpression,
-	SourceFile,
-	SyntaxKind,
+  ExportedDeclarations,
+  Node,
+  ObjectLiteralExpression,
+  SourceFile,
+  SyntaxKind,
 } from 'ts-morph';
 
 /**
@@ -11,15 +11,15 @@ import {
  * @param sourceFile - source file to get object expression from
  */
 export function getObjectExpressionFromDefault(
-	sourceFile: SourceFile,
+  sourceFile: SourceFile,
 ): ObjectLiteralExpression | undefined {
-	const defaultExport: ExportedDeclarations | undefined = sourceFile
-		.getExportedDeclarations()
-		?.get('default')?.[0];
+  const defaultExport: ExportedDeclarations | undefined = sourceFile
+    .getExportedDeclarations()
+    ?.get('default')?.[0];
 
-	if (Node.isVariableDeclaration(defaultExport)) {
-		return defaultExport?.getFirstChildByKindOrThrow(SyntaxKind.ObjectLiteralExpression);
-	}
+  if (Node.isVariableDeclaration(defaultExport)) {
+    return defaultExport?.getFirstChildByKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+  }
 
-	return undefined;
+  return undefined;
 }

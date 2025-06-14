@@ -1,4 +1,4 @@
-import {ClassDeclaration, Decorator, Expression, Node, ObjectLiteralElementLike} from 'ng-morph';
+import { ClassDeclaration, Decorator, Expression, Node, ObjectLiteralElementLike } from 'ng-morph';
 
 /**
  *
@@ -7,27 +7,27 @@ import {ClassDeclaration, Decorator, Expression, Node, ObjectLiteralElementLike}
  * @param propertyName
  */
 export function getInitializer(
-	classDeclaration: ClassDeclaration,
-	decoratorName: string,
-	propertyName: string,
+  classDeclaration: ClassDeclaration,
+  decoratorName: string,
+  propertyName: string,
 ): Expression | undefined {
-	const decorator: Decorator | undefined = classDeclaration.getDecorator(decoratorName);
+  const decorator: Decorator | undefined = classDeclaration.getDecorator(decoratorName);
 
-	if (!decorator) {
-		return;
-	}
+  if (!decorator) {
+    return;
+  }
 
-	const [metadata] = decorator.getArguments();
+  const [metadata] = decorator.getArguments();
 
-	if (!Node.isObjectLiteralExpression(metadata)) {
-		return;
-	}
+  if (!Node.isObjectLiteralExpression(metadata)) {
+    return;
+  }
 
-	const property: ObjectLiteralElementLike | undefined = metadata.getProperty(propertyName);
+  const property: ObjectLiteralElementLike | undefined = metadata.getProperty(propertyName);
 
-	if (!Node.isPropertyAssignment(property)) {
-		return;
-	}
+  if (!Node.isPropertyAssignment(property)) {
+    return;
+  }
 
-	return property.getInitializer();
+  return property.getInitializer();
 }

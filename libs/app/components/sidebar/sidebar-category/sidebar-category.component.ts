@@ -1,4 +1,4 @@
-import { Location, NgIf, NgTemplateOutlet } from '@angular/common';
+import { Location, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -35,7 +35,6 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
     NgDocRotatorDirective,
     NgDocExpanderComponent,
     PolymorpheusModule,
-    NgTemplateOutlet,
   ],
 })
 export class NgDocSidebarCategoryComponent {

@@ -1,4 +1,4 @@
-import { DOCUMENT, NgFor } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
   afterNextRender,
   ChangeDetectionStrategy,
@@ -32,7 +32,7 @@ import { NgDocTocElementComponent } from './toc-element/toc-element.component';
   templateUrl: './toc.component.html',
   styleUrls: ['./toc.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgFor, NgDocTocElementComponent],
+  imports: [NgDocTocElementComponent],
 })
 export class NgDocTocComponent implements NgDocPageToc, OnInit {
   @Input()

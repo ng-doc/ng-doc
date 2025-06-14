@@ -6,13 +6,7 @@ import { NgDocPageProcessorComponent } from '@ng-doc/app/processors/page-process
 import { linkProcessor } from '@ng-doc/app/processors/processors/link';
 import { tooltipProcessor } from '@ng-doc/app/processors/processors/tooltip';
 import { provideMainPageProcessor } from '@ng-doc/app/tokens';
-import {
-  NgDocButtonIconComponent,
-  NgDocIconComponent,
-  NgDocSmoothResizeComponent,
-  NgDocTextComponent,
-  NgDocTooltipDirective,
-} from '@ng-doc/ui-kit';
+import { NgDocIconComponent, NgDocTextComponent } from '@ng-doc/ui-kit';
 
 @Component({
   selector: 'ng-doc-code',
@@ -22,9 +16,6 @@ import {
   imports: [
     NgIf,
     NgDocTextComponent,
-    NgDocButtonIconComponent,
-    NgDocTooltipDirective,
-    NgDocSmoothResizeComponent,
     NgDocIconComponent,
     NgDocPageProcessorComponent,
     NgDocCopyButtonComponent,

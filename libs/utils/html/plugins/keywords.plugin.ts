@@ -1,6 +1,10 @@
-import { asArray, NG_DOC_ELEMENT } from '@ng-doc/core';
-import { NgDocKeyword, NgDocKeywordLanguage } from '@ng-doc/core';
-import { KEYWORD_ALLOWED_LANGUAGES } from '@ng-doc/core';
+import {
+  asArray,
+  KEYWORD_ALLOWED_LANGUAGES,
+  NG_DOC_ELEMENT,
+  NgDocKeyword,
+  NgDocKeywordLanguage,
+} from '@ng-doc/core';
 import { Element, Text } from 'hast';
 import { isElement } from 'hast-util-is-element';
 import { toString } from 'hast-util-to-string';

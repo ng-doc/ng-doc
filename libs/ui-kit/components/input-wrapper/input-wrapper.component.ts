@@ -13,7 +13,6 @@ import {
 import { NgDocBaseInput } from '@ng-doc/ui-kit/classes/base-input';
 import { NgDocInputHost } from '@ng-doc/ui-kit/classes/input-host';
 import { NgDocFloatedBorderComponent } from '@ng-doc/ui-kit/components/floated-border';
-import { NgDocFloatedContentComponent } from '@ng-doc/ui-kit/components/floated-content';
 import { NgDocWrapperComponent } from '@ng-doc/ui-kit/components/wrapper';
 import { ngDocMakePure } from '@ng-doc/ui-kit/decorators';
 import { NgDocFocusCatcherDirective } from '@ng-doc/ui-kit/directives/focus-catcher';
@@ -38,7 +37,6 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
     NgDocFloatedBorderComponent,
     NgIf,
     PolymorpheusModule,
-    NgDocFloatedContentComponent,
   ],
 })
 export class NgDocInputWrapperComponent<T, B = unknown>
