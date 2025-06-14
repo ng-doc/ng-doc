@@ -1,3 +1,16 @@
+# [19.3.0](https://github.com/ng-doc/ng-doc/compare/v19.2.0...v19.3.0) (2025-06-14)
+
+
+### Bug Fixes
+
+* keywords don't support unicode characters ([370f2b2](https://github.com/ng-doc/ng-doc/commit/370f2b20a902afb3df878b2d0242ea2ea5c703a0)), closes [#274](https://github.com/ng-doc/ng-doc/issues/274)
+* url in JSDoc breaks NgDocActions.playground ([2cefdd5](https://github.com/ng-doc/ng-doc/commit/2cefdd5bdfe90f75ec615175bcf84f48c902cd27)), closes [#281](https://github.com/ng-doc/ng-doc/issues/281)
+
+
+### Features
+
+* support for configuring providers for NgDocCategory ([78da9b2](https://github.com/ng-doc/ng-doc/commit/78da9b2728bb19934368fd1304e1ce4b415662b2)), closes [#195](https://github.com/ng-doc/ng-doc/issues/195)
+
 # [19.2.0](https://github.com/ng-doc/ng-doc/compare/v19.1.0...v19.2.0) (2025-04-20)
 
 
