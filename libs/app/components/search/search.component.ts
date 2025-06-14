@@ -1,5 +1,6 @@
 import { AsyncPipe, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { NgDocSearchEngine } from '@ng-doc/app/classes';
@@ -31,7 +32,6 @@ import {
   observableState,
   StatedObservable,
 } from '@ng-doc/ui-kit';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, NEVER } from 'rxjs';
 import { shareReplay, skip, switchMap } from 'rxjs/operators';
 
@@ -66,7 +66,6 @@ import { shareReplay, skip, switchMap } from 'rxjs/operators';
     NgDocSanitizeHtmlPipe,
   ],
 })
-@UntilDestroy()
 export class NgDocSearchComponent {
   protected readonly query: BehaviorSubject<string> = new BehaviorSubject<string>('');
   protected readonly searchResults: StatedObservable<NgDocSearchResult[]>;
@@ -84,7 +83,7 @@ export class NgDocSearchComponent {
       skip(1),
       switchMap((term: string) => this.searchEngine?.search(term).pipe(observableState()) ?? NEVER),
       shareReplay(1),
-      untilDestroyed(this),
+      takeUntilDestroyed(),
     );
   }
 
