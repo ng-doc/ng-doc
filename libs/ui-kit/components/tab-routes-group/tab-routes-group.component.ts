@@ -9,7 +9,7 @@ import {
   selector: 'ng-doc-tab-routes-group',
   templateUrl: './tab-routes-group.component.html',
   styleUrl: './tab-routes-group.component.scss',
-  imports: [CommonModule, NgDocSelectionComponent, NgDocSelectionHostDirective],
+  imports: [CommonModule, NgDocSelectionComponent],
   hostDirectives: [NgDocSelectionHostDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, HostBinding, inject, Input } from '@angular/core';
 import { NgDocCopyButtonComponent } from '@ng-doc/app/components/copy-button';
-import { NgDocButtonIconComponent, NgDocIconComponent } from '@ng-doc/ui-kit';
+import { NgDocIconComponent } from '@ng-doc/ui-kit';
 import { LOCATION } from '@ng-web-apis/common';
 
 @Component({
   selector: 'ng-doc-heading-anchor',
-  imports: [NgDocButtonIconComponent, NgDocIconComponent, NgDocCopyButtonComponent],
+  imports: [NgDocIconComponent, NgDocCopyButtonComponent],
   template: `
     <ng-doc-copy-button [text]="href">
       <ng-doc-icon icon="link-2"></ng-doc-icon>

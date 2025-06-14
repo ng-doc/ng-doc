@@ -1,11 +1,25 @@
 // @ts-nocheck
 import {Routes} from '@angular/router';
+{%- macro categoryImport(entry) -%}
+{%- if entry.isCategory %}
+import {{ entry.id }} from '{{ curDir | createImportPath(entry.path) }}';
+{%- endif -%}
+{%- endmacro -%}
+
+{%- for entry in entries -%}
+{{ categoryImport(entry.item) }}
+{%- endfor %}
 
 export const NG_DOC_ROUTING: Routes = [
 	{%- macro route(entry) %}
 	{
 		path: '{{ entry.item.route }}',
 		title: `{{ entry.item.title | toTemplateString }}`,
+    {%- if entry.item.isCategory %}
+    providers: [
+      ...({{ entry.item.id }}.providers ?? []),
+    ],
+    {%- endif %}
 		{%- if entry.children.length %}
 		children: [{
 			path: '',

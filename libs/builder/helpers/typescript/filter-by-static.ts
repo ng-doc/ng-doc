@@ -1,4 +1,4 @@
-import {StaticableNode} from 'ts-morph';
+import { StaticableNode } from 'ts-morph';
 
 /**
  *
@@ -6,5 +6,5 @@ import {StaticableNode} from 'ts-morph';
  * @param isStatic
  */
 export function filterByStatic<T extends StaticableNode>(nodes: T[], isStatic: boolean): T[] {
-	return nodes.filter((node: T) => node.isStatic() === isStatic);
+  return nodes.filter((node: T) => node.isStatic() === isStatic);
 }

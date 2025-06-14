@@ -2,9 +2,9 @@ import { getProjectTargetOptions } from '@angular/cdk/schematics';
 import { JsonArray, JsonValue } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import {
-	ProjectDefinition,
-	updateWorkspace,
-	WorkspaceDefinition,
+  ProjectDefinition,
+  updateWorkspace,
+  WorkspaceDefinition,
 } from '@schematics/angular/utility/workspace';
 
 import { NG_DOC_STYLES } from '../constants/styles';
@@ -17,34 +17,34 @@ import { getProject } from '../utils/get-project';
  * @param context
  */
 export function addStyles(options: Schema): Rule {
-	return async (tree: Tree, context: SchematicContext) => {
-		return updateWorkspace((workspace: WorkspaceDefinition) => {
-			const logger = context.logger.createChild('add-styles');
+  return async (tree: Tree, context: SchematicContext) => {
+    return updateWorkspace((workspace: WorkspaceDefinition) => {
+      const logger = context.logger.createChild('add-styles');
 
-			context.logger.info(`[INFO]: Global styles`);
-			logger.info(`🔄 Adding NgDoc global styles to the target project...`);
+      context.logger.info(`[INFO]: Global styles`);
+      logger.info(`🔄 Adding NgDoc global styles to the target project...`);
 
-			try {
-				const project: ProjectDefinition | undefined = getProject(options, workspace);
+      try {
+        const project: ProjectDefinition | undefined = getProject(options, workspace);
 
-				if (!project) {
-					logger.error(`❌ Target project not found. Please add global NgDoc styles manually.`);
+        if (!project) {
+          logger.error(`❌ Target project not found. Please add global NgDoc styles manually.`);
 
-					return;
-				}
+          return;
+        }
 
-				const targetOptions: Record<string, JsonValue | undefined> = getProjectTargetOptions(
-					project,
-					'build',
-				);
-				const styles: JsonArray | undefined = targetOptions['styles'] as JsonArray | undefined;
+        const targetOptions: Record<string, JsonValue | undefined> = getProjectTargetOptions(
+          project,
+          'build',
+        );
+        const styles: JsonArray | undefined = targetOptions['styles'] as JsonArray | undefined;
 
-				targetOptions['styles'] = Array.from(new Set([...NG_DOC_STYLES, ...(styles ?? [])]));
+        targetOptions['styles'] = Array.from(new Set([...NG_DOC_STYLES, ...(styles ?? [])]));
 
-				logger.info('✅ Done!');
-			} catch (e) {
-				logger.error(`❌ Error: ${e}`);
-			}
-		});
-	};
+        logger.info('✅ Done!');
+      } catch (e) {
+        logger.error(`❌ Error: ${e}`);
+      }
+    });
+  };
 }

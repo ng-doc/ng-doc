@@ -1,7 +1,6 @@
-
 export declare class DummyClass {
   /** Find the first node with the specified title */
-  public findByTitle(title: string): object;
+  findByTitle(title: string): object;
 }
 
 export type ResourceId = string;
@@ -19,16 +18,16 @@ export type ResourceVersion = number;
 /**
  * List of tags that a resource has.
  */
-export type ResourceTagList = Array<string>;
+export type ResourceTagList = string[];
 
 /**
  * Description of a resource
  */
-export type ResourceDescription = {
+export interface ResourceDescription {
   name: string;
   description?: string;
   tags?: ResourceTagList;
-};
+}
 
 export type UserRole = 'guest' | 'user';
 
@@ -46,7 +45,7 @@ export type SystemRole = UserRole | OrgUserRole | StandaloneUserRole;
  */
 export type OAuthGrantType = 'authorization_code' | 'client_credentials' | 'refresh_token';
 
-export type OAuthGrantTypes = Array<OAuthGrantType>;
+export type OAuthGrantTypes = OAuthGrantType[];
 
 /**
  * OAuth 2.0 response types used in differnt OAuth 2.0 flows. See https://oauth.net/2/.
@@ -56,7 +55,7 @@ export type OAuthResponseType = Array<'token' | 'code'>;
 /**
  * A related resource link (see hateoas principles).
  */
-export type ResourceLink = {
+export interface ResourceLink {
   href: string;
   /**
    * Indicates whether href" property is a URI Template.
@@ -70,21 +69,21 @@ export type ResourceLink = {
    * May be used as a secondary key for selecting Link Objects which share the same relation type.
    */
   name?: string;
-};
+}
 
 /**
-* hateoas object containing links to self and related resources.
-* @see HAL spec at http://stateless.co/hal_specification.html
-* @see https://tools.ietf.org/html/draft-kelly-json-hal-08
-*/
-export type HateoasLinks = {
+ * hateoas object containing links to self and related resources.
+ * @see HAL spec at http://stateless.co/hal_specification.html
+ * @see https://tools.ietf.org/html/draft-kelly-json-hal-08
+ */
+export interface HateoasLinks {
   self: ResourceLink;
   /**
    * Templates to generate links.
    */
-  curies?: Array<ResourceLink>;
-  [key: string]: (ResourceLink | Array<ResourceLink>) | ResourceLink | Array<ResourceLink> | undefined;
-};
+  curies?: ResourceLink[];
+  [key: string]: (ResourceLink | ResourceLink[]) | ResourceLink | ResourceLink[] | undefined;
+}
 
 export type HateoasEmbedded = ResourceDescription & {
   id: ResourceId;
@@ -95,17 +94,16 @@ export type HateoasEmbedded = ResourceDescription & {
 };
 
 /** */
-export type BaseApplicationAttributes = {
+export interface BaseApplicationAttributes {
   oauthGrantTypes?: OAuthGrantTypes;
   oauthResponseTypes?: OAuthResponseType;
   organisation?: ResourceId;
-};
+}
 
 /**
  * An application body.
- * 
  * @usageNotes
- * 
+ *
  * Some useful notes about the application body.
  */
 export type ApplicationBody = BaseApplicationAttributes & {
@@ -124,17 +122,17 @@ export type ApplicationBody = BaseApplicationAttributes & {
   /**
    * Callback URIs.
    */
-  callbackURIs?: Array<string>;
+  callbackURIs?: string[];
   /**
    * Allowed redirection URLs for logout.
    */
-  logoutURLs?: Array<string>;
+  logoutURLs?: string[];
   /** */
   clientCredentialsRole?: SystemRole;
   /**
    * List of scopes allowed for this application.
    */
-  allowedScopes?: Array<string>;
+  allowedScopes?: string[];
 };
 
 /**
@@ -160,11 +158,11 @@ export type BaseLinks = HateoasLinks & {
   owner?: ResourceLink;
 };
 
-export type BaseEmbedded = {
+export interface BaseEmbedded {
   creator?: HateoasEmbedded;
   modifier?: HateoasEmbedded;
   owner?: HateoasEmbedded;
-};
+}
 
 export type ApplicationLinks = BaseLinks & {
   providers?: ResourceLink;
@@ -175,9 +173,10 @@ export type ApplicationEmbedded = BaseEmbedded & {
   organisation: HateoasEmbedded;
 };
 
-export type SimpleApplicationProfile = SimpleResourceResponse & BaseApplicationAttributes & {
-  _embedded?: ApplicationEmbedded;
-  _links?: ApplicationLinks;
-};
+export type SimpleApplicationProfile = SimpleResourceResponse &
+  BaseApplicationAttributes & {
+    _embedded?: ApplicationEmbedded;
+    _links?: ApplicationLinks;
+  };
 
 export type ApplicationProfile = SimpleApplicationProfile & ApplicationBody;

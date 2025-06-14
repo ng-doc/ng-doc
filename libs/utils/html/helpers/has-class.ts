@@ -1,4 +1,4 @@
-import {Element} from 'hast';
+import { Element } from 'hast';
 
 /**
  *
@@ -6,7 +6,7 @@ import {Element} from 'hast';
  * @param cls
  */
 export function hasClass(node: Element, cls: string): boolean {
-	const className: string = node.properties?.['className']?.toString() ?? '';
+  const className: string = node.properties?.['className']?.toString() ?? '';
 
-	return !!className && className.includes(cls);
+  return !!className && className.includes(cls);
 }

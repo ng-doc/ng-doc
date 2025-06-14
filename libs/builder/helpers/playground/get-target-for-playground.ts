@@ -1,9 +1,9 @@
 import {
-	ClassDeclaration,
-	Expression,
-	Node,
-	ObjectLiteralElementLike,
-	ObjectLiteralExpression,
+  ClassDeclaration,
+  Expression,
+  Node,
+  ObjectLiteralElementLike,
+  ObjectLiteralExpression,
 } from 'ts-morph';
 
 /**
@@ -13,24 +13,24 @@ import {
  * @param playground
  */
 export function getTargetForPlayground(
-	playground: ObjectLiteralExpression,
+  playground: ObjectLiteralExpression,
 ): ClassDeclaration | undefined {
-	const target: ObjectLiteralElementLike | undefined = playground.getProperty('target');
+  const target: ObjectLiteralElementLike | undefined = playground.getProperty('target');
 
-	if (Node.isPropertyAssignment(target)) {
-		const targetInitializer: Expression | undefined = target.getInitializer();
+  if (Node.isPropertyAssignment(target)) {
+    const targetInitializer: Expression | undefined = target.getInitializer();
 
-		if (Node.isIdentifier(targetInitializer)) {
-			const declaration: Node | undefined = targetInitializer
-				.getType()
-				?.getSymbol()
-				?.getDeclarations()[0];
+    if (Node.isIdentifier(targetInitializer)) {
+      const declaration: Node | undefined = targetInitializer
+        .getType()
+        ?.getSymbol()
+        ?.getDeclarations()[0];
 
-			if (Node.isClassDeclaration(declaration)) {
-				return declaration;
-			}
-		}
-	}
+      if (Node.isClassDeclaration(declaration)) {
+        return declaration;
+      }
+    }
+  }
 
-	return undefined;
+  return undefined;
 }

@@ -1,6 +1,6 @@
-import {ClassDeclaration} from 'ts-morph';
+import { ClassDeclaration } from 'ts-morph';
 
-import {forAllClasses} from './for-all-classes';
+import { forAllClasses } from './for-all-classes';
 
 /**
  *
@@ -8,20 +8,20 @@ import {forAllClasses} from './for-all-classes';
  * @param condition
  */
 export function findClass(
-	cls: ClassDeclaration,
-	condition: (c: ClassDeclaration) => boolean,
+  cls: ClassDeclaration,
+  condition: (c: ClassDeclaration) => boolean,
 ): ClassDeclaration | undefined {
-	let baseClass: ClassDeclaration | undefined;
+  let baseClass: ClassDeclaration | undefined;
 
-	forAllClasses(cls, (c: ClassDeclaration) => {
-		if (condition(c)) {
-			baseClass = c;
+  forAllClasses(cls, (c: ClassDeclaration) => {
+    if (condition(c)) {
+      baseClass = c;
 
-			return true;
-		}
+      return true;
+    }
 
-		return false;
-	});
+    return false;
+  });
 
-	return baseClass;
+  return baseClass;
 }

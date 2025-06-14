@@ -38,6 +38,7 @@ export function createEntryMetadata<T extends FileEntry>(
   const isCategory = minimatch(entryPath, CATEGORY_PATTERN);
 
   return {
+    id: `entry${Math.random().toString(36).substring(2)}`,
     dir,
     dirName,
     route,
@@ -59,7 +60,7 @@ export function createEntryMetadata<T extends FileEntry>(
     title: entry.title,
     keywordTitle: entry.title,
     order: entry.order,
-    nestedRoutes: !isCategory,
+    isCategory,
     jsDocMetadata: function (): JSDocMetadata {
       const statement = getVariableStatementFromObjectLiteralExpression(this.objectExpression());
       const description = getJsDocDescription(statement);

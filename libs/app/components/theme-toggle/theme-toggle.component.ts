@@ -1,4 +1,4 @@
-import { DOCUMENT, NgIf } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgDocThemeService } from '@ng-doc/app/services/theme';
 import {
@@ -21,7 +21,6 @@ interface ToggleTheme {
   imports: [
     NgDocButtonIconComponent,
     NgDocTooltipDirective,
-    NgIf,
     NgDocIconComponent,
     NgDocSmoothResizeComponent,
   ],

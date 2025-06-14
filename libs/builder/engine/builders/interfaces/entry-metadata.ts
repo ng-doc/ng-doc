@@ -8,6 +8,7 @@ import { DeclarationEntry, DeclarationTabEntry, Entry } from './entry';
 import { MarkdownEntry } from './markdown-entry';
 
 export interface EntryMetadata<T extends Entry = Entry> {
+  id: string;
   dir: string;
   path: string;
   dirName: string;
@@ -25,6 +26,7 @@ export interface EntryMetadata<T extends Entry = Entry> {
   parent: ParentEntryMetadata<T>;
   entry: T;
   jsDocMetadata: () => JSDocMetadata;
+  isCategory: boolean;
   order?: number;
   hidden?: boolean;
 }

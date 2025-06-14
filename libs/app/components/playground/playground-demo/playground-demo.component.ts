@@ -1,9 +1,9 @@
-import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ComponentRef,
+  DestroyRef,
   inject,
   InjectionToken,
   Injector,
@@ -15,6 +15,7 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup } from '@angular/forms';
 import { NgDocDemoDisplayerComponent } from '@ng-doc/app/components/demo-displayer';
 import { formatHtml } from '@ng-doc/app/helpers';
@@ -27,8 +28,7 @@ import {
 import { objectKeys } from '@ng-doc/core/helpers/object-keys';
 import { stringify } from '@ng-doc/core/helpers/stringify';
 import { NgDocPlaygroundConfig, NgDocPlaygroundProperties } from '@ng-doc/core/interfaces';
-import { NgDocLetDirective, NgDocSmoothResizeComponent } from '@ng-doc/ui-kit';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { NgDocSmoothResizeComponent } from '@ng-doc/ui-kit';
 import { Subject } from 'rxjs';
 import { startWith, takeUntil } from 'rxjs/operators';
 
@@ -40,9 +40,8 @@ import { NgDocPlaygroundForm } from '../playground-form';
   templateUrl: './playground-demo.component.html',
   styleUrls: ['./playground-demo.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgDocDemoDisplayerComponent, AsyncPipe, NgDocSmoothResizeComponent, NgDocLetDirective],
+  imports: [NgDocDemoDisplayerComponent, NgDocSmoothResizeComponent],
 })
-@UntilDestroy()
 export class NgDocPlaygroundDemoComponent<
     T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties,
   >
@@ -81,6 +80,7 @@ export class NgDocPlaygroundDemoComponent<
 
   protected readonly injector = inject(Injector);
   protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+  protected readonly destroyRef = inject(DestroyRef);
 
   private demoRef?: ComponentRef<NgDocBasePlayground>;
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
@@ -104,7 +104,11 @@ export class NgDocPlaygroundDemoComponent<
       await this.updateDemo();
 
       this.form?.valueChanges
-        .pipe(takeUntil(this.unsubscribe$), untilDestroyed(this), startWith(this.form?.value))
+        .pipe(
+          takeUntil(this.unsubscribe$),
+          startWith(this.form?.value),
+          takeUntilDestroyed(this.destroyRef),
+        )
         .subscribe((data: NgDocFormPartialValue<typeof this.form>) => this.updateDemo(data));
     }
   }

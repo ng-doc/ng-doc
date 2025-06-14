@@ -1,4 +1,4 @@
-import { Location, NgIf, NgTemplateOutlet } from '@angular/common';
+import { Location, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -18,7 +18,6 @@ import {
   NgDocTextComponent,
   NgDocTextLeftDirective,
 } from '@ng-doc/ui-kit';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 
 @Component({
@@ -36,10 +35,8 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
     NgDocRotatorDirective,
     NgDocExpanderComponent,
     PolymorpheusModule,
-    NgTemplateOutlet,
   ],
 })
-@UntilDestroy()
 export class NgDocSidebarCategoryComponent {
   @Input({ required: true })
   category!: NgDocNavigation;

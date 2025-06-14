@@ -1,4 +1,4 @@
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { expandCollapseAnimation, preventInitialChildAnimations } from '@ng-doc/ui-kit/animations';
 import { NgDocContent } from '@ng-doc/ui-kit/types';
@@ -11,7 +11,7 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
   templateUrl: './expander.component.html',
   styleUrls: ['./expander.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, PolymorpheusModule, NgTemplateOutlet],
+  imports: [NgIf, PolymorpheusModule],
 })
 export class NgDocExpanderComponent implements AfterViewInit {
   /** Change expand state */

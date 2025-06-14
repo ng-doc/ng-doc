@@ -1,24 +1,20 @@
-import { AsyncPipe, NgIf } from '@angular/common';
 import {
   afterNextRender,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   HostBinding,
   Inject,
+  inject,
   Input,
   NgZone,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgDocSearchComponent } from '@ng-doc/app/components/search';
 import { NgDocSidebarService } from '@ng-doc/app/services';
-import {
-  NgDocButtonIconComponent,
-  NgDocIconComponent,
-  NgDocLetDirective,
-  ngDocZoneOptimize,
-} from '@ng-doc/ui-kit';
+import { NgDocButtonIconComponent, NgDocIconComponent, ngDocZoneOptimize } from '@ng-doc/ui-kit';
 import { WINDOW } from '@ng-web-apis/common';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 import { combineLatest, fromEvent } from 'rxjs';
 import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
@@ -31,17 +27,8 @@ import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    NgDocLetDirective,
-    PolymorpheusModule,
-    NgIf,
-    NgDocSearchComponent,
-    NgDocButtonIconComponent,
-    NgDocIconComponent,
-    AsyncPipe,
-  ],
+  imports: [PolymorpheusModule, NgDocSearchComponent, NgDocButtonIconComponent, NgDocIconComponent],
 })
-@UntilDestroy()
 export class NgDocNavbarComponent {
   /**
    * Show search input
@@ -75,6 +62,8 @@ export class NgDocNavbarComponent {
     private readonly changeDetectorRef: ChangeDetectorRef,
     protected readonly sidebarService: NgDocSidebarService,
   ) {
+    const destroyRef = inject(DestroyRef);
+
     afterNextRender(() => {
       combineLatest([
         fromEvent(this.window, 'scroll').pipe(
@@ -90,7 +79,7 @@ export class NgDocNavbarComponent {
             ([scrolled, isExpanded]: [boolean, boolean]) =>
               scrolled || (isExpanded && this.sidebarService.isMobile),
           ),
-          untilDestroyed(this),
+          takeUntilDestroyed(destroyRef),
         )
         .subscribe((hasShadow: boolean) => {
           this.hasBorder = hasShadow;

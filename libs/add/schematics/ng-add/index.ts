@@ -1,10 +1,10 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { NodePackageInstallTask, RunSchematicTask } from '@angular-devkit/schematics/tasks';
 import {
-	addPackageJsonDependency,
-	createProject,
-	removePackageJsonDependency,
-	setActiveProject,
+  addPackageJsonDependency,
+  createProject,
+  removePackageJsonDependency,
+  setActiveProject,
 } from 'ng-morph';
 
 import { NG_DOC_VERSION } from './constants/version';
@@ -25,19 +25,19 @@ import { updateAppTsConfig } from './steps/update-app-ts-config';
  * @param options
  */
 export function ngAdd(options: Schema): Rule {
-	return (tree: Tree, context: SchematicContext) => {
-		setActiveProject(createProject(tree, '/', ['**/*.ts', '**/*.json']));
+  return (tree: Tree, context: SchematicContext) => {
+    setActiveProject(createProject(tree, '/', ['**/*.ts', '**/*.json']));
 
-		addPackageJsonDependency(tree, { name: `@ng-doc/app`, version: NG_DOC_VERSION });
-		addPackageJsonDependency(tree, { name: `@ng-doc/builder`, version: NG_DOC_VERSION });
-		addPackageJsonDependency(tree, { name: `@ng-doc/ui-kit`, version: NG_DOC_VERSION });
-		addPackageJsonDependency(tree, { name: `@ng-doc/core`, version: NG_DOC_VERSION });
-		removePackageJsonDependency(tree, '@ng-doc/add');
+    addPackageJsonDependency(tree, { name: `@ng-doc/app`, version: NG_DOC_VERSION });
+    addPackageJsonDependency(tree, { name: `@ng-doc/builder`, version: NG_DOC_VERSION });
+    addPackageJsonDependency(tree, { name: `@ng-doc/ui-kit`, version: NG_DOC_VERSION });
+    addPackageJsonDependency(tree, { name: `@ng-doc/core`, version: NG_DOC_VERSION });
+    removePackageJsonDependency(tree, '@ng-doc/add');
 
-		context.addTask(new NodePackageInstallTask(), [
-			context.addTask(new RunSchematicTask('ng-add-setup-project', options)),
-		]);
-	};
+    context.addTask(new NodePackageInstallTask(), [
+      context.addTask(new RunSchematicTask('ng-add-setup-project', options)),
+    ]);
+  };
 }
 
 /**
@@ -45,16 +45,16 @@ export function ngAdd(options: Schema): Rule {
  * @param options
  */
 export function ngAddSetupProject(options: Schema): Rule {
-	return chain([
-		replaceBuilders(options),
-		addStyles(options),
-		addAssets(options),
-		addJsDependencies(options),
-		addNgDocAppConfig(options),
-		addLayout(options),
-		addTsconfigPaths(options),
-		updateAppTsConfig(options),
-		addGitIgnore(),
-		postInstall(),
-	]);
+  return chain([
+    replaceBuilders(options),
+    addStyles(options),
+    addAssets(options),
+    addJsDependencies(options),
+    addNgDocAppConfig(options),
+    addLayout(options),
+    addTsconfigPaths(options),
+    updateAppTsConfig(options),
+    addGitIgnore(),
+    postInstall(),
+  ]);
 }
