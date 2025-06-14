@@ -4,8 +4,10 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   HostBinding,
   Inject,
+  inject,
   Input,
   NgZone,
 } from '@angular/core';
@@ -74,6 +76,8 @@ export class NgDocNavbarComponent {
     private readonly changeDetectorRef: ChangeDetectorRef,
     protected readonly sidebarService: NgDocSidebarService,
   ) {
+    const destroyRef = inject(DestroyRef);
+
     afterNextRender(() => {
       combineLatest([
         fromEvent(this.window, 'scroll').pipe(
@@ -89,7 +93,7 @@ export class NgDocNavbarComponent {
             ([scrolled, isExpanded]: [boolean, boolean]) =>
               scrolled || (isExpanded && this.sidebarService.isMobile),
           ),
-          takeUntilDestroyed(),
+          takeUntilDestroyed(destroyRef),
         )
         .subscribe((hasShadow: boolean) => {
           this.hasBorder = hasShadow;
