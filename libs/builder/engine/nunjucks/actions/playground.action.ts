@@ -18,11 +18,13 @@ export function playgroundAction(
     const metadata: NgDocPlaygroundMetadata | undefined = playgroundMetadata[pId];
 
     if (metadata) {
+      const data = JSON.stringify(metadata.properties).replace(/\\/g, '\\\\');
+
       return {
         output: `<ng-doc-playground id="${pId}" indexable="false">
 							<div id="selectors">${metadata.selector ?? ''}</div>
 							<div id="pipeName">${metadata.name ?? ''}</div>
-							<div id="data">${escapeHtml(JSON.stringify(metadata.properties))}</div>
+							<div id="data">${escapeHtml(data)}</div>
 							<div id="options">${escapeHtml(JSON.stringify(options ?? {}))}</div>
 						</ng-doc-playground>`,
         dependencies: [metadata.class.getSourceFile().getFilePath()],
