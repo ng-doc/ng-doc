@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "module": "esnext",
-    "target": "ESNext",
+    "target": "ES2023",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,
