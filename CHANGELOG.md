@@ -1,3 +1,46 @@
+# [20.0.0-beta.1](https://github.com/ng-doc/ng-doc/compare/v19.3.0...v20.0.0-beta.1) (2025-06-15)
+
+
+### Bug Fixes
+
+* **builder:** fix build ([9adcc8d](https://github.com/ng-doc/ng-doc/commit/9adcc8d96fa7ec5675ed4610d91fcdd8ece79152))
+* **builder:** fix build ([8a1fa20](https://github.com/ng-doc/ng-doc/commit/8a1fa20b9ed1f446127d156fc77038fc8bd1f1f6))
+* **builder:** fix build ([68a1d1e](https://github.com/ng-doc/ng-doc/commit/68a1d1ef70328befbb5259a8778550f7e3f82f1b))
+* **builder:** fix migrations ([0b1e58e](https://github.com/ng-doc/ng-doc/commit/0b1e58eed826704880952100d6ebbff55b3b9882))
+* **builder:** fix migrations ([56a7b1c](https://github.com/ng-doc/ng-doc/commit/56a7b1cf7c621a20fc63d4030205c0bba276a2c6))
+* **builder:** fix migrations ([5aeab32](https://github.com/ng-doc/ng-doc/commit/5aeab3229643f5a494916e98b279787c852769bc))
+* **builder:** replace flex-controls with di-controls ([465d62f](https://github.com/ng-doc/ng-doc/commit/465d62ff4ee982815717b6df430c415db58a0187))
+* **builder:** replace flex-controls with di-controls ([49cff30](https://github.com/ng-doc/ng-doc/commit/49cff303cccc1bd51c9cb2de1fec20b13b80bf58))
+* **builder:** serveWebpackBrowser is not a function ([a23dd2d](https://github.com/ng-doc/ng-doc/commit/a23dd2d9c1f2e2b5f861909926073327171160a9))
+* **builder:** test migration ([da5afb5](https://github.com/ng-doc/ng-doc/commit/da5afb5eea26b1ad98dd15ba3bbe926fb6e40b40))
+* **builder:** test migration ([26bee5e](https://github.com/ng-doc/ng-doc/commit/26bee5eb2bed588039ed80d995e41f60f8d25e4d))
+* **builder:** the cache is not invalidated after removing `.ng-doc` folder ([c20e479](https://github.com/ng-doc/ng-doc/commit/c20e479af6e8ad3dc23382b4a3942f54063d7714))
+* **keywords-loaders:** fix release cycle for the `keywords-loaders` library ([a1dbda9](https://github.com/ng-doc/ng-doc/commit/a1dbda92a017fe19732d8120d70c74780c2825fc))
+* **ng-doc:** `ng-doc` doesn't forget pages that have been moved to another directory ([c433a10](https://github.com/ng-doc/ng-doc/commit/c433a1007d07716833de2a987f9be63c7dc73a7a))
+* **ng-doc:** release trigger ([e7ac592](https://github.com/ng-doc/ng-doc/commit/e7ac592fc2f5ddadceb6633d13d6a3790b4eeb00))
+* **project:** dependency injection error after update to 15.10.0 ([cc41f44](https://github.com/ng-doc/ng-doc/commit/cc41f448054d73b9961f8a7be7689b4195a23c1f))
+* **project:** fix "could not resolve *path*" error for the build target ([66a7b23](https://github.com/ng-doc/ng-doc/commit/66a7b236e8b1053a0f2be05ec35454bde172dc6c))
+* **semantic-release:** bump version ([d0f1862](https://github.com/ng-doc/ng-doc/commit/d0f18629d1d99afbf4f8ba5a34db227a05a84bbc))
+
+
+### Features
+
+* **angular:** angular 20 support ([15202bc](https://github.com/ng-doc/ng-doc/commit/15202bc4db174db7ebaa02b3dfdc86db81465af6)), closes [#278](https://github.com/ng-doc/ng-doc/issues/278)
+* **angular:** bump Angular version ([2945f16](https://github.com/ng-doc/ng-doc/commit/2945f163b39e779469311389727189a140451121))
+* **angular:** bump Angular version ([47e3a24](https://github.com/ng-doc/ng-doc/commit/47e3a24bc831e28176ca82384abdb1e99fffa635))
+* **builder:** add additional migrations ([c4a67d0](https://github.com/ng-doc/ng-doc/commit/c4a67d00551100b2230385ce068c4d532549e054))
+* **builder:** add automatic migration ([9c72508](https://github.com/ng-doc/ng-doc/commit/9c72508ca2862d1ea2895b2055058f92df8824c9))
+* **builder:** add automatic migration ([dab72a0](https://github.com/ng-doc/ng-doc/commit/dab72a018ed8cf18d81ab33e85d1c1196c9ec1c2))
+* **project:** migrate to Angular 17 ([5e7e36e](https://github.com/ng-doc/ng-doc/commit/5e7e36eca2514f24d3fbd80262b9413bcc1c40e8))
+* **project:** update packages ([3542e64](https://github.com/ng-doc/ng-doc/commit/3542e642c0ace7cf194d902c8ed0722565c21217))
+
+
+### BREAKING CHANGES
+
+* **angular:** increase Angular major version
+* **angular:** Angular 17
+* **angular:** Angular 17
+
 # [19.3.0](https://github.com/ng-doc/ng-doc/compare/v19.2.0...v19.3.0) (2025-06-14)
 
 
