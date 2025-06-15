@@ -1,4 +1,4 @@
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -37,7 +37,6 @@ import { DIControl, provideHostControl } from 'di-controls';
     NgDocFocusCatcherDirective,
     NgDocInputStringDirective,
     PolymorpheusModule,
-    NgIf,
     NgDocClearControlComponent,
     NgDocDropdownComponent,
     NgTemplateOutlet,

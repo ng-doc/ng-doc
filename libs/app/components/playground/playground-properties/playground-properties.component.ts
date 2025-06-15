@@ -1,9 +1,10 @@
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
-import { AsyncPipe, KeyValuePipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, KeyValuePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  inject,
   InjectionToken,
   Injector,
   Input,
@@ -54,8 +55,6 @@ import { NgDocPlaygroundPropertyControl } from '../playground-property-control';
     NgDocTooltipDirective,
     NgDocIconComponent,
     NgDocTextRightDirective,
-    NgIf,
-    NgFor,
     NgDocPlaygroundPropertyComponent,
     AsyncPipe,
     KeyValuePipe,
@@ -68,6 +67,9 @@ export class NgDocPlaygroundPropertiesComponent<
   C extends Record<string, NgDocPlaygroundContent>,
 > implements OnChanges
 {
+  protected readonly breakpointObserver = inject(BreakpointObserver);
+  private injector = inject(Injector);
+
   @Input()
   form!: FormGroup<NgDocPlaygroundForm>;
 
@@ -104,10 +106,7 @@ export class NgDocPlaygroundPropertiesComponent<
   protected propertyControls: NgDocPlaygroundPropertyControl[] = [];
   protected contentTypeControl?: NgDocProvidedTypeControl = this.getControlForType('boolean');
 
-  constructor(
-    protected readonly breakpointObserver: BreakpointObserver,
-    private injector: Injector,
-  ) {
+  constructor() {
     this.observer = this.breakpointObserver
       .observe(this.breakpoints)
       .pipe(map((state: BreakpointState) => state.matches));

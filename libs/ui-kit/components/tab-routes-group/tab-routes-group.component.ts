@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
   NgDocSelectionComponent,
@@ -9,7 +8,7 @@ import {
   selector: 'ng-doc-tab-routes-group',
   templateUrl: './tab-routes-group.component.html',
   styleUrl: './tab-routes-group.component.scss',
-  imports: [CommonModule, NgDocSelectionComponent],
+  imports: [NgDocSelectionComponent],
   hostDirectives: [NgDocSelectionHostDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

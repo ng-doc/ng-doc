@@ -1,9 +1,9 @@
-import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
   DestroyRef,
+  DOCUMENT,
   ElementRef,
   inject,
   NgZone,

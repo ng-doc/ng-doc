@@ -1,4 +1,3 @@
-import { NgFor, NgIf } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -49,14 +48,12 @@ interface ApiFilterForm {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgDocTextComponent,
-    NgIf,
     FormsModule,
     ReactiveFormsModule,
     NgDocInputWrapperComponent,
     NgDocIconComponent,
     NgDocInputStringDirective,
     NgDocAutofocusDirective,
-    NgFor,
     NgDocKindIconComponent,
     NgDocTooltipDirective,
     RouterLink,

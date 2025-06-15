@@ -1,5 +1,11 @@
-import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostBinding,
+  inject,
+  Input,
+} from '@angular/core';
 import { NgDocCopyButtonComponent } from '@ng-doc/app/components/copy-button';
 import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes';
 import { NgDocPageProcessorComponent } from '@ng-doc/app/processors/page-processor';
@@ -14,7 +20,6 @@ import { NgDocIconComponent, NgDocTextComponent } from '@ng-doc/ui-kit';
   styleUrls: ['./code.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     NgDocTextComponent,
     NgDocIconComponent,
     NgDocPageProcessorComponent,
@@ -24,6 +29,8 @@ import { NgDocIconComponent, NgDocTextComponent } from '@ng-doc/ui-kit';
   viewProviders: [provideMainPageProcessor([linkProcessor, tooltipProcessor])],
 })
 export class NgDocCodeComponent {
+  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
   @Input()
   html: string = '';
 
@@ -36,7 +43,7 @@ export class NgDocCodeComponent {
   @Input()
   icon?: string;
 
-  constructor(private elementRef: ElementRef<HTMLElement>) {}
+  constructor() {}
 
   @HostBinding('attr.data-ng-doc-has-header')
   get hasHeader(): boolean {

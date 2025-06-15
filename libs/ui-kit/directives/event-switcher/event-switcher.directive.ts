@@ -12,6 +12,9 @@ import { fromEvent, merge } from 'rxjs';
   standalone: true,
 })
 export class NgDocEventSwitcherDirective implements OnInit {
+  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private ngZone = inject(NgZone);
+
   @Input('ngDocEventSwitcher')
   switchTo: BaseElement<HTMLElement> | null = null;
 
@@ -20,10 +23,7 @@ export class NgDocEventSwitcherDirective implements OnInit {
 
   private readonly destroyRef = inject(DestroyRef);
 
-  constructor(
-    private elementRef: ElementRef<HTMLElement>,
-    private ngZone: NgZone,
-  ) {}
+  constructor() {}
 
   ngOnInit(): void {
     merge(

@@ -1,20 +1,17 @@
 <ng-doc-list>
-	<ng-container *ngIf="items && items.length; else emptyTemplate">
-		<ng-doc-option
-			*ngFor="let item of items; trackBy: trackByFn"
-			[value]="defineValueFn(item)"
-			[disabled]="itemDisabledFn(item)">
-			<ng-container *polymorpheusOutlet="itemContent as text; context: getContext(item)">
-				{{ text }}
-			</ng-container>
-		</ng-doc-option>
-	</ng-container>
-
-	<ng-template #emptyTemplate>
-		<div class="ng-doc-empty-message" ng-doc-text>
-			<ng-container *ngIf="emptyContent">
-				<ng-container *polymorpheusOutlet="emptyContent as text"> {{ text }} </ng-container>
-			</ng-container>
-		</div>
-	</ng-template>
+  @if (items && items.length) {
+    @for (item of items; track trackByFn($index, item)) {
+      <ng-doc-option [value]="defineValueFn(item)" [disabled]="itemDisabledFn(item)">
+        <ng-container *polymorpheusOutlet="itemContent as text; context: getContext(item)">
+          {{ text }}
+        </ng-container>
+      </ng-doc-option>
+    }
+  } @else {
+    <div class="ng-doc-empty-message" ng-doc-text>
+      @if (emptyContent) {
+        <ng-container *polymorpheusOutlet="emptyContent as text"> {{ text }} </ng-container>
+      }
+    </div>
+  }
 </ng-doc-list>

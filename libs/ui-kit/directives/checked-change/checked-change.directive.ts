@@ -3,6 +3,7 @@ import {
   ElementRef,
   EventEmitter,
   HostListener,
+  inject,
   Input,
   Output,
   Renderer2,
@@ -13,6 +14,9 @@ import {
   standalone: true,
 })
 export class NgDocCheckedChangeDirective {
+  private readonly element = inject<ElementRef<HTMLInputElement>>(ElementRef);
+  private readonly renderer = inject(Renderer2);
+
   @Input()
   set ngDocChecked(checked: null | boolean) {
     this.updateProperty('checked', checked || false);
@@ -22,10 +26,7 @@ export class NgDocCheckedChangeDirective {
   @Output()
   readonly ngDocCheckedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(
-    private readonly element: ElementRef<HTMLInputElement>,
-    private readonly renderer: Renderer2,
-  ) {
+  constructor() {
     this.updateProperty('checked', false);
   }
 

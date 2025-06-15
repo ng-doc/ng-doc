@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { AfterContentInit, ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgDocInputHost } from '@ng-doc/ui-kit/classes/input-host';
@@ -12,7 +11,7 @@ import { DIControl, injectHostControl } from 'di-controls';
   templateUrl: './clear-control.component.html',
   styleUrls: ['./clear-control.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, NgDocButtonIconComponent, NgDocFocusableDirective, NgDocIconComponent],
+  imports: [NgDocButtonIconComponent, NgDocFocusableDirective, NgDocIconComponent],
 })
 export class NgDocClearControlComponent<T> extends DIControl<T> implements AfterContentInit {
   protected readonly inputHost: NgDocInputHost<T> | null = inject(NgDocInputHost, {

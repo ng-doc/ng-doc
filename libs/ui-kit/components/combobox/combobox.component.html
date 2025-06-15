@@ -6,7 +6,9 @@
     <input ngDocInputString [readonly]="readonly" [placeholder]="placeholder" />
     <ng-container ngDocInputWrapperRight>
       <ng-container *polymorpheusOutlet="rightContent"></ng-container>
-      <ng-doc-clear-control *ngIf="clearButton"></ng-doc-clear-control>
+      @if (clearButton) {
+        <ng-doc-clear-control></ng-doc-clear-control>
+      }
     </ng-container>
     <ng-doc-dropdown [content]="dropdownContent" [closeIfInnerClick]="true">
       <ng-template #dropdownContent>

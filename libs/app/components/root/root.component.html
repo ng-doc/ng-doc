@@ -18,8 +18,10 @@
         <ng-content></ng-content>
       </ng-doc-sidenav>
     </main>
-    <footer *ngIf="footerContent">
-      <ng-container *polymorpheusOutlet="footerContent as text"> {{ text }}</ng-container>
-    </footer>
+    @if (footerContent) {
+      <footer>
+        <ng-container *polymorpheusOutlet="footerContent as text"> {{ text }}</ng-container>
+      </footer>
+    }
   </div>
 </ng-container>

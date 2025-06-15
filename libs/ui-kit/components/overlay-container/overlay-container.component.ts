@@ -3,15 +3,15 @@ import {
   ConnectedOverlayPositionChange,
   FlexibleConnectedPositionStrategy,
 } from '@angular/cdk/overlay';
-import { DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DOCUMENT,
   ElementRef,
   HostBinding,
-  Inject,
+  inject,
   Input,
   NgZone,
   OnDestroy,
@@ -54,6 +54,12 @@ import { distinctUntilChanged } from 'rxjs/operators';
 export class NgDocOverlayContainerComponent
   implements NgDocOverlayContainer, OnInit, AfterViewInit, OnDestroy
 {
+  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private documentRef = inject<Document>(DOCUMENT);
+  private changeDetectorRef = inject(ChangeDetectorRef);
+  private ngZone = inject(NgZone);
+  private animationBuilder = inject(AnimationBuilder);
+
   @Input()
   content: NgDocContent = '';
 
@@ -77,13 +83,7 @@ export class NgDocOverlayContainerComponent
     new Subject<NgDocOverlayAnimationEvent>();
   private isOpened: boolean = true;
 
-  constructor(
-    private elementRef: ElementRef<HTMLElement>,
-    @Inject(DOCUMENT) private documentRef: Document,
-    private changeDetectorRef: ChangeDetectorRef,
-    private ngZone: NgZone,
-    private animationBuilder: AnimationBuilder,
-  ) {}
+  constructor() {}
 
   ngOnInit(): void {
     if (this.config?.positionStrategy instanceof FlexibleConnectedPositionStrategy) {

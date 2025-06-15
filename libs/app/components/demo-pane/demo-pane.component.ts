@@ -1,8 +1,9 @@
-import { NgComponentOutlet, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   HostBinding,
+  inject,
   Input,
   OnInit,
   Type,
@@ -31,8 +32,6 @@ import {
     NgTemplateOutlet,
     NgDocPaneBackDirective,
     NgDocPaneFrontDirective,
-    NgIf,
-    NgFor,
     NgDocCodeComponent,
     NgDocTabGroupComponent,
     NgDocTabComponent,
@@ -41,6 +40,8 @@ import {
   ],
 })
 export class NgDocDemoPaneComponent implements OnInit {
+  private readonly rootPage = inject(NgDocRootPage);
+
   @Input()
   componentName?: string;
 
@@ -50,7 +51,7 @@ export class NgDocDemoPaneComponent implements OnInit {
   demo?: Type<unknown>;
   assets: NgDocDemoAsset[] = [];
 
-  constructor(private readonly rootPage: NgDocRootPage) {}
+  constructor() {}
 
   @HostBinding('class')
   protected get classes(): string | string[] {

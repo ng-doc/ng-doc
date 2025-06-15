@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { NgDocTab } from '@ng-doc/app/interfaces';
 import {
@@ -10,13 +9,7 @@ import {
 
 @Component({
   selector: 'ng-doc-tabs',
-  imports: [
-    CommonModule,
-    NgDocTabGroupComponent,
-    NgDocTabComponent,
-    NgDocExecutePipe,
-    NgDocIconComponent,
-  ],
+  imports: [NgDocTabGroupComponent, NgDocTabComponent, NgDocExecutePipe, NgDocIconComponent],
   templateUrl: './tabs.component.html',
   styleUrls: ['./tabs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,4 +1,3 @@
-import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, TrackByFunction } from '@angular/core';
 import { asArray } from '@ng-doc/core/helpers/as-array';
 import { NgDocListComponent } from '@ng-doc/ui-kit/components/list';
@@ -19,14 +18,7 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
   templateUrl: './data-list.component.html',
   styleUrls: ['./data-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    NgDocListComponent,
-    NgIf,
-    NgFor,
-    NgDocOptionComponent,
-    PolymorpheusModule,
-    NgDocTextComponent,
-  ],
+  imports: [NgDocListComponent, NgDocOptionComponent, PolymorpheusModule, NgDocTextComponent],
 })
 export class NgDocDataListComponent<T> {
   @Input()

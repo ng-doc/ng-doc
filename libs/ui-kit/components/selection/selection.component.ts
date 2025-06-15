@@ -22,16 +22,16 @@ import { NgDocSelectionHostDirective } from './selection-host.directive';
   standalone: true,
 })
 export class NgDocSelectionComponent implements AfterViewInit {
+  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly selectionHost = inject(NgDocSelectionHostDirective);
+
   @Input()
   @HostBinding('attr.data-ng-doc-align')
   align: NgDocHorizontalAlign | NgDocVerticalAlign = 'bottom';
 
   private readonly destroyRef = inject(DestroyRef);
 
-  constructor(
-    private readonly elementRef: ElementRef<HTMLElement>,
-    private readonly selectionHost: NgDocSelectionHostDirective,
-  ) {}
+  constructor() {}
 
   ngAfterViewInit(): void {
     this.selectionHost.selectedChange$

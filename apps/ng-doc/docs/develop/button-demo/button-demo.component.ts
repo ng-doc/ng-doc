@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgDocButtonComponent } from '@ng-doc/ui-kit';
 import { NgDocNotifyService } from '@ng-doc/ui-kit/services/notify';
 
@@ -11,7 +11,12 @@ import { NgDocNotifyService } from '@ng-doc/ui-kit/services/notify';
   imports: [NgDocButtonComponent],
 })
 export class ButtonDemoComponent {
-  constructor(private readonly notifyService: NgDocNotifyService) {}
+  private readonly notifyService = inject(NgDocNotifyService);
+
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {}
 
   clickEvent(): void {
     this.notifyService.notify('Button was clicked!');

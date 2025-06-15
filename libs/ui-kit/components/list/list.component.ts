@@ -1,12 +1,5 @@
 import { ListKeyManager } from '@angular/cdk/a11y';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  Inject,
-  NgZone,
-  Optional,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, NgZone } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { asArray } from '@ng-doc/core/helpers/as-array';
 import { NgDocListHost } from '@ng-doc/ui-kit/classes/list-host';
@@ -23,14 +16,14 @@ import { delayWhen, filter, repeat, takeUntil } from 'rxjs/operators';
   standalone: true,
 })
 export class NgDocListComponent {
+  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private ngZone = inject(NgZone);
+  private listHost = inject<NgDocListHost>(NgDocListHost, { optional: true });
+
   private keyManager: ListKeyManager<NgDocListItem> | null = null;
   private readonly items: Set<NgDocListItem> = new Set<NgDocListItem>();
 
-  constructor(
-    private elementRef: ElementRef<HTMLElement>,
-    private ngZone: NgZone,
-    @Inject(NgDocListHost) @Optional() private listHost?: NgDocListHost,
-  ) {
+  constructor() {
     const origin: HTMLElement | null = this.listHost?.listHostOrigin
       ? toElement(this.listHost?.listHostOrigin)
       : null;

@@ -5,28 +5,28 @@
 
 <ng-template #demoTemplate>
   @if (options.fullscreenRoute) {
-  <ng-doc-fullscreen-button [route]="options.fullscreenRoute!"></ng-doc-fullscreen-button>
+    <ng-doc-fullscreen-button [route]="options.fullscreenRoute!"></ng-doc-fullscreen-button>
   } @else if (demo) {
-  <ng-container *ngComponentOutlet="demo; inputs: options.inputs"></ng-container>
+    <ng-container *ngComponentOutlet="demo; inputs: options.inputs"></ng-container>
   }
 </ng-template>
 
 <ng-template #codeContent>
-  <ng-container *ngIf="assets.length === 1">
-    <ng-doc-code *ngFor="let asset of assets" [html]="asset.code"></ng-doc-code>
-  </ng-container>
+  @if (assets.length === 1) {
+    @for (asset of assets; track asset) {
+      <ng-doc-code [html]="asset.code"></ng-doc-code>
+    }
+  }
 
-  <ng-container *ngIf="assets.length > 1">
+  @if (assets.length > 1) {
     <ng-doc-tab-group [openedTab]="options.defaultTab">
-      <ng-doc-tab
-        *ngFor="let asset of assets"
-        [id]="asset.title"
-        [label]="asset.title"
-        [content]="assetContent">
-        <ng-template #assetContent>
-          <ng-doc-code [html]="asset.code"></ng-doc-code>
-        </ng-template>
-      </ng-doc-tab>
+      @for (asset of assets; track asset) {
+        <ng-doc-tab [id]="asset.title" [label]="asset.title" [content]="assetContent">
+          <ng-template #assetContent>
+            <ng-doc-code [html]="asset.code"></ng-doc-code>
+          </ng-template>
+        </ng-doc-tab>
+      }
     </ng-doc-tab-group>
-  </ng-container>
+  }
 </ng-template>

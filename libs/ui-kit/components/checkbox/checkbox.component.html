@@ -7,8 +7,12 @@
       (ngDocCheckedChange)="toggle(); touch()"
       (blur)="touch()"
       [ngDocFocusable]="false" />
-    <ng-doc-icon icon="minus" *ngIf="isIntermediate"></ng-doc-icon>
-    <ng-doc-icon icon="check" *ngIf="checked()"></ng-doc-icon>
+    @if (isIntermediate) {
+      <ng-doc-icon icon="minus"></ng-doc-icon>
+    }
+    @if (checked()) {
+      <ng-doc-icon icon="check"></ng-doc-icon>
+    }
   </div>
   <div class="ng-doc-checkbox-content">
     <span class="ng-doc-checkbox-icons">

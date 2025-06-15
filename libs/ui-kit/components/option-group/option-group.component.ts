@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -26,16 +25,18 @@ export class NgDocOptionGroupHeaderDirective {}
   templateUrl: './option-group.component.html',
   styleUrls: ['./option-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, NgDocTextComponent],
+  imports: [NgDocTextComponent],
 })
 export class NgDocOptionGroupComponent<T> implements AfterContentInit {
+  private changeDetectorRef = inject(ChangeDetectorRef);
+
   @ContentChildren(NgDocOptionComponent, { descendants: true })
   options: QueryList<NgDocOptionComponent<T>> = new QueryList<NgDocOptionComponent<T>>();
   hasHeader: boolean = false;
 
   private readonly destroyRef = inject(DestroyRef);
 
-  constructor(private changeDetectorRef: ChangeDetectorRef) {}
+  constructor() {}
 
   ngAfterContentInit(): void {
     this.options.changes
