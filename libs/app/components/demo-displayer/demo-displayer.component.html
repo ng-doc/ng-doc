@@ -1,34 +1,40 @@
-<div class="ng-doc-demo-wrapper" *ngIf="container; else demoTemplate">
-  <div class="ng-doc-demo-container">
-    <div class="ng-doc-demo">
-      <ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
+@if (container) {
+  <div class="ng-doc-demo-wrapper">
+    <div class="ng-doc-demo-container">
+      <div class="ng-doc-demo">
+        <ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
+      </div>
+      <div class="ng-doc-demo-controls">
+        @if (!codeContent) {
+          <ng-doc-copy-button [text]="code">
+            <ng-doc-icon icon="copy"></ng-doc-icon>
+          </ng-doc-copy-button>
+        }
+        <button
+          ng-doc-button-icon
+          [rounded]="false"
+          (click)="expanded = !expanded"
+          [ngDocTooltip]="tooltipContent">
+          <ng-template #tooltipContent>
+            <ng-doc-smooth-resize [trigger]="expandTooltipText">
+              {{ expandTooltipText }}
+            </ng-doc-smooth-resize>
+          </ng-template>
+          <ng-doc-icon icon="code"></ng-doc-icon>
+        </button>
+      </div>
     </div>
-    <div class="ng-doc-demo-controls">
-      <ng-doc-copy-button *ngIf="!codeContent" [text]="code">
-        <ng-doc-icon icon="copy"></ng-doc-icon>
-      </ng-doc-copy-button>
-      <button
-        ng-doc-button-icon
-        [rounded]="false"
-        (click)="expanded = !expanded"
-        [ngDocTooltip]="tooltipContent">
-        <ng-template #tooltipContent>
-          <ng-doc-smooth-resize [trigger]="expandTooltipText">
-            {{ expandTooltipText }}
-          </ng-doc-smooth-resize>
-        </ng-template>
-        <ng-doc-icon icon="code"></ng-doc-icon>
-      </button>
-    </div>
+    <ng-doc-expander [content]="codeContent ? codeContent : expanderContent" [expanded]="expanded">
+      <ng-template #expanderContent>
+        <ng-doc-code [copyButton]="false">
+          <div [ngDocHighlighter]="code"></div>
+        </ng-doc-code>
+      </ng-template>
+    </ng-doc-expander>
   </div>
-  <ng-doc-expander [content]="codeContent ? codeContent : expanderContent" [expanded]="expanded">
-    <ng-template #expanderContent>
-      <ng-doc-code [copyButton]="false">
-        <div [ngDocHighlighter]="code"></div>
-      </ng-doc-code>
-    </ng-template>
-  </ng-doc-expander>
-</div>
+} @else {
+  <ng-content></ng-content>
+}
 
 <ng-template #demoTemplate>
   <ng-content></ng-content>

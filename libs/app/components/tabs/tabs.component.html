@@ -1,13 +1,17 @@
 <ng-doc-tab-group [openedTab]="getActiveIndex | execute: tabs">
-	<ng-doc-tab *ngFor="let tab of tabs; let i = index" [label]="label" [content]="content" [id]="i">
-		<ng-template #label>
-			<ng-doc-icon [customIcon]="tab.icon" *ngIf="tab.icon"></ng-doc-icon>
-			{{ tab.title }}
-		</ng-template>
-		<ng-template #content>
-			<div #element>
-				{{ appendElement | execute: tab.content:element }}
-			</div>
-		</ng-template>
-	</ng-doc-tab>
+  @for (tab of tabs; track tab; let i = $index) {
+    <ng-doc-tab [label]="label" [content]="content" [id]="i">
+      <ng-template #label>
+        @if (tab.icon) {
+          <ng-doc-icon [customIcon]="tab.icon"></ng-doc-icon>
+        }
+        {{ tab.title }}
+      </ng-template>
+      <ng-template #content>
+        <div #element>
+          {{ appendElement | execute: tab.content : element }}
+        </div>
+      </ng-template>
+    </ng-doc-tab>
+  }
 </ng-doc-tab-group>

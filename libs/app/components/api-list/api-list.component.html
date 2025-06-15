@@ -40,20 +40,26 @@
   </form>
 
   <div class="ng-doc-api-list">
-    <div class="ng-doc-api-scope" *ngFor="let scope of filteredApiList()">
-      <h3 class="ng-doc-scope-title" ng-doc-text>{{ scope.title }}</h3>
-      <ul class="ng-doc-scope-items" *ngIf="scope.items.length">
-        <li class="ng-doc-scope-item" *ngFor="let apiReference of scope.items">
-          <a class="ng-doc-scope-item-link" [routerLink]="[apiReference.route]">
-            <ng-doc-kind-icon
-              [kind]="apiReference.type"
-              size="medium"
-              [ngDocTooltip]="apiReference.type">
-            </ng-doc-kind-icon>
-            {{ apiReference.name }}
-          </a>
-        </li>
-      </ul>
-    </div>
+    @for (scope of filteredApiList(); track scope) {
+      <div class="ng-doc-api-scope">
+        <h3 class="ng-doc-scope-title" ng-doc-text>{{ scope.title }}</h3>
+        @if (scope.items.length) {
+          <ul class="ng-doc-scope-items">
+            @for (apiReference of scope.items; track apiReference) {
+              <li class="ng-doc-scope-item">
+                <a class="ng-doc-scope-item-link" [routerLink]="[apiReference.route]">
+                  <ng-doc-kind-icon
+                    [kind]="apiReference.type"
+                    size="medium"
+                    [ngDocTooltip]="apiReference.type">
+                  </ng-doc-kind-icon>
+                  {{ apiReference.name }}
+                </a>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    }
   </div>
 </div>

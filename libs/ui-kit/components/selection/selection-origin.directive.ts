@@ -1,29 +1,40 @@
-import { Directive, ElementRef, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  inject,
+  Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
+} from '@angular/core';
 
 import { NgDocSelectionHostDirective } from './selection-host.directive';
 
 @Directive({
-	selector: '[ngDocSelectionOrigin]',
-	standalone: true,
+  selector: '[ngDocSelectionOrigin]',
+  standalone: true,
 })
 export class NgDocSelectionOriginDirective implements OnChanges, OnDestroy {
-	@Input('ngDocSelectionOrigin')
-	selected: boolean = false;
+  readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly selectionHost = inject(NgDocSelectionHostDirective);
 
-	constructor(
-		readonly elementRef: ElementRef<HTMLElement>,
-		private readonly selectionHost: NgDocSelectionHostDirective,
-	) {
-		this.selectionHost.addOrigin(this);
-	}
+  @Input('ngDocSelectionOrigin')
+  selected: boolean = false;
 
-	ngOnChanges({ selected }: SimpleChanges): void {
-		if (selected) {
-			this.selectionHost.changeSelected(this, this.selected);
-		}
-	}
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
 
-	ngOnDestroy(): void {
-		this.selectionHost.removeOrigin(this);
-	}
+  constructor() {
+    this.selectionHost.addOrigin(this);
+  }
+
+  ngOnChanges({ selected }: SimpleChanges): void {
+    if (selected) {
+      this.selectionHost.changeSelected(this, this.selected);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.selectionHost.removeOrigin(this);
+  }
 }

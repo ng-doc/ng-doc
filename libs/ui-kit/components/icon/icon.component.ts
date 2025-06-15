@@ -24,6 +24,9 @@ import { catchError, startWith, switchMap } from 'rxjs/operators';
   standalone: true,
 })
 export class NgDocIconComponent implements OnChanges, OnInit {
+  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly httpClient = inject(HttpClient);
+
   /** Icon name */
   @Input()
   @HostBinding('attr.data-ng-doc-icon')
@@ -44,10 +47,7 @@ export class NgDocIconComponent implements OnChanges, OnInit {
   private readonly customIconsPath: string =
     inject(NG_DOC_CUSTOM_ICONS_PATH, { optional: true }) ?? '';
 
-  constructor(
-    private readonly elementRef: ElementRef<HTMLElement>,
-    private readonly httpClient: HttpClient,
-  ) {}
+  constructor() {}
 
   ngOnChanges(): void {
     this.reload$.next();

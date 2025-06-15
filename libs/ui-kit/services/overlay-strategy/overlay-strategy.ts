@@ -1,6 +1,5 @@
 import { OverlayRef, ScrollStrategy } from '@angular/cdk/overlay';
-import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable, NgZone } from '@angular/core';
+import { DOCUMENT, inject, Injectable, NgZone } from '@angular/core';
 import { toElement } from '@ng-doc/ui-kit/helpers';
 import { NgDocOverlayConfig } from '@ng-doc/ui-kit/interfaces';
 import { ngDocZoneDetach } from '@ng-doc/ui-kit/observables';
@@ -9,54 +8,57 @@ import { filter, map, takeUntil, throttleTime } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class NgDocOverlayStrategy implements ScrollStrategy {
-	private overlayRef: OverlayRef | null = null;
-	private destroy$: Subject<void> = new Subject<void>();
+  private documentRef = inject<Document>(DOCUMENT);
+  private ngZone = inject(NgZone);
 
-	constructor(
-		@Inject(DOCUMENT) private documentRef: Document,
-		private ngZone: NgZone,
-	) {}
+  private overlayRef: OverlayRef | null = null;
+  private destroy$: Subject<void> = new Subject<void>();
 
-	attach(overlayRef: OverlayRef): void {
-		this.overlayRef = overlayRef;
-	}
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
 
-	enable(): void {
-		fromEvent(this.documentRef, 'scroll', { capture: true })
-			.pipe(
-				ngDocZoneDetach(this.ngZone),
-				throttleTime(10),
-				map((scrollEvent: Event) =>
-					scrollEvent.target instanceof Document
-						? scrollEvent.target.scrollingElement
-						: scrollEvent.target,
-				),
-				filter((target: EventTarget | null) =>
-					target instanceof Node ? target.contains(this.origin) || !this.origin : false,
-				),
-				takeUntil(this.destroy$),
-			)
-			.subscribe(() => this.detach());
-	}
+  constructor() {}
 
-	private get origin(): HTMLElement | null {
-		const config: NgDocOverlayConfig | undefined =
-			this.overlayRef?.getConfig() as NgDocOverlayConfig;
-		return config?.viewContainerRef
-			? (toElement(config.viewContainerRef.element) as HTMLElement)
-			: null;
-	}
+  attach(overlayRef: OverlayRef): void {
+    this.overlayRef = overlayRef;
+  }
 
-	disable(): void {
-		this.destroy$.next();
-	}
+  enable(): void {
+    fromEvent(this.documentRef, 'scroll', { capture: true })
+      .pipe(
+        ngDocZoneDetach(this.ngZone),
+        throttleTime(10),
+        map((scrollEvent: Event) =>
+          scrollEvent.target instanceof Document
+            ? scrollEvent.target.scrollingElement
+            : scrollEvent.target,
+        ),
+        filter((target: EventTarget | null) =>
+          target instanceof Node ? target.contains(this.origin) || !this.origin : false,
+        ),
+        takeUntil(this.destroy$),
+      )
+      .subscribe(() => this.detach());
+  }
 
-	detach(): void {
-		this.disable();
-		if (this.overlayRef?.hasAttached()) {
-			this.ngZone.run(() => {
-				this.overlayRef?.detach();
-			});
-		}
-	}
+  private get origin(): HTMLElement | null {
+    const config: NgDocOverlayConfig | undefined =
+      this.overlayRef?.getConfig() as NgDocOverlayConfig;
+    return config?.viewContainerRef
+      ? (toElement(config.viewContainerRef.element) as HTMLElement)
+      : null;
+  }
+
+  disable(): void {
+    this.destroy$.next();
+  }
+
+  detach(): void {
+    this.disable();
+    if (this.overlayRef?.hasAttached()) {
+      this.ngZone.run(() => {
+        this.overlayRef?.detach();
+      });
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import { KeyValuePipe, NgFor, NgIf } from '@angular/common';
+import { KeyValuePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgDocKindIconComponent } from '@ng-doc/app/components/kind-icon';
@@ -11,8 +11,6 @@ import { NgDocTextComponent, NgDocTooltipDirective } from '@ng-doc/ui-kit';
   styleUrls: ['./search-result.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
-    NgFor,
     NgDocTextComponent,
     RouterLink,
     NgDocKindIconComponent,

@@ -4,6 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   HostBinding,
+  inject,
   NgZone,
   Output,
 } from '@angular/core';
@@ -20,6 +21,10 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
   standalone: true,
 })
 export class NgDocFocusCatcherDirective {
+  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private ngZone = inject(NgZone);
+  private changeDetectorRef = inject(ChangeDetectorRef);
+
   @Output()
   focusEvent: EventEmitter<Event> = new EventEmitter<Event>();
 
@@ -29,11 +34,7 @@ export class NgDocFocusCatcherDirective {
   @HostBinding('attr.data-ng-doc-focused')
   focused: boolean = false;
 
-  constructor(
-    private elementRef: ElementRef<HTMLElement>,
-    private ngZone: NgZone,
-    private changeDetectorRef: ChangeDetectorRef,
-  ) {
+  constructor() {
     NgDocFocusCatcherDirective.observeFocus(toElement(this.elementRef))
       .pipe(ngDocZoneOptimize(this.ngZone), takeUntilDestroyed())
       .subscribe((event: FocusEvent) => {

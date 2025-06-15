@@ -1,5 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, inject, Input } from '@angular/core';
 import { NgDocFocusableDirective } from '@ng-doc/ui-kit/directives/focusable';
 import { NgDocFocusUtils } from '@ng-doc/ui-kit/utils';
 
@@ -15,10 +14,12 @@ import { NgDocFocusUtils } from '@ng-doc/ui-kit/utils';
   imports: [NgDocFocusableDirective],
 })
 export class NgDocFocusControlComponent {
+  private documentRef = inject<Document>(DOCUMENT);
+
   @Input()
   focusHost: HTMLElement | null = null;
 
-  constructor(@Inject(DOCUMENT) private documentRef: Document) {}
+  constructor() {}
 
   focusPrev(): void {
     if (this.focusHost) {

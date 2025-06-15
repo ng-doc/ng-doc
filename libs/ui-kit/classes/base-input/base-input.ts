@@ -1,5 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import { Directive, ElementRef, HostBinding, inject } from '@angular/core';
+import { Directive, DOCUMENT, ElementRef, HostBinding, inject } from '@angular/core';
 import { DIControl, injectHostControl } from 'di-controls';
 import { DIControlConfig } from 'di-controls/controls/control';
 import { Subject } from 'rxjs';

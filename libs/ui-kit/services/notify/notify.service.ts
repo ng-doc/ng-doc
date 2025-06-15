@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { notificationCloseAnimation, notificationOpenAnimation } from '@ng-doc/ui-kit/animations';
 import { NgDocOverlayRef } from '@ng-doc/ui-kit/classes';
@@ -12,10 +12,12 @@ import { switchMap, tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class NgDocNotifyService {
+  private readonly overlayService = inject(NgDocOverlayService);
+
   private overlayRef?: NgDocOverlayRef;
   private readonly notify$: Subject<NgDocContent> = new Subject<NgDocContent>();
 
-  constructor(private readonly overlayService: NgDocOverlayService) {
+  constructor() {
     this.notify$
       .pipe(
         tap(() => this.overlayRef?.close()),

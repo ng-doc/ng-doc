@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  inject,
   Input,
   ViewChild,
 } from '@angular/core';
@@ -33,6 +34,8 @@ import { NgDocTooltipDirective } from '@ng-doc/ui-kit';
   imports: [NgDocTooltipDirective],
 })
 class NgDocTooltipWrapperComponent implements AfterViewInit {
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+
   @Input()
   content?: string;
 
@@ -41,7 +44,7 @@ class NgDocTooltipWrapperComponent implements AfterViewInit {
   @ViewChild('contentProjection', { read: ElementRef, static: true })
   private contentProjection?: ElementRef<HTMLElement>;
 
-  constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
+  constructor() {}
 
   ngAfterViewInit(): void {
     if (this.contentProjection) {

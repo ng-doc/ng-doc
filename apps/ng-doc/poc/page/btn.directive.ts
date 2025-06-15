@@ -1,10 +1,13 @@
-import { ChangeDetectorRef, Directive, ElementRef, Input, OnChanges } from '@angular/core';
+import { ChangeDetectorRef, Directive, ElementRef, inject, Input, OnChanges } from '@angular/core';
 
 @Directive({
   selector: '[ngDocBtn]',
   standalone: true,
 })
 export class BtnDirective implements OnChanges {
+  private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+
   /**
    * @link http://ng-doc.io/docs/guide/directives
    */
@@ -17,10 +20,10 @@ export class BtnDirective implements OnChanges {
   @Input()
   checker: boolean = true;
 
-  constructor(
-    private readonly element: ElementRef<HTMLElement>,
-    private readonly changeDetectorRef: ChangeDetectorRef,
-  ) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
     setTimeout(() => {
       this.changeDetectorRef.detectChanges();
     }, 100);

@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgDocTypeControl } from '@ng-doc/app/interfaces';
@@ -20,7 +19,6 @@ import { DIControl, DIControlSilencerDirective } from 'di-controls';
     FormsModule,
     NgDocInputWrapperComponent,
     NgDocInputStringDirective,
-    NgIf,
     NgDocButtonIconComponent,
     NgDocFocusableDirective,
     NgDocIconComponent,

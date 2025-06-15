@@ -1,21 +1,27 @@
-<div class="ng-doc-search-result-wrapper" *ngIf="groupedResult | keyvalue as results">
-	<ng-container *ngIf="results.length; else emptyTemplate">
-		<div class="ng-doc-search-result-category" *ngFor="let item of results">
-			<h4 class="ng-doc-search-result-title" ng-doc-text>{{ typeToLabel(item.key) }}</h4>
-			<ul class="ng-doc-search-result-pages">
-				<li class="ng-doc-search-result-page" *ngFor="let page of item.value">
-					<a class="ng-doc-search-result-page-link" [routerLink]="[page.route]">
-						<ng-doc-kind-icon
-							*ngIf="page.kind"
-							[kind]="page.kind"
-							[ngDocTooltip]="page.kind"></ng-doc-kind-icon>
-						{{ page.title }}
-					</a>
-				</li>
-			</ul>
-		</div>
-	</ng-container>
-	<ng-template #emptyTemplate>
-		<div ng-doc-text color="muted">Nothing was found...</div>
-	</ng-template>
-</div>
+@if (groupedResult | keyvalue; as results) {
+  <div class="ng-doc-search-result-wrapper">
+    @if (results.length) {
+      @for (item of results; track item) {
+        <div class="ng-doc-search-result-category">
+          <h4 class="ng-doc-search-result-title" ng-doc-text>{{ typeToLabel(item.key) }}</h4>
+          <ul class="ng-doc-search-result-pages">
+            @for (page of item.value; track page) {
+              <li class="ng-doc-search-result-page">
+                <a class="ng-doc-search-result-page-link" [routerLink]="[page.route]">
+                  @if (page.kind) {
+                    <ng-doc-kind-icon
+                      [kind]="page.kind"
+                      [ngDocTooltip]="page.kind"></ng-doc-kind-icon>
+                  }
+                  {{ page.title }}
+                </a>
+              </li>
+            }
+          </ul>
+        </div>
+      }
+    } @else {
+      <div ng-doc-text color="muted">Nothing was found...</div>
+    }
+  </div>
+}

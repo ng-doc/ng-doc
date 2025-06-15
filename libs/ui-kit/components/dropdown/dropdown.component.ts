@@ -11,12 +11,11 @@ import {
   EventEmitter,
   HostBinding,
   HostListener,
-  Inject,
+  inject,
   Input,
   NgZone,
   OnChanges,
   OnDestroy,
-  Optional,
   Output,
   SimpleChanges,
   ViewContainerRef,
@@ -42,6 +41,12 @@ import { NgDocOverlayUtils } from '@ng-doc/ui-kit/utils';
   standalone: true,
 })
 export class NgDocDropdownComponent implements OnChanges, OnDestroy {
+  protected changeDetectorRef = inject(ChangeDetectorRef);
+  protected overlayService = inject(NgDocOverlayService);
+  protected viewContainerRef = inject(ViewContainerRef);
+  protected ngZone = inject(NgZone);
+  protected overlayHost = inject<NgDocOverlayHost>(NgDocOverlayHost, { optional: true });
+
   @Input()
   content: NgDocContent = '';
 
@@ -110,15 +115,7 @@ export class NgDocDropdownComponent implements OnChanges, OnDestroy {
   overlay: NgDocOverlayRef | null = null;
   overlayProperties: NgDocOverlayProperties = this.getOverlayProperties();
 
-  constructor(
-    protected changeDetectorRef: ChangeDetectorRef,
-    protected overlayService: NgDocOverlayService,
-    protected viewContainerRef: ViewContainerRef,
-    protected ngZone: NgZone,
-    @Inject(NgDocOverlayHost)
-    @Optional()
-    protected overlayHost?: NgDocOverlayHost,
-  ) {}
+  constructor() {}
 
   ngOnChanges({ origin }: SimpleChanges): void {
     if (origin && origin.currentValue !== origin.previousValue) {
@@ -232,7 +229,7 @@ export class NgDocDropdownComponent implements OnChanges, OnDestroy {
     const overlayProperties: NgDocOverlayProperties = mergeOverlayConfigs(
       this.overlayProperties,
       this.getOverlayProperties(),
-      this.overlayHost,
+      this.overlayHost ?? undefined,
     );
     if (!this.currentOrigin) {
       throw new Error('Origin for the dropdown was not provided.');

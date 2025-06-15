@@ -1,4 +1,4 @@
-import { NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgDocKindIconComponent } from '@ng-doc/app/components/kind-icon';
@@ -29,8 +29,6 @@ import { DIControl } from 'di-controls';
     FormsModule,
     NgDocDataDirective,
     NgDocListComponent,
-    NgFor,
-    NgIf,
     NgDocOptionComponent,
     NgTemplateOutlet,
     NgDocTextComponent,

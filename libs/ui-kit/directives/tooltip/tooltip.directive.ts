@@ -33,6 +33,13 @@ import { filter, switchMap, takeUntil } from 'rxjs/operators';
   standalone: true,
 })
 export class NgDocTooltipDirective implements AfterViewInit, OnDestroy {
+  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly viewContainerRef = inject(ViewContainerRef);
+  private readonly overlayService = inject(NgDocOverlayService);
+  private readonly ngZone = inject(NgZone);
+  private readonly scrollStrategy = inject(NgDocOverlayStrategy);
+
   @Input('ngDocTooltip')
   content: NgDocContent = '';
 
@@ -93,14 +100,7 @@ export class NgDocTooltipDirective implements AfterViewInit, OnDestroy {
 
   private readonly destroyRef = inject(DestroyRef);
 
-  constructor(
-    private readonly elementRef: ElementRef<HTMLElement>,
-    private readonly changeDetectorRef: ChangeDetectorRef,
-    private readonly viewContainerRef: ViewContainerRef,
-    private readonly overlayService: NgDocOverlayService,
-    private readonly ngZone: NgZone,
-    private readonly scrollStrategy: NgDocOverlayStrategy,
-  ) {}
+  constructor() {}
 
   ngAfterViewInit(): void {
     // Opens tooltip with delay

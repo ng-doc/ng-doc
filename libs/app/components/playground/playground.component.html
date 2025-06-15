@@ -1,4 +1,4 @@
-<ng-container *ngIf="configuration">
+@if (configuration) {
   <ng-doc-playground-properties
     [form]="formGroup"
     [properties]="properties"
@@ -9,25 +9,26 @@
     [showResetButton]="!isDefaultState()"
     [(recreateDemo)]="recreateDemo"
     (resetForm)="resetForm()">
-    <ng-doc-playground-demo
-      *ngFor="let selector of configuration.selectors ?? selectors | asArray"
-      [id]="id"
-      [selector]="selector"
-      [properties]="properties"
-      [configuration]="configuration"
-      [recreateDemo]="recreateDemo"
-      [form]="formGroup"
-      [expanded]="configuration.expanded ?? false">
-    </ng-doc-playground-demo>
-
-    <ng-doc-playground-demo
-      *ngIf="pipeName"
-      [id]="id"
-      [pipeName]="pipeName"
-      [properties]="properties"
-      [configuration]="configuration"
-      [recreateDemo]="recreateDemo"
-      [form]="formGroup">
-    </ng-doc-playground-demo>
+    @for (selector of configuration.selectors ?? selectors | asArray; track selector) {
+      <ng-doc-playground-demo
+        [id]="id"
+        [selector]="selector"
+        [properties]="properties"
+        [configuration]="configuration"
+        [recreateDemo]="recreateDemo"
+        [form]="formGroup"
+        [expanded]="configuration.expanded ?? false">
+      </ng-doc-playground-demo>
+    }
+    @if (pipeName) {
+      <ng-doc-playground-demo
+        [id]="id"
+        [pipeName]="pipeName"
+        [properties]="properties"
+        [configuration]="configuration"
+        [recreateDemo]="recreateDemo"
+        [form]="formGroup">
+      </ng-doc-playground-demo>
+    }
   </ng-doc-playground-properties>
-</ng-container>
+}

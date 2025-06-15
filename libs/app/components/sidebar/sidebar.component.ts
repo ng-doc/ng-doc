@@ -1,4 +1,4 @@
-import { Location, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { Location, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgDocNavigation } from '@ng-doc/app/interfaces';
 import { NG_DOC_CONTEXT } from '@ng-doc/app/tokens';
@@ -13,9 +13,7 @@ import { NgDocSidebarItemComponent } from './sidebar-item/sidebar-item.component
   styleUrls: ['./sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgFor,
     NgTemplateOutlet,
-    NgIf,
     NgDocSidebarCategoryComponent,
     NgDocSidebarItemComponent,
     NgDocExecutePipe,

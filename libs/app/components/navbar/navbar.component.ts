@@ -5,7 +5,6 @@ import {
   Component,
   DestroyRef,
   HostBinding,
-  Inject,
   inject,
   Input,
   NgZone,
@@ -30,6 +29,11 @@ import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
   imports: [PolymorpheusModule, NgDocSearchComponent, NgDocButtonIconComponent, NgDocIconComponent],
 })
 export class NgDocNavbarComponent {
+  private readonly window = inject<Window>(WINDOW);
+  private readonly ngZone = inject(NgZone);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  protected readonly sidebarService = inject(NgDocSidebarService);
+
   /**
    * Show search input
    */
@@ -55,13 +59,7 @@ export class NgDocNavbarComponent {
   @HostBinding('class.has-border')
   hasBorder: boolean = false;
 
-  constructor(
-    @Inject(WINDOW)
-    private readonly window: Window,
-    private readonly ngZone: NgZone,
-    private readonly changeDetectorRef: ChangeDetectorRef,
-    protected readonly sidebarService: NgDocSidebarService,
-  ) {
+  constructor() {
     const destroyRef = inject(DestroyRef);
 
     afterNextRender(() => {

@@ -1,4 +1,4 @@
-import { Location, NgIf } from '@angular/common';
+import { Location } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -27,7 +27,6 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgDocRouteActiveDirective,
-    NgIf,
     NgDocDotComponent,
     NgDocTextComponent,
     NgDocIconComponent,

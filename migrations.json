@@ -1,110 +1,179 @@
 {
   "migrations": [
     {
-      "version": "20.2.0-beta.5",
-      "description": "Update TypeScript ESLint packages to v8.13.0 if they are already on v8",
-      "implementation": "./src/migrations/update-20-2-0/update-typescript-eslint-v8-13-0",
+      "version": "21.0.0-beta.8",
+      "description": "Removes the legacy cache configuration from nx.json",
+      "implementation": "./src/migrations/update-21-0-0/remove-legacy-cache",
+      "package": "nx",
+      "name": "remove-legacy-cache"
+    },
+    {
+      "version": "21.0.0-beta.8",
+      "description": "Removes the legacy cache configuration from nx.json",
+      "implementation": "./src/migrations/update-21-0-0/remove-custom-tasks-runner",
+      "package": "nx",
+      "name": "remove-custom-tasks-runner"
+    },
+    {
+      "version": "21.0.0-beta.11",
+      "description": "Updates release version config based on the breaking changes in Nx v21",
+      "implementation": "./src/migrations/update-21-0-0/release-version-config-changes",
+      "package": "nx",
+      "name": "release-version-config-changes"
+    },
+    {
+      "version": "21.0.0-beta.11",
+      "description": "Updates release changelog config based on the breaking changes in Nx v21",
+      "implementation": "./src/migrations/update-21-0-0/release-changelog-config-changes",
+      "package": "nx",
+      "name": "release-changelog-config-changes"
+    },
+    {
+      "version": "21.1.0-beta.2",
+      "description": "Adds **/nx-rules.mdc and **/nx.instructions.md to .gitignore if not present",
+      "implementation": "./src/migrations/update-21-1-0/add-gitignore-entry",
+      "package": "nx",
+      "name": "21-1-0-add-ignore-entries-for-nx-rule-files"
+    },
+    {
+      "version": "20.3.0-beta.1",
+      "description": "Update ESLint flat config to include .cjs, .mjs, .cts, and .mts files in overrides (if needed)",
+      "implementation": "./src/migrations/update-20-3-0/add-file-extensions-to-overrides",
       "package": "@nx/eslint",
-      "name": "update-typescript-eslint-v8.13.0"
+      "name": "add-file-extensions-to-overrides"
+    },
+    {
+      "version": "21.0.0-beta.10",
+      "description": "Removes the `tsConfig` and `copyFiles` options from the `@nx/cypress:cypress` executor.",
+      "implementation": "./src/migrations/update-21-0-0/remove-tsconfig-and-copy-files-options-from-cypress-executor",
+      "package": "@nx/cypress",
+      "name": "remove-tsconfig-and-copy-files-options-from-cypress-executor"
     },
     {
       "cli": "nx",
-      "version": "20.2.0-beta.2",
-      "description": "Update the ModuleFederationConfig import use @nx/module-federation.",
-      "factory": "./src/migrations/update-20-2-0/migrate-mf-imports-to-new-package",
-      "package": "@nx/angular",
-      "name": "update-20-2-0-update-module-federation-config-import"
+      "version": "21.0.0-beta.9",
+      "description": "Replace usage of `getJestProjects` with `getJestProjectsAsync`.",
+      "implementation": "./src/migrations/update-21-0-0/replace-getJestProjects-with-getJestProjectsAsync",
+      "package": "@nx/jest",
+      "name": "replace-getJestProjects-with-getJestProjectsAsync-v21"
+    },
+    {
+      "version": "21.0.0-beta.10",
+      "description": "Remove the previously deprecated and unused `tsConfig` option from the `@nx/jest:jest` executor.",
+      "implementation": "./src/migrations/update-21-0-0/remove-tsconfig-option-from-jest-executor",
+      "package": "@nx/jest",
+      "name": "remove-tsconfig-option-from-jest-executor"
     },
     {
       "cli": "nx",
-      "version": "20.2.0-beta.2",
-      "description": "Update the withModuleFederation import use @nx/module-federation/angular.",
-      "factory": "./src/migrations/update-20-2-0/migrate-with-mf-import-to-new-package",
+      "version": "20.3.0-beta.2",
+      "description": "If workspace includes Module Federation projects, ensure the new @nx/module-federation package is installed.",
+      "factory": "./src/migrations/update-20-3-0/ensure-nx-module-federation-package",
       "package": "@nx/angular",
-      "name": "update-20-2-0-update-with-module-federation-import"
+      "name": "ensure-nx-module-federation-package"
     },
     {
       "cli": "nx",
-      "version": "20.2.0-beta.5",
-      "requires": { "@angular/core": ">=19.0.0" },
-      "description": "Update the @angular/cli package version to ~19.0.0.",
-      "factory": "./src/migrations/update-20-2-0/update-angular-cli",
+      "version": "20.4.0-beta.1",
+      "requires": { "@angular/core": ">=19.1.0" },
+      "description": "Update the @angular/cli package version to ~19.1.0.",
+      "factory": "./src/migrations/update-20-4-0/update-angular-cli",
       "package": "@nx/angular",
-      "name": "update-angular-cli-version-19-0-0"
+      "name": "update-angular-cli-version-19-1-0"
     },
     {
       "cli": "nx",
-      "version": "20.2.0-beta.5",
-      "requires": { "@angular/core": ">=19.0.0" },
-      "description": "Add the '@angular/localize/init' polyfill to the 'polyfills' option of targets using esbuild-based executors.",
-      "factory": "./src/migrations/update-20-2-0/add-localize-polyfill-to-targets",
+      "version": "20.5.0-beta.5",
+      "requires": { "@angular/core": ">=19.2.0" },
+      "description": "Update the @angular/cli package version to ~19.2.0.",
+      "factory": "./src/migrations/update-20-5-0/update-angular-cli",
       "package": "@nx/angular",
-      "name": "add-localize-polyfill-to-targets"
+      "name": "update-angular-cli-version-19-2-0"
     },
     {
       "cli": "nx",
-      "version": "20.2.0-beta.5",
-      "requires": { "@angular/core": ">=19.0.0" },
-      "description": "Update '@angular/ssr' import paths to use the new '/node' entry point when 'CommonEngine' is detected.",
-      "factory": "./src/migrations/update-20-2-0/update-angular-ssr-imports-to-use-node-entry-point",
+      "version": "21.0.0-beta.3",
+      "description": "Set the `continuous` option to `true` for continuous tasks.",
+      "factory": "./src/migrations/update-21-0-0/set-continuous-option",
       "package": "@nx/angular",
-      "name": "update-angular-ssr-imports-to-use-node-entry-point"
+      "name": "set-continuous-option"
     },
     {
       "cli": "nx",
-      "version": "20.2.0-beta.6",
-      "requires": { "@angular/core": ">=19.0.0" },
-      "description": "Disable the Angular ESLint prefer-standalone rule if not set.",
-      "factory": "./src/migrations/update-20-2-0/disable-angular-eslint-prefer-standalone",
+      "version": "21.2.0-beta.3",
+      "requires": { "@angular/core": ">=20.0.0" },
+      "description": "Update the @angular/cli package version to ~20.0.0.",
+      "factory": "./src/migrations/update-21-2-0/update-angular-cli",
       "package": "@nx/angular",
-      "name": "disable-angular-eslint-prefer-standalone"
+      "name": "update-angular-cli-version-20-0-0"
     },
     {
-      "cli": "nx",
-      "version": "20.2.0-beta.8",
-      "requires": { "@angular/core": ">=19.0.0" },
-      "description": "Remove Angular ESLint rules that were removed in v19.0.0.",
-      "factory": "./src/migrations/update-20-2-0/remove-angular-eslint-rules",
+      "version": "21.2.0-beta.3",
+      "requires": { "@angular/core": ">=20.0.0" },
+      "description": "Migrate imports of `provideServerRendering` from `@angular/platform-server` to `@angular/ssr`.",
+      "factory": "./src/migrations/update-21-2-0/migrate-provide-server-rendering-import",
       "package": "@nx/angular",
-      "name": "remove-angular-eslint-rules"
+      "name": "migrate-provide-server-rendering-import"
     },
     {
-      "cli": "nx",
-      "version": "20.2.0-beta.8",
-      "requires": { "@angular/core": ">=19.0.0" },
-      "description": "Remove the deprecated 'tailwindConfig' option from ng-packagr executors. Tailwind CSS configurations located at the project or workspace root will be picked up automatically.",
-      "factory": "./src/migrations/update-20-2-0/remove-tailwind-config-from-ng-packagr-executors",
+      "version": "21.2.0-beta.3",
+      "requires": { "@angular/core": ">=20.0.0" },
+      "description": "Replace `provideServerRouting` and `provideServerRoutesConfig` with `provideServerRendering` using `withRoutes`.",
+      "factory": "./src/migrations/update-21-2-0/replace-provide-server-routing",
       "package": "@nx/angular",
-      "name": "remove-tailwind-config-from-ng-packagr-executors"
+      "name": "replace-provide-server-routing"
     },
     {
-      "version": "19.0.0",
-      "description": "Updates non-standalone Directives, Component and Pipes to 'standalone:false' and removes 'standalone:true' from those who are standalone",
-      "factory": "./bundles/explicit-standalone-flag#migrate",
+      "version": "21.2.0-beta.3",
+      "requires": { "@angular/core": ">=20.0.0" },
+      "description": "Update the generator defaults to maintain the previous style guide behavior.",
+      "factory": "./src/migrations/update-21-2-0/set-generator-defaults-for-previous-style-guide",
+      "package": "@nx/angular",
+      "name": "set-generator-defaults-for-previous-style-guide"
+    },
+    {
+      "version": "21.2.0-beta.3",
+      "requires": { "@angular/core": ">=20.0.0" },
+      "description": "Update 'moduleResolution' to 'bundler' in TypeScript configurations. You can read more about this here: https://www.typescriptlang.org/tsconfig/#moduleResolution.",
+      "factory": "./src/migrations/update-21-2-0/update-module-resolution",
+      "package": "@nx/angular",
+      "name": "update-module-resolution"
+    },
+    {
+      "version": "20.0.0",
+      "description": "Replaces usages of the deprecated InjectFlags enum",
+      "factory": "./bundles/inject-flags.cjs#migrate",
       "package": "@angular/core",
-      "name": "explicit-standalone-flag"
+      "name": "inject-flags"
     },
     {
-      "version": "19.0.0",
-      "description": "Updates ExperimentalPendingTasks to PendingTasks",
-      "factory": "./bundles/pending-tasks#migrate",
+      "version": "20.0.0",
+      "description": "Replaces usages of the deprecated TestBed.get method with TestBed.inject",
+      "factory": "./bundles/test-bed-get.cjs#migrate",
       "package": "@angular/core",
-      "name": "pending-tasks"
+      "name": "test-bed-get"
     },
     {
-      "version": "19.0.0",
-      "description": "Replaces `APP_INITIALIZER`, `ENVIRONMENT_INITIALIZER` & `PLATFORM_INITIALIZER` respectively with `provideAppInitializer`, `provideEnvironmentInitializer` & `providePlatformInitializer`.",
-      "factory": "./bundles/provide-initializer#migrate",
+      "version": "20.0.0",
+      "description": "Converts the entire application to block control flow syntax",
+      "factory": "./bundles/control-flow-migration.cjs#migrate",
       "optional": true,
       "package": "@angular/core",
-      "name": "provide-initializer"
+      "name": "control-flow-migration"
     },
     {
-      "version": "19.0.0-0",
-      "description": "Updates the Angular CDK to v19",
-      "factory": "./ng-update/index#updateToV19",
+      "version": "20.0.0",
+      "description": "Moves imports of `DOCUMENT` from `@angular/common` to `@angular/core`",
+      "factory": "./bundles/document-core.cjs#migrate",
+      "package": "@angular/core",
+      "name": "document-core"
+    },
+    {
+      "version": "20.0.0-0",
+      "description": "Updates the Angular CDK to v20",
+      "factory": "./ng-update/index#updateToV20",
       "package": "@angular/cdk",
-      "name": "migration-v19"
+      "name": "migration-v20"
     }
   ]
 }

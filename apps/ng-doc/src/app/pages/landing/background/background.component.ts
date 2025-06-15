@@ -1,9 +1,9 @@
-import { NgFor, NgIf } from '@angular/common';
 import {
   afterNextRender,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  inject,
   Input,
   NgZone,
   OnDestroy,
@@ -34,9 +34,13 @@ const DARK_PALETTE = [
   templateUrl: './background.component.html',
   styleUrls: ['./background.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, NgFor],
+  imports: [],
 })
 export class BackgroundComponent implements OnDestroy {
+  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly ngZone = inject(NgZone);
+  private readonly themeService = inject(NgDocThemeService);
+
   @Input()
   minRadius: number = 400;
 
@@ -91,11 +95,10 @@ export class BackgroundComponent implements OnDestroy {
   private animationId?: number;
   private colors: Array<{ r: number; g: number; b: number }> = LIGHT_PALETTE;
 
-  constructor(
-    private readonly elementRef: ElementRef<HTMLElement>,
-    private readonly ngZone: NgZone,
-    private readonly themeService: NgDocThemeService,
-  ) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
     afterNextRender(() => {
       this.context = this.canvas.nativeElement.getContext('2d');
       this.pixelRatio = window.devicePixelRatio > 1 ? 2 : 1;

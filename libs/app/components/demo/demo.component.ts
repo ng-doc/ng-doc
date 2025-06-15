@@ -1,8 +1,9 @@
-import { NgComponentOutlet, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   HostBinding,
+  inject,
   Input,
   OnInit,
   Type,
@@ -27,10 +28,8 @@ import {
   styleUrls: ['./demo.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     NgDocDemoDisplayerComponent,
     NgTemplateOutlet,
-    NgFor,
     NgDocCodeComponent,
     NgDocTabGroupComponent,
     NgDocTabComponent,
@@ -41,6 +40,8 @@ import {
   ],
 })
 export class NgDocDemoComponent implements OnInit {
+  private readonly rootPage = inject(NgDocRootPage);
+
   @Input()
   componentName?: string;
 
@@ -50,7 +51,7 @@ export class NgDocDemoComponent implements OnInit {
   demo?: Type<unknown>;
   assets: NgDocDemoAsset[] = [];
 
-  constructor(private readonly rootPage: NgDocRootPage) {}
+  constructor() {}
 
   @HostBinding('class')
   protected get classes(): string | string[] {

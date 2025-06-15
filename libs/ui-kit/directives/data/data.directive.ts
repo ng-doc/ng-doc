@@ -1,12 +1,15 @@
-import { Directive, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, inject, TemplateRef, ViewContainerRef } from '@angular/core';
 
 @Directive({
-	selector: '[ngDocData]',
-	standalone: true,
+  selector: '[ngDocData]',
+  standalone: true,
 })
 export class NgDocDataDirective {
-	constructor(
-		protected template: TemplateRef<unknown>,
-		protected viewContainerRef: ViewContainerRef,
-	) {}
+  protected template = inject<TemplateRef<unknown>>(TemplateRef);
+  protected viewContainerRef = inject(ViewContainerRef);
+
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {}
 }
