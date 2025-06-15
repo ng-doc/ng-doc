@@ -3,7 +3,7 @@ import path from 'path';
 
 /* The plugin updates dependencies between packages based on the generated semantic-release version */
 
-function prepare(pluginConfig, { logger }) {
+export function prepare(pluginConfig, { logger }) {
   const originalPackageJson = JSON.parse(
     fs.readFileSync(pluginConfig.original, { encoding: 'utf-8' }),
   );
@@ -25,5 +25,3 @@ function prepare(pluginConfig, { logger }) {
     );
   }
 }
-
-module.exports = { prepare };

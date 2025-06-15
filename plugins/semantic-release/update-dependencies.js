@@ -3,7 +3,7 @@ import path from 'path';
 
 /* The plugin updates dependencies between packages based on the generated semantic-release version */
 
-function prepare(pluginConfig, { logger }) {
+export function prepare(pluginConfig, { logger }) {
   const localPackages = collectPackageNames(pluginConfig.packages);
 
   for (let packageDir of pluginConfig.packages) {
@@ -37,5 +37,3 @@ function collectPackageNames(packages) {
     return packageJson.name;
   });
 }
-
-module.exports = { prepare };
