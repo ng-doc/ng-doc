@@ -1,3 +1,11 @@
+# [20.0.0-beta.2](https://github.com/ng-doc/ng-doc/compare/v20.0.0-beta.1...v20.0.0-beta.2) (2025-06-15)
+
+
+### Bug Fixes
+
+* custom sematic-release plugins ([21a85a6](https://github.com/ng-doc/ng-doc/commit/21a85a6856271d27ad0ce25c98df51f9d8bbaad8))
+* update sematic-release packages ([520e3e2](https://github.com/ng-doc/ng-doc/commit/520e3e200c043894450140ade05b8a448175b05b))
+
 # [20.0.0-beta.1](https://github.com/ng-doc/ng-doc/compare/v19.3.0...v20.0.0-beta.1) (2025-06-15)
 
 
