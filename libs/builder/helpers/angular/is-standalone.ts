@@ -14,5 +14,5 @@ export function isStandalone(cls: ClassDeclaration): boolean {
   const decorator: Component | Directive | Pipe | undefined =
     getComponentDecorator(cls) ?? getDirectiveDecorator(cls) ?? getPipeDecorator(cls);
 
-  return !!decorator?.standalone;
+  return decorator?.standalone !== false;
 }

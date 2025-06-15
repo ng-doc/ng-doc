@@ -1,20 +1,76 @@
+import {
+  type DocNode,
+  DocErrorText,
+  DocExcerpt,
+  DocPlainText,
+  TSDocParser,
+} from '@microsoft/tsdoc';
 import { asArray, isPresent } from '@ng-doc/core';
 import { JSDocableNode } from 'ts-morph';
 
 import { markdownToHtml } from './markdown-to-html';
 
+export class Formatter {
+  static renderDocNode(docNode: DocNode): string {
+    let result: string = '';
+    if (docNode) {
+      if (docNode instanceof DocExcerpt) {
+        result += docNode.content.toString();
+      }
+      for (const childNode of Formatter.filterOutStatusTag(docNode.getChildNodes())) {
+        result += Formatter.renderDocNode(childNode);
+      }
+    }
+    return result;
+  }
+
+  static renderDocNodes(docNodes: readonly DocNode[]): string {
+    let result: string = '';
+    for (const docNode of docNodes) {
+      result += Formatter.renderDocNode(docNode);
+    }
+    return result;
+  }
+
+  private static filterOutStatusTag(docNodes: readonly DocNode[]): readonly DocNode[] {
+    if (docNodes.length < 2) return docNodes;
+
+    const result: DocNode[] = [];
+
+    for (let i = 0; i < docNodes.length; i += 2) {
+      const node1 = docNodes.at(i),
+        node2 = docNodes.at(i + 1);
+
+      if (
+        node1 instanceof DocErrorText &&
+        node1.text === '@' &&
+        node2 instanceof DocPlainText &&
+        node2.text.startsWith('status:')
+      ) {
+        continue;
+      }
+
+      if (node1) result.push(node1);
+      if (node2) result.push(node2);
+    }
+
+    return result;
+  }
+}
+
 /**
  *
  * @param node
  */
-export function getJsDocDescription(node: JSDocableNode): string {
+export function getJsDocDescription(node: JSDocableNode | undefined): string {
+  if (!node) return '';
   const jsDocs = asArray(node.getJsDocs()[0]);
-  const description = jsDocs
-    .map((doc) => doc.getStructure())
-    .map(({ description }) => description)
-    .join('');
+  const tsdocParser = new TSDocParser();
+  const parserContext = tsdocParser.parseString(jsDocs[0]?.getText() ?? '');
 
-  return markdownToHtml(description).trim();
+  return markdownToHtml(
+    Formatter.renderDocNodes(parserContext.docComment.summarySection.getChildNodes()),
+  ).trim();
 }
 
 /**
@@ -22,7 +78,8 @@ export function getJsDocDescription(node: JSDocableNode): string {
  * @param node
  * @param tagName
  */
-export function getJsDocTag(node: JSDocableNode, tagName: string): string {
+export function getJsDocTag(node: JSDocableNode | undefined, tagName: string): string {
+  if (!node) return '';
   const jsDocs = asArray(node.getJsDocs()[0]);
   const tag = jsDocs
     .map((doc) => doc.getStructure())
@@ -39,7 +96,8 @@ export function getJsDocTag(node: JSDocableNode, tagName: string): string {
  * @param node
  * @param tagName
  */
-export function getJsDocTags(node: JSDocableNode, tagName: string): string[] {
+export function getJsDocTags(node: JSDocableNode | undefined, tagName: string): string[] {
+  if (!node) return [];
   const jsDocs = asArray(node.getJsDocs()[0]);
   const tags = jsDocs
     .map((doc) => doc.getStructure())
@@ -55,7 +113,8 @@ export function getJsDocTags(node: JSDocableNode, tagName: string): string[] {
  *
  * @param node
  */
-export function getAllJsDocTags(node: JSDocableNode): Record<string, string[]> {
+export function getAllJsDocTags(node: JSDocableNode | undefined): Record<string, string[]> {
+  if (!node) return {};
   const jsDocs = asArray(node.getJsDocs()[0]);
   const tags = jsDocs
     .map((doc) => doc.getStructure())
@@ -83,7 +142,8 @@ export function getAllJsDocTags(node: JSDocableNode): Record<string, string[]> {
  * @param node
  * @param tagName
  */
-export function hasJsDocTag(node: JSDocableNode, tagName: string): boolean {
+export function hasJsDocTag(node: JSDocableNode | undefined, tagName: string): boolean {
+  if (!node) return false;
   const jsDocs = asArray(node.getJsDocs()[0]);
 
   return jsDocs
@@ -98,41 +158,15 @@ export function hasJsDocTag(node: JSDocableNode, tagName: string): boolean {
  * @param node
  * @param paramName
  */
-export function getJsDocParam(node: JSDocableNode, paramName: string): string {
+export function getJsDocParam(node: JSDocableNode | undefined, paramName: string): string {
+  if (!node) return '';
   const jsDocs = asArray(node.getJsDocs()[0]);
-  const param = jsDocs
-    .map((doc) => doc.getStructure())
-    .map((doc) =>
-      doc.tags?.find(
-        (tag) => tag.tagName === 'param' && getParameter(String(tag.text)).name === paramName,
-      ),
-    )
-    .filter(isPresent)
-    .map((tag) => getParameter(String(tag.text)).description)
-    .join('');
+  const tsdocParser = new TSDocParser();
+  const parserContext = tsdocParser.parseString(jsDocs[0]?.getText() ?? '');
+
+  const param = Formatter.renderDocNodes(
+    parserContext.docComment.params.tryGetBlockByName(paramName)?.content?.getChildNodes() ?? [],
+  );
 
   return markdownToHtml(param).trim();
-}
-
-/**
- * Returns the name and description of a parameter
- * @example
- * // input: "param1 - Test param1"
- * // output: ['param1', 'Test param1']
- *
- * // input: "param1 Test param1"
- * // output: ['param1', 'Test param1']
- * @param docs
- */
-function getParameter(docs: string): { name: string; description: string } {
-  const match = docs.match(/(?<name>\w*)((\s?-\s?)|(\s))(?<description>.*)/);
-
-  if (!match || !match.groups) {
-    return { name: '', description: '' };
-  }
-
-  return {
-    name: match.groups['name'].trim() ?? '',
-    description: match.groups['description'].trim() ?? '',
-  };
 }

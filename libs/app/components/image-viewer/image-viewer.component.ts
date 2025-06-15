@@ -1,5 +1,4 @@
 import { animate, group, query, style } from '@angular/animations';
-import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -16,7 +15,7 @@ import { NgDocOverlayRef } from '@ng-doc/ui-kit/classes';
 
 @Component({
   selector: 'ng-doc-image-viewer',
-  imports: [NgTemplateOutlet],
+  imports: [],
   templateUrl: './image-viewer.component.html',
   styleUrl: './image-viewer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

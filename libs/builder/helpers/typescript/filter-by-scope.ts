@@ -1,5 +1,5 @@
-import {asArray} from '@ng-doc/core';
-import {Scope, ScopedNode} from 'ts-morph';
+import { asArray } from '@ng-doc/core';
+import { Scope, ScopedNode } from 'ts-morph';
 
 /**
  *
@@ -7,5 +7,5 @@ import {Scope, ScopedNode} from 'ts-morph';
  * @param scope
  */
 export function filterByScope<T extends ScopedNode>(nodes: T[], scope: Scope | Scope[]): T[] {
-	return nodes.filter((node: T) => asArray(scope).includes(node.getScope()));
+  return nodes.filter((node: T) => asArray(scope).includes(node.getScope()));
 }

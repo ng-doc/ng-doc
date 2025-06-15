@@ -8,6 +8,7 @@ import { NgDocCodeBlockParams } from '../interfaces';
 import { parseCodeBlockParams } from '../parsers';
 import { removeLinesFromCode } from './remove-lines-from-code';
 import { UTILS } from './utils';
+
 const blockquoteRegex: RegExp = /^<p><strong>(\w+)<\/strong>\s*/;
 
 /**

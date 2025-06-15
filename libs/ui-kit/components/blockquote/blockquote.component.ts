@@ -1,4 +1,3 @@
-import { NgIf, NgSwitch, NgSwitchCase } from '@angular/common';
 import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
 import { NgDocIconComponent } from '@ng-doc/ui-kit/components/icon';
 import { NgDocBlockquoteType } from '@ng-doc/ui-kit/types';
@@ -8,7 +7,7 @@ import { NgDocBlockquoteType } from '@ng-doc/ui-kit/types';
   templateUrl: './blockquote.component.html',
   styleUrls: ['./blockquote.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, NgSwitch, NgSwitchCase, NgDocIconComponent],
+  imports: [NgDocIconComponent],
 })
 export class NgDocBlockquoteComponent {
   @Input()

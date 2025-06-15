@@ -1,4 +1,4 @@
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { expandCollapseAnimation, preventInitialChildAnimations } from '@ng-doc/ui-kit/animations';
 import { NgDocContent } from '@ng-doc/ui-kit/types';
@@ -11,7 +11,7 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
   templateUrl: './expander.component.html',
   styleUrls: ['./expander.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, PolymorpheusModule, NgTemplateOutlet],
+  imports: [NgIf, PolymorpheusModule],
 })
 export class NgDocExpanderComponent implements AfterViewInit {
   /** Change expand state */
@@ -21,6 +21,9 @@ export class NgDocExpanderComponent implements AfterViewInit {
   /** Expander content */
   @Input({ required: true })
   content!: NgDocContent;
+
+  @Input()
+  collapseMod: 'remove' | 'hide' = 'remove';
 
   /** Closed height could be used to show preview of the content */
   @Input()

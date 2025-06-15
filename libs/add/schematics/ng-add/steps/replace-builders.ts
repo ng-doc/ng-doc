@@ -1,9 +1,9 @@
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import {
-	ProjectDefinition,
-	TargetDefinition,
-	updateWorkspace,
-	WorkspaceDefinition,
+  ProjectDefinition,
+  TargetDefinition,
+  updateWorkspace,
+  WorkspaceDefinition,
 } from '@schematics/angular/utility/workspace';
 
 import { Schema } from '../schema';
@@ -14,45 +14,45 @@ import { getProject } from '../utils/get-project';
  * @param options
  */
 export function replaceBuilders(options: Schema): Rule {
-	return async (tree: Tree, context: SchematicContext) => {
-		return updateWorkspace((workspace: WorkspaceDefinition) => {
-			const logger = context.logger.createChild('replace-builders');
+  return async (tree: Tree, context: SchematicContext) => {
+    return updateWorkspace((workspace: WorkspaceDefinition) => {
+      const logger = context.logger.createChild('replace-builders');
 
-			context.logger.info(`[INFO]: Builders`);
-			logger.info(`🔄 Replacing Angular CLI builders with @ng-doc builders...`);
+      context.logger.info(`[INFO]: Builders`);
+      logger.info(`🔄 Replacing Angular CLI builders with @ng-doc builders...`);
 
-			try {
-				const project: ProjectDefinition | undefined = getProject(options, workspace);
+      try {
+        const project: ProjectDefinition | undefined = getProject(options, workspace);
 
-				if (!project) {
-					logger.error(`❌ Target project not found. Please replace builders manually.`);
+        if (!project) {
+          logger.error(`❌ Target project not found. Please replace builders manually.`);
 
-					return;
-				}
+          return;
+        }
 
-				const buildTarget: TargetDefinition | undefined = project.targets.get('build');
-				const serveTarget: TargetDefinition | undefined = project.targets.get('serve');
+        const buildTarget: TargetDefinition | undefined = project.targets.get('build');
+        const serveTarget: TargetDefinition | undefined = project.targets.get('serve');
 
-				if (buildTarget) {
-					buildTarget.builder = '@ng-doc/builder:application';
-				} else {
-					logger.error(
-						`❌ "build" target was not found, please add "@ng-doc/builder:application" builder manually.`,
-					);
-				}
+        if (buildTarget) {
+          buildTarget.builder = '@ng-doc/builder:application';
+        } else {
+          logger.error(
+            `❌ "build" target was not found, please add "@ng-doc/builder:application" builder manually.`,
+          );
+        }
 
-				if (serveTarget) {
-					serveTarget.builder = '@ng-doc/builder:dev-server';
-				} else {
-					logger.warn(
-						`❌ "serve" target was not found, please add "@ng-doc/builder:dev-server" builder manually.`,
-					);
-				}
+        if (serveTarget) {
+          serveTarget.builder = '@ng-doc/builder:dev-server';
+        } else {
+          logger.warn(
+            `❌ "serve" target was not found, please add "@ng-doc/builder:dev-server" builder manually.`,
+          );
+        }
 
-				logger.info('✅ Done!');
-			} catch (e) {
-				logger.error(`❌ Error: ${e}`);
-			}
-		});
-	};
+        logger.info('✅ Done!');
+      } catch (e) {
+        logger.error(`❌ Error: ${e}`);
+      }
+    });
+  };
 }

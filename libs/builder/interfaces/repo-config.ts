@@ -1,4 +1,5 @@
 import { NgDocPlatform } from '../types';
+
 /**
  * The repository configuration interface.
  */

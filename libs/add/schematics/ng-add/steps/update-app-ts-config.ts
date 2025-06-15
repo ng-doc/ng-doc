@@ -1,59 +1,59 @@
-import {Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
+import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import {
-	ProjectDefinition,
-	TargetDefinition,
-	updateWorkspace,
-	WorkspaceDefinition,
+  ProjectDefinition,
+  TargetDefinition,
+  updateWorkspace,
+  WorkspaceDefinition,
 } from '@schematics/angular/utility/workspace';
-import {JSONFile} from 'ng-morph';
+import { JSONFile } from 'ng-morph';
 
-import {Schema} from '../schema';
-import {getProject} from '../utils/get-project';
+import { Schema } from '../schema';
+import { getProject } from '../utils/get-project';
 
 /**
  *
  * @param options
  */
 export function updateAppTsConfig(options: Schema): Rule {
-	return async (tree: Tree, context: SchematicContext) => {
-		return updateWorkspace((workspace: WorkspaceDefinition) => {
-			const logger = context.logger.createChild('update-app-ts-config');
+  return async (tree: Tree, context: SchematicContext) => {
+    return updateWorkspace((workspace: WorkspaceDefinition) => {
+      const logger = context.logger.createChild('update-app-ts-config');
 
-			context.logger.info(`[INFO]: TSConfig compilerOptions`);
-			logger.info(`🔄 Updating tsconfig compilerOptions...`);
+      context.logger.info(`[INFO]: TSConfig compilerOptions`);
+      logger.info(`🔄 Updating tsconfig compilerOptions...`);
 
-			try {
-				const project: ProjectDefinition | undefined = getProject(options, workspace);
+      try {
+        const project: ProjectDefinition | undefined = getProject(options, workspace);
 
-				if (!project) {
-					logger.error(`❌ Target project not found. Please configure "compilerOptions" manually.`);
+        if (!project) {
+          logger.error(`❌ Target project not found. Please configure "compilerOptions" manually.`);
 
-					return;
-				}
+          return;
+        }
 
-				const buildTarget: TargetDefinition | undefined = project.targets.get('build');
-				const serveTarget: TargetDefinition | undefined = project.targets.get('serve');
+        const buildTarget: TargetDefinition | undefined = project.targets.get('build');
+        const serveTarget: TargetDefinition | undefined = project.targets.get('serve');
 
-				if (buildTarget) {
-					const tsConfigPath: string | undefined =
-						buildTarget.options && (buildTarget.options['tsConfig'] as string);
+        if (buildTarget) {
+          const tsConfigPath: string | undefined =
+            buildTarget.options && (buildTarget.options['tsConfig'] as string);
 
-					tsConfigPath && updateTsConfig(tree, String(tsConfigPath));
-				}
+          tsConfigPath && updateTsConfig(tree, String(tsConfigPath));
+        }
 
-				if (serveTarget) {
-					const tsConfigPath: string | undefined =
-						serveTarget.options && (serveTarget.options['tsConfig'] as string);
+        if (serveTarget) {
+          const tsConfigPath: string | undefined =
+            serveTarget.options && (serveTarget.options['tsConfig'] as string);
 
-					tsConfigPath && updateTsConfig(tree, String(tsConfigPath));
-				}
+          tsConfigPath && updateTsConfig(tree, String(tsConfigPath));
+        }
 
-				logger.info('✅ Done!');
-			} catch (e) {
-				logger.error(`❌ Error: ${e}`);
-			}
-		});
-	};
+        logger.info('✅ Done!');
+      } catch (e) {
+        logger.error(`❌ Error: ${e}`);
+      }
+    });
+  };
 }
 
 /**
@@ -64,7 +64,7 @@ export function updateAppTsConfig(options: Schema): Rule {
  * @param projectName
  */
 function updateTsConfig(tree: Tree, filePath: string): void {
-	const json: JSONFile = new JSONFile(tree, filePath);
+  const json: JSONFile = new JSONFile(tree, filePath);
 
-	json.modify(['compilerOptions', 'allowSyntheticDefaultImports'], true);
+  json.modify(['compilerOptions', 'allowSyntheticDefaultImports'], true);
 }

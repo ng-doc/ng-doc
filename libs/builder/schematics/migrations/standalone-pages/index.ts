@@ -1,17 +1,17 @@
 import { Rule, Tree } from '@angular-devkit/schematics';
 import {
-	createProject,
-	ExportedDeclarations,
-	getSourceFiles,
-	ImportDeclaration,
-	ImportSpecifier,
-	Node,
-	ObjectLiteralExpression,
-	QuoteKind,
-	saveActiveProject,
-	setActiveProject,
-	SourceFile,
-	SyntaxKind,
+  createProject,
+  ExportedDeclarations,
+  getSourceFiles,
+  ImportDeclaration,
+  ImportSpecifier,
+  Node,
+  ObjectLiteralExpression,
+  QuoteKind,
+  saveActiveProject,
+  setActiveProject,
+  SourceFile,
+  SyntaxKind,
 } from 'ng-morph';
 import * as path from 'path';
 
@@ -22,44 +22,44 @@ import { NgDocStandalonePagesSchema } from './schema';
  * @param options
  */
 export function migrate(options: NgDocStandalonePagesSchema): Rule {
-	return (tree: Tree) => {
-		setActiveProject(
-			createProject(tree, options.path, ['**/**/ng-doc.dependencies.ts', '**/**/ng-doc.page.ts']),
-		);
+  return (tree: Tree) => {
+    setActiveProject(
+      createProject(tree, options.path, ['**/**/ng-doc.dependencies.ts', '**/**/ng-doc.page.ts']),
+    );
 
-		const sourceFiles = getSourceFiles('**/**/ng-doc.dependencies.ts');
+    const sourceFiles = getSourceFiles('**/**/ng-doc.dependencies.ts');
 
-		for (const sourceFile of sourceFiles) {
-			const pageSourceFile = getSourceFiles(
-				path.join(sourceFile.getDirectoryPath(), 'ng-doc.page.ts'),
-			)[0];
+    for (const sourceFile of sourceFiles) {
+      const pageSourceFile = getSourceFiles(
+        path.join(sourceFile.getDirectoryPath(), 'ng-doc.page.ts'),
+      )[0];
 
-			if (!pageSourceFile) {
-				continue;
-			}
+      if (!pageSourceFile) {
+        continue;
+      }
 
-			const objectExpression = getObjectExpressionFromDefault(sourceFile);
-			const pageObjectExpression = getObjectExpressionFromDefault(pageSourceFile);
+      const objectExpression = getObjectExpressionFromDefault(sourceFile);
+      const pageObjectExpression = getObjectExpressionFromDefault(pageSourceFile);
 
-			if (!objectExpression || !pageObjectExpression) {
-				continue;
-			}
+      if (!objectExpression || !pageObjectExpression) {
+        continue;
+      }
 
-			migrateProperty(
-				objectExpression,
-				pageObjectExpression,
-				'module',
-				'imports',
-				(initializer: string) => `[${initializer}]`,
-			);
-			migrateProperty(objectExpression, pageObjectExpression, 'demo', 'demos');
-			migrateProperty(objectExpression, pageObjectExpression, 'playgrounds');
+      migrateProperty(
+        objectExpression,
+        pageObjectExpression,
+        'module',
+        'imports',
+        (initializer: string) => `[${initializer}]`,
+      );
+      migrateProperty(objectExpression, pageObjectExpression, 'demo', 'demos');
+      migrateProperty(objectExpression, pageObjectExpression, 'playgrounds');
 
-			sourceFile.delete();
-		}
+      sourceFile.delete();
+    }
 
-		saveActiveProject();
-	};
+    saveActiveProject();
+  };
 }
 
 /**
@@ -67,17 +67,17 @@ export function migrate(options: NgDocStandalonePagesSchema): Rule {
  * @param sourceFile
  */
 function getObjectExpressionFromDefault(
-	sourceFile: SourceFile,
+  sourceFile: SourceFile,
 ): ObjectLiteralExpression | undefined {
-	const defaultExport: ExportedDeclarations | undefined = sourceFile
-		.getExportedDeclarations()
-		?.get('default')?.[0];
+  const defaultExport: ExportedDeclarations | undefined = sourceFile
+    .getExportedDeclarations()
+    ?.get('default')?.[0];
 
-	if (Node.isVariableDeclaration(defaultExport)) {
-		return defaultExport?.getFirstChildByKindOrThrow(SyntaxKind.ObjectLiteralExpression);
-	}
+  if (Node.isVariableDeclaration(defaultExport)) {
+    return defaultExport?.getFirstChildByKindOrThrow(SyntaxKind.ObjectLiteralExpression);
+  }
 
-	return undefined;
+  return undefined;
 }
 
 /**
@@ -89,65 +89,65 @@ function getObjectExpressionFromDefault(
  * @param initializer
  */
 function migrateProperty(
-	original: ObjectLiteralExpression,
-	destination: ObjectLiteralExpression,
-	propertyName: string,
-	newPropertyName: string = propertyName,
-	initializer: (initializer: string) => string = (initializer: string) => initializer,
+  original: ObjectLiteralExpression,
+  destination: ObjectLiteralExpression,
+  propertyName: string,
+  newPropertyName: string = propertyName,
+  initializer: (initializer: string) => string = (initializer: string) => initializer,
 ): void {
-	const sourceFile = original.getSourceFile();
-	const property = original.getProperty(propertyName);
+  const sourceFile = original.getSourceFile();
+  const property = original.getProperty(propertyName);
 
-	sourceFile.getProject().manipulationSettings.set({
-		quoteKind: QuoteKind.Single,
-	});
+  sourceFile.getProject().manipulationSettings.set({
+    quoteKind: QuoteKind.Single,
+  });
 
-	if (property) {
-		if (Node.isPropertyAssignment(property) || Node.isShorthandPropertyAssignment(property)) {
-			if (Node.isPropertyAssignment(property)) {
-				const structure = property.getStructure();
+  if (property) {
+    if (Node.isPropertyAssignment(property) || Node.isShorthandPropertyAssignment(property)) {
+      if (Node.isPropertyAssignment(property)) {
+        const structure = property.getStructure();
 
-				destination.addProperty({
-					...structure,
-					name: newPropertyName,
-					initializer: initializer(structure.initializer as string),
-				});
-			}
+        destination.addProperty({
+          ...structure,
+          name: newPropertyName,
+          initializer: initializer(structure.initializer as string),
+        });
+      }
 
-			if (Node.isShorthandPropertyAssignment(property)) {
-				const structure = property.getStructure();
+      if (Node.isShorthandPropertyAssignment(property)) {
+        const structure = property.getStructure();
 
-				destination.addProperty({
-					...structure,
-					name: newPropertyName,
-				});
-			}
+        destination.addProperty({
+          ...structure,
+          name: newPropertyName,
+        });
+      }
 
-			const imports: ImportDeclaration[] = sourceFile
-				.getImportDeclarations()
-				.filter((importDeclaration: ImportDeclaration) => {
-					return (
-						importDeclaration.getNamedImports().filter((importSpecifier: ImportSpecifier) => {
-							return (
-								importSpecifier
-									.getNameNode()
-									.findReferencesAsNodes()
-									.filter((node: Node) => {
-										return isChildOf(node, property);
-									}).length > 0
-							);
-						}).length > 0
-					);
-				})
-				.flat();
+      const imports: ImportDeclaration[] = sourceFile
+        .getImportDeclarations()
+        .filter((importDeclaration: ImportDeclaration) => {
+          return (
+            importDeclaration.getNamedImports().filter((importSpecifier: ImportSpecifier) => {
+              return (
+                importSpecifier
+                  .getNameNode()
+                  .findReferencesAsNodes()
+                  .filter((node: Node) => {
+                    return isChildOf(node, property);
+                  }).length > 0
+              );
+            }).length > 0
+          );
+        })
+        .flat();
 
-			destination
-				.getSourceFile()
-				.addImportDeclarations(
-					imports.map((importDeclaration: ImportDeclaration) => importDeclaration.getStructure()),
-				);
-		}
-	}
+      destination
+        .getSourceFile()
+        .addImportDeclarations(
+          imports.map((importDeclaration: ImportDeclaration) => importDeclaration.getStructure()),
+        );
+    }
+  }
 }
 
 /**
@@ -156,15 +156,15 @@ function migrateProperty(
  * @param parent
  */
 function isChildOf(node: Node, parent: Node): boolean {
-	if (node === parent) {
-		return true;
-	}
+  if (node === parent) {
+    return true;
+  }
 
-	const p = node.getParent();
+  const p = node.getParent();
 
-	if (p) {
-		return isChildOf(p, parent);
-	}
+  if (p) {
+    return isChildOf(p, parent);
+  }
 
-	return false;
+  return false;
 }

@@ -2,12 +2,14 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   HostBinding,
+  inject,
   Input,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgDocHorizontalAlign, NgDocPosition, NgDocVerticalAlign } from '@ng-doc/ui-kit/types';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { debounceTime } from 'rxjs/operators';
 
 import { NgDocSelectionHostDirective } from './selection-host.directive';
@@ -19,11 +21,12 @@ import { NgDocSelectionHostDirective } from './selection-host.directive';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
 })
-@UntilDestroy()
 export class NgDocSelectionComponent implements AfterViewInit {
   @Input()
   @HostBinding('attr.data-ng-doc-align')
   align: NgDocHorizontalAlign | NgDocVerticalAlign = 'bottom';
+
+  private readonly destroyRef = inject(DestroyRef);
 
   constructor(
     private readonly elementRef: ElementRef<HTMLElement>,
@@ -32,7 +35,7 @@ export class NgDocSelectionComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.selectionHost.selectedChange$
-      .pipe(debounceTime(0), untilDestroyed(this))
+      .pipe(debounceTime(0), takeUntilDestroyed(this.destroyRef))
       .subscribe((selected: HTMLElement | undefined) => this.setStyles(selected));
   }
 

@@ -5,7 +5,6 @@ import { NavigationEnd, Router } from '@angular/router';
 import { ngDocZoneOptimize } from '@ng-doc/ui-kit';
 import { NgDocScrollService } from '@ng-doc/ui-kit/services/scroll';
 import { WINDOW } from '@ng-web-apis/common';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject, fromEvent, Observable, share } from 'rxjs';
 import { filter, startWith } from 'rxjs/operators';
 
@@ -15,7 +14,6 @@ import { filter, startWith } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root',
 })
-@UntilDestroy()
 export class NgDocSidebarService {
   protected readonly expanded = new BehaviorSubject<boolean>(false);
   protected readonly document = inject(DOCUMENT);

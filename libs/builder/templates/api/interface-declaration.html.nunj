@@ -2,12 +2,14 @@
 
 {% import "helpers/type.html.nunj" as typeMacro %}
 {% import "helpers/methods.html.nunj" as methodsMacro %}
+{% import "helpers/call-signature.html.nunj" as callSignatureMacro %}
 {% import "helpers/properties.html.nunj" as propertiesMacro %}
 {% import "helpers/accessors.html.nunj" as accessorsMacro %}
 
 {% block overview %}
     {%- set properties = declaration | getInterfaceProperties | excludeByJsDocTags('internal') | filterUselessMembers | sortByNodesName -%}
     {%- set methods = declaration | getInterfaceMethods | excludeByJsDocTags('internal') | filterUselessMembers | sortByNodesName -%}
+    {%- set callSignatures = declaration | getInterfaceCallSignatures | excludeByJsDocTags('internal') -%}
     {%- set accessors = declaration | getInterfaceAccessors | excludeByJsDocTags('internal') | filterUselessMembers | sortByNodesName -%}
 
     {% if properties.length -%}
@@ -24,4 +26,12 @@
         <h2>Methods</h2>
         {{ methodsMacro.render(methods, declaration) }}
     {%- endif %}
+
+  {% if callSignatures.length -%}
+    <h2>Call Signatures</h2>
+
+    {%- for c in callSignatures %}
+      {{ callSignatureMacro.render(c, declaration, "Call Signature #" + loop.index) }}
+    {% endfor -%}
+  {%- endif %}
 {% endblock %}

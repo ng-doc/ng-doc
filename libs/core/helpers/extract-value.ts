@@ -1,15 +1,15 @@
-import {NgDocExtractedValue} from '../types';
+import { NgDocExtractedValue } from '../types';
 
 /**
  *
  * @param value
  */
 export function extractValue(value: string): NgDocExtractedValue {
-	try {
-		return extractValueOrThrow(value);
-	} catch {
-		return '';
-	}
+  try {
+    return extractValueOrThrow(value);
+  } catch {
+    return '';
+  }
 }
 
 /**
@@ -17,5 +17,5 @@ export function extractValue(value: string): NgDocExtractedValue {
  * @param value
  */
 export function extractValueOrThrow(value: string): NgDocExtractedValue {
-	return new Function(`return ${value}`)();
+  return new Function(`return ${value}`)();
 }

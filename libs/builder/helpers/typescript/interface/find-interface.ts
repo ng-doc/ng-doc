@@ -1,4 +1,4 @@
-import {ExpressionWithTypeArguments, InterfaceDeclaration, Node} from 'ts-morph';
+import { ExpressionWithTypeArguments, InterfaceDeclaration, Node } from 'ts-morph';
 
 /**
  *
@@ -6,29 +6,29 @@ import {ExpressionWithTypeArguments, InterfaceDeclaration, Node} from 'ts-morph'
  * @param fn
  */
 export function findInterface(
-	int: InterfaceDeclaration,
-	fn: (c: InterfaceDeclaration) => boolean,
+  int: InterfaceDeclaration,
+  fn: (c: InterfaceDeclaration) => boolean,
 ): InterfaceDeclaration | undefined {
-	const baseInterface: InterfaceDeclaration | undefined = int;
+  const baseInterface: InterfaceDeclaration | undefined = int;
 
-	if (fn(baseInterface)) {
-		return baseInterface;
-	}
+  if (fn(baseInterface)) {
+    return baseInterface;
+  }
 
-	const ext: InterfaceDeclaration[] = baseInterface
-		.getExtends()
-		.map((expr: ExpressionWithTypeArguments) => expr.getType().getSymbol()?.getDeclarations()[0])
-		.filter((node: Node | undefined) => Node.isInterfaceDeclaration(node))
-		// Reverse interfaces because the latest one overrides previous one
-		.reverse() as InterfaceDeclaration[];
+  const ext: InterfaceDeclaration[] = baseInterface
+    .getExtends()
+    .map((expr: ExpressionWithTypeArguments) => expr.getType().getSymbol()?.getDeclarations()[0])
+    .filter((node: Node | undefined) => Node.isInterfaceDeclaration(node))
+    // Reverse interfaces because the latest one overrides previous one
+    .reverse() as InterfaceDeclaration[];
 
-	for (const i of ext) {
-		const deepResult: InterfaceDeclaration | undefined = findInterface(i, fn);
+  for (const i of ext) {
+    const deepResult: InterfaceDeclaration | undefined = findInterface(i, fn);
 
-		if (deepResult) {
-			return i;
-		}
-	}
+    if (deepResult) {
+      return i;
+    }
+  }
 
-	return undefined;
+  return undefined;
 }

@@ -6,11 +6,14 @@ import {
   ChangeDetectorRef,
   Component,
   ContentChildren,
+  DestroyRef,
   ElementRef,
+  inject,
   Input,
   QueryList,
   ViewChildren,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { tabFadeAnimation } from '@ng-doc/ui-kit/animations';
 import {
   NgDocSelectionComponent,
@@ -18,7 +21,6 @@ import {
   NgDocSelectionOriginDirective,
 } from '@ng-doc/ui-kit/components/selection';
 import { NgDocSmoothResizeComponent } from '@ng-doc/ui-kit/components/smooth-resize';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 import { startWith } from 'rxjs/operators';
 
@@ -39,7 +41,6 @@ import { NgDocTabComponent } from './tab/tab.component';
     NgDocSmoothResizeComponent,
   ],
 })
-@UntilDestroy()
 export class NgDocTabGroupComponent<T = number> implements AfterContentInit, AfterViewInit {
   @Input()
   openedTab!: T;
@@ -52,23 +53,27 @@ export class NgDocTabGroupComponent<T = number> implements AfterContentInit, Aft
 
   selectedTab?: NgDocTabComponent<T>;
 
+  private readonly destroyRef = inject(DestroyRef);
+
   constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
   ngAfterContentInit(): void {
-    this.tabs.changes.pipe(startWith(this.tabs), untilDestroyed(this)).subscribe(() => {
-      const tabToOpen: NgDocTabComponent<T> | undefined = this.openedTab
-        ? this.tabs.find((tab: NgDocTabComponent<T>) => tab.id === this.openedTab)
-        : this.tabs.get(0);
+    this.tabs.changes
+      .pipe(startWith(this.tabs), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        const tabToOpen: NgDocTabComponent<T> | undefined = this.openedTab
+          ? this.tabs.find((tab: NgDocTabComponent<T>) => tab.id === this.openedTab)
+          : this.tabs.get(0);
 
-      tabToOpen && this.selectTab(tabToOpen);
+        tabToOpen && this.selectTab(tabToOpen);
 
-      this.changeDetectorRef.markForCheck();
-    });
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   ngAfterViewInit(): void {
     this.tabElements.changes
-      .pipe(startWith(this.tabElements), untilDestroyed(this))
+      .pipe(startWith(this.tabElements), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.changeDetectorRef.detectChanges());
   }
 
