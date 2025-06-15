@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import {
   AfterContentInit,
   AfterViewInit,
@@ -35,13 +34,14 @@ import { NgDocTabComponent } from './tab/tab.component';
   imports: [
     NgDocSelectionHostDirective,
     NgDocSelectionComponent,
-    NgFor,
     NgDocSelectionOriginDirective,
     PolymorpheusModule,
     NgDocSmoothResizeComponent,
   ],
 })
 export class NgDocTabGroupComponent<T = number> implements AfterContentInit, AfterViewInit {
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+
   @Input()
   openedTab!: T;
 
@@ -55,7 +55,7 @@ export class NgDocTabGroupComponent<T = number> implements AfterContentInit, Aft
 
   private readonly destroyRef = inject(DestroyRef);
 
-  constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
+  constructor() {}
 
   ngAfterContentInit(): void {
     this.tabs.changes

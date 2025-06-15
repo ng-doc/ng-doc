@@ -1,4 +1,3 @@
-import { DOCUMENT } from '@angular/common';
 import {
   afterNextRender,
   ChangeDetectionStrategy,
@@ -6,9 +5,9 @@ import {
   Component,
   DestroyRef,
   Directive,
+  DOCUMENT,
   ElementRef,
   HostBinding,
-  Inject,
   inject,
   Input,
   NgZone,
@@ -50,6 +49,11 @@ export class NgDocPaneBackDirective {}
   standalone: true,
 })
 export class NgDocPaneComponent implements OnChanges {
+  private readonly document = inject<Document>(DOCUMENT);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly ngZone = inject(NgZone);
+
   @Input()
   expanded: boolean = false;
 
@@ -61,13 +65,7 @@ export class NgDocPaneComponent implements OnChanges {
   @HostBinding('attr.data-ng-doc-dragging')
   dragging: boolean = false;
 
-  constructor(
-    @Inject(DOCUMENT)
-    private readonly document: Document,
-    private readonly changeDetectorRef: ChangeDetectorRef,
-    private readonly elementRef: ElementRef<HTMLElement>,
-    private readonly ngZone: NgZone,
-  ) {
+  constructor() {
     const destroyRef = inject(DestroyRef);
 
     afterNextRender(() => {

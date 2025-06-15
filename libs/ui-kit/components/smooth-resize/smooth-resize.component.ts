@@ -4,6 +4,7 @@ import {
   Component,
   ElementRef,
   HostBinding,
+  inject,
   Input,
   OnChanges,
 } from '@angular/core';
@@ -34,6 +35,8 @@ import {
   standalone: true,
 })
 export class NgDocSmoothResizeComponent implements OnChanges {
+  private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
+
   @Input({ required: true })
   trigger: unknown;
 
@@ -49,7 +52,7 @@ export class NgDocSmoothResizeComponent implements OnChanges {
     params: { startHeight: 0, startWidth: 0 },
   };
 
-  constructor(private readonly element: ElementRef<HTMLElement>) {}
+  constructor() {}
 
   ngOnChanges(): void {
     this.resizeAnimation = {

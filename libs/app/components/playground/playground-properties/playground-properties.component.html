@@ -1,52 +1,56 @@
-<div
-	class="ng-doc-playground-properties-wrapper"
-	[class.vertical]="observer | async"
-	*ngIf="defaultValues">
-	<div class="ng-doc-playground-demos">
-		<ng-content></ng-content>
-	</div>
-	<div class="ng-doc-playground-properties" *ngIf="!hideSidePanel">
-		<div class="ng-doc-playground-header">
-			<h4 ng-doc-text>Playground</h4>
-			<button ng-doc-button color="alert" (click)="resetForm.emit()" *ngIf="showResetButton">
-				Reset
-			</button>
-		</div>
-		<div class="ng-doc-playground-setting">
-			<ng-doc-checkbox [(ngModel)]="recreateDemo" (ngModelChange)="recreateDemoChange.emit($event)">
-				<span
-					ng-doc-text
-					[ngDocTooltip]="'Recreates demo everytime\none of the input has changed'"
-					[positions]="['bottom-right', 'left-center']">
-					Recreate
-					<ng-doc-icon icon="info" ngDocTextRight></ng-doc-icon>
-				</span>
-			</ng-doc-checkbox>
-		</div>
-		<div class="ng-doc-playground-divider"></div>
-		<ng-container *ngIf="propertyControls.length">
-			<h5 class="ng-doc-title" ng-doc-text>Settings</h5>
-			<ng-doc-playground-property
-				*ngFor="let propertyControl of propertyControls"
-				[name]="propertyControl.property.inputName"
-				[property]="propertyControl.property"
-				[typeControl]="propertyControl.typeControl"
-				[defaultValue]="defaultValues[propertyControl.propertyName]"
-				[control]="
-					getFormControl | bind: this | execute: 'properties':propertyControl.propertyName
-				">
-			</ng-doc-playground-property>
-		</ng-container>
-
-		<ng-container *ngIf="(dynamicContent | keyvalue)?.length">
-			<h5 class="ng-doc-title" ng-doc-text>Content</h5>
-			<ng-doc-playground-property
-				*ngFor="let content of dynamicContent | keyvalue"
-				[name]="content.value.label"
-				[property]="content.value"
-				[typeControl]="contentTypeControl"
-				[control]="getFormControl | bind: this | execute: 'content':content.key">
-			</ng-doc-playground-property>
-		</ng-container>
-	</div>
-</div>
+@if (defaultValues) {
+  <div class="ng-doc-playground-properties-wrapper" [class.vertical]="observer | async">
+    <div class="ng-doc-playground-demos">
+      <ng-content></ng-content>
+    </div>
+    @if (!hideSidePanel) {
+      <div class="ng-doc-playground-properties">
+        <div class="ng-doc-playground-header">
+          <h4 ng-doc-text>Playground</h4>
+          @if (showResetButton) {
+            <button ng-doc-button color="alert" (click)="resetForm.emit()">Reset</button>
+          }
+        </div>
+        <div class="ng-doc-playground-setting">
+          <ng-doc-checkbox
+            [(ngModel)]="recreateDemo"
+            (ngModelChange)="recreateDemoChange.emit($event)">
+            <span
+              ng-doc-text
+              [ngDocTooltip]="'Recreates demo everytime\none of the input has changed'"
+              [positions]="['bottom-right', 'left-center']">
+              Recreate
+              <ng-doc-icon icon="info" ngDocTextRight></ng-doc-icon>
+            </span>
+          </ng-doc-checkbox>
+        </div>
+        <div class="ng-doc-playground-divider"></div>
+        @if (propertyControls.length) {
+          <h5 class="ng-doc-title" ng-doc-text>Settings</h5>
+          @for (propertyControl of propertyControls; track propertyControl) {
+            <ng-doc-playground-property
+              [name]="propertyControl.property.inputName"
+              [property]="propertyControl.property"
+              [typeControl]="propertyControl.typeControl"
+              [defaultValue]="defaultValues[propertyControl.propertyName]"
+              [control]="
+                getFormControl | bind: this | execute: 'properties' : propertyControl.propertyName
+              ">
+            </ng-doc-playground-property>
+          }
+        }
+        @if ((dynamicContent | keyvalue)?.length) {
+          <h5 class="ng-doc-title" ng-doc-text>Content</h5>
+          @for (content of dynamicContent | keyvalue; track content) {
+            <ng-doc-playground-property
+              [name]="content.value.label"
+              [property]="content.value"
+              [typeControl]="contentTypeControl"
+              [control]="getFormControl | bind: this | execute: 'content' : content.key">
+            </ng-doc-playground-property>
+          }
+        }
+      </div>
+    }
+  </div>
+}

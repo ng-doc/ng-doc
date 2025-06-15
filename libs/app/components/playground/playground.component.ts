@@ -1,8 +1,8 @@
-import { NgFor, NgIf } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  inject,
   Input,
   OnChanges,
   SimpleChanges,
@@ -27,19 +27,16 @@ import { NgDocPlaygroundPropertiesComponent } from './playground-properties/play
   templateUrl: './playground.component.html',
   styleUrls: ['./playground.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    NgIf,
-    NgDocPlaygroundPropertiesComponent,
-    NgFor,
-    NgDocPlaygroundDemoComponent,
-    NgDocAsArrayPipe,
-  ],
+  imports: [NgDocPlaygroundPropertiesComponent, NgDocPlaygroundDemoComponent, NgDocAsArrayPipe],
 })
 export class NgDocPlaygroundComponent<
     T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties,
   >
   implements OnChanges, AfterViewInit
 {
+  private readonly rootPage = inject(NgDocRootPage);
+  private readonly formBuilder = inject(FormBuilder);
+
   @Input({ required: true })
   id: string = '';
 
@@ -63,10 +60,7 @@ export class NgDocPlaygroundComponent<
   private defaultProperties: Record<string, unknown> = {};
   private defaultContent: Record<string, boolean> = {};
 
-  constructor(
-    private readonly rootPage: NgDocRootPage,
-    private readonly formBuilder: FormBuilder,
-  ) {}
+  constructor() {}
 
   ngOnChanges({ options }: SimpleChanges) {
     if (options) {

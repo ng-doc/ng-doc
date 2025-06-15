@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { NgDocButtonComponent, NgDocColor } from '@ng-doc/ui-kit';
 import { NgDocNotifyService } from '@ng-doc/ui-kit/services/notify';
 
@@ -11,10 +11,15 @@ import { NgDocNotifyService } from '@ng-doc/ui-kit/services/notify';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonDemoComponent {
+  private readonly notifyService = inject(NgDocNotifyService);
+
   @Input()
   color: NgDocColor = 'primary';
 
-  constructor(private readonly notifyService: NgDocNotifyService) {}
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {}
 
   clickEvent(): void {
     this.notifyService.notify('Button was clicked!');

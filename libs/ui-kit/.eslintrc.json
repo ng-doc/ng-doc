@@ -19,7 +19,8 @@
         "@typescript-eslint/no-inferrable-types": "off",
         "@angular-eslint/no-input-rename": "off",
         "@typescript-eslint/member-ordering": "off",
-        "@angular-eslint/prefer-standalone": "off"
+        "@angular-eslint/prefer-standalone": "off",
+        "@angular-eslint/prefer-inject": "off"
       }
     },
     {

@@ -1,4 +1,4 @@
-import { NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
 import { NgDocCodeComponent } from '@ng-doc/app/components/code';
 import { NgDocCopyButtonComponent } from '@ng-doc/app/components/copy-button';
@@ -18,7 +18,6 @@ import {
   styleUrls: ['./demo-displayer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgIf,
     NgTemplateOutlet,
     NgDocButtonIconComponent,
     NgDocTooltipDirective,

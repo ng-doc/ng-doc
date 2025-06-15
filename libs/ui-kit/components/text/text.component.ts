@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import {
   AfterContentChecked,
   ChangeDetectionStrategy,
@@ -6,6 +5,7 @@ import {
   Component,
   ContentChild,
   HostBinding,
+  inject,
   Input,
 } from '@angular/core';
 import { NgDocSize, NgDocTextAlign, NgDocTextColor } from '@ng-doc/ui-kit/types';
@@ -18,9 +18,11 @@ import { NgDocTextRightDirective } from './text-right.directive';
   templateUrl: './text.component.html',
   styleUrls: ['./text.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf],
+  imports: [],
 })
 export class NgDocTextComponent implements AfterContentChecked {
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+
   /** Text size */
   @Input()
   @HostBinding('attr.data-ng-doc-text-size')
@@ -49,7 +51,7 @@ export class NgDocTextComponent implements AfterContentChecked {
   @HostBinding('class.ngde')
   readonly ngDocElement: boolean = true;
 
-  constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
+  constructor() {}
 
   ngAfterContentChecked(): void {
     this.changeDetectorRef.detectChanges();

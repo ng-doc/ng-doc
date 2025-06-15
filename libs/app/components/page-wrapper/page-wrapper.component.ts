@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -31,7 +30,6 @@ import {
 @Component({
   selector: 'ng-doc-page-wrapper',
   imports: [
-    CommonModule,
     RouterOutlet,
     RouterLink,
     NgDocTabRouteComponent,

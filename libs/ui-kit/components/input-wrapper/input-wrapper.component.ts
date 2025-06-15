@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import {
   AfterViewChecked,
   ChangeDetectionStrategy,
@@ -7,6 +6,7 @@ import {
   ContentChild,
   ElementRef,
   HostBinding,
+  inject,
   Input,
   ViewChild,
 } from '@angular/core';
@@ -35,13 +35,15 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
     NgDocWrapperComponent,
     NgDocFocusCatcherDirective,
     NgDocFloatedBorderComponent,
-    NgIf,
     PolymorpheusModule,
   ],
 })
 export class NgDocInputWrapperComponent<T, B = unknown>
   implements AfterViewChecked, NgDocInputHost<T>
 {
+  elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected changeDetectorRef = inject(ChangeDetectorRef);
+
   @Input()
   blurContent: NgDocContent<NgDocContextWithImplicit<B | null>> = '';
 
@@ -61,10 +63,7 @@ export class NgDocInputWrapperComponent<T, B = unknown>
   @ViewChild(NgDocFocusCatcherDirective, { static: true })
   focusCatcher?: NgDocFocusCatcherDirective;
 
-  constructor(
-    public elementRef: ElementRef<HTMLElement>,
-    protected changeDetectorRef: ChangeDetectorRef,
-  ) {}
+  constructor() {}
 
   ngAfterViewChecked(): void {
     this.changeDetectorRef.markForCheck();

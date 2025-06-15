@@ -20,13 +20,15 @@ import { filter } from 'rxjs/operators';
   standalone: true,
 })
 export class NgDocHotkeyDirective {
+  private readonly ngZone = inject(NgZone);
+
   @Input('ngDocHotkey')
   hotkey?: Partial<KeyboardEvent>;
 
   @Output('ngDocHotkey')
   callback: EventEmitter<void> = new EventEmitter<void>();
 
-  constructor(private readonly ngZone: NgZone) {
+  constructor() {
     const destroyRef = inject(DestroyRef);
 
     afterNextRender(() => {

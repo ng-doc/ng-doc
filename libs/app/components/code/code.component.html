@@ -1,9 +1,13 @@
-<div class="ng-doc-code-header" *ngIf="hasHeader">
-  <span class="ng-doc-code-file-name" ng-doc-text>
-    <ng-doc-icon [customIcon]="icon" *ngIf="icon"></ng-doc-icon>
-    {{ name }}
-  </span>
-</div>
+@if (hasHeader) {
+  <div class="ng-doc-code-header">
+    <span class="ng-doc-code-file-name" ng-doc-text>
+      @if (icon) {
+        <ng-doc-icon [customIcon]="icon"></ng-doc-icon>
+      }
+      {{ name }}
+    </span>
+  </div>
+}
 <div class="ng-doc-code-body">
   @if (html) {
     <div class="ng-doc-code-wrapper" [ngDocPageProcessor]="html | ngDocSanitizeHtml"></div>
@@ -13,10 +17,9 @@
     </div>
   }
 
-  <ng-doc-copy-button
-    class="ng-doc-copy-button"
-    [text]="this.codeElement?.textContent ?? ''"
-    *ngIf="copyButton">
-    <ng-doc-icon icon="copy"></ng-doc-icon>
-  </ng-doc-copy-button>
+  @if (copyButton) {
+    <ng-doc-copy-button class="ng-doc-copy-button" [text]="this.codeElement?.textContent ?? ''">
+      <ng-doc-icon icon="copy"></ng-doc-icon>
+    </ng-doc-copy-button>
+  }
 </div>

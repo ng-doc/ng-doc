@@ -1,11 +1,12 @@
-<button
-  ng-doc-button-icon-transparent
-  size="large"
-  [ngDocFocusable]="false"
-  [disabled]="disabled"
-  [rounded]="false"
-  (click)="clear()"
-  (focusout)="touch()"
-  *ngIf="isVisible">
-  <ng-doc-icon icon="x"></ng-doc-icon>
-</button>
+@if (isVisible) {
+  <button
+    ng-doc-button-icon-transparent
+    size="large"
+    [ngDocFocusable]="false"
+    [disabled]="disabled"
+    [rounded]="false"
+    (click)="clear()"
+    (focusout)="touch()">
+    <ng-doc-icon icon="x"></ng-doc-icon>
+  </button>
+}

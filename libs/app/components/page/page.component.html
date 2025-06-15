@@ -1,20 +1,22 @@
 <div class="ng-doc-page-controls">
-  <a
-    ng-doc-button-icon
-    *ngIf="rootPage.editSourceFileUrl"
-    [href]="rootPage.editSourceFileUrl"
-    target="_blank"
-    ngDocTooltip="Suggest Edits">
-    <ng-doc-icon icon="edit-2"></ng-doc-icon>
-  </a>
-  <a
-    ng-doc-button-icon
-    *ngIf="rootPage.viewSourceFileUrl"
-    [href]="rootPage.viewSourceFileUrl"
-    target="_blank"
-    ngDocTooltip="View Source">
-    <ng-doc-icon icon="code"></ng-doc-icon>
-  </a>
+  @if (rootPage.editSourceFileUrl) {
+    <a
+      ng-doc-button-icon
+      [href]="rootPage.editSourceFileUrl"
+      target="_blank"
+      ngDocTooltip="Suggest Edits">
+      <ng-doc-icon icon="edit-2"></ng-doc-icon>
+    </a>
+  }
+  @if (rootPage.viewSourceFileUrl) {
+    <a
+      ng-doc-button-icon
+      [href]="rootPage.viewSourceFileUrl"
+      target="_blank"
+      ngDocTooltip="View Source">
+      <ng-doc-icon icon="code"></ng-doc-icon>
+    </a>
+  }
 </div>
 
 <div
@@ -23,10 +25,10 @@
   (afterRender)="createToc()"
   #pageContainer></div>
 
-<ng-doc-dialog-outlet
-  *ngIf="!rootPage.page?.disableFullscreenRoutes"
-  [config]="{ width: '100vw', height: '100vh' }">
-  <div class="ng-doc-fullscreen-wrapper">
-    <router-outlet></router-outlet>
-  </div>
-</ng-doc-dialog-outlet>
+@if (!rootPage.page?.disableFullscreenRoutes) {
+  <ng-doc-dialog-outlet [config]="{ width: '100vw', height: '100vh' }">
+    <div class="ng-doc-fullscreen-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </ng-doc-dialog-outlet>
+}

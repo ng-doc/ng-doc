@@ -1,4 +1,3 @@
-import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { NgDocDataListComponent } from '@ng-doc/ui-kit/components/data-list';
 import { NgDocListComponent } from '@ng-doc/ui-kit/components/list';
@@ -21,8 +20,6 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgDocListComponent,
-    NgIf,
-    NgFor,
     NgDocOptionGroupComponent,
     PolymorpheusModule,
     NgDocOptionGroupHeaderDirective,

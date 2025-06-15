@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
 import { NgDocContent, NgDocHorizontalAlign } from '@ng-doc/ui-kit/types';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
@@ -8,7 +7,7 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
   templateUrl: './label.component.html',
   styleUrls: ['./label.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, PolymorpheusModule],
+  imports: [PolymorpheusModule],
 })
 export class NgDocLabelComponent {
   @Input('ng-doc-label')

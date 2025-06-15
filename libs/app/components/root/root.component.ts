@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -56,7 +56,7 @@ export class NgDocCustomSidebarDirective {}
   styleUrls: ['./root.component.scss'],
   providers: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgDocSidenavComponent, NgIf, PolymorpheusModule, AsyncPipe],
+  imports: [NgDocSidenavComponent, PolymorpheusModule, AsyncPipe],
 })
 export class NgDocRootComponent {
   /**

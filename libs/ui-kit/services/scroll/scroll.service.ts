@@ -1,32 +1,33 @@
 import { BlockScrollStrategy, ViewportRuler } from '@angular/cdk/overlay';
-import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable } from '@angular/core';
+import { DOCUMENT, inject, Injectable } from '@angular/core';
 
 @Injectable({
-	providedIn: 'root',
+  providedIn: 'root',
 })
 export class NgDocScrollService {
-	private readonly scrollStrategy: BlockScrollStrategy;
+  private readonly document = inject<Document>(DOCUMENT);
+  private readonly viewportRuler = inject(ViewportRuler);
 
-	constructor(
-		@Inject(DOCUMENT)
-		private readonly document: Document,
-		private readonly viewportRuler: ViewportRuler,
-	) {
-		this.scrollStrategy = new BlockScrollStrategy(this.viewportRuler, this.document);
-	}
+  private readonly scrollStrategy: BlockScrollStrategy;
 
-	/**
-	 * Block global scroll
-	 */
-	block(): void {
-		this.scrollStrategy.enable();
-	}
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
 
-	/**
-	 * Unblock global scroll
-	 */
-	unblock(): void {
-		this.scrollStrategy.disable();
-	}
+  constructor() {
+    this.scrollStrategy = new BlockScrollStrategy(this.viewportRuler, this.document);
+  }
+
+  /**
+   * Block global scroll
+   */
+  block(): void {
+    this.scrollStrategy.enable();
+  }
+
+  /**
+   * Unblock global scroll
+   */
+  unblock(): void {
+    this.scrollStrategy.disable();
+  }
 }

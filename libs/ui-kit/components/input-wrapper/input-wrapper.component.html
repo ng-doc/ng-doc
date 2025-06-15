@@ -8,14 +8,16 @@
       <ng-content select="[ngDocInputWrapperLeft]"></ng-content>
       <div class="ng-doc-original-input">
         <ng-content></ng-content>
-        <div class="ng-doc-blur-container ng-doc-input" *ngIf="blurContentIsVisible">
-          <div class="ng-doc-blur-content">
-            <ng-container
-              *polymorpheusOutlet="blurContent as text; context: getBlurContext(blurContext)">
-              {{ text }}
-            </ng-container>
+        @if (blurContentIsVisible) {
+          <div class="ng-doc-blur-container ng-doc-input">
+            <div class="ng-doc-blur-content">
+              <ng-container
+                *polymorpheusOutlet="blurContent as text; context: getBlurContext(blurContext)">
+                {{ text }}
+              </ng-container>
+            </div>
           </div>
-        </div>
+        }
       </div>
       <ng-content select="[ngDocInputWrapperRight]"></ng-content>
     </label>

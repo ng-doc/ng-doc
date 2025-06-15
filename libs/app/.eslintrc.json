@@ -18,7 +18,8 @@
         "@angular-eslint/prefer-on-push-component-change-detection": ["error"],
         "@typescript-eslint/no-inferrable-types": "off",
         "@angular-eslint/no-input-rename": "off",
-        "@angular-eslint/prefer-standalone": "off"
+        "@angular-eslint/prefer-standalone": "off",
+        "@angular-eslint/prefer-inject": "off"
       }
     },
     {

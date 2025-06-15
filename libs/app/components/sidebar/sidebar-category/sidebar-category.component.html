@@ -1,14 +1,13 @@
 <div class="ng-doc-sidebar-category-wrapper">
   <div class="ng-doc-sidebar-category-button" (click)="toggle()">
     <div class="ng-doc-sidebar-category" [ngDocRouteActive]="category.route" activeClass="active">
-      <ng-doc-dot *ngIf="!expandable"></ng-doc-dot>
+      @if (!expandable) {
+        <ng-doc-dot></ng-doc-dot>
+      }
       <span ng-doc-text>
-        <ng-doc-icon
-          icon="chevron-right"
-          *ngIf="category.expandable"
-          [ngDocRotator]="expanded"
-          ngDocTextLeft>
-        </ng-doc-icon>
+        @if (category.expandable) {
+          <ng-doc-icon icon="chevron-right" [ngDocRotator]="expanded" ngDocTextLeft> </ng-doc-icon>
+        }
         {{ category.title }}
       </span>
     </div>

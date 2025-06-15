@@ -1,8 +1,10 @@
 <div class="ng-doc-overlay-pointer-wrapper">
-	<div class="ng-doc-overlay-pointer" *ngIf="withPointer">
-		<div class="ng-doc-pointer"></div>
-	</div>
-	<div class="ng-doc-overlay-pointer-content">
-		<ng-content></ng-content>
-	</div>
+  @if (withPointer) {
+    <div class="ng-doc-overlay-pointer">
+      <div class="ng-doc-pointer"></div>
+    </div>
+  }
+  <div class="ng-doc-overlay-pointer-content">
+    <ng-content></ng-content>
+  </div>
 </div>

@@ -1,10 +1,10 @@
-import { DOCUMENT } from '@angular/common';
 import {
   afterNextRender,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  DOCUMENT,
   ElementRef,
   inject,
   Input,
