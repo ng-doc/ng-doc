@@ -1,13 +1,16 @@
 // @ts-nocheck
 import {Routes} from '@angular/router';
 {%- macro categoryImport(entry) -%}
-{%- if entry.isCategory %}
-import {{ entry.id }} from '{{ curDir | createImportPath(entry.path) }}';
+{%- if entry.item.isCategory %}
+import {{ entry.item.id }} from '{{ curDir | createImportPath(entry.item.path) }}';
 {%- endif -%}
+{%- for child in entry.children -%}
+{{ categoryImport(child) }}
+{%- endfor -%}
 {%- endmacro -%}
 
 {%- for entry in entries -%}
-{{ categoryImport(entry.item) }}
+{{ categoryImport(entry) }}
 {%- endfor %}
 
 export const NG_DOC_ROUTING: Routes = [
