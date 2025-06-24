@@ -1,3 +1,10 @@
+## [20.0.1](https://github.com/ng-doc/ng-doc/compare/v20.0.0...v20.0.1) (2025-06-24)
+
+
+### Bug Fixes
+
+* add missing nested category file imports ([#285](https://github.com/ng-doc/ng-doc/issues/285)) ([4dd6984](https://github.com/ng-doc/ng-doc/commit/4dd6984354cf3f50f892bf4af7fb3b491b276d62)), closes [#284](https://github.com/ng-doc/ng-doc/issues/284)
+
 # [20.0.0](https://github.com/ng-doc/ng-doc/compare/v19.3.0...v20.0.0) (2025-06-15)
 
 
