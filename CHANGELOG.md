@@ -1,3 +1,17 @@
+# [20.1.0](https://github.com/ng-doc/ng-doc/compare/v20.0.2...v20.1.0) (2025-06-25)
+
+
+### Bug Fixes
+
+* make shiki instance static in highlighter service ([#291](https://github.com/ng-doc/ng-doc/issues/291)) ([d9bbeaf](https://github.com/ng-doc/ng-doc/commit/d9bbeafe107dc626c6aa7bebb74ee226f7d7495f)), closes [#277](https://github.com/ng-doc/ng-doc/issues/277)
+* ng-doc-tab was being removed when using grouped code blocks on guide pages ([#292](https://github.com/ng-doc/ng-doc/issues/292)) ([fba1054](https://github.com/ng-doc/ng-doc/commit/fba1054f69598437e180209658364c504f1b3beb))
+* using base-href with ssg was breaking build ([#290](https://github.com/ng-doc/ng-doc/issues/290)) ([215778e](https://github.com/ng-doc/ng-doc/commit/215778e1fdfaa08d14d83fe786ce7c6dd91531e9)), closes [#263](https://github.com/ng-doc/ng-doc/issues/263)
+
+
+### Features
+
+* make category div a html button ([#289](https://github.com/ng-doc/ng-doc/issues/289)) ([ef3b71d](https://github.com/ng-doc/ng-doc/commit/ef3b71d465cce4c656e07ebce62cad854334fe0d)), closes [#257](https://github.com/ng-doc/ng-doc/issues/257)
+
 ## [20.0.2](https://github.com/ng-doc/ng-doc/compare/v20.0.1...v20.0.2) (2025-06-25)
 
 
