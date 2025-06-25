@@ -7,8 +7,8 @@ import {
   Provider,
 } from '@angular/core';
 import { NgDocHighlighterConfig, NgDocHighlighterService } from '@ng-doc/app/services/highlighter';
-import { NG_REQUEST_BASE_PATH } from '@ng-doc/core';
 import { NgDocUiConfig, provideNgDocUiKitConfig } from '@ng-doc/ui-kit';
+import { NG_REQUEST_BASE_PATH } from '@ng-doc/ui-kit/tokens';
 
 /**
  * NgDoc application config.

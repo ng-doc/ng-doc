@@ -21,7 +21,6 @@ import {
 import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
 import { NgDocKindIconComponent } from '@ng-doc/app/components/kind-icon';
 import { NgDocFormPartialValue } from '@ng-doc/app/types';
-import { NG_REQUEST_BASE_PATH } from '@ng-doc/core';
 import { asArray } from '@ng-doc/core/helpers/as-array';
 import { NgDocApiList, NgDocApiListItem } from '@ng-doc/core/interfaces';
 import {
@@ -34,6 +33,7 @@ import {
   NgDocTextComponent,
   NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
+import { NG_REQUEST_BASE_PATH } from '@ng-doc/ui-kit/tokens';
 import { startWith } from 'rxjs/operators';
 
 interface ApiFilterForm {
