@@ -1,3 +1,10 @@
+## [20.0.2](https://github.com/ng-doc/ng-doc/compare/v20.0.1...v20.0.2) (2025-06-25)
+
+
+### Bug Fixes
+
+* ng-doc-ignore-line regex was working only for one digit number ([#288](https://github.com/ng-doc/ng-doc/issues/288)) ([b4f0482](https://github.com/ng-doc/ng-doc/commit/b4f0482c2d900e36cf96948acd4cafcebb53742a)), closes [#283](https://github.com/ng-doc/ng-doc/issues/283)
+
 ## [20.0.1](https://github.com/ng-doc/ng-doc/compare/v20.0.0...v20.0.1) (2025-06-24)
 
 
