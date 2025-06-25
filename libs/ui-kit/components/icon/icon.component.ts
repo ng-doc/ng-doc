@@ -10,6 +10,7 @@ import {
   OnChanges,
   OnInit,
 } from '@angular/core';
+import { NG_REQUEST_BASE_PATH } from '@ng-doc/core';
 import { NgDocCacheInterceptor } from '@ng-doc/ui-kit/interceptors';
 import { NG_DOC_ASSETS_PATH, NG_DOC_CUSTOM_ICONS_PATH } from '@ng-doc/ui-kit/tokens';
 import { NgDocIconSize } from '@ng-doc/ui-kit/types';
@@ -26,6 +27,7 @@ import { catchError, startWith, switchMap } from 'rxjs/operators';
 export class NgDocIconComponent implements OnChanges, OnInit {
   private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly httpClient = inject(HttpClient);
+  private readonly baseUrl = inject(NG_REQUEST_BASE_PATH);
 
   /** Icon name */
   @Input()
@@ -76,8 +78,11 @@ export class NgDocIconComponent implements OnChanges, OnInit {
   }
 
   get href(): string {
-    return this.customIcon
-      ? `${this.customIconsPath}/${this.customIcon}.svg#${this.customIcon}`
-      : `${this.assetsPath}/icons/${this.size}/${this.icon}.svg#${this.icon}`;
+    return (
+      this.baseUrl +
+      (this.customIcon
+        ? `${this.customIconsPath}/${this.customIcon}.svg#${this.customIcon}`
+        : `${this.assetsPath}/icons/${this.size}/${this.icon}.svg#${this.icon}`)
+    );
   }
 }

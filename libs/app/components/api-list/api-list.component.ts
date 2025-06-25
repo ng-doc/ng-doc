@@ -21,6 +21,7 @@ import {
 import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
 import { NgDocKindIconComponent } from '@ng-doc/app/components/kind-icon';
 import { NgDocFormPartialValue } from '@ng-doc/app/types';
+import { NG_REQUEST_BASE_PATH } from '@ng-doc/core';
 import { asArray } from '@ng-doc/core/helpers/as-array';
 import { NgDocApiList, NgDocApiListItem } from '@ng-doc/core/interfaces';
 import {
@@ -62,6 +63,8 @@ interface ApiFilterForm {
   ],
 })
 export class NgDocApiListComponent implements OnInit {
+  private readonly baseUrl = inject(NG_REQUEST_BASE_PATH);
+
   title = input<string>('API References');
   segment = input<string>();
 
@@ -145,7 +148,9 @@ export class NgDocApiListComponent implements OnInit {
 
   ngOnInit(): void {
     this.httpClient
-      .get<NgDocApiList[]>(asArray('assets/ng-doc', this.segment(), 'api-list.json').join('/'))
+      .get<
+        NgDocApiList[]
+      >(this.baseUrl + asArray('assets/ng-doc', this.segment(), 'api-list.json').join('/'))
       .subscribe((apiList) => this.apiList.set(apiList));
   }
 }
