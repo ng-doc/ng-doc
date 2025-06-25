@@ -10,9 +10,12 @@ import {
   OnChanges,
   OnInit,
 } from '@angular/core';
-import { NG_REQUEST_BASE_PATH } from '@ng-doc/core';
 import { NgDocCacheInterceptor } from '@ng-doc/ui-kit/interceptors';
-import { NG_DOC_ASSETS_PATH, NG_DOC_CUSTOM_ICONS_PATH } from '@ng-doc/ui-kit/tokens';
+import {
+  NG_DOC_ASSETS_PATH,
+  NG_DOC_CUSTOM_ICONS_PATH,
+  NG_REQUEST_BASE_PATH,
+} from '@ng-doc/ui-kit/tokens';
 import { NgDocIconSize } from '@ng-doc/ui-kit/types';
 import { of, Subject } from 'rxjs';
 import { catchError, startWith, switchMap } from 'rxjs/operators';
