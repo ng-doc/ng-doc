@@ -33,6 +33,7 @@ import {
   NgDocTextComponent,
   NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
+import { NG_REQUEST_BASE_PATH } from '@ng-doc/ui-kit/tokens';
 import { startWith } from 'rxjs/operators';
 
 interface ApiFilterForm {
@@ -62,6 +63,8 @@ interface ApiFilterForm {
   ],
 })
 export class NgDocApiListComponent implements OnInit {
+  private readonly baseUrl = inject(NG_REQUEST_BASE_PATH);
+
   title = input<string>('API References');
   segment = input<string>();
 
@@ -145,7 +148,9 @@ export class NgDocApiListComponent implements OnInit {
 
   ngOnInit(): void {
     this.httpClient
-      .get<NgDocApiList[]>(asArray('assets/ng-doc', this.segment(), 'api-list.json').join('/'))
+      .get<
+        NgDocApiList[]
+      >(this.baseUrl + asArray('assets/ng-doc', this.segment(), 'api-list.json').join('/'))
       .subscribe((apiList) => this.apiList.set(apiList));
   }
 }
