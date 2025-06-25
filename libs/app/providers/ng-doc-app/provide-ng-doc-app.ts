@@ -1,14 +1,7 @@
-import { isPlatformBrowser, ViewportScroller } from '@angular/common';
-import {
-  EnvironmentProviders,
-  inject,
-  PLATFORM_ID,
-  provideAppInitializer,
-  Provider,
-} from '@angular/core';
+import { ViewportScroller } from '@angular/common';
+import { EnvironmentProviders, inject, provideAppInitializer, Provider } from '@angular/core';
 import { NgDocHighlighterConfig, NgDocHighlighterService } from '@ng-doc/app/services/highlighter';
 import { NgDocUiConfig, provideNgDocUiKitConfig } from '@ng-doc/ui-kit';
-import { NG_REQUEST_BASE_PATH } from '@ng-doc/ui-kit/tokens';
 
 /**
  * NgDoc application config.
@@ -41,13 +34,6 @@ export function provideNgDocApp(
     provideAppInitializer(async () => {
       await inject(NgDocHighlighterService).initialize(config?.shiki);
     }),
-
-    {
-      provide: NG_REQUEST_BASE_PATH,
-      useFactory: () => {
-        return isPlatformBrowser(inject(PLATFORM_ID)) ? '' : '/';
-      },
-    },
 
     /* --- UiKit --- */
     ...provideNgDocUiKitConfig(config?.uiKit),
