@@ -65,9 +65,9 @@ export function markdownToHtml(
 	      metastring="${metaString}">${escapeHtml(code)}</code></pre>`;
 
       return group
-        ? `<ng-doc-tab group="${group}" name="${name}" icon="${icon ?? ''}" ${
+        ? `<div><ng-doc-tab group="${group}" name="${name}" icon="${icon ?? ''}" ${
             active ? 'active' : ''
-          }>${codeElement}</ng-doc-tab>`
+          }>${codeElement}</ng-doc-tab></div>`
         : codeElement;
     },
     blockquote(quote: string): string {

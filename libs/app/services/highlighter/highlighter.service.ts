@@ -23,12 +23,15 @@ export interface NgDocHighlighterConfig {
   providedIn: 'root',
 })
 export class NgDocHighlighterService {
-  highlighter?: HighlighterGeneric<string, string>;
+  private static highlighter?: HighlighterGeneric<string, string>;
 
   protected readonly theme = inject(NG_DOC_SHIKI_THEME);
 
   async initialize(config?: NgDocHighlighterConfig): Promise<void> {
-    this.highlighter = (await createHighlighterCore({
+    if (NgDocHighlighterService.highlighter) {
+      return;
+    }
+    NgDocHighlighterService.highlighter = (await createHighlighterCore({
       themes: [
         import('shiki/themes/github-light.mjs'),
         import('shiki/themes/ayu-dark.mjs'),
@@ -40,12 +43,14 @@ export class NgDocHighlighterService {
   }
 
   highlight(code: string): string {
-    return this.highlighter!.codeToHtml(code, {
-      lang: 'angular-html',
-      themes: {
-        light: this.theme.light || 'github-light',
-        dark: this.theme.dark || 'ayu-dark',
-      },
-    });
+    return (
+      NgDocHighlighterService.highlighter?.codeToHtml(code, {
+        lang: 'angular-html',
+        themes: {
+          light: this.theme.light || 'github-light',
+          dark: this.theme.dark || 'ayu-dark',
+        },
+      }) ?? ''
+    );
   }
 }
