@@ -29,6 +29,9 @@
   .ng-doc-sidebar-category-button {
     display: flex;
     flex-direction: column;
+    border: unset;
+    background-color: unset;
+    width: 100%;
 
     .ng-doc-sidebar-category {
       display: flex;
