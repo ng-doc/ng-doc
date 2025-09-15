@@ -74,6 +74,8 @@ in your `ng-doc.config.ts` file.
 
 After that NgDoc will search for documentation pages in the specified folder and its subfolders.
 
+> **Warning** > `docsPath` is relative to the root of the repository, not the documentation application.
+
 ```typescript name="ng-doc.config.ts"
 import { NgDocConfiguration } from '@ng-doc/builder';
 
