@@ -3,6 +3,8 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/builder",
   "projectType": "library",
+  "tags": ["type:lib", "lib:builder"],
+  "implicitDependencies": ["!app", "utils"],
   "targets": {
     "pre-build": {
       "executor": "@nx/js:tsc",
@@ -62,10 +64,9 @@
       "outputs": ["{workspaceRoot}/coverage/libs/builder"],
       "options": {
         "jestConfig": "libs/builder/jest.config.ts",
-        "runInBand": true
+        "runInBand": true,
+        "tsConfig": "libs/builder/tsconfig.spec.json"
       }
     }
-  },
-  "tags": ["type:lib", "lib:builder"],
-  "implicitDependencies": ["!app", "utils"]
+  }
 }

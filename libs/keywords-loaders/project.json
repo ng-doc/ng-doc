@@ -1,46 +1,46 @@
 {
-	"name": "keywords-loaders",
-	"$schema": "../../node_modules/nx/schemas/project-schema.json",
-	"sourceRoot": "libs/keywords-loaders",
-	"projectType": "library",
-	"targets": {
-		"pre-build": {
-			"executor": "@nx/rollup:rollup",
-			"outputs": ["{workspaceRoot}/dist/{projectRoot}"],
-			"options": {
-				"outputPath": "dist/libs/keywords-loaders",
-				"project": "libs/keywords-loaders/package.json",
-				"main": "libs/keywords-loaders/index.ts",
-				"tsConfig": "libs/keywords-loaders/tsconfig.lib.json",
-				"assets": [
-					{
-						"glob": "**/*.md",
-						"input": "libs/keywords-loaders",
-						"output": "./"
-					}
-				],
-				"generateExportsField": true,
-				"babelUpwardRootMode": true
-			}
-		},
-		"build": {
-			"executor": "nx:run-commands",
-			"options": {
-				"commands": []
-			}
-		},
-		"lint": {
-			"executor": "@nx/eslint:lint",
-			"outputs": ["{options.outputFile}"]
-		},
-		"test": {
-			"executor": "@nx/jest:jest",
-			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-			"options": {
-				"jestConfig": "libs/keywords-loaders/jest.config.ts"
-			}
-		}
-	},
-	"tags": ["type:lib", "lib:keywords-loaders"],
-	"implicitDependencies": ["core"]
+  "name": "keywords-loaders",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/keywords-loaders",
+  "projectType": "library",
+  "tags": ["type:lib", "lib:keywords-loaders"],
+  "implicitDependencies": ["core"],
+  "targets": {
+    "pre-build": {
+      "executor": "@nx/rollup:rollup",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "outputPath": "dist/libs/keywords-loaders",
+        "project": "libs/keywords-loaders/package.json",
+        "main": "libs/keywords-loaders/index.ts",
+        "tsConfig": "libs/keywords-loaders/tsconfig.lib.json",
+        "assets": [
+          {
+            "glob": "**/*.md",
+            "input": "libs/keywords-loaders",
+            "output": "./"
+          }
+        ],
+        "generateExportsField": true,
+        "babelUpwardRootMode": true
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": []
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/keywords-loaders/jest.config.ts"
+      }
+    }
+  }
 }
