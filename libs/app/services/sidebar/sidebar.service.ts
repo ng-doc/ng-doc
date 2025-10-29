@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { ngDocZoneOptimize } from '@ng-doc/ui-kit';
 import { NgDocScrollService } from '@ng-doc/ui-kit/services/scroll';
-import { WINDOW } from '@ng-web-apis/common';
+import { WA_WINDOW } from '@ng-web-apis/common';
 import { BehaviorSubject, fromEvent, Observable, share } from 'rxjs';
 import { filter, startWith } from 'rxjs/operators';
 
@@ -16,7 +16,7 @@ import { filter, startWith } from 'rxjs/operators';
 export class NgDocSidebarService {
   protected readonly expanded = new BehaviorSubject<boolean>(false);
   protected readonly document = inject(DOCUMENT);
-  protected readonly window = inject(WINDOW);
+  protected readonly window = inject(WA_WINDOW);
   protected readonly router = inject(Router);
   protected readonly scroll = inject(NgDocScrollService);
 

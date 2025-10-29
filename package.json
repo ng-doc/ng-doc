@@ -59,7 +59,7 @@
     "@angular/router": "20.0.3",
     "@angular/ssr": "20.0.2",
     "@microsoft/tsdoc": "0.15.1",
-    "@ng-web-apis/common": "2.0.1",
+    "@ng-web-apis/common": "4.12.2",
     "@orama/orama": "2.0.17",
     "@orama/plugin-match-highlight": "2.0.17",
     "@orama/plugin-parsedoc": "2.0.17",

@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { LOCAL_STORAGE } from '@ng-web-apis/common';
+import { WA_LOCAL_STORAGE } from '@ng-web-apis/common';
 
 const DEFAULT_SERIALIZE: (v: unknown) => string = (v: unknown) => String(v);
 
@@ -7,7 +7,7 @@ const DEFAULT_SERIALIZE: (v: unknown) => string = (v: unknown) => String(v);
 	providedIn: 'root',
 })
 export class NgDocStoreService {
-	protected readonly localStorage: Storage = inject(LOCAL_STORAGE);
+	protected readonly localStorage: Storage = inject(WA_LOCAL_STORAGE);
 
 	set(key: string, data: string): void;
 	set<T>(key: string, data: T, serialize: (v: T) => string): void;
