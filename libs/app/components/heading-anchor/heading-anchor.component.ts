@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostBinding, inject, Input } from '@angular/core';
 import { NgDocCopyButtonComponent } from '@ng-doc/app/components/copy-button';
 import { NgDocIconComponent } from '@ng-doc/ui-kit';
-import { LOCATION } from '@ng-web-apis/common';
+import { WA_LOCATION } from '@ng-web-apis/common';
 
 @Component({
   selector: 'ng-doc-heading-anchor',
@@ -22,7 +22,7 @@ export class NgDocHeadingAnchorComponent {
   @HostBinding('class')
   classes: string[] = [];
 
-  protected readonly location = inject(LOCATION);
+  protected readonly location = inject(WA_LOCATION);
 
   protected get href(): string {
     const { origin, pathname } = this.location;
