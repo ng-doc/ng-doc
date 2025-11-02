@@ -1,3 +1,10 @@
+## [20.1.1](https://github.com/ng-doc/ng-doc/compare/v20.1.0...v20.1.1) (2025-11-02)
+
+
+### Bug Fixes
+
+* upgrade to @ng-web-apis/common@4.x and refactor deprecations ([#306](https://github.com/ng-doc/ng-doc/issues/306)) ([09917b1](https://github.com/ng-doc/ng-doc/commit/09917b18b5c030679eef48a66264e338f6b2a88e))
+
 # [20.1.0](https://github.com/ng-doc/ng-doc/compare/v20.0.2...v20.1.0) (2025-06-25)
 
 
