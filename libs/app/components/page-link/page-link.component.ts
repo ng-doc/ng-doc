@@ -11,7 +11,7 @@ import {
 import { Params, RouterLink } from '@angular/router';
 import { NgDocDecodeUriComponentPipe } from '@ng-doc/app/pipes';
 import { NgDocIconComponent } from '@ng-doc/ui-kit';
-import { LOCATION } from '@ng-web-apis/common';
+import { WA_LOCATION } from '@ng-web-apis/common';
 
 @Component({
   selector: 'ng-doc-page-link',
@@ -31,7 +31,7 @@ export class NgDocPageLinkComponent implements OnInit, OnChanges {
 
   private link: URL | undefined;
 
-  private readonly location = inject(LOCATION);
+  private readonly location = inject(WA_LOCATION);
   private readonly elementRef: ElementRef<HTMLElement> = inject(ElementRef);
 
   ngOnInit(): void {
