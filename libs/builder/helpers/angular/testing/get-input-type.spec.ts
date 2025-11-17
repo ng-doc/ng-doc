@@ -38,7 +38,7 @@ describe('getInputType', () => {
     expect(getInputType(input).getText()).toBe('string');
   });
 
-  describe('signal', () => {
+  describe('input signal', () => {
     it('should return type for signature input without default value', () => {
       const sourceFile = project.createSourceFile(
         'index.ts',
@@ -50,7 +50,7 @@ describe('getInputType', () => {
 				template: '',
 			})
 			export class AppComponent {
-				foo = input<string>(');
+				foo = input<string>('');
 			}
 		`,
         { overwrite: true },
@@ -125,6 +125,102 @@ describe('getInputType', () => {
 				foo = input.required<string>();
 			}
 		`,
+        { overwrite: true },
+      );
+
+      sourceFile.getProject().resolveSourceFileDependencies();
+      const component = sourceFile.getClassOrThrow('AppComponent');
+      const input = component.getPropertyOrThrow('foo');
+
+      expect(getInputType(input).getText()).toBe('string');
+    });
+
+    it('should return type for model signal', () => {
+      const sourceFile = project.createSourceFile(
+        'index.ts',
+        `
+        import {Component, model} from '@angular/core';
+
+        @Component({
+          selector: 'app-root',
+          template: '',
+        })
+        export class AppComponent {
+          foo = model<string>();
+        }
+        `,
+        { overwrite: true },
+      );
+
+      sourceFile.getProject().resolveSourceFileDependencies();
+      const component = sourceFile.getClassOrThrow('AppComponent');
+      const input = component.getPropertyOrThrow('foo');
+
+      expect(getInputType(input).getText()).toBe('string | undefined');
+    });
+
+    it('should return inferred type for model signal', () => {
+      const sourceFile = project.createSourceFile(
+        'index.ts',
+        `
+        import {Component, model} from '@angular/core';
+
+        @Component({
+          selector: 'app-root',
+          template: '',
+        })
+        export class AppComponent {
+          foo = model(123);
+        }
+        `,
+        { overwrite: true },
+      );
+
+      sourceFile.getProject().resolveSourceFileDependencies();
+      const component = sourceFile.getClassOrThrow('AppComponent');
+      const input = component.getPropertyOrThrow('foo');
+
+      expect(getInputType(input).getText()).toBe('number');
+    });
+
+    it('should return type for model signal with transform', () => {
+      const sourceFile = project.createSourceFile(
+        'index.ts',
+        `
+        import {Component, model, coerceBooleanProperty} from '@angular/core';
+
+        @Component({
+          selector: 'app-root',
+          template: '',
+        })
+        export class AppComponent {
+          foo = model<boolean, string>(true, {transform: coerceBooleanProperty});
+        }
+        `,
+        { overwrite: true },
+      );
+
+      sourceFile.getProject().resolveSourceFileDependencies();
+      const component = sourceFile.getClassOrThrow('AppComponent');
+      const input = component.getPropertyOrThrow('foo');
+
+      expect(getInputType(input).getText()).toBe('boolean');
+    });
+
+    it('should return type for required model signal', () => {
+      const sourceFile = project.createSourceFile(
+        'index.ts',
+        `
+        import {Component, model} from '@angular/core';
+
+        @Component({
+          selector: 'app-root',
+          template: '',
+        })
+        export class AppComponent {
+          foo = model.required<string>();
+        }
+        `,
         { overwrite: true },
       );
 
