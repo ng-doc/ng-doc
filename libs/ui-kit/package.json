@@ -2,7 +2,6 @@
   "name": "@ng-doc/ui-kit",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/animations": ">=20.2.0 < 21.0.0",
     "@angular/common": ">=20.2.0 < 21.0.0",
     "@angular/core": ">=20.2.0 < 21.0.0",
     "@angular/cdk": ">=20.2.0 < 21.0.0",

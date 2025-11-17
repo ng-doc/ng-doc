@@ -15,9 +15,7 @@
 </div>
 
 <div class="ng-doc-body-wrapper">
-  <ng-doc-smooth-resize [trigger]="selectedTab?.content ?? ''">
-    <div *polymorpheusOutlet="selectedTab?.content ?? '' as text; context: {}" @tabFadeAnimation>
-      {{ text }}
-    </div>
-  </ng-doc-smooth-resize>
+  <div *polymorpheusOutlet="selectedTab?.content ?? '' as text; context: {}">
+    {{ text }}
+  </div>
 </div>

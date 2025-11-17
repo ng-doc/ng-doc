@@ -1,9 +1,5 @@
 <button ng-doc-button-icon size="large" (click)="toggleTheme()" [ngDocTooltip]="tooltipContent">
-  <ng-template #tooltipContent>
-    <ng-doc-smooth-resize [trigger]="currentTheme.name">
-      "{{ currentTheme.name }}" theme
-    </ng-doc-smooth-resize>
-  </ng-template>
+  <ng-template #tooltipContent> "{{ currentTheme.name }}" theme </ng-template>
 
   @if (currentTheme === themes[0]) {
     <div class="letter">A</div>

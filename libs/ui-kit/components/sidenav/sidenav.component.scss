@@ -64,4 +64,17 @@
       width: 100%;
     }
   }
+
+  .backdrop-enter {
+    animation: ng-doc-backdrop-fade-in var(--ng-doc-transition) forwards;
+
+    @keyframes ng-doc-backdrop-fade-in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  }
 }

@@ -4,4 +4,26 @@
   & > div {
     overflow: hidden;
   }
+
+  .ng-doc-expander-container {
+    display: grid;
+    grid-template-rows: 0fr;
+    overflow: hidden;
+    transition: grid-template-rows var(--ng-doc-transition);
+
+    &.expanded {
+      grid-template-rows: 1fr;
+
+      .ng-doc-expander-content {
+        visibility: visible;
+      }
+    }
+
+    .ng-doc-expander-content {
+      min-height: 0;
+      transition: visibility var(--ng-doc-transition);
+      visibility: hidden;
+      overflow: hidden;
+    }
+  }
 }

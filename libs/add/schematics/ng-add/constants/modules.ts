@@ -73,10 +73,6 @@ const NG_DOC_PROVIDERS: ImportConstant[] = [
 export const MODULE_APP: AppImports = {
   imports: [
     {
-      initializer: 'BrowserAnimationsModule',
-      imports: [{ name: 'BrowserAnimationsModule', path: '@angular/platform-browser/animations' }],
-    },
-    {
       initializer:
         "RouterModule.forRoot(NG_DOC_ROUTING, {scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', scrollOffset: [0, 70]})",
       imports: [
@@ -95,10 +91,6 @@ export const MODULE_APP: AppImports = {
 export const STANDALONE_APP: AppImports = {
   imports: NG_DOC_COMPONENT_IMPORTS,
   providers: [
-    {
-      initializer: 'provideAnimations()',
-      imports: [{ name: 'provideAnimations', path: '@angular/platform-browser/animations' }],
-    },
     {
       initializer: 'provideHttpClient(withInterceptorsFromDi())',
       imports: [

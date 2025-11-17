@@ -116,4 +116,19 @@
       margin-right: var(--ng-doc-base-gutter);
     }
   }
+
+  &.ng-doc-enter-animation {
+    animation: ng-doc-fade-in-scale 150ms ease-in forwards;
+
+    @keyframes ng-doc-fade-in-scale {
+      0% {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  }
 }

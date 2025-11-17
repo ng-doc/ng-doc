@@ -47,7 +47,6 @@
   "dependencies": {
     "@angular-devkit/architect": "0.2002.2",
     "@angular-devkit/schematics": "20.2.2",
-    "@angular/animations": "20.2.4",
     "@angular/cdk": "20.2.3",
     "@angular/common": "20.2.4",
     "@angular/compiler": "20.2.4",

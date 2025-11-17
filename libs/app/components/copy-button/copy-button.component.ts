@@ -1,14 +1,10 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { ChangeDetectionStrategy, Component, inject, Input, ViewChild } from '@angular/core';
-import {
-  NgDocButtonIconComponent,
-  NgDocSmoothResizeComponent,
-  NgDocTooltipDirective,
-} from '@ng-doc/ui-kit';
+import { NgDocButtonIconComponent, NgDocTooltipDirective } from '@ng-doc/ui-kit';
 
 @Component({
   selector: 'ng-doc-copy-button',
-  imports: [NgDocButtonIconComponent, NgDocTooltipDirective, NgDocSmoothResizeComponent],
+  imports: [NgDocButtonIconComponent, NgDocTooltipDirective],
   template: `
     <button
       ng-doc-button-icon
@@ -17,9 +13,7 @@ import {
       [ngDocTooltip]="tooltipContent"
       (mouseenter)="tooltipText = 'Copy to clipboard'">
       <ng-template #tooltipContent>
-        <ng-doc-smooth-resize [trigger]="tooltipText">
-          {{ tooltipText }}
-        </ng-doc-smooth-resize>
+        {{ tooltipText }}
       </ng-template>
       <ng-content></ng-content>
     </button>

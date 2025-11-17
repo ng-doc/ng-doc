@@ -12,10 +12,8 @@ import {
   NgDocIconComponent,
   NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
-import { preventInitialChildAnimations } from '@ng-doc/ui-kit/animations';
 
 @Component({
-  animations: [preventInitialChildAnimations],
   selector: 'ng-doc-app',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],

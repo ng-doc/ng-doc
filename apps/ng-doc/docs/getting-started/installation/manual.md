@@ -183,17 +183,8 @@ Provide default configuration for the documentation app.
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { enableProdMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
-import {
-  NG_DOC_DEFAULT_PAGE_PROCESSORS,
-  NG_DOC_DEFAULT_PAGE_SKELETON,
-  NgDocDefaultSearchEngine,
-  provideNgDocApp,
-  provideMainPageProcessor,
-  providePageSkeleton,
-  provideSearchEngine,
-} from '@ng-doc/app';
+import { NG_DOC_DEFAULT_PAGE_PROCESSORS, NG_DOC_DEFAULT_PAGE_SKELETON, NgDocDefaultSearchEngine, provideNgDocApp, provideMainPageProcessor, providePageSkeleton, provideSearchEngine } from '@ng-doc/app';
 import { NG_DOC_ROUTING, provideNgDocContext } from '@ng-doc/generated';
 
 import { AppComponent } from './app/app.component';
@@ -212,8 +203,6 @@ bootstrapApplication(AppComponent, {
     provideSearchEngine(NgDocDefaultSearchEngine),
     providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON),
     provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS),
-    // Provide animations
-    provideAnimations(),
     // Provide HttpClient with interceptors (NgDoc uses interceptors)
     provideHttpClient(withInterceptorsFromDi()),
     // Add generated routes to the application
@@ -232,20 +221,8 @@ bootstrapApplication(AppComponent, {
 ```typescript name="Module APP (app.module.ts)" group="imports"
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import {
-  NG_DOC_DEFAULT_PAGE_PROCESSORS,
-  NG_DOC_DEFAULT_PAGE_SKELETON,
-  NgDocDefaultSearchEngine,
-  NgDocNavbarComponent,
-  NgDocRootComponent,
-  NgDocSidebarComponent,
-  provideNgDocApp,
-  provideMainPageProcessor,
-  providePageSkeleton,
-  provideSearchEngine,
-} from '@ng-doc/app';
+import { NG_DOC_DEFAULT_PAGE_PROCESSORS, NG_DOC_DEFAULT_PAGE_SKELETON, NgDocDefaultSearchEngine, NgDocNavbarComponent, NgDocRootComponent, NgDocSidebarComponent, provideNgDocApp, provideMainPageProcessor, providePageSkeleton, provideSearchEngine } from '@ng-doc/app';
 import { NG_DOC_ROUTING, provideNgDocContext } from '@ng-doc/generated';
 
 import { AppComponent } from './app.component';
@@ -254,8 +231,6 @@ import { AppComponent } from './app.component';
   declarations: [AppComponent],
   imports: [
     BrowserModule,
-    // To enable animations ( import NoopAnimationsModule if you don't like animations :( )
-    BrowserAnimationsModule,
     // Add generated routes to the application
     RouterModule.forRoot(NG_DOC_ROUTING, {
       // Enable anchor scrolling

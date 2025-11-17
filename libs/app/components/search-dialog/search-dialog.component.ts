@@ -24,7 +24,6 @@ import {
   NgDocSpinnerComponent,
   NgDocTagComponent,
   NgDocTextComponent,
-  popupAnimation,
   StatedObservable,
 } from '@ng-doc/ui-kit';
 import { NgDocListHost, NgDocOverlayRef } from '@ng-doc/ui-kit/classes';
@@ -36,7 +35,6 @@ export interface NgDocSearchDialogData {
 }
 
 @Component({
-  animations: [popupAnimation],
   selector: 'ng-doc-search-dialog',
   imports: [
     CommonModule,
@@ -62,10 +60,10 @@ export interface NgDocSearchDialogData {
       useExisting: forwardRef(() => NgDocSearchDialogComponent),
     },
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[@popupAnimation]': 'true',
+    'animate.enter': 'ng-doc-enter-animation',
   },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgDocSearchDialogComponent implements NgDocListHost {
   @ViewChild('inputElement', { read: ElementRef })
