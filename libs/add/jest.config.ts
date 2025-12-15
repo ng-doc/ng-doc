@@ -11,6 +11,7 @@ export default {
       },
     ],
   },
+  transformIgnorePatterns: ['/node_modules/(?!(parse5)/)'],
   setupFiles: ['../jest.polyfills.js'],
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/libs/add',
