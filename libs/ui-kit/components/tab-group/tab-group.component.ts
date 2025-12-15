@@ -13,20 +13,17 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { tabFadeAnimation } from '@ng-doc/ui-kit/animations';
 import {
   NgDocSelectionComponent,
   NgDocSelectionHostDirective,
   NgDocSelectionOriginDirective,
 } from '@ng-doc/ui-kit/components/selection';
-import { NgDocSmoothResizeComponent } from '@ng-doc/ui-kit/components/smooth-resize';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 import { startWith } from 'rxjs/operators';
 
 import { NgDocTabComponent } from './tab/tab.component';
 
 @Component({
-  animations: [tabFadeAnimation],
   selector: 'ng-doc-tab-group',
   templateUrl: './tab-group.component.html',
   styleUrls: ['./tab-group.component.scss'],
@@ -36,7 +33,6 @@ import { NgDocTabComponent } from './tab/tab.component';
     NgDocSelectionComponent,
     NgDocSelectionOriginDirective,
     PolymorpheusModule,
-    NgDocSmoothResizeComponent,
   ],
 })
 export class NgDocTabGroupComponent<T = number> implements AfterContentInit, AfterViewInit {

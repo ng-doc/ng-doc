@@ -28,7 +28,6 @@ export * from '@ng-doc/ui-kit/components/overlay-pointer';
 export * from '@ng-doc/ui-kit/components/pane';
 export * from '@ng-doc/ui-kit/components/selection';
 export * from '@ng-doc/ui-kit/components/sidenav';
-export * from '@ng-doc/ui-kit/components/smooth-resize';
 export * from '@ng-doc/ui-kit/components/spinner';
 export * from '@ng-doc/ui-kit/components/tab-group';
 export * from '@ng-doc/ui-kit/components/tab-routes-group';

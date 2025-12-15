@@ -8,7 +8,6 @@ import {
   NgDocContent,
   NgDocExpanderComponent,
   NgDocIconComponent,
-  NgDocSmoothResizeComponent,
   NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
 
@@ -21,7 +20,6 @@ import {
     NgTemplateOutlet,
     NgDocButtonIconComponent,
     NgDocTooltipDirective,
-    NgDocSmoothResizeComponent,
     NgDocIconComponent,
     NgDocExpanderComponent,
     NgDocCodeComponent,

@@ -5,6 +5,7 @@ export * from './color';
 export * from './content';
 export * from './define-value-fn';
 export * from './display-value-fn';
+export * from './element-animation';
 export * from './group-fn';
 export * from './handlers';
 export * from './icon-size';

@@ -26,7 +26,9 @@ export function isInputSignal(p: NgDocInputDeclaration): boolean {
   const typeDeclaration = p.getType().getSymbol()?.getDeclarations()[0];
 
   if (Node.isInterfaceDeclaration(typeDeclaration)) {
-    return ['InputSignal', 'InputSignalWithTransform'].includes(typeDeclaration.getName());
+    return ['InputSignal', 'InputSignalWithTransform', 'ModelSignal'].includes(
+      typeDeclaration.getName(),
+    );
   }
 
   return false;

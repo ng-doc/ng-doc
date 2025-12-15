@@ -168,7 +168,7 @@ export default MyPagePage;
         },
         host,
       ),
-    ).rejects.toThrowError();
+    ).rejects.toThrow();
   });
 
   it('should throw error if title has forbidden characters and --name was not provided', async () => {

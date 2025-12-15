@@ -4,7 +4,7 @@
   </div>
   <div class="ng-doc-sidenav-content">
     @if (opened && hasBackdrop) {
-      <div class="ng-doc-backdrop" @backdropFade (click)="closeEvent.emit()"></div>
+      <div class="ng-doc-backdrop" animate.enter="backdrop-enter" (click)="closeEvent.emit()"></div>
     }
 
     <ng-content></ng-content>

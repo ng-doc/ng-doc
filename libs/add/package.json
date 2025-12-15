@@ -10,8 +10,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@angular/cdk": ">=20.0.0 < 21.0.0",
-    "@angular-devkit/schematics": ">=20.0.0 < 21.0.0",
+    "@angular/cdk": ">=20.2.0 < 21.0.0",
+    "@angular-devkit/schematics": ">=20.2.0 < 21.0.0",
     "ng-morph": "4.8.4"
   }
 }

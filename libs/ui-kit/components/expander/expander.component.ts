@@ -1,18 +1,16 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { expandCollapseAnimation, preventInitialChildAnimations } from '@ng-doc/ui-kit/animations';
+import { AnimationCallbackEvent, ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { NgDocContent } from '@ng-doc/ui-kit/types';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 
 /** Component helps to expand or collapse content */
 @Component({
-  animations: [preventInitialChildAnimations, expandCollapseAnimation],
   selector: 'ng-doc-expander',
   templateUrl: './expander.component.html',
   styleUrls: ['./expander.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PolymorpheusModule],
 })
-export class NgDocExpanderComponent implements AfterViewInit {
+export class NgDocExpanderComponent {
   /** Change expand state */
   @Input()
   expanded: boolean = false;
@@ -24,17 +22,41 @@ export class NgDocExpanderComponent implements AfterViewInit {
   @Input()
   collapseMod: 'remove' | 'hide' = 'remove';
 
-  /** Closed height could be used to show preview of the content */
-  @Input()
-  from: number = 0;
-
-  protected animationDisabled = true;
-
-  ngAfterViewInit(): void {
-    this.animationDisabled = false;
-  }
-
   toggle(): void {
     this.expanded = !this.expanded;
+  }
+
+  protected enter(container: HTMLElement, event: AnimationCallbackEvent): void {
+    setTimeout(() => {
+      container
+        .animate(
+          [
+            { opacity: '0', maxHeight: 0 },
+            { opacity: '1', maxHeight: container.scrollHeight + 'px' },
+          ],
+          {
+            duration: 225,
+            easing: 'cubic-bezier(0.4,0.0,0.2,1)',
+            fill: 'forwards',
+          },
+        )
+        .finished.then(() => event.animationComplete());
+    });
+  }
+
+  protected leave(container: HTMLElement, event: AnimationCallbackEvent): void {
+    container
+      .animate(
+        [
+          { opacity: '1', maxHeight: container.offsetHeight + 'px' },
+          { opacity: '0', maxHeight: 0 },
+        ],
+        {
+          duration: 225,
+          easing: 'cubic-bezier(0.4,0.0,0.2,1)',
+          fill: 'forwards',
+        },
+      )
+      .finished.then(() => event.animationComplete());
   }
 }

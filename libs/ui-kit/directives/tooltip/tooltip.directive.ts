@@ -44,7 +44,7 @@ export class NgDocTooltipDirective implements AfterViewInit, OnDestroy {
   content: NgDocContent = '';
 
   @Input()
-  delay: number = 1000;
+  delay: number = 500;
 
   @Input()
   displayOrigin?: BaseElement<HTMLElement>;
