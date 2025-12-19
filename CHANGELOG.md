@@ -1,3 +1,16 @@
+# [20.2.0](https://github.com/ng-doc/ng-doc/compare/v20.1.1...v20.2.0) (2025-12-19)
+
+
+### Bug Fixes
+
+* **package:** bump version of Mermaid to 10.9.5 ([#310](https://github.com/ng-doc/ng-doc/issues/310)) ([2a06f6d](https://github.com/ng-doc/ng-doc/commit/2a06f6d5118fb2606bfc54bc86900c860b48fb71)), closes [#309](https://github.com/ng-doc/ng-doc/issues/309)
+
+
+### Features
+
+* **playgrounds:** add `model` support ([1a6631f](https://github.com/ng-doc/ng-doc/commit/1a6631f85ed6b966e78c953864c7f1c392812bdb)), closes [#300](https://github.com/ng-doc/ng-doc/issues/300)
+* remove `@angular/animation` dependency ([a45a5cb](https://github.com/ng-doc/ng-doc/commit/a45a5cbe094da99bc5219ead468b19226a0a9e76)), closes [#303](https://github.com/ng-doc/ng-doc/issues/303)
+
 ## [20.1.1](https://github.com/ng-doc/ng-doc/compare/v20.1.0...v20.1.1) (2025-11-02)
 
 
