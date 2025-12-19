@@ -45,7 +45,7 @@
   "homepage": "https://ng-doc.com",
   "private": true,
   "dependencies": {
-    "@angular-devkit/architect": "0.2100.3",
+    "@angular-devkit/architect": "0.2003.13",
     "@angular-devkit/schematics": "20.3.13",
     "@angular/cdk": "20.2.14",
     "@angular/common": "20.3.15",
