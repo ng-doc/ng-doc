@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "module": "CommonJS",
+    "module": "preserve",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,
@@ -13,7 +13,8 @@
     "emitDecoratorMetadata": false,
     "target": "ES2022",
     "lib": ["ES2022"],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "moduleResolution": "bundler"
   },
   "files": [],
   "include": [],
