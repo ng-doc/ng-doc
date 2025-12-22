@@ -6,6 +6,7 @@
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "extends": ["prettier", "plugin:jsdoc/recommended"],
+      "excludedFiles": ["**/__mocks__/**"],
       "plugins": ["eslint-plugin-jsdoc", "eslint-plugin-prefer-arrow", "simple-import-sort"],
       "rules": {
         "jsdoc/require-param-type": "off",
@@ -95,10 +96,12 @@
     {
       "files": ["*.js", "*.jsx"],
       "extends": ["plugin:@nx/javascript"],
+      "excludedFiles": ["**/__mocks__/**"],
       "rules": {}
     },
     {
       "files": ["*.spec.ts"],
+      "excludedFiles": ["**/__mocks__/**"],
       "rules": {
         "@typescript-eslint/no-non-null-assertion": "off"
       }

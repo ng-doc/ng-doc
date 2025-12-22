@@ -31,9 +31,9 @@ export class NgDocCheckedChangeDirective {
   }
 
   @HostListener('change', ['$event.target'])
-  onChange({ checked }: HTMLInputElement): void {
+  onChange(target: EventTarget | null): void {
     this.updateProperty('indeterminate', false);
-    this.ngDocCheckedChange.emit(checked);
+    this.ngDocCheckedChange.emit(target instanceof HTMLInputElement ? target.checked : false);
   }
 
   private updateProperty(property: 'checked' | 'indeterminate', value: boolean): void {
