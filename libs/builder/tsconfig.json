@@ -13,7 +13,8 @@
     "emitDecoratorMetadata": false,
     "target": "ES2022",
     "lib": ["ES2022"],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "moduleResolution": "node"
   },
   "files": [],
   "include": [],

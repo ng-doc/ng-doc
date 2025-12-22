@@ -1,6 +1,6 @@
 import { Directive, DOCUMENT, ElementRef, HostBinding, inject } from '@angular/core';
 import { DIControl, injectHostControl } from 'di-controls';
-import { DIControlConfig } from 'di-controls/controls/control';
+import { DIControlConfig } from 'di-controls/controls';
 import { Subject } from 'rxjs';
 
 @Directive()

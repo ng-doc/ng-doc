@@ -20,7 +20,11 @@
             "input": "libs/utils",
             "output": "./"
           }
-        ]
+        ],
+        "sourceMap": true,
+        "generateExportsField": true,
+        "babelUpwardRootMode": true,
+        "useLegacyTypescriptPlugin": true
       }
     },
     "build": {
