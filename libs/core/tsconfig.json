@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "module": "preserve",
+    "module": "CommonJS",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,
@@ -10,7 +10,7 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "target": "es2020",
-    "moduleResolution": "bundler"
+    "moduleResolution": "node"
   },
   "files": [],
   "include": ["**/*.ts"],
