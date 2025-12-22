@@ -1,7 +1,11 @@
 // Mock for ora module to avoid ES module issues in Jest
 module.exports = function ora(options) {
   return {
-    start: () => ({ succeed: () => {}, fail: () => {}, stop: () => {} }),
+    start: () => ({
+      succeed: () => {},
+      fail: () => {},
+      stop: () => {},
+    }),
     succeed: () => {},
     fail: () => {},
     stop: () => {},
