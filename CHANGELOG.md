@@ -1,3 +1,15 @@
+# [21.0.0](https://github.com/ng-doc/ng-doc/compare/v20.2.0...v21.0.0) (2025-12-22)
+
+
+### Features
+
+* **angular:** angular 21 support ([2497bc2](https://github.com/ng-doc/ng-doc/commit/2497bc2e9942d64aea2ab383802ad1cb07733dc9)), closes [#313](https://github.com/ng-doc/ng-doc/issues/313)
+
+
+### BREAKING CHANGES
+
+* **angular:** increase Angular major version
+
 # [20.2.0](https://github.com/ng-doc/ng-doc/compare/v20.1.1...v20.2.0) (2025-12-19)
 
 
