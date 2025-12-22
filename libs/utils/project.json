@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/utils",
   "projectType": "library",
+  "tags": ["type:lib", "lib:utils"],
   "targets": {
     "pre-build": {
       "executor": "@nx/rollup:rollup",
@@ -19,7 +20,11 @@
             "input": "libs/utils",
             "output": "./"
           }
-        ]
+        ],
+        "sourceMap": true,
+        "generateExportsField": true,
+        "babelUpwardRootMode": true,
+        "useLegacyTypescriptPlugin": true
       }
     },
     "build": {
@@ -50,6 +55,5 @@
         "jestConfig": "libs/utils/jest.config.ts"
       }
     }
-  },
-  "tags": ["type:lib", "lib:utils"]
+  }
 }

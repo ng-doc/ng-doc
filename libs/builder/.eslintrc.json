@@ -1,6 +1,6 @@
 {
   "extends": ["../../.eslintrc.json"],
-  "ignorePatterns": ["!**/*", "generated", "*.nunj"],
+  "ignorePatterns": ["!**/*", "generated", "*.nunj", "__mocks__/**/*"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],

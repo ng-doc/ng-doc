@@ -1,53 +1,54 @@
 {
-	"name": "core",
-	"$schema": "../../node_modules/nx/schemas/project-schema.json",
-	"sourceRoot": "libs/core",
-	"projectType": "library",
-	"targets": {
-		"pre-build": {
-			"executor": "@nx/js:tsc",
-			"outputs": ["{workspaceRoot}/dist/{projectRoot}"],
-			"options": {
-				"outputPath": "dist/libs/core",
-				"main": "libs/core/index.ts",
-				"tsConfig": "libs/core/tsconfig.lib.json",
-				"assets": ["libs/core/*.md"]
-			}
-		},
-		"build": {
-			"executor": "nx:run-commands",
-			"options": {
-				"commands": []
-			}
-		},
-		"schematics": {
-			"executor": "nx:run-commands",
-			"options": {
-				"commands": []
-			}
-		},
-		"publish": {
-			"executor": "nx:run-commands",
-			"options": {
-				"command": "node tools/scripts/publish.mjs core {args.ver} {args.tag}"
-			},
-			"dependsOn": [
-				{
-					"target": "build"
-				}
-			]
-		},
-		"lint": {
-			"executor": "@nx/eslint:lint",
-			"outputs": ["{options.outputFile}"]
-		},
-		"test": {
-			"executor": "@nx/jest:jest",
-			"outputs": ["{workspaceRoot}/coverage/libs/core"],
-			"options": {
-				"jestConfig": "libs/core/jest.config.ts"
-			}
-		}
-	},
-	"tags": ["type:lib", "lib:core"]
+  "name": "core",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/core",
+  "projectType": "library",
+  "tags": ["type:lib", "lib:core"],
+  "targets": {
+    "pre-build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "outputPath": "dist/libs/core",
+        "main": "libs/core/index.ts",
+        "tsConfig": "libs/core/tsconfig.lib.json",
+        "assets": ["libs/core/*.md"]
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": []
+      }
+    },
+    "schematics": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": []
+      }
+    },
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node tools/scripts/publish.mjs core {args.ver} {args.tag}"
+      },
+      "dependsOn": [
+        {
+          "target": "build"
+        }
+      ]
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/core"],
+      "options": {
+        "jestConfig": "libs/core/jest.config.ts",
+        "tsConfig": "libs/core/tsconfig.spec.json"
+      }
+    }
+  }
 }

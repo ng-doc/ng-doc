@@ -10,7 +10,7 @@ import {
   OramaWithHighlight,
   searchWithHighlight,
 } from '@orama/plugin-match-highlight';
-import * as stemmer from '@orama/stemmers';
+import { stemmer } from '@orama/stemmers/english';
 import { from, Observable } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 
@@ -27,9 +27,9 @@ type OramaDb = OramaWithHighlight<
  */
 export interface NgDocDefaultSearchEngineOptions {
   /**
-   * The language to use for the search engine.
+   * The language to use for the search engine. See https://www.npmjs.com/package/@orama/stemmers for available languages
    */
-  stemmer?: typeof stemmer.stemmer;
+  stemmer?: typeof stemmer;
   /**
    * Specifies the maximum distance (following the Levenshtein algorithm) between the term and the searchable property.
    * (doesn't work with `exact` option)

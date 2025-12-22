@@ -1,21 +1,19 @@
 :host {
-	display: block;
-	height: var(--ng-doc-demo-pane-height);
-	margin: var(--ng-doc-demo-pane-margin);
+  display: block;
+  height: var(--ng-doc-demo-pane-height);
+  margin: var(--ng-doc-demo-pane-margin);
 
-	--ng-doc-code-margin: 0;
-	--ng-doc-code-border-radius: 0;
-	--ng-doc-code-border: none;
-	--ng-doc-smooth-resize-height: var(--ng-doc-demo-pane-height);
-	--ng-doc-smooth-resize-max-height: 100%;
-	--ng-doc-tab-group-tabs-background: var(--ng-doc-base-2);
-	--ng-doc-tab-group-border: none;
-	--ng-doc-tab-group-border-radius: 0;
+  --ng-doc-code-margin: 0;
+  --ng-doc-code-border-radius: 0;
+  --ng-doc-code-border: none;
+  --ng-doc-tab-group-tabs-background: var(--ng-doc-base-2);
+  --ng-doc-tab-group-border: none;
+  --ng-doc-tab-group-border-radius: 0;
 
-	ng-doc-tab-group,
-	ng-doc-code,
-	ng-doc-pane {
-		width: 100%;
-		height: 100%;
-	}
+  ng-doc-tab-group,
+  ng-doc-code,
+  ng-doc-pane {
+    width: 100%;
+    height: 100%;
+  }
 }

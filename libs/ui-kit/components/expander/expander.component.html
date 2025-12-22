@@ -1,7 +1,22 @@
-@if (expanded || from || collapseMod === 'hide') {
+@if (collapseMod === 'hide') {
   <div
-    [@.disabled]="animationDisabled"
-    [@expandCollapse]="{ value: expanded, params: { from: from + 'px', opacity: from ? 1 : 0 } }">
-    <ng-container *polymorpheusOutlet="content as text">{{ text }}</ng-container>
+    class="ng-doc-expander-container"
+    [attr.inert]="expanded ? null : ''"
+    [class.expanded]="expanded">
+    <div class="ng-doc-expander-content">
+      <ng-container *polymorpheusOutlet="content as text">{{ text }}</ng-container>
+    </div>
   </div>
+} @else {
+  @if (expanded) {
+    <div
+      [attr.inert]="expanded ? null : ''"
+      (animate.enter)="enter(container, $event)"
+      (animate.leave)="leave(container, $event)"
+      #container>
+      <div>
+        <ng-container *polymorpheusOutlet="content as text">{{ text }}</ng-container>
+      </div>
+    </div>
+  }
 }

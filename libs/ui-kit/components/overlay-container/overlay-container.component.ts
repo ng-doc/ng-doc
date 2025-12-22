@@ -1,4 +1,3 @@
-import { AnimationBuilder, AnimationMetadata, AnimationPlayer } from '@angular/animations';
 import {
   ConnectedOverlayPositionChange,
   FlexibleConnectedPositionStrategy,
@@ -58,7 +57,6 @@ export class NgDocOverlayContainerComponent
   private documentRef = inject<Document>(DOCUMENT);
   private changeDetectorRef = inject(ChangeDetectorRef);
   private ngZone = inject(NgZone);
-  private animationBuilder = inject(AnimationBuilder);
 
   @Input()
   content: NgDocContent = '';
@@ -104,7 +102,8 @@ export class NgDocOverlayContainerComponent
   }
 
   ngAfterViewInit(): void {
-    this.runAnimation(this.config?.openAnimation || []);
+    const [keyframes, options] = this.config?.openAnimation || [];
+    this.runAnimation(keyframes ?? [], options);
   }
 
   @HostBinding('attr.data-ng-doc-overlay-with-contact-border')
@@ -130,7 +129,8 @@ export class NgDocOverlayContainerComponent
 
   close(): void {
     if (this.isOpened) {
-      this.runAnimation(this.config?.closeAnimation || [], true);
+      const [keyframes, options] = this.config?.closeAnimation || [];
+      this.runAnimation(keyframes ?? [], options, true);
       this.isOpened = false;
       this.changeDetectorRef.markForCheck();
     }
@@ -149,13 +149,16 @@ export class NgDocOverlayContainerComponent
     this.changeDetectorRef.markForCheck();
   }
 
-  private runAnimation(animation: AnimationMetadata[], close: boolean = false): void {
-    const player: AnimationPlayer = this.animationBuilder
-      .build(animation)
-      .create(this.elementRef.nativeElement);
-    player.onStart(() => this.animationEvent$.next(close ? 'beforeClose' : 'beforeOpen'));
-    player.onDone(() => this.animationEvent$.next(close ? 'afterClose' : 'afterOpen'));
-    player.play();
+  private runAnimation(
+    keyframes: Keyframe[] | PropertyIndexedKeyframes,
+    options?: KeyframeAnimationOptions,
+    close: boolean = false,
+  ): void {
+    this.animationEvent$.next(close ? 'beforeClose' : 'beforeOpen');
+
+    this.elementRef.nativeElement
+      .animate(keyframes, options)
+      .finished.then(() => this.animationEvent$.next(close ? 'afterClose' : 'afterOpen'));
   }
 
   ngOnDestroy(): void {

@@ -28,7 +28,6 @@ import {
 import { objectKeys } from '@ng-doc/core/helpers/object-keys';
 import { stringify } from '@ng-doc/core/helpers/stringify';
 import { NgDocPlaygroundConfig, NgDocPlaygroundProperties } from '@ng-doc/core/interfaces';
-import { NgDocSmoothResizeComponent } from '@ng-doc/ui-kit';
 import { Subject } from 'rxjs';
 import { startWith, takeUntil } from 'rxjs/operators';
 
@@ -40,7 +39,7 @@ import { NgDocPlaygroundForm } from '../playground-form';
   templateUrl: './playground-demo.component.html',
   styleUrls: ['./playground-demo.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgDocDemoDisplayerComponent, NgDocSmoothResizeComponent],
+  imports: [NgDocDemoDisplayerComponent],
 })
 export class NgDocPlaygroundDemoComponent<
     T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties,

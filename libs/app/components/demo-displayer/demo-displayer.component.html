@@ -16,9 +16,7 @@
           (click)="expanded = !expanded"
           [ngDocTooltip]="tooltipContent">
           <ng-template #tooltipContent>
-            <ng-doc-smooth-resize [trigger]="expandTooltipText">
-              {{ expandTooltipText }}
-            </ng-doc-smooth-resize>
+            {{ expandTooltipText }}
           </ng-template>
           <ng-doc-icon icon="code"></ng-doc-icon>
         </button>

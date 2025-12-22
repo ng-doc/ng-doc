@@ -1,11 +1,13 @@
 {
-	"extends": "./tsconfig.json",
-	"compilerOptions": {
-		"outDir": "../../dist/out-tsc",
-		"module": "commonjs",
-		"types": ["jest", "node"],
-		"resolveJsonModule": true
-	},
-	"files": ["test-setup.ts"],
-	"include": ["jest.config.ts", "**/*.test.ts", "**/*.spec.ts", "**/*.d.ts"]
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc",
+    "module": "preserve",
+    "types": ["jest", "node"],
+    "resolveJsonModule": true,
+    "moduleResolution": "bundler",
+    "isolatedModules": true
+  },
+  "files": ["test-setup.ts"],
+  "include": ["jest.config.ts", "**/*.test.ts", "**/*.spec.ts", "**/*.d.ts"]
 }

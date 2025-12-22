@@ -3,7 +3,6 @@ import { NgDocThemeService } from '@ng-doc/app/services/theme';
 import {
   NgDocButtonIconComponent,
   NgDocIconComponent,
-  NgDocSmoothResizeComponent,
   NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
 
@@ -17,12 +16,7 @@ interface ToggleTheme {
   templateUrl: './theme-toggle.component.html',
   styleUrls: ['./theme-toggle.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    NgDocButtonIconComponent,
-    NgDocTooltipDirective,
-    NgDocIconComponent,
-    NgDocSmoothResizeComponent,
-  ],
+  imports: [NgDocButtonIconComponent, NgDocTooltipDirective, NgDocIconComponent],
 })
 export class NgDocThemeToggleComponent {
   protected readonly themes: ToggleTheme[] = [

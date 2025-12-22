@@ -1,51 +1,51 @@
 {
-	"name": "ui-kit",
-	"$schema": "../../node_modules/nx/schemas/project-schema.json",
-	"projectType": "library",
-	"sourceRoot": "libs/ui-kit",
-	"prefix": "ng-doc",
-	"targets": {
-		"pre-build": {
-			"executor": "@nx/angular:package",
-			"outputs": ["{workspaceRoot}/dist/{projectRoot}"],
-			"options": {
-				"project": "libs/ui-kit/ng-package.json"
-			},
-			"configurations": {
-				"production": {
-					"tsConfig": "libs/ui-kit/tsconfig.lib.prod.json"
-				},
-				"development": {
-					"tsConfig": "libs/ui-kit/tsconfig.lib.json"
-				}
-			},
-			"defaultConfiguration": "production"
-		},
-		"build": {
-			"executor": "nx:run-commands",
-			"outputs": ["{workspaceRoot}/dist/libs/ui-kit/styles"],
-			"options": {
-				"commands": [
-					"sass --no-source-map libs/ui-kit/styles/main.scss dist/libs/ui-kit/styles/main.css"
-				]
-			}
-		},
-		"schematics": {
-			"executor": "nx:run-commands",
-			"options": {
-				"commands": []
-			}
-		},
-		"test": {
-			"executor": "@nx/jest:jest",
-			"outputs": ["{workspaceRoot}/coverage/libs/ui-kit"],
-			"options": {
-				"jestConfig": "libs/ui-kit/jest.config.ts"
-			}
-		},
-		"lint": {
-			"executor": "@nx/eslint:lint"
-		}
-	},
-	"tags": ["type:lib", "lib:ui-kit"]
+  "name": "ui-kit",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/ui-kit",
+  "prefix": "ng-doc",
+  "tags": ["type:lib", "lib:ui-kit"],
+  "targets": {
+    "pre-build": {
+      "executor": "@nx/angular:package",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "libs/ui-kit/ng-package.json",
+        "tsConfig": "libs/ui-kit/tsconfig.lib.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/ui-kit/tsconfig.lib.prod.json"
+        },
+        "development": {}
+      },
+      "defaultConfiguration": "production"
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/libs/ui-kit/styles"],
+      "options": {
+        "commands": [
+          "sass --no-source-map libs/ui-kit/styles/main.scss dist/libs/ui-kit/styles/main.css"
+        ]
+      }
+    },
+    "schematics": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": []
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/ui-kit"],
+      "options": {
+        "jestConfig": "libs/ui-kit/jest.config.ts",
+        "tsConfig": "libs/ui-kit/tsconfig.spec.json"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
 }

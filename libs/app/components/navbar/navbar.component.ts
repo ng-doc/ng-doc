@@ -13,7 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgDocSearchComponent } from '@ng-doc/app/components/search';
 import { NgDocSidebarService } from '@ng-doc/app/services';
 import { NgDocButtonIconComponent, NgDocIconComponent, ngDocZoneOptimize } from '@ng-doc/ui-kit';
-import { WINDOW } from '@ng-web-apis/common';
+import { WA_WINDOW } from '@ng-web-apis/common';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 import { combineLatest, fromEvent } from 'rxjs';
 import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
@@ -29,7 +29,7 @@ import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
   imports: [PolymorpheusModule, NgDocSearchComponent, NgDocButtonIconComponent, NgDocIconComponent],
 })
 export class NgDocNavbarComponent {
-  private readonly window = inject<Window>(WINDOW);
+  private readonly window = inject<Window>(WA_WINDOW);
   private readonly ngZone = inject(NgZone);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   protected readonly sidebarService = inject(NgDocSidebarService);

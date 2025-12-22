@@ -2,11 +2,11 @@
   "name": "@ng-doc/app",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": ">=20.0.0 < 21.0.0",
-    "@angular/core": ">=20.0.0 < 21.0.0",
-    "@angular/cdk": ">=20.0.0 < 21.0.0",
-    "@angular/router": ">=20.0.0 < 21.0.0",
-    "@ng-web-apis/common": "2.0.1",
+    "@angular/common": ">=21.0.0 < 22.0.0",
+    "@angular/core": ">=21.0.0 < 22.0.0",
+    "@angular/cdk": ">=21.0.0 < 22.0.0",
+    "@angular/router": ">=21.0.0 < 22.0.0",
+    "@ng-web-apis/common": ">=4",
     "rxjs": "^7.0.0",
     "di-controls": "2.1.0"
   },
@@ -16,7 +16,7 @@
     "@ng-doc/ui-kit": "0.0.0",
     "@orama/plugin-match-highlight": "2.0.17",
     "@orama/stemmers": "2.0.17",
-    "mermaid": "10.9.3"
+    "mermaid": "10.9.5"
   },
   "publishConfig": {
     "access": "public"

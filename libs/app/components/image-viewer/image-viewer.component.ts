@@ -1,4 +1,3 @@
-import { animate, group, query, style } from '@angular/animations';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -54,49 +53,79 @@ export class NgDocImageViewerComponent {
       hasBackdrop: true,
       backdropClass: 'ng-doc-blur-backdrop',
       openAnimation: [
-        style({ position: 'fixed', width, height, top, left, transform: 'translate(0%, 0)' }),
-        group([
-          animate(
-            '300ms cubic-bezier(0.25, 0.8, 0.25, 1)',
-            style({
-              width: `${newWidth}px`,
-              height: `${newHeight}px`,
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-            }),
-          ),
-          query('.ng-doc-image-container', [
-            style({ padding: 0 }),
-            animate('300ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({ padding: '16px' })),
-          ]),
-        ]),
+        [
+          {
+            position: 'fixed',
+            width: `${width}px`,
+            height: `${height}px`,
+            top: `${top}px`,
+            left: `${left}px`,
+            transform: 'translate(0%, 0)',
+          },
+          {
+            position: 'fixed',
+            width: `${newWidth}px`,
+            height: `${newHeight}px`,
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+          },
+        ],
+        {
+          duration: 300,
+          easing: 'cubic-bezier(0.25, 0.8, 0.25, 1)',
+        },
+        //
+        // group([
+        //   animate(
+        //     '300ms cubic-bezier(0.25, 0.8, 0.25, 1)',
+        //     style({
+        //       width: `${newWidth}px`,
+        //       height: `${newHeight}px`,
+        //       top: '50%',
+        //       left: '50%',
+        //       transform: 'translate(-50%, -50%)',
+        //     }),
+        //   ),
+        //   query('.ng-doc-image-container', [
+        //     style({ padding: 0 }),
+        //     animate('300ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({ padding: '16px' })),
+        //   ]),
+        // ]),
       ],
-      closeAnimation: [
-        style({
-          position: 'fixed',
-          width: `${newWidth}px`,
-          height: `${newHeight}px`,
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-        }),
-        group([
-          animate(
-            '300ms cubic-bezier(0.25, 0.8, 0.25, 1)',
-            style({ width, height, top, left, transform: 'translate(0%, 0)' }),
-          ),
-          query(
-            '.ng-doc-image-container',
-            animate('300ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({ padding: 0 })),
-          ),
-        ]),
-      ],
+      // closeAnimation: [
+      //   style({
+      //     position: 'fixed',
+      //     width: `${newWidth}px`,
+      //     height: `${newHeight}px`,
+      //     top: '50%',
+      //     left: '50%',
+      //     transform: 'translate(-50%, -50%)',
+      //   }),
+      //   group([
+      //     animate(
+      //       '300ms cubic-bezier(0.25, 0.8, 0.25, 1)',
+      //       style({ width, height, top, left, transform: 'translate(0%, 0)' }),
+      //     ),
+      //     query(
+      //       '.ng-doc-image-container',
+      //       animate('300ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({ padding: 0 })),
+      //     ),
+      //   ]),
+      // ],
     });
 
     this.overlayRef.afterClose().subscribe(() => {
       this.overlayRef = undefined;
       this.changeDetectorRef.markForCheck();
+    });
+  }
+
+  protected enterContainer(element: HTMLElement): void {
+    console.log('enterContainer');
+    element.animate([{ padding: 0 }, { padding: '16px' }], {
+      duration: 300,
+      easing: 'cubic-bezier(0.25, 0.8, 0.25, 1)',
     });
   }
 }

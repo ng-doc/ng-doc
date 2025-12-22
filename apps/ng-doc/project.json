@@ -4,6 +4,8 @@
   "projectType": "application",
   "sourceRoot": "apps/ng-doc/src",
   "prefix": "ng-doc",
+  "tags": ["type:app", "app:ng-doc"],
+  "implicitDependencies": ["builder"],
   "targets": {
     "build": {
       "executor": "./dist/libs/builder:application",
@@ -147,10 +149,9 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/apps/ng-doc"],
       "options": {
-        "jestConfig": "apps/ng-doc/jest.config.ts"
+        "jestConfig": "apps/ng-doc/jest.config.ts",
+        "tsConfig": "apps/ng-doc/tsconfig.spec.json"
       }
     }
-  },
-  "tags": ["type:app", "app:ng-doc"],
-  "implicitDependencies": ["builder"]
+  }
 }
