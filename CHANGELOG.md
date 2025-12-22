@@ -1,3 +1,23 @@
+# [20.0.0-beta.3](https://github.com/ng-doc/ng-doc/compare/v20.0.0-beta.2...v20.0.0-beta.3) (2025-12-22)
+
+
+### Bug Fixes
+
+* add missing nested category file imports ([#285](https://github.com/ng-doc/ng-doc/issues/285)) ([4dd6984](https://github.com/ng-doc/ng-doc/commit/4dd6984354cf3f50f892bf4af7fb3b491b276d62)), closes [#284](https://github.com/ng-doc/ng-doc/issues/284)
+* make shiki instance static in highlighter service ([#291](https://github.com/ng-doc/ng-doc/issues/291)) ([d9bbeaf](https://github.com/ng-doc/ng-doc/commit/d9bbeafe107dc626c6aa7bebb74ee226f7d7495f)), closes [#277](https://github.com/ng-doc/ng-doc/issues/277)
+* ng-doc-ignore-line regex was working only for one digit number ([#288](https://github.com/ng-doc/ng-doc/issues/288)) ([b4f0482](https://github.com/ng-doc/ng-doc/commit/b4f0482c2d900e36cf96948acd4cafcebb53742a)), closes [#283](https://github.com/ng-doc/ng-doc/issues/283)
+* ng-doc-tab was being removed when using grouped code blocks on guide pages ([#292](https://github.com/ng-doc/ng-doc/issues/292)) ([fba1054](https://github.com/ng-doc/ng-doc/commit/fba1054f69598437e180209658364c504f1b3beb))
+* **package:** bump version of Mermaid to 10.9.5 ([#310](https://github.com/ng-doc/ng-doc/issues/310)) ([2a06f6d](https://github.com/ng-doc/ng-doc/commit/2a06f6d5118fb2606bfc54bc86900c860b48fb71)), closes [#309](https://github.com/ng-doc/ng-doc/issues/309)
+* upgrade to @ng-web-apis/common@4.x and refactor deprecations ([#306](https://github.com/ng-doc/ng-doc/issues/306)) ([09917b1](https://github.com/ng-doc/ng-doc/commit/09917b18b5c030679eef48a66264e338f6b2a88e))
+* using base-href with ssg was breaking build ([#290](https://github.com/ng-doc/ng-doc/issues/290)) ([215778e](https://github.com/ng-doc/ng-doc/commit/215778e1fdfaa08d14d83fe786ce7c6dd91531e9)), closes [#263](https://github.com/ng-doc/ng-doc/issues/263)
+
+
+### Features
+
+* make category div a html button ([#289](https://github.com/ng-doc/ng-doc/issues/289)) ([ef3b71d](https://github.com/ng-doc/ng-doc/commit/ef3b71d465cce4c656e07ebce62cad854334fe0d)), closes [#257](https://github.com/ng-doc/ng-doc/issues/257)
+* **playgrounds:** add `model` support ([1a6631f](https://github.com/ng-doc/ng-doc/commit/1a6631f85ed6b966e78c953864c7f1c392812bdb)), closes [#300](https://github.com/ng-doc/ng-doc/issues/300)
+* remove `@angular/animation` dependency ([a45a5cb](https://github.com/ng-doc/ng-doc/commit/a45a5cbe094da99bc5219ead468b19226a0a9e76)), closes [#303](https://github.com/ng-doc/ng-doc/issues/303)
+
 # [20.0.0-beta.2](https://github.com/ng-doc/ng-doc/compare/v20.0.0-beta.1...v20.0.0-beta.2) (2025-06-15)
 
 
