@@ -2,6 +2,7 @@ import {
   ConnectedOverlayPositionChange,
   FlexibleConnectedPositionStrategy,
 } from '@angular/cdk/overlay';
+import { isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -15,6 +16,7 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
+  PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
 import { NgDocFocusControlComponent } from '@ng-doc/ui-kit/components/focus-control';
@@ -57,6 +59,7 @@ export class NgDocOverlayContainerComponent
   private documentRef = inject<Document>(DOCUMENT);
   private changeDetectorRef = inject(ChangeDetectorRef);
   private ngZone = inject(NgZone);
+  private platformId = inject(PLATFORM_ID);
 
   @Input()
   content: NgDocContent = '';
@@ -155,6 +158,11 @@ export class NgDocOverlayContainerComponent
     close: boolean = false,
   ): void {
     this.animationEvent$.next(close ? 'beforeClose' : 'beforeOpen');
+
+    if (!isPlatformBrowser(this.platformId)) {
+      this.animationEvent$.next(close ? 'afterClose' : 'afterOpen');
+      return;
+    }
 
     this.elementRef.nativeElement
       .animate(keyframes, options)
