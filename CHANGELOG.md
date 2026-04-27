@@ -1,3 +1,10 @@
+## [21.0.1](https://github.com/ng-doc/ng-doc/compare/v21.0.0...v21.0.1) (2026-04-27)
+
+
+### Bug Fixes
+
+* **ui-kit:** guard nativeElement.animate() against SSR in overlay container ([#324](https://github.com/ng-doc/ng-doc/issues/324)) ([2d28d39](https://github.com/ng-doc/ng-doc/commit/2d28d393a367deffe7ce108e8dd3f97516b556d4)), closes [#323](https://github.com/ng-doc/ng-doc/issues/323)
+
 # [21.0.0](https://github.com/ng-doc/ng-doc/compare/v20.2.0...v21.0.0) (2025-12-22)
 
 
