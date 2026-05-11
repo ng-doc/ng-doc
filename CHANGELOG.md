@@ -1,3 +1,10 @@
+## [21.0.2](https://github.com/ng-doc/ng-doc/compare/v21.0.1...v21.0.2) (2026-05-11)
+
+
+### Bug Fixes
+
+* **app:** types declaration error ([#325](https://github.com/ng-doc/ng-doc/issues/325)) ([3d5efef](https://github.com/ng-doc/ng-doc/commit/3d5efefb9253cd22e507caf15f6ca4c04492bcb4)), closes [#317](https://github.com/ng-doc/ng-doc/issues/317)
+
 ## [21.0.1](https://github.com/ng-doc/ng-doc/compare/v21.0.0...v21.0.1) (2026-04-27)
 
 
