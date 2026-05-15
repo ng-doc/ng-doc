@@ -31,11 +31,11 @@ export function entriesEmitter(
     map((events) =>
       events
         .map((filePath) => {
-          if (minimatch(filePath, PAGE_PATTERN)) {
+          if (minimatch(filePath, PAGE_PATTERN, { dot: true })) {
             return pageBuilder(context, path.resolve(filePath));
           }
 
-          if (minimatch(filePath, API_PATTERN)) {
+          if (minimatch(filePath, API_PATTERN, { dot: true })) {
             return apiBuilder(context, path.resolve(filePath));
           }
 
