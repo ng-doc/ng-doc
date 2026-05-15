@@ -35,7 +35,7 @@ export function createEntryMetadata<T extends FileEntry>(
   const route = getEntryRoute(entry, entryPath);
   const categorySourceFile = entry.category && getCategorySourceFile(sourceFile);
   const outDir = getEntryOutDir(context, entry, entryPath);
-  const isCategory = minimatch(entryPath, CATEGORY_PATTERN);
+  const isCategory = minimatch(entryPath, CATEGORY_PATTERN, { dot: true });
 
   return {
     id: `entry${Math.random().toString(36).substring(2)}`,

@@ -48,5 +48,5 @@ export type ParentEntryMetadata<T extends Entry> = T extends NgDocPage
  * @param entry
  */
 export function isPageEntryMetadata(entry: EntryMetadata): entry is EntryMetadata<NgDocPage> {
-  return minimatch(entry.path, PAGE_PATTERN);
+  return minimatch(entry.path, PAGE_PATTERN, { dot: true });
 }
