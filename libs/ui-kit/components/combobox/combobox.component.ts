@@ -16,7 +16,7 @@ import { NgDocFocusCatcherDirective } from '@ng-doc/ui-kit/directives/focus-catc
 import { NgDocInputStringDirective } from '@ng-doc/ui-kit/directives/input-string';
 import { NgDocContextWithImplicit } from '@ng-doc/ui-kit/interfaces';
 import { NgDocContent } from '@ng-doc/ui-kit/types';
-import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
+import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { DIControl, provideHostControl } from 'di-controls';
 
 @Component({
@@ -36,7 +36,7 @@ import { DIControl, provideHostControl } from 'di-controls';
     NgDocInputWrapperComponent,
     NgDocFocusCatcherDirective,
     NgDocInputStringDirective,
-    PolymorpheusModule,
+    PolymorpheusOutlet,
     NgDocClearControlComponent,
     NgDocDropdownComponent,
     NgTemplateOutlet,

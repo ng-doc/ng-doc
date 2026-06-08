@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { NgDocSidebarService } from '@ng-doc/app/services';
 import { NgDocContent, NgDocSidenavComponent } from '@ng-doc/ui-kit';
-import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
+import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 
 /**
  * Directive uses for providing custom navbar, you should mark element with this directive
@@ -56,7 +56,7 @@ export class NgDocCustomSidebarDirective {}
   styleUrls: ['./root.component.scss'],
   providers: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgDocSidenavComponent, PolymorpheusModule, AsyncPipe],
+  imports: [NgDocSidenavComponent, PolymorpheusOutlet, AsyncPipe],
 })
 export class NgDocRootComponent {
   /**

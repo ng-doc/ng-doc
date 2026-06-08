@@ -18,7 +18,7 @@ import {
   NgDocSelectionHostDirective,
   NgDocSelectionOriginDirective,
 } from '@ng-doc/ui-kit/components/selection';
-import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
+import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { startWith } from 'rxjs/operators';
 
 import { NgDocTabComponent } from './tab/tab.component';
@@ -32,7 +32,7 @@ import { NgDocTabComponent } from './tab/tab.component';
     NgDocSelectionHostDirective,
     NgDocSelectionComponent,
     NgDocSelectionOriginDirective,
-    PolymorpheusModule,
+    PolymorpheusOutlet,
   ],
 })
 export class NgDocTabGroupComponent<T = number> implements AfterContentInit, AfterViewInit {

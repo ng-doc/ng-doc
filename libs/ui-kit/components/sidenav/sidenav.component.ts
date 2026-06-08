@@ -7,14 +7,14 @@ import {
   Output,
 } from '@angular/core';
 import { NgDocContent } from '@ng-doc/ui-kit/types';
-import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
+import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 
 @Component({
   selector: 'ng-doc-sidenav',
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PolymorpheusModule],
+  imports: [PolymorpheusOutlet],
   host: {
     '[attr.data-ng-doc-sidebar]': '!!sidebar',
   },

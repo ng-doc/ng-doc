@@ -68,7 +68,7 @@
     "@schematics/angular": "21.0.4",
     "@shikijs/rehype": "1.10.3",
     "@stackblitz/sdk": "1.6.0",
-    "@tinkoff/ng-polymorpheus": "4.3.0",
+    "@taiga-ui/polymorpheus": "5.0.1",
     "@types/svgo": "2.6.3",
     "chalk": "5.2.0",
     "cosmiconfig": "8.2.0",

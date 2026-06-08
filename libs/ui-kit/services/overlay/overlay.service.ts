@@ -13,7 +13,7 @@ import { NgDocOverlayRef } from '@ng-doc/ui-kit/classes';
 import { NgDocOverlayConfig, NgDocOverlayContainer } from '@ng-doc/ui-kit/interfaces';
 import { NgDocContent, NgDocOverlayOrigin, NgDocOverlayPosition } from '@ng-doc/ui-kit/types';
 import { NgDocOverlayUtils } from '@ng-doc/ui-kit/utils';
-import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { take } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
