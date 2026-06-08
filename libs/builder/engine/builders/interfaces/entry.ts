@@ -27,7 +27,7 @@ export type Entry = ContentEntry | NgDocCategory;
  * @param filePath
  */
 export function isPageEntry(entry: Entry, filePath: string): entry is NgDocPage {
-  return minimatch(filePath, PAGE_PATTERN);
+  return minimatch(filePath, PAGE_PATTERN, { dot: true });
 }
 
 /**
@@ -36,7 +36,7 @@ export function isPageEntry(entry: Entry, filePath: string): entry is NgDocPage 
  * @param filePath
  */
 export function isCategoryEntry(entry: Entry, filePath: string): entry is NgDocCategory {
-  return minimatch(filePath, CATEGORY_PATTERN);
+  return minimatch(filePath, CATEGORY_PATTERN, { dot: true });
 }
 
 /**
@@ -45,5 +45,5 @@ export function isCategoryEntry(entry: Entry, filePath: string): entry is NgDocC
  * @param filePath
  */
 export function isApiEntry(entry: Entry, filePath: string): entry is NgDocApi {
-  return minimatch(filePath, API_PATTERN);
+  return minimatch(filePath, API_PATTERN, { dot: true });
 }
