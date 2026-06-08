@@ -1,3 +1,10 @@
+## [21.0.4](https://github.com/ng-doc/ng-doc/compare/v21.0.3...v21.0.4) (2026-06-08)
+
+
+### Bug Fixes
+
+* update polymorpheus to rebranded version ([#329](https://github.com/ng-doc/ng-doc/issues/329)) ([b259421](https://github.com/ng-doc/ng-doc/commit/b2594219f04f5982c7ffc208fa44062a42240a75))
+
 ## [21.0.3](https://github.com/ng-doc/ng-doc/compare/v21.0.2...v21.0.3) (2026-06-08)
 
 
