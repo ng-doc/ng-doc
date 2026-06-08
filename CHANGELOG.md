@@ -1,3 +1,10 @@
+## [21.0.3](https://github.com/ng-doc/ng-doc/compare/v21.0.2...v21.0.3) (2026-06-08)
+
+
+### Bug Fixes
+
+* **builder:** pass { dot: true } to minimatch to support dot-directories in file paths ([#327](https://github.com/ng-doc/ng-doc/issues/327)) ([65f7f23](https://github.com/ng-doc/ng-doc/commit/65f7f2353efb48bb050650b01cf43ef0c62ca9a0)), closes [#326](https://github.com/ng-doc/ng-doc/issues/326)
+
 ## [21.0.2](https://github.com/ng-doc/ng-doc/compare/v21.0.1...v21.0.2) (2026-05-11)
 
 
