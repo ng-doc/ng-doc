@@ -11,7 +11,7 @@ import { NG_DOC_DEFAULT_STRINGIFY } from '@ng-doc/ui-kit/constants';
 import { ngDocMakePure } from '@ng-doc/ui-kit/decorators';
 import { NgDocContextWithImplicit } from '@ng-doc/ui-kit/interfaces';
 import { NgDocContent, NgDocGroupFn } from '@ng-doc/ui-kit/types';
-import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
+import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 
 @Component({
   selector: 'ng-doc-data-list-group',
@@ -21,7 +21,7 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
   imports: [
     NgDocListComponent,
     NgDocOptionGroupComponent,
-    PolymorpheusModule,
+    PolymorpheusOutlet,
     NgDocOptionGroupHeaderDirective,
     NgDocOptionComponent,
     NgDocTextComponent,

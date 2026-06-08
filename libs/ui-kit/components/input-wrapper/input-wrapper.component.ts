@@ -18,7 +18,7 @@ import { ngDocMakePure } from '@ng-doc/ui-kit/decorators';
 import { NgDocFocusCatcherDirective } from '@ng-doc/ui-kit/directives/focus-catcher';
 import { NgDocContextWithImplicit } from '@ng-doc/ui-kit/interfaces';
 import { NgDocContent, NgDocTextAlign } from '@ng-doc/ui-kit/types';
-import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
+import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 
 @Component({
   selector: 'ng-doc-input-wrapper',
@@ -35,7 +35,7 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
     NgDocWrapperComponent,
     NgDocFocusCatcherDirective,
     NgDocFloatedBorderComponent,
-    PolymorpheusModule,
+    PolymorpheusOutlet,
   ],
 })
 export class NgDocInputWrapperComponent<T, B = unknown>

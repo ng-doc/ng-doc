@@ -1,6 +1,6 @@
 import { AnimationCallbackEvent, ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { NgDocContent } from '@ng-doc/ui-kit/types';
-import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
+import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 
 /** Component helps to expand or collapse content */
 @Component({
@@ -8,7 +8,7 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
   templateUrl: './expander.component.html',
   styleUrls: ['./expander.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PolymorpheusModule],
+  imports: [PolymorpheusOutlet],
 })
 export class NgDocExpanderComponent {
   /** Change expand state */

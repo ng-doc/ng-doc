@@ -6,7 +6,7 @@
     "@angular/core": ">=21.0.0 < 22.0.0",
     "@angular/cdk": ">=21.0.0 < 22.0.0",
     "di-controls": "2.1.0",
-    "@tinkoff/ng-polymorpheus": "4.3.0",
+    "@taiga-ui/polymorpheus": "^5.0.0",
     "rxjs": "^7.0.0"
   },
   "dependencies": {

@@ -35,7 +35,7 @@ import {
   NgDocVerticalAlign,
 } from '@ng-doc/ui-kit/types';
 import { NgDocFocusUtils, NgDocOverlayUtils } from '@ng-doc/ui-kit/utils';
-import { PolymorpheusModule, PolymorpheusOutletDirective } from '@tinkoff/ng-polymorpheus';
+import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { Observable, Subject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
@@ -49,7 +49,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
     NgDocEventSwitcherDirective,
     NgDocFocusControlComponent,
     NgDocFocusCatcherDirective,
-    PolymorpheusModule,
+    PolymorpheusOutlet,
   ],
 })
 export class NgDocOverlayContainerComponent
@@ -73,8 +73,8 @@ export class NgDocOverlayContainerComponent
   @ViewChild(NgDocFocusCatcherDirective)
   focusCatcher?: NgDocFocusCatcherDirective;
 
-  @ViewChild(PolymorpheusOutletDirective, { static: true })
-  outlet?: PolymorpheusOutletDirective<object>;
+  @ViewChild(PolymorpheusOutlet, { static: true })
+  outlet?: PolymorpheusOutlet<object>;
 
   @HostBinding('attr.data-ng-doc-overlay-position')
   relativePosition: NgDocOverlayRelativePosition | null = null;
