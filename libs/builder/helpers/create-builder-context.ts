@@ -29,7 +29,10 @@ export function createBuilderContext(
     'ng-doc',
     context.target?.project ?? 'app',
   );
-  const tsConfig = config?.tsConfig ?? String(targetOptions['tsConfig']);
+  const tsConfig = path.resolve(
+    context.workspaceRoot,
+    config?.tsConfig ?? String(targetOptions['tsConfig']),
+  );
 
   return {
     tsConfig,
@@ -37,7 +40,7 @@ export function createBuilderContext(
     config,
     context,
     inlineStyleLanguage: (targetOptions?.['inlineStyleLanguage'] as NgDocStyleType) ?? 'CSS',
-    docsPath: config.docsPath ?? projectRoot,
+    docsPath: path.resolve(context.workspaceRoot, config.docsPath ?? projectRoot),
     outAssetsDir: path.join(buildPath, 'assets'),
     cachedFiles: [configPath],
     outDir: buildPath,

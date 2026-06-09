@@ -9,8 +9,7 @@ import { NgDocAction } from '../../../types';
  */
 export function jsDocAction(declarationPath: string): NgDocAction<string> {
   return (entry) => {
-    const project = entry.sourceFile.getProject();
-    const declaration = getDeclarationByPath(project, declarationPath);
+    const declaration = getDeclarationByPath(entry, declarationPath);
 
     return {
       output: Node.isVariableDeclaration(declaration)
