@@ -1,3 +1,11 @@
+## [21.0.5](https://github.com/ng-doc/ng-doc/compare/v21.0.4...v21.0.5) (2026-06-17)
+
+
+### Bug Fixes
+
+* **deps:** update @parcel/watcher to version 2.5.0 ([74a88f0](https://github.com/ng-doc/ng-doc/commit/74a88f0844b88b2ebe7476f71ba8e30a457e59cc)), closes [#332](https://github.com/ng-doc/ng-doc/issues/332)
+* **expander:** animation fix for expander component ([2911285](https://github.com/ng-doc/ng-doc/commit/2911285a79736501ae24667d42c9c487b92ffc4c)), closes [#321](https://github.com/ng-doc/ng-doc/issues/321)
+
 ## [21.0.4](https://github.com/ng-doc/ng-doc/compare/v21.0.3...v21.0.4) (2026-06-08)
 
 
