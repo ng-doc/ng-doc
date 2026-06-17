@@ -63,7 +63,7 @@
     "@orama/plugin-match-highlight": "2.0.17",
     "@orama/plugin-parsedoc": "2.0.17",
     "@orama/stemmers": "2.0.17",
-    "@parcel/watcher": "2.4.1",
+    "@parcel/watcher": "^2.5.0",
     "@prettier/sync": "0.5.2",
     "@schematics/angular": "21.0.4",
     "@shikijs/rehype": "1.10.3",

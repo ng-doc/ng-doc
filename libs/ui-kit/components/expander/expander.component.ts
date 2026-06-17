@@ -27,34 +27,30 @@ export class NgDocExpanderComponent {
   }
 
   protected enter(container: HTMLElement, event: AnimationCallbackEvent): void {
-    setTimeout(() => {
-      container
-        .animate(
-          [
-            { opacity: '0', maxHeight: 0 },
-            { opacity: '1', maxHeight: container.scrollHeight + 'px' },
-          ],
-          {
-            duration: 225,
-            easing: 'cubic-bezier(0.4,0.0,0.2,1)',
-            fill: 'forwards',
-          },
-        )
-        .finished.then(() => event.animationComplete());
-    });
+    container
+      .animate(
+        [
+          { opacity: '0', height: '0px' },
+          { opacity: '1', height: container.scrollHeight + 'px' },
+        ],
+        {
+          duration: 225,
+          easing: 'cubic-bezier(0.4,0.0,0.2,1)',
+        },
+      )
+      .finished.then(() => event.animationComplete());
   }
 
   protected leave(container: HTMLElement, event: AnimationCallbackEvent): void {
     container
       .animate(
         [
-          { opacity: '1', maxHeight: container.offsetHeight + 'px' },
-          { opacity: '0', maxHeight: 0 },
+          { opacity: '1', height: container.scrollHeight + 'px' },
+          { opacity: '0', height: '0px' },
         ],
         {
           duration: 225,
           easing: 'cubic-bezier(0.4,0.0,0.2,1)',
-          fill: 'forwards',
         },
       )
       .finished.then(() => event.animationComplete());
