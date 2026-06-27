@@ -18,7 +18,7 @@ import {
   NgDocTextComponent,
   NgDocTextLeftDirective,
 } from '@ng-doc/ui-kit';
-import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
+import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 
 @Component({
   selector: 'ng-doc-sidebar-category',
@@ -33,7 +33,7 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
     NgDocTextLeftDirective,
     NgDocRotatorDirective,
     NgDocExpanderComponent,
-    PolymorpheusModule,
+    PolymorpheusOutlet,
   ],
 })
 export class NgDocSidebarCategoryComponent {

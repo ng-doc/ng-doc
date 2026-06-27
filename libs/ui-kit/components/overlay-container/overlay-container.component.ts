@@ -2,6 +2,7 @@ import {
   ConnectedOverlayPositionChange,
   FlexibleConnectedPositionStrategy,
 } from '@angular/cdk/overlay';
+import { isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -15,6 +16,7 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
+  PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
 import { NgDocFocusControlComponent } from '@ng-doc/ui-kit/components/focus-control';
@@ -33,7 +35,7 @@ import {
   NgDocVerticalAlign,
 } from '@ng-doc/ui-kit/types';
 import { NgDocFocusUtils, NgDocOverlayUtils } from '@ng-doc/ui-kit/utils';
-import { PolymorpheusModule, PolymorpheusOutletDirective } from '@tinkoff/ng-polymorpheus';
+import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { Observable, Subject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
@@ -47,7 +49,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
     NgDocEventSwitcherDirective,
     NgDocFocusControlComponent,
     NgDocFocusCatcherDirective,
-    PolymorpheusModule,
+    PolymorpheusOutlet,
   ],
 })
 export class NgDocOverlayContainerComponent
@@ -57,6 +59,7 @@ export class NgDocOverlayContainerComponent
   private documentRef = inject<Document>(DOCUMENT);
   private changeDetectorRef = inject(ChangeDetectorRef);
   private ngZone = inject(NgZone);
+  private platformId = inject(PLATFORM_ID);
 
   @Input()
   content: NgDocContent = '';
@@ -70,8 +73,8 @@ export class NgDocOverlayContainerComponent
   @ViewChild(NgDocFocusCatcherDirective)
   focusCatcher?: NgDocFocusCatcherDirective;
 
-  @ViewChild(PolymorpheusOutletDirective, { static: true })
-  outlet?: PolymorpheusOutletDirective<object>;
+  @ViewChild(PolymorpheusOutlet, { static: true })
+  outlet?: PolymorpheusOutlet<object>;
 
   @HostBinding('attr.data-ng-doc-overlay-position')
   relativePosition: NgDocOverlayRelativePosition | null = null;
@@ -155,6 +158,11 @@ export class NgDocOverlayContainerComponent
     close: boolean = false,
   ): void {
     this.animationEvent$.next(close ? 'beforeClose' : 'beforeOpen');
+
+    if (!isPlatformBrowser(this.platformId)) {
+      this.animationEvent$.next(close ? 'afterClose' : 'afterOpen');
+      return;
+    }
 
     this.elementRef.nativeElement
       .animate(keyframes, options)

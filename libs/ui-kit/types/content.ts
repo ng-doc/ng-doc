@@ -4,7 +4,7 @@ import {
   PolymorpheusComponent,
   PolymorpheusHandler,
   PolymorpheusTemplate,
-} from '@tinkoff/ng-polymorpheus';
+} from '@taiga-ui/polymorpheus';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type NgDocContent<C extends object = {}> =
@@ -21,7 +21,7 @@ export type NgDocContent<C extends object = {}> =
 export class NgDocComponentContent<
   T extends object,
   C extends object = object,
-> extends PolymorpheusComponent<T, C> {
+> extends PolymorpheusComponent<T> {
   constructor(
     override readonly component: Type<T>,
     readonly injectorRef?: Injector,

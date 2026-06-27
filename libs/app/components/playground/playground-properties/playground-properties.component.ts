@@ -151,7 +151,7 @@ export class NgDocPlaygroundPropertiesComponent<
     }
   }
 
-  getFormControl(controlType: keyof typeof this.form.controls, key: string): FormControl {
+  getFormControl(controlType: keyof NgDocPlaygroundForm, key: string): FormControl {
     return this.form.get(controlType)?.get(key) as FormControl;
   }
 
