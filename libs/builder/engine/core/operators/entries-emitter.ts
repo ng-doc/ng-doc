@@ -10,6 +10,7 @@ import { NgDocBuilderContext } from '../../../interfaces';
 import { pageBuilder } from '../../builders';
 import { apiBuilder } from '../../builders/api-list';
 import { API_PATTERN, PAGE_PATTERN } from '../../variables';
+import { ExpectedEntries } from '../stores';
 import { AsyncFileOutput, BuilderState, FileOutput } from '../types';
 import { watchFolder } from '../watcher';
 
@@ -31,12 +32,18 @@ export function entriesEmitter(
     map((events) =>
       events
         .map((filePath) => {
+          const entryPath = path.resolve(filePath);
+
           if (minimatch(filePath, PAGE_PATTERN, { dot: true })) {
-            return pageBuilder(context, path.resolve(filePath));
+            ExpectedEntries.add(entryPath);
+
+            return pageBuilder(context, entryPath);
           }
 
           if (minimatch(filePath, API_PATTERN, { dot: true })) {
-            return apiBuilder(context, path.resolve(filePath));
+            ExpectedEntries.add(entryPath);
+
+            return apiBuilder(context, entryPath);
           }
 
           return null;

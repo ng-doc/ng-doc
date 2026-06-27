@@ -1,4 +1,5 @@
 import {
+  allEntriesResolved,
   disableCache,
   emitCache,
   emitFileOutput,
@@ -12,7 +13,7 @@ import {
 } from '@ng-doc/builder';
 import fs from 'fs';
 import { forkJoin, merge, Observable, switchMap } from 'rxjs';
-import { debounceTime, map, tap } from 'rxjs/operators';
+import { debounceTime, filter, map, tap } from 'rxjs/operators';
 
 import { importEsm, importUtils } from '../helpers';
 import { NgDocBuilderContext } from '../interfaces';
@@ -45,6 +46,16 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
     importEsm('@angular/compiler'),
   ]).pipe(switchMap(() => merge(entriesEmitter(context), globalBuilders(context))));
 
+  /**
+   * The pipeline emits every time the builder stack is empty, but on the initial build
+   * an empty stack does not guarantee that every entry page has been collected into the
+   * PageStore (entries can register late). Hold back the first emission until all
+   * discovered entries have resolved, so the very first build the application/dev-server
+   * builders consume is generated from a complete PageStore (see issue #322). Subsequent
+   * (watch) rebuilds are not gated.
+   */
+  let initialBuildComplete = false;
+
   return emitter.pipe(
     printBuildProgress(),
     whenStackIsEmpty(),
@@ -58,6 +69,15 @@ export function buildNgDoc(context: NgDocBuilderContext): Observable<void> {
       // );
     }),
     printErrors(),
+    filter(() => {
+      if (initialBuildComplete) {
+        return true;
+      }
+
+      initialBuildComplete = allEntriesResolved();
+
+      return initialBuildComplete;
+    }),
     debounceTime(100),
     map(() => void 0),
     emitCache(),

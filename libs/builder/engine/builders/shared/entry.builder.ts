@@ -1,5 +1,5 @@
 import { NgDocApi, NgDocPage } from '@ng-doc/core';
-import { finalize, of, takeUntil } from 'rxjs';
+import { finalize, of, takeUntil, tap } from 'rxjs';
 
 import { ObservableSet } from '../../../classes';
 import { buildFileEntity, importFreshEsm } from '../../../helpers';
@@ -8,6 +8,9 @@ import {
   Builder,
   createBuilder,
   createMainTrigger,
+  FailedEntries,
+  isBuilderDone,
+  isBuilderError,
   onDependenciesChange,
   PageStore,
   runBuild,
@@ -64,7 +67,19 @@ export function entryBuilder<T extends NgDocPage | NgDocApi>(
     [createMainTrigger(watchFile(entryPath, 'update'), onDependenciesChange(dependencies))],
     () => builder,
   ).pipe(
-    finalize(() => PageStore.delete(entryPath)),
+    tap((state) => {
+      // Track whether this entry failed to build so the completion gate doesn't wait
+      // forever for a page that will never register (see issue #322).
+      if (isBuilderError(state)) {
+        FailedEntries.add(entryPath);
+      } else if (isBuilderDone(state)) {
+        FailedEntries.delete(entryPath);
+      }
+    }),
+    finalize(() => {
+      PageStore.delete(entryPath);
+      FailedEntries.delete(entryPath);
+    }),
     takeUntil(watchFile(entryPath, 'delete')),
   );
 }
