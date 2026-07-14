@@ -1,11 +1,17 @@
 const { basename, dirname, join } = require('path');
 const glob = require('glob');
-const yargs = require('yargs/yargs');
-const { hideBin } = require('yargs/helpers');
 const merge = require('lodash/merge');
 const fs = require('fs');
 
-const argv = yargs(hideBin(process.argv)).argv;
+const argv = process.argv.slice(2).reduce((args, arg) => {
+  const match = arg.match(/^--([^=]+)=(.*)$/);
+
+  if (match) {
+    args[match[1]] = match[2];
+  }
+
+  return args;
+}, {});
 
 function buildSchema(from, to) {
   const schemas = glob.sync(from);
