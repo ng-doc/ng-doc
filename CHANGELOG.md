@@ -1,3 +1,10 @@
+## [21.0.6](https://github.com/ng-doc/ng-doc/compare/v21.0.5...v21.0.6) (2026-07-14)
+
+
+### Bug Fixes
+
+* **builder:** prevent file watcher from keeping process alive in one-shot builds ([5d49353](https://github.com/ng-doc/ng-doc/commit/5d493537d0a4bf2b2a959c819b3b46bc50177a20)), closes [#333](https://github.com/ng-doc/ng-doc/issues/333)
+
 ## [21.0.5](https://github.com/ng-doc/ng-doc/compare/v21.0.4...v21.0.5) (2026-06-17)
 
 
