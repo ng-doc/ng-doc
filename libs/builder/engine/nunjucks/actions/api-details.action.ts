@@ -10,8 +10,7 @@ import { NgDocAction } from '../../../types';
  */
 export function apiDetailsAction(declarationPath: string): NgDocAction<string> {
   return (entry) => {
-    const project = entry.sourceFile.getProject();
-    const declaration = getDeclarationByPath(project, declarationPath);
+    const declaration = getDeclarationByPath(entry, declarationPath);
     const kindName = kebabCase(declaration.getKindName());
     const output = renderTemplate(`./api/details/${kindName}.html.nunj`, {
       context: {

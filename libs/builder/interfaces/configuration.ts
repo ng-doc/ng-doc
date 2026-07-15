@@ -39,7 +39,8 @@ export interface NgDocConfiguration {
    */
   repoConfig?: NgDocRepoConfig;
   /**
-   * The path to the tsconfig file (NgDoc uses tsconfig of your application by default, but you can override it)
+   * The path to the tsconfig file (NgDoc uses tsconfig of your application by default, but you can override it).
+   * The path must be relative to the Angular workspace root (the directory containing `angular.json`).
    */
   tsConfig?: string;
   /**

@@ -10,8 +10,7 @@ import { NgDocAction } from '../../../types';
  */
 export function jsDocTagsAction(declarationPath: string, tagName: string): NgDocAction<string[]> {
   return (entry) => {
-    const project = entry.sourceFile.getProject();
-    const declaration = getDeclarationByPath(project, declarationPath);
+    const declaration = getDeclarationByPath(entry, declarationPath);
     const output = Node.isVariableDeclaration(declaration)
       ? getJsDocTags(declaration.getVariableStatement()!, tagName)
       : getJsDocTags(declaration, tagName);
