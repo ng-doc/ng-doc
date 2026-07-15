@@ -11,6 +11,7 @@ import { first } from 'rxjs/operators';
 
 import { buildNgDoc } from '../engine/build-ng-doc';
 import { transformIndexHtml } from '../engine/transform-index-html';
+import { GLOBALS } from '../engine/variables';
 import { createBuilderContext } from '../helpers/create-builder-context';
 import { NgDocBuilderContext, NgDocSchema } from '../interfaces';
 
@@ -32,6 +33,12 @@ export async function runBrowser(options: NgDocSchema, context: BuilderContext):
     context,
     options.ngDoc?.config,
   );
+
+  // In a one-shot build there is nothing to watch, and the file watcher would
+  // crawl the whole workspace only to be torn down right after the first build,
+  // potentially keeping the process alive (see #333)
+  GLOBALS.watch = !!options.watch;
+
   const runner: Observable<void> = buildNgDoc(builderContext);
 
   await firstValueFrom(runner.pipe(first()));
