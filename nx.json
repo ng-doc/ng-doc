@@ -98,7 +98,12 @@
       }
     },
     "@nx/eslint:lint": {
-      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
+      "inputs": [
+        "default",
+        "^default",
+        "{workspaceRoot}/eslint.config.mjs",
+        "{workspaceRoot}/tools/eslint-rules/**/*"
+      ],
       "cache": true
     },
     "@nx/vitest:test": {
@@ -113,10 +118,12 @@
       "default",
       "!{projectRoot}/src/test-setup.[jt]s",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
-      "!{projectRoot}/tsconfig.spec.json"
+      "!{projectRoot}/tsconfig.spec.json",
+      "!{projectRoot}/eslint.config.mjs"
     ]
   },
   "nxCloudAccessToken": "ZGIxMzcwOTUtZmYzMy00MzBhLWJiZmUtZmU3NDAxYTQ1MzcwfHJlYWQtd3JpdGU=",
   "useInferencePlugins": false,
-  "defaultBase": "main"
+  "defaultBase": "main",
+  "analytics": false
 }

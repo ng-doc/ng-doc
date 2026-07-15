@@ -10,6 +10,12 @@
     "build": {
       "executor": "./dist/libs/builder:application",
       "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "dependsOn": [
+        {
+          "target": "link-libs"
+        }
+      ],
       "options": {
         "outputPath": "dist/apps/ng-doc",
         "index": "apps/ng-doc/src/index.html",
@@ -80,16 +86,16 @@
           "sourceMap": true,
           "namedChunks": true
         }
-      },
-      "defaultConfiguration": "production",
-      "dependsOn": [
-        {
-          "target": "link-libs"
-        }
-      ]
+      }
     },
     "link-libs": {
       "executor": "nx:run-commands",
+      "dependsOn": [
+        {
+          "target": "build",
+          "dependencies": true
+        }
+      ],
       "options": {
         "commands": [
           "symlink-dir dist/libs/core dist/libs/builder/node_modules/@ng-doc/core",
@@ -100,16 +106,16 @@
           "symlink-dir dist/libs/app node_modules/@ng-doc/app",
           "symlink-dir dist/libs/ui-kit node_modules/@ng-doc/ui-kit"
         ]
-      },
-      "dependsOn": [
-        {
-          "projects": "dependencies",
-          "target": "build"
-        }
-      ]
+      }
     },
     "serve": {
       "executor": "./dist/libs/builder:dev-server",
+      "defaultConfiguration": "development",
+      "dependsOn": [
+        {
+          "target": "link-libs"
+        }
+      ],
       "configurations": {
         "production": {
           "buildTarget": "ng-doc:build:production",
@@ -128,13 +134,7 @@
           "sourceMap": true,
           "namedChunks": true
         }
-      },
-      "defaultConfiguration": "development",
-      "dependsOn": [
-        {
-          "target": "link-libs"
-        }
-      ]
+      }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",

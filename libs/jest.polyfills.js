@@ -1,4 +1,5 @@
 const { TextDecoder, TextEncoder } = require('node:util');
+const { deserialize, serialize } = require('node:v8');
 
 /*
 	 After migration to Angular 17.1 an error "TextEncoder is not defined" started to appear
@@ -8,6 +9,9 @@ const { TextDecoder, TextEncoder } = require('node:util');
  */
 
 Object.defineProperties(globalThis, {
+  structuredClone: {
+    value: (value) => deserialize(serialize(value)),
+  },
   TextDecoder: { value: TextDecoder },
   TextEncoder: { value: TextEncoder },
 });
