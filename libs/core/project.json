@@ -29,14 +29,14 @@
     },
     "publish": {
       "executor": "nx:run-commands",
-      "options": {
-        "command": "node tools/scripts/publish.mjs core {args.ver} {args.tag}"
-      },
       "dependsOn": [
         {
           "target": "build"
         }
-      ]
+      ],
+      "options": {
+        "command": "node tools/scripts/publish.mjs core {args.ver} {args.tag}"
+      }
     },
     "lint": {
       "executor": "@nx/eslint:lint",

@@ -1,6 +1,6 @@
 import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
 import { ApplicationConfig } from '@angular/core';
-import { provideClientHydration } from '@angular/platform-browser';
+import { provideClientHydration, withNoIncrementalHydration } from '@angular/platform-browser';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import {
   NG_DOC_DEFAULT_PAGE_PROCESSORS,
@@ -16,7 +16,7 @@ import { provideNgDocContext } from '@ng-doc/generated';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideClientHydration(),
+    provideClientHydration(withNoIncrementalHydration()),
     provideNgDocContext(),
     provideNgDocApp(),
     provideSearchEngine(NgDocDefaultSearchEngine),

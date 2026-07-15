@@ -6,7 +6,7 @@ import {
   PolymorpheusTemplate,
 } from '@taiga-ui/polymorpheus';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export type NgDocContent<C extends object = {}> =
   | string
   | number
@@ -17,7 +17,6 @@ export type NgDocContent<C extends object = {}> =
   | PolymorpheusHandler<C>
   | NgDocComponentContent<object, C>;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export class NgDocComponentContent<
   T extends object,
   C extends object = object,
