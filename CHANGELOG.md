@@ -1,3 +1,23 @@
+# [22.0.0-beta.2](https://github.com/ng-doc/ng-doc/compare/v22.0.0-beta.1...v22.0.0-beta.2) (2026-07-15)
+
+
+* feat(angular)!: angular 22 support ([b595004](https://github.com/ng-doc/ng-doc/commit/b595004d8925b5c93ae56f82a6439cd10e5de0cb)), closes [#328](https://github.com/ng-doc/ng-doc/issues/328)
+
+
+### Bug Fixes
+
+* **builder:** prevent file watcher from keeping process alive in one-shot builds ([5d49353](https://github.com/ng-doc/ng-doc/commit/5d493537d0a4bf2b2a959c819b3b46bc50177a20)), closes [#333](https://github.com/ng-doc/ng-doc/issues/333)
+
+
+### Reverts
+
+* Revert "fix(entry-status): add tracking for expected and failed entries" ([61aeda8](https://github.com/ng-doc/ng-doc/commit/61aeda8bdb24de450b25ee78a69fa61d655ecba5))
+
+
+### BREAKING CHANGES
+
+* Angular 22 support
+
 # [22.0.0-beta.1](https://github.com/ng-doc/ng-doc/compare/v21.0.5...v22.0.0-beta.1) (2026-06-27)
 
 
