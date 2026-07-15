@@ -14,7 +14,8 @@
     "target": "ES2022",
     "lib": ["ES2022"],
     "esModuleInterop": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "ignoreDeprecations": "6.0"
   },
   "files": [],
   "include": [],

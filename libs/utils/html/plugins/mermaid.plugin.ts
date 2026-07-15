@@ -14,7 +14,7 @@ export default function mermaidPlugin(): any {
         const codeNode = node.children[0] as Element;
 
         if (codeNode.tagName === 'code' && codeNode.properties?.['lang'] === 'mermaid') {
-          node.properties = { className: 'mermaid' };
+          node.properties = { className: ['mermaid'] };
           node.children = [
             {
               type: 'text',

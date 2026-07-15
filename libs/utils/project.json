@@ -23,8 +23,8 @@
         ],
         "sourceMap": true,
         "generateExportsField": true,
-        "babelUpwardRootMode": true,
-        "useLegacyTypescriptPlugin": true
+        "compiler": "tsc",
+        "babelUpwardRootMode": true
       }
     },
     "build": {
@@ -35,14 +35,14 @@
     },
     "publish": {
       "executor": "nx:run-commands",
-      "options": {
-        "command": "node tools/scripts/publish.mjs utils {args.ver} {args.tag}"
-      },
       "dependsOn": [
         {
           "target": "build"
         }
-      ]
+      ],
+      "options": {
+        "command": "node tools/scripts/publish.mjs utils {args.ver} {args.tag}"
+      }
     },
     "lint": {
       "executor": "@nx/eslint:lint",
