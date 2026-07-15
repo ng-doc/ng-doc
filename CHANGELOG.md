@@ -1,3 +1,13 @@
+# [21.1.0](https://github.com/ng-doc/ng-doc/compare/v21.0.6...v21.1.0) (2026-07-15)
+
+
+* feat(angular)!: angular 22 support ([b595004](https://github.com/ng-doc/ng-doc/commit/b595004d8925b5c93ae56f82a6439cd10e5de0cb)), closes [#328](https://github.com/ng-doc/ng-doc/issues/328)
+
+
+### BREAKING CHANGES
+
+* Angular 22 support
+
 ## [21.0.6](https://github.com/ng-doc/ng-doc/compare/v21.0.5...v21.0.6) (2026-07-14)
 
 
