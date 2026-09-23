@@ -24,7 +24,7 @@ As a workaround, you can replace NgDoc builder with the default Angular
 builder, add SSR, and then restore the NgDoc builder back. Here is the list
 of NgDoc builders and their Angular alternatives:
 
-| NgDoc builder                 | Angular builder                             |
-| ----------------------------- | ------------------------------------------- |
-| `@ng-doc/builder:application` | `@angular-devkit/build-angular:application` |
-| `@ng-doc/builder:dev-server`  | `@angular-devkit/build-angular:dev-server`  |
+| NgDoc builder                 | Angular builder              |
+| ----------------------------- | ---------------------------- |
+| `@ng-doc/builder:application` | `@angular/build:application` |
+| `@ng-doc/builder:dev-server`  | `@angular/build:dev-server`  |
