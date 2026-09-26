@@ -1,6 +1,6 @@
+import { executeDevServerBuilder } from '@angular/build';
 import { BuilderContext, createBuilder, targetFromTargetString } from '@angular-devkit/architect';
 import { BuilderOutputLike } from '@angular-devkit/architect/src/api';
-import { executeDevServer } from '@angular-devkit/build-angular/src/builders/dev-server';
 import { JsonObject } from '@angular-devkit/core';
 import { combineLatest, from, Observable, of } from 'rxjs';
 import { first, map, shareReplay, switchMap } from 'rxjs/operators';
@@ -22,7 +22,7 @@ export function runDevServer(
 ): Observable<BuilderOutputLike> {
   const contextWithPatch = patchBuilderContext(context, {
     mock: ['@ng-doc/builder:application', './dist/libs/builder:application'],
-    with: '@angular-devkit/build-angular:application',
+    with: '@angular/build:application',
     optionsTransform: (options: Partial<NgDocSchema>) => {
       delete options.ngDoc;
     },
@@ -42,7 +42,11 @@ export function runDevServer(
         switchMap(() =>
           combineLatest([
             buildNgDoc$,
-            executeDevServer(options, contextWithPatch, { indexHtml: transformIndexHtml }),
+            from(
+              executeDevServerBuilder(options as any, contextWithPatch, {
+                indexHtmlTransformer: transformIndexHtml,
+              }),
+            ),
           ]).pipe(map(([, devServerOutput]) => devServerOutput)),
         ),
       );
