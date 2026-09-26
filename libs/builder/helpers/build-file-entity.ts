@@ -70,7 +70,7 @@ export async function buildFileEntity(
 	await esbuild.build({
 		stdin: {
 			contents: code,
-			resolveDir: path.dirname(p),
+			resolveDir: path.dirname(path.resolve(outbase, p)),
 			loader: 'ts',
 			sourcefile: p,
 		},

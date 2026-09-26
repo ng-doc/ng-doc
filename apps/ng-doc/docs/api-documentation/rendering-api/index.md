@@ -4,6 +4,11 @@ keywords: RenderingApiPage
 
 NgDoc supports rendering API information in your guides.
 
+> **Note**
+> Declaration paths are resolved in the following order:
+> relative to the `rootDir` specified in your `tsconfig.json` first,
+> then relative to the page file's directory.
+
 ## API rendering
 
 To render API information you can use the `NgDocApi` class that provides methods to generate
