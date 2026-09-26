@@ -1,3 +1,4 @@
+import { buildApplication } from '@angular/build';
 import {
   BuilderContext,
   createBuilder,
@@ -5,7 +6,6 @@ import {
   Target,
   targetFromTargetString,
 } from '@angular-devkit/architect';
-import { buildApplication } from '@angular-devkit/build-angular';
 import { firstValueFrom, Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 
