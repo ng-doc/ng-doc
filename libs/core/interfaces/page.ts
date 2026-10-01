@@ -17,7 +17,20 @@ export interface NgDocPage extends NgDocBaseEntity {
    */
   category?: NgDocCategory;
   /**
-   *  Render the page only for specific build configuration
+   * Build tags this page is rendered for. The page is part of a build only when the build has at
+   * least one of these tags; otherwise it has no route, navigation item, search entry or keyword,
+   * as if it did not exist. A page without `onlyForTags` is part of every build.
+   *
+   * With the new generator engine (the `modern-*` builders, the Vite plugin and the `ng-doc` CLI),
+   * the build tags are:
+   * - Angular CLI builders: the build configuration name(s), e.g. `production` or `development`
+   *   (the target's `defaultConfiguration` when none is given), or the `ngDoc.tags` option;
+   * - Vite plugin: the Vite mode (`development` for the dev server, `production` for
+   *   `vite build`), or `generator.discovery.tags`;
+   * - `ng-doc` CLI: `production` for `generate`, `development` for `dev` and `watch`, or `--tags`.
+   *
+   * `null` or an empty string means no filter; an empty array hides the entry in every build.
+   * The legacy `application`/`dev-server` builders ignore this option.
    */
   onlyForTags?: string[];
   /**

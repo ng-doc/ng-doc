@@ -1,4 +1,4 @@
-import { Directive, forwardRef, HostListener } from '@angular/core';
+import { Directive, forwardRef } from '@angular/core';
 import { isPresent } from '@ng-doc/core/helpers/is-present';
 import { NgDocBaseInput } from '@ng-doc/ui-kit/classes/base-input';
 import { toElement } from '@ng-doc/ui-kit/helpers';
@@ -9,7 +9,10 @@ import { toElement } from '@ng-doc/ui-kit/helpers';
   providers: [
     { provide: NgDocBaseInput, useExisting: forwardRef(() => NgDocInputStringDirective) },
   ],
-  standalone: true,
+  host: {
+    '(blur)': 'blurEvent()',
+    '(input)': 'inputEvent()',
+  },
 })
 export class NgDocInputStringDirective extends NgDocBaseInput<string> {
   constructor() {
@@ -20,13 +23,11 @@ export class NgDocInputStringDirective extends NgDocBaseInput<string> {
     });
   }
 
-  @HostListener('blur')
-  blurEvent(): void {
+  protected blurEvent(): void {
     this.touch();
   }
 
-  @HostListener('input')
-  inputEvent(): void {
+  protected inputEvent(): void {
     this.updateModel(this.elementRef.nativeElement.value);
   }
 }

@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "NgDoc modern development server builder",
+  "description": "Angular development server with transactional NgDoc generation.",
+  "type": "object",
+  "properties": {
+    "ngDoc": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "config": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Workspace-relative or absolute NgDoc configuration file."
+        },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Build tags matched against onlyForTags of pages and categories. Defaults to the build configuration name(s), e.g. production or development."
+        },
+        "progress": {
+          "type": "string",
+          "enum": ["auto", "live", "plain", "verbose", "summary", "off"],
+          "description": "Generation progress in the terminal. NGDOC_PROGRESS overrides it; the application option progress: false means summary. Defaults to auto."
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

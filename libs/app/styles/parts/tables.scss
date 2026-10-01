@@ -74,3 +74,418 @@ table.ng-doc-overload-table {
     }
   }
 }
+
+// Applies the nested rules in the dark theme, and in the auto theme when the system is dark.
+@mixin ng-doc-api-dark {
+  :root[data-theme='dark'] & {
+    @content;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root[data-theme='auto'] & {
+      @content;
+    }
+  }
+}
+
+// Per-section API tables (properties, parameters, enum members): a bordered panel with a label
+// header row, 12px cells, identifier names and a row hover.
+.ng-doc-table-wrapper:has(> table.ng-doc-api-table:not(.no-padding)) {
+  border: 1px solid var(--ng-doc-border-color);
+  border-radius: var(--ng-doc-radius-lg);
+}
+
+table.ng-doc-api-table:not(.no-padding) {
+  font-size: 14px;
+  line-height: 22px;
+
+  thead tr th {
+    padding: var(--ng-doc-space-2) var(--ng-doc-space-3);
+    border-bottom: 1px solid var(--ng-doc-border-color);
+    border-radius: 0;
+    background: var(--ng-doc-base-1);
+    font-size: 11px;
+    line-height: 16px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ng-doc-text-muted);
+    white-space: nowrap;
+
+    &:first-child,
+    &:last-child {
+      border-radius: 0;
+    }
+  }
+
+  tbody tr td {
+    padding: var(--ng-doc-space-3);
+  }
+
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  tbody tr:hover > td {
+    background: var(--ng-doc-row-hover-background);
+  }
+
+  &.first-colum-highlighted tbody tr td:first-child > span {
+    font-family: var(--ng-doc-code-font);
+    font-size: 13px;
+    font-weight: 600;
+  }
+}
+
+// Members table of the symbol view: tabs and a name filter above one table with a group row per
+// member kind. The table reads well without the members filter directive; the directive only
+// hides rows. Below 640px each member becomes a stacked block.
+.ng-doc-members-bar {
+  display: flex;
+  // The tabs scroll inside themselves, so the filter stays on their line however many groups
+  // there are; phones stack both (below).
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--ng-doc-space-2) var(--ng-doc-space-3);
+  margin: 0 0 var(--ng-doc-space-3);
+}
+
+.ng-doc-members-tabs {
+  display: inline-flex;
+  flex: 0 1 auto;
+  min-width: 0;
+  gap: 2px;
+  max-width: 100%;
+  padding: 3px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-radius: var(--ng-doc-radius-md);
+  background: var(--ng-doc-base-2);
+
+  // The row fades on the edge that still hides tabs (set by the members filter directive).
+  &[data-fade~='end'] {
+    mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+  }
+
+  &[data-fade~='start'] {
+    mask-image: linear-gradient(to left, #000 calc(100% - 28px), transparent);
+  }
+
+  &[data-fade~='start'][data-fade~='end'] {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 28px,
+      #000 calc(100% - 28px),
+      transparent
+    );
+  }
+
+  [role='tab'] {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 28px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: var(--ng-doc-radius-sm);
+    background: none;
+    font: 500 13px/1 var(--ng-doc-font-family);
+    color: var(--ng-doc-text-muted);
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      color: var(--ng-doc-heading-color);
+    }
+
+    &[aria-selected='true'] {
+      background: var(--ng-doc-background);
+      color: var(--ng-doc-heading-color);
+      box-shadow: var(--ng-doc-shadow-xs);
+
+      @include ng-doc-api-dark {
+        box-shadow:
+          var(--ng-doc-shadow-xs),
+          inset 0 0 0 1px var(--ng-doc-base-4);
+      }
+    }
+
+    &:disabled {
+      cursor: default;
+      color: color-mix(in oklab, var(--ng-doc-text-muted) 70%, var(--ng-doc-base-2));
+    }
+  }
+
+  .ng-doc-members-count {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--ng-doc-text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.ng-doc-members-filter {
+  display: flex;
+  align-items: center;
+  gap: var(--ng-doc-space-2);
+  flex: 0 0 200px;
+  width: 200px;
+  height: 36px;
+  margin-left: auto;
+  padding: 0 var(--ng-doc-space-2) 0 var(--ng-doc-space-3);
+  border: var(--ng-doc-input-border);
+  border-radius: var(--ng-doc-radius-md);
+  background: var(--ng-doc-input-background-color, var(--ng-doc-background));
+  color: var(--ng-doc-text-muted);
+
+  &:hover {
+    border: var(--ng-doc-input-border-hover);
+  }
+
+  &:focus-within {
+    box-shadow: var(--ng-doc-focus-ring);
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: none;
+    font: 400 14px/20px var(--ng-doc-font-family);
+    color: var(--ng-doc-heading-color);
+
+    &::placeholder {
+      color: var(--ng-doc-text-muted);
+      opacity: 1;
+    }
+  }
+}
+
+.ng-doc-members-table-wrapper {
+  border: 1px solid var(--ng-doc-border-color);
+  border-radius: var(--ng-doc-radius-lg);
+  overflow: hidden;
+
+  // The page pipeline wraps every table in its own scroll wrapper; this one sits flush.
+  > .ng-doc-table-wrapper {
+    margin: 0;
+  }
+}
+
+table.ng-doc-members-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 22px;
+
+  tbody tr td {
+    padding: var(--ng-doc-space-3);
+    border-bottom: 0;
+    vertical-align: top;
+    background: none;
+  }
+
+  .ng-doc-members-group td {
+    height: 36px;
+    padding-block: 0;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--ng-doc-border-color);
+    background: var(--ng-doc-base-1);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ng-doc-text-muted);
+
+    .ng-doc-members-count {
+      margin-left: var(--ng-doc-space-2);
+      font-weight: 400;
+      letter-spacing: 0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    // The group title is a heading for the page outline and search; it reads as the row label.
+    .ng-doc-members-group-title {
+      display: inline;
+      margin: 0;
+      font: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      color: inherit;
+    }
+  }
+
+  .ng-doc-members-group:not(:first-child) td {
+    border-top: 1px solid var(--ng-doc-border-color);
+  }
+
+  .ng-doc-member + .ng-doc-member > td,
+  .ng-doc-member-detail + .ng-doc-member > td {
+    border-top: 1px solid var(--ng-doc-base-2);
+  }
+
+  .ng-doc-member:hover > td {
+    background: var(--ng-doc-row-hover-background);
+  }
+
+  .ng-doc-member-declaration {
+    width: 54%;
+  }
+
+  // Only the chevron and the name form the expand button; the type after it stays text.
+  .ng-doc-member-declaration:has(.ng-doc-member-expand) {
+    padding-left: calc(var(--ng-doc-space-3) + 22px);
+  }
+
+  .ng-doc-member-detail > td {
+    padding: 0 var(--ng-doc-space-3) var(--ng-doc-space-3) calc(var(--ng-doc-space-3) + 22px);
+  }
+}
+
+.ng-doc-member-signature {
+  font: 400 13px/22px var(--ng-doc-code-font);
+  color: var(--ng-doc-text);
+  overflow-wrap: anywhere;
+
+  // Types are part of the signature text, not inline code chips; their API links stay links.
+  code,
+  code.ngde {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: inherit;
+    white-space: normal;
+  }
+
+  .ng-doc-member-name {
+    font-weight: 600;
+    color: var(--ng-doc-heading-color);
+  }
+}
+
+.ng-doc-member-expand {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 4px;
+  margin-left: -22px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  vertical-align: top;
+  cursor: pointer;
+
+  svg {
+    margin-top: 5px;
+    color: var(--ng-doc-text-muted);
+    transition: transform var(--ng-doc-transition);
+  }
+
+  &[aria-expanded='true'] svg {
+    transform: rotate(90deg);
+  }
+}
+
+.ng-doc-member-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  margin-top: 6px;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.ng-doc-member-from {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--ng-doc-text-muted);
+}
+
+.ng-doc-member-label {
+  margin: var(--ng-doc-space-2) 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ng-doc-text-muted);
+}
+
+// The members filter directive hides rows with the hidden attribute; the stacked layout below
+// must not show them again.
+table.ng-doc-members-table [hidden],
+.ng-doc-members-empty[hidden] {
+  display: none !important;
+}
+
+.ng-doc-members-none {
+  color: var(--ng-doc-text-muted);
+}
+
+.ng-doc-members-empty {
+  padding: var(--ng-doc-space-5) var(--ng-doc-space-4);
+  text-align: center;
+  font-size: 14px;
+  color: var(--ng-doc-text-muted);
+}
+
+@media (max-width: 640px) {
+  .ng-doc-members-bar {
+    flex-wrap: wrap;
+  }
+
+  .ng-doc-members-tabs {
+    width: 100%;
+  }
+
+  .ng-doc-members-filter {
+    flex-basis: 100%;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  table.ng-doc-members-table {
+    &,
+    tbody,
+    tr,
+    td {
+      display: block;
+      width: 100% !important;
+    }
+
+    .ng-doc-members-group td {
+      height: auto;
+      padding: 8px var(--ng-doc-space-3);
+    }
+
+    .ng-doc-member > td {
+      padding: var(--ng-doc-space-3);
+    }
+
+    .ng-doc-member > td.ng-doc-member-description {
+      padding-top: 0;
+      border-top: 0 !important;
+    }
+
+    .ng-doc-member-declaration:has(.ng-doc-member-expand) {
+      padding-left: calc(var(--ng-doc-space-3) + 22px);
+    }
+
+    .ng-doc-member-detail > td {
+      padding: 0 var(--ng-doc-space-3) var(--ng-doc-space-3);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ng-doc-member-expand svg {
+    transition: none;
+  }
+}

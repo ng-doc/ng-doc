@@ -1,7 +1,7 @@
 import { HostTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { createProject, createSourceFile, saveActiveProject, setActiveProject } from 'ng-morph';
-import { join } from 'path';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { APP_COMPONENT_CONTENT } from '../constants/app-component-content';
 import { NG_DOC_VERSION } from '../constants/version';
@@ -9,8 +9,7 @@ import { Schema } from '../schema';
 import { createAngularJson } from '../utils/create-angular-json';
 import { createGitIgnore } from '../utils/create-git-ignore';
 import { createTsConfigs } from '../utils/create-ts-configs';
-
-const collectionPath: string = join(__dirname, '../../collection.json');
+import { createRunner } from './ng-add-runner';
 
 describe('ng-add module app', () => {
   let host: UnitTestTree;
@@ -18,7 +17,7 @@ describe('ng-add module app', () => {
 
   beforeEach(() => {
     host = new UnitTestTree(new HostTree());
-    runner = new SchematicTestRunner('schematics', collectionPath);
+    runner = createRunner();
 
     setActiveProject(createProject(host));
 
@@ -119,7 +118,7 @@ describe('ng-add module app', () => {
     const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
     expect(tree.readContent('test/app/app.module.ts'))
-      .toEqual(`import { provideHttpClient, withInterceptorsFromDi, withFetch } from "@angular/common/http";
+      .toEqual(`import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { NgDocRootComponent, NgDocNavbarComponent, NgDocSidebarComponent, provideNgDocApp, provideSearchEngine, NgDocDefaultSearchEngine, providePageSkeleton, NG_DOC_DEFAULT_PAGE_SKELETON, provideMainPageProcessor, NG_DOC_DEFAULT_PAGE_PROCESSORS } from "@ng-doc/app";
 import { NG_DOC_ROUTING, provideNgDocContext } from "@ng-doc/generated";
 import { RouterModule } from "@angular/router";
@@ -127,11 +126,54 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 
 @NgModule({declarations: [AppComponent],
-    imports: [RouterModule.forRoot(NG_DOC_ROUTING, {scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', scrollOffset: [0, 70]}), NgDocRootComponent, NgDocNavbarComponent, NgDocSidebarComponent],
-    providers: [provideHttpClient(withInterceptorsFromDi(), withFetch()), provideNgDocContext(), provideNgDocApp(), provideSearchEngine(NgDocDefaultSearchEngine), providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON), provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS)]
+  imports: [RouterModule.forRoot(NG_DOC_ROUTING, {scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', scrollOffset: [0, 70]}), NgDocRootComponent, NgDocNavbarComponent, NgDocSidebarComponent],
+  providers: [provideHttpClient(withInterceptorsFromDi()), provideNgDocContext(), provideNgDocApp(), provideSearchEngine(NgDocDefaultSearchEngine), providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON), provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS)]
 })
 export class AppModule {}
 `);
+  });
+
+  it('should extend the RouterModule.forRoot call of a routing module instead of adding a second one', async () => {
+    host.overwrite(
+      'test/app/app.module.ts',
+      `import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+
+@NgModule({declarations: [AppComponent], imports: [BrowserModule, AppRoutingModule], bootstrap: [AppComponent]})
+export class AppModule {}
+`,
+    );
+    host.create(
+      'test/app/app-routing.module.ts',
+      `import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [];
+
+@NgModule({imports: [RouterModule.forRoot(routes)], exports: [RouterModule]})
+export class AppRoutingModule {}
+`,
+    );
+
+    const tree: UnitTestTree = await runner.runSchematic(
+      'ng-add-setup-project',
+      { project: '' },
+      host,
+    );
+
+    expect(tree.readContent('test/app/app-routing.module.ts'))
+      .toEqual(`import { NG_DOC_ROUTING } from "@ng-doc/generated";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [];
+
+@NgModule({imports: [RouterModule.forRoot([...routes, ...NG_DOC_ROUTING], {scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', scrollOffset: [0, 70]})], exports: [RouterModule]})
+export class AppRoutingModule {}
+`);
+    expect(tree.readContent('test/app/app.module.ts')).not.toContain('RouterModule');
   });
 
   it('should update angular.json', async () => {
@@ -155,7 +197,8 @@ export class AppModule {}
               "main": "test/main.ts",
               "tsConfig": "test/tsconfig.app.json",
               "styles": [
-                "node_modules/@ng-doc/app/styles/global.css"
+                "node_modules/@ng-doc/app/styles/global.css",
+                "node_modules/@ng-doc/app/styles/themes/dark.css"
               ],
               "assets": [
                 {

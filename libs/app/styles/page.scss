@@ -1,18 +1,18 @@
-@import 'mixins/headings';
-@import 'parts/header';
-@import 'parts/tags';
-@import 'parts/decorators';
-@import 'parts/modifiers';
-@import 'parts/badge';
-@import 'parts/see-also';
-@import 'parts/tables';
-@import 'parts/text';
-@import 'defaults';
+@use 'mixins/headings';
+@use 'parts/header';
+@use 'parts/tags';
+@use 'parts/decorators';
+@use 'parts/modifiers';
+@use 'parts/badge';
+@use 'parts/see-also';
+@use 'parts/tables';
+@use 'parts/text';
+@use 'defaults';
 
-$class: $ng-doc-element;
+$class: defaults.$ng-doc-element;
 
 article {
-  @include headings {
+  @include headings.headings {
     &:hover {
       .ng-doc-anchor {
         opacity: 1;
@@ -27,9 +27,12 @@ article {
   }
 
   .ng-doc-page-wrapper > {
-    @include headings {
+    @include headings.headings {
+      // The first heading of a page never shows the optional h2 divider.
       &:first-child {
         margin-top: 0;
+        padding-top: 0;
+        border-top: 0;
       }
     }
   }
@@ -74,7 +77,7 @@ article {
     display: flex;
     align-items: center;
 
-    @include headings {
+    @include headings.headings {
       margin-right: var(--ng-doc-base-gutter);
     }
   }

@@ -2,10 +2,10 @@ import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  HostBinding,
+  computed,
   inject,
-  Input,
-  OnInit,
+  input,
+  Signal,
   Type,
 } from '@angular/core';
 import { NgDocRootPage } from '@ng-doc/app/classes/root-page';
@@ -15,6 +15,7 @@ import { NgDocDemoAsset } from '@ng-doc/app/interfaces';
 import { asArray } from '@ng-doc/core/helpers/as-array';
 import { NgDocDemoPaneActionOptions } from '@ng-doc/core/interfaces';
 import {
+  NgDocIconComponent,
   NgDocPaneBackDirective,
   NgDocPaneComponent,
   NgDocPaneFrontDirective,
@@ -22,6 +23,10 @@ import {
   NgDocTabGroupComponent,
 } from '@ng-doc/ui-kit';
 
+/**
+ * Renders a demo of the page in front of its source files, which the reader reveals by dragging
+ * the pane's resizer.
+ */
 @Component({
   selector: 'ng-doc-demo-pane',
   templateUrl: './demo-pane.component.html',
@@ -37,51 +42,37 @@ import {
     NgDocTabComponent,
     NgDocFullscreenButtonComponent,
     NgComponentOutlet,
+    NgDocIconComponent,
   ],
+  host: {
+    '[class]': 'options().class ?? ""',
+  },
 })
-export class NgDocDemoPaneComponent implements OnInit {
+export class NgDocDemoPaneComponent {
   private readonly rootPage = inject(NgDocRootPage);
 
-  @Input()
-  componentName?: string;
+  /** Name of the demo component in the page's `demos`. */
+  readonly componentName = input<string | undefined>(undefined);
 
-  @Input()
-  options: NgDocDemoPaneActionOptions = {};
+  /** Options of the `demoPane` action. */
+  readonly options = input<NgDocDemoPaneActionOptions>({});
 
-  demo?: Type<unknown>;
-  assets: NgDocDemoAsset[] = [];
+  /** The demo component. */
+  readonly demo: Signal<Type<unknown> | undefined> = computed(() => {
+    const name: string | undefined = this.componentName();
 
-  constructor() {}
+    return name ? this.rootPage.page?.demos?.[name] : undefined;
+  });
 
-  @HostBinding('class')
-  protected get classes(): string | string[] {
-    return this.options.class ?? '';
-  }
+  /** Source files of the demo, filtered by the `tabs` option. */
+  readonly assets: Signal<NgDocDemoAsset[]> = computed(() => {
+    const name: string | undefined = this.componentName();
+    const tabs: string | string[] | undefined = this.options().tabs;
 
-  ngOnInit(): void {
-    this.demo = this.getDemo();
-    this.assets = this.getAssets();
-  }
-
-  private getDemo(): Type<unknown> | undefined {
-    if (this.componentName) {
-      return this.rootPage.page?.demos && this.rootPage.page.demos[this.componentName];
-    }
-
-    return undefined;
-  }
-
-  private getAssets(): NgDocDemoAsset[] {
-    if (this.componentName) {
-      return (
-        (this.rootPage.demoAssets && this.rootPage.demoAssets[this.componentName]) ??
-        []
-      ).filter(
-        (asset: NgDocDemoAsset) =>
-          !this.options.tabs?.length || asArray(this.options.tabs).includes(asset.title),
-      );
-    }
-
-    return [];
-  }
+    return name
+      ? (this.rootPage.demoAssets?.[name] ?? []).filter(
+          (asset: NgDocDemoAsset) => !tabs?.length || asArray(tabs).includes(asset.title),
+        )
+      : [];
+  });
 }

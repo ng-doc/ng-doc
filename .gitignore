@@ -52,3 +52,7 @@ vitest.config.*.timestamp*
 .nx/polygraph
 .nx/self-healing
 .nx/migrate-runs
+# Standalone generator integration output
+/ng-doc-modernization/
+/.ng-doc-modernization/
+/.cache/ng-doc/

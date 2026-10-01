@@ -2,11 +2,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { asArray } from '@ng-doc/core/helpers/as-array';
 
 @Pipe({
-	name: 'asArray',
-	standalone: true,
+  name: 'asArray',
 })
 export class NgDocAsArrayPipe implements PipeTransform {
-	transform<T>(value: T | T[] | Iterable<T> | null | undefined): T[] {
-		return asArray(value);
-	}
+  transform<T>(value: T | T[] | Iterable<T> | null | undefined): T[] {
+    return asArray(value);
+  }
 }

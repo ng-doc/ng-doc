@@ -20,7 +20,6 @@
         "outputPath": "dist/apps/ng-doc",
         "index": "apps/ng-doc/src/index.html",
         "browser": "apps/ng-doc/src/main.ts",
-        "polyfills": ["zone.js"],
         "inlineStyleLanguage": "scss",
         "server": "apps/ng-doc/src/main.server.ts",
         "prerender": true,
@@ -137,7 +136,7 @@
       }
     },
     "extract-i18n": {
-      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "executor": "@angular/build:extract-i18n",
       "options": {
         "buildTarget": "ng-doc:build"
       }
@@ -145,12 +144,156 @@
     "lint": {
       "executor": "@nx/eslint:lint"
     },
+    "build-specs": {
+      "executor": "@angular/build:application",
+      "metadata": {
+        "description": "Build options for the unit-test builder only (test); it is not a build of the site."
+      },
+      "options": {
+        "outputPath": "dist/spec/apps/ng-doc",
+        "tsConfig": "apps/ng-doc/tsconfig.spec.json",
+        "inlineStyleLanguage": "scss",
+        "polyfills": ["zone.js"]
+      }
+    },
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "@angular/build:unit-test",
       "outputs": ["{workspaceRoot}/coverage/apps/ng-doc"],
       "options": {
-        "jestConfig": "apps/ng-doc/jest.config.ts",
-        "tsConfig": "apps/ng-doc/tsconfig.spec.json"
+        "buildTarget": "ng-doc:build-specs",
+        "tsConfig": "apps/ng-doc/tsconfig.spec.json",
+        "runnerConfig": "apps/ng-doc/vitest.config.ts",
+        "isolate": true,
+        "watch": false
+      },
+      "configurations": {
+        "ci": {
+          "coverage": true
+        }
+      }
+    },
+    "build-modern": {
+      "executor": "./dist/libs/builder:modern-application",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "dependsOn": [
+        {
+          "target": "link-libs"
+        }
+      ],
+      "options": {
+        "outputPath": "dist/apps/ng-doc-modern",
+        "index": "apps/ng-doc/src/index.html",
+        "browser": "apps/ng-doc/src/main.ts",
+        "inlineStyleLanguage": "scss",
+        "server": "apps/ng-doc/src/main.server.ts",
+        "prerender": true,
+        "ssr": {
+          "entry": "apps/ng-doc/server.ts"
+        },
+        "assets": [
+          "apps/ng-doc/src/assets",
+          {
+            "glob": "**/*",
+            "input": "dist/libs/app/assets",
+            "output": "assets/ng-doc/app"
+          },
+          {
+            "glob": "**/*",
+            "input": "dist/libs/ui-kit/assets",
+            "output": "assets/ng-doc/ui-kit"
+          },
+          {
+            "glob": "**/*",
+            "input": "ng-doc/ng-doc/assets",
+            "output": "assets/ng-doc"
+          }
+        ],
+        "styles": ["apps/ng-doc/src/styles.scss"],
+        "scripts": [],
+        "allowedCommonJsDependencies": [
+          "@ng-doc/core",
+          "posthtml-parser",
+          "posthtml-render",
+          "js-beautify",
+          "chalk"
+        ],
+        "ngDoc": {
+          "config": "apps/ng-doc/ng-doc.config.modern.ts"
+        }
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "apps/ng-doc/tsconfig.modern.json",
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "10mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "8kb",
+              "maximumError": "10kb"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "apps/ng-doc/src/environments/environment.ts",
+              "with": "apps/ng-doc/src/environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all",
+          "sourceMap": true
+        },
+        "development": {
+          "tsConfig": "apps/ng-doc/tsconfig.modern.json",
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      }
+    },
+    "serve-modern": {
+      "executor": "./dist/libs/builder:modern-dev-server",
+      "defaultConfiguration": "development",
+      "dependsOn": [
+        {
+          "target": "link-libs"
+        }
+      ],
+      "configurations": {
+        "production": {
+          "buildTarget": "ng-doc:build-modern:production"
+        },
+        "development": {
+          "buildTarget": "ng-doc:build-modern:development"
+        }
+      }
+    },
+    "build-vite": {
+      "executor": "./dist/libs/builder:vite-application",
+      "outputs": ["{options.outputPath}"],
+      "dependsOn": [
+        {
+          "target": "link-libs"
+        }
+      ],
+      "options": {
+        "configFile": "apps/ng-doc/vite.config.mjs",
+        "outputPath": "dist/apps/ng-doc-vite"
+      }
+    },
+    "serve-vite": {
+      "executor": "./dist/libs/builder:vite-dev-server",
+      "dependsOn": [
+        {
+          "target": "link-libs"
+        }
+      ],
+      "options": {
+        "configFile": "apps/ng-doc/vite.config.mjs"
       }
     }
   }

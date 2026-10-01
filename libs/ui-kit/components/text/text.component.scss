@@ -1,4 +1,4 @@
-@import '../../styles/mixins';
+@use '../../styles/mixins';
 
 ::ng-deep {
   :root {
@@ -8,7 +8,7 @@
 }
 
 :host {
-  @include ng-doc-font();
+  @include mixins.ng-doc-font();
   position: relative;
   display: flex;
   align-items: center;

@@ -47,12 +47,69 @@
         "assets": ["libs/app/schematics/**/*.json", "libs/app/schematics/**/files/**/*"]
       }
     },
+    "build-specs": {
+      "executor": "@angular/build:application",
+      "metadata": {
+        "description": "Build options for the unit-test builder only (test, test-zoneless); it is not a build of the library."
+      },
+      "options": {
+        "outputPath": "dist/spec/libs/app",
+        "tsConfig": "libs/app/tsconfig.spec.json",
+        "inlineStyleLanguage": "scss",
+        "stylePreprocessorOptions": {
+          "includePaths": ["libs/app/styles"]
+        },
+        "polyfills": ["zone.js"]
+      },
+      "configurations": {
+        "zoneless": {
+          "polyfills": []
+        }
+      }
+    },
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "@angular/build:unit-test",
       "outputs": ["{workspaceRoot}/coverage/libs/app"],
       "options": {
-        "jestConfig": "libs/app/jest.config.ts",
-        "tsConfig": "libs/app/tsconfig.spec.json"
+        "buildTarget": "app:build-specs",
+        "tsConfig": "libs/app/tsconfig.spec.json",
+        "runnerConfig": "libs/app/vitest.config.ts",
+        "setupFiles": ["libs/app/test-setup.ts"],
+        "exclude": ["testing/search-index/**"],
+        "isolate": true,
+        "watch": false
+      },
+      "configurations": {
+        "ci": {
+          "coverage": true
+        }
+      }
+    },
+    "test-zoneless": {
+      "executor": "@angular/build:unit-test",
+      "outputs": ["{workspaceRoot}/coverage/libs/app-zoneless"],
+      "options": {
+        "buildTarget": "app:build-specs:zoneless",
+        "tsConfig": "libs/app/tsconfig.spec.json",
+        "runnerConfig": "libs/app/vitest.zoneless.config.ts",
+        "setupFiles": ["libs/app/test-setup.ts"],
+        "exclude": ["testing/search-index/**"],
+        "isolate": true,
+        "watch": false
+      },
+      "configurations": {
+        "ci": {
+          "coverage": true
+        }
+      }
+    },
+    "test-search-index": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest run -c libs/app/testing/search-index/vitest.config.ts"
+      },
+      "configurations": {
+        "ci": {}
       }
     },
     "lint": {

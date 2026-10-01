@@ -1,0 +1,4 @@
+// While the server-rendered copy is shown, the component's own content renders hidden.
+:host[data-ng-doc-hydration-snapshot] > :not(.ng-doc-hydration-snapshot) {
+  display: none !important;
+}

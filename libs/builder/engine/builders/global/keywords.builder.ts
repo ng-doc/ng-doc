@@ -1,23 +1,10 @@
 import path from 'path';
-import { of } from 'rxjs';
+import { debounceTime, of, switchMap } from 'rxjs';
 
 import { NgDocBuilderContext } from '../../../interfaces';
-import {
-  afterBuilders,
-  Builder,
-  createBuilder,
-  createSecondaryTrigger,
-  FileOutput,
-  keywordsStore,
-  runBuild,
-} from '../../core';
-import { API_PAGE_TEMPLATE_BUILDER_TAG } from '../api-list/api-page-template.builder';
-import { GUIDE_TEMPLATE_BUILDER_TAG } from '../page/guide-template.builder';
+import { Builder, FileOutput, keywordsStore, runBuild } from '../../core';
 
-/**
- *
- * @param context
- */
+/** Publishes the latest complete store snapshot whenever keyword ownership changes. */
 export function keywordsBuilder(context: NgDocBuilderContext): Builder<FileOutput> {
   const builder = of(void 0).pipe(
     runBuild('Keywords', async () => ({
@@ -26,12 +13,11 @@ export function keywordsBuilder(context: NgDocBuilderContext): Builder<FileOutpu
     })),
   );
 
-  return createBuilder(
-    [
-      createSecondaryTrigger(
-        afterBuilders([GUIDE_TEMPLATE_BUILDER_TAG, API_PAGE_TEMPLATE_BUILDER_TAG]),
-      ),
-    ],
-    () => builder,
+  // This aggregate has no main trigger to unblock createBuilder's secondary
+  // trigger suppression. Observe the actual store, including cache restores,
+  // instead of racing the completion of selected rendering builder tags.
+  return keywordsStore.changes().pipe(
+    debounceTime(0),
+    switchMap(() => builder),
   );
 }

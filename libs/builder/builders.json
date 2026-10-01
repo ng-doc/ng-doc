@@ -1,15 +1,35 @@
 {
-	"$schema": "../../node_modules/@angular-devkit/architect/src/builders-schema.json",
-	"builders": {
-		"application": {
-			"implementation": "./application/index.js",
-			"schema": "./application/schema.json",
-			"description": "NgDoc Application"
-		},
-		"dev-server": {
-			"implementation": "./dev-server/index.js",
-			"schema": "./dev-server/schema.json",
-			"description": "NgDoc Dev Server"
-		}
-	}
+  "$schema": "../../node_modules/@angular-devkit/architect/src/builders-schema.json",
+  "builders": {
+    "application": {
+      "implementation": "./application/index.js",
+      "schema": "./application/schema.json",
+      "description": "NgDoc Application"
+    },
+    "dev-server": {
+      "implementation": "./dev-server/index.js",
+      "schema": "./dev-server/schema.json",
+      "description": "NgDoc Dev Server"
+    },
+    "modern-application": {
+      "implementation": "./generator/angular/application.js",
+      "schema": "./generator/angular/application.schema.json",
+      "description": "NgDoc standalone generator application"
+    },
+    "modern-dev-server": {
+      "implementation": "./generator/angular/dev-server.js",
+      "schema": "./generator/angular/dev-server.schema.json",
+      "description": "NgDoc standalone generator dev-server"
+    },
+    "vite-application": {
+      "implementation": "./generator/vite/application-builder.js",
+      "schema": "./generator/vite/application-builder.schema.json",
+      "description": "NgDoc Vite engine: production build, server bundle and prerender"
+    },
+    "vite-dev-server": {
+      "implementation": "./generator/vite/dev-server-builder.js",
+      "schema": "./generator/vite/dev-server-builder.schema.json",
+      "description": "NgDoc Vite engine: development server"
+    }
+  }
 }

@@ -118,6 +118,8 @@ export default [
     files: ['**/*.spec.ts'],
     rules: {
       '@typescript-eslint/no-non-null-assertion': 'off',
+      // Vitest reads per-file environments from a `@vitest-environment` docblock.
+      'jsdoc/check-tag-names': ['warn', { definedTags: ['vitest-environment'] }],
     },
     ignores: ['**/__mocks__/**'],
   },

@@ -3,11 +3,11 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "module": "preserve",
-    "types": ["jest", "node"],
+    "types": ["node"],
     "moduleResolution": "bundler",
     "isolatedModules": true
   },
-  "include": ["jest.config.ts", "**/*.test.ts", "**/*.spec.ts", "**/*.d.ts"],
+  "include": ["**/*.test.ts", "**/*.spec.ts", "**/*.d.ts"],
   "angularCompilerOptions": {
     "strictTemplates": false
   }

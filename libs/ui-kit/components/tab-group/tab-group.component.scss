@@ -1,5 +1,6 @@
-@import '../../styles/mixins';
+@use '../../styles/mixins';
 
+// A segmented control in a header bar over the open tab's panel.
 :host {
   display: flex;
   flex-direction: column;
@@ -8,30 +9,79 @@
   border: var(--ng-doc-tab-group-border);
   overflow: hidden;
 
-  .ng-doc-tabs-wrapper {
-    @include ng-doc-font();
-    position: relative;
-    width: 100%;
-    display: inline-flex;
-    overflow-x: auto;
-    line-height: 18px;
-    font-size: 14px;
+  .ng-doc-tabs-header {
+    display: flex;
+    align-items: center;
     flex-shrink: 0;
-    background: var(--ng-doc-tab-group-tabs-background);
+    min-height: var(--ng-doc-code-header-height, 40px);
+    padding: var(--ng-doc-space-1) var(--ng-doc-space-2);
+    background: var(--ng-doc-tab-group-tabs-background, transparent);
+    border-bottom: 1px solid var(--ng-doc-border-color);
+  }
 
-    .ng-doc-tab {
-      position: relative;
-      padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
-      cursor: pointer;
-      white-space: nowrap;
+  .ng-doc-tabs-wrapper {
+    @include mixins.ng-doc-font();
+    position: relative;
+    display: inline-flex;
+    gap: 2px;
+    max-width: 100%;
+    padding: 3px;
+    border-radius: var(--ng-doc-radius-md);
+    background: var(--ng-doc-base-2);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
 
-      .ng-doc-tab-text {
-        @include ng-doc-font();
-        position: relative;
-        --ng-doc-font-size: 13px;
-        --ng-doc-font-weight: 500;
-      }
+  // The highlight of the open tab; the tabs paint over it.
+  ng-doc-selection {
+    border-radius: var(--ng-doc-radius-sm);
+    background: var(--ng-doc-background);
+    box-shadow: var(--ng-doc-shadow-xs);
+  }
+
+  .ng-doc-tab {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 28px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: var(--ng-doc-radius-sm);
+    background: none;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 18px;
+    color: var(--ng-doc-text-muted);
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--ng-doc-heading-color);
     }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--ng-doc-focus-ring);
+    }
+
+    &.selected {
+      color: var(--ng-doc-heading-color);
+    }
+
+    .ng-doc-tab-text {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+  }
+
+  // Until the highlight is placed in the browser (in the server-rendered page), the open tab draws
+  // its own background.
+  ng-doc-selection:not([data-ng-doc-placed]) ~ .ng-doc-tab.selected {
+    background: var(--ng-doc-background);
+    box-shadow: var(--ng-doc-shadow-xs);
   }
 
   .ng-doc-body-wrapper {
@@ -39,6 +89,26 @@
     background-color: var(--ng-doc-tab-group-background);
     height: 100%;
     overflow: hidden;
-    border-top: 1px solid var(--ng-doc-border-color);
+  }
+}
+
+// In dark themes the selected segment also gets a hairline, so it stands out from the track.
+:host-context([data-theme='dark']) ng-doc-selection,
+:host-context([data-theme='dark'])
+  ng-doc-selection:not([data-ng-doc-placed])
+  ~ .ng-doc-tab.selected {
+  box-shadow:
+    var(--ng-doc-shadow-xs),
+    inset 0 0 0 1px var(--ng-doc-base-4);
+}
+
+@media (prefers-color-scheme: dark) {
+  :host-context([data-theme='auto']) ng-doc-selection,
+  :host-context([data-theme='auto'])
+    ng-doc-selection:not([data-ng-doc-placed])
+    ~ .ng-doc-tab.selected {
+    box-shadow:
+      var(--ng-doc-shadow-xs),
+      inset 0 0 0 1px var(--ng-doc-base-4);
   }
 }

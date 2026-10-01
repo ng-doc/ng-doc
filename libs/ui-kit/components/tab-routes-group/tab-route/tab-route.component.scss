@@ -1,7 +1,7 @@
-@import '../../../styles/mixins';
+@use '../../../styles/mixins';
 
 :host {
-  @include ng-doc-font();
+  @include mixins.ng-doc-font();
   position: relative;
   padding: calc(var(--ng-doc-base-gutter) + var(--ng-doc-base-gutter) / 2)
     calc(var(--ng-doc-base-gutter) * 2);
@@ -9,4 +9,17 @@
   white-space: nowrap;
   text-decoration: none;
   font-weight: 500;
+  flex-shrink: 0;
+  color: var(--ng-doc-text-muted);
+
+  &[aria-current='page'],
+  &:hover {
+    color: var(--ng-doc-heading-color);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--ng-doc-focus-ring-color);
+    border-radius: var(--ng-doc-radius-sm);
+  }
 }

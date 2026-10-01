@@ -1,0 +1,17 @@
+{#-
+    The classes that extend a class, as identifier chips (they no longer sit in See Also). When the
+    page has no `@see` tags, the list keeps
+    the `see-also` anchor that the per-section layout gave the derived classes, so links and
+    keywords to it still resolve.
+-#}
+{% set derived = declaration.getDerivedClasses() if declaration.getDerivedClasses else [] %}
+{% set seeDocs = docNode | getJsDocTags('see') %}
+
+{% if derived.length %}
+    <dl class="ng-doc-api-extended" indexable="false"{% if not seeDocs.length %} dataSlug="See Also" dataSlugType="heading"{% endif %}>
+        <dt>Extended by <span class="ng-doc-members-count">{{ derived.length }}</span></dt>
+        <dd>
+            {%- for cls in derived %}<code>{{ cls.getName() }}</code>{% endfor -%}
+        </dd>
+    </dl>
+{% endif %}

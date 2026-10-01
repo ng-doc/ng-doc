@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   NgDocButtonComponent,
@@ -7,6 +7,7 @@ import {
   NgDocTextRightDirective,
 } from '@ng-doc/ui-kit';
 
+/** A link that opens a demo's fullscreen route in a new tab. */
 @Component({
   selector: 'ng-doc-fullscreen-button',
   templateUrl: './fullscreen-button.component.html',
@@ -21,6 +22,6 @@ import {
   ],
 })
 export class NgDocFullscreenButtonComponent {
-  @Input({ required: true })
-  route!: string;
+  /** Route of the fullscreen demo. */
+  readonly route = input.required<string>();
 }

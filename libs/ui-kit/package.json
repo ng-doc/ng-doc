@@ -1,6 +1,25 @@
 {
   "name": "@ng-doc/ui-kit",
   "version": "0.0.1",
+  "description": "The UI components NgDoc sites are built from.",
+  "keywords": [
+    "angular",
+    "documentation",
+    "docs",
+    "ng-doc",
+    "markdown",
+    "api-documentation"
+  ],
+  "homepage": "https://ng-doc.com/",
+  "bugs": {
+    "url": "https://github.com/ng-doc/ng-doc/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ng-doc/ng-doc.git",
+    "directory": "libs/ui-kit"
+  },
+  "license": "MIT",
   "peerDependencies": {
     "@angular/common": ">=22.0.0 < 23.0.0",
     "@angular/core": ">=22.0.0 < 23.0.0",

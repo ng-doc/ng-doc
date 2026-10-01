@@ -43,11 +43,17 @@
       "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": ["default", "^production", "{workspaceRoot}/tools/vitest/**/*"],
       "outputs": ["{workspaceRoot}/coverage/libs/core"],
       "options": {
-        "jestConfig": "libs/core/jest.config.ts",
-        "tsConfig": "libs/core/tsconfig.spec.json"
+        "command": "vitest run --config libs/core/vitest.config.ts"
+      },
+      "configurations": {
+        "ci": {
+          "command": "vitest run --config libs/core/vitest.config.ts --coverage"
+        }
       }
     }
   }

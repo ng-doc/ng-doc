@@ -1,21 +1,36 @@
-<div class="ng-doc-tabs-wrapper" ngDocSelectionHost>
-  <ng-doc-selection></ng-doc-selection>
-  @for (tab of tabs; track tab) {
-    <div
-      class="ng-doc-tab"
-      [class.selected]="tab === selectedTab"
-      (click)="selectTab(tab)"
-      [ngDocSelectionOrigin]="tab === selectedTab"
-      #headerTab>
-      <div class="ng-doc-tab-text">
-        <ng-container *polymorpheusOutlet="tab.label; context: {}">{{ tab.label }}</ng-container>
-      </div>
-    </div>
-  }
+<div class="ng-doc-tabs-header">
+  <div class="ng-doc-tabs-wrapper" role="tablist" ngDocSelectionHost>
+    <ng-doc-selection [align]="null" />
+    @for (tab of tabs(); track tab; let i = $index) {
+      <button
+        type="button"
+        class="ng-doc-tab"
+        role="tab"
+        [id]="idPrefix + '-tab-' + i"
+        [attr.aria-selected]="tab === selectedTab()"
+        [attr.aria-controls]="idPrefix + '-panel'"
+        [attr.tabindex]="tab === selectedTab() ? 0 : -1"
+        [class.selected]="tab === selectedTab()"
+        [ngDocSelectionOrigin]="tab === selectedTab()"
+        (click)="selectTab(tab)"
+        (keydown)="onKeydown($event)"
+        #headerTab>
+        <span class="ng-doc-tab-text">
+          <ng-container *polymorpheusOutlet="tab.label() as text; context: {}">{{
+            text
+          }}</ng-container>
+        </span>
+      </button>
+    }
+  </div>
 </div>
 
-<div class="ng-doc-body-wrapper">
-  <div *polymorpheusOutlet="selectedTab?.content ?? '' as text; context: {}">
+<div
+  class="ng-doc-body-wrapper"
+  role="tabpanel"
+  [id]="idPrefix + '-panel'"
+  [attr.aria-labelledby]="selectedIndex() >= 0 ? idPrefix + '-tab-' + selectedIndex() : null">
+  <div *polymorpheusOutlet="selectedTab()?.content() ?? '' as text; context: {}">
     {{ text }}
   </div>
 </div>

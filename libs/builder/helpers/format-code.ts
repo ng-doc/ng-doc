@@ -1,20 +1,34 @@
 import { NgDocCodeType } from '@ng-doc/core';
-import { format, resolveConfig } from '@prettier/sync';
+import prettierSync from '@prettier/sync';
+import { join } from 'node:path';
 import { Options } from 'prettier';
 
 /**
  *    Format code with Prettier
  * @param code - Code to format
  * @param codeType - Type of code
+ * @param configDirectory - Optional workspace directory; omitted preserves legacy cwd lookup.
  */
-export function formatCode(code: string, codeType: NgDocCodeType | null = 'TypeScript'): string {
+export function formatCode(
+  code: string,
+  codeType: NgDocCodeType | null = 'TypeScript',
+  configDirectory?: string,
+): string {
   try {
     if (codeType) {
       const parser: Options['parser'] | undefined = getPrettierParserFromCodeType(codeType);
-      const config = resolveConfig(process.cwd(), { editorconfig: true });
+      const config = prettierSync.resolveConfig(
+        // Prettier searches from a file's parent, so use a synthetic path inside the directory.
+        configDirectory ? join(configDirectory, '__ng_doc_format__.ts') : process.cwd(),
+        { editorconfig: true, useCache: false },
+      );
 
       return (
-        format(code, { ...config, parser, embeddedLanguageFormatting: 'auto' }) as unknown as string
+        prettierSync.format(code, {
+          ...config,
+          parser,
+          embeddedLanguageFormatting: 'auto',
+        }) as unknown as string
       ).trim();
     }
 

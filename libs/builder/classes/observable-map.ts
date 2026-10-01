@@ -6,10 +6,12 @@ type DestroyFn = () => void;
 
 export class ObservableMap<TKey, TValue> {
   private collection: Map<TKey, TValue> = new Map();
-  private changes$: ReplaySubject<void> = new ReplaySubject<void>();
+  private changes$: ReplaySubject<void> = new ReplaySubject<void>(1);
+  private owners = new Map<TKey, symbol>();
 
   constructor(values?: Array<[TKey, TValue]>) {
     this.collection = new Map(values);
+    this.changes$.next();
   }
 
   get size(): number {
@@ -33,12 +35,18 @@ export class ObservableMap<TKey, TValue> {
   }
 
   add(...items: Array<[TKey, TValue]>): DestroyFn {
-    items.forEach(([key, value]) => this.collection.set(key, value));
+    const owner = Symbol();
+    items.forEach(([key, value]) => {
+      this.collection.set(key, value);
+      this.owners.set(key, owner);
+    });
 
     this.changes$.next();
 
     return () => {
-      items.forEach(([key]) => this.delete(key));
+      items.forEach(([key]) => {
+        if (this.owners.get(key) === owner) this.delete(key);
+      });
     };
   }
 
@@ -48,12 +56,14 @@ export class ObservableMap<TKey, TValue> {
 
   delete(key: TKey): void {
     this.collection.delete(key);
+    this.owners.delete(key);
 
     this.changes$.next();
   }
 
   clear(): void {
     this.collection.clear();
+    this.owners.clear();
 
     this.changes$.next();
   }

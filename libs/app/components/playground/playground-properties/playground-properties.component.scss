@@ -1,79 +1,156 @@
+// The inspector: the demos, with the property grid on the right. Below 640px of the playground's
+// own width the grid stacks under the demos (a container query, so narrow layouts stack too).
 :host {
+  display: block;
+  container: ng-doc-playground / inline-size;
+}
+
+.ng-doc-playground-properties-wrapper {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--ng-doc-playground-inspector-width);
+  align-items: stretch;
+  border: var(--ng-doc-demo-displayer-border);
+  border-radius: var(--ng-doc-demo-displayer-border-radius);
+  // `clip`, not `hidden`: it rounds the corners without creating a scroll container, so the demos
+  // can stick to the viewport.
+  overflow: clip;
+  // The demos sit on a canvas: a subtle dot grid. It is drawn on the wrapper, so it fills the
+  // demo column below demos that are shorter than the inspector.
+  background-color: var(--ng-doc-demo-displayer-background, var(--ng-doc-background));
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--ng-doc-base-5) 55%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 16px 16px;
+
+  &.no-side-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  // Beside the inspector, the demos stay in view while the reader scrolls through a long list of
+  // properties.
+  &:not(.no-side-panel) .ng-doc-playground-demos {
+    position: sticky;
+    top: calc(var(--ng-doc-page-sticky-offset) + var(--ng-doc-base-gutter));
+    align-self: start;
+    z-index: 4;
+  }
+}
+
+.ng-doc-playground-demos {
+  min-width: 0;
+}
+
+.ng-doc-playground-properties {
+  min-width: 0;
+  background: var(--ng-doc-base-1);
+  border-left: 1px solid var(--ng-doc-border-color);
+  font-family: var(--ng-doc-font-family);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ng-doc-text);
+
+  // Inputs in the inspector: 36px high, with a border that stays above 3:1 on its surface.
+  --ng-doc-input-height: 36px;
+  --ng-doc-input-border: var(--ng-doc-playground-input-border);
+  --ng-doc-checkbox-border: var(--ng-doc-playground-input-border);
+}
+
+.ng-doc-playground-header {
+  display: flex;
+  align-items: center;
+  gap: var(--ng-doc-space-2);
+  height: 52px;
+  padding: 0 var(--ng-doc-space-3) 0 var(--ng-doc-space-4);
+
+  h4 {
+    margin: 0;
+    font-family: var(--ng-doc-heading-font-family);
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--ng-doc-heading-color);
+  }
+}
+
+.ng-doc-playground-reset {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  margin-left: auto;
+  padding: 0 10px;
+  border: 1px solid var(--ng-doc-border-color);
+  border-radius: var(--ng-doc-radius-md);
+  background: var(--ng-doc-background);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ng-doc-heading-color);
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--ng-doc-border-hover-color);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--ng-doc-focus-ring);
+  }
+}
+
+.ng-doc-playground-setting {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 var(--ng-doc-space-4) var(--ng-doc-space-3);
+}
+
+.ng-doc-playground-info {
+  --ng-doc-icon-color: var(--ng-doc-text-muted);
+}
+
+.ng-doc-playground-divider {
+  height: 1px;
+  background: var(--ng-doc-border-color);
+}
+
+h5.ng-doc-title {
+  margin: 0;
+  padding: var(--ng-doc-space-3) var(--ng-doc-space-4) var(--ng-doc-space-1);
+  font-family: var(--ng-doc-font-family);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ng-doc-text-muted);
+}
+
+ng-doc-playground-property {
+  padding: var(--ng-doc-space-2) var(--ng-doc-space-4);
+
+  & + ng-doc-playground-property {
+    border-top: 1px solid var(--ng-doc-base-2);
+  }
+
+  &:last-child {
+    padding-bottom: var(--ng-doc-space-4);
+  }
+}
+
+@container ng-doc-playground (max-width: 640px) {
   .ng-doc-playground-properties-wrapper {
-    position: relative;
-    display: flex;
-    align-items: flex-start;
-    gap: calc(var(--ng-doc-base-gutter) * 2);
+    grid-template-columns: minmax(0, 1fr);
 
-    &.vertical {
-      flex-direction: column;
-
-      .ng-doc-playground-demos {
-        margin-right: 0;
-        margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
-      }
-
-      .ng-doc-playground-properties {
-        width: 100%;
-      }
-    }
-
-    .ng-doc-playground-demos {
-      position: sticky;
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      min-width: 0;
-      z-index: 4;
-
-      top: calc(var(--ng-doc-page-sticky-offset) + var(--ng-doc-base-gutter));
-    }
-
-    .ng-doc-playground-properties {
-      flex-shrink: 0;
-      align-self: normal;
-      width: 300px;
-      padding: calc(var(--ng-doc-base-gutter) * 2) calc(var(--ng-doc-base-gutter) * 3);
-      background-color: var(--ng-doc-base-1);
-      border-radius: var(--ng-doc-base-gutter);
-      border: 1px solid var(--ng-doc-border-color);
-
-      ng-doc-playground-property:not(:last-child) {
-        margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
-      }
-
-      .ng-doc-playground-controls {
-        display: flex;
-        justify-content: flex-end;
-      }
-
-      .ng-doc-playground-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 40px;
-        margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
-
-        h4 {
-          margin: 0;
-        }
-      }
-
-      .ng-doc-playground-setting {
-        display: flex;
-        flex-direction: column;
-      }
-    }
-
-    .ng-doc-title {
-      margin-top: 0;
-      margin-bottom: calc(var(--ng-doc-base-gutter) + var(--ng-doc-base-gutter) / 2);
+    // Stacked, the inspector follows the demos: nothing sticks.
+    &:not(.no-side-panel) .ng-doc-playground-demos {
+      position: static;
     }
   }
 
-  .ng-doc-playground-divider {
-    margin: calc(var(--ng-doc-base-gutter) * 2) 0;
-    height: 1px;
-    background-color: var(--ng-doc-base-2);
+  .ng-doc-playground-properties {
+    border-left: 0;
+    border-top: 1px solid var(--ng-doc-border-color);
   }
 }

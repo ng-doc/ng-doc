@@ -1,11 +1,13 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
+  DOCUMENT,
   ElementRef,
-  HostBinding,
   inject,
-  OnInit,
-  ViewChild,
+  signal,
+  viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor } from '@angular/forms';
@@ -14,25 +16,29 @@ import { DICompareHost, DIStateControl, injectHostControl } from 'di-controls';
 import { fromEvent } from 'rxjs';
 import { filter, last, map, pairwise, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 
+/**
+ * Switch control. It works with forms (`ngModel`, reactive forms, `[formField]`) and with host
+ * controls; the circle can be clicked or dragged.
+ */
 @Component({
   selector: 'ng-doc-toggle',
   templateUrl: './toggle.component.html',
   styleUrls: ['./toggle.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
+  host: {
+    '[attr.data-ng-doc-dragging]': 'dragging()',
+    '[attr.data-checked]': 'checked()',
+    '[attr.data-disabled]': 'disabled',
+  },
 })
-export class NgDocToggleComponent<T>
-  extends DIStateControl<T>
-  implements OnInit, ControlValueAccessor
-{
-  @ViewChild('wrapper', { static: true })
-  private wrapper?: ElementRef<HTMLElement>;
+export class NgDocToggleComponent<T> extends DIStateControl<T> implements ControlValueAccessor {
+  private readonly document = inject(DOCUMENT);
+  private readonly toggleDestroyRef = inject(DestroyRef);
+  private readonly wrapper = viewChild<ElementRef<HTMLElement>>('wrapper');
+  private readonly circle = viewChild<ElementRef<HTMLElement>>('circle');
 
-  @ViewChild('circle', { static: true })
-  private circle?: ElementRef<HTMLElement>;
-
-  @HostBinding('attr.data-ng-doc-dragging')
-  dragging: boolean = false;
+  /** Whether the user is dragging the circle. */
+  protected readonly dragging = signal(false);
 
   private maxPixelValue: number = 0;
 
@@ -40,107 +46,119 @@ export class NgDocToggleComponent<T>
     super({
       host: injectHostControl({ optional: true }),
       compareHost: inject(DICompareHost, { optional: true }),
-      onIncomingUpdate: () => {
-        this.setState(!!this.checked());
-      },
+      onIncomingUpdate: () => this.setState(!!this.checked()),
     });
-  }
 
-  override ngOnInit(): void {
-    super.ngOnInit();
-    if (this.wrapper && this.circle) {
-      this.maxPixelValue =
-        this.wrapper.nativeElement.offsetWidth - this.circle.nativeElement.offsetWidth - 6;
-      fromEvent(this.circle.nativeElement, 'mousedown')
-        .pipe(
-          filter(() => !this.disabled),
-          switchMap(() => {
-            const transition: string = this.circle?.nativeElement.style.transition ?? '';
-            this.renderer.setStyle(this.circle?.nativeElement, 'transition', '');
-            this.setDragging(true);
+    // The track is measured once it is rendered (and only in the browser); a value written by a
+    // form before that is shown from here.
+    afterNextRender(() => {
+      const wrapper: HTMLElement | undefined = this.wrapper()?.nativeElement;
+      const circle: HTMLElement | undefined = this.circle()?.nativeElement;
 
-            return fromEvent(document.body, 'mousemove').pipe(
-              pairwise(),
-              map(
-                ([newEvent, oldEvent]: [Event, Event]) =>
-                  [newEvent, oldEvent] as [MouseEvent, MouseEvent],
-              ),
-              map(
-                ([newEvent, oldEvent]: [MouseEvent, MouseEvent]) =>
-                  oldEvent.clientX - newEvent.clientX,
-              ),
-              filter((deltaX: number) => deltaX !== 0),
-              tap((deltaX: number) => this.changeCirclePosition(deltaX)),
-              startWith(null),
-              takeUntil(
-                fromEvent(document.body, 'mouseup').pipe(tap(() => this.setDragging(false))),
-              ),
-              last(),
-              tap(
-                () =>
-                  this.circle &&
-                  this.renderer.setStyle(this.circle.nativeElement, 'transition', transition),
-              ),
-            );
-          }),
-          takeUntilDestroyed(this['destroyRef']),
-        )
-        .subscribe((deltaX: number | null) => {
-          deltaX === null ? this.toggle() : this.detectByCoordinates();
-        });
-    }
+      if (!wrapper || !circle) {
+        return;
+      }
+
+      this.maxPixelValue = Math.max(wrapper.offsetWidth - circle.offsetWidth - 6, 0);
+      this.setState(!!this.checked());
+      this.listenToDrag(circle);
+    });
   }
 
   override updateModel(value: boolean | T | null): void {
     super.updateModel(value);
-    this.setState(!!this.checked);
+    this.setState(!!this.checked());
+  }
+
+  protected onWrapperClick(): void {
+    if (!this.disabled) {
+      this.toggle();
+    }
   }
 
   protected setState(isSelected: boolean): void {
-    isSelected
-      ? this.circle &&
-        this.renderer.setStyle(
-          this.circle.nativeElement,
-          'transform',
-          `translateX(${this.maxPixelValue}px)`,
-        )
-      : this.circle &&
-        this.renderer.setStyle(this.circle.nativeElement, 'transform', `translateX(0)`);
+    const circle: HTMLElement | undefined = this.circle()?.nativeElement;
+
+    if (circle) {
+      this.renderer.setStyle(
+        circle,
+        'transform',
+        isSelected ? `translateX(${this.maxPixelValue}px)` : 'translateX(0)',
+      );
+    }
   }
 
-  private setDragging(value: boolean): void {
-    this.dragging = value;
-    this.changeDetectorRef.markForCheck();
+  private listenToDrag(circle: HTMLElement): void {
+    fromEvent(circle, 'mousedown')
+      .pipe(
+        filter(() => !this.disabled),
+        switchMap(() => {
+          const transition: string = circle.style.transition;
+          this.renderer.setStyle(circle, 'transition', '');
+          this.dragging.set(true);
+
+          return fromEvent<MouseEvent>(this.document.body, 'mousemove').pipe(
+            pairwise(),
+            map(
+              ([newEvent, oldEvent]: [MouseEvent, MouseEvent]) =>
+                oldEvent.clientX - newEvent.clientX,
+            ),
+            filter((deltaX: number) => deltaX !== 0),
+            tap((deltaX: number) => this.changeCirclePosition(deltaX)),
+            startWith(null),
+            takeUntil(
+              fromEvent(this.document.body, 'mouseup').pipe(tap(() => this.dragging.set(false))),
+            ),
+            last(),
+            tap(() => this.renderer.setStyle(circle, 'transition', transition)),
+          );
+        }),
+        takeUntilDestroyed(this.toggleDestroyRef),
+      )
+      .subscribe((deltaX: number | null) => {
+        // Without a drag the press is a click on the circle. While dragging, the track ignores
+        // pointer events, so the click that follows does not reach its handler as well.
+        if (deltaX === null) {
+          this.toggle();
+        } else {
+          this.detectByCoordinates();
+        }
+      });
   }
 
   private detectByCoordinates(): void {
-    if (!this.disabled && this.wrapper && this.circle) {
+    const wrapper: HTMLElement | undefined = this.wrapper()?.nativeElement;
+    const circle: HTMLElement | undefined = this.circle()?.nativeElement;
+
+    if (!this.disabled && wrapper && circle) {
       const wrapperMiddle: number =
-        NgDocPositionUtils.getElementPosition(this.wrapper.nativeElement).x +
-        this.wrapper.nativeElement.offsetWidth / 2;
+        NgDocPositionUtils.getElementPosition(wrapper).x + wrapper.offsetWidth / 2;
       const circleCenterLeft: number =
-        NgDocPositionUtils.getElementPosition(this.circle.nativeElement).x +
-        this.circle.nativeElement.offsetWidth / 2;
-      circleCenterLeft > wrapperMiddle ? this.check() : this.uncheck();
-      this.setState(!!this.checked);
+        NgDocPositionUtils.getElementPosition(circle).x + circle.offsetWidth / 2;
+
+      if (circleCenterLeft > wrapperMiddle) {
+        this.check();
+      } else {
+        this.uncheck();
+      }
+
+      this.setState(!!this.checked());
     }
   }
 
   private changeCirclePosition(delta: number): void {
-    if (this.wrapper && this.circle) {
-      const wrapperLeft: number = NgDocPositionUtils.getElementPosition(
-        this.wrapper.nativeElement,
-      ).x;
-      const circleLeft: number = NgDocPositionUtils.getElementPosition(this.circle.nativeElement).x;
+    const wrapper: HTMLElement | undefined = this.wrapper()?.nativeElement;
+    const circle: HTMLElement | undefined = this.circle()?.nativeElement;
+
+    if (wrapper && circle) {
+      const wrapperLeft: number = NgDocPositionUtils.getElementPosition(wrapper).x;
+      const circleLeft: number = NgDocPositionUtils.getElementPosition(circle).x;
       const newPosition: number = Math.max(
         Math.min(circleLeft - wrapperLeft - 3 + delta, this.maxPixelValue),
         0,
       );
-      this.renderer.setStyle(
-        this.circle.nativeElement,
-        'transform',
-        `translateX(${newPosition}px)`,
-      );
+
+      this.renderer.setStyle(circle, 'transform', `translateX(${newPosition}px)`);
     }
   }
 }

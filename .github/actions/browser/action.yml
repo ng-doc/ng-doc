@@ -1,0 +1,14 @@
+name: NgDoc browser automation
+description: Install an isolated Playwright with Chromium and export PLAYWRIGHT_MODULE and CHROME_PATH.
+
+runs:
+  using: composite
+  steps:
+    # Kept out of the workspace so that the checkout's dependencies stay exactly the lockfile's.
+    - name: Install Playwright and Chromium
+      shell: bash
+      run: |
+        npm install --prefix "$RUNNER_TEMP/ngdoc-browser" --no-audit --no-fund playwright@1.62.1
+        node "$RUNNER_TEMP/ngdoc-browser/node_modules/playwright/cli.js" install --with-deps chromium
+        echo "PLAYWRIGHT_MODULE=$RUNNER_TEMP/ngdoc-browser/node_modules/playwright" >> "$GITHUB_ENV"
+        node -e 'const p = require(process.env.RUNNER_TEMP + "/ngdoc-browser/node_modules/playwright"); console.log("CHROME_PATH=" + p.chromium.executablePath())' >> "$GITHUB_ENV"

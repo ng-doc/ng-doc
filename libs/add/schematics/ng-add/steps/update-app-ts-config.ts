@@ -8,6 +8,7 @@ import {
 import { JSONFile } from 'ng-morph';
 
 import { Schema } from '../schema';
+import { getBuildOptionsTarget } from '../utils/get-build-options-target';
 import { getProject } from '../utils/get-project';
 
 /**
@@ -31,7 +32,9 @@ export function updateAppTsConfig(options: Schema): Rule {
           return;
         }
 
-        const buildTarget: TargetDefinition | undefined = project.targets.get('build');
+        const buildTarget: TargetDefinition | undefined = project.targets.get(
+          getBuildOptionsTarget(project),
+        );
         const serveTarget: TargetDefinition | undefined = project.targets.get('serve');
 
         if (buildTarget) {

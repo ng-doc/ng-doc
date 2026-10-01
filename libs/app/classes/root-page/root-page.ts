@@ -1,5 +1,5 @@
 import { NgDocDemoAssets } from '@ng-doc/app/interfaces';
-import { NgDocPage } from '@ng-doc/core/interfaces';
+import type { NgDocContentSource, NgDocPage } from '@ng-doc/core/interfaces';
 import { NgDocPageType } from '@ng-doc/core/types';
 
 /**
@@ -14,6 +14,12 @@ export abstract class NgDocRootPage {
    * Html content of the page
    */
   abstract readonly pageContent: string;
+
+  /**
+   * Deferred content for generated pages. Legacy pages can continue to provide
+   * {@link pageContent} only.
+   */
+  readonly pageContentSource?: NgDocContentSource;
 
   /**
    * Edit URL that can be used to edit the page source file in the repository

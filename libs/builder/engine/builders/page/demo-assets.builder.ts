@@ -14,8 +14,11 @@ import * as path from 'path';
 import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
+import { ObservableSet } from '../../../classes/observable-set';
 import { getDemoAssets, getDemoClassDeclarations, UTILS } from '../../../helpers';
-import { Builder, watchFile } from '../../core';
+import { getComponentSourceFiles } from '../../../helpers/angular/get-component-source-files';
+import { Builder } from '../../core';
+import { onDependenciesChange } from '../../core/triggers/on-dependencies-change';
 import { EntryMetadata } from '../interfaces';
 
 /**
@@ -39,12 +42,17 @@ export function demoAssetsBuilder(config: Config): Builder<AsyncFileOutput> {
   const references = Object.values(getDemoClassDeclarations(page.objectExpression())).map(
     (classDeclaration) => classDeclaration.getSourceFile(),
   );
+  const resourcePaths = () =>
+    Object.values(getDemoClassDeclarations(page.objectExpression())).flatMap(
+      getComponentSourceFiles,
+    );
+  const dependencies = new ObservableSet<string>(resourcePaths());
   const outPath = path.join(page.outDir, 'demo-assets.ts');
   const usedKeywords = new Set<string>();
   const cacheStrategy = {
     id: `${page.path}#DemoAssets`,
     action: 'skip',
-    files: () => [page.path, outPath, ...references.map((sourceFile) => sourceFile.getFilePath())],
+    files: () => [page.path, outPath, ...dependencies.asArray()],
   } satisfies CacheStrategy<undefined, string>;
 
   const builder = of(void 0).pipe(
@@ -52,6 +60,7 @@ export function demoAssetsBuilder(config: Config): Builder<AsyncFileOutput> {
       references.forEach((sourceFile) => {
         sourceFile.refreshFromFileSystemSync();
       });
+      dependencies.fill(...resourcePaths());
     }),
     runBuild(
       PAGE_DEMO_ASSETS_BUILDER_TAG,
@@ -109,12 +118,5 @@ export function demoAssetsBuilder(config: Config): Builder<AsyncFileOutput> {
     ),
   );
 
-  return createBuilder(
-    [
-      createMainTrigger(
-        ...references.map((sourceFile) => watchFile(sourceFile.getFilePath(), 'update')),
-      ),
-    ],
-    () => builder,
-  );
+  return createBuilder([createMainTrigger(onDependenciesChange(dependencies))], () => builder);
 }

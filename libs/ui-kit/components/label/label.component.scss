@@ -1,4 +1,4 @@
-@import '../../styles/mixins';
+@use '../../styles/mixins';
 
 :host {
 	display: flex;
@@ -13,7 +13,7 @@
 }
 
 .ng-doc-label {
-	@include ng-doc-font();
+	@include mixins.ng-doc-font();
 	display: flex;
 	flex-direction: row;
 	pointer-events: auto;

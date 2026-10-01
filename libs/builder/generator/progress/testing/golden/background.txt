@@ -1,0 +1,4 @@
+  0.0s @ 3:04:00 PM [vite] NgDoc: engine switches set: NGDOC_TARGETED_REBUILD=0 (edits rebuild all pages); builds and edits may be slower
+ 22.0s @ 3:04:22 PM [vite] NgDoc: checking generated files...
+ 23.1s @ 3:04:23 PM [vite] NgDoc: checking generated files finished in 3.1s; updated 2 files
+ 30.2s @ 3:04:30 PM [vite] NgDoc: catching up with missed changes failed (2 errors above); the site keeps the last good version

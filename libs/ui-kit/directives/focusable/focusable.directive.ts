@@ -1,16 +1,16 @@
-import { Directive, HostBinding, Input } from '@angular/core';
+import { Directive, input } from '@angular/core';
 
+/**
+ * Puts the host into the tab order (`tabindex="0"`) or takes it out (`tabindex="-1"`).
+ */
 @Directive({
-	selector: '[ngDocFocusable]',
-	exportAs: 'ngDocFocusable',
-	standalone: true,
+  selector: '[ngDocFocusable]',
+  exportAs: 'ngDocFocusable',
+  host: {
+    '[attr.tabIndex]': 'focusable() ? 0 : -1',
+  },
 })
 export class NgDocFocusableDirective {
-	@Input('ngDocFocusable')
-	focusable: boolean = true;
-
-	@HostBinding('attr.tabIndex')
-	get tabIndex(): number {
-		return this.focusable ? 0 : -1;
-	}
+  /** Whether the host can be focused with the keyboard. */
+  readonly focusable = input<boolean>(true, { alias: 'ngDocFocusable' });
 }

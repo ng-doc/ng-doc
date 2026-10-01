@@ -14,10 +14,19 @@
   article {
     position: relative;
     width: var(--ng-doc-article-width, 100%);
+    // Prose is capped for readability; code, tables and demos share the column, so their edges
+    // align. API pages (their header carries the page tags) and the API index get the wider API
+    // width. A width set through --ng-doc-article-width still wins.
+    max-width: var(--ng-doc-article-width, var(--ng-doc-content-max-width));
     margin-left: auto;
     margin-right: auto;
     // fixes the issue when child elements affect the width of the parent
     min-width: 0;
+
+    &:has(.ng-doc-page-tags),
+    &:has(ng-doc-api-list) {
+      max-width: var(--ng-doc-article-width, var(--ng-doc-api-content-max-width));
+    }
   }
 
   header ::ng-deep {

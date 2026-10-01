@@ -1,4 +1,10 @@
-import { NgDocHeading, NgDocPageAnchor } from '@ng-doc/core';
+import {
+  NG_DOC_SYNTAX_THEME_NAME,
+  NgDocHeading,
+  NgDocPageAnchor,
+  NgDocSyntaxTheme,
+  ngDocSyntaxTheme,
+} from '@ng-doc/core';
 import rehypeShiki from '@shikijs/rehype';
 import rehypeMinifyWhitespace from 'rehype-minify-whitespace';
 import rehypeParse from 'rehype-parse';
@@ -48,9 +54,13 @@ export async function processHtml(
         fallbackLanguage: 'text',
         addLanguageClass: true,
         parseMetaString: (meta: string) => JSON.parse(meta?.replace(/\\/g, '') || '{}'),
+        // Shiki stops tokenizing a line after 500 ms by default and silently colours the rest of
+        // it like the last token. A slow or pre-empted process then renders other HTML than a fast
+        // one, so the build output would depend on machine load. No limit keeps it deterministic.
+        tokenizeTimeLimit: 0,
         themes: {
-          light: config.lightTheme ?? 'github-light',
-          dark: config.darkTheme ?? 'ayu-dark',
+          light: shikiTheme(config.lightTheme ?? 'github-light'),
+          dark: shikiTheme(config.darkTheme ?? 'ayu-dark'),
         },
       })
       .use(highlightCodeLines)
@@ -66,4 +76,13 @@ export async function processHtml(
   } catch (error) {
     return { content: html, anchors: [], error };
   }
+}
+
+/**
+ * A Shiki theme by name. NgDoc's own theme is not bundled with Shiki, so its name resolves to a new
+ * copy of it; any other name is left to Shiki.
+ * @param name - The theme name.
+ */
+function shikiTheme(name: string): string | NgDocSyntaxTheme {
+  return name === NG_DOC_SYNTAX_THEME_NAME ? ngDocSyntaxTheme() : name;
 }

@@ -1,7 +1,7 @@
-@import 'defaults';
-@import '../../ui-kit/styles/mixins';
+@use 'defaults';
+@use '../../ui-kit/styles/mixins';
 
-$class: $ng-doc-element;
+$class: defaults.$ng-doc-element;
 
 body {
   --ng-doc-code-margin: var(--ng-doc-page-block-margin);
@@ -31,40 +31,60 @@ iframe#{$class} {
   border: 0;
 }
 
+// Prose rhythm: blocks stack with a bottom margin only, so spacing is predictable. Paragraphs and
+// list items read --ng-doc-line-height, so they follow their container: 26px on the page, 24px in
+// callouts.
 p#{$class} {
-  line-height: calc(var(--ng-doc-base-gutter) * 3);
-  margin: calc(var(--ng-doc-base-gutter) * 2) 0;
+  line-height: var(--ng-doc-line-height);
+  margin: 0 0 var(--ng-doc-space-4);
 }
 
 ul#{$class},
 ol#{$class} {
-  margin: var(--ng-doc-page-block-margin);
+  margin: 0 0 var(--ng-doc-space-4);
+  padding-left: 1.25em;
 }
 
 ul li#{$class},
 ol li#{$class} {
-  line-height: 1.5rem;
-  margin-bottom: calc(var(--ng-doc-base-gutter) + var(--ng-doc-base-gutter) / 2);
+  line-height: var(--ng-doc-line-height);
+  margin: 0 0 var(--ng-doc-space-1);
+  padding-left: 2px;
+
+  &::marker {
+    color: var(--ng-doc-base-5);
+  }
 }
 
 ul ul#{$class},
 ol ul#{$class},
 ul ol#{$class},
 ol ol#{$class} {
-  margin-top: calc(var(--ng-doc-base-gutter) * 2);
+  margin-top: var(--ng-doc-space-1);
   margin-bottom: 0;
 }
 
+// Callouts use a tighter 16/24 leading. It is set through the variable, so the paragraphs and
+// lists inside a callout follow it too. The blockquote processor renders Markdown callouts as the
+// ui-kit component (`blockquote[ng-doc-blockquote]`, without the `ngde` class); a blockquote that no
+// processor replaced keeps `blockquote.ngde`.
+blockquote#{$class},
+blockquote[ng-doc-blockquote] {
+  --ng-doc-line-height: 24px;
+  line-height: var(--ng-doc-line-height);
+}
+
 blockquote#{$class} {
-  line-height: 1.5rem;
   margin: var(--ng-doc-page-block-margin);
 }
 
+// One tracking rule: headings use --ng-doc-heading-letter-spacing, the page title the display
+// tracking, and all other text none. Weights stay within 400, 500, 600 and 700.
 @include headings {
-  @include ng-doc-heading-font();
-  margin: calc(var(--ng-doc-base-gutter) * 7) 0 0;
-  --ng-doc-line-height: 1.5rem;
+  @include mixins.ng-doc-heading-font();
+  margin: var(--ng-doc-space-6) 0 var(--ng-doc-space-2);
   --ng-doc-font-weight: 600;
+  letter-spacing: var(--ng-doc-heading-letter-spacing);
   overflow-wrap: anywhere;
   color: var(--ng-doc-heading-color);
 
@@ -78,36 +98,52 @@ blockquote#{$class} {
   & + h4#{$class},
   & + h5#{$class},
   & + h6#{$class} {
-    margin-top: calc(var(--ng-doc-base-gutter) * 2);
+    margin-top: var(--ng-doc-space-4);
   }
 }
 
+// Every line height is at least the font size.
 h1#{$class} {
-  --ng-doc-font-size: 36px;
-  --ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 4);
+  --ng-doc-font-size: var(--ng-doc-h1-font-size);
+  --ng-doc-line-height: var(--ng-doc-h1-line-height);
+  --ng-doc-font-weight: 700;
+  letter-spacing: var(--ng-doc-display-letter-spacing);
+  margin-top: 0;
+
+  @media (max-width: 640px) {
+    --ng-doc-font-size: 28px;
+    --ng-doc-line-height: 36px;
+  }
 }
 
+// The optional divider above h2 (--ng-doc-h2-border) is off by default.
 h2#{$class} {
-  --ng-doc-font-size: 26px;
-  --ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 4);
+  --ng-doc-font-size: var(--ng-doc-h2-font-size);
+  --ng-doc-line-height: var(--ng-doc-h2-line-height);
+  margin: var(--ng-doc-h2-margin-top) 0 var(--ng-doc-heading-margin-bottom);
+  padding-top: var(--ng-doc-h2-padding-top);
+  border-top: var(--ng-doc-h2-border);
 }
 
 h3#{$class} {
-  --ng-doc-font-size: 20px;
-  --ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 3);
+  --ng-doc-font-size: var(--ng-doc-h3-font-size);
+  --ng-doc-line-height: var(--ng-doc-h3-line-height);
+  margin: var(--ng-doc-h3-margin-top) 0 var(--ng-doc-space-2);
 }
 
 h4#{$class} {
-  --ng-doc-font-size: 18px;
-  --ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 2);
-  margin: calc(var(--ng-doc-base-gutter) * 2) 0;
+  --ng-doc-font-size: var(--ng-doc-h4-font-size);
+  --ng-doc-line-height: var(--ng-doc-h4-line-height);
 }
 
-h5#{$class},
+h5#{$class} {
+  --ng-doc-font-size: var(--ng-doc-h5-font-size);
+  --ng-doc-line-height: var(--ng-doc-h5-line-height);
+}
+
 h6#{$class} {
-  --ng-doc-font-size: 15px;
-  --ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 2);
-  margin: calc(var(--ng-doc-base-gutter) * 2) 0;
+  --ng-doc-font-size: var(--ng-doc-h6-font-size);
+  --ng-doc-line-height: var(--ng-doc-h6-line-height);
 }
 
 pre.shiki {
@@ -131,16 +167,16 @@ pre.shiki {
   }
 }
 
+// Inline code sits on the text baseline and scales with the surrounding text. The background
+// variable is a tint source, mixed into the page.
 *:not(pre) > code#{$class} {
-  vertical-align: bottom;
-  border-radius: calc(var(--ng-doc-base-gutter) / 2);
+  border-radius: var(--ng-doc-radius-sm);
   color: var(--ng-doc-inline-code-color);
-  padding: calc(var(--ng-doc-base-gutter) / 4) var(--ng-doc-base-gutter);
+  padding: 0.15em 0.4em;
   font-family: var(--ng-doc-code-font);
-  font-size: 14px;
+  font-size: 0.875em;
   font-weight: var(--ng-doc-code-font-weight);
-  line-height: var(--ng-doc-code-line-height, var(--ng-doc-line-height));
-  background: color-mix(in srgb, var(--ng-doc-inline-code-background) 15%, transparent);
+  background: color-mix(in srgb, var(--ng-doc-inline-code-background) 12%, transparent);
   white-space: nowrap;
 }
 
@@ -155,17 +191,15 @@ table#{$class} {
   thead {
     tr {
       th {
-        padding: calc(var(--ng-doc-base-gutter) * 1.5);
+        padding: var(--ng-doc-space-2) var(--ng-doc-space-3);
         background-color: var(--ng-doc-base-1);
         text-align: left;
 
         &:first-child {
           border-top-left-radius: var(--ng-doc-base-gutter);
-          padding-left: calc(var(--ng-doc-base-gutter) * 3);
         }
 
         &:last-child {
-          padding-right: calc(var(--ng-doc-base-gutter) * 3);
           border-top-right-radius: var(--ng-doc-base-gutter);
         }
 
@@ -180,18 +214,10 @@ table#{$class} {
   tbody {
     tr {
       td {
-        padding: calc(var(--ng-doc-base-gutter) * 2);
+        padding: var(--ng-doc-space-3);
         vertical-align: top;
         border-bottom: 1px solid var(--ng-doc-base-2);
         background-color: var(--ng-doc-background);
-
-        &:first-child {
-          padding-left: calc(var(--ng-doc-base-gutter) * 3);
-        }
-
-        &:last-child {
-          padding-right: calc(var(--ng-doc-base-gutter) * 3);
-        }
 
         table {
           margin: calc(var(--ng-doc-base-gutter) * 2) 0;
@@ -205,12 +231,36 @@ table#{$class} {
   }
 }
 
+// Identifiers inside 14px UI text (API node details, API tables, declaration details) use the 13px
+// identifier size; 0.875em would give 12.25px there.
+.ng-doc-node-details,
+table.ng-doc-api-table,
+table.ng-doc-overload-table,
+.ng-doc-declaration-details {
+  *:not(pre) > code#{$class} {
+    font-size: 13px;
+  }
+}
+
+// Links are underlined, so they are not identified by colour alone; the underline strengthens on
+// hover. API links inside inline code are already set apart by their tint and stay plain.
 a#{$class} {
-  text-decoration: none;
   color: var(--ng-doc-link-color);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--ng-doc-link-color) 35%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
 
   &:hover {
-    text-decoration: underline;
+    text-decoration-color: currentColor;
+  }
+
+  &.ng-doc-code-anchor {
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 

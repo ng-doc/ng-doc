@@ -6,9 +6,10 @@
   --ng-doc-code-margin: 0;
   --ng-doc-code-border-radius: 0;
   --ng-doc-code-border: none;
-  --ng-doc-tab-group-tabs-background: var(--ng-doc-base-2);
+  --ng-doc-tab-group-tabs-background: var(--ng-doc-demo-toolbar-background);
   --ng-doc-tab-group-border: none;
   --ng-doc-tab-group-border-radius: 0;
+  --ng-doc-pane-border-radius: var(--ng-doc-demo-displayer-border-radius);
 
   ng-doc-tab-group,
   ng-doc-code,

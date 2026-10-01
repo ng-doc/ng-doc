@@ -2,3 +2,8 @@
   display: block;
   margin: var(--ng-doc-playground-margin);
 }
+
+// Caption-free demo rows, separated by a soft hairline.
+ng-doc-playground-demo + ng-doc-playground-demo {
+  border-top: 1px solid color-mix(in srgb, var(--ng-doc-border-color) 70%, transparent);
+}

@@ -29,12 +29,58 @@
       margin-top: auto;
     }
 
+    // The target of the skip link: focused by script, so it shows no ring of its own.
+    .ng-doc-content {
+      outline: none;
+    }
+
     .ng-doc-header {
       position: fixed;
       top: 0;
       height: var(--ng-doc-navbar-height);
       width: 100%;
       z-index: 15;
+    }
+  }
+
+  // Hidden above the viewport until it is focused, so it is the first stop for keyboard users
+  // and invisible to everyone else.
+  .ng-doc-skip-link {
+    position: fixed;
+    top: var(--ng-doc-space-2);
+    left: var(--ng-doc-space-4);
+    z-index: 70;
+    display: inline-flex;
+    align-items: center;
+    height: 36px;
+    padding: 0 var(--ng-doc-space-3);
+    border: 1px solid var(--ng-doc-border-color);
+    border-radius: var(--ng-doc-radius-md);
+    background: var(--ng-doc-background);
+    color: var(--ng-doc-heading-color);
+    font-family: var(--ng-doc-font-family);
+    font-size: var(--ng-doc-text-sm-size);
+    line-height: 20px;
+    font-weight: 500;
+    text-decoration: none;
+    box-shadow: var(--ng-doc-shadow-md);
+    transform: translateY(calc(-100% - var(--ng-doc-space-16)));
+
+    &:focus {
+      transform: none;
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--ng-doc-focus-ring), var(--ng-doc-shadow-md);
+    }
+  }
+
+  // Phones get 16px page gutters, the same as the navbar. Full-width pages (the landing page)
+  // lay out their own gutters.
+  @media (max-width: 640px) {
+    &:not([data-ng-doc-no-width-limit='true']) .ng-doc-root-wrapper main {
+      --ng-doc-sidenav-content-padding: var(--ng-doc-space-5) var(--ng-doc-space-4);
     }
   }
 }

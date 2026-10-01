@@ -1,4 +1,4 @@
-@if (leftContent) {
+@if (leftContent()) {
   <span class="ng-doc-text-left">
     <ng-content select="[ngDocTextLeft]"></ng-content>
   </span>
@@ -6,7 +6,7 @@
 <span class="ng-doc-text">
   <ng-content></ng-content>
 </span>
-@if (rightContent) {
+@if (rightContent()) {
   <span class="ng-doc-text-right">
     <ng-content select="[ngDocTextRight]"></ng-content>
   </span>

@@ -8,24 +8,25 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
+  DestroyRef,
   DOCUMENT,
   ElementRef,
-  HostBinding,
   inject,
-  Input,
-  NgZone,
+  input,
   OnDestroy,
   OnInit,
   PLATFORM_ID,
-  ViewChild,
+  signal,
+  viewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgDocFocusControlComponent } from '@ng-doc/ui-kit/components/focus-control';
 import { NgDocOverlayPointerComponent } from '@ng-doc/ui-kit/components/overlay-pointer';
 import { NgDocEventSwitcherDirective } from '@ng-doc/ui-kit/directives/event-switcher';
 import { NgDocFocusCatcherDirective } from '@ng-doc/ui-kit/directives/focus-catcher';
 import { toElement } from '@ng-doc/ui-kit/helpers';
 import { NgDocOverlayConfig, NgDocOverlayContainer } from '@ng-doc/ui-kit/interfaces';
-import { ngDocZoneOptimize } from '@ng-doc/ui-kit/observables';
 import {
   NgDocContent,
   NgDocHorizontalAlign,
@@ -39,6 +40,7 @@ import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { Observable, Subject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
+/** The default overlay container: renders the content with the pointer and the open animation. */
 @Component({
   selector: 'ng-doc-overlay-container',
   templateUrl: './overlay-container.component.html',
@@ -51,6 +53,10 @@ import { distinctUntilChanged } from 'rxjs/operators';
     NgDocFocusCatcherDirective,
     PolymorpheusOutlet,
   ],
+  host: {
+    '[attr.data-ng-doc-overlay-position]': 'relativePosition()',
+    '[attr.data-ng-doc-overlay-with-contact-border]': 'contactBorder()',
+  },
 })
 export class NgDocOverlayContainerComponent
   implements NgDocOverlayContainer, OnInit, AfterViewInit, OnDestroy
@@ -58,81 +64,82 @@ export class NgDocOverlayContainerComponent
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private documentRef = inject<Document>(DOCUMENT);
   private changeDetectorRef = inject(ChangeDetectorRef);
-  private ngZone = inject(NgZone);
   private platformId = inject(PLATFORM_ID);
+  private destroyRef = inject(DestroyRef);
 
-  @Input()
-  content: NgDocContent = '';
+  /** What the overlay renders: a string, a template or a component. */
+  readonly content = input<NgDocContent>('');
 
-  @Input()
-  config?: NgDocOverlayConfig;
+  /** The configuration the overlay was opened with. */
+  readonly config = input<NgDocOverlayConfig>();
 
-  @ViewChild('contentContainer', { read: ElementRef, static: true })
-  contentContainer?: ElementRef<HTMLElement>;
+  readonly contentContainer = viewChild('contentContainer', { read: ElementRef });
 
-  @ViewChild(NgDocFocusCatcherDirective)
-  focusCatcher?: NgDocFocusCatcherDirective;
+  readonly focusCatcher = viewChild(NgDocFocusCatcherDirective);
 
-  @ViewChild(PolymorpheusOutlet, { static: true })
-  outlet?: PolymorpheusOutlet<object>;
+  readonly outlet = viewChild(PolymorpheusOutlet);
 
-  @HostBinding('attr.data-ng-doc-overlay-position')
-  relativePosition: NgDocOverlayRelativePosition | null = null;
+  private readonly currentPosition = signal<NgDocOverlayPosition | null>(null);
 
-  private currentPosition?: NgDocOverlayPosition;
+  /** The side of the origin the overlay is on, once the position strategy has placed it. */
+  protected readonly relativePosition = computed<NgDocOverlayRelativePosition | null>(() => {
+    const position: NgDocOverlayPosition | null = this.currentPosition();
+
+    return position ? NgDocOverlayUtils.getRelativePosition(position) : null;
+  });
+
+  protected readonly overlayAlign = computed<NgDocHorizontalAlign | NgDocVerticalAlign | null>(
+    () => {
+      const position: NgDocOverlayPosition | null = this.currentPosition();
+
+      return position
+        ? NgDocOverlayUtils.getPositionAlign(NgDocOverlayUtils.toConnectedPosition(position))
+        : null;
+    },
+  );
+
+  protected readonly contactBorder = computed<boolean>(() => !!this.config()?.contactBorder);
+
   private animationEvent$: Subject<NgDocOverlayAnimationEvent> =
     new Subject<NgDocOverlayAnimationEvent>();
   private isOpened: boolean = true;
 
-  constructor() {}
-
   ngOnInit(): void {
-    if (this.config?.positionStrategy instanceof FlexibleConnectedPositionStrategy) {
-      this.config.positionStrategy.positionChanges
+    const positionStrategy = this.config()?.positionStrategy;
+
+    if (positionStrategy instanceof FlexibleConnectedPositionStrategy) {
+      // The strategy may report a position outside the Angular zone; writing a signal schedules
+      // change detection with and without zone.js.
+      positionStrategy.positionChanges
         .pipe(
           distinctUntilChanged(
             (a: ConnectedOverlayPositionChange, b: ConnectedOverlayPositionChange) =>
               a.connectionPair === b.connectionPair,
           ),
-          ngDocZoneOptimize(this.ngZone),
+          takeUntilDestroyed(this.destroyRef),
         )
-        .subscribe((change: ConnectedOverlayPositionChange) => {
-          this.currentPosition = NgDocOverlayUtils.getOverlayPosition(change.connectionPair);
-          this.relativePosition = NgDocOverlayUtils.getRelativePosition(this.currentPosition);
-          this.changeDetectorRef.markForCheck();
-        });
+        .subscribe((change: ConnectedOverlayPositionChange) =>
+          this.currentPosition.set(NgDocOverlayUtils.getOverlayPosition(change.connectionPair)),
+        );
     }
   }
 
   ngAfterViewInit(): void {
-    const [keyframes, options] = this.config?.openAnimation || [];
+    const [keyframes, options] = this.config()?.openAnimation || [];
     this.runAnimation(keyframes ?? [], options);
   }
 
-  @HostBinding('attr.data-ng-doc-overlay-with-contact-border')
-  get contactBorder(): boolean {
-    return !!this.config?.contactBorder;
-  }
-
   get isFocused(): boolean {
-    return !!this.focusCatcher?.focused;
+    return !!this.focusCatcher()?.focused;
   }
 
   get animationEvent(): Observable<NgDocOverlayAnimationEvent> {
     return this.animationEvent$.asObservable();
   }
 
-  get overlayAlign(): NgDocHorizontalAlign | NgDocVerticalAlign | null {
-    return this.currentPosition
-      ? NgDocOverlayUtils.getPositionAlign(
-          NgDocOverlayUtils.toConnectedPosition(this.currentPosition),
-        )
-      : null;
-  }
-
   close(): void {
     if (this.isOpened) {
-      const [keyframes, options] = this.config?.closeAnimation || [];
+      const [keyframes, options] = this.config()?.closeAnimation || [];
       this.runAnimation(keyframes ?? [], options, true);
       this.isOpened = false;
       this.changeDetectorRef.markForCheck();
@@ -140,11 +147,10 @@ export class NgDocOverlayContainerComponent
   }
 
   focus(): void {
-    if (this.contentContainer) {
-      NgDocFocusUtils.focusClosestElement(
-        toElement(this.contentContainer),
-        toElement(this.contentContainer),
-      );
+    const contentContainer: ElementRef<HTMLElement> | undefined = this.contentContainer();
+
+    if (contentContainer) {
+      NgDocFocusUtils.focusClosestElement(toElement(contentContainer), toElement(contentContainer));
     }
   }
 
@@ -170,9 +176,11 @@ export class NgDocOverlayContainerComponent
   }
 
   ngOnDestroy(): void {
-    if (this.isFocused && this.config && this.config.viewContainerRef) {
+    const config: NgDocOverlayConfig | undefined = this.config();
+
+    if (this.isFocused && config && config.viewContainerRef) {
       NgDocFocusUtils.focusClosestElement(
-        this.config.viewContainerRef.element.nativeElement,
+        config.viewContainerRef.element.nativeElement,
         this.documentRef.body,
         false,
       );

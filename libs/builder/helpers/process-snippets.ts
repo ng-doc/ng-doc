@@ -25,7 +25,11 @@ const snippet = (id?: string | null) =>
  * @param code - code to process
  * @param basePath - base path to file
  */
-export function processSnippets(code: string, basePath?: string): NgDocSnippet[] {
+export function processSnippets(
+  code: string,
+  basePath?: string,
+  configDirectory?: string,
+): NgDocSnippet[] {
   const result: NgDocSnippet[] = [];
   const endings: Set<number> = new Set();
   const startRegexp = snippet();
@@ -51,7 +55,11 @@ export function processSnippets(code: string, basePath?: string): NgDocSnippet[]
             lang: language,
             icon,
             opened,
-            code: formatCode(removeSnippets(snippetCode), getCodeTypeFromLang(language)).trim(),
+            code: formatCode(
+              removeSnippets(snippetCode),
+              getCodeTypeFromLang(language),
+              configDirectory,
+            ).trim(),
           });
         }
       }
@@ -78,7 +86,11 @@ export function processSnippets(code: string, basePath?: string): NgDocSnippet[]
               lang: language,
               icon,
               opened,
-              code: formatCode(removeSnippets(snippetCode), getCodeTypeFromLang(language)).trim(),
+              code: formatCode(
+                removeSnippets(snippetCode),
+                getCodeTypeFromLang(language),
+                configDirectory,
+              ).trim(),
             });
           }
         }

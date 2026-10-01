@@ -12,7 +12,7 @@
           <div class="ng-doc-blur-container ng-doc-input">
             <div class="ng-doc-blur-content">
               <ng-container
-                *polymorpheusOutlet="blurContent as text; context: getBlurContext(blurContext)">
+                *polymorpheusOutlet="blurContent() as text; context: { $implicit: blurContext() }">
                 {{ text }}
               </ng-container>
             </div>

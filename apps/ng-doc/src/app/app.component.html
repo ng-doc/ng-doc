@@ -1,32 +1,66 @@
 <ng-doc-root
-  [sidebar]="!isLandingPage"
-  [noWidthLimit]="isLandingPage"
-  [footerContent]="footerContent">
-  <ng-doc-navbar [hamburger]="!isLandingPage">
-    <a class="brand" routerLink="/" ngDocNavbarLeft>
-      <h3>
-        <img src="assets/images/ng-doc.svg" />
-        <span class="brand-title-ng">Ng</span>
-        <span class="brand-title-doc">Doc</span>
-      </h3>
+  [sidebar]="!isLandingPage()"
+  [noWidthLimit]="isLandingPage()"
+  [footerContent]="isLandingPage() ? '' : footerContent">
+  <ng-doc-navbar [hamburger]="!isLandingPage()">
+    <a class="brand" routerLink="/" aria-label="NgDoc home" ngDocNavbarLeft>
+      <img
+        class="brand-light"
+        src="assets/images/brand/lockup-light.svg"
+        alt=""
+        width="90"
+        height="28" />
+      <img
+        class="brand-dark"
+        src="assets/images/brand/lockup-dark.svg"
+        alt=""
+        width="90"
+        height="28" />
     </a>
-    <div class="ng-doc-header-controls" ngDocNavbarRight>
-      <ng-doc-theme-toggle></ng-doc-theme-toggle>
+    <nav class="links" aria-label="Primary" ngDocNavbarCenter>
       <a
-        href="https://github.com/ng-doc/ng-doc"
-        ng-doc-button-icon
-        ngDocTooltip="Repository on GitHub"
-        size="large"
-        target="_blank">
-        <ng-doc-icon [size]="24" customIcon="github"></ng-doc-icon>
-      </a>
-    </div>
+        routerLink="/docs/get-started/introduction"
+        [attr.aria-current]="section() === 'guides' ? 'page' : null"
+        >Guides</a
+      >
+      <a routerLink="/docs/api" [attr.aria-current]="section() === 'api' ? 'page' : null">API</a>
+      <a
+        routerLink="/docs/upgrade/upgrade-to-22"
+        [attr.aria-current]="section() === 'migrations' ? 'page' : null"
+        >Migrations</a
+      >
+    </nav>
+    <ng-doc-theme-toggle ngDocNavbarRight></ng-doc-theme-toggle>
+    <a
+      href="https://github.com/ng-doc/ng-doc"
+      ng-doc-button-icon
+      size="large"
+      [rounded]="false"
+      aria-label="NgDoc on GitHub"
+      ngDocTooltip="Repository on GitHub"
+      target="_blank"
+      rel="noopener"
+      ngDocNavbarRight>
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true">
+        <path
+          d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21" />
+      </svg>
+    </a>
   </ng-doc-navbar>
 
   <ng-doc-sidebar></ng-doc-sidebar>
   <router-outlet></router-outlet>
 
   <ng-template #footerContent>
-    <div class="ng-doc-footer">MIT © 2023 Aleksandr Skoropad</div>
+    <div class="ng-doc-footer">MIT License · © {{ year }} Aleksandr Skoropad</div>
   </ng-template>
 </ng-doc-root>

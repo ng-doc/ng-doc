@@ -36,12 +36,58 @@
         "commands": []
       }
     },
+    "build-specs": {
+      "executor": "@angular/build:application",
+      "metadata": {
+        "description": "Build options for the unit-test builder only (test, test-zoneless); it is not a build of the library."
+      },
+      "options": {
+        "outputPath": "dist/spec/libs/ui-kit",
+        "tsConfig": "libs/ui-kit/tsconfig.spec.json",
+        "inlineStyleLanguage": "scss",
+        "stylePreprocessorOptions": {
+          "includePaths": ["libs/ui-kit/styles"]
+        },
+        "polyfills": ["zone.js"]
+      },
+      "configurations": {
+        "zoneless": {
+          "polyfills": []
+        }
+      }
+    },
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "@angular/build:unit-test",
       "outputs": ["{workspaceRoot}/coverage/libs/ui-kit"],
       "options": {
-        "jestConfig": "libs/ui-kit/jest.config.ts",
-        "tsConfig": "libs/ui-kit/tsconfig.spec.json"
+        "buildTarget": "ui-kit:build-specs",
+        "tsConfig": "libs/ui-kit/tsconfig.spec.json",
+        "runnerConfig": "libs/ui-kit/vitest.config.ts",
+        "setupFiles": ["libs/ui-kit/test-setup.ts"],
+        "isolate": true,
+        "watch": false
+      },
+      "configurations": {
+        "ci": {
+          "coverage": true
+        }
+      }
+    },
+    "test-zoneless": {
+      "executor": "@angular/build:unit-test",
+      "outputs": ["{workspaceRoot}/coverage/libs/ui-kit-zoneless"],
+      "options": {
+        "buildTarget": "ui-kit:build-specs:zoneless",
+        "tsConfig": "libs/ui-kit/tsconfig.spec.json",
+        "runnerConfig": "libs/ui-kit/vitest.zoneless.config.ts",
+        "setupFiles": ["libs/ui-kit/test-setup.ts"],
+        "isolate": true,
+        "watch": false
+      },
+      "configurations": {
+        "ci": {
+          "coverage": true
+        }
       }
     },
     "lint": {

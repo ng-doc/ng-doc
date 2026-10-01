@@ -5,6 +5,7 @@ import {
   PropertyDeclaration,
   SourceFile,
 } from 'ts-morph';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { createProject } from '../create-project';
 import { filterByStatic } from '../filter-by-static';

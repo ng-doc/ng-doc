@@ -1,12 +1,15 @@
 import { OverlayRef, ScrollStrategy } from '@angular/cdk/overlay';
-import { DOCUMENT, inject, Injectable, NgZone } from '@angular/core';
+import { DOCUMENT, inject, NgZone, Service } from '@angular/core';
 import { toElement } from '@ng-doc/ui-kit/helpers';
 import { NgDocOverlayConfig } from '@ng-doc/ui-kit/interfaces';
-import { ngDocZoneDetach } from '@ng-doc/ui-kit/observables';
 import { fromEvent, Subject } from 'rxjs';
 import { filter, map, takeUntil, throttleTime } from 'rxjs/operators';
 
-@Injectable({ providedIn: 'root' })
+/**
+ * A scroll strategy that closes the overlay when an element that contains its origin scrolls.
+ * Tooltips use it.
+ */
+@Service()
 export class NgDocOverlayStrategy implements ScrollStrategy {
   private documentRef = inject<Document>(DOCUMENT);
   private ngZone = inject(NgZone);
@@ -14,31 +17,29 @@ export class NgDocOverlayStrategy implements ScrollStrategy {
   private overlayRef: OverlayRef | null = null;
   private destroy$: Subject<void> = new Subject<void>();
 
-  /** Inserted by Angular inject() migration for backwards compatibility */
-  constructor(...args: unknown[]);
-
-  constructor() {}
-
   attach(overlayRef: OverlayRef): void {
     this.overlayRef = overlayRef;
   }
 
   enable(): void {
-    fromEvent(this.documentRef, 'scroll', { capture: true })
-      .pipe(
-        ngDocZoneDetach(this.ngZone),
-        throttleTime(10),
-        map((scrollEvent: Event) =>
-          scrollEvent.target instanceof Document
-            ? scrollEvent.target.scrollingElement
-            : scrollEvent.target,
-        ),
-        filter((target: EventTarget | null) =>
-          target instanceof Node ? target.contains(this.origin) || !this.origin : false,
-        ),
-        takeUntil(this.destroy$),
-      )
-      .subscribe(() => this.detach());
+    // Scroll events are frequent: listen outside the Angular zone so that they do not trigger
+    // change detection in a zone.js application. Only the detachment re-enters it.
+    this.ngZone.runOutsideAngular(() =>
+      fromEvent(this.documentRef, 'scroll', { capture: true })
+        .pipe(
+          throttleTime(10),
+          map((scrollEvent: Event) =>
+            scrollEvent.target instanceof Document
+              ? scrollEvent.target.scrollingElement
+              : scrollEvent.target,
+          ),
+          filter((target: EventTarget | null) =>
+            target instanceof Node ? target.contains(this.origin) || !this.origin : false,
+          ),
+          takeUntil(this.destroy$),
+        )
+        .subscribe(() => this.detach()),
+    );
   }
 
   private get origin(): HTMLElement | null {

@@ -1,7 +1,7 @@
 <ng-doc-input-wrapper diControlSilencer>
   <input ngDocInputNumber type="number" [ngModel]="model()" (ngModelChange)="changeModel($event)" />
 
-  @if (model() && model() !== default) {
+  @if (model() && model() !== default()) {
     <button
       ng-doc-button-icon-transparent
       ngDocInputWrapperRight
@@ -9,7 +9,7 @@
       [ngDocFocusable]="false"
       [disabled]="disabled"
       [rounded]="false"
-      (click)="updateModel(default ?? null)"
+      (click)="updateModel(default() ?? null)"
       (focusout)="touch()">
       <ng-doc-icon icon="x"></ng-doc-icon>
     </button>

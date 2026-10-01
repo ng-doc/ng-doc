@@ -1,4 +1,5 @@
 import { Node, Project, SourceFile } from 'ts-morph';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { NgDocInputDeclaration } from '../angular';
 import { getComponentInputs } from '../angular/get-component-inputs';

@@ -1,6 +1,25 @@
 {
   "name": "@ng-doc/builder",
   "version": "0.0.1",
+  "description": "Generates an NgDoc documentation site from your Markdown pages and TypeScript code.",
+  "keywords": [
+    "angular",
+    "documentation",
+    "docs",
+    "ng-doc",
+    "markdown",
+    "api-documentation"
+  ],
+  "homepage": "https://ng-doc.com/",
+  "bugs": {
+    "url": "https://github.com/ng-doc/ng-doc/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ng-doc/ng-doc.git",
+    "directory": "libs/builder"
+  },
+  "license": "MIT",
   "type": "commonjs",
   "builders": "./builders.json",
   "schematics": "./schematics/collection.json",
@@ -13,11 +32,10 @@
   "dependencies": {
     "@ng-doc/core": "0.0.0",
     "@ng-doc/utils": "0.0.0",
-    "@angular-devkit/architect": ">=0.2200.0 < 0.2300.0",
-    "@angular/build": ">=22.0.0 < 23.0.0",
+    "@angular-devkit/architect": "0.2200.6",
     "minimatch": "9.0.1",
     "rxjs": "^7.0.0",
-    "ts-morph": "22.0.0",
+    "ts-morph": "28.0.0",
     "nunjucks": "3.2.4",
     "@orama/orama": "2.0.17",
     "@orama/plugin-parsedoc": "2.0.17",
@@ -33,9 +51,54 @@
     "find-cache-dir": "3.3.2",
     "tslib": "^2.6.2",
     "ng-morph": "^4.0.3",
+    "jsonc-parser": "3.3.1",
     "parsimmon": "^1.18.1",
     "@parcel/watcher": "^2.5.0",
-    "@microsoft/tsdoc": "0.15.1"
+    "@microsoft/tsdoc": "0.15.1",
+    "@angular/build": "22.0.6",
+    "@shikijs/rehype": "1.10.3",
+    "css-what": "6.1.0",
+    "github-slugger": "2.0.0",
+    "hast-util-has-property": "3.0.0",
+    "hast-util-heading-rank": "3.0.0",
+    "hast-util-is-element": "3.0.0",
+    "hast-util-to-string": "3.0.0",
+    "posthtml-render": "3.0.0",
+    "rehype": "13.0.1",
+    "rehype-minify-whitespace": "6.0.0",
+    "rehype-parse": "9.0.0",
+    "rehype-stringify": "10.0.1",
+    "stringify-entities": "4.0.4",
+    "typescript": "6.0.3",
+    "unified": "11.0.5",
+    "unist-util-filter": "5.0.1",
+    "unist-util-visit": "5.0.0",
+    "unist-util-visit-parents": "6.0.2",
+    "@angular-devkit/core": "22.0.6",
+    "magic-string": "0.30.21",
+    "obug": "2.1.3",
+    "oxc-parser": "0.121.0",
+    "tinyglobby": "0.2.17"
+  },
+  "peerDependencies": {
+    "vite": "7.3.5",
+    "@analogjs/vite-plugin-angular": "2.6.3",
+    "@angular/compiler": "22.0.6",
+    "@angular/compiler-cli": "22.0.6"
+  },
+  "peerDependenciesMeta": {
+    "vite": {
+      "optional": true
+    },
+    "@analogjs/vite-plugin-angular": {
+      "optional": true
+    },
+    "@angular/compiler": {
+      "optional": true
+    },
+    "@angular/compiler-cli": {
+      "optional": true
+    }
   },
   "publishConfig": {
     "access": "public"
@@ -44,5 +107,11 @@
     "nunjucks": {
       "chokidar": "^5.0.0"
     }
+  },
+  "bin": {
+    "ng-doc": "./generator/bootstrap/bin.js"
+  },
+  "engines": {
+    "node": ">=24.15.0 <25"
   }
 }

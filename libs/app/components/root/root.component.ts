@@ -1,14 +1,14 @@
-import { AsyncPipe } from '@angular/common';
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   Directive,
-  HostBinding,
+  DOCUMENT,
   inject,
-  Input,
-  ViewChild,
+  input,
+  viewChild,
 } from '@angular/core';
-import { NgDocSidebarService } from '@ng-doc/app/services';
+import { NgDocSidebarService } from '@ng-doc/app/services/sidebar';
 import { NgDocContent, NgDocSidenavComponent } from '@ng-doc/ui-kit';
 import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 
@@ -27,7 +27,6 @@ import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
  */
 @Directive({
   selector: '[ngDocCustomNavbar]',
-  standalone: true,
 })
 export class NgDocCustomNavbarDirective {}
 
@@ -46,42 +45,60 @@ export class NgDocCustomNavbarDirective {}
  */
 @Directive({
   selector: '[ngDocCustomSidebar]',
-  standalone: true,
 })
 export class NgDocCustomSidebarDirective {}
 
+/**
+ * Root layout of the NgDoc application: the navbar, the sidebar, the page and the footer.
+ *
+ * Its first focusable element is a "Skip to content" link, shown only while it has focus, that
+ * moves keyboard focus past the navbar and the sidebar to the page.
+ */
 @Component({
   selector: 'ng-doc-root',
   templateUrl: './root.component.html',
   styleUrls: ['./root.component.scss'],
-  providers: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgDocSidenavComponent, PolymorpheusOutlet, AsyncPipe],
+  imports: [NgDocSidenavComponent, PolymorpheusOutlet],
+  host: {
+    '[attr.data-ng-doc-no-width-limit]': 'noWidthLimit()',
+  },
 })
 export class NgDocRootComponent {
   /**
    * If `true` then the sidebar will be shown
    * You can use it for example for landing page to hide sidebar
    */
-  @Input()
-  sidebar: boolean = true;
+  readonly sidebar = input<boolean, unknown>(true, { transform: booleanAttribute });
 
   /**
    * Content for footer
    */
-  @Input()
-  footerContent: NgDocContent = '';
+  readonly footerContent = input<NgDocContent>('');
 
   /**
    * If `true` then page will be shown without width limit.
    * You can use it for example for landing page
    */
-  @Input()
-  @HostBinding('attr.data-ng-doc-no-width-limit')
-  noWidthLimit: boolean = false;
-
-  @ViewChild(NgDocSidenavComponent)
-  sidenav?: NgDocSidenavComponent;
+  readonly noWidthLimit = input<boolean, unknown>(false, { transform: booleanAttribute });
 
   protected readonly sidebarService = inject(NgDocSidebarService);
+  private readonly document = inject(DOCUMENT);
+  private readonly sidenavQuery = viewChild(NgDocSidenavComponent);
+
+  /**
+   * The sidenav that holds the sidebar and the page.
+   */
+  get sidenav(): NgDocSidenavComponent | undefined {
+    return this.sidenavQuery();
+  }
+
+  /**
+   * Moves keyboard focus to the page content, as the skip link does.
+   * @param event - The click on the skip link; its navigation to a fragment is cancelled.
+   */
+  skipToContent(event?: Event): void {
+    event?.preventDefault();
+    this.document.getElementById('ng-doc-content')?.focus();
+  }
 }

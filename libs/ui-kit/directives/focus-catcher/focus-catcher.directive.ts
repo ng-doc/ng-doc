@@ -1,47 +1,53 @@
-import {
-  ChangeDetectorRef,
-  Directive,
-  ElementRef,
-  EventEmitter,
-  HostBinding,
-  inject,
-  NgZone,
-  Output,
-} from '@angular/core';
+import { DestroyRef, Directive, ElementRef, inject, NgZone, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BLUR_EVENT, FOCUS_EVENT } from '@ng-doc/ui-kit/constants';
 import { toElement } from '@ng-doc/ui-kit/helpers';
-import { ngDocZoneOptimize } from '@ng-doc/ui-kit/observables';
 import { fromEvent, merge, Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
+/** Tracks whether focus is inside the host element. */
 @Directive({
   selector: '[ngDocFocusCatcher]',
   exportAs: 'ngDocFocusCatcher',
-  standalone: true,
+  host: {
+    '[attr.data-ng-doc-focused]': 'focusedState()',
+  },
 })
 export class NgDocFocusCatcherDirective {
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private ngZone = inject(NgZone);
-  private changeDetectorRef = inject(ChangeDetectorRef);
 
-  @Output()
-  focusEvent: EventEmitter<Event> = new EventEmitter<Event>();
+  /** Emits when focus moves into the host. */
+  readonly focusEvent = output<Event>();
 
-  @Output()
-  blurEvent: EventEmitter<Event> = new EventEmitter<Event>();
+  /** Emits when focus leaves the host. */
+  readonly blurEvent = output<Event>();
 
-  @HostBinding('attr.data-ng-doc-focused')
-  focused: boolean = false;
+  protected readonly focusedState = signal<boolean>(false);
 
   constructor() {
-    NgDocFocusCatcherDirective.observeFocus(toElement(this.elementRef))
-      .pipe(ngDocZoneOptimize(this.ngZone), takeUntilDestroyed())
-      .subscribe((event: FocusEvent) => {
-        this.focused = event.type === FOCUS_EVENT;
-        this.focused ? this.focusEvent.emit(event) : this.blurEvent.emit(event);
-        this.changeDetectorRef.markForCheck();
-      });
+    const destroyRef: DestroyRef = inject(DestroyRef);
+
+    // Focus events are frequent: they are observed outside the Angular zone, and only a change of
+    // the focus state re-enters it. The state is a signal, so a zoneless application renders it
+    // too.
+    this.ngZone.runOutsideAngular(() =>
+      NgDocFocusCatcherDirective.observeFocus(toElement(this.elementRef))
+        .pipe(takeUntilDestroyed(destroyRef))
+        .subscribe((event: FocusEvent) =>
+          this.ngZone.run(() => {
+            const focused: boolean = event.type === FOCUS_EVENT;
+
+            this.focusedState.set(focused);
+            focused ? this.focusEvent.emit(event) : this.blurEvent.emit(event);
+          }),
+        ),
+    );
+  }
+
+  /** Whether focus is inside the host. */
+  get focused(): boolean {
+    return this.focusedState();
   }
 
   static observeFocus(element: HTMLElement): Observable<FocusEvent> {

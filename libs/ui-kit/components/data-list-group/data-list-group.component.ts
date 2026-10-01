@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, Signal } from '@angular/core';
 import { NgDocDataListComponent } from '@ng-doc/ui-kit/components/data-list';
 import { NgDocListComponent } from '@ng-doc/ui-kit/components/list';
 import { NgDocOptionComponent } from '@ng-doc/ui-kit/components/option';
@@ -8,11 +8,13 @@ import {
 } from '@ng-doc/ui-kit/components/option-group';
 import { NgDocTextComponent } from '@ng-doc/ui-kit/components/text';
 import { NG_DOC_DEFAULT_STRINGIFY } from '@ng-doc/ui-kit/constants';
-import { ngDocMakePure } from '@ng-doc/ui-kit/decorators';
 import { NgDocContextWithImplicit } from '@ng-doc/ui-kit/interfaces';
 import { NgDocContent, NgDocGroupFn } from '@ng-doc/ui-kit/types';
 import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 
+/**
+ * Data list whose options are grouped by `itemGroupFn`, with a header per group.
+ */
 @Component({
   selector: 'ng-doc-data-list-group',
   templateUrl: './data-list-group.component.html',
@@ -27,42 +29,36 @@ import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
     NgDocTextComponent,
   ],
 })
-export class NgDocDataListGroupComponent<T, G>
-  extends NgDocDataListComponent<T>
-  implements OnChanges
-{
-  @Input()
-  itemGroupFn?: NgDocGroupFn<T, G>;
+export class NgDocDataListGroupComponent<T, G> extends NgDocDataListComponent<T> {
+  /** Returns the group of an item. Without it, no option is shown. */
+  readonly itemGroupFn = input<NgDocGroupFn<T, G>>();
 
-  @Input()
-  groupContent: NgDocContent<NgDocContextWithImplicit<G>> = ({
-    $implicit,
-  }: NgDocContextWithImplicit<G>) => NG_DOC_DEFAULT_STRINGIFY($implicit);
+  /** Content of a group header; its context is the group. */
+  readonly groupContent = input<NgDocContent<NgDocContextWithImplicit<G>>>(
+    ({ $implicit }: NgDocContextWithImplicit<G>) => NG_DOC_DEFAULT_STRINGIFY($implicit),
+  );
 
-  groups: Map<G, T[]> = new Map();
+  /** Items by group, in the order in which the groups first appear. */
+  readonly groups: Signal<Map<G, T[]>> = computed(() => {
+    const itemGroupFn: NgDocGroupFn<T, G> | undefined = this.itemGroupFn();
+    const groups: Map<G, T[]> = new Map<G, T[]>();
 
-  groupItems: G[] = [];
+    if (itemGroupFn) {
+      this.items()?.forEach((item: T) => {
+        const itemGroup: G = itemGroupFn(item);
+        const groupItems: T[] | undefined = groups.get(itemGroup);
 
-  @ngDocMakePure
-  getGroupContext($implicit: G): NgDocContextWithImplicit<G> {
-    return { $implicit };
-  }
-
-  ngOnChanges({ items, itemGroupFn }: SimpleChanges): void {
-    if (items || itemGroupFn) {
-      this.groups = new Map<G, T[]>();
-
-      this.items?.forEach((item: T) => {
-        if (this.itemGroupFn) {
-          const itemGroup: G = this.itemGroupFn(item);
-          const itemsList: T[] = this.groups.get(itemGroup) || [];
-          itemsList.push(item);
-
-          this.groups.set(this.itemGroupFn(item), itemsList);
+        if (groupItems) {
+          groupItems.push(item);
+        } else {
+          groups.set(itemGroup, [item]);
         }
       });
-
-      this.groupItems = Array.from(this.groups.keys());
     }
-  }
+
+    return groups;
+  });
+
+  /** The groups, in the order in which they first appear. */
+  readonly groupItems: Signal<G[]> = computed(() => Array.from(this.groups().keys()));
 }

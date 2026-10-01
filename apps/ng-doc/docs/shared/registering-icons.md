@@ -1,2 +1,2 @@
 > **Note**
-> To know how to add your own icons, please read `*Icons` article.
+> To know how to add your own icons, please read `*IconsPage` article.

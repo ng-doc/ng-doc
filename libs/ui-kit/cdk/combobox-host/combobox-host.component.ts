@@ -1,16 +1,14 @@
 import {
-  AfterContentInit,
   ChangeDetectionStrategy,
   Component,
-  ContentChild,
+  contentChild,
+  effect,
   ElementRef,
   forwardRef,
-  inject,
   Input,
-  NgZone,
-  ViewChild,
+  untracked,
+  viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   NgDocBaseInput,
   NgDocDisplayValueHost,
@@ -21,7 +19,6 @@ import {
 import { NgDocDropdownComponent } from '@ng-doc/ui-kit/components/dropdown';
 import { NgDocDropdownHandlerDirective } from '@ng-doc/ui-kit/directives/dropdown-handler';
 import { NgDocFocusCatcherDirective } from '@ng-doc/ui-kit/directives/focus-catcher';
-import { ngDocZoneOptimize } from '@ng-doc/ui-kit/observables';
 import { NgDocDisplayValueFunction, NgDocOverlayPosition } from '@ng-doc/ui-kit/types';
 import {
   DI_DEFAULT_COMPARE,
@@ -35,6 +32,7 @@ import {
 } from 'di-controls';
 import { filter } from 'rxjs/operators';
 
+/** Connects a text field, a dropdown and a list into a combobox. */
 @Component({
   selector: 'ng-doc-combobox-host',
   templateUrl: './combobox-host.component.html',
@@ -69,27 +67,28 @@ export class NgDocComboboxHostComponent<T>
     NgDocInputHost<string>,
     DICompareHost<T>,
     NgDocDisplayValueHost<T>,
-    NgDocListHost,
-    AfterContentInit
+    NgDocListHost
 {
+  // `compareFn` and `displayValueFn` stay plain inputs: `DICompareHost` and
+  // `NgDocDisplayValueHost` call them as functions.
+  /** Compares an option with the value. */
+  // eslint-disable-next-line @angular-eslint/prefer-signals -- read as a plain function by DICompareHost
   @Input()
   compareFn: DICompareFunction<T> = DI_DEFAULT_COMPARE;
 
+  /** Turns the value into the text of the field. */
+  // eslint-disable-next-line @angular-eslint/prefer-signals -- read as a plain function by NgDocDisplayValueHost
   @Input()
   displayValueFn: NgDocDisplayValueFunction<T> = String;
 
-  @ViewChild('origin', { read: ElementRef, static: true })
-  origin?: ElementRef<HTMLElement>;
-
-  @ContentChild(NgDocDropdownComponent)
-  dropdown?: NgDocDropdownComponent;
-
-  @ContentChild(NgDocBaseInput)
-  inputControl?: NgDocBaseInput<string>;
-
   readonly positions: NgDocOverlayPosition[] = ['bottom-center', 'top-center'];
 
-  protected readonly ngZone: NgZone = inject(NgZone);
+  // Not `required`: overlay code may read the origin before this view has rendered.
+  private readonly originQuery = viewChild<string, ElementRef<HTMLElement>>('origin', {
+    read: ElementRef,
+  });
+  private readonly dropdownQuery = contentChild(NgDocDropdownComponent);
+  private readonly inputQuery = contentChild<NgDocBaseInput<string>>(NgDocBaseInput);
 
   constructor() {
     super({
@@ -100,16 +99,34 @@ export class NgDocComboboxHostComponent<T>
         }
       },
     });
+
+    // Typing in the focused field opens the options.
+    effect((onCleanup) => {
+      const input: NgDocBaseInput<string> | undefined = this.inputQuery();
+
+      if (input) {
+        const subscription = input.changes
+          .pipe(filter(() => input.isFocused))
+          .subscribe(() => untracked(() => this.dropdown?.open()));
+
+        onCleanup(() => subscription.unsubscribe());
+      }
+    });
   }
 
-  ngAfterContentInit(): void {
-    this.inputControl?.changes
-      .pipe(
-        filter(() => !!this.inputControl?.isFocused),
-        ngDocZoneOptimize(this.ngZone),
-        takeUntilDestroyed(this['destroyRef']),
-      )
-      .subscribe(() => this.dropdown?.open());
+  /** Origin of the dropdown (`NgDocOverlayHost`). */
+  get origin(): ElementRef<HTMLElement> | undefined {
+    return this.originQuery();
+  }
+
+  /** The dropdown with the options. */
+  get dropdown(): NgDocDropdownComponent | undefined {
+    return this.dropdownQuery();
+  }
+
+  /** The text field of the combobox. */
+  get inputControl(): NgDocBaseInput<string> | undefined {
+    return this.inputQuery();
   }
 
   get listHostOrigin(): ElementRef<HTMLElement> | undefined {
@@ -128,6 +145,7 @@ export class NgDocComboboxHostComponent<T>
     return `ng-doc-combobox-host-overlay`;
   }
 
+  /** Opens the dropdown when the field is clicked. */
   clickEvent(): void {
     if (!this.disabled) {
       this.dropdown?.open();

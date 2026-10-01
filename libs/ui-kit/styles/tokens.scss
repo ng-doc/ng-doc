@@ -1,0 +1,291 @@
+// Design tokens behind the public --ng-doc-* variables.
+//
+// Layering:
+// 1. Primitives (--ng-doc-palette-*, --ng-doc-space-*, --ng-doc-radius-*, type sizes) are literal
+//    values. Spacing is derived from --ng-doc-base-gutter, so changing the gutter still scales
+//    everything.
+// 2. Public variables (variables.scss) keep their names and meaning; their defaults point at the
+//    primitives.
+// 3. Derived tokens (below) are computed FROM the public variables with color-mix(), so a user who
+//    overrides --ng-doc-primary, --ng-doc-warning or a kind colour sees every derived surface follow.
+//
+// Components read the public variable when one exists and a derived token only where the old
+// surface had no equivalent. The dark theme overrides a few mixing weights in themes/dark.scss.
+
+// ---------------------------------------------------------------------------------- primitives
+:root {
+  // Neutral: cool grey. The steps share their lightness with the colour ramps below, so two hues
+  // at the same step have near-identical contrast.
+  --ng-doc-palette-neutral-0: #ffffff;
+  --ng-doc-palette-neutral-25: #fbfcfe;
+  --ng-doc-palette-neutral-50: #f4f7fc;
+  --ng-doc-palette-neutral-100: #eef0f5;
+  --ng-doc-palette-neutral-150: #e7e9ee;
+  --ng-doc-palette-neutral-200: #dfe1e6;
+  --ng-doc-palette-neutral-300: #cfd1d6;
+  --ng-doc-palette-neutral-400: #a9abaf;
+  --ng-doc-palette-neutral-450: #96989d;
+  --ng-doc-palette-neutral-500: #84868a;
+  --ng-doc-palette-neutral-600: #67696d;
+  --ng-doc-palette-neutral-700: #515256;
+  --ng-doc-palette-neutral-750: #46484c;
+  --ng-doc-palette-neutral-800: #3b3d41;
+  --ng-doc-palette-neutral-850: #2c2e31;
+  --ng-doc-palette-neutral-875: #26282c;
+  --ng-doc-palette-neutral-900: #212326;
+  --ng-doc-palette-neutral-950: #18191d;
+  --ng-doc-palette-neutral-1000: #0d0e11;
+
+  // Brand: the historical light primary sits between brand-600 and brand-700.
+  --ng-doc-palette-brand-50: #f4f8fe;
+  --ng-doc-palette-brand-100: #e6effe;
+  --ng-doc-palette-brand-200: #cddffe;
+  --ng-doc-palette-brand-300: #aac8fe;
+  --ng-doc-palette-brand-400: #81adfe;
+  --ng-doc-palette-brand-500: #4c89ff;
+  --ng-doc-palette-brand-600: #1d60e2;
+  --ng-doc-palette-brand-700: #134dbe;
+  --ng-doc-palette-brand-800: #0f3d96;
+  --ng-doc-palette-brand-900: #0c2d6f;
+  --ng-doc-palette-brand-950: #081e4b;
+
+  // Violet: classes and services, the API page-type tag.
+  --ng-doc-palette-violet-50: #f8f6fe;
+  --ng-doc-palette-violet-100: #f1ebff;
+  --ng-doc-palette-violet-200: #e3d6ff;
+  --ng-doc-palette-violet-300: #d1b9fe;
+  --ng-doc-palette-violet-400: #bc98fa;
+  --ng-doc-palette-violet-500: #a072e6;
+  --ng-doc-palette-violet-600: #7e4ac2;
+  --ng-doc-palette-violet-700: #683ba3;
+  --ng-doc-palette-violet-800: #512e80;
+  --ng-doc-palette-violet-900: #3c225f;
+  --ng-doc-palette-violet-950: #281740;
+
+  // Green: success, functions.
+  --ng-doc-palette-green-50: #f1faf3;
+  --ng-doc-palette-green-100: #e1f4e5;
+  --ng-doc-palette-green-200: #c3e9cc;
+  --ng-doc-palette-green-300: #9cd8ab;
+  --ng-doc-palette-green-400: #6fc488;
+  --ng-doc-palette-green-500: #39a761;
+  --ng-doc-palette-green-600: #058141;
+  --ng-doc-palette-green-700: #036a34;
+  --ng-doc-palette-green-800: #015428;
+  --ng-doc-palette-green-900: #003e1c;
+  --ng-doc-palette-green-950: #012a11;
+
+  // Amber: warnings, values (variables, enums).
+  --ng-doc-palette-amber-50: #fff6ec;
+  --ng-doc-palette-amber-100: #fdebd8;
+  --ng-doc-palette-amber-200: #fad7b1;
+  --ng-doc-palette-amber-300: #f1bc7f;
+  --ng-doc-palette-amber-400: #e49d41;
+  --ng-doc-palette-amber-500: #c47d04;
+  --ng-doc-palette-amber-600: #955e05;
+  --ng-doc-palette-amber-700: #7b4c01;
+  --ng-doc-palette-amber-800: #613c01;
+  --ng-doc-palette-amber-900: #492b00;
+  --ng-doc-palette-amber-950: #321c00;
+
+  // Red: alerts, danger and deprecation only.
+  --ng-doc-palette-red-50: #fef5f4;
+  --ng-doc-palette-red-100: #ffe8e6;
+  --ng-doc-palette-red-200: #ffd1cd;
+  --ng-doc-palette-red-300: #ffb0a9;
+  --ng-doc-palette-red-400: #ff847d;
+  --ng-doc-palette-red-500: #e85854;
+  --ng-doc-palette-red-600: #c2272d;
+  --ng-doc-palette-red-700: #a21921;
+  --ng-doc-palette-red-800: #80161a;
+  --ng-doc-palette-red-900: #5f1113;
+  --ng-doc-palette-red-950: #400c0c;
+
+  // Spacing: a 4px grid expressed through the gutter (8px by default).
+  --ng-doc-space-1: calc(var(--ng-doc-base-gutter) * 0.5);
+  --ng-doc-space-2: var(--ng-doc-base-gutter);
+  --ng-doc-space-3: calc(var(--ng-doc-base-gutter) * 1.5);
+  --ng-doc-space-4: calc(var(--ng-doc-base-gutter) * 2);
+  --ng-doc-space-5: calc(var(--ng-doc-base-gutter) * 2.5);
+  --ng-doc-space-6: calc(var(--ng-doc-base-gutter) * 3);
+  --ng-doc-space-8: calc(var(--ng-doc-base-gutter) * 4);
+  --ng-doc-space-10: calc(var(--ng-doc-base-gutter) * 5);
+  --ng-doc-space-12: calc(var(--ng-doc-base-gutter) * 6);
+  --ng-doc-space-16: calc(var(--ng-doc-base-gutter) * 8);
+  --ng-doc-space-20: calc(var(--ng-doc-base-gutter) * 10);
+  --ng-doc-space-24: calc(var(--ng-doc-base-gutter) * 12);
+
+  // Radius
+  --ng-doc-radius-xs: 4px;
+  --ng-doc-radius-sm: 6px;
+  --ng-doc-radius-md: 8px;
+  --ng-doc-radius-lg: 12px;
+  --ng-doc-radius-xl: 16px;
+  --ng-doc-radius-full: 999px;
+
+  // Type scale. Px lengths on purpose: --ng-doc-line-height is consumed by min-height rules, so it
+  // must stay a length.
+  --ng-doc-text-xs-size: 12px;
+  --ng-doc-text-xs-line-height: 16px;
+  --ng-doc-text-sm-size: 14px;
+  --ng-doc-text-sm-line-height: 22px;
+  --ng-doc-text-md-size: 16px;
+  --ng-doc-text-md-line-height: 26px;
+  --ng-doc-text-lg-size: 18px;
+  --ng-doc-text-lg-line-height: 28px;
+  --ng-doc-h1-font-size: 34px;
+  --ng-doc-h1-line-height: 42px;
+  --ng-doc-h2-font-size: 26px;
+  --ng-doc-h2-line-height: 34px;
+  --ng-doc-h3-font-size: 20px;
+  --ng-doc-h3-line-height: 28px;
+  --ng-doc-h4-font-size: 17px;
+  --ng-doc-h4-line-height: 26px;
+  --ng-doc-h5-font-size: 15px;
+  --ng-doc-h5-line-height: 24px;
+  --ng-doc-h6-font-size: 14px;
+  --ng-doc-h6-line-height: 22px;
+  --ng-doc-heading-letter-spacing: -0.015em;
+  --ng-doc-display-letter-spacing: -0.025em;
+
+  // Motion
+  --ng-doc-easing: cubic-bezier(0.2, 0, 0, 1);
+
+  // Page rhythm. The divider above h2 is opt-in: set --ng-doc-h2-border (for example
+  // `1px solid var(--ng-doc-border-color)`) and --ng-doc-h2-padding-top to enable it.
+  --ng-doc-content-max-width: 760px;
+  --ng-doc-h2-margin-top: var(--ng-doc-space-12);
+  --ng-doc-h3-margin-top: var(--ng-doc-space-8);
+  --ng-doc-heading-margin-bottom: var(--ng-doc-space-3);
+  --ng-doc-h2-border: none;
+  --ng-doc-h2-padding-top: 0px;
+}
+
+// ------------------------------------------------------------------------------ derived tokens
+// Declared once on :root. A var() inside a custom property resolves on the element that declares
+// it, and every theme lives on the same element (<html data-theme>), so these recompute for the
+// dark, auto and custom themes. Components whose colour can be overridden on a subtree (badges,
+// tags, callouts) mix locally from their own input variable instead of reading these results.
+:root {
+  // Badge hues. Red is reserved for alerts and deprecation.
+  --ng-doc-hue-brand: var(--ng-doc-primary);
+  --ng-doc-hue-violet: var(--ng-doc-palette-violet-600);
+  --ng-doc-hue-green: var(--ng-doc-success);
+  --ng-doc-hue-amber: var(--ng-doc-warning);
+  --ng-doc-hue-red: var(--ng-doc-alert);
+  --ng-doc-hue-neutral: var(--ng-doc-base-8);
+  --ng-doc-on-hue: var(--ng-doc-white);
+
+  // Mixing weights. "strong" mixes toward the heading colour, so the same formula darkens in the
+  // light theme and lightens in the dark one.
+  --ng-doc-mix-soft: 10%;
+  --ng-doc-mix-chip: 12%;
+  --ng-doc-mix-border: 28%;
+  --ng-doc-mix-strong: 64%;
+
+  --ng-doc-hue-brand-chip: color-mix(
+    in oklab,
+    var(--ng-doc-hue-brand) var(--ng-doc-mix-chip),
+    var(--ng-doc-background)
+  );
+  --ng-doc-hue-brand-strong: color-mix(
+    in oklab,
+    var(--ng-doc-hue-brand) var(--ng-doc-mix-strong),
+    var(--ng-doc-heading-color)
+  );
+  --ng-doc-hue-violet-chip: color-mix(
+    in oklab,
+    var(--ng-doc-hue-violet) var(--ng-doc-mix-chip),
+    var(--ng-doc-background)
+  );
+  --ng-doc-hue-violet-strong: color-mix(
+    in oklab,
+    var(--ng-doc-hue-violet) var(--ng-doc-mix-strong),
+    var(--ng-doc-heading-color)
+  );
+
+  // Status helpers for callouts, tags and flat buttons.
+  --ng-doc-info-soft: color-mix(
+    in oklab,
+    var(--ng-doc-info) var(--ng-doc-mix-soft),
+    var(--ng-doc-background)
+  );
+  --ng-doc-info-border: color-mix(
+    in oklab,
+    var(--ng-doc-info) var(--ng-doc-mix-border),
+    var(--ng-doc-background)
+  );
+  --ng-doc-info-strong: color-mix(
+    in oklab,
+    var(--ng-doc-info) var(--ng-doc-mix-strong),
+    var(--ng-doc-heading-color)
+  );
+  --ng-doc-success-soft: color-mix(
+    in oklab,
+    var(--ng-doc-success) var(--ng-doc-mix-soft),
+    var(--ng-doc-background)
+  );
+  --ng-doc-success-border: color-mix(
+    in oklab,
+    var(--ng-doc-success) var(--ng-doc-mix-border),
+    var(--ng-doc-background)
+  );
+  --ng-doc-success-strong: color-mix(
+    in oklab,
+    var(--ng-doc-success) var(--ng-doc-mix-strong),
+    var(--ng-doc-heading-color)
+  );
+  --ng-doc-warning-soft: color-mix(
+    in oklab,
+    var(--ng-doc-warning) var(--ng-doc-mix-soft),
+    var(--ng-doc-background)
+  );
+  --ng-doc-warning-border: color-mix(
+    in oklab,
+    var(--ng-doc-warning) var(--ng-doc-mix-border),
+    var(--ng-doc-background)
+  );
+  --ng-doc-warning-strong: color-mix(
+    in oklab,
+    var(--ng-doc-warning) var(--ng-doc-mix-strong),
+    var(--ng-doc-heading-color)
+  );
+  --ng-doc-alert-soft: color-mix(
+    in oklab,
+    var(--ng-doc-alert) var(--ng-doc-mix-soft),
+    var(--ng-doc-background)
+  );
+  --ng-doc-alert-border: color-mix(
+    in oklab,
+    var(--ng-doc-alert) var(--ng-doc-mix-border),
+    var(--ng-doc-background)
+  );
+  --ng-doc-alert-strong: color-mix(
+    in oklab,
+    var(--ng-doc-alert) var(--ng-doc-mix-strong),
+    var(--ng-doc-heading-color)
+  );
+  --ng-doc-primary-soft: color-mix(
+    in oklab,
+    var(--ng-doc-primary) var(--ng-doc-mix-soft),
+    var(--ng-doc-background)
+  );
+  --ng-doc-primary-strong: color-mix(
+    in oklab,
+    var(--ng-doc-primary) var(--ng-doc-mix-strong),
+    var(--ng-doc-heading-color)
+  );
+
+  // Elevation: every shadow is built from --ng-doc-shadow-color, which still controls them all.
+  --ng-doc-shadow-xs: 0 1px 2px var(--ng-doc-shadow-color);
+  --ng-doc-shadow-sm: 0 1px 3px var(--ng-doc-shadow-color),
+    0 1px 2px -1px var(--ng-doc-shadow-color);
+  --ng-doc-shadow-md: 0 8px 24px -6px var(--ng-doc-shadow-color),
+    0 2px 6px -2px var(--ng-doc-shadow-color);
+  --ng-doc-shadow-lg: 0 24px 48px -12px var(--ng-doc-shadow-color),
+    0 4px 12px -4px var(--ng-doc-shadow-color);
+
+  // Keyboard focus ring.
+  --ng-doc-focus-ring-color: var(--ng-doc-palette-brand-500);
+  --ng-doc-focus-ring: 0 0 0 2px var(--ng-doc-background), 0 0 0 4px var(--ng-doc-focus-ring-color);
+}

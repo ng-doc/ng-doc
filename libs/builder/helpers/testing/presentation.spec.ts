@@ -9,6 +9,7 @@ import {
   TypeAliasDeclaration,
   VariableDeclaration,
 } from 'ts-morph';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { formatCode } from '../format-code';
 import {

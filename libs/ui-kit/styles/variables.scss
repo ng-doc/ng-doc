@@ -1,47 +1,48 @@
-@import 'mixins';
+@use 'tokens';
 
 :root {
   --ng-doc-base-gutter: 8px;
-  --ng-doc-transition: 0.2s;
-  --ng-doc-text-selection: rgba(21, 88, 214, 0.15);
+  --ng-doc-transition: 0.18s;
+  --ng-doc-text-selection: color-mix(in srgb, var(--ng-doc-primary) 18%, transparent);
 
   --ng-doc-white: #fff;
   --ng-doc-black: #000;
-  --ng-doc-base-rgb: 0 0 0;
-  --ng-doc-base-0: var(--ng-doc-white);
-  --ng-doc-base-1: #f6f6f6;
-  --ng-doc-base-2: #ebebeb;
-  --ng-doc-base-3: #dedede;
-  --ng-doc-base-4: #d1d1d1;
-  --ng-doc-base-5: #b8b8b8;
-  --ng-doc-base-6: #ababab;
-  --ng-doc-base-7: #9e9e9e;
-  --ng-doc-base-8: #919191;
-  --ng-doc-base-9: #858585;
-  --ng-doc-base-10: #6e6e6e;
+  // The neutral ramp keeps its meaning: base-N is N steps away from the page background.
+  --ng-doc-base-rgb: 13 14 17;
+  --ng-doc-base-0: var(--ng-doc-palette-neutral-0);
+  --ng-doc-base-1: var(--ng-doc-palette-neutral-50);
+  --ng-doc-base-2: var(--ng-doc-palette-neutral-100);
+  --ng-doc-base-3: var(--ng-doc-palette-neutral-200);
+  --ng-doc-base-4: var(--ng-doc-palette-neutral-300);
+  --ng-doc-base-5: var(--ng-doc-palette-neutral-400);
+  --ng-doc-base-6: var(--ng-doc-palette-neutral-450);
+  --ng-doc-base-7: var(--ng-doc-palette-neutral-500);
+  --ng-doc-base-8: var(--ng-doc-palette-neutral-600);
+  --ng-doc-base-9: var(--ng-doc-palette-neutral-700);
+  --ng-doc-base-10: var(--ng-doc-palette-neutral-800);
 
-  // Main colors
-  --ng-doc-primary: #1558d6;
+  // Main colors: one hue family each; info uses the brand hue.
+  --ng-doc-primary: var(--ng-doc-palette-brand-600);
   --ng-doc-primary-text: var(--ng-doc-white);
 
-  --ng-doc-alert: #ff5959;
+  --ng-doc-alert: var(--ng-doc-palette-red-600);
   --ng-doc-alert-text: var(--ng-doc-white);
 
-  --ng-doc-warning: #ff9f1a;
+  --ng-doc-warning: var(--ng-doc-palette-amber-600);
   --ng-doc-warning-text: var(--ng-doc-white);
 
-  --ng-doc-info: #3f68b5;
+  --ng-doc-info: var(--ng-doc-palette-brand-600);
   --ng-doc-info-text: var(--ng-doc-white);
 
-  --ng-doc-success: #00b74a;
+  --ng-doc-success: var(--ng-doc-palette-green-600);
   --ng-doc-success-text: var(--ng-doc-white);
 
   --ng-doc-background: var(--ng-doc-base-0);
-  --ng-doc-hover-background: rgba(110, 110, 110, 0.09);
+  --ng-doc-hover-background: color-mix(in srgb, var(--ng-doc-base-10) 6%, transparent);
   --ng-doc-border-size: 1px;
   --ng-doc-border-color: var(--ng-doc-base-3);
   --ng-doc-border-hover-color: var(--ng-doc-base-5);
-  --ng-doc-shadow-color: rgba(0, 0, 0, 0.15);
+  --ng-doc-shadow-color: rgb(16 24 40 / 0.1);
 
   // Font
   --ng-doc-font-system: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
@@ -50,30 +51,31 @@
   --ng-doc-font-system-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     'Liberation Mono', 'Courier New', monospace;
   --ng-doc-heading-font-family: var(--ng-doc-font-system);
-  --ng-doc-heading-color: #111111;
+  --ng-doc-heading-color: var(--ng-doc-palette-neutral-950);
   --ng-doc-font-family: var(--ng-doc-font-system);
-  --ng-doc-font-size: calc(var(--ng-doc-base-gutter) * 2);
-  --ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 3);
+  --ng-doc-font-size: var(--ng-doc-text-md-size);
+  // Must stay a length: NgDocTextComponent reads it in min-height.
+  --ng-doc-line-height: var(--ng-doc-text-md-line-height);
   --ng-doc-font-weight: 400;
   --ng-doc-code-font: var(--ng-doc-font-system-mono);
   --ng-doc-code-font-size: 14px;
-  --ng-doc-code-line-height: 20px;
+  --ng-doc-code-line-height: 22px;
   --ng-doc-code-font-weight: 400;
-  --ng-doc-text: rgb(78 78 78);
+  --ng-doc-text: var(--ng-doc-palette-neutral-800);
   --ng-doc-text-muted: var(--ng-doc-base-8);
 
   // Mark
-  --ng-doc-mark-background: rgba(255, 222, 0, 0.3);
+  --ng-doc-mark-background: color-mix(in srgb, #f5c542 45%, transparent);
 
   // Link
   --ng-doc-link-color: var(--ng-doc-primary);
 
-  // Inline code
-  --ng-doc-inline-code-background: var(--ng-doc-base-9);
-  --ng-doc-inline-code-color: var(--ng-doc-text);
+  // Inline code. The background is a tint source (mixed into the page), not the final colour.
+  --ng-doc-inline-code-background: var(--ng-doc-base-8);
+  --ng-doc-inline-code-color: var(--ng-doc-heading-color);
 
   // NgDocButtonIconComponent
-  --ng-doc-button-background: trasparent;
+  --ng-doc-button-background: transparent;
   --ng-doc-button-background-opacity: 0;
   --ng-doc-button-color: var(--ng-doc-text);
   --ng-doc-button-hover-background: var(--ng-doc-base-2);
@@ -85,7 +87,7 @@
   --ng-doc-floated-border-color: transparent;
   --ng-doc-floated-border: 2px solid var(--ng-doc-floated-border-color);
   --ng-doc-floated-border-shadow-color: 0 1px 2px rgba(16, 24, 40, 0.05), 0 0 0 4px transparent;
-  --ng-doc-floated-border-radius: var(--ng-doc-base-gutter);
+  --ng-doc-floated-border-radius: var(--ng-doc-radius-md);
 
   /* NgDocCheckboxComponent */
   --ng-doc-checkbox-color: var(--ng-doc-primary);
@@ -97,8 +99,9 @@
   --ng-doc-input-text-align: left;
   --ng-doc-input-width: 100%;
   --ng-doc-input-height: 40px;
-  --ng-doc-input-border: var(--ng-doc-border-size) solid var(--ng-doc-border-color);
-  --ng-doc-input-border-hover: var(--ng-doc-border-size) solid var(--ng-doc-border-hover-color);
+  // base-7 keeps the input border at 3:1 or more against the page in both themes.
+  --ng-doc-input-border: var(--ng-doc-border-size) solid var(--ng-doc-base-7);
+  --ng-doc-input-border-hover: var(--ng-doc-border-size) solid var(--ng-doc-base-8);
   --ng-doc-input-background-color: var(--ng-doc-base-0);
   --ng-doc-input-cursor: auto;
 
@@ -118,6 +121,6 @@
   --ng-doc-sidenav-width: 300px;
 
   /* TabGroup */
-  --ng-doc-tab-group-border-radius: var(--ng-doc-base-gutter);
+  --ng-doc-tab-group-border-radius: var(--ng-doc-radius-lg);
   --ng-doc-tab-group-border: 1px solid var(--ng-doc-border-color);
 }

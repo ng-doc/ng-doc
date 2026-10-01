@@ -1,5 +1,7 @@
 // @ts-nocheck
 import {Routes} from '@angular/router';
+{#- Route strings are single-quoted string literals: backslashes, quotes and line breaks are
+    escaped, so a route or segment with one cannot end the literal. -#}
 {%- macro categoryImport(entry) -%}
 {%- if entry.item.isCategory %}
 import {{ entry.item.id }} from '{{ curDir | createImportPath(entry.item.path) }}';
@@ -16,8 +18,11 @@ import {{ entry.item.id }} from '{{ curDir | createImportPath(entry.item.path) }
 export const NG_DOC_ROUTING: Routes = [
 	{%- macro route(entry) %}
 	{
-		path: '{{ entry.item.route }}',
+		path: '{{ entry.item.route | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}',
 		title: `{{ entry.item.title | toTemplateString }}`,
+    {%- if entry.item.apiListSegment is defined %}
+    data: {ngDocApiListSegment: '{{ entry.item.apiListSegment | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}'},
+    {%- endif %}
     {%- if entry.item.isCategory %}
     providers: [
       ...({{ entry.item.id }}.providers ?? []),

@@ -1,10 +1,12 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, OnDestroy, Service, Signal, signal } from '@angular/core';
 import { NG_DOC_SHIKI_THEME } from '@ng-doc/app/tokens';
+import { ngDocSyntaxTheme } from '@ng-doc/core/constants/syntax-theme';
 import { HighlighterGeneric } from '@shikijs/core/types';
 import { ThemeInput } from 'shiki';
 import { createHighlighterCore } from 'shiki/core';
 import getWasm from 'shiki/wasm';
 
+/** Shiki configuration of the code highlighter. */
 export interface NgDocHighlighterConfig {
   /**
    * Themes sources.
@@ -19,32 +21,106 @@ export interface NgDocHighlighterConfig {
   };
 }
 
-@Injectable({
-  providedIn: 'root',
-})
-export class NgDocHighlighterService {
-  private static highlighter?: HighlighterGeneric<string, string>;
+/**
+ * Highlights code with Shiki. `provideNgDocApp` initializes it before the application renders.
+ */
+@Service()
+export class NgDocHighlighterService implements OnDestroy {
+  private static defaultInitialization?: Promise<HighlighterGeneric<string, string>>;
+
+  private highlighter?: HighlighterGeneric<string, string>;
+  private initialization?: Promise<void>;
+  private ownsHighlighter = false;
+  private destroyed = false;
+  private readonly readyState = signal(false);
 
   protected readonly theme = inject(NG_DOC_SHIKI_THEME);
 
-  async initialize(config?: NgDocHighlighterConfig): Promise<void> {
-    if (NgDocHighlighterService.highlighter) {
-      return;
+  /**
+   * Whether `highlight()` can highlight: `true` once `initialize()` has finished, and
+   * `false` again after the service is destroyed.
+   */
+  readonly ready: Signal<boolean> = this.readyState.asReadonly();
+
+  /**
+   * Loads Shiki with the built-in themes (`github-light`, `ayu-dark` and NgDoc's `css-variables`)
+   * and the given ones. Concurrent and repeated calls share one initialization; a failed one can
+   * be retried.
+   * @param config - Custom Shiki themes and the theme names to use.
+   */
+  initialize(config?: NgDocHighlighterConfig): Promise<void> {
+    if (this.destroyed) {
+      return Promise.reject(new Error('NgDoc highlighter has been destroyed.'));
     }
-    NgDocHighlighterService.highlighter = (await createHighlighterCore({
+    if (this.initialization) {
+      return this.initialization;
+    }
+
+    // Only immutable built-in themes are shared across SSR applications. Custom
+    // themes may reuse names with different colors, or be asynchronous getters.
+    this.ownsHighlighter = Boolean(config?.themes?.length);
+    const creation = this.ownsHighlighter
+      ? NgDocHighlighterService.create(config?.themes)
+      : (NgDocHighlighterService.defaultInitialization ??= NgDocHighlighterService.create().catch(
+          (error: unknown) => {
+            NgDocHighlighterService.defaultInitialization = undefined;
+            throw error;
+          },
+        ));
+    this.initialization = creation
+      .then((highlighter) => {
+        if (this.destroyed) {
+          if (this.ownsHighlighter) {
+            highlighter.dispose();
+          }
+          return;
+        }
+        this.highlighter = highlighter;
+        this.readyState.set(true);
+      })
+      .catch((error: unknown) => {
+        this.initialization = undefined;
+        throw error;
+      });
+    return this.initialization;
+  }
+
+  /** Disposes the highlighter this service created for custom themes. */
+  ngOnDestroy(): void {
+    this.destroyed = true;
+    this.readyState.set(false);
+    if (this.ownsHighlighter) {
+      this.highlighter?.dispose();
+    }
+    this.highlighter = undefined;
+  }
+
+  private static async create(
+    themes: ThemeInput[] = [],
+  ): Promise<HighlighterGeneric<string, string>> {
+    return (await createHighlighterCore({
       themes: [
         import('shiki/themes/github-light.mjs'),
         import('shiki/themes/ayu-dark.mjs'),
-        ...(config?.themes ?? []),
+        // A new copy: Shiki changes the theme object it loads.
+        ngDocSyntaxTheme(),
+        ...themes,
       ],
       langs: [import('shiki/langs/angular-html.mjs')],
       loadWasm: getWasm,
     })) as HighlighterGeneric<string, string>;
   }
 
+  /**
+   * Returns the code as highlighted HTML, or an empty string before `initialize()` has
+   * finished. It reads `ready()`, so a `computed` over it updates once Shiki is loaded.
+   * @param code - Angular HTML to highlight.
+   */
   highlight(code: string): string {
+    if (!this.readyState()) return '';
+
     return (
-      NgDocHighlighterService.highlighter?.codeToHtml(code, {
+      this.highlighter?.codeToHtml(code, {
         lang: 'angular-html',
         themes: {
           light: this.theme.light || 'github-light',

@@ -3,12 +3,10 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "module": "preserve",
-    "types": ["jest", "node"],
-    "moduleResolution": "bundler",
-    "isolatedModules": true
+    "types": ["node"],
+    "moduleResolution": "bundler"
   },
-  "files": ["src/test-setup.ts"],
-  "include": ["jest.config.ts", "**/*.test.ts", "**/*.spec.ts", "**/*.d.ts"],
+  "include": ["**/*.test.ts", "**/*.spec.ts", "**/*.d.ts"],
   "angularCompilerOptions": {
     "extendedDiagnostics": {
       "checks": {

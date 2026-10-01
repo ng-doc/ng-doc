@@ -1,24 +1,26 @@
 import { ListKeyManager } from '@angular/cdk/a11y';
-import { ChangeDetectionStrategy, Component, ElementRef, inject, NgZone } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { asArray } from '@ng-doc/core/helpers/as-array';
 import { NgDocListHost } from '@ng-doc/ui-kit/classes/list-host';
 import { NgDocListItem } from '@ng-doc/ui-kit/classes/list-item';
 import { toElement } from '@ng-doc/ui-kit/helpers';
-import { fromEvent, merge, NEVER } from 'rxjs';
+import { fromEvent, merge, NEVER, timer } from 'rxjs';
 import { delayWhen, filter, repeat, takeUntil } from 'rxjs/operators';
 
+/**
+ * Keyboard navigation for the options inside it: arrow keys move the active option and Enter
+ * selects it. The keys also work from the list host's origin (for example a combobox input).
+ */
 @Component({
   selector: 'ng-doc-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
 })
 export class NgDocListComponent {
-  private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  private ngZone = inject(NgZone);
-  private listHost = inject<NgDocListHost>(NgDocListHost, { optional: true });
+  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly listHost = inject<NgDocListHost>(NgDocListHost, { optional: true });
 
   private keyManager: ListKeyManager<NgDocListItem> | null = null;
   private readonly items: Set<NgDocListItem> = new Set<NgDocListItem>();
@@ -34,7 +36,11 @@ export class NgDocListComponent {
       origin
         ? fromEvent(origin, 'keydown').pipe(
             takeUntil(fromEvent(list, 'keydown')),
-            delayWhen(() => this.ngZone.onStable),
+            // Handle the key in the next macrotask, once the origin's own handlers and the change
+            // detection they schedule have run. `NgZone.onStable` never emits in a zoneless
+            // application, and waiting for the application to be stable would stall the keys
+            // while any timer or request is pending. The timer is cancelled on destroy.
+            delayWhen(() => timer(0)),
             repeat(),
           )
         : NEVER,
@@ -63,6 +69,10 @@ export class NgDocListComponent {
       });
   }
 
+  /**
+   * Adds an item to the keyboard navigation.
+   * @param item - The item to add.
+   */
   registerItem(item: NgDocListItem): void {
     this.items.add(item);
 
@@ -70,6 +80,10 @@ export class NgDocListComponent {
     this.keyManager = new ListKeyManager(asArray(this.items)).withVerticalOrientation(true);
   }
 
+  /**
+   * Removes an item from the keyboard navigation.
+   * @param item - The item to remove.
+   */
   unregisterItem(item: NgDocListItem): void {
     this.items.delete(item);
   }

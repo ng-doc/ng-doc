@@ -1,5 +1,9 @@
 export interface NgDocBaseDemoOptions {
-  /** Specifies whether the code preview should be expanded (false by default) */
+  /**
+   * Opens the demo on its code (false by default): a `demo` starts on a source file instead of the
+   * preview (the `opened` snippet, then `defaultTab`, then the first file), and a `demoPane` starts
+   * with its code expanded.
+   */
   expanded?: boolean;
   /** Tab name that should be opened by default */
   defaultTab?: string;

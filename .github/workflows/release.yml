@@ -35,11 +35,19 @@ jobs:
       - name: Build Libraries
         run: npx nx run-many --projects=tag:type:lib --target=build --configuration=ci --parallel
 
-      - name: Build Applications
-        run: npx nx run-many --projects=tag:type:app --target=build --configuration=ci --parallel
+      # ng-doc.com is built with the Vite engine, from the libraries built above.
+      - name: Build Documentation
+        run: |
+          npx nx run ng-doc:link-libs --excludeTaskDependencies
+          npx nx run ng-doc:build-vite --excludeTaskDependencies
 
+      - name: Build Applications
+        run: npx nx run-many --projects='tag:type:app,!ng-doc' --target=build --configuration=ci --parallel
+
+      # deploy.yml syncs dist/apps/ng-doc/browser from the tar, so the Vite output keeps that path
+      # in the archive.
       - name: Tar Artifacts
-        run: tar -cvf ng-doc.tar dist/apps/ng-doc/browser
+        run: tar -cvf ng-doc.tar --transform='s,^dist/apps/ng-doc-vite/,dist/apps/ng-doc/,' dist/apps/ng-doc-vite/browser
 
       - name: Uploading Artifacts
         uses: actions/upload-artifact@v4

@@ -6,7 +6,13 @@
     "types": ["node"]
   },
   "include": ["schematics/**/*"],
-  "exclude": ["schematics/*/files/**/*", "jest.config.ts", "**/*.spec.ts", "**/*.test.ts"],
+  "exclude": [
+    "schematics/*/files/**/*",
+    "schematics/**/testing/**/*",
+    "vitest.config.ts",
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ],
   "angularCompilerOptions": {
     "strictTemplates": false
   }

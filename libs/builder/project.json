@@ -26,16 +26,28 @@
     },
     "build": {
       "executor": "nx:run-commands",
+      "inputs": [
+        "production",
+        "^production",
+        "{workspaceRoot}/tools/scripts/**/*",
+        "{workspaceRoot}/tools/compatibility/**/*",
+        "{workspaceRoot}/tools/licenses/**/*",
+        "{workspaceRoot}/tsconfig.base.json",
+        "{workspaceRoot}/build-schema.js"
+      ],
       "outputs": [
         "{workspaceRoot}/dist/libs/builder/application/schema.json",
         "{workspaceRoot}/dist/libs/builder/dev-server/schema.json",
         "{workspaceRoot}/dist/libs/builder/prerender/schema.json",
-        "{workspaceRoot}/dist/libs/builder/ssr-dev-server/schema.json"
+        "{workspaceRoot}/dist/libs/builder/ssr-dev-server/schema.json",
+        "{workspaceRoot}/dist/libs/builder/generator"
       ],
       "options": {
         "commands": [
-          "node build-schema.js --from=\"libs/builder/**/*(application|dev-server|prerender|ssr-dev-server)/schema.json\" --to=\"dist/libs/builder\""
-        ]
+          "node build-schema.js --from=\"libs/builder/**/*(application|dev-server|prerender|ssr-dev-server)/schema.json\" --to=\"dist/libs/builder\"",
+          "node tools/scripts/build-generator.mjs"
+        ],
+        "parallel": false
       }
     },
     "schematics": {
@@ -60,12 +72,17 @@
       "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": ["default", "^production", "{workspaceRoot}/tools/vitest/**/*"],
       "outputs": ["{workspaceRoot}/coverage/libs/builder"],
       "options": {
-        "jestConfig": "libs/builder/jest.config.ts",
-        "runInBand": true,
-        "tsConfig": "libs/builder/tsconfig.spec.json"
+        "command": "vitest run --config libs/builder/vitest.config.ts"
+      },
+      "configurations": {
+        "ci": {
+          "command": "vitest run --config libs/builder/vitest.config.ts --coverage"
+        }
       }
     }
   }

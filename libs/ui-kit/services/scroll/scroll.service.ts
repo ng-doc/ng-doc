@@ -1,21 +1,15 @@
 import { BlockScrollStrategy, ViewportRuler } from '@angular/cdk/overlay';
-import { DOCUMENT, inject, Injectable } from '@angular/core';
+import { DOCUMENT, inject, Service } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root',
-})
+/**
+ * Blocks and unblocks the scrolling of the page, for example while a sidebar covers it.
+ */
+@Service()
 export class NgDocScrollService {
-  private readonly document = inject<Document>(DOCUMENT);
-  private readonly viewportRuler = inject(ViewportRuler);
-
-  private readonly scrollStrategy: BlockScrollStrategy;
-
-  /** Inserted by Angular inject() migration for backwards compatibility */
-  constructor(...args: unknown[]);
-
-  constructor() {
-    this.scrollStrategy = new BlockScrollStrategy(this.viewportRuler, this.document);
-  }
+  private readonly scrollStrategy: BlockScrollStrategy = new BlockScrollStrategy(
+    inject(ViewportRuler),
+    inject<Document>(DOCUMENT),
+  );
 
   /**
    * Block global scroll

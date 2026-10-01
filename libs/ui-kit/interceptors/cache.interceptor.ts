@@ -1,60 +1,51 @@
-import {
-  HttpEvent,
-  HttpHandler,
-  HttpInterceptor,
-  HttpRequest,
-  HttpResponse,
-} from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { shareReplay, tap } from 'rxjs/operators';
 
+/**
+ * Caches `GET` responses of requests that opt in with the `NgDocCacheInterceptor.TOKEN` query
+ * parameter. The parameter is removed before the request is sent, and every later request for the
+ * same URL shares the first response. A failed request is not cached.
+ *
+ * It only runs when the application's `HttpClient` uses interceptors from DI
+ * (`withInterceptorsFromDi()`). NgDoc's icons no longer depend on it: they are cached by
+ * `NgDocIconRegistry`.
+ */
 @Injectable()
 export class NgDocCacheInterceptor implements HttpInterceptor {
+  /** Name of the query parameter that marks a request as cacheable. */
   static readonly TOKEN: string = Math.random().toString(36).slice(-8);
-  private cache: Map<string, Observable<HttpEvent<unknown>>> = new Map<
-    string,
-    Observable<HttpEvent<unknown>>
-  >();
 
+  private readonly cache: Map<string, Observable<HttpEvent<unknown>>> = new Map();
+
+  /**
+   * Returns the cached response for opted-in `GET` requests and passes every other request on.
+   * @param request - The outgoing request.
+   * @param next - The next handler in the chain.
+   * @returns The response stream.
+   */
   intercept<T>(request: HttpRequest<T>, next: HttpHandler): Observable<HttpEvent<T>> {
-    // Only GET requests can be cached
-    if (request.method !== 'GET') {
+    if (request.method !== 'GET' || !request.params.has(NgDocCacheInterceptor.TOKEN)) {
       return next.handle(request);
     }
 
-    // Do not cache request when the token is not provided
-    if (!request.params.has(NgDocCacheInterceptor.TOKEN)) {
-      return next.handle(request);
-    }
-
-    // Return cached response
-    const cachedRequest: Observable<HttpEvent<T>> | undefined = this.cache.get(
-      request.url,
-    ) as Observable<HttpEvent<T>>;
+    const cachedRequest = this.cache.get(request.url) as Observable<HttpEvent<T>> | undefined;
 
     if (cachedRequest) {
       return cachedRequest;
     }
 
-    // Clone the request, delete the TOKEN from the params
     const newRequest: HttpRequest<T> = request.clone({
       params: request.params.delete(NgDocCacheInterceptor.TOKEN),
     });
-
-    // Create a new request handler
     const newHandler: Observable<HttpEvent<T>> = next.handle(newRequest).pipe(
-      tap({
-        error: (event: HttpEvent<Error>) => {
-          if (event instanceof HttpResponse) {
-            this.cache.delete(event.url || '');
-          }
-        },
-      }),
+      // An error arrives as an `HttpErrorResponse`, so the entry is removed by the request URL:
+      // the next request for it goes to the network again.
+      tap({ error: () => this.cache.delete(request.url) }),
       shareReplay(1),
     );
 
-    // Cache the request and return the new handler
     this.cache.set(request.url, newHandler);
 
     return newHandler;

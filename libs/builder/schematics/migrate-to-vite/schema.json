@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "NgDocMigrateToVite",
+  "title": "Migrate an NgDoc project to the Vite engine",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "The project to migrate. Defaults to the only project that builds with @ng-doc/builder:application."
+    },
+    "revert": {
+      "type": "boolean",
+      "default": false,
+      "description": "Undo an earlier migration of the project: restore its original targets and changed files, and delete the files the migration created."
+    },
+    "viteConfig": {
+      "type": "string",
+      "description": "The Vite configuration file to create, relative to the workspace root. Defaults to vite.config.mjs in the project root."
+    },
+    "rootComponent": {
+      "type": "string",
+      "description": "The file of the application's root component, relative to the workspace root. Found from the browser entry by default."
+    },
+    "skipInstall": {
+      "type": "boolean",
+      "default": false,
+      "description": "Do not install the added dependencies."
+    }
+  },
+  "additionalProperties": false
+}

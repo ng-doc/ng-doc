@@ -1,0 +1,524 @@
+// The palette is not encapsulated: it also styles the dialog backdrop the dialog service creates
+// around it. Every rule is scoped to the palette's own element or classes.
+
+// Applies the nested rules in the dark theme, and in the auto theme when the system is dark.
+@mixin dark {
+  :root[data-theme='dark'] & {
+    @content;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root[data-theme='auto'] & {
+      @content;
+    }
+  }
+}
+
+.ng-doc-command-palette-backdrop {
+  background: rgb(var(--ng-doc-base-rgb) / 0.32);
+
+  @include dark {
+    background: rgb(0 0 0 / 0.55);
+  }
+}
+
+ng-doc-command-palette {
+  display: block;
+  width: min(var(--ng-doc-search-dialog-width), calc(100vw - 32px));
+  font-family: var(--ng-doc-font-family);
+  color: var(--ng-doc-text);
+
+  &.ng-doc-command-palette-enter {
+    animation: ng-doc-command-palette-enter 150ms var(--ng-doc-easing, ease-out);
+  }
+
+  @media (max-width: 640px) {
+    width: calc(100vw - 16px);
+  }
+}
+
+@keyframes ng-doc-command-palette-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+.ng-doc-command-palette {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
+  max-height: min(600px, 82vh);
+  overflow: hidden;
+  background: var(--ng-doc-background);
+  border: 1px solid var(--ng-doc-border-color);
+  border-radius: var(--ng-doc-search-border-radius, var(--ng-doc-radius-xl));
+  box-shadow: var(--ng-doc-shadow-lg);
+
+  @media (max-width: 640px) {
+    max-height: calc(100vh - 16px);
+  }
+}
+
+// The status region is read by screen readers only.
+.ng-doc-command-palette-announcer {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.ng-doc-command-palette-kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  font: 500 12px/1 var(--ng-doc-font-family);
+  color: var(--ng-doc-text-muted);
+  background: var(--ng-doc-kbd-background);
+  border: 1px solid var(--ng-doc-kbd-border-color);
+  border-radius: var(--ng-doc-radius-xs);
+}
+
+.ng-doc-command-palette-mono {
+  font-family: var(--ng-doc-code-font);
+}
+
+.ng-doc-command-palette-muted {
+  color: var(--ng-doc-text-muted);
+}
+
+// Search field row: 56px, the field, the scope tabs and the Escape hint.
+.ng-doc-command-palette-input {
+  display: flex;
+  align-items: center;
+  gap: var(--ng-doc-space-3);
+  height: 56px;
+  padding: 0 var(--ng-doc-space-3) 0 var(--ng-doc-space-4);
+  border-bottom: 1px solid var(--ng-doc-border-color);
+  color: var(--ng-doc-text-muted);
+
+  svg {
+    flex: none;
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: none;
+    font: 400 16px/24px var(--ng-doc-font-family);
+    color: var(--ng-doc-heading-color);
+
+    &::placeholder {
+      color: var(--ng-doc-text-muted);
+      opacity: 1;
+    }
+  }
+}
+
+// Segmented control, as in the demo toolbar and the API index.
+.ng-doc-command-palette-segments {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--ng-doc-radius-md);
+  background: var(--ng-doc-base-2);
+
+  // The highlight of the selected scope slides between the scopes, which paint over it.
+  ng-doc-selection {
+    border-radius: var(--ng-doc-radius-sm);
+    background: var(--ng-doc-background);
+    box-shadow: var(--ng-doc-shadow-xs);
+  }
+
+  button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding: 0 8px;
+    border: 0;
+    border-radius: var(--ng-doc-radius-sm);
+    background: none;
+    font: 500 12px/1 var(--ng-doc-font-family);
+    color: var(--ng-doc-text-muted);
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:hover {
+      color: var(--ng-doc-heading-color);
+    }
+
+    &[aria-selected='true'] {
+      color: var(--ng-doc-heading-color);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--ng-doc-focus-ring);
+    }
+  }
+}
+
+// In dark themes the selected segment also gets a hairline, so it stands out from the track.
+.ng-doc-command-palette-segments ng-doc-selection {
+  @include dark {
+    box-shadow:
+      var(--ng-doc-shadow-xs),
+      inset 0 0 0 1px var(--ng-doc-base-4);
+  }
+}
+
+.ng-doc-command-palette-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--ng-doc-search-preview-width);
+  min-height: 0;
+}
+
+.ng-doc-command-palette-list {
+  min-height: 120px;
+  padding: var(--ng-doc-space-2);
+  overflow: auto;
+  overscroll-behavior: contain;
+  container: ng-doc-command-palette-list / inline-size;
+}
+
+.ng-doc-command-palette-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ng-doc-space-2);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ng-doc-text-muted);
+}
+
+.ng-doc-command-palette-empty {
+  padding: var(--ng-doc-space-8) var(--ng-doc-space-3);
+}
+
+.ng-doc-command-palette-section {
+  display: flex;
+  justify-content: space-between;
+  margin: var(--ng-doc-space-4) var(--ng-doc-space-3) var(--ng-doc-space-2);
+  font: 600 11px/16px var(--ng-doc-font-family);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ng-doc-text-muted);
+
+  .ng-doc-command-palette-count {
+    font-weight: 400;
+    letter-spacing: 0;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.ng-doc-command-palette-group:first-child .ng-doc-command-palette-section {
+  margin-top: var(--ng-doc-space-2);
+}
+
+// Rows: the name comes first and truncates; the kind chip sits in its own column on the right.
+.ng-doc-command-palette-row {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--ng-doc-space-3);
+  min-height: 40px;
+  padding: 4px var(--ng-doc-space-3);
+  border-radius: var(--ng-doc-radius-md);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ng-doc-text);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--ng-doc-row-hover-background);
+  }
+
+  &[aria-selected='true'] {
+    background: var(--ng-doc-row-selected-background);
+    box-shadow: inset 0 0 0 1px var(--ng-doc-row-selected-border);
+
+    .ng-doc-command-palette-return {
+      display: block;
+    }
+  }
+
+  mark {
+    background: none;
+    color: var(--ng-doc-primary-strong);
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 3px;
+  }
+}
+
+.ng-doc-command-palette-icon {
+  display: grid;
+  place-items: center;
+  color: var(--ng-doc-text-muted);
+}
+
+.ng-doc-command-palette-name {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--ng-doc-search-result-header-color, var(--ng-doc-heading-color));
+
+  &.ng-doc-command-palette-mono {
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  small {
+    margin-left: var(--ng-doc-space-2);
+    font: 400 12px var(--ng-doc-font-family);
+    color: var(--ng-doc-text-muted);
+  }
+}
+
+.ng-doc-command-palette-end {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-self: end;
+}
+
+.ng-doc-command-palette-return {
+  display: none;
+  color: var(--ng-doc-primary-strong);
+}
+
+@container ng-doc-command-palette-list (max-width: 420px) {
+  .ng-doc-command-palette-row {
+    column-gap: var(--ng-doc-space-2);
+    padding: 4px var(--ng-doc-space-2);
+  }
+
+  .ng-doc-command-palette-name small {
+    display: none;
+  }
+}
+
+// Preview of the selected result.
+.ng-doc-command-palette-preview {
+  padding: var(--ng-doc-space-4);
+  overflow: auto;
+  border-left: 1px solid var(--ng-doc-border-color);
+  background: var(--ng-doc-base-1);
+  font-size: 13px;
+  line-height: 20px;
+
+  p {
+    margin: 0 0 var(--ng-doc-space-3);
+  }
+}
+
+.ng-doc-command-palette-preview-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ng-doc-space-2);
+  font-size: 12px;
+  color: var(--ng-doc-text-muted);
+}
+
+.ng-doc-command-palette-preview-title {
+  margin: var(--ng-doc-space-2) 0 var(--ng-doc-space-1);
+  padding: 0;
+  border: 0;
+  font: 600 15px/22px var(--ng-doc-font-family);
+  letter-spacing: 0;
+  color: var(--ng-doc-heading-color);
+  overflow-wrap: anywhere;
+
+  &.ng-doc-command-palette-mono {
+    font-family: var(--ng-doc-code-font);
+  }
+}
+
+.ng-doc-command-palette-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 8;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--ng-doc-search-result-color);
+}
+
+// Page-type chip: shown for guides, and for API results whose declaration kind is unknown.
+.ng-doc-command-palette-type {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--ng-doc-radius-sm);
+  font: 600 10.5px/1 var(--ng-doc-font-family);
+  white-space: nowrap;
+
+  &[data-ng-doc-page-type='api'] {
+    color: var(--ng-doc-api-tag-color);
+    background: var(--ng-doc-api-tag-background);
+  }
+
+  &[data-ng-doc-page-type='guide'] {
+    color: var(--ng-doc-guide-tag-color);
+    background: var(--ng-doc-guide-tag-background);
+  }
+}
+
+.ng-doc-command-palette-signature {
+  margin: 0 0 var(--ng-doc-space-3);
+  padding: var(--ng-doc-space-2) var(--ng-doc-space-3);
+  border: 1px solid var(--ng-doc-border-color);
+  border-radius: var(--ng-doc-radius-md);
+  background: var(--ng-doc-background);
+  font: 400 13px/20px var(--ng-doc-code-font);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ng-doc-command-palette-hint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ng-doc-text-muted);
+}
+
+// Footer: key hints and the single-key shortcuts switch.
+.ng-doc-command-palette-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--ng-doc-space-4);
+  min-height: 44px;
+  padding: 0 var(--ng-doc-space-3) 0 var(--ng-doc-space-4);
+  border-top: 1px solid var(--ng-doc-border-color);
+  background: var(--ng-doc-base-1);
+  font-size: 12px;
+  color: var(--ng-doc-text-muted);
+
+  > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+}
+
+.ng-doc-command-palette-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: -4px -4px -4px auto;
+  padding: 4px;
+  border: 0;
+  border-radius: var(--ng-doc-radius-sm);
+  background: none;
+  font: 400 12px/1 var(--ng-doc-font-family);
+  color: var(--ng-doc-text);
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--ng-doc-focus-ring);
+  }
+
+  .ng-doc-command-palette-track {
+    position: relative;
+    width: 28px;
+    height: 16px;
+    border-radius: var(--ng-doc-radius-full);
+    background: var(--ng-doc-base-7);
+    transition: background var(--ng-doc-transition);
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--ng-doc-background);
+      box-shadow: var(--ng-doc-shadow-xs);
+      transition: transform var(--ng-doc-transition) var(--ng-doc-easing, ease);
+    }
+  }
+
+  &[aria-checked='true'] .ng-doc-command-palette-track {
+    background: var(--ng-doc-primary);
+
+    &::after {
+      transform: translateX(12px);
+    }
+  }
+}
+
+// The off track needs base-8 on the base-1 footer in dark themes to keep a 3:1 contrast.
+.ng-doc-command-palette-switch:not([aria-checked='true']) .ng-doc-command-palette-track {
+  @include dark {
+    background: var(--ng-doc-base-8);
+  }
+}
+
+@media (max-width: 640px) {
+  .ng-doc-command-palette-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ng-doc-command-palette-preview,
+  .ng-doc-command-palette-wide {
+    display: none !important;
+  }
+
+  // The scopes stay visible on phones, in their own row under the search field.
+  .ng-doc-command-palette-input {
+    flex-wrap: wrap;
+    row-gap: 0;
+    height: auto;
+    padding-bottom: var(--ng-doc-space-2);
+
+    input {
+      height: 48px;
+    }
+  }
+
+  .ng-doc-command-palette-scopes {
+    order: 1;
+    flex: 1 1 100%;
+
+    button {
+      flex: 1;
+      justify-content: center;
+    }
+  }
+
+  .ng-doc-command-palette-footer {
+    gap: var(--ng-doc-space-3);
+    padding-left: var(--ng-doc-space-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ng-doc-command-palette.ng-doc-command-palette-enter {
+    animation: none;
+  }
+
+  .ng-doc-command-palette-switch .ng-doc-command-palette-track,
+  .ng-doc-command-palette-switch .ng-doc-command-palette-track::after {
+    transition: none;
+  }
+}
