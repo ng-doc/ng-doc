@@ -824,6 +824,30 @@ export function parseArgs(args) {
   return options;
 }
 
+/** Trailing lines of a failed group's log that the CLI prints, so a CI job log shows the failure. */
+export const FAILURE_LOG_TAIL_LINES = 200;
+
+/**
+ * The last lines of a group's log, with a note of how many earlier lines the file keeps.
+ * @param {string} file - The log file.
+ * @param {number} [count] - How many trailing lines to keep.
+ * @returns {Promise<string>} The tail, or why the log could not be read.
+ */
+export async function logTail(file, count = FAILURE_LOG_TAIL_LINES) {
+  let text;
+  try {
+    text = await readFile(file, 'utf8');
+  } catch (error) {
+    return `(the log could not be read: ${error.message})`;
+  }
+  const lines = text.replace(/\n$/, '').split('\n');
+  const earlier = lines.length - count;
+  return [
+    ...(earlier > 0 ? [`(${earlier} earlier lines are in the log file)`] : []),
+    ...lines.slice(-count),
+  ].join('\n');
+}
+
 export async function isMain(moduleUrl, argvPath = process.argv[1]) {
   if (!argvPath) return false;
   try {
@@ -854,6 +878,11 @@ if (await isMain(import.meta.url)) {
         console.error(
           `check-builder-modernization: ${entry.id}: ${entry.message ?? entry.error ?? `failed with code ${entry.code}`}${hint}; log: ${entry.logFile}`,
         );
+        // CI keeps the log only as an artifact; its tail in the job log names the failure.
+        if (entry.logFile)
+          console.error(
+            `--- ${entry.id}: last ${FAILURE_LOG_TAIL_LINES} lines of ${entry.logFile} ---\n${await logTail(entry.logFile)}\n--- end of ${entry.id} ---`,
+          );
       }
       process.exitCode = controller.signal.aborted
         ? 130

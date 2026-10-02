@@ -66,13 +66,19 @@ try {
     await writeFile(target, value);
     return target;
   };
-  // The fixture adds a never-opened probe page, and its own output, cache and base.
+  // The fixture adds a never-opened probe page, and its own output, cache and base. `paths`
+  // replaces the inherited mappings as a whole, so it keeps the site's and replaces the generated one.
+  const sitePaths = JSON.parse(
+    await readFile(path.join(root, 'apps/ng-doc/tsconfig.vite.json'), 'utf8'),
+  ).compilerOptions.paths;
   const tsconfig = await put(
     'tsconfig.json',
     JSON.stringify(
       {
         extends: path.join(root, 'apps/ng-doc/tsconfig.vite.json'),
-        compilerOptions: { paths: { '@ng-doc/generated': [path.join(generated, 'index.ts')] } },
+        compilerOptions: {
+          paths: { ...sitePaths, '@ng-doc/generated': [path.join(generated, 'index.ts')] },
+        },
       },
       null,
       2,

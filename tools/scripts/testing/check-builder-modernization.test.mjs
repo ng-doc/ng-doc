@@ -4,6 +4,7 @@ import { mkdtemp, mkdir, readFile, readdir, rm, writeFile, copyFile } from 'node
 import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { stripVTControlCharacters } from 'node:util';
 import test from 'node:test';
 import * as runner from '../check-builder-modernization.mjs';
 import {
@@ -813,6 +814,69 @@ test(
   },
 );
 
+test('logTail keeps the last lines of a log and says how many earlier ones the file keeps', async (t) => {
+  const root = await temporary(t);
+  const file = path.join(root, 'run.log');
+  await writeFile(
+    file,
+    `${Array.from({ length: 5 }, (_, index) => `line ${index + 1}`).join('\n')}\n`,
+  );
+  assert.equal(
+    await runner.logTail(file, 2),
+    '(3 earlier lines are in the log file)\nline 4\nline 5',
+  );
+  assert.equal(await runner.logTail(file, 5), 'line 1\nline 2\nline 3\nline 4\nline 5');
+  assert.equal(runner.FAILURE_LOG_TAIL_LINES, 200);
+  assert.match(
+    await runner.logTail(path.join(root, 'missing.log')),
+    /^\(the log could not be read: .*ENOENT/,
+  );
+});
+
+test("CLI prints the tail of a failed group's log after its failure line", async (t) => {
+  const root = await temporary(t);
+  const scripts = path.join(root, 'tools/scripts');
+  await mkdir(scripts, { recursive: true });
+  const cli = path.join(scripts, 'check-builder-modernization.mjs');
+  await copyFile(path.join(ROOT, 'tools/scripts/check-builder-modernization.mjs'), cli);
+  const fakeVitest = path.join(root, 'node_modules/vitest');
+  await mkdir(fakeVitest, { recursive: true });
+  // More lines than the tail: the runner's argv line and the first of these stay in the file.
+  await writeFile(
+    path.join(fakeVitest, 'vitest.mjs'),
+    `for (let line = 1; line <= 250; line++) console.log('vitest line ' + line); console.log('AssertionError: the cause'); process.exitCode = 1;`,
+  );
+  const evidence = path.join(root, 'fresh logs');
+  const child = spawn(process.execPath, [cli, '--group', 'graph', '--log-dir', evidence], {
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  let stderr = '';
+  child.stdout.resume();
+  child.stderr.on('data', (chunk) => {
+    stderr += chunk;
+  });
+  const exit = await new Promise((resolve, reject) => {
+    child.once('error', reject);
+    child.once('close', (code, signal) => resolve({ code, signal }));
+  });
+  assert.deepEqual(exit, { code: 1, signal: null });
+  const log = path.join(evidence, 'graph', 'run.log');
+  const lines = (await readFile(log, 'utf8')).trimEnd().split('\n');
+  const failure = stderr.indexOf('graph: exited with code 1');
+  const header = stderr.indexOf(`--- graph: last 200 lines of ${log} ---`);
+  assert.ok(failure >= 0 && header > failure, stderr);
+  // The tail is the log's last 200 lines (the failure and the runner's result line among them),
+  // after a note of how many earlier lines the file keeps.
+  assert.ok(lines.length > 200);
+  assert.ok(
+    stderr.includes(
+      `---\n(${lines.length - 200} earlier lines are in the log file)\n${lines.slice(-200).join('\n')}\n--- end of graph ---\n`,
+    ),
+    stderr,
+  );
+  assert.match(stderr, /vitest line 250\nAssertionError: the cause\n/);
+});
+
 test(
   'after a natural exit a briefly zombie-only group (EPERM) settles instead of failing the run',
   posix,
@@ -1233,7 +1297,10 @@ test(
       });
       return {
         result: results[0],
-        log: await readFile(path.join(root, name, 'graph/run.log'), 'utf8'),
+        // Vitest colours its report under CI (the CI variable), which splits the matched lines.
+        log: stripVTControlCharacters(
+          await readFile(path.join(root, name, 'graph/run.log'), 'utf8'),
+        ),
       };
     };
     const summary = async (name) =>

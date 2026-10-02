@@ -49,6 +49,9 @@ async function fixture() {
   });
   servers.push(server);
   await server.listen();
+  // createServer does not wait for the watcher's initial scan, and an edit made before the scan
+  // watched a file is never reported: on a loaded runner the edits below could precede it.
+  await watcherReady(server);
   const runner = await createServerModuleRunner(server.environments.ssr);
   runners.push(runner);
   const mutations: HotPayload[] = [];
@@ -83,6 +86,17 @@ async function fixture() {
     entrySource,
     mutations,
   };
+}
+
+/**
+ * Resolves once Vite's watcher has watched every file of its initial scan. chokidar emits `ready`
+ * once and records that it did.
+ * @param server - The dev server.
+ */
+function watcherReady(server: ViteDevServer): Promise<void> {
+  const watcher = server.watcher as ViteDevServer['watcher'] & { _readyEmitted?: boolean };
+  if (watcher._readyEmitted) return Promise.resolve();
+  return new Promise((resolve) => watcher.once('ready', () => resolve()));
 }
 
 async function remainsPending<T>(promise: Promise<T>): Promise<void> {

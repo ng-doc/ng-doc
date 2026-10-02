@@ -66,7 +66,7 @@ The rules for rebuilding while something else is running are in [agent-safety.md
 ## Serve the documentation site
 
 - **Where the builders come from:** the site's builders are loaded from `dist/libs/builder`.
-- **Linking:** the `ng-doc:link-libs` target symlinks the built packages from `dist/libs/*` into `node_modules/@ng-doc/*` for `app`, `ui-kit`, `builder` and `keywords-loaders`, and links `core` and `utils` into the builder's own `node_modules`. No target creates root `node_modules/@ng-doc/core` or `utils` links.
+- **Linking:** the `ng-doc:link-libs` target symlinks the built packages from `dist/libs/*` into `node_modules/@ng-doc/*` for `app`, `ui-kit`, `builder`, `keywords-loaders`, `core` and `utils`, and links `core` and `utils` into the builder's own `node_modules`. A fresh clone has no `node_modules/@ng-doc` until it runs. The site's `tsconfig.vite.json` and `tsconfig.modern.json` repeat the library `paths` of `tsconfig.build.json`, because a `paths` override replaces the inherited mappings as a whole; `tools/scripts/testing/site-package-links.test.mjs` checks both.
 - **Angular CLI targets:** the targets below build and link first, through `dependsOn`.
 - **`serve-docs-vite.mjs` does not build.** Before starting it, run the package-set build, and run `npx nx run ng-doc:link-libs` once on a fresh clone. Rebuild after source changes.
 

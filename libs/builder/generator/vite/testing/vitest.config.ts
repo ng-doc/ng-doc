@@ -5,6 +5,14 @@ const repository = path.resolve(import.meta.dirname, '../../../../..');
 
 export default defineConfig({
   root: repository,
+  // The sources, as the generator build bundles them: CI runs this group without linking the built
+  // packages into node_modules.
+  resolve: {
+    alias: {
+      '@ng-doc/core': path.resolve(repository, 'libs/core/index.ts'),
+      '@ng-doc/utils': path.resolve(repository, 'libs/utils/index.ts'),
+    },
+  },
   test: {
     include: ['libs/builder/generator/vite/testing/**/*.vitest.ts'],
     environment: 'node',

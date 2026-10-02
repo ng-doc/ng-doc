@@ -4,7 +4,7 @@ These rules prevent the failures that are easy to cause here and hard to notice 
 
 ## The shared `dist` is live
 
-- **Who reads `dist`:** `node_modules/@ng-doc/{app,ui-kit,builder,keywords-loaders}` are symlinks to `dist/libs/*` (created by `ng-doc:link-libs`). The docs site, `tools/scripts/serve-docs-vite.mjs`, the Angular CLI targets and the generator acceptance harnesses all load code from `dist`.
+- **Who reads `dist`:** `node_modules/@ng-doc/{app,ui-kit,builder,keywords-loaders,core,utils}` are symlinks to `dist/libs/*` (created by `ng-doc:link-libs`). The docs site, `tools/scripts/serve-docs-vite.mjs`, the Angular CLI targets and the generator acceptance harnesses all load code from `dist`.
 - **Don't rebuild it under a running consumer.** Rebuilding the libraries or `builder:build` while a dev server, test run or acceptance harness is using it swaps code under a running process. Stop the consumers first, or build privately:
 
   ```sh

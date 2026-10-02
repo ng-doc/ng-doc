@@ -86,9 +86,10 @@ class Events implements FileEventSource {
 }
 
 async function until(predicate: () => boolean, timeout: number = 60_000): Promise<void> {
-  const end = Date.now() + timeout;
+  // Not Date.now(): the test stops that clock.
+  const end = performance.now() + timeout;
   while (!predicate()) {
-    if (Date.now() > end) throw new Error('Timed out waiting for a generation');
+    if (performance.now() > end) throw new Error('Timed out waiting for a generation');
     await new Promise((resolve) => setTimeout(resolve, 5));
   }
 }
@@ -449,8 +450,19 @@ test(
   'delta and full commits leave identical results, manifests and trees at every step',
   { timeout: 240_000 },
   async () => {
-    const full = await run(false);
-    const delta = await run(true);
+    // The committer trusts an unchanged output's stat instead of reading it once the output is
+    // older than its racy window (2 s), so how many outputs a commit reads would depend on the
+    // machine's speed. The wall clock stands still instead: every output stays inside the window,
+    // and each commit reads exactly what its plan reads, on a fast machine and on a slow runner.
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(Date.now());
+    let full: Step[];
+    let delta: Step[];
+    try {
+      full = await run(false);
+      delta = await run(true);
+    } finally {
+      clock.mockRestore();
+    }
     expect(delta.map((item) => item.label)).toEqual(full.map((item) => item.label));
     for (const [index, step] of delta.entries()) {
       const reference = full[index];
