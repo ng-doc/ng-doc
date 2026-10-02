@@ -84,6 +84,49 @@ class MembersHostComponent {
   readonly filter = viewChild.required(NgDocMembersFilterDirective);
 }
 
+// A members table with a single group renders no tabs.
+@Component({
+  template: `
+    <section ngDocMembersFilter>
+      <table class="ng-doc-members-table">
+        <tbody>
+          <tr class="ng-doc-member" data-group="properties" data-name="content">
+            <td>content</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  `,
+  imports: [NgDocMembersFilterDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class MembersWithoutTabsHostComponent {}
+
+/**
+ * Gives an element the layout that `ng-doc-selection` measures (jsdom has none).
+ * @param element - The element.
+ * @param left - `offsetLeft`.
+ * @param width - `offsetWidth`.
+ */
+function layout(element: HTMLElement, left: number, width: number): void {
+  Object.defineProperties(element, {
+    offsetLeft: { configurable: true, value: left },
+    offsetTop: { configurable: true, value: 3 },
+    offsetWidth: { configurable: true, value: width },
+    offsetHeight: { configurable: true, value: 28 },
+  });
+}
+
+/**
+ * Waits until the highlight has rendered after a change.
+ * @param fixture - The fixture of the test.
+ */
+async function settle(fixture: ComponentFixture<unknown>): Promise<void> {
+  await fixture.whenStable();
+  await new Promise((resolve) => setTimeout(resolve));
+  await fixture.whenStable();
+}
+
 describeChangeDetection('NgDocMembersFilterDirective', ({ providers }) => {
   let fixture: ComponentFixture<MembersHostComponent>;
   let element: HTMLElement;
@@ -203,6 +246,66 @@ describeChangeDetection('NgDocMembersFilterDirective', ({ providers }) => {
     expand.click();
 
     expect(detail().hidden).toBe(true);
+  });
+
+  it('inserts one highlight in front of the tabs, placed once a tab has a box', () => {
+    const row = element.querySelector<HTMLElement>('.ng-doc-members-tabs')!;
+    const highlights = row.querySelectorAll('ng-doc-selection');
+
+    expect(highlights).toHaveLength(1);
+    expect(row.firstElementChild).toBe(highlights[0]);
+    expect(highlights[0].getAttribute('aria-hidden')).toBe('true');
+    // A thumb that covers the tab, without a border on one side.
+    expect(highlights[0].hasAttribute('data-ng-doc-align')).toBe(false);
+    // jsdom lays nothing out: the selected tab keeps drawing its own background.
+    expect(highlights[0].hasAttribute('data-ng-doc-placed')).toBe(false);
+  });
+
+  it('slides the highlight to the tab selected by a click or a key', async () => {
+    const highlight = element.querySelector<HTMLElement>('ng-doc-selection')!;
+
+    ['all', 'properties', 'accessors', 'methods', 'inherited'].forEach((name, index) =>
+      layout(tab(name), 3 + index * 80, 70 + index),
+    );
+
+    tab('methods').click();
+    await settle(fixture);
+
+    expect(highlight.style.transform).toBe('translate(243px, 3px)');
+    expect(highlight.style.width).toBe('73px');
+    expect(highlight.style.height).toBe('28px');
+    expect(highlight.style.visibility).toBe('visible');
+    expect(highlight.hasAttribute('data-ng-doc-placed')).toBe(true);
+
+    tab('methods').focus();
+    document.activeElement!.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Home', bubbles: true, cancelable: true }),
+    );
+    await settle(fixture);
+
+    expect(highlight.style.transform).toBe('translate(3px, 3px)');
+    expect(highlight.style.width).toBe('70px');
+
+    fixture.componentInstance.filter().select('inherited');
+    await settle(fixture);
+
+    expect(highlight.style.transform).toBe('translate(323px, 3px)');
+  });
+
+  it('removes the highlight when destroyed', () => {
+    const row = element.querySelector<HTMLElement>('.ng-doc-members-tabs')!;
+
+    fixture.destroy();
+
+    expect(row.querySelector('ng-doc-selection')).toBeNull();
+  });
+
+  it('adds no highlight to a table without tabs', async () => {
+    const withoutTabs = TestBed.createComponent(MembersWithoutTabsHostComponent);
+
+    await withoutTabs.whenStable();
+
+    expect(withoutTabs.nativeElement.querySelector('ng-doc-selection')).toBeNull();
   });
 
   it('focuses the filter with F and gives the key back when destroyed', () => {

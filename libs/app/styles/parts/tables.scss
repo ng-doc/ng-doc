@@ -150,7 +150,22 @@ table.ng-doc-api-table:not(.no-padding) {
   margin: 0 0 var(--ng-doc-space-3);
 }
 
+// The background of the selected member tab, drawn by its highlight, as in the code-block tabs. In
+// dark themes it also gets a hairline, so it stands out from the track.
+@mixin ng-doc-members-tab-highlight {
+  background: var(--ng-doc-background);
+  box-shadow: var(--ng-doc-shadow-xs);
+
+  @include ng-doc-api-dark {
+    box-shadow:
+      var(--ng-doc-shadow-xs),
+      inset 0 0 0 1px var(--ng-doc-base-4);
+  }
+}
+
 .ng-doc-members-tabs {
+  // The highlight is positioned in the row, so it scrolls with the tabs.
+  position: relative;
   display: inline-flex;
   flex: 0 1 auto;
   min-width: 0;
@@ -181,7 +196,15 @@ table.ng-doc-api-table:not(.no-padding) {
     );
   }
 
+  // The highlight of the selected tab, which the members filter directive inserts. It slides
+  // between the tabs, which paint over it.
+  > ng-doc-selection {
+    border-radius: var(--ng-doc-radius-sm);
+    @include ng-doc-members-tab-highlight;
+  }
+
   [role='tab'] {
+    position: relative;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -200,21 +223,19 @@ table.ng-doc-api-table:not(.no-padding) {
     }
 
     &[aria-selected='true'] {
-      background: var(--ng-doc-background);
       color: var(--ng-doc-heading-color);
-      box-shadow: var(--ng-doc-shadow-xs);
-
-      @include ng-doc-api-dark {
-        box-shadow:
-          var(--ng-doc-shadow-xs),
-          inset 0 0 0 1px var(--ng-doc-base-4);
-      }
     }
 
     &:disabled {
       cursor: default;
       color: color-mix(in oklab, var(--ng-doc-text-muted) 70%, var(--ng-doc-base-2));
     }
+  }
+
+  // Until the highlight is placed in the browser (in the server-rendered page), the selected tab
+  // draws its own background.
+  &:not(:has(> ng-doc-selection[data-ng-doc-placed])) [role='tab'][aria-selected='true'] {
+    @include ng-doc-members-tab-highlight;
   }
 
   .ng-doc-members-count {

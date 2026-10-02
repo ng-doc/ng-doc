@@ -1,16 +1,25 @@
 import {
   afterNextRender,
+  ApplicationRef,
+  ComponentRef,
+  createComponent,
   DestroyRef,
   Directive,
   DOCUMENT,
   ElementRef,
+  EnvironmentInjector,
   inject,
+  Injector,
   NgZone,
   Signal,
   signal,
   untracked,
 } from '@angular/core';
 import { NgDocShortcutsService } from '@ng-doc/app/services/shortcuts';
+import {
+  NgDocSelectionComponent,
+  NgDocSelectionHostDirective,
+} from '@ng-doc/ui-kit/components/selection';
 
 const TAB = '[data-ng-doc-members-tab]';
 const FILTER = 'input[data-ng-doc-members-filter]';
@@ -34,6 +43,10 @@ const INHERITED = 'inherited';
  * data-inherited). A .ng-doc-member-expand button in a member row shows and hides the detail row
  * its aria-controls names, and an optional .ng-doc-members-empty element shows when no member
  * matches. F focuses the filter while single-key shortcuts are on.
+ *
+ * In the browser it inserts an `ng-doc-selection` as the first child of the row of tabs, the
+ * highlight that slides to the selected tab as in the code-block tabs. Until it is placed, the
+ * selected tab draws its own background, so the server-rendered page looks the same.
  */
 @Directive({
   selector: '[ngDocMembersFilter]',
@@ -45,6 +58,13 @@ const INHERITED = 'inherited';
 })
 export class NgDocMembersFilterDirective {
   private readonly host: HTMLElement = inject(ElementRef).nativeElement;
+  // The tabs are plain HTML, so no element can carry ngDocSelectionOrigin: the directive selects
+  // the tab on the host of the highlight itself.
+  private readonly selectionInjector = Injector.create({
+    providers: [NgDocSelectionHostDirective],
+    parent: inject(Injector),
+  });
+  private readonly selection = this.selectionInjector.get(NgDocSelectionHostDirective);
   private readonly selectedTab = signal(ALL);
   private readonly filterQuery = signal('');
   private ready = false;
@@ -68,7 +88,15 @@ export class NgDocMembersFilterDirective {
     // The markup is rendered by the page, so the directive only starts working in the browser.
     afterNextRender(() => {
       this.ready = true;
+      // The counts change the width of the tabs, so they are final before the highlight measures.
       this.countTabs();
+
+      const highlight = this.createHighlight();
+
+      destroyRef.onDestroy(() => {
+        highlight?.destroy();
+        highlight?.location.nativeElement.remove();
+      });
 
       const selected = this.tabs().find(
         (tab: HTMLElement) => tab.getAttribute('aria-selected') === 'true',
@@ -104,12 +132,16 @@ export class NgDocMembersFilterDirective {
     untracked(() => {
       this.selectedTab.set(tab);
 
-      for (const button of this.tabs()) {
-        const selected = button.dataset['ngDocMembersTab'] === tab;
+      const button = this.tabs().find(
+        (candidate: HTMLElement) => candidate.dataset['ngDocMembersTab'] === tab,
+      );
 
-        button.setAttribute('aria-selected', String(selected));
-        button.tabIndex = selected ? 0 : -1;
+      for (const candidate of this.tabs()) {
+        candidate.setAttribute('aria-selected', String(candidate === button));
+        candidate.tabIndex = candidate === button ? 0 : -1;
       }
+
+      this.selection.select(button);
 
       this.apply();
     });
@@ -177,6 +209,34 @@ export class NgDocMembersFilterDirective {
       next.focus();
       this.select(next.dataset['ngDocMembersTab'] ?? ALL);
     }
+  }
+
+  /**
+   * Inserts the highlight of the selected tab into the row of tabs. It is the same component as in
+   * the code-block tabs, so it measures, follows resizes and animates the same way; the row is its
+   * offset parent, so it scrolls with the tabs.
+   */
+  private createHighlight(): ComponentRef<NgDocSelectionComponent> | undefined {
+    const row = this.tabs()[0]?.parentElement;
+
+    if (!row) {
+      return undefined;
+    }
+
+    const hostElement = this.host.ownerDocument.createElement('ng-doc-selection');
+
+    row.prepend(hostElement);
+
+    const highlight = createComponent(NgDocSelectionComponent, {
+      environmentInjector: this.selectionInjector.get(EnvironmentInjector),
+      elementInjector: this.selectionInjector,
+      hostElement,
+    });
+
+    highlight.setInput('align', null);
+    this.selectionInjector.get(ApplicationRef).attachView(highlight.hostView);
+
+    return highlight;
   }
 
   private tabs(): HTMLElement[] {

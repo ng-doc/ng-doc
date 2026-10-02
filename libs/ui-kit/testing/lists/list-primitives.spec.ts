@@ -11,6 +11,7 @@ import {
   provideZonelessChangeDetection,
   signal,
   Type,
+  viewChild,
 } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
@@ -219,6 +220,22 @@ class SelectionHostComponent {
 })
 class TwoSelectionsHostComponent {
   readonly active = signal<string | null>(null);
+}
+
+// Static markup, as in a generated page: the tabs carry no ngDocSelectionOrigin.
+@Component({
+  imports: [NgDocSelectionHostDirective, NgDocSelectionComponent],
+  template: `
+    <div ngDocSelectionHost>
+      <ng-doc-selection [align]="null" />
+      <a class="tab">One</a>
+      <a class="tab">Two</a>
+    </div>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class StaticSelectionHostComponent {
+  readonly selectionHost = viewChild.required(NgDocSelectionHostDirective);
 }
 
 @Component({
@@ -534,6 +551,45 @@ describeChangeDetection('ui-kit list primitives', ({ providers }: ChangeDetectio
         'write 0',
         'write 1',
       ]);
+    });
+
+    it('follows an element selected on the host directly', async () => {
+      TestBed.configureTestingModule({ providers });
+
+      const fixture: ComponentFixture<StaticSelectionHostComponent> = TestBed.createComponent(
+        StaticSelectionHostComponent,
+      );
+      const host: HTMLElement = fixture.nativeElement;
+
+      fixture.detectChanges();
+
+      const [one, two] = Array.from(host.querySelectorAll<HTMLElement>('a.tab'));
+      const selection: HTMLElement = host.querySelector('ng-doc-selection')!;
+      const selectionHost: NgDocSelectionHostDirective = fixture.componentInstance.selectionHost();
+
+      layout(one, 0, 40);
+      layout(two, 40, 60);
+      selectionHost.select(two);
+      await settle(fixture);
+
+      expect(selectionHost.selected()).toBe(two);
+      expect(selection.hasAttribute('data-ng-doc-align')).toBe(false);
+      expect(selection.style.transform).toBe('translate(40px, 0px)');
+      expect(selection.style.width).toBe('60px');
+      expect(selection.hasAttribute('data-ng-doc-placed')).toBe(true);
+
+      selectionHost.select(one);
+      await settle(fixture);
+
+      expect(selection.style.transform).toBe('translate(0px, 0px)');
+      expect(selection.style.width).toBe('40px');
+
+      selectionHost.select(undefined);
+      await settle(fixture);
+
+      expect(selectionHost.selected()).toBeUndefined();
+      expect(selection.style.visibility).toBe('hidden');
+      expect(selection.hasAttribute('data-ng-doc-placed')).toBe(false);
     });
 
     it('waits for the selected element to get a box before placing itself', async () => {

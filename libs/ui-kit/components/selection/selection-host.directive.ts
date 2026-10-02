@@ -1,4 +1,4 @@
-import { computed, Directive, Signal, signal, untracked } from '@angular/core';
+import { Directive, Signal, signal, untracked } from '@angular/core';
 
 import type { NgDocSelectionOriginDirective } from './selection-origin.directive';
 
@@ -10,12 +10,10 @@ import type { NgDocSelectionOriginDirective } from './selection-origin.directive
   selector: '[ngDocSelectionHost]',
 })
 export class NgDocSelectionHostDirective {
-  private readonly selectedOrigin = signal<NgDocSelectionOriginDirective | undefined>(undefined);
+  private readonly selectedElement = signal<HTMLElement | undefined>(undefined);
 
   /** Element of the selected origin, or `undefined` when none is selected. */
-  readonly selected: Signal<HTMLElement | undefined> = computed(
-    () => this.selectedOrigin()?.elementRef.nativeElement,
-  );
+  readonly selected: Signal<HTMLElement | undefined> = this.selectedElement.asReadonly();
 
   /**
    * Updates the selection after an origin changed its state or went away.
@@ -26,11 +24,22 @@ export class NgDocSelectionHostDirective {
     // Origins call this from their effects: reading the current selection must not subscribe
     // them to it.
     untracked(() => {
+      const element: HTMLElement = origin.elementRef.nativeElement;
+
       if (selected) {
-        this.selectedOrigin.set(origin);
-      } else if (this.selectedOrigin() === origin) {
-        this.selectedOrigin.set(undefined);
+        this.selectedElement.set(element);
+      } else if (this.selectedElement() === element) {
+        this.selectedElement.set(undefined);
       }
     });
+  }
+
+  /**
+   * Selects an element that cannot carry `ngDocSelectionOrigin`, because Angular does not render
+   * it: for example a tab in the HTML of a generated page.
+   * @param element - The element to highlight, or `undefined` to highlight none.
+   */
+  select(element: HTMLElement | undefined): void {
+    this.selectedElement.set(element);
   }
 }
