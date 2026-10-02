@@ -1,7 +1,16 @@
 import { createHash } from 'node:crypto';
 import { EventEmitter } from 'node:events';
 import { existsSync, readFileSync, realpathSync } from 'node:fs';
-import { mkdir, mkdtemp, readdir, readFile, rm, symlink, writeFile } from 'node:fs/promises';
+import {
+  mkdir,
+  mkdtemp,
+  readdir,
+  readFile,
+  rename,
+  rm,
+  symlink,
+  writeFile,
+} from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { type FSWatcher, type Plugin, type ViteDevServer, createServer } from 'vite';
@@ -344,9 +353,19 @@ async function rig(options: RigOptions = {}) {
     await watch.initial;
     await lifecycle.settled();
   };
-  /** Writes a file and reports it the way Vite's hotUpdate hooks do. */
+  let saves = 0;
+  /**
+   * Writes a file in one step and reports it the way Vite's hotUpdate hooks do. The bytes are
+   * staged beside the workspace and renamed in: a plain `writeFile` creates or truncates the file
+   * first, and the real watch of a missing input (`fs.watch` of its directory) reports that empty
+   * file at once on Linux (inotify), which starts a generation of its own before the bytes land.
+   */
   const edit = async (file: string, body: string, kind: 'update' | 'create' = 'update') => {
-    await writeFile(file, body);
+    const staged = path.join(`${root}-saves`, String(++saves));
+    await mkdir(path.dirname(staged), { recursive: true });
+    if (!temporary.includes(path.dirname(staged))) temporary.push(path.dirname(staged));
+    await writeFile(staged, body);
+    await rename(staged, file);
     const ticket = lifecycle.hostUpdateStarted(file, kind, () => body);
     void lifecycle.hostUpdateAcknowledged(ticket).catch(() => {});
   };

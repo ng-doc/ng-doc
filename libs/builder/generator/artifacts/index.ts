@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
-import type { BigIntStats } from 'node:fs';
+import { type BigIntStats, constants } from 'node:fs';
 import {
-  link,
+  copyFile,
   lstat,
   mkdir,
   open,
@@ -267,8 +267,8 @@ export interface OutputCommitterOptions {
   beforeMutation?: (operation: CommitMutation, target: string) => void | Promise<void>;
   fileSystem?: {
     rename?: typeof rename;
-    /** @internal Test port: the hard link that backs a published file up (see `backUp`). */
-    link?: typeof link;
+    /** @internal Test port: the copy that backs a published file up (see `backUp`). */
+    copyFile?: (from: string, to: string) => Promise<void>;
     writeFile?: typeof writeFile;
     /**
      * @internal Test port: the platform whose rename behaviour applies (win32 retries transient
@@ -334,6 +334,8 @@ type OutputCheck =
 interface RollbackRecord {
   target: string;
   backup?: string;
+  /** The identity of the file a copied backup copied (see `backUp`); unset for a moved one. */
+  original?: string;
   published: boolean;
   removeTarget: boolean;
 }
@@ -414,7 +416,7 @@ export class TransactionalOutputCommitter implements OutputCommitter {
   private readonly outputRoot: string;
   private readonly hook?: OutputCommitterOptions['beforeMutation'];
   private readonly renameFile: typeof rename;
-  private readonly linkFile: typeof link;
+  private readonly copyBackup: (from: string, to: string) => Promise<void>;
   /** The rollback's rename: the real one, never the injected port, with the same retries. */
   private readonly restoreFile: typeof rename;
   private readonly platform: NodeJS.Platform;
@@ -447,7 +449,10 @@ export class TransactionalOutputCommitter implements OutputCommitter {
     this.renameFile = retryingRename(options.fileSystem?.rename ?? rename, retry);
     // Resolved at each call: the module's `rename`, as a test double replaces it.
     this.restoreFile = retryingRename((from, to) => rename(from, to), retry);
-    this.linkFile = options.fileSystem?.link ?? link;
+    // A copy-on-write clone where the file system has one (APFS, Btrfs, XFS), a copy elsewhere.
+    this.copyBackup =
+      options.fileSystem?.copyFile ??
+      ((from, to) => copyFile(from, to, constants.COPYFILE_FICLONE));
     this.write = options.fileSystem?.writeFile ?? writeFile;
     this.delta = options.delta !== false;
   }
@@ -661,7 +666,7 @@ export class TransactionalOutputCommitter implements OutputCommitter {
           await mkdir(path.dirname(backup), { recursive: true });
           record.backup = backup;
           await this.mutate('backup-output', item.target, signal);
-          await this.backUp(item.target, backup);
+          await this.backUp(item.target, backup, record);
         }
         await mkdir(path.dirname(item.target), { recursive: true });
         await this.mutate('publish-output', item.target, signal);
@@ -713,7 +718,7 @@ export class TransactionalOutputCommitter implements OutputCommitter {
           const backup = path.join(backups, 'manifest.json');
           manifestRecord.backup = backup;
           await this.mutate('backup-manifest', manifestPath, signal);
-          await this.backUp(manifestPath, backup);
+          await this.backUp(manifestPath, backup, manifestRecord);
         }
         await this.mutate('publish-manifest', manifestPath, signal);
         assertCurrent(request.generation, guard, signal);
@@ -1429,27 +1434,33 @@ export class TransactionalOutputCommitter implements OutputCommitter {
   }
 
   /**
-   * Keeps the published file `target` at `backup` for the rollback, leaving `target` in place: a
-   * hard link to the same file, so the publish rename that follows replaces `target` in one step
-   * and it never goes missing. Had it been moved away first, a reader between the two renames (a
-   * transform request) would find no file, and a watcher that stats a file whose inode moved
-   * (chokidar's `fs.watch` backend, the default on Linux) would report the rewrite as a deletion
-   * and a creation; a host waiting for that output's change would wait in vain.
+   * Keeps the published file `target` at `backup` for the rollback, leaving `target` in place and
+   * untouched: a copy, so the publish rename that follows replaces `target` in one step and it never
+   * goes missing. Had it been moved away first, a reader between the two renames (a transform
+   * request) would find no file, and a watcher that stats a file whose inode moved (chokidar's
+   * `fs.watch` backend, the default on Linux) would report the rewrite as a deletion and a creation;
+   * a host waiting for that output's change would wait in vain. Not a hard link either: a link
+   * changes the file's link count, which inotify reports (`IN_ATTRIB`) as a change of the old
+   * bytes, and chokidar then drops the publish's own change within its 50 ms throttle, so the host
+   * never sees the new bytes.
    *
-   * Where the file system refuses the link, the file is moved away instead, which is the protocol
-   * without links: the rollback restores either backup the same way, so only the gap differs. Any
-   * system error falls back, not a list of codes, because file systems do not agree on one: FAT
-   * reports `EPERM` on Linux, while Windows reports its "incorrect function" as `EISDIR` and a file
-   * another process holds open as `EBUSY`; network and FUSE mounts answer `ENOTSUP`, `ENOSYS` or
-   * whatever their server does. An unknown code must not fail every commit. A link that took
-   * effect although it reported an error is harmless: both names then refer to the original file.
-   * Only an error without a code, which no file system call raises, is rethrown.
+   * The copy records the identity of the file it copied: a rollback leaves that very file in place
+   * while the target still is it, and restores the copy's bytes otherwise. Where the copy fails, the
+   * file is moved away instead, which is the protocol without the copy: the rollback restores that
+   * backup by moving it back, so only the gap differs. Any system error falls back, not a list of
+   * codes, because file systems do not agree on them (a full volume, a file another process holds
+   * on Windows, network and FUSE mounts). A copy that took effect although it reported an error is
+   * replaced by the move. Only an error without a code, which no file system call raises, is
+   * rethrown.
    * @param target A published output or the manifest.
    * @param backup Its path in the stage's backups.
+   * @param record The target's rollback record, which learns how the backup was taken.
    */
-  private async backUp(target: string, backup: string): Promise<void> {
+  private async backUp(target: string, backup: string, record: RollbackRecord): Promise<void> {
+    const original = await lstat(target, { bigint: true });
     try {
-      await this.linkFile(target, backup);
+      await this.copyBackup(target, backup);
+      record.original = fileIdentity(original);
     } catch (error) {
       if (typeof (error as NodeJS.ErrnoException | undefined)?.code !== 'string') throw error;
       await this.renameFile(target, backup);
@@ -1501,6 +1512,9 @@ async function rollbackFiles(
   for (const record of [...records].reverse()) {
     try {
       if (record.backup && (await exists(record.backup))) {
+        // Still the very file the backup copied: nothing to restore, and it keeps its identity.
+        if (record.original !== undefined && (await identity(record.target)) === record.original)
+          continue;
         await rm(record.target, removal(platform));
         await mkdir(path.dirname(record.target), { recursive: true });
         await renameFile(record.backup, record.target);
@@ -1514,6 +1528,21 @@ async function rollbackFiles(
     }
   }
   return diagnostics;
+}
+
+/** A file's device and inode, which a rename keeps and a rewrite or replacement changes. */
+function fileIdentity(info: BigIntStats): string {
+  return `${info.dev}:${info.ino}`;
+}
+
+/** The identity of `file`, or undefined when it is missing. */
+async function identity(file: string): Promise<string | undefined> {
+  try {
+    return fileIdentity(await lstat(file, { bigint: true }));
+  } catch (error) {
+    if (isMissing(error)) return undefined;
+    throw error;
+  }
 }
 
 function outputBytes(output: FileOutput): Buffer {
