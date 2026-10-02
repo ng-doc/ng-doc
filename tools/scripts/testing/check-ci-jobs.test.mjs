@@ -159,19 +159,22 @@ test('coverage merge jobs: one per sharded group, in its lane, and nothing else'
   ]);
 });
 
-test('the steps pass the coverage switch and the shard, and the merge waits for the shards', () => {
+test('the steps pass the lane, the coverage switch and the shard, and the merge waits for the shards', () => {
   const coverage = "${{ matrix.coverage == 'off' && '--no-coverage' || '' }}";
+  const lane = "--lane ${{ matrix.lane || 'core' }}";
   const jobs = {
-    generator: { steps: [{ run: `node runner --group g ${coverage} --log-dir x` }] },
+    generator: { steps: [{ run: `node runner ${lane} --group g ${coverage} --log-dir x` }] },
     'generator-shard': {
       steps: [
         { uses: 'actions/checkout' },
-        { run: `node runner --shard \${{ matrix.shard }}/\${{ matrix.shards }} ${coverage}` },
+        {
+          run: `node runner ${lane} --shard \${{ matrix.shard }}/\${{ matrix.shards }} ${coverage}`,
+        },
       ],
     },
     'generator-coverage': {
       needs: ['build', 'generator-shard'],
-      steps: [{ run: 'node runner --merge-coverage blobs' }],
+      steps: [{ run: `node runner ${lane} --merge-coverage blobs` }],
     },
   };
   assert.deepEqual(stepProblems(jobs), []);
@@ -182,13 +185,71 @@ test('the steps pass the coverage switch and the shard, and the merge waits for 
       'generator-coverage': { needs: 'build', steps: [{ run: 'node runner' }] },
     }),
     [
+      'generator does not pass the matrix lane to the runner',
+      'generator-shard does not pass the matrix lane to the runner',
+      'generator-coverage does not pass the matrix lane to the runner',
       'generator does not pass the matrix coverage switch to the runner',
       'generator-shard does not pass its shard to the runner',
       'generator-coverage does not wait for generator-shard',
       'generator-coverage does not merge the shard coverage',
     ],
   );
-  assert.deepEqual(stepProblems({}).length, 5);
+  assert.deepEqual(stepProblems({}).length, 8);
+});
+
+test('a posix group sharded into fewer shards than the axis: Linux only, in the posix lane', () => {
+  const commands = [core('a', { shards: 4 }), posix('p', { shards: 3 })];
+  const matrix = {
+    os: ['ubuntu-latest', 'windows-latest'],
+    group: ['a', 'p'],
+    shard: [1, 2, 3, 4],
+    exclude: [
+      { os: 'windows-latest', group: 'p' },
+      { group: 'p', shard: 4 },
+    ],
+    include: [
+      { group: 'a', shards: 4 },
+      { group: 'p', shards: 3, lane: 'posix' },
+      { os: 'windows-latest', coverage: 'off' },
+    ],
+  };
+  assert.deepEqual(generatorJobProblems(expandMatrix(matrix), commands), []);
+  // Without an exclude, a Windows shard or a fourth shard of the posix group runs.
+  assert.deepEqual(
+    generatorJobProblems(expandMatrix({ ...matrix, exclude: matrix.exclude.slice(1) }), commands),
+    [1, 2, 3].map(
+      (shard) => `generator job without a runner group on its OS: windows-latest p ${shard}/3`,
+    ),
+  );
+  assert.deepEqual(
+    generatorJobProblems(
+      expandMatrix({ ...matrix, exclude: matrix.exclude.slice(0, 1) }),
+      commands,
+    ),
+    ['generator job without a runner group on its OS: ubuntu-latest p 4/3'],
+  );
+  // Without its lane, the posix shards would run the core lane, which refuses the group.
+  assert.deepEqual(
+    generatorJobProblems(
+      expandMatrix({
+        ...matrix,
+        include: matrix.include.map((entry) =>
+          entry.group === 'p' ? { group: 'p', shards: 3 } : entry,
+        ),
+      }),
+      commands,
+    ),
+    [1, 2, 3].map(
+      (shard) => `generator job ubuntu-latest p ${shard}/3 runs the core lane; the group is posix`,
+    ),
+  );
+  assert.deepEqual(
+    mergeJobProblems(
+      expandMatrix({ group: ['a', 'p'], include: [{ group: 'p', lane: 'posix' }] }),
+      commands,
+    ),
+    [],
+  );
 });
 
 test('test jobs: every test target with specs, and nothing else', () => {

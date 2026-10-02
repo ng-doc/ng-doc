@@ -2,6 +2,7 @@
 
 import { createHash } from 'node:crypto';
 import {
+  link as linkFile,
   mkdir,
   mkdtemp,
   readdir,
@@ -940,103 +941,129 @@ test('allows dotted in-root directories and rejects byte-identical unowned colli
   ).rejects.toMatchObject({ code: 'ENOENT' });
 });
 
-test('preserves originals when an output backup rename fails before or after mutation', async () => {
-  const root = await temporary('ng-doc-backup-uncertainty');
-  const initial = new TransactionalOutputCommitter({ outputRoot: root });
-  const old = artifact('project-one', 'owner', [output('page.txt', 'old')]);
-  const first = await initial.commit(
-    { generation: 1, candidate: snapshot([old]) },
-    guard(),
-    new AbortController().signal,
-  );
-  const manifestBefore = await readFile(path.join(root, '.ng-doc-output-manifest.json'), 'utf8');
-  const fault = new TransactionalOutputCommitter({
-    outputRoot: root,
-    fileSystem: {
-      rename: async (from, to) => {
-        await renameFile(from, to);
-        if (
-          String(from) === path.join(root, 'page.txt') &&
-          String(to).includes(`${path.sep}backups${path.sep}changed${path.sep}`)
-        ) {
-          throw new Error('backup rename failed after mutation');
-        }
-      },
-    },
-  });
-  const next = artifact('project-one', 'owner', [output('page.txt', 'new')]);
-  const result = await fault.commit(
-    {
-      generation: 2,
-      candidate: snapshot([next], 'next'),
-      previous: (first as { manifest: OutputManifest }).manifest,
-    },
-    guard(),
-    new AbortController().signal,
-  );
-  expect(result.status).toBe('failed');
-  expect(await readFile(path.join(root, 'page.txt'), 'utf8')).toBe('old');
-  expect(await readFile(path.join(root, '.ng-doc-output-manifest.json'), 'utf8')).toBe(
-    manifestBefore,
-  );
+/** A hard link refused as by a file system without links (FAT, exFAT, some network mounts). */
+const linkUnsupported = async (): Promise<never> => {
+  throw Object.assign(new Error('operation not supported'), { code: 'ENOTSUP' });
+};
 
-  const beforeMutationFault = new TransactionalOutputCommitter({
-    outputRoot: root,
-    fileSystem: {
-      rename: async (from, to) => {
-        if (
-          String(from) === path.join(root, 'page.txt') &&
-          String(to).includes(`${path.sep}backups${path.sep}changed${path.sep}`)
-        ) {
-          throw new Error('backup rename failed before mutation');
+// A backup is a hard link; where the file system refuses one, the file is renamed away instead.
+// Either way a backup that fails, before or after it took effect, leaves the last good outputs.
+describe.each([
+  { backup: 'hard link', move: false },
+  { backup: 'rename fallback', move: true },
+])('backup faults ($backup)', ({ move }) => {
+  /**
+   * The file system port whose backup of `source` fails, `after` it took effect or before.
+   * @param source The file whose backup fails.
+   * @param after Whether the backup happened before the failure.
+   */
+  const faulty = (source: string, after: boolean) => {
+    const fault = async (from: unknown, to: unknown, operation: () => Promise<void>) => {
+      const backup =
+        String(from) === source && String(to).includes(`${path.sep}backups${path.sep}`);
+      if (backup && !after) throw new Error('backup failed before mutation');
+      await operation();
+      if (backup) throw new Error('backup failed after mutation');
+    };
+    return move
+      ? {
+          link: linkUnsupported,
+          rename: (async (from, to) =>
+            fault(from, to, () => renameFile(from, to))) as typeof renameFile,
         }
-        await renameFile(from, to);
-      },
-    },
+      : {
+          link: (async (from, to) => fault(from, to, () => linkFile(from, to))) as typeof linkFile,
+        };
+  };
+
+  test('preserves originals when an output backup fails before or after mutation', async () => {
+    const root = await temporary('ng-doc-backup-uncertainty');
+    const initial = new TransactionalOutputCommitter({ outputRoot: root });
+    const old = artifact('project-one', 'owner', [output('page.txt', 'old')]);
+    const first = await initial.commit(
+      { generation: 1, candidate: snapshot([old]) },
+      guard(),
+      new AbortController().signal,
+    );
+    const manifestBefore = await readFile(path.join(root, '.ng-doc-output-manifest.json'), 'utf8');
+    const next = artifact('project-one', 'owner', [output('page.txt', 'new')]);
+    for (const [generation, after] of [
+      [2, true],
+      [3, false],
+    ] as const) {
+      const fault = new TransactionalOutputCommitter({
+        outputRoot: root,
+        fileSystem: faulty(path.join(root, 'page.txt'), after),
+      });
+      const result = await fault.commit(
+        {
+          generation,
+          candidate: snapshot([next], `next-${generation}`),
+          previous: (first as { manifest: OutputManifest }).manifest,
+        },
+        guard(),
+        new AbortController().signal,
+      );
+      expect(result.status).toBe('failed');
+      expect(await readFile(path.join(root, 'page.txt'), 'utf8')).toBe('old');
+      expect(await readFile(path.join(root, '.ng-doc-output-manifest.json'), 'utf8')).toBe(
+        manifestBefore,
+      );
+    }
   });
-  const secondResult = await beforeMutationFault.commit(
-    {
-      generation: 3,
-      candidate: snapshot([next], 'next-again'),
-      previous: (first as { manifest: OutputManifest }).manifest,
-    },
-    guard(),
-    new AbortController().signal,
-  );
-  expect(secondResult.status).toBe('failed');
-  expect(await readFile(path.join(root, 'page.txt'), 'utf8')).toBe('old');
-  expect(await readFile(path.join(root, '.ng-doc-output-manifest.json'), 'utf8')).toBe(
-    manifestBefore,
-  );
+
+  test('restores outputs and manifest when the manifest backup reports uncertain failure', async () => {
+    const root = await temporary('ng-doc-manifest-backup-uncertainty');
+    const initial = new TransactionalOutputCommitter({ outputRoot: root });
+    const old = artifact('project-one', 'owner', [output('page.txt', 'old')]);
+    const first = await initial.commit(
+      { generation: 1, candidate: snapshot([old]) },
+      guard(),
+      new AbortController().signal,
+    );
+    const manifestPath = path.join(root, '.ng-doc-output-manifest.json');
+    const manifestBefore = await readFile(manifestPath, 'utf8');
+    const fault = new TransactionalOutputCommitter({
+      outputRoot: root,
+      fileSystem: faulty(manifestPath, true),
+    });
+    const next = artifact('project-one', 'owner', [output('page.txt', 'new')]);
+    const result = await fault.commit(
+      {
+        generation: 2,
+        candidate: snapshot([next], 'next'),
+        previous: (first as { manifest: OutputManifest }).manifest,
+      },
+      guard(),
+      new AbortController().signal,
+    );
+    expect(result.status).toBe('failed');
+    expect(await readFile(path.join(root, 'page.txt'), 'utf8')).toBe('old');
+    expect(await readFile(manifestPath, 'utf8')).toBe(manifestBefore);
+  });
 });
 
-test('restores outputs and manifest when manifest backup rename reports uncertain failure', async () => {
-  const root = await temporary('ng-doc-manifest-backup-uncertainty');
-  const initial = new TransactionalOutputCommitter({ outputRoot: root });
+test('replaces a changed output and the manifest in one step: neither is ever missing', async () => {
+  const root = await temporary('ng-doc-publish-in-place');
   const old = artifact('project-one', 'owner', [output('page.txt', 'old')]);
-  const first = await initial.commit(
+  const first = await new TransactionalOutputCommitter({ outputRoot: root }).commit(
     { generation: 1, candidate: snapshot([old]) },
     guard(),
     new AbortController().signal,
   );
   const manifestPath = path.join(root, '.ng-doc-output-manifest.json');
   const manifestBefore = await readFile(manifestPath, 'utf8');
-  const fault = new TransactionalOutputCommitter({
+  // What a reader (or a watcher's stat) finds right before each publish rename.
+  const seen: Array<[string, string]> = [];
+  const committer = new TransactionalOutputCommitter({
     outputRoot: root,
-    fileSystem: {
-      rename: async (from, to) => {
-        await renameFile(from, to);
-        if (
-          String(from) === manifestPath &&
-          String(to).endsWith(`${path.sep}backups${path.sep}manifest.json`)
-        ) {
-          throw new Error('manifest backup failed after mutation');
-        }
-      },
+    beforeMutation: async (operation, target) => {
+      if (operation === 'publish-output' || operation === 'publish-manifest')
+        seen.push([operation, await readFile(target, 'utf8')]);
     },
   });
   const next = artifact('project-one', 'owner', [output('page.txt', 'new')]);
-  const result = await fault.commit(
+  const result = await committer.commit(
     {
       generation: 2,
       candidate: snapshot([next], 'next'),
@@ -1045,9 +1072,47 @@ test('restores outputs and manifest when manifest backup rename reports uncertai
     guard(),
     new AbortController().signal,
   );
-  expect(result.status).toBe('failed');
-  expect(await readFile(path.join(root, 'page.txt'), 'utf8')).toBe('old');
-  expect(await readFile(manifestPath, 'utf8')).toBe(manifestBefore);
+  expect(result.status).toBe('committed');
+  expect(seen).toEqual([
+    ['publish-output', 'old'],
+    ['publish-manifest', manifestBefore],
+  ]);
+  expect(await readFile(path.join(root, 'page.txt'), 'utf8')).toBe('new');
+});
+
+test('moves a file away to back it up where the file system cannot link it', async () => {
+  const root = await temporary('ng-doc-backup-fallback');
+  const old = artifact('project-one', 'owner', [output('page.txt', 'old')]);
+  const first = await new TransactionalOutputCommitter({ outputRoot: root }).commit(
+    { generation: 1, candidate: snapshot([old]) },
+    guard(),
+    new AbortController().signal,
+  );
+  const moved: string[] = [];
+  const committer = new TransactionalOutputCommitter({
+    outputRoot: root,
+    fileSystem: {
+      link: linkUnsupported,
+      rename: async (from, to) => {
+        await renameFile(from, to);
+        if (String(to).includes(`${path.sep}backups${path.sep}`))
+          moved.push(path.relative(root, String(from)));
+      },
+    },
+  });
+  const next = artifact('project-one', 'owner', [output('page.txt', 'new')]);
+  const result = await committer.commit(
+    {
+      generation: 2,
+      candidate: snapshot([next], 'next'),
+      previous: (first as { manifest: OutputManifest }).manifest,
+    },
+    guard(),
+    new AbortController().signal,
+  );
+  expect(result.status).toBe('committed');
+  expect(moved).toEqual(['page.txt', '.ng-doc-output-manifest.json']);
+  expect(await readFile(path.join(root, 'page.txt'), 'utf8')).toBe('new');
 });
 
 test('preserves staged recovery data when rollback cannot restore a backup', async () => {

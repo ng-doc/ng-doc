@@ -151,7 +151,6 @@ jobs:
           - progress
           - bootstrap
           - angular
-          - vite-adapter
         # tools/scripts/check-ci-jobs.mjs keeps this list and generator-shard equal to the runner's
         # groups. The posix groups need owned POSIX process groups; the core lane is the Windows gate.
         exclude:
@@ -159,14 +158,10 @@ jobs:
             group: bootstrap
           - os: windows-latest
             group: angular
-          - os: windows-latest
-            group: vite-adapter
         include:
           - group: bootstrap
             lane: posix
           - group: angular
-            lane: posix
-          - group: vite-adapter
             lane: posix
           # Linux gates coverage; Windows runs every test without measuring it.
           - os: windows-latest
@@ -220,11 +215,20 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        group: [compiler]
+        group: [compiler, vite-adapter]
         shard: [1, 2, 3, 4]
+        # vite-adapter is a posix group (Linux only) of three shards.
+        exclude:
+          - os: windows-latest
+            group: vite-adapter
+          - group: vite-adapter
+            shard: 4
         include:
           - group: compiler
             shards: 4
+          - group: vite-adapter
+            shards: 3
+            lane: posix
           - os: windows-latest
             coverage: 'off'
     steps:
@@ -276,7 +280,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [compiler]
+        group: [compiler, vite-adapter]
+        include:
+          - group: vite-adapter
+            lane: posix
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:

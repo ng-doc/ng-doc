@@ -10,7 +10,7 @@ import { HostUpdateCoordinator } from '../host-updates';
 import { watchOutputRoot } from '../output-watch';
 
 /**
- * Unit cases of the two structural-edit fixes; `page-tabs.vitest.ts` runs them on a real
+ * Unit cases of the two structural-edit fixes; `page-tabs*.vitest.ts` run them on a real
  * Vite/Analog host. An output root outside the Vite root is watched as a whole, and a claimed
  * source that no compiled generated update can witness is released with its generation.
  */
@@ -75,20 +75,63 @@ function watcher(options: { getWatched?: boolean } = {}) {
 const tick = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 describe('watchOutputRoot', () => {
-  it('leaves an output root inside the Vite root to its recursive watch', async () => {
+  it('reads again each directory inside the Vite root whose read missed an output, and waits', async () => {
+    // The initial commit ran while chokidar scanned the Vite root: with the `fs.watch` backend
+    // (Linux) a file published between a directory's read and its watch is never listed.
     const root = await directory();
+    const output = path.join(root, 'generated');
+    const slash = (value: string) => value.replace(/\\/g, '/');
     const double = watcher();
-    await expect(
-      watchOutputRoot(double.watcher, root, path.join(root, 'generated'), ['routes.ts']),
-    ).resolves.toBe('watched');
-    // Also when either path is spelled through a symlink.
+    // Each directory misses a published entry: unlisted, or read without it.
+    double.attach(path.join(output, 'guides'), 'guide');
+    double.attach(output, 'routes.ts');
+    let settled: string | undefined;
+    const watching = watchOutputRoot(double.watcher, root, output, [
+      'routes.ts',
+      'guides/guide/page.ts',
+      'guides/other.ts',
+    ]).then((value) => {
+      settled = value;
+    });
+    expect(double.added).toEqual(
+      [output, path.join(output, 'guides/guide'), path.join(output, 'guides')].map(slash),
+    );
+    double.attach(output, 'guides');
+    double.attach(path.join(output, 'guides'), 'other.ts');
+    await tick(60);
+    // A directory whose read has not listed its published file yet: not watched.
+    expect(settled).toBeUndefined();
+    double.attach(path.join(output, 'guides/guide'), 'page.ts');
+    await watching;
+    expect(settled).toBe('watched');
+
+    // Spelled through a symlink, the output is read in the Vite root's spelling, as chokidar
+    // lists it; with nothing published there is nothing to read again.
     const link = path.join(await directory(), 'link');
     await symlink(root, link, 'dir');
-    await mkdir(path.join(root, 'generated'));
-    await expect(
-      watchOutputRoot(double.watcher, root, path.join(link, 'generated'), []),
-    ).resolves.toBe('watched');
-    expect(double.added).toEqual([]);
+    const linked = watcher();
+    await mkdir(output);
+    let linkedSettled: string | undefined;
+    const linkedWatching = watchOutputRoot(linked.watcher, root, path.join(link, 'generated'), [
+      'routes.ts',
+    ]).then((value) => {
+      linkedSettled = value;
+    });
+    expect(linked.added).toEqual([slash(output)]);
+    linked.attach(output, 'routes.ts');
+    await linkedWatching;
+    expect(linkedSettled).toBe('watched');
+    const empty = watcher();
+    await expect(watchOutputRoot(empty.watcher, link, output, [])).resolves.toBe('watched');
+    expect(empty.added).toEqual([]);
+    // Everything listed already: nothing is read again (another listener on a directory would
+    // read it once more on each of its events).
+    const listed = watcher();
+    listed.attach(output, 'routes.ts');
+    await expect(watchOutputRoot(listed.watcher, root, output, ['routes.ts'])).resolves.toBe(
+      'watched',
+    );
+    expect(listed.added).toEqual([]);
   });
 
   it('adds an outside output root and waits until every directory has been read', async () => {

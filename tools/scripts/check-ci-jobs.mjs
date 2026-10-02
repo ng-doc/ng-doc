@@ -115,12 +115,17 @@ export function mergeJobProblems(combinations, commands = COMMANDS) {
 }
 
 /**
- * The steps that pass the matrix to the runner: every generator job passes its coverage switch,
- * a shard job its shard, and the merge job waits for the shards and merges what they uploaded.
+ * The steps that pass the matrix to the runner: every generator, shard and merge job passes its
+ * lane (a sharded posix group runs its shards and its merge in the posix lane), every generator
+ * job its coverage switch, a shard job its shard, and the merge job waits for the shards and
+ * merges what they uploaded.
  */
 export function stepProblems(jobs) {
   const runs = (job) => (job?.steps ?? []).map((step) => step.run ?? '').join('\n');
   const problems = [];
+  for (const name of ['generator', 'generator-shard', 'generator-coverage'])
+    if (!runs(jobs[name]).includes("--lane ${{ matrix.lane || 'core' }}"))
+      problems.push(`${name} does not pass the matrix lane to the runner`);
   for (const name of ['generator', 'generator-shard'])
     if (!runs(jobs[name]).includes("${{ matrix.coverage == 'off' && '--no-coverage' || '' }}"))
       problems.push(`${name} does not pass the matrix coverage switch to the runner`);

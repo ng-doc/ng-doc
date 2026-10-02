@@ -101,7 +101,42 @@ export const COMMANDS = Object.freeze(
       testTimeout: 120_000,
       fileParallelism: false,
     }), // real Angular builders in owned child processes
-    posix('vite-adapter', 'vite/testing/vitest.config.ts'),
+    posix('vite-adapter', 'vite/testing/vitest.config.ts', {
+      shards: 3,
+      // Seconds per file with coverage on a Linux CI runner, three files at a time; only their
+      // ratios matter.
+      shardWeights: {
+        'libs/builder/generator/vite/testing/vite-adapter.vitest.ts': 452,
+        'libs/builder/generator/vite/testing/startup-native.vitest.ts': 330,
+        'libs/builder/generator/vite/testing/page-tabs-structural.vitest.ts': 272,
+        'libs/builder/generator/vite/testing/page-tabs.vitest.ts': 266,
+        'libs/builder/generator/vite/testing/watch-scope.vitest.ts': 75,
+        'libs/builder/generator/vite/testing/reconcile-inputs.vitest.ts': 36,
+        'libs/builder/generator/vite/testing/only-for-tags.vitest.ts': 34,
+        'libs/builder/generator/vite/testing/watcher-recovery.vitest.ts': 6,
+        'libs/builder/generator/vite/testing/ssr-renderer.vitest.ts': 3,
+        'libs/builder/generator/vite/testing/watch-scope-units.vitest.ts': 3,
+        'libs/builder/generator/vite/testing/ssr-renderer-control.vitest.ts': 2,
+        'libs/builder/generator/vite/testing/watch-start.vitest.ts': 2,
+        'libs/builder/generator/vite/testing/angular-composition.vitest.ts': 1,
+        'libs/builder/generator/vite/testing/angular-factory.vitest.ts': 1,
+        'libs/builder/generator/vite/testing/application.vitest.ts': 1,
+        'libs/builder/generator/vite/testing/bounded-close.vitest.ts': 1,
+        'libs/builder/generator/vite/testing/dev-styles.vitest.ts': 1,
+        'libs/builder/generator/vite/testing/paths.vitest.ts': 1,
+        'libs/builder/generator/vite/testing/plugin-disposal.vitest.ts': 1,
+        'libs/builder/generator/vite/testing/prerender.vitest.ts': 1,
+        'libs/builder/generator/vite/testing/production.vitest.ts': 1,
+        'libs/builder/generator/vite/testing/progress.vitest.ts': 1,
+        'libs/builder/generator/vite/testing/shared-pass.vitest.ts': 1,
+        'libs/builder/generator/vite/testing/ssr-renderer-protocol.vitest.ts': 1,
+        'libs/builder/generator/vite/testing/ssr-renderer-runtime.vitest.ts': 1,
+        'libs/builder/generator/vite/testing/startup-composition.vitest.ts': 1,
+        'libs/builder/generator/vite/testing/structural-pass.vitest.ts': 1,
+        'libs/builder/generator/vite/testing/structural-updates.vitest.ts': 1,
+        'libs/builder/generator/vite/testing/superseded-commit.vitest.ts': 1,
+      },
+    }),
   ].map(Object.freeze),
 );
 

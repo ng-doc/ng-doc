@@ -334,7 +334,8 @@ describe('watch scope: target placement and the probe poller', () => {
     expect(kinds.slice(1, -1).every((kind) => kind === 'update')).toBe(true);
     expect(kinds.length).toBeGreaterThanOrEqual(4);
     expect(changes).toHaveLength(count);
-  });
+    // Real watches on a loaded machine: each step above may wait up to its own 10 s.
+  }, 60_000);
 
   it('reports the inputs that exceed its directory budget', async () => {
     const root = await directory();

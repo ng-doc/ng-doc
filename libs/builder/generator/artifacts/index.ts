@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import type { BigIntStats } from 'node:fs';
 import {
+  link,
   lstat,
   mkdir,
   open,
@@ -46,6 +47,19 @@ const CACHE_EXTENSION = '.artifact.json';
  * The handle goes away by itself, so these are retried there; elsewhere they are real errors.
  */
 const TRANSIENT_RENAME_CODES = new Set(['EPERM', 'EBUSY', 'EACCES']);
+
+/**
+ * What a file system that cannot hard-link a file reports (FAT and exFAT volumes, some network and
+ * FUSE mounts, a file at its link limit). A backup then moves the file away, as without links.
+ */
+const LINK_UNSUPPORTED_CODES = new Set([
+  'EPERM',
+  'ENOTSUP',
+  'EOPNOTSUPP',
+  'ENOSYS',
+  'EXDEV',
+  'EMLINK',
+]);
 
 /** Bounded backoff for transient Windows rename failures: at most about 3.5 s per rename. */
 export const RENAME_RETRY = Object.freeze({ attempts: 8, delayMs: 50, maxDelayMs: 1000 });
@@ -266,6 +280,8 @@ export interface OutputCommitterOptions {
   beforeMutation?: (operation: CommitMutation, target: string) => void | Promise<void>;
   fileSystem?: {
     rename?: typeof rename;
+    /** @internal Test port: the hard link that backs a published file up (see `backUp`). */
+    link?: typeof link;
     writeFile?: typeof writeFile;
     /**
      * @internal Test port: the platform whose rename behaviour applies (win32 retries transient
@@ -411,6 +427,7 @@ export class TransactionalOutputCommitter implements OutputCommitter {
   private readonly outputRoot: string;
   private readonly hook?: OutputCommitterOptions['beforeMutation'];
   private readonly renameFile: typeof rename;
+  private readonly linkFile: typeof link;
   /** The rollback's rename: the real one, never the injected port, with the same retries. */
   private readonly restoreFile: typeof rename;
   private readonly platform: NodeJS.Platform;
@@ -443,6 +460,7 @@ export class TransactionalOutputCommitter implements OutputCommitter {
     this.renameFile = retryingRename(options.fileSystem?.rename ?? rename, retry);
     // Resolved at each call: the module's `rename`, as a test double replaces it.
     this.restoreFile = retryingRename((from, to) => rename(from, to), retry);
+    this.linkFile = options.fileSystem?.link ?? link;
     this.write = options.fileSystem?.writeFile ?? writeFile;
     this.delta = options.delta !== false;
   }
@@ -620,7 +638,7 @@ export class TransactionalOutputCommitter implements OutputCommitter {
           await mkdir(path.dirname(backup), { recursive: true });
           record.backup = backup;
           await this.mutate('backup-output', item.target, signal);
-          await this.renameFile(item.target, backup);
+          await this.backUp(item.target, backup);
         }
         await mkdir(path.dirname(item.target), { recursive: true });
         await this.mutate('publish-output', item.target, signal);
@@ -672,7 +690,7 @@ export class TransactionalOutputCommitter implements OutputCommitter {
           const backup = path.join(backups, 'manifest.json');
           manifestRecord.backup = backup;
           await this.mutate('backup-manifest', manifestPath, signal);
-          await this.renameFile(manifestPath, backup);
+          await this.backUp(manifestPath, backup);
         }
         await this.mutate('publish-manifest', manifestPath, signal);
         assertCurrent(request.generation, guard, signal);
@@ -1347,6 +1365,27 @@ export class TransactionalOutputCommitter implements OutputCommitter {
     } catch (error) {
       if (isMissing(error)) return undefined;
       throw error;
+    }
+  }
+
+  /**
+   * Keeps the published file `target` at `backup` for the rollback, leaving `target` in place: a
+   * hard link to the same file, so the publish rename that follows replaces `target` in one step
+   * and it never goes missing. Had it been moved away first, a reader between the two renames (a
+   * transform request) would find no file, and a watcher that stats a file whose inode moved
+   * (chokidar's `fs.watch` backend, the default on Linux) would report the rewrite as a deletion
+   * and a creation; a host waiting for that output's change would wait in vain. Where the file
+   * system cannot link it, the file is moved away as before.
+   * @param target A published output or the manifest.
+   * @param backup Its path in the stage's backups.
+   */
+  private async backUp(target: string, backup: string): Promise<void> {
+    try {
+      await this.linkFile(target, backup);
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException | undefined)?.code;
+      if (!code || !LINK_UNSUPPORTED_CODES.has(code)) throw error;
+      await this.renameFile(target, backup);
     }
   }
 
