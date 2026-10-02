@@ -17,6 +17,7 @@ import { metadataWatchIgnore, resolveOptions, staticViteConfig } from '../option
 import {
   MAX_LOST_WATCHES,
   MAX_RETAINED_REJECTIONS,
+  TRAILING_RESTAT_MS,
   ViteFileEventSource,
   WATCHER_ERROR_COALESCE_MS,
 } from '../vite-event-source';
@@ -275,6 +276,12 @@ describe('Vite watcher parity: an edit to an input first recorded by the in-flig
     await h.edit(h.page, 'v2');
     await vi.waitFor(() => expect(h.commits).toContain('2:v2|'), { timeout: 5_000 });
     await h.lifecycle.settled();
+    // Forwarding the save armed the page's trailing re-stat, which fires TRAILING_RESTAT_MS later.
+    // On a loaded machine it can otherwise fire inside the next save of the page, between its
+    // truncation and its write, and start a generation of its own that reads the page empty. The
+    // edit is still published, one generation later, but this scenario starts from a quiet
+    // generation 2. A timer of the same duration armed later fires after it.
+    await new Promise((resolve) => setTimeout(resolve, TRAILING_RESTAT_MS));
 
     const held = h.hold();
     await h.edit(h.page, 'v3 include');
@@ -284,6 +291,19 @@ describe('Vite watcher parity: an edit to an input first recorded by the in-flig
     await vi.waitFor(() => expect(h.commits).toContain('4:v3 include|snippet v2'), {
       timeout: 5_000,
     });
+    expect(h.commits).toEqual([
+      '1:v1 include|snippet v1',
+      '2:v2|',
+      '3:v3 include|snippet v1',
+      '4:v3 include|snippet v2',
+    ]);
+    // The snippet edit was rejected while generation 3 ran; only the reconcile of the input that
+    // generation recorded again can have reported it.
+    expect(
+      h.requests
+        .at(-1)
+        ?.changes.map((change) => ({ ...change, path: path.normalize(change.path) })),
+    ).toEqual([{ kind: 'update', path: path.normalize(h.snippet) }]);
     await h.dispose();
   }, 15_000);
 });
