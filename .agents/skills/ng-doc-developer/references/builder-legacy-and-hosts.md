@@ -6,13 +6,13 @@
 
 | Entry                                                    | Engine    | Source                                        | Used by                                                                                            |
 | -------------------------------------------------------- | --------- | --------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `@ng-doc/builder:application`                            | legacy    | `libs/builder/application/`                   | `ng-doc:build`                                                                                     |
-| `@ng-doc/builder:dev-server`                             | legacy    | `libs/builder/dev-server/`                    | `ng-doc:serve`, `serve:poc`                                                                        |
+| `@ng-doc/builder:application`                            | legacy    | `libs/builder/application/`                   | `ng-doc:build-legacy`                                                                              |
+| `@ng-doc/builder:dev-server`                             | legacy    | `libs/builder/dev-server/`                    | `ng-doc:serve-legacy`, `serve-legacy:poc`                                                          |
 | `@ng-doc/builder:modern-application`                     | generator | `libs/builder/generator/angular/application/` | `ng-doc:build-modern`                                                                              |
 | `@ng-doc/builder:modern-dev-server`                      | generator | `libs/builder/generator/angular/dev-server/`  | `ng-doc:serve-modern`                                                                              |
 | Vite plugin (`generator/vite`, `generator/vite/angular`) | generator | `libs/builder/generator/vite/`                | `tools/scripts/serve-docs-vite.mjs`, `apps/ng-doc/vite.config.mjs`, Vite/Analog consumers          |
-| `@ng-doc/builder:vite-application`                       | generator | `libs/builder/generator/vite/builders.ts`     | `ng-doc:build-vite` (Vite build, server build, prerender)                                          |
-| `@ng-doc/builder:vite-dev-server`                        | generator | `libs/builder/generator/vite/builders.ts`     | `ng-doc:serve-vite`                                                                                |
+| `@ng-doc/builder:vite-application`                       | generator | `libs/builder/generator/vite/builders.ts`     | `ng-doc:build` (Vite build, server build, prerender)                                               |
+| `@ng-doc/builder:vite-dev-server`                        | generator | `libs/builder/generator/vite/builders.ts`     | `ng-doc:serve`                                                                                     |
 | `ng-doc` CLI (`generator/bootstrap/bin.js`)              | generator | `libs/builder/generator/bootstrap/`           | Standalone `generate` / `watch` / `dev`, and `prerender` (the Vite production pipeline)            |
 | Schematics / `ng update`                                 | -         | `libs/builder/schematics/`                    | `ng g @ng-doc/builder:page`, `migrate-to-vite`, `vite-setup` (hidden, run by `ng add`), migrations |
 

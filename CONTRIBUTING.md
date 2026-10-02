@@ -51,28 +51,19 @@ Everyone taking part agrees to follow our [Code of Conduct](CODE_OF_CONDUCT.md).
    npm ci
    ```
 
-3. Build the packages into `dist/libs`:
+3. Run the documentation site with the new engine, then open the URL it prints:
 
    ```bash
-   npx nx run-many --target=build --projects=core,utils,ui-kit,keywords-loaders,builder,app --parallel=1
-   ```
-
-4. Link the built packages into `node_modules/@ng-doc/*`, so the docs site uses your local build:
-
-   ```bash
-   npx nx run ng-doc:link-libs
-   ```
-
-5. Run the documentation site with the new engine, then open the URL it prints:
-
-   ```bash
-   npx nx run ng-doc:serve-vite
+   npx nx serve ng-doc   # or: npm run serve
    ```
 
 The documentation site in `apps/ng-doc` is NgDoc's own site, [ng-doc.com](https://ng-doc.com/),
-built with NgDoc, so it is also the best place to try your change. The `serve-vite` target builds
-and links the packages first through its task dependencies, so steps 3 and 4 also run when you skip
-them. The site loads the packages from `dist`, so rebuild after you change library code.
+built with NgDoc, so it is also the best place to try your change. Before it starts the server, the
+`serve` target builds the packages into `dist/libs` and links them into `node_modules/@ng-doc/*`,
+so it works on a fresh clone; later runs take unchanged packages from the Nx cache. The site loads
+the packages from `dist`, so restart it after you change library code. `npx nx build ng-doc` (or
+`npm run build`) builds and prerenders the site into `dist/apps/ng-doc-vite`. The legacy builders
+have their own targets, `serve-legacy` and `build-legacy`.
 
 > **Tip:** in scripts and non-interactive shells, run Nx with
 > `NX_DAEMON=false NX_NO_CLOUD=true NX_TUI=false`.
@@ -184,9 +175,9 @@ CI checks the docs site's search index and keywords against reviewed snapshots i
 or search output on purpose, update the snapshots and commit them with your change:
 
 ```bash
-npx nx run ng-doc:build
+npx nx run ng-doc:build-legacy
 node libs/builder/generator/acceptance/production/source-stamp.mjs dist/apps/ng-doc/browser
-npx nx run ng-doc:build-vite --excludeTaskDependencies
+npx nx run ng-doc:build --excludeTaskDependencies
 node libs/builder/generator/acceptance/production/source-stamp.mjs dist/apps/ng-doc-vite/browser
 NGDOC_PARITY_CURRENT=dist/apps/ng-doc-vite/browser NGDOC_PARITY_ACCEPT=1 \
   node libs/builder/generator/acceptance/production/parity.mjs

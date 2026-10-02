@@ -17,7 +17,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 //
 // The packages digest covers the bytes the build job produced, not what a later step adds
 // inside `dist/libs`: the `@ng-doc` links of `ng-doc:link-libs` and the legacy engine's page
-// cache, which `ng-doc:build` writes beside its bundle. Otherwise the two engines' stamps of the
+// cache, which `ng-doc:build-legacy` writes beside its bundle. Otherwise the two engines' stamps of the
 // same packages differ (only the legacy build writes that cache).
 const root = path.resolve(fileURLToPath(new URL('../../../../..', import.meta.url)));
 const EXCLUDED = ['libs/builder/generator/acceptance'];

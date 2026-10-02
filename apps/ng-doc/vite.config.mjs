@@ -1,5 +1,5 @@
 // The documentation site on the NgDoc Vite engine (Vite + Analog, physical generated files).
-// Used by the `build-vite` and `serve-vite` targets. The plugins come from the built package in
+// Used by the `build` and `serve` targets. The plugins come from the built package in
 // dist, as the site's Angular CLI targets do.
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

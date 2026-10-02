@@ -3,26 +3,14 @@
   "version": "0.0.0",
   "license": "MIT",
   "description": "The documentation engine for your Angular projects.",
-  "watch": {
-    "serve": "libs/**/*.*"
-  },
   "scripts": {
-    "ng": "nx",
     "serve": "nx serve",
-    "poc": "nx run ng-doc:serve:poc",
-    "start": "npm-watch",
+    "poc": "nx run ng-doc:serve-legacy:poc",
     "build": "nx build",
     "lint": "npx nx run-many --all --target=lint",
     "test": "npx nx run-many --all --target=test",
-    "build:analyze": "nx build --stats-json --named-chunks",
     "prepare": "node ./prepare.js",
-    "debug": "nx g @angular/ssr:ng-add",
-    "dev:ssr": "nx serve ng-doc",
-    "serve:ssr": "node dist/apps/ng-doc/server/server.mjs",
-    "build:ssr": "nx build ng-doc --configuration=production",
-    "prerender": "nx build ng-doc --configuration=production",
-    "visual": "playwright test -c apps/ng-doc/testing/visual/playwright.config.mjs",
-    "migr": "ng g ./dist/libs/builder:ng-update"
+    "visual": "playwright test -c apps/ng-doc/testing/visual/playwright.config.mjs"
   },
   "keywords": [
     "angular",

@@ -18,9 +18,9 @@ import { sourceStamp, stampFile } from './source-stamp.mjs';
 // Production parity of the new engine's output against the legacy engine's output of the same
 // checkout, and against the reviewed search and keyword sets in `accepted/`.
 //
-// NGDOC_PARITY_LEGACY: the legacy production output (`ng-doc:build:production`).
+// NGDOC_PARITY_LEGACY: the legacy production output (`ng-doc:build-legacy:production`).
 // NGDOC_PARITY_CURRENT: the new engine's production output (`ng-doc:build-modern:production`, or
-//   `ng-doc:build-vite` with `dist/apps/ng-doc-vite/browser`).
+//   `ng-doc:build` with `dist/apps/ng-doc-vite/browser`).
 // NGDOC_PARITY_EVIDENCE: where `main-parity.json` is written (a new directory, never tracked).
 // NGDOC_PARITY_ACCEPT=1: once the legacy comparison passes, replace the accepted sets with the
 //   current output and write `accepted-diff.json` (previous against new) for review.

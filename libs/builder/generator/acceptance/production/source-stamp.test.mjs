@@ -48,7 +48,7 @@ test('what the site jobs add inside the packages after the build keeps the diges
   await link('core', 'builder/node_modules/@ng-doc/core');
   await link('core', 'utils/node_modules/@ng-doc/core');
   await link('utils', 'builder/node_modules/@ng-doc/utils');
-  // The legacy engine's page cache (`ng-doc:build`).
+  // The legacy engine's page cache (`ng-doc:build-legacy`).
   await put('builder/engine/.cache/apps/ng-doc/docs/ng-doc.api.mjs', 'export default {};');
   assert.equal(packagesDigest(libs), built);
 });

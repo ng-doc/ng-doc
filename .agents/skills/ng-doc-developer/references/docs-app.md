@@ -14,7 +14,7 @@ The site is NgDoc's own documentation, and it doubles as the largest real-world 
 | `docs/**/<page>/ng-doc.page.ts` + `index.md` | A page.                                                                                                                           |
 | `docs/shared/*.md`                           | Nunjucks includes shared by pages.                                                                                                |
 | `docs/ng-doc.api.ts`                         | API reference scopes (`app`, `builder`, `ui-kit`, `core`, `keywords-loaders`), each an include/exclude glob over library sources. |
-| `poc/` + `ng-doc.config.poc.ts`              | A small sandbox site for quick experiments (`npm run poc`).                                                                       |
+| `poc/` + `ng-doc.config.poc.ts`              | A small sandbox site for quick experiments (`npm run poc`, legacy engine).                                                        |
 | `src/app/app.config.ts`                      | Wires `provideNgDocContext()` (from `@ng-doc/generated`), `provideNgDocApp`, search, the page skeleton, processors and Mermaid.   |
 | `src/app/pages/docs/docs.routes.ts`          | Mounts `NG_DOC_ROUTING` from `@ng-doc/generated`.                                                                                 |
 | `server.ts`, `src/main.server.ts`            | SSR / prerender entry points.                                                                                                     |
@@ -101,5 +101,5 @@ export default Category;
 ## Working on the site
 
 - **Demos:** demo and playground components follow the library conventions (standalone, OnPush, `inject()`, built-in control flow). See [angular-libraries.md](angular-libraries.md).
-- **Running:** use the Vite/Analog dev host (`node tools/scripts/serve-docs-vite.mjs`, after building the packages) for new-engine work, and `npx nx serve ng-doc` to compare with the legacy engine. See [repo-and-commands.md](repo-and-commands.md).
+- **Running:** use the Vite/Analog dev host (`node tools/scripts/serve-docs-vite.mjs`, after building the packages) or `npx nx serve ng-doc` (the `vite-dev-server` builder) for new-engine work, and `npx nx run ng-doc:serve-legacy` to compare with the legacy engine. See [repo-and-commands.md](repo-and-commands.md).
 - **Production check:** prerender every route, which is what the production build does. A page that renders in development but fails prerender is a bug.

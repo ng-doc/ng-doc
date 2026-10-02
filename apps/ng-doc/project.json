@@ -7,7 +7,7 @@
   "tags": ["type:app", "app:ng-doc"],
   "implicitDependencies": ["builder"],
   "targets": {
-    "build": {
+    "build-legacy": {
       "executor": "./dist/libs/builder:application",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
@@ -109,7 +109,7 @@
         ]
       }
     },
-    "serve": {
+    "serve-legacy": {
       "executor": "./dist/libs/builder:dev-server",
       "defaultConfiguration": "development",
       "dependsOn": [
@@ -119,28 +119,24 @@
       ],
       "configurations": {
         "production": {
-          "buildTarget": "ng-doc:build:production",
+          "buildTarget": "ng-doc:build-legacy:production",
           "tsConfig": "apps/ng-doc/tsconfig.build.json"
         },
         "development": {
-          "buildTarget": "ng-doc:build:development"
+          "buildTarget": "ng-doc:build-legacy:development"
         },
         "poc": {
-          "buildTarget": "ng-doc:build:development",
+          "buildTarget": "ng-doc:build-legacy:development",
           "ngDoc": {
             "config": "apps/ng-doc/ng-doc.config.poc.ts"
-          },
-          "optimization": false,
-          "extractLicenses": false,
-          "sourceMap": true,
-          "namedChunks": true
+          }
         }
       }
     },
     "extract-i18n": {
       "executor": "@angular/build:extract-i18n",
       "options": {
-        "buildTarget": "ng-doc:build"
+        "buildTarget": "ng-doc:build-legacy"
       }
     },
     "lint": {
@@ -274,8 +270,8 @@
         }
       }
     },
-    "build-vite": {
-      "executor": "./dist/libs/builder:vite-application",
+    "build": {
+      "executor": "./tools/builders:vite-application",
       "outputs": ["{options.outputPath}"],
       "dependsOn": [
         {
@@ -287,8 +283,8 @@
         "outputPath": "dist/apps/ng-doc-vite"
       }
     },
-    "serve-vite": {
-      "executor": "./dist/libs/builder:vite-dev-server",
+    "serve": {
+      "executor": "./tools/builders:vite-dev-server",
       "dependsOn": [
         {
           "target": "link-libs"

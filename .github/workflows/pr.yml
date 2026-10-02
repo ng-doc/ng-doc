@@ -361,7 +361,7 @@ jobs:
           name: packages
           path: dist/libs
       - run: npx nx run ng-doc:link-libs --excludeTaskDependencies
-      - run: npx nx run ng-doc:build --excludeTaskDependencies
+      - run: npx nx run ng-doc:build-legacy --excludeTaskDependencies
       # The parity gate compares outputs built from the same sources only.
       - name: Stamp the output
         run: node libs/builder/generator/acceptance/production/source-stamp.mjs dist/apps/ng-doc/browser
@@ -392,7 +392,7 @@ jobs:
           name: packages
           path: dist/libs
       - run: npx nx run ng-doc:link-libs --excludeTaskDependencies
-      - run: npx nx run ng-doc:build-vite --excludeTaskDependencies
+      - run: npx nx run ng-doc:build --excludeTaskDependencies
       - name: Stamp the output
         run: node libs/builder/generator/acceptance/production/source-stamp.mjs dist/apps/ng-doc-vite/browser
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6

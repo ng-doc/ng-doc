@@ -65,18 +65,18 @@ The rules for rebuilding while something else is running are in [agent-safety.md
 
 ## Serve the documentation site
 
-- **Where the builders come from:** the site's builders are loaded from `dist/libs/builder`.
+- **Where the builders come from:** the site's builders are loaded from `dist/libs/builder`. The `serve` and `build` targets name them through `tools/builders`, a builder alias whose `builders.json` takes the options schemas from the sources and the implementations from `dist/libs/builder`. Nx reads every task's executor and schema before it runs any task (to look for a custom hasher), so this is what lets `nx serve` and `nx build` start on a fresh clone without `dist`; `tools/scripts/testing/site-builders.test.mjs` keeps the alias in step with `libs/builder/builders.json`. The other targets name `./dist/libs/builder:*` directly (their schemas are generated at build time) and fail before running anything until the packages are built once.
 - **Linking:** the `ng-doc:link-libs` target symlinks the built packages from `dist/libs/*` into `node_modules/@ng-doc/*` for `app`, `ui-kit`, `builder`, `keywords-loaders`, `core` and `utils`, and links `core` and `utils` into the builder's own `node_modules`. A fresh clone has no `node_modules/@ng-doc` until it runs. The site's `tsconfig.vite.json` and `tsconfig.modern.json` repeat the library `paths` of `tsconfig.build.json`, because a `paths` override replaces the inherited mappings as a whole; `tools/scripts/testing/site-package-links.test.mjs` checks both.
-- **Angular CLI targets:** the targets below build and link first, through `dependsOn`.
+- **Nx targets:** the targets below build and link first, through `dependsOn`, so a fresh clone needs only `npx nx serve ng-doc`.
 - **`serve-docs-vite.mjs` does not build.** Before starting it, run the package-set build, and run `npx nx run ng-doc:link-libs` once on a fresh clone. Rebuild after source changes.
 
-| Mode                                                 | Command                                    | Engine                                                                     |
-| ---------------------------------------------------- | ------------------------------------------ | -------------------------------------------------------------------------- |
-| Vite/Analog dev host (**default development mode**)  | `node tools/scripts/serve-docs-vite.mjs`   | New generator through the Vite plugin with physical generated files.       |
-| Vite/Analog dev host through the Angular CLI builder | `npx nx run ng-doc:serve-vite`             | New generator through `vite-dev-server` and `apps/ng-doc/vite.config.mjs`. |
-| Angular CLI dev host with the new generator          | `npx nx run ng-doc:serve-modern`           | New generator through the `modern-dev-server` builder.                     |
-| Angular CLI dev host with the legacy engine          | `npx nx serve ng-doc` (or `npm run serve`) | Legacy engine (`dev-server` builder).                                      |
-| Legacy proof-of-concept site                         | `npm run poc` (`nx run ng-doc:serve:poc`)  | Legacy engine on `apps/ng-doc/poc` only.                                   |
+| Mode                                                | Command                                          | Engine                                                                     |
+| --------------------------------------------------- | ------------------------------------------------ | -------------------------------------------------------------------------- |
+| Vite/Analog dev host (**default development mode**) | `node tools/scripts/serve-docs-vite.mjs`         | New generator through the Vite plugin with physical generated files.       |
+| Vite/Analog dev host through the Nx target          | `npx nx serve ng-doc` (or `npm run serve`)       | New generator through `vite-dev-server` and `apps/ng-doc/vite.config.mjs`. |
+| Angular CLI dev host with the new generator         | `npx nx run ng-doc:serve-modern`                 | New generator through the `modern-dev-server` builder.                     |
+| Angular CLI dev host with the legacy engine         | `npx nx run ng-doc:serve-legacy`                 | Legacy engine (`dev-server` builder).                                      |
+| Legacy proof-of-concept site                        | `npm run poc` (`nx run ng-doc:serve-legacy:poc`) | Legacy engine on `apps/ng-doc/poc` only.                                   |
 
 `serve-docs-vite.mjs` takes no arguments; it is configured by environment:
 
@@ -91,13 +91,14 @@ The rules for rebuilding while something else is running are in [agent-safety.md
 Production builds:
 
 ```sh
-npx nx build ng-doc                      # legacy engine, SSR + prerender -> dist/apps/ng-doc
+npx nx build ng-doc                      # Vite engine: browser + server build + prerender -> dist/apps/ng-doc-vite
 npx nx run ng-doc:build-modern           # new generator (Angular CLI) -> dist/apps/ng-doc-modern
-npx nx run ng-doc:build-vite             # Vite engine: browser + server build + prerender -> dist/apps/ng-doc-vite
+npx nx run ng-doc:build-legacy           # legacy engine, SSR + prerender -> dist/apps/ng-doc
 ```
 
-- **Vite engine:** `build-vite` and `serve-vite` run `apps/ng-doc/vite.config.mjs` through the `vite-application` and `vite-dev-server` builders. The configuration loads the plugins from `dist/libs/builder/generator`, uses `tsconfig.vite.json` and writes the generated files to `ng-doc-modernization/ng-doc/ng-doc-vite` (cache `.cache/ng-doc/ng-doc-vite`). The same pipeline runs without Nx: `node dist/libs/builder/generator/bootstrap/bin.js prerender --vite-config apps/ng-doc/vite.config.mjs --output-path dist/apps/ng-doc-vite`. In a private copy of the repository, add `--excludeTaskDependencies` to the Nx targets so that `link-libs` does not rebuild or relink the shared packages.
+- **Vite engine:** `build` and `serve` run `apps/ng-doc/vite.config.mjs` through the `vite-application` and `vite-dev-server` builders. The configuration loads the plugins from `dist/libs/builder/generator`, uses `tsconfig.vite.json` and writes the generated files to `ng-doc-modernization/ng-doc/ng-doc-vite` (cache `.cache/ng-doc/ng-doc-vite`). The same pipeline runs without Nx: `node dist/libs/builder/generator/bootstrap/bin.js prerender --vite-config apps/ng-doc/vite.config.mjs --output-path dist/apps/ng-doc-vite`. In a private copy of the repository, add `--excludeTaskDependencies` to the Nx targets so that `link-libs` does not rebuild or relink the shared packages.
 
+- **Caching:** `build` takes `cache: true` and the `production` inputs from the `build` target defaults in `nx.json`; its own `dependsOn` (`link-libs`) replaces the default `pre-build`. The other site targets are not cached.
 - **Config files:** `apps/ng-doc/ng-doc.config.ts` is the site configuration. `ng-doc.config.modern.ts` extends it for the new-generator targets (output `ng-doc-modernization/`, cache on). `ng-doc.config.poc.ts` points at `apps/ng-doc/poc`.
 
 ## Test and lint
@@ -136,8 +137,8 @@ node --test tools/scripts/testing/*.test.mjs   # tool-script tests
   | `generator-shard`     | Linux, Windows        | one job per shard of a sharded group, split by `shardWeights`: `compiler` (`1/4` to `4/4`) and, on Linux only, `vite-adapter` (`1/3` to `3/3`); a Linux shard uploads its blob report (`generator-blob-<group>-<shard>`), Windows runs without coverage                        |
   | `generator-coverage`  | Linux                 | one job per sharded group, after every `generator-shard` job: `--merge-coverage` replays the shards' blob reports and enforces the group's gate over the merged coverage                                                                                                       |
   | `windows-processes`   | Windows               | natively, the Windows process supervision: `bootstrap/testing/process-tree.vitest.ts` (`ng-doc dev -- <command>`, `.cmd` hosts, process trees) and `vite/testing/ssr-renderer.vitest.ts`                                                                                       |
-  | `site-legacy`         | Linux                 | `ng-doc:build`, a source stamp, the output uploaded for `parity`, then `apps/ng-doc/testing/ssr-entry/verify-built-server.mjs`                                                                                                                                                 |
-  | `site-vite`           | Linux                 | `ng-doc:build-vite`, a source stamp, then `acceptance/production-c` (harness tests, run, reconcile)                                                                                                                                                                            |
+  | `site-legacy`         | Linux                 | `ng-doc:build-legacy`, a source stamp, the output uploaded for `parity`, then `apps/ng-doc/testing/ssr-entry/verify-built-server.mjs`                                                                                                                                          |
+  | `site-vite`           | Linux                 | `ng-doc:build`, a source stamp, then `acceptance/production-c` (harness tests, run, reconcile)                                                                                                                                                                                 |
   | `site-modern`         | Linux                 | `ng-doc:build-modern`                                                                                                                                                                                                                                                          |
   | `parity`              | Linux                 | the source stamp tests (`acceptance/production/*.test.mjs`), then `acceptance/production/parity.mjs` on the `site-legacy` and `site-vite` outputs                                                                                                                              |
   | `vite-main`           | Linux                 | `acceptance/vite-main/run-bounded.mjs`                                                                                                                                                                                                                                         |
@@ -162,4 +163,4 @@ node --test tools/scripts/testing/*.test.mjs   # tool-script tests
   - `release` and `beta` are fed from `main` through the `create-release` and `create-beta` workflow dispatches; `N.x` maintenance branches are pushed to directly.
   - Only `feat`, `fix`, `perf` and `revert` trigger a release. For the breaking-change rule, see [code-style.md](code-style.md).
   - Custom semantic-release plugins live in `plugins/semantic-release/`.
-  - `release.yml` builds ng-doc.com with the Vite engine (`ng-doc:build-vite`) and packs `dist/apps/ng-doc-vite/browser` under the `dist/apps/ng-doc/browser` path that `deploy.yml` syncs.
+  - `release.yml` builds ng-doc.com with the Vite engine (`ng-doc:build --skipNxCache`) and packs `dist/apps/ng-doc-vite/browser` under the `dist/apps/ng-doc/browser` path that `deploy.yml` syncs.

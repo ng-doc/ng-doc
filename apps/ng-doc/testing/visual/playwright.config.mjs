@@ -7,7 +7,7 @@ import { defineConfig } from '@playwright/test';
  * Visual harness: compares pages of a running docs site with the Hybrid prototype screenshots.
  *
  * It does not start a server. Serve the site on the library sources first, for example:
- *   NX_DAEMON=false npx nx run ng-doc:serve:development --excludeTaskDependencies --port 4251 --host 127.0.0.1
+ *   NX_DAEMON=false npx nx run ng-doc:serve-legacy:development --excludeTaskDependencies --port 4251 --host 127.0.0.1
  * then run:
  *   NGDOC_VISUAL_BASE_URL=http://127.0.0.1:4251 npm run visual
  *
