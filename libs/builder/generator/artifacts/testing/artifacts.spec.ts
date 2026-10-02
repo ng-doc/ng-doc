@@ -1115,6 +1115,105 @@ test('moves a file away to back it up where the file system cannot link it', asy
   expect(await readFile(path.join(root, 'page.txt'), 'utf8')).toBe('new');
 });
 
+/** The committed `page.txt` (`old`) of a fresh root, and the next candidate's request. */
+async function backedUpRoot(name: string) {
+  const root = await temporary(name);
+  const old = artifact('project-one', 'owner', [output('page.txt', 'old')]);
+  const first = await new TransactionalOutputCommitter({ outputRoot: root }).commit(
+    { generation: 1, candidate: snapshot([old]) },
+    guard(),
+    new AbortController().signal,
+  );
+  const next = artifact('project-one', 'owner', [output('page.txt', 'new')]);
+  const request = {
+    generation: 2,
+    candidate: snapshot([next], 'next'),
+    previous: (first as { manifest: OutputManifest }).manifest,
+  };
+  const stages = async () =>
+    (await readdir(root)).filter((entry) => entry.startsWith('.ng-doc-stage-'));
+  return { root, request, stages, page: path.join(root, 'page.txt') };
+}
+
+// File systems without links do not agree on a code (Windows reports FAT's refusal as EISDIR and a
+// file held open as EBUSY), so every file system error of the link takes the move instead.
+test.each(['EPERM', 'EXDEV', 'EMLINK', 'EISDIR', 'EBUSY', 'EACCES', 'EIO', 'ENOSYS'])(
+  'moves a file away to back it up when its link fails with %s',
+  async (code) => {
+    const { root, request, stages, page } = await backedUpRoot(`ng-doc-backup-${code}`);
+    const moved: string[] = [];
+    const committer = new TransactionalOutputCommitter({
+      outputRoot: root,
+      fileSystem: {
+        link: async () => {
+          throw Object.assign(new Error(`link failed (${code})`), { code });
+        },
+        rename: async (from, to) => {
+          await renameFile(from, to);
+          if (String(to).includes(`${path.sep}backups${path.sep}`))
+            moved.push(path.relative(root, String(from)));
+        },
+      },
+    });
+    const result = await committer.commit(request, guard(), new AbortController().signal);
+    expect(result.status).toBe('committed');
+    expect(moved).toEqual(['page.txt', '.ng-doc-output-manifest.json']);
+    expect(await readFile(page, 'utf8')).toBe('new');
+    expect(await stages()).toEqual([]);
+  },
+);
+
+test('commits when a link takes effect but reports an error', async () => {
+  const { root, request, stages, page } = await backedUpRoot('ng-doc-backup-uncertain-link');
+  const committer = new TransactionalOutputCommitter({
+    outputRoot: root,
+    fileSystem: {
+      link: async (from, to) => {
+        await linkFile(from, to);
+        throw Object.assign(new Error('link reported failure'), { code: 'EIO' });
+      },
+    },
+  });
+  const result = await committer.commit(request, guard(), new AbortController().signal);
+  expect(result.status).toBe('committed');
+  expect(await readFile(page, 'utf8')).toBe('new');
+  expect(await stages()).toEqual([]);
+});
+
+// The backup is a second name of the published file, so the rollback puts back that very file:
+// the same inode, bytes and modification time, with no name of it left in a stage.
+test.each([
+  { failure: 'output publish', target: 'page.txt' },
+  { failure: 'manifest publish', target: '.ng-doc-output-manifest.json' },
+])('restores the linked file itself when the $failure fails', async ({ target }) => {
+  const { root, request, stages, page } = await backedUpRoot('ng-doc-backup-linked-rollback');
+  const manifestPath = path.join(root, '.ng-doc-output-manifest.json');
+  const before = await Promise.all(
+    [page, manifestPath].map((file) => stat(file, { bigint: true })),
+  );
+  const manifestBefore = await readFile(manifestPath, 'utf8');
+  const committer = new TransactionalOutputCommitter({
+    outputRoot: root,
+    fileSystem: {
+      rename: async (from, to) => {
+        if (String(to) === path.join(root, target)) throw new Error('publish rename failed');
+        await renameFile(from, to);
+      },
+    },
+  });
+  const result = await committer.commit(request, guard(), new AbortController().signal);
+  expect(result.status).toBe('failed');
+  expect(await readFile(page, 'utf8')).toBe('old');
+  expect(await readFile(manifestPath, 'utf8')).toBe(manifestBefore);
+  const after = await Promise.all([page, manifestPath].map((file) => stat(file, { bigint: true })));
+  for (const [index, info] of after.entries()) {
+    expect(info.ino).toBe(before[index].ino);
+    expect(info.mtimeNs).toBe(before[index].mtimeNs);
+    expect(info.nlink).toBe(1n);
+  }
+  expect(await stages()).toEqual([]);
+});
+
 test('preserves staged recovery data when rollback cannot restore a backup', async () => {
   const root = await temporary('ng-doc-rollback-recovery');
   const initial = new TransactionalOutputCommitter({ outputRoot: root });

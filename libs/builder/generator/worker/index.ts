@@ -251,6 +251,68 @@ function bytes(value: number | undefined, fallback: number): number {
   return number;
 }
 
+/**
+ * A runtime ends together with every process it started. The compiler's esbuild service is one:
+ * it is unreferenced, never stopped, and exits only once it reads the end of its stdin after the
+ * runtime died, so a host that exits right after `dispose` could leave it behind. On POSIX every
+ * runtime therefore leads a process group of its own (`detached`); ending a runtime signals the
+ * group, and a runtime counts as ended only once its group is empty. Windows has no process
+ * groups: a runtime is not detached there (a detached child gets a console of its own), only the
+ * runtime itself is signalled, and its esbuild service exits at the end of its stdin.
+ */
+const PROCESS_GROUPS = process.platform !== 'win32';
+/**
+ * How long a runtime's group may take to empty after the runtime exited. Normally milliseconds;
+ * the bound only matters where orphans are never reaped (a host running as PID 1 without an init).
+ */
+const GROUP_EXIT_DEADLINE_MS = 2_000;
+
+/**
+ * Signals the runtime's process group (POSIX) or the runtime itself (Windows).
+ * @param child The runtime.
+ * @param signal The signal to send.
+ */
+function signalRuntime(child: ChildProcess, signal: NodeJS.Signals): void {
+  if (PROCESS_GROUPS && child.pid) {
+    try {
+      process.kill(-child.pid, signal);
+      return;
+    } catch {
+      // ESRCH: the group is gone. EPERM: macOS answers it for a group whose members all exited
+      // but are not reaped yet. Either way nothing is left to signal but the runtime itself.
+    }
+  }
+  child.kill(signal);
+}
+
+/**
+ * The runtime's process group still has a member; one exited but not reaped yet counts.
+ * @param pid The runtime's pid, which is its process group id.
+ */
+function groupAlive(pid: number): boolean {
+  try {
+    process.kill(-pid, 0);
+    return true;
+  } catch (error) {
+    return (error as NodeJS.ErrnoException).code === 'EPERM';
+  }
+}
+
+/**
+ * Called once the runtime exited: kills what it left in its process group and resolves when the
+ * group is empty, or after `GROUP_EXIT_DEADLINE_MS`.
+ * @param child The runtime that exited.
+ */
+async function joinGroup(child: ChildProcess): Promise<void> {
+  const pid = child.pid;
+  if (!PROCESS_GROUPS || !pid || !groupAlive(pid)) return;
+  signalRuntime(child, 'SIGKILL');
+  const deadline = Date.now() + GROUP_EXIT_DEADLINE_MS;
+  while (groupAlive(pid) && Date.now() < deadline) {
+    await new Promise<void>((resolve) => setTimeout(resolve, 5));
+  }
+}
+
 const ABORTED = (): CompilationResult => failure('WORKER_ABORTED', 'Compilation aborted');
 const DISPOSED = (): CompilationResult =>
   failure('WORKER_DISPOSED', 'Compilation service is disposed');
@@ -405,6 +467,16 @@ export function createWorkerCompilationService(
   let watchServed = false;
   let active: Active | undefined;
   let runtime: Runtime | undefined;
+  /**
+   * Every long-lived runtime until its process group is empty: the current one and any that is
+   * still ending (recycled, retired after the watch, killed), which `runtime` no longer names.
+   */
+  const runtimes = new Set<Runtime>();
+  /** Resolves once every runtime but the current one has ended. */
+  const ending = (): Promise<void> =>
+    Promise.all([...runtimes].filter((each) => each !== runtime).map((each) => each.exited)).then(
+      () => undefined,
+    );
   let disposing: Promise<void> | undefined;
 
   const retainedProgramOff = (): boolean =>
@@ -448,6 +520,7 @@ export function createWorkerCompilationService(
       // Do not inherit test runners/loaders/--input-type from the embedding process.
       worker = fork(fileURLToPath(entry), [], {
         execArgv: [],
+        detached: PROCESS_GROUPS,
         stdio: ['ignore', 'ignore', 'ignore', 'ipc'],
         serialization: 'json',
       });
@@ -473,7 +546,7 @@ export function createWorkerCompilationService(
       job.progress?.settled();
       completed = result;
       // A process boundary is intentional: Worker.terminate cannot interrupt synchronous native code.
-      worker.kill('SIGKILL');
+      signalRuntime(worker, 'SIGKILL');
     };
     active = {
       job,
@@ -521,10 +594,13 @@ export function createWorkerCompilationService(
       if (!ended)
         finish(failure('WORKER_EXIT', `Compilation worker exited before replying (${code})`));
       worker.removeAllListeners();
-      active = undefined;
-      job.resolve(job.signal.aborted ? ABORTED() : disposed ? DISPOSED() : completed);
-      stopped();
-      pump();
+      // The generation ends only once nothing the runtime started is left.
+      void joinGroup(worker).then(() => {
+        active = undefined;
+        job.resolve(job.signal.aborted ? ABORTED() : disposed ? DISPOSED() : completed);
+        stopped();
+        pump();
+      });
     });
     worker.send(workerData, (error) => {
       if (error) finish(failure('WORKER_STARTUP', error.message));
@@ -536,6 +612,7 @@ export function createWorkerCompilationService(
     const child = fork(fileURLToPath(entry), [], {
       // Only flag: lets the idle runtime collect a finished generation (see entry.ts).
       execArgv: ['--expose-gc'],
+      detached: PROCESS_GROUPS,
       stdio: ['ignore', 'ignore', 'ignore', 'ipc'],
       // Messages are still JSON text (`encode`), validated and normalised once. With the delta
       // transport the advanced channel carries that string as is, where a `json` channel would
@@ -562,6 +639,7 @@ export function createWorkerCompilationService(
         exited = resolve;
       }),
     };
+    runtimes.add(created);
     let starting = true;
     const startupFailed = (result: CompilationResult): void => {
       if (!starting) return;
@@ -569,7 +647,7 @@ export function createWorkerCompilationService(
       clearTimeout(timer);
       created.startupFailure = result;
       settleReady(false);
-      child.kill('SIGKILL');
+      signalRuntime(child, 'SIGKILL');
     };
     const timer = setTimeout(
       () =>
@@ -628,7 +706,11 @@ export function createWorkerCompilationService(
       child.removeAllListeners();
       if (runtime === created) runtime = undefined;
       created.handler?.({ type: 'close', code });
-      exited();
+      // `exited` means that nothing the runtime started is left either.
+      void joinGroup(child).then(() => {
+        runtimes.delete(created);
+        exited();
+      });
     });
     child.send(persistentData, (error) => {
       if (error) startupFailed(failure('WORKER_STARTUP', error.message));
@@ -642,10 +724,13 @@ export function createWorkerCompilationService(
     if (target.closed) return target.exited;
     if (graceful && persistent) {
       target.child.send(encode({ type: 'dispose' }), () => {});
-      const timer = setTimeout(() => target.child.kill('SIGKILL'), persistent.abortGraceMs);
+      const timer = setTimeout(
+        () => signalRuntime(target.child, 'SIGKILL'),
+        persistent.abortGraceMs,
+      );
       void target.exited.then(() => clearTimeout(timer));
     } else {
-      target.child.kill('SIGKILL');
+      signalRuntime(target.child, 'SIGKILL');
     }
     return target.exited;
   }
@@ -1229,8 +1314,10 @@ export function createWorkerCompilationService(
       // A running watch generation finishes first; the runtime ends after the last one. A warm-up
       // is not worth finishing.
       active?.job.prime?.supersede();
-      if (active?.job.lifetime === 'watch') return active.stopped;
-      return runtime ? retire(runtime, true) : Promise.resolve();
+      // Resolves once the runtime and what it started are gone (unless a queued watch job keeps it).
+      if (active?.job.lifetime === 'watch') return active.stopped.then(ending);
+      if (runtime) void retire(runtime, true);
+      return ending();
     },
     dispose() {
       if (disposing) return disposing;
@@ -1242,10 +1329,10 @@ export function createWorkerCompilationService(
       }
       const running = active;
       running?.dispose();
-      const idle = runtime;
+      // Every runtime, including one still ending gracefully, is killed and joined.
       disposing = Promise.all([
         running?.stopped ?? Promise.resolve(),
-        idle ? retire(idle, false) : Promise.resolve(),
+        ...[...runtimes].map((each) => retire(each, false)),
       ]).then(() => undefined);
       return disposing;
     },

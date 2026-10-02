@@ -48,19 +48,6 @@ const CACHE_EXTENSION = '.artifact.json';
  */
 const TRANSIENT_RENAME_CODES = new Set(['EPERM', 'EBUSY', 'EACCES']);
 
-/**
- * What a file system that cannot hard-link a file reports (FAT and exFAT volumes, some network and
- * FUSE mounts, a file at its link limit). A backup then moves the file away, as without links.
- */
-const LINK_UNSUPPORTED_CODES = new Set([
-  'EPERM',
-  'ENOTSUP',
-  'EOPNOTSUPP',
-  'ENOSYS',
-  'EXDEV',
-  'EMLINK',
-]);
-
 /** Bounded backoff for transient Windows rename failures: at most about 3.5 s per rename. */
 export const RENAME_RETRY = Object.freeze({ attempts: 8, delayMs: 50, maxDelayMs: 1000 });
 
@@ -1374,8 +1361,16 @@ export class TransactionalOutputCommitter implements OutputCommitter {
    * and it never goes missing. Had it been moved away first, a reader between the two renames (a
    * transform request) would find no file, and a watcher that stats a file whose inode moved
    * (chokidar's `fs.watch` backend, the default on Linux) would report the rewrite as a deletion
-   * and a creation; a host waiting for that output's change would wait in vain. Where the file
-   * system cannot link it, the file is moved away as before.
+   * and a creation; a host waiting for that output's change would wait in vain.
+   *
+   * Where the file system refuses the link, the file is moved away instead, which is the protocol
+   * without links: the rollback restores either backup the same way, so only the gap differs. Any
+   * system error falls back, not a list of codes, because file systems do not agree on one: FAT
+   * reports `EPERM` on Linux, while Windows reports its "incorrect function" as `EISDIR` and a file
+   * another process holds open as `EBUSY`; network and FUSE mounts answer `ENOTSUP`, `ENOSYS` or
+   * whatever their server does. An unknown code must not fail every commit. A link that took
+   * effect although it reported an error is harmless: both names then refer to the original file.
+   * Only an error without a code, which no file system call raises, is rethrown.
    * @param target A published output or the manifest.
    * @param backup Its path in the stage's backups.
    */
@@ -1383,8 +1378,7 @@ export class TransactionalOutputCommitter implements OutputCommitter {
     try {
       await this.linkFile(target, backup);
     } catch (error) {
-      const code = (error as NodeJS.ErrnoException | undefined)?.code;
-      if (!code || !LINK_UNSUPPORTED_CODES.has(code)) throw error;
+      if (typeof (error as NodeJS.ErrnoException | undefined)?.code !== 'string') throw error;
       await this.renameFile(target, backup);
     }
   }
