@@ -5,6 +5,7 @@ import { afterEach, expect, test, vi } from 'vitest';
 import { createOutputCommitter, JsonArtifactCache } from '../artifacts';
 import { GeneratorContentCompiler } from '../content/content-compiler';
 import type { ArtifactSnapshot, CompilationResult } from '../contracts';
+import { hostPath } from '../kernel/paths';
 import { OutputAssemblerImpl } from '../outputs';
 import { createBuildSession } from '../session/build-session';
 import {
@@ -716,7 +717,7 @@ test('a link to the keyword of a left-out page names the page and its onlyForTag
     expect.objectContaining({
       code: 'CONTENT_KEYWORD_FILTERED',
       message: expect.stringContaining(
-        `Keyword *DevelopPage belongs to "Develop" (${path.join(f.root, 'docs/develop/ng-doc.page.ts')}), which onlyForTags [development] leaves out of this build (build tags: [production]).`,
+        `Keyword *DevelopPage belongs to "Develop" (${hostPath(path.join(f.root, 'docs/develop/ng-doc.page.ts'))}), which onlyForTags [development] leaves out of this build (build tags: [production]).`,
       ),
     }),
   ]);
@@ -732,7 +733,7 @@ test('a link to the keyword of a left-out page names the page and its onlyForTag
     expect.objectContaining({
       code: 'CONTENT_KEYWORD_FILTERED',
       message: expect.stringContaining(
-        `of its category "Beta" (${path.join(f.root, 'docs/beta/ng-doc.category.ts')})`,
+        `of its category "Beta" (${hostPath(path.join(f.root, 'docs/beta/ng-doc.category.ts'))})`,
       ),
     }),
   ]);

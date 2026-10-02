@@ -1,17 +1,17 @@
 import fs from 'node:fs';
 import os from 'node:os';
-import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import type { Dependency } from '../../contracts';
 import { CONFLICTING_CONTENT_DIGEST } from '../../graph';
 import { digest, SemanticFailure, TrackedFiles } from '../dependencies';
+import { join } from './engine-paths';
 
 describe('semantic tracked files', () => {
   let root: string;
 
   beforeEach(() => {
-    root = fs.mkdtempSync(path.join(os.tmpdir(), 'ng-doc-tracked-files-'));
+    root = fs.mkdtempSync(join(os.tmpdir(), 'ng-doc-tracked-files-'));
   });
 
   afterEach(() => {
@@ -19,7 +19,7 @@ describe('semantic tracked files', () => {
   });
 
   it('orders deterministically, replaces logical dependencies, and returns defensive values', () => {
-    const contentPath = path.join(root, 'content.ts');
+    const contentPath = join(root, 'content.ts');
     const glob: Extract<Dependency, { kind: 'glob' }> = {
       kind: 'glob',
       root,
@@ -40,8 +40,8 @@ describe('semantic tracked files', () => {
       { kind: 'existence', path: contentPath, exists: true },
     ]);
     tracker.add({ kind: 'content', path: contentPath, digest: 'new' });
-    tracker.add({ ...glob, members: [contentPath, path.join(root, 'second.ts')] });
-    glob.members.push(path.join(root, 'input-mutated.ts'));
+    tracker.add({ ...glob, members: [contentPath, join(root, 'second.ts')] });
+    glob.members.push(join(root, 'input-mutated.ts'));
 
     const first = tracker.all();
     const serialized = first.map((dependency) => JSON.stringify(dependency));
@@ -52,7 +52,7 @@ describe('semantic tracked files', () => {
       { kind: 'content', path: contentPath, digest: CONFLICTING_CONTENT_DIGEST },
     ]);
     expect(first.filter((dependency) => dependency.kind === 'glob')).toEqual([
-      { ...glob, members: [contentPath, path.join(root, 'second.ts')] },
+      { ...glob, members: [contentPath, join(root, 'second.ts')] },
     ]);
 
     first.reverse();
@@ -65,18 +65,18 @@ describe('semantic tracked files', () => {
         dependency.kind === 'glob',
     );
     returnedContent!.digest = 'caller-mutated';
-    returnedGlob!.members.push(path.join(root, 'caller-mutated.ts'));
+    returnedGlob!.members.push(join(root, 'caller-mutated.ts'));
 
     expect(tracker.all()).toEqual(
       expect.arrayContaining([
         { kind: 'content', path: contentPath, digest: CONFLICTING_CONTENT_DIGEST },
-        { ...glob, members: [contentPath, path.join(root, 'second.ts')] },
+        { ...glob, members: [contentPath, join(root, 'second.ts')] },
       ]),
     );
   });
 
   it('records a missing read and replaces it with recovered existence and content', () => {
-    const file = path.join(root, 'later.ts');
+    const file = join(root, 'later.ts');
     const tracker = new TrackedFiles();
 
     expect(() => tracker.read(file)).toThrow(SemanticFailure);

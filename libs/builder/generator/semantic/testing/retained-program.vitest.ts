@@ -8,7 +8,6 @@ import {
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
 import { afterEach, beforeEach, expect, test } from 'vitest';
 
 import type {
@@ -24,6 +23,7 @@ import {
   type SemanticServiceImpl,
   createSemanticService,
 } from '../semantic-service';
+import { hostPath, join } from './engine-paths';
 
 // A synchronization made for retention can hand its Project to the next generation's service,
 // which reuses it only when nothing the program observed changed.
@@ -89,7 +89,7 @@ function snapshot(): DiscoverySnapshot {
 }
 
 beforeEach(async () => {
-  directory = realpathSync(mkdtempSync(join(tmpdir(), 'semantic-retained-')));
+  directory = hostPath(realpathSync(mkdtempSync(join(tmpdir(), 'semantic-retained-'))));
   write(
     'tsconfig.json',
     JSON.stringify({

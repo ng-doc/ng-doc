@@ -1,11 +1,11 @@
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, mkdtempSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
 import { afterEach, beforeEach, expect, test } from 'vitest';
 
 import type { ApiDescriptor, DiscoverySnapshot, GuideDescriptor } from '../../contracts';
 import { createSemanticService, declarationIdentity } from '../semantic-service';
+import { join, resolve } from './engine-paths';
 
 const root = resolve(__dirname, '../../../../..');
 let directory: string;

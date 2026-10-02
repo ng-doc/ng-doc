@@ -14,7 +14,17 @@ import type {
 } from '../../contracts';
 import { refreshDependencies } from '../../graph';
 import { bytesDigest, compareCodeUnits, dependencyIdentity } from '../../kernel/canonical';
+import { forwardSlashes, hostPath } from '../../kernel/paths';
 import { DiscoveryServiceImpl, evaluatedDigests } from '..';
+
+/**
+ * `path.join` in the engine's spelling (forward slashes, drive letter kept), which every path the
+ * service records uses, so expected paths equal recorded ones on Windows too.
+ * @param parts The path segments.
+ */
+function join(...parts: string[]): string {
+  return forwardSlashes(path.join(...parts));
+}
 
 // The discovery input partition: the configuration digest covers only the configuration's own
 // inputs, each entry records its own evaluation closure (with the resolution probes of its
@@ -39,10 +49,10 @@ interface Tree {
  * @param files
  */
 function tree(files: Record<string, string>): Tree {
-  const root = realpathSync(mkdtempSync(path.join(tmpdir(), 'ngdoc-partition-')));
+  const root = hostPath(realpathSync(mkdtempSync(path.join(tmpdir(), 'ngdoc-partition-'))));
   roots.push(root);
   const write = (file: string, text: string) => {
-    const target = path.join(root, file);
+    const target = join(root, file);
     mkdirSync(path.dirname(target), { recursive: true });
     writeFileSync(target, text);
   };
@@ -55,12 +65,12 @@ function tree(files: Record<string, string>): Tree {
     changes: [],
     projectId: 'partition',
     workspaceRoot: root,
-    configFile: path.join(root, 'ng-doc.config.ts'),
+    configFile: join(root, 'ng-doc.config.ts'),
     defaults: {
-      docsRoot: path.join(root, 'docs'),
-      tsConfig: path.join(root, 'tsconfig.json'),
-      outputRoot: path.join(root, 'out'),
-      cacheRoot: path.join(root, 'cache'),
+      docsRoot: join(root, 'docs'),
+      tsConfig: join(root, 'tsconfig.json'),
+      outputRoot: join(root, 'out'),
+      cacheRoot: join(root, 'cache'),
     },
   };
   return {
@@ -105,7 +115,7 @@ test('each entry records its own closure, the probes of its modules and one eval
   const alpha = byTitle(found, 'Alpha');
   const beta = byTitle(found, 'Beta');
   const gamma = byTitle(found, 'Gamma');
-  const file = (name: string) => path.join(t.root, name);
+  const file = (name: string) => join(t.root, name);
 
   expect(paths(alpha, 'content')).toEqual(
     expect.arrayContaining([file('docs/a/ng-doc.page.ts'), file('docs/a/helper.ts')]),
@@ -171,12 +181,12 @@ test('an entry added or removed leaves the configuration digest; the description
       changes: [],
       projectId: 'partition',
       workspaceRoot: t.root,
-      configFile: path.join(t.root, 'ng-doc.config.ts'),
+      configFile: join(t.root, 'ng-doc.config.ts'),
       defaults: {
-        docsRoot: path.join(t.root, 'docs'),
-        tsConfig: path.join(t.root, 'tsconfig.json'),
-        outputRoot: path.join(t.root, 'out'),
-        cacheRoot: path.join(t.root, 'cache'),
+        docsRoot: join(t.root, 'docs'),
+        tsConfig: join(t.root, 'tsconfig.json'),
+        outputRoot: join(t.root, 'out'),
+        cacheRoot: join(t.root, 'cache'),
       },
     },
     new AbortController().signal,
@@ -188,12 +198,12 @@ test('an entry added or removed leaves the configuration digest; the description
   expect(byTitle(second, 'Delta')).toBeDefined();
   // The scan's membership is still observed (a new description module starts a generation).
   const scan = added.dependencies.find(
-    (item) => item.kind === 'glob' && item.root === path.join(t.root, 'docs'),
+    (item) => item.kind === 'glob' && item.root === join(t.root, 'docs'),
   );
   expect(scan && scan.kind === 'glob' ? scan.members : []).toContain(
-    path.join(t.root, 'docs/d/ng-doc.page.ts'),
+    join(t.root, 'docs/d/ng-doc.page.ts'),
   );
-  rmSync(path.join(t.root, 'docs/d'), { recursive: true });
+  rmSync(join(t.root, 'docs/d'), { recursive: true });
   const third = await t.discover(3);
   expect(third.configuration).toEqual(first.configuration);
   expect(third.entries).toEqual(first.entries);
@@ -301,9 +311,9 @@ test('guide values and template renders record the entry evaluated dependency', 
   const rendered = t.service.render(
     {
       entryId: alpha.id,
-      source: { path: path.join(t.root, 'docs/a/index.md') },
+      source: { path: join(t.root, 'docs/a/index.md') },
       text: '{{ NgDocPage.title }}',
-      scope: path.join(t.root, 'docs/a'),
+      scope: join(t.root, 'docs/a'),
       kind: 'guide',
       values: {},
     },
@@ -335,8 +345,8 @@ test('entry dependencies are in code-unit order and in the one content digest do
   expect(identities).toEqual([...identities].sort(compareCodeUnits));
   const content = paths(entry, 'content');
   // Code-unit order puts `Zeta.ts` before `alpha.ts`; a locale order would not.
-  expect(content.indexOf(path.join(t.root, 'docs/p/Zeta.ts'))).toBeLessThan(
-    content.indexOf(path.join(t.root, 'docs/p/alpha.ts')),
+  expect(content.indexOf(join(t.root, 'docs/p/Zeta.ts'))).toBeLessThan(
+    content.indexOf(join(t.root, 'docs/p/alpha.ts')),
   );
   for (const dependency of entry.dependencies)
     if (dependency.kind === 'content')

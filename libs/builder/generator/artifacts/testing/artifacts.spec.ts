@@ -29,6 +29,7 @@ import type {
   PageArtifact,
   SearchRecord,
 } from '../../contracts';
+import { hostPath } from '../../kernel/paths';
 import {
   createArtifactCache,
   createOutputCommitter,
@@ -1088,7 +1089,8 @@ test('preserves staged recovery data when rollback cannot restore a backup', asy
   const stages = (await readdir(root)).filter((entry) => entry.startsWith('.ng-doc-stage-'));
   expect(stages).toHaveLength(1);
   const stageRoot = path.join(root, stages[0]);
-  expect(result.diagnostics.some((item) => item.message.includes(stageRoot))).toBe(true);
+  // The diagnostic names the stage in the engine's spelling (forward slashes on Windows).
+  expect(result.diagnostics.some((item) => item.message.includes(hostPath(stageRoot)))).toBe(true);
   expect(await readFile(path.join(stageRoot, 'backups/changed/nested/page.txt'), 'utf8')).toBe(
     'old',
   );
@@ -1521,9 +1523,10 @@ test('published configuration is strictly validated and cannot redirect an exist
   const root = await temporary('published-configuration-');
   const committer = createOutputCommitter({ outputRoot: root });
   const candidate = snapshot([artifact()]);
+  // A published configuration spells its roots as the engine does (forward slashes on Windows).
   candidate.configuration = {
-    outputRoot: root,
-    cacheRoot: path.join(root, 'cache'),
+    outputRoot: hostPath(root),
+    cacheRoot: hostPath(path.join(root, 'cache')),
     assetDirectory: 'assets',
     themes: { light: 'github-light', dark: 'github-dark' },
     digest: candidate.artifacts[0].fingerprint.configurationDigest,
@@ -1536,7 +1539,7 @@ test('published configuration is strictly validated and cannot redirect an exist
   expect(committed.status).toBe('committed');
   for (const fields of [
     { outputRoot: 'relative' },
-    { outputRoot: path.join(root, 'other') },
+    { outputRoot: hostPath(path.join(root, 'other')) },
     { cacheRoot: 'relative' },
     { cacheRoot: root + '/..' },
     { assetDirectory: '../outside' },
@@ -1575,8 +1578,8 @@ test('canonical metadata accepts an ancestor alias but cannot authorize a symlin
   await symlink(physical, alias, 'dir');
   const candidate = snapshot([artifact()]);
   candidate.configuration = {
-    outputRoot: path.join(physical, 'output'),
-    cacheRoot: path.join(physical, 'cache'),
+    outputRoot: hostPath(path.join(physical, 'output')),
+    cacheRoot: hostPath(path.join(physical, 'cache')),
     assetDirectory: 'assets',
     themes: { light: 'light', dark: 'dark' },
     digest: candidate.artifacts[0].fingerprint.configurationDigest,

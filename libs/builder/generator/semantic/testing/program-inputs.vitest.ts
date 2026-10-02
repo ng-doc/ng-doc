@@ -1,6 +1,5 @@
 import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
 import { ts } from 'ts-morph';
 import { afterEach, expect, test } from 'vitest';
 
@@ -13,6 +12,7 @@ import {
   UNVERIFIABLE_MEMBERSHIP,
 } from '../program-inputs';
 import { createSemanticService } from '../semantic-service';
+import { hostPath, join } from './engine-paths';
 
 const directories: string[] = [];
 afterEach(() => {
@@ -23,7 +23,7 @@ afterEach(() => {
 type Files = Record<string, string>;
 
 function workspace(files: Files, tsConfig: string = 'tsconfig.json') {
-  const directory = realpathSync(mkdtempSync(join(tmpdir(), 'semantic-inputs-')));
+  const directory = hostPath(realpathSync(mkdtempSync(join(tmpdir(), 'semantic-inputs-'))));
   directories.push(directory);
   const write = (path: string, text: string) => {
     mkdirSync(join(directory, path, '..'), { recursive: true });
@@ -288,7 +288,7 @@ async function recordMembership(directory: string, configFile: string = 'tsconfi
 }
 
 function tree(files: Files): string {
-  const directory = realpathSync(mkdtempSync(join(tmpdir(), 'semantic-specs-')));
+  const directory = hostPath(realpathSync(mkdtempSync(join(tmpdir(), 'semantic-specs-'))));
   directories.push(directory);
   for (const [path, text] of Object.entries(files)) {
     mkdirSync(join(directory, path, '..'), { recursive: true });
@@ -550,7 +550,19 @@ test('property: generated layouts never reuse a result after TypeScript gains a 
 
 // ---- Escapes that survive recording, and TypeScript's case folding -----------------------------
 
-const SPECIAL = ['(', ')', '[', ']', '{', '}', '!', '+', '@', '|'];
+// `|` cannot occur in a Windows file name, so no file there can match a pattern with it.
+const SPECIAL = [
+  '(',
+  ')',
+  '[',
+  ']',
+  '{',
+  '}',
+  '!',
+  '+',
+  '@',
+  ...(process.platform === 'win32' ? [] : ['|']),
+];
 
 test.each([
   ...SPECIAL.map((character) => ({

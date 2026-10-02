@@ -23,6 +23,7 @@ import type {
   SearchRecord,
 } from '../contracts';
 import { refreshDependencies } from '../graph';
+import { hostPath } from '../kernel/paths';
 import { type CompilationOptions, createCompilationService } from './index';
 const cleanup: Array<() => unknown> = [];
 afterEach(async () => {
@@ -104,9 +105,10 @@ test('cold and fresh-runtime warm caches restore full artifacts/search/keywords/
   const f = fixture();
   const first = f.create();
   const cold = success(await compile(first));
+  // The published configuration carries the engine's spelling of the host's paths.
   expect(cold.configuration).toEqual({
-    outputRoot: f.options.defaults.outputRoot,
-    cacheRoot: f.options.defaults.cacheRoot,
+    outputRoot: hostPath(f.options.defaults.outputRoot),
+    cacheRoot: hostPath(f.options.defaults.cacheRoot),
     assetDirectory: 'assets',
     themes: { light: expect.any(String), dark: expect.any(String) },
     digest: expect.any(String),
@@ -284,7 +286,9 @@ test('malformed content fails without replacing last good and missing file repai
   );
   expect(failed.diagnostics.some((item) => item.severity === 'error')).toBe(true);
   expect(
-    failed.dependencies.some((item) => item.kind === 'existence' && item.path === markdown),
+    failed.dependencies.some(
+      (item) => item.kind === 'existence' && item.path === hostPath(markdown),
+    ),
   ).toBe(true);
   f.write('docs/guide/index.md', '# Recovered\n\nRecovered content.');
   const recovered = success(
@@ -320,7 +324,7 @@ test('failed attempts retain missing external include/import and empty external 
   expect(failedInclude.diagnostics.some((item) => item.severity === 'error')).toBe(true);
   expect(failedInclude.dependencies, JSON.stringify(failedInclude.diagnostics)).toContainEqual({
     kind: 'existence',
-    path: missingInclude,
+    path: hostPath(missingInclude),
     exists: false,
   });
   expect(failedInclude.dependencies).toContainEqual(
@@ -359,7 +363,7 @@ test('failed attempts retain missing external include/import and empty external 
   expect(failedConfig.diagnostics.some((item) => item.severity === 'error')).toBe(true);
   expect(failedConfig.dependencies).toContainEqual({
     kind: 'existence',
-    path: missingImport,
+    path: hostPath(missingImport),
     exists: false,
   });
   writeFileSync(missingImport, 'export const useCache = false;');
@@ -879,7 +883,7 @@ test('category metadata retains external snippet dependencies outside the TypeSc
   const category = cold.artifacts.find((item) => item.identity.role === 'category')!;
   expect(category.routes[0].metadata?.description).toContain('originalSnippet');
   expect(category.dependencies).toContainEqual(
-    expect.objectContaining({ kind: 'content', path: snippet }),
+    expect.objectContaining({ kind: 'content', path: hostPath(snippet) }),
   );
   f.write('snippets/example.txt', 'const changedSnippet = 2;');
   const changedResult = await compile(f.create(), 2, cold, [{ kind: 'update', path: snippet }]);
@@ -932,7 +936,7 @@ test('published configuration follows legacy outDir parent semantics and changes
   );
   const moved = success(await compile(service, 2, first, [{ kind: 'update', path: config }]));
   expect(moved.configuration?.outputRoot).toBe(
-    path.join(f.root, 'custom-parent', 'ng-doc', 'fixture'),
+    hostPath(path.join(f.root, 'custom-parent', 'ng-doc', 'fixture')),
   );
   expect(moved.configuration?.digest).not.toBe(first.configuration?.digest);
   expect(moved.revision).not.toBe(first.revision);
@@ -1002,8 +1006,9 @@ test('memoised observations never cross generations: changed files and bindings 
       .flatMap((item) => (item.kind === 'content' && item.path === file ? [item.digest] : []))[0];
   const guideOwner = (snapshot: ArtifactSnapshot) =>
     snapshot.artifacts.find((artifact) => artifact.usedKeywords.includes('Actual'))!.id;
-  const markdown = path.join(f.root, 'docs/guide/index.md');
-  const api = path.join(f.root, 'docs/api.ts');
+  // The engine's spelling: recorded dependency paths are compared with these.
+  const markdown = hostPath(path.join(f.root, 'docs/guide/index.md'));
+  const api = hostPath(path.join(f.root, 'docs/api.ts'));
   const first = success(await compile(service));
   const actual = keywordDigest(first, 'Actual');
   const guideBytes = contentDigest(first, markdown);

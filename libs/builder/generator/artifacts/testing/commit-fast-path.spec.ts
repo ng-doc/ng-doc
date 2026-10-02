@@ -27,6 +27,7 @@ import type {
   OutputManifest,
   PageArtifact,
 } from '../../contracts';
+import { forwardSlashes } from '../../kernel/paths';
 import { JsonArtifactCache, TransactionalOutputCommitter } from '..';
 
 // The namespace of a Node built-in cannot be spied on, so the committer and these specs share a
@@ -136,7 +137,8 @@ function observeFileSystem(root: string) {
     file: Parameters<typeof readFileOriginal>[0],
     ...rest: unknown[]
   ) => {
-    if (typeof file === 'string' && file.startsWith(root)) reads.push(path.relative(root, file));
+    if (typeof file === 'string' && file.startsWith(root))
+      reads.push(forwardSlashes(path.relative(root, file)));
     return (readFileOriginal as (...values: unknown[]) => unknown)(file, ...rest);
   }) as typeof readFileOriginal);
   vi.spyOn(fsPromises, 'realpath').mockImplementation(((
@@ -144,7 +146,7 @@ function observeFileSystem(root: string) {
     ...rest: unknown[]
   ) => {
     if (typeof file === 'string' && file.startsWith(root))
-      realpaths.push(path.relative(root, file));
+      realpaths.push(forwardSlashes(path.relative(root, file)));
     return (realpathOriginal as (...values: unknown[]) => unknown)(file, ...rest);
   }) as typeof realpathOriginal);
   return { reads, realpaths };
@@ -156,7 +158,7 @@ async function tree(root: string): Promise<Record<string, string>> {
     for (const entry of await readdir(directory, { withFileTypes: true })) {
       const file = path.join(directory, entry.name);
       if (entry.isDirectory()) await walk(file);
-      else result[path.relative(root, file)] = await readFile(file, 'utf8');
+      else result[forwardSlashes(path.relative(root, file))] = await readFile(file, 'utf8');
     }
   };
   await walk(root);

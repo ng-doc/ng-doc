@@ -11,6 +11,7 @@ import type {
   CompilationResult,
 } from '../contracts';
 import { FAST_START_FLAG, SHAPE_CLOSURE_FLAG } from '../kernel/flags';
+import { hostPath } from '../kernel/paths';
 import { resetClosureStores } from './closure-store';
 import { hash } from './common';
 import { FAST_START_MISMATCH, resetFastStarts, runtimeIdentity } from './fast-start';
@@ -166,8 +167,11 @@ test.each(['guide body edit', 'API JSDoc edit', 'page title edit (entry module)'
     await settle();
     const edited = await start(f);
     expect(edited.restored).toBe(false);
-    // The changed file is named, whichever check found it (a long reason is cut).
-    expect(edited.reason).toMatch(/^fast start: \/\S+/);
+    // The changed file is named, whichever check found it (a long reason is cut): a fixture path
+    // in the engine's spelling (`D:/...` on Windows).
+    const named = `fast start: ${hostPath(f.root)}/`;
+    expect(edited.reason).toMatch(/^fast start: \S+/);
+    expect(edited.reason?.slice(0, named.length)).toBe(named);
     expect(edited.reason).not.toContain('a page module');
     await settle();
     // The edited start recorded itself: the next start restores it.
@@ -298,7 +302,7 @@ function cacheEntries(f: Fixture): string[] {
     for (const entry of readdirSync(directory, { withFileTypes: true })) {
       const file = path.join(directory, entry.name);
       if (entry.isDirectory()) walk(file);
-      else if (path.dirname(file) !== f.path('cache')) files.push(file);
+      else if (hostPath(path.dirname(file)) !== f.path('cache')) files.push(file);
     }
   };
   walk(f.path('cache'));

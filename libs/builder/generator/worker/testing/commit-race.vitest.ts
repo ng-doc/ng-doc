@@ -18,6 +18,7 @@ import type {
   FileChange,
   FileEventSource,
 } from '../../contracts';
+import { hostPath } from '../../kernel/paths';
 import { createBuildSession, GeneratorBuildSession } from '../../session/build-session';
 import { createWorkerCompilationService } from '../index';
 
@@ -83,9 +84,10 @@ describe('a generation superseded after its commit', () => {
     roots.push(root);
     const outputRoot = join(root, 'out');
     mkdirSync(outputRoot);
+    // A published configuration spells its roots as the engine does (forward slashes on Windows).
     const configuration = {
-      outputRoot,
-      cacheRoot: join(root, 'cache'),
+      outputRoot: hostPath(outputRoot),
+      cacheRoot: hostPath(join(root, 'cache')),
       assetDirectory: 'assets',
       themes: { light: 'light', dark: 'dark' },
       digest: 'configuration',
@@ -267,9 +269,10 @@ export function createCompilationService({ probe, configuration }) {
 }
 `,
     );
+    // A published configuration spells its roots as the engine does (forward slashes on Windows).
     const configuration = {
-      outputRoot,
-      cacheRoot: join(root, 'cache'),
+      outputRoot: hostPath(outputRoot),
+      cacheRoot: hostPath(join(root, 'cache')),
       assetDirectory: 'assets',
       themes: { light: 'light', dark: 'dark' },
       digest: 'configuration',

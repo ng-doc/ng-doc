@@ -6,7 +6,17 @@ import path from 'node:path';
 import { afterEach, expect, test } from 'vitest';
 
 import type { DiscoveryRequest, DiscoverySnapshot } from '../../contracts';
+import { forwardSlashes, hostPath } from '../../kernel/paths';
 import { DiscoveryServiceImpl } from '..';
+
+/**
+ * `path.join` in the engine's spelling (forward slashes, drive letter kept), which every path the
+ * service records uses, so expected paths equal recorded ones on Windows too.
+ * @param parts The path segments.
+ */
+function join(...parts: string[]): string {
+  return forwardSlashes(path.join(...parts));
+}
 
 const roots: string[] = [];
 
@@ -19,12 +29,12 @@ afterEach(() => {
  * one (with a page and an API) and an unfiltered page.
  */
 function fixture(): { root: string; docs: string; request: DiscoveryRequest } {
-  const root = realpathSync(mkdtempSync(path.join(tmpdir(), 'ng-doc-only-for-tags-')));
+  const root = hostPath(realpathSync(mkdtempSync(path.join(tmpdir(), 'ng-doc-only-for-tags-'))));
   roots.push(root);
-  const docs = path.join(root, 'docs');
+  const docs = join(root, 'docs');
   const write = (file: string, content: string) => {
-    mkdirSync(path.dirname(path.join(root, file)), { recursive: true });
-    writeFileSync(path.join(root, file), content);
+    mkdirSync(path.dirname(join(root, file)), { recursive: true });
+    writeFileSync(join(root, file), content);
   };
   write('tsconfig.json', JSON.stringify({ compilerOptions: { target: 'ES2022' } }));
   write('ng-doc.config.ts', `const config = { docsPath: 'docs' }; export default config;\n`);
@@ -62,12 +72,12 @@ function fixture(): { root: string; docs: string; request: DiscoveryRequest } {
       generation: 1,
       projectId: 'tags',
       workspaceRoot: root,
-      configFile: path.join(root, 'ng-doc.config.ts'),
+      configFile: join(root, 'ng-doc.config.ts'),
       defaults: {
         docsRoot: docs,
-        tsConfig: path.join(root, 'tsconfig.json'),
-        outputRoot: path.join(root, 'generated'),
-        cacheRoot: path.join(root, '.cache'),
+        tsConfig: join(root, 'tsconfig.json'),
+        outputRoot: join(root, 'generated'),
+        cacheRoot: join(root, '.cache'),
       },
       changes: [],
     },
@@ -106,16 +116,16 @@ test('leaves out filtered pages and categories with everything under them', asyn
       )
     ).dependencies,
   );
-  expect(paths).toContain(path.join(f.docs, 'develop/ng-doc.page.ts'));
-  expect(paths).toContain(path.join(f.docs, 'develop/index.md'));
+  expect(paths).toContain(join(f.docs, 'develop/ng-doc.page.ts'));
+  expect(paths).toContain(join(f.docs, 'develop/index.md'));
   const develop = {
     title: 'Develop',
-    source: path.join(f.docs, 'develop/ng-doc.page.ts'),
+    source: join(f.docs, 'develop/ng-doc.page.ts'),
     onlyForTags: ['development'],
   };
   const beta = {
     title: 'Beta',
-    source: path.join(f.docs, 'beta/ng-doc.category.ts'),
+    source: join(f.docs, 'beta/ng-doc.category.ts'),
     onlyForTags: ['preview', 'development'],
   };
   // Sorted by source.
@@ -123,21 +133,21 @@ test('leaves out filtered pages and categories with everything under them', asyn
     {
       kind: 'category',
       title: 'Nested',
-      source: path.join(f.docs, 'beta/nested/ng-doc.category.ts'),
+      source: join(f.docs, 'beta/nested/ng-doc.category.ts'),
       absoluteRoute: 'beta/nested',
       filteredBy: beta,
     },
     {
       kind: 'guide',
       title: 'Nested page',
-      source: path.join(f.docs, 'beta/nested/page/ng-doc.page.ts'),
+      source: join(f.docs, 'beta/nested/page/ng-doc.page.ts'),
       absoluteRoute: 'beta/nested/page',
       filteredBy: beta,
     },
     {
       kind: 'api',
       title: 'Beta API',
-      source: path.join(f.docs, 'beta/ng-doc.api.ts'),
+      source: join(f.docs, 'beta/ng-doc.api.ts'),
       absoluteRoute: 'beta/api',
       filteredBy: beta,
     },
@@ -220,9 +230,9 @@ test('changes the configuration digest only when the tags select other entries',
 test('a project without onlyForTags has the same digest for every tag set', async () => {
   const f = fixture();
   for (const file of ['develop/ng-doc.page.ts', 'beta/ng-doc.category.ts']) {
-    rmSync(path.join(f.docs, file));
+    rmSync(join(f.docs, file));
   }
-  rmSync(path.join(f.docs, 'beta'), { recursive: true, force: true });
+  rmSync(join(f.docs, 'beta'), { recursive: true, force: true });
   const digests = new Set<string | undefined>();
   for (const tags of [undefined, ['production'], ['development'], ['a', 'b']]) {
     const found = await discover(f.request, tags);
@@ -236,7 +246,7 @@ test('a project without onlyForTags has the same digest for every tag set', asyn
 test('accepts a single string like the legacy engine and ignores filtered invalid entries', async () => {
   const f = fixture();
   writeFileSync(
-    path.join(f.docs, 'develop/ng-doc.page.ts'),
+    join(f.docs, 'develop/ng-doc.page.ts'),
     // An empty title under a filter is not validated: the entry does not exist in production.
     `const Page = { title: '', mdFile: './missing.md', onlyForTags: 'development' };\nexport default Page;\n`,
   );
@@ -250,7 +260,7 @@ test('accepts a single string like the legacy engine and ignores filtered invali
 test('rejects invalid onlyForTags values and invalid host tags', async () => {
   const f = fixture();
   writeFileSync(
-    path.join(f.docs, 'develop/ng-doc.page.ts'),
+    join(f.docs, 'develop/ng-doc.page.ts'),
     `const Page = { title: 'Develop', mdFile: './index.md', onlyForTags: ['development', 3] };\nexport default Page;\n`,
   );
   const invalidEntry = await discover(f.request, ['development']);
@@ -268,7 +278,7 @@ test('treats null and an empty string as no filter, like the legacy engine, and 
   const f = fixture();
   const page = (onlyForTags: string) =>
     writeFileSync(
-      path.join(f.docs, 'develop/ng-doc.page.ts'),
+      join(f.docs, 'develop/ng-doc.page.ts'),
       `const Page = { title: 'Develop', mdFile: './index.md', onlyForTags: ${onlyForTags} };\nexport default Page;\n`,
     );
   for (const value of ['null', "''"]) {
@@ -290,7 +300,7 @@ test('treats null and an empty string as no filter, like the legacy engine, and 
 
 test('names a left-out entry even when its category import or front matter is broken', async () => {
   const f = fixture();
-  writeFileSync(path.join(f.docs, 'develop/index.md'), '---\nkeyword: [unclosed\n---\n');
+  writeFileSync(join(f.docs, 'develop/index.md'), '---\nkeyword: [unclosed\n---\n');
   const broken = await discover(f.request, ['production']);
   expect(broken.codes).toEqual([]);
   const develop = broken.snapshot?.filtered?.find((entry) => entry.title === 'Develop');

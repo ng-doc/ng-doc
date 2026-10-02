@@ -6,6 +6,7 @@ import { afterEach, expect, test } from 'vitest';
 import type { CompilationRequest, Dependency, EntryDescriptor, PageArtifact } from '../contracts';
 import { stampOf } from '../graph';
 import { UnitIndex } from '../graph/unit-index';
+import { hostPath } from '../kernel/paths';
 import type { CompilationOptions } from './index';
 import type { CommittedGeneration, GenerationRetention } from './retention';
 import { type Observation, type RetainedBuild, TargetedGeneration, targetedMode } from './targeted';
@@ -24,8 +25,11 @@ const content = (file: string): Dependency => ({ kind: 'content', path: file, di
 function site() {
   const root = realpathSync(mkdtempSync(path.join(tmpdir(), 'ngdoc-targeted-')));
   roots.push(root);
+  // Recorded paths, observations and changes are in the engine's spelling, as a generation records
+  // them and the session reports them.
+  const engine = (name: string) => hostPath(path.join(root, name));
   const file = (name: string) => {
-    const target = path.join(root, name);
+    const target = engine(name);
     mkdirSync(path.dirname(target), { recursive: true });
     writeFileSync(target, name);
     return target;
@@ -34,8 +38,8 @@ function site() {
     page: file('docs/a/ng-doc.page.ts'),
     md: file('docs/a/index.md'),
     include: file('docs/include.md'),
-    missing: path.join(root, 'docs/missing.md'),
-    directory: path.join(root, 'docs/a'),
+    missing: engine('docs/missing.md'),
+    directory: engine('docs/a'),
     unrecorded: file('docs/unrecorded.md'),
     program: file('docs/a/helper.ts'),
   };

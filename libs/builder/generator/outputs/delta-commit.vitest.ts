@@ -39,6 +39,7 @@ import type {
   FileChange,
   FileEventSource,
 } from '../contracts';
+import { forwardSlashes, hostPath } from '../kernel/paths';
 import { type GeneratorBuildSession, createBuildSession } from '../session/build-session';
 
 /** Fault injection on the committer's stage removal and a record of its output reads. */
@@ -60,9 +61,11 @@ vi.mock('node:fs/promises', async (importOriginal) => {
       return actual.rm(...args);
     },
     readFile: (async (...args: Parameters<typeof actual.readFile>) => {
-      const file = String(args[0]);
-      if (hooks.outputRoot && file.startsWith(`${hooks.outputRoot}/`))
-        hooks.reads.push(path.relative(hooks.outputRoot, file));
+      // The committer reads native paths (backslashes on Windows); compare and record them with
+      // forward slashes.
+      const file = forwardSlashes(String(args[0]));
+      if (hooks.outputRoot && file.startsWith(`${forwardSlashes(hooks.outputRoot)}/`))
+        hooks.reads.push(forwardSlashes(path.relative(hooks.outputRoot, file)));
       return actual.readFile(...args);
     }) as typeof actual.readFile,
   };
@@ -267,7 +270,8 @@ async function run(delta: boolean): Promise<Step[]> {
     await until(() => results.length >= from + count && !session.inspect().building);
     await record(label, from);
   };
-  const update = (file: string): FileChange => ({ kind: 'update', path: file });
+  // A watcher reports the engine's spelling of a path (forward slashes on Windows).
+  const update = (file: string): FileChange => ({ kind: 'update', path: hostPath(file) });
 
   try {
     await start();

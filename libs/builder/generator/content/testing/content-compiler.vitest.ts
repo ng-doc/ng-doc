@@ -21,6 +21,7 @@ import type {
   TemplateEvaluationService,
   TemplateRequest,
 } from '../../contracts';
+import { hostPath } from '../../kernel/paths';
 import { GeneratorContentCompiler, linkedKeywordDigest } from '../content-compiler';
 
 // The generator loads the HTML utilities lazily (see content-compiler.ts); so does this test.
@@ -1045,7 +1046,9 @@ describe('GeneratorContentCompiler', () => {
     expect(result.value?.html).toContain('>keep</span>');
     expect(result.value?.html).not.toContain('removeOne');
     expect(result.dependencies).toEqual(
-      expect.arrayContaining([expect.objectContaining({ kind: 'content', path: snippet })]),
+      expect.arrayContaining([
+        expect.objectContaining({ kind: 'content', path: hostPath(snippet) }),
+      ]),
     );
   });
 
@@ -1125,7 +1128,9 @@ describe('GeneratorContentCompiler', () => {
     );
     expect(recovered.value?.html).toContain('recovered');
     expect(recovered.dependencies).toEqual(
-      expect.arrayContaining([expect.objectContaining({ kind: 'content', path: snippet })]),
+      expect.arrayContaining([
+        expect.objectContaining({ kind: 'content', path: hostPath(snippet) }),
+      ]),
     );
   });
 
@@ -1784,13 +1789,13 @@ describe('GeneratorContentCompiler', () => {
     expect(result.value?.html).toContain('three');
     expect(result.value?.html).not.toContain('remove');
     const snippetDependencies = result.dependencies.filter(
-      (item) => 'path' in item && item.path === snippet,
+      (item) => 'path' in item && item.path === hostPath(snippet),
     );
     expect(snippetDependencies).toHaveLength(3);
     expect(snippetDependencies).toEqual(
       Array(3).fill({
         kind: 'content',
-        path: snippet,
+        path: hostPath(snippet),
         digest: createHash('sha256').update(wholeSnippet).digest('hex'),
       }),
     );
@@ -2098,7 +2103,7 @@ describe('GeneratorContentCompiler', () => {
       new AbortController().signal,
     );
     expect(result.diagnostics).toContainEqual(
-      expect.objectContaining({ code: 'CONTENT_SNIPPET_READ', source: { path: folder } }),
+      expect.objectContaining({ code: 'CONTENT_SNIPPET_READ', source: { path: hostPath(folder) } }),
     );
     expect(result.value?.html).toContain('fallback');
   });

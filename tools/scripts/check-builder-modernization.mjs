@@ -244,6 +244,14 @@ export default async (environment) => {
   );
 }
 
+/**
+ * A file's path relative to the repository root with forward slashes, so a boundary violation reads
+ * the same on every OS. `rules` is a test port (`path.win32`).
+ */
+export function repositoryPath(root, file, rules = path) {
+  return rules.relative(root, file).split(rules.sep).join('/');
+}
+
 export async function sourceBoundaryCheck(root = ROOT) {
   const ts = require('typescript');
   const base = path.join(root, 'libs/builder/generator');
@@ -352,17 +360,17 @@ export async function sourceBoundaryCheck(root = ROOT) {
             node.name.text === 'require'))
       )
         layering.push(
-          `${path.relative(root, file)}:${source.getLineAndCharacterOfPosition(node.getStart()).line + 1}: ${node.getText()}`,
+          `${repositoryPath(root, file)}:${source.getLineAndCharacterOfPosition(node.getStart()).line + 1}: ${node.getText()}`,
         );
       if (target && (ts.isStringLiteral(target) || ts.isNoSubstitutionTemplateLiteral(target))) {
-        const where = `${path.relative(root, file)}:${source.getLineAndCharacterOfPosition(target.getStart()).line + 1}: ${target.text}`;
+        const where = `${repositoryPath(root, file)}:${source.getLineAndCharacterOfPosition(target.getStart()).line + 1}: ${target.text}`;
         if (privateImport.test(target.text)) violations.push(where);
         if (file.startsWith(progressDir) && !progressAllows(node, target.text, file))
           layering.push(where);
         if (file.startsWith(kernelDir) && !kernelAllows(node, target.text, file)) leaf.push(where);
       } else if (target && (file.startsWith(progressDir) || file.startsWith(kernelDir)))
         (file.startsWith(progressDir) ? layering : leaf).push(
-          `${path.relative(root, file)}:${source.getLineAndCharacterOfPosition(target.getStart()).line + 1}: <computed specifier>`,
+          `${repositoryPath(root, file)}:${source.getLineAndCharacterOfPosition(target.getStart()).line + 1}: <computed specifier>`,
         );
       ts.forEachChild(node, visit);
     }
@@ -767,7 +775,8 @@ export async function runPlan({
   return results;
 }
 
-export function parseArgs(args) {
+/** `platform` is a test port: the posix lane is refused on Windows. */
+export function parseArgs(args, { platform = process.platform } = {}) {
   const options = { groups: [], lane: 'core' };
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
@@ -804,7 +813,7 @@ export function parseArgs(args) {
     else if (arg === '--merge-coverage') options.mergeFrom = value;
     else options.timeoutMs = Number(value);
   }
-  const plan = commandPlan(options);
+  const plan = commandPlan({ ...options, platform });
   if (!options.logDir) throw new Error('--log-dir is required for execution');
   if (
     options.timeoutMs !== undefined &&

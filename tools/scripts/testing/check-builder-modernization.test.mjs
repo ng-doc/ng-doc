@@ -14,6 +14,7 @@ import {
   isMain,
   parseArgs,
   prepareConfig,
+  repositoryPath,
   ROOT,
   runCommand,
   runPlan,
@@ -157,7 +158,33 @@ test('unknown groups, lanes, CLI arguments and empty values fail rather than pas
     commandPlan({ groups: ['graph'] }).map((entry) => entry.id),
     ['graph'],
   );
-  assert.equal(parseArgs(['--log-dir', 'x', '--lane', 'posix']).lane, 'posix');
+  assert.equal(
+    parseArgs(['--log-dir', 'x', '--lane', 'posix'], { platform: 'linux' }).lane,
+    'posix',
+  );
+  assert.throws(
+    () => parseArgs(['--log-dir', 'x', '--lane', 'posix'], { platform: 'win32' }),
+    /Windows is unsupported/,
+  );
+});
+
+test('boundary violations name files with forward slashes on every OS', () => {
+  assert.equal(
+    repositoryPath(
+      'D:\\a\\ng-doc',
+      'D:\\a\\ng-doc\\libs\\builder\\generator\\kernel\\bad.ts',
+      path.win32,
+    ),
+    'libs/builder/generator/kernel/bad.ts',
+  );
+  assert.equal(
+    repositoryPath(
+      '/work/ng-doc',
+      '/work/ng-doc/libs/builder/generator/progress/bad.ts',
+      path.posix,
+    ),
+    'libs/builder/generator/progress/bad.ts',
+  );
 });
 
 test('private import audit parses imports rather than matching comments/spec strings or adapters', async (t) => {

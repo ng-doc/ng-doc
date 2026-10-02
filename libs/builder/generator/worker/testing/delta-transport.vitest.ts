@@ -29,6 +29,7 @@ import type {
   JsonValue,
   OutputCommitter,
 } from '../../contracts';
+import { hostPath } from '../../kernel/paths';
 import { createBuildSession } from '../../session/build-session';
 import {
   type DeltaTransportStatistics,
@@ -194,7 +195,8 @@ interface Recorded {
 }
 
 const read = async (file: string) => readFile(at(file), 'utf8');
-const update = (file: string): FileChange => ({ kind: 'update', path: at(file) });
+/** A watcher change, in the engine's spelling of the path (forward slashes on Windows). */
+const update = (file: string): FileChange => ({ kind: 'update', path: hostPath(at(file)) });
 
 interface Controls {
   failCommit(): void;
@@ -243,7 +245,9 @@ const steps: Step[] = [
     apply: async () => [
       {
         kind: 'create',
-        path: await put('docs/api-extra.ts', '/** Extra declaration. */ export class Extra {}'),
+        path: hostPath(
+          await put('docs/api-extra.ts', '/** Extra declaration. */ export class Extra {}'),
+        ),
       },
     ],
     expect: 'success',
@@ -252,7 +256,7 @@ const steps: Step[] = [
     name: 'API file deleted',
     apply: async () => {
       await unlink(at('docs/api-extra.ts'));
-      return [{ kind: 'delete', path: at('docs/api-extra.ts') }];
+      return [{ kind: 'delete', path: hostPath(at('docs/api-extra.ts')) }];
     },
     expect: 'success',
   },

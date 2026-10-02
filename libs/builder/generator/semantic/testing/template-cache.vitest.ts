@@ -1,11 +1,11 @@
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
 import nunjucks from 'nunjucks';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 
 import { digest, TrackedFiles } from '../dependencies';
 import { renderApiTemplate } from '../rendering';
+import { join } from './engine-paths';
 
 let directory: string;
 beforeEach(() => {

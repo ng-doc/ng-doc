@@ -24,6 +24,8 @@ import {
   type RouteRecord,
   GENERATOR_SCHEMA_VERSION,
 } from '../contracts';
+import { hostPath } from '../kernel/paths';
+import { projectWatchInputs } from '../session/watch-inputs';
 import {
   type AggregateRequest,
   type PageAssemblyRequest,
@@ -1137,6 +1139,9 @@ describe('OutputAssembler diagnostics and dependencies', () => {
     expect(found.dependencies.every((item) => item.kind === 'content')).toBe(true);
     for (const dependency of found.dependencies) {
       if (dependency.kind !== 'content') continue;
+      // Recorded with forward slashes on every OS: the session rejects a dependency path with a
+      // backslash, so a native Windows path here fails every build.
+      expect(dependency.path).toBe(hostPath(dependency.path));
       expect(dependency.digest).toBe(
         createHash('sha256').update(readFileSync(dependency.path, 'utf8')).digest('hex'),
       );
@@ -1149,6 +1154,9 @@ describe('OutputAssembler diagnostics and dependencies', () => {
     expect(missing.dependencies).toHaveLength(8);
     expect(missing.dependencies.every((item) => item.kind === 'existence' && !item.exists)).toBe(
       true,
+    );
+    expect(projectWatchInputs([...found.dependencies, ...missing.dependencies]).files).toHaveLength(
+      16,
     );
     expect(missing.diagnostics).toHaveLength(8);
   });

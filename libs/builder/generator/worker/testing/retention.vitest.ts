@@ -16,6 +16,7 @@ import type {
   OutputCommitter,
   RetainedCompilation,
 } from '../../contracts';
+import { hostPath } from '../../kernel/paths';
 import { createBuildSession } from '../../session/build-session';
 import { createWorkerCompilationService } from '../index';
 import { createRuntimeRetention } from '../protocol';
@@ -358,7 +359,8 @@ async function run(
       failNext = step.failCommit === true;
       const changed = await step.apply(put);
       const before = results.length;
-      emit([{ kind: 'update', path: changed }]);
+      // A watcher reports the engine's spelling of the path (forward slashes on Windows).
+      emit([{ kind: 'update', path: hostPath(changed) }]);
       await expect.poll(() => results.length, { timeout: 60_000, interval: 20 }).toBe(before + 1);
       const result = results.at(-1)!;
       expect(result.status, step.name).toBe(step.failCommit ? 'failure' : 'success');

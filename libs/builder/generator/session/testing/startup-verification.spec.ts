@@ -1,9 +1,7 @@
 /** @vitest-environment node */
 
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { type Mock, afterEach, describe, expect, it, vi } from 'vitest';
 
 import type {
@@ -17,27 +15,35 @@ import type {
 import { type SessionOptions, createBuildSession, GeneratorBuildSession } from '../build-session';
 import * as verification from '../input-verification';
 import { inputsUnchanged, physicalInputs } from '../input-verification';
-import { compilation, deferred, Events, harness, until } from './support';
+import {
+  compilation,
+  deferred,
+  Events,
+  harness,
+  hostJoin,
+  temporaryDirectory,
+  until,
+} from './support';
 
 const digest = (value: string) => createHash('sha256').update(value).digest('hex');
 
 /** A native workspace whose compiler reports the real filesystem observations it made. */
 function workspace() {
-  const root = mkdtempSync(join(tmpdir(), 'ngdoc-startup-'));
-  const docs = join(root, 'docs');
-  const output = join(root, 'generated');
-  const cache = join(root, 'cache');
+  const root = temporaryDirectory('ngdoc-startup-');
+  const docs = hostJoin(root, 'docs');
+  const output = hostJoin(root, 'generated');
+  const cache = hostJoin(root, 'cache');
   mkdirSync(docs, { recursive: true });
-  const page = join(docs, 'page.md');
-  const missing = join(docs, 'missing.md');
+  const page = hostJoin(docs, 'page.md');
+  const missing = hostJoin(docs, 'missing.md');
   writeFileSync(page, 'initial body');
   const compile = vi.fn(
     async (request: CompilationRequest, _signal: AbortSignal): Promise<CompilationResult> => {
       const body = existsSync(page) ? readFileSync(page, 'utf8') : '<deleted>';
       const members = ['docs/page.md', 'docs/extra.md', 'generated/index.ts']
-        .map((file) => join(root, file))
+        .map((file) => hostJoin(root, file))
         .filter((file) => existsSync(file));
-      const generatedIndex = join(output, 'index.ts');
+      const generatedIndex = hostJoin(output, 'index.ts');
       const dependencies: Dependency[] = [
         existsSync(page)
           ? { kind: 'content', path: page, digest: digest(body) }
@@ -96,8 +102,8 @@ describe('post-subscription startup verification', () => {
     const built = await s.buildOnce({ mode: 'development' });
     expect(built).toMatchObject({ status: 'success', generation: 1 });
     // Owned-root membership that the compiler did not observe does not disqualify the baseline.
-    mkdirSync(join(output, 'guides'), { recursive: true });
-    writeFileSync(join(output, 'guides', 'page.ts'), 'export {};');
+    mkdirSync(hostJoin(output, 'guides'), { recursive: true });
+    writeFileSync(hostJoin(output, 'guides', 'page.ts'), 'export {};');
     const events: BuildEvent[] = [];
     const source = new Events();
     const watch = await s.watch(source, (event) => events.push(event));
@@ -171,13 +177,13 @@ describe('post-subscription startup verification', () => {
     ['a created missing input', (w: ReturnType<typeof workspace>) => writeFileSync(w.missing, 'x')],
     [
       'a new glob member',
-      (w: ReturnType<typeof workspace>) => writeFileSync(join(w.docs, 'extra.md'), 'x'),
+      (w: ReturnType<typeof workspace>) => writeFileSync(hostJoin(w.docs, 'extra.md'), 'x'),
     ],
     [
       'an owned output the compiler read',
       (w: ReturnType<typeof workspace>) => {
         mkdirSync(w.output, { recursive: true });
-        writeFileSync(join(w.output, 'index.ts'), 'export {};');
+        writeFileSync(hostJoin(w.output, 'index.ts'), 'export {};');
       },
     ],
   ])(
@@ -477,16 +483,16 @@ describe('input verification', () => {
   });
 
   it('compares every chunk and reports scan failures and changed membership', async () => {
-    const root = mkdtempSync(join(tmpdir(), 'ngdoc-inputs-'));
+    const root = temporaryDirectory('ngdoc-inputs-');
     roots.push(root);
     const files = Array.from({ length: 150 }, (_, index) => {
-      const file = join(root, `file-${index}.md`);
+      const file = hostJoin(root, `file-${index}.md`);
       writeFileSync(file, `body ${index}`);
       return { kind: 'content' as const, path: file, digest: digest(`body ${index}`) };
     });
-    const owned = join(root, 'owned');
+    const owned = hostJoin(root, 'owned');
     mkdirSync(owned);
-    writeFileSync(join(owned, 'out.md'), 'x');
+    writeFileSync(hostJoin(owned, 'out.md'), 'x');
     const members = files.map((file) => file.path);
     const glob = { kind: 'glob' as const, root, include: ['**/*.md'], exclude: [], members };
     expect(await inputsUnchanged([...files, glob], [owned])).toBe(true);
@@ -494,7 +500,10 @@ describe('input verification', () => {
     writeFileSync(files[140].path, 'changed');
     expect(await inputsUnchanged(files, [owned])).toBe(false);
     expect(
-      await inputsUnchanged([{ kind: 'existence', path: join(root, 'absent'), exists: true }], []),
+      await inputsUnchanged(
+        [{ kind: 'existence', path: hostJoin(root, 'absent'), exists: true }],
+        [],
+      ),
     ).toBe(false);
     expect(
       await inputsUnchanged(

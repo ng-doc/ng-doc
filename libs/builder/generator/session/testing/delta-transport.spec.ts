@@ -1,9 +1,7 @@
 /** @vitest-environment node */
 
 import { createHash } from 'node:crypto';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type {
@@ -19,7 +17,15 @@ import type {
   Diagnostic,
 } from '../../contracts';
 import { type SessionOptions, createBuildSession, GeneratorBuildSession } from '../build-session';
-import { committed, compilation, Events, harness, until } from './support';
+import {
+  committed,
+  compilation,
+  Events,
+  harness,
+  hostJoin,
+  temporaryDirectory,
+  until,
+} from './support';
 
 /**
  * With a compiler that acknowledges commits (a long-lived worker with the delta transport), a
@@ -265,10 +271,10 @@ describe('delta transport', () => {
   });
 
   it('primes with the frozen committed snapshot itself, which the first edit passes again', async () => {
-    const root = mkdtempSync(join(tmpdir(), 'ngdoc-delta-session-'));
+    const root = temporaryDirectory('ngdoc-delta-session-');
     roots.push(root);
-    mkdirSync(join(root, 'docs'), { recursive: true });
-    const page = join(root, 'docs/page.md');
+    mkdirSync(hostJoin(root, 'docs'), { recursive: true });
+    const page = hostJoin(root, 'docs/page.md');
     writeFileSync(page, 'body');
     const { s, requests, compileWith, acknowledgements } = setup();
     compileWith(async (request) => {

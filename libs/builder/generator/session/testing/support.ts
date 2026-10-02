@@ -1,3 +1,6 @@
+import { mkdtempSync, realpathSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 import { expect, vi } from 'vitest';
 
 import type {
@@ -12,6 +15,26 @@ import type {
   FileChange,
   FileEventSource,
 } from '../../contracts';
+import { hostPath } from '../../kernel/paths';
+
+/**
+ * `path.join` in the engine's spelling of a host path (resolved, forward slashes, drive letter
+ * kept). Every path a compiler records and a watcher reports has this form, and
+ * `projectWatchInputs` rejects a native Windows path, so a fake compiler or event source must
+ * spell its paths this way to behave as the real ones do on every platform.
+ */
+export function hostJoin(...parts: string[]): string {
+  return hostPath(path.join(...parts));
+}
+
+/**
+ * A new directory below the system temporary directory, in the engine's spelling. With `real`, its
+ * symlinks are resolved first (macOS spells the temporary directory `/var`, really `/private/var`).
+ */
+export function temporaryDirectory(prefix: string, real: boolean = false): string {
+  const directory = mkdtempSync(path.join(tmpdir(), prefix));
+  return hostPath(real ? realpathSync(directory) : directory);
+}
 
 export function deferred<T>() {
   let resolve!: (value: T) => void;

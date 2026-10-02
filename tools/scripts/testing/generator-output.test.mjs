@@ -83,6 +83,19 @@ function faultyFs({ rename, rm: remove } = {}) {
 /** Owner options for a pid whose process has since exited (the build crashed or was killed). */
 const exited = { alive: () => false };
 
+/**
+ * A host identity under which an owner can be proven dead (a boot id and no pid namespaces, as on
+ * macOS). Windows reports neither, so on the real host identity no owner is ever provable there and
+ * every root is kept; tests of the recovery proof inject this identity to run on every OS.
+ */
+const PROVABLE = Object.freeze({
+  host: os.hostname(),
+  boot: 'test-boot',
+  pidNamespace: 'host',
+  bootedAt: null,
+});
+const provableHost = { identity: PROVABLE };
+
 async function seedStaging(base, name, owner, previous) {
   const root = path.join(base, name);
   await mkdir(path.join(root, 'output'), { recursive: true });
@@ -92,6 +105,10 @@ async function seedStaging(base, name, owner, previous) {
       await put(path.join(root, 'previous', file), text);
   return root;
 }
+
+/** An owner record written under {@link PROVABLE}. */
+const provableRecord = (output, overrides = {}) =>
+  ownerRecord(output, { ...PROVABLE, ...overrides });
 
 function ownerRecord(output, overrides = {}) {
   return {
@@ -148,7 +165,10 @@ test('the owner record names this process, its start time, boot, pid namespace a
   assert.match(owner.token, /^[0-9a-f]{32}$/);
   assert.equal(owner.host, os.hostname());
   assert.equal(owner.started, processStartTime(process.pid));
-  assert.equal(ownerState(owner), 'live');
+  // Windows reports no boot id or pid namespace, so no owner (not even this live one) is provable
+  // there: its roots are kept, never removed.
+  assert.equal(ownerState(owner), process.platform === 'win32' ? 'unknown' : 'live');
+  assert.equal(ownerState({ ...owner, ...PROVABLE }, provableHost), 'live');
 });
 
 test('a successful build replaces the whole output: deleted and renamed files do not survive', async (t) => {
@@ -262,7 +282,7 @@ test('a failure to remove the staging root after a successful swap is a warning,
       await put(path.join(staged, 'contracts.js'), 'next\n');
       return 'published';
     },
-    { fs, warn, ...noSleep },
+    { fs, warn, ...noSleep, owner: provableHost },
   );
   assert.equal(result, 'published');
   assert.equal(await readFile(path.join(output, 'contracts.js'), 'utf8'), 'next\n');
@@ -276,7 +296,7 @@ test('a failure to remove the staging root after a successful swap is a warning,
     output,
     async ({ output: staged }) => put(path.join(staged, 'contracts.js'), 'third\n'),
     {
-      owner: exited,
+      owner: { ...provableHost, ...exited },
     },
   );
   assert.deepEqual(await staging(base), []);
@@ -378,6 +398,7 @@ test('a failed rollback keeps the previous output, reports both errors, and the 
       fs,
       warn,
       ...noSleep,
+      owner: provableHost,
     },
   ).then(
     () => assert.fail('expected a failure'),
@@ -408,7 +429,7 @@ test('a failed rollback keeps the previous output, reports both errors, and the 
       async () => {
         throw new Error('next build fails');
       },
-      { owner: exited, warn: recovered.warn },
+      { owner: { ...provableHost, ...exited }, warn: recovered.warn },
     ),
     /next build fails/,
   );
@@ -421,7 +442,7 @@ test('a failed rollback keeps the previous output, reports both errors, and the 
 test('a crash inside the swap window never loses the output, even if the next build fails', async (t) => {
   const { base, output } = await scratch(t);
   // State left by a build killed between rename(target -> previous) and rename(staged -> target).
-  await seedStaging(base, '.pkg.generator.staging-2147483646-crash', ownerRecord(output), {
+  await seedStaging(base, '.pkg.generator.staging-2147483646-crash', provableRecord(output), {
     'contracts.js': 'last good\n',
   });
   const { warn, warnings } = quiet();
@@ -431,7 +452,7 @@ test('a crash inside the swap window never loses the output, even if the next bu
       async () => {
         throw new Error('guard');
       },
-      { warn },
+      { warn, owner: provableHost },
     ),
     /guard/,
   );
@@ -714,41 +735,44 @@ test('a real child process is live while it runs, dead once it exits, and a reus
 
 test('recovery removes only provably dead roots of this output', async (t) => {
   const { base, output } = await scratch(t);
-  const identity = hostIdentity();
   const dead = await seedStaging(
     base,
     '.pkg.generator.staging-2147483646-dead',
-    ownerRecord(output),
+    provableRecord(output),
   );
   const renamedHost = await seedStaging(
     base,
     '.pkg.generator.staging-2147483646-renamed',
-    ownerRecord(output, { host: `${identity.host}-other` }),
+    provableRecord(output, { host: `${PROVABLE.host}-other` }),
   );
   const live = await seedStaging(
     base,
     `.pkg.generator.staging-${process.pid}-live`,
-    ownerRecord(output, { pid: process.pid, started: processStartTime(process.pid) }),
+    provableRecord(output, { pid: process.pid, started: processStartTime(process.pid) }),
   );
   const otherBoot = await seedStaging(
     base,
     '.pkg.generator.staging-2147483646-reboot',
-    ownerRecord(output, { boot: 'another-boot' }),
+    provableRecord(output, { boot: 'another-boot' }),
   );
   const unowned = await seedStaging(base, '.pkg.generator.staging-2147483646-unowned');
   const otherTarget = await seedStaging(
     base,
     '.pkg.generator.staging-2147483646-moved',
-    ownerRecord(path.join(base, 'elsewhere')),
+    provableRecord(path.join(base, 'elsewhere')),
   );
   const otherOutput = await seedStaging(
     base,
     '.pkg.other.staging-2147483646-abc',
-    ownerRecord(output),
+    provableRecord(output),
   );
-  const unrelated = await seedStaging(base, '.pkg.generator.staging-notapid', ownerRecord(output));
+  const unrelated = await seedStaging(
+    base,
+    '.pkg.generator.staging-notapid',
+    provableRecord(output),
+  );
   const { warn, warnings } = quiet();
-  const report = await recoverStaging(output, { warn });
+  const report = await recoverStaging(output, { warn, owner: provableHost });
   assert.deepEqual(report.removed.sort(), [
     '.pkg.generator.staging-2147483646-dead',
     '.pkg.generator.staging-2147483646-renamed',
@@ -786,23 +810,25 @@ test("a staging root whose owner record is no longer this build's is not removed
 });
 
 test('the output directory comes from --outdir, then NGDOC_GENERATOR_OUT_DIR, then the default', () => {
-  const root = '/workspace';
+  // Native absolute paths: on Windows `/workspace` resolves to `<drive>:\workspace`.
+  const root = path.resolve('/workspace');
+  const scratchDirectory = path.resolve('/scratch/gen');
   assert.equal(
     resolveOutputDirectory([], {}, root, 'dist/libs/builder/generator'),
-    '/workspace/dist/libs/builder/generator',
+    path.join(root, 'dist', 'libs', 'builder', 'generator'),
   );
   assert.equal(
-    resolveOutputDirectory([], { NGDOC_GENERATOR_OUT_DIR: '/scratch/gen' }, root, 'dist/x'),
-    '/scratch/gen',
+    resolveOutputDirectory([], { NGDOC_GENERATOR_OUT_DIR: scratchDirectory }, root, 'dist/x'),
+    scratchDirectory,
   );
   assert.equal(
     resolveOutputDirectory(
       ['--outdir', 'tmp/gen'],
-      { NGDOC_GENERATOR_OUT_DIR: '/scratch/gen' },
+      { NGDOC_GENERATOR_OUT_DIR: scratchDirectory },
       root,
       'dist/x',
     ),
-    '/workspace/tmp/gen',
+    path.join(root, 'tmp', 'gen'),
   );
   for (const argv of [['--outdir'], ['tmp/gen'], ['--out', 'x'], ['--outdir', '']])
     assert.throws(() => resolveOutputDirectory(argv, {}, root, 'dist/x'), /Usage/);

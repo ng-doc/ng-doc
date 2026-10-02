@@ -1,24 +1,22 @@
 /** @vitest-environment node */
 
 import { createHash } from 'node:crypto';
-import {
-  mkdirSync,
-  mkdtempSync,
-  readFileSync,
-  realpathSync,
-  rmSync,
-  unlinkSync,
-  writeFileSync,
-} from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { mkdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { BuildEvent, Dependency } from '../../contracts';
 import { type GeneratorBuildSession, createBuildSession } from '../build-session';
 import * as verification from '../input-verification';
 import { type PhysicalInput, reobservedChanges } from '../input-verification';
-import { compilation, deferred, Events, harness, until } from './support';
+import {
+  compilation,
+  deferred,
+  Events,
+  harness,
+  hostJoin,
+  temporaryDirectory,
+  until,
+} from './support';
 
 /**
  * A watch host re-observes only the inputs it has just begun watching: a generation may have read
@@ -31,7 +29,7 @@ const digest = (value: string) => createHash('sha256').update(value).digest('hex
 const roots: string[] = [];
 
 function temporary(): string {
-  const root = realpathSync(mkdtempSync(join(tmpdir(), 'ngdoc-reobserve-')));
+  const root = temporaryDirectory('ngdoc-reobserve-', true);
   roots.push(root);
   return root;
 }
@@ -44,16 +42,16 @@ afterEach(() => {
 describe('reobservedChanges', () => {
   it('compares only the recorded observations at the given paths', async () => {
     const root = temporary();
-    const docs = join(root, 'docs');
-    const owned = join(root, 'generated');
+    const docs = hostJoin(root, 'docs');
+    const owned = hostJoin(root, 'generated');
     mkdirSync(docs, { recursive: true });
     mkdirSync(owned, { recursive: true });
-    const same = join(docs, 'same.md');
-    const edited = join(docs, 'edited.md');
-    const removed = join(docs, 'removed.md');
-    const appeared = join(docs, 'appeared.md');
-    const elsewhere = join(root, 'elsewhere.md');
-    const output = join(owned, 'index.ts');
+    const same = hostJoin(docs, 'same.md');
+    const edited = hostJoin(docs, 'edited.md');
+    const removed = hostJoin(docs, 'removed.md');
+    const appeared = hostJoin(docs, 'appeared.md');
+    const elsewhere = hostJoin(root, 'elsewhere.md');
+    const output = hostJoin(owned, 'index.ts');
     for (const file of [same, edited, removed, elsewhere, output]) writeFileSync(file, 'before');
     const inputs: PhysicalInput[] = [
       { kind: 'content', path: same, digest: digest('before') },
@@ -87,10 +85,10 @@ describe('reobservedChanges', () => {
 
   it('re-scans globs at, below or above a path and reports unrecorded paths as changed', async () => {
     const root = temporary();
-    const docs = join(root, 'docs');
-    mkdirSync(join(docs, 'guide'), { recursive: true });
-    const member = join(docs, 'guide/page.md');
-    const created = join(docs, 'guide/created.md');
+    const docs = hostJoin(root, 'docs');
+    mkdirSync(hostJoin(docs, 'guide'), { recursive: true });
+    const member = hostJoin(docs, 'guide/page.md');
+    const created = hostJoin(docs, 'guide/created.md');
     writeFileSync(member, 'member');
     const glob: PhysicalInput = {
       kind: 'glob',
@@ -108,8 +106,8 @@ describe('reobservedChanges', () => {
     expect(await reobservedChanges([glob, read], [], [member])).toEqual([]);
     // So is any file below a glob root that nothing recorded, such as an include beside an API
     // scope rooted at the workspace root.
-    const include = join(root, 'shared/include.md');
-    mkdirSync(join(root, 'shared'));
+    const include = hostJoin(root, 'shared/include.md');
+    mkdirSync(hostJoin(root, 'shared'));
     writeFileSync(include, 'never recorded');
     expect(await reobservedChanges([glob], [], [include])).toEqual([
       { kind: 'update', path: include },
@@ -119,12 +117,12 @@ describe('reobservedChanges', () => {
     expect(await reobservedChanges([glob], [], [docs])).toEqual([
       { kind: 'create', path: created },
     ]);
-    expect(await reobservedChanges([glob], [], [join(root, '..')])).toEqual([
+    expect(await reobservedChanges([glob], [], [hostJoin(root, '..')])).toEqual([
       { kind: 'create', path: created },
     ]);
     // No recorded observation at all: reported, as an update or a delete.
-    const unknown = join(root, 'unknown.md');
-    const missing = join(root, 'missing.md');
+    const unknown = hostJoin(root, 'unknown.md');
+    const missing = hostJoin(root, 'missing.md');
     writeFileSync(unknown, 'x');
     expect(await reobservedChanges([], [], [missing, unknown])).toEqual([
       { kind: 'delete', path: missing },
@@ -141,8 +139,8 @@ describe('BuildSession.reconcileInputs and rescan', () => {
 
   async function watching() {
     const root = temporary();
-    const page = join(root, 'page.md');
-    const snippet = join(root, 'snippet.md');
+    const page = hostJoin(root, 'page.md');
+    const snippet = hostJoin(root, 'snippet.md');
     writeFileSync(page, 'page v1');
     writeFileSync(snippet, 'snippet v1');
     const observe = (file: string): Dependency => ({
@@ -200,7 +198,7 @@ describe('BuildSession.reconcileInputs and rescan', () => {
 
   it('compares the new inputs of a failed generation with what it read, not with the last commit', async () => {
     const root = temporary();
-    const snippet = join(root, 'snippet.md');
+    const snippet = hostJoin(root, 'snippet.md');
     writeFileSync(snippet, 'snippet v1');
     const h = harness();
     h.compile.mockImplementation(async (request) => {

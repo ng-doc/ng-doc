@@ -3,7 +3,7 @@ import { mkdtemp, mkdir, readFile, realpath, rm, writeFile } from 'node:fs/promi
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { build } from 'esbuild';
 import {
   assertRuntimeRequiresDeclared,
@@ -16,7 +16,8 @@ import {
   sourceInventory,
 } from '../build-analog-compatibility.mjs';
 
-const workspace = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../../..');
+// `fileURLToPath`, not `URL.pathname`: on Windows the pathname is `/D:/…`, which resolves to `D:\D:\…`.
+const workspace = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 
 async function importShim(packageJson, includeTsMorph) {
   const fixture = await mkdtemp(path.join(os.tmpdir(), 'ngdoc-analog-shim-'));

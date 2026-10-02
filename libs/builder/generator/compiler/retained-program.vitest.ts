@@ -24,6 +24,7 @@ import type {
   CompilationResult,
   FileChange,
 } from '../contracts';
+import { hostPath } from '../kernel/paths';
 import { createBuildSession } from '../session/build-session';
 import { type RetentionPromotion, createRuntimeRetention } from '../worker/protocol';
 import * as compilerModule from './index';
@@ -158,14 +159,17 @@ function fixture(options: { demo?: boolean; undeclared?: boolean } = {}): Fixtur
       : {}),
   };
   const resolve = (file: string) => path.join(root, file);
+  // Paths handed to the test (changes, expectations) in the engine's spelling, as the session's
+  // changes and every recorded dependency spell them; the filesystem accepts it on every OS.
+  const engine = (file: string) => hostPath(resolve(file));
   const write = (file: string, content: string) => {
-    const target = resolve(file);
+    const target = engine(file);
     mkdirSync(path.dirname(target), { recursive: true });
     writeFileSync(target, content);
     return target;
   };
   const remove = (file: string) => {
-    const target = resolve(file);
+    const target = engine(file);
     unlinkSync(target);
     return target;
   };
@@ -202,7 +206,7 @@ function fixture(options: { demo?: boolean; undeclared?: boolean } = {}): Fixtur
   return {
     root,
     options: compilation,
-    path: resolve,
+    path: engine,
     read: (file) => readFileSync(resolve(file), 'utf8'),
     write,
     remove,

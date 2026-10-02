@@ -26,6 +26,7 @@ import type {
 import { GENERATOR_SCHEMA_VERSION } from '../contracts';
 import { canonicalJsonStrict, sha256Hex as sha256 } from '../kernel/canonical';
 import { readTextFile } from '../kernel/observations';
+import { hostPath } from '../kernel/paths';
 
 const STRUCTURAL_TEMPLATES = [
   'page.ts.nunj',
@@ -907,7 +908,9 @@ export class OutputAssemblerImpl implements OutputAssembler {
     const dependencies: Dependency[] = [];
     const diagnostics: Diagnostic[] = [];
     for (const name of STRUCTURAL_TEMPLATES) {
-      const path = resolve(this.templateRoot, name);
+      // Recorded as a host path with forward slashes: on Windows `resolve` gives backslashes,
+      // which no dependency may carry.
+      const path = hostPath(resolve(this.templateRoot, name));
       try {
         dependencies.push({ kind: 'content', path, digest: (await readTextFile(path)).digest });
       } catch (error) {

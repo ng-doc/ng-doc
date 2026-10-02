@@ -7,6 +7,7 @@ import { afterAll, beforeAll, expect, test } from 'vitest';
 
 import { createOutputCommitter } from '../../artifacts';
 import type { BuildEvent, BuildResult, FileChange, JsonValue } from '../../contracts';
+import { hostPath } from '../../kernel/paths';
 import { createBuildSession } from '../../session/build-session';
 import { type PersistentWorkerOptions, createWorkerCompilationService } from '../index';
 
@@ -203,7 +204,8 @@ async function run(
     const beforeEdit = await probes();
     expect(events).toEqual([]);
     await writeFile(w.guide, '# Guide\n\nEdited body with `Actual`.\n');
-    emit([{ kind: 'update', path: w.guide }]);
+    // A watcher reports the engine's spelling of the path (forward slashes on Windows).
+    emit([{ kind: 'update', path: hostPath(w.guide) }]);
     await expect.poll(() => results.length, { timeout: 60_000, interval: 50 }).toBe(1);
     await watch.dispose();
     return {
@@ -331,7 +333,7 @@ test('an edit during the startup generation in the long-lived runtime, then anot
       api,
       '/** Edited declaration. */ export class Actual { /** Value. */ value = 2; }',
     );
-    emit([{ kind: 'update', path: api }]);
+    emit([{ kind: 'update', path: hostPath(api) }]);
     await expect
       .poll(() => results.slice(settled).some((result) => result.status === 'success'), {
         timeout: 60_000,

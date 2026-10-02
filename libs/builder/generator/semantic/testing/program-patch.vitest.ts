@@ -9,7 +9,6 @@ import {
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
 import { Project, ts } from 'ts-morph';
 import { afterEach, beforeEach, expect, test } from 'vitest';
 
@@ -30,6 +29,7 @@ import {
   createSemanticService,
   SEMANTIC_PATCH_MISMATCH,
 } from '../semantic-service';
+import { hostPath, join } from './engine-paths';
 
 // The incremental program: a retained program is patched with the content edits of its files, and
 // every patched synchronization equals a cold synchronization of the same tree.
@@ -104,7 +104,7 @@ const PUBLIC = [
 ].join('\n');
 
 beforeEach(async () => {
-  directory = realpathSync(mkdtempSync(join(tmpdir(), 'semantic-patch-')));
+  directory = hostPath(realpathSync(mkdtempSync(join(tmpdir(), 'semantic-patch-'))));
   write(
     'tsconfig.json',
     JSON.stringify({
@@ -387,16 +387,19 @@ test('too many edited files, an unreadable file, a failing patch and an unknown 
     path: 'full',
     reason: `${MAX_PATCHED_FILES + 1} program files changed (at most ${MAX_PATCHED_FILES} are patched)`,
   });
-  // A file that cannot be read.
-  first = await retained();
-  write('base.ts', '/** Unreadable. */\nexport interface Base { base: string }');
-  chmodSync(at('base.ts'), 0o000);
-  const unreadable = await next(first, [update('base.ts')]);
-  chmodSync(at('base.ts'), 0o644);
-  expect(unreadable.path).toMatchObject({
-    path: 'full',
-    reason: expect.stringMatching(/^patch refused: .*base\.ts cannot be read/),
-  });
+  // A file that cannot be read. Windows has no permission bits that make a file unreadable to its
+  // owner (`chmod` only sets the read-only attribute), so the case is POSIX-only.
+  if (process.platform !== 'win32') {
+    first = await retained();
+    write('base.ts', '/** Unreadable. */\nexport interface Base { base: string }');
+    chmodSync(at('base.ts'), 0o000);
+    const unreadable = await next(first, [update('base.ts')]);
+    chmodSync(at('base.ts'), 0o644);
+    expect(unreadable.path).toMatchObject({
+      path: 'full',
+      reason: expect.stringMatching(/^patch refused: .*base\.ts cannot be read/),
+    });
+  }
   // A throwing manipulation is refused, never half kept.
   first = await retained();
   const source = first.project.getSourceFileOrThrow(at('base.ts'));

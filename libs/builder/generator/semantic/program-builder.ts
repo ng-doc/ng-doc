@@ -112,7 +112,10 @@ export async function programMembers(
       );
     },
   };
-  const parsed = ts.getParsedCommandLineOfConfigFile(config.tsConfig, {}, host);
+  // TypeScript asserts that a JSON file's diagnostics name the file in its own spelling (forward
+  // slashes): a Windows path with backslashes fails that Debug assertion on a syntax error instead
+  // of reporting the error.
+  const parsed = ts.getParsedCommandLineOfConfigFile(normalize(config.tsConfig), {}, host);
   if (!parsed || parsed.errors.length)
     throw new SemanticFailure(
       'SEMANTIC_CONFIG',

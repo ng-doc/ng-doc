@@ -33,6 +33,7 @@ import * as methods from '../../helpers/typescript/method';
 import { sortByNodesName } from '../../helpers/typescript/node/sort-by-nodes-name';
 import * as properties from '../../helpers/typescript/property';
 import { parseCodeBlockParams } from '../../parsers/parse-code-block-params';
+import { hostPath } from '../kernel/paths';
 import { apiDeclaration } from './api-summary';
 import type { TrackedFiles } from './dependencies';
 
@@ -50,7 +51,8 @@ export const renderMarkdown: MarkdownRenderer = (text, context) => {
         if (options.file)
           code = removeLinesFromCode(
             context
-              .read(resolve(dirname(context.source), options.file))
+              // The engine's spelling of the snippet path, as every path a reader receives.
+              .read(hostPath(resolve(dirname(context.source), options.file)))
               .split(/\r?\n/)
               .slice(options.fileLineStart, options.fileLineEnd)
               .join('\n')

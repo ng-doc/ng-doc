@@ -27,6 +27,7 @@ import type {
   FileChange,
   OutputManifest,
 } from '../../contracts';
+import { forwardSlashes } from '../../kernel/paths';
 import { createRuntimeRetention } from '../../worker/protocol';
 import {
   type CompilationOptions,
@@ -399,7 +400,10 @@ export async function coldCorpus(f: CorpusFixture): Promise<CompilationResult> {
   }
 }
 
-/** Every file of the committed output tree (the manifest and staging internals excluded). */
+/**
+ * Every file of the committed output tree (the manifest and staging internals excluded), keyed by
+ * its output path with forward slashes, the spelling the snapshot's outputs use on every OS.
+ */
 export function tree(root: string): Record<string, string> {
   const result: Record<string, string> = {};
   const walk = (directory: string) => {
@@ -408,7 +412,7 @@ export function tree(root: string): Record<string, string> {
       const file = path.join(directory, entry.name);
       if (entry.name.startsWith('.ng-doc-')) continue;
       if (entry.isDirectory()) walk(file);
-      else result[path.relative(root, file)] = readFileSync(file, 'utf8');
+      else result[forwardSlashes(path.relative(root, file))] = readFileSync(file, 'utf8');
     }
   };
   walk(root);

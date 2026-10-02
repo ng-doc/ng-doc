@@ -1,7 +1,7 @@
 import { kebabCase } from '@ng-doc/core';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { dirname, join, resolve } from 'node:path';
+import { dirname } from 'node:path';
 import { Node, Project } from 'ts-morph';
 import ts from 'typescript';
 import { describe, expect, test, vi } from 'vitest';
@@ -11,6 +11,7 @@ import { diagnostic, SemanticFailure, TrackedFiles } from '../dependencies';
 import { withIndexedDerivedClasses } from '../derived-classes';
 import type { SupportedDeclaration } from '../program-state';
 import { createJsDoc, renderApiTemplate, renderMarkdown } from '../rendering';
+import { join, resolve } from './engine-paths';
 
 test('runtime AST import closure cannot load Builder/engine barrels, Architect or globals', () => {
   const workspace = resolve(__dirname, '../../../../..');
@@ -76,7 +77,7 @@ test('standalone Markdown preserves alert, code group metadata, external lines a
   expect(html).toContain('ng-doc-tab');
   expect(html).toContain('star');
   expect(html).toContain('&lt;b&gt;');
-  expect(read).toHaveBeenCalledWith('/docs/sample.ts');
+  expect(read).toHaveBeenCalledWith(resolve('/docs/sample.ts'));
   expect(renderMarkdown('```\ncode\n```', { source: 'entry', read })).toContain(
     'language-typescript',
   );

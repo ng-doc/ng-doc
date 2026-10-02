@@ -73,7 +73,11 @@ test('the store is kept only by development generations with reuse, the cache, c
     cacheRoot: '/cache',
   } as DiscoverySnapshot['configuration'];
   const file = closureStorePath(options, development, configuration, 'on');
-  expect(file).toMatch(/^\/cache\/[0-9a-f]{64}\.semantic-closures\.json$/);
+  // A file of the cache root, in the platform's spelling: it is only read and written, never
+  // recorded as a dependency.
+  const name = path.basename(file ?? '');
+  expect(name).toMatch(/^[0-9a-f]{64}\.semantic-closures\.json$/);
+  expect(file).toBe(path.join('/cache', name));
   expect(closureStorePath(options, development, configuration, 'verify')).toBe(file);
   for (const [changed, request, mode, settings] of [
     [{}, { mode: 'production' }, 'on', configuration],

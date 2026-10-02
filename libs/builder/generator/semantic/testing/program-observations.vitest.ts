@@ -1,6 +1,5 @@
 import { mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
 import { Project } from 'ts-morph';
 import { afterEach, beforeEach, expect, test } from 'vitest';
 
@@ -10,6 +9,7 @@ import { OwnedRoots } from '../owned-roots';
 import { ProgramObservations, trackProgram } from '../program-observations';
 import { type RetainedSemanticState, RetainedProgram } from '../program-state';
 import { type SemanticServiceImpl, createSemanticService } from '../semantic-service';
+import { hostPath, join } from './engine-paths';
 
 // Per-importer program tracking, the shared program mirror, and re-tracking.
 
@@ -75,7 +75,7 @@ function snapshot(): DiscoverySnapshot {
 }
 
 beforeEach(async () => {
-  directory = realpathSync(mkdtempSync(join(tmpdir(), 'semantic-observations-')));
+  directory = hostPath(realpathSync(mkdtempSync(join(tmpdir(), 'semantic-observations-'))));
   write(
     'tsconfig.json',
     JSON.stringify({

@@ -1,11 +1,12 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { dirname } from 'node:path';
 import nunjucks from 'nunjucks';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 
 import { TrackedFiles } from '../dependencies';
 import { renderApiTemplate } from '../rendering';
+import { join } from './engine-paths';
 
 /**
  * Nunjucks 3.2.4 compiles an included/imported template lazily, inside

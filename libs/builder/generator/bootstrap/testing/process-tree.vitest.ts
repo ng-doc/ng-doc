@@ -18,10 +18,14 @@ const windows = process.platform === 'win32';
 const children = new Set<ChildProcess>();
 const roots: string[] = [];
 
-afterEach(() => {
-  for (const child of children) {
-    if (child.exitCode === null && child.signalCode === null) child.kill('SIGKILL');
-  }
+afterEach(async () => {
+  const running = [...children].filter(
+    (child) => child.exitCode === null && child.signalCode === null,
+  );
+  for (const child of running) child.kill('SIGKILL');
+  // Windows refuses to remove a directory that is a live process's working directory (EPERM), and
+  // a killed process ends asynchronously, so the roots go only once every child has closed.
+  await Promise.all(running.map((child) => closed(child)));
   children.clear();
   for (const root of roots.splice(0)) fs.rmSync(root, { recursive: true, force: true });
 });
@@ -123,6 +127,33 @@ describe('Windows command resolution', () => {
       'C:\\work\\local.EXE',
     );
     expect(resolveWindowsCommand('missing', { cwd: 'C:\\work', env, isFile })).toBeUndefined();
+  });
+
+  it('lets a script in the working directory shadow a PATH shim when PATHEXT lists its extension', () => {
+    // The default PATHEXT of a Windows installation (and of the GitHub runners) lists `.JS`.
+    const env = {
+      PATH: 'C:\\work\\node_modules\\.bin',
+      PATHEXT: '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC',
+    };
+    const layout =
+      (...paths: string[]) =>
+      (file: string) =>
+        paths.some((candidate) => candidate.toLowerCase() === file.toLowerCase());
+    const shim = 'C:\\work\\node_modules\\.bin\\echo-args.cmd';
+    expect(
+      resolveWindowsCommand('echo-args', {
+        cwd: 'C:\\work',
+        env,
+        isFile: layout(shim, 'C:\\work\\echo-args.js'),
+      }),
+    ).toBe('C:\\work\\echo-args.JS');
+    expect(
+      resolveWindowsCommand('echo-args', {
+        cwd: 'C:\\work',
+        env,
+        isFile: layout(shim, 'C:\\work\\scripts\\echo-args.js'),
+      }),
+    ).toBe('C:\\work\\node_modules\\.bin\\echo-args.CMD');
   });
 
   it('uses the default PATHEXT and resolves paths against the working directory', () => {
@@ -305,7 +336,11 @@ describe('Windows process trees', () => {
       const bin = path.join(root, 'node_modules', '.bin');
       fs.mkdirSync(bin, { recursive: true });
       const out = path.join(root, 'argv.json');
-      const script = path.join(root, 'echo-args.js');
+      // Not `echo-args.js` in the working directory: `cmd.exe` searches it first, and a PATHEXT
+      // that lists `.JS` (the Windows default) would resolve the command to that script instead
+      // of the shim.
+      const script = path.join(root, 'scripts', 'echo-args.js');
+      fs.mkdirSync(path.dirname(script));
       fs.writeFileSync(
         script,
         `require('node:fs').writeFileSync(${JSON.stringify(out)}, JSON.stringify(process.argv.slice(2)));`,

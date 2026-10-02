@@ -8,7 +8,17 @@ import path from 'node:path';
 import { afterEach, expect, test } from 'vitest';
 
 import { Dependency, DiscoveryRequest, TemplateActions } from '../../contracts';
+import { forwardSlashes, hostPath } from '../../kernel/paths';
 import { createDiscoveryServices, DiscoveryServiceImpl } from '..';
+
+/**
+ * `path.join` in the engine's spelling (forward slashes, drive letter kept), which every path the
+ * service records uses, so expected paths equal recorded ones on Windows too.
+ * @param parts The path segments.
+ */
+function join(...parts: string[]): string {
+  return forwardSlashes(path.join(...parts));
+}
 
 interface Fixture {
   root: string;
@@ -37,15 +47,12 @@ function write(file: string, content: string): void {
  *
  */
 function fixture(): Fixture {
-  const root = realpathSync(mkdtempSync(path.join(tmpdir(), 'ng-doc-discovery-')));
+  const root = hostPath(realpathSync(mkdtempSync(path.join(tmpdir(), 'ng-doc-discovery-'))));
   roots.push(root);
-  const docs = path.join(root, '.docs');
-  const config = path.join(root, 'ng-doc.config.ts');
-  write(
-    path.join(root, 'tsconfig.json'),
-    JSON.stringify({ compilerOptions: { target: 'ES2022' } }),
-  );
-  write(path.join(root, 'config-value.ts'), `export const routePrefix = 'manual';`);
+  const docs = join(root, '.docs');
+  const config = join(root, 'ng-doc.config.ts');
+  write(join(root, 'tsconfig.json'), JSON.stringify({ compilerOptions: { target: 'ES2022' } }));
+  write(join(root, 'config-value.ts'), `export const routePrefix = 'manual';`);
   write(
     config,
     `
@@ -63,17 +70,17 @@ function fixture(): Fixture {
     export default config;
   `,
   );
-  write(path.join(docs, 'header.nunj'), 'Header');
-  write(path.join(docs, 'shared.ts'), `export const suffix = '!';`);
+  write(join(docs, 'header.nunj'), 'Header');
+  write(join(docs, 'shared.ts'), `export const suffix = '!';`);
   write(
-    path.join(docs, 'parent', 'ng-doc.category.ts'),
+    join(docs, 'parent', 'ng-doc.category.ts'),
     `
     const Parent = { title: 'Parent', route: 'parent-route', expandable: true, providers: [() => 'live'] };
     export default Parent;
   `,
   );
   write(
-    path.join(docs, 'parent', 'child', 'ng-doc.category.ts'),
+    join(docs, 'parent', 'child', 'ng-doc.category.ts'),
     `
     import Parent from '../ng-doc.category';
     const Child = { title: 'Child', category: Parent, expanded: true };
@@ -81,7 +88,7 @@ function fixture(): Fixture {
   `,
   );
   write(
-    path.join(docs, 'parent', 'child', 'guide', 'ng-doc.page.ts'),
+    join(docs, 'parent', 'child', 'guide', 'ng-doc.page.ts'),
     `
     import Child from '../ng-doc.category';
     import { suffix } from '../../../shared';
@@ -99,10 +106,10 @@ function fixture(): Fixture {
     export default Page;
   `,
   );
-  write(path.join(docs, 'parent', 'child', 'guide', 'first.md.nunj'), 'One');
-  write(path.join(docs, 'parent', 'child', 'guide', 'second.md'), 'Two');
+  write(join(docs, 'parent', 'child', 'guide', 'first.md.nunj'), 'One');
+  write(join(docs, 'parent', 'child', 'guide', 'second.md'), 'Two');
   write(
-    path.join(docs, 'ng-doc.api.ts'),
+    join(docs, 'ng-doc.api.ts'),
     `
     const Api = { title: 'Reference', scopes: [
       { name: 'Second', route: 'second', include: ['b.ts', 'a.ts'], exclude: 'x.ts', order: 2 },
@@ -121,10 +128,10 @@ function fixture(): Fixture {
       workspaceRoot: root,
       configFile: config,
       defaults: {
-        docsRoot: path.join(root, 'unused-docs'),
-        tsConfig: path.join(root, 'tsconfig.json'),
-        outputRoot: path.join(root, 'fallback-output'),
-        cacheRoot: path.join(root, '.cache'),
+        docsRoot: join(root, 'unused-docs'),
+        tsConfig: join(root, 'tsconfig.json'),
+        outputRoot: join(root, 'fallback-output'),
+        cacheRoot: join(root, '.cache'),
       },
       changes: [],
     },
@@ -158,7 +165,7 @@ test('discovers real config, nested categories, ordered guide tabs and API scope
     projectId: 'fixture',
     workspaceRoot: f.root,
     docsRoots: [f.docs],
-    outputRoot: path.join(f.root, '.generated', 'ng-doc', 'fixture'),
+    outputRoot: join(f.root, '.generated', 'ng-doc', 'fixture'),
     routePrefix: 'manual',
     inlineStyleLanguage: 'SCSS',
     anchorHeadings: ['h1', 'h3'],
@@ -187,12 +194,12 @@ test('discovers real config, nested categories, ordered guide tabs and API scope
     order: 2,
     hasImports: true,
     runtimeImport: {
-      source: path.join(f.docs, 'parent/child/guide/ng-doc.page.ts'),
+      source: join(f.docs, 'parent/child/guide/ng-doc.page.ts'),
       exportName: 'default',
     },
     markdown: [
-      path.join(f.docs, 'parent/child/guide/first.md.nunj'),
-      path.join(f.docs, 'parent/child/guide/second.md'),
+      join(f.docs, 'parent/child/guide/first.md.nunj'),
+      join(f.docs, 'parent/child/guide/second.md'),
     ],
   });
   expect(api && api.kind === 'api' ? api.scopes : []).toEqual([
@@ -214,7 +221,7 @@ test('discovers real config, nested categories, ordered guide tabs and API scope
     expect.arrayContaining([
       expect.objectContaining({
         kind: 'content',
-        path: path.join(f.docs, 'parent/child/guide/first.md.nunj'),
+        path: join(f.docs, 'parent/child/guide/first.md.nunj'),
       }),
       expect.objectContaining({ kind: 'content', path: guide!.source.path }),
     ]),
@@ -226,7 +233,7 @@ test('a template include is compiled from exactly the bytes whose digest is reco
   const service = new DiscoveryServiceImpl();
   const discovery = await service.discover(f.request, new AbortController().signal);
   const guide = discovery.value!.entries.find((entry) => entry.kind === 'guide')!;
-  const partial = path.join(f.docs, 'parent/child/guide/partial.nunj');
+  const partial = join(f.docs, 'parent/child/guide/partial.nunj');
   write(partial, 'A');
   // The file changes between two uses of it in one render (an A→B write during the render).
   const actions: TemplateActions = {
@@ -258,7 +265,7 @@ test('a template include is compiled from exactly the bytes whose digest is reco
   // Bundle inputs are loaded through the same recorded read: the digest is that of the source.
   expect(findDependency(discovery.dependencies, 'content', '/.docs/shared.ts')).toEqual({
     kind: 'content',
-    path: path.join(f.docs, 'shared.ts'),
+    path: join(f.docs, 'shared.ts'),
     digest: createHash('sha256').update(`export const suffix = '!';`).digest('hex'),
   });
   await service.dispose();
@@ -270,7 +277,7 @@ test('renders live functions, actions, and tracked includes, then ends the scope
   const discovery = await service.discover(f.request, new AbortController().signal);
   const guide = discovery.value?.entries.find((entry) => entry.kind === 'guide');
   expect(guide).toBeDefined();
-  write(path.join(f.docs, 'parent/child/guide/partial.nunj'), 'include={{ value }}');
+  write(join(f.docs, 'parent/child/guide/partial.nunj'), 'include={{ value }}');
   const actions: TemplateActions = {
     invoke: (namespace, name, args) => `${namespace}.${name}:${args.join(',')}`,
   };
@@ -331,8 +338,8 @@ test('a partial that fails to compile is a synchronous diagnostic naming it; not
     const discovery = await service.discover(f.request, new AbortController().signal);
     const guide = discovery.value!.entries.find((entry) => entry.kind === 'guide')!;
     const directory = path.dirname(guide.source.path);
-    const partial = path.join(directory, 'partial.nunj');
-    const deep = path.join(directory, 'nested', 'deep.nunj');
+    const partial = join(directory, 'partial.nunj');
+    const deep = join(directory, 'nested', 'deep.nunj');
     const render = (text: string, kind: 'guide' | 'header' = 'guide') =>
       service.render(
         { entryId: guide.id, source: guide.source, scope: directory, kind, text, values: {} },
@@ -401,15 +408,15 @@ test('re-evaluates imported config and description dependencies without a module
   const firstGuide = first.value?.entries.find((entry) => entry.kind === 'guide');
   expect(firstGuide?.absoluteRoute).toContain('manual/');
 
-  write(path.join(f.root, 'config-value.ts'), `export const routePrefix = 'changed';`);
-  write(path.join(f.docs, 'shared.ts'), `export const suffix = '?';`);
+  write(join(f.root, 'config-value.ts'), `export const routePrefix = 'changed';`);
+  write(join(f.docs, 'shared.ts'), `export const suffix = '?';`);
   const second = await service.discover(
     {
       ...f.request,
       generation: 2,
       changes: [
-        { kind: 'update', path: path.join(f.root, 'config-value.ts') },
-        { kind: 'update', path: path.join(f.docs, 'shared.ts') },
+        { kind: 'update', path: join(f.root, 'config-value.ts') },
+        { kind: 'update', path: join(f.docs, 'shared.ts') },
       ],
     },
     new AbortController().signal,
@@ -435,9 +442,9 @@ test('glob membership tracks create and delete in dot directories', async () => 
   const f = fixture();
   const service = new DiscoveryServiceImpl();
   const initial = await service.discover(f.request, new AbortController().signal);
-  const created = path.join(f.docs, '.new', 'ng-doc.page.ts');
+  const created = join(f.docs, '.new', 'ng-doc.page.ts');
   write(created, `const Added = { title: 'Added', mdFile: './index.md' }; export default Added;`);
-  write(path.join(f.docs, '.new', 'index.md'), 'Added');
+  write(join(f.docs, '.new', 'index.md'), 'Added');
   const added = await service.discover(
     { ...f.request, generation: 2, changes: [{ kind: 'create', path: created }] },
     new AbortController().signal,
@@ -461,14 +468,14 @@ test.each(['relative', 'absolute'] as const)(
   'records a missing %s import edge and recovers after creation',
   async (kind) => {
     const f = fixture();
-    const missingPage = path.join(f.docs, 'missing', 'ng-doc.page.ts');
+    const missingPage = join(f.docs, 'missing', 'ng-doc.page.ts');
     const specifier =
-      kind === 'absolute' ? path.join(f.docs, 'missing/missing-title.ts') : './missing-title';
+      kind === 'absolute' ? join(f.docs, 'missing/missing-title.ts') : './missing-title';
     write(
       missingPage,
       `import { title } from ${JSON.stringify(specifier)}; const Page = { title, mdFile: './index.md' }; export default Page;`,
     );
-    write(path.join(f.docs, 'missing', 'index.md'), 'Missing');
+    write(join(f.docs, 'missing', 'index.md'), 'Missing');
     const service = new DiscoveryServiceImpl();
     const failed = await service.discover(f.request, new AbortController().signal);
     expect(failed.value).toBeUndefined();
@@ -477,11 +484,11 @@ test.each(['relative', 'absolute'] as const)(
     );
     expect(failed.dependencies).toContainEqual({
       kind: 'existence',
-      path: path.join(f.docs, 'missing/missing-title.ts'),
+      path: join(f.docs, 'missing/missing-title.ts'),
       exists: false,
     });
 
-    write(path.join(f.docs, 'missing', 'missing-title.ts'), `export const title = 'Recovered';`);
+    write(join(f.docs, 'missing', 'missing-title.ts'), `export const title = 'Recovered';`);
     const recovered = await service.discover(
       { ...f.request, generation: 2 },
       new AbortController().signal,
@@ -494,7 +501,7 @@ test.each(['relative', 'absolute'] as const)(
 test('reports unsupported descriptions with source coordinates', async () => {
   const f = fixture();
   write(
-    path.join(f.docs, 'bad', 'ng-doc.page.ts'),
+    join(f.docs, 'bad', 'ng-doc.page.ts'),
     `\nexport default { title: 'Bad', mdFile: './index.md' };`,
   );
   const result = await new DiscoveryServiceImpl().discover(f.request, new AbortController().signal);
@@ -585,7 +592,7 @@ test('surfaces loader, cancellation, missing include, invalid action, and catego
   expect(invalid.diagnostics[0]?.message).toContain('not JSON-safe');
 
   write(
-    path.join(f.docs, 'orphan', 'ng-doc.page.ts'),
+    join(f.docs, 'orphan', 'ng-doc.page.ts'),
     `const Ghost = { title: 'Ghost' }; const Page = { title: 'Orphan', mdFile: './x.md', category: Ghost }; export default Page;`,
   );
   const orphan = await service.discover(
@@ -599,12 +606,12 @@ test('surfaces loader, cancellation, missing include, invalid action, and catego
 
 test('supports defaults without a config and the explicit service composition port', async () => {
   const f = fixture();
-  const plainDocs = path.join(f.root, 'plain-docs');
+  const plainDocs = join(f.root, 'plain-docs');
   write(
-    path.join(plainDocs, 'topic', 'ng-doc.page.ts'),
+    join(plainDocs, 'topic', 'ng-doc.page.ts'),
     `const Page = { title: 'Plain', mdFile: './readme.md', hidden: true }; export default Page;`,
   );
-  write(path.join(plainDocs, 'topic', 'readme.md'), 'Plain');
+  write(join(plainDocs, 'topic', 'readme.md'), 'Plain');
   const request: DiscoveryRequest = {
     ...f.request,
     configFile: undefined,
@@ -639,7 +646,7 @@ test('supports defaults without a config and the explicit service composition po
 
 test('fails an explicit missing config and detects a category cycle', async () => {
   const f = fixture();
-  const missingConfig = path.join(f.root, 'absent.config.ts');
+  const missingConfig = join(f.root, 'absent.config.ts');
   const missing = await new DiscoveryServiceImpl().discover(
     { ...f.request, configFile: missingConfig },
     new AbortController().signal,
@@ -653,7 +660,7 @@ test('fails an explicit missing config and detects a category cycle', async () =
   );
 
   write(
-    path.join(f.docs, 'cycle', 'ng-doc.category.ts'),
+    join(f.docs, 'cycle', 'ng-doc.category.ts'),
     `
     const Cycle: any = { title: 'Cycle' };
     Cycle.category = Cycle;
@@ -670,7 +677,7 @@ test('fails an explicit missing config and detects a category cycle', async () =
 test('evaluates every current application description without executing Angular providers', async () => {
   const temporary = fixture();
   const workspaceRoot = process.cwd();
-  const docsRoot = path.join(workspaceRoot, 'apps/ng-doc/docs');
+  const docsRoot = join(workspaceRoot, 'apps/ng-doc/docs');
   write(
     temporary.config,
     `const Config = { docsPath: ${JSON.stringify(docsRoot)} }; export default Config;`,
@@ -683,9 +690,9 @@ test('evaluates every current application description without executing Angular 
       configFile: temporary.config,
       defaults: {
         docsRoot,
-        tsConfig: path.join(workspaceRoot, 'apps/ng-doc/tsconfig.app.json'),
+        tsConfig: join(workspaceRoot, 'apps/ng-doc/tsconfig.app.json'),
         outputRoot: temporary.root,
-        cacheRoot: path.join(temporary.root, '.cache'),
+        cacheRoot: join(temporary.root, '.cache'),
       },
       changes: [],
     },
@@ -731,14 +738,14 @@ test('provides JSON-only playground controls and the legacy index extension', as
 test('bounds synchronous modules/templates, aborts pending loaders on dispose, and owns timers', async () => {
   const f = fixture();
   write(
-    path.join(f.docs, 'blocked', 'ng-doc.page.ts'),
+    join(f.docs, 'blocked', 'ng-doc.page.ts'),
     `const Page = { title: 'Blocked', mdFile: './x.md' }; while (true) {} export default Page;`,
   );
   const moduleService = new DiscoveryServiceImpl({ moduleTimeoutMs: 20 });
   const blocked = await moduleService.discover(f.request, new AbortController().signal);
   expect(blocked.value).toBeUndefined();
   expect(blocked.diagnostics[0]?.message).toContain('Script execution timed out');
-  rmSync(path.join(f.docs, 'blocked'), { recursive: true });
+  rmSync(join(f.docs, 'blocked'), { recursive: true });
 
   const service = new DiscoveryServiceImpl({ templateTimeoutMs: 20, templateWallTimeoutMs: 200 });
   const ready = await service.discover(f.request, new AbortController().signal);
@@ -848,7 +855,7 @@ function budgetExceeded(ms: number): string {
 async function actionsGuide(options: ConstructorParameters<typeof DiscoveryServiceImpl>[0]) {
   const f = fixture();
   write(
-    path.join(f.docs, 'actions', 'ng-doc.page.ts'),
+    join(f.docs, 'actions', 'ng-doc.page.ts'),
     `
     let count = 0;
     type Api = { api(path: string): string };
@@ -869,7 +876,7 @@ async function actionsGuide(options: ConstructorParameters<typeof DiscoveryServi
     export default Page;
   `,
   );
-  write(path.join(f.docs, 'actions', 'index.md'), '# Actions');
+  write(join(f.docs, 'actions', 'index.md'), '# Actions');
   const service = new DiscoveryServiceImpl(options);
   const discovery = await service.discover(f.request, new AbortController().signal);
   const guide = discovery.value!.entries.find((entry) => entry.title === 'Actions')!;
@@ -1132,7 +1139,7 @@ test('a template action error fails the render at its call; arguments must be JS
 
 test('reads config before scanning its selected docs root', async () => {
   const f = fixture();
-  write(path.join(f.root, 'unused-docs', 'bad', 'ng-doc.page.ts'), `export default makePage();`);
+  write(join(f.root, 'unused-docs', 'bad', 'ng-doc.page.ts'), `export default makePage();`);
   const result = await new DiscoveryServiceImpl().discover(f.request, new AbortController().signal);
   expect(result.diagnostics).toEqual([]);
   expect(result.value?.entries.some((entry) => entry.title === 'Guide')).toBe(true);
@@ -1161,14 +1168,14 @@ test('derives stable entry IDs from workspace-relative sources across checkouts'
 
 test('rejects a symlinked description source outside the workspace', async () => {
   const f = fixture();
-  const external = realpathSync(mkdtempSync(path.join(tmpdir(), 'ng-doc-external-')));
+  const external = hostPath(realpathSync(mkdtempSync(path.join(tmpdir(), 'ng-doc-external-'))));
   roots.push(external);
   write(
-    path.join(external, 'ng-doc.page.ts'),
+    join(external, 'ng-doc.page.ts'),
     `const Page = { title: 'External', mdFile: './index.md' }; export default Page;`,
   );
-  write(path.join(external, 'index.md'), 'External');
-  symlinkSync(external, path.join(f.root, 'linked-docs'), 'dir');
+  write(join(external, 'index.md'), 'External');
+  symlinkSync(external, join(f.root, 'linked-docs'), 'dir');
   write(f.config, `const config = { docsPath: 'linked-docs' }; export default config;`);
   const result = await new DiscoveryServiceImpl().discover(f.request, new AbortController().signal);
   expect(result.value).toBeUndefined();
@@ -1185,7 +1192,7 @@ test('returns lossless JSON with absent optional fields and diagnoses non-finite
   expect(result.diagnostics).toEqual([]);
   expect(JSON.parse(JSON.stringify(result))).toStrictEqual(result);
   write(
-    path.join(f.docs, 'bad', 'ng-doc.page.ts'),
+    join(f.docs, 'bad', 'ng-doc.page.ts'),
     `const page = { title: 'Bad', mdFile: 'index.md', order: Infinity }; export default page;`,
   );
   const invalid = await service.discover(f.request, new AbortController().signal);
@@ -1198,7 +1205,7 @@ test('accepts a double-dot-prefixed directory inside the workspace', async () =>
   const f = fixture();
   write(f.config, `const config = { docsPath: '..docs' }; export default config;`);
   write(
-    path.join(f.root, '..docs', 'ng-doc.page.ts'),
+    join(f.root, '..docs', 'ng-doc.page.ts'),
     `const page = { title: 'Inside', mdFile: 'index.md' }; export default page;`,
   );
   const service = new DiscoveryServiceImpl();
@@ -1224,7 +1231,7 @@ test('diagnoses sparse arrays instead of silently serializing holes as null', as
 test('rejects opaque objects in the live JSON controls port', async () => {
   const f = fixture();
   write(
-    path.join(f.docs, 'parent', 'child', 'guide', 'ng-doc.page.ts'),
+    join(f.docs, 'parent', 'child', 'guide', 'ng-doc.page.ts'),
     `
     const Page = { title: 'Guide', mdFile: './first.md.nunj', playgrounds: {
       Demo: { target: class {}, controls: { value: new Date() } }
@@ -1258,7 +1265,7 @@ test('omitted renderer settings take the default headings and syntax theme', asy
 
 test('preserves explicit API asset route separately from the omitted default', async () => {
   const f = fixture();
-  const apiPath = path.join(f.root, '.docs', 'ng-doc.api.ts');
+  const apiPath = join(f.root, '.docs', 'ng-doc.api.ts');
   write(apiPath, `const api = { title: 'API', route: 'api', scopes: [] }; export default api;`);
   const runtime = createDiscoveryServices();
   try {

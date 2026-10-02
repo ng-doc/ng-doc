@@ -1,9 +1,7 @@
 /** @vitest-environment node */
 
 import { createHash } from 'node:crypto';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type {
@@ -13,7 +11,15 @@ import type {
   CompilationResult,
 } from '../../contracts';
 import { type SessionOptions, createBuildSession, GeneratorBuildSession } from '../build-session';
-import { compilation, deferred, Events, harness, until } from './support';
+import {
+  compilation,
+  deferred,
+  Events,
+  harness,
+  hostJoin,
+  temporaryDirectory,
+  until,
+} from './support';
 
 /**
  * After a watch reuses the verified development buildOnce baseline (compiled by a one-shot
@@ -35,10 +41,10 @@ describe('priming the compiler runtime after a reused startup baseline', () => {
 
   /** A compiler that reports a real content observation, so the baseline can be verified. */
   function setup(prime?: Prime, options: SessionOptions = {}) {
-    const root = mkdtempSync(join(tmpdir(), 'ngdoc-priming-'));
+    const root = temporaryDirectory('ngdoc-priming-');
     roots.push(root);
-    mkdirSync(join(root, 'docs'), { recursive: true });
-    const page = join(root, 'docs/page.md');
+    mkdirSync(hostJoin(root, 'docs'), { recursive: true });
+    const page = hostJoin(root, 'docs/page.md');
     writeFileSync(page, 'initial body');
     const h = harness();
     const contexts: Array<CompilationContext | undefined> = [];

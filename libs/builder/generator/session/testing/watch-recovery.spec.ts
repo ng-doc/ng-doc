@@ -5,7 +5,6 @@ import { createHash } from 'node:crypto';
 import {
   existsSync,
   mkdirSync,
-  mkdtempSync,
   readFileSync,
   realpathSync,
   rmSync,
@@ -13,7 +12,6 @@ import {
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type {
@@ -31,7 +29,15 @@ import {
 } from '../build-session';
 import * as verification from '../input-verification';
 import { createParcelEventSource } from '../parcel-event-source';
-import { compilation, deferred, Events, harness, until } from './support';
+import {
+  compilation,
+  deferred,
+  Events,
+  harness,
+  hostJoin,
+  temporaryDirectory,
+  until,
+} from './support';
 
 /** The session protocol code for a lossy native watcher (session/watch-signals.ts). */
 const WATCHER_RESCAN = 'WATCHER_RESCAN';
@@ -86,7 +92,7 @@ describe('watch liveness and lossy-watcher recovery', () => {
     return result;
   }
   function temporary() {
-    const root = realpathSync(mkdtempSync(join(tmpdir(), 'ngdoc-recovery-')));
+    const root = temporaryDirectory('ngdoc-recovery-', true);
     roots.push(root);
     return root;
   }
@@ -178,15 +184,15 @@ describe('watch liveness and lossy-watcher recovery', () => {
 
   it('reconciles re-observed input differences after a lossy watcher signal and keeps watching', async () => {
     const root = temporary();
-    const docs = join(root, 'docs');
-    const owned = join(root, 'generated');
+    const docs = hostJoin(root, 'docs');
+    const owned = hostJoin(root, 'generated');
     mkdirSync(docs, { recursive: true });
     mkdirSync(owned, { recursive: true });
-    const edited = join(docs, 'edited.md');
-    const removed = join(docs, 'removed.md');
-    const created = join(docs, 'created.md');
-    const unchanged = join(docs, 'unchanged.md');
-    const output = join(owned, 'index.ts');
+    const edited = hostJoin(docs, 'edited.md');
+    const removed = hostJoin(docs, 'removed.md');
+    const created = hostJoin(docs, 'created.md');
+    const unchanged = hostJoin(docs, 'unchanged.md');
+    const output = hostJoin(owned, 'index.ts');
     writeFileSync(edited, 'before');
     writeFileSync(removed, 'removed');
     writeFileSync(unchanged, 'unchanged');
@@ -217,7 +223,7 @@ describe('watch liveness and lossy-watcher recovery', () => {
       const result = compilation(`test-${request.generation}`);
       result.candidate!.configuration = {
         outputRoot: owned,
-        cacheRoot: join(root, 'cache'),
+        cacheRoot: hostJoin(root, 'cache'),
         assetDirectory: 'assets',
         themes: { light: 'light', dark: 'dark' },
         digest: 'configuration',
@@ -265,7 +271,7 @@ describe('watch liveness and lossy-watcher recovery', () => {
 
   it('carries a pending rescan through supersession and into a queued batch', async () => {
     const root = temporary();
-    const page = join(root, 'page.md');
+    const page = hostJoin(root, 'page.md');
     writeFileSync(page, 'one');
     const h = harness();
     const s = session(h);
@@ -285,12 +291,12 @@ describe('watch liveness and lossy-watcher recovery', () => {
     source.onError!(rescanSignal);
     await until(() => attempts.length === 1);
     expect(attempts[0].request.changes).toEqual([{ kind: 'update', path: page }]);
-    source.emit({ kind: 'create', path: join(root, 'other.md') });
+    source.emit({ kind: 'create', path: hostJoin(root, 'other.md') });
     await until(() => attempts.length === 2);
     expect(attempts[0].signal.aborted).toBe(true);
     expect(attempts[1].request.changes).toEqual([
       { kind: 'update', path: page },
-      { kind: 'create', path: join(root, 'other.md') },
+      { kind: 'create', path: hostJoin(root, 'other.md') },
     ]);
     // A rescan arriving while another batch is queued behind a protected generation merges.
     const protectedHarness = harness();
@@ -366,7 +372,7 @@ describe('watch liveness and lossy-watcher recovery', () => {
 
   it('keeps a Parcel dropped-events signal non-fatal, forwards its events and publishes the edit', async () => {
     const root = temporary();
-    const page = join(root, 'page.md');
+    const page = hostJoin(root, 'page.md');
     writeFileSync(page, 'one');
     let callback!: parcel.SubscribeCallback;
     const native = vi.fn(async (_root: string, listener: parcel.SubscribeCallback) => {

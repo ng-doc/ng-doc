@@ -1,4 +1,3 @@
-import { dirname, resolve } from 'node:path';
 import { type Project, ts } from 'ts-morph';
 
 import { canonicalJson as stableJson, compareCodeUnits, digestOf } from '../kernel/canonical';
@@ -411,8 +410,11 @@ export class ProgramIndex {
       fallback(specifier);
     }
     for (const reference of source.referencedFiles) {
+      // TypeScript's own resolution of the reference: program file names use forward slashes on
+      // every platform, so resolving them with the host's path rules (backslashes and the current
+      // drive on Windows) would miss the file.
       const target = this.program.getSourceFile(
-        resolve(dirname(source.fileName), reference.fileName).replace(/\\/g, '/'),
+        ts.resolveTripleslashReference(reference.fileName, source.fileName),
       );
       if (target) moduleEdge(target.fileName);
       else references.push(['unresolved-reference', reference.fileName]);

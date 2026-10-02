@@ -1,9 +1,7 @@
 /** @vitest-environment node */
 
 import { createHash } from 'node:crypto';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import type {
@@ -25,7 +23,15 @@ import type {
 import { SESSION_PROGRESS_FAILED } from '../../progress/events';
 import { type SessionOptions, createBuildSession, GeneratorBuildSession } from '../build-session';
 import { SessionProgress } from '../progress';
-import { committed, deferred, Events, harness, until } from './support';
+import {
+  committed,
+  deferred,
+  Events,
+  harness,
+  hostJoin,
+  temporaryDirectory,
+  until,
+} from './support';
 
 const digest = (value: string) => createHash('sha256').update(value).digest('hex');
 
@@ -469,10 +475,10 @@ describe('session progress events', () => {
 
   describe('work outside a generation', () => {
     function withBaseline(prime: (signal: AbortSignal) => Promise<unknown>) {
-      const root = mkdtempSync(join(tmpdir(), 'ngdoc-progress-'));
+      const root = temporaryDirectory('ngdoc-progress-');
       roots.push(root);
-      mkdirSync(join(root, 'docs'), { recursive: true });
-      const file = join(root, 'docs/page.md');
+      mkdirSync(hostJoin(root, 'docs'), { recursive: true });
+      const file = hostJoin(root, 'docs/page.md');
       writeFileSync(file, 'body');
       const context = setup();
       context.h.compile.mockImplementation((async (request: CompilationRequest) => {

@@ -1,6 +1,5 @@
 import { mkdtempSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 
 import type { ApiDescriptor, DiscoverySnapshot } from '../../contracts';
@@ -13,6 +12,7 @@ import {
   createSemanticService,
   SEMANTIC_PATCH_MISMATCH,
 } from '../semantic-service';
+import { hostPath, join } from './engine-paths';
 
 // `verify` compares the semantic facts of a patched program with a cold one, not only its texts:
 // with the documentation cache fix disabled, a reused symbol answers with the documentation it
@@ -71,7 +71,7 @@ function snapshot(): DiscoverySnapshot {
 }
 
 beforeEach(async () => {
-  directory = realpathSync(mkdtempSync(join(tmpdir(), 'semantic-verify-')));
+  directory = hostPath(realpathSync(mkdtempSync(join(tmpdir(), 'semantic-verify-'))));
   write(
     'tsconfig.json',
     JSON.stringify({

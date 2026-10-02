@@ -14,6 +14,7 @@ import path from 'node:path';
 import { expect } from 'vitest';
 
 import type { ArtifactSnapshot, CompilationResult, FileChange } from '../../contracts';
+import { hostPath } from '../../kernel/paths';
 import { type CompilationOptions, createCompilationService } from '../index';
 
 /**
@@ -30,6 +31,11 @@ export const cleanup: Array<() => unknown> = [];
 
 export interface Fixture {
   root: string;
+  /**
+   * The absolute path of a fixture file in the engine's spelling (forward slashes), as the
+   * session's changes and every recorded dependency spell it; `write` and `remove` return the
+   * same spelling. The filesystem accepts it on every OS.
+   */
   path(file: string): string;
   read(file: string): string;
   write(file: string, content: string): string;
@@ -143,7 +149,8 @@ export function fixture(
     'docs/data/index.md': '# Data\n\nVersion {{ NgDocPage.data.version }}.\n',
     ...extra(root),
   };
-  const resolve = (file: string) => path.join(root, file);
+  const native = (file: string) => path.join(root, file);
+  const resolve = (file: string) => hostPath(native(file));
   const write = (file: string, content: string) => {
     const target = resolve(file);
     mkdirSync(path.dirname(target), { recursive: true });
@@ -159,12 +166,13 @@ export function fixture(
   const options: CompilationOptions = {
     projectId: 'fixture',
     workspaceRoot: root,
-    configFile: resolve('ng-doc.config.ts'),
+    // Host options keep the platform's spelling, as a host passes them.
+    configFile: native('ng-doc.config.ts'),
     defaults: {
-      docsRoot: resolve('docs'),
-      tsConfig: resolve('tsconfig.json'),
-      outputRoot: resolve('out'),
-      cacheRoot: resolve('cache'),
+      docsRoot: native('docs'),
+      tsConfig: native('tsconfig.json'),
+      outputRoot: native('out'),
+      cacheRoot: native('cache'),
     },
     compilerVersion: 'test-v1',
     toolchainDigest: 'real-ts6-shiki',

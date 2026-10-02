@@ -35,6 +35,7 @@ import type {
   PublishedGeneratorConfiguration,
 } from '../../contracts';
 import * as graph from '../../graph';
+import { forwardSlashes, hostPath } from '../../kernel/paths';
 import { type CommitMutation, type CommitTelemetry, TransactionalOutputCommitter } from '..';
 
 // The namespace of a Node built-in cannot be spied on, so the committer and these specs share a
@@ -123,8 +124,9 @@ async function tree(root: string): Promise<Record<string, string>> {
     for (const entry of await readdir(directory, { withFileTypes: true })) {
       const file = path.join(directory, entry.name);
       if (entry.isDirectory()) await walk(file);
-      else if (entry.isSymbolicLink()) result[path.relative(root, file)] = '<symlink>';
-      else result[path.relative(root, file)] = await readFile(file, 'utf8');
+      else if (entry.isSymbolicLink())
+        result[forwardSlashes(path.relative(root, file))] = '<symlink>';
+      else result[forwardSlashes(path.relative(root, file))] = await readFile(file, 'utf8');
     }
   };
   await walk(root);
@@ -139,7 +141,8 @@ function observeReads(root: string): string[] {
     file: Parameters<typeof original>[0],
     ...rest: unknown[]
   ) => {
-    if (typeof file === 'string' && file.startsWith(root)) reads.push(path.relative(root, file));
+    if (typeof file === 'string' && file.startsWith(root))
+      reads.push(forwardSlashes(path.relative(root, file)));
     return (original as (...values: unknown[]) => unknown)(file, ...rest);
   }) as typeof original);
   return reads;
@@ -511,10 +514,11 @@ describe('delta commit', () => {
       generation += 1;
       const deltaResult = await delta.commit(generation, candidate, options);
       const fullResult = await full.commit(generation, candidate, options);
-      // Diagnostics name absolute paths under each arm's own root.
-      expect(JSON.stringify(deltaResult).replaceAll(delta.root, '<root>')).toBe(
-        JSON.stringify(fullResult).replaceAll(full.root, '<root>'),
-      );
+      // Diagnostics name absolute paths under each arm's own root, JSON-escaped like the rest of
+      // the result (a Windows root's backslashes are doubled).
+      const rooted = (result: CommitResult, root: string) =>
+        JSON.stringify(result).replaceAll(JSON.stringify(root).slice(1, -1), '<root>');
+      expect(rooted(deltaResult, delta.root)).toBe(rooted(fullResult, full.root));
       expect(await tree(delta.root)).toEqual(await tree(full.root));
       return { result: deltaResult, telemetry: delta.committer.inspect() };
     };
@@ -596,9 +600,10 @@ describe('delta commit', () => {
 
   it('a configuration change or a malformed top level falls back to the full commit', async () => {
     const root = await temporary('ng-doc-s4-configuration');
+    // A published configuration spells its roots as the engine does (forward slashes on Windows).
     const configuration = (value: string): PublishedGeneratorConfiguration => ({
-      outputRoot: root,
-      cacheRoot: path.join(root, 'cache'),
+      outputRoot: hostPath(root),
+      cacheRoot: hostPath(path.join(root, 'cache')),
       assetDirectory: 'assets',
       themes: { light: 'light', dark: 'dark' },
       digest: value,
@@ -611,7 +616,10 @@ describe('delta commit', () => {
     expect(arm.committer.inspect()).toMatchObject({ mode: 'full', reason: 'configuration' });
     // Another publication root in the configuration: the full commit's diagnostic.
     const moved = snapshot(base, 'c4', {
-      configuration: { ...configuration('two'), outputRoot: path.join(root, 'elsewhere') },
+      configuration: {
+        ...configuration('two'),
+        outputRoot: hostPath(path.join(root, 'elsewhere')),
+      },
     });
     expect(await arm.commit(4, moved)).toMatchObject({
       status: 'failed',

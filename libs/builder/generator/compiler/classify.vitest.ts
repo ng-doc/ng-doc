@@ -19,6 +19,7 @@ import type {
   PageArtifact,
 } from '../contracts';
 import { UnitIndex } from '../graph/unit-index';
+import { hostPath } from '../kernel/paths';
 import {
   affectedClosure,
   classifyChanges,
@@ -103,8 +104,9 @@ function guide(
 function site() {
   const root = realpathSync(mkdtempSync(path.join(tmpdir(), 'ngdoc-classify-')));
   roots.push(root);
+  // Recorded paths, and the paths classifications report, are in the engine's spelling.
   const file = (name: string, text = name) => {
-    const target = path.join(root, name);
+    const target = hostPath(path.join(root, name));
     mkdirSync(path.dirname(target), { recursive: true });
     writeFileSync(target, text);
     return target;
@@ -164,7 +166,7 @@ function site() {
         content(files.program),
         {
           kind: 'glob',
-          root: path.join(root, 'docs'),
+          root: hostPath(path.join(root, 'docs')),
           include: ['api*.ts'],
           exclude: [],
           members: [files.api],
@@ -188,7 +190,7 @@ function site() {
       content(files.both),
       {
         kind: 'glob',
-        root: path.join(root, 'docs'),
+        root: hostPath(path.join(root, 'docs')),
         include: ['**/ng-doc.page.ts'],
         exclude: [],
         members: [files.pageA, files.pageB],
@@ -433,8 +435,8 @@ test('a file created at an absent resolution candidate of an entry is FULL when 
   // also joins an API scope glob: enumeration reads that membership only in a full generation.
   const s = site();
   const { root, files } = s;
-  const probe = path.join(root, 'docs/api-probe.ts');
-  const other = path.join(root, 'docs/a/probe.ts');
+  const probe = hostPath(path.join(root, 'docs/api-probe.ts'));
+  const other = hostPath(path.join(root, 'docs/a/probe.ts'));
   const absent = (file: string): Dependency => ({ kind: 'existence', path: file, exists: false });
   const entries = s.entries.map((entry) =>
     entry.id === 'a'

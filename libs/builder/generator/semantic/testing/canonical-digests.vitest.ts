@@ -28,6 +28,7 @@ import {
 import { TrackedFiles } from '../dependencies';
 import { OwnedRoots } from '../owned-roots';
 import { trackProgram } from '../program-observations';
+import { hostPath, join } from './engine-paths';
 
 const reference = (text: string): string => createHash('sha256').update(text).digest('hex');
 const BOM = Buffer.from([0xef, 0xbb, 0xbf]);
@@ -170,14 +171,14 @@ describe('canonical digests', () => {
 
 describe('the observation recorder', () => {
   let root: string;
-  const at = (name: string): string => path.join(root, name);
+  const at = (name: string): string => join(root, name);
   const write = (name: string, bytes: string | Buffer): string => {
     fs.writeFileSync(at(name), bytes);
     return at(name);
   };
 
   beforeEach(() => {
-    root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'ng-doc-canonical-')));
+    root = hostPath(fs.realpathSync(fs.mkdtempSync(join(os.tmpdir(), 'ng-doc-canonical-'))));
   });
 
   afterEach(() => {

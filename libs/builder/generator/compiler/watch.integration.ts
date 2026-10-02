@@ -5,6 +5,7 @@ import { expect, test } from 'vitest';
 
 import { createOutputCommitter } from '../artifacts';
 import type { BuildEvent, BuildResult, PageArtifact } from '../contracts';
+import { hostPath } from '../kernel/paths';
 import { createBuildSession } from '../session/build-session';
 import { createParcelEventSource } from '../session/parcel-event-source';
 import { createCompilationService } from './index';
@@ -89,6 +90,7 @@ test('native Parcel events drive the real compiler and transactional output life
         }
       }
     };
+    // The session reports changes in the engine's spelling (forward slashes on Windows too).
     const changes = (): Array<{ kind: string; path: string }> =>
       events.flatMap((event) => (event.kind === 'started' ? event.changes : []));
     const waitFor = async (
@@ -190,7 +192,7 @@ test('native Parcel events drive the real compiler and transactional output life
     );
     expect(
       changes().some(
-        (change) => change.path === shared && ['create', 'update'].includes(change.kind),
+        (change) => change.path === hostPath(shared) && ['create', 'update'].includes(change.kind),
       ),
     ).toBe(true);
 
@@ -201,7 +203,9 @@ test('native Parcel events drive the real compiler and transactional output life
         (result) => hasApi(result, 'AddedApi'),
       ),
     );
-    expect(changes()).toContainEqual(expect.objectContaining({ kind: 'create', path: apiAdded }));
+    expect(changes()).toContainEqual(
+      expect.objectContaining({ kind: 'create', path: hostPath(apiAdded) }),
+    );
     expect(
       guideArtifact(current).content.some(
         (item) => item.html.includes('AddedApi') && item.html.includes('<a'),
@@ -217,8 +221,12 @@ test('native Parcel events drive the real compiler and transactional output life
         () => rename(apiAdded, apiRenamed),
         (result) =>
           hasApi(result, 'AddedApi') &&
-          changes().some((change) => change.kind === 'delete' && change.path === apiAdded) &&
-          changes().some((change) => change.kind === 'create' && change.path === apiRenamed),
+          changes().some(
+            (change) => change.kind === 'delete' && change.path === hostPath(apiAdded),
+          ) &&
+          changes().some(
+            (change) => change.kind === 'create' && change.path === hostPath(apiRenamed),
+          ),
       ),
     );
     expect(current.whyRebuilt.some((reason) => reason.ownerId === addedOwner)).toBe(true);
@@ -230,7 +238,9 @@ test('native Parcel events drive the real compiler and transactional output life
         (result) => result.status === 'success' && !hasApi(result, 'AddedApi'),
       ),
     );
-    expect(changes()).toContainEqual(expect.objectContaining({ kind: 'delete', path: apiRenamed }));
+    expect(changes()).toContainEqual(
+      expect.objectContaining({ kind: 'delete', path: hostPath(apiRenamed) }),
+    );
 
     const beforeFailureRevision = current.snapshot.revision;
     const stableOutput = path.join(
@@ -254,7 +264,9 @@ test('native Parcel events drive the real compiler and transactional output life
         (result) => hasGuideText(result, 'Shared repaired'),
       ),
     );
-    expect(changes()).toContainEqual(expect.objectContaining({ kind: 'create', path: shared }));
+    expect(changes()).toContainEqual(
+      expect.objectContaining({ kind: 'create', path: hostPath(shared) }),
+    );
 
     const missingOutput = path.join(
       outputRoot,

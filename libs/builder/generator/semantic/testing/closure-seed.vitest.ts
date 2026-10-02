@@ -1,6 +1,5 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
 import { afterEach, expect, test, vi } from 'vitest';
 
 import type {
@@ -13,6 +12,7 @@ import { ProgramIndex } from '../program-index';
 import { openRecordingScopes } from '../recorder';
 import { type ClosureStore, programDigestOf } from '../semantic-closure';
 import { createSemanticService } from '../semantic-service';
+import { join } from './engine-paths';
 
 // A runtime that carries no closure records of its own is seeded from the persistent store: a
 // seeded record is used as a carried one (checked when it is used), and is not recomputed while

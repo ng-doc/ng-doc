@@ -42,6 +42,7 @@ import {
   recorderMode,
 } from '../kernel/footprint';
 import { readTextFile } from '../kernel/observations';
+import { hostPath } from '../kernel/paths';
 
 const DEFAULT_GUIDE_HEADER = `<h1 class="ngde">{{ NgDocPage.title }}</h1>
 {% if Metadata.description %}<p class="ngde">{{ Metadata.description }}</p>{% endif %}`;
@@ -1074,7 +1075,8 @@ export class GeneratorContentCompiler implements ContentCompiler {
       code: (code, language) => {
         const options = parseCodeBlockParams(language?.trim() || 'typescript');
         if (options.file) {
-          const source = path.resolve(context, options.file);
+          // The engine's spelling of the path: it is recorded as a dependency.
+          const source = hostPath(path.resolve(context, options.file));
           const fullSource = this.readPhysicalFile(
             source,
             dependencies,

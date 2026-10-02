@@ -1,16 +1,7 @@
 /** @vitest-environment node */
 
 import { createHash } from 'node:crypto';
-import {
-  existsSync,
-  mkdtempSync,
-  readFileSync,
-  realpathSync,
-  rmSync,
-  writeFileSync,
-} from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { performance } from 'node:perf_hooks';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -24,7 +15,15 @@ import type {
 import { type SessionOptions, createBuildSession, GeneratorBuildSession } from '../build-session';
 import { UNCHANGED_SAVE_LIMITS, UnchangedSaves } from '../unchanged-saves';
 import { filterFileEvents, WatchInputFilter } from '../watch-input-filter';
-import { compilation, deferred, Events, harness, until } from './support';
+import {
+  compilation,
+  deferred,
+  Events,
+  harness,
+  hostJoin,
+  temporaryDirectory,
+  until,
+} from './support';
 
 const digest = (value: string | Buffer) => createHash('sha256').update(value).digest('hex');
 const pause = (ms: number) => new Promise((done) => setTimeout(done, ms));
@@ -105,7 +104,7 @@ describe('unchanged saves (no-op filter)', () => {
     return result;
   }
   function temporary() {
-    const root = realpathSync(mkdtempSync(join(tmpdir(), 'ngdoc-unchanged-')));
+    const root = temporaryDirectory('ngdoc-unchanged-', true);
     roots.push(root);
     return root;
   }
@@ -117,7 +116,7 @@ describe('unchanged saves (no-op filter)', () => {
   /** A watched session over one tracked page with v1 committed. */
   async function watched(options: { blocking?: boolean; session?: object; extra?: string[] } = {}) {
     const root = temporary();
-    const page = join(root, 'page.md');
+    const page = hostJoin(root, 'page.md');
     writeFileSync(page, 'v1');
     const h = harness();
     const attempts = readingCompiler(h, () => [page, ...(options.extra ?? [])], options.blocking);
@@ -234,7 +233,7 @@ describe('unchanged saves (no-op filter)', () => {
       blocking: true,
       extra: [],
     });
-    const other = join(root, 'other.md');
+    const other = hostJoin(root, 'other.md');
     source.emit({ kind: 'update', path: other });
     await until(() => attempts.length === 2);
     writeFileSync(page, 'v2');
@@ -266,11 +265,11 @@ describe('unchanged saves (no-op filter)', () => {
 
   it('discards a deferred save after the running generation is cancelled when the base is unchanged', async () => {
     const { root, page, source, attempts, commits, unchanged } = await watched({ blocking: true });
-    const other = join(root, 'other.md');
+    const other = hostJoin(root, 'other.md');
     source.emit({ kind: 'update', path: other });
     await until(() => attempts.length === 2);
     source.emit({ kind: 'update', path: page });
-    source.emit({ kind: 'create', path: join(root, 'new.md') });
+    source.emit({ kind: 'create', path: hostJoin(root, 'new.md') });
     await until(() => attempts.length === 3);
     expect(attempts[1].signal.aborted).toBe(true);
     await until(() => unchanged().length === 1);
@@ -287,7 +286,7 @@ describe('unchanged saves (no-op filter)', () => {
     await until(() => commits().length === 2);
     source.emit({ kind: 'delete', path: page });
     await until(() => commits().length === 3);
-    const unrecorded = join(root, 'unrecorded.md');
+    const unrecorded = hostJoin(root, 'unrecorded.md');
     writeFileSync(unrecorded, 'x');
     source.emit({ kind: 'update', path: unrecorded });
     await until(() => commits().length === 4);
@@ -297,7 +296,7 @@ describe('unchanged saves (no-op filter)', () => {
 
   it('never discards a path recorded only as an existence observation', async () => {
     const root = temporary();
-    const missing = join(root, 'missing.md');
+    const missing = hostJoin(root, 'missing.md');
     const h = harness();
     readingCompiler(h, () => [missing]);
     const s = session(h);
@@ -330,7 +329,7 @@ describe('unchanged saves (no-op filter)', () => {
 
   it('keeps a verified startup baseline when only an unchanged save arrives during subscription', async () => {
     const root = temporary();
-    const page = join(root, 'page.md');
+    const page = hostJoin(root, 'page.md');
     writeFileSync(page, 'v1');
     const h = harness();
     readingCompiler(h, () => [page]);
@@ -362,7 +361,7 @@ describe('unchanged saves (no-op filter)', () => {
   it('screens a burst of real edits delivered one event per call in linear time', async () => {
     // Vite forwards every change on its own; the busy set must not be rebuilt per changed file.
     const root = temporary();
-    const files = Array.from({ length: 4000 }, (_, index) => join(root, `page-${index}.md`));
+    const files = Array.from({ length: 4000 }, (_, index) => hostJoin(root, `page-${index}.md`));
     files.forEach((file, index) =>
       writeFileSync(file, `# page ${index}\n${'lorem ipsum '.repeat(300)}`),
     );
@@ -397,7 +396,7 @@ describe('unchanged saves (no-op filter)', () => {
 
   it('drops deferred saves when the watch stops', async () => {
     const { root, page, source, attempts, unchanged, watch, h } = await watched({ blocking: true });
-    source.emit({ kind: 'update', path: join(root, 'other.md') });
+    source.emit({ kind: 'update', path: hostJoin(root, 'other.md') });
     await until(() => attempts.length === 2);
     source.emit({ kind: 'update', path: page });
     const disposed = watch.dispose();
@@ -410,8 +409,8 @@ describe('unchanged saves (no-op filter)', () => {
   describe('composition with the watch-input filter', () => {
     function wired(options: { capacity?: number; backoff?: number } = {}) {
       const root = temporary();
-      const page = join(root, 'page.md');
-      const snippet = join(root, 'snippet.md');
+      const page = hostJoin(root, 'page.md');
+      const snippet = hostJoin(root, 'snippet.md');
       writeFileSync(page, 'v1');
       writeFileSync(snippet, 's1');
       const tracked = [page];
@@ -454,7 +453,7 @@ describe('unchanged saves (no-op filter)', () => {
       await pause(30);
       expect(w.attempts).toHaveLength(2);
       // Generation 3 records another file and reads it before it is edited: the replay regenerates.
-      const second = join(w.root, 'second.md');
+      const second = hostJoin(w.root, 'second.md');
       writeFileSync(second, 't1');
       w.tracked.push(second);
       writeFileSync(w.page, 'v3');
@@ -481,8 +480,8 @@ describe('unchanged saves (no-op filter)', () => {
       // Two overflowing generations: the first reconcile runs at once, the second is backed off.
       const overflow = async (index: number) => {
         await until(() => w.attempts.length === index + 1);
-        w.native.emit({ kind: 'create', path: join(w.root, `.cache/a${index}`) });
-        w.native.emit({ kind: 'create', path: join(w.root, `.cache/b${index}`) });
+        w.native.emit({ kind: 'create', path: hostJoin(w.root, `.cache/a${index}`) });
+        w.native.emit({ kind: 'create', path: hostJoin(w.root, `.cache/b${index}`) });
         w.attempts[index].release();
       };
       writeFileSync(w.page, 'v2');
@@ -559,48 +558,48 @@ describe('UnchangedSaves', () => {
   });
 
   it('admits unreadable, oversized and over-budget candidates and reads a repeated path once', () => {
+    // The filter reads a path in the engine's spelling: on Windows `/a` is `D:/a`.
+    const [a, b, c, big, gone] = ['/a', '/b', '/c', '/big', '/gone'].map((file) => hostJoin(file));
     const reads: string[] = [];
-    const sizes: Record<string, number> = { '/a': 1, '/b': 1, '/c': 1, '/big': 10 };
+    const sizes: Record<string, number> = { [a]: 1, [b]: 1, [c]: 1, [big]: 10 };
     const filter = new UnchangedSaves(
       { maxFileBytes: 5, maxFilesPerBatch: 2, maxBytesPerBatch: 100 },
       (file, max) => {
         reads.push(file);
-        if (file === '/gone') return undefined;
+        if (file === gone) return undefined;
         return sizes[file] > max ? undefined : { digest: 'd', bytes: sizes[file] };
       },
     );
     filter.committed(
-      ['/a', '/b', '/c', '/big', '/gone'].map((path) => ({
+      [a, b, c, big, gone].map((path) => ({
         kind: 'content' as const,
         path,
         digest: 'd',
       })),
     );
     filter.settled('success');
-    const first = filter.screen([change('/a'), change('/a'), change('/big'), change('/b')], idle);
-    expect(first.dropped.map((item) => item.path)).toEqual(['/a', '/a']);
+    const first = filter.screen([change(a), change(a), change(big), change(b)], idle);
+    expect(first.dropped.map((item) => item.path)).toEqual([a, a]);
     // /big is over the file limit; /b exceeds the two-file budget of this batch.
-    expect(first.passed.map((item) => item.path)).toEqual(['/big', '/b']);
-    expect(reads).toEqual(['/a', '/big']);
-    expect(filter.screen([change('/gone')], idle).passed).toHaveLength(1);
+    expect(first.passed.map((item) => item.path)).toEqual([big, b]);
+    expect(reads).toEqual([a, big]);
+    expect(filter.screen([change(gone)], idle).passed).toHaveLength(1);
     const bytes = new UnchangedSaves(
       { maxFileBytes: 5, maxFilesPerBatch: 10, maxBytesPerBatch: 1 },
       () => ({ digest: 'd', bytes: 1 }),
     );
     bytes.committed([
-      { kind: 'content', path: '/a', digest: 'd' },
-      { kind: 'content', path: '/b', digest: 'd' },
+      { kind: 'content', path: a, digest: 'd' },
+      { kind: 'content', path: b, digest: 'd' },
     ]);
     bytes.settled('success');
-    expect(
-      bytes.screen([change('/a'), change('/b')], idle).passed.map((item) => item.path),
-    ).toEqual(['/b']);
+    expect(bytes.screen([change(a), change(b)], idle).passed.map((item) => item.path)).toEqual([b]);
   });
 
   it('defers while active, forgets a deferred path when a later event passes, and hashes real files', () => {
-    const root = realpathSync(mkdtempSync(join(tmpdir(), 'ngdoc-unchanged-unit-')));
+    const root = temporaryDirectory('ngdoc-unchanged-unit-', true);
     try {
-      const file = join(root, 'a.md');
+      const file = hostJoin(root, 'a.md');
       writeFileSync(file, 'same');
       const filter = new UnchangedSaves();
       filter.committed([{ kind: 'content', path: file, digest: digest('same') }]);

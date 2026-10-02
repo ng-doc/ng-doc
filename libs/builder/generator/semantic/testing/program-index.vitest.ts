@@ -215,15 +215,17 @@ describe('ProgramIndex', () => {
     expect(index(files, 'other observations').env()).not.toBe(before.env());
   });
 
-  test('triple-slash path references are module edges', () => {
+  // A drive-letter root is how program file names look on Windows; on any host it shows that a
+  // reference is resolved by TypeScript's rules, not by the host's.
+  test.each(['/src', 'C:/src'])('triple-slash path references are module edges (%s)', (root) => {
     const files = {
-      '/src/refs.ts':
+      [`${root}/refs.ts`]:
         '/// <reference path="./target.ts" />\n/// <reference path="./gone.ts" />\nexport const r = 1;\n',
-      '/src/target.ts': 'export const t = 1;\n',
+      [`${root}/target.ts`]: 'export const t = 1;\n',
     };
     const before = index(files);
-    const after = index({ ...files, '/src/target.ts': 'export const t = "";\n' });
-    expect(after.typeClosure('/src/refs.ts')).not.toBe(before.typeClosure('/src/refs.ts'));
+    const after = index({ ...files, [`${root}/target.ts`]: 'export const t = "";\n' });
+    expect(after.typeClosure(`${root}/refs.ts`)).not.toBe(before.typeClosure(`${root}/refs.ts`));
   });
 
   test('the derived-class list of a class, and absent classes', () => {

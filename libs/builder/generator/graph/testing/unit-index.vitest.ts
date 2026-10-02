@@ -18,6 +18,7 @@ import type {
   KeywordExport,
   PageArtifact,
 } from '../../contracts';
+import { forwardSlashes, hostPath } from '../../kernel/paths';
 import {
   type UnitIndexInput,
   createCanonicalAliases,
@@ -27,6 +28,15 @@ import {
   UnitIndex,
 } from '../unit-index';
 
+/**
+ * `path.join` in the engine's spelling (forward slashes, drive letter kept), which every path the
+ * graph records uses, so expected paths equal recorded ones on Windows too.
+ * @param parts The path segments.
+ */
+function join(...parts: string[]): string {
+  return forwardSlashes(path.join(...parts));
+}
+
 // The reverse index of a committed build, for the targeted rebuild's classifier.
 
 const roots: string[] = [];
@@ -35,12 +45,12 @@ afterEach(() => {
 });
 
 function workspace(): { root: string; file(name: string, text?: string): string } {
-  const root = realpathSync(mkdtempSync(path.join(tmpdir(), 'ngdoc-unit-index-')));
+  const root = hostPath(realpathSync(mkdtempSync(path.join(tmpdir(), 'ngdoc-unit-index-'))));
   roots.push(root);
   return {
     root,
     file(name: string, text: string | undefined = name) {
-      const target = path.join(root, name);
+      const target = join(root, name);
       mkdirSync(path.dirname(target), { recursive: true });
       writeFileSync(target, text);
       return target;
@@ -152,10 +162,10 @@ describe('UnitIndex', () => {
         content(pageModule),
         content(shared),
         content(md),
-        { kind: 'existence', path: path.join(w.root, 'ng-doc.config.js'), exists: false },
+        { kind: 'existence', path: join(w.root, 'ng-doc.config.js'), exists: false },
         {
           kind: 'glob',
-          root: path.join(w.root, 'docs'),
+          root: join(w.root, 'docs'),
           include: ['**/ng-doc.page.ts'],
           exclude: [],
           members: [pageModule],
@@ -163,7 +173,7 @@ describe('UnitIndex', () => {
       ],
       templates: [
         content(template),
-        { kind: 'existence', path: path.join(w.root, 'templates/missing.njk'), exists: false },
+        { kind: 'existence', path: join(w.root, 'templates/missing.njk'), exists: false },
       ],
       keywords: [keyword('*A'), keyword('X')],
       artifacts: [
@@ -176,7 +186,7 @@ describe('UnitIndex', () => {
             { kind: 'keyword', key: 'Kdep', digest: 'x' },
             {
               kind: 'glob',
-              root: path.join(w.root, 'docs/snippets'),
+              root: join(w.root, 'docs/snippets'),
               include: ['*.ts'],
               exclude: [],
               members: [],
@@ -217,7 +227,7 @@ describe('UnitIndex', () => {
                 usedKeywords: [],
                 dependencies: [
                   content(include),
-                  { kind: 'existence', path: path.join(w.root, 'docs/gone.md'), exists: false },
+                  { kind: 'existence', path: join(w.root, 'docs/gone.md'), exists: false },
                   { kind: 'glob', root: w.root, include: ['x/*.md'], exclude: [], members: [] },
                 ],
                 diagnostics: [],
@@ -260,7 +270,7 @@ describe('UnitIndex', () => {
             { kind: 'semantic', scopeId: 's', digest: 'x', files: [program, scoped], reason: 'r' },
             {
               kind: 'glob',
-              root: path.join(w.root, 'docs'),
+              root: join(w.root, 'docs'),
               include: ['api*.ts'],
               exclude: [],
               members: [program],
@@ -297,18 +307,18 @@ describe('UnitIndex', () => {
         .map((hit) => hit.level)
         .sort(),
     ).toEqual(['descriptor', 'observed']);
-    expect(index.hits(path.join(w.root, 'docs/gone.md'))).toHaveLength(1);
-    expect(index.hits(path.join(w.root, 'elsewhere.md'))).toEqual([]);
+    expect(index.hits(join(w.root, 'docs/gone.md'))).toHaveLength(1);
+    expect(index.hits(join(w.root, 'elsewhere.md'))).toEqual([]);
     expect(index.markdown(md)).toEqual(['unit-a']);
     expect(index.markdown(include)).toBeUndefined();
     // Roles: evaluated discovery inputs outrank the program; markdown is content.
     expect(index.role(config)).toBe('configuration');
-    expect(index.role(path.join(w.root, 'ng-doc.config.js'))).toBe('configuration');
+    expect(index.role(join(w.root, 'ng-doc.config.js'))).toBe('configuration');
     expect(index.role(header)).toBe('header-template');
     expect(index.role(pageModule)).toBe('entry-module');
     expect(index.role(shared)).toBe('entry-input');
     expect(index.role(template)).toBe('output-template');
-    expect(index.role(path.join(w.root, 'templates/missing.njk'))).toBe('output-template');
+    expect(index.role(join(w.root, 'templates/missing.njk'))).toBe('output-template');
     expect(index.role(program)).toBe('program');
     expect(index.role(scoped)).toBe('program');
     expect(index.role(md)).toBeUndefined();
@@ -318,7 +328,7 @@ describe('UnitIndex', () => {
     expect([...index.roles(program)]).toEqual(['program']);
     expect(index.roles(md).size).toBe(0);
     // Ancestors of recorded paths.
-    expect(index.isAncestor(path.join(w.root, 'docs/a'))).toBe(true);
+    expect(index.isAncestor(join(w.root, 'docs/a'))).toBe(true);
     expect(index.isAncestor(md)).toBe(false);
     // Keyword consumers: used keys, root keys of anchored uses, keyword dependencies.
     // Each edge source on its own: they overlap in a real build, which would hide a missing one.
@@ -340,15 +350,15 @@ describe('UnitIndex', () => {
   it('matches a recorded path under its symlinked spelling, and a missing path through its nearest directory', () => {
     const w = workspace();
     const real = w.file('real/docs/page.md');
-    symlinkSync(path.join(w.root, 'real'), path.join(w.root, 'link'), 'dir');
-    const linked = path.join(w.root, 'link/docs/page.md');
+    symlinkSync(join(w.root, 'real'), join(w.root, 'link'), 'dir');
+    const linked = join(w.root, 'link/docs/page.md');
     const aliases = createCanonicalAliases();
     expect(aliases(linked)).toEqual([linked, real]);
     expect(aliases(real)).toEqual([real]);
     // A path below a directory that does not exist resolves through the nearest existing one.
-    expect(aliases(path.join(w.root, 'link/new/dir/file.md'))).toEqual([
-      path.join(w.root, 'link/new/dir/file.md'),
-      path.join(w.root, 'real/new/dir/file.md'),
+    expect(aliases(join(w.root, 'link/new/dir/file.md'))).toEqual([
+      join(w.root, 'link/new/dir/file.md'),
+      join(w.root, 'real/new/dir/file.md'),
     ]);
     expect(aliases('/')).toEqual(['/']);
     // A Windows path under a missing folder climbs to the drive root, never to `C:`, which
@@ -369,7 +379,7 @@ describe('UnitIndex', () => {
     expect(index.hits(real)).toEqual([{ owner: 'u', level: 'unit', ids: [] }]);
     expect(index.hits(linked)).toHaveLength(1);
     // A path whose directory cannot be resolved keeps its spelling.
-    unlinkSync(path.join(w.root, 'link'));
+    unlinkSync(join(w.root, 'link'));
     expect(createCanonicalAliases()(linked)).toEqual([linked]);
   });
 

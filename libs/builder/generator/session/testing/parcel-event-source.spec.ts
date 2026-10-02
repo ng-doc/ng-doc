@@ -7,7 +7,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { BuildEvent, Diagnostic } from '../../contracts';
 import { createBuildSession } from '../build-session';
 import { createParcelEventSource } from '../parcel-event-source';
-import { committed, compilation, deferred, harness, until } from './support';
+import { committed, compilation, deferred, harness, hostJoin, until } from './support';
 
 describe('Parcel FileEventSource', () => {
   it('normalizes/filter events, contains callback faults and closes exactly once', async () => {
@@ -31,7 +31,8 @@ describe('Parcel FileEventSource', () => {
       { type: 'delete', path: `${root}-other/page.md` },
       { type: 'create', path: resolve(root, '../other.md') },
     ]);
-    expect(events).toHaveBeenCalledWith([{ kind: 'update', path: join(root, 'page.md') }]);
+    // Parcel reports native paths; the source emits the engine's spelling.
+    expect(events).toHaveBeenCalledWith([{ kind: 'update', path: hostJoin(root, 'page.md') }]);
     callback(null, []);
     expect(events).toHaveBeenCalledTimes(1);
     callback(new Error('native failure'), []);
@@ -119,7 +120,7 @@ describe('Parcel FileEventSource', () => {
         );
         await new Promise((done) => setTimeout(done, 300));
         expect(seen.filter((file) => file.includes('.DS_Store'))).toEqual([]);
-        expect(seen.filter((file) => file.startsWith(join(root, '.idea')))).toEqual([]);
+        expect(seen.filter((file) => file.startsWith(hostJoin(root, '.idea')))).toEqual([]);
       } finally {
         await subscription.dispose();
       }
@@ -260,13 +261,13 @@ describe('Parcel FileEventSource', () => {
       const changes = events.flatMap((event) => (event.kind === 'started' ? event.changes : []));
       expect(changes).toEqual(
         expect.arrayContaining([
-          expect.objectContaining({ kind: 'create', path: join(root, 'added.md') }),
-          expect.objectContaining({ kind: 'delete', path: join(root, 'added.md') }),
-          expect.objectContaining({ kind: 'create', path: join(root, 'renamed.md') }),
-          expect.objectContaining({ kind: 'delete', path: join(root, 'renamed.md') }),
+          expect.objectContaining({ kind: 'create', path: hostJoin(root, 'added.md') }),
+          expect.objectContaining({ kind: 'delete', path: hostJoin(root, 'added.md') }),
+          expect.objectContaining({ kind: 'create', path: hostJoin(root, 'renamed.md') }),
+          expect.objectContaining({ kind: 'delete', path: hostJoin(root, 'renamed.md') }),
         ]),
       );
-      expect(changes.some((change) => change.path.startsWith(generated))).toBe(false);
+      expect(changes.some((change) => change.path.startsWith(hostJoin(generated)))).toBe(false);
     } finally {
       releaseFirst.resolve();
       await session.dispose();

@@ -1,7 +1,6 @@
 import { createHash } from 'node:crypto';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
 import { type Node, Project, Symbol as MorphSymbol, ts } from 'ts-morph';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
@@ -35,6 +34,7 @@ import {
   suspendRecording,
 } from '../recorder';
 import { createSemanticService } from '../semantic-service';
+import { join, resolve } from './engine-paths';
 
 const builderRoot = resolve(__dirname, '../../..');
 const directories: string[] = [];

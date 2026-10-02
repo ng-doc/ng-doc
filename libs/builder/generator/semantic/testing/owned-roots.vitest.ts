@@ -9,13 +9,14 @@ import {
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { basename, join } from 'node:path';
+import { basename } from 'node:path';
 import { type FileSystemHost, Project, ts } from 'ts-morph';
 import { afterEach, expect, test } from 'vitest';
 
 import type { ApiDescriptor, Dependency, DiscoverySnapshot } from '../../contracts';
 import { missingFileError, OwnedRoots } from '../owned-roots';
 import { createSemanticService } from '../semantic-service';
+import { join } from './engine-paths';
 
 const directories: string[] = [];
 afterEach(() => {
