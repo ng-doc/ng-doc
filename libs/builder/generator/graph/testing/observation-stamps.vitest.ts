@@ -165,6 +165,30 @@ test('whole-second timestamps need a two-second margin; fine timestamps fifty mi
   expect(stampSettledBefore(stamp(since - 3_000_000_000n, since), since)).toBe(false);
 });
 
+test('on NTFS a change after an observation never keeps a stamp the fast path accepted', () => {
+  // NTFS stores 100 ns times but takes them from the system clock tick (15.625 ms by default), so
+  // a time can lag the wall clock by up to one tick, and two writes within one tick share it. The
+  // fine margin must exceed that lag, or a stamp accepted as settled could be shared by a write
+  // made after the observation began (git's "racily clean" case). The stamps here also have a
+  // sub-second part, so they take the fine margin, as NTFS times do.
+  const tick = 15_625_000n;
+  const ntfsTime = (wallNs: bigint) => (wallNs / tick) * tick + 1n;
+  const stamp = (wallNs: bigint) => {
+    const time = ntfsTime(wallNs);
+    return { dev: 1n, ino: 1n, size: 0n, mtimeNs: time, ctimeNs: time };
+  };
+  const observedAt = 100_000_000_000n;
+  for (let before = 0n; before <= 200_000_000n; before += 1_000_000n) {
+    const written = stamp(observedAt - before);
+    if (!stampSettledBefore(written, observedAt)) continue;
+    // Any later write, from the start of the observation on, gets another time.
+    for (let after = 0n; after <= 2n * tick; after += 500_000n)
+      expect(stamp(observedAt + after).mtimeNs).not.toBe(written.mtimeNs);
+  }
+  // A write one tick before the observation is never settled.
+  expect(stampSettledBefore(stamp(observedAt - tick), observedAt)).toBe(false);
+});
+
 test('changedObservation decides a change set by observed paths and glob membership', () => {
   const tracked = write('src/a.ts', 'export const a = 1;');
   const probe = join(root, 'src/missing.ts');
@@ -264,8 +288,11 @@ test('DirectoryListings: stat fast path, re-listing, type roots and glob directo
   racy.record(join(root, 'types'), observationClockNs() - 1_000_000_000n);
   expect(racy.sweep().changed).toBe(join(root, 'types'));
 
-  // Glob directories: the root and every directory on the way to a member.
+  // Glob directories: the root and every directory on the way to a member, settled before the
+  // observation (see the type root above).
   const member = write('lib/api/deep/member.ts', '');
+  for (const directory of ['lib', 'lib/api', 'lib/api/deep'])
+    utimesSync(join(root, directory), past, past);
   const glob: Extract<Dependency, { kind: 'glob' }> = {
     kind: 'glob',
     root: join(root, 'lib'),

@@ -620,7 +620,10 @@ export interface ObservationSweep {
 /**
  * A file whose mtime or ctime is not at least this far before an observation began may have been
  * written while it was observed: its recorded digest cannot be trusted to describe the bytes the
- * observer used. Coarse (whole-second) timestamps get the wider margin.
+ * observer used. Coarse (whole-second) timestamps get the wider margin. The fine margin exceeds the
+ * clock tick NTFS takes its times from (15.625 ms), so on Windows too a write made after the
+ * observation began never shares the time of a stamp accepted as settled; directories rely on the
+ * same rule (their size is always 0 there).
  */
 const FINE_MARGIN_NS = 50_000_000n;
 const COARSE_MARGIN_NS = 2_000_000_000n;
