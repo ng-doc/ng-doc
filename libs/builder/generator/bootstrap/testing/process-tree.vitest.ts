@@ -156,6 +156,15 @@ describe('Windows command resolution', () => {
     ).toBe('C:\\work\\node_modules\\.bin\\echo-args.CMD');
   });
 
+  it('names a refused batch file as PATHEXT spells it', () => {
+    const env = { PATH: 'C:\\work\\node_modules\\.bin', PATHEXT: '.COM;.EXE;.BAT;.CMD' };
+    const isShim = (file: string) =>
+      file.toLowerCase() === 'c:\\work\\node_modules\\.bin\\echo-args.cmd';
+    expect(() =>
+      windowsSpawnPlan('echo-args', ['q"&calc&"'], { cwd: 'C:\\work', env, isFile: isShim }),
+    ).toThrow(/^Cannot pass "q\\"&calc&\\"" to echo-args\.CMD: /);
+  });
+
   it('uses the default PATHEXT and resolves paths against the working directory', () => {
     const env = { PATH: 'C:\\tools' };
     expect(resolveWindowsCommand('ng', { cwd: 'C:\\work', env, isFile })).toBe('C:\\tools\\ng.EXE');
@@ -366,8 +375,9 @@ describe('Windows process trees', () => {
       expect(await closed(child)).toBe(0);
       expect(JSON.parse(fs.readFileSync(out, 'utf8'))).toEqual(args);
       for (const unsafe of ['q"&calc&"', '%PATH:a=b%', '!bang!', 'line\nbreak']) {
+        // The command resolves through PATHEXT, whose spelling (`.CMD` on Windows) names the file.
         expect(() => spawnOwnedHost('echo-args', [unsafe], root, { env })).toThrow(
-          /Cannot pass .* to echo-args\.cmd/,
+          /Cannot pass .* to echo-args\.cmd:/i,
         );
       }
     },

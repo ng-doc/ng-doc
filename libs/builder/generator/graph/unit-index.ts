@@ -113,28 +113,53 @@ const WINDOWS_DRIVE = /^[A-Za-z]:$/;
 const WINDOWS_DRIVE_ROOT = /^[A-Za-z]:\/$/;
 
 /**
+ * @internal The parent directory of an engine path; a root (`/`, `C:/`) is its own parent. `path.posix`
+ * alone gets drive paths wrong: it gives `.` for `C:/` and the drive designator `C:` for
+ * `C:/docs`, and Windows resolves `C:` to the drive's current directory, not its root.
+ */
+export function parentDirectory(file: string): string {
+  if (WINDOWS_DRIVE_ROOT.test(file)) return file;
+  const parent = path.posix.dirname(file);
+  return WINDOWS_DRIVE.test(parent) ? `${parent}/` : parent;
+}
+
+/** @internal Test ports of {@link createCanonicalAliases}; the real filesystem by default. */
+export interface CanonicalAliasPorts {
+  /** Turns a path into its engine spelling; {@link normalizePath} by default. */
+  readonly normalize?: (file: string) => string;
+  readonly exists?: (file: string) => boolean;
+  /** The native realpath of an existing directory. */
+  readonly realpath?: (directory: string) => string;
+}
+
+/**
  * One canonical path helper: the normalized path, and its physical spelling through the realpath of
  * its nearest existing directory. Directory realpaths are cached per helper.
  */
-export function createCanonicalAliases(): (file: string) => string[] {
+export function createCanonicalAliases(
+  ports: CanonicalAliasPorts = {},
+): (file: string) => string[] {
+  const {
+    normalize = normalizePath,
+    exists = existsSync,
+    realpath = (directory: string) => realpathSync.native(directory),
+  } = ports;
   const directories = new Map<string, string>();
   const physicalDirectory = (directory: string): string => {
     const cached = directories.get(directory);
     if (cached !== undefined) return cached;
     let resolved = directory;
-    if (existsSync(directory)) {
+    if (exists(directory)) {
       try {
-        resolved = normalizePath(realpathSync.native(directory));
+        resolved = normalize(realpath(directory));
       } catch {
         resolved = directory;
       }
     } else {
-      // A drive designator (`C:`) names the drive's current directory on Windows, not its root:
-      // the parent of `C:/docs` is `C:/`, and a missing drive root is its own spelling.
-      const dirname = path.posix.dirname(directory);
-      const parent = WINDOWS_DRIVE.test(dirname) ? `${dirname}/` : dirname;
+      // A missing root (`/`, `C:/`) is its own spelling.
+      const parent = parentDirectory(directory);
       resolved =
-        parent === directory || WINDOWS_DRIVE_ROOT.test(directory)
+        parent === directory
           ? directory
           : path.posix.join(physicalDirectory(parent), path.posix.basename(directory));
     }
@@ -145,8 +170,9 @@ export function createCanonicalAliases(): (file: string) => string[] {
   return (file) => {
     const cached = files.get(file);
     if (cached) return cached;
-    const normalized = normalizePath(file);
-    const directory = path.posix.dirname(normalized);
+    const normalized = normalize(file);
+    // A root is its own spelling.
+    const directory = parentDirectory(normalized);
     const physical =
       directory === normalized
         ? normalized
@@ -635,10 +661,10 @@ export class UnitIndex {
   }
 
   private addAncestors(file: string): void {
-    let directory = path.posix.dirname(file);
+    let directory = parentDirectory(file);
     while (!this.ancestors.has(directory)) {
       this.ancestors.add(directory);
-      const parent = path.posix.dirname(directory);
+      const parent = parentDirectory(directory);
       if (parent === directory) break;
       directory = parent;
     }

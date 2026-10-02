@@ -15,6 +15,7 @@ import type {
   TemplateRequest,
 } from '../../contracts';
 import { attachFootprint, footprintOf, SEMANTIC_RECORDER_ENV } from '../../kernel/footprint';
+import { hostPath } from '../../kernel/paths';
 import { GeneratorContentCompiler } from '../content-compiler';
 
 /** Content describe, compile and link each record one footprint, and change nothing else. */
@@ -232,7 +233,8 @@ describe('content footprints', () => {
       complete: true,
       reads: expect.arrayContaining([
         markdown,
-        path.join(root, 'snippet.ts'),
+        // A `file=` snippet is read in the engine's spelling (forward slashes on Windows).
+        hostPath(path.join(root, 'snippet.ts')),
         '/missing-play.ts',
         '/api.ts',
         '/guide-semantics.ts.read',

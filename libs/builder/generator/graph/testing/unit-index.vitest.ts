@@ -24,6 +24,7 @@ import {
   createCanonicalAliases,
   indexEntry,
   keywordBindingDigests,
+  parentDirectory,
   rootKeyword,
   UnitIndex,
 } from '../unit-index';
@@ -347,6 +348,31 @@ describe('UnitIndex', () => {
     expect(index.entries.get('a')?.markdown.get(md)).toBe('md-digest');
   });
 
+  it('climbs Windows paths to the drive root, which is its own parent', () => {
+    expect(parentDirectory('D:/a/docs/page.md')).toBe('D:/a/docs');
+    expect(parentDirectory('D:/page.md')).toBe('D:/');
+    expect(parentDirectory('D:/')).toBe('D:/');
+    expect(parentDirectory('//server/share/docs')).toBe('//server/share');
+    expect(parentDirectory('/work/page.md')).toBe('/work');
+    expect(parentDirectory('/')).toBe('/');
+  });
+
+  it('keeps a Windows drive root as its own spelling, never the current directory of the drive', () => {
+    // Windows as the engine sees it: `D:` (no slash) names the current directory of drive D.
+    const cwd = 'D:\\a\\ng-doc\\ng-doc';
+    const directories = new Set(['D:', 'D:/', 'D:/a', 'D:/a/ng-doc', 'D:/a/ng-doc/ng-doc']);
+    const aliases = createCanonicalAliases({
+      normalize: (file) => hostPath(file, path.win32),
+      exists: (file) => directories.has(file),
+      realpath: (directory) => (directory === 'D:' ? cwd : path.win32.resolve(directory)),
+    });
+    expect(aliases('D:/')).toEqual(['D:/']);
+    expect(aliases('D:\\')).toEqual(['D:/']);
+    expect(aliases('D:/page.md')).toEqual(['D:/page.md']);
+    expect(aliases('D:/missing/dir/file.md')).toEqual(['D:/missing/dir/file.md']);
+    expect(aliases('D:/a/ng-doc/file.md')).toEqual(['D:/a/ng-doc/file.md']);
+  });
+
   it('matches a recorded path under its symlinked spelling, and a missing path through its nearest directory', () => {
     const w = workspace();
     const real = w.file('real/docs/page.md');
@@ -360,7 +386,8 @@ describe('UnitIndex', () => {
       join(w.root, 'link/new/dir/file.md'),
       join(w.root, 'real/new/dir/file.md'),
     ]);
-    expect(aliases('/')).toEqual(['/']);
+    // The root is its own spelling (the current drive's root on Windows).
+    expect(aliases('/')).toEqual([hostPath('/')]);
     // A Windows path under a missing folder climbs to the drive root, never to `C:`, which
     // Windows resolves to the drive's current directory.
     if (process.platform === 'win32') {

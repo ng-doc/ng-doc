@@ -276,7 +276,9 @@ export function renderApiTemplate(
 ): string {
   class TrackedLoader extends Loader {
     getSource(name: string): LoaderSource {
-      const path = resolve(root, name);
+      // The engine's spelling, which nunjucks also prints in its errors (forward slashes on
+      // Windows too, as in discovery's template renders).
+      const path = hostPath(resolve(root, name));
       // Every use records the template read, including compiled-cache hits.
       const text = files.read(path);
       const src = compiledSource(path, text, environment as unknown as CompileEnvironment);

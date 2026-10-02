@@ -20,7 +20,8 @@ describe('the engine spelling of host paths', () => {
   it('leaves a resolved POSIX path unchanged and resolves the rest', () => {
     expect(hostPath('/work/docs/page.md', path.posix)).toBe('/work/docs/page.md');
     expect(hostPath('/work/docs/../page.md', path.posix)).toBe('/work/page.md');
-    expect(hostPath('/work/docs/page.md')).toBe(path.resolve('/work/docs/page.md'));
+    // On the running platform: a drive letter and forward slashes on Windows.
+    expect(hostPath('/work/docs/page.md')).toBe(forwardSlashes(path.resolve('/work/docs/page.md')));
   });
 
   it('turns the separators of a relative path without resolving it', () => {

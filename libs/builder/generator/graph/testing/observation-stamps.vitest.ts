@@ -244,6 +244,11 @@ test('changedObservation decides a change set by observed paths and glob members
 test('DirectoryListings: stat fast path, re-listing, type roots and glob directories', async () => {
   // A type root: every entry counts.
   write('types/a/index.d.ts', '');
+  // Settled well before the observation, as a stamped directory is. Windows takes file times from
+  // a clock that ticks every few milliseconds, so an entry added right after the first write could
+  // leave the directory's whole stat unchanged.
+  const past = new Date(Date.now() - 60_000);
+  utimesSync(join(root, 'types'), past, past);
   const listings = new DirectoryListings();
   listings.record(join(root, 'types'), later());
   listings.record(join(root, 'absent'), later());

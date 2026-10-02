@@ -1,6 +1,5 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
 import vm from 'node:vm';
 import { Node, Project } from 'ts-morph';
 import { afterEach, beforeEach, expect, test } from 'vitest';
@@ -11,6 +10,7 @@ import { createDiscoveryServices } from '../../discovery';
 import { literal, unwrap } from '../angular';
 import { openRecordingScopes } from '../recorder';
 import { createSemanticService } from '../semantic-service';
+import { hostPath, join, resolve } from './engine-paths';
 const repository = resolve(__dirname, '../../../../..');
 let directory: string;
 let service: ReturnType<typeof createSemanticService>;
@@ -81,7 +81,8 @@ async function sync() {
   expect(result.diagnostics).toEqual([]);
 }
 beforeEach(() => {
-  directory = mkdtempSync(join(tmpdir(), 'semantic-angular-'));
+  // The engine's spelling of the fixture root (forward slashes on Windows).
+  directory = hostPath(mkdtempSync(join(tmpdir(), 'semantic-angular-')));
   write(
     'tsconfig.json',
     JSON.stringify({
