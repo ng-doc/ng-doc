@@ -28,7 +28,8 @@ import { sourceStamp, stampFile } from './source-stamp.mjs';
 // Stamp each output right after its build (`source-stamp.mjs <browser folder>`): both must come
 // from the same commit, uncommitted changes and built packages, so a stale output is never
 // compared. Any local edit between the two builds, even an unrelated one, changes the stamp:
-// build both again.
+// build both again. What a site build adds inside `dist/libs` (the `link-libs` links, the legacy
+// engine's page cache) is not part of the packages digest.
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '../../../../..');
 const legacy = path.resolve(root, process.env.NGDOC_PARITY_LEGACY || 'dist/apps/ng-doc/browser');

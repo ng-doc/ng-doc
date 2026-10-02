@@ -457,6 +457,8 @@ jobs:
         with:
           name: site-vite
           path: dist/apps/ng-doc-vite
+      - name: Source stamp tests
+        run: node --test "libs/builder/generator/acceptance/production/*.test.mjs"
       - name: Compare the outputs and the accepted search and keyword sets
         env:
           NGDOC_PARITY_LEGACY: dist/apps/ng-doc/browser
