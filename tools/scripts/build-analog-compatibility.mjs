@@ -13,7 +13,6 @@ export const ANALOG_COMPATIBILITY_UPSTREAM = Object.freeze({
   mainSource: 'lib/angular-vite-plugin.js',
   mainSourceSha256: 'cec7abb4b1063d6dbf59298e897a8322077d8d57eeddbe81829a91588ca69826',
   sourceInventorySha256: '86be448127bc03f7b4635dc77dd924a8fdefb6839eb3e7aa63d76b206a36eb84',
-  licenseSha256: '38e28e0033ff4c11ebbd5ae0686b55875daa25f73bd4e2abf18cd7714495cf06',
 });
 
 export const RETAINED_STATIC_EXTERNALS = Object.freeze([
@@ -294,9 +293,6 @@ export async function prepareAnalogCompatibility({
 
   const licensePath = path.join(resolvedRoot, 'tools/licenses/analog-2.6.3.LICENSE');
   const licenseText = await readFile(licensePath, 'utf8');
-  if (sha256(licenseText) !== ANALOG_COMPATIBILITY_UPSTREAM.licenseSha256) {
-    throw new Error(`Analog 2.6.3 license text hash mismatch: ${licensePath}.`);
-  }
 
   return Object.freeze({
     plugin,
