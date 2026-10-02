@@ -7,7 +7,7 @@ Run it with Node 24:
 ```sh
 PATH=/Users/alex/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH \
 CI=1 NX_DAEMON=false NX_NO_CLOUD=true NX_TUI=false \
-NGDOC_LEGACY_BASELINE_EVIDENCE="$PWD/docs/architecture/evidence/t19/baseline-correction/protocol-final-3" \
+NGDOC_LEGACY_BASELINE_EVIDENCE="$PWD/tmp/benchmarks/legacy-baseline" \
 node tools/benchmarks/builder/legacy-baseline/run.mjs
 ```
 

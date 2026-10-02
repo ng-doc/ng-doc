@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
+import { existsSync } from 'node:fs';
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { parse } from 'parse5';
@@ -7,7 +8,14 @@ import { parse } from 'parse5';
 // Reconcile retained native outputs without rebuilding or changing the evidence.
 const [evidence] = process.argv.slice(2);
 assert.ok(evidence, 'Pass a completed production-c evidence directory');
-const json = async (file) => JSON.parse(await readFile(file, 'utf8'));
+// The inputs are the outputs of run-bounded.mjs in the same run; a missing one names that step.
+const json = async (file) => {
+  if (!existsSync(file))
+    throw new Error(
+      `Missing ${file}: run production-c/run-bounded.mjs first with NGDOC_PRODUCTION_C_EVIDENCE=${evidence} and NGDOC_PRODUCTION_C_KEEP_FIXTURE=1.`,
+    );
+  return JSON.parse(await readFile(file, 'utf8'));
+};
 const hash = (value) => createHash('sha256').update(value).digest('hex');
 const build = await json(path.join(evidence, 'build-results.json'));
 const audit = await json(path.join(evidence, 'audit-results.json'));

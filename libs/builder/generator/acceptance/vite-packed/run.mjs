@@ -14,8 +14,7 @@ const execute = promisify(execFile);
 const harness = path.dirname(fileURLToPath(import.meta.url));
 const repository = path.resolve(harness, '../../../../..');
 const evidence = path.resolve(
-  process.env.NGDOC_PACKED_EVIDENCE ||
-    path.join(repository, 'docs/architecture/evidence/t14/packed'),
+  process.env.NGDOC_PACKED_EVIDENCE || path.join(repository, 'tmp/acceptance/vite-packed'),
 );
 const dist = path.join(repository, 'dist/libs');
 const runtime = await mkdtemp(path.join(os.tmpdir(), 'ng-doc-vite-packed-'));

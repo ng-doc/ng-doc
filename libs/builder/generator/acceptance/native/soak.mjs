@@ -15,11 +15,9 @@ import {
 
 const evidence = path.resolve(
   process.env.NGDOC_NATIVE_SOAK_EVIDENCE ??
-    fileURLToPath(
-      new URL('../../../../../docs/architecture/evidence/t12/native/soak', import.meta.url),
-    ),
+    fileURLToPath(new URL('../../../../../tmp/acceptance/native-soak', import.meta.url)),
 );
-const root = await mkdtemp(path.join(os.tmpdir(), 'ng-doc-t12-native-soak-'));
+const root = await mkdtemp(path.join(os.tmpdir(), 'ng-doc-native-soak-'));
 const trace = [];
 const memory = [];
 const summary = {

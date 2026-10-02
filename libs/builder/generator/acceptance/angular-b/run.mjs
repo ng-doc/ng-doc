@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 
 const harness = path.dirname(fileURLToPath(import.meta.url));
 const repository = path.resolve(harness, '../../../../..');
-const evidence = path.join(repository, 'docs/architecture/evidence/t12/angular-b');
+const evidence = path.join(repository, 'tmp/acceptance/angular-b');
 const runtimeRoot = path.join(harness, '.runtime');
 await mkdir(runtimeRoot, { recursive: true });
 const runtimeParent = await mkdtemp(path.join(runtimeRoot, '.ng-doc-angular-b-'));
@@ -1102,7 +1102,7 @@ async function runDevBrowser() {
     'native Angular template recovery',
   );
   // Angular's SSR middleware can serve a half-evaluated main.server.mjs to a request that races the
-  // post-rebuild re-evaluation (evidence/t19/b-ssr-cache-500); navigate only after the reload is sent.
+  // post-rebuild re-evaluation (a cached HTTP 500); navigate only after the reload is sent.
   await waitForLogSince(
     dev,
     logOffset,

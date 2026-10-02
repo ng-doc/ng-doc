@@ -7,7 +7,7 @@ import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 const repository = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../../..');
-const evidence = path.join(repository, 'docs/architecture/evidence/t12/presentation');
+const evidence = path.join(repository, 'tmp/acceptance/presentation');
 const temporary = await realpath(await mkdtemp(path.join(tmpdir(), 'ngdoc-presentation-')));
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
 try {

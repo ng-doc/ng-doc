@@ -13,7 +13,7 @@ const repository = fileURLToPath(new URL('../../../../../', import.meta.url));
 const require = createRequire(import.meta.url);
 const evidence = path.resolve(
   process.env.NGDOC_VITE_RESOURCES_EVIDENCE ??
-    path.join(repository, 'docs/architecture/evidence/t14/vite-resources/probe'),
+    path.join(repository, 'tmp/acceptance/vite-resources-probe'),
 );
 const fixture = await mkdtemp(path.join(repository, 'tmp/ngdoc-vite-resources-'));
 const summary = {

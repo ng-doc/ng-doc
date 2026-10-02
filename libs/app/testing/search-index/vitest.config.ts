@@ -27,10 +27,7 @@ export default defineConfig({
         'libs/app/providers/search-engine/**/*.ts',
       ],
       exclude: ['libs/app/testing/**'],
-      reportsDirectory: path.join(
-        workspace,
-        'docs/architecture/evidence/t16/search-runtime/coverage',
-      ),
+      reportsDirectory: path.join(workspace, 'coverage/libs/app-search-index'),
       reporter: ['text', 'json', 'json-summary'],
       thresholds: { lines: 90, statements: 90, functions: 90, branches: 85 },
     },

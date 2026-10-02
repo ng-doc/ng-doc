@@ -20,8 +20,7 @@ import { prepareSsr } from './ssr-fixture.mjs';
 const filename = fileURLToPath(import.meta.url);
 const repository = path.resolve(path.dirname(filename), '../../../../..');
 const evidence = path.resolve(
-  process.env.NGDOC_CONTENT_EVIDENCE ??
-    path.join(repository, 'docs/architecture/evidence/t15/native'),
+  process.env.NGDOC_CONTENT_EVIDENCE ?? path.join(repository, 'tmp/acceptance/content-boundary'),
 );
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

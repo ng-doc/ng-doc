@@ -16,7 +16,7 @@ const workspace = resolve(spike, '../../../..');
 const omitDynamicPrebundle = process.argv.includes('--without-dynamic-prebundle');
 const unsynchronizedAdd = process.argv.includes('--unsynchronized-add');
 const evidence = resolve(
-  process.env.NGDOC_SPIKE_EVIDENCE || resolve(workspace, 'docs/architecture/evidence/t13'),
+  process.env.NGDOC_SPIKE_EVIDENCE || resolve(workspace, 'tmp/acceptance/vite-spike'),
   omitDynamicPrebundle ? 'unprimed' : unsynchronizedAdd ? 'unsynchronized-add' : '.',
 );
 const runtimeRoot = join(spike, '.runtime');

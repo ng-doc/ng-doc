@@ -12,7 +12,7 @@ import { prepare } from '../../../../../plugins/semantic-release/update-dependen
 const repository = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../../..');
 const evidence = path.resolve(
   process.env.NGDOC_B_OPTIONAL_EVIDENCE ??
-    path.join(repository, 'docs/architecture/evidence/t14/packed-b-optional'),
+    path.join(repository, 'tmp/acceptance/packed-b-optional'),
 );
 const expected = process.env.NGDOC_EXPECTED_SOURCE_DIGEST;
 const runtime = await mkdtemp(path.join(os.tmpdir(), 'ngdoc-packed-b-optional-'));

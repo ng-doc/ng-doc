@@ -19,9 +19,9 @@ import {
 
 const evidence = path.resolve(
   process.env.NGDOC_NATIVE_EVIDENCE ??
-    fileURLToPath(new URL('../../../../../docs/architecture/evidence/t12/native', import.meta.url)),
+    fileURLToPath(new URL('../../../../../tmp/acceptance/native', import.meta.url)),
 );
-const root = await mkdtemp(path.join(os.tmpdir(), 'ng-doc-t12-native-'));
+const root = await mkdtemp(path.join(os.tmpdir(), 'ng-doc-native-'));
 const cacheParent = path.join(root, 'shared-cache-parent');
 const trace = [];
 const handles = [];

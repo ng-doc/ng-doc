@@ -11,8 +11,7 @@ import { createServer } from 'vite';
 
 const repository = fileURLToPath(new URL('../../../../../', import.meta.url));
 const evidence = path.resolve(
-  process.env.NGDOC_VITE_ASSETS_EVIDENCE ??
-    path.join(repository, 'docs/architecture/evidence/t14/vite-assets'),
+  process.env.NGDOC_VITE_ASSETS_EVIDENCE ?? path.join(repository, 'tmp/acceptance/vite-assets'),
 );
 const expectedDigest = process.env.NGDOC_EXPECTED_SOURCE_DIGEST;
 const fixture = await mkdtemp(path.join(repository, 'tmp/ngdoc-vite-assets-'));

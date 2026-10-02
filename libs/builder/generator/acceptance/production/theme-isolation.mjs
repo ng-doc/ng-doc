@@ -7,7 +7,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const directory = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(directory, '../../../../..');
-const evidence = path.join(root, 'docs/architecture/evidence/t12/production/theme-isolation');
+const evidence = path.join(root, 'tmp/acceptance/production-theme-isolation');
 await mkdir(path.join(directory, '.runtime'), { recursive: true });
 await mkdir(evidence, { recursive: true });
 const temporary = await mkdtemp(path.join(directory, '.runtime/shiki-ssr-'));

@@ -1,6 +1,6 @@
 # NgDoc builder benchmark preparation
 
-This directory is an **unfinished benchmark harness**. No final performance matrix or default decision has been accepted. The protocol is in `docs/architecture/evidence/t19/benchmark-protocol.md`.
+This directory is an **unfinished benchmark harness**. No final performance matrix or default decision has been accepted.
 
 Implemented pieces:
 
@@ -17,7 +17,7 @@ Use Node 24.19.0 and the exact accepted lockfile. Example correctness pilot (pat
 NGDOC_EXPECTED_SOURCE_DIGEST=<accepted-built-source-digest> \
   caffeinate -i -s node tools/benchmarks/builder/pilot.mjs \
   --mode c --root <checkout>/tmp/fresh-pilot \
-  --evidence <checkout>/docs/architecture/evidence/t19/fresh-pilot
+  --evidence <checkout>/tmp/benchmarks/fresh-pilot
 ```
 
 The virtual content mode (`--mode c-d`) was removed. `--observed` privately rebuilds all generator entries with the work observer and keeps the trace cohort separate. `--warm` currently supports pilot restarts only; full warm manifest/cache admission is still required before benchmark use. Keep retained runtime/cache trees for diagnosis until they are explicitly removed.

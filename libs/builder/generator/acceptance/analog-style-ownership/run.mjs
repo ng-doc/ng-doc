@@ -14,7 +14,7 @@ import { prepareAnalogCopy } from './prepare-copy.mjs';
 const repository = path.resolve(import.meta.dirname, '../../../../..');
 const evidence = path.resolve(
   process.env.NGDOC_ANALOG_STYLE_EVIDENCE ??
-    path.join(repository, 'docs/architecture/evidence/t14/analog-style-ownership/acceptance'),
+    path.join(repository, 'tmp/acceptance/analog-style-ownership'),
 );
 const runtime = path.join(import.meta.dirname, '.runtime');
 const require = createRequire(import.meta.url);

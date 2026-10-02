@@ -278,7 +278,7 @@ export class ViteFileEventSource implements FileEventSource {
   private readonly onDeleteDirectory = (value: string) => this.emitDirectory('delete', value);
   /**
    * chokidar keeps watching after every `error` it emits; each one is an `fs` failure for a single
-   * path (see `docs/architecture/evidence/t19/c-watcher-parity/README.md` for the sources):
+   * path (see `_handleError` and its callers in the chokidar that Vite bundles):
    *
    * - `syscall: 'watch'`: the native `fs.watch` handle for the path could not be created (for
    *   example ENOSPC at the inotify limit, or EMFILE) or failed later. chokidar never re-creates

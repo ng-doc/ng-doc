@@ -13,7 +13,7 @@ const directory = path.dirname(fileURLToPath(import.meta.url));
 const repository = path.resolve(directory, '../../../..');
 const evidence = path.resolve(
   process.env.NGDOC_LEGACY_BASELINE_EVIDENCE ??
-    path.join(repository, 'docs/architecture/evidence/t19/baseline-correction/run'),
+    path.join(repository, 'tmp/benchmarks/legacy-baseline'),
 );
 const runtime = await mkdtemp(path.join(os.tmpdir(), 'ng-doc-legacy-overlay-'));
 const result = { status: 'failed', checks: [], node: process.version, runtime };

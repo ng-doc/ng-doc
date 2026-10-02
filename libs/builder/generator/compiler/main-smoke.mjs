@@ -21,7 +21,7 @@ import { promisify } from 'node:util';
 import { constants as zlibConstants, createGzip, gunzip } from 'node:zlib';
 
 const repository = path.resolve(import.meta.dirname, '../../../..');
-const evidence = path.join(repository, 'docs/architecture/evidence/t10/main');
+const evidence = path.join(repository, 'tmp/acceptance/compiler-main-smoke');
 const profileEnabled = process.env.NGDOC_MAIN_PROFILE === '1';
 const profileEvidence = path.join(evidence, 'profiling');
 const cpuProfileFile = path.join(profileEvidence, 'compiler.cpuprofile');

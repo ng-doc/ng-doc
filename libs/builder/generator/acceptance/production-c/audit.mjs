@@ -210,15 +210,20 @@ try {
     api: generated.api.length,
     excluded: inventory.excluded,
   });
-  const baselineFile = path.join(
-    root,
-    'docs/architecture/evidence/t14/main/recoverable-diagnostics/prerender-all/results.json',
-  );
+  // The static routes of a complete, passing prerender of the site before 22.0.0, and those of its
+  // routes whose documentation body was already empty, committed next to this audit. It is a fixed
+  // reference, not the output of an earlier run.
+  const baselineFile = fileURLToPath(new URL('./baseline-routes.json', import.meta.url));
   const baselineBytes = await readFile(baselineFile);
-  const baseline = JSON.parse(baselineBytes);
-  assert.equal(baseline.status, 'passed');
-  const oldRoutes = baseline.routes.map((r) => r.route);
-  summary.baselineEvidence = { file: baselineFile, sha256: hash(baselineBytes) };
+  const { routes: oldRoutes, emptyBodyRoutes } = JSON.parse(baselineBytes);
+  assert.ok(
+    Array.isArray(oldRoutes) && oldRoutes.length > 0 && Array.isArray(emptyBodyRoutes),
+    `${baselineFile} must list the baseline routes and the empty-body routes`,
+  );
+  summary.baselineRoutes = {
+    file: path.relative(root, baselineFile),
+    sha256: hash(baselineBytes),
+  };
   // The baseline predates onlyForTags in the new engine (the legacy engine ignores it). Routes of
   // entries that this build's tags (the Vite mode, `production`) leave out, e.g. the Develop
   // sandbox (`onlyForTags: ['development']`), are expected removals: derived by the run's own
@@ -293,7 +298,6 @@ try {
       );
     assert.ok(current.hydration, `Missing hydration ${route}`);
     const expectedRoute = expected.routes.find((item) => item.path === route);
-    const previous = baseline.routes.find((r) => r.route === route);
     const header =
       expectedRoute?.kind === 'guide-tab'
         ? expected.routes.find(
@@ -307,8 +311,7 @@ try {
       );
       assert.ok(current.pages.length > 0, `Missing documentation page element for ${route}`);
       assert.ok(
-        current.pages.some((body) => body.length > 0) ||
-          previous?.pageText.every((body) => body.characters === 0),
+        current.pages.some((body) => body.length > 0) || emptyBodyRoutes.includes(route),
         `Unexpected empty documentation body for ${route}`,
       );
     }
@@ -327,16 +330,7 @@ try {
       headings: current.headings,
       pageCount: current.pages.length,
       pageHashes: bodyHashes,
-      baseline: previous
-        ? {
-            headingsMatch: JSON.stringify(previous.headings) === JSON.stringify(current.headings),
-            pageCountMatch: previous.pages === current.pages.length,
-            bodyMatch:
-              JSON.stringify(previous.pageText.map((x) => x.sha256)) === JSON.stringify(bodyHashes),
-          }
-        : null,
     };
-    // Body differences are retained for source-change adjudication, never silently discarded.
     summary.routes.push(record);
     if (summary.routes.length % 100 === 0)
       console.log(`Audited ${summary.routes.length}/${actual.size}`);

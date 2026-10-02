@@ -13,7 +13,7 @@ const filename = fileURLToPath(import.meta.url);
 const repository = fileURLToPath(new URL('../../../../../', import.meta.url));
 const evidence = path.resolve(
   process.env.NGDOC_VITE_RESOURCES_EVIDENCE ??
-    path.join(repository, 'docs/architecture/evidence/t14/vite-resources/acceptance'),
+    path.join(repository, 'tmp/acceptance/vite-resources'),
 );
 const digest = (value) => createHash('sha256').update(value).digest('hex');
 const require = createRequire(import.meta.url);

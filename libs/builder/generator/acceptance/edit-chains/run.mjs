@@ -16,11 +16,9 @@ import {
 
 const evidence = path.resolve(
   process.env.NGDOC_EDIT_CHAIN_EVIDENCE ??
-    fileURLToPath(
-      new URL('../../../../../docs/architecture/evidence/t12/edit-chains', import.meta.url),
-    ),
+    fileURLToPath(new URL('../../../../../tmp/acceptance/edit-chains', import.meta.url)),
 );
-const root = await mkdtemp(path.join(os.tmpdir(), 'ng-doc-t12-edit-chains-'));
+const root = await mkdtemp(path.join(os.tmpdir(), 'ng-doc-edit-chains-'));
 const workspace = path.join(root, 'edit-chains.project');
 const docs = path.join(workspace, 'docs');
 const primary = path.join(docs, 'primary');

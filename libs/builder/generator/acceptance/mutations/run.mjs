@@ -8,7 +8,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repository = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../../..');
-const evidence = path.join(repository, 'docs/architecture/evidence/t12/mutations');
+const evidence = path.join(repository, 'tmp/acceptance/mutations');
 const sha = (text) => createHash('sha256').update(text).digest('hex');
 const artifacts = 'libs/builder/generator/artifacts/index.ts';
 const specifications = [

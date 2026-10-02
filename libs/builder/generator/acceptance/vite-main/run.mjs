@@ -17,7 +17,7 @@ const { productionFileReplacements } = await import(
   pathToFileURL(path.join(root, 'apps/ng-doc/vite.config.mjs')).href
 );
 const evidence = path.resolve(
-  process.env.NGDOC_VITE_MAIN_EVIDENCE || path.join(root, 'docs/architecture/evidence/t14/main'),
+  process.env.NGDOC_VITE_MAIN_EVIDENCE || path.join(root, 'tmp/acceptance/vite-main'),
 );
 await mkdir(evidence, { recursive: true });
 await mkdir(path.join(root, 'tmp'), { recursive: true });

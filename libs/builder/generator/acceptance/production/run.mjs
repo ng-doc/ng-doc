@@ -8,8 +8,7 @@ import { promisify } from 'node:util';
 
 const root = path.resolve(fileURLToPath(new URL('../../../../..', import.meta.url)));
 const evidence = path.resolve(
-  process.env.NGDOC_PRODUCTION_EVIDENCE ||
-    path.join(root, 'docs/architecture/evidence/t12/production'),
+  process.env.NGDOC_PRODUCTION_EVIDENCE || path.join(root, 'tmp/acceptance/production'),
 );
 const execute = promisify(execFile);
 await mkdir(evidence, { recursive: true });

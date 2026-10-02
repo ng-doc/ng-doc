@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
+import { existsSync } from 'node:fs';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
@@ -46,7 +47,20 @@ const fixture = path.resolve(fixtureArgument);
 const baseline = path.resolve(baselineArgument);
 const evidence = path.resolve(evidenceArgument);
 const hash = (bytes) => createHash('sha256').update(bytes).digest('hex');
-const inventoryBytes = await readFile(path.join(baseline, 'prerendered-routes.json'));
+// Every input comes from the caller's own run; a missing one names the step that writes it.
+function requireInput(file, producer) {
+  if (!existsSync(file)) throw new Error(`Missing ${file}: ${producer}.`);
+  return file;
+}
+const retainedFixture =
+  'run vite-main/run-bounded.mjs with KEEP_VITE_MAIN_FIXTURE=1 first; its results.json names the fixture';
+requireInput(path.join(fixture, 'server/server.js'), retainedFixture);
+const inventoryBytes = await readFile(
+  requireInput(
+    path.join(baseline, 'prerendered-routes.json'),
+    'run `npx nx run ng-doc:build-modern` first; it writes dist/apps/ng-doc-modern',
+  ),
+);
 const inventory = Object.keys(JSON.parse(inventoryBytes).routes).sort();
 assert.equal(inventory.length, 656, 'Expected the accepted B route inventory');
 // The accepted inventory predates `onlyForTags` in the new engine: it still lists entries a
@@ -73,7 +87,12 @@ const removals = await onlyForTagsRemovals({
   tags: ['production'],
 });
 await rm(discoveryScratch, { recursive: true, force: true });
-const sourceEvidenceBytes = await readFile(path.resolve(productionEvidenceArgument));
+const sourceEvidenceBytes = await readFile(
+  requireInput(
+    path.resolve(productionEvidenceArgument),
+    `${retainedFixture} (results-production.json)`,
+  ),
+);
 const sourceEvidence = JSON.parse(sourceEvidenceBytes);
 assert.equal(sourceEvidence.fixture, fixture, 'Evidence must describe the audited fixture');
 assert.ok(!sourceEvidence.failure, 'Cannot audit a failed production build as accepted');

@@ -8,10 +8,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.dirname(fileURLToPath(import.meta.url));
 const packageRoot = path.join(root, 'package');
 const entry = path.join(packageRoot, 'dist/index.js');
-const evidenceRoot = path.join(
-  root,
-  '../../../docs/architecture/evidence/t14/analog-compat-package/replay',
-);
+const evidenceRoot = path.join(root, '../../../tmp/probes/analog-compat-package');
 const expected = {
   entrySha256: '139f0448fadaf824f6eb20926c65175d6f233c27de9b062fd6d274d8fe693115',
   inputInventorySha256: '86be448127bc03f7b4635dc77dd924a8fdefb6839eb3e7aa63d76b206a36eb84',

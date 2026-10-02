@@ -150,3 +150,17 @@ test('rejects a keyword asset that differs from the warm production output', asy
     },
   );
 });
+
+test('names the step that writes a missing input instead of reading a stale one', async () => {
+  const evidence = await mkdtemp(path.join(os.tmpdir(), 'ngdoc-reconcile-empty-'));
+  try {
+    const result = await run(evidence);
+    assert.notEqual(result.code, 0);
+    assert.match(
+      result.stderr,
+      /Missing .*build-results\.json: run production-c\/run-bounded\.mjs first with NGDOC_PRODUCTION_C_EVIDENCE=/,
+    );
+  } finally {
+    await rm(evidence, { recursive: true, force: true });
+  }
+});

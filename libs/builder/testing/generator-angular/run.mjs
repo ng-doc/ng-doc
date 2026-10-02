@@ -15,7 +15,7 @@ const harness = dirname(fileURLToPath(import.meta.url));
 const repository = resolve(harness, '../../../..');
 const evidence = resolve(
   process.env.NGDOC_GENERATOR_ANGULAR_EVIDENCE ||
-    join(repository, 'docs/architecture/evidence/t10/angular'),
+    join(repository, 'tmp/acceptance/generator-angular'),
 );
 const runtimeRoot = join(harness, '.runtime');
 await mkdir(runtimeRoot, { recursive: true });
