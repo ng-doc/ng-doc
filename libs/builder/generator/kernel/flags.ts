@@ -35,6 +35,7 @@ export const ANGULAR_STRUCTURAL_PASS_FLAG = 'NGDOC_ANGULAR_STRUCTURAL_PASS';
 export const VITE_BUILD_HANDOFF_FLAG = 'NGDOC_VITE_BUILD_HANDOFF';
 export const TRACKED_PROGRAM_REUSE_FLAG = 'NGDOC_TRACKED_PROGRAM_REUSE';
 export const FAST_START_FLAG = 'NGDOC_FAST_START';
+export const PARALLEL_WRITES_FLAG = 'NGDOC_PARALLEL_WRITES';
 
 /** The registry, in the order the engine applies the switches. */
 export const FLAGS: readonly FlagDefinition[] = Object.freeze(
@@ -127,6 +128,13 @@ export const FLAGS: readonly FlagDefinition[] = Object.freeze(
       description:
         "The server build of the Vite production pipeline publishes the browser build's " +
         'generation instead of generating again.',
+      verify: false,
+    },
+    {
+      name: PARALLEL_WRITES_FLAG,
+      description:
+        'An output commit stages its changed files and takes its backup copies concurrently, ' +
+        'and still publishes them one rename at a time, the manifest last.',
       verify: false,
     },
   ].map((flag) => Object.freeze({ ...flag, default: 'on' as const })),

@@ -243,6 +243,7 @@ Use them to find the cause of a problem, and report it (`*TroubleshootingPage`).
 | `NGDOC_ANGULAR_STRUCTURAL_PASS` | on      | Vite host only. When an edit adds, moves or deletes pages, compiles the application once more on those files before the pass that compiles the edit.                                                              |
 | `NGDOC_FAST_START`              | on      | Generates every page on a development server start, even when no file changed since the last run, and doesn't reuse the cached links and generated files of unchanged pages on a start after edits.               |
 | `NGDOC_VITE_BUILD_HANDOFF`      | on      | `vite-application` only. Generates the documentation again for the server bundle instead of reusing the browser build's generation.                                                                               |
+| `NGDOC_PARALLEL_WRITES`         | on      | Writes the generated files one at a time, instead of several at once. The published files are the same.                                                                                                           |
 
 Production builds always use a fresh compiler worker, whatever these variables say.
 

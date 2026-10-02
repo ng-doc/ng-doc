@@ -186,6 +186,11 @@ export const ENGINE_SWITCHES: ReadonlyArray<{ name: string; values: RegExp; effe
       values: /^(0|false|off|no)$/i,
       effect: 'the server build generates again',
     },
+    {
+      name: 'NGDOC_PARALLEL_WRITES',
+      values: /^(0|false|off|no)$/i,
+      effect: 'generated files are written one at a time',
+    },
   ]);
 
 /**

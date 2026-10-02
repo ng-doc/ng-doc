@@ -11,6 +11,7 @@ import type { DiscoveryOptions } from '../discovery';
 import {
   type FlagValue,
   DELTA_TRANSPORT_FLAG,
+  PARALLEL_WRITES_FLAG,
   PERSISTENT_WORKER_FLAG,
   PERSISTENT_WORKER_PRIME_FLAG,
   readFlag,
@@ -109,6 +110,18 @@ export const DELTA_TRANSPORT_ENV = DELTA_TRANSPORT_FLAG;
  * worker: with `NGDOC_PERSISTENT_WORKER=0` every generation is one-shot and full.
  */
 export const TARGETED_REBUILD_ENV = TARGETED_REBUILD_FLAG;
+/**
+ * Environment kill switch of parallel output writes: `0`/`false`/`off`/`no` turn them off;
+ * `1`/`true`/`on`/`yes` and unset leave them on; any other value is reported once
+ * (`NGDOC_PARALLEL_WRITES_VALUE`) and leaves them on.
+ *
+ * - On: a commit stages its changed outputs and takes the backup copies of the outputs it
+ *   replaces concurrently, then publishes them one rename at a time in the sequential order, the
+ *   manifest last (`OutputCommitterOptions.parallelWrites`).
+ * - Off: every staging write, backup and publication runs one output at a time, as before
+ *   (`parallelWrites: false`). The published files and manifest are the same either way.
+ */
+export const PARALLEL_WRITES_ENV = PARALLEL_WRITES_FLAG;
 
 const unrecognisedSwitchReported = new Set<string>();
 
@@ -221,6 +234,9 @@ export function createGeneratorBuildSession(
   );
   const targeted: boolean | 'verify' =
     targetedSwitch === 'off' ? false : targetedSwitch === 'verify' ? 'verify' : true;
+  const parallelWrites =
+    switchValue(PARALLEL_WRITES_ENV, 'parallel output writes', 'NGDOC_PARALLEL_WRITES_VALUE') !==
+    'off';
   const factoryOptions = {
     projectId,
     workspaceRoot,
@@ -243,7 +259,13 @@ export function createGeneratorBuildSession(
   return createBuildSession(
     {
       compiler,
-      committer: createCandidateOutputCommitter(targeted === false ? { delta: false } : {}, host),
+      committer: createCandidateOutputCommitter(
+        {
+          ...(targeted === false ? { delta: false } : {}),
+          ...(parallelWrites ? {} : { parallelWrites: false }),
+        },
+        host,
+      ),
     },
     options.session,
   );

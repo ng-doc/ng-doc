@@ -286,6 +286,14 @@ export interface OutputCommitterOptions {
    * the full commit, with no publication recorded.
    */
   delta?: boolean;
+  /**
+   * Parallel writes; on unless `false`. A commit stages its changed outputs and takes the backup
+   * copies of the outputs it replaces concurrently, at most {@link WRITE_CONCURRENCY} at a time,
+   * and still publishes them one rename at a time in the sequential order, the manifest last.
+   * `false` (the `NGDOC_PARALLEL_WRITES=0` kill switch, resolved in bootstrap) writes, copies and
+   * publishes one output at a time, as before.
+   */
+  parallelWrites?: boolean;
 }
 
 /**
@@ -411,6 +419,24 @@ interface CommitPlan {
 /** A stat taken this long after the file's last change cannot hide a same-tick rewrite. */
 const RACY_WINDOW_NS = 2_000_000_000n;
 const PROBE_CONCURRENCY = 64;
+/**
+ * The most staging writes, directory creations or backup copies one commit has in flight (parallel
+ * writes). Node runs them on its libuv thread pool (four threads unless `UV_THREADPOOL_SIZE` says
+ * otherwise), so a few more than its threads keep it busy, and the bound keeps a commit of
+ * thousands of outputs from queueing them all ahead of the host's own file reads.
+ */
+export const WRITE_CONCURRENCY = 16;
+
+/** The backup of an output that parallel writes took before the first publish rename. */
+interface TakenBackup {
+  /** Whether the output existed; a missing one is not backed up. */
+  exists: boolean;
+  /**
+   * The identity of the file the backup copied; unset when the copy failed with a file system
+   * error, so the output is moved away right before its publish rename (see `backUpAll`).
+   */
+  original?: string;
+}
 
 export class TransactionalOutputCommitter implements OutputCommitter {
   private readonly outputRoot: string;
@@ -422,6 +448,7 @@ export class TransactionalOutputCommitter implements OutputCommitter {
   private readonly platform: NodeJS.Platform;
   private readonly write: typeof writeFile;
   private readonly delta: boolean;
+  private readonly parallel: boolean;
   private active?: ActiveCommit;
   private disposed = false;
   /**
@@ -455,6 +482,7 @@ export class TransactionalOutputCommitter implements OutputCommitter {
       ((from, to) => copyFile(from, to, constants.COPYFILE_FICLONE));
     this.write = options.fileSystem?.writeFile ?? writeFile;
     this.delta = options.delta !== false;
+    this.parallel = options.parallelWrites !== false;
   }
 
   commit(request: CommitRequest, guard: CommitGuard, signal: AbortSignal): Promise<CommitResult> {
@@ -598,13 +626,18 @@ export class TransactionalOutputCommitter implements OutputCommitter {
           this.rememberVerified(item, comparison.stats, comparison.observedAtNs);
         } else {
           this.verified.delete(item.relative);
-          const staged = path.join(stagedOutputs, item.relative);
-          await mkdir(path.dirname(staged), { recursive: true });
-          await this.mutate('stage-write', item.target, signal);
-          await this.write(staged, item.bytes, { flag: 'wx' });
+          // Parallel writes stage every changed output together, below.
+          if (!this.parallel) {
+            const staged = path.join(stagedOutputs, item.relative);
+            await mkdir(path.dirname(staged), { recursive: true });
+            await this.mutate('stage-write', item.target, signal);
+            await this.write(staged, item.bytes, { flag: 'wx' });
+          }
           changed.push(item);
         }
       }
+      if (this.parallel)
+        await this.stage(changed, stagedOutputs, request.generation, guard, signal);
 
       const removedPaths: string[] = [];
       for (const relative of orphanPaths)
@@ -623,6 +656,18 @@ export class TransactionalOutputCommitter implements OutputCommitter {
       // host would wait for it in vain. Published whole, it holds every output when it is read.
       const order = orderForPublication(changed);
       const directories = await this.newDirectories(order);
+      // Parallel writes take the backups of the outputs published one by one before the first
+      // publish rename (see `backUpAll`), and create each output directory once per commit.
+      const taken = this.parallel
+        ? await this.backUpAll(
+            order.filter((item) => !directories.has(item)),
+            backups,
+            request.generation,
+            guard,
+            signal,
+          )
+        : undefined;
+      const ensured = this.parallel ? new Set<string>() : undefined;
       const publishedDirectories = new Set<string>();
       for (const item of order) {
         const staged = path.join(stagedOutputs, item.relative);
@@ -634,6 +679,11 @@ export class TransactionalOutputCommitter implements OutputCommitter {
           const target = path.join(this.outputRoot, directory);
           const record: RollbackRecord = { target, published: false, removeTarget: true };
           rollback.push(record);
+          if (this.parallel) {
+            await this.publishDirectory(members, stagedOutputs, directory, published, signal);
+            record.published = true;
+            continue;
+          }
           for (const member of members) {
             await this.mutate('publish-output', member.target, signal);
             if (this.delta) {
@@ -655,20 +705,29 @@ export class TransactionalOutputCommitter implements OutputCommitter {
           continue;
         }
         const backup = path.join(backups, 'changed', item.relative);
-        const originalExists = await exists(item.target);
+        const backedUp = taken?.get(item);
+        const originalExists = backedUp ? backedUp.exists : await exists(item.target);
         const record: RollbackRecord = {
           target: item.target,
           published: false,
           removeTarget: !originalExists,
         };
         rollback.push(record);
-        if (originalExists) {
+        if (originalExists && backedUp) {
+          record.backup = backup;
+          if (backedUp.original !== undefined) record.original = backedUp.original;
+          else await this.renameFile(item.target, backup);
+        } else if (originalExists) {
           await mkdir(path.dirname(backup), { recursive: true });
           record.backup = backup;
           await this.mutate('backup-output', item.target, signal);
           await this.backUp(item.target, backup, record);
         }
-        await mkdir(path.dirname(item.target), { recursive: true });
+        const parent = path.dirname(item.target);
+        if (!ensured?.has(parent)) {
+          await mkdir(parent, { recursive: true });
+          ensured?.add(parent);
+        }
         await this.mutate('publish-output', item.target, signal);
         if (this.delta) {
           published.set(item, {
@@ -1434,6 +1493,126 @@ export class TransactionalOutputCommitter implements OutputCommitter {
   }
 
   /**
+   * Parallel writes: stages the changed outputs concurrently, first the directories they need in
+   * the stage, then their files, at most {@link WRITE_CONCURRENCY} at a time. Every write lands
+   * inside the stage, which hosts do not watch (`GENERATED_STAGE_IGNORE`) and which nothing reads
+   * before its publish renames, so the order of the writes is not observable. A failure, a stale
+   * guard or an abort starts no further write and waits for the writes in flight (`runBounded`),
+   * so nothing is still writing when the rollback removes the stage.
+   * @param changed The changed outputs, in plan order.
+   * @param stagedOutputs The stage's output tree.
+   * @param generation The generation the guard must still accept.
+   * @param guard The commit guard.
+   * @param signal The commit's signal.
+   */
+  private async stage(
+    changed: readonly PreparedOutput[],
+    stagedOutputs: string,
+    generation: number,
+    guard: CommitGuard,
+    signal: AbortSignal,
+  ): Promise<void> {
+    const directories = [
+      ...new Set(changed.map((item) => path.dirname(path.join(stagedOutputs, item.relative)))),
+    ];
+    await runBounded(directories, WRITE_CONCURRENCY, async (directory) => {
+      assertCurrent(generation, guard, signal);
+      await mkdir(directory, { recursive: true });
+    });
+    await runBounded(changed, WRITE_CONCURRENCY, async (item) => {
+      assertCurrent(generation, guard, signal);
+      await this.mutate('stage-write', item.target, signal);
+      await this.write(path.join(stagedOutputs, item.relative), item.bytes, { flag: 'wx' });
+    });
+  }
+
+  /**
+   * Parallel writes: the backups of the outputs published one by one, taken concurrently (at most
+   * {@link WRITE_CONCURRENCY} at a time) before the first publish rename, keyed by output.
+   *
+   * A backup copies its output and leaves it untouched (see `backUp`), so taking it early changes
+   * nothing a reader or watcher of the output root sees, and the publish renames that follow keep
+   * their order. Until an output is published, the rollback has no record of it, so a failure here
+   * or before its turn leaves it in place and its copy goes with the stage. Where the copy fails
+   * with a file system error, its partial file is removed and the output gets no identity: its
+   * publication moves it away right before its rename, as `backUp` does, so the gap of that
+   * fallback is as short as without parallel writes. A copy error without a code is thrown.
+   * @param items The outputs published one by one, in publication order.
+   * @param backups The stage's backup tree.
+   * @param generation The generation the guard must still accept.
+   * @param guard The commit guard.
+   * @param signal The commit's signal.
+   */
+  private async backUpAll(
+    items: readonly PreparedOutput[],
+    backups: string,
+    generation: number,
+    guard: CommitGuard,
+    signal: AbortSignal,
+  ): Promise<Map<PreparedOutput, TakenBackup>> {
+    const results: TakenBackup[] = new Array(items.length);
+    await runBounded(items, WRITE_CONCURRENCY, async (item, index) => {
+      assertCurrent(generation, guard, signal);
+      if (!(await exists(item.target))) {
+        results[index] = { exists: false };
+        return;
+      }
+      const backup = path.join(backups, 'changed', item.relative);
+      await mkdir(path.dirname(backup), { recursive: true });
+      await this.mutate('backup-output', item.target, signal);
+      const original = await lstat(item.target, { bigint: true });
+      try {
+        await this.copyBackup(item.target, backup);
+        results[index] = { exists: true, original: fileIdentity(original) };
+      } catch (error) {
+        if (typeof (error as NodeJS.ErrnoException | undefined)?.code !== 'string') throw error;
+        await rm(backup, removal(this.platform));
+        results[index] = { exists: true };
+      }
+    });
+    return new Map(items.map((item, index) => [item, results[index]!]));
+  }
+
+  /**
+   * Parallel writes: publishes the new directory `directory` whole, as the sequential loop does
+   * (one rename of its staged copy, each member's `publish-output` hook first, in order), with the
+   * stats of delta commits taken concurrently: every staged file's before the rename, then the
+   * clock, which the rename follows, then every published file's right after it.
+   * @param members The outputs below the directory, in publication order.
+   * @param stagedOutputs The stage's output tree.
+   * @param directory The directory, relative to the output root.
+   * @param published The delta commit's record of published outputs.
+   * @param signal The commit's signal.
+   */
+  private async publishDirectory(
+    members: readonly PreparedOutput[],
+    stagedOutputs: string,
+    directory: string,
+    published: Map<PreparedOutput, PublishedOutput>,
+    signal: AbortSignal,
+  ): Promise<void> {
+    for (const member of members) await this.mutate('publish-output', member.target, signal);
+    if (this.delta) {
+      const staged = await statAll(
+        members.map((member) => path.join(stagedOutputs, member.relative)),
+      );
+      const atNs = nowNs();
+      for (const [index, member] of members.entries())
+        published.set(member, { atNs, staged: staged[index] });
+    }
+    await this.renameFile(
+      path.join(stagedOutputs, directory),
+      path.join(this.outputRoot, directory),
+    );
+    if (!this.delta) return;
+    const renamed = await statAll(members.map((member) => member.target));
+    for (const [index, member] of members.entries()) {
+      const entry = published.get(member);
+      if (entry) entry.renamed = renamed[index];
+    }
+  }
+
+  /**
    * Keeps the published file `target` at `backup` for the rollback, leaving `target` in place and
    * untouched: a copy, so the publish rename that follows replaces `target` in one step and it never
    * goes missing. Had it been moved away first, a reader between the two renames (a transform
@@ -1528,6 +1707,50 @@ async function rollbackFiles(
     }
   }
   return diagnostics;
+}
+
+/**
+ * Runs `task` for each of `items`, at most `limit` at a time, starting them in index order. After
+ * a task fails no further task starts, and the tasks in flight are awaited, so the caller's
+ * rollback never races a write. The failure thrown is the one of the lowest index: every task
+ * before a failed one had started, so it is the first failure of the sequential loop whenever
+ * failures do not depend on timing.
+ * @param items The work items.
+ * @param limit The most tasks in flight.
+ * @param task The work of one item.
+ */
+async function runBounded<T>(
+  items: readonly T[],
+  limit: number,
+  task: (item: T, index: number) => Promise<void>,
+): Promise<void> {
+  let next = 0;
+  let failedIndex = Infinity;
+  let failure: unknown;
+  const worker = async (): Promise<void> => {
+    while (failedIndex === Infinity && next < items.length) {
+      const index = next++;
+      try {
+        await task(items[index]!, index);
+      } catch (error) {
+        if (index < failedIndex) {
+          failedIndex = index;
+          failure = error;
+        }
+      }
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  if (failedIndex !== Infinity) throw failure;
+}
+
+/** The lstat of each of `files`, concurrently, in their order; undefined where it fails. */
+async function statAll(files: readonly string[]): Promise<Array<BigIntStats | undefined>> {
+  const stats: Array<BigIntStats | undefined> = new Array(files.length);
+  await runBounded(files, PROBE_CONCURRENCY, async (file, index) => {
+    stats[index] = await lstat(file, { bigint: true }).catch(() => undefined);
+  });
+  return stats;
 }
 
 /** A file's device and inode, which a rename keeps and a rewrite or replacement changes. */
