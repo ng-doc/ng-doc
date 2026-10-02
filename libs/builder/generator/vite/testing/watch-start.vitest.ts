@@ -9,6 +9,7 @@ import {
   type HotUpdateOptions,
   type Plugin,
   type ViteDevServer,
+  type WatchOptions,
   createServer,
 } from 'vite';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -50,61 +51,76 @@ afterEach(async () => {
 });
 
 describe('Vite watch start: physical target registration', () => {
-  it('adds only targets the watcher can report and still reports their native changes', async () => {
-    const w = await workspace();
-    const { server, hot, bind } = await nativeServer(w.root);
-    const add = vi.spyOn(server.watcher, 'add');
-    const source = new ViteFileEventSource(server.watcher, 10);
-    bind(source);
-    expect(internals(server.watcher)._isIgnored?.(w.declaration)).toBe(true);
+  // chokidar picks FSEvents where it can (macOS), else `fs.watch` (Linux): both backends run here.
+  it.each([
+    ['the default', false],
+    ['the fs.watch', { useFsEvents: false, usePolling: false }],
+  ] as const)(
+    'adds only targets the watcher can report and still reports their native changes (%s backend)',
+    async (_backend, watch) => {
+      const w = await workspace();
+      const { server, hot, bind } = await nativeServer(w.root, watch);
+      const add = vi.spyOn(server.watcher, 'add');
+      const source = new ViteFileEventSource(server.watcher, 10);
+      bind(source);
+      expect(internals(server.watcher)._isIgnored?.(w.declaration)).toBe(true);
 
-    // Every input is registered (and reconciled); only the ignored declaration skips chokidar.
-    expect(await source.seed(1, inputs([w.declaration, w.input, w.missing]))).toEqual({
-      accepted: true,
-      reconcile: true,
-    });
-    expect(add.mock.calls).toEqual([[[w.input, w.missing]]]);
-    expect(await source.observe(success(2, inputs([w.declaration, w.input, w.missing])))).toEqual({
-      accepted: true,
-      reconcile: false,
-    });
-    expect(add).toHaveBeenCalledOnce();
+      // Every input is registered (and reconciled); only the ignored declaration skips chokidar.
+      // FSEvents reports the creation of each missing path it is given. With the other backends the
+      // missing input is watched through its directory instead, and chokidar is not given it.
+      expect(await source.seed(1, inputs([w.declaration, w.input, w.missing]))).toEqual({
+        accepted: true,
+        reconcile: true,
+      });
+      const fsEvents = internals(server.watcher).options?.useFsEvents === true;
+      expect(add.mock.calls).toEqual([[fsEvents ? [w.input, w.missing] : [w.input]]]);
+      const missing = (source as unknown as { missing: { has(target: string): boolean } }).missing;
+      expect(missing.has(w.missing)).toBe(!fsEvents);
+      expect(await source.observe(success(2, inputs([w.declaration, w.input, w.missing])))).toEqual(
+        {
+          accepted: true,
+          reconcile: false,
+        },
+      );
+      expect(add).toHaveBeenCalledOnce();
 
-    const events: FileChange[] = [];
-    const subscription = await source.subscribe(
-      (batch) => events.push(...batch),
-      () => {},
-    );
-    const seen = (file: string, kind: FileChange['kind']) =>
-      events.some((event) => event.path === file && event.kind === kind);
-    let version = 0;
-    await writeFile(w.declaration, 'export declare const changed: true;');
-    // watcher.add() has no attach acknowledgement: repeat each edit until its event arrives.
-    await repeatUntil(
-      () => writeFile(w.input, `export const input = ${++version};`),
-      () => seen(w.input, 'update'),
-    );
-    // The external tree is demonstrably watched now; the ignored file changes again.
-    await writeFile(w.declaration, 'export declare const changedAgain: true;');
-    await repeatUntil(
-      async () => {
-        await rm(w.missing, { force: true });
-        await writeFile(w.missing, `export const created = ${++version};`);
-      },
-      () => seen(w.missing, 'create'),
-    );
-    await repeatUntil(
-      async () => {
-        if (!existsSync(w.input)) await writeFile(w.input, `export const input = ${++version};`);
-        await rm(w.input);
-      },
-      () => seen(w.input, 'delete'),
-    );
-    // An ignored path is never reported by Vite, whether or not it was added.
-    expect(hot.some((file) => file === w.declaration)).toBe(false);
-    expect(events.some((event) => event.path === w.declaration)).toBe(false);
-    await subscription.dispose();
-  }, 30_000);
+      const events: FileChange[] = [];
+      const subscription = await source.subscribe(
+        (batch) => events.push(...batch),
+        () => {},
+      );
+      const seen = (file: string, kind: FileChange['kind']) =>
+        events.some((event) => event.path === file && event.kind === kind);
+      let version = 0;
+      await writeFile(w.declaration, 'export declare const changed: true;');
+      // watcher.add() has no attach acknowledgement: repeat each edit until its event arrives.
+      await repeatUntil(
+        () => writeFile(w.input, `export const input = ${++version};`),
+        () => seen(w.input, 'update'),
+      );
+      // The external tree is demonstrably watched now; the ignored file changes again.
+      await writeFile(w.declaration, 'export declare const changedAgain: true;');
+      await repeatUntil(
+        async () => {
+          await rm(w.missing, { force: true });
+          await writeFile(w.missing, `export const created = ${++version};`);
+        },
+        () => seen(w.missing, 'create'),
+      );
+      await repeatUntil(
+        async () => {
+          if (!existsSync(w.input)) await writeFile(w.input, `export const input = ${++version};`);
+          await rm(w.input);
+        },
+        () => seen(w.input, 'delete'),
+      );
+      // An ignored path is never reported by Vite, whether or not it was added.
+      expect(hot.some((file) => file === w.declaration)).toBe(false);
+      expect(events.some((event) => event.path === w.declaration)).toBe(false);
+      await subscription.dispose();
+    },
+    30_000,
+  );
 
   it('adds a path unwatched earlier, because chokidar add() is what re-enables it', async () => {
     const w = await workspace();
@@ -540,8 +556,12 @@ async function workspace(): Promise<Workspace> {
   return { root, external, input, missing, declaration };
 }
 
-/** A real Vite server whose hot-update hook forwards native changes, as the adapter does. */
-async function nativeServer(root: string, polling: boolean = false) {
+/**
+ * A real Vite server whose hot-update hook forwards native changes, as the adapter does.
+ * @param root - Its root.
+ * @param watch - `true` to poll, or chokidar options that pin another backend.
+ */
+async function nativeServer(root: string, watch: boolean | WatchOptions = false) {
   let source: ViteFileEventSource | undefined;
   const hot: string[] = [];
   const server = await createServer({
@@ -554,7 +574,11 @@ async function nativeServer(root: string, polling: boolean = false) {
     server: {
       host: '127.0.0.1',
       port: 0,
-      ...(polling ? { watch: { usePolling: true, interval: 50, binaryInterval: 50 } } : {}),
+      ...(watch === true
+        ? { watch: { usePolling: true, interval: 50, binaryInterval: 50 } }
+        : watch
+          ? { watch }
+          : {}),
     },
     plugins: [
       {

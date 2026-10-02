@@ -682,40 +682,50 @@ describe('createNgDocVitePlugin with a real Vite server and generator worker', (
 });
 
 describe('watch input semantics', () => {
-  it('keeps transactional staging TypeScript out of Vite hot-update hooks', async () => {
-    const root = await directory();
-    const updates: string[] = [];
-    const server = await createServer({
-      root,
-      // Its own dependency cache (below a node_modules folder, as linters and editors skip): the
-      // default one is shared by every fixture.
-      cacheDir: path.join(root, '.vite/node_modules/.vite'),
-      configFile: false,
-      logLevel: 'silent',
-      server: {
-        host: '127.0.0.1',
-        port: 0,
-        watch: { ignored: [GENERATED_STAGE_IGNORE] },
-      },
-      plugins: [
-        {
-          name: 'hot-update-observer',
-          hotUpdate(context: HotUpdateOptions) {
-            updates.push(context.file);
-          },
+  // chokidar picks FSEvents where it can (macOS), else `fs.watch` (Linux): both backends run here.
+  it.each([
+    { backend: 'the default', watch: undefined },
+    { backend: 'the fs.watch', watch: { useFsEvents: false, usePolling: false } },
+  ])(
+    'keeps transactional staging TypeScript out of Vite hot-update hooks ($backend backend)',
+    async ({ watch }) => {
+      const root = await directory();
+      const updates: string[] = [];
+      const server = await createServer({
+        root,
+        // Its own dependency cache (below a node_modules folder, as linters and editors skip): the
+        // default one is shared by every fixture.
+        cacheDir: path.join(root, '.vite/node_modules/.vite'),
+        configFile: false,
+        logLevel: 'silent',
+        server: {
+          host: '127.0.0.1',
+          port: 0,
+          watch: { ...watch, ignored: [GENERATED_STAGE_IGNORE] },
         },
-      ],
-    });
-    servers.push(server);
-    await server.listen();
-    const stage = path.join(root, '.ng-doc-stage-test/outputs/api/page.ts');
-    const control = path.join(root, 'control.ts');
-    await mkdir(path.dirname(stage), { recursive: true });
-    await writeFile(stage, 'export const staged = true;');
-    await writeFile(control, 'export const control = true;');
-    await waitFor(async () => updates.includes(control));
-    expect(updates.some((file) => file.includes('.ng-doc-stage-'))).toBe(false);
-  });
+        plugins: [
+          {
+            name: 'hot-update-observer',
+            hotUpdate(context: HotUpdateOptions) {
+              updates.push(context.file);
+            },
+          },
+        ],
+      });
+      servers.push(server);
+      await server.listen();
+      // A file created before the root's read is taken as initial and never reported, and the
+      // `fs.watch` backend (Linux) reads a directory before it attaches its listener.
+      await nativelyWatched(server.watcher, [root]);
+      const stage = path.join(root, '.ng-doc-stage-test/outputs/api/page.ts');
+      const control = path.join(root, 'control.ts');
+      await mkdir(path.dirname(stage), { recursive: true });
+      await writeFile(stage, 'export const staged = true;');
+      await writeFile(control, 'export const control = true;');
+      await waitFor(async () => updates.includes(control));
+      expect(updates.some((file) => file.includes('.ng-doc-stage-'))).toBe(false);
+    },
+  );
 
   // chokidar picks FSEvents where it can (macOS), else `fs.watch` (Linux, Windows). Without
   // FSEvents on macOS it polls unless told not to, so both of its other backends are pinned here;

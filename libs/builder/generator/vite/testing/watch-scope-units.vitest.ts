@@ -357,6 +357,65 @@ describe('watch scope: target placement and the probe poller', () => {
     watcher.dispose();
   });
 
+  it("reports inotify's event sequences once each, whatever the order they arrive in", async () => {
+    // Linux's sequences, replayed deterministically: a rename arrives as two events (the old name
+    // leaving, the new one arriving), and a file created in a new directory before that
+    // directory's watch exists gets no event of its own.
+    const root = await directory();
+    const nested = normalize(path.join(root, 'a/b.ts'));
+    const target = normalize(path.join(root, 'c.ts'));
+    const handles = new Map<string, (event: string, name: string | null) => void>();
+    const changes: FileChange[] = [];
+    const watcher = new MissingPathWatcher(
+      (change) => changes.push(change),
+      MAX_MISSING_PATH_DIRECTORIES,
+      (directory, listener) => {
+        handles.set(normalize(directory), listener);
+        const handle = new EventEmitter() as unknown as fs.FSWatcher;
+        Object.assign(handle, { close: () => handles.delete(normalize(directory)) });
+        return handle;
+      },
+    );
+    expect(watcher.add([nested, target])).toEqual([]);
+    expect([...handles.keys()]).toEqual([normalize(root)]);
+    const emit = (directory: string, event: string, name: string | null) =>
+      handles.get(normalize(directory))!(event, name);
+
+    // The directory and its file exist before the new directory is watched: only the directory's
+    // own creation is reported, by the watch of its parent.
+    await mkdir(path.dirname(nested));
+    await writeFile(nested, 'export {};');
+    emit(root, 'rename', 'a');
+    expect([...handles.keys()].sort()).toEqual([normalize(root), path.dirname(nested)].sort());
+    expect(changes).toEqual([{ kind: 'create', path: nested }]);
+
+    // A rename into place: the staged name leaves (no input of its own), then the input arrives.
+    const stage = path.join(root, '.c.ts.tmp');
+    await writeFile(stage, 'export const c = 1;');
+    await rename(stage, target);
+    emit(root, 'rename', path.basename(stage));
+    expect(changes).toHaveLength(1);
+    emit(root, 'rename', 'c.ts');
+    expect(changes.at(-1)).toEqual({ kind: 'create', path: target });
+    // A replacement by rename reports both halves under the input's own name: one update.
+    await writeFile(stage, 'export const c = 2;');
+    await rename(stage, target);
+    emit(root, 'rename', 'c.ts');
+    emit(root, 'rename', 'c.ts');
+    // An event that names no file (some platforms) re-reads every input of the directory.
+    emit(root, 'change', null);
+    expect(changes.slice(2)).toEqual([{ kind: 'update', path: target }]);
+
+    // The new directory and its file go together: one deletion, reported once it is re-anchored.
+    await rm(path.dirname(nested), { recursive: true });
+    emit(path.dirname(nested), 'rename', 'b.ts');
+    emit(root, 'rename', 'a');
+    expect(changes.slice(3)).toEqual([{ kind: 'delete', path: nested }]);
+    expect([...handles.keys()]).toEqual([normalize(root)]);
+    watcher.dispose();
+    expect(handles.size).toBe(0);
+  });
+
   it('keeps missing inputs beyond the directory budget native and says so', async () => {
     const root = await directory();
     const count = MAX_MISSING_PATH_DIRECTORIES + 3;

@@ -4,6 +4,7 @@ import path from 'node:path';
 import {
   type HotPayload,
   type ViteDevServer,
+  type WatchOptions,
   createServer,
   createServerModuleRunner,
   createServerModuleRunnerTransport,
@@ -26,7 +27,7 @@ afterEach(async () => {
   for (const root of roots.splice(0)) await rm(root, { recursive: true, force: true });
 });
 
-async function fixture() {
+async function fixture(watch?: WatchOptions) {
   const temporary = path.resolve(import.meta.dirname, '../../../../../tmp');
   await mkdir(temporary, { recursive: true });
   const root = await mkdtemp(path.join(temporary, 'ng-doc-ssr-control-'));
@@ -45,13 +46,13 @@ async function fixture() {
     root,
     configFile: false,
     logLevel: 'silent',
-    server: { host: '127.0.0.1', port: 0 },
+    server: { host: '127.0.0.1', port: 0, ...(watch ? { watch } : {}) },
   });
   servers.push(server);
   await server.listen();
   // createServer does not wait for the watcher's initial scan, and an edit made before the scan
   // watched a file is never reported: on a loaded runner the edits below could precede it.
-  await watcherReady(server);
+  await nativelyWatched(server, root, [control, unaccepted]);
   const runner = await createServerModuleRunner(server.environments.ssr);
   runners.push(runner);
   const mutations: HotPayload[] = [];
@@ -89,14 +90,32 @@ async function fixture() {
 }
 
 /**
- * Resolves once Vite's watcher has watched every file of its initial scan. chokidar emits `ready`
- * once and records that it did.
+ * Resolves once chokidar has a native listener for every file of the initial scan. Its `ready`
+ * event is enough for FSEvents only: the `fs.watch` backend (Linux) counts each missing path it
+ * was given twice, and Vite gives it the missing `.env` files, so there `ready` is emitted before
+ * the root is even read. chokidar records a path's closer right after attaching the path's
+ * listener: with `fs.watch` one per file, with FSEvents one for the root, whose stream reports
+ * every file below it.
  * @param server - The dev server.
+ * @param root - Its root.
+ * @param files - Files of the root that the test edits.
  */
-function watcherReady(server: ViteDevServer): Promise<void> {
-  const watcher = server.watcher as ViteDevServer['watcher'] & { _readyEmitted?: boolean };
-  if (watcher._readyEmitted) return Promise.resolve();
-  return new Promise((resolve) => watcher.once('ready', () => resolve()));
+async function nativelyWatched(
+  server: ViteDevServer,
+  root: string,
+  files: readonly string[],
+): Promise<void> {
+  const watcher = server.watcher as ViteDevServer['watcher'] & {
+    _readyEmitted?: boolean;
+    _closers: ReadonlyMap<string, unknown>;
+    options: { useFsEvents?: boolean };
+  };
+  if (!watcher._readyEmitted) await new Promise((resolve) => watcher.once('ready', resolve));
+  const targets = watcher.options.useFsEvents ? [root] : [root, ...files];
+  await vi.waitFor(
+    () => expect(targets.filter((target) => !watcher._closers.has(target))).toEqual([]),
+    { timeout: 10_000 },
+  );
 }
 
 async function remainsPending<T>(promise: Promise<T>): Promise<void> {
@@ -110,9 +129,13 @@ async function remainsPending<T>(promise: Promise<T>): Promise<void> {
   expect(outcome).toBe('pending');
 }
 
-describe('SSR renderer public HMR fence control', () => {
+// chokidar picks FSEvents where it can (macOS), else `fs.watch` (Linux): both backends run here.
+describe.each([
+  { backend: 'the default', watch: undefined },
+  { backend: 'the fs.watch', watch: { useFsEvents: false, usePolling: false } },
+])('SSR renderer public HMR fence control ($backend backend)', ({ watch }) => {
   it('acknowledges only the requested finite sequence after prior public HMR delivery', async () => {
-    const { controlModule, epoch, fence } = await fixture();
+    const { controlModule, epoch, fence } = await fixture(watch);
     const control = await controlModule();
     const waiting = control.waitForNgDocSsrFence(2);
 
@@ -125,7 +148,7 @@ describe('SSR renderer public HMR fence control', () => {
   }, 30_000);
 
   it('keeps multiple waiters ordered and rejects invalid sequence inputs', async () => {
-    const { controlModule, fence } = await fixture();
+    const { controlModule, fence } = await fixture(watch);
     const control = await controlModule();
     const one = control.waitForNgDocSsrFence(1);
     const two = control.waitForNgDocSsrFence(2);
@@ -146,7 +169,7 @@ describe('SSR renderer public HMR fence control', () => {
   }, 30_000);
 
   it('cleans up aborted fence waiters before and after registration', async () => {
-    const { controlModule, fence } = await fixture();
+    const { controlModule, fence } = await fixture(watch);
     const control = await controlModule();
     const before = new AbortController();
     const beforeReason = new Error('aborted before wait');
@@ -163,7 +186,7 @@ describe('SSR renderer public HMR fence control', () => {
   }, 30_000);
 
   it('rebinds after a real self-accepted control-file update in the same public module runner', async () => {
-    const { control, controlModule, fence, source } = await fixture();
+    const { control, controlModule, fence, source } = await fixture(watch);
     expect((await controlModule()).testRevision).toBe('one');
 
     await writeFile(control, source('two'));
@@ -180,7 +203,8 @@ describe('SSR renderer public HMR fence control', () => {
   }, 30_000);
 
   it('handles a real unaccepted full reload and retains a working control binding in the same runner', async () => {
-    const { controlModule, entrySource, fence, mutations, runner, unaccepted } = await fixture();
+    const { controlModule, entrySource, fence, mutations, runner, unaccepted } =
+      await fixture(watch);
     expect(
       (await runner.import<{ testRevision: string }>('/unaccepted-entry.mjs')).testRevision,
     ).toBe('one');
@@ -207,7 +231,8 @@ describe('SSR renderer public HMR fence control', () => {
   }, 30_000);
 
   it('does not acknowledge a fence from a full-reload receipt while real entry evaluation is held', async () => {
-    const { controlModule, entrySource, fence, mutations, runner, unaccepted } = await fixture();
+    const { controlModule, entrySource, fence, mutations, runner, unaccepted } =
+      await fixture(watch);
     expect(
       (await runner.import<{ testRevision: string }>('/unaccepted-entry.mjs')).testRevision,
     ).toBe('one');
