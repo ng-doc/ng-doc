@@ -6,11 +6,14 @@ import path from 'node:path';
 import { COMMANDS, ROOT, isMain } from './check-builder-modernization.mjs';
 
 // Guards the one-check-per-job layout of .github/workflows/pr.yml: a runner group or a test
-// target that has no job would otherwise never run in CI, and nothing would say so.
+// target that has no job would otherwise never run in CI, and nothing would say so. Branch
+// protection requires only the aggregate gate job, so a job the gate does not wait for would not
+// block a merge either.
 
 const require = createRequire(import.meta.url);
 const WORKFLOW = '.github/workflows/pr.yml';
 const SPEC = /\.(spec|test)\.[cm]?[jt]sx?$/;
+const GATE = 'pr-checks-passed';
 
 /** Expands a job matrix the way GitHub does: axes, then `exclude`, then `include`. */
 export function expandMatrix(matrix = {}) {
@@ -140,6 +143,22 @@ export function stepProblems(jobs) {
 }
 
 /**
+ * The gate job exists, waits for every other job, and runs whatever their outcome: a gate that
+ * is skipped after a failure would report as passing to branch protection.
+ */
+export function gateProblems(jobs) {
+  const gate = jobs[GATE];
+  if (!gate) return [`no ${GATE} job`];
+  const needs = [gate.needs ?? []].flat();
+  const problems = Object.keys(jobs)
+    .filter((id) => id !== GATE && !needs.includes(id))
+    .map((id) => `${GATE} does not need ${id}`);
+  if (gate.if !== '${{ always() }}')
+    problems.push(`${GATE} does not run with if: \${{ always() }}`);
+  return problems;
+}
+
+/**
  * Whether a target runs the project's own specs with Vitest: the Angular unit-test builder, or a
  * command that runs `vitest run --config <project>/vitest.config.ts`. Such a target has nothing to
  * run in a project without specs.
@@ -220,6 +239,7 @@ export async function checkWorkflow(root = ROOT) {
     ...mergeJobProblems(expandMatrix(jobs['generator-coverage']?.strategy.matrix)),
     ...stepProblems(jobs),
     ...testJobProblems(jobs.unit.strategy.matrix.target, await readProjects(root)),
+    ...gateProblems(jobs),
   ];
 }
 
@@ -227,6 +247,8 @@ if (await isMain(import.meta.url)) {
   const problems = await checkWorkflow();
   for (const problem of problems) console.error(`check-ci-jobs: ${problem}`);
   if (!problems.length)
-    console.log(`check-ci-jobs: ${WORKFLOW} has a job for every runner group and test target`);
+    console.log(
+      `check-ci-jobs: ${WORKFLOW} has a job for every runner group and test target, and ${GATE} needs every job`,
+    );
   process.exitCode = problems.length ? 1 : 0;
 }

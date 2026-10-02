@@ -267,6 +267,10 @@ Windows. Roughly, CI runs:
 - end-to-end checks that install the packed packages into fresh projects, including `ng add`, on
   Linux, Windows and macOS.
 
+A final **PR checks passed** job waits for all the others and fails unless every one of them
+succeeded, so branch protection requires only that one check. A new job in `pr.yml` must be added
+to its `needs`; `tools/scripts/check-ci-jobs.mjs` fails the build when one is missing.
+
 A pull request is ready to merge when every check passes. If a check fails for a reason that looks
 unrelated to your change, say so in the pull request and a maintainer will take a look.
 

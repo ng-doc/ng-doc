@@ -673,3 +673,51 @@ jobs:
           path: ${{ runner.temp }}/ng-add-e2e
           if-no-files-found: ignore
           retention-days: 3
+
+  # The one check that branch protection requires. It runs after every other job, whatever their
+  # outcome, and passes only when each of them succeeded. A skipped job counts as a failure, since
+  # its check never ran; no job here is skipped by design, so ALLOWED_SKIPS is empty. A job whose
+  # static `if:` skips it on purpose goes there by id. tools/scripts/check-ci-jobs.mjs fails when a
+  # job is missing from `needs`.
+  pr-checks-passed:
+    name: PR checks passed
+    if: ${{ always() }}
+    needs:
+      - build
+      - lint
+      - unit
+      - tools
+      - generator
+      - generator-shard
+      - generator-coverage
+      - windows-processes
+      - site-legacy
+      - site-vite
+      - site-modern
+      - parity
+      - vite-main
+      - runtime-links
+      - packed-consumer
+      - packed-optional
+      - packed-interruption
+      - ng-add-e2e
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - name: Every job succeeded
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+          ALLOWED_SKIPS: ''
+        run: |
+          jq -r '"| Job | Result |", "| --- | --- |", (to_entries[] | "| \(.key) | \(.value.result) |")' <<<"$RESULTS" | tee -a "$GITHUB_STEP_SUMMARY"
+          failed=$(jq -r --arg allowed "$ALLOWED_SKIPS" '
+            ($allowed | split(" ") | map(select(. != ""))) as $skips
+            | to_entries[]
+            | select(.value.result != "success")
+            | select(.value.result != "skipped" or (.key | IN($skips[]) | not))
+            | .key' <<<"$RESULTS")
+          if [ -n "$failed" ]; then
+            echo "::error::Jobs that did not succeed: $(echo $failed)"
+            exit 1
+          fi

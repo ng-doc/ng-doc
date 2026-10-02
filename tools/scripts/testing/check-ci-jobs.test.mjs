@@ -5,6 +5,7 @@ import { COMMANDS } from '../check-builder-modernization.mjs';
 import {
   checkWorkflow,
   expandMatrix,
+  gateProblems,
   generatorJobProblems,
   mergeJobProblems,
   runsProjectSpecs,
@@ -312,6 +313,34 @@ test('a spec target is the unit-test builder or a Vitest run of the project conf
   );
   assert.equal(runsProjectSpecs(vitest('node --test tools/scripts/testing/*.test.mjs')), false);
   assert.equal(runsProjectSpecs({ executor: '@nx/eslint:lint' }), false);
+});
+
+test('the gate job waits for every other job and runs whatever their outcome', () => {
+  const always = '${{ always() }}';
+  const jobs = {
+    build: {},
+    lint: { needs: 'build' },
+    unit: { needs: ['build'] },
+    'pr-checks-passed': { if: always, needs: ['build', 'lint', 'unit'] },
+  };
+  assert.deepEqual(gateProblems(jobs), []);
+  // A job left out of `needs` would not block a merge.
+  assert.deepEqual(
+    gateProblems({ ...jobs, 'pr-checks-passed': { if: always, needs: ['build', 'lint'] } }),
+    ['pr-checks-passed does not need unit'],
+  );
+  assert.deepEqual(gateProblems({ ...jobs, 'pr-checks-passed': { if: always, needs: 'build' } }), [
+    'pr-checks-passed does not need lint',
+    'pr-checks-passed does not need unit',
+  ]);
+  // Without always(), a failed job skips the gate, and branch protection reads a skip as a pass.
+  assert.deepEqual(
+    gateProblems({ ...jobs, 'pr-checks-passed': { needs: ['build', 'lint', 'unit'] } }),
+    ['pr-checks-passed does not run with if: ${{ always() }}'],
+  );
+  assert.deepEqual(gateProblems({ build: {}, lint: { needs: 'build' } }), [
+    'no pr-checks-passed job',
+  ]);
 });
 
 test('the committed pull request workflow has a job for every runner group and test target', async () => {
