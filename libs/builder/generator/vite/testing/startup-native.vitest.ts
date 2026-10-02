@@ -21,8 +21,12 @@ afterEach(async () => {
   try {
     await Promise.all(servers.splice(0).map((server) => server.close()));
   } finally {
+    // Vite's dependency optimizer may still write its fixture cache (`deps_temp_*`) after the
+    // server closed: a removal that meets a directory it just wrote into retries.
     await Promise.all(
-      temporary.splice(0).map((root) => rm(root, { recursive: true, force: true })),
+      temporary
+        .splice(0)
+        .map((root) => rm(root, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 })),
     );
     vi.unstubAllEnvs();
   }

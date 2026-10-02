@@ -1080,6 +1080,132 @@ test('replaces a changed output and the manifest in one step: neither is ever mi
   expect(await readFile(path.join(root, 'page.txt'), 'utf8')).toBe('new');
 });
 
+test('publishes a new directory whole: whoever reads it finds every output in it', async () => {
+  const root = await temporary('ng-doc-new-directory');
+  const old = artifact('project-one', 'owner', [output('page.txt', 'old')]);
+  const first = await new TransactionalOutputCommitter({ outputRoot: root }).commit(
+    { generation: 1, candidate: snapshot([old]) },
+    guard(),
+    new AbortController().signal,
+  );
+  // What a watcher that reads each new directory once would find there.
+  const listed = new Map<string, string[]>();
+  const renamed: string[] = [];
+  const publishing: string[] = [];
+  const committer = new TransactionalOutputCommitter({
+    outputRoot: root,
+    beforeMutation: (operation, target) => {
+      if (operation === 'publish-output') publishing.push(path.relative(root, target));
+    },
+    fileSystem: {
+      rename: async (from, to) => {
+        await renameFile(from, to);
+        const target = path.relative(root, String(to));
+        if (!target.startsWith('.ng-doc-stage-')) renamed.push(target);
+        if (target === 'guides') {
+          const walk = async (directory: string): Promise<string[]> =>
+            (
+              await Promise.all(
+                (await readdir(directory, { withFileTypes: true })).map((entry) =>
+                  entry.isDirectory()
+                    ? walk(path.join(directory, entry.name))
+                    : [path.relative(root, path.join(directory, entry.name))],
+                ),
+              )
+            ).flat();
+          listed.set(target, (await walk(String(to))).sort());
+        }
+      },
+    },
+  });
+  const next = artifact('project-one', 'owner', [
+    output('page.txt', 'new'),
+    output('guides/one/page.ts', 'one'),
+    output('guides/one/index/page.ts', 'index'),
+    output('guides/two/page.ts', 'two'),
+    output('routes.ts', 'routes', 'routes'),
+  ]);
+  const result = await committer.commit(
+    {
+      generation: 2,
+      candidate: snapshot([next], 'next'),
+      previous: (first as { manifest: OutputManifest }).manifest,
+    },
+    guard(),
+    new AbortController().signal,
+  );
+  expect(result.status).toBe('committed');
+  const published = ['guides/one/index/page.ts', 'guides/one/page.ts', 'guides/two/page.ts'];
+  expect(listed.get('guides')).toEqual(published.map((file) => path.join(...file.split('/'))));
+  // One rename for the new directory, one per file elsewhere, the late routes after it.
+  expect(renamed).toEqual(['guides', 'page.txt', 'routes.ts', '.ng-doc-output-manifest.json']);
+  expect(publishing).toEqual(
+    [...published, 'page.txt', 'routes.ts'].map((file) => path.join(...file.split('/'))),
+  );
+  expect(await readFile(path.join(root, 'guides/one/index/page.ts'), 'utf8')).toBe('index');
+
+  // A new directory that holds a late output (routes, context, search) would publish it before
+  // the others: its outputs are published one by one, as in an existing directory.
+  renamed.length = 0;
+  const late = artifact('project-one', 'owner', [
+    ...next.outputs,
+    output('assets/search.json', '[]', 'search'),
+    output('assets/icon.svg', '<svg/>', 'asset'),
+  ]);
+  const third = await committer.commit(
+    {
+      generation: 3,
+      candidate: snapshot([late], 'late'),
+      previous: (result as { manifest: OutputManifest }).manifest,
+    },
+    guard(),
+    new AbortController().signal,
+  );
+  expect(third.status).toBe('committed');
+  expect(renamed).toEqual([
+    path.join('assets', 'icon.svg'),
+    path.join('assets', 'search.json'),
+    '.ng-doc-output-manifest.json',
+  ]);
+});
+
+test('rolls a new directory back whole when the commit fails after publishing it', async () => {
+  const root = await temporary('ng-doc-new-directory-rollback');
+  const old = artifact('project-one', 'owner', [output('page.txt', 'old')]);
+  const first = await new TransactionalOutputCommitter({ outputRoot: root }).commit(
+    { generation: 1, candidate: snapshot([old]) },
+    guard(),
+    new AbortController().signal,
+  );
+  const manifestPath = path.join(root, '.ng-doc-output-manifest.json');
+  const manifestBefore = await readFile(manifestPath, 'utf8');
+  const committer = new TransactionalOutputCommitter({
+    outputRoot: root,
+    beforeMutation: (operation) => {
+      if (operation === 'publish-manifest') throw new Error('manifest publish failed');
+    },
+  });
+  const next = artifact('project-one', 'owner', [
+    output('page.txt', 'new'),
+    output('guides/one/page.ts', 'one'),
+  ]);
+  const result = await committer.commit(
+    {
+      generation: 2,
+      candidate: snapshot([next], 'next'),
+      previous: (first as { manifest: OutputManifest }).manifest,
+    },
+    guard(),
+    new AbortController().signal,
+  );
+  expect(result.status).toBe('failed');
+  expect(
+    (await readdir(root)).filter((entry) => !entry.startsWith('.ng-doc-stage-')).sort(),
+  ).toEqual(['.ng-doc-output-manifest.json', 'page.txt']);
+  expect(await readFile(path.join(root, 'page.txt'), 'utf8')).toBe('old');
+  expect(await readFile(manifestPath, 'utf8')).toBe(manifestBefore);
+});
+
 test('moves a file away to back it up where the file system cannot link it', async () => {
   const root = await temporary('ng-doc-backup-fallback');
   const old = artifact('project-one', 'owner', [output('page.txt', 'old')]);

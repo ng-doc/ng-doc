@@ -611,8 +611,44 @@ export class TransactionalOutputCommitter implements OutputCommitter {
        * rename and the stat of the staged file it renamed, which ties a later stat to these bytes.
        */
       const published = new Map<PreparedOutput, PublishedOutput>();
-      for (const item of orderForPublication(changed)) {
+      // A changed output below a directory that does not exist yet joins that directory, which is
+      // published whole, with one rename of its staged copy, when its first output comes. A
+      // watcher reads a new directory before it watches it (chokidar's `fs.watch` backend, the
+      // default on Linux): an output renamed into it in between would never be reported, and a
+      // host would wait for it in vain. Published whole, it holds every output when it is read.
+      const order = orderForPublication(changed);
+      const directories = await this.newDirectories(order);
+      const publishedDirectories = new Set<string>();
+      for (const item of order) {
         const staged = path.join(stagedOutputs, item.relative);
+        const directory = directories.get(item);
+        if (directory !== undefined) {
+          if (publishedDirectories.has(directory)) continue;
+          publishedDirectories.add(directory);
+          const members = order.filter((member) => directories.get(member) === directory);
+          const target = path.join(this.outputRoot, directory);
+          const record: RollbackRecord = { target, published: false, removeTarget: true };
+          rollback.push(record);
+          for (const member of members) {
+            await this.mutate('publish-output', member.target, signal);
+            if (this.delta) {
+              published.set(member, {
+                atNs: nowNs(),
+                staged: await lstat(path.join(stagedOutputs, member.relative), {
+                  bigint: true,
+                }).catch(() => undefined),
+              });
+            }
+          }
+          await this.renameFile(path.join(stagedOutputs, directory), target);
+          record.published = true;
+          for (const member of members) {
+            const entry = published.get(member);
+            if (entry)
+              entry.renamed = await lstat(member.target, { bigint: true }).catch(() => undefined);
+          }
+          continue;
+        }
         const backup = path.join(backups, 'changed', item.relative);
         const originalExists = await exists(item.target);
         const record: RollbackRecord = {
@@ -1356,6 +1392,43 @@ export class TransactionalOutputCommitter implements OutputCommitter {
   }
 
   /**
+   * For each output below a directory that does not exist yet, the outermost such directory
+   * (relative to the output root), unless one of its outputs is published late (routes, context,
+   * search): the directory would publish it early. Those outputs, and every other, are published
+   * one by one.
+   * @param order The changed outputs, in publication order.
+   */
+  private async newDirectories(order: PreparedOutput[]): Promise<Map<PreparedOutput, string>> {
+    const missing = new Map<string, boolean>();
+    const absent = async (relative: string) => {
+      let value = missing.get(relative);
+      if (value === undefined) {
+        value = !(await exists(path.join(this.outputRoot, relative)));
+        missing.set(relative, value);
+      }
+      return value;
+    };
+    const directories = new Map<PreparedOutput, string>();
+    for (const item of order) {
+      const segments = item.relative.split('/').slice(0, -1);
+      for (let depth = 1; depth <= segments.length; depth++) {
+        const directory = segments.slice(0, depth).join('/');
+        if (await absent(directory)) {
+          directories.set(item, directory);
+          break;
+        }
+      }
+    }
+    const early = new Set(
+      [...directories]
+        .filter(([item]) => LATE_ROLES.has(item.output.role))
+        .map(([, directory]) => directory),
+    );
+    for (const [item, directory] of directories) if (early.has(directory)) directories.delete(item);
+    return directories;
+  }
+
+  /**
    * Keeps the published file `target` at `backup` for the rollback, leaving `target` in place: a
    * hard link to the same file, so the publish rename that follows replaces `target` in one step
    * and it never goes missing. Had it been moved away first, a reader between the two renames (a
@@ -1624,11 +1697,13 @@ function manifestEntry(item: PreparedOutput): OutputManifest['files'][number] {
   };
 }
 
+/** Roles published after every other output: they refer to the others. */
+const LATE_ROLES = new Set<FileOutput['role']>(['routes', 'context', 'search', 'api-list']);
+
 function orderForPublication(outputs: PreparedOutput[]): PreparedOutput[] {
-  const late = new Set<FileOutput['role']>(['routes', 'context', 'search', 'api-list']);
   return [...outputs].sort(
     (left, right) =>
-      Number(late.has(left.output.role)) - Number(late.has(right.output.role)) ||
+      Number(LATE_ROLES.has(left.output.role)) - Number(LATE_ROLES.has(right.output.role)) ||
       compareText(left.relative, right.relative),
   );
 }
