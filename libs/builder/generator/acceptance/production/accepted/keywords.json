@@ -239,6 +239,7 @@
 "*MigrateToNewEnginePage#1-preview-the-migration": {"path":"docs/upgrade/migrate-to-the-new-engine#1-preview-the-migration","title":"Migrate to the new engine [1. Preview the migration]","type":"link"},
 "*MigrateToNewEnginePage#2-run-the-schematic": {"path":"docs/upgrade/migrate-to-the-new-engine#2-run-the-schematic","title":"Migrate to the new engine [2. Run the schematic]","type":"link"},
 "*MigrateToNewEnginePage#3-build-and-check": {"path":"docs/upgrade/migrate-to-the-new-engine#3-build-and-check","title":"Migrate to the new engine [3. Build and check]","type":"link"},
+"*MigrateToNewEnginePage#after-migrating": {"path":"docs/upgrade/migrate-to-the-new-engine#after-migrating","title":"Migrate to the new engine [After migrating]","type":"link"},
 "*MigrateToNewEnginePage#known-limitations": {"path":"docs/upgrade/migrate-to-the-new-engine#known-limitations","title":"Migrate to the new engine [Known limitations]","type":"link"},
 "*MigrateToNewEnginePage#prerequisites": {"path":"docs/upgrade/migrate-to-the-new-engine#prerequisites","title":"Migrate to the new engine [Prerequisites]","type":"link"},
 "*MigrateToNewEnginePage#related": {"path":"docs/upgrade/migrate-to-the-new-engine#related","title":"Migrate to the new engine [Related]","type":"link"},
