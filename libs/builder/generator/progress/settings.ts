@@ -192,6 +192,11 @@ export const ENGINE_SWITCHES: ReadonlyArray<{ name: string; values: RegExp; effe
       effect: 'every code block is highlighted again',
     },
     {
+      name: 'NGDOC_PARALLEL_RENDER',
+      values: /^(0|false|off|no|verify)$/i,
+      effect: 'pages are rendered and linked in one thread',
+    },
+    {
       name: 'NGDOC_PARALLEL_WRITES',
       values: /^(0|false|off|no)$/i,
       effect: 'generated files are written one at a time',

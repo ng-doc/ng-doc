@@ -351,6 +351,67 @@ test('the kernel is a leaf: it imports only ./*, node:* and ../contracts', async
   }
 });
 
+test('a render thread imports only the HTML pipeline and its own runtime', async (t) => {
+  const root = await temporary(t);
+  const base = path.join(root, 'libs/builder/generator');
+  for (const name of [
+    'artifacts',
+    'compiler',
+    'content',
+    'discovery',
+    'graph',
+    'kernel',
+    'outputs',
+    'progress',
+    'semantic',
+    'session',
+    'worker',
+  ])
+    await mkdir(path.join(base, name), { recursive: true });
+  for (const name of ['contracts.ts', 'content-module-ids.ts'])
+    await writeFile(path.join(base, name), 'export {};');
+  await writeFile(
+    path.join(base, 'content/html-worker.ts'),
+    "import { parentPort } from 'node:worker_threads';\nimport { serveHtmlThread } from './html-pipeline';",
+  );
+  const pipeline = [
+    "import { parseFile } from '@orama/plugin-parsedoc';",
+    "import type { ContentAnchor } from '../contracts';",
+    "import { digestOf } from '../kernel/canonical';",
+    "import { decode, encode } from '../worker/protocol';",
+    "import type { HighlightBlock } from './highlight-cache';",
+    "export const utilities = () => import('@ng-doc/utils');",
+  ].join('\n');
+  await writeFile(path.join(base, 'content/html-pipeline.ts'), pipeline);
+  // Other content files may import anything the core allows.
+  await writeFile(path.join(base, 'content/html-pool.ts'), "import { existsSync } from 'node:fs';");
+  assert.equal((await sourceBoundaryCheck(root)).filesChecked, 5);
+  for (const code of [
+    "import { readFileSync } from 'node:fs';",
+    "import { readFile } from 'node:fs/promises';",
+    "import { highlightJournal } from './highlight-cache';",
+    "import { GeneratorContentCompiler } from './content-compiler';",
+    "import { readText } from '../kernel/observations';",
+    "import { x } from '../compiler/common';",
+    "import { minimatch } from 'minimatch';",
+    "const x = require('node:fs');",
+    'const x = await import(name);',
+  ]) {
+    for (const file of ['content/html-worker.ts', 'content/html-pipeline.ts']) {
+      await writeFile(path.join(base, file), code);
+      await assert.rejects(
+        sourceBoundaryCheck(root),
+        new RegExp(`render thread may import only.*\\n.*${file.replace('.', '\\.')}:1`, 's'),
+        `${file}: ${code}`,
+      );
+      await writeFile(
+        path.join(base, file),
+        file.endsWith('pipeline.ts') ? pipeline : 'export {};',
+      );
+    }
+  }
+});
+
 test('posixEnv reaches the generated Vitest config on POSIX only', async (t) => {
   const root = await temporary(t);
   const progress = COMMANDS.find((entry) => entry.id === 'progress');

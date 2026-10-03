@@ -65,6 +65,7 @@ export async function buildObservedRuntime({ repository, packages, expectedSourc
     'bootstrap/cli',
     'bootstrap/bin',
     'compiler/index',
+    'content/html-worker',
     'worker/index',
     'worker/entry',
     'angular/application',

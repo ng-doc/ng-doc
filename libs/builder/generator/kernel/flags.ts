@@ -37,6 +37,7 @@ export const TRACKED_PROGRAM_REUSE_FLAG = 'NGDOC_TRACKED_PROGRAM_REUSE';
 export const FAST_START_FLAG = 'NGDOC_FAST_START';
 export const PARALLEL_WRITES_FLAG = 'NGDOC_PARALLEL_WRITES';
 export const HIGHLIGHT_CACHE_FLAG = 'NGDOC_HIGHLIGHT_CACHE';
+export const PARALLEL_RENDER_FLAG = 'NGDOC_PARALLEL_RENDER';
 
 /** The registry, in the order the engine applies the switches. */
 export const FLAGS: readonly FlagDefinition[] = Object.freeze(
@@ -137,6 +138,14 @@ export const FLAGS: readonly FlagDefinition[] = Object.freeze(
         'Code blocks are highlighted with one Shiki highlighter per runtime and cached by their ' +
         'text, language, meta, themes and Shiki version; development keeps the cache beside the ' +
         'artifact cache.',
+      verify: true,
+    },
+    {
+      name: PARALLEL_RENDER_FLAG,
+      description:
+        'A large generation runs the HTML processing of its pages (highlighting, anchors, keyword ' +
+        'links, search records) on up to four worker threads, while the main thread prepares the ' +
+        'next pages in order.',
       verify: true,
     },
     {

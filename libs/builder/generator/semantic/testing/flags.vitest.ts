@@ -7,6 +7,7 @@ import {
   HIGHLIGHT_CACHE_FLAG,
   INCREMENTAL_PROGRAM_FLAG,
   INCREMENTAL_SKIP_FLAG,
+  PARALLEL_RENDER_FLAG,
   PERSISTENT_WORKER_FLAG,
   readFlag,
   SCOPED_SEMANTIC_FLAG,
@@ -41,12 +42,13 @@ describe('the engine switch registry', () => {
     }
   });
 
-  it('registers the scoped semantic, incremental program, shape closure and highlight cache switches with their effects', () => {
+  it('registers the scoped semantic, incremental program, shape closure, highlight cache and parallel render switches with their effects', () => {
     for (const name of [
       SCOPED_SEMANTIC_FLAG,
       INCREMENTAL_PROGRAM_FLAG,
       SHAPE_CLOSURE_FLAG,
       HIGHLIGHT_CACHE_FLAG,
+      PARALLEL_RENDER_FLAG,
     ]) {
       const flag = FLAGS.find((item) => item.name === name)!;
       expect(flag.verify).toBe(true);
@@ -59,6 +61,7 @@ describe('the engine switch registry', () => {
     expect(ENGINE_SWITCHES.some((engine) => engine.name === INCREMENTAL_PROGRAM_FLAG)).toBe(true);
     expect(ENGINE_SWITCHES.some((engine) => engine.name === SHAPE_CLOSURE_FLAG)).toBe(true);
     expect(ENGINE_SWITCHES.some((engine) => engine.name === HIGHLIGHT_CACHE_FLAG)).toBe(true);
+    expect(ENGINE_SWITCHES.some((engine) => engine.name === PARALLEL_RENDER_FLAG)).toBe(true);
   });
 
   it.each([

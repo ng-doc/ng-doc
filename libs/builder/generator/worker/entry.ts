@@ -31,6 +31,20 @@ type DryRunReport = () => { counters: { generations: number }; last?: unknown };
 /** The dry-run report of the loaded compilation module, when it exports one. */
 let dryRunReport: DryRunReport | undefined;
 
+/**
+ * The compilation module's render threads (compiler/index.ts), when it has them: a long-lived
+ * runtime keeps them across its generations' services, and every runtime terminates them before it
+ * exits (they would die with the process anyway; this waits until each has stopped).
+ */
+let renderThreads: { keep(keep: boolean): void; dispose(): Promise<void> } | undefined;
+
+/** Terminates the render threads, then exits. */
+function exit(): void {
+  void (renderThreads?.dispose() ?? Promise.resolve())
+    .catch(() => undefined)
+    .finally(() => process.exit(0));
+}
+
 const send = (message: string): void => {
   process.send!(message);
 };
@@ -53,12 +67,21 @@ function progressFor(
 
 async function load(options: Record<string, unknown>): Promise<Factory> {
   if (typeof options['moduleUrl'] !== 'string') throw new Error('Missing compilation module URL');
-  const module: { createCompilationService?: Factory; targetedDryRun?: DryRunReport } =
-    await import(options['moduleUrl']);
+  const module: {
+    createCompilationService?: Factory;
+    targetedDryRun?: DryRunReport;
+    keepRenderThreads?: (keep: boolean) => void;
+    disposeRenderThreads?: () => Promise<void>;
+  } = await import(options['moduleUrl']);
   if (typeof module.createCompilationService !== 'function') {
     throw new Error('Compilation module must export createCompilationService(options)');
   }
   if (typeof module.targetedDryRun === 'function') dryRunReport = module.targetedDryRun;
+  if (
+    typeof module.keepRenderThreads === 'function' &&
+    typeof module.disposeRenderThreads === 'function'
+  )
+    renderThreads = { keep: module.keepRenderThreads, dispose: module.disposeRenderThreads };
   return module.createCompilationService;
 }
 
@@ -97,6 +120,8 @@ async function start(workerData: unknown): Promise<void> {
       } finally {
         progress?.close();
         await service.dispose();
+        // Nothing of a one-shot compile outlives it (the process ends anyway: a failure is moot).
+        await renderThreads?.dispose().catch(() => undefined);
       }
       send(encode({ type: 'result', id, result }));
     } catch (error) {
@@ -242,6 +267,8 @@ function withMembers(text: string, members: Record<string, string>): string {
 async function serve(workerData: unknown): Promise<void> {
   const options = decode(workerData);
   const factory = await load(options);
+  // The render threads serve every generation of this runtime, until it is disposed or recycled.
+  renderThreads?.keep(true);
   // Validate the factory once, as the one-shot runtime does before `ready`.
   await (await create(factory, options['factoryOptions'])).dispose();
   let base: string | null = null;
@@ -389,7 +416,7 @@ async function serve(workerData: unknown): Promise<void> {
       message = encode({ type: 'failure', id, message: errorMessage(error), state: state() });
     }
     process.send!(message, () => {
-      if (disposing) process.exit(0);
+      if (disposing) return exit();
       settle();
       // A compile that is already running gets neither a full collection in its middle nor a
       // report of its mid-compile resident set; its own reply collects later.
@@ -414,7 +441,7 @@ async function serve(workerData: unknown): Promise<void> {
       if (running && running.id === id) running.controller.abort();
     } else if (job['type'] === 'dispose') {
       disposing = true;
-      if (!running) process.exit(0);
+      if (!running) return exit();
       running.controller.abort();
     } else if (
       job['type'] === 'resync' &&

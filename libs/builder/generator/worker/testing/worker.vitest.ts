@@ -108,7 +108,8 @@ beforeAll(async () => {
     // any point, and a runtime can outlive its test: a write in place could leave a truncated
     // file, or be read half-written, when afterAll merges the files.
     banner: {
-      js: `import { renameSync as publishCoverage, writeFileSync as saveCoverage } from 'node:fs'; const nativeSend = process.send; let coverageWrites = 0; process.send = function(...args) { const partial = ${JSON.stringify(temporary)} + '/partial-coverage-' + process.pid + '-' + ++coverageWrites + '.json'; saveCoverage(partial, JSON.stringify(globalThis.__coverage__)); publishCoverage(partial, ${JSON.stringify(temporary)} + '/entry-coverage-' + process.pid + '.json'); return nativeSend.apply(process, args); };`,
+      // A runtime that exits on its own (dispose, a recycle) writes it once more on its way out.
+      js: `import { renameSync as publishCoverage, writeFileSync as saveCoverage } from 'node:fs'; const nativeSend = process.send; let coverageWrites = 0; const flushCoverage = () => { const partial = ${JSON.stringify(temporary)} + '/partial-coverage-' + process.pid + '-' + ++coverageWrites + '.json'; saveCoverage(partial, JSON.stringify(globalThis.__coverage__)); publishCoverage(partial, ${JSON.stringify(temporary)} + '/entry-coverage-' + process.pid + '.json'); }; process.on('exit', () => { try { flushCoverage(); } catch {} }); process.send = function(...args) { flushCoverage(); return nativeSend.apply(process, args); };`,
     },
   });
   workerEntryUrl = pathToFileURL(path.join(temporary, 'entry.js'));
@@ -123,7 +124,18 @@ beforeAll(async () => {
     const load = createRequire(import.meta.url);
     let calls = 0;
     let started = false;
+    // The compilation module's render threads: what the runtime asks of them is logged.
+    let threads;
+    let threadsFail = false;
+    let kept = false;
+    export function keepRenderThreads(keep) { kept = keep; }
+    export async function disposeRenderThreads() {
+      if(threads) appendFileSync(threads, 'dispose\\n');
+      if(threadsFail) throw new Error('threads failed');
+    }
     export async function createCompilationService(options = {}) {
+      if(options.threads) threads = options.threads;
+      if(options.threadsFail) threadsFail = true;
       if(!started) {
         started = true;
         if(options.announce) appendFileSync(options.announce, process.pid + '\\n');
@@ -167,6 +179,7 @@ beforeAll(async () => {
           // A host-realm handle left behind.
           if(directive === 'interval') setInterval(() => {}, 1000);
           if(options.log) appendFileSync(options.log, 'start ' + request.generation + '\\n');
+          if(options.threads) appendFileSync(options.threads, 'compile kept ' + kept + '\\n');
           if(options.mode === 'loop') while(true) {}
           if(options.mode === 'native') pbkdf2Sync('p','s',2147483647,32,'sha512');
           if(options.mode === 'hang') await new Promise(() => {});
@@ -502,6 +515,46 @@ describe('persistent development worker', () => {
     expect(pidOf(await proxy.compile(directive(6, 'ok'), signal(), watch))).toBe(pidOf(first));
     await proxy.dispose();
     await gone(pidOf(first));
+  });
+
+  it('keeps the render threads across watch generations and terminates them before the runtime exits', async () => {
+    const threads = path.join(temporary, 'threads-persistent');
+    const proxy = persistentService({ threads });
+    await proxy.watching?.(true);
+    const first = await proxy.compile(directive(1, 'ok'), signal(), watch);
+    await proxy.compile(directive(2, 'ok'), signal(), watch);
+    // The watch stops: the runtime is asked to exit, and does once its threads are gone.
+    await proxy.watching?.(false);
+    await gone(pidOf(first));
+    expect((await readFile(threads, 'utf8')).trim().split('\n')).toEqual([
+      'compile kept true',
+      'compile kept true',
+      'dispose',
+    ]);
+    await proxy.dispose();
+
+    // A one-shot runtime terminates them before it replies, even when that fails.
+    const oneShot = path.join(temporary, 'threads-one-shot');
+    const once = persistentService({ threads: oneShot, threadsFail: true }, { persistent: false });
+    expect((await once.compile(request(3), signal())).candidate?.revision).toBe('3:1');
+    expect((await readFile(oneShot, 'utf8')).trim().split('\n')).toEqual([
+      'compile kept false',
+      'dispose',
+    ]);
+    await once.dispose();
+
+    // A failure to terminate them does not keep a long-lived runtime alive.
+    const failing = path.join(temporary, 'threads-failing');
+    const stuck = persistentService({ threads: failing, threadsFail: true });
+    await stuck.watching?.(true);
+    const served = await stuck.compile(directive(1, 'ok'), signal(), watch);
+    await stuck.watching?.(false);
+    await gone(pidOf(served));
+    expect((await readFile(failing, 'utf8')).trim().split('\n')).toEqual([
+      'compile kept true',
+      'dispose',
+    ]);
+    await stuck.dispose();
   });
 
   it('runs watch generations one-shot when persistence is disabled and rejects invalid limits', async () => {

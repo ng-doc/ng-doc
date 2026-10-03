@@ -81,6 +81,7 @@ export const COMMANDS = Object.freeze(
         'generator/compiler/tracked-program.vitest.ts': 40,
         'generator/compiler/progress.vitest.ts': 38,
         'generator/compiler/fast-start.vitest.ts': 35,
+        'generator/compiler/parallel-render.vitest.ts': 60,
         'generator/compiler/highlight-cache.vitest.ts': 17,
         'generator/compiler/locale.vitest.ts': 5,
         'generator/compiler/watch.integration.ts': 5,
@@ -361,6 +362,30 @@ export async function sourceBoundaryCheck(root = ROOT) {
     );
     return resolved.startsWith('kernel/') || resolved === 'contracts';
   };
+  // A render thread runs only the HTML pipeline: its files import the pipeline, the digest, the
+  // worker protocol, the bundled HTML utilities and the search parser, and Node's thread port. No
+  // file system, no stage and no other package reach a thread (types erase and may come from anywhere).
+  const threadFiles = new Set(
+    ['content/html-worker.ts', 'content/html-pipeline.ts'].map((file) => path.join(base, file)),
+  );
+  const threadAllows = (node, specifier, file) => {
+    if (
+      ts.isImportEqualsDeclaration(node) ||
+      (ts.isCallExpression(node) && node.expression.kind !== ts.SyntaxKind.ImportKeyword)
+    )
+      return false;
+    if (typeOnly(node)) return true;
+    if (['node:worker_threads', '@ng-doc/utils', '@orama/plugin-parsedoc'].includes(specifier))
+      return true;
+    if (!specifier.startsWith('./') && !specifier.startsWith('../')) return false;
+    const resolved = path.posix.normalize(
+      path.posix.join(path.relative(base, path.dirname(file)).split(path.sep).join('/'), specifier),
+    );
+    return ['content/html-pipeline', 'kernel/canonical', 'worker/protocol', 'contracts'].includes(
+      resolved,
+    );
+  };
+  const thread = [];
   const privateImport =
     /^(?:@angular-devkit\/(?:build-angular|architect)(?:\/|$)|@angular-devkit\/core\/(?:src|private)(?:\/|$)|@angular\/(?:build|cli)(?:\/|$)|@angular\/compiler-cli\/(?:src|private)(?:\/|$)|@ngtools\/webpack(?:\/|$))/;
   for (const file of files.sort()) {
@@ -404,7 +429,12 @@ export async function sourceBoundaryCheck(root = ROOT) {
         if (file.startsWith(progressDir) && !progressAllows(node, target.text, file))
           layering.push(where);
         if (file.startsWith(kernelDir) && !kernelAllows(node, target.text, file)) leaf.push(where);
-      } else if (target && (file.startsWith(progressDir) || file.startsWith(kernelDir)))
+        if (threadFiles.has(file) && !threadAllows(node, target.text, file)) thread.push(where);
+      } else if (target && threadFiles.has(file))
+        thread.push(
+          `${repositoryPath(root, file)}:${source.getLineAndCharacterOfPosition(target.getStart()).line + 1}: <computed specifier>`,
+        );
+      else if (target && (file.startsWith(progressDir) || file.startsWith(kernelDir)))
         (file.startsWith(progressDir) ? layering : leaf).push(
           `${repositoryPath(root, file)}:${source.getLineAndCharacterOfPosition(target.getStart()).line + 1}: <computed specifier>`,
         );
@@ -423,6 +453,10 @@ export async function sourceBoundaryCheck(root = ROOT) {
   if (leaf.length)
     throw new Error(
       `The kernel is a leaf and may import only ./*, node:* and ../contracts:\n${leaf.join('\n')}`,
+    );
+  if (thread.length)
+    throw new Error(
+      `A render thread may import only the HTML pipeline, the digest, the worker protocol, @ng-doc/utils, @orama/plugin-parsedoc and node:worker_threads:\n${thread.join('\n')}`,
     );
   return { filesChecked: files.length, adaptersExcluded: ['angular', 'vite', 'bootstrap'] };
 }

@@ -492,12 +492,12 @@ describe('the pack', () => {
         process(
           html: string,
           route: string,
-          dependencies: unknown[],
           diagnostics: Diagnostic[],
           signal: AbortSignal,
+          staged: () => void,
         ): Promise<{ html: string } | undefined>;
       }
-    ).process(html, 'docs/page', [], diagnostics, new AbortController().signal);
+    ).process(html, 'docs/page', diagnostics, new AbortController().signal, () => undefined);
     expect(processed?.html).toBeDefined();
     expect(processed?.html).not.toContain('x="1"');
     expect(diagnostics).toEqual([

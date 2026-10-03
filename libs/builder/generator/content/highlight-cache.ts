@@ -39,8 +39,10 @@ import { runtimePackages } from '../kernel/runtime-identity';
  * `verify` highlights every hit again, uses the fresh result and reports
  * `CONTENT_HIGHLIGHT_CACHE_MISMATCH` when it differs.
  *
- * The entries are plain strings, so a worker thread can be handed them and return its own as
- * `[key, value]` pairs; the key is a function of the block alone.
+ * The entries are plain strings, so a render thread (`./html-pool`) is handed them (the journal of
+ * this runtime's writes, `highlightJournal`) and returns what it hit and highlighted, which the
+ * main thread merges (`HighlightSession.merge`); the key is a function of the block alone. Only the
+ * main thread reads and writes the pack.
  */
 
 /** The warning of a `verify` hit whose highlighting differs from the cached one. */
@@ -86,6 +88,12 @@ interface PackFile {
 /** The entries this runtime knows, by key. */
 const memory = new Map<string, string>();
 let memoryBytes = 0;
+/**
+ * Every write into `memory` since it was last cleared, in order, and the number of clears: a render
+ * thread replays the journal from where it stopped, or from the start after a clear.
+ */
+const journal: Array<[string, string]> = [];
+let epoch = 0;
 /** The contexts this runtime highlighted a block under or read a pack of: their themes load. */
 const proven = new Set<string>();
 /**
@@ -102,6 +110,19 @@ function remember(key: string, value: string): void {
   if (previous !== undefined) memoryBytes -= sizeOf(key, previous);
   memory.set(key, value);
   memoryBytes += sizeOf(key, value);
+  journal.push([key, value]);
+}
+
+function forget(): void {
+  memory.clear();
+  memoryBytes = 0;
+  journal.length = 0;
+  epoch += 1;
+}
+
+/** The writes into this runtime's entries since they were last cleared, and the clear count. */
+export function highlightJournal(): { epoch: number; entries: ReadonlyArray<[string, string]> } {
+  return { epoch, entries: journal };
 }
 
 /** The cache's switch: `off`, `on` or `verify`. */
@@ -162,8 +183,7 @@ export class HighlightSession {
     });
     // A long-lived runtime whose map outgrew the limit starts again from the pack.
     if (memoryBytes > HIGHLIGHT_CACHE_LIMIT) {
-      memory.clear();
-      memoryBytes = 0;
+      forget();
       packs.clear();
     }
   }
@@ -192,6 +212,51 @@ export class HighlightSession {
       mismatch: (key) => mismatches.push(key),
       mismatches,
     };
+  }
+
+  /**
+   * What a render thread needs to use this cache: the context its keys are made in, whether hits
+   * are checked again, and whether the themes are known to load. Reads the pack first, so the
+   * journal holds its entries.
+   */
+  prepare(): { context: string; verify: boolean; proven: boolean } {
+    this.load();
+    return { context: this.context, verify: this.verify, proven: proven.has(this.context) };
+  }
+
+  /** The entry this runtime holds for `key`, without counting it as used. */
+  peek(key: string): string | undefined {
+    return memory.get(key);
+  }
+
+  /**
+   * Takes in what one document's highlighting recorded out of plan order (a render thread, or the
+   * main thread rendering ahead), as if this thread had processed it now, in plan order: a fresh
+   * value equal to the known one is a hit (another task highlighted the block first), any other
+   * replaces it; and a `verify` difference counts only while the known entry is still not the
+   * fresh value (an earlier document in plan order repaired it, as a sequential render would).
+   * Returns the differences this document reports.
+   */
+  merge(record: {
+    used: readonly string[];
+    fresh: ReadonlyArray<readonly [string, string]>;
+    mismatched: readonly string[];
+  }): number {
+    const fresh = new Map(record.fresh);
+    let mismatches = 0;
+    for (const key of record.mismatched) {
+      const known = memory.get(key);
+      if (known !== undefined && known !== fresh.get(key)) mismatches += 1;
+    }
+    for (const [key, value] of record.fresh) {
+      const known = memory.get(key);
+      if (known === value) continue;
+      if (known !== undefined) this.replaced = true;
+      remember(key, value);
+      proven.add(this.context);
+    }
+    for (const key of record.used) if (memory.has(key)) this.used.add(key);
+    return mismatches;
   }
 
   /** Reads the pack once per runtime and context; an unusable pack is not read. */
@@ -293,8 +358,7 @@ function isPackFile(value: unknown): value is PackFile {
 
 /** Forgets every entry, pack and proven context of this runtime (tests). */
 export function resetHighlightCache(): void {
-  memory.clear();
-  memoryBytes = 0;
+  forget();
   proven.clear();
   packs.clear();
 }

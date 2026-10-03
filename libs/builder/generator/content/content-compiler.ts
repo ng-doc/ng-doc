@@ -1,4 +1,3 @@
-import { type NodeContent, parseFile } from '@orama/plugin-parsedoc';
 import matter from 'gray-matter';
 import { type RendererObject, Marked } from 'marked';
 import { existsSync } from 'node:fs';
@@ -43,11 +42,20 @@ import {
 } from '../kernel/footprint';
 import { readTextFile } from '../kernel/observations';
 import { hostPath } from '../kernel/paths';
+import { type HighlightSession, HIGHLIGHT_CACHE_MISMATCH } from './highlight-cache';
 import {
-  type HighlightCall,
-  type HighlightSession,
-  HIGHLIGHT_CACHE_MISMATCH,
-} from './highlight-cache';
+  type LinkedDocument,
+  type LinkTask,
+  type RenderDocument,
+  type RenderedDocument,
+  type RenderTask,
+  bindingsOf,
+  linkDocument,
+  renderDocuments,
+} from './html-pipeline';
+
+/** The warning of `NGDOC_PARALLEL_RENDER=verify` (`./html-pool`). */
+export const PARALLEL_RENDER_MISMATCH = 'CONTENT_PARALLEL_MISMATCH';
 
 const DEFAULT_GUIDE_HEADER = `<h1 class="ngde">{{ NgDocPage.title }}</h1>
 {% if Metadata.description %}<p class="ngde">{{ Metadata.description }}</p>{% endif %}`;
@@ -56,34 +64,10 @@ const DEFAULT_GUIDE_HEADER = `<h1 class="ngde">{{ NgDocPage.title }}</h1>
 const digest = (value: string) => sha256Hex(value);
 const asString = (value: JsonValue): string => (typeof value === 'string' ? value : '');
 
-interface HtmlUtilities {
-  processHtml(
-    html: string,
-    config: {
-      headings?: string[];
-      route?: string;
-      lightTheme?: string;
-      darkTheme?: string;
-      highlight?: HighlightCall;
-    },
-  ): Promise<{ content: string; anchors: ContentAnchor[]; error?: unknown }>;
-  postProcessHtml(
-    html: string,
-  ): Promise<{ content: string; usedKeywords: string[]; error?: unknown }>;
-  replaceKeywords(html: string, config: { getKeyword(key: string): unknown }): Promise<string>;
-  removeNotIndexableContent(html: string): Promise<string>;
-}
-
 interface ProcessedHtml {
   html: string;
   anchors: ContentAnchor[];
   usedKeywords: string[];
-}
-
-interface ParsedDocument {
-  type: string;
-  content: string;
-  properties?: Record<string, unknown>;
 }
 
 type DescriptorFields = Omit<
@@ -91,18 +75,46 @@ type DescriptorFields = Omit<
   'ownerId' | 'ordinal' | 'requestDigest' | 'closureIds'
 >;
 
-const htmlUtilities = () => import('@ng-doc/utils') as Promise<HtmlUtilities>;
+/**
+ * Where a generation runs the back half of its content (`./html-pipeline`): in the main thread or
+ * on render threads (`./html-pool`). Either way a task's result is the pipeline's result for its
+ * input, so the content compiler cannot tell them apart.
+ */
+export interface ContentBack {
+  render(task: RenderTask, signal: AbortSignal): Promise<RenderedDocument[]>;
+  link(
+    task: LinkTask,
+    keywords: readonly KeywordExport[],
+    signal: AbortSignal,
+  ): Promise<LinkedDocument>;
+}
 
-/** Stateless, per-document content compiler. It never touches legacy stores. */
+/** A link whose back half was dispatched ahead of its turn (`prepareLink`). */
+export interface PreparedLink {
+  readonly ir: ContentIR;
+  readonly keywords: KeywordExport[];
+  readonly outcome: Promise<LinkedDocument>;
+}
+
+/**
+ * Stateless, per-document content compiler. It never touches legacy stores.
+ *
+ * A compile has a front, which reads files, evaluates templates and queries the program, and a back
+ * half, the HTML pipeline, which is a pure function of the HTML the front produced
+ * (`./html-pipeline`). `compileStaged` resolves once the front is done and the back half is
+ * dispatched, so a caller can run the next front while the back half of this one runs elsewhere.
+ */
 export class GeneratorContentCompiler implements ContentCompiler {
   /**
    * @param services - What the compiler reads.
    * @param highlight - The generation's cache of highlighted code blocks; without it, every block
    *   is highlighted (`./highlight-cache`).
+   * @param back - Where the HTML pipeline runs; without it, in this thread, at once.
    */
   constructor(
     private readonly services: ContentCompilerServices,
     private readonly highlight?: HighlightSession,
+    private readonly back?: ContentBack,
   ) {}
 
   /**
@@ -189,8 +201,29 @@ export class GeneratorContentCompiler implements ContentCompiler {
     signal: AbortSignal,
     descriptor?: ContentDescriptor,
   ): Promise<ServiceResult<ContentIR>> {
+    return (await this.compileStaged(request, signal, descriptor)).finish;
+  }
+
+  /**
+   * `compile` in two stages: resolves once the front of the compile is done (everything it reads,
+   * evaluates and queries) and its HTML pipeline is dispatched to the back (`ContentBack`); `finish`
+   * then settles with exactly what `compile` returns. The rest of the compile after the pipeline is
+   * pure, so a caller may start the next front before `finish` settles: the fronts, and with them
+   * the semantic queries and their order, stay those of sequential compiles.
+   */
+  async compileStaged(
+    request: ContentRequest,
+    signal: AbortSignal,
+    descriptor?: ContentDescriptor,
+  ): Promise<{ finish: Promise<ServiceResult<ContentIR>> }> {
     const scope = this.scope('content-compile', request.id);
-    return this.sealed(scope, await this.compileContent(request, signal, descriptor, scope));
+    let staged!: () => void;
+    const front = new Promise<void>((resolve) => (staged = resolve));
+    const finish = this.compileContent(request, signal, descriptor, scope, staged).then((result) =>
+      this.sealed(scope, result),
+    );
+    await Promise.race([front, finish]);
+    return { finish };
   }
 
   private async compileContent(
@@ -198,6 +231,7 @@ export class GeneratorContentCompiler implements ContentCompiler {
     signal: AbortSignal,
     descriptor: ContentDescriptor | undefined,
     scope: FootprintScope | undefined,
+    staged: () => void,
   ): Promise<ServiceResult<ContentIR>> {
     const dependencies: Dependency[] = [];
     const diagnostics: Diagnostic[] = [];
@@ -246,16 +280,16 @@ export class GeneratorContentCompiler implements ContentCompiler {
       let result: ServiceResult<ContentIR>;
       switch (request.kind) {
         case 'guide-tab':
-          result = await this.guideTab(request, dependencies, diagnostics, signal, scope);
+          result = await this.guideTab(request, dependencies, diagnostics, signal, scope, staged);
           break;
         case 'api-tab':
-          result = await this.apiTab(request, dependencies, diagnostics, signal, scope);
+          result = await this.apiTab(request, dependencies, diagnostics, signal, scope, staged);
           break;
         case 'demo-assets':
-          result = await this.demoAssets(request, dependencies, diagnostics, signal);
+          result = await this.demoAssets(request, dependencies, diagnostics, signal, staged);
           break;
         case 'header':
-          result = await this.header(request, dependencies, diagnostics, signal, scope);
+          result = await this.header(request, dependencies, diagnostics, signal, scope, staged);
           break;
       }
       if (descriptor && !this.matchesCompiledDependencies(descriptor, result.dependencies)) {
@@ -425,6 +459,7 @@ export class GeneratorContentCompiler implements ContentCompiler {
     diagnostics: Diagnostic[],
     signal: AbortSignal,
     scope: FootprintScope | undefined,
+    staged: () => void,
   ): Promise<ServiceResult<ContentIR>> {
     dependencies.push({ kind: 'existence', path: request.markdown, exists: false });
     let source: string;
@@ -479,9 +514,9 @@ export class GeneratorContentCompiler implements ContentCompiler {
         diagnostics,
       ),
       absoluteRoute,
-      dependencies,
       diagnostics,
       signal,
+      staged,
     );
     if (!processed) return { dependencies, diagnostics };
 
@@ -526,6 +561,7 @@ export class GeneratorContentCompiler implements ContentCompiler {
     diagnostics: Diagnostic[],
     signal: AbortSignal,
     scope: FootprintScope | undefined,
+    staged: () => void,
   ): Promise<ServiceResult<ContentIR>> {
     const fragment = this.services.semantic.renderFragment({
       kind: 'api-page',
@@ -544,9 +580,9 @@ export class GeneratorContentCompiler implements ContentCompiler {
     const processed = await this.process(
       fragment.value.value,
       request.declaration.route,
-      dependencies,
       diagnostics,
       signal,
+      staged,
     );
     if (!processed) return { dependencies, diagnostics };
     const rootKey = request.declaration.exportedKeywords[0]?.key ?? request.declaration.name;
@@ -590,43 +626,57 @@ export class GeneratorContentCompiler implements ContentCompiler {
     dependencies: Dependency[],
     diagnostics: Diagnostic[],
     signal: AbortSignal,
+    staged: () => void,
   ): Promise<ServiceResult<ContentIR>> {
-    const blocks: string[] = [];
-    const anchors: ContentAnchor[] = [];
-    const usedKeywords = new Set<string>();
-    for (const [name, assets] of Object.entries(request.semantics.demos)) {
+    // The front reads every asset (up to the first that cannot be read) before the back processes
+    // them, in order, until the first that fails. What each asset recorded is then replayed in the
+    // order a one-asset-at-a-time compile records it, and nothing after the first failure counts:
+    // an unread asset is not a dependency, and reading one has no effect but its result.
+    const reads: Array<{
+      name: string;
+      dependencies: Dependency[];
+      diagnostics: Diagnostic[];
+      document?: RenderDocument;
+    }> = [];
+    reading: for (const [name, assets] of Object.entries(request.semantics.demos)) {
       for (const asset of assets) {
+        const read = { name, dependencies: [], diagnostics: [] } as (typeof reads)[number];
+        reads.push(read);
         if (
           this.readPhysicalFile(
             asset.source,
-            dependencies,
-            diagnostics,
+            read.dependencies,
+            read.diagnostics,
             'CONTENT_DEMO_ASSET_READ',
           ) === undefined
-        ) {
-          return { dependencies, diagnostics };
-        }
+        )
+          break reading;
         const meta = codeMetadata({
           name: asset.title,
           ...(asset.icon === undefined ? {} : { icon: asset.icon }),
           ...(asset.opened === undefined ? {} : { opened: asset.opened }),
         });
-        const source = `<pre><code class="language-${escapeAttribute(asset.language)}" lang="${escapeAttribute(asset.language)}" metastring="${meta}">${escapeHtml(asset.code)}</code></pre>`;
-        const processed = await this.process(
-          source,
-          undefined,
-          dependencies,
-          diagnostics,
-          signal,
-          false,
-        );
-        if (!processed) return { dependencies, diagnostics };
-        anchors.push(...processed.anchors);
-        processed.usedKeywords.forEach((keyword) => usedKeywords.add(keyword));
-        blocks.push(
-          `<ng-doc-demo-assets name="${escapeAttribute(name)}">${processed.html}</ng-doc-demo-assets>`,
-        );
+        read.document = {
+          html: `<pre><code class="language-${escapeAttribute(asset.language)}" lang="${escapeAttribute(asset.language)}" metastring="${meta}">${escapeHtml(asset.code)}</code></pre>`,
+        };
       }
+    }
+    const documents = reads.flatMap((read) => (read.document ? [read.document] : []));
+    const rendered = documents.length ? await this.render(documents, signal, staged) : [];
+    const blocks: string[] = [];
+    const anchors: ContentAnchor[] = [];
+    const usedKeywords = new Set<string>();
+    for (const [index, read] of reads.entries()) {
+      dependencies.push(...read.dependencies);
+      diagnostics.push(...read.diagnostics);
+      if (!read.document) return { dependencies, diagnostics };
+      const processed = this.processed(rendered[index]!, diagnostics);
+      if (!processed) return { dependencies, diagnostics };
+      anchors.push(...processed.anchors);
+      processed.usedKeywords.forEach((keyword) => usedKeywords.add(keyword));
+      blocks.push(
+        `<ng-doc-demo-assets name="${escapeAttribute(read.name)}">${processed.html}</ng-doc-demo-assets>`,
+      );
     }
     return {
       dependencies,
@@ -651,6 +701,7 @@ export class GeneratorContentCompiler implements ContentCompiler {
     diagnostics: Diagnostic[],
     signal: AbortSignal,
     scope: FootprintScope | undefined,
+    staged: () => void,
   ): Promise<ServiceResult<ContentIR>> {
     const entry = request.entry;
     if (isDeclarationDescriptor(entry)) {
@@ -671,9 +722,9 @@ export class GeneratorContentCompiler implements ContentCompiler {
       const processed = await this.process(
         fragment.value.value,
         entry.route,
-        dependencies,
         diagnostics,
         signal,
+        staged,
       );
       return processed
         ? {
@@ -749,9 +800,9 @@ export class GeneratorContentCompiler implements ContentCompiler {
     const processed = await this.process(
       rendered.value,
       entry.absoluteRoute,
-      dependencies,
       diagnostics,
       signal,
+      staged,
     );
     return processed
       ? {
@@ -775,49 +826,72 @@ export class GeneratorContentCompiler implements ContentCompiler {
       : { dependencies, diagnostics };
   }
 
+  /** Processes one document (`./html-pipeline`) and reports what failed. */
   private async process(
     html: string,
     route: string | undefined,
-    dependencies: Dependency[],
     diagnostics: Diagnostic[],
     signal: AbortSignal,
-    headings: boolean = true,
+    staged: () => void,
   ): Promise<ProcessedHtml | undefined> {
-    if (this.stopIfAborted(signal, diagnostics, 'Compilation was aborted')) return undefined;
-    const utilities = await htmlUtilities();
-    if (this.stopIfAborted(signal, diagnostics, 'Compilation was aborted')) return undefined;
-    const highlight = this.highlight?.call();
-    const result = await utilities.processHtml(html, {
-      ...(headings ? { headings: this.services.configuration.anchorHeadings } : {}),
+    const document: RenderDocument = {
+      html,
       ...(route === undefined ? {} : { route }),
-      lightTheme: this.services.configuration.themes.light,
-      darkTheme: this.services.configuration.themes.dark,
-      ...(highlight ? { highlight } : {}),
-    });
-    if (highlight?.mismatches.length)
+      headings: this.services.configuration.anchorHeadings,
+    };
+    const [rendered] = await this.render([document], signal, staged);
+    return this.processed(rendered!, diagnostics);
+  }
+
+  /**
+   * Dispatches a render task to the back (or runs it here), then tells the caller of
+   * `compileStaged` that the front is done: everything after the pipeline is pure.
+   */
+  private render(
+    documents: RenderDocument[],
+    signal: AbortSignal,
+    staged: () => void,
+  ): Promise<RenderedDocument[]> {
+    const task: RenderTask = { documents, themes: this.services.configuration.themes };
+    const rendered = this.back
+      ? this.back.render(task, signal)
+      : renderDocuments(
+          task,
+          () => this.highlight?.call(),
+          () => signal.aborted,
+        );
+    staged();
+    return rendered;
+  }
+
+  /** A document's diagnostics, in the order the pipeline met them, and its HTML when it succeeded. */
+  private processed(
+    rendered: RenderedDocument,
+    diagnostics: Diagnostic[],
+  ): ProcessedHtml | undefined {
+    if (rendered.mismatches)
       diagnostics.push({
         ...this.diag(
           HIGHLIGHT_CACHE_MISMATCH,
-          `${highlight.mismatches.length} cached code block(s) differ from highlighting them again; the fresh highlighting is used.`,
+          `${rendered.mismatches} cached code block(s) differ from highlighting them again; the fresh highlighting is used.`,
         ),
         severity: 'warning',
       });
-    if (result.error) {
-      diagnostics.push(this.diag('CONTENT_HTML_PROCESS', String(result.error)));
+    if (rendered.differs !== undefined) diagnostics.push(this.parallelMismatch(rendered.differs));
+    if ('failed' in rendered) {
+      diagnostics.push(
+        this.diag(
+          rendered.failed === 'process' ? 'CONTENT_HTML_PROCESS' : 'CONTENT_HTML_POST_PROCESS',
+          rendered.message,
+        ),
+      );
       return undefined;
     }
-    if (this.stopIfAborted(signal, diagnostics, 'Compilation was aborted')) return undefined;
-    const post = await utilities.postProcessHtml(result.content);
-    if (post.error) {
-      diagnostics.push(this.diag('CONTENT_HTML_POST_PROCESS', String(post.error)));
+    if ('aborted' in rendered) {
+      diagnostics.push(this.diag('CONTENT_ABORTED', 'Compilation was aborted'));
       return undefined;
     }
-    if (this.stopIfAborted(signal, diagnostics, 'Compilation was aborted')) return undefined;
-    return {
-      html: post.content,
-      anchors: result.anchors.map(normalizeAnchor),
-      usedKeywords: post.usedKeywords,
-    };
+    return { html: rendered.html, anchors: rendered.anchors, usedKeywords: rendered.usedKeywords };
   }
 
   private ir(
@@ -852,6 +926,8 @@ export class GeneratorContentCompiler implements ContentCompiler {
    * `consulted`, when given, receives every keyword key the link pass looked up. The linked
    * HTML is a function of the IR HTML and the bindings of exactly those keys: each lookup is
    * made before any branch on its result.
+   *
+   * `prepared`, when given, is this request's back half dispatched earlier (`prepareLink`).
    */
   async link(
     request: {
@@ -862,81 +938,84 @@ export class GeneratorContentCompiler implements ContentCompiler {
     },
     signal: AbortSignal,
     consulted?: Set<string>,
+    prepared?: PreparedLink,
   ): Promise<ServiceResult<LinkedContent>> {
     // Link reads no file: its footprint is empty, and its result carries the IR's dependencies.
     const scope = this.scope('link', request.ir.id);
-    const result = await this.linkContent(request, signal, consulted);
+    const result = await this.linkContent(request, signal, consulted, prepared);
     return scope ? attachFootprint(result, scope.seal()) : result;
+  }
+
+  /**
+   * Dispatches the back half of a link before its turn. Linking is a pure function of the IR and
+   * the keyword set, so the result `link` makes of it is the one it would make of linking then.
+   */
+  prepareLink(
+    request: Parameters<GeneratorContentCompiler['link']>[0],
+    signal: AbortSignal,
+  ): PreparedLink {
+    return {
+      ir: request.ir,
+      keywords: request.keywords,
+      outcome: this.linkBack(request, signal),
+    };
+  }
+
+  private linkBack(
+    request: Parameters<GeneratorContentCompiler['link']>[0],
+    signal: AbortSignal,
+  ): Promise<LinkedDocument> {
+    const task: LinkTask = {
+      html: request.ir.html,
+      title: request.ir.title,
+      absoluteRoute: request.ir.absoluteRoute,
+      breadcrumbs: request.breadcrumbs,
+      pageType: request.pageType,
+    };
+    if (this.back) return this.back.link(task, request.keywords, signal);
+    const bindings = keywordBindings(request.keywords);
+    return linkDocument(
+      task,
+      (key) => bindings.get(key),
+      () => signal.aborted,
+    );
   }
 
   private async linkContent(
     request: Parameters<GeneratorContentCompiler['link']>[0],
     signal: AbortSignal,
-    consulted?: Set<string>,
+    consulted: Set<string> | undefined,
+    prepared: PreparedLink | undefined,
   ): Promise<ServiceResult<LinkedContent>> {
-    if (signal.aborted) {
+    const aborted = (): ServiceResult<LinkedContent> => ({
+      dependencies: request.ir.dependencies,
+      diagnostics: [...request.ir.diagnostics, this.diag('CONTENT_ABORTED', 'Linking was aborted')],
+    });
+    if (signal.aborted) return aborted();
+    const outcome = await (prepared?.ir === request.ir && prepared.keywords === request.keywords
+      ? prepared.outcome
+      : this.linkBack(request, signal));
+    for (const key of outcome.consulted) consulted?.add(key);
+    const checked =
+      outcome.differs === undefined
+        ? request.ir.diagnostics
+        : [...request.ir.diagnostics, this.parallelMismatch(outcome.differs)];
+    if ('failed' in outcome)
       return {
         dependencies: request.ir.dependencies,
-        diagnostics: [
-          ...request.ir.diagnostics,
-          this.diag('CONTENT_ABORTED', 'Linking was aborted'),
-        ],
+        diagnostics: [...checked, this.diag('CONTENT_LINK', outcome.failed)],
       };
-    }
-    try {
-      const bindings = keywordBindings(request.keywords);
-      const utilities = await htmlUtilities();
-      const html = await utilities.replaceKeywords(request.ir.html, {
-        getKeyword: (key) => {
-          consulted?.add(key);
-          return bindings.get(key) as never;
-        },
-      });
-      if (signal.aborted) {
-        return {
-          dependencies: request.ir.dependencies,
-          diagnostics: [
-            ...request.ir.diagnostics,
-            this.diag('CONTENT_ABORTED', 'Linking was aborted'),
-          ],
-        };
-      }
-      const indexable = await utilities.removeNotIndexableContent(html);
-      if (signal.aborted) {
-        return {
-          dependencies: request.ir.dependencies,
-          diagnostics: [
-            ...request.ir.diagnostics,
-            this.diag('CONTENT_ABORTED', 'Linking was aborted'),
-          ],
-        };
-      }
-      const searchRecords = await buildSearchRecords(indexable, request);
-      if (signal.aborted) {
-        return {
-          dependencies: request.ir.dependencies,
-          diagnostics: [
-            ...request.ir.diagnostics,
-            this.diag('CONTENT_ABORTED', 'Linking was aborted'),
-          ],
-        };
-      }
-      return {
-        dependencies: request.ir.dependencies,
-        diagnostics: request.ir.diagnostics,
-        value: {
-          ir: request.ir,
-          html,
-          searchRecords,
-          keywordDigest: keywordDigestFor(request.ir, bindings),
-        },
-      };
-    } catch (error) {
-      return {
-        dependencies: request.ir.dependencies,
-        diagnostics: [...request.ir.diagnostics, this.diag('CONTENT_LINK', String(error))],
-      };
-    }
+    if ('aborted' in outcome || signal.aborted) return aborted();
+    return {
+      dependencies: request.ir.dependencies,
+      diagnostics: checked,
+      value: {
+        ir: request.ir,
+        html: outcome.html,
+        searchRecords: outcome.searchRecords,
+        keywordDigest: keywordDigestFor(request.ir, keywordBindings(request.keywords)),
+      },
+    };
   }
 
   private actions(
@@ -1172,6 +1251,17 @@ export class GeneratorContentCompiler implements ContentCompiler {
     }
   }
 
+  /** `NGDOC_PARALLEL_RENDER=verify`: a thread result differed; the main thread's is used. */
+  private parallelMismatch(at: string): Diagnostic {
+    return {
+      ...this.diag(
+        PARALLEL_RENDER_MISMATCH,
+        `A render thread's result differs from the main thread's at ${at}; the main thread's result is used.`,
+      ),
+      severity: 'warning',
+    };
+  }
+
   private diag(code: string, message: string, file?: string): Diagnostic {
     return {
       code,
@@ -1192,7 +1282,7 @@ const bindingsByKeywords = new WeakMap<KeywordExport[], ReadonlyMap<string, Keyw
 export function keywordBindings(keywords: KeywordExport[]): ReadonlyMap<string, KeywordExport> {
   let bindings = bindingsByKeywords.get(keywords);
   if (!bindings) {
-    bindings = new Map(keywords.map((keyword) => [keyword.key, keyword]));
+    bindings = bindingsOf(keywords);
     if (Object.isFrozen(keywords)) bindingsByKeywords.set(keywords, bindings);
   }
   return bindings;
@@ -1211,56 +1301,6 @@ function keywordDigestFor(ir: ContentIR, bindings: ReadonlyMap<string, KeywordEx
   return digest(JSON.stringify(consumedBindings));
 }
 
-/**
- * Search records are the parsed documents only. `populate` would also index every document
- * into a throw-away Orama database (tokenizing each one, in timer-separated batches) before
- * the records were read back in insertion order; `parseFile` returns the same records, in
- * the same order, without that index.
- */
-async function buildSearchRecords(
-  html: string,
-  request: { ir: ContentIR; breadcrumbs: string[]; pageType: 'guide' | 'api' },
-): Promise<SearchRecord[]> {
-  const documents: ParsedDocument[] = await parseFile(html, 'html', {
-    transformFn: transformSearchNode,
-    mergeStrategy: 'split',
-  });
-  const records: SearchRecord[] = [];
-  let section: ParsedDocument | undefined;
-  for (const document of documents) {
-    if (!document?.content?.trim()) continue;
-    if (isSearchHeading(document)) {
-      section = document;
-      continue;
-    }
-    const fragment = section?.properties?.['id'];
-    records.push({
-      breadcrumbs: request.breadcrumbs,
-      pageType: request.pageType,
-      title: request.ir.title,
-      section: section?.content ?? '',
-      route: request.ir.absoluteRoute,
-      ...(typeof fragment === 'string' && fragment ? { fragment } : {}),
-      content: document.content,
-    });
-  }
-  return records;
-}
-
-function transformSearchNode(node: NodeContent): NodeContent {
-  return ['strong', 'a', 'time', 'span', 'small', 'b', 'p', 'ul'].includes(node.tag)
-    ? { ...node, raw: `<p>${node.content}</p>` }
-    : node;
-}
-
-function isSearchHeading(document: ParsedDocument): boolean {
-  return (
-    ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(document.type) &&
-    !!document.properties &&
-    !!document.properties['id']
-  );
-}
-
 function normalizeBinding(keyword: KeywordExport | undefined): KeywordExport | null {
   if (!keyword) return null;
   return {
@@ -1270,16 +1310,6 @@ function normalizeBinding(keyword: KeywordExport | undefined): KeywordExport | n
     ...(keyword.type === undefined ? {} : { type: keyword.type }),
     ...(keyword.languages === undefined ? {} : { languages: keyword.languages }),
     ...(keyword.description === undefined ? {} : { description: keyword.description }),
-  };
-}
-
-function normalizeAnchor(anchor: ContentAnchor): ContentAnchor {
-  return {
-    anchorId: anchor.anchorId,
-    anchor: anchor.anchor,
-    title: anchor.title,
-    type: anchor.type,
-    ...(anchor.scope === undefined ? {} : { scope: anchor.scope }),
   };
 }
 

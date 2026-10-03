@@ -245,6 +245,7 @@ Use them to find the cause of a problem, and report it (`*TroubleshootingPage`).
 | `NGDOC_VITE_BUILD_HANDOFF`      | on      | `vite-application` only. Generates the documentation again for the server bundle instead of reusing the browser build's generation.                                                                               |
 | `NGDOC_PARALLEL_WRITES`         | on      | Writes the generated files one at a time, instead of several at once. The published files are the same.                                                                                                           |
 | `NGDOC_HIGHLIGHT_CACHE`         | on      | Highlights every code block again, instead of reusing the highlighting of code that it highlighted before. The published files are the same.                                                                      |
+| `NGDOC_PARALLEL_RENDER`         | on      | Processes the HTML of every page in one thread, instead of on up to four worker threads in a build that renders many pages. The published files are the same.                                                     |
 
 Production builds always use a fresh compiler worker, whatever these variables say.
 

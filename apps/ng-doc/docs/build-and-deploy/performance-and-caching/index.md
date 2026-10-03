@@ -68,6 +68,9 @@ In the development server:
   their cached links and generated files.
 - Highlighted code is kept in the cache folder too, so code that NgDoc highlighted before is not
   highlighted again, even on pages that are rendered again.
+- A start that renders many pages, like a production build, processes their HTML (highlighting,
+  links and search records) on up to four worker threads, while the compiler prepares the next
+  pages.
 
 Each of these has an environment switch that turns it off (`*BuildersReference#environment-switches`).
 Use them only to find the cause of a problem.

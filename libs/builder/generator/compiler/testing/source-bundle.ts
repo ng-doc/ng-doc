@@ -29,6 +29,7 @@ export async function bundleSourceCompiler(): Promise<SourceCompilerBundle> {
     entryPoints: {
       'compiler/index': 'libs/builder/generator/compiler/index.ts',
       'worker/entry': 'libs/builder/generator/worker/entry.ts',
+      'content/html-worker': 'libs/builder/generator/content/html-worker.ts',
     },
     outdir,
     bundle: true,

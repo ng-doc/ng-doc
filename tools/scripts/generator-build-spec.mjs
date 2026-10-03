@@ -16,6 +16,7 @@ export const GENERATOR_ENTRY_POINTS = Object.freeze([
   'bootstrap/cli',
   'bootstrap/bin',
   'compiler/index',
+  'content/html-worker',
   'worker/index',
   'worker/entry',
   'angular/application',

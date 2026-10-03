@@ -6,6 +6,7 @@ import path from 'node:path';
 import { createArtifactCache, JsonArtifactCache, retryingRename } from '../artifacts';
 import { GeneratorContentCompiler } from '../content/content-compiler';
 import { type HighlightSession, createHighlightSession } from '../content/highlight-cache';
+import { type RenderBack,createRenderBack } from '../content/html-pool';
 import type {
   CompilationRequest,
   Dependency,
@@ -74,6 +75,8 @@ export interface GenerationPlan extends CompilationServices {
   compiler: GeneratorContentCompiler;
   /** The cache of highlighted code blocks, when this generation uses one (`content/highlight-cache`). */
   highlight?: HighlightSession;
+  /** Where the content's HTML pipeline runs, when it may run on threads (`content/html-pool`). */
+  back?: RenderBack;
 }
 
 /**
@@ -214,9 +217,14 @@ export async function planGeneration(
   setup(outputDependencyResult.diagnostics, outputDependencyResult.dependencies);
   const outputDependencies = outputDependencyResult.dependencies;
   const highlight = createHighlightSession(options, request, configuration);
+  const back = createRenderBack(options, highlight, {
+    themes: configuration.themes,
+    cache: highlight !== undefined,
+  });
   const compiler = new GeneratorContentCompiler(
     { configuration, semantic, templates: discovery.templates },
     highlight,
+    back,
   );
   return {
     ...services,
@@ -239,6 +247,7 @@ export async function planGeneration(
     memo,
     compiler,
     ...(highlight ? { highlight } : {}),
+    ...(back ? { back } : {}),
     scopedSemantic,
   };
 }

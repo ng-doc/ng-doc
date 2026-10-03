@@ -1,6 +1,7 @@
 import { compareText } from '../../helpers/text-order';
 import {
   type GeneratorContentCompiler,
+  type PreparedLink,
   keywordBindings,
   linkedKeywordDigest,
 } from '../content/content-compiler';
@@ -78,6 +79,12 @@ export function combineUnitKeywords(plan: GenerationPlan, units: Unit[]): Keywor
  *
  * `done`, when progress is reported, hears how many units are done: the kept ones at once, then
  * each linked unit.
+ *
+ * With render threads (`content/html-pool`), the back half of each link that will not be reused is
+ * dispatched a window of units ahead (`prepareLink`); the loop below still takes every result,
+ * records it and reports it in unit order, exactly as when it links each one in its turn. Linking
+ * is a pure function of the IR and the keyword set, so the result does not depend on when or where
+ * it ran.
  */
 export async function linkUnits(
   plan: GenerationPlan,
@@ -120,13 +127,12 @@ export async function linkUnits(
     keywordSetDigest,
     previous: plan.previous,
   });
-  for (const unit of units) {
-    const content: PageArtifact['content'] = [];
-    const usedKeywords = unitKeywords.get(unit)!;
+  /** The unit's previous linked content by IR id. */
+  const previousLinkedOf = (unit: Unit): Map<string, LinkedContent> => {
     // Linking reads no configuration, so a previous artifact of the same compiler and
     // toolchain serves even when the configuration digest (executable inputs) changed.
     const linkPrevious = plan.sessionPrevious ? plan.previousById.get(unit.id) : undefined;
-    const previousLinked = new Map(
+    return new Map(
       (linkPrevious &&
       linkPrevious.fingerprint.compilerVersion === options.compilerVersion &&
       linkPrevious.fingerprint.toolchainDigest === options.toolchainDigest
@@ -134,23 +140,46 @@ export async function linkUnits(
         : []
       ).map((item) => [item.ir.id, item]),
     );
+  };
+  const linkRequestOf = (unit: Unit, ir: ContentIR): LinkRequest => ({
+    ir,
+    keywords,
+    breadcrumbs: ir.searchBreadcrumbs ?? unit.declaration?.breadcrumbs ?? unit.entry.breadcrumbs,
+    pageType: unit.entry.kind === 'guide' ? 'guide' : 'api',
+  });
+  // Links dispatched ahead of their turn, by IR, while render threads take them.
+  const ahead = plan.back?.parallel ? plan.back.window() : 0;
+  const prepared = new Map<ContentIR, PreparedLink>();
+  let preparedUnits = 0;
+  const prepareUntil = (end: number): void => {
+    for (; preparedUnits < Math.min(end, units.length); preparedUnits += 1) {
+      const unit = units[preparedUnits]!;
+      const previousLinked = previousLinkedOf(unit);
+      for (const ir of unit.ir) {
+        const request = linkRequestOf(unit, ir);
+        if (!linkReuse.reusable(request, previousLinked.get(ir.id)))
+          prepared.set(ir, compiler.prepareLink(request, signal));
+      }
+    }
+  };
+  for (const [index, unit] of units.entries()) {
+    if (ahead && !signal.aborted) prepareUntil(index + 1 + ahead);
+    const content: PageArtifact['content'] = [];
+    const usedKeywords = unitKeywords.get(unit)!;
+    const previousLinked = previousLinkedOf(unit);
     const keywordDependencies = allKeywordDependencies
       .filter((dependency) => dependency.kind === 'keyword' && usedKeywords.has(dependency.key))
       .map((dependency) => ({ ...dependency }));
     keywordDependenciesByUnit.set(unit, keywordDependencies);
     records.link(unit.record, { diagnostics: [], dependencies: keywordDependencies });
     for (const ir of unit.ir) {
-      const linkRequest = {
-        ir,
-        keywords,
-        breadcrumbs:
-          ir.searchBreadcrumbs ?? unit.declaration?.breadcrumbs ?? unit.entry.breadcrumbs,
-        pageType: unit.entry.kind === 'guide' ? ('guide' as const) : ('api' as const),
-      };
+      const linkRequest = linkRequestOf(unit, ir);
+      const ready = prepared.get(ir);
+      prepared.delete(ir);
       const linked = explainFilteredKeywords(
         (signal.aborted ? undefined : linkReuse.reuse(linkRequest, previousLinked.get(ir.id))) ??
           (await linkReuse.link(linkRequest, (consulted) =>
-            compiler.link(linkRequest, signal, consulted),
+            compiler.link(linkRequest, signal, consulted, ready),
           )),
         plan.found,
       );
@@ -283,6 +312,8 @@ function createLinkReuse(input: {
   keywordSetDigest: string;
   previous: PageArtifact[];
 }): {
+  /** Whether `reuse` would reuse `previous`; records nothing. */
+  reusable(request: LinkRequest, previous: LinkedContent | undefined): boolean;
   reuse(
     request: LinkRequest,
     previous: LinkedContent | undefined,
@@ -312,38 +343,40 @@ function createLinkReuse(input: {
         }),
       ),
     );
-  return {
-    reuse(
-      request: {
-        ir: ContentIR;
-        keywords: KeywordExport[];
-        breadcrumbs: string[];
-        pageType: 'guide' | 'api';
-      },
-      previous: LinkedContent | undefined,
-    ) {
-      if (!input.enabled || !previous) return undefined;
-      const { ir } = request;
-      if (
-        previous.ir.html !== ir.html ||
-        previous.ir.title !== ir.title ||
-        previous.ir.absoluteRoute !== ir.absoluteRoute ||
-        !previous.searchRecords.every(
-          (record) =>
-            record.pageType === request.pageType &&
-            sameStrings(record.breadcrumbs, request.breadcrumbs),
-        )
+  /** The recorded link facts that prove `previous` is linking again's result, if it is. */
+  const proof = (
+    request: LinkRequest,
+    previous: LinkedContent | undefined,
+  ): { recorded: ReturnType<MemoState['link']> } | undefined => {
+    if (!input.enabled || !previous) return undefined;
+    const { ir } = request;
+    if (
+      previous.ir.html !== ir.html ||
+      previous.ir.title !== ir.title ||
+      previous.ir.absoluteRoute !== ir.absoluteRoute ||
+      !previous.searchRecords.every(
+        (record) =>
+          record.pageType === request.pageType &&
+          sameStrings(record.breadcrumbs, request.breadcrumbs),
       )
-        return undefined;
-      const recorded = input.memo.link(ir.id);
-      const proven =
-        sameKeywordSet ||
-        (!!recorded &&
-          recorded.input === sha256(ir.html) &&
-          recorded.output === sha256(previous.html) &&
-          recorded.bindings === bindingsDigest(recorded.keys));
-      if (!proven) return undefined;
-      input.memo.recordLink(ir.id, recorded);
+    )
+      return undefined;
+    const recorded = input.memo.link(ir.id);
+    const proven =
+      sameKeywordSet ||
+      (!!recorded &&
+        recorded.input === sha256(ir.html) &&
+        recorded.output === sha256(previous.html) &&
+        recorded.bindings === bindingsDigest(recorded.keys));
+    return proven ? { recorded } : undefined;
+  };
+  return {
+    reusable: (request, previous) => proof(request, previous) !== undefined,
+    reuse(request: LinkRequest, previous: LinkedContent | undefined) {
+      const proved = proof(request, previous);
+      if (!proved || !previous) return undefined;
+      const { ir } = request;
+      input.memo.recordLink(ir.id, proved.recorded);
       return {
         dependencies: ir.dependencies,
         diagnostics: ir.diagnostics,

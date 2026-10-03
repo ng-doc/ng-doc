@@ -1,3 +1,10 @@
+import { highlightCacheSwitch } from '../content/highlight-cache';
+import {
+  disposeHtmlPool,
+  holdHtmlPool,
+  htmlPoolKept,
+  prestartRenderThreads,
+} from '../content/html-pool';
 import type {
   ArtifactSnapshot,
   CompilationContext,
@@ -45,6 +52,10 @@ import { GenerationRetention, incrementalProgramMode } from './retention';
 import { scopedSemanticMode, scopedSemanticSwitch } from './semantic-closure';
 import { type RetainedBuild, TargetedFallback, TargetedGeneration } from './targeted';
 
+export {
+  disposeHtmlPool as disposeRenderThreads,
+  keepHtmlPool as keepRenderThreads,
+} from '../content/html-pool';
 export {
   type DryRunRecord,
   type DryRunReport,
@@ -137,6 +148,22 @@ export interface CompilationOptions {
    * `CONTENT_HIGHLIGHT_CACHE_MISMATCH` when it differs.
    */
   highlightCache?: boolean | 'verify';
+  /**
+   * Parallel rendering (`content/html-pool.ts`): a large generation runs the HTML pipeline of its
+   * content (highlighting, anchors, keyword links, search records) on render threads, while the
+   * main thread runs every front (files, templates, semantic queries) in plan order and settles
+   * every result in plan order; the output is the same. Never on the targeted path or the
+   * reference path (`incrementalReuse: false`). On by default; `false`, like
+   * `NGDOC_PARALLEL_RENDER=0`, runs everything in the main thread. `verify` (or the environment's
+   * `verify`) also runs every thread task in the main thread, uses that result and reports
+   * `CONTENT_PARALLEL_MISMATCH` when it differs.
+   */
+  parallelRender?: boolean | 'verify';
+  /**
+   * The number of render threads (`parallelRender`). Defaults to the available parallelism less
+   * two (the main thread and Prettier's), at most 4; `0` uses none.
+   */
+  renderThreads?: number;
 }
 
 /** A compiler service that can say which of its results came from a targeted generation. */
@@ -209,6 +236,8 @@ export function createCompilationService(options: CompilationOptions): TargetedC
         return result();
       }
       active = true;
+      // The render threads stay for this compile's render, however long its semantic phase is.
+      const releaseThreads = holdHtmlPool();
       guideValues = new Map();
       const startedNs = BigInt(Date.now()) * 1_000_000n;
       const retention = new GenerationRetention(options, request, context);
@@ -365,6 +394,12 @@ export function createCompilationService(options: CompilationOptions): TargetedC
             scratch = true;
           }
         }
+        // A large generation starts its render threads now: they get ready during the semantic phase.
+        if (!scratch)
+          prestartRenderThreads(options, request, found!.entries.length, {
+            themes: found!.configuration.themes,
+            cache: highlightCacheSwitch(options) !== 'off',
+          });
         await synchronize(true);
         if (records.failed() && !(await repeating(refresh))) return (publishedResult = result());
         const setup = (into: GenerationRecords) => {
@@ -582,6 +617,7 @@ export function createCompilationService(options: CompilationOptions): TargetedC
             ...(reportError !== undefined ? { error: reportError } : {}),
           });
         signal.removeEventListener('abort', abort);
+        releaseThreads();
         active = false;
         activeController = undefined;
         settle();
@@ -594,6 +630,9 @@ export function createCompilationService(options: CompilationOptions): TargetedC
       const settling = activeSettlement;
       await Promise.all([semantic.dispose(), discovery.runtime.dispose()]);
       await settling;
+      // A one-shot or in-process compile leaves no render thread behind; a long-lived runtime keeps
+      // its pool for the next generation's service (`keepRenderThreads`).
+      if (!htmlPoolKept()) await disposeHtmlPool();
     },
   };
 }
@@ -626,6 +665,8 @@ async function runPhases(
 ): Promise<Attempt> {
   const { records, signal } = plan;
   const units: Unit[] = [];
+  // The targeted path renders a few units: it never waits for a thread.
+  if (!scope) plan.back?.admit();
   const done = (candidate?: ArtifactSnapshot, keywords?: KeywordExport[]): Attempt => ({
     result: fold(records, candidate),
     ...(candidate ? { candidate } : {}),

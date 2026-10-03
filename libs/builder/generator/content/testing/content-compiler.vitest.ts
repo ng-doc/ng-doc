@@ -2084,9 +2084,9 @@ describe('GeneratorContentCompiler', () => {
       const processed = await (compiler as any).process(
         '<p>Body</p>',
         'docs/guide',
-        [],
         diagnostics,
         stagedSignal,
+        () => undefined,
       );
       expect(processed).toBeUndefined();
       expect(diagnostics).toContainEqual(expect.objectContaining({ code: 'CONTENT_ABORTED' }));
