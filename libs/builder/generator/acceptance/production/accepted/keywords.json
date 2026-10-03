@@ -110,6 +110,7 @@
 "*DiagnosticCodesReference#other-codes": {"path":"docs/reference/diagnostic-codes#other-codes","title":"Diagnostic codes [Other codes]","type":"link"},
 "*DiagnosticCodesReference#output": {"path":"docs/reference/diagnostic-codes#output","title":"Diagnostic codes [Output]","type":"link"},
 "*DiagnosticCodesReference#prefixes": {"path":"docs/reference/diagnostic-codes#prefixes","title":"Diagnostic codes [Prefixes]","type":"link"},
+"*DiagnosticCodesReference#prerendering": {"path":"docs/reference/diagnostic-codes#prerendering","title":"Diagnostic codes [Prerendering]","type":"link"},
 "*DiagnosticCodesReference#related": {"path":"docs/reference/diagnostic-codes#related","title":"Diagnostic codes [Related]","type":"link"},
 "*DiagnosticCodesReference#semantic-analysis": {"path":"docs/reference/diagnostic-codes#semantic-analysis","title":"Diagnostic codes [Semantic analysis]","type":"link"},
 "*DiagnosticCodesReference#vite-plugin": {"path":"docs/reference/diagnostic-codes#vite-plugin","title":"Diagnostic codes [Vite plugin]","type":"link"},
