@@ -126,6 +126,17 @@ export interface CompilationOptions {
    * `COMPILATION_FAST_START_MISMATCH` when the candidates differ.
    */
   fastStart?: boolean | 'verify';
+  /**
+   * The cache of highlighted code blocks (`content/highlight-cache.ts`): code is highlighted by one
+   * Shiki highlighter per runtime, and a block whose text, language, meta, themes and Shiki release
+   * were highlighted before reuses that result. Development generations with the artifact cache
+   * keep it beside the cache; production, `cache: false` and the reference path
+   * (`incrementalReuse: false`, which highlights every block) keep none. On by default; `false`,
+   * like `NGDOC_HIGHLIGHT_CACHE=0`, highlights every block with the plain plugin. `verify` (or the
+   * environment's `verify`) also highlights every hit again, uses that result and reports
+   * `CONTENT_HIGHLIGHT_CACHE_MISMATCH` when it differs.
+   */
+  highlightCache?: boolean | 'verify';
 }
 
 /** A compiler service that can say which of its results came from a targeted generation. */
@@ -663,12 +674,19 @@ async function runPhases(
   const candidate = candidateSnapshot(plan, artifacts, keywordPlan, site);
   if (records.failed()) return done();
   progress?.phase('persist');
-  if (cache)
+  if (cache) {
     await writeCache(
       plan,
       artifacts,
       scope ? (artifact) => artifact === plan.previousById.get(artifact.id) : undefined,
     );
+    // The highlighted code blocks, beside the cache. A generation that rendered every content
+    // keeps exactly the blocks it used; one that reused or replayed some keeps the earlier ones too.
+    await plan.highlight?.save(
+      !scope &&
+        units.every((unit) => unit.record.render.every((step) => step.projection !== 'reuse')),
+    );
+  }
   progress?.end();
   if (signal.aborted) return done();
   return done(candidate, keywordPlan.keywords);

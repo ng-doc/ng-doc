@@ -66,6 +66,8 @@ In the development server:
   worker prepares the program in the background (an edit made before it is ready rebuilds every
   page once). When some changed, only the changed pages are rendered again, and the others reuse
   their cached links and generated files.
+- Highlighted code is kept in the cache folder too, so code that NgDoc highlighted before is not
+  highlighted again, even on pages that are rendered again.
 
 Each of these has an environment switch that turns it off (`*BuildersReference#environment-switches`).
 Use them only to find the cause of a problem.

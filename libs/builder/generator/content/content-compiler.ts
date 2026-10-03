@@ -43,6 +43,11 @@ import {
 } from '../kernel/footprint';
 import { readTextFile } from '../kernel/observations';
 import { hostPath } from '../kernel/paths';
+import {
+  type HighlightCall,
+  type HighlightSession,
+  HIGHLIGHT_CACHE_MISMATCH,
+} from './highlight-cache';
 
 const DEFAULT_GUIDE_HEADER = `<h1 class="ngde">{{ NgDocPage.title }}</h1>
 {% if Metadata.description %}<p class="ngde">{{ Metadata.description }}</p>{% endif %}`;
@@ -54,7 +59,13 @@ const asString = (value: JsonValue): string => (typeof value === 'string' ? valu
 interface HtmlUtilities {
   processHtml(
     html: string,
-    config: { headings?: string[]; route?: string; lightTheme?: string; darkTheme?: string },
+    config: {
+      headings?: string[];
+      route?: string;
+      lightTheme?: string;
+      darkTheme?: string;
+      highlight?: HighlightCall;
+    },
   ): Promise<{ content: string; anchors: ContentAnchor[]; error?: unknown }>;
   postProcessHtml(
     html: string,
@@ -84,7 +95,15 @@ const htmlUtilities = () => import('@ng-doc/utils') as Promise<HtmlUtilities>;
 
 /** Stateless, per-document content compiler. It never touches legacy stores. */
 export class GeneratorContentCompiler implements ContentCompiler {
-  constructor(private readonly services: ContentCompilerServices) {}
+  /**
+   * @param services - What the compiler reads.
+   * @param highlight - The generation's cache of highlighted code blocks; without it, every block
+   *   is highlighted (`./highlight-cache`).
+   */
+  constructor(
+    private readonly services: ContentCompilerServices,
+    private readonly highlight?: HighlightSession,
+  ) {}
 
   /**
    * Whether this call records its footprint. The semantic service's effective recorder state
@@ -767,12 +786,22 @@ export class GeneratorContentCompiler implements ContentCompiler {
     if (this.stopIfAborted(signal, diagnostics, 'Compilation was aborted')) return undefined;
     const utilities = await htmlUtilities();
     if (this.stopIfAborted(signal, diagnostics, 'Compilation was aborted')) return undefined;
+    const highlight = this.highlight?.call();
     const result = await utilities.processHtml(html, {
       ...(headings ? { headings: this.services.configuration.anchorHeadings } : {}),
       ...(route === undefined ? {} : { route }),
       lightTheme: this.services.configuration.themes.light,
       darkTheme: this.services.configuration.themes.dark,
+      ...(highlight ? { highlight } : {}),
     });
+    if (highlight?.mismatches.length)
+      diagnostics.push({
+        ...this.diag(
+          HIGHLIGHT_CACHE_MISMATCH,
+          `${highlight.mismatches.length} cached code block(s) differ from highlighting them again; the fresh highlighting is used.`,
+        ),
+        severity: 'warning',
+      });
     if (result.error) {
       diagnostics.push(this.diag('CONTENT_HTML_PROCESS', String(result.error)));
       return undefined;

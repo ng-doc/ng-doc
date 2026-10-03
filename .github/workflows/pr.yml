@@ -67,7 +67,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Every target runs Vitest. Projects without specs (core, utils) have no job;
+        # Every target runs Vitest. Projects without specs (core) have no job;
         # tools/scripts/check-ci-jobs.mjs fails the build when a project gains specs.
         target:
           - app:test
@@ -79,6 +79,7 @@ jobs:
           - add:test
           - builder:test
           - keywords-loaders:test
+          - utils:test
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:

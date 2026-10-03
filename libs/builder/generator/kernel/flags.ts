@@ -36,6 +36,7 @@ export const VITE_BUILD_HANDOFF_FLAG = 'NGDOC_VITE_BUILD_HANDOFF';
 export const TRACKED_PROGRAM_REUSE_FLAG = 'NGDOC_TRACKED_PROGRAM_REUSE';
 export const FAST_START_FLAG = 'NGDOC_FAST_START';
 export const PARALLEL_WRITES_FLAG = 'NGDOC_PARALLEL_WRITES';
+export const HIGHLIGHT_CACHE_FLAG = 'NGDOC_HIGHLIGHT_CACHE';
 
 /** The registry, in the order the engine applies the switches. */
 export const FLAGS: readonly FlagDefinition[] = Object.freeze(
@@ -129,6 +130,14 @@ export const FLAGS: readonly FlagDefinition[] = Object.freeze(
         "The server build of the Vite production pipeline publishes the browser build's " +
         'generation instead of generating again.',
       verify: false,
+    },
+    {
+      name: HIGHLIGHT_CACHE_FLAG,
+      description:
+        'Code blocks are highlighted with one Shiki highlighter per runtime and cached by their ' +
+        'text, language, meta, themes and Shiki version; development keeps the cache beside the ' +
+        'artifact cache.',
+      verify: true,
     },
     {
       name: PARALLEL_WRITES_FLAG,

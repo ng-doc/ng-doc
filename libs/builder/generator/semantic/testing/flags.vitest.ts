@@ -4,6 +4,7 @@ import {
   DELTA_TRANSPORT_FLAG,
   flagOff,
   FLAGS,
+  HIGHLIGHT_CACHE_FLAG,
   INCREMENTAL_PROGRAM_FLAG,
   INCREMENTAL_SKIP_FLAG,
   PERSISTENT_WORKER_FLAG,
@@ -40,8 +41,13 @@ describe('the engine switch registry', () => {
     }
   });
 
-  it('registers the scoped semantic, incremental program and shape closure switches with their effects', () => {
-    for (const name of [SCOPED_SEMANTIC_FLAG, INCREMENTAL_PROGRAM_FLAG, SHAPE_CLOSURE_FLAG]) {
+  it('registers the scoped semantic, incremental program, shape closure and highlight cache switches with their effects', () => {
+    for (const name of [
+      SCOPED_SEMANTIC_FLAG,
+      INCREMENTAL_PROGRAM_FLAG,
+      SHAPE_CLOSURE_FLAG,
+      HIGHLIGHT_CACHE_FLAG,
+    ]) {
       const flag = FLAGS.find((item) => item.name === name)!;
       expect(flag.verify).toBe(true);
       expect(readFlag(name, {})).toEqual({ value: 'on' });
@@ -52,6 +58,7 @@ describe('the engine switch registry', () => {
     expect(ENGINE_SWITCHES.some((engine) => engine.name === SCOPED_SEMANTIC_FLAG)).toBe(true);
     expect(ENGINE_SWITCHES.some((engine) => engine.name === INCREMENTAL_PROGRAM_FLAG)).toBe(true);
     expect(ENGINE_SWITCHES.some((engine) => engine.name === SHAPE_CLOSURE_FLAG)).toBe(true);
+    expect(ENGINE_SWITCHES.some((engine) => engine.name === HIGHLIGHT_CACHE_FLAG)).toBe(true);
   });
 
   it.each([

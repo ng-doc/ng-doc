@@ -1,8 +1,7 @@
 import { randomUUID } from 'node:crypto';
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { mkdir, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { ts } from 'ts-morph';
 
 import { retryingRename } from '../artifacts';
@@ -18,6 +17,7 @@ import {
 import { createDependencyRefresher } from '../graph';
 import { bytesDigest, contentDigest, dependencyIdentity, digestOf } from '../kernel/canonical';
 import { FAST_START_FLAG, FLAGS, readFlag } from '../kernel/flags';
+import { runtimePackages } from '../kernel/runtime-identity';
 import { type ProgramWatchFacts, watchFactsChange } from '../semantic/program-retention';
 import { snapshotOf } from './assemble';
 import { sweepTemporaries } from './closure-store';
@@ -162,87 +162,26 @@ function header(options: CompilationOptions, created: ReadonlyArray<[string, str
   });
 }
 
-/**
- * The packages whose code shapes what a generation produces (parsing, rendering, highlighting,
- * formatting, search records, bundling of page modules), read from the `package.json` they
- * resolve to from this module. `shiki` is resolved from `@shikijs/rehype`, which loads it.
- */
-const RUNTIME_PACKAGES: ReadonlyArray<readonly [string, string?]> = [
-  ['typescript'],
-  ['ts-morph'],
-  ['@ts-morph/common'],
-  ['prettier'],
-  ['@prettier/sync'],
-  ['@shikijs/rehype'],
-  ['shiki', '@shikijs/rehype'],
-  ['marked'],
-  ['gray-matter'],
-  ['nunjucks'],
-  ['esbuild'],
-  ['@microsoft/tsdoc'],
-  ['@orama/orama'],
-  ['@orama/plugin-parsedoc'],
-  ['posthtml-parser'],
-  ['posthtml-render'],
-  ['rehype'],
-  ['rehype-parse'],
-  ['rehype-stringify'],
-  ['rehype-minify-whitespace'],
-  ['unified'],
-  ['github-slugger'],
-  ['stringify-entities'],
-  ['css-what'],
-  ['oxc-parser'],
-];
-
 let runtime: Record<string, unknown> | undefined;
 
 /**
  * What the process that compiles brings to a generation besides the options: the Node and ICU
  * versions and the default locale (`localeCompare` and `Intl` without a locale depend on them),
- * the TypeScript that ts-morph runs, and the resolved version of every package in
- * {@link RUNTIME_PACKAGES} (`null` when it does not resolve). Read once per process: a package
- * upgraded while it runs is not the code it loaded, and the next process reads the new versions.
+ * the TypeScript that ts-morph runs, and the resolved versions of the packages that shape output
+ * (`runtimePackages`). Read once per process: a package upgraded while it runs is not the code it
+ * loaded, and the next process reads the new versions.
  */
 export function runtimeIdentity(): Record<string, unknown> {
   if (runtime) return runtime;
-  const from = path.dirname(fileURLToPath(import.meta.url));
-  const versions: Record<string, string | null> = {};
-  const directories = new Map<string, string | undefined>();
-  for (const [name, via] of RUNTIME_PACKAGES) {
-    const start = via ? directories.get(via) : from;
-    const directory = start ? packageDirectory(name, start) : undefined;
-    directories.set(name, directory);
-    versions[name] = directory ? packageVersion(directory) : null;
-  }
   runtime = {
     node: process.versions.node,
     icu: process.versions.icu ?? null,
     unicode: process.versions.unicode ?? null,
     locale: new Intl.Collator().resolvedOptions().locale,
     typescript: ts.version,
-    packages: versions,
+    packages: runtimePackages(),
   };
   return runtime;
-}
-
-/** The directory of package `name` as Node's resolution finds it from `directory` upwards. */
-function packageDirectory(name: string, directory: string): string | undefined {
-  for (let current = directory; ; current = path.dirname(current)) {
-    const candidate = path.join(current, 'node_modules', name);
-    if (existsSync(path.join(candidate, 'package.json'))) return candidate;
-    if (path.dirname(current) === current) return undefined;
-  }
-}
-
-function packageVersion(directory: string): string | null {
-  try {
-    const value: unknown = JSON.parse(readFileSync(path.join(directory, 'package.json'), 'utf8'));
-    const version = (value as { version?: unknown } | null)?.version;
-    return typeof version === 'string' ? version : null;
-  } catch {
-    return null;
-  }
 }
 
 /** Discovery as the record compares it: the snapshot and what discovery recorded. */

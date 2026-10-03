@@ -5,6 +5,7 @@ import path from 'node:path';
 
 import { createArtifactCache, JsonArtifactCache, retryingRename } from '../artifacts';
 import { GeneratorContentCompiler } from '../content/content-compiler';
+import { type HighlightSession, createHighlightSession } from '../content/highlight-cache';
 import type {
   CompilationRequest,
   Dependency,
@@ -71,6 +72,8 @@ export interface GenerationPlan extends CompilationServices {
   sessionPrevious: boolean;
   memo: MemoState;
   compiler: GeneratorContentCompiler;
+  /** The cache of highlighted code blocks, when this generation uses one (`content/highlight-cache`). */
+  highlight?: HighlightSession;
 }
 
 /**
@@ -210,11 +213,11 @@ export async function planGeneration(
   const outputDependencyResult = await assembler.templateDependencies();
   setup(outputDependencyResult.diagnostics, outputDependencyResult.dependencies);
   const outputDependencies = outputDependencyResult.dependencies;
-  const compiler = new GeneratorContentCompiler({
-    configuration,
-    semantic,
-    templates: discovery.templates,
-  });
+  const highlight = createHighlightSession(options, request, configuration);
+  const compiler = new GeneratorContentCompiler(
+    { configuration, semantic, templates: discovery.templates },
+    highlight,
+  );
   return {
     ...services,
     request,
@@ -235,6 +238,7 @@ export async function planGeneration(
     sessionPrevious,
     memo,
     compiler,
+    ...(highlight ? { highlight } : {}),
     scopedSemantic,
   };
 }

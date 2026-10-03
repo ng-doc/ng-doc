@@ -187,6 +187,11 @@ export const ENGINE_SWITCHES: ReadonlyArray<{ name: string; values: RegExp; effe
       effect: 'the server build generates again',
     },
     {
+      name: 'NGDOC_HIGHLIGHT_CACHE',
+      values: /^(0|false|off|no|verify)$/i,
+      effect: 'every code block is highlighted again',
+    },
+    {
       name: 'NGDOC_PARALLEL_WRITES',
       values: /^(0|false|off|no)$/i,
       effect: 'generated files are written one at a time',
