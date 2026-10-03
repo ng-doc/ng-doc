@@ -6,7 +6,7 @@ A guide often needs part of the API next to its text: the inputs of the componen
 the deprecation note of a function. Template functions render them from the code, so the guide
 doesn't repeat what the code already says, and it updates when the code changes.
 
-## See it
+## 👀 See it
 
 The details, the members and the description of `NgDocTagComponent`, rendered on this page from
 its source:
@@ -17,7 +17,7 @@ its source:
 
 {{ JSDoc.description("libs/ui-kit/components/tag/tag.component.ts#NgDocTagComponent") }}
 
-## Use it
+## 🧰 Use it
 
 Call a function in the Markdown of the page, with the path of the declaration:
 
@@ -82,7 +82,7 @@ Or list the `@see` tags of a declaration:
 {{ '{% endfor %}' | safe }}
 ```
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Warning**
 > A path to a file or a name that doesn't exist fails the build. Paths are relative to the workspace

@@ -6,7 +6,7 @@ NgDoc colors code with Shiki. Code blocks in your pages are highlighted when NgD
 the code of a playground, which changes while readers edit its inputs, is highlighted in the
 browser. Both use the same pair of themes: one for light backgrounds and one for dark ones.
 
-## See it
+## 👀 See it
 
 Built with the new engine, this site colors its code with the default theme. Switch between the
 light and dark themes with the `T` key and watch the colors follow:
@@ -181,7 +181,7 @@ const html = highlighter.codeToHtml('const answer = 42;', {
 
 Call `ngDocSyntaxTheme()` for every highlighter: Shiki changes the theme object that it loads.
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Warning**
 > The theme names in `shiki.themes` must be themes bundled with Shiki, or `css-variables`. To use

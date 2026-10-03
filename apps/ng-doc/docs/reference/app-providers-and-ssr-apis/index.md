@@ -34,6 +34,7 @@ registers an HTTP interceptor.
 | `contentScrollPositionRestoration` | `'enabled' \| 'top' \| 'disabled'` | `'disabled'` | Restores the scroll position after NgDoc content has loaded. Use the same value as the router's `scrollPositionRestoration`. |
 | `uiKit`                            | `NgDocUiConfig`                    | See below    | Paths of the UI kit assets.                                                                                                  |
 | `shiki`                            | `NgDocHighlighterConfig`           | –            | Extra Shiki themes to load in the browser (`themes`).                                                                        |
+| `shortcuts`                        | `boolean`                          | `true`       | Whether single-key shortcuts are on for readers who haven't chosen (`*SearchPage#keyboard-shortcuts`). ⌘K always works.      |
 
 `NgDocUiConfig` has two fields. Set both when you pass `uiKit`:
 
@@ -59,7 +60,7 @@ default engine is `NgDocDefaultSearchEngine`, and its first argument is an
 
 | Option      | Type                             | Default | Description                                                 |
 | ----------- | -------------------------------- | ------- | ----------------------------------------------------------- |
-| `stemmer`   | A stemmer from `@orama/stemmers` | –       | Stems words in the language of your documentation.          |
+| `stemmer`   | A stemmer from `@orama/stemmers` | –       | Stems words. Without it, words are not stemmed.             |
 | `limit`     | `number`                         | `10`    | The most results to return.                                 |
 | `tolerance` | `number`                         | –       | The number of typos to allow. It doesn't work with `exact`. |
 | `exact`     | `boolean`                        | –       | Returns only exact matches.                                 |
@@ -91,7 +92,8 @@ Leave a field out to remove that part of the page.
 
 `provideMainPageProcessor(processors)` registers the processors you pass. Pass
 `NG_DOC_DEFAULT_PAGE_PROCESSORS` for the standard ones, which render links, icons, heading anchors,
-callouts, tooltips, diagrams, code blocks, demos, demo panes, playgrounds, tabs and images.
+callouts, tooltips, diagrams, code blocks, demos, demo panes, playgrounds, tabs, images and the
+members tables of API pages.
 `providePageProcessor(processors)` adds your own, which run after the main processors. Each
 processor is an `NgDocPageProcessor`:
 

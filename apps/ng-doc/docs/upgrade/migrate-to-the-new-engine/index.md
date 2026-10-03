@@ -69,13 +69,14 @@ The schematic changes nothing when it can't migrate the project, and the report 
 
 - the build target uses another builder, such as a custom esbuild builder;
 - the build target localizes the application (`localize`);
-- the index file isn't named `index.html`;
+- the index file isn't named `index.html`, or `index` is `false`;
 - the root component can't be found from the browser entry. Pass it with
   `--root-component src/app/app.ts`;
 - the server entry, `main.server.ts`, exports an NgModule (`NGDOC_MIGRATE_SERVER_NGMODULE`). The
   Vite build prerenders with a bootstrap function, so export one instead:
   `(context) => bootstrapApplication(App, config, context)`;
-- `vite.config.mjs` already exists. Pass another file name with `--vite-config`.
+- `vite.config.mjs` already exists. Pass another file name with `--vite-config`;
+- a target with the name the legacy target would get, such as `build-legacy`, already exists.
 
 Running the schematic again is safe: it adds only what is missing, and keeps your edits to the
 files it created. If the `.ng-doc-migration/<project-name>` folder is gone, it finds the
@@ -112,7 +113,7 @@ the Angular CLI application builder, with the options of your build target uncha
 | Errors                   | Messages                                                        | Messages with a diagnostic code (`*DiagnosticCodesReference`)                                                       |
 | Progress output          | –                                                               | `*ProgressOutputPage`                                                                                               |
 
-## Roll back
+## 🔙 Roll back
 
 ```bash
 ng g @ng-doc/builder:migrate-to-vite --project <project-name> --revert
@@ -127,7 +128,7 @@ and changes nothing: restore the target first.
 It needs the `.ng-doc-migration/<project-name>` folder: commit it with the migration if you want to
 keep the revert available. Your version control remains the primary way back.
 
-## Known limitations
+## 🚧 Known limitations
 
 - `vite build --watch` isn't supported. Use the development server.
 - Supported platforms: Linux, macOS and Windows, all tested in CI.

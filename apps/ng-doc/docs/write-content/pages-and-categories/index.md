@@ -5,7 +5,7 @@ keyword: PagesAndCategoriesPage
 A page is a folder with a configuration file and Markdown content. Categories group pages in the
 sidebar. Use them to shape the navigation of your site.
 
-## See it
+## 👀 See it
 
 The sidebar of this site is built from pages and categories. This page is **Write content ›
 Pages and categories**, and these are the two files behind it.
@@ -22,7 +22,7 @@ The page, `write-content/pages-and-categories/ng-doc.page.ts`:
 
 ```
 
-## Create a page
+## 🧰 Create a page
 
 A page is a file named `ng-doc.page.ts` that default-exports an `NgDocPage` object. Its content
 lives in the Markdown file that `mdFile` points to.
@@ -226,7 +226,7 @@ empty tag in `--tags` with a usage error (exit code `2`), and the Angular CLI bu
 `ngDoc.tags` before they start. With the Vite plugin, `generator.discovery.tags` that aren't an
 array of non-empty strings fail the build with `DISCOVERY_TAGS_INVALID`.
 
-## Gotchas
+## 🚧 Gotchas
 
 {% include "../../shared/export-by-default.md" %}
 

@@ -7,7 +7,7 @@ holds the page, `NgDocNavbarComponent` is the header bar, and `NgDocSidebarCompo
 pages. This page shows what you can put in them, how to size them, and how to replace the navbar or
 the sidebar with your own component.
 
-## See it
+## 👀 See it
 
 The root component of this site uses the whole layout:
 
@@ -278,7 +278,7 @@ const config: NgDocConfiguration = {
 export default config;
 ```
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Warning**
 > The `ng-doc-root` component places only its direct children marked as the navbar or the sidebar. A navbar or

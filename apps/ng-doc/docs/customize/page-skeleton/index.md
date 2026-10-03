@@ -7,7 +7,7 @@ the breadcrumbs above the title, the links to the previous and next page below t
 "On this page" rail beside it. You choose these components with `providePageSkeleton`, so you can
 replace any of them or leave it out.
 
-## Use it
+## 🧰 Use it
 
 Provide the default skeleton in the application configuration. `ng add` does this for you:
 
@@ -136,7 +136,7 @@ export class PagerComponent implements NgDocPageNavigation {
 }
 ```
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Note**
 > The `[` and `]` keyboard shortcuts click the links marked `rel="prev"` and `rel="next"`

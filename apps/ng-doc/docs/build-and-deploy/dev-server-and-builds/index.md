@@ -5,12 +5,15 @@ keyword: DevServerAndBuildsPage
 The new engine runs in one of two hosts: the Vite host or an Angular CLI builder. Both generate the
 same site. This page helps you choose, and shows how each one runs in development and production.
 
-> **Note**
-> A new standalone application gets the Vite host from `ng add` (`*InstallationPage`). `ng update`
-> keeps existing projects on the legacy builders; for them, the new engine is opt-in: see
-> `*MigrateToNewEnginePage`. The legacy builders are described in `*LegacyBuildersPage`.
+<ng-doc-blockquote type="note" label="🧭 New or existing project?">
 
-## Choose a host
+A new standalone application gets the Vite host from `ng add` (`*InstallationPage`). `ng update`
+keeps existing projects on the legacy builders; for them, the new engine is opt-in: see
+`*MigrateToNewEnginePage`. The legacy builders are described in `*LegacyBuildersPage`.
+
+</ng-doc-blockquote>
+
+## 🆚 Choose a host
 
 |            | Vite host                                                                      | Angular CLI builder                                                 |
 | ---------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
@@ -18,7 +21,7 @@ same site. This page helps you choose, and shows how each one runs in developmen
 | Set up by  | `ng add`, `ng g @ng-doc/builder:migrate-to-vite`, or by hand (`*ViteHostPage`) | The `modern-*` builders (`*BuildersReference#angular-cli-builders`) |
 | Dev        | `vite`, or `ng serve` with a Vite builder                                      | `ng serve`                                                          |
 | Production | `vite build`; prerender with `ng build`                                        | `ng build`                                                          |
-| SSR        | Development renders in the browser; production has SSR and prerendering        | Angular SSR                                                         |
+| SSR        | Development renders in the browser; production prerenders every route          | Angular SSR                                                         |
 | Platforms  | Linux, macOS and Windows                                                       | Linux, macOS and Windows                                            |
 
 Choose the **Vite host** for new projects and for the fastest edit loop. Choose the **Angular CLI

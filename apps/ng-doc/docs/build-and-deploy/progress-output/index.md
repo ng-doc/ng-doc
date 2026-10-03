@@ -6,7 +6,7 @@ The new engine reports what it is doing while it builds the documentation. You s
 updates while the site builds, a summary when it is ready, and then one line for each edit. Progress
 never changes the generated files. The legacy builders keep their own output.
 
-## What you see
+## 👀 What you see
 
 On a terminal, the first build shows a live line that is redrawn in place. It names the current
 step, counts the pages of the steps that go page by page, and shows how much of the build is done:

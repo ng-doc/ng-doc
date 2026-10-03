@@ -7,7 +7,7 @@ interface, function, type alias, enum and variable in the files you choose, and 
 lists them. The pages read the types from the code and the text from your doc comments, so they
 stay in step with your library.
 
-## See it
+## 👀 See it
 
 Open the page of `NgDocThemeService` or `NgDocTagComponent`, or the index of this site's API,
 `*ApiReferences`.
@@ -23,10 +23,11 @@ Every declaration, whatever its kind, gets the same symbol view:
 - **Declaration:** the declaration as code, without its body.
 - **Extended by:** for a class, the classes that extend it, with their number.
 - **Members:** one table for the members of a class, an interface, an object type or an enum.
-- **Returns**, **Parameters** and **Overloads** for a function, then the notes, examples and usage
-  notes of the doc comment (`*WriteDocCommentsPage`).
+- **Returns**, **Parameters** and **Overloads** for a function. The notes and **See Also** of the
+  doc comment come before the members, and its examples and usage notes after them
+  (`*WriteDocCommentsPage`).
 
-## Use it
+## 🧰 Use it
 
 1. Create `ng-doc.api.ts` in your project, by hand or with the schematic:
 
@@ -161,7 +162,7 @@ The chips of `@Component`, `@Directive`, `@Injectable`, `@Pipe`, `@NgModule`, `@
 `--ng-doc-api-content-max-width` caps the width of API pages and the index, which need more room
 than guides.
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Warning**
 > The symbol view is part of the new engine. The legacy builders render API pages with a section

@@ -5,14 +5,14 @@ keyword: LinksAndKeywordsPage
 Keywords turn inline code into links. Write the name of a page, a declaration or an external
 resource in backticks, and NgDoc links it. When a page moves, its links keep working.
 
-## See it
+## 👀 See it
 
 - A page keyword: `*InstallationPage`
 - A page keyword with an anchor: `*InstallationPage#manual-setup`
 - An API keyword: `NgDocPage`
 - A global keyword: `nunjucks`
 
-## Use it
+## 🧰 Use it
 
 Give a page a keyword in its front matter:
 
@@ -72,8 +72,8 @@ case-sensitive.
 ## Query parameters
 
 Add query parameters after `?`, as in a URL. They work on links to pages, such as the API list
-page, and on global keywords. API keywords drop them. This link opens the API list filtered to
-classes:
+page, and on global keywords with `type: 'link'`. API keywords and other global keywords drop them.
+This link opens the API list filtered to classes:
 
 ```markdown name="index.md"
 `*ApiReferences?type=Class`
@@ -123,7 +123,7 @@ export default config;
 `title` is optional; the key is used by default. To load keywords for Angular, RxJS or another
 NgDoc site, use keyword loaders (`*LinkToExternalApisPage`).
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Warning**
 > A page keyword that doesn't exist fails the build, and so does an unknown anchor on a page

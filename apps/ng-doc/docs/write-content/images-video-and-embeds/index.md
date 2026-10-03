@@ -5,13 +5,13 @@ keyword: ImagesVideoAndEmbedsPage
 Add images, videos and embedded pages with Markdown or HTML. Images open in a zoom viewer when
 readers click them.
 
-## See it
+## 👀 See it
 
 Click the logo to zoom in:
 
 ![NgDoc logo](assets/images/brand/logo.svg)
 
-## Use it
+## 🧰 Use it
 
 Put images in a folder that the build copies to the site, such as `public` or `src/assets`.
 Then reference them by their path in the built site:
@@ -65,7 +65,7 @@ platform:
 Give every `iframe` a `title` for screen readers, and use `loading="lazy"` so it doesn't slow down
 the page.
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Warning**
 > Embedded pages load code from another site on every visit. Prefer demos (`*DemosPage`) for

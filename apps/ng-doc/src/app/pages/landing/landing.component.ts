@@ -75,6 +75,7 @@ export class LandingComponent {
     },
     {
       heading: 'API docs from your code',
+      emoji: '📚',
       description:
         'Classes, components, interfaces and functions documented from TypeScript and JSDoc, with no duplicate writing.',
       more: 'API pages',
@@ -84,6 +85,7 @@ export class LandingComponent {
     },
     {
       heading: 'Demos and demo panes',
+      emoji: '🧩',
       description:
         'Render any Angular component on a page with one line, with its source shown next to it.',
       more: 'Demos',
@@ -103,6 +105,7 @@ export class LandingComponent {
     },
     {
       heading: 'Offline full-text search',
+      emoji: '🔍',
       description:
         'Guides and API are indexed at build time, so search works without a hosted service.',
       more: 'Search',
@@ -112,6 +115,7 @@ export class LandingComponent {
     },
     {
       heading: 'Keywords and auto-linking',
+      emoji: '🔗',
       description:
         'Mention a declaration anywhere, even inside code blocks, and it links to its API page.',
       more: 'Links and keywords',

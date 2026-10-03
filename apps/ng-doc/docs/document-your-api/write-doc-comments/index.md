@@ -6,7 +6,7 @@ The text of an API page comes from the doc comments in your code: the comment ri
 declaration or a member that opens with a slash and two stars. NgDoc reads them with the TSDoc parser, renders their Markdown,
 and turns the names in inline code into links.
 
-## See it
+## 👀 See it
 
 The page of `NgDocThemeService` is written from these comments, shortened here:
 
@@ -36,7 +36,7 @@ export class NgDocThemeService {
 }
 ```
 
-## Use it
+## 🧰 Use it
 
 Write the comment before the declaration. The text before the first tag is the description: it opens
 the page. With the new engine, its first paragraph is also the one-line summary in the search and
@@ -180,15 +180,18 @@ export function toArray<T>(value: T | T[]): T[] {
 }
 ```
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Warning**
 > Only a doc comment, opened with a slash and two stars, counts. Line comments, and block comments
 > opened with one star, are ignored.
 
-> **Note**
-> Write `@param name - text`, with the hyphen. It is the TSDoc form, and it keeps the parameter's
-> name out of its description.
+<ng-doc-blockquote type="note" label="💡 Tip">
+
+Write `@param name - text`, with the hyphen. It is the TSDoc form, and it keeps the parameter's
+name out of its description.
+
+</ng-doc-blockquote>
 
 {% index false %}
 

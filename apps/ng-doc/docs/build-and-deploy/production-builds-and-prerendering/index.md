@@ -11,7 +11,7 @@ loading and search engines.
 - For server-side rendering or prerendering: an application with Angular SSR set up, with
   `main.server.ts` and a server application configuration.
 
-## Build with the Vite host
+## 🚀 Build with the Vite host
 
 `vite build` builds the application with the Vite host (`*ViteHostPage#build-for-production`).
 

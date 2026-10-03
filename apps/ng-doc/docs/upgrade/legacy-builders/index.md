@@ -200,7 +200,7 @@ theme, which the theme toggle switches to), and allow `@ng-doc/core`, which is a
 }
 ```
 
-## Options
+## 📋 Options
 
 The builders accept every option of the Angular builders they wrap, plus:
 

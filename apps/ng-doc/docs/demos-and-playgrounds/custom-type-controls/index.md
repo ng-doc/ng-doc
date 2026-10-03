@@ -6,7 +6,7 @@ A playground has built-in controls for strings, numbers, booleans and unions of 
 input of any other type, such as an interface, write a type control: a small form component that
 edits a value of that type. Once you register it, every playground uses it for inputs of that type.
 
-## See it
+## 👀 See it
 
 `FloatingCircleComponent` places a circle with its `position` input, an object with `top` and
 `left`:
@@ -18,7 +18,7 @@ the input. With a type control for the type, the inspector shows two fields inst
 
 {{ NgDocActions.playground("FloatingCircle") }}
 
-## Use it
+## 🧰 Use it
 
 1. Write a component that implements `NgDocTypeControl`. It is a `ControlValueAccessor`: the
    playground writes the value of the input with `writeValue()`, and the control reports changes
@@ -126,7 +126,7 @@ optional and nullable inputs of their type, such as `@Input() label?: string`, `
 In development, the browser console names the type of every input that a playground skips, so you
 can copy the text to register.
 
-## Options
+## 📋 Options
 
 The third argument of `provideTypeControl` takes `NgDocTypeControlProviderOptions`:
 
@@ -157,15 +157,18 @@ matches the inspector: `NgDocInputWrapperComponent` with `NgDocInputStringDirect
 | `--ng-doc-playground-inspector-width` | `312px`                 | The width of the inspector beside the demo. |
 | `--ng-doc-playground-input-border`    | `--ng-doc-input-border` | The border of the inputs in the inspector.  |
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Warning**
 > Type names are compared as text, so a registration of `FloatingCirclePosition|undefined`, without
 > the spaces that TypeScript prints, matches no input.
 
-> **Note**
-> A control registered in the `providers` of a page is registered when the code of that page loads.
-> Register controls that the playgrounds of several pages use in the providers of your application.
+<ng-doc-blockquote type="note" label="💡 Tip">
+
+A control registered in the `providers` of a page is registered when the code of that page loads.
+Register controls that the playgrounds of several pages use in the providers of your application.
+
+</ng-doc-blockquote>
 
 {% index false %}
 

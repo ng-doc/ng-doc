@@ -6,7 +6,7 @@ The search field in the navbar opens the command palette: one dialog that search
 the API, and runs actions such as switching the theme. This page shows how readers use it, and how
 you configure the search engine behind it or replace it.
 
-## See it
+## 👀 See it
 
 Press ⌘K on macOS or Ctrl+K elsewhere, or click the search field in the navbar.
 
@@ -26,7 +26,7 @@ listed first as **Top matches**, so Enter opens the symbol you typed.
 The **Actions** scope lists **Toggle dark mode**, **Copy link to this page** and the switch for
 single-key shortcuts.
 
-## Set it up
+## 🧰 Set it up
 
 The palette needs a search engine. `ng add` provides the default one:
 
@@ -127,8 +127,9 @@ export const appConfig: ApplicationConfig = {
 
 ### Language
 
-The default engine stems words in English. If your documentation is in another language, pass a
-stemmer for it from `@orama/stemmers`, which `@ng-doc/app` installs:
+The default engine doesn't stem words: it matches them as they are written. To match other forms
+of a word, pass a stemmer for the language of your documentation from `@orama/stemmers`, which
+`@ng-doc/app` installs:
 
 ```typescript name="app.config.ts"
 import { ApplicationConfig } from '@angular/core';
@@ -196,7 +197,7 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Warning**
 > The `ng-doc-search` component throws an error when no search engine is provided. Provide one, or hide the search

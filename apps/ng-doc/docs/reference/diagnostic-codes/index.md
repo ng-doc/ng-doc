@@ -45,6 +45,9 @@ With `--json`, the `ng-doc` command prints one JSON object per line:
 | `NGDOC_VITE_`                                   | The Vite plugin.                                                                               |
 | `NGDOC_SSR_`                                    | Server-side rendering in the Vite development server.                                          |
 | `NGDOC_ANGULAR_`                                | The Angular CLI builders.                                                                      |
+| `NGDOC_PRERENDER_`                              | Prerendering with `vite-application` or `ng-doc prerender`.                                    |
+| `NGDOC_ADD_`, `NGDOC_VITE_SETUP_`               | `ng add @ng-doc/add`.                                                                          |
+| `NGDOC_MIGRATE_`                                | The `migrate-to-vite` schematic (`*MigrateToNewEnginePage`).                                   |
 
 ## Codes you can fix
 
@@ -113,28 +116,41 @@ These codes point to a problem in your files or setup. The linked entries explai
 
 ### Vite plugin
 
-| Code                               | Meaning                                                                                                                                              |
-| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `NGDOC_VITE_VERSION`               | The Vite engine runs on another Vite than 7.3.5 (`*TroubleshootingPage#ngdoc_vite_version`).                                                         |
-| `NGDOC_VITE_WATCH_CAPACITY`        | The plugin needs more watch targets than allowed (`*TroubleshootingPage#ngdoc_vite_watch_capacity`).                                                 |
-| `NGDOC_VITE_RESTART_REQUIRED`      | A setting that needs a restart changed (`*TroubleshootingPage#ngdoc_vite_restart_required`).                                                         |
-| `NGDOC_VITE_OUTPUT_LEASE`          | Another plugin instance in the same Vite process already uses the same project or generated folder (`*TroubleshootingPage#ngdoc_vite_output_lease`). |
-| `NGDOC_VITE_BUILD_WATCH`           | `vite build --watch` isn't supported.                                                                                                                |
-| `NGDOC_VITE_WATCH_DISABLED`        | `server.watch` is disabled.                                                                                                                          |
-| `NGDOC_VITE_HMR_DISABLED`          | `server.hmr` is disabled.                                                                                                                            |
-| `NGDOC_VITE_THEME_MODULE`          | A Shiki theme other than the built-in ones has no entry in `themeModules`.                                                                           |
-| `NGDOC_VITE_ANGULAR_COMPATIBILITY` | The Angular plugins don't come from `createNgDocAngularPlugins`.                                                                                     |
-| `NGDOC_VITE_ANGULAR_OPTIONS`       | `createNgDocAngularPlugins` got an unsupported option value.                                                                                         |
-| `NGDOC_VITE_ANGULAR_MODE`          | The plugins run in test mode (`NODE_ENV=test` or `VITEST`).                                                                                          |
-| `NGDOC_VITE_ANGULAR_BUILD`         | `createNgDocAngularPlugins` was loaded from source instead of the built `@ng-doc/builder` package.                                                   |
-| `NGDOC_VITE_ANGULAR_COMPOSITION`   | The Angular plugin array was changed: it must contain exactly the plugins that `createNgDocAngularPlugins` returns.                                  |
-| `NGDOC_VITE_ANGULAR_PROBE`         | `angularComponentProbe` can't be read, or Angular didn't compile it. Point it to a component that the application always compiles.                   |
+| Code                                | Meaning                                                                                                                                              |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NGDOC_VITE_VERSION`                | The Vite engine runs on another Vite than 7.3.5 (`*TroubleshootingPage#ngdoc_vite_version`).                                                         |
+| `NGDOC_VITE_WATCH_CAPACITY`         | The plugin needs more watch targets than allowed (`*TroubleshootingPage#ngdoc_vite_watch_capacity`).                                                 |
+| `NGDOC_VITE_RESTART_REQUIRED`       | A setting that needs a restart changed (`*TroubleshootingPage#ngdoc_vite_restart_required`).                                                         |
+| `NGDOC_VITE_OUTPUT_LEASE`           | Another plugin instance in the same Vite process already uses the same project or generated folder (`*TroubleshootingPage#ngdoc_vite_output_lease`). |
+| `NGDOC_VITE_BUILD_WATCH`            | `vite build --watch` isn't supported.                                                                                                                |
+| `NGDOC_VITE_WATCH_DISABLED`         | `server.watch` is disabled.                                                                                                                          |
+| `NGDOC_VITE_HMR_DISABLED`           | `server.hmr` is disabled.                                                                                                                            |
+| `NGDOC_VITE_THEME_MODULE`           | A Shiki theme other than the built-in ones has no entry in `themeModules`.                                                                           |
+| `NGDOC_VITE_ANGULAR_COMPATIBILITY`  | The Angular plugins don't come from `createNgDocAngularPlugins`.                                                                                     |
+| `NGDOC_VITE_ANGULAR_OPTIONS`        | `createNgDocAngularPlugins` got an unsupported option value.                                                                                         |
+| `NGDOC_VITE_ANGULAR_MODE`           | The plugins run in test mode (`NODE_ENV=test` or `VITEST`).                                                                                          |
+| `NGDOC_VITE_ANGULAR_BUILD`          | `createNgDocAngularPlugins` was loaded from source instead of the built `@ng-doc/builder` package.                                                   |
+| `NGDOC_VITE_ANGULAR_COMPOSITION`    | The Angular plugin array was changed: it must contain exactly the plugins that `createNgDocAngularPlugins` returns.                                  |
+| `NGDOC_VITE_ANGULAR_PROBE`          | `angularComponentProbe` can't be read, or Angular didn't compile it. Point it to a component that the application always compiles.                   |
+| `NGDOC_VITE_APPLICATION_OPTION`     | `createNgDocApplicationPlugin` got an option of an `angular.json` build target. The message names its Vite or Analog equivalent.                     |
+| `NGDOC_VITE_SERVER_ENTRY`           | The server bundle or prerendering was requested, but `createNgDocApplicationPlugin` has no `server` entry.                                           |
+| `NGDOC_VITE_OPTION_REMOVED`         | The plugin got `maxContentRequests`, which was removed with the virtual content mode. Remove the option.                                             |
+| `NGDOC_DEVELOPMENT_CONTENT_REMOVED` | `generator.developmentContent: 'virtual'` was removed. Remove the option.                                                                            |
 
 ### Angular CLI builders
 
 | Code                          | Meaning                                                                                    |
 | ----------------------------- | ------------------------------------------------------------------------------------------ |
 | `NGDOC_ANGULAR_HIDDEN_OUTPUT` | In watch mode, the generated folder can't be inside a folder whose name starts with a dot. |
+
+### Prerendering
+
+| Code                           | Meaning                                                                                                   |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| `NGDOC_PRERENDER_FAILED`       | One or more routes failed to render. The message lists the first ten with their errors.                   |
+| `NGDOC_PRERENDER_TIMEOUT`      | A route took longer than `routeTimeout` (`--route-timeout`).                                              |
+| `NGDOC_PRERENDER_ROUTE`        | A route in `routes` (`--routes`) doesn't start with `/`, or has a `?`, a `#`, or a `.` or `..` segment.   |
+| `NGDOC_PRERENDER_SERVER_ENTRY` | The server bundle doesn't export what prerendering needs. Build it from the `server` entry of the plugin. |
 
 ## Other codes
 

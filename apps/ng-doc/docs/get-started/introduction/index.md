@@ -2,9 +2,9 @@
 keyword: IntroductionPage
 ---
 
-NgDoc turns an Angular application into a documentation site for your components and APIs. You
-write guide pages in Markdown next to your code, and NgDoc adds live demos, playgrounds, API pages,
-links and search. It is built for authors of Angular libraries and design systems.
+👋 Welcome! NgDoc turns an Angular application into a documentation site for your components and
+APIs. You write guide pages in Markdown next to your code, and NgDoc adds live demos, playgrounds,
+API pages, links and search. It is built for authors of Angular libraries and design systems.
 
 ## ✨ What NgDoc can do
 
@@ -19,7 +19,7 @@ links and search. It is built for authors of Angular libraries and design system
 | Search      | Full-text search over guide pages and API pages.                               | `*SearchPage`           |
 | Theming     | Light, dark and custom themes through CSS variables.                           | `*ThemesAndColorsPage`  |
 
-## See it
+## 👀 See it
 
 This is a demo. NgDoc renders the component and shows its source code in tabs:
 

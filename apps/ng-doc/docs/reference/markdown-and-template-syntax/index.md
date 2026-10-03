@@ -18,6 +18,9 @@ Attributes follow the language in the opening fence of a code block, separated b
 | Highlighted lines | `{1,3-5}`         | Highlights lines. Ranges are inclusive.                    |
 | `file`            | `file="./app.ts"` | Loads the code from a file, relative to the Markdown file. |
 
+`fileName="…"` is another spelling of `name`. `lineNumbers` is accepted but has no effect. Any other
+attribute fails the build.
+
 The language is optional and defaults to TypeScript. A block with the `mermaid` language renders
 a diagram (`*DiagramsPage`).
 
@@ -75,7 +78,8 @@ Snippet comments in demo source files mark the code that a demo shows. See `*Sni
 | `// snippet-from-file="./other.ts"` | Shows another file, relative to the demo file.              |
 
 Snippets work in `//`, `/* */` and `<!-- -->` comments. The language defaults to HTML for
-`<!-- -->` comments and to TypeScript otherwise.
+`<!-- -->` comments and to TypeScript otherwise. Prettier formats a snippet only when its language
+is set to `ts`, `typescript`, `js`, `javascript`, `html`, `css`, `scss`, `less` or `sass`.
 
 ## Template tags
 
@@ -90,32 +94,32 @@ Markdown files are `nunjucks` templates. See `*TemplatesPage`.
 
 ## Template actions
 
-| Call                                              | Renders                                                                  |
-| ------------------------------------------------- | ------------------------------------------------------------------------ |
-| `NgDocActions.demo(className, options?)`          | A demo. Options: `NgDocDemoActionOptions` (`*DemosPage`).                |
-| `NgDocActions.demoPane(className, options?)`      | A demo pane. Options: `NgDocDemoPaneActionOptions` (`*DemoPanePage`).    |
-| `NgDocActions.playground(playgroundId, options?)` | A playground. Options: `NgDocPlaygroundOptions` (`*PlaygroundsPage`).    |
-| `NgDocApi.api(path)`                              | The API tables of a declaration (`*EmbedApiInGuidesPage`).               |
-| `NgDocApi.details(path)`                          | The details of a declaration: type parameters, decorators and selectors. |
-| `JSDoc.description(path)`                         | The description from a declaration's doc comment.                        |
-| `JSDoc.tag(path, tagName)`                        | The text of the tag with that name.                                      |
-| `JSDoc.tags(path, tagName)`                       | The texts of every tag with that name, as a list.                        |
-| `JSDoc.hasTag(path, tagName)`                     | `true` if the doc comment has that tag.                                  |
+| Call                                              | Renders                                                                            |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `NgDocActions.demo(className, options?)`          | A demo. Options: `NgDocDemoActionOptions` (`*DemosPage`).                          |
+| `NgDocActions.demoPane(className, options?)`      | A demo pane. Options: `NgDocDemoPaneActionOptions` (`*DemoPanePage`).              |
+| `NgDocActions.playground(playgroundId, options?)` | A playground. Options: `NgDocPlaygroundOptions` (`*PlaygroundsPage`).              |
+| `NgDocApi.api(path)`                              | The API tables of a declaration (`*EmbedApiInGuidesPage`).                         |
+| `NgDocApi.details(path)`                          | The details of a declaration: type parameters, decorators, selectors and heritage. |
+| `JSDoc.description(path)`                         | The description from a declaration's doc comment.                                  |
+| `JSDoc.tag(path, tagName)`                        | The text of the tag with that name.                                                |
+| `JSDoc.tags(path, tagName)`                       | The texts of every tag with that name, as a list.                                  |
+| `JSDoc.hasTag(path, tagName)`                     | `true` if the doc comment has that tag.                                            |
 
 `path` is `path/to/file.ts#ExportName`, relative to the workspace root. `tagName` has no `@`, for
 example `deprecated`.
 
 ## Keywords
 
-| Written as                                | Links to                                                              |
-| ----------------------------------------- | --------------------------------------------------------------------- |
-| `*` and a page keyword                    | A guide page. Unknown page keywords fail the build.                   |
-| `*` and a page keyword, `#` and a heading | A section of the page.                                                |
-| A declaration name                        | Its API page.                                                         |
-| A declaration name, `.` and a member      | A member of the API page. Getters and setters take `get-` and `set-`. |
-| A declaration name, `#` and a heading     | A section of the API page.                                            |
-| A global keyword                          | The URL from the configuration file.                                  |
-| Any of the above, `?` and a query         | The same link with query parameters.                                  |
+| Written as                                                              | Links to                                                              |
+| ----------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `*` and a page keyword                                                  | A guide page. Unknown page keywords fail the build.                   |
+| `*` and a page keyword, `#` and a heading                               | A section of the page.                                                |
+| A declaration name                                                      | Its API page.                                                         |
+| A declaration name, `.` and a member                                    | A member of the API page. Getters and setters take `get-` and `set-`. |
+| A declaration name, `#` and a heading                                   | A section of the API page.                                            |
+| A global keyword                                                        | The URL from the configuration file.                                  |
+| A page keyword or a global keyword with `type: 'link'`, `?` and a query | The same link with query parameters. Other keywords drop the query.   |
 
 See `*LinksAndKeywordsPage`.
 

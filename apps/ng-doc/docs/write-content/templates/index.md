@@ -5,7 +5,7 @@ keyword: TemplatesPage
 Every Markdown file is also a `nunjucks` template. Use it to reuse content across pages, render
 values from the page configuration, and call NgDoc actions such as demos and API tables.
 
-## See it
+## 👀 See it
 
 This page reads its own configuration. Its title is **{{ NgDocPage.title }}**, and it renders this
 list from the page's `data` field:
@@ -16,7 +16,7 @@ And this callout is included from another file:
 
 {% include "./partials/support.md" %}
 
-## Use it
+## 🧰 Use it
 
 Nunjucks tags go straight into the Markdown. The example above comes from this source:
 
@@ -99,11 +99,13 @@ To show them as text, output them as a string with the `safe` filter:
 {{ "{{ '{{ NgDocPage.title }}' | safe }}" | safe }}
 ```
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Warning**
 > Paths in `include` and `import` are relative to the Markdown file, not to the documentation root.
-> Use only the built-in Nunjucks filters: NgDoc doesn't add filters of its own.
+> Use only the built-in Nunjucks filters: the new engine adds no filters of its own. The legacy
+> builders expose some internal filters, but don't rely on them, because the new engine doesn't have
+> them.
 
 {% index false %}
 

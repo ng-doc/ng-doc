@@ -5,7 +5,7 @@ keyword: DiagramsPage
 Draw flowcharts, sequence diagrams and other charts from plain text with `mermaid`. The diagram
 source stays in the Markdown file, so it is easy to review and update.
 
-## See it
+## 👀 See it
 
 ```mermaid
 flowchart LR
@@ -14,7 +14,7 @@ flowchart LR
   api["ng-doc.api.ts"] --> html
 ```
 
-## Use it
+## 🧰 Use it
 
 Diagrams are off by default because the Mermaid library is large. Add `provideMermaid()` to the
 providers of your application:
@@ -42,7 +42,7 @@ flowchart LR
 ```
 ````
 
-## Options
+## 📋 Options
 
 `provideMermaid` accepts a Mermaid configuration object and passes it to Mermaid's `initialize()` function.
 NgDoc renders diagrams itself, so it always sets `startOnLoad` to `false`.
@@ -73,7 +73,7 @@ sequenceDiagram
   NgDoc->>Browser: Updated page
 ```
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Warning**
 > Without `provideMermaid()`, a page with a `mermaid` block throws the error "Mermaid is not

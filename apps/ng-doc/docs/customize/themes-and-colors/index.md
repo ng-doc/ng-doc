@@ -206,7 +206,7 @@ The variables are `--ng-doc-syntax-plain`, `-punctuation`, `-comment`, `-keyword
 `dev-server` builders keep the `github-light` and `ayu-dark` Shiki themes unless you set
 `css-variables` as both themes. To use other Shiki themes, see `*CodeHighlightingPage`.
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Warning**
 > The `ng-doc-theme-toggle` component offers only Auto, Light and Dark. While a custom theme is set, it shows

@@ -5,12 +5,12 @@ keyword: MarkdownAndCalloutsPage
 Page content is Markdown. NgDoc adds callouts for notes and warnings, heading anchors, and links
 from inline code.
 
-## See it
+## 👀 See it
 
 > **Note**
 > This is a callout. It highlights information that readers should not miss.
 
-## Use it
+## 🧰 Use it
 
 Write a blockquote whose first line is a bold callout kind:
 
@@ -98,7 +98,7 @@ same anchors: `*InstallationPage#manual-setup` links to a section of the Install
 
 Start the sections of a page with `##`. The page title is already the `h1`.
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Warning**
 > The callout kind must open the blockquote as a single bold word. With a colon inside the bold
@@ -108,6 +108,11 @@ Start the sections of a page with `##`. The page title is already the `h1`.
 > **Note:**
 > This renders as a plain blockquote.
 ```
+
+> **Warning**
+> Only `Note`, `Warning`, `Alert` and `Success` are callout kinds. Any other bold first word, such
+> as `Tip`, is removed, and the callout has no title and no icon. For a tip, set a `label`
+> instead, as in `*MarkdownAndCalloutsPage#custom-titles`.
 
 {% index false %}
 

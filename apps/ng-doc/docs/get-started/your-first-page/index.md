@@ -3,7 +3,7 @@ keyword: YourFirstPage
 ---
 
 Write a documentation page with a callout, a code block, a live demo, a playground and a link to an
-API page. The tutorial takes about 10 minutes, and each step shows the result you should see.
+API page. The tutorial takes about 10 minutes, and each step shows the result you should see. ✍️
 
 ## Before you start
 

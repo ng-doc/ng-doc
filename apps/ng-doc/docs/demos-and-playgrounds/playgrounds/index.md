@@ -6,7 +6,7 @@ A playground renders a component, a directive or a pipe next to an inspector wit
 each of its inputs. Readers change the values and see the result and its code at once, without
 writing a demo for every state.
 
-## See it
+## 👀 See it
 
 {{ NgDocActions.playground("TagPlayground") }}
 
@@ -20,7 +20,7 @@ The demo sits on the left, and the inspector on the right. When the playground i
 - **Reset** appears as soon as a value differs from its default, and sets every input back.
 - The code button beside the demo shows, below it, the template of the current state.
 
-## Use it
+## 🧰 Use it
 
 1. Add the playground to the `playgrounds` of the page. The key is the name of the playground:
 
@@ -244,7 +244,7 @@ export default MyPage;
 The descriptions come from the `@param` tags of `transform`, and the defaults from its default
 parameter values.
 
-## Options
+## 📋 Options
 
 Set options in the configuration of the playground, or as the second argument of the action. The
 action's options win. They follow `NgDocPlaygroundOptions`:
@@ -316,7 +316,7 @@ An entry in `controls` also replaces the control that NgDoc chose for an input o
 type `NgDocTypeAlias` shows a list of `options`; a type registered with `provideTypeControl` shows
 your control.
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Warning**
 > In the action's options, put a space between two closing braces, such as `{ inputs: { a: 1 } }`.

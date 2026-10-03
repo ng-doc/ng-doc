@@ -5,7 +5,7 @@ keyword: CodeBlocksPage
 Code blocks show source code with syntax highlighting. NgDoc adds file names, code groups,
 highlighted lines, and code loaded from real files, so examples can't drift from the code.
 
-## See it
+## 👀 See it
 
 ```typescript name="greeting.ts" file="./examples/greeting.ts"#L1-L6 {3}
 
@@ -13,7 +13,7 @@ highlighted lines, and code loaded from real files, so examples can't drift from
 
 This block loads its code from a real file, names it and highlights line 3.
 
-## Use it
+## 🧰 Use it
 
 Write a fenced code block with a language, then add attributes after the language:
 
@@ -142,8 +142,9 @@ export default MyPage;
 
 ## Code from a file
 
-`file` loads the code from a file, relative to the Markdown file. Leave the block empty. The
-examples on this page load `examples/greeting.ts`:
+`file` loads the code from a file, relative to the Markdown file. Leave the block empty. NgDoc
+shows the code as it is in the file, without reformatting it. The examples on this page load
+`examples/greeting.ts`:
 
 ```typescript name="greeting.ts" file="./examples/greeting.ts"
 
@@ -200,7 +201,7 @@ Loaded with `file`, the comment and the `console.debug` line are gone:
 The comment works in `//`, `/* */` and `<!-- -->` form, so you can use it in TypeScript, styles and
 templates.
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Warning**
 > The comment also removes the line after it. A comment at the end of a line of code, such as

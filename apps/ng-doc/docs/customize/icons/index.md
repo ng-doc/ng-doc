@@ -5,7 +5,7 @@ keyword: IconsPage
 NgDoc shows icons next to the names of code blocks, code groups, demo files, snippets and page tabs.
 These icons are your own SVG files: add them to your application, then refer to them by file name.
 
-## See it
+## 👀 See it
 
 ```typescript name="app.ts" icon="angular"
 @Component({ selector: 'app-root', template: '' })
@@ -79,7 +79,7 @@ of `customIcon`, including in Markdown:
 The set contains only the icons NgDoc needs, so it is not a general icon library. Use custom icons
 for your own content.
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Warning**
 > An icon that fails to load, or a response that isn't SVG, such as a development server answering a

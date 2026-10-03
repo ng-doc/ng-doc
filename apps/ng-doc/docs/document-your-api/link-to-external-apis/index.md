@@ -6,7 +6,7 @@ Keyword loaders link the names of other libraries' APIs to their documentation. 
 when it starts, and every name they return works like a global keyword: written in inline code or in
 a code block, it becomes a link.
 
-## See it
+## 👀 See it
 
 This site loads the keywords of Angular and RxJS, so these names are links:
 
@@ -16,7 +16,7 @@ Inject `ChangeDetectorRef` in a `@Component`, and `switchMap` over an `Observabl
 
 Inject `ChangeDetectorRef` in a `@Component`, and `switchMap` over an `Observable`.
 
-## Use it
+## 🧰 Use it
 
 1. Install the loaders:
 
@@ -143,7 +143,7 @@ build with `DISCOVERY_KEYWORD_LOADER_FAILED`. The Angular and RxJS loaders don't
 site can't be reached, they log the error and load no keywords, and the names stay plain code.
 `ngDocKeywordsLoader` throws, so the build fails when the other site can't be reached.
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Warning**
 > When two sources define the same keyword, the last one wins, and the new engine reports
@@ -175,8 +175,8 @@ export default config;
 With the new engine, a global keyword also chooses between your own API and the loaders, or
 between two of your API pages with the same name: when its `url` is the route of one of your
 pages, such as `/docs/api/functions/core/asArray`, that page keeps the keyword without a warning.
-When no page or API declaration of that name has the route any more, the build reports
-`KEYWORD_PIN_UNRESOLVED`. The legacy engine doesn't check the route: there, your pages and API
+When a global keyword replaces a loader keyword with a route that no page or API declaration of the
+build has any more, the build warns with `KEYWORD_PIN_UNRESOLVED`. The legacy engine doesn't check the route: there, your pages and API
 always win over global keywords.
 
 > **Note**

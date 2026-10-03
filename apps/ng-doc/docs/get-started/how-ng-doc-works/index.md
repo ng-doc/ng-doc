@@ -49,7 +49,7 @@ Your application imports the generated code through the `@ng-doc/generated` path
 - `NG_DOC_ROUTING` holds the routes of every page;
 - `provideNgDocContext()` provides the sidebar navigation and other site data.
 
-The folder is rewritten on every build, so don't edit it and don't commit it.
+NgDoc owns the folder and updates it on every build, so don't edit it and don't commit it.
 
 ## Development server and production build
 
@@ -63,7 +63,7 @@ The folder is rewritten on every build, so don't edit it and don't commit it.
 
 A keyword is a name that NgDoc turns into a link:
 
-- the `keyword` in a page's front matter, and the headings of that page;
+- the `keyword` in a page's front matter, which also links to the headings of that page;
 - the name of every declaration in an API scope, such as `NgDocPage`, and its members;
 - the global keywords and keyword loaders in the configuration file.
 

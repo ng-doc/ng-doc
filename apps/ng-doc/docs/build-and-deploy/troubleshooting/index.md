@@ -3,7 +3,7 @@ keyword: TroubleshootingPage
 ---
 
 Common problems, their causes and fixes. Entries with a diagnostic code are titled by the code, so
-you can search for the code in the error message. `*DiagnosticCodesReference` lists every code.
+you can search for the code in the error message. `*DiagnosticCodesReference` lists the codes.
 
 ## Setup
 
@@ -176,8 +176,8 @@ NGDOC_TARGETED_REBUILD=0 ng serve
 NGDOC_PERSISTENT_WORKER=0 ng serve
 ```
 
-With the Vite host, use your Vite command instead of `ng serve`. `NGDOC_ANGULAR_SHARED_PASS` affects
-only the Vite host.
+With the Vite host, `ng serve` works when it runs the `vite-dev-server` builder; otherwise use your
+Vite command, such as `npx vite`. `NGDOC_ANGULAR_SHARED_PASS` affects only the Vite host.
 
 **See also:** `*BuildersReference#environment-switches`
 

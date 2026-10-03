@@ -7,7 +7,7 @@ parts of a page this way: code blocks, callouts, demos, playgrounds, tabs and im
 plain HTML and become components in the browser. Your own processors can add components to
 Markdown, or improve elements that Markdown already produces.
 
-## See it
+## 👀 See it
 
 This page registers two processors. One replaces images with a component that zooms on hover and
 shows the image title in a tooltip:
@@ -107,7 +107,7 @@ and return a new anchor from `nodeToReplace`. The component projects the element
 
 ```
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Warning**
 > Processors registered in a page replace those registered in the application configuration, for

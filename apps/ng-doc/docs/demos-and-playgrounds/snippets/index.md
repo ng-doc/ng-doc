@@ -5,7 +5,7 @@ keyword: SnippetsPage
 Snippets show the part of a demo's code that matters. Mark a piece of a source file with snippet
 comments, and the demo shows that piece as a tab of its own instead of the whole file.
 
-## See it
+## 👀 See it
 
 {{ NgDocActions.demo("SnippetsDemoComponent", { expanded: true }) }}
 
@@ -15,7 +15,7 @@ The demo's single TypeScript file holds three snippets. They are marked like thi
 
 ```
 
-## Use it
+## 🧰 Use it
 
 Put a `snippet` comment before and after the code to show:
 
@@ -130,11 +130,17 @@ export class DemoComponent {}
 `:styles` uses the language of the file for a stylesheet, and the inline style language of the
 project for styles in a TypeScript file.
 
+A snippet whose language is set to `ts`, `typescript`, `js`, `javascript`, `html`, `css`, `scss`,
+`less` or `sass` is formatted with Prettier, with the Prettier configuration of your workspace.
+Snippets in the default languages or with `:styles` keep their code as written, and so do demo
+files without snippets and code blocks loaded with `file`.
+
 ## Load a snippet from a file
 
 `snippet-from-file` shows the content of another file as a tab, with the same title, `icon`,
-`opened` and language parameters. The title defaults to the file name. The path is relative to the
-demo file:
+`opened` and language parameters. The title defaults to the file name. The language follows the
+comment, not the file's extension, so set it after the closing quote for another kind of file:
+`// snippet-from-file="./demo.css":css`. The path is relative to the demo file:
 
 ```typescript name="demo.component.ts"
 // snippet-from-file="./demo.service.ts" "Service"
@@ -145,14 +151,17 @@ demo file:
 export class DemoComponent {}
 ```
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Warning**
 > Snippet comments in a file loaded with `snippet-from-file` are ignored: the whole file is shown.
 
-> **Note**
-> Snippets don't hide lines. To leave out a line inside a snippet, use `ng-doc-ignore-line`
-> (`*CodeBlocksPage#hiding-lines`).
+<ng-doc-blockquote type="note" label="💡 Tip">
+
+Snippets don't hide lines. To leave out a line inside a snippet, use `ng-doc-ignore-line`
+(`*CodeBlocksPage#hiding-lines`).
+
+</ng-doc-blockquote>
 
 {% index false %}
 
