@@ -201,7 +201,8 @@
     "libs/app/components/demo-pane/demo-pane.component.scss :: :host = var(--ng-doc-demo-displayer-border-radius)"
   ],
   "--ng-doc-sidenav-width": [
-    "libs/app/components/root/root.component.scss :: :host .ng-doc-root-wrapper main = var(--ng-doc-sidebar-width)"
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-root-wrapper main = var(--ng-doc-sidebar-width)",
+    "libs/app/components/root/root.component.scss :: :host[data-ng-doc-fullscreen-route=true] .ng-doc-root-wrapper main = 0px"
   ],
   "--ng-doc-tab-group-border": [
     "libs/app/components/demo-pane/demo-pane.component.scss :: :host = none"

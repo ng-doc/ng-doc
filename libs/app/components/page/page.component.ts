@@ -15,7 +15,7 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
 import { NgDocContentAnchorController } from '@ng-doc/app/classes/content-anchor-controller';
 import { NgDocContentController } from '@ng-doc/app/classes/content-controller';
 import { NgDocRootPage } from '@ng-doc/app/classes/root-page';
@@ -25,6 +25,7 @@ import { NgDocPageSkeleton } from '@ng-doc/app/interfaces';
 import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes';
 import { NgDocPageProcessorComponent } from '@ng-doc/app/processors';
 import { provideTypeControl } from '@ng-doc/app/providers/type-control';
+import { NgDocFullscreenRouteService } from '@ng-doc/app/services/fullscreen-route';
 import { NG_DOC_PAGE_SKELETON } from '@ng-doc/app/tokens';
 import {
   NgDocBooleanControlComponent,
@@ -32,16 +33,18 @@ import {
   NgDocStringControlComponent,
   NgDocTypeAliasControlComponent,
 } from '@ng-doc/app/type-controls';
-import {
-  DialogOutletComponent,
-  NgDocButtonIconComponent,
-  NgDocTooltipDirective,
-} from '@ng-doc/ui-kit';
+import type { NgDocContentSource } from '@ng-doc/core/interfaces';
+import { NgDocButtonIconComponent, NgDocTooltipDirective } from '@ng-doc/ui-kit';
 import { WA_LOCATION } from '@ng-web-apis/common';
 
 /**
  * A generated page: its rendered content, the page actions (copy link, edit and view the source),
- * the table of contents it fills in, and the outlet of its fullscreen demos.
+ * the table of contents it fills in, and the outlet of its fullscreen routes.
+ *
+ * A fullscreen route (a child route of the page, unless the page sets `disableFullscreenRoutes`)
+ * replaces the page: it is shown on its own on the canvas of demos, with a link back to the page,
+ * and `NgDocFullscreenRouteService` tells the root layout and the page wrapper to hide their
+ * chrome.
  */
 @Component({
   selector: 'ng-doc-page',
@@ -52,8 +55,8 @@ import { WA_LOCATION } from '@ng-web-apis/common';
     NgDocButtonIconComponent,
     NgDocTooltipDirective,
     NgDocPageProcessorComponent,
+    RouterLink,
     RouterOutlet,
-    DialogOutletComponent,
     NgDocSanitizeHtmlPipe,
   ],
   providers: [
@@ -68,7 +71,8 @@ import { WA_LOCATION } from '@ng-web-apis/common';
     ngSkipHydration: 'true',
     // Tells the browser that the server-rendered content must be kept until the loaded content
     // renders (ɵNG_DOC_ASYNC_CONTENT_ATTRIBUTE).
-    '[attr.data-ng-doc-async-content]': 'rootPage.pageContentSource ? "" : null',
+    '[attr.data-ng-doc-async-content]':
+      'rootPage.pageContentSource && !fullscreenRoute() ? "" : null',
   },
 })
 export class NgDocPageComponent {
@@ -83,6 +87,12 @@ export class NgDocPageComponent {
   protected readonly contentController = inject(NgDocContentController);
   /** Whether the link to the page was just copied. */
   protected readonly linkCopied = signal(false);
+  /** Whether one of the page's fullscreen routes is shown instead of the page. */
+  protected readonly fullscreenRoute = signal(false);
+  /** URL of the page, for the link back from a fullscreen route. */
+  protected readonly pageUrl = signal('/');
+  private readonly route = inject(ActivatedRoute);
+  private readonly fullscreenRoutes = inject(NgDocFullscreenRouteService);
   private readonly contentAnchorController = inject(NgDocContentAnchorController);
   private readonly clipboard = inject(Clipboard);
   private readonly ngZone = inject(NgZone);
@@ -92,15 +102,26 @@ export class NgDocPageComponent {
   private snapshot?: () => void;
 
   constructor() {
-    if (this.rootPage.pageContentSource) {
+    // The router state is complete when the page is created, so a fullscreen route opened
+    // directly (a new tab) is known before the first render and the page content never renders.
+    this.showFullscreenRoute(!!this.route.firstChild);
+
+    const source: NgDocContentSource | undefined = this.rootPage.pageContentSource;
+
+    if (source && !this.fullscreenRoute()) {
       // Angular empties this host (it skips hydration) and the content loads asynchronously, so
       // the server-rendered page stays visible until the loaded content renders.
       if (isPlatformBrowser(inject(PLATFORM_ID))) {
         this.snapshot = ɵrestoreNgDocHydrationSnapshot(inject(ElementRef).nativeElement);
       }
-      this.contentAnchorController.activate();
-      this.contentController.connect(this.rootPage.pageContentSource);
+      this.connectContent(source);
     }
+    // A page opened on a fullscreen route loads its content only when the reader goes back to
+    // it, because pending content holds the application unstable until it renders. An effect,
+    // so a page that is leaving (its route closes as it is destroyed) loads nothing.
+    effect(() => {
+      if (source && !this.fullscreenRoute()) untracked(() => this.connectContent(source));
+    });
     // A load that needs no new pass (its content is already rendered, for example an empty body)
     // or that failed settles without `revealLoaded`.
     effect(() => {
@@ -118,7 +139,30 @@ export class NgDocPageComponent {
     inject(DestroyRef).onDestroy(() => {
       clearTimeout(this.linkCopiedTimer);
       this.releaseSnapshot();
+      this.fullscreenRoutes.set(this, false);
     });
+  }
+
+  /**
+   * Shows one of the page's fullscreen routes instead of the page, or the page again. The outlet
+   * of the fullscreen routes calls it when a route opens or closes.
+   * @param shown - Whether a fullscreen route is shown.
+   */
+  protected showFullscreenRoute(shown: boolean): void {
+    // Pages that disable fullscreen routes render their child routes themselves.
+    const fullscreen: boolean = shown && !this.rootPage.page?.disableFullscreenRoutes;
+
+    if (fullscreen) {
+      this.pageUrl.set(
+        '/' +
+          this.route.pathFromRoot
+            .flatMap((route: ActivatedRoute) => route.snapshot.url)
+            .map((segment) => segment.path)
+            .join('/'),
+      );
+    }
+    this.fullscreenRoute.set(fullscreen);
+    this.fullscreenRoutes.set(this, fullscreen);
   }
 
   /**
@@ -177,6 +221,12 @@ export class NgDocPageComponent {
     this.linkCopiedTimer = this.ngZone.runOutsideAngular(() =>
       setTimeout(() => this.linkCopied.set(false), 1400),
     );
+  }
+
+  private connectContent(source: NgDocContentSource): void {
+    // Both calls do nothing once the source is connected.
+    this.contentAnchorController.activate();
+    this.contentController.connect(source);
   }
 
   private releaseSnapshot(): void {

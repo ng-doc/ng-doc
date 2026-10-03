@@ -70,6 +70,10 @@
         <ng-doc-icon icon="copy"></ng-doc-icon>
       </ng-doc-copy-button>
     }
+
+    @if (view() === 'preview' && !options().fullscreenRoute) {
+      <ng-doc-fullscreen-toggle class="ng-doc-demo-fullscreen" [target]="stage" />
+    }
   </div>
 
   <div
@@ -78,10 +82,16 @@
     [id]="idPrefix + '-panel-0'"
     [attr.aria-labelledby]="idPrefix + '-tab-0'"
     [attr.data-ng-doc-width]="previewWidth()"
-    [hidden]="view() !== 'preview'">
+    [hidden]="view() !== 'preview'"
+    ngDocFullscreen
+    #stage="ngDocFullscreen">
     <div class="ng-doc-demo-frame">
       <ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
     </div>
+    <!-- The toolbar is not shown in fullscreen, so the stage carries its own way out. -->
+    @if (stage.active()) {
+      <ng-doc-fullscreen-toggle class="ng-doc-demo-fullscreen-exit" [target]="stage" />
+    }
   </div>
 
   @for (asset of assets(); track asset.title; let i = $index) {

@@ -14,6 +14,10 @@ Drag the handle, or click it, to reveal the code. The handle also works with the
 arrow keys move it, and Enter or Space opens or closes the code pane. With several source files,
 the code pane shows them as tabs.
 
+The demo sits on the same dotted canvas as a demo (`*DemosPage`). The button in its corner shows the
+demo fullscreen, centred at the size of the screen; press Esc or the button again to leave.
+Browsers that don't support fullscreen don't show the button.
+
 ## Use it
 
 Add the component to the `demos` of the page, as for a demo (`*DemosPage#use-it`), then render it
@@ -27,14 +31,14 @@ with the `demoPane` action:
 
 Pass options as the second argument of `demoPane`. They follow `NgDocDemoPaneActionOptions`:
 
-| Option            | Type                      | Default | Description                                                             |
-| ----------------- | ------------------------- | ------- | ----------------------------------------------------------------------- |
-| `expanded`        | `boolean`                 | `false` | Opens the code pane from the start.                                     |
-| `defaultTab`      | `string`                  | –       | The source tab to open first, such as `HTML`.                           |
-| `tabs`            | `string \| string[]`      | All     | The source tabs to show, by name.                                       |
-| `inputs`          | `Record<string, unknown>` | –       | Values for the inputs of the demo component.                            |
-| `fullscreenRoute` | `string`                  | –       | Shows a link that opens the demo on its own route, instead of the demo. |
-| `class`           | `string \| string[]`      | –       | CSS classes for the demo pane element.                                  |
+| Option            | Type                      | Default | Description                                                                         |
+| ----------------- | ------------------------- | ------- | ----------------------------------------------------------------------------------- |
+| `expanded`        | `boolean`                 | `false` | Opens the code pane from the start.                                                 |
+| `defaultTab`      | `string`                  | –       | The source tab to open first, such as `HTML`.                                       |
+| `tabs`            | `string \| string[]`      | All     | The source tabs to show, by name.                                                   |
+| `inputs`          | `Record<string, unknown>` | –       | Values for the inputs of the demo component.                                        |
+| `fullscreenRoute` | `string`                  | –       | Shows a link that opens the demo on its own page in a new tab, instead of the demo. |
+| `class`           | `string \| string[]`      | –       | CSS classes for the demo pane element.                                              |
 
 This demo pane opens with its code, and shows only the template:
 

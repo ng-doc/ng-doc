@@ -1,3 +1,5 @@
+@use '../../styles/mixins/demo-canvas';
+
 :host {
   display: flex;
   flex-direction: column;
@@ -20,12 +22,77 @@
   }
 }
 
-.ng-doc-fullscreen-wrapper {
-  display: flex;
+// A fullscreen route: the routed component centred on the canvas of demos, filling the screen.
+.ng-doc-fullscreen-route {
+  @include demo-canvas.demo-canvas;
+
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: var(--ng-doc-space-16) var(--ng-doc-space-4);
+  background-color: var(--ng-doc-demo-displayer-background, var(--ng-doc-background));
+
+  &[hidden] {
+    display: none;
+  }
+
+  // The outlet element is empty (the routed component follows it); as a grid item it would push
+  // the component off centre.
+  > router-outlet {
+    display: none;
+  }
+}
+
+// A small way back to the page, in the corner, that does not compete with the demo.
+.ng-doc-fullscreen-route-back {
+  position: fixed;
+  top: var(--ng-doc-space-4);
+  left: var(--ng-doc-space-4);
+  z-index: 1;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
+  gap: var(--ng-doc-space-2);
+  max-width: calc(100% - var(--ng-doc-space-8));
+  height: 32px;
+  padding: 0 var(--ng-doc-space-3) 0 var(--ng-doc-space-2);
+  border-radius: var(--ng-doc-radius-md);
+  background: var(--ng-doc-background);
+  box-shadow:
+    0 0 0 1px var(--ng-doc-border-color),
+    var(--ng-doc-shadow-xs);
+  color: var(--ng-doc-text-muted);
+  font-family: var(--ng-doc-font-family);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--ng-doc-heading-color);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--ng-doc-focus-ring);
+  }
+
+  svg {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
+.ng-doc-fullscreen-route-back-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 // While the server-rendered copy is shown, the component's own content renders hidden.

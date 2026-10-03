@@ -47,4 +47,21 @@
   .ng-doc-page-header {
     margin-bottom: calc(var(--ng-doc-base-gutter) * 3);
   }
+
+  // A fullscreen route shows only the routed page, full width. The breadcrumbs, the page links and
+  // the table of contents are created components without this component's encapsulation
+  // attribute, hence ::ng-deep.
+  &[data-ng-doc-fullscreen-route='true'] {
+    display: block;
+
+    article {
+      width: 100%;
+      max-width: none;
+    }
+
+    ::ng-deep > :not(article),
+    ::ng-deep article > :not(router-outlet + *) {
+      display: none;
+    }
+  }
 }

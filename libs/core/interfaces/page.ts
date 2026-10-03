@@ -57,8 +57,9 @@ export interface NgDocPage extends NgDocBaseEntity {
    */
   playgrounds?: Record<string, NgDocPlaygroundConfig>;
   /**
-   * By default, the child routes of a page are shown in a fullscreen dialog.
-   * Set disableFullscreenRoutes to false to handle them yourself with a <router-outlet />.
+   * By default, a child route of a page opens as a standalone page: only the routed component, on
+   * the canvas of demos, with a link back to the page, without the navbar, the sidebar or the page.
+   * Set disableFullscreenRoutes to true to handle them yourself with a <router-outlet />.
    * It can be used for example in a demo that requires to show nested routes.
    * Be careful however, only 1 router-outlet is allowed level, that can lead to collisions if
    * multiple demos on the same page require nested routes.

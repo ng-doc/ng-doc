@@ -8,6 +8,7 @@ import {
   input,
   viewChild,
 } from '@angular/core';
+import { NgDocFullscreenRouteService } from '@ng-doc/app/services/fullscreen-route';
 import { NgDocSidebarService } from '@ng-doc/app/services/sidebar';
 import { NgDocContent, NgDocSidenavComponent } from '@ng-doc/ui-kit';
 import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
@@ -53,6 +54,9 @@ export class NgDocCustomSidebarDirective {}
  *
  * Its first focusable element is a "Skip to content" link, shown only while it has focus, that
  * moves keyboard focus past the navbar and the sidebar to the page.
+ *
+ * While a page shows one of its fullscreen routes (`NgDocFullscreenRouteService`), only the page
+ * is shown: the navbar, the sidebar, the footer and the skip link are hidden.
  */
 @Component({
   selector: 'ng-doc-root',
@@ -62,6 +66,7 @@ export class NgDocCustomSidebarDirective {}
   imports: [NgDocSidenavComponent, PolymorpheusOutlet],
   host: {
     '[attr.data-ng-doc-no-width-limit]': 'noWidthLimit()',
+    '[attr.data-ng-doc-fullscreen-route]': 'fullscreenRoute.active()',
   },
 })
 export class NgDocRootComponent {
@@ -83,6 +88,7 @@ export class NgDocRootComponent {
   readonly noWidthLimit = input<boolean, unknown>(false, { transform: booleanAttribute });
 
   protected readonly sidebarService = inject(NgDocSidebarService);
+  protected readonly fullscreenRoute = inject(NgDocFullscreenRouteService);
   private readonly document = inject(DOCUMENT);
   private readonly sidenavQuery = viewChild(NgDocSidenavComponent);
 

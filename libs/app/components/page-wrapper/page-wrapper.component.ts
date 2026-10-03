@@ -21,6 +21,7 @@ import {
 import { NgDocPageHeaderComponent } from '@ng-doc/app/components/page-header';
 import { createComponent } from '@ng-doc/app/helpers';
 import { NgDocNavigation } from '@ng-doc/app/interfaces';
+import { NgDocFullscreenRouteService } from '@ng-doc/app/services/fullscreen-route';
 import { NgDocRoutePreloader } from '@ng-doc/app/services/route-preloader';
 import { NG_DOC_CONTEXT, NG_DOC_PAGE_SKELETON } from '@ng-doc/app/tokens';
 import { isPresent } from '@ng-doc/core/helpers/is-present';
@@ -38,6 +39,9 @@ import {
  *
  * The breadcrumbs, the page links and the table of contents are the page skeleton's components,
  * created in the containers this component exposes.
+ *
+ * While the page shows one of its fullscreen routes (`NgDocFullscreenRouteService`), only the page
+ * is shown.
  */
 @Component({
   selector: 'ng-doc-page-wrapper',
@@ -55,6 +59,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[attr.data-ng-doc-page-tabs]': 'routes().length > 1',
+    '[attr.data-ng-doc-fullscreen-route]': 'fullscreenRoute.active()',
   },
 })
 export class NgDocPageWrapperComponent implements OnInit {
@@ -86,6 +91,7 @@ export class NgDocPageWrapperComponent implements OnInit {
   protected router = inject(Router);
   protected route = inject(ActivatedRoute);
   protected context = inject(NG_DOC_CONTEXT);
+  protected readonly fullscreenRoute = inject(NgDocFullscreenRouteService);
 
   private breadcrumbs: string[] = inject(ActivatedRoute)
     .pathFromRoot.filter((route: ActivatedRoute) => !!route.snapshot.url.length)

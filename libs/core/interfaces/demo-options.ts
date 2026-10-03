@@ -7,7 +7,11 @@ export interface NgDocBaseDemoOptions {
   expanded?: boolean;
   /** Tab name that should be opened by default */
   defaultTab?: string;
-  /** If specified, fullscreen button will be displayed and will navigate to the specified route */
+  /**
+   * A child route of the page (see `route.children` of `NgDocPage`). When set, a link that opens
+   * the route in a new tab replaces the demo; the route opens as a standalone page that shows only
+   * the routed component.
+   */
   fullscreenRoute?: string;
   /** List of tabs that should be displayed if they are not empty and exist */
   tabs?: string | string[];

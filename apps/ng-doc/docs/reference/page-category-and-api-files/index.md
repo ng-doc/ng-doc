@@ -23,7 +23,7 @@ The default export of `ng-doc.page.ts`. See `NgDocPage` and `*PagesAndCategories
 | `providers`               | `Component['providers']`                | –               | Providers for every component on the page.                                                                                                                      |
 | `demos`                   | `Record<string, Type<unknown>>`         | –               | Demo components, keyed by class name (`*DemosPage`).                                                                                                            |
 | `playgrounds`             | `Record<string, NgDocPlaygroundConfig>` | –               | Playgrounds, keyed by playground ID (`*PlaygroundsPage`).                                                                                                       |
-| `disableFullscreenRoutes` | `boolean`                               | `false`         | Renders child routes in your own `router-outlet` instead of a fullscreen dialog.                                                                                |
+| `disableFullscreenRoutes` | `boolean`                               | `false`         | Renders child routes in your own `router-outlet` instead of as standalone pages.                                                                                |
 
 A doc comment on the page object becomes the page description. A `@status:<color> <text>` tag in it
 adds a sidebar badge.

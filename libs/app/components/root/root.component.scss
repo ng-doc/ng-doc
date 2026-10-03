@@ -83,4 +83,27 @@
       --ng-doc-sidenav-content-padding: var(--ng-doc-space-5) var(--ng-doc-space-4);
     }
   }
+
+  // A fullscreen route is a standalone page: only the page is shown, edge to edge. The chrome is
+  // hidden rather than removed, so the browser hydrates the same markup the server rendered.
+  // After the phone gutters above, which it overrides.
+  &[data-ng-doc-fullscreen-route='true'] {
+    .ng-doc-skip-link,
+    .ng-doc-header,
+    footer {
+      display: none;
+    }
+
+    .ng-doc-root-wrapper main {
+      max-width: none;
+      padding: 0;
+      --ng-doc-sidenav-width: 0px;
+      --ng-doc-sidenav-content-padding: 0;
+    }
+
+    // The sidebar is projected into the panel of ng-doc-sidenav, out of reach of these styles.
+    ::ng-deep .ng-doc-sidenav {
+      display: none;
+    }
+  }
 }

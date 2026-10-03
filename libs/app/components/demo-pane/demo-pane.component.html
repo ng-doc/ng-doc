@@ -1,6 +1,11 @@
 <ng-doc-pane [expanded]="options().expanded ?? false">
   <ng-container *ngTemplateOutlet="codeContent" ngDocPaneBack></ng-container>
-  <ng-container *ngTemplateOutlet="demoTemplate" ngDocPaneFront></ng-container>
+  <div class="ng-doc-demo-pane-stage" ngDocPaneFront ngDocFullscreen #stage="ngDocFullscreen">
+    <ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
+    @if (!options().fullscreenRoute) {
+      <ng-doc-fullscreen-toggle class="ng-doc-demo-pane-fullscreen" [target]="stage" />
+    }
+  </div>
 </ng-doc-pane>
 
 <ng-template #demoTemplate>

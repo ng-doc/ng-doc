@@ -1,3 +1,5 @@
+@use '../../styles/mixins/demo-canvas';
+
 // A demo row: the demo centred on its canvas, the copy and code toggle at the right, and the code
 // below when revealed.
 :host {
@@ -33,11 +35,7 @@
   // The canvas takes any extra height its host gets (the last demo of a playground), so the
   // revealed code sits at the bottom.
   flex: 1 1 auto;
-  background-image: radial-gradient(
-    color-mix(in srgb, var(--ng-doc-base-5) 55%, transparent) 1px,
-    transparent 1px
-  );
-  background-size: 16px 16px;
+  @include demo-canvas.demo-canvas;
   display: flex;
   align-items: center;
   justify-content: center;

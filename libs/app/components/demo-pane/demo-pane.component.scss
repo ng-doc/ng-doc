@@ -1,3 +1,5 @@
+@use '../../styles/mixins/demo-canvas';
+
 :host {
   display: block;
   height: var(--ng-doc-demo-pane-height);
@@ -17,4 +19,33 @@
     width: 100%;
     height: 100%;
   }
+}
+
+// The demo side: the demo centred on the canvas of demos, over the background of the front pane,
+// with the fullscreen control in its corner. Fullscreen, the canvas fills the screen and a demo
+// taller than it scrolls; it paints the pane's background itself, as the pane is not shown.
+.ng-doc-demo-pane-stage {
+  @include demo-canvas.demo-canvas;
+
+  position: relative;
+  display: grid;
+  place-items: center;
+  align-self: stretch;
+  width: 100%;
+  min-height: 100%;
+
+  &[data-ng-doc-fullscreen='true'] {
+    overflow: auto;
+    padding: var(--ng-doc-space-16) var(--ng-doc-space-8);
+    background-color: var(
+      --ng-doc-pane-front-background,
+      var(--ng-doc-pane-background, var(--ng-doc-base-1))
+    );
+  }
+}
+
+.ng-doc-demo-pane-fullscreen {
+  position: absolute;
+  top: var(--ng-doc-space-2);
+  right: var(--ng-doc-space-2);
 }

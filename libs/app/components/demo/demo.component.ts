@@ -18,10 +18,12 @@ import { NgDocRootPage } from '@ng-doc/app/classes/root-page';
 import { NgDocCodeComponent } from '@ng-doc/app/components/code';
 import { NgDocCopyButtonComponent } from '@ng-doc/app/components/copy-button';
 import { NgDocFullscreenButtonComponent } from '@ng-doc/app/components/fullscreen-button';
+import { NgDocFullscreenToggleComponent } from '@ng-doc/app/components/fullscreen-toggle';
 import { NgDocDemoAsset } from '@ng-doc/app/interfaces';
 import { asArray } from '@ng-doc/core/helpers/as-array';
 import { NgDocDemoActionOptions } from '@ng-doc/core/interfaces';
 import {
+  NgDocFullscreenDirective,
   NgDocIconComponent,
   NgDocSelectionComponent,
   NgDocSelectionHostDirective,
@@ -47,7 +49,9 @@ let nextId = 0;
 
 /**
  * Renders a demo of the page in a panel: a toolbar with Preview and source tabs, the preview
- * width, copy and fullscreen controls, over the demo on a dot-grid stage.
+ * width, copy and fullscreen controls, over the demo on a dot-grid stage. The fullscreen control
+ * shows the stage fullscreen with the browser Fullscreen API; it is hidden where the browser does
+ * not support it.
  *
  * The preview widths set the width of the demo's container; they do not emulate a device, so
  * media queries inside the demo do not respond to them.
@@ -63,6 +67,8 @@ let nextId = 0;
     NgDocCodeComponent,
     NgDocCopyButtonComponent,
     NgDocFullscreenButtonComponent,
+    NgDocFullscreenDirective,
+    NgDocFullscreenToggleComponent,
     NgDocIconComponent,
     NgDocSelectionComponent,
     NgDocSelectionHostDirective,

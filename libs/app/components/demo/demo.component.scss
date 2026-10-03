@@ -1,3 +1,5 @@
+@use '../../styles/mixins/demo-canvas';
+
 // A device-frame panel: a toolbar over the demo's stage or one of its source files.
 :host {
   display: block;
@@ -157,22 +159,54 @@
   margin-left: 0;
 }
 
+.ng-doc-demo-fullscreen {
+  margin-left: auto;
+}
+
+.ng-doc-demo-width-readout ~ .ng-doc-demo-fullscreen,
+.ng-doc-demo-copy ~ .ng-doc-demo-fullscreen {
+  margin-left: 0;
+}
+
 // The demo sits on a canvas: a subtle dot grid. Narrow preview widths frame it as a device.
 .ng-doc-demo-stage {
+  @include demo-canvas.demo-canvas;
+
+  position: relative;
   display: grid;
   place-items: center;
   min-height: 160px;
   padding: var(--ng-doc-space-8) var(--ng-doc-space-4);
   background-color: var(--ng-doc-demo-displayer-background, var(--ng-doc-background));
-  background-image: radial-gradient(
-    color-mix(in srgb, var(--ng-doc-base-5) 55%, transparent) 1px,
-    transparent 1px
-  );
-  background-size: 16px 16px;
 
   &[hidden] {
     display: none;
   }
+
+  // Fullscreen, the stage fills the screen and the demo stays centred on it; a demo taller than
+  // the screen scrolls.
+  &[data-ng-doc-fullscreen='true'] {
+    overflow: auto;
+    padding: var(--ng-doc-space-16) var(--ng-doc-space-8);
+  }
+}
+
+// Fullscreen, a full-width demo takes the width it needs, so it is centred on the screen.
+.ng-doc-demo-stage[data-ng-doc-fullscreen='true'][data-ng-doc-width='full'] > .ng-doc-demo-frame {
+  width: auto;
+  max-width: 100%;
+}
+
+// The way out of fullscreen, in the corner of the stage.
+.ng-doc-demo-fullscreen-exit {
+  position: absolute;
+  top: var(--ng-doc-space-4);
+  right: var(--ng-doc-space-4);
+  border-radius: var(--ng-doc-radius-md);
+  background: var(--ng-doc-background);
+  box-shadow:
+    0 0 0 1px var(--ng-doc-border-color),
+    var(--ng-doc-shadow-sm);
 }
 
 .ng-doc-demo-frame {

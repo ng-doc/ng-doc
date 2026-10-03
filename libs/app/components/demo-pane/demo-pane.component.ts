@@ -11,10 +11,12 @@ import {
 import { NgDocRootPage } from '@ng-doc/app/classes/root-page';
 import { NgDocCodeComponent } from '@ng-doc/app/components/code';
 import { NgDocFullscreenButtonComponent } from '@ng-doc/app/components/fullscreen-button';
+import { NgDocFullscreenToggleComponent } from '@ng-doc/app/components/fullscreen-toggle';
 import { NgDocDemoAsset } from '@ng-doc/app/interfaces';
 import { asArray } from '@ng-doc/core/helpers/as-array';
 import { NgDocDemoPaneActionOptions } from '@ng-doc/core/interfaces';
 import {
+  NgDocFullscreenDirective,
   NgDocIconComponent,
   NgDocPaneBackDirective,
   NgDocPaneComponent,
@@ -25,7 +27,8 @@ import {
 
 /**
  * Renders a demo of the page in front of its source files, which the reader reveals by dragging
- * the pane's resizer.
+ * the pane's resizer. The demo sits on the dot-grid canvas of demos, with a control that shows it
+ * fullscreen with the browser Fullscreen API where the browser supports it.
  */
 @Component({
   selector: 'ng-doc-demo-pane',
@@ -41,6 +44,8 @@ import {
     NgDocTabGroupComponent,
     NgDocTabComponent,
     NgDocFullscreenButtonComponent,
+    NgDocFullscreenDirective,
+    NgDocFullscreenToggleComponent,
     NgComponentOutlet,
     NgDocIconComponent,
   ],
