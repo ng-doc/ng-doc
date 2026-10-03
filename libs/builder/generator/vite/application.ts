@@ -276,23 +276,27 @@ export async function collectAssets(
 }
 
 /**
- * The asset file a development request names, or undefined.
+ * The asset files a development request can name, the last matching entry first. An entry's
+ * output prefix and glob can match a file it does not have, so the server serves the first
+ * candidate that exists: a later entry wins over an earlier one only with a file, as in
+ * `collectAssets` and the Angular CLI.
  */
-export function matchAsset(
+export function matchAssets(
   assets: readonly ResolvedAsset[],
   base: string,
   url: string,
-): { file: string; relative: string } | undefined {
+): Array<{ file: string; relative: string }> {
   let pathname: string;
   try {
     pathname = decodeURIComponent(url.split(/[?#]/, 1)[0]);
   } catch {
-    return undefined;
+    return [];
   }
   const prefix = base.startsWith('/') ? base.replace(/\/?$/, '/') : '/';
-  if (!pathname.startsWith(prefix)) return undefined;
+  if (!pathname.startsWith(prefix)) return [];
   const requested = pathname.slice(prefix.length);
-  if (unsafeSegment(requested)) return undefined;
+  if (unsafeSegment(requested)) return [];
+  const candidates: Array<{ file: string; relative: string }> = [];
   for (const asset of [...assets].reverse()) {
     const relative = asset.output
       ? requested.startsWith(`${asset.output}/`)
@@ -304,10 +308,10 @@ export function matchAsset(
       minimatch(relative, asset.glob, { dot: true }) &&
       !asset.ignore.some((pattern) => minimatch(relative, pattern, { dot: true }))
     ) {
-      return { file: path.join(asset.input, relative), relative };
+      candidates.push({ file: path.join(asset.input, relative), relative });
     }
   }
-  return undefined;
+  return candidates;
 }
 
 /**
@@ -487,15 +491,16 @@ function assetMiddleware(
   return (request, response, next) => {
     void assets().then(
       async (resolved) => {
-        const match = matchAsset(resolved, base(), request.url ?? '/');
-        const source = match ? await readFile(match.file).catch(() => undefined) : undefined;
-        if (!match || !source) {
-          next();
+        for (const match of matchAssets(resolved, base(), request.url ?? '/')) {
+          // A directory or a missing file: an earlier entry may still have the file.
+          const source = await readFile(match.file).catch(() => undefined);
+          if (!source) continue;
+          response.statusCode = 200;
+          response.setHeader('Content-Type', contentType(match.relative));
+          response.end(source);
           return;
         }
-        response.statusCode = 200;
-        response.setHeader('Content-Type', contentType(match.relative));
-        response.end(source);
+        next();
       },
       (error: unknown) => next(error),
     );

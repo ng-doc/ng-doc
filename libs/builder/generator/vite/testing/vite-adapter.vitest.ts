@@ -439,7 +439,8 @@ describe('createNgDocVitePlugin with a real Vite server and generator worker', (
         },
       ],
       resolve: { alias: packageAliases(), dedupe: angularPackages() },
-      build: { outDir: path.join(fixture.root, 'bundle'), emptyOutDir: true },
+      // Source maps only when the configuration asks for them, as in the Angular CLI.
+      build: { outDir: path.join(fixture.root, 'bundle'), emptyOutDir: true, sourcemap: true },
       ssr: { noExternal: ['@ng-doc/app', '@ng-doc/ui-kit', '@ng-doc/core'] },
     });
     expect(generatedAtBuildStart).toBe(true);
@@ -519,6 +520,8 @@ describe('createNgDocVitePlugin with a real Vite server and generator worker', (
 
     await build('first', [handoff]);
     expect(generations()).toBe(1);
+    // A production build that does not ask for source maps emits none.
+    expect(await filesWithSuffix(path.join(fixture.root, 'first'), '.map')).toEqual([]);
     const published = await readFile(manifest, 'utf8');
     // The second build publishes the first one's generation: nothing is generated or written, and
     // it bundles and emits exactly what the first did.
@@ -2319,9 +2322,11 @@ describe('bounded output ownership and assets', () => {
   it('exposes deterministic hook admission, watch rejection and packaged theme transform path', async () => {
     const fixture = await project();
     const [hooks] = plugin(fixture) as Array<Record<string, any>>;
-    expect(hooks.config({}, { command: 'serve' })).toEqual(
-      expect.objectContaining({ build: { sourcemap: true } }),
-    );
+    const served = hooks.config({}, { command: 'serve' });
+    expect(served.server.watch.ignored).toContain(GENERATED_STAGE_IGNORE);
+    // Production source maps are the configuration's choice, as in the Angular CLI.
+    expect(served).not.toHaveProperty('build');
+    expect(hooks.config({}, { command: 'build' })).not.toHaveProperty('build');
     expect(() => hooks.config({ build: { watch: {} } }, { command: 'build' })).toThrow(
       'BUILD_WATCH',
     );
@@ -2444,7 +2449,7 @@ describe('bounded output ownership and assets', () => {
       },
       themeModules: { custom: '/src/custom-theme.ts' },
     });
-    expect(staticViteConfig(options).build?.sourcemap).toBe(true);
+    expect(staticViteConfig(options).build?.sourcemap).toBeUndefined();
     expect(staticViteConfig(options).server?.watch?.ignored).toContain(GENERATED_STAGE_IGNORE);
     expect(staticViteConfig(options).optimizeDeps?.include).toEqual(
       expect.arrayContaining(['esthetic', 'shiki/langs/angular-html.mjs']),

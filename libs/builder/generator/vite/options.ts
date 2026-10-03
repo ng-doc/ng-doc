@@ -299,7 +299,8 @@ export function staticViteConfig(
         ]),
       ].sort(),
     },
-    build: { sourcemap: true },
+    // No `build.sourcemap`: a production build emits source maps only when the configuration asks
+    // for them, as the Angular CLI's production configuration does.
     server: {
       watch: { ignored },
     },

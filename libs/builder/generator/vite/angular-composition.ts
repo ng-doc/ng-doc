@@ -163,6 +163,31 @@ export function analogFileId(file: string): string {
   return path.posix.normalize(file.replace(/\\/g, '/'));
 }
 
+const UNRESOLVED_IMPORT = /^Failed to resolve import "([^"]+)" from "([^"]+)"/;
+
+/**
+ * The user error for an import Vite could not resolve, or undefined for any other error. Vite's
+ * import analysis reports it after every transform has run, so the Angular compiler is not at
+ * fault: the import names a module that does not exist, or one that only a tsconfig path mapping
+ * or a Vite alias the configuration lacks would resolve.
+ * @param cause - The error of a module transform.
+ */
+export function unresolvedImportError(cause: unknown): Error | undefined {
+  const match =
+    cause instanceof Error && typeof cause.message === 'string'
+      ? UNRESOLVED_IMPORT.exec(cause.message)
+      : null;
+  if (!match) return undefined;
+  const [, specifier, importer] = match;
+  return error(
+    'NGDOC_VITE_UNRESOLVED_IMPORT',
+    `Cannot resolve the import "${specifier}" in ${importer}. If the tsconfig maps it ` +
+      '(compilerOptions.paths), pass that tsconfig to createNgDocAngularPlugins({ tsconfig }); ' +
+      'otherwise add a Vite resolve.alias for it, or install the package that provides it.',
+    cause,
+  );
+}
+
 function probeUrl(file: string): string {
   return `/@fs/${encodeURI(file.replace(/\\/g, '/')).replace(/#/g, '%23').replace(/\?/g, '%3F')}`;
 }
@@ -422,8 +447,18 @@ export function composeAngularPlugins(
     try {
       client.moduleGraph.invalidateModule(node);
       if (disposed) throw error('NGDOC_VITE_DISPOSED', 'Angular composition is disposed.');
-      const request = client.transformRequest(url);
-      const result = await request;
+      let result: Awaited<ReturnType<typeof client.transformRequest>>;
+      try {
+        result = await client.transformRequest(url);
+      } catch (cause) {
+        const unresolved = unresolvedImportError(cause);
+        if (!unresolved || disposed || !attempt.traversed || !attempt.emitted) throw cause;
+        // Angular freshly compiled the probe; only Vite's import analysis failed afterwards. The
+        // compiler stays usable: report the import and keep serving, so that fixing it (or the
+        // configuration) recovers like any other edit. The browser shows Vite's error meanwhile.
+        server.config.logger.error(unresolved.message);
+        return;
+      }
       if (disposed) throw error('NGDOC_VITE_DISPOSED', 'Angular composition is disposed.');
       if (
         !attempt.traversed ||

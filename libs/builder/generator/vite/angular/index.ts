@@ -2,6 +2,7 @@ import angular, { type PluginOptions } from '@analogjs/vite-plugin-angular';
 import type { Plugin } from 'vite';
 
 import { ANGULAR_COMPATIBILITY_FORMAT, qualifyAngularPlugins } from '../angular-compatibility';
+import { createTsconfigPathsPlugin } from '../tsconfig-paths';
 
 // Only the verified package build defines this constant while bundling patched upstream sources.
 // Running this source file directly must never label an unpatched upstream factory as compatible.
@@ -18,7 +19,10 @@ export type NgDocAngularPluginOptions = Omit<
   experimental?: never;
 };
 
-/** Complete pinned Analog plugin array, with the resource corrections required by NgDoc. */
+/**
+ * Complete pinned Analog plugin array, with the resource corrections required by NgDoc, followed by
+ * the resolution of the tsconfig's `compilerOptions.paths` (as the Angular CLI resolves them).
+ */
 export function createNgDocAngularPlugins(options: NgDocAngularPluginOptions = {}): Plugin[] {
   if (
     typeof __NG_DOC_ANALOG_COMPATIBILITY__ === 'undefined' ||
@@ -53,5 +57,5 @@ export function createNgDocAngularPlugins(options: NgDocAngularPluginOptions = {
     disableTypeChecking: false,
     fastCompile: false,
   });
-  return qualifyAngularPlugins(plugins);
+  return qualifyAngularPlugins([...plugins, createTsconfigPathsPlugin(options.tsconfig)]);
 }

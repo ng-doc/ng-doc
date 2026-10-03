@@ -69,6 +69,9 @@ export default {
 
 - `angularComponentProbe` is the absolute path of a component that is always in the application,
   such as the root component.
+- `createNgDocAngularPlugins` also resolves the `compilerOptions.paths` of its `tsconfig`, with
+  `extends` and `baseUrl`, as the Angular CLI does. The application can import a library of the
+  workspace through its path mapping. A Vite `resolve.alias` wins over a mapping.
 - The `defaults` apply when `ng-doc.config.ts` doesn't set `docsPath`, `tsConfig` or `outDir`. With
   `outDir`, the generated folder is `<outDir>/ng-doc/<projectId>` in the workspace root. All paths
   are absolute.
@@ -137,7 +140,8 @@ each edit (`*ProgressOutputPage`).
 ## 🚀 Build for production
 
 `vite build` builds the application with NgDoc. It generates every page once, with the build tag
-`production`, before Vite bundles the application. To build the server bundle and prerender every
+`production`, before Vite bundles the application. As in the Angular CLI's production
+configuration, it emits source maps only when you set Vite's `build.sourcemap`. To build the server bundle and prerender every
 route, use `ng build` with the `@ng-doc/builder:vite-application` builder or `ng-doc prerender`
 (`*ProductionBuildsPage#build-with-the-vite-host`).
 

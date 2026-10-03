@@ -8,7 +8,7 @@ import {
   checkOptionKeys,
   collectAssets,
   createNgDocApplicationPlugin,
-  matchAsset,
+  matchAssets,
   NG_DOC_BROWSER_ENTRY,
   NG_DOC_SERVER_ENTRY,
   resolveAssets,
@@ -339,6 +339,46 @@ describe('createNgDocApplicationPlugin', () => {
     expect(await (await fetch(`${origin}/preview/assets/skip.txt`)).text()).not.toBe('skip\n');
   });
 
+  it('serves an asset of an earlier entry that a later, broader entry does not have', async () => {
+    // The order of an Nx project: the UI kit's icons, then the project's public folder at the
+    // output root, whose `**/*` also matches the icon's output path.
+    const root = await workspace();
+    await mkdir(path.join(root, 'public'), { recursive: true });
+    await writeFile(path.join(root, 'public/robots.txt'), 'robots\n');
+    // A directory where the later entry would have the file.
+    await mkdir(path.join(root, 'public/assets/ng-doc/ui-kit/logo.txt'), { recursive: true });
+    const server = await createServer({
+      root: path.join(root, 'src'),
+      cacheDir: path.join(root, '.vite/node_modules/.vite'),
+      configFile: false,
+      logLevel: 'silent',
+      publicDir: false,
+      plugins: [
+        plugin(root, {
+          assets: [
+            { glob: '**/*', input: 'vendor/assets', output: 'assets/ng-doc/ui-kit' },
+            { glob: '**/*', input: 'public' },
+          ],
+        }),
+      ],
+      server: { host: '127.0.0.1', port: 0, fs: { allow: [root] } },
+      optimizeDeps: { noDiscovery: true },
+    });
+    servers.push(server);
+    await server.listen();
+    const origin = `http://127.0.0.1:${(server.httpServer!.address() as { port: number }).port}`;
+    const icon = await fetch(`${origin}/assets/ng-doc/ui-kit/icon.svg`, {
+      headers: { accept: 'image/svg+xml,*/*' },
+    });
+    expect(icon.headers.get('content-type')).toBe('image/svg+xml; charset=utf-8');
+    expect(await icon.text()).toBe('<svg xmlns="http://www.w3.org/2000/svg"/>\n');
+    expect(await (await fetch(`${origin}/robots.txt`)).text()).toBe('robots\n');
+    // A directory is no file: the earlier entry is asked next.
+    expect(await (await fetch(`${origin}/assets/ng-doc/ui-kit/logo.txt`)).text()).toBe(
+      'vendor logo\n',
+    );
+  });
+
   it('serves the index page when a global style sheet does not compile', async () => {
     const root = await workspace();
     await writeFile(path.join(root, 'src/broken.scss'), 'body { color: ; ');
@@ -456,29 +496,28 @@ describe('assets', () => {
     expect(files.has('assets/icon.svg')).toBe(false);
   });
 
-  it('matches a development request to the last matching asset entry', () => {
+  it('lists the asset files a development request can name, the last entry first', () => {
     const assets = [
       { input: '/a', output: '', glob: '**/*', ignore: [] },
       { input: '/b', output: 'assets', glob: '*.svg', ignore: ['skip.svg'] },
     ];
-    expect(matchAsset(assets, '/base/', '/base/assets/x.svg?v=1')).toEqual({
-      file: path.join('/b', 'x.svg'),
-      relative: 'x.svg',
-    });
-    expect(matchAsset(assets, '/base', '/base/assets/skip.svg')).toEqual({
-      file: path.join('/a', 'assets/skip.svg'),
-      relative: 'assets/skip.svg',
-    });
-    expect(matchAsset(assets, './', '/top.txt')).toEqual({
-      file: path.join('/a', 'top.txt'),
-      relative: 'top.txt',
-    });
-    expect(matchAsset(assets, '/base/', '/other/x.svg')).toBeUndefined();
-    expect(matchAsset(assets, '/', '/a/../b')).toBeUndefined();
-    expect(matchAsset(assets, '/', '/a/..%5C..%5Csecret')).toBeUndefined();
-    expect(matchAsset(assets, '/', '/a%00b')).toBeUndefined();
-    expect(matchAsset(assets, '/', '/%E0%A4%A')).toBeUndefined();
-    expect(matchAsset([assets[1]], '/', '/elsewhere/x.svg')).toBeUndefined();
+    expect(matchAssets(assets, '/base/', '/base/assets/x.svg?v=1')).toEqual([
+      { file: path.join('/b', 'x.svg'), relative: 'x.svg' },
+      // The earlier entry matches too: it serves the file when the later one lacks it.
+      { file: path.join('/a', 'assets/x.svg'), relative: 'assets/x.svg' },
+    ]);
+    expect(matchAssets(assets, '/base', '/base/assets/skip.svg')).toEqual([
+      { file: path.join('/a', 'assets/skip.svg'), relative: 'assets/skip.svg' },
+    ]);
+    expect(matchAssets(assets, './', '/top.txt')).toEqual([
+      { file: path.join('/a', 'top.txt'), relative: 'top.txt' },
+    ]);
+    expect(matchAssets(assets, '/base/', '/other/x.svg')).toEqual([]);
+    expect(matchAssets(assets, '/', '/a/../b')).toEqual([]);
+    expect(matchAssets(assets, '/', '/a/..%5C..%5Csecret')).toEqual([]);
+    expect(matchAssets(assets, '/', '/a%00b')).toEqual([]);
+    expect(matchAssets(assets, '/', '/%E0%A4%A')).toEqual([]);
+    expect(matchAssets([assets[1]], '/', '/elsewhere/x.svg')).toEqual([]);
   });
 });
 

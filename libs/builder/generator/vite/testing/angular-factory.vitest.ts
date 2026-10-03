@@ -11,6 +11,7 @@ const { upstream } = vi.hoisted(() => ({ upstream: vi.fn() }));
 vi.mock('@analogjs/vite-plugin-angular', () => ({ default: upstream }));
 
 import { createNgDocAngularPlugins } from '../angular';
+import { NG_DOC_TSCONFIG_PATHS_PLUGIN } from '../tsconfig-paths';
 
 beforeEach(() => {
   vi.stubGlobal('__NG_DOC_ANALOG_COMPATIBILITY__', ANGULAR_COMPATIBILITY_FORMAT);
@@ -30,7 +31,10 @@ describe('verified Angular factory boundary (mocked upstream; native acceptance 
     const plugins: Plugin[] = [{ name: 'before' }, compiler, { name: 'after' }];
     upstream.mockReturnValue(plugins);
     const result = createNgDocAngularPlugins({ tsconfig: '/app/tsconfig.json' });
-    expect(result).toBe(plugins);
+    // The upstream array in order, then the resolution of the tsconfig's `paths`.
+    expect(result).toHaveLength(4);
+    plugins.forEach((plugin, index) => expect(result[index]).toBe(plugin));
+    expect(result[3]!.name).toBe(NG_DOC_TSCONFIG_PATHS_PLUGIN);
     expect(result[1]).toBe(compiler);
     expect(compiler.transform).toBe(hook);
     expect(compiler.api.existing).toBe(7);
@@ -54,9 +58,13 @@ describe('verified Angular factory boundary (mocked upstream; native acceptance 
       'NGDOC_VITE_ANGULAR_COMPATIBILITY',
     );
     expect(() =>
-      assertAngularCompatibility([result[0]!, { ...compiler }, result[2]!]),
+      assertAngularCompatibility([result[0]!, { ...compiler }, result[2]!, result[3]!]),
     ).not.toThrow();
-    expect(() => assertAngularCompatibility([{ ...result[0]! }, compiler, result[2]!])).toThrow(
+    expect(() =>
+      assertAngularCompatibility([{ ...result[0]! }, compiler, result[2]!, result[3]!]),
+    ).toThrow('NGDOC_VITE_ANGULAR_COMPATIBILITY');
+    // The paths resolution is part of the complete array.
+    expect(() => assertAngularCompatibility(result.slice(0, 3))).toThrow(
       'NGDOC_VITE_ANGULAR_COMPATIBILITY',
     );
   });

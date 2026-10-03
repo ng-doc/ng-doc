@@ -132,6 +132,7 @@ These codes point to a problem in your files or setup. The linked entries explai
 | `NGDOC_VITE_ANGULAR_BUILD`          | `createNgDocAngularPlugins` was loaded from source instead of the built `@ng-doc/builder` package.                                                   |
 | `NGDOC_VITE_ANGULAR_COMPOSITION`    | The Angular plugin array was changed: it must contain exactly the plugins that `createNgDocAngularPlugins` returns.                                  |
 | `NGDOC_VITE_ANGULAR_PROBE`          | `angularComponentProbe` can't be read, or Angular didn't compile it. Point it to a component that the application always compiles.                   |
+| `NGDOC_VITE_UNRESOLVED_IMPORT`      | Vite can't resolve an import in development; the message names it. Check the tsconfig `paths`, or add a Vite `resolve.alias`.                        |
 | `NGDOC_VITE_APPLICATION_OPTION`     | `createNgDocApplicationPlugin` got an option of an `angular.json` build target. The message names its Vite or Analog equivalent.                     |
 | `NGDOC_VITE_SERVER_ENTRY`           | The server bundle or prerendering was requested, but `createNgDocApplicationPlugin` has no `server` entry.                                           |
 | `NGDOC_VITE_OPTION_REMOVED`         | The plugin got `maxContentRequests`, which was removed with the virtual content mode. Remove the option.                                             |

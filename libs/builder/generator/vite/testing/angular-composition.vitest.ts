@@ -8,6 +8,7 @@ import {
   type AngularCompositionBridge,
   composeAngularPlugins,
   globalStyleSheet,
+  unresolvedImportError,
 } from '../angular-composition';
 import type { HostUpdateTicket } from '../host-updates';
 
@@ -117,6 +118,85 @@ describe('Analog Angular composition ownership', () => {
     await expect(hot(context(probe, server))).rejects.toThrow('RESTART_REQUIRED');
     expect(bridge.fail).toHaveBeenCalledOnce();
     await composition.dispose();
+  });
+
+  it('reports an import Vite cannot resolve in the probe as a user error and keeps serving', async () => {
+    const { probe } = await fixtureProbe();
+    const unresolved = Object.assign(
+      new Error(
+        'Failed to resolve import "ngx-oneforall/services/history" from "src/app/app.component.ts". Does the file exist?',
+      ),
+      { plugin: 'vite:import-analysis' },
+    );
+    const bridge: AngularCompositionBridge = {
+      initialize: vi.fn(async () => {}),
+      start: vi.fn(() => ticket(1)),
+      acknowledge: vi.fn(async () => {}),
+      diagnostic: vi.fn(),
+      committed: vi.fn(async () => {}),
+      settle: vi.fn(async () => {}),
+      fail: vi.fn(),
+    };
+    const compiler: Plugin = {
+      name: '@analogjs/vite-plugin-angular',
+      buildStart() {},
+      handleHotUpdate: () => [],
+      transform: () => ({ code: 'class App {}; App.ɵcmp = {};', map: null }),
+    };
+    const composition = composeAngularPlugins([compiler], probe, bridge);
+    const wrapped = composition.plugins[0]!;
+    const logger = { error: vi.fn() };
+    // As Vite: every transform runs, then the import analysis fails.
+    const transformRequest = vi.fn(async () => {
+      await callable(wrapped.transform)('', probe);
+      throw unresolved;
+    });
+    const server = {
+      config: { logger },
+      environments: {
+        client: {
+          moduleGraph: { ensureEntryFromUrl: async () => ({}), invalidateModule() {} },
+          transformRequest,
+        },
+      },
+    } as unknown as ViteDevServer;
+    composition.attachServer(server);
+    await callable(wrapped.buildStart)();
+    await composition.preflight();
+    expect(logger.error).toHaveBeenCalledExactlyOnceWith(
+      expect.stringMatching(
+        /^\[NGDOC_VITE_UNRESOLVED_IMPORT\] Cannot resolve the import "ngx-oneforall\/services\/history" in src\/app\/app\.component\.ts\..*compilerOptions\.paths.*resolve\.alias/,
+      ),
+    );
+    expect(bridge.fail).not.toHaveBeenCalled();
+    // The compiler stays admitted: a resource update runs the probe again and settles.
+    const stylesheet = path.join(path.dirname(probe), 'app.component.css');
+    await writeFile(stylesheet, 'p {}');
+    await callable(wrapped.handleHotUpdate)(context(stylesheet, server));
+    expect(logger.error).toHaveBeenCalledTimes(2);
+    expect(bridge.acknowledge).toHaveBeenLastCalledWith(expect.anything(), true, true);
+    expect(bridge.settle).toHaveBeenCalledOnce();
+
+    // Without a fresh Angular emission, the failure still means the compiler cannot be trusted.
+    transformRequest.mockImplementation(async () => {
+      throw unresolved;
+    });
+    await expect(callable(wrapped.handleHotUpdate)(context(stylesheet, server))).rejects.toBe(
+      unresolved,
+    );
+    expect(bridge.fail).toHaveBeenCalledWith(
+      expect.objectContaining({ code: 'NGDOC_VITE_ANGULAR_RESTART_REQUIRED' }),
+    );
+    await composition.dispose();
+  });
+
+  it('recognizes only the unresolved import errors of Vite', () => {
+    expect(unresolvedImportError('Failed to resolve import "a" from "b"')).toBeUndefined();
+    expect(unresolvedImportError(new Error('Failed to load url /a'))).toBeUndefined();
+    const cause = new Error('Failed to resolve import "a" from "b.ts". Does the file exist?');
+    expect(unresolvedImportError(cause)).toEqual(
+      expect.objectContaining({ code: 'NGDOC_VITE_UNRESOLVED_IMPORT', cause }),
+    );
   });
 
   it('preserves hook calls, serializes compiler admission and witnesses resources before settlement', async () => {
