@@ -126,6 +126,11 @@ jobs:
           name: packages
           path: dist/libs
       - run: node --test "tools/scripts/testing/*.test.mjs"
+      # The other jobs use the generator built on Linux; this builds it on each OS, declarations
+      # included, into a private directory.
+      - name: Build the generator from source
+        shell: bash
+        run: node tools/scripts/build-generator.mjs --outdir "$RUNNER_TEMP/generator-build"
 
   generator:
     name: Generator ${{ matrix.group }} (${{ matrix.os }})

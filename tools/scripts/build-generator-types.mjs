@@ -194,7 +194,10 @@ async function main() {
   const declarations = new Map();
   const declarationEmit = program.emit(undefined, (filename, text, _bom, _error, sourceFiles) => {
     if (!filename.endsWith('.d.ts')) return;
-    const source = sourceFiles?.[0]?.fileName;
+    // TypeScript names files with forward slashes on every platform; resolve them to native
+    // paths, which generatorRoot and the emitted-source lookups use.
+    const fileName = sourceFiles?.[0]?.fileName;
+    const source = fileName && path.resolve(fileName);
     if (!source || !source.startsWith(`${generatorRoot}${path.sep}`)) return;
     declarations.set(source, text);
   });
