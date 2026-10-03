@@ -1,3 +1,10 @@
+## [21.1.1](https://github.com/ng-doc/ng-doc/compare/v21.1.0...v21.1.1) (2026-10-03)
+
+
+### Bug Fixes
+
+* **builder:** replace @angular-devkit/build-angular with @angular/build ([#341](https://github.com/ng-doc/ng-doc/issues/341)) ([c5cfb3c](https://github.com/ng-doc/ng-doc/commit/c5cfb3c92b916003f321a41f48b920d10e54872e))
+
 # [21.1.0](https://github.com/ng-doc/ng-doc/compare/v21.0.6...v21.1.0) (2026-07-15)
 
 
