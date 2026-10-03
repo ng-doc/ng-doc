@@ -288,8 +288,9 @@ publish stable releases from the `release` branch and prereleases from `beta`; b
 
 ## 💬 Getting help
 
-- **Questions about using NgDoc:** start with the [documentation](https://ng-doc.com/), then open
-  an [issue](https://github.com/ng-doc/ng-doc/issues/new/choose) if it doesn't answer them.
+- **Questions about using NgDoc:** start with the [documentation](https://ng-doc.com/), then ask
+  in [GitHub Discussions](https://github.com/ng-doc/ng-doc/discussions/categories/q-a) if it
+  doesn't answer them.
 - **Questions about a contribution:** ask in the issue you're working on, or open a draft pull
   request and ask there. Early questions are welcome; a draft is a good way to check the direction
   before you finish.

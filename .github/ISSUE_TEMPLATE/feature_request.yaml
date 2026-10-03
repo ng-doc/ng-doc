@@ -1,37 +1,27 @@
-name: '🚀 Feature Request'
-description: Suggest a feature
-title: '[Feature] '
-labels: 'Type: Enhancement'
+name: '🚀 Feature request'
+description: Suggest an idea or an improvement for NgDoc.
+labels: ['Type: Enhancement']
 assignees: skoropadas
 
 body:
   - type: textarea
-    id: description
+    id: problem
     attributes:
-      label: Description
-      placeholder: |
-        A clear and concise description of what the problem is.
-        Ex. I'm always frustrated when [...]
+      label: Problem or use case
+      description: What are you trying to do, and what gets in the way today?
     validations:
       required: true
 
   - type: textarea
-    id: proposed-solution
+    id: proposal
     attributes:
-      label: Proposed solution
-      placeholder: |
-        A clear and concise description of what you want to happen.
-        What is the expected behavior?
-        What is the current behavior?
-        What is the motivation / use case for changing the behavior?
+      label: Proposal
+      description: What would you like NgDoc to do? An example of the API or the result helps.
     validations:
       required: true
 
   - type: textarea
-    id: alternatives-considered
+    id: alternatives
     attributes:
-      label: Alternatives considered
-      placeholder: |
-        A clear and concise description of any alternative solutions or features you've considered.
-    validations:
-      required: true
+      label: Alternatives
+      description: Optional. Workarounds or other approaches you have considered.
