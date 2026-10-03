@@ -50,7 +50,10 @@ It changes the workspace like this:
   `withNgDocContentReady`, so a page is prerendered once its content is ready.
 - **Dependencies:** `vite`, `@analogjs/vite-plugin-angular`, `@angular/compiler` and
   `@angular/compiler-cli` are added at the versions in `*BuildersReference#supported-versions`,
-  unless the workspace already has them. Pass `--skip-install` to install them yourself.
+  unless the workspace already has them. Pass `--skip-install` to install them yourself. A `vite`
+  at another version than 7.3.5 is kept, and the report tells you to pin it with
+  `npm i -D vite@7.3.5`: the Vite engine doesn't start with another version
+  (`*TroubleshootingPage#ngdoc_vite_version`).
 - **Files:** `/.cache/ng-doc` is added to `.gitignore`. The legacy generated folder,
   `ng-doc/<project-name>`, is deleted once, because the new engine refuses to overwrite files it
   didn't write (`OUTPUT_UNOWNED_COLLISION`). The `@ng-doc/generated` path in `tsconfig.json` stays

@@ -22,9 +22,14 @@ site:
 
 ## Prerequisites
 
-- Angular 22. `@ng-doc/app` and `@ng-doc/ui-kit` support `>=22.0.0 <23.0.0`. `@ng-doc/builder`
-  needs `@angular/compiler` and `@angular/compiler-cli` 22.2.1 exactly, and depends on
-  `@angular/build` 22.1.9. Update Angular first.
+- Angular 22. `@ng-doc/app`, `@ng-doc/ui-kit` and `@ng-doc/builder` support `>=22.0.0 <23.0.0`,
+  and `@ng-doc/builder` depends on `@angular/build` 22.1.9. The Vite engine is tested with
+  `@angular/compiler` and `@angular/compiler-cli` 22.2.1. Update Angular first.
+- For the Vite engine only: `vite` 7.3.5 exactly. The legacy builders don't use Vite, so an update
+  that stays on them needs nothing. Before you move to the Vite engine, pin Vite in
+  `devDependencies` with `npm i -D vite@7.3.5` (the migration schematic adds it when `package.json`
+  has no `vite`). Without the pin, Vitest brings in Vite 8 and the Vite engine stops with
+  `NGDOC_VITE_VERSION`.
 - Node.js 24 (`>=24.15.0 <25`).
 
 Zoneless applications are supported: NgDoc's own tests run with and without zone.js.

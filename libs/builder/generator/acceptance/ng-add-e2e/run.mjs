@@ -155,6 +155,20 @@ async function newApplication(context, name) {
   return application;
 }
 
+/**
+ * The Vite the application runs: `ng add` and `migrate-to-vite` pin `vite` 7.3.5 in
+ * `devDependencies`, the only version the Vite engine starts with, so the root install is that one
+ * even though Vitest (which `ng new` adds) accepts Vite 8.
+ */
+async function assertPinnedVite(application) {
+  const manifest = await readJson(path.join(application, 'package.json'));
+  assert.equal(manifest.devDependencies?.vite, '7.3.5', 'vite is not pinned in devDependencies');
+  const lock = await readJson(path.join(application, 'package-lock.json'));
+  const installed = lock.packages['node_modules/vite']?.version;
+  assert.equal(installed, '7.3.5', `the root vite is ${installed}`);
+  return installed;
+}
+
 async function project(application, name) {
   const workspace = await readJson(path.join(application, 'angular.json'));
   const value = workspace.projects[name];
@@ -286,12 +300,14 @@ async function scenarioA(context) {
   await addPage(application);
   const installed = await assertInstalledFromRegistry(context, application);
   for (const item of [...installed, '@ng-doc/add']) context.installed.add(item);
+  const vite = await assertPinnedVite(application);
   const production = await build(context, application, name);
   const serve = await serveSmoke(context, application, name);
   return {
     application,
     targets: { build: targets.build.builder, serve: targets.serve.builder },
     installed,
+    vite,
     production,
     serve,
   };
@@ -361,12 +377,14 @@ async function scenarioB(context) {
   });
   const installed = await assertInstalledFromRegistry(context, application);
   for (const item of [...installed, '@ng-doc/add']) context.installed.add(item);
+  const vite = await assertPinnedVite(application);
   const production = await build(context, application, name);
   const serve = await serveSmoke(context, application, name);
   return {
     application,
     targets: { build: targets.build.builder, serve: targets.serve.builder },
     installed,
+    vite,
     production,
     serve,
   };

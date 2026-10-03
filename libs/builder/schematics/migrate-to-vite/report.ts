@@ -1,5 +1,5 @@
 import { FindingLevel, MigrationFinding } from './analyze';
-import { DependencyMismatch } from './setup/dependencies';
+import { DependencyMismatch, dependencyMismatchText } from './setup/dependencies';
 
 const SECTIONS: Array<{ level: FindingLevel; title: string; intro: string }> = [
   {
@@ -75,9 +75,7 @@ export function renderReport(input: ReportInput): string {
       lines.push(`- Added \`${name}@${version}\` to \`devDependencies\`.`);
     }
     for (const mismatch of input.mismatches ?? []) {
-      lines.push(
-        `- \`${mismatch.name}\` is \`${mismatch.found}\`; the Vite engine is tested with \`${mismatch.expected}\`.`,
-      );
+      lines.push(`- ${dependencyMismatchText(mismatch)}`);
     }
     lines.push('');
   }

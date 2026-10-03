@@ -146,7 +146,9 @@ try {
           '@angular/router': '22.2.1',
           '@angular/forms': '22.2.1',
           typescript: '6.0.3',
+          // Vitest admits Vite 8; the root pin is the Vite the Vite engine requires.
           vite: '7.3.5',
+          vitest: '4.1.11',
           'zone.js': '0.15.1',
         },
       },
@@ -156,6 +158,11 @@ try {
   );
   await run('npm', ['install', '--no-audit', '--no-fund'], consumer, 'npm-install');
   summary.checks.push('fresh npm consumer installed all five actual ng-doc package tarballs');
+  const installedLock = JSON.parse(
+    await readFile(path.join(consumer, 'package-lock.json'), 'utf8'),
+  );
+  assert.equal(installedLock.packages['node_modules/vite']?.version, '7.3.5');
+  summary.checks.push('the root Vite is the pinned 7.3.5 next to Vitest');
 
   await put(
     'tsconfig.json',

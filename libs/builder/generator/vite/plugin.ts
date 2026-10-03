@@ -1,6 +1,7 @@
 import path from 'node:path';
 import type {
   ConfigEnv,
+  ConfigPluginContext,
   EnvironmentModuleNode,
   HotUpdateOptions,
   Logger,
@@ -44,6 +45,7 @@ import { OwnedSsrRenderer } from './ssr-renderer';
 import { SSR_RENDER_CONTROL_ID } from './ssr-renderer-protocol';
 import { transformNgDocIndex } from './theme-index';
 import { NGDOC_VITE_WATCHER, ViteFileEventSource } from './vite-event-source';
+import { assertSupportedViteVersion } from './vite-version';
 
 interface Initialized {
   /** Absent when a production build publishes the generation of an earlier build (a handoff). */
@@ -81,6 +83,8 @@ function logSafely(write: () => void): void {
 const ANALOG_COMPILER_TRIGGER = /\.[cm]?ts(?![a-z])|\.(?:html?|css|less|sass|scss)$/;
 
 export function createPlugin(options: NgDocVitePluginOptions): Plugin[] {
+  // First: on another Vite, the option and Analog checks below could fail in misleading ways.
+  assertSupportedViteVersion();
   const resolved = resolveOptions(options);
   const cacheWatch = new CacheRootWatchIgnore(resolved);
   let devServer: ViteDevServer | undefined;
@@ -315,7 +319,11 @@ export function createPlugin(options: NgDocVitePluginOptions): Plugin[] {
       }),
     },
     enforce: 'pre',
-    config(config: UserConfig, environment: ConfigEnv) {
+    config(this: ConfigPluginContext | void, config: UserConfig, environment: ConfigEnv) {
+      // The Vite running this configuration, which can be another copy than the one NgDoc
+      // resolves (checked when the plugin was created). Vite 7 reports it in the context.
+      const running = this?.meta?.viteVersion;
+      if (running !== undefined) assertSupportedViteVersion(running);
       if (environment.command === 'serve' && config.server?.watch === null) {
         throw new Error(
           '[NGDOC_VITE_WATCH_DISABLED] NgDoc development requires Vite filesystem watching.',

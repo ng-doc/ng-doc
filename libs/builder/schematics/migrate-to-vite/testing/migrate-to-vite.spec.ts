@@ -150,6 +150,42 @@ describe('migrate-to-vite', () => {
     );
   });
 
+  it('installs the exact tested Vite tuple, not the optional peer ranges', async () => {
+    const manifest = JSON.parse(readFileSync(join(__dirname, '../../../package.json'), 'utf8'));
+    // The peers only keep npm from refusing an install that pulls in another Vite (Vitest does).
+    expect(manifest.peerDependencies.vite).toBe('^7.3.5 || ^8.0.0');
+    expect(ngDocViteDependencies()).toEqual(manifest['ng-doc'].viteEngine);
+    expect(ngDocViteDependencies()['vite']).toBe('7.3.5');
+    for (const [name, version] of Object.entries(ngDocViteDependencies())) {
+      expect([name, version]).toEqual([name, expect.stringMatching(/^\d+\.\d+\.\d+$/)]);
+      expect(manifest.peerDependencies[name]).toBeDefined();
+    }
+
+    const tree = await migrate(standaloneApp());
+    const packageJson = JSON.parse(tree.readText('package.json'));
+    expect(packageJson.devDependencies.vite).toBe('7.3.5');
+    expect(tree.readText('.ng-doc-migration/site/report.md')).toContain(
+      '- Added `vite@7.3.5` to `devDependencies`.',
+    );
+  });
+
+  it('keeps another Vite and reports that the engine requires the exact one', async () => {
+    const files = standaloneApp();
+    const manifest = JSON.parse(files['package.json']);
+    manifest.devDependencies = { ...manifest.devDependencies, vite: '^8.0.0' };
+    files['package.json'] = JSON.stringify(manifest);
+
+    const tree = await migrate(files);
+
+    expect(JSON.parse(tree.readText('package.json')).devDependencies.vite).toBe('^8.0.0');
+    const report = tree.readText('.ng-doc-migration/site/report.md');
+    expect(report).toContain(
+      '- `vite` is `^8.0.0`; the Vite engine requires exactly `7.3.5` and does not start with ' +
+        'another version. Pin it: `npm i -D vite@7.3.5`.',
+    );
+    expect(report).not.toContain('Added `vite@');
+  });
+
   it('migrates an NgModule application in a multi-project layout', async () => {
     const tree = await migrate(ngModuleApp());
     const targets = workspace(tree).projects.docs.architect;

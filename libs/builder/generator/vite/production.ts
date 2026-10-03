@@ -6,6 +6,7 @@ import type { BuildResult, PublishedGeneratorConfiguration } from '../contracts'
 import type { NgDocViteApplicationApi } from './application';
 import { type NgDocPrerenderOptions, prerenderNgDoc } from './prerender';
 import type { PrerenderReport } from './prerender-runtime';
+import { assertSupportedViteVersion } from './vite-version';
 
 export interface NgDocViteBuildOptions {
   /** The Vite configuration file of the application (the one `vite build` would load). */
@@ -111,6 +112,8 @@ export async function buildNgDocViteApplication(
   options: NgDocViteBuildOptions,
   dependencies: NgDocViteBuildDependencies = defaultDependencies,
 ): Promise<NgDocViteBuildResult> {
+  // Before anything touches the output directory.
+  assertSupportedViteVersion();
   const configFile = path.resolve(options.configFile);
   const outputPath = path.resolve(options.outputPath);
   const browser = path.join(outputPath, 'browser');

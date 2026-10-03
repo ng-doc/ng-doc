@@ -110,6 +110,22 @@ on the next build.
 
 ## Vite host
 
+### NGDOC_VITE_VERSION
+
+**Cause:** the Vite engine started with another Vite than 7.3.5, the only version it is tested and
+patched for. The error names the version it found. It usually comes from Vitest or another package
+that installs Vite 8 when `package.json` doesn't pin `vite`.
+
+**Fix:** pin Vite in the application's `devDependencies`, then restart:
+
+```bash
+npm i -D vite@7.3.5
+```
+
+The legacy builders (`@ng-doc/builder:application` and `dev-server`) don't use Vite.
+
+**See also:** `*BuildersReference#supported-versions`
+
 ### NGDOC_VITE_WATCH_CAPACITY
 
 **Cause:** the plugin needs to watch more files and folders outside the Vite root than

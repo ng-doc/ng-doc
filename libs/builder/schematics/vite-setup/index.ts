@@ -2,7 +2,12 @@ import { Rule, SchematicContext, SchematicsException, Tree } from '@angular-devk
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
 import { analyzeProject, MigrationFinding } from '../migrate-to-vite/analyze';
-import { addGitIgnoreLine, addNgDocViteDependencies } from '../migrate-to-vite/setup/dependencies';
+import {
+  addGitIgnoreLine,
+  addNgDocViteDependencies,
+  dependencyMismatchText,
+  isRequiredExactly,
+} from '../migrate-to-vite/setup/dependencies';
 import { wrapServerEntry } from '../migrate-to-vite/setup/source';
 import {
   VITE_APPLICATION_BUILDER,
@@ -214,9 +219,9 @@ export function viteSetup(options: NgDocViteSetupSchema): Rule {
       changes.push(`- Added \`${name}@${version}\` to \`devDependencies\`.`);
     }
     for (const mismatch of mismatches) {
-      changes.push(
-        `- \`${mismatch.name}\` is \`${mismatch.found}\`; the Vite engine is tested with \`${mismatch.expected}\`.`,
-      );
+      // A Vite the engine refuses to start with is a warning, not a note among the changes.
+      if (isRequiredExactly(mismatch.name)) context.logger.warn(dependencyMismatchText(mismatch));
+      else changes.push(`- ${dependencyMismatchText(mismatch)}`);
     }
     if (Object.keys(added).length && !options.skipInstall) {
       context.addTask(new NodePackageInstallTask());

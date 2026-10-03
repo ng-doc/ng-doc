@@ -15,10 +15,13 @@ const angular: SchematicTestRunner = new SchematicTestRunner(
   join(dirname(require.resolve('@schematics/angular/package.json')), 'collection.json'),
 );
 
-/** The Vite engine's dependencies, as the builder package declares them. */
-const VITE_DEPENDENCIES: Record<string, string> = JSON.parse(
+/** The builder package's manifest. */
+const BUILDER_MANIFEST = JSON.parse(
   readFileSync(join(__dirname, '../../../../builder/package.json'), 'utf8'),
-).peerDependencies;
+);
+
+/** The Vite engine's tested dependencies, at the exact versions the builder package names. */
+const VITE_DEPENDENCIES: Record<string, string> = BUILDER_MANIFEST['ng-doc'].viteEngine;
 
 interface AppOptions {
   ssr?: boolean;
@@ -145,12 +148,34 @@ describe('ng-add with the Vite engine', () => {
       'export default withNgDocContentReady(bootstrap);',
     );
     expect(tree.readContent('.gitignore')).toMatch(/\n\/ng-doc\n[\s\S]*\n\/\.cache\/ng-doc\n/);
+    // The exact versions, not the wider optional peer ranges: a root `vite@7.3.5` is what Vitest's
+    // own `vite` range then resolves to, and the only version the Vite engine starts with.
+    expect(manifest.devDependencies['vite']).toBe('7.3.5');
     expect(manifest.devDependencies['vite']).toBe(VITE_DEPENDENCIES['vite']);
+    expect(manifest.devDependencies['vite']).not.toBe(BUILDER_MANIFEST.peerDependencies['vite']);
+    expect(manifest.devDependencies['@analogjs/vite-plugin-angular']).toBe('2.6.3');
     expect(manifest.devDependencies['@analogjs/vite-plugin-angular']).toBe(
       VITE_DEPENDENCIES['@analogjs/vite-plugin-angular'],
     );
     // `ng add` installs them with the NgDoc packages: the setup schedules no install of its own.
     expect(runner.tasks).toEqual([]);
+  });
+
+  it('should keep another Vite and warn that the Vite engine requires the exact one', async () => {
+    const app: UnitTestTree = await newApp();
+    const before = JSON.parse(app.readContent('package.json'));
+    before.devDependencies = { ...before.devDependencies, vite: '^8.0.0' };
+    app.overwrite('package.json', JSON.stringify(before, null, 2));
+
+    const tree: UnitTestTree = await setup(app);
+    const manifest = JSON.parse(tree.readContent('package.json'));
+
+    expect(manifest.devDependencies['vite']).toBe('^8.0.0');
+    expect(logged('warn')).toContain(
+      '`vite` is `^8.0.0`; the Vite engine requires exactly `7.3.5` and does not start with ' +
+        'another version. Pin it: `npm i -D vite@7.3.5`.',
+    );
+    expect(logged('info')).not.toContain('Added `vite@');
   });
 
   it('should add the providers and the layout, and report what the Vite engine does not build', async () => {

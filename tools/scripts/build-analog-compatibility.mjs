@@ -75,19 +75,19 @@ export const RUNTIME_REQUIRES = Object.freeze([
 /**
  * Fails when a retained runtime require that can run is not declared by the builder package.
  * A require behind an upstream branch for older Angular majors (`maxAngularMajor`) never runs on
- * the Angular major that the package pins `@angular/compiler-cli` to, so it needs no dependency.
+ * the Angular major of the Vite engine's tested `@angular/compiler-cli` (`ng-doc.viteEngine`; the
+ * optional peer dependency is a range, so that an install never fails on it), so it needs no
+ * dependency.
  * @param {readonly { id: string, maxAngularMajor?: number }[]} requires - The retained requires.
- * @param {{ dependencies?: Record<string, string>, peerDependencies?: Record<string, string> }} manifest -
+ * @param {{ dependencies?: Record<string, string>, peerDependencies?: Record<string, string>, 'ng-doc'?: { viteEngine?: Record<string, string> } }} manifest -
  *   The builder's `package.json`.
  */
 export function assertRuntimeRequiresDeclared(requires, manifest) {
-  const compilerCli =
-    manifest.peerDependencies?.['@angular/compiler-cli'] ??
-    manifest.dependencies?.['@angular/compiler-cli'];
+  const compilerCli = manifest['ng-doc']?.viteEngine?.['@angular/compiler-cli'];
   const major = /^(\d+)\.\d+\.\d+$/.exec(compilerCli ?? '')?.[1];
   if (!major) {
     throw new Error(
-      `The builder must pin @angular/compiler-cli to an exact version to check the retained Analog runtime requires, found ${compilerCli}`,
+      `The builder must pin the Vite engine's @angular/compiler-cli (ng-doc.viteEngine) to an exact version to check the retained Analog runtime requires, found ${compilerCli}`,
     );
   }
   for (const { id, maxAngularMajor } of requires) {

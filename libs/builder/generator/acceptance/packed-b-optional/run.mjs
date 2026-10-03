@@ -347,6 +347,12 @@ console.log(JSON.stringify({bootstrapImported:true,analogResolvable:false,viteVe
   summary.checks.push(
     'Actual installed CLI production generation publishes manifest-matching files, rendered guide HTML and searchable content',
   );
+  // Angular's own packages pull in Vite through Vitest, often a newer major than the Vite engine's
+  // 7.3.5. The builder's optional peers must accept that tree, and only the Vite engine checks it.
+  const treeVite = summary.installed.vitePackages.map((item) => item.version).join(', ');
+  summary.checks.push(
+    `Installed and generated without Analog and with Vite ${treeVite || 'absent'} in the tree: no optional peer blocks the install`,
+  );
   summary.status = 'passed';
 } catch (error) {
   summary.status = 'failed';

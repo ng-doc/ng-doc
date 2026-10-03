@@ -81,10 +81,10 @@
     "tinyglobby": "0.2.17"
   },
   "peerDependencies": {
-    "vite": "7.3.5",
-    "@analogjs/vite-plugin-angular": "2.6.3",
-    "@angular/compiler": "22.2.1",
-    "@angular/compiler-cli": "22.2.1"
+    "vite": "^7.3.5 || ^8.0.0",
+    "@analogjs/vite-plugin-angular": "^2.6.3",
+    "@angular/compiler": ">=22.0.0 <23.0.0",
+    "@angular/compiler-cli": ">=22.0.0 <23.0.0"
   },
   "peerDependenciesMeta": {
     "vite": {
@@ -98,6 +98,14 @@
     },
     "@angular/compiler-cli": {
       "optional": true
+    }
+  },
+  "ng-doc": {
+    "viteEngine": {
+      "@analogjs/vite-plugin-angular": "2.6.3",
+      "@angular/compiler": "22.2.1",
+      "@angular/compiler-cli": "22.2.1",
+      "vite": "7.3.5"
     }
   },
   "publishConfig": {

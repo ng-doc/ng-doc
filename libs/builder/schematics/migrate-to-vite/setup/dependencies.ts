@@ -7,14 +7,26 @@ import { JsonFile } from './json-file';
 
 /**
  * The packages the Vite engine needs next to `@ng-doc/builder`, at the exact versions it is
- * released with: its optional peer dependencies. They are read from the package's own manifest,
- * so the schematic of a release always installs that release's tuple.
+ * released and tested with (`ng-doc.viteEngine` in the package's own manifest), so the schematic of
+ * a release always installs that release's tuple. The optional peer dependencies are wider on
+ * purpose: they only keep npm from refusing an install whose other packages pull in a newer Vite.
  */
 export function ngDocViteDependencies(): { [name: string]: string } {
   const manifest = JSON.parse(readFileSync(join(__dirname, '../../../package.json'), 'utf8')) as {
-    peerDependencies?: { [name: string]: string };
+    'ng-doc'?: { viteEngine?: { [name: string]: string } };
   };
-  return Object.fromEntries(Object.entries(manifest.peerDependencies ?? {}).sort());
+  return Object.fromEntries(Object.entries(manifest['ng-doc']?.viteEngine ?? {}).sort());
+}
+
+/**
+ * The packages whose exact version the Vite engine checks when it starts: it refuses any other
+ * version, while the others only differ from the tested tuple.
+ */
+const REQUIRED_EXACTLY = new Set(['vite']);
+
+/** Whether the Vite engine refuses to start with another version of this package. */
+export function isRequiredExactly(name: string): boolean {
+  return REQUIRED_EXACTLY.has(name);
 }
 
 /** A dependency the workspace has at another version than the Vite engine's. */
@@ -22,6 +34,14 @@ export interface DependencyMismatch {
   name: string;
   expected: string;
   found: string;
+}
+
+/** The report line of a dependency mismatch, with the command that fixes a required one. */
+export function dependencyMismatchText({ name, expected, found }: DependencyMismatch): string {
+  return isRequiredExactly(name)
+    ? `\`${name}\` is \`${found}\`; the Vite engine requires exactly \`${expected}\` and does not start ` +
+        `with another version. Pin it: \`npm i -D ${name}@${expected}\`.`
+    : `\`${name}\` is \`${found}\`; the Vite engine is tested with \`${expected}\`.`;
 }
 
 /**

@@ -330,7 +330,10 @@ try {
     rxjs: '7.8.2',
     tslib: '2.8.1',
     typescript: '6.0.3',
+    // An Angular 22 application has Vitest, whose `vite` range admits Vite 8. The root pin is the
+    // only Vite the Vite engine starts with, and the builder's optional peer must accept the tree.
     vite: '7.3.5',
+    vitest: '4.1.11',
     'zone.js': '0.16.2',
   };
   const packageJson = {
@@ -373,10 +376,18 @@ try {
     ),
     true,
   );
+  assert.equal(
+    lock.packages['node_modules/vite']?.version,
+    '7.3.5',
+    'The root Vite must be the pinned one the Vite engine requires',
+  );
   summary.install = {
     lockSha256: sha(lockBytes),
     installedNgDoc,
     childNodePathDeleted: true,
+    vitePackages: Object.entries(lock.packages)
+      .filter(([key]) => /(?:^|\/)node_modules\/vite$/.test(key))
+      .map(([key, value]) => ({ path: key, version: value.version })),
   };
   summary.checks.push(
     'Fresh external npm consumer installed six real tarballs without workspace links or NODE_PATH resolution',

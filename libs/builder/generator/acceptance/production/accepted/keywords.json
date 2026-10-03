@@ -375,6 +375,7 @@
 "*TroubleshootingPage#ng0201-no-provider-found": {"path":"docs/build-and-deploy/troubleshooting#ng0201-no-provider-found","title":"Troubleshooting [NG0201: No provider found]","type":"link"},
 "*TroubleshootingPage#ngdoc_vite_output_lease": {"path":"docs/build-and-deploy/troubleshooting#ngdoc_vite_output_lease","title":"Troubleshooting [NGDOC_VITE_OUTPUT_LEASE]","type":"link"},
 "*TroubleshootingPage#ngdoc_vite_restart_required": {"path":"docs/build-and-deploy/troubleshooting#ngdoc_vite_restart_required","title":"Troubleshooting [NGDOC_VITE_RESTART_REQUIRED]","type":"link"},
+"*TroubleshootingPage#ngdoc_vite_version": {"path":"docs/build-and-deploy/troubleshooting#ngdoc_vite_version","title":"Troubleshooting [NGDOC_VITE_VERSION]","type":"link"},
 "*TroubleshootingPage#ngdoc_vite_watch_capacity": {"path":"docs/build-and-deploy/troubleshooting#ngdoc_vite_watch_capacity","title":"Troubleshooting [NGDOC_VITE_WATCH_CAPACITY]","type":"link"},
 "*TroubleshootingPage#output_unowned_collision": {"path":"docs/build-and-deploy/troubleshooting#output_unowned_collision","title":"Troubleshooting [OUTPUT_UNOWNED_COLLISION]","type":"link"},
 "*TroubleshootingPage#related": {"path":"docs/build-and-deploy/troubleshooting#related","title":"Troubleshooting [Related]","type":"link"},

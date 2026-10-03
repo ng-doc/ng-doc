@@ -208,7 +208,8 @@ test('esbuild redirects only the factory entry and retains ordinary Analog impor
 test('assertRuntimeRequiresDeclared needs only the requires reachable on the pinned Angular major', () => {
   const manifest = (dependencies) => ({
     dependencies,
-    peerDependencies: { '@angular/compiler-cli': '22.0.6' },
+    peerDependencies: { '@angular/compiler-cli': '>=22.0.0 <23.0.0' },
+    'ng-doc': { viteEngine: { '@angular/compiler-cli': '22.0.6' } },
   });
   const requires = [
     { id: '@angular/build/private' },
@@ -226,7 +227,7 @@ test('assertRuntimeRequiresDeclared needs only the requires reachable on the pin
     () =>
       assertRuntimeRequiresDeclared(requires, {
         dependencies: { '@angular/build': '17.3.0' },
-        peerDependencies: { '@angular/compiler-cli': '17.3.0' },
+        'ng-doc': { viteEngine: { '@angular/compiler-cli': '17.3.0' } },
       }),
     /Undeclared retained Analog runtime require: @angular-devkit\/build-angular/,
   );
@@ -234,9 +235,18 @@ test('assertRuntimeRequiresDeclared needs only the requires reachable on the pin
     () =>
       assertRuntimeRequiresDeclared(requires, {
         dependencies: { '@angular/build': '22.0.6' },
-        peerDependencies: { '@angular/compiler-cli': '^22.0.0' },
+        'ng-doc': { viteEngine: { '@angular/compiler-cli': '^22.0.0' } },
       }),
-    /must pin @angular\/compiler-cli to an exact version/,
+    /must pin the Vite engine's @angular\/compiler-cli \(ng-doc.viteEngine\) to an exact version/,
+  );
+  // The peer range alone does not name the tested major.
+  assert.throws(
+    () =>
+      assertRuntimeRequiresDeclared(requires, {
+        dependencies: { '@angular/build': '22.0.6' },
+        peerDependencies: { '@angular/compiler-cli': '22.0.6' },
+      }),
+    /must pin the Vite engine's @angular\/compiler-cli/,
   );
 });
 
