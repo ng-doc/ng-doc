@@ -1,3 +1,9 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+}
+
+// When the row is given extra height, its demo's canvas takes it.
+ng-doc-demo-displayer {
+  flex: 1 1 auto;
 }

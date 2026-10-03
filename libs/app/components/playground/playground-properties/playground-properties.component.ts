@@ -86,6 +86,9 @@ export class NgDocPlaygroundPropertiesComponent<
   /** Whether the inspector is hidden, leaving the demos only. */
   readonly hideSidePanel = input<boolean>(false);
 
+  /** Where the inspector goes: right of the demos, or below them at full width. */
+  readonly inspectorPosition = input<'right' | 'bottom'>('right');
+
   /** Whether the demo is recreated each time an input changes. */
   readonly recreateDemo = model<boolean>(false);
 

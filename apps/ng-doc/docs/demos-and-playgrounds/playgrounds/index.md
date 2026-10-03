@@ -249,15 +249,16 @@ parameter values.
 Set options in the configuration of the playground, or as the second argument of the action. The
 action's options win. They follow `NgDocPlaygroundOptions`:
 
-| Option          | Type                      | Default | Description                                                                         |
-| --------------- | ------------------------- | ------- | ----------------------------------------------------------------------------------- |
-| `selectors`     | `string \| string[]`      | All     | The selectors to render a demo for.                                                 |
-| `expanded`      | `boolean`                 | `false` | Shows the code under the demo when the playground opens.                            |
-| `hideSidePanel` | `boolean`                 | `false` | Hides the inspector and shows only the demo.                                        |
-| `inputs`        | `Record<string, unknown>` | –       | Values for the inputs when the playground opens. **Reset** returns to the defaults. |
-| `defaults`      | `Record<string, unknown>` | –       | Defaults for the controls, instead of the target's own. **Reset** returns to them.  |
-| `hiddenInputs`  | `string[]`                | –       | Inputs that get no control.                                                         |
-| `data`          | `Record<string, unknown>` | –       | Values for the template. The action's `data` extends the configuration's.           |
+| Option              | Type                      | Default   | Description                                                                         |
+| ------------------- | ------------------------- | --------- | ----------------------------------------------------------------------------------- |
+| `selectors`         | `string \| string[]`      | All       | The selectors to render a demo for.                                                 |
+| `expanded`          | `boolean`                 | `false`   | Shows the code under the demo when the playground opens.                            |
+| `hideSidePanel`     | `boolean`                 | `false`   | Hides the inspector and shows only the demo.                                        |
+| `inspectorPosition` | `'right' \| 'bottom'`     | `'right'` | Puts the inspector right of the demo, or below it so the demo gets the full width.  |
+| `inputs`            | `Record<string, unknown>` | –         | Values for the inputs when the playground opens. **Reset** returns to the defaults. |
+| `defaults`          | `Record<string, unknown>` | –         | Defaults for the controls, instead of the target's own. **Reset** returns to them.  |
+| `hiddenInputs`      | `string[]`                | –         | Inputs that get no control.                                                         |
+| `data`              | `Record<string, unknown>` | –         | Values for the template. The action's `data` extends the configuration's.           |
 
 This playground hides the inspector, and starts with a rounded button:
 
@@ -271,6 +272,15 @@ selectors: "button[ng-doc-button-flat]",
 inputs: {rounded: true},
 data: {label: "Rounded Button"} })
 }}
+
+For a large component, put the inspector below the demo. The demo gets the full width, and the
+controls flow into columns:
+
+```twig name="index.md"
+{{ '{{ NgDocActions.playground("TagPlayground", { inspectorPosition: "bottom" }) }}' | safe }}
+```
+
+{{ NgDocActions.playground("TagPlayground", { inspectorPosition: "bottom" }) }}
 
 ## Controls for other inputs
 

@@ -5,6 +5,7 @@
     [ignoreInputs]="configuration.hiddenInputs"
     [dynamicContent]="configuration.content"
     [hideSidePanel]="configuration.hideSidePanel ?? false"
+    [inspectorPosition]="configuration.inspectorPosition ?? 'right'"
     [defaultValues]="defaultValues()"
     [showResetButton]="!isDefaultState()"
     [(recreateDemo)]="recreateDemo"

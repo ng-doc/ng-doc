@@ -209,9 +209,8 @@
     "libs/ui-kit/components/tab-routes-group/tab-routes-group.component.scss :: :host"
   ],
   "--ng-doc-base-5": [
-    "libs/app/components/demo-displayer/demo-displayer.component.scss :: :host[data-ng-doc-border=true] .ng-doc-demo-container",
+    "libs/app/components/demo-displayer/demo-displayer.component.scss :: .ng-doc-demo-container",
     "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-stage",
-    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties-wrapper",
     "libs/app/styles/typography.scss :: ul li.ngde::marker, ol li.ngde::marker",
     "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[ng-doc-button-icon-raised] :: --ng-doc-button-active-border",
     "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-border-hover-color"
@@ -246,7 +245,7 @@
     "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host .ng-doc-page-header",
     "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host :: --ng-doc-toc-margin",
     "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host ng-doc-tab-routes-group",
-    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties-wrapper:not(.no-side-panel) .ng-doc-playground-demos",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties-wrapper:not(.no-side-panel):not(.inspector-bottom) .ng-doc-playground-demos",
     "libs/app/components/search-result/search-result.component.scss :: :host .ng-doc-search-result-wrapper .ng-doc-search-result-category .ng-doc-search-result-pages .ng-doc-search-result-page",
     "libs/app/components/search-result/search-result.component.scss :: :host .ng-doc-search-result-wrapper .ng-doc-search-result-category .ng-doc-search-result-pages .ng-doc-search-result-page .ng-doc-search-result-page-link ng-doc-kind-icon",
     "libs/app/components/search-result/search-result.component.scss :: :host .ng-doc-search-result-wrapper .ng-doc-search-result-category .ng-doc-search-result-title",
@@ -375,6 +374,7 @@
     "libs/app/components/page-navigation/page-navigation.component.scss :: .ng-doc-navigation-controls a",
     "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-divider",
     "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties-wrapper.inspector-bottom .ng-doc-playground-properties",
     "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-reset",
     "libs/app/components/playground/playground-properties/playground-properties.component.scss :: @container ng-doc-playground (max-width: 640px) > .ng-doc-playground-properties",
     "libs/app/components/playground/playground.component.scss :: ng-doc-playground-demo + ng-doc-playground-demo",
@@ -1290,7 +1290,7 @@
     "libs/app/components/root/root.component.scss :: :host .ng-doc-root-wrapper main :: --ng-doc-sidenav-content-padding"
   ],
   "--ng-doc-page-sticky-offset": [
-    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties-wrapper:not(.no-side-panel) .ng-doc-playground-demos"
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties-wrapper:not(.no-side-panel):not(.inspector-bottom) .ng-doc-playground-demos"
   ],
   "--ng-doc-page-wrapper-tabs-height": [
     "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host ng-doc-tab-routes-group",
@@ -1778,6 +1778,7 @@
     "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-toolbar",
     "libs/app/components/navbar/navbar.component.scss :: .ng-doc-menu",
     "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-header",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-property-list:last-child",
     "libs/app/components/playground/playground-properties/playground-properties.component.scss :: ng-doc-playground-property",
     "libs/app/components/root/root.component.scss :: :host .ng-doc-skip-link",
     "libs/app/components/search/search.component.scss :: .ng-doc-search-field",
@@ -1868,6 +1869,7 @@
     "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-input",
     "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-preview",
     "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-section",
+    "libs/app/components/demo-displayer/demo-displayer.component.scss :: .ng-doc-demo-controls",
     "libs/app/components/demo-displayer/demo-displayer.component.scss :: @container ng-doc-playground (max-width: 640px) > .ng-doc-demo-container",
     "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-stage",
     "libs/app/components/mermaid-viewer/mermaid-viewer.component.scss :: :host ng-doc-magnifier-controller",
@@ -1877,10 +1879,10 @@
     "libs/app/components/page-navigation/page-navigation.component.scss :: .ng-doc-navigation-controls",
     "libs/app/components/page-navigation/page-navigation.component.scss :: .ng-doc-navigation-controls a",
     "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-header",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties-wrapper.inspector-bottom .ng-doc-playground-property-list",
     "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-setting",
     "libs/app/components/playground/playground-properties/playground-properties.component.scss :: h5.ng-doc-title",
     "libs/app/components/playground/playground-properties/playground-properties.component.scss :: ng-doc-playground-property",
-    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: ng-doc-playground-property:last-child",
     "libs/app/components/root/root.component.scss :: :host .ng-doc-skip-link",
     "libs/app/components/root/root.component.scss :: @media (max-width: 640px) > :host:not([data-ng-doc-no-width-limit=true]) .ng-doc-root-wrapper main :: --ng-doc-sidenav-content-padding",
     "libs/app/styles/parts/header.scss :: .ng-doc-api-details",

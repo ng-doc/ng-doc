@@ -14,14 +14,9 @@
   // `clip`, not `hidden`: it rounds the corners without creating a scroll container, so the demos
   // can stick to the viewport.
   overflow: clip;
-  // The demos sit on a canvas: a subtle dot grid. It is drawn on the wrapper, so it fills the
-  // demo column below demos that are shorter than the inspector.
+  // Each demo draws its own dot grid (see the demo displayer); the rest of the demo column, below
+  // demos that are shorter than the inspector, stays plain.
   background-color: var(--ng-doc-demo-displayer-background, var(--ng-doc-background));
-  background-image: radial-gradient(
-    color-mix(in srgb, var(--ng-doc-base-5) 55%, transparent) 1px,
-    transparent 1px
-  );
-  background-size: 16px 16px;
 
   &.no-side-panel {
     grid-template-columns: minmax(0, 1fr);
@@ -29,7 +24,7 @@
 
   // Beside the inspector, the demos stay in view while the reader scrolls through a long list of
   // properties.
-  &:not(.no-side-panel) .ng-doc-playground-demos {
+  &:not(.no-side-panel):not(.inspector-bottom) .ng-doc-playground-demos {
     position: sticky;
     top: calc(var(--ng-doc-page-sticky-offset) + var(--ng-doc-base-gutter));
     align-self: start;
@@ -38,7 +33,20 @@
 }
 
 .ng-doc-playground-demos {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
+}
+
+// Beside the inspector, the demos fill the column, up to one screen (the column is sticky, so it
+// must stay shorter than the viewport): the last demo's canvas takes the extra height, and the
+// code it reveals docks at the bottom of the column instead of floating above empty space.
+.ng-doc-playground-properties-wrapper:not(.no-side-panel):not(.inspector-bottom)
+  .ng-doc-playground-demos {
+  min-height: min(
+    100%,
+    calc(100dvh - var(--ng-doc-page-sticky-offset) - 2 * var(--ng-doc-base-gutter))
+  );
 }
 
 .ng-doc-playground-properties {
@@ -133,9 +141,31 @@ ng-doc-playground-property {
   & + ng-doc-playground-property {
     border-top: 1px solid var(--ng-doc-base-2);
   }
+}
 
-  &:last-child {
-    padding-bottom: var(--ng-doc-space-4);
+.ng-doc-playground-property-list:last-child {
+  padding-bottom: var(--ng-doc-space-2);
+}
+
+// The inspector below the demos, at full width: the demos get the whole width, and the controls
+// flow into as many columns as fit.
+.ng-doc-playground-properties-wrapper.inspector-bottom {
+  grid-template-columns: minmax(0, 1fr);
+
+  .ng-doc-playground-properties {
+    border-left: 0;
+    border-top: 1px solid var(--ng-doc-border-color);
+  }
+
+  .ng-doc-playground-property-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+    column-gap: var(--ng-doc-space-4);
+  }
+
+  // Rows of a column grid: no hairlines between cells, which would not line up across columns.
+  ng-doc-playground-property + ng-doc-playground-property {
+    border-top: 0;
   }
 }
 

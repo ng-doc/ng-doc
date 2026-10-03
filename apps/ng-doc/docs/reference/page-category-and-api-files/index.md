@@ -76,19 +76,20 @@ an API page. A declaration with an `@internal` tag is skipped.
 Each value in a page's `playgrounds` is an `NgDocPlaygroundConfig`. The options of
 `NgDocActions.playground` can also be set here.
 
-| Field           | Type                                                     | Default  | Description                                                         |
-| --------------- | -------------------------------------------------------- | -------- | ------------------------------------------------------------------- |
-| `target`        | `Type<unknown>`                                          | required | The component, directive or pipe to play with.                      |
-| `template`      | `string`                                                 | required | The template. `<ng-doc-selector>` stands for the target's selector. |
-| `controls`      | `Record<string, string \| NgDocPlaygroundControlConfig>` | –        | Extra or replacement controls, keyed by property name.              |
-| `content`       | `Record<string, NgDocPlaygroundContent>`                 | –        | Content that readers can toggle, inserted into the template by key. |
-| `selectors`     | `string \| string[]`                                     | All      | The selectors to render, for targets with several selectors.        |
-| `expanded`      | `boolean`                                                | `false`  | Opens the playground expanded.                                      |
-| `hideSidePanel` | `boolean`                                                | `false`  | Hides the controls.                                                 |
-| `inputs`        | `Record<string, unknown>`                                | –        | Input values set once when the playground renders.                  |
-| `defaults`      | `Record<string, unknown>`                                | –        | Initial control values, also used by the reset button.              |
-| `hiddenInputs`  | `string[]`                                               | –        | Inputs without a control.                                           |
-| `data`          | `Record<string, unknown>`                                | –        | Data for the template, available as `data`.                         |
+| Field               | Type                                                     | Default   | Description                                                         |
+| ------------------- | -------------------------------------------------------- | --------- | ------------------------------------------------------------------- |
+| `target`            | `Type<unknown>`                                          | required  | The component, directive or pipe to play with.                      |
+| `template`          | `string`                                                 | required  | The template. `<ng-doc-selector>` stands for the target's selector. |
+| `controls`          | `Record<string, string \| NgDocPlaygroundControlConfig>` | –         | Extra or replacement controls, keyed by property name.              |
+| `content`           | `Record<string, NgDocPlaygroundContent>`                 | –         | Content that readers can toggle, inserted into the template by key. |
+| `selectors`         | `string \| string[]`                                     | All       | The selectors to render, for targets with several selectors.        |
+| `expanded`          | `boolean`                                                | `false`   | Opens the playground expanded.                                      |
+| `hideSidePanel`     | `boolean`                                                | `false`   | Hides the controls.                                                 |
+| `inspectorPosition` | `'right' \| 'bottom'`                                    | `'right'` | Puts the controls right of the demos, or below them.                |
+| `inputs`            | `Record<string, unknown>`                                | –         | Input values set once when the playground renders.                  |
+| `defaults`          | `Record<string, unknown>`                                | –         | Initial control values, also used by the reset button.              |
+| `hiddenInputs`      | `string[]`                                               | –         | Inputs without a control.                                           |
+| `data`              | `Record<string, unknown>`                                | –         | Data for the template, available as `data`.                         |
 
 ## Markdown front matter
 

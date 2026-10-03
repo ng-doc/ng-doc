@@ -8,25 +8,36 @@
   --ng-doc-code-border-radius: 0;
   --ng-doc-code-border: none;
 
-  // A standalone displayer draws its frame and its own dot-grid canvas; inside a playground the
-  // inspector does.
+  // A standalone displayer draws its frame and background; inside a playground the inspector does.
   &[data-ng-doc-border='true'] {
     border: var(--ng-doc-demo-displayer-border);
     border-radius: var(--ng-doc-demo-displayer-border-radius);
 
     .ng-doc-demo-container {
       background-color: var(--ng-doc-demo-displayer-background, var(--ng-doc-background));
-      background-image: radial-gradient(
-        color-mix(in srgb, var(--ng-doc-base-5) 55%, transparent) 1px,
-        transparent 1px
-      );
-      background-size: 16px 16px;
     }
   }
 }
 
+// Extra height given to the host reaches the canvas.
+.ng-doc-demo-wrapper {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+// The demo sits on a canvas: a subtle dot grid, behind the demo only, so the code below it and
+// the rest of a playground's demo column read as a separate surface.
 .ng-doc-demo-container {
   position: relative;
+  // The canvas takes any extra height its host gets (the last demo of a playground), so the
+  // revealed code sits at the bottom.
+  flex: 1 1 auto;
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--ng-doc-base-5) 55%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 16px 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -40,13 +51,14 @@
   min-width: 0;
 }
 
+// Pinned to the top-right corner, so they stay put on a canvas that is taller than one row (the
+// last demo of a playground). On a one-row canvas (64px) this is also its vertical centre.
 .ng-doc-demo-controls {
   position: absolute;
-  top: 50%;
+  top: var(--ng-doc-space-4);
   right: var(--ng-doc-space-3);
   display: flex;
   gap: 2px;
-  transform: translateY(-50%);
 }
 
 // The pressed code toggle uses the tint of an active control.

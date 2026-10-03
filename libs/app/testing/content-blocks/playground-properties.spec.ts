@@ -57,6 +57,7 @@ const PROPERTIES: NgDocPlaygroundProperties = {
       [properties]="properties"
       [defaultValues]="defaults"
       [showResetButton]="changed()"
+      [inspectorPosition]="position()"
       [(recreateDemo)]="recreate"
       (resetForm)="resets = resets + 1">
       <div class="demo">Demo</div>
@@ -78,6 +79,7 @@ class PropertiesHostComponent {
   });
   readonly changed = signal<boolean>(false);
   readonly recreate = signal<boolean>(false);
+  readonly position = signal<'right' | 'bottom'>('right');
   resets = 0;
 }
 
@@ -148,6 +150,25 @@ describeChangeDetection(
       query<HTMLButtonElement>('.ng-doc-playground-reset')!.click();
 
       expect(fixture.componentInstance.resets).toBe(1);
+    });
+
+    it('moves the inspector below the demos when asked', async () => {
+      const wrapper = () => query('.ng-doc-playground-properties-wrapper')!;
+
+      expect(wrapper().classList.contains('inspector-bottom')).toBe(false);
+
+      fixture.componentInstance.position.set('bottom');
+      await fixture.whenStable();
+
+      expect(wrapper().classList.contains('inspector-bottom')).toBe(true);
+      // The demos still come first, then the inspector with the same controls.
+      expect(Array.from(wrapper().children, (child: Element) => child.className)).toEqual([
+        'ng-doc-playground-demos',
+        'ng-doc-playground-properties',
+      ]);
+      expect(queryAll('.ng-doc-playground-property-list ng-doc-playground-property')).toHaveLength(
+        3,
+      );
     });
 
     it('binds the Recreate setting both ways', async () => {
