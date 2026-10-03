@@ -124,6 +124,10 @@ test('real Angular AST includes inherited/decorated/signal/model aliases and pip
     'angular-html',
     'SCSS',
   ]);
+  // In the engine's spelling, as the content compiler records them (forward slashes on Windows).
+  expect(semantics.demos.Example.map((asset) => asset.source)).toEqual(
+    ['demo.ts', 'demo.html', 'demo.scss'].map((name) => join(directory, name)),
+  );
   expect(result.dependencies).toEqual(
     expect.arrayContaining([
       expect.objectContaining({ kind: 'content', path: join(directory, 'demo.html') }),

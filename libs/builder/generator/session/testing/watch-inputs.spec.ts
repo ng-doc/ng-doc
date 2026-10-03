@@ -113,6 +113,27 @@ describe('current-attempt WatchInputs projection', () => {
   });
 
   it.each([
+    ['content path', 'D:\\a\\docs\\demo.html', { kind: 'content', digest: 'x' }],
+    ['existence path', 'd:/a/../demo.html', { kind: 'existence', exists: true }],
+  ])('names the refused %s and its value', (name, path, dependency) => {
+    expect(() => projectWatchInputs([{ ...dependency, path }])).toThrow(
+      `Invalid normalized absolute ${name}: ${JSON.stringify(path)}`,
+    );
+  });
+
+  it('names a refused glob member and semantic file by their index', () => {
+    const glob = { kind: 'glob', root: '/docs', include: [], exclude: [], members: ['/docs/a/'] };
+    expect(() => projectWatchInputs([glob])).toThrow(
+      'Invalid normalized absolute glob members[0]: "/docs/a/"',
+    );
+    expect(() =>
+      projectWatchInputs([
+        { kind: 'semantic', scopeId: 's', digest: 'd', reason: 'r', files: ['//srv'] },
+      ]),
+    ).toThrow('Invalid normalized absolute semantic files[0]: "//srv"');
+  });
+
+  it.each([
     ['unknown dependency', [{ kind: 'other', path: '/docs/a.md' }]],
     ['extra property', [{ kind: 'content', path: '/docs/a.md', digest: 'x', extra: true }]],
     ['relative path', [{ kind: 'content', path: 'docs/a.md', digest: 'x' }]],

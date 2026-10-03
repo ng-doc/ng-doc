@@ -33,6 +33,7 @@ import { snippetsFromAsset } from '../../helpers/snippets-from-asset';
 import { formatType } from '../../helpers/typescript/display-type';
 import { parseSnippet } from '../../parsers/parse-snippet';
 import type { DemoAsset, GeneratorConfiguration, GuideSemantics, JsonValue } from '../contracts';
+import { hostPath } from '../kernel/paths';
 import { type TrackedFiles, SemanticFailure } from './dependencies';
 import type { JsDoc } from './rendering';
 import { canonicalUnionMembers } from './type-text';
@@ -148,7 +149,10 @@ function assets(
   files: TrackedFiles,
   config: GeneratorConfiguration,
 ): DemoAsset[] {
-  return getComponentSourceFiles(target).flatMap((source) => {
+  // The shared helper joins the resource URLs with `node:path`, which gives backslashes on Windows.
+  // Each asset's source is recorded as a content dependency, so it takes the engine's spelling.
+  return getComponentSourceFiles(target).flatMap((file) => {
+    const source = hostPath(file);
     const code = files.read(source).trim();
     // The reused snippet parser reads these files; register even failed reads before invoking it.
     for (const line of code.split(/\r?\n/)) {

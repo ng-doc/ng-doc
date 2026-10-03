@@ -352,6 +352,43 @@ jobs:
       - name: Isolated SSR renderer
         run: node node_modules/vitest/vitest.mjs run --config libs/builder/generator/vite/testing/vitest.config.ts libs/builder/generator/vite/testing/ssr-renderer.vitest.ts
 
+  # The other Windows jobs generate small fixtures only. This one generates the documentation site
+  # itself with the new engine, as `ng-doc:serve` does (its configuration and development tags), so
+  # every dependency the real docs record passes the session's watch-input check on Windows.
+  windows-site:
+    name: Site generation, new engine (Windows)
+    needs: build
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Keep LF line endings
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      # The default Windows temporary directory is an 8.3 short path on another drive than the
+      # workspace; the runner's own temporary directory is neither.
+      - name: Use the runner temporary directory
+        shell: bash
+        run: |
+          echo "TEMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
+          echo "TMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
+      - uses: ./.github/actions/nodejs
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: packages
+          path: dist/libs
+      - run: npx nx run ng-doc:link-libs --excludeTaskDependencies
+      # `generate` runs one complete generation through the build session, which projects the
+      # watch inputs of every recorded dependency and fails on a path it refuses.
+      - name: Generate the site
+        shell: bash
+        run: >-
+          node dist/libs/builder/generator/bootstrap/bin.js generate --project ng-doc-vite
+          --config apps/ng-doc/ng-doc.config.modern.ts --docs-root apps/ng-doc/docs
+          --tsconfig apps/ng-doc/tsconfig.vite.json --tags development --progress plain
+          --output-root "$RUNNER_TEMP/site/output" --cache-root "$RUNNER_TEMP/site/cache"
+
   site-legacy:
     name: Site build, legacy engine
     needs: build
@@ -697,6 +734,7 @@ jobs:
       - generator-shard
       - generator-coverage
       - windows-processes
+      - windows-site
       - site-legacy
       - site-vite
       - site-modern

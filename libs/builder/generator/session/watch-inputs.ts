@@ -38,7 +38,8 @@ function path(value: unknown, name: string): string {
     (!root && result.endsWith('/')) ||
     pathAfterRoot.split('/').some((segment) => segment === '.' || segment === '..')
   ) {
-    throw new Error(`Invalid normalized absolute ${name}`);
+    // The value is named so that a report from another OS shows which spelling was refused.
+    throw new Error(`Invalid normalized absolute ${name}: ${JSON.stringify(result)}`);
   }
   return result;
 }
