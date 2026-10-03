@@ -141,7 +141,7 @@ describe('migrate-to-vite', () => {
     expect(report).toContain('`build.ssr.entry`: `src/server.ts` is not built.');
     expect(report).toContain('`build.budgets`: Vite has no size budgets.');
     expect(report).toContain(
-      '`@angular/compiler` is `^22.0.0`; the Vite engine is tested with `22.0.6`.',
+      '`@angular/compiler` is `^22.0.0`; the Vite engine is tested with `22.2.1`.',
     );
     expect(report).toContain('`test.buildTarget`: now `site:build-legacy:development`');
     expect(report).not.toContain('## Blocking');

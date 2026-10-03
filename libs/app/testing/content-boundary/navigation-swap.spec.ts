@@ -236,6 +236,9 @@ async function setup(
     }
   });
 
+  // The root renders its empty outlet before any navigation. Since Angular 22.2 a zone fixture
+  // renders it after `createComponent` returns, so wait for it: the frames are the navigations'.
+  await fixture.whenStable();
   afterEveryRender(() => frames.push(shown(host)), {
     injector: TestBed.inject(EnvironmentInjector),
   });

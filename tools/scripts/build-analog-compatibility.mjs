@@ -35,8 +35,8 @@ export const RETAINED_STATIC_EXTERNALS = Object.freeze([
 // These are the resolved workspace lock versions for the selected tuple, not
 // the different versions used by the earlier isolated packed-consumer probe.
 export const STATIC_EXTERNAL_INVENTORY = Object.freeze([
-  Object.freeze({ id: '@angular/compiler', owner: 'peer @angular/compiler@22.0.6' }),
-  Object.freeze({ id: '@angular/compiler-cli', owner: 'peer @angular/compiler-cli@22.0.6' }),
+  Object.freeze({ id: '@angular/compiler', owner: 'peer @angular/compiler@22.2.1' }),
+  Object.freeze({ id: '@angular/compiler-cli', owner: 'peer @angular/compiler-cli@22.2.1' }),
   Object.freeze({ id: 'magic-string', owner: 'upstream dependency magic-string@0.30.21' }),
   Object.freeze({ id: 'node:crypto', owner: 'Node 24 runtime' }),
   Object.freeze({ id: 'node:fs', owner: 'Node 24 runtime' }),

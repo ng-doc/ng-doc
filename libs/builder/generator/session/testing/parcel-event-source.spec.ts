@@ -91,6 +91,27 @@ describe('Parcel FileEventSource', () => {
     await expect(subscription.dispose()).rejects.toThrow('unsubscribe failed');
   });
 
+  it('forwards a regular expression ignore unchanged', async () => {
+    const native = vi.fn(
+      async (_root: string, _listener: parcel.SubscribeCallback, _options?: parcel.Options) => ({
+        unsubscribe: async () => {},
+      }),
+    );
+    const generated = /[\\/]generated[\\/]/;
+    const subscription = await createParcelEventSource(
+      process.cwd(),
+      { ignore: [generated, join(process.cwd(), 'out')] },
+      native,
+    ).subscribe(
+      () => {},
+      () => {},
+    );
+    const ignore = native.mock.calls[0][2]?.ignore ?? [];
+    expect(ignore[0]).toBe(generated);
+    expect(ignore.slice(2)).toEqual(['.idea', '**/.DS_Store']);
+    await subscription.dispose();
+  });
+
   it('never reports the root .idea directory or .DS_Store files', async () => {
     const root = await mkdtemp(join(tmpdir(), 'ng-doc-metadata-'));
     try {

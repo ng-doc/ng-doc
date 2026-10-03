@@ -32,6 +32,6 @@
     "@ng-doc/builder": "0.0.0",
     "@angular/cdk": ">=22.0.0 < 23.0.0",
     "@angular-devkit/schematics": ">=22.0.0 < 23.0.0",
-    "ng-morph": "4.8.4"
+    "ng-morph": "4.9.0"
   }
 }

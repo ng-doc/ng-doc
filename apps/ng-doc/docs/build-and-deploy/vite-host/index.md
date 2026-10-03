@@ -19,8 +19,8 @@ setup by hand.
 
 - A working NgDoc site (`*InstallationPage`).
 - These exact versions next to `@ng-doc/builder`: `vite@7.3.5`,
-  `@analogjs/vite-plugin-angular@2.6.3`, `@angular/compiler@22.0.6` and
-  `@angular/compiler-cli@22.0.6`, on Node.js `>=24.15.0 <25` (`*BuildersReference#supported-versions`).
+  `@analogjs/vite-plugin-angular@2.6.3`, `@angular/compiler@22.2.1` and
+  `@angular/compiler-cli@22.2.1`, on Node.js `>=24.15.0 <25` (`*BuildersReference#supported-versions`).
 
 ## 1. Add the Vite configuration
 

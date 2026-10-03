@@ -190,16 +190,16 @@ try {
     };
   }
   const pinned = {
-    '@angular/core': '22.0.6',
-    '@angular/common': '22.0.6',
-    '@angular/compiler': '22.0.6',
-    '@angular/compiler-cli': '22.0.6',
-    '@angular/build': '22.0.6',
-    '@angular-devkit/build-angular': '22.0.6',
-    '@angular-devkit/core': '22.0.6',
-    '@angular-devkit/architect': '0.2200.6',
-    '@angular-devkit/schematics': '22.0.6',
-    '@angular/platform-browser': '22.0.6',
+    '@angular/core': '22.2.1',
+    '@angular/common': '22.2.1',
+    '@angular/compiler': '22.2.1',
+    '@angular/compiler-cli': '22.2.1',
+    '@angular/build': '22.1.9',
+    '@angular-devkit/build-angular': '22.1.9',
+    '@angular-devkit/core': '22.1.9',
+    '@angular-devkit/architect': '0.2201.9',
+    '@angular-devkit/schematics': '22.1.9',
+    '@angular/platform-browser': '22.2.1',
     typescript: '6.0.3',
   };
   const packageJson = {

@@ -1,6 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component, Provider, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, NgZone, Provider, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router, Routes } from '@angular/router';
 import { NgDocSearchEngine } from '@ng-doc/app/classes/search-engine';
@@ -118,6 +118,15 @@ class FakeSearchEngine extends NgDocSearchEngine {
 }
 
 /**
+ * Runs change detection by hand inside the Angular zone, as zone scheduling does. Called from
+ * outside the zone, a zone turn that ends during the tick makes Angular's zone scheduler start a
+ * nested tick (NG0101) with the zone fixtures of Angular 22.2.
+ */
+function tickInZone(): void {
+  TestBed.inject(NgZone).run(() => TestBed.tick());
+}
+
+/**
  * Waits for the search debounce and the next render.
  * @param fixture - The fixture to settle.
  * @param ms - How long to wait between the two stability checks.
@@ -214,7 +223,7 @@ describeChangeDetection('NgDocCommandPaletteComponent', ({ providers }) => {
     fixture = TestBed.createComponent(NgDocCommandPaletteComponent);
     element = fixture.nativeElement;
     // The API list requests are pending tasks, so stability waits for them: answer them first.
-    TestBed.tick();
+    tickInZone();
     await answer();
     await settle(fixture);
   }
@@ -299,7 +308,7 @@ describeChangeDetection('NgDocCommandPaletteComponent', ({ providers }) => {
     // The pending search keeps the application unstable, so this test renders by hand.
     const render = async (ms: number = 0): Promise<void> => {
       await new Promise((resolve) => setTimeout(resolve, ms));
-      TestBed.tick();
+      tickInZone();
     };
 
     engine.result = () => results;
@@ -885,7 +894,7 @@ describeChangeDetection('NgDocSearchComponent', ({ providers }) => {
 
   /** Opens state changes and answers the API list request of an opened palette. */
   async function flush(): Promise<void> {
-    TestBed.tick();
+    tickInZone();
     http.match(() => true).forEach((request) => request.flush([]));
     await settle(fixture);
   }

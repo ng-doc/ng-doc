@@ -40,7 +40,8 @@ export function createParcelEventSource(
         ...requested,
         ...METADATA_IGNORE.filter((pattern) => !requested.includes(pattern)),
       ].map((pattern) => {
-        if (!isAbsolute(pattern)) return pattern;
+        // @parcel/watcher 2.6 also accepts regular expressions; they match as given.
+        if (typeof pattern !== 'string' || !isAbsolute(pattern)) return pattern;
         const path = relative(directory, pattern);
         return path !== '..' &&
           !path.startsWith('../') &&

@@ -9,7 +9,7 @@ can start from a new Angular project or add it to an existing one.
 
 - A standalone Angular 22 application (one that calls `bootstrapApplication`) built with Angular's
   `application` builder, as `ng new` creates it. `@ng-doc/builder` needs `@angular/compiler` and
-  `@angular/compiler-cli` 22.0.6 exactly (`*UpgradeTo22Page#prerequisites`).
+  `@angular/compiler-cli` 22.2.1 exactly (`*UpgradeTo22Page#prerequisites`).
 - Node.js 24 (`>=24.15.0 <25`).
 
 The examples use `npm`. Any package manager works.

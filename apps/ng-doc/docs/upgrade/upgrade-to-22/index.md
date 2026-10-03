@@ -23,8 +23,8 @@ site:
 ## Prerequisites
 
 - Angular 22. `@ng-doc/app` and `@ng-doc/ui-kit` support `>=22.0.0 <23.0.0`. `@ng-doc/builder`
-  needs `@angular/compiler` and `@angular/compiler-cli` 22.0.6 exactly, and depends on
-  `@angular/build` 22.0.6. Update Angular first.
+  needs `@angular/compiler` and `@angular/compiler-cli` 22.2.1 exactly, and depends on
+  `@angular/build` 22.1.9. Update Angular first.
 - Node.js 24 (`>=24.15.0 <25`).
 
 Zoneless applications are supported: NgDoc's own tests run with and without zone.js.
