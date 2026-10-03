@@ -430,6 +430,9 @@ try {
     assert.equal(new URL(page.url()).pathname, base.replace(/\/$/, '') + route);
     assert.equal(await page.evaluate(() => !!globalThis.ngDevMode), false);
     if (route.endsWith('/demos')) {
+      // Until the loaded content replaces the server-rendered copy, the button is static markup:
+      // a click on it is lost. Click the live demo.
+      await page.waitForFunction(() => !document.querySelector('[data-ng-doc-hydration-snapshot]'));
       await page.getByRole('button', { name: 'Just a button', exact: true }).first().click();
       await page.getByText('Button was clicked!', { exact: true }).waitFor();
     }
