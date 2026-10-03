@@ -217,14 +217,16 @@ describe('tsconfig paths in the Vite engine', () => {
     const transformed = await server.environments.client.transformRequest('/src/main.ts');
     expect(transformed?.code).toContain('/@fs/');
 
+    // Another file changing keeps the parsed tsconfig. Checked before the tsconfig is rewritten:
+    // the server's real watcher reports that write on its own, and may do so first on Linux.
     await fixture.put('libs/next/index.ts', `export const pixi = 'NEXT';\n`);
+    server.watcher.emit('change', fixture.main);
+    expect(await resolve('ngx-oneforall/services/history', fixture.main)).toBe(history);
+    // The tsconfig changing drops it.
     await fixture.put(
       'tsconfig.base.json',
       json({ compilerOptions: { paths: { '@klerick/ng-pixijs': ['libs/next/index.ts'] } } }),
     );
-    // Another file changing keeps the parsed tsconfig; the tsconfig itself drops it.
-    server.watcher.emit('change', fixture.main);
-    expect(await resolve('ngx-oneforall/services/history', fixture.main)).toBe(history);
     server.watcher.emit('change', path.join(fixture.root, 'tsconfig.base.json'));
     expect(await resolve('@klerick/ng-pixijs', fixture.main)).toBe(
       path.join(fixture.root, 'libs/next/index.ts'),
