@@ -2884,6 +2884,7 @@
 "NgDocSelectionHostDirective#methods": {"path":"docs/api/classes/ui-kit/NgDocSelectionHostDirective#methods","title":"NgDocSelectionHostDirective [Methods]","type":"link"},
 "NgDocSelectionHostDirective#properties": {"path":"docs/api/classes/ui-kit/NgDocSelectionHostDirective#properties","title":"NgDocSelectionHostDirective [Properties]","type":"link"},
 "NgDocSelectionHostDirective.changeselected": {"path":"docs/api/classes/ui-kit/NgDocSelectionHostDirective#changeselected","title":"NgDocSelectionHostDirective.changeSelected()"},
+"NgDocSelectionHostDirective.select": {"path":"docs/api/classes/ui-kit/NgDocSelectionHostDirective#select","title":"NgDocSelectionHostDirective.select()"},
 "NgDocSelectionHostDirective.selected": {"path":"docs/api/classes/ui-kit/NgDocSelectionHostDirective#selected","title":"NgDocSelectionHostDirective.selected"},
 "NgDocSelectionOriginDirective": {"path":"docs/api/classes/ui-kit/NgDocSelectionOriginDirective","title":"NgDocSelectionOriginDirective"},
 "NgDocSelectionOriginDirective#constructor": {"path":"docs/api/classes/ui-kit/NgDocSelectionOriginDirective#constructor","title":"NgDocSelectionOriginDirective [Constructor]","type":"link"},

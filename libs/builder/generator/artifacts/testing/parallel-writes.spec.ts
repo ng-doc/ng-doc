@@ -284,6 +284,8 @@ describe('parallel writes', () => {
       expect(sequential.writes).toBe(1);
       expect(sequential.copies).toBe(1);
     },
+    // Eight commits of about 300 files each, in both modes: well past the 5 s default on Windows.
+    60_000,
   );
 
   test('keep at most WRITE_CONCURRENCY writes, directory creations and copies in flight', async () => {
