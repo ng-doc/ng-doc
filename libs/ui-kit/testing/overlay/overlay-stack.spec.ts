@@ -1,3 +1,4 @@
+import { OverlayConfig } from '@angular/cdk/overlay';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -21,7 +22,7 @@ import { NgDocDropdownOriginDirective } from '@ng-doc/ui-kit/directives/dropdown
 import { NgDocEventSwitcherDirective } from '@ng-doc/ui-kit/directives/event-switcher';
 import { NgDocFocusCatcherDirective } from '@ng-doc/ui-kit/directives/focus-catcher';
 import { NgDocTooltipDirective } from '@ng-doc/ui-kit/directives/tooltip';
-import { NgDocOverlayConfig } from '@ng-doc/ui-kit/interfaces';
+import { NgDocOverlayConfig, NgDocOverlayProperties } from '@ng-doc/ui-kit/interfaces';
 import {
   NG_DOC_DIALOG_DATA,
   NgDocDialogConfig,
@@ -687,6 +688,22 @@ describeChangeDetection('NgDocDialogService', ({ providers }) => {
     await settle(fixture);
     expect(locked.isOpened).toBe(true);
     expect(pane('ng-doc-dialog')?.textContent).toContain('Locked');
+  });
+
+  it('passes disposeOnNavigation to the CDK overlay with the type of the installed CDK', async () => {
+    // Both assignments compile only while NgDocOverlayProperties takes the option's type from
+    // OverlayConfig: CDK 22.2 widened it from a boolean to boolean | 'url-change' | 'pop-state'.
+    const cdkValue: OverlayConfig['disposeOnNavigation'] = true;
+    const properties: NgDocOverlayProperties = { disposeOnNavigation: cdkValue };
+    const config: NgDocDialogConfig = { disposeOnNavigation: properties.disposeOnNavigation };
+    const dialogRef = dialog.open('Navigation', config);
+
+    await settle(fixture);
+
+    expect(dialogRef.overlayRef.getConfig().disposeOnNavigation).toBe(true);
+
+    dialogRef.close();
+    await settle(fixture);
   });
 });
 

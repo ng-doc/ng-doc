@@ -97,8 +97,34 @@ export class NgDocIconComponent {
       const svg: string | null = this.svg();
 
       if (svg !== null) {
-        this.elementRef.nativeElement.innerHTML = svg;
+        writeMarkup(this.elementRef.nativeElement, svg);
       }
     });
   }
+}
+
+/**
+ * Replaces the children of `host` with the parsed `markup`.
+ *
+ * The host is not always an HTML element. Angular 22.2 creates a component through a
+ * `ViewContainerRef` in the namespace of the container's parent node, and a control-flow block
+ * keeps the SVG namespace of an `<svg>` that comes before it in the same template, so a page
+ * processor can create the icon as an SVG element. The server DOM (domino) implements the
+ * `innerHTML` setter only for HTML elements and throws `NotYetImplemented` for the others, so the
+ * markup is parsed by an HTML `<template>` instead, which gives the same nodes in the browser and
+ * on the server whatever the host's namespace.
+ * @param host - The element to fill.
+ * @param markup - The SVG markup.
+ */
+function writeMarkup(host: Element, markup: string): void {
+  const document: Document = host.ownerDocument;
+  const template: HTMLTemplateElement = document.createElement('template');
+
+  template.innerHTML = markup;
+
+  while (host.firstChild) {
+    host.removeChild(host.firstChild);
+  }
+
+  host.appendChild(document.importNode(template.content, true));
 }

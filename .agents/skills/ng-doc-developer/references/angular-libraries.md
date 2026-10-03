@@ -39,6 +39,7 @@ Current conventions, followed consistently:
 - **Class names:** `NgDoc<Name>Component|Directive|Pipe|Service`.
 - **Styles:** SCSS files next to the component, using `:host`, the shared mixins in `libs/<lib>/styles` and `--ng-doc-*` CSS custom properties. Load Sass files with the module system (`@use`, with the namespace, and `sass:map` and the other built-in modules); Sass `@import` and global built-ins such as `map-get` are deprecated, and the serve and build output must stay free of their warnings. Plain CSS imports (`@import '...css'`) are fine. The packages ship compiled CSS (`@ng-doc/app/styles/*.css`, `@ng-doc/ui-kit/styles/main.css`), not SCSS. Variants are expressed as `data-ng-doc-*` attributes, not BEM classes. Theme values come from custom properties; don't hard-code colours.
 - **SSR safety:** the runtime is server-rendered and prerendered. Guard browser-only APIs (`window`, `document`, `Element.animate`, `matchMedia`, ...) with platform checks or `afterNextRender`, and use injected tokens (`DOCUMENT`, `@ng-doc/app` tokens) instead of globals.
+- **Server DOM:** the server renders with domino, which implements less than a browser. For example, its `innerHTML` setter works only on HTML elements, and since Angular 22.2 a component created through a `ViewContainerRef` can be an SVG element (it takes the namespace of the container's parent). Parse markup with an HTML `<template>` instead (see `components/icon`). `libs/ui-kit/testing/icon/icon-server.spec.ts` shows how a spec renders with the real server platform.
 
 ### Signals
 
