@@ -336,6 +336,10 @@ test('DirectoryListings: stat fast path, re-listing, type roots and glob directo
   expect(narrow.sweep().changed).toBeUndefined();
   mkdirSync(join(root, 'site/other/deep'), { recursive: true });
   expect(narrow.sweep().changed).toBeUndefined();
+  // The directories just changed above are settled before this observation, as for the type
+  // root: on NTFS a time comes from a 15.625 ms tick, so `site/docs` could otherwise keep the time
+  // of the `mkdir` above through the next one, which this observation must see.
+  for (const directory of ['site', 'site/docs']) utimesSync(join(root, directory), past, past);
   const wide = new DirectoryListings();
   wide.recordGlob({ ...scoped, include: ['**/*.ts'] }, later(), () => false);
   mkdirSync(join(root, 'site/docs/nested'));
