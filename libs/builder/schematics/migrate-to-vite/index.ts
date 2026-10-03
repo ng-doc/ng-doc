@@ -1,6 +1,13 @@
-import { Rule, SchematicContext, SchematicsException, Tree } from '@angular-devkit/schematics';
+import {
+  Rule,
+  SchematicContext,
+  SchematicsException,
+  Tree,
+  workflow,
+} from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { execFileSync } from 'child_process';
+import { posix } from 'path';
 
 import {
   analyzeProject,
@@ -25,7 +32,9 @@ import {
   builderKey,
   parseTargetString,
   readWorkspaceProjects,
+  renameTarget,
   targetBuilder,
+  updateTarget,
   withBuildTarget,
   WorkspaceProject,
   WorkspaceTarget,
@@ -43,6 +52,76 @@ import {
 } from './state';
 
 const CACHE_IGNORE = '/.cache/ng-doc';
+
+/** The configuration files Vite (and Vitest, after its own) looks for in a folder, in its order. */
+const VITE_DEFAULT_CONFIGS = [
+  'vite.config.js',
+  'vite.config.mjs',
+  'vite.config.ts',
+  'vite.config.cjs',
+  'vite.config.mts',
+  'vite.config.cts',
+];
+
+/** The name of NgDoc's Vite configuration when the project folder already has a `vite.config.*`. */
+export const NGDOC_VITE_CONFIG = 'vite.ng-doc.config.mjs';
+
+/** The Vite configuration file of a migration, and the project's own ones it sits next to. */
+interface ViteConfigChoice {
+  file: string;
+  /** Default-named configurations in the same folder that stay the project's own. */
+  kept: string[];
+}
+
+/**
+ * Picks the file NgDoc's Vite configuration is written to.
+ *
+ * Vite and Vitest run without `--config` load the first default name they find in a folder
+ * (`vite.config.{js,mjs,ts,cjs,mts,cts}`; Vitest after its own `vitest.config.*`), so a new
+ * `vite.config.mjs` next to a project's `vite.config.mts` (often its unit-test setup) would take
+ * its place. When the folder has one, NgDoc's configuration gets a name neither tool looks for,
+ * and the Vite targets name it in `configFile`, which the builders pass to Vite explicitly.
+ * A second run keeps the file the first run chose, which the Vite build target names.
+ * @param tree - The workspace tree.
+ * @param project - The project as it is now.
+ * @param state - The state of an earlier run.
+ * @param requested - The `--vite-config` option.
+ */
+function chooseViteConfig(
+  tree: Tree,
+  project: WorkspaceProject,
+  state: MigrationState | undefined,
+  requested: string | undefined,
+): ViteConfigChoice {
+  const defaultsIn = (folder: string) =>
+    VITE_DEFAULT_CONFIGS.map((name) => posix.join(folder, name)).filter((file) =>
+      tree.exists(file),
+    );
+  if (requested) return { file: requested, kept: [] };
+  const configured = state ? project.targets[state.build.name]?.options?.['configFile'] : undefined;
+  const existing = defaultsIn(project.root);
+  const file =
+    typeof configured === 'string'
+      ? configured
+      : posix.join(project.root, existing.length ? NGDOC_VITE_CONFIG : 'vite.config.mjs');
+  return {
+    file,
+    kept: posix.basename(file) === NGDOC_VITE_CONFIG ? defaultsIn(posix.dirname(file)) : [],
+  };
+}
+
+/**
+ * The other default-named Vite configurations next to a file the user named with `--vite-config`.
+ * @param tree - The workspace tree.
+ * @param configFile - The configuration file to create, workspace-relative.
+ */
+function otherViteConfigs(tree: Tree, configFile: string): string[] {
+  if (!VITE_DEFAULT_CONFIGS.includes(posix.basename(configFile))) return [];
+  const folder = posix.dirname(configFile);
+  return VITE_DEFAULT_CONFIGS.map((name) => posix.join(folder, name)).filter(
+    (file) => file !== configFile && tree.exists(file),
+  );
+}
 
 /** Rewrites the `buildTarget` references of a serve target from one build target name to another. */
 function renameBuildTarget(
@@ -191,6 +270,41 @@ function logReport(context: SchematicContext, report: string, blocked: boolean):
   log(report);
 }
 
+/** The part of the devkit's `BaseWorkflow` (Angular CLI, `nx g`) that announces its phases. */
+interface WorkflowLifeCycle {
+  lifeCycle?: {
+    subscribe(next: (event: workflow.LifeCycleEvent) => void): { unsubscribe(): void };
+  };
+}
+
+/**
+ * Logs the report of a successful migration after the workflow's own file list. The Angular CLI
+ * prints one `CREATE`/`UPDATE`/`DELETE` line per file once the tree is committed, at the workflow's
+ * `post-tasks-start` (or `end`, in a dry run, which runs no tasks), and the legacy generated folder
+ * alone can be hundreds of `DELETE` lines; a report logged from the rule would scroll away above
+ * them. The CLI subscribes to the life cycle before the schematic runs, so this subscription runs
+ * after its flush. Without a workflow that exposes its life cycle (the schematic test runner), the
+ * report is logged at once.
+ * @param context - The schematic context.
+ * @param lines - The report and any notes after it.
+ */
+function logReportLast(context: SchematicContext, lines: string[]): void {
+  const log = () => lines.forEach((line) => context.logger.info(line));
+  const lifeCycle = (context.engine.workflow as WorkflowLifeCycle | null)?.lifeCycle;
+  if (typeof lifeCycle?.subscribe !== 'function') {
+    log();
+    return;
+  }
+  let logged = false;
+  const subscription = lifeCycle.subscribe((event) => {
+    if (logged || (event.kind !== 'post-tasks-start' && event.kind !== 'end')) return;
+    logged = true;
+    log();
+    // The subscription may not be assigned yet if a workflow replays an event synchronously.
+    queueMicrotask(() => subscription.unsubscribe());
+  });
+}
+
 /**
  * `ng g @ng-doc/builder:migrate-to-vite`: moves a project from the legacy NgDoc builders to the
  * Vite engine, or back with `--revert`.
@@ -254,13 +368,14 @@ function migrate(
     );
   }
 
+  const viteConfig = chooseViteConfig(tree, current, state, options.viteConfig);
   const plan = analyzeProject(
     tree,
     project,
     build,
     serve,
     {
-      ...(options.viteConfig ? { viteConfig: options.viteConfig } : {}),
+      viteConfig: viteConfig.file,
       ...(options.rootComponent ? { rootComponent: options.rootComponent } : {}),
     },
     builderKey(project.targets[build]!),
@@ -276,6 +391,20 @@ function migrate(
       level: 'blocking',
       subject: configFile,
       message: 'already exists. Move it away, or pass `--vite-config` with another file name.',
+    });
+  }
+  // A default name the user asked for next to the project's own configuration: their choice,
+  // with a reminder that one of the two now shadows the other for Vite and Vitest run directly.
+  const others = state || !options.viteConfig ? [] : otherViteConfigs(tree, configFile);
+  if (others.length) {
+    plan.findings.push({
+      level: 'manual',
+      subject: others.join(', '),
+      message:
+        `already configures Vite in this folder (for example for Vitest). Vite and Vitest load ` +
+        `one \`vite.config.*\` per folder, so \`${posix.basename(configFile)}\` next to it ` +
+        'takes the place of one of them. Check that the tools of this folder still load the ' +
+        'configuration they expect.',
     });
   }
   for (const [name, legacyName] of [
@@ -409,6 +538,7 @@ function migrate(
       ]),
     ),
     created: Object.keys(next.created).sort(),
+    keptViteConfigs: viteConfig.kept,
     modified: Object.keys(next.modified).sort(),
     ...(next.legacyOutputDeleted && next.generatedFolder ? { deleted: next.generatedFolder } : {}),
     ...(next.generatedFolder ? { generatedFolder: next.generatedFolder } : {}),
@@ -417,11 +547,12 @@ function migrate(
   });
   writeFile(tree, reportPath(project.name), report);
   writeFile(tree, `${stateFolder(project.name)}/state.json`, serializeState(next));
-  logReport(context, report, false);
-  if (state)
-    context.logger.info(
-      `Project "${project.name}" was already migrated; missing pieces were added.`,
-    );
+  logReportLast(context, [
+    report,
+    ...(state
+      ? [`Project "${project.name}" was already migrated; missing pieces were added.`]
+      : []),
+  ]);
 }
 
 /** Records a changed file: its original goes to the backup folder once, then the new text is written. */
@@ -433,8 +564,11 @@ function modify(tree: Tree, state: MigrationState, file: string, text: string): 
 }
 
 function applyTargets(tree: Tree, project: WorkspaceProject, plan: MigrationPlan): void {
-  writeTarget(tree, project, plan.build.legacyName, plan.build.legacy, plan.build.name);
-  writeTarget(tree, project, plan.build.name, plan.build.next);
+  // The originals are renamed in place, so they keep the user's text, and the Vite targets are
+  // inserted before them under the original names.
+  renameTarget(tree, project, plan.build.name, plan.build.legacyName);
+  updateTarget(tree, project, plan.build.legacyName, plan.build.legacy);
+  writeTarget(tree, project, plan.build.name, plan.build.next, { before: plan.build.legacyName });
   if (plan.serve) {
     const legacyServe = renameBuildTarget(
       plan.serve.legacy,
@@ -442,12 +576,15 @@ function applyTargets(tree: Tree, project: WorkspaceProject, plan: MigrationPlan
       plan.build.name,
       plan.build.legacyName,
     );
-    writeTarget(tree, project, plan.serve.legacyName, legacyServe, plan.serve.name);
-    writeTarget(tree, project, plan.serve.name, plan.serve.next);
+    renameTarget(tree, project, plan.serve.name, plan.serve.legacyName);
+    updateTarget(tree, project, plan.serve.legacyName, legacyServe);
+    writeTarget(tree, project, plan.serve.name, plan.serve.next, {
+      before: plan.serve.legacyName,
+    });
   }
   for (const retarget of plan.retargets) {
     const target = project.targets[retarget.target]!;
-    writeTarget(tree, project, retarget.target, withBuildTarget(target, retarget.after));
+    updateTarget(tree, project, retarget.target, withBuildTarget(target, retarget.after));
   }
 }
 
@@ -488,8 +625,9 @@ function revert(
       target === state.build
         ? legacy
         : renameBuildTarget(legacy, project.name, state.build.legacy, state.build.name);
-    writeTarget(tree, project, target.name, restored);
-    writeTarget(tree, project, target.legacy, undefined);
+    writeTarget(tree, project, target.name, undefined);
+    renameTarget(tree, project, target.legacy, target.name);
+    updateTarget(tree, project, target.name, restored);
   }
   for (const retarget of state.retargets) {
     const target = project.targets[retarget.target];
@@ -497,7 +635,7 @@ function revert(
       kept.push(`\`${retarget.target}.buildTarget\` was changed after the migration and was kept.`);
       continue;
     }
-    writeTarget(tree, project, retarget.target, withBuildTarget(target, retarget.before));
+    updateTarget(tree, project, retarget.target, withBuildTarget(target, retarget.before));
   }
   for (const [file, hash] of Object.entries(state.created)) {
     if (!tree.exists(file)) continue;

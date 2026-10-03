@@ -62,9 +62,10 @@ export function createNgDocViteTargets(input: NgDocViteTargetsInput): {
           Object.entries(modes).map(([name, mode]) => [name, { mode, ...(extra[name] ?? {}) }]),
         )
       : undefined;
+  // The builder key first, as Angular and Nx write targets, then the kept target-level keys.
   const build = withoutUndefined({
-    ...(input.keepBuild ?? {}),
     [input.builderKey]: VITE_APPLICATION_BUILDER,
+    ...(input.keepBuild ?? {}),
     options: withoutUndefined({
       configFile: input.configFile,
       outputPath: input.outputPath,
@@ -78,8 +79,8 @@ export function createNgDocViteTargets(input: NgDocViteTargetsInput): {
     defaultConfiguration: input.defaultConfiguration,
   }) as WorkspaceTarget;
   const serve = withoutUndefined({
-    ...(input.keepServe ?? {}),
     [input.builderKey]: VITE_DEV_SERVER_BUILDER,
+    ...(input.keepServe ?? {}),
     options: withoutUndefined({
       configFile: input.configFile,
       mode: input.serveMode,

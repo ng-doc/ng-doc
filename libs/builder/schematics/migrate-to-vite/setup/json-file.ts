@@ -113,4 +113,27 @@ export class JsonFile {
   remove(path: JsonPath): void {
     if (this.get(path) !== undefined) this.modify(path, undefined);
   }
+
+  /**
+   * Renames the property at a path by rewriting its key only, so its value keeps its text, its
+   * comments and its place among its siblings. Does nothing when there is no such property.
+   * @param path - The path of the property.
+   * @param name - The new name, which no sibling may have.
+   */
+  rename(path: JsonPath, name: string): void {
+    const root = this.root();
+    const value = root && path.length ? findNodeAtLocation(root, path) : undefined;
+    const property = value?.parent;
+    const key = property?.type === 'property' ? property.children?.[0] : undefined;
+    if (!key) return;
+    if (this.get([...path.slice(0, -1), name]) !== undefined) {
+      throw new Error(`[${this.path}] Cannot rename to '${name}': the property exists.`);
+    }
+    this.content =
+      this.content.slice(0, key.offset) +
+      JSON.stringify(name) +
+      this.content.slice(key.offset + key.length);
+    this.ast = undefined;
+    this.tree.overwrite(this.path, this.content);
+  }
 }

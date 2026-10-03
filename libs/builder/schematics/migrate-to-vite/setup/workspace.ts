@@ -1,7 +1,7 @@
 import { Tree } from '@angular-devkit/schematics';
 import { posix } from 'path';
 
-import { JsonFile } from './json-file';
+import { JsonFile, JsonPath } from './json-file';
 
 /** A JSON value as it appears in `angular.json` or `project.json`. */
 export type JsonLike =
@@ -104,25 +104,64 @@ function findProjectJsonFiles(tree: Tree): string[] {
 }
 
 /**
- * Reads every project of the workspace: from `angular.json` when it exists, otherwise from the Nx
- * `project.json` files.
+ * The projects of `angular.json`, or none when there is no `angular.json`.
+ * @param tree - The workspace tree.
  */
-export function readWorkspaceProjects(tree: Tree): WorkspaceProject[] {
-  if (tree.exists('angular.json')) {
-    const json = new JsonFile(tree, 'angular.json');
-    const projects = json.get(['projects']) as unknown;
-    if (!isRecord(projects)) return [];
-    return Object.entries(projects)
-      .filter((entry): entry is [string, JsonRecord] => isRecord(entry[1]))
-      .map(([name, value]) => projectFromJson(name, value, 'angular.json', ['projects', name], ''));
-  }
+function readAngularJsonProjects(tree: Tree): WorkspaceProject[] {
+  if (!tree.exists('angular.json')) return [];
+  const projects = new JsonFile(tree, 'angular.json').get(['projects']) as unknown;
+  if (!isRecord(projects)) return [];
+  return Object.entries(projects)
+    .filter((entry): entry is [string, JsonRecord] => isRecord(entry[1]))
+    .map(([name, value]) => projectFromJson(name, value, 'angular.json', ['projects', name], ''));
+}
+
+/**
+ * The projects of the `project.json` files.
+ * @param tree - The workspace tree.
+ * @param namesByRoot - Project names by root, for a `project.json` without a `name`.
+ */
+function readProjectJsonProjects(tree: Tree, namesByRoot: Map<string, string>): WorkspaceProject[] {
   return findProjectJsonFiles(tree).flatMap((file) => {
     const value = new JsonFile(tree, file).get([]) as unknown;
     if (!isRecord(value)) return [];
     const root = posix.dirname(file) === '.' ? '' : posix.dirname(file);
-    const name = typeof value['name'] === 'string' ? value['name'] : posix.basename(root);
+    const name =
+      typeof value['name'] === 'string'
+        ? value['name']
+        : namesByRoot.get(root) ?? posix.basename(root);
     return [projectFromJson(name, value, file, [], root)];
   });
+}
+
+/**
+ * Reads every project of the workspace.
+ *
+ * - An Angular CLI workspace (no `nx.json`): the projects of `angular.json`, or of the
+ *   `project.json` files when there is no `angular.json`.
+ * - An Nx workspace: the `project.json` files first, then the `angular.json` projects that no
+ *   `project.json` declares. Under `nx g`, Nx shows Angular devkit schematics a virtual
+ *   `angular.json` built from every `project.json`, and writing it makes Nx rewrite all of them
+ *   (reordered keys, its own layout, no final newline), including unrelated projects. Reading a
+ *   project from its own `project.json` keeps every write in that one file, as a text edit.
+ * @param tree - The workspace tree.
+ */
+export function readWorkspaceProjects(tree: Tree): WorkspaceProject[] {
+  const angular = readAngularJsonProjects(tree);
+  if (!tree.exists('nx.json')) {
+    return tree.exists('angular.json') ? angular : readProjectJsonProjects(tree, new Map());
+  }
+  // A `project.json` without a name is named by Nx, which the virtual `angular.json` shows.
+  const projects = readProjectJsonProjects(
+    tree,
+    new Map(angular.map((project) => [project.root, project.name])),
+  );
+  const names = new Set(projects.map((project) => project.name));
+  const roots = new Set(projects.map((project) => project.root));
+  return [
+    ...projects,
+    ...angular.filter((project) => !names.has(project.name) && !roots.has(project.root)),
+  ];
 }
 
 /**
@@ -163,15 +202,21 @@ export function withBuildTarget(
 }
 
 /**
- * Writes a target. A new target is inserted right after `after` when that target exists, so a
+ * Writes a target as a whole, replacing an existing one. A new target is inserted right after
+ * the target named by `anchor`, or right before `anchor.before`, when that target exists, so a
  * renamed target stays next to its replacement.
+ * @param tree - The workspace tree.
+ * @param project - The project.
+ * @param name - The target.
+ * @param value - The target, or undefined to remove it.
+ * @param anchor - The target to insert a new target after, or `{ before }` to insert it before.
  */
 export function writeTarget(
   tree: Tree,
   project: WorkspaceProject,
   name: string,
   value: WorkspaceTarget | undefined,
-  after?: string,
+  anchor?: string | { before: string },
 ): void {
   const json = new JsonFile(tree, project.file);
   const path = [...project.targetsPath, name];
@@ -181,6 +226,77 @@ export function writeTarget(
   }
   const names = Object.keys((json.get(project.targetsPath) as unknown as JsonRecord) ?? {});
   const exists = names.includes(name);
-  const anchor = after === undefined ? -1 : names.indexOf(after);
-  json.modify(path, value as never, exists || anchor < 0 ? undefined : () => anchor + 1);
+  const index =
+    anchor === undefined
+      ? -1
+      : typeof anchor === 'string'
+        ? names.indexOf(anchor) + (names.includes(anchor) ? 1 : 0)
+        : names.indexOf(anchor.before);
+  json.modify(path, value as never, exists || index < 0 ? undefined : () => index);
+}
+
+/**
+ * Applies the differences between two values as edits to the values that changed, so everything
+ * else keeps its text and order. A new property is appended to its object.
+ * @param json - The file.
+ * @param path - The path of both values.
+ * @param before - The value in the file.
+ * @param after - The value to write.
+ */
+function applyDifferences(
+  json: JsonFile,
+  path: JsonPath,
+  before: JsonRecord,
+  after: JsonRecord,
+): void {
+  for (const key of Object.keys(before)) {
+    if (after[key] === undefined) json.modify([...path, key], undefined);
+  }
+  for (const [key, value] of Object.entries(after)) {
+    if (value === undefined) continue;
+    const current = before[key];
+    if (isRecord(current) && isRecord(value)) {
+      applyDifferences(json, [...path, key], current, value);
+    } else if (JSON.stringify(current) !== JSON.stringify(value)) {
+      json.modify([...path, key], value, false);
+    }
+  }
+}
+
+/**
+ * Updates an existing target to a value with the smallest text edits: only the values that differ
+ * are written, so the rest of the target keeps the layout and key order of the user's file.
+ * Writes the whole target when it does not exist.
+ * @param tree - The workspace tree.
+ * @param project - The project.
+ * @param name - The target.
+ * @param value - The target as it should be.
+ */
+export function updateTarget(
+  tree: Tree,
+  project: WorkspaceProject,
+  name: string,
+  value: WorkspaceTarget,
+): void {
+  const json = new JsonFile(tree, project.file);
+  const path = [...project.targetsPath, name];
+  const current = json.get(path);
+  if (isRecord(current)) applyDifferences(json, path, current, value);
+  else writeTarget(tree, project, name, value);
+}
+
+/**
+ * Renames a target by rewriting its key, so the target keeps its text and its place.
+ * @param tree - The workspace tree.
+ * @param project - The project.
+ * @param from - The current name.
+ * @param to - The new name, which no target may have.
+ */
+export function renameTarget(
+  tree: Tree,
+  project: WorkspaceProject,
+  from: string,
+  to: string,
+): void {
+  new JsonFile(tree, project.file).rename([...project.targetsPath, from], to);
 }

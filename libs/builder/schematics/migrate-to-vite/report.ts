@@ -31,6 +31,8 @@ export interface ReportInput {
   configFile?: string;
   targets?: { [name: string]: string };
   created?: string[];
+  /** The project's own Vite configurations that NgDoc's configuration sits next to. */
+  keptViteConfigs?: string[];
   modified?: string[];
   deleted?: string;
   /** The generated folder both engines write. */
@@ -65,6 +67,13 @@ export function renderReport(input: ReportInput): string {
       );
     }
     for (const file of input.created ?? []) lines.push(`- Created \`${file}\`.`);
+    if (input.keptViteConfigs?.length && input.configFile) {
+      lines.push(
+        `- ${input.keptViteConfigs.map((file) => `\`${file}\``).join(', ')} stays the ` +
+          'configuration of Vite and Vitest run directly; NgDoc uses ' +
+          `\`${input.configFile}\`, which the Vite targets name in \`configFile\`.`,
+      );
+    }
     for (const file of input.modified ?? []) lines.push(`- Changed \`${file}\`.`);
     if (input.deleted) {
       lines.push(

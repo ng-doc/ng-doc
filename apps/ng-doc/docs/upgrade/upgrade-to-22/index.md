@@ -584,7 +584,10 @@ with a persistent cache, faster rebuilds and diagnostic codes.
   ng g @ng-doc/builder:migrate-to-vite --project <project-name>
   ```
 
-  `*MigrateToNewEnginePage` explains each step, and how to roll back.
+  `*MigrateToNewEnginePage` explains each step, and how to roll back. After the migration, go
+  through its checklist (`*MigrateToNewEnginePage#after-migrating`): the manual items of the
+  report, the output folder (`<outputPath>/browser`), server rendering with
+  `outputMode: 'server'`, and the exact Vite version, 7.3.5.
 
 - **New projects:** `ng add` sets up the new engine with the Vite host in a new standalone
   application. NgModule applications, and projects whose build target doesn't use an Angular

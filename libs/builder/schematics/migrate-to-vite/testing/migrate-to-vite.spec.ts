@@ -1,15 +1,18 @@
-import { normalize, virtualFs } from '@angular-devkit/core';
+import { logging, normalize, virtualFs } from '@angular-devkit/core';
 import { NodeJsSyncHost } from '@angular-devkit/core/node';
 import { HostTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'fs';
+import { NodeWorkflow } from '@angular-devkit/schematics/tools';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { dirname, join } from 'path';
+import { lastValueFrom } from 'rxjs';
 import * as ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 
 import { KNOWN_BUILD_OPTIONS } from '../analyze';
 import { ngDocViteDependencies } from '../setup/dependencies';
+import { wrapServerEntry } from '../setup/source';
 import {
   customOptionsApp,
   Files,
@@ -304,6 +307,200 @@ describe('migrate-to-vite', () => {
     expect(tree.readText('.ng-doc-migration/docs/report.md')).not.toContain('`vite` is');
   });
 
+  it('edits only the migrated project.json under nx g, never the virtual angular.json', async () => {
+    const files = nxApp();
+    // Nx's own layout: arrays of one string on one line.
+    const docs = files['apps/docs/project.json']
+      .replace(/\[\n\s+("[^"\n]*")\n\s+\]/g, '[$1]')
+      .replace('"targets": {', '"tags": ["scope:docs"],\n  "targets": {');
+    const block = (name: string, text: string) =>
+      new RegExp(`\\n    "${name}": (\\{\\n[\\s\\S]*?\\n    \\})`).exec(text)![1];
+    files['apps/docs/project.json'] = docs;
+    const lib =
+      '{\n  "name": "lib",\n  "tags": ["type:lib"],\n  "targets": {\n    "build": { "executor": "@nx/angular:package", "outputs": ["{workspaceRoot}/dist/{projectRoot}"] }\n  }\n}';
+    files['libs/lib/project.json'] = lib;
+    // `nx g` shows Angular devkit schematics an angular.json built from every project.json, and
+    // writing it makes Nx rewrite every project.json in its own layout.
+    const architect = (targets: Record<string, Record<string, unknown>>) =>
+      Object.fromEntries(
+        Object.entries(targets).map(([name, { executor, ...rest }]) => [
+          name,
+          { builder: executor, ...rest },
+        ]),
+      );
+    const { targets: docsTargets, ...docsProject } = JSON.parse(docs);
+    files['angular.json'] = JSON.stringify({
+      version: 1,
+      projects: {
+        docs: { root: 'apps/docs', ...docsProject, architect: architect(docsTargets) },
+        lib: { root: 'libs/lib', architect: architect(JSON.parse(lib).targets) },
+      },
+    });
+
+    const tree = await migrate(files);
+
+    expect(tree.readText('angular.json')).toBe(files['angular.json']);
+    expect(tree.readText('libs/lib/project.json')).toBe(lib);
+    const text = tree.readText('apps/docs/project.json');
+    const project = JSON.parse(text);
+    expect(project.targets.build.executor).toBe('@ng-doc/builder:vite-application');
+    expect(project.targets['build-legacy'].executor).toBe('@ng-doc/builder:application');
+    expect(Object.keys(project.targets)).toEqual([
+      'build',
+      'build-legacy',
+      'serve',
+      'serve-legacy',
+      'lint',
+    ]);
+    // Everything but the new targets and the changed buildTarget values keeps its bytes: the
+    // original build target is renamed in place, and the final newline stays.
+    expect(text.slice(0, text.indexOf('"targets"'))).toBe(docs.slice(0, docs.indexOf('"targets"')));
+    expect(block('build-legacy', text)).toBe(block('build', docs));
+    expect(block('build-legacy', text)).toContain('"outputs": ["{options.outputPath}"]');
+    expect(block('serve-legacy', text)).toBe(
+      block('serve', docs).replace(/docs:build:/g, 'docs:build-legacy:'),
+    );
+    expect(text).toContain('    "lint": {\n      "executor": "@nx/eslint:lint"\n    }\n  }\n}\n');
+    // The new targets start with their executor, as Nx writes targets.
+    expect(Object.keys(project.targets.build)[0]).toBe('executor');
+    expect(Object.keys(project.targets.serve)[0]).toBe('executor');
+  });
+
+  it('wraps the server entry with a minimal edit in the file’s own style', async () => {
+    const crlf =
+      'import { bootstrapApplication } from "@angular/platform-browser"\r\n' +
+      'import { App } from "./app/app"\r\n\r\n' +
+      'const bootstrap = (context: BootstrapContext) => bootstrapApplication(App, {...config, providers: [provideZoneChangeDetection(), ...config.providers]}, context)\r\n\r\n' +
+      'export default bootstrap\r\n';
+    expect(wrapServerEntry('main.server.ts', crlf)).toBe(
+      crlf
+        .replace(
+          'from "./app/app"\r\n',
+          'from "./app/app"\r\nimport { withNgDocContentReady } from "@ng-doc/app/helpers"\r\n',
+        )
+        .replace('export default bootstrap', 'export default withNgDocContentReady(bootstrap)'),
+    );
+
+    // Through the schematic: two changed lines, whatever the layout of the rest of the file.
+    const files = standaloneApp();
+    const original =
+      "import { provideZoneChangeDetection } from \"@angular/core\";\nimport { bootstrapApplication, BootstrapContext } from '@angular/platform-browser';\nimport { App } from './app/app';\nimport { config } from './app/app.config.server';\n\nconst bootstrap = (context: BootstrapContext) => bootstrapApplication(App, {...config, providers: [provideZoneChangeDetection(), ...config.providers]}, context);\n\nexport default bootstrap;\n";
+    files['src/main.server.ts'] = original;
+    const tree = await migrate(files);
+    const before = original.split('\n');
+    const after = tree.readText('src/main.server.ts').split('\n');
+    expect(after).toEqual([
+      ...before.slice(0, 4),
+      "import { withNgDocContentReady } from '@ng-doc/app/helpers';",
+      ...before.slice(4, 7),
+      'export default withNgDocContentReady(bootstrap);',
+      '',
+    ]);
+  });
+
+  it('logs the report after the file list a workflow prints, so the DELETE lines do not bury it', async () => {
+    const root = mkdtempSync(join(tmpdir(), 'ngdoc-migrate-log-'));
+    try {
+      for (const [file, content] of Object.entries(standaloneApp())) {
+        mkdirSync(dirname(join(root, file)), { recursive: true });
+        writeFileSync(join(root, file), content);
+      }
+      const workflow = new NodeWorkflow(root, { force: false, dryRun: false });
+      const output: string[] = [];
+      const logger = new logging.Logger('migrate-to-vite');
+      logger.subscribe((entry) => output.push(entry.message));
+      // As the Angular CLI prints a workflow: one line per file, once the tree is committed.
+      let queue: string[] = [];
+      workflow.reporter.subscribe((event) =>
+        queue.push(`${event.kind.toUpperCase()} ${event.path}`),
+      );
+      workflow.lifeCycle.subscribe((event) => {
+        if (event.kind !== 'post-tasks-start' && event.kind !== 'end') return;
+        queue.forEach((line) => logger.info(line));
+        queue = [];
+      });
+
+      await lastValueFrom(
+        workflow.execute({
+          collection: collectionPath,
+          schematic: 'migrate-to-vite',
+          options: { skipInstall: true },
+          logger,
+        }),
+        { defaultValue: undefined },
+      );
+
+      const lastDelete = output
+        .map((line) => line.startsWith('DELETE /ng-doc/site/'))
+        .lastIndexOf(true);
+      const report = output.findIndex((line) => line.startsWith('# NgDoc migration'));
+      expect(lastDelete).toBeGreaterThan(-1);
+      expect(report).toBeGreaterThan(lastDelete);
+      expect(output.filter((line) => line.startsWith('# NgDoc migration'))).toHaveLength(1);
+      // What is deleted does not change.
+      expect(existsSync(join(root, 'ng-doc/site/index.ts'))).toBe(false);
+      expect(existsSync(join(root, 'ng-doc/site/guides/intro/page.ts'))).toBe(false);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it('writes its Vite configuration next to the project’s own under a name Vite and Vitest skip', async () => {
+    const vitest = "export default { test: { environment: 'node' } };\n";
+    const files = { ...nxApp(), 'apps/docs/vite.config.mts': vitest };
+
+    const tree = await migrate(files);
+
+    expect(tree.exists('apps/docs/vite.config.mjs')).toBe(false);
+    expect(tree.readText('apps/docs/vite.config.mts')).toBe(vitest);
+    expect(tree.readText('apps/docs/vite.ng-doc.config.mjs')).toContain('createNgDocVitePlugin');
+    const project = JSON.parse(tree.readText('apps/docs/project.json'));
+    expect(project.targets.build.options.configFile).toBe('apps/docs/vite.ng-doc.config.mjs');
+    expect(project.targets.serve.options.configFile).toBe('apps/docs/vite.ng-doc.config.mjs');
+    const report = tree.readText('.ng-doc-migration/docs/report.md');
+    expect(report).not.toContain('## Blocking');
+    expect(report).not.toContain('already configures Vite');
+    expect(report).toContain(
+      '- `apps/docs/vite.config.mts` stays the configuration of Vite and Vitest run directly; ' +
+        'NgDoc uses `apps/docs/vite.ng-doc.config.mjs`, which the Vite targets name in `configFile`.',
+    );
+    // A second run keeps the same file and report.
+    const first = snapshot(tree);
+    expect(snapshot(await migrate(tree))).toEqual(first);
+
+    // --vite-config still names the file; a default name next to the project's own is reported.
+    const named = await migrate(files, { viteConfig: 'apps/docs/vite.docs.mjs' });
+    expect(
+      JSON.parse(named.readText('apps/docs/project.json')).targets.build.options.configFile,
+    ).toBe('apps/docs/vite.docs.mjs');
+    expect(named.exists('apps/docs/vite.ng-doc.config.mjs')).toBe(false);
+    const explicit = await migrate(files, { viteConfig: 'apps/docs/vite.config.mjs' });
+    expect(explicit.exists('apps/docs/vite.config.mjs')).toBe(true);
+    expect(explicit.readText('.ng-doc-migration/docs/report.md')).toContain(
+      '- `apps/docs/vite.config.mts`: already configures Vite in this folder',
+    );
+  });
+
+  it('leaves other tsconfig path mappings to the engine and does not report them', async () => {
+    const files = standaloneApp();
+    const tsconfig = JSON.parse(files['tsconfig.json']);
+    tsconfig.compilerOptions.paths = {
+      ...tsconfig.compilerOptions.paths,
+      'my-lib': ['./projects/my-lib/src/public-api.ts'],
+      'my-lib/*': ['./projects/my-lib/*/src/public_api.ts'],
+    };
+    files['tsconfig.json'] = JSON.stringify(tsconfig, null, 2);
+    const tree = await migrate(files);
+    expect(tree.readText('tsconfig.json')).toBe(files['tsconfig.json']);
+    const report = tree.readText('.ng-doc-migration/site/report.md');
+    expect(report).not.toContain('my-lib');
+    expect(report).not.toMatch(/^- `tsconfig[^`]*`.*paths/m);
+    expect(report).toContain(
+      '`tsconfig`: `@ng-doc/generated` keeps pointing at the generated folder',
+    );
+    expect(report).not.toContain('## Blocking');
+  });
+
   it('refuses a localized application and changes nothing', async () => {
     const files = standaloneApp();
     const angular = JSON.parse(files['angular.json']);
@@ -361,12 +558,25 @@ describe('migrate-to-vite', () => {
     );
   });
 
-  it('refuses to overwrite an existing Vite configuration', async () => {
+  it('never overwrites an existing Vite configuration', async () => {
     const files = { ...standaloneApp(), 'vite.config.mjs': 'export default {};\n' };
-    await expect(migrate(files)).rejects.toThrow('[NGDOC_MIGRATE_BLOCKED]');
-    const tree = await migrate(files, { viteConfig: 'vite.ngdoc.mjs' });
+    const tree = await migrate(files);
     expect(tree.readText('vite.config.mjs')).toBe('export default {};\n');
-    expect(workspace(tree).projects.site.architect.build.options.configFile).toBe('vite.ngdoc.mjs');
+    expect(workspace(tree).projects.site.architect.build.options.configFile).toBe(
+      'vite.ng-doc.config.mjs',
+    );
+    // A file named with --vite-config, or NgDoc's own name, that already exists blocks.
+    await expect(migrate(files, { viteConfig: 'vite.config.mjs' })).rejects.toThrow(
+      '[NGDOC_MIGRATE_BLOCKED]',
+    );
+    await expect(
+      migrate({ ...files, 'vite.ng-doc.config.mjs': 'export default {};\n' }),
+    ).rejects.toThrow('[NGDOC_MIGRATE_BLOCKED]');
+    const named = await migrate(files, { viteConfig: 'vite.ngdoc.mjs' });
+    expect(named.readText('vite.config.mjs')).toBe('export default {};\n');
+    expect(workspace(named).projects.site.architect.build.options.configFile).toBe(
+      'vite.ngdoc.mjs',
+    );
   });
 
   it('is idempotent: a second run leaves the tree unchanged', async () => {

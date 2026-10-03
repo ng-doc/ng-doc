@@ -41,7 +41,10 @@ It changes the workspace like this:
   the Vite mode with the same name; without a `defaultConfiguration`, the target runs the plain
   options as the `default` mode. `prerender: false` stays off. Angular builders that read the
   build options, such as `extract-i18n` and `unit-test`, now point at `build-legacy`.
-- **`vite.config.mjs`:** a new file in the project folder. It holds the application of the build
+- **`vite.config.mjs`:** a new file in the project folder. When the folder already has a
+  `vite.config.*`, for example for Vitest, the file is `vite.ng-doc.config.mjs` instead, so Vite
+  and Vitest run directly keep loading yours; the `build` and `serve` targets name NgDoc's file
+  in `configFile`, and the report says so. `--vite-config` sets another name. The file holds the application of the build
   target (`browser`, `server`, `polyfills`, `styles`, `assets`), the Analog Angular plugin
   (`tsConfig`, `inlineStyleLanguage`, `fileReplacements`) and the engine settings (`*ViteHostPage`).
   Options that differ between configurations, such as `fileReplacements` or `sourceMap`, are
@@ -75,7 +78,8 @@ The schematic changes nothing when it can't migrate the project, and the report 
 - the server entry, `main.server.ts`, exports an NgModule (`NGDOC_MIGRATE_SERVER_NGMODULE`). The
   Vite build prerenders with a bootstrap function, so export one instead:
   `(context) => bootstrapApplication(App, config, context)`;
-- `vite.config.mjs` already exists. Pass another file name with `--vite-config`;
+- the Vite configuration file it would create already exists, such as a `vite.ng-doc.config.mjs`
+  or the file you named with `--vite-config`. Pass another file name with `--vite-config`;
 - a target with the name the legacy target would get, such as `build-legacy`, already exists.
 
 Running the schematic again is safe: it adds only what is missing, and keeps your edits to the
@@ -99,6 +103,29 @@ files it created. If the `.ng-doc-migration/<project-name>` folder is gone, it f
 To set up the Vite host by hand instead, follow `*ViteHostPage`. The `modern-application` and
 `modern-dev-server` builders (`*BuildersReference#angular-cli-builders`) run the new engine inside
 the Angular CLI application builder, with the options of your build target unchanged.
+
+## ✅ After migrating
+
+Go through this list before you commit the migration:
+
+- **Manual items:** open `.ng-doc-migration/<project-name>/report.md` and handle each entry under
+  “Needs a manual change”. The schematic didn't migrate them, so the site can behave differently
+  until you do.
+- **Output folder:** the Vite build writes the application to `<outputPath>/browser`, whatever
+  `outputPath.browser` was, and with a `server` entry the server bundle to `<outputPath>/server`.
+  Update deploy scripts and CI artifact paths that read the old folder.
+- **Server rendering:** with `outputMode: 'server'`, the Angular server that renders on request
+  isn't built. The build prerenders every route into `browser/`: deploy it as a static site, or
+  keep the `build-legacy` target for the server.
+- **Vite version:** keep `vite` at exactly 7.3.5, even when another tool, such as Vitest or a
+  dependency update bot, asks for a newer one. The Vite engine doesn't start with another version
+  (`*TroubleshootingPage#ngdoc_vite_version`).
+- **Vite configuration:** if the project folder already had a `vite.config.*`, NgDoc's
+  configuration is `vite.ng-doc.config.mjs`. Run NgDoc through `ng serve` and `ng build` (or pass
+  `--config` to Vite); `vite` and `vitest` run directly keep using your own file.
+- **The diff:** `ng g` formats every file a schematic changed with the workspace's Prettier, so a
+  file can show more changed lines than the schematic's edit. In `main.server.ts` the schematic
+  adds one import and wraps the default export.
 
 ## What changes
 

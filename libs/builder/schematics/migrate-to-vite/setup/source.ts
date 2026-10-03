@@ -171,10 +171,27 @@ export function serverEntryNgModule(tree: Tree, file: string): string | undefine
 export const CONTENT_READY_IMPORT = "import { withNgDocContentReady } from '@ng-doc/app/helpers';";
 
 /**
+ * The `withNgDocContentReady` import in the style of the file's last import: its quotes and
+ * whether it ends with a semicolon.
+ * @param source - The parsed server entry.
+ * @param last - Its last import, if any.
+ */
+function contentReadyImport(source: ts.SourceFile, last: ts.ImportDeclaration | undefined): string {
+  if (!last) return CONTENT_READY_IMPORT;
+  const quote = last.moduleSpecifier.getText(source).startsWith('"') ? '"' : "'";
+  const semicolon = last.getText(source).endsWith(';') ? ';' : '';
+  return `import { withNgDocContentReady } from ${quote}@ng-doc/app/helpers${quote}${semicolon}`;
+}
+
+/**
  * Wraps the default export of a server entry (`main.server.ts`) with `withNgDocContentReady`, so a
  * prerendered page waits for its NgDoc content and a content failure fails the route. Returns the
  * new text, the same text when it is already wrapped, or undefined when the default export is not
  * an expression (`export { AppServerModule as default }`) and the entry needs a manual change.
+ *
+ * The change is two insertions: the import after the last import, in that import's quotes and
+ * semicolon style and the file's line ending, and the call around the exported expression. The
+ * rest of the file keeps its bytes, so the diff a user reviews is exactly what the migration does.
  */
 export function wrapServerEntry(file: string, text: string): string | undefined {
   if (text.includes('withNgDocContentReady')) return text;
@@ -189,9 +206,11 @@ export function wrapServerEntry(file: string, text: string): string | undefined 
     text.slice(0, expression.getStart(source)) +
     `withNgDocContentReady(${expression.getText(source)})` +
     text.slice(expression.getEnd());
+  const eol = text.includes('\r\n') ? '\r\n' : '\n';
   const imports = source.statements.filter(ts.isImportDeclaration);
   const last = imports[imports.length - 1];
-  if (!last) return `${CONTENT_READY_IMPORT}\n\n${wrapped}`;
+  const line = contentReadyImport(source, last);
+  if (!last) return `${line}${eol}${eol}${wrapped}`;
   const end = last.getEnd();
-  return `${wrapped.slice(0, end)}\n${CONTENT_READY_IMPORT}${wrapped.slice(end)}`;
+  return `${wrapped.slice(0, end)}${eol}${line}${wrapped.slice(end)}`;
 }
