@@ -25,7 +25,9 @@ site:
 - Angular 22. `@ng-doc/app`, `@ng-doc/ui-kit` and `@ng-doc/builder` support `>=22.0.0 <23.0.0`,
   and `@ng-doc/builder` depends on `@angular/build` 22.1.9. The Vite engine is tested with
   `@angular/compiler` and `@angular/compiler-cli` 22.2.1. Update Angular first.
-- For the Vite engine only: `vite` 7.3.5 exactly. The legacy builders don't use Vite, so an update
+- For the Vite engine only: `vite` 7.3.5 exactly, with `@analogjs/vite-plugin-angular` 2.6.3 (the
+  versions the engine is tested with are listed under `ng-doc.viteEngine` in the `package.json` of
+  `@ng-doc/builder`). The legacy builders don't use Vite, so an update
   that stays on them needs nothing. Before you move to the Vite engine, pin Vite in
   `devDependencies` with `npm i -D vite@7.3.5` (the migration schematic adds it when `package.json`
   has no `vite`). Without the pin, Vitest brings in Vite 8 and the Vite engine stops with
@@ -63,6 +65,12 @@ The pages of this site moved to new routes, and the old routes don't redirect. F
 `/docs/customization/themes` is now `/docs/customize/themes-and-colors`. If you link to a page of
 this site, find it again in the sidebar and update the link. The API reference stays under
 `/docs/api`, but the declarations that 22.0 removes have no page any more.
+
+### Keywords of another NgDoc site
+
+`ngDocKeywordsLoader` loads the page keywords of the other site only with `loadGuides: true`, as
+documented. Before, it loaded them without the option, unprefixed. If your pages link to the pages
+of that site, set `loadGuides: true` (`*LinkToExternalApisPage`).
 
 ## 2. Inputs and outputs are signals
 
@@ -161,14 +169,14 @@ classes that they used to set are still set, unless section 4 says otherwise.
 | `NgDocPageComponent`                           | `pageContainer` is a signal query; `childOutlet` removed                                                                                                                                                     | Call `pageContainer()`                              |
 | `NgDocPageLinkComponent`                       | `isExternalLink`, `path`, `fragment` and `queryParams` are signals; `ngOnChanges()` removed                                                                                                                  | Call them                                           |
 | `NgDocPageProcessorComponent`                  | `afterRender` is an `OutputEmitterRef`; public `ngOnChanges()` removed                                                                                                                                       | Set the inputs                                      |
-| `NgDocApiListComponent`                        | `apiList`, `filteredApiList`, `filter`, `scopes`, `types` and `ngOnInit()` removed; the `title` and `segment` inputs stay                                                                                    | The `?type=`, `?scope=` and `?filter=` query params |
+| `NgDocApiListComponent`                        | `filteredApiList`, `filter`, `types` and `ngOnInit()` removed; `apiList` and `scopes` are no longer public; the `title` and `segment` inputs stay                                                            | The `?type=`, `?scope=` and `?filter=` query params |
 | `NgDocSearchResultComponent`                   | `groupedResult` is a signal; `ngOnChanges()` removed                                                                                                                                                         | `groupedResult()`                                   |
 | `NgDocDemoComponent`, `NgDocDemoPaneComponent` | `demo` and `assets` are signals; `ngOnInit()` removed; `getOpenedAssetId()` of the demo removed                                                                                                              | `demo()`, `assets()`                                |
 | `NgDocDemoDisplayerComponent`                  | `expanded` is a `model()`                                                                                                                                                                                    | `[(expanded)]`                                      |
 | `NgDocTabsComponent`                           | `getActiveIndex()` removed                                                                                                                                                                                   | –                                                   |
 | `NgDocTabGroupComponent`                       | `tabs` and `tabElements` are signal queries, `selectedTab` and `selectedIndex` signals; `selectedHeaderTab` removed                                                                                          | `selectTab(tab)`                                    |
 | `NgDocPaneComponent`                           | `resizer` is a signal query and `width` a signal; `dragging` is no longer public; `ngOnChanges()` removed                                                                                                    | Call them                                           |
-| `NgDocCodeComponent`                           | `hasHeader` is a signal; `codeElement` removed                                                                                                                                                               | Query the `pre code` element                        |
+| `NgDocCodeComponent`                           | `hasHeader` is a signal; `codeElement` is no longer public                                                                                                                                                   | Query the `pre code` element                        |
 | `NgDocCopyButtonComponent`                     | `tooltip` is a signal query                                                                                                                                                                                  | `tooltip()`                                         |
 | `NgDocPlaygroundPropertiesComponent`           | `recreateDemo` is a `model()`, `resetForm` an `OutputEmitterRef`; `observer`, `breakpoints` and `ngOnChanges()` removed                                                                                      | –                                                   |
 | `NgDocPlaygroundComponent`                     | `id`, `pipeName`, `selectors`, `properties` and `options` are signal inputs; `recreateDemo`, `formGroup`, `defaultValues` and `configuration` are signals; `ngOnChanges()` removed                           | Call them                                           |
@@ -325,6 +333,10 @@ this.ngZone.runOutsideAngular(() => {
 });
 ```
 
+`theme` of `NgDocHighlighterConfig`, the `shiki` option of `provideNgDocApp`, is deprecated. It never
+had an effect, and it now logs a warning in development mode: name the themes in `shiki.themes` of
+`ng-doc.config.ts` (`*CodeHighlightingPage`).
+
 The theme tokens had no effect: NgDoc never read them. Remove the providers, and ship a custom
 theme as a stylesheet:
 
@@ -352,7 +364,7 @@ changed, and so did the markup of several parts of the page.
 
 ### Default theme
 
-- **Colors:** 111 of the 169 public variables have new default values in the light, dark and auto
+- **Colors:** most of the 169 public variables have new default values in the light, dark and auto
   themes. They now point at a new token layer, `tokens.scss` in `@ng-doc/ui-kit`: 156 variables
   with the palette, spacing, radius and type primitives, the page rhythm (such as
   `--ng-doc-content-max-width` and `--ng-doc-h2-border`) and tokens derived from the public
@@ -437,6 +449,15 @@ ng-doc-navbar .ng-doc-navbar-container {
   max-width: 1440px;
 }
 ```
+
+### Demos and playgrounds
+
+- **Fullscreen:** demos and demo panes have a fullscreen button that shows the demo alone in the
+  browser's fullscreen. It needs no route (`*DemosPage`).
+- **`fullscreenRoute`** opens the demo route in a new tab, as a standalone page with only the demo
+  and a link back, instead of a dialog over the page. The route setup is unchanged.
+- **`inspectorPosition`** is a new playground option: `'bottom'` puts the inspector below the demo
+  (`*PlaygroundsPage`).
 
 ### Demo option `expanded`
 

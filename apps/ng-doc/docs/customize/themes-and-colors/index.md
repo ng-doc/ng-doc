@@ -164,7 +164,7 @@ Switch to it with `NgDocThemeService`, or set it by default in `index.html`:
 
 ```typescript name="theme-button.component.ts"
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { NgDocThemeService } from '@ng-doc/app/services/theme';
+import { NgDocThemeService } from '@ng-doc/app';
 
 @Component({
   selector: 'app-theme-button',

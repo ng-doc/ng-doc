@@ -2,6 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { NgDocCodeHighlighterDirective } from '@ng-doc/app/directives/code-highlighter';
+import * as services from '@ng-doc/app/services';
 import { NgDocContentState } from '@ng-doc/app/services/content-state';
 import { NgDocHighlighterService } from '@ng-doc/app/services/highlighter';
 import { NgDocStoreService } from '@ng-doc/app/services/store';
@@ -138,6 +139,16 @@ describeChangeDetection('NgDocThemeService', ({ providers }) => {
   });
 });
 
+describe('@ng-doc/app/services', () => {
+  it('re-exports the theme service, which `@ng-doc/app` exports with every other service', () => {
+    // Read by name: before the theme service was re-exported, the barrel had no such member.
+    expect((services as Record<string, unknown>)['NgDocThemeService']).toBe(NgDocThemeService);
+    expect((services as Record<string, unknown>)['NgDocHighlighterService']).toBe(
+      NgDocHighlighterService,
+    );
+  });
+});
+
 describe('NgDocStoreService', () => {
   it('stores strings and serialized values', () => {
     const storage = new MemoryStorage();
@@ -264,5 +275,37 @@ describeChangeDetection('NgDocHighlighterService with configured themes', ({ pro
       lang: 'angular-html',
       themes: { light: 'css-variables', dark: 'css-variables' },
     });
+  });
+
+  it('ignores the deprecated theme option and reports it in development mode', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    try {
+      const highlighter = fakeHighlighter();
+      createHighlighter.mockResolvedValue(highlighter as never);
+      const service = TestBed.inject(NgDocHighlighterService);
+      await service.initialize({ theme: { light: 'github-dark', dark: 'github-dark' } });
+      service.highlight('<i></i>');
+
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(warn.mock.calls[0][0]).toContain('`shiki.theme` of `provideNgDocApp` has no effect');
+      expect(highlighter.codeToHtml).toHaveBeenCalledWith('<i></i>', {
+        lang: 'angular-html',
+        themes: { light: 'css-variables', dark: 'css-variables' },
+      });
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it('reports nothing without the deprecated theme option', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    try {
+      createHighlighter.mockResolvedValue(fakeHighlighter() as never);
+      await TestBed.inject(NgDocHighlighterService).initialize({ themes: [] });
+
+      expect(warn).not.toHaveBeenCalled();
+    } finally {
+      warn.mockRestore();
+    }
   });
 });

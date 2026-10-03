@@ -145,8 +145,9 @@ async function oramaSearchRecords(
     records.push({
       breadcrumbs: request.breadcrumbs,
       pageType: request.pageType,
-      title: request.ir.title,
-      section: section?.content ?? '',
+      // The legacy engine trims the title and the section name in the same way (`build-indexes.ts`).
+      title: request.ir.title.trim(),
+      section: (section?.content ?? '').trim(),
       route: request.ir.absoluteRoute,
       ...(typeof fragment === 'string' && fragment ? { fragment } : {}),
       content: document.content,
@@ -1428,6 +1429,8 @@ describe('GeneratorContentCompiler', () => {
       '',
       'Only text',
       '<h1 id="only">Only heading</h1>',
+      '<h2 id="use-it"><span aria-hidden="true">🧰</span>\u00a0Use it\u00a0</h2><p>Body</p>' +
+        '<h3 id="plain"> Plain <span aria-hidden="true">🧰</span></h3><p>Tail</p>',
     ];
     const all: SearchRecord[] = [];
     for (const html of bodies) {
@@ -1460,6 +1463,17 @@ describe('GeneratorContentCompiler', () => {
     expect(all.map((record) => record.fragment)).toEqual(
       expect.arrayContaining(['first', 'second']),
     );
+    // A heading's decorative emoji is no record of its own, and no whitespace (a no-break space
+    // included) surrounds a section name; an emoji that does not open the heading stays indexed.
+    expect(
+      all.filter((record) => record.content === '🧰').map((record) => record.fragment),
+    ).toEqual(['plain']);
+    expect(all.find((record) => record.content === 'Body')?.section).toBe('Use it');
+    expect(all.find((record) => record.fragment === 'first')?.section).toBe('First &');
+    expect(
+      all.filter((record) => record.fragment === 'plain').map((record) => record.content),
+    ).toEqual(['🧰', 'Tail']);
+    expect(all.find((record) => record.content === 'Tail')?.section).toBe('Plain');
     expect(JSON.stringify(all)).not.toContain('Hidden');
   });
 
@@ -1876,6 +1890,28 @@ describe('GeneratorContentCompiler', () => {
         message: expect.stringContaining('Unable to parse code block options'),
       }),
     );
+  });
+
+  it('compiles code blocks in the Shiki languages whose names have symbols, with their options', async () => {
+    const markdown = path.join(root, 'languages.md');
+    fs.writeFileSync(
+      markdown,
+      [
+        '```c++ name="main.cpp" {1}\nint main() { return 0; }\n```',
+        '```c#\nvar answer = 42;\n```',
+        '```objective-c\n@interface Answer : NSObject\n@end\n```',
+      ].join('\n\n'),
+    );
+    const compiled = await new GeneratorContentCompiler(services()).compile(
+      { kind: 'guide-tab', id: 'languages', entry: entry(markdown), markdown },
+      new AbortController().signal,
+    );
+    expect(compiled.diagnostics).toEqual([]);
+    const html = compiled.value!.html;
+    expect(html).toContain('name="main.cpp"');
+    for (const language of ['c++', 'c#', 'objective-c']) {
+      expect(html).toContain(`language-${language}`);
+    }
   });
 
   it('attributes slot template evaluation failures to content while preserving global failures', async () => {

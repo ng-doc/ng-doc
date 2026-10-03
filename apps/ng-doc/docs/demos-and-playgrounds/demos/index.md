@@ -6,7 +6,7 @@ A demo renders one of your Angular components on a page, next to its source code
 component working and the code that builds it, and the code can't drift, because NgDoc reads it from
 the component's own files.
 
-## See it
+## 👀 See it
 
 {{ NgDocActions.demo("ButtonDemoComponent") }}
 
@@ -18,7 +18,7 @@ The fullscreen button shows the demo on its own, centred on its canvas at the si
 Press Esc, or the button in the corner of the screen, to leave fullscreen. Browsers that don't
 support fullscreen don't show the button.
 
-## Use it
+## 🧰 Use it
 
 1. Write a standalone component for the demo, usually next to the page.
 2. Add it to the `demos` of the page:
@@ -51,7 +51,7 @@ they are separate files. Each tab is named after the language of its file, such 
 The demo component can import anything your application can. If it is declared in an NgModule
 instead of being standalone, add the module to the `imports` of the page.
 
-## Options
+## 📋 Options
 
 Pass options as the second argument of `demo`. They follow `NgDocDemoActionOptions`:
 
@@ -137,7 +137,7 @@ To style one demo, give it a class with the `class` option and set the variables
 }
 ```
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Warning**
 > The `--ng-doc-demo-displayer-*` variables style playgrounds and demo panes too.

@@ -19,7 +19,12 @@ export function ngDocKeywordsLoader(options: NgDocKeywordsLoaderOptions): NgDocK
       const url: string = `${endpoint}${path}`;
       const isGuideKeyword = key.startsWith('*');
 
-      if (isGuideKeyword && options.loadGuides) {
+      // Page keywords (and their anchors) start with an asterisk; they are loaded only on request.
+      if (isGuideKeyword && !options.loadGuides) {
+        return acc;
+      }
+
+      if (isGuideKeyword) {
         const prefix: string = options.guidesPrefix ?? '';
         const newKey: string = `*${prefix}${key.replace(/^\*/, '')}`;
 

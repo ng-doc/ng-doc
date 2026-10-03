@@ -49,8 +49,11 @@ export async function buildIndexes(config: NgDocIndexBuilderConfig): Promise<NgD
           pages.push({
             breadcrumbs: config.breadcrumbs,
             pageType: config.pageType,
-            title: config.title,
-            section: section?.content ?? '',
+            // Without the whitespace around them, a no-break space included: a heading's decorative
+            // emoji is joined to its text with one. The new engine trims them the same way
+            // (`generator/content/html-pipeline.ts`); keep both in step.
+            title: config.title.trim(),
+            section: (section?.content ?? '').trim(),
             route: config.route,
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore

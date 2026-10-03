@@ -56,7 +56,7 @@ export default {
         projectId: 'my-app',
         workspaceRoot,
         defaults: {
-          docsRoot: path.join(workspaceRoot, 'src/app'),
+          docsRoot: path.join(workspaceRoot, 'src'),
           tsConfig: path.join(workspaceRoot, 'tsconfig.app.json'),
           outputRoot: path.join(workspaceRoot, 'ng-doc/my-app'),
           cacheRoot: path.join(workspaceRoot, '.cache/ng-doc/my-app'),
@@ -72,6 +72,9 @@ export default {
 - The `defaults` apply when `ng-doc.config.ts` doesn't set `docsPath`, `tsConfig` or `outDir`. With
   `outDir`, the generated folder is `<outDir>/ng-doc/<projectId>` in the workspace root. All paths
   are absolute.
+- `docsRoot` is the folder of the `browser` entry, usually `src`, as `ng add` and `migrate-to-vite`
+  write it. NgDoc looks for `ng-doc.config.ts` from the parent of that folder up to the workspace
+  root (`*ConfigurationReference#where-ngdoc-finds-the-file`).
 - `*BuildersReference#vite-plugin` lists every option.
 
 ## 2. Point the application at the generated folder
@@ -131,14 +134,14 @@ pages that depend on it, and the browser updates. The build tags of the server a
 (`*PagesAndCategoriesPage#build-tags`). The terminal shows the build's progress and a line for
 each edit (`*ProgressOutputPage`).
 
-## Build for production
+## 🚀 Build for production
 
 `vite build` builds the application with NgDoc. It generates every page once, with the build tag
 `production`, before Vite bundles the application. To build the server bundle and prerender every
 route, use `ng build` with the `@ng-doc/builder:vite-application` builder or `ng-doc prerender`
 (`*ProductionBuildsPage#build-with-the-vite-host`).
 
-## Limitations
+## 🚧 Limitations
 
 - The development server needs file watching and hot module replacement. Don't disable
   `server.watch` or `server.hmr`.

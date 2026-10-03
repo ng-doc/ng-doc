@@ -88,4 +88,42 @@ describe('parseCodeBlockParams', () => {
       icon: 'icon',
     });
   });
+
+  it.each([
+    'c++',
+    'c#',
+    'f#',
+    'objective-c',
+    'objective-cpp',
+    'f90',
+    '1c',
+    'actionscript-3',
+    '文言',
+  ])('should parse the Shiki language %s', (language) => {
+    expect(parseCodeBlockParams(language)).toStrictEqual({ language });
+  });
+
+  it('should parse the parameters after a language with symbols', () => {
+    expect(parseCodeBlockParams('c++ name="main.cpp" group="native" active {1-2}')).toStrictEqual({
+      language: 'c++',
+      name: 'main.cpp',
+      group: 'native',
+      active: true,
+      highlightedLines: [1, 2],
+    });
+    expect(parseCodeBlockParams('c#{3}')).toStrictEqual({ language: 'c#', highlightedLines: [3] });
+    expect(parseCodeBlockParams('f# file="./main.fs"#L2-L3')).toStrictEqual({
+      language: 'f#',
+      file: './main.fs',
+      fileLineStart: 1,
+      fileLineEnd: 3,
+    });
+  });
+
+  it('should still reject an unknown parameter after the language', () => {
+    expect(() => parseCodeBlockParams('c++ unknown')).toThrow(
+      'Unable to parse code block options: "c++ unknown"',
+    );
+    expect(() => parseCodeBlockParams('ts name=main.ts')).toThrow();
+  });
 });

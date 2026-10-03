@@ -1,4 +1,4 @@
-import { inject, OnDestroy, Service, Signal, signal } from '@angular/core';
+import { inject, isDevMode, OnDestroy, Service, Signal, signal } from '@angular/core';
 import { NG_DOC_SHIKI_THEME } from '@ng-doc/app/tokens';
 import { ngDocSyntaxTheme } from '@ng-doc/core/constants/syntax-theme';
 import { HighlighterGeneric } from '@shikijs/core/types';
@@ -13,7 +13,13 @@ export interface NgDocHighlighterConfig {
    */
   themes?: ThemeInput[];
   /**
-   * Theme that will be used for rendering the code blocks.
+   * Has no effect, and is reported in development mode.
+   *
+   * The theme names come from `shiki.themes` in `ng-doc.config.ts`: NgDoc highlights code blocks
+   * with them when it builds the site, and passes them to the application (`NG_DOC_SHIKI_THEME`),
+   * so the code that the browser highlights matches the code blocks.
+   * @deprecated Set the theme names in `shiki.themes` of `ng-doc.config.ts` instead, and load
+   * other themes with `themes`. This field will be removed in a future major release.
    */
   theme?: {
     light: string;
@@ -46,7 +52,7 @@ export class NgDocHighlighterService implements OnDestroy {
    * Loads Shiki with the built-in themes (`github-light`, `ayu-dark` and NgDoc's `css-variables`)
    * and the given ones. Concurrent and repeated calls share one initialization; a failed one can
    * be retried.
-   * @param config - Custom Shiki themes and the theme names to use.
+   * @param config - Custom Shiki themes to load.
    */
   initialize(config?: NgDocHighlighterConfig): Promise<void> {
     if (this.destroyed) {
@@ -54,6 +60,13 @@ export class NgDocHighlighterService implements OnDestroy {
     }
     if (this.initialization) {
       return this.initialization;
+    }
+    if (config?.theme && isDevMode()) {
+      console.warn(
+        '[NgDoc] `shiki.theme` of `provideNgDocApp` has no effect. Set the theme names in ' +
+          '`shiki.themes` of `ng-doc.config.ts`: NgDoc uses them for the code blocks and the ' +
+          'code that the browser highlights.',
+      );
     }
 
     // Only immutable built-in themes are shared across SSR applications. Custom

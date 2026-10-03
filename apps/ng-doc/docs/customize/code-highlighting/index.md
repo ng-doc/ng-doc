@@ -13,7 +13,7 @@ light and dark themes with the `T` key and watch the colors follow:
 
 ```typescript name="theme-toggle.ts"
 import { Component, inject } from '@angular/core';
-import { NgDocThemeService } from '@ng-doc/app/services/theme';
+import { NgDocThemeService } from '@ng-doc/app';
 
 /** Switches the site between the light and the dark theme. */
 @Component({
@@ -127,8 +127,10 @@ set them in three places.
    export default config;
    ```
 
-2. Load them in the browser, where NgDoc highlights the code of playgrounds. `provideNgDocApp`
-   loads `github-light`, `ayu-dark` and `css-variables` already; pass the others to `shiki.themes`:
+2. Load them in the browser, where NgDoc highlights the code of playgrounds with the same theme
+   names. `provideNgDocApp` loads `github-light`, `ayu-dark` and `css-variables` already; pass the
+   others to `shiki.themes`. Its `shiki.theme` field is deprecated and has no effect, so name the
+   themes only in `ng-doc.config.ts`:
 
    ```typescript name="app.config.ts"
    import { ApplicationConfig } from '@angular/core';

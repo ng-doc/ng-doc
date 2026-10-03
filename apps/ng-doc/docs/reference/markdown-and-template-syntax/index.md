@@ -21,8 +21,9 @@ Attributes follow the language in the opening fence of a code block, separated b
 `fileName="…"` is another spelling of `name`. `lineNumbers` is accepted but has no effect. Any other
 attribute fails the build.
 
-The language is optional and defaults to TypeScript. A block with the `mermaid` language renders
-a diagram (`*DiagramsPage`).
+The language is optional and defaults to TypeScript. It is any Shiki language id or alias, such as
+`c++`, `c#` or `objective-c`; a language Shiki doesn't know is shown as plain text. A block with the
+`mermaid` language renders a diagram (`*DiagramsPage`).
 
 ### Line ranges for `file`
 

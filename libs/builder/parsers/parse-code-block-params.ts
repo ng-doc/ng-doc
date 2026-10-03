@@ -4,13 +4,20 @@ import type { NgDocCodeBlockParams } from '../interfaces/code-block-options';
 import { number, param } from './helpers';
 
 /**
+ * A code block language: a Shiki language id or alias. Besides letters and dashes, they use digits
+ * (`f90`, `1c`), `+` and `#` (`c++`, `c#`, `f#`) and other scripts (`文言`). Quotes, `=`, braces and
+ * whitespace end it, so the parameters that follow are parsed as before.
+ */
+const CODE_BLOCK_LANGUAGE: RegExp = /[\p{L}\p{N}+#-]+/u;
+
+/**
  * Code block options parser
  * @param options - Options string to parse
  */
 export function parseCodeBlockParams(options: string): NgDocCodeBlockParams {
   const parser = P.createLanguage({
     language: () =>
-      P.regexp(/[a-zA-Z-]+/)
+      P.regexp(CODE_BLOCK_LANGUAGE)
         .skip(P.optWhitespace)
         .map((language) => ({ language })),
     // File Parsers

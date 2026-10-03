@@ -228,8 +228,11 @@ async function buildSearchRecords(html: string, task: LinkTask): Promise<SearchR
     records.push({
       breadcrumbs: task.breadcrumbs,
       pageType: task.pageType,
-      title: task.title,
-      section: section?.content ?? '',
+      // Without the whitespace around them, a no-break space included: a heading's decorative
+      // emoji is joined to its text with one. `helpers/build-indexes.ts` of the legacy engine trims
+      // them the same way; keep both in step, so the two search indexes stay equal.
+      title: task.title.trim(),
+      section: (section?.content ?? '').trim(),
       route: task.absoluteRoute,
       ...(typeof fragment === 'string' && fragment ? { fragment } : {}),
       content: document.content,

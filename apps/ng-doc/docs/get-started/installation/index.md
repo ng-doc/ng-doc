@@ -7,10 +7,10 @@ can start from a new Angular project or add it to an existing one.
 
 ## Prerequisites
 
-- A standalone Angular 22 application (one that calls `bootstrapApplication`) built with Angular's
-  `application` builder, as `ng new` creates it. `@ng-doc/builder` installs with any Angular 22
-  version; the Vite engine is tested with `@angular/compiler` and `@angular/compiler-cli` 22.2.1
-  (`*UpgradeTo22Page#prerequisites`).
+- An Angular 22 application. `@ng-doc/builder` installs with any Angular 22 version; the Vite
+  engine is tested with `@angular/compiler` and `@angular/compiler-cli` 22.2.1
+  (`*UpgradeTo22Page#prerequisites`). The command chooses the engine from the application
+  ([Add NgDoc](#add-ngdoc)).
 - `vite` 7.3.5 for the Vite engine, which the command adds for you (see below).
 - Node.js 24 (`>=24.15.0 <25`).
 
@@ -29,17 +29,48 @@ ng add @ng-doc/add
 npm install @ng-doc/add && npx nx g @ng-doc/add:ng-add
 ```
 
+The command chooses the engine from the application:
+
+- **The Vite engine** (`*ViteHostPage`) for a standalone application, one that calls
+  `bootstrapApplication`, whose `build` target uses Angular's `application` builder
+  (`@angular/build:application` or `@angular-devkit/build-angular:application`). `ng new` creates
+  such an application.
+- **The legacy builders** (`*LegacyBuildersPage`) for an NgModule application, one that calls
+  `bootstrapModule`, and for an application whose `build` target uses another builder, such as
+  `@nx/angular:application` or the `browser` builder. The command says so in its output.
+- **The builders it already has** for a project that uses NgDoc: `ng add` never switches the engine,
+  even with `--engine`. `ng g @ng-doc/builder:migrate-to-vite` moves a project from the legacy
+  builders (`*MigrateToNewEnginePage`).
+
+To choose yourself, pass `--engine` (see the options below). `--engine legacy` sets up the legacy
+builders in any project that doesn't use NgDoc yet. `--engine vite` stops with an error in an
+application that the Vite engine can't build (`*LegacyBuildersPage#when-ng-add-sets-them-up`).
+
+## 🚀 Start the site
+
+Start the development server:
+
+```bash
+ng serve
+```
+
+You should see an empty documentation site with a navigation bar and a sidebar. It is empty because
+there are no pages yet. `*YourFirstPage` adds the first one.
+
 {% include "../../shared/generated-folder.md" %}
 
-## Command options
+## 📋 Command options
 
-| Option             | Description                                                                                 |
-| ------------------ | ------------------------------------------------------------------------------------------- |
-| `--project=<name>` | The application to set up. Defaults to the default project or the first one with a `build`. |
+| Option                  | Description                                                                                    |
+| ----------------------- | ---------------------------------------------------------------------------------------------- |
+| `--project=<name>`      | The application to set up. Defaults to the default project or the first one with a `build`.    |
+| `--engine=vite\|legacy` | The engine to set up. Without it, the command chooses as described in [Add NgDoc](#add-ngdoc). |
 
 ## What the command changed
 
-The command sets up NgDoc with the Vite engine (`*ViteHostPage`) and changes these files:
+With the Vite engine (`*ViteHostPage`), the command changes these files. With the legacy builders,
+the targets, styles, assets and budgets change in another way, and Vite, `vite.config.mjs` and the
+server entry are left alone (`*LegacyBuildersPage#when-ng-add-sets-them-up`):
 
 - **Packages:** it adds `@ng-doc/app`, `@ng-doc/builder`, `@ng-doc/ui-kit` and `@ng-doc/core`, and
   removes `@ng-doc/add`. It also adds `vite` 7.3.5 and `@analogjs/vite-plugin-angular` 2.6.3 to
@@ -103,17 +134,6 @@ held in a variable), it leaves that code as it is and tells you what to add by h
 > polyfill, so a zoneless application (the default since Angular 21) stays zoneless, and an
 > application that uses `provideZoneChangeDetection()` keeps it. It does not add `withFetch()`
 > either: `HttpClient` uses the Fetch API by default since Angular 22.
-
-## 🚀 Start the site
-
-Start the development server:
-
-```bash
-ng serve
-```
-
-You should see an empty documentation site with a navigation bar and a sidebar. It is empty because
-there are no pages yet. `*YourFirstPage` adds the first one.
 
 ## Manual setup
 

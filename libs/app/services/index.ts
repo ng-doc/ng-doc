@@ -7,3 +7,4 @@ export * from '@ng-doc/app/services/route-preloader';
 export * from '@ng-doc/app/services/shortcuts';
 export * from '@ng-doc/app/services/sidebar';
 export * from '@ng-doc/app/services/store';
+export * from '@ng-doc/app/services/theme';

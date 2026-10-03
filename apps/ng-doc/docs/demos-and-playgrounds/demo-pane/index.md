@@ -6,7 +6,7 @@ A demo pane shows a demo and its source side by side. The demo is in front; read
 between the panes to reveal the code behind it. Use it when the demo should come first, and the
 code is there for readers who want it.
 
-## See it
+## 👀 See it
 
 {{ NgDocActions.demoPane("ButtonDemoComponent") }}
 
@@ -18,7 +18,7 @@ The demo sits on the same dotted canvas as a demo (`*DemosPage`). The button in 
 demo fullscreen, centred at the size of the screen; press Esc or the button again to leave.
 Browsers that don't support fullscreen don't show the button.
 
-## Use it
+## 🧰 Use it
 
 Add the component to the `demos` of the page, as for a demo (`*DemosPage#use-it`), then render it
 with the `demoPane` action:
@@ -27,7 +27,7 @@ with the `demoPane` action:
 {{ '{{ NgDocActions.demoPane("ButtonDemoComponent") }}' | safe }}
 ```
 
-## Options
+## 📋 Options
 
 Pass options as the second argument of `demoPane`. They follow `NgDocDemoPaneActionOptions`:
 
@@ -102,7 +102,7 @@ class:
 }
 ```
 
-## Gotchas
+## 🚧 Gotchas
 
 > **Note**
 > A demo pane opens on `defaultTab` or on the first tab. Unlike a demo, it ignores the `opened`
