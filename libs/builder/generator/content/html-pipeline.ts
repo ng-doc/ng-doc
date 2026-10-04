@@ -28,6 +28,7 @@ interface HtmlUtilities {
       lightTheme?: string;
       darkTheme?: string;
       langs?: readonly ShikiLanguage[];
+      grammars?: 'all' | 'used';
       highlight?: PipelineHighlight;
     },
   ): Promise<{ content: string; anchors: ContentAnchor[]; error?: unknown }>;
@@ -65,6 +66,11 @@ export interface RenderTask {
   readonly themes: { readonly light: string; readonly dark: string };
   /** The configured Shiki languages (`shiki.langs`); absent without any. */
   readonly langs?: readonly ShikiLanguage[];
+  /**
+   * `all` when highlighting loads every bundled Shiki grammar (the switch is off); absent when it
+   * loads only the grammars code blocks reach. The HTML is the same.
+   */
+  readonly grammars?: 'all';
 }
 
 /**
@@ -135,7 +141,7 @@ export async function renderDocuments(
 
 async function renderDocument(
   document: RenderDocument,
-  { themes, langs }: Pick<RenderTask, 'themes' | 'langs'>,
+  { themes, langs, grammars }: Pick<RenderTask, 'themes' | 'langs' | 'grammars'>,
   highlight: () => PipelineHighlight | undefined,
   aborted: () => boolean,
 ): Promise<RenderedDocument> {
@@ -149,6 +155,7 @@ async function renderDocument(
     lightTheme: themes.light,
     darkTheme: themes.dark,
     ...(langs ? { langs } : {}),
+    grammars: grammars ?? 'used',
     ...(call ? { highlight: call } : {}),
   });
   const mismatches = call?.mismatches.length ?? 0;
@@ -340,8 +347,16 @@ export interface ThreadPort {
   postMessage(value: string): void;
 }
 
-/** A tiny document whose processing loads the pipeline and sets the highlighter up. */
-const WARM_DOCUMENT = '<pre><code class="language-ts">const warm = 1;</code></pre>';
+/**
+ * A tiny document whose processing loads the pipeline and sets the highlighter up, with the
+ * grammars of the languages NgDoc itself writes code in: TypeScript (the default language) and the
+ * Angular TypeScript and HTML of demos and snippets. With only the used grammars loaded, this moves
+ * their loading (about a second: Angular HTML reaches about 90 grammars) off the critical path, to
+ * the warm-up during the semantic phase; the HTML of a block never depends on what was loaded.
+ */
+const WARM_DOCUMENT = ['ts', 'angular-ts', 'angular-html']
+  .map((language) => `<pre><code class="language-${language}">warm</code></pre>`)
+  .join('');
 
 /**
  * Serves render, link and warm-up jobs on `port`: the body of a render thread. Every message is
@@ -419,6 +434,7 @@ export function serveHtmlThread(port: ThreadPort): void {
                 documents: [{ html: WARM_DOCUMENT }],
                 themes: job['themes'] as RenderTask['themes'],
                 ...(job['langs'] ? { langs: job['langs'] as RenderTask['langs'] } : {}),
+                ...(job['grammars'] === 'all' ? { grammars: 'all' as const } : {}),
               },
               () => (job['cache'] === true ? cache : undefined),
             );

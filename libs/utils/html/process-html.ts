@@ -22,6 +22,7 @@ import markElementsPlugin from './plugins/mark-elements.plugin';
 import mermaidPlugin from './plugins/mermaid.plugin';
 import sluggerPlugin from './plugins/slugger.plugin';
 import wrapTablePlugin from './plugins/table-wrapper';
+import { blockLanguages, createGrammarlessHighlighter, shikiGrammars } from './shiki-grammars';
 
 export type { NgDocHighlightBlock, NgDocHighlightCache } from './plugins/cached-shiki.plugin';
 
@@ -40,6 +41,13 @@ export interface NgDocHtmlProcessorConfig {
    * own, created once per thread for these languages and themes.
    */
   langs?: readonly NgDocHighlightLanguage[];
+  /**
+   * Which bundled Shiki grammars the highlighter loads: `all` (the default) sets it up with every
+   * bundled grammar, as `@shikijs/rehype` does; `used` loads only the grammars the document's code
+   * blocks can reach, into a highlighter kept per thread and theme pair, which takes a fraction of
+   * the time and gives the same HTML. With `langs`, every grammar is loaded.
+   */
+  grammars?: 'all' | 'used';
   headings?: NgDocHeading[];
   route?: string;
   /**
@@ -72,6 +80,7 @@ export async function processHtml(
     dark: config.darkTheme ?? 'ayu-dark',
   };
   const langs = config.langs?.length ? config.langs : undefined;
+  const used = !langs && config.grammars === 'used';
 
   try {
     const content = await unified()
@@ -89,20 +98,25 @@ export async function processHtml(
                   cache: config.highlight,
                   themes,
                   ...(langs ? { languages: languagesId(langs) } : {}),
+                  ...(used ? { grammars: 'used' as const } : {}),
                   identity: HIGHLIGHT_IDENTITY,
                   defaultLanguage: DEFAULT_LANGUAGE,
                   transformer: () =>
                     langs
                       ? withLanguages(themes, langs)
-                      : (rehypeShiki as unknown as (options: RehypeShikiOptions) => Transformer)(
-                          shikiOptions(themes),
-                        ),
+                      : used
+                        ? withUsedGrammars(themes)
+                        : (rehypeShiki as unknown as (options: RehypeShikiOptions) => Transformer)(
+                            shikiOptions(themes),
+                          ),
                 },
               ],
             ]
           : langs
             ? [[() => withLanguages(themes, langs)]]
-            : [[rehypeShiki, shikiOptions(themes)]],
+            : used
+              ? [[() => withUsedGrammars(themes)]]
+              : [[rehypeShiki, shikiOptions(themes)]],
       )
       .use(highlightCodeLines)
       .use(wrapTablePlugin)
@@ -224,6 +238,48 @@ function withLanguages(
         options: RehypeShikiOptions,
       ) => Transformer
     )(await highlighter, shikiOptions(themes));
+    await transform(tree);
+  };
+}
+
+/**
+ * The highlighters that load only the grammars code blocks use, by theme pair, in this thread. A
+ * highlighter that failed to load is forgotten, so that the next document tries again and fails
+ * with the same error.
+ */
+const usedHighlighters = new Map<string, ReturnType<typeof createGrammarlessHighlighter>>();
+
+/**
+ * The `@shikijs/rehype` transformer, with the options of the plain plugin, over this thread's
+ * highlighter for the theme pair, after it has loaded the grammars of the tree's code blocks
+ * (`./shiki-grammars`).
+ * @param themes - The theme names.
+ * @param themes.light - The light theme.
+ * @param themes.dark - The dark theme.
+ */
+function withUsedGrammars(themes: { light: string; dark: string }): Transformer {
+  const id = `${themes.light}\n${themes.dark}`;
+  return async (tree) => {
+    let highlighter = usedHighlighters.get(id);
+    if (!highlighter) {
+      highlighter = createGrammarlessHighlighter([
+        shikiTheme(themes.light),
+        shikiTheme(themes.dark),
+      ] as Parameters<typeof createGrammarlessHighlighter>[0]);
+      usedHighlighters.set(id, highlighter);
+      const created = highlighter;
+      created.catch(() => {
+        if (usedHighlighters.get(id) === created) usedHighlighters.delete(id);
+      });
+    }
+    const [grammars, ready] = await Promise.all([shikiGrammars(), highlighter]);
+    grammars.load(ready, blockLanguages(tree, DEFAULT_LANGUAGE));
+    const transform = (
+      rehypeShikiFromHighlighter as unknown as (
+        highlighter: unknown,
+        options: RehypeShikiOptions,
+      ) => Transformer
+    )(ready, shikiOptions(themes));
     await transform(tree);
   };
 }

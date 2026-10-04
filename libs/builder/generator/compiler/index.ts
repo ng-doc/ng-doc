@@ -1,4 +1,4 @@
-import { highlightCacheSwitch } from '../content/highlight-cache';
+import { grammarsSwitch, highlightCacheSwitch } from '../content/highlight-cache';
 import {
   disposeHtmlPool,
   holdHtmlPool,
@@ -148,6 +148,14 @@ export interface CompilationOptions {
    * `CONTENT_HIGHLIGHT_CACHE_MISMATCH` when it differs.
    */
   highlightCache?: boolean | 'verify';
+  /**
+   * Highlighting loads only the Shiki grammars that the languages of code blocks reach, into one
+   * highlighter per thread and theme pair, instead of every bundled grammar (which takes seconds);
+   * the HTML is the same (`@ng-doc/utils` `processHtml`'s `grammars: 'used'`). Projects with
+   * `shiki.langs` load every grammar. On by default; `false`, like `NGDOC_USED_GRAMMARS=0`, loads
+   * every grammar.
+   */
+  usedGrammars?: boolean;
   /**
    * Parallel rendering (`content/html-pool.ts`): a large generation runs the HTML pipeline of its
    * content (highlighting, anchors, keyword links, search records) on render threads, while the
@@ -399,6 +407,7 @@ export function createCompilationService(options: CompilationOptions): TargetedC
           prestartRenderThreads(options, request, found!.entries.length, {
             themes: found!.configuration.themes,
             ...(found!.configuration.shikiLangs ? { langs: found!.configuration.shikiLangs } : {}),
+            ...(grammarsSwitch(options) === 'all' ? { grammars: 'all' as const } : {}),
             cache: highlightCacheSwitch(options) !== 'off',
           });
         await synchronize(true);

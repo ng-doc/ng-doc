@@ -4,7 +4,7 @@ import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 
 import { HIGHLIGHT_CACHE_MISMATCH, resetHighlightCache } from '../content/highlight-cache';
 import type { ArtifactSnapshot, CompilationResult } from '../contracts';
-import { HIGHLIGHT_CACHE_FLAG } from '../kernel/flags';
+import { HIGHLIGHT_CACHE_FLAG, USED_GRAMMARS_FLAG } from '../kernel/flags';
 import { resetClosureStores } from './closure-store';
 import { type CompilationOptions, resetIncrementalRetention, resetTargetedDryRun } from './index';
 import {
@@ -216,6 +216,27 @@ test('the environment switch turns the cache off and on verify', async () => {
   const on = await chain(f, 'on');
   expect(verify.results).toEqual(on.results);
   expect(off.results).toEqual(on.results);
+}, 600_000);
+
+test('chains that load every grammar equal those that load only the used ones, cached or not', async () => {
+  const f = fixture(true, {}, code);
+  const used = await chain(f, 'on');
+  expect(used.results[0]).toContain('class=\\"shiki');
+  for (const [label, overrides, mode] of [
+    ['usedGrammars: false', { usedGrammars: false }, 'on'],
+    ['usedGrammars: false without the cache', { usedGrammars: false }, 'off'],
+    ['the cache off', {}, 'off'],
+  ] as const) {
+    const other = await chain(f, mode, overrides);
+    expect(other.results, label).toEqual(used.results);
+    expect(other.memos, label).toEqual(used.memos);
+  }
+  vi.stubEnv(USED_GRAMMARS_FLAG, '0');
+  expect((await chain(f, 'on')).results).toEqual(used.results);
+  vi.unstubAllEnvs();
+  expect(JSON.stringify((await cold(f, { usedGrammars: false })).candidate)).toBe(
+    JSON.stringify(used.candidates[3]),
+  );
 }, 600_000);
 
 test('production and cache: false keep no pack, and equal the switch off', async () => {

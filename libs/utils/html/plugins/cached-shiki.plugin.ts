@@ -51,6 +51,11 @@ export interface CachedShikiOptions {
   themes: NgDocHighlightBlock['themes'];
   /** The identity of the extra languages the transformer highlights with; absent without any. */
   languages?: string;
+  /**
+   * `used` when the transformer loads only the grammars blocks use. It gives the same result, so
+   * it is not part of a key; it only selects the transformer.
+   */
+  grammars?: 'used';
   /** What the options stand for in a key: change it whenever the options or this plugin change. */
   identity: NgDocHighlightBlock['options'];
   /** The language of a block without a `language-*` class (the options' `defaultLanguage`). */
@@ -97,7 +102,7 @@ const highlighters = new Map<string, Promise<Highlighter>>();
  */
 export default function cachedShikiPlugin(settings: CachedShikiOptions) {
   const { cache, themes, languages, identity, defaultLanguage } = settings;
-  const id = `${themes.light}\n${themes.dark}\n${languages ?? ''}`;
+  const id = `${themes.light}\n${themes.dark}\n${languages ?? ''}\n${settings.grammars ?? 'all'}`;
   return async (tree: Root): Promise<void> => {
     const blocks: Block[] = [];
     visit(tree, 'element', (node, index, parent) => {

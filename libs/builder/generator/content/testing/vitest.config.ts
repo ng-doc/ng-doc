@@ -16,10 +16,6 @@ export default defineConfig({
     environment: 'node',
     globals: false,
     pool: 'forks',
-    // Shiki sets its highlighter up with every bundled grammar the first time a process
-    // highlights, which takes seconds on a loaded machine; it counts against whichever test
-    // highlights first.
-    testTimeout: 30_000,
     coverage: {
       provider: 'v8',
       include: ['generator/content/**/*.ts'],

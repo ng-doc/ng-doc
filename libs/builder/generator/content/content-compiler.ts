@@ -116,6 +116,8 @@ export class GeneratorContentCompiler implements ContentCompiler {
     private readonly services: ContentCompilerServices,
     private readonly highlight?: HighlightSession,
     private readonly back?: ContentBack,
+    /** The Shiki grammars highlighting loads (`grammarsSwitch`). */
+    private readonly grammars: 'used' | 'all' = 'used',
   ) {}
 
   /**
@@ -854,7 +856,12 @@ export class GeneratorContentCompiler implements ContentCompiler {
     staged: () => void,
   ): Promise<RenderedDocument[]> {
     const { themes, shikiLangs } = this.services.configuration;
-    const task: RenderTask = { documents, themes, ...(shikiLangs ? { langs: shikiLangs } : {}) };
+    const task: RenderTask = {
+      documents,
+      themes,
+      ...(shikiLangs ? { langs: shikiLangs } : {}),
+      ...(this.grammars === 'all' ? { grammars: 'all' as const } : {}),
+    };
     const rendered = this.back
       ? this.back.render(task, signal)
       : renderDocuments(

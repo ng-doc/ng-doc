@@ -38,6 +38,7 @@ export const FAST_START_FLAG = 'NGDOC_FAST_START';
 export const PARALLEL_WRITES_FLAG = 'NGDOC_PARALLEL_WRITES';
 export const HIGHLIGHT_CACHE_FLAG = 'NGDOC_HIGHLIGHT_CACHE';
 export const PARALLEL_RENDER_FLAG = 'NGDOC_PARALLEL_RENDER';
+export const USED_GRAMMARS_FLAG = 'NGDOC_USED_GRAMMARS';
 
 /** The registry, in the order the engine applies the switches. */
 export const FLAGS: readonly FlagDefinition[] = Object.freeze(
@@ -139,6 +140,13 @@ export const FLAGS: readonly FlagDefinition[] = Object.freeze(
         'text, language, meta, themes and Shiki version; development keeps the cache beside the ' +
         'artifact cache.',
       verify: true,
+    },
+    {
+      name: USED_GRAMMARS_FLAG,
+      description:
+        'Code blocks are highlighted by a highlighter that loads only the Shiki grammars their ' +
+        'languages reach, instead of every bundled grammar; the HTML is the same.',
+      verify: false,
     },
     {
       name: PARALLEL_RENDER_FLAG,

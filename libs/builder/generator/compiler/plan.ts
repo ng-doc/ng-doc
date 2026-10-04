@@ -5,7 +5,11 @@ import path from 'node:path';
 
 import { createArtifactCache, JsonArtifactCache, retryingRename } from '../artifacts';
 import { GeneratorContentCompiler } from '../content/content-compiler';
-import { type HighlightSession, createHighlightSession } from '../content/highlight-cache';
+import {
+  type HighlightSession,
+  createHighlightSession,
+  grammarsSwitch,
+} from '../content/highlight-cache';
 import { type RenderBack, createRenderBack } from '../content/html-pool';
 import type {
   CompilationRequest,
@@ -217,15 +221,18 @@ export async function planGeneration(
   setup(outputDependencyResult.diagnostics, outputDependencyResult.dependencies);
   const outputDependencies = outputDependencyResult.dependencies;
   const highlight = createHighlightSession(options, request, configuration);
+  const grammars = grammarsSwitch(options);
   const back = createRenderBack(options, highlight, {
     themes: configuration.themes,
     ...(configuration.shikiLangs ? { langs: configuration.shikiLangs } : {}),
+    ...(grammars === 'all' ? { grammars } : {}),
     cache: highlight !== undefined,
   });
   const compiler = new GeneratorContentCompiler(
     { configuration, semantic, templates: discovery.templates },
     highlight,
     back,
+    grammars,
   );
   return {
     ...services,

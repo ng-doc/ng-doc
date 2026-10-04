@@ -8,7 +8,7 @@ import { retryingRename } from '../artifacts';
 import { sweepTemporaries } from '../compiler/closure-store';
 import type { CompilationRequest, GeneratorConfiguration, ShikiLanguage } from '../contracts';
 import { bytesDigest, compareCodeUnits, contentDigest, digestOf } from '../kernel/canonical';
-import { HIGHLIGHT_CACHE_FLAG, readFlag } from '../kernel/flags';
+import { HIGHLIGHT_CACHE_FLAG, readFlag, USED_GRAMMARS_FLAG } from '../kernel/flags';
 import { runtimePackages } from '../kernel/runtime-identity';
 
 /**
@@ -148,6 +148,17 @@ export function highlightCacheSwitch(options: {
   if (options.highlightCache === false) return 'off';
   const value = readFlag(HIGHLIGHT_CACHE_FLAG).value;
   return value === 'off' ? 'off' : options.highlightCache === 'verify' ? 'verify' : value;
+}
+
+/**
+ * Which Shiki grammars highlighting loads: only those code blocks reach (`used`, the default), or
+ * every bundled grammar (`all`: `usedGrammars: false` or `NGDOC_USED_GRAMMARS=0`). The HTML is the
+ * same, so neither the cache keys nor any digest depend on it.
+ */
+export function grammarsSwitch(options: { usedGrammars?: boolean }): 'used' | 'all' {
+  return options.usedGrammars === false || readFlag(USED_GRAMMARS_FLAG).value === 'off'
+    ? 'all'
+    : 'used';
 }
 
 /**

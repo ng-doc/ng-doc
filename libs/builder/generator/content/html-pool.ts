@@ -221,6 +221,8 @@ class HtmlThread {
 export interface RenderWarmUp {
   themes: { light: string; dark: string };
   langs?: readonly ShikiLanguage[];
+  /** `all` when highlighting loads every bundled grammar. */
+  grammars?: 'all';
   cache: boolean;
 }
 

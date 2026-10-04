@@ -3,6 +3,7 @@ import rehypeShiki from '@shikijs/rehype';
 import rehypeMinifyWhitespace from 'rehype-minify-whitespace';
 import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
+import { bundledLanguages } from 'shiki';
 import { unified } from 'unified';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -18,6 +19,7 @@ import {
   NgDocHtmlProcessorConfig,
   processHtml,
 } from './process-html';
+import { shikiGrammars } from './shiki-grammars';
 
 // Counts the transformers `@shikijs/rehype` creates: each one sets a highlighter up.
 vi.mock('@shikijs/rehype', async (importOriginal) => {
@@ -30,6 +32,8 @@ const factory = rehypeShiki as unknown as ReturnType<typeof vi.fn>;
 /**
  * `processHtml` as it was before the cache, verbatim: the call without `highlight` must still be
  * exactly this.
+ * @param html
+ * @param config
  */
 async function reference(html: string, config: NgDocHtmlProcessorConfig) {
   const anchors = new Set<unknown>();
@@ -68,7 +72,14 @@ async function reference(html: string, config: NgDocHtmlProcessorConfig) {
   }
 }
 
-/** A cache in a map. `loads` says whether the themes are known to load. */
+/**
+ * A cache in a map. `loads` says whether the themes are known to load.
+ * @param options
+ * @param options.loads
+ * @param options.verify
+ * @param options.entries
+ * @param options.key
+ */
 function mapCache(
   options: {
     loads?: boolean;
@@ -166,6 +177,10 @@ describe.each(THEMES)('processHtml with %s', (_, themes) => {
 
 describe('Angular templates', () => {
   // The tokens of a highlighted block with NgDoc's theme, which names the colour of each token.
+  /**
+   *
+   * @param text
+   */
   async function tokens(text: string): Promise<Map<string, string>> {
     const { content } = await processHtml(code('angular-html', text), {
       lightTheme: NG_DOC_SYNTAX_THEME_NAME,
@@ -185,6 +200,85 @@ describe('Angular templates', () => {
     );
     for (const block of ['@let', '@if', '@else', '@for', '@switch', '@case', '@defer'])
       expect(colours.get(block), block).toBe('keyword');
+  });
+});
+
+describe('only the grammars blocks use', { timeout: 300_000 }, () => {
+  // Text that many grammars tokenize: markup, Angular template syntax, tagged templates (which
+  // other grammars inject into), fenced code (which Markdown embeds lazily), SQL, JSON and shell.
+  const sample = [
+    '&lt;div class="a" (click)="go()"&gt;{{ x | async }}&lt;/div&gt;',
+    '@if (a) { &lt;b&gt;y&lt;/b&gt; } @let total = price * 2;',
+    'const a = css`a { color: red }`; // c',
+    '/* d */ let s = html`&lt;p&gt;${a}&lt;/p&gt;`;',
+    '# Title',
+    '```ts',
+    'let a = 1;',
+    '```',
+    'def f(x):',
+    '  return x + 1',
+    "SELECT * FROM t WHERE a = 'b';",
+    '{"a": [1, true, null]}',
+    '$ echo "hi" &amp;&amp; ls -la',
+  ].join('\n');
+  // Mermaid blocks become diagrams, not code.
+  const languages = Object.keys(bundledLanguages).filter((language) => language !== 'mermaid');
+  // A fixed shuffle, so every run loads the closures in the same, unsorted order.
+  const shuffled = (seed: number) => {
+    let state = seed;
+    const next = () => (state = (state * 16807) % 2147483647);
+    return languages
+      .map((language) => [next(), language] as const)
+      .sort(([left], [right]) => left - right)
+      .map(([, language]) => language);
+  };
+
+  it.each([
+    ['the legacy default themes', {}, 1],
+    [
+      "NgDoc's theme",
+      { lightTheme: NG_DOC_SYNTAX_THEME_NAME, darkTheme: NG_DOC_SYNTAX_THEME_NAME },
+      7,
+    ],
+  ] as const)(
+    'every bundled language highlights as with every grammar, in any order, with %s',
+    async (_, themes, seed) => {
+      const expected = new Map<string, string>();
+      for (const language of languages) {
+        const result = await processHtml(code(language, sample), themes);
+        expect(result.error, language).toBeUndefined();
+        expect(result.content).toContain('class="shiki');
+        expect(expected.has(language)).toBe(false);
+        expected.set(language, result.content);
+      }
+      factory.mockClear();
+      // One highlighter per theme pair grows language by language, in a shuffled order; the plain
+      // and the cached path share it.
+      for (const [index, language] of shuffled(seed).entries()) {
+        const document = code(language, sample);
+        const used = { ...themes, grammars: 'used' as const };
+        const result =
+          index % 2
+            ? await processHtml(document, used)
+            : await processHtml(document, { ...used, highlight: mapCache().cache });
+        expect(result.content, language).toBe(expected.get(language));
+      }
+      // `@shikijs/rehype`'s plugin, which loads every grammar, was never set up.
+      expect(factory).not.toHaveBeenCalled();
+    },
+  );
+
+  it('loads a language with the grammars it reaches, and nothing for an unknown one', async () => {
+    const grammars = await shikiGrammars();
+    const names = (language: string) => grammars.closure(language).map((item) => item.name);
+    expect(names('json')).toEqual(['json']);
+    expect(names('bash')).toEqual(['shellscript']);
+    expect(names('sh')).toEqual(['shellscript']);
+    // TypeScript with the grammars that inject into it (tagged templates) and theirs.
+    expect(names('ts')).toEqual(expect.arrayContaining(['typescript', 'es-tag-css', 'css']));
+    expect(names('ts').length).toBeLessThan(20);
+    expect(names('no-such-language')).toEqual([]);
+    expect(names('text')).toEqual([]);
   });
 });
 

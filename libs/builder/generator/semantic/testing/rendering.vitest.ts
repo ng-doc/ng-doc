@@ -420,12 +420,13 @@ describe('symbol view anchors', () => {
         (text) => (text ? `<p>${text}</p>` : ''),
       ),
     );
-  // The builder loads @ng-doc/utils lazily (it is ESM), as here.
+  // The builder loads @ng-doc/utils lazily (it is ESM), as here, and loads only the grammars that
+  // code blocks use.
   const anchors = async (html: string) =>
     (
       await (
         await import('@ng-doc/utils')
-      ).processHtml(html, { headings: ['h1', 'h2', 'h3', 'h4'], route: 'api/x' })
+      ).processHtml(html, { headings: ['h1', 'h2', 'h3', 'h4'], route: 'api/x', grammars: 'used' })
     ).anchors
       .map(({ anchorId, anchor, title, type }) => `${type} ${anchorId} ${anchor} ${title}`)
       .sort();
