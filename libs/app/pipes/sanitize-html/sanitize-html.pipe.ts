@@ -1,17 +1,15 @@
 import { inject, Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
+/**
+ * Marks HTML as trusted, so it can be bound to `innerHTML` without sanitization. Use it only for
+ * HTML that NgDoc generated.
+ */
 @Pipe({
   name: 'ngDocSanitizeHtml',
-  standalone: true,
 })
 export class NgDocSanitizeHtmlPipe implements PipeTransform {
   private readonly sanitizer = inject(DomSanitizer);
-
-  /** Inserted by Angular inject() migration for backwards compatibility */
-  constructor(...args: unknown[]);
-
-  constructor() {}
 
   transform(value: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(value);

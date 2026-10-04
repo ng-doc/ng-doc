@@ -1,14 +1,21 @@
-<label [ng-doc-label]="option?.hideLabel ? '' : labelContent">
-	<ng-template #labelContent>
-		<span
-			[ngDocTooltip]="tooltipTemplate"
-			[canOpen]="!!tooltipContent"
-			[positions]="['left-center', 'top-right', 'bottom-right']"
-			>{{ name }}</span
-		>
-		<ng-template #tooltipTemplate>
-			<div [innerHTML]="tooltipContent | ngDocSanitizeHtml"></div>
-		</ng-template>
-	</ng-template>
-	<ng-container #propertyOutlet></ng-container>
+<label
+  class="ng-doc-playground-property-label"
+  [class.with-label]="!option()?.hideLabel"
+  [ng-doc-label]="option()?.hideLabel ? '' : labelContent">
+  <ng-template #labelContent>
+    <span
+      class="ng-doc-playground-property-name"
+      [ngDocTooltip]="tooltipTemplate"
+      [canOpen]="!!tooltipContent()"
+      [positions]="['left-center', 'top-right', 'bottom-right']"
+      >{{ name() }}</span
+    >
+    @if (typeChip(); as type) {
+      <ng-doc-kind-icon [kind]="type" type="type"></ng-doc-kind-icon>
+    }
+    <ng-template #tooltipTemplate>
+      <div [innerHTML]="tooltipContent() | ngDocSanitizeHtml"></div>
+    </ng-template>
+  </ng-template>
+  <ng-container #propertyOutlet></ng-container>
 </label>

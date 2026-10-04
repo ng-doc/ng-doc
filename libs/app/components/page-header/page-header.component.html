@@ -1,3 +1,17 @@
-<header
-  class="ng-doc-page-header ngde"
-  [ngDocPageProcessor]="headerContent | ngDocSanitizeHtml"></header>
+@if (headerContentSource()) {
+  @if (contentController.error(); as error) {
+    <header class="ng-doc-page-header ngde" role="alert">{{ error.message }}</header>
+  } @else {
+    <header
+      class="ng-doc-page-header ngde"
+      [ngDocPageProcessor]="contentController.html() | ngDocSanitizeHtml"
+      [contentVersion]="contentController.version()"
+      (beforeRender)="revealLoaded($event)"
+      (contentProcessed)="contentController.processed($event)"
+      (processingError)="contentController.processingFailed($event)"></header>
+  }
+} @else {
+  <header
+    class="ng-doc-page-header ngde"
+    [ngDocPageProcessor]="headerContent() | ngDocSanitizeHtml"></header>
+}

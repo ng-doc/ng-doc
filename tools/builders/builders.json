@@ -1,0 +1,15 @@
+{
+  "$schema": "../../node_modules/@angular-devkit/architect/src/builders-schema.json",
+  "builders": {
+    "vite-application": {
+      "implementation": "../../dist/libs/builder/generator/vite/application-builder.js",
+      "schema": "../../libs/builder/generator/vite/application-builder.schema.json",
+      "description": "NgDoc Vite engine: production build, server bundle and prerender"
+    },
+    "vite-dev-server": {
+      "implementation": "../../dist/libs/builder/generator/vite/dev-server-builder.js",
+      "schema": "../../libs/builder/generator/vite/dev-server-builder.schema.json",
+      "description": "NgDoc Vite engine: development server"
+    }
+  }
+}

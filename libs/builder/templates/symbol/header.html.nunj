@@ -1,0 +1,22 @@
+{#-
+    The header of an API page in the symbol view: the scope, the kind chip and the modifiers, the
+    name and the status callouts. The details follow the description in the page.
+-#}
+{% import "helpers/status.html.nunj" as statusMacro %}
+{% import "helpers/tag.html.nunj" as tagMacro %}
+{% import "helpers/declaration-modifiers.html.nunj" as modifiersMacro %}
+
+<div class="ng-doc-page-tags">
+    {% set declarationType = declaration | getDeclarationType %}
+
+    {{ tagMacro.render(scope.name, "ng-doc-scope") }}
+    <span class="ng-doc-inline-delimiter" indexable="false">/</span>
+    {{ tagMacro.render("Type alias" if declarationType == "TypeAlias" else declarationType, declarationType) if declarationType }}
+    {{ modifiersMacro.render(declaration) }}
+</div>
+
+<h1 class="{{ statusMacro.class(docNode) }}">
+    {{ declaration.getName() }}
+</h1>
+
+{{ statusMacro.render(docNode) }}

@@ -36,10 +36,17 @@
       "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": ["default", "^production", "{workspaceRoot}/tools/vitest/**/*"],
+      "outputs": ["{workspaceRoot}/coverage/libs/keywords-loaders"],
       "options": {
-        "jestConfig": "libs/keywords-loaders/jest.config.ts"
+        "command": "vitest run --config libs/keywords-loaders/vitest.config.ts"
+      },
+      "configurations": {
+        "ci": {
+          "command": "vitest run --config libs/keywords-loaders/vitest.config.ts --coverage"
+        }
       }
     }
   }

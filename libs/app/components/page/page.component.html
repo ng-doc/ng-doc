@@ -1,34 +1,115 @@
-<div class="ng-doc-page-controls">
-  @if (rootPage.editSourceFileUrl) {
-    <a
+@if (!fullscreenRoute()) {
+  <div class="ng-doc-page-controls">
+    <button
+      type="button"
       ng-doc-button-icon
-      [href]="rootPage.editSourceFileUrl"
-      target="_blank"
-      ngDocTooltip="Suggest Edits">
-      <ng-doc-icon icon="edit-2"></ng-doc-icon>
-    </a>
-  }
-  @if (rootPage.viewSourceFileUrl) {
-    <a
-      ng-doc-button-icon
-      [href]="rootPage.viewSourceFileUrl"
-      target="_blank"
-      ngDocTooltip="View Source">
-      <ng-doc-icon icon="code"></ng-doc-icon>
-    </a>
-  }
-</div>
+      [rounded]="false"
+      [attr.aria-label]="linkCopied() ? 'Link copied' : 'Copy link to this page'"
+      [ngDocTooltip]="linkCopied() ? 'Copied' : 'Copy link'"
+      [attr.data-ng-doc-copied]="linkCopied()"
+      (click)="copyLink()">
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true">
+        <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7" />
+        <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7" />
+      </svg>
+    </button>
+    @if (rootPage.editSourceFileUrl) {
+      <a
+        ng-doc-button-icon
+        [rounded]="false"
+        [href]="rootPage.editSourceFileUrl"
+        target="_blank"
+        rel="noopener"
+        aria-label="Edit this page"
+        ngDocTooltip="Edit this page">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true">
+          <path d="M12 20h9M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4Z" />
+        </svg>
+      </a>
+    }
+    @if (rootPage.viewSourceFileUrl) {
+      <a
+        ng-doc-button-icon
+        [rounded]="false"
+        [href]="rootPage.viewSourceFileUrl"
+        target="_blank"
+        rel="noopener"
+        aria-label="View the page source"
+        ngDocTooltip="View source">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true">
+          <path d="m8 7-5 5 5 5m8-10 5 5-5 5" />
+        </svg>
+      </a>
+    }
+  </div>
 
-<div
-  class="ng-doc-page-wrapper"
-  [ngDocPageProcessor]="rootPage.pageContent | ngDocSanitizeHtml"
-  (afterRender)="createToc()"
-  #pageContainer></div>
+  @if (rootPage.pageContentSource) {
+    @if (contentController.error(); as error) {
+      <div class="ng-doc-page-wrapper" role="alert">{{ error.message }}</div>
+    } @else {
+      <div
+        class="ng-doc-page-wrapper"
+        [ngDocPageProcessor]="contentController.html() | ngDocSanitizeHtml"
+        [contentVersion]="contentController.version()"
+        (beforeRender)="revealLoaded($event)"
+        (contentProcessed)="contentController.processed($event)"
+        (processingError)="contentController.processingFailed($event)"
+        (afterRender)="createToc()"
+        #pageContainer></div>
+    }
+  } @else {
+    <div
+      class="ng-doc-page-wrapper"
+      [ngDocPageProcessor]="rootPage.pageContent | ngDocSanitizeHtml"
+      (afterRender)="createToc()"
+      #pageContainer></div>
+  }
+}
 
+<!-- A fullscreen route replaces the page; the outlet stays, so it can open and close in place. -->
 @if (!rootPage.page?.disableFullscreenRoutes) {
-  <ng-doc-dialog-outlet [config]="{ width: '100vw', height: '100vh' }">
-    <div class="ng-doc-fullscreen-wrapper">
-      <router-outlet></router-outlet>
-    </div>
-  </ng-doc-dialog-outlet>
+  <div class="ng-doc-fullscreen-route" [hidden]="!fullscreenRoute()">
+    @if (fullscreenRoute()) {
+      <a
+        class="ng-doc-fullscreen-route-back"
+        [routerLink]="pageUrl()"
+        [attr.aria-label]="'Back to ' + (rootPage.page?.title ?? 'the page')"
+        [ngDocTooltip]="'Back to ' + (rootPage.page?.title ?? 'the page')">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M19 12H5m7 7-7-7 7-7" />
+        </svg>
+        <span class="ng-doc-fullscreen-route-back-label">{{ rootPage.page?.title ?? 'Back' }}</span>
+      </a>
+    }
+    <router-outlet
+      (activate)="showFullscreenRoute(true)"
+      (deactivate)="showFullscreenRoute(false)" />
+  </div>
 }

@@ -1,43 +1,118 @@
-@if (options.container ?? true) {
-  <ng-doc-demo-displayer [codeContent]="codeContent" [expanded]="!!options.expanded">
-    <ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
-    <ng-template #codeContent>
-      @if (assets.length === 1) {
-        @for (asset of assets; track asset) {
-          <ng-doc-code [html]="asset.code"></ng-doc-code>
-        }
-      }
-      @if (assets.length > 1) {
-        <ng-doc-tab-group [openedTab]="(getOpenedAssetId | execute: assets) ?? options.defaultTab">
-          @for (asset of assets; track asset) {
-            <ng-doc-tab [id]="asset.title" [label]="label" [content]="assetContent">
-              <ng-template #label>
-                @if (asset.icon) {
-                  <ng-doc-icon [customIcon]="asset.icon"></ng-doc-icon>
-                }
-                {{ asset.title }}
-              </ng-template>
-              <ng-template #assetContent>
-                <ng-doc-code [html]="asset.code"></ng-doc-code>
-              </ng-template>
-            </ng-doc-tab>
+@if (options().container ?? true) {
+  <div class="ng-doc-demo-toolbar">
+    <div class="ng-doc-demo-views" role="tablist" aria-label="Demo view" ngDocSelectionHost>
+      <ng-doc-selection [align]="null" />
+      @for (item of views(); track item; let i = $index) {
+        <button
+          type="button"
+          class="ng-doc-demo-view"
+          role="tab"
+          [id]="idPrefix + '-tab-' + i"
+          [attr.aria-selected]="view() === item"
+          [ngDocSelectionOrigin]="view() === item"
+          [attr.aria-controls]="idPrefix + '-panel-' + i"
+          [attr.tabindex]="view() === item ? 0 : -1"
+          (click)="openView(item)"
+          (keydown)="onViewKeydown($event)"
+          #viewTab>
+          @if (item === 'preview') {
+            Preview
+          } @else {
+            @if (assets()[i - 1].icon; as icon) {
+              <ng-doc-icon [customIcon]="icon"></ng-doc-icon>
+            }
+            {{ item }}
           }
-        </ng-doc-tab-group>
+        </button>
       }
-    </ng-template>
-  </ng-doc-demo-displayer>
-} @else {
-  @if (options.fullscreenRoute) {
-    <ng-doc-fullscreen-button [route]="options.fullscreenRoute!"></ng-doc-fullscreen-button>
-  } @else if (demo) {
-    <ng-container *ngComponentOutlet="demo; inputs: options.inputs"></ng-container>
+    </div>
+
+    @if (view() === 'preview' && !options().fullscreenRoute) {
+      <span class="ng-doc-demo-width-readout">{{ widthReadout() }}</span>
+      <div class="ng-doc-demo-widths" role="group" aria-label="Preview width" ngDocSelectionHost>
+        <ng-doc-selection [align]="null" />
+        @for (item of previewWidths; track item.width) {
+          <button
+            type="button"
+            class="ng-doc-demo-width"
+            [attr.aria-pressed]="previewWidth() === item.width"
+            [ngDocSelectionOrigin]="previewWidth() === item.width"
+            [attr.aria-label]="item.label"
+            [ngDocTooltip]="item.label"
+            (click)="previewWidth.set(item.width)">
+            @switch (item.width) {
+              @case ('full') {
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="2" y="3" width="20" height="14" rx="2" />
+                  <path d="M8 21h8M12 17v4" />
+                </svg>
+              }
+              @case ('480') {
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="4" y="2" width="16" height="20" rx="2" />
+                  <path d="M12 18h.01" />
+                </svg>
+              }
+              @case ('280') {
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="6" y="2" width="12" height="20" rx="2" />
+                  <path d="M12 18h.01" />
+                </svg>
+              }
+            }
+          </button>
+        }
+      </div>
+    }
+
+    @if (assets().length) {
+      <ng-doc-copy-button class="ng-doc-demo-copy" [text]="copyText" label="Copy code">
+        <ng-doc-icon icon="copy"></ng-doc-icon>
+      </ng-doc-copy-button>
+    }
+
+    @if (view() === 'preview' && !options().fullscreenRoute) {
+      <ng-doc-fullscreen-toggle class="ng-doc-demo-fullscreen" [target]="stage" />
+    }
+  </div>
+
+  <div
+    class="ng-doc-demo-stage"
+    role="tabpanel"
+    [id]="idPrefix + '-panel-0'"
+    [attr.aria-labelledby]="idPrefix + '-tab-0'"
+    [attr.data-ng-doc-width]="previewWidth()"
+    [hidden]="view() !== 'preview'"
+    ngDocFullscreen
+    #stage="ngDocFullscreen">
+    <div class="ng-doc-demo-frame">
+      <ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
+    </div>
+    <!-- The toolbar is not shown in fullscreen, so the stage carries its own way out. -->
+    @if (stage.active()) {
+      <ng-doc-fullscreen-toggle class="ng-doc-demo-fullscreen-exit" [target]="stage" />
+    }
+  </div>
+
+  @for (asset of assets(); track asset.title; let i = $index) {
+    @if (view() === asset.title) {
+      <div
+        class="ng-doc-demo-source"
+        role="tabpanel"
+        [id]="idPrefix + '-panel-' + (i + 1)"
+        [attr.aria-labelledby]="idPrefix + '-tab-' + (i + 1)">
+        <ng-doc-code [html]="asset.code" [copyButton]="false"></ng-doc-code>
+      </div>
+    }
   }
+} @else {
+  <ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
 }
 
 <ng-template #demoTemplate>
-  @if (options.fullscreenRoute) {
-    <ng-doc-fullscreen-button [route]="options.fullscreenRoute!"></ng-doc-fullscreen-button>
-  } @else if (demo) {
-    <ng-container *ngComponentOutlet="demo; inputs: options.inputs"></ng-container>
+  @if (options().fullscreenRoute; as route) {
+    <ng-doc-fullscreen-button [route]="route"></ng-doc-fullscreen-button>
+  } @else if (demo(); as demo) {
+    <ng-container *ngComponentOutlet="demo; inputs: options().inputs"></ng-container>
   }
 </ng-template>

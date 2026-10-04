@@ -1,0 +1,2261 @@
+{
+  "--ng-doc-abstract-background": [
+    "libs/app/styles/parts/badge.scss :: .ng-doc-badge[data-content=abstract] :: --_ring",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifier[data-content=abstract] :: --_ring",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=abstract]"
+  ],
+  "--ng-doc-alert": [
+    "libs/app/components/mermaid-viewer/mermaid-viewer.component.scss :: :host .ng-doc-mermaid-error",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-status[data-ng-doc-color=alert] :: --_status-hue",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host[data-ng-doc-type=alert] :: --ng-doc-blockquote-background",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host[data-ng-doc-type=alert] :: --ng-doc-blockquote-border-color",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host[data-ng-doc-type=alert] :: --ng-doc-icon-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=alert] :: --ng-doc-button-background",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=alert] :: --ng-doc-button-active-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=alert] :: --ng-doc-button-background",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=alert] :: --ng-doc-button-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=alert] :: --ng-doc-button-hover-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=alert] :: --ng-doc-button-active-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=alert] :: --ng-doc-button-background",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=alert] :: --ng-doc-button-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=alert] :: --ng-doc-button-hover-color",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-color=alert] :: --ng-doc-tag-background",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-alert-border",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-alert-soft",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-alert-strong",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-hue-red"
+  ],
+  "--ng-doc-alert-text": [
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=alert] :: --ng-doc-button-active-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=alert] :: --ng-doc-button-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=alert] :: --ng-doc-button-hover-color",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-color=alert] :: --ng-doc-tag-color"
+  ],
+  "--ng-doc-api-content-max-width": [
+    "libs/app/components/api-list/api-list.component.scss :: :host",
+    "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host article:has(.ng-doc-page-tags), :host article:has(ng-doc-api-list)"
+  ],
+  "--ng-doc-api-tag-background": [
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-type[data-ng-doc-page-type=api]"
+  ],
+  "--ng-doc-api-tag-color": [
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-type[data-ng-doc-page-type=api]"
+  ],
+  "--ng-doc-app-horizontal-padding": [
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-navbar-horizontal-padding",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-page-padding",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-sidebar-horizontal-padding"
+  ],
+  "--ng-doc-app-max-width": [
+    "libs/app/components/navbar/navbar.component.scss :: .ng-doc-navbar-container",
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-root-wrapper main"
+  ],
+  "--ng-doc-article-width": [
+    "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host article",
+    "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host article:has(.ng-doc-page-tags), :host article:has(ng-doc-api-list)"
+  ],
+  "--ng-doc-async-background": [
+    "libs/app/styles/parts/badge.scss :: .ng-doc-badge[data-content=async] :: --_ring",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifier[data-content=async] :: --_ring",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=async]"
+  ],
+  "--ng-doc-background": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-filter",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-segments ng-doc-selection, .ng-doc-api-list-segments ng-doc-selection:not([data-ng-doc-placed]) ~ button[aria-pressed=true]",
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-language",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-segments ng-doc-selection",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-signature",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-switch .ng-doc-command-palette-track::after",
+    "libs/app/components/demo-displayer/demo-displayer.component.scss :: :host[data-ng-doc-border=true] .ng-doc-demo-container",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-fullscreen-exit",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-stage",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-views ng-doc-selection, .ng-doc-demo-views ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-selected=true], .ng-doc-demo-views ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-pressed=true], .ng-doc-demo-widths ng-doc-selection, .ng-doc-demo-widths ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-selected=true], .ng-doc-demo-widths ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-pressed=true]",
+    "libs/app/components/demo/demo.component.scss :: :host",
+    "libs/app/components/demo/demo.component.scss :: [data-ng-doc-width=\"480\"] > .ng-doc-demo-frame, [data-ng-doc-width=\"280\"] > .ng-doc-demo-frame",
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host",
+    "libs/app/components/page/page.component.scss :: .ng-doc-fullscreen-route",
+    "libs/app/components/page/page.component.scss :: .ng-doc-fullscreen-route-back",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties-wrapper",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-reset",
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-skip-link",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-status",
+    "libs/app/styles/global.scss :: html, body",
+    "libs/app/styles/parts/decorators.scss :: .ng-doc-decorators-group code, .ng-doc-decorators-group code.ngde",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-filter",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-tabs > ng-doc-selection",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-tabs:not(:has(> ng-doc-selection[data-ng-doc-placed])) [role=tab][aria-selected=true]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag",
+    "libs/app/styles/typography.scss :: table.ngde tbody tr td",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-kbd-background",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host",
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: .ng-doc-checkbox",
+    "libs/ui-kit/components/dropdown/dropdown.component.scss :: ::ng-deep .ng-doc-dropdown :: --ng-doc-overlay-background",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host ng-doc-selection",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host ng-doc-selection:not([data-ng-doc-placed]) ~ .ng-doc-tab.selected",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-mod=light]",
+    "libs/ui-kit/services/dialog/dialog.scss :: .ng-doc-dialog",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-alert-border",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-alert-soft",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-focus-ring",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-hue-brand-chip",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-hue-violet-chip",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-info-border",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-info-soft",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-primary-soft",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-success-border",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-success-soft",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-warning-border",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-warning-soft"
+  ],
+  "--ng-doc-base-0": [
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-navbar-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-sidebar-background",
+    "libs/ui-kit/components/toggle/toggle.component.scss :: :host .ng-doc-toggle-wrapper .ng-doc-toggle-circle",
+    "libs/ui-kit/directives/tooltip/tooltip.scss :: .ng-doc-tooltip .ng-doc-overlay-content :: --ng-doc-text",
+    "libs/ui-kit/services/notify/notify.scss :: .ng-doc-notify .ng-doc-overlay-content :: --ng-doc-text",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-background",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-input-background-color"
+  ],
+  "--ng-doc-base-1": [
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-footer",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-preview",
+    "libs/app/components/demo-pane/demo-pane.component.scss :: .ng-doc-demo-pane-stage[data-ng-doc-fullscreen=true]",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties",
+    "libs/app/components/search/search.component.scss :: .ng-doc-search-field",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-api-table:not(.no-padding) thead tr th",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-members-table .ng-doc-members-group td",
+    "libs/app/styles/typography.scss :: table.ngde thead tr th",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-code-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-demo-toolbar-background",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[ng-doc-button-icon-raised] :: --ng-doc-button-background",
+    "libs/ui-kit/components/button-toggle/button-toggle.component.scss :: :host[aria-checked=true]",
+    "libs/ui-kit/components/option-group/option-group.component.scss :: .ng-doc-option-group-header",
+    "libs/ui-kit/components/pane/pane.component.scss :: :host .ng-doc-pane-back",
+    "libs/ui-kit/components/pane/pane.component.scss :: :host .ng-doc-pane-front"
+  ],
+  "--ng-doc-base-10": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-inline-code-background",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-inline-code-background",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[ng-doc-button-icon-transparent] :: --ng-doc-button-active-color",
+    "libs/ui-kit/components/pane/pane.component.scss :: :host .ng-doc-pane-resizer:after",
+    "libs/ui-kit/directives/tooltip/tooltip.scss :: .ng-doc-tooltip :: --ng-doc-overlay-background",
+    "libs/ui-kit/directives/tooltip/tooltip.scss :: .ng-doc-tooltip :: --ng-doc-overlay-border",
+    "libs/ui-kit/services/notify/notify.scss :: .ng-doc-notify :: --ng-doc-overlay-background",
+    "libs/ui-kit/services/notify/notify.scss :: .ng-doc-notify :: --ng-doc-overlay-border",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-hover-background"
+  ],
+  "--ng-doc-base-2": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-index li + li",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-segments",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-segments",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-views, .ng-doc-demo-widths",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: ng-doc-playground-property + ng-doc-playground-property",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-progress",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-tabs",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-tabs [role=tab]:disabled",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-members-table .ng-doc-member + .ng-doc-member > td, table.ng-doc-members-table .ng-doc-member-detail + .ng-doc-member > td",
+    "libs/app/styles/typography.scss :: table.ngde tbody tr td",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[ng-doc-button-icon-raised] :: --ng-doc-button-hover-background",
+    "libs/ui-kit/components/dropdown/dropdown.component.scss :: ::ng-deep .ng-doc-dropdown :: --ng-doc-overlay-border",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-tabs-wrapper",
+    "libs/ui-kit/components/toggle/toggle.component.scss :: :host[data-disabled=true] .ng-doc-toggle-wrapper",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-button-hover-background"
+  ],
+  "--ng-doc-base-3": [
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[ng-doc-button-icon-raised] :: --ng-doc-button-active-background",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[ng-doc-button-icon-raised] :: --ng-doc-button-border",
+    "libs/ui-kit/components/button-toggle/button-toggle.component.scss :: :host:hover",
+    "libs/ui-kit/components/button-toggle/button-toggle.component.scss :: :host[aria-checked=true]",
+    "libs/ui-kit/components/line/line.component.scss :: :host",
+    "libs/ui-kit/components/pane/pane.component.scss :: :host .ng-doc-pane-resizer",
+    "libs/ui-kit/components/toggle/toggle.component.scss :: :host .ng-doc-toggle-wrapper",
+    "libs/ui-kit/components/toggle/toggle.component.scss :: :host[data-disabled=true][data-checked=true] .ng-doc-toggle-wrapper",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-border-color",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-button-active-background"
+  ],
+  "--ng-doc-base-4": [
+    "libs/app/components/api-list/api-list.component.scss :: :host-context([data-theme=dark]) .ng-doc-api-list-segments ng-doc-selection, :host-context([data-theme=dark]) .ng-doc-api-list-segments ng-doc-selection:not([data-ng-doc-placed]) ~ button[aria-pressed=true]",
+    "libs/app/components/api-list/api-list.component.scss :: @media (prefers-color-scheme: dark) > :host-context([data-theme=auto]) .ng-doc-api-list-segments ng-doc-selection, :host-context([data-theme=auto]) .ng-doc-api-list-segments ng-doc-selection:not([data-ng-doc-placed]) ~ button[aria-pressed=true]",
+    "libs/app/components/command-palette/command-palette.component.scss :: :root[data-theme=dark] .ng-doc-command-palette-segments ng-doc-selection",
+    "libs/app/components/command-palette/command-palette.component.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] .ng-doc-command-palette-segments ng-doc-selection",
+    "libs/app/components/demo/demo.component.scss :: :host-context([data-theme=dark]) ng-doc-selection, :host-context([data-theme=dark]) ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-selected=true], :host-context([data-theme=dark]) ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-pressed=true]",
+    "libs/app/components/demo/demo.component.scss :: @media (prefers-color-scheme: dark) > :host-context([data-theme=auto]) ng-doc-selection, :host-context([data-theme=auto]) ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-selected=true], :host-context([data-theme=auto]) ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-pressed=true]",
+    "libs/app/styles/parts/badge.scss :: .ng-doc-badge :: --_ring",
+    "libs/app/styles/parts/badge.scss :: .ng-doc-badge[data-content=abstract] :: --_ring",
+    "libs/app/styles/parts/badge.scss :: .ng-doc-badge[data-content=async] :: --_ring",
+    "libs/app/styles/parts/badge.scss :: .ng-doc-badge[data-content=overriden] :: --_ring",
+    "libs/app/styles/parts/badge.scss :: .ng-doc-badge[data-content=protected] :: --_ring",
+    "libs/app/styles/parts/badge.scss :: .ng-doc-badge[data-content=readonly] :: --_ring",
+    "libs/app/styles/parts/badge.scss :: .ng-doc-badge[data-content=static] :: --_ring",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifier :: --_ring",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifier[data-content=abstract] :: --_ring",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifier[data-content=async] :: --_ring",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifier[data-content=get] :: --_ring",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifier[data-content=overriden] :: --_ring",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifier[data-content=protected] :: --_ring",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifier[data-content=readonly] :: --_ring",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifier[data-content=set] :: --_ring",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifier[data-content=static] :: --_ring",
+    "libs/app/styles/parts/tables.scss :: :root[data-theme=dark] .ng-doc-members-tabs > ng-doc-selection",
+    "libs/app/styles/parts/tables.scss :: :root[data-theme=dark] .ng-doc-members-tabs:not(:has(> ng-doc-selection[data-ng-doc-placed])) [role=tab][aria-selected=true]",
+    "libs/app/styles/parts/tables.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] .ng-doc-members-tabs > ng-doc-selection",
+    "libs/app/styles/parts/tables.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] .ng-doc-members-tabs:not(:has(> ng-doc-selection[data-ng-doc-placed])) [role=tab][aria-selected=true]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=abstract]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=async]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=overriden]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=protected]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=readonly]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=static]",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[ng-doc-button-icon-raised] :: --ng-doc-button-hover-border",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host-context([data-theme=dark]) ng-doc-selection, :host-context([data-theme=dark]) ng-doc-selection:not([data-ng-doc-placed]) ~ .ng-doc-tab.selected",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: @media (prefers-color-scheme: dark) > :host-context([data-theme=auto]) ng-doc-selection, :host-context([data-theme=auto]) ng-doc-selection:not([data-ng-doc-placed]) ~ .ng-doc-tab.selected",
+    "libs/ui-kit/components/tab-routes-group/tab-routes-group.component.scss :: :host"
+  ],
+  "--ng-doc-base-5": [
+    "libs/app/components/demo-displayer/demo-displayer.component.scss :: .ng-doc-demo-container",
+    "libs/app/components/demo-pane/demo-pane.component.scss :: .ng-doc-demo-pane-stage",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-stage",
+    "libs/app/components/page/page.component.scss :: .ng-doc-fullscreen-route",
+    "libs/app/styles/typography.scss :: ul li.ngde::marker, ol li.ngde::marker",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[ng-doc-button-icon-raised] :: --ng-doc-button-active-border",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-border-hover-color"
+  ],
+  "--ng-doc-base-6": [
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[ng-doc-button-icon-transparent] :: --ng-doc-button-color"
+  ],
+  "--ng-doc-base-7": [
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-switch .ng-doc-command-palette-track",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-input-border"
+  ],
+  "--ng-doc-base-8": [
+    "libs/app/components/command-palette/command-palette.component.scss :: :root[data-theme=dark] .ng-doc-command-palette-switch:not([aria-checked=true]) .ng-doc-command-palette-track",
+    "libs/app/components/command-palette/command-palette.component.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] .ng-doc-command-palette-switch:not([aria-checked=true]) .ng-doc-command-palette-track",
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-playground-input-border",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-playground-input-border",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[ng-doc-button-icon-transparent] :: --ng-doc-button-hover-color",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-hue-neutral",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-inline-code-background",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-input-border-hover",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-text-muted"
+  ],
+  "--ng-doc-base-9": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-text-muted",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-text-muted",
+    "libs/ui-kit/components/option-group/option-group.component.scss :: .ng-doc-option-group-header :: --ng-doc-text"
+  ],
+  "--ng-doc-base-gutter": [
+    "libs/app/components/fullscreen-button/fullscreen-button.component.scss :: :host",
+    "libs/app/components/mermaid-viewer/mermaid-viewer.component.scss :: :host .ng-doc-mermaid-container",
+    "libs/app/components/page-link/page-link.component.scss :: :host ng-doc-icon",
+    "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host .ng-doc-page-header",
+    "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host :: --ng-doc-toc-margin",
+    "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host ng-doc-tab-routes-group",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties-wrapper:not(.no-side-panel):not(.inspector-bottom) .ng-doc-playground-demos",
+    "libs/app/components/search-result/search-result.component.scss :: :host .ng-doc-search-result-wrapper .ng-doc-search-result-category .ng-doc-search-result-pages .ng-doc-search-result-page",
+    "libs/app/components/search-result/search-result.component.scss :: :host .ng-doc-search-result-wrapper .ng-doc-search-result-category .ng-doc-search-result-pages .ng-doc-search-result-page .ng-doc-search-result-page-link ng-doc-kind-icon",
+    "libs/app/components/search-result/search-result.component.scss :: :host .ng-doc-search-result-wrapper .ng-doc-search-result-category .ng-doc-search-result-title",
+    "libs/app/components/search-result/search-result.component.scss :: :host .ng-doc-search-result-wrapper .ng-doc-search-result-category:not(:last-child)",
+    "libs/app/styles/global.scss :: .ng-doc-global-scrollblock",
+    "libs/app/styles/js-doc.scss :: .ng-doc-returns",
+    "libs/app/styles/page.scss :: article .ng-doc-header-link",
+    "libs/app/styles/page.scss :: article .ng-doc-inline-header h1, article .ng-doc-inline-header h2, article .ng-doc-inline-header h3, article .ng-doc-inline-header h4, article .ng-doc-inline-header h5, article .ng-doc-inline-header h6",
+    "libs/app/styles/page.scss :: article h1 .ng-doc-anchor, article h2 .ng-doc-anchor, article h3 .ng-doc-anchor, article h4 .ng-doc-anchor, article h5 .ng-doc-anchor, article h6 .ng-doc-anchor",
+    "libs/app/styles/page.scss :: article header.ngde h1.ngde",
+    "libs/app/styles/page.scss :: article section.ngde",
+    "libs/app/styles/parts/header.scss :: article header.ngde .ng-doc-header-details",
+    "libs/app/styles/parts/header.scss :: article header.ngde .ng-doc-header-details .ng-doc-header-details-label",
+    "libs/app/styles/parts/header.scss :: article header.ngde .ng-doc-page-tags",
+    "libs/app/styles/parts/header.scss :: article header.ngde h1",
+    "libs/app/styles/parts/see-also.scss :: .ng-doc-see-also li",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-api-table tr td > *:not(:last-child)",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-api-table.no-padding tbody tr td, table.ng-doc-api-table.no-padding thead tr th",
+    "libs/app/styles/typography.scss :: table.ngde h1.ngde, table.ngde h2.ngde, table.ngde h3.ngde, table.ngde h4.ngde, table.ngde h5.ngde, table.ngde h6.ngde",
+    "libs/app/styles/typography.scss :: table.ngde tbody tr td table",
+    "libs/app/styles/typography.scss :: table.ngde thead tr th:first-child",
+    "libs/app/styles/typography.scss :: table.ngde thead tr th:last-child",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-app-horizontal-padding",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-navbar-height",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-page-padding",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-page-wrapper-tabs-height",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-sidebar-padding",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-tabs-margin",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-toc-indent",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-toc-top-padding",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host :: --ng-doc-code-margin",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[data-ng-doc-rounded=false]",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[data-ng-doc-size=large]",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[data-ng-doc-size=small]",
+    "libs/ui-kit/components/button-toggle/button-toggle.component.scss :: :host",
+    "libs/ui-kit/components/button/button.component.scss :: :host",
+    "libs/ui-kit/components/button/button.component.scss :: :host :: --ng-doc-font-size",
+    "libs/ui-kit/components/button/button.component.scss :: :host :: --ng-doc-line-height",
+    "libs/ui-kit/components/button/button.component.scss :: :host[data-ng-doc-rounded=true]",
+    "libs/ui-kit/components/button/button.component.scss :: :host[data-ng-doc-size=large][data-ng-doc-rounded=true]",
+    "libs/ui-kit/components/button/button.component.scss :: :host[data-ng-doc-size=small][data-ng-doc-rounded=true]",
+    "libs/ui-kit/components/data-list-group/data-list-group.component.scss :: .ng-doc-empty-message",
+    "libs/ui-kit/components/data-list-group/data-list-group.component.scss :: ng-doc-option-group:not(:last-child)",
+    "libs/ui-kit/components/data-list/data-list.component.scss :: .ng-doc-empty-message",
+    "libs/ui-kit/components/dot/dot.component.scss :: :host[data-ng-doc-size=large] :: --ng-doc-dot-size",
+    "libs/ui-kit/components/dot/dot.component.scss :: :host[data-ng-doc-size=medium] :: --ng-doc-dot-size",
+    "libs/ui-kit/components/dot/dot.component.scss :: :host[data-ng-doc-size=small] :: --ng-doc-dot-size",
+    "libs/ui-kit/components/dropdown/dropdown.component.scss :: ::ng-deep .ng-doc-dropdown :: --ng-doc-overlay-border-radius",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: .ng-doc-blur-container .ng-doc-blur-content",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-original-input",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-original-input:first-child",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-original-input:last-child",
+    "libs/ui-kit/components/label/label.component.scss :: .ng-doc-label",
+    "libs/ui-kit/components/magnifier-controller/magnifier-controller.component.scss :: :host",
+    "libs/ui-kit/components/magnifier-controller/magnifier-controller.component.scss :: :host .ng-doc-controls-row",
+    "libs/ui-kit/components/option-group/option-group.component.scss :: .ng-doc-option-group ::ng-deep ng-doc-option .ng-doc-option-wrapper",
+    "libs/ui-kit/components/option-group/option-group.component.scss :: .ng-doc-option-group-header",
+    "libs/ui-kit/components/option/option.component.scss :: :host",
+    "libs/ui-kit/components/overlay-pointer/overlay-pointer.component.scss :: :host[data-ng-doc-overlay-align=bottom] .ng-doc-overlay-pointer .ng-doc-pointer",
+    "libs/ui-kit/components/overlay-pointer/overlay-pointer.component.scss :: :host[data-ng-doc-overlay-align=left] .ng-doc-overlay-pointer .ng-doc-pointer",
+    "libs/ui-kit/components/overlay-pointer/overlay-pointer.component.scss :: :host[data-ng-doc-overlay-align=right] .ng-doc-overlay-pointer .ng-doc-pointer",
+    "libs/ui-kit/components/overlay-pointer/overlay-pointer.component.scss :: :host[data-ng-doc-overlay-align=top] .ng-doc-overlay-pointer .ng-doc-pointer",
+    "libs/ui-kit/components/overlay-pointer/overlay-pointer.component.scss :: :host[data-ng-doc-overlay-position=left] .ng-doc-overlay-pointer-wrapper, :host[data-ng-doc-overlay-position=right] .ng-doc-overlay-pointer-wrapper",
+    "libs/ui-kit/components/overlay-pointer/overlay-pointer.component.scss :: :host[data-ng-doc-overlay-position=top] .ng-doc-overlay-pointer-wrapper, :host[data-ng-doc-overlay-position=bottom] .ng-doc-overlay-pointer-wrapper",
+    "libs/ui-kit/components/pane/pane.component.scss :: :host",
+    "libs/ui-kit/components/pane/pane.component.scss :: :host .ng-doc-pane-back",
+    "libs/ui-kit/components/pane/pane.component.scss :: :host .ng-doc-pane-front",
+    "libs/ui-kit/components/spinner/spinner.component.scss :: :host[data-ng-doc-size=large]",
+    "libs/ui-kit/components/spinner/spinner.component.scss :: :host[data-ng-doc-size=medium]",
+    "libs/ui-kit/components/spinner/spinner.component.scss :: :host[data-ng-doc-size=small]",
+    "libs/ui-kit/components/tab-routes-group/tab-route/tab-route.component.scss :: :host",
+    "libs/ui-kit/components/text/text.component.scss :: :host[data-ng-doc-text-absolute=false] .ng-doc-text-left:not(:empty) ~ .ng-doc-text",
+    "libs/ui-kit/components/text/text.component.scss :: :host[data-ng-doc-text-absolute=false] .ng-doc-text-right:not(:empty)",
+    "libs/ui-kit/components/text/text.component.scss :: :host[data-ng-doc-text-absolute=true] .ng-doc-text-left",
+    "libs/ui-kit/components/text/text.component.scss :: :host[data-ng-doc-text-absolute=true] .ng-doc-text-right",
+    "libs/ui-kit/components/toggle/toggle.component.scss :: :host .ng-doc-toggle-wrapper .ng-doc-toggle-circle",
+    "libs/ui-kit/directives/tooltip/tooltip.scss :: .ng-doc-tooltip .ng-doc-overlay-content",
+    "libs/ui-kit/directives/tooltip/tooltip.scss :: .ng-doc-tooltip :: --ng-doc-overlay-border-radius",
+    "libs/ui-kit/services/notify/notify.scss :: .ng-doc-notify .ng-doc-overlay-content",
+    "libs/ui-kit/services/notify/notify.scss :: .ng-doc-notify :: --ng-doc-overlay-border-radius",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-space-1",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-space-10",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-space-12",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-space-16",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-space-2",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-space-20",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-space-24",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-space-3",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-space-4",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-space-5",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-space-6",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-space-8",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-dot-size"
+  ],
+  "--ng-doc-base-rgb": [
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-backdrop"
+  ],
+  "--ng-doc-blockquote-background": [
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host"
+  ],
+  "--ng-doc-blockquote-border-color": [
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host .ng-doc-blockquote-title"
+  ],
+  "--ng-doc-blockquote-margin": [
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host"
+  ],
+  "--ng-doc-boolean-background": [
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host[data-ng-doc-type=type][data-ng-doc-kind=boolean] :: --ng-doc-kind-icon-background"
+  ],
+  "--ng-doc-border-color": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-index",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-kinds",
+    "libs/app/components/code/code.component.scss :: :host",
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-header",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-footer",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-input",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-preview",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-signature",
+    "libs/app/components/demo-displayer/demo-displayer.component.scss :: ng-doc-code",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-fullscreen-exit",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-toolbar",
+    "libs/app/components/demo/demo.component.scss :: [data-ng-doc-width=\"480\"] > .ng-doc-demo-frame, [data-ng-doc-width=\"280\"] > .ng-doc-demo-frame",
+    "libs/app/components/mermaid-viewer/mermaid-viewer.component.scss :: :host",
+    "libs/app/components/page-navigation/page-navigation.component.scss :: .ng-doc-navigation-controls a",
+    "libs/app/components/page/page.component.scss :: .ng-doc-fullscreen-route-back",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-divider",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties-wrapper.inspector-bottom .ng-doc-playground-properties",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-reset",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: @container ng-doc-playground (max-width: 640px) > .ng-doc-playground-properties",
+    "libs/app/components/playground/playground.component.scss :: ng-doc-playground-demo + ng-doc-playground-demo",
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-skip-link",
+    "libs/app/components/search/search.component.scss :: .ng-doc-search-field",
+    "libs/app/components/sidebar/sidebar.component.scss :: :host",
+    "libs/app/components/tabs/tabs.component.scss :: :host",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-section + .ng-doc-toc-section",
+    "libs/app/styles/parts/header.scss :: .ng-doc-api-details",
+    "libs/app/styles/parts/header.scss :: article header.ngde .ng-doc-table-wrapper:has(> table.ng-doc-api-table.no-padding)",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-table-wrapper",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-table-wrapper:has(> table.ng-doc-api-table:not(.no-padding))",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-api-table:not(.no-padding) thead tr th",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-members-table .ng-doc-members-group td",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-members-table .ng-doc-members-group:not(:first-child) td",
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-navbar-border",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-navbar-border",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-demo-displayer-border",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-kbd-border-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-navbar-border",
+    "libs/ui-kit/components/pane/pane.component.scss :: :host",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-tabs-header",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-checkbox-border",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-tab-group-border"
+  ],
+  "--ng-doc-border-hover-color": [
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-reset:hover",
+    "libs/app/components/search/search.component.scss :: .ng-doc-search-field:hover",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-checkbox-border-hover"
+  ],
+  "--ng-doc-border-size": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-playground-input-border",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-playground-input-border",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-checkbox-border",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-checkbox-border-hover",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-input-border",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-input-border-hover"
+  ],
+  "--ng-doc-button-active-background": [
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host:active"
+  ],
+  "--ng-doc-button-active-background-opacity": [
+    "libs/ui-kit/components/button/button.component.scss :: :host:active :: --ng-doc-button-background-opacity"
+  ],
+  "--ng-doc-button-active-border": [
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host:active"
+  ],
+  "--ng-doc-button-active-color": [
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host:active",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host:active :: --ng-doc-icon-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host:active :: --ng-doc-button-color"
+  ],
+  "--ng-doc-button-background": [
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host",
+    "libs/ui-kit/components/button-toggle/button-toggle.component.scss :: :host",
+    "libs/ui-kit/components/button/button.component.scss :: :host",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat]"
+  ],
+  "--ng-doc-button-background-opacity": [
+    "libs/ui-kit/components/button/button.component.scss :: :host",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat]"
+  ],
+  "--ng-doc-button-border": [
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host"
+  ],
+  "--ng-doc-button-border-color": [
+    "libs/ui-kit/components/button-toggle/button-toggle.component.scss :: :host"
+  ],
+  "--ng-doc-button-checked-background": [
+    "libs/ui-kit/components/button-toggle/button-toggle.component.scss :: :host[aria-checked=true]"
+  ],
+  "--ng-doc-button-color": [
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host :: --ng-doc-icon-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host :: --ng-doc-icon-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host :: --ng-doc-text",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-button-hover-color"
+  ],
+  "--ng-doc-button-hover-background": [
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host:hover"
+  ],
+  "--ng-doc-button-hover-background-opacity": [
+    "libs/ui-kit/components/button/button.component.scss :: :host:hover :: --ng-doc-button-background-opacity"
+  ],
+  "--ng-doc-button-hover-border": [
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host:hover"
+  ],
+  "--ng-doc-button-hover-border-color": [
+    "libs/ui-kit/components/button-toggle/button-toggle.component.scss :: :host:hover",
+    "libs/ui-kit/components/button-toggle/button-toggle.component.scss :: :host[aria-checked=true]"
+  ],
+  "--ng-doc-button-hover-color": [
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host:hover",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host:hover :: --ng-doc-icon-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host:hover :: --ng-doc-button-color",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-button-active-color"
+  ],
+  "--ng-doc-button-padding": [
+    "libs/ui-kit/components/button-toggle/button-toggle.component.scss :: :host",
+    "libs/ui-kit/components/button/button.component.scss :: :host"
+  ],
+  "--ng-doc-checkbox-border": [
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: .ng-doc-checkbox"
+  ],
+  "--ng-doc-checkbox-border-hover": [
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: :host:hover:not([aria-checked=true]) .ng-doc-checkbox"
+  ],
+  "--ng-doc-checkbox-color": [
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: :host[aria-checked=true] .ng-doc-checkbox",
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: :host[aria-checked=true] .ng-doc-checkbox :: --ng-doc-checkbox-border",
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: :host[aria-checked=true] .ng-doc-checkbox :: --ng-doc-checkbox-border-hover"
+  ],
+  "--ng-doc-checkbox-color-text": [
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: :host[aria-checked=true] .ng-doc-checkbox :: --ng-doc-icon-color"
+  ],
+  "--ng-doc-class-background": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-dot[data-ng-doc-kind=Class] :: --_hue",
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host[data-ng-doc-type=declaration][data-ng-doc-kind=Class] :: --ng-doc-kind-icon-background",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=Class] :: --ng-doc-css-tag-background"
+  ],
+  "--ng-doc-code-background": [
+    "libs/app/components/code/code.component.scss :: :host",
+    "libs/app/components/demo-displayer/demo-displayer.component.scss :: .ng-doc-demo-code ng-doc-expander",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-source",
+    "libs/app/components/mermaid-viewer/mermaid-viewer.component.scss :: :host",
+    "libs/app/components/tabs/tabs.component.scss :: :host :: --ng-doc-tab-group-background",
+    "libs/app/components/tabs/tabs.component.scss :: :host :: --ng-doc-tab-group-header-background",
+    "libs/app/styles/typography.scss :: pre.shiki code",
+    "libs/app/styles/typography.scss :: pre.shiki code span"
+  ],
+  "--ng-doc-code-border": [
+    "libs/app/components/code/code.component.scss :: :host",
+    "libs/app/styles/typography.scss :: pre.shiki code"
+  ],
+  "--ng-doc-code-border-radius": ["libs/app/components/code/code.component.scss :: :host"],
+  "--ng-doc-code-font": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-name",
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-body ::ng-deep pre code",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-mono",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-preview-title.ng-doc-command-palette-mono",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-signature",
+    "libs/app/components/playground/playground-property/playground-property.component.scss :: .ng-doc-playground-property-name",
+    "libs/app/styles/parts/badge.scss :: .ng-doc-badge",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifier",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-member-signature",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-api-table:not(.no-padding).first-colum-highlighted tbody tr td:first-child > span",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=abstract]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=async]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=overriden]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=protected]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=readonly]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=static]",
+    "libs/app/styles/typography.scss :: *:not(pre) > code.ngde",
+    "libs/app/styles/typography.scss :: pre.shiki code"
+  ],
+  "--ng-doc-code-font-size": [
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-body ::ng-deep pre code",
+    "libs/app/styles/typography.scss :: pre.shiki code"
+  ],
+  "--ng-doc-code-font-weight": [
+    "libs/app/styles/typography.scss :: *:not(pre) > code.ngde",
+    "libs/app/styles/typography.scss :: pre.shiki code"
+  ],
+  "--ng-doc-code-header-background": [
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-header",
+    "libs/app/components/tabs/tabs.component.scss :: :host :: --ng-doc-tab-group-tabs-background"
+  ],
+  "--ng-doc-code-header-color": [
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-file-name"
+  ],
+  "--ng-doc-code-header-height": [
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-header",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-tabs-header"
+  ],
+  "--ng-doc-code-highlight-color": [
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-body ::ng-deep pre code .line.highlighted"
+  ],
+  "--ng-doc-code-line-height": [
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-body ::ng-deep pre code",
+    "libs/app/styles/typography.scss :: pre.shiki code"
+  ],
+  "--ng-doc-code-line-number-color": [
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-body ::ng-deep pre code .line::before"
+  ],
+  "--ng-doc-code-line-numbers": [
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-body ::ng-deep pre code .line::before"
+  ],
+  "--ng-doc-code-margin": [
+    "libs/app/components/code/code.component.scss :: :host",
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-body ::ng-deep pre"
+  ],
+  "--ng-doc-code-max-height": [
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-body ::ng-deep pre code"
+  ],
+  "--ng-doc-code-shadow": ["libs/app/styles/typography.scss :: pre.shiki code"],
+  "--ng-doc-component-decorator-background": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-dot[data-ng-doc-kind=Component] :: --_hue",
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host[data-ng-doc-type=declaration][data-ng-doc-kind=Component] :: --ng-doc-kind-icon-background",
+    "libs/app/styles/parts/decorators.scss :: .ng-doc-decorators-group code[data-ng-doc-decorator=Component] :: --_hue",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=Component] :: --ng-doc-css-tag-background"
+  ],
+  "--ng-doc-content-max-width": [
+    "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host article"
+  ],
+  "--ng-doc-css-tag-background": ["libs/app/styles/parts/tags.scss :: .ng-doc-tag"],
+  "--ng-doc-css-tag-background-opacity": ["libs/app/styles/parts/tags.scss :: .ng-doc-tag"],
+  "--ng-doc-demo-displayer-background": [
+    "libs/app/components/demo-displayer/demo-displayer.component.scss :: :host[data-ng-doc-border=true] .ng-doc-demo-container",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-stage",
+    "libs/app/components/demo/demo.component.scss :: :host",
+    "libs/app/components/page/page.component.scss :: .ng-doc-fullscreen-route",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties-wrapper"
+  ],
+  "--ng-doc-demo-displayer-border": [
+    "libs/app/components/demo-displayer/demo-displayer.component.scss :: :host[data-ng-doc-border=true]",
+    "libs/app/components/demo/demo.component.scss :: :host",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties-wrapper"
+  ],
+  "--ng-doc-demo-displayer-border-radius": [
+    "libs/app/components/demo-displayer/demo-displayer.component.scss :: :host[data-ng-doc-border=true]",
+    "libs/app/components/demo-pane/demo-pane.component.scss :: :host :: --ng-doc-pane-border-radius",
+    "libs/app/components/demo/demo.component.scss :: :host",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties-wrapper"
+  ],
+  "--ng-doc-demo-margin": ["libs/app/components/demo/demo.component.scss :: :host"],
+  "--ng-doc-demo-pane-height": ["libs/app/components/demo-pane/demo-pane.component.scss :: :host"],
+  "--ng-doc-demo-pane-margin": ["libs/app/components/demo-pane/demo-pane.component.scss :: :host"],
+  "--ng-doc-demo-toolbar-background": [
+    "libs/app/components/demo-pane/demo-pane.component.scss :: :host :: --ng-doc-tab-group-tabs-background",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-toolbar"
+  ],
+  "--ng-doc-directive-decorator-background": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-dot[data-ng-doc-kind=Directive] :: --_hue",
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host[data-ng-doc-type=declaration][data-ng-doc-kind=Directive] :: --ng-doc-kind-icon-background",
+    "libs/app/styles/parts/decorators.scss :: .ng-doc-decorators-group code[data-ng-doc-decorator=Directive] :: --_hue",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=Directive] :: --ng-doc-css-tag-background"
+  ],
+  "--ng-doc-display-letter-spacing": ["libs/app/styles/typography.scss :: h1.ngde"],
+  "--ng-doc-dot-background": ["libs/ui-kit/components/dot/dot.component.scss :: :host"],
+  "--ng-doc-dot-size": ["libs/ui-kit/components/dot/dot.component.scss :: :host"],
+  "--ng-doc-easing": [
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-switch .ng-doc-command-palette-track::after",
+    "libs/app/components/command-palette/command-palette.component.scss :: ng-doc-command-palette.ng-doc-command-palette-enter",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-frame",
+    "libs/app/components/sidebar/sidebar-category/sidebar-category.component.scss :: .ng-doc-sidebar-category-chevron",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-marker"
+  ],
+  "--ng-doc-enum-background": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-dot[data-ng-doc-kind=Enum] :: --_hue",
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host[data-ng-doc-type=declaration][data-ng-doc-kind=Enum] :: --ng-doc-kind-icon-background",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=Enum] :: --ng-doc-css-tag-background"
+  ],
+  "--ng-doc-floated-border": [
+    "libs/ui-kit/components/floated-border/floated-border.component.scss :: :host:after"
+  ],
+  "--ng-doc-floated-border-color": [
+    "libs/ui-kit/components/floated-border/floated-border.component.scss :: :host:after",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-floated-border"
+  ],
+  "--ng-doc-floated-border-radius": [
+    "libs/ui-kit/components/floated-border/floated-border.component.scss :: :host:after",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-input, :host .ng-doc-input-container ::ng-deep .ng-doc-input",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container:after"
+  ],
+  "--ng-doc-floated-border-shadow-color": [
+    "libs/ui-kit/components/floated-border/floated-border.component.scss :: :host:after"
+  ],
+  "--ng-doc-floated-focus-border-color": [
+    "libs/ui-kit/components/wrapper/wrapper.component.scss :: :host[data-ng-doc-focused=true] :: --ng-doc-floated-border-color"
+  ],
+  "--ng-doc-focus-ring": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-filter:focus-within",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-segments button:focus-visible",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-switch:focus-visible",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-view:focus-visible, .ng-doc-demo-width:focus-visible",
+    "libs/app/components/image-viewer/image-viewer.component.scss :: :host:focus-visible",
+    "libs/app/components/page-navigation/page-navigation.component.scss :: .ng-doc-navigation-controls a:focus-visible",
+    "libs/app/components/page/page.component.scss :: .ng-doc-fullscreen-route-back:focus-visible",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-reset:focus-visible",
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-skip-link:focus-visible",
+    "libs/app/components/search/search.component.scss :: .ng-doc-search-field:focus-visible",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-filter:focus-within",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host:focus-visible",
+    "libs/ui-kit/components/button/button.component.scss :: :host:focus-visible",
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: .ng-doc-checkbox:has(input:focus-visible)",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container:has(.ng-doc-input:focus-visible)",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-tab:focus-visible"
+  ],
+  "--ng-doc-focus-ring-color": [
+    "libs/ui-kit/components/pane/pane.component.scss :: :host .ng-doc-pane-resizer:focus-visible",
+    "libs/ui-kit/components/tab-routes-group/tab-route/tab-route.component.scss :: :host:focus-visible",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-focus-ring"
+  ],
+  "--ng-doc-font-family": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-filter input",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-group-title .ng-doc-api-list-count",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-kbd",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-kinds button",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-segments button",
+    "libs/app/components/api-list/api-list.component.scss :: :host",
+    "libs/app/components/breadcrumb/breadcrumb.component.scss :: .ng-doc-breadcrumbs",
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-header",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-input input",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-kbd",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-name small",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-preview-title",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-section",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-segments button",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-switch",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-type",
+    "libs/app/components/command-palette/command-palette.component.scss :: ng-doc-command-palette",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-toolbar",
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host",
+    "libs/app/components/page-navigation/page-navigation.component.scss :: .ng-doc-navigation-controls",
+    "libs/app/components/page/page.component.scss :: .ng-doc-fullscreen-route-back",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: h5.ng-doc-title",
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-skip-link",
+    "libs/app/components/search/search.component.scss :: .ng-doc-search-field",
+    "libs/app/components/search/search.component.scss :: .ng-doc-search-field kbd",
+    "libs/app/components/sidebar/sidebar.component.scss :: :host",
+    "libs/app/components/toc/toc.component.scss :: :host",
+    "libs/app/styles/global.scss :: html, body",
+    "libs/app/styles/parts/decorators.scss :: .ng-doc-decorators-group code, .ng-doc-decorators-group code.ngde",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-node-details",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-filter input",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-tabs [role=tab]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag",
+    "libs/app/type-controls/type-alias-control/type-alias-control.component.scss :: .ng-doc-type-alias-value",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host",
+    "libs/ui-kit/components/button-toggle/button-toggle.component.scss :: :host",
+    "libs/ui-kit/components/button/button.component.scss :: :host",
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: :host",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-input, :host .ng-doc-input-container ::ng-deep .ng-doc-input",
+    "libs/ui-kit/components/label/label.component.scss :: .ng-doc-label",
+    "libs/ui-kit/components/option/option.component.scss :: :host",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-tabs-wrapper",
+    "libs/ui-kit/components/tab-routes-group/tab-route/tab-route.component.scss :: :host",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host",
+    "libs/ui-kit/components/text/text.component.scss :: :host",
+    "libs/ui-kit/directives/tooltip/tooltip.scss :: .ng-doc-tooltip .ng-doc-overlay-content",
+    "libs/ui-kit/services/notify/notify.scss :: .ng-doc-notify .ng-doc-overlay-content"
+  ],
+  "--ng-doc-font-size": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-lead",
+    "libs/app/components/page-navigation/page-navigation.component.scss :: .ng-doc-navigation-page-title",
+    "libs/app/styles/global.scss :: html, body",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-node-details",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-node-details code.ng-doc-code-with-link :: --ng-doc-code-font-size",
+    "libs/app/styles/typography.scss :: h1.ngde, h2.ngde, h3.ngde, h4.ngde, h5.ngde, h6.ngde",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host",
+    "libs/ui-kit/components/button-toggle/button-toggle.component.scss :: :host",
+    "libs/ui-kit/components/button/button.component.scss :: :host",
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: :host",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-input, :host .ng-doc-input-container ::ng-deep .ng-doc-input",
+    "libs/ui-kit/components/label/label.component.scss :: .ng-doc-label",
+    "libs/ui-kit/components/option/option.component.scss :: :host",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-tabs-wrapper",
+    "libs/ui-kit/components/tab-routes-group/tab-route/tab-route.component.scss :: :host",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host",
+    "libs/ui-kit/components/text/text.component.scss :: :host",
+    "libs/ui-kit/directives/tooltip/tooltip.scss :: .ng-doc-tooltip .ng-doc-overlay-content",
+    "libs/ui-kit/services/notify/notify.scss :: .ng-doc-notify .ng-doc-overlay-content"
+  ],
+  "--ng-doc-font-system": [
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-font-family",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-heading-font-family"
+  ],
+  "--ng-doc-font-system-mono": ["libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-code-font"],
+  "--ng-doc-font-weight": [
+    "libs/app/styles/global.scss :: html, body",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-node-details",
+    "libs/app/styles/typography.scss :: h1.ngde, h2.ngde, h3.ngde, h4.ngde, h5.ngde, h6.ngde",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host",
+    "libs/ui-kit/components/button-toggle/button-toggle.component.scss :: :host",
+    "libs/ui-kit/components/button/button.component.scss :: :host",
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: :host",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-input, :host .ng-doc-input-container ::ng-deep .ng-doc-input",
+    "libs/ui-kit/components/label/label.component.scss :: .ng-doc-label",
+    "libs/ui-kit/components/option/option.component.scss :: :host",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-tabs-wrapper",
+    "libs/ui-kit/components/tab-routes-group/tab-route/tab-route.component.scss :: :host",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host",
+    "libs/ui-kit/components/text/text.component.scss :: :host",
+    "libs/ui-kit/directives/tooltip/tooltip.scss :: .ng-doc-tooltip .ng-doc-overlay-content",
+    "libs/ui-kit/services/notify/notify.scss :: .ng-doc-notify .ng-doc-overlay-content"
+  ],
+  "--ng-doc-function-background": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-dot[data-ng-doc-kind=Function] :: --_hue",
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host[data-ng-doc-type=declaration][data-ng-doc-kind=Function] :: --ng-doc-kind-icon-background",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=Function] :: --ng-doc-css-tag-background"
+  ],
+  "--ng-doc-get-background": [
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifier[data-content=get] :: --_ring"
+  ],
+  "--ng-doc-guide-tag-background": [
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-type[data-ng-doc-page-type=guide]"
+  ],
+  "--ng-doc-guide-tag-color": [
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-type[data-ng-doc-page-type=guide]"
+  ],
+  "--ng-doc-h1-font-size": ["libs/app/styles/typography.scss :: h1.ngde :: --ng-doc-font-size"],
+  "--ng-doc-h1-line-height": ["libs/app/styles/typography.scss :: h1.ngde :: --ng-doc-line-height"],
+  "--ng-doc-h2-border": ["libs/app/styles/typography.scss :: h2.ngde"],
+  "--ng-doc-h2-font-size": ["libs/app/styles/typography.scss :: h2.ngde :: --ng-doc-font-size"],
+  "--ng-doc-h2-line-height": ["libs/app/styles/typography.scss :: h2.ngde :: --ng-doc-line-height"],
+  "--ng-doc-h2-margin-top": ["libs/app/styles/typography.scss :: h2.ngde"],
+  "--ng-doc-h2-padding-top": ["libs/app/styles/typography.scss :: h2.ngde"],
+  "--ng-doc-h3-font-size": ["libs/app/styles/typography.scss :: h3.ngde :: --ng-doc-font-size"],
+  "--ng-doc-h3-line-height": ["libs/app/styles/typography.scss :: h3.ngde :: --ng-doc-line-height"],
+  "--ng-doc-h3-margin-top": ["libs/app/styles/typography.scss :: h3.ngde"],
+  "--ng-doc-h4-font-size": ["libs/app/styles/typography.scss :: h4.ngde :: --ng-doc-font-size"],
+  "--ng-doc-h4-line-height": ["libs/app/styles/typography.scss :: h4.ngde :: --ng-doc-line-height"],
+  "--ng-doc-h5-font-size": ["libs/app/styles/typography.scss :: h5.ngde :: --ng-doc-font-size"],
+  "--ng-doc-h5-line-height": ["libs/app/styles/typography.scss :: h5.ngde :: --ng-doc-line-height"],
+  "--ng-doc-h6-font-size": ["libs/app/styles/typography.scss :: h6.ngde :: --ng-doc-font-size"],
+  "--ng-doc-h6-line-height": ["libs/app/styles/typography.scss :: h6.ngde :: --ng-doc-line-height"],
+  "--ng-doc-heading-color": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-filter input",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-group-title",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-kinds button:hover",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-name",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-segments button:hover",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-segments button[aria-pressed=true]",
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-file-name",
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-language",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-input input",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-name",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-preview-title",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-segments button:hover",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-segments button[aria-selected=true]",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-view:hover, .ng-doc-demo-width:hover",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-view[aria-selected=true], .ng-doc-demo-view[aria-pressed=true], .ng-doc-demo-width[aria-selected=true], .ng-doc-demo-width[aria-pressed=true]",
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host",
+    "libs/app/components/navbar/navbar.component.scss :: :host :: --ng-doc-button-active-color",
+    "libs/app/components/navbar/navbar.component.scss :: :host :: --ng-doc-button-hover-color",
+    "libs/app/components/page/page.component.scss :: .ng-doc-fullscreen-route-back:hover",
+    "libs/app/components/page/page.component.scss :: :host .ng-doc-page-controls :: --ng-doc-button-active-color",
+    "libs/app/components/page/page.component.scss :: :host .ng-doc-page-controls :: --ng-doc-button-hover-color",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-header h4",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-reset",
+    "libs/app/components/playground/playground-property/playground-property.component.scss :: .ng-doc-playground-property-name",
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-skip-link",
+    "libs/app/components/sidebar/sidebar-category/sidebar-category.component.scss :: .ng-doc-sidebar-category-button",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-link:hover",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-status",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: :host([data-ng-doc-is-root=true]) .ng-doc-sidebar-link:not(.active)",
+    "libs/app/components/toc/toc-element/toc-element.component.scss :: a:hover",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-action:hover",
+    "libs/app/styles/parts/decorators.scss :: .ng-doc-decorators-group code, .ng-doc-decorators-group code.ngde",
+    "libs/app/styles/parts/header.scss :: .ng-doc-api-details[data-ng-doc-variant=rail] dd",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-member-signature .ng-doc-member-name",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-filter input",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-tabs [role=tab]:hover:not(:disabled)",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-tabs [role=tab][aria-selected=true]",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-api-table.first-colum-highlighted tr td:first-child",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag",
+    "libs/app/styles/typography.scss :: h1.ngde, h2.ngde, h3.ngde, h4.ngde, h5.ngde, h6.ngde",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-function",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-keyword",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-string",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-type",
+    "libs/app/type-controls/type-alias-control/type-alias-control.component.scss :: .ng-doc-type-alias-value",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host .ng-doc-blockquote-title",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host ::ng-deep code.ng-doc-code-with-link a",
+    "libs/ui-kit/components/button-toggle/button-toggle.component.scss :: :host[aria-checked=true] :: --ng-doc-text",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-tab.selected",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-tab:hover",
+    "libs/ui-kit/components/tab-routes-group/tab-route/tab-route.component.scss :: :host[aria-current=page], :host:hover",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-mod=light] :: --ng-doc-tag-color",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-alert-strong",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-hue-brand-strong",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-hue-violet-strong",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-info-strong",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-primary-strong",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-success-strong",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-warning-strong",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-inline-code-color"
+  ],
+  "--ng-doc-heading-font-family": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-group-title",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-header h4",
+    "libs/app/styles/typography.scss :: h1.ngde, h2.ngde, h3.ngde, h4.ngde, h5.ngde, h6.ngde"
+  ],
+  "--ng-doc-heading-letter-spacing": [
+    "libs/app/styles/typography.scss :: h1.ngde, h2.ngde, h3.ngde, h4.ngde, h5.ngde, h6.ngde"
+  ],
+  "--ng-doc-heading-margin-bottom": ["libs/app/styles/typography.scss :: h2.ngde"],
+  "--ng-doc-hover-background": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-kinds button:hover",
+    "libs/app/components/navbar/navbar.component.scss :: :host :: --ng-doc-button-hover-background",
+    "libs/app/components/page/page.component.scss :: :host .ng-doc-page-controls :: --ng-doc-button-hover-background",
+    "libs/app/components/sidebar/sidebar-category/sidebar-category.component.scss :: button.ng-doc-sidebar-category-button:hover",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-link:hover",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-action:hover",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-row-hover-background",
+    "libs/ui-kit/components/option/option.component.scss :: :host:hover:not([data-disabled=true]), :host[data-ng-doc-hover=true]:not([data-disabled=true])"
+  ],
+  "--ng-doc-hue-amber": [
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-enum-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-object-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-variable-background"
+  ],
+  "--ng-doc-hue-brand": [
+    "libs/app/styles/parts/decorators.scss :: .ng-doc-decorators-group code, .ng-doc-decorators-group code.ngde :: --_hue",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-component-decorator-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-directive-decorator-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-input-decorator-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-ng-module-decorator-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-number-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-output-decorator-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-pipe-decorator-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-selector-background",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-hue-brand-chip",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-hue-brand-strong"
+  ],
+  "--ng-doc-hue-brand-chip": [
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-guide-tag-background"
+  ],
+  "--ng-doc-hue-brand-strong": [
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-guide-tag-color"
+  ],
+  "--ng-doc-hue-green": [
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-function-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-string-background"
+  ],
+  "--ng-doc-hue-neutral": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-dot :: --_hue",
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-language",
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-abstract-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-async-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-get-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-interface-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-null-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-overriden-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-protected-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-readonly-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-set-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-static-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-type-alias-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-undefined-background",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host .ng-doc-blockquote-title"
+  ],
+  "--ng-doc-hue-violet": [
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-boolean-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-class-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-injectable-decorator-background",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-keyword",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-hue-violet-chip",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-hue-violet-strong"
+  ],
+  "--ng-doc-hue-violet-chip": [
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-api-tag-background"
+  ],
+  "--ng-doc-hue-violet-strong": [
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-api-tag-color"
+  ],
+  "--ng-doc-icon-color": ["libs/ui-kit/components/icon/icon.component.scss :: :host"],
+  "--ng-doc-icon-height": [
+    "libs/ui-kit/components/icon/icon.component.scss :: :host",
+    "libs/ui-kit/components/icon/icon.component.scss :: :host[data-ng-doc-size=\"24\"]"
+  ],
+  "--ng-doc-icon-width": [
+    "libs/ui-kit/components/icon/icon.component.scss :: :host",
+    "libs/ui-kit/components/icon/icon.component.scss :: :host[data-ng-doc-size=\"24\"]"
+  ],
+  "--ng-doc-info": [
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-status[data-ng-doc-color=info] :: --_status-hue",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host[data-ng-doc-type=note] :: --ng-doc-blockquote-background",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host[data-ng-doc-type=note] :: --ng-doc-blockquote-border-color",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host[data-ng-doc-type=note] :: --ng-doc-icon-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=info] :: --ng-doc-button-background",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=info] :: --ng-doc-button-active-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=info] :: --ng-doc-button-background",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=info] :: --ng-doc-button-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=info] :: --ng-doc-button-hover-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=info] :: --ng-doc-button-active-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=info] :: --ng-doc-button-background",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=info] :: --ng-doc-button-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=info] :: --ng-doc-button-hover-color",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-color=info] :: --ng-doc-tag-background",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-info-border",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-info-soft",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-info-strong"
+  ],
+  "--ng-doc-info-text": [
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=info] :: --ng-doc-button-active-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=info] :: --ng-doc-button-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=info] :: --ng-doc-button-hover-color",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-color=info] :: --ng-doc-tag-color"
+  ],
+  "--ng-doc-injectable-decorator-background": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-dot[data-ng-doc-kind=Injectable] :: --_hue",
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host[data-ng-doc-type=declaration][data-ng-doc-kind=Injectable] :: --ng-doc-kind-icon-background",
+    "libs/app/styles/parts/decorators.scss :: .ng-doc-decorators-group code[data-ng-doc-decorator=Injectable] :: --_hue",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=Injectable] :: --ng-doc-css-tag-background"
+  ],
+  "--ng-doc-inline-code-background": ["libs/app/styles/typography.scss :: *:not(pre) > code.ngde"],
+  "--ng-doc-inline-code-color": ["libs/app/styles/typography.scss :: *:not(pre) > code.ngde"],
+  "--ng-doc-input-background-color": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-filter",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-filter",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container"
+  ],
+  "--ng-doc-input-border": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-filter",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-filter",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-playground-input-border",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container:after"
+  ],
+  "--ng-doc-input-border-hover": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-filter:hover",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-filter:hover",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host:hover:not([data-ng-doc-input-disabled=true]) :: --ng-doc-input-border"
+  ],
+  "--ng-doc-input-color": [
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-input, :host .ng-doc-input-container ::ng-deep .ng-doc-input"
+  ],
+  "--ng-doc-input-cursor": [
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-input, :host .ng-doc-input-container ::ng-deep .ng-doc-input"
+  ],
+  "--ng-doc-input-decorator-background": [
+    "libs/app/styles/parts/decorators.scss :: .ng-doc-decorators-group code[data-ng-doc-decorator=Input] :: --_hue"
+  ],
+  "--ng-doc-input-font-family": [
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-input, :host .ng-doc-input-container ::ng-deep .ng-doc-input"
+  ],
+  "--ng-doc-input-font-size": [
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-input, :host .ng-doc-input-container ::ng-deep .ng-doc-input"
+  ],
+  "--ng-doc-input-font-weight": [
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-input, :host .ng-doc-input-container ::ng-deep .ng-doc-input"
+  ],
+  "--ng-doc-input-height": [
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host :: --ng-doc-icon-height",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: ng-doc-floated-border"
+  ],
+  "--ng-doc-input-padding-left": [
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: .ng-doc-blur-container .ng-doc-blur-content",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-original-input",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-original-input:first-child"
+  ],
+  "--ng-doc-input-padding-right": [
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: .ng-doc-blur-container .ng-doc-blur-content",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-original-input",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-original-input:last-child"
+  ],
+  "--ng-doc-input-text-align": [
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-input, :host .ng-doc-input-container ::ng-deep .ng-doc-input"
+  ],
+  "--ng-doc-input-width": [
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: ng-doc-floated-border"
+  ],
+  "--ng-doc-interface-background": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-dot[data-ng-doc-kind=Interface] :: --_hue",
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host[data-ng-doc-type=declaration][data-ng-doc-kind=Interface] :: --ng-doc-kind-icon-background",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=Interface] :: --ng-doc-css-tag-background"
+  ],
+  "--ng-doc-kbd-background": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-kbd",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-kbd",
+    "libs/app/components/search/search.component.scss :: .ng-doc-search-field kbd"
+  ],
+  "--ng-doc-kbd-border-color": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-kbd",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-kbd",
+    "libs/app/components/search/search.component.scss :: .ng-doc-search-field kbd"
+  ],
+  "--ng-doc-kind-icon-background": [
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host"
+  ],
+  "--ng-doc-kind-icon-background-opacity": [
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host"
+  ],
+  "--ng-doc-label-content-width": [
+    "libs/ui-kit/components/label/label.component.scss :: .ng-doc-content"
+  ],
+  "--ng-doc-line-height": [
+    "libs/app/styles/global.scss :: html, body",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-node-details",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-node-details :: --ng-doc-code-line-height",
+    "libs/app/styles/typography.scss :: blockquote.ngde, blockquote[ng-doc-blockquote]",
+    "libs/app/styles/typography.scss :: h1.ngde, h2.ngde, h3.ngde, h4.ngde, h5.ngde, h6.ngde",
+    "libs/app/styles/typography.scss :: p.ngde",
+    "libs/app/styles/typography.scss :: ul li.ngde, ol li.ngde",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host",
+    "libs/ui-kit/components/button-toggle/button-toggle.component.scss :: :host",
+    "libs/ui-kit/components/button/button.component.scss :: :host",
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: :host",
+    "libs/ui-kit/components/dot/dot.component.scss :: :host",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container",
+    "libs/ui-kit/components/label/label.component.scss :: .ng-doc-label",
+    "libs/ui-kit/components/option/option.component.scss :: :host",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-tabs-wrapper",
+    "libs/ui-kit/components/tab-routes-group/tab-route/tab-route.component.scss :: :host",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host",
+    "libs/ui-kit/components/text/text.component.scss :: :host",
+    "libs/ui-kit/components/text/text.component.scss :: :host .ng-doc-text-left ::ng-deep > ng-doc-svg-icon, :host .ng-doc-text-right ::ng-deep > ng-doc-svg-icon",
+    "libs/ui-kit/components/text/text.component.scss :: :host .ng-doc-text-left, :host .ng-doc-text-right",
+    "libs/ui-kit/directives/tooltip/tooltip.scss :: .ng-doc-tooltip .ng-doc-overlay-content",
+    "libs/ui-kit/services/notify/notify.scss :: .ng-doc-notify .ng-doc-overlay-content"
+  ],
+  "--ng-doc-link-color": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-index a:hover .ng-doc-api-list-name",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-scope-note button",
+    "libs/app/components/page-navigation/page-navigation.component.scss :: .ng-doc-navigation-page-title",
+    "libs/app/styles/parts/text.scss :: code.ng-doc-code-with-link :: --ng-doc-inline-code-background",
+    "libs/app/styles/typography.scss :: a.ngde",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host ::ng-deep code.ng-doc-code-with-link a",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=link] :: --ng-doc-button-background",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=link] :: --ng-doc-button-active-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=link] :: --ng-doc-button-background",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=link] :: --ng-doc-button-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=link] :: --ng-doc-button-hover-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=link] :: --ng-doc-button-active-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=link] :: --ng-doc-button-background",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=link] :: --ng-doc-button-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=link] :: --ng-doc-button-hover-color",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-color=link] :: --ng-doc-tag-background"
+  ],
+  "--ng-doc-list-element-horizontal-space": [
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: :host:not(:last-of-type)"
+  ],
+  "--ng-doc-list-element-vertical-space": [
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: :host:not(:last-of-type)"
+  ],
+  "--ng-doc-list-size": [
+    "libs/ui-kit/components/data-list-group/data-list-group.component.scss :: :host",
+    "libs/ui-kit/components/data-list/data-list.component.scss :: :host"
+  ],
+  "--ng-doc-main-padding": [
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-root-wrapper main"
+  ],
+  "--ng-doc-mark-background": ["libs/app/styles/typography.scss :: mark.ng-doc-mark"],
+  "--ng-doc-mark-color": ["libs/app/styles/typography.scss :: mark.ng-doc-mark"],
+  "--ng-doc-mermaid-viewer-background": [
+    "libs/app/components/mermaid-viewer/mermaid-viewer.component.scss :: :host"
+  ],
+  "--ng-doc-mermaid-viewer-border": [
+    "libs/app/components/mermaid-viewer/mermaid-viewer.component.scss :: :host"
+  ],
+  "--ng-doc-mermaid-viewer-border-radius": [
+    "libs/app/components/mermaid-viewer/mermaid-viewer.component.scss :: :host"
+  ],
+  "--ng-doc-mermaid-viewer-margin": [
+    "libs/app/components/mermaid-viewer/mermaid-viewer.component.scss :: :host"
+  ],
+  "--ng-doc-mix-border": [
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-alert-border",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-info-border",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-success-border",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-warning-border"
+  ],
+  "--ng-doc-mix-chip": [
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-language",
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-status",
+    "libs/app/styles/parts/decorators.scss :: .ng-doc-decorators-group code, .ng-doc-decorators-group code.ngde",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-mod=light]",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-hue-brand-chip",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-hue-violet-chip"
+  ],
+  "--ng-doc-mix-soft": [
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-alert-soft",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-info-soft",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-primary-soft",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-success-soft",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-warning-soft"
+  ],
+  "--ng-doc-mix-strong": [
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-language",
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-status",
+    "libs/app/styles/parts/decorators.scss :: .ng-doc-decorators-group code, .ng-doc-decorators-group code.ngde",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host .ng-doc-blockquote-title",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-mod=light] :: --ng-doc-tag-color",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-alert-strong",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-hue-brand-strong",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-hue-violet-strong",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-info-strong",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-primary-strong",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-success-strong",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-warning-strong"
+  ],
+  "--ng-doc-mix-syntax": [
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-function",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-keyword",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-string",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-type",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host ::ng-deep code.ng-doc-code-with-link a"
+  ],
+  "--ng-doc-navbar-background": [
+    "libs/app/components/navbar/navbar.component.scss :: :host",
+    "libs/app/components/navbar/navbar.component.scss :: :host[data-glass-effect=false]",
+    "libs/app/components/navbar/navbar.component.scss :: @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) > :host",
+    "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host ng-doc-tab-routes-group"
+  ],
+  "--ng-doc-navbar-border": ["libs/app/components/navbar/navbar.component.scss :: :host"],
+  "--ng-doc-navbar-height": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-group",
+    "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host :: --ng-doc-page-sticky-offset",
+    "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host ng-doc-tab-routes-group",
+    "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host[data-ng-doc-page-tabs=true] :: --ng-doc-page-sticky-offset",
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-root-wrapper .ng-doc-header",
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-root-wrapper main :: --ng-doc-sidenav-top",
+    "libs/app/components/sidebar/sidebar.component.scss :: :host",
+    "libs/app/components/toc/toc.component.scss :: :host",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-main-padding",
+    "libs/ui-kit/components/sidenav/sidenav.component.scss :: :host .ng-doc-sidenav"
+  ],
+  "--ng-doc-navbar-horizontal-padding": [
+    "libs/app/components/navbar/navbar.component.scss :: .ng-doc-navbar-container",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-navbar-left-width"
+  ],
+  "--ng-doc-navbar-left-width": [
+    "libs/app/components/navbar/navbar.component.scss :: .ng-doc-navbar-left"
+  ],
+  "--ng-doc-ng-module-decorator-background": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-dot[data-ng-doc-kind=NgModule] :: --_hue",
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host[data-ng-doc-type=declaration][data-ng-doc-kind=NgModule] :: --ng-doc-kind-icon-background",
+    "libs/app/styles/parts/decorators.scss :: .ng-doc-decorators-group code[data-ng-doc-decorator=NgModule] :: --_hue",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=NgModule] :: --ng-doc-css-tag-background"
+  ],
+  "--ng-doc-null-background": [
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host[data-ng-doc-type=type][data-ng-doc-kind=null] :: --ng-doc-kind-icon-background"
+  ],
+  "--ng-doc-number-background": [
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host[data-ng-doc-type=type][data-ng-doc-kind=number] :: --ng-doc-kind-icon-background"
+  ],
+  "--ng-doc-object-background": [
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host[data-ng-doc-type=type][data-ng-doc-kind=object] :: --ng-doc-kind-icon-background"
+  ],
+  "--ng-doc-on-hue": [
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-abstract-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-async-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-boolean-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-class-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-component-decorator-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-directive-decorator-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-enum-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-function-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-get-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-injectable-decorator-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-input-decorator-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-interface-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-ng-module-decorator-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-null-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-number-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-object-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-output-decorator-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-overriden-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-pipe-decorator-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-protected-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-readonly-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-selector-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-set-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-static-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-string-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-type-alias-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-undefined-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-variable-color"
+  ],
+  "--ng-doc-option-padding": ["libs/ui-kit/components/option/option.component.scss :: :host"],
+  "--ng-doc-output-decorator-background": [
+    "libs/app/styles/parts/decorators.scss :: .ng-doc-decorators-group code[data-ng-doc-decorator=Output] :: --_hue"
+  ],
+  "--ng-doc-overlay-background": [
+    "libs/ui-kit/components/overlay-container/overlay-container.component.scss :: .ng-doc-overlay-content",
+    "libs/ui-kit/components/overlay-pointer/overlay-pointer.component.scss :: :host[data-ng-doc-overlay-position=left] .ng-doc-overlay-pointer .ng-doc-pointer:after, :host[data-ng-doc-overlay-position=right] .ng-doc-overlay-pointer .ng-doc-pointer:after",
+    "libs/ui-kit/components/overlay-pointer/overlay-pointer.component.scss :: :host[data-ng-doc-overlay-position=top] .ng-doc-overlay-pointer .ng-doc-pointer:after, :host[data-ng-doc-overlay-position=bottom] .ng-doc-overlay-pointer .ng-doc-pointer:after"
+  ],
+  "--ng-doc-overlay-border": [
+    "libs/ui-kit/components/overlay-container/overlay-container.component.scss :: .ng-doc-overlay-content",
+    "libs/ui-kit/components/overlay-pointer/overlay-pointer.component.scss :: :host[data-ng-doc-overlay-position=left] .ng-doc-overlay-pointer .ng-doc-pointer:before, :host[data-ng-doc-overlay-position=right] .ng-doc-overlay-pointer .ng-doc-pointer:before",
+    "libs/ui-kit/components/overlay-pointer/overlay-pointer.component.scss :: :host[data-ng-doc-overlay-position=top] .ng-doc-overlay-pointer .ng-doc-pointer:before, :host[data-ng-doc-overlay-position=bottom] .ng-doc-overlay-pointer .ng-doc-pointer:before"
+  ],
+  "--ng-doc-overlay-border-radius": [
+    "libs/ui-kit/components/overlay-container/overlay-container.component.scss :: .ng-doc-overlay-content"
+  ],
+  "--ng-doc-overlay-shadow": [
+    "libs/ui-kit/components/overlay-container/overlay-container.component.scss :: .ng-doc-overlay-content"
+  ],
+  "--ng-doc-overriden-background": [
+    "libs/app/styles/parts/badge.scss :: .ng-doc-badge[data-content=overriden] :: --_ring",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifier[data-content=overriden] :: --_ring",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=overriden]"
+  ],
+  "--ng-doc-page-block-margin": [
+    "libs/app/components/mermaid-viewer/mermaid-viewer.component.scss :: :host",
+    "libs/app/styles/js-doc.scss :: .ng-doc-returns",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-table-wrapper",
+    "libs/app/styles/typography.scss :: blockquote.ngde",
+    "libs/app/styles/typography.scss :: body :: --ng-doc-blockquote-margin",
+    "libs/app/styles/typography.scss :: body :: --ng-doc-code-margin",
+    "libs/app/styles/typography.scss :: body :: --ng-doc-demo-margin",
+    "libs/app/styles/typography.scss :: body :: --ng-doc-demo-pane-margin",
+    "libs/app/styles/typography.scss :: body :: --ng-doc-playground-margin",
+    "libs/app/styles/typography.scss :: body :: --ng-doc-tabs-margin",
+    "libs/app/styles/typography.scss :: pre.shiki"
+  ],
+  "--ng-doc-page-padding": [
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-root-wrapper main :: --ng-doc-sidenav-content-padding"
+  ],
+  "--ng-doc-page-sticky-offset": [
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties-wrapper:not(.no-side-panel):not(.inspector-bottom) .ng-doc-playground-demos"
+  ],
+  "--ng-doc-page-wrapper-tabs-height": [
+    "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host ng-doc-tab-routes-group",
+    "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host[data-ng-doc-page-tabs=true] :: --ng-doc-page-sticky-offset"
+  ],
+  "--ng-doc-palette-amber-400": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-warning",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-warning"
+  ],
+  "--ng-doc-palette-amber-600": ["libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-warning"],
+  "--ng-doc-palette-brand-400": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-focus-ring-color",
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-info",
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-primary",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-focus-ring-color",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-info",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-primary"
+  ],
+  "--ng-doc-palette-brand-500": [
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-focus-ring-color"
+  ],
+  "--ng-doc-palette-brand-600": [
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-info",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-primary"
+  ],
+  "--ng-doc-palette-green-400": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-success",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-success"
+  ],
+  "--ng-doc-palette-green-600": ["libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-success"],
+  "--ng-doc-palette-neutral-0": ["libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-base-0"],
+  "--ng-doc-palette-neutral-100": ["libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-base-2"],
+  "--ng-doc-palette-neutral-1000": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-alert-text",
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-info-text",
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-on-hue",
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-primary-text",
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-success-text",
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-warning-text",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-alert-text",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-info-text",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-on-hue",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-primary-text",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-success-text",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-warning-text"
+  ],
+  "--ng-doc-palette-neutral-200": ["libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-base-3"],
+  "--ng-doc-palette-neutral-300": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-text",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-text",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-base-4"
+  ],
+  "--ng-doc-palette-neutral-400": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-base-10",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-base-10",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-base-5"
+  ],
+  "--ng-doc-palette-neutral-450": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-base-9",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-base-9",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-base-6"
+  ],
+  "--ng-doc-palette-neutral-50": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-heading-color",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-heading-color",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-base-1"
+  ],
+  "--ng-doc-palette-neutral-500": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-base-8",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-base-8",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-base-7"
+  ],
+  "--ng-doc-palette-neutral-600": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-base-7",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-base-7",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-base-8"
+  ],
+  "--ng-doc-palette-neutral-700": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-base-6",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-base-6",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-base-9"
+  ],
+  "--ng-doc-palette-neutral-750": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-base-5",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-base-5"
+  ],
+  "--ng-doc-palette-neutral-800": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-base-4",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-base-4",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-base-10",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-text"
+  ],
+  "--ng-doc-palette-neutral-850": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-base-3",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-base-3"
+  ],
+  "--ng-doc-palette-neutral-875": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-base-2",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-base-2"
+  ],
+  "--ng-doc-palette-neutral-900": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-base-1",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-base-1"
+  ],
+  "--ng-doc-palette-neutral-950": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-base-0",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-base-0",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-heading-color"
+  ],
+  "--ng-doc-palette-red-400": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-alert",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-alert"
+  ],
+  "--ng-doc-palette-red-600": ["libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-alert"],
+  "--ng-doc-palette-violet-400": [
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-hue-violet",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-hue-violet"
+  ],
+  "--ng-doc-palette-violet-600": ["libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-hue-violet"],
+  "--ng-doc-pane-back-background": [
+    "libs/ui-kit/components/pane/pane.component.scss :: :host .ng-doc-pane-back"
+  ],
+  "--ng-doc-pane-back-border": [
+    "libs/ui-kit/components/pane/pane.component.scss :: :host .ng-doc-pane-back"
+  ],
+  "--ng-doc-pane-background": [
+    "libs/app/components/demo-pane/demo-pane.component.scss :: .ng-doc-demo-pane-stage[data-ng-doc-fullscreen=true]",
+    "libs/ui-kit/components/pane/pane.component.scss :: :host .ng-doc-pane-back",
+    "libs/ui-kit/components/pane/pane.component.scss :: :host .ng-doc-pane-front"
+  ],
+  "--ng-doc-pane-border": [
+    "libs/ui-kit/components/pane/pane.component.scss :: :host",
+    "libs/ui-kit/components/pane/pane.component.scss :: :host .ng-doc-pane-back",
+    "libs/ui-kit/components/pane/pane.component.scss :: :host .ng-doc-pane-front"
+  ],
+  "--ng-doc-pane-border-radius": ["libs/ui-kit/components/pane/pane.component.scss :: :host"],
+  "--ng-doc-pane-content-min-width": [
+    "libs/ui-kit/components/pane/pane.component.scss :: :host .ng-doc-pane-content"
+  ],
+  "--ng-doc-pane-front-background": [
+    "libs/app/components/demo-pane/demo-pane.component.scss :: .ng-doc-demo-pane-stage[data-ng-doc-fullscreen=true]",
+    "libs/ui-kit/components/pane/pane.component.scss :: :host .ng-doc-pane-front"
+  ],
+  "--ng-doc-pane-front-border": [
+    "libs/ui-kit/components/pane/pane.component.scss :: :host .ng-doc-pane-front"
+  ],
+  "--ng-doc-pipe-decorator-background": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-dot[data-ng-doc-kind=Pipe] :: --_hue",
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host[data-ng-doc-type=declaration][data-ng-doc-kind=Pipe] :: --ng-doc-kind-icon-background",
+    "libs/app/styles/parts/decorators.scss :: .ng-doc-decorators-group code[data-ng-doc-decorator=Pipe] :: --_hue",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=Pipe] :: --ng-doc-css-tag-background"
+  ],
+  "--ng-doc-playground-input-border": [
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties :: --ng-doc-checkbox-border",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties :: --ng-doc-input-border"
+  ],
+  "--ng-doc-playground-inspector-width": [
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties-wrapper"
+  ],
+  "--ng-doc-playground-margin": [
+    "libs/app/components/playground/playground.component.scss :: :host"
+  ],
+  "--ng-doc-primary": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-index a:focus-visible",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-switch[aria-checked=true] .ng-doc-command-palette-track",
+    "libs/app/components/page-navigation/page-navigation.component.scss :: .ng-doc-navigation-controls a:hover",
+    "libs/app/components/sidebar/sidebar-category/sidebar-category.component.scss :: button.ng-doc-sidebar-category-button:focus-visible",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-link:focus-visible",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-status[data-ng-doc-color=primary] :: --_status-hue",
+    "libs/app/components/toc/toc-element/toc-element.component.scss :: a:focus-visible",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-action:focus-visible",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-progress span",
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-link-color",
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-text-selection",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-link-color",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-text-selection",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-code-highlight-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-row-selected-border",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-type",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=primary] :: --ng-doc-button-background",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=primary] :: --ng-doc-button-active-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=primary] :: --ng-doc-button-background",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=primary] :: --ng-doc-button-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=primary] :: --ng-doc-button-hover-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=primary] :: --ng-doc-button-active-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=primary] :: --ng-doc-button-background",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=primary] :: --ng-doc-button-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=primary] :: --ng-doc-button-hover-color",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: @keyframes blink-animation > from",
+    "libs/ui-kit/components/option/option.component.scss :: :host[data-checked=true]",
+    "libs/ui-kit/components/spinner/spinner.component.scss :: :host .ng-doc-spinner .ng-doc-spinner-path",
+    "libs/ui-kit/components/toggle/toggle.component.scss :: :host[data-checked=true] .ng-doc-toggle-wrapper",
+    "libs/ui-kit/components/wrapper/wrapper.component.scss :: :host[data-ng-doc-focused=true] :: --ng-doc-floated-border-color",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-hue-brand",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-primary-soft",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-primary-strong",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-checkbox-color",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-dot-background",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-link-color",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-selection-border",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-tag-background",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-text-selection"
+  ],
+  "--ng-doc-primary-soft": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-kinds button[aria-pressed=true]",
+    "libs/app/components/demo-displayer/demo-displayer.component.scss :: .ng-doc-demo-code-toggle[aria-expanded=true]",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-link.active",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-marker",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-row-selected-background"
+  ],
+  "--ng-doc-primary-strong": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-kinds button[aria-pressed=true]",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-kinds button[aria-pressed=true] .ng-doc-api-list-count",
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-body ::ng-deep pre code .line.highlighted::before",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-return",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-row mark",
+    "libs/app/components/demo-displayer/demo-displayer.component.scss :: .ng-doc-demo-code-toggle[aria-expanded=true] :: --ng-doc-icon-color",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-link.active",
+    "libs/app/components/toc/toc-element/toc-element.component.scss :: :host([data-ng-doc-selected=true]) a"
+  ],
+  "--ng-doc-primary-text": [
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=link] :: --ng-doc-button-active-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=link] :: --ng-doc-button-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=link] :: --ng-doc-button-hover-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=primary] :: --ng-doc-button-active-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=primary] :: --ng-doc-button-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=primary] :: --ng-doc-button-hover-color",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-color=link] :: --ng-doc-tag-color",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-checkbox-color-text",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-tag-color"
+  ],
+  "--ng-doc-protected-background": [
+    "libs/app/styles/parts/badge.scss :: .ng-doc-badge[data-content=protected] :: --_ring",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifier[data-content=protected] :: --_ring",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=protected]"
+  ],
+  "--ng-doc-radius-full": [
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-switch .ng-doc-command-palette-track",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-status",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-progress",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-progress span"
+  ],
+  "--ng-doc-radius-lg": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-index",
+    "libs/app/components/code/code.component.scss :: :host",
+    "libs/app/components/image-viewer/image-viewer.component.scss :: .ng-doc-image-container .ng-doc-scaled-image",
+    "libs/app/components/image-viewer/image-viewer.component.scss :: :host",
+    "libs/app/components/image-viewer/image-viewer.component.scss :: :host > ::ng-deep img",
+    "libs/app/components/mermaid-viewer/mermaid-viewer.component.scss :: :host",
+    "libs/app/components/page-navigation/page-navigation.component.scss :: .ng-doc-navigation-controls a",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-table-wrapper",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-table-wrapper:has(> table.ng-doc-api-table:not(.no-padding))",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-demo-displayer-border-radius",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-tabs-border-radius",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-tab-group-border-radius"
+  ],
+  "--ng-doc-radius-md": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-filter",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-kinds button",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-segments",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-row",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-segments",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-signature",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-frame",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-fullscreen-exit",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-views, .ng-doc-demo-widths",
+    "libs/app/components/page/page.component.scss :: .ng-doc-fullscreen-route-back",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-reset",
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-skip-link",
+    "libs/app/components/search/search.component.scss :: .ng-doc-search-field",
+    "libs/app/components/sidebar/sidebar-category/sidebar-category.component.scss :: .ng-doc-sidebar-category-button",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-link",
+    "libs/app/components/toc/toc-element/toc-element.component.scss :: a",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-action",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-marker",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-filter",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-tabs",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-tabs-wrapper",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-floated-border-radius"
+  ],
+  "--ng-doc-radius-sm": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-segments button",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-segments ng-doc-selection, .ng-doc-api-list-segments ng-doc-selection:not([data-ng-doc-placed]) ~ button[aria-pressed=true]",
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-language",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-segments button",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-segments ng-doc-selection",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-switch",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-type",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-view, .ng-doc-demo-width",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-views ng-doc-selection, .ng-doc-demo-views ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-selected=true], .ng-doc-demo-views ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-pressed=true], .ng-doc-demo-widths ng-doc-selection, .ng-doc-demo-widths ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-selected=true], .ng-doc-demo-widths ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-pressed=true]",
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host",
+    "libs/app/styles/parts/decorators.scss :: .ng-doc-decorators-group code, .ng-doc-decorators-group code.ngde",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-tabs > ng-doc-selection",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-tabs [role=tab]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag",
+    "libs/app/styles/typography.scss :: *:not(pre) > code.ngde",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-tab",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host ng-doc-selection",
+    "libs/ui-kit/components/tab-routes-group/tab-route/tab-route.component.scss :: :host:focus-visible",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host"
+  ],
+  "--ng-doc-radius-xl": [
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette"
+  ],
+  "--ng-doc-radius-xs": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-kbd",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-kbd",
+    "libs/app/components/search/search.component.scss :: .ng-doc-search-field kbd",
+    "libs/app/styles/parts/badge.scss :: .ng-doc-badge",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifier",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=abstract]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=async]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=overriden]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=protected]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=readonly]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=static]",
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: .ng-doc-checkbox"
+  ],
+  "--ng-doc-readonly-background": [
+    "libs/app/styles/parts/badge.scss :: .ng-doc-badge[data-content=readonly] :: --_ring",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifier[data-content=readonly] :: --_ring",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=readonly]"
+  ],
+  "--ng-doc-row-hover-background": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-index a:hover",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-row:hover",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-api-table:not(.no-padding) tbody tr:hover > td",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-members-table .ng-doc-member:hover > td"
+  ],
+  "--ng-doc-row-selected-background": [
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-row[aria-selected=true]"
+  ],
+  "--ng-doc-row-selected-border": [
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-row[aria-selected=true]"
+  ],
+  "--ng-doc-scope-item-link-background": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-index a:hover"
+  ],
+  "--ng-doc-search-border-radius": [
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette"
+  ],
+  "--ng-doc-search-dialog-width": [
+    "libs/app/components/command-palette/command-palette.component.scss :: ng-doc-command-palette"
+  ],
+  "--ng-doc-search-preview-width": [
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-body"
+  ],
+  "--ng-doc-search-result-color": [
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-text"
+  ],
+  "--ng-doc-search-result-header-color": [
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-name"
+  ],
+  "--ng-doc-selection-background": [
+    "libs/ui-kit/components/selection/selection.component.scss :: :host"
+  ],
+  "--ng-doc-selection-border": [
+    "libs/ui-kit/components/selection/selection.component.scss :: :host[data-ng-doc-align=bottom]",
+    "libs/ui-kit/components/selection/selection.component.scss :: :host[data-ng-doc-align=left]",
+    "libs/ui-kit/components/selection/selection.component.scss :: :host[data-ng-doc-align=right]",
+    "libs/ui-kit/components/selection/selection.component.scss :: :host[data-ng-doc-align=top]",
+    "libs/ui-kit/components/tab-routes-group/tab-routes-group.component.scss :: ng-doc-selection:not([data-ng-doc-placed]) ~ ::ng-deep [aria-current=page]::after"
+  ],
+  "--ng-doc-selector-background": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-dot[data-ng-doc-kind=ng-doc-tag-selector] :: --_hue",
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host[data-ng-doc-type=declaration][data-ng-doc-kind=ng-doc-tag-selector] :: --ng-doc-kind-icon-background",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=ng-doc-tag-selector] :: --ng-doc-css-tag-background"
+  ],
+  "--ng-doc-set-background": [
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifier[data-content=set] :: --_ring"
+  ],
+  "--ng-doc-shadow-color": [
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-shadow-lg",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-shadow-md",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-shadow-sm",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-shadow-xs"
+  ],
+  "--ng-doc-shadow-lg": [
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette",
+    "libs/ui-kit/components/sidenav/sidenav.component.scss :: @media (max-width: 900px) > :host[data-ng-doc-opened=true] .ng-doc-sidenav :: --ng-doc-sidebar-shadow"
+  ],
+  "--ng-doc-shadow-md": [
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-skip-link",
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-skip-link:focus-visible"
+  ],
+  "--ng-doc-shadow-sm": [
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-fullscreen-exit",
+    "libs/app/components/demo/demo.component.scss :: [data-ng-doc-width=\"480\"] > .ng-doc-demo-frame, [data-ng-doc-width=\"280\"] > .ng-doc-demo-frame"
+  ],
+  "--ng-doc-shadow-xs": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-segments ng-doc-selection, .ng-doc-api-list-segments ng-doc-selection:not([data-ng-doc-placed]) ~ button[aria-pressed=true]",
+    "libs/app/components/api-list/api-list.component.scss :: :host-context([data-theme=dark]) .ng-doc-api-list-segments ng-doc-selection, :host-context([data-theme=dark]) .ng-doc-api-list-segments ng-doc-selection:not([data-ng-doc-placed]) ~ button[aria-pressed=true]",
+    "libs/app/components/api-list/api-list.component.scss :: @media (prefers-color-scheme: dark) > :host-context([data-theme=auto]) .ng-doc-api-list-segments ng-doc-selection, :host-context([data-theme=auto]) .ng-doc-api-list-segments ng-doc-selection:not([data-ng-doc-placed]) ~ button[aria-pressed=true]",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-segments ng-doc-selection",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-switch .ng-doc-command-palette-track::after",
+    "libs/app/components/command-palette/command-palette.component.scss :: :root[data-theme=dark] .ng-doc-command-palette-segments ng-doc-selection",
+    "libs/app/components/command-palette/command-palette.component.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] .ng-doc-command-palette-segments ng-doc-selection",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-views ng-doc-selection, .ng-doc-demo-views ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-selected=true], .ng-doc-demo-views ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-pressed=true], .ng-doc-demo-widths ng-doc-selection, .ng-doc-demo-widths ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-selected=true], .ng-doc-demo-widths ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-pressed=true]",
+    "libs/app/components/demo/demo.component.scss :: :host-context([data-theme=dark]) ng-doc-selection, :host-context([data-theme=dark]) ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-selected=true], :host-context([data-theme=dark]) ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-pressed=true]",
+    "libs/app/components/demo/demo.component.scss :: @media (prefers-color-scheme: dark) > :host-context([data-theme=auto]) ng-doc-selection, :host-context([data-theme=auto]) ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-selected=true], :host-context([data-theme=auto]) ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-pressed=true]",
+    "libs/app/components/page/page.component.scss :: .ng-doc-fullscreen-route-back",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-tabs > ng-doc-selection",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-tabs:not(:has(> ng-doc-selection[data-ng-doc-placed])) [role=tab][aria-selected=true]",
+    "libs/app/styles/parts/tables.scss :: :root[data-theme=dark] .ng-doc-members-tabs > ng-doc-selection",
+    "libs/app/styles/parts/tables.scss :: :root[data-theme=dark] .ng-doc-members-tabs:not(:has(> ng-doc-selection[data-ng-doc-placed])) [role=tab][aria-selected=true]",
+    "libs/app/styles/parts/tables.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] .ng-doc-members-tabs > ng-doc-selection",
+    "libs/app/styles/parts/tables.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] .ng-doc-members-tabs:not(:has(> ng-doc-selection[data-ng-doc-placed])) [role=tab][aria-selected=true]",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host ng-doc-selection",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host ng-doc-selection:not([data-ng-doc-placed]) ~ .ng-doc-tab.selected",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host-context([data-theme=dark]) ng-doc-selection, :host-context([data-theme=dark]) ng-doc-selection:not([data-ng-doc-placed]) ~ .ng-doc-tab.selected",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: @media (prefers-color-scheme: dark) > :host-context([data-theme=auto]) ng-doc-selection, :host-context([data-theme=auto]) ng-doc-selection:not([data-ng-doc-placed]) ~ .ng-doc-tab.selected"
+  ],
+  "--ng-doc-sidebar-background": ["libs/app/components/sidebar/sidebar.component.scss :: :host"],
+  "--ng-doc-sidebar-category-indent": [
+    "libs/app/components/sidebar/sidebar-category/sidebar-category.component.scss :: .ng-doc-sidebar-category-children :: --ng-doc-sidebar-item-indent"
+  ],
+  "--ng-doc-sidebar-horizontal-padding": [
+    "libs/app/components/sidebar/sidebar.component.scss :: .ng-doc-side-bar-wrapper"
+  ],
+  "--ng-doc-sidebar-item-indent": [
+    "libs/app/components/sidebar/sidebar-category/sidebar-category.component.scss :: .ng-doc-sidebar-category-button",
+    "libs/app/components/sidebar/sidebar-category/sidebar-category.component.scss :: :host :: --ng-doc-sidebar-category-indent",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-link"
+  ],
+  "--ng-doc-sidebar-padding": [
+    "libs/app/components/sidebar/sidebar.component.scss :: .ng-doc-side-bar-wrapper"
+  ],
+  "--ng-doc-sidebar-shadow": ["libs/app/components/sidebar/sidebar.component.scss :: :host"],
+  "--ng-doc-sidebar-vertical-padding": [
+    "libs/app/components/sidebar/sidebar-category/sidebar-category.component.scss :: .ng-doc-sidebar-category-button",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-link"
+  ],
+  "--ng-doc-sidebar-vetical-padding": [
+    "libs/app/components/sidebar/sidebar-category/sidebar-category.component.scss :: .ng-doc-sidebar-category-button",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-link"
+  ],
+  "--ng-doc-sidebar-width": [
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-root-wrapper main :: --ng-doc-sidenav-width",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-navbar-left-width"
+  ],
+  "--ng-doc-sidenav-content-padding": [
+    "libs/ui-kit/components/sidenav/sidenav.component.scss :: :host .ng-doc-sidenav-content"
+  ],
+  "--ng-doc-sidenav-width": [
+    "libs/ui-kit/components/sidenav/sidenav.component.scss :: :host .ng-doc-sidenav",
+    "libs/ui-kit/components/sidenav/sidenav.component.scss :: :host .ng-doc-sidenav-content",
+    "libs/ui-kit/components/sidenav/sidenav.component.scss :: @media (max-width: 900px) > :host .ng-doc-sidenav"
+  ],
+  "--ng-doc-space-1": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-kinds",
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-header",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-preview-title",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: h5.ng-doc-title",
+    "libs/app/components/playground/playground-property/playground-property.component.scss :: .ng-doc-playground-property-label.with-label ::ng-deep > .ng-doc-label",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-status + .ng-doc-sidebar-status",
+    "libs/app/components/sidebar/sidebar.component.scss :: .ng-doc-side-bar-wrapper",
+    "libs/app/styles/parts/badge.scss :: .ng-doc-badge-wrapper",
+    "libs/app/styles/parts/decorators.scss :: .ng-doc-decorators-group",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifiers-wrapper",
+    "libs/app/styles/typography.scss :: ul li.ngde, ol li.ngde",
+    "libs/app/styles/typography.scss :: ul ul.ngde, ol ul.ngde, ul ol.ngde, ol ol.ngde",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-tabs-header"
+  ],
+  "--ng-doc-space-12": ["libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-h2-margin-top"],
+  "--ng-doc-space-16": [
+    "libs/app/components/demo-pane/demo-pane.component.scss :: .ng-doc-demo-pane-stage[data-ng-doc-fullscreen=true]",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-stage[data-ng-doc-fullscreen=true]",
+    "libs/app/components/page-navigation/page-navigation.component.scss :: .ng-doc-navigation-controls",
+    "libs/app/components/page/page.component.scss :: .ng-doc-fullscreen-route",
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-skip-link"
+  ],
+  "--ng-doc-space-2": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-filter",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-group-by",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-group-title",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-kinds",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-lead",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-scope-note",
+    "libs/app/components/breadcrumb/breadcrumb.component.scss :: :host",
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-header",
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-copy-button",
+    "libs/app/components/code/code.component.scss :: @media (max-width: 640px) > :host .ng-doc-code-body ::ng-deep pre code .line::before",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-empty",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-group:first-child .ng-doc-command-palette-section",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-list",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-name small",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-preview-title",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-preview-top",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-section",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-signature",
+    "libs/app/components/command-palette/command-palette.component.scss :: @container ng-doc-command-palette-list (max-width: 420px) > .ng-doc-command-palette-row",
+    "libs/app/components/command-palette/command-palette.component.scss :: @media (max-width: 640px) > .ng-doc-command-palette-input",
+    "libs/app/components/demo-pane/demo-pane.component.scss :: .ng-doc-demo-pane-fullscreen",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-toolbar",
+    "libs/app/components/navbar/navbar.component.scss :: .ng-doc-menu",
+    "libs/app/components/page/page.component.scss :: .ng-doc-fullscreen-route-back",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-header",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-property-list:last-child",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: ng-doc-playground-property",
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-skip-link",
+    "libs/app/components/search/search.component.scss :: .ng-doc-search-field",
+    "libs/app/components/sidebar/sidebar-category/sidebar-category.component.scss :: .ng-doc-sidebar-category-button",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-link",
+    "libs/app/components/sidebar/sidebar.component.scss :: .ng-doc-side-bar-wrapper ng-doc-sidebar-category[data-ng-doc-expanded=true] + *, .ng-doc-side-bar-wrapper * + ng-doc-sidebar-category[data-ng-doc-expanded=true]",
+    "libs/app/components/sidebar/sidebar.component.scss :: :host :: --ng-doc-sidebar-item-indent",
+    "libs/app/components/toc/toc-element/toc-element.component.scss :: a",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-action",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-head",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-progress",
+    "libs/app/components/toc/toc.component.scss :: :host",
+    "libs/app/styles/parts/badge.scss :: .ng-doc-badge-wrapper",
+    "libs/app/styles/parts/header.scss :: .ng-doc-api-details",
+    "libs/app/styles/parts/header.scss :: .ng-doc-api-details[data-ng-doc-variant=rail]",
+    "libs/app/styles/parts/header.scss :: .ng-doc-api-extended",
+    "libs/app/styles/parts/header.scss :: @media (max-width: 640px) > .ng-doc-api-details dd",
+    "libs/app/styles/parts/header.scss :: article header.ngde .ng-doc-table-wrapper:has(> table.ng-doc-api-table.no-padding)",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-member-label",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-bar",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-filter",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-api-table:not(.no-padding) thead tr th",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-members-table .ng-doc-members-group td .ng-doc-members-count",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tags-wrapper",
+    "libs/app/styles/typography.scss :: h1.ngde, h2.ngde, h3.ngde, h4.ngde, h5.ngde, h6.ngde",
+    "libs/app/styles/typography.scss :: h3.ngde",
+    "libs/app/styles/typography.scss :: table.ngde thead tr th",
+    "libs/app/type-controls/type-alias-control/type-alias-control.component.scss :: .ng-doc-type-alias-default",
+    "libs/app/type-controls/type-alias-control/type-alias-control.component.scss :: .ng-doc-type-alias-value",
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: .ng-doc-checkbox-icons",
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: .ng-doc-checkbox-text",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-tabs-header",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host"
+  ],
+  "--ng-doc-space-3": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-filter",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-kinds",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-scope-note",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-tools",
+    "libs/app/components/api-list/api-list.component.scss :: @media (max-width: 640px) > .ng-doc-api-list-index.ng-doc-api-list-described a",
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-body ::ng-deep pre code .line::before",
+    "libs/app/components/code/code.component.scss :: @media (max-width: 640px) > :host .ng-doc-code-body ::ng-deep pre code .line::before",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-empty",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-footer",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-input",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-preview p",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-row",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-section",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-signature",
+    "libs/app/components/command-palette/command-palette.component.scss :: @media (max-width: 640px) > .ng-doc-command-palette-footer",
+    "libs/app/components/demo-displayer/demo-displayer.component.scss :: .ng-doc-demo-container",
+    "libs/app/components/demo-displayer/demo-displayer.component.scss :: .ng-doc-demo-controls",
+    "libs/app/components/demo-displayer/demo-displayer.component.scss :: @container ng-doc-playground (max-width: 640px) > .ng-doc-demo-container",
+    "libs/app/components/page/page.component.scss :: .ng-doc-fullscreen-route-back",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-header",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-setting",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: h5.ng-doc-title",
+    "libs/app/components/playground/playground-property/playground-property.component.scss :: .ng-doc-playground-property-label.with-label",
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-skip-link",
+    "libs/app/components/search/search.component.scss :: .ng-doc-search-field",
+    "libs/app/components/sidebar/sidebar-category/sidebar-category.component.scss :: :host :: --ng-doc-sidebar-category-indent",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-progress",
+    "libs/app/styles/parts/header.scss :: .ng-doc-api-description",
+    "libs/app/styles/parts/header.scss :: .ng-doc-api-details",
+    "libs/app/styles/parts/header.scss :: .ng-doc-api-details[data-ng-doc-variant=rail] dt:not(:first-child)",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-bar",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-filter",
+    "libs/app/styles/parts/tables.scss :: @media (max-width: 640px) > table.ng-doc-members-table .ng-doc-member > td",
+    "libs/app/styles/parts/tables.scss :: @media (max-width: 640px) > table.ng-doc-members-table .ng-doc-member-declaration:has(.ng-doc-member-expand)",
+    "libs/app/styles/parts/tables.scss :: @media (max-width: 640px) > table.ng-doc-members-table .ng-doc-member-detail > td",
+    "libs/app/styles/parts/tables.scss :: @media (max-width: 640px) > table.ng-doc-members-table .ng-doc-members-group td",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-api-table:not(.no-padding) tbody tr td",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-api-table:not(.no-padding) thead tr th",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-members-table .ng-doc-member-declaration:has(.ng-doc-member-expand)",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-members-table .ng-doc-member-detail > td",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-members-table tbody tr td",
+    "libs/app/styles/typography.scss :: table.ngde tbody tr td",
+    "libs/app/styles/typography.scss :: table.ngde thead tr th",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-heading-margin-bottom"
+  ],
+  "--ng-doc-space-4": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-empty",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-index a",
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-body ::ng-deep pre code",
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-body ::ng-deep pre code .line::before",
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-header",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-footer",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-input",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-preview",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-section",
+    "libs/app/components/demo-displayer/demo-displayer.component.scss :: .ng-doc-demo-controls",
+    "libs/app/components/demo-displayer/demo-displayer.component.scss :: @container ng-doc-playground (max-width: 640px) > .ng-doc-demo-container",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-fullscreen-exit",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-stage",
+    "libs/app/components/mermaid-viewer/mermaid-viewer.component.scss :: :host ng-doc-magnifier-controller",
+    "libs/app/components/navbar/navbar.component.scss :: .ng-doc-navbar-container",
+    "libs/app/components/navbar/navbar.component.scss :: .ng-doc-navbar-left, .ng-doc-navbar-center, .ng-doc-navbar-right",
+    "libs/app/components/navbar/navbar.component.scss :: @media (max-width: 640px) > .ng-doc-navbar-container",
+    "libs/app/components/page-navigation/page-navigation.component.scss :: .ng-doc-navigation-controls",
+    "libs/app/components/page-navigation/page-navigation.component.scss :: .ng-doc-navigation-controls a",
+    "libs/app/components/page/page.component.scss :: .ng-doc-fullscreen-route",
+    "libs/app/components/page/page.component.scss :: .ng-doc-fullscreen-route-back",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-header",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties-wrapper.inspector-bottom .ng-doc-playground-property-list",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-setting",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: h5.ng-doc-title",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: ng-doc-playground-property",
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-skip-link",
+    "libs/app/components/root/root.component.scss :: @media (max-width: 640px) > :host:not([data-ng-doc-no-width-limit=true]) .ng-doc-root-wrapper main :: --ng-doc-sidenav-content-padding",
+    "libs/app/styles/parts/header.scss :: .ng-doc-api-details",
+    "libs/app/styles/parts/header.scss :: .ng-doc-api-extended",
+    "libs/app/styles/parts/header.scss :: article header.ngde .ng-doc-table-wrapper:has(> table.ng-doc-api-table.no-padding)",
+    "libs/app/styles/parts/header.scss :: article header.ngde .ng-doc-table-wrapper:has(> table.ng-doc-api-table.no-padding) table.ng-doc-api-table.no-padding tbody tr td",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-empty",
+    "libs/app/styles/typography.scss :: h1.ngde + h1.ngde, h1.ngde + h2.ngde, h1.ngde + h3.ngde, h1.ngde + h4.ngde, h1.ngde + h5.ngde, h1.ngde + h6.ngde, h2.ngde + h1.ngde, h2.ngde + h2.ngde, h2.ngde + h3.ngde, h2.ngde + h4.ngde, h2.ngde + h5.ngde, h2.ngde + h6.ngde, h3.ngde + h1.ngde, h3.ngde + h2.ngde, h3.ngde + h3.ngde, h3.ngde + h4.ngde, h3.ngde + h5.ngde, h3.ngde + h6.ngde, h4.ngde + h1.ngde, h4.ngde + h2.ngde, h4.ngde + h3.ngde, h4.ngde + h4.ngde, h4.ngde + h5.ngde, h4.ngde + h6.ngde, h5.ngde + h1.ngde, h5.ngde + h2.ngde, h5.ngde + h3.ngde, h5.ngde + h4.ngde, h5.ngde + h5.ngde, h5.ngde + h6.ngde, h6.ngde + h1.ngde, h6.ngde + h2.ngde, h6.ngde + h3.ngde, h6.ngde + h4.ngde, h6.ngde + h5.ngde, h6.ngde + h6.ngde",
+    "libs/app/styles/typography.scss :: p.ngde",
+    "libs/app/styles/typography.scss :: ul.ngde, ol.ngde",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host"
+  ],
+  "--ng-doc-space-5": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-empty",
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-body ::ng-deep pre code .line",
+    "libs/app/components/code/code.component.scss :: @container style(--ng-doc-code-line-numbers: none) > :host .ng-doc-code-body ::ng-deep pre code .line",
+    "libs/app/components/demo/demo.component.scss :: [data-ng-doc-width=\"480\"] > .ng-doc-demo-frame, [data-ng-doc-width=\"280\"] > .ng-doc-demo-frame",
+    "libs/app/components/page-navigation/page-navigation.component.scss :: .ng-doc-navigation-controls a",
+    "libs/app/components/root/root.component.scss :: @media (max-width: 640px) > :host:not([data-ng-doc-no-width-limit=true]) .ng-doc-root-wrapper main :: --ng-doc-sidenav-content-padding",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-section + .ng-doc-toc-section",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-empty"
+  ],
+  "--ng-doc-space-6": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-tools",
+    "libs/app/components/navbar/navbar.component.scss :: .ng-doc-navbar-right ng-doc-search",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-section + .ng-doc-toc-section",
+    "libs/app/components/toc/toc.component.scss :: :host",
+    "libs/app/styles/parts/header.scss :: .ng-doc-api-declaration",
+    "libs/app/styles/parts/header.scss :: .ng-doc-api-description",
+    "libs/app/styles/parts/header.scss :: .ng-doc-api-details",
+    "libs/app/styles/parts/header.scss :: .ng-doc-api-extended",
+    "libs/app/styles/parts/header.scss :: article header.ngde .ng-doc-table-wrapper:has(> table.ng-doc-api-table.no-padding)",
+    "libs/app/styles/typography.scss :: h1.ngde, h2.ngde, h3.ngde, h4.ngde, h5.ngde, h6.ngde",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-page-block-margin"
+  ],
+  "--ng-doc-space-8": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-group",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-empty",
+    "libs/app/components/demo-pane/demo-pane.component.scss :: .ng-doc-demo-pane-stage[data-ng-doc-fullscreen=true]",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-stage",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-stage[data-ng-doc-fullscreen=true]",
+    "libs/app/components/page/page.component.scss :: .ng-doc-fullscreen-route-back",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-h3-margin-top"
+  ],
+  "--ng-doc-spinner-color": [
+    "libs/ui-kit/components/spinner/spinner.component.scss :: :host .ng-doc-spinner .ng-doc-spinner-path"
+  ],
+  "--ng-doc-static-background": [
+    "libs/app/styles/parts/badge.scss :: .ng-doc-badge[data-content=static] :: --_ring",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifier[data-content=static] :: --_ring",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=static]"
+  ],
+  "--ng-doc-string-background": [
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host[data-ng-doc-type=type][data-ng-doc-kind=string] :: --ng-doc-kind-icon-background"
+  ],
+  "--ng-doc-success": [
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-status :: --_status-hue",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-function",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host[data-ng-doc-type=success] :: --ng-doc-blockquote-background",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host[data-ng-doc-type=success] :: --ng-doc-blockquote-border-color",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host[data-ng-doc-type=success] :: --ng-doc-icon-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=success] :: --ng-doc-button-background",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=success] :: --ng-doc-button-active-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=success] :: --ng-doc-button-background",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=success] :: --ng-doc-button-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=success] :: --ng-doc-button-hover-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=success] :: --ng-doc-button-active-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=success] :: --ng-doc-button-background",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=success] :: --ng-doc-button-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=success] :: --ng-doc-button-hover-color",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-color=success] :: --ng-doc-tag-background",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-hue-green",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-success-border",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-success-soft",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-success-strong"
+  ],
+  "--ng-doc-success-strong": [
+    "libs/app/components/page/page.component.scss :: :host .ng-doc-page-controls [data-ng-doc-copied=true] :: --ng-doc-button-color",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-action[data-ng-doc-copied=true]"
+  ],
+  "--ng-doc-success-text": [
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=success] :: --ng-doc-button-active-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=success] :: --ng-doc-button-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=success] :: --ng-doc-button-hover-color",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-color=success] :: --ng-doc-tag-color"
+  ],
+  "--ng-doc-syntax-keyword": [
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-decorator"
+  ],
+  "--ng-doc-syntax-string": ["libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-number"],
+  "--ng-doc-syntax-type": ["libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-tag"],
+  "--ng-doc-tab-group-background": [
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-body-wrapper"
+  ],
+  "--ng-doc-tab-group-border": [
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host"
+  ],
+  "--ng-doc-tab-group-border-radius": [
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host"
+  ],
+  "--ng-doc-tab-group-header-background": [
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host"
+  ],
+  "--ng-doc-tab-group-tabs-background": [
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-tabs-header"
+  ],
+  "--ng-doc-tabs-border": ["libs/app/components/tabs/tabs.component.scss :: :host"],
+  "--ng-doc-tabs-border-radius": ["libs/app/components/tabs/tabs.component.scss :: :host"],
+  "--ng-doc-tabs-margin": ["libs/app/components/tabs/tabs.component.scss :: :host"],
+  "--ng-doc-tag-background": [
+    "libs/ui-kit/components/tag/tag.component.scss :: :host",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-mod=light]",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-mod=light] :: --ng-doc-tag-color"
+  ],
+  "--ng-doc-tag-background-opacity": [
+    "libs/ui-kit/components/tag/tag.component.scss :: :host",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-mod=light]"
+  ],
+  "--ng-doc-tag-border": ["libs/ui-kit/components/tag/tag.component.scss :: :host"],
+  "--ng-doc-tag-color": [
+    "libs/ui-kit/components/tag/tag.component.scss :: :host",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host :: --ng-doc-icon-color"
+  ],
+  "--ng-doc-text": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-index a",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-kinds button",
+    "libs/app/components/api-list/api-list.component.scss :: :host",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-row",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-switch",
+    "libs/app/components/command-palette/command-palette.component.scss :: ng-doc-command-palette",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties",
+    "libs/app/components/search-result/search-result.component.scss :: :host .ng-doc-search-result-wrapper .ng-doc-search-result-category .ng-doc-search-result-pages .ng-doc-search-result-page .ng-doc-search-result-page-link",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-link",
+    "libs/app/styles/global.scss :: html, body",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-node-details",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-member-signature",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=ng-doc-scope]",
+    "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-search-result-color",
+    "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-search-result-color",
+    "libs/app/styles/typography.scss :: h1.ngde, h2.ngde, h3.ngde, h4.ngde, h5.ngde, h6.ngde",
+    "libs/app/styles/typography.scss :: h1.ngde.ng-doc-secondary-heading, h2.ngde.ng-doc-secondary-heading, h3.ngde.ng-doc-secondary-heading, h4.ngde.ng-doc-secondary-heading, h5.ngde.ng-doc-secondary-heading, h6.ngde.ng-doc-secondary-heading",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-search-result-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-plain",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-punctuation",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host",
+    "libs/ui-kit/components/button-toggle/button-toggle.component.scss :: :host",
+    "libs/ui-kit/components/button/button.component.scss :: :host",
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: :host",
+    "libs/ui-kit/components/icon/icon.component.scss :: :host",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-input, :host .ng-doc-input-container ::ng-deep .ng-doc-input",
+    "libs/ui-kit/components/label/label.component.scss :: .ng-doc-label",
+    "libs/ui-kit/components/option/option.component.scss :: :host",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-tabs-wrapper",
+    "libs/ui-kit/components/tab-routes-group/tab-route/tab-route.component.scss :: :host",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host",
+    "libs/ui-kit/components/text/text.component.scss :: :host",
+    "libs/ui-kit/directives/tooltip/tooltip.scss :: .ng-doc-tooltip .ng-doc-overlay-content",
+    "libs/ui-kit/services/notify/notify.scss :: .ng-doc-notify .ng-doc-overlay-content",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-button-color"
+  ],
+  "--ng-doc-text-left-width": [
+    "libs/ui-kit/components/text/text.component.scss :: :host[data-ng-doc-text-absolute=false] .ng-doc-text-left:not(:empty)"
+  ],
+  "--ng-doc-text-md-line-height": [
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-line-height"
+  ],
+  "--ng-doc-text-md-size": ["libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-font-size"],
+  "--ng-doc-text-muted": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-count",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-empty",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-filter",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-filter input::placeholder",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-group-by",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-kbd",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-lead",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-none",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-scope",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-scope-note",
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-segments button",
+    "libs/app/components/breadcrumb/breadcrumb.component.scss :: .ng-doc-breadcrumbs",
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-header",
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-code-header-copy, :host .ng-doc-copy-button :: --ng-doc-icon-color",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-empty",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-footer",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-hint",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-icon",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-input",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-input input::placeholder",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-kbd",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-muted",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-name small",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-preview-top",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-section",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-segments button",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-copy :: --ng-doc-icon-color",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-view, .ng-doc-demo-width",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-width-readout",
+    "libs/app/components/navbar/navbar.component.scss :: :host :: --ng-doc-button-color",
+    "libs/app/components/page-navigation/page-navigation.component.scss :: .ng-doc-navigation-page-label",
+    "libs/app/components/page/page.component.scss :: .ng-doc-fullscreen-route-back",
+    "libs/app/components/page/page.component.scss :: :host .ng-doc-page-controls :: --ng-doc-button-color",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-info :: --ng-doc-icon-color",
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: h5.ng-doc-title",
+    "libs/app/components/search/search.component.scss :: .ng-doc-search-field",
+    "libs/app/components/search/search.component.scss :: .ng-doc-search-field kbd",
+    "libs/app/components/sidebar/sidebar-category/sidebar-category.component.scss :: .ng-doc-sidebar-category-chevron",
+    "libs/app/components/toc/toc-element/toc-element.component.scss :: a",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-action",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-label",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-percent",
+    "libs/app/styles/parts/badge.scss :: .ng-doc-badge",
+    "libs/app/styles/parts/header.scss :: .ng-doc-api-details dt",
+    "libs/app/styles/parts/header.scss :: .ng-doc-api-extended dt",
+    "libs/app/styles/parts/header.scss :: article header.ngde .ng-doc-table-wrapper:has(> table.ng-doc-api-table.no-padding) table.ng-doc-api-table.no-padding tbody tr td:first-child",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifier",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-node-details :: --ng-doc-text",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-member-expand svg",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-member-from",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-member-label",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-empty",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-filter",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-filter input::placeholder",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-none",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-tabs .ng-doc-members-count",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-tabs [role=tab]",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-members-tabs [role=tab]:disabled",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-api-table:not(.no-padding) thead tr th",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-members-table .ng-doc-members-group td",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=abstract]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=async]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=overriden]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=protected]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=readonly]",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=static]",
+    "libs/app/styles/parts/text.scss :: .ng-doc-no-content",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-code-line-number-color",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-comment",
+    "libs/app/type-controls/type-alias-control/type-alias-control.component.scss :: .ng-doc-type-alias-default",
+    "libs/ui-kit/components/combobox/combobox.component.scss :: .ng-doc-combobox-chevron :: --ng-doc-icon-color",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-input::placeholder, :host .ng-doc-input-container ::ng-deep .ng-doc-input::placeholder",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-tab",
+    "libs/ui-kit/components/tab-routes-group/tab-route/tab-route.component.scss :: :host",
+    "libs/ui-kit/components/text/text.component.scss :: :host[data-ng-doc-text-color=muted] :: --ng-doc-text"
+  ],
+  "--ng-doc-text-right-width": [
+    "libs/ui-kit/components/text/text.component.scss :: :host[data-ng-doc-text-absolute=false] .ng-doc-text-right:not(:empty)"
+  ],
+  "--ng-doc-text-selection": ["libs/app/styles/global.scss :: ::selection"],
+  "--ng-doc-text-sm-size": [
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-skip-link",
+    "libs/app/components/search/search.component.scss :: .ng-doc-search-field",
+    "libs/app/components/sidebar/sidebar.component.scss :: :host",
+    "libs/app/components/toc/toc.component.scss :: :host"
+  ],
+  "--ng-doc-toc-indent": ["libs/app/components/toc/toc-element/toc-element.component.scss :: a"],
+  "--ng-doc-toc-margin": ["libs/app/components/toc/toc.component.scss :: :host"],
+  "--ng-doc-toc-top-padding": ["libs/app/components/toc/toc.component.scss :: :host"],
+  "--ng-doc-toc-width": ["libs/app/components/toc/toc.component.scss :: :host"],
+  "--ng-doc-tooltip-background": [
+    "libs/ui-kit/directives/tooltip/tooltip.scss :: .ng-doc-tooltip :: --ng-doc-overlay-background"
+  ],
+  "--ng-doc-tooltip-border": [
+    "libs/ui-kit/directives/tooltip/tooltip.scss :: .ng-doc-tooltip :: --ng-doc-overlay-border"
+  ],
+  "--ng-doc-transition": [
+    "libs/app/components/code/code.component.scss :: :host .ng-doc-copy-button",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-switch .ng-doc-command-palette-track",
+    "libs/app/components/command-palette/command-palette.component.scss :: .ng-doc-command-palette-switch .ng-doc-command-palette-track::after",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-frame",
+    "libs/app/components/image-viewer/image-viewer.component.scss :: :host",
+    "libs/app/components/mermaid-viewer/mermaid-viewer.component.scss :: :host ng-doc-magnifier-controller",
+    "libs/app/components/page-navigation/page-navigation.component.scss :: .ng-doc-navigation-controls a",
+    "libs/app/components/search/search.component.scss :: .ng-doc-search-field",
+    "libs/app/components/sidebar/sidebar-category/sidebar-category.component.scss :: .ng-doc-sidebar-category-chevron",
+    "libs/app/components/sidebar/sidebar-category/sidebar-category.component.scss :: button.ng-doc-sidebar-category-button",
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-link",
+    "libs/app/components/toc/toc-element/toc-element.component.scss :: a",
+    "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-action",
+    "libs/app/styles/page.scss :: article h1 .ng-doc-anchor, article h2 .ng-doc-anchor, article h3 .ng-doc-anchor, article h4 .ng-doc-anchor, article h5 .ng-doc-anchor, article h6 .ng-doc-anchor",
+    "libs/app/styles/parts/tables.scss :: .ng-doc-member-expand svg",
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: .ng-doc-checkbox",
+    "libs/ui-kit/components/dot/dot.component.scss :: :host",
+    "libs/ui-kit/components/expander/expander.component.scss :: :host .ng-doc-expander-container",
+    "libs/ui-kit/components/expander/expander.component.scss :: :host .ng-doc-expander-container .ng-doc-expander-content",
+    "libs/ui-kit/components/floated-border/floated-border.component.scss :: :host:after",
+    "libs/ui-kit/components/pane/pane.component.scss :: :host .ng-doc-pane-resizer:after",
+    "libs/ui-kit/components/pane/pane.component.scss :: :host[data-ng-doc-dragging=false] .ng-doc-pane-back",
+    "libs/ui-kit/components/selection/selection.component.scss :: :host[data-ng-doc-animated]",
+    "libs/ui-kit/components/sidenav/sidenav.component.scss :: :host .backdrop-enter",
+    "libs/ui-kit/components/sidenav/sidenav.component.scss :: :host .ng-doc-sidenav",
+    "libs/ui-kit/components/sidenav/sidenav.component.scss :: :host .ng-doc-sidenav-content",
+    "libs/ui-kit/components/sidenav/sidenav.component.scss :: @media (max-width: 900px) > :host .ng-doc-sidenav",
+    "libs/ui-kit/components/toggle/toggle.component.scss :: :host .ng-doc-toggle-wrapper",
+    "libs/ui-kit/components/toggle/toggle.component.scss :: :host .ng-doc-toggle-wrapper .ng-doc-toggle-circle"
+  ],
+  "--ng-doc-type-alias-background": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-dot[data-ng-doc-kind=TypeAlias] :: --_hue",
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host[data-ng-doc-type=declaration][data-ng-doc-kind=TypeAlias] :: --ng-doc-kind-icon-background",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=TypeAlias] :: --ng-doc-css-tag-background"
+  ],
+  "--ng-doc-undefined-background": [
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host[data-ng-doc-type=type][data-ng-doc-kind=undefined] :: --ng-doc-kind-icon-background"
+  ],
+  "--ng-doc-variable-background": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-dot[data-ng-doc-kind=Variable] :: --_hue",
+    "libs/app/components/kind-icon/kind-icon.component.scss :: :host[data-ng-doc-type=declaration][data-ng-doc-kind=Variable] :: --ng-doc-kind-icon-background",
+    "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=Variable] :: --ng-doc-css-tag-background"
+  ],
+  "--ng-doc-warning": [
+    "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-status[data-ng-doc-color=warning] :: --_status-hue",
+    "libs/app/styles/parts/tables.scss :: table.ng-doc-overload-table thead tr th",
+    "libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-string",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host[data-ng-doc-type=warning] :: --ng-doc-blockquote-background",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host[data-ng-doc-type=warning] :: --ng-doc-blockquote-border-color",
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host[data-ng-doc-type=warning] :: --ng-doc-icon-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=warning] :: --ng-doc-button-background",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=warning] :: --ng-doc-button-active-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=warning] :: --ng-doc-button-background",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=warning] :: --ng-doc-button-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=warning] :: --ng-doc-button-hover-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=warning] :: --ng-doc-button-active-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=warning] :: --ng-doc-button-background",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=warning] :: --ng-doc-button-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=warning] :: --ng-doc-button-hover-color",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-color=warning] :: --ng-doc-tag-background",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-hue-amber",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-warning-border",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-warning-soft",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-warning-strong"
+  ],
+  "--ng-doc-warning-text": [
+    "libs/app/styles/js-doc.scss :: .ng-doc-deprecated-notes",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=warning] :: --ng-doc-button-active-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=warning] :: --ng-doc-button-color",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=warning] :: --ng-doc-button-hover-color",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-color=warning] :: --ng-doc-tag-color"
+  ],
+  "--ng-doc-white": [
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat] :: --ng-doc-button-background",
+    "libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-on-hue",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-alert-text",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-info-text",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-primary-text",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-success-text",
+    "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-warning-text"
+  ]
+}

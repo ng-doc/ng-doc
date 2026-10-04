@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "NgDoc Vite application",
+  "description": "Builds an Angular application with Vite and the NgDoc Vite engine: the browser bundle, the server bundle and every prerendered route.",
+  "type": "object",
+  "properties": {
+    "configFile": {
+      "type": "string",
+      "description": "The Vite configuration file, relative to the workspace root."
+    },
+    "outputPath": {
+      "type": "string",
+      "description": "The output directory, relative to the workspace root: browser/, server/server.mjs and prerendered-routes.json."
+    },
+    "mode": {
+      "type": "string",
+      "description": "The Vite mode.",
+      "default": "production"
+    },
+    "ssr": {
+      "type": "boolean",
+      "description": "Build the server bundle. Defaults to true when the Vite configuration's createNgDocApplicationPlugin has a server entry."
+    },
+    "prerender": {
+      "type": "boolean",
+      "description": "Prerender every route into browser/. Defaults to true when the server bundle is built."
+    },
+    "routes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Routes prerendered in addition to the discovered ones, for example pages with route parameters."
+    },
+    "routeTimeout": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Fails a route that takes longer to render, in milliseconds. No limit by default."
+    },
+    "discoverRoutes": {
+      "type": "boolean",
+      "description": "Prerender every concrete route of the application's router configuration.",
+      "default": true
+    }
+  },
+  "required": ["configFile", "outputPath"],
+  "additionalProperties": false
+}

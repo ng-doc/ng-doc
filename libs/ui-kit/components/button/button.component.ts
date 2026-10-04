@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { NgDocColor, NgDocSize } from '@ng-doc/ui-kit/types';
 
 /**
@@ -15,30 +15,28 @@ import { NgDocColor, NgDocSize } from '@ng-doc/ui-kit/types';
   template: `<ng-content></ng-content>`,
   styleUrls: ['./button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
+  host: {
+    '[attr.data-ng-doc-size]': 'size()',
+    '[attr.data-ng-doc-color]': 'color()',
+    '[attr.data-ng-doc-rounded]': 'rounded()',
+  },
 })
 export class NgDocButtonComponent {
   /**
    * Size of the button. Can be 'small', 'medium', or 'large'.
    * Default is 'small'.
    */
-  @Input()
-  @HostBinding('attr.data-ng-doc-size')
-  size: NgDocSize = 'small';
+  readonly size = input<NgDocSize>('small');
 
   /**
    * Color of the button. Can be 'primary', 'secondary', etc.
    * Default is 'primary'.
    */
-  @Input()
-  @HostBinding('attr.data-ng-doc-color')
-  color: NgDocColor = 'primary';
+  readonly color = input<NgDocColor>('primary');
 
   /**
    * Whether the button is rounded or not.
    * Default is false.
    */
-  @Input()
-  @HostBinding('attr.data-ng-doc-rounded')
-  rounded: boolean = false;
+  readonly rounded = input<boolean, unknown>(false, { transform: booleanAttribute });
 }

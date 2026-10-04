@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "NgDoc Vite development server",
+  "description": "Serves an Angular application with the Vite development server and the NgDoc Vite engine.",
+  "type": "object",
+  "properties": {
+    "configFile": {
+      "type": "string",
+      "description": "The Vite configuration file, relative to the workspace root."
+    },
+    "mode": {
+      "type": "string",
+      "description": "The Vite mode.",
+      "default": "development"
+    },
+    "host": {
+      "type": "string",
+      "description": "The host to listen on. Defaults to the Vite configuration's server.host."
+    },
+    "port": {
+      "type": "number",
+      "description": "The port to listen on. Defaults to the Vite configuration's server.port."
+    }
+  },
+  "required": ["configFile"],
+  "additionalProperties": false
+}

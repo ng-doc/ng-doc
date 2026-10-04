@@ -1,32 +1,28 @@
 {% macro render(member) %}
     {% set deprecated = member | getJsDocTag('deprecated') %}
     {% if deprecated %}
-        <ng-doc-blockquote type="warning" icon="activity">
-            <b>Deprecated</b>
+        <ng-doc-blockquote type="warning" icon="activity" label="Deprecated">
             {{ deprecated }}
         </ng-doc-blockquote>
     {% endif %}
 
     {% set experimental = member | getJsDocTag('experimental') %}
     {% if experimental %}
-        <ng-doc-blockquote type="alert" icon="activity">
-            <b>Experimental</b>
+        <ng-doc-blockquote type="alert" icon="activity" label="Experimental">
             {{ experimental }}
         </ng-doc-blockquote>
     {% endif %}
 
     {% set alpha = member | getJsDocTag('alpha') %}
     {% if alpha %}
-        <ng-doc-blockquote type="alert" icon="activity">
-            <b>Alpha</b>
+        <ng-doc-blockquote type="alert" icon="activity" label="Alpha">
             {{ alpha }}
         </ng-doc-blockquote>
     {% endif %}
 
     {% set beta = member | getJsDocTag('beta') %}
     {% if beta %}
-        <ng-doc-blockquote type="warning" icon="activity">
-            <b>Beta</b>
+        <ng-doc-blockquote type="warning" icon="activity" label="Beta">
             {{ beta }}
         </ng-doc-blockquote>
     {% endif %}

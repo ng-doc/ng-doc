@@ -1,17 +1,744 @@
 name: 📝 PR Checks
 
-on: [pull_request]
+# One job builds the packages once; every check is its own job on that build, so a failure never
+# hides another and the slowest check sets the wall time.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: 'true'
+  NX_DAEMON: 'false'
+  NX_NO_CLOUD: 'true'
+  NX_TUI: 'false'
 
 jobs:
-  lint:
-    uses: ./.github/workflows/lint.yml
-    with:
-      base: ${{github.event.pull_request.base.ref}}
-  test:
-    uses: ./.github/workflows/test.yml
-    with:
-      base: ${{github.event.pull_request.base.ref}}
   build:
-    uses: ./.github/workflows/build.yml
-    with:
-      base: ${{github.event.pull_request.base.ref}}
+    name: Build packages
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/nodejs
+      # Fails fast when a runner group or a test target has no job below.
+      - name: Every runner group and test target has a job
+        run: node tools/scripts/check-ci-jobs.mjs
+      - name: Build the packages and the generator
+        run: npx nx run-many --target=build --projects=tag:type:lib --parallel=1 --skipNxCache
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: packages
+          path: dist/libs
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 3
+
+  lint:
+    name: Lint
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/nodejs
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: packages
+          path: dist/libs
+      - run: npx nx run-many --target=lint --quiet=true --parallel=3
+
+  unit:
+    name: Test ${{ matrix.target }}
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        # Every target runs Vitest. Projects without specs (core) have no job;
+        # tools/scripts/check-ci-jobs.mjs fails the build when a project gains specs.
+        target:
+          - app:test
+          - app:test-zoneless
+          - app:test-search-index
+          - ui-kit:test
+          - ui-kit:test-zoneless
+          - ng-doc:test
+          - add:test
+          - builder:test
+          - keywords-loaders:test
+          - utils:test
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/nodejs
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: packages
+          path: dist/libs
+      # The builder's legacy-engine specs run the built engine in a child process, which resolves
+      # @ng-doc/core through these links.
+      - run: npx nx run ng-doc:link-libs --excludeTaskDependencies
+      - run: npx nx run ${{ matrix.target }} --configuration=ci --excludeTaskDependencies
+
+  tools:
+    name: Tool-script tests (${{ matrix.os }})
+    needs: build
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      # The suites compare committed fixtures byte for byte, and the node_modules cache key hashes
+      # package-lock.json, so Windows checks out LF as the other runners do.
+      - name: Keep LF line endings
+        if: runner.os == 'Windows'
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      # The default Windows temporary directory is an 8.3 short path on another drive than the
+      # workspace; the runner's own temporary directory is neither.
+      - name: Use the runner temporary directory
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          echo "TEMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
+          echo "TMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
+      - uses: ./.github/actions/nodejs
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: packages
+          path: dist/libs
+      - run: node --test "tools/scripts/testing/*.test.mjs"
+      # The other jobs use the generator built on Linux; this builds it on each OS, declarations
+      # included, into a private directory.
+      - name: Build the generator from source
+        shell: bash
+        run: node tools/scripts/build-generator.mjs --outdir "$RUNNER_TEMP/generator-build"
+
+  generator:
+    name: Generator ${{ matrix.group }} (${{ matrix.os }})
+    needs: build
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    # The job limit stays above the runner's own group limit, so a slow group fails with the
+    # runner's report rather than a cancelled job.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        group:
+          - source-boundaries
+          - contracts
+          - session
+          - discovery
+          - artifact-cache-commit
+          - graph
+          - content
+          - semantic
+          - outputs
+          - worker
+          - progress
+          - bootstrap
+        # tools/scripts/check-ci-jobs.mjs keeps this list and generator-shard equal to the runner's
+        # groups. The posix groups need owned POSIX process groups; the core lane is the Windows gate.
+        exclude:
+          - os: windows-latest
+            group: bootstrap
+        include:
+          - group: bootstrap
+            lane: posix
+          # Linux gates coverage; Windows runs every test without measuring it.
+          - os: windows-latest
+            coverage: 'off'
+    steps:
+      # The suites compare committed fixtures byte for byte, and the node_modules cache key hashes
+      # package-lock.json, so Windows checks out LF as the other runners do.
+      - name: Keep LF line endings
+        if: runner.os == 'Windows'
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      # The default Windows temporary directory is an 8.3 short path on another drive than the
+      # workspace; the runner's own temporary directory is neither.
+      - name: Use the runner temporary directory
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          echo "TEMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
+          echo "TMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
+      - uses: ./.github/actions/nodejs
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: packages
+          path: dist/libs
+      - name: Suite and coverage gate
+        run: node tools/scripts/check-builder-modernization.mjs --lane ${{ matrix.lane || 'core' }} --group ${{ matrix.group }} ${{ matrix.coverage == 'off' && '--no-coverage' || '' }} --log-dir ${{ runner.temp }}/generator
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
+        with:
+          name: generator-${{ matrix.group }}-${{ runner.os }}
+          path: |
+            ${{ runner.temp }}/generator/results.json
+            ${{ runner.temp }}/generator/*/*.log
+            ${{ runner.temp }}/generator/*/coverage/coverage-summary.json
+          if-no-files-found: ignore
+          include-hidden-files: true
+          retention-days: 3
+
+  # The slowest groups split their files over parallel Vitest shards. A Linux shard records its
+  # coverage in a blob report without gating it; generator-coverage merges every shard and enforces
+  # the group's gate once, over the same files and thresholds as an unsharded run.
+  generator-shard:
+    name: Generator ${{ matrix.group }} ${{ matrix.shard }}/${{ matrix.shards }} (${{ matrix.os }})
+    needs: build
+    runs-on: ${{ matrix.os }}
+    # Above the runner's 35 minute compiler limit, which bounds every shard.
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        group: [compiler, vite-adapter]
+        shard: [1, 2, 3, 4]
+        # vite-adapter is a posix group (Linux only) of three shards.
+        exclude:
+          - os: windows-latest
+            group: vite-adapter
+          - group: vite-adapter
+            shard: 4
+        include:
+          - group: compiler
+            shards: 4
+          - group: vite-adapter
+            shards: 3
+            lane: posix
+          - os: windows-latest
+            coverage: 'off'
+    steps:
+      - name: Keep LF line endings
+        if: runner.os == 'Windows'
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Use the runner temporary directory
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          echo "TEMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
+          echo "TMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
+      - uses: ./.github/actions/nodejs
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: packages
+          path: dist/libs
+      - name: Suite shard
+        run: node tools/scripts/check-builder-modernization.mjs --lane ${{ matrix.lane || 'core' }} --group ${{ matrix.group }} --shard ${{ matrix.shard }}/${{ matrix.shards }} ${{ matrix.coverage == 'off' && '--no-coverage' || '' }} --log-dir ${{ runner.temp }}/generator
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
+        with:
+          name: generator-${{ matrix.group }}-${{ matrix.shard }}-${{ runner.os }}
+          path: |
+            ${{ runner.temp }}/generator/results.json
+            ${{ runner.temp }}/generator/*/*.log
+          if-no-files-found: ignore
+          include-hidden-files: true
+          retention-days: 3
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: runner.os == 'Linux'
+        with:
+          name: generator-blob-${{ matrix.group }}-${{ matrix.shard }}
+          path: ${{ runner.temp }}/generator/${{ matrix.group }}/blob/
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 3
+
+  generator-coverage:
+    name: Generator ${{ matrix.group }} coverage gate
+    needs: [build, generator-shard]
+    # Runs even when a shard failed, so a missing shard report fails the gate instead of skipping it.
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [compiler, vite-adapter]
+        include:
+          - group: vite-adapter
+            lane: posix
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/nodejs
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: packages
+          path: dist/libs
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          pattern: generator-blob-${{ matrix.group }}-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/blobs
+      # Refuses to gate unless every shard's blob is present, then replays their results and
+      # enforces the thresholds over the merged coverage.
+      - name: Merged coverage gate
+        run: node tools/scripts/check-builder-modernization.mjs --lane ${{ matrix.lane || 'core' }} --group ${{ matrix.group }} --merge-coverage ${{ runner.temp }}/blobs --log-dir ${{ runner.temp }}/generator
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
+        with:
+          name: generator-${{ matrix.group }}-coverage
+          path: |
+            ${{ runner.temp }}/generator/results.json
+            ${{ runner.temp }}/generator/*/*.log
+            ${{ runner.temp }}/generator/*/coverage/coverage-summary.json
+          if-no-files-found: ignore
+          include-hidden-files: true
+          retention-days: 3
+
+  windows-processes:
+    name: Windows process supervision (SSR renderer, ng-doc dev host)
+    needs: build
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      # The suites compare committed fixtures byte for byte, and the node_modules cache key hashes
+      # package-lock.json, so Windows checks out LF as the other runners do.
+      - name: Keep LF line endings
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      # The default Windows temporary directory is an 8.3 short path on another drive than the
+      # workspace; the runner's own temporary directory is neither.
+      - name: Use the runner temporary directory
+        shell: bash
+        run: |
+          echo "TEMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
+          echo "TMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
+      - uses: ./.github/actions/nodejs
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: packages
+          path: dist/libs
+      # The bootstrap and vite-adapter groups need POSIX process groups as a whole; these two suites
+      # hold the Windows supervision (process trees, .cmd hosts) and run natively here.
+      - name: ng-doc dev host and process trees
+        run: node node_modules/vitest/vitest.mjs run --config libs/builder/generator/bootstrap/testing/vitest.config.ts libs/builder/generator/bootstrap/testing/process-tree.vitest.ts
+      - name: Isolated SSR renderer
+        run: node node_modules/vitest/vitest.mjs run --config libs/builder/generator/vite/testing/vitest.config.ts libs/builder/generator/vite/testing/ssr-renderer.vitest.ts
+
+  # The other Windows jobs generate small fixtures only. This one generates the documentation site
+  # itself with the new engine, as `ng-doc:serve` does (its configuration and development tags), so
+  # every dependency the real docs record passes the session's watch-input check on Windows.
+  windows-site:
+    name: Site generation, new engine (Windows)
+    needs: build
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Keep LF line endings
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      # The default Windows temporary directory is an 8.3 short path on another drive than the
+      # workspace; the runner's own temporary directory is neither.
+      - name: Use the runner temporary directory
+        shell: bash
+        run: |
+          echo "TEMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
+          echo "TMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
+      - uses: ./.github/actions/nodejs
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: packages
+          path: dist/libs
+      - run: npx nx run ng-doc:link-libs --excludeTaskDependencies
+      # `generate` runs one complete generation through the build session, which projects the
+      # watch inputs of every recorded dependency and fails on a path it refuses.
+      - name: Generate the site
+        shell: bash
+        run: >-
+          node dist/libs/builder/generator/bootstrap/bin.js generate --project ng-doc
+          --config apps/ng-doc/ng-doc.config.ts --docs-root apps/ng-doc/docs
+          --tsconfig apps/ng-doc/tsconfig.vite.json --tags development --progress plain
+          --output-root "$RUNNER_TEMP/site/output" --cache-root "$RUNNER_TEMP/site/cache"
+
+  site-legacy:
+    name: Site build, legacy engine
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/nodejs
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: packages
+          path: dist/libs
+      - run: npx nx run ng-doc:link-libs --excludeTaskDependencies
+      - run: npx nx run ng-doc:build-legacy --excludeTaskDependencies
+      # The parity gate compares outputs built from the same sources only.
+      - name: Stamp the output
+        run: node libs/builder/generator/acceptance/production/source-stamp.mjs dist/apps/ng-doc-legacy/browser
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: site-legacy
+          path: |
+            dist/apps/ng-doc-legacy/browser
+            dist/apps/ng-doc-legacy/ngdoc-source.json
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 3
+      - name: Verify the built server
+        run: node apps/ng-doc/testing/ssr-entry/verify-built-server.mjs dist/apps/ng-doc-legacy/server/server.mjs
+
+  site-vite:
+    name: Site build and production acceptance, Vite engine
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/nodejs
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: packages
+          path: dist/libs
+      - run: npx nx run ng-doc:link-libs --excludeTaskDependencies
+      - run: npx nx run ng-doc:build --excludeTaskDependencies
+      - name: Stamp the output
+        run: node libs/builder/generator/acceptance/production/source-stamp.mjs dist/apps/ng-doc/browser
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: site-vite
+          path: |
+            dist/apps/ng-doc/browser
+            dist/apps/ng-doc/ngdoc-source.json
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 3
+      - uses: ./.github/actions/browser
+      - name: Production acceptance harness tests
+        run: node --test "libs/builder/generator/acceptance/production-c/*.test.mjs"
+      - name: Production acceptance (build, prerender and browser audit)
+        env:
+          NGDOC_PRODUCTION_C_EVIDENCE: ${{ runner.temp }}/production-c
+          # The reconcile step reads the prerendered fixture, which the run removes otherwise.
+          NGDOC_PRODUCTION_C_KEEP_FIXTURE: '1'
+        run: node libs/builder/generator/acceptance/production-c/run-bounded.mjs
+      - name: Reconcile links and assets
+        run: node libs/builder/generator/acceptance/production-c/reconcile.mjs "${{ runner.temp }}/production-c"
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
+        with:
+          name: production-c
+          path: ${{ runner.temp }}/production-c
+          if-no-files-found: ignore
+          include-hidden-files: true
+          retention-days: 3
+
+  parity:
+    name: Production parity of the engines
+    needs: [build, site-legacy, site-vite]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/nodejs
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: packages
+          path: dist/libs
+      - run: npx nx run ng-doc:link-libs --excludeTaskDependencies
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: site-legacy
+          path: dist/apps/ng-doc-legacy
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: site-vite
+          path: dist/apps/ng-doc
+      - name: Source stamp tests
+        run: node --test "libs/builder/generator/acceptance/production/*.test.mjs"
+      - name: Compare the outputs and the accepted search and keyword sets
+        env:
+          NGDOC_PARITY_LEGACY: dist/apps/ng-doc-legacy/browser
+          NGDOC_PARITY_CURRENT: dist/apps/ng-doc/browser
+          NGDOC_PARITY_EVIDENCE: ${{ runner.temp }}/parity
+        run: node libs/builder/generator/acceptance/production/parity.mjs
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
+        with:
+          name: parity
+          path: ${{ runner.temp }}/parity
+          if-no-files-found: ignore
+          include-hidden-files: true
+          retention-days: 3
+
+  vite-main:
+    name: Vite host on the site (dev, SSR, production)
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/nodejs
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: packages
+          path: dist/libs
+      - run: npx nx run ng-doc:link-libs --excludeTaskDependencies
+      - uses: ./.github/actions/browser
+      - env:
+          NGDOC_VITE_MAIN_EVIDENCE: ${{ runner.temp }}/vite-main
+        run: node libs/builder/generator/acceptance/vite-main/run-bounded.mjs
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
+        with:
+          name: vite-main
+          path: ${{ runner.temp }}/vite-main
+          if-no-files-found: ignore
+          include-hidden-files: true
+          retention-days: 3
+
+  runtime-links:
+    name: Runtime links
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/nodejs
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: packages
+          path: dist/libs
+      - run: node node_modules/vitest/vitest.mjs run --config libs/builder/generator/acceptance/runtime-links/vitest.config.ts --coverage
+
+  packed-consumer:
+    name: Packed consumer, Node ${{ matrix.node }}
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        # The ends and the middle of the supported range, >=24.15.0 <25.
+        node: ['24.15.0', '24.19.0', '24.21.0']
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/nodejs
+        with:
+          node-version: ${{ matrix.node }}
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: packages
+          path: dist/libs
+      - uses: ./.github/actions/browser
+      # The packed harnesses refuse packages that were not built from this checkout.
+      - name: Expect the packages built from this checkout
+        shell: bash
+        run: node -p '"NGDOC_EXPECTED_SOURCE_DIGEST=" + require("./dist/libs/builder/generator/build-provenance.json").sourceDigest' >> "$GITHUB_ENV"
+      - name: Fresh tarball install, watch, build, serve smoke, browser and SSR
+        env:
+          NGDOC_PACKAGE_CONSUMER_EVIDENCE: ${{ runner.temp }}/packed-consumer
+        run: node libs/builder/generator/acceptance/package-consumer/run.mjs
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
+        with:
+          name: packed-consumer-node-${{ matrix.node }}
+          path: ${{ runner.temp }}/packed-consumer
+          if-no-files-found: ignore
+          include-hidden-files: true
+          retention-days: 3
+
+  packed-optional:
+    name: Packed install without Analog
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/nodejs
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: packages
+          path: dist/libs
+      # The packed harnesses refuse packages that were not built from this checkout.
+      - name: Expect the packages built from this checkout
+        shell: bash
+        run: node -p '"NGDOC_EXPECTED_SOURCE_DIGEST=" + require("./dist/libs/builder/generator/build-provenance.json").sourceDigest' >> "$GITHUB_ENV"
+      - env:
+          NGDOC_B_OPTIONAL_EVIDENCE: ${{ runner.temp }}/packed-optional
+        run: node libs/builder/generator/acceptance/package-optional/run.mjs
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
+        with:
+          name: packed-optional
+          path: ${{ runner.temp }}/packed-optional
+          if-no-files-found: ignore
+          include-hidden-files: true
+          retention-days: 3
+
+  packed-interruption:
+    name: Packed consumer interruption cleanup
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/nodejs
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: packages
+          path: dist/libs
+      - uses: ./.github/actions/browser
+      # The packed harnesses refuse packages that were not built from this checkout.
+      - name: Expect the packages built from this checkout
+        shell: bash
+        run: node -p '"NGDOC_EXPECTED_SOURCE_DIGEST=" + require("./dist/libs/builder/generator/build-provenance.json").sourceDigest' >> "$GITHUB_ENV"
+      # The probe interrupts package-consumer/run.mjs, which needs the browser and the digest.
+      - env:
+          NGDOC_PACKAGE_CONSUMER_EVIDENCE: ${{ runner.temp }}/packed-interruption
+        run: node libs/builder/generator/acceptance/package-consumer/interrupt-probe.mjs
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
+        with:
+          name: packed-interruption
+          path: ${{ runner.temp }}/packed-interruption
+          if-no-files-found: ignore
+          include-hidden-files: true
+          retention-days: 3
+
+  ng-add-e2e:
+    name: Packed ${{ matrix.scenario == 'A' && 'ng add' || 'migrate-to-vite' }} (${{ matrix.os }})
+    needs: build
+    runs-on: ${{ matrix.os }}
+    # One fresh application installed from the npm registry, built and served: a 28 minute
+    # scenario budget inside a 32 minute test timeout, plus setup (a cold Windows npm ci included).
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        scenario: [A, B]
+    steps:
+      - name: Keep LF line endings
+        if: runner.os == 'Windows'
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Use the runner temporary directory
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          echo "TEMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
+          echo "TMP=$RUNNER_TEMP" >> "$GITHUB_ENV"
+      - uses: ./.github/actions/nodejs
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: packages
+          path: dist/libs
+      # The packed harnesses refuse packages that were not built from this checkout.
+      - name: Expect the packages built from this checkout
+        shell: bash
+        run: node -p '"NGDOC_EXPECTED_SOURCE_DIGEST=" + require("./dist/libs/builder/generator/build-provenance.json").sourceDigest' >> "$GITHUB_ENV"
+      - name: Harness tests
+        run: node --test libs/builder/generator/acceptance/ng-add-e2e/harness.test.mjs
+      - name: Scenario ${{ matrix.scenario }} from the tarballs (ng new, ng add or migrate-to-vite, ng build, ng serve)
+        env:
+          NGDOC_NG_ADD_E2E_EVIDENCE: ${{ runner.temp }}/ng-add-e2e
+        run: node --test --test-name-pattern="^scenario ${{ matrix.scenario }}:" libs/builder/generator/acceptance/ng-add-e2e/scenarios.e2e.mjs
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
+        with:
+          name: ng-add-e2e-${{ matrix.scenario }}-${{ runner.os }}
+          path: ${{ runner.temp }}/ng-add-e2e
+          if-no-files-found: ignore
+          retention-days: 3
+
+  # The one check that branch protection requires. It runs after every other job, whatever their
+  # outcome, and passes only when each of them succeeded. A skipped job counts as a failure, since
+  # its check never ran; no job here is skipped by design, so ALLOWED_SKIPS is empty. A job whose
+  # static `if:` skips it on purpose goes there by id. tools/scripts/check-ci-jobs.mjs fails when a
+  # job is missing from `needs`.
+  pr-checks-passed:
+    name: PR checks passed
+    if: ${{ always() }}
+    needs:
+      - build
+      - lint
+      - unit
+      - tools
+      - generator
+      - generator-shard
+      - generator-coverage
+      - windows-processes
+      - windows-site
+      - site-legacy
+      - site-vite
+      - parity
+      - vite-main
+      - runtime-links
+      - packed-consumer
+      - packed-optional
+      - packed-interruption
+      - ng-add-e2e
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - name: Every job succeeded
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+          ALLOWED_SKIPS: ''
+        run: |
+          jq -r '"| Job | Result |", "| --- | --- |", (to_entries[] | "| \(.key) | \(.value.result) |")' <<<"$RESULTS" | tee -a "$GITHUB_STEP_SUMMARY"
+          failed=$(jq -r --arg allowed "$ALLOWED_SKIPS" '
+            ($allowed | split(" ") | map(select(. != ""))) as $skips
+            | to_entries[]
+            | select(.value.result != "success")
+            | select(.value.result != "skipped" or (.key | IN($skips[]) | not))
+            | .key' <<<"$RESULTS")
+          if [ -n "$failed" ]; then
+            echo "::error::Jobs that did not succeed: $(echo $failed)"
+            exit 1
+          fi

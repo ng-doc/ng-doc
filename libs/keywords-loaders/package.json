@@ -1,12 +1,31 @@
 {
-	"name": "@ng-doc/keywords-loaders",
-	"version": "0.0.1",
-	"type": "commonjs",
-	"dependencies": {
-		"@ng-doc/core": "0.0.0",
-		"node-fetch": "2.6.11"
-	},
-	"publishConfig": {
-		"access": "public"
-	}
+  "name": "@ng-doc/keywords-loaders",
+  "version": "0.0.1",
+  "description": "Keyword loaders that link NgDoc pages to Angular, RxJS and other NgDoc sites.",
+  "keywords": [
+    "angular",
+    "documentation",
+    "docs",
+    "ng-doc",
+    "markdown",
+    "api-documentation"
+  ],
+  "homepage": "https://ng-doc.com/",
+  "bugs": {
+    "url": "https://github.com/ng-doc/ng-doc/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ng-doc/ng-doc.git",
+    "directory": "libs/keywords-loaders"
+  },
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "@ng-doc/core": "0.0.0",
+    "node-fetch": "2.6.11"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

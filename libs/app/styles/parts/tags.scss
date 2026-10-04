@@ -1,33 +1,74 @@
-@import '../mixins/entities-colors';
-@import '../../../ui-kit/styles/mixins';
+@use '../mixins/entities-colors';
 
+// Tags in API page headers: the kind is a word chip coloured by the kind; modifiers are outlined
+// keyword tags; the scope is plain text.
 .ng-doc-tags-wrapper {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ng-doc-space-2);
   line-height: 22px;
+  vertical-align: middle;
 }
 
 .ng-doc-tag {
-  display: inline-block;
-  padding: 0 var(--ng-doc-base-gutter);
-  font-size: 14px;
-  border-radius: var(--ng-doc-base-gutter);
-  background-color: color-mix(
-    in srgb,
-    var(--ng-doc-css-tag-background) var(--ng-doc-css-tag-background-opacity, 15%),
-    transparent
-  );
-  vertical-align: middle;
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 7px;
+  border-radius: var(--ng-doc-radius-sm);
+  font-family: var(--ng-doc-font-family);
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1;
   white-space: nowrap;
-  color: var(--ng-doc-css-tag-background);
+  vertical-align: middle;
+  color: color-mix(
+    in oklab,
+    var(--ng-doc-css-tag-background, var(--ng-doc-hue-neutral)) var(--ng-doc-mix-strong),
+    var(--ng-doc-heading-color)
+  );
+  background: color-mix(
+    in oklab,
+    var(--ng-doc-css-tag-background, var(--ng-doc-hue-neutral))
+      var(--ng-doc-css-tag-background-opacity, var(--ng-doc-mix-chip)),
+    var(--ng-doc-background)
+  );
+  box-shadow: inset 0 0 0 1px
+    color-mix(
+      in oklab,
+      var(--ng-doc-css-tag-background, var(--ng-doc-hue-neutral)) 24%,
+      transparent
+    );
 
-  & + .ng-doc-tag {
-    margin-left: var(--ng-doc-base-gutter);
+  @each $modifier in ('protected', 'abstract', 'static', 'async', 'overriden', 'readonly') {
+    &[data-content='#{$modifier}'] {
+      height: 18px;
+      padding: 0 5px;
+      border-radius: var(--ng-doc-radius-xs);
+      font-family: var(--ng-doc-code-font);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--ng-doc-text-muted);
+      background: transparent;
+      box-shadow: inset
+        0
+        0
+        0
+        1px
+        color-mix(in oklab, var(--ng-doc-#{$modifier}-background) 40%, var(--ng-doc-base-4));
+    }
   }
 
   &[data-content='ng-doc-scope'] {
+    height: auto;
     padding: 0;
+    font-size: 14px;
+    font-weight: 400;
     background-color: transparent;
+    box-shadow: none;
     color: var(--ng-doc-text);
   }
 
-  @include entitiesColors('data-content', '--ng-doc-css-tag-background', null);
+  @include entities-colors.entitiesColors('data-content', '--ng-doc-css-tag-background', null);
 }

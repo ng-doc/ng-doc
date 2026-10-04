@@ -2,24 +2,25 @@ import { HostTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { createProject, createSourceFile, saveActiveProject, setActiveProject } from 'ng-morph';
 import { join } from 'path';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 const collectionPath: string = join(__dirname, '../../../collection.json');
 
 describe('standalone-pages-migration', () => {
-	let host: UnitTestTree;
-	let runner: SchematicTestRunner;
+  let host: UnitTestTree;
+  let runner: SchematicTestRunner;
 
-	beforeEach(() => {
-		host = new UnitTestTree(new HostTree());
-		runner = new SchematicTestRunner('schematics', collectionPath);
+  beforeEach(() => {
+    host = new UnitTestTree(new HostTree());
+    runner = new SchematicTestRunner('schematics', collectionPath);
 
-		setActiveProject(createProject(host));
-	});
+    setActiveProject(createProject(host));
+  });
 
-	it('should migrate module and demos', async () => {
-		createSourceFile(
-			'page1/ng-doc.dependencies.ts',
-			`import {NgDocDependencies} from '@ng-doc/core';
+  it('should migrate module and demos', async () => {
+    createSourceFile(
+      'page1/ng-doc.dependencies.ts',
+      `import {NgDocDependencies} from '@ng-doc/core';
 
 import {ButtonDemoComponent} from './button-demo/button-demo.component';
 import {DevelopDemoComponent} from './develop-demo/develop-demo.component';
@@ -33,11 +34,11 @@ const DevelopPageDependencies: NgDocDependencies = {
 
 export default DevelopPageDependencies;
 `,
-		);
+    );
 
-		createSourceFile(
-			'page1/ng-doc.page.ts',
-			`import {NgDocPage} from '@ng-doc/core';
+    createSourceFile(
+      'page1/ng-doc.page.ts',
+      `import {NgDocPage} from '@ng-doc/core';
 
 export const DevelopPage: NgDocPage = {
   title: 'Develop',
@@ -46,14 +47,14 @@ export const DevelopPage: NgDocPage = {
 
 export default DevelopPage;
 `,
-		);
-		saveActiveProject();
+    );
+    saveActiveProject();
 
-		const tree: UnitTestTree = await runner.runSchematic('standalone-pages-migration', {}, host);
+    const tree: UnitTestTree = await runner.runSchematic('standalone-pages-migration', {}, host);
 
-		expect(tree.get('page1/ng-doc.dependencies.ts')).toBeNull();
-		expect(tree.readContent('page1/ng-doc.page.ts'))
-			.toEqual(`import {NgDocPage} from '@ng-doc/core';
+    expect(tree.get('page1/ng-doc.dependencies.ts')).toBeNull();
+    expect(tree.readContent('page1/ng-doc.page.ts'))
+      .toEqual(`import {NgDocPage} from '@ng-doc/core';
 import { DevelopPageModule } from './ng-doc.module';
 import { ButtonDemoComponent } from './button-demo/button-demo.component';
 import { DevelopDemoComponent } from './develop-demo/develop-demo.component';
@@ -67,12 +68,12 @@ export const DevelopPage: NgDocPage = {
 
 export default DevelopPage;
 `);
-	});
+  });
 
-	it('should migrate module and playgrounds', async () => {
-		createSourceFile(
-			'page1/ng-doc.dependencies.ts',
-			`import {NgDocDependencies} from '@ng-doc/core';
+  it('should migrate module and playgrounds', async () => {
+    createSourceFile(
+      'page1/ng-doc.dependencies.ts',
+      `import {NgDocDependencies} from '@ng-doc/core';
 import {NgDocTagComponent} from '@ng-doc/ui-kit';
 
 import {PlaygroundModule} from './ng-doc.module';
@@ -110,11 +111,11 @@ const PlaygroundDependencies: NgDocDependencies = {
 
 export default PlaygroundDependencies;
 `,
-		);
+    );
 
-		createSourceFile(
-			'page1/ng-doc.page.ts',
-			`import {NgDocPage} from '@ng-doc/core';
+    createSourceFile(
+      'page1/ng-doc.page.ts',
+      `import {NgDocPage} from '@ng-doc/core';
 
 export const DevelopPage: NgDocPage = {
   title: 'Develop',
@@ -123,14 +124,14 @@ export const DevelopPage: NgDocPage = {
 
 export default DevelopPage;
 `,
-		);
-		saveActiveProject();
+    );
+    saveActiveProject();
 
-		const tree: UnitTestTree = await runner.runSchematic('standalone-pages-migration', {}, host);
+    const tree: UnitTestTree = await runner.runSchematic('standalone-pages-migration', {}, host);
 
-		expect(tree.get('page1/ng-doc.dependencies.ts')).toBeNull();
-		expect(tree.readContent('page1/ng-doc.page.ts'))
-			.toEqual(`import {NgDocPage} from '@ng-doc/core';
+    expect(tree.get('page1/ng-doc.dependencies.ts')).toBeNull();
+    expect(tree.readContent('page1/ng-doc.page.ts'))
+      .toEqual(`import {NgDocPage} from '@ng-doc/core';
 import { PlaygroundModule } from './ng-doc.module';
 import { NgDocTagComponent } from '@ng-doc/ui-kit';
 
@@ -169,5 +170,5 @@ export const DevelopPage: NgDocPage = {
 
 export default DevelopPage;
 `);
-	});
+  });
 });

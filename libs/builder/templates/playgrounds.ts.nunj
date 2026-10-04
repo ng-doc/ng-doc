@@ -1,5 +1,5 @@
 // @ts-nocheck
-import {ChangeDetectionStrategy, Component, Type, ViewChild, ViewContainerRef} from '@angular/core';
+import {ChangeDetectionStrategy, Component, viewChild, ViewContainerRef} from '@angular/core';
 import {NgDocBasePlayground, providePlaygroundDemo} from '@ng-doc/app';
 // noinspection ES6UnusedImports
 import pageEntity from '{{ entryImportPath }}';
@@ -18,6 +18,9 @@ import {CommonModule} from '@angular/common';
 
 @Component({
     selector: 'ng-doc-playground-{{ index }}',
+    {#- Two pages with the same playground would otherwise compile to identical components, which
+        Angular gives the same component ID (NG0912). The page route keeps them apart. #}
+    host: {'data-ng-doc-playground-page': '{{ pageRoute }}'},
     template: `
 		{{ template }}
 	`,
@@ -35,17 +38,13 @@ import {CommonModule} from '@angular/common';
 export class {{ comp.name }} extends NgDocBasePlayground {
     static readonly selector: string = '{{ comp.selector }}';
 
-    @ViewChild(pageEntity.playgrounds['{{ id }}'].target, {static: true})
-    readonly playground: Type<any>;
+    readonly target = pageEntity.playgrounds['{{ id }}'].target;
 
-    @ViewChild(pageEntity.playgrounds['{{ id }}'].target, {static: true, read: ViewContainerRef})
-    readonly viewContainerRef: ViewContainerRef;
+    readonly playground = viewChild(pageEntity.playgrounds['{{ id }}'].target);
+
+    readonly viewContainerRef = viewChild(pageEntity.playgrounds['{{ id }}'].target, {read: ViewContainerRef});
 
     readonly configData: any = pageEntity.playgrounds['{{ id }}'].data;
-
-    constructor() {
-        super(pageEntity.playgrounds['{{ id }}'].target);
-    }
 }
 {%- set index = index + 1 -%}
 {%- endfor %}

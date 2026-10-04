@@ -1,25 +1,25 @@
 import {
-  AfterContentInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  ContentChildren,
-  DestroyRef,
+  computed,
+  contentChildren,
   Directive,
-  inject,
-  QueryList,
+  Signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgDocOptionComponent } from '@ng-doc/ui-kit/components/option';
 import { NgDocTextComponent } from '@ng-doc/ui-kit/components/text';
-import { startWith } from 'rxjs/operators';
 
+/**
+ * Marks the header content of an option group.
+ */
 @Directive({
   selector: '[ngDocOptionGroupHeader]',
-  standalone: true,
 })
 export class NgDocOptionGroupHeaderDirective {}
 
+/**
+ * Group of options with a header. The header is hidden while the group has no options.
+ */
 @Component({
   selector: 'ng-doc-option-group',
   templateUrl: './option-group.component.html',
@@ -27,23 +27,12 @@ export class NgDocOptionGroupHeaderDirective {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgDocTextComponent],
 })
-export class NgDocOptionGroupComponent<T> implements AfterContentInit {
-  private changeDetectorRef = inject(ChangeDetectorRef);
+export class NgDocOptionGroupComponent<T> {
+  /** Options of the group. */
+  readonly options = contentChildren<NgDocOptionComponent<T>>(NgDocOptionComponent, {
+    descendants: true,
+  });
 
-  @ContentChildren(NgDocOptionComponent, { descendants: true })
-  options: QueryList<NgDocOptionComponent<T>> = new QueryList<NgDocOptionComponent<T>>();
-  hasHeader: boolean = false;
-
-  private readonly destroyRef = inject(DestroyRef);
-
-  constructor() {}
-
-  ngAfterContentInit(): void {
-    this.options.changes
-      .pipe(startWith(this.options), takeUntilDestroyed(this.destroyRef))
-      .subscribe((options: QueryList<NgDocOptionComponent<T>>) => {
-        this.hasHeader = !!options.length;
-        this.changeDetectorRef.markForCheck();
-      });
-  }
+  /** Whether the header is shown. */
+  readonly hasHeader: Signal<boolean> = computed(() => this.options().length > 0);
 }

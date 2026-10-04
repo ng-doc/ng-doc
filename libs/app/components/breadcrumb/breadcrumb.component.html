@@ -1,6 +1,10 @@
-@for (item of breadcrumbs; track item) {
-  @if (!$first) {
-    <ng-doc-icon icon="chevron-right"></ng-doc-icon>
-  }
-  {{ item }}
-}
+<nav aria-label="Breadcrumb">
+  <ol class="ng-doc-breadcrumbs">
+    @for (item of breadcrumbs(); track $index; let last = $last) {
+      <li class="ng-doc-breadcrumb" [attr.aria-current]="last ? 'page' : null">{{ item }}</li>
+      @if (!last) {
+        <li class="ng-doc-breadcrumb-separator" aria-hidden="true">›</li>
+      }
+    }
+  </ol>
+</nav>

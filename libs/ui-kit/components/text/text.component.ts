@@ -1,59 +1,42 @@
-import {
-  AfterContentChecked,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChild,
-  HostBinding,
-  inject,
-  Input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, contentChild, input } from '@angular/core';
 import { NgDocSize, NgDocTextAlign, NgDocTextColor } from '@ng-doc/ui-kit/types';
 
 import { NgDocTextLeftDirective } from './text-left.directive';
 import { NgDocTextRightDirective } from './text-right.directive';
 
+/**
+ * Text with the UI Kit typography, optionally with content on its left or right side
+ * (`ngDocTextLeft`, `ngDocTextRight`).
+ */
 @Component({
   selector: '[ng-doc-text]',
   templateUrl: './text.component.html',
   styleUrls: ['./text.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [],
+  host: {
+    class: 'ngde',
+    '[attr.data-ng-doc-text-size]': 'size()',
+    '[attr.data-ng-doc-text-color]': 'color()',
+    '[attr.data-ng-doc-text-align]': 'align()',
+    '[attr.data-ng-doc-text-absolute]': 'absoluteContent()',
+  },
 })
-export class NgDocTextComponent implements AfterContentChecked {
-  private readonly changeDetectorRef = inject(ChangeDetectorRef);
-
+export class NgDocTextComponent {
   /** Text size */
-  @Input()
-  @HostBinding('attr.data-ng-doc-text-size')
-  size: NgDocSize = 'medium';
+  readonly size = input<NgDocSize>('medium');
 
   /** Text color */
-  @Input()
-  @HostBinding('attr.data-ng-doc-text-color')
-  color: NgDocTextColor = 'normal';
+  readonly color = input<NgDocTextColor>('normal');
 
   /** Text align */
-  @Input()
-  @HostBinding('attr.data-ng-doc-text-align')
-  align: NgDocTextAlign = 'left';
+  readonly align = input<NgDocTextAlign>('left');
 
-  @Input()
-  @HostBinding('attr.data-ng-doc-text-absolute')
-  absoluteContent: boolean = false;
+  /** Positions the side content absolutely, so it does not take space from the text. */
+  readonly absoluteContent = input<boolean>(false);
 
-  @ContentChild(NgDocTextLeftDirective)
-  leftContent?: NgDocTextLeftDirective;
+  /** Content projected with `ngDocTextLeft`. */
+  readonly leftContent = contentChild(NgDocTextLeftDirective);
 
-  @ContentChild(NgDocTextRightDirective)
-  rightContent?: NgDocTextRightDirective;
-
-  @HostBinding('class.ngde')
-  readonly ngDocElement: boolean = true;
-
-  constructor() {}
-
-  ngAfterContentChecked(): void {
-    this.changeDetectorRef.detectChanges();
-  }
+  /** Content projected with `ngDocTextRight`. */
+  readonly rightContent = contentChild(NgDocTextRightDirective);
 }

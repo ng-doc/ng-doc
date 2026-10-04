@@ -5,11 +5,13 @@ import {
   keywordsStore,
   NgDocBuilderContext,
 } from '@ng-doc/builder';
-import { NgDocPageType, uid } from '@ng-doc/core';
+import { NgDocPageType } from '@ng-doc/core';
+import path from 'path';
 import { finalize } from 'rxjs';
 
 import { UTILS } from '../../../helpers';
 import { buildIndexes } from '../../../helpers/build-indexes';
+import { stableGeneratedId } from '../../../helpers/stable-generated-id';
 import { AsyncFileOutput, Builder, CacheStrategy, mergeFactory } from '../../core';
 import { renderTemplate } from '../../nunjucks';
 import { EntryMetadata, TemplateBuilderOutput } from '../interfaces';
@@ -30,7 +32,7 @@ interface Config {
 export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput> {
   const { context, tag, metadata, pageTemplateBuilders, pageType, getHeaderContent } = config;
   const cacheStrategy = {
-    id: `${metadata.path}#PageWrapper`,
+    id: `${metadata.outPath}#PageWrapper`,
     action: 'skip',
     files: () => [metadata.outPath],
   } satisfies CacheStrategy<undefined, string>;
@@ -76,7 +78,12 @@ export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput> {
             filePath: metadata.outPath,
             content: renderTemplate('./page-wrapper.ts.nunj', {
               context: {
-                id: uid(),
+                id: stableGeneratedId(
+                  context.context.target?.project ??
+                    path.relative(context.context.workspaceRoot, context.outDir),
+                  path.relative(context.context.workspaceRoot, metadata.outPath),
+                  'page-wrapper',
+                ),
                 metadata,
                 entries,
                 headerContent: content,

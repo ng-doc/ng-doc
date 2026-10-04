@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { isApiEntry, isCategoryEntry, isPageEntry } from '../entry';
 
 describe('entry type guards', () => {

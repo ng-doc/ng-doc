@@ -15,6 +15,12 @@ export interface NgDocPlaygroundOptions {
 	 */
 	hideSidePanel?: boolean;
 	/**
+	 * Where the inspector (the side panel with the controls) goes: `'right'` of the demos (the
+	 * default), or `'bottom'`, below them, so the demos get the full width. Playgrounds narrower
+	 * than 640px always show it below.
+	 */
+	inspectorPosition?: 'right' | 'bottom';
+	/**
 	 * Specifies input values for the playground that will be set to playground component.
 	 * These values will be used only once, when the playground is rendered.
 	 * If user resets the playground, these values will be overridden by default values.

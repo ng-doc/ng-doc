@@ -1,7 +1,6 @@
 import { escapeHtml } from '@ng-doc/core';
 import * as fs from 'fs';
 import { marked, RendererObject } from 'marked';
-import { EOL } from 'node:os';
 import * as path from 'path';
 
 import { NgDocCodeBlockParams } from '../interfaces';
@@ -43,9 +42,10 @@ export function markdownToHtml(
         const relativeFilePath: string = path.join(context, file);
         const fileContent: string = fs
           .readFileSync(relativeFilePath ?? '', 'utf8')
-          .split(EOL)
+          // LF on every platform, as the new engine does, so both engines render the same lines.
+          .split('\n')
           .slice(fileLineStart, fileLineEnd)
-          .join(EOL)
+          .join('\n')
           .trim();
 
         addDependency && addDependency(relativeFilePath);

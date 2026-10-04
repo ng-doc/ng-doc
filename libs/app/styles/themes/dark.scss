@@ -1,39 +1,53 @@
-@use 'sass:color';
-
 // dark theme
 @mixin theme {
-  --ng-doc-base-rgb: 43 43 43;
-  --ng-doc-base-0: #{color.scale(#2b2b2b, $lightness: -5%)};
-  --ng-doc-base-1: #{color.scale(#333333, $lightness: -5%)};
-  --ng-doc-base-2: #{color.scale(#3a3a3a, $lightness: -5%)};
-  --ng-doc-base-3: #{color.scale(#424242, $lightness: -5%)};
-  --ng-doc-base-4: #{color.scale(#4b4b4b, $lightness: -5%)};
-  --ng-doc-base-5: #{color.scale(#555555, $lightness: -5%)};
-  --ng-doc-base-6: #{color.scale(#5e5e5e, $lightness: -5%)};
-  --ng-doc-base-7: #{color.scale(#686868, $lightness: -5%)};
-  --ng-doc-base-8: #{color.scale(#727272, $lightness: -5%)};
-  --ng-doc-base-9: #{color.scale(#7d7d7d, $lightness: -5%)};
-  --ng-doc-base-10: #{color.scale(#888888, $lightness: -5%)};
-  --ng-doc-heading-color: #e3e3e3;
-  --ng-doc-text: #a9a9a9;
-  --ng-doc-text-muted: var(--ng-doc-base-10);
-  --ng-doc-text-selection: rgba(110, 110, 110, 0.81);
+  --ng-doc-base-rgb: 24 25 29;
+  --ng-doc-base-0: var(--ng-doc-palette-neutral-950);
+  --ng-doc-base-1: var(--ng-doc-palette-neutral-900);
+  --ng-doc-base-2: var(--ng-doc-palette-neutral-875);
+  --ng-doc-base-3: var(--ng-doc-palette-neutral-850);
+  --ng-doc-base-4: var(--ng-doc-palette-neutral-800);
+  --ng-doc-base-5: var(--ng-doc-palette-neutral-750);
+  --ng-doc-base-6: var(--ng-doc-palette-neutral-700);
+  --ng-doc-base-7: var(--ng-doc-palette-neutral-600);
+  --ng-doc-base-8: var(--ng-doc-palette-neutral-500);
+  --ng-doc-base-9: var(--ng-doc-palette-neutral-450);
+  --ng-doc-base-10: var(--ng-doc-palette-neutral-400);
+  --ng-doc-heading-color: var(--ng-doc-palette-neutral-50);
+  --ng-doc-text: var(--ng-doc-palette-neutral-300);
+  --ng-doc-text-muted: var(--ng-doc-base-9);
+  --ng-doc-text-selection: color-mix(in srgb, var(--ng-doc-primary) 30%, transparent);
 
-  --ng-doc-shadow-color: rgba(0, 0, 0, 0.4);
-  --ng-doc-link-color: #30a5ff;
-  --ng-doc-inline-code-background: #b9b9b9;
+  --ng-doc-shadow-color: rgb(0 0 0 / 0.45);
+  --ng-doc-inline-code-background: var(--ng-doc-base-10);
 
-  --ng-doc-primary: #faab00;
-  --ng-doc-info: #7095ff;
+  // One accent family in both themes: links, info and primary share the brand hue.
+  --ng-doc-primary: var(--ng-doc-palette-brand-400);
+  --ng-doc-primary-text: var(--ng-doc-palette-neutral-1000);
+  --ng-doc-link-color: var(--ng-doc-primary);
+  --ng-doc-info: var(--ng-doc-palette-brand-400);
+  --ng-doc-info-text: var(--ng-doc-palette-neutral-1000);
+  --ng-doc-success: var(--ng-doc-palette-green-400);
+  --ng-doc-success-text: var(--ng-doc-palette-neutral-1000);
+  --ng-doc-warning: var(--ng-doc-palette-amber-400);
+  --ng-doc-warning-text: var(--ng-doc-palette-neutral-1000);
+  --ng-doc-alert: var(--ng-doc-palette-red-400);
+  --ng-doc-alert-text: var(--ng-doc-palette-neutral-1000);
 
-  --ng-doc-mark-background: rgba(48, 165, 255, 0.3);
-  --ng-doc-search-result-color: #c6c6c6;
+  // The search highlight stays yellow, as in the light theme.
+  --ng-doc-mark-background: color-mix(in srgb, #f5c542 28%, transparent);
+  --ng-doc-search-result-color: var(--ng-doc-text);
+  --ng-doc-navbar-border: 1px solid var(--ng-doc-border-color);
 
-  --ng-doc-api-tag-background: #ff5959;
-  --ng-doc-api-tag-color: var(--ng-doc-base-0);
-  --ng-doc-guide-tag-background: #faab00;
-  --ng-doc-guide-tag-color: var(--ng-doc-base-0);
-  --ng-doc-navbar-border: 1px solid var(--ng-doc-base-4);
+  // Derived tokens: lighter hues and slightly stronger tints on the dark page.
+  --ng-doc-hue-violet: var(--ng-doc-palette-violet-400);
+  --ng-doc-on-hue: var(--ng-doc-palette-neutral-1000);
+  --ng-doc-mix-soft: 12%;
+  --ng-doc-mix-chip: 16%;
+  --ng-doc-mix-border: 30%;
+  --ng-doc-focus-ring-color: var(--ng-doc-palette-brand-400);
+
+  // base-7 input borders measure below 3:1 on the base-1 inspector, so its inputs use base-8.
+  --ng-doc-playground-input-border: var(--ng-doc-border-size) solid var(--ng-doc-base-8);
 }
 
 // shiki theme to match dark theme

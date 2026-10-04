@@ -1,14 +1,39 @@
-<div class="navbar-container">
+<div class="ng-doc-navbar-container">
+  @if (hamburger()) {
+    <button
+      type="button"
+      class="ng-doc-menu"
+      ng-doc-button-icon
+      size="large"
+      [rounded]="false"
+      aria-controls="ng-doc-sidenav"
+      [attr.aria-expanded]="sidebarService.expandedState()"
+      [attr.aria-label]="sidebarService.expandedState() ? 'Close navigation' : 'Open navigation'"
+      (click)="sidebarService.toggle()"
+      #menuButton>
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16" />
+      </svg>
+    </button>
+  }
   <div class="ng-doc-navbar-left">
     <ng-content select="[ngDocNavbarLeft]"></ng-content>
   </div>
+  <div class="ng-doc-navbar-center">
+    <ng-content select="[ngDocNavbarCenter]"></ng-content>
+  </div>
   <div class="ng-doc-navbar-right">
-    @if (search) {
+    @if (search()) {
       <ng-doc-search></ng-doc-search>
     }
     <ng-content select="[ngDocNavbarRight]"></ng-content>
-    <button class="ng-doc-menu" ng-doc-button-icon size="large" (click)="sidebarService.toggle()">
-      <ng-doc-icon icon="menu" [size]="24"></ng-doc-icon>
-    </button>
   </div>
 </div>

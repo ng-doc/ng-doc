@@ -1,0 +1,260 @@
+@let current = selected();
+<div
+  class="ng-doc-command-palette"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Search"
+  (keydown)="onTrapKeydown($event)">
+  <div class="ng-doc-command-palette-input">
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      aria-hidden="true">
+      <circle cx="11" cy="11" r="7" />
+      <path d="m20 20-3.5-3.5" />
+    </svg>
+    <input
+      #input
+      type="text"
+      role="combobox"
+      aria-label="Search the documentation"
+      aria-autocomplete="list"
+      aria-expanded="true"
+      aria-controls="ng-doc-command-palette-list"
+      [attr.aria-activedescendant]="current?.id ?? null"
+      autocomplete="off"
+      spellcheck="false"
+      placeholder="Search guides, API and actions…"
+      [formField]="searchForm.query"
+      (keydown)="onKeydown($event)" />
+    <div
+      class="ng-doc-command-palette-scopes ng-doc-command-palette-segments"
+      role="tablist"
+      aria-label="Search scope"
+      ngDocSelectionHost>
+      <ng-doc-selection [align]="null" />
+      @for (item of scopes; track item.id) {
+        <button
+          type="button"
+          role="tab"
+          aria-controls="ng-doc-command-palette-list"
+          [attr.tabindex]="scope() === item.id ? 0 : -1"
+          [attr.aria-selected]="scope() === item.id"
+          [ngDocSelectionOrigin]="scope() === item.id"
+          (mousedown)="$event.preventDefault()"
+          (keydown)="onScopeKeydown($event)"
+          (click)="selectScope(item.id)">
+          {{ item.label }}
+        </button>
+      }
+    </div>
+    <kbd class="ng-doc-command-palette-kbd">Esc</kbd>
+  </div>
+
+  <div class="ng-doc-command-palette-body">
+    <div
+      #list
+      class="ng-doc-command-palette-list"
+      id="ng-doc-command-palette-list"
+      role="listbox"
+      aria-label="Results">
+      @for (section of sections(); track section.key) {
+        <div class="ng-doc-command-palette-group" role="group" [attr.aria-label]="section.title">
+          <div class="ng-doc-command-palette-section" aria-hidden="true">
+            <span>{{ section.title }}</span>
+            <span class="ng-doc-command-palette-count">{{ section.rows.length }}</span>
+          </div>
+          @for (row of section.rows; track row.id) {
+            <div
+              class="ng-doc-command-palette-row"
+              role="option"
+              [id]="row.id"
+              [attr.data-ng-doc-type]="row.type"
+              [attr.data-ng-doc-url]="row.url ?? null"
+              [attr.aria-selected]="row.id === current?.id"
+              (mousedown)="$event.preventDefault()"
+              (mousemove)="hover(rows().indexOf(row))"
+              (click)="activate(row)">
+              <span class="ng-doc-command-palette-icon" aria-hidden="true">
+                <ng-container
+                  [ngTemplateOutlet]="icon"
+                  [ngTemplateOutletContext]="{ $implicit: row.icon }"></ng-container>
+              </span>
+              <span class="ng-doc-command-palette-name" [class.ng-doc-command-palette-mono]="row.type === 'api'">
+                <span class="ng-doc-command-palette-label">
+                  @for (segment of row.label; track $index) {
+                    @if (segment.match) {
+                      <mark>{{ segment.text }}</mark>
+                    } @else {
+                      <span>{{ segment.text }}</span>
+                    }
+                  }
+                </span>
+                @if (row.meta) {
+                  <small>{{ row.meta }}</small>
+                }
+              </span>
+              <span class="ng-doc-command-palette-end">
+                @if (row.kind) {
+                  <ng-doc-kind-icon [kind]="row.kind"></ng-doc-kind-icon>
+                } @else if (row.type === 'api') {
+                  <span class="ng-doc-command-palette-type" data-ng-doc-page-type="api">API</span>
+                }
+                @if (row.keys?.length && shortcuts.enabled()) {
+                  @for (key of row.keys; track key) {
+                    <kbd class="ng-doc-command-palette-kbd">{{ key }}</kbd>
+                  }
+                }
+                <svg
+                  class="ng-doc-command-palette-return"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true">
+                  <path d="M20 5v7a3 3 0 0 1-3 3H5" />
+                  <path d="m9 11-4 4 4 4" />
+                </svg>
+              </span>
+            </div>
+          }
+        </div>
+      } @empty {
+        <div class="ng-doc-command-palette-empty" role="presentation">
+          @if (searching()) {
+            <ng-doc-spinner size="small"></ng-doc-spinner>
+            Searching…
+          } @else if (failed()) {
+            Search failed. Try again.
+          } @else {
+            {{ emptyMessage() }}
+          }
+        </div>
+      }
+    </div>
+
+    <div class="ng-doc-command-palette-preview">
+      @if (current) {
+        <div class="ng-doc-command-palette-preview-top">
+          @switch (current.type) {
+            @case ('api') {
+              @if (current.kind) {
+                <ng-doc-kind-icon [kind]="current.kind"></ng-doc-kind-icon>
+              } @else {
+                <span class="ng-doc-command-palette-type" data-ng-doc-page-type="api">API</span>
+              }
+              <span>{{ current.scope }}</span>
+            }
+            @case ('guide') {
+              <span class="ng-doc-command-palette-type" data-ng-doc-page-type="guide">Guide</span>
+              <span>{{ current.meta }}</span>
+            }
+            @default {
+              <ng-container
+                [ngTemplateOutlet]="icon"
+                [ngTemplateOutletContext]="{ $implicit: 'action' }"></ng-container>
+              <span>Action</span>
+            }
+          }
+        </div>
+        <h2
+          class="ng-doc-command-palette-preview-title"
+          [class.ng-doc-command-palette-mono]="current.type === 'api'">
+          {{ current.title }}
+        </h2>
+        @if (current.type === 'action') {
+          <p class="ng-doc-command-palette-muted">
+            {{ current.action?.keepOpen ? 'Changes the setting and keeps the search open.' : 'Runs immediately.' }}
+          </p>
+          @if (current.keys?.length && shortcuts.enabled()) {
+            <div class="ng-doc-command-palette-hint">
+              Shortcut
+              @for (key of current.keys; track key) {
+                <kbd class="ng-doc-command-palette-kbd">{{ key }}</kbd>
+              }
+            </div>
+          }
+        } @else {
+          @if (current.text) {
+            <p class="ng-doc-command-palette-text">{{ current.text }}</p>
+          }
+          @if (current.signature) {
+            <pre class="ng-doc-command-palette-signature"><code>{{ current.signature }}</code></pre>
+          }
+          <div class="ng-doc-command-palette-hint">
+            <kbd class="ng-doc-command-palette-kbd">↵</kbd>
+            {{ current.type === 'api' ? 'open symbol page' : 'open' }}
+          </div>
+        }
+      }
+    </div>
+  </div>
+
+  <div class="ng-doc-command-palette-announcer" role="status">{{ status() }}</div>
+
+  <div class="ng-doc-command-palette-footer">
+    <span>
+      <kbd class="ng-doc-command-palette-kbd">↑</kbd>
+      <kbd class="ng-doc-command-palette-kbd">↓</kbd>
+      navigate
+    </span>
+    <span class="ng-doc-command-palette-wide"><kbd class="ng-doc-command-palette-kbd">↵</kbd> open</span>
+    <span class="ng-doc-command-palette-wide"
+      ><kbd class="ng-doc-command-palette-kbd">Tab</kbd> scopes and settings</span
+    >
+    @if (shortcuts.enabled()) {
+      <span class="ng-doc-command-palette-wide"
+        ><kbd class="ng-doc-command-palette-kbd">/</kbd> also opens search</span
+      >
+    }
+    <button
+      class="ng-doc-command-palette-switch"
+      type="button"
+      role="switch"
+      [attr.aria-checked]="shortcuts.enabled()"
+      title="Single-character shortcuts: / [ ] F L T"
+      (click)="shortcuts.toggle()">
+      Single-key shortcuts
+      <span class="ng-doc-command-palette-track" aria-hidden="true"></span>
+    </button>
+  </div>
+</div>
+
+<ng-template #icon let-name>
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true">
+    @switch (name) {
+      @case ('symbol') {
+        <path d="m21 16-9 5-9-5V8l9-5 9 5z" />
+        <path d="m3.3 7.5 8.7 5 8.7-5M12 22V12.5" />
+      }
+      @case ('section') {
+        <path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18" />
+      }
+      @case ('action') {
+        <path d="M13 2 3 14h9l-1 8 10-12h-9z" />
+      }
+      @default {
+        <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+        <path d="M14 3v5h5M9 13h6M9 17h6" />
+      }
+    }
+  </svg>
+</ng-template>

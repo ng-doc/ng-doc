@@ -1,0 +1,240 @@
+{
+  "--ng-doc-button-active-background": [
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[ng-doc-button-icon-raised] = var(--ng-doc-base-3)",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[ng-doc-button-icon-transparent] = transparent"
+  ],
+  "--ng-doc-button-active-color": [
+    "libs/app/components/navbar/navbar.component.scss :: :host = var(--ng-doc-heading-color)",
+    "libs/app/components/page/page.component.scss :: :host .ng-doc-page-controls = var(--ng-doc-heading-color)",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[ng-doc-button-icon-transparent] = var(--ng-doc-base-10)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=alert] = var(--ng-doc-alert-text)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=info] = var(--ng-doc-info-text)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=link] = var(--ng-doc-primary-text)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=primary] = var(--ng-doc-primary-text)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=success] = var(--ng-doc-success-text)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=warning] = var(--ng-doc-warning-text)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=alert] = var(--ng-doc-alert)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=info] = var(--ng-doc-info)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=link] = var(--ng-doc-link-color)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=primary] = var(--ng-doc-primary)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=success] = var(--ng-doc-success)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=warning] = var(--ng-doc-warning)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=alert] = var(--ng-doc-alert)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=info] = var(--ng-doc-info)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=link] = var(--ng-doc-link-color)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=primary] = var(--ng-doc-primary)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=success] = var(--ng-doc-success)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=warning] = var(--ng-doc-warning)"
+  ],
+  "--ng-doc-button-background": [
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[ng-doc-button-icon-raised] = var(--ng-doc-base-1)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat] = var(--ng-doc-white)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=alert] = var(--ng-doc-alert)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=info] = var(--ng-doc-info)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=link] = var(--ng-doc-link-color)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=primary] = var(--ng-doc-primary)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=success] = var(--ng-doc-success)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=warning] = var(--ng-doc-warning)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=alert] = var(--ng-doc-alert)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=info] = var(--ng-doc-info)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=link] = var(--ng-doc-link-color)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=primary] = var(--ng-doc-primary)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=success] = var(--ng-doc-success)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=warning] = var(--ng-doc-warning)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=alert] = var(--ng-doc-alert)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=info] = var(--ng-doc-info)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=link] = var(--ng-doc-link-color)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=primary] = var(--ng-doc-primary)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=success] = var(--ng-doc-success)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=warning] = var(--ng-doc-warning)"
+  ],
+  "--ng-doc-button-background-opacity": [
+    "libs/ui-kit/components/button/button.component.scss :: :host:active = var(--ng-doc-button-active-background-opacity)",
+    "libs/ui-kit/components/button/button.component.scss :: :host:hover = var(--ng-doc-button-hover-background-opacity)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat] = 0%",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button] = 10%"
+  ],
+  "--ng-doc-button-color": [
+    "libs/app/components/navbar/navbar.component.scss :: :host = var(--ng-doc-text-muted)",
+    "libs/app/components/page/page.component.scss :: :host .ng-doc-page-controls = var(--ng-doc-text-muted)",
+    "libs/app/components/page/page.component.scss :: :host .ng-doc-page-controls [data-ng-doc-copied=true] = var(--ng-doc-success-strong)",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[ng-doc-button-icon-transparent] = var(--ng-doc-base-6)",
+    "libs/ui-kit/components/button/button.component.scss :: :host:active = var(--ng-doc-button-active-color)",
+    "libs/ui-kit/components/button/button.component.scss :: :host:hover = var(--ng-doc-button-hover-color)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=alert] = var(--ng-doc-alert-text)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=info] = var(--ng-doc-info-text)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=link] = var(--ng-doc-primary-text)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=primary] = var(--ng-doc-primary-text)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=success] = var(--ng-doc-success-text)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=warning] = var(--ng-doc-warning-text)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=alert] = var(--ng-doc-alert)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=info] = var(--ng-doc-info)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=link] = var(--ng-doc-link-color)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=primary] = var(--ng-doc-primary)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=success] = var(--ng-doc-success)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=warning] = var(--ng-doc-warning)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=alert] = var(--ng-doc-alert)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=info] = var(--ng-doc-info)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=link] = var(--ng-doc-link-color)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=primary] = var(--ng-doc-primary)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=success] = var(--ng-doc-success)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=warning] = var(--ng-doc-warning)"
+  ],
+  "--ng-doc-button-hover-background": [
+    "libs/app/components/navbar/navbar.component.scss :: :host = var(--ng-doc-hover-background)",
+    "libs/app/components/page/page.component.scss :: :host .ng-doc-page-controls = var(--ng-doc-hover-background)",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[ng-doc-button-icon-raised] = var(--ng-doc-base-2)",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[ng-doc-button-icon-transparent] = transparent"
+  ],
+  "--ng-doc-button-hover-color": [
+    "libs/app/components/navbar/navbar.component.scss :: :host = var(--ng-doc-heading-color)",
+    "libs/app/components/page/page.component.scss :: :host .ng-doc-page-controls = var(--ng-doc-heading-color)",
+    "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[ng-doc-button-icon-transparent] = var(--ng-doc-base-8)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=alert] = var(--ng-doc-alert-text)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=info] = var(--ng-doc-info-text)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=link] = var(--ng-doc-primary-text)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=primary] = var(--ng-doc-primary-text)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=success] = var(--ng-doc-success-text)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-flat][data-ng-doc-color=warning] = var(--ng-doc-warning-text)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=alert] = var(--ng-doc-alert)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=info] = var(--ng-doc-info)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=link] = var(--ng-doc-link-color)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=primary] = var(--ng-doc-primary)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=success] = var(--ng-doc-success)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button-text][data-ng-doc-color=warning] = var(--ng-doc-warning)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=alert] = var(--ng-doc-alert)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=info] = var(--ng-doc-info)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=link] = var(--ng-doc-link-color)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=primary] = var(--ng-doc-primary)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=success] = var(--ng-doc-success)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[ng-doc-button][data-ng-doc-color=warning] = var(--ng-doc-warning)"
+  ],
+  "--ng-doc-checkbox-border": [
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties = var(--ng-doc-playground-input-border)",
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: :host[aria-checked=true] .ng-doc-checkbox = var(--ng-doc-checkbox-color)"
+  ],
+  "--ng-doc-checkbox-border-hover": [
+    "libs/ui-kit/components/checkbox/checkbox.component.scss :: :host[aria-checked=true] .ng-doc-checkbox = var(--ng-doc-checkbox-color)"
+  ],
+  "--ng-doc-code-font-size": [
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-node-details code.ng-doc-code-with-link = var(--ng-doc-font-size)"
+  ],
+  "--ng-doc-code-line-height": [
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-node-details = var(--ng-doc-line-height)"
+  ],
+  "--ng-doc-dot-size": [
+    "libs/ui-kit/components/dot/dot.component.scss :: :host[data-ng-doc-size=large] = calc(var(--ng-doc-base-gutter) * 2)",
+    "libs/ui-kit/components/dot/dot.component.scss :: :host[data-ng-doc-size=medium] = var(--ng-doc-base-gutter)",
+    "libs/ui-kit/components/dot/dot.component.scss :: :host[data-ng-doc-size=small] = calc(var(--ng-doc-base-gutter) / 2)"
+  ],
+  "--ng-doc-floated-border-color": [
+    "libs/ui-kit/components/wrapper/wrapper.component.scss :: :host[data-ng-doc-focused=true] = var(--ng-doc-floated-focus-border-color, var(--ng-doc-primary))"
+  ],
+  "--ng-doc-font-size": [
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-node-details = 14px",
+    "libs/app/styles/typography.scss :: @media (max-width: 640px) > h1.ngde = 28px",
+    "libs/app/styles/typography.scss :: h1.ngde = var(--ng-doc-h1-font-size)",
+    "libs/app/styles/typography.scss :: h2.ngde = var(--ng-doc-h2-font-size)",
+    "libs/app/styles/typography.scss :: h3.ngde = var(--ng-doc-h3-font-size)",
+    "libs/app/styles/typography.scss :: h4.ngde = var(--ng-doc-h4-font-size)",
+    "libs/app/styles/typography.scss :: h5.ngde = var(--ng-doc-h5-font-size)",
+    "libs/app/styles/typography.scss :: h6.ngde = var(--ng-doc-h6-font-size)",
+    "libs/ui-kit/components/button/button.component.scss :: :host = calc(var(--ng-doc-base-gutter) * 2)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[data-ng-doc-size=large] = 20px",
+    "libs/ui-kit/components/button/button.component.scss :: :host[data-ng-doc-size=small] = 14px",
+    "libs/ui-kit/components/data-list-group/data-list-group.component.scss :: .ng-doc-empty-message = 13px",
+    "libs/ui-kit/components/data-list/data-list.component.scss :: .ng-doc-empty-message = 14px",
+    "libs/ui-kit/components/option-group/option-group.component.scss :: .ng-doc-option-group-header = 13px",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host = 14px",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-size=small] = 11px",
+    "libs/ui-kit/components/text/text.component.scss :: :host[data-ng-doc-text-size=small] = 14px"
+  ],
+  "--ng-doc-font-weight": [
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-node-details = 400",
+    "libs/app/styles/typography.scss :: h1.ngde = 700",
+    "libs/app/styles/typography.scss :: h1.ngde, h2.ngde, h3.ngde, h4.ngde, h5.ngde, h6.ngde = 600",
+    "libs/ui-kit/components/button/button.component.scss :: :host[data-ng-doc-size=large] = 700",
+    "libs/ui-kit/components/option-group/option-group.component.scss :: .ng-doc-option-group-header = 700",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-size=small] = 500"
+  ],
+  "--ng-doc-inline-code-background": [
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-node-details code.ng-doc-code-with-link = transparent",
+    "libs/app/styles/parts/text.scss :: code.ng-doc-code-with-link = var(--ng-doc-link-color)"
+  ],
+  "--ng-doc-input-border": [
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties = var(--ng-doc-playground-input-border)",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host:hover:not([data-ng-doc-input-disabled=true]) = var(--ng-doc-input-border-hover)"
+  ],
+  "--ng-doc-input-cursor": [
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host:not([data-ng-doc-input-disabled=true]) ::ng-deep .ng-doc-input:read-only = pointer"
+  ],
+  "--ng-doc-input-height": [
+    "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties = 36px"
+  ],
+  "--ng-doc-input-text-align": [
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host[data-ng-doc-align=center] = center",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host[data-ng-doc-align=left] = left",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host[data-ng-doc-align=right] = right"
+  ],
+  "--ng-doc-line-height": [
+    "libs/app/styles/parts/decorators.scss :: .ng-doc-decorators-group code, .ng-doc-decorators-group code.ngde = 18px",
+    "libs/app/styles/parts/header.scss :: article header.ngde .ng-doc-header-details code = 18px",
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-node-details = 22px",
+    "libs/app/styles/typography.scss :: @media (max-width: 640px) > h1.ngde = 36px",
+    "libs/app/styles/typography.scss :: blockquote.ngde, blockquote[ng-doc-blockquote] = 24px",
+    "libs/app/styles/typography.scss :: h1.ngde = var(--ng-doc-h1-line-height)",
+    "libs/app/styles/typography.scss :: h2.ngde = var(--ng-doc-h2-line-height)",
+    "libs/app/styles/typography.scss :: h3.ngde = var(--ng-doc-h3-line-height)",
+    "libs/app/styles/typography.scss :: h4.ngde = var(--ng-doc-h4-line-height)",
+    "libs/app/styles/typography.scss :: h5.ngde = var(--ng-doc-h5-line-height)",
+    "libs/app/styles/typography.scss :: h6.ngde = var(--ng-doc-h6-line-height)",
+    "libs/ui-kit/components/button/button.component.scss :: :host = calc(var(--ng-doc-base-gutter) * 3)",
+    "libs/ui-kit/components/button/button.component.scss :: :host[data-ng-doc-size=large] = 32px",
+    "libs/ui-kit/components/button/button.component.scss :: :host[data-ng-doc-size=small] = 16px",
+    "libs/ui-kit/components/data-list-group/data-list-group.component.scss :: .ng-doc-empty-message = 22px",
+    "libs/ui-kit/components/data-list/data-list.component.scss :: .ng-doc-empty-message = 22px",
+    "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container = 22px",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-size=small] = 18px",
+    "libs/ui-kit/components/text/text.component.scss :: :host[data-ng-doc-text-size=small] = 18px"
+  ],
+  "--ng-doc-pane-border-radius": [
+    "libs/app/components/demo-pane/demo-pane.component.scss :: :host = var(--ng-doc-demo-displayer-border-radius)"
+  ],
+  "--ng-doc-sidenav-width": [
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-root-wrapper main = var(--ng-doc-sidebar-width)",
+    "libs/app/components/root/root.component.scss :: :host[data-ng-doc-fullscreen-route=true] .ng-doc-root-wrapper main = 0px"
+  ],
+  "--ng-doc-tab-group-border": [
+    "libs/app/components/demo-pane/demo-pane.component.scss :: :host = none"
+  ],
+  "--ng-doc-tab-group-border-radius": [
+    "libs/app/components/demo-pane/demo-pane.component.scss :: :host = 0"
+  ],
+  "--ng-doc-tabs-margin": [
+    "libs/app/styles/typography.scss :: body = var(--ng-doc-page-block-margin)"
+  ],
+  "--ng-doc-tag-background": [
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-color=alert] = var(--ng-doc-alert)",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-color=info] = var(--ng-doc-info)",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-color=link] = var(--ng-doc-link-color)",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-color=success] = var(--ng-doc-success)",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-color=warning] = var(--ng-doc-warning)"
+  ],
+  "--ng-doc-tag-color": [
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-color=alert] = var(--ng-doc-alert-text)",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-color=info] = var(--ng-doc-info-text)",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-color=link] = var(--ng-doc-primary-text)",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-color=success] = var(--ng-doc-success-text)",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-color=warning] = var(--ng-doc-warning-text)",
+    "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-mod=light] = color-mix(\n    in oklab,\n    var(--ng-doc-tag-background) var(--ng-doc-mix-strong),\n    var(--ng-doc-heading-color)\n  )"
+  ],
+  "--ng-doc-text": [
+    "libs/app/styles/parts/modifiers.scss :: .ng-doc-node-details = var(--ng-doc-text-muted)",
+    "libs/ui-kit/components/button-toggle/button-toggle.component.scss :: :host[aria-checked=true] = var(--ng-doc-heading-color)",
+    "libs/ui-kit/components/button/button.component.scss :: :host = var(--ng-doc-button-color)",
+    "libs/ui-kit/components/option-group/option-group.component.scss :: .ng-doc-option-group-header = var(--ng-doc-base-9)",
+    "libs/ui-kit/components/text/text.component.scss :: :host[data-ng-doc-text-color=muted] = var(--ng-doc-text-muted)",
+    "libs/ui-kit/directives/tooltip/tooltip.scss :: .ng-doc-tooltip .ng-doc-overlay-content = var(--ng-doc-base-0)",
+    "libs/ui-kit/services/notify/notify.scss :: .ng-doc-notify .ng-doc-overlay-content = var(--ng-doc-base-0)"
+  ]
+}

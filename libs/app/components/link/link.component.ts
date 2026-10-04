@@ -1,6 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+/**
+ * Router link to a path of the application.
+ */
 @Component({
   selector: 'ng-doc-link',
   templateUrl: './link.component.html',
@@ -9,6 +12,6 @@ import { RouterLink } from '@angular/router';
   imports: [RouterLink],
 })
 export class NgDocLinkComponent {
-  @Input()
-  path: string = '';
+  /** The path to link to. */
+  readonly path = input<string>('');
 }

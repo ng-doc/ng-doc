@@ -1,62 +1,88 @@
 <div align="center">
-  <a href="https://github.com/ng-doc/ng-doc">
-    <img src="https://ng-doc.com/assets/images/ng-doc.svg?raw=true" alt="Logo" height="150px">
-  </a>
-<h1 align="center" style="margin-bottom: 0; border-bottom: 0">NgDoc</h1>
+  <h1 align="center">
+    <a href="https://ng-doc.com/">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="apps/ng-doc/src/assets/images/brand/lockup-dark.svg">
+        <img src="apps/ng-doc/src/assets/images/brand/lockup-light.svg" alt="NgDoc" height="80">
+      </picture>
+    </a>
+  </h1>
   <p align="center">
-    Create user-friendly documentation for your projects with ease!
+    📚 The documentation engine for Angular projects.
     <br />
-    <a href="https://ng-doc.com/">Documentation</a>
+    <a href="https://ng-doc.com/"><strong>📖 Documentation</strong></a>
     ·
-    <a href="https://github.com/ng-doc/ng-doc/issues/new/choose">Report Bug</a>
+    <a href="https://github.com/ng-doc/ng-doc/issues/new/choose">🐞 Report a bug</a>
     ·
-    <a href="https://github.com/ng-doc/ng-doc/issues/new/choose">Request Feature</a>
+    <a href="https://github.com/ng-doc/ng-doc/issues/new/choose">💡 Request a feature</a>
+  </p>
 
 [![GitHub Workflow Status][build-shield]][build-url]
 [![NPM][npm-shield]][npm-url]
 [![MIT License][license-shield]][license-url]
 
-  </p>
 </div>
 
-<!-- ABOUT THE PROJECT -->
+## 👋 About
 
-## About The Project
+NgDoc turns Markdown guides and your TypeScript code into a documentation site for your Angular
+library or application. Guides, live demos and API reference live together and link to each other,
+so you write less boilerplate and keep the docs next to the code they describe.
 
-This project was originally created to speed up the writing of documentation for your Angular
-libraries and applications and make it flexible. We want to make this process as quick and easy as
-possible for you so that you can focus on writing code and not on finding solutions for your
-documentation.
+NgDoc's own site, [ng-doc.com](https://ng-doc.com/), is built with NgDoc. 🙌
 
-NgDoc allows you to do the following things:
+## ✨ Features
 
-- Dynamic markdown templates for your guidelines via Nunjucks
-- Render demos on the page in one line of code
-- Create playgrounds for your Angular Components and Directives
-- The documentation for your API is based on comments to your code
-- Dynamic links to API, Pages, or foreign websites via `Keywords` feature
-- Automatic generation of links to your API in code examples or in mentions of any entity inside
-  inline code
-- Offline search that collects indexes automatically based on you documentation
-- Customizable interface
-- And much more!
+- 📝 **Pages in Markdown**, with Nunjucks templates, code blocks, callouts, images and Mermaid
+  diagrams.
+- 🎬 **Live demos** of your components, added to a page in one line.
+- 🛝 **Playgrounds** that let readers change a component's or directive's inputs and see the
+  result.
+- 📘 **API reference** generated from your code and its JSDoc comments.
+- 🔗 **Keywords** that link to pages, API entities or external sites, including automatic links in
+  code examples and inline code.
+- 🔎 **Offline search**, indexed automatically from your content.
+- 🎨 **Customizable UI**: themes, layout, icons and page processors.
 
-<!-- GETTING STARTED -->
+## 🚀 Quick start
 
-## Installation
+Add NgDoc to an existing Angular project:
 
-To know how to install and use NgDoc, please check our [documentation](https://ng-doc.com/).
+```bash
+ng add @ng-doc/add
+```
 
-<!-- CONTRIBUTING -->
+In an Nx workspace:
 
-## Contributing
+```bash
+npm install @ng-doc/add && npx nx g @ng-doc/add:ng-add
+```
 
-Contributions are what make the open source community such an amazing place to be learn, inspire,
-and create. Any contributions you make are **greatly appreciated**. Please read the
-[Contributing Guidelines](CONTRIBUTING.md) for more information.
+Then create a page: a folder with an `ng-doc.page.ts` file and the Markdown it points to.
 
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+```ts
+// ng-doc.page.ts
+import { NgDocPage } from '@ng-doc/core';
+
+const GettingStartedPage: NgDocPage = {
+  title: 'Getting started',
+  mdFile: './index.md',
+};
+
+export default GettingStartedPage;
+```
+
+Serve your app and the page appears in the sidebar. 🎉 See the
+[documentation](https://ng-doc.com/) for configuration, demos, playgrounds and API docs.
+
+## 🤝 Contributing
+
+Contributions are welcome! ❤️ Please read the [contributing guidelines](CONTRIBUTING.md) before
+opening a pull request.
+
+## 📄 License
+
+[MIT](LICENSE)
 
 [npm-shield]: https://img.shields.io/npm/v/@ng-doc/builder.svg?style=for-the-badge
 [npm-url]: https://www.npmjs.com/package/@ng-doc/builder

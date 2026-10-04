@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgDocTypeControl } from '@ng-doc/app/interfaces';
 import {
@@ -10,6 +10,7 @@ import {
 } from '@ng-doc/ui-kit';
 import { DIControl, DIControlSilencerDirective } from 'di-controls';
 
+/** The playground control of `number` inputs. */
 @Component({
   selector: 'ng-doc-number-control',
   templateUrl: './number-control.component.html',
@@ -29,14 +30,16 @@ export class NgDocNumberControlComponent
   extends DIControl<number>
   implements NgDocTypeControl<number>
 {
-  @Input()
-  default?: number;
+  /** Default value of the input; clearing the field returns to it. */
+  readonly default = input<number | undefined>(undefined);
 
   constructor() {
     super();
   }
 
   changeModel(value: number | null): void {
-    this.updateModel(value === null && this.default ? this.default : value);
+    const defaultValue: number | undefined = this.default();
+
+    this.updateModel(value === null && defaultValue ? defaultValue : value);
   }
 }

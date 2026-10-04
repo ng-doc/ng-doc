@@ -1,52 +1,92 @@
-@import '../../../ui-kit/styles/mixins';
-
+// The header bar. The NgDoc site uses the same header on its landing page and on its docs: a
+// 60px translucent bar with a hairline, 16px between items and 36px icon buttons.
 :host {
-  @include ng-doc-backdrop-filter(var(--ng-doc-navbar-background), '[data-glass-effect="false"]');
   position: relative;
   display: flex;
   justify-content: center;
   height: 100%;
-  border-bottom: 1px solid transparent;
-  transition: var(--ng-doc-transition) border;
+  background: color-mix(in srgb, var(--ng-doc-navbar-background) 82%, transparent);
+  backdrop-filter: saturate(1.4) blur(12px);
+  border-bottom: var(--ng-doc-navbar-border);
 
-  &.has-border {
-    border-bottom: var(--ng-doc-navbar-border,);
-    box-shadow: var(--ng-doc-shadow-color) 0 5px 20px -5px;
+  // Icon buttons (menu, search, theme toggle and projected links) are muted until hovered.
+  --ng-doc-button-color: var(--ng-doc-text-muted);
+  --ng-doc-button-hover-color: var(--ng-doc-heading-color);
+  --ng-doc-button-active-color: var(--ng-doc-heading-color);
+  --ng-doc-button-hover-background: var(--ng-doc-hover-background);
+
+  &[data-glass-effect='false'] {
+    background: var(--ng-doc-navbar-background);
+    backdrop-filter: none;
   }
 
-  .navbar-container {
-    display: flex;
-    height: 100%;
-    width: 100%;
-    padding: 0 var(--ng-doc-navbar-horizontal-padding);
-    z-index: 10;
-    max-width: var(--ng-doc-app-max-width);
+  @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+    background: var(--ng-doc-navbar-background);
+  }
+}
+
+.ng-doc-navbar-container {
+  display: flex;
+  align-items: center;
+  gap: var(--ng-doc-space-4);
+  width: 100%;
+  max-width: var(--ng-doc-app-max-width);
+  height: 100%;
+  padding: 0 var(--ng-doc-navbar-horizontal-padding);
+}
+
+.ng-doc-navbar-left,
+.ng-doc-navbar-center,
+.ng-doc-navbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--ng-doc-space-4);
+  min-width: 0;
+}
+
+.ng-doc-navbar-left {
+  flex: none;
+  max-width: var(--ng-doc-navbar-left-width);
+}
+
+.ng-doc-navbar-center {
+  margin-left: auto;
+}
+
+// The search field keeps its distance from the links.
+.ng-doc-navbar-right ng-doc-search {
+  margin-left: var(--ng-doc-space-6);
+}
+
+@media (max-width: 1024px) {
+  .ng-doc-navbar-right ng-doc-search {
+    margin-left: 0;
+  }
+}
+
+.ng-doc-menu {
+  display: none;
+  margin-left: calc(var(--ng-doc-space-2) * -1);
+}
+
+@media (max-width: 1024px) {
+  .ng-doc-navbar-center {
+    display: none;
   }
 
-  .ng-doc-navbar-left,
   .ng-doc-navbar-right {
-    display: flex;
-    align-items: center;
-  }
-
-  .ng-doc-navbar-left {
-    justify-content: flex-start;
-    width: 100%;
-    max-width: var(--ng-doc-navbar-left-width);
-  }
-
-  .ng-doc-navbar-right {
-    justify-content: flex-end;
     margin-left: auto;
   }
+}
 
+@media (max-width: 900px) {
   .ng-doc-menu {
-    margin-left: calc(var(--ng-doc-base-gutter) * 2);
+    display: inline-flex;
   }
+}
 
-  @media (min-width: 1024px) {
-    .ng-doc-menu {
-      display: none;
-    }
+@media (max-width: 640px) {
+  .ng-doc-navbar-container {
+    padding: 0 var(--ng-doc-space-4);
   }
 }

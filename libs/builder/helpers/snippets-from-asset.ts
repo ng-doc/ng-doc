@@ -12,25 +12,26 @@ import { processSnippets } from './process-snippets';
  * @param inlineStylesType - Inline styles type
  */
 export function snippetsFromAsset(
-	asset: NgDocAsset,
-	inlineStylesType: NgDocStyleType,
+  asset: NgDocAsset,
+  inlineStylesType: NgDocStyleType,
+  configDirectory?: string,
 ): NgDocAsset[] {
-	const snippets = processLegacySnippets(asset.code).concat(
-		processSnippets(asset.code, path.dirname(asset.filePath)),
-	);
-	const codeType = codeTypeFromExt(asset.filePath);
-	const isStylesFile = ['CSS', 'SCSS', 'LESS', 'SASS'].includes(codeType.toUpperCase());
+  const snippets = processLegacySnippets(asset.code).concat(
+    processSnippets(asset.code, path.dirname(asset.filePath), configDirectory),
+  );
+  const codeType = codeTypeFromExt(asset.filePath);
+  const isStylesFile = ['CSS', 'SCSS', 'LESS', 'SASS'].includes(codeType.toUpperCase());
 
-	return snippets.map(({ code, title, lang, icon, opened }, i) => {
-		const language = lang === 'styles' ? (isStylesFile ? codeType : inlineStylesType) : lang;
+  return snippets.map(({ code, title, lang, icon, opened }, i) => {
+    const language = lang === 'styles' ? (isStylesFile ? codeType : inlineStylesType) : lang;
 
-		return {
-			...asset,
-			code,
-			title: title ?? `Snippet #${i + 1}`,
-			icon,
-			opened,
-			lang: language,
-		};
-	});
+    return {
+      ...asset,
+      code,
+      title: title ?? `Snippet #${i + 1}`,
+      icon,
+      opened,
+      lang: language,
+    };
+  });
 }

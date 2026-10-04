@@ -1,6 +1,25 @@
 {
   "name": "@ng-doc/utils",
   "version": "0.0.1",
+  "description": "Shared utilities used by the NgDoc packages.",
+  "keywords": [
+    "angular",
+    "documentation",
+    "docs",
+    "ng-doc",
+    "markdown",
+    "api-documentation"
+  ],
+  "homepage": "https://ng-doc.com/",
+  "bugs": {
+    "url": "https://github.com/ng-doc/ng-doc/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ng-doc/ng-doc.git",
+    "directory": "libs/utils"
+  },
+  "license": "MIT",
   "type": "module",
   "dependencies": {
     "rehype": "13.0.1",

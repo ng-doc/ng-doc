@@ -1,4 +1,11 @@
-import { AnimationCallbackEvent, ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  AnimationCallbackEvent,
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  model,
+  untracked,
+} from '@angular/core';
 import { NgDocContent } from '@ng-doc/ui-kit/types';
 import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 
@@ -11,19 +18,18 @@ import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
   imports: [PolymorpheusOutlet],
 })
 export class NgDocExpanderComponent {
-  /** Change expand state */
-  @Input()
-  expanded: boolean = false;
+  /** Whether the content is shown. */
+  readonly expanded = model<boolean>(false);
 
   /** Expander content */
-  @Input({ required: true })
-  content!: NgDocContent;
+  readonly content = input.required<NgDocContent>();
 
-  @Input()
-  collapseMod: 'remove' | 'hide' = 'remove';
+  /** `remove` removes the collapsed content from the DOM; `hide` keeps it, inert and hidden. */
+  readonly collapseMod = input<'remove' | 'hide'>('remove');
 
+  /** Shows or hides the content. */
   toggle(): void {
-    this.expanded = !this.expanded;
+    untracked(() => this.expanded.update((expanded: boolean) => !expanded));
   }
 
   protected enter(container: HTMLElement, event: AnimationCallbackEvent): void {

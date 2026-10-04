@@ -8,7 +8,12 @@ import {
   TypeFormatFlags,
 } from 'ts-morph';
 
-import { getComponentInputs, getInputName, getInputType, NgDocInputDeclaration } from '../angular';
+// Not the `../angular` barrel: it re-exports get-component-assets, which imports the
+// @ng-doc/builder package itself, so this helper would need a built and linked package to load.
+import { getComponentInputs } from '../angular/get-component-inputs';
+import { getInputName } from '../angular/get-input-name';
+import { getInputType } from '../angular/get-input-type';
+import { NgDocInputDeclaration } from '../angular/is-input';
 import { getJsDocDescription, getJsDocParam } from '../get-js-doc';
 import { formatType } from '../typescript';
 

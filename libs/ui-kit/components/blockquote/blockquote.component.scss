@@ -1,23 +1,35 @@
-@import '../../styles/mixins';
+@use '../../styles/mixins';
 
+// The type sets the hook variables locally, and every surface mixes from them: a soft tint of the
+// background, a border and a strong title, all opaque over the page background.
 :host {
-  @include ng-doc-font();
+  @include mixins.ng-doc-font();
 
   position: relative;
-  display: flex;
-  padding: calc(var(--ng-doc-base-gutter) * 2);
-  border-radius: var(--ng-doc-base-gutter);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: var(--ng-doc-space-3);
+  padding: var(--ng-doc-space-3) var(--ng-doc-space-4);
+  border-radius: var(--ng-doc-radius-lg);
   margin: var(--ng-doc-blockquote-margin);
   background: color-mix(
-    in srgb,
-    var(--ng-doc-blockquote-background, var(--ng-doc-base-9)),
-    transparent 90%
+    in oklab,
+    var(--ng-doc-blockquote-background, var(--ng-doc-hue-neutral)) var(--ng-doc-mix-soft),
+    var(--ng-doc-background)
   );
   border: 1px solid
-    color-mix(in srgb, var(--ng-doc-blockquote-border-color, var(--ng-doc-base-9)), transparent 80%);
+    color-mix(
+      in oklab,
+      var(--ng-doc-blockquote-border-color, var(--ng-doc-hue-neutral)) var(--ng-doc-mix-border),
+      var(--ng-doc-background)
+    );
   overflow: hidden;
 
   --ng-doc-code-margin: var(--ng-doc-base-gutter) 0;
+
+  &[data-ng-doc-has-icon] {
+    grid-template-columns: 20px minmax(0, 1fr);
+  }
 
   &[data-ng-doc-type='note'] {
     --ng-doc-blockquote-background: var(--ng-doc-info);
@@ -45,11 +57,44 @@
 
   .ng-doc-blockquote-icon {
     display: flex;
-    margin-right: calc(var(--ng-doc-base-gutter) * 2);
+    // Centres the 18px icon on the first 24px line. The icon set ships these icons at 24px only,
+    // so the SVG is scaled down.
+    padding-top: 3px;
+
+    ng-doc-icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    ::ng-deep svg {
+      width: 100%;
+      height: 100%;
+    }
   }
 
   .ng-doc-blockquote {
+    min-width: 0;
     text-decoration: none;
+  }
+
+  .ng-doc-blockquote-title {
+    display: block;
+    font-weight: 600;
+    color: color-mix(
+      in oklab,
+      var(--ng-doc-blockquote-border-color, var(--ng-doc-hue-neutral)) var(--ng-doc-mix-strong),
+      var(--ng-doc-heading-color)
+    );
+  }
+
+  // On the tinted callout the link colour over its own 12% tint falls below 4.5:1, so API links
+  // mix the link colour toward the heading colour, as the syntax colours do.
+  ::ng-deep code.ng-doc-code-with-link a {
+    color: color-mix(
+      in oklab,
+      var(--ng-doc-link-color) var(--ng-doc-mix-syntax, 80%),
+      var(--ng-doc-heading-color)
+    );
   }
 
   ::ng-deep p {

@@ -1,26 +1,32 @@
-import { Directive, HostListener, Input } from '@angular/core';
+import { Directive, input } from '@angular/core';
 import { NgDocDropdownComponent } from '@ng-doc/ui-kit/components/dropdown';
 
+/** Opens the dropdown on ArrowDown and closes it on Escape while the host has focus. */
 @Directive({
-	selector: '[ngDocDropdownHandler]',
-	standalone: true,
+  selector: '[ngDocDropdownHandler]',
+  host: {
+    '(keydown)': 'keyboardEvent($event)',
+  },
 })
 export class NgDocDropdownHandlerDirective {
-	@Input('ngDocDropdownHandler')
-	dropdown?: NgDocDropdownComponent;
+  /** The dropdown the host controls. */
+  readonly dropdown = input<NgDocDropdownComponent | undefined>(undefined, {
+    alias: 'ngDocDropdownHandler',
+  });
 
-	@HostListener('keydown', ['$event'])
-	keyboardEvent(event: KeyboardEvent): void {
-		if (this.dropdown) {
-			if (event.key === 'ArrowDown' && !this.dropdown.isOpened) {
-				event.preventDefault();
-				this.dropdown.open();
-			}
+  keyboardEvent(event: KeyboardEvent): void {
+    const dropdown: NgDocDropdownComponent | undefined = this.dropdown();
 
-			if (event.key === 'Escape' && this.dropdown.isOpened) {
-				event.preventDefault();
-				this.dropdown.close();
-			}
-		}
-	}
+    if (dropdown) {
+      if (event.key === 'ArrowDown' && !dropdown.isOpened) {
+        event.preventDefault();
+        dropdown.open();
+      }
+
+      if (event.key === 'Escape' && dropdown.isOpened) {
+        event.preventDefault();
+        dropdown.close();
+      }
+    }
+  }
 }

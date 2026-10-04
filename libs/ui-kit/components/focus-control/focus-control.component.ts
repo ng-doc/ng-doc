@@ -1,7 +1,11 @@
-import { ChangeDetectionStrategy, Component, DOCUMENT, inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, inject, input } from '@angular/core';
 import { NgDocFocusableDirective } from '@ng-doc/ui-kit/directives/focusable';
 import { NgDocFocusUtils } from '@ng-doc/ui-kit/utils';
 
+/**
+ * Surrounds its content with two focus traps. Tabbing out of the content moves the focus to the
+ * element before or after `focusHost` in the document, instead of leaving it on the traps.
+ */
 @Component({
   selector: 'ng-doc-focus-control',
   template: `
@@ -14,22 +18,26 @@ import { NgDocFocusUtils } from '@ng-doc/ui-kit/utils';
   imports: [NgDocFocusableDirective],
 })
 export class NgDocFocusControlComponent {
-  private documentRef = inject<Document>(DOCUMENT);
+  private readonly documentRef = inject<Document>(DOCUMENT);
 
-  @Input()
-  focusHost: HTMLElement | null = null;
+  /** Element from which the focus moves on when it leaves the content. */
+  readonly focusHost = input<HTMLElement | null>(null);
 
-  constructor() {}
-
+  /** Focuses the focusable element before `focusHost`. */
   focusPrev(): void {
-    if (this.focusHost) {
-      NgDocFocusUtils.focusClosestElement(this.focusHost, this.documentRef.body, false);
+    const focusHost: HTMLElement | null = this.focusHost();
+
+    if (focusHost) {
+      NgDocFocusUtils.focusClosestElement(focusHost, this.documentRef.body, false);
     }
   }
 
+  /** Focuses the focusable element after `focusHost`. */
   focusNext(): void {
-    if (this.focusHost) {
-      NgDocFocusUtils.focusClosestElement(this.focusHost, this.documentRef.body);
+    const focusHost: HTMLElement | null = this.focusHost();
+
+    if (focusHost) {
+      NgDocFocusUtils.focusClosestElement(focusHost, this.documentRef.body);
     }
   }
 }

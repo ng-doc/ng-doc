@@ -2,15 +2,18 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  HostBinding,
-  HostListener,
   inject,
   OnDestroy,
+  signal,
 } from '@angular/core';
 import { NgDocListItem } from '@ng-doc/ui-kit/classes/list-item';
 import { NgDocListComponent } from '@ng-doc/ui-kit/components/list';
 import { DICompareHost, DIStateControl, injectHostControl } from 'di-controls';
 
+/**
+ * Option of a list. Clicking it, or pressing Enter while it is active, checks it in its host
+ * control; an option that contains a link follows the link instead.
+ */
 @Component({
   selector: 'ng-doc-option',
   template: '<ng-content></ng-content>',
@@ -22,13 +25,16 @@ import { DICompareHost, DIStateControl, injectHostControl } from 'di-controls';
     },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
+  host: {
+    '[attr.data-ng-doc-hover]': 'hovered()',
+    '(click)': 'check()',
+  },
 })
 export class NgDocOptionComponent<T> extends DIStateControl<T> implements NgDocListItem, OnDestroy {
-  @HostBinding('attr.data-ng-doc-hover')
-  protected hovered: boolean = false;
-
   override readonly elementRef: ElementRef<HTMLElement> = inject(ElementRef);
+
+  /** Whether the option is the active item of the list's keyboard navigation. */
+  protected readonly hovered = signal(false);
   protected readonly list: NgDocListComponent | null = inject(NgDocListComponent, {
     optional: true,
   });
@@ -42,25 +48,25 @@ export class NgDocOptionComponent<T> extends DIStateControl<T> implements NgDocL
     this.list?.registerItem(this);
   }
 
-  @HostListener('click')
-  clickEvent(): void {
-    this.check();
-  }
-
+  /** Selects the option as if the user did: follows its link, or checks it. */
   selectByUser(): void {
     const anchor: HTMLAnchorElement | null = this.elementRef.nativeElement.querySelector('a');
 
-    anchor ? anchor.click() : this.check();
+    if (anchor) {
+      anchor.click();
+    } else {
+      this.check();
+    }
   }
 
+  /** Marks the option as the active item. */
   setActiveStyles(): void {
-    this.hovered = true;
-    this.changeDetectorRef.markForCheck();
+    this.hovered.set(true);
   }
 
+  /** Clears the active-item mark. */
   setInactiveStyles(): void {
-    this.hovered = false;
-    this.changeDetectorRef.markForCheck();
+    this.hovered.set(false);
   }
 
   ngOnDestroy(): void {

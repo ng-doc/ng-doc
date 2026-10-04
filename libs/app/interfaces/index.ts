@@ -7,7 +7,6 @@ export * from './processor-options';
 export * from './provided-type-control';
 export * from './search-result';
 export * from './tab';
-export * from './theme';
 export * from './toc-item';
 export * from './type-control';
 export * from './type-control-provider-options';

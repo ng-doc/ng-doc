@@ -6,3 +6,5 @@
 /.nx/cache
 /.nx/workspace-data
 .nx/self-healing
+# Written by acceptance/production/parity.mjs (NGDOC_PARITY_ACCEPT=1), one row per line
+/libs/builder/generator/acceptance/production/accepted

@@ -1,0 +1,33 @@
+  0.5s ~ ⠋ NgDoc generating documentation (starting) · 0s
+  1.3s ~ ⠋ NgDoc [1/4] preparing: reading configuration (4%) · 1s ────────────
+  2.0s ~ ⠋ NgDoc [1/4] preparing: analyzing TypeScript (6%) · 2s ━───────────
+  3.0s ~ ⠙ NgDoc [1/4] preparing: analyzing TypeScript (6%) · 3s ━───────────
+  4.0s ~ ⠹ NgDoc [1/4] preparing: analyzing TypeScript (6%) · 4s ━───────────
+  5.0s ~ ⠸ NgDoc [1/4] preparing: analyzing TypeScript (6%) · 5s ━───────────
+  6.0s ~ ⠼ NgDoc [1/4] preparing: analyzing TypeScript (6%) · 6s ━───────────
+  6.8s ~ ⠼ NgDoc [1/4] preparing: collecting pages (32%) · 6s ━━━━────────
+  7.5s ~ ⠼ NgDoc [2/4] rendering 52/664 pages (36%) · 7s ━━━━────────
+  8.3s ~ ⠼ NgDoc [2/4] rendering 156/664 pages (40%) · 8s ━━━━━───────
+  9.0s ~ ⠼ NgDoc [2/4] rendering 247/664 pages (43%) · 9s ━━━━━───────
+  9.8s ~ ⠼ NgDoc [2/4] rendering 351/664 pages (47%) · 9s ━━━━━━──────
+ 10.5s ~ ⠼ NgDoc [2/4] rendering 442/664 pages (50%) · 10s ━━━━━━──────
+ 11.3s ~ ⠼ NgDoc [2/4] rendering 546/664 pages (53%) · 11s ━━━━━━──────
+ 12.0s ~ ⠼ NgDoc [2/4] rendering 637/664 pages (57%) · 12s ━━━━━━━─────
+ 12.8s ~ ⠼ NgDoc [3/4] linking 99/664 pages (61%) · 12s ━━━━━━━─────
+ 13.5s ~ ⠼ NgDoc [3/4] linking 332/664 pages (65%) · 13s ━━━━━━━━────
+ 14.3s ~ ⠼ NgDoc [3/4] linking 597/664 pages (68%) · 14s ━━━━━━━━────
+ 15.0s ~ ⠼ NgDoc [3/4] linking 664 pages (73%) · 15s ━━━━━━━━━───
+ 15.8s ~ ⠼ NgDoc [4/4] writing files (77%) · 15s ━━━━━━━━━───
+ 16.5s ~ ⠼ NgDoc [4/4] writing files (80%) · 16s ━━━━━━━━━━──
+ 17.3s ~ ⠼ NgDoc [4/4] writing files (81%) · 17s ━━━━━━━━━━──
+ 18.0s ~ ⠼ NgDoc [4/4] writing 6669 files (87%) · 18s ━━━━━━━━━━━─
+ 18.8s ~ ⠼ NgDoc [4/4] writing 6669 files (91%) · 18s ━━━━━━━━━━━─
+ 19.5s ~ ⠼ NgDoc [4/4] writing 6669 files (94%) · 19s ━━━━━━━━━━━─
+ 20.3s ~ ⠼ NgDoc [4/4] writing 6669 files (98%) · 20s ━━━━━━━━━━━━
+ 20.5s   NgDoc: [32mOK[39m generated 664 pages in 20s; 6669 files written; analyze 4.7s, render 5.4s, link 2.8s, write 5.3s
+ 20.5s     VITE v7.3.5  ready in 24112 ms
+ 27.9s @ 3:04:27 PM [vite] NgDoc: updated 1 of 664 pages in 0.9s (/getting-started/installation)
+ 53.2s @ 3:04:53 PM [vite] NgDoc: updated 3 of 664 pages in 1.2s (/api/core/functions/asArray, +2)
+102.0s @ 3:05:42 PM [vite] NgDoc: rebuilding all pages (tsconfig.json changed)...
+106.8s @ 3:05:46 PM [vite] NgDoc: updated 664 pages in 6.8s
+130.9s @ 3:06:10 PM [vite] NgDoc: update failed (1 error above); the site keeps the last good version

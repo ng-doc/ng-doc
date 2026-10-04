@@ -1,40 +1,141 @@
+// The shared "On this page" rail: sticky beside the article, scrolling on its own when it is
+// taller than the viewport, and hidden below 1240px, where the article needs the room.
 :host {
-  .ng-doc-toc-wrapper {
-    position: relative;
-    width: var(--ng-doc-toc-width);
+  position: sticky;
+  top: var(--ng-doc-navbar-height);
+  align-self: flex-start;
+  flex: none;
+  width: var(--ng-doc-toc-width);
+  max-height: calc(100vh - var(--ng-doc-navbar-height));
+  // Pulled up by the page's top padding, so the rail sits at the same height whether it is
+  // stuck under the navbar or not.
+  margin: calc(var(--ng-doc-space-6) * -1) 0 0 var(--ng-doc-toc-margin);
+  padding: calc(var(--ng-doc-toc-top-padding) + var(--ng-doc-space-2)) 0
+    var(--ng-doc-toc-top-padding);
+  overflow: auto;
+  font-family: var(--ng-doc-font-family);
+  font-size: var(--ng-doc-text-sm-size);
+  line-height: 20px;
+}
 
-    .ng-doc-toc-container {
-      position: fixed;
-      top: calc(var(--ng-doc-navbar-height) + var(--ng-doc-toc-top-padding));
-      overflow-y: auto;
-      height: calc(100% - var(--ng-doc-navbar-height) - var(--ng-doc-base-gutter) * 5);
-      width: var(--ng-doc-toc-width);
-    }
+@media (max-width: 1240px) {
+  :host {
+    display: none;
+  }
+}
 
-    .ng-doc-toc-selection {
-      position: absolute;
-      transform: translateX(-50%);
-      width: 3px;
-      border-radius: calc(var(--ng-doc-base-gutter) / 2);
-      background-color: var(--ng-doc-primary);
-      left: calc(var(--ng-doc-toc-margin) + 1px);
-      transition: var(--ng-doc-transition);
-    }
+.ng-doc-toc-section + .ng-doc-toc-section {
+  margin-top: var(--ng-doc-space-6);
+  padding-top: var(--ng-doc-space-5);
+  border-top: 1px solid var(--ng-doc-border-color);
+}
 
-    .ng-doc-toc {
-      list-style: none;
-      margin: 0 0 0 var(--ng-doc-toc-margin);
-      border-left: 1px solid var(--ng-doc-base-3);
-      padding: 0 0 0 var(--ng-doc-base-gutter);
+.ng-doc-toc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ng-doc-space-2);
+  margin: 0 0 var(--ng-doc-space-2);
+  padding: 0 var(--ng-doc-space-2);
+}
 
-      .ng-doc-page-map-item {
-      }
-    }
+.ng-doc-toc-label {
+  color: var(--ng-doc-text-muted);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.ng-doc-toc-percent {
+  color: var(--ng-doc-text-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ng-doc-toc-progress {
+  height: 2px;
+  margin: 0 var(--ng-doc-space-2) var(--ng-doc-space-3);
+  border-radius: var(--ng-doc-radius-full);
+  background: var(--ng-doc-base-2);
+  overflow: hidden;
+
+  span {
+    display: block;
+    height: 100%;
+    border-radius: var(--ng-doc-radius-full);
+    background: var(--ng-doc-primary);
+    transition: width 0.12s linear;
+  }
+}
+
+.ng-doc-toc {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// A soft highlight that glides to the active entry; it is decoration only, hence aria-hidden.
+.ng-doc-toc-marker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  border-radius: var(--ng-doc-radius-md);
+  background: var(--ng-doc-primary-soft);
+  pointer-events: none;
+  transition:
+    transform 0.22s var(--ng-doc-easing),
+    height 0.22s var(--ng-doc-easing);
+}
+
+.ng-doc-toc-actions {
+  display: grid;
+  gap: 1px;
+}
+
+.ng-doc-toc-action {
+  display: flex;
+  align-items: center;
+  gap: var(--ng-doc-space-2);
+  min-height: 32px;
+  padding: 6px var(--ng-doc-space-2);
+  border: 0;
+  border-radius: var(--ng-doc-radius-md);
+  background: none;
+  color: var(--ng-doc-text-muted);
+  font: inherit;
+  font-size: 13px;
+  line-height: 18px;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background var(--ng-doc-transition),
+    color var(--ng-doc-transition);
+
+  &:hover {
+    background: var(--ng-doc-hover-background);
+    color: var(--ng-doc-heading-color);
   }
 
-  @media (max-width: 1200px) {
-    .ng-doc-toc-wrapper {
-      display: none;
-    }
+  &:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--ng-doc-primary);
+  }
+
+  &[data-ng-doc-copied='true'] {
+    color: var(--ng-doc-success-strong);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ng-doc-toc-marker,
+  .ng-doc-toc-progress span,
+  .ng-doc-toc-action {
+    transition: none;
   }
 }

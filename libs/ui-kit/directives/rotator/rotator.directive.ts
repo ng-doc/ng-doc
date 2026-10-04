@@ -1,27 +1,25 @@
-import { Directive, HostBinding, Input } from '@angular/core';
+import { Directive, input } from '@angular/core';
 
 /**
  * Directive rotates host with transition
  */
 @Directive({
   selector: '[ngDocRotator]',
-  standalone: true,
+  host: {
+    '[style.transform]': 'transform()',
+  },
 })
 export class NgDocRotatorDirective {
   /** Rotator state */
-  @Input('ngDocRotator')
-  rotated: boolean = false;
+  readonly rotated = input<boolean>(false, { alias: 'ngDocRotator' });
 
   /** Start position angle */
-  @Input()
-  from: number = 0;
+  readonly from = input<number>(0);
 
-  /** End position anle */
-  @Input()
-  to: number = 90;
+  /** End position angle */
+  readonly to = input<number>(90);
 
-  @HostBinding('style.transform')
-  get transform(): string {
-    return `rotateZ(${this.rotated ? this.to : this.from}deg)`;
+  protected transform(): string {
+    return `rotateZ(${this.rotated() ? this.to() : this.from()}deg)`;
   }
 }

@@ -1,111 +1,375 @@
+@use '../../styles/mixins/entities-colors';
+
+// The API index: filter row, kind filter with dots and counts, then one group per kind (or
+// scope) with a dense list of declarations.
 :host {
-  h1 {
-    margin-top: 0;
+  display: block;
+  max-width: var(--ng-doc-api-content-max-width);
+  font-family: var(--ng-doc-font-family);
+  color: var(--ng-doc-text);
+}
+
+.ng-doc-api-list-title {
+  margin-top: 0;
+}
+
+.ng-doc-api-list-lead {
+  margin: var(--ng-doc-space-2) 0 0;
+  font-size: var(--ng-doc-font-size);
+  color: var(--ng-doc-text-muted);
+}
+
+.ng-doc-api-list-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ng-doc-space-3);
+  margin: var(--ng-doc-space-6) 0 var(--ng-doc-space-3);
+}
+
+.ng-doc-api-list-filter {
+  display: flex;
+  flex: 1 1 280px;
+  align-items: center;
+  gap: var(--ng-doc-space-2);
+  max-width: 420px;
+  height: 36px;
+  padding: 0 var(--ng-doc-space-2) 0 var(--ng-doc-space-3);
+  border: var(--ng-doc-input-border);
+  border-radius: var(--ng-doc-radius-md);
+  background: var(--ng-doc-input-background-color, var(--ng-doc-background));
+  color: var(--ng-doc-text-muted);
+  cursor: text;
+
+  &:hover {
+    border: var(--ng-doc-input-border-hover);
   }
 
-  .ng-doc-filter-list {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: var(--ng-doc-base-gutter);
-    list-style: none;
+  &:focus-within {
+    box-shadow: var(--ng-doc-focus-ring);
+  }
+
+  svg {
+    flex: none;
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: none;
+    font: 400 14px/20px var(--ng-doc-font-family);
+    color: var(--ng-doc-heading-color);
+
+    &::placeholder {
+      color: var(--ng-doc-text-muted);
+      opacity: 1;
+    }
+  }
+}
+
+.ng-doc-api-list-kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border: 1px solid var(--ng-doc-kbd-border-color);
+  border-radius: var(--ng-doc-radius-xs);
+  background: var(--ng-doc-kbd-background);
+  font: 500 12px/1 var(--ng-doc-font-family);
+  color: var(--ng-doc-text-muted);
+}
+
+.ng-doc-api-list-group-by {
+  display: flex;
+  align-items: center;
+  gap: var(--ng-doc-space-2);
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--ng-doc-text-muted);
+}
+
+// Segmented control, as in the demo toolbar and the search palette.
+.ng-doc-api-list-segments {
+  position: relative;
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--ng-doc-radius-md);
+  background: var(--ng-doc-base-2);
+
+  // The highlight of the pressed segment slides between the segments, which paint over it. Until
+  // it is placed in the browser (in the server-rendered page), the pressed segment draws its own.
+  ng-doc-selection,
+  ng-doc-selection:not([data-ng-doc-placed]) ~ button[aria-pressed='true'] {
+    border-radius: var(--ng-doc-radius-sm);
+    background: var(--ng-doc-background);
+    box-shadow: var(--ng-doc-shadow-xs);
+  }
+
+  button {
+    position: relative;
+    height: 28px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: var(--ng-doc-radius-sm);
+    background: none;
+    font: 500 13px/1 var(--ng-doc-font-family);
+    color: var(--ng-doc-text-muted);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--ng-doc-heading-color);
+    }
+
+    &[aria-pressed='true'] {
+      color: var(--ng-doc-heading-color);
+    }
+  }
+}
+
+// In dark themes the selected segment also gets a hairline, so it stands out from the track.
+:host-context([data-theme='dark']) .ng-doc-api-list-segments ng-doc-selection,
+:host-context([data-theme='dark'])
+  .ng-doc-api-list-segments
+  ng-doc-selection:not([data-ng-doc-placed])
+  ~ button[aria-pressed='true'] {
+  box-shadow:
+    var(--ng-doc-shadow-xs),
+    inset 0 0 0 1px var(--ng-doc-base-4);
+}
+
+@media (prefers-color-scheme: dark) {
+  :host-context([data-theme='auto']) .ng-doc-api-list-segments ng-doc-selection,
+  :host-context([data-theme='auto'])
+    .ng-doc-api-list-segments
+    ng-doc-selection:not([data-ng-doc-placed])
+    ~ button[aria-pressed='true'] {
+    box-shadow:
+      var(--ng-doc-shadow-xs),
+      inset 0 0 0 1px var(--ng-doc-base-4);
+  }
+}
+
+// Kind filter: text buttons with a dot and a count; pressed uses the sidebar's active style.
+.ng-doc-api-list-kinds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px var(--ng-doc-space-1);
+  margin: 0 0 var(--ng-doc-space-2);
+  padding-bottom: var(--ng-doc-space-3);
+  border-bottom: 1px solid var(--ng-doc-border-color);
+
+  button {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 7px;
+    height: 28px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: var(--ng-doc-radius-md);
+    background: none;
+    font: 500 13px/1 var(--ng-doc-font-family);
+    color: var(--ng-doc-text);
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--ng-doc-hover-background);
+      color: var(--ng-doc-heading-color);
+    }
+
+    &[aria-pressed='true'] {
+      background: var(--ng-doc-primary-soft);
+      color: var(--ng-doc-primary-strong);
+      font-weight: 600;
+
+      .ng-doc-api-list-count {
+        color: var(--ng-doc-primary-strong);
+      }
+    }
+  }
+}
+
+.ng-doc-api-list-count {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ng-doc-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.ng-doc-api-list-dot {
+  --_hue: var(--ng-doc-hue-neutral);
+  display: inline-block;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--_hue);
+
+  @include entities-colors.entitiesColors('data-ng-doc-kind', '--_hue', null);
+}
+
+.ng-doc-api-list-scope-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ng-doc-space-2);
+  margin: var(--ng-doc-space-3) 0 0;
+  font-size: 14px;
+  color: var(--ng-doc-text-muted);
+
+  button {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: var(--ng-doc-link-color);
+    cursor: pointer;
+  }
+}
+
+.ng-doc-api-list-group {
+  margin-top: var(--ng-doc-space-8);
+  scroll-margin-top: calc(var(--ng-doc-navbar-height) + 16px);
+}
+
+.ng-doc-api-list-group-title {
+  display: flex;
+  align-items: center;
+  gap: var(--ng-doc-space-2);
+  margin: 0 0 var(--ng-doc-space-2);
+  padding: 0;
+  border: 0;
+  font-family: var(--ng-doc-heading-font-family);
+  font-size: 17px;
+  line-height: 26px;
+  font-weight: 600;
+  color: var(--ng-doc-heading-color);
+
+  .ng-doc-api-list-count {
+    font-family: var(--ng-doc-font-family);
+    font-size: 13px;
+  }
+}
+
+// The index: identifier, one-line description (when the data has one) and scope or kind.
+.ng-doc-api-list-index {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--ng-doc-border-color);
+  border-radius: var(--ng-doc-radius-lg);
+  overflow: hidden;
+
+  li {
+    margin: 0;
     padding: 0;
 
-    @container api-list-wrapper (max-width: 775px) {
-      grid-template-columns: repeat(4, 1fr);
-    }
-    @container api-list-wrapper (max-width: 600px) {
-      grid-template-columns: repeat(3, 1fr);
-    }
-    @container api-list-wrapper (max-width: 500px) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    @container api-list-wrapper (max-width: 350px) {
-      grid-template-columns: repeat(1, 1fr);
-    }
-
-    .ng-doc-filter-button {
-      justify-content: flex-start;
-      text-wrap: nowrap;
-      width: 100%;
-
-      ng-doc-kind-icon {
-        margin-right: var(--ng-doc-base-gutter);
-      }
+    & + li {
+      border-top: 1px solid var(--ng-doc-base-2);
     }
   }
 
-  .ng-doc-api-list-filter-input {
-    max-width: 450px;
-  }
+  a {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--ng-doc-space-4);
+    min-height: 44px;
+    padding: 8px var(--ng-doc-space-4);
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--ng-doc-text);
+    text-decoration: none;
 
-  .ng-doc-api-list-wrapper {
-    container: api-list-wrapper / inline-size;
+    &:hover {
+      background: var(--ng-doc-scope-item-link-background, var(--ng-doc-row-hover-background));
 
-    .ng-doc-api-filter {
-      display: flex;
-      margin-top: calc(var(--ng-doc-base-gutter) * 3);
-      flex-wrap: wrap;
-      gap: calc(var(--ng-doc-base-gutter) * 2);
-
-      .ng-doc-api-filter-item {
-        width: 200px;
+      .ng-doc-api-list-name {
+        color: var(--ng-doc-link-color);
       }
     }
 
-    .ng-doc-api-list {
-      margin-top: calc(var(--ng-doc-base-gutter) * 2);
-
-      .ng-doc-api-scope {
-        display: flex;
-        flex-direction: column;
-
-        .ng-doc-scope-items {
-          margin-top: calc(var(--ng-doc-base-gutter) * 3);
-          list-style: none;
-          padding: 0;
-
-          .ng-doc-scope-item {
-            float: left;
-            width: 33%;
-            overflow: hidden;
-            min-width: 330px;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-
-            .ng-doc-scope-item-link {
-              display: flex;
-              align-items: center;
-              border-left: 1px solid var(--ng-doc-border-color);
-              padding: var(--ng-doc-base-gutter);
-              color: var(--ng-doc-text);
-              background: color-mix(
-                in srgb,
-                var(--ng-doc-scope-item-link-background),
-                transparent 90%
-              );
-              text-decoration: none;
-
-              &:hover {
-                color: var(--ng-doc-heading-color);
-                border-left-color: var(--ng-doc-primary);
-
-                --ng-doc-scope-item-link-background: var(--ng-doc-primary);
-              }
-
-              ng-doc-kind-icon {
-                margin-right: var(--ng-doc-base-gutter);
-                text-decoration: none !important;
-              }
-            }
-          }
-        }
-      }
+    &:focus-visible {
+      outline: none;
+      box-shadow: inset 0 0 0 2px var(--ng-doc-primary);
     }
   }
 
-  ng-doc-input-wrapper {
-    ng-doc-icon {
-      --ng-doc-icon-color: var(--ng-doc-text-muted);
+  &.ng-doc-api-list-described a {
+    grid-template-columns: minmax(0, 17rem) minmax(0, 1fr) auto;
+  }
+}
+
+// Identifiers wrap instead of being ellipsed.
+.ng-doc-api-list-name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font: 500 13px/20px var(--ng-doc-code-font);
+  color: var(--ng-doc-heading-color);
+}
+
+.ng-doc-api-list-description {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ng-doc-api-list-none {
+  color: var(--ng-doc-text-muted);
+}
+
+.ng-doc-api-list-scope {
+  justify-self: end;
+  font-size: 12px;
+  color: var(--ng-doc-text-muted);
+  white-space: nowrap;
+}
+
+.ng-doc-api-list-empty {
+  padding: var(--ng-doc-space-5) var(--ng-doc-space-4);
+  text-align: center;
+  font-size: 14px;
+  color: var(--ng-doc-text-muted);
+}
+
+@media (max-width: 900px) {
+  .ng-doc-api-list-index.ng-doc-api-list-described a {
+    grid-template-columns: minmax(0, 16rem) minmax(0, 1fr);
+
+    .ng-doc-api-list-scope {
+      display: none;
     }
+  }
+}
+
+@media (max-width: 640px) {
+  .ng-doc-api-list-filter {
+    flex-basis: 100%;
+    max-width: none;
+  }
+
+  .ng-doc-api-list-group-by {
+    margin-left: 0;
+  }
+
+  // The kind filter scrolls inside itself; rows stack the name over the description.
+  .ng-doc-api-list-kinds {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .ng-doc-api-list-index.ng-doc-api-list-described a {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+    padding: 10px var(--ng-doc-space-3);
   }
 }

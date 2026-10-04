@@ -1,0 +1,347 @@
+// Part of the landing page styles (split so each stylesheet stays within the component style
+// budget). Every rule is scoped under the element; the component does not emulate encapsulation.
+ng-doc-landing {
+  // The scaled-down documentation page
+  .window {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--ng-doc-border-color);
+    border-radius: var(--ng-doc-radius-xl);
+    background: var(--ng-doc-background);
+    box-shadow: var(--ng-doc-shadow-lg);
+  }
+
+  .window-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 14px;
+    border-bottom: 1px solid var(--ng-doc-border-color);
+    background: var(--ng-doc-base-1);
+
+    i {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--ng-doc-base-4);
+    }
+
+    span {
+      margin-left: 10px;
+      color: var(--ng-doc-text-muted);
+      font-size: 12px;
+    }
+  }
+
+  .window-body {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    font-size: 13px;
+    line-height: 20px;
+  }
+
+  .mini-sidebar {
+    padding: 14px 10px;
+    border-right: 1px solid var(--ng-doc-border-color);
+
+    b {
+      display: block;
+      margin: 10px 8px 4px;
+      color: var(--ng-doc-heading-color);
+      font-size: 11px;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+
+    span {
+      display: block;
+      padding: 4px 8px;
+      overflow: hidden;
+      border-radius: 6px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      &.on {
+        background: var(--ng-doc-primary-soft);
+        color: var(--ng-doc-primary-strong);
+        font-weight: 500;
+      }
+    }
+  }
+
+  .mini-page {
+    min-width: 0;
+    padding: 18px 22px 22px;
+
+    h4 {
+      margin: 0 0 4px;
+      color: var(--ng-doc-heading-color);
+      font-size: 22px;
+      line-height: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      margin: 0 0 10px;
+    }
+
+    .callout {
+      margin: 10px 0;
+      padding: 8px 12px;
+      font-size: 12.5px;
+    }
+
+    .code {
+      margin: 10px 0;
+      border-radius: 10px;
+    }
+
+    .code-head {
+      height: 30px;
+      font-size: 11.5px;
+    }
+
+    pre {
+      padding: 10px 0;
+      font-size: 11.5px;
+      line-height: 18px;
+    }
+
+    pre .l {
+      padding: 0 14px;
+    }
+  }
+
+  .mini-crumbs {
+    margin-bottom: 4px;
+    color: var(--ng-doc-text-muted);
+    font-size: 11.5px;
+
+    .sep {
+      opacity: 0.5;
+    }
+  }
+
+  .demo-stage {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+    border: 1px solid var(--ng-doc-border-color);
+    border-radius: 10px;
+    background-image: radial-gradient(
+      color-mix(in srgb, var(--ng-doc-base-5) 55%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: 14px 14px;
+
+    &.large {
+      padding: 24px;
+    }
+  }
+
+  .sample-button {
+    display: inline-flex;
+    align-items: center;
+    height: 30px;
+    padding: 0 12px;
+    border-radius: var(--ng-doc-radius-md);
+    font-size: 12.5px;
+    font-weight: 600;
+
+    &.flat {
+      background: var(--ng-doc-primary);
+      color: var(--ng-doc-primary-text);
+    }
+
+    &.soft {
+      background: var(--ng-doc-primary-soft);
+      color: var(--ng-doc-primary-strong);
+    }
+
+    &.outline {
+      background: var(--ng-doc-background);
+      color: var(--ng-doc-heading-color);
+      box-shadow: inset 0 0 0 1px var(--ng-doc-base-4);
+    }
+  }
+
+  .callout {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    column-gap: var(--ng-doc-space-3);
+    margin: var(--ng-doc-space-4) 0;
+    padding: var(--ng-doc-space-3) var(--ng-doc-space-4);
+    border: 1px solid
+      color-mix(in oklab, var(--ng-doc-info) var(--ng-doc-mix-border), var(--ng-doc-background));
+    border-radius: var(--ng-doc-radius-lg);
+    background: color-mix(
+      in oklab,
+      var(--ng-doc-info) var(--ng-doc-mix-soft),
+      var(--ng-doc-background)
+    );
+    line-height: 24px;
+
+    svg {
+      margin-top: 3px;
+      color: var(--ng-doc-info);
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .callout-title {
+    display: block;
+    color: color-mix(
+      in oklab,
+      var(--ng-doc-info) var(--ng-doc-mix-strong),
+      var(--ng-doc-heading-color)
+    );
+    font-weight: 600;
+  }
+
+  code.api {
+    color: var(--ng-doc-link-color);
+  }
+
+  .code {
+    overflow: hidden;
+    border: 1px solid var(--ng-doc-border-color);
+    border-radius: var(--ng-doc-radius-lg);
+    background: var(--ng-doc-code-background);
+  }
+
+  .code-head {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 var(--ng-doc-space-4);
+    border-bottom: 1px solid var(--ng-doc-border-color);
+    color: var(--ng-doc-heading-color);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  pre {
+    margin: 0;
+    padding: var(--ng-doc-space-4) 0;
+    overflow: auto;
+    color: var(--ng-doc-syntax-plain);
+    font: 400 13px/22px var(--ng-doc-code-font);
+    tab-size: 2;
+
+    .l {
+      display: block;
+      min-height: 22px;
+      padding: 0 var(--ng-doc-space-5);
+      white-space: pre;
+    }
+
+    .hl {
+      background: color-mix(in srgb, var(--ng-doc-code-highlight-color) 10%, transparent);
+      box-shadow: inset 2px 0 0 var(--ng-doc-code-highlight-color);
+    }
+
+    .k {
+      color: var(--ng-doc-syntax-keyword);
+    }
+
+    .t {
+      color: var(--ng-doc-syntax-tag);
+    }
+
+    .f {
+      color: var(--ng-doc-syntax-function);
+    }
+
+    .s {
+      color: var(--ng-doc-syntax-string);
+    }
+
+    .c {
+      color: var(--ng-doc-syntax-comment);
+      font-style: italic;
+    }
+  }
+
+  // Section headers
+  .kicker {
+    color: var(--ng-doc-primary);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .section-title {
+    margin: var(--ng-doc-space-2) 0 var(--ng-doc-space-3);
+    padding: 0;
+    border: 0;
+    color: var(--ng-doc-heading-color);
+    font-family: var(--ng-doc-heading-font-family);
+    font-size: clamp(28px, 3.4vw, 38px);
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.028em;
+  }
+
+  .section-lead {
+    max-width: 640px;
+    margin: 0 0 var(--ng-doc-space-10);
+    color: var(--ng-doc-text-muted);
+    font-size: 17px;
+    line-height: 28px;
+  }
+
+  // Showcase
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--ng-doc-space-4);
+  }
+
+  // You write, readers get
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--ng-doc-space-6);
+    align-items: start;
+  }
+
+  .arrow-note {
+    margin-bottom: var(--ng-doc-space-3);
+    color: var(--ng-doc-text-muted);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .result {
+    padding: var(--ng-doc-space-6);
+    border: 1px solid var(--ng-doc-border-color);
+    border-radius: var(--ng-doc-radius-lg);
+
+    h4 {
+      margin: 0 0 var(--ng-doc-space-2);
+      color: var(--ng-doc-heading-color);
+      font-size: 24px;
+      line-height: 32px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .demo-stage + p {
+      margin-top: var(--ng-doc-space-4);
+    }
+  }
+}

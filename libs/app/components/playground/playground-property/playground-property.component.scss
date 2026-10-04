@@ -1,7 +1,39 @@
 :host {
-	display: block;
+  display: block;
 
-	&[data-has-property-control='false'] {
-		display: none;
-	}
+  &[data-has-property-control='false'] {
+    display: none;
+  }
+}
+
+// The name, with its type chip underneath, beside the control.
+.ng-doc-playground-property-label.with-label {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--ng-doc-space-3);
+
+  ::ng-deep > .ng-doc-label {
+    display: grid;
+    justify-items: start;
+    gap: var(--ng-doc-space-1);
+    min-width: 0;
+    margin: 0;
+  }
+
+  ::ng-deep > .ng-doc-content {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.ng-doc-playground-property-name {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--ng-doc-code-font);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+  color: var(--ng-doc-heading-color);
 }

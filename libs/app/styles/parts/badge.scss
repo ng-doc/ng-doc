@@ -1,60 +1,35 @@
+// Member modifier badges (`protected`, `readonly`, `static`, `abstract`, `async`) are outlined
+// lowercase keyword tags, a different shape from the filled kind chips. The modifier hue only
+// tints the ring, so the text stays muted and readable.
 .ng-doc-badge-wrapper {
-	display: inline-flex;
-	margin-right: var(--ng-doc-base-gutter);
-	vertical-align: middle;
-
-	.ng-doc-badge:first-child {
-		border-top-left-radius: var(--ng-doc-base-gutter);
-		border-bottom-left-radius: var(--ng-doc-base-gutter);
-	}
-
-	.ng-doc-badge:last-child {
-		border-top-right-radius: var(--ng-doc-base-gutter);
-		border-bottom-right-radius: var(--ng-doc-base-gutter);
-	}
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--ng-doc-space-1);
+  margin-right: var(--ng-doc-space-2);
+  vertical-align: middle;
 }
 
 .ng-doc-badge {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: calc(var(--ng-doc-base-gutter) * 2);
-	height: calc(var(--ng-doc-base-gutter) * 2);
-	font-family: var(--ng-doc-heading-font-family);
-	font-size: 10px;
-	color: var(--ng-doc-white);
-	white-space: nowrap;
-	font-weight: 900;
-	background-color: var(--ng-doc-text);
-	text-transform: capitalize;
+  --_ring: var(--ng-doc-base-4);
 
-	&[data-content='protected'] {
-		background-color: var(--ng-doc-protected-background);
-		color: var(--ng-doc-protected-color);
-	}
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--ng-doc-radius-xs);
+  font-family: var(--ng-doc-code-font);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+  text-transform: lowercase;
+  color: var(--ng-doc-text-muted);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--_ring);
 
-	&[data-content='abstract'] {
-		background-color: var(--ng-doc-abstract-background);
-		color: var(--ng-doc-abstract-color);
-	}
-
-	&[data-content='static'] {
-		background-color: var(--ng-doc-static-background);
-		color: var(--ng-doc-static-color);
-	}
-
-	&[data-content='async'] {
-		background-color: var(--ng-doc-async-background);
-		color: var(--ng-doc-async-color);
-	}
-
-	&[data-content='overriden'] {
-		background-color: var(--ng-doc-overriden-background);
-		color: var(--ng-doc-overriden-color);
-	}
-
-	&[data-content='readonly'] {
-		background-color: var(--ng-doc-readonly-background);
-		color: var(--ng-doc-readonly-color);
-	}
+  @each $modifier in ('protected', 'abstract', 'static', 'async', 'overriden', 'readonly') {
+    &[data-content='#{$modifier}'] {
+      --_ring: color-mix(in oklab, var(--ng-doc-#{$modifier}-background) 40%, var(--ng-doc-base-4));
+    }
+  }
 }

@@ -2,9 +2,7 @@ import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { updateWorkspace } from '@schematics/angular/utility/workspace';
 
 /**
- *
- * @param options
- * @param context
+ * Adds the generated `ng-doc` folder to `.gitignore` unless it is already ignored.
  */
 export function addGitIgnore(): Rule {
   return async (tree: Tree, context: SchematicContext) => {
@@ -25,7 +23,15 @@ export function addGitIgnore(): Rule {
           return;
         }
 
-        tree.overwrite('.gitignore', `${gitignore}\n\n# NgDoc files\n/ng-doc`);
+        // A second `ng add` run must not append the entry again.
+        const ignored: boolean = gitignore
+          .toString()
+          .split(/\r?\n/)
+          .some((line: string) => /^\/?ng-doc\/?$/.test(line.trim()));
+
+        if (!ignored) {
+          tree.overwrite('.gitignore', `${gitignore}\n\n# NgDoc files\n/ng-doc`);
+        }
 
         logger.info('✅ Done!');
       } catch (e) {

@@ -1,0 +1,27 @@
+== replaced, plain
+  0.0s   NgDoc: generating documentation (development)
+  0.8s   NgDoc: [1/4] preparing (reading configuration) (4%)
+  7.0s   NgDoc: [2/4] rendering 664 pages (35%), 7.0s elapsed
+  9.0s   NgDoc: inputs changed, restarting
+  9.0s   NgDoc: generating documentation (development)
+  9.0s   NgDoc: [2/4] rendering 664 pages (43%), 9.0s elapsed
+ 14.4s   NgDoc: [3/4] linking 664 pages (60%), 14s elapsed
+ 17.2s   NgDoc: [4/4] writing files (75%), 17s elapsed
+ 22.5s   NgDoc: OK generated 664 pages in 22s; 6669 files written; render 5.4s, link 2.8s, write 5.3s
+== replaced, summary
+ 22.5s   NgDoc: OK generated 664 pages in 22s; 6669 files written; render 5.4s, link 2.8s, write 5.3s
+== superseded, plain
+  0.0s   NgDoc: generating documentation (development)
+  0.8s   NgDoc: [1/4] preparing (reading configuration) (4%)
+  7.0s   NgDoc: [2/4] rendering 664 pages (35%), 7.0s elapsed
+ 12.4s   NgDoc: [3/4] linking 664 pages (60%), 12s elapsed
+ 15.2s   NgDoc: [4/4] writing files (75%), 15s elapsed
+ 21.0s   NgDoc: inputs changed, restarting
+ 21.0s   NgDoc: generating documentation (development)
+ 21.0s   NgDoc: [1/4] preparing (analyzing TypeScript) (100%), 21s elapsed
+ 21.3s   NgDoc: [2/4] rendering 1 page (100%), 21s elapsed
+ 21.6s   NgDoc: [3/4] linking 1 page (100%), 21s elapsed
+ 21.7s   NgDoc: [4/4] writing files (100%), 21s elapsed
+ 21.9s   NgDoc: OK generated 664 pages in 21s; 6669 files written; analyze 5.0s, render 5.6s, link 2.9s, write 5.5s
+== superseded, summary
+ 21.9s   NgDoc: OK generated 664 pages in 21s; 6669 files written; analyze 5.0s, render 5.6s, link 2.9s, write 5.5s

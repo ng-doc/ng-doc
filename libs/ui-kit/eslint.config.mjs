@@ -1,6 +1,8 @@
 import baseConfig from '../../eslint.config.mjs';
 import nx from '@nx/eslint-plugin';
 
+import { modernizationRules } from '../../tools/eslint/angular-modernization.mjs';
+
 export default [
   ...baseConfig,
   ...nx.configs['flat/angular'],
@@ -34,4 +36,5 @@ export default [
       '@angular-eslint/template/label-has-associated-control': 'off',
     },
   },
+  ...modernizationRules(import.meta.dirname, 'error'),
 ];

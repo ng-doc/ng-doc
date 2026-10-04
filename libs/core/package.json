@@ -1,6 +1,25 @@
 {
   "name": "@ng-doc/core",
   "version": "0.0.1",
+  "description": "Page, category and API configuration types and helpers for NgDoc.",
+  "keywords": [
+    "angular",
+    "documentation",
+    "docs",
+    "ng-doc",
+    "markdown",
+    "api-documentation"
+  ],
+  "homepage": "https://ng-doc.com/",
+  "bugs": {
+    "url": "https://github.com/ng-doc/ng-doc/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ng-doc/ng-doc.git",
+    "directory": "libs/core"
+  },
+  "license": "MIT",
   "type": "commonjs",
   "sideEffects": false,
   "dependencies": {

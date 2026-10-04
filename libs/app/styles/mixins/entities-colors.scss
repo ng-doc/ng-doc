@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $entities: (
 	'Class': (
 		background: var(--ng-doc-class-background),
@@ -53,11 +55,11 @@ $entities: (
 	@each $name, $props in $entities {
 		&[#{$attr}='#{$name}'] {
 			@if $background-prop {
-				#{$background-prop}: #{map-get($props, 'background')};
+				#{$background-prop}: #{map.get($props, 'background')};
 			}
 
 			@if $color-prop {
-				#{$color-prop}: #{map-get($props, 'color')};
+				#{$color-prop}: #{map.get($props, 'color')};
 			}
 		}
 	}

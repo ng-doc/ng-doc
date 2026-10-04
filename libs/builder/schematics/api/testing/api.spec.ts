@@ -2,6 +2,7 @@ import { HostTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { createProject, setActiveProject } from 'ng-morph';
 import { join } from 'path';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 const collectionPath: string = join(__dirname, '../../collection.json');
 
