@@ -13,6 +13,11 @@ export default defineConfig({
         find: '@ng-doc/app/components/page-link/page-link.component',
         replacement: path.join(repository, 'libs/app/components/page-link/page-link.component.ts'),
       },
+      // The component's only helper, from source: `@ng-doc/app` has no package export for it.
+      {
+        find: '@ng-doc/app/helpers',
+        replacement: path.join(repository, 'libs/app/helpers/page-url.ts'),
+      },
       {
         find: '@ng-doc/ui-kit',
         replacement: path.join(
