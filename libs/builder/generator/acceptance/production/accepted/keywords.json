@@ -372,6 +372,7 @@
 "*TroubleshootingPage#discovery_config_missing": {"path":"docs/build-and-deploy/troubleshooting#discovery_config_missing","title":"Troubleshooting [DISCOVERY_CONFIG_MISSING]","type":"link"},
 "*TroubleshootingPage#discovery_evaluation_failed": {"path":"docs/build-and-deploy/troubleshooting#discovery_evaluation_failed","title":"Troubleshooting [DISCOVERY_EVALUATION_FAILED]","type":"link"},
 "*TroubleshootingPage#ng0201-no-provider-found": {"path":"docs/build-and-deploy/troubleshooting#ng0201-no-provider-found","title":"Troubleshooting [NG0201: No provider found]","type":"link"},
+"*TroubleshootingPage#ngdoc_vite_angular_version": {"path":"docs/build-and-deploy/troubleshooting#ngdoc_vite_angular_version","title":"Troubleshooting [NGDOC_VITE_ANGULAR_VERSION]","type":"link"},
 "*TroubleshootingPage#ngdoc_vite_output_lease": {"path":"docs/build-and-deploy/troubleshooting#ngdoc_vite_output_lease","title":"Troubleshooting [NGDOC_VITE_OUTPUT_LEASE]","type":"link"},
 "*TroubleshootingPage#ngdoc_vite_restart_required": {"path":"docs/build-and-deploy/troubleshooting#ngdoc_vite_restart_required","title":"Troubleshooting [NGDOC_VITE_RESTART_REQUIRED]","type":"link"},
 "*TroubleshootingPage#ngdoc_vite_version": {"path":"docs/build-and-deploy/troubleshooting#ngdoc_vite_version","title":"Troubleshooting [NGDOC_VITE_VERSION]","type":"link"},
