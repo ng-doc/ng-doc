@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { writeFile } from 'node:fs/promises';
+import { rename, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 
 import { getNgDocViteSsrRenderer } from '@ng-doc/builder/generator/vite/index.js';
@@ -109,10 +109,14 @@ try {
   if (holdBeforePublication) {
     const evidence = process.env.NGDOC_PACKAGE_CONSUMER_EVIDENCE;
     assert.ok(evidence, 'Evidence path is required for the interruption probe');
+    // Written beside and renamed into place: the probe polls for this file and must never read
+    // it half-written.
+    const ready = `${evidence}/interrupt-ready.json`;
     await writeFile(
-      `${evidence}/interrupt-ready.json`,
+      `${ready}.tmp`,
       `${JSON.stringify({ stage: 'after-browser-before-publication', browserGroup })}\n`,
     );
+    await rename(`${ready}.tmp`, ready);
     await stopped;
   }
   browser = await launching;
