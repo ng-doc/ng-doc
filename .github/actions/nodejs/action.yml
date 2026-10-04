@@ -1,22 +1,48 @@
 name: NgDoc action for Node.js
-description: Setup Node.js
+description: Set up Node.js and the workspace's node_modules from the lockfile.
+
+inputs:
+  node-version:
+    description: Node.js version. The builder requires Node >=24.15.0 <25.
+    required: false
+    default: '24.19.0'
+  seed:
+    description: >-
+      'true' only in the cache-seeding workflow: check for the cache without downloading it, and
+      install and save node_modules on a miss. Other jobs only restore, so that pull requests that
+      change the lockfile never evict the caches of the base branch.
+    required: false
+    default: 'false'
 
 runs:
   using: composite
   steps:
     - name: Use Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
       with:
-        cache: npm
+        node-version: ${{ inputs.node-version }}
+        # node_modules itself is cached below; the npm download cache would only add a second restore.
+        package-manager-cache: false
 
-    - name: Cache NPM dependencies
-      uses: actions/cache@v3
-      id: cache-npm-dependencies
+    # node_modules itself, not only the npm download cache, so that a hit skips `npm ci`.
+    - name: Restore node_modules
+      id: restore
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: node_modules
-        key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+        key: node-modules-${{ runner.os }}-${{ runner.arch }}-node-${{ inputs.node-version }}-${{ hashFiles('package-lock.json') }}
+        lookup-only: ${{ inputs.seed }}
 
-    - name: Install Dependencies
-      if: steps.cache-npm-dependencies.outputs.cache-hit != 'true'
+    - name: Install dependencies
+      if: steps.restore.outputs.cache-hit != 'true'
       shell: bash
       run: npm ci
+
+    # Saved right after the install, before a job writes into node_modules (the @ng-doc links that
+    # ng-doc:link-libs creates, tool caches), so that every restore is a clean install.
+    - name: Save node_modules
+      if: inputs.seed == 'true' && steps.restore.outputs.cache-hit != 'true'
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: node_modules
+        key: ${{ steps.restore.outputs.cache-primary-key }}

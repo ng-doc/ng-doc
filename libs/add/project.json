@@ -24,10 +24,30 @@
       "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": ["default", "^production", "{workspaceRoot}/tools/vitest/**/*"],
+      "outputs": ["{workspaceRoot}/coverage/libs/add"],
       "options": {
-        "jestConfig": "libs/add/jest.config.ts"
+        "commands": [
+          {
+            "command": "tsc -p libs/add/tsconfig.spec.json --noEmit",
+            "forwardAllArgs": false
+          },
+          "vitest run --config libs/add/vitest.config.ts"
+        ],
+        "parallel": false
+      },
+      "configurations": {
+        "ci": {
+          "commands": [
+            {
+              "command": "tsc -p libs/add/tsconfig.spec.json --noEmit",
+              "forwardAllArgs": false
+            },
+            "vitest run --config libs/add/vitest.config.ts --coverage"
+          ]
+        }
       }
     }
   }

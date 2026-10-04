@@ -1,42 +1,66 @@
+// The navbar search: a 220px field on wide screens and an icon button at 1024px and below, as on
+// the landing header.
 :host {
-  --ng-doc-floated-border-radius: var(--ng-doc-base-gutter);
-  --ng-doc-input-background-color: var(--ng-doc-base-1);
-  --ng-doc-input-border: none;
-  --ng-doc-input-border-hover: none;
-  --ng-doc-icon-color: var(--ng-doc-base-7);
+  display: flex;
+  align-items: center;
+}
 
-  ng-doc-input-wrapper {
-    cursor: pointer;
+.ng-doc-search-field {
+  display: flex;
+  align-items: center;
+  gap: var(--ng-doc-space-2);
+  width: 220px;
+  height: 36px;
+  padding: 0 var(--ng-doc-space-2) 0 var(--ng-doc-space-3);
+  border: 1px solid var(--ng-doc-border-color);
+  border-radius: var(--ng-doc-radius-md);
+  background: var(--ng-doc-base-1);
+  color: var(--ng-doc-text-muted);
+  font: 400 var(--ng-doc-text-sm-size) / 20px var(--ng-doc-font-family);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--ng-doc-transition);
 
-    ng-doc-icon,
-    ng-doc-tag {
-      cursor: pointer;
-    }
+  &:hover {
+    border-color: var(--ng-doc-border-hover-color);
   }
 
-  @media (max-width: 1024px) {
-    ng-doc-input-wrapper {
-      display: none;
-    }
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--ng-doc-focus-ring);
   }
 
-  @media (min-width: 1024px) {
-    width: 240px;
+  svg {
+    flex: none;
+  }
 
-    button[ng-doc-button-icon] {
-      display: none;
-    }
+  kbd {
+    margin-left: auto;
+    padding: 0 6px;
+    border: 1px solid var(--ng-doc-kbd-border-color);
+    border-radius: var(--ng-doc-radius-xs);
+    background: var(--ng-doc-kbd-background);
+    font: 500 11px/18px var(--ng-doc-font-family);
+    color: var(--ng-doc-text-muted);
   }
 }
 
-.search-hotkey {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: calc(var(--ng-doc-base-gutter) * 3);
-  height: calc(var(--ng-doc-base-gutter) * 3);
-  margin-right: var(--ng-doc-base-gutter);
-  --ng-doc-tag-border: 1px solid var(--ng-doc-base-6);
-  --ng-doc-tag-color: var(--ng-doc-base-6);
-  --ng-doc-tag-background: transparent;
+.ng-doc-search-placeholder {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ng-doc-search-button {
+  display: none !important;
+}
+
+@media (max-width: 1024px) {
+  .ng-doc-search-field {
+    display: none;
+  }
+
+  .ng-doc-search-button {
+    display: inline-flex !important;
+  }
 }

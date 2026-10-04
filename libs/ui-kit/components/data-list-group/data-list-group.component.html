@@ -1,15 +1,16 @@
 <ng-doc-list>
-  @if (items && items.length) {
-    @for (group of groupItems; track group) {
+  @if (items()?.length) {
+    @for (group of groupItems(); track group) {
       <ng-doc-option-group>
+        <!-- The context literals are memoized per group and item, like a pure pipe. -->
         <span
-          *polymorpheusOutlet="groupContent as groupText; context: getGroupContext(group)"
+          *polymorpheusOutlet="groupContent() as groupText; context: { $implicit: group }"
           ngDocOptionGroupHeader>
           {{ groupText }}
         </span>
-        @for (item of groups.get(group); track trackByFn($index, item)) {
-          <ng-doc-option [value]="defineValueFn(item)" [disabled]="itemDisabledFn(item)">
-            <ng-container *polymorpheusOutlet="itemContent as text; context: getContext(item)">
+        @for (item of groups().get(group); track trackByFn()($index, item)) {
+          <ng-doc-option [value]="defineValueFn()(item)" [disabled]="itemDisabledFn()(item)">
+            <ng-container *polymorpheusOutlet="itemContent() as text; context: { $implicit: item }">
               {{ text }}
             </ng-container>
           </ng-doc-option>
@@ -18,8 +19,8 @@
     }
   } @else {
     <div class="ng-doc-empty-message" ng-doc-text>
-      @if (emptyContent) {
-        <ng-container *polymorpheusOutlet="emptyContent as text"> {{ text }} </ng-container>
+      @if (emptyContent()) {
+        <ng-container *polymorpheusOutlet="emptyContent() as text"> {{ text }} </ng-container>
       }
     </div>
   }

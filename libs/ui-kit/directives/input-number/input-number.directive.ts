@@ -1,14 +1,18 @@
-import { Directive, forwardRef, HostListener } from '@angular/core';
+import { Directive, forwardRef } from '@angular/core';
 import { isPresent } from '@ng-doc/core/helpers/is-present';
 import { NgDocBaseInput } from '@ng-doc/ui-kit/classes/base-input';
 import { toElement } from '@ng-doc/ui-kit/helpers';
 
+/** Directive turns a native input into a control whose model is a number */
 @Directive({
   selector: `input[ngDocInputNumber]`,
   providers: [
     { provide: NgDocBaseInput, useExisting: forwardRef(() => NgDocInputNumberDirective) },
   ],
-  standalone: true,
+  host: {
+    '(blur)': 'blurEvent()',
+    '(input)': 'inputEvent()',
+  },
 })
 export class NgDocInputNumberDirective extends NgDocBaseInput<number> {
   constructor() {
@@ -19,13 +23,11 @@ export class NgDocInputNumberDirective extends NgDocBaseInput<number> {
     });
   }
 
-  @HostListener('blur')
-  blurEvent(): void {
+  protected blurEvent(): void {
     this.touch();
   }
 
-  @HostListener('input')
-  inputEvent(): void {
+  protected inputEvent(): void {
     this.updateModel(Number(this.elementRef.nativeElement.value));
   }
 }

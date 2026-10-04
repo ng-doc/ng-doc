@@ -1,20 +1,68 @@
+// Decorators of a declaration (`@Component`, `@Input`, ...) are compact word chips in the chip font,
+// not code.
 .ng-doc-decorators-group {
-	display: flex;
-	gap: var(--ng-doc-base-gutter);
-	margin-bottom: calc(var(--ng-doc-base-gutter) / 2);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ng-doc-space-1);
+  margin-bottom: var(--ng-doc-space-1);
 
-	code {
-		--ng-doc-line-height: 18px;
-	}
+  // `code.ngde` outranks the global inline-code rule (`*:not(pre) > code.ngde`).
+  code,
+  code.ngde {
+    display: inline-flex;
+    align-items: center;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: var(--ng-doc-radius-sm);
+    font-family: var(--ng-doc-font-family);
+    font-size: 10.5px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    // `data-ng-doc-decorator` (the new engine's API pages) picks the decorator's hue; other chips
+    // keep the brand hue.
+    --_hue: var(--ng-doc-hue-brand);
 
-	&.column {
-		flex-direction: column;
-		align-items: flex-start;
-		gap: calc(var(--ng-doc-base-gutter) / 2);
-		margin-bottom: 0;
+    color: color-mix(in oklab, var(--_hue) var(--ng-doc-mix-strong), var(--ng-doc-heading-color));
+    background: color-mix(in oklab, var(--_hue) var(--ng-doc-mix-chip), var(--ng-doc-background));
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--_hue) 24%, transparent);
+    --ng-doc-line-height: 18px;
 
-		code {
-			margin: 0;
-		}
-	}
+    // Decorators that link to their docs keep the chip colour; the underline shows on hover.
+    a {
+      color: inherit;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  @each $decorator,
+    $variable
+      in (
+        'Component': 'component',
+        'Directive': 'directive',
+        'Injectable': 'injectable',
+        'Pipe': 'pipe',
+        'NgModule': 'ng-module',
+        'Input': 'input',
+        'Output': 'output'
+      )
+  {
+    code[data-ng-doc-decorator='#{$decorator}'] {
+      --_hue: var(--ng-doc-#{$variable}-decorator-background);
+    }
+  }
+
+  &.column {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 0;
+
+    code {
+      margin: 0;
+    }
+  }
 }

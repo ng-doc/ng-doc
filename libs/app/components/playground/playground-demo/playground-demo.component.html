@@ -1,3 +1,7 @@
-<ng-doc-demo-displayer [code]="code" [border]="false" [expanded]="expanded" language="angular-html">
+<ng-doc-demo-displayer
+  [code]="code()"
+  [border]="false"
+  [expanded]="expanded()"
+  language="angular-html">
   <ng-container #demoOutlet></ng-container>
 </ng-doc-demo-displayer>

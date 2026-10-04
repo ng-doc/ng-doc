@@ -5,6 +5,6 @@
 
     {{ tagMacro.render(scope.name, "ng-doc-scope") }}
     <span class="ng-doc-inline-delimiter" indexable="false">/</span>
-    {{ tagMacro.render(declarationType) if declarationType }}
+    {{ tagMacro.render("Type alias" if declarationType == "TypeAlias" else declarationType, declarationType) if declarationType }}
 </div>
 

@@ -3,14 +3,34 @@
   display: block;
   border: var(--ng-doc-mermaid-viewer-border, 1px solid var(--ng-doc-border-color));
   margin: var(--ng-doc-mermaid-viewer-margin, var(--ng-doc-page-block-margin));
-  background: var(--ng-doc-mermaid-viewer-background, var(--ng-doc-base-8));
-  border-radius: var(--ng-doc-mermaid-viewer-border-radius, var(--ng-doc-base-gutter));
+  background: var(--ng-doc-mermaid-viewer-background, var(--ng-doc-code-background));
+  border-radius: var(--ng-doc-mermaid-viewer-border-radius, var(--ng-doc-radius-lg));
+  overflow: hidden;
   min-height: 150px;
 
+  // The controls sit over the diagram, so they show only while the pointer is over the viewer or
+  // one of them has keyboard focus. Touch screens have no hover and always show them.
   ng-doc-magnifier-controller {
     position: absolute;
-    bottom: calc(var(--ng-doc-base-gutter) * 2);
-    right: calc(var(--ng-doc-base-gutter) * 2);
+    bottom: var(--ng-doc-space-4);
+    right: var(--ng-doc-space-4);
+    opacity: 0;
+    transition: opacity var(--ng-doc-transition);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    @media (hover: none) {
+      opacity: 1;
+    }
+  }
+
+  &:hover,
+  &:focus-within {
+    ng-doc-magnifier-controller {
+      opacity: 1;
+    }
   }
 
   .ng-doc-mermaid-container {

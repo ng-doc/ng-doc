@@ -6,7 +6,7 @@ import {
   ScrollStrategyOptions,
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { ComponentRef, inject, Injectable, Injector, NgZone, StaticProvider } from '@angular/core';
+import { ComponentRef, inject, Injector, Service, StaticProvider } from '@angular/core';
 import { Router } from '@angular/router';
 import { asArray } from '@ng-doc/core/helpers/as-array';
 import { NgDocOverlayRef } from '@ng-doc/ui-kit/classes';
@@ -16,15 +16,25 @@ import { NgDocOverlayUtils } from '@ng-doc/ui-kit/utils';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { take } from 'rxjs/operators';
 
-@Injectable({ providedIn: 'root' })
+/**
+ * Opens NgDoc overlays: a container component inside a CDK overlay.
+ *
+ * It is provided in the root injector. A component can also list it in its `providers`, so the
+ * overlays it opens use that component's injector (the dropdown does).
+ */
+@Service()
 export class NgDocOverlayService {
   private overlay = inject(Overlay);
-  private ngZone = inject(NgZone);
   private injector = inject(Injector);
   private router = inject(Router);
 
-  constructor() {}
-
+  /**
+   * Opens an overlay.
+   * @param content - What the container renders: a string, a template or a component.
+   * @param config - The overlay configuration, including the container component.
+   * @param providers - Extra providers for a component content; `NgDocOverlayRef` is always added.
+   * @returns The handle of the opened overlay.
+   */
   open<R>(
     content: NgDocContent,
     config: NgDocOverlayConfig,
@@ -50,7 +60,7 @@ export class NgDocOverlayService {
       overlay,
       config,
       containerRef.instance,
-      this.ngZone,
+      this.injector,
       this.router,
     );
 

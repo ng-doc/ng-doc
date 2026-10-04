@@ -1,4 +1,5 @@
 import { Project, SourceFile } from 'ts-morph';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import {
   getJsDocDescription,

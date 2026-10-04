@@ -1,7 +1,8 @@
 import { renderTemplate } from '@ng-doc/builder';
-import { NgDocApi, uid } from '@ng-doc/core';
+import { NgDocApi } from '@ng-doc/core';
 import { of } from 'rxjs';
 
+import { stableGeneratedId } from '../../../helpers/stable-generated-id';
 import { Builder, FileOutput, runBuild } from '../../core';
 import { EntryMetadata } from '../interfaces';
 
@@ -23,7 +24,7 @@ export function apiListComponentBuilder(config: Config): Builder<FileOutput> {
       filePath: metadata.outPath,
       content: renderTemplate('./api-list.ts.nunj', {
         context: {
-          id: uid(),
+          id: stableGeneratedId(metadata.id, metadata.absoluteRoute(), 'api-list'),
           segment: metadata.entry.route,
           title: metadata.entry.title,
         },

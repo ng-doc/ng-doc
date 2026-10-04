@@ -18,13 +18,16 @@ import {
 } from 'ts-morph';
 
 import { formatCode } from './format-code';
-import { displayReturnType, displayType } from './typescript';
+import { displayReturnType, displayType } from './typescript/display-type';
 
 /**
  *
  * @param constructor
  */
-export function constructorPresentation(constructor: ConstructorDeclaration): string {
+export function constructorPresentation(
+  constructor: ConstructorDeclaration,
+  configDirectory?: string,
+): string {
   const parameters: string = constructor.getParameters().map(parameterPresentation).join(', \n	');
 
   const presentation: string =
@@ -36,14 +39,17 @@ export function constructorPresentation(constructor: ConstructorDeclaration): st
       .filter(isPresent)
       .join(' ') + ';';
 
-  return formatCode(presentation, 'TypeScript');
+  return formatCode(presentation, 'TypeScript', configDirectory);
 }
 
 /**
  *
  * @param accessor
  */
-export function accessorPresentation(accessor: AccessorDeclaration): string {
+export function accessorPresentation(
+  accessor: AccessorDeclaration,
+  configDirectory?: string,
+): string {
   const parameters: string = accessor.getParameters().map(parameterPresentation).join(', ');
   const prefix: string = Node.isGetAccessorDeclaration(accessor) ? 'get' : 'set';
   const header: string = Node.isGetAccessorDeclaration(accessor)
@@ -58,14 +64,14 @@ export function accessorPresentation(accessor: AccessorDeclaration): string {
       .filter(isPresent)
       .join(' ') + ';';
 
-  return formatCode(presentation, 'TypeScript');
+  return formatCode(presentation, 'TypeScript', configDirectory);
 }
 
 /**
  *
  * @param method
  */
-export function methodPresentation(method: MethodDeclaration): string {
+export function methodPresentation(method: MethodDeclaration, configDirectory?: string): string {
   const parameters: string = method.getParameters().map(parameterPresentation).join(', ');
 
   const presentation: string = [
@@ -78,14 +84,17 @@ export function methodPresentation(method: MethodDeclaration): string {
     .filter(isPresent)
     .join(' ');
 
-  return formatCode(presentation, 'TypeScript');
+  return formatCode(presentation, 'TypeScript', configDirectory);
 }
 
 /**
  *
  * @param callSignature
  */
-export function callSignaturePresentation(callSignature: CallSignatureDeclaration): string {
+export function callSignaturePresentation(
+  callSignature: CallSignatureDeclaration,
+  configDirectory?: string,
+): string {
   const parameters: string = callSignature.getParameters().map(parameterPresentation).join(', ');
   const typeParameters = typeParametersPresentation(callSignature.getTypeParameters());
 
@@ -96,14 +105,14 @@ export function callSignaturePresentation(callSignature: CallSignatureDeclaratio
     .filter(isPresent)
     .join(' ');
 
-  return formatCode(presentation, 'TypeScript');
+  return formatCode(presentation, 'TypeScript', configDirectory);
 }
 
 /**
  *
  * @param fnc
  */
-export function functionPresentation(fnc: FunctionDeclaration): string {
+export function functionPresentation(fnc: FunctionDeclaration, configDirectory?: string): string {
   const parameters: string = fnc.getParameters().map(parameterPresentation).join(', ');
 
   const presentation: string = [
@@ -114,24 +123,30 @@ export function functionPresentation(fnc: FunctionDeclaration): string {
     .filter(isPresent)
     .join(' ');
 
-  return formatCode(presentation, 'TypeScript');
+  return formatCode(presentation, 'TypeScript', configDirectory);
 }
 
 /**
  *
  * @param typeAlias
  */
-export function typeAliasPresentation(typeAlias: TypeAliasDeclaration): string {
+export function typeAliasPresentation(
+  typeAlias: TypeAliasDeclaration,
+  configDirectory?: string,
+): string {
   const presentation: string = `type ${typeAlias.getName()} = ${displayType(typeAlias)};`;
 
-  return formatCode(presentation, 'TypeScript');
+  return formatCode(presentation, 'TypeScript', configDirectory);
 }
 
 /**
  *
  * @param variable
  */
-export function variablePresentation(variable: VariableDeclaration): string {
+export function variablePresentation(
+  variable: VariableDeclaration,
+  configDirectory?: string,
+): string {
   const presentation: string = [
     variable.getVariableStatement()?.getDeclarationKind() ?? 'const',
     `${variable.getName()}:`,
@@ -140,7 +155,7 @@ export function variablePresentation(variable: VariableDeclaration): string {
     .filter(isPresent)
     .join(' ');
 
-  return formatCode(presentation, 'TypeScript');
+  return formatCode(presentation, 'TypeScript', configDirectory);
 }
 
 /**

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, TrackByFunction } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, TrackByFunction } from '@angular/core';
 import { asArray } from '@ng-doc/core/helpers/as-array';
 import { NgDocListComponent } from '@ng-doc/ui-kit/components/list';
 import { NgDocOptionComponent } from '@ng-doc/ui-kit/components/option';
@@ -8,11 +8,13 @@ import {
   NG_DOC_DEFAULT_HANDLER,
   NG_DOC_DEFAULT_STRINGIFY,
 } from '@ng-doc/ui-kit/constants';
-import { ngDocMakePure } from '@ng-doc/ui-kit/decorators';
 import { NgDocContextWithImplicit } from '@ng-doc/ui-kit/interfaces';
 import { NgDocBooleanHandler, NgDocContent, NgDocDefineValueFunction } from '@ng-doc/ui-kit/types';
 import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 
+/**
+ * Keyboard-navigable list of options built from `items`.
+ */
 @Component({
   selector: 'ng-doc-data-list',
   templateUrl: './data-list.component.html',
@@ -21,35 +23,32 @@ import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
   imports: [NgDocListComponent, NgDocOptionComponent, PolymorpheusOutlet, NgDocTextComponent],
 })
 export class NgDocDataListComponent<T> {
-  @Input()
-  autofocus: boolean = true;
+  /** Whether the list takes focus when it opens. */
+  readonly autofocus = input<boolean>(true);
 
-  @Input()
-  items: readonly T[] | null = [];
+  /** Items to show. */
+  readonly items = input<readonly T[] | null>([]);
 
-  @Input()
-  itemContent: NgDocContent<NgDocContextWithImplicit<T>> = ({
-    $implicit,
-  }: NgDocContextWithImplicit<T>) => NG_DOC_DEFAULT_STRINGIFY($implicit);
+  /** Content of an option; its context is the item. */
+  readonly itemContent = input<NgDocContent<NgDocContextWithImplicit<T>>>(
+    ({ $implicit }: NgDocContextWithImplicit<T>) => NG_DOC_DEFAULT_STRINGIFY($implicit),
+  );
 
-  @Input()
-  emptyContent: NgDocContent = '';
+  /** Content shown when there are no items. */
+  readonly emptyContent = input<NgDocContent>('');
 
-  @Input()
-  itemDisabledFn: NgDocBooleanHandler<T> = NG_DOC_ALWAYS_FALSE_HANDLER;
+  /** Returns `true` for items whose option is disabled. */
+  readonly itemDisabledFn = input<NgDocBooleanHandler<T>>(NG_DOC_ALWAYS_FALSE_HANDLER);
 
-  @Input()
-  defineValueFn: NgDocDefineValueFunction<unknown, unknown> = NG_DOC_DEFAULT_HANDLER;
+  /** Maps an item to the value its option selects. */
+  readonly defineValueFn =
+    input<NgDocDefineValueFunction<unknown, unknown>>(NG_DOC_DEFAULT_HANDLER);
 
-  @Input()
-  trackByFn: TrackByFunction<T> = (_index: number, item: T) => item;
+  /** Identifies items across changes of `items`. */
+  readonly trackByFn = input<TrackByFunction<T>>((_index: number, item: T) => item);
 
-  @ngDocMakePure
-  getContext($implicit: T): NgDocContextWithImplicit<T> {
-    return { $implicit };
-  }
-
+  /** Returns the items as an array. */
   getItems(): T[] {
-    return asArray(this.items);
+    return asArray(this.items());
   }
 }

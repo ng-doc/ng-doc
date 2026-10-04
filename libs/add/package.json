@@ -1,6 +1,25 @@
 {
   "name": "@ng-doc/add",
   "version": "0.0.1",
+  "description": "Adds NgDoc to an Angular or Nx project with `ng add` and sets everything up for you.",
+  "keywords": [
+    "angular",
+    "documentation",
+    "docs",
+    "ng-doc",
+    "markdown",
+    "api-documentation"
+  ],
+  "homepage": "https://ng-doc.com/",
+  "bugs": {
+    "url": "https://github.com/ng-doc/ng-doc/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ng-doc/ng-doc.git",
+    "directory": "libs/add"
+  },
+  "license": "MIT",
   "type": "commonjs",
   "schematics": "./schematics/collection.json",
   "ng-add": {
@@ -10,8 +29,9 @@
     "access": "public"
   },
   "dependencies": {
+    "@ng-doc/builder": "0.0.0",
     "@angular/cdk": ">=22.0.0 < 23.0.0",
     "@angular-devkit/schematics": ">=22.0.0 < 23.0.0",
-    "ng-morph": "4.8.4"
+    "ng-morph": "4.9.0"
   }
 }

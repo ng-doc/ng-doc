@@ -1,4 +1,5 @@
 import { Project } from 'ts-morph';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { createProject } from '../../typescript';
 import { getInputName } from '../get-input-name';

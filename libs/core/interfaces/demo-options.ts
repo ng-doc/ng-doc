@@ -1,9 +1,17 @@
 export interface NgDocBaseDemoOptions {
-  /** Specifies whether the code preview should be expanded (false by default) */
+  /**
+   * Opens the demo on its code (false by default): a `demo` starts on a source file instead of the
+   * preview (the `opened` snippet, then `defaultTab`, then the first file), and a `demoPane` starts
+   * with its code expanded.
+   */
   expanded?: boolean;
   /** Tab name that should be opened by default */
   defaultTab?: string;
-  /** If specified, fullscreen button will be displayed and will navigate to the specified route */
+  /**
+   * A child route of the page (see `route.children` of `NgDocPage`). When set, a link that opens
+   * the route in a new tab replaces the demo; the route opens as a standalone page that shows only
+   * the routed component.
+   */
   fullscreenRoute?: string;
   /** List of tabs that should be displayed if they are not empty and exist */
   tabs?: string | string[];

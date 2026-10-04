@@ -1,92 +1,100 @@
-@import '../../styles/mixins';
+@use '../../styles/mixins';
 
 :host {
-	display: inline-flex;
-	align-items: flex-start;
-	flex-direction: column;
+  display: inline-flex;
+  align-items: flex-start;
+  flex-direction: column;
 
-	&:not(:last-of-type) {
-		margin-bottom: var(--ng-doc-list-element-vertical-space);
-		margin-right: var(--ng-doc-list-element-horizontal-space);
-	}
+  &:not(:last-of-type) {
+    margin-bottom: var(--ng-doc-list-element-vertical-space);
+    margin-right: var(--ng-doc-list-element-horizontal-space);
+  }
 
-	&:hover:not([data-checked='true']) {
-		.ng-doc-checkbox {
-			border: var(--ng-doc-checkbox-border-hover);
-		}
-	}
+  &:hover:not([aria-checked='true']) {
+    .ng-doc-checkbox {
+      border: var(--ng-doc-checkbox-border-hover);
+    }
+  }
 
-	&:not([data-disabled='true']) {
-		.ng-doc-checkbox-wrapper {
-			cursor: pointer;
-		}
-	}
+  &:not([data-disabled='true']) {
+    .ng-doc-checkbox-wrapper {
+      cursor: pointer;
+    }
+  }
 
-	&[data-checked='true'] {
-		.ng-doc-checkbox {
-			background-color: var(--ng-doc-checkbox-color);
-			--ng-doc-checkbox-border: var(--ng-doc-checkbox-color);
-			--ng-doc-checkbox-border-hover: var(--ng-doc-checkbox-color);
-			--ng-doc-icon-color: var(--ng-doc-checkbox-color-text);
-		}
-	}
+  // `aria-checked` is set by the state control; `null` (mixed) keeps the unchecked look.
+  &[aria-checked='true'] {
+    .ng-doc-checkbox {
+      background-color: var(--ng-doc-checkbox-color);
+      --ng-doc-checkbox-border: var(--ng-doc-checkbox-color);
+      --ng-doc-checkbox-border-hover: var(--ng-doc-checkbox-color);
+      --ng-doc-icon-color: var(--ng-doc-checkbox-color-text);
+    }
+  }
 
-	@include ng-doc-font();
+  @include mixins.ng-doc-font();
 }
 
 input {
-	position: absolute;
-	bottom: 0;
-	left: 50%;
-	border: 0;
-	clip: rect(0 0 0 0);
-	height: 1px;
-	margin: -1px;
-	overflow: hidden;
-	padding: 0;
-	width: 1px;
-	outline: 0;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  width: 1px;
+  outline: 0;
 }
 
 .ng-doc-checkbox-wrapper {
-	display: flex;
+  display: flex;
+  align-items: center;
+  // The 18px box and its label reach the 24px minimum target size.
+  min-height: 24px;
 }
 
 .ng-doc-checkbox {
-	position: relative;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: calc(var(--ng-doc-base-gutter) * 2 + var(--ng-doc-base-gutter) / 2);
-	height: calc(var(--ng-doc-base-gutter) * 2 + var(--ng-doc-base-gutter) / 2);
-	border: var(--ng-doc-checkbox-border);
-	flex: 0 0 calc(var(--ng-doc-base-gutter) * 2 + var(--ng-doc-base-gutter) / 2);
-	background-color: var(--ng-doc-base-0);
-	transition: background-color var(--ng-doc-transition);
-	box-sizing: border-box;
-	border-radius: calc(var(--ng-doc-base-gutter) / 2);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: var(--ng-doc-checkbox-border);
+  flex: 0 0 18px;
+  background-color: var(--ng-doc-background);
+  transition: background-color var(--ng-doc-transition);
+  box-sizing: border-box;
+  border-radius: var(--ng-doc-radius-xs);
+
+  // The native input is visually hidden: the box shows its keyboard focus.
+  &:has(input:focus-visible) {
+    box-shadow: var(--ng-doc-focus-ring);
+  }
 }
 
 .ng-doc-checkbox-content {
-	display: flex;
-	align-items: flex-start;
+  display: flex;
+  align-items: center;
 }
 
 .ng-doc-checkbox-icons {
-	display: flex;
-	margin-left: var(--ng-doc-base-gutter);
-	margin-top: calc(var(--ng-doc-base-gutter) / 2);
+  display: flex;
+  margin-left: var(--ng-doc-space-2);
 
-	&:empty {
-		display: none;
-	}
+  &:empty {
+    display: none;
+  }
 }
 
 .ng-doc-checkbox-text {
-	margin-left: var(--ng-doc-base-gutter);
-	line-height: calc(var(--ng-doc-base-gutter) * 2 + var(--ng-doc-base-gutter) / 2);
+  margin-left: var(--ng-doc-space-2);
+  line-height: 24px;
 
-	&:empty {
-		display: none;
-	}
+  &:empty {
+    display: none;
+  }
 }

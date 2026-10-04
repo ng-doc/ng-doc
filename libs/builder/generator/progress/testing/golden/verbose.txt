@@ -1,0 +1,17 @@
+  0.2s   NgDoc: rebuilding all pages (tsconfig.json changed)
+  6.8s   NgDoc: updated 664 pages in 6.8s
+  6.8s   NgDoc: phases (full pass: tsconfig.json changed): discovery 0.3s, semantic 2.9s, render 2.1s, link 0.8s, transfer 0.1s, commit 0.4s
+ 10.9s   NgDoc: superseded by newer changes
+ 11.9s   NgDoc: updated 1 of 664 pages in 0.9s (/getting-started/installation)
+ 11.9s   NgDoc: phases (targeted pass): semantic 0.3s, render 0.2s, link 0.1s, transfer 0.0s, commit 0.1s
+ 20.5s   NgDoc: warming up...
+ 30.0s   NgDoc: warm-up finished in 9.5s
+ 32.0s   NgDoc: confirming the last update...
+ 32.7s   NgDoc: confirming the last update finished in 0.7s; updated 1 of 664 pages
+ 32.7s   NgDoc: phases: transfer 0.3s, commit 0.4s
+ 40.0s   NgDoc: checking generated files...
+ 43.1s   NgDoc: checking generated files finished in 3.1s; updated 2 files
+ 43.1s   NgDoc: phases: transfer 0.5s, commit 2.6s
+ 50.0s   NgDoc: catching up with missed changes...
+ 50.2s   NgDoc: catching up with missed changes failed (2 errors above); the site keeps the last good version
+ 50.2s   NgDoc: phases: transfer 0.2s

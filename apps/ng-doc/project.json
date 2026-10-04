@@ -7,7 +7,7 @@
   "tags": ["type:app", "app:ng-doc"],
   "implicitDependencies": ["builder"],
   "targets": {
-    "build": {
+    "build-legacy": {
       "executor": "./dist/libs/builder:application",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
@@ -17,10 +17,9 @@
         }
       ],
       "options": {
-        "outputPath": "dist/apps/ng-doc",
+        "outputPath": "dist/apps/ng-doc-legacy",
         "index": "apps/ng-doc/src/index.html",
         "browser": "apps/ng-doc/src/main.ts",
-        "polyfills": ["zone.js"],
         "inlineStyleLanguage": "scss",
         "server": "apps/ng-doc/src/main.server.ts",
         "prerender": true,
@@ -41,7 +40,7 @@
           },
           {
             "glob": "**/*",
-            "input": "ng-doc/ng-doc/assets",
+            "input": "ng-doc-legacy/ng-doc/ng-doc/assets",
             "output": "assets/ng-doc"
           }
         ],
@@ -53,7 +52,10 @@
           "posthtml-render",
           "js-beautify",
           "chalk"
-        ]
+        ],
+        "ngDoc": {
+          "config": "apps/ng-doc/ng-doc.config.legacy.ts"
+        }
       },
       "configurations": {
         "production": {
@@ -80,7 +82,7 @@
           "sourceMap": true
         },
         "development": {
-          "tsConfig": "apps/ng-doc/tsconfig.app.json",
+          "tsConfig": "apps/ng-doc/tsconfig.legacy.json",
           "optimization": false,
           "extractLicenses": false,
           "sourceMap": true,
@@ -101,6 +103,8 @@
           "symlink-dir dist/libs/core dist/libs/builder/node_modules/@ng-doc/core",
           "symlink-dir dist/libs/core dist/libs/utils/node_modules/@ng-doc/core",
           "symlink-dir dist/libs/utils dist/libs/builder/node_modules/@ng-doc/utils",
+          "symlink-dir dist/libs/core node_modules/@ng-doc/core",
+          "symlink-dir dist/libs/utils node_modules/@ng-doc/utils",
           "symlink-dir dist/libs/keywords-loaders node_modules/@ng-doc/keywords-loaders",
           "symlink-dir dist/libs/builder node_modules/@ng-doc/builder",
           "symlink-dir dist/libs/app node_modules/@ng-doc/app",
@@ -108,7 +112,7 @@
         ]
       }
     },
-    "serve": {
+    "serve-legacy": {
       "executor": "./dist/libs/builder:dev-server",
       "defaultConfiguration": "development",
       "dependsOn": [
@@ -116,41 +120,86 @@
           "target": "link-libs"
         }
       ],
+      "options": {
+        "ngDoc": {
+          "config": "apps/ng-doc/ng-doc.config.legacy.ts"
+        }
+      },
       "configurations": {
         "production": {
-          "buildTarget": "ng-doc:build:production",
+          "buildTarget": "ng-doc:build-legacy:production",
           "tsConfig": "apps/ng-doc/tsconfig.build.json"
         },
         "development": {
-          "buildTarget": "ng-doc:build:development"
+          "buildTarget": "ng-doc:build-legacy:development"
         },
         "poc": {
-          "buildTarget": "ng-doc:build:development",
+          "buildTarget": "ng-doc:build-legacy:development",
           "ngDoc": {
             "config": "apps/ng-doc/ng-doc.config.poc.ts"
-          },
-          "optimization": false,
-          "extractLicenses": false,
-          "sourceMap": true,
-          "namedChunks": true
+          }
         }
       }
     },
     "extract-i18n": {
-      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "executor": "@angular/build:extract-i18n",
       "options": {
-        "buildTarget": "ng-doc:build"
+        "buildTarget": "ng-doc:build-legacy"
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint"
     },
+    "build-specs": {
+      "executor": "@angular/build:application",
+      "metadata": {
+        "description": "Build options for the unit-test builder only (test); it is not a build of the site."
+      },
+      "options": {
+        "outputPath": "dist/spec/apps/ng-doc",
+        "tsConfig": "apps/ng-doc/tsconfig.spec.json",
+        "inlineStyleLanguage": "scss",
+        "polyfills": ["zone.js"]
+      }
+    },
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "@angular/build:unit-test",
       "outputs": ["{workspaceRoot}/coverage/apps/ng-doc"],
       "options": {
-        "jestConfig": "apps/ng-doc/jest.config.ts",
-        "tsConfig": "apps/ng-doc/tsconfig.spec.json"
+        "buildTarget": "ng-doc:build-specs",
+        "tsConfig": "apps/ng-doc/tsconfig.spec.json",
+        "runnerConfig": "apps/ng-doc/vitest.config.ts",
+        "isolate": true,
+        "watch": false
+      },
+      "configurations": {
+        "ci": {
+          "coverage": true
+        }
+      }
+    },
+    "build": {
+      "executor": "./tools/builders:vite-application",
+      "outputs": ["{options.outputPath}"],
+      "dependsOn": [
+        {
+          "target": "link-libs"
+        }
+      ],
+      "options": {
+        "configFile": "apps/ng-doc/vite.config.mjs",
+        "outputPath": "dist/apps/ng-doc"
+      }
+    },
+    "serve": {
+      "executor": "./tools/builders:vite-dev-server",
+      "dependsOn": [
+        {
+          "target": "link-libs"
+        }
+      ],
+      "options": {
+        "configFile": "apps/ng-doc/vite.config.mjs"
       }
     }
   }

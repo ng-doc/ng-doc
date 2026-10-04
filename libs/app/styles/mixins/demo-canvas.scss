@@ -1,0 +1,9 @@
+// The canvas a demo is drawn on: a subtle dot grid. Demos, demo panes, playgrounds and the page of a
+// fullscreen route share it, so a demo looks the same wherever it is shown.
+@mixin demo-canvas {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--ng-doc-base-5) 55%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 16px 16px;
+}

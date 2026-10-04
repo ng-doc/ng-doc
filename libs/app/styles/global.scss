@@ -1,4 +1,5 @@
-@import 'main';
+@use 'main';
+@use '../../ui-kit/styles/mixins';
 
 html {
   overflow-y: scroll;
@@ -7,7 +8,7 @@ html {
 
 html,
 body {
-  @include ng-doc-font();
+  @include mixins.ng-doc-font();
   font-size: var(--ng-doc-font-size);
   background-color: var(--ng-doc-background);
   margin: 0;

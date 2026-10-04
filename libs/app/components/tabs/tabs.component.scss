@@ -1,16 +1,15 @@
+// Grouped code blocks: the tab group is the header of one code surface.
 :host {
-	display: block;
-	border-radius: var(--ng-doc-tabs-border-radius);
-	border: var(--ng-doc-tabs-border);
-	margin: var(--ng-doc-tabs-margin);
-	overflow: hidden;
+  display: block;
+  border-radius: var(--ng-doc-tabs-border-radius);
+  border: var(--ng-doc-tabs-border, 1px solid var(--ng-doc-border-color));
+  margin: var(--ng-doc-tabs-margin);
+  overflow: hidden;
 
-	--ng-doc-code-margin: 0;
-	--ng-doc-code-border-radius: 0;
-	--ng-doc-code-border: none;
-	--ng-doc-tab-group-header-background: var(--ng-doc-base-2);
-
-	ng-doc-icon {
-		margin-right: calc(var(--ng-doc-base-gutter) / 2);
-	}
+  --ng-doc-code-margin: 0;
+  --ng-doc-code-border-radius: 0;
+  --ng-doc-code-border: none;
+  --ng-doc-tab-group-background: var(--ng-doc-code-background);
+  --ng-doc-tab-group-header-background: var(--ng-doc-code-background);
+  --ng-doc-tab-group-tabs-background: var(--ng-doc-code-header-background, transparent);
 }

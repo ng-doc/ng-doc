@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $types: (
 	'string': (
 		background: var(--ng-doc-string-background),
@@ -29,11 +31,11 @@ $types: (
 	@each $name, $props in $types {
 		&[#{$attr}='#{$name}'] {
 			@if $background-prop {
-				#{$background-prop}: #{map-get($props, 'background')};
+				#{$background-prop}: #{map.get($props, 'background')};
 			}
 
 			@if $color-prop {
-				#{$color-prop}: #{map-get($props, 'color')};
+				#{$color-prop}: #{map.get($props, 'color')};
 			}
 		}
 	}

@@ -1,45 +1,200 @@
-@import '../mixins/headings';
-@import '../defaults';
+@use '../mixins/headings';
+@use '../defaults';
 
-$class: $ng-doc-element;
+$class: defaults.$ng-doc-element;
 
 article {
-	header#{$class} {
-		.ng-doc-page-tags {
-			display: flex;
-			align-items: flex-start;
-			flex-wrap: wrap;
-			margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
-			line-height: 22px;
-		}
+  header#{$class} {
+    .ng-doc-page-tags {
+      display: flex;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin-bottom: calc(var(--ng-doc-base-gutter) * 2);
+      line-height: 22px;
+    }
 
-		h1 {
-			margin-right: var(--ng-doc-base-gutter);
-		}
+    h1 {
+      margin-right: var(--ng-doc-base-gutter);
+    }
 
-		.ng-doc-header-details {
-			display: inline-flex;
-			flex-wrap: wrap;
-			align-items: baseline;
-			gap: var(--ng-doc-base-gutter);
-			margin-top: var(--ng-doc-base-gutter);
-			line-height: 18px;
+    .ng-doc-header-details {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: var(--ng-doc-base-gutter);
+      margin-top: var(--ng-doc-base-gutter);
+      line-height: 18px;
 
-			code {
-				--ng-doc-line-height: 18px;
-			}
+      code {
+        --ng-doc-line-height: 18px;
+      }
 
-			.ng-doc-header-details-label {
-				font-size: 11px;
-				font-weight: 600;
-				line-height: 18px;
-				margin-left: calc(var(--ng-doc-base-gutter) * 2);
-				opacity: 0.5;
+      .ng-doc-header-details-label {
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 18px;
+        margin-left: calc(var(--ng-doc-base-gutter) * 2);
+        opacity: 0.5;
 
-				&:first-child {
-					margin-left: 0;
-				}
-			}
-		}
-	}
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+}
+
+// Declaration details of today's API header (decorators, extends, implements, selectors): a
+// definition grid between two hairlines, with label-style names.
+article header#{$class} .ng-doc-table-wrapper:has(> table.ng-doc-api-table.no-padding) {
+  margin: var(--ng-doc-space-4) 0 var(--ng-doc-space-6);
+  padding: var(--ng-doc-space-2) 0;
+  border-block: 1px solid var(--ng-doc-border-color);
+
+  table.ng-doc-api-table.no-padding tbody tr td {
+    padding: 4px var(--ng-doc-space-4) 4px 0;
+    border-bottom: 0;
+    font-size: 14px;
+    line-height: 22px;
+    background: none;
+
+    &:first-child {
+      padding-left: 0;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      color: var(--ng-doc-text-muted);
+    }
+
+    // Long types wrap inside the column instead of scrolling it.
+    &:last-child code {
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+  }
+}
+
+// Symbol view (API pages with the declaration panel and the single members table).
+.ng-doc-api-description {
+  margin: var(--ng-doc-space-3) 0 var(--ng-doc-space-6);
+}
+
+// The declaration is a code block; on phones it wraps instead of scrolling sideways.
+.ng-doc-api-declaration {
+  margin: 0 0 var(--ng-doc-space-6);
+
+  @media (max-width: 640px) {
+    pre,
+    pre code {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+  }
+}
+
+// "Extended by": a label and wrapping identifier chips.
+.ng-doc-api-extended {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--ng-doc-space-2) var(--ng-doc-space-4);
+  margin: 0 0 var(--ng-doc-space-6);
+  font-size: 14px;
+
+  dt {
+    font-weight: 500;
+    line-height: 28px;
+    color: var(--ng-doc-text-muted);
+  }
+
+  dd {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+  }
+
+  code {
+    font-size: 13px;
+    line-height: 20px;
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+// Symbol details: a definition grid in the content column, stacked label and value in the rail.
+.ng-doc-api-details {
+  display: grid;
+  grid-template-columns: 128px minmax(0, 1fr);
+  gap: var(--ng-doc-space-2) var(--ng-doc-space-4);
+  margin: 0 0 var(--ng-doc-space-6);
+  padding: var(--ng-doc-space-3) 0;
+  border-block: 1px solid var(--ng-doc-border-color);
+  font-size: 14px;
+  line-height: 22px;
+
+  dt {
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 22px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ng-doc-text-muted);
+  }
+
+  dd {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  // The rail copy waits hidden in the content until the page moves it into the rail.
+  &[hidden] {
+    display: none;
+  }
+
+  &[data-ng-doc-variant='rail'] {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 0 var(--ng-doc-space-2);
+    border: 0;
+    font-size: 13px;
+    line-height: 18px;
+
+    dt {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0;
+      text-transform: none;
+      line-height: 18px;
+
+      &:not(:first-child) {
+        margin-top: var(--ng-doc-space-3);
+      }
+    }
+
+    dd {
+      margin-top: 4px;
+      gap: 4px;
+      color: var(--ng-doc-heading-color);
+    }
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+    gap: 2px;
+
+    dd {
+      margin-bottom: var(--ng-doc-space-2);
+    }
+  }
 }

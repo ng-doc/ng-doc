@@ -6,10 +6,11 @@ type DestroyFn = () => void;
 
 export class ObservableSet<T> {
   private collection: Set<T> = new Set();
-  private changes$: ReplaySubject<void> = new ReplaySubject<void>();
+  private changes$: ReplaySubject<void> = new ReplaySubject<void>(1);
 
   constructor(values?: T[]) {
     this.collection = new Set(values);
+    this.changes$.next();
   }
 
   get size(): number {

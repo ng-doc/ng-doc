@@ -1,6 +1,8 @@
 import { StructuredDoc } from '@ng-doc/builder';
 import { isPresent } from '@ng-doc/core/helpers/is-present';
 
+import { compareNavigationTitles } from './navigation-title-order';
+
 /**
  *
  * @param entries
@@ -17,6 +19,6 @@ export function sortNavigationEntries(entries: StructuredDoc[]): StructuredDoc[]
       return 1;
     }
 
-    return a.item.title.localeCompare(b.item.title);
+    return compareNavigationTitles(a.item.title, b.item.title);
   });
 }

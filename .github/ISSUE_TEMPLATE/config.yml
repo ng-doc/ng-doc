@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Documentation
+    url: https://ng-doc.com
+    about: Guides and the API reference for NgDoc.
+  - name: 💬 Questions
+    url: https://github.com/ng-doc/ng-doc/discussions/categories/q-a
+    about: Ask how to do something in GitHub Discussions.

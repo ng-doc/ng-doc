@@ -1,74 +1,71 @@
-name: '🐞 Bug Report'
-description: Report a bug
-title: '[Bug] '
-labels: 'Type: Bug'
+name: '🐞 Bug report'
+description: Something in NgDoc doesn't work as expected.
+labels: ['Type: Bug']
 assignees: skoropadas
 
 body:
-  - type: dropdown
-    id: is-regression
+  - type: markdown
     attributes:
-      label: Is this a regression?
-      options:
-        - 'Yes'
-        - 'No'
-        - "I don't know"
+      value: |
+        Thanks for reporting a bug! Please check the [existing issues](https://github.com/ng-doc/ng-doc/issues) first. A small reproduction is the fastest way to a fix.
+
+  - type: input
+    id: ngdoc-version
+    attributes:
+      label: NgDoc version
+      placeholder: e.g. 22.0.0
     validations:
       required: true
+
+  - type: input
+    id: angular-version
+    attributes:
+      label: Angular version
+      placeholder: e.g. 22.0.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: engine
+    attributes:
+      label: Engine
+      description: Which engine builds your docs? Your `angular.json` or `project.json` shows the builder.
+      options:
+        - Vite engine (vite-dev-server or vite-application builder, Vite plugin, or ng-doc CLI)
+        - Legacy builders (dev-server or application)
+        - Not sure
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Node version and OS
+      placeholder: e.g. Node 24.19.0 on macOS 15
 
   - type: textarea
     id: description
     attributes:
-      label: Description
-      placeholder: |
-        A clear and concise description of what the bug is.
-        What is the current behavior?
-        What is the expected behavior?
-        Please provide a link to a minimal reproduction of the problem with instructions.
+      label: What happened?
+      description: Tell us what you saw and what you expected instead. Screenshots are welcome.
     validations:
       required: true
 
   - type: textarea
-    id: exception-or-error
+    id: reproduction
     attributes:
-      label: Please provide the exception or error you saw
-      render: true
-
-  - type: dropdown
-    id: os
-    attributes:
-      label: OS
-      options:
-        - Unix (Linux, macOS, etc.)
-        - Windows
-        - iOS, Android, etc.
-        - Something else
-    validations:
-      required: true
-
-  - type: dropdown
-    id: browser
-    attributes:
-      label: Browser
-      options:
-        - Chrome
-        - Firefox
-        - Safari
-        - Edge
-        - IE
-        - Other
-
-  - type: input
-    id: node-version
-    attributes:
-      label: Node version
+      label: Reproduction
+      description: A link to a repository or StackBlitz, or the minimal steps to reproduce the bug.
+      placeholder: |
+        1. Create a page with ...
+        2. Run `ng serve` ...
+        3. See ...
     validations:
       required: true
 
   - type: textarea
-    id: other
+    id: logs
     attributes:
-      label: Anything else?
-      placeholder: |
-        Please provide any additional information that may be helpful in understanding the issue.
-        If you have a screenshot, attach it here.
+      label: Logs or error output
+      description: Paste the terminal or browser console output. It is formatted as code automatically.
+      render: shell

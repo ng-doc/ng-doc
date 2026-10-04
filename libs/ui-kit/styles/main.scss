@@ -1,5 +1,7 @@
+@use 'variables';
+@use '../directives/tooltip/tooltip';
+@use '../services/notify/notify';
+@use '../services/dialog/dialog';
+// A plain CSS import: Sass keeps it as is (it is not a Sass `@import`), and the application's
+// bundler resolves it. CSS imports are hoisted above the rules of the used modules.
 @import '@angular/cdk/overlay-prebuilt.css';
-@import 'variables';
-@import '../directives/tooltip/tooltip';
-@import '../services/notify/notify';
-@import '../services/dialog/dialog';

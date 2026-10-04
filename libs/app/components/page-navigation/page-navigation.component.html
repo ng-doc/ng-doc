@@ -1,20 +1,44 @@
-<div class="ng-doc-navigation-controls">
-  @if (prevPage) {
-    <a class="ng-doc-prev-page" [routerLink]="prevPage.route">
-      <div class="ng-doc-navigation-page-label" ng-doc-text size="small">
-        <ng-doc-icon icon="arrow-left" ngDocTextLeft></ng-doc-icon>
-        Previous
-      </div>
-      <div class="ng-doc-navigation-page-title" ng-doc-text>{{ prevPage.title }}</div>
-    </a>
-  }
-  @if (nextPage) {
-    <a class="ng-doc-next-page" [routerLink]="nextPage.route">
-      <div class="ng-doc-navigation-page-label" ng-doc-text size="small">
-        Next
-        <ng-doc-icon icon="arrow-right" ngDocTextRight></ng-doc-icon>
-      </div>
-      <div class="ng-doc-navigation-page-title" ng-doc-text>{{ nextPage.title }}</div>
-    </a>
-  }
-</div>
+@if (prevPage() || nextPage()) {
+  <nav class="ng-doc-navigation-controls" aria-label="Previous and next page">
+    @if (prevPage(); as page) {
+      <a class="ng-doc-prev-page" [routerLink]="page.route">
+        <span class="ng-doc-navigation-page-label">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true">
+            <path d="M19 12H5m6-6-6 6 6 6" />
+          </svg>
+          Previous
+        </span>
+        <span class="ng-doc-navigation-page-title">{{ page.title }}</span>
+      </a>
+    }
+    @if (nextPage(); as page) {
+      <a class="ng-doc-next-page" [routerLink]="page.route">
+        <span class="ng-doc-navigation-page-label">
+          Next
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true">
+            <path d="M5 12h14m-6-6 6 6-6 6" />
+          </svg>
+        </span>
+        <span class="ng-doc-navigation-page-title">{{ page.title }}</span>
+      </a>
+    }
+  </nav>
+}

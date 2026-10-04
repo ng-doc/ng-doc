@@ -1,34 +1,44 @@
-@if (container) {
+@if (container()) {
   <div class="ng-doc-demo-wrapper">
     <div class="ng-doc-demo-container">
       <div class="ng-doc-demo">
         <ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
       </div>
       <div class="ng-doc-demo-controls">
-        @if (!codeContent) {
-          <ng-doc-copy-button [text]="code">
+        @if (!codeContent()) {
+          <ng-doc-copy-button [text]="code()" label="Copy code">
             <ng-doc-icon icon="copy"></ng-doc-icon>
           </ng-doc-copy-button>
         }
         <button
+          type="button"
           ng-doc-button-icon
+          class="ng-doc-demo-code-toggle"
           [rounded]="false"
-          (click)="expanded = !expanded"
-          [ngDocTooltip]="tooltipContent">
-          <ng-template #tooltipContent>
-            {{ expandTooltipText }}
-          </ng-template>
+          [attr.aria-expanded]="expanded()"
+          [attr.aria-controls]="codeId"
+          [attr.aria-label]="expanded() ? 'Hide code' : 'Show code'"
+          (click)="toggle()"
+          [ngDocTooltip]="expanded() ? 'Hide code' : 'Show code'">
           <ng-doc-icon icon="code"></ng-doc-icon>
         </button>
       </div>
     </div>
-    <ng-doc-expander [content]="codeContent ? codeContent : expanderContent" [expanded]="expanded">
-      <ng-template #expanderContent>
-        <ng-doc-code [copyButton]="false">
-          <div [ngDocHighlighter]="code"></div>
-        </ng-doc-code>
-      </ng-template>
-    </ng-doc-expander>
+    <div
+      class="ng-doc-demo-code"
+      [id]="codeId"
+      [attr.role]="expanded() ? 'region' : null"
+      [attr.aria-label]="expanded() ? 'Code' : null">
+      <ng-doc-expander
+        [content]="codeContent() ? codeContent() : expanderContent"
+        [expanded]="expanded()">
+        <ng-template #expanderContent>
+          <ng-doc-code [copyButton]="false">
+            <div [ngDocHighlighter]="code()"></div>
+          </ng-doc-code>
+        </ng-template>
+      </ng-doc-expander>
+    </div>
   </div>
 } @else {
   <ng-content></ng-content>

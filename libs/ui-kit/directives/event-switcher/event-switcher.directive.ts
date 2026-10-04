@@ -1,43 +1,50 @@
-import { DestroyRef, Directive, ElementRef, inject, Input, NgZone, OnInit } from '@angular/core';
+import { DestroyRef, Directive, ElementRef, inject, input, NgZone, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { asArray } from '@ng-doc/core/helpers/as-array';
 import { Constructor } from '@ng-doc/core/types';
 import { toElement } from '@ng-doc/ui-kit/helpers';
-import { ngDocZoneDetach } from '@ng-doc/ui-kit/observables';
 import { BaseElement } from '@ng-doc/ui-kit/types';
 import { fromEvent, merge } from 'rxjs';
 
+/**
+ * Re-dispatches the given events of the host on another element, for example the events of an
+ * overlay on its origin.
+ */
 @Directive({
   selector: '[ngDocEventSwitcher]',
-  standalone: true,
 })
 export class NgDocEventSwitcherDirective implements OnInit {
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private ngZone = inject(NgZone);
-
-  @Input('ngDocEventSwitcher')
-  switchTo: BaseElement<HTMLElement> | null = null;
-
-  @Input()
-  events: string | string[] = [];
-
   private readonly destroyRef = inject(DestroyRef);
 
-  constructor() {}
+  /** The element that receives the events. */
+  readonly switchTo = input<BaseElement<HTMLElement> | null>(null, {
+    alias: 'ngDocEventSwitcher',
+  });
+
+  /** The names of the events to re-dispatch. They are read once, when the directive starts. */
+  readonly events = input<string | string[]>([]);
 
   ngOnInit(): void {
-    merge(
-      ...asArray(this.events).map((eventName: string) =>
-        fromEvent(this.elementRef.nativeElement, eventName),
-      ),
-    )
-      .pipe(ngDocZoneDetach(this.ngZone), takeUntilDestroyed(this.destroyRef))
-      .subscribe((event: Event) => {
-        if (this.switchTo && !event.defaultPrevented && event.bubbles) {
-          event.stopPropagation();
-          this.makeEvent(event, toElement(this.switchTo));
-        }
-      });
+    // The copies are dispatched outside the Angular zone: the listeners of the target decide
+    // whether they need change detection, as they would for a native event.
+    this.ngZone.runOutsideAngular(() =>
+      merge(
+        ...asArray(this.events()).map((eventName: string) =>
+          fromEvent(this.elementRef.nativeElement, eventName),
+        ),
+      )
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((event: Event) => {
+          const switchTo: BaseElement<HTMLElement> | null = this.switchTo();
+
+          if (switchTo && !event.defaultPrevented && event.bubbles) {
+            event.stopPropagation();
+            this.makeEvent(event, toElement(switchTo));
+          }
+        }),
+    );
   }
 
   private makeEvent(from: Event, target: Element): void {

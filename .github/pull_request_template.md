@@ -1,36 +1,15 @@
-## PR Checklist
+<!-- Thanks for contributing to NgDoc! CONTRIBUTING.md explains the setup, the checks and what reviewers look for: https://github.com/ng-doc/ng-doc/blob/main/CONTRIBUTING.md -->
 
-Please check if your PR fulfills the following requirements:
+## What and why
 
-- [ ] Tests for the changes have been added (for bug fixes/features)
-- [ ] Docs have been added/updated (for bug fixes/features)
+<!-- What does this pull request change, and why? -->
 
-## PR Type
+<!-- Link the issue it resolves, if there is one. -->
 
-What kind of change does this PR introduce?
+Closes #
 
-<!-- Please check the one that applies to this PR using "x". -->
+## Checklist
 
-- [ ] Bugfix
-- [ ] Feature
-- [ ] Code style update (formatting, local variables)
-- [ ] Refactoring (no functional changes, no API changes)
-- [ ] Build related changes
-- [ ] CI-related changes
-- [ ] Documentation content changes
-- [ ] Other... Please describe:
-
-## Issue Number
-
-<!-- Bugs and features must be linked to an issue. -->
-
-Issue Number: N/A
-
-## Does this PR introduce a breaking change?
-
-<!-- If this PR contains a breaking change, please describe the impact and migration path for existing applications below. -->
-
-- [ ] Yes
-- [ ] No
-
-## Other information
+- [ ] Tests are added or updated for the change.
+- [ ] Author-facing changes are documented in `apps/ng-doc/docs`.
+- [ ] The title follows Conventional Commits with a scope, for example `fix(builder): …`. A breaking change has a `BREAKING CHANGE:` footer with a migration path, never `!` in the title.

@@ -1,0 +1,16 @@
+{#-
+    The `@see` tags of a declaration; derived classes are listed by `symbol/extended-by.html.nunj`.
+-#}
+{%- set seeDocs = docNode | getJsDocTags('see') %}
+
+{%- if seeDocs.length %}
+    <section indexable="false">
+        <h2>See Also</h2>
+
+        <ul class="ng-doc-see-also">
+            {%- for see in seeDocs %}
+                <li>{{ see }}</li>
+            {%- endfor %}
+        </ul>
+    </section>
+{%- endif %}

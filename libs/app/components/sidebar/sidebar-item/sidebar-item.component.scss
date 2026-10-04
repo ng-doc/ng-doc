@@ -1,60 +1,98 @@
-@import '../../../../ui-kit/styles/mixins';
-
 :host {
   display: block;
 }
 
+// One row style for pages and category headers: 32px, 14px sans, an 8px inner padding and a
+// medium radius. The active page is tinted, with no accent bar.
 .ng-doc-sidebar-link {
-  @include ng-doc-heading-font();
   display: flex;
   align-items: center;
-  gap: var(--ng-doc-base-gutter);
-  padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-horizontal-padding)
-    var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
-  text-decoration: inherit;
-  cursor: pointer;
-  border-radius: var(--ng-doc-base-gutter);
+  gap: var(--ng-doc-space-2);
+  min-height: 32px;
+  padding: var(--ng-doc-sidebar-vertical-padding, var(--ng-doc-sidebar-vetical-padding))
+    var(--ng-doc-space-2)
+    var(--ng-doc-sidebar-vertical-padding, var(--ng-doc-sidebar-vetical-padding))
+    var(--ng-doc-sidebar-item-indent);
+  border-radius: var(--ng-doc-radius-md);
+  color: var(--ng-doc-text);
+  font-weight: 400;
+  text-decoration: none;
+  transition:
+    background var(--ng-doc-transition),
+    color var(--ng-doc-transition);
 
-  --ng-doc-icon-color: var(--ng-doc-text);
-  --ng-doc-dot-background: var(--ng-doc-base-4);
-  --ng-doc-font-weight: 400;
-
-  ng-doc-dot {
-    margin-right: var(--ng-doc-base-gutter);
-    z-index: 1;
-  }
-
-  &:hover:not(.active) {
-    background: var(--ng-doc-base-1);
+  &:hover {
+    background: var(--ng-doc-hover-background);
+    color: var(--ng-doc-heading-color);
   }
 
   &.active {
-    background: color-mix(in srgb, var(--ng-doc-primary) 7%, transparent);
-    --ng-doc-text: var(--ng-doc-primary);
-    --ng-doc-dot-background: var(--ng-doc-primary);
-
-    ng-doc-dot {
-      animation: animation 0.5s ease-out;
-
-      @keyframes animation {
-        0% {
-          transform: scale(1);
-        }
-
-        50% {
-          transform: scale(2);
-        }
-
-        100% {
-          transform: scale(1);
-        }
-      }
-    }
+    background: var(--ng-doc-primary-soft);
+    color: var(--ng-doc-primary-strong);
+    font-weight: 600;
   }
 
-  ng-doc-tag {
-    vertical-align: middle;
-    margin-left: var(--ng-doc-base-gutter);
-    font-weight: 600;
+  // Keyboard focus only, drawn inside the row so neighbouring rows do not cover it.
+  &:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--ng-doc-primary);
+  }
+}
+
+// A page at the top level sits beside the category headers, so it takes their style.
+:host([data-ng-doc-is-root='true']) .ng-doc-sidebar-link:not(.active) {
+  color: var(--ng-doc-heading-color);
+  font-weight: 600;
+}
+
+.ng-doc-sidebar-link-title {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+// Status badges annotate quietly: a soft chip in sentence case, pushed to the right.
+.ng-doc-sidebar-status {
+  --_status-hue: var(--ng-doc-success);
+
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  height: 18px;
+  margin-left: auto;
+  padding: 0 6px;
+  border-radius: var(--ng-doc-radius-full);
+  color: color-mix(
+    in oklab,
+    var(--_status-hue) var(--ng-doc-mix-strong),
+    var(--ng-doc-heading-color)
+  );
+  background: color-mix(
+    in oklab,
+    var(--_status-hue) var(--ng-doc-mix-chip),
+    var(--ng-doc-background)
+  );
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 500;
+  white-space: nowrap;
+
+  & + & {
+    margin-left: var(--ng-doc-space-1);
+  }
+
+  &[data-ng-doc-color='primary'] {
+    --_status-hue: var(--ng-doc-primary);
+  }
+
+  &[data-ng-doc-color='info'] {
+    --_status-hue: var(--ng-doc-info);
+  }
+
+  &[data-ng-doc-color='warning'] {
+    --_status-hue: var(--ng-doc-warning);
+  }
+
+  &[data-ng-doc-color='alert'] {
+    --_status-hue: var(--ng-doc-alert);
   }
 }

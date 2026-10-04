@@ -1,33 +1,51 @@
-@import '../../../../ui-kit/styles/mixins';
+:host {
+  position: relative;
+  display: block;
+  margin: 0;
+}
+
+// Rows are 32px, like the sidebar's. Deeper headings step in by one and a half indents.
+a {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 6px var(--ng-doc-space-2) 6px
+    calc(var(--ng-doc-space-2) + (var(--ng-doc-toc-indent) * 1.5) * (var(--_toc-level) - 1));
+  border-radius: var(--ng-doc-radius-md);
+  color: var(--ng-doc-text-muted);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition: color var(--ng-doc-transition);
+
+  &:hover {
+    color: var(--ng-doc-heading-color);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--ng-doc-primary);
+  }
+}
 
 :host {
-	display: flex;
-	margin: 0;
-	color: var(--ng-doc-text);
+  --_toc-level: 1;
+}
 
-	&[data-ng-doc-level='1'] a {
-		padding-left: var(--ng-doc-base-gutter);
-	}
+:host([data-ng-doc-level='2']) {
+  --_toc-level: 2;
+}
 
-	&[data-ng-doc-selected='true'] {
-		color: var(--ng-doc-primary);
-	}
+:host([data-ng-doc-level='3']) {
+  --_toc-level: 3;
+}
 
-	&:hover {
-		cursor: pointer;
+:host([data-ng-doc-level='4']),
+:host([data-ng-doc-level='5']),
+:host([data-ng-doc-level='6']) {
+  --_toc-level: 4;
+}
 
-		color: var(--ng-doc-primary);
-	}
-
-	a {
-		@include ng-doc-font();
-
-		padding: calc(var(--ng-doc-base-gutter) / 2);
-		color: inherit;
-		width: 100%;
-		text-decoration: none;
-		word-break: break-word;
-
-		--ng-doc-font-size: 14px;
-	}
+:host([data-ng-doc-selected='true']) a {
+  color: var(--ng-doc-primary-strong);
+  font-weight: 500;
 }

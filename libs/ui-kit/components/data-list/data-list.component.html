@@ -1,16 +1,17 @@
 <ng-doc-list>
-  @if (items && items.length) {
-    @for (item of items; track trackByFn($index, item)) {
-      <ng-doc-option [value]="defineValueFn(item)" [disabled]="itemDisabledFn(item)">
-        <ng-container *polymorpheusOutlet="itemContent as text; context: getContext(item)">
+  @if (items()?.length) {
+    @for (item of items(); track trackByFn()($index, item)) {
+      <ng-doc-option [value]="defineValueFn()(item)" [disabled]="itemDisabledFn()(item)">
+        <!-- The context literal is memoized per item, like a pure pipe. -->
+        <ng-container *polymorpheusOutlet="itemContent() as text; context: { $implicit: item }">
           {{ text }}
         </ng-container>
       </ng-doc-option>
     }
   } @else {
     <div class="ng-doc-empty-message" ng-doc-text>
-      @if (emptyContent) {
-        <ng-container *polymorpheusOutlet="emptyContent as text"> {{ text }} </ng-container>
+      @if (emptyContent()) {
+        <ng-container *polymorpheusOutlet="emptyContent() as text"> {{ text }} </ng-container>
       }
     </div>
   }

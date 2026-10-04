@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { NgDocCodeComponent } from '@ng-doc/app/components/code';
 import { NgDocCopyButtonComponent } from '@ng-doc/app/components/copy-button';
 import { NgDocCodeHighlighterDirective } from '@ng-doc/app/directives/code-highlighter';
@@ -11,6 +11,12 @@ import {
   NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
 
+let nextId = 0;
+
+/**
+ * A demo on the dot-grid stage with a copy button and a toggle that reveals its code below it
+ * (the rows of a playground use it).
+ */
 @Component({
   selector: 'ng-doc-demo-displayer',
   templateUrl: './demo-displayer.component.html',
@@ -26,28 +32,34 @@ import {
     NgDocCodeHighlighterDirective,
     NgDocCopyButtonComponent,
   ],
+  host: {
+    '[attr.data-ng-doc-border]': 'border()',
+  },
 })
 export class NgDocDemoDisplayerComponent {
-  @Input()
-  codeContent: NgDocContent = '';
+  /** Content shown when the code is revealed; when empty, the highlighted `code` is shown. */
+  readonly codeContent = input<NgDocContent>('');
 
-  @Input()
-  code: string = '';
+  /** Code of the demo, copied by the copy button and shown when there is no `codeContent`. */
+  readonly code = input<string>('');
 
-  @Input()
-  language: string = 'typescript';
+  /** Language of `code`. */
+  readonly language = input<string>('typescript');
 
-  @Input()
-  container: boolean = true;
+  /** Whether the demo is shown in the stage with its controls; otherwise it is shown as is. */
+  readonly container = input<boolean>(true);
 
-  @Input()
-  @HostBinding('attr.data-ng-doc-border')
-  border: boolean = true;
+  /** Whether the displayer draws its border. */
+  readonly border = input<boolean>(true);
 
-  @Input()
-  expanded: boolean = false;
+  /** Whether the code is revealed. */
+  readonly expanded = model<boolean>(false);
 
-  protected get expandTooltipText(): string {
-    return this.expanded ? 'Collapse' : 'Expand';
+  /** Id of the region that holds the code, for the toggle's `aria-controls`. */
+  protected readonly codeId: string = `ng-doc-demo-displayer-code-${nextId++}`;
+
+  /** Reveals or hides the code. */
+  toggle(): void {
+    this.expanded.update((expanded: boolean) => !expanded);
   }
 }

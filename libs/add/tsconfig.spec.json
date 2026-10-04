@@ -4,7 +4,8 @@
     "outDir": "../../dist/out-tsc",
     "allowJs": true,
     "module": "commonjs",
-    "types": ["jest", "node"]
+    "types": ["node"]
   },
-  "include": ["jest.config.ts", "src/**/*.test.ts", "src/**/*.spec.ts", "src/**/*.d.ts"]
+  "include": ["schematics/**/*.ts"],
+  "exclude": ["schematics/*/files/**/*"]
 }

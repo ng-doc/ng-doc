@@ -128,13 +128,14 @@ function migrateProperty(
         .filter((importDeclaration: ImportDeclaration) => {
           return (
             importDeclaration.getNamedImports().filter((importSpecifier: ImportSpecifier) => {
+              // Since ts-morph 27 the name of a named import may also be a string literal
+              // (`import { 'a-b' as ab }`); only an identifier has references to look up.
+              const nameNode = importSpecifier.getNameNode();
               return (
-                importSpecifier
-                  .getNameNode()
-                  .findReferencesAsNodes()
-                  .filter((node: Node) => {
-                    return isChildOf(node, property);
-                  }).length > 0
+                Node.isIdentifier(nameNode) &&
+                nameNode.findReferencesAsNodes().filter((node: Node) => {
+                  return isChildOf(node, property);
+                }).length > 0
               );
             }).length > 0
           );

@@ -1,4 +1,12 @@
 :host {
-	display: block;
-	width: 100%;
+  display: block;
+  width: 100%;
+}
+
+// A read-only combobox is a select: a chevron marks it.
+.ng-doc-combobox-chevron {
+  flex: none;
+  width: 24px;
+  transform: rotate(90deg);
+  --ng-doc-icon-color: var(--ng-doc-text-muted);
 }

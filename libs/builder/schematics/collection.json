@@ -1,25 +1,36 @@
 {
-	"$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
-	"schematics": {
-		"category": {
-			"description": "Generates NgDoc Category entity",
-			"factory": "./category/index#generate",
-			"schema": "./category/schema.json"
-		},
-		"page": {
-			"description": "Generates NgDoc Page entity",
-			"factory": "./page/index#generate",
-			"schema": "./page/schema.json"
-		},
-		"api": {
-			"description": "Generates NgDoc API entity",
-			"factory": "./api/index#generate",
-			"schema": "./api/schema.json"
-		},
-		"standalone-pages-migration": {
-			"description": "Moves all dependencies from ng-doc.dependencies.ts to ng-doc.page.ts",
-			"factory": "./migrations/standalone-pages/index#migrate",
-			"schema": "./migrations/standalone-pages/schema.json"
-		}
-	}
+  "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "category": {
+      "description": "Generates NgDoc Category entity",
+      "factory": "./category/index#generate",
+      "schema": "./category/schema.json"
+    },
+    "page": {
+      "description": "Generates NgDoc Page entity",
+      "factory": "./page/index#generate",
+      "schema": "./page/schema.json"
+    },
+    "api": {
+      "description": "Generates NgDoc API entity",
+      "factory": "./api/index#generate",
+      "schema": "./api/schema.json"
+    },
+    "migrate-to-vite": {
+      "description": "Moves a project from the legacy NgDoc builders to the Vite engine (or back with --revert)",
+      "factory": "./migrate-to-vite/index#migrateToVite",
+      "schema": "./migrate-to-vite/schema.json"
+    },
+    "vite-setup": {
+      "description": "Sets up the Vite engine for a project on Angular's application builder (run by ng add @ng-doc/add)",
+      "factory": "./vite-setup/index#viteSetup",
+      "schema": "./vite-setup/schema.json",
+      "hidden": true
+    },
+    "standalone-pages-migration": {
+      "description": "Moves all dependencies from ng-doc.dependencies.ts to ng-doc.page.ts",
+      "factory": "./migrations/standalone-pages/index#migrate",
+      "schema": "./migrations/standalone-pages/schema.json"
+    }
+  }
 }

@@ -1,5 +1,5 @@
 import { asArray } from '@ng-doc/core';
-import { combineLatest, from, map, ObservableInputTuple, of, switchMap } from 'rxjs';
+import { combineLatest, defer, from, map, ObservableInputTuple, of, switchMap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import {
@@ -56,16 +56,16 @@ export function factory<T, R, TCacheData>(
       /**
        * If there are no errors or pending states, call the provided function with the results of the successful states.
        * The result of the function is then mapped to a BuilderDone state.
-       */
-      const buildFnResult = buildFn(
-        ...(states as Array<BuilderDone<T>>).map(({ result }) => result),
-      );
-
-      /**
        * We don't use ObservableInput here because it opens the door to passing an Observable
        * as the result of the build function which might break the cache strategy, and final state.
        */
-      return from(Promise.resolve(buildFnResult)).pipe(
+      return defer(() =>
+        from(
+          Promise.resolve(
+            buildFn(...(states as Array<BuilderDone<T>>).map(({ result }) => result)),
+          ),
+        ),
+      ).pipe(
         map((result) => new BuilderDone(tag, result)),
         catchError((error: Error) => of(new BuilderError(tag, [error]))),
         handleCacheStrategy<R, TCacheData>(

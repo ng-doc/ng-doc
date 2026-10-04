@@ -3,6 +3,9 @@ import { NgDocButtonIconComponent } from '@ng-doc/ui-kit/components/button-icon'
 import { NgDocIconComponent } from '@ng-doc/ui-kit/components/icon';
 import { NgDocMagnifierComponent } from '@ng-doc/ui-kit/components/magnifier';
 
+/**
+ * Buttons that pan, zoom and reset an `ng-doc-magnifier`.
+ */
 @Component({
   selector: 'ng-doc-magnifier-controller',
   imports: [NgDocButtonIconComponent, NgDocIconComponent],
@@ -11,5 +14,6 @@ import { NgDocMagnifierComponent } from '@ng-doc/ui-kit/components/magnifier';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MagnifierControllerComponent {
-  magnifier = input.required<NgDocMagnifierComponent>();
+  /** The magnifier to control. */
+  readonly magnifier = input.required<NgDocMagnifierComponent>();
 }

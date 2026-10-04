@@ -2,3 +2,32 @@
   display: block;
   width: 100%;
 }
+
+// Value first, then the compact type chip and the default marker as muted text.
+.ng-doc-type-alias-value {
+  display: flex;
+  align-items: center;
+  gap: var(--ng-doc-space-2);
+  width: 100%;
+  min-width: 0;
+  font-family: var(--ng-doc-font-family);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ng-doc-heading-color);
+}
+
+.ng-doc-type-alias-value-text {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ng-doc-type-alias-default {
+  margin-left: auto;
+  // Keeps the marker off the select's chevron.
+  padding-right: var(--ng-doc-space-2);
+  font-size: 12px;
+  color: var(--ng-doc-text-muted);
+  white-space: nowrap;
+}

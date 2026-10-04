@@ -1,6 +1,25 @@
 {
   "name": "@ng-doc/app",
   "version": "0.0.1",
+  "description": "The NgDoc documentation site: layout, navigation, search, demos, playgrounds and API pages.",
+  "keywords": [
+    "angular",
+    "documentation",
+    "docs",
+    "ng-doc",
+    "markdown",
+    "api-documentation"
+  ],
+  "homepage": "https://ng-doc.com/",
+  "bugs": {
+    "url": "https://github.com/ng-doc/ng-doc/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ng-doc/ng-doc.git",
+    "directory": "libs/app"
+  },
+  "license": "MIT",
   "peerDependencies": {
     "@angular/common": ">=22.0.0 < 23.0.0",
     "@angular/core": ">=22.0.0 < 23.0.0",
@@ -16,7 +35,7 @@
     "@ng-doc/ui-kit": "0.0.0",
     "@orama/plugin-match-highlight": "2.0.17",
     "@orama/stemmers": "2.0.17",
-    "mermaid": "10.9.5"
+    "mermaid": "10.9.8"
   },
   "publishConfig": {
     "access": "public"

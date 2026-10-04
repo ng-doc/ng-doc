@@ -1,17 +1,11 @@
-@if (!isExternalLink) {
-  <a
-    [class]="classes"
-    [routerLink]="path"
-    [fragment]="fragment ? (fragment | decodeUriComponent) : undefined"
-    [queryParams]="queryParams">
+@if (usesRouterLink()) {
+  <a [class]="classes()" [routerLink]="routerLink()">
     <ng-container *ngTemplateOutlet="content"></ng-container>
   </a>
-}
-
-@if (isExternalLink) {
-  <a [class]="classes" [href]="path" target="_blank">
+} @else {
+  <a [class]="classes()" [href]="path()" [attr.target]="isExternalLink() ? '_blank' : null">
     <ng-container *ngTemplateOutlet="content"></ng-container>
-    @if (!isInCode) {
+    @if (isExternalLink() && !isInCode()) {
       <ng-doc-icon icon="external-link"></ng-doc-icon>
     }
   </a>

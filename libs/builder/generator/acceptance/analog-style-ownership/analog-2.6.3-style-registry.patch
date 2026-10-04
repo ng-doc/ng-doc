@@ -1,0 +1,186 @@
+--- a/src/lib/angular-vite-plugin.js
++++ b/src/lib/angular-vite-plugin.js
+@@ -107,7 +107,17 @@
+     const fileTransformMap = new Map();
+     let styleTransform;
+     let pendingCompilation;
++    let terminalCompilationError;
+     let compilationLock = Promise.resolve();
++    function reportCompilationError(error) {
++        try {
++            resolvedConfig.logger.error(error);
++        }
++        catch {
++            // A custom logger must not replace the original terminal compiler failure or create
++            // a second unhandled rejection from this best-effort reporting observer.
++        }
++    }
+     // Persistent Angular Compilation API instance. Kept alive across rebuilds so
+     // Angular can diff previous state and emit `templateUpdates` for HMR.
+     // Previously the compilation was recreated on every pass, which meant Angular
+@@ -198,7 +208,17 @@
+                 // Add/unlink changes the TypeScript program shape, not just file
+                 // contents, so we need to invalidate both include discovery and the
+                 // cached tsconfig root names before recompiling.
+-                const invalidateCompilationOnFsChange = createFsWatcherCacheInvalidator(invalidateFsCaches, invalidateTsconfigCaches, () => performCompilation(resolvedConfig), pluginOptions.include.map((glob) => `${normalizePath(resolve(pluginOptions.workspaceRoot))}${glob}`));
++                const invalidateCompilationOnFsChange = createFsWatcherCacheInvalidator(invalidateFsCaches, invalidateTsconfigCaches, (files) => {
++                    const compilation = performCompilation(resolvedConfig, files);
++                    pendingCompilation = compilation;
++                    void compilation.catch((error) => {
++                        // Add/unlink compilation has no legacy HMR hook promise for Vite to observe.
++                        // Report the failed candidate; the same rejection remains durable for the
++                        // next public transform and the last published style registry stays active.
++                        reportCompilationError(error);
++                    });
++                    return compilation;
++                }, pluginOptions.include.map((glob) => `${normalizePath(resolve(pluginOptions.workspaceRoot))}${glob}`));
+                 server.watcher.on('add', invalidateCompilationOnFsChange);
+                 server.watcher.on('unlink', invalidateCompilationOnFsChange);
+                 server.watcher.on('change', (file) => {
+@@ -317,9 +337,15 @@
+                         });
+                     });
+                     pendingCompilation = performCompilation(resolvedConfig, [
++                        ctx.file,
+                         ...mods.map((mod) => mod.id),
+                         ...updates,
+                     ]);
++                    if (updates.length === 0) {
++                        // Keep the rejected promise for the next public Angular transform, while
++                        // attaching an immediate observer so Node never treats it as unhandled.
++                        void pendingCompilation.catch(reportCompilationError);
++                    }
+                     if (updates.length > 0) {
+                         await pendingCompilation;
+                         pendingCompilation = null;
+@@ -771,6 +797,9 @@
+         }
+     }
+     async function performCompilation(config, ids) {
++        if (terminalCompilationError) {
++            throw terminalCompilationError;
++        }
+         let resolve;
+         const previousLock = compilationLock;
+         compilationLock = new Promise((r) => {
+@@ -778,7 +807,19 @@
+         });
+         try {
+             await previousLock;
++            if (terminalCompilationError) {
++                throw terminalCompilationError;
++            }
+             await _doPerformCompilation(config, ids);
++        }
++        catch (error) {
++            // Only completed analysis with an ordinary diagnostic is retryable. The rejected
++            // pending compilation continues blocking transforms until a real later pass succeeds.
++            if (error?.code === "NGDOC_ANALOG_COMPILATION_DIAGNOSTIC") {
++                throw error;
++            }
++            terminalCompilationError ??= error;
++            throw terminalCompilationError;
+         }
+         finally {
+             resolve();
+@@ -911,18 +952,20 @@
+                 augmentHostWithCaching(host, sourceFileCache);
+             }
+         }
++        let passInlineComponentStyles;
++        let passExternalComponentStyles;
+         if (!jit) {
+-            inlineComponentStyles = tsCompilerOptions['externalRuntimeStyles']
++            passInlineComponentStyles = tsCompilerOptions['externalRuntimeStyles']
+                 ? new Map()
+                 : undefined;
+-            externalComponentStyles = tsCompilerOptions['externalRuntimeStyles']
++            passExternalComponentStyles = tsCompilerOptions['externalRuntimeStyles']
+                 ? new Map()
+                 : undefined;
+             augmentHostWithResources(host, styleTransform, {
+                 inlineStylesExtension: pluginOptions.inlineStylesExtension,
+                 isProd,
+-                inlineComponentStyles,
+-                externalComponentStyles,
++                inlineComponentStyles: passInlineComponentStyles,
++                externalComponentStyles: passExternalComponentStyles,
+                 sourceFileCache,
+             });
+         }
+@@ -936,7 +979,13 @@
+         const oldBuilder = builder ?? ts.readBuilderProgram(tsCompilerOptions, host);
+         if (!jit) {
+             // Create the Angular specific program that contains the Angular compiler
+-            const angularProgram = new compilerCli.NgtscProgram(rootNames, tsCompilerOptions, host, nextProgram);
++            // External runtime style maps represent the complete current Angular program. Reusing the
++            // previous NgtscProgram can skip unchanged owners and therefore cannot reconstruct that
++            // complete registry after a pass-local reset.
++            const styleRegistryPreviousProgram = tsCompilerOptions['externalRuntimeStyles']
++                ? undefined
++                : nextProgram;
++            const angularProgram = new compilerCli.NgtscProgram(rootNames, tsCompilerOptions, host, styleRegistryPreviousProgram);
+             angularCompiler = angularProgram.compiler;
+             typeScriptProgram = angularProgram.compiler.getCurrentProgram();
+             augmentProgramWithVersioning(typeScriptProgram);
+@@ -1089,6 +1138,29 @@
+              */
+             outputFile = writeOutputFile;
+         }
++        // A pass with diagnostics is not a complete current-owner registry: a broken component
++        // can be absent while the browser still holds its last successful virtual style URL.
++        // Keep the prior published maps and reject this pass. A later real compilation can
++        // repair ordinary diagnostics; unexpected compiler exceptions still require a new factory.
++        if (!jit && tsCompilerOptions['externalRuntimeStyles']) {
++            const styleRegistryDiagnostics = [
++                ...builder.getSyntacticDiagnostics(),
++                ...(pluginOptions.disableTypeChecking ? [] : builder.getSemanticDiagnostics()),
++                ...(angularCompiler?.getDiagnostics() ?? []),
++            ];
++            const styleRegistryError = styleRegistryDiagnostics.find((diagnostic) => diagnostic.category === ts.DiagnosticCategory.Error);
++            if (styleRegistryError) {
++                throw Object.assign(new Error('[ANALOG_STYLE_REGISTRY_INVALID] ' + formatDiagnosticWithLocation(styleRegistryError)), {
++                    code: 'NGDOC_ANALOG_COMPILATION_DIAGNOSTIC',
++                });
++            }
++        }
++        // Publish a complete registry only after analysis, diagnostics, and emit setup return
++        // successfully. A thrown pass leaves the prior maps serving the last successful program.
++        if (!jit) {
++            inlineComponentStyles = passInlineComponentStyles;
++            externalComponentStyles = passExternalComponentStyles;
++        }
+     }
+ }
+ const COMPONENT_RESOURCE_EXT_REGEX = /\.(html|htm|css|scss|sass|less)$/;
+@@ -1100,6 +1172,7 @@
+         ? createFilter(includeGlobs)
+         : undefined;
+     let debounceTimer;
++    const modifiedFiles = new Set();
+     return (file) => {
+         const affectsProgram = (TS_EXT_REGEX.test(file) && !EXCLUDED_TS_EXT_REGEX.test(file)) ||
+             COMPONENT_RESOURCE_EXT_REGEX.test(file) ||
+@@ -1110,14 +1183,20 @@
+         }
+         invalidateFsCaches();
+         invalidateTsconfigCaches();
++        modifiedFiles.add(file);
+         // Coalesce event bursts (atomic-save add+unlink pairs, git branch
+-        // switches) into a single recompilation.
++        // switches) into a single recompilation without losing the physical
++        // identities needed to invalidate the source-file cache.
+         if (debounceTimer) {
+             clearTimeout(debounceTimer);
+         }
+         debounceTimer = setTimeout(() => {
+             debounceTimer = undefined;
+-            void performCompilation();
++            const files = [...modifiedFiles];
++            modifiedFiles.clear();
++            void performCompilation(files).catch(() => {
++                // The supplied callback records the terminal error and reports it through Vite.
++            });
+         }, debounceMs);
+     };
+ }

@@ -1,39 +1,81 @@
+@use '../../styles/mixins/demo-canvas';
+
+// A demo row: the demo centred on its canvas, the copy and code toggle at the right, and the code
+// below when revealed.
 :host {
-	display: flex;
-	flex-direction: column;
-	overflow: hidden;
-	--ng-doc-code-margin: 0;
-	--ng-doc-code-border-radius: 0;
-	--ng-doc-code-border: none;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  --ng-doc-code-margin: 0;
+  --ng-doc-code-border-radius: 0;
+  --ng-doc-code-border: none;
 
-	&[data-ng-doc-border='true'] {
-		border: var(--ng-doc-demo-displayer-border);
-		border-radius: var(--ng-doc-demo-displayer-border-radius);
-	}
+  // A standalone displayer draws its frame and background; inside a playground the inspector does.
+  &[data-ng-doc-border='true'] {
+    border: var(--ng-doc-demo-displayer-border);
+    border-radius: var(--ng-doc-demo-displayer-border-radius);
 
-	.ng-doc-demo-wrapper {
-		overflow: hidden;
+    .ng-doc-demo-container {
+      background-color: var(--ng-doc-demo-displayer-background, var(--ng-doc-background));
+    }
+  }
+}
 
-		.ng-doc-demo-container {
-			display: flex;
-			justify-content: flex-start;
-			width: 100%;
-			padding: calc(var(--ng-doc-base-gutter) * 2);
-			background: var(--ng-doc-demo-displayer-background, var(--ng-doc-base-0));
+// Extra height given to the host reaches the canvas.
+.ng-doc-demo-wrapper {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
 
-			.ng-doc-demo {
-				overflow: hidden;
-				width: 100%;
-			}
+// The demo sits on a canvas: a subtle dot grid, behind the demo only, so the code below it and
+// the rest of a playground's demo column read as a separate surface.
+.ng-doc-demo-container {
+  position: relative;
+  // The canvas takes any extra height its host gets (the last demo of a playground), so the
+  // revealed code sits at the bottom.
+  flex: 1 1 auto;
+  @include demo-canvas.demo-canvas;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 64px;
+  padding: var(--ng-doc-space-3) 84px;
+}
 
-			.ng-doc-demo-controls {
-				flex-shrink: 0;
-				margin-left: auto;
-			}
-		}
-	}
+.ng-doc-demo {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
 
-	ng-doc-code {
-		border-top: 1px solid var(--ng-doc-border-color);
-	}
+// Pinned to the top-right corner, so they stay put on a canvas that is taller than one row (the
+// last demo of a playground). On a one-row canvas (64px) this is also its vertical centre.
+.ng-doc-demo-controls {
+  position: absolute;
+  top: var(--ng-doc-space-4);
+  right: var(--ng-doc-space-3);
+  display: flex;
+  gap: 2px;
+}
+
+// The pressed code toggle uses the tint of an active control.
+.ng-doc-demo-code-toggle[aria-expanded='true'] {
+  background: var(--ng-doc-primary-soft);
+  --ng-doc-icon-color: var(--ng-doc-primary-strong);
+}
+
+.ng-doc-demo-code ng-doc-expander {
+  background: var(--ng-doc-code-background);
+}
+
+ng-doc-code {
+  border-top: 1px solid var(--ng-doc-border-color);
+}
+
+@container ng-doc-playground (max-width: 640px) {
+  .ng-doc-demo-container {
+    justify-content: flex-start;
+    padding: var(--ng-doc-space-3) 84px var(--ng-doc-space-3) var(--ng-doc-space-4);
+  }
 }

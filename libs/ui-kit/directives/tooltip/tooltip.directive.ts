@@ -4,12 +4,12 @@ import {
   DestroyRef,
   Directive,
   ElementRef,
-  EventEmitter,
   inject,
-  Input,
+  input,
   NgZone,
   OnDestroy,
-  Output,
+  output,
+  untracked,
   ViewContainerRef,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -19,18 +19,17 @@ import { tooltipCloseAnimation, tooltipOpenAnimation } from '@ng-doc/ui-kit/anim
 import { NgDocOverlayRef } from '@ng-doc/ui-kit/classes/overlay-ref';
 import { NgDocOverlayContainerComponent } from '@ng-doc/ui-kit/components/overlay-container';
 import { toElement } from '@ng-doc/ui-kit/helpers';
-import { ngDocZoneDetach, ngDocZoneOptimize } from '@ng-doc/ui-kit/observables';
 import { NgDocOverlayService } from '@ng-doc/ui-kit/services';
 import { NgDocOverlayStrategy } from '@ng-doc/ui-kit/services/overlay-strategy';
 import { BaseElement, NgDocContent, NgDocOverlayPosition } from '@ng-doc/ui-kit/types';
 import { NgDocOverlayUtils } from '@ng-doc/ui-kit/utils';
-import { EMPTY, fromEvent, merge, timer } from 'rxjs';
+import { EMPTY, fromEvent, merge, Subject, timer } from 'rxjs';
 import { filter, switchMap, takeUntil } from 'rxjs/operators';
 
+/** Shows its content in a tooltip while the pointer rests on the host. */
 @Directive({
   selector: '[ngDocTooltip]',
   exportAs: 'ngDocTooltip',
-  standalone: true,
 })
 export class NgDocTooltipDirective implements AfterViewInit, OnDestroy {
   private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -39,153 +38,162 @@ export class NgDocTooltipDirective implements AfterViewInit, OnDestroy {
   private readonly overlayService = inject(NgDocOverlayService);
   private readonly ngZone = inject(NgZone);
   private readonly scrollStrategy = inject(NgDocOverlayStrategy);
+  private readonly destroyRef = inject(DestroyRef);
 
-  @Input('ngDocTooltip')
-  content: NgDocContent = '';
+  /** What the tooltip renders: a string, a template or a component. */
+  readonly content = input<NgDocContent>('', { alias: 'ngDocTooltip' });
 
-  @Input()
-  delay: number = 500;
+  /** Milliseconds the pointer rests on the host before the tooltip opens. */
+  readonly delay = input<number>(500);
 
-  @Input()
-  displayOrigin?: BaseElement<HTMLElement>;
+  /** The element the tooltip points at; the host by default. */
+  readonly displayOrigin = input<BaseElement<HTMLElement>>();
 
-  @Input()
-  pointerOrigin?: BaseElement<HTMLElement>;
+  /** The element whose hover opens the tooltip; the host by default. Read once, after the view. */
+  readonly pointerOrigin = input<BaseElement<HTMLElement>>();
 
-  @Input()
-  positions: NgDocOverlayPosition | NgDocOverlayPosition[] = [
+  readonly positions = input<NgDocOverlayPosition | NgDocOverlayPosition[]>([
     'top-center',
     'bottom-center',
     'right-center',
     'left-center',
-  ];
+  ]);
 
-  @Input()
-  canOpen: boolean = true;
+  /** Whether hovering opens the tooltip. */
+  readonly canOpen = input<boolean>(true);
 
-  @Input()
-  panelClass: string | string[] = '';
+  readonly panelClass = input<string | string[]>('');
 
-  @Input()
-  minHeight: number | string = '';
+  readonly minHeight = input<number | string>('');
 
-  @Input()
-  maxHeight: number | string = '';
+  readonly maxHeight = input<number | string>('');
 
-  @Input()
-  height: number | string = '';
+  readonly height = input<number | string>('');
 
-  @Input()
-  minWidth: number | string = '';
+  readonly minWidth = input<number | string>('');
 
-  @Input()
-  maxWidth: number | string = '';
+  readonly maxWidth = input<number | string>('');
 
-  @Input()
-  width: number | string = '';
+  readonly width = input<number | string>('');
 
-  @Output()
-  beforeOpen: EventEmitter<void> = new EventEmitter<void>();
+  /** Emits when the tooltip starts opening. */
+  readonly beforeOpen = output<void>();
 
-  @Output()
-  afterOpen: EventEmitter<void> = new EventEmitter<void>();
+  /** Emits when the open animation has finished. */
+  readonly afterOpen = output<void>();
 
-  @Output()
-  beforeClose: EventEmitter<void> = new EventEmitter<void>();
+  /** Emits when the tooltip starts closing. */
+  readonly beforeClose = output<void>();
 
-  @Output()
-  afterClose: EventEmitter<void> = new EventEmitter<void>();
+  /** Emits when the tooltip has closed. */
+  readonly afterClose = output<void>();
 
   overlayRef: NgDocOverlayRef | null = null;
 
-  private readonly destroyRef = inject(DestroyRef);
+  private readonly opened$: Subject<NgDocOverlayRef> = new Subject<NgDocOverlayRef>();
 
-  constructor() {}
+  // The last opened overlay. hide() clears `overlayRef` at once, while the overlay stays attached
+  // until its close animation ends; destroying the directive disposes it.
+  private lastOverlayRef: NgDocOverlayRef | null = null;
 
   ngAfterViewInit(): void {
-    // Opens tooltip with delay
-    fromEvent(this.pointerOriginElement, 'mouseenter')
-      .pipe(
-        filter(() => this.canOpen && !this.isOpened),
-        switchMap(() =>
-          timer(this.delay).pipe(takeUntil(fromEvent(this.pointerOriginElement, 'mouseleave'))),
-        ),
-        ngDocZoneOptimize(this.ngZone),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe(() => this.show());
+    // Pointer events are frequent, so they are observed outside the Angular zone; only opening
+    // and closing re-enter it. Opening and closing work through signals and markForCheck, so a
+    // zoneless application renders them as well.
+    this.ngZone.runOutsideAngular(() => {
+      // Opens the tooltip after the delay, unless the pointer leaves first
+      fromEvent(this.pointerOriginElement, 'mouseenter')
+        .pipe(
+          filter(() => this.canOpen() && !this.isOpened),
+          switchMap(() =>
+            timer(this.delay()).pipe(takeUntil(fromEvent(this.pointerOriginElement, 'mouseleave'))),
+          ),
+          takeUntilDestroyed(this.destroyRef),
+        )
+        .subscribe(() => this.ngZone.run(() => this.show()));
 
-    // Closes tooltip when mouseleave was fired, and cancel closing if mouseenter was happened
-    merge(
-      fromEvent(this.pointerOriginElement, 'mouseleave'),
-      this.beforeOpen.pipe(
-        switchMap(() =>
-          isPresent(this.overlayRef)
-            ? fromEvent(this.overlayRef.overlayRef.overlayElement, 'mouseleave')
-            : EMPTY,
-        ),
-      ),
-    )
-      .pipe(
-        filter(() => this.isOpened),
-        switchMap(() =>
-          timer(50).pipe(
-            takeUntil(fromEvent(this.pointerOriginElement, 'mouseenter')),
-            takeUntil(
-              isPresent(this.overlayRef)
-                ? fromEvent(this.overlayRef.overlayRef.overlayElement, 'mouseenter')
-                : EMPTY,
-            ),
+      // Closes the tooltip when the pointer leaves the host or the tooltip, unless it comes back
+      // to either of them within 50 ms
+      merge(
+        fromEvent(this.pointerOriginElement, 'mouseleave'),
+        this.opened$.pipe(
+          switchMap((overlayRef: NgDocOverlayRef) =>
+            fromEvent(overlayRef.overlayRef.overlayElement, 'mouseleave'),
           ),
         ),
-        ngDocZoneOptimize(this.ngZone),
-        takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe(() => this.hide());
+        .pipe(
+          filter(() => this.isOpened),
+          switchMap(() =>
+            timer(50).pipe(
+              takeUntil(fromEvent(this.pointerOriginElement, 'mouseenter')),
+              takeUntil(
+                isPresent(this.overlayRef)
+                  ? fromEvent(this.overlayRef.overlayRef.overlayElement, 'mouseenter')
+                  : EMPTY,
+              ),
+            ),
+          ),
+          takeUntilDestroyed(this.destroyRef),
+        )
+        .subscribe(() => this.ngZone.run(() => this.hide()));
+    });
   }
 
   show(): void {
+    // Opening reads the inputs; `untracked` keeps an effect that calls show() from depending on
+    // them.
+    untracked(() => this.open());
+  }
+
+  private open(): void {
     if (!this.isOpened) {
-      this.overlayRef = this.overlayService.open(this.content, {
+      const overlayRef: NgDocOverlayRef = this.overlayService.open(this.content(), {
         origin: this.displayOriginElement,
         overlayContainer: NgDocOverlayContainerComponent,
         positionStrategy: this.overlayService.connectedPositionStrategy(
           this.displayOriginElement,
-          this.getPositions(this.positions),
+          this.getPositions(this.positions()),
         ),
         viewContainerRef: this.viewContainerRef,
         withPointer: true,
         contactBorder: true,
-        panelClass: ['ng-doc-tooltip', ...asArray(this.panelClass)],
-        height: this.height,
-        width: this.width,
-        minHeight: this.minHeight,
-        minWidth: this.minWidth,
-        maxHeight: this.maxHeight,
-        maxWidth: this.maxWidth,
+        panelClass: ['ng-doc-tooltip', ...asArray(this.panelClass())],
+        height: this.height(),
+        width: this.width(),
+        minHeight: this.minHeight(),
+        minWidth: this.minWidth(),
+        maxHeight: this.maxHeight(),
+        maxWidth: this.maxWidth(),
         scrollStrategy: this.scrollStrategy,
         disposeOnRouteNavigation: true,
         openAnimation: tooltipOpenAnimation,
         closeAnimation: tooltipCloseAnimation,
       });
+
+      this.overlayRef = overlayRef;
+      this.lastOverlayRef = overlayRef;
       this.beforeOpen.emit();
+      // The tooltip closes when the pointer leaves it; its element exists only once it is open.
+      this.ngZone.runOutsideAngular(() => this.opened$.next(overlayRef));
 
-      this.overlayRef
-        ?.afterOpen()
-        .pipe(ngDocZoneDetach(this.ngZone))
+      // The animations can finish after the directive is destroyed; its outputs must not emit
+      // then.
+      overlayRef
+        .afterOpen()
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => this.afterOpen.emit());
-
-      this.overlayRef
-        ?.beforeClose()
-        .pipe(ngDocZoneDetach(this.ngZone))
-        .subscribe(() => this.beforeClose.emit());
-
-      this.overlayRef
-        ?.afterClose()
-        .pipe(ngDocZoneDetach(this.ngZone))
+      overlayRef
+        .beforeClose()
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(() => {
+          this.beforeClose.emit();
+          this.hide();
+        });
+      overlayRef
+        .afterClose()
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => this.afterClose.emit());
-
-      this.overlayRef?.beforeClose().subscribe(() => this.hide());
 
       this.changeDetectorRef.markForCheck();
     }
@@ -204,21 +212,19 @@ export class NgDocTooltipDirective implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.overlayRef) {
-      this.overlayRef.overlayRef.dispose();
-    }
+    this.lastOverlayRef?.overlayRef.dispose();
   }
 
   private get pointerOriginElement(): HTMLElement {
-    return isPresent(this.pointerOrigin)
-      ? toElement(this.pointerOrigin)
-      : toElement(this.elementRef);
+    const pointerOrigin: BaseElement<HTMLElement> | undefined = this.pointerOrigin();
+
+    return isPresent(pointerOrigin) ? toElement(pointerOrigin) : toElement(this.elementRef);
   }
 
   private get displayOriginElement(): HTMLElement {
-    return isPresent(this.displayOrigin)
-      ? toElement(this.displayOrigin)
-      : toElement(this.elementRef);
+    const displayOrigin: BaseElement<HTMLElement> | undefined = this.displayOrigin();
+
+    return isPresent(displayOrigin) ? toElement(displayOrigin) : toElement(this.elementRef);
   }
 
   private getPositions(

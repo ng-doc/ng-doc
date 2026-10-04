@@ -1,20 +1,20 @@
-@import '../../styles/mixins';
+@use '../../styles/mixins';
 
 :host {
-	@include ng-doc-font();
-	display: block;
-	padding: var(
-		--ng-doc-option-padding,
-		var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2)
-	);
+  @include mixins.ng-doc-font();
+  display: block;
+  padding: var(
+    --ng-doc-option-padding,
+    var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2)
+  );
 
-	&:hover:not([data-disabled='true']),
-	&[data-ng-doc-hover='true']:not([data-disabled='true']) {
-		background: var(--ng-doc-hover-background);
-		cursor: pointer;
-	}
+  &:hover:not([data-disabled='true']),
+  &[data-ng-doc-hover='true']:not([data-disabled='true']) {
+    background: var(--ng-doc-hover-background);
+    cursor: pointer;
+  }
 
-	&[data-checked='true'] {
-		background-color: rgba(var(--ng-doc-primary-rgb), 0.2);
-	}
+  &[data-checked='true'] {
+    background-color: color-mix(in srgb, var(--ng-doc-primary) 20%, transparent);
+  }
 }

@@ -1,0 +1,7 @@
+{
+  "name": "@ng-doc/workspace-builders",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The docs site's Vite builders as Nx resolves them before dist exists: options schemas from the sources, implementations from dist/libs/builder, which the targets build first.",
+  "builders": "./builders.json"
+}

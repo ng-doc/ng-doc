@@ -1,6 +1,32 @@
-@import 'libs/app/styles/global.scss';
-@import 'libs/app/styles/themes/dark.scss';
+@use '../../../libs/app/styles/global';
+@use '../../../libs/app/styles/themes/dark';
 
 html {
   scroll-behavior: smooth;
+}
+
+// The brand lockup ships as a light and a dark file. Show the one that matches the theme, using the
+// same selectors as the dark theme itself.
+.brand-dark {
+  display: none;
+}
+
+@mixin brand-lockup-dark {
+  .brand-light {
+    display: none;
+  }
+
+  .brand-dark {
+    display: block;
+  }
+}
+
+:root[data-theme='dark'] {
+  @include brand-lockup-dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme='auto'] {
+    @include brand-lockup-dark;
+  }
 }

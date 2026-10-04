@@ -10,6 +10,7 @@ import {
   getObjectExpressionFromDefault,
   posix,
 } from '../../../helpers';
+import { stableGeneratedId } from '../../../helpers/stable-generated-id';
 import { NgDocBuilderContext } from '../../../interfaces';
 import { CATEGORY_PATTERN } from '../../variables';
 import { EntryMetadata, FileEntry } from '../interfaces';
@@ -38,7 +39,7 @@ export function createEntryMetadata<T extends FileEntry>(
   const isCategory = minimatch(entryPath, CATEGORY_PATTERN, { dot: true });
 
   return {
-    id: `entry${Math.random().toString(36).substring(2)}`,
+    id: `entry${stableGeneratedId(context.context.target?.project ?? path.relative(context.context.workspaceRoot, context.outDir), path.relative(context.context.workspaceRoot, entryPath), 'entry')}`,
     dir,
     dirName,
     route,

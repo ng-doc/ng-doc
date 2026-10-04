@@ -1,24 +1,36 @@
-@if (hasHeader) {
+@if (hasHeader()) {
   <div class="ng-doc-code-header">
-    <span class="ng-doc-code-file-name" ng-doc-text>
-      @if (icon) {
+    <span class="ng-doc-code-file-name">
+      @if (icon(); as icon) {
         <ng-doc-icon [customIcon]="icon"></ng-doc-icon>
       }
-      {{ name }}
+      <span class="ng-doc-code-file-name-text">{{ name() }}</span>
     </span>
+    @if (language(); as language) {
+      <span class="ng-doc-code-language">{{ language }}</span>
+    }
+    <span class="ng-doc-code-header-spacer"></span>
+    @if (range(); as range) {
+      <span class="ng-doc-code-range">{{ range }}</span>
+    }
+    @if (copyButton()) {
+      <ng-doc-copy-button class="ng-doc-code-header-copy" [text]="text">
+        <ng-doc-icon icon="copy"></ng-doc-icon>
+      </ng-doc-copy-button>
+    }
   </div>
 }
 <div class="ng-doc-code-body">
-  @if (html) {
-    <div class="ng-doc-code-wrapper" [ngDocPageProcessor]="html | ngDocSanitizeHtml"></div>
+  @if (html()) {
+    <div class="ng-doc-code-wrapper" [ngDocPageProcessor]="html() | ngDocSanitizeHtml"></div>
   } @else {
     <div class="ng-doc-code-wrapper">
       <ng-content></ng-content>
     </div>
   }
 
-  @if (copyButton) {
-    <ng-doc-copy-button class="ng-doc-copy-button" [text]="this.codeElement?.textContent ?? ''">
+  @if (copyButton() && !hasHeader()) {
+    <ng-doc-copy-button class="ng-doc-copy-button" [text]="text">
       <ng-doc-icon icon="copy"></ng-doc-icon>
     </ng-doc-copy-button>
   }

@@ -1,17 +1,9 @@
 :host {
-	display: block;
-	border: var(--ng-doc-demo-displayer-border);
-	border-radius: var(--ng-doc-demo-displayer-border-radius);
-	overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
 
-	&:not(:last-child) {
-		border-bottom: 0;
-		border-bottom-left-radius: 0;
-		border-bottom-right-radius: 0;
-	}
-
-	&:not(:first-child) {
-		border-top-left-radius: 0;
-		border-top-right-radius: 0;
-	}
+// When the row is given extra height, its demo's canvas takes it.
+ng-doc-demo-displayer {
+  flex: 1 1 auto;
 }

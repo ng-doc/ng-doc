@@ -1,30 +1,23 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  HostBinding,
-  inject,
-  Input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input } from '@angular/core';
 import { BaseElement, NgDocHorizontalAlign } from '@ng-doc/ui-kit/types';
 
+/** Content that floats over the edge of its container, aligned to one side. */
 @Component({
   selector: '[ng-doc-floated-content]',
   template: ` <ng-content></ng-content> `,
   styleUrls: ['./floated-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
+  host: {
+    '[attr.data-ng-doc-align]': 'alignTo()',
+  },
 })
 export class NgDocFloatedContentComponent {
-  @Input()
-  bindTo?: BaseElement<HTMLElement>;
+  readonly bindTo = input<BaseElement<HTMLElement>>();
 
-  @Input()
-  propertyName: string = '';
+  readonly propertyName = input<string>('');
 
-  @Input()
-  @HostBinding('attr.data-ng-doc-align')
-  alignTo: NgDocHorizontalAlign = 'left';
+  /** The side the content is aligned to. */
+  readonly alignTo = input<NgDocHorizontalAlign>('left');
 
   readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 }

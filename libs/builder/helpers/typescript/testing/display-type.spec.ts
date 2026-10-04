@@ -7,6 +7,7 @@ import {
   SourceFile,
   TypeAliasDeclaration,
 } from 'ts-morph';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { createProject } from '../create-project';
 import { displayReturnType, displayType } from '../display-type';

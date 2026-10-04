@@ -5,6 +5,11 @@
       "version": "18.0.0",
       "description": "Updates NgDoc to v18",
       "factory": "./ng-update/index#update"
+    },
+    "vite-engine-note-v22": {
+      "version": "22.0.0",
+      "description": "Keeps NgDoc projects on the legacy builders and prints how to move them to the Vite engine",
+      "factory": "./migrate-to-vite/update-note#updateNote"
     }
   }
 }

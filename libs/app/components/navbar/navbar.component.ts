@@ -1,88 +1,70 @@
 import {
-  afterNextRender,
+  booleanAttribute,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  DestroyRef,
-  HostBinding,
+  ElementRef,
   inject,
-  Input,
-  NgZone,
+  input,
+  viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgDocSearchComponent } from '@ng-doc/app/components/search';
-import { NgDocSidebarService } from '@ng-doc/app/services';
-import { NgDocButtonIconComponent, NgDocIconComponent, ngDocZoneOptimize } from '@ng-doc/ui-kit';
-import { WA_WINDOW } from '@ng-web-apis/common';
-import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
-import { combineLatest, fromEvent } from 'rxjs';
-import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { NgDocSidebarService } from '@ng-doc/app/services/sidebar';
+import { NgDocButtonIconComponent } from '@ng-doc/ui-kit';
 
 /**
- * Navbar component for ng-doc application
+ * Navbar of the NgDoc application: the header bar above the sidebar and the page.
+ *
+ * It lays out, from left to right: the menu button (only where the sidebar is an overlay), the
+ * content marked with `ngDocNavbarLeft` (for example the logo), the content marked with
+ * `ngDocNavbarCenter` (for example the section links, hidden at 1024px and below), the search, and
+ * the content marked with `ngDocNavbarRight` (for example the theme toggle).
+ * @example
+ * ```html
+ * <ng-doc-navbar>
+ *   <a ngDocNavbarLeft routerLink="/">My library</a>
+ *   <nav ngDocNavbarCenter aria-label="Primary"><a routerLink="/docs">Guides</a></nav>
+ *   <ng-doc-theme-toggle ngDocNavbarRight />
+ * </ng-doc-navbar>
+ * ```
  */
 @Component({
   selector: 'ng-doc-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PolymorpheusOutlet, NgDocSearchComponent, NgDocButtonIconComponent, NgDocIconComponent],
+  imports: [NgDocSearchComponent, NgDocButtonIconComponent],
+  host: {
+    '[attr.data-glass-effect]': 'glassEffect()',
+    '(document:keydown.escape)': 'closeSidebar()',
+  },
 })
 export class NgDocNavbarComponent {
-  private readonly window = inject<Window>(WA_WINDOW);
-  private readonly ngZone = inject(NgZone);
-  private readonly changeDetectorRef = inject(ChangeDetectorRef);
   protected readonly sidebarService = inject(NgDocSidebarService);
 
   /**
    * Show search input
    */
-  @Input()
-  search: boolean = true;
+  readonly search = input<boolean, unknown>(true, { transform: booleanAttribute });
 
   /**
-   * Show hamburger button
+   * Show the menu button that opens the sidebar where it is an overlay (900px and below).
    */
-  @Input()
-  hamburger: boolean = true;
+  readonly hamburger = input<boolean, unknown>(true, { transform: booleanAttribute });
 
   /**
    * Use glass effect for navbar
    */
-  @Input()
-  @HostBinding('attr.data-glass-effect')
-  glassEffect: boolean = true;
+  readonly glassEffect = input<boolean, unknown>(true, { transform: booleanAttribute });
+
+  private readonly menuButton = viewChild('menuButton', { read: ElementRef<HTMLButtonElement> });
 
   /**
-   * Indicates if navbar has border
+   * Closes the sidebar overlay and moves focus back to the menu button that opened it.
    */
-  @HostBinding('class.has-border')
-  hasBorder: boolean = false;
-
-  constructor() {
-    const destroyRef = inject(DestroyRef);
-
-    afterNextRender(() => {
-      combineLatest([
-        fromEvent(this.window, 'scroll').pipe(
-          map((e: Event) => ((e.target as Document)?.scrollingElement?.scrollTop ?? 0) > 0),
-          distinctUntilChanged(),
-          startWith(false),
-          ngDocZoneOptimize(this.ngZone),
-        ),
-        this.sidebarService.isExpanded(),
-      ])
-        .pipe(
-          map(
-            ([scrolled, isExpanded]: [boolean, boolean]) =>
-              scrolled || (isExpanded && this.sidebarService.isMobile),
-          ),
-          takeUntilDestroyed(destroyRef),
-        )
-        .subscribe((hasShadow: boolean) => {
-          this.hasBorder = hasShadow;
-          this.changeDetectorRef.markForCheck();
-        });
-    });
+  protected closeSidebar(): void {
+    if (this.sidebarService.expandedState() && this.sidebarService.isMobile) {
+      this.sidebarService.hide();
+      this.menuButton()?.nativeElement.focus();
+    }
   }
 }

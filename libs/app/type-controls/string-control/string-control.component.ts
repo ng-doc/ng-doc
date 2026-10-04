@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgDocTypeControl } from '@ng-doc/app/interfaces';
 import {
@@ -10,6 +10,7 @@ import {
 } from '@ng-doc/ui-kit';
 import { DIControl, DIControlSilencerDirective } from 'di-controls';
 
+/** The playground control of `string` inputs. */
 @Component({
   selector: 'ng-doc-string-control',
   templateUrl: './string-control.component.html',
@@ -29,15 +30,17 @@ export class NgDocStringControlComponent
   extends DIControl<string>
   implements NgDocTypeControl<string>
 {
-  @Input()
-  default?: string;
+  /** Default value of the input; clearing the field returns to it. */
+  readonly default = input<string | undefined>(undefined);
 
   constructor() {
     super();
   }
 
   changeModel(value: string | null): void {
-    this.updateModel(value === null && this.default ? this.default : value);
+    const defaultValue: string | undefined = this.default();
+
+    this.updateModel(value === null && defaultValue ? defaultValue : value);
   }
 
   override writeValue(value: string | null) {

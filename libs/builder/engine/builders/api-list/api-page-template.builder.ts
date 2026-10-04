@@ -36,7 +36,7 @@ export function apiPageTemplateBuilder(config: Config): Builder<TemplateBuilderO
   const declPath = declaration.getSourceFile().getFilePath();
   const pageKey = `${declPath}#${declaration.getName()}`;
   const cacheStrategy = {
-    id: `${pageKey}#ApiTemplate`,
+    id: `${tabMetadata.outPath}#ApiTemplate`,
     action: 'skip',
     files: () => [tabMetadata.outPath],
   } satisfies CacheStrategy<undefined, string>;
@@ -52,7 +52,7 @@ export function apiPageTemplateBuilder(config: Config): Builder<TemplateBuilderO
             tag: API_BUILDER_TAG,
             context,
             mainFilePath: declPath,
-            cacheId: `${declPath}#Api`,
+            cacheId: `${tabMetadata.outPath}#Api`,
             metadata: tabMetadata,
             getKeywords: buildApiKeywords(metadata),
             getContent: async () => {

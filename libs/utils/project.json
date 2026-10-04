@@ -6,25 +6,10 @@
   "tags": ["type:lib", "lib:utils"],
   "targets": {
     "pre-build": {
-      "executor": "@nx/rollup:rollup",
+      "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
       "options": {
-        "outputPath": "dist/libs/utils",
-        "project": "libs/utils/package.json",
-        "main": "libs/utils/index.ts",
-        "tsConfig": "libs/utils/tsconfig.lib.json",
-        "external": "all",
-        "assets": [
-          {
-            "glob": "**/*.md",
-            "input": "libs/utils",
-            "output": "./"
-          }
-        ],
-        "sourceMap": true,
-        "generateExportsField": true,
-        "compiler": "tsc",
-        "babelUpwardRootMode": true
+        "command": "rollup -c libs/utils/rollup.config.cjs"
       }
     },
     "build": {
@@ -49,10 +34,17 @@
       "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": ["default", "^production", "{workspaceRoot}/tools/vitest/**/*"],
+      "outputs": ["{workspaceRoot}/coverage/libs/utils"],
       "options": {
-        "jestConfig": "libs/utils/jest.config.ts"
+        "command": "vitest run --config libs/utils/vitest.config.ts"
+      },
+      "configurations": {
+        "ci": {
+          "command": "vitest run --config libs/utils/vitest.config.ts --coverage"
+        }
       }
     }
   }

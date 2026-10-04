@@ -1,30 +1,21 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgDocNavigation, NgDocPageNavigation } from '@ng-doc/app/interfaces';
-import {
-  NgDocIconComponent,
-  NgDocTextComponent,
-  NgDocTextLeftDirective,
-  NgDocTextRightDirective,
-} from '@ng-doc/ui-kit';
 
+/**
+ * Links to the previous and the next page, as two cards at the bottom of a guide.
+ */
 @Component({
   selector: 'ng-doc-page-navigation',
-  imports: [
-    NgDocIconComponent,
-    NgDocTextComponent,
-    NgDocTextLeftDirective,
-    NgDocTextRightDirective,
-    RouterLink,
-  ],
+  imports: [RouterLink],
   templateUrl: './page-navigation.component.html',
   styleUrls: ['./page-navigation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgDocPageNavigationComponent implements NgDocPageNavigation {
-  @Input({ required: true })
-  prevPage?: NgDocNavigation;
+  /** The page before this one in the sidebar. */
+  readonly prevPage = input<NgDocNavigation>();
 
-  @Input({ required: true })
-  nextPage?: NgDocNavigation;
+  /** The page after this one in the sidebar. */
+  readonly nextPage = input<NgDocNavigation>();
 }

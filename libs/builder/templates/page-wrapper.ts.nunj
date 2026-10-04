@@ -3,24 +3,43 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {Routes} from '@angular/router';
 import {NgDocPageWrapperComponent} from '@ng-doc/app';
 import {NgDocPageType} from '@ng-doc/core';
+{%- if headerContentSourceImport %}
+import {ɵwithNgDocContent} from '@ng-doc/app';
+import headerContentSource from '{{ headerContentSourceImport }}';
+{%- endif %}
 
+{%- if headerContentSourceImport %}
+const headerContent: string = '';
+{%- else %}
 const headerContent: string = `{{ headerContent | toTemplateString }}`
+{%- endif %}
 
 @Component({
   selector: 'ng-doc-page-wrapper-{{ id }}',
-  template: `<ng-doc-page-wrapper [routes]="routes" [headerContent]="headerContent" [hasBreadcrumb]="hasBreadcrumb" [pageType]="pageType"></ng-doc-page-wrapper>`,
+  template: `<ng-doc-page-wrapper [routes]="routes" [headerContent]="headerContent"{%- if headerContentSourceImport %} [headerContentSource]="headerContentSource"{%- endif %} [hasBreadcrumb]="hasBreadcrumb" [pageType]="pageType"></ng-doc-page-wrapper>`,
   imports: [NgDocPageWrapperComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageWrapperComponent {
     routes = routes[0].children!;
     headerContent = headerContent;
+    {%- if headerContentSourceImport %}
+    headerContentSource = headerContentSource;
+    {%- endif %}
     pageType: NgDocPageType = '{{ pageType }}';
     hasBreadcrumb = {{ hasBreadcrumb }};
 }
+{%- if headerContentSourceImport %}
+
+
+// The router shows the page only once its header has loaded, so the previous page stays on
+// screen instead of an empty page.
+const routes: Routes = [ɵwithNgDocContent({
+{%- else %}
 
 
 const routes: Routes = [{
+{%- endif %}
   path: '',
   component: PageWrapperComponent,
   title: `{{ metadata.title | toTemplateString }}`,
@@ -36,6 +55,10 @@ const routes: Routes = [{
     },
     {%- endfor %}
   ]
+{%- if headerContentSourceImport %}
+}, headerContentSource)]
+{%- else %}
 }]
+{%- endif %}
 
 export default routes;

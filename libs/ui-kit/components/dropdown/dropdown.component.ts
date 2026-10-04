@@ -8,18 +8,18 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  EventEmitter,
-  HostBinding,
-  HostListener,
+  DestroyRef,
   inject,
-  Input,
-  NgZone,
+  input,
   OnChanges,
   OnDestroy,
-  Output,
+  output,
+  signal,
   SimpleChanges,
+  untracked,
   ViewContainerRef,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { asArray } from '@ng-doc/core/helpers/as-array';
 import { dropdownOpenAnimation } from '@ng-doc/ui-kit/animations';
 import { NgDocOverlayHost } from '@ng-doc/ui-kit/classes/overlay-host';
@@ -27,121 +27,112 @@ import { NgDocOverlayRef } from '@ng-doc/ui-kit/classes/overlay-ref';
 import { NgDocOverlayContainerComponent } from '@ng-doc/ui-kit/components/overlay-container';
 import { mergeOverlayConfigs, toElement } from '@ng-doc/ui-kit/helpers';
 import { NgDocOverlayConfig, NgDocOverlayProperties } from '@ng-doc/ui-kit/interfaces';
-import { ngDocZoneDetach } from '@ng-doc/ui-kit/observables';
 import { NgDocOverlayService } from '@ng-doc/ui-kit/services/overlay';
 import { NgDocContent, NgDocOverlayOrigin, NgDocOverlayPosition } from '@ng-doc/ui-kit/types';
 import { NgDocOverlayUtils } from '@ng-doc/ui-kit/utils';
 
+/**
+ * Renders its content in an overlay connected to an origin: the `origin` input, or the
+ * surrounding `ngDocDropdownOrigin`.
+ */
 @Component({
   selector: 'ng-doc-dropdown',
   template: ``,
   styleUrls: ['./dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [NgDocOverlayService],
-  standalone: true,
+  host: {
+    '[attr.tabIndex]': 'isOpened ? 0 : -1',
+    '(focus)': 'focus()',
+  },
 })
 export class NgDocDropdownComponent implements OnChanges, OnDestroy {
   protected changeDetectorRef = inject(ChangeDetectorRef);
   protected overlayService = inject(NgDocOverlayService);
   protected viewContainerRef = inject(ViewContainerRef);
-  protected ngZone = inject(NgZone);
   protected overlayHost = inject<NgDocOverlayHost>(NgDocOverlayHost, { optional: true });
+  private readonly destroyRef = inject(DestroyRef);
 
-  @Input()
-  content: NgDocContent = '';
+  /** What the dropdown renders: a string, a template or a component. */
+  readonly content = input<NgDocContent>('');
 
-  @Input()
-  origin: CdkOverlayOrigin | Point | null = null;
+  /**
+   * The origin to connect to. When it changes to `null`, the dropdown stays connected to the
+   * previous origin.
+   */
+  readonly origin = input<CdkOverlayOrigin | Point | null>(null);
 
-  @Input()
-  closeIfOutsideClick: boolean = true;
+  readonly closeIfOutsideClick = input<boolean>(true);
 
-  @Input()
-  closeIfInnerClick: boolean = false;
+  readonly closeIfInnerClick = input<boolean>(false);
 
-  @Input()
-  withArrow: boolean = false;
+  readonly withArrow = input<boolean>(false);
 
-  @Input()
-  borderOffset: number = -8;
+  readonly borderOffset = input<number>(-8);
 
-  @Input()
-  panelClass: string | string[] = [];
+  readonly panelClass = input<string | string[]>([]);
 
-  @Input()
-  contactBorder: boolean = true;
+  readonly contactBorder = input<boolean>(true);
 
-  @Input()
-  hasBackdrop: boolean = false;
+  readonly hasBackdrop = input<boolean>(false);
 
-  @Input()
-  positions: NgDocOverlayPosition | NgDocOverlayPosition[] = [
+  readonly positions = input<NgDocOverlayPosition | NgDocOverlayPosition[]>([
     'bottom-center',
     'top-center',
     'right-center',
     'left-center',
-  ];
+  ]);
 
-  @Input()
-  minHeight: number | string = '';
+  readonly minHeight = input<number | string>('');
 
-  @Input()
-  maxHeight: number | string = '';
+  readonly maxHeight = input<number | string>('');
 
-  @Input()
-  height: number | string = '';
+  readonly height = input<number | string>('');
 
-  @Input()
-  minWidth: number | string = '';
+  readonly minWidth = input<number | string>('');
 
-  @Input()
-  maxWidth: number | string = '';
+  readonly maxWidth = input<number | string>('');
 
-  @Input()
-  width: number | string = '';
+  readonly width = input<number | string>('');
 
-  @Output()
-  beforeOpen: EventEmitter<void> = new EventEmitter<void>();
+  /** Emits when the dropdown starts opening. */
+  readonly beforeOpen = output<void>();
 
-  @Output()
-  afterOpen: EventEmitter<void> = new EventEmitter<void>();
+  /** Emits when the open animation has finished. */
+  readonly afterOpen = output<void>();
 
-  @Output()
-  beforeClose: EventEmitter<void> = new EventEmitter<void>();
+  /** Emits when the dropdown starts closing. */
+  readonly beforeClose = output<void>();
 
-  @Output()
-  afterClose: EventEmitter<void> = new EventEmitter<void>();
+  /** Emits when the dropdown has closed. */
+  readonly afterClose = output<void>();
 
   overlay: NgDocOverlayRef | null = null;
+
+  // The last origin bound to the input that was not null. It is recorded in ngOnChanges, so that
+  // every change is seen, including changes while the dropdown is closed.
+  private readonly lastOrigin = signal<CdkOverlayOrigin | Point | null>(null);
+
+  // The defaults the other inputs are compared with; declared after `lastOrigin`, which it reads.
   overlayProperties: NgDocOverlayProperties = this.getOverlayProperties();
 
-  constructor() {}
-
   ngOnChanges({ origin }: SimpleChanges): void {
-    if (origin && origin.currentValue !== origin.previousValue) {
-      if (!origin.currentValue) {
-        this.origin = origin.previousValue as CdkOverlayOrigin | Point | null;
-      }
+    if (origin?.currentValue) {
+      this.lastOrigin.set(origin.currentValue);
+    }
 
-      if (this.overlay) {
-        const positionStrategy: PositionStrategy | undefined =
-          this.overlay.overlayRef.getConfig().positionStrategy;
-        if (positionStrategy instanceof FlexibleConnectedPositionStrategy && this.currentOrigin) {
-          this.overlay.overlayRef.updatePositionStrategy(
-            positionStrategy.setOrigin(this.currentOrigin),
-          );
-        }
+    if (origin && origin.currentValue !== origin.previousValue && this.overlay) {
+      const positionStrategy: PositionStrategy | undefined =
+        this.overlay.overlayRef.getConfig().positionStrategy;
+      if (positionStrategy instanceof FlexibleConnectedPositionStrategy && this.currentOrigin) {
+        this.overlay.overlayRef.updatePositionStrategy(
+          positionStrategy.setOrigin(this.currentOrigin),
+        );
       }
     }
     this.updateOverlayPosition();
   }
 
-  @HostBinding('attr.tabIndex')
-  get tabIndex(): number {
-    return this.isOpened ? 0 : -1;
-  }
-
-  @HostListener('focus')
   focus(): void {
     this.overlay?.focus();
   }
@@ -151,29 +142,35 @@ export class NgDocDropdownComponent implements OnChanges, OnDestroy {
   }
 
   open(): void {
-    if (!this.overlay?.hasAttached) {
-      const config: NgDocOverlayConfig = this.getConfig();
-      this.overlay = this.overlayService.open(this.content, config);
-      this.beforeOpen.emit();
-      this.overlay
-        ?.afterOpen()
-        .pipe(ngDocZoneDetach(this.ngZone))
-        .subscribe(() => this.afterOpen.emit());
+    // Opening reads the inputs; `untracked` keeps an effect that calls open() from depending on
+    // them.
+    untracked(() => {
+      if (!this.overlay?.hasAttached) {
+        const config: NgDocOverlayConfig = this.getConfig();
+        const overlay: NgDocOverlayRef = this.overlayService.open(this.content(), config);
 
-      this.overlay
-        ?.beforeClose()
-        .pipe(ngDocZoneDetach(this.ngZone))
-        .subscribe(() => this.beforeClose.emit());
+        this.overlay = overlay;
+        this.beforeOpen.emit();
+        // The animations can finish after the dropdown is destroyed; its outputs must not emit then.
+        overlay
+          .afterOpen()
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe(() => this.afterOpen.emit());
+        overlay
+          .beforeClose()
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe(() => {
+            this.beforeClose.emit();
+            this.close();
+          });
+        overlay
+          .afterClose()
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe(() => this.afterClose.emit());
 
-      this.overlay
-        ?.afterClose()
-        .pipe(ngDocZoneDetach(this.ngZone))
-        .subscribe(() => this.afterClose.emit());
-
-      this.overlay.beforeClose().subscribe(() => this.close());
-
-      this.changeDetectorRef.markForCheck();
-    }
+        this.changeDetectorRef.markForCheck();
+      }
+    });
   }
 
   close(): void {
@@ -199,9 +196,11 @@ export class NgDocDropdownComponent implements OnChanges, OnDestroy {
   }
 
   private get currentOrigin(): NgDocOverlayOrigin | null {
-    return this.origin instanceof CdkOverlayOrigin
-      ? (this.origin.elementRef.nativeElement as HTMLElement)
-      : this.origin || this.overlayHost?.origin || null;
+    const origin: CdkOverlayOrigin | Point | null = this.lastOrigin();
+
+    return origin instanceof CdkOverlayOrigin
+      ? (origin.elementRef.nativeElement as HTMLElement)
+      : origin || this.overlayHost?.origin || null;
   }
 
   private getPositions(
@@ -216,7 +215,7 @@ export class NgDocDropdownComponent implements OnChanges, OnDestroy {
           : ['bottom-center', 'top-center', 'right-center', 'left-center'],
         origin,
         border * -1,
-        this.withArrow,
+        this.withArrow(),
       );
     } else {
       return !!positions && asArray(positions).length
@@ -243,11 +242,11 @@ export class NgDocDropdownComponent implements OnChanges, OnDestroy {
       scrollStrategy: this.overlayService.scrollStrategy().reposition(),
       viewContainerRef: this.viewContainerRef,
       openAnimation: dropdownOpenAnimation,
-      hasBackdrop: this.hasBackdrop,
+      hasBackdrop: this.hasBackdrop(),
       ...overlayProperties,
       panelClass: [
         'ng-doc-dropdown',
-        ...asArray(this.panelClass),
+        ...asArray(this.panelClass()),
         ...asArray(this.overlayHost?.panelClass),
       ],
     };
@@ -256,19 +255,19 @@ export class NgDocDropdownComponent implements OnChanges, OnDestroy {
   private getOverlayProperties(): NgDocOverlayProperties {
     return {
       origin: this.currentOrigin || undefined,
-      positions: this.positions,
-      closeIfOutsideClick: this.closeIfOutsideClick,
-      closeIfInnerClick: this.closeIfInnerClick,
-      withPointer: this.withArrow,
-      contactBorder: this.contactBorder,
-      borderOffset: this.borderOffset,
-      panelClass: this.panelClass,
-      width: this.width,
-      height: this.height,
-      minWidth: this.minWidth,
-      minHeight: this.minHeight,
-      maxWidth: this.maxWidth,
-      maxHeight: this.maxHeight,
+      positions: this.positions(),
+      closeIfOutsideClick: this.closeIfOutsideClick(),
+      closeIfInnerClick: this.closeIfInnerClick(),
+      withPointer: this.withArrow(),
+      contactBorder: this.contactBorder(),
+      borderOffset: this.borderOffset(),
+      panelClass: this.panelClass(),
+      width: this.width(),
+      height: this.height(),
+      minWidth: this.minWidth(),
+      minHeight: this.minHeight(),
+      maxWidth: this.maxWidth(),
+      maxHeight: this.maxHeight(),
       disposeOnNavigation: true,
       disposeOnRouteNavigation: true,
     };

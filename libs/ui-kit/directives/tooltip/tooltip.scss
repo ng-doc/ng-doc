@@ -1,4 +1,4 @@
-@import '../../styles/mixins';
+@use '../../styles/mixins';
 
 .ng-doc-tooltip {
 	--ng-doc-overlay-background: var(--ng-doc-tooltip-background, var(--ng-doc-base-10));
@@ -6,7 +6,7 @@
 	--ng-doc-overlay-border-radius: calc(var(--ng-doc-base-gutter) / 2);
 
 	.ng-doc-overlay-content {
-		@include ng-doc-font();
+		@include mixins.ng-doc-font();
 		padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
 		max-width: 400px;
 		max-height: 50vh;

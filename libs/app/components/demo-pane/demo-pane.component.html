@@ -1,27 +1,36 @@
-<ng-doc-pane [expanded]="options.expanded ?? false">
+<ng-doc-pane [expanded]="options().expanded ?? false">
   <ng-container *ngTemplateOutlet="codeContent" ngDocPaneBack></ng-container>
-  <ng-container *ngTemplateOutlet="demoTemplate" ngDocPaneFront></ng-container>
+  <div class="ng-doc-demo-pane-stage" ngDocPaneFront ngDocFullscreen #stage="ngDocFullscreen">
+    <ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
+    @if (!options().fullscreenRoute) {
+      <ng-doc-fullscreen-toggle class="ng-doc-demo-pane-fullscreen" [target]="stage" />
+    }
+  </div>
 </ng-doc-pane>
 
 <ng-template #demoTemplate>
-  @if (options.fullscreenRoute) {
-    <ng-doc-fullscreen-button [route]="options.fullscreenRoute!"></ng-doc-fullscreen-button>
-  } @else if (demo) {
-    <ng-container *ngComponentOutlet="demo; inputs: options.inputs"></ng-container>
+  @if (options().fullscreenRoute; as route) {
+    <ng-doc-fullscreen-button [route]="route"></ng-doc-fullscreen-button>
+  } @else if (demo(); as demo) {
+    <ng-container *ngComponentOutlet="demo; inputs: options().inputs"></ng-container>
   }
 </ng-template>
 
 <ng-template #codeContent>
-  @if (assets.length === 1) {
-    @for (asset of assets; track asset) {
-      <ng-doc-code [html]="asset.code"></ng-doc-code>
-    }
+  @if (assets().length === 1) {
+    <ng-doc-code [html]="assets()[0].code"></ng-doc-code>
   }
 
-  @if (assets.length > 1) {
-    <ng-doc-tab-group [openedTab]="options.defaultTab">
-      @for (asset of assets; track asset) {
-        <ng-doc-tab [id]="asset.title" [label]="asset.title" [content]="assetContent">
+  @if (assets().length > 1) {
+    <ng-doc-tab-group [openedTab]="options().defaultTab">
+      @for (asset of assets(); track asset.title) {
+        <ng-doc-tab [id]="asset.title" [label]="label" [content]="assetContent">
+          <ng-template #label>
+            @if (asset.icon) {
+              <ng-doc-icon [customIcon]="asset.icon"></ng-doc-icon>
+            }
+            {{ asset.title }}
+          </ng-template>
           <ng-template #assetContent>
             <ng-doc-code [html]="asset.code"></ng-doc-code>
           </ng-template>

@@ -1,9 +1,9 @@
 <div class="ng-doc-sidenav-wrapper">
-  <div class="ng-doc-sidenav">
-    <ng-container *polymorpheusOutlet="sidebar"></ng-container>
+  <div class="ng-doc-sidenav" id="ng-doc-sidenav">
+    <ng-container *polymorpheusOutlet="sidebar()"></ng-container>
   </div>
   <div class="ng-doc-sidenav-content">
-    @if (opened && hasBackdrop) {
+    @if (opened() && hasBackdrop()) {
       <div class="ng-doc-backdrop" animate.enter="backdrop-enter" (click)="closeEvent.emit()"></div>
     }
 

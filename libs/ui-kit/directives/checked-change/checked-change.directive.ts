@@ -1,42 +1,36 @@
-import {
-  Directive,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  inject,
-  Input,
-  Output,
-  Renderer2,
-} from '@angular/core';
+import { Directive, input, linkedSignal, output } from '@angular/core';
 
+/**
+ * Binds the checked state of a native checkbox: `true`, `false`, or `null` for the
+ * indeterminate state. Use `[ngDocChecked]` and `(ngDocCheckedChange)`, or both at once with
+ * `[(ngDocChecked)]`.
+ */
 @Directive({
   selector: 'input[ngDocChecked], input[ngDocCheckedChange]',
-  standalone: true,
+  host: {
+    '[checked]': '!!state()',
+    '[indeterminate]': 'state() === null',
+    '(change)': 'onChange($event.target)',
+  },
 })
 export class NgDocCheckedChangeDirective {
-  private readonly element = inject<ElementRef<HTMLInputElement>>(ElementRef);
-  private readonly renderer = inject(Renderer2);
+  // An input and a separate output rather than `model()`: the change event carries the user's
+  // choice, which is never indeterminate, so it stays a `boolean`.
+  /** Checked state; `null` shows the checkbox as indeterminate. */
+  // eslint-disable-next-line @angular-eslint/prefer-signal-model
+  readonly ngDocChecked = input<boolean | null>(false);
 
-  @Input()
-  set ngDocChecked(checked: null | boolean) {
-    this.updateProperty('checked', checked || false);
-    this.updateProperty('indeterminate', checked === null);
-  }
+  /** Emits the new checked state when the user changes it. */
+  readonly ngDocCheckedChange = output<boolean>();
 
-  @Output()
-  readonly ngDocCheckedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+  /** What the checkbox shows: the bound state until the user changes it. */
+  protected readonly state = linkedSignal<boolean | null>(() => this.ngDocChecked());
 
-  constructor() {
-    this.updateProperty('checked', false);
-  }
+  protected onChange(target: EventTarget | null): void {
+    const checked: boolean = target instanceof HTMLInputElement ? target.checked : false;
 
-  @HostListener('change', ['$event.target'])
-  onChange(target: EventTarget | null): void {
-    this.updateProperty('indeterminate', false);
-    this.ngDocCheckedChange.emit(target instanceof HTMLInputElement ? target.checked : false);
-  }
-
-  private updateProperty(property: 'checked' | 'indeterminate', value: boolean): void {
-    this.renderer.setProperty(this.element.nativeElement, property, value);
+    // The user's choice ends the indeterminate state, even when the bound value stays `null`.
+    this.state.set(checked);
+    this.ngDocCheckedChange.emit(checked);
   }
 }

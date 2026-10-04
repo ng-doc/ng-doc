@@ -1,9 +1,10 @@
-import { NgDocPageType, uid } from '@ng-doc/core';
+import { NgDocPageType } from '@ng-doc/core';
 import path from 'path';
 import { finalize } from 'rxjs';
 
 import { editFileInRepoUrl, UTILS, viewFileInRepoUrl } from '../../../helpers';
 import { buildIndexes } from '../../../helpers/build-indexes';
+import { stableGeneratedId } from '../../../helpers/stable-generated-id';
 import { NgDocBuilderContext } from '../../../interfaces';
 import { AsyncFileOutput, Builder, IndexStore, keywordsStore } from '../../core';
 import { renderTemplate } from '../../nunjucks';
@@ -42,8 +43,11 @@ export function pageComponentBuilder<T>(
     lineNumber,
   } = config;
   let removeIndexes: () => void = () => {};
+  let disposed = false;
+  let revision = 0;
 
   return builder((html: string) => {
+    const current = ++revision;
     removeIndexes();
 
     // Replace keywords in the template at the end of the build process
@@ -75,13 +79,20 @@ export function pageComponentBuilder<T>(
           route: metadata.absoluteRoute(),
         });
 
-        removeIndexes = IndexStore.add(...indexes);
+        if (!disposed && revision === current) {
+          removeIndexes = IndexStore.add(...indexes);
+        }
 
         return {
           filePath: metadata.outPath,
           content: renderTemplate('./page.ts.nunj', {
             context: {
-              id: uid(),
+              id: stableGeneratedId(
+                context.context.target?.project ??
+                  path.relative(context.context.workspaceRoot, context.outDir),
+                path.relative(context.context.workspaceRoot, metadata.outPath),
+                'page-component',
+              ),
               content,
               metadata,
               editSourceFileUrl,
@@ -98,5 +109,11 @@ export function pageComponentBuilder<T>(
         throw new Error(`Failed to build page: file:///${metadata.path}`, { cause });
       }
     };
-  }).pipe(finalize(() => removeIndexes));
+  }).pipe(
+    finalize(() => {
+      disposed = true;
+      revision++;
+      removeIndexes();
+    }),
+  );
 }

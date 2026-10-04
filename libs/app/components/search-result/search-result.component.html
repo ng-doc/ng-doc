@@ -1,4 +1,4 @@
-@if (groupedResult | keyvalue; as results) {
+@if (groupedResult() | keyvalue; as results) {
   <div class="ng-doc-search-result-wrapper">
     @if (results.length) {
       @for (item of results; track item) {

@@ -1,6 +1,8 @@
 import { NgDocPageKeyword } from '@ng-doc/builder';
 import { NgDocPageAnchor } from '@ng-doc/core';
 
+import { keywordHeadingTitle } from './keyword-heading-title';
+
 /**
  *
  * @param key
@@ -17,7 +19,7 @@ export function constructPageKeyword(
   return anchor.type === 'heading'
     ? {
         key: `${key}#${anchor.anchor}`,
-        title: `${title} [${anchor.title}]`,
+        title: `${title} [${keywordHeadingTitle(anchor.title)}]`,
         path: `${path}#${anchor.anchorId}`,
       }
     : {
