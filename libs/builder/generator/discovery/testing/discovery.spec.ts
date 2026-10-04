@@ -1641,3 +1641,36 @@ test('demoProviders must be one import of a file that resolves', async () => {
     await services.runtime.dispose();
   }
 });
+
+test('shiki.langs modules and demoProviders work together in one configuration', async () => {
+  const f = fixture();
+  const services = createDiscoveryServices();
+  // The configuration imports a real `@shikijs/langs` module (static imports, bundled and
+  // evaluated) and names the demo providers with a dynamic import (kept out of the bundle).
+  symlinkSync(path.resolve('node_modules'), join(f.root, 'node_modules'), 'dir');
+  const module = join(f.root, 'src', 'demo.providers.ts');
+  write(module, `throw new Error('evaluated');\nexport default [];\n`);
+  const themes = "themes: { light: 'css-variables', dark: 'css-variables' }";
+  try {
+    const digests: string[] = [];
+    for (const demo of ['', `, demoProviders: () => import('./src/demo.providers')`]) {
+      write(
+        f.config,
+        `import angularTs from '@shikijs/langs/angular-ts';\n` +
+          `export default { docsPath: '.docs', shiki: { ${themes}, langs: [angularTs] }${demo} };`,
+      );
+      const result = await services.discovery.discover(f.request, new AbortController().signal);
+      expect(result.diagnostics, demo).toEqual([]);
+      const configuration = result.value!.configuration;
+      expect(
+        configuration.shikiLangs?.map((item) => item.name),
+        demo,
+      ).toContain('angular-ts');
+      expect(configuration.demoApplication, demo).toEqual(demo ? { providers: module } : undefined);
+      digests.push(configuration.digest);
+    }
+    expect(digests[0]).not.toBe(digests[1]);
+  } finally {
+    await services.runtime.dispose();
+  }
+});
