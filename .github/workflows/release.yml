@@ -20,6 +20,10 @@ jobs:
   release:
     runs-on: ubuntu-latest
     needs: [lint, test]
+    # id-token: npm trusted publishing (OIDC). Git and GitHub steps use the SEMANTIC_RELEASE token.
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -58,5 +62,7 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE }}
+          # Fallback only: packages publish through trusted publishing. Remove with the secret once a
+          # release shows provenance.
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
