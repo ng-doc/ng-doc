@@ -11,6 +11,7 @@ import {
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import ts from 'typescript';
 import { afterEach, expect, test, vi } from 'vitest';
 
 import { createOutputCommitter } from '../artifacts';
@@ -659,6 +660,65 @@ test('real demo resources are compiled, linked and refreshed through the full se
       .flatMap((item) => item.outputs)
       .find((item) => item.path.endsWith('/demo-assets.ts'))!.content,
   ).toContain('Changed external body');
+}, 60000);
+
+/** The text a browser shows for highlighted HTML: tags dropped, character references decoded. */
+function shownText(html: string): string {
+  return html
+    .replace(/<[^>]*>/g, '')
+    .replace(/&#x([0-9a-f]+);/gi, (_, code: string) => String.fromCodePoint(parseInt(code, 16)))
+    .replace(/&#(\d+);/g, (_, code: string) => String.fromCodePoint(Number(code)))
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;|&apos;/g, "'")
+    .replace(/&amp;/g, '&');
+}
+
+test('demo asset code with backslashes compiles and shows exactly its source', async () => {
+  const f = fixture();
+  symlinkSync(
+    path.resolve(import.meta.dirname, '../../../../node_modules'),
+    path.join(f.root, 'node_modules'),
+    'dir',
+  );
+  const component = [
+    "import { Component } from '@angular/core';",
+    '',
+    "@Component({ selector: 'fixture-demo', template: '<b>x</b>', styleUrls: ['./demo.scss'] })",
+    'export class Demo {',
+    '  readonly digits = /\\d+/;',
+    "  readonly lines = 'a\\nb';",
+    "  readonly slash = '\\\\';",
+    '  readonly tick = `${this.slash}\\``;',
+    '}',
+    '',
+  ].join('\n');
+  const style = '.crumb::after {\n  content: "\\203A";\n}\n';
+  f.write('docs/guide/demo.ts', component);
+  f.write('docs/guide/demo.scss', style);
+  f.write(
+    'docs/guide/ng-doc.page.ts',
+    `import { Demo } from './demo'; const page = { title:'Guide', route:'guide', mdFile:'./index.md', demos:{Demo} }; export default page;`,
+  );
+  f.write('docs/guide/index.md', '# Guide\n\n{{ NgDocActions.demo("Demo") }}');
+  const cold = success(await compile(f.create()));
+  const output = cold.artifacts
+    .flatMap((item) => item.outputs)
+    .find((item) => item.path.endsWith('/demo-assets.ts'))!;
+  const transpiled = ts.transpileModule(output.content, {
+    reportDiagnostics: true,
+    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+  });
+  // `\203A` in a template literal was a syntax error ("Octal escape sequences are not allowed").
+  expect(transpiled.diagnostics ?? []).toEqual([]);
+  const exports: { demoAssets?: Record<string, Array<{ title: string; code: string }>> } = {};
+  new Function('exports', 'require', transpiled.outputText)(exports, () => ({}));
+  const shown = Object.fromEntries(
+    exports.demoAssets!['Demo'].map((asset) => [asset.title, shownText(asset.code)]),
+  );
+  // Before the fix `/\d+/` showed as `/d+/` and `'a\nb'` with a real line break.
+  expect(Object.values(shown).map((code) => code.trim())).toEqual([component.trim(), style.trim()]);
 }, 60000);
 
 test('compiler and toolchain changes explain incompatible cached fingerprints', async () => {

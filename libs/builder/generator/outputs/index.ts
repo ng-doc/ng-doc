@@ -152,8 +152,15 @@ function moduleSpecifier(fromDirectory: string, target: string): string {
   return specifier.startsWith('.') ? specifier : `./${specifier}`;
 }
 
+/**
+ * The body of a template literal that evaluates to `value`. The backslash goes first: unescaped,
+ * `\d` would evaluate to `d` and `\n` to a line break, `\203A` would not compile (no octal
+ * escapes in template literals), and the escapes added below must not be escaped again.
+ * @param value - The text to embed.
+ */
 function templateString(value: unknown): string {
   return String(value ?? '')
+    .replace(/\\/g, '\\\\')
     .replace(/`/g, '\\`')
     .replace(/\$\{/g, '\\${')
     .replace(/{/g, '\\{')
