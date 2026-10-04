@@ -4,7 +4,13 @@ import { Selector, TagSelector } from 'css-what/lib/es/types';
 import { Node, NodeTag, parser } from 'posthtml-parser';
 import { render } from 'posthtml-render';
 
-import { asArray, isNodeTag, isPresent, objectKeys } from '../helpers';
+// Import the helpers from their own modules, not from the `helpers` barrel: the barrel also
+// re-exports `buildPlaygroundDemoTemplate`, which imports this class, and the cycle makes
+// the bundlers of `@ng-doc/utils` report a circular dependency.
+import { asArray } from '../helpers/as-array';
+import { isNodeTag } from '../helpers/is-node-tag';
+import { isPresent } from '../helpers/is-present';
+import { objectKeys } from '../helpers/object-keys';
 
 export class NgDocHtmlParser {
   private readonly parsedHTML: Node[];
