@@ -1,4 +1,6 @@
 import { EventEmitter } from 'node:events';
+import { mkdir, mkdtemp, realpath, rm, writeFile } from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
 import type { HmrContext } from 'vite';
 import { describe, expect, it, vi } from 'vitest';
@@ -183,5 +185,75 @@ describe('plugin initialization disposal', () => {
     ) as Array<Record<string, any>>;
     for (const id of ['virtual:ng-doc/content/page', '/@ng-doc/virtual/content/page'])
       expect(() => plugin.resolveId(id)).toThrow(/^\[NGDOC_VIRTUAL_TRANSPORT\] .*was removed/);
+  });
+
+  it('generates for the demo application before the build starts, once, and reads its pages', async () => {
+    const workspace = await realpath(await mkdtemp(path.join(os.tmpdir(), 'ng-doc-vite-demo-')));
+    const output = path.join(workspace, 'generated');
+    await mkdir(output, { recursive: true });
+    const buildOnce = vi.fn(
+      async (): Promise<BuildResult> => ({
+        status: 'success',
+        generation: 1,
+        snapshot: {
+          projectId: 'options',
+          revision: 'r1',
+          artifacts: [],
+          globalKeywords: [],
+          remoteKeywords: [],
+          configuration: {
+            outputRoot: output,
+            cacheRoot: path.join(workspace, 'cache'),
+            assetDirectory: 'assets',
+            themes: { light: 'css-variables', dark: 'css-variables' },
+            digest: 'digest',
+          },
+        },
+        manifest: {
+          schemaVersion: 1,
+          projectId: 'options',
+          generation: 1,
+          revision: 'r1',
+          files: [],
+        },
+        diagnostics: [],
+        whyRebuilt: [],
+      }),
+    );
+    bootstrap.create.mockReset();
+    bootstrap.create.mockReturnValue({ buildOnce, dispose: vi.fn() } as unknown as BuildSession);
+    try {
+      const [plugin] = createNgDocVitePlugin(pluginOptions(workspace)) as Array<
+        Record<string, any>
+      >;
+      const api = plugin.api.ngDocDemoApplication;
+      expect(api.schemaVersion).toBe(1);
+      // Nothing generated yet: no current demo application.
+      expect(await api.current()).toBeUndefined();
+      plugin.configResolved({ command: 'build', plugins: [] });
+      // The generation has no demo pages.
+      expect(await api.resolve()).toBeUndefined();
+      await writeFile(
+        path.join(output, 'demo-app.ts'),
+        [
+          "export const NG_DOC_DEMO_PATH = 'demo-preview';",
+          'export const NG_DOC_DEMO_PAGES: string[] = ["demo-preview/docs/A"];',
+          '',
+        ].join('\n'),
+      );
+      const demo = {
+        module: path.join(output, 'demo-app.ts'),
+        path: 'demo-preview',
+        pages: ['demo-preview/docs/A'],
+      };
+      expect(await api.resolve()).toEqual(demo);
+      expect(await api.current()).toEqual(demo);
+      // The build starts with the generation it already has.
+      await plugin.buildStart.handler();
+      expect(buildOnce).toHaveBeenCalledOnce();
+      await plugin.closeBundle();
+    } finally {
+      await rm(workspace, { recursive: true, force: true });
+    }
   });
 });

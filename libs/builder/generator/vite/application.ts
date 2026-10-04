@@ -1,6 +1,6 @@
 import { minimatch } from 'minimatch';
 import { existsSync } from 'node:fs';
-import { readdir, readFile, stat } from 'node:fs/promises';
+import { mkdir, readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { escapePath, glob } from 'tinyglobby';
@@ -15,6 +15,7 @@ import type {
   ViteDevServer,
 } from 'vite';
 
+import type { NgDocDemoApplication, NgDocDemoApplicationApi } from './demo-application';
 import { ngDocDevStyleTags } from './dev-styles';
 import { contentType } from './mime';
 
@@ -59,9 +60,21 @@ export interface NgDocViteApplicationOptions {
 export const NG_DOC_BROWSER_ENTRY = '/@ng-doc-application/browser.js';
 /** The module id of the server entry; `buildNgDocViteApplication` builds it into `server.mjs`. */
 export const NG_DOC_SERVER_ENTRY = '/@ng-doc-application/server.js';
+/** The URL of the demo application's browser entry, which its page loads. */
+export const NG_DOC_DEMO_ENTRY = '/@ng-doc-application/demo.js';
+/** The module id of the demo application's server entry, built next to `server.mjs`. */
+export const NG_DOC_DEMO_SERVER_ENTRY = '/@ng-doc-application/demo-server.js';
+/** The page of the demo application, next to index.html in the build output. */
+export const NG_DOC_DEMO_PAGE = 'ng-doc-demo.html';
+/** The name of the demo application's server entry in the server build (`demo-server.mjs`). */
+export const NG_DOC_DEMO_SERVER_NAME = 'demo-server';
 
 const BROWSER_ID = '\0ng-doc-application:browser';
 const SERVER_ID = '\0ng-doc-application:server';
+const DEMO_ID = '\0ng-doc-application:demo';
+const DEMO_SERVER_ID = '\0ng-doc-application:demo-server';
+/** The root element of the demo application, which only its page has. */
+const DEMO_ROOT = '<ng-doc-demo-app></ng-doc-demo-app>';
 const ANGULAR_DEDUPE = [
   '@angular/common',
   '@angular/compiler',
@@ -353,6 +366,43 @@ function escapeAttribute(value: string): string {
   return value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 }
 
+/**
+ * The page of the demo application: the application's index.html with the demo application's
+ * root as its body, so it has the same head (base href, fonts, icons, theme script).
+ * @param index - The content of index.html.
+ */
+export function demoDocument(index: string): string {
+  const body = /<body(\s[^>]*)?>[\s\S]*<\/body>/i;
+  return body.test(index)
+    ? index.replace(
+        body,
+        (_all, attributes: string | undefined) => `<body${attributes ?? ''}>${DEMO_ROOT}</body>`,
+      )
+    : `${index}${DEMO_ROOT}`;
+}
+
+/**
+ * Adds the demo page or the demo server entry to the inputs of a build.
+ */
+function withDemoInput(
+  input: Rolldown.InputOption | undefined,
+  key: string,
+  id: string,
+  next: string,
+): Record<string, string> {
+  const record: Record<string, string> =
+    typeof input === 'string'
+      ? { [path.parse(input).name]: input }
+      : Array.isArray(input)
+        ? Object.fromEntries(input.map((item) => [path.parse(item).name, item]))
+        : { ...(input ?? {}) };
+  // The input that the demo's input goes with: the server entry, or index.html (a path).
+  if (Object.values(record).some((item) => item === id || posix(path.resolve(item)) === id)) {
+    record[key] = next;
+  }
+  return record;
+}
+
 /** Sets `<base href>` to an absolute Vite base, or adds it at the start of `<head>`. */
 export function withBase(html: string, base: string): string {
   if (!base.startsWith('/')) return html;
@@ -388,6 +438,16 @@ export function createNgDocApplicationPlugin(options: NgDocViteApplicationOption
     posix(path.resolve(workspaceRoot, text(item, `styles[${index}]`))),
   );
   const assetPatterns = [...(options.assets ?? [])];
+  const zone = (options.polyfills ?? []).some(
+    (item) => item === 'zone.js' || item.startsWith('zone.js/'),
+  );
+  let viteRoot = process.cwd();
+  // The NgDoc plugin of the configuration, and the demo application of the build's generation.
+  let demoApi: NgDocDemoApplicationApi | undefined;
+  let demo: NgDocDemoApplication | undefined;
+  const demoPage = () => posix(path.join(viteRoot, NG_DOC_DEMO_PAGE));
+  const currentDemo = async () =>
+    config?.command === 'build' ? demo : await demoApi?.current().catch(() => undefined);
   let assets: Promise<ResolvedAsset[]> | undefined;
   const resolvedAssets = () => (assets ??= resolveAssets(assetPatterns, workspaceRoot, sourceRoot));
   let config: ResolvedConfig | undefined;
@@ -420,6 +480,7 @@ export function createNgDocApplicationPlugin(options: NgDocViteApplicationOption
     enforce: 'pre',
     api: { ngDocApplication: api },
     async config(user: UserConfig, environment: ConfigEnv) {
+      viteRoot = path.resolve(user.root ?? process.cwd());
       return {
         resolve: { dedupe: ANGULAR_DEDUPE },
         // Every `vite build` is a production build of the application (the Angular CLI's
@@ -434,7 +495,7 @@ export function createNgDocApplicationPlugin(options: NgDocViteApplicationOption
             }
           : {}),
         ...(environment.command === 'serve'
-          ? { optimizeDeps: await developmentPrebundles(path.resolve(user.root ?? process.cwd())) }
+          ? { optimizeDeps: await developmentPrebundles(viteRoot) }
           : {}),
         // The server bundle is imported by a plain Node process: it must hold every dependency,
         // partially compiled Angular libraries included.
@@ -445,7 +506,37 @@ export function createNgDocApplicationPlugin(options: NgDocViteApplicationOption
     },
     configResolved(resolved: ResolvedConfig) {
       config = resolved;
+      viteRoot = resolved.root ?? viteRoot;
+      const apis = (resolved.plugins ?? [])
+        .map((plugin) => plugin.api?.ngDocDemoApplication as NgDocDemoApplicationApi | undefined)
+        .filter((api) => api?.schemaVersion === 1);
+      demoApi = apis.length === 1 ? apis[0] : undefined;
       for (const warning of warnings) resolved.logger.warn(warning);
+    },
+    // A build with demo pages builds the demo application too: its page is a second input of the
+    // browser build and its server entry a second input of the server build. Whether there are
+    // demo pages is known once NgDoc has generated, so the NgDoc plugin generates here, before
+    // the build starts, instead of in its `buildStart`.
+    async options(input: Rolldown.InputOptions) {
+      if (config?.command !== 'build' || !demoApi) return null;
+      demo = await demoApi.resolve();
+      if (!demo) return null;
+      return {
+        ...input,
+        input: config.build.ssr
+          ? withDemoInput(
+              input.input,
+              NG_DOC_DEMO_SERVER_NAME,
+              NG_DOC_SERVER_ENTRY,
+              NG_DOC_DEMO_SERVER_ENTRY,
+            )
+          : withDemoInput(
+              input.input ?? path.join(viteRoot, 'index.html'),
+              'ng-doc-demo',
+              posix(path.join(viteRoot, 'index.html')),
+              demoPage(),
+            ),
+      };
     },
     resolveId(
       source: string,
@@ -453,9 +544,18 @@ export function createNgDocApplicationPlugin(options: NgDocViteApplicationOption
       resolveOptions: { isEntry: boolean; custom?: Rolldown.CustomPluginOptions },
     ) {
       if (source === NG_DOC_BROWSER_ENTRY) return BROWSER_ID;
+      if (source === NG_DOC_DEMO_ENTRY) return DEMO_ID;
+      if (source === NG_DOC_DEMO_SERVER_ENTRY) return DEMO_SERVER_ID;
+      if (
+        config?.command === 'build' &&
+        demo &&
+        posix(path.resolve(viteRoot, source)) === demoPage()
+      ) {
+        return demoPage();
+      }
       // The polyfills, global styles and browser entry are entry points of the Angular CLI's
       // build, which is never tree-shaken away; here they are imports of a generated module.
-      if (importer === BROWSER_ID && config?.command === 'build') {
+      if ((importer === BROWSER_ID || importer === DEMO_ID) && config?.command === 'build') {
         const { isEntry, custom } = resolveOptions;
         return this.resolve(source, importer, { isEntry, custom, skipSelf: true }).then(
           (resolved) =>
@@ -471,6 +571,25 @@ export function createNgDocApplicationPlugin(options: NgDocViteApplicationOption
       return SERVER_ID;
     },
     load(id: string) {
+      if (config?.command === 'build' && demo && id === demoPage()) {
+        const index = path.join(viteRoot, 'index.html');
+        this.addWatchFile(index);
+        return readFile(index, 'utf8').then(demoDocument);
+      }
+      if (id === DEMO_ID || id === DEMO_SERVER_ID) {
+        return currentDemo().then((current) => {
+          if (!current) {
+            throw new Error(
+              '[NGDOC_VITE_DEMO_APPLICATION] The demo application was requested, but NgDoc generated no demo pages.',
+            );
+          }
+          return demoEntry(id === DEMO_SERVER_ID ? 'server' : 'browser', current.module, {
+            polyfills: id === DEMO_SERVER_ID ? serverPolyfills(options.polyfills ?? []) : polyfills,
+            styles: id === DEMO_SERVER_ID ? [] : styles,
+            zone,
+          });
+        });
+      }
       if (id === BROWSER_ID) {
         return [...polyfills, ...styles, posix(browser)]
           .map((item) => `import ${JSON.stringify(item)};`)
@@ -504,6 +623,7 @@ export function createNgDocApplicationPlugin(options: NgDocViteApplicationOption
     transformIndexHtml: {
       order: 'pre',
       async handler(html: string, context: IndexHtmlTransformContext) {
+        const demoPageHtml = html.includes(DEMO_ROOT);
         return {
           html: withBase(html, config?.base ?? '/'),
           tags: [
@@ -512,7 +632,10 @@ export function createNgDocApplicationPlugin(options: NgDocViteApplicationOption
             ...(context.server ? await ngDocDevStyleTags(context.server, styles) : []),
             {
               tag: 'script',
-              attrs: { type: 'module', src: NG_DOC_BROWSER_ENTRY },
+              attrs: {
+                type: 'module',
+                src: demoPageHtml ? NG_DOC_DEMO_ENTRY : NG_DOC_BROWSER_ENTRY,
+              },
               injectTo: 'body',
             },
           ],
@@ -521,6 +644,50 @@ export function createNgDocApplicationPlugin(options: NgDocViteApplicationOption
     },
     configureServer(server: ViteDevServer) {
       server.middlewares.use(assetMiddleware(resolvedAssets, () => server.config.base));
+      // Before Vite's own fallback to index.html: a page under the demo path is the demo
+      // application's page, while the current generation has demo pages.
+      server.middlewares.use((request, response, next) => {
+        const accept = request.headers.accept;
+        const url = request.url ?? '/';
+        if (
+          request.method !== 'GET' ||
+          !(Array.isArray(accept) ? accept.join(',') : accept ?? '').includes('text/html')
+        ) {
+          next();
+          return;
+        }
+        void currentDemo()
+          .then(async (current) => {
+            const prefix = `${server.config.base.replace(/\/?$/, '/')}${current?.path}/`;
+            if (!current || !url.split(/[?#]/, 1)[0]!.startsWith(prefix)) {
+              next();
+              return;
+            }
+            const index = await readFile(path.join(viteRoot, 'index.html'), 'utf8');
+            const html = await server.transformIndexHtml(
+              url,
+              demoDocument(index),
+              request.originalUrl,
+            );
+            response.statusCode = 200;
+            response.setHeader('Content-Type', 'text/html');
+            response.end(html);
+          })
+          .catch((error: unknown) => next(error));
+      });
+    },
+    // Every demo page is a copy of the demo application's page, so a static host without a
+    // fallback serves it, as with hash URLs (which are built without prerendering). Prerendering
+    // replaces each copy with the rendered page.
+    async writeBundle(output: Rolldown.NormalizedOutputOptions) {
+      if (config?.command !== 'build' || config.build.ssr || !demo || !output.dir) return;
+      const page = await readFile(path.join(output.dir, NG_DOC_DEMO_PAGE), 'utf8');
+      for (const route of [...demo.pages].sort()) {
+        if (unsafeSegment(route)) continue;
+        const file = path.join(output.dir, ...route.split('/'), 'index.html');
+        await mkdir(path.dirname(file), { recursive: true });
+        await writeFile(file, page);
+      }
     },
     async generateBundle(_output: Rolldown.NormalizedOutputOptions, bundle: Rolldown.OutputBundle) {
       if (config?.command !== 'build' || config.build.ssr) return;
@@ -557,4 +724,51 @@ function assetMiddleware(
       (error: unknown) => next(error),
     );
   };
+}
+
+/**
+ * The entry module of the demo application: the polyfills, the global styles, and the bootstrap of
+ * the generated routes and `demoProviders` (in the browser), or a server entry with the exports
+ * `prerenderNgDoc` needs (on the server).
+ */
+function demoEntry(
+  platform: 'browser' | 'server',
+  module: string,
+  options: { polyfills: readonly string[]; styles: readonly string[]; zone: boolean },
+): string {
+  const imports = [...options.polyfills, ...options.styles].map(
+    (item) => `import ${JSON.stringify(item)};`,
+  );
+  const application = [
+    `import { bootstrapApplication } from '@angular/platform-browser';`,
+    `import { NgDocDemoAppComponent, ɵngDocDemoApplicationConfig } from '@ng-doc/app/demo-app';`,
+    `import { NG_DOC_DEMO_PROVIDERS, NG_DOC_DEMO_ROUTES } from ${JSON.stringify(posix(module))};`,
+  ];
+  if (platform === 'browser') {
+    return [
+      ...imports,
+      ...application,
+      `ɵngDocDemoApplicationConfig(NG_DOC_DEMO_ROUTES, NG_DOC_DEMO_PROVIDERS, { zone: ${options.zone} })`,
+      `  .then((config) => bootstrapApplication(NgDocDemoAppComponent, config))`,
+      `  .catch((error) => console.error(error));`,
+    ].join('\n');
+  }
+  return [
+    ...imports,
+    ...application,
+    `import { provideServerRendering } from '@angular/platform-server';`,
+    `export const bootstrap = async (context) =>`,
+    `  bootstrapApplication(`,
+    `    NgDocDemoAppComponent,`,
+    `    await ɵngDocDemoApplicationConfig(NG_DOC_DEMO_ROUTES, NG_DOC_DEMO_PROVIDERS, {`,
+    `      zone: ${options.zone},`,
+    `      providers: [provideServerRendering()],`,
+    `    }),`,
+    `    context,`,
+    `  );`,
+    `export default bootstrap;`,
+    `export { renderApplication } from '@angular/platform-server';`,
+    `export { Router } from '@angular/router';`,
+    `export { runInInjectionContext } from '@angular/core';`,
+  ].join('\n');
 }
