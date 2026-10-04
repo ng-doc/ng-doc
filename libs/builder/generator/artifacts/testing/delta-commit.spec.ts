@@ -515,9 +515,12 @@ describe('delta commit', () => {
       const deltaResult = await delta.commit(generation, candidate, options);
       const fullResult = await full.commit(generation, candidate, options);
       // Diagnostics name absolute paths under each arm's own root, JSON-escaped like the rest of
-      // the result (a Windows root's backslashes are doubled).
+      // the result (a Windows root's backslashes are doubled), and some messages name the root
+      // with forward slashes.
       const rooted = (result: CommitResult, root: string) =>
-        JSON.stringify(result).replaceAll(JSON.stringify(root).slice(1, -1), '<root>');
+        JSON.stringify(result)
+          .replaceAll(JSON.stringify(root).slice(1, -1), '<root>')
+          .replaceAll(root.replaceAll('\\', '/'), '<root>');
       expect(rooted(deltaResult, delta.root)).toBe(rooted(fullResult, full.root));
       expect(await tree(delta.root)).toEqual(await tree(full.root));
       return { result: deltaResult, telemetry: delta.committer.inspect() };
