@@ -175,6 +175,13 @@ export interface RemoteKeywordSnapshot {
   validator?: string;
 }
 
+/** A Shiki (TextMate) language registration of `shiki.langs`: a grammar as plain JSON. */
+export interface ShikiLanguage {
+  readonly name: string;
+  readonly scopeName: string;
+  readonly [key: string]: JsonValue;
+}
+
 export interface GeneratorConfiguration {
   projectId: ProjectId;
   workspaceRoot: FilePath;
@@ -196,6 +203,11 @@ export interface GeneratorConfiguration {
    */
   apiProtectedMembers?: false;
   themes: { light: string; dark: string };
+  /**
+   * The Shiki language registrations of `shiki.langs`, flattened, as plain JSON in configuration
+   * order. Absent without any, so every other configuration keeps its digest.
+   */
+  shikiLangs?: ShikiLanguage[];
   repo?: {
     url: string;
     platform: 'github' | 'gitlab';

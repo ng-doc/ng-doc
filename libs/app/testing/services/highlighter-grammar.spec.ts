@@ -52,4 +52,20 @@ describe('NgDocHighlighterService grammars', () => {
       expect(tokens.get(block), block).toBe('keyword');
     expect(tokens.get('b')).toBe('tag');
   });
+
+  it('replaces a language with a registration of the same name', async () => {
+    const service = TestBed.inject(NgDocHighlighterService);
+    await service.initialize({
+      langs: [
+        {
+          name: 'angular-html',
+          scopeName: 'text.html.derivative.ng',
+          patterns: [{ match: '\\bhello\\b', name: 'keyword.control.test' }],
+          repository: {},
+        },
+      ],
+    });
+
+    expect(colours(service.highlight('hello <b>world</b>')).get('hello')).toBe('keyword');
+  });
 });

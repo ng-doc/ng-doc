@@ -1,7 +1,12 @@
 import { inject, isDevMode, OnDestroy, Service, Signal, signal } from '@angular/core';
 import { NG_DOC_SHIKI_THEME } from '@ng-doc/app/tokens';
 import { ngDocSyntaxTheme } from '@ng-doc/core/constants/syntax-theme';
-import { type HighlighterCore, type ThemeInput, createHighlighterCore } from 'shiki/core';
+import {
+  type HighlighterCore,
+  type LanguageInput,
+  type ThemeInput,
+  createHighlighterCore,
+} from 'shiki/core';
 import { createOnigurumaEngine } from 'shiki/engine/oniguruma';
 import getWasm from 'shiki/wasm';
 
@@ -11,6 +16,13 @@ export interface NgDocHighlighterConfig {
    * Themes sources.
    */
   themes?: ThemeInput[];
+  /**
+   * Shiki languages to load besides `angular-html`, the language of playground code, and the
+   * languages it embeds. A language named like one of them replaces it, so register here the
+   * languages of `shiki.langs` in `ng-doc.config.ts` that playground code uses, for example a newer
+   * Angular template grammar.
+   */
+  langs?: LanguageInput[];
   /**
    * Has no effect, and is reported in development mode.
    *
@@ -49,9 +61,9 @@ export class NgDocHighlighterService implements OnDestroy {
 
   /**
    * Loads Shiki with the built-in themes (`github-light`, `ayu-dark` and NgDoc's `css-variables`)
-   * and the given ones. Concurrent and repeated calls share one initialization; a failed one can
-   * be retried.
-   * @param config - Custom Shiki themes to load.
+   * and the given ones, and the given languages. Concurrent and repeated calls share one
+   * initialization; a failed one can be retried.
+   * @param config - Custom Shiki themes and languages to load.
    */
   initialize(config?: NgDocHighlighterConfig): Promise<void> {
     if (this.destroyed) {
@@ -68,11 +80,11 @@ export class NgDocHighlighterService implements OnDestroy {
       );
     }
 
-    // Only immutable built-in themes are shared across SSR applications. Custom
-    // themes may reuse names with different colors, or be asynchronous getters.
-    this.ownsHighlighter = Boolean(config?.themes?.length);
+    // Only immutable built-in themes and languages are shared across SSR applications. Custom
+    // ones may reuse names with other definitions, or be asynchronous getters.
+    this.ownsHighlighter = Boolean(config?.themes?.length || config?.langs?.length);
     const creation = this.ownsHighlighter
-      ? NgDocHighlighterService.create(config?.themes)
+      ? NgDocHighlighterService.create(config?.themes, config?.langs)
       : (NgDocHighlighterService.defaultInitialization ??= NgDocHighlighterService.create().catch(
           (error: unknown) => {
             NgDocHighlighterService.defaultInitialization = undefined;
@@ -97,7 +109,7 @@ export class NgDocHighlighterService implements OnDestroy {
     return this.initialization;
   }
 
-  /** Disposes the highlighter this service created for custom themes. */
+  /** Disposes the highlighter this service created for custom themes or languages. */
   ngOnDestroy(): void {
     this.destroyed = true;
     this.readyState.set(false);
@@ -107,7 +119,10 @@ export class NgDocHighlighterService implements OnDestroy {
     this.highlighter = undefined;
   }
 
-  private static async create(themes: ThemeInput[] = []): Promise<HighlighterCore> {
+  private static async create(
+    themes: ThemeInput[] = [],
+    langs: LanguageInput[] = [],
+  ): Promise<HighlighterCore> {
     return createHighlighterCore({
       themes: [
         import('shiki/themes/github-light.mjs'),
@@ -116,7 +131,8 @@ export class NgDocHighlighterService implements OnDestroy {
         ngDocSyntaxTheme(),
         ...themes,
       ],
-      langs: [import('shiki/langs/angular-html.mjs')],
+      // Later registrations of a name replace earlier ones, so the given languages win.
+      langs: [import('shiki/langs/angular-html.mjs'), ...langs],
       // The Oniguruma engine, as at build time, so that the browser tokenizes code as the code
       // blocks were tokenized.
       engine: createOnigurumaEngine(getWasm),

@@ -398,6 +398,7 @@ export function createCompilationService(options: CompilationOptions): TargetedC
         if (!scratch)
           prestartRenderThreads(options, request, found!.entries.length, {
             themes: found!.configuration.themes,
+            ...(found!.configuration.shikiLangs ? { langs: found!.configuration.shikiLangs } : {}),
             cache: highlightCacheSwitch(options) !== 'off',
           });
         await synchronize(true);

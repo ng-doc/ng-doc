@@ -39,7 +39,7 @@ export interface NgDocApplicationConfig {
    */
   uiKit?: NgDocUiConfig;
   /**
-   * Shiki theme.
+   * Extra Shiki themes and languages for the code that the browser highlights.
    */
   shiki?: NgDocHighlighterConfig;
   /**

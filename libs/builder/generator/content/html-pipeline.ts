@@ -1,6 +1,6 @@
 import { type NodeContent, parseFile } from '@orama/plugin-parsedoc';
 
-import type { ContentAnchor, KeywordExport, SearchRecord } from '../contracts';
+import type { ContentAnchor, KeywordExport, SearchRecord, ShikiLanguage } from '../contracts';
 import { digestOf } from '../kernel/canonical';
 import { decode, encode } from '../worker/protocol';
 import type { HighlightBlock } from './highlight-cache';
@@ -27,6 +27,7 @@ interface HtmlUtilities {
       route?: string;
       lightTheme?: string;
       darkTheme?: string;
+      langs?: readonly ShikiLanguage[];
       highlight?: PipelineHighlight;
     },
   ): Promise<{ content: string; anchors: ContentAnchor[]; error?: unknown }>;
@@ -62,6 +63,8 @@ export interface RenderDocument {
 export interface RenderTask {
   readonly documents: readonly RenderDocument[];
   readonly themes: { readonly light: string; readonly dark: string };
+  /** The configured Shiki languages (`shiki.langs`); absent without any. */
+  readonly langs?: readonly ShikiLanguage[];
 }
 
 /**
@@ -123,7 +126,7 @@ export async function renderDocuments(
 ): Promise<RenderedDocument[]> {
   const results: RenderedDocument[] = [];
   for (const document of task.documents) {
-    const result = await renderDocument(document, task.themes, highlight, aborted);
+    const result = await renderDocument(document, task, highlight, aborted);
     results.push(result);
     if (!('html' in result)) break;
   }
@@ -132,7 +135,7 @@ export async function renderDocuments(
 
 async function renderDocument(
   document: RenderDocument,
-  themes: RenderTask['themes'],
+  { themes, langs }: Pick<RenderTask, 'themes' | 'langs'>,
   highlight: () => PipelineHighlight | undefined,
   aborted: () => boolean,
 ): Promise<RenderedDocument> {
@@ -145,6 +148,7 @@ async function renderDocument(
     ...(document.route === undefined ? {} : { route: document.route }),
     lightTheme: themes.light,
     darkTheme: themes.dark,
+    ...(langs ? { langs } : {}),
     ...(call ? { highlight: call } : {}),
   });
   const mismatches = call?.mismatches.length ?? 0;
@@ -414,6 +418,7 @@ export function serveHtmlThread(port: ThreadPort): void {
               {
                 documents: [{ html: WARM_DOCUMENT }],
                 themes: job['themes'] as RenderTask['themes'],
+                ...(job['langs'] ? { langs: job['langs'] as RenderTask['langs'] } : {}),
               },
               () => (job['cache'] === true ? cache : undefined),
             );

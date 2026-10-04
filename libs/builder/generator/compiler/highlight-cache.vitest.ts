@@ -279,3 +279,94 @@ test('verify reports a tampered pack entry and publishes the fresh highlighting'
   const trusted = await restart('on');
   expect(outputs(trusted.candidate)).toContain('data-tampered');
 }, 600_000);
+
+/** A grammar that colours `word` as a keyword, in the file the configuration imports. */
+const grammar = (word: string) =>
+  JSON.stringify({
+    name: 'ngdoc-test',
+    scopeName: 'source.ngdoc-test',
+    patterns: [{ match: `\\b${word}\\b`, name: 'keyword.control.ngdoc-test' }],
+    repository: {},
+  });
+
+const languageConfig = (langs: boolean) =>
+  [
+    ...(langs ? [`import lang from './docs/ngdoc-test.tmLanguage.json';`] : []),
+    `export default { docsPath: 'docs', cache: true, shiki: { themes: { light: 'css-variables', dark: 'css-variables' }${langs ? ', langs: [lang]' : ''} } };`,
+  ].join('\n');
+
+const languages = (): Record<string, string> => ({
+  'ng-doc.config.ts': languageConfig(false),
+  'docs/ngdoc-test.tmLanguage.json': grammar('hello'),
+  'docs/code/ng-doc.page.ts': page('Code', 'code'),
+  'docs/code/index.md':
+    '# Code\n\n```ngdoc-test\nhello world\n```\n\n```typescript\nconst a = 1;\n```\n',
+});
+
+const languageSteps: Array<[string, (f: Fixture) => Array<ReturnType<typeof update>>]> = [
+  ['languages registered', (f) => [update(f.write('ng-doc.config.ts', languageConfig(true)))]],
+  [
+    'the grammar edited',
+    (f) => [update(f.write('docs/ngdoc-test.tmLanguage.json', grammar('world')))],
+  ],
+  ['languages removed', (f) => [update(f.write('ng-doc.config.ts', languageConfig(false)))]],
+];
+
+/** A server start and the language steps; `after` runs after each generation (cold builds). */
+async function languageChain(
+  f: Fixture,
+  overrides: Partial<CompilationOptions>,
+  after?: () => Promise<void>,
+) {
+  f.reset();
+  resetHighlightCache();
+  const service = f.create(overrides);
+  await settle();
+  const results = [await generation(service, 1, undefined, [])];
+  let previous = candidate(results[0]!, 'start');
+  await after?.();
+  for (const [index, [name, apply]] of languageSteps.entries()) {
+    const changes = apply(f);
+    await settle();
+    results.push(await generation(service, index + 2, previous, changes));
+    previous = candidate(results.at(-1)!, name);
+    await after?.();
+  }
+  return results;
+}
+
+test('differential: shiki.langs registered, edited and removed re-highlight, equal with the cache off, the reference path and cold builds', async () => {
+  const f = fixture(true, {}, languages);
+  const colds: string[] = [];
+  const reference = await languageChain(f, { incrementalReuse: false }, async () => {
+    colds.push(JSON.stringify((await cold(f)).candidate));
+  });
+  const on = await languageChain(f, {});
+  const off = await languageChain(f, { highlightCache: false });
+  for (const [index, result] of on.entries()) {
+    const label = index ? languageSteps[index - 1]![0] : 'start';
+    expect(JSON.stringify(off[index]), label).toBe(JSON.stringify(result));
+    expect(JSON.stringify(result.candidate), label).toBe(
+      JSON.stringify(reference[index]!.candidate),
+    );
+    expect(JSON.stringify(result.candidate), label).toBe(colds[index]);
+  }
+  // The block of the registered language, as each step publishes it.
+  const block = (result: CompilationResult) =>
+    result
+      .candidate!.artifacts.flatMap((artifact) => artifact.content)
+      .map((content) => content.html)
+      .join('\n')
+      .match(/<pre class="shiki.*?<\/pre>/s)![0];
+  const keyword = (word: string) =>
+    new RegExp(`color:var\\(--ng-doc-syntax-keyword\\)[^>]*>${word}<`);
+  const [start, registered, edited, removed] = on.map(block);
+  expect(start).toContain('language-text');
+  expect(start).not.toMatch(keyword('hello'));
+  expect(registered).toContain('language-ngdoc-test');
+  expect(registered).toMatch(keyword('hello'));
+  expect(registered).not.toMatch(keyword('world'));
+  expect(edited).toMatch(keyword('world'));
+  expect(edited).not.toMatch(keyword('hello'));
+  expect(removed).toBe(start);
+}, 600_000);

@@ -30,6 +30,7 @@ import {
   RemoteKeywordSnapshot,
   RuntimeImport,
   ServiceResult,
+  ShikiLanguage,
   TemplateActions,
   TemplateEvaluationService,
   TemplateRequest,
@@ -73,7 +74,7 @@ interface RawConfiguration extends LiveRecord {
   tsConfig?: string;
   guide?: { anchorHeadings?: GeneratorConfiguration['anchorHeadings']; headerTemplate?: string };
   api?: { protectedMembers?: boolean };
-  shiki?: { themes?: { light?: string; dark?: string } };
+  shiki?: { themes?: { light?: string; dark?: string }; langs?: unknown };
   repoConfig?: GeneratorConfiguration['repo'];
   keywords?: {
     keywords?: Record<string, RawKeyword>;
@@ -1297,6 +1298,7 @@ async function normalizeConfiguration(
   const globalKeywords = normalizeKeywords(
     validGlobalKeywords(raw.keywords?.keywords ?? {}, configFile ?? workspaceRoot, diagnostics),
   );
+  const shikiLangs = shikiLanguages(raw.shiki?.langs, configFile ?? workspaceRoot, diagnostics);
   const remoteKeywords: RemoteKeywordSnapshot[] = [];
   const executables: ExecutableProvenance[] = [];
   const loaders = raw.keywords?.loaders ?? [];
@@ -1373,6 +1375,7 @@ async function normalizeConfiguration(
       light: raw.shiki?.themes?.light ?? options.defaultThemes.light,
       dark: raw.shiki?.themes?.dark ?? options.defaultThemes.dark,
     },
+    ...(shikiLangs.length ? { shikiLangs } : {}),
     repo: raw.repoConfig
       ? {
           url: raw.repoConfig.url,
@@ -1733,6 +1736,86 @@ function validGlobalKeywords(
       });
   }
   return valid;
+}
+
+/**
+ * The language registrations of `shiki.langs`, flattened one level (a module of `@shikijs/langs`
+ * exports an array of them) and copied as plain JSON, which the highlight cache keys and render
+ * threads receive. Anything else, such as a function or a promise, fails the configuration.
+ */
+function shikiLanguages(
+  value: unknown,
+  source: string,
+  diagnostics: Diagnostic[],
+): ShikiLanguage[] {
+  if (value === undefined) return [];
+  const invalid = (message: string): ShikiLanguage[] => {
+    diagnostics.push({
+      code: 'DISCOVERY_SHIKI_LANGUAGE_INVALID',
+      severity: 'error',
+      stage: 'evaluation',
+      message,
+      source: { path: source },
+    });
+    return [];
+  };
+  if (!Array.isArray(value))
+    return invalid('shiki.langs must be an array of Shiki language registrations.');
+  const languages: ShikiLanguage[] = [];
+  for (const [index, entry] of value.entries()) {
+    for (const item of Array.isArray(entry) ? (entry as unknown[]) : [entry]) {
+      const json = plainJson(item, 0);
+      if (
+        !json ||
+        typeof json !== 'object' ||
+        Array.isArray(json) ||
+        typeof json['name'] !== 'string' ||
+        !json['name'] ||
+        typeof json['scopeName'] !== 'string' ||
+        !json['scopeName']
+      )
+        return invalid(
+          `shiki.langs[${index}] is not a Shiki language registration: plain JSON data with a ` +
+            'name and a scopeName. Import the grammar instead of passing a function or a promise.',
+        );
+      languages.push(json as ShikiLanguage);
+    }
+  }
+  return languages;
+}
+
+/**
+ * A copy of `value` when it is plain JSON data, or undefined. The configuration is evaluated in
+ * its own realm, so a plain object is recognized by the shape of its prototype chain.
+ */
+function plainJson(value: unknown, depth: number): JsonValue | undefined {
+  // Deeper than any grammar nests: a cycle.
+  if (depth > 256) return undefined;
+  if (value === null || typeof value === 'boolean' || typeof value === 'string') return value;
+  if (typeof value === 'number') return Number.isFinite(value) ? value : undefined;
+  if (Array.isArray(value)) {
+    const copy: JsonValue[] = [];
+    for (const item of value) {
+      const json = plainJson(item, depth + 1);
+      if (json === undefined) return undefined;
+      copy.push(json);
+    }
+    return copy;
+  }
+  if (typeof value !== 'object') return undefined;
+  const prototype: unknown = Object.getPrototypeOf(value);
+  if (
+    (prototype !== null && Object.getPrototypeOf(prototype) !== null) ||
+    Object.prototype.toString.call(value) !== '[object Object]'
+  )
+    return undefined;
+  const copy: Record<string, JsonValue> = {};
+  for (const [key, item] of Object.entries(value)) {
+    const json = plainJson(item, depth + 1);
+    if (json === undefined) return undefined;
+    copy[key] = json;
+  }
+  return copy;
 }
 
 function normalizeKeywords(value: Record<string, RawKeyword>): KeywordExport[] {

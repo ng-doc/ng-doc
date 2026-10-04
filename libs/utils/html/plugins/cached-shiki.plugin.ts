@@ -1,4 +1,3 @@
-import rehypeShiki, { type RehypeShikiOptions } from '@shikijs/rehype';
 import type { Element, ElementContent, Root } from 'hast';
 import { toString } from 'hast-util-to-string';
 import { visit } from 'unist-util-visit';
@@ -12,6 +11,8 @@ export interface NgDocHighlightBlock {
   readonly options: Readonly<Record<string, string | number | boolean>>;
   /** The theme names. NgDoc's own theme (`css-variables`) is not a Shiki theme. */
   readonly themes: { readonly light: string; readonly dark: string };
+  /** The identity of the extra languages (`processHtml`'s `langs`); absent without any. */
+  readonly languages?: string;
   /** The language of the block's class, or the default language: before the fallback. */
   readonly lang: string;
   /** The raw meta string, before it is parsed. */
@@ -48,15 +49,20 @@ export interface NgDocHighlightCache {
 export interface CachedShikiOptions {
   cache: NgDocHighlightCache;
   themes: NgDocHighlightBlock['themes'];
-  /** What `options` stands for in a key: change it whenever the options or this plugin change. */
+  /** The identity of the extra languages the transformer highlights with; absent without any. */
+  languages?: string;
+  /** What the options stand for in a key: change it whenever the options or this plugin change. */
   identity: NgDocHighlightBlock['options'];
   /** The language of a block without a `language-*` class (the options' `defaultLanguage`). */
   defaultLanguage: string;
-  /** The options `@shikijs/rehype` highlights with, created when the highlighter is. */
-  options: () => RehypeShikiOptions;
+  /**
+   * Creates the `@shikijs/rehype` transformer that highlights a miss, with the plugin's options;
+   * called once per thread, theme pair and languages.
+   */
+  transformer: () => Highlighter;
 }
 
-type Highlighter = (tree: Root) => Promise<void>;
+type Highlighter = (tree: Root) => Promise<void> | void;
 
 interface Block {
   node: Element;
@@ -67,8 +73,8 @@ interface Block {
 const languagePrefix = 'language-';
 
 /**
- * One `@shikijs/rehype` transformer per theme pair in this thread. It loads its highlighter once
- * (every bundled language, the themes and the WASM), where the plain plugin, created again for
+ * One `@shikijs/rehype` transformer per theme pair and languages in this thread. It loads its
+ * highlighter once (every bundled language, the extra ones, the themes and the WASM), where the plain plugin, created again for
  * every document, asks for the highlighter and loads every language and theme into it again on
  * each call. A transformer whose highlighter failed to load is forgotten, so the next document
  * tries again and fails with the same error, as the plain plugin does.
@@ -90,8 +96,8 @@ const highlighters = new Map<string, Promise<Highlighter>>();
  * loads Shiki once the cache shows that its themes load.
  */
 export default function cachedShikiPlugin(settings: CachedShikiOptions) {
-  const { cache, themes, identity, defaultLanguage } = settings;
-  const id = `${themes.light}\n${themes.dark}`;
+  const { cache, themes, languages, identity, defaultLanguage } = settings;
+  const id = `${themes.light}\n${themes.dark}\n${languages ?? ''}`;
   return async (tree: Root): Promise<void> => {
     const blocks: Block[] = [];
     visit(tree, 'element', (node, index, parent) => {
@@ -113,12 +119,19 @@ export default function cachedShikiPlugin(settings: CachedShikiOptions) {
       blocks.push({
         node,
         parent,
-        key: cache.key({ options: identity, themes, lang, meta, code }),
+        key: cache.key({
+          options: identity,
+          themes,
+          ...(languages === undefined ? {} : { languages }),
+          lang,
+          meta,
+          code,
+        }),
       });
     });
     let highlighter: Highlighter | undefined;
     const load = async (): Promise<Highlighter> =>
-      (highlighter ??= await highlighterFor(id, settings.options));
+      (highlighter ??= await highlighterFor(id, settings.transformer));
     if (cache.loads?.(themes) !== true) await load();
     const values: ElementContent[][] = [];
     for (const block of blocks) {
@@ -141,13 +154,11 @@ export default function cachedShikiPlugin(settings: CachedShikiOptions) {
   };
 }
 
-function highlighterFor(id: string, options: () => RehypeShikiOptions): Promise<Highlighter> {
+function highlighterFor(id: string, transformer: () => Highlighter): Promise<Highlighter> {
   const known = highlighters.get(id);
   if (known) return known;
   const created = (async (): Promise<Highlighter> => {
-    const transform = (rehypeShiki as unknown as (options: RehypeShikiOptions) => Highlighter)(
-      options(),
-    );
+    const transform = transformer();
     // An empty tree makes the transformer load its highlighter, so that a failure to load is told
     // apart from a block's own failure.
     await transform({ type: 'root', children: [] });

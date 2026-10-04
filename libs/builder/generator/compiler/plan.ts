@@ -6,7 +6,7 @@ import path from 'node:path';
 import { createArtifactCache, JsonArtifactCache, retryingRename } from '../artifacts';
 import { GeneratorContentCompiler } from '../content/content-compiler';
 import { type HighlightSession, createHighlightSession } from '../content/highlight-cache';
-import { type RenderBack,createRenderBack } from '../content/html-pool';
+import { type RenderBack, createRenderBack } from '../content/html-pool';
 import type {
   CompilationRequest,
   Dependency,
@@ -219,6 +219,7 @@ export async function planGeneration(
   const highlight = createHighlightSession(options, request, configuration);
   const back = createRenderBack(options, highlight, {
     themes: configuration.themes,
+    ...(configuration.shikiLangs ? { langs: configuration.shikiLangs } : {}),
     cache: highlight !== undefined,
   });
   const compiler = new GeneratorContentCompiler(

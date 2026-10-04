@@ -188,6 +188,82 @@ describe('Angular templates', () => {
   });
 });
 
+// Every list of languages gets a highlighter of its own, which loads every bundled grammar.
+describe('extra languages', { timeout: 60_000 }, () => {
+  const NGDOC_THEMES = {
+    lightTheme: NG_DOC_SYNTAX_THEME_NAME,
+    darkTheme: NG_DOC_SYNTAX_THEME_NAME,
+  };
+  // A grammar that colours `hello` as a keyword.
+  const grammar = (name: string, scopeName: string) => ({
+    name,
+    scopeName,
+    patterns: [{ match: '\\bhello\\b', name: `keyword.control.${name}` }],
+    repository: {},
+  });
+  const custom = grammar('ngdoc-test', 'source.ngdoc-test');
+  const keyword = 'color:var(--ng-doc-syntax-keyword)';
+
+  it('highlights a registered language with or without a cache, and only where it is registered', async () => {
+    const html = code('ngdoc-test', 'hello world');
+    const registered = { ...NGDOC_THEMES, langs: [custom] };
+    const expected = await processHtml(html, registered);
+    expect(expected.error).toBeUndefined();
+    expect(expected.content).toContain(keyword);
+    expect(expected.content).toContain('language-ngdoc-test');
+
+    // Without the registration the block falls back to text, before and after a registered one.
+    const plain = await processHtml(html, NGDOC_THEMES);
+    expect(plain.content).not.toContain(keyword);
+    expect(plain.content).toContain('language-text');
+    expect(await processHtml(html, registered)).toEqual(expected);
+    expect(await processHtml(html, NGDOC_THEMES)).toEqual(plain);
+
+    const { cache, blocks } = mapCache();
+    for (let pass = 0; pass < 2; pass++)
+      expect(await processHtml(html, { ...registered, highlight: cache })).toEqual(expected);
+    const unregistered = mapCache();
+    expect(await processHtml(html, { ...NGDOC_THEMES, highlight: unregistered.cache })).toEqual(
+      plain,
+    );
+    // The languages are part of a block's key, by the digest of their JSON.
+    expect(blocks[0]!.languages).toMatch(/^[0-9a-f]{64}$/);
+    expect(unregistered.blocks[0]).not.toHaveProperty('languages');
+    const other = mapCache();
+    await processHtml(html, {
+      ...registered,
+      langs: [{ ...custom, displayName: 'Test' }],
+      highlight: other.cache,
+    });
+    expect(other.blocks[0]!.languages).not.toBe(blocks[0]!.languages);
+  });
+
+  it('replaces a bundled language with a registration of the same name', async () => {
+    const html = code('ini', 'hello');
+    expect((await processHtml(html, NGDOC_THEMES)).content).not.toContain(keyword);
+    const replaced = { ...NGDOC_THEMES, langs: [[grammar('ini', 'source.ini')]] };
+    const expected = await processHtml(html, replaced);
+    expect(expected.content).toContain(keyword);
+    expect(await processHtml(html, { ...replaced, highlight: mapCache().cache })).toEqual(expected);
+  });
+
+  it('fails every document, with or without code, when a language cannot load', async () => {
+    const broken = {
+      ...NGDOC_THEMES,
+      langs: [{ ...custom, embeddedLangs: ['no-such-language'] }],
+    };
+    for (const document of [code('ts', 'const a = 1;'), '<p>No code.</p>']) {
+      const expected = await processHtml(document, broken);
+      expect(String(expected.error)).toContain('no-such-language');
+      const result = await processHtml(document, {
+        ...broken,
+        highlight: mapCache({ loads: false }).cache,
+      });
+      expect(String(result.error)).toBe(String(expected.error));
+    }
+  });
+});
+
 describe('the highlight cache', () => {
   const html = `${code('typescript', 'const cached = true;')}${code('css', '.a { color: red; }')}`;
 

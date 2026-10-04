@@ -6,7 +6,7 @@ import path from 'node:path';
 
 import { retryingRename } from '../artifacts';
 import { sweepTemporaries } from '../compiler/closure-store';
-import type { CompilationRequest, GeneratorConfiguration } from '../contracts';
+import type { CompilationRequest, GeneratorConfiguration, ShikiLanguage } from '../contracts';
 import { bytesDigest, compareCodeUnits, contentDigest, digestOf } from '../kernel/canonical';
 import { HIGHLIGHT_CACHE_FLAG, readFlag } from '../kernel/flags';
 import { runtimePackages } from '../kernel/runtime-identity';
@@ -76,6 +76,7 @@ export const HIGHLIGHT_CACHE_LIMIT = 64 * 1024 * 1024;
 export interface HighlightBlock {
   readonly options: Readonly<Record<string, string | number | boolean>>;
   readonly themes: { readonly light: string; readonly dark: string };
+  readonly languages?: string;
   readonly lang: string;
   readonly meta: string;
   readonly code: string;
@@ -161,7 +162,10 @@ export function createHighlightSession(
     highlightCache?: boolean | 'verify';
   },
   request: Pick<CompilationRequest, 'mode'>,
-  configuration: Pick<GeneratorConfiguration, 'cacheEnabled' | 'cacheRoot' | 'themes'>,
+  configuration: Pick<
+    GeneratorConfiguration,
+    'cacheEnabled' | 'cacheRoot' | 'themes' | 'shikiLangs'
+  >,
 ): HighlightSession | undefined {
   const mode = highlightCacheSwitch(options);
   if (mode === 'off' || options.incrementalReuse === false) return undefined;
@@ -169,7 +173,12 @@ export function createHighlightSession(
     request.mode === 'development' && configuration.cacheEnabled
       ? path.join(configuration.cacheRoot, `${digestOf(options.projectId)}.highlight.json`)
       : undefined;
-  return new HighlightSession(configuration.themes, mode === 'verify', pack);
+  return new HighlightSession(
+    configuration.themes,
+    mode === 'verify',
+    pack,
+    configuration.shikiLangs,
+  );
 }
 
 /** One generation's use of the cache: what it hit or highlighted, and its pack. */
@@ -185,12 +194,15 @@ export class HighlightSession {
     readonly themes: { readonly light: string; readonly dark: string },
     readonly verify: boolean,
     readonly pack: string | undefined,
+    langs?: readonly ShikiLanguage[],
   ) {
     const engine = runtimePackages();
     this.context = digestOf({
       version: PACK_VERSION,
       engine: Object.fromEntries(SHIKI_PACKAGES.map((name) => [name, engine[name] ?? null])),
       themes: { light: themeIdentity(themes.light), dark: themeIdentity(themes.dark) },
+      // The configured languages: a block highlights with them, and they must load.
+      ...(langs?.length ? { langs: digestOf(langs) } : {}),
     });
     // A long-lived runtime whose map outgrew the limit starts again from the pack.
     if (memoryBytes > HIGHLIGHT_CACHE_LIMIT) {

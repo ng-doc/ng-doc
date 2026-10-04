@@ -6,9 +6,13 @@ import {
   ngDocSyntaxTheme,
 } from '@ng-doc/core';
 import rehypeShiki, { type RehypeShikiOptions } from '@shikijs/rehype';
+import rehypeShikiFromHighlighter from '@shikijs/rehype/core';
+import type { Root } from 'hast';
+import { createHash } from 'node:crypto';
 import rehypeMinifyWhitespace from 'rehype-minify-whitespace';
 import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
+import { type LanguageRegistration, bundledLanguages, createHighlighter } from 'shiki';
 import { unified } from 'unified';
 
 import autolinkHeadingPlugin from './plugins/add-heading-anchors.plugin';
@@ -21,9 +25,21 @@ import wrapTablePlugin from './plugins/table-wrapper';
 
 export type { NgDocHighlightBlock, NgDocHighlightCache } from './plugins/cached-shiki.plugin';
 
+/** A Shiki language registration: a TextMate grammar as plain JSON, with its name. */
+export interface NgDocHighlightLanguage {
+  readonly name: string;
+  readonly scopeName: string;
+}
+
 export interface NgDocHtmlProcessorConfig {
   lightTheme?: string;
   darkTheme?: string;
+  /**
+   * Languages that code blocks can use besides those bundled with Shiki. A registration named like
+   * a bundled language replaces it. With languages, code is highlighted by a highlighter of its
+   * own, created once per thread for these languages and themes.
+   */
+  langs?: readonly NgDocHighlightLanguage[];
   headings?: NgDocHeading[];
   route?: string;
   /**
@@ -55,6 +71,7 @@ export async function processHtml(
     light: config.lightTheme ?? 'github-light',
     dark: config.darkTheme ?? 'ayu-dark',
   };
+  const langs = config.langs?.length ? config.langs : undefined;
 
   try {
     const content = await unified()
@@ -71,13 +88,21 @@ export async function processHtml(
                 {
                   cache: config.highlight,
                   themes,
+                  ...(langs ? { languages: languagesId(langs) } : {}),
                   identity: HIGHLIGHT_IDENTITY,
                   defaultLanguage: DEFAULT_LANGUAGE,
-                  options: () => shikiOptions(themes),
+                  transformer: () =>
+                    langs
+                      ? withLanguages(themes, langs)
+                      : (rehypeShiki as unknown as (options: RehypeShikiOptions) => Transformer)(
+                          shikiOptions(themes),
+                        ),
                 },
               ],
             ]
-          : [[rehypeShiki, shikiOptions(themes)]],
+          : langs
+            ? [[() => withLanguages(themes, langs)]]
+            : [[rehypeShiki, shikiOptions(themes)]],
       )
       .use(highlightCodeLines)
       .use(wrapTablePlugin)
@@ -139,4 +164,66 @@ function shikiOptions(themes: { light: string; dark: string }): RehypeShikiOptio
  */
 function shikiTheme(name: string): string | NgDocSyntaxTheme {
   return name === NG_DOC_SYNTAX_THEME_NAME ? ngDocSyntaxTheme() : name;
+}
+
+type Transformer = (tree: Root) => Promise<void> | void;
+
+/**
+ * The highlighters with extra languages in this thread, by themes and languages. Each loads every
+ * bundled language and the given ones once; nothing loads into it later, so a block highlights
+ * the same whatever was highlighted before, and documents with other languages (or none) never
+ * see these.
+ */
+const languageHighlighters = new Map<string, ReturnType<typeof createHighlighter>>();
+const languageIds = new WeakMap<readonly NgDocHighlightLanguage[], string>();
+
+/**
+ * The identity of a list of languages: the digest of its JSON.
+ * @param langs
+ */
+function languagesId(langs: readonly NgDocHighlightLanguage[]): string {
+  let id = languageIds.get(langs);
+  if (id === undefined) {
+    id = createHash('sha256').update(JSON.stringify(langs)).digest('hex');
+    languageIds.set(langs, id);
+  }
+  return id;
+}
+
+/**
+ * The `@shikijs/rehype` transformer over the highlighter with these languages, with the options of
+ * the plain plugin. A highlighter that failed to load is forgotten, so that the next document tries
+ * again and fails with the same error.
+ * @param themes - The theme names.
+ * @param themes.light - The light theme.
+ * @param themes.dark - The dark theme.
+ * @param langs - The extra languages.
+ */
+function withLanguages(
+  themes: { light: string; dark: string },
+  langs: readonly NgDocHighlightLanguage[],
+): Transformer {
+  const id = `${themes.light}\n${themes.dark}\n${languagesId(langs)}`;
+  return async (tree) => {
+    let highlighter = languageHighlighters.get(id);
+    if (!highlighter) {
+      highlighter = createHighlighter({
+        themes: [shikiTheme(themes.light), shikiTheme(themes.dark)],
+        // Later registrations of a name replace earlier ones, so the given languages win.
+        langs: [...Object.keys(bundledLanguages), ...(langs as unknown as LanguageRegistration[])],
+      });
+      languageHighlighters.set(id, highlighter);
+      const created = highlighter;
+      created.catch(() => {
+        if (languageHighlighters.get(id) === created) languageHighlighters.delete(id);
+      });
+    }
+    const transform = (
+      rehypeShikiFromHighlighter as unknown as (
+        highlighter: unknown,
+        options: RehypeShikiOptions,
+      ) => Transformer
+    )(await highlighter, shikiOptions(themes));
+    await transform(tree);
+  };
 }

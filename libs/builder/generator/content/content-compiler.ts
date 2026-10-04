@@ -853,7 +853,8 @@ export class GeneratorContentCompiler implements ContentCompiler {
     signal: AbortSignal,
     staged: () => void,
   ): Promise<RenderedDocument[]> {
-    const task: RenderTask = { documents, themes: this.services.configuration.themes };
+    const { themes, shikiLangs } = this.services.configuration;
+    const task: RenderTask = { documents, themes, ...(shikiLangs ? { langs: shikiLangs } : {}) };
     const rendered = this.back
       ? this.back.render(task, signal)
       : renderDocuments(

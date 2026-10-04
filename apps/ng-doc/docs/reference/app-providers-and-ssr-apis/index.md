@@ -34,7 +34,7 @@ registers an HTTP interceptor.
 | `contentAnchorScrolling`           | `boolean`                          | `false`      | Scrolls to the anchor in the URL again after NgDoc content has loaded. Use it with the router's `anchorScrolling`.           |
 | `contentScrollPositionRestoration` | `'enabled' \| 'top' \| 'disabled'` | `'disabled'` | Restores the scroll position after NgDoc content has loaded. Use the same value as the router's `scrollPositionRestoration`. |
 | `uiKit`                            | `NgDocUiConfig`                    | See below    | Paths of the UI kit assets.                                                                                                  |
-| `shiki`                            | `NgDocHighlighterConfig`           | –            | Extra Shiki themes to load in the browser (`themes`). `theme` is deprecated and ignored.                                     |
+| `shiki`                            | `NgDocHighlighterConfig`           | –            | Extra Shiki themes (`themes`) and languages (`langs`) to load in the browser. `theme` is deprecated and ignored.             |
 | `shortcuts`                        | `boolean`                          | `true`       | Whether single-key shortcuts are on for readers who haven't chosen (`*SearchPage#keyboard-shortcuts`). ⌘K always works.      |
 
 `NgDocUiConfig` has two fields. Set both when you pass `uiKit`:

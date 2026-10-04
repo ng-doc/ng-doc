@@ -1293,6 +1293,80 @@ test('api.protectedMembers false is the only value that enters the configuration
   }
 });
 
+test('shiki.langs enters the configuration as plain JSON, flattened, only when it has languages', async () => {
+  const f = fixture();
+  const services = createDiscoveryServices();
+  const themes = "themes: { light: 'css-variables', dark: 'css-variables' }";
+  const lang = (name: string) =>
+    `{ name: '${name}', scopeName: 'source.${name}', patterns: [{ match: 'a', name: 'keyword' }], repository: {} }`;
+  try {
+    const configurations = [];
+    for (const shiki of [
+      '',
+      `, shiki: { ${themes} }`,
+      `, shiki: { ${themes}, langs: [] }`,
+      `, shiki: { ${themes}, langs: [${lang('one')}, Object.freeze([${lang('two')}, ${lang('three')}])] }`,
+    ]) {
+      write(f.config, `export default { docsPath: '.docs'${shiki} };`);
+      const result = await services.discovery.discover(f.request, new AbortController().signal);
+      expect(result.diagnostics).toEqual([]);
+      configurations.push(result.value!.configuration);
+    }
+    expect(configurations.map((configuration) => 'shikiLangs' in configuration)).toEqual([
+      false,
+      false,
+      false,
+      true,
+    ]);
+    const langs = configurations[3]!.shikiLangs!;
+    expect(langs.map((item) => item.name)).toEqual(['one', 'two', 'three']);
+    expect(langs[0]).toEqual({
+      name: 'one',
+      scopeName: 'source.one',
+      patterns: [{ match: 'a', name: 'keyword' }],
+      repository: {},
+    });
+    // A copy in this realm, not the configuration's frozen objects.
+    expect(Object.getPrototypeOf(langs[1])).toBe(Object.prototype);
+    expect(Object.isFrozen(langs[1])).toBe(false);
+  } finally {
+    await services.runtime.dispose();
+  }
+});
+
+test.each([
+  ['not an array', `{ name: 'x', scopeName: 'source.x' }`],
+  ['a function', `[() => ({ name: 'x', scopeName: 'source.x' })]`],
+  ['a promise', `[Promise.resolve({ name: 'x', scopeName: 'source.x' })]`],
+  ['without a scopeName', `[{ name: 'x' }]`],
+  ['with an empty name', `[{ name: '', scopeName: 'source.x' }]`],
+  ['with a class instance', `[{ name: 'x', scopeName: 'source.x', repository: new Map() }]`],
+  ['with a regular expression', `[{ name: 'x', scopeName: 'source.x', patterns: [/a/] }]`],
+  ['with a function inside', `[{ name: 'x', scopeName: 'source.x', patterns: [{ f() {} }] }]`],
+  ['with an infinite number', `[{ name: 'x', scopeName: 'source.x', patterns: [Infinity] }]`],
+  [
+    'with a cycle',
+    `(() => { const x: any = { name: 'x', scopeName: 'source.x' }; x.patterns = [x]; return [x]; })()`,
+  ],
+  ['nested twice', `[[[{ name: 'x', scopeName: 'source.x' }]]]`],
+])('shiki.langs that is %s fails the configuration', async (_, langs) => {
+  const f = fixture();
+  const services = createDiscoveryServices();
+  try {
+    write(
+      f.config,
+      `export default { docsPath: '.docs', shiki: { themes: { light: 'a', dark: 'b' }, langs: ${langs} } };`,
+    );
+    const result = await services.discovery.discover(f.request, new AbortController().signal);
+    expect(result.diagnostics.map((item) => [item.code, item.severity])).toEqual([
+      ['DISCOVERY_SHIKI_LANGUAGE_INVALID', 'error'],
+    ]);
+    expect(result.diagnostics[0]!.message).toContain('shiki.langs');
+  } finally {
+    await services.runtime.dispose();
+  }
+});
+
 test('preserves explicit API asset route separately from the omitted default', async () => {
   const f = fixture();
   const apiPath = join(f.root, '.docs', 'ng-doc.api.ts');

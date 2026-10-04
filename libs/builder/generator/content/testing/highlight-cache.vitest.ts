@@ -14,7 +14,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import type { ContentCompilerServices, Diagnostic } from '../../contracts';
+import type { ContentCompilerServices, Diagnostic, ShikiLanguage } from '../../contracts';
 import { HIGHLIGHT_CACHE_FLAG } from '../../kernel/flags';
 import { GeneratorContentCompiler } from '../content-compiler';
 import {
@@ -271,6 +271,19 @@ describe('the key', () => {
     }
     packages.overrides = { shiki: null };
     variants.push(key());
+    packages.overrides = { shiki: '4.5.0' };
+    // The configured languages, and each block's languages.
+    const lang = { name: 'x', scopeName: 'source.x', patterns: [] };
+    const withLanguages = (langs: ShikiLanguage[]) =>
+      createHighlightSession({ projectId: 'site' }, development, {
+        ...configuration('/cache'),
+        shikiLangs: langs,
+      })!
+        .call()
+        .key(block);
+    variants.push(withLanguages([lang]), withLanguages([{ ...lang, patterns: [{}] }]));
+    expect(withLanguages([])).toBe(base);
+    variants.push(key({ languages: 'a' }));
     // A package that does not highlight leaves the key alone.
     packages.overrides = { shiki: '4.5.0', prettier: '0.0.0' };
     expect(key()).toBe(base);

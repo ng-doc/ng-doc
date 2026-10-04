@@ -58,7 +58,43 @@ export interface NgDocConfiguration {
       light: string;
       dark: string;
     };
+    /**
+     * Shiki language registrations that code blocks can use in addition to the languages bundled
+     * with Shiki, such as a grammar imported from a `.tmLanguage.json` file or from
+     * `@shikijs/langs`. A registration named like a bundled language replaces it. Only the Vite
+     * engine reads it; load the same languages in the browser with `provideNgDocApp`.
+     */
+    langs?: Array<NgDocShikiLanguage | readonly NgDocShikiLanguage[]>;
   };
+}
+
+/**
+ * A Shiki (TextMate) language registration: a grammar and the name that code blocks use for it.
+ * It must be plain JSON data, as in a `.tmLanguage.json` file or a module of `@shikijs/langs`.
+ */
+export interface NgDocShikiLanguage {
+  /** The language name: code blocks that name it (for example ` ```my-lang `) use the grammar. */
+  name: string;
+  /** The root scope of the grammar, such as `source.my-lang`. */
+  scopeName: string;
+  /** The name to display for the language. */
+  displayName?: string;
+  /** Other names that code blocks can use for the language. */
+  aliases?: string[];
+  /** The languages that the grammar embeds, which must be bundled or registered too. */
+  embeddedLangs?: string[];
+  /** The languages that the grammar embeds when they are loaded. */
+  embeddedLangsLazy?: string[];
+  /** The scopes that the grammar injects itself into. */
+  injectTo?: string[];
+  /** The TextMate rules of the grammar. */
+  patterns?: unknown;
+  /** The named TextMate rules that `patterns` include. */
+  repository?: unknown;
+  /** TextMate injections. */
+  injections?: unknown;
+  /** The selector of an injection grammar. */
+  injectionSelector?: string;
 }
 
 /**
