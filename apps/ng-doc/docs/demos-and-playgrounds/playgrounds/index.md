@@ -16,7 +16,8 @@ The demo sits on the left, and the inspector on the right. When the playground i
 - **Settings** has a row for each input: its name, a chip with the type of its value, and a
   control. Hover the name to read the input's description, taken from its doc comment.
 - **Recreate** creates the demo again every time an input changes, instead of updating the inputs
-  of the same instance. Use it for components that read an input only once.
+  of the same instance. Use it for components that read an input only once, and turn it on from
+  the start with the `recreate` option (see "Options").
 - **Reset** appears as soon as a value differs from its default, and sets every input back.
 - The code button beside the demo shows, below it, the template of the current state.
 
@@ -255,6 +256,7 @@ action's options win. They follow `NgDocPlaygroundOptions`:
 | `expanded`          | `boolean`                 | `false`   | Shows the code under the demo when the playground opens.                            |
 | `hideSidePanel`     | `boolean`                 | `false`   | Hides the inspector and shows only the demo.                                        |
 | `inspectorPosition` | `'right' \| 'bottom'`     | `'right'` | Puts the inspector right of the demo, or below it so the demo gets the full width.  |
+| `recreate`          | `boolean \| 'always'`     | `false`   | Starts with **Recreate** on. `'always'` keeps it on and hides the setting.          |
 | `inputs`            | `Record<string, unknown>` | –         | Values for the inputs when the playground opens. **Reset** returns to the defaults. |
 | `defaults`          | `Record<string, unknown>` | –         | Defaults for the controls, instead of the target's own. **Reset** returns to them.  |
 | `hiddenInputs`      | `string[]`                | –         | Inputs that get no control.                                                         |

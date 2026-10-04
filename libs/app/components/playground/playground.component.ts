@@ -6,6 +6,7 @@ import {
   inject,
   input,
   InputSignal,
+  linkedSignal,
   Signal,
   signal,
   WritableSignal,
@@ -58,9 +59,6 @@ export class NgDocPlaygroundComponent<
   /** Options of the playground action; they extend the playground configuration. */
   readonly options: InputSignal<NgDocPlaygroundOptions> = input<NgDocPlaygroundOptions>({});
 
-  /** Whether the demo is created again each time a value changes. */
-  readonly recreateDemo: WritableSignal<boolean> = signal(false);
-
   /** The values of the inputs and content slots. */
   readonly formGroup: WritableSignal<FormGroup<NgDocPlaygroundForm> | undefined> =
     signal(undefined);
@@ -71,6 +69,19 @@ export class NgDocPlaygroundComponent<
   /** The playground configuration of the page, extended by the options. */
   readonly configuration: Signal<NgDocPlaygroundConfig> = computed(() =>
     Object.assign({}, this.rootPage.page?.playgrounds?.[this.id()], this.options()),
+  );
+
+  /**
+   * Whether the demo is created again each time a value changes. It starts from the `recreate`
+   * option; the reader can change it unless the option is `'always'`.
+   */
+  readonly recreateDemo: WritableSignal<boolean> = linkedSignal(
+    () => !!this.configuration().recreate,
+  );
+
+  /** Whether the Recreate setting is fixed on, and hidden, by the `'always'` option. */
+  readonly recreateLocked: Signal<boolean> = computed(
+    () => this.configuration().recreate === 'always',
   );
 
   private defaultProperties: Record<string, unknown> = {};

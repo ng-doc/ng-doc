@@ -92,6 +92,9 @@ export class NgDocPlaygroundPropertiesComponent<
   /** Whether the demo is recreated each time an input changes. */
   readonly recreateDemo = model<boolean>(false);
 
+  /** Whether the Recreate setting is fixed by the playground's options and hidden. */
+  readonly recreateLocked = input<boolean>(false);
+
   /** Whether the Reset button is shown. */
   readonly showResetButton = input<boolean>(false);
 

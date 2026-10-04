@@ -86,6 +86,7 @@ Each value in a page's `playgrounds` is an `NgDocPlaygroundConfig`. The options 
 | `expanded`          | `boolean`                                                | `false`   | Opens the playground expanded.                                      |
 | `hideSidePanel`     | `boolean`                                                | `false`   | Hides the controls.                                                 |
 | `inspectorPosition` | `'right' \| 'bottom'`                                    | `'right'` | Puts the controls right of the demos, or below them.                |
+| `recreate`          | `boolean \| 'always'`                                    | `false`   | Starts with Recreate on; `'always'` also hides the setting.         |
 | `inputs`            | `Record<string, unknown>`                                | –         | Input values set once when the playground renders.                  |
 | `defaults`          | `Record<string, unknown>`                                | –         | Initial control values, also used by the reset button.              |
 | `hiddenInputs`      | `string[]`                                               | –         | Inputs without a control.                                           |
