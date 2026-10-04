@@ -79,7 +79,7 @@ export default Category;
 - `JSDoc.description(...)`, `JSDoc.tag(...)` and `JSDoc.hasTag(...)` read doc comments.
 - `{% include "../../shared/demo-inputs.md" %}` includes a shared file.
 - `{{ NgDocPage.title }}` gives page data.
-- To show template syntax literally, wrap it: `{{ '{{ NgDocActions.demo("X") }}' | safe }}`.
+- To show template syntax literally, wrap it: `{{ '{{ NgDocActions.demo("X") }}' | safe }}`, or wrap a whole block (such as a code block with Angular template syntax) in `{% raw %}` … `{% endraw %}`.
 - `<ng-doc-tab group="…" name="…" icon="…" active>` elements, with empty lines around their Markdown content, group any content (demos, playgrounds, text) into tabs (`write-content/content-tabs`); code groups use the same element.
 
 **Keywords (auto-links):**

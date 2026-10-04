@@ -96,6 +96,7 @@ Markdown files are `nunjucks` templates. See `*TemplatesPage`.
 | `{{ '{% import "./macros.md" as m %}' }}`              | Imports the macros of another file.                     |
 | `{{ "{% index false %}" }}` … `{{ "{% endindex %}" }}` | Keeps the content out of the search index.              |
 | `{{ "{{ NgDocPage.title }}" }}`                        | Outputs a value. `NgDocPage` is the page configuration. |
+| `{{ "{% raw %}" }}` … `{{ "{% endraw %}" }}`           | Outputs the content as written, without rendering it.   |
 
 ## Template actions
 

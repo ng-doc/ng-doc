@@ -99,6 +99,33 @@ To show them as text, output them as a string with the `safe` filter:
 {{ "{{ '{{ NgDocPage.title }}' | safe }}" | safe }}
 ```
 
+For a longer block, such as an Angular template in a code block, wrap it in the `raw` and `endraw`
+tags. Everything between them is output as written:
+
+<!-- prettier-ignore -->
+````markdown name="index.md"
+{{ "{% raw %}" }}
+```html
+<p>Hello, {{ "{{ user.name }}" }}!</p>
+@if (user.admin) {
+  <button>Edit</button>
+}
+```
+{{ "{% endraw %}" }}
+````
+
+{% raw %}
+
+<!-- prettier-ignore -->
+```html
+<p>Hello, {{ user.name }}!</p>
+@if (user.admin) {
+  <button>Edit</button>
+}
+```
+
+{% endraw %}
+
 ## 🚧 Gotchas
 
 > **Warning**

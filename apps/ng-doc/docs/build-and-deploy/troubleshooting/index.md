@@ -28,6 +28,26 @@ so the providers and the components use different injection tokens.
 
 **See also:** `*AppProvidersReference`
 
+### Type errors in `node_modules`
+
+**Cause:** `tsconfig.json` sets `"skipLibCheck": false`, so TypeScript checks the type
+declarations of every package the application uses. The types of NgDoc refer to other packages,
+such as Shiki and Mermaid, and some of their declarations don't compile with every TypeScript
+version, `lib` and `strict` setting. The errors name a declaration file, for example
+`node_modules/mermaid/dist/types.d.ts`, not your code.
+
+**Fix:** set `"skipLibCheck": true` in `compilerOptions`, as projects created by the Angular CLI
+do. TypeScript then doesn't check declaration files (`.d.ts`), such as those of packages, and
+still checks your own code.
+
+```json name="tsconfig.json"
+{
+  "compilerOptions": {
+    "skipLibCheck": true
+  }
+}
+```
+
 ### DISCOVERY_CONFIG_MISSING
 
 **Cause:** the Vite plugin's `generator.configFile` or the `--config` flag of the `ng-doc` command

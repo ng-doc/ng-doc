@@ -129,6 +129,66 @@ optional and nullable inputs of their type, such as `@Input() label?: string`, `
 In development, the browser console names the type of every input that a playground skips, so you
 can copy the text to register.
 
+## Controls for array inputs
+
+An array input, such as `tags = input<string[]>([])`, has no built-in control. Register a control
+for its type text, `string[]`, like for any other type. This one edits the array as comma-separated
+text:
+
+```typescript name="string-list-control.component.ts"
+import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { NgDocTypeControl } from '@ng-doc/app';
+
+@Component({
+  selector: 'app-string-list-control',
+  template: `<input [value]="text()" (input)="update($event)" (blur)="touched()" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class StringListControlComponent implements NgDocTypeControl<string[]> {
+  readonly default = input<string[]>();
+
+  protected readonly text = signal('');
+  protected touched: () => void = () => {};
+  private changed: (value: string[]) => void = () => {};
+
+  writeValue(value: string[] | null): void {
+    // `null` means no value: show the default of the input.
+    this.text.set((value ?? this.default() ?? []).join(', '));
+  }
+
+  registerOnChange(fn: (value: string[]) => void): void {
+    this.changed = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.touched = fn;
+  }
+
+  protected update(event: Event): void {
+    const text = (event.target as HTMLInputElement).value;
+
+    this.text.set(text);
+    this.changed(
+      text
+        .split(',')
+        .map((item: string) => item.trim())
+        .filter(Boolean),
+    );
+  }
+}
+```
+
+```typescript name="app.config.ts"
+providers: [
+  provideTypeControl('string[]', StringListControlComponent),
+  // For `input<string[]>()` and `@Input() tags?: string[]`.
+  provideTypeControl('string[] | undefined', StringListControlComponent),
+],
+```
+
+The same works for arrays of other types, such as `number[]` or `Item[]`: the control parses the
+text, or offers a form row per item, and reports the new array.
+
 ## 📋 Options
 
 The third argument of `provideTypeControl` takes `NgDocTypeControlProviderOptions`:
