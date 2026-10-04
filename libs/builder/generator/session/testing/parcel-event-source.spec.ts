@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import type { BuildEvent, Diagnostic } from '../../contracts';
 import { createBuildSession } from '../build-session';
-import { createParcelEventSource } from '../parcel-event-source';
+import { createParcelEventSource, nativeWatcherBackend } from '../parcel-event-source';
 import { committed, compilation, deferred, harness, hostJoin, until } from './support';
 
 describe('Parcel FileEventSource', () => {
@@ -23,7 +23,8 @@ describe('Parcel FileEventSource', () => {
     const events = vi.fn();
     const errors = vi.fn();
     const subscription = await createParcelEventSource(root, {}, native).subscribe(events, errors);
-    expect(native.mock.calls[0][2]).toEqual({
+    expect(native.mock.calls[0][2]).toStrictEqual({
+      ...(nativeWatcherBackend() ? { backend: nativeWatcherBackend() } : {}),
       ignore: ['**/node_modules/**', '.idea', '**/.DS_Store'],
     });
     callback(null, [
@@ -66,6 +67,16 @@ describe('Parcel FileEventSource', () => {
     callback(null, [{ type: 'create', path: join(root, 'late.md') }]);
     expect(unsubscribe).toHaveBeenCalledTimes(1);
     expect(events).toHaveBeenCalledTimes(3);
+  });
+
+  it('names the native backend where @parcel/watcher would probe for Watchman first', () => {
+    // The probe leaves an unreaped shell in the host's process group when Watchman is missing.
+    expect(nativeWatcherBackend('linux')).toBe('inotify');
+    expect(nativeWatcherBackend('android')).toBe('inotify');
+    // FSEvents is chosen before the probe; Windows has no zombies to leave.
+    expect(nativeWatcherBackend('darwin')).toBeUndefined();
+    expect(nativeWatcherBackend('win32')).toBeUndefined();
+    expect(nativeWatcherBackend()).toBe(nativeWatcherBackend(process.platform));
   });
 
   it('forwards custom ignore/backend options and unsubscribe rejection', async () => {

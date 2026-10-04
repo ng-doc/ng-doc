@@ -20,6 +20,22 @@ const RESCAN_MESSAGE = /must be re-scanned/i;
  */
 export const METADATA_IGNORE: readonly string[] = ['.idea', '**/.DS_Store'];
 
+/**
+ * The backend a subscription names when its options name none. Without a name, @parcel/watcher on
+ * Linux first probes for Watchman: it runs `watchman get-sockname` through `popen`, and when
+ * Watchman is missing the reply fails to parse before `pclose`, so the probe's shell is never
+ * reaped. The host then keeps a zombie child in its process group until it exits, and a
+ * supervisor that waits for that group to empty after `dispose` finds it there. Naming inotify,
+ * the backend the probe falls back to, skips the probe. macOS selects FSEvents before any probe.
+ * @param platform The platform to choose for.
+ * @returns The backend to name, or `undefined` to keep @parcel/watcher's choice.
+ */
+export function nativeWatcherBackend(
+  platform: NodeJS.Platform = process.platform,
+): parcel.BackendType | undefined {
+  return platform === 'linux' || platform === 'android' ? 'inotify' : undefined;
+}
+
 /** Each subscription owns a native watcher. The adapter must ignore its generated output roots. */
 export function createParcelEventSource(
   root: string,
@@ -50,6 +66,7 @@ export function createParcelEventSource(
           ? join(physicalDirectory, path)
           : pattern;
       });
+      const backend = options.backend ?? nativeWatcherBackend();
       let active = true;
       let disposing: Promise<void> | undefined;
       const report = (diagnostic: Diagnostic): void => {
@@ -115,7 +132,7 @@ export function createParcelEventSource(
             }
           }
         },
-        { ...options, ignore },
+        { ...options, ...(backend ? { backend } : {}), ignore },
       );
       return {
         dispose() {

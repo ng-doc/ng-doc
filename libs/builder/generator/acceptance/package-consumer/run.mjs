@@ -68,6 +68,32 @@ async function joinGroup(pid) {
   assert.equal(groupAlive(pid), false, `Owned process group ${pid} survived cleanup`);
   return true;
 }
+/** What is left in the given process groups, for the evidence of a forced cleanup. */
+function groupMembers(groups) {
+  if (!groups.length) return [];
+  try {
+    return execFileSync('/bin/ps', ['-axo', 'pid=,ppid=,pgid=,stat=,command='], {
+      encoding: 'utf8',
+    })
+      .split('\n')
+      .flatMap((row) => {
+        const match = row.match(/^\s*(\d+)\s+(\d+)\s+(\d+)\s+(\S+)\s+(.+)$/);
+        return match && groups.includes(Number(match[3]))
+          ? [
+              {
+                pid: Number(match[1]),
+                ppid: Number(match[2]),
+                pgid: Number(match[3]),
+                stat: match[4],
+                command: match[5].slice(0, 300),
+              },
+            ]
+          : [];
+      });
+  } catch (error) {
+    return [{ error: String(error) }];
+  }
+}
 function joinOwned(pid) {
   const current = joinTasks.get(pid);
   if (current) return current;
@@ -201,6 +227,16 @@ async function run(name, command, args, cwd = consumer, timeout = 300_000, track
   }
   const joined = [];
   const joinErrors = [];
+  // Recorded before the join kills them: a forced cleanup names what outlived the command.
+  const leftovers = groupMembers(
+    [...active].filter((owned) => {
+      try {
+        return groupAlive(owned);
+      } catch {
+        return true;
+      }
+    }),
+  );
   for (const owned of [...active]) {
     const [result] = await Promise.allSettled([joinOwned(owned)]);
     if (result.status === 'fulfilled' && result.value) joined.push(owned);
@@ -220,6 +256,7 @@ async function run(name, command, args, cwd = consumer, timeout = 300_000, track
     overflow,
     forcedCleanup,
     joinErrors,
+    leftovers,
     spawnError: spawnError instanceof Error ? spawnError.message : undefined,
     ownedGroups: trackOwned
       ? [...new Set([...stdout.matchAll(/^NGDOC_OWNED (\d+)$/gm)].map((match) => Number(match[1])))]
@@ -451,9 +488,16 @@ try {
     { recursive: true },
   );
 
+  // The consumer brings its own watcher, as a host may. It names inotify on Linux, as NgDoc's own
+  // watcher does: @parcel/watcher's default there probes for Watchman through popen and, without
+  // Watchman, never reaps the probe's shell, so the host would exit with a zombie in its group.
+  // The host is its group's leader (`run` starts it detached), so after dispose it checks that
+  // nothing else is in that group, zombies included, instead of relying on the harness winning a
+  // race with the reaping of orphans after it exited.
   await put(
     'b-lifecycle.mjs',
     `import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
 import {readFile,writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {createGeneratorBuildSession} from '@ng-doc/builder/generator/bootstrap/index.js';
@@ -465,13 +509,15 @@ let built; try{built=await once.buildOnce({mode:'production'}); assert.equal(bui
 const watched=createGeneratorBuildSession(options('b-watch','b-cache-watch'));
 const guideHtml=result=>result.status==='success'?result.snapshot.artifacts.flatMap(artifact=>artifact.content).find(item=>item.ir.role==='guide-tab')?.html:undefined;
 let handle; let initial; let next; let timer; let resolveUpdate; const updated=new Promise(resolve=>resolveUpdate=resolve); let initialGeneration=0;
-const source={async subscribe(listener,onError){const subscription=await parcel.subscribe(root,(error,events)=>{if(error){onError({code:'PACKAGE_CONSUMER_WATCH',message:String(error),severity:'error',stage:'host'});return;} listener(events.map(event=>({kind:event.type,path:event.path})));},{ignore:['**/node_modules/**','**/b-once/**','**/b-watch/**','**/b-cache-*/**','**/generated/**','**/browser/**','**/server/**']}); return {dispose:()=>subscription.unsubscribe()};}};
+const source={async subscribe(listener,onError){const subscription=await parcel.subscribe(root,(error,events)=>{if(error){onError({code:'PACKAGE_CONSUMER_WATCH',message:String(error),severity:'error',stage:'host'});return;} listener(events.map(event=>({kind:event.type,path:event.path})));},{ignore:['**/node_modules/**','**/b-once/**','**/b-watch/**','**/b-cache-*/**','**/generated/**','**/browser/**','**/server/**'],...(process.platform==='linux'?{backend:'inotify'}:{})}); return {dispose:()=>subscription.unsubscribe()};}};
 try{handle=await watched.watch(source,event=>{if(event.kind==='result'&&event.result.generation>initialGeneration&&guideHtml(event.result)?.includes('External tarball content two.'))resolveUpdate?.(event.result);});
 initial=await handle.initial; assert.equal(initial.status,'success'); initialGeneration=initial.generation; assert.match(guideHtml(initial),/External tarball content one\\./);
 const guide=path.join(root,'docs/packed.md'); await writeFile(guide,(await readFile(guide,'utf8')).replace('content one','content two'));
 try{next=await Promise.race([updated,new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('watch update timed out')),60000);})]);} finally{clearTimeout(timer);}
 assert.equal(next.status,'success'); assert.match(guideHtml(next),/External tarball content two\\./);
 } finally{await handle?.dispose(); await watched.dispose();}
+const leftInGroup=execFileSync('/bin/ps',['-axo','pid=,pgid=,stat=,command='],{encoding:'utf8'}).split('\\n').map(row=>row.trim().split(/\\s+/)).filter(([pid,pgid,,command])=>Number(pgid)===process.pid&&Number(pid)!==process.pid&&command!=='/bin/ps').map(row=>row.join(' '));
+assert.deepEqual(leftInGroup,[],'Nothing but the host may be left in its process group after dispose');
 console.log(JSON.stringify({buildOnce:{generation:built.generation,revision:built.snapshot.revision},watch:{initial:initial.generation,updated:next.generation},disposed:true}));
 `,
   );
