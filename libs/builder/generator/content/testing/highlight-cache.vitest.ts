@@ -41,11 +41,15 @@ vi.mock('node:fs/promises', async (importOriginal) => {
   };
 });
 
-const packages = vi.hoisted(() => ({ shiki: '1.10.3' as string | null }));
+// A fixed Shiki release, so that keys do not depend on the installed one; a test changes any
+// package of `overrides`.
+const packages = vi.hoisted(() => ({
+  overrides: { shiki: '4.5.0' } as Record<string, string | null>,
+}));
 vi.mock('../../kernel/runtime-identity', async (importOriginal) => {
   const actual = await importOriginal<typeof import('../../kernel/runtime-identity')>();
   return {
-    runtimePackages: () => ({ ...actual.runtimePackages(), shiki: packages.shiki }),
+    runtimePackages: () => ({ ...actual.runtimePackages(), ...packages.overrides }),
   };
 });
 
@@ -56,7 +60,7 @@ afterEach(() => {
   resetHighlightCache();
   vi.unstubAllEnvs();
   writes.fail = undefined;
-  packages.shiki = '1.10.3';
+  packages.overrides = { shiki: '4.5.0' };
   for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true });
 });
 
@@ -252,10 +256,24 @@ describe('the key', () => {
       key({}, { light: 'github-light', dark: NG_DOC_SYNTAX_THEME_NAME }),
       key({}, { light: NG_DOC_SYNTAX_THEME_NAME, dark: 'github-dark' }),
     ];
-    packages.shiki = '9.9.9';
+    // Shiki and every package it highlights with, and the plugin that runs it.
+    for (const name of [
+      'shiki',
+      '@shikijs/core',
+      '@shikijs/langs',
+      '@shikijs/themes',
+      '@shikijs/engine-oniguruma',
+      '@shikijs/vscode-textmate',
+      '@shikijs/rehype',
+    ]) {
+      packages.overrides = { shiki: '4.5.0', [name]: '9.9.9' };
+      variants.push(key());
+    }
+    packages.overrides = { shiki: null };
     variants.push(key());
-    packages.shiki = null;
-    variants.push(key());
+    // A package that does not highlight leaves the key alone.
+    packages.overrides = { shiki: '4.5.0', prettier: '0.0.0' };
+    expect(key()).toBe(base);
     expect(new Set([base, ...variants]).size).toBe(variants.length + 1);
   });
 });

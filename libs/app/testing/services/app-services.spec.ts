@@ -25,6 +25,7 @@ import { describeChangeDetection } from '../change-detection/change-detection-mo
 
 vi.mock('shiki/core', () => ({ createHighlighterCore: vi.fn() }));
 vi.mock('shiki/wasm', () => ({ default: vi.fn() }));
+vi.mock('shiki/engine/oniguruma', () => ({ createOnigurumaEngine: vi.fn() }));
 // The theme modules declare `name`: a spec below reads it on every theme, and Vitest refuses reads
 // of exports a mock does not declare.
 vi.mock('shiki/themes/github-light.mjs', () => ({ default: {}, name: undefined }));

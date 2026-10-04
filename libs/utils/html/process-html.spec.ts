@@ -116,6 +116,10 @@ const CASES: Record<string, string> = {
   'a pre without a code element first': `<pre> <code class="language-ts">x</code></pre><pre>plain</pre>`,
   'a block nested in a block': `<pre><code class="language-ts">outer</code><pre><code class="language-ts">inner</code></pre></pre>`,
   'no code at all': `<h1>Title</h1><p>Only text.</p><table><tr><td>cell</td></tr></table>`,
+  'Angular control flow and @let': code(
+    'angular-html',
+    '@let name = user.name;\n@if (name) {\n  &lt;b&gt;{{ name }}&lt;/b&gt;\n} @else {\n  @defer (on viewport) { x }\n}',
+  ),
 };
 
 const THEMES: Array<[string, NgDocHtmlProcessorConfig]> = [
@@ -160,6 +164,30 @@ describe.each(THEMES)('processHtml with %s', (_, themes) => {
   });
 });
 
+describe('Angular templates', () => {
+  // The tokens of a highlighted block with NgDoc's theme, which names the colour of each token.
+  async function tokens(text: string): Promise<Map<string, string>> {
+    const { content } = await processHtml(code('angular-html', text), {
+      lightTheme: NG_DOC_SYNTAX_THEME_NAME,
+      darkTheme: NG_DOC_SYNTAX_THEME_NAME,
+    });
+    const colours = new Map<string, string>();
+    for (const [, colour, token] of content.matchAll(
+      /<span style="color:var\(--ng-doc-syntax-([a-z]+)\)[^"]*"[^>]*>([^<]*)<\/span>/g,
+    ))
+      colours.set(token!.trim(), colour!);
+    return colours;
+  }
+
+  it('highlights @let and the control flow blocks as template blocks', async () => {
+    const colours = await tokens(
+      '@let total = price * count;\n@if (total &gt; 0) {\n  {{ total }}\n} @else {\n  @for (item of items; track item) { x }\n}\n@switch (mode) { @case (1) { a } }\n@defer (on viewport) { b }',
+    );
+    for (const block of ['@let', '@if', '@else', '@for', '@switch', '@case', '@defer'])
+      expect(colours.get(block), block).toBe('keyword');
+  });
+});
+
 describe('the highlight cache', () => {
   const html = `${code('typescript', 'const cached = true;')}${code('css', '.a { color: red; }')}`;
 
@@ -180,7 +208,7 @@ describe('the highlight cache', () => {
       expect.objectContaining({ lang: 'ts', meta: '', code: 'b' }),
     ]);
     expect(blocks[0]!.options).toEqual({
-      format: 1,
+      format: 2,
       defaultLanguage: 'ts',
       fallbackLanguage: 'text',
       addLanguageClass: true,
@@ -274,6 +302,9 @@ describe('the highlight cache', () => {
       'an element with array properties',
       '[{"type":"element","tagName":"pre","properties":[],"children":[]}]',
     ],
+    ['an empty root', '[{"type":"root","children":[]}]'],
+    ['a root of a text node', '[{"type":"root","children":[{"type":"text","value":"x"}]}]'],
+    ['a root without children', '[{"type":"root"}]'],
   ])('treats an entry that is %s as a miss', async (_, value) => {
     const expected = await reference(html, config({}));
     const warm = mapCache();
@@ -289,8 +320,14 @@ describe('the highlight cache', () => {
     const warm = mapCache();
     await processHtml(html, { ...config({}), highlight: warm.cache });
     const [first, second] = [...warm.entries.keys()];
-    const tampered = JSON.parse(warm.entries.get(first!)!) as Array<{ properties: object }>;
-    tampered[0]!.properties = { ...tampered[0]!.properties, 'data-tampered': '' };
+    // `@shikijs/rehype` puts the root of the highlighted fragment in place of the block.
+    const tampered = JSON.parse(warm.entries.get(first!)!) as Array<{
+      type: string;
+      children: Array<{ properties: object }>;
+    }>;
+    expect(tampered[0]!.type).toBe('root');
+    const pre = tampered[0]!.children[0]!;
+    pre.properties = { ...pre.properties, 'data-tampered': '' };
     const entries = new Map(warm.entries).set(first!, JSON.stringify(tampered));
 
     const used = mapCache({ entries: new Map(entries), loads: true });

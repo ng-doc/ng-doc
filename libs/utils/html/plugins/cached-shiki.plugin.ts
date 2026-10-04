@@ -22,8 +22,10 @@ export interface NgDocHighlightBlock {
 
 /**
  * A cache of highlighted code blocks for `processHtml`. Values are the JSON of the HAST nodes that
- * replace a block's `pre` element. A value that is not a JSON array of HAST elements is a miss.
- * The cache only ever receives values of blocks that were highlighted without an error.
+ * replace a block's `pre` element: `@shikijs/rehype` replaces it with the root of the highlighted
+ * fragment, which holds the new `pre` element. A value that is not a JSON array of HAST elements or
+ * such roots is a miss. The cache only ever receives values of blocks that were highlighted without
+ * an error.
  */
 export interface NgDocHighlightCache {
   /** The key of a block. It must change whenever anything in the block or the Shiki release does. */
@@ -165,18 +167,32 @@ async function highlight(transform: Highlighter, node: Element): Promise<string>
   return JSON.stringify(root.children);
 }
 
-/** A cached value as fresh nodes, or undefined when it is not a JSON array of HAST elements. */
+/**
+ * A cached value as fresh nodes, or undefined when it is not a JSON array of HAST elements or of
+ * roots of elements (what `@shikijs/rehype` puts in place of a block).
+ */
 function fragment(value: string): ElementContent[] | undefined {
   try {
     const parsed: unknown = JSON.parse(value);
-    return Array.isArray(parsed) &&
-      parsed.length > 0 &&
-      parsed.every((item) => isNode(item) && item.type === 'element')
+    return Array.isArray(parsed) && parsed.length > 0 && parsed.every(isReplacement)
       ? (parsed as ElementContent[])
       : undefined;
   } catch {
     return undefined;
   }
+}
+
+function isReplacement(value: unknown): boolean {
+  if (isNode(value)) return value.type === 'element';
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  const node = value as Record<string, unknown>;
+  const children = node['children'];
+  return (
+    node['type'] === 'root' &&
+    Array.isArray(children) &&
+    children.length > 0 &&
+    children.every((child) => isNode(child) && child.type === 'element')
+  );
 }
 
 function isNode(value: unknown): value is ElementContent {

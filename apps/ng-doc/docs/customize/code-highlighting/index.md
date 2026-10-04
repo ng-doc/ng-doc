@@ -185,6 +185,13 @@ Call `ngDocSyntaxTheme()` for every highlighter: Shiki changes the theme object 
 
 ## 🚧 Gotchas
 
+> **Note**
+> NgDoc highlights code with Shiki 4, which knows Angular's `@let` and every control flow block.
+> Themes and languages that you load yourself must be Shiki 4 registrations. Shiki writes the font
+> styles of a pair of themes as the `--shiki-light-font-style` and `--shiki-dark-font-style`
+> variables (and their `font-weight` and `text-decoration` siblings), which the NgDoc styles apply
+> to code blocks.
+
 > **Warning**
 > The theme names in `shiki.themes` must be themes bundled with Shiki, or `css-variables`. To use
 > a theme of your own, set its colors with the `--ng-doc-syntax-*` variables instead.

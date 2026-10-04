@@ -101,7 +101,7 @@ const DEFAULT_LANGUAGE = 'ts';
  * whenever {@link shikiOptions} or the cached plugin change.
  */
 const HIGHLIGHT_IDENTITY = {
-  format: 1,
+  format: 2,
   defaultLanguage: DEFAULT_LANGUAGE,
   fallbackLanguage: 'text',
   addLanguageClass: true,

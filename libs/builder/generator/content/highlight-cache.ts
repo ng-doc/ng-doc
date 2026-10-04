@@ -17,8 +17,8 @@ import { runtimePackages } from '../kernel/runtime-identity';
  * Highlighting a block is a pure function of its text, language and meta string, the themes, the
  * fixed options of the highlighting plugin and the Shiki release, so its result is cached under a
  * key that covers all of them: `digestOf({ context, block })`, where the context is the format of
- * this cache, the resolved versions of `shiki`, `@shikijs/core` and `@shikijs/rehype`
- * (`runtimePackages`) and the identity of each theme (a bundled theme's name; NgDoc's own theme by
+ * this cache, the resolved versions of `shiki`, the Shiki packages it highlights with and
+ * `@shikijs/rehype` (`SHIKI_PACKAGES`, from `runtimePackages`) and the identity of each theme (a bundled theme's name; NgDoc's own theme by
  * the digest of its definition), and the block names the plugin's format and options, the theme
  * names, the language before its fallback, the raw meta string and the text. A Shiki upgrade or a
  * plugin change therefore changes every key, and a stale entry is never hit.
@@ -30,7 +30,8 @@ import { runtimePackages } from '../kernel/runtime-identity';
  * reference path and `cache: false` never read or write the pack: they use the map only.
  *
  * A cached entry can never change output: the plugin uses an entry only when it is a JSON array of
- * HAST elements and highlights the block otherwise, it stores only blocks that were highlighted
+ * HAST elements (or of the roots `@shikijs/rehype` replaces a block with) and highlights the block
+ * otherwise, it stores only blocks that were highlighted
  * without an error, and a pack of another version or context, or one that cannot be read or
  * parsed, is not read. No dependency or watch input is added: the result depends only on the key.
  *
@@ -44,6 +45,20 @@ import { runtimePackages } from '../kernel/runtime-identity';
  * main thread merges (`HighlightSession.merge`); the key is a function of the block alone. Only the
  * main thread reads and writes the pack.
  */
+
+/**
+ * The packages whose versions enter every key: Shiki, the packages it highlights with (grammars,
+ * themes, regular expression engine, tokenizer) and the plugin that runs it.
+ */
+const SHIKI_PACKAGES = [
+  'shiki',
+  '@shikijs/core',
+  '@shikijs/langs',
+  '@shikijs/themes',
+  '@shikijs/engine-oniguruma',
+  '@shikijs/vscode-textmate',
+  '@shikijs/rehype',
+] as const;
 
 /** The warning of a `verify` hit whose highlighting differs from the cached one. */
 export const HIGHLIGHT_CACHE_MISMATCH = 'CONTENT_HIGHLIGHT_CACHE_MISMATCH';
@@ -174,11 +189,7 @@ export class HighlightSession {
     const engine = runtimePackages();
     this.context = digestOf({
       version: PACK_VERSION,
-      engine: {
-        shiki: engine['shiki'] ?? null,
-        '@shikijs/core': engine['@shikijs/core'] ?? null,
-        '@shikijs/rehype': engine['@shikijs/rehype'] ?? null,
-      },
+      engine: Object.fromEntries(SHIKI_PACKAGES.map((name) => [name, engine[name] ?? null])),
       themes: { light: themeIdentity(themes.light), dark: themeIdentity(themes.dark) },
     });
     // A long-lived runtime whose map outgrew the limit starts again from the pack.

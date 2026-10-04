@@ -1,9 +1,8 @@
 import { inject, isDevMode, OnDestroy, Service, Signal, signal } from '@angular/core';
 import { NG_DOC_SHIKI_THEME } from '@ng-doc/app/tokens';
 import { ngDocSyntaxTheme } from '@ng-doc/core/constants/syntax-theme';
-import { HighlighterGeneric } from '@shikijs/core/types';
-import { ThemeInput } from 'shiki';
-import { createHighlighterCore } from 'shiki/core';
+import { type HighlighterCore, type ThemeInput, createHighlighterCore } from 'shiki/core';
+import { createOnigurumaEngine } from 'shiki/engine/oniguruma';
 import getWasm from 'shiki/wasm';
 
 /** Shiki configuration of the code highlighter. */
@@ -32,9 +31,9 @@ export interface NgDocHighlighterConfig {
  */
 @Service()
 export class NgDocHighlighterService implements OnDestroy {
-  private static defaultInitialization?: Promise<HighlighterGeneric<string, string>>;
+  private static defaultInitialization?: Promise<HighlighterCore>;
 
-  private highlighter?: HighlighterGeneric<string, string>;
+  private highlighter?: HighlighterCore;
   private initialization?: Promise<void>;
   private ownsHighlighter = false;
   private destroyed = false;
@@ -108,10 +107,8 @@ export class NgDocHighlighterService implements OnDestroy {
     this.highlighter = undefined;
   }
 
-  private static async create(
-    themes: ThemeInput[] = [],
-  ): Promise<HighlighterGeneric<string, string>> {
-    return (await createHighlighterCore({
+  private static async create(themes: ThemeInput[] = []): Promise<HighlighterCore> {
+    return createHighlighterCore({
       themes: [
         import('shiki/themes/github-light.mjs'),
         import('shiki/themes/ayu-dark.mjs'),
@@ -120,8 +117,10 @@ export class NgDocHighlighterService implements OnDestroy {
         ...themes,
       ],
       langs: [import('shiki/langs/angular-html.mjs')],
-      loadWasm: getWasm,
-    })) as HighlighterGeneric<string, string>;
+      // The Oniguruma engine, as at build time, so that the browser tokenizes code as the code
+      // blocks were tokenized.
+      engine: createOnigurumaEngine(getWasm),
+    });
   }
 
   /**
