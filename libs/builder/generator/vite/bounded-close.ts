@@ -22,12 +22,12 @@ export interface BoundedCloseOptions {
 type Outcome = 'settled' | 'timeout';
 
 /**
- * Makes `server.close()` settle even when Vite's own close never does.
+ * Makes `server.close()` release NgDoc first and settle even when Vite's own close never does.
  *
- * Vite's dependency optimizer never settles the processing promise of a dependency whose first
- * optimization is cancelled by close. A pending request for that dependency then keeps
- * `DevEnvironment.close()` waiting forever, so `server.close()` never resolves. The request holds
- * no handle, and Vite has already disposed its esbuild contexts; only the promise is left.
+ * Vite 7's dependency optimizer never settled the processing promise of a dependency whose first
+ * optimization close cancelled, so a pending request for it kept `DevEnvironment.close()` waiting
+ * forever. Vite 8 settles those promises on close; the bound stays as a safety net for any other
+ * request or plugin hook that never settles, and costs nothing when close does.
  *
  * The replacement always waits for NgDoc to release its own resources. It then gives Vite's close
  * and the rest of NgDoc's disposal `boundMs`. On timeout it reports one diagnostic and resolves;
@@ -71,8 +71,8 @@ async function closeWithinBound(
   options.warn(
     `[NGDOC_VITE_CLOSE_TIMEOUT] ${[...pending].map(describe).join(' and ')} did not settle ` +
       `within ${boundMs} ms after NgDoc released its processes, watchers and output lease; ` +
-      'the server is closed without waiting further. Vite leaves requests for optimized ' +
-      'dependencies pending when it closes during their first optimization.',
+      'the server is closed without waiting further. A request or plugin hook that never ' +
+      'settles keeps Vite from closing.',
   );
   const late = (label: string) => (cause: unknown) =>
     options.error(`[NGDOC_VITE_CLOSE] ${label} failed after the close bound: ${message(cause)}`);

@@ -471,7 +471,7 @@ export function analyzeProject(
     ? externalValue.filter((item): item is string => typeof item === 'string')
     : [];
   if (externalDependencies.length) {
-    add('migrated', 'build.externalDependencies', 'Vite `build.rollupOptions.external`.');
+    add('migrated', 'build.externalDependencies', 'Vite `build.rolldownOptions.external`.');
   }
 
   const rawOutputPath = resolveTargetOptions(legacy, defaultConfiguration)['outputPath'];
@@ -724,7 +724,7 @@ export function analyzeProject(
         add(
           'manual',
           'build.outputHashing',
-          'Vite hashes every output file name; change `build.rollupOptions.output` to name files differently.',
+          'Vite hashes every output file name; change `build.rolldownOptions.output` to name files differently.',
         );
       } else add('dropped', 'build.outputHashing', 'Vite hashes the output file names by default.');
     } else if (option === 'scripts') {

@@ -231,7 +231,7 @@ export function renderNgDocViteConfig(setup: NgDocViteSetup, header: string[] = 
       outDir: path(posix.join(setup.outputPath, 'browser')),
       emptyOutDir: true,
       sourcemap: setting('sourcemap'),
-      rollupOptions: setup.externalDependencies.length
+      rolldownOptions: setup.externalDependencies.length
         ? { external: setup.externalDependencies }
         : undefined,
     },

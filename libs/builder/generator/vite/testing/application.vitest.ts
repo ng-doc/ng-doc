@@ -239,7 +239,10 @@ describe('createNgDocApplicationPlugin', () => {
     const files = (await readdir(outDir, { recursive: true })).map(String).sort();
     const script = files.find((file) => /^assets\/index-.*\.js$/.test(file))!;
     const code = await readFile(path.join(outDir, script), 'utf8');
-    expect(code.indexOf('"polyfill"')).toBeLessThan(code.indexOf('"main"'));
+    // Vite 8's Oxc minifier prints string literals as templates.
+    const polyfill = code.search(/["`]polyfill["`]/);
+    expect(polyfill).toBeGreaterThan(-1);
+    expect(polyfill).toBeLessThan(code.search(/["`]main["`]/));
     expect(code).not.toContain('ngDevMode');
     expect(files.some((file) => /^assets\/index-.*\.css$/.test(file))).toBe(true);
     expect(files).toEqual(

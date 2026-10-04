@@ -854,11 +854,12 @@ try {
   };
   summary.patchProvenance = { patch, baselinePatch };
   const preparedMainSource = path.join(preparedRoot, 'src/lib/angular-vite-plugin.js');
-  assert.equal(
-    digest(await readFile(preparedMainSource)),
-    analogResourcePolicy.patchedMainSourceSha256,
-    'Normal prepared copy must be exactly the shipped patched Analog source',
-  );
+  for (const [file, expected] of Object.entries(analogResourcePolicy.patchedSourcesSha256))
+    assert.equal(
+      digest(await readFile(path.join(preparedRoot, 'src', file))),
+      expected,
+      `Normal prepared copy of ${file} must be exactly the shipped patched Analog source`,
+    );
   summary.fatalFaultInjection = {
     normalPreparedSha256: digest(await readFile(preparedMainSource)),
     ...(await prepareFatalCompilerCopy(preparedRoot, fatalRoot)),

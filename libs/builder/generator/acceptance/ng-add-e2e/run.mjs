@@ -156,16 +156,15 @@ async function newApplication(context, name) {
 }
 
 /**
- * The Vite the application runs: `ng add` and `migrate-to-vite` pin `vite` 7.3.5 in
- * `devDependencies`, the only version the Vite engine starts with, so the root install is that one
- * even though Vitest (which `ng new` adds) accepts Vite 8.
+ * The Vite the application runs: `ng add` and `migrate-to-vite` add `vite` `^8.3.0` to
+ * `devDependencies`, the range the Vite engine starts with, so npm installs the newest Vite 8.
  */
 async function assertPinnedVite(application) {
   const manifest = await readJson(path.join(application, 'package.json'));
-  assert.equal(manifest.devDependencies?.vite, '7.3.5', 'vite is not pinned in devDependencies');
+  assert.equal(manifest.devDependencies?.vite, '^8.3.0', 'vite is not in devDependencies');
   const lock = await readJson(path.join(application, 'package-lock.json'));
-  const installed = lock.packages['node_modules/vite']?.version;
-  assert.equal(installed, '7.3.5', `the root vite is ${installed}`);
+  const installed = lock.packages['node_modules/vite']?.version ?? '';
+  assert.match(installed, /^8\.(?:[3-9]|\d{2,})\.\d+$/, `the root vite is ${installed}`);
   return installed;
 }
 

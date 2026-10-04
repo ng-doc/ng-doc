@@ -142,7 +142,7 @@ function viteBuild(
     build: {
       write: false,
       minify: false,
-      ...(ssr ? { ssr: fixture.main } : { rollupOptions: { input: fixture.main } }),
+      ...(ssr ? { ssr: fixture.main } : { rolldownOptions: { input: fixture.main } }),
     },
     ...(ssr ? { ssr: { noExternal: true } } : {}),
   });
@@ -274,6 +274,34 @@ describe('tsconfig paths in the Vite engine', () => {
     expect(await run(createTsconfigPathsPlugin(undefined), { root, build: { lib: {} } })).toEqual({
       id: path.join(root, 'lib/feature.ts'),
     });
+    // An explicit development mode is never production for Analog (`isProdMode`), whatever
+    // NODE_ENV says: the library build reads tsconfig.lib.json, which maps nothing here.
+    await put('tsconfig.lib.json', json({ compilerOptions: {} }));
+    expect(
+      await run(createTsconfigPathsPlugin(undefined), {
+        root,
+        mode: 'development',
+        build: { lib: {} },
+      }),
+    ).toBeNull();
+    vi.unstubAllEnvs();
+    // The tsconfig the Analog compiler resolved itself wins over the plugin's own resolution.
+    await put(
+      'tsconfig.compiler.json',
+      json({ compilerOptions: { paths: { feature: ['lib/feature.ts'] } } }),
+    );
+    const compilerTsconfig = vi.fn(() => path.join(root, 'tsconfig.compiler.json'));
+    expect(
+      await run(createTsconfigPathsPlugin('tsconfig.lib.json', compilerTsconfig), { root }),
+    ).toEqual({ id: path.join(root, 'lib/feature.ts') });
+    expect(compilerTsconfig).toHaveBeenCalledTimes(1);
+    // A compiler that resolves nothing leaves the plugin's own resolution.
+    expect(
+      await run(
+        createTsconfigPathsPlugin('tsconfig.lib.json', () => undefined),
+        { root },
+      ),
+    ).toBeNull();
     // A plugin used before Vite resolved its configuration resolves nothing.
     expect(
       await (

@@ -8,10 +8,10 @@ can start from a new Angular project or add it to an existing one.
 ## Prerequisites
 
 - An Angular 22 application. `@ng-doc/builder` installs with any Angular 22 version; the Vite
-  engine is tested with `@angular/compiler` and `@angular/compiler-cli` 22.2.1
-  (`*UpgradeTo22Page#prerequisites`). The command chooses the engine from the application
+  engine needs Angular 22.2 or later (`@angular/compiler` and `@angular/compiler-cli` `^22.2.0`,
+  `*UpgradeTo22Page#prerequisites`). The command chooses the engine from the application
   ([Add NgDoc](#add-ngdoc)).
-- `vite` 7.3.5 for the Vite engine, which the command adds for you (see below).
+- Vite 8 for the Vite engine, which the command adds for you (see below).
 - Node.js 24 (`>=24.15.0 <25`).
 
 The examples use `npm`. Any package manager works.
@@ -73,13 +73,13 @@ the targets, styles, assets and budgets change in another way, and Vite, `vite.c
 server entry are left alone (`*LegacyBuildersPage#when-ng-add-sets-them-up`):
 
 - **Packages:** it adds `@ng-doc/app`, `@ng-doc/builder`, `@ng-doc/ui-kit` and `@ng-doc/core`, and
-  removes `@ng-doc/add`. It also adds `vite` 7.3.5 and `@analogjs/vite-plugin-angular` 2.6.3 to
-  `devDependencies` (`*BuildersReference#supported-versions`), and tells you when your
-  `@angular/compiler` or `@angular/compiler-cli` version isn't the one the engine is tested with.
-  The `vite` entry matters: Vitest, which `ng new` adds, would otherwise install Vite 8, and the
-  Vite engine doesn't start with any version but 7.3.5 (`*TroubleshootingPage#ngdoc_vite_version`).
-  If `package.json` already has another `vite`, the command keeps it and warns; pin it with
-  `npm i -D vite@7.3.5`.
+  removes `@ng-doc/add`. It also adds `vite` `^8.3.0` and `@analogjs/vite-plugin-angular` `^2.8.0`
+  to `devDependencies` when `package.json` doesn't list them
+  (`*BuildersReference#supported-versions`), so npm installs their newest releases. It tells you
+  when your `@angular/compiler` or `@angular/compiler-cli` can't be Angular 22.2 or later. If
+  `package.json` already has a `vite` that can't resolve to Vite 8.3 or later, the command keeps it
+  and warns, because the Vite engine doesn't start with it
+  (`*TroubleshootingPage#ngdoc_vite_version`); update it with `npm i -D vite@^8.3.0`.
 - **Targets:** the `build` target uses `@ng-doc/builder:vite-application` and the `serve` target
   uses `@ng-doc/builder:vite-dev-server`, both with `vite.config.mjs`
   (`*BuildersReference#vite-builders`). Each build configuration, such as `production`, selects the

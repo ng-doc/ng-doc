@@ -8,39 +8,21 @@ import { build } from 'esbuild';
 import {
   assertRuntimeRequiresDeclared,
   assertSourceInventory,
+  ANALOG_COMPATIBILITY_UPSTREAM,
   RUNTIME_REQUIRES,
-  createTsMorphShim,
-  patchMainSource,
+  patchSource,
   prepareAnalogCompatibility,
   replaceExactlyOnce,
   sourceInventory,
 } from '../build-analog-compatibility.mjs';
+import {
+  ANALOG_MAIN_SOURCE,
+  analogResourcePolicy,
+  applyAnalogResourcePatch,
+} from '../analog-resource-patch.mjs';
 
 // `fileURLToPath`, not `URL.pathname`: on Windows the pathname is `/D:/…`, which resolves to `D:\D:\…`.
 const workspace = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
-
-async function importShim(packageJson, includeTsMorph) {
-  const fixture = await mkdtemp(path.join(os.tmpdir(), 'ngdoc-analog-shim-'));
-  try {
-    const analogDirectory = path.join(fixture, 'node_modules/@analogjs/vite-plugin-angular');
-    await mkdir(analogDirectory, { recursive: true });
-    await writeFile(path.join(analogDirectory, 'package.json'), JSON.stringify(packageJson));
-    if (includeTsMorph) {
-      const tsMorphDirectory = path.join(analogDirectory, 'node_modules/ts-morph');
-      await mkdir(tsMorphDirectory, { recursive: true });
-      await writeFile(path.join(tsMorphDirectory, 'package.json'), '{"main":"./index.cjs"}');
-      await writeFile(
-        path.join(tsMorphDirectory, 'index.cjs'),
-        'exports.Project = class Project {}; exports.SyntaxKind = {};',
-      );
-    }
-    const shim = path.join(fixture, 'shim.mjs');
-    await writeFile(shim, createTsMorphShim());
-    return await import(`${pathToFileURL(shim).href}?fixture=${Date.now()}`);
-  } finally {
-    await rm(fixture, { recursive: true, force: true });
-  }
-}
 
 test('source inventory rejects a changed upstream input', async () => {
   const fixture = await mkdtemp(path.join(os.tmpdir(), 'ngdoc-analog-inventory-'));
@@ -72,56 +54,21 @@ test('replaceExactlyOnce rejects missing and duplicate patch anchors', () => {
   );
 });
 
-test('patchMainSource requires caller patch policy to alter the source', () => {
-  assert.throws(() => patchMainSource('source', (value) => value), /did not change/);
+test('patchSource requires caller patch policy to alter the source', () => {
+  assert.throws(
+    () => patchSource('source', (value) => value, 'lib/fixture.js'),
+    /did not change lib\/fixture\.js/,
+  );
   assert.deepEqual(
-    patchMainSource('source', (value) => ({ code: `${value} patched`, changes: ['fixture'] })),
+    patchSource(
+      'source',
+      (value, file) => ({ code: `${value} patched`, changes: [file] }),
+      'lib/fixture.js',
+    ),
     {
       code: 'source patched',
-      changes: ['fixture'],
+      changes: ['lib/fixture.js'],
     },
-  );
-});
-
-test('ts-morph shim checks the upstream package before requiring its dependency', () => {
-  const shim = createTsMorphShim();
-  assert.ok(
-    shim.indexOf('upstreamPackage.version !== expected.version') <
-      shim.indexOf("upstreamRequire('ts-morph')"),
-  );
-  assert.match(shim, /import\.meta\.resolve\('@analogjs\/vite-plugin-angular\/package\.json'\)/);
-});
-
-test('ts-morph shim rejects a wrong Analog peer before attempting ts-morph', async () => {
-  await assert.rejects(
-    () =>
-      importShim(
-        {
-          name: '@analogjs/vite-plugin-angular',
-          version: '9.9.9',
-          exports: { './package.json': './package.json' },
-        },
-        false,
-      ),
-    (error) =>
-      /requires @analogjs\/vite-plugin-angular@2\.6\.3; found @analogjs\/vite-plugin-angular@9\.9\.9/.test(
-        error.message,
-      ) && !/ts-morph/.test(error.message),
-  );
-});
-
-test('ts-morph shim rejects a missing nested dependency after accepting the exact peer', async () => {
-  await assert.rejects(
-    () =>
-      importShim(
-        {
-          name: '@analogjs/vite-plugin-angular',
-          version: '2.6.3',
-          exports: { './package.json': './package.json' },
-        },
-        false,
-      ),
-    /could not resolve ts-morph from @analogjs\/vite-plugin-angular@2\.6\.3/,
   );
 });
 
@@ -139,14 +86,19 @@ test('esbuild redirects only the factory entry and retains ordinary Analog impor
       "import angular from '@analogjs/vite-plugin-angular'; export default angular;",
     );
     const resolvedOrdinary = await realpath(ordinary);
-    const original = `pendingCompilation = performCompilation(resolvedConfig, [\n                        ...mods.map((mod) => mod.id),\n                        ...updates,\n                    ]);`;
-    const replacement = `pendingCompilation = performCompilation(resolvedConfig, [\n                        ctx.file,\n                        ...mods.map((mod) => mod.id),\n                        ...updates,\n                    ]);`;
+    const original = `await hotUpdates.schedule(ctx.file, [\n                        ...mods.map((mod) => mod.id),\n                        ...updates,\n                    ]);`;
+    const replacement = `await hotUpdates.schedule(ctx.file, [\n                        ctx.file,\n                        ...mods.map((mod) => mod.id),\n                        ...updates,\n                    ]);`;
+    const files = [];
     const prepared = await prepareAnalogCompatibility({
       root: workspace,
       factoryEntry: factory,
       compatibilityFormat: 'diagnostic-ctx-file',
-      applyPatch: (source) =>
-        replaceExactlyOnce(source, original, replacement, 'diagnostic ctx.file anchor'),
+      applyPatch: (source, file) => {
+        files.push(file);
+        return file === 'lib/angular-vite-plugin.js'
+          ? replaceExactlyOnce(source, original, replacement, 'diagnostic ctx.file anchor')
+          : `${source}\nexport const diagnosticStylesPatched = true;\n`;
+      },
     });
     const result = await build({
       entryPoints: [factory, ordinary],
@@ -176,10 +128,13 @@ test('esbuild redirects only the factory entry and retains ordinary Analog impor
       result.outputFiles.map((file) => [path.basename(file.path), file.text]),
     );
     assert.match(outputs['factory.js'], /diagnostic-ctx-file/);
-    assert.match(
-      outputs['factory.js'],
-      /pendingCompilation = performCompilation\(resolvedConfig, \[\s*ctx\.file,/,
-    );
+    assert.match(outputs['factory.js'], /await hotUpdates\.schedule\(ctx\.file, \[\s*ctx\.file,/);
+    assert.deepEqual(files, [
+      'lib/angular-vite-plugin.js',
+      'lib/encapsulate-component-styles-plugin.js',
+    ]);
+    // Analog 2.8.0 no longer depends on ts-morph: nothing resolves it, and no shim is bundled.
+    assert.doesNotMatch(outputs['factory.js'], /ts-morph/);
     assert.doesNotMatch(outputs['factory.js'], /from ["']@analogjs\/vite-plugin-angular["']/);
     assert.match(outputs['ordinary.js'], /from ["']@analogjs\/vite-plugin-angular["']/);
     assert.deepEqual([...prepared.encounteredStaticExternals].sort(), [
@@ -199,17 +154,59 @@ test('esbuild redirects only the factory entry and retains ordinary Analog impor
       'vite',
     ]);
     assert.equal(prepared.provenance.compatibilityFormat, 'diagnostic-ctx-file');
-    assert.equal(prepared.provenance.patchedMainSourceSha256.length, 64);
+    assert.deepEqual(
+      prepared.provenance.patchedSources.map(({ path: file }) => file),
+      ['lib/angular-vite-plugin.js', 'lib/encapsulate-component-styles-plugin.js'],
+    );
+    for (const source of prepared.provenance.patchedSources) {
+      assert.equal(source.patchedSha256.length, 64);
+      assert.notEqual(source.patchedSha256, source.sha256);
+    }
   } finally {
     await rm(fixture, { recursive: true, force: true });
   }
+});
+
+test('the shipped policy patches exactly the pinned Analog sources it names', async () => {
+  const upstream = path.join(workspace, 'node_modules/@analogjs/vite-plugin-angular/src');
+  const files = Object.keys(analogResourcePolicy.patchedSourcesSha256);
+  assert.deepEqual(files, Object.keys(ANALOG_COMPATIBILITY_UPSTREAM.patchedSources));
+  assert.equal(
+    analogResourcePolicy.upstream,
+    `${ANALOG_COMPATIBILITY_UPSTREAM.name}@${ANALOG_COMPATIBILITY_UPSTREAM.version}`,
+  );
+  const applied = [];
+  for (const file of files) {
+    const { changes } = applyAnalogResourcePatch(
+      await readFile(path.join(upstream, file), 'utf8'),
+      file,
+    );
+    applied.push(...changes.map(({ label }) => label));
+  }
+  assert.deepEqual(
+    applied.sort(),
+    analogResourcePolicy.changes.map(({ label }) => label).sort(),
+    'every change applies to one of the named files',
+  );
+  // Fixed upstream in 2.8.0: hot-update passes are awaited, and component stylesheets are
+  // encapsulated by a separate plugin outside the TypeScript transform.
+  for (const label of [
+    'unimported-resource-rejection-observer',
+    'component-style-transform-filter',
+    'component-style-transform-passthrough',
+  ])
+    assert.equal(applied.includes(label), false, label);
+  assert.throws(
+    () => applyAnalogResourcePatch('unrelated source', ANALOG_MAIN_SOURCE),
+    /must occur exactly once; found 0/,
+  );
 });
 
 test('assertRuntimeRequiresDeclared needs only the requires reachable on the pinned Angular major', () => {
   const manifest = (dependencies) => ({
     dependencies,
     peerDependencies: { '@angular/compiler-cli': '>=22.0.0 <23.0.0' },
-    'ng-doc': { viteEngine: { '@angular/compiler-cli': '22.0.6' } },
+    'ng-doc': { viteEngine: { '@angular/compiler-cli': '^22.2.0' } },
   });
   const requires = [
     { id: '@angular/build/private' },
@@ -231,14 +228,23 @@ test('assertRuntimeRequiresDeclared needs only the requires reachable on the pin
       }),
     /Undeclared retained Analog runtime require: @angular-devkit\/build-angular/,
   );
-  assert.throws(
-    () =>
-      assertRuntimeRequiresDeclared(requires, {
-        dependencies: { '@angular/build': '22.0.6' },
-        'ng-doc': { viteEngine: { '@angular/compiler-cli': '^22.0.0' } },
-      }),
-    /must pin the Vite engine's @angular\/compiler-cli \(ng-doc.viteEngine\) to an exact version/,
+  // An exact version names its major as well.
+  assert.doesNotThrow(() =>
+    assertRuntimeRequiresDeclared(requires, {
+      dependencies: { '@angular/build': '22.2.1' },
+      'ng-doc': { viteEngine: { '@angular/compiler-cli': '22.2.1' } },
+    }),
   );
+  for (const range of ['>=22.0.0 <23.0.0', '~22.2.0', '^0.22.0', '22.x', 'latest'])
+    assert.throws(
+      () =>
+        assertRuntimeRequiresDeclared(requires, {
+          dependencies: { '@angular/build': '22.2.1' },
+          'ng-doc': { viteEngine: { '@angular/compiler-cli': range } },
+        }),
+      /must name the Vite engine's @angular\/compiler-cli \(ng-doc.viteEngine\) as a version or a caret range of one major/,
+      range,
+    );
   // The peer range alone does not name the tested major.
   assert.throws(
     () =>
@@ -246,7 +252,7 @@ test('assertRuntimeRequiresDeclared needs only the requires reachable on the pin
         dependencies: { '@angular/build': '22.0.6' },
         peerDependencies: { '@angular/compiler-cli': '22.0.6' },
       }),
-    /must pin the Vite engine's @angular\/compiler-cli/,
+    /must name the Vite engine's @angular\/compiler-cli/,
   );
 });
 

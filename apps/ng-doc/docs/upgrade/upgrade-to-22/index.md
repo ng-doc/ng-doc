@@ -23,15 +23,14 @@ site:
 ## Prerequisites
 
 - Angular 22. `@ng-doc/app`, `@ng-doc/ui-kit` and `@ng-doc/builder` support `>=22.0.0 <23.0.0`,
-  and `@ng-doc/builder` depends on `@angular/build` 22.1.9. The Vite engine is tested with
-  `@angular/compiler` and `@angular/compiler-cli` 22.2.1. Update Angular first.
-- For the Vite engine only: `vite` 7.3.5 exactly, with `@analogjs/vite-plugin-angular` 2.6.3 (the
-  versions the engine is tested with are listed under `ng-doc.viteEngine` in the `package.json` of
-  `@ng-doc/builder`). The legacy builders don't use Vite, so an update
-  that stays on them needs nothing. Before you move to the Vite engine, pin Vite in
-  `devDependencies` with `npm i -D vite@7.3.5` (the migration schematic adds it when `package.json`
-  has no `vite`). Without the pin, Vitest brings in Vite 8 and the Vite engine stops with
-  `NGDOC_VITE_VERSION`.
+  and `@ng-doc/builder` depends on `@angular/build` 22.2.1. The Vite engine needs Angular 22.2 or
+  later (`@angular/compiler` and `@angular/compiler-cli` `^22.2.0`). Update Angular first.
+- For the Vite engine only: Vite 8 (`vite` `^8.3.0`) and `@analogjs/vite-plugin-angular` `^2.8.0`
+  (the ranges are listed under `ng-doc.viteEngine` in the `package.json` of `@ng-doc/builder`). The
+  legacy builders don't use Vite, so an update that stays on them needs nothing. The migration
+  schematic adds both when `package.json` doesn't list them. If an earlier setup pinned
+  `vite@7.3.5`, update it with `npm i -D vite@^8.3.0 @analogjs/vite-plugin-angular@^2.8.0`: the
+  Vite engine stops with `NGDOC_VITE_VERSION` on Vite 7.
 - Node.js 24 (`>=24.15.0 <25`).
 
 Zoneless applications are supported: NgDoc's own tests run with and without zone.js.
@@ -587,7 +586,7 @@ with a persistent cache, faster rebuilds and diagnostic codes.
   `*MigrateToNewEnginePage` explains each step, and how to roll back. After the migration, go
   through its checklist (`*MigrateToNewEnginePage#after-migrating`): the manual items of the
   report, the output folder (`<outputPath>/browser`), server rendering with
-  `outputMode: 'server'`, and the exact Vite version, 7.3.5.
+  `outputMode: 'server'`, and the Vite version (Vite 8, `^8.3.0`).
 
 - **New projects:** `ng add` sets up the new engine with the Vite host in a new standalone
   application. NgModule applications, and projects whose build target doesn't use an Angular

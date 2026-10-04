@@ -1,6 +1,6 @@
 import type { Plugin } from 'vite';
 
-export const ANGULAR_COMPATIBILITY_FORMAT = 'ng-doc-analog-2.6.3-resources-v1';
+export const ANGULAR_COMPATIBILITY_FORMAT = 'ng-doc-analog-2.8.0-resources-v1';
 export const ANGULAR_COMPILER_NAME = '@analogjs/vite-plugin-angular';
 
 /** Compatibility assertion for the tested compiler implementation; not an authenticity signature. */
@@ -36,7 +36,7 @@ export function assertAngularCompatibility(plugins: readonly Plugin[]): void {
   ) {
     throw new Error(
       '[NGDOC_VITE_ANGULAR_COMPATIBILITY] Use createNgDocAngularPlugins from ' +
-        '@ng-doc/builder/generator/vite/angular/index.js. The stock Analog 2.6.3 factory ' +
+        '@ng-doc/builder/generator/vite/angular/index.js. The stock Analog 2.8.0 factory ' +
         'does not preserve documentation resource invalidation and stylesheet ownership.',
     );
   }

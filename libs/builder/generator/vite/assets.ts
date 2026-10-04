@@ -1,7 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import type { OutputBundle, PluginContext } from 'rollup';
-import type { Connect } from 'vite';
+import type { Connect, Rolldown } from 'vite';
 
 import { compareText } from '../../helpers/text-order';
 import type { BuildResult, OutputManifest, PublishedGeneratorConfiguration } from '../contracts';
@@ -122,7 +121,7 @@ export class GeneratedAssetInventory {
     };
   }
 
-  async emit(context: PluginContext, bundle: OutputBundle): Promise<void> {
+  async emit(context: Rolldown.PluginContext, bundle: Rolldown.OutputBundle): Promise<void> {
     for (const asset of [...this.assets.values()].sort((a, b) =>
       compareText(a.outputName, b.outputName),
     )) {

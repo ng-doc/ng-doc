@@ -7,7 +7,7 @@ import type {
   Logger,
   Plugin,
   ResolvedConfig,
-  Rollup,
+  Rolldown,
   UserConfig,
   ViteDevServer,
 } from 'vite';
@@ -321,7 +321,7 @@ export function createPlugin(options: NgDocVitePluginOptions): Plugin[] {
     enforce: 'pre',
     config(this: ConfigPluginContext | void, config: UserConfig, environment: ConfigEnv) {
       // The Vite running this configuration, which can be another copy than the one NgDoc
-      // resolves (checked when the plugin was created). Vite 7 reports it in the context.
+      // resolves (checked when the plugin was created). Vite reports it in the context.
       const running = this?.meta?.viteVersion;
       if (running !== undefined) assertSupportedViteVersion(running);
       if (environment.command === 'serve' && config.server?.watch === null) {
@@ -489,7 +489,7 @@ export function createPlugin(options: NgDocVitePluginOptions): Plugin[] {
       return ssrRenderer.controlModule(id) ?? null;
     },
     transformIndexHtml: { order: 'pre', handler: transformNgDocIndex },
-    async generateBundle(_output: Rollup.NormalizedOutputOptions, bundle: Rollup.OutputBundle) {
+    async generateBundle(_output: Rolldown.NormalizedOutputOptions, bundle: Rolldown.OutputBundle) {
       if (vite?.command === 'build' && active) await active.lifecycle.assets.emit(this, bundle);
     },
     async buildEnd(error: Error | undefined) {

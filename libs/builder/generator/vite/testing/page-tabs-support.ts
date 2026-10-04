@@ -425,10 +425,18 @@ function plugin(fixture: Fixture, angularPlugins: Plugin[]) {
  *
  */
 function packageAliases() {
-  return ['app', 'core', 'ui-kit'].map((name) => ({
-    find: `@ng-doc/${name}`,
-    replacement: path.join(repository, `libs/${name}`),
-  }));
+  // The package entry is the library's `index.ts`: Vite 8 resolves a directory through the
+  // `exports` of its package.json, and `libs/app/package.json` exports only its style sheets.
+  return ['app', 'core', 'ui-kit'].flatMap((name) => [
+    {
+      find: new RegExp(`^@ng-doc/${name}$`),
+      replacement: path.join(repository, `libs/${name}/index.ts`),
+    },
+    {
+      find: new RegExp(`^@ng-doc/${name}/`),
+      replacement: `${path.join(repository, `libs/${name}`)}/`,
+    },
+  ]);
 }
 
 /**

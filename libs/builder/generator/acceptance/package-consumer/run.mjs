@@ -307,9 +307,10 @@ try {
   }
 
   const tuple = {
-    '@analogjs/vite-plugin-angular': '2.6.3',
+    // The ranges `ng add` and `migrate-to-vite` add: npm resolves the newest releases.
+    '@analogjs/vite-plugin-angular': '^2.8.0',
     '@angular/animations': '22.2.1',
-    '@angular/build': '22.1.9',
+    '@angular/build': '22.2.1',
     '@angular/cdk': '22.0.6',
     '@angular/common': '22.2.1',
     '@angular/compiler': '22.2.1',
@@ -319,10 +320,10 @@ try {
     '@angular/platform-browser': '22.2.1',
     '@angular/platform-server': '22.2.1',
     '@angular/router': '22.2.1',
-    '@angular-devkit/architect': '0.2201.9',
-    '@angular-devkit/build-angular': '22.1.9',
-    '@angular-devkit/core': '22.1.9',
-    '@angular-devkit/schematics': '22.1.9',
+    '@angular-devkit/architect': '0.2202.1',
+    '@angular-devkit/build-angular': '22.2.1',
+    '@angular-devkit/core': '22.2.1',
+    '@angular-devkit/schematics': '22.2.1',
     '@ng-web-apis/common': '4.12.2',
     '@parcel/watcher': '2.5.6',
     '@taiga-ui/polymorpheus': '5.0.1',
@@ -330,9 +331,8 @@ try {
     rxjs: '7.8.2',
     tslib: '2.8.1',
     typescript: '6.0.3',
-    // An Angular 22 application has Vitest, whose `vite` range admits Vite 8. The root pin is the
-    // only Vite the Vite engine starts with, and the builder's optional peer must accept the tree.
-    vite: '7.3.5',
+    // The Vite engine's range; the builder's optional peer must accept the tree it installs.
+    vite: '^8.3.0',
     vitest: '4.1.11',
     'zone.js': '0.16.2',
   };
@@ -376,10 +376,10 @@ try {
     ),
     true,
   );
-  assert.equal(
-    lock.packages['node_modules/vite']?.version,
-    '7.3.5',
-    'The root Vite must be the pinned one the Vite engine requires',
+  assert.match(
+    lock.packages['node_modules/vite']?.version ?? '',
+    /^8\.(?:[3-9]|\d{2,})\.\d+$/,
+    'The root Vite must be inside the range the Vite engine requires (^8.3.0)',
   );
   summary.install = {
     lockSha256: sha(lockBytes),

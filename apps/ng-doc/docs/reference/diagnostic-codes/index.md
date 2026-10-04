@@ -118,7 +118,7 @@ These codes point to a problem in your files or setup. The linked entries explai
 
 | Code                                | Meaning                                                                                                                                              |
 | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `NGDOC_VITE_VERSION`                | The Vite engine runs on another Vite than 7.3.5 (`*TroubleshootingPage#ngdoc_vite_version`).                                                         |
+| `NGDOC_VITE_VERSION`                | The Vite engine runs on a Vite outside `^8.3.0`, such as Vite 7 (`*TroubleshootingPage#ngdoc_vite_version`).                                         |
 | `NGDOC_VITE_WATCH_CAPACITY`         | The plugin needs more watch targets than allowed (`*TroubleshootingPage#ngdoc_vite_watch_capacity`).                                                 |
 | `NGDOC_VITE_RESTART_REQUIRED`       | A setting that needs a restart changed (`*TroubleshootingPage#ngdoc_vite_restart_required`).                                                         |
 | `NGDOC_VITE_OUTPUT_LEASE`           | Another plugin instance in the same Vite process already uses the same project or generated folder (`*TroubleshootingPage#ngdoc_vite_output_lease`). |

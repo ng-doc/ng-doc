@@ -6,10 +6,10 @@ import { join, posix } from 'path';
 import { JsonFile } from './json-file';
 
 /**
- * The packages the Vite engine needs next to `@ng-doc/builder`, at the exact versions it is
+ * The packages the Vite engine needs next to `@ng-doc/builder`, with the version ranges it is
  * released and tested with (`ng-doc.viteEngine` in the package's own manifest), so the schematic of
- * a release always installs that release's tuple. The optional peer dependencies are wider on
- * purpose: they only keep npm from refusing an install whose other packages pull in a newer Vite.
+ * a release always installs that release's ranges. Each is a caret range (`^8.3.0`): npm installs
+ * the newest matching release, and nothing is pinned.
  */
 export function ngDocViteDependencies(): { [name: string]: string } {
   const manifest = JSON.parse(readFileSync(join(__dirname, '../../../package.json'), 'utf8')) as {
@@ -19,35 +19,105 @@ export function ngDocViteDependencies(): { [name: string]: string } {
 }
 
 /**
- * The packages whose exact version the Vite engine checks when it starts: it refuses any other
- * version, while the others only differ from the tested tuple.
+ * The packages whose version the Vite engine checks when it starts: it refuses any version outside
+ * the range, while the others only differ from what it is tested with.
  */
-const REQUIRED_EXACTLY = new Set(['vite']);
+const ENFORCED = new Set(['vite']);
 
-/** Whether the Vite engine refuses to start with another version of this package. */
-export function isRequiredExactly(name: string): boolean {
-  return REQUIRED_EXACTLY.has(name);
+/** Whether the Vite engine refuses to start with a version of this package outside its range. */
+export function isEnforced(name: string): boolean {
+  return ENFORCED.has(name);
 }
 
-/** A dependency the workspace has at another version than the Vite engine's. */
+/** A dependency the workspace has at a version outside the Vite engine's range. */
 export interface DependencyMismatch {
   name: string;
   expected: string;
+  /** The specifier in `package.json`. */
   found: string;
+  /** The installed version, when it is what lies outside the range. */
+  installed?: string;
 }
 
-/** The report line of a dependency mismatch, with the command that fixes a required one. */
-export function dependencyMismatchText({ name, expected, found }: DependencyMismatch): string {
-  return isRequiredExactly(name)
-    ? `\`${name}\` is \`${found}\`; the Vite engine requires exactly \`${expected}\` and does not start ` +
-        `with another version. Pin it: \`npm i -D ${name}@${expected}\`.`
-    : `\`${name}\` is \`${found}\`; the Vite engine is tested with \`${expected}\`.`;
+/** The report line of a dependency mismatch, with the command that fixes an enforced one. */
+export function dependencyMismatchText({
+  name,
+  expected,
+  found,
+  installed,
+}: DependencyMismatch): string {
+  const is = `\`${name}\` is \`${found}\`${installed ? ` (installed \`${installed}\`)` : ''}`;
+  return isEnforced(name)
+    ? `${is}; the Vite engine requires \`${expected}\` and does not start ` +
+        `with another version. Update it: \`npm i -D ${name}@${expected}\`.`
+    : `${is}; the Vite engine is tested with \`${expected}\`.`;
+}
+
+type Version = readonly [number, number, number];
+
+const VERSION = /^v?(\d+)\.(\d+)\.(\d+)(?:[-+][0-9A-Za-z.+-]*)?$/;
+
+function parseVersion(text: string): Version | undefined {
+  const match = VERSION.exec(text.trim());
+  return match ? [Number(match[1]), Number(match[2]), Number(match[3])] : undefined;
+}
+
+function compare(left: Version, right: Version): number {
+  for (let index = 0; index < 3; index++) {
+    if (left[index] !== right[index]) return left[index]! - right[index]!;
+  }
+  return 0;
+}
+
+/** The lower bound and the exclusive upper bound a caret range (`^8.3.0`, major ≥ 1) admits. */
+function caretBounds(range: string): readonly [Version, Version] | undefined {
+  const version = range.startsWith('^') ? parseVersion(range.slice(1)) : undefined;
+  return version && version[0] > 0 ? [version, [version[0] + 1, 0, 0]] : undefined;
+}
+
+/**
+ * Whether a declared dependency specifier can resolve to a version inside `required` (a caret
+ * range): true when it does, false when it cannot, and undefined when the specifier is not a plain
+ * version, caret or tilde range (a tag, a URL, `>=`, `||`, `x`), which this check cannot tell.
+ * @param declared - The specifier in the workspace's `package.json`.
+ * @param required - The engine's range, such as `^8.3.0`.
+ */
+export function admitsRange(declared: string, required: string): boolean | undefined {
+  const bounds = caretBounds(required);
+  if (!bounds) return undefined;
+  const [low, high] = bounds;
+  const text = declared.trim();
+  const operator = /^[\^~=]/.exec(text)?.[0];
+  const version = parseVersion(operator ? text.slice(1) : text);
+  if (!version) return undefined;
+  if (!operator || operator === '=')
+    return compare(version, low) >= 0 && compare(version, high) < 0;
+  // `^0.y.z` and `~x.y.z` stay below the next minor; `^x.y.z` below the next major.
+  const upper: Version =
+    operator === '~' || version[0] === 0 ? [version[0], version[1] + 1, 0] : [version[0] + 1, 0, 0];
+  return compare(version, high) < 0 && compare(upper, low) > 0;
+}
+
+/**
+ * The version of a package installed in the workspace's `node_modules`, when the tree can read
+ * it (a real workspace; schematic test trees have none).
+ */
+function installedVersion(tree: Tree, name: string): string | undefined {
+  const file = `node_modules/${name}/package.json`;
+  if (!tree.exists(file)) return undefined;
+  try {
+    const version = (JSON.parse(tree.readText(file)) as { version?: unknown }).version;
+    return typeof version === 'string' ? version : undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 /**
  * Adds the missing Vite engine dependencies to the `devDependencies` of `package.json`. A package
- * the workspace already has is left at its version and returned as a mismatch when that version
- * is not the exact one.
+ * the workspace already declares is left as it is: nothing is added when its installed version
+ * (or, before an install, its specifier) satisfies the engine's range, and it is returned as a
+ * mismatch when it cannot.
  */
 export function addNgDocViteDependencies(
   tree: Tree,
@@ -64,7 +134,14 @@ export function addNgDocViteDependencies(
     if (found === undefined) {
       json.modify(['devDependencies', name], expected);
       added[name] = expected;
-    } else if (found !== expected) {
+      continue;
+    }
+    const installed = installedVersion(tree, name);
+    if (installed !== undefined) {
+      if (admitsRange(installed, expected) === false) {
+        mismatches.push({ name, expected, found, installed });
+      }
+    } else if (admitsRange(found, expected) === false) {
       mismatches.push({ name, expected, found });
     }
   }

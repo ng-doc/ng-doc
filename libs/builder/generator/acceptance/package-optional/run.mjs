@@ -219,11 +219,11 @@ try {
     '@angular/common': '22.2.1',
     '@angular/compiler': '22.2.1',
     '@angular/compiler-cli': '22.2.1',
-    '@angular/build': '22.1.9',
-    '@angular-devkit/build-angular': '22.1.9',
-    '@angular-devkit/core': '22.1.9',
-    '@angular-devkit/architect': '0.2201.9',
-    '@angular-devkit/schematics': '22.1.9',
+    '@angular/build': '22.2.1',
+    '@angular-devkit/build-angular': '22.2.1',
+    '@angular-devkit/core': '22.2.1',
+    '@angular-devkit/architect': '0.2202.1',
+    '@angular-devkit/schematics': '22.2.1',
     '@angular/platform-browser': '22.2.1',
     typescript: '6.0.3',
   };
@@ -392,8 +392,8 @@ console.log(JSON.stringify({bootstrapImported:true,analogResolvable:false,viteVe
   summary.checks.push(
     'Actual installed CLI production generation publishes manifest-matching files, rendered guide HTML and searchable content',
   );
-  // Angular's own packages pull in Vite through Vitest, often a newer major than the Vite engine's
-  // 7.3.5. The builder's optional peers must accept that tree, and only the Vite engine checks it.
+  // Angular's own packages pull in Vite (`@angular/build` and Vitest). The builder's optional
+  // peers must accept that tree, and only the Vite engine checks the version.
   const treeVite = summary.installed.vitePackages.map((item) => item.version).join(', ');
   summary.checks.push(
     `Installed and generated without Analog and with Vite ${treeVite || 'absent'} in the tree: no optional peer blocks the install`,

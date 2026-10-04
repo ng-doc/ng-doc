@@ -6,7 +6,7 @@ import {
   addGitIgnoreLine,
   addNgDocViteDependencies,
   dependencyMismatchText,
-  isRequiredExactly,
+  isEnforced,
 } from '../migrate-to-vite/setup/dependencies';
 import { wrapServerEntry } from '../migrate-to-vite/setup/source';
 import {
@@ -220,7 +220,7 @@ export function viteSetup(options: NgDocViteSetupSchema): Rule {
     }
     for (const mismatch of mismatches) {
       // A Vite the engine refuses to start with is a warning, not a note among the changes.
-      if (isRequiredExactly(mismatch.name)) context.logger.warn(dependencyMismatchText(mismatch));
+      if (isEnforced(mismatch.name)) context.logger.warn(dependencyMismatchText(mismatch));
       else changes.push(`- ${dependencyMismatchText(mismatch)}`);
     }
     if (Object.keys(added).length && !options.skipInstall) {

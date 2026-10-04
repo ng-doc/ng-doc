@@ -67,7 +67,7 @@ async function assertLoadedInputsUnchanged(snapshot, files) {
       `Build scripts changed after this build started; rerun it: ${changed.join(', ')}`,
     );
   const snapshotPolicy = JSON.parse(
-    await readFile(path.join(snapshot, 'tools/compatibility/analog-2.6.3-resources.json'), 'utf8'),
+    await readFile(path.join(snapshot, 'tools/compatibility/analog-2.8.0-resources.json'), 'utf8'),
   );
   if (JSON.stringify(snapshotPolicy) !== JSON.stringify(analogResourcePolicy))
     throw new Error(
@@ -188,7 +188,6 @@ await publishStaged(output, async ({ output: stagedPath, sibling, scratch }) => 
     JSON.stringify(
       {
         ...analogCompatibility.provenance,
-        mainSourcePath: workspacePath(analogCompatibility.provenance.mainSourcePath),
         licensePath: workspacePath(analogCompatibility.provenance.licensePath),
         runtimeRequires: analogCompatibility.runtimeRequires,
         staticExternalInventory: analogCompatibility.staticExternalInventory,
@@ -233,7 +232,7 @@ await publishStaged(output, async ({ output: stagedPath, sibling, scratch }) => 
           format: analogResourcePolicy.format,
           upstream: analogCompatibility.provenance.package,
           sourceInventorySha256: analogCompatibility.provenance.sourceInventory.sha256,
-          patchedMainSourceSha256: analogCompatibility.provenance.patchedMainSourceSha256,
+          patchedSources: analogCompatibility.provenance.patchedSources,
         },
       },
       null,

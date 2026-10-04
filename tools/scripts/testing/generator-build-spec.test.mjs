@@ -326,7 +326,6 @@ test('a bundled workspace file outside the inventory is rejected', () => {
     metafile([
       'libs/builder/generator/contracts.ts',
       'node_modules/@analogjs/vite-plugin-angular/src/index.js',
-      'ngdoc-analog-compatibility:\0ngdoc-analog-ts-morph-context',
     ]),
   );
   assert.throws(
@@ -340,13 +339,13 @@ test('namespaced esbuild inputs pass only when allow-listed as virtual; unknown 
   const metafile = (...inputs) => ({
     inputs: Object.fromEntries(inputs.map((input) => [input, {}])),
   });
-  assert.deepEqual(Object.keys(GENERATOR_VIRTUAL_INPUTS), ['ngdoc-analog-compatibility']);
+  assert.deepEqual(Object.keys(GENERATOR_VIRTUAL_INPUTS), []);
   for (const input of [
     // A plugin that reads a workspace file into its own namespace (e.g. ?raw or inline CSS).
     'raw:libs/builder/generator/vite/overlay.css',
     'inline-css:libs/builder/templates/theme.css',
-    // A known namespace, but a path it does not produce.
-    'ngdoc-analog-compatibility:libs/builder/generator/contracts.ts',
+    // The namespace of the former Analog ts-morph shim, which Analog 2.8.0 no longer needs.
+    'ngdoc-analog-compatibility:\0ngdoc-analog-ts-morph-context',
   ])
     assert.throws(
       () =>
@@ -359,9 +358,16 @@ test('namespaced esbuild inputs pass only when allow-listed as virtual; unknown 
     () => assertInventoryCoversBundle(files, metafile('C:/elsewhere/x.ts')),
     /missing from sourceDigest: C:\/elsewhere\/x\.ts/,
   );
-  // An explicit allow-list entry admits exactly that virtual input.
+  // An explicit allow-list entry admits exactly that virtual input, and no other path of it.
   assert.doesNotThrow(() =>
     assertInventoryCoversBundle(files, metafile('raw:\0virtual'), { raw: ['\0virtual'] }),
+  );
+  assert.throws(
+    () =>
+      assertInventoryCoversBundle(files, metafile('raw:libs/builder/generator/contracts.ts'), {
+        raw: ['\0virtual'],
+      }),
+    /unknown esbuild namespace/,
   );
 });
 
@@ -374,7 +380,7 @@ test('the real shared bundle has no namespaced input outside the allow-list', as
   const namespaced = Object.keys(JSON.parse(metafile).inputs).filter((input) =>
     /^[A-Za-z][\w-]*:(?![\\/])/.test(input),
   );
-  assert.deepEqual(namespaced, ['ngdoc-analog-compatibility:\0ngdoc-analog-ts-morph-context']);
+  assert.deepEqual(namespaced, []);
 });
 
 test('the input snapshot holds exactly the inventory and the lockfile, links node_modules, and is private', async (t) => {

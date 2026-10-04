@@ -112,14 +112,15 @@ on the next build.
 
 ### NGDOC_VITE_VERSION
 
-**Cause:** the Vite engine started with another Vite than 7.3.5, the only version it is tested and
-patched for. The error names the version it found. It usually comes from Vitest or another package
-that installs Vite 8 when `package.json` doesn't pin `vite`.
+**Cause:** the Vite engine started with a Vite outside `^8.3.0`, such as Vite 7. It runs on Vite 8
+from 8.3.0, the release Angular 22.2's own build tools use. The error names the version it found.
+It usually comes from a `vite` entry in `package.json` that an older setup pinned, or from another
+package that still installs Vite 7.
 
-**Fix:** pin Vite in the application's `devDependencies`, then restart:
+**Fix:** install Vite 8 in the application's `devDependencies`, then restart:
 
 ```bash
-npm i -D vite@7.3.5
+npm i -D vite@^8.3.0
 ```
 
 The legacy builders (`@ng-doc/builder:application` and `dev-server`) don't use Vite.

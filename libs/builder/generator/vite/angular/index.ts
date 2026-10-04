@@ -57,5 +57,14 @@ export function createNgDocAngularPlugins(options: NgDocAngularPluginOptions = {
     disableTypeChecking: false,
     fastCompile: false,
   });
-  return qualifyAngularPlugins([...plugins, createTsconfigPathsPlugin(options.tsconfig)]);
+  // The compiler's own resolution of its tsconfig, read after its `config` hook has run.
+  const compiler = plugins.find((plugin) => plugin.name === '@analogjs/vite-plugin-angular');
+  const compilerTsconfig = (): string | undefined => {
+    const resolve: unknown = compiler?.api?.getTsConfigPath;
+    return typeof resolve === 'function' ? (resolve as () => string)() : undefined;
+  };
+  return qualifyAngularPlugins([
+    ...plugins,
+    createTsconfigPathsPlugin(options.tsconfig, compilerTsconfig),
+  ]);
 }

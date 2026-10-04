@@ -421,7 +421,7 @@ describe('createNgDocVitePlugin with a real Vite server and generator worker', (
       plugins: [
         plugin(
           fixture,
-          angular({
+          aotAngular({
             tsconfig: fixture.tsconfig,
             workspaceRoot: repository,
             disableTypeChecking: false,
@@ -448,8 +448,8 @@ describe('createNgDocVitePlugin with a real Vite server and generator worker', (
     expect(ngDoc[0]).toBe('NgDoc: generating documentation for vite-fixture (production)');
     const summary = ngDoc.at(-1)!;
     expect(summary).toMatch(/^NgDoc: OK generated \d+ pages? in \d+\.\ds; /);
-    // Before Vite reports its own transform work.
-    const transformed = logged.findIndex((line) => /modules? transformed/.test(line));
+    // Before Vite reports its own bundle work (Vite 8 reports the bundle as `✓ built in …`).
+    const transformed = logged.findIndex((line) => /modules? transformed|built in/.test(line));
     expect(transformed).toBeGreaterThan(-1);
     expect(logged.indexOf(summary)).toBeLessThan(transformed);
     expect(await readFile(path.join(fixture.root, 'bundle/index.html'), 'utf8')).toContain(
@@ -493,7 +493,7 @@ describe('createNgDocVitePlugin with a real Vite server and generator worker', (
         plugins: [
           plugin(
             fixture,
-            angular({
+            aotAngular({
               tsconfig: fixture.tsconfig,
               workspaceRoot: repository,
               disableTypeChecking: false,
@@ -652,9 +652,9 @@ describe('createNgDocVitePlugin with a real Vite server and generator worker', (
       plugins: [
         plugin(fixture),
         {
-          // Vite's optimized-dependency load awaits the optimizer's processing promise, which
-          // a close during the first optimization never settles; environment.close() then
-          // waits for that request forever. This load reproduces the same pending request.
+          // A request whose load never settles keeps environment.close() waiting forever (Vite 7
+          // left such a request behind when a close cancelled a first dependency optimization;
+          // Vite 8 settles those). This load reproduces such a pending request.
           name: 'never-settling-load',
           resolveId: (id: string) =>
             id === 'virtual:never-settles' ? '\0virtual:never-settles' : null,
@@ -2961,11 +2961,40 @@ function fakeAngularPlugins(probe: string): Plugin[] {
   ];
 }
 
+/**
+ * Analog's plugins as a production build creates them. Under Vitest (`VITEST`, `NODE_ENV=test`)
+ * Analog emits nothing on demand and hands every TypeScript file to Vite's own transform instead
+ * (`angularVitestSourcemapPlugin`); with Vite 8 that is Oxc, which, unlike esbuild, honours the
+ * workspace's `emitDecoratorMetadata`, so a type-only import stays and Rolldown reports it missing.
+ * @param options - The Analog plugin options.
+ */
+function aotAngular(options: Parameters<typeof angular>[0]): ReturnType<typeof angular> {
+  const saved = { VITEST: process.env['VITEST'], NODE_ENV: process.env['NODE_ENV'] };
+  delete process.env['VITEST'];
+  process.env['NODE_ENV'] = 'production';
+  try {
+    return angular(options);
+  } finally {
+    for (const [name, value] of Object.entries(saved)) {
+      if (value === undefined) delete process.env[name];
+      else process.env[name] = value;
+    }
+  }
+}
+
 function packageAliases() {
-  return ['app', 'core', 'ui-kit'].map((name) => ({
-    find: `@ng-doc/${name}`,
-    replacement: path.join(repository, `libs/${name}`),
-  }));
+  // The package entry is the library's `index.ts`: Vite 8 resolves a directory through the
+  // `exports` of its package.json, and `libs/app/package.json` exports only its style sheets.
+  return ['app', 'core', 'ui-kit'].flatMap((name) => [
+    {
+      find: new RegExp(`^@ng-doc/${name}$`),
+      replacement: path.join(repository, `libs/${name}/index.ts`),
+    },
+    {
+      find: new RegExp(`^@ng-doc/${name}/`),
+      replacement: `${path.join(repository, `libs/${name}`)}/`,
+    },
+  ]);
 }
 
 function angularPackages(): string[] {

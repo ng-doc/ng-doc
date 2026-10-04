@@ -174,7 +174,7 @@ export async function buildNgDocViteApplication(
             ssr: true,
             outDir: serverDirectory,
             emptyOutDir: true,
-            rollupOptions: {
+            rolldownOptions: {
               input: { server: entry },
               output: {
                 format: 'es',

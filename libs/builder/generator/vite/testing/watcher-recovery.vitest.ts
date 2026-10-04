@@ -1061,19 +1061,19 @@ describe('IDE/OS metadata watch ignore', () => {
 
 /**
  * Pins the chokidar behaviour the classification above relies on, in the chokidar 3.6.0 that
- * Vite bundles. A Vite upgrade that changes any of it fails here first.
+ * Vite bundles (`dist/node/chunks/node.js` in Vite 8). A Vite upgrade that changes any of it fails here first.
  */
 describe('bundled chokidar guard', () => {
   const require = createRequire(import.meta.url);
   const bundle = readFileSync(
-    path.join(path.dirname(require.resolve('vite/package.json')), 'dist/node/chunks/config.js'),
+    path.join(path.dirname(require.resolve('vite/package.json')), 'dist/node/chunks/node.js'),
     'utf8',
   );
 
   it('suppresses only ENOENT/ENOTDIR (and permission errors under Vite) and never closes on error', () => {
     expect(bundle).toContain('chokidar@3.6.0');
     expect(bundle).toMatch(
-      /_handleError\(error\$1\) \{\s*const code = error\$1 && error\$1\.code;\s*if \(error\$1 && code !== "ENOENT" && code !== "ENOTDIR" && \(!this\.options\.ignorePermissionErrors \|\| code !== "EPERM" && code !== "EACCES"\)\) this\.emit\(EV_ERROR, error\$1\);\s*return error\$1 \|\| this\.closed;\s*\}/,
+      /_handleError\(error(?:\$1)?\) \{\s*const code = error(?:\$1)? && error(?:\$1)?\.code;\s*if \(error(?:\$1)? && code !== "ENOENT" && code !== "ENOTDIR" && \(!this\.options\.ignorePermissionErrors \|\| code !== "EPERM" && code !== "EACCES"\)\) this\.emit\(EV_ERROR, error(?:\$1)?\);\s*return error(?:\$1)? \|\| this\.closed;\s*\}/,
     );
     expect(bundle).toMatch(/ignoreInitial: true,\s*ignorePermissionErrors: true,/);
   });
@@ -1083,7 +1083,7 @@ describe('bundled chokidar guard', () => {
     expect(bundle).not.toMatch(/if \(cont\.watcherUnusable\)/);
     // _addToFsEvents: the catch reports the error, then initWatch runs outside the try.
     expect(bundle).toMatch(
-      /if \(!error\$1 \|\| this\.fsw\._handleError\(error\$1\)\) \{\s*this\.fsw\._emitReady\(\);\s*this\.fsw\._emitReady\(\);\s*\}\s*\}\s*if \(opts\.persistent && forceAdd !== true\)/,
+      /if \(!error(?:\$1)? \|\| this\.fsw\._handleError\(error(?:\$1)?\)\) \{\s*this\.fsw\._emitReady\(\);\s*this\.fsw\._emitReady\(\);\s*\}\s*\}\s*if \(opts\.persistent && forceAdd !== true\)/,
     );
   });
 

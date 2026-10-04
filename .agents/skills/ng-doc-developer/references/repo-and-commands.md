@@ -33,7 +33,7 @@ The generated and ignored directories are listed in [agent-safety.md](agent-safe
 
 - **Node:** 22.0 requires Node 24: `@ng-doc/builder` declares `engines.node` `>=24.15.0 <25`. Every workflow job pins Node `24.19.0` through `.github/actions/nodejs` (input `node-version`), and the packed-consumer check also runs on 24.15.0 and 24.21.0.
 - **Package manager:** npm, installed with `npm ci` from the committed lockfile.
-- **Toolchain:** Angular 22, Nx 23, TypeScript 6, Vite 7, Vitest 4 (every test suite; there is no Jest) and the Analog Vite plugin. Versions are pinned exactly in `package.json`, so don't upgrade them as a side effect of other work.
+- **Toolchain:** Angular 22, Nx 23, TypeScript 6, Vite 8, Vitest 4 (every test suite; there is no Jest) and the Analog Vite plugin. Versions are pinned exactly in `package.json`, so don't upgrade them as a side effect of other work.
 - **Nx:** inference plugins are off (`useInferencePlugins: false`, and `.env` sets `NX_ADD_PLUGINS=false`). Every target is declared in a `project.json`.
 - **Non-interactive runs:** in agent shells and scripts, set:
 

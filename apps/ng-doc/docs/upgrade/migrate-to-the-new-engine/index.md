@@ -52,10 +52,12 @@ It changes the workspace like this:
 - **Server entry:** with a `server` entry, the default export of `main.server.ts` is wrapped with
   `withNgDocContentReady`, so a page is prerendered once its content is ready.
 - **Dependencies:** `vite`, `@analogjs/vite-plugin-angular`, `@angular/compiler` and
-  `@angular/compiler-cli` are added at the versions in `*BuildersReference#supported-versions`,
-  unless the workspace already has them. Pass `--skip-install` to install them yourself. A `vite`
-  at another version than 7.3.5 is kept, and the report tells you to pin it with
-  `npm i -D vite@7.3.5`: the Vite engine doesn't start with another version
+  `@angular/compiler-cli` are added with the ranges in `*BuildersReference#supported-versions`
+  (`^8.3.0`, `^2.8.0`, `^22.2.0`), unless `package.json` already lists them. Nothing is pinned:
+  npm installs the newest matching releases. Pass `--skip-install` to install them yourself. A
+  listed package whose installed version (or, before an install, whose range) lies outside the
+  engine's range is kept, and the report says so. For `vite` it also tells you to update it with
+  `npm i -D vite@^8.3.0`: the Vite engine doesn't start with Vite 7 or earlier
   (`*TroubleshootingPage#ngdoc_vite_version`).
 - **Files:** `/.cache/ng-doc` is added to `.gitignore`. The legacy generated folder,
   `ng-doc/<project-name>`, is deleted once, because the new engine refuses to overwrite files it
@@ -117,9 +119,8 @@ Go through this list before you commit the migration:
 - **Server rendering:** with `outputMode: 'server'`, the Angular server that renders on request
   isn't built. The build prerenders every route into `browser/`: deploy it as a static site, or
   keep the `build-legacy` target for the server.
-- **Vite version:** keep `vite` at exactly 7.3.5, even when another tool, such as Vitest or a
-  dependency update bot, asks for a newer one. The Vite engine doesn't start with another version
-  (`*TroubleshootingPage#ngdoc_vite_version`).
+- **Vite version:** keep `vite` on Vite 8 (`^8.3.0`); updates within Vite 8 are fine. The Vite
+  engine doesn't start with Vite 7 or earlier (`*TroubleshootingPage#ngdoc_vite_version`).
 - **Vite configuration:** if the project folder already had a `vite.config.*`, NgDoc's
   configuration is **vite.ng-doc.config.mjs**. Run NgDoc through `ng serve` and `ng build` (or pass
   `--config` to Vite); `vite` and `vitest` run directly keep using your own file.

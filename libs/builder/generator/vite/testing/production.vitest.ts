@@ -77,7 +77,7 @@ describe('buildNgDocViteApplication', () => {
       build: {
         ssr: true,
         outDir: path.join(output, 'server'),
-        rollupOptions: {
+        rolldownOptions: {
           input: { server: NG_DOC_SERVER_ENTRY },
           output: { entryFileNames: '[name].mjs' },
         },

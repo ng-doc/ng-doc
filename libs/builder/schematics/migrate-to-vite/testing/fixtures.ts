@@ -235,7 +235,7 @@ export function customOptionsApp(): Files {
 /** An Nx workspace: the project lives in `apps/docs/project.json` and uses `executor`. */
 export function nxApp(): Files {
   return {
-    'package.json': json({ name: 'nx-docs', private: true, devDependencies: { vite: '7.3.5' } }),
+    'package.json': json({ name: 'nx-docs', private: true, devDependencies: { vite: '^8.3.2' } }),
     'nx.json': json({ targetDefaults: {} }),
     'apps/docs/project.json': json({
       name: 'docs',

@@ -18,16 +18,16 @@ setup by hand.
 ## Prerequisites
 
 - A working NgDoc site (`*InstallationPage`).
-- `vite` 7.3.5 exactly, pinned in `devDependencies`. The engine checks the version when it starts
-  and stops with `NGDOC_VITE_VERSION` on any other, because it is tested and patched for this
-  release only. Angular's Vitest accepts Vite 8, so pin it even when Vite is already installed:
+- Vite 8 (`vite` `^8.3.0`) and Analog's Angular plugin 2.8 or later in `devDependencies`. The
+  engine checks the Vite version when it starts and stops with `NGDOC_VITE_VERSION` on Vite 7 or
+  earlier:
 
   ```bash
-  npm i -D vite@7.3.5 @analogjs/vite-plugin-angular@2.6.3
+  npm i -D vite@^8.3.0 @analogjs/vite-plugin-angular@^2.8.0
   ```
 
-- The engine is tested with `@analogjs/vite-plugin-angular` 2.6.3 and `@angular/compiler` and
-  `@angular/compiler-cli` 22.2.1, on Node.js `>=24.15.0 <25` (`*BuildersReference#supported-versions`).
+- Angular 22.2 or later (`@angular/compiler` and `@angular/compiler-cli` `^22.2.0`), on Node.js
+  `>=24.15.0 <25` (`*BuildersReference#supported-versions`).
 
 ## 1. Add the Vite configuration
 

@@ -25,8 +25,8 @@ export async function buildObservedRuntime({ repository, packages, expectedSourc
     'tools/scripts/build-generator-types.mjs',
     'tools/scripts/build-analog-compatibility.mjs',
     'tools/scripts/analog-resource-patch.mjs',
-    'tools/compatibility/analog-2.6.3-resources.json',
-    'tools/licenses/analog-2.6.3.LICENSE',
+    'tools/compatibility/analog-2.8.0-resources.json',
+    'tools/licenses/analog-2.8.0.LICENSE',
     'libs/builder/package.json',
     'tsconfig.base.json',
   ])

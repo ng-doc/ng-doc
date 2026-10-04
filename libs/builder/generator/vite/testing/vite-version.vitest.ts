@@ -7,7 +7,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { NgDocVitePluginOptions } from '..';
 
-// The Vite that NgDoc resolves, switchable per test. The real one is 7.3.5 (the root lockfile).
+// The Vite that NgDoc resolves, switchable per test. The real one is 8.3.2 (the root lockfile).
 const vite = vi.hoisted(() => ({ version: undefined as string | undefined }));
 
 vi.mock('vite', async (original) => {
@@ -29,7 +29,11 @@ vi.mock('../../bootstrap', async (original) => ({
 
 import { buildNgDocViteApplication, createNgDocVitePlugin } from '..';
 import { qualifyAngularPlugins } from '../angular-compatibility';
-import { assertSupportedViteVersion, SUPPORTED_VITE_VERSION } from '../vite-version';
+import {
+  assertSupportedViteVersion,
+  isSupportedViteVersion,
+  SUPPORTED_VITE_RANGE,
+} from '../vite-version';
 
 const repository = path.resolve(import.meta.dirname, '../../../../..');
 const manifest = JSON.parse(
@@ -40,8 +44,8 @@ const manifest = JSON.parse(
 };
 
 const REQUIRED = new RegExp(
-  `^\\[NGDOC_VITE_VERSION\\] The NgDoc Vite engine requires vite 7\\.3\\.5, but vite 8\\.3\\.2 is running\\. ` +
-    `Pin it in the application's devDependencies: npm i -D vite@7\\.3\\.5\\. ` +
+  `^\\[NGDOC_VITE_VERSION\\] The NgDoc Vite engine requires vite \\^8\\.3\\.0, but vite 7\\.3\\.5 is running\\. ` +
+    `Install a supported release in the application's devDependencies: npm i -D vite@\\^8\\.3\\.0\\. ` +
     'The legacy builders \\(@ng-doc/builder:application and dev-server\\) do not use Vite\\.$',
 );
 
@@ -80,27 +84,38 @@ afterEach(() => {
 });
 
 describe('the supported Vite version', () => {
-  it('is the exact version the setup schematics install, inside the optional peer range', () => {
-    expect(SUPPORTED_VITE_VERSION).toBe('7.3.5');
-    expect(manifest['ng-doc'].viteEngine['vite']).toBe(SUPPORTED_VITE_VERSION);
-    // The peer admits the Vite 8 that Vitest and Angular's own tooling pull in, so the install
-    // never fails on it; the engine checks the exact version when it starts.
-    expect(manifest.peerDependencies['vite']).toBe('^7.3.5 || ^8.0.0');
+  it('is the range the setup schematics install and the optional peer range', () => {
+    expect(SUPPORTED_VITE_RANGE).toBe('^8.3.0');
+    expect(manifest['ng-doc'].viteEngine['vite']).toBe(SUPPORTED_VITE_RANGE);
+    expect(manifest.peerDependencies['vite']).toBe(SUPPORTED_VITE_RANGE);
   });
 
-  it('accepts exactly the supported version', () => {
-    expect(() => assertSupportedViteVersion('7.3.5')).not.toThrow();
+  it('accepts every Vite 8 release from 8.3.0 and nothing else', () => {
     expect(() => assertSupportedViteVersion()).not.toThrow();
-    for (const found of ['7.3.6', '7.3.4', '8.3.2', '8.0.0', '6.4.1', '7.3.5-beta.0']) {
-      expect(() => assertSupportedViteVersion(found)).toThrow(
-        `[NGDOC_VITE_VERSION] The NgDoc Vite engine requires vite 7.3.5, but vite ${found} is running.`,
-      );
-    }
     expect(() => assertSupportedViteVersion(undefined)).not.toThrow();
+    for (const found of ['8.3.0', '8.3.2', '8.4.0', '8.10.1', '8.4.0-beta.1', '8.3.1+build.5'])
+      expect(isSupportedViteVersion(found), found).toBe(true);
+    for (const found of [
+      '7.3.5',
+      '8.2.9',
+      '8.0.0',
+      '9.0.0',
+      '6.4.1',
+      '8.3.0-beta.1',
+      '8.3',
+      'v8.3.2',
+      '',
+    ]) {
+      expect(isSupportedViteVersion(found), found).toBe(false);
+      if (found)
+        expect(() => assertSupportedViteVersion(found)).toThrow(
+          `[NGDOC_VITE_VERSION] The NgDoc Vite engine requires vite ^8.3.0, but vite ${found} is running.`,
+        );
+    }
   });
 
   it('names the found and the required version and the fix', () => {
-    expect(() => assertSupportedViteVersion('8.3.2')).toThrow(REQUIRED);
+    expect(() => assertSupportedViteVersion('7.3.5')).toThrow(REQUIRED);
   });
 
   it('names an unknown version', () => {
@@ -109,7 +124,7 @@ describe('the supported Vite version', () => {
   });
 
   it('stops the plugin before any option check or generator work on another Vite', () => {
-    vite.version = '8.3.2';
+    vite.version = '7.3.5';
     expect(() => createNgDocVitePlugin(pluginOptions('/tmp/ng-doc-vite-version'))).toThrow(
       REQUIRED,
     );
@@ -126,10 +141,10 @@ describe('the supported Vite version', () => {
       environment: { command: 'serve' | 'build'; mode: string },
     ) => unknown;
     const environment = { command: 'build' as const, mode: 'production' };
-    expect(() => config.call({ meta: { viteVersion: '8.3.2' } }, {}, environment)).toThrow(
+    expect(() => config.call({ meta: { viteVersion: '7.3.5' } }, {}, environment)).toThrow(
       REQUIRED,
     );
-    expect(() => config.call({ meta: { viteVersion: '7.3.5' } }, {}, environment)).not.toThrow();
+    expect(() => config.call({ meta: { viteVersion: '8.3.2' } }, {}, environment)).not.toThrow();
     // Older hosts call the hook without a context; the version checked at creation stands.
     expect(() => config.call(undefined, {}, environment)).not.toThrow();
     expect(bootstrap.create).not.toHaveBeenCalled();
@@ -139,7 +154,7 @@ describe('the supported Vite version', () => {
     const output = await mkdtemp(path.join(os.tmpdir(), 'ng-doc-vite-version-'));
     try {
       await writeFile(path.join(output, 'keep.txt'), 'kept');
-      vite.version = '8.3.2';
+      vite.version = '7.3.5';
       const build = vi.fn();
       await expect(
         buildNgDocViteApplication(

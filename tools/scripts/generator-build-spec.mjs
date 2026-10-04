@@ -51,8 +51,8 @@ export const GENERATOR_SOURCE_FILES = Object.freeze([
   'tools/scripts/build-generator-types.mjs',
   'tools/scripts/build-analog-compatibility.mjs',
   'tools/scripts/analog-resource-patch.mjs',
-  'tools/compatibility/analog-2.6.3-resources.json',
-  'tools/licenses/analog-2.6.3.LICENSE',
+  'tools/compatibility/analog-2.8.0-resources.json',
+  'tools/licenses/analog-2.8.0.LICENSE',
   'tsconfig.base.json',
   'libs/builder/package.json',
   'libs/builder/tsconfig.json',
@@ -73,7 +73,7 @@ export const GENERATOR_PROCESS_LOADED_INPUTS = Object.freeze([
   'tools/scripts/generator-output.mjs',
   'tools/scripts/build-analog-compatibility.mjs',
   'tools/scripts/analog-resource-patch.mjs',
-  'tools/compatibility/analog-2.6.3-resources.json',
+  'tools/compatibility/analog-2.8.0-resources.json',
 ]);
 
 const LOCAL_IMPORT =
@@ -326,10 +326,7 @@ export function assertInventoryCoversCopies(files, copies = generatorCopyPlan(fi
  * the exact paths each may produce. Anything else in a non-file namespace fails the bundle guard:
  * a plugin that reads a workspace file into its own namespace would otherwise bundle unhashed bytes.
  */
-export const GENERATOR_VIRTUAL_INPUTS = Object.freeze({
-  // build-analog-compatibility.mjs: the ts-morph shim, generated from constants in that script.
-  'ngdoc-analog-compatibility': Object.freeze(['\0ngdoc-analog-ts-morph-context']),
-});
+export const GENERATOR_VIRTUAL_INPUTS = Object.freeze({});
 
 const NAMESPACED_INPUT = /^([A-Za-z][\w-]*):(?![\\/])(.*)$/s;
 

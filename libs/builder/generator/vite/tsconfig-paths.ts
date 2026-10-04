@@ -173,8 +173,15 @@ function inNodeModules(file: string): boolean {
  *
  * In development, the tsconfig and the configurations it extends are watched, and an edit of one
  * is read again at the next resolution.
+ * @param tsconfig - The `tsconfig` option of the Analog Angular plugin.
+ * @param compilerTsconfig - The tsconfig the Analog compiler itself resolved (its
+ *   `api.getTsConfigPath`, Analog 2.8 and later), read once the configuration is resolved, so
+ *   both always read the same file; without it, the plugin resolves the option as Analog does.
  */
-export function createTsconfigPathsPlugin(tsconfig: AngularTsconfigOption): Plugin {
+export function createTsconfigPathsPlugin(
+  tsconfig: AngularTsconfigOption,
+  compilerTsconfig?: () => string | undefined,
+): Plugin {
   let root = '.';
   let isProd = false;
   let isLib = false;
@@ -193,11 +200,14 @@ export function createTsconfigPathsPlugin(tsconfig: AngularTsconfigOption): Plug
     config(user: UserConfig) {
       // The same context the Analog plugin resolves its tsconfig in.
       root = user.root || '.';
-      isProd = user.mode === 'production' || process.env['NODE_ENV'] === 'production';
+      // Analog's `isProdMode`: an explicit development mode is never production.
+      isProd =
+        user.mode !== 'development' &&
+        (user.mode === 'production' || process.env['NODE_ENV'] === 'production');
       isLib = !!user.build?.lib;
     },
     configResolved() {
-      file = angularTsconfigPath(root, tsconfig, isProd, isLib);
+      file = compilerTsconfig?.() ?? angularTsconfigPath(root, tsconfig, isProd, isLib);
       parsed = undefined;
     },
     configureServer(server: ViteDevServer) {

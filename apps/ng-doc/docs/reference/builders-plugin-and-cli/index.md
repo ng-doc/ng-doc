@@ -256,16 +256,18 @@ Production builds always use a fresh compiler worker, whatever these variables s
 | Angular (`@ng-doc/app`, `@ng-doc/ui-kit`)                        | `>=22.0.0 <23.0.0`       |
 | `@angular/compiler`, `@angular/compiler-cli` (`@ng-doc/builder`) | `>=22.0.0 <23.0.0`       |
 | Node.js                                                          | `>=24.15.0 <25`          |
-| Vite (Vite host only)                                            | `7.3.5` exactly          |
-| `@analogjs/vite-plugin-angular` (Vite host only)                 | `2.6.3`                  |
+| Vite (Vite host only)                                            | `^8.3.0`                 |
+| `@analogjs/vite-plugin-angular` (Vite host only)                 | `^2.8.0`                 |
+| `@angular/compiler`, `@angular/compiler-cli` (Vite host only)    | `^22.2.0`                |
 | Platforms                                                        | Linux, macOS and Windows |
 
-The Vite engine is tested with `@angular/compiler` and `@angular/compiler-cli` 22.2.1. It checks the
-Vite version when it starts and stops with `NGDOC_VITE_VERSION` on any other; `ng add` and
-`migrate-to-vite` add `vite` 7.3.5 to `devDependencies`. The optional peer dependencies of
-`@ng-doc/builder` are wider (`vite` `^7.3.5 || ^8.0.0`, Analog `^2.6.3`), so that an application
-whose other packages bring in Vite 8, such as Vitest, still installs NgDoc. The legacy builders
-don't use Vite or Analog.
+The Vite engine is tested with Vite 8.3.2, Analog 2.8.0 and Angular 22.2.1. It checks the Vite
+version when it starts and stops with `NGDOC_VITE_VERSION` outside `^8.3.0`; `ng add` and
+`migrate-to-vite` add these ranges to `devDependencies` when `package.json` doesn't list them, so
+npm installs the newest matching releases. The optional peer dependencies of `@ng-doc/builder` are
+the same ranges (`vite` `^8.3.0`, Analog `^2.8.0`). NgDoc bundles its own patched copy of Analog's
+Angular plugin; the installed one supplies its types. The legacy builders don't use Vite or
+Analog.
 
 {% index false %}
 

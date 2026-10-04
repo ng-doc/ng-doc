@@ -134,20 +134,20 @@ try {
           Object.entries(tarballs).map(([name, file]) => [`@ng-doc/${name}`, `file:${file}`]),
         ),
         devDependencies: {
-          '@analogjs/vite-plugin-angular': '2.6.3',
+          '@analogjs/vite-plugin-angular': '^2.8.0',
           '@angular/common': '22.2.1',
           '@angular/cdk': '22.0.6',
           '@angular/compiler': '22.2.1',
           '@angular/compiler-cli': '22.2.1',
           '@angular/core': '22.2.1',
-          '@angular/build': '22.1.9',
+          '@angular/build': '22.2.1',
           '@angular/platform-browser': '22.2.1',
           '@angular/platform-server': '22.2.1',
           '@angular/router': '22.2.1',
           '@angular/forms': '22.2.1',
           typescript: '6.0.3',
-          // Vitest admits Vite 8; the root pin is the Vite the Vite engine requires.
-          vite: '7.3.5',
+          // The Vite engine's range, as `ng add` and `migrate-to-vite` add it.
+          vite: '^8.3.0',
           vitest: '4.1.11',
           'zone.js': '0.15.1',
         },
@@ -161,8 +161,9 @@ try {
   const installedLock = JSON.parse(
     await readFile(path.join(consumer, 'package-lock.json'), 'utf8'),
   );
-  assert.equal(installedLock.packages['node_modules/vite']?.version, '7.3.5');
-  summary.checks.push('the root Vite is the pinned 7.3.5 next to Vitest');
+  const rootVite = installedLock.packages['node_modules/vite']?.version ?? '';
+  assert.match(rootVite, /^8\.(?:[3-9]|\d{2,})\.\d+$/, `the root Vite is ${rootVite}`);
+  summary.checks.push(`the root Vite ${rootVite} is inside the engine's ^8.3.0 next to Vitest`);
 
   await put(
     'tsconfig.json',

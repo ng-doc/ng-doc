@@ -8,11 +8,16 @@ const workspaceRoot = path.resolve(scriptDirectory, '../..');
 
 export const ANALOG_COMPATIBILITY_UPSTREAM = Object.freeze({
   name: '@analogjs/vite-plugin-angular',
-  version: '2.6.3',
-  sourceFiles: 148,
-  mainSource: 'lib/angular-vite-plugin.js',
-  mainSourceSha256: 'cec7abb4b1063d6dbf59298e897a8322077d8d57eeddbe81829a91588ca69826',
-  sourceInventorySha256: '86be448127bc03f7b4635dc77dd924a8fdefb6839eb3e7aa63d76b206a36eb84',
+  version: '2.8.0',
+  sourceFiles: 163,
+  sourceInventorySha256: '59d7bbf119ca438674d11d3e1123b589f238d0d03ff34de9e46b284e0b7d0dc7',
+  // The upstream files the policy patches (paths below `src/`), with their original digests.
+  patchedSources: Object.freeze({
+    'lib/angular-vite-plugin.js':
+      '0d60401c25875de0aa06aeb991b8e27324f40cb51403dc061cc1c07db47fee5f',
+    'lib/encapsulate-component-styles-plugin.js':
+      '6dd369d15c54ed8070eb10d3876bdf2b4e8ceb60be39275c7acd497c50a7c1d0',
+  }),
 });
 
 export const RETAINED_STATIC_EXTERNALS = Object.freeze([
@@ -48,7 +53,7 @@ export const STATIC_EXTERNAL_INVENTORY = Object.freeze([
   Object.freeze({ id: 'oxc-parser', owner: 'upstream dependency oxc-parser@0.121.0' }),
   Object.freeze({ id: 'tinyglobby', owner: 'upstream dependency tinyglobby@0.2.17' }),
   Object.freeze({ id: 'typescript', owner: 'peer typescript@6.0.3' }),
-  Object.freeze({ id: 'vite', owner: 'peer vite@7.3.5' }),
+  Object.freeze({ id: 'vite', owner: 'peer vite@8.3.2' }),
 ]);
 
 export const RUNTIME_REQUIRES = Object.freeze([
@@ -63,6 +68,12 @@ export const RUNTIME_REQUIRES = Object.freeze([
     reason: 'Pinned Angular 22 branch retained from upstream implementation.',
   }),
   Object.freeze({
+    id: '@angular/build/src/utils/hash.js',
+    source: 'lib/utils/devkit.js',
+    reason:
+      'Angular 22.2 transformer hash initialization, required by path next to @angular/build/package.json.',
+  }),
+  Object.freeze({
     id: '@angular-devkit/build-angular/src/tools/esbuild/angular/*',
     source: 'lib/utils/devkit.js',
     reason:
@@ -75,19 +86,19 @@ export const RUNTIME_REQUIRES = Object.freeze([
 /**
  * Fails when a retained runtime require that can run is not declared by the builder package.
  * A require behind an upstream branch for older Angular majors (`maxAngularMajor`) never runs on
- * the Angular major of the Vite engine's tested `@angular/compiler-cli` (`ng-doc.viteEngine`; the
- * optional peer dependency is a range, so that an install never fails on it), so it needs no
- * dependency.
+ * the Angular major of the Vite engine's `@angular/compiler-cli` range (`ng-doc.viteEngine`, a
+ * version or a caret range of one major; the optional peer dependency is wider, so that an install
+ * never fails on it), so it needs no dependency.
  * @param {readonly { id: string, maxAngularMajor?: number }[]} requires - The retained requires.
  * @param {{ dependencies?: Record<string, string>, peerDependencies?: Record<string, string>, 'ng-doc'?: { viteEngine?: Record<string, string> } }} manifest -
  *   The builder's `package.json`.
  */
 export function assertRuntimeRequiresDeclared(requires, manifest) {
   const compilerCli = manifest['ng-doc']?.viteEngine?.['@angular/compiler-cli'];
-  const major = /^(\d+)\.\d+\.\d+$/.exec(compilerCli ?? '')?.[1];
+  const major = /^\^?([1-9]\d*)\.\d+\.\d+$/.exec(compilerCli ?? '')?.[1];
   if (!major) {
     throw new Error(
-      `The builder must pin the Vite engine's @angular/compiler-cli (ng-doc.viteEngine) to an exact version to check the retained Analog runtime requires, found ${compilerCli}`,
+      `The builder must name the Vite engine's @angular/compiler-cli (ng-doc.viteEngine) as a version or a caret range of one major to check the retained Analog runtime requires, found ${compilerCli}`,
     );
   }
   for (const { id, maxAngularMajor } of requires) {
@@ -157,13 +168,16 @@ export function replaceExactlyOnce(source, before, after, label = 'upstream patc
   return `${parts[0]}${after}${parts[1]}`;
 }
 
-export function patchMainSource(
-  source,
-  applyPatch,
-  sourcePath = ANALOG_COMPATIBILITY_UPSTREAM.mainSource,
-) {
+/**
+ * Applies the caller's patch policy to one upstream source, which it must change.
+ * @param {string} source - The upstream source text.
+ * @param {(source: string, sourcePath: string) => string | { code: string, changes?: unknown }} applyPatch -
+ *   The patch policy, called with the source and its path below `src/`.
+ * @param {string} sourcePath - The source's path below `src/`.
+ */
+export function patchSource(source, applyPatch, sourcePath) {
   if (typeof applyPatch !== 'function') throw new TypeError('applyPatch must be a function.');
-  const result = applyPatch(source);
+  const result = applyPatch(source, sourcePath);
   const patched = typeof result === 'string' ? result : result?.code;
   if (typeof patched !== 'string' || patched === source) {
     throw new Error(`applyPatch did not change ${sourcePath}.`);
@@ -176,32 +190,6 @@ export function patchMainSource(
 
 function isBareImport(specifier) {
   return !specifier.startsWith('.') && !specifier.startsWith('/') && !specifier.startsWith('file:');
-}
-
-export function createTsMorphShim() {
-  const expected = JSON.stringify(ANALOG_COMPATIBILITY_UPSTREAM);
-  return `import { createRequire } from 'node:module';
-const expected = ${expected};
-let upstreamRequire;
-let upstreamPackage;
-try {
-  upstreamRequire = createRequire(import.meta.resolve('@analogjs/vite-plugin-angular/package.json'));
-  upstreamPackage = upstreamRequire('./package.json');
-} catch (cause) {
-  throw new Error(\`NgDoc Analog compatibility requires \${expected.name}@\${expected.version} and its public package.json export.\`, { cause });
-}
-if (upstreamPackage.name !== expected.name || upstreamPackage.version !== expected.version) {
-  throw new Error(\`NgDoc Analog compatibility requires \${expected.name}@\${expected.version}; found \${upstreamPackage.name}@\${upstreamPackage.version}.\`);
-}
-let upstreamTsMorph;
-try {
-  upstreamTsMorph = upstreamRequire('ts-morph');
-} catch (cause) {
-  throw new Error(\`NgDoc Analog compatibility could not resolve ts-morph from \${expected.name}@\${expected.version}.\`, { cause });
-}
-export const Project = upstreamTsMorph.Project;
-export const SyntaxKind = upstreamTsMorph.SyntaxKind;
-`;
 }
 
 async function readPinnedUpstream(upstreamRoot) {
@@ -249,18 +237,22 @@ export async function prepareAnalogCompatibility({
   const inventory = await sourceInventory(sourceDirectory);
   assertSourceInventory(inventory);
 
-  const mainSourcePath = path.join(sourceDirectory, ANALOG_COMPATIBILITY_UPSTREAM.mainSource);
-  const originalMainSource = await readFile(mainSourcePath, 'utf8');
-  if (sha256(originalMainSource) !== ANALOG_COMPATIBILITY_UPSTREAM.mainSourceSha256) {
-    throw new Error(`@analogjs/vite-plugin-angular main source hash mismatch: ${mainSourcePath}.`);
+  // The inventory pins every upstream file; the per-file digests name what the policy patches.
+  const patched = new Map();
+  for (const [relative, expected] of Object.entries(ANALOG_COMPATIBILITY_UPSTREAM.patchedSources)) {
+    const file = path.join(sourceDirectory, relative);
+    const original = await readFile(file, 'utf8');
+    if (sha256(original) !== expected) {
+      throw new Error(`@analogjs/vite-plugin-angular source hash mismatch: ${file}.`);
+    }
+    const result = patchSource(original, applyPatch, relative);
+    patched.set(file, { relative, original, ...result });
   }
-  const patchedMain = patchMainSource(originalMainSource, applyPatch);
   const sourcePaths = new Set(
     inventory.entries.map((entry) => path.join(sourceDirectory, entry.path)),
   );
   const encounteredStaticExternals = new Set();
   const upstreamIndex = path.join(sourceDirectory, 'index.js');
-  const shimPath = '\0ngdoc-analog-ts-morph-context';
 
   const plugin = {
     name: 'ngdoc-analog-compatibility',
@@ -269,29 +261,23 @@ export async function prepareAnalogCompatibility({
         if (path.resolve(args.importer) !== resolvedEntry) return undefined;
         return { path: upstreamIndex };
       });
-      build.onResolve({ filter: /^ts-morph$/ }, (args) => {
-        if (!sourcePaths.has(path.resolve(args.importer))) return undefined;
-        return { path: shimPath, namespace: 'ngdoc-analog-compatibility' };
-      });
       build.onResolve({ filter: /.*/ }, (args) => {
         if (!sourcePaths.has(path.resolve(args.importer)) || !isBareImport(args.path))
           return undefined;
-        if (args.path === 'ts-morph') return undefined;
         encounteredStaticExternals.add(args.path);
         return { path: args.path, external: true };
       });
-      build.onLoad({ filter: /.*/, namespace: 'ngdoc-analog-compatibility' }, (args) => {
-        if (args.path !== shimPath) return undefined;
-        return { contents: createTsMorphShim(), loader: 'js' };
-      });
-      build.onLoad({ filter: /angular-vite-plugin\.js$/ }, (args) => {
-        if (path.resolve(args.path) !== mainSourcePath) return undefined;
-        return { contents: patchedMain.code, loader: 'js' };
+      build.onLoad({ filter: /\.js$/ }, (args) => {
+        const source = patched.get(path.resolve(args.path));
+        return source ? { contents: source.code, loader: 'js' } : undefined;
       });
     },
   };
 
-  const licensePath = path.join(resolvedRoot, 'tools/licenses/analog-2.6.3.LICENSE');
+  const licensePath = path.join(
+    resolvedRoot,
+    `tools/licenses/analog-${ANALOG_COMPATIBILITY_UPSTREAM.version}.LICENSE`,
+  );
   const licenseText = await readFile(licensePath, 'utf8');
 
   return Object.freeze({
@@ -305,11 +291,13 @@ export async function prepareAnalogCompatibility({
         license: upstreamPackage.license,
       }),
       sourceInventory: inventory,
-      mainSourcePath,
-      mainSourceSha256: sha256(originalMainSource),
-      patchedMainSourceSha256: sha256(patchedMain.code),
+      patchedSources: Object.freeze(
+        [...patched.values()].map(({ relative, original, code }) =>
+          Object.freeze({ path: relative, sha256: sha256(original), patchedSha256: sha256(code) }),
+        ),
+      ),
       compatibilityFormat,
-      changes: patchedMain.changes,
+      changes: [...patched.values()].flatMap(({ changes }) => changes ?? []),
       licensePath,
       licenseSha256: sha256(licenseText),
     }),

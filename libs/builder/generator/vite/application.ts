@@ -3,7 +3,6 @@ import { existsSync } from 'node:fs';
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import path from 'node:path';
-import type { NormalizedOutputOptions, OutputBundle } from 'rollup';
 import { glob } from 'tinyglobby';
 import type {
   ConfigEnv,
@@ -11,6 +10,7 @@ import type {
   IndexHtmlTransformContext,
   Plugin,
   ResolvedConfig,
+  Rolldown,
   UserConfig,
   ViteDevServer,
 } from 'vite';
@@ -101,7 +101,7 @@ const MOVED_OPTIONS: Readonly<Record<string, string>> = {
   crossOrigin: 'Vite `html.cspNonce` / `build.modulePreload`; remove it',
   define: 'Vite `define`',
   deployUrl: 'Vite `base`',
-  externalDependencies: 'Vite `build.rollupOptions.external`',
+  externalDependencies: 'Vite `build.rolldownOptions.external`',
   fileReplacements: 'createNgDocAngularPlugins({ fileReplacements })',
   i18nMissingTranslation: 'not supported by the Vite engine',
   index: 'Vite `root` (the folder of index.html)',
@@ -470,7 +470,7 @@ export function createNgDocApplicationPlugin(options: NgDocViteApplicationOption
     configureServer(server: ViteDevServer) {
       server.middlewares.use(assetMiddleware(resolvedAssets, () => server.config.base));
     },
-    async generateBundle(_output: NormalizedOutputOptions, bundle: OutputBundle) {
+    async generateBundle(_output: Rolldown.NormalizedOutputOptions, bundle: Rolldown.OutputBundle) {
       if (config?.command !== 'build' || config.build.ssr) return;
       for (const [fileName, file] of [...(await collectAssets(await resolvedAssets()))].sort(
         ([left], [right]) => (left < right ? -1 : left > right ? 1 : 0),

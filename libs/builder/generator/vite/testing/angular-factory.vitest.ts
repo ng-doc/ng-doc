@@ -25,6 +25,36 @@ afterEach(() => {
 });
 
 describe('verified Angular factory boundary (mocked upstream; native acceptance is separate)', () => {
+  it('resolves the tsconfig paths from the tsconfig the compiler resolved (api.getTsConfigPath)', async () => {
+    const { mkdtemp, rm, writeFile } = await import('node:fs/promises');
+    const os = await import('node:os');
+    const path = await import('node:path');
+    const root = await mkdtemp(path.join(os.tmpdir(), 'ngdoc-factory-tsconfig-'));
+    try {
+      await writeFile(path.join(root, 'feature.ts'), 'export {};\n');
+      const tsconfig = path.join(root, 'tsconfig.compiler.json');
+      await writeFile(
+        tsconfig,
+        JSON.stringify({ compilerOptions: { paths: { feature: ['feature.ts'] } } }),
+      );
+      const getTsConfigPath = vi.fn(() => tsconfig);
+      upstream.mockReturnValue([{ name: ANGULAR_COMPILER_NAME, api: { getTsConfigPath } }]);
+      const paths = createNgDocAngularPlugins({ tsconfig: 'missing.json' }).at(-1)!;
+      (paths.config as (user: unknown) => void)({ root });
+      (paths.configResolved as () => void)();
+      expect(getTsConfigPath).toHaveBeenCalledTimes(1);
+      const resolved = await (paths.resolveId as (...args: unknown[]) => Promise<unknown>).call(
+        { resolve: async (id: string) => ({ id }) },
+        'feature',
+        undefined,
+        {},
+      );
+      expect(resolved).toEqual({ id: path.join(root, 'feature.ts') });
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
   it('preserves the complete array, original hooks, other API fields and supported options', () => {
     const hook = vi.fn();
     const compiler: Plugin = { name: ANGULAR_COMPILER_NAME, transform: hook, api: { existing: 7 } };

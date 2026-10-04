@@ -1,0 +1,101 @@
+{
+  "format": "ng-doc-analog-2.8.0-resources-v1",
+  "upstream": "@analogjs/vite-plugin-angular@2.8.0",
+  "patchedSourcesSha256": {
+    "lib/angular-vite-plugin.js": "8a4b18a6ca06183a483b324d61b9d49863556ffeab0ff02f10253a187ead403e",
+    "lib/encapsulate-component-styles-plugin.js": "03c38e8443e7c41ab49f035d88fd7560f98acffbc1c212b7957fe82f5294a64d"
+  },
+  "changes": [
+    {
+      "label": "native-resource-identity",
+      "before": "await hotUpdates.schedule(ctx.file, [\n                        ...mods.map((mod) => mod.id),",
+      "after": "await hotUpdates.schedule(ctx.file, [\n                        ctx.file,\n                        ...mods.map((mod) => mod.id),"
+    },
+    {
+      "label": "terminal-invalid-registry-state",
+      "before": "    let pendingCompilation;\n    let compilationLock = Promise.resolve();",
+      "after": "    let pendingCompilation;\n    let terminalCompilationError;\n    let compilationLock = Promise.resolve();\n    function reportCompilationError(error) {\n        try {\n            resolvedConfig.logger.error(error);\n        }\n        catch {\n            // A custom logger must not replace the original terminal compiler failure or create\n            // a second unhandled rejection from this best-effort reporting observer.\n        }\n    }"
+    },
+    {
+      "label": "hot-update-pending-compilation",
+      "before": "const hotUpdates = createHotUpdateBatcher((ids) => performCompilation(resolvedConfig, ids));",
+      "after": "// NgDoc: a hot-update pass is the pending compilation the transform awaits, as before batching.\n    // A failed pass stays pending (rejected), so transforms keep failing until a later pass succeeds.\n    const hotUpdates = createHotUpdateBatcher((ids) => (pendingCompilation = performCompilation(resolvedConfig, ids)));"
+    },
+    {
+      "label": "filesystem-resource-identity",
+      "before": "() => performCompilation(resolvedConfig), pluginOptions.include.map((glob) => `${normalizePath(resolve(pluginOptions.workspaceRoot))}${glob}`)",
+      "after": "(files) => {\n                    const compilation = performCompilation(resolvedConfig, files);\n                    pendingCompilation = compilation;\n                    void compilation.catch((error) => {\n                        // Add/unlink compilation has no legacy HMR hook promise for Vite to observe.\n                        // Report the failed candidate; the same rejection remains durable for the\n                        // next public transform and the last published style registry stays active.\n                        reportCompilationError(error);\n                    });\n                    return compilation;\n                }, pluginOptions.include.map((glob) => `${normalizePath(resolve(pluginOptions.workspaceRoot))}${glob}`)"
+    },
+    {
+      "label": "debounced-filesystem-identities",
+      "before": "    let debounceTimer;\n    return (file) => {\n        const affectsProgram = TS_EXT_REGEX.test(file) ||\n            COMPONENT_RESOURCE_EXT_REGEX.test(file) ||\n            basename(file).includes('tsconfig') ||\n            !!includeFilter?.(file);\n        if (!affectsProgram) {\n            return;\n        }\n        invalidateFsCaches();\n        invalidateTsconfigCaches();\n        // Coalesce event bursts (atomic-save add+unlink pairs, git branch\n        // switches) into a single recompilation.\n        if (debounceTimer) {\n            clearTimeout(debounceTimer);\n        }\n        debounceTimer = setTimeout(() => {\n            debounceTimer = undefined;\n            void performCompilation();\n        }, debounceMs);\n    };",
+      "after": "    let debounceTimer;\n    const modifiedFiles = new Set();\n    return (file) => {\n        const affectsProgram = TS_EXT_REGEX.test(file) ||\n            COMPONENT_RESOURCE_EXT_REGEX.test(file) ||\n            basename(file).includes('tsconfig') ||\n            !!includeFilter?.(file);\n        if (!affectsProgram) {\n            return;\n        }\n        invalidateFsCaches();\n        invalidateTsconfigCaches();\n        modifiedFiles.add(file);\n        // Coalesce event bursts (atomic-save add+unlink pairs, git branch\n        // switches) into a single recompilation without losing the physical\n        // identities needed to invalidate the source-file cache.\n        if (debounceTimer) {\n            clearTimeout(debounceTimer);\n        }\n        debounceTimer = setTimeout(() => {\n            debounceTimer = undefined;\n            const files = [...modifiedFiles];\n            modifiedFiles.clear();\n            void performCompilation(files).catch(() => {\n                // The supplied callback records the terminal error and reports it through Vite.\n            });\n        }, debounceMs);\n    };"
+    },
+    {
+      "label": "terminal-compilation-policy",
+      "before": "    async function performCompilation(config, ids) {\n        let resolve;\n        const previousLock = compilationLock;\n        compilationLock = new Promise((r) => {\n            resolve = r;\n        });\n        try {\n            await previousLock;\n            const usedExternalStyles = liveReloadExternalStyles;\n            await _doPerformCompilation(config, ids);\n            // Flip after a successful compile so the *next* pass can emit\n            // external runtime styles. The emit that just finished stays inlined.\n            if (pluginOptions.liveReload && watchMode) {\n                liveReloadExternalStyles = true;\n            }\n            if (usedExternalStyles) {\n                liveReloadProgramHasExternalStyles = true;\n            }\n        }\n        finally {\n            resolve();\n        }\n    }",
+      "after": "    async function performCompilation(config, ids) {\n        if (terminalCompilationError) {\n            throw terminalCompilationError;\n        }\n        let resolve;\n        const previousLock = compilationLock;\n        compilationLock = new Promise((r) => {\n            resolve = r;\n        });\n        try {\n            await previousLock;\n            if (terminalCompilationError) {\n                throw terminalCompilationError;\n            }\n            const usedExternalStyles = liveReloadExternalStyles;\n            await _doPerformCompilation(config, ids);\n            // Flip after a successful compile so the *next* pass can emit\n            // external runtime styles. The emit that just finished stays inlined.\n            if (pluginOptions.liveReload && watchMode) {\n                liveReloadExternalStyles = true;\n            }\n            if (usedExternalStyles) {\n                liveReloadProgramHasExternalStyles = true;\n            }\n        }\n        catch (error) {\n            // Only completed analysis with an ordinary diagnostic is retryable. The rejected\n            // pending compilation continues blocking transforms until a real later pass succeeds.\n            if (error?.code === \"NGDOC_ANALOG_COMPILATION_DIAGNOSTIC\") {\n                throw error;\n            }\n            terminalCompilationError ??= error;\n            throw terminalCompilationError;\n        }\n        finally {\n            resolve();\n        }\n    }"
+    },
+    {
+      "label": "transactional-pass-maps",
+      "before": "        if (!jit) {\n            inlineComponentStyles = tsCompilerOptions['externalRuntimeStyles']\n                ? new Map()\n                : undefined;\n            externalComponentStyles = tsCompilerOptions['externalRuntimeStyles']\n                ? new Map()\n                : undefined;\n            augmentHostWithResources(host, getStyleTransform(), {\n                inlineStylesExtension: pluginOptions.inlineStylesExtension,\n                isProd,\n                inlineComponentStyles,\n                externalComponentStyles,\n                sourceFileCache,\n            });\n        }",
+      "after": "        let passInlineComponentStyles;\n        let passExternalComponentStyles;\n        if (!jit) {\n            passInlineComponentStyles = tsCompilerOptions['externalRuntimeStyles']\n                ? new Map()\n                : undefined;\n            passExternalComponentStyles = tsCompilerOptions['externalRuntimeStyles']\n                ? new Map()\n                : undefined;\n            augmentHostWithResources(host, getStyleTransform(), {\n                inlineStylesExtension: pluginOptions.inlineStylesExtension,\n                isProd,\n                inlineComponentStyles: passInlineComponentStyles,\n                externalComponentStyles: passExternalComponentStyles,\n                sourceFileCache,\n            });\n        }"
+    },
+    {
+      "label": "complete-style-owner-analysis",
+      "before": "const angularProgram = new compilerCli.NgtscProgram(rootNames, tsCompilerOptions, host, nextProgram);",
+      "after": "// External runtime style maps represent the complete current Angular program. Reusing the\n            // previous NgtscProgram can skip unchanged owners and therefore cannot reconstruct that\n            // complete registry after a pass-local reset.\n            const styleRegistryPreviousProgram = tsCompilerOptions['externalRuntimeStyles']\n                ? undefined\n                : nextProgram;\n            const angularProgram = new compilerCli.NgtscProgram(rootNames, tsCompilerOptions, host, styleRegistryPreviousProgram);"
+    },
+    {
+      "label": "validated-successful-pass-publication",
+      "before": "        if (!isTest) {\n            /**\n             * Perf: Output files on demand so the dev server\n             * isn't blocked when emitting files.\n             */\n            outputFile = writeOutputFile;\n        }\n    }\n}",
+      "after": "        if (!isTest) {\n            /**\n             * Perf: Output files on demand so the dev server\n             * isn't blocked when emitting files.\n             */\n            outputFile = writeOutputFile;\n        }\n        // A pass with diagnostics is not a complete current-owner registry: a broken component\n        // can be absent while the browser still holds its last successful virtual style URL.\n        // Keep the prior published maps and reject this pass. A later real compilation can\n        // repair ordinary diagnostics; unexpected compiler exceptions still require a new factory.\n        if (!jit && tsCompilerOptions['externalRuntimeStyles']) {\n            const styleRegistryDiagnostics = [\n                ...builder.getSyntacticDiagnostics(),\n                ...(pluginOptions.disableTypeChecking ? [] : builder.getSemanticDiagnostics()),\n                ...(angularCompiler?.getDiagnostics() ?? []),\n            ];\n            const styleRegistryError = styleRegistryDiagnostics.find((diagnostic) => diagnostic.category === ts.DiagnosticCategory.Error);\n            if (styleRegistryError) {\n                throw Object.assign(new Error('[ANALOG_STYLE_REGISTRY_INVALID] ' + formatDiagnosticWithLocation(styleRegistryError)), {\n                    code: 'NGDOC_ANALOG_COMPILATION_DIAGNOSTIC',\n                });\n            }\n        }\n        // Publish a complete registry only after analysis, diagnostics, and emit setup return\n        // successfully. A thrown pass leaves the prior maps serving the last successful program.\n        if (!jit) {\n            inlineComponentStyles = passInlineComponentStyles;\n            externalComponentStyles = passExternalComponentStyles;\n        }\n    }\n}"
+    },
+    {
+      "label": "generation-companion-pass",
+      "before": "                    const [fileId] = ctx.file.split('?');\n                    await hotUpdates.schedule(ctx.file, [fileId]);",
+      "after": "                    const [fileId] = ctx.file.split('?');\n                    // NgDoc: the host passes the other TypeScript outputs of the same committed\n                    // generation. They join this pass, which analyzes the whole program anyway,\n                    // instead of each costing a full pass of its own. The pass is exposed so the\n                    // host knows these companions were compiled, and by which pass.\n                    const companionFiles = Array.isArray(ctx.ngDocCompanionFiles)\n                        ? ctx.ngDocCompanionFiles\n                        : [];\n                    const ngDocPass = hotUpdates.schedule(ctx.file, [\n                        fileId,\n                        ...companionFiles,\n                    ]);\n                    if (companionFiles.length > 0) {\n                        ctx.ngDocCompanionPass = ngDocPass;\n                    }\n                    await ngDocPass;"
+    },
+    {
+      "label": "component-style-flag-without-id",
+      "file": "lib/encapsulate-component-styles-plugin.js",
+      "before": "export function isComponentStyleSheet(id) {\n    return id.includes('ngcomp=');\n}",
+      "after": "export function isComponentStyleSheet(id) {\n    // NgDoc: Angular requests the stylesheets of a component without emulated encapsulation as\n    // `?ngcomp&e=2`: the flag has no component id, so it must match without a value too.\n    return /[?&]ngcomp(?:[=&]|$)/.test(id);\n}"
+    },
+    {
+      "label": "generation-claimed-filesystem-state",
+      "before": "    function angularPlugin() {\n        let isProd = false;",
+      "after": "    // NgDoc: the host's hooks into this compiler, exposed as `api.ngDocHost`.\n    // `claimFilesystemChange(file)` returns true for an added or deleted file that a pass the\n    // host starts itself compiles (its generated modules, whose importer the same generation\n    // rewrites): such a file joins the next pass instead of starting one of its own.\n    // `passes` counts the passes of this compiler.\n    const ngDocHost = { claimFilesystemChange: undefined, passes: 0 };\n    const claimedFilesystemFiles = new Set();\n    function angularPlugin() {\n        let isProd = false;"
+    },
+    {
+      "label": "generation-claimed-filesystem-api",
+      "before": "            api: { getTsConfigPath: resolveTsConfigPath },",
+      "after": "            api: { getTsConfigPath: resolveTsConfigPath, ngDocHost },"
+    },
+    {
+      "label": "generation-claimed-filesystem-listener",
+      "before": "}, pluginOptions.include.map((glob) => `${normalizePath(resolve(pluginOptions.workspaceRoot))}${glob}`));\n                server.watcher.on('add', (file) => {",
+      "after": "}, pluginOptions.include.map((glob) => `${normalizePath(resolve(pluginOptions.workspaceRoot))}${glob}`), undefined, (file) => {\n                    // NgDoc: a pass started by this event would compile the program before the\n                    // module that imports the file is rewritten, and the importer's own pass would\n                    // then compile it again. A claimed file joins that pass instead.\n                    if (ngDocHost.claimFilesystemChange?.(file) !== true) {\n                        return false;\n                    }\n                    claimedFilesystemFiles.add(file);\n                    return true;\n                });\n                server.watcher.on('add', (file) => {"
+    },
+    {
+      "label": "changed-file-cached-source",
+      "before": "                server.watcher.on('change', (file) => {\n                    if (file.includes('tsconfig')) {",
+      "after": "                server.watcher.on('change', (file) => {\n                    // NgDoc: a pass that an add or unlink event starts compiles every file of the\n                    // program, so a file changed on disk whose own hot update has not run yet must\n                    // not be served from the cache: that pass would compile its previous text (an\n                    // import of the file just deleted, say) and fail. The text is read again; a\n                    // file whose bytes did not change keeps its version (a hash of the text).\n                    const changedId = normalizePath(file);\n                    tsSourceFileCache.delete(changedId);\n                    fileTransformMap.delete(changedId);\n                    if (file.includes('tsconfig')) {"
+    },
+    {
+      "label": "generation-claimed-filesystem-invalidator",
+      "before": "export function createFsWatcherCacheInvalidator(invalidateFsCaches, invalidateTsconfigCaches, performCompilation, includeGlobs = [], debounceMs = 100) {",
+      "after": "export function createFsWatcherCacheInvalidator(invalidateFsCaches, invalidateTsconfigCaches, performCompilation, includeGlobs = [], debounceMs = 100, claim) {"
+    },
+    {
+      "label": "generation-claimed-filesystem-schedule",
+      "before": "        invalidateFsCaches();\n        invalidateTsconfigCaches();\n        modifiedFiles.add(file);",
+      "after": "        invalidateFsCaches();\n        invalidateTsconfigCaches();\n        // NgDoc: a claimed change keeps the invalidation above and schedules no pass.\n        if (claim?.(file) === true) {\n            return;\n        }\n        modifiedFiles.add(file);"
+    },
+    {
+      "label": "generation-claimed-filesystem-pass",
+      "before": "        const modifiedFiles = new Set(ids ?? []);\n        invalidateSourceFiles(modifiedFiles);",
+      "after": "        ngDocHost.passes++;\n        const modifiedFiles = new Set(ids ?? []);\n        // NgDoc: every file claimed since the last pass (configureServer) joins this one. Only its\n        // cached bytes are dropped; it is emitted when a transform asks for it, as any other file.\n        for (const file of claimedFilesystemFiles) {\n            modifiedFiles.add(file);\n            fileTransformMap.delete(file);\n        }\n        claimedFilesystemFiles.clear();\n        invalidateSourceFiles(modifiedFiles);"
+    }
+  ]
+}

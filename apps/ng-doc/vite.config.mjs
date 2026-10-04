@@ -88,11 +88,8 @@ export function ngDocSiteConfig({
     },
     css: { preprocessorOptions: { scss: { loadPaths: [workspaceRoot] } } },
     server: { fs: { allow: [workspaceRoot] } },
-    build: {
-      outDir,
-      emptyOutDir: true,
-      commonjsOptions: { include: [/node_modules/, /dist\/libs\/core\//] },
-    },
+    // Vite 8 bundles with Rolldown, which converts the linked CommonJS @ng-doc/core by itself.
+    build: { outDir, emptyOutDir: true },
   };
 }
 

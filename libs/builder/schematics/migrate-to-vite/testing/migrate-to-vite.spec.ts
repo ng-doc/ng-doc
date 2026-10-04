@@ -11,7 +11,7 @@ import * as ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 
 import { KNOWN_BUILD_OPTIONS } from '../analyze';
-import { ngDocViteDependencies } from '../setup/dependencies';
+import { admitsRange, ngDocViteDependencies } from '../setup/dependencies';
 import { wrapServerEntry } from '../setup/source';
 import {
   customOptionsApp,
@@ -143,9 +143,8 @@ describe('migrate-to-vite', () => {
     );
     expect(report).toContain('`build.ssr.entry`: `src/server.ts` is not built.');
     expect(report).toContain('`build.budgets`: Vite has no size budgets.');
-    expect(report).toContain(
-      '`@angular/compiler` is `^22.0.0`; the Vite engine is tested with `22.2.1`.',
-    );
+    // `^22.0.0` installs the newest Angular 22, which the engine's `^22.2.0` admits.
+    expect(report).not.toContain('`@angular/compiler` is');
     expect(report).toContain('`test.buildTarget`: now `site:build-legacy:development`');
     expect(report).not.toContain('## Blocking');
     expect(tree.readText('.ng-doc-migration/site/backup/src/main.server.ts.bak')).toBe(
@@ -153,26 +152,68 @@ describe('migrate-to-vite', () => {
     );
   });
 
-  it('installs the exact tested Vite tuple, not the optional peer ranges', async () => {
+  it("installs the Vite engine's caret ranges, which npm resolves to the newest releases", async () => {
     const manifest = JSON.parse(readFileSync(join(__dirname, '../../../package.json'), 'utf8'));
-    // The peers only keep npm from refusing an install that pulls in another Vite (Vitest does).
-    expect(manifest.peerDependencies.vite).toBe('^7.3.5 || ^8.0.0');
+    expect(manifest.peerDependencies.vite).toBe('^8.3.0');
     expect(ngDocViteDependencies()).toEqual(manifest['ng-doc'].viteEngine);
-    expect(ngDocViteDependencies()['vite']).toBe('7.3.5');
+    expect(ngDocViteDependencies()['vite']).toBe('^8.3.0');
     for (const [name, version] of Object.entries(ngDocViteDependencies())) {
-      expect([name, version]).toEqual([name, expect.stringMatching(/^\d+\.\d+\.\d+$/)]);
+      expect([name, version]).toEqual([name, expect.stringMatching(/^\^[1-9]\d*\.\d+\.\d+$/)]);
       expect(manifest.peerDependencies[name]).toBeDefined();
     }
 
     const tree = await migrate(standaloneApp());
     const packageJson = JSON.parse(tree.readText('package.json'));
-    expect(packageJson.devDependencies.vite).toBe('7.3.5');
+    expect(packageJson.devDependencies.vite).toBe('^8.3.0');
     expect(tree.readText('.ng-doc-migration/site/report.md')).toContain(
-      '- Added `vite@7.3.5` to `devDependencies`.',
+      '- Added `vite@^8.3.0` to `devDependencies`.',
     );
   });
 
-  it('keeps another Vite and reports that the engine requires the exact one', async () => {
+  it('tells whether a declared specifier can resolve inside a caret range', () => {
+    const cases: Array<[string, boolean | undefined]> = [
+      ['8.3.0', true],
+      ['8.3.2', true],
+      ['v8.10.0', true],
+      ['8.2.9', false],
+      ['9.0.0', false],
+      ['^8.0.0', true],
+      ['^8.4.1', true],
+      ['^7.3.5', false],
+      ['^9.0.0', false],
+      ['~8.3.1', true],
+      ['~8.2.0', false],
+      ['=8.3.0', true],
+      ['^0.8.0', false],
+      ['>=8.0.0', undefined],
+      ['^7.0.0 || ^8.0.0', undefined],
+      ['8.x', undefined],
+      ['latest', undefined],
+    ];
+    for (const [declared, expected] of cases) {
+      expect([declared, admitsRange(declared, '^8.3.0')]).toEqual([declared, expected]);
+    }
+    expect(admitsRange('8.3.0', '>=8.3.0')).toBeUndefined();
+  });
+
+  it('keeps a Vite outside the range and reports that the engine requires the range', async () => {
+    const files = standaloneApp();
+    const manifest = JSON.parse(files['package.json']);
+    manifest.devDependencies = { ...manifest.devDependencies, vite: '^7.3.5' };
+    files['package.json'] = JSON.stringify(manifest);
+
+    const tree = await migrate(files);
+
+    expect(JSON.parse(tree.readText('package.json')).devDependencies.vite).toBe('^7.3.5');
+    const report = tree.readText('.ng-doc-migration/site/report.md');
+    expect(report).toContain(
+      '- `vite` is `^7.3.5`; the Vite engine requires `^8.3.0` and does not start with ' +
+        'another version. Update it: `npm i -D vite@^8.3.0`.',
+    );
+    expect(report).not.toContain('Added `vite@');
+  });
+
+  it('adds and reports nothing for a declared dependency that resolves inside the range', async () => {
     const files = standaloneApp();
     const manifest = JSON.parse(files['package.json']);
     manifest.devDependencies = { ...manifest.devDependencies, vite: '^8.0.0' };
@@ -182,11 +223,31 @@ describe('migrate-to-vite', () => {
 
     expect(JSON.parse(tree.readText('package.json')).devDependencies.vite).toBe('^8.0.0');
     const report = tree.readText('.ng-doc-migration/site/report.md');
-    expect(report).toContain(
-      '- `vite` is `^8.0.0`; the Vite engine requires exactly `7.3.5` and does not start with ' +
-        'another version. Pin it: `npm i -D vite@7.3.5`.',
-    );
+    expect(report).not.toContain('`vite` is');
     expect(report).not.toContain('Added `vite@');
+  });
+
+  it('checks the installed version when the workspace has one', async () => {
+    const files = standaloneApp();
+    const manifest = JSON.parse(files['package.json']);
+    manifest.devDependencies = { ...manifest.devDependencies, vite: '^8.0.0' };
+    files['package.json'] = JSON.stringify(manifest);
+    files['node_modules/vite/package.json'] = JSON.stringify({ name: 'vite', version: '8.1.4' });
+    files['node_modules/@angular/compiler/package.json'] = JSON.stringify({
+      name: '@angular/compiler',
+      version: '22.1.3',
+    });
+
+    const report = (await migrate(files)).readText('.ng-doc-migration/site/report.md');
+
+    expect(report).toContain(
+      '- `vite` is `^8.0.0` (installed `8.1.4`); the Vite engine requires `^8.3.0` and does not ' +
+        'start with another version. Update it: `npm i -D vite@^8.3.0`.',
+    );
+    expect(report).toContain(
+      '- `@angular/compiler` is `^22.0.0` (installed `22.1.3`); the Vite engine is tested with ' +
+        '`^22.2.0`.',
+    );
   });
 
   it('migrates an NgModule application in a multi-project layout', async () => {
@@ -241,7 +302,7 @@ describe('migrate-to-vite', () => {
     expect(config).toContain("configFile: workspace('docs/ng-doc.config.ts'),");
     expect(config).toContain("discovery: { tags: ['public'] },");
     expect(config).toContain("loadPaths: [workspace('src/styles')]");
-    expect(config).toContain("rollupOptions: { external: ['canvas'] },");
+    expect(config).toContain("rolldownOptions: { external: ['canvas'] },");
     expect(config).toContain("headers: { 'X-Docs': 'yes' }");
     // Per-mode settings: the production configuration's tsconfig, replacements, source maps, define.
     expect(config).toContain('const settings = modes[mode] ?? fallback;');
@@ -301,9 +362,9 @@ describe('migrate-to-vite', () => {
     expect(config).toContain("'apps/docs/src/assets',");
     expect(config).toContain('fileReplacements: settings.fileReplacements,');
     expect(tree.exists('angular.json')).toBe(false);
-    // vite was already installed at the exact version, so it is neither added nor reported.
+    // vite was already declared inside the range, so it is neither added nor reported.
     const packageJson = JSON.parse(tree.readText('package.json'));
-    expect(packageJson.devDependencies.vite).toBe('7.3.5');
+    expect(packageJson.devDependencies.vite).toBe('^8.3.2');
     expect(tree.readText('.ng-doc-migration/docs/report.md')).not.toContain('`vite` is');
   });
 
