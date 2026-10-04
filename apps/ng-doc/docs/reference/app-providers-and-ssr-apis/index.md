@@ -109,10 +109,11 @@ processor is an `NgDocPageProcessor`:
 `provideTypeControl(type: string, control, options?)` registers a playground control for inputs of
 the given type name.
 
-| Option      | Type      | Description                                                      |
-| ----------- | --------- | ---------------------------------------------------------------- |
-| `hideLabel` | `boolean` | Hides the input name next to the control.                        |
-| `order`     | `number`  | The position of the control. The built-in controls use 10 to 40. |
+| Option         | Type      | Description                                                        |
+| -------------- | --------- | ------------------------------------------------------------------ |
+| `hideLabel`    | `boolean` | Hides the input name next to the control.                          |
+| `order`        | `number`  | The position of the control. The built-in controls use 10 to 40.   |
+| `labelWrapper` | `boolean` | Wraps the row in a `<label>` (default). `false` renders a `<div>`. |
 
 ## Preload pages
 

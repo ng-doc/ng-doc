@@ -288,3 +288,128 @@ describeChangeDetection(
     afterEach(() => warn.mockRestore());
   },
 );
+
+/** A control with several interactive parts, as a custom type control may have. */
+@Component({
+  selector: 'ng-doc-list-control',
+  template: `<input class="list-filter" (click)="clicks = clicks + 1" /><span class="list-area"
+      >Area</span
+    >`,
+})
+class ListControlComponent {
+  clicks = 0;
+  writeValue(): void {}
+  registerOnChange(): void {}
+  registerOnTouched(): void {}
+}
+
+const LIST_PROPERTIES: NgDocPlaygroundProperties = {
+  items: { type: 'Items', inputName: 'items', description: 'The items' },
+  hidden: { type: 'HiddenItems', inputName: 'hidden' },
+  wrapped: { type: 'WrappedItems', inputName: 'wrapped' },
+};
+
+@Component({
+  selector: 'ng-doc-list-properties-host',
+  template: `<ng-doc-playground-properties
+    [form]="form"
+    [properties]="properties"
+    [defaultValues]="{}" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgDocPlaygroundPropertiesComponent],
+})
+class ListPropertiesHostComponent {
+  readonly properties: NgDocPlaygroundProperties = LIST_PROPERTIES;
+  readonly form = new FormGroup<NgDocPlaygroundForm>({
+    properties: new FormGroup<Record<string, FormControl<unknown>>>({
+      items: new FormControl<unknown>(null),
+      hidden: new FormControl<unknown>(null),
+      wrapped: new FormControl<unknown>(null),
+    }),
+    content: new FormGroup<Record<string, FormControl<boolean>>>({}),
+  });
+}
+
+describeChangeDetection(
+  'NgDocPlaygroundPropertiesComponent with labelWrapper',
+  ({ providers }: ChangeDetectionCase) => {
+    let fixture: ComponentFixture<ListPropertiesHostComponent>;
+
+    beforeEach(async () => {
+      TestBed.configureTestingModule({
+        providers: [
+          ...providers,
+          provideTypeControl('Items', ListControlComponent, { labelWrapper: false, order: 1 }),
+          provideTypeControl('HiddenItems', ListControlComponent, {
+            labelWrapper: false,
+            hideLabel: true,
+            order: 2,
+          }),
+          provideTypeControl('WrappedItems', ListControlComponent, { order: 3 }),
+        ],
+      });
+      fixture = TestBed.createComponent(ListPropertiesHostComponent);
+      await fixture.whenStable();
+      await fixture.whenStable();
+    });
+
+    const rows = (): HTMLElement[] =>
+      Array.from(fixture.nativeElement.querySelectorAll('ng-doc-playground-property'));
+    const wrapper = (row: HTMLElement): HTMLElement =>
+      row.querySelector('.ng-doc-playground-property-label')!;
+
+    it('renders the row as a div named by its caption', () => {
+      const row: HTMLElement = wrapper(rows()[0]);
+      const captionId: string | null = row.getAttribute('aria-labelledby');
+
+      expect(row.tagName).toBe('DIV');
+      expect(row.getAttribute('role')).toBe('group');
+      expect(captionId).toBeTruthy();
+      // The accessible name of the group is the caption: the input's name.
+      expect(
+        fixture.nativeElement
+          .querySelector(`#${captionId}`)
+          ?.querySelector('.ng-doc-playground-property-name')?.textContent,
+      ).toBe('items');
+      expect(row.querySelector('ng-doc-list-control')).not.toBeNull();
+    });
+
+    it('gives each row its own caption ID', () => {
+      const ids: Array<string | null> = rows().map(
+        (row: HTMLElement) =>
+          wrapper(row).querySelector('.ng-doc-label')?.getAttribute('id') ?? null,
+      );
+
+      expect(ids[0]).not.toBeNull();
+      expect(ids[0]).not.toBe(ids[1]);
+    });
+
+    it('leaves out the caption and the reference when the label is hidden', () => {
+      const row: HTMLElement = wrapper(rows()[1]);
+
+      expect(row.tagName).toBe('DIV');
+      expect(row.hasAttribute('aria-labelledby')).toBe(false);
+      expect(row.querySelector('.ng-doc-label')).toBeNull();
+      expect(row.querySelector('ng-doc-list-control')).not.toBeNull();
+    });
+
+    it('keeps the label of other controls', () => {
+      expect(wrapper(rows()[2]).tagName).toBe('LABEL');
+    });
+
+    it('does not forward clicks inside the control to its first field', () => {
+      const clicks = (row: HTMLElement): number =>
+        fixture.debugElement.query(
+          (debug) => debug.nativeElement === row.querySelector('ng-doc-list-control'),
+        ).componentInstance.clicks;
+      const [unwrapped, , wrapped] = rows();
+
+      unwrapped.querySelector<HTMLElement>('.list-area')!.click();
+      wrapped.querySelector<HTMLElement>('.list-area')!.click();
+
+      expect(clicks(unwrapped)).toBe(0);
+      // A label forwards the click to the input, the behaviour the option turns off.
+      expect(clicks(wrapped)).toBe(1);
+    });
+  },
+);

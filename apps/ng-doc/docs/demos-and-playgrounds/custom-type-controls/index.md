@@ -130,10 +130,11 @@ can copy the text to register.
 
 The third argument of `provideTypeControl` takes `NgDocTypeControlProviderOptions`:
 
-| Option      | Type      | Default | Description                                                                                 |
-| ----------- | --------- | ------- | ------------------------------------------------------------------------------------------- |
-| `hideLabel` | `boolean` | `false` | Hides the row's label, with the input's name and type chip, for a control that has its own. |
-| `order`     | `number`  | –       | The position of the control's rows in the inspector, lowest first.                          |
+| Option         | Type      | Default | Description                                                                                 |
+| -------------- | --------- | ------- | ------------------------------------------------------------------------------------------- |
+| `hideLabel`    | `boolean` | `false` | Hides the row's label, with the input's name and type chip, for a control that has its own. |
+| `order`        | `number`  | –       | The position of the control's rows in the inspector, lowest first.                          |
+| `labelWrapper` | `boolean` | `true`  | Wraps the row in a `<label>`. Set `false` for a control with several interactive parts.     |
 
 The inspector lists the inputs whose controls have an `order` first, by that order, and then the
 others by name. The built-in controls have these orders:
@@ -144,6 +145,19 @@ others by name. The built-in controls have these orders:
 | A text field                    | `string`         | 20    |
 | A number field                  | `number`         | 30    |
 | A checkbox                      | `boolean`        | 40    |
+
+### Controls with several interactive parts
+
+Each row of the inspector is a `<label>` around the control. A click anywhere in a label also
+clicks the first field inside it, so a control with several parts, such as a list with a filter
+field or a set of buttons, reacts to clicks it shouldn't. Set `labelWrapper: false` and the row
+becomes a `<div>` instead, named by its caption for assistive technology:
+
+```typescript name="app.config.ts"
+provideTypeControl('Items', ItemsControlComponent, { labelWrapper: false }),
+```
+
+The built-in controls keep their label.
 
 ## Appearance
 
