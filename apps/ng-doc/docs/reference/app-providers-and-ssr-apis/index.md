@@ -19,6 +19,7 @@ rendering. Add the providers to your application configuration
 | `provideTypeControl(type, control, options?)`    | `@ng-doc/app`       | –            | Registers a playground control for a type (`*CustomTypeControlsPage`).               |
 | `providePlaygroundDemo(playgroundId, component)` | `@ng-doc/app`       | –            | Registers the component of a playground. Generated code calls it; you don't need to. |
 | `provideMermaid(config?)`                        | `@ng-doc/app`       | For diagrams | Enables Mermaid diagrams (`*DiagramsPage`).                                          |
+| `provideNgDocTitle(titleFn)`                     | `@ng-doc/app`       | –            | Builds the browser tab titles (`*BrowserTabTitlesPage`).                             |
 
 The routes of the site are in `NG_DOC_ROUTING`, also from `@ng-doc/generated`. The application
 also needs the Angular router and `provideHttpClient(withInterceptorsFromDi())`, because NgDoc
@@ -87,6 +88,17 @@ To use another engine, extend `NgDocSearchEngine` and pass your class.
 | `toc`         | `Type<NgDocPageToc>`         | `NgDocTocComponent`               |
 
 Leave a field out to remove that part of the page.
+
+## provideNgDocTitle
+
+`provideNgDocTitle(titleFn: NgDocTitleFn)` sets a `TitleStrategy` that builds the title of every
+navigation with `titleFn`. The function receives an `NgDocTitleContext` with the `categories`,
+`page`, `tab` and `api` of the route and the default `title`, and returns the title, or
+`undefined` to keep the current one. See `*BrowserTabTitlesPage`.
+
+```typescript name="app.config.ts"
+provideNgDocTitle(({ page, title }) => (page ? `${page} | My library` : title));
+```
 
 ## Page processors
 

@@ -366,6 +366,11 @@ describe('OutputAssembler page assembly', () => {
     expect(overview).toMatch(
       /const routes: Routes = \[ɵwithNgDocContent\(\{[\s\S]*\}, pageContentSource\)\]/,
     );
+    // The page route inherits its tab's title, so a page's own `route.title` is the only one.
+    expect(overview).toMatch(
+      /\{\n {2}\.\.\.\(isRoute\(entry\.route\) \? entry\.route : \{\}\),\n {2}path: '',\n {2}component: PageComponent,\n\}/,
+    );
+    expect(overview).not.toContain('title:');
     const bodyPayload = byPath(result.outputs, 'guides/start/index/page.content.mjs').content;
     expect(bodyPayload).toContain('"schemaVersion":1');
     expect(JSON.parse(bodyPayload.replace(/^export default |;\n$/g, '')).html).toBe(
@@ -405,6 +410,10 @@ describe('OutputAssembler page assembly', () => {
     expect(wrapper.indexOf("path: ''")).toBeLessThan(wrapper.indexOf("path: 'advanced'"));
     expect(wrapper).toContain("import('./index/page')");
     expect(wrapper).toContain("icon: 'rocket'");
+    // Only the tabs have titles here: the wrapper route inherits the page's from `routes.ts`.
+    expect(wrapper.match(/title: /g)).toHaveLength(2);
+    expect(wrapper.match(/ngDocTitle: 'tab'/g)).toHaveLength(2);
+    expect(wrapper).toContain("ngDocPageType: 'guide'");
     expect(wrapper).toMatch(
       /const routes: Routes = \[ɵwithNgDocContent\(\{[\s\S]*\}, headerContentSource\)\]/,
     );
@@ -463,6 +472,10 @@ describe('OutputAssembler page assembly', () => {
     expect(wrapper).not.toContain('headerContentSource');
     expect(page).not.toContain('ɵwithNgDocContent');
     expect(wrapper).not.toContain('ɵwithNgDocContent');
+    // The legacy branch has the same titles: none on the page route or the wrapper route.
+    expect(page).not.toContain('title:');
+    expect(wrapper).not.toContain('title:');
+    expect(wrapper).toContain("ngDocPageType: 'guide'");
   });
 
   test('writes route paths and API list segments as escaped string literals', () => {
@@ -710,6 +723,9 @@ describe('OutputAssembler page assembly', () => {
     expect(byPath(page.outputs, 'api/api/classes/public/Button/page.ts').content).toContain(
       "import('./api/page')",
     );
+    expect(byPath(page.outputs, 'api/api/classes/public/Button/page.ts').content).toContain(
+      "ngDocPageType: 'api'",
+    );
     expect(
       JSON.parse(
         byPath(page.outputs, 'api/api/classes/public/Button/page.content.mjs').content.replace(
@@ -855,8 +871,13 @@ describe('OutputAssembler aggregate assembly', () => {
     expect(routes).toMatch(/import NgDocCategory_[a-f0-9]+ from '\.\.\/docs\/ng-doc\.category'/);
     expect(routes).toMatch(/\.\.\.\(NgDocCategory_[a-f0-9]+\.providers \?\? \[\]\)/);
     expect(routes).toContain("import('./guides/start/page')");
-    // Only the API entry's route names its list; guides and categories carry no data.
-    expect(routes.match(/data: \{ngDocApiListSegment: 'reference'\}/g)).toHaveLength(1);
+    // Every route names what its title belongs to; only the API entry's route names its list.
+    expect(routes.match(/data: \{ngDocTitle: 'category'\}/g)).toHaveLength(1);
+    expect(routes.match(/data: \{ngDocTitle: 'page'\}/g)).toHaveLength(1);
+    expect(
+      routes.match(/data: \{ngDocTitle: 'page', ngDocApiListSegment: 'reference'\}/g),
+    ).toHaveLength(1);
+    expect(routes.match(/ngDocApiListSegment/g)).toHaveLength(1);
     expect(routes).not.toContain("ngDocApiListSegment: ''");
     const context = byPath(result.outputs, 'context.ts').content;
     expect(context).toContain('apiLists: ["reference"]');

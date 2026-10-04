@@ -10,6 +10,7 @@ import {
   provideMainPageProcessor,
   provideMermaid,
   provideNgDocApp,
+  provideNgDocTitle,
   providePageSkeleton,
   provideSearchEngine,
 } from '@ng-doc/app';
@@ -33,6 +34,13 @@ export const appConfig: ApplicationConfig = {
     providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON),
     provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS),
     provideMermaid(),
+    // "Installation · Get started | NgDoc", "NgDocPage · API | NgDoc".
+    provideNgDocTitle(({ categories, page, tab, api }) => {
+      const parts = api ? [api, 'API'] : [tab, page, ...[...categories].reverse()];
+      const title = parts.filter(Boolean).join(' · ');
+
+      return title ? `${title} | NgDoc` : 'NgDoc';
+    }),
     provideHttpClient(withInterceptorsFromDi(), withFetch()),
     provideRouter(
       [
