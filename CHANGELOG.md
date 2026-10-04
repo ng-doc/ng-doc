@@ -1,3 +1,28 @@
+# [22.0.0](https://github.com/ng-doc/ng-doc/compare/v21.1.1...v22.0.0) (2026-10-04)
+
+
+### Features
+
+* **angular:** ship NgDoc 22 with a new generator engine, Vite host and redesigned docs UI ([93613be](https://github.com/ng-doc/ng-doc/commit/93613be8bdecc1dadb22ec69c209125e725f58b6)), closes [#339](https://github.com/ng-doc/ng-doc/issues/339) [#307](https://github.com/ng-doc/ng-doc/issues/307) [#226](https://github.com/ng-doc/ng-doc/issues/226) [#340](https://github.com/ng-doc/ng-doc/issues/340) [#338](https://github.com/ng-doc/ng-doc/issues/338) [#337](https://github.com/ng-doc/ng-doc/issues/337) [#316](https://github.com/ng-doc/ng-doc/issues/316) [#330](https://github.com/ng-doc/ng-doc/issues/330) [#322](https://github.com/ng-doc/ng-doc/issues/322) [#334](https://github.com/ng-doc/ng-doc/issues/334) [#305](https://github.com/ng-doc/ng-doc/issues/305) [#298](https://github.com/ng-doc/ng-doc/issues/298) [#125](https://github.com/ng-doc/ng-doc/issues/125)
+
+
+### BREAKING CHANGES
+
+* **angular:** Node.js 24 (>=24.15.0 <25) and Angular 22 are required. The new engine also needs
+Vite ^8.3.0 and @analogjs/vite-plugin-angular ^2.8.0, which ng add and migrate-to-vite install.
+* **angular:** public inputs, outputs and queries of NgDoc components and directives are signals.
+Templates keep working; TypeScript code reads them as signals. See "Inputs and outputs are signals"
+in the upgrade guide.
+* **angular:** NgDocBasePlayground declares an abstract `target`; playground classes provide it.
+* **angular:** removed NgDocLetDirective (use @let), ngDocMakePure (use computed()), the zone
+helpers ngDocZoneAttach/ngDocZoneDetach/ngDocZoneOptimize, NG_DOC_THEME, NgDocTheme and
+NG_DOC_DEFAULT_THEME_ID (use data-theme stylesheets), and the search-dialog entry point (use
+NgDocCommandPaletteComponent).
+* **angular:** ng add sets up the new engine with the Vite builders by default; pass --engine
+legacy to keep the application/dev-server builders.
+* **angular:** theme defaults and the markup of several page parts changed; public CSS variables
+keep their names. See "Theme and CSS" in the upgrade guide.
+
 ## [21.1.1](https://github.com/ng-doc/ng-doc/compare/v21.1.0...v21.1.1) (2026-10-03)
 
 
