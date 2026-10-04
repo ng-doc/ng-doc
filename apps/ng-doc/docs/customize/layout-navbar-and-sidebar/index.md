@@ -230,6 +230,20 @@ By default, the documentation routes start at the root of the application, such 
 `/getting-started`. To keep other pages at the root, for example a landing page, serve the
 documentation under its own route, such as `/docs`.
 
+First, take the NgDoc layout out of the root component. `ng add` puts it in the root component's
+template, so it wraps every route: your other pages would render inside the documentation layout,
+and the documentation would get a second layout under `/docs`. Replace the template with your
+application's own shell, which keeps a `<router-outlet />`:
+
+```html name="app.html"
+<!-- Your header, footer and other parts of the shell -->
+<router-outlet />
+```
+
+Remove `NgDocRootComponent`, `NgDocNavbarComponent` and `NgDocSidebarComponent` from the root
+component's `imports`, and keep `RouterOutlet`. The documentation layout moves to a component of its
+own.
+
 Create a component for the documentation layout, and export its routes:
 
 ```typescript name="docs.routes.ts"
@@ -262,8 +276,11 @@ export default routes;
 Load these routes lazily under the `docs` path of the application router:
 
 ```typescript name="app.config.ts"
-provideRouter([{ path: 'docs', loadChildren: () => import('./docs/docs.routes') }], withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' }));
+provideRouter([...routes, { path: 'docs', loadChildren: () => import('./docs/docs.routes') }], withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' }));
 ```
+
+`routes` holds your own pages, such as the landing page at `''`. Remove the `...NG_DOC_ROUTING`
+that `ng add` added to this list: the documentation routes now come from `docs.routes.ts`.
 
 NgDoc generates the links between pages, so it needs to know the route too. Set `routePrefix` in
 the configuration file (`*ConfigurationReference`):
@@ -278,11 +295,105 @@ const config: NgDocConfiguration = {
 export default config;
 ```
 
+### Keep your app header above the docs
+
+To show your application's header on the documentation pages too, put it in the documentation
+layout as the custom navbar (see [Custom navbar](#custom-navbar)), and show it in the shell only
+outside the documentation:
+
+```typescript name="header.ts"
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { NgDocSearchComponent, NgDocSidebarService } from '@ng-doc/app';
+
+@Component({
+  selector: 'app-header',
+  imports: [RouterLink, NgDocSearchComponent],
+  template: `
+    @if (inDocs()) {
+      <button type="button" aria-controls="ng-doc-sidenav" [attr.aria-expanded]="sidebar.expandedState()" (click)="sidebar.toggle()">Menu</button>
+    }
+    <a routerLink="/">My app</a>
+    <a routerLink="/docs/getting-started">Docs</a>
+    @if (inDocs()) {
+      <ng-doc-search />
+    }
+  `,
+  styles: `
+    :host {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      height: var(--ng-doc-navbar-height);
+      padding: 0 var(--ng-doc-app-horizontal-padding);
+      background: var(--ng-doc-navbar-background);
+      border-bottom: var(--ng-doc-navbar-border);
+    }
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class AppHeader {
+  readonly inDocs = input(false);
+  protected readonly sidebar = inject(NgDocSidebarService);
+}
+```
+
+In the documentation layout, the header takes the place of `ng-doc-navbar`:
+
+```html
+<ng-doc-root>
+  <app-header ngDocCustomNavbar [inDocs]="true" />
+  <ng-doc-sidebar />
+  <router-outlet />
+</ng-doc-root>
+```
+
+In the `imports` of `DocsComponent`, replace `NgDocNavbarComponent` with `AppHeader`. The shell
+hides its own copy of the header under `/docs`:
+
+```typescript name="app.ts"
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { filter, map } from 'rxjs';
+
+import { AppHeader } from './header/header';
+
+@Component({
+  selector: 'app-root',
+  imports: [RouterOutlet, AppHeader],
+  template: `
+    @if (!inDocs()) {
+      <app-header />
+    }
+    <router-outlet />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class App {
+  private readonly router = inject(Router);
+
+  protected readonly inDocs = toSignal(
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      map(() => this.router.url.startsWith('/docs')),
+    ),
+    { initialValue: false },
+  );
+}
+```
+
 ## 🚧 Gotchas
 
 > **Warning**
 > The `ng-doc-root` component places only its direct children marked as the navbar or the sidebar. A navbar or
 > sidebar wrapped in another element, such as a `div`, lands in the page area.
+
+> **Warning**
+> NgDoc's header is fixed at the top of the window, even when the layout has no navbar. A header
+> of your application placed above `ng-doc-root` ends up under it and can't be clicked. Put it in
+> the layout as the custom navbar instead
+> ([Keep your app header above the docs](#keep-your-app-header-above-the-docs)).
 
 {% index false %}
 

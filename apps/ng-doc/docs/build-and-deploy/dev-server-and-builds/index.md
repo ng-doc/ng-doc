@@ -64,6 +64,74 @@ or `.bat` command runs through `cmd.exe`, which can't pass an argument containin
 line break safely, so `dev` refuses one. `*BuildersReference#command-line-interface` lists every
 flag.
 
+## Keep another builder
+
+Some applications are built by a builder that NgDoc must not replace, such as the one of
+`@angular-architects/native-federation`, which runs Angular's `application` builder from another
+target. Keep that builder, and generate the documentation with the `ng-doc` command instead:
+
+1. Don't let `ng add` set up the builders: it replaces the `build` and `serve` builders of the
+   application. If you have run it, restore the original `build` and `serve` targets. Set NgDoc up
+   by hand with steps 1 to 5 of `*InstallationPage#manual-setup`, without `vite` and
+   `@analogjs/vite-plugin-angular`: the Vite engine of step 6 isn't needed.
+2. Add the NgDoc styles and assets to the target that builds the application. With native
+   federation, it is the `esbuild` target, which its `build` target runs:
+
+   <!-- prettier-ignore -->
+   ```json name="angular.json"
+   {
+     "esbuild": {
+       "builder": "@angular/build:application",
+       "options": {
+         "styles": [
+           "node_modules/@ng-doc/app/styles/global.css",
+           "node_modules/@ng-doc/app/styles/themes/dark.css",
+           "src/styles.css"
+         ],
+         "assets": [
+           { "glob": "**/*", "input": "public" },
+           { "glob": "**/*", "input": "node_modules/@ng-doc/app/assets", "output": "assets/ng-doc/app" },
+           { "glob": "**/*", "input": "node_modules/@ng-doc/ui-kit/assets", "output": "assets/ng-doc/ui-kit" },
+           { "glob": "**/*", "input": "ng-doc/<project-name>/assets", "output": "assets/ng-doc" }
+         ],
+         "allowedCommonJsDependencies": ["@ng-doc/core"]
+       }
+     }
+   }
+   ```
+
+   The last asset entry copies the generated assets, such as the API lists.
+
+3. Start `ng serve` through `ng-doc dev`, and generate the documentation before `ng build`:
+
+   ```json name="package.json"
+   {
+     "scripts": {
+       "docs:serve": "ng-doc dev --project <project-name> --docs-root src --tsconfig tsconfig.app.json --output-root ng-doc/<project-name> -- ng serve",
+       "docs:build": "ng-doc generate --project <project-name> --docs-root src --tsconfig tsconfig.app.json --output-root ng-doc/<project-name> && ng build"
+     }
+   }
+   ```
+
+   `--output-root` writes the generated folder where the `@ng-doc/generated` path and the assets
+   entry point, `--docs-root` is the folder with your pages, and `--tsconfig` is the TypeScript
+   configuration that includes the code your API pages document.
+
+4. With native federation, don't share the NgDoc packages: add them to the list of skipped
+   packages in the federation configuration. Otherwise every page is blank, and the browser
+   console shows `Unable to resolve specifier '@ng-doc/core/...'`, because the import map lacks
+   the deep imports of `@ng-doc/core`:
+
+   ```js name="federation.config.mjs"
+   export default withNativeFederation({
+     // name, exposes, shared, ...
+     skip: [
+       // the packages that the configuration already skips
+       (name) => name.startsWith('@ng-doc/'),
+     ],
+   });
+   ```
+
 ## If something misbehaves
 
 The new engine has environment switches that turn off one optimization each, such as the

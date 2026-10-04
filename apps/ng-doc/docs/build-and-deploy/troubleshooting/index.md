@@ -182,6 +182,35 @@ Vite server without closing the previous one.
 **Fix:** register `createNgDocVitePlugin` once per project, and close a Vite server before you
 create another one in the same process.
 
+## Production builds
+
+### Prerender can't load `api-list.json`
+
+With the legacy builders, `ng build` fails to prerender an API page with
+`Http failure response for http://ng-localhost/assets/ng-doc/<api-route>/api-list.json: 0`, or,
+with `outputMode: 'server'`, with
+`Unable to handle request: '/assets/ng-doc/<api-route>/api-list.json'`.
+
+**Cause:** the build doesn't copy the generated assets. NgDoc writes the API lists to
+`ng-doc/<project-name>/assets`, and the legacy builders copy that folder only through an entry in
+the `assets` of the `build` target. The entry is missing, or its input points to another folder,
+for example after a change of `outDir` or a move of the project.
+
+**Fix:** add the entry that `ng add` writes to the `assets` of the `build` target:
+
+```json name="angular.json"
+{
+  "glob": "**/*",
+  "input": "ng-doc/<project-name>/assets",
+  "output": "assets/ng-doc"
+}
+```
+
+If you set `outDir` in the configuration file, change its input to match. The Vite builders copy
+the generated assets themselves, so they need no entry.
+
+**See also:** `*LegacyBuildersPage#2-add-the-assets`
+
 ## Development server
 
 ### Worker crashes and timeouts
