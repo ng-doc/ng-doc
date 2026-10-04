@@ -35,6 +35,10 @@ Write the range right after the closing quote, with no space.
 | `#L12`    | Line 12.                       |
 | `#L4-`    | Line 4 to the end of the file. |
 
+Any other suffix names a snippet of the file: `file="./app.ts"#example` loads the code between two
+`// snippet#example` comments (`*CodeBlocksPage#snippets-from-a-file`). Only the new engine reads
+snippet ids.
+
 ## Callouts
 
 A blockquote whose first paragraph starts with a bold kind. See `*MarkdownAndCalloutsPage`.

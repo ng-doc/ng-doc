@@ -92,6 +92,12 @@ Only the new engine writes these, so the runtime treats them as optional and the
 - **Summaries.** `semantic/api-summary.ts` reads each declaration's header and the first paragraph of its doc comment syntactically (no checker) into `DeclarationDescriptor.signature`/`description`. The records of an API page that belong to no section carry `kind`, `signature` and `description` (`compiler/assemble.ts`), and `api-list.json` items a `description`. The search palette previews them and the API index shows the description column. `acceptance/production/parity.mjs` leaves these fields (`KNOWN.search.fields`) out of the legacy comparison.
 - **List locations.** An API entry's route carries `data: { ngDocApiListSegment }` (`routes.ts.nunj`) and the generated context lists every segment (`NgDocContext.apiLists`), so the palette requests exactly those lists (none on a site without an API). Both template blocks render only when the value is defined.
 
+### Deliberate difference: new-engine options in shared code
+
+Some author-facing options reach code that both engines share, and only the new engine turns them on, so the legacy output stays as it was:
+
+- **Named snippets in code blocks** (`file="./x.ts"#id`). `parseCodeBlockParams` accepts a snippet id only with `{ snippets: true }`, which the generator's Markdown renderer passes (`content/code-snippet.ts` extracts the region); without it, as in the legacy `markdown-to-html.ts` and in doc comments, any fragment but a line range still fails to parse.
+
 ## Shared code: changes affect both engines
 
 | Path                                       | Shared how                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |

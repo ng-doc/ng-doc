@@ -126,4 +126,59 @@ describe('parseCodeBlockParams', () => {
     );
     expect(() => parseCodeBlockParams('ts name=main.ts')).toThrow();
   });
+
+  describe('with snippets', () => {
+    const snippets = { snippets: true };
+
+    it.each([
+      ['file="test.ts"', { file: 'test.ts', fileLineStart: undefined, fileLineEnd: undefined }],
+      ['file="test.ts"#L1', { file: 'test.ts', fileLineStart: 0, fileLineEnd: 1 }],
+      ['file="test.ts"#L1-L2', { file: 'test.ts', fileLineStart: 0, fileLineEnd: 2 }],
+      ['file="test.ts"#L1-', { file: 'test.ts', fileLineStart: 0, fileLineEnd: undefined }],
+      [
+        'f# file="./main.fs"#L2-L3 {1}',
+        {
+          language: 'f#',
+          file: './main.fs',
+          fileLineStart: 1,
+          fileLineEnd: 3,
+          highlightedLines: [1],
+        },
+      ],
+    ])('parses %s as without snippets', (options, expected) => {
+      expect(parseCodeBlockParams(options, snippets)).toStrictEqual(expected);
+      expect(parseCodeBlockParams(options)).toStrictEqual(expected);
+    });
+
+    it.each(['greeting', 'html-part', 'Lambda', 'L1-5', 'L', '2'])(
+      'parses #%s after the file as a snippet id',
+      (snippet) => {
+        expect(
+          parseCodeBlockParams(`typescript name="a.ts" file="./a.ts"#${snippet} {2}`, snippets),
+        ).toStrictEqual({
+          language: 'typescript',
+          name: 'a.ts',
+          file: './a.ts',
+          fileLineStart: undefined,
+          fileLineEnd: undefined,
+          snippet,
+          highlightedLines: [2],
+        });
+      },
+    );
+
+    it('rejects a snippet id without the option, as before', () => {
+      expect(() => parseCodeBlockParams('ts file="./a.ts"#greeting')).toThrow(
+        'Unable to parse code block options',
+      );
+    });
+
+    it('keeps a fragment inside the quotes in the file path (no snippet)', () => {
+      expect(parseCodeBlockParams('file="./a.ts#greeting"', snippets)).toStrictEqual({
+        file: './a.ts#greeting',
+        fileLineStart: undefined,
+        fileLineEnd: undefined,
+      });
+    });
+  });
 });

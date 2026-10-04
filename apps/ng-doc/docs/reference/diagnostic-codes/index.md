@@ -97,6 +97,7 @@ These codes point to a problem in your files or setup. The linked entries explai
 | `CONTENT_FRONTMATTER`       | error    | The front matter of a Markdown file is invalid.                                                                                                   |
 | `CONTENT_HEADER_READ`       | error    | The `guide.headerTemplate` file can't be read.                                                                                                    |
 | `CONTENT_SNIPPET_READ`      | error    | The file in a code block's `file` attribute doesn't exist.                                                                                        |
+| `CONTENT_SNIPPET_UNKNOWN`   | error    | The file in a code block's `file="…"#id` has no snippet with that id, or the snippet has no closing comment.                                      |
 | `CONTENT_DEMO`              | error    | `NgDocActions.demo` or `demoPane` names a demo that the page doesn't register.                                                                    |
 | `CONTENT_PLAYGROUND`        | error    | `NgDocActions.playground` names a playground that the page doesn't register.                                                                      |
 | `CONTENT_PLAYGROUND_SOURCE` | error    | The source file of a playground's target doesn't exist.                                                                                           |
