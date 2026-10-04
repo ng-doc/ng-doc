@@ -373,6 +373,13 @@ describe('OutputAssembler page assembly', () => {
     );
     const bodySource = byPath(result.outputs, 'guides/start/index/page.source.mjs').content;
     expect(bodySource).toContain('import("./page.content.mjs")');
+    // The package root: `@ng-doc/core` has no `exports`, and NodeNext refuses a subpath of it.
+    expect(byPath(result.outputs, 'guides/start/index/page.content.d.mts').content).toBe(
+      "import type {NgDocContentModule} from '@ng-doc/core';\ndeclare const payload: NgDocContentModule;\nexport default payload;\n",
+    );
+    expect(byPath(result.outputs, 'guides/start/index/page.source.d.mts').content).toBe(
+      "import type {NgDocContentSource} from '@ng-doc/core';\ndeclare const source: NgDocContentSource;\nexport default source;\n",
+    );
     const moduleRoot = path.join(root, 'modules');
     mkdirSync(path.join(moduleRoot, 'guides/start/index'), { recursive: true });
     writeFileSync(path.join(moduleRoot, 'guides/start/index/page.content.mjs'), bodyPayload);

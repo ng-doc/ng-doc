@@ -27,7 +27,8 @@ setup by hand.
   ```
 
 - Angular 22.2 or later (`@angular/compiler` and `@angular/compiler-cli` `^22.2.0`), on Node.js
-  `>=24.15.0 <25` (`*BuildersReference#supported-versions`).
+  `>=24.15.0 <25` (`*BuildersReference#supported-versions`). The engine stops with
+  `NGDOC_VITE_ANGULAR_VERSION` on an older Angular.
 
 ## 1. Add the Vite configuration
 

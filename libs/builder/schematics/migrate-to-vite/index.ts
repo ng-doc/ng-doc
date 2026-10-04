@@ -23,7 +23,9 @@ import {
   addGitIgnoreLine,
   addNgDocViteDependencies,
   DependencyMismatch,
+  findOutdatedAngular,
   hashContent,
+  outdatedAngularText,
 } from './setup/dependencies';
 import { wrapServerEntry } from './setup/source';
 import { VITE_APPLICATION_BUILDER, VITE_DEV_SERVER_BUILDER } from './setup/targets';
@@ -418,6 +420,14 @@ function migrate(
         message: `already exists, so the \`${name}\` target cannot be kept under that name.`,
       });
     }
+  }
+  // The Vite engine does not start on an older Angular (NGDOC_VITE_ANGULAR_VERSION).
+  for (const outdated of findOutdatedAngular(tree)) {
+    plan.findings.push({
+      level: 'blocking',
+      subject: outdated.name,
+      message: outdatedAngularText(outdated),
+    });
   }
   if (plan.findings.some((finding) => finding.level === 'blocking')) {
     logReport(context, renderReport({ project: project.name, findings: plan.findings }), true);

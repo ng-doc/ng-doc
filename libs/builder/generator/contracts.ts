@@ -1111,8 +1111,12 @@ export interface HostAdapter {
   dispose(): Promise<void>;
 }
 
-/** The runtime and generator share one JSON content schema without app → builder imports. */
-export type { NgDocContentModule as ContentModule } from '@ng-doc/core/interfaces';
+/**
+ * The runtime and generator share one JSON content schema without app → builder imports. Imported
+ * from the package root: `@ng-doc/core` has no `exports`, so a subpath is a directory import,
+ * which TypeScript's `NodeNext` resolution refuses in these ESM declarations.
+ */
+export type { NgDocContentModule as ContentModule } from '@ng-doc/core';
 
 export interface HostAssetMapping {
   generatedDirectory: FilePath;

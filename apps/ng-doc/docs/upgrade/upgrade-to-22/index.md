@@ -24,7 +24,9 @@ site:
 
 - Angular 22. `@ng-doc/app`, `@ng-doc/ui-kit` and `@ng-doc/builder` support `>=22.0.0 <23.0.0`,
   and `@ng-doc/builder` depends on `@angular/build` 22.2.1. The Vite engine needs Angular 22.2 or
-  later (`@angular/compiler` and `@angular/compiler-cli` `^22.2.0`). Update Angular first.
+  later (`@angular/compiler` and `@angular/compiler-cli` `^22.2.0`): it stops with
+  `NGDOC_VITE_ANGULAR_VERSION` on an older one, and `ng add` and `migrate-to-vite` refuse to set
+  it up. Update Angular first: `ng update @angular/core@22 @angular/cli@22`.
 - For the Vite engine only: Vite 8 (`vite` `^8.3.0`) and `@analogjs/vite-plugin-angular` `^2.8.0`
   (the ranges are listed under `ng-doc.viteEngine` in the `package.json` of `@ng-doc/builder`). The
   legacy builders don't use Vite, so an update that stays on them needs nothing. The migration

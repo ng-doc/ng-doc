@@ -6,7 +6,9 @@ import {
   addGitIgnoreLine,
   addNgDocViteDependencies,
   dependencyMismatchText,
+  findOutdatedAngular,
   isEnforced,
+  outdatedAngularText,
 } from '../migrate-to-vite/setup/dependencies';
 import { wrapServerEntry } from '../migrate-to-vite/setup/source';
 import {
@@ -136,6 +138,14 @@ export function viteSetup(options: NgDocViteSetupSchema): Rule {
         level: 'manual',
         subject: 'serve',
         message: `uses \`${targetBuilder(serveTarget) ?? 'no builder'}\` and was left as it is. Use \`${VITE_DEV_SERVER_BUILDER}\` with \`"configFile": "${configFile}"\` to serve the site.`,
+      });
+    }
+    // The Vite engine does not start on an older Angular (NGDOC_VITE_ANGULAR_VERSION).
+    for (const outdated of findOutdatedAngular(tree)) {
+      plan.findings.push({
+        level: 'blocking',
+        subject: outdated.name,
+        message: outdatedAngularText(outdated),
       });
     }
     const blocking = plan.findings.filter((finding) => finding.level === 'blocking');

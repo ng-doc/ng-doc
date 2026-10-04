@@ -66,6 +66,25 @@ describe('vite-setup', () => {
     );
   });
 
+  it('should refuse an installed Angular older than 22.2 and change nothing', async () => {
+    // The Nx fixture's package.json declares no Angular compiler: the installed one counts.
+    const tree = nxAngularApp();
+    tree.create(
+      'node_modules/@angular/compiler-cli/package.json',
+      JSON.stringify({ name: '@angular/compiler-cli', version: '22.0.6' }),
+    );
+    const before = snapshot(tree);
+
+    await expect(runner.runSchematic('vite-setup', { project: 'docs' }, tree)).rejects.toThrow(
+      new RegExp(
+        'NGDOC_VITE_SETUP_BLOCKED[\\s\\S]*`@angular/compiler-cli`: is installed at `22\\.0\\.6`; ' +
+          'the Vite engine needs Angular 22\\.2 or later and does not start with an older one\\. ' +
+          'Update Angular first: `ng update @angular/core@22 @angular/cli@22`\\.[\\s\\S]*--engine legacy',
+      ),
+    );
+    expect(snapshot(tree)).toEqual(before);
+  });
+
   it('should refuse an unknown project', async () => {
     await expect(
       runner.runSchematic('vite-setup', { project: 'site' }, nxAngularApp()),

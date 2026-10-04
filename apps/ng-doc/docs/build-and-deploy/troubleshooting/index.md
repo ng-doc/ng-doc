@@ -127,6 +127,23 @@ The legacy builders (`@ng-doc/builder:application` and `dev-server`) don't use V
 
 **See also:** `*BuildersReference#supported-versions`
 
+### NGDOC_VITE_ANGULAR_VERSION
+
+**Cause:** the Vite engine started with an `@angular/compiler-cli` older than 22.2, or without one.
+The Angular plugin it bundles chooses how it calls Angular's build tools from that version, and on
+Angular 22.0 or 22.1 a later build step fails with an unclear error, so the engine stops first. The
+error names the version it found.
+
+**Fix:** update Angular, then restart:
+
+```bash
+ng update @angular/core@22 @angular/cli@22
+```
+
+`ng add` and `migrate-to-vite` refuse an older Angular in the same way and change nothing.
+
+**See also:** `*BuildersReference#supported-versions`
+
 ### NGDOC_VITE_WATCH_CAPACITY
 
 **Cause:** the plugin needs to watch more files and folders outside the Vite root than

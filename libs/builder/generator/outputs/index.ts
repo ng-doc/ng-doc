@@ -1442,12 +1442,14 @@ export class OutputAssemblerImpl implements OutputAssembler {
       );
     const source = `const source = Object.freeze({ id: ${strictJson(payload!.id)}, load: async (_signal) => (await import(${strictJson(payloadImport)})).default });\nexport default source;\n`;
     addOutput(outputs, output(paths.sourcePath, 'content', source), diagnostics, ownerId);
+    // The declarations import the package root: `@ng-doc/core` has no `exports`, so a subpath is
+    // a directory import, which TypeScript's `NodeNext` resolution refuses in an ESM project.
     addOutput(
       outputs,
       output(
         paths.contentDeclarationPath,
         'content',
-        "import type {NgDocContentModule} from '@ng-doc/core/interfaces';\ndeclare const payload: NgDocContentModule;\nexport default payload;\n",
+        "import type {NgDocContentModule} from '@ng-doc/core';\ndeclare const payload: NgDocContentModule;\nexport default payload;\n",
       ),
       diagnostics,
       ownerId,
@@ -1457,7 +1459,7 @@ export class OutputAssemblerImpl implements OutputAssembler {
       output(
         paths.sourceDeclarationPath,
         'content',
-        "import type {NgDocContentSource} from '@ng-doc/core/interfaces';\ndeclare const source: NgDocContentSource;\nexport default source;\n",
+        "import type {NgDocContentSource} from '@ng-doc/core';\ndeclare const source: NgDocContentSource;\nexport default source;\n",
       ),
       diagnostics,
       ownerId,

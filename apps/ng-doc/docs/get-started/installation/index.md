@@ -9,7 +9,8 @@ can start from a new Angular project or add it to an existing one.
 
 - An Angular 22 application. `@ng-doc/builder` installs with any Angular 22 version; the Vite
   engine needs Angular 22.2 or later (`@angular/compiler` and `@angular/compiler-cli` `^22.2.0`,
-  `*UpgradeTo22Page#prerequisites`). The command chooses the engine from the application
+  `*UpgradeTo22Page#prerequisites`) and doesn't start with an older one
+  (`*TroubleshootingPage#ngdoc_vite_angular_version`). The command chooses the engine from the application
   ([Add NgDoc](#add-ngdoc)).
 - Vite 8 for the Vite engine, which the command adds for you (see below).
 - Node.js 24 (`>=24.15.0 <25`).
@@ -75,8 +76,9 @@ server entry are left alone (`*LegacyBuildersPage#when-ng-add-sets-them-up`):
 - **Packages:** it adds `@ng-doc/app`, `@ng-doc/builder`, `@ng-doc/ui-kit` and `@ng-doc/core`, and
   removes `@ng-doc/add`. It also adds `vite` `^8.3.0` and `@analogjs/vite-plugin-angular` `^2.8.0`
   to `devDependencies` when `package.json` doesn't list them
-  (`*BuildersReference#supported-versions`), so npm installs their newest releases. It tells you
-  when your `@angular/compiler` or `@angular/compiler-cli` can't be Angular 22.2 or later. If
+  (`*BuildersReference#supported-versions`), so npm installs their newest releases. When your
+  `@angular/compiler` or `@angular/compiler-cli` is older than 22.2, it stops before it changes
+  the project and tells you to run `ng update @angular/core@22 @angular/cli@22`. If
   `package.json` already has a `vite` that can't resolve to Vite 8.3 or later, the command keeps it
   and warns, because the Vite engine doesn't start with it
   (`*TroubleshootingPage#ngdoc_vite_version`); update it with `npm i -D vite@^8.3.0`.

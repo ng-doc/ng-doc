@@ -24,6 +24,7 @@ import { flagOff, VITE_BUILD_HANDOFF_FLAG } from '../kernel/flags';
 import type { HostProgress } from '../progress/host';
 import { assertAngularCompatibility } from './angular-compatibility';
 import { composeAngularPlugins } from './angular-composition';
+import { assertSupportedAngularVersion } from './angular-version';
 import { boundServerClose } from './bounded-close';
 import { requirePublishedConfiguration } from './configuration';
 import { diagnosticText, hostDiagnostic } from './diagnostics';
@@ -83,8 +84,10 @@ function logSafely(write: () => void): void {
 const ANALOG_COMPILER_TRIGGER = /\.[cm]?ts(?![a-z])|\.(?:html?|css|less|sass|scss)$/;
 
 export function createPlugin(options: NgDocVitePluginOptions): Plugin[] {
-  // First: on another Vite, the option and Analog checks below could fail in misleading ways.
+  // First: on another Vite or an older Angular, the option and Analog checks below, or Analog
+  // itself much later, could fail in misleading ways.
   assertSupportedViteVersion();
+  assertSupportedAngularVersion();
   const resolved = resolveOptions(options);
   const cacheWatch = new CacheRootWatchIgnore(resolved);
   let devServer: ViteDevServer | undefined;

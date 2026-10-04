@@ -33,7 +33,7 @@ export function isEnforced(name: string): boolean {
 export interface DependencyMismatch {
   name: string;
   expected: string;
-  /** The specifier in `package.json`. */
+  /** The specifier in `package.json`; empty for an outdated Angular that is only installed. */
   found: string;
   /** The installed version, when it is what lies outside the range. */
   installed?: string;
@@ -96,6 +96,83 @@ export function admitsRange(declared: string, required: string): boolean | undef
   const upper: Version =
     operator === '~' || version[0] === 0 ? [version[0], version[1] + 1, 0] : [version[0] + 1, 0, 0];
   return compare(version, high) < 0 && compare(upper, low) > 0;
+}
+
+/**
+ * The oldest Angular the Vite engine starts with. It refuses an older `@angular/compiler-cli`
+ * (`NGDOC_VITE_ANGULAR_VERSION`, `MINIMUM_ANGULAR_COMPILER` in `generator/vite/angular-version.ts`),
+ * so the setup refuses one too; `@angular/compiler` is always the same release.
+ */
+export const MINIMUM_VITE_ENGINE_ANGULAR = '22.2.0';
+
+const ANGULAR_COMPILERS = ['@angular/compiler-cli', '@angular/compiler'];
+
+/** The command that moves a workspace to the newest Angular 22. */
+export const UPDATE_ANGULAR = 'ng update @angular/core@22 @angular/cli@22';
+
+/**
+ * Whether a version, or a declared specifier, cannot reach `minimum`: true for a version below it
+ * and for a plain version, caret or tilde range whose every version is below it; undefined for a
+ * specifier this check cannot tell (a tag, a URL, `>=`, `||`, `x`). Prereleases count as their
+ * release, as the Vite engine's own check does.
+ * @param declared - An installed version or a specifier in `package.json`.
+ * @param minimum - The lowest admitted version, such as `22.2.0`.
+ */
+export function isBelowVersion(declared: string, minimum: string): boolean | undefined {
+  const low = parseVersion(minimum);
+  const text = declared.trim();
+  const operator = /^[\^~=]/.exec(text)?.[0];
+  const version = parseVersion(operator ? text.slice(1) : text);
+  if (!low || !version) return undefined;
+  if (!operator || operator === '=') return compare(version, low) < 0;
+  // The specifier's exclusive upper bound, as in `admitsRange`.
+  const upper: Version =
+    operator === '~' || version[0] === 0 ? [version[0], version[1] + 1, 0] : [version[0] + 1, 0, 0];
+  return compare(upper, low) <= 0;
+}
+
+/**
+ * The Angular compilers of the workspace that are older than the Vite engine starts with
+ * ({@link MINIMUM_VITE_ENGINE_ANGULAR}): by their installed version when the tree can read it,
+ * otherwise by their specifier in `package.json`. The setup refuses to continue with any of them.
+ * @param tree - The workspace tree.
+ */
+export function findOutdatedAngular(tree: Tree): DependencyMismatch[] {
+  if (!tree.exists('package.json')) return [];
+  const json = new JsonFile(tree, 'package.json');
+  const outdated: DependencyMismatch[] = [];
+  for (const name of ANGULAR_COMPILERS) {
+    const found =
+      (json.get(['dependencies', name]) as string | undefined) ??
+      (json.get(['devDependencies', name]) as string | undefined);
+    // The installed one is what the engine loads, even when only another package depends on it.
+    const installed = installedVersion(tree, name);
+    const version = installed ?? found;
+    if (version !== undefined && isBelowVersion(version, MINIMUM_VITE_ENGINE_ANGULAR)) {
+      outdated.push({
+        name,
+        expected: `>=${MINIMUM_VITE_ENGINE_ANGULAR}`,
+        found: found ?? '',
+        ...(installed !== undefined ? { installed } : {}),
+      });
+    }
+  }
+  return outdated;
+}
+
+/**
+ * Why an outdated Angular compiler blocks the Vite setup, with the command that fixes it, written
+ * to follow the package name in a report line.
+ */
+export function outdatedAngularText({ found, installed }: DependencyMismatch): string {
+  const is = found
+    ? `is \`${found}\`${installed ? ` (installed \`${installed}\`)` : ''}`
+    : `is installed at \`${installed}\``;
+  return (
+    `${is}; the Vite engine needs ` +
+    `Angular 22.2 or later and does not start with an older one. Update Angular first: ` +
+    `\`${UPDATE_ANGULAR}\`.`
+  );
 }
 
 /**

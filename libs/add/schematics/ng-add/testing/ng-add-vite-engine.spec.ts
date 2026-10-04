@@ -313,6 +313,28 @@ describe('ng-add with the Vite engine', () => {
     );
   });
 
+  it('should refuse the Vite engine on an Angular older than 22.2, which the legacy builders accept', async () => {
+    const appOnAngular221 = async (): Promise<UnitTestTree> => {
+      const app: UnitTestTree = await newApp();
+      const manifest = JSON.parse(app.readContent('package.json'));
+
+      manifest.dependencies['@angular/compiler'] = '~22.1.0';
+      manifest.devDependencies['@angular/compiler-cli'] = '~22.1.0';
+      app.overwrite('package.json', JSON.stringify(manifest, null, 2));
+
+      return app;
+    };
+
+    // The Angular CLI commits nothing of a schematic that fails.
+    await expect(setup(await appOnAngular221())).rejects.toThrow(
+      /NGDOC_VITE_SETUP_BLOCKED[\s\S]*`@angular\/compiler-cli`: is `~22\.1\.0`; the Vite engine needs Angular 22\.2 or later[\s\S]*`ng update @angular\/core@22 @angular\/cli@22`[\s\S]*--engine legacy/,
+    );
+
+    const legacy: UnitTestTree = await setup(await appOnAngular221(), { engine: 'legacy' });
+
+    expect(architect(legacy)['build'].builder).toBe('@ng-doc/builder:application');
+  });
+
   it('should refuse a custom builder and an existing vite.config.mjs', async () => {
     const custom: UnitTestTree = await newApp();
     const workspace = JSON.parse(custom.readContent('angular.json'));

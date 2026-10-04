@@ -58,7 +58,9 @@ It changes the workspace like this:
   listed package whose installed version (or, before an install, whose range) lies outside the
   engine's range is kept, and the report says so. For `vite` it also tells you to update it with
   `npm i -D vite@^8.3.0`: the Vite engine doesn't start with Vite 7 or earlier
-  (`*TroubleshootingPage#ngdoc_vite_version`).
+  (`*TroubleshootingPage#ngdoc_vite_version`). An `@angular/compiler` or `@angular/compiler-cli`
+  older than 22.2 blocks the migration: update Angular first
+  (`*TroubleshootingPage#ngdoc_vite_angular_version`).
 - **Files:** `/.cache/ng-doc` is added to `.gitignore`. The legacy generated folder,
   `ng-doc/<project-name>`, is deleted once, because the new engine refuses to overwrite files it
   didn't write (`OUTPUT_UNOWNED_COLLISION`). The `@ng-doc/generated` path in `tsconfig.json` stays
