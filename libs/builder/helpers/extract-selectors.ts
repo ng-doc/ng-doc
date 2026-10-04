@@ -1,8 +1,10 @@
 import { Component, Directive, Pipe } from '@angular/core';
 import { Node } from 'ts-morph';
 
-import { NgDocSupportedDeclaration } from '../types';
-import { getComponentDecorator, getDirectiveDecorator, getPipeDecorator } from './angular';
+import type { NgDocSupportedDeclaration } from '../types/supported-declaration';
+import { getComponentDecorator } from './angular/get-component-decorator';
+import { getDirectiveDecorator } from './angular/get-directive-decorator';
+import { getPipeDecorator } from './angular/get-pipe-decorator';
 
 /**
  *

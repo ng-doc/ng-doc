@@ -10,6 +10,7 @@ import * as path from 'path';
 
 import { GENERATED_PATH } from '../constants/modules';
 import { Schema } from '../schema';
+import { getBuildOptionsTarget } from '../utils/get-build-options-target';
 import { getProject } from '../utils/get-project';
 import { getProjectName } from '../utils/get-project-name';
 
@@ -34,7 +35,9 @@ export function addTsconfigPaths(options: Schema): Rule {
           return;
         }
 
-        const buildTarget: TargetDefinition | undefined = project.targets.get('build');
+        const buildTarget: TargetDefinition | undefined = project.targets.get(
+          getBuildOptionsTarget(project),
+        );
         const serveTarget: TargetDefinition | undefined = project.targets.get('serve');
         const projectName = getProjectName(options, workspace);
 

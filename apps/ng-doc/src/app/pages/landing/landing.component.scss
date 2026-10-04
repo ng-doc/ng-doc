@@ -1,169 +1,321 @@
-@import '../../../../../../libs/ui-kit/styles/mixins';
+// The landing page. Every rule is scoped under the element (the component does not emulate
+// encapsulation, so the bound code samples are styled too).
+ng-doc-landing {
+  display: block;
+  color: var(--ng-doc-text);
+  font-family: var(--ng-doc-font-family);
 
-:host {
-  section {
-    position: relative;
-
-    &.greeting {
-      @media (max-width: 1000px) {
-        .container {
-          flex-direction: column;
-          align-items: center;
-
-          h1,
-          p {
-            text-align: center;
-          }
-
-          .greeting-buttons,
-          .greeting-shields {
-            justify-content: center;
-          }
-        }
-      }
-
-      p {
-        margin-top: calc(var(--ng-doc-base-gutter) * 3);
-        --ng-doc-font-size: 22px;
-        --ng-doc-line-height: 32px;
-      }
-
-      figure {
-        width: 100%;
-        max-width: 900px;
-      }
-
-      .container {
-        margin-top: 90px;
-        gap: calc(var(--ng-doc-base-gutter) * 7);
-      }
-
-      .greeting-content {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        max-width: 400px;
-        margin-top: calc(var(--ng-doc-base-gutter) * 4);
-
-        .greeting-shields {
-          display: flex;
-          margin-top: 72px;
-          flex-wrap: wrap;
-          gap: var(--ng-doc-base-gutter);
-        }
-
-        .greeting-buttons {
-          display: flex;
-          margin-top: calc(var(--ng-doc-base-gutter) * 2);
-
-          a {
-            --ng-doc-button-padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
-            --ng-doc-font-size: 22px;
-            --ng-doc-line-height: 32px;
-            --ng-doc-font-weight: 600;
-
-            background: linear-gradient(-45deg, #ffa63d, #ff3d77, #338aff, #3cf0c5);
-            background-size: 600%;
-            -webkit-animation: anime 16s linear infinite;
-            animation: scale 16s linear infinite;
-            box-shadow: 0 0 23px 1px rgba(0, 0, 0, 0.2);
-            transition:
-              var(--ng-doc-transition) transform,
-              box-shadow;
-
-            &:hover {
-              transform: scale(1.05);
-            }
-
-            @keyframes scale {
-              0% {
-                background-position: 0 50%;
-              }
-
-              50% {
-                background-position: 100% 50%;
-              }
-
-              100% {
-                background-position: 0 50%;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    &.try-it {
-      .description {
-        margin-bottom: calc(var(--ng-doc-base-gutter) * 4);
-      }
-
-      iframe {
-        width: 100%;
-        height: 600px;
-        border: none;
-        border-radius: 8px;
-        box-shadow: 0 0 50px rgba(0, 0, 0, 0.2);
-      }
-    }
+  code {
+    font-family: var(--ng-doc-code-font);
+    font-size: 0.875em;
   }
 
-  h1 {
-    margin: 0;
-  }
-
-  h2 {
-    margin: 0;
-  }
-
-  .section-container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
+  .wrap {
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 48px var(--ng-doc-app-horizontal-padding) 92px;
-    max-width: var(--ng-doc-app-max-width);
+    padding: 0 var(--ng-doc-space-6);
+  }
 
-    &.grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      grid-gap: 40px;
+  section {
+    padding: var(--ng-doc-space-20) 0;
+  }
+
+  section + section {
+    border-top: 1px solid var(--ng-doc-border-color);
+  }
+
+  // Hero
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: var(--ng-doc-space-20) 0 var(--ng-doc-space-24);
+
+    // The glow: two radial layers that drift and breathe on their own loops. Each layer is a
+    // pseudo-element that animates only `transform` and `opacity`, so the browser rasterizes the
+    // gradient once and the compositor moves it; nothing is repainted per frame. Every keyframe
+    // run starts from the resting state, which is also the server-rendered and reduced-motion
+    // frame, so first paint and hydration never jump. `overflow: hidden` above clips the drift.
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -30% -10% auto 30%;
+      height: 620px;
+      pointer-events: none;
+      animation: ng-doc-hero-glow-brand 11s ease-in-out infinite alternate;
+    }
+
+    // Brand blue, painted under the violet layer.
+    &::before {
+      background: radial-gradient(
+        closest-side at 30% 60%,
+        color-mix(in srgb, var(--ng-doc-palette-brand-500) 16%, transparent),
+        transparent
+      );
+      transform-origin: 30% 60%;
+    }
+
+    &::after {
+      background: radial-gradient(
+        closest-side,
+        color-mix(in srgb, var(--ng-doc-palette-violet-500) 16%, transparent),
+        transparent
+      );
+      // A different period keeps the two layers from moving in step.
+      animation-name: ng-doc-hero-glow-violet;
+      animation-duration: 14s;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      &::before,
+      &::after {
+        animation: none;
+      }
     }
   }
 
-  .container {
+  .hero-grid {
+    position: relative;
+    // Keeps the content above the glow, which `::after` would otherwise paint over.
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+    gap: var(--ng-doc-space-12);
+    align-items: center;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ng-doc-space-2);
+    margin-bottom: var(--ng-doc-space-5);
+    padding: 4px 12px 4px 4px;
+    border: 1px solid var(--ng-doc-border-color);
+    border-radius: var(--ng-doc-radius-full);
+    background: var(--ng-doc-background);
+    color: var(--ng-doc-text);
+    font-size: 13px;
+    line-height: 20px;
+    text-decoration: none;
+
+    &:hover {
+      border-color: var(--ng-doc-border-hover-color);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 20px;
+      padding: 0 7px;
+      border-radius: var(--ng-doc-radius-full);
+      color: color-mix(
+        in oklab,
+        var(--ng-doc-success) var(--ng-doc-mix-strong),
+        var(--ng-doc-heading-color)
+      );
+      background: color-mix(
+        in oklab,
+        var(--ng-doc-success) var(--ng-doc-mix-chip),
+        var(--ng-doc-background)
+      );
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+  }
+
+  .display {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    color: var(--ng-doc-heading-color);
+    font-family: var(--ng-doc-heading-font-family);
+    font-size: clamp(38px, 5.4vw, 60px);
+    line-height: 1.06;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+
+    .grad {
+      background: linear-gradient(
+        100deg,
+        var(--ng-doc-palette-brand-600) 10%,
+        var(--ng-doc-palette-violet-600) 60%,
+        #d0408f 100%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+  }
+
+  .hero-lead {
+    max-width: 560px;
+    margin: var(--ng-doc-space-6) 0 var(--ng-doc-space-8);
+    font-size: 19px;
+    line-height: 30px;
+  }
+
+  .ctas {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ng-doc-space-3);
+  }
 
-    &.row {
-      flex-direction: row;
-    }
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 44px;
+    padding: 0 var(--ng-doc-space-5);
+    border-radius: var(--ng-doc-radius-md);
+    font-size: 15px;
+    line-height: 1;
+    font-weight: 600;
+    text-decoration: none;
 
-    &.space-between {
-      justify-content: space-between;
-    }
-
-    &.center {
-      justify-content: center;
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--ng-doc-focus-ring);
     }
   }
 
-  .feature-icon {
-    --ng-doc-icon-width: 48px;
-    --ng-doc-icon-height: 48px;
+  .cta-primary {
+    background: var(--ng-doc-primary);
+    color: var(--ng-doc-primary-text);
+    box-shadow:
+      var(--ng-doc-shadow-xs),
+      inset 0 1px 0 rgb(255 255 255 / 0.12);
+
+    &:hover {
+      filter: brightness(1.08);
+    }
+  }
+
+  .cta-outline {
+    background: var(--ng-doc-background);
+    color: var(--ng-doc-heading-color);
+    box-shadow: inset 0 0 0 1px var(--ng-doc-base-4);
+
+    &:hover {
+      box-shadow: inset 0 0 0 1px var(--ng-doc-border-hover-color);
+    }
+  }
+
+  .install {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ng-doc-space-3);
+    height: 44px;
+    margin-top: var(--ng-doc-space-4);
+    padding: 0 6px 0 var(--ng-doc-space-4);
+    border: 1px solid var(--ng-doc-border-color);
+    border-radius: var(--ng-doc-radius-md);
+    background: var(--ng-doc-code-background);
+
+    code {
+      color: var(--ng-doc-heading-color);
+      font-size: 14px;
+    }
+
+    .prompt {
+      color: var(--ng-doc-text-muted);
+    }
+  }
+
+  .icon-button {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--ng-doc-radius-md);
+    background: transparent;
+    color: var(--ng-doc-text-muted);
+    cursor: pointer;
+
+    &:hover {
+      background: var(--ng-doc-hover-background);
+      color: var(--ng-doc-heading-color);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--ng-doc-focus-ring);
+    }
+
+    &.copied {
+      color: var(--ng-doc-success-strong);
+    }
+
+    // Touch screens get a 44px hit area; nothing changes visually.
+    @media (pointer: coarse) {
+      &::before {
+        content: '';
+        position: absolute;
+        inset: -6px;
+      }
+    }
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ng-doc-space-5);
+    margin: var(--ng-doc-space-8) 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--ng-doc-text-muted);
+    font-size: 13px;
+
+    li {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    svg {
+      color: var(--ng-doc-success);
+    }
   }
 }
 
-figure {
-  margin: 0;
+// Dark theme: lighter stops keep the gradient headline readable.
+:root[data-theme='dark'] ng-doc-landing .display .grad {
+  background-image: linear-gradient(
+    100deg,
+    var(--ng-doc-palette-brand-400) 10%,
+    var(--ng-doc-palette-violet-400) 60%,
+    #f08cc0 100%
+  );
 }
 
-video {
-  width: 100%;
-  background-color: black;
-  border-radius: 8px;
-  box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.5);
+@media (prefers-color-scheme: dark) {
+  :root[data-theme='auto'] ng-doc-landing .display .grad {
+    background-image: linear-gradient(
+      100deg,
+      var(--ng-doc-palette-brand-400) 10%,
+      var(--ng-doc-palette-violet-400) 60%,
+      #f08cc0 100%
+    );
+  }
 }
 
-img {
-  box-shadow: 0 0 23px 1px rgba(0, 0, 0, 0.2);
+// The hero glow's loops. Only the end frame is given, so each run starts from the resting
+// gradient; with `alternate`, a loop lasts twice the animation duration.
+@keyframes ng-doc-hero-glow-brand {
+  to {
+    transform: translate3d(12%, -8%, 0) scale(1.15);
+    opacity: 0.7;
+  }
+}
+
+@keyframes ng-doc-hero-glow-violet {
+  to {
+    transform: translate3d(-10%, 9%, 0) scale(1.12);
+    opacity: 0.75;
+  }
 }

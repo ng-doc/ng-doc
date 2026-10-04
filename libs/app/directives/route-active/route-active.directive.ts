@@ -1,48 +1,42 @@
-import { Directive, ElementRef, inject, Input, Renderer2 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Event, IsActiveMatchOptions, NavigationEnd, Router } from '@angular/router';
+import { computed, Directive, inject, input } from '@angular/core';
+import { isActive, IsActiveMatchOptions, Router } from '@angular/router';
 import { asArray } from '@ng-doc/core/helpers/as-array';
-import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 
+/**
+ * Adds classes to its host element while the router URL matches a link.
+ *
+ * ```html
+ * <a [ngDocRouteActive]="'/docs/getting-started'" activeClass="active">Getting started</a>
+ * ```
+ */
 @Directive({
   selector: '[ngDocRouteActive]',
-  standalone: true,
+  host: {
+    '[class]': 'classes()',
+  },
 })
 export class NgDocRouteActiveDirective {
-  @Input('ngDocRouteActive')
-  link: string = '';
+  /** The link to match against the router URL. */
+  readonly link = input<string>('', { alias: 'ngDocRouteActive' });
 
-  @Input()
-  activeClass: string | string[] = [];
+  /** Class or classes to add while the link is active. */
+  readonly activeClass = input<string | string[]>([]);
 
-  @Input()
-  matchOptions: IsActiveMatchOptions = {
+  /** How the link is matched against the router URL. */
+  readonly matchOptions = input<IsActiveMatchOptions>({
     fragment: 'exact',
     paths: 'subset',
     queryParams: 'exact',
     matrixParams: 'exact',
-  };
+  });
 
-  constructor() {
-    const elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    const router = inject(Router);
-    const renderer = inject(Renderer2);
+  private readonly router = inject(Router);
 
-    router.events
-      .pipe(
-        filter((event: Event) => event instanceof NavigationEnd),
-        map(() => router.isActive(this.link, this.matchOptions)),
-        distinctUntilChanged(),
-        takeUntilDestroyed(),
-      )
-      .subscribe((isActive: boolean) => {
-        isActive
-          ? asArray(this.activeClass).forEach((cls: string) =>
-              renderer.addClass(elementRef.nativeElement, cls),
-            )
-          : asArray(this.activeClass).forEach((cls: string) =>
-              renderer.removeClass(elementRef.nativeElement, cls),
-            );
-      });
-  }
+  // One router signal per link and options; it follows the URL the router has committed.
+  private readonly active = computed(() => isActive(this.link(), this.router, this.matchOptions()));
+
+  /** Whether the link is active. */
+  readonly isActive = computed(() => this.active()());
+
+  protected readonly classes = computed(() => (this.isActive() ? asArray(this.activeClass()) : []));
 }

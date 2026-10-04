@@ -1,37 +1,47 @@
-@import '../../styles/mixins';
+@use '../../styles/mixins';
 
 :host {
-  @include ng-doc-font();
-  display: inline-block;
-  padding: 0 var(--ng-doc-base-gutter);
-  border-radius: calc(var(--ng-doc-base-gutter) / 2);
-  border: var(--ng-doc-tag-border);
+  @include mixins.ng-doc-font();
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--ng-doc-space-2);
+  border-radius: var(--ng-doc-radius-sm);
+  border: var(--ng-doc-tag-border, none);
   color: var(--ng-doc-tag-color);
   background: color-mix(
     in srgb,
     var(--ng-doc-tag-background) var(--ng-doc-tag-background-opacity, 100%),
     transparent
   );
+  white-space: nowrap;
   --ng-doc-icon-color: var(--ng-doc-tag-color);
   --ng-doc-font-size: 14px;
 
+  // Sentence-case status chips (sidebar badges, search result kinds).
   &[data-ng-doc-size='small'] {
-    padding: 0 calc(var(--ng-doc-base-gutter) / 2);
-    border-radius: 6px;
-    --ng-doc-font-size: 10px;
-    --ng-doc-line-height: calc(var(--ng-doc-base-gutter) * 2);
+    height: 18px;
+    padding: 0 6px;
+    --ng-doc-font-size: 11px;
+    --ng-doc-font-weight: 500;
+    --ng-doc-line-height: 18px;
   }
 
-  @include forEachColor('primary') using($background, $color) {
+  @include mixins.forEachColor('primary') using($background, $color) {
     --ng-doc-tag-background: #{$background};
     --ng-doc-tag-color: #{$color};
   }
 
+  // The soft chip: opaque over the page, text mixed toward the heading colour, no ring.
   &[data-ng-doc-mod='light'] {
-    --ng-doc-tag-background-opacity: 15%;
-
-    @include forEachColor() using($background, $color) {
-      --ng-doc-tag-color: #{$background};
-    }
+    background: color-mix(
+      in oklab,
+      var(--ng-doc-tag-background) var(--ng-doc-tag-background-opacity, var(--ng-doc-mix-chip)),
+      var(--ng-doc-background)
+    );
+    --ng-doc-tag-color: color-mix(
+      in oklab,
+      var(--ng-doc-tag-background) var(--ng-doc-mix-strong),
+      var(--ng-doc-heading-color)
+    );
   }
 }

@@ -18,7 +18,7 @@ export function rxjsPageToKeyword(
     {
       title: page.title,
       url: getApiUrl(page.path, version),
-      description: `External link the RxJS documentation.`,
+      description: `External link to the RxJS documentation.`,
     },
   ];
 }

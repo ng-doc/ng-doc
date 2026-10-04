@@ -1,4 +1,5 @@
 import { ClassDeclaration, Project, SourceFile } from 'ts-morph';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { createProject } from '../create-project';
 import { firstNodeWithComment } from '../first-node-with-comment';

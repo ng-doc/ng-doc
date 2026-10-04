@@ -1,7 +1,7 @@
 import { HostTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { createProject, createSourceFile, saveActiveProject, setActiveProject } from 'ng-morph';
-import { join } from 'path';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { APP_COMPONENT_CONTENT } from '../constants/app-component-content';
 import { NG_DOC_VERSION } from '../constants/version';
@@ -9,16 +9,17 @@ import { Schema } from '../schema';
 import { createAngularJson } from '../utils/create-angular-json';
 import { createGitIgnore } from '../utils/create-git-ignore';
 import { createTsConfigs } from '../utils/create-ts-configs';
+import { createRunner } from './ng-add-runner';
 
-const collectionPath: string = join(__dirname, '../../collection.json');
-
+// The fixture is an older workspace (no builder, `main`, trailing commas), set up with the legacy
+// builders; the Vite engine setup is covered by ng-add-vite-engine.spec.ts.
 describe('ng-add standalone app', () => {
   let host: UnitTestTree;
   let runner: SchematicTestRunner;
 
   beforeEach(() => {
     host = new UnitTestTree(new HostTree());
-    runner = new SchematicTestRunner('schematics', collectionPath);
+    runner = createRunner();
 
     setActiveProject(createProject(host));
 
@@ -33,6 +34,7 @@ describe('ng-add standalone app', () => {
   it('should add main modules in package.json', async () => {
     const options: Schema = {
       project: '',
+      engine: 'legacy',
     };
 
     const tree: UnitTestTree = await runner.runSchematic('ng-add', options, host);
@@ -53,6 +55,7 @@ describe('ng-add standalone app', () => {
   it('should replace content of the app components template', async () => {
     const options: Schema = {
       project: '',
+      engine: 'legacy',
     };
 
     const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
@@ -63,6 +66,7 @@ describe('ng-add standalone app', () => {
   it('should update app tsconfig', async () => {
     const options: Schema = {
       project: '',
+      engine: 'legacy',
     };
 
     const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
@@ -80,6 +84,7 @@ describe('ng-add standalone app', () => {
   it('should update tsconfig', async () => {
     const options: Schema = {
       project: '',
+      engine: 'legacy',
     };
 
     const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
@@ -101,6 +106,7 @@ describe('ng-add standalone app', () => {
   it('should add ng-doc folder to gitignore tsconfig', async () => {
     const options: Schema = {
       project: '',
+      engine: 'legacy',
     };
 
     const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
@@ -111,24 +117,25 @@ describe('ng-add standalone app', () => {
 /ng-doc`);
   });
 
-  it('should add NgDoc providers', async () => {
+  it('should add NgDoc providers and extend the existing router instead of adding a second one', async () => {
     const options: Schema = {
       project: '',
+      engine: 'legacy',
     };
 
     const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
 
     expect(tree.readContent('test/app/app.config.ts'))
       .toEqual(`import { provideNgDocApp, provideSearchEngine, NgDocDefaultSearchEngine, providePageSkeleton, NG_DOC_DEFAULT_PAGE_SKELETON, provideMainPageProcessor, NG_DOC_DEFAULT_PAGE_PROCESSORS } from "@ng-doc/app";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { NG_DOC_ROUTING, provideNgDocContext } from "@ng-doc/generated";
-import { provideHttpClient, withInterceptorsFromDi, withFetch } from "@angular/common/http";
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), provideHttpClient(withInterceptorsFromDi()), provideRouter(NG_DOC_ROUTING, withInMemoryScrolling({scrollPositionRestoration: "enabled", anchorScrolling: "enabled"})), provideHttpClient(withInterceptorsFromDi(), withFetch()), provideNgDocContext(), provideNgDocApp(), provideSearchEngine(NgDocDefaultSearchEngine), providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON), provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS)]
+  providers: [provideRouter([...routes, ...NG_DOC_ROUTING], withInMemoryScrolling({scrollPositionRestoration: "enabled", anchorScrolling: "enabled"})), provideHttpClient(withInterceptorsFromDi()), provideNgDocContext(), provideNgDocApp(), provideSearchEngine(NgDocDefaultSearchEngine), providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON), provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS)]
 };
 `);
   });
@@ -136,6 +143,7 @@ export const appConfig: ApplicationConfig = {
   it('should import main components', async () => {
     const options: Schema = {
       project: '',
+      engine: 'legacy',
     };
 
     const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
@@ -162,6 +170,7 @@ export class AppComponent {
   it('should update angular.json', async () => {
     const options: Schema = {
       project: '',
+      engine: 'legacy',
     };
 
     const tree: UnitTestTree = await runner.runSchematic('ng-add-setup-project', options, host);
@@ -180,7 +189,8 @@ export class AppComponent {
               "main": "test/main.ts",
               "tsConfig": "test/tsconfig.app.json",
               "styles": [
-                "node_modules/@ng-doc/app/styles/global.css"
+                "node_modules/@ng-doc/app/styles/global.css",
+                "node_modules/@ng-doc/app/styles/themes/dark.css"
               ],
               "assets": [
                 {

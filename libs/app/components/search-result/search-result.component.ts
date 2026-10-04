@@ -1,10 +1,13 @@
 import { KeyValuePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, Signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgDocKindIconComponent } from '@ng-doc/app/components/kind-icon';
 import { NgDocPageInfo } from '@ng-doc/core/interfaces';
 import { NgDocTextComponent, NgDocTooltipDirective } from '@ng-doc/ui-kit';
 
+/**
+ * A list of pages grouped by their type (guides and API).
+ */
 @Component({
   selector: 'ng-doc-search-result',
   templateUrl: './search-result.component.html',
@@ -18,29 +21,26 @@ import { NgDocTextComponent, NgDocTooltipDirective } from '@ng-doc/ui-kit';
     KeyValuePipe,
   ],
 })
-export class NgDocSearchResultComponent implements OnChanges {
-  @Input()
-  result: NgDocPageInfo[] | null = [];
+export class NgDocSearchResultComponent {
+  /** The pages to list. */
+  readonly result = input<NgDocPageInfo[] | null>([]);
 
-  groupedResult: Record<string, NgDocPageInfo[]> = {};
+  /** The pages grouped by their type. */
+  readonly groupedResult: Signal<Record<string, NgDocPageInfo[]>> = computed(() =>
+    (this.result() ?? []).reduce(
+      (grouped: Record<string, NgDocPageInfo[]>, item: NgDocPageInfo) => {
+        (grouped[item.type] ??= []).push(item);
 
-  ngOnChanges({ result }: SimpleChanges): void {
-    if (result && this.result) {
-      this.groupedResult = this.result.reduce(
-        (grouped: Record<string, NgDocPageInfo[]>, item: NgDocPageInfo) => {
-          if (!grouped[item.type]) {
-            grouped[item.type] = [];
-          }
+        return grouped;
+      },
+      {},
+    ),
+  );
 
-          grouped[item.type].push(item);
-
-          return grouped;
-        },
-        {},
-      );
-    }
-  }
-
+  /**
+   * Returns the heading of a group.
+   * @param type - The page type of the group.
+   */
   typeToLabel(type: string): string {
     switch (type) {
       case 'api':

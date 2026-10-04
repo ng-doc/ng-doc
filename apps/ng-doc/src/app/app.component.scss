@@ -2,18 +2,11 @@
   &[data-ng-doc-is-landing='true'] {
     --ng-doc-page-max-width: auto;
     --ng-doc-page-padding: 0;
-    --ng-doc-main-padding: 0;
+    --ng-doc-main-padding: var(--ng-doc-navbar-height) 0 0 0;
 
+    // The landing header lines up with the landing's 1200px content column.
     ng-doc-navbar {
-      transition: 300ms ease-in-out;
-
-      &:before {
-        transition: 300ms ease-in-out;
-      }
-
-      &:not(.has-shadow) {
-        --ng-doc-navbar-background: transparent;
-      }
+      --ng-doc-app-max-width: calc(1200px + var(--ng-doc-navbar-horizontal-padding) * 2);
     }
   }
 
@@ -27,49 +20,36 @@
   }
 }
 
+// The lockup images keep their colours under a custom theme; styles.scss picks the light or dark file.
 .brand {
+  display: flex;
+  align-items: center;
   text-decoration: none;
-  color: var(--ng-doc-heading-color);
-
-  h3 {
-    margin: 0;
-    display: flex;
-    align-items: center;
-    font-size: 22px;
-
-    .brand-title-ng {
-      font-family: var(--ng-doc-font-family);
-      font-weight: 400;
-    }
-
-    .brand-title-doc {
-      font-family: var(--ng-doc-heading-font-family);
-      font-weight: 700;
-    }
-  }
 
   img {
-    height: 36px;
-    margin-right: var(--ng-doc-base-gutter);
+    width: auto;
+    height: 28px;
   }
 }
 
-.ng-doc-header-controls {
+.links {
   display: flex;
+  gap: var(--ng-doc-space-5);
+  font-family: var(--ng-doc-font-family);
+  font-size: var(--ng-doc-text-sm-size);
+  line-height: 20px;
+  font-weight: 500;
 
-  a[ng-doc-button-icon],
-  button[ng-doc-button-icon],
-  ng-doc-theme-toggle {
-    margin-left: calc(var(--ng-doc-base-gutter) * 2);
-  }
-}
+  a {
+    color: var(--ng-doc-text);
+    text-decoration: none;
 
-@media screen and (max-width: 600px) {
-  .ng-doc-header-controls {
-    a[ng-doc-button-icon],
-    button[ng-doc-button-icon],
-    ng-doc-theme-toggle {
-      margin-left: var(--ng-doc-base-gutter);
+    &:hover {
+      color: var(--ng-doc-heading-color);
+    }
+
+    &[aria-current] {
+      color: var(--ng-doc-primary);
     }
   }
 }

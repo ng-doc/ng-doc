@@ -1,7 +1,7 @@
-@import '../../styles/mixins';
+@use '../../styles/mixins';
 
 :host {
-  @include ng-doc-font();
+  @include mixins.ng-doc-font();
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -47,6 +47,11 @@
     }
   }
 
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--ng-doc-focus-ring);
+  }
+
   &:hover {
     text-decoration: none;
 
@@ -64,7 +69,7 @@
     --ng-doc-button-hover-background-opacity: 20%;
     --ng-doc-button-active-background-opacity: 30%;
 
-    @include forEachColor() using($background, $color) {
+    @include mixins.forEachColor() using($background, $color) {
       --ng-doc-button-background: #{$background};
       --ng-doc-button-color: #{$background};
       --ng-doc-button-hover-color: #{$background};
@@ -76,7 +81,7 @@
     --ng-doc-button-hover-background-opacity: 10%;
     --ng-doc-button-active-background-opacity: 20%;
 
-    @include forEachColor() using($background, $color) {
+    @include mixins.forEachColor() using($background, $color) {
       --ng-doc-button-background: #{$background};
       --ng-doc-button-color: #{$background};
       --ng-doc-button-hover-color: #{$background};
@@ -96,7 +101,7 @@
     --ng-doc-button-hover-background-opacity: 10%;
     --ng-doc-button-active-background-opacity: 20%;
 
-    @include forEachColor() using($background, $color) {
+    @include mixins.forEachColor() using($background, $color) {
       --ng-doc-button-background: #{$background};
       --ng-doc-button-color: #{$color};
       --ng-doc-button-hover-color: #{$color};

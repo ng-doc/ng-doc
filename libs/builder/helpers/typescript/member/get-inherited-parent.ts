@@ -1,6 +1,7 @@
 import { Node } from 'ts-morph';
 
-import { getMemberParent, MemberType } from '../index';
+import { getMemberParent } from './get-member-parent';
+import type { MemberType } from './member-type';
 
 /**
  *

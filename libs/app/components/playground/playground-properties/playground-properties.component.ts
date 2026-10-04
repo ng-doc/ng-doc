@@ -1,17 +1,16 @@
-import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
-import { AsyncPipe, KeyValuePipe } from '@angular/common';
+import { KeyValuePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
+  computed,
   inject,
   InjectionToken,
   Injector,
-  Input,
+  input,
   isDevMode,
-  OnChanges,
-  Output,
-  SimpleChanges,
+  model,
+  output,
+  Signal,
 } from '@angular/core';
 import { FormControl, FormGroup, FormsModule } from '@angular/forms';
 import { isPlaygroundProperty } from '@ng-doc/app/helpers';
@@ -27,36 +26,37 @@ import {
 } from '@ng-doc/core/interfaces';
 import {
   NgDocBindPipe,
-  NgDocButtonComponent,
   NgDocCheckboxComponent,
   NgDocExecutePipe,
   NgDocIconComponent,
-  NgDocTextComponent,
-  NgDocTextRightDirective,
   NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import { NgDocPlaygroundForm } from '../playground-form';
 import { NgDocPlaygroundPropertyComponent } from '../playground-property/playground-property.component';
 import { NgDocPlaygroundPropertyControl } from '../playground-property-control';
 
+/**
+ * Orders inputs without an `order` by name in English whatever the locale, so a prerendered
+ * playground does not depend on the machine that built it.
+ */
+const INPUT_ORDER = new Intl.Collator('en');
+
+/**
+ * The playground inspector: the demos, and beside them (below them in a container narrower than
+ * 640px) the Recreate setting and a control per input and content slot.
+ */
 @Component({
   selector: 'ng-doc-playground-properties',
   templateUrl: './playground-properties.component.html',
   styleUrls: ['./playground-properties.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgDocTextComponent,
-    NgDocButtonComponent,
     NgDocCheckboxComponent,
     FormsModule,
     NgDocTooltipDirective,
     NgDocIconComponent,
-    NgDocTextRightDirective,
     NgDocPlaygroundPropertyComponent,
-    AsyncPipe,
     KeyValuePipe,
     NgDocBindPipe,
     NgDocExecutePipe,
@@ -65,100 +65,93 @@ import { NgDocPlaygroundPropertyControl } from '../playground-property-control';
 export class NgDocPlaygroundPropertiesComponent<
   P extends NgDocPlaygroundProperties,
   C extends Record<string, NgDocPlaygroundContent>,
-> implements OnChanges
-{
-  protected readonly breakpointObserver = inject(BreakpointObserver);
-  private injector = inject(Injector);
+> {
+  private readonly injector = inject(Injector);
 
-  @Input()
-  form!: FormGroup<NgDocPlaygroundForm>;
+  /** The form of the playground. */
+  readonly form = input.required<FormGroup<NgDocPlaygroundForm>>();
 
-  @Input()
-  properties?: P;
+  /** The inputs of the playground's target. */
+  readonly properties = input<P | undefined>(undefined);
 
-  @Input()
-  ignoreInputs?: string[] = [];
+  /** Inputs that get no control. */
+  readonly ignoreInputs = input<string[] | undefined>([]);
 
-  @Input()
-  dynamicContent?: C;
+  /** Content slots of the playground. */
+  readonly dynamicContent = input<C | undefined>(undefined);
 
-  @Input()
-  defaultValues?: Record<string, unknown>;
+  /** Default values of the inputs; the inspector renders once they are known. */
+  readonly defaultValues = input<Record<string, unknown> | undefined>(undefined);
 
-  @Input()
-  hideSidePanel: boolean = false;
+  /** Whether the inspector is hidden, leaving the demos only. */
+  readonly hideSidePanel = input<boolean>(false);
 
-  @Input()
-  recreateDemo: boolean = false;
+  /** Where the inspector goes: right of the demos, or below them at full width. */
+  readonly inspectorPosition = input<'right' | 'bottom'>('right');
 
-  @Input()
-  showResetButton: boolean = false;
+  /** Whether the demo is recreated each time an input changes. */
+  readonly recreateDemo = model<boolean>(false);
 
-  @Output()
-  recreateDemoChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+  /** Whether the Reset button is shown. */
+  readonly showResetButton = input<boolean>(false);
 
-  @Output()
-  resetForm: EventEmitter<void> = new EventEmitter<void>();
+  /** Emits when the reader resets the form. */
+  readonly resetForm = output<void>();
 
-  readonly breakpoints: string[] = [Breakpoints.XSmall];
-  readonly observer: Observable<boolean>;
+  /** The control of each input, in display order. */
+  protected readonly propertyControls: Signal<NgDocPlaygroundPropertyControl[]> = computed(() => {
+    const properties: P | undefined = this.properties();
+    const ignoreInputs: string[] | undefined = this.ignoreInputs();
 
-  protected propertyControls: NgDocPlaygroundPropertyControl[] = [];
-  protected contentTypeControl?: NgDocProvidedTypeControl = this.getControlForType('boolean');
-
-  constructor() {
-    this.observer = this.breakpointObserver
-      .observe(this.breakpoints)
-      .pipe(map((state: BreakpointState) => state.matches));
-  }
-
-  ngOnChanges({ properties }: SimpleChanges): void {
-    if (properties && this.properties) {
-      this.propertyControls = objectKeys(this.properties)
-        .filter((key: keyof P) => this.ignoreInputs?.includes(String(key)) !== true)
-        .map((key: keyof P) => {
-          if (this.properties) {
-            const property: NgDocPlaygroundProperty = this.properties[key];
-            const typeControl: NgDocProvidedTypeControl | undefined = this.getTypeControl(property);
-
-            if (typeControl) {
-              return {
-                propertyName: String(key),
-                property,
-                typeControl,
-              };
-            }
-          }
-
-          return null;
-        })
-        .filter(isPresent)
-        .sort((a: NgDocPlaygroundPropertyControl, b: NgDocPlaygroundPropertyControl) => {
-          const aOrder: number | undefined = a.typeControl.options?.order;
-          const bOrder: number | undefined = b.typeControl.options?.order;
-
-          if (isPresent(aOrder) && isPresent(bOrder)) {
-            return aOrder - bOrder;
-          }
-          if (isPresent(aOrder)) {
-            return -1;
-          }
-          if (isPresent(bOrder)) {
-            return 1;
-          }
-          return a.property.inputName.localeCompare(b.property.inputName);
-        });
+    if (!properties) {
+      return [];
     }
-  }
 
+    return objectKeys(properties)
+      .filter((key: keyof P) => ignoreInputs?.includes(String(key)) !== true)
+      .map((key: keyof P) => {
+        const property: NgDocPlaygroundProperty = properties[key];
+        const typeControl: NgDocProvidedTypeControl | undefined = this.getTypeControl(property);
+
+        return typeControl ? { propertyName: String(key), property, typeControl } : null;
+      })
+      .filter(isPresent)
+      .sort((a: NgDocPlaygroundPropertyControl, b: NgDocPlaygroundPropertyControl) => {
+        const aOrder: number | undefined = a.typeControl.options?.order;
+        const bOrder: number | undefined = b.typeControl.options?.order;
+
+        if (isPresent(aOrder) && isPresent(bOrder)) {
+          return aOrder - bOrder;
+        }
+        if (isPresent(aOrder)) {
+          return -1;
+        }
+        if (isPresent(bOrder)) {
+          return 1;
+        }
+        return INPUT_ORDER.compare(a.property.inputName, b.property.inputName);
+      });
+  });
+
+  /** The control of content slots. */
+  protected readonly contentTypeControl?: NgDocProvidedTypeControl =
+    this.getControlForType('boolean');
+
+  /**
+   * The form control of an input or a content slot.
+   * @param controlType - `properties` or `content`.
+   * @param key - Name of the input or slot.
+   */
   getFormControl(controlType: keyof NgDocPlaygroundForm, key: string): FormControl {
-    return this.form.get(controlType)?.get(key) as FormControl;
+    return this.form().get(controlType)?.get(key) as FormControl;
   }
 
   private getTypeControl(property: NgDocPlaygroundProperty): NgDocProvidedTypeControl | undefined {
     const type: string = property.type;
+    const primitive: string | undefined = optionalPrimitive(type);
     const typeControl: NgDocProvidedTypeControl | undefined =
       this.getControlForType(type) ??
+      (primitive ? this.getControlForType(primitive) : undefined) ??
       this.getControlForTypeAlias(
         isPlaygroundProperty(property) ? property.options : undefined,
         property.isManual,
@@ -205,4 +198,28 @@ export class NgDocPlaygroundPropertiesComponent<
 
     return undefined;
   }
+}
+
+/** The types whose control also edits an optional or nullable input of the type. */
+const PRIMITIVE_TYPES: ReadonlySet<string> = new Set(['string', 'number', 'boolean']);
+
+/**
+ * The primitive of an optional or nullable primitive input type, such as `string` of
+ * `string | undefined` (an optional `@Input() label?: string`, `input<string>()` or
+ * `model<string>()`) or of `number | null`, so that the input gets the primitive's control.
+ * Other types are matched by their exact name only: a custom control registered for `Position`
+ * does not receive the `undefined` of a `Position | undefined` input unless it is registered for
+ * that type too.
+ * @param type - The input type as the builder printed it.
+ * @returns The primitive, or `undefined` when the type is not one.
+ */
+function optionalPrimitive(type: string): string | undefined {
+  const members: string[] = type.split('|').map((member: string) => member.trim());
+  const rest: string[] = members.filter(
+    (member: string) => member !== 'undefined' && member !== 'null',
+  );
+
+  return rest.length === 1 && rest.length < members.length && PRIMITIVE_TYPES.has(rest[0])
+    ? rest[0]
+    : undefined;
 }

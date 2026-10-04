@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { removeLinesFromCode } from '../remove-lines-from-code';
 
 describe('removeLinesFromCode', () => {

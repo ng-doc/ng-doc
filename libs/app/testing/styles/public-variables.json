@@ -1,0 +1,1550 @@
+{
+  "$comment": [
+    "Public CSS custom-property surface of @ng-doc/app and @ng-doc/ui-kit, checked by css-variable-contract.spec.ts.",
+    "Baseline: the 251 names inventoried before the UI refresh, plus two pane hooks that inventory missed.",
+    "declared: declared on :root by the library stylesheets; users override them from their own stylesheet.",
+    "hooks: never declared by the library, read with (or without) a fallback so users can set them.",
+    "local: declared inside a component or the site only; still part of the overridable surface.",
+    "additive: names added after the inventory (new tokens); declared on :root.",
+    "aliases: read-first names that are deliberately never declared (typo fixes).",
+    "retired: names that must no longer be read, with the reason.",
+    "Adding, removing or moving a name updates this file in the same change."
+  ],
+  "declared": {
+    "--ng-doc-abstract-background": {
+      "group": "api-modifier"
+    },
+    "--ng-doc-abstract-color": {
+      "group": "api-modifier"
+    },
+    "--ng-doc-alert": {
+      "group": "foundation"
+    },
+    "--ng-doc-alert-text": {
+      "group": "foundation"
+    },
+    "--ng-doc-api-tag-background": {
+      "group": "layout"
+    },
+    "--ng-doc-api-tag-color": {
+      "group": "layout"
+    },
+    "--ng-doc-app-horizontal-padding": {
+      "group": "layout",
+      "documented": true
+    },
+    "--ng-doc-app-max-width": {
+      "group": "layout",
+      "documented": true
+    },
+    "--ng-doc-async-background": {
+      "group": "api-modifier"
+    },
+    "--ng-doc-async-color": {
+      "group": "api-modifier"
+    },
+    "--ng-doc-background": {
+      "group": "foundation"
+    },
+    "--ng-doc-base-0": {
+      "group": "foundation",
+      "documented": true
+    },
+    "--ng-doc-base-1": {
+      "group": "foundation",
+      "documented": true
+    },
+    "--ng-doc-base-10": {
+      "group": "foundation",
+      "documented": true
+    },
+    "--ng-doc-base-2": {
+      "group": "foundation",
+      "documented": true
+    },
+    "--ng-doc-base-3": {
+      "group": "foundation",
+      "documented": true
+    },
+    "--ng-doc-base-4": {
+      "group": "foundation",
+      "documented": true
+    },
+    "--ng-doc-base-5": {
+      "group": "foundation",
+      "documented": true
+    },
+    "--ng-doc-base-6": {
+      "group": "foundation",
+      "documented": true
+    },
+    "--ng-doc-base-7": {
+      "group": "foundation",
+      "documented": true
+    },
+    "--ng-doc-base-8": {
+      "group": "foundation",
+      "documented": true
+    },
+    "--ng-doc-base-9": {
+      "group": "foundation",
+      "documented": true
+    },
+    "--ng-doc-base-gutter": {
+      "group": "foundation",
+      "documented": true
+    },
+    "--ng-doc-base-rgb": {
+      "group": "foundation"
+    },
+    "--ng-doc-black": {
+      "group": "foundation"
+    },
+    "--ng-doc-boolean-background": {
+      "group": "api-type"
+    },
+    "--ng-doc-boolean-color": {
+      "group": "api-type"
+    },
+    "--ng-doc-border-color": {
+      "group": "foundation",
+      "documented": true
+    },
+    "--ng-doc-border-hover-color": {
+      "group": "foundation"
+    },
+    "--ng-doc-border-size": {
+      "group": "foundation"
+    },
+    "--ng-doc-button-active-background": {
+      "group": "component"
+    },
+    "--ng-doc-button-active-color": {
+      "group": "component"
+    },
+    "--ng-doc-button-background": {
+      "group": "component"
+    },
+    "--ng-doc-button-background-opacity": {
+      "group": "component"
+    },
+    "--ng-doc-button-color": {
+      "group": "component"
+    },
+    "--ng-doc-button-hover-background": {
+      "group": "component"
+    },
+    "--ng-doc-button-hover-color": {
+      "group": "component"
+    },
+    "--ng-doc-checkbox-border": {
+      "group": "component"
+    },
+    "--ng-doc-checkbox-border-hover": {
+      "group": "component"
+    },
+    "--ng-doc-checkbox-color": {
+      "group": "component"
+    },
+    "--ng-doc-checkbox-color-text": {
+      "group": "component"
+    },
+    "--ng-doc-class-background": {
+      "group": "api-kind"
+    },
+    "--ng-doc-class-color": {
+      "group": "api-kind"
+    },
+    "--ng-doc-code-background": {
+      "group": "component"
+    },
+    "--ng-doc-code-font": {
+      "group": "foundation"
+    },
+    "--ng-doc-code-font-size": {
+      "group": "foundation"
+    },
+    "--ng-doc-code-font-weight": {
+      "group": "foundation"
+    },
+    "--ng-doc-code-highlight-color": {
+      "group": "component"
+    },
+    "--ng-doc-code-line-height": {
+      "group": "foundation"
+    },
+    "--ng-doc-code-max-height": {
+      "group": "component"
+    },
+    "--ng-doc-component-decorator-background": {
+      "group": "api-decorator"
+    },
+    "--ng-doc-component-decorator-color": {
+      "group": "api-decorator"
+    },
+    "--ng-doc-demo-displayer-border": {
+      "group": "component",
+      "documented": true
+    },
+    "--ng-doc-demo-displayer-border-radius": {
+      "group": "component",
+      "documented": true
+    },
+    "--ng-doc-directive-decorator-background": {
+      "group": "api-decorator"
+    },
+    "--ng-doc-directive-decorator-color": {
+      "group": "api-decorator"
+    },
+    "--ng-doc-dot-background": {
+      "group": "component"
+    },
+    "--ng-doc-dot-size": {
+      "group": "component"
+    },
+    "--ng-doc-enum-background": {
+      "group": "api-kind"
+    },
+    "--ng-doc-enum-color": {
+      "group": "api-kind"
+    },
+    "--ng-doc-floated-border": {
+      "group": "component"
+    },
+    "--ng-doc-floated-border-color": {
+      "group": "component"
+    },
+    "--ng-doc-floated-border-radius": {
+      "group": "component"
+    },
+    "--ng-doc-floated-border-shadow-color": {
+      "group": "component"
+    },
+    "--ng-doc-font-family": {
+      "group": "foundation"
+    },
+    "--ng-doc-font-size": {
+      "group": "foundation"
+    },
+    "--ng-doc-font-system": {
+      "group": "foundation"
+    },
+    "--ng-doc-font-system-mono": {
+      "group": "foundation"
+    },
+    "--ng-doc-font-weight": {
+      "group": "foundation"
+    },
+    "--ng-doc-function-background": {
+      "group": "api-kind"
+    },
+    "--ng-doc-function-color": {
+      "group": "api-kind"
+    },
+    "--ng-doc-get-background": {
+      "group": "api-modifier"
+    },
+    "--ng-doc-get-color": {
+      "group": "api-modifier"
+    },
+    "--ng-doc-guide-tag-background": {
+      "group": "layout"
+    },
+    "--ng-doc-guide-tag-color": {
+      "group": "layout"
+    },
+    "--ng-doc-heading-color": {
+      "group": "foundation"
+    },
+    "--ng-doc-heading-font-family": {
+      "group": "foundation"
+    },
+    "--ng-doc-hover-background": {
+      "group": "foundation"
+    },
+    "--ng-doc-info": {
+      "group": "foundation"
+    },
+    "--ng-doc-info-text": {
+      "group": "foundation"
+    },
+    "--ng-doc-injectable-decorator-background": {
+      "group": "api-decorator"
+    },
+    "--ng-doc-injectable-decorator-color": {
+      "group": "api-decorator"
+    },
+    "--ng-doc-inline-code-background": {
+      "group": "foundation"
+    },
+    "--ng-doc-inline-code-color": {
+      "group": "foundation"
+    },
+    "--ng-doc-input-background-color": {
+      "group": "component"
+    },
+    "--ng-doc-input-border": {
+      "group": "component"
+    },
+    "--ng-doc-input-border-hover": {
+      "group": "component"
+    },
+    "--ng-doc-input-cursor": {
+      "group": "component"
+    },
+    "--ng-doc-input-decorator-background": {
+      "group": "api-decorator"
+    },
+    "--ng-doc-input-decorator-color": {
+      "group": "api-decorator"
+    },
+    "--ng-doc-input-height": {
+      "group": "component"
+    },
+    "--ng-doc-input-text-align": {
+      "group": "component"
+    },
+    "--ng-doc-input-width": {
+      "group": "component"
+    },
+    "--ng-doc-interface-background": {
+      "group": "api-kind"
+    },
+    "--ng-doc-interface-color": {
+      "group": "api-kind"
+    },
+    "--ng-doc-line-height": {
+      "group": "foundation"
+    },
+    "--ng-doc-link-color": {
+      "group": "foundation"
+    },
+    "--ng-doc-main-padding": {
+      "group": "layout"
+    },
+    "--ng-doc-mark-background": {
+      "group": "foundation"
+    },
+    "--ng-doc-navbar-background": {
+      "group": "layout",
+      "documented": true
+    },
+    "--ng-doc-navbar-border": {
+      "group": "layout"
+    },
+    "--ng-doc-navbar-height": {
+      "group": "layout",
+      "documented": true
+    },
+    "--ng-doc-navbar-horizontal-padding": {
+      "group": "layout",
+      "documented": true
+    },
+    "--ng-doc-navbar-left-width": {
+      "group": "layout"
+    },
+    "--ng-doc-ng-module-decorator-background": {
+      "group": "api-decorator"
+    },
+    "--ng-doc-ng-module-decorator-color": {
+      "group": "api-decorator"
+    },
+    "--ng-doc-null-background": {
+      "group": "api-type"
+    },
+    "--ng-doc-null-color": {
+      "group": "api-type"
+    },
+    "--ng-doc-number-background": {
+      "group": "api-type"
+    },
+    "--ng-doc-number-color": {
+      "group": "api-type"
+    },
+    "--ng-doc-object-background": {
+      "group": "api-type"
+    },
+    "--ng-doc-object-color": {
+      "group": "api-type"
+    },
+    "--ng-doc-output-decorator-background": {
+      "group": "api-decorator"
+    },
+    "--ng-doc-output-decorator-color": {
+      "group": "api-decorator"
+    },
+    "--ng-doc-overriden-background": {
+      "group": "api-modifier"
+    },
+    "--ng-doc-overriden-color": {
+      "group": "api-modifier"
+    },
+    "--ng-doc-page-block-margin": {
+      "group": "layout"
+    },
+    "--ng-doc-page-padding": {
+      "group": "layout"
+    },
+    "--ng-doc-page-wrapper-tabs-height": {
+      "group": "layout"
+    },
+    "--ng-doc-pipe-decorator-background": {
+      "group": "api-decorator"
+    },
+    "--ng-doc-pipe-decorator-color": {
+      "group": "api-decorator"
+    },
+    "--ng-doc-primary": {
+      "group": "foundation",
+      "documented": true
+    },
+    "--ng-doc-primary-text": {
+      "group": "foundation"
+    },
+    "--ng-doc-protected-background": {
+      "group": "api-modifier"
+    },
+    "--ng-doc-protected-color": {
+      "group": "api-modifier"
+    },
+    "--ng-doc-readonly-background": {
+      "group": "api-modifier"
+    },
+    "--ng-doc-readonly-color": {
+      "group": "api-modifier"
+    },
+    "--ng-doc-search-result-color": {
+      "group": "layout"
+    },
+    "--ng-doc-selection-background": {
+      "group": "component"
+    },
+    "--ng-doc-selection-border": {
+      "group": "component"
+    },
+    "--ng-doc-selector-background": {
+      "group": "api-kind"
+    },
+    "--ng-doc-selector-color": {
+      "group": "api-kind"
+    },
+    "--ng-doc-set-background": {
+      "group": "api-modifier"
+    },
+    "--ng-doc-set-color": {
+      "group": "api-modifier"
+    },
+    "--ng-doc-shadow-color": {
+      "group": "foundation",
+      "documented": true
+    },
+    "--ng-doc-sidebar-background": {
+      "group": "layout",
+      "documented": true
+    },
+    "--ng-doc-sidebar-horizontal-padding": {
+      "group": "layout"
+    },
+    "--ng-doc-sidebar-padding": {
+      "group": "layout",
+      "documented": true
+    },
+    "--ng-doc-sidebar-vetical-padding": {
+      "group": "layout"
+    },
+    "--ng-doc-sidebar-width": {
+      "group": "layout",
+      "documented": true
+    },
+    "--ng-doc-sidenav-width": {
+      "group": "layout"
+    },
+    "--ng-doc-static-background": {
+      "group": "api-modifier"
+    },
+    "--ng-doc-static-color": {
+      "group": "api-modifier"
+    },
+    "--ng-doc-string-background": {
+      "group": "api-type"
+    },
+    "--ng-doc-string-color": {
+      "group": "api-type"
+    },
+    "--ng-doc-success": {
+      "group": "foundation"
+    },
+    "--ng-doc-success-text": {
+      "group": "foundation"
+    },
+    "--ng-doc-tab-group-border": {
+      "group": "component"
+    },
+    "--ng-doc-tab-group-border-radius": {
+      "group": "component"
+    },
+    "--ng-doc-tabs-border-radius": {
+      "group": "component"
+    },
+    "--ng-doc-tabs-margin": {
+      "group": "component"
+    },
+    "--ng-doc-tag-background": {
+      "group": "component"
+    },
+    "--ng-doc-tag-color": {
+      "group": "component"
+    },
+    "--ng-doc-text": {
+      "group": "foundation"
+    },
+    "--ng-doc-text-muted": {
+      "group": "foundation"
+    },
+    "--ng-doc-text-selection": {
+      "group": "foundation"
+    },
+    "--ng-doc-toc-indent": {
+      "group": "layout"
+    },
+    "--ng-doc-toc-top-padding": {
+      "group": "layout"
+    },
+    "--ng-doc-toc-width": {
+      "group": "layout"
+    },
+    "--ng-doc-transition": {
+      "group": "foundation"
+    },
+    "--ng-doc-type-alias-background": {
+      "group": "api-kind"
+    },
+    "--ng-doc-type-alias-color": {
+      "group": "api-kind"
+    },
+    "--ng-doc-undefined-background": {
+      "group": "api-type"
+    },
+    "--ng-doc-undefined-color": {
+      "group": "api-type"
+    },
+    "--ng-doc-variable-background": {
+      "group": "api-kind"
+    },
+    "--ng-doc-variable-color": {
+      "group": "api-kind"
+    },
+    "--ng-doc-warning": {
+      "group": "foundation"
+    },
+    "--ng-doc-warning-text": {
+      "group": "foundation"
+    },
+    "--ng-doc-white": {
+      "group": "foundation",
+      "documented": true
+    }
+  },
+  "hooks": {
+    "--ng-doc-article-width": {
+      "group": "layout"
+    },
+    "--ng-doc-button-border-color": {
+      "group": "component"
+    },
+    "--ng-doc-button-checked-background": {
+      "group": "component"
+    },
+    "--ng-doc-button-hover-border-color": {
+      "group": "component"
+    },
+    "--ng-doc-code-header-background": {
+      "group": "component"
+    },
+    "--ng-doc-code-header-color": {
+      "group": "component"
+    },
+    "--ng-doc-css-tag-background-opacity": {
+      "group": "component"
+    },
+    "--ng-doc-demo-displayer-background": {
+      "group": "component",
+      "documented": true
+    },
+    "--ng-doc-demo-pane-height": {
+      "group": "component"
+    },
+    "--ng-doc-input-color": {
+      "group": "component"
+    },
+    "--ng-doc-input-font-family": {
+      "group": "component"
+    },
+    "--ng-doc-input-font-size": {
+      "group": "component"
+    },
+    "--ng-doc-input-font-weight": {
+      "group": "component"
+    },
+    "--ng-doc-input-padding-left": {
+      "group": "component"
+    },
+    "--ng-doc-input-padding-right": {
+      "group": "component"
+    },
+    "--ng-doc-kind-icon-background-opacity": {
+      "group": "component"
+    },
+    "--ng-doc-label-content-width": {
+      "group": "component"
+    },
+    "--ng-doc-list-element-horizontal-space": {
+      "group": "component"
+    },
+    "--ng-doc-list-element-vertical-space": {
+      "group": "component"
+    },
+    "--ng-doc-list-size": {
+      "group": "component"
+    },
+    "--ng-doc-mark-color": {
+      "group": "foundation"
+    },
+    "--ng-doc-mermaid-viewer-background": {
+      "group": "component"
+    },
+    "--ng-doc-mermaid-viewer-border": {
+      "group": "component"
+    },
+    "--ng-doc-mermaid-viewer-border-radius": {
+      "group": "component"
+    },
+    "--ng-doc-mermaid-viewer-margin": {
+      "group": "component"
+    },
+    "--ng-doc-pane-back-background": {
+      "group": "component",
+      "documented": true,
+      "note": "read through a multi-line var() in pane.component.scss; documented in the demo-pane guide"
+    },
+    "--ng-doc-pane-back-border": {
+      "group": "component",
+      "documented": true
+    },
+    "--ng-doc-pane-background": {
+      "group": "component",
+      "documented": true
+    },
+    "--ng-doc-pane-border": {
+      "group": "component",
+      "documented": true
+    },
+    "--ng-doc-pane-border-radius": {
+      "group": "component"
+    },
+    "--ng-doc-pane-content-min-width": {
+      "group": "component"
+    },
+    "--ng-doc-pane-front-background": {
+      "group": "component",
+      "documented": true,
+      "note": "read through a multi-line var() in pane.component.scss; documented in the demo-pane guide"
+    },
+    "--ng-doc-pane-front-border": {
+      "group": "component",
+      "documented": true
+    },
+    "--ng-doc-search-result-header-color": {
+      "group": "layout"
+    },
+    "--ng-doc-spinner-color": {
+      "group": "component"
+    },
+    "--ng-doc-tabs-border": {
+      "group": "component"
+    },
+    "--ng-doc-tooltip-background": {
+      "group": "component"
+    },
+    "--ng-doc-tooltip-border": {
+      "group": "component"
+    }
+  },
+  "local": {
+    "--ng-doc-blockquote-background": {
+      "group": "component"
+    },
+    "--ng-doc-blockquote-border-color": {
+      "group": "component"
+    },
+    "--ng-doc-blockquote-margin": {
+      "group": "component"
+    },
+    "--ng-doc-button-active-background-opacity": {
+      "group": "component"
+    },
+    "--ng-doc-button-active-border": {
+      "group": "component"
+    },
+    "--ng-doc-button-border": {
+      "group": "component"
+    },
+    "--ng-doc-button-hover-background-opacity": {
+      "group": "component"
+    },
+    "--ng-doc-button-hover-border": {
+      "group": "component"
+    },
+    "--ng-doc-button-padding": {
+      "group": "component"
+    },
+    "--ng-doc-code-border": {
+      "group": "component"
+    },
+    "--ng-doc-code-border-radius": {
+      "group": "component"
+    },
+    "--ng-doc-code-margin": {
+      "group": "component"
+    },
+    "--ng-doc-code-shadow": {
+      "group": "component"
+    },
+    "--ng-doc-css-tag-background": {
+      "group": "component"
+    },
+    "--ng-doc-demo-margin": {
+      "group": "component"
+    },
+    "--ng-doc-demo-pane-margin": {
+      "group": "component"
+    },
+    "--ng-doc-floated-focus-border-color": {
+      "group": "component"
+    },
+    "--ng-doc-font-line-height": {
+      "group": "foundation"
+    },
+    "--ng-doc-icon-color": {
+      "group": "component"
+    },
+    "--ng-doc-icon-height": {
+      "group": "component"
+    },
+    "--ng-doc-icon-width": {
+      "group": "component"
+    },
+    "--ng-doc-kind-icon-background": {
+      "group": "component"
+    },
+    "--ng-doc-option-padding": {
+      "group": "component"
+    },
+    "--ng-doc-overlay-background": {
+      "group": "component"
+    },
+    "--ng-doc-overlay-border": {
+      "group": "component"
+    },
+    "--ng-doc-overlay-border-radius": {
+      "group": "component"
+    },
+    "--ng-doc-overlay-shadow": {
+      "group": "component"
+    },
+    "--ng-doc-page-max-width": {
+      "group": "layout"
+    },
+    "--ng-doc-page-sticky-offset": {
+      "group": "layout"
+    },
+    "--ng-doc-playground-margin": {
+      "group": "component"
+    },
+    "--ng-doc-scope-item-link-background": {
+      "group": "component"
+    },
+    "--ng-doc-search-border-radius": {
+      "group": "layout"
+    },
+    "--ng-doc-sidebar-category-indent": {
+      "group": "layout",
+      "documented": true
+    },
+    "--ng-doc-sidebar-item-indent": {
+      "group": "layout",
+      "documented": true
+    },
+    "--ng-doc-sidebar-shadow": {
+      "group": "layout",
+      "documented": true
+    },
+    "--ng-doc-sidenav-content-padding": {
+      "group": "layout"
+    },
+    "--ng-doc-sidenav-top": {
+      "group": "layout"
+    },
+    "--ng-doc-tab-group-background": {
+      "group": "component"
+    },
+    "--ng-doc-tab-group-header-background": {
+      "group": "component"
+    },
+    "--ng-doc-tab-group-tabs-background": {
+      "group": "component"
+    },
+    "--ng-doc-tag-background-opacity": {
+      "group": "component"
+    },
+    "--ng-doc-tag-border": {
+      "group": "component"
+    },
+    "--ng-doc-text-left-width": {
+      "group": "foundation"
+    },
+    "--ng-doc-text-right-width": {
+      "group": "foundation"
+    },
+    "--ng-doc-toc-margin": {
+      "group": "layout"
+    }
+  },
+  "additive": {
+    "--ng-doc-alert-border": {
+      "group": "status-helper",
+      "source": "refresh"
+    },
+    "--ng-doc-alert-soft": {
+      "group": "status-helper",
+      "source": "refresh"
+    },
+    "--ng-doc-alert-strong": {
+      "group": "status-helper",
+      "source": "refresh"
+    },
+    "--ng-doc-api-content-max-width": {
+      "group": "layout",
+      "source": "hybrid"
+    },
+    "--ng-doc-code-header-height": {
+      "group": "code",
+      "source": "hybrid"
+    },
+    "--ng-doc-code-line-number-color": {
+      "group": "code",
+      "source": "hybrid"
+    },
+    "--ng-doc-code-line-numbers": {
+      "group": "code",
+      "source": "hybrid"
+    },
+    "--ng-doc-content-max-width": {
+      "group": "rhythm",
+      "source": "refresh"
+    },
+    "--ng-doc-demo-toolbar-background": {
+      "group": "layout",
+      "source": "hybrid"
+    },
+    "--ng-doc-display-letter-spacing": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-easing": {
+      "group": "motion",
+      "source": "refresh"
+    },
+    "--ng-doc-focus-ring": {
+      "group": "focus",
+      "source": "refresh"
+    },
+    "--ng-doc-focus-ring-color": {
+      "group": "focus",
+      "source": "refresh"
+    },
+    "--ng-doc-h1-font-size": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-h1-line-height": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-h2-border": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-h2-font-size": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-h2-line-height": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-h2-margin-top": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-h2-padding-top": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-h3-font-size": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-h3-line-height": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-h3-margin-top": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-h4-font-size": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-h4-line-height": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-h5-font-size": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-h5-line-height": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-h6-font-size": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-h6-line-height": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-heading-letter-spacing": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-heading-margin-bottom": {
+      "group": "rhythm",
+      "source": "refresh"
+    },
+    "--ng-doc-hue-amber": {
+      "group": "badge-hue",
+      "source": "refresh"
+    },
+    "--ng-doc-hue-brand": {
+      "group": "badge-hue",
+      "source": "refresh"
+    },
+    "--ng-doc-hue-brand-chip": {
+      "group": "badge-hue",
+      "source": "refresh"
+    },
+    "--ng-doc-hue-brand-strong": {
+      "group": "badge-hue",
+      "source": "refresh"
+    },
+    "--ng-doc-hue-green": {
+      "group": "badge-hue",
+      "source": "refresh"
+    },
+    "--ng-doc-hue-neutral": {
+      "group": "badge-hue",
+      "source": "refresh"
+    },
+    "--ng-doc-hue-red": {
+      "group": "badge-hue",
+      "source": "refresh"
+    },
+    "--ng-doc-hue-violet": {
+      "group": "badge-hue",
+      "source": "refresh"
+    },
+    "--ng-doc-hue-violet-chip": {
+      "group": "badge-hue",
+      "source": "refresh"
+    },
+    "--ng-doc-hue-violet-strong": {
+      "group": "badge-hue",
+      "source": "refresh"
+    },
+    "--ng-doc-info-border": {
+      "group": "status-helper",
+      "source": "refresh"
+    },
+    "--ng-doc-info-soft": {
+      "group": "status-helper",
+      "source": "refresh"
+    },
+    "--ng-doc-info-strong": {
+      "group": "status-helper",
+      "source": "refresh"
+    },
+    "--ng-doc-kbd-background": {
+      "group": "keys",
+      "source": "hybrid"
+    },
+    "--ng-doc-kbd-border-color": {
+      "group": "keys",
+      "source": "hybrid"
+    },
+    "--ng-doc-mix-border": {
+      "group": "mix-weight",
+      "source": "refresh"
+    },
+    "--ng-doc-mix-chip": {
+      "group": "mix-weight",
+      "source": "refresh"
+    },
+    "--ng-doc-mix-soft": {
+      "group": "mix-weight",
+      "source": "refresh"
+    },
+    "--ng-doc-mix-strong": {
+      "group": "mix-weight",
+      "source": "refresh"
+    },
+    "--ng-doc-mix-syntax": {
+      "group": "syntax",
+      "source": "hybrid"
+    },
+    "--ng-doc-on-hue": {
+      "group": "badge-hue",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-amber-100": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-amber-200": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-amber-300": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-amber-400": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-amber-50": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-amber-500": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-amber-600": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-amber-700": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-amber-800": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-amber-900": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-amber-950": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-brand-100": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-brand-200": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-brand-300": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-brand-400": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-brand-50": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-brand-500": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-brand-600": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-brand-700": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-brand-800": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-brand-900": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-brand-950": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-green-100": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-green-200": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-green-300": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-green-400": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-green-50": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-green-500": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-green-600": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-green-700": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-green-800": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-green-900": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-green-950": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-neutral-0": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-neutral-100": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-neutral-1000": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-neutral-150": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-neutral-200": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-neutral-25": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-neutral-300": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-neutral-400": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-neutral-450": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-neutral-50": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-neutral-500": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-neutral-600": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-neutral-700": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-neutral-750": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-neutral-800": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-neutral-850": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-neutral-875": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-neutral-900": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-neutral-950": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-red-100": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-red-200": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-red-300": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-red-400": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-red-50": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-red-500": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-red-600": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-red-700": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-red-800": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-red-900": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-red-950": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-violet-100": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-violet-200": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-violet-300": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-violet-400": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-violet-50": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-violet-500": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-violet-600": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-violet-700": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-violet-800": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-violet-900": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-palette-violet-950": {
+      "group": "palette",
+      "source": "refresh"
+    },
+    "--ng-doc-playground-input-border": {
+      "group": "inputs",
+      "source": "hybrid"
+    },
+    "--ng-doc-playground-inspector-width": {
+      "group": "layout",
+      "source": "hybrid"
+    },
+    "--ng-doc-primary-soft": {
+      "group": "status-helper",
+      "source": "refresh"
+    },
+    "--ng-doc-primary-strong": {
+      "group": "status-helper",
+      "source": "refresh"
+    },
+    "--ng-doc-radius-full": {
+      "group": "radius",
+      "source": "refresh"
+    },
+    "--ng-doc-radius-lg": {
+      "group": "radius",
+      "source": "refresh"
+    },
+    "--ng-doc-radius-md": {
+      "group": "radius",
+      "source": "refresh"
+    },
+    "--ng-doc-radius-sm": {
+      "group": "radius",
+      "source": "refresh"
+    },
+    "--ng-doc-radius-xl": {
+      "group": "radius",
+      "source": "refresh"
+    },
+    "--ng-doc-radius-xs": {
+      "group": "radius",
+      "source": "refresh"
+    },
+    "--ng-doc-row-hover-background": {
+      "group": "rows",
+      "source": "hybrid"
+    },
+    "--ng-doc-row-selected-background": {
+      "group": "rows",
+      "source": "hybrid"
+    },
+    "--ng-doc-row-selected-border": {
+      "group": "rows",
+      "source": "hybrid"
+    },
+    "--ng-doc-search-dialog-width": {
+      "group": "layout",
+      "source": "hybrid"
+    },
+    "--ng-doc-search-preview-width": {
+      "group": "layout",
+      "source": "hybrid"
+    },
+    "--ng-doc-shadow-lg": {
+      "group": "elevation",
+      "source": "refresh"
+    },
+    "--ng-doc-shadow-md": {
+      "group": "elevation",
+      "source": "refresh"
+    },
+    "--ng-doc-shadow-sm": {
+      "group": "elevation",
+      "source": "refresh"
+    },
+    "--ng-doc-shadow-xs": {
+      "group": "elevation",
+      "source": "refresh"
+    },
+    "--ng-doc-space-1": {
+      "group": "spacing",
+      "source": "refresh"
+    },
+    "--ng-doc-space-10": {
+      "group": "spacing",
+      "source": "refresh"
+    },
+    "--ng-doc-space-12": {
+      "group": "spacing",
+      "source": "refresh"
+    },
+    "--ng-doc-space-16": {
+      "group": "spacing",
+      "source": "refresh"
+    },
+    "--ng-doc-space-2": {
+      "group": "spacing",
+      "source": "refresh"
+    },
+    "--ng-doc-space-20": {
+      "group": "spacing",
+      "source": "refresh"
+    },
+    "--ng-doc-space-24": {
+      "group": "spacing",
+      "source": "refresh"
+    },
+    "--ng-doc-space-3": {
+      "group": "spacing",
+      "source": "refresh"
+    },
+    "--ng-doc-space-4": {
+      "group": "spacing",
+      "source": "refresh"
+    },
+    "--ng-doc-space-5": {
+      "group": "spacing",
+      "source": "refresh"
+    },
+    "--ng-doc-space-6": {
+      "group": "spacing",
+      "source": "refresh"
+    },
+    "--ng-doc-space-8": {
+      "group": "spacing",
+      "source": "refresh"
+    },
+    "--ng-doc-success-border": {
+      "group": "status-helper",
+      "source": "refresh"
+    },
+    "--ng-doc-success-soft": {
+      "group": "status-helper",
+      "source": "refresh"
+    },
+    "--ng-doc-success-strong": {
+      "group": "status-helper",
+      "source": "refresh"
+    },
+    "--ng-doc-syntax-comment": {
+      "group": "syntax",
+      "source": "hybrid"
+    },
+    "--ng-doc-syntax-decorator": {
+      "group": "syntax",
+      "source": "hybrid"
+    },
+    "--ng-doc-syntax-function": {
+      "group": "syntax",
+      "source": "hybrid"
+    },
+    "--ng-doc-syntax-keyword": {
+      "group": "syntax",
+      "source": "hybrid"
+    },
+    "--ng-doc-syntax-number": {
+      "group": "syntax",
+      "source": "hybrid"
+    },
+    "--ng-doc-syntax-plain": {
+      "group": "syntax",
+      "source": "hybrid"
+    },
+    "--ng-doc-syntax-punctuation": {
+      "group": "syntax",
+      "source": "hybrid"
+    },
+    "--ng-doc-syntax-string": {
+      "group": "syntax",
+      "source": "hybrid"
+    },
+    "--ng-doc-syntax-tag": {
+      "group": "syntax",
+      "source": "hybrid"
+    },
+    "--ng-doc-syntax-type": {
+      "group": "syntax",
+      "source": "hybrid"
+    },
+    "--ng-doc-text-lg-line-height": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-text-lg-size": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-text-md-line-height": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-text-md-size": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-text-sm-line-height": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-text-sm-size": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-text-xs-line-height": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-text-xs-size": {
+      "group": "type",
+      "source": "refresh"
+    },
+    "--ng-doc-warning-border": {
+      "group": "status-helper",
+      "source": "refresh"
+    },
+    "--ng-doc-warning-soft": {
+      "group": "status-helper",
+      "source": "refresh"
+    },
+    "--ng-doc-warning-strong": {
+      "group": "status-helper",
+      "source": "refresh"
+    }
+  },
+  "aliases": {
+    "--ng-doc-sidebar-vertical-padding": {
+      "group": "layout"
+    }
+  },
+  "retired": {
+    "--ng-doc-primary-rgb": {
+      "group": "foundation",
+      "reason": "Read but never declared, so the selected option and the input blink rendered nothing. Components mix --ng-doc-primary with color-mix() instead; no declaration is added."
+    }
+  }
+}

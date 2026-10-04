@@ -12,8 +12,16 @@ import {PLAYGROUND_COMPONENTS, PLAYGROUND_PROVIDERS} from '{{ metadata.outDir | 
 {%- if demoAssetsPath %}
 import demoAssets from '{{ metadata.outDir | createImportPath(demoAssetsPath) }}';
 {%- endif %}
+{%- if contentSourceImport %}
+import {ɵwithNgDocContent} from '@ng-doc/app';
+import pageContentSource from '{{ contentSourceImport }}';
+{%- endif %}
 
+{%- if contentSourceImport %}
+const pageContent: string = '';
+{%- else %}
 const pageContent: string = `{{ content | toTemplateString }}`
+{%- endif %}
 
 @Component({
   selector: 'ng-doc-page-{{ id }}',
@@ -41,6 +49,9 @@ const pageContent: string = `{{ content | toTemplateString }}`
 export class PageComponent extends NgDocRootPage {
   readonly pageType: NgDocPageType = '{{ pageType }}';
   readonly pageContent: string = pageContent;
+    {%- if contentSourceImport %}
+  readonly pageContentSource = pageContentSource;
+    {%- endif %}
     {%- if editSourceFileUrl %}
   readonly editSourceFileUrl: string = '{{ editSourceFileUrl }}';
     {%- endif %}
@@ -58,6 +69,19 @@ export class PageComponent extends NgDocRootPage {
     super();
   }
 }
+{%- if contentSourceImport %}
+
+// The router shows the page only once its content has loaded, so the previous page stays on
+// screen instead of an empty page.
+const routes: Routes = [ɵwithNgDocContent({
+    {%- if entryPath %}
+  ...(isRoute(entry.route) ? entry.route : {}),
+    {%- endif %}
+  path: '',
+  component: PageComponent,
+  title: `{{ metadata.title | toTemplateString }}`,
+}, pageContentSource)]
+{%- else %}
 
 const routes: Routes = [{
     {%- if entryPath %}
@@ -67,6 +91,7 @@ const routes: Routes = [{
   component: PageComponent,
   title: `{{ metadata.title | toTemplateString }}`,
 }]
+{%- endif %}
 
 export default routes;
 

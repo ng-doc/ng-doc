@@ -78,7 +78,6 @@ export function contentBuilder(config: Config): Builder<string> {
           // This is needed because keywords can be changed after the build
           touchKeywords(...keywords.keys());
 
-          removeKeywords();
           dependencies.clear();
           usedKeywords.clear();
 
@@ -98,7 +97,7 @@ export function contentBuilder(config: Config): Builder<string> {
             });
           }
 
-          removeKeywords = keywordsStore.add(...new Map(getKeywords(anchors)));
+          keywords = new Map(getKeywords(anchors));
 
           const postProcessed = await UTILS.postProcessHtml(content);
 
@@ -119,13 +118,17 @@ export function contentBuilder(config: Config): Builder<string> {
     [
       createMainTrigger(watchFile(mainFilePath, 'update'), onDependenciesChange(dependencies)),
       createSecondaryTrigger(
-        onKeywordsTouch(usedKeywords.has.bind(usedKeywords), keywords.has.bind(keywords)),
+        onKeywordsTouch(
+          (key) => usedKeywords.has(key),
+          (key) => keywords.has(key),
+        ),
       ),
     ],
     () => builder,
   ).pipe(
     tap((state) => {
       if (isBuilderDone(state)) {
+        removeKeywords();
         if (keywords.size) {
           removeKeywords = keywordsStore.add(...keywords);
 

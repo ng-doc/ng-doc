@@ -1,65 +1,132 @@
-<h1 ng-doc-text>{{ title() }}</h1>
-<div class="ng-doc-api-list-wrapper">
-  <form [formGroup]="formGroup">
-    @if (types().length) {
-      <h3>Declaration types</h3>
-      <ul class="ng-doc-filter-list" ngDocRadioGroup formControlName="type">
-        @for (type of types(); track type) {
-          <li>
-            <button class="ng-doc-filter-button" ng-doc-button-toggle [value]="type">
-              <ng-doc-kind-icon [kind]="type" size="medium"></ng-doc-kind-icon>
-              {{ type }}
-            </button>
-          </li>
-        }
-      </ul>
-    }
+<h1 class="ng-doc-api-list-title">{{ title() }}</h1>
+@if (loaded()) {
+  <p class="ng-doc-api-list-lead">
+    {{ declarations().length }} declarations in {{ scopes().length }}
+    {{ scopes().length === 1 ? 'scope' : 'scopes' }}.
+  </p>
+}
 
-    @if (scopes().length) {
-      <h3>Scopes</h3>
-      <ul class="ng-doc-filter-list" ngDocRadioGroup formControlName="scope">
-        @for (scope of scopes(); track scope) {
-          <li>
-            <button class="ng-doc-filter-button" ng-doc-button-toggle [value]="scope">
-              {{ scope }}
-            </button>
-          </li>
-        }
-      </ul>
+<div class="ng-doc-api-list-tools">
+  <label class="ng-doc-api-list-filter">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true">
+      <path d="M3 5h18l-7 8.5V19l-4 2v-7.5z" />
+    </svg>
+    <input
+      #filterInput
+      type="text"
+      autocomplete="off"
+      spellcheck="false"
+      [placeholder]="hasDescriptions() ? 'Filter by name or description' : 'Filter by name'"
+      [attr.aria-label]="
+        hasDescriptions()
+          ? 'Filter declarations by name or description'
+          : 'Filter declarations by name'
+      "
+      [attr.aria-keyshortcuts]="shortcuts.enabled() ? 'F' : null"
+      [formField]="filterForm.filter" />
+    @if (shortcuts.enabled()) {
+      <kbd class="ng-doc-api-list-kbd">F</kbd>
     }
-
-    <h3>Filter</h3>
-    <ng-doc-input-wrapper class="ng-doc-api-list-filter-input">
-      <ng-doc-icon icon="search" ngDocInputWrapperLeft></ng-doc-icon>
-      <input
-        ngDocInputString
-        formControlName="filter"
-        placeholder="Declaration name..."
-        ngDocAutofocus />
-    </ng-doc-input-wrapper>
-  </form>
-
-  <div class="ng-doc-api-list">
-    @for (scope of filteredApiList(); track scope) {
-      <div class="ng-doc-api-scope">
-        <h3 class="ng-doc-scope-title" ng-doc-text>{{ scope.title }}</h3>
-        @if (scope.items.length) {
-          <ul class="ng-doc-scope-items">
-            @for (apiReference of scope.items; track apiReference) {
-              <li class="ng-doc-scope-item">
-                <a class="ng-doc-scope-item-link" [routerLink]="[apiReference.route]">
-                  <ng-doc-kind-icon
-                    [kind]="apiReference.type"
-                    size="medium"
-                    [ngDocTooltip]="apiReference.type">
-                  </ng-doc-kind-icon>
-                  {{ apiReference.name }}
-                </a>
-              </li>
-            }
-          </ul>
-        }
-      </div>
-    }
+  </label>
+  <div class="ng-doc-api-list-group-by">
+    <span id="ng-doc-api-list-group-by">Group by</span>
+    <div
+      class="ng-doc-api-list-segments"
+      role="group"
+      aria-labelledby="ng-doc-api-list-group-by"
+      ngDocSelectionHost>
+      <ng-doc-selection [align]="null" />
+      <button
+        type="button"
+        [attr.aria-pressed]="groupBy() === 'kind'"
+        [ngDocSelectionOrigin]="groupBy() === 'kind'"
+        (click)="selectGroupBy('kind')">
+        Kind
+      </button>
+      <button
+        type="button"
+        [attr.aria-pressed]="groupBy() === 'scope'"
+        [ngDocSelectionOrigin]="groupBy() === 'scope'"
+        (click)="selectGroupBy('scope')">
+        Scope
+      </button>
+    </div>
   </div>
 </div>
+
+@if (kinds().length) {
+  <div class="ng-doc-api-list-kinds" role="group" aria-label="Filter by kind">
+    <button type="button" [attr.aria-pressed]="!kind()" (click)="selectKind('')">
+      All <span class="ng-doc-api-list-count">{{ inScope().length }}</span>
+    </button>
+    @for (item of kinds(); track item.kind) {
+      <button
+        type="button"
+        [attr.data-ng-doc-kind]="item.kind"
+        [attr.aria-pressed]="kind() === item.kind"
+        (click)="selectKind(item.kind)">
+        <span class="ng-doc-api-list-dot" [attr.data-ng-doc-kind]="item.kind"></span>
+        {{ item.label }}
+        <span class="ng-doc-api-list-count">{{ item.count }}</span>
+      </button>
+    }
+  </div>
+}
+
+@if (scope()) {
+  <p class="ng-doc-api-list-scope-note">
+    Showing {{ scope() }} only.
+    <button type="button" (click)="clearScope()">Show every scope</button>
+  </p>
+}
+
+@for (group of groups(); track group.id) {
+  <section class="ng-doc-api-list-group" [id]="group.id">
+    <h2 class="ng-doc-api-list-group-title">
+      @if (group.kind) {
+        <ng-doc-kind-icon [kind]="group.kind" size="medium"></ng-doc-kind-icon>
+      } @else {
+        {{ group.label }}
+      }
+      <span class="ng-doc-api-list-count">{{ group.items.length }}</span>
+    </h2>
+    <ul class="ng-doc-api-list-index" [class.ng-doc-api-list-described]="hasDescriptions()">
+      @for (item of group.items; track item.route) {
+        <li>
+          <a [routerLink]="item.route">
+            <span class="ng-doc-api-list-name">{{ item.name }}</span>
+            @if (hasDescriptions()) {
+              @if (item.description) {
+                <span class="ng-doc-api-list-description" [title]="item.description">{{
+                  item.description
+                }}</span>
+              } @else {
+                <span class="ng-doc-api-list-description ng-doc-api-list-none">No description</span>
+              }
+            }
+            @if (group.kind) {
+              <span class="ng-doc-api-list-scope">{{ item.scope }}</span>
+            } @else {
+              <ng-doc-kind-icon class="ng-doc-api-list-scope" [kind]="item.type"></ng-doc-kind-icon>
+            }
+          </a>
+        </li>
+      }
+    </ul>
+  </section>
+} @empty {
+  @if (loaded()) {
+    <p class="ng-doc-api-list-empty">No declarations match.</p>
+  } @else if (failed()) {
+    <p class="ng-doc-api-list-empty">The API list could not be loaded.</p>
+  }
+}

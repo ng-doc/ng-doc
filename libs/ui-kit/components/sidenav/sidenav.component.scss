@@ -1,4 +1,4 @@
-@import '../../styles/mixins';
+@use '../../styles/mixins';
 
 :host {
   width: 100%;
@@ -33,7 +33,7 @@
   }
 
   .ng-doc-backdrop {
-    @include ng-doc-backdrop-filter(rgba(0, 0, 0, 0.2), 'nothing');
+    @include mixins.ng-doc-backdrop-filter(rgba(0, 0, 0, 0.2), 'nothing');
 
     position: fixed !important;
     left: 0;
@@ -43,25 +43,36 @@
     z-index: 9;
   }
 
-  @media (max-width: 1024px) {
-    &[data-ng-doc-opened='true'] {
-      .ng-doc-sidenav {
-        right: 0;
-        transition: right var(--ng-doc-transition);
-        --ng-doc-sidebar-shadow: var(--ng-doc-shadow-color) -5px 5px 20px -5px;
-      }
+  // The side panel collapses into an overlay that slides in from the left. While closed it is
+  // hidden, so its links leave the tab order.
+  @media (max-width: 900px) {
+    .ng-doc-sidenav {
+      left: calc(var(--ng-doc-sidenav-width) * -1);
+      max-width: 100%;
+      visibility: hidden;
+      transition:
+        left var(--ng-doc-transition),
+        visibility var(--ng-doc-transition);
     }
 
-    .ng-doc-sidenav {
-      transition: unset;
-      left: unset;
-      right: calc(var(--ng-doc-sidenav-width) * -1);
-      top: var(--ng-doc-navbar-height);
+    &[data-ng-doc-opened='true'] {
+      .ng-doc-sidenav {
+        left: 0;
+        visibility: visible;
+        --ng-doc-sidebar-shadow: var(--ng-doc-shadow-lg);
+      }
     }
 
     .ng-doc-sidenav-content {
       margin-left: 0;
       width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ng-doc-sidenav,
+    .ng-doc-sidenav-content {
+      transition: none;
     }
   }
 

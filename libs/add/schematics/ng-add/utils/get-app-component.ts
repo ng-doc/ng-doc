@@ -1,18 +1,14 @@
 import { Tree } from '@angular-devkit/schematics';
-import {
-  ClassDeclaration,
-  Expression,
-  getBootstrapApplicationFn,
-  getMainModule,
-  Node,
-} from 'ng-morph';
+import { ClassDeclaration, Expression, getBootstrapApplicationFn, Node } from 'ng-morph';
 
 import { getInitializer } from './get-initializer';
+import { getRootModule } from './get-root-module';
 
 /**
- *
- * @param tree
- * @param mainPath
+ * Returns the root component: the component passed to `bootstrapApplication`, or the first
+ * declaration of the module passed to `bootstrapModule`.
+ * @param tree - The workspace tree.
+ * @param mainPath - Path of the application's main file.
  */
 export function getAppComponent(tree: Tree, mainPath: string): ClassDeclaration | undefined {
   const bootstrapApplicationFn = getBootstrapApplicationFn(mainPath);
@@ -28,12 +24,9 @@ export function getAppComponent(tree: Tree, mainPath: string): ClassDeclaration 
       }
     }
   } else {
-    const mainModule: ClassDeclaration = getMainModule(mainPath)!;
-    const mainInitializer: Expression | undefined = getInitializer(
-      mainModule,
-      'NgModule',
-      'declarations',
-    );
+    const mainModule: ClassDeclaration | undefined = getRootModule(mainPath);
+    const mainInitializer: Expression | undefined =
+      mainModule && getInitializer(mainModule, 'NgModule', 'declarations');
 
     if (Node.isArrayLiteralExpression(mainInitializer)) {
       const appIdentifier: Expression | undefined = mainInitializer.getElements()[0];

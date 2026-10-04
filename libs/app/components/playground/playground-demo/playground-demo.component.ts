@@ -1,18 +1,21 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ComponentRef,
   DestroyRef,
   inject,
   InjectionToken,
   Injector,
-  Input,
+  input,
+  InputSignal,
   OnChanges,
   OnDestroy,
+  PendingTasks,
+  Signal,
+  signal,
   SimpleChanges,
   Type,
-  ViewChild,
+  viewChild,
   ViewContainerRef,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -34,6 +37,10 @@ import { startWith, takeUntil } from 'rxjs/operators';
 import { NgDocBasePlayground } from '../base-playground';
 import { NgDocPlaygroundForm } from '../playground-form';
 
+/**
+ * One demo of a playground: it creates the generated playground class of its selector (or pipe),
+ * passes it the form's values and shows the code of the current state.
+ */
 @Component({
   selector: 'ng-doc-playground-demo',
   templateUrl: './playground-demo.component.html',
@@ -46,40 +53,47 @@ export class NgDocPlaygroundDemoComponent<
   >
   implements OnChanges, OnDestroy
 {
-  @Input()
-  id: string = '';
+  /** The name of the playground in the page configuration. */
+  readonly id: InputSignal<string> = input<string>('');
 
-  @Input()
-  pipeName: string = '';
+  /** The name of the pipe, when the target is a pipe. */
+  readonly pipeName: InputSignal<string> = input<string>('');
 
-  @Input()
-  selector: string = '';
+  /** The selector of the target this demo renders. */
+  readonly selector: InputSignal<string> = input<string>('');
 
-  @Input()
-  configuration?: NgDocPlaygroundConfig;
+  /** The playground configuration, extended by the action's options. */
+  readonly configuration: InputSignal<NgDocPlaygroundConfig | undefined> = input<
+    NgDocPlaygroundConfig | undefined
+  >(undefined);
 
-  @Input()
-  properties?: T;
+  /** The inputs of the target. */
+  readonly properties: InputSignal<T | undefined> = input<T | undefined>(undefined);
 
-  @Input()
-  recreateDemo: boolean = false;
+  /** Whether the demo is created again each time a value changes. */
+  readonly recreateDemo: InputSignal<boolean> = input<boolean>(false);
 
-  @Input()
-  form!: FormGroup<NgDocPlaygroundForm>;
+  /** The values of the inputs and content slots. */
+  readonly form: InputSignal<FormGroup<NgDocPlaygroundForm> | undefined> = input<
+    FormGroup<NgDocPlaygroundForm> | undefined
+  >(undefined);
 
-  @Input()
-  expanded: boolean = false;
+  /** Whether the code of the demo is shown. */
+  readonly expanded: InputSignal<boolean> = input<boolean>(false);
 
-  @ViewChild('demoOutlet', { static: true, read: ViewContainerRef })
-  demoOutlet?: ViewContainerRef;
+  /** Where the playground class is created. */
+  readonly demoOutlet: Signal<ViewContainerRef | undefined> = viewChild('demoOutlet', {
+    read: ViewContainerRef,
+  });
 
+  /** The generated playground class of this demo's selector or pipe. */
   playgroundDemo?: typeof NgDocBasePlayground;
 
-  protected code = '';
+  protected readonly code = signal('');
 
   protected readonly injector = inject(Injector);
-  protected readonly changeDetectorRef = inject(ChangeDetectorRef);
   protected readonly destroyRef = inject(DestroyRef);
+  private readonly pendingTasks = inject(PendingTasks);
 
   private demoRef?: ComponentRef<NgDocBasePlayground>;
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
@@ -89,40 +103,46 @@ export class NgDocPlaygroundDemoComponent<
       this.unsubscribe$.next();
 
       const demoInjector: InjectionToken<Array<typeof NgDocBasePlayground>> | undefined =
-        getPlaygroundDemoToken(this.id);
+        getPlaygroundDemoToken(this.id());
 
       if (demoInjector) {
         const demos: Array<typeof NgDocBasePlayground> = this.injector.get(demoInjector, []);
 
         this.playgroundDemo = demos.find(
           (demo: typeof NgDocBasePlayground) =>
-            demo.selector === this.selector || demo.selector === this.pipeName,
+            demo.selector === this.selector() || demo.selector === this.pipeName(),
         );
       }
 
       await this.updateDemo();
 
-      this.form?.valueChanges
+      const form = this.form();
+
+      form?.valueChanges
         .pipe(
+          startWith(form.value),
           takeUntil(this.unsubscribe$),
-          startWith(this.form?.value),
           takeUntilDestroyed(this.destroyRef),
         )
-        .subscribe((data: NgDocFormPartialValue<typeof this.form>) => this.updateDemo(data));
+        .subscribe((data: NgDocFormPartialValue<FormGroup<NgDocPlaygroundForm>>) =>
+          this.updateDemo(data),
+        );
     }
   }
 
-  private async updateDemo(data?: NgDocFormPartialValue<typeof this.form>): Promise<void> {
-    if (this.recreateDemo || !this.demoRef) {
+  private async updateDemo(
+    data?: NgDocFormPartialValue<FormGroup<NgDocPlaygroundForm>>,
+  ): Promise<void> {
+    if (this.recreateDemo() || !this.demoRef) {
       this.createDemo();
     }
 
     if (data) {
       this.demoRef?.setInput('properties', data.properties ?? {});
       this.demoRef?.setInput('content', data.content ?? {});
-      this.demoRef?.setInput('actionData', this.configuration?.data ?? {});
+      this.demoRef?.setInput('actionData', this.configuration()?.data ?? {});
 
-      if (this.recreateDemo) {
+      if (this.recreateDemo()) {
         this.demoRef?.instance.onReattached.subscribe(() => {
           this.demoRef?.changeDetectorRef.detectChanges();
         });
@@ -135,7 +155,7 @@ export class NgDocPlaygroundDemoComponent<
   private createDemo(): void {
     if (this.playgroundDemo) {
       this.demoRef?.destroy();
-      this.demoRef = this.demoOutlet?.createComponent(
+      this.demoRef = this.demoOutlet()?.createComponent(
         this.playgroundDemo as unknown as Type<NgDocBasePlayground>,
       );
       this.demoRef?.changeDetectorRef.markForCheck();
@@ -143,30 +163,37 @@ export class NgDocPlaygroundDemoComponent<
   }
 
   private async updateCodeView(): Promise<void> {
-    const template: string = this.pipeName
+    const template: string = this.pipeName()
       ? buildPlaygroundDemoPipeTemplate(
-          this.configuration?.template ?? '',
-          this.pipeName,
+          this.configuration()?.template ?? '',
+          this.pipeName(),
           this.getActiveContent(),
           this.getPipeActiveInputs(),
         )
       : buildPlaygroundDemoTemplate(
-          this.configuration?.template ?? '',
-          this.selector,
+          this.configuration()?.template ?? '',
+          this.selector(),
           this.getActiveContent(),
           this.getActiveInputs(),
         );
 
-    this.code = await formatHtml(template);
-    this.changeDetectorRef.markForCheck();
+    // Formatting loads the formatter asynchronously. Zoneless SSR waits only for pending tasks, so
+    // the page would otherwise be serialized before the code view is filled.
+    const done = this.pendingTasks.add();
+
+    try {
+      this.code.set(await formatHtml(template));
+    } finally {
+      done();
+    }
   }
 
   private getActiveContent(): Record<string, string> {
     const formData: Record<string, boolean> =
-      (this.form?.controls.content.value as Record<string, boolean>) ?? {};
+      (this.form()?.controls.content.value as Record<string, boolean>) ?? {};
 
     return objectKeys(formData).reduce((result: Record<string, string>, key: string) => {
-      result[key] = formData[key] ? this.configuration?.content?.[key].template ?? '' : '';
+      result[key] = formData[key] ? this.configuration()?.content?.[key].template ?? '' : '';
 
       return result;
     }, {});
@@ -174,10 +201,10 @@ export class NgDocPlaygroundDemoComponent<
 
   private getActiveInputs(): Record<string, string> {
     const formData: Record<string, unknown> =
-      (this.form?.controls.properties.value as Record<string, unknown>) ?? {};
+      (this.form()?.controls.properties.value as Record<string, unknown>) ?? {};
 
     return objectKeys(formData).reduce((result: Record<string, string>, key: string) => {
-      const inputName = this.properties?.[key]?.inputName ?? key;
+      const inputName = this.properties()?.[key]?.inputName ?? key;
       const value: unknown = formData[key];
       const property: unknown | undefined = this.demoRef?.instance?.defaultValues[key];
 
@@ -191,7 +218,7 @@ export class NgDocPlaygroundDemoComponent<
 
   private getPipeActiveInputs(): Record<string, string> {
     const formData: Record<string, unknown> =
-      (this.form?.controls.properties.value as Record<string, unknown>) ?? {};
+      (this.form()?.controls.properties.value as Record<string, unknown>) ?? {};
     let changedInputIndex: number = -1;
 
     return objectKeys(formData)

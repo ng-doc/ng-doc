@@ -1,0 +1,10 @@
+$color: rgb(23, 101, 211);
+:host {
+  display: block;
+  margin: 12px;
+}
+button {
+  background-color: $color;
+  color: white;
+  padding: 8px;
+}

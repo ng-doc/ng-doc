@@ -17,7 +17,18 @@ export interface NgDocPage extends NgDocBaseEntity {
    */
   category?: NgDocCategory;
   /**
-   *  Render the page only for specific build configuration
+   * Build tags this page is rendered for. The page is part of a build only when the build has at
+   * least one of these tags; otherwise it has no route, navigation item, search entry or keyword,
+   * as if it did not exist. A page without `onlyForTags` is part of every build.
+   *
+   * With the new generator engine (the Vite plugin, the `vite-*` builders and the `ng-doc` CLI),
+   * the build tags are:
+   * - Vite plugin and `vite-*` builders: the Vite mode (`development` for the dev server,
+   *   `production` for a build, or the builders' `mode` option), or `generator.discovery.tags`;
+   * - `ng-doc` CLI: `production` for `generate`, `development` for `dev` and `watch`, or `--tags`.
+   *
+   * `null` or an empty string means no filter; an empty array hides the entry in every build.
+   * The legacy `application`/`dev-server` builders ignore this option.
    */
   onlyForTags?: string[];
   /**
@@ -44,8 +55,9 @@ export interface NgDocPage extends NgDocBaseEntity {
    */
   playgrounds?: Record<string, NgDocPlaygroundConfig>;
   /**
-   * By default, the child routes of a page are shown in a fullscreen dialog.
-   * Set disableFullscreenRoutes to false to handle them yourself with a <router-outlet />.
+   * By default, a child route of a page opens as a standalone page: only the routed component, on
+   * the canvas of demos, with a link back to the page, without the navbar, the sidebar or the page.
+   * Set disableFullscreenRoutes to true to handle them yourself with a <router-outlet />.
    * It can be used for example in a demo that requires to show nested routes.
    * Be careful however, only 1 router-outlet is allowed level, that can lead to collisions if
    * multiple demos on the same page require nested routes.

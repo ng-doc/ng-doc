@@ -1,65 +1,112 @@
+// One bordered surface: an optional header bar over the code. Line numbers are CSS counters, so
+// they are neither copied nor announced.
 :host {
   position: relative;
   display: block;
   margin: var(--ng-doc-code-margin);
+  border: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
+  border-radius: var(--ng-doc-code-border-radius, var(--ng-doc-radius-lg));
+  background: var(--ng-doc-code-background);
+  overflow: hidden;
+  min-width: 0;
 
-  &:hover {
+  // The block draws its own border, so the code inside has no shadow.
+  --ng-doc-code-shadow: none;
+
+  &:hover,
+  &:focus-within {
     .ng-doc-copy-button {
       opacity: 1;
     }
   }
 
-  &[data-ng-doc-has-header='true'] {
-    --ng-doc-code-border-radius: 0 0 var(--ng-doc-base-gutter) var(--ng-doc-base-gutter);
-    --ng-doc-code-shadow: none;
+  .ng-doc-code-header {
+    display: flex;
+    align-items: center;
+    gap: var(--ng-doc-space-2);
+    height: var(--ng-doc-code-header-height);
+    padding: 0 var(--ng-doc-space-1) 0 var(--ng-doc-space-4);
+    border-bottom: 1px solid var(--ng-doc-border-color);
+    background: var(--ng-doc-code-header-background, transparent);
+    font-family: var(--ng-doc-font-family);
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--ng-doc-text-muted);
+  }
+
+  .ng-doc-code-file-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    font-weight: 500;
+    color: var(--ng-doc-code-header-color, var(--ng-doc-heading-color));
+  }
+
+  .ng-doc-code-file-name-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  // The language chip: the neutral compact word chip.
+  .ng-doc-code-language {
+    display: inline-flex;
+    align-items: center;
+    flex: none;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: var(--ng-doc-radius-sm);
+    font-size: 10.5px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    color: color-mix(
+      in oklab,
+      var(--ng-doc-hue-neutral) var(--ng-doc-mix-strong),
+      var(--ng-doc-heading-color)
+    );
+    background: color-mix(
+      in oklab,
+      var(--ng-doc-hue-neutral) var(--ng-doc-mix-chip),
+      var(--ng-doc-background)
+    );
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ng-doc-hue-neutral) 24%, transparent);
+  }
+
+  .ng-doc-code-header-spacer {
+    flex: 1;
+  }
+
+  .ng-doc-code-range {
+    font-size: 12px;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ng-doc-code-header-copy,
+  .ng-doc-copy-button {
+    --ng-doc-icon-color: var(--ng-doc-text-muted);
+  }
+
+  .ng-doc-copy-button {
+    position: absolute;
+    top: var(--ng-doc-space-2);
+    right: var(--ng-doc-space-2);
+    transition: var(--ng-doc-transition);
+    opacity: 0;
   }
 
   .ng-doc-code-wrapper {
     --ng-doc-code-margin: 0;
     --ng-doc-code-border: none;
-  }
 
-  .ng-doc-code-header {
-    display: flex;
-    align-items: center;
-    padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 2);
-    background: var(--ng-doc-code-header-background, var(--ng-doc-base-2));
-    border-radius: var(--ng-doc-base-gutter) var(--ng-doc-base-gutter) 0 0;
-    border-top: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
-    border-left: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
-    border-right: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
-
-    .ng-doc-code-file-name {
-      --ng-doc-text: var(--ng-doc-code-header-color);
-      --ng-doc-font-weight: 600;
-      --ng-doc-font-size: 13px;
-
-      ng-doc-icon {
-        margin-right: calc(var(--ng-doc-base-gutter) / 2);
-      }
-    }
-  }
-
-  .ng-doc-copy-button {
-    position: absolute;
-    top: var(--ng-doc-base-gutter);
-    right: var(--ng-doc-base-gutter);
-    transition: var(--ng-doc-transition);
-    opacity: 0;
-
-    --ng-doc-icon-color: var(--ng-doc-text-muted);
-  }
-
-  .ng-doc-code-wrapper {
     height: 100%;
   }
 
   .ng-doc-code-body {
     position: relative;
     height: 100%;
-    border-radius: var(--ng-doc-code-border-radius, var(--ng-doc-base-gutter));
-    border: var(--ng-doc-code-border, 1px solid var(--ng-doc-border-color));
-    overflow: hidden;
 
     ::ng-deep {
       pre {
@@ -69,7 +116,7 @@
 
         code {
           display: block;
-          padding: calc(var(--ng-doc-base-gutter) * 2) 0;
+          padding: var(--ng-doc-space-4) 0;
           width: 100%;
           font-family: var(--ng-doc-code-font);
           font-size: var(--ng-doc-code-font-size);
@@ -77,43 +124,73 @@
           max-height: var(--ng-doc-code-max-height);
           overflow: auto;
           height: 100%;
+          counter-reset: ng-doc-code-line;
 
           &.code-lines {
             display: grid;
-            padding: calc(var(--ng-doc-base-gutter) * 2) 0;
           }
 
           .line {
             display: inline-block;
             width: 100%;
-            padding: 0 calc(var(--ng-doc-base-gutter) * 2);
+            min-width: max-content;
+            padding: 0 var(--ng-doc-space-5) 0 0;
+
+            &::before {
+              counter-increment: ng-doc-code-line;
+              content: counter(ng-doc-code-line);
+              content: counter(ng-doc-code-line) / '';
+              display: var(--ng-doc-code-line-numbers);
+              width: 3ch;
+              margin: 0 var(--ng-doc-space-4) 0 var(--ng-doc-space-3);
+              text-align: right;
+              color: var(--ng-doc-code-line-number-color);
+              user-select: none;
+              -webkit-user-select: none;
+            }
 
             &.highlighted {
-              position: relative;
               background: color-mix(
                 in srgb,
-                var(--ng-doc-code-highlight-color),
-                transparent 90%
+                var(--ng-doc-code-highlight-color) 10%,
+                transparent
               ) !important;
+              box-shadow: inset 2px 0 0 var(--ng-doc-code-highlight-color);
 
               span {
                 background: transparent !important;
               }
 
-              &:after {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 3px;
-                height: 100%;
-                background: var(--ng-doc-code-highlight-color);
-                opacity: 0.8;
+              &::before {
+                color: var(--ng-doc-primary-strong);
+                font-weight: 600;
               }
+            }
+          }
+
+          // Without line numbers the code keeps its left padding.
+          @container style(--ng-doc-code-line-numbers: none) {
+            .line {
+              padding-left: var(--ng-doc-space-5);
             }
           }
         }
       }
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  :host .ng-doc-code-range {
+    display: none;
+  }
+
+  :host .ng-doc-code-body ::ng-deep pre code {
+    font-size: 13px;
+
+    .line::before {
+      width: 2ch;
+      margin: 0 var(--ng-doc-space-3) 0 var(--ng-doc-space-2);
     }
   }
 }

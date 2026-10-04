@@ -1,7 +1,7 @@
-@import '../../styles/mixins';
+@use '../../styles/mixins';
 
 :host {
-  @include ng-doc-font();
+  @include mixins.ng-doc-font();
   position: relative;
   display: inline-flex;
   align-items: center;

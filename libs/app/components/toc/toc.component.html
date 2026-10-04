@@ -1,17 +1,93 @@
-<div class="ng-doc-toc-wrapper">
-  <div class="ng-doc-toc-container">
-    <div class="ng-doc-toc-selection" #selection></div>
-    <ul class="ng-doc-toc">
-      @for (item of tableOfContent; track item) {
+@if (details()) {
+  <section class="ng-doc-toc-section ng-doc-toc-details" aria-label="Symbol">
+    <div class="ng-doc-toc-head">
+      <span class="ng-doc-toc-label">Symbol</span>
+    </div>
+    <div #details></div>
+  </section>
+}
+@if (tableOfContent().length) {
+  <nav class="ng-doc-toc-section" aria-label="On this page">
+    <div class="ng-doc-toc-head">
+      <span class="ng-doc-toc-label">On this page</span>
+      <span class="ng-doc-toc-percent" aria-hidden="true">{{ progress() }}%</span>
+    </div>
+    <div
+      class="ng-doc-toc-progress"
+      role="progressbar"
+      aria-label="Reading progress"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      [attr.aria-valuenow]="progress()">
+      <span [style.width.%]="progress()"></span>
+    </div>
+    <ul class="ng-doc-toc" #list>
+      <li class="ng-doc-toc-marker" aria-hidden="true" #marker></li>
+      @for (item of tableOfContent(); track item; let index = $index) {
         <li
           ng-doc-toc-element
           [path]="item.path"
           [hash]="item.hash"
           [level]="item.level"
-          [selected]="item === activeItem()">
+          [selected]="index === activeIndex()"
+          (click)="pin(index)">
           {{ item.title }}
         </li>
       }
     </ul>
-  </div>
+  </nav>
+}
+<div class="ng-doc-toc-section ng-doc-toc-actions">
+  <button type="button" class="ng-doc-toc-action" (click)="scrollToTop()">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true">
+      <path d="M12 19V5m-6 6 6-6 6 6" />
+    </svg>
+    Back to top
+  </button>
+  <button
+    type="button"
+    class="ng-doc-toc-action"
+    [attr.data-ng-doc-copied]="copied()"
+    (click)="copyLink()">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true">
+      <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7" />
+      <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7" />
+    </svg>
+    <span aria-live="polite">{{ copied() ? 'Copied' : 'Copy link' }}</span>
+  </button>
+  @if (editSourceFileUrl(); as url) {
+    <a class="ng-doc-toc-action" [href]="url" target="_blank" rel="noopener">
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true">
+        <path d="M12 20h9M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4Z" />
+      </svg>
+      Edit this page
+    </a>
+  }
 </div>

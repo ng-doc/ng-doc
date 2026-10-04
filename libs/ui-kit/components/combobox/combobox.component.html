@@ -1,18 +1,24 @@
 <ng-doc-combobox-host>
   <ng-doc-input-wrapper
     ngDocFocusCatcher
-    [blurContent]="hasValue ? valueContent : ''"
+    [blurContent]="hasValue ? valueContent() : ''"
     [blurContext]="model()">
-    <input ngDocInputString [readonly]="readonly" [placeholder]="placeholder" />
+    <input ngDocInputString [readonly]="readonly()" [placeholder]="placeholder()" />
     <ng-container ngDocInputWrapperRight>
-      <ng-container *polymorpheusOutlet="rightContent"></ng-container>
-      @if (clearButton) {
+      <ng-container *polymorpheusOutlet="rightContent()"></ng-container>
+      @if (clearButton()) {
         <ng-doc-clear-control></ng-doc-clear-control>
+      }
+      @if (readonly()) {
+        <ng-doc-icon
+          class="ng-doc-combobox-chevron"
+          icon="chevron-right"
+          aria-hidden="true"></ng-doc-icon>
       }
     </ng-container>
     <ng-doc-dropdown [content]="dropdownContent" [closeIfInnerClick]="true">
       <ng-template #dropdownContent>
-        <ng-container *ngTemplateOutlet="data"></ng-container>
+        <ng-container *ngTemplateOutlet="data() ?? null"></ng-container>
       </ng-template>
     </ng-doc-dropdown>
   </ng-doc-input-wrapper>

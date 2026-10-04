@@ -2,9 +2,10 @@ import {
   ChangeDetectorRef,
   Directive,
   inject,
-  Input,
+  input,
+  InputSignal,
   OnInit,
-  Type,
+  Signal,
   ViewContainerRef,
 } from '@angular/core';
 import { extractFunctionDefaults } from '@ng-doc/core/helpers/extract-function-defaults';
@@ -15,74 +16,92 @@ import { Observable, Subject, take } from 'rxjs';
 import { NgDocPlaygroundComponent } from './playground.component';
 
 /**
- * Base class for playgrounds components.
+ * Base class of the playground classes the builder generates, one per playground and selector.
+ * A generated class renders the playground template with the target's inputs bound to
+ * `properties()`, and queries the target with `viewChild()`.
  */
 @Directive()
 export abstract class NgDocBasePlayground implements Pick<NgDocPlaygroundConfig, 'data'>, OnInit {
   static readonly selector: string = 'unknown';
-  abstract readonly playground?: Type<any>;
-  abstract readonly viewContainerRef?: ViewContainerRef;
+
+  /** The class the playground shows: a component, a directive or a pipe. */
+  abstract readonly target: Constructor<unknown>;
+
+  /** The instance of the target in the playground template; a pipe has none. */
+  abstract readonly playground: Signal<unknown>;
+
+  /** The view container of the target in the playground template; a pipe has none. */
+  abstract readonly viewContainerRef: Signal<ViewContainerRef | undefined>;
+
+  /** The `data` of the playground configuration. */
   abstract readonly configData: Record<string, unknown>;
 
-  @Input()
-  properties: Record<string, any> = {};
+  /** Values of the target's inputs, by property name. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  readonly properties: InputSignal<Record<string, any>> = input<Record<string, any>>({});
 
-  @Input()
-  actionData: Record<string, unknown> = {};
+  /** The `data` given to the playground action; it extends the configuration's `data`. */
+  readonly actionData: InputSignal<Record<string, unknown>> = input<Record<string, unknown>>({});
 
-  @Input()
-  content: any = {};
+  /** Whether each content slot is shown, by slot name. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  readonly content: InputSignal<Record<string, any>> = input<Record<string, any>>({});
 
+  /** The default values of the target's inputs, read before the template binds them. */
   defaultValues: Record<string, unknown> = {};
 
-  private reattached: Subject<void> = new Subject<void>();
+  private readonly reattached: Subject<void> = new Subject<void>();
+  private readonly playgroundContainer: NgDocPlaygroundComponent = inject(NgDocPlaygroundComponent);
+  protected readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
-  private playgroundContainer: NgDocPlaygroundComponent = inject(NgDocPlaygroundComponent);
-  protected changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
-
-  protected constructor(private playgroundInstance?: Constructor<unknown>) {
+  constructor() {
+    // The view is not checked until the default values of the target are read, so the
+    // template's bindings cannot overwrite them first.
     this.changeDetectorRef.detach();
   }
 
+  /** Emits once, after the view is attached again and checks the template's bindings. */
   get onReattached(): Observable<void> {
     return this.reattached.pipe(take(1));
   }
 
+  /** The playground `data`: the configuration's data extended by the action's data. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  get data(): any {
+    return Object.assign({}, this.configData, this.actionData());
+  }
+
   ngOnInit(): void {
-    /*
-     * Extract default values from playground properties. We do this in `ngOnInit` because in this case
-     * input values provided from the template are not initialized yet, and we can read default values instead.
-     */
-    if (this.playground) {
-      this.defaultValues = Object.keys(this.playground).reduce(
+    // The target is created with the view, but the view has not been checked yet, so its inputs
+    // still hold their defaults. Signal inputs are read by calling them.
+    const playground = this.playground() as Record<string, unknown> | undefined;
+
+    if (playground) {
+      this.defaultValues = Object.keys(playground).reduce(
         (values: Record<string, unknown>, key: string) => {
-          if (this.playground) {
-            try {
-              values[key] =
-                // @ts-expect-error we do not know the type of the playground
-                typeof this.playground[key] === 'function'
-                  ? // @ts-expect-error we do not know the type of the playground
-                    this.playground[key]()
-                  : // @ts-expect-error we do not know the type of the playground
-                    this.playground[key];
-            } catch (e) {
-              // we do catch here because some of the playground properties can be getters and throw an error
-            }
+          try {
+            const value: unknown = playground[key];
+
+            values[key] = typeof value === 'function' ? value.call(playground) : value;
+          } catch {
+            // Some properties are getters or functions that throw without their context.
           }
 
           return values;
         },
         {},
       );
-    } else if (this.playgroundInstance) {
-      const defaults = extractFunctionDefaults(this.playgroundInstance.prototype.transform);
+    } else if (this.target) {
+      // A pipe: the defaults of its `transform` parameters after the value itself.
+      const defaults = extractFunctionDefaults(
+        (this.target.prototype as { transform: (...args: unknown[]) => unknown }).transform,
+      );
 
-      this.defaultValues = Object.keys(this.playgroundContainer.properties ?? {}).reduce(
-        (def: Record<string, unknown>, key: string, i: number) => {
-          // we do +1 because the first argument is the `value` of the transform function
-          def[key] = defaults[i + 1];
+      this.defaultValues = Object.keys(this.playgroundContainer.properties() ?? {}).reduce(
+        (values: Record<string, unknown>, key: string, i: number) => {
+          values[key] = defaults[i + 1];
 
-          return def;
+          return values;
         },
         {},
       );
@@ -90,21 +109,16 @@ export abstract class NgDocBasePlayground implements Pick<NgDocPlaygroundConfig,
       throw new Error('Playground is not defined or initialized');
     }
 
-    if (!this.playgroundContainer.defaultValues) {
-      this.playgroundContainer.defaultValues = this.defaultValues;
+    if (!this.playgroundContainer.defaultValues()) {
+      this.playgroundContainer.defaultValues.set(this.defaultValues);
     }
 
-    /*
-             This is a hack just to wait for the playground container to be initialized and only then
-             attach the change detector to have correct inputs values.
-         */
+    // The demo sets the playground's inputs right after it creates this view; the view is
+    // attached again once they are set, so its first check renders the playground's values.
     Promise.resolve().then(() => {
       this.changeDetectorRef.reattach();
+      this.changeDetectorRef.markForCheck();
       this.reattached.next();
     });
-  }
-
-  get data(): any {
-    return Object.assign({}, this.configData, this.actionData);
   }
 }

@@ -1,8 +1,0 @@
-<canvas #canvas></canvas>
-@if (showControls) {
-  @for (comp of globalCompositionOperation; track comp) {
-    <button (click)="setCompositionOperation(comp)">
-      {{ comp }}
-    </button>
-  }
-}

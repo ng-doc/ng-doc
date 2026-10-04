@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { notificationCloseAnimation, notificationOpenAnimation } from '@ng-doc/ui-kit/animations';
 import { NgDocOverlayRef } from '@ng-doc/ui-kit/classes';
@@ -8,9 +8,11 @@ import { NgDocContent } from '@ng-doc/ui-kit/types';
 import { Subject, timer } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root',
-})
+/**
+ * Shows short notifications at the bottom of the viewport. A new notification replaces the
+ * current one, and each closes after two seconds.
+ */
+@Service()
 export class NgDocNotifyService {
   private readonly overlayService = inject(NgDocOverlayService);
 
@@ -28,6 +30,10 @@ export class NgDocNotifyService {
       .subscribe(() => this.overlayRef?.close());
   }
 
+  /**
+   * Shows a notification.
+   * @param content - Content of the notification.
+   */
   notify(content: NgDocContent): void {
     this.notify$.next(content);
   }

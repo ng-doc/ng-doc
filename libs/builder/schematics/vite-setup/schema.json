@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "NgDocViteSetup",
+  "title": "Set up the NgDoc Vite engine for a new project",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "The project to set up. Its build target must use Angular's application builder."
+    },
+    "skipInstall": {
+      "type": "boolean",
+      "default": false,
+      "description": "Do not install the added dependencies."
+    }
+  },
+  "required": ["project"],
+  "additionalProperties": false
+}

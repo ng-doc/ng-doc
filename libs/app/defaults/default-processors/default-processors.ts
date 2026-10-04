@@ -8,6 +8,7 @@ import {
   iconProcessor,
   imageProcessor,
   linkProcessor,
+  membersProcessor,
   mermaidProcessor,
   playgroundProcessor,
   tabsProcessor,
@@ -31,4 +32,5 @@ export const NG_DOC_DEFAULT_PAGE_PROCESSORS: NgDocPageProcessor[] = [
   playgroundProcessor,
   tabsProcessor,
   imageProcessor,
+  membersProcessor,
 ];

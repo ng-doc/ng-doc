@@ -1,0 +1,70 @@
+import angular, { type PluginOptions } from '@analogjs/vite-plugin-angular';
+import type { Plugin } from 'vite';
+
+import { ANGULAR_COMPATIBILITY_FORMAT, qualifyAngularPlugins } from '../angular-compatibility';
+import { createTsconfigPathsPlugin } from '../tsconfig-paths';
+
+// Only the verified package build defines this constant while bundling patched upstream sources.
+// Running this source file directly must never label an unpatched upstream factory as compatible.
+declare const __NG_DOC_ANALOG_COMPATIBILITY__: string;
+
+export type NgDocAngularPluginOptions = Omit<
+  PluginOptions,
+  'liveReload' | 'jit' | 'disableTypeChecking' | 'fastCompile' | 'experimental'
+> & {
+  liveReload?: true;
+  jit?: false;
+  disableTypeChecking?: false;
+  fastCompile?: false;
+  experimental?: never;
+};
+
+/**
+ * Complete pinned Analog plugin array, with the resource corrections required by NgDoc, followed by
+ * the resolution of the tsconfig's `compilerOptions.paths` (as the Angular CLI resolves them).
+ */
+export function createNgDocAngularPlugins(options: NgDocAngularPluginOptions = {}): Plugin[] {
+  if (
+    typeof __NG_DOC_ANALOG_COMPATIBILITY__ === 'undefined' ||
+    __NG_DOC_ANALOG_COMPATIBILITY__ !== ANGULAR_COMPATIBILITY_FORMAT
+  ) {
+    throw new Error('[NGDOC_VITE_ANGULAR_BUILD] Use the verified built NgDoc Angular entry.');
+  }
+  if (process.env['NODE_ENV'] === 'test' || process.env['VITEST']) {
+    throw new Error(
+      '[NGDOC_VITE_ANGULAR_MODE] The NgDoc documentation host requires non-test AOT mode.',
+    );
+  }
+  if (
+    !options ||
+    typeof options !== 'object' ||
+    Array.isArray(options) ||
+    (options.liveReload !== undefined && options.liveReload !== true) ||
+    (options.jit !== undefined && options.jit !== false) ||
+    (options.disableTypeChecking !== undefined && options.disableTypeChecking !== false) ||
+    (options.fastCompile !== undefined && options.fastCompile !== false) ||
+    options.experimental !== undefined
+  ) {
+    throw new Error(
+      '[NGDOC_VITE_ANGULAR_OPTIONS] NgDoc requires liveReload:true, jit:false, ' +
+        'disableTypeChecking:false, fastCompile:false and the default Angular compilation path.',
+    );
+  }
+  const plugins = angular({
+    ...options,
+    liveReload: true,
+    jit: false,
+    disableTypeChecking: false,
+    fastCompile: false,
+  });
+  // The compiler's own resolution of its tsconfig, read after its `config` hook has run.
+  const compiler = plugins.find((plugin) => plugin.name === '@analogjs/vite-plugin-angular');
+  const compilerTsconfig = (): string | undefined => {
+    const resolve: unknown = compiler?.api?.getTsConfigPath;
+    return typeof resolve === 'function' ? (resolve as () => string)() : undefined;
+  };
+  return qualifyAngularPlugins([
+    ...plugins,
+    createTsconfigPathsPlugin(options.tsconfig, compilerTsconfig),
+  ]);
+}

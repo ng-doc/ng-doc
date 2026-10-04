@@ -1,4 +1,4 @@
-import { from, merge, Observable, ObservableInputTuple, of, switchMap } from 'rxjs';
+import { defer, from, merge, Observable, ObservableInputTuple, of, switchMap } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import {
@@ -51,42 +51,48 @@ export function mergeFactory<TCacheData, A extends ReadonlyArray<BuilderState<un
   cacheStrategy?: CacheStrategy<TCacheData, T>,
   mapper?: (source: [...BuilderStateTuple<A>][number]) => M,
 ): Observable<A[number] | BuilderState<T | M>> {
-  const id = builderId++;
-  const buffer: Array<BuilderState<unknown>> = new Array(sources.length);
+  return defer(() => {
+    const id = builderId++;
+    const buffer: Array<BuilderState<unknown> | undefined> = new Array(sources.length).fill(
+      undefined,
+    );
 
-  return merge(
-    ...sources.map((source, i) => from(source).pipe(map((value) => [i, value] as const))),
-  ).pipe(
-    switchMap(([i, value]) => {
-      buffer[i] = value;
-      const valueMapper = () => {
-        if (!mapper || !isBuilderDone(value)) {
-          return value;
+    return merge(
+      ...sources.map((source, i) => from(source).pipe(map((value) => [i, value] as const))),
+    ).pipe(
+      switchMap(([i, value]) => {
+        buffer[i] = value;
+        const valueMapper = () => {
+          if (!mapper || !isBuilderDone(value)) {
+            return value;
+          }
+
+          return new BuilderDone(
+            value.tag,
+            mapper(value.result as [...BuilderStateTuple<A>][number]),
+            value.fromCache,
+          );
+        };
+        const mappedValue = valueMapper();
+
+        if (
+          buffer.every((state): state is BuilderDone<unknown> => !!state && isBuilderDone(state))
+        ) {
+          const results = buffer.map(({ result }) => result) as [...BuilderStateTuple<A>];
+          const buildFn = from(project(...results)).pipe(
+            builderState(tag),
+            handleCacheStrategy<T, TCacheData>(
+              `mergeFactory${id}`,
+              cacheStrategy,
+              buffer.every(({ fromCache }) => fromCache),
+            ),
+          );
+
+          return merge(of(mappedValue), buildFn);
         }
 
-        return new BuilderDone(
-          value.tag,
-          mapper(value.result as [...BuilderStateTuple<A>][number]),
-          value.fromCache,
-        );
-      };
-      const mappedValue = valueMapper();
-
-      if (buffer.every(isBuilderDone)) {
-        const results = buffer.map(({ result }) => result) as [...BuilderStateTuple<A>];
-        const buildFn = from(project(...results)).pipe(
-          builderState(tag),
-          handleCacheStrategy<T, TCacheData>(
-            `mergeFactory${id}`,
-            cacheStrategy,
-            buffer.every(({ fromCache }) => fromCache),
-          ),
-        );
-
-        return merge(of(mappedValue), buildFn);
-      }
-
-      return of(mappedValue);
-    }),
-  );
+        return of(mappedValue);
+      }),
+    );
+  });
 }

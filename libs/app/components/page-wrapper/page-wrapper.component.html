@@ -1,11 +1,13 @@
 <article class="ngde">
   <ng-container #pageBreadcrumbs></ng-container>
 
-  <ng-doc-page-header [headerContent]="headerContent" />
+  <ng-doc-page-header
+    [headerContent]="headerContent()"
+    [headerContentSource]="headerContentSource()" />
 
-  @if (routes.length > 1) {
+  @if (routes().length > 1) {
     <ng-doc-tab-routes-group>
-      @for (route of routes; track route) {
+      @for (route of routes(); track route) {
         <a
           ng-doc-tab-route
           [routerLink]="['./' + route.path]"

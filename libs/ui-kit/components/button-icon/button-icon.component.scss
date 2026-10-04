@@ -20,8 +20,19 @@
   }
 
   &[data-ng-doc-size='large'] {
-    width: calc(var(--ng-doc-base-gutter) * 5);
-    height: calc(var(--ng-doc-base-gutter) * 5);
+    width: calc(var(--ng-doc-base-gutter) * 4.5);
+    height: calc(var(--ng-doc-base-gutter) * 4.5);
+
+    // Touch screens get a 44px hit area around the 36px button; nothing changes visually.
+    @media (pointer: coarse) {
+      overflow: visible;
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset: -4px;
+      }
+    }
   }
 
   &:hover {
@@ -36,6 +47,12 @@
     color: var(--ng-doc-button-active-color);
     border: var(--ng-doc-button-active-border);
     --ng-doc-icon-color: var(--ng-doc-button-active-color);
+  }
+
+  // Keyboard focus only: a mouse click leaves no ring.
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--ng-doc-focus-ring);
   }
 
   &[data-ng-doc-rounded='false'] {

@@ -1,8 +1,9 @@
 import { vol } from 'memfs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createCacheForFile } from '../create-cache-for-file';
 
-jest.mock('fs');
+vi.mock('fs');
 
 describe('createCacheForFile', () => {
   beforeEach(() => {

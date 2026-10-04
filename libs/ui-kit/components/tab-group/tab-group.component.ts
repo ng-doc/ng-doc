@@ -1,87 +1,116 @@
 import {
-  AfterContentInit,
-  AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  ContentChildren,
-  DestroyRef,
+  computed,
+  contentChildren,
   ElementRef,
-  inject,
-  Input,
-  QueryList,
-  ViewChildren,
+  input,
+  linkedSignal,
+  Signal,
+  untracked,
+  viewChildren,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   NgDocSelectionComponent,
   NgDocSelectionHostDirective,
   NgDocSelectionOriginDirective,
 } from '@ng-doc/ui-kit/components/selection';
 import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
-import { startWith } from 'rxjs/operators';
 
 import { NgDocTabComponent } from './tab/tab.component';
 
+let nextId = 0;
+
+/**
+ * Tabs as a segmented control over one panel. It follows the WAI-ARIA tabs pattern: the arrow keys,
+ * Home and End move between the tabs and select them. The highlight of the open tab slides to
+ * the newly opened one.
+ */
 @Component({
   selector: 'ng-doc-tab-group',
   templateUrl: './tab-group.component.html',
   styleUrls: ['./tab-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgDocSelectionHostDirective,
-    NgDocSelectionComponent,
-    NgDocSelectionOriginDirective,
     PolymorpheusOutlet,
+    NgDocSelectionComponent,
+    NgDocSelectionHostDirective,
+    NgDocSelectionOriginDirective,
   ],
 })
-export class NgDocTabGroupComponent<T = number> implements AfterContentInit, AfterViewInit {
-  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+export class NgDocTabGroupComponent<T = number> {
+  /** Id of the tab to open; the first tab opens when it is not set or matches no tab. */
+  readonly openedTab = input<T | undefined>(undefined);
 
-  @Input()
-  openedTab!: T;
+  /** The tabs of the group. */
+  readonly tabs: Signal<ReadonlyArray<NgDocTabComponent<T>>> =
+    contentChildren<NgDocTabComponent<T>>(NgDocTabComponent);
 
-  @ViewChildren('headerTab')
-  tabElements: QueryList<ElementRef> = new QueryList<ElementRef>();
+  /** Header buttons of the tabs, in order. */
+  readonly tabElements: Signal<ReadonlyArray<ElementRef<HTMLElement>>> =
+    viewChildren<ElementRef<HTMLElement>>('headerTab');
 
-  @ContentChildren(NgDocTabComponent)
-  tabs: QueryList<NgDocTabComponent<T>> = new QueryList<NgDocTabComponent<T>>();
+  /**
+   * The open tab. It follows `openedTab` and the tab list; a tab the user selects stays open as
+   * long as it is in the group and `openedTab` does not change.
+   */
+  readonly selectedTab = linkedSignal<
+    { tabs: ReadonlyArray<NgDocTabComponent<T>>; opened: T | undefined },
+    NgDocTabComponent<T> | undefined
+  >({
+    source: () => ({ tabs: this.tabs(), opened: this.openedTab() }),
+    computation: ({ tabs, opened }, previous) => {
+      const kept: NgDocTabComponent<T> | undefined =
+        previous?.value && previous.source.opened === opened && tabs.includes(previous.value)
+          ? previous.value
+          : undefined;
 
-  selectedTab?: NgDocTabComponent<T>;
+      return (
+        kept ??
+        (opened !== undefined && opened !== null
+          ? tabs.find((tab: NgDocTabComponent<T>) => tab.id() === opened)
+          : undefined) ??
+        tabs[0]
+      );
+    },
+  });
 
-  private readonly destroyRef = inject(DestroyRef);
+  /** Index of the open tab, or -1. */
+  readonly selectedIndex: Signal<number> = computed(() => {
+    const selected: NgDocTabComponent<T> | undefined = this.selectedTab();
 
-  constructor() {}
+    return selected ? this.tabs().indexOf(selected) : -1;
+  });
 
-  ngAfterContentInit(): void {
-    this.tabs.changes
-      .pipe(startWith(this.tabs), takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        const tabToOpen: NgDocTabComponent<T> | undefined = this.openedTab
-          ? this.tabs.find((tab: NgDocTabComponent<T>) => tab.id === this.openedTab)
-          : this.tabs.get(0);
+  /** Prefix of the ids that tie the tabs to the panel. */
+  protected readonly idPrefix: string = `ng-doc-tab-group-${nextId++}`;
 
-        tabToOpen && this.selectTab(tabToOpen);
-
-        this.changeDetectorRef.markForCheck();
-      });
+  /**
+   * Opens a tab.
+   * @param tab - The tab to open.
+   */
+  selectTab(tab: NgDocTabComponent<T>): void {
+    untracked(() => this.selectedTab.set(tab));
   }
 
-  ngAfterViewInit(): void {
-    this.tabElements.changes
-      .pipe(startWith(this.tabElements), takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.changeDetectorRef.detectChanges());
-  }
+  /**
+   * Moves the selection with the keyboard and focuses the new tab.
+   * @param event - The key press on a tab.
+   */
+  protected onKeydown(event: KeyboardEvent): void {
+    const tabs: ReadonlyArray<NgDocTabComponent<T>> = this.tabs();
+    const current: number = Math.max(this.selectedIndex(), 0);
+    const next: number | undefined = {
+      ArrowRight: (current + 1) % tabs.length,
+      ArrowLeft: (current - 1 + tabs.length) % tabs.length,
+      Home: 0,
+      End: tabs.length - 1,
+    }[event.key];
 
-  get selectedIndex(): number {
-    return this.selectedTab ? this.tabs.toArray().indexOf(this.selectedTab) : -1;
-  }
-
-  get selectedHeaderTab(): ElementRef | null {
-    return this.selectedTab ? this.tabElements.get(this.selectedIndex) ?? null : null;
-  }
-
-  selectTab(tab: NgDocTabComponent<T>) {
-    this.selectedTab = tab;
+    if (next !== undefined && tabs[next]) {
+      event.preventDefault();
+      this.selectTab(tabs[next]);
+      this.tabElements()[next]?.nativeElement.focus();
+    }
   }
 }

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ClassDeclaration, Decorator, Node, ObjectLiteralElementLike } from 'ts-morph';
 
 import { stringExpression } from '../string-expression';
-import { getPropertyAssignment } from '../typescript';
+import { getPropertyAssignment } from '../typescript/property/get-property-assignment';
 
 /**
  *    Resolves the component decorator and return its properties.

@@ -38,6 +38,9 @@ export function provideNgDocContext(): Provider[] {
           {%- endif %}
           {%- endfor %}
       ],
+      {%- if apiLists is defined %}
+      apiLists: {{ apiLists | dump }},
+      {%- endif %}
     },
   }, {
     provide: NG_DOC_ROUTE_PREFIX,

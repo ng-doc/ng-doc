@@ -1,8 +1,9 @@
 import { vol } from 'memfs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { processSnippets } from '../process-snippets';
 
-jest.mock('fs');
+vi.mock('fs');
 
 describe('processSnippets', () => {
   beforeEach(() => {

@@ -20,6 +20,10 @@ jobs:
   release:
     runs-on: ubuntu-latest
     needs: [lint, test]
+    # id-token: npm trusted publishing (OIDC). Git and GitHub steps use the SEMANTIC_RELEASE token.
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -35,9 +39,17 @@ jobs:
       - name: Build Libraries
         run: npx nx run-many --projects=tag:type:lib --target=build --configuration=ci --parallel
 
-      - name: Build Applications
-        run: npx nx run-many --projects=tag:type:app --target=build --configuration=ci --parallel
+      # ng-doc.com is built with the Vite engine (the site's `build` target), from the libraries
+      # built above. It skips the Nx cache, so every release builds the site from scratch.
+      - name: Build Documentation
+        run: |
+          npx nx run ng-doc:link-libs --excludeTaskDependencies
+          npx nx run ng-doc:build --excludeTaskDependencies --skipNxCache
 
+      - name: Build Applications
+        run: npx nx run-many --projects='tag:type:app,!ng-doc' --target=build --configuration=ci --parallel
+
+      # deploy.yml syncs dist/apps/ng-doc/browser from the tar.
       - name: Tar Artifacts
         run: tar -cvf ng-doc.tar dist/apps/ng-doc/browser
 
@@ -50,5 +62,7 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE }}
+          # Fallback only: packages publish through trusted publishing. Remove with the secret once a
+          # release shows provenance.
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release

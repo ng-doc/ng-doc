@@ -1,0 +1,12 @@
+{#-
+    Decorator chips with the per-decorator colour hook: `data-ng-doc-decorator` names the
+    decorator, so a site colours `@Component`, `@Injectable` or `@Input` chips from their
+    `--ng-doc-*-decorator-background` variables.
+-#}
+{% macro chip(name) -%}
+    <code data-ng-doc-decorator="{{ name | escape }}">{{ '@' + name | escape }}</code>
+{%- endmacro %}
+
+{% macro render(decorators) -%}
+    <span class="ng-doc-decorators-group">{% for decorator in decorators %}{{ chip(decorator.getName()) }}{% endfor %}</span>
+{%- endmacro %}

@@ -1,21 +1,8 @@
 ## Inputs
 
-You can also add input fields to your demo component and then pass their values during rendering of
-the demo. This will give you greater reusability.
+Give the demo component inputs, and set them where you render the demo with the `inputs` option.
+One component can then show several variants.
 
-```typescript name="button-demo.component.ts"
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { NgDocButtonComponent, NgDocColor } from '@ng-doc/ui-kit';
+```typescript name="button-inline-demo.component.ts" file="../examples/button-inline-demo/button-inline-demo.component.ts"
 
-@Component({
-  selector: 'ng-doc-button-inline-demo',
-  standalone: true,
-  imports: [NgDocButtonComponent],
-  template: ` <button ng-doc-button [color]="color">Button</button> `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class ButtonInlineDemoComponent {
-  @Input()
-  color: NgDocColor = 'primary';
-}
 ```

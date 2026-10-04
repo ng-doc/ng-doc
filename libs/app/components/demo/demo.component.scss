@@ -1,23 +1,256 @@
+@use '../../styles/mixins/demo-canvas';
+
+// A device-frame panel: a toolbar over the demo's stage or one of its source files.
 :host {
-	display: block;
-	margin: var(--ng-doc-demo-margin);
+  display: block;
+  margin: var(--ng-doc-demo-margin);
+  border: var(--ng-doc-demo-displayer-border);
+  border-radius: var(--ng-doc-demo-displayer-border-radius);
+  background: var(--ng-doc-demo-displayer-background, var(--ng-doc-background));
+  overflow: hidden;
+  min-width: 0;
 
-	--ng-doc-tab-group-background: var(--ng-doc-code-background);
-	--ng-doc-tab-group-tabs-background: var(--ng-doc-base-2);
-	--ng-doc-tab-group-border-radius: 0;
-	--ng-doc-tab-group-border: none;
-	--ng-doc-code-border-radius: 0;
-	--ng-doc-code-border: none;
+  --ng-doc-code-margin: 0;
+  --ng-doc-code-border-radius: 0;
+  --ng-doc-code-border: none;
 
-	.ng-doc-example {
-		padding: calc(var(--ng-doc-base-gutter) * 3);
-	}
+  // Without the container the demo is shown as is.
+  &[data-ng-doc-container='false'] {
+    border: none;
+    border-radius: 0;
+    background: none;
+    overflow: visible;
+  }
+}
 
-	ng-doc-icon {
-		margin-right: calc(var(--ng-doc-base-gutter) / 2);
-	}
+.ng-doc-demo-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--ng-doc-space-2);
+  min-height: 48px;
+  padding: var(--ng-doc-space-2);
+  background: var(--ng-doc-demo-toolbar-background);
+  border-bottom: 1px solid var(--ng-doc-border-color);
+  font-family: var(--ng-doc-font-family);
+}
 
-	ng-doc-tab-group {
-		border-top: 1px solid var(--ng-doc-border-color);
-	}
+// Segmented controls: the views and the preview widths.
+.ng-doc-demo-views,
+.ng-doc-demo-widths {
+  display: inline-flex;
+  flex: none;
+  gap: 2px;
+  max-width: 100%;
+  padding: 3px;
+  border-radius: var(--ng-doc-radius-md);
+  background: var(--ng-doc-base-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.ng-doc-demo-views {
+  flex: 0 1 auto;
+}
+
+.ng-doc-demo-view,
+.ng-doc-demo-width {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--ng-doc-radius-sm);
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  color: var(--ng-doc-text-muted);
+  white-space: nowrap;
+  cursor: pointer;
+  --ng-doc-icon-color: currentColor;
+
+  &:hover {
+    color: var(--ng-doc-heading-color);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--ng-doc-focus-ring);
+  }
+
+  &[aria-selected='true'],
+  &[aria-pressed='true'] {
+    color: var(--ng-doc-heading-color);
+  }
+}
+
+// The highlight of the selected segment slides between the segments, which paint over it. Until
+// it is placed in the browser (in the server-rendered page), the selected segment draws its own.
+.ng-doc-demo-views,
+.ng-doc-demo-widths {
+  position: relative;
+
+  ng-doc-selection,
+  ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-selected='true'],
+  ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-pressed='true'] {
+    border-radius: var(--ng-doc-radius-sm);
+    background: var(--ng-doc-background);
+    box-shadow: var(--ng-doc-shadow-xs);
+  }
+}
+
+.ng-doc-demo-view,
+.ng-doc-demo-width {
+  position: relative;
+}
+
+.ng-doc-demo-width {
+  padding: 0 7px;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
+:host-context([data-theme='dark']) {
+  ng-doc-selection,
+  ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-selected='true'],
+  ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-pressed='true'] {
+    box-shadow:
+      var(--ng-doc-shadow-xs),
+      inset 0 0 0 1px var(--ng-doc-base-4);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :host-context([data-theme='auto']) {
+    ng-doc-selection,
+    ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-selected='true'],
+    ng-doc-selection:not([data-ng-doc-placed]) ~ [aria-pressed='true'] {
+      box-shadow:
+        var(--ng-doc-shadow-xs),
+        inset 0 0 0 1px var(--ng-doc-base-4);
+    }
+  }
+}
+
+.ng-doc-demo-width-readout {
+  margin-left: auto;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ng-doc-text-muted);
+  white-space: nowrap;
+}
+
+.ng-doc-demo-copy {
+  margin-left: auto;
+  --ng-doc-icon-color: var(--ng-doc-text-muted);
+}
+
+.ng-doc-demo-width-readout ~ .ng-doc-demo-copy {
+  margin-left: 0;
+}
+
+.ng-doc-demo-fullscreen {
+  margin-left: auto;
+}
+
+.ng-doc-demo-width-readout ~ .ng-doc-demo-fullscreen,
+.ng-doc-demo-copy ~ .ng-doc-demo-fullscreen {
+  margin-left: 0;
+}
+
+// The demo sits on a canvas: a subtle dot grid. Narrow preview widths frame it as a device.
+.ng-doc-demo-stage {
+  @include demo-canvas.demo-canvas;
+
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 160px;
+  padding: var(--ng-doc-space-8) var(--ng-doc-space-4);
+  background-color: var(--ng-doc-demo-displayer-background, var(--ng-doc-background));
+
+  &[hidden] {
+    display: none;
+  }
+
+  // Fullscreen, the stage fills the screen and the demo stays centred on it; a demo taller than
+  // the screen scrolls.
+  &[data-ng-doc-fullscreen='true'] {
+    overflow: auto;
+    padding: var(--ng-doc-space-16) var(--ng-doc-space-8);
+  }
+}
+
+// Fullscreen, a full-width demo takes the width it needs, so it is centred on the screen.
+.ng-doc-demo-stage[data-ng-doc-fullscreen='true'][data-ng-doc-width='full'] > .ng-doc-demo-frame {
+  width: auto;
+  max-width: 100%;
+}
+
+// The way out of fullscreen, in the corner of the stage.
+.ng-doc-demo-fullscreen-exit {
+  position: absolute;
+  top: var(--ng-doc-space-4);
+  right: var(--ng-doc-space-4);
+  border-radius: var(--ng-doc-radius-md);
+  background: var(--ng-doc-background);
+  box-shadow:
+    0 0 0 1px var(--ng-doc-border-color),
+    var(--ng-doc-shadow-sm);
+}
+
+.ng-doc-demo-frame {
+  width: 100%;
+  min-width: 0;
+  border-radius: var(--ng-doc-radius-md);
+  transition: width var(--ng-doc-transition) var(--ng-doc-easing);
+
+  [data-ng-doc-width='480'] > &,
+  [data-ng-doc-width='280'] > & {
+    padding: var(--ng-doc-space-5);
+    background: var(--ng-doc-background);
+    box-shadow:
+      0 0 0 1px var(--ng-doc-border-color),
+      var(--ng-doc-shadow-sm);
+    overflow: auto;
+  }
+
+  [data-ng-doc-width='480'] > & {
+    width: min(480px, 100%);
+  }
+
+  [data-ng-doc-width='280'] > & {
+    width: min(280px, 100%);
+  }
+}
+
+.ng-doc-demo-source {
+  background: var(--ng-doc-code-background);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ng-doc-demo-frame {
+    transition: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .ng-doc-demo-width-readout,
+  .ng-doc-demo-widths {
+    display: none;
+  }
+
+  .ng-doc-demo-copy {
+    margin-left: auto;
+  }
 }

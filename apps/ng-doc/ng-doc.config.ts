@@ -4,8 +4,10 @@ import { ngKeywordsLoader, rxjsKeywordsLoader } from '@ng-doc/keywords-loaders';
 const NgDocConfig: NgDocConfiguration = {
   docsPath: 'apps/ng-doc/docs',
   routePrefix: 'docs',
-  tsConfig: 'apps/ng-doc/tsconfig.app.json',
-  cache: false,
+  // The documentation program maps `@ng-doc/generated` to a stub instead of a generated output, so
+  // the API pages don't depend on which builds ran before.
+  tsConfig: 'apps/ng-doc/tsconfig.docs.json',
+  cache: true,
   repoConfig: {
     url: 'https://github.com/ng-doc/ng-doc',
     mainBranch: 'main',
@@ -44,6 +46,24 @@ const NgDocConfig: NgDocConfiguration = {
         title: 'Feather Icons Pack',
         url: 'https://feathericons.com/',
       },
+      // The Angular loader (Signal Forms) and the RxJS loader both define these names; choose the
+      // RxJS operators explicitly, so the link does not depend on the order of the loaders.
+      ...Object.fromEntries(
+        ['debounce', 'max', 'min'].map((name) => [
+          name,
+          {
+            url: `https://rxjs.dev/api/operators/${name}`,
+            description: 'External link to the RxJS documentation.',
+          },
+        ]),
+      ),
+      // Names that an API page here shares with another export: Angular's `createComponent` and
+      // `extractValue`, the `asArray` pipe, and the `NgDocApi` template global. Each is pinned to the
+      // page it links to; a url that is the route of an API page picks that page.
+      createComponent: { url: '/docs/api/functions/app/createComponent' },
+      extractValue: { url: '/docs/api/functions/core/extractValue' },
+      asArray: { url: '/docs/api/functions/core/asArray' },
+      NgDocApi: { url: '/docs/api/interfaces/core/NgDocApi' },
     },
   },
   guide: {

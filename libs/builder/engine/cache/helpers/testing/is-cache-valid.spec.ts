@@ -1,11 +1,12 @@
 import { vol } from 'memfs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { NgDocCachedData } from '../../interfaces';
 import { createCache } from '../create-cache';
 import { isCacheValid } from '../is-cache-valid';
 import { updateCache } from '../update-cache';
 
-jest.mock('fs');
+vi.mock('fs');
 
 describe('isCacheValid', () => {
   beforeEach(() => {

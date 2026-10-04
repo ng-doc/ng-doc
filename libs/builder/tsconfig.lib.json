@@ -8,7 +8,7 @@
   "files": ["index.ts"],
   "include": ["schematics/**/*"],
   "exclude": [
-    "jest.config.ts",
+    "vitest.config.ts",
     "**/*.spec.ts",
     "**/*.test.ts",
     "generated",

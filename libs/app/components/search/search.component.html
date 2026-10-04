@@ -1,13 +1,45 @@
-<ng-container
-  [ngDocHotkey]="{ ctrlKey: false, altKey: false, shiftKey: false, code: 'Slash' }"
-  (ngDocHotkey)="open()">
-  <button ng-doc-button-icon size="large" (click)="open()" ngDocDropdownOrigin>
-    <ng-doc-icon icon="search" [size]="24"></ng-doc-icon>
-  </button>
-
-  <ng-doc-input-wrapper ngDocDropdownOrigin>
-    <ng-doc-icon icon="search" ngDocInputWrapperLeft></ng-doc-icon>
-    <input ngDocInputString readonly placeholder="Search..." (click)="open()" />
-    <ng-doc-tag class="search-hotkey" ngDocInputWrapperRight>/</ng-doc-tag>
-  </ng-doc-input-wrapper>
-</ng-container>
+<button
+  class="ng-doc-search-field"
+  type="button"
+  aria-haspopup="dialog"
+  [attr.aria-label]="'Search (' + chord() + ')'"
+  aria-keyshortcuts="Meta+K Control+K"
+  (click)="open()">
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    aria-hidden="true">
+    <circle cx="11" cy="11" r="7" />
+    <path d="m20 20-3.5-3.5" />
+  </svg>
+  <span class="ng-doc-search-placeholder">Search docs…</span>
+  <kbd>{{ chord() }}</kbd>
+</button>
+<button
+  class="ng-doc-search-button"
+  type="button"
+  ng-doc-button-icon
+  size="large"
+  [rounded]="false"
+  aria-haspopup="dialog"
+  [attr.aria-label]="'Search (' + chord() + ')'"
+  aria-keyshortcuts="Meta+K Control+K"
+  (click)="open()">
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    aria-hidden="true">
+    <circle cx="11" cy="11" r="7" />
+    <path d="m20 20-3.5-3.5" />
+  </svg>
+</button>

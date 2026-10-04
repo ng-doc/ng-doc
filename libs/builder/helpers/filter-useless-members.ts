@@ -1,4 +1,4 @@
-import { MemberType } from './typescript';
+import type { MemberType } from './typescript/member/member-type';
 
 const EXCLUDING_RULES: RegExp[] = [/^ɵ/];
 

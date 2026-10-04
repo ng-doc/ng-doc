@@ -54,6 +54,7 @@ export function playgroundBuilder(config: Config): Builder<FileOutput> {
             context: {
               playgroundMetadata,
               hasImports: !!page.objectExpression().getProperty('imports'),
+              pageRoute: page.absoluteRoute(),
               entryImportPath: createImportPath(page.outDir, path.join(page.dir, PAGE_NAME)),
             },
           }),

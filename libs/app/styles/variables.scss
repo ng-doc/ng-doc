@@ -1,115 +1,183 @@
 :root {
-  --ng-doc-app-max-width: 1450px;
+  --ng-doc-app-max-width: 1440px;
   --ng-doc-app-horizontal-padding: calc(var(--ng-doc-base-gutter) * 3);
   --ng-doc-code-background: var(--ng-doc-base-1);
   --ng-doc-page-padding: calc(var(--ng-doc-base-gutter) * 3) var(--ng-doc-app-horizontal-padding);
   --ng-doc-main-padding: var(--ng-doc-navbar-height) 0 0 0;
-  --ng-doc-page-block-margin: calc(var(--ng-doc-base-gutter) * 3) 0;
+  --ng-doc-page-block-margin: var(--ng-doc-space-6) 0;
   --ng-doc-page-wrapper-tabs-height: calc(var(--ng-doc-base-gutter) * 6);
 
+  // API colours. "*-background" is the kind's hue: chips derive their tint and text from it.
+  // "*-color" is the text on a solid fill of that hue. Kinds share five hues: Angular building
+  // blocks are brand, classes and services violet, callables green, values amber, and type-only
+  // declarations neutral.
+
   // Entities
-  --ng-doc-class-color: #fff;
-  --ng-doc-class-background: #e74c3c;
-  --ng-doc-interface-color: #fff;
-  --ng-doc-interface-background: #3498db;
-  --ng-doc-enum-color: #fff;
-  --ng-doc-enum-background: #2ecc71;
-  --ng-doc-variable-color: #fff;
-  --ng-doc-variable-background: #f1c40f;
-  --ng-doc-function-color: #fff;
-  --ng-doc-function-background: #27bd09;
-  --ng-doc-type-alias-color: #fff;
-  --ng-doc-type-alias-background: #3e69c5;
-  --ng-doc-selector-color: #fff;
-  --ng-doc-selector-background: #25ac5f;
+  --ng-doc-class-color: var(--ng-doc-on-hue);
+  --ng-doc-class-background: var(--ng-doc-hue-violet);
+  --ng-doc-interface-color: var(--ng-doc-on-hue);
+  --ng-doc-interface-background: var(--ng-doc-hue-neutral);
+  --ng-doc-enum-color: var(--ng-doc-on-hue);
+  --ng-doc-enum-background: var(--ng-doc-hue-amber);
+  --ng-doc-variable-color: var(--ng-doc-on-hue);
+  --ng-doc-variable-background: var(--ng-doc-hue-amber);
+  --ng-doc-function-color: var(--ng-doc-on-hue);
+  --ng-doc-function-background: var(--ng-doc-hue-green);
+  --ng-doc-type-alias-color: var(--ng-doc-on-hue);
+  --ng-doc-type-alias-background: var(--ng-doc-hue-neutral);
+  --ng-doc-selector-color: var(--ng-doc-on-hue);
+  --ng-doc-selector-background: var(--ng-doc-hue-brand);
 
   // Types
-  --ng-doc-string-color: #fff;
-  --ng-doc-string-background: #ff1150;
-  --ng-doc-number-color: #fff;
-  --ng-doc-number-background: #3498db;
-  --ng-doc-boolean-color: #fff;
-  --ng-doc-boolean-background: #2ecc71;
-  --ng-doc-null-color: #fff;
-  --ng-doc-null-background: #95a5a6;
-  --ng-doc-undefined-color: #fff;
-  --ng-doc-undefined-background: #bdc3c7;
-  --ng-doc-object-color: #fff;
-  --ng-doc-object-background: #f39c12;
+  --ng-doc-string-color: var(--ng-doc-on-hue);
+  --ng-doc-string-background: var(--ng-doc-hue-green);
+  --ng-doc-number-color: var(--ng-doc-on-hue);
+  --ng-doc-number-background: var(--ng-doc-hue-brand);
+  --ng-doc-boolean-color: var(--ng-doc-on-hue);
+  --ng-doc-boolean-background: var(--ng-doc-hue-violet);
+  --ng-doc-null-color: var(--ng-doc-on-hue);
+  --ng-doc-null-background: var(--ng-doc-hue-neutral);
+  --ng-doc-undefined-color: var(--ng-doc-on-hue);
+  --ng-doc-undefined-background: var(--ng-doc-hue-neutral);
+  --ng-doc-object-color: var(--ng-doc-on-hue);
+  --ng-doc-object-background: var(--ng-doc-hue-amber);
 
   // Decorators
-  --ng-doc-component-decorator-color: #fff;
-  --ng-doc-component-decorator-background: #1abc9c;
-  --ng-doc-directive-decorator-color: #fff;
-  --ng-doc-directive-decorator-background: #e67e22;
-  --ng-doc-injectable-decorator-color: #fff;
-  --ng-doc-injectable-decorator-background: #9b59b6;
-  --ng-doc-pipe-decorator-color: #fff;
-  --ng-doc-pipe-decorator-background: #c0392b;
-  --ng-doc-ng-module-decorator-color: #fff;
-  --ng-doc-ng-module-decorator-background: #27ae60;
-  --ng-doc-input-decorator-color: #fff;
-  --ng-doc-input-decorator-background: #13a2da;
-  --ng-doc-output-decorator-color: #fff;
-  --ng-doc-output-decorator-background: #daa213;
+  --ng-doc-component-decorator-color: var(--ng-doc-on-hue);
+  --ng-doc-component-decorator-background: var(--ng-doc-hue-brand);
+  --ng-doc-directive-decorator-color: var(--ng-doc-on-hue);
+  --ng-doc-directive-decorator-background: var(--ng-doc-hue-brand);
+  --ng-doc-injectable-decorator-color: var(--ng-doc-on-hue);
+  --ng-doc-injectable-decorator-background: var(--ng-doc-hue-violet);
+  --ng-doc-pipe-decorator-color: var(--ng-doc-on-hue);
+  --ng-doc-pipe-decorator-background: var(--ng-doc-hue-brand);
+  --ng-doc-ng-module-decorator-color: var(--ng-doc-on-hue);
+  --ng-doc-ng-module-decorator-background: var(--ng-doc-hue-brand);
+  --ng-doc-input-decorator-color: var(--ng-doc-on-hue);
+  --ng-doc-input-decorator-background: var(--ng-doc-hue-brand);
+  --ng-doc-output-decorator-color: var(--ng-doc-on-hue);
+  --ng-doc-output-decorator-background: var(--ng-doc-hue-brand);
 
-  // Modifiers
-  --ng-doc-abstract-background: #ff5f1a;
-  --ng-doc-abstract-color: #fff;
-  --ng-doc-async-background: #0de311;
-  --ng-doc-async-color: #fff;
-  --ng-doc-protected-background: var(--ng-doc-base-7);
-  --ng-doc-protected-color: #fff;
-  --ng-doc-static-background: #e30dbf;
-  --ng-doc-static-color: #fff;
-  --ng-doc-overriden-background: #0d78e3;
-  --ng-doc-overriden-color: #fff;
-  --ng-doc-readonly-background: #ff2020;
-  --ng-doc-readonly-color: #fff;
-  --ng-doc-get-background: #2ecc3b;
-  --ng-doc-get-color: #fff;
-  --ng-doc-set-background: #e30dbf;
-  --ng-doc-set-color: #fff;
+  // Modifiers: neutral, because the word carries the meaning.
+  --ng-doc-abstract-background: var(--ng-doc-hue-neutral);
+  --ng-doc-abstract-color: var(--ng-doc-on-hue);
+  --ng-doc-async-background: var(--ng-doc-hue-neutral);
+  --ng-doc-async-color: var(--ng-doc-on-hue);
+  --ng-doc-protected-background: var(--ng-doc-hue-neutral);
+  --ng-doc-protected-color: var(--ng-doc-on-hue);
+  --ng-doc-static-background: var(--ng-doc-hue-neutral);
+  --ng-doc-static-color: var(--ng-doc-on-hue);
+  --ng-doc-overriden-background: var(--ng-doc-hue-neutral);
+  --ng-doc-overriden-color: var(--ng-doc-on-hue);
+  --ng-doc-readonly-background: var(--ng-doc-hue-neutral);
+  --ng-doc-readonly-color: var(--ng-doc-on-hue);
+  --ng-doc-get-background: var(--ng-doc-hue-neutral);
+  --ng-doc-get-color: var(--ng-doc-on-hue);
+  --ng-doc-set-background: var(--ng-doc-hue-neutral);
+  --ng-doc-set-color: var(--ng-doc-on-hue);
 
   // Navbar
   --ng-doc-navbar-background: var(--ng-doc-base-0);
-  --ng-doc-navbar-height: calc(var(--ng-doc-base-gutter) * 7);
+  --ng-doc-navbar-height: calc(var(--ng-doc-base-gutter) * 7.5);
   --ng-doc-navbar-horizontal-padding: var(--ng-doc-app-horizontal-padding);
   --ng-doc-navbar-left-width: calc(
     var(--ng-doc-sidebar-width) - var(--ng-doc-navbar-horizontal-padding)
   );
-  --ng-doc-navbar-border: 1px solid var(--ng-doc-base-3);
+  --ng-doc-navbar-border: 1px solid var(--ng-doc-border-color);
 
   // Sidebar
-  --ng-doc-sidebar-width: 310px;
+  --ng-doc-sidebar-width: 288px;
   --ng-doc-sidebar-background: var(--ng-doc-base-0);
   --ng-doc-sidebar-padding: calc(var(--ng-doc-base-gutter) * 2);
-  --ng-doc-sidebar-vetical-padding: var(--ng-doc-base-gutter);
+  // The misspelled name stays the source of truth; components read it through the correctly spelled
+  // name first: var(--ng-doc-sidebar-vertical-padding, var(--ng-doc-sidebar-vetical-padding)).
+  --ng-doc-sidebar-vetical-padding: 6px;
   --ng-doc-sidebar-horizontal-padding: var(--ng-doc-app-horizontal-padding);
 
   // DemoDisplayer
   --ng-doc-demo-displayer-border: 1px solid var(--ng-doc-border-color);
-  --ng-doc-demo-displayer-border-radius: var(--ng-doc-base-gutter);
+  --ng-doc-demo-displayer-border-radius: var(--ng-doc-radius-lg);
 
   // Code
   --ng-doc-code-max-height: 400px;
   --ng-doc-code-highlight-color: var(--ng-doc-primary);
 
   // Table of contents
-  --ng-doc-toc-width: 280px;
+  --ng-doc-toc-width: 240px;
   --ng-doc-toc-indent: var(--ng-doc-base-gutter);
   --ng-doc-toc-top-padding: calc(var(--ng-doc-base-gutter) * 3);
 
   // Search
-  --ng-doc-search-result-color: #454545;
+  --ng-doc-search-result-color: var(--ng-doc-text);
 
-  // Page type tags
-  --ng-doc-api-tag-color: #ff1111;
-  --ng-doc-api-tag-background: rgba(255, 17, 17, 0.15);
-  --ng-doc-guide-tag-color: #0086ff;
-  --ng-doc-guide-tag-background: rgba(0, 134, 255, 0.15);
+  // Page type tags. These are final colours, not tint sources. They follow the derived chip tokens
+  // in every theme, so the dark theme needs no override.
+  --ng-doc-api-tag-color: var(--ng-doc-hue-violet-strong);
+  --ng-doc-api-tag-background: var(--ng-doc-hue-violet-chip);
+  --ng-doc-guide-tag-color: var(--ng-doc-hue-brand-strong);
+  --ng-doc-guide-tag-background: var(--ng-doc-hue-brand-chip);
 
   /* Tabs */
   --ng-doc-tabs-margin: calc(var(--ng-doc-base-gutter) * 4) 0px;
-  --ng-doc-tabs-border-radius: var(--ng-doc-base-gutter);
+  --ng-doc-tabs-border-radius: var(--ng-doc-radius-lg);
+
+  // Code blocks: header bar and line numbers. Line numbers are on by default; `none` hides them.
+  --ng-doc-code-line-numbers: inline-block;
+  --ng-doc-code-line-number-color: var(--ng-doc-text-muted);
+  --ng-doc-code-header-height: 40px;
+
+  // Keyboard hints (<kbd>) in the navbar search field, the search palette and filters.
+  --ng-doc-kbd-background: var(--ng-doc-background);
+  --ng-doc-kbd-border-color: var(--ng-doc-border-color);
+
+  // Selectable rows (members table, search palette, API list). The selected row's ring is the full
+  // primary, so the state indicator keeps 3:1 against both the tint and the page.
+  --ng-doc-row-hover-background: var(--ng-doc-hover-background);
+  --ng-doc-row-selected-background: var(--ng-doc-primary-soft);
+  --ng-doc-row-selected-border: var(--ng-doc-primary);
+
+  // Demo toolbar
+  --ng-doc-demo-toolbar-background: var(--ng-doc-base-1);
+
+  // Playground inspector: the width of the property grid beside the demo, and the border of its
+  // inputs. The inputs sit on base-1, so the dark theme uses a stronger border.
+  --ng-doc-playground-inspector-width: 312px;
+  --ng-doc-playground-input-border: var(--ng-doc-input-border);
+
+  // Search palette
+  --ng-doc-search-dialog-width: 820px;
+  --ng-doc-search-preview-width: 300px;
+
+  // Syntax colours for the css-variables highlighting theme: the badge hues mixed toward the
+  // heading colour, so code follows user colours and the dark theme.
+  --ng-doc-mix-syntax: 80%;
+  --ng-doc-syntax-plain: var(--ng-doc-text);
+  --ng-doc-syntax-punctuation: var(--ng-doc-text);
+  --ng-doc-syntax-comment: var(--ng-doc-text-muted);
+  --ng-doc-syntax-keyword: color-mix(
+    in oklab,
+    var(--ng-doc-hue-violet) var(--ng-doc-mix-syntax),
+    var(--ng-doc-heading-color)
+  );
+  --ng-doc-syntax-type: color-mix(
+    in oklab,
+    var(--ng-doc-primary) var(--ng-doc-mix-syntax),
+    var(--ng-doc-heading-color)
+  );
+  --ng-doc-syntax-function: color-mix(
+    in oklab,
+    var(--ng-doc-success) var(--ng-doc-mix-syntax),
+    var(--ng-doc-heading-color)
+  );
+  --ng-doc-syntax-string: color-mix(
+    in oklab,
+    var(--ng-doc-warning) var(--ng-doc-mix-syntax),
+    var(--ng-doc-heading-color)
+  );
+  --ng-doc-syntax-number: var(--ng-doc-syntax-string);
+  --ng-doc-syntax-tag: var(--ng-doc-syntax-type);
+  --ng-doc-syntax-decorator: var(--ng-doc-syntax-keyword);
+
+  // API symbol pages: the members table needs more width than prose.
+  --ng-doc-api-content-max-width: 880px;
 }

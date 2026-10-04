@@ -1,43 +1,57 @@
 import { addImports, editImports, getImports, ImportDeclaration, ImportSpecifier } from 'ng-morph';
 
 /**
+ * Adds a named import to a file unless the file already imports that name from the module.
  *
- * @param filePath
- * @param namedImport
- * @param moduleSpecifier
+ * The name is added to an existing named-import declaration of the module. A namespace import
+ * (`import * as router from '@angular/router'`) or a type-only import cannot take it, so a
+ * separate declaration is added in that case.
+ * @param filePath - The file to update.
+ * @param namedImport - The exported name to import.
+ * @param moduleSpecifier - The module that exports it.
  */
 export function addUniqueImport(
-	filePath: string,
-	namedImport: string,
-	moduleSpecifier: string,
+  filePath: string,
+  namedImport: string,
+  moduleSpecifier: string,
 ): void {
-	const existingNamedImport: ImportDeclaration[] = getImports(filePath, {
-		namedImports: namedImport,
-		moduleSpecifier,
-	});
+  const declarations: ImportDeclaration[] = getImports(filePath, { moduleSpecifier });
+  const imported: boolean = declarations.some(
+    (declaration: ImportDeclaration) =>
+      !declaration.isTypeOnly() &&
+      declaration
+        .getNamedImports()
+        .some(
+          (specifier: ImportSpecifier) =>
+            !specifier.isTypeOnly() &&
+            specifier.getName() === namedImport &&
+            (specifier.getAliasNode()?.getText() ?? namedImport) === namedImport,
+        ),
+  );
 
-	if (existingNamedImport.length) {
-		return;
-	}
+  if (imported) {
+    return;
+  }
 
-	const existingDeclaration: ImportDeclaration[] = getImports(filePath, {
-		moduleSpecifier,
-	});
+  const target: ImportDeclaration | undefined = declarations.find(
+    (declaration: ImportDeclaration) =>
+      !declaration.getNamespaceImport() && !declaration.isTypeOnly(),
+  );
 
-	if (existingDeclaration.length) {
-		const modules: string[] = existingDeclaration[0]
-			.getNamedImports()
-			.map((namedImport: ImportSpecifier) => namedImport.getText());
+  if (target) {
+    const modules: string[] = target
+      .getNamedImports()
+      .map((specifier: ImportSpecifier) => specifier.getText());
 
-		editImports(existingDeclaration[0], () => ({
-			namedImports: [...modules, namedImport],
-		}));
+    editImports(target, () => ({
+      namedImports: [...modules, namedImport],
+    }));
 
-		return;
-	}
+    return;
+  }
 
-	addImports(filePath, {
-		moduleSpecifier: moduleSpecifier,
-		namedImports: [namedImport],
-	});
+  addImports(filePath, {
+    moduleSpecifier,
+    namedImports: [namedImport],
+  });
 }

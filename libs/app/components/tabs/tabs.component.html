@@ -1,5 +1,5 @@
-<ng-doc-tab-group [openedTab]="getActiveIndex | execute: tabs">
-  @for (tab of tabs; track tab; let i = $index) {
+<ng-doc-tab-group [openedTab]="activeIndex()">
+  @for (tab of tabs(); track tab; let i = $index) {
     <ng-doc-tab [label]="label" [content]="content" [id]="i">
       <ng-template #label>
         @if (tab.icon) {

@@ -1,33 +1,34 @@
-@if (configuration) {
+@if (configuration(); as configuration) {
   <ng-doc-playground-properties
-    [form]="formGroup"
-    [properties]="properties"
+    [form]="formGroup()!"
+    [properties]="properties()"
     [ignoreInputs]="configuration.hiddenInputs"
     [dynamicContent]="configuration.content"
     [hideSidePanel]="configuration.hideSidePanel ?? false"
-    [defaultValues]="defaultValues"
+    [inspectorPosition]="configuration.inspectorPosition ?? 'right'"
+    [defaultValues]="defaultValues()"
     [showResetButton]="!isDefaultState()"
     [(recreateDemo)]="recreateDemo"
     (resetForm)="resetForm()">
-    @for (selector of configuration.selectors ?? selectors | asArray; track selector) {
+    @for (selector of configuration.selectors ?? selectors() | asArray; track selector) {
       <ng-doc-playground-demo
-        [id]="id"
+        [id]="id()"
         [selector]="selector"
-        [properties]="properties"
+        [properties]="properties()"
         [configuration]="configuration"
-        [recreateDemo]="recreateDemo"
-        [form]="formGroup"
+        [recreateDemo]="recreateDemo()"
+        [form]="formGroup()"
         [expanded]="configuration.expanded ?? false">
       </ng-doc-playground-demo>
     }
-    @if (pipeName) {
+    @if (pipeName()) {
       <ng-doc-playground-demo
-        [id]="id"
-        [pipeName]="pipeName"
-        [properties]="properties"
+        [id]="id()"
+        [pipeName]="pipeName()"
+        [properties]="properties()"
         [configuration]="configuration"
-        [recreateDemo]="recreateDemo"
-        [form]="formGroup">
+        [recreateDemo]="recreateDemo()"
+        [form]="formGroup()">
       </ng-doc-playground-demo>
     }
   </ng-doc-playground-properties>

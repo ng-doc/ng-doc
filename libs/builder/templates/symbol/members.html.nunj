@@ -1,0 +1,301 @@
+{#-
+    The members of a class or an interface as one table, which the `ng-doc-members` host filters by
+    group and name at runtime. Every group row holds the heading and every member row the anchor
+    that the per-section layout rendered (same ids, titles and anchor types), so page keywords and
+    links do not change. Only the chevron and the name of an expandable row form its button.
+-#}
+{% import "helpers/type.html.nunj" as typeMacro %}
+{% import "helpers/badge.html.nunj" as badgeMacro %}
+{% import "helpers/status.html.nunj" as statusMacro %}
+{% import "helpers/code.html.nunj" as codeMacro %}
+{% import "helpers/parameters.html.nunj" as parametersMacro %}
+{% import "helpers/overload.html.nunj" as overloadMacro %}
+{% import "symbol/decorators.html.nunj" as decoratorsMacro %}
+
+{% macro chevron() -%}
+    <svg class="ng-doc-member-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+{%- endmacro %}
+
+{% macro description(node, docNode) -%}
+    <div class="ng-doc-api-status">{{ statusMacro.render(node) }}</div>
+    {%- set text = docNode | getJsDocDescription %}
+    {%- if text %}
+        {{ text }}
+    {%- else %}
+        <span class="ng-doc-members-none" indexable="false" aria-label="No documentation">—</span>
+    {%- endif %}
+    {%- set remarks = docNode | getJsDocTags('remarks') %}
+    {%- if remarks.length %}
+        <div class="ng-doc-member-label" indexable="false">Notes</div>
+        {%- for remark in remarks %}
+            {{ remark | markdownToHtml }}
+        {%- endfor %}
+    {%- endif %}
+{%- endmacro %}
+
+{% macro examples(docNode) -%}
+    {%- set items = docNode | getJsDocTags('example') %}
+    {%- if items.length %}
+        <div indexable="false">
+            <div class="ng-doc-member-label">Example usage</div>
+            {%- for example in items %}
+                {{ example }}
+            {%- endfor %}
+        </div>
+    {%- endif %}
+{%- endmacro %}
+
+{% macro tags(node, inheritedFrom, definedIn) -%}
+    {%- set isAbstract = node.isAbstract and node.isAbstract() %}
+    {%- set isStatic = node.isStatic and node.isStatic() %}
+    {%- set isAsync = node.isAsync and node.isAsync() %}
+    {%- set isReadonly = node.isReadonly and node.isReadonly() %}
+    {%- set isProtected = node.getScope and node.getScope() == 'protected' %}
+    {%- set overriddenMember = (node | getOverriddenMember) if node.getName %}
+    {%- set implementedMember = (node | getImplementedMember) if node.getName %}
+    {%- set signal = node | signalMember %}
+    {%- set decorators = node.getDecorators() if node.getDecorators else [] %}
+    <div class="ng-doc-member-tags" indexable="false">
+        {{- badgeMacro.render("protected") if isProtected }}
+        {{- badgeMacro.render("abstract") if isAbstract }}
+        {{- badgeMacro.render("static") if isStatic }}
+        {{- badgeMacro.render("async") if isAsync }}
+        {{- badgeMacro.render("readonly") if isReadonly }}
+        {%- if decorators.length or signal %}
+            <span class="ng-doc-decorators-group">
+                {%- for decorator in decorators %}{{ decoratorsMacro.chip(decorator.getName()) }}{% endfor -%}
+                {%- if signal %}<code data-ng-doc-decorator="{{ 'Output' if signal.kind == 'output' else 'Input' }}" data-ng-doc-signal="{{ signal.kind }}">{{ signal.kind }}()</code>{% endif -%}
+            </span>
+            {%- if signal and signal.required %}{{ badgeMacro.render("required") }}{% endif %}
+        {%- endif %}
+        {%- if definedIn %}
+            <span class="ng-doc-member-from">defined in <code>{{ definedIn.getName() }}</code></span>
+        {%- elseif inheritedFrom %}
+            <span class="ng-doc-member-from">inherited from <code>{{ inheritedFrom.getName() }}</code></span>
+        {%- elseif overriddenMember %}
+            <span class="ng-doc-member-from">overrides <code>{{ (overriddenMember | getMemberParent).getName() }}</code></span>
+        {%- elseif implementedMember %}
+            <span class="ng-doc-member-from">implements <code>{{ (implementedMember | getMemberParent).getName() }}</code></span>
+        {%- endif %}
+    </div>
+{%- endmacro %}
+
+{#- `definedIn` mode (type aliases) names the named type that declares a property, as the
+    per-section layout does; classes and interfaces name the parent it is inherited from. #}
+{% macro propertyRow(property, group, origin, mode) -%}
+    {%- set inheritedFrom = none %}
+    {%- set definedIn = none %}
+    {%- if mode == 'definedIn' %}
+        {%- set parent = property | getDefinedInParent(origin) %}
+        {%- set definedIn = parent if (parent and (parent | isNamed)) else none %}
+    {%- else %}
+        {%- set inheritedFrom = property | getInheritedParent(origin) %}
+    {%- endif %}
+    {%- set docNode = property | getPropertyChain | firstNodeWithComment %}
+    <tr class="ng-doc-member {{ statusMacro.class(property) }}" data-group="{{ group }}" data-name="{{ property.getName() }}"{{ ' data-inherited' if inheritedFrom }} dataSlug="{{ property.getName() }}" dataSlugType="member">
+        <td class="ng-doc-member-declaration" indexable="false">
+            <div class="ng-doc-member-signature"><span class="ng-doc-member-name">{{ property.getName() }}</span>{{ '?' if property.hasQuestionToken and property.hasQuestionToken() }}: {{ typeMacro.type(property) }}</div>
+            {{ tags(property, inheritedFrom, definedIn) }}
+        </td>
+        <td class="ng-doc-member-description">
+            {{ description(property, docNode) }}
+            {{ examples(docNode) }}
+        </td>
+    </tr>
+{%- endmacro %}
+
+{% macro enumRow(member, group) -%}
+    <tr class="ng-doc-member {{ statusMacro.class(member) }}" data-group="{{ group }}" data-name="{{ member.getName() }}" dataSlug="{{ member.getName() }}" dataSlugType="member">
+        <td class="ng-doc-member-declaration" indexable="false">
+            <div class="ng-doc-member-signature"><span class="ng-doc-member-name">{{ member.getName() }}</span> = <code>{{ member.getValue() | dump | escape }}</code></div>
+        </td>
+        <td class="ng-doc-member-description">
+            {{ description(member, member) }}
+        </td>
+    </tr>
+{%- endmacro %}
+
+{% macro accessorRow(accessor, type, group, origin) -%}
+    {%- set inheritedFrom = accessor | getInheritedParent(origin) %}
+    {%- set docNode = accessor | getAccessorChain | firstNodeWithComment %}
+    <tr class="ng-doc-member {{ statusMacro.class(accessor) }}" data-group="{{ group }}" data-name="{{ accessor.getName() }}"{{ ' data-inherited' if inheritedFrom }} dataSlug="{{ type + '-' + accessor.getName() }}" dataSlugType="member" dataSlugTitle="{{ accessor.getName() }}">
+        <td class="ng-doc-member-declaration" indexable="false">
+            <div class="ng-doc-member-signature">{{ type }} <span class="ng-doc-member-name">{{ accessor.getName() }}</span>: {{ typeMacro.type(accessor) }}</div>
+            {{ tags(accessor, inheritedFrom) }}
+        </td>
+        <td class="ng-doc-member-description">
+            {{ description(accessor, docNode) }}
+        </td>
+    </tr>
+{%- endmacro %}
+
+{#- A row with a detail row: a method, the constructor or a call signature (`kind`). #}
+{% macro callableRow(node, kind, name, slug, group, origin, presentation, detailId) -%}
+    {%- if kind == 'method' %}
+        {%- set docNode = node | getMethodChain | firstNodeWithComment %}
+    {%- elseif kind == 'call' %}
+        {%- set docNode = node | getCallSignatureChain | firstNodeWithComment %}
+    {%- else %}
+        {%- set docNode = node %}
+    {%- endif %}
+    {%- set inheritedFrom = none %}
+    {%- if kind != 'constructor' %}
+        {%- set inheritedFrom = node | getInheritedParent(origin) %}
+    {%- endif %}
+    {%- set parameters = node.getParameters() %}
+    {%- set overloads = node.getOverloads() if node.getOverloads else [] %}
+    {%- set returnsTag = docNode | getJsDocTag('returns') %}
+    <tr class="ng-doc-member {{ statusMacro.class(node) }}" data-group="{{ group }}" data-name="{{ name }}"{{ ' data-inherited' if inheritedFrom }}{% if kind != 'constructor' %} dataSlug="{{ slug }}" dataSlugType="method"{% endif %}>
+        <td class="ng-doc-member-declaration" indexable="false">
+            <div class="ng-doc-member-signature"><button type="button" class="ng-doc-member-expand" aria-expanded="false" aria-controls="{{ detailId }}" aria-label="{{ name }}: show the signature">{{ chevron() }}<span class="ng-doc-member-name">{{ name }}</span></button>({{ '…' if parameters.length }}){% if kind != 'constructor' %}: {{ typeMacro.returnType(node) }}{% endif %}</div>
+            {{ tags(node, inheritedFrom) }}
+        </td>
+        <td class="ng-doc-member-description">
+            {{ description(node, docNode) }}
+        </td>
+    </tr>
+    <tr class="ng-doc-member-detail" id="{{ detailId }}" data-group="{{ group }}" hidden>
+        <td colspan="2">
+            <div class="ng-doc-member-label" indexable="false">Signature</div>
+            {{ codeMacro.render(presentation, "typescript", false) }}
+            {%- if parameters.length %}
+                <div class="ng-doc-member-label" indexable="false">Parameters</div>
+                {{ parametersMacro.render(parameters, (node if kind == 'constructor' else docNode), kind == 'constructor') }}
+            {%- endif %}
+            {%- if kind != 'constructor' %}
+                <div class="ng-doc-member-label" indexable="false">Returns</div>
+                <div class="ng-doc-returns">
+                    {{ typeMacro.returnType(node) }}
+                    {%- if returnsTag.length %}
+                        <span> - </span>
+                        {{ returnsTag | markdownToHtml }}
+                    {%- endif %}
+                </div>
+            {%- endif %}
+            {{ examples(docNode) }}
+            {%- if overloads.length %}
+                <div class="ng-doc-member-label" indexable="false">Overloads</div>
+                {{ overloadMacro.render(overloads) }}
+            {%- endif %}
+        </td>
+    </tr>
+{%- endmacro %}
+
+{#- The number of rows of a group: an accessor pair has a row per get and set. #}
+{% macro count(group) -%}
+    {%- if group.kind == 'accessor' -%}
+        {%- set marks %}{% for pair in group.members %}{{ 'x' if pair.get }}{{ 'x' if pair.set }}{% endfor %}{% endset -%}
+        {{- marks | length -}}
+    {%- else -%}
+        {{- group.members.length -}}
+    {%- endif -%}
+{%- endmacro %}
+
+{% macro groupRow(group, title, total) -%}
+    <tr class="ng-doc-members-group" data-group="{{ group }}">
+        <td colspan="2"><h3 class="ng-doc-members-group-title">{{ title }}</h3><span class="ng-doc-members-count" indexable="false">{{ total }}</span></td>
+    </tr>
+{%- endmacro %}
+
+{% macro render(declaration) %}
+    {%- if Node.isClassDeclaration(declaration) %}
+        {%- set constructors = declaration.getConstructors() | filterByScope("public") | excludeByJsDocTags('internal') -%}
+        {%- set allProperties = declaration | getClassProperties | excludeByJsDocTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
+        {%- set allMethods = declaration | getClassMethods | excludeByJsDocTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
+        {%- set allAccessors = declaration | getClassAccessors | excludeByJsDocTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
+        {%- set staticProperties = allProperties | filterByStatic(true) -%}
+        {%- set properties = allProperties | filterByStatic(false) -%}
+        {%- set staticAccessors = allAccessors | filterByStatic(true) | groupAccessors -%}
+        {%- set accessors = allAccessors | filterByStatic(false) | groupAccessors -%}
+        {%- set staticMethods = allMethods | filterByStatic(true) -%}
+        {%- set methods = allMethods | filterByStatic(false) -%}
+        {%- set groups = [
+            { id: 'constructor', title: 'Constructor', kind: 'constructor', members: constructors.slice(0, 1) },
+            { id: 'static-properties', title: 'Static Properties', kind: 'property', members: staticProperties },
+            { id: 'properties', title: 'Properties', kind: 'property', members: properties },
+            { id: 'static-accessors', title: 'Static Accessors', kind: 'accessor', members: staticAccessors },
+            { id: 'accessors', title: 'Accessors', kind: 'accessor', members: accessors },
+            { id: 'static-methods', title: 'Static Methods', kind: 'method', members: staticMethods },
+            { id: 'methods', title: 'Methods', kind: 'method', members: methods }
+        ] -%}
+    {%- elseif Node.isInterfaceDeclaration(declaration) %}
+        {%- set properties = declaration | getInterfaceProperties | excludeByJsDocTags('internal') | filterUselessMembers | sortByNodesName -%}
+        {%- set accessors = declaration | getInterfaceAccessors | excludeByJsDocTags('internal') | filterUselessMembers | sortByNodesName | groupAccessors -%}
+        {%- set methods = declaration | getInterfaceMethods | excludeByJsDocTags('internal') | filterUselessMembers | sortByNodesName -%}
+        {%- set callSignatures = declaration | getInterfaceCallSignatures | excludeByJsDocTags('internal') -%}
+        {%- set groups = [
+            { id: 'properties', title: 'Properties', kind: 'property', members: properties },
+            { id: 'accessors', title: 'Accessors', kind: 'accessor', members: accessors },
+            { id: 'methods', title: 'Methods', kind: 'method', members: methods },
+            { id: 'call-signatures', title: 'Call Signatures', kind: 'call', members: callSignatures }
+        ] -%}
+    {%- elseif Node.isTypeAliasDeclaration(declaration) %}
+        {%- set properties = declaration | getTypeAliasProperties | excludeByJsDocTags('internal') | filterUselessMembers | sortByNodesName -%}
+        {%- set groups = [{ id: 'properties', title: 'Properties', kind: 'defined-property', members: properties }] -%}
+    {%- elseif Node.isEnumDeclaration(declaration) %}
+        {%- set groups = [{ id: 'members', title: 'Members', kind: 'enum', members: declaration.getMembers() | excludeByJsDocTags('internal') }] -%}
+    {%- else %}
+        {%- set groups = [] -%}
+    {%- endif %}
+    {%- set populated = [] %}
+    {%- for group in groups %}{% if group.members.length %}{% set populated = (populated.push(group), populated) %}{% endif %}{% endfor %}
+
+    {%- set rows %}
+        {%- for group in groups %}
+            {%- if group.members.length %}
+                {{ groupRow(group.id, group.title, count(group)) }}
+                {%- for member in group.members %}
+                    {%- if group.kind == 'property' %}
+                        {{ propertyRow(member, group.id, declaration) }}
+                    {%- elseif group.kind == 'defined-property' %}
+                        {{ propertyRow(member, group.id, declaration, 'definedIn') }}
+                    {%- elseif group.kind == 'enum' %}
+                        {{ enumRow(member, group.id) }}
+                    {%- elseif group.kind == 'accessor' %}
+                        {{ accessorRow(member.get, 'get', group.id, declaration) if member.get }}
+                        {{ accessorRow(member.set, 'set', group.id, declaration) if member.set }}
+                    {%- elseif group.kind == 'method' %}
+                        {{ callableRow(member, 'method', member.getName(), member.getName() + '()', group.id, declaration, member | methodPresentation, 'ng-doc-member-detail-' + group.id + '-' + member.getName()) }}
+                    {%- elseif group.kind == 'constructor' %}
+                        {{ callableRow(member, 'constructor', 'constructor', 'constructor', group.id, declaration, member | constructorPresentation, 'ng-doc-member-detail-constructor') }}
+                    {%- else %}
+                        {{ callableRow(member, 'call', 'Call Signature #' + loop.index, 'Call Signature #' + loop.index, group.id, declaration, member | callSignaturePresentation, 'ng-doc-member-detail-call-signature-' + loop.index) }}
+                    {%- endif %}
+                {%- endfor %}
+            {%- endif %}
+        {%- endfor %}
+    {%- endset %}
+
+    {%- if rows | trim %}
+        {%- set total = rows.split('class="ng-doc-member ').length - 1 %}
+        {%- set inherited = rows.split(' data-inherited ').length - 1 %}
+        {#- An enum's only group is its members, whose row already holds the Members heading. #}
+        {%- if not (populated.length == 1 and populated[0].kind == 'enum') %}
+        <h2 id="ng-doc-members">Members</h2>
+        {%- endif %}
+        <ng-doc-members>
+            <div class="ng-doc-members-bar" indexable="false">
+                {%- if populated.length > 1 or inherited %}
+                <div class="ng-doc-members-tabs" role="tablist" aria-label="Filter members">
+                    <button type="button" role="tab" data-ng-doc-members-tab="all" aria-selected="true">All <span class="ng-doc-members-count">{{ total }}</span></button>
+                    {%- for group in groups %}
+                        {%- if group.members.length %}
+                            <button type="button" role="tab" data-ng-doc-members-tab="{{ group.id }}" aria-selected="false" tabindex="-1">{{ group.title }} <span class="ng-doc-members-count">{{ count(group) }}</span></button>
+                        {%- endif %}
+                    {%- endfor %}
+                    {%- if inherited %}
+                        <button type="button" role="tab" data-ng-doc-members-tab="inherited" aria-selected="false" tabindex="-1">Inherited <span class="ng-doc-members-count">{{ inherited }}</span></button>
+                    {%- endif %}
+                </div>
+                {%- endif %}
+                <label class="ng-doc-members-filter"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"></path></svg><input type="text" placeholder="Filter by name" aria-label="Filter members by name" data-ng-doc-members-filter aria-keyshortcuts="F"></label>
+            </div>
+            <div class="ng-doc-members-table-wrapper">
+                <table class="ng-doc-members-table">
+                    <tbody>{{ rows }}</tbody>
+                </table>
+                <div class="ng-doc-members-empty" indexable="false" hidden>No members match.</div>
+            </div>
+        </ng-doc-members>
+    {%- endif %}
+{% endmacro %}

@@ -12,9 +12,8 @@ import { Schema } from '../schema';
 import { getProject } from '../utils/get-project';
 
 /**
- *
- * @param options
- * @param context
+ * Adds the NgDoc assets to the build target. Entries that are already there are not added again.
+ * @param options - The `ng add` options.
  */
 export function addAssets(options: Schema): Rule {
   return async (tree: Tree, context: SchematicContext) => {
@@ -40,9 +39,18 @@ export function addAssets(options: Schema): Rule {
 
         const assets: JsonArray | undefined = targetOptions['assets'] as JsonArray | undefined;
 
-        targetOptions['assets'] = Array.from(
-          new Set([...getNgDocAssets(options, workspace), ...(assets ?? [])]),
+        // Asset entries are objects, so they are compared by content: a second `ng add` run must
+        // not add them again.
+        const existing: Set<string> = new Set(
+          (assets ?? []).map((asset: JsonValue) => JSON.stringify(asset)),
         );
+
+        targetOptions['assets'] = [
+          ...getNgDocAssets(options, workspace).filter(
+            (asset: JsonValue) => !existing.has(JSON.stringify(asset)),
+          ),
+          ...(assets ?? []),
+        ];
 
         logger.info('✅ Done!');
       } catch (e) {

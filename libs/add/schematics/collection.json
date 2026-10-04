@@ -1,16 +1,16 @@
 {
-	"$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
-	"schematics": {
-		"ng-add": {
-			"description": "Add NgDoc library to the project.",
-			"factory": "./ng-add/index#ngAdd",
-			"schema": "./ng-add/schema.json"
-		},
-		"ng-add-setup-project": {
-			"private": true,
-			"description": "Sets up the project after dependencies have been installed",
-			"factory": "./ng-add/index#ngAddSetupProject",
-			"schema": "./ng-add/schema.json"
-		}
-	}
+  "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "ng-add": {
+      "description": "Add NgDoc library to the project.",
+      "factory": "./ng-add/index#ngAdd",
+      "schema": "./ng-add/schema.json"
+    },
+    "ng-add-setup-project": {
+      "private": true,
+      "description": "Sets up the project; runs before the dependencies added by ng-add are installed",
+      "factory": "./ng-add/index#ngAddSetupProject",
+      "schema": "./ng-add/schema.json"
+    }
+  }
 }

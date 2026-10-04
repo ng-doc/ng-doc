@@ -9,9 +9,11 @@ import {
 import { Schema } from '../schema';
 import { getProject } from '../utils/get-project';
 
+const NG_DOC_BUILDER_PREFIX = '@ng-doc/builder:';
+
 /**
- *
- * @param options
+ * Sets the legacy NgDoc builders on the build and serve targets.
+ * @param options - The `ng add` options.
  */
 export function replaceBuilders(options: Schema): Rule {
   return async (tree: Tree, context: SchematicContext) => {
@@ -33,16 +35,21 @@ export function replaceBuilders(options: Schema): Rule {
         const buildTarget: TargetDefinition | undefined = project.targets.get('build');
         const serveTarget: TargetDefinition | undefined = project.targets.get('serve');
 
-        if (buildTarget) {
+        // A target that already runs an NgDoc builder keeps it.
+        if (buildTarget && !(buildTarget.builder ?? '').startsWith(NG_DOC_BUILDER_PREFIX)) {
           buildTarget.builder = '@ng-doc/builder:application';
+        } else if (buildTarget) {
+          logger.info(`ℹ️ "build" already uses "${buildTarget.builder}".`);
         } else {
           logger.error(
             `❌ "build" target was not found, please add "@ng-doc/builder:application" builder manually.`,
           );
         }
 
-        if (serveTarget) {
+        if (serveTarget && !(serveTarget.builder ?? '').startsWith(NG_DOC_BUILDER_PREFIX)) {
           serveTarget.builder = '@ng-doc/builder:dev-server';
+        } else if (serveTarget) {
+          logger.info(`ℹ️ "serve" already uses "${serveTarget.builder}".`);
         } else {
           logger.warn(
             `❌ "serve" target was not found, please add "@ng-doc/builder:dev-server" builder manually.`,

@@ -1,0 +1,4 @@
+  0.0s   NgDoc: generating documentation (production)
+  0.8s   NgDoc: [1/4] preparing (reading configuration) (4%)
+  7.0s   NgDoc: [2/4] rendering 664 pages (35%), 7.0s elapsed
+ 12.0s   NgDoc: FAILED generation failed after 12s (3 errors, see above)

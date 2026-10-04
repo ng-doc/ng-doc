@@ -2,12 +2,12 @@ import {
   AfterContentInit,
   ChangeDetectionStrategy,
   Component,
-  ContentChild,
+  contentChild,
   DestroyRef,
   inject,
-  Input,
+  input,
   TemplateRef,
-  ViewChild,
+  viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
@@ -16,9 +16,12 @@ import { NgDocDialogConfig, NgDocDialogService } from '@ng-doc/ui-kit/services/d
 import { merge, NEVER, Subject, switchMap } from 'rxjs';
 import { map, startWith, takeUntil } from 'rxjs/operators';
 
+/**
+ * Shows the projected router outlet in a dialog while one of its routes is active, and navigates
+ * back to the parent route when the dialog closes.
+ */
 @Component({
   selector: 'ng-doc-dialog-outlet',
-  standalone: true,
   template: `
     <ng-template #outletContent>
       <ng-content></ng-content>
@@ -27,14 +30,12 @@ import { map, startWith, takeUntil } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogOutletComponent implements AfterContentInit {
-  @Input()
-  config?: NgDocDialogConfig;
+  /** Options of the dialog. */
+  readonly config = input<NgDocDialogConfig>();
 
-  @ViewChild('outletContent', { static: true })
-  outletContent!: TemplateRef<never>;
+  readonly outletContent = viewChild.required<TemplateRef<never>>('outletContent');
 
-  @ContentChild(RouterOutlet)
-  routerOutlet?: RouterOutlet;
+  readonly routerOutlet = contentChild(RouterOutlet);
 
   dialogRef?: NgDocOverlayRef;
 
@@ -44,13 +45,15 @@ export class DialogOutletComponent implements AfterContentInit {
   protected readonly destroyRef = inject(DestroyRef);
 
   ngAfterContentInit(): void {
-    if (this.routerOutlet) {
+    const routerOutlet: RouterOutlet | undefined = this.routerOutlet();
+
+    if (routerOutlet) {
       const dialogRef = new Subject<NgDocOverlayRef>();
 
       dialogRef
         .pipe(
           switchMap((dialogRef: NgDocOverlayRef) =>
-            dialogRef.beforeClose().pipe(takeUntil(this.routerOutlet?.deactivateEvents ?? NEVER)),
+            dialogRef.beforeClose().pipe(takeUntil(routerOutlet.deactivateEvents ?? NEVER)),
           ),
           takeUntilDestroyed(this.destroyRef),
         )
@@ -65,13 +68,13 @@ export class DialogOutletComponent implements AfterContentInit {
         });
 
       merge(
-        this.routerOutlet.activateEvents.pipe(map(() => true)),
-        this.routerOutlet.deactivateEvents.pipe(map(() => false)),
+        routerOutlet.activateEvents.pipe(map(() => true)),
+        routerOutlet.deactivateEvents.pipe(map(() => false)),
       )
-        .pipe(startWith(this.routerOutlet.isActivated), takeUntilDestroyed(this.destroyRef))
+        .pipe(startWith(routerOutlet.isActivated), takeUntilDestroyed(this.destroyRef))
         .subscribe((activated: boolean) => {
           if (activated) {
-            this.dialogRef = this.dialogService.open(this.outletContent, this.config);
+            this.dialogRef = this.dialogService.open(this.outletContent(), this.config());
 
             dialogRef.next(this.dialogRef);
           } else {

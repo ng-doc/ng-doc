@@ -1,64 +1,53 @@
-@import '../../../ui-kit/styles/mixins';
+@use '../../../ui-kit/styles/mixins';
 
+// Modifier keywords printed in member headings (`static`, `get`, `readonly`, ...) are outlined
+// lowercase keyword tags, like the member badges.
 .ng-doc-modifiers-wrapper {
-	line-height: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ng-doc-space-1);
+  line-height: 18px;
 }
 
 .ng-doc-modifier {
-	font-size: 14px;
-	color: var(--ng-doc-text);
-	font-family: var(--ng-doc-heading-font-family);
-	white-space: nowrap;
-	font-weight: 800;
+  --_ring: var(--ng-doc-base-4);
 
-	&[data-content='protected'] {
-		color: var(--ng-doc-protected-background);
-	}
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--ng-doc-radius-xs);
+  font-family: var(--ng-doc-code-font);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: middle;
+  color: var(--ng-doc-text-muted);
+  box-shadow: inset 0 0 0 1px var(--_ring);
 
-	&[data-content='abstract'] {
-		color: var(--ng-doc-abstract-background);
-	}
-
-	&[data-content='static'] {
-		color: var(--ng-doc-static-background);
-	}
-
-	&[data-content='async'] {
-		color: var(--ng-doc-async-background);
-	}
-
-	&[data-content='overriden'] {
-		color: var(--ng-doc-overriden-background);
-	}
-
-	&[data-content='readonly'] {
-		color: var(--ng-doc-readonly-background);
-	}
-
-	&[data-content='get'] {
-		font-size: 16px;
-		color: var(--ng-doc-get-background);
-	}
-
-	&[data-content='set'] {
-		font-size: 16px;
-		color: var(--ng-doc-set-background);
-	}
+  @each $modifier
+    in ('protected', 'abstract', 'static', 'async', 'overriden', 'readonly', 'get', 'set')
+  {
+    &[data-content='#{$modifier}'] {
+      --_ring: color-mix(in oklab, var(--ng-doc-#{$modifier}-background) 40%, var(--ng-doc-base-4));
+    }
+  }
 }
 
 .ng-doc-node-details {
-	@include ng-doc-font();
-	--ng-doc-code-line-height: var(--ng-doc-line-height);
+  @include mixins.ng-doc-font();
+  --ng-doc-code-line-height: var(--ng-doc-line-height);
 
-	--ng-doc-font-size: 14px;
-	--ng-doc-text: var(--ng-doc-text-muted);
-	--ng-doc-font-weight: 400;
-	--ng-doc-line-height: 22px;
+  --ng-doc-font-size: 14px;
+  --ng-doc-text: var(--ng-doc-text-muted);
+  --ng-doc-font-weight: 400;
+  --ng-doc-line-height: 22px;
 
-	code.ng-doc-code-with-link {
-		--ng-doc-inline-code-background: transparent !important;
-		padding: 0;
+  code.ng-doc-code-with-link {
+    --ng-doc-inline-code-background: transparent !important;
+    padding: 0;
 
-		--ng-doc-code-font-size: var(--ng-doc-font-size);
-	}
+    --ng-doc-code-font-size: var(--ng-doc-font-size);
+  }
 }

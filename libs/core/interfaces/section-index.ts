@@ -33,4 +33,17 @@ export interface NgDocPageIndex {
    * The url anchor of the section
    */
   fragment?: string;
+  /**
+   * The kind of the declaration, such as `Class` or `Component`. The new engine sets it, with
+   * `signature` and `description`, on the records of an API page that belong to no section.
+   */
+  kind?: string;
+  /**
+   * The declaration header as written, such as `export class NgDocThemeService`, as plain text.
+   */
+  signature?: string;
+  /**
+   * The first paragraph of the declaration's doc comment, as one line of plain text.
+   */
+  description?: string;
 }

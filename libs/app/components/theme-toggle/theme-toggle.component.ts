@@ -1,46 +1,54 @@
-import { ChangeDetectionStrategy, Component, DOCUMENT, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
 import { NgDocThemeService } from '@ng-doc/app/services/theme';
-import {
-  NgDocButtonIconComponent,
-  NgDocIconComponent,
-  NgDocTooltipDirective,
-} from '@ng-doc/ui-kit';
+import { NgDocButtonIconComponent, NgDocTooltipDirective } from '@ng-doc/ui-kit';
 
 interface ToggleTheme {
   name: string;
   theme: string | null;
 }
 
+const THEMES: readonly ToggleTheme[] = [
+  { name: 'Auto', theme: 'auto' },
+  { name: 'Light', theme: null },
+  { name: 'Dark', theme: 'dark' },
+];
+
+/**
+ * Button that switches the theme in turn: Auto (follows the system), Light and Dark.
+ *
+ * It shows the current theme and follows theme changes made elsewhere through the theme service.
+ */
 @Component({
   selector: 'ng-doc-theme-toggle',
   templateUrl: './theme-toggle.component.html',
   styleUrls: ['./theme-toggle.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgDocButtonIconComponent, NgDocTooltipDirective, NgDocIconComponent],
+  imports: [NgDocButtonIconComponent, NgDocTooltipDirective],
 })
 export class NgDocThemeToggleComponent {
-  protected readonly themes: ToggleTheme[] = [
-    { name: 'Auto', theme: 'auto' },
-    { name: 'Light', theme: null },
-    { name: 'Dark', theme: 'dark' },
-  ];
-  protected readonly documentElement = inject(DOCUMENT).documentElement;
   protected readonly themeService = inject(NgDocThemeService);
 
-  get currentTheme(): ToggleTheme {
-    const theme = this.documentElement.getAttribute('data-theme');
+  /**
+   * The current theme. A custom theme id counts as Auto, because the toggle does not offer it.
+   */
+  protected readonly currentTheme: Signal<ToggleTheme> = computed(() => {
+    const theme: string | null = this.themeService.theme();
 
-    return this.themes.find(({ theme: t }) => t === theme) ?? this.themes[0];
-  }
+    return THEMES.find(({ theme: t }) => t === theme) ?? THEMES[0];
+  });
 
-  get nextTheme(): ToggleTheme {
-    const index = this.themes.findIndex(({ theme }) => theme === this.currentTheme.theme);
+  /**
+   * The theme the next press switches to.
+   */
+  protected readonly nextTheme: Signal<ToggleTheme> = computed(
+    () => THEMES[(THEMES.indexOf(this.currentTheme()) + 1) % THEMES.length],
+  );
 
-    return this.themes[(index + 1) % this.themes.length];
-  }
-
+  /**
+   * Switches to the next theme.
+   */
   toggleTheme(): void {
-    const { theme } = this.nextTheme;
+    const { theme } = this.nextTheme();
 
     this.themeService.set(theme ?? undefined);
   }

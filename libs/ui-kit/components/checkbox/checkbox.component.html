@@ -5,8 +5,7 @@
       [disabled]="disabled"
       [ngDocChecked]="checked()"
       (ngDocCheckedChange)="toggle(); touch()"
-      (blur)="touch()"
-      [ngDocFocusable]="false" />
+      (blur)="touch()" />
     @if (isIntermediate) {
       <ng-doc-icon icon="minus"></ng-doc-icon>
     }

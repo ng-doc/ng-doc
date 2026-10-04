@@ -1,39 +1,45 @@
-import { Directive } from '@angular/core';
-import { Observable, ReplaySubject } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { Directive, Signal, signal, untracked } from '@angular/core';
 
-import { NgDocSelectionOriginDirective } from './selection-origin.directive';
+import type { NgDocSelectionOriginDirective } from './selection-origin.directive';
 
+/**
+ * Tracks which of its `ngDocSelectionOrigin` elements is selected, so that an
+ * `ng-doc-selection` inside it can highlight that element.
+ */
 @Directive({
-	selector: '[ngDocSelectionHost]',
-	standalone: true,
+  selector: '[ngDocSelectionHost]',
 })
 export class NgDocSelectionHostDirective {
-	private origins: Set<NgDocSelectionOriginDirective> = new Set<NgDocSelectionOriginDirective>();
-	private selected?: NgDocSelectionOriginDirective;
-	private selectedChange: ReplaySubject<HTMLElement | undefined> = new ReplaySubject<
-		HTMLElement | undefined
-	>();
+  private readonly selectedElement = signal<HTMLElement | undefined>(undefined);
 
-	get selectedChange$(): Observable<HTMLElement | undefined> {
-		return this.selectedChange.pipe(distinctUntilChanged());
-	}
+  /** Element of the selected origin, or `undefined` when none is selected. */
+  readonly selected: Signal<HTMLElement | undefined> = this.selectedElement.asReadonly();
 
-	addOrigin(origin: NgDocSelectionOriginDirective): void {
-		this.origins.add(origin);
-	}
+  /**
+   * Updates the selection after an origin changed its state or went away.
+   * @param origin - The origin whose state changed.
+   * @param selected - Whether the origin is selected now.
+   */
+  changeSelected(origin: NgDocSelectionOriginDirective, selected: boolean): void {
+    // Origins call this from their effects: reading the current selection must not subscribe
+    // them to it.
+    untracked(() => {
+      const element: HTMLElement = origin.elementRef.nativeElement;
 
-	removeOrigin(origin: NgDocSelectionOriginDirective): void {
-		this.origins.delete(origin);
+      if (selected) {
+        this.selectedElement.set(element);
+      } else if (this.selectedElement() === element) {
+        this.selectedElement.set(undefined);
+      }
+    });
+  }
 
-		if (this.selected === origin) {
-			this.changeSelected(origin, false);
-		}
-	}
-
-	changeSelected(origin: NgDocSelectionOriginDirective, selected: boolean): void {
-		this.selected =
-			this.selected === origin || selected ? (selected ? origin : undefined) : this.selected;
-		this.selectedChange.next(this.selected?.elementRef?.nativeElement ?? undefined);
-	}
+  /**
+   * Selects an element that cannot carry `ngDocSelectionOrigin`, because Angular does not render
+   * it: for example a tab in the HTML of a generated page.
+   * @param element - The element to highlight, or `undefined` to highlight none.
+   */
+  select(element: HTMLElement | undefined): void {
+    this.selectedElement.set(element);
+  }
 }

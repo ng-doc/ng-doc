@@ -9,6 +9,7 @@ export const blockquoteProcessor: NgDocPageProcessor<NgDocBlockquoteComponent> =
     inputs: {
       type: (element.getAttribute('type') as NgDocBlockquoteType) || 'default',
       icon: element.getAttribute('icon') ?? undefined,
+      label: element.getAttribute('label') ?? undefined,
     },
   }),
 };

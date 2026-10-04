@@ -1,18 +1,38 @@
+// The sidebar rhythm: one 32px row and one 14px sans size for headers and pages, 2px between
+// collapsed categories and 8px around an open one.
 :host {
   display: block;
   height: calc(100vh - var(--ng-doc-navbar-height));
   width: 100%;
   overflow: hidden;
-  padding: var(--ng-doc-sidebar-padding) 0;
   background: var(--ng-doc-sidebar-background);
+  border-right: 1px solid var(--ng-doc-border-color);
   box-shadow: var(--ng-doc-sidebar-shadow);
-  --ng-doc-sidebar-category-indent: var(--ng-doc-sidebar-horizontal-padding);
-  --ng-doc-sidebar-item-indent: var(--ng-doc-sidebar-horizontal-padding);
-  //--ng-doc-font-family: var(--ng-doc-heading-font-family);
+  font-family: var(--ng-doc-font-family);
+  font-size: var(--ng-doc-text-sm-size);
+  line-height: 20px;
+  --ng-doc-sidebar-item-indent: var(--ng-doc-space-2);
+}
 
-  .ng-doc-side-bar-wrapper {
-    position: relative;
-    overflow: auto;
-    max-height: 100%;
-  }
+.ng-doc-side-bar-wrapper {
+  position: relative;
+  overflow: auto;
+  max-height: 100%;
+  padding: calc(var(--ng-doc-sidebar-padding) + var(--ng-doc-space-1))
+    calc(var(--ng-doc-sidebar-horizontal-padding) / 2) calc(var(--ng-doc-sidebar-padding) * 2.5);
+}
+
+.ng-doc-side-bar-wrapper > * + *,
+ng-doc-sidebar-category + ng-doc-sidebar-category {
+  margin-top: 2px;
+}
+
+.ng-doc-side-bar-wrapper ng-doc-sidebar-category[data-ng-doc-expanded='true'] + *,
+.ng-doc-side-bar-wrapper * + ng-doc-sidebar-category[data-ng-doc-expanded='true'] {
+  margin-top: var(--ng-doc-space-2);
+}
+
+// Pages inside a category are spaced by the category's own grid.
+.ng-doc-side-bar-wrapper ng-doc-sidebar-category ng-doc-sidebar-item + ng-doc-sidebar-item {
+  margin-top: 0;
 }

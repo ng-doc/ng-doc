@@ -1,0 +1,76 @@
+{#-
+    An API page in the symbol view: the description, the details (also in the right rail), the
+    declaration panel, the kind's own sections and the page-level notes, see-also, examples and
+    usage notes. Every heading and member anchor of the per-section layout
+    (`api-page-content.html.nunj`) is kept, so page keywords and links do not change: the
+    declaration panel carries the `presentation` anchor of the declarations that had one.
+-#}
+{% import "helpers/no-content.html.nunj" as noContentMacro %}
+{% import "helpers/code.html.nunj" as codeMacro %}
+{% import "helpers/type.html.nunj" as typeMacro %}
+{% import "helpers/parameters.html.nunj" as parametersMacro %}
+{% import "helpers/overload.html.nunj" as overloadMacro %}
+{% import "symbol/members.html.nunj" as membersMacro %}
+{% import "symbol/details.html.nunj" as detailsMacro %}
+
+{% set isClass = Node.isClassDeclaration(declaration) %}
+{% set isInterface = Node.isInterfaceDeclaration(declaration) %}
+{% set isFunction = Node.isFunctionDeclaration(declaration) %}
+{% set isTypeAlias = Node.isTypeAliasDeclaration(declaration) %}
+{% set isVariable = Node.isVariableDeclaration(declaration) %}
+
+{% set description = docNode | getJsDocDescription %}
+<div class="ng-doc-api-description">
+    {{ description if description else noContentMacro.render('No documentation has been provided.') }}
+</div>
+
+{{ detailsMacro.render(declaration, scope) }}
+{{ detailsMacro.render(declaration, scope, 'rail') }}
+
+{%- if isFunction %}
+    {% set code = declaration | functionPresentation %}
+{%- elseif isTypeAlias %}
+    {% set code = declaration | typeAliasPresentation %}
+{%- elseif isVariable %}
+    {% set code = declaration | variablePresentation %}
+{%- else %}
+    {% set code = declaration | apiDeclaration %}
+{%- endif %}
+<div class="ng-doc-api-declaration" indexable="false"{% if isFunction or isTypeAlias or isVariable %} dataSlug="Presentation" dataSlugType="heading"{% endif %}>
+    <pre><code class="language-typescript" lang="typescript" metastring='{"name":"Declaration"}'>{{ code | escape }}</code></pre>
+</div>
+
+{% include "symbol/extended-by.html.nunj" %}
+
+{% include "parts/remarks.html.nunj" %}
+{% include "symbol/see-also.html.nunj" %}
+
+{% if isFunction %}
+    {%- set parameters = declaration.getParameters() -%}
+    {%- set overloads = declaration.getOverloads() -%}
+    {%- set returnsTag = docNode | getJsDocTag('returns') -%}
+
+    <h2>Returns</h2>
+    <div class="ng-doc-returns">
+        {{ typeMacro.returnType(declaration) }}
+        {%- if returnsTag.length %}
+            <span> - </span>
+            {{ returnsTag | markdownToHtml }}
+        {%- endif %}
+    </div>
+
+    {% if parameters.length -%}
+        <h2>Parameters</h2>
+        {{ parametersMacro.render(parameters, declaration) }}
+    {%- endif %}
+
+    {% if overloads.length %}
+        <h2>Overloads</h2>
+        {{ overloadMacro.render(overloads) }}
+    {% endif %}
+{% else %}
+    {{ membersMacro.render(declaration) }}
+{% endif %}
+
+{% include "parts/examples.html.nunj" %}
+{% include "parts/usage-notes.html.nunj" %}

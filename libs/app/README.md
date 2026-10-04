@@ -1,37 +1,28 @@
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <a href="https://github.com/ng-doc/ng-doc">
-    <img src="https://ng-doc.com/assets/images/ng-doc.svg?raw=true" alt="Logo" height="150px">
-  </a>
+# 🖥️ @ng-doc/app
 
-<h1 align="center" style="margin-bottom: 0; border-bottom: 0">NgDoc</h1>
-  <p align="center">
-    Create user-friendly documentation for your projects with ease!
-    <br />
-    <a href="https://ng-doc.com/">Documentation</a>
-    ·
-    <a href="https://github.com/ng-doc/ng-doc/issues/new/choose">Report Bug</a>
-    ·
-    <a href="https://github.com/ng-doc/ng-doc/issues/new/choose">Request Feature</a>
+The Angular components and providers that make up an NgDoc documentation site.
 
-[![GitHub Workflow Status][build-shield]][build-url]
+It's part of [NgDoc](https://ng-doc.com/) 📚, the documentation engine for Angular projects.
+
 [![NPM][npm-shield]][npm-url]
 [![MIT License][license-shield]][license-url]
 
-  </p>
-</div>
+## 🚀 Getting started
 
-<!-- ABOUT THE PROJECT -->
+You don't need to install this package by hand. Add NgDoc to your project and it sets up
+everything it needs:
 
-## About The Project
+```bash
+ng add @ng-doc/add
+```
 
-This library is a part of NgDoc project, that uses to create documentation
-for Angular projects, please check our [repo](https://github.com/ng-doc/ng-doc) for more details.
+## 📖 Learn more
 
-[npm-shield]: https://img.shields.io/npm/v/@ng-doc/builder.svg?style=for-the-badge
-[npm-url]: https://www.npmjs.com/package/@ng-doc/builder
+- [Documentation](https://ng-doc.com/)
+- [GitHub repository](https://github.com/ng-doc/ng-doc)
+- [Report a bug or request a feature](https://github.com/ng-doc/ng-doc/issues/new/choose)
+
+[npm-shield]: https://img.shields.io/npm/v/%40ng-doc%2Fapp.svg?style=for-the-badge
+[npm-url]: https://www.npmjs.com/package/@ng-doc/app
 [license-shield]: https://img.shields.io/github/license/ng-doc/ng-doc.svg?style=for-the-badge
-[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
-[build-shield]: https://img.shields.io/github/actions/workflow/status/ng-doc/ng-doc/release.yml?style=for-the-badge&branch=release
-[build-url]: https://github.com/ng-doc/ng-doc/actions
+[license-url]: https://github.com/ng-doc/ng-doc/blob/main/LICENSE

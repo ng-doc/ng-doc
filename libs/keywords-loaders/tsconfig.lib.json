@@ -3,10 +3,11 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "declaration": true,
+    "sourceMap": false,
     "types": ["node"]
   },
   "include": ["**/*.ts"],
-  "exclude": ["jest.config.ts", "**/*.spec.ts", "**/*.test.ts"],
+  "exclude": ["vitest.config.ts", "**/*.spec.ts", "**/*.test.ts"],
   "angularCompilerOptions": {
     "strictTemplates": false
   }

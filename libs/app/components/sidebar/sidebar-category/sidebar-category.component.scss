@@ -1,62 +1,71 @@
 :host {
   display: flex;
   flex-direction: column;
-  --ng-doc-sidebar-category-indent: calc(
-    var(--ng-doc-sidebar-item-indent) + calc(var(--ng-doc-base-gutter) * 2)
-  );
-  --ng-doc-icon-color: var(--ng-doc-text);
+  // Pages of the category are indented 12px past its header.
+  --ng-doc-sidebar-category-indent: calc(var(--ng-doc-sidebar-item-indent) + var(--ng-doc-space-3));
+}
 
-  &[data-ng-doc-expandable='false'] {
-    .ng-doc-sidebar-category-button {
-      padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-base-gutter)
-        var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
-    }
+// The same row as a page link, in the header weight. The chevron has its own right-aligned
+// column and points right while the category is closed.
+.ng-doc-sidebar-category-button {
+  display: flex;
+  align-items: center;
+  gap: var(--ng-doc-space-2);
+  width: 100%;
+  min-height: 32px;
+  padding: var(--ng-doc-sidebar-vertical-padding, var(--ng-doc-sidebar-vetical-padding))
+    var(--ng-doc-space-2)
+    var(--ng-doc-sidebar-vertical-padding, var(--ng-doc-sidebar-vetical-padding))
+    var(--ng-doc-sidebar-item-indent);
+  border: 0;
+  border-radius: var(--ng-doc-radius-md);
+  background: none;
+  color: var(--ng-doc-heading-color);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+}
+
+button.ng-doc-sidebar-category-button {
+  cursor: pointer;
+  transition: background var(--ng-doc-transition);
+
+  &:hover {
+    background: var(--ng-doc-hover-background);
   }
 
-  &[data-ng-doc-expandable='true'] {
-    .ng-doc-sidebar-category-button {
-      padding: var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-base-gutter)
-        var(--ng-doc-sidebar-vetical-padding) var(--ng-doc-sidebar-item-indent);
-      cursor: pointer;
-      border-radius: var(--ng-doc-base-gutter);
-
-      &:hover {
-        background-color: var(--ng-doc-base-1);
-      }
-    }
+  &:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--ng-doc-primary);
   }
+}
 
-  .ng-doc-sidebar-category-button {
-    display: flex;
-    flex-direction: column;
-    border: unset;
-    background-color: unset;
-    width: 100%;
+.ng-doc-sidebar-category-title {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
 
-    .ng-doc-sidebar-category {
-      display: flex;
-      align-items: center;
-      --ng-doc-dot-background: var(--ng-doc-base-4);
-      --ng-doc-text: var(--ng-doc-heading-color);
+.ng-doc-sidebar-category-chevron {
+  flex: none;
+  margin-left: auto;
+  color: var(--ng-doc-text-muted);
+  transform: rotate(-90deg);
+  transition: transform var(--ng-doc-transition) var(--ng-doc-easing);
 
-      ng-doc-dot {
-        margin-right: calc(var(--ng-doc-base-gutter) * 2);
-      }
-
-      &.active {
-        --ng-doc-font-weight: 600;
-        --ng-doc-dot-background: var(--ng-doc-primary);
-      }
-    }
-
-    span[ng-doc-text] {
-      flex-shrink: 0;
-      margin-right: var(--ng-doc-base-gutter);
-    }
+  [aria-expanded='true'] > & {
+    transform: none;
   }
+}
 
-  .ng-doc-sidebar-category-children {
-    padding-bottom: calc(var(--ng-doc-base-gutter) * 2);
-    --ng-doc-sidebar-item-indent: var(--ng-doc-sidebar-category-indent);
+.ng-doc-sidebar-category-children {
+  display: grid;
+  gap: 1px;
+  padding-top: 2px;
+  --ng-doc-sidebar-item-indent: var(--ng-doc-sidebar-category-indent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ng-doc-sidebar-category-chevron {
+    transition: none;
   }
 }

@@ -1,36 +1,53 @@
-@import '../../styles/mixins/entities-colors';
-@import '../../styles/mixins/type-colors';
-@import '../../../ui-kit/styles/mixins';
+@use '../../styles/mixins/entities-colors';
+@use '../../styles/mixins/type-colors';
 
+// A word chip: text mixed from the kind colour toward the heading colour over a soft, opaque tint
+// of it, with a faint ring of the same hue.
 :host {
-  display: inline-block;
-  width: 22px;
-  height: 22px;
-  border-radius: calc(var(--ng-doc-base-gutter) / 2);
-  font-size: 13px;
-  text-align: center;
-  line-height: 22px;
-  text-transform: uppercase;
-  flex-shrink: 0;
-  font-weight: 700;
-  color: var(--ng-doc-kind-icon-background);
-  background: color-mix(
-    in srgb,
-    var(--ng-doc-kind-icon-background) var(--ng-doc-kind-icon-background-opacity, 15%),
-    transparent
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  height: 20px;
+  padding: 0 7px;
+  border-radius: var(--ng-doc-radius-sm);
+  font-family: var(--ng-doc-font-family);
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  color: color-mix(
+    in oklab,
+    var(--ng-doc-kind-icon-background, var(--ng-doc-hue-neutral)) var(--ng-doc-mix-strong),
+    var(--ng-doc-heading-color)
   );
+  background: color-mix(
+    in oklab,
+    var(--ng-doc-kind-icon-background, var(--ng-doc-hue-neutral))
+      var(--ng-doc-kind-icon-background-opacity, var(--ng-doc-mix-chip)),
+    var(--ng-doc-background)
+  );
+  box-shadow: inset 0 0 0 1px
+    color-mix(
+      in oklab,
+      var(--ng-doc-kind-icon-background, var(--ng-doc-hue-neutral)) 24%,
+      transparent
+    );
 
   &[data-ng-doc-size='small'] {
-    width: calc(var(--ng-doc-base-gutter) * 2);
-    height: calc(var(--ng-doc-base-gutter) * 2);
-    line-height: calc(var(--ng-doc-base-gutter) * 2);
+    height: 18px;
+    padding: 0 5px;
+    font-size: 10.5px;
   }
 
   &[data-ng-doc-type='declaration'] {
-    @include entitiesColors('data-ng-doc-kind', '--ng-doc-kind-icon-background', null);
+    @include entities-colors.entitiesColors(
+      'data-ng-doc-kind',
+      '--ng-doc-kind-icon-background',
+      null
+    );
   }
 
   &[data-ng-doc-type='type'] {
-    @include typeColors('data-ng-doc-kind', '--ng-doc-kind-icon-background', null);
+    @include type-colors.typeColors('data-ng-doc-kind', '--ng-doc-kind-icon-background', null);
   }
 }

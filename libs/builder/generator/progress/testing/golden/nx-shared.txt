@@ -1,0 +1,9 @@
+  0.0s   NgDoc: started (production)
+  0.8s   NgDoc: preparing 4%, 0.8s
+  5.8s   NgDoc: preparing 6%, 5.8s
+  7.0s   NgDoc: rendering 664 pages, 35%, 7.0s
+ 12.0s   NgDoc: rendering 637/664 pages, 57%, 12s
+ 12.4s   NgDoc: linking 664 pages, 60%, 12s
+ 15.2s   NgDoc: writing 75%, 15s
+ 20.2s   NgDoc: writing 98%, 20s
+ 20.5s   NgDoc: [32mOK[39m generated 664 pages in 20s; 6669 files written; analyze 4.7s, render 5.4s, link 2.8s, write 5.3s
