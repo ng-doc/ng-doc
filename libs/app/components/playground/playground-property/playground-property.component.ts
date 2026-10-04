@@ -17,15 +17,18 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NgDocKindIconComponent } from '@ng-doc/app/components/kind-icon';
-import { isPlaygroundProperty } from '@ng-doc/app/helpers';
+import { isPlaygroundProperty, resolvePlaygroundOption } from '@ng-doc/app/helpers';
 import {
   NgDocProvidedTypeControl,
   NgDocTypeControl,
   NgDocTypeControlProviderOptions,
 } from '@ng-doc/app/interfaces';
 import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes';
-import { extractValueOrThrow } from '@ng-doc/core/helpers/extract-value';
-import { NgDocPlaygroundContent, NgDocPlaygroundProperty } from '@ng-doc/core/interfaces';
+import {
+  NgDocPlaygroundContent,
+  NgDocPlaygroundOption,
+  NgDocPlaygroundProperty,
+} from '@ng-doc/core/interfaces';
 import { NgDocLabelComponent, NgDocTooltipDirective } from '@ng-doc/ui-kit';
 
 let nextId = 0;
@@ -188,11 +191,11 @@ function valueType(property: NgDocPlaygroundProperty | NgDocPlaygroundContent | 
     return property.type;
   }
 
-  const option: string | undefined = property.options?.[0];
+  const option: string | NgDocPlaygroundOption | undefined = property.options?.[0];
 
   if (option !== undefined) {
     try {
-      const type: string = typeof (property.isManual ? option : extractValueOrThrow(option));
+      const type: string = typeof resolvePlaygroundOption(option, property.isManual).value;
 
       return CHIP_TYPES.has(type) ? type : '';
     } catch {

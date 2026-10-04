@@ -222,6 +222,77 @@ export class Optional {
     expect([...generator[name].options].sort(), name).toEqual([...(value.options ?? [])].sort());
 });
 
+test('enum inputs list the names and values of their members, in the written order', async () => {
+  // A file the checker reads first creates the later members first.
+  write(
+    'a-warm.ts',
+    `import { Status } from './status';\nexport const warm: [Status.Unknown, Status.Bad] = [Status.Unknown, Status.Bad];`,
+  );
+  write(
+    'status.ts',
+    `import { Component, Input, input } from '@angular/core';
+export enum Status { Good = 'good', Bad = 'bad', Unknown = '' }
+export const enum Level { Low, High = 5, Top }
+enum Mixed { Yes = 'yes', No = 0 }
+@Component({selector: 'status-box', template: ''})
+export class StatusBox {
+  @Input() status: Status = Status.Good;
+  level = input<Level>(Level.Low);
+  optional = input<Status>();
+  @Input() mixed: Mixed | 'maybe' = Mixed.Yes;
+  @Input() withLiteral: Status | 'maybe' = 'maybe';
+  @Input() single: Status.Good | Status.Bad = Status.Bad;
+}`,
+  );
+  write(
+    'entry.ts',
+    `import { StatusBox } from './status'; export default {playgrounds:{status:{target:StatusBox,template:'<ng-doc-selector></ng-doc-selector>'}}};`,
+  );
+  await sync();
+  const result = service.describeGuide('guide');
+  expect(result.diagnostics).toEqual([]);
+  const properties = result.value!.playgrounds[0].properties as Record<
+    string,
+    { type: string; options: unknown[] }
+  >;
+  const options = Object.fromEntries(
+    Object.entries(properties).map(([name, value]) => [name, value.options]),
+  );
+  expect(options).toEqual({
+    status: [
+      { label: 'Good', value: 'good' },
+      { label: 'Bad', value: 'bad' },
+      { label: 'Unknown', value: '' },
+    ],
+    level: [
+      { label: 'Low', value: 0 },
+      { label: 'High', value: 5 },
+      { label: 'Top', value: 6 },
+    ],
+    // `undefined` of an optional input stays source text, which the runtime evaluates.
+    optional: [
+      'undefined',
+      { label: 'Good', value: 'good' },
+      { label: 'Bad', value: 'bad' },
+      { label: 'Unknown', value: '' },
+    ],
+    mixed: [{ label: 'Yes', value: 'yes' }, { label: 'No', value: 0 }, "'maybe'"],
+    single: [
+      { label: 'Good', value: 'good' },
+      { label: 'Bad', value: 'bad' },
+    ],
+    withLiteral: [
+      { label: 'Good', value: 'good' },
+      { label: 'Bad', value: 'bad' },
+      { label: 'Unknown', value: '' },
+      "'maybe'",
+    ],
+  });
+  // The type keeps the enum's name, so a type control registered for it still matches.
+  expect(properties.status.type).toBe('Status');
+  expect(JSON.parse(JSON.stringify(result))).toEqual(result);
+});
+
 test('a query terminated by a template watchdog leaves a program that answers no query and is not retained', async () => {
   await service.dispose();
   let slow = false;

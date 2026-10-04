@@ -9,3 +9,4 @@ export * from './is-dark-os-theme';
 export * from './is-external-link';
 export * from './is-playground-property';
 export * from './page-url';
+export * from './playground-option';

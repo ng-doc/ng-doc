@@ -76,9 +76,20 @@ function collect(node: TypeNode, into: ts.Type[], seen: Set<Node>): void {
       }
     }
     if (Node.isEnumDeclaration(declaration)) {
-      declaration.getMembers().forEach((member) => into.push(member.getType().compilerType));
+      // A member's declared type is the fresh literal type; a union holds the regular one.
+      declaration
+        .getMembers()
+        .forEach((member) => into.push(regularType(member.getType().compilerType)));
       return;
     }
   }
   into.push(node.getType().compilerType);
+}
+
+/**
+ * The regular type of a fresh literal type, which is the one unions hold; other types as they are.
+ * @param type - A type.
+ */
+function regularType(type: ts.Type): ts.Type {
+  return (type as ts.Type & { regularType?: ts.Type }).regularType ?? type;
 }

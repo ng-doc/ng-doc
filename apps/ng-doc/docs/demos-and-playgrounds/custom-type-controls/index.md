@@ -54,13 +54,16 @@ The control of the playground above:
 Before the control renders, the playground sets these fields of `NgDocTypeControl`. Declare the
 ones you need, as signal inputs or as plain fields:
 
-| Field         | Type                    | Value                                                                             |
-| ------------- | ----------------------- | --------------------------------------------------------------------------------- |
-| `name`        | `string`                | The name of the input, or its `label` from the `controls` of the playground.      |
-| `description` | `string`                | The description of the input, from its doc comment, as HTML.                      |
-| `default`     | the type of the control | The default value of the input.                                                   |
-| `options`     | `string[]`              | The members of the input's union type, as written in code, such as `"'small'"`.   |
-| `isManual`    | `boolean`               | `true` when the input comes from `controls` in the configuration of a playground. |
+| Field         | Type                                     | Value                                                                                                      |
+| ------------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `name`        | `string`                                 | The name of the input, or its `label` from the `controls` of the playground.                               |
+| `description` | `string`                                 | The description of the input, from its doc comment, as HTML.                                               |
+| `default`     | the type of the control                  | The default value of the input.                                                                            |
+| `options`     | `Array<string \| NgDocPlaygroundOption>` | The members of the input's union type: code, such as `"'small'"`, or an enum member's `label` and `value`. |
+| `isManual`    | `boolean`                                | `true` when the input comes from `controls` in the configuration of a playground.                          |
+
+`resolvePlaygroundOption(option, isManual)` from `@ng-doc/app` turns an option into the value it
+sets and the text that shows it.
 
 The playground sets a field that the control declares as an input, a signal input or an `@Input()`,
 with `setInput()`, so `ngOnChanges()` reports it. It assigns a plain field. With signal inputs,

@@ -13,14 +13,14 @@ import {
   Signal,
 } from '@angular/core';
 import { FormControl, FormGroup, FormsModule } from '@angular/forms';
-import { isPlaygroundProperty } from '@ng-doc/app/helpers';
+import { isPlaygroundProperty, resolvePlaygroundOption } from '@ng-doc/app/helpers';
 import { NgDocProvidedTypeControl } from '@ng-doc/app/interfaces';
 import { getTokenForType } from '@ng-doc/app/providers/type-control';
-import { extractValueOrThrow } from '@ng-doc/core/helpers/extract-value';
 import { isPresent } from '@ng-doc/core/helpers/is-present';
 import { objectKeys } from '@ng-doc/core/helpers/object-keys';
 import {
   NgDocPlaygroundContent,
+  NgDocPlaygroundOption,
   NgDocPlaygroundProperties,
   NgDocPlaygroundProperty,
 } from '@ng-doc/core/interfaces';
@@ -186,19 +186,19 @@ export class NgDocPlaygroundPropertiesComponent<
   }
 
   private getControlForTypeAlias(
-    options?: string[],
+    options?: Array<string | NgDocPlaygroundOption>,
     isManual?: boolean,
   ): NgDocProvidedTypeControl | undefined {
     if (options && options.length) {
       let optionsIsValid: boolean = true;
 
-      if (!isManual) {
-        try {
-          // checking that all values are extractable
-          options.forEach((item: string) => extractValueOrThrow(item));
-        } catch {
-          optionsIsValid = false;
-        }
+      try {
+        // checking that all values are extractable
+        options.forEach((item: string | NgDocPlaygroundOption) =>
+          resolvePlaygroundOption(item, isManual),
+        );
+      } catch {
+        optionsIsValid = false;
       }
 
       if (optionsIsValid) {

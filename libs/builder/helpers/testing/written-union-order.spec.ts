@@ -25,6 +25,7 @@ export class Box {
   @Input() color: Color = 'primary';
   @Input() nested: Nested = 'x';
   @Input() size: Size = Size.Medium;
+  @Input() sized: 'auto' | Size = 'auto';
   tone = input<'soft' | 'link' | 'loud'>('soft');
   required = input.required<'z' | 'link'>();
   bound = model<'m' | 'link'>('m');
@@ -87,6 +88,8 @@ describe('writtenUnionOrder', () => {
       color: ["'primary'", "'warning'", "'link'"],
       nested: ["'primary'", "'warning'", "'link'", "'x'", "'y'"],
       size: ['Size.Medium', 'Size.Small'],
+      // The members of an enum among other members: the union holds their regular types.
+      sized: ["'auto'", 'Size.Medium', 'Size.Small'],
       tone: ["'soft'", "'link'", "'loud'"],
       required: ["'z'", "'link'"],
       bound: ["'m'", "'link'"],

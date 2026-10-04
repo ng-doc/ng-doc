@@ -1,4 +1,5 @@
 import {
+  type NgDocPlaygroundOption,
   type NgDocPlaygroundProperties,
   type NgDocPlaygroundProperty,
   buildPlaygroundDemoPipeTemplate,
@@ -53,6 +54,26 @@ function canonicalMembers(type: Type): Type[] {
           TypeFormatFlags.NoTruncation | TypeFormatFlags.UseSingleQuotesForStringLiteralType,
         ),
   ).map((member) => wrappers.get(member)!);
+}
+
+/**
+ * An option of a union input. The runtime evaluates the printed text of a member, which works for
+ * literals (`'small'`, `1`) but not for an enum member (`Status.Good`): a member of an enum is the
+ * member's name, which the playground shows, and the literal value the checker resolved for it,
+ * which the playground sets.
+ * @param member - A member of the input's union type.
+ */
+function playgroundOption(member: Type): string | NgDocPlaygroundOption {
+  if (member.isEnumLiteral()) {
+    const value = member.getLiteralValue();
+    const name = member.getSymbol()?.getName();
+    if (name && (typeof value === 'string' || typeof value === 'number'))
+      return { label: name, value };
+  }
+  return member.getText(
+    undefined,
+    TypeFormatFlags.NoTruncation | TypeFormatFlags.UseSingleQuotesForStringLiteralType,
+  );
 }
 
 /** Resolves wrappers and local constants without executing source code. */
@@ -318,12 +339,7 @@ export function guideSemantics(
             ? docs.getJsDocParam(target.getMethodOrThrow('transform'), input.getName())
             : docs.getJsDocDescription(input),
           // In the written order: the checker's (stable) order sorts literals by value.
-          options: writtenUnionOrder(input, type, canonicalMembers(type)).map((part) =>
-            part.getText(
-              undefined,
-              TypeFormatFlags.NoTruncation | TypeFormatFlags.UseSingleQuotesForStringLiteralType,
-            ),
-          ),
+          options: writtenUnionOrder(input, type, canonicalMembers(type)).map(playgroundOption),
         };
       }
       const controls =

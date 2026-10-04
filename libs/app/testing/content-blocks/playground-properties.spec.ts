@@ -47,6 +47,15 @@ const PROPERTIES: NgDocPlaygroundProperties = {
   label: { type: 'string', inputName: 'label', description: 'Text of the tag' },
   color: { type: 'NgDocColor', inputName: 'color', options: ["'primary'", "'alert'"] },
   rounded: { type: 'boolean', inputName: 'rounded' },
+  // An enum, as the new engine lists its members: names and values.
+  level: {
+    type: 'Level',
+    inputName: 'level',
+    options: [
+      { label: 'Low', value: 0 },
+      { label: 'High', value: 5 },
+    ],
+  },
 };
 
 @Component({
@@ -74,6 +83,7 @@ class PropertiesHostComponent {
       label: new FormControl<unknown>('Tag'),
       color: new FormControl<unknown>('primary'),
       rounded: new FormControl<unknown>(false),
+      level: new FormControl<unknown>(0),
     }),
     content: new FormGroup<Record<string, FormControl<boolean>>>({}),
   });
@@ -120,13 +130,16 @@ describeChangeDetection(
         queryAll('ng-doc-playground-property').map(
           (row: HTMLElement) => row.querySelector('.ng-doc-playground-property-name')?.textContent,
         ),
-      ).toEqual(['color', 'label', undefined]);
-      // The type chip sits under the name: `string` for the alias of string literals.
+      ).toEqual(['color', 'level', 'label', undefined]);
+      // The type chip sits under the name: `string` for the alias of string literals, `number`
+      // for the enum of numbers.
       expect(
         queryAll('ng-doc-playground-property ng-doc-kind-icon').map((chip: HTMLElement) =>
           chip.getAttribute('data-ng-doc-kind'),
         ),
-      ).toEqual(['string', 'string']);
+      ).toEqual(['string', 'number', 'string']);
+      // The enum gets the list of its members.
+      expect(queryAll('ng-doc-type-alias-control')).toHaveLength(2);
       // The boolean control carries its own label.
       expect(query('ng-doc-boolean-control')?.textContent?.trim()).toBe('rounded');
     });
@@ -167,7 +180,7 @@ describeChangeDetection(
         'ng-doc-playground-properties',
       ]);
       expect(queryAll('.ng-doc-playground-property-list ng-doc-playground-property')).toHaveLength(
-        3,
+        4,
       );
     });
 

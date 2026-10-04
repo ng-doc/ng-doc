@@ -1,5 +1,6 @@
 import { Signal } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
+import { NgDocPlaygroundOption } from '@ng-doc/core/interfaces';
 
 /**
  * A field of a type control that the playground sets: a plain field, or a signal input
@@ -31,9 +32,12 @@ export interface NgDocTypeControl<T = unknown> extends ControlValueAccessor {
    */
   default?: NgDocTypeControlField<T>;
   /**
-   * The list of possible values, it usually works only for Type Aliases which has several values
+   * The list of possible values, it usually works only for Type Aliases which has several values.
+   * An option is the source text of a union member (such as `'small'`), a plain value when
+   * `isManual` is set, or the name and value of an enum member (`resolvePlaygroundOption` reads
+   * all three)
    */
-  options?: NgDocTypeControlField<string[]>;
+  options?: NgDocTypeControlField<Array<string | NgDocPlaygroundOption>>;
   /**
    * Determines if the property is manually added by the user using `controls` property in playground config
    */
