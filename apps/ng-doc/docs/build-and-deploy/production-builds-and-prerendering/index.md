@@ -54,6 +54,15 @@ option.
 
 `vite build --watch` isn't supported. Use the development server to work on pages.
 
+## Demo pages
+
+When the site has demo pages (`*IsolatedDemosPage`), the browser build also writes the page of the
+demo application, ng-doc-demo.html, and the server build its server entry, demo-server.mjs.
+The prerender renders every demo page into `dist/my-app/browser/demo-preview/<page route>/<demo name>/index.html`
+and lists it in `prerendered-routes.json`. A demo that fails to render on the server doesn't fail
+the build: its page is the demo application's page, which renders it in the browser, and the build
+prints a warning. Without prerendering, every demo page is that page.
+
 ## Wait for content on the server
 
 NgDoc loads page content asynchronously. Wrap the server bootstrap function with

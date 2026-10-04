@@ -22,6 +22,10 @@ const api: NgDocApi = {
         'libs/app/helpers/content-preload.ts',
         'libs/app/helpers/hydration-snapshot.ts',
         'libs/app/helpers/page-url.ts',
+        // The bootstrap and the iframe messages of the demo application, which generated code and
+        // the demo frame use.
+        'libs/app/demo-app/demo-application.ts',
+        'libs/app/demo-app/demo-message.ts',
       ],
     },
     {
