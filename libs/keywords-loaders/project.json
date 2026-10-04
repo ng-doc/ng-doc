@@ -7,22 +7,10 @@
   "implicitDependencies": ["core"],
   "targets": {
     "pre-build": {
-      "executor": "@nx/rollup:rollup",
+      "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
       "options": {
-        "outputPath": "dist/libs/keywords-loaders",
-        "project": "libs/keywords-loaders/package.json",
-        "main": "libs/keywords-loaders/index.ts",
-        "tsConfig": "libs/keywords-loaders/tsconfig.lib.json",
-        "assets": [
-          {
-            "glob": "**/*.md",
-            "input": "libs/keywords-loaders",
-            "output": "./"
-          }
-        ],
-        "generateExportsField": true,
-        "babelUpwardRootMode": true
+        "command": "rollup -c libs/keywords-loaders/rollup.config.cjs"
       }
     },
     "build": {
