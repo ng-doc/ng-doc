@@ -17,6 +17,13 @@ import {
   MigrationFinding,
   MigrationPlan,
 } from './analyze';
+import {
+  applyLegacyEdits,
+  LEGACY_OUT_DIR_IGNORE,
+  LegacyFolderPlan,
+  planLegacyFolder,
+  undoLegacyEdits,
+} from './legacy-folder';
 import { renderReport } from './report';
 import { NgDocMigrateToViteSchema } from './schema';
 import {
@@ -186,6 +193,12 @@ function selectProject(
  */
 function beforeMigration(project: WorkspaceProject, state: MigrationState): WorkspaceProject {
   const targets = { ...project.targets };
+  for (const name of [state.build.legacy, ...(state.serve ? [state.serve.legacy] : [])]) {
+    const target = targets[name];
+    if (target && state.legacyFolder) {
+      targets[name] = undoLegacyEdits(target, name, state.legacyFolder.edits).target;
+    }
+  }
   const buildLegacy = targets[state.build.legacy];
   if (buildLegacy) {
     targets[state.build.name] = buildLegacy;
@@ -439,6 +452,30 @@ function migrate(
         dependencies: {},
       };
 
+  // The kept legacy targets get a generated folder of their own, so the engines never share one.
+  // A second run plans the same folder from the original targets and adds only missing files.
+  const legacyFolder: LegacyFolderPlan | undefined = plan.legacyOutput
+    ? planLegacyFolder(tree, {
+        project,
+        build: { name: plan.build.name, legacyName: plan.build.legacyName },
+        ...(plan.serve
+          ? { serve: { name: plan.serve.name, legacyName: plan.serve.legacyName } }
+          : {}),
+        legacyOutput: plan.legacyOutput,
+        ...(plan.setup.ngDocConfig ? { ngDocConfig: plan.setup.ngDocConfig } : {}),
+        owned: new Set(Object.keys(next.created)),
+      })
+    : undefined;
+  plan.findings.push(...(legacyFolder?.findings ?? []));
+  if (!state && legacyFolder?.edits.length) {
+    const { edits } = legacyFolder;
+    plan.build.legacy = applyLegacyEdits(plan.build.legacy, plan.build.legacyName, edits);
+    if (plan.serve) {
+      plan.serve.legacy = applyLegacyEdits(plan.serve.legacy, plan.serve.legacyName, edits);
+    }
+    next.legacyFolder = { folder: legacyFolder.folder, edits };
+  }
+
   // Targets: the originals move to `<name>-legacy`, the Vite targets take their names. A second run
   // leaves the targets alone, so edits to the new targets survive it.
   if (!state) {
@@ -467,6 +504,15 @@ function migrate(
     });
   }
 
+  // The legacy targets' configuration and tsconfig files: created once, never overwritten.
+  if (next.legacyFolder) {
+    for (const [file, text] of Object.entries(legacyFolder?.files ?? {})) {
+      if (tree.exists(file)) continue;
+      tree.create(file, text);
+      next.created[file] = hashContent(text);
+    }
+  }
+
   // The server entry waits for NgDoc content before a page is prerendered.
   const serverEntry = plan.setup.server;
   if (serverEntry && tree.exists(serverEntry)) {
@@ -491,10 +537,15 @@ function migrate(
     }
   }
 
-  // The engine's cache folder stays out of version control.
+  // The engine's cache folder, and the legacy targets' generated folder, stay out of version control.
+  const ignored = [CACHE_IGNORE, ...(next.legacyFolder ? [LEGACY_OUT_DIR_IGNORE] : [])];
   if (tree.exists('.gitignore')) {
     const before = tree.readText('.gitignore');
-    if (addGitIgnoreLine(tree, CACHE_IGNORE)) {
+    const cache = addGitIgnoreLine(tree, CACHE_IGNORE);
+    const legacy =
+      !!next.legacyFolder &&
+      addGitIgnoreLine(tree, LEGACY_OUT_DIR_IGNORE, 'NgDoc files of the legacy builders');
+    if (cache || legacy) {
       const after = tree.readText('.gitignore');
       tree.overwrite('.gitignore', before);
       modify(tree, next, '.gitignore', after);
@@ -503,7 +554,7 @@ function migrate(
     plan.findings.push({
       level: 'manual',
       subject: '.gitignore',
-      message: `does not exist; keep \`${CACHE_IGNORE}\` out of version control.`,
+      message: `does not exist; keep ${ignored.map((line) => `\`${line}\``).join(' and ')} out of version control.`,
     });
   }
 
@@ -521,7 +572,10 @@ function migrate(
     plan.findings.push({
       level: 'manual',
       subject: 'ngDoc.outDir',
-      message: `is not a string literal. Delete \`<outDir>/ng-doc/${project.name}\` once before the first build.`,
+      message:
+        `is not a string literal. Delete \`<outDir>/ng-doc/${project.name}\` once before the first ` +
+        'build. The legacy targets keep writing that folder, so delete it again whenever you ' +
+        'switch engines.',
     });
   }
   if (plan.legacyOutput) next.generatedFolder = plan.legacyOutput;
@@ -542,6 +596,14 @@ function migrate(
     modified: Object.keys(next.modified).sort(),
     ...(next.legacyOutputDeleted && next.generatedFolder ? { deleted: next.generatedFolder } : {}),
     ...(next.generatedFolder ? { generatedFolder: next.generatedFolder } : {}),
+    ...(next.legacyFolder
+      ? {
+          legacyFolder: {
+            folder: next.legacyFolder.folder,
+            targets: [next.build.legacy, ...(next.serve ? [next.serve.legacy] : [])],
+          },
+        }
+      : {}),
     dependencies: next.dependencies,
     mismatches: mismatches as DependencyMismatch[],
   });
@@ -613,7 +675,15 @@ function revert(
   }
   const kept: string[] = [];
   for (const target of targets) {
-    const legacy = project.targets[target.legacy]!;
+    const original = project.targets[target.legacy]!;
+    // The values the migration changed so the target writes its own generated folder go back.
+    const undone = state.legacyFolder
+      ? undoLegacyEdits(original, target.legacy, state.legacyFolder.edits)
+      : { target: original, kept: [] };
+    for (const path of undone.kept) {
+      kept.push(`\`${path}\` was changed after the migration and was kept.`);
+    }
+    const legacy = undone.target;
     const current = project.targets[target.name];
     const written = state.targetHashes?.[target.name];
     if (written && (!current || hashTarget(current) !== written)) {
@@ -657,6 +727,7 @@ function revert(
   // engine is left untracked once `/.cache/ng-doc` leaves .gitignore again.
   if (state.generatedFolder) deleteFolder(tree, state.generatedFolder);
   if (state.cacheFolder) deleteFolder(tree, state.cacheFolder);
+  if (state.legacyFolder) deleteFolder(tree, state.legacyFolder.folder);
   const keepBackups = kept.some((line) => line.includes('backup/'));
   tree.getDir(stateFolder(project.name)).visit((file) => {
     if (!keepBackups || !file.includes('/backup/')) tree.delete(file);

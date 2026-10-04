@@ -941,6 +941,35 @@ test('allows dotted in-root directories and rejects byte-identical unowned colli
   ).rejects.toMatchObject({ code: 'ENOENT' });
 });
 
+test('an unowned collision names the output folder, the usual cause and the way out', async () => {
+  // The legacy builders write the same `ng-doc/<project>` folder by default and leave no manifest.
+  const root = await temporary('ng-doc-legacy-collision');
+  await mkdir(path.join(root, 'api', 'button'), { recursive: true });
+  await writeFile(path.join(root, 'api', 'button', 'page.ts'), 'export const legacy = true;\n');
+  const page = artifact('project-one', 'button', [output('api/button/page.ts', 'export {};\n')]);
+  const result = await new TransactionalOutputCommitter({ outputRoot: root }).commit(
+    { generation: 1, candidate: snapshot([page]) },
+    guard(),
+    new AbortController().signal,
+  );
+
+  expect(result).toMatchObject({
+    status: 'failed',
+    diagnostics: [{ code: 'OUTPUT_UNOWNED_COLLISION', severity: 'error', stage: 'commit' }],
+  });
+  const message = result.diagnostics[0].message;
+  expect(message).toBe(
+    `Refusing to overwrite unowned output api/button/page.ts: the output folder ` +
+      `${path.resolve(root).replace(/\\/g, '/')} holds files this engine didn't write. A common ` +
+      'cause is the legacy builders (build-legacy, serve-legacy) or another tool writing to the ' +
+      'same folder. Delete the folder and restart, or give the other writer its own folder.',
+  );
+  // The ownership rule itself is unchanged: the file stays as the other writer left it.
+  expect(await readFile(path.join(root, 'api', 'button', 'page.ts'), 'utf8')).toBe(
+    'export const legacy = true;\n',
+  );
+});
+
 /** A backup copy refused by the file system (a full volume). */
 const copyRefused = async (): Promise<never> => {
   throw Object.assign(new Error('no space left on device'), { code: 'ENOSPC' });

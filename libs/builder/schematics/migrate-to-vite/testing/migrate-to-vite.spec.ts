@@ -62,6 +62,30 @@ function pluginTable(name: string): string[] {
   return [...match[1].matchAll(/^\s*'?([A-Za-z]+)'?[:,]/gm)].map((item) => item[1]).sort();
 }
 
+/**
+ * The `paths` a tsconfig of the tree compiles with, as TypeScript resolves them through `extends`
+ * and `baseUrl`, each entry as an absolute path of the tree.
+ */
+function compilerPaths(tree: UnitTestTree, file: string): Record<string, string[]> {
+  const host: ts.ParseConfigHost = {
+    useCaseSensitiveFileNames: true,
+    readDirectory: () => [],
+    fileExists: (path) => tree.exists(path),
+    readFile: (path) => (tree.exists(path) ? tree.readText(path) : undefined),
+  };
+  const path = `/${file}`;
+  const { config, error } = ts.readConfigFile(path, host.readFile);
+  if (error) throw new Error(ts.flattenDiagnosticMessageText(error.messageText, '\n'));
+  const parsed = ts.parseJsonConfigFileContent(config, host, dirname(path), undefined, path);
+  const base = (parsed.options.baseUrl ?? parsed.options['pathsBasePath']) as string;
+  return Object.fromEntries(
+    Object.entries(parsed.options.paths ?? {}).map(([alias, entries]) => [
+      alias,
+      entries.map((entry) => join(base, entry)),
+    ]),
+  );
+}
+
 describe('migrate-to-vite', () => {
   it('migrates a standalone Angular 22 SSR application', async () => {
     const tree = await migrate(standaloneApp());
@@ -446,18 +470,213 @@ describe('migrate-to-vite', () => {
       'serve-legacy',
       'lint',
     ]);
-    // Everything but the new targets and the changed buildTarget values keeps its bytes: the
-    // original build target is renamed in place, and the final newline stays.
+    // Everything but the new targets, the changed buildTarget values and the legacy targets' own
+    // generated folder keeps its bytes: the original build target is renamed in place, and the
+    // final newline stays.
     expect(text.slice(0, text.indexOf('"targets"'))).toBe(docs.slice(0, docs.indexOf('"targets"')));
-    expect(block('build-legacy', text)).toBe(block('build', docs));
+    expect(block('build-legacy', text)).toBe(
+      block('build', docs)
+        .replace('"apps/docs/tsconfig.app.json"', '"apps/docs/tsconfig.app.legacy.json"')
+        .replace('"ng-doc/docs/assets"', '"ng-doc-legacy/ng-doc/docs/assets"')
+        .replace(
+          '"inlineStyleLanguage": "scss"',
+          '"inlineStyleLanguage": "scss",\n        "ngDoc": {\n          "config": "apps/docs/ng-doc.config.legacy.ts"\n        }',
+        ),
+    );
     expect(block('build-legacy', text)).toContain('"outputs": ["{options.outputPath}"]');
     expect(block('serve-legacy', text)).toBe(
-      block('serve', docs).replace(/docs:build:/g, 'docs:build-legacy:'),
+      block('serve', docs)
+        .replace(/docs:build:/g, 'docs:build-legacy:')
+        .replace(
+          /\n {4}\}$/,
+          ',\n      "options": {\n        "ngDoc": {\n          "config": "apps/docs/ng-doc.config.legacy.ts"\n        }\n      }\n    }',
+        ),
     );
     expect(text).toContain('    "lint": {\n      "executor": "@nx/eslint:lint"\n    }\n  }\n}\n');
     // The new targets start with their executor, as Nx writes targets.
     expect(Object.keys(project.targets.build)[0]).toBe('executor');
     expect(Object.keys(project.targets.serve)[0]).toBe('executor');
+  });
+
+  it('gives the kept legacy targets their own generated folder in an Angular CLI workspace', async () => {
+    const original = standaloneApp();
+    const tree = await migrate(original);
+    const targets = workspace(tree).projects.site.architect;
+
+    // The legacy targets load a configuration with their own `outDir`, compile with a tsconfig
+    // that maps `@ng-doc/generated` there, and copy the generated assets from there.
+    const legacy = targets['build-legacy'].options;
+    expect(legacy.tsConfig).toBe('tsconfig.app.legacy.json');
+    expect(legacy.ngDoc).toEqual({ config: 'ng-doc.config.legacy.ts' });
+    expect(legacy.assets).toContainEqual({
+      glob: '**/*',
+      input: 'ng-doc-legacy/ng-doc/site/assets',
+      output: 'assets/ng-doc',
+    });
+    expect(JSON.stringify(legacy.assets)).not.toContain('"ng-doc/site/assets"');
+    expect(targets['serve-legacy'].options).toEqual({
+      ngDoc: { config: 'ng-doc.config.legacy.ts' },
+    });
+    expect(tree.readText('ng-doc.config.legacy.ts')).toContain(
+      "import config from './ng-doc.config';",
+    );
+    expect(tree.readText('ng-doc.config.legacy.ts')).toContain(
+      "const legacyConfig: NgDocConfiguration = { ...config, outDir: 'ng-doc-legacy' };",
+    );
+    expect(compilerPaths(tree, 'tsconfig.app.legacy.json')).toEqual({
+      '@ng-doc/generated': ['/ng-doc-legacy/ng-doc/site/index.ts'],
+      '@ng-doc/generated/*': ['/ng-doc-legacy/ng-doc/site/*'],
+    });
+
+    // The Vite engine keeps the project's folder, tsconfig and configuration.
+    expect(compilerPaths(tree, 'tsconfig.app.json')).toEqual({
+      '@ng-doc/generated': ['/ng-doc/site/index.ts'],
+      '@ng-doc/generated/*': ['/ng-doc/site/*'],
+    });
+    for (const file of ['tsconfig.json', 'tsconfig.app.json', 'ng-doc.config.ts']) {
+      expect(tree.readText(file)).toBe(original[file]);
+    }
+    const config = tree.readText('vite.config.mjs');
+    expect(config).toContain("outputRoot: workspace('ng-doc/site'),");
+    expect(config).toContain("tsconfig: workspace('tsconfig.app.json'),");
+    expect(config).toContain("configFile: workspace('ng-doc.config.ts'),");
+
+    expect(tree.readText('.gitignore')).toBe(
+      `${original['.gitignore']}\n# NgDoc cache\n/.cache/ng-doc\n\n# NgDoc files of the legacy builders\n/ng-doc-legacy\n`,
+    );
+    const report = tree.readText('.ng-doc-migration/site/report.md');
+    expect(report).toContain('- Created `ng-doc.config.legacy.ts`.');
+    expect(report).toContain('- Created `tsconfig.app.legacy.json`.');
+    expect(report).toContain(
+      '- `build-legacy` and `serve-legacy` write their generated files to ' +
+        '`ng-doc-legacy/ng-doc/site` (added to `.gitignore`), so the legacy builders and the Vite ' +
+        'engine never share a generated folder.',
+    );
+    expect(report).toContain(
+      '3. The Vite targets write `ng-doc/site` and the `-legacy` targets ' +
+        '`ng-doc-legacy/ng-doc/site`, so you can switch between them without deleting anything.',
+    );
+    expect(report).not.toContain('Both engines write');
+  });
+
+  it('gives the kept legacy targets their own generated folder in an Nx project.json', async () => {
+    const files = nxApp();
+    const project = JSON.parse(files['apps/docs/project.json']);
+    project.targets.build.configurations.production.tsConfig = 'apps/docs/tsconfig.prod.json';
+    files['apps/docs/project.json'] = `${JSON.stringify(project, null, 2)}\n`;
+    // Nx's layout: the mappings live in tsconfig.base.json, resolved from its `baseUrl`.
+    files['tsconfig.base.json'] = `${JSON.stringify(
+      {
+        compilerOptions: {
+          baseUrl: '.',
+          paths: {
+            '@acme/ui': ['libs/ui/src/index.ts'],
+            '@ng-doc/generated': ['ng-doc/docs/index.ts'],
+          },
+        },
+      },
+      null,
+      2,
+    )}\n`;
+    files['apps/docs/tsconfig.app.json'] = '{ "extends": "../../tsconfig.base.json" }\n';
+    files['apps/docs/tsconfig.prod.json'] = '{ "extends": "./tsconfig.app.json" }\n';
+    files['libs/lib/project.json'] = '{ "name": "lib", "targets": {} }\n';
+    files['.gitignore'] = '/node_modules\n';
+
+    const tree = await migrate(files);
+
+    const targets = JSON.parse(tree.readText('apps/docs/project.json')).targets;
+    expect(targets['build-legacy'].options.tsConfig).toBe('apps/docs/tsconfig.app.legacy.json');
+    expect(targets['build-legacy'].configurations.production.tsConfig).toBe(
+      'apps/docs/tsconfig.prod.legacy.json',
+    );
+    expect(targets['build-legacy'].options.ngDoc).toEqual({
+      config: 'apps/docs/ng-doc.config.legacy.ts',
+    });
+    expect(targets['serve-legacy'].options).toEqual({
+      ngDoc: { config: 'apps/docs/ng-doc.config.legacy.ts' },
+    });
+    // Without an NgDoc configuration, the legacy one sets only `outDir`.
+    expect(tree.readText('apps/docs/ng-doc.config.legacy.ts')).toContain(
+      "const legacyConfig: NgDocConfiguration = { outDir: 'ng-doc-legacy' };",
+    );
+    for (const file of [
+      'apps/docs/tsconfig.app.legacy.json',
+      'apps/docs/tsconfig.prod.legacy.json',
+    ]) {
+      expect(compilerPaths(tree, file)).toEqual({
+        '@acme/ui': ['/libs/ui/src/index.ts'],
+        '@ng-doc/generated': ['/ng-doc-legacy/ng-doc/docs/index.ts'],
+      });
+    }
+    // The Nx edits stay in the migrated project.json; shared files are not touched.
+    for (const file of [
+      'tsconfig.base.json',
+      'apps/docs/tsconfig.app.json',
+      'apps/docs/tsconfig.prod.json',
+      'libs/lib/project.json',
+      'nx.json',
+    ]) {
+      expect(tree.readText(file)).toBe(files[file]);
+    }
+    expect(tree.exists('angular.json')).toBe(false);
+    expect(tree.readText('.gitignore')).toContain('\n/ng-doc-legacy\n');
+    expect(tree.readText('.ng-doc-migration/docs/report.md')).toContain(
+      'write their generated files to `ng-doc-legacy/ng-doc/docs`',
+    );
+  });
+
+  it('keeps the shared folder, and says how to separate it, when it cannot remap the legacy build', async () => {
+    // This tsconfig maps `@ng-doc/generated` relative to its own folder, outside `ng-doc/docs`.
+    const tree = await migrate(ngModuleApp());
+    const targets = workspace(tree).projects.docs.architect;
+    expect(targets['build-legacy'].options.tsConfig).toBe('projects/docs/tsconfig.app.json');
+    expect(targets['build-legacy'].options.ngDoc).toBeUndefined();
+    expect(tree.exists('projects/docs/src/ng-doc.config.legacy.ts')).toBe(false);
+    expect(tree.exists('projects/docs/tsconfig.app.legacy.json')).toBe(false);
+    const report = tree.readText('.ng-doc-migration/docs/report.md');
+    expect(report).toContain(
+      "`build-legacy.tsConfig`: `projects/docs/tsconfig.app.json` maps no path into `ng-doc/docs`, so the schematic can't point `@ng-doc/generated` of the legacy targets at another folder. The legacy targets keep writing `ng-doc/docs`, the Vite engine's folder",
+    );
+    expect(report).toContain('3. Both engines write `ng-doc/docs`.');
+    expect(report).not.toContain('ng-doc-legacy/ng-doc/docs');
+    expect(JSON.parse(tree.readText('.ng-doc-migration/docs/state.json')).legacyFolder).toBe(
+      undefined,
+    );
+  });
+
+  it('writes the legacy configuration again when it is missing on a second run', async () => {
+    const once = await migrate(standaloneApp());
+    const text = once.readText('ng-doc.config.legacy.ts');
+    once.delete('ng-doc.config.legacy.ts');
+    const twice = await migrate(once);
+    expect(twice.readText('ng-doc.config.legacy.ts')).toBe(text);
+  });
+
+  it('reverts the legacy targets’ folder and keeps a legacy value changed since', async () => {
+    const migrated = await migrate(standaloneApp());
+    migrated.create('ng-doc-legacy/ng-doc/site/index.ts', 'export {};');
+    const angular = workspace(migrated);
+    angular.projects.site.architect['build-legacy'].options.tsConfig = 'tsconfig.mine.json';
+    migrated.overwrite('angular.json', JSON.stringify(angular, null, 2));
+    const logs: string[] = [];
+    const subscription = runner.logger.subscribe((entry) => logs.push(entry.message));
+    const reverted = await migrate(migrated, { revert: true });
+    subscription.unsubscribe();
+
+    const build = workspace(reverted).projects.site.architect.build;
+    expect(build.builder).toBe('@ng-doc/builder:application');
+    expect(build.options.tsConfig).toBe('tsconfig.mine.json');
+    expect(build.options.ngDoc).toBeUndefined();
+    expect(JSON.stringify(build.options.assets)).toContain('"ng-doc/site/assets"');
+    expect(workspace(reverted).projects.site.architect.serve.options).toBeUndefined();
+    expect(reverted.exists('ng-doc-legacy/ng-doc/site/index.ts')).toBe(false);
+    expect(reverted.exists('ng-doc.config.legacy.ts')).toBe(false);
+    expect(reverted.exists('tsconfig.app.legacy.json')).toBe(false);
+    expect(reverted.readText('.gitignore')).toBe(standaloneApp()['.gitignore']);
+    expect(logs.join('\n')).toContain(
+      '`build-legacy.options.tsConfig` was changed after the migration and was kept.',
+    );
   });
 
   it('wraps the server entry with a minimal edit in the file’s own style', async () => {
@@ -889,7 +1108,9 @@ describe('migrate-to-vite', () => {
     expect(targets.build.options.outputPath).toBe('{workspaceRoot}/dist/{projectName}');
     expect(targets.build.outputs).toEqual(['{options.outputPath}']);
     expect(targets.build.dependsOn).toEqual(['^build']);
-    expect(targets['build-legacy'].options.tsConfig).toBe('{projectRoot}/tsconfig.app.json');
+    // The legacy target compiles with its own tsconfig, named with the same token.
+    expect(targets['build-legacy'].options.tsConfig).toBe('{projectRoot}/tsconfig.app.legacy.json');
+    expect(tree.exists('apps/docs/tsconfig.app.legacy.json')).toBe(true);
     expect(targets.serve.continuous).toBe(true);
     const config = tree.readText('apps/docs/vite.config.mjs');
     expect(config).toContain("outDir: workspace('dist/docs/browser'),");

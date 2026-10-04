@@ -27,8 +27,8 @@ import {
  * - Scenario `a`: `ng new` (a standalone application), `ng add @ng-doc/add` (the Vite engine),
  *   a docs page, `ng build`, and an `ng serve` smoke that fetches the page.
  * - Scenario `b`: `ng new`, `ng add @ng-doc/add --engine legacy` (the legacy builders, as NgDoc 21
- *   set them up), a docs page, `ng g @ng-doc/builder:migrate-to-vite`, `ng build` and the same
- *   smoke.
+ *   set them up), a docs page, `ng g @ng-doc/builder:migrate-to-vite`, the kept `build-legacy`
+ *   target, `ng build`, `build-legacy` again and the same smoke.
  *
  * The packages are packed from `dist/libs` and served under their own names by a local registry
  * for the `@ng-doc` scope; everything else comes from the npm registry (through the npm cache).
@@ -312,6 +312,33 @@ async function scenarioA(context) {
   };
 }
 
+/**
+ * `ng run <name>:build-legacy`: the legacy target kept by the migration builds into its own
+ * generated folder, `ng-doc-legacy/ng-doc/<name>`, and never writes the Vite engine's
+ * `ng-doc/<name>`, which refuses files it didn't write (`OUTPUT_UNOWNED_COLLISION`).
+ */
+async function buildLegacy(context, application, name, label) {
+  const viteFolder = path.join(application, 'ng-doc', name);
+  const before = existsSync(viteFolder) ? (await readdir(viteFolder)).sort() : undefined;
+  await step(context, process.execPath, [ng(application), 'run', `${name}:build-legacy`], {
+    cwd: application,
+    env: context.env,
+    log: context.log(`${name}-${label}`),
+    timeoutMs: 900_000,
+  });
+  const legacyFolder = path.join(application, 'ng-doc-legacy', 'ng-doc', name);
+  assert.ok(
+    existsSync(path.join(legacyFolder, 'index.ts')),
+    `build-legacy wrote no ${path.relative(application, legacyFolder)}/index.ts`,
+  );
+  assert.deepEqual(
+    existsSync(viteFolder) ? (await readdir(viteFolder)).sort() : undefined,
+    before,
+    "build-legacy changed the Vite engine's generated folder",
+  );
+  return path.relative(application, legacyFolder).replaceAll('\\', '/');
+}
+
 async function scenarioB(context) {
   const name = 'legacy-app';
   const application = await newApplication(context, name);
@@ -377,13 +404,18 @@ async function scenarioB(context) {
   const installed = await assertInstalledFromRegistry(context, application);
   for (const item of [...installed, '@ng-doc/add']) context.installed.add(item);
   const vite = await assertPinnedVite(application);
+  // The kept legacy target and the Vite targets run in turn without deleting anything: legacy
+  // first (the Vite build then meets no legacy files), and again before the Vite dev server.
+  const legacy = await buildLegacy(context, application, name, 'ng-build-legacy');
   const production = await build(context, application, name);
+  await buildLegacy(context, application, name, 'ng-build-legacy-again');
   const serve = await serveSmoke(context, application, name);
   return {
     application,
     targets: { build: targets.build.builder, serve: targets.serve.builder },
     installed,
     vite,
+    legacy,
     production,
     serve,
   };

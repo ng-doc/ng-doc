@@ -35,8 +35,10 @@ export interface ReportInput {
   keptViteConfigs?: string[];
   modified?: string[];
   deleted?: string;
-  /** The generated folder both engines write. */
+  /** The generated folder the Vite engine writes. */
   generatedFolder?: string;
+  /** The generated folder of the kept legacy targets, when they got one of their own. */
+  legacyFolder?: { folder: string; targets: string[] };
   dependencies?: { [name: string]: string };
   mismatches?: DependencyMismatch[];
 }
@@ -80,6 +82,13 @@ export function renderReport(input: ReportInput): string {
         `- Deleted the legacy generated folder \`${input.deleted}\`; the Vite engine writes it again.`,
       );
     }
+    if (input.legacyFolder) {
+      lines.push(
+        `- ${input.legacyFolder.targets.map((name) => `\`${name}\``).join(' and ')} write their ` +
+          `generated files to \`${input.legacyFolder.folder}\` (added to \`.gitignore\`), so the ` +
+          'legacy builders and the Vite engine never share a generated folder.',
+      );
+    }
     for (const [name, version] of Object.entries(input.dependencies ?? {})) {
       lines.push(`- Added \`${name}@${version}\` to \`devDependencies\`.`);
     }
@@ -102,10 +111,14 @@ export function renderReport(input: ReportInput): string {
       '1. Install the dependencies if the schematic did not (`npm install`).',
       '2. Run `ng serve` and `ng build`, and compare the pages with the legacy build (`ng run ' +
         `${input.project}:build-legacy\`).`,
-      `3. Both engines write \`${input.generatedFolder ?? `ng-doc/${input.project}`}\`. Delete it ` +
-        'whenever you switch between the `-legacy` targets and the Vite targets: the Vite engine ' +
-        "refuses files it didn't write (`OUTPUT_UNOWNED_COLLISION`), and the legacy engine " +
-        "replaces the Vite engine's files.",
+      input.legacyFolder
+        ? `3. The Vite targets write \`${input.generatedFolder ?? `ng-doc/${input.project}`}\` and ` +
+            `the \`-legacy\` targets \`${input.legacyFolder.folder}\`, so you can switch between ` +
+            'them without deleting anything.'
+        : `3. Both engines write \`${input.generatedFolder ?? `ng-doc/${input.project}`}\`. ` +
+            'Delete it whenever you switch between the `-legacy` targets and the Vite targets: ' +
+            "the Vite engine refuses files it didn't write (`OUTPUT_UNOWNED_COLLISION`), and the " +
+            "legacy engine replaces the Vite engine's files.",
       '4. Commit the changes, including this folder if you want to keep `--revert` available.',
       '',
       '## Roll back',

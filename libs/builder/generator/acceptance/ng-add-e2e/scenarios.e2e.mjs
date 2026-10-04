@@ -32,7 +32,7 @@ test(
 );
 
 test(
-  'scenario B: legacy builders, ng g @ng-doc/builder:migrate-to-vite, ng build, ng serve smoke',
+  'scenario B: legacy builders, ng g @ng-doc/builder:migrate-to-vite, build-legacy and ng build in turn, ng serve smoke',
   { timeout: 32 * 60_000 },
   async (t) => {
     await runScenarios({

@@ -858,7 +858,7 @@ export class TransactionalOutputCommitter implements OutputCommitter {
       if (probedExists(item.target, probe) && !ownedPaths.has(item.relative)) {
         return failed(
           'OUTPUT_UNOWNED_COLLISION',
-          `Refusing to overwrite unowned output ${item.relative}.`,
+          unownedCollisionMessage(this.outputRoot, item.relative),
         );
       }
     }
@@ -2068,6 +2068,24 @@ function isStaleError(error: unknown): boolean {
 
 function stale(): CommitResult {
   return { status: 'stale', diagnostics: [] };
+}
+
+/**
+ * The message of `OUTPUT_UNOWNED_COLLISION`. The ownership rule stays: this engine never replaces
+ * a file it didn't write. The message names the folder and the usual cause, because the file alone
+ * doesn't tell a user that another writer (most often the legacy builders, which write the same
+ * `ng-doc/<project>` folder by default) shares the output folder, or how to get out of it.
+ * @param outputRoot - The output folder.
+ * @param relative - The output path that exists without being owned, relative to `outputRoot`.
+ */
+function unownedCollisionMessage(outputRoot: string, relative: string): string {
+  const root = slash(outputRoot);
+  return (
+    `Refusing to overwrite unowned output ${relative}: the output folder ${root} holds files ` +
+    "this engine didn't write. A common cause is the legacy builders (build-legacy, " +
+    'serve-legacy) or another tool writing to the same folder. Delete the folder and restart, ' +
+    'or give the other writer its own folder.'
+  );
 }
 
 function failed(code: string, text: string): CommitResult {

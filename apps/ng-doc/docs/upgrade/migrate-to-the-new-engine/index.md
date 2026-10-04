@@ -64,6 +64,13 @@ It changes the workspace like this:
   `ng-doc/<project-name>`, is deleted once, because the new engine refuses to overwrite files it
   didn't write (`OUTPUT_UNOWNED_COLLISION`). The `@ng-doc/generated` path in `tsconfig.json` stays
   as it is.
+- **Legacy targets:** `build-legacy` and `serve-legacy` get a generated folder of their own,
+  `ng-doc-legacy/ng-doc/<project-name>`, which is added to `.gitignore`. They load
+  **ng-doc.config.legacy.ts**, which sets `outDir: 'ng-doc-legacy'` over your configuration, and
+  compile with **tsconfig.app.legacy.json** (one per `tsConfig` of the build target), which maps
+  `@ng-doc/generated` there; their generated assets entry points there too. So both engines can
+  run in turn without touching each other's files. When the schematic can't remap
+  `@ng-doc/generated`, it leaves the folder shared and the report says how to separate it.
 
 The schematic writes a report to `.ng-doc-migration/<project-name>/report.md` and prints it. The
 report lists every option: migrated, dropped because it has no effect under Vite, or left for you
@@ -97,9 +104,9 @@ files it created. If the `.ng-doc-migration/<project-name>` folder is gone, it f
 3. Compare the pages with the legacy build, `ng run <project-name>:build-legacy`. If a build fails,
    the error starts with a diagnostic code: look it up in `*TroubleshootingPage`.
 
-   Both engines write the generated folder, `ng-doc/<project-name>`. Delete it whenever you switch
-   between the `-legacy` targets and the Vite targets: the new engine refuses files it didn't write
-   (`OUTPUT_UNOWNED_COLLISION`), and the legacy engine replaces the new engine's files.
+   The Vite targets write `ng-doc/<project-name>` and the `-legacy` targets
+   `ng-doc-legacy/ng-doc/<project-name>`, so you can switch between them without deleting
+   anything.
 
 4. Delete `node_modules/.cache/ng-doc` if it exists. The new engine doesn't use it.
 
@@ -120,6 +127,11 @@ Go through this list before you commit the migration:
   keep the `build-legacy` target for the server.
 - **Vite version:** keep `vite` on Vite 8 (`^8.3.0`); updates within Vite 8 are fine. The Vite
   engine doesn't start with Vite 7 or earlier (`*TroubleshootingPage#ngdoc_vite_version`).
+- **Legacy targets:** keep `ng-doc.config.legacy.ts` and the `tsconfig.*.legacy.json` files as
+  long as you keep `build-legacy` and `serve-legacy`, and commit them with the migration;
+  `ng-doc-legacy/` is generated and ignored. If the report says the legacy targets still share
+  `ng-doc/<project-name>`, delete that folder before you switch engines
+  (`*TroubleshootingPage#output_unowned_collision`).
 - **Vite configuration:** if the project folder already had a `vite.config.*`, NgDoc's
   configuration is **vite.ng-doc.config.mjs**. Run NgDoc through `ng serve` and `ng build` (or pass
   `--config` to Vite); `vite` and `vitest` run directly keep using your own file.
@@ -147,8 +159,8 @@ ng g @ng-doc/builder:migrate-to-vite --project <project-name> --revert
 ```
 
 The revert restores the original `build` and `serve` targets and the files the schematic changed,
-and deletes the files it created, the generated folder and the new engine's cache folder, so the
-legacy builders start clean. A file you edited after the migration is kept, and the revert says so;
+and deletes the files it created, both generated folders and the new engine's cache folder, so
+the legacy builders start clean in `ng-doc/<project-name>` again. A file you edited after the migration is kept, and the revert says so;
 reformatting doesn't count as an edit. It also reports a Vite target you edited, then restores
 the original. The added dependencies stay. When a `-legacy` target is missing, the revert stops
 and changes nothing: restore the target first.

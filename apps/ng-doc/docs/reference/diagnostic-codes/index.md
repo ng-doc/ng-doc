@@ -106,11 +106,11 @@ These codes point to a problem in your files or setup. The linked entries explai
 
 ### Output
 
-| Code                          | Severity | Meaning                                                                                                    |
-| ----------------------------- | -------- | ---------------------------------------------------------------------------------------------------------- |
-| `OUTPUT_UNOWNED_COLLISION`    | error    | The generated folder has a file that NgDoc didn't write (`*TroubleshootingPage#output_unowned_collision`). |
-| `OUTPUT_ROUTE_PATH_COLLISION` | error    | Two pages resolve to the same URL.                                                                         |
-| `OUTPUT_GUIDE_ROOT`           | error    | A page is outside the documentation folder.                                                                |
+| Code                          | Severity | Meaning                                                                                                                                                                                                                                                |
+| ----------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `OUTPUT_UNOWNED_COLLISION`    | error    | The output folder has files that NgDoc didn't write, often from the legacy builders or another tool writing the same folder. Delete the folder and restart, or give the other writer its own folder (`*TroubleshootingPage#output_unowned_collision`). |
+| `OUTPUT_ROUTE_PATH_COLLISION` | error    | Two pages resolve to the same URL.                                                                                                                                                                                                                     |
+| `OUTPUT_GUIDE_ROOT`           | error    | A page is outside the documentation folder.                                                                                                                                                                                                            |
 
 ### Vite plugin
 

@@ -2,6 +2,7 @@ import { SchematicsException, Tree } from '@angular-devkit/schematics';
 import { posix } from 'path';
 
 import { Retarget } from './analyze';
+import { LegacyTargetEdit } from './legacy-folder';
 
 /**
  * What a migration changed, kept next to the report so that `--revert` can undo exactly that and
@@ -30,6 +31,11 @@ export interface MigrationState {
   cacheFolder?: string;
   /** Target name to the hash of the Vite target the migration wrote, to tell later edits apart. */
   targetHashes?: { [name: string]: string };
+  /**
+   * The generated folder of the kept legacy targets, and the values of those targets the migration
+   * changed so that they write it. A second run and `--revert` change them back.
+   */
+  legacyFolder?: { folder: string; edits: LegacyTargetEdit[] };
 }
 
 /** The folder of a project's migration state, report and backups. */
@@ -104,6 +110,7 @@ export function serializeState(state: MigrationState): string {
       ...(state.legacyOutputDeleted ? { legacyOutputDeleted: true } : {}),
       ...(state.cacheFolder ? { cacheFolder: state.cacheFolder } : {}),
       ...(state.targetHashes ? { targetHashes: sorted(state.targetHashes) } : {}),
+      ...(state.legacyFolder ? { legacyFolder: state.legacyFolder } : {}),
     },
     null,
     2,

@@ -100,11 +100,15 @@ Keep the generated and cache folders outside the documentation folder.
 
 ### OUTPUT_UNOWNED_COLLISION
 
-**Cause:** the generated folder has files that the new engine didn't write. This usually happens
-after switching from the legacy builders, which leave their output in the same folder.
+**Cause:** the output folder, whose path the message names (usually `ng-doc/<project-name>`), has
+files that the new engine didn't write. The new engine never overwrites them. A common cause is
+the legacy builders, such as the `build-legacy` and `serve-legacy` targets kept by
+`migrate-to-vite`, or another tool writing to the same folder.
 
-**Fix:** delete the generated folder, `ng-doc/<project-name>`, once. The new engine writes it again
-on the next build.
+**Fix:** delete that folder and restart; the new engine writes it again. If the other writer keeps
+running, give it its own folder. For the legacy builders, set `outDir: 'ng-doc-legacy'` in the
+NgDoc configuration they load and map their `@ng-doc/generated` path and generated assets entry to
+`ng-doc-legacy/ng-doc/<project-name>`, as `migrate-to-vite` does.
 
 **See also:** `*MigrateToNewEnginePage`
 

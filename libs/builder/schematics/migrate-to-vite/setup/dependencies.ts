@@ -164,8 +164,15 @@ const CACHE_LINES = new Set(['.cache', '.cache/', '.cache/ng-doc', '.cache/ng-do
 /**
  * Adds a line to `.gitignore` when no existing line already ignores it. Returns whether the file
  * changed; false also when the workspace has no `.gitignore`.
+ * @param tree - The workspace tree.
+ * @param line - The line, such as `/.cache/ng-doc`.
+ * @param comment - The comment written above it.
  */
-export function addGitIgnoreLine(tree: Tree, line: string): boolean {
+export function addGitIgnoreLine(
+  tree: Tree,
+  line: string,
+  comment: string = 'NgDoc cache',
+): boolean {
   if (!tree.exists('.gitignore')) return false;
   const text = tree.readText('.gitignore');
   const wanted = line.replace(/^\//, '');
@@ -180,7 +187,7 @@ export function addGitIgnoreLine(tree: Tree, line: string): boolean {
     );
   if (covered) return false;
   const separator = text === '' || text.endsWith('\n') ? '' : '\n';
-  tree.overwrite('.gitignore', `${text}${separator}\n# NgDoc cache\n${line}\n`);
+  tree.overwrite('.gitignore', `${text}${separator}\n# ${comment}\n${line}\n`);
   return true;
 }
 
