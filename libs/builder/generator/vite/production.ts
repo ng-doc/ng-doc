@@ -3,7 +3,7 @@ import path from 'node:path';
 import { type InlineConfig, type Plugin, type ResolvedConfig, build as viteBuild } from 'vite';
 
 import type { BuildResult, PublishedGeneratorConfiguration } from '../contracts';
-import { assertSupportedAngularVersion } from './angular-version';
+import { assertConsistentAngularBuild } from './angular-version';
 import type { NgDocViteApplicationApi } from './application';
 import { type NgDocPrerenderOptions, prerenderNgDoc } from './prerender';
 import type { PrerenderReport } from './prerender-runtime';
@@ -115,7 +115,7 @@ export async function buildNgDocViteApplication(
 ): Promise<NgDocViteBuildResult> {
   // Before anything touches the output directory.
   assertSupportedViteVersion();
-  assertSupportedAngularVersion();
+  assertConsistentAngularBuild();
   const configFile = path.resolve(options.configFile);
   const outputPath = path.resolve(options.outputPath);
   const browser = path.join(outputPath, 'browser');

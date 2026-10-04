@@ -222,19 +222,24 @@ Production builds always use a fresh compiler worker, whatever these variables s
 | Node.js                                                          | `>=24.15.0 <25`          |
 | Vite (Vite host only)                                            | `^8.3.0`                 |
 | `@analogjs/vite-plugin-angular` (Vite host only)                 | `^2.8.0`                 |
-| `@angular/compiler`, `@angular/compiler-cli` (Vite host only)    | `^22.2.0`                |
+| `@angular/compiler`, `@angular/compiler-cli` (Vite host only)    | `^22.0.0`                |
 | Platforms                                                        | Linux, macOS and Windows |
 
-The Vite engine is tested with Vite 8.3.2, Analog 2.8.0 and Angular 22.2.1. It checks the Vite
-version when it starts and stops with `NGDOC_VITE_VERSION` outside `^8.3.0`, and with
-`NGDOC_VITE_ANGULAR_VERSION` on an `@angular/compiler-cli` older than 22.2. `ng add` and
+The Vite engine is tested with Vite 8.3.2, Analog 2.8.0 and Angular 22.1 and 22.2. It checks the
+Vite version when it starts and stops with `NGDOC_VITE_VERSION` outside `^8.3.0`. `ng add` and
 `migrate-to-vite` add these ranges to `devDependencies` when `package.json` doesn't list them, so
-npm installs the newest matching releases, and refuse to set up the Vite engine on an Angular older
-than 22.2. The optional peer dependencies of `@ng-doc/builder` are the same ranges for `vite`
-(`^8.3.0`) and Analog (`^2.8.0`), and admit any Angular 22 for the Angular compilers, so the
-package installs on Angular 22.0 and 22.1 for the legacy builders. NgDoc bundles its own patched copy of Analog's
-Angular plugin; the installed one supplies its types. The legacy builders don't use Vite or
-Analog.
+npm installs the newest matching releases.
+
+`@ng-doc/builder` takes `@angular/build` `>=22.0.0 <23.0.0` as a peer dependency, the project's
+own copy, and depends on `@angular-devkit/core` `>=22.0.0 <23.0.0` and `@angular-devkit/architect`
+`>=0.2200.0 <0.2300.0`, which the package manager shares with the project where it can: both
+engines run on the project's Angular 22 release. The Vite engine stops with
+`NGDOC_VITE_ANGULAR_VERSION` when the `@angular/build` it finds and `@angular/compiler-cli` come
+from different sides of Angular 22.2. The optional peer dependencies admit any Angular 22 for the
+Angular compilers, Analog `^2.8.0`, and for `vite` Analog's own range (`^6.0.0 || ^7.0.0 ||
+^8.0.0`), so that installing NgDoc never fails on the Vite that Angular 22.0 or 22.1 brings before
+the migration adds Vite 8.3. NgDoc bundles its own patched copy of Analog's Angular plugin; the
+installed one supplies its types. The legacy builders don't use Vite or Analog.
 
 {% index false %}
 

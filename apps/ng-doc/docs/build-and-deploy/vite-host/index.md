@@ -26,9 +26,10 @@ setup by hand.
   npm i -D vite@^8.3.0 @analogjs/vite-plugin-angular@^2.8.0
   ```
 
-- Angular 22.2 or later (`@angular/compiler` and `@angular/compiler-cli` `^22.2.0`), on Node.js
-  `>=24.15.0 <25` (`*BuildersReference#supported-versions`). The engine stops with
-  `NGDOC_VITE_ANGULAR_VERSION` on an older Angular.
+- Angular 22 (`@angular/compiler`, `@angular/compiler-cli` and `@angular/build` `^22.0.0`, from
+  the same release), on Node.js `>=24.15.0 <25` (`*BuildersReference#supported-versions`). The
+  engine uses the project's `@angular/build` and stops with `NGDOC_VITE_ANGULAR_VERSION` when it
+  doesn't match the compiler.
 
 ## 1. Add the Vite configuration
 

@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs';
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import path from 'node:path';
-import { glob } from 'tinyglobby';
+import { escapePath, glob } from 'tinyglobby';
 import type {
   ConfigEnv,
   Connect,
@@ -314,6 +314,16 @@ export function matchAssets(
   return candidates;
 }
 
+/** Whether a package is installed where the application resolves it. */
+function resolvable(root: string, name: string): boolean {
+  try {
+    createRequire(path.join(root, 'package.json')).resolve(`${name}/package.json`);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /**
  * The `@ng-doc/core` entry points that the installed NgDoc UI packages import.
  */
@@ -381,6 +391,25 @@ export function createNgDocApplicationPlugin(options: NgDocViteApplicationOption
   let assets: Promise<ResolvedAsset[]> | undefined;
   const resolvedAssets = () => (assets ??= resolveAssets(assetPatterns, workspaceRoot, sourceRoot));
   let config: ResolvedConfig | undefined;
+  // Vite's dependency scan starts from the HTML pages by default, but the index page loads only
+  // the generated browser entry, which the scan does not follow: every dependency of the
+  // application, the generated pages and their demos was found while the first page loaded, and
+  // Vite reloaded that page once per discovery. The browser entry's files are the scan's entries
+  // instead (generation has committed before the server listens, so the scan reaches the generated
+  // pages), and the polyfills that are packages are prebundled by name, as is `tslib`, which the
+  // TypeScript emit imports (`importHelpers`) but no source names.
+  const developmentPrebundles = async (viteRoot: string) => ({
+    include: [
+      ...new Set([
+        ...(await coreImports(viteRoot)),
+        ...polyfills.filter((item) => !path.isAbsolute(item)),
+        ...(resolvable(viteRoot, 'tslib') ? ['tslib'] : []),
+      ]),
+    ].sort(),
+    entries: [...polyfills.filter((item) => path.isAbsolute(item)), posix(browser)].map((file) =>
+      escapePath(posix(path.relative(viteRoot, file))),
+    ),
+  });
   const api: NgDocViteApplicationApi = Object.freeze({
     schemaVersion: 1,
     ...(server ? { serverEntry: NG_DOC_SERVER_ENTRY } : {}),
@@ -405,11 +434,7 @@ export function createNgDocApplicationPlugin(options: NgDocViteApplicationOption
             }
           : {}),
         ...(environment.command === 'serve'
-          ? {
-              optimizeDeps: {
-                include: await coreImports(path.resolve(user.root ?? process.cwd())),
-              },
-            }
+          ? { optimizeDeps: await developmentPrebundles(path.resolve(user.root ?? process.cwd())) }
           : {}),
         // The server bundle is imported by a plain Node process: it must hold every dependency,
         // partially compiled Angular libraries included.
@@ -422,8 +447,21 @@ export function createNgDocApplicationPlugin(options: NgDocViteApplicationOption
       config = resolved;
       for (const warning of warnings) resolved.logger.warn(warning);
     },
-    resolveId(source: string) {
+    resolveId(
+      source: string,
+      importer: string | undefined,
+      resolveOptions: { isEntry: boolean; custom?: Rolldown.CustomPluginOptions },
+    ) {
       if (source === NG_DOC_BROWSER_ENTRY) return BROWSER_ID;
+      // The polyfills, global styles and browser entry are entry points of the Angular CLI's
+      // build, which is never tree-shaken away; here they are imports of a generated module.
+      if (importer === BROWSER_ID && config?.command === 'build') {
+        const { isEntry, custom } = resolveOptions;
+        return this.resolve(source, importer, { isEntry, custom, skipSelf: true }).then(
+          (resolved) =>
+            resolved && !resolved.external ? { ...resolved, moduleSideEffects: true } : resolved,
+        );
+      }
       if (source !== NG_DOC_SERVER_ENTRY) return null;
       if (!server) {
         throw new Error(
@@ -448,6 +486,20 @@ export function createNgDocApplicationPlugin(options: NgDocViteApplicationOption
         `export { Router } from '@angular/router';`,
         `export { runInInjectionContext } from '@angular/core';`,
       ].join('\n');
+    },
+    // A `"sideEffects": false` in the package.json above the application, common in library
+    // repositories, would let Rolldown drop every application module imported for its effects
+    // only, the bootstrap included: the build succeeds and the site never starts. The Angular CLI
+    // keeps them, so the application's own files (outside node_modules) count as side-effectful,
+    // while dependencies keep their declaration and their tree-shaking. First, so that a later
+    // plugin still refines it (Vite's CSS plugin marks style modules `no-treeshake`). Build only:
+    // the development server does not tree-shake.
+    transform: {
+      order: 'pre',
+      filter: { id: { exclude: [/^\0/, /[\\/]node_modules[\\/]/] } },
+      handler() {
+        return config?.command === 'build' ? { moduleSideEffects: true } : null;
+      },
     },
     transformIndexHtml: {
       order: 'pre',

@@ -178,6 +178,45 @@ describe('createNgDocApplicationPlugin', () => {
     expect(() => hook(client.resolveId)(NG_DOC_SERVER_ENTRY)).toThrow(/NGDOC_VITE_SERVER_ENTRY/);
   });
 
+  it('marks the entry imports and the application files side-effectful in builds only', async () => {
+    const root = await workspace();
+    const application = plugin(root);
+    const resolveId = hook(application.resolveId);
+    const transform = hook(application.transform);
+    const browserId = resolveId(NG_DOC_BROWSER_ENTRY) as string;
+    const resolve = vi.fn(async (source: string) =>
+      source === 'external' ? { id: source, external: true } : { id: `/resolved/${source}` },
+    );
+    const context = { resolve };
+    // Development: Vite resolves the entry imports itself, and nothing is tree-shaken.
+    expect(resolveId.call(context, 'zone.js', browserId, {})).toBeNull();
+    expect(transform.call(context, '', `${root}/src/main.js`)).toBeNull();
+    hook(application.configResolved)({ command: 'serve', build: {}, base: '/' });
+    expect(transform.call(context, '', `${root}/src/main.js`)).toBeNull();
+    expect(resolve).not.toHaveBeenCalled();
+
+    hook(application.configResolved)({ command: 'build', build: {}, base: '/' });
+    expect(transform.call(context, '', `${root}/src/main.js`)).toEqual({ moduleSideEffects: true });
+    await expect(
+      resolveId.call(context, 'zone.js', browserId, { isEntry: false }),
+    ).resolves.toEqual({ id: '/resolved/zone.js', moduleSideEffects: true });
+    expect(resolve).toHaveBeenCalledWith('zone.js', browserId, { isEntry: false, skipSelf: true });
+    await expect(resolveId.call(context, 'external', browserId, {})).resolves.toEqual({
+      id: 'external',
+      external: true,
+    });
+    resolve.mockResolvedValueOnce(null as never);
+    await expect(resolveId.call(context, 'missing', browserId, {})).resolves.toBeNull();
+    // Only the browser entry's imports; dependencies are left to their package.json.
+    expect(resolveId.call(context, 'zone.js', `${root}/src/main.js`, {})).toBeNull();
+    const filter = (application.transform as { filter: { id: { exclude: RegExp[] } } }).filter;
+    const excluded = (id: string) => filter.id.exclude.some((pattern) => pattern.test(id));
+    expect(excluded(`${root}/src/main.js`)).toBe(false);
+    expect(excluded(`${root}/node_modules/rxjs/index.js`)).toBe(true);
+    expect(excluded('C:\\app\\node_modules\\rxjs\\index.js')).toBe(true);
+    expect(excluded('\0ng-doc-application:browser')).toBe(true);
+  });
+
   it('configures production defines, the server bundle and the NgDoc core prebundles', async () => {
     const root = await workspace();
     const packages = path.join(root, 'node_modules/@ng-doc');
@@ -194,16 +233,50 @@ describe('createNgDocApplicationPlugin', () => {
       path.join(packages, 'ui-kit/fesm2022/ng-doc-ui-kit.mjs'),
       "import {c} from '@ng-doc/core/helpers/a';\n",
     );
-    const config = hook(plugin(root).config);
+    const config = hook(
+      plugin(root, { polyfills: ['zone.js', './src/polyfill.js', '@angular/localize/init'] })
+        .config,
+    );
     expect(
       await config({ root: path.join(root, 'src') }, { command: 'serve', mode: 'development' }),
     ).toEqual({
       resolve: { dedupe: expect.arrayContaining(['@angular/core', '@angular/router']) },
-      optimizeDeps: { include: ['@ng-doc/core', '@ng-doc/core/helpers/a'] },
+      // The scan starts from the browser entry's files, which the index page does not name.
+      optimizeDeps: {
+        include: ['@angular/localize/init', '@ng-doc/core', '@ng-doc/core/helpers/a', 'zone.js'],
+        entries: ['polyfill.js', 'main.js'],
+      },
     });
     await rm(path.join(packages, 'ui-kit/fesm2022'), { recursive: true });
-    expect(await config({ root }, { command: 'serve', mode: 'development' })).toMatchObject({
-      optimizeDeps: { include: ['@ng-doc/core', '@ng-doc/core/helpers/a'] },
+    // `tslib`, which compiled code imports, once the application has it.
+    await mkdir(path.join(root, 'node_modules/tslib'), { recursive: true });
+    await writeFile(path.join(root, 'node_modules/tslib/package.json'), '{"name":"tslib"}');
+    await mkdir(path.join(root, 'web (1)'));
+    expect(
+      await config({ root: path.join(root, 'web (1)') }, { command: 'serve', mode: 'development' }),
+    ).toMatchObject({
+      optimizeDeps: {
+        include: [
+          '@angular/localize/init',
+          '@ng-doc/core',
+          '@ng-doc/core/helpers/a',
+          'tslib',
+          'zone.js',
+        ],
+        // Relative to the Vite root, and escaped: the scan reads them as glob patterns.
+        entries: ['../src/polyfill.js', '../src/main.js'],
+      },
+    });
+    expect(
+      await hook(plugin(root, { polyfills: [] }).config)(
+        { root },
+        { command: 'serve', mode: 'development' },
+      ),
+    ).toMatchObject({
+      optimizeDeps: {
+        include: ['@ng-doc/core', '@ng-doc/core/helpers/a', 'tslib'],
+        entries: ['src/main.js'],
+      },
     });
     expect(await config({}, { command: 'build', mode: 'production' })).toEqual({
       resolve: { dedupe: expect.any(Array) },
@@ -267,6 +340,51 @@ describe('createNgDocApplicationPlugin', () => {
       build: { outDir, emptyOutDir: true },
     });
     expect(await readFile(path.join(outDir, 'index.html'), 'utf8')).toContain('<base href="/">');
+  });
+
+  it('keeps the application and its polyfills when package.json says "sideEffects": false', async () => {
+    const root = await workspace();
+    const put = async (file: string, text: string) => {
+      await mkdir(path.dirname(path.join(root, file)), { recursive: true });
+      await writeFile(path.join(root, file), text);
+    };
+    // A library repository: its root package.json declares the library free of side effects.
+    await put('package.json', '{ "name": "library-repository", "sideEffects": false }\n');
+    await put(
+      'src/main.js',
+      'import "./register.js"; import "pure-dependency"; globalThis.order.push("main");\n',
+    );
+    await put('src/register.js', 'globalThis.registered = "registered-module";\n');
+    for (const name of ['pure-dependency', 'dependency-polyfill']) {
+      await put(
+        `node_modules/${name}/package.json`,
+        `{ "name": "${name}", "sideEffects": false, "main": "index.js" }\n`,
+      );
+      await put(`node_modules/${name}/index.js`, `globalThis.dependency = "${name}-code";\n`);
+    }
+    const outDir = path.join(root, 'dist/browser');
+    await build({
+      root: path.join(root, 'src'),
+      configFile: false,
+      logLevel: 'silent',
+      publicDir: false,
+      plugins: [plugin(root, { polyfills: ['./src/polyfill.js', 'dependency-polyfill'] })],
+      build: { outDir, emptyOutDir: true },
+    });
+    const files = (await readdir(outDir, { recursive: true })).map(String);
+    const code = await readFile(
+      path.join(outDir, files.find((file) => /^assets\/index-.*\.js$/.test(file))!),
+      'utf8',
+    );
+    // The bootstrap and what it imports for its side effects, as in the Angular CLI.
+    expect(code).toMatch(/["`]main["`]/);
+    expect(code).toContain('registered-module');
+    expect(code).toMatch(/["`]polyfill["`]/);
+    // A polyfill is an entry of the Angular CLI's build: never left out.
+    expect(code).toContain('dependency-polyfill-code');
+    // Dependencies keep their own declaration: an import for side effects only is still dropped.
+    expect(code).not.toContain('pure-dependency-code');
+    expect(files.some((file) => /^assets\/index-.*\.css$/.test(file))).toBe(true);
   });
 
   it('emits assets only into client builds and refuses to replace a bundle file', async () => {

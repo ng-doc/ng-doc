@@ -84,10 +84,30 @@ afterEach(() => {
 });
 
 describe('the supported Vite version', () => {
-  it('is the range the setup schematics install and the optional peer range', () => {
+  it('is the range the setup schematics install, inside the optional peer range', () => {
     expect(SUPPORTED_VITE_RANGE).toBe('^8.3.0');
     expect(manifest['ng-doc'].viteEngine['vite']).toBe(SUPPORTED_VITE_RANGE);
-    expect(manifest.peerDependencies['vite']).toBe(SUPPORTED_VITE_RANGE);
+  });
+
+  it("has Analog's optional peer range, which admits the Vite of every Angular 22 build", () => {
+    // Before the migration adds `vite@^8.3.0`, the Vite at the root of the application is the one
+    // its `@angular/build` brings: npm refuses to install NgDoc next to it when the peer excludes it.
+    const analog = JSON.parse(
+      readFileSync(
+        path.join(repository, 'node_modules/@analogjs/vite-plugin-angular/package.json'),
+        'utf8',
+      ),
+    ) as { peerDependencies: Record<string, string> };
+    expect(manifest.peerDependencies['vite']).toBe(analog.peerDependencies['vite']);
+    const majors = manifest.peerDependencies['vite']!.split('||').map((range) => {
+      const match = /^\^(\d+)\.0\.0$/.exec(range.trim());
+      expect(match, range).not.toBeNull();
+      return Number(match![1]);
+    });
+    // @angular/build 22.0 brings Vite 7.3, 22.1 Vite 8.1 and 22.2 Vite 8.3.
+    for (const found of ['7.3.2', '7.3.6', '8.1.5', '8.3.2']) {
+      expect([found, majors.includes(Number(found.split('.')[0]))]).toEqual([found, true]);
+    }
   });
 
   it('accepts every Vite 8 release from 8.3.0 and nothing else', () => {

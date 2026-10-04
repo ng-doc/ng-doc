@@ -151,7 +151,8 @@ describe('ng-add with the Vite engine', () => {
     // Caret ranges: npm installs the newest Vite 8 and Analog 2 releases, and nothing is pinned.
     expect(manifest.devDependencies['vite']).toBe('^8.3.0');
     expect(manifest.devDependencies['vite']).toBe(VITE_DEPENDENCIES['vite']);
-    expect(manifest.devDependencies['vite']).toBe(BUILDER_MANIFEST.peerDependencies['vite']);
+    // Inside the builder's optional peer range, which is wider (Analog's own).
+    expect(BUILDER_MANIFEST.peerDependencies['vite'].split(' || ')).toContain('^8.0.0');
     expect(manifest.devDependencies['@analogjs/vite-plugin-angular']).toBe('^2.8.0');
     expect(manifest.devDependencies['@analogjs/vite-plugin-angular']).toBe(
       VITE_DEPENDENCIES['@analogjs/vite-plugin-angular'],
@@ -313,26 +314,21 @@ describe('ng-add with the Vite engine', () => {
     );
   });
 
-  it('should refuse the Vite engine on an Angular older than 22.2, which the legacy builders accept', async () => {
-    const appOnAngular221 = async (): Promise<UnitTestTree> => {
-      const app: UnitTestTree = await newApp();
-      const manifest = JSON.parse(app.readContent('package.json'));
+  it('should set up the Vite engine on Angular 22.1, as the legacy builders', async () => {
+    const app: UnitTestTree = await newApp();
+    const manifest = JSON.parse(app.readContent('package.json'));
 
-      manifest.dependencies['@angular/compiler'] = '~22.1.0';
-      manifest.devDependencies['@angular/compiler-cli'] = '~22.1.0';
-      app.overwrite('package.json', JSON.stringify(manifest, null, 2));
+    manifest.dependencies['@angular/compiler'] = '~22.1.0';
+    manifest.devDependencies['@angular/compiler-cli'] = '~22.1.0';
+    app.overwrite('package.json', JSON.stringify(manifest, null, 2));
 
-      return app;
-    };
+    const tree: UnitTestTree = await setup(app);
 
-    // The Angular CLI commits nothing of a schematic that fails.
-    await expect(setup(await appOnAngular221())).rejects.toThrow(
-      /NGDOC_VITE_SETUP_BLOCKED[\s\S]*`@angular\/compiler-cli`: is `~22\.1\.0`; the Vite engine needs Angular 22\.2 or later[\s\S]*`ng update @angular\/core@22 @angular\/cli@22`[\s\S]*--engine legacy/,
-    );
-
-    const legacy: UnitTestTree = await setup(await appOnAngular221(), { engine: 'legacy' });
-
-    expect(architect(legacy)['build'].builder).toBe('@ng-doc/builder:application');
+    expect(architect(tree)['build'].builder).toBe('@ng-doc/builder:vite-application');
+    // Any Angular 22 is inside the engine's range: the project's own versions stay.
+    const written = JSON.parse(tree.readContent('package.json'));
+    expect(written.dependencies['@angular/compiler']).toBe('~22.1.0');
+    expect(written.devDependencies['@angular/compiler-cli']).toBe('~22.1.0');
   });
 
   it('should refuse a custom builder and an existing vite.config.mjs', async () => {

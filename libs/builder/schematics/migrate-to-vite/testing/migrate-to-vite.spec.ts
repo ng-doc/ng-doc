@@ -11,7 +11,7 @@ import * as ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 
 import { KNOWN_BUILD_OPTIONS } from '../analyze';
-import { admitsRange, isBelowVersion, ngDocViteDependencies } from '../setup/dependencies';
+import { admitsRange, ngDocViteDependencies } from '../setup/dependencies';
 import { wrapServerEntry } from '../setup/source';
 import {
   customOptionsApp,
@@ -143,7 +143,7 @@ describe('migrate-to-vite', () => {
     );
     expect(report).toContain('`build.ssr.entry`: `src/server.ts` is not built.');
     expect(report).toContain('`build.budgets`: Vite has no size budgets.');
-    // `^22.0.0` installs the newest Angular 22, which the engine's `^22.2.0` admits.
+    // `^22.0.0` is the engine's own range.
     expect(report).not.toContain('`@angular/compiler` is');
     expect(report).toContain('`test.buildTarget`: now `site:build-legacy:development`');
     expect(report).not.toContain('## Blocking');
@@ -154,7 +154,8 @@ describe('migrate-to-vite', () => {
 
   it("installs the Vite engine's caret ranges, which npm resolves to the newest releases", async () => {
     const manifest = JSON.parse(readFileSync(join(__dirname, '../../../package.json'), 'utf8'));
-    expect(manifest.peerDependencies.vite).toBe('^8.3.0');
+    // The optional peer is wider, so that installing NgDoc never fails on the application's Vite.
+    expect(manifest.peerDependencies.vite).toBe('^6.0.0 || ^7.0.0 || ^8.0.0');
     expect(ngDocViteDependencies()).toEqual(manifest['ng-doc'].viteEngine);
     expect(ngDocViteDependencies()['vite']).toBe('^8.3.0');
     for (const [name, version] of Object.entries(ngDocViteDependencies())) {
@@ -247,64 +248,37 @@ describe('migrate-to-vite', () => {
     );
     expect(report).toContain(
       '- `@angular/compiler` is `^22.0.0` (installed `23.0.1`); the Vite engine is tested with ' +
-        '`^22.2.0`.',
+        '`^22.0.0`.',
     );
     expect(report).not.toContain('## Blocking');
   });
 
-  it('tells whether a version or a specifier cannot reach a minimum version', () => {
-    const cases: Array<[string, boolean | undefined]> = [
-      ['22.1.9', true],
-      ['22.1.0-rc.0', true],
-      ['22.2.0', false],
-      ['22.2.0-next.1', false],
-      ['23.0.0', false],
-      ['=22.1.3', true],
-      ['~22.1.0', true],
-      ['~22.2.0', false],
-      ['^22.0.0', false],
-      ['^21.2.0', true],
-      ['^0.22.0', true],
-      ['>=22.0.0', undefined],
-      ['22.x', undefined],
-      ['latest', undefined],
-    ];
-    for (const [declared, expected] of cases) {
-      expect([declared, isBelowVersion(declared, '22.2.0')]).toEqual([declared, expected]);
-    }
-    expect(isBelowVersion('22.1.0', 'next')).toBeUndefined();
-  });
+  it('migrates an application on Angular 22.0 or 22.1, which the Vite engine runs on', async () => {
+    for (const [declared, installed] of [
+      ['~22.1.0', '22.1.3'],
+      ['22.0.6', '22.0.6'],
+    ]) {
+      const files = standaloneApp();
+      files['node_modules/@angular/compiler-cli/package.json'] = JSON.stringify({
+        name: '@angular/compiler-cli',
+        version: installed,
+      });
+      const manifest = JSON.parse(files['package.json']);
+      manifest.dependencies['@angular/compiler'] = declared;
+      files['package.json'] = JSON.stringify(manifest);
 
-  it('refuses an Angular older than 22.2, which the Vite engine does not start with', async () => {
-    const files = standaloneApp();
-    files['node_modules/@angular/compiler-cli/package.json'] = JSON.stringify({
-      name: '@angular/compiler-cli',
-      version: '22.1.3',
-    });
-    const manifest = JSON.parse(files['package.json']);
-    manifest.dependencies['@angular/compiler'] = '~22.1.0';
-    files['package.json'] = JSON.stringify(manifest);
-    const tree = treeOf(files);
-    const before = snapshot(tree);
-    const logs: string[] = [];
-    const subscription = runner.logger.subscribe((entry) => logs.push(entry.message));
-    try {
-      await expect(migrate(tree)).rejects.toThrow('[NGDOC_MIGRATE_BLOCKED]');
-    } finally {
-      subscription.unsubscribe();
-    }
+      const tree = await migrate(files);
 
-    expect(snapshot(tree)).toEqual(before);
-    const report = logs.join('\n');
-    expect(report).toContain('## Blocking');
-    // By the installed version when there is one, otherwise by the specifier.
-    expect(report).toContain(
-      '- `@angular/compiler-cli`: is `^22.0.0` (installed `22.1.3`); the Vite engine needs ' +
-        'Angular 22.2 or later and does not start with an older one. Update Angular first: ' +
-        '`ng update @angular/core@22 @angular/cli@22`.',
-    );
-    expect(report).toContain('- `@angular/compiler`: is `~22.1.0`; the Vite engine needs');
-    expect(report).not.toContain('is tested with');
+      expect(workspace(tree).projects.site.architect.build.builder).toBe(
+        '@ng-doc/builder:vite-application',
+      );
+      const report = tree.readText('.ng-doc-migration/site/report.md');
+      expect(report).not.toContain('## Blocking');
+      // Nothing to report or update: any Angular 22 is inside the engine's range.
+      expect(report).not.toContain('`@angular/compiler');
+      const written = JSON.parse(tree.readText('package.json'));
+      expect(written.dependencies['@angular/compiler']).toBe(declared);
+    }
   });
 
   it('migrates an NgModule application in a multi-project layout', async () => {

@@ -6,11 +6,13 @@ import { version as resolvedViteVersion } from 'vite';
  * watcher, optimizer and module-runner APIs, which are tested on this major; Vite 7 and earlier
  * are refused.
  *
- * The builder's optional `vite` peer dependency is the same range, and `ng-doc.viteEngine.vite` in
- * `libs/builder/package.json`, which the setup schematics install, must equal it (a test compares
- * them). The peer is optional, so npm never refuses an install over it, even for the legacy
- * engine, which never loads Vite. The check below enforces the range where it matters, when the
- * Vite engine starts.
+ * `ng-doc.viteEngine.vite` in `libs/builder/package.json`, which the setup schematics install, must
+ * equal it (a test compares them). The builder's optional `vite` peer dependency is wider, Analog's
+ * own peer range: before the migration adds `vite`, the Vite at the application's root is the one
+ * its `@angular/build` brings (7.3 for Angular 22.0, 8.1 for 22.1), and npm refuses to install a
+ * package whose peer range excludes it, even an optional one and even for the legacy engine, which
+ * never loads Vite. The check below enforces the range where it matters, when the Vite engine
+ * starts.
  */
 export const SUPPORTED_VITE_RANGE = '^8.3.0';
 

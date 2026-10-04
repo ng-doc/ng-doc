@@ -113,9 +113,9 @@ on the next build.
 ### NGDOC_VITE_VERSION
 
 **Cause:** the Vite engine started with a Vite outside `^8.3.0`, such as Vite 7. It runs on Vite 8
-from 8.3.0, the release Angular 22.2's own build tools use. The error names the version it found.
-It usually comes from a `vite` entry in `package.json` that an older setup pinned, or from another
-package that still installs Vite 7.
+from 8.3.0. The error names the version it found. It usually comes from a `vite` entry in
+`package.json` that an older setup pinned, or from Angular 22.0 or 22.1, whose build tools bring
+Vite 7.3 or 8.1 when the application doesn't list `vite` itself.
 
 **Fix:** install Vite 8 in the application's `devDependencies`, then restart:
 
@@ -129,18 +129,26 @@ The legacy builders (`@ng-doc/builder:application` and `dev-server`) don't use V
 
 ### NGDOC_VITE_ANGULAR_VERSION
 
-**Cause:** the Vite engine started with an `@angular/compiler-cli` older than 22.2, or without one.
-The Angular plugin it bundles chooses how it calls Angular's build tools from that version, and on
-Angular 22.0 or 22.1 a later build step fails with an unclear error, so the engine stops first. The
-error names the version it found.
+**Cause:** the `@angular/compiler-cli` and the `@angular/build` that NgDoc finds come from
+different Angular releases, one before 22.2 and one 22.2 or later, or one of them is missing. The
+Angular plugin the engine bundles chooses how it calls `@angular/build` from the compiler's version,
+so a mismatched pair fails later with an unclear error, such as "Hash utility must be initialized";
+the engine stops first. The error names both versions.
 
-**Fix:** update Angular, then restart:
+This usually means the package manager installed a second `@angular/build` for NgDoc next to the
+project's own, for example after an override or a lockfile that pins one.
+
+**Fix:** find the copies, give every `@angular/*` package the same Angular version, reinstall, then
+restart:
 
 ```bash
+npm ls @angular/build
 ng update @angular/core@22 @angular/cli@22
 ```
 
-`ng add` and `migrate-to-vite` refuse an older Angular in the same way and change nothing.
+If a second copy remains, deduplicate it (`npm dedupe`, or an `overrides` entry, a pnpm override or
+a Yarn `resolutions` entry with the project's version). Any Angular 22 release works, as long as
+both packages come from the same side of 22.2.
 
 **See also:** `*BuildersReference#supported-versions`
 
