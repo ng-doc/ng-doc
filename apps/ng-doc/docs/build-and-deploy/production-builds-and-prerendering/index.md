@@ -90,6 +90,40 @@ routes that weren't prerendered, so that client-side navigation keeps working af
 the Vite host, `index.html` holds the prerendered home page: serve `index.csr.html`, the page
 without prerendered content, instead.
 
+### Hosts without a fallback
+
+Some static hosts, such as a plain file server, can't serve `index.html` for any path. A reload of
+a page that wasn't prerendered then returns 404. Prerender every page, or switch the router to hash
+URLs (`/#/docs/getting-started`) with `withHashLocation()`, so the host only ever serves the root
+`index.html`:
+
+<!-- prettier-ignore -->
+```typescript name="app.config.ts" {2,9}
+import { ApplicationConfig } from '@angular/core';
+import { provideRouter, withHashLocation, withInMemoryScrolling } from '@angular/router';
+import { NG_DOC_ROUTING } from '@ng-doc/generated';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideRouter(
+      NG_DOC_ROUTING,
+      withHashLocation(),
+      withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' }),
+    ),
+    // The other NgDoc providers stay as they are.
+  ],
+};
+```
+
+Navigation, links in the content, search, the table of contents and the Copy link actions keep the
+route after the `#`, so a copied link to a page or a section opens it on any host.
+
+> **Warning**
+> With hash URLs, build the site for the browser only, without server rendering or prerendering.
+> The browser never sends the part after `#` to the server, so the server would render the root
+> page for every URL, and prerendered `docs/<page>/index.html` files would never be requested.
+> Search engines don't index pages behind `#` either: for a public site, prefer prerendering.
+
 {% index false %}
 
 ## Related

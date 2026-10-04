@@ -1,3 +1,4 @@
+import { LocationStrategy } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,6 +9,7 @@ import {
   Renderer2,
 } from '@angular/core';
 import { NgDocCopyButtonComponent } from '@ng-doc/app/components/copy-button';
+import { ɵngDocPageUrl } from '@ng-doc/app/helpers';
 import { NgDocIconComponent } from '@ng-doc/ui-kit';
 import { WA_LOCATION } from '@ng-web-apis/common';
 
@@ -37,16 +39,14 @@ export class NgDocHeadingAnchorComponent implements OnInit {
 
   protected readonly location = inject(WA_LOCATION);
 
+  private readonly locationStrategy = inject(LocationStrategy);
   private readonly host: HTMLElement = inject(ElementRef).nativeElement;
   private readonly renderer = inject(Renderer2);
 
-  // A getter rather than `computed`: the location is not a signal, and the link must use the
-  // path of the page at the time it renders.
-  protected get href(): string {
-    const { origin, pathname } = this.location;
-
-    return `${origin}${pathname}#${this.anchor()}`;
-  }
+  // Read when the button is pressed: the location is not a signal, and the link must use the
+  // route the reader is on, in the form the location strategy shows it.
+  protected readonly href = (): string =>
+    ɵngDocPageUrl(this.locationStrategy, this.location, this.anchor());
 
   /**
    * Names the heading after its own text: the anchor sits inside the heading, so the button's

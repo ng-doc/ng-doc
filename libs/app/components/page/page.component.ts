@@ -1,5 +1,5 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser, LocationStrategy } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -20,7 +20,12 @@ import { NgDocContentAnchorController } from '@ng-doc/app/classes/content-anchor
 import { NgDocContentController } from '@ng-doc/app/classes/content-controller';
 import { NgDocRootPage } from '@ng-doc/app/classes/root-page';
 import { NgDocPageWrapperComponent } from '@ng-doc/app/components/page-wrapper';
-import { createComponent, generateToc, ɵrestoreNgDocHydrationSnapshot } from '@ng-doc/app/helpers';
+import {
+  createComponent,
+  generateToc,
+  ɵngDocPageUrl,
+  ɵrestoreNgDocHydrationSnapshot,
+} from '@ng-doc/app/helpers';
 import { NgDocPageSkeleton } from '@ng-doc/app/interfaces';
 import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes';
 import { NgDocPageProcessorComponent } from '@ng-doc/app/processors';
@@ -97,6 +102,7 @@ export class NgDocPageComponent {
   private readonly clipboard = inject(Clipboard);
   private readonly ngZone = inject(NgZone);
   private readonly location = inject(WA_LOCATION);
+  private readonly locationStrategy = inject(LocationStrategy);
   private linkCopiedTimer?: ReturnType<typeof setTimeout>;
   /** Removes the server-rendered copy shown while asynchronous content loads. */
   private snapshot?: () => void;
@@ -214,7 +220,7 @@ export class NgDocPageComponent {
    * Copies the link to the page, without its query and fragment.
    */
   copyLink(): void {
-    this.clipboard.copy(this.location.origin + this.location.pathname);
+    this.clipboard.copy(ɵngDocPageUrl(this.locationStrategy, this.location));
     this.linkCopied.set(true);
     clearTimeout(this.linkCopiedTimer);
     // The label timer must not hold the application unstable, so it runs outside the zone.

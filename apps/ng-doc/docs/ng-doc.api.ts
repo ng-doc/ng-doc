@@ -21,6 +21,7 @@ const api: NgDocApi = {
         // exported only across entry points.
         'libs/app/helpers/content-preload.ts',
         'libs/app/helpers/hydration-snapshot.ts',
+        'libs/app/helpers/page-url.ts',
       ],
     },
     {

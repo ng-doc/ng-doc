@@ -1,4 +1,5 @@
 import { Clipboard } from '@angular/cdk/clipboard';
+import { LocationStrategy } from '@angular/common';
 import {
   afterNextRender,
   afterRenderEffect,
@@ -20,6 +21,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
+import { ɵngDocPageUrl, ɵngDocRouteUrl } from '@ng-doc/app/helpers';
 import { NgDocPageToc, NgDocTocItem } from '@ng-doc/app/interfaces';
 import { NgDocShortcutsService } from '@ng-doc/app/services/shortcuts';
 import { WA_LOCATION, WA_WINDOW } from '@ng-web-apis/common';
@@ -91,6 +93,7 @@ export class NgDocTocComponent implements NgDocPageToc {
 
   private readonly window = inject(WA_WINDOW);
   private readonly location = inject(WA_LOCATION);
+  private readonly locationStrategy = inject(LocationStrategy);
   private readonly clipboard = inject(Clipboard);
   private readonly ngZone = inject(NgZone);
   private readonly rail: HTMLElement = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
@@ -184,7 +187,11 @@ export class NgDocTocComponent implements NgDocPageToc {
         this.tableOfContent();
         untracked(() => {
           this.pinned = null;
-          this.pinFragment(this.location.hash.replace(/^#/, ''));
+          // The route's fragment, not the document's: with hash location the route is the
+          // document's fragment.
+          this.pinFragment(
+            ɵngDocRouteUrl(this.locationStrategy, this.location.href).hash.replace(/^#/, ''),
+          );
           this.track();
         });
       },
@@ -227,7 +234,7 @@ export class NgDocTocComponent implements NgDocPageToc {
    * Copies the link to the page, without its query and fragment.
    */
   copyLink(): void {
-    this.clipboard.copy(this.location.origin + this.location.pathname);
+    this.clipboard.copy(ɵngDocPageUrl(this.locationStrategy, this.location));
     this.copied.set(true);
     clearTimeout(this.copiedTimer);
     // The label timer must not hold the application unstable, so it runs outside the zone.

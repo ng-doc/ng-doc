@@ -21,6 +21,7 @@ import { WA_LOCATION } from '@ng-web-apis/common';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { describeChangeDetection } from '../change-detection/change-detection-modes';
+import { provideBrowserLocation } from '../location/browser-location';
 
 @Component({ template: '' })
 class EmptyPageComponent {}
@@ -173,7 +174,8 @@ describeChangeDetection('NgDocHeadingAnchorComponent', ({ providers }) => {
         // The copy button renders an icon; its request stays pending.
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: WA_LOCATION, useValue: { origin: 'https://ng-doc.test', pathname: '/docs' } },
+        // The link follows the route the browser shows.
+        ...provideBrowserLocation('https://ng-doc.test/docs'),
       ],
     });
     const fixture = TestBed.createComponent(HeadingAnchorHostComponent);
@@ -182,7 +184,8 @@ describeChangeDetection('NgDocHeadingAnchorComponent', ({ providers }) => {
 
     const copyButton = fixture.debugElement.query(By.directive(NgDocCopyButtonComponent))
       .componentInstance as NgDocCopyButtonComponent;
-    const text: unknown = copyButton.text;
+    // The link is read when the button is pressed.
+    const text = copyButton.text();
     expect(typeof text === 'function' ? text() : text).toBe(
       'https://ng-doc.test/docs#getting-started',
     );
@@ -191,7 +194,7 @@ describeChangeDetection('NgDocHeadingAnchorComponent', ({ providers }) => {
     fixture.componentInstance.anchor.set('next');
     fixture.componentInstance.classes.set([]);
     await fixture.whenStable();
-    const next: unknown = copyButton.text;
+    const next = copyButton.text();
     expect(typeof next === 'function' ? next() : next).toBe('https://ng-doc.test/docs#next');
     expect(classesOf(anchor)).toEqual([]);
   });

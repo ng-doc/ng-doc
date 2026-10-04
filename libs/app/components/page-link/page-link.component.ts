@@ -10,6 +10,7 @@ import {
   signal,
 } from '@angular/core';
 import { Params, Router, RouterLink, UrlTree } from '@angular/router';
+import { ɵngDocRouteUrl } from '@ng-doc/app/helpers';
 import { NgDocIconComponent } from '@ng-doc/ui-kit';
 import { WA_LOCATION } from '@ng-web-apis/common';
 
@@ -54,7 +55,14 @@ export class NgDocPageLinkComponent implements OnInit {
     const href: string = this.href();
     const resolvesFromCurrentPage = href.startsWith('#') || href.startsWith('?');
     const absoluteUrl = isAbsoluteUrl(href);
-    const link = new URL(href, resolvesFromCurrentPage ? this.location.href : this.location.origin);
+    // `#section` and `?query` resolve against the route, which with hash location is not the
+    // document's path.
+    const link = new URL(
+      href,
+      resolvesFromCurrentPage
+        ? ɵngDocRouteUrl(this.locationStrategy, this.location.href)
+        : this.location.origin,
+    );
     const routerBasePath = normalizeRouterBasePath(
       this.locationStrategy.getBaseHref(),
       this.location.origin,
