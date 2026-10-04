@@ -190,6 +190,11 @@ export interface GeneratorConfiguration {
   inlineStyleLanguage: 'CSS' | 'SCSS' | 'SASS' | 'LESS';
   anchorHeadings: Array<'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'>;
   headerTemplate?: FilePath;
+  /**
+   * `false` when `api.protectedMembers` is `false`: API templates then list only public class
+   * members. Absent otherwise, so every other configuration keeps its digest.
+   */
+  apiProtectedMembers?: false;
   themes: { light: string; dark: string };
   repo?: {
     url: string;

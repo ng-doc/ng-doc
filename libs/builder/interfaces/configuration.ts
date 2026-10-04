@@ -47,6 +47,10 @@ export interface NgDocConfiguration {
    */
   guide?: NgDocGuideConfiguration;
   /**
+   * The configuration for the API pages. Only the Vite engine reads it.
+   */
+  api?: NgDocApiConfiguration;
+  /**
    * Shiki configuration
    */
   shiki?: {
@@ -70,6 +74,18 @@ export interface NgDocGuideConfiguration {
    * It can be used to customize the header of the guide page.
    */
   headerTemplate?: string;
+}
+
+/**
+ * The configuration for the API pages.
+ */
+export interface NgDocApiConfiguration {
+  /**
+   * Whether API pages list the protected members of classes, inherited ones included
+   * (`true` by default). With `false`, they list only public members: hidden members get no row,
+   * anchor, search record or keyword.
+   */
+  protectedMembers?: boolean;
 }
 
 /**

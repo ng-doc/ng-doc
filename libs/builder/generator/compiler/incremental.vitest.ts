@@ -801,3 +801,125 @@ test('a cache written by the previous schema version is rebuilt with one warning
   expect(restored.whyRebuilt.filter((reason) => reason.reason === 'cache-miss')).toEqual([]);
   expect(rebuilt.whyRebuilt.some((reason) => reason.reason === 'cache-miss')).toBe(true);
 }, 240_000);
+
+const memberFiles = (): Record<string, string> => ({
+  'tsconfig.json': JSON.stringify({
+    compilerOptions: { target: 'ES2022', types: [], skipLibCheck: true },
+    include: ['docs/**/*.ts'],
+  }),
+  'ng-doc.config.ts': `export default { docsPath: 'docs', cache: true };`,
+  'docs/ng-doc.api.ts': `const api = { title: 'API', scopes: [{ name: 'Public', route: 'public', include: ['docs/api*.ts'] }] }; export default api;`,
+  'docs/api.ts': [
+    '/** The base. */',
+    'export class Base {',
+    '  /** Shown everywhere. */ visibleValue = 1;',
+    '  /** A template binding. */ protected guardedValue = 2;',
+    '  /** A protected method. */ protected guardedMethod(): void {}',
+    '  /** A protected accessor. */ protected get guardedAccessor(): number { return 1; }',
+    '  /** A public method. */ visibleMethod(): void {}',
+    '}',
+    '/** The derived class. */',
+    'export class Derived extends Base {',
+    '  /** Its own protected value. */ protected ownGuarded = 3;',
+    '}',
+  ].join('\n'),
+  'docs/guide/ng-doc.page.ts': `const page = { title: 'Guide', route: 'guide', mdFile: './index.md' }; export default page;`,
+  'docs/guide/index.md': '# Guide\n\n{{ NgDocApi.api("docs/api.ts#Derived") }}\n',
+});
+
+const protectedConfig = (value?: boolean) =>
+  `export default { docsPath: 'docs', cache: true${value === undefined ? '' : `, api: { protectedMembers: ${value} }`} };`;
+
+const memberSteps: Step[] = [
+  {
+    name: 'protected members off',
+    apply: (f) => [update(f.write('ng-doc.config.ts', protectedConfig(false)))],
+  },
+  {
+    name: 'an API edit with protected members off',
+    apply: (f) => [
+      update(
+        f.write(
+          'docs/api.ts',
+          readFileSync(path.join(f.root, 'docs/api.ts'), 'utf8').replace(
+            'visibleMethod(): void {}',
+            'visibleMethod(): void {}\n  /** Added later. */ protected addedGuarded = 4;',
+          ),
+        ),
+      ),
+    ],
+  },
+  {
+    name: 'protected members on again (explicit true)',
+    apply: (f) => [update(f.write('ng-doc.config.ts', protectedConfig(true)))],
+  },
+];
+
+test('differential: api.protectedMembers on and off equal reference and cold builds', async () => {
+  const f = fixture(true, memberFiles);
+  const colds: CompilationResult[] = [];
+  const reference = await runChain(
+    f,
+    f.create({ incrementalReuse: false }),
+    async () => {
+      colds.push(await cold(f));
+    },
+    memberSteps,
+  );
+  f.reset();
+  const incremental = await runChain(f, f.create(), undefined, memberSteps);
+  for (const [index, result] of incremental.entries()) {
+    const label = index ? memberSteps[index - 1].name : 'initial';
+    expect({ label, result: JSON.stringify(result) }).toEqual({
+      label,
+      result: JSON.stringify(reference[index]),
+    });
+    expect({ label, ...published(result) }).toEqual({ label, ...published(colds[index]) });
+  }
+  const shown = (result: CompilationResult) => {
+    const candidate = success(result);
+    return {
+      html: candidate.artifacts
+        .flatMap((artifact) => artifact.content)
+        .map((content) => content.html)
+        .join('\n'),
+      keywords: candidate.artifacts
+        .flatMap((artifact) => artifact.exportedKeywords)
+        .map((keyword) => keyword.key),
+      search: JSON.stringify(candidate.artifacts.flatMap((artifact) => artifact.searchRecords)),
+    };
+  };
+  const guarded = ['guardedValue', 'guardedMethod', 'guardedAccessor', 'ownGuarded'];
+  const guardedDocs = [
+    'A template binding.',
+    'A protected method.',
+    'A protected accessor.',
+    'Its own protected value.',
+  ];
+  // Today's output: protected members, inherited ones too, have rows, records and keywords.
+  const on = shown(incremental[0]);
+  for (const name of [...guarded, 'visibleValue', 'visibleMethod']) expect(on.html).toContain(name);
+  for (const text of guardedDocs) expect(on.search).toContain(text);
+  expect(on.keywords).toEqual(
+    expect.arrayContaining([
+      'Base.guardedvalue',
+      'Base.get-guardedaccessor',
+      'Derived.guardedmethod',
+      'Derived.ownguarded',
+    ]),
+  );
+  // Off: only public members, in API pages and in the guide's API embed alike.
+  for (const off of [shown(incremental[1]), shown(incremental[2])]) {
+    for (const name of [...guarded, 'addedGuarded']) expect(off.html).not.toContain(name);
+    expect(off.keywords.filter((key) => /guarded/.test(key))).toEqual([]);
+    for (const text of [...guardedDocs, 'Added later.']) expect(off.search).not.toContain(text);
+    expect(off.html).toContain('visibleValue');
+    expect(off.search).toContain('Shown everywhere.');
+    expect(off.keywords).toEqual(
+      expect.arrayContaining(['Base.visiblevalue', 'Derived.visiblemethod']),
+    );
+  }
+  // `protectedMembers: true` is the default.
+  const again = shown(incremental[3]);
+  for (const name of [...guarded, 'addedGuarded']) expect(again.html).toContain(name);
+}, 240_000);

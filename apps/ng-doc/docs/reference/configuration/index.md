@@ -25,6 +25,7 @@ export default config;
 | `tsConfig`    | `string`                                      | The application's TypeScript configuration                                    | The `tsconfig` file used to analyse your sources, relative to the workspace root.                |
 | `cache`       | `boolean`                                     | `true` in the new engine, `false` in the legacy builders                      | Reuses generated results between builds (`*PerformanceAndCachingPage`).                          |
 | `guide`       | `NgDocGuideConfiguration`                     | –                                                                             | Options for guide pages. See `*ConfigurationReference#guide`.                                    |
+| `api`         | `NgDocApiConfiguration`                       | –                                                                             | Options for API pages (new engine only). See `*ConfigurationReference#api`.                      |
 | `shiki`       | `{ themes: { light: string; dark: string } }` | `css-variables` (new engine); `github-light` and `ayu-dark` (legacy builders) | The syntax highlighting themes (`*CodeHighlightingPage`).                                        |
 | `repoConfig`  | `NgDocRepoConfig`                             | –                                                                             | Adds "Suggest edits" and "View source" links to pages. See `*ConfigurationReference#repoconfig`. |
 | `keywords`    | `NgDocKeywordsConfiguration`                  | –                                                                             | Global keywords and keyword loaders. See `*ConfigurationReference#keywords`.                     |
@@ -48,6 +49,14 @@ The header template is a Nunjucks template, not Markdown. It can use these varia
 
 {{ "{{ Metadata.description }}" | safe }}
 ```
+
+## api
+
+Only the new engine reads these options.
+
+| Option             | Type      | Default | Description                                                                                                                                     |
+| ------------------ | --------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `protectedMembers` | `boolean` | `true`  | Lists the protected members of classes, inherited ones included. `false` lists public members only (`*GenerateApiPagesPage#protected-members`). |
 
 ## repoConfig
 

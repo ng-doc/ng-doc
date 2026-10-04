@@ -72,6 +72,7 @@ interface RawConfiguration extends LiveRecord {
   routePrefix?: string;
   tsConfig?: string;
   guide?: { anchorHeadings?: GeneratorConfiguration['anchorHeadings']; headerTemplate?: string };
+  api?: { protectedMembers?: boolean };
   shiki?: { themes?: { light?: string; dark?: string } };
   repoConfig?: GeneratorConfiguration['repo'];
   keywords?: {
@@ -1367,6 +1368,7 @@ async function normalizeConfiguration(
     inlineStyleLanguage: options.inlineStyleLanguage,
     anchorHeadings: raw.guide?.anchorHeadings ?? options.defaultAnchorHeadings,
     headerTemplate,
+    ...(raw.api?.protectedMembers === false ? { apiProtectedMembers: false as const } : {}),
     themes: {
       light: raw.shiki?.themes?.light ?? options.defaultThemes.light,
       dark: raw.shiki?.themes?.dark ?? options.defaultThemes.dark,

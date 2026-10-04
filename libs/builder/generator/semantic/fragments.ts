@@ -157,6 +157,8 @@ export function renderFragment(
         docNode: documented,
         templateName: kind,
         scope,
+        // The legacy engine passes no such flag, so the shared templates keep protected members.
+        hideProtectedMembers: state.discovery.configuration.apiProtectedMembers === false,
         ...(request.kind === 'api'
           ? {
               hideDescription: true,

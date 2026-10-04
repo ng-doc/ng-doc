@@ -85,6 +85,28 @@ of their own, and the properties, accessors, methods and call signatures of an i
 A member without a doc comment takes the comment of the member it overrides or implements. Every
 member keeps its anchor, so links such as `NgDocThemeService.set` open the page at its row.
 
+## Protected members
+
+Angular components often make members `protected` so that only their template uses them. To leave
+them out of the API pages, set `api.protectedMembers` to `false` in `ng-doc.config.ts`:
+
+```typescript name="ng-doc.config.ts" {4-6}
+import { NgDocConfiguration } from '@ng-doc/builder';
+
+const config: NgDocConfiguration = {
+  api: {
+    protectedMembers: false,
+  },
+};
+
+export default config;
+```
+
+The members tables of API pages, and of API tables embedded in guides (`*EmbedApiInGuidesPage`),
+then list public members only. Protected members inherited from a base class are left out too, and a
+hidden member gets no row, anchor, search record or keyword. Without the option, or with `true`,
+protected members are listed with a `protected` chip.
+
 ## Details in the rail
 
 On wide screens, the right rail shows the details of the declaration in a **Symbol** section above
@@ -163,6 +185,10 @@ The chips of `@Component`, `@Directive`, `@Injectable`, `@Pipe`, `@NgModule`, `@
 than guides.
 
 ## 🚧 Gotchas
+
+> **Warning**
+> Only the new engine reads `api.protectedMembers`. The legacy builders always list protected
+> members (`*LegacyBuildersPage`).
 
 > **Warning**
 > The symbol view is part of the new engine. The legacy builders render API pages with a section

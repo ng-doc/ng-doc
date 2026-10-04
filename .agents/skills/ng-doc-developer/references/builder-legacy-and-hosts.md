@@ -96,6 +96,7 @@ Only the new engine writes these, so the runtime treats them as optional and the
 
 Some author-facing options reach code that both engines share, and only the new engine turns them on, so the legacy output stays as it was:
 
+- **`api.protectedMembers: false`** (`ng-doc.config.ts`). Discovery puts `apiProtectedMembers: false` into the `GeneratorConfiguration` (only for `false`, so other configurations keep their digest), and `semantic/fragments.ts` passes `hideProtectedMembers` to the API templates (`symbol/members.html.nunj`, `api/class-declaration.html.nunj`). The legacy engine never sets the variable, so its pages list protected members.
 - **Named snippets in code blocks** (`file="./x.ts"#id`). `parseCodeBlockParams` accepts a snippet id only with `{ snippets: true }`, which the generator's Markdown renderer passes (`content/code-snippet.ts` extracts the region); without it, as in the legacy `markdown-to-html.ts` and in doc comments, any fragment but a line range still fails to parse.
 
 ## Shared code: changes affect both engines

@@ -1263,6 +1263,36 @@ test('omitted renderer settings take the default headings and syntax theme', asy
   }
 });
 
+test('api.protectedMembers false is the only value that enters the configuration', async () => {
+  const f = fixture();
+  const services = createDiscoveryServices();
+  try {
+    const configurations = [];
+    for (const api of [
+      '',
+      ', api: {}',
+      ', api: { protectedMembers: true }',
+      ', api: { protectedMembers: false }',
+    ]) {
+      write(f.config, `export default { docsPath: '.docs'${api} };`);
+      const result = await services.discovery.discover(f.request, new AbortController().signal);
+      expect(result.diagnostics).toEqual([]);
+      configurations.push(result.value!.configuration);
+    }
+    expect(configurations.map((configuration) => 'apiProtectedMembers' in configuration)).toEqual([
+      false,
+      false,
+      false,
+      true,
+    ]);
+    expect(configurations[3]).toMatchObject({ apiProtectedMembers: false });
+    // The option changes the digest; the configuration file's bytes change it too.
+    expect(new Set(configurations.map((configuration) => configuration.digest)).size).toBe(4);
+  } finally {
+    await services.runtime.dispose();
+  }
+});
+
 test('preserves explicit API asset route separately from the omitted default', async () => {
   const f = fixture();
   const apiPath = join(f.root, '.docs', 'ng-doc.api.ts');
