@@ -33,10 +33,14 @@ export interface EngineChoice {
   keptBuilder?: string;
 }
 
-/** Angular's application builders, whose options the Vite setup reads. */
+/**
+ * The application builders whose options the Vite setup reads: Angular's, and Nx's executor that
+ * runs Angular's with the same options (the Vite setup reports the few options Nx adds).
+ */
 export const ANGULAR_APPLICATION_BUILDERS: string[] = [
   '@angular/build:application',
   '@angular-devkit/build-angular:application',
+  '@nx/angular:application',
 ];
 
 const NG_DOC_BUILDER_PREFIX = '@ng-doc/builder:';
@@ -45,8 +49,9 @@ const NG_DOC_BUILDER_PREFIX = '@ng-doc/builder:';
 const ANGULAR_BUILDER_PREFIXES: string[] = ['@angular/build:', '@angular-devkit/build-angular:'];
 
 /**
- * Nx's executors that run Angular's builders with the same options. The legacy builders replace
- * them as they replace Angular's.
+ * Nx's executors that run Angular's builders with the same options, so they are not foreign: the
+ * Vite setup reads the options of `application`, and the legacy builders replace them as they
+ * replace Angular's.
  */
 const NX_ANGULAR_BUILDERS: string[] = [
   '@nx/angular:application',
@@ -96,9 +101,10 @@ export function isNgModuleApp(tree: Tree, project: ProjectDefinition): boolean {
 /**
  * Chooses the engine to set up. A project that already builds with NgDoc keeps its engine: `ng add`
  * never switches it (the legacy builders move to the Vite engine with `migrate-to-vite`). A new
- * standalone application gets the Vite engine unless `--engine legacy` is passed; an NgModule
- * application, or one whose `build` target does not use Angular's application builder, gets the
- * legacy builders; `--engine vite` is refused for an NgModule application. Without `--engine`, a
+ * standalone application on Angular's application builder (or Nx's executor that runs it) gets the
+ * Vite engine unless `--engine legacy` is passed; an NgModule application, or one whose `build`
+ * target uses another builder, gets the legacy builders; `--engine vite` is refused for an NgModule
+ * application. Without `--engine`, a
  * `build` or `serve` builder that is neither Angular's nor NgDoc's is kept (`keptBuilder`).
  * @param tree - The workspace tree.
  * @param project - The application project.
@@ -182,7 +188,7 @@ export function selectEngine(
   }
 
   // The Vite setup reads the options of Angular's application builder. Without `--engine`, another
-  // builder (a browser builder, an Nx or custom executor) gets the legacy builders, as before; an
+  // builder (a browser builder, Nx's `browser-esbuild`) gets the legacy builders, as before; an
   // explicit `--engine vite` goes on to the Vite setup, which refuses it and says why.
   if (requested === undefined && !ANGULAR_APPLICATION_BUILDERS.includes(build ?? '')) {
     logger.info(

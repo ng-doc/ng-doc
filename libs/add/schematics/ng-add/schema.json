@@ -14,7 +14,7 @@
     "engine": {
       "type": "string",
       "enum": ["vite", "legacy"],
-      "description": "The engine to set up: \"vite\" (the @ng-doc/builder:vite-application and vite-dev-server builders) or \"legacy\" (the @ng-doc/builder:application and dev-server builders). By default a standalone application on Angular's application builder gets the Vite engine; an NgModule application, or one on another builder, gets the legacy builders. A project that already uses NgDoc keeps its builders."
+      "description": "The engine to set up: \"vite\" (the @ng-doc/builder:vite-application and vite-dev-server builders) or \"legacy\" (the @ng-doc/builder:application and dev-server builders). By default a standalone application on Angular's application builder (or Nx's @nx/angular:application executor) gets the Vite engine; an NgModule application, or one on another builder, gets the legacy builders. A project that already uses NgDoc keeps its builders."
     }
   },
   "required": []

@@ -1,3 +1,4 @@
+import { virtualFs } from '@angular-devkit/core';
 import { HostTree, Tree } from '@angular-devkit/schematics';
 import { UnitTestTree } from '@angular-devkit/schematics/testing';
 
@@ -8,6 +9,40 @@ export function treeOf(files: Files): UnitTestTree {
   const tree = new UnitTestTree(new HostTree());
   for (const [file, content] of Object.entries(files)) tree.create(file, content);
   return tree;
+}
+
+/**
+ * A tree over files that exist outside it, as a workspace on disk does under `ng` or `nx g`:
+ * unlike in `treeOf`, writing one of them is an overwrite.
+ * @param files - The files by workspace-relative path.
+ */
+export function hostTreeOf(files: Files): UnitTestTree {
+  const host = new virtualFs.test.TestHost(
+    Object.fromEntries(Object.entries(files).map(([file, content]) => [`/${file}`, content])),
+  );
+  return new UnitTestTree(new HostTree(host));
+}
+
+/**
+ * The files with the `angular.json` that `nx g` shows Angular devkit schematics: every
+ * `project.json` as a project, its targets under `architect` with `builder` keys.
+ * @param files - The files by workspace-relative path.
+ */
+export function withNxAngularJson(files: Files): Files {
+  const projects = Object.fromEntries(
+    Object.entries(files)
+      .filter(([file]) => file.endsWith('/project.json'))
+      .map(([file, content]) => {
+        const { name, targets, ...project } = JSON.parse(content);
+        const architect = Object.fromEntries(
+          Object.entries(targets as Record<string, Record<string, unknown>>).map(
+            ([target, { executor, ...rest }]) => [target, { builder: executor, ...rest }],
+          ),
+        );
+        return [name, { root: file.replace(/\/project\.json$/, ''), ...project, architect }];
+      }),
+  );
+  return { ...files, 'angular.json': JSON.stringify({ version: 1, projects }) };
 }
 
 /** Every file of a tree with its content, for whole-tree comparisons. */

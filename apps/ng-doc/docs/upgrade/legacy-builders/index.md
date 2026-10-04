@@ -4,10 +4,11 @@ keyword: LegacyBuildersPage
 
 The legacy builders, `@ng-doc/builder:application` and `@ng-doc/builder:dev-server`, keep existing
 projects working in 22.0: `ng update` leaves a project on them. `ng add` sets them up for an
-NgModule application, an application on another builder than Angular's `application` builder, or
-with `--engine legacy` ([when `ng add` sets them up](#when-ng-add-sets-them-up)); a new standalone
-application gets the Vite engine (`*InstallationPage`). This page covers everything that is
-specific to them. The other pages describe behaviour that is the same in both engines.
+NgModule application, an application on another builder than Angular's `application` builder (or
+Nx's `@nx/angular:application` executor, which runs it), or with `--engine legacy`
+([when `ng add` sets them up](#when-ng-add-sets-them-up)); a new standalone application gets the
+Vite engine (`*InstallationPage`). This page covers everything that is specific to them. The other
+pages describe behaviour that is the same in both engines.
 
 > **Warning**
 > The legacy builders are deprecated in 22.0. They still ship and work, and `ng update` doesn't
@@ -19,14 +20,15 @@ specific to them. The other pages describe behaviour that is the same in both en
 
 `ng add @ng-doc/add` chooses the engine for the application:
 
-- A **new standalone application** on Angular's `application` builder gets the Vite engine
-  (`*InstallationPage`).
+- A **new standalone application** on Angular's `application` builder, or on Nx's
+  `@nx/angular:application` executor, gets the Vite engine (`*InstallationPage`; for Nx, see
+  `*InstallationPage#nx-workspaces`).
 - An **NgModule application** (one that calls `bootstrapModule`) gets the legacy builders. Passing
   `--engine vite` to it stops with an error (`NGDOC_ADD_ENGINE`). To move it to the Vite engine
   later, run `ng g @ng-doc/builder:migrate-to-vite` (`*MigrateToNewEnginePage`).
-- An application whose `build` target uses **another builder**, such as `@nx/angular:application`
-  or the `browser` builder, gets the legacy builders, because the Vite engine reads the options of
-  Angular's `application` builder. With `--engine vite`, the command stops instead.
+- An application whose `build` target uses **another builder**, such as the `browser` builder or
+  Nx's `@nx/angular:browser-esbuild`, gets the legacy builders, because the Vite engine reads the
+  options of Angular's `application` builder. With `--engine vite`, the command stops instead.
 - A **project that already uses NgDoc** (any target runs an `@ng-doc/builder` builder) keeps its
   builders. `ng add` never switches the engine of a project: move a project from the legacy
   builders with `ng g @ng-doc/builder:migrate-to-vite`.

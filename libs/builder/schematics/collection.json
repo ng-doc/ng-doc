@@ -22,7 +22,7 @@
       "schema": "./migrate-to-vite/schema.json"
     },
     "vite-setup": {
-      "description": "Sets up the Vite engine for a project on Angular's application builder (run by ng add @ng-doc/add)",
+      "description": "Sets up the Vite engine for a project on Angular's application builder or Nx's application executor (run by ng add @ng-doc/add)",
       "factory": "./vite-setup/index#viteSetup",
       "schema": "./vite-setup/schema.json",
       "hidden": true

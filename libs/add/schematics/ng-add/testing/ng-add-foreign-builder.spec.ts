@@ -268,9 +268,10 @@ export const routes: Routes = [];
     expect(logged()).not.toContain(KEEP_ANOTHER_BUILDER_URL);
   });
 
-  it('still replaces Nx’s executors that run Angular’s builders', async () => {
+  // Nx's application executor gets the Vite engine (ng-add-nx-workspace.spec.ts).
+  it('still replaces Nx’s other executors that run Angular’s builders', async () => {
     createWorkspace({
-      build: { ...ESBUILD_TARGET, builder: '@nx/angular:application' },
+      build: { ...ESBUILD_TARGET, builder: '@nx/angular:browser-esbuild' },
       serve: { builder: '@nx/angular:dev-server', options: {} },
     });
 
