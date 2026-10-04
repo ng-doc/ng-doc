@@ -9,10 +9,11 @@ import {
 
 import { getNgDocAssets } from '../constants/assets';
 import { Schema } from '../schema';
+import { getBuildOptionsTarget } from '../utils/get-build-options-target';
 import { getProject } from '../utils/get-project';
 
 /**
- * Adds the NgDoc assets to the build target. Entries that are already there are not added again.
+ * Adds the NgDoc assets to the target with the Angular build options (`getBuildOptionsTarget`). Entries that are already there are not added again.
  * @param options - The `ng add` options.
  */
 export function addAssets(options: Schema): Rule {
@@ -34,7 +35,7 @@ export function addAssets(options: Schema): Rule {
 
         const targetOptions: Record<string, JsonValue | undefined> = getProjectTargetOptions(
           project,
-          'build',
+          getBuildOptionsTarget(project),
         );
 
         const assets: JsonArray | undefined = targetOptions['assets'] as JsonArray | undefined;

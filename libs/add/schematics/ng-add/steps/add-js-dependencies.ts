@@ -8,6 +8,7 @@ import {
 } from '@schematics/angular/utility/workspace';
 
 import { Schema } from '../schema';
+import { getBuildOptionsTarget } from '../utils/get-build-options-target';
 import { getProject } from '../utils/get-project';
 
 /**
@@ -36,7 +37,7 @@ export function addJsDependencies(options: Schema): Rule {
 
         const targetOptions: Record<string, JsonValue | undefined> = getProjectTargetOptions(
           project,
-          'build',
+          getBuildOptionsTarget(project),
         );
         const jsDependencies: JsonArray | undefined = targetOptions[
           'allowedCommonJsDependencies'

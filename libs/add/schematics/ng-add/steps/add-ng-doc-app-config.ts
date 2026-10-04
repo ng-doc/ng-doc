@@ -35,7 +35,7 @@ import {
 import { addUniqueImport } from '../utils/add-unique-import';
 import { getAppComponent } from '../utils/get-app-component';
 import { getInitializer } from '../utils/get-initializer';
-import { getMainPath } from '../utils/get-main-path';
+import { getBootstrapPath } from '../utils/get-main-path';
 import { getProject } from '../utils/get-project';
 import { getBootstrapModuleFn, getRootModule } from '../utils/get-root-module';
 
@@ -64,7 +64,7 @@ export function addNgDocAppConfig(options: Schema): Rule {
         return;
       }
 
-      const mainPath: string = getMainPath(project);
+      const mainPath: string = getBootstrapPath(tree, project);
       const morphProject = createProject(tree, '/', ['**/*.ts', '**/*.json']);
 
       // Angular CLI projects indent with two spaces; ts-morph defaults to four.

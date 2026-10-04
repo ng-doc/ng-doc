@@ -40,9 +40,16 @@ The command chooses the engine from the application:
 - **The builders it already has** for a project that uses NgDoc: `ng add` never switches the engine,
   even with `--engine`. `ng g @ng-doc/builder:migrate-to-vite` moves a project from the legacy
   builders (`*MigrateToNewEnginePage`).
+- **No NgDoc builder** for an application whose `build` or `serve` target uses a builder that is
+  neither Angular's nor NgDoc's, such as `@angular-architects/native-federation:build` or a custom
+  builder: replacing it would break the application. The command keeps the builders, sets up the
+  rest (the styles, assets and budget go to the target with the Angular build options, such as the
+  `esbuild` target of native federation) and links to
+  `*DevServerAndBuildsPage#keep-another-builder`, which generates the documentation with the
+  `ng-doc` command next to your builder.
 
 To choose yourself, pass `--engine` (see the options below). `--engine legacy` sets up the legacy
-builders in any project that doesn't use NgDoc yet. `--engine vite` stops with an error in an
+builders in any project that doesn't use NgDoc yet, in place of any builder. `--engine vite` stops with an error in an
 application that the Vite engine can't build (`*LegacyBuildersPage#when-ng-add-sets-them-up`).
 
 ## 🚀 Start the site
