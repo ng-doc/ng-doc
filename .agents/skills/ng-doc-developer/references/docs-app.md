@@ -80,6 +80,7 @@ export default Category;
 - `{% include "../../shared/demo-inputs.md" %}` includes a shared file.
 - `{{ NgDocPage.title }}` gives page data.
 - To show template syntax literally, wrap it: `{{ '{{ NgDocActions.demo("X") }}' | safe }}`.
+- `<ng-doc-tab group="…" name="…" icon="…" active>` elements, with empty lines around their Markdown content, group any content (demos, playgrounds, text) into tabs (`write-content/content-tabs`); code groups use the same element.
 
 **Keywords (auto-links):**
 

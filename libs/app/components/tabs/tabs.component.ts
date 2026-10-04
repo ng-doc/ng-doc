@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, OnInit, Signal } from '@angular/core';
 import { NgDocTab } from '@ng-doc/app/interfaces';
 import {
   NgDocExecutePipe,
@@ -7,7 +7,10 @@ import {
   NgDocTabGroupComponent,
 } from '@ng-doc/ui-kit';
 
-/** Grouped code blocks of a page, shown as tabs. */
+/**
+ * Tabs of a page: grouped code blocks, or any content that Markdown wraps in
+ * `<ng-doc-tab group="…" name="…">` elements.
+ */
 @Component({
   selector: 'ng-doc-tabs',
   imports: [NgDocTabGroupComponent, NgDocTabComponent, NgDocExecutePipe, NgDocIconComponent],
@@ -15,7 +18,7 @@ import {
   styleUrls: ['./tabs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgDocTabsComponent {
+export class NgDocTabsComponent implements OnInit {
   /** The tabs; their content is moved into the open panel. */
   readonly tabs = input<NgDocTab[]>([]);
 
@@ -26,6 +29,12 @@ export class NgDocTabsComponent {
       0,
     ),
   );
+
+  ngOnInit(): void {
+    // The tabs processor leaves the contents on the page until every processor has run on them;
+    // only the open tab's content is shown, in the panel.
+    this.tabs().forEach((tab: NgDocTab) => tab.content.remove());
+  }
 
   /**
    * Moves a tab's content into its panel.

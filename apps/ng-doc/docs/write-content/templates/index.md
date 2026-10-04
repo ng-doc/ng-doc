@@ -117,4 +117,4 @@ To show them as text, output them as a string with the `safe` filter:
 
 {% endindex %}
 
-Next: `*DemosPage`
+Next: `*ContentTabsPage`
