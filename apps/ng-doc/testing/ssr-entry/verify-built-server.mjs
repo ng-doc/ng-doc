@@ -7,7 +7,10 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const workspaceRoot = resolve(import.meta.dirname, '../../../..');
-const serverEntry = resolve(workspaceRoot, process.argv[2] ?? 'dist/apps/ng-doc/server/server.mjs');
+const serverEntry = resolve(
+  workspaceRoot,
+  process.argv[2] ?? 'dist/apps/ng-doc-legacy/server/server.mjs',
+);
 const browserFolder = resolve(dirname(serverEntry), '../browser');
 const mountServerEntry = fileURLToPath(new URL('./mount-built-server.mjs', import.meta.url));
 const temporaryCwd = await mkdtemp(join(tmpdir(), 'ng-doc-ssr-entry-'));

@@ -14,7 +14,7 @@ import { filterFileEvents, WatchInputFilter } from '../watch-input-filter';
 import { compilation, harness, until } from './support';
 
 /**
- * Real FSEvents reproduction of an Angular CLI host watch crash: heavy unrelated churn in the
+ * Real FSEvents reproduction of a host watch crash: heavy unrelated churn in the
  * watched workspace overflows the native queue ("Events were dropped by the FSEvents client"). The
  * watch must keep running, report only a warning and publish the newest edit. Opt-in (about one
  * minute of heavy filesystem load on macOS): NGDOC_FSEVENTS_CHURN=1.

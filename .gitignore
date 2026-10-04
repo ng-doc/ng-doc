@@ -40,7 +40,9 @@ Thumbs.db
 
 # Cache
 .angular
+# Generated documentation: the Vite engine (ng-doc/) and the site's legacy targets (ng-doc-legacy/)
 /ng-doc
+/ng-doc-legacy
 
 .nx/cache
 .nx/workspace-data
@@ -52,7 +54,5 @@ vitest.config.*.timestamp*
 .nx/polygraph
 .nx/self-healing
 .nx/migrate-runs
-# Standalone generator integration output
-/ng-doc-modernization/
-/.ng-doc-modernization/
+# Generator caches
 /.cache/ng-doc/

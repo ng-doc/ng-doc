@@ -8,6 +8,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 // outputs of different trees. Run it right after a build:
 //
 //   node libs/builder/generator/acceptance/production/source-stamp.mjs dist/apps/ng-doc/browser
+//   node libs/builder/generator/acceptance/production/source-stamp.mjs dist/apps/ng-doc-legacy/browser
 //
 // It writes `ngdoc-source.json` beside the browser folder: the commit, a digest of the
 // uncommitted changes (tracked edits and untracked files) and a digest of the built packages

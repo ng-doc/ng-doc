@@ -21,15 +21,9 @@ import {
   WorkspaceTarget,
 } from './setup/workspace';
 
-/** The legacy builders the schematic migrates, and the frozen Angular CLI builders of the new engine. */
-export const LEGACY_BUILD_BUILDERS = [
-  '@ng-doc/builder:application',
-  '@ng-doc/builder:modern-application',
-];
-export const LEGACY_SERVE_BUILDERS = [
-  '@ng-doc/builder:dev-server',
-  '@ng-doc/builder:modern-dev-server',
-];
+/** The legacy builders the schematic migrates. */
+export const LEGACY_BUILD_BUILDERS = ['@ng-doc/builder:application'];
+export const LEGACY_SERVE_BUILDERS = ['@ng-doc/builder:dev-server'];
 
 /**
  * How an option or a workspace detail is carried over:
@@ -161,7 +155,7 @@ const DROPPED: { [option: string]: string } = {
   optimization:
     'Every `vite build` is optimized, in every mode; use the development server for unoptimized code.',
   poll: 'Use Vite `server.watch.usePolling` if you need polling.',
-  progress: 'NgDoc reports its own progress (`ngDoc.progress` becomes the plugin `progress`).',
+  progress: 'NgDoc reports its own progress (the plugin option `progress`).',
   statsJson: 'Use a Rollup visualizer plugin.',
   verbose: 'Use Vite `logLevel`.',
   watch: 'Use the development server; `vite build --watch` is not supported.',
@@ -557,10 +551,10 @@ export function analyzeProject(
     if (optionKeys(legacy).includes(option)) add('migrated', `build.${option}`, `${target}.`);
   }
 
-  // ngDoc: the configuration file, build tags and progress.
+  // ngDoc: the configuration file, the only option of the legacy builders.
   const ngDoc = isRecord(base['ngDoc']) ? base['ngDoc'] : {};
   for (const key of Object.keys(ngDoc)) {
-    if (!['config', 'tags', 'progress'].includes(key)) {
+    if (key !== 'config') {
       add('manual', `build.ngDoc.${key}`, 'is not an option of the Vite engine.');
     }
   }
@@ -572,15 +566,10 @@ export function analyzeProject(
   } else {
     add('dropped', 'ngDoc.config', 'No ng-doc.config.ts was found; the engine uses its defaults.');
   }
-  const tags = Array.isArray(ngDoc['tags'])
-    ? ngDoc['tags'].filter((item): item is string => typeof item === 'string')
-    : undefined;
   add(
     'dropped',
     'onlyForTags',
-    tags
-      ? `\`ngDoc.tags\` became \`generator.discovery.tags\`.`
-      : 'The Vite engine applies `onlyForTags` of pages and categories, with the Vite mode as the build tag (the legacy engine ignored it).',
+    'The Vite engine applies `onlyForTags` of pages and categories, with the Vite mode as the build tag (the legacy engine ignored it).',
   );
 
   // Server rendering, prerendering and the output mode, per configuration: the target's options
@@ -833,8 +822,6 @@ export function analyzeProject(
     docsRoot: normalizePath(posix.dirname(browser)),
     outputRoot: posix.join('ng-doc', project.name),
     cacheRoot: posix.join('.cache/ng-doc', project.name),
-    ...(tags ? { tags } : {}),
-    ...(asString(ngDoc['progress']) ? { progress: asString(ngDoc['progress'])! } : {}),
     ...(serveSettings?.devServer ? { devServer: serveSettings.devServer } : {}),
     modes: { byMode, fallback: modeSettings(plain) },
   };

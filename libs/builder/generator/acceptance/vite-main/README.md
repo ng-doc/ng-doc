@@ -8,7 +8,7 @@ node libs/builder/generator/acceptance/vite-main/run-bounded.mjs
 
 The harness checks real browser routes and demo interaction, served search bytes, development SSR, production browser/server bundles, search parity and representative prerendered routes with a hydrated demo click. Complete-route prerendering remains a separate acceptance requirement; three representative routes do not prove it. Each run writes its status and failures to `NGDOC_VITE_MAIN_EVIDENCE` (default `tmp/acceptance/vite-main`, ignored by git); this README records no results.
 
-The semantic generator retains the application's source tsconfig, matching the accepted B path. Analog uses a fixture tsconfig pointing to built Angular libraries and this run's generated entry. Optional nonexistent app asset directories are skipped, as in the native application configuration; present UI and application assets are copied. No source fixture edits are made in the shared application.
+The semantic generator retains the site configuration's documentation tsconfig. Analog uses a fixture tsconfig pointing to built Angular libraries and this run's generated entry. Optional nonexistent app asset directories are skipped, as in the native application configuration; present UI and application assets are copied. No source fixture edits are made in the shared application.
 
 The current candidate host opts into Analog `liveReload: true` and declares `analogLiveReload: true` to the NgDoc adapter. Earlier source1505 evidence predates this completion protocol; the configuration change alone is not new passing evidence.
 
@@ -18,12 +18,6 @@ The harness forwards Analog public build/hot-update hooks unchanged while record
 
 Development SSR and subsequent production builds run in separate Node processes, matching CLI execution. Importing zone.js/node changes global Promise identity and breaks sass-embedded importer detection in a later build in the same process. The parent retains a nested production result and propagates subprocess failure. Production rendering occurs only after both browser and server builds finish.
 
-Production host configuration carries over the original build-modern environment file replacements and verifies Angular production mode in both browser and SSR. `compare-b.mjs <fixture> <Angular CLI output> <evidence.json>` checks that the search and keyword asset bytes equal those of an Angular CLI build of the same sources (`npx nx run ng-doc:build-modern`, which writes `dist/apps/ng-doc-modern`). Both inputs must come from the same run; a missing one fails with the step that produces it.
+Production host configuration carries over the site's production environment file replacements and verifies Angular production mode in both browser and SSR.
 
-The server build uses `ssr.noExternal: true` so Angular partial dependencies are linked into the standalone bundle. The build harness itself imports Analog, which can preload Angular compiler; successful rendering in that process alone does not prove standalone server loading. Audit the retained production bundle in a separate process with no Analog/compiler import:
-
-```sh
-node libs/builder/generator/acceptance/vite-main/prerender-all.mjs <fixture> dist/apps/ng-doc-modern <production-results.json> <evidence-directory>
-```
-
-This audit uses the complete accepted B `prerendered-routes.json` inventory, including redirect routes. It requires hydration metadata and zero logged SSR errors, and compares headings, page counts and normalized documentation text wherever B has an HTML file. HTML remains under the fixture's `prerender-audit` directory; evidence records hashes and counts. An owned subprocess has a ten-minute limit. The baseline inventory is a comparison oracle, not an independent extractor of the new host's routes; added-route discovery and final production route extraction remain separate requirements.
+The server build uses `ssr.noExternal: true` so Angular partial dependencies are linked into the standalone bundle. The build harness itself imports Analog, which can preload Angular compiler; successful rendering in that process alone does not prove standalone server loading. The complete prerender of the site is the production acceptance (`production-c`).

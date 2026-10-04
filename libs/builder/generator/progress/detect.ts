@@ -31,8 +31,8 @@ export interface DetectOptions {
   stream?: ProgressStream;
   platform?: NodeJS.Platform;
   /**
-   * Another writer shares the terminal: the Angular builders after their host starts, the Vite dev
-   * server after it listens, the CLI after it spawns a host.
+   * Another writer shares the terminal: the Vite dev server after it listens, the CLI after it
+   * spawns a host.
    */
   foreign?: boolean;
 }

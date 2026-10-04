@@ -102,7 +102,8 @@ builders stop at your home directory.
 So a file in `src/ng-doc.config.ts` is found only by the legacy builders. Put the file in the
 project folder or at the workspace root, where both engines find it.
 
-A builder option or a command line flag can point to a specific file instead. See
+The Vite plugin's `generator.configFile`, the `--config` flag of the `ng-doc` command, or the
+`ngDoc.config` option of the legacy builders can point to a specific file instead. See
 `*BuildersReference` and `*LegacyBuildersPage`. Without a configuration file, every option keeps its
 default.
 

@@ -52,8 +52,8 @@ test('every site configuration that extends the build configuration keeps its li
     .filter((name) => /^tsconfig\..*\.json$/.test(name))
     .map((name) => path.join(APP, name))
     .filter((file) => file !== BUILD_CONFIG && extendsConfig(file, BUILD_CONFIG));
-  // tsconfig.vite.json (Vite engine) and tsconfig.modern.json (Angular CLI, new engine).
-  assert.ok(files.length >= 2, files.join(', '));
+  // tsconfig.vite.json (the Vite engine's `build` and `serve`).
+  assert.ok(files.includes(path.join(APP, 'tsconfig.vite.json')), files.join(', '));
   for (const file of files) {
     const paths = effectivePaths(file);
     for (const [key, target] of libraryPaths)

@@ -285,8 +285,8 @@ export class ViteFileEventSource implements FileEventSource {
    *   it, so later changes there are never reported. Fatal when it can hide a recorded input.
    * - any other `fs` failure (stat, lstat, realpath, scandir, open, including awaitWriteFinish):
    *   the path is still watched or is re-read on its directory's next change, but an event may
-   *   have been missed. Like the Angular CLI host's lossy FSEvents signal this is a `WATCHER_RESCAN` warning, and the
-   *   session re-observes every committed input.
+   *   have been missed. Like a lossy FSEvents signal of the session's own watcher, this is a
+   *   `WATCHER_RESCAN` warning, and the session re-observes every committed input.
    *
    * A failure for a path that cannot hide a recorded input (outside the inputs, or below a
    * generator-owned root the generator itself rewrites) is only a warning. A value that is not
@@ -390,8 +390,7 @@ export class ViteFileEventSource implements FileEventSource {
   /**
    * Whether a host change is a generator input. A change rejected while a generation is in flight
    * is retained: if that generation records the path as a new input (it may have read the old
-   * bytes), its observation requests a reconcile, as the Angular CLI host's WatchInputFilter
-   * replays it.
+   * bytes), its observation requests a reconcile.
    */
   matches(change: FileChange): boolean {
     const normalized = { ...change, path: normalize(change.path) };

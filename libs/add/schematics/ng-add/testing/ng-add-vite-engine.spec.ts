@@ -263,16 +263,17 @@ describe('ng-add with the Vite engine', () => {
     expect(logged('warn')).toContain('"--engine vite" was ignored');
   });
 
-  it('should keep an NgDoc builder that is not the legacy one', async () => {
+  it('should keep an NgDoc builder that a target already runs', async () => {
     const app: UnitTestTree = await newApp();
     const workspace = JSON.parse(app.readContent('angular.json'));
 
-    workspace.projects.docs.architect.build.builder = '@ng-doc/builder:modern-application';
+    workspace.projects.docs.architect.build.builder = '@ng-doc/builder:application';
     app.overwrite('angular.json', JSON.stringify(workspace, null, 2));
 
     const tree: UnitTestTree = await setup(app);
 
-    expect(architect(tree)['build'].builder).toBe('@ng-doc/builder:modern-application');
+    expect(architect(tree)['build'].builder).toBe('@ng-doc/builder:application');
+    expect(logged()).toContain('"build" already uses "@ng-doc/builder:application"');
     expect(architect(tree)['serve'].builder).toBe('@ng-doc/builder:dev-server');
     expect(tree.exists('vite.config.mjs')).toBe(false);
   });

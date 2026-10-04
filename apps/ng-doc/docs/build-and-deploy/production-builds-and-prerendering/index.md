@@ -54,17 +54,6 @@ option.
 
 `vite build --watch` isn't supported. Use the development server to work on pages.
 
-## Build with the Angular CLI builder
-
-The new engine's Angular CLI builder accepts every option of the Angular `application` builder. Use
-Angular's `server`, `ssr` and `prerender` options as you would without NgDoc, then run:
-
-```bash
-ng build
-```
-
-NgDoc generates every page once before Angular builds the application.
-
 ## Wait for content on the server
 
 NgDoc loads page content asynchronously. Wrap the server bootstrap function with

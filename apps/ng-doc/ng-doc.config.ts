@@ -4,8 +4,10 @@ import { ngKeywordsLoader, rxjsKeywordsLoader } from '@ng-doc/keywords-loaders';
 const NgDocConfig: NgDocConfiguration = {
   docsPath: 'apps/ng-doc/docs',
   routePrefix: 'docs',
-  tsConfig: 'apps/ng-doc/tsconfig.app.json',
-  cache: false,
+  // The documentation program maps `@ng-doc/generated` to a stub instead of a generated output, so
+  // the API pages don't depend on which builds ran before.
+  tsConfig: 'apps/ng-doc/tsconfig.docs.json',
+  cache: true,
   repoConfig: {
     url: 'https://github.com/ng-doc/ng-doc',
     mainBranch: 'main',

@@ -272,7 +272,7 @@ describe('buildNgDocViteApplication', () => {
   });
 });
 
-describe('Angular CLI builders', () => {
+describe('vite-application and vite-dev-server builders', () => {
   const context = () => ({
     workspaceRoot: '/workspace',
     logger: { info: vi.fn(), error: vi.fn() },

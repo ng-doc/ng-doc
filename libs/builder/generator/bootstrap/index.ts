@@ -193,7 +193,7 @@ export function assertDevelopmentContent(value: unknown): void {
     throw new TypeError(
       "[NGDOC_DEVELOPMENT_CONTENT_REMOVED] developmentContent: 'virtual' (the virtual content " +
         'mode) was removed. Remove the option: generated content is always written as physical ' +
-        'files, which the Vite plugin and the Angular CLI builders serve and reload.',
+        'files, which the Vite plugin serves and reloads.',
     );
   }
   throw new TypeError("developmentContent must be 'file' or omitted.");

@@ -24,7 +24,7 @@ import {
 import { WatchInputRegistry } from '../watch-inputs';
 
 /**
- * Vite host watcher parity with the Angular CLI host's hardened Parcel watcher.
+ * Vite host watcher parity with the session's hardened Parcel watcher.
  * The chokidar watcher is a stand-in EventEmitter; every other part (session, event source,
  * lifecycle, host-update coordination) is the real implementation.
  */

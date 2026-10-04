@@ -98,11 +98,6 @@ export const COMMANDS = Object.freeze(
       heavy: true,
     }), // POSIX: the PTY checks must run, not skip; real PTYs and timing
     posix('bootstrap', 'bootstrap/testing/vitest.config.ts'),
-    posix('angular', 'angular/testing/vitest.config.ts', {
-      additionalIncludes: ['generator/angular/testing/native-smoke.integration.ts'],
-      testTimeout: 120_000,
-      fileParallelism: false,
-    }), // real Angular builders in owned child processes
     posix('vite-adapter', 'vite/testing/vitest.config.ts', {
       shards: 3,
       // Seconds per file with coverage on a Linux CI runner, three files at a time; only their
@@ -137,6 +132,7 @@ export const COMMANDS = Object.freeze(
         'libs/builder/generator/vite/testing/structural-pass.vitest.ts': 1,
         'libs/builder/generator/vite/testing/structural-updates.vitest.ts': 1,
         'libs/builder/generator/vite/testing/superseded-commit.vitest.ts': 1,
+        'libs/builder/generator/vite/testing/theme-index.vitest.ts': 1,
       },
     }),
   ].map(Object.freeze),
@@ -275,7 +271,7 @@ export default async (environment) => {
   const sequencer = balancedSequencer(BaseSequencer, ${JSON.stringify(entry.shardWeights)});`
       : ''
   }
-  return {...base,test:{...base.test,${balanced ? 'sequence:{...base.test.sequence,sequencer},' : ''}include:${entry.tests ? JSON.stringify(entry.tests) : `[...base.test.include,...${JSON.stringify(entry.additionalIncludes ?? [])}]`},${coverageOverrides.length ? `coverage:{...base.test.coverage,${coverageOverrides.join(',')}},` : ''}${entry.testTimeout ? `testTimeout:${entry.testTimeout},hookTimeout:${entry.testTimeout},` : ''}${entry.fileParallelism === false ? 'fileParallelism:false,' : ''}env:{...base.test.env,${platform !== 'win32' && entry.posixEnv ? `...${JSON.stringify(entry.posixEnv)},` : ''}${coverage ? `NODE_V8_COVERAGE:${JSON.stringify(raw)},` : ''}NGDOC_TEST_EVIDENCE_DIR:${JSON.stringify(directory)}}}};
+  return {...base,test:{...base.test,${balanced ? 'sequence:{...base.test.sequence,sequencer},' : ''}include:${entry.tests ? JSON.stringify(entry.tests) : `[...base.test.include,...${JSON.stringify(entry.additionalIncludes ?? [])}]`},${coverageOverrides.length ? `coverage:{...base.test.coverage,${coverageOverrides.join(',')}},` : ''}${entry.testTimeout ? `testTimeout:${entry.testTimeout},hookTimeout:${entry.testTimeout},` : ''}env:{...base.test.env,${platform !== 'win32' && entry.posixEnv ? `...${JSON.stringify(entry.posixEnv)},` : ''}${coverage ? `NODE_V8_COVERAGE:${JSON.stringify(raw)},` : ''}NGDOC_TEST_EVIDENCE_DIR:${JSON.stringify(directory)}}}};
 };
 `,
   );
@@ -458,7 +454,7 @@ export async function sourceBoundaryCheck(root = ROOT) {
     throw new Error(
       `A render thread may import only the HTML pipeline, the digest, the worker protocol, @ng-doc/utils, @orama/plugin-parsedoc and node:worker_threads:\n${thread.join('\n')}`,
     );
-  return { filesChecked: files.length, adaptersExcluded: ['angular', 'vite', 'bootstrap'] };
+  return { filesChecked: files.length, adaptersExcluded: ['vite', 'bootstrap'] };
 }
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

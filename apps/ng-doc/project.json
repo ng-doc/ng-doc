@@ -17,7 +17,7 @@
         }
       ],
       "options": {
-        "outputPath": "dist/apps/ng-doc",
+        "outputPath": "dist/apps/ng-doc-legacy",
         "index": "apps/ng-doc/src/index.html",
         "browser": "apps/ng-doc/src/main.ts",
         "inlineStyleLanguage": "scss",
@@ -40,7 +40,7 @@
           },
           {
             "glob": "**/*",
-            "input": "ng-doc/ng-doc/assets",
+            "input": "ng-doc-legacy/ng-doc/ng-doc/assets",
             "output": "assets/ng-doc"
           }
         ],
@@ -52,7 +52,10 @@
           "posthtml-render",
           "js-beautify",
           "chalk"
-        ]
+        ],
+        "ngDoc": {
+          "config": "apps/ng-doc/ng-doc.config.legacy.ts"
+        }
       },
       "configurations": {
         "production": {
@@ -79,7 +82,7 @@
           "sourceMap": true
         },
         "development": {
-          "tsConfig": "apps/ng-doc/tsconfig.app.json",
+          "tsConfig": "apps/ng-doc/tsconfig.legacy.json",
           "optimization": false,
           "extractLicenses": false,
           "sourceMap": true,
@@ -117,6 +120,11 @@
           "target": "link-libs"
         }
       ],
+      "options": {
+        "ngDoc": {
+          "config": "apps/ng-doc/ng-doc.config.legacy.ts"
+        }
+      },
       "configurations": {
         "production": {
           "buildTarget": "ng-doc:build-legacy:production",
@@ -170,106 +178,6 @@
         }
       }
     },
-    "build-modern": {
-      "executor": "./dist/libs/builder:modern-application",
-      "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "production",
-      "dependsOn": [
-        {
-          "target": "link-libs"
-        }
-      ],
-      "options": {
-        "outputPath": "dist/apps/ng-doc-modern",
-        "index": "apps/ng-doc/src/index.html",
-        "browser": "apps/ng-doc/src/main.ts",
-        "inlineStyleLanguage": "scss",
-        "server": "apps/ng-doc/src/main.server.ts",
-        "prerender": true,
-        "ssr": {
-          "entry": "apps/ng-doc/server.ts"
-        },
-        "assets": [
-          "apps/ng-doc/src/assets",
-          {
-            "glob": "**/*",
-            "input": "dist/libs/app/assets",
-            "output": "assets/ng-doc/app"
-          },
-          {
-            "glob": "**/*",
-            "input": "dist/libs/ui-kit/assets",
-            "output": "assets/ng-doc/ui-kit"
-          },
-          {
-            "glob": "**/*",
-            "input": "ng-doc/ng-doc/assets",
-            "output": "assets/ng-doc"
-          }
-        ],
-        "styles": ["apps/ng-doc/src/styles.scss"],
-        "scripts": [],
-        "allowedCommonJsDependencies": [
-          "@ng-doc/core",
-          "posthtml-parser",
-          "posthtml-render",
-          "js-beautify",
-          "chalk"
-        ],
-        "ngDoc": {
-          "config": "apps/ng-doc/ng-doc.config.modern.ts"
-        }
-      },
-      "configurations": {
-        "production": {
-          "tsConfig": "apps/ng-doc/tsconfig.modern.json",
-          "budgets": [
-            {
-              "type": "initial",
-              "maximumWarning": "500kb",
-              "maximumError": "10mb"
-            },
-            {
-              "type": "anyComponentStyle",
-              "maximumWarning": "8kb",
-              "maximumError": "10kb"
-            }
-          ],
-          "fileReplacements": [
-            {
-              "replace": "apps/ng-doc/src/environments/environment.ts",
-              "with": "apps/ng-doc/src/environments/environment.prod.ts"
-            }
-          ],
-          "outputHashing": "all",
-          "sourceMap": true
-        },
-        "development": {
-          "tsConfig": "apps/ng-doc/tsconfig.modern.json",
-          "optimization": false,
-          "extractLicenses": false,
-          "sourceMap": true,
-          "namedChunks": true
-        }
-      }
-    },
-    "serve-modern": {
-      "executor": "./dist/libs/builder:modern-dev-server",
-      "defaultConfiguration": "development",
-      "dependsOn": [
-        {
-          "target": "link-libs"
-        }
-      ],
-      "configurations": {
-        "production": {
-          "buildTarget": "ng-doc:build-modern:production"
-        },
-        "development": {
-          "buildTarget": "ng-doc:build-modern:development"
-        }
-      }
-    },
     "build": {
       "executor": "./tools/builders:vite-application",
       "outputs": ["{options.outputPath}"],
@@ -280,7 +188,7 @@
       ],
       "options": {
         "configFile": "apps/ng-doc/vite.config.mjs",
-        "outputPath": "dist/apps/ng-doc-vite"
+        "outputPath": "dist/apps/ng-doc"
       }
     },
     "serve": {

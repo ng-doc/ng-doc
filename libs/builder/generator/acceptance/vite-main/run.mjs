@@ -55,7 +55,7 @@ try {
   };
   const source = path.join(root, 'apps/ng-doc/src');
   const appPaths = JSON.parse(
-    await readFile(path.join(root, 'apps/ng-doc/tsconfig.modern.json'), 'utf8'),
+    await readFile(path.join(root, 'apps/ng-doc/tsconfig.vite.json'), 'utf8'),
   ).compilerOptions.paths;
   appPaths['@ng-doc/generated'] = [path.join(generated, 'index.ts')];
   const tsconfig = await put(

@@ -62,8 +62,8 @@ built with NgDoc, so it is also the best place to try your change. Before it sta
 `serve` target builds the packages into `dist/libs` and links them into `node_modules/@ng-doc/*`,
 so it works on a fresh clone; later runs take unchanged packages from the Nx cache. The site loads
 the packages from `dist`, so restart it after you change library code. `npx nx build ng-doc` (or
-`npm run build`) builds and prerenders the site into `dist/apps/ng-doc-vite`. The legacy builders
-have their own targets, `serve-legacy` and `build-legacy`.
+`npm run build`) builds and prerenders the site into `dist/apps/ng-doc`. The legacy builders have
+their own targets, `serve-legacy` and `build-legacy`, which build into `dist/apps/ng-doc-legacy`.
 
 > **Tip:** in scripts and non-interactive shells, run Nx with
 > `NX_DAEMON=false NX_NO_CLOUD=true NX_TUI=false`.
@@ -90,8 +90,8 @@ This is an [Nx](https://nx.dev/) monorepo. Each project has its own `project.jso
 `@ng-doc/builder` ships two engines that turn a docs tree into an Angular application:
 
 - **The new engine** is the default. It runs through the Vite builders (`vite-application`,
-  `vite-dev-server`), the `modern-*` Angular CLI builders, the Vite plugin and the `ng-doc` CLI. Its
-  code is in `libs/builder/generator`.
+  `vite-dev-server`), the Vite plugin and the `ng-doc` CLI. Its code is in
+  `libs/builder/generator`.
 - **The legacy builders** (`application` and `dev-server`) are deprecated. They still ship and keep
   existing projects working, but they get no new features and will be removed in a future major
   release.
@@ -176,11 +176,10 @@ or search output on purpose, update the snapshots and commit them with your chan
 
 ```bash
 npx nx run ng-doc:build-legacy
-node libs/builder/generator/acceptance/production/source-stamp.mjs dist/apps/ng-doc/browser
+node libs/builder/generator/acceptance/production/source-stamp.mjs dist/apps/ng-doc-legacy/browser
 npx nx run ng-doc:build --excludeTaskDependencies
-node libs/builder/generator/acceptance/production/source-stamp.mjs dist/apps/ng-doc-vite/browser
-NGDOC_PARITY_CURRENT=dist/apps/ng-doc-vite/browser NGDOC_PARITY_ACCEPT=1 \
-  node libs/builder/generator/acceptance/production/parity.mjs
+node libs/builder/generator/acceptance/production/source-stamp.mjs dist/apps/ng-doc/browser
+NGDOC_PARITY_ACCEPT=1 node libs/builder/generator/acceptance/production/parity.mjs
 ```
 
 The script first compares the two engines' output and updates the snapshots only when they match.

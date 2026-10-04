@@ -188,7 +188,7 @@ light theme.
 
 ## Code highlighting
 
-With the Vite plugin, the `modern-*` builders and the `ng-doc` CLI, code is colored by NgDoc's
+With the new engine (the Vite host and the `ng-doc` CLI), code is colored by NgDoc's
 `css-variables` theme by default: every token takes a CSS variable of the current site theme, so
 code follows the light, dark and custom themes. Override the variables like the others:
 

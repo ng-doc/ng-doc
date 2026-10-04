@@ -19,8 +19,6 @@ export const GENERATOR_ENTRY_POINTS = Object.freeze([
   'content/html-worker',
   'worker/index',
   'worker/entry',
-  'angular/application',
-  'angular/dev-server',
   'vite/index',
   'vite/ssr-renderer-entry',
   'vite/prerender-entry',
@@ -32,10 +30,7 @@ export const GENERATOR_ENTRY_POINTS = Object.freeze([
 /** esbuild `entryPoints` map: output name -> workspace-relative source file. */
 export function generatorEntryPointMap() {
   return Object.fromEntries(
-    GENERATOR_ENTRY_POINTS.map((entry) => [
-      entry,
-      `libs/builder/generator/${entry}${entry === 'angular/application' || entry === 'angular/dev-server' ? '/index' : ''}.ts`,
-    ]),
+    GENERATOR_ENTRY_POINTS.map((entry) => [entry, `libs/builder/generator/${entry}.ts`]),
   );
 }
 
@@ -111,8 +106,8 @@ export async function localModuleClosure(root, entry) {
 
 /**
  * Source trees and the files in them that are build inputs.
- * - generator: TypeScript sources, plus the `*.json` (angular schema extensions merged into the
- *   output, per-folder tsconfig.json read by esbuild) and `*.js` (restore-theme.js, copied) assets.
+ * - generator: TypeScript sources, plus the `*.json` (Vite builder schemas copied into the output,
+ *   per-folder tsconfig.json read by esbuild) and `*.js` (restore-theme.js, copied) assets.
  *   Test code (see `excludeTests`) is not an input.
  * - templates: shipped verbatim. Every file is an input and the copy ships exactly this list, so no
  *   directory or test-name exclude applies: what is hashed is what is copied, and vice versa.
@@ -138,8 +133,8 @@ export const GENERATOR_COPIED_TREES = Object.freeze([
 /** Single workspace files the build copies verbatim into the generator output. */
 export const GENERATOR_COPIED_FILES = Object.freeze([
   Object.freeze({
-    source: 'libs/builder/generator/angular/restore-theme.js',
-    target: 'angular/restore-theme.js',
+    source: 'libs/builder/generator/vite/restore-theme.js',
+    target: 'vite/restore-theme.js',
   }),
   ...['application-builder', 'dev-server-builder'].map((name) =>
     Object.freeze({
@@ -148,17 +143,6 @@ export const GENERATOR_COPIED_FILES = Object.freeze([
     }),
   ),
 ]);
-
-/** Angular builder schema extensions merged over the installed @angular/build schema (lockfile-pinned). */
-export const GENERATOR_MERGED_SCHEMAS = Object.freeze(
-  ['application', 'dev-server'].map((name) =>
-    Object.freeze({
-      extension: `libs/builder/generator/angular/${name}/schema.json`,
-      native: `node_modules/@angular/build/src/builders/${name}/schema.json`,
-      target: `angular/${name}.schema.json`,
-    }),
-  ),
-);
 
 /** The package manifest, copied next to the generator output (`<output>/../package.json`). */
 export const GENERATOR_PACKAGE_MANIFEST = 'libs/builder/package.json';
@@ -309,11 +293,7 @@ export function generatorCopyPlan(files) {
 /** Fails when the build copies or merges a workspace file the digest does not cover. */
 export function assertInventoryCoversCopies(files, copies = generatorCopyPlan(files)) {
   const covered = new Set(files);
-  const sources = [
-    ...copies.map((copy) => copy.source),
-    ...GENERATOR_MERGED_SCHEMAS.map((schema) => schema.extension),
-    GENERATOR_PACKAGE_MANIFEST,
-  ];
+  const sources = [...copies.map((copy) => copy.source), GENERATOR_PACKAGE_MANIFEST];
   const missing = sources.filter((source) => !covered.has(source));
   if (missing.length)
     throw new Error(
@@ -412,7 +392,7 @@ async function outputFiles(directory, relative = '', found = []) {
 
 /**
  * Every file in a built generator output must come from a known producer: an esbuild output, a
- * copy from the plan, a merged schema, a generated file, or a declaration of a hashed generator
+ * copy from the plan, a generated file, or a declaration of a hashed generator
  * source. A file written by anything else (an ad-hoc `cp` of an unhashed asset) fails the build.
  * `bundleOutputs` are output-relative paths of the esbuild outputs.
  */
@@ -424,7 +404,6 @@ export async function assertOutputAccountedFor(
   const known = new Set([
     ...bundleOutputs,
     ...copies.map((copy) => copy.target),
-    ...GENERATOR_MERGED_SCHEMAS.map((schema) => schema.target),
     ...GENERATOR_GENERATED_OUTPUTS,
   ]);
   const declarationSource = (file) => {

@@ -18,9 +18,10 @@ import { sourceStamp, stampFile } from './source-stamp.mjs';
 // Production parity of the new engine's output against the legacy engine's output of the same
 // checkout, and against the reviewed search and keyword sets in `accepted/`.
 //
-// NGDOC_PARITY_LEGACY: the legacy production output (`ng-doc:build-legacy:production`).
-// NGDOC_PARITY_CURRENT: the new engine's production output (`ng-doc:build-modern:production`, or
-//   `ng-doc:build` with `dist/apps/ng-doc-vite/browser`).
+// NGDOC_PARITY_LEGACY: the legacy production output (`ng-doc:build-legacy`, default
+//   `dist/apps/ng-doc-legacy/browser`).
+// NGDOC_PARITY_CURRENT: the Vite engine's production output (`ng-doc:build`, default
+//   `dist/apps/ng-doc/browser`).
 // NGDOC_PARITY_EVIDENCE: where `main-parity.json` is written (a new directory, never tracked).
 // NGDOC_PARITY_ACCEPT=1: once the legacy comparison passes, replace the accepted sets with the
 //   current output and write `accepted-diff.json` (previous against new) for review.
@@ -32,11 +33,11 @@ import { sourceStamp, stampFile } from './source-stamp.mjs';
 // engine's page cache) is not part of the packages digest.
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '../../../../..');
-const legacy = path.resolve(root, process.env.NGDOC_PARITY_LEGACY || 'dist/apps/ng-doc/browser');
-const current = path.resolve(
+const legacy = path.resolve(
   root,
-  process.env.NGDOC_PARITY_CURRENT || 'dist/apps/ng-doc-modern/browser',
+  process.env.NGDOC_PARITY_LEGACY || 'dist/apps/ng-doc-legacy/browser',
 );
+const current = path.resolve(root, process.env.NGDOC_PARITY_CURRENT || 'dist/apps/ng-doc/browser');
 const evidence = path.resolve(
   process.env.NGDOC_PARITY_EVIDENCE || path.join(root, 'tmp/ngdoc-parity'),
 );
@@ -124,11 +125,11 @@ try {
     request: {
       projectId: 'ng-doc',
       workspaceRoot: root,
-      configFile: path.join(root, 'apps/ng-doc/ng-doc.config.modern.ts'),
+      configFile: path.join(root, 'apps/ng-doc/ng-doc.config.ts'),
       defaults: {
         docsRoot: path.join(root, 'apps/ng-doc/src'),
-        tsConfig: path.join(root, 'apps/ng-doc/tsconfig.app.json'),
-        outputRoot: path.join(root, 'ng-doc-modernization/ng-doc'),
+        tsConfig: path.join(root, 'apps/ng-doc/tsconfig.vite.json'),
+        outputRoot: path.join(root, 'ng-doc/ng-doc'),
         cacheRoot: path.join(root, '.cache/ng-doc/ng-doc'),
       },
     },

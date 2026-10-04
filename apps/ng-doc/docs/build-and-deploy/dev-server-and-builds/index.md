@@ -2,8 +2,9 @@
 keyword: DevServerAndBuildsPage
 ---
 
-The new engine runs in one of two hosts: the Vite host or an Angular CLI builder. Both generate the
-same site. This page helps you choose, and shows how each one runs in development and production.
+The new engine runs in the Vite host: Vite builds and serves the Angular application, and NgDoc
+generates the documentation inside it. This page compares it with the legacy builders, and shows how
+it runs in development and production.
 
 <ng-doc-blockquote type="note" label="🧭 New or existing project?">
 
@@ -13,36 +14,35 @@ keeps existing projects on the legacy builders; for them, the new engine is opt-
 
 </ng-doc-blockquote>
 
-## 🆚 Choose a host
+## New engine or legacy builders
 
-|            | Vite host                                                                      | Angular CLI builder                                                 |
-| ---------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
-| Role       | Recommended, full support                                                      | A thin compatibility path                                           |
-| Set up by  | `ng add`, `ng g @ng-doc/builder:migrate-to-vite`, or by hand (`*ViteHostPage`) | The `modern-*` builders (`*BuildersReference#angular-cli-builders`) |
-| Dev        | `vite`, or `ng serve` with a Vite builder                                      | `ng serve`                                                          |
-| Production | `vite build`; prerender with `ng build`                                        | `ng build`                                                          |
-| SSR        | Development renders in the browser; production prerenders every route          | Angular SSR                                                         |
-| Platforms  | Linux, macOS and Windows                                                       | Linux, macOS and Windows                                            |
+|               | Vite host (new engine)                                                         | Legacy builders                                             |
+| ------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------- |
+| Status        | Recommended, full support                                                      | Deprecated in 22.0, no new features                         |
+| Set up by     | `ng add`, `ng g @ng-doc/builder:migrate-to-vite`, or by hand (`*ViteHostPage`) | `ng update` keeps them; `ng add --engine legacy`            |
+| Builders      | `@ng-doc/builder:vite-dev-server`, `@ng-doc/builder:vite-application`          | `@ng-doc/builder:dev-server`, `@ng-doc/builder:application` |
+| Dev           | `vite`, or `ng serve` with `vite-dev-server`                                   | `ng serve`                                                  |
+| Production    | `vite build`; server bundle and prerender with `ng build` (`vite-application`) | `ng build`                                                  |
+| SSR           | Development renders in the browser; production prerenders every route          | Angular SSR                                                 |
+| `onlyForTags` | Honoured (`*PagesAndCategoriesPage#build-tags`)                                | Ignored                                                     |
+| Platforms     | Linux, macOS and Windows                                                       | Linux, macOS and Windows                                    |
 
-Choose the **Vite host** for new projects and for the fastest edit loop. Choose the **Angular CLI
-builder** to keep an existing `angular.json` or `project.json` setup with fewer changes. It runs
-Angular's own builders once the documentation is generated, so after an edit it waits for Angular
-to rebuild the application.
+Use the **Vite host** for new projects. To move a project off the legacy builders, run
+`ng g @ng-doc/builder:migrate-to-vite` (`*MigrateToNewEnginePage`).
 
-## How the hosts run
+## How the new engine runs
 
 ```mermaid
 flowchart LR
   files["Docs files"] --> engine["NgDoc engine"]
   engine --> generated["Generated folder"]
   generated --> vite["Vite host"]
-  generated --> cli["Angular CLI builder"]
   vite --> site["Site"]
-  cli --> site
 ```
 
-In both hosts, the engine writes the generated folder first. Then the host compiles the Angular
-application, which imports the generated code from `@ng-doc/generated`.
+The engine writes the generated folder first. Then Vite compiles the Angular application, which
+imports the generated code from `@ng-doc/generated`. The Vite builders run the same Vite
+configuration for `ng serve` and `ng build` (`*BuildersReference#vite-builders`).
 
 In development, the engine keeps a compiler worker running between edits. When you save a file, it
 rebuilds only the pages that depend on it, and the host updates the page in the browser.

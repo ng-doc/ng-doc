@@ -102,9 +102,7 @@ files it created. If the `.ng-doc-migration/<project-name>` folder is gone, it f
 
 4. Delete `node_modules/.cache/ng-doc` if it exists. The new engine doesn't use it.
 
-To set up the Vite host by hand instead, follow `*ViteHostPage`. The `modern-application` and
-`modern-dev-server` builders (`*BuildersReference#angular-cli-builders`) run the new engine inside
-the Angular CLI application builder, with the options of your build target unchanged.
+To set up the Vite host by hand instead, follow `*ViteHostPage`.
 
 ## ✅ After migrating
 

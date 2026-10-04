@@ -34,15 +34,13 @@ export interface ResolvedProgressSetting {
 export interface HostQuiet {
   /** Vite `logLevel`: `warn`, `error` and `silent` turn progress off. */
   viteLogLevel?: 'info' | 'warn' | 'error' | 'silent';
-  /** Angular application option `progress`: `false` keeps the summary only. */
-  angularProgress?: boolean;
 }
 
 export interface ResolveProgressOptions {
   /** `--progress <value>`, already validated by the CLI (`isProgressSetting`). */
   cli?: ProgressSetting;
   env?: NodeJS.ProcessEnv;
-  /** `ngDoc.progress` (Angular builders) or the Vite plugin option `progress` (Vite dev server and build). */
+  /** The Vite plugin option `progress` (Vite dev server and build). */
   option?: ProgressOptionSetting;
   host?: HostQuiet;
   /** Defaults to `process.emitWarning`. */
@@ -82,7 +80,6 @@ export function resolveProgressSetting(
   const level = options.host?.viteLogLevel;
   if (level === 'warn' || level === 'error' || level === 'silent')
     return { setting: 'off', source: 'host' };
-  if (options.host?.angularProgress === false) return { setting: 'summary', source: 'host' };
   return explicit ?? { setting: 'auto', source: 'default' };
 }
 

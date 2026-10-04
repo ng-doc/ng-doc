@@ -50,10 +50,7 @@ describe('settings', () => {
     expect(resolveProgressSetting({ env: {}, host: { viteLogLevel: 'error' } }).setting).toBe(
       'off',
     );
-    expect(
-      resolveProgressSetting({ env: {}, host: { viteLogLevel: 'info', angularProgress: false } }),
-    ).toEqual({ setting: 'summary', source: 'host' });
-    expect(resolveProgressSetting({ env: {}, host: { angularProgress: true } })).toEqual({
+    expect(resolveProgressSetting({ env: {}, host: { viteLogLevel: 'info' } })).toEqual({
       setting: 'auto',
       source: 'default',
     });
@@ -73,8 +70,8 @@ describe('settings', () => {
       'off',
     );
     expect(
-      resolveProgressSetting({ env: {}, option: 'auto', host: { angularProgress: false } }),
-    ).toEqual({ setting: 'summary', source: 'host' });
+      resolveProgressSetting({ env: {}, option: 'auto', host: { viteLogLevel: 'silent' } }),
+    ).toEqual({ setting: 'off', source: 'host' });
     expect(resolveProgressSetting({ env: {}, option: 'auto' })).toEqual({
       setting: 'auto',
       source: 'option',

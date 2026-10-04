@@ -30,11 +30,11 @@ so the providers and the components use different injection tokens.
 
 ### DISCOVERY_CONFIG_MISSING
 
-**Cause:** a builder option, the `--config` flag or the Vite plugin points to a configuration file
-that doesn't exist.
+**Cause:** the Vite plugin's `generator.configFile` or the `--config` flag of the `ng-doc` command
+points to a configuration file that doesn't exist.
 
-**Fix:** correct the path. Paths are relative to the workspace root. Or remove the option, so
-NgDoc finds `ng-doc.config.ts` itself.
+**Fix:** correct the path: `generator.configFile` is absolute, and `--config` is relative to the
+workspace root. Or remove the option, so NgDoc finds `ng-doc.config.ts` itself.
 
 **See also:** `*ConfigurationReference#where-ngdoc-finds-the-file`
 

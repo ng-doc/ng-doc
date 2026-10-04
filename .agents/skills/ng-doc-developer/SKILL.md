@@ -52,7 +52,7 @@ Before you edit, read [agent-safety.md](references/agent-safety.md) and [code-st
 5. **Public API is deliberate.** Anything exported from a library barrel is public. Exported declarations in files matched by the scopes in `apps/ng-doc/docs/ng-doc.api.ts` also appear in the site's API reference.
    - Document exports with JSDoc.
    - Treat renames and removals as breaking (a `BREAKING CHANGE:` footer; see code-style.md) and provide a migration path.
-6. **Two engines, one product.** The legacy engine (`application`/`dev-server` builders) and the new generator (`modern-*` builders, Vite plugin, `ng-doc` CLI) both ship.
+6. **Two engines, one product.** The legacy engine (`application`/`dev-server` builders) and the new generator (`vite-application`/`vite-dev-server` builders, Vite plugin, `ng-doc` CLI) both ship. There is no third host.
    - New features go into the generator.
    - Changes to shared templates or helpers must keep both working.
    - User-visible behaviour must match between them.
@@ -73,7 +73,7 @@ Before you edit, read [agent-safety.md](references/agent-safety.md) and [code-st
    - `node_modules/@ng-doc/*` link into it.
    - Don't rebuild while a dev server or suite is using it; use `build-generator.mjs --outdir` for private builds.
    - Rebuild after source changes before trusting any end-to-end result. Details are in [agent-safety.md](references/agent-safety.md).
-10. **Never edit generated output:** `dist/`, `ng-doc/`, `ng-doc-modernization/`, caches, coverage, `.runtime/` test workspaces, generator manifests or stages. Fix the source that generates them.
+10. **Never edit generated output:** `dist/`, `ng-doc/`, `ng-doc-legacy/`, caches, coverage, `.runtime/` test workspaces, generator manifests or stages. Fix the source that generates them.
 11. **Leave no processes.** Stop every server, watcher and browser you started. Never kill processes you didn't start. For Nx in agent shells, use `NX_DAEMON=false NX_NO_CLOUD=true NX_TUI=false`.
 12. **Commits** follow Conventional Commits with a project scope, for example `fix(builder): …` or `feat(app): …`. Breaking changes use a `BREAKING CHANGE:` footer, never `!`; the release rules are in [code-style.md](references/code-style.md). The commit-msg hook runs commitlint.
 13. **Language.** Code, comments, docs and commit messages are in English. Comments explain _why_ (invariants, ordering, platform quirks) and never reference internal task or ticket numbers.

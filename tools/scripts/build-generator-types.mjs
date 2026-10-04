@@ -18,8 +18,6 @@ const entries = [
   { source: 'compiler/index', output: 'compiler/index' },
   { source: 'worker/index', output: 'worker/index' },
   { source: 'worker/entry', output: 'worker/entry' },
-  { source: 'angular/application/index', output: 'angular/application' },
-  { source: 'angular/dev-server/index', output: 'angular/dev-server' },
   { source: 'vite/index', output: 'vite/index' },
   { source: 'vite/angular/index', output: 'vite/angular/index' },
 ];

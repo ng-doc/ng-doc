@@ -35,7 +35,7 @@ export function replaceBuilders(options: Schema): Rule {
         const buildTarget: TargetDefinition | undefined = project.targets.get('build');
         const serveTarget: TargetDefinition | undefined = project.targets.get('serve');
 
-        // A target that already runs an NgDoc builder (for example `modern-application`) keeps it.
+        // A target that already runs an NgDoc builder keeps it.
         if (buildTarget && !(buildTarget.builder ?? '').startsWith(NG_DOC_BUILDER_PREFIX)) {
           buildTarget.builder = '@ng-doc/builder:application';
         } else if (buildTarget) {

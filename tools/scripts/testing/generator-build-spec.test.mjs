@@ -18,7 +18,6 @@ import { fileURLToPath } from 'node:url';
 import {
   GENERATOR_ENTRY_POINTS,
   GENERATOR_GENERATED_OUTPUTS,
-  GENERATOR_MERGED_SCHEMAS,
   GENERATOR_PROCESS_LOADED_INPUTS,
   GENERATOR_SOURCE_FILES,
   GENERATOR_VIRTUAL_INPUTS,
@@ -60,9 +59,7 @@ async function workspace(t) {
     JSON.stringify({ packages: { 'node_modules/nunjucks': { version: '3.2.4' } } }),
   );
   await write('libs/builder/generator/contracts.ts', 'export const contracts = 1;\n');
-  await write('libs/builder/generator/angular/application/schema.json', '{"properties":{}}\n');
-  await write('libs/builder/generator/angular/dev-server/schema.json', '{"properties":{}}\n');
-  await write('libs/builder/generator/angular/restore-theme.js', 'restore();\n');
+  await write('libs/builder/generator/vite/restore-theme.js', 'restore();\n');
   await write('libs/builder/generator/vite/application-builder.schema.json', '{"properties":{}}\n');
   await write('libs/builder/generator/vite/dev-server-builder.schema.json', '{"properties":{}}\n');
   await write('libs/builder/templates/page.ts.nunj', '{{ page.title }}\n');
@@ -104,11 +101,11 @@ test('a template-only change changes sourceDigest and toolchainDigest', async (t
   assert.notEqual(after.toolchainDigest, before.toolchainDigest);
 });
 
-test('copied and merged generator assets are digest inputs', async (t) => {
+test('copied generator assets are digest inputs', async (t) => {
   const { root, write } = await workspace(t);
   for (const [file, text] of [
-    ['libs/builder/generator/angular/application/schema.json', '{"properties":{"x":{}}}\n'],
-    ['libs/builder/generator/angular/restore-theme.js', 'restore(true);\n'],
+    ['libs/builder/generator/vite/application-builder.schema.json', '{"properties":{"x":{}}}\n'],
+    ['libs/builder/generator/vite/restore-theme.js', 'restore(true);\n'],
     ['libs/builder/templates/page.ts.nunj', '{{ page.route }}\n'],
     ['libs/builder/parsers/index.ts', 'export const parsed = 1;\n'],
     ['tools/scripts/generator-output.mjs', '// staged publication changed\n'],
@@ -180,9 +177,7 @@ test('templates are hashed and copied as one list: no directory or test-name exc
       target: 'templates/testing/shared.nunj',
     },
   );
-  assert.ok(
-    copies.some((copy) => copy.source === 'libs/builder/generator/angular/restore-theme.js'),
-  );
+  assert.ok(copies.some((copy) => copy.source === 'libs/builder/generator/vite/restore-theme.js'));
   assert.doesNotThrow(() => assertInventoryCoversCopies(files, copies));
   const before = await computeSourceDigest(root);
   await write('libs/builder/templates/testing/shared.nunj', 'edited\n');
@@ -206,7 +201,7 @@ test('a symlink in a build input tree fails the digest instead of being skipped'
   }
 });
 
-test('a copied or merged source outside the inventory is rejected', async (t) => {
+test('a copied source outside the inventory is rejected', async (t) => {
   const { root } = await workspace(t);
   const { files } = await computeSourceDigest(root);
   const copies = [
@@ -217,8 +212,13 @@ test('a copied or merged source outside the inventory is rejected', async (t) =>
     () => assertInventoryCoversCopies(files, copies),
     /copied inputs missing from sourceDigest: libs\/builder\/generator\/vite\/overlay\.css/,
   );
-  const withoutSchema = files.filter((file) => file !== GENERATOR_MERGED_SCHEMAS[0].extension);
-  assert.throws(() => assertInventoryCoversCopies(withoutSchema), /application\/schema\.json/);
+  const withoutSchema = files.filter(
+    (file) => file !== 'libs/builder/generator/vite/application-builder.schema.json',
+  );
+  assert.throws(
+    () => assertInventoryCoversCopies(withoutSchema),
+    /application-builder\.schema\.json/,
+  );
 });
 
 test('every output file must come from a hashed source or a known producer', async (t) => {
@@ -229,13 +229,13 @@ test('every output file must come from a hashed source or a known producer', asy
   for (const file of [
     ...bundleOutputs,
     ...generatorCopyPlan(files).map((copy) => copy.target),
-    ...GENERATOR_MERGED_SCHEMAS.map((schema) => schema.target),
     ...GENERATOR_GENERATED_OUTPUTS,
     'contracts.d.ts',
-    'angular/application.d.ts',
+    'vite/angular.d.ts',
   ])
     await write(file, 'x\n');
-  const inventory = [...files, 'libs/builder/generator/angular/application/index.ts'].sort();
+  // A declaration may come from a folder's index.ts.
+  const inventory = [...files, 'libs/builder/generator/vite/angular/index.ts'].sort();
   await assertOutputAccountedFor(output, { files: inventory, bundleOutputs });
 
   await write('vite/overlay.css', 'body {}\n');
@@ -271,16 +271,14 @@ test('the digest is stable across two runs on the same tree', async (t) => {
   assert.deepEqual(await computeGeneratorDigests(root), await computeGeneratorDigests(root));
 });
 
-test('the repository inventory covers templates and angular assets; its digest is stable on a snapshot', async (t) => {
+test('the repository inventory covers templates and copied assets; its digest is stable on a snapshot', async (t) => {
   // One walk of the live tree, for membership only: other work may edit sources concurrently, so
   // determinism is asserted on a private snapshot of exactly the captured file list.
   // Membership only: generatorSourceInventory walks without reading any file's bytes.
   const files = await generatorSourceInventory(REPOSITORY);
   for (const file of [
     'libs/builder/templates/page.ts.nunj',
-    'libs/builder/generator/angular/application/schema.json',
-    'libs/builder/generator/angular/dev-server/schema.json',
-    'libs/builder/generator/angular/restore-theme.js',
+    'libs/builder/generator/vite/restore-theme.js',
     'libs/builder/generator/vite/application-builder.schema.json',
     'libs/builder/generator/vite/dev-server-builder.schema.json',
     'libs/builder/parsers/parse-snippet.ts',

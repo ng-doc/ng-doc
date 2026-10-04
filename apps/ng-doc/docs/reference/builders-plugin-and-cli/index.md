@@ -2,59 +2,19 @@
 keyword: BuildersReference
 ---
 
-The entry points of the new engine: its Angular CLI builders, its Vite plugin, the `ng-doc` command
-line interface, the schematics and the environment switches. `*DevServerAndBuildsPage` explains
-when to use each.
+The entry points of the new engine: its Vite plugin, its Vite builders, the `ng-doc` command line
+interface, the schematics and the environment switches. `*DevServerAndBuildsPage` explains
+how they run.
 
 ## Entry points
 
-| Entry point            | Package           | Name                                                                                 |
-| ---------------------- | ----------------- | ------------------------------------------------------------------------------------ |
-| Angular CLI builders   | `@ng-doc/builder` | `@ng-doc/builder:modern-application`, `@ng-doc/builder:modern-dev-server`            |
-| Vite plugin            | `@ng-doc/builder` | `createNgDocVitePlugin`, `createNgDocAngularPlugins`, `createNgDocApplicationPlugin` |
-| Vite builders          | `@ng-doc/builder` | `@ng-doc/builder:vite-application`, `@ng-doc/builder:vite-dev-server`                |
-| Prerendering           | `@ng-doc/builder` | `@ng-doc/builder:vite-application`, `ng-doc prerender`                               |
-| Command line interface | `@ng-doc/builder` | `ng-doc`                                                                             |
-| Legacy builders        | `@ng-doc/builder` | `@ng-doc/builder:application`, `@ng-doc/builder:dev-server` (`*LegacyBuildersPage`)  |
-
-## Angular CLI builders
-
-The new engine's Angular CLI builders, `@ng-doc/builder:modern-application` and
-`@ng-doc/builder:modern-dev-server`, accept every option
-of the Angular `application` and `dev-server` builders, plus these NgDoc options:
-
-| Option           | Type       | Default                                         | Description                                                                                          |
-| ---------------- | ---------- | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `ngDoc.config`   | `string`   | The discovered `ng-doc.config.ts`               | The configuration file, relative to the workspace or absolute.                                       |
-| `ngDoc.tags`     | `string[]` | The configuration name, or names, of the target | The build tags matched against `onlyForTags`.                                                        |
-| `ngDoc.progress` | `string`   | `auto`                                          | The progress output: `auto`, `live`, `plain`, `verbose`, `summary` or `off` (`*ProgressOutputPage`). |
-
-On the dev server target, `ngDoc.config`, `ngDoc.tags` and `ngDoc.progress` override the values of
-the build target. Without `ngDoc.tags`, the dev server uses the configuration of its build target, as
-named in `buildTarget` or by the build target's `defaultConfiguration`.
-
-The builders use these defaults:
-
-| Setting              | Default                                              |
-| -------------------- | ---------------------------------------------------- |
-| Documentation folder | The folder of the `browser` entry file               |
-| TypeScript config    | The target's `tsConfig`                              |
-| Generated folder     | `ng-doc/<project-name>` in the workspace root        |
-| Cache folder         | `.cache/ng-doc/<project-name>` in the workspace root |
-
-The builders add the generated assets to the build, so the target doesn't need an assets entry for
-them. The `@ng-doc/generated` path still comes from the application's `tsconfig.json`.
-
-The builders generate the documentation first, then run the Angular `application` or `dev-server`
-builder in the same process. With `ng serve`, or `ng build` with `watch`, they watch the workspace
-folder, except `node_modules`, `.git`, `.angular`, `.nx`, the generated and cache folders and the
-`outputPath` (`dist/<project-name>` without one). A change to a file the documentation was built
-from, or a new file in a documentation folder, regenerates the documentation, and Angular rebuilds
-the application from the generated folder; other changes are ignored. A failed generation is
-reported as a failed build with its diagnostic codes, again after each successful Angular rebuild
-until a generation succeeds, and the development server keeps serving the last successful build. An
-error of the file watcher itself ends the build: the builder stops the Angular development server
-or watch build, and `ng serve` exits.
+| Entry point            | Package           | Name                                                                                            |
+| ---------------------- | ----------------- | ----------------------------------------------------------------------------------------------- |
+| Vite plugin            | `@ng-doc/builder` | `createNgDocVitePlugin`, `createNgDocAngularPlugins`, `createNgDocApplicationPlugin`            |
+| Vite builders          | `@ng-doc/builder` | `@ng-doc/builder:vite-application`, `@ng-doc/builder:vite-dev-server`                           |
+| Prerendering           | `@ng-doc/builder` | `@ng-doc/builder:vite-application`, `ng-doc prerender`                                          |
+| Command line interface | `@ng-doc/builder` | `ng-doc`                                                                                        |
+| Legacy builders        | `@ng-doc/builder` | `@ng-doc/builder:application`, `@ng-doc/builder:dev-server`, deprecated (`*LegacyBuildersPage`) |
 
 ## Vite plugin
 
@@ -144,6 +104,10 @@ for `ng build` and `ng serve`. Paths are relative to the workspace root.
 | `vite-application` | `discoverRoutes` | `boolean`  | `true`                                 | Prerenders every route of the router configuration.                            |
 | `vite-application` | `routeTimeout`   | `number`   | No limit                               | Fails a route that takes longer to render, in milliseconds.                    |
 | `vite-dev-server`  | `host`, `port`   | –          | Vite's `server` options                | Where the development server listens.                                          |
+
+The NgDoc options, such as `progress` and `generator.discovery.tags`, come from the Vite plugin in
+the configuration file. Without `generator.discovery.tags`, the build tags are the `mode`
+(`*PagesAndCategoriesPage#build-tags`).
 
 ## Command line interface
 

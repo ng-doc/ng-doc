@@ -193,7 +193,7 @@ describe('WatchInputFilter replay of inputs recorded by an in-flight generation'
   const tick = () => new Promise((done) => setTimeout(done, 0));
 
   it('publishes a snippet edited before the generation that first reads it settles', async () => {
-    // Wired as angular/runner.ts wires the session and filter.
+    // The session and the filter wired as a host that filters its watch does.
     const root = temporaryDirectory('ngdoc-replay-', true);
     roots.push(root);
     const page = hostJoin(root, 'page.md');

@@ -91,7 +91,7 @@ try {
   await put('extra-docs/index.md', `{% include './missing-include.md' %}`);
   const config = await put(
     'ng-doc.config.ts',
-    `import config from ${JSON.stringify(path.join(root, 'apps/ng-doc/ng-doc.config.modern.ts'))};\nconst result = {...config, docsPath:[...(Array.isArray(config.docsPath)?config.docsPath:[config.docsPath]),${JSON.stringify(path.join(fixture, 'extra-docs'))}], outDir: undefined, cache: true}; export default result;\n`,
+    `import config from ${JSON.stringify(path.join(root, 'apps/ng-doc/ng-doc.config.ts'))};\nconst result = {...config, docsPath:[...(Array.isArray(config.docsPath)?config.docsPath:[config.docsPath]),${JSON.stringify(path.join(fixture, 'extra-docs'))}], outDir: undefined, cache: true}; export default result;\n`,
   );
   const generatorOptions = ngDocSiteGenerator({
     configFile: config,

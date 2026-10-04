@@ -7,12 +7,11 @@ here or in `*TroubleshootingPage`, and use it in bug reports. The legacy builder
 
 ## Format
 
-| Entry point          | Format                       | Example                                                                    |
-| -------------------- | ---------------------------- | -------------------------------------------------------------------------- |
-| Angular CLI builders | `[CODE] message`             | `[DISCOVERY_CONFIG_MISSING] Configuration file does not exist: …`          |
-| Vite plugin          | `[CODE] message (file:line)` | `[CONTENT_LINK] … (docs/guide/index.md:12)`                                |
-| `ng-doc` command     | `[severity] CODE: message`   | `[error] OUTPUT_UNOWNED_COLLISION: Refusing to overwrite unowned output …` |
-| `ng-doc --json`      | One JSON object per line     | See `*DiagnosticCodesReference#json-output`                                |
+| Entry point      | Format                       | Example                                                                    |
+| ---------------- | ---------------------------- | -------------------------------------------------------------------------- |
+| Vite plugin      | `[CODE] message (file:line)` | `[CONTENT_LINK] … (docs/guide/index.md:12)`                                |
+| `ng-doc` command | `[severity] CODE: message`   | `[error] OUTPUT_UNOWNED_COLLISION: Refusing to overwrite unowned output …` |
+| `ng-doc --json`  | One JSON object per line     | See `*DiagnosticCodesReference#json-output`                                |
 
 The severity is `error`, `warning` or `info`. Errors stop the build. Warnings and info don't.
 
@@ -44,7 +43,6 @@ With `--json`, the `ng-doc` command prints one JSON object per line:
 | `SESSION_`, `WATCHER_`, `WORKER_`, `BOOTSTRAP_` | Running the build session, the file watcher and the compiler worker.                           |
 | `NGDOC_VITE_`                                   | The Vite plugin.                                                                               |
 | `NGDOC_SSR_`                                    | Server-side rendering in the Vite development server.                                          |
-| `NGDOC_ANGULAR_`                                | The Angular CLI builders.                                                                      |
 | `NGDOC_PRERENDER_`                              | Prerendering with `vite-application` or `ng-doc prerender`.                                    |
 | `NGDOC_ADD_`, `NGDOC_VITE_SETUP_`               | `ng add @ng-doc/add`.                                                                          |
 | `NGDOC_MIGRATE_`                                | The `migrate-to-vite` schematic (`*MigrateToNewEnginePage`).                                   |
@@ -55,19 +53,19 @@ These codes point to a problem in your files or setup. The linked entries explai
 
 ### Discovery
 
-| Code                                   | Severity | Meaning                                                                                                                                                                                                                             |
-| -------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `DISCOVERY_CONFIG_MISSING`             | error    | The configuration file set by a builder option or flag doesn't exist (`*TroubleshootingPage#discovery_config_missing`).                                                                                                             |
-| `DISCOVERY_MODULE_BUILD_FAILED`        | error    | A page, category, API or configuration file doesn't compile.                                                                                                                                                                        |
-| `DISCOVERY_UNSUPPORTED_DEFAULT_EXPORT` | error    | An entity file must default-export a named variable with an object literal.                                                                                                                                                         |
-| `DISCOVERY_INVALID_ENTRY`              | error    | A page, category or API file has no `title`, or its `onlyForTags` isn't a string or an array of strings.                                                                                                                            |
-| `DISCOVERY_TAGS_INVALID`               | error    | The Vite plugin's or the API's `generator.discovery.tags` aren't an array of non-empty strings (`*PagesAndCategoriesPage#build-tags`). The `ng-doc` command and the Angular CLI builders check their tags before the build instead. |
-| `DISCOVERY_CATEGORY_SOURCE_MISSING`    | error    | A page imports a category from outside the documentation folder.                                                                                                                                                                    |
-| `DISCOVERY_CATEGORY_CYCLE`             | error    | Categories are nested in a loop.                                                                                                                                                                                                    |
-| `DISCOVERY_KEYWORD_LOADER_FAILED`      | error    | A keyword loader failed.                                                                                                                                                                                                            |
-| `DISCOVERY_KEYWORD_INVALID`            | warning  | An entry of `keywords.keywords` has no `url`. It is left out.                                                                                                                                                                       |
-| `DISCOVERY_EVALUATION_FAILED`          | error    | Running an entity or configuration file failed, or a Markdown template failed to render, for example a Nunjucks syntax error or a missing `include` (`*TroubleshootingPage#discovery_evaluation_failed`).                           |
-| `DISCOVERY_SOURCE_OUTSIDE_WORKSPACE`   | error    | A page, category or API file resolves outside the workspace, for example through a symbolic link.                                                                                                                                   |
+| Code                                   | Severity | Meaning                                                                                                                                                                                                   |
+| -------------------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `DISCOVERY_CONFIG_MISSING`             | error    | The configuration file set by `generator.configFile` or `--config` doesn't exist (`*TroubleshootingPage#discovery_config_missing`).                                                                       |
+| `DISCOVERY_MODULE_BUILD_FAILED`        | error    | A page, category, API or configuration file doesn't compile.                                                                                                                                              |
+| `DISCOVERY_UNSUPPORTED_DEFAULT_EXPORT` | error    | An entity file must default-export a named variable with an object literal.                                                                                                                               |
+| `DISCOVERY_INVALID_ENTRY`              | error    | A page, category or API file has no `title`, or its `onlyForTags` isn't a string or an array of strings.                                                                                                  |
+| `DISCOVERY_TAGS_INVALID`               | error    | The Vite plugin's or the API's `generator.discovery.tags` aren't an array of non-empty strings (`*PagesAndCategoriesPage#build-tags`). The `ng-doc` command checks its `--tags` before the build instead. |
+| `DISCOVERY_CATEGORY_SOURCE_MISSING`    | error    | A page imports a category from outside the documentation folder.                                                                                                                                          |
+| `DISCOVERY_CATEGORY_CYCLE`             | error    | Categories are nested in a loop.                                                                                                                                                                          |
+| `DISCOVERY_KEYWORD_LOADER_FAILED`      | error    | A keyword loader failed.                                                                                                                                                                                  |
+| `DISCOVERY_KEYWORD_INVALID`            | warning  | An entry of `keywords.keywords` has no `url`. It is left out.                                                                                                                                             |
+| `DISCOVERY_EVALUATION_FAILED`          | error    | Running an entity or configuration file failed, or a Markdown template failed to render, for example a Nunjucks syntax error or a missing `include` (`*TroubleshootingPage#discovery_evaluation_failed`). |
+| `DISCOVERY_SOURCE_OUTSIDE_WORKSPACE`   | error    | A page, category or API file resolves outside the workspace, for example through a symbolic link.                                                                                                         |
 
 ### Semantic analysis
 
@@ -137,12 +135,6 @@ These codes point to a problem in your files or setup. The linked entries explai
 | `NGDOC_VITE_SERVER_ENTRY`           | The server bundle or prerendering was requested, but `createNgDocApplicationPlugin` has no `server` entry.                                           |
 | `NGDOC_VITE_OPTION_REMOVED`         | The plugin got `maxContentRequests`, which was removed with the virtual content mode. Remove the option.                                             |
 | `NGDOC_DEVELOPMENT_CONTENT_REMOVED` | `generator.developmentContent: 'virtual'` was removed. Remove the option.                                                                            |
-
-### Angular CLI builders
-
-| Code                          | Meaning                                                                                    |
-| ----------------------------- | ------------------------------------------------------------------------------------------ |
-| `NGDOC_ANGULAR_HIDDEN_OUTPUT` | In watch mode, the generated folder can't be inside a folder whose name starts with a dot. |
 
 ### Prerendering
 

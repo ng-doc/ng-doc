@@ -11,12 +11,10 @@ export interface NgDocCategory extends NgDocBaseEntity {
    * API pages) is left out, as if it did not exist. A category without `onlyForTags` is part of
    * every build.
    *
-   * With the new generator engine (the `modern-*` builders, the Vite plugin and the `ng-doc` CLI),
+   * With the new generator engine (the Vite plugin, the `vite-*` builders and the `ng-doc` CLI),
    * the build tags are:
-   * - Angular CLI builders: the build configuration name(s), e.g. `production` or `development`
-   *   (the target's `defaultConfiguration` when none is given), or the `ngDoc.tags` option;
-   * - Vite plugin: the Vite mode (`development` for the dev server, `production` for
-   *   `vite build`), or `generator.discovery.tags`;
+   * - Vite plugin and `vite-*` builders: the Vite mode (`development` for the dev server,
+   *   `production` for a build, or the builders' `mode` option), or `generator.discovery.tags`;
    * - `ng-doc` CLI: `production` for `generate`, `development` for `dev` and `watch`, or `--tags`.
    *
    * `null` or an empty string means no filter; an empty array hides the entry in every build.

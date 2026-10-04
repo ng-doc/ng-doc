@@ -128,7 +128,7 @@ export function resolveOptions(options: NgDocVitePluginOptions): ResolvedNgDocVi
  * The generator options of one session with its build tags (`onlyForTags` of pages and
  * categories). Explicit `generator.discovery.tags` win; otherwise the only tag is the Vite mode:
  * `development` for the dev server and `production` for `vite build`, unless `--mode` names
- * another one. This mirrors the Angular builders, whose tags are the configuration name(s).
+ * another one.
  */
 export function generatorWithTags(
   generator: GeneratorBootstrapOptions,

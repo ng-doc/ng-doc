@@ -21,7 +21,7 @@ function restore(script: string, stored: string | null, initial: string | null):
 // Both engines inject their copy of the script into index.html.
 describe.each([
   path.resolve(__dirname, '../../scripts/restore-theme.js'),
-  path.resolve(__dirname, '../../generator/angular/restore-theme.js'),
+  path.resolve(__dirname, '../../generator/vite/restore-theme.js'),
 ])('restore-theme (%s)', (script) => {
   it('restores a stored theme', () => {
     expect(restore(script, 'dark', null)).toBe('dark');

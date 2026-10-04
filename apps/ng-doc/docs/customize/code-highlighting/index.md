@@ -31,7 +31,7 @@ export class ThemeToggleComponent {
 
 ## The default theme
 
-With the Vite plugin, the `modern-*` builders and the `ng-doc` CLI, code is colored by NgDoc's own
+With the new engine (the Vite host and the `ng-doc` CLI), code is colored by NgDoc's own
 theme, `css-variables`. Its name is exported as `NG_DOC_SYNTAX_THEME_NAME`, and `ngDocSyntaxTheme()`
 creates it. Every color of the theme is a CSS variable, `var(--ng-doc-syntax-*)`, and its
 background is `--ng-doc-code-background`. So code follows the light, dark and custom themes of the

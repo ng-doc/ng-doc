@@ -45,10 +45,9 @@ jobs:
       - name: Build Applications
         run: npx nx run-many --projects='tag:type:app,!ng-doc' --target=build --configuration=ci --parallel
 
-      # deploy.yml syncs dist/apps/ng-doc/browser from the tar, so the Vite output keeps that path
-      # in the archive.
+      # deploy.yml syncs dist/apps/ng-doc/browser from the tar.
       - name: Tar Artifacts
-        run: tar -cvf ng-doc.tar --transform='s,^dist/apps/ng-doc-vite/,dist/apps/ng-doc/,' dist/apps/ng-doc-vite/browser
+        run: tar -cvf ng-doc.tar dist/apps/ng-doc/browser
 
       - name: Uploading Artifacts
         uses: actions/upload-artifact@v4

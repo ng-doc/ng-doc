@@ -7,21 +7,21 @@ The site is NgDoc's own documentation, and it doubles as the largest real-world 
 
 ## Layout
 
-| Path                                         | Role                                                                                                                              |
-| -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `docs/`                                      | All documentation content (`docsPath` in `ng-doc.config.ts`).                                                                     |
-| `docs/<category>/ng-doc.category.ts`         | A sidebar category.                                                                                                               |
-| `docs/**/<page>/ng-doc.page.ts` + `index.md` | A page.                                                                                                                           |
-| `docs/shared/*.md`                           | Nunjucks includes shared by pages.                                                                                                |
-| `docs/ng-doc.api.ts`                         | API reference scopes (`app`, `builder`, `ui-kit`, `core`, `keywords-loaders`), each an include/exclude glob over library sources. |
-| `poc/` + `ng-doc.config.poc.ts`              | A small sandbox site for quick experiments (`npm run poc`, legacy engine).                                                        |
-| `src/app/app.config.ts`                      | Wires `provideNgDocContext()` (from `@ng-doc/generated`), `provideNgDocApp`, search, the page skeleton, processors and Mermaid.   |
-| `src/app/pages/docs/docs.routes.ts`          | Mounts `NG_DOC_ROUTING` from `@ng-doc/generated`.                                                                                 |
-| `server.ts`, `src/main.server.ts`            | SSR / prerender entry points.                                                                                                     |
-| `ng-doc.config.ts`                           | Site configuration: `docsPath`, `routePrefix: 'docs'`, `tsConfig`, keyword loaders, custom keywords, anchor headings.             |
-| `ng-doc.config.modern.ts`                    | Same configuration for the new-generator Angular CLI targets. Its output goes to `ng-doc-modernization/`.                         |
+| Path                                         | Role                                                                                                                                |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `docs/`                                      | All documentation content (`docsPath` in `ng-doc.config.ts`).                                                                       |
+| `docs/<category>/ng-doc.category.ts`         | A sidebar category.                                                                                                                 |
+| `docs/**/<page>/ng-doc.page.ts` + `index.md` | A page.                                                                                                                             |
+| `docs/shared/*.md`                           | Nunjucks includes shared by pages.                                                                                                  |
+| `docs/ng-doc.api.ts`                         | API reference scopes (`app`, `builder`, `ui-kit`, `core`, `keywords-loaders`), each an include/exclude glob over library sources.   |
+| `poc/` + `ng-doc.config.poc.ts`              | A small sandbox site for quick experiments (`npm run poc`, legacy engine).                                                          |
+| `src/app/app.config.ts`                      | Wires `provideNgDocContext()` (from `@ng-doc/generated`), `provideNgDocApp`, search, the page skeleton, processors and Mermaid.     |
+| `src/app/pages/docs/docs.routes.ts`          | Mounts `NG_DOC_ROUTING` from `@ng-doc/generated`.                                                                                   |
+| `server.ts`, `src/main.server.ts`            | SSR / prerender entry points.                                                                                                       |
+| `ng-doc.config.ts`                           | Site configuration (Vite engine): `docsPath`, `routePrefix: 'docs'`, `tsConfig`, keyword loaders, custom keywords, anchor headings. |
+| `ng-doc.config.legacy.ts`                    | The same configuration for the legacy targets. Its output goes to `ng-doc-legacy/`.                                                 |
 
-- **`@ng-doc/generated`:** an alias resolved to the engine's generated output. That output is `ng-doc/ng-doc/index.ts` for the legacy engine, `ng-doc-modernization/...` for `*-modern` targets, and a temporary directory for `serve-docs-vite.mjs`.
+- **`@ng-doc/generated`:** an alias resolved to the engine's generated output. That output is `ng-doc/ng-doc/index.ts` for the Vite engine (`build`, `serve`), `ng-doc-legacy/ng-doc/ng-doc/index.ts` for the `*-legacy` targets, and a temporary directory for `serve-docs-vite.mjs`.
 - **Generated output:** never edit it, and never import from it by relative path.
 
 ## Authoring cheatsheet

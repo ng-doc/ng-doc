@@ -300,7 +300,8 @@ describe('migrate-to-vite', () => {
     const config = tree.readText('vite.config.mjs');
     expect(config).toContain("base: '/docs/',");
     expect(config).toContain("configFile: workspace('docs/ng-doc.config.ts'),");
-    expect(config).toContain("discovery: { tags: ['public'] },");
+    // `ngDoc.tags` is not an option of the legacy builders: it is reported, not migrated.
+    expect(config).not.toContain('discovery');
     expect(config).toContain("loadPaths: [workspace('src/styles')]");
     expect(config).toContain("rolldownOptions: { external: ['canvas'] },");
     expect(config).toContain("headers: { 'X-Docs': 'yes' }");
@@ -330,6 +331,7 @@ describe('migrate-to-vite', () => {
       '`build.webWorkerTsConfig`:',
       '`build.outputPath.browser`: is ``; the Vite engine always writes `browser/`.',
       '`build.unknownOption`: is not a known option',
+      '`build.ngDoc.tags`: is not an option of the Vite engine.',
       '`build.stylePreprocessorOptions.sass`: Set it in Vite `css.preprocessorOptions`.',
       '`serve.proxyConfig`: `proxy.conf.json`: move the proxy rules to Vite `server.proxy`.',
       '`serve.hmr`: is `false`',

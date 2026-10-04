@@ -12,7 +12,6 @@ import {
 import { analogResourcePolicy, applyAnalogResourcePatch } from './analog-resource-patch.mjs';
 import {
   GENERATOR_ENTRY_POINTS,
-  GENERATOR_MERGED_SCHEMAS,
   GENERATOR_PACKAGE_MANIFEST,
   GENERATOR_PROCESS_LOADED_INPUTS,
   assertInventoryCoversBundle,
@@ -200,18 +199,6 @@ await publishStaged(output, async ({ output: stagedPath, sibling, scratch }) => 
   for (const { source, target } of copies) {
     await mkdir(path.dirname(path.join(staged, target)), { recursive: true });
     await copyFile(path.join(snapshot, source), path.join(staged, target));
-  }
-  for (const { extension: extensionFile, native: nativeFile, target } of GENERATOR_MERGED_SCHEMAS) {
-    const native = JSON.parse(await readFile(path.join(root, nativeFile), 'utf8'));
-    const extension = JSON.parse(await readFile(path.join(snapshot, extensionFile), 'utf8'));
-    await writeFile(
-      path.join(staged, target),
-      JSON.stringify(
-        { ...native, ...extension, properties: { ...native.properties, ...extension.properties } },
-        null,
-        2,
-      ),
-    );
   }
   await chmod(path.join(staged, 'bootstrap/bin.js'), 0o755);
   await writeFile(

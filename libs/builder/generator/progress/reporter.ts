@@ -79,8 +79,8 @@ export const systemClock: ProgressClock = {
 /**
  * What the reporter still prints once another writer shares the terminal. `notices`: results plus
  * the slow-edit and background notices (the Vite dev server, whose log is NgDoc's to share).
- * `summaries`: results only (the Angular builders after their host starts, the CLI after it
- * spawns a host), because the host's own output owns the terminal.
+ * `summaries`: results only (the CLI after it spawns a host), because the host's own output owns
+ * the terminal.
  */
 export type ForeignMode = 'summaries' | 'notices';
 
@@ -112,8 +112,8 @@ export interface ProgressReporter {
   /** Feeds one event. Never throws. */
   handle(event: ProgressEvent): void;
   /**
-   * Another writer took the terminal: the Vite dev server after it listens (`notices`), the
-   * Angular builders after their host starts and the CLI after it spawns a host (`summaries`).
+   * Another writer took the terminal: the Vite dev server after it listens (`notices`) and the CLI
+   * after it spawns a host (`summaries`).
    */
   setForeign(mode?: ForeignMode): void;
   /**

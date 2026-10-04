@@ -156,18 +156,13 @@ jobs:
           - worker
           - progress
           - bootstrap
-          - angular
         # tools/scripts/check-ci-jobs.mjs keeps this list and generator-shard equal to the runner's
         # groups. The posix groups need owned POSIX process groups; the core lane is the Windows gate.
         exclude:
           - os: windows-latest
             group: bootstrap
-          - os: windows-latest
-            group: angular
         include:
           - group: bootstrap
-            lane: posix
-          - group: angular
             lane: posix
           # Linux gates coverage; Windows runs every test without measuring it.
           - os: windows-latest
@@ -384,8 +379,8 @@ jobs:
       - name: Generate the site
         shell: bash
         run: >-
-          node dist/libs/builder/generator/bootstrap/bin.js generate --project ng-doc-vite
-          --config apps/ng-doc/ng-doc.config.modern.ts --docs-root apps/ng-doc/docs
+          node dist/libs/builder/generator/bootstrap/bin.js generate --project ng-doc
+          --config apps/ng-doc/ng-doc.config.ts --docs-root apps/ng-doc/docs
           --tsconfig apps/ng-doc/tsconfig.vite.json --tags development --progress plain
           --output-root "$RUNNER_TEMP/site/output" --cache-root "$RUNNER_TEMP/site/cache"
 
@@ -407,18 +402,18 @@ jobs:
       - run: npx nx run ng-doc:build-legacy --excludeTaskDependencies
       # The parity gate compares outputs built from the same sources only.
       - name: Stamp the output
-        run: node libs/builder/generator/acceptance/production/source-stamp.mjs dist/apps/ng-doc/browser
+        run: node libs/builder/generator/acceptance/production/source-stamp.mjs dist/apps/ng-doc-legacy/browser
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: site-legacy
           path: |
-            dist/apps/ng-doc/browser
-            dist/apps/ng-doc/ngdoc-source.json
+            dist/apps/ng-doc-legacy/browser
+            dist/apps/ng-doc-legacy/ngdoc-source.json
           if-no-files-found: error
           include-hidden-files: true
           retention-days: 3
       - name: Verify the built server
-        run: node apps/ng-doc/testing/ssr-entry/verify-built-server.mjs
+        run: node apps/ng-doc/testing/ssr-entry/verify-built-server.mjs dist/apps/ng-doc-legacy/server/server.mjs
 
   site-vite:
     name: Site build and production acceptance, Vite engine
@@ -437,13 +432,13 @@ jobs:
       - run: npx nx run ng-doc:link-libs --excludeTaskDependencies
       - run: npx nx run ng-doc:build --excludeTaskDependencies
       - name: Stamp the output
-        run: node libs/builder/generator/acceptance/production/source-stamp.mjs dist/apps/ng-doc-vite/browser
+        run: node libs/builder/generator/acceptance/production/source-stamp.mjs dist/apps/ng-doc/browser
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: site-vite
           path: |
-            dist/apps/ng-doc-vite/browser
-            dist/apps/ng-doc-vite/ngdoc-source.json
+            dist/apps/ng-doc/browser
+            dist/apps/ng-doc/ngdoc-source.json
           if-no-files-found: error
           include-hidden-files: true
           retention-days: 3
@@ -467,23 +462,6 @@ jobs:
           include-hidden-files: true
           retention-days: 3
 
-  site-modern:
-    name: Site build, Angular CLI with the new engine
-    needs: build
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-        with:
-          persist-credentials: false
-      - uses: ./.github/actions/nodejs
-      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
-        with:
-          name: packages
-          path: dist/libs
-      - run: npx nx run ng-doc:link-libs --excludeTaskDependencies
-      - run: npx nx run ng-doc:build-modern --excludeTaskDependencies
-
   parity:
     name: Production parity of the engines
     needs: [build, site-legacy, site-vite]
@@ -502,17 +480,17 @@ jobs:
       - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
         with:
           name: site-legacy
-          path: dist/apps/ng-doc
+          path: dist/apps/ng-doc-legacy
       - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
         with:
           name: site-vite
-          path: dist/apps/ng-doc-vite
+          path: dist/apps/ng-doc
       - name: Source stamp tests
         run: node --test "libs/builder/generator/acceptance/production/*.test.mjs"
       - name: Compare the outputs and the accepted search and keyword sets
         env:
-          NGDOC_PARITY_LEGACY: dist/apps/ng-doc/browser
-          NGDOC_PARITY_CURRENT: dist/apps/ng-doc-vite/browser
+          NGDOC_PARITY_LEGACY: dist/apps/ng-doc-legacy/browser
+          NGDOC_PARITY_CURRENT: dist/apps/ng-doc/browser
           NGDOC_PARITY_EVIDENCE: ${{ runner.temp }}/parity
         run: node libs/builder/generator/acceptance/production/parity.mjs
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
@@ -737,7 +715,6 @@ jobs:
       - windows-site
       - site-legacy
       - site-vite
-      - site-modern
       - parity
       - vite-main
       - runtime-links

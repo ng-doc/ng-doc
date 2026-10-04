@@ -66,7 +66,6 @@ test('inventory covers actual independent production groups with fresh absolute 
     'worker',
     'progress',
     'bootstrap',
-    'angular',
     'vite-adapter',
   ])
     assert.ok(
@@ -96,11 +95,6 @@ test('inventory covers actual independent production groups with fresh absolute 
       'generator/compiler/watch.integration.ts',
     ),
   );
-  const angular = COMMANDS.find((entry) => entry.id === 'angular');
-  assert.deepEqual(angular.additionalIncludes, [
-    'generator/angular/testing/native-smoke.integration.ts',
-  ]);
-  assert.equal(angular.fileParallelism, false);
   assert.ok(!COMMANDS.some((entry) => 'mergeChildCoverage' in entry || 'coverage' in entry));
   assert.ok(
     commandFor(
@@ -202,7 +196,6 @@ test('private import audit parses imports rather than matching comments/spec str
     'semantic',
     'session',
     'worker',
-    'angular',
     'vite',
     'bootstrap',
   ])
@@ -211,7 +204,7 @@ test('private import audit parses imports rather than matching comments/spec str
     await writeFile(path.join(base, name), 'export {};');
   await mkdir(path.join(base, 'compiler/testing'));
   const forbidden = "import '@angular/build/private';";
-  await writeFile(path.join(base, 'angular/index.ts'), forbidden);
+  await writeFile(path.join(base, 'vite/index.ts'), forbidden);
   await writeFile(path.join(base, 'compiler/a.spec.ts'), forbidden);
   await writeFile(path.join(base, 'compiler/testing/a.ts'), forbidden);
   await writeFile(
@@ -744,7 +737,7 @@ test('--list prints each group with its effective default timeout', async (t) =>
   assert.match(log, /^compiler\tcore\tvitest\t2100000ms\theavy\t4 shards$/m);
   assert.match(log, /^worker\tcore\tvitest\t600000ms\theavy$/m);
   assert.match(log, /^graph\tcore\tvitest\t600000ms\theavy$/m);
-  assert.match(log, /^angular\tposix\tvitest\t600000ms\theavy$/m);
+  assert.match(log, /^bootstrap\tposix\tvitest\t600000ms\theavy$/m);
 });
 
 test(
@@ -1080,7 +1073,6 @@ test('groups are light or heavy: heavy groups are the real-process, program and 
     'worker',
     'progress',
     'bootstrap',
-    'angular',
     'vite-adapter',
   ])
     assert.ok(heavy.includes(id), id);

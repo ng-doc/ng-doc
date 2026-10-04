@@ -48,7 +48,7 @@ NgDoc: updated 1 of 445 pages in 1.6s (/docs/get-started/installation)
 ```
 
 An edit that is still running after two seconds first prints `NgDoc: updating (1 file changed)...`.
-The Angular CLI builders and the `summary` mode leave this notice out and print only the edit's line.
+The `summary` mode leaves this notice out and prints only the edit's line.
 When NgDoc could not limit the edit to the pages it reaches and rebuilds every page, the line says
 why instead, for example `NgDoc: rebuilding all pages (discovery: configuration changed)...`. With
 the targeted rebuild switched off (`NGDOC_TARGETED_REBUILD=0`), every edit rebuilds every page and
@@ -84,9 +84,8 @@ The first of these that is set wins:
 1. The `--progress <mode>` flag of the `ng-doc` command. `--progress=<mode>` works too.
 2. The `NGDOC_PROGRESS` environment variable, in every entry point. An unknown value prints one
    `NGDOC_PROGRESS_VALUE` warning and counts as unset.
-3. The `progress` option of the Vite plugin (`*BuildersReference#vite-plugin`), or `ngDoc.progress`
-   of the Angular CLI builders (`*BuildersReference#angular-cli-builders`). Both accept every mode
-   except `json`. The dev server target's own value wins over its build target's.
+3. The `progress` option of the Vite plugin (`*BuildersReference#vite-plugin`), which the Vite
+   builders read from the configuration they run. It accepts every mode except `json`.
 4. The host's own quiet settings (below).
 5. `auto`.
 
@@ -96,20 +95,19 @@ NGDOC_PROGRESS=plain npx vite
 
 ### Quiet hosts
 
-- **Vite:** a `logLevel` of `warn`, `error` or `silent` turns progress off. A mode other than `auto`
-  set by the variable or the plugin option still prints, straight to stderr and without timestamps.
-- **Angular CLI builders:** the application option `progress: false` means `summary`.
+A `logLevel` of `warn`, `error` or `silent` in the Vite configuration turns progress off. A mode
+other than `auto` set by the variable or the plugin option still prints, straight to stderr and
+without timestamps.
 
 An explicit `auto` still follows these settings.
 
 ## Where the output goes
 
-| Entry point          | Output                                                                                                                                                                                                                                                                                                       |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `ng-doc` command     | Progress on stderr; diagnostics and the summary on stdout. With `--json`, stdout keeps only its JSON lines unless the mode is `json`. The `Generated …` line is printed only in `verbose`. After `ng-doc dev` starts a command, only summary and edit lines.                                                 |
-| Vite plugin          | Vite's log. The live line is on stderr until the server listens; after that, lines carry Vite's timestamp.                                                                                                                                                                                                   |
-| Vite builders        | The same as the Vite plugin, whose configuration they run. With a server bundle, `vite-application` still prints one summary: the server build uses the browser build's generation.                                                                                                                          |
-| Angular CLI builders | The Angular CLI log. The live line is on stderr until the Angular build starts; after that, only summary and edit lines. The first build also reports its step and progress to Architect (`reportStatus`, `reportProgress`), for tools that run builders themselves; the Angular CLI and Nx don't show them. |
+| Entry point      | Output                                                                                                                                                                                                                                                       |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ng-doc` command | Progress on stderr; diagnostics and the summary on stdout. With `--json`, stdout keeps only its JSON lines unless the mode is `json`. The `Generated …` line is printed only in `verbose`. After `ng-doc dev` starts a command, only summary and edit lines. |
+| Vite plugin      | Vite's log. The live line is on stderr until the server listens; after that, lines carry Vite's timestamp.                                                                                                                                                   |
+| Vite builders    | The same as the Vite plugin, whose configuration they run. With a server bundle, `vite-application` still prints one summary: the server build uses the browser build's generation.                                                                          |
 
 ## Nx
 
@@ -120,7 +118,7 @@ An explicit `auto` still follows these settings.
   short plain lines, such as `NgDoc: rendering 209/445 pages, 45%, 9.5s`, at most every 5 seconds.
   They wrap in a narrow pane without piling up.
 - **Other `nx run-many` output styles**: Nx collects each task's output and prints it when the task
-  ends. The Angular CLI builders then print plain lines. An `nx:run-commands` target, such as one
+  ends. The Vite builders then print plain lines. An `nx:run-commands` target, such as one
   that runs `ng-doc generate`, still runs in a terminal of its own, so NgDoc draws the live line and
   Nx prints its frames at the end. Set `NGDOC_PROGRESS=plain` in the target's `env` option, or pass
   `--progress plain`, when you run such a target with `nx run-many`.

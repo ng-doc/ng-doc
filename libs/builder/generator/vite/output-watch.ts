@@ -39,8 +39,8 @@ function spellings(value: string): string[] {
  * The host update coordinator expects a Vite hot update for every generated module a commit
  * creates, rewrites or deletes, and settles an edit only once they all arrived. Vite watches its
  * root recursively, but a file outside it only once Vite has served it. An output root outside
- * the Vite root (the documentation site's `apps/ng-doc/src` root with its output in
- * `ng-doc-modernization/`) therefore reported only the modules the browser had loaded: a new page
+ * the Vite root (the documentation site's `apps/ng-doc/src` root with its output in `ng-doc/`)
+ * therefore reported only the modules the browser had loaded: a new page
  * tab, a new page or an edit of a page nobody opened never produced its hot update, and the edit
  * failed with `NGDOC_VITE_HOST_TIMEOUT`. Such a root is added to the watcher here, and startup
  * waits until the output is watched, because chokidar ignores initial files: a file written while

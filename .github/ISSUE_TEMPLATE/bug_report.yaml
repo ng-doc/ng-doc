@@ -32,7 +32,6 @@ body:
       description: Which engine builds your docs? Your `angular.json` or `project.json` shows the builder.
       options:
         - Vite engine (vite-dev-server or vite-application builder, Vite plugin, or ng-doc CLI)
-        - Angular CLI fallback (modern-dev-server or modern-application builder)
         - Legacy builders (dev-server or application)
         - Not sure
     validations:

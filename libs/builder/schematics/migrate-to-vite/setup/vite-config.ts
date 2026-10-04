@@ -73,9 +73,6 @@ export interface NgDocViteSetup {
   /** The generated folder, used when the NgDoc configuration has no `outDir`. */
   outputRoot: string;
   cacheRoot: string;
-  /** Build tags matched against `onlyForTags`; the Vite mode when absent. */
-  tags?: string[];
-  progress?: string;
   devServer?: NgDocViteServerSettings;
   modes: NgDocViteModes;
 }
@@ -199,12 +196,10 @@ export function renderNgDocViteConfig(setup: NgDocViteSetup, header: string[] = 
     analogLiveReload: true,
     angularPlugins: new Code(`createNgDocAngularPlugins(${printLiteral(angular)})`),
     angularComponentProbe: path(setup.rootComponent),
-    progress: setup.progress,
     generator: {
       projectId: setup.project,
       workspaceRoot: new Code('workspaceRoot'),
       configFile: setup.ngDocConfig === undefined ? undefined : path(setup.ngDocConfig),
-      discovery: setup.tags ? { tags: setup.tags } : undefined,
       defaults: {
         docsRoot: path(setup.docsRoot || '.'),
         tsConfig: tsconfig,

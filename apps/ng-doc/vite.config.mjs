@@ -1,6 +1,6 @@
 // The documentation site on the NgDoc Vite engine (Vite + Analog, physical generated files).
 // Used by the `build` and `serve` targets. The plugins come from the built package in
-// dist, as the site's Angular CLI targets do.
+// dist, as the site's legacy targets do.
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -13,7 +13,7 @@ import {
 const workspaceRoot = fileURLToPath(new URL('../..', import.meta.url));
 const app = (file) => path.join(workspaceRoot, 'apps/ng-doc', file);
 
-/** Replaced in production builds only, as in the Angular CLI targets. */
+/** Replaced in production builds only, as in the legacy targets. */
 export const productionFileReplacements = [
   {
     replace: 'apps/ng-doc/src/environments/environment.ts',
@@ -21,15 +21,18 @@ export const productionFileReplacements = [
   },
 ];
 
-/** The generator options of the site: its configuration and its own output and cache roots. */
+/**
+ * The generator options of the site: its configuration and its output and cache roots, which are
+ * the engine's defaults for the project `ng-doc` (`ng-doc/<project>`, `.cache/ng-doc/<project>`).
+ */
 export function ngDocSiteGenerator({
-  configFile = app('ng-doc.config.modern.ts'),
+  configFile = app('ng-doc.config.ts'),
   tsConfig = app('tsconfig.vite.json'),
-  outputRoot = path.join(workspaceRoot, 'ng-doc-modernization/ng-doc/ng-doc-vite'),
-  cacheRoot = path.join(workspaceRoot, '.cache/ng-doc/ng-doc-vite'),
+  outputRoot = path.join(workspaceRoot, 'ng-doc/ng-doc'),
+  cacheRoot = path.join(workspaceRoot, '.cache/ng-doc/ng-doc'),
 } = {}) {
   return {
-    projectId: 'ng-doc-vite',
+    projectId: 'ng-doc',
     workspaceRoot,
     configFile,
     defaults: { docsRoot: app('docs'), tsConfig, outputRoot, cacheRoot },
@@ -46,13 +49,13 @@ export function ngDocSiteConfig({
   tsconfig = app('tsconfig.vite.json'),
   generator = ngDocSiteGenerator({ tsConfig: tsconfig }),
   cacheDir = path.join(workspaceRoot, '.angular/vite/ng-doc'),
-  outDir = path.join(workspaceRoot, 'dist/apps/ng-doc-vite/browser'),
+  outDir = path.join(workspaceRoot, 'dist/apps/ng-doc/browser'),
 }) {
   return {
     root: app('src'),
     base,
     cacheDir,
-    // The HTML entry is src/index.html; the Angular CLI targets keep using the same file.
+    // The HTML entry is src/index.html; the legacy targets use the same file.
     publicDir: false,
     plugins: [
       createNgDocApplicationPlugin({

@@ -39,8 +39,7 @@ export function heapArguments(execArgv: readonly string[]): string[] {
  * Prerenders every route of a built application into its browser output.
  *
  * Rendering runs in a child process: the server bundle carries its own Angular and zone.js,
- * which patch the process's globals, so they never share a process with the Vite builds or the
- * Angular CLI host.
+ * which patch the process's globals, so they never share a process with the Vite builds.
  */
 export function prerenderNgDoc(options: NgDocPrerenderOptions): Promise<PrerenderReport> {
   const request: PrerenderRequest = {

@@ -423,7 +423,7 @@ describe('unchanged saves (no-op filter)', () => {
       });
       const native = new Events();
       const events: BuildEvent[] = [];
-      // Wired as in angular/runner.ts.
+      // The filter observes every session event, as a host that filters its watch does.
       const observer = (event: BuildEvent) => {
         events.push(event);
         if (event.kind === 'started') filter.started();

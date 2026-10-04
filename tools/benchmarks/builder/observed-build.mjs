@@ -68,8 +68,6 @@ export async function buildObservedRuntime({ repository, packages, expectedSourc
     'content/html-worker',
     'worker/index',
     'worker/entry',
-    'angular/application',
-    'angular/dev-server',
     'vite/index',
     'vite/ssr-renderer-entry',
     'vite/angular/index',
@@ -77,10 +75,7 @@ export async function buildObservedRuntime({ repository, packages, expectedSourc
   const result = await build({
     absWorkingDir: repository,
     entryPoints: Object.fromEntries(
-      entries.map((entry) => [
-        entry,
-        `libs/builder/generator/${entry}${['angular/application', 'angular/dev-server'].includes(entry) ? '/index' : ''}.ts`,
-      ]),
+      entries.map((entry) => [entry, `libs/builder/generator/${entry}.ts`]),
     ),
     outbase: 'libs/builder/generator',
     outdir: output,

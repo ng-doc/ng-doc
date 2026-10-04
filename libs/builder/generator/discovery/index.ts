@@ -120,9 +120,8 @@ export interface DiscoveryOptions {
    *
    * The tags name the build configuration, as the legacy engine's `onlyForTags` check did, so
    * that the usual `development`/`production` configurations work without extra options. The
-   * hosts default them accordingly: the Angular builders to the configuration name(s) (or the
-   * target's `defaultConfiguration`), the Vite plugin to the Vite mode, and the CLI to
-   * `development` for `dev`/`watch` and `production` for `generate`.
+   * hosts default them accordingly: the Vite plugin (and the Vite builders) to the Vite mode, and
+   * the CLI to `development` for `dev`/`watch` and `production` for `generate`.
    */
   tags?: readonly string[];
 }

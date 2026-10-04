@@ -200,14 +200,13 @@ const SandboxPage: NgDocPage = {
 export default SandboxPage;
 ```
 
-A build's tags come from its configuration name, so `development` and `production` work without
-setup:
+A build's tags come from its Vite mode or its command, so `development` and `production` work
+without setup:
 
-| Entry point          | Tags by default                                                       | Set them with              |
-| -------------------- | --------------------------------------------------------------------- | -------------------------- |
-| Angular CLI builders | The configuration name, or names, of the target                       | The `ngDoc.tags` option    |
-| Vite host            | The Vite mode: `development` for the server, `production` for a build | `generator.discovery.tags` |
-| `ng-doc` command     | `production` for `generate`, `development` for `dev` and `watch`      | `--tags a,b`               |
+| Entry point      | Tags by default                                                                                           | Set them with              |
+| ---------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
+| Vite host        | The Vite mode: `development` for the server, `production` for a build, or the `mode` of the Vite builders | `generator.discovery.tags` |
+| `ng-doc` command | `production` for `generate`, `development` for `dev` and `watch`                                          | `--tags a,b`               |
 
 - An entry without `onlyForTags` is always kept. `null` and `''` also mean no filter.
 - An entry with `onlyForTags` is kept only if the build has at least one of its tags. A build
@@ -222,8 +221,7 @@ names the page, the tags that left it out and the tags of the build.
 
 A value of `onlyForTags` that isn't a string or an array of strings fails with
 `DISCOVERY_INVALID_ENTRY`. Build tags must be non-empty strings. The `ng-doc` command rejects an
-empty tag in `--tags` with a usage error (exit code `2`), and the Angular CLI builders reject one in
-`ngDoc.tags` before they start. With the Vite plugin, `generator.discovery.tags` that aren't an
+empty tag in `--tags` with a usage error (exit code `2`). With the Vite plugin, `generator.discovery.tags` that aren't an
 array of non-empty strings fail the build with `DISCOVERY_TAGS_INVALID`.
 
 ## 🚧 Gotchas

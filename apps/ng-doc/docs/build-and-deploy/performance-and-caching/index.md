@@ -11,11 +11,10 @@ The cache is on by default. It stores the generated result of every page togethe
 fingerprint of its inputs. On the next build, NgDoc reuses a result when its fingerprint still
 matches, and rebuilds it when an input changed.
 
-| Host                | Cache folder                                         |
-| ------------------- | ---------------------------------------------------- |
-| Angular CLI builder | `.cache/ng-doc/<project-name>` in the workspace root |
-| `ng-doc` command    | `.cache/ng-doc/<project-name>`, or `--cache-root`    |
-| Vite host           | `generator.defaults.cacheRoot` of the Vite plugin    |
+| Host             | Cache folder                                      |
+| ---------------- | ------------------------------------------------- |
+| Vite host        | `generator.defaults.cacheRoot` of the Vite plugin |
+| `ng-doc` command | `.cache/ng-doc/<project-name>`, or `--cache-root` |
 
 Add the folder to `.gitignore`:
 
