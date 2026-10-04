@@ -26,6 +26,7 @@ import { assertAngularCompatibility } from './angular-compatibility';
 import { composeAngularPlugins } from './angular-composition';
 import { assertConsistentAngularBuild } from './angular-version';
 import { boundServerClose } from './bounded-close';
+import { createComponentUpdateGate } from './component-updates';
 import { requirePublishedConfiguration } from './configuration';
 import { diagnosticText, hostDiagnostic } from './diagnostics';
 import type { HostUpdateTicket } from './host-updates';
@@ -540,5 +541,7 @@ export function createPlugin(options: NgDocVitePluginOptions): Plugin[] {
     },
   };
 
-  return [primary, ...angularComposition.plugins, completion];
+  // Analog's component update endpoint answers only the update events Analog sent: after the
+  // dependency optimizer's reload it would otherwise apply stale, mismatched component metadata.
+  return [primary, createComponentUpdateGate(), ...angularComposition.plugins, completion];
 }
