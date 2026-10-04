@@ -91,7 +91,13 @@ export class NgDocPlaygroundComponent<
     this.defaultProperties = this.getPropertiesFormValues();
     this.defaultContent = this.getContentFormValues();
 
-    const propertiesForm: FormGroup = this.formBuilder.group(this.defaultProperties);
+    // `FormBuilder` reads an array as `[value, validators]`, so each value is wrapped: the default
+    // of an array input is the value of its control.
+    const propertiesForm: FormGroup = this.formBuilder.group(
+      Object.fromEntries(
+        Object.entries(this.defaultProperties).map(([key, value]) => [key, [value]]),
+      ),
+    );
     const contentForm: FormGroup = this.formBuilder.group(this.defaultContent);
     const formGroup: FormGroup<NgDocPlaygroundForm> = this.formBuilder.group({
       properties: propertiesForm,
