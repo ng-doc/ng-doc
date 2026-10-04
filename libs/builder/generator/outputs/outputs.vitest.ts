@@ -1163,7 +1163,7 @@ describe('OutputAssembler diagnostics and dependencies', () => {
     const found = await assembler.templateDependencies();
     expect(found.value).toBeNull();
     expect(found.diagnostics).toEqual([]);
-    expect(found.dependencies).toHaveLength(8);
+    expect(found.dependencies).toHaveLength(10);
     expect(found.dependencies.every((item) => item.kind === 'content')).toBe(true);
     for (const dependency of found.dependencies) {
       if (dependency.kind !== 'content') continue;
@@ -1179,14 +1179,14 @@ describe('OutputAssembler diagnostics and dependencies', () => {
       templateRoot: path.join(fixture().root, 'missing'),
     }).templateDependencies();
     expect(missing.value).toBeUndefined();
-    expect(missing.dependencies).toHaveLength(8);
+    expect(missing.dependencies).toHaveLength(10);
     expect(missing.dependencies.every((item) => item.kind === 'existence' && !item.exists)).toBe(
       true,
     );
     expect(projectWatchInputs([...found.dependencies, ...missing.dependencies]).files).toHaveLength(
-      16,
+      20,
     );
-    expect(missing.diagnostics).toHaveLength(8);
+    expect(missing.diagnostics).toHaveLength(10);
   });
 
   test('returns actionable page diagnostics for invalid ownership, missing inputs and unsafe routes', () => {

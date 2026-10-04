@@ -923,3 +923,107 @@ test('differential: api.protectedMembers on and off equal reference and cold bui
   const again = shown(incremental[3]);
   for (const name of [...guarded, 'addedGuarded']) expect(again.html).toContain(name);
 }, 240_000);
+
+const demoPage = (demos: string) =>
+  `import { ButtonDemo, LinkDemo } from './demos';\nimport category from '../ng-doc.category';\nconst page = { title: 'Guide', route: 'guide', category, mdFile: './index.md', demos: { ${demos} } }; export default page;`;
+const demoMarkdown = (options: string) =>
+  `# Guide\n\n{{ NgDocActions.demo("ButtonDemo", ${options}) }}\n`;
+const demoConfig = (options = '') => `export default { docsPath: 'docs', cache: true${options} };`;
+
+const demoFiles = (): Record<string, string> => ({
+  'tsconfig.json': JSON.stringify({
+    compilerOptions: {
+      target: 'ES2022',
+      types: [],
+      skipLibCheck: true,
+      experimentalDecorators: true,
+    },
+    include: ['docs/**/*.ts'],
+  }),
+  'ng-doc.config.ts': demoConfig(),
+  'src/demo.providers.ts': 'export default [];\n',
+  'docs/ng-doc.category.ts': `const category = { title: 'Docs', route: 'docs' }; export default category;`,
+  'docs/guide/demos.ts': [
+    "import { Component } from '@angular/core';",
+    "@Component({ selector: 'button-demo', template: '<button>Button</button>' }) export class ButtonDemo {}",
+    "@Component({ selector: 'link-demo', template: '<a>Link</a>' }) export class LinkDemo {}",
+  ].join('\n'),
+  'docs/guide/ng-doc.page.ts': demoPage('ButtonDemo'),
+  'docs/guide/index.md': demoMarkdown('{ expanded: true }'),
+  'docs/other/ng-doc.page.ts': `const page = { title: 'Other', route: 'other', mdFile: './index.md' }; export default page;`,
+  'docs/other/index.md': '# Other\n',
+});
+
+const demoSteps: Step[] = [
+  {
+    name: 'an isolated demo',
+    apply: (f) => [update(f.write('docs/guide/index.md', demoMarkdown('{ isolated: true }')))],
+  },
+  {
+    name: 'every demo isolated, under a path, with providers',
+    apply: (f) => [
+      update(
+        f.write(
+          'ng-doc.config.ts',
+          demoConfig(
+            `, isolatedDemos: true, demoApplication: { path: 'previews' }, demoProviders: () => import('./src/demo.providers')`,
+          ),
+        ),
+      ),
+    ],
+  },
+  {
+    name: 'a demo added to the guide',
+    apply: (f) => [update(f.write('docs/guide/ng-doc.page.ts', demoPage('ButtonDemo, LinkDemo')))],
+  },
+  {
+    name: 'demo pages turned off again',
+    apply: (f) => [
+      update(f.write('ng-doc.config.ts', demoConfig())),
+      update(f.write('docs/guide/index.md', demoMarkdown('{ expanded: true }'))),
+      update(f.write('docs/guide/ng-doc.page.ts', demoPage('ButtonDemo'))),
+    ],
+  },
+];
+
+test('differential: demo pages on and off equal reference and cold builds', async () => {
+  const f = fixture(true, demoFiles);
+  const colds: CompilationResult[] = [];
+  const reference = await runChain(
+    f,
+    f.create({ incrementalReuse: false }),
+    async () => {
+      colds.push(await cold(f));
+    },
+    demoSteps,
+  );
+  f.reset();
+  const incremental = await runChain(f, f.create(), undefined, demoSteps);
+  for (const [index, result] of incremental.entries()) {
+    const label = index ? demoSteps[index - 1].name : 'initial';
+    expect({ label, result: JSON.stringify(result) }).toEqual({
+      label,
+      result: JSON.stringify(reference[index]),
+    });
+    expect({ label, ...published(result) }).toEqual({ label, ...published(colds[index]) });
+  }
+  const files = (result: CompilationResult) => published(result).outputs;
+  const [initial, isolated, site, added, off] = incremental.map(files);
+  // Without isolated demos or options, no demo page exists.
+  expect(Object.keys(initial).filter((file) => /demo-(routes|app)\.ts$/.test(file))).toEqual([]);
+  // An isolated demo gives its guide demo pages; the other guide has none.
+  expect(Object.keys(isolated).filter((file) => /demo-(routes|app)\.ts$/.test(file))).toEqual([
+    'demo-app.ts',
+    'guides/guide/demo-routes.ts',
+  ]);
+  expect(isolated['guides/guide/index/page.ts'] ?? isolated['guides/guide/page.ts']).toBeDefined();
+  expect(isolated['demo-app.ts']).toContain("path: 'demo-preview/docs/guide',");
+  expect(site['demo-app.ts']).toContain("path: 'previews/docs/guide',");
+  expect(site['demo-app.ts']).toContain("import('../src/demo.providers')");
+  expect(site['index.ts']).toContain("import type {} from './demo-app';");
+  expect(site['guides/guide/demo-routes.ts']).not.toContain('LinkDemo');
+  expect(added['guides/guide/demo-routes.ts']).toContain("path: 'LinkDemo',");
+  // Off again, every published byte is what the site had before it opted in.
+  expect(off).toEqual(initial);
+  expect(published(incremental[4])).toEqual(published(incremental[0]));
+}, 240_000);

@@ -1515,3 +1515,129 @@ test('disposing discovery aborts an in-flight native fetch owned by a loader', a
     await new Promise<void>((resolve) => server.close(() => resolve()));
   }
 });
+
+test('demo page options enter the configuration only when they change a default', async () => {
+  const f = fixture();
+  const services = createDiscoveryServices();
+  try {
+    const cases: Array<[string, unknown]> = [
+      ['', undefined],
+      [', isolatedDemos: false', undefined],
+      [', demoApplication: { path: "/demo-preview/" }', { pages: 'all' }],
+      [', demoApplication: true', { pages: 'all' }],
+      [', demoApplication: { path: "previews/live" }', { pages: 'all', path: 'previews/live' }],
+      [', isolatedDemos: true', { pages: 'all', isolated: true }],
+      [', demoApplication: false', { pages: 'none' }],
+    ];
+    const digests = new Set<string>();
+    for (const [options, expected] of cases) {
+      write(f.config, `export default { docsPath: '.docs'${options} };`);
+      const result = await services.discovery.discover(f.request, new AbortController().signal);
+      expect(result.diagnostics, options).toEqual([]);
+      expect(result.value!.configuration.demoApplication, options).toEqual(expected);
+      digests.add(result.value!.configuration.digest);
+    }
+    expect(digests.size).toBe(cases.length);
+
+    write(
+      f.config,
+      `export default { docsPath: '.docs', demoApplication: false, isolatedDemos: true };`,
+    );
+    const off = await services.discovery.discover(f.request, new AbortController().signal);
+    expect(off.value!.configuration.demoApplication).toEqual({ pages: 'none' });
+    expect(off.diagnostics).toEqual([
+      expect.objectContaining({ code: 'DISCOVERY_DEMO_APPLICATION_OFF', severity: 'warning' }),
+    ]);
+  } finally {
+    await services.runtime.dispose();
+  }
+});
+
+test('invalid demo page options fail the configuration', async () => {
+  const f = fixture();
+  const services = createDiscoveryServices();
+  try {
+    for (const [options, code] of [
+      ['isolatedDemos: "yes"', 'DISCOVERY_DEMO_APPLICATION_INVALID'],
+      ['demoApplication: "on"', 'DISCOVERY_DEMO_APPLICATION_INVALID'],
+      ['demoApplication: null', 'DISCOVERY_DEMO_APPLICATION_INVALID'],
+      ['demoApplication: { path: "_demos" }', 'DISCOVERY_DEMO_PATH_INVALID'],
+      ['demoApplication: { path: "demos/.hidden" }', 'DISCOVERY_DEMO_PATH_INVALID'],
+      ['demoApplication: { path: "a/../b" }', 'DISCOVERY_DEMO_PATH_INVALID'],
+      ['demoApplication: { path: "/" }', 'DISCOVERY_DEMO_PATH_INVALID'],
+      ['demoApplication: { path: 42 }', 'DISCOVERY_DEMO_PATH_INVALID'],
+      ['demoProviders: "./demo.providers"', 'DISCOVERY_DEMO_PROVIDERS_INVALID'],
+    ] as const) {
+      write(f.config, `export default { docsPath: '.docs', ${options} };`);
+      const result = await services.discovery.discover(f.request, new AbortController().signal);
+      expect(result.value, options).toBeUndefined();
+      expect(result.diagnostics, options).toEqual([
+        expect.objectContaining({ code, severity: 'error', source: { path: f.config } }),
+      ]);
+    }
+  } finally {
+    await services.runtime.dispose();
+  }
+});
+
+test('demoProviders names its module without bundling or calling it', async () => {
+  const f = fixture();
+  const services = createDiscoveryServices();
+  const module = join(f.root, 'src', 'demo.providers.ts');
+  // Bundled, the import of a package that does not exist would fail the configuration; called,
+  // the module would throw.
+  write(
+    module,
+    `import { provideMissing } from '@angular/not-installed';\nthrow new Error('evaluated');\nexport default [provideMissing()];\n`,
+  );
+  try {
+    for (const form of [
+      `() => import('./src/demo.providers')`,
+      `async () => import("./src/demo.providers")`,
+      `() => { return import('./src/demo.providers'); }`,
+      `() => import('./src/demo.providers.ts')`,
+    ]) {
+      write(f.config, `export default { docsPath: '.docs', demoProviders: ${form} };`);
+      const result = await services.discovery.discover(f.request, new AbortController().signal);
+      expect(result.diagnostics, form).toEqual([]);
+      expect(result.value!.configuration.demoApplication, form).toEqual({ providers: module });
+      // Its existence is a configuration input; its content is not, since only browsers import it.
+      const dependencies = result.dependencies.filter(
+        (item) => 'path' in item && item.path === module,
+      );
+      expect(dependencies, form).toContainEqual({ kind: 'existence', path: module, exists: true });
+      expect(
+        dependencies.some((item) => item.kind === 'content'),
+        form,
+      ).toBe(false);
+    }
+  } finally {
+    await services.runtime.dispose();
+  }
+});
+
+test('demoProviders must be one import of a file that resolves', async () => {
+  const f = fixture();
+  const services = createDiscoveryServices();
+  write(join(f.root, 'src', 'demo.providers.ts'), 'export default [];\n');
+  try {
+    for (const [form, message] of [
+      [`() => import('./src/demo.providers').then((module) => module)`, 'must only import'],
+      [`(path = './src/demo.providers') => import(path)`, 'literal path'],
+      [`() => import('./src/missing')`, 'literal path'],
+      [`() => ({ default: [] })`, 'literal path'],
+    ] as const) {
+      write(f.config, `export default { docsPath: '.docs', demoProviders: ${form} };`);
+      const result = await services.discovery.discover(f.request, new AbortController().signal);
+      expect(result.value, form).toBeUndefined();
+      expect(result.diagnostics, form).toEqual([
+        expect.objectContaining({
+          code: 'DISCOVERY_DEMO_PROVIDERS_IMPORT',
+          message: expect.stringContaining(message),
+        }),
+      ]);
+    }
+  } finally {
+    await services.runtime.dispose();
+  }
+});

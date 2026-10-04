@@ -1,4 +1,4 @@
-import { NgDocHeading, NgDocKeywordsLoader } from '@ng-doc/core';
+import { NgDocDemoProvidersImport, NgDocHeading, NgDocKeywordsLoader } from '@ng-doc/core';
 import { NgDocGlobalKeyword } from '@ng-doc/core/interfaces/keyword-map';
 
 import { NgDocRepoConfig } from './repo-config';
@@ -50,6 +50,26 @@ export interface NgDocConfiguration {
    * The configuration for the API pages. Only the Vite engine reads it.
    */
   api?: NgDocApiConfiguration;
+  /**
+   * Shows every demo of the `demo` action in an iframe, as `isolated: true` does for one demo
+   * (`false` by default). It also builds a demo page for every demo. Only the Vite engine reads it.
+   */
+  isolatedDemos?: boolean;
+  /**
+   * The demo pages: one page per demo that loads only Angular and that demo, which isolated demos
+   * show in an iframe and "Open in new tab" opens. Only the Vite engine builds them.
+   *
+   * By default only the pages with an isolated demo get them. `true` (or an object) builds them for
+   * every page with demos; `false` never builds them, and isolated demos render in the page.
+   */
+  demoApplication?: boolean | NgDocDemoApplicationConfiguration;
+  /**
+   * Imports the module whose default export lists the providers of the demo pages, for example
+   * `() => import('./demo.providers')`. It must be written in `ng-doc.config.ts` as an arrow
+   * function that returns one `import()` of a file. NgDoc never calls it while it generates; the
+   * demo pages import the module. Only the Vite engine reads it.
+   */
+  demoProviders?: NgDocDemoProvidersImport;
   /**
    * Shiki configuration
    */
@@ -122,6 +142,20 @@ export interface NgDocApiConfiguration {
    * anchor, search record or keyword.
    */
   protectedMembers?: boolean;
+}
+
+/**
+ * The configuration of the demo pages.
+ */
+export interface NgDocDemoApplicationConfiguration {
+  /**
+   * The URL path under which the demo pages are served, relative to the base href
+   * (`demo-preview` by default): a demo's page is `<base href><path>/<page route>/<demo name>/`.
+   * One or more URL segments of letters, digits, `-`, `_` and `.`; the first character of a
+   * segment is a letter or a digit, because some static hosts skip folders that start with `_`
+   * or `.`.
+   */
+  path?: string;
 }
 
 /**

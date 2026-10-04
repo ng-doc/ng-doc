@@ -64,6 +64,13 @@ export class PageComponent extends NgDocRootPage {
     {%- if demoAssetsPath %}
   readonly demoAssets: NgDocDemoAssets = demoAssets;
     {%- endif %}
+    {#- The demo pages of the guide (Vite engine), and whether its demos are isolated by default. #}
+    {%- if demoRoute %}
+  readonly demoRoute: string = '{{ demoRoute | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}';
+      {%- if isolatedDemos %}
+  readonly isolatedDemos: boolean = true;
+      {%- endif %}
+    {%- endif %}
 
   constructor() {
     super();

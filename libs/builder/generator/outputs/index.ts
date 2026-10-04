@@ -37,7 +37,66 @@ const STRUCTURAL_TEMPLATES = [
   'routes.ts.nunj',
   'context.ts.nunj',
   'index.ts.nunj',
+  'demo-routes.ts.nunj',
+  'demo-app.ts.nunj',
 ] as const;
+
+/** The default URL path of the demo pages (`demoApplication.path`). */
+const DEFAULT_DEMO_PATH = 'demo-preview';
+/** Demo names that are a URL segment as they are, so a demo page's URL is its name. */
+const DEMO_NAME = /^[A-Za-z0-9_$-]+$/;
+/** A `demo` action and its options, as the content compiler writes them and the HTML pipeline keeps them. */
+const DEMO_ACTION = /<ng-doc-demo\b[^>]*>\s*<div\b[^>]*\bid="options"[^>]*>([^<]*)<\/div>/g;
+
+/**
+ * The demo pages of a configuration, with their defaults.
+ */
+function demoSettings(configuration: GeneratorConfiguration): {
+  pages: 'all' | 'isolated' | 'none';
+  isolated: boolean;
+  path: string;
+  providers?: string;
+} {
+  const settings = configuration.demoApplication;
+  return {
+    pages: settings?.pages ?? 'isolated',
+    isolated: settings?.isolated === true,
+    path: settings?.path ?? DEFAULT_DEMO_PATH,
+    ...(settings?.providers ? { providers: settings.providers } : {}),
+  };
+}
+
+/**
+ * Decodes the character references the HTML pipeline writes in text.
+ */
+function decodeHtmlText(value: string): string {
+  return value.replace(
+    /&(?:#x([0-9a-f]+)|#([0-9]+)|(amp|lt|gt|quot|apos));/gi,
+    (all, hex, dec, name) => {
+      if (hex) return String.fromCodePoint(parseInt(hex, 16));
+      if (dec) return String.fromCodePoint(parseInt(dec, 10));
+      return (
+        { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" }[String(name).toLowerCase()] ?? all
+      );
+    },
+  );
+}
+
+/**
+ * Whether rendered content has a `demo` action with `isolated: true`.
+ */
+function hasIsolatedDemo(html: string | undefined): boolean {
+  for (const match of html?.matchAll(DEMO_ACTION) ?? []) {
+    try {
+      if ((JSON.parse(decodeHtmlText(match[1])) as { isolated?: unknown })?.isolated === true) {
+        return true;
+      }
+    } catch {
+      // Options the runtime can't parse either: the demo renders in the page.
+    }
+  }
+  return false;
+}
 
 export interface PageAssemblyRequest {
   /** Authoritative compiler artifact ID, required when a descriptor plan is supplied. */
@@ -1011,7 +1070,9 @@ export class OutputAssemblerImpl implements OutputAssembler {
           .filter((entry): entry is ApiDescriptor => entry.kind === 'api')
           .map((entry) => apiAssetRoute(entry, request.configuration)),
       });
-      this.renderOutput(outputs, diagnostics, 'index.ts', 'angular', 'index.ts.nunj', {});
+      this.renderOutput(outputs, diagnostics, 'index.ts', 'angular', 'index.ts.nunj', {
+        demoApplication: this.demoApplication(request, records, outputs, diagnostics),
+      });
 
       const searchPath = joinOutput(request.configuration.assetDirectory, 'indexes.json');
       const keywordPath = joinOutput(request.configuration.assetDirectory, 'keywords.json');
@@ -1083,6 +1144,8 @@ export class OutputAssemblerImpl implements OutputAssembler {
     const wrapperPath = joinOutput(directory, 'page.ts')!;
     const demoPath = joinOutput(directory, 'demo-assets.ts')!;
     const playgroundPath = joinOutput(directory, 'playgrounds.ts')!;
+    const demoPages = this.demoRoutes(request, directory, [header!, ...tabs], outputs, diagnostics);
+    const demoSettingsOfPage = demoSettings(request.configuration);
     const tabEntries: Record<string, { route: string; title: string; entry: { icon?: string } }> =
       {};
     for (const tab of tabs) {
@@ -1113,6 +1176,12 @@ export class OutputAssemblerImpl implements OutputAssembler {
           pageType: 'guide',
           entryPath: request.entry.runtimeImport.source,
           entryHasImports: request.entry.hasImports,
+          ...(demoPages
+            ? {
+                demoRoute: `${demoSettingsOfPage.path}/${request.entry.absoluteRoute}`,
+                isolatedDemos: demoSettingsOfPage.isolated,
+              }
+            : {}),
           demoAssetsPath: resolve(request.configuration.outputRoot, demoPath),
           playgroundsPath: resolve(request.configuration.outputRoot, playgroundPath),
         },
@@ -1211,7 +1280,65 @@ export class OutputAssemblerImpl implements OutputAssembler {
       ...(request.entry.hidden === undefined ? {} : { hidden: request.entry.hidden }),
       ...(request.metadata ? { metadata: request.metadata } : {}),
       modulePath: wrapperPath,
+      ...(demoPages ? { demoModulePath: demoPages.path, demoNames: demoPages.names } : {}),
     });
+  }
+
+  /**
+   * Writes the guide's demo routes module (one route per demo, under the page's own providers)
+   * when the guide gets demo pages: with `pages: 'all'`, or by default when its content has a demo
+   * with `isolated: true`. Returns its path and the names of the demos that got a page, or
+   * undefined.
+   */
+  private demoRoutes(
+    request: PageAssemblyRequest & { entry: GuideDescriptor },
+    directory: string,
+    slots: Array<{ linked?: LinkedContent }>,
+    outputs: Map<string, FileOutput>,
+    diagnostics: Diagnostic[],
+  ): { path: string; names: string[] } | undefined {
+    const settings = demoSettings(request.configuration);
+    const names = Object.keys(request.semantics?.demos ?? {});
+    if (
+      settings.pages === 'none' ||
+      !names.length ||
+      (settings.pages === 'isolated' && !slots.some((slot) => hasIsolatedDemo(slot.linked?.html)))
+    ) {
+      return undefined;
+    }
+    const demos = names.filter((name) => {
+      if (DEMO_NAME.test(name)) return true;
+      diagnostics.push({
+        ...diagnostic(
+          'OUTPUT_DEMO_NAME_INVALID',
+          `Demo ${JSON.stringify(name)} has no demo page: a demo name must be letters, digits, '_', '$' or '-' to be its page's URL segment.`,
+          request.entry.id,
+        ),
+        severity: 'warning',
+      });
+      return false;
+    });
+    const path = joinOutput(directory, 'demo-routes.ts');
+    if (!path || !demos.length) return undefined;
+    this.renderOutput(
+      outputs,
+      diagnostics,
+      path,
+      'angular',
+      'demo-routes.ts.nunj',
+      {
+        entryImport: moduleSpecifier(
+          dirname(resolve(request.configuration.outputRoot, path)),
+          request.entry.runtimeImport.source,
+        ),
+        demos: demos.map((name) => ({
+          name,
+          title: `${request.entry.title}: ${name}`,
+        })),
+      },
+      request.entry.id,
+    );
+    return outputs.has(path) ? { path, names: demos } : undefined;
   }
 
   private apiEntry(
@@ -1471,6 +1598,58 @@ export class OutputAssemblerImpl implements OutputAssembler {
       diagnostics,
       ownerId,
     );
+  }
+
+  /**
+   * Writes `demo-app.ts`, the routes of the demo application (one lazy route per guide with demo
+   * pages, under its categories' providers) and its `demoProviders` import, when a guide has demo
+   * pages. Returns whether it did.
+   */
+  private demoApplication(
+    request: AggregateRequest,
+    records: RouteRecord[],
+    outputs: Map<string, FileOutput>,
+    diagnostics: Diagnostic[],
+  ): boolean {
+    const settings = demoSettings(request.configuration);
+    const outputRoot = resolve(request.configuration.outputRoot);
+    const entries = new Map(request.entries.map((entry) => [entry.id, entry]));
+    const categories = new Map<string, string>();
+    const pages = records
+      .filter((record) => record.demoModulePath && entries.get(record.id)?.kind === 'guide')
+      .map((record) => {
+        const chain: string[] = [];
+        for (
+          let parent = entries.get(record.id)?.parentId;
+          parent !== undefined;
+          parent = entries.get(parent)?.parentId
+        ) {
+          const category = entries.get(parent);
+          if (category?.kind !== 'category') break;
+          const identifier = categoryIdentifier(request.configuration.projectId, category.id);
+          categories.set(identifier, moduleSpecifier(outputRoot, category.runtimeImport.source));
+          chain.unshift(identifier);
+        }
+        const route = `${settings.path}/${entries.get(record.id)!.absoluteRoute}`;
+        return {
+          path: route,
+          demos: (record.demoNames ?? []).map((name) => `${route}/${name}`),
+          categories: chain,
+          importPath: moduleSpecifier(outputRoot, resolve(outputRoot, record.demoModulePath!)),
+        };
+      })
+      .sort((left, right) => (left.path < right.path ? -1 : left.path > right.path ? 1 : 0));
+    if (!pages.length) return false;
+    this.renderOutput(outputs, diagnostics, 'demo-app.ts', 'routes', 'demo-app.ts.nunj', {
+      demoPath: settings.path,
+      demoPages: pages.flatMap((page) => page.demos),
+      pages,
+      categories: [...categories].sort(([left], [right]) => (left < right ? -1 : 1)),
+      ...(settings.providers
+        ? { providersImport: moduleSpecifier(outputRoot, settings.providers) }
+        : {}),
+    });
+    return true;
   }
 
   private renderOutput(

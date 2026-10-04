@@ -1,0 +1,23 @@
+// @ts-nocheck
+import {Routes} from '@angular/router';
+import {NgDocDemoHostComponent} from '@ng-doc/app/demo-app';
+import entry from '{{ entryImport }}';
+
+// The demo pages of one guide: one route per demo, under the page's providers, as the demos have
+// them on the page.
+const routes: Routes = [{
+  path: '',
+  providers: [...(entry.providers ?? [])],
+  children: [
+    {%- for demo in demos %}
+    {
+      path: '{{ demo.name }}',
+      component: NgDocDemoHostComponent,
+      title: `{{ demo.title | toTemplateString }}`,
+      data: {ngDocDemo: entry.demos?.['{{ demo.name }}']},
+    },
+    {%- endfor %}
+  ],
+}];
+
+export default routes;
