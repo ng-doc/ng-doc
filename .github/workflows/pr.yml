@@ -615,6 +615,38 @@ jobs:
           include-hidden-files: true
           retention-days: 3
 
+  packed-vite:
+    name: Packed Vite consumer
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/nodejs
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: packages
+          path: dist/libs
+      # The packed harnesses refuse packages that were not built from this checkout.
+      - name: Expect the packages built from this checkout
+        shell: bash
+        run: node -p '"NGDOC_EXPECTED_SOURCE_DIGEST=" + require("./dist/libs/builder/generator/build-provenance.json").sourceDigest' >> "$GITHUB_ENV"
+      # Server-side rendering only, so no browser.
+      - name: Tarball install, NodeNext declarations, Analog build and SSR
+        env:
+          NGDOC_PACKED_EVIDENCE: ${{ runner.temp }}/packed-vite
+        run: node libs/builder/generator/acceptance/vite-packed/run.mjs
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
+        with:
+          name: packed-vite
+          path: ${{ runner.temp }}/packed-vite
+          if-no-files-found: ignore
+          include-hidden-files: true
+          retention-days: 3
+
   packed-interruption:
     name: Packed consumer interruption cleanup
     needs: build
@@ -720,6 +752,7 @@ jobs:
       - runtime-links
       - packed-consumer
       - packed-optional
+      - packed-vite
       - packed-interruption
       - ng-add-e2e
     runs-on: ubuntu-latest

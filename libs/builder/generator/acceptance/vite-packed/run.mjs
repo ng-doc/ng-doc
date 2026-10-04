@@ -57,6 +57,34 @@ async function put(relative, content) {
   return target;
 }
 
+/**
+ * Every published entry point of the installed runtime packages: the `exports` subpaths of
+ * @ng-doc/app and @ng-doc/ui-kit that have declarations, and @ng-doc/core's root, its directory
+ * indexes and its declaration files, imported the way consumers do (without an extension).
+ */
+async function publishedDeclarationImports() {
+  const imports = [];
+  for (const name of ['app', 'ui-kit']) {
+    const manifest = JSON.parse(
+      await readFile(path.join(consumer, 'node_modules/@ng-doc', name, 'package.json'), 'utf8'),
+    );
+    for (const [subpath, target] of Object.entries(manifest.exports ?? {}))
+      if (typeof target === 'object' && target.types && !subpath.includes('*'))
+        imports.push(`@ng-doc/${name}${subpath.slice(1)}`);
+  }
+  const core = path.join(consumer, 'node_modules/@ng-doc/core');
+  for (const file of (await readdir(core, { recursive: true })).map(String).sort()) {
+    if (!file.endsWith('.d.ts') || file.split(path.sep).includes('node_modules')) continue;
+    const subpath = file.slice(0, -'.d.ts'.length).split(path.sep).join('/');
+    if (subpath === 'index') imports.push('@ng-doc/core');
+    else if (subpath.endsWith('/index')) imports.push(`@ng-doc/core/${subpath.slice(0, -6)}`);
+    else imports.push(`@ng-doc/core/${subpath}`);
+  }
+  assert.ok(imports.includes('@ng-doc/app') && imports.includes('@ng-doc/ui-kit'));
+  assert.ok(imports.includes('@ng-doc/core/interfaces'));
+  return imports;
+}
+
 try {
   const packageNames = ['builder', 'core', 'utils', 'app', 'ui-kit'];
   for (const name of packageNames) {
@@ -102,6 +130,13 @@ try {
   const provenance = JSON.parse(
     await readFile(path.join(snapshot, 'builder/generator/build-provenance.json'), 'utf8'),
   );
+  // CI passes the digest of the packages built from its checkout; refuse any other build.
+  if (process.env.NGDOC_EXPECTED_SOURCE_DIGEST)
+    assert.equal(
+      provenance.sourceDigest,
+      process.env.NGDOC_EXPECTED_SOURCE_DIGEST,
+      'the packed builder does not match NGDOC_EXPECTED_SOURCE_DIGEST',
+    );
   summary.provenance = {
     sourceDigest: provenance.sourceDigest,
     compilerVersion: provenance.compilerVersion,
@@ -273,6 +308,67 @@ export default {
   );
   summary.checks.push(
     'public generator/vite JavaScript entry and declaration file resolve in packed consumer',
+  );
+  const declarationImports = await publishedDeclarationImports();
+  await put(
+    'published-declarations.ts',
+    declarationImports
+      .map((specifier, index) => `import type * as m${index} from '${specifier}';\n`)
+      .join('') + `export type All = [${declarationImports.map((_, i) => `typeof m${i}`)}];\n`,
+  );
+  // The legacy builder requires @ng-doc/core from CommonJS, so its subpaths must also resolve
+  // under the `require` condition.
+  const coreImports = declarationImports.filter((specifier) =>
+    specifier.startsWith('@ng-doc/core'),
+  );
+  await put(
+    'published-declarations.cts',
+    coreImports
+      .map((specifier, index) => `import type * as c${index} from '${specifier}';\n`)
+      .join('') + `export type All = [${coreImports.map((_, i) => `typeof c${i}`)}];\n`,
+  );
+  // No skipLibCheck: an unresolved import inside a published declaration file is reported only
+  // when declaration files are checked. Third-party declarations (Mermaid's, which need @types/d3)
+  // are not NgDoc's to fix, so only diagnostics in NgDoc's packages and in the probes count.
+  const typecheck = await run(
+    path.join(consumer, 'node_modules/.bin/tsc'),
+    [
+      '--ignoreConfig',
+      '--noEmit',
+      '--strict',
+      '--module',
+      'nodenext',
+      '--moduleResolution',
+      'nodenext',
+      '--target',
+      'es2022',
+      '--lib',
+      'esnext,dom',
+      'published-declarations.ts',
+      'published-declarations.cts',
+    ],
+    consumer,
+    'published-declarations-typecheck',
+  ).then(
+    () => 'passed',
+    () => 'failed',
+  );
+  const typecheckLog = await readFile(
+    path.join(evidence, 'published-declarations-typecheck.log'),
+    'utf8',
+  );
+  const ngDocErrors = typecheckLog
+    .split('\n')
+    .filter((line) =>
+      /^(?:published-declarations\.c?ts|node_modules\/@ng-doc\/)[^(]*\(\d+,\d+\): error TS/.test(
+        line,
+      ),
+    );
+  assert.deepEqual(ngDocErrors, [], 'NgDoc declarations fail to type-check under NodeNext');
+  if (typecheck === 'failed')
+    assert.match(typecheckLog, /: error TS\d+/, 'tsc failed without diagnostics');
+  summary.checks.push(
+    `${declarationImports.length} entry points of @ng-doc/app, @ng-doc/ui-kit and @ng-doc/core, declarations included, type-check under NodeNext`,
   );
   await run(path.join(consumer, 'node_modules/.bin/vite'), ['build'], consumer, 'analog-aot-build');
   const generated = await readFile(path.join(consumer, 'generated/index.ts'), 'utf8');

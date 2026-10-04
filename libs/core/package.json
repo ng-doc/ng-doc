@@ -22,6 +22,37 @@
   "license": "MIT",
   "type": "commonjs",
   "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./package.json": "./package.json",
+    "./classes": {
+      "types": "./classes/index.d.ts",
+      "default": "./classes/index.js"
+    },
+    "./constants": {
+      "types": "./constants/index.d.ts",
+      "default": "./constants/index.js"
+    },
+    "./helpers": {
+      "types": "./helpers/index.d.ts",
+      "default": "./helpers/index.js"
+    },
+    "./interfaces": {
+      "types": "./interfaces/index.d.ts",
+      "default": "./interfaces/index.js"
+    },
+    "./types": {
+      "types": "./types/index.d.ts",
+      "default": "./types/index.js"
+    },
+    "./*": {
+      "types": "./*.d.ts",
+      "default": "./*.js"
+    }
+  },
   "dependencies": {
     "posthtml-render": "3.0.0",
     "posthtml-parser": "0.11.0",
