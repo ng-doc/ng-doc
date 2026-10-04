@@ -1,3 +1,5 @@
+import { EnvironmentProviders, Provider } from '@angular/core';
+
 export interface NgDocBaseDemoOptions {
   /**
    * Opens the demo on its code (false by default): a `demo` starts on a source file instead of the
@@ -30,9 +32,30 @@ export interface NgDocBaseDemoOptions {
 export interface NgDocDemoActionOptions extends NgDocBaseDemoOptions {
   /** Display demo in the container (true by default) */
   container?: boolean;
+  /**
+   * Shows the demo in an iframe that loads only Angular and the demo, instead of rendering it in
+   * the page: the preview widths become real viewport widths (media queries respond) and the
+   * page's styles and providers don't reach the demo. The default is `isolatedDemos` of
+   * `ng-doc.config.ts` (`false`). Only the Vite engine builds the demo pages; elsewhere the demo
+   * renders in the page.
+   */
+  isolated?: boolean;
 }
 
 /**
  * Possible options for `demoPane` action
  */
 export type NgDocDemoPaneActionOptions = NgDocBaseDemoOptions;
+
+/**
+ * The providers of the demo application, which shows isolated demos: what the module named by
+ * `demoProviders` in `ng-doc.config.ts` exports by default.
+ */
+export type NgDocDemoProviders = Array<Provider | EnvironmentProviders>;
+
+/**
+ * Imports the module that provides the demo application's providers, written as
+ * `() => import('./demo.providers')`. NgDoc never calls it while it generates: the demo
+ * application imports the module in the browser and on the server.
+ */
+export type NgDocDemoProvidersImport = () => Promise<{ default: NgDocDemoProviders }>;
