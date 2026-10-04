@@ -13,4 +13,10 @@ export interface NgDocPlaygroundProperty {
   options?: string[];
   /** Determines if the property is manually added by the user */
   isManual?: boolean;
+  /** The name shown in the inspector instead of `inputName`, from the playground's `controls` */
+  label?: string;
+  /** The group the inspector lists the property under, from the playground's `controls` */
+  group?: string;
+  /** The position of the property in the inspector, from the playground's `controls` */
+  order?: number;
 }

@@ -18,7 +18,8 @@ export type NgDocTypeControlField<T> = T | Signal<T | undefined>;
  */
 export interface NgDocTypeControl<T = unknown> extends ControlValueAccessor {
   /**
-   * The name of the input for which it is created
+   * The name of the input for which it is created, or the `label` that the playground's
+   * `controls` give it
    */
   name?: NgDocTypeControlField<string>;
   /**

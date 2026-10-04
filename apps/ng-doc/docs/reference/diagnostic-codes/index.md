@@ -79,7 +79,7 @@ These codes point to a problem in your files or setup. The linked entries explai
 | `SEMANTIC_DEMO_OBJECT`         | error    | A page's `demos` isn't an object literal that maps names to component classes.                                           |
 | `SEMANTIC_PLAYGROUNDS_OBJECT`  | error    | A page's `playgrounds` isn't an object literal.                                                                          |
 | `SEMANTIC_PLAYGROUND_OBJECT`   | error    | A playground isn't a named property, or its configuration can't be resolved.                                             |
-| `SEMANTIC_CONTROLS_SHAPE`      | error    | An entry in a playground's `controls` is neither a type name nor an object with a `type`.                                |
+| `SEMANTIC_CONTROLS_SHAPE`      | error    | A `controls` entry isn't a type name or an object, its `type` isn't text, or it has no `type` and names no input.        |
 | `SEMANTIC_DECLARATION_PATH`    | error    | An `NgDocApi` or `JSDoc` path isn't in the form `path/to/file.ts#ExportName`.                                            |
 | `SEMANTIC_DECLARATION_MISSING` | error    | The declaration in such a path doesn't exist.                                                                            |
 | `SEMANTIC_ROUTE_COLLISION`     | error    | Two API declarations need the same route.                                                                                |

@@ -413,3 +413,88 @@ describeChangeDetection(
     });
   },
 );
+
+/** Inputs with the `label`, `group` and `order` of the playground's `controls`. */
+const GROUPED_PROPERTIES: NgDocPlaygroundProperties = {
+  primaryColor: {
+    type: 'string',
+    inputName: 'primaryColor',
+    label: 'Primary color',
+    group: 'Colors',
+    order: 2,
+  },
+  accentColor: { type: 'string', inputName: 'accentColor', group: 'Colors', order: 1 },
+  rounded: { type: 'boolean', inputName: 'rounded', label: 'Rounded corners', group: 'Shape' },
+  title: { type: 'string', inputName: 'title' },
+  subtitle: { type: 'string', inputName: 'subtitle', order: 3 },
+};
+
+@Component({
+  selector: 'ng-doc-grouped-properties-host',
+  template: `<ng-doc-playground-properties
+    [form]="form"
+    [properties]="properties"
+    [defaultValues]="{}" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgDocPlaygroundPropertiesComponent],
+})
+class GroupedPropertiesHostComponent {
+  readonly properties: NgDocPlaygroundProperties = GROUPED_PROPERTIES;
+  readonly form = new FormGroup<NgDocPlaygroundForm>({
+    properties: new FormGroup<Record<string, FormControl<unknown>>>(
+      Object.fromEntries(
+        Object.keys(GROUPED_PROPERTIES).map((key: string) => [key, new FormControl<unknown>(null)]),
+      ),
+    ),
+    content: new FormGroup<Record<string, FormControl<boolean>>>({}),
+  });
+}
+
+describeChangeDetection(
+  'NgDocPlaygroundPropertiesComponent with labels, groups and orders',
+  ({ providers }: ChangeDetectionCase) => {
+    let fixture: ComponentFixture<GroupedPropertiesHostComponent>;
+
+    beforeEach(async () => {
+      TestBed.configureTestingModule({
+        providers: [
+          ...providers,
+          provideTypeControl('string', NgDocStringControlComponent, { order: 20 }),
+          provideTypeControl('boolean', NgDocBooleanControlComponent, {
+            hideLabel: true,
+            order: 40,
+          }),
+        ],
+      });
+      fixture = TestBed.createComponent(GroupedPropertiesHostComponent);
+      await fixture.whenStable();
+      await fixture.whenStable();
+    });
+
+    it('lists the inputs without a group first, then each group under its name', () => {
+      const sections = Array.from(
+        fixture.nativeElement.querySelectorAll('h5.ng-doc-title'),
+        (heading: Element) => ({
+          title: heading.textContent?.trim(),
+          rows: Array.from(
+            heading.nextElementSibling?.querySelectorAll('ng-doc-playground-property') ?? [],
+            (row: Element) =>
+              (
+                row.querySelector('.ng-doc-playground-property-name') ??
+                row.querySelector('ng-doc-boolean-control')
+              )?.textContent?.trim(),
+          ),
+        }),
+      );
+
+      expect(sections).toEqual([
+        // An order comes first; the others keep the order of their controls, then their names.
+        { title: 'Settings', rows: ['subtitle', 'title'] },
+        // A group takes the place of its first input, and its inputs are ordered the same way.
+        { title: 'Colors', rows: ['accentColor', 'Primary color'] },
+        // The label is also the name a control shows itself.
+        { title: 'Shape', rows: ['Rounded corners'] },
+      ]);
+    });
+  },
+);

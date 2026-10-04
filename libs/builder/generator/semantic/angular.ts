@@ -1,5 +1,6 @@
 import {
   type NgDocPlaygroundProperties,
+  type NgDocPlaygroundProperty,
   buildPlaygroundDemoPipeTemplate,
   buildPlaygroundDemoTemplate,
   getAssignedInputs,
@@ -114,34 +115,70 @@ export function literal(node: Node | undefined): JsonValue {
   );
 }
 
-function controlsToProperties(controls: Record<string, JsonValue>): NgDocPlaygroundProperties {
-  return Object.fromEntries(
-    Object.entries(controls).map(([name, value]) => {
-      if (typeof value === 'string') {
-        return [name, { inputName: name, type: value, isManual: true }];
-      }
-      if (!value || typeof value !== 'object' || Array.isArray(value)) {
-        throw new SemanticFailure('SEMANTIC_CONTROLS_SHAPE', `Invalid control ${name}`);
-      }
-      const type = value.type;
-      if (typeof type !== 'string') {
-        throw new SemanticFailure('SEMANTIC_CONTROLS_SHAPE', `Invalid control ${name}`);
-      }
-      return [
-        name,
-        {
-          inputName: typeof value.alias === 'string' ? value.alias : name,
-          type,
-          ...(typeof value.description === 'string' ? { description: value.description } : {}),
-          ...(Array.isArray(value.options) &&
-          value.options.every((item) => typeof item === 'string')
-            ? { options: value.options as string[] }
-            : {}),
-          isManual: true,
-        },
-      ];
-    }),
-  );
+/**
+ * The fields of a `controls` entry that only change how the inspector shows an input's row.
+ * @param value - The entry.
+ */
+function displayFields(
+  value: Record<string, JsonValue>,
+): Pick<NgDocPlaygroundProperty, 'label' | 'group' | 'order'> {
+  return {
+    ...(typeof value.label === 'string' ? { label: value.label } : {}),
+    ...(typeof value.group === 'string' ? { group: value.group } : {}),
+    ...(typeof value.order === 'number' && Number.isFinite(value.order)
+      ? { order: value.order }
+      : {}),
+  };
+}
+
+/**
+ * Applies a playground's `controls` to the properties read from its target. A type name, or an
+ * entry with a `type`, replaces (or adds) the property; an entry without a `type` keeps the
+ * control chosen for an input of the target and changes only how its row is shown.
+ * @param properties - The properties read from the target, changed in place.
+ * @param controls - The playground's `controls`, as JSON.
+ */
+function applyControls(
+  properties: NgDocPlaygroundProperties,
+  controls: Record<string, JsonValue>,
+): void {
+  for (const [name, value] of Object.entries(controls)) {
+    if (typeof value === 'string') {
+      properties[name] = { inputName: name, type: value, isManual: true };
+      continue;
+    }
+    if (!value || typeof value !== 'object' || Array.isArray(value)) {
+      throw new SemanticFailure('SEMANTIC_CONTROLS_SHAPE', `Invalid control ${name}`);
+    }
+    const type = value.type;
+    if (type === undefined) {
+      const detected = properties[name];
+      if (!detected)
+        throw new SemanticFailure(
+          'SEMANTIC_CONTROLS_SHAPE',
+          `Control ${name} has no type, and the target has no input ${name} to keep the control of`,
+        );
+      properties[name] = {
+        ...detected,
+        ...(typeof value.description === 'string' ? { description: value.description } : {}),
+        ...displayFields(value),
+      };
+      continue;
+    }
+    if (typeof type !== 'string') {
+      throw new SemanticFailure('SEMANTIC_CONTROLS_SHAPE', `Invalid control ${name}`);
+    }
+    properties[name] = {
+      inputName: typeof value.alias === 'string' ? value.alias : name,
+      type,
+      ...(typeof value.description === 'string' ? { description: value.description } : {}),
+      ...(Array.isArray(value.options) && value.options.every((item) => typeof item === 'string')
+        ? { options: value.options as string[] }
+        : {}),
+      isManual: true,
+      ...displayFields(value),
+    };
+  }
 }
 
 function assets(
@@ -297,7 +334,7 @@ export function guideSemantics(
           'SEMANTIC_CONTROLS_SHAPE',
           `Controls for ${id} must be a JSON object`,
         );
-      Object.assign(properties, controlsToProperties(controls as Record<string, JsonValue>));
+      applyControls(properties, controls as Record<string, JsonValue>);
       for (const [key, value] of Object.entries(properties)) {
         if (!value || typeof value !== 'object' || typeof value.type !== 'string')
           throw new SemanticFailure('SEMANTIC_CONTROLS_SHAPE', `Invalid control ${id}.${key}`);

@@ -31,12 +31,12 @@
           </div>
         }
         <div class="ng-doc-playground-divider"></div>
-        @if (propertyControls().length) {
-          <h5 class="ng-doc-title">Settings</h5>
+        @for (section of propertySections(); track $index) {
+          <h5 class="ng-doc-title">{{ section.title }}</h5>
           <div class="ng-doc-playground-property-list">
-            @for (propertyControl of propertyControls(); track propertyControl.propertyName) {
+            @for (propertyControl of section.controls; track propertyControl.propertyName) {
               <ng-doc-playground-property
-                [name]="propertyControl.property.inputName"
+                [name]="propertyControl.property.label ?? propertyControl.property.inputName"
                 [property]="propertyControl.property"
                 [typeControl]="propertyControl.typeControl"
                 [defaultValue]="defaultValues[propertyControl.propertyName]"

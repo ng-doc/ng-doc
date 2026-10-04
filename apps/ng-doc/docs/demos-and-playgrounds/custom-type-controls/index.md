@@ -56,7 +56,7 @@ ones you need, as signal inputs or as plain fields:
 
 | Field         | Type                    | Value                                                                             |
 | ------------- | ----------------------- | --------------------------------------------------------------------------------- |
-| `name`        | `string`                | The name of the input.                                                            |
+| `name`        | `string`                | The name of the input, or its `label` from the `controls` of the playground.      |
 | `description` | `string`                | The description of the input, from its doc comment, as HTML.                      |
 | `default`     | the type of the control | The default value of the input.                                                   |
 | `options`     | `string[]`              | The members of the input's union type, as written in code, such as `"'small'"`.   |

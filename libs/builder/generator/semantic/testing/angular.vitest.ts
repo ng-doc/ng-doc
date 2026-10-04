@@ -320,6 +320,48 @@ test('evaluated manual controls retain dependencies and assigned inputs are remo
   });
 });
 
+test('controls label, group and order rows, and an entry without a type keeps the detected control', async () => {
+  write(
+    'entry.ts',
+    `import { Demo } from './demo'; export default {playgrounds:{x:{target:Demo,template:'<demo-box></demo-box>',controls:{
+      title: { label: 'Title', group: 'Text', order: 2, description: 'Shown above' },
+      count: { type: 'number', label: 'Amount', group: 'Numbers', order: 1, alias: 'amount' },
+      inherited: { label: 3, group: null, order: 'first' },
+    }}}};`,
+  );
+  await sync();
+  const result = service.describeGuide('guide');
+  expect(result.diagnostics).toEqual([]);
+  const properties = result.value!.playgrounds[0].properties;
+  // The detected union keeps its type and options; the entry adds the row's presentation.
+  expect(properties.title).toEqual({
+    inputName: 'caption',
+    type: "'large' | 'small'",
+    description: 'Shown above',
+    options: ["'small'", "'large'"],
+    label: 'Title',
+    group: 'Text',
+    order: 2,
+  });
+  // An entry with a type replaces the control, as before, and carries the same fields.
+  expect(properties.count).toEqual({
+    inputName: 'amount',
+    type: 'number',
+    isManual: true,
+    label: 'Amount',
+    group: 'Numbers',
+    order: 1,
+  });
+  // Values of the wrong type are left out, like the other optional fields.
+  expect(Object.keys(properties.inherited as object).sort()).toEqual([
+    'description',
+    'inputName',
+    'options',
+    'type',
+  ]);
+  expect(JSON.parse(JSON.stringify(result))).toEqual(result);
+});
+
 test('composes the real discovery values reader without a pre-normalized controls DTO', async () => {
   const docs = join(directory, '.docs');
   mkdirSync(docs);
@@ -459,6 +501,14 @@ test.each([
   ],
   [
     "import {Demo} from './demo';export default {playgrounds:{x:{target:Demo,template:'<demo-box></demo-box>',controls:{bad:null}}}}",
+    'SEMANTIC_CONTROLS_SHAPE',
+  ],
+  [
+    "import {Demo} from './demo';export default {playgrounds:{x:{target:Demo,template:'<demo-box></demo-box>',controls:{missing:{label:'Missing'}}}}}",
+    'SEMANTIC_CONTROLS_SHAPE',
+  ],
+  [
+    "import {Demo} from './demo';export default {playgrounds:{x:{target:Demo,template:'<demo-box></demo-box>',controls:{bad:{type:1}}}}}",
     'SEMANTIC_CONTROLS_SHAPE',
   ],
 ])('invalid guide %s returns structured diagnostic', async (text, code) => {

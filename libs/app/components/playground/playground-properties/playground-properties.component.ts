@@ -119,21 +119,31 @@ export class NgDocPlaygroundPropertiesComponent<
         return typeControl ? { propertyName: String(key), property, typeControl } : null;
       })
       .filter(isPresent)
-      .sort((a: NgDocPlaygroundPropertyControl, b: NgDocPlaygroundPropertyControl) => {
-        const aOrder: number | undefined = a.typeControl.options?.order;
-        const bOrder: number | undefined = b.typeControl.options?.order;
+      .sort(
+        (a: NgDocPlaygroundPropertyControl, b: NgDocPlaygroundPropertyControl) =>
+          compareOrder(a.property.order, b.property.order) ?? compareByTypeControl(a, b),
+      );
+  });
 
-        if (isPresent(aOrder) && isPresent(bOrder)) {
-          return aOrder - bOrder;
-        }
-        if (isPresent(aOrder)) {
-          return -1;
-        }
-        if (isPresent(bOrder)) {
-          return 1;
-        }
-        return INPUT_ORDER.compare(a.property.inputName, b.property.inputName);
-      });
+  /**
+   * The controls in sections: the inputs without a group first, then a section per group, in the
+   * order of the group's first input.
+   */
+  protected readonly propertySections: Signal<NgDocPlaygroundPropertySection[]> = computed(() => {
+    const sections = new Map<string | undefined, NgDocPlaygroundPropertyControl[]>([
+      [undefined, []],
+    ]);
+
+    for (const control of this.propertyControls()) {
+      const group: string | undefined = control.property.group || undefined;
+
+      sections.set(group, [...(sections.get(group) ?? []), control]);
+    }
+
+    return Array.from(sections, ([group, controls]) => ({
+      title: group ?? 'Settings',
+      controls,
+    })).filter((section: NgDocPlaygroundPropertySection) => section.controls.length > 0);
   });
 
   /** The control of content slots. */
@@ -201,6 +211,57 @@ export class NgDocPlaygroundPropertiesComponent<
 
     return undefined;
   }
+}
+
+/** A titled list of controls in the inspector. */
+interface NgDocPlaygroundPropertySection {
+  title: string;
+  controls: NgDocPlaygroundPropertyControl[];
+}
+
+/**
+ * Compares the `order` of two inputs from the playground's `controls`: inputs with one come first,
+ * lowest first.
+ * @param a - The first input's order.
+ * @param b - The second input's order.
+ * @returns The comparison, or `undefined` when neither input has an order or both have the same.
+ */
+function compareOrder(a: number | undefined, b: number | undefined): number | undefined {
+  if (isPresent(a) && isPresent(b)) {
+    return a - b || undefined;
+  }
+  if (isPresent(a)) {
+    return -1;
+  }
+  if (isPresent(b)) {
+    return 1;
+  }
+  return undefined;
+}
+
+/**
+ * Compares two inputs by the order of their type controls: controls with an order first, lowest
+ * first (equal orders keep the inputs' order), then the others by name.
+ * @param a - The first input.
+ * @param b - The second input.
+ */
+function compareByTypeControl(
+  a: NgDocPlaygroundPropertyControl,
+  b: NgDocPlaygroundPropertyControl,
+): number {
+  const aOrder: number | undefined = a.typeControl.options?.order;
+  const bOrder: number | undefined = b.typeControl.options?.order;
+
+  if (isPresent(aOrder) && isPresent(bOrder)) {
+    return aOrder - bOrder;
+  }
+  if (isPresent(aOrder)) {
+    return -1;
+  }
+  if (isPresent(bOrder)) {
+    return 1;
+  }
+  return INPUT_ORDER.compare(a.property.inputName, b.property.inputName);
 }
 
 /** The types whose control also edits an optional or nullable input of the type. */

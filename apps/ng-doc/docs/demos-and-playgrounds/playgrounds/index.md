@@ -318,6 +318,32 @@ An entry in `controls` also replaces the control that NgDoc chose for an input o
 type `NgDocTypeAlias` shows a list of `options`; a type registered with `provideTypeControl` shows
 your control.
 
+## Labels, groups and order
+
+An entry in `controls` can also change how the inspector shows a row. Leave out `type` to keep the
+control NgDoc chose for the input:
+
+```typescript name="ng-doc.page.ts"
+controls: {
+  primaryColor: { label: 'Primary color', group: 'Colors', order: 1 },
+  accentColor: { label: 'Accent color', group: 'Colors', order: 2 },
+  rounded: { label: 'Rounded corners', group: 'Shape' },
+},
+```
+
+- `label: '…'` replaces the input's name in the row. A control that shows the name itself, such
+  as the checkbox of a `boolean`, shows the label too.
+- `group: '…'` lists the inputs of a group together, under its name. Inputs without a group stay
+  under **Settings**, above the groups. The groups follow the order of their first input.
+- `order: <number>` puts the input before the inputs without one, lowest first. The others keep
+  the order of their controls (`*CustomTypeControlsPage#options`), then their names.
+
+An entry with a `type` takes the same fields.
+
+> **Warning**
+> Only the new engine reads these fields. The legacy builders ignore them, and an entry without a
+> `type` leaves the input's row as it is (`*LegacyBuildersPage`).
+
 ## 🚧 Gotchas
 
 > **Warning**
