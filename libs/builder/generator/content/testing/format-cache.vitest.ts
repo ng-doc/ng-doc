@@ -361,9 +361,13 @@ describe('the format cache switch', () => {
   it('creates a session with a pack only for development with the cache', () => {
     const configuration = { cacheEnabled: true, cacheRoot: '/cache' };
     const development = { mode: 'development' as const };
-    expect(createFormatSession({ projectId: 'p' }, development, configuration)?.pack).toMatch(
-      /^\/cache\/[0-9a-f]+\.format\.json$/,
-    );
+    // The pack path is joined with the platform's separator (backslashes on Windows).
+    expect(
+      createFormatSession({ projectId: 'p' }, development, configuration)?.pack?.replaceAll(
+        '\\',
+        '/',
+      ),
+    ).toMatch(/^\/cache\/[0-9a-f]+\.format\.json$/);
     expect(
       createFormatSession({ projectId: 'p' }, { mode: 'production' }, configuration)?.pack,
     ).toBeUndefined();
