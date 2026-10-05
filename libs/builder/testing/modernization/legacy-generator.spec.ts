@@ -91,7 +91,8 @@ function run(root: string, outDir: string, cache: boolean = false): Capture {
   const result = spawnSync(node, [child, root, outDir], {
     cwd: root,
     encoding: 'utf8',
-    timeout: 14_000,
+    // Above the child's 30 s readiness bound (a cold legacy build loads every Shiki grammar).
+    timeout: 45_000,
     env: {
       ...process.env,
       PATH: `${path.dirname(node)}:${process.env.PATH}`,
@@ -143,7 +144,7 @@ function watch(root: string, outDir: string) {
   });
   return {
     async waitFor(predicate: (capture: Capture) => boolean, label: string): Promise<Capture> {
-      const deadline = Date.now() + 12000;
+      const deadline = Date.now() + 30_000;
       let latest: Capture | undefined;
       while (true) {
         while (events.length) {
@@ -370,7 +371,7 @@ describe('modernization legacy native watcher characterization', () => {
       (c) => !byPath(c).get('routes.ts')?.normalized.includes("path: 'watched'"),
       'entry delete routes',
     );
-  }, 45000);
+  }, 120_000);
 
   afterAll(async () => {
     await observed?.dispose();
@@ -418,7 +419,7 @@ describe('real filesystem cache parity', () => {
     warm = run(root, outDir, true);
     evidence('cache-cold', cold);
     evidence('cache-warm', warm);
-  }, 30000);
+  }, 100_000);
   afterAll(() => {
     if (root) fs.rmSync(root, { recursive: true, force: true });
   });
