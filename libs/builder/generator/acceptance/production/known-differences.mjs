@@ -29,7 +29,10 @@ export const KNOWN = {
   },
   routes: {
     /** `**\/index.html` routes only the new engine builds. */
-    added: [],
+    added: [
+      // Isolated demos have pages of their own, which only the new engine builds.
+      'demo-preview/docs/demos-and-playgrounds/isolated-demos/ViewportDemoComponent/index.html',
+    ],
     /** Legacy routes the new engine does not build (onlyForTags removals are derived). */
     removed: [],
     /**
