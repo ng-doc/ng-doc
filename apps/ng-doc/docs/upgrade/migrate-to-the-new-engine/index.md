@@ -42,7 +42,7 @@ It changes the workspace like this:
   options as the `default` mode. `prerender: false` stays off. Angular builders that read the
   build options, such as `extract-i18n` and `unit-test`, now point at `build-legacy`.
 - **`vite.config.mjs`:** a new file in the project folder. When the folder already has a
-  `vite.config.*`, for example for Vitest, the file is **vite.ng-doc.config.mjs** instead, so Vite
+  `vite.config.*`, for example for Vitest, the file is `vite.ng-doc.config.mjs` instead, so Vite
   and Vitest run directly keep loading yours; the `build` and `serve` targets name NgDoc's file
   in `configFile`, and the report says so. `--vite-config` sets another name. The file holds the application of the build
   target (`browser`, `server`, `polyfills`, `styles`, `assets`), the Analog Angular plugin
@@ -66,8 +66,8 @@ It changes the workspace like this:
   as it is.
 - **Legacy targets:** `build-legacy` and `serve-legacy` get a generated folder of their own,
   `ng-doc-legacy/ng-doc/<project-name>`, which is added to `.gitignore`. They load
-  **ng-doc.config.legacy.ts**, which sets `outDir: 'ng-doc-legacy'` over your configuration, and
-  compile with **tsconfig.app.legacy.json** (one per `tsConfig` of the build target), which maps
+  `ng-doc.config.legacy.ts`, which sets `outDir: 'ng-doc-legacy'` over your configuration, and
+  compile with `tsconfig.app.legacy.json` (one per `tsConfig` of the build target), which maps
   `@ng-doc/generated` there; their generated assets entry points there too. So both engines can
   run in turn without touching each other's files. When the schematic can't remap
   `@ng-doc/generated`, it leaves the folder shared and the report says how to separate it.
@@ -88,7 +88,7 @@ The schematic changes nothing when it can't migrate the project, and the report 
 - the server entry, `main.server.ts`, exports an NgModule (`NGDOC_MIGRATE_SERVER_NGMODULE`). The
   Vite build prerenders with a bootstrap function, so export one instead:
   `(context) => bootstrapApplication(App, config, context)`;
-- the Vite configuration file it would create already exists, such as a **vite.ng-doc.config.mjs**
+- the Vite configuration file it would create already exists, such as a `vite.ng-doc.config.mjs`
   or the file you named with `--vite-config`. Pass another file name with `--vite-config`;
 - a target with the name the legacy target would get, such as `build-legacy`, already exists.
 
@@ -133,7 +133,7 @@ Go through this list before you commit the migration:
   `ng-doc/<project-name>`, delete that folder before you switch engines
   (`*TroubleshootingPage#output_unowned_collision`).
 - **Vite configuration:** if the project folder already had a `vite.config.*`, NgDoc's
-  configuration is **vite.ng-doc.config.mjs**. Run NgDoc through `ng serve` and `ng build` (or pass
+  configuration is `vite.ng-doc.config.mjs`. Run NgDoc through `ng serve` and `ng build` (or pass
   `--config` to Vite); `vite` and `vitest` run directly keep using your own file.
 - **The diff:** `ng g` formats every file a schematic changed with the workspace's Prettier, so a
   file can show more changed lines than the schematic's edit. In `main.server.ts` the schematic
