@@ -66,7 +66,9 @@ In the development server:
   page once). When some changed, only the changed pages are rendered again, and the others reuse
   their cached links and generated files.
 - Highlighted code is kept in the cache folder too, so code that NgDoc highlighted before is not
-  highlighted again, even on pages that are rendered again.
+  highlighted again, even on pages that are rendered again. The same goes for API signatures and
+  snippets that NgDoc formatted with Prettier, and the Prettier configuration is read once per
+  build.
 - A start that renders many pages, like a production build, processes their HTML (highlighting,
   links and search records) on up to four worker threads, while the compiler prepares the next
   pages.

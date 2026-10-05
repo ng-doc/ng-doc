@@ -37,10 +37,14 @@ import { parseSnippet } from '../../parsers/parse-snippet';
 import type { DemoAsset, GeneratorConfiguration, GuideSemantics, JsonValue } from '../contracts';
 import { hostPath } from '../kernel/paths';
 import { type TrackedFiles, SemanticFailure } from './dependencies';
+import { formatting } from './formatting';
 import type { JsDoc } from './rendering';
 import { canonicalUnionMembers } from './type-text';
 
-/** A union's members in the canonical order of printed types (`type-text.ts`). */
+/**
+ * A union's members in the canonical order of printed types (`type-text.ts`).
+ * @param type
+ */
 function canonicalMembers(type: Type): Type[] {
   const members = type.getUnionTypes();
   const wrappers = new Map(members.map((member) => [member.compilerType, member]));
@@ -76,7 +80,11 @@ function playgroundOption(member: Type): string | NgDocPlaygroundOption {
   );
 }
 
-/** Resolves wrappers and local constants without executing source code. */
+/**
+ * Resolves wrappers and local constants without executing source code.
+ * @param node
+ * @param seen
+ */
 export function unwrap(
   node: Node | undefined,
   seen: Set<Node<ts.Node>> = new Set<Node>(),
@@ -97,6 +105,10 @@ export function unwrap(
   return node;
 }
 
+/**
+ *
+ * @param source
+ */
 export function entryObject(source: SourceFile): ObjectLiteralExpression {
   const exported = source.getDefaultExportSymbol()?.getDeclarations()[0];
   const object = unwrap(exported);
@@ -108,6 +120,10 @@ export function entryObject(source: SourceFile): ObjectLiteralExpression {
   return object;
 }
 
+/**
+ *
+ * @param node
+ */
 export function literal(node: Node | undefined): JsonValue {
   const value = unwrap(node);
   if (Node.isStringLiteral(value) || Node.isNoSubstitutionTemplateLiteral(value))
@@ -202,6 +218,12 @@ function applyControls(
   }
 }
 
+/**
+ *
+ * @param target
+ * @param files
+ * @param config
+ */
 function assets(
   target: ClassDeclaration,
   files: TrackedFiles,
@@ -233,7 +255,9 @@ function assets(
       isEmpty: !code,
       lang: title.replace('TypeScript', 'angular-ts').replace('HTML', 'angular-html'),
     };
-    const snippets = snippetsFromAsset(asset, config.inlineStyleLanguage, config.workspaceRoot);
+    const snippets = formatting(() =>
+      snippetsFromAsset(asset, config.inlineStyleLanguage, config.workspaceRoot),
+    );
     return (snippets.length ? snippets : [asset]).map((item) => ({
       title: item.title,
       source,
@@ -245,6 +269,14 @@ function assets(
   });
 }
 
+/**
+ *
+ * @param source
+ * @param files
+ * @param config
+ * @param docs
+ * @param values
+ */
 export function guideSemantics(
   source: SourceFile,
   files: TrackedFiles,

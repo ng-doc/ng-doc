@@ -83,6 +83,7 @@ export const COMMANDS = Object.freeze(
         'generator/compiler/fast-start.vitest.ts': 35,
         'generator/compiler/parallel-render.vitest.ts': 60,
         'generator/compiler/highlight-cache.vitest.ts': 17,
+        'generator/compiler/format-cache.vitest.ts': 25,
         'generator/compiler/locale.vitest.ts': 5,
         'generator/compiler/watch.integration.ts': 5,
         'generator/compiler/classify.vitest.ts': 1,

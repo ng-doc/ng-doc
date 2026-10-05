@@ -37,6 +37,7 @@ export const TRACKED_PROGRAM_REUSE_FLAG = 'NGDOC_TRACKED_PROGRAM_REUSE';
 export const FAST_START_FLAG = 'NGDOC_FAST_START';
 export const PARALLEL_WRITES_FLAG = 'NGDOC_PARALLEL_WRITES';
 export const HIGHLIGHT_CACHE_FLAG = 'NGDOC_HIGHLIGHT_CACHE';
+export const FORMAT_CACHE_FLAG = 'NGDOC_FORMAT_CACHE';
 export const PARALLEL_RENDER_FLAG = 'NGDOC_PARALLEL_RENDER';
 export const USED_GRAMMARS_FLAG = 'NGDOC_USED_GRAMMARS';
 
@@ -139,6 +140,14 @@ export const FLAGS: readonly FlagDefinition[] = Object.freeze(
         'Code blocks are highlighted with one Shiki highlighter per runtime and cached by their ' +
         'text, language, meta, themes and Shiki version; development keeps the cache beside the ' +
         'artifact cache.',
+      verify: true,
+    },
+    {
+      name: FORMAT_CACHE_FLAG,
+      description:
+        'The Prettier configuration is resolved once per generation, and formatted signatures ' +
+        'and snippets are cached by their code, parser, configuration and Prettier version; ' +
+        'development keeps the cache beside the artifact cache.',
       verify: true,
     },
     {
