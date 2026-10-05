@@ -748,7 +748,13 @@ function demoEntry(
     return [
       ...imports,
       ...application,
-      `ɵngDocDemoApplicationConfig(NG_DOC_DEMO_ROUTES, NG_DOC_DEMO_PROVIDERS, { zone: ${options.zone} })`,
+      // A page the server rendered carries the serialized state (`<script id="ng-state">`, the
+      // default APP_ID); the other pages (the copies of the demo page, the development server's)
+      // start without hydration, as Angular warns (NG0505) when it finds no state.
+      `ɵngDocDemoApplicationConfig(NG_DOC_DEMO_ROUTES, NG_DOC_DEMO_PROVIDERS, {`,
+      `  zone: ${options.zone},`,
+      `  hydration: document.getElementById('ng-state') !== null,`,
+      `})`,
       `  .then((config) => bootstrapApplication(NgDocDemoAppComponent, config))`,
       `  .catch((error) => console.error(error));`,
     ].join('\n');
@@ -762,6 +768,7 @@ function demoEntry(
     `    NgDocDemoAppComponent,`,
     `    await ɵngDocDemoApplicationConfig(NG_DOC_DEMO_ROUTES, NG_DOC_DEMO_PROVIDERS, {`,
     `      zone: ${options.zone},`,
+    `      hydration: true,`,
     `      providers: [provideServerRendering()],`,
     `    }),`,
     `    context,`,

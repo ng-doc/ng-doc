@@ -159,7 +159,10 @@ describe('the demo application', () => {
       "import { bootstrapApplication } from '@angular/platform-browser';",
       "import { NgDocDemoAppComponent, ɵngDocDemoApplicationConfig } from '@ng-doc/app/demo-app';",
       `import { NG_DOC_DEMO_PROVIDERS, NG_DOC_DEMO_ROUTES } from "${module}";`,
-      'ɵngDocDemoApplicationConfig(NG_DOC_DEMO_ROUTES, NG_DOC_DEMO_PROVIDERS, { zone: true })',
+      'ɵngDocDemoApplicationConfig(NG_DOC_DEMO_ROUTES, NG_DOC_DEMO_PROVIDERS, {',
+      '  zone: true,',
+      "  hydration: document.getElementById('ng-state') !== null,",
+      '})',
       '  .then((config) => bootstrapApplication(NgDocDemoAppComponent, config))',
       '  .catch((error) => console.error(error));',
     ]);
@@ -167,6 +170,8 @@ describe('the demo application', () => {
     expect(server).toContain('import "zone.js/node";\nimport "@angular/localize/init";');
     expect(server).not.toContain('styles.css');
     expect(server).toContain('providers: [provideServerRendering()],');
+    // The server always writes the hydration data of the demo application.
+    expect(server).toContain('hydration: true,');
     expect(server).toContain('export const bootstrap = async (context) =>');
     expect(server).toContain("export { renderApplication } from '@angular/platform-server';");
   });

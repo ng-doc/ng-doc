@@ -5,6 +5,11 @@ import { ActivatedRoute } from '@angular/router';
 /**
  * Shows the demo of a demo page: the component in the route's `ngDocDemo` data, with the inputs
  * of the `inputs` query parameter (the JSON of the `inputs` option of the `demo` action).
+ *
+ * The demo application hydrates its server-rendered page, but not the demo: a demo is the user's
+ * component and need not be hydration-safe, and the server renders it without the inputs of the
+ * query, which only the browser has. So the host skips hydration, as documentation pages do for
+ * their content, and the browser renders the demo again.
  */
 @Component({
   selector: 'ng-doc-demo-host',
@@ -17,6 +22,7 @@ import { ActivatedRoute } from '@angular/router';
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { ngSkipHydration: 'true' },
 })
 export class NgDocDemoHostComponent {
   private readonly route = inject(ActivatedRoute);

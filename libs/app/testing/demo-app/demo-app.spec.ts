@@ -58,6 +58,15 @@ describeChangeDetection('Demo pages', ({ providers }: ChangeDetectionCase) => {
     expect(page.querySelector('.label')?.textContent).toBe('default label');
   });
 
+  it('keeps the demo out of hydration, since demos need not be hydration-safe', async () => {
+    const page = await open('/demo-preview/docs/page/LabelDemo');
+
+    // The harness gives the routed element: the host of the demo.
+    const host: Element | null = page.closest('ng-doc-demo-host');
+
+    expect(host?.getAttribute('ngskiphydration')).toBe('true');
+  });
+
   it('passes the inputs of the query to the demo', async () => {
     const inputs = encodeURIComponent(JSON.stringify({ label: 'From the page' }));
     const page = await open(`/demo-preview/docs/page/LabelDemo?inputs=${inputs}`);
@@ -112,6 +121,14 @@ describe('Demo application configuration', () => {
     expect(zoneless.providers).toHaveLength(2);
     expect(zone.providers).toHaveLength(2);
     expect(zone.providers[0]).not.toBe(zoneless.providers[0]);
+  });
+
+  it('hydrates only when asked: on the server, and in the browser for a server-rendered page', async () => {
+    const hydrated = await ɵngDocDemoApplicationConfig([], undefined, { hydration: true });
+    const plain = await ɵngDocDemoApplicationConfig([], undefined, { hydration: false });
+
+    expect(hydrated.providers).toHaveLength(3);
+    expect(plain.providers).toHaveLength(2);
   });
 });
 
