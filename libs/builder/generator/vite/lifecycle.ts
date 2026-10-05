@@ -75,6 +75,22 @@ export class ViteAdapterLifecycle {
     this.hostUpdates = new HostUpdateCoordinator(
       () => this.server?.ws.send({ type: 'full-reload' }),
       (error) => this.fail(error),
+      {
+        warn: (message) => this.warn(message),
+        // Exactly the event Vite's watcher emits for the file: Vite invalidates its modules and
+        // runs the hot update hooks, which the coordinator matches like the lost report.
+        replay: (file, type) => {
+          if (this.disposed) return;
+          this.server?.watcher.emit(
+            type === 'create' ? 'add' : type === 'delete' ? 'unlink' : 'change',
+            file,
+          );
+        },
+        rescan: () => {
+          if (this.disposed) return;
+          void this.session?.rescan().catch(() => {});
+        },
+      },
     );
   }
 
@@ -407,6 +423,16 @@ export class ViteAdapterLifecycle {
       });
     } catch {
       // The overlay is optional; the logger above already has the error.
+    }
+  }
+
+  private warn(message: string): void {
+    if (!this.server) return;
+    this.interrupt();
+    try {
+      this.server.config.logger.warn(message);
+    } catch {
+      // Logging is best effort while the server closes.
     }
   }
 

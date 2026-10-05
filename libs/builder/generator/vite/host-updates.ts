@@ -80,10 +80,43 @@ export interface InitialCompilationInventory {
   isCurrent(): boolean;
 }
 
+/**
+ * What the host does for the coordinator when a burst ends (see {@link HostUpdateCoordinator}).
+ */
+export interface HostUpdateRecovery {
+  /** Logs a warning: the summary of the host update timeouts a burst held back. */
+  warn(message: string): void;
+  /**
+   * Reports `file` again as its watcher would have: a generated output whose report never
+   * completed its generation's expectation (lost, or its hook timed out and threw).
+   */
+  replay(file: string, type: 'create' | 'update' | 'delete'): void;
+  /** Re-observes every recorded input before the next generation (`BuildSession.rescan`). */
+  rescan(): void;
+}
+
 const COMPILER_TYPESCRIPT = /\.[cm]?ts(?![a-z])/;
 const JAVASCRIPT_MODULE = /\.[cm]?jsx?$/;
 const COMPILER_RESOURCE = /\.(?:html?|css|less|sass|scss)$/;
-const HOST_COMPLETION_TIMEOUT_MS = 30_000;
+/** How long a host update waits for the publication's host obligations to drain. */
+export const HOST_COMPLETION_TIMEOUT_MS = 30_000;
+/** Hot updates within {@link HOST_BURST_WINDOW_MS} that open a burst of file events. */
+export const HOST_BURST_EVENTS = 1_000;
+/** The window in which {@link HOST_BURST_EVENTS} hot updates open a burst. */
+export const HOST_BURST_WINDOW_MS = 1_000;
+/** A burst ends after this long without a hot update or a host update timeout. */
+export const HOST_BURST_QUIET_MS = 2_000;
+
+/** A burst: many file events in a short time, or host updates that did not settle. */
+interface Burst {
+  /** Whether it is a burst of file events (and not only of timeouts). */
+  events: boolean;
+  /** Host update timeouts during the burst. Only the first is reported as it happens. */
+  timeouts: number;
+  /** When the last hot update or timeout of the burst happened. */
+  last: number;
+  timer?: ReturnType<typeof setTimeout>;
+}
 
 function deferred(resolved: boolean = false): Deferred {
   let settled = false;
@@ -177,7 +210,24 @@ export function observePhysicalVersion(file: string): string | undefined {
   }
 }
 
-/** Coordinates committed generator versions with Vite's client hot-update pipeline. */
+/**
+ * Coordinates committed generator versions with Vite's client hot-update pipeline.
+ *
+ * Bursts: thousands of file events at once (a script or a checkout writing many files) flood
+ * Vite's hot-update pipeline and the watcher. Host updates then wait longer than
+ * {@link HOST_COMPLETION_TIMEOUT_MS}, a hook that timed out leaves its generation's obligation
+ * open (nothing reports that output again, so no reload is ever sent), and chokidar may lose
+ * events without any signal. So a burst is tracked: it opens with {@link HOST_BURST_EVENTS} hot
+ * updates of files outside the output root (once the first generation is published) within
+ * {@link HOST_BURST_WINDOW_MS}, or with a host update timeout, and ends after
+ * {@link HOST_BURST_QUIET_MS} without either. Only its first timeout is reported as it happens;
+ * the others are summed up in one warning when it ends. Then it takes one more pass: every
+ * generated output whose report never completed its expectation, and whose file is still what
+ * its generation wrote, is reported again (`HostUpdateRecovery.replay`), and every recorded
+ * input is re-observed (`HostUpdateRecovery.rescan`), so the newest edit is published even if
+ * its event was lost or its generation failed under the load. A replayed report is matched like
+ * any other: one that arrives twice is a repeat, so an edit still reloads once.
+ */
 export class HostUpdateCoordinator {
   private outputRoot?: string;
   private manifest?: OutputManifest;
@@ -203,10 +253,14 @@ export class HostUpdateCoordinator {
   private pendingGeneration?: number;
   private sequence = 0;
   private disposed = false;
+  private burst?: Burst;
+  /** The start and the hot updates of the current burst-detection window. */
+  private window = { start: 0, events: 0 };
 
   constructor(
     private readonly notify: () => void,
     private readonly fail: (error: Error) => void,
+    private readonly recovery?: HostUpdateRecovery,
   ) {}
 
   seed(outputRoot: string, manifest: OutputManifest): void {
@@ -319,6 +373,9 @@ export class HostUpdateCoordinator {
     }
     const filePath = normalize(file);
     const generated = !!this.outputRoot && relativeWithin(this.outputRoot, filePath) !== undefined;
+    // NgDoc's own writes (the first generation before `seed`, every commit and replay after it)
+    // are no burst: they are reported once each, and a large commit would otherwise rescan.
+    if (this.outputRoot && !generated) this.hotUpdate();
     const token: HostToken = {
       id: ++this.sequence,
       path: filePath,
@@ -580,6 +637,8 @@ export class HostUpdateCoordinator {
 
   dispose(): void {
     this.disposed = true;
+    if (this.burst?.timer) clearTimeout(this.burst.timer);
+    this.burst = undefined;
     this.pendingGeneration = undefined;
     this.pendingManifest = undefined;
     for (const attempt of this.attempts.values()) {
@@ -943,11 +1002,132 @@ export class HostUpdateCoordinator {
         }),
       ]).catch((error) => {
         const failure = error instanceof Error ? error : new Error(String(error));
-        this.fail(failure);
+        this.timedOut(failure);
         throw failure;
       });
     } finally {
       if (timeout) clearTimeout(timeout);
+    }
+  }
+
+  /** Counts a hot update towards a burst of file events (see the class description). */
+  private hotUpdate(): void {
+    const now = Date.now();
+    if (this.burst) {
+      this.burst.last = now;
+      this.burst.events = true;
+      return;
+    }
+    if (now - this.window.start >= HOST_BURST_WINDOW_MS) this.window = { start: now, events: 0 };
+    if (++this.window.events >= HOST_BURST_EVENTS) this.openBurst(now).events = true;
+  }
+
+  /**
+   * A host update did not settle in time. The first of a burst is reported as it happens (as
+   * every timeout was before); the others only count towards the burst's summary, so a flood of
+   * file events logs two lines instead of one per event.
+   * @param failure The timeout, thrown to its waiter as well.
+   */
+  private timedOut(failure: Error): void {
+    const burst = this.burst ?? this.openBurst(Date.now());
+    burst.last = Date.now();
+    if (burst.timeouts++ === 0) this.fail(failure);
+  }
+
+  private openBurst(now: number): Burst {
+    const burst: Burst = { events: false, timeouts: 0, last: now };
+    this.burst = burst;
+    this.armBurst(burst, HOST_BURST_QUIET_MS);
+    return burst;
+  }
+
+  /**
+   * One timer per burst, re-armed for the rest of the quiet period when activity moved `last`.
+   * @param burst The open burst.
+   * @param delay When to check it next.
+   */
+  private armBurst(burst: Burst, delay: number): void {
+    burst.timer = setTimeout(() => {
+      if (this.burst !== burst || this.disposed) return;
+      const quiet = Date.now() - burst.last;
+      if (quiet < HOST_BURST_QUIET_MS) {
+        this.armBurst(burst, HOST_BURST_QUIET_MS - quiet);
+        return;
+      }
+      this.burst = undefined;
+      this.window = { start: 0, events: 0 };
+      void this.recover(burst);
+    }, delay);
+    burst.timer.unref?.();
+  }
+
+  /**
+   * The pass after a burst: the summary of its held-back timeouts, then every open output
+   * obligation whose file is still what its generation wrote is reported again, in path order,
+   * and every recorded input is re-observed once no generation is in flight. An output a newer generation rewrote since is left
+   * to that generation's own report, which supersedes the older expectation.
+   * @param burst The burst that ended.
+   */
+  private async recover(burst: Burst): Promise<void> {
+    if (burst.timeouts > 1) {
+      this.recovery?.warn(
+        `[NGDOC_VITE_HOST_TIMEOUT] ${burst.timeouts - 1} more host update(s) did not settle ` +
+          `within ${HOST_COMPLETION_TIMEOUT_MS / 1000} s while files kept changing. NgDoc ` +
+          'checks the generated files and the documentation inputs again.',
+      );
+    }
+    const open = new Map<string, ExpectedOutput>();
+    for (const attempt of [...this.attempts.values()].sort(
+      (left, right) => right.generation - left.generation,
+    )) {
+      if (!attempt.resultSeen) continue;
+      for (const expected of attempt.expected.values()) {
+        // The newest generation's expectation of a path is the one its file can still satisfy.
+        if (!expected.completed && !open.has(expected.path)) open.set(expected.path, expected);
+      }
+    }
+    for (const [file, expected] of [...open].sort(([left], [right]) => (left < right ? -1 : 1))) {
+      let current: PhysicalState;
+      let written: PhysicalState;
+      try {
+        [current, written] = await Promise.all([observePhysicalState(file), expected.state]);
+      } catch {
+        continue;
+      }
+      if (this.disposed) return;
+      // The file must still be the one its generation wrote: its bytes, and the version the
+      // generation's own observation saw (a deleted output: still missing).
+      const unchanged =
+        expected.digest === undefined
+          ? current.version === 'missing'
+          : current.digest === expected.digest && current.version === written.version;
+      if (expected.completed || !unchanged) continue;
+      try {
+        this.recovery?.replay(
+          file,
+          expected.kind === 'update'
+            ? 'update'
+            : expected.digest === undefined
+              ? 'delete'
+              : 'create',
+        );
+      } catch {
+        // Best effort: a host that cannot replay leaves the obligation as before.
+      }
+    }
+    // A generation in flight reads its changed inputs afresh: re-observe the rest after it (a
+    // failed one is retried that way), rather than supersede it.
+    for (
+      let latest = this.latestAttempt;
+      latest && !latest.resultSeen && !this.disposed;
+      latest = this.latestAttempt
+    )
+      await latest.result.promise;
+    if (this.disposed) return;
+    try {
+      this.recovery?.rescan();
+    } catch {
+      // Best effort, like the replay above.
     }
   }
 }

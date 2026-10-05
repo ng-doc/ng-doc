@@ -111,6 +111,7 @@ export const COMMANDS = Object.freeze(
         'libs/builder/generator/vite/testing/reconcile-inputs.vitest.ts': 36,
         'libs/builder/generator/vite/testing/only-for-tags.vitest.ts': 34,
         'libs/builder/generator/vite/testing/watcher-recovery.vitest.ts': 6,
+        'libs/builder/generator/vite/testing/host-bursts.vitest.ts': 3,
         'libs/builder/generator/vite/testing/ssr-renderer.vitest.ts': 3,
         'libs/builder/generator/vite/testing/watch-scope-units.vitest.ts': 3,
         'libs/builder/generator/vite/testing/ssr-renderer-control.vitest.ts': 2,

@@ -268,6 +268,22 @@ change at once, for example during a branch switch. NgDoc checks the watched fil
 **Fix:** no action is needed. If a page doesn't update afterwards, save the file again or restart
 the server.
 
+### NGDOC_VITE_HOST_TIMEOUT
+
+The Vite host logs `[NGDOC_VITE_HOST_TIMEOUT] Host update did not settle.`, sometimes followed by
+one summary line with the number of hot updates that didn't settle either.
+
+**Cause:** many files changed at once while the server ran, for example a script that writes
+thousands of files into the documentation folder, so Vite needed more than 30 seconds to report a
+change. NgDoc logs the first timeout of such a burst and sums up the rest in one line. When the
+burst is over, NgDoc checks the generated files and every documentation input again, so the last
+edit is published even if a file event was lost.
+
+**Fix:** no action is needed. Keep scripts that write many files out of the documentation folder
+when you can. If a page doesn't update afterwards, save the file again or restart the server.
+
+This applies to the Vite engine only.
+
 {% index false %}
 
 ## Related
