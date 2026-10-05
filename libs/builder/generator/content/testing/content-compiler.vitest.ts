@@ -1622,20 +1622,11 @@ describe('GeneratorContentCompiler', () => {
       );
     const consulted = new Set<string>();
     const recorded = await link(keywords, consulted);
-    // Inline code and TypeScript blocks are consulted (root and anchored spellings); prose and
-    // other languages are not.
+    // Inline code and TypeScript blocks are consulted (root and anchored spellings); prose, other
+    // languages and positions that never link (the reserved word `const`, the declared name
+    // `value`) are not.
     expect([...consulted].sort()).toEqual(
-      [
-        '*Guide',
-        'Known',
-        'Missing',
-        'Other',
-        'Other.create',
-        'Thing',
-        'Thing.member',
-        'const',
-        'value',
-      ].sort(),
+      ['*Guide', 'Known', 'Missing', 'Other', 'Other.create', 'Thing', 'Thing.member'].sort(),
     );
     expect(recorded.value?.keywordDigest).toBe(linkedKeywordDigest(ir, keywords));
     const unrecorded = await link(keywords);
@@ -1653,8 +1644,14 @@ describe('GeneratorContentCompiler', () => {
     expect(relinked.value?.html).not.toBe(recorded.value?.html);
     expect(relinked.value?.html).toContain('api/moved');
     // A newly bound consulted key (previously missing) also changes the output.
-    const bound = await link([...keywords, { key: 'value', title: 'value', path: 'api/value' }]);
+    const bound = await link([
+      ...keywords,
+      { key: 'Other.create', title: 'Other.create', path: 'api/other#create' },
+    ]);
     expect(bound.value?.html).not.toBe(recorded.value?.html);
+    // A key in a position that never links is not consulted: binding it changes nothing.
+    const declared = await link([...keywords, { key: 'value', title: 'value', path: 'api/value' }]);
+    expect(declared.value).toEqual(recorded.value);
   });
 
   it('merges API seed exports with heading, member and scoped anchor exports', async () => {

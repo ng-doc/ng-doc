@@ -81,6 +81,14 @@ This link opens the API list filtered to classes:
 
 `*ApiReferences?type=Class`
 
+## Inline code with other text
+
+Inline code that reads as TypeScript, such as a call, a generic type or a signature, links the
+names it uses, the way a code block does: `provideNgDocApp()` and `Array<NgDocPage>` both link.
+Other inline code links only when all of it is one keyword, with an optional anchor or query
+parameters, so file names such as `vite.ng-doc.config.mjs`, paths, commands, HTML tags and
+sentences stay plain text.
+
 ## Keywords in code blocks
 
 API keywords also work inside TypeScript and HTML code blocks. Hover a linked name to see its
@@ -97,6 +105,13 @@ In HTML code blocks, NgDoc links the selectors of your components and directives
 ```html name="button.html"
 <button ng-doc-button>Click me</button>
 ```
+
+NgDoc links the names that code uses: imports, types, class names, calls and their arguments. It
+doesn't link object keys, property and parameter names, strings, comments, TypeScript keywords
+such as readonly, or names the example declares itself, such as a constant or an import from a
+relative path. A member after a dot links only when the owner and the member together are an API
+keyword, like `NgDocBaseInput.changes`. In HTML code blocks, attribute values and comments stay
+plain text.
 
 ## 🔗 Global keywords
 
