@@ -1,9 +1,12 @@
 // Grouped code blocks: the tab group is the header of one code surface.
 :host {
   display: block;
+  margin: var(--ng-doc-tabs-margin);
+}
+
+:host(:not(.ng-doc-content-tabs)) {
   border-radius: var(--ng-doc-tabs-border-radius);
   border: var(--ng-doc-tabs-border, 1px solid var(--ng-doc-border-color));
-  margin: var(--ng-doc-tabs-margin);
   overflow: hidden;
 
   --ng-doc-code-margin: 0;
@@ -12,4 +15,15 @@
   --ng-doc-tab-group-background: var(--ng-doc-code-background);
   --ng-doc-tab-group-header-background: var(--ng-doc-code-background);
   --ng-doc-tab-group-tabs-background: var(--ng-doc-code-header-background, transparent);
+}
+
+// Content tabs: the tab group is plain (`appearance`), so a framed demo or code block in a tab
+// keeps the only frame. The tab's own blocks start and end at the panel's edges; the class is set
+// per instance, so a code group nested in a tab keeps its spacing.
+.ng-doc-tabs-content ::ng-deep > * > :first-child {
+  margin-top: 0;
+}
+
+.ng-doc-tabs-content ::ng-deep > * > :last-child {
+  margin-bottom: 0;
 }

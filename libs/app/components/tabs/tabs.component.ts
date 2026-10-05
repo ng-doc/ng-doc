@@ -17,6 +17,9 @@ import {
   templateUrl: './tabs.component.html',
   styleUrls: ['./tabs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[class.ng-doc-content-tabs]': 'contentTabs()',
+  },
 })
 export class NgDocTabsComponent implements OnInit {
   /** The tabs; their content is moved into the open panel. */
@@ -27,6 +30,19 @@ export class NgDocTabsComponent implements OnInit {
     Math.max(
       this.tabs().findIndex((tab: NgDocTab) => tab.active),
       0,
+    ),
+  );
+
+  /**
+   * Whether the tabs hold page content rather than a code group. A code group has one code block
+   * per tab and is drawn as one framed code surface; content tabs are only a tab bar over their
+   * content, so a framed demo or code block inside them doesn't sit in a second frame.
+   */
+  protected readonly contentTabs: Signal<boolean> = computed(() =>
+    this.tabs().some(
+      (tab: NgDocTab) =>
+        tab.content.childElementCount !== 1 ||
+        !tab.content.firstElementChild?.matches('ng-doc-code, pre'),
     ),
   );
 

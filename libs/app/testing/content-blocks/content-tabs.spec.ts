@@ -198,6 +198,23 @@ describeChangeDetection('content tabs', ({ providers }: ChangeDetectionCase) => 
     expect(panel(code).textContent?.trim()).toBe('b');
   });
 
+  it('draws content tabs plain and keeps a code group inside them framed', async () => {
+    const [examples] = groups();
+    const tabGroup = (group: Element): Element => group.querySelector(':scope > ng-doc-tab-group')!;
+
+    // Content tabs are only a tab bar, so the framed blocks in them keep the only frame.
+    expect(examples.classList).toContain('ng-doc-content-tabs');
+    expect(tabGroup(examples).classList).toContain('ng-doc-tab-group-plain');
+
+    await open(examples, 'First');
+
+    // A code group, one code block per tab, stays one framed code surface, also inside a tab.
+    const code = panel(examples).querySelector('ng-doc-tabs')!;
+
+    expect(code.classList).not.toContain('ng-doc-content-tabs');
+    expect(tabGroup(code).classList).not.toContain('ng-doc-tab-group-plain');
+  });
+
   it('leaves the headings inside tabs out of the table of contents', async () => {
     const [examples] = groups();
 

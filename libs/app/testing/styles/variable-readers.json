@@ -390,7 +390,7 @@
     "libs/app/components/root/root.component.scss :: :host .ng-doc-skip-link",
     "libs/app/components/search/search.component.scss :: .ng-doc-search-field",
     "libs/app/components/sidebar/sidebar.component.scss :: :host",
-    "libs/app/components/tabs/tabs.component.scss :: :host",
+    "libs/app/components/tabs/tabs.component.scss :: :host(:not(.ng-doc-content-tabs))",
     "libs/app/components/toc/toc.component.scss :: .ng-doc-toc-section + .ng-doc-toc-section",
     "libs/app/styles/parts/header.scss :: .ng-doc-api-details",
     "libs/app/styles/parts/header.scss :: article header.ngde .ng-doc-table-wrapper:has(> table.ng-doc-api-table.no-padding)",
@@ -509,8 +509,8 @@
     "libs/app/components/demo-displayer/demo-displayer.component.scss :: .ng-doc-demo-code ng-doc-expander",
     "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-source",
     "libs/app/components/mermaid-viewer/mermaid-viewer.component.scss :: :host",
-    "libs/app/components/tabs/tabs.component.scss :: :host :: --ng-doc-tab-group-background",
-    "libs/app/components/tabs/tabs.component.scss :: :host :: --ng-doc-tab-group-header-background",
+    "libs/app/components/tabs/tabs.component.scss :: :host(:not(.ng-doc-content-tabs)) :: --ng-doc-tab-group-background",
+    "libs/app/components/tabs/tabs.component.scss :: :host(:not(.ng-doc-content-tabs)) :: --ng-doc-tab-group-header-background",
     "libs/app/styles/typography.scss :: pre.shiki code",
     "libs/app/styles/typography.scss :: pre.shiki code span"
   ],
@@ -549,7 +549,7 @@
   ],
   "--ng-doc-code-header-background": [
     "libs/app/components/code/code.component.scss :: :host .ng-doc-code-header",
-    "libs/app/components/tabs/tabs.component.scss :: :host :: --ng-doc-tab-group-tabs-background"
+    "libs/app/components/tabs/tabs.component.scss :: :host(:not(.ng-doc-content-tabs)) :: --ng-doc-tab-group-tabs-background"
   ],
   "--ng-doc-code-header-color": [
     "libs/app/components/code/code.component.scss :: :host .ng-doc-code-file-name"
@@ -1836,6 +1836,7 @@
     "libs/ui-kit/components/checkbox/checkbox.component.scss :: .ng-doc-checkbox-icons",
     "libs/ui-kit/components/checkbox/checkbox.component.scss :: .ng-doc-checkbox-text",
     "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-tabs-header",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host(.ng-doc-tab-group-plain) > .ng-doc-tabs-header",
     "libs/ui-kit/components/tag/tag.component.scss :: :host"
   ],
   "--ng-doc-space-3": [
@@ -1924,7 +1925,8 @@
     "libs/app/styles/typography.scss :: h1.ngde + h1.ngde, h1.ngde + h2.ngde, h1.ngde + h3.ngde, h1.ngde + h4.ngde, h1.ngde + h5.ngde, h1.ngde + h6.ngde, h2.ngde + h1.ngde, h2.ngde + h2.ngde, h2.ngde + h3.ngde, h2.ngde + h4.ngde, h2.ngde + h5.ngde, h2.ngde + h6.ngde, h3.ngde + h1.ngde, h3.ngde + h2.ngde, h3.ngde + h3.ngde, h3.ngde + h4.ngde, h3.ngde + h5.ngde, h3.ngde + h6.ngde, h4.ngde + h1.ngde, h4.ngde + h2.ngde, h4.ngde + h3.ngde, h4.ngde + h4.ngde, h4.ngde + h5.ngde, h4.ngde + h6.ngde, h5.ngde + h1.ngde, h5.ngde + h2.ngde, h5.ngde + h3.ngde, h5.ngde + h4.ngde, h5.ngde + h5.ngde, h5.ngde + h6.ngde, h6.ngde + h1.ngde, h6.ngde + h2.ngde, h6.ngde + h3.ngde, h6.ngde + h4.ngde, h6.ngde + h5.ngde, h6.ngde + h6.ngde",
     "libs/app/styles/typography.scss :: p.ngde",
     "libs/app/styles/typography.scss :: ul.ngde, ol.ngde",
-    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host"
+    "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host",
+    "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host(.ng-doc-tab-group-plain) > .ng-doc-body-wrapper"
   ],
   "--ng-doc-space-5": [
     "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-empty",
@@ -2021,8 +2023,12 @@
   "--ng-doc-tab-group-tabs-background": [
     "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-tabs-header"
   ],
-  "--ng-doc-tabs-border": ["libs/app/components/tabs/tabs.component.scss :: :host"],
-  "--ng-doc-tabs-border-radius": ["libs/app/components/tabs/tabs.component.scss :: :host"],
+  "--ng-doc-tabs-border": [
+    "libs/app/components/tabs/tabs.component.scss :: :host(:not(.ng-doc-content-tabs))"
+  ],
+  "--ng-doc-tabs-border-radius": [
+    "libs/app/components/tabs/tabs.component.scss :: :host(:not(.ng-doc-content-tabs))"
+  ],
   "--ng-doc-tabs-margin": ["libs/app/components/tabs/tabs.component.scss :: :host"],
   "--ng-doc-tag-background": [
     "libs/ui-kit/components/tag/tag.component.scss :: :host",
