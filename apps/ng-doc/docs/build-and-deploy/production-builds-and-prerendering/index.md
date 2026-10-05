@@ -126,6 +126,8 @@ export const appConfig: ApplicationConfig = {
 
 Navigation, links in the content, search, the table of contents and the Copy link actions keep the
 route after the `#`, so a copied link to a page or a section opens it on any host.
+Page preloading with `NgDocPreloadingStrategy` reads the route after the `#` too, so a page still
+loads while the reader points at a link to it.
 
 > **Warning**
 > With hash URLs, build the site for the browser only, without server rendering or prerendering.

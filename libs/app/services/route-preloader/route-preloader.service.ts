@@ -9,7 +9,11 @@ import {
   Service,
 } from '@angular/core';
 import { PRIMARY_OUTLET, Route, Router, RouterPreloader, UrlTree } from '@angular/router';
-import { ɵngDocRouteContentSources, ɵpreloadNgDocContent } from '@ng-doc/app/helpers';
+import {
+  ɵngDocRouteContentSources,
+  ɵngDocRouteUrl,
+  ɵpreloadNgDocContent,
+} from '@ng-doc/app/helpers';
 import { NG_DOC_ROUTE_PREFIX } from '@ng-doc/app/tokens';
 
 /** The events that tell that the reader is about to open a link. */
@@ -219,6 +223,10 @@ export class NgDocRoutePreloader {
   /**
    * Returns the application URL of a link, or `undefined` for a link that leaves the
    * application, opens elsewhere, downloads a file or points into the current page.
+   *
+   * The link is read through the location strategy: with `PathLocationStrategy` the route is the
+   * link's path, and with `HashLocationStrategy` (`withHashLocation()`) it is the link's fragment
+   * (`#/docs/page`), so a fragment that is not a route (`#usage`) is an anchor on the page.
    * @param anchor - The link.
    * @returns The URL relative to the application's base, with its query.
    */
@@ -227,13 +235,7 @@ export class NgDocRoutePreloader {
     const href = anchor.getAttribute('href');
     const target = anchor.getAttribute('target');
 
-    if (
-      !view ||
-      !href ||
-      anchor.hasAttribute('download') ||
-      (target && target !== '_self') ||
-      href.startsWith('#')
-    ) {
+    if (!view || !href || anchor.hasAttribute('download') || (target && target !== '_self')) {
       return undefined;
     }
 
@@ -245,8 +247,20 @@ export class NgDocRoutePreloader {
       return undefined;
     }
 
-    // Another site, or the current page (an anchor on it, or a link to itself).
-    if (url.origin !== view.location.origin || url.pathname === view.location.pathname) {
+    if (url.origin !== view.location.origin) return undefined;
+
+    if (this.hashLocation()) {
+      // The route lives in the fragment of this document; another document leaves the
+      // application.
+      if (url.pathname !== view.location.pathname || !url.hash.startsWith('#/')) return undefined;
+
+      url = new URL(url.hash.slice(1).replace(/^\/*/, '/'), view.location.origin);
+    } else if (href.startsWith('#')) {
+      return undefined;
+    }
+
+    // The current page: an anchor on it, or a link to itself.
+    if (url.pathname === ɵngDocRouteUrl(this.locationStrategy, view.location.href).pathname) {
       return undefined;
     }
 
@@ -257,10 +271,23 @@ export class NgDocRoutePreloader {
     return `/${url.pathname.slice(base.length)}${url.search}`;
   }
 
-  /** The base path of the application, ending with a slash. */
+  /**
+   * Whether the location strategy keeps the route in the document's fragment, as
+   * `HashLocationStrategy` does.
+   */
+  private hashLocation(): boolean {
+    return this.locationStrategy.prepareExternalUrl('/').startsWith('#');
+  }
+
+  /**
+   * The base path of the application's routes, ending with a slash: the base href, which a
+   * fragment route carries only when `APP_BASE_HREF` sets one.
+   */
   private basePath(): string {
     const base = this.locationStrategy.getBaseHref() || '/';
-    const path = new URL(base, this.document.baseURI).pathname;
+    const path = this.hashLocation()
+      ? base.replace(/^\/*/, '/')
+      : new URL(base, this.document.baseURI).pathname;
 
     return path.endsWith('/') ? path : `${path}/`;
   }
