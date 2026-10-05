@@ -52,6 +52,8 @@ export function pageWrapperBuilder(config: Config): Builder<AsyncFileOutput> {
           route: metadata.absoluteRoute(),
           lightTheme: config.context.config.shiki?.themes.light,
           darkTheme: config.context.config.shiki?.themes.dark,
+          // Same output as loading every grammar; Shiki 4 takes seconds to load them all.
+          grammars: 'used',
         });
         const postProcessed = await UTILS.postProcessHtml(processed.content);
 
