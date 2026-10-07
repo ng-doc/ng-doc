@@ -1,3 +1,10 @@
+# [22.1.0](https://github.com/ng-doc/ng-doc/compare/v22.0.0...v22.1.0) (2026-10-07)
+
+
+### Features
+
+* **builder:** ship NgDoc 22.1 with isolated demos, Shiki 4, playground options and content tabs ([37fec1a](https://github.com/ng-doc/ng-doc/commit/37fec1a195b59a2348f814675f2d527729620adb)), closes [#191](https://github.com/ng-doc/ng-doc/issues/191) [#312](https://github.com/ng-doc/ng-doc/issues/312) [#311](https://github.com/ng-doc/ng-doc/issues/311) [#320](https://github.com/ng-doc/ng-doc/issues/320) [#243](https://github.com/ng-doc/ng-doc/issues/243) [#244](https://github.com/ng-doc/ng-doc/issues/244) [#301](https://github.com/ng-doc/ng-doc/issues/301) [#187](https://github.com/ng-doc/ng-doc/issues/187) [#255](https://github.com/ng-doc/ng-doc/issues/255) [#297](https://github.com/ng-doc/ng-doc/issues/297) [#227](https://github.com/ng-doc/ng-doc/issues/227) [#304](https://github.com/ng-doc/ng-doc/issues/304) [#245](https://github.com/ng-doc/ng-doc/issues/245)
+
 # [22.0.0](https://github.com/ng-doc/ng-doc/compare/v21.1.1...v22.0.0) (2026-10-04)
 
 
