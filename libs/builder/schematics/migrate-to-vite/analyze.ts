@@ -174,7 +174,19 @@ const MANUAL: { [option: string]: string } = {
   serviceWorker: 'The Vite engine does not build the Angular service worker.',
   subresourceIntegrity: 'Use a Vite plugin to add `integrity` attributes.',
   webWorkerTsConfig: 'Vite bundles workers created with `new Worker(new URL(...))` itself.',
+  // Nx's `application` executor runs Angular's builder with these options of its own.
+  indexHtmlTransformer:
+    'Nx transforms index.html with this function; move it to a Vite plugin with a `transformIndexHtml` hook.',
+  plugins:
+    'Nx runs these esbuild plugins and Vite does not; add a Vite plugin that does the same to the Vite configuration.',
 };
+
+/**
+ * `buildLibsFromSource: false` of Nx's executors: Nx builds the buildable libraries first and
+ * resolves them to their output.
+ */
+const BUILD_LIBS_FROM_SOURCE =
+  'is `false`; the Vite engine reads the workspace libraries from source through the tsconfig `paths` and does not build them first.';
 
 function isRecord(value: unknown): value is JsonRecord {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -716,10 +728,19 @@ export function analyzeProject(
           'Vite hashes every output file name; change `build.rolldownOptions.output` to name files differently.',
         );
       } else add('dropped', 'build.outputHashing', 'Vite hashes the output file names by default.');
-    } else if (option === 'scripts') {
+    } else if (option === 'scripts' || option === 'plugins') {
       if (values.some((value) => Array.isArray(value) && value.length))
-        add('manual', 'build.scripts', MANUAL['scripts']);
-      else add('dropped', 'build.scripts', 'The list is empty.');
+        add('manual', `build.${option}`, MANUAL[option]);
+      else add('dropped', `build.${option}`, 'The list is empty.');
+    } else if (option === 'buildLibsFromSource') {
+      if (values.includes(false))
+        add('manual', 'build.buildLibsFromSource', BUILD_LIBS_FROM_SOURCE);
+      else
+        add(
+          'dropped',
+          'build.buildLibsFromSource',
+          'The Vite engine reads the workspace libraries from source through the tsconfig `paths`.',
+        );
     } else if (option === 'serviceWorker') {
       if (active.length) add('manual', 'build.serviceWorker', MANUAL['serviceWorker']);
       else add('dropped', 'build.serviceWorker', 'The service worker is off.');
@@ -1007,6 +1028,33 @@ function analyzeServe(
       case 'prebundle':
       case 'verbose':
         add('dropped', subject, 'Vite prebundles dependencies and logs by its own settings.');
+        break;
+      // The options Nx's `dev-server` executor adds to Angular's.
+      case 'buildLibsFromSource':
+        if (value === false) add('manual', subject, BUILD_LIBS_FROM_SOURCE);
+        else add('dropped', subject, 'The Vite engine reads the workspace libraries from source.');
+        break;
+      case 'watchDependencies':
+        add('dropped', subject, 'The Vite engine watches the library sources it reads.');
+        break;
+      case 'forceEsbuild':
+      case 'publicHost':
+        add('dropped', subject, 'Nx uses it with webpack-based builds only.');
+        break;
+      case 'disableHostCheck':
+        if (value === true) {
+          devServer.allowedHosts = true;
+          add('migrated', subject, 'Vite `server.allowedHosts: true`.');
+        } else add('dropped', subject, 'The host check is on.');
+        break;
+      case 'esbuildMiddleware':
+        if (Array.isArray(value) && value.length) {
+          add(
+            'manual',
+            subject,
+            'Add these middleware functions with the `configureServer` hook of a Vite plugin.',
+          );
+        } else add('dropped', subject, 'The list is empty.');
         break;
       case 'ngDoc':
         add(

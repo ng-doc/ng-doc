@@ -2451,6 +2451,8 @@ function isRoute(value: unknown): boolean {
         'category',
         'modulePath',
         'apiListSegment',
+        'demoModulePath',
+        'demoNames',
       ],
     ) &&
     [value.id, value.path, value.title].every(string) &&
@@ -2460,6 +2462,8 @@ function isRoute(value: unknown): boolean {
     (value.icon === undefined || string(value.icon)) &&
     (value.modulePath === undefined || string(value.modulePath)) &&
     (value.apiListSegment === undefined || string(value.apiListSegment)) &&
+    (value.demoModulePath === undefined || string(value.demoModulePath)) &&
+    (value.demoNames === undefined || stringArray(value.demoNames)) &&
     (value.metadata === undefined ||
       (isRecord(value.metadata) &&
         exact(value.metadata, ['description', 'tags']) &&

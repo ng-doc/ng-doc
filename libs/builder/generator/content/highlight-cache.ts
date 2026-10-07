@@ -6,9 +6,9 @@ import path from 'node:path';
 
 import { retryingRename } from '../artifacts';
 import { sweepTemporaries } from '../compiler/closure-store';
-import type { CompilationRequest, GeneratorConfiguration } from '../contracts';
+import type { CompilationRequest, GeneratorConfiguration, ShikiLanguage } from '../contracts';
 import { bytesDigest, compareCodeUnits, contentDigest, digestOf } from '../kernel/canonical';
-import { HIGHLIGHT_CACHE_FLAG, readFlag } from '../kernel/flags';
+import { HIGHLIGHT_CACHE_FLAG, readFlag, USED_GRAMMARS_FLAG } from '../kernel/flags';
 import { runtimePackages } from '../kernel/runtime-identity';
 
 /**
@@ -17,8 +17,8 @@ import { runtimePackages } from '../kernel/runtime-identity';
  * Highlighting a block is a pure function of its text, language and meta string, the themes, the
  * fixed options of the highlighting plugin and the Shiki release, so its result is cached under a
  * key that covers all of them: `digestOf({ context, block })`, where the context is the format of
- * this cache, the resolved versions of `shiki`, `@shikijs/core` and `@shikijs/rehype`
- * (`runtimePackages`) and the identity of each theme (a bundled theme's name; NgDoc's own theme by
+ * this cache, the resolved versions of `shiki`, the Shiki packages it highlights with and
+ * `@shikijs/rehype` (`SHIKI_PACKAGES`, from `runtimePackages`) and the identity of each theme (a bundled theme's name; NgDoc's own theme by
  * the digest of its definition), and the block names the plugin's format and options, the theme
  * names, the language before its fallback, the raw meta string and the text. A Shiki upgrade or a
  * plugin change therefore changes every key, and a stale entry is never hit.
@@ -30,7 +30,8 @@ import { runtimePackages } from '../kernel/runtime-identity';
  * reference path and `cache: false` never read or write the pack: they use the map only.
  *
  * A cached entry can never change output: the plugin uses an entry only when it is a JSON array of
- * HAST elements and highlights the block otherwise, it stores only blocks that were highlighted
+ * HAST elements (or of the roots `@shikijs/rehype` replaces a block with) and highlights the block
+ * otherwise, it stores only blocks that were highlighted
  * without an error, and a pack of another version or context, or one that cannot be read or
  * parsed, is not read. No dependency or watch input is added: the result depends only on the key.
  *
@@ -44,6 +45,20 @@ import { runtimePackages } from '../kernel/runtime-identity';
  * main thread merges (`HighlightSession.merge`); the key is a function of the block alone. Only the
  * main thread reads and writes the pack.
  */
+
+/**
+ * The packages whose versions enter every key: Shiki, the packages it highlights with (grammars,
+ * themes, regular expression engine, tokenizer) and the plugin that runs it.
+ */
+const SHIKI_PACKAGES = [
+  'shiki',
+  '@shikijs/core',
+  '@shikijs/langs',
+  '@shikijs/themes',
+  '@shikijs/engine-oniguruma',
+  '@shikijs/vscode-textmate',
+  '@shikijs/rehype',
+] as const;
 
 /** The warning of a `verify` hit whose highlighting differs from the cached one. */
 export const HIGHLIGHT_CACHE_MISMATCH = 'CONTENT_HIGHLIGHT_CACHE_MISMATCH';
@@ -61,6 +76,7 @@ export const HIGHLIGHT_CACHE_LIMIT = 64 * 1024 * 1024;
 export interface HighlightBlock {
   readonly options: Readonly<Record<string, string | number | boolean>>;
   readonly themes: { readonly light: string; readonly dark: string };
+  readonly languages?: string;
   readonly lang: string;
   readonly meta: string;
   readonly code: string;
@@ -135,6 +151,17 @@ export function highlightCacheSwitch(options: {
 }
 
 /**
+ * Which Shiki grammars highlighting loads: only those code blocks reach (`used`, the default), or
+ * every bundled grammar (`all`: `usedGrammars: false` or `NGDOC_USED_GRAMMARS=0`). The HTML is the
+ * same, so neither the cache keys nor any digest depend on it.
+ */
+export function grammarsSwitch(options: { usedGrammars?: boolean }): 'used' | 'all' {
+  return options.usedGrammars === false || readFlag(USED_GRAMMARS_FLAG).value === 'off'
+    ? 'all'
+    : 'used';
+}
+
+/**
  * The cache of one generation, or undefined when blocks are highlighted without it: with the
  * switch off, and on the reference path (`incrementalReuse: false`), which recomputes everything.
  * Only a development generation with the artifact cache on keeps a pack.
@@ -146,7 +173,10 @@ export function createHighlightSession(
     highlightCache?: boolean | 'verify';
   },
   request: Pick<CompilationRequest, 'mode'>,
-  configuration: Pick<GeneratorConfiguration, 'cacheEnabled' | 'cacheRoot' | 'themes'>,
+  configuration: Pick<
+    GeneratorConfiguration,
+    'cacheEnabled' | 'cacheRoot' | 'themes' | 'shikiLangs'
+  >,
 ): HighlightSession | undefined {
   const mode = highlightCacheSwitch(options);
   if (mode === 'off' || options.incrementalReuse === false) return undefined;
@@ -154,7 +184,12 @@ export function createHighlightSession(
     request.mode === 'development' && configuration.cacheEnabled
       ? path.join(configuration.cacheRoot, `${digestOf(options.projectId)}.highlight.json`)
       : undefined;
-  return new HighlightSession(configuration.themes, mode === 'verify', pack);
+  return new HighlightSession(
+    configuration.themes,
+    mode === 'verify',
+    pack,
+    configuration.shikiLangs,
+  );
 }
 
 /** One generation's use of the cache: what it hit or highlighted, and its pack. */
@@ -170,16 +205,15 @@ export class HighlightSession {
     readonly themes: { readonly light: string; readonly dark: string },
     readonly verify: boolean,
     readonly pack: string | undefined,
+    langs?: readonly ShikiLanguage[],
   ) {
     const engine = runtimePackages();
     this.context = digestOf({
       version: PACK_VERSION,
-      engine: {
-        shiki: engine['shiki'] ?? null,
-        '@shikijs/core': engine['@shikijs/core'] ?? null,
-        '@shikijs/rehype': engine['@shikijs/rehype'] ?? null,
-      },
+      engine: Object.fromEntries(SHIKI_PACKAGES.map((name) => [name, engine[name] ?? null])),
       themes: { light: themeIdentity(themes.light), dark: themeIdentity(themes.dark) },
+      // The configured languages: a block highlights with them, and they must load.
+      ...(langs?.length ? { langs: digestOf(langs) } : {}),
     });
     // A long-lived runtime whose map outgrew the limit starts again from the pack.
     if (memoryBytes > HIGHLIGHT_CACHE_LIMIT) {

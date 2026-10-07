@@ -71,6 +71,20 @@
       </ng-doc-copy-button>
     }
 
+    @if (demoUrl(); as url) {
+      <a
+        class="ng-doc-demo-open"
+        ng-doc-button-icon
+        [rounded]="false"
+        [href]="url"
+        target="_blank"
+        rel="noopener"
+        aria-label="Open in a new tab"
+        ngDocTooltip="Open in a new tab">
+        <ng-doc-icon icon="external-link"></ng-doc-icon>
+      </a>
+    }
+
     @if (view() === 'preview' && !options().fullscreenRoute) {
       <ng-doc-fullscreen-toggle class="ng-doc-demo-fullscreen" [target]="stage" />
     }
@@ -82,6 +96,7 @@
     [id]="idPrefix + '-panel-0'"
     [attr.aria-labelledby]="idPrefix + '-tab-0'"
     [attr.data-ng-doc-width]="previewWidth()"
+    [attr.data-ng-doc-isolated]="isolated()"
     [hidden]="view() !== 'preview'"
     ngDocFullscreen
     #stage="ngDocFullscreen">
@@ -112,6 +127,8 @@
 <ng-template #demoTemplate>
   @if (options().fullscreenRoute; as route) {
     <ng-doc-fullscreen-button [route]="route"></ng-doc-fullscreen-button>
+  } @else if (isolated()) {
+    <ng-doc-demo-frame [src]="demoUrl()!" [frameTitle]="frameTitle()" [fill]="fullscreen()" />
   } @else if (demo(); as demo) {
     <ng-container *ngComponentOutlet="demo; inputs: options().inputs"></ng-container>
   }

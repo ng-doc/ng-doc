@@ -6,7 +6,7 @@ import { createProject, resetActiveProject, setActiveProject } from 'ng-morph';
 import { APP_COMPONENT_CONTENT } from '../constants/app-component-content';
 import { Schema } from '../schema';
 import { getAppTemplatePath } from '../utils/get-app-template-path';
-import { getMainPath } from '../utils/get-main-path';
+import { getBootstrapPath } from '../utils/get-main-path';
 import { getProject } from '../utils/get-project';
 
 /**
@@ -32,7 +32,7 @@ export function addLayout(options: Schema): Rule {
         return;
       }
 
-      const mainPath: string | undefined = getMainPath(project);
+      const mainPath: string | undefined = getBootstrapPath(tree, project);
 
       // A project of its own: the one of an earlier step may hold edits that step did not save.
       setActiveProject(createProject(tree, '/', ['**/*.ts', '**/*.json']));

@@ -6,7 +6,7 @@
   "properties": {
     "project": {
       "type": "string",
-      "description": "The project to set up. Its build target must use Angular's application builder."
+      "description": "The project to set up. Its build target must use Angular's application builder or Nx's @nx/angular:application executor."
     },
     "skipInstall": {
       "type": "boolean",

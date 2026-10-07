@@ -175,6 +175,13 @@ export interface RemoteKeywordSnapshot {
   validator?: string;
 }
 
+/** A Shiki (TextMate) language registration of `shiki.langs`: a grammar as plain JSON. */
+export interface ShikiLanguage {
+  readonly name: string;
+  readonly scopeName: string;
+  readonly [key: string]: JsonValue;
+}
+
 export interface GeneratorConfiguration {
   projectId: ProjectId;
   workspaceRoot: FilePath;
@@ -190,7 +197,32 @@ export interface GeneratorConfiguration {
   inlineStyleLanguage: 'CSS' | 'SCSS' | 'SASS' | 'LESS';
   anchorHeadings: Array<'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'>;
   headerTemplate?: FilePath;
+  /**
+   * `false` when `api.protectedMembers` is `false`: API templates then list only public class
+   * members. Absent otherwise, so every other configuration keeps its digest.
+   */
+  apiProtectedMembers?: false;
+  /**
+   * The demo pages (`isolatedDemos`, `demoApplication`, `demoProviders`). Absent when none of them
+   * is set, so every other configuration keeps its digest, and so is every default field:
+   * - `pages`: `all` builds a demo page for every demo, `none` for none; absent, only the guides
+   *   with an isolated demo get them.
+   * - `isolated`: `true` when `isolatedDemos` is: every `demo` action shows an iframe by default.
+   * - `path`: the URL path of the demo pages, absent for `demo-preview`.
+   * - `providers`: the module that `demoProviders` imports.
+   */
+  demoApplication?: {
+    pages?: 'all' | 'none';
+    isolated?: true;
+    path?: string;
+    providers?: FilePath;
+  };
   themes: { light: string; dark: string };
+  /**
+   * The Shiki language registrations of `shiki.langs`, flattened, as plain JSON in configuration
+   * order. Absent without any, so every other configuration keeps its digest.
+   */
+  shikiLangs?: ShikiLanguage[];
   repo?: {
     url: string;
     platform: 'github' | 'gitlab';
@@ -644,6 +676,14 @@ export interface RouteRecord {
    * for the root list), which its route carries as `ngDocApiListSegment` data.
    */
   apiListSegment?: string;
+  /**
+   * The guide's demo routes module (relative to the output root), when the guide has demo pages.
+   * The aggregate lists it in `demo-app.ts`. Optional and only written for such guides, so a cache
+   * written without it stays valid: every other route record is unchanged.
+   */
+  demoModulePath?: string;
+  /** The names of the guide's demo pages, in the order of `demos`, with `demoModulePath`. */
+  demoNames?: string[];
 }
 
 export interface ApiListRecord {

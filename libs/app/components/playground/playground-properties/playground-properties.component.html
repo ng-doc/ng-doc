@@ -16,25 +16,27 @@
             </button>
           }
         </div>
-        <div class="ng-doc-playground-setting">
-          <ng-doc-checkbox [ngModel]="recreateDemo()" (ngModelChange)="recreateDemo.set($event)">
-            Recreate
-          </ng-doc-checkbox>
-          <ng-doc-icon
-            class="ng-doc-playground-info"
-            icon="info"
-            role="img"
-            aria-label="Recreates the demo every time one of the inputs changes"
-            [ngDocTooltip]="'Recreates the demo every time one of the inputs changes'"
-            [positions]="['bottom-right', 'left-center']"></ng-doc-icon>
-        </div>
+        @if (!recreateLocked()) {
+          <div class="ng-doc-playground-setting">
+            <ng-doc-checkbox [ngModel]="recreateDemo()" (ngModelChange)="recreateDemo.set($event)">
+              Recreate
+            </ng-doc-checkbox>
+            <ng-doc-icon
+              class="ng-doc-playground-info"
+              icon="info"
+              role="img"
+              aria-label="Recreates the demo every time one of the inputs changes"
+              [ngDocTooltip]="'Recreates the demo every time one of the inputs changes'"
+              [positions]="['bottom-right', 'left-center']"></ng-doc-icon>
+          </div>
+        }
         <div class="ng-doc-playground-divider"></div>
-        @if (propertyControls().length) {
-          <h5 class="ng-doc-title">Settings</h5>
+        @for (section of propertySections(); track $index) {
+          <h5 class="ng-doc-title">{{ section.title }}</h5>
           <div class="ng-doc-playground-property-list">
-            @for (propertyControl of propertyControls(); track propertyControl.propertyName) {
+            @for (propertyControl of section.controls; track propertyControl.propertyName) {
               <ng-doc-playground-property
-                [name]="propertyControl.property.inputName"
+                [name]="propertyControl.property.label ?? propertyControl.property.inputName"
                 [property]="propertyControl.property"
                 [typeControl]="propertyControl.typeControl"
                 [defaultValue]="defaultValues[propertyControl.propertyName]"

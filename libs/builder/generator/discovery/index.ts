@@ -30,6 +30,7 @@ import {
   RemoteKeywordSnapshot,
   RuntimeImport,
   ServiceResult,
+  ShikiLanguage,
   TemplateActions,
   TemplateEvaluationService,
   TemplateRequest,
@@ -72,7 +73,11 @@ interface RawConfiguration extends LiveRecord {
   routePrefix?: string;
   tsConfig?: string;
   guide?: { anchorHeadings?: GeneratorConfiguration['anchorHeadings']; headerTemplate?: string };
-  shiki?: { themes?: { light?: string; dark?: string } };
+  api?: { protectedMembers?: boolean };
+  isolatedDemos?: unknown;
+  demoApplication?: unknown;
+  demoProviders?: unknown;
+  shiki?: { themes?: { light?: string; dark?: string }; langs?: unknown };
   repoConfig?: GeneratorConfiguration['repo'];
   keywords?: {
     keywords?: Record<string, RawKeyword>;
@@ -866,7 +871,10 @@ async function evaluateModules(
       treeShaking: true,
       tsconfig: normalizeAbsolute(tsConfig, workspaceRoot),
       logLevel: 'silent',
-      plugins: [descriptionSanitizer(modules, dependencies, probes)],
+      plugins: [
+        ...(configFile ? [browserModuleImports(configFile, dependencies)] : []),
+        descriptionSanitizer(modules, dependencies, probes),
+      ],
     });
     throwIfAborted(signal);
     // The module graph of the bundle: each input and the inputs it imports.
@@ -931,6 +939,57 @@ async function evaluateModules(
     }
     throw error;
   }
+}
+
+/** The specifier that stands for a module of `ng-doc.config.ts` that only the browser imports. */
+const BROWSER_MODULE = 'ng-doc-browser-module:';
+
+/**
+ * Keeps the dynamic imports of `ng-doc.config.ts` out of the bundle that discovery evaluates in
+ * Node (`demoProviders: () => import('./demo.providers')` imports Angular code). Each one resolves
+ * as the bundle would resolve it and becomes an external import of a marker that names the
+ * resolved file, so the function's source names that file; `demoApplicationSettings` reads it from
+ * there. The resolved file's existence is a configuration input; its content is not, because only
+ * the demo application imports it.
+ */
+function browserModuleImports(
+  configFile: string,
+  dependencies: ObservationRecorder,
+): esbuild.Plugin {
+  const config = normalizePath(path.resolve(configFile));
+  return {
+    name: 'ng-doc-browser-module-imports',
+    setup(build: esbuild.PluginBuild) {
+      build.onResolve({ filter: /.*/ }, async (args) => {
+        if (
+          args.kind !== 'dynamic-import' ||
+          args.pluginData?.ngDocBrowserModule ||
+          !path.isAbsolute(args.importer) ||
+          normalizePath(path.resolve(args.importer)) !== config
+        ) {
+          return undefined;
+        }
+        // The resolution probes of a relative import are configuration inputs, as for any import
+        // of the configuration: a file added in front of the resolved one changes the result.
+        if (path.isAbsolute(args.path) || /^\.{1,2}\//.test(args.path)) {
+          observeResolutionCandidates(path.resolve(args.resolveDir, args.path), dependencies);
+        }
+        const resolved = await build.resolve(args.path, {
+          kind: 'dynamic-import',
+          importer: args.importer,
+          resolveDir: args.resolveDir,
+          pluginData: { ngDocBrowserModule: true },
+        });
+        if (resolved.errors.length || !resolved.path || resolved.external) {
+          // Left to esbuild, which reports the failure, or to the evaluation, which never runs it.
+          return { path: args.path, external: true };
+        }
+        const file = normalizeAbsolute(resolved.path);
+        dependencies.add({ kind: 'existence', path: file, exists: true });
+        return { path: `${BROWSER_MODULE}${encodeURIComponent(file)}`, external: true };
+      });
+    },
+  };
 }
 
 function descriptionSanitizer(
@@ -1296,6 +1355,7 @@ async function normalizeConfiguration(
   const globalKeywords = normalizeKeywords(
     validGlobalKeywords(raw.keywords?.keywords ?? {}, configFile ?? workspaceRoot, diagnostics),
   );
+  const shikiLangs = shikiLanguages(raw.shiki?.langs, configFile ?? workspaceRoot, diagnostics);
   const remoteKeywords: RemoteKeywordSnapshot[] = [];
   const executables: ExecutableProvenance[] = [];
   const loaders = raw.keywords?.loaders ?? [];
@@ -1350,6 +1410,10 @@ async function normalizeConfiguration(
     ? normalizeAbsolute(raw.guide.headerTemplate, workspaceRoot)
     : undefined;
   if (headerTemplate) dependencies.observeFile(headerTemplate);
+  const demoApplication = demoApplicationSettings(raw, configFile ?? workspaceRoot, diagnostics);
+  if (diagnostics.some((item) => item.severity === 'error')) {
+    return { globalKeywords, remoteKeywords, diagnostics };
+  }
   const withoutDigest = {
     projectId: request.projectId,
     workspaceRoot,
@@ -1367,10 +1431,13 @@ async function normalizeConfiguration(
     inlineStyleLanguage: options.inlineStyleLanguage,
     anchorHeadings: raw.guide?.anchorHeadings ?? options.defaultAnchorHeadings,
     headerTemplate,
+    ...(raw.api?.protectedMembers === false ? { apiProtectedMembers: false as const } : {}),
+    ...(demoApplication ? { demoApplication } : {}),
     themes: {
       light: raw.shiki?.themes?.light ?? options.defaultThemes.light,
       dark: raw.shiki?.themes?.dark ?? options.defaultThemes.dark,
     },
+    ...(shikiLangs.length ? { shikiLangs } : {}),
     repo: raw.repoConfig
       ? {
           url: raw.repoConfig.url,
@@ -1396,6 +1463,116 @@ async function normalizeConfiguration(
     digest: digestOf({ settings: digestSettings, inputs: digestDependencies(dependencies.all()) }),
   };
   return { configuration, globalKeywords, remoteKeywords, diagnostics };
+}
+
+/** The default URL path of the demo pages. */
+export const DEFAULT_DEMO_PATH = 'demo-preview';
+
+/** A URL segment of the demo path; never `_` or `.` first, which some static hosts skip. */
+const DEMO_PATH_SEGMENT = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
+
+/**
+ * `isolatedDemos`, `demoApplication` and `demoProviders` as `GeneratorConfiguration` settings.
+ * Undefined when none of them changes a default, so every other configuration keeps its digest.
+ */
+function demoApplicationSettings(
+  raw: RawConfiguration,
+  source: string,
+  diagnostics: Diagnostic[],
+): GeneratorConfiguration['demoApplication'] {
+  const invalid = (code: string, message: string): undefined => {
+    diagnostics.push({
+      code,
+      severity: 'error',
+      stage: 'evaluation',
+      message,
+      source: { path: source },
+    });
+    return undefined;
+  };
+  const { isolatedDemos, demoApplication, demoProviders } = raw;
+  if (isolatedDemos !== undefined && typeof isolatedDemos !== 'boolean') {
+    return invalid('DISCOVERY_DEMO_APPLICATION_INVALID', 'isolatedDemos must be a boolean.');
+  }
+  const configured = demoApplication !== null && typeof demoApplication === 'object';
+  if (demoApplication !== undefined && typeof demoApplication !== 'boolean' && !configured) {
+    return invalid(
+      'DISCOVERY_DEMO_APPLICATION_INVALID',
+      'demoApplication must be a boolean or an object.',
+    );
+  }
+  let demoPath: string | undefined;
+  if (configured && (demoApplication as { path?: unknown }).path !== undefined) {
+    const value = (demoApplication as { path?: unknown }).path;
+    const segments = typeof value === 'string' ? value.split('/').filter(Boolean) : [];
+    if (!segments.length || segments.some((segment) => !DEMO_PATH_SEGMENT.test(segment))) {
+      return invalid(
+        'DISCOVERY_DEMO_PATH_INVALID',
+        `demoApplication.path must be one or more URL segments of letters, digits, '-', '_' and '.', ` +
+          `each starting with a letter or a digit; got ${JSON.stringify(value)}.`,
+      );
+    }
+    demoPath = segments.join('/');
+  }
+  const providers =
+    demoProviders === undefined ? undefined : demoProvidersModule(demoProviders, invalid);
+  if (demoProviders !== undefined && !providers) return undefined;
+  if (demoApplication === false && isolatedDemos === true) {
+    diagnostics.push({
+      code: 'DISCOVERY_DEMO_APPLICATION_OFF',
+      severity: 'warning',
+      stage: 'evaluation',
+      message:
+        'isolatedDemos has no effect while demoApplication is false: demos render in the page.',
+      source: { path: source },
+    });
+  }
+  const pages =
+    demoApplication === false
+      ? ('none' as const)
+      : isolatedDemos === true || demoApplication === true || configured
+        ? ('all' as const)
+        : undefined;
+  const settings = {
+    ...(pages ? { pages } : {}),
+    ...(isolatedDemos === true && pages !== 'none' ? { isolated: true as const } : {}),
+    ...(demoPath && demoPath !== DEFAULT_DEMO_PATH ? { path: demoPath } : {}),
+    ...(providers ? { providers } : {}),
+  };
+  return Object.keys(settings).length ? settings : undefined;
+}
+
+/**
+ * The module that `demoProviders` imports, read from the function's source: the configuration's
+ * bundle turned its `import()` into an external import of a marker that names the resolved file
+ * (`browserModuleImports`). The function is never called.
+ */
+function demoProvidersModule(
+  value: unknown,
+  invalid: (code: string, message: string) => undefined,
+): string | undefined {
+  const usage = "write it as `demoProviders: () => import('./demo.providers')` in ng-doc.config.ts";
+  if (typeof value !== 'function') {
+    return invalid(
+      'DISCOVERY_DEMO_PROVIDERS_INVALID',
+      `demoProviders must be a function: ${usage}.`,
+    );
+  }
+  const compact = Function.prototype.toString.call(value).replace(/\s+/g, '');
+  const marker = `(["'\`])${BROWSER_MODULE}([^"'\`]+)\\1`;
+  const match =
+    new RegExp(`^(?:async)?\\(\\)=>\\(?import\\(${marker}\\)\\)?$`).exec(compact) ??
+    new RegExp(`^(?:async)?\\(\\)=>\\{returnimport\\(${marker}\\);?\\}$`).exec(compact);
+  if (!match) {
+    return invalid(
+      'DISCOVERY_DEMO_PROVIDERS_IMPORT',
+      compact.includes(BROWSER_MODULE)
+        ? `demoProviders must only import its module: ${usage}.`
+        : `demoProviders must import a file by a literal path that resolves from ng-doc.config.ts: ${usage}.`,
+    );
+  }
+  // The bundle resolved it to an existing file, a configuration input (`browserModuleImports`).
+  return decodeURIComponent(match[2]);
 }
 
 function describeEntries(
@@ -1731,6 +1908,86 @@ function validGlobalKeywords(
       });
   }
   return valid;
+}
+
+/**
+ * The language registrations of `shiki.langs`, flattened one level (a module of `@shikijs/langs`
+ * exports an array of them) and copied as plain JSON, which the highlight cache keys and render
+ * threads receive. Anything else, such as a function or a promise, fails the configuration.
+ */
+function shikiLanguages(
+  value: unknown,
+  source: string,
+  diagnostics: Diagnostic[],
+): ShikiLanguage[] {
+  if (value === undefined) return [];
+  const invalid = (message: string): ShikiLanguage[] => {
+    diagnostics.push({
+      code: 'DISCOVERY_SHIKI_LANGUAGE_INVALID',
+      severity: 'error',
+      stage: 'evaluation',
+      message,
+      source: { path: source },
+    });
+    return [];
+  };
+  if (!Array.isArray(value))
+    return invalid('shiki.langs must be an array of Shiki language registrations.');
+  const languages: ShikiLanguage[] = [];
+  for (const [index, entry] of value.entries()) {
+    for (const item of Array.isArray(entry) ? (entry as unknown[]) : [entry]) {
+      const json = plainJson(item, 0);
+      if (
+        !json ||
+        typeof json !== 'object' ||
+        Array.isArray(json) ||
+        typeof json['name'] !== 'string' ||
+        !json['name'] ||
+        typeof json['scopeName'] !== 'string' ||
+        !json['scopeName']
+      )
+        return invalid(
+          `shiki.langs[${index}] is not a Shiki language registration: plain JSON data with a ` +
+            'name and a scopeName. Import the grammar instead of passing a function or a promise.',
+        );
+      languages.push(json as ShikiLanguage);
+    }
+  }
+  return languages;
+}
+
+/**
+ * A copy of `value` when it is plain JSON data, or undefined. The configuration is evaluated in
+ * its own realm, so a plain object is recognized by the shape of its prototype chain.
+ */
+function plainJson(value: unknown, depth: number): JsonValue | undefined {
+  // Deeper than any grammar nests: a cycle.
+  if (depth > 256) return undefined;
+  if (value === null || typeof value === 'boolean' || typeof value === 'string') return value;
+  if (typeof value === 'number') return Number.isFinite(value) ? value : undefined;
+  if (Array.isArray(value)) {
+    const copy: JsonValue[] = [];
+    for (const item of value) {
+      const json = plainJson(item, depth + 1);
+      if (json === undefined) return undefined;
+      copy.push(json);
+    }
+    return copy;
+  }
+  if (typeof value !== 'object') return undefined;
+  const prototype: unknown = Object.getPrototypeOf(value);
+  if (
+    (prototype !== null && Object.getPrototypeOf(prototype) !== null) ||
+    Object.prototype.toString.call(value) !== '[object Object]'
+  )
+    return undefined;
+  const copy: Record<string, JsonValue> = {};
+  for (const [key, item] of Object.entries(value)) {
+    const json = plainJson(item, depth + 1);
+    if (json === undefined) return undefined;
+    copy[key] = json;
+  }
+  return copy;
 }
 
 function normalizeKeywords(value: Record<string, RawKeyword>): KeywordExport[] {

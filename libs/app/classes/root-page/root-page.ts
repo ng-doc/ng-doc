@@ -40,4 +40,14 @@ export abstract class NgDocRootPage {
    * The page demo assets that have code examples of the demo components
    */
   readonly demoAssets?: NgDocDemoAssets;
+
+  /**
+   * The path of the page's demo pages, relative to the base href, when the Vite engine built them:
+   * the demo `X` has its page at `<base href><demoRoute>/X`. Isolated demos show it in an iframe,
+   * and the demo toolbar opens it in a new tab.
+   */
+  readonly demoRoute?: string;
+
+  /** Whether the page's demos are isolated unless their `demo` action says otherwise (`isolatedDemos`). */
+  readonly isolatedDemos?: boolean;
 }

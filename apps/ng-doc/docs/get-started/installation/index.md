@@ -32,17 +32,25 @@ The command chooses the engine from the application:
 
 - **The Vite engine** (`*ViteHostPage`) for a standalone application, one that calls
   `bootstrapApplication`, whose `build` target uses Angular's `application` builder
-  (`@angular/build:application` or `@angular-devkit/build-angular:application`). `ng new` creates
-  such an application.
+  (`@angular/build:application` or `@angular-devkit/build-angular:application`) or Nx's
+  `@nx/angular:application` executor, which runs it ([Nx workspaces](#nx-workspaces)). `ng new`
+  and `nx g @nx/angular:application` create such an application.
 - **The legacy builders** (`*LegacyBuildersPage`) for an NgModule application, one that calls
-  `bootstrapModule`, and for an application whose `build` target uses another builder, such as
-  `@nx/angular:application` or the `browser` builder. The command says so in its output.
+  `bootstrapModule`, and for an application whose `build` target uses another builder, such as the
+  `browser` builder or Nx's `@nx/angular:browser-esbuild`. The command says so in its output.
 - **The builders it already has** for a project that uses NgDoc: `ng add` never switches the engine,
   even with `--engine`. `ng g @ng-doc/builder:migrate-to-vite` moves a project from the legacy
   builders (`*MigrateToNewEnginePage`).
+- **No NgDoc builder** for an application whose `build` or `serve` target uses a builder that is
+  neither Angular's nor NgDoc's, such as `@angular-architects/native-federation:build` or a custom
+  builder: replacing it would break the application. The command keeps the builders, sets up the
+  rest (the styles, assets and budget go to the target with the Angular build options, such as the
+  `esbuild` target of native federation) and links to
+  `*DevServerAndBuildsPage#keep-another-builder`, which generates the documentation with the
+  `ng-doc` command next to your builder.
 
 To choose yourself, pass `--engine` (see the options below). `--engine legacy` sets up the legacy
-builders in any project that doesn't use NgDoc yet. `--engine vite` stops with an error in an
+builders in any project that doesn't use NgDoc yet, in place of any builder. `--engine vite` stops with an error in an
 application that the Vite engine can't build (`*LegacyBuildersPage#when-ng-add-sets-them-up`).
 
 ## 🚀 Start the site
@@ -132,6 +140,23 @@ held in a variable), it leaves that code as it is and tells you what to add by h
 > polyfill, so a zoneless application (the default since Angular 21) stays zoneless, and an
 > application that uses `provideZoneChangeDetection()` keeps it. It does not add `withFetch()`
 > either: `HttpClient` uses the Fetch API by default since Angular 22.
+
+### Nx workspaces
+
+Nx's `@nx/angular:application` and `@nx/angular:dev-server` executors run Angular's builders with
+the same options, so the command sets up the Vite engine for them as it does for Angular's builders:
+
+- **Targets:** `build` and `serve` use the Vite builders, and `build-angular` keeps the
+  `@nx/angular:application` executor with the original options. Other targets that name `build`,
+  such as `serve-static`, keep working: the Vite build writes the `browser` folder to the same
+  `outputPath`. `targetDefaults` that `nx.json` sets for the `@nx/angular:application` executor now
+  apply to `build-angular`, not to `build`.
+- **Nx's own options:** the Vite engine reads workspace libraries from source through the tsconfig
+  `paths`, as Nx does by default (`buildLibsFromSource`). The command lists the options it can't
+  carry over among the changes to make by hand: esbuild `plugins`, `indexHtmlTransformer`,
+  `esbuildMiddleware` of the development server, and `buildLibsFromSource: false`. Handle them in
+  `vite.config.mjs`, for example with a Vite plugin.
+- **Files:** Nx writes the targets to the project's `project.json` in its own layout.
 
 ## Manual setup
 

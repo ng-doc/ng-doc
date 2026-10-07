@@ -1,0 +1,49 @@
+.card {
+  display: flex;
+  gap: 16px;
+  max-width: 560px;
+  padding: 16px;
+  border: 1px solid var(--ng-doc-border-color);
+  border-radius: 12px;
+  background: var(--ng-doc-background);
+  color: var(--ng-doc-text);
+}
+
+.cover {
+  flex: 0 0 120px;
+  min-height: 96px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--ng-doc-primary), var(--ng-doc-info));
+}
+
+h3 {
+  margin: 0 0 8px;
+}
+
+p {
+  margin: 0;
+}
+
+.narrow {
+  display: none;
+}
+
+// A media query: it responds to the width of the viewport, which the preview widths set only for
+// an isolated demo.
+@media (max-width: 480px) {
+  .card {
+    flex-direction: column;
+  }
+
+  .cover {
+    flex-basis: 64px;
+  }
+
+  .wide {
+    display: none;
+  }
+
+  .narrow {
+    display: block;
+  }
+}

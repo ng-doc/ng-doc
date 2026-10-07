@@ -5,8 +5,13 @@ import path from 'node:path';
 
 import { createArtifactCache, JsonArtifactCache, retryingRename } from '../artifacts';
 import { GeneratorContentCompiler } from '../content/content-compiler';
-import { type HighlightSession, createHighlightSession } from '../content/highlight-cache';
-import { type RenderBack,createRenderBack } from '../content/html-pool';
+import { type FormatSession, createFormatSession } from '../content/format-cache';
+import {
+  type HighlightSession,
+  createHighlightSession,
+  grammarsSwitch,
+} from '../content/highlight-cache';
+import { type RenderBack, createRenderBack } from '../content/html-pool';
 import type {
   CompilationRequest,
   Dependency,
@@ -19,6 +24,7 @@ import { GENERATOR_SCHEMA_VERSION } from '../contracts';
 import type { createDiscoveryServices } from '../discovery';
 import { type DependencyRefresher, createDependencyIndex, validateSemanticScopes } from '../graph';
 import type { OutputAssembler } from '../outputs';
+import { useFormatCache } from '../semantic/formatting';
 import { programDigestOf } from '../semantic/semantic-closure';
 import type { SemanticServiceImpl } from '../semantic/semantic-service';
 import { type Unit, dependencyKey, diagnostic, hash, uniqueDependencies } from './common';
@@ -75,6 +81,8 @@ export interface GenerationPlan extends CompilationServices {
   compiler: GeneratorContentCompiler;
   /** The cache of highlighted code blocks, when this generation uses one (`content/highlight-cache`). */
   highlight?: HighlightSession;
+  /** The cache of formatted signatures and snippets, when this generation uses one (`content/format-cache`). */
+  format?: FormatSession;
   /** Where the content's HTML pipeline runs, when it may run on threads (`content/html-pool`). */
   back?: RenderBack;
 }
@@ -82,6 +90,16 @@ export interface GenerationPlan extends CompilationServices {
 /**
  * Setup phase: previous artifacts (session snapshot or cache index), reuse switches and the output
  * templates. Its diagnostics are recorded as the `setup` phase.
+ * @param services
+ * @param input
+ * @param input.request
+ * @param input.signal
+ * @param input.records
+ * @param input.refresher
+ * @param input.found
+ * @param input.programDependencies
+ * @param input.scopedSemantic
+ * @param input.scratch
  */
 export async function planGeneration(
   services: CompilationServices,
@@ -217,14 +235,21 @@ export async function planGeneration(
   setup(outputDependencyResult.diagnostics, outputDependencyResult.dependencies);
   const outputDependencies = outputDependencyResult.dependencies;
   const highlight = createHighlightSession(options, request, configuration);
+  // The semantic service formats through it until the compile ends (`compiler/index.ts`).
+  const format = createFormatSession(options, request, configuration);
+  useFormatCache(format);
+  const grammars = grammarsSwitch(options);
   const back = createRenderBack(options, highlight, {
     themes: configuration.themes,
+    ...(configuration.shikiLangs ? { langs: configuration.shikiLangs } : {}),
+    ...(grammars === 'all' ? { grammars } : {}),
     cache: highlight !== undefined,
   });
   const compiler = new GeneratorContentCompiler(
     { configuration, semantic, templates: discovery.templates },
     highlight,
     back,
+    grammars,
   );
   return {
     ...services,
@@ -247,6 +272,7 @@ export async function planGeneration(
     memo,
     compiler,
     ...(highlight ? { highlight } : {}),
+    ...(format ? { format } : {}),
     ...(back ? { back } : {}),
     scopedSemantic,
   };
@@ -255,6 +281,8 @@ export async function planGeneration(
 /**
  * Plan phase, after describe: the current descriptor plan, in which a duplicate descriptor fails
  * the generation. Every descriptor of the plan is rendered.
+ * @param plan
+ * @param units
  */
 export function planContent(plan: GenerationPlan, units: Unit[]): void {
   const diagnostics: Diagnostic[] = [];
@@ -282,6 +310,9 @@ const indexPath = (root: string, projectId: string) =>
 /**
  * The artifacts the cache index names, in its order. An entry that cannot be read is left out
  * with its diagnostics; an index of another schema version restores nothing.
+ * @param root
+ * @param projectId
+ * @param diagnostics
  */
 export async function restoreIndex(
   root: string,
@@ -337,6 +368,12 @@ export async function restoreIndex(
     return [];
   }
 }
+/**
+ *
+ * @param root
+ * @param projectId
+ * @param artifacts
+ */
 export async function saveIndex(
   root: string,
   projectId: string,

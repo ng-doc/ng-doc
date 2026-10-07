@@ -69,7 +69,7 @@
         {{ overloadMacro.render(overloads) }}
     {% endif %}
 {% else %}
-    {{ membersMacro.render(declaration) }}
+    {{ membersMacro.render(declaration, hideProtectedMembers) }}
 {% endif %}
 
 {% include "parts/examples.html.nunj" %}

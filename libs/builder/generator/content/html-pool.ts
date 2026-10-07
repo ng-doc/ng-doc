@@ -3,7 +3,7 @@ import { availableParallelism } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { Worker } from 'node:worker_threads';
 
-import type { CompilationRequest, KeywordExport } from '../contracts';
+import type { CompilationRequest, KeywordExport, ShikiLanguage } from '../contracts';
 import { PARALLEL_RENDER_FLAG, readFlag } from '../kernel/flags';
 import { decode, encode } from '../worker/protocol';
 import type { ContentBack } from './content-compiler';
@@ -214,9 +214,15 @@ class HtmlThread {
   }
 }
 
-/** A warm-up: the themes to set the highlighter up for, and whether the cached plugin is used. */
+/**
+ * A warm-up: the themes and languages to set the highlighter up for, and whether the cached
+ * plugin is used.
+ */
 export interface RenderWarmUp {
   themes: { light: string; dark: string };
+  langs?: readonly ShikiLanguage[];
+  /** `all` when highlighting loads every bundled grammar. */
+  grammars?: 'all';
   cache: boolean;
 }
 

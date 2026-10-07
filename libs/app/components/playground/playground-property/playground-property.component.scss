@@ -6,6 +6,20 @@
   }
 }
 
+// A row without the `<label>` lays out its caption and content like the label component does.
+.ng-doc-playground-property-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  > .ng-doc-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+}
+
 // The name, with its type chip underneath, beside the control.
 .ng-doc-playground-property-label.with-label {
   display: grid;

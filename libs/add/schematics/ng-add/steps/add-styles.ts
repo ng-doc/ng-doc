@@ -9,6 +9,7 @@ import {
 
 import { NG_DOC_STYLES } from '../constants/styles';
 import { Schema } from '../schema';
+import { getBuildOptionsTarget } from '../utils/get-build-options-target';
 import { getProject } from '../utils/get-project';
 
 /**
@@ -35,7 +36,7 @@ export function addStyles(options: Schema): Rule {
 
         const targetOptions: Record<string, JsonValue | undefined> = getProjectTargetOptions(
           project,
-          'build',
+          getBuildOptionsTarget(project),
         );
         const styles: JsonArray | undefined = targetOptions['styles'] as JsonArray | undefined;
 

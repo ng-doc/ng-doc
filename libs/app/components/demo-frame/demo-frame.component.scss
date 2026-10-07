@@ -1,0 +1,67 @@
+:host {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.ng-doc-demo-frame-iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color-scheme: normal;
+}
+
+// Until the demo reports its size, the iframe lies invisible over the placeholder, with the
+// placeholder's size: a browser loads a lazy iframe only when it is near the viewport, and an
+// iframe without a size eagerly.
+:host(:not([data-ng-doc-state='ready'])) .ng-doc-demo-frame-iframe {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+:host([data-ng-doc-fill='true']) {
+  height: 100%;
+
+  .ng-doc-demo-frame-iframe {
+    height: 100%;
+  }
+}
+
+.ng-doc-demo-frame-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ng-doc-space-3);
+  padding: var(--ng-doc-space-4);
+  font-size: 13px;
+  color: var(--ng-doc-text-muted);
+  text-align: center;
+}
+
+.ng-doc-demo-frame-skeleton {
+  width: min(240px, 100%);
+  height: 32px;
+  border-radius: var(--ng-doc-radius-md);
+  background: var(--ng-doc-base-2);
+  animation: ng-doc-demo-frame-pulse 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes ng-doc-demo-frame-pulse {
+  from {
+    opacity: 0.5;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ng-doc-demo-frame-skeleton {
+    animation: none;
+  }
+}

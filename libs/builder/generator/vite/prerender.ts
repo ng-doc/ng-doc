@@ -17,6 +17,8 @@ export interface NgDocPrerenderOptions {
   discoverRoutes?: boolean;
   /** Fails a route that takes longer to render, in milliseconds (default: no limit). */
   routeTimeoutMs?: number;
+  /** The demo application's server bundle (`demo-server.mjs`), when the build has demo pages. */
+  demoServerEntry?: string;
   signal?: AbortSignal;
   /** The child process entry; tests replace it. */
   entryUrl?: URL;
@@ -48,6 +50,7 @@ export function prerenderNgDoc(options: NgDocPrerenderOptions): Promise<Prerende
     routes: [...(options.routes ?? [])],
     discoverRoutes: options.discoverRoutes ?? true,
     ...(options.routeTimeoutMs === undefined ? {} : { routeTimeoutMs: options.routeTimeoutMs }),
+    ...(options.demoServerEntry ? { demoServerEntry: options.demoServerEntry } : {}),
   };
   if (
     request.routeTimeoutMs !== undefined &&

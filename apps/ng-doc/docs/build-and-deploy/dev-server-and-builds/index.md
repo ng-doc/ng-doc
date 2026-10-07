@@ -70,12 +70,13 @@ Some applications are built by a builder that NgDoc must not replace, such as th
 `@angular-architects/native-federation`, which runs Angular's `application` builder from another
 target. Keep that builder, and generate the documentation with the `ng-doc` command instead:
 
-1. Don't let `ng add` set up the builders: it replaces the `build` and `serve` builders of the
-   application. If you have run it, restore the original `build` and `serve` targets. Set NgDoc up
-   by hand with steps 1 to 5 of `*InstallationPage#manual-setup`, without `vite` and
+1. Run `ng add @ng-doc/add` without `--engine`. It keeps a `build` or `serve` builder that is
+   neither Angular's nor NgDoc's, and sets up everything else: the packages, the providers, the
+   layout, the `@ng-doc/generated` path, and the styles, assets and budget of step 2. Or set NgDoc
+   up by hand with steps 1 to 5 of `*InstallationPage#manual-setup`, without `vite` and
    `@analogjs/vite-plugin-angular`: the Vite engine of step 6 isn't needed.
-2. Add the NgDoc styles and assets to the target that builds the application. With native
-   federation, it is the `esbuild` target, which its `build` target runs:
+2. The NgDoc styles and assets go to the target that builds the application; `ng add` adds them
+   there. With native federation, it is the `esbuild` target, which its `build` target runs:
 
    <!-- prettier-ignore -->
    ```json name="angular.json"

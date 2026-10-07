@@ -14,18 +14,20 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import type { ContentCompilerServices, Diagnostic } from '../../contracts';
-import { HIGHLIGHT_CACHE_FLAG } from '../../kernel/flags';
-import { GeneratorContentCompiler } from '../content-compiler';
+import type { ContentCompilerServices, Diagnostic, ShikiLanguage } from '../../contracts';
+import { HIGHLIGHT_CACHE_FLAG, USED_GRAMMARS_FLAG } from '../../kernel/flags';
+import { type ContentBack, GeneratorContentCompiler } from '../content-compiler';
 import {
   type HighlightBlock,
   createHighlightSession,
+  grammarsSwitch,
   HIGHLIGHT_CACHE_LIMIT,
   HIGHLIGHT_CACHE_MISMATCH,
   highlightCacheSwitch,
   HighlightSession,
   resetHighlightCache,
 } from '../highlight-cache';
+import { type RenderTask, renderDocuments } from '../html-pipeline';
 
 // The cache of highlighted code blocks: `processHtml` with it is byte-equal to `processHtml`
 // without it, with the cache cold, warm, read from a pack and corrupted, over every code block of
@@ -41,11 +43,15 @@ vi.mock('node:fs/promises', async (importOriginal) => {
   };
 });
 
-const packages = vi.hoisted(() => ({ shiki: '1.10.3' as string | null }));
+// A fixed Shiki release, so that keys do not depend on the installed one; a test changes any
+// package of `overrides`.
+const packages = vi.hoisted(() => ({
+  overrides: { shiki: '4.5.0' } as Record<string, string | null>,
+}));
 vi.mock('../../kernel/runtime-identity', async (importOriginal) => {
   const actual = await importOriginal<typeof import('../../kernel/runtime-identity')>();
   return {
-    runtimePackages: () => ({ ...actual.runtimePackages(), shiki: packages.shiki }),
+    runtimePackages: () => ({ ...actual.runtimePackages(), ...packages.overrides }),
   };
 });
 
@@ -56,10 +62,13 @@ afterEach(() => {
   resetHighlightCache();
   vi.unstubAllEnvs();
   writes.fail = undefined;
-  packages.shiki = '1.10.3';
+  packages.overrides = { shiki: '4.5.0' };
   for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true });
 });
 
+/**
+ *
+ */
 function temporary(): string {
   const root = realpathSync(mkdtempSync(path.join(tmpdir(), 'highlight-cache-')));
   roots.push(root);
@@ -77,7 +86,10 @@ const configuration = (cacheRoot: string, themes = SITE_THEMES) => ({
 
 const development = { mode: 'development' as const };
 
-/** A content compiler: the corpus is rendered by its own Markdown renderer. */
+/**
+ * A content compiler: the corpus is rendered by its own Markdown renderer.
+ * @param highlight
+ */
 const compiler = (highlight?: HighlightSession) =>
   new GeneratorContentCompiler(
     {
@@ -163,17 +175,24 @@ describe('processHtml with the highlight cache', () => {
     expect(blocks).toBeGreaterThan(350);
     expect(expected.every((result) => !result.error)).toBe(true);
 
+    // Only the grammars the blocks use (the generator's default): the same HTML.
+    for (const [index, html] of documents.entries())
+      expect(await processHtml(html, { ...options(), grammars: 'used' }), `used ${index}`).toEqual(
+        expected[index],
+      );
+
     const root = temporary();
-    const run = async (label: string) => {
+    const run = async (label: string, grammars: 'all' | 'used' = 'all') => {
       const session = createHighlightSession(
         { projectId: 'site' },
         development,
         configuration(root),
       );
       for (const [index, html] of documents.entries())
-        expect(await processHtml(html, options(session)), `${label} ${index}`).toEqual(
-          expected[index],
-        );
+        expect(
+          await processHtml(html, { ...options(session), grammars }),
+          `${label} ${index}`,
+        ).toEqual(expected[index]);
       return session!;
     };
     // Cold, then warm from this runtime's memory, then saved and read by a fresh runtime.
@@ -181,6 +200,10 @@ describe('processHtml with the highlight cache', () => {
     const pack = path.join(root, packOf(root)!);
     const written = readFileSync(pack, 'utf8');
     await run('warm');
+    resetHighlightCache();
+    // Cold with only the grammars the blocks use: the same entries.
+    await (await run('cold, used grammars', 'used')).save(true);
+    expect(readFileSync(pack, 'utf8')).toBe(written);
     resetHighlightCache();
     const fromPack = await run('pack');
     await fromPack.save(true);
@@ -252,15 +275,77 @@ describe('the key', () => {
       key({}, { light: 'github-light', dark: NG_DOC_SYNTAX_THEME_NAME }),
       key({}, { light: NG_DOC_SYNTAX_THEME_NAME, dark: 'github-dark' }),
     ];
-    packages.shiki = '9.9.9';
+    // Shiki and every package it highlights with, and the plugin that runs it.
+    for (const name of [
+      'shiki',
+      '@shikijs/core',
+      '@shikijs/langs',
+      '@shikijs/themes',
+      '@shikijs/engine-oniguruma',
+      '@shikijs/vscode-textmate',
+      '@shikijs/rehype',
+    ]) {
+      packages.overrides = { shiki: '4.5.0', [name]: '9.9.9' };
+      variants.push(key());
+    }
+    packages.overrides = { shiki: null };
     variants.push(key());
-    packages.shiki = null;
-    variants.push(key());
+    packages.overrides = { shiki: '4.5.0' };
+    // The configured languages, and each block's languages.
+    const lang = { name: 'x', scopeName: 'source.x', patterns: [] };
+    const withLanguages = (langs: ShikiLanguage[]) =>
+      createHighlightSession({ projectId: 'site' }, development, {
+        ...configuration('/cache'),
+        shikiLangs: langs,
+      })!
+        .call()
+        .key(block);
+    variants.push(withLanguages([lang]), withLanguages([{ ...lang, patterns: [{}] }]));
+    expect(withLanguages([])).toBe(base);
+    variants.push(key({ languages: 'a' }));
+    // A package that does not highlight leaves the key alone.
+    packages.overrides = { shiki: '4.5.0', prettier: '0.0.0' };
+    expect(key()).toBe(base);
     expect(new Set([base, ...variants]).size).toBe(variants.length + 1);
   });
 });
 
 describe('the switch and the session', () => {
+  it('loads only the used grammars unless usedGrammars or NGDOC_USED_GRAMMARS turns it off', async () => {
+    expect(grammarsSwitch({})).toBe('used');
+    expect(grammarsSwitch({ usedGrammars: true })).toBe('used');
+    expect(grammarsSwitch({ usedGrammars: false })).toBe('all');
+    vi.stubEnv(USED_GRAMMARS_FLAG, '0');
+    expect(grammarsSwitch({})).toBe('all');
+    vi.stubEnv(USED_GRAMMARS_FLAG, '1');
+    expect(grammarsSwitch({})).toBe('used');
+    // The content compiler's render tasks name `all` only when the switch is off.
+    const tasks: RenderTask[] = [];
+    const back = {
+      render: (task: RenderTask) => {
+        tasks.push(task);
+        return renderDocuments(task, () => undefined);
+      },
+    } as unknown as ContentBack;
+    const services = {
+      configuration: { anchorHeadings: ['h1'], themes: SITE_THEMES },
+    } as unknown as ContentCompilerServices;
+    const html = '<pre><code class="language-ts">const a = 1;</code></pre>';
+    const rendered = [];
+    for (const grammars of [undefined, 'used', 'all'] as const) {
+      const content = new GeneratorContentCompiler(services, undefined, back, grammars);
+      const render = (
+        content as unknown as {
+          render(documents: unknown[], signal: AbortSignal, staged: () => void): Promise<unknown>;
+        }
+      ).render.bind(content);
+      rendered.push(await render([{ html }], new AbortController().signal, () => undefined));
+    }
+    expect(tasks.map((task) => task.grammars)).toEqual([undefined, undefined, 'all']);
+    expect(rendered[1]).toEqual(rendered[0]);
+    expect(rendered[2]).toEqual(rendered[0]);
+  });
+
   it('reads the option and NGDOC_HIGHLIGHT_CACHE', () => {
     expect(highlightCacheSwitch({})).toBe('on');
     expect(highlightCacheSwitch({ highlightCache: true })).toBe('on');
@@ -349,6 +434,10 @@ describe('the pack', () => {
     )!;
   const html = `<pre><code class="language-typescript" metastring="">const one = 1;</code></pre><pre><code class="language-css" metastring="">a { color: red; }</code></pre>`;
 
+  /**
+   *
+   * @param root
+   */
   async function warm(root: string): Promise<{ file: string; text: string }> {
     const first = session(root);
     await processHtml(html, options(first));

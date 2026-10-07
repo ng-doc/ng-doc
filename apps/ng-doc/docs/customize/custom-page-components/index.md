@@ -129,4 +129,4 @@ and return a new anchor from `nodeToReplace`. The component projects the element
 
 {% endindex %}
 
-Next: `*DevServerAndBuildsPage`
+Next: `*BrowserTabTitlesPage`

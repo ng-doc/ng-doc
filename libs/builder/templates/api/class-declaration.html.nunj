@@ -7,10 +7,12 @@
 {% import "helpers/modifier.html.nunj" as modifierMacro %}
 
 {% block overview %}
+    {#- The new engine sets `hideProtectedMembers` for `api.protectedMembers: false`; the legacy engine never does. #}
+    {%- set memberScopes = ["public"] if hideProtectedMembers else ["public", "protected"] -%}
     {%- set constructors = declaration.getConstructors() | filterByScope("public") | excludeByJsDocTags('internal') -%}
-    {%- set allProperties = declaration | getClassProperties | excludeByJsDocTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
-    {%- set allMethods = declaration | getClassMethods | excludeByJsDocTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
-    {%- set allAccessors = declaration | getClassAccessors | excludeByJsDocTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
+    {%- set allProperties = declaration | getClassProperties | excludeByJsDocTags('internal') | filterByScope(memberScopes) | filterUselessMembers | sortByNodesName -%}
+    {%- set allMethods = declaration | getClassMethods | excludeByJsDocTags('internal') | filterByScope(memberScopes) | filterUselessMembers | sortByNodesName -%}
+    {%- set allAccessors = declaration | getClassAccessors | excludeByJsDocTags('internal') | filterByScope(memberScopes) | filterUselessMembers | sortByNodesName -%}
 
     {%- set staticProperties = allProperties | filterByStatic(true) -%}
     {%- set staticAccessors = allAccessors | filterByStatic(true) -%}

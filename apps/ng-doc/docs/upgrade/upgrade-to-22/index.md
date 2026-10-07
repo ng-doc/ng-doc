@@ -623,6 +623,26 @@ If you tried a 22.0 pre-release of the new engine with `developmentContent: 'vir
 option: the virtual content mode is gone, and the option fails with
 `NGDOC_DEVELOPMENT_CONTENT_REMOVED`.
 
+## 8. Updating from 22.0 to 22.1
+
+22.1 is a minor release: configurations, pages and APIs keep working. Check these three cases if
+they apply to your site.
+
+- **Custom type controls that read `options`:** `options` is now
+  `Array<string | NgDocPlaygroundOption>`. A control registered for an enum's type name receives
+  named options such as `{ label: 'Good', value: 'good' }` instead of text such as
+  `'StatusEnum.Good'`. Widen the type of the control's `options` input, and read each option with
+  `resolvePlaygroundOption(option)`, which returns its label and value
+  (`*CustomTypeControlsPage`).
+- **Your own CSS for highlighted code:** NgDoc uses Shiki 4, which writes the italic, bold and
+  underline of tokens as variables (`--shiki-light-font-style`, `--shiki-dark-font-style` and the
+  matching `-font-weight` and `-text-decoration`) instead of inline styles. NgDoc's styles read
+  them; CSS of your own that relied on the inline styles should read the variables too. Custom
+  theme files keep working (`*CodeHighlightingPage`).
+- **Doubled backslashes in demo code:** demo code used to lose its backslashes, so `/\d+/` showed
+  as `/d+/`. If you doubled them as a workaround, remove the extra ones: demo code is now shown
+  exactly as written.
+
 ## 🎉 Next steps
 
 - Try the new engine: `*MigrateToNewEnginePage`.

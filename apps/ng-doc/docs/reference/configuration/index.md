@@ -17,17 +17,21 @@ export default config;
 
 ## Options
 
-| Option        | Type                                          | Default                                                                       | Description                                                                                      |
-| ------------- | --------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `docsPath`    | `string`                                      | The folder that contains the application's `main.ts`                          | The folder with your pages, categories and API files, relative to the workspace root.            |
-| `outDir`      | `string`                                      | The workspace root                                                            | The parent folder of the generated folder. NgDoc writes to `<outDir>/ng-doc/<project-name>`.     |
-| `routePrefix` | `string`                                      | `''`                                                                          | A route segment added before every page route, such as `docs`.                                   |
-| `tsConfig`    | `string`                                      | The application's TypeScript configuration                                    | The `tsconfig` file used to analyse your sources, relative to the workspace root.                |
-| `cache`       | `boolean`                                     | `true` in the new engine, `false` in the legacy builders                      | Reuses generated results between builds (`*PerformanceAndCachingPage`).                          |
-| `guide`       | `NgDocGuideConfiguration`                     | –                                                                             | Options for guide pages. See `*ConfigurationReference#guide`.                                    |
-| `shiki`       | `{ themes: { light: string; dark: string } }` | `css-variables` (new engine); `github-light` and `ayu-dark` (legacy builders) | The syntax highlighting themes (`*CodeHighlightingPage`).                                        |
-| `repoConfig`  | `NgDocRepoConfig`                             | –                                                                             | Adds "Suggest edits" and "View source" links to pages. See `*ConfigurationReference#repoconfig`. |
-| `keywords`    | `NgDocKeywordsConfiguration`                  | –                                                                             | Global keywords and keyword loaders. See `*ConfigurationReference#keywords`.                     |
+| Option            | Type                                                                        | Default                                                                       | Description                                                                                                 |
+| ----------------- | --------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `docsPath`        | `string`                                                                    | The folder that contains the application's `main.ts`                          | The folder with your pages, categories and API files, relative to the workspace root.                       |
+| `outDir`          | `string`                                                                    | The workspace root                                                            | The parent folder of the generated folder. NgDoc writes to `<outDir>/ng-doc/<project-name>`.                |
+| `routePrefix`     | `string`                                                                    | `''`                                                                          | A route segment added before every page route, such as `docs`.                                              |
+| `tsConfig`        | `string`                                                                    | The application's TypeScript configuration                                    | The `tsconfig` file used to analyse your sources, relative to the workspace root.                           |
+| `cache`           | `boolean`                                                                   | `true` in the new engine, `false` in the legacy builders                      | Reuses generated results between builds (`*PerformanceAndCachingPage`).                                     |
+| `guide`           | `NgDocGuideConfiguration`                                                   | –                                                                             | Options for guide pages. See `*ConfigurationReference#guide`.                                               |
+| `api`             | `NgDocApiConfiguration`                                                     | –                                                                             | Options for API pages (new engine only). See `*ConfigurationReference#api`.                                 |
+| `isolatedDemos`   | `boolean`                                                                   | `false`                                                                       | Shows every demo in an iframe of its own page (new engine only). See `*ConfigurationReference#demo-pages`.  |
+| `demoApplication` | `boolean \| NgDocDemoApplicationConfiguration`                              | –                                                                             | Which pages get demo pages, and their URL path (new engine only). See `*ConfigurationReference#demo-pages`. |
+| `demoProviders`   | `NgDocDemoProvidersImport`                                                  | –                                                                             | Imports the providers of the demo pages (new engine only). See `*ConfigurationReference#demo-pages`.        |
+| `shiki`           | `{ themes: { light: string; dark: string }; langs?: NgDocShikiLanguage[] }` | `css-variables` (new engine); `github-light` and `ayu-dark` (legacy builders) | The syntax highlighting themes, and extra languages (new engine only) (`*CodeHighlightingPage`).            |
+| `repoConfig`      | `NgDocRepoConfig`                                                           | –                                                                             | Adds "Suggest edits" and "View source" links to pages. See `*ConfigurationReference#repoconfig`.            |
+| `keywords`        | `NgDocKeywordsConfiguration`                                                | –                                                                             | Global keywords and keyword loaders. See `*ConfigurationReference#keywords`.                                |
 
 ## guide
 
@@ -48,6 +52,32 @@ The header template is a Nunjucks template, not Markdown. It can use these varia
 
 {{ "{{ Metadata.description }}" | safe }}
 ```
+
+## api
+
+Only the new engine reads these options.
+
+| Option             | Type      | Default | Description                                                                                                                                     |
+| ------------------ | --------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `protectedMembers` | `boolean` | `true`  | Lists the protected members of classes, inherited ones included. `false` lists public members only (`*GenerateApiPagesPage#protected-members`). |
+
+## Demo pages
+
+Only the new engine reads these options. Isolated demos show a demo's page in an iframe
+(`*IsolatedDemosPage`).
+
+| Option            | Type                                           | Default | Description                                                                                                                     |
+| ----------------- | ---------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `isolatedDemos`   | `boolean`                                      | `false` | Shows every demo in an iframe of its page, unless its `isolated` option is `false`. Every page with demos gets demo pages.      |
+| `demoApplication` | `boolean \| NgDocDemoApplicationConfiguration` | –       | `true` or an object gives every page with demos its demo pages. `false` gives none, and isolated demos render in the page.      |
+| `demoProviders`   | `NgDocDemoProvidersImport`                     | –       | `() => import('./demo.providers')`: the module whose default export, an `NgDocDemoProviders` list, provides for the demo pages. |
+
+Without them, only the pages with an isolated demo get demo pages. `demoApplication` takes an
+object with one option:
+
+| Option | Type     | Default          | Description                                                                                           |
+| ------ | -------- | ---------------- | ----------------------------------------------------------------------------------------------------- |
+| `path` | `string` | `'demo-preview'` | The URL path of the demo pages under the base href. URL segments that start with a letter or a digit. |
 
 ## repoConfig
 

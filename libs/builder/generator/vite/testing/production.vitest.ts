@@ -235,6 +235,33 @@ describe('buildNgDocViteApplication', () => {
     );
   });
 
+  it('prerenders the demo pages with the demo server bundle and logs their warnings', async () => {
+    const output = await directory();
+    const { build } = builds([]);
+    const prerender = vi.fn(async () => ({
+      ...report,
+      warnings: [{ route: '/demo-preview/docs/A', message: '[NGDOC_PRERENDER_DEMO_FALLBACK] x' }],
+    }));
+    const log = vi.fn();
+    const options = { configFile: 'a', outputPath: output, skipBuild: true, log };
+    // Without the demo application's page and server bundle, prerendering knows no demo pages.
+    await buildNgDocViteApplication(options, { build, prerender });
+    expect(prerender.mock.calls[0]).toEqual([
+      expect.not.objectContaining({ demoServerEntry: expect.anything() }),
+    ]);
+    await mkdir(path.join(output, 'browser'), { recursive: true });
+    await mkdir(path.join(output, 'server'), { recursive: true });
+    await writeFile(path.join(output, 'browser/ng-doc-demo.html'), '<ng-doc-demo-app>');
+    await writeFile(path.join(output, 'server/demo-server.mjs'), '');
+    await buildNgDocViteApplication(options, { build, prerender });
+    expect(prerender.mock.calls[1]).toEqual([
+      expect.objectContaining({ demoServerEntry: path.join(output, 'server/demo-server.mjs') }),
+    ]);
+    expect(log).toHaveBeenCalledWith(
+      'Warning: /demo-preview/docs/A: [NGDOC_PRERENDER_DEMO_FALLBACK] x',
+    );
+  });
+
   it('rejects a server build without a server entry, two application plugins, and an abort', async () => {
     const output = await directory();
     const prerender = vi.fn(async () => report);

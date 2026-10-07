@@ -58,7 +58,8 @@ export function ngAdd(options: Schema): Rule {
  * Sets up the project. It runs as a task before the install task of `ngAdd`, while `@ng-doc/add` is
  * still installed. The styles, assets and providers are the same for both engines. The Vite engine then reads the build target, as it now is, into
  * `vite.config.mjs` and the Vite targets (`@ng-doc/builder:vite-setup`); the legacy engine swaps
- * the builders of the build and serve targets.
+ * the builders of the build and serve targets. A builder that is neither Angular's nor NgDoc's is
+ * kept, and the project generates its documentation with the `ng-doc` command.
  * @param options - The `ng add` options.
  */
 export function ngAddSetupProject(options: Schema): Rule {
@@ -77,12 +78,19 @@ export function ngAddSetupProject(options: Schema): Rule {
     const editBuildTarget: boolean = !(choice.engine === 'vite' && choice.existing);
 
     context.logger.info(
-      `[INFO]: Engine: ${choice.engine === 'vite' ? 'Vite (@ng-doc/builder:vite-application)' : 'legacy (@ng-doc/builder:application)'}`,
+      `[INFO]: Engine: ${
+        choice.keptBuilder
+          ? `the "ng-doc" command, next to "${choice.keptBuilder}"`
+          : choice.engine === 'vite'
+            ? 'Vite (@ng-doc/builder:vite-application)'
+            : 'legacy (@ng-doc/builder:application)'
+      }`,
     );
 
     return chain([
       choice.engine === 'legacy' && choice.replaceBuilders ? replaceBuilders(options) : noop(),
-      // Only a project new to NgDoc: an existing one chose its budgets.
+      // Only a project new to NgDoc: an existing one chose its budgets. A kept builder runs
+      // Angular's builder with its budgets too.
       choice.engine === 'legacy' && !choice.existing ? raiseInitialBudget(options) : noop(),
       editBuildTarget ? addStyles(options) : noop(),
       editBuildTarget ? addAssets(options) : noop(),
@@ -100,7 +108,7 @@ export function ngAddSetupProject(options: Schema): Rule {
             skipInstall: true,
           })
         : noop(),
-      postInstall(choice.engine),
+      postInstall(choice.engine, choice.keptBuilder),
     ]);
   };
 }

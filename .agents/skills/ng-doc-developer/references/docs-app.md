@@ -79,13 +79,15 @@ export default Category;
 - `JSDoc.description(...)`, `JSDoc.tag(...)` and `JSDoc.hasTag(...)` read doc comments.
 - `{% include "../../shared/demo-inputs.md" %}` includes a shared file.
 - `{{ NgDocPage.title }}` gives page data.
-- To show template syntax literally, wrap it: `{{ '{{ NgDocActions.demo("X") }}' | safe }}`.
+- To show template syntax literally, wrap it: `{{ '{{ NgDocActions.demo("X") }}' | safe }}`, or wrap a whole block (such as a code block with Angular template syntax) in `{% raw %}` … `{% endraw %}`.
+- `<ng-doc-tab group="…" name="…" icon="…" active>` elements, with empty lines around their Markdown content, group any content (demos, playgrounds, text) into tabs (`write-content/content-tabs`); code groups use the same element.
 
 **Keywords (auto-links):**
 
 - **API declarations:** a declaration in an API scope links automatically when written as inline code, for example `` `NgDocPage` ``.
 - **Page keywords:** the front-matter `keyword` is linked with `` `*MyPage` `` or `` `*MyPage#section` ``, and an API reference filter with `` `*ApiReferences?type=Class` ``.
 - **External keywords:** these come from `keywords.keywords` and `keywords.loaders` in `ng-doc.config.ts`. The loaders live in `libs/keywords-loaders`.
+- **Where a keyword links** (`libs/utils/html/plugins/keyword-positions.ts`, shared by both engines): inline code links when all of it is one keyword reference (`Key`, `Key.member`, `*Page#anchor`, with an optional `?query`; only this form fails the build on a missing page keyword or anchor), or when it reads as TypeScript (code punctuation, or a declaration at the start), in which case its words follow the code-block rules. Other inline code (file names such as `vite.ng-doc.config.mjs`, paths, commands, HTML tags, sentences) stays plain, so don't bold file names to dodge the linker. In TypeScript code blocks, strings, comments, template literal text (except Angular control flow such as `@if` and custom element names such as `<ng-content>`), object keys and declared names (before `:`, `?:`, `!:`, `=`), reserved words that aren't called, members after a dot (unless `Owner.member` is a keyword) and names bound by the example itself (`const`/`let`/`var`, relative imports) don't link. In HTML blocks, attribute values and comments don't link. Shiki leaves no token scopes in its output, so the rules read the code text; they never depend on the keyword set, which keeps the recorded used keywords exact.
 
 **API reference:** `docs/ng-doc.api.ts` lists scopes, each with `include`/`exclude` globs over library sources. Every exported declaration in an included file is documented, whether or not a barrel re-exports it.
 

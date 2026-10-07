@@ -42,7 +42,11 @@ const routes: Routes = [{
 {%- endif %}
   path: '',
   component: PageWrapperComponent,
-  title: `{{ metadata.title | toTemplateString }}`,
+  {#- No title: the route inherits the page's title from the route that loads it, and a second
+      copy of it would repeat it in a title strategy that joins the titles of the route. #}
+  data: {
+    ngDocPageType: '{{ pageType }}',
+  },
   children: [
     {%- for importPath, entry in entries  %}
     {
@@ -51,6 +55,7 @@ const routes: Routes = [{
       title: `{{ entry.title | toTemplateString }}`,
       data: {
         icon: '{{ entry.entry.icon }}',
+        ngDocTitle: 'tab',
       }
     },
     {%- endfor %}

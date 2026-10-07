@@ -15,7 +15,7 @@ The default export of `ng-doc.page.ts`. See `NgDocPage` and `*PagesAndCategories
 | `mdFile`                  | `string \| string[]`                    | required        | The Markdown file, or several files shown as tabs. Paths are relative to the page.                                                                              |
 | `category`                | `NgDocCategory`                         | –               | The category that contains the page.                                                                                                                            |
 | `order`                   | `number`                                | –               | The position in the sidebar, lowest first.                                                                                                                      |
-| `route`                   | `string \| Route`                       | The folder name | The route segment, or an Angular `Route` object. Use `route.children` for fullscreen demos.                                                                     |
+| `route`                   | `string \| Route`                       | The folder name | The route segment, or an Angular `Route` object: `children` for fullscreen demos, `title` for the browser tab (`*BrowserTabTitlesPage`).                        |
 | `hidden`                  | `boolean`                               | `false`         | Removes the page from the sidebar. The route still works.                                                                                                       |
 | `onlyForTags`             | `string[]`                              | –               | Keeps the page only in builds with one of these tags. A build's tags default to its configuration name (`*PagesAndCategoriesPage#build-tags`). New engine only. |
 | `data`                    | `unknown`                               | –               | Any data, available in the page template as `NgDocPage.data`.                                                                                                   |
@@ -86,6 +86,7 @@ Each value in a page's `playgrounds` is an `NgDocPlaygroundConfig`. The options 
 | `expanded`          | `boolean`                                                | `false`   | Opens the playground expanded.                                      |
 | `hideSidePanel`     | `boolean`                                                | `false`   | Hides the controls.                                                 |
 | `inspectorPosition` | `'right' \| 'bottom'`                                    | `'right'` | Puts the controls right of the demos, or below them.                |
+| `recreate`          | `boolean \| 'always'`                                    | `false`   | Starts with Recreate on; `'always'` also hides the setting.         |
 | `inputs`            | `Record<string, unknown>`                                | –         | Input values set once when the playground renders.                  |
 | `defaults`          | `Record<string, unknown>`                                | –         | Initial control values, also used by the reset button.              |
 | `hiddenInputs`      | `string[]`                                               | –         | Inputs without a control.                                           |

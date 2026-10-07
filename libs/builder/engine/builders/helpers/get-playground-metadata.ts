@@ -55,9 +55,17 @@ function controlsToProperties(
       properties: NgDocPlaygroundProperties,
       [name, value]: [string, string | NgDocPlaygroundControlConfig],
     ) => {
+      const type: string | undefined = typeof value === 'string' ? value : value.type;
+
+      // An entry without a type only changes how the inspector shows an input, which the new
+      // engine supports: here the input keeps the control chosen for it.
+      if (type === undefined) {
+        return properties;
+      }
+
       properties[name] = {
         inputName: typeof value === 'string' ? name : value.alias ?? name,
-        type: typeof value === 'string' ? value : value.type,
+        type,
         description: typeof value === 'string' ? undefined : value.description ?? undefined,
         options: typeof value === 'string' ? undefined : value.options ?? undefined,
         isManual: true,

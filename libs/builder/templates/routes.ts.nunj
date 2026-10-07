@@ -20,9 +20,13 @@ export const NG_DOC_ROUTING: Routes = [
 	{
 		path: '{{ entry.item.route | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}',
 		title: `{{ entry.item.title | toTemplateString }}`,
-    {%- if entry.item.apiListSegment is defined %}
-    data: {ngDocApiListSegment: '{{ entry.item.apiListSegment | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}'},
-    {%- endif %}
+    {#- `ngDocTitle` names what the title belongs to, so a title strategy can compose the titles of
+        the route without repeating one (`provideNgDocTitle`). #}
+    data: {ngDocTitle: '{{ 'category' if entry.item.isCategory else 'page' }}'
+    {%- if entry.item.apiListSegment is defined -%}
+    , ngDocApiListSegment: '{{ entry.item.apiListSegment | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}'
+    {%- endif -%}
+    },
     {%- if entry.item.isCategory %}
     providers: [
       ...({{ entry.item.id }}.providers ?? []),

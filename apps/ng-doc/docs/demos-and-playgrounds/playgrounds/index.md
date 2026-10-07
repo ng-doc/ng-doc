@@ -16,7 +16,8 @@ The demo sits on the left, and the inspector on the right. When the playground i
 - **Settings** has a row for each input: its name, a chip with the type of its value, and a
   control. Hover the name to read the input's description, taken from its doc comment.
 - **Recreate** creates the demo again every time an input changes, instead of updating the inputs
-  of the same instance. Use it for components that read an input only once.
+  of the same instance. Use it for components that read an input only once, and turn it on from
+  the start with the `recreate` option (see "Options").
 - **Reset** appears as soon as a value differs from its default, and sets every input back.
 - The code button beside the demo shows, below it, the template of the current state.
 
@@ -62,14 +63,15 @@ NgDoc reads the inputs of the target when it builds the page: signal inputs (`in
 `model()`, required or not), `@Input()` properties, and the inputs of its base classes. An
 alias becomes the name of the row. The type of the input chooses the control:
 
-| Type of the input                      | Control                                                                  |
-| -------------------------------------- | ------------------------------------------------------------------------ |
-| `string`                               | A text field.                                                            |
-| `number`                               | A number field.                                                          |
-| `boolean`                              | A checkbox.                                                              |
-| A union of literals, or an alias of it | A list of the values, such as `'small' \| 'medium' \| 'large'`.          |
-| A type with a type control             | Your control (`*CustomTypeControlsPage`).                                |
-| Any other type                         | No control. In development, the browser console names the skipped input. |
+| Type of the input                      | Control                                                                   |
+| -------------------------------------- | ------------------------------------------------------------------------- |
+| `string`                               | A text field.                                                             |
+| `number`                               | A number field.                                                           |
+| `boolean`                              | A checkbox.                                                               |
+| A union of literals, or an alias of it | A list of the values, such as `'small' \| 'medium' \| 'large'`.           |
+| An enum                                | A list of the member names, such as `Good`, that sets the member's value. |
+| A type with a type control             | Your control (`*CustomTypeControlsPage`).                                 |
+| Any other type                         | No control. In development, the browser console names the skipped input.  |
 
 For a signal input, the type is the type argument: `size = input<NgDocSize>('small')` gets the list
 of `NgDocSize`. An input with a transform, such as
@@ -80,6 +82,26 @@ input, such as `label = input<string>()`, gets the control of its type too.
 The list of a union shows the values in the order the type is written. `NgDocSize` is written
 `'small' | 'medium' | 'large'`, so its list starts with `small`. The default value of the input is
 marked in the list.
+
+The list of an enum shows the names of its members, and choosing one sets the member's value:
+
+```typescript name="status.component.ts"
+export enum Status {
+  Good = 'good',
+  Bad = 'bad',
+}
+
+@Component({ selector: 'app-status', template: '' })
+export class StatusComponent {
+  // The list shows Good and Bad; choosing Good sets 'good'.
+  readonly status = input<Status>(Status.Good);
+}
+```
+
+> **Warning**
+> Only the new engine lists the members of an enum. With the legacy builders, an enum input gets no
+> control: list its values in `controls` with the type `NgDocTypeAlias` (see "Controls for other
+> inputs").
 
 ## Multiple selectors
 
@@ -255,6 +277,7 @@ action's options win. They follow `NgDocPlaygroundOptions`:
 | `expanded`          | `boolean`                 | `false`   | Shows the code under the demo when the playground opens.                            |
 | `hideSidePanel`     | `boolean`                 | `false`   | Hides the inspector and shows only the demo.                                        |
 | `inspectorPosition` | `'right' \| 'bottom'`     | `'right'` | Puts the inspector right of the demo, or below it so the demo gets the full width.  |
+| `recreate`          | `boolean \| 'always'`     | `false`   | Starts with **Recreate** on. `'always'` keeps it on and hides the setting.          |
 | `inputs`            | `Record<string, unknown>` | –         | Values for the inputs when the playground opens. **Reset** returns to the defaults. |
 | `defaults`          | `Record<string, unknown>` | –         | Defaults for the controls, instead of the target's own. **Reset** returns to them.  |
 | `hiddenInputs`      | `string[]`                | –         | Inputs that get no control.                                                         |
@@ -315,6 +338,32 @@ export default MyPage;
 An entry in `controls` also replaces the control that NgDoc chose for an input of the same name. The
 type `NgDocTypeAlias` shows a list of `options`; a type registered with `provideTypeControl` shows
 your control.
+
+## Labels, groups and order
+
+An entry in `controls` can also change how the inspector shows a row. Leave out `type` to keep the
+control NgDoc chose for the input:
+
+```typescript name="ng-doc.page.ts"
+controls: {
+  primaryColor: { label: 'Primary color', group: 'Colors', order: 1 },
+  accentColor: { label: 'Accent color', group: 'Colors', order: 2 },
+  rounded: { label: 'Rounded corners', group: 'Shape' },
+},
+```
+
+- `label: '…'` replaces the input's name in the row. A control that shows the name itself, such
+  as the checkbox of a `boolean`, shows the label too.
+- `group: '…'` lists the inputs of a group together, under its name. Inputs without a group stay
+  under **Settings**, above the groups. The groups follow the order of their first input.
+- `order: <number>` puts the input before the inputs without one, lowest first. The others keep
+  the order of their controls (`*CustomTypeControlsPage#options`), then their names.
+
+An entry with a `type` takes the same fields.
+
+> **Warning**
+> Only the new engine reads these fields. The legacy builders ignore them, and an entry without a
+> `type` leaves the input's row as it is (`*LegacyBuildersPage`).
 
 ## 🚧 Gotchas
 

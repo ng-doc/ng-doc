@@ -1,4 +1,5 @@
-import { highlightCacheSwitch } from '../content/highlight-cache';
+import { FORMAT_CACHE_MISMATCH } from '../content/format-cache';
+import { grammarsSwitch, highlightCacheSwitch } from '../content/highlight-cache';
 import {
   disposeHtmlPool,
   holdHtmlPool,
@@ -23,6 +24,7 @@ import { createDependencyRefresher } from '../graph';
 import type { UnitIndex } from '../graph/unit-index';
 import { recorderMode } from '../kernel/footprint';
 import { createOutputAssembler } from '../outputs';
+import { useFormatCache } from '../semantic/formatting';
 import { createSemanticService } from '../semantic/semantic-service';
 import {
   aggregateUnits,
@@ -149,6 +151,25 @@ export interface CompilationOptions {
    */
   highlightCache?: boolean | 'verify';
   /**
+   * The cache of formatted code (`content/format-cache.ts`): a generation resolves the Prettier
+   * configuration once, and API signatures and demo snippets whose code, parser, configuration and
+   * Prettier release were formatted before reuse that result. Development generations with the
+   * artifact cache keep it beside the cache; production, `cache: false` and the reference path
+   * (`incrementalReuse: false`, which formats every call) keep none. On by default; `false`, like
+   * `NGDOC_FORMAT_CACHE=0`, formats every call as before. `verify` (or the environment's `verify`)
+   * also resolves and formats every hit again, uses that result and reports
+   * `CONTENT_FORMAT_CACHE_MISMATCH` when one differs.
+   */
+  formatCache?: boolean | 'verify';
+  /**
+   * Highlighting loads only the Shiki grammars that the languages of code blocks reach, into one
+   * highlighter per thread and theme pair, instead of every bundled grammar (which takes seconds);
+   * the HTML is the same (`@ng-doc/utils` `processHtml`'s `grammars: 'used'`). Projects with
+   * `shiki.langs` load every grammar. On by default; `false`, like `NGDOC_USED_GRAMMARS=0`, loads
+   * every grammar.
+   */
+  usedGrammars?: boolean;
+  /**
    * Parallel rendering (`content/html-pool.ts`): a large generation runs the HTML pipeline of its
    * content (highlighting, anchors, keyword links, search records) on render threads, while the
    * main thread runs every front (files, templates, semantic queries) in plan order and settles
@@ -178,6 +199,7 @@ export interface TargetedCompilationService extends CompilationService {
  * A compile runs its phases in order (discovery, semantic, setup, describe, plan, render, keywords,
  * link, assembly, aggregate, validation): each phase records what it emits per unit or globally,
  * and every exit folds those records into its result (`./fold`).
+ * @param options
  */
 export function createCompilationService(options: CompilationOptions): TargetedCompilationService {
   const discovery = createDiscoveryServices(options.discovery);
@@ -355,6 +377,7 @@ export function createCompilationService(options: CompilationOptions): TargetedC
       /**
        * Preparation repeated without the pinned keywords while the targeted pass still stands (the
        * targeted attempt may follow): not reported, so the phases never go backwards in the pass.
+       * @param work
        */
       const repeating = async <T>(work: () => Promise<T>): Promise<T> => {
         if (!progress?.targeted) return work();
@@ -398,6 +421,8 @@ export function createCompilationService(options: CompilationOptions): TargetedC
         if (!scratch)
           prestartRenderThreads(options, request, found!.entries.length, {
             themes: found!.configuration.themes,
+            ...(found!.configuration.shikiLangs ? { langs: found!.configuration.shikiLangs } : {}),
+            ...(grammarsSwitch(options) === 'all' ? { grammars: 'all' as const } : {}),
             cache: highlightCacheSwitch(options) !== 'off',
           });
         await synchronize(true);
@@ -617,6 +642,8 @@ export function createCompilationService(options: CompilationOptions): TargetedC
             ...(reportError !== undefined ? { error: reportError } : {}),
           });
         signal.removeEventListener('abort', abort);
+        // A later generation resolves the formatter configuration again (`content/format-cache`).
+        useFormatCache(undefined);
         releaseThreads();
         active = false;
         activeController = undefined;
@@ -637,7 +664,10 @@ export function createCompilationService(options: CompilationOptions): TargetedC
   };
 }
 
-/** What a synchronized program depends on in a discovery snapshot (everything but keywords). */
+/**
+ * What a synchronized program depends on in a discovery snapshot (everything but keywords).
+ * @param found
+ */
 const programInputs = (found: DiscoverySnapshot): string =>
   JSON.stringify([found.configuration, found.entries, found.filtered ?? null]);
 
@@ -655,6 +685,11 @@ interface Attempt {
  * phase records what it emits per unit or globally, and every exit folds those records into its
  * result (`./fold`). With `scope`, the targeted path: entries without a candidate are replayed,
  * and only candidates and one-hop consumers are linked and assembled again (`./targeted`).
+ * @param plan
+ * @param found
+ * @param scope
+ * @param cache
+ * @param progress
  */
 async function runPhases(
   plan: GenerationPlan,
@@ -711,6 +746,19 @@ async function runPhases(
   scope?.explain(artifacts, units);
   progress?.phase('aggregate');
   const site = aggregateUnits(plan, artifacts, keywordPlan);
+  // `verify`: formatted code or a configuration that differed from the cache (the fresh one was
+  // used, so the output is the uncached one).
+  if (plan.format?.mismatches)
+    records.global('aggregate', {
+      diagnostics: [
+        diagnostic(
+          FORMAT_CACHE_MISMATCH,
+          `${plan.format.mismatches} cached formatted signature(s), snippet(s) or formatter configuration(s) differ from formatting them again; the fresh formatting is used.`,
+          'warning',
+        ),
+      ],
+      dependencies: [],
+    });
   if (signal.aborted || records.failed()) return done();
   const candidate = candidateSnapshot(plan, artifacts, keywordPlan, site);
   if (records.failed()) return done();
@@ -723,10 +771,12 @@ async function runPhases(
     );
     // The highlighted code blocks, beside the cache. A generation that rendered every content
     // keeps exactly the blocks it used; one that reused or replayed some keeps the earlier ones too.
-    await plan.highlight?.save(
+    const complete =
       !scope &&
-        units.every((unit) => unit.record.render.every((step) => step.projection !== 'reuse')),
-    );
+      units.every((unit) => unit.record.render.every((step) => step.projection !== 'reuse'));
+    await plan.highlight?.save(complete);
+    // The formatted signatures and snippets, beside the cache, on the same terms.
+    await plan.format?.save(complete);
   }
   progress?.end();
   if (signal.aborted) return done();

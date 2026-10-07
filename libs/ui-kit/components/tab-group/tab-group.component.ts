@@ -37,8 +37,17 @@ let nextId = 0;
     NgDocSelectionHostDirective,
     NgDocSelectionOriginDirective,
   ],
+  host: {
+    '[class.ng-doc-tab-group-plain]': "appearance() === 'plain'",
+  },
 })
 export class NgDocTabGroupComponent<T = number> {
+  /**
+   * `framed` draws the header bar and the panel as one surface; `plain` draws only the tabs over
+   * a line, and the panel takes no frame or background of its own, for content that has its own.
+   */
+  readonly appearance = input<'framed' | 'plain'>('framed');
+
   /** Id of the tab to open; the first tab opens when it is not set or matches no tab. */
   readonly openedTab = input<T | undefined>(undefined);
 

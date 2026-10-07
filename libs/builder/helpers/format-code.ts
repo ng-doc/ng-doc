@@ -3,6 +3,8 @@ import prettierSync from '@prettier/sync';
 import { join } from 'node:path';
 import { Options } from 'prettier';
 
+import { activeFormatCodeCache } from './format-cache';
+
 /**
  *    Format code with Prettier
  * @param code - Code to format
@@ -17,19 +19,27 @@ export function formatCode(
   try {
     if (codeType) {
       const parser: Options['parser'] | undefined = getPrettierParserFromCodeType(codeType);
-      const config = prettierSync.resolveConfig(
-        // Prettier searches from a file's parent, so use a synthetic path inside the directory.
-        configDirectory ? join(configDirectory, '__ng_doc_format__.ts') : process.cwd(),
-        { editorconfig: true, useCache: false },
-      );
+      // The new engine's cache, when it formats (see `./format-cache`); none in the legacy engine.
+      const cache = activeFormatCodeCache();
+      const resolve = () =>
+        prettierSync.resolveConfig(
+          // Prettier searches from a file's parent, so use a synthetic path inside the directory.
+          configDirectory ? join(configDirectory, '__ng_doc_format__.ts') : process.cwd(),
+          { editorconfig: true, useCache: false },
+        );
+      const config = cache ? cache.config(configDirectory, resolve) : resolve();
+      const format = () =>
+        (
+          prettierSync.format(code, {
+            ...config,
+            parser,
+            embeddedLanguageFormatting: 'auto',
+          }) as unknown as string
+        ).trim();
 
-      return (
-        prettierSync.format(code, {
-          ...config,
-          parser,
-          embeddedLanguageFormatting: 'auto',
-        }) as unknown as string
-      ).trim();
+      return cache && typeof parser === 'string'
+        ? cache.format({ code, parser, config }, format)
+        : format();
     }
 
     return code.trim();

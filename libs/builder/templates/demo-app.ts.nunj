@@ -1,0 +1,37 @@
+// @ts-nocheck
+import {Routes} from '@angular/router';
+{%- for category in categories %}
+import {{ category[0] }} from '{{ category[1] }}';
+{%- endfor %}
+
+// The URL path of the demo pages, which the Vite host serves the demo application's page under.
+export const NG_DOC_DEMO_PATH = '{{ demoPath }}';
+
+// Every demo page, which a build without prerendering writes as a copy of the demo application's
+// page, so that static hosts serve it without a fallback.
+export const NG_DOC_DEMO_PAGES: string[] = {{ demoPages | dump }};
+
+// The routes of the demo application: one lazy route per guide with demo pages, under the
+// providers of its categories, as on the documentation pages.
+export const NG_DOC_DEMO_ROUTES: Routes = [
+  {%- for page in pages %}
+  {
+    path: '{{ page.path | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}',
+    {%- if page.categories.length %}
+    providers: [
+      {%- for id in page.categories %}
+      ...({{ id }}.providers ?? []),
+      {%- endfor %}
+    ],
+    {%- endif %}
+    loadChildren: () => import('{{ page.importPath }}'),
+  },
+  {%- endfor %}
+];
+
+// The module of `demoProviders`, which only the demo application imports.
+{%- if providersImport %}
+export const NG_DOC_DEMO_PROVIDERS = () => import('{{ providersImport }}');
+{%- else %}
+export const NG_DOC_DEMO_PROVIDERS = undefined;
+{%- endif %}

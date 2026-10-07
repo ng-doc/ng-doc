@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, OnInit, Signal } from '@angular/core';
 import { NgDocTab } from '@ng-doc/app/interfaces';
 import {
   NgDocExecutePipe,
@@ -7,15 +7,21 @@ import {
   NgDocTabGroupComponent,
 } from '@ng-doc/ui-kit';
 
-/** Grouped code blocks of a page, shown as tabs. */
+/**
+ * Tabs of a page: grouped code blocks, or any content that Markdown wraps in
+ * `<ng-doc-tab group="…" name="…">` elements.
+ */
 @Component({
   selector: 'ng-doc-tabs',
   imports: [NgDocTabGroupComponent, NgDocTabComponent, NgDocExecutePipe, NgDocIconComponent],
   templateUrl: './tabs.component.html',
   styleUrls: ['./tabs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[class.ng-doc-content-tabs]': 'contentTabs()',
+  },
 })
-export class NgDocTabsComponent {
+export class NgDocTabsComponent implements OnInit {
   /** The tabs; their content is moved into the open panel. */
   readonly tabs = input<NgDocTab[]>([]);
 
@@ -26,6 +32,25 @@ export class NgDocTabsComponent {
       0,
     ),
   );
+
+  /**
+   * Whether the tabs hold page content rather than a code group. A code group has one code block
+   * per tab and is drawn as one framed code surface; content tabs are only a tab bar over their
+   * content, so a framed demo or code block inside them doesn't sit in a second frame.
+   */
+  protected readonly contentTabs: Signal<boolean> = computed(() =>
+    this.tabs().some(
+      (tab: NgDocTab) =>
+        tab.content.childElementCount !== 1 ||
+        !tab.content.firstElementChild?.matches('ng-doc-code, pre'),
+    ),
+  );
+
+  ngOnInit(): void {
+    // The tabs processor leaves the contents on the page until every processor has run on them;
+    // only the open tab's content is shown, in the panel.
+    this.tabs().forEach((tab: NgDocTab) => tab.content.remove());
+  }
 
   /**
    * Moves a tab's content into its panel.

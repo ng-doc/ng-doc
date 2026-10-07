@@ -9,6 +9,7 @@
     [defaultValues]="defaultValues()"
     [showResetButton]="!isDefaultState()"
     [(recreateDemo)]="recreateDemo"
+    [recreateLocked]="recreateLocked()"
     (resetForm)="resetForm()">
     @for (selector of configuration.selectors ?? selectors() | asArray; track selector) {
       <ng-doc-playground-demo

@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import { rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { type InlineConfig, type Plugin, type ResolvedConfig, build as viteBuild } from 'vite';
@@ -192,10 +193,15 @@ export async function buildNgDocViteApplication(
   }
   const prerender = options.prerender ?? (options.skipBuild ? true : ssr === true);
   if (!prerender) return { browser, ...(ssr ? { server: serverEntry } : {}) };
+  // The server build has the demo application's entry when the generation has demo pages.
+  const demoServerEntry = path.join(serverDirectory, 'demo-server.mjs');
   const report = await timed('Prerendered the routes', () =>
     dependencies.prerender({
       browserDir: browser,
       serverEntry,
+      ...(existsSync(demoServerEntry) && existsSync(path.join(browser, 'ng-doc-demo.html'))
+        ? { demoServerEntry }
+        : {}),
       routes: options.routes ?? [],
       discoverRoutes: options.discoverRoutes ?? true,
       ...(options.routeTimeoutMs === undefined ? {} : { routeTimeoutMs: options.routeTimeoutMs }),
@@ -207,6 +213,7 @@ export async function buildNgDocViteApplication(
     `${JSON.stringify({ routes: report.routes, excluded: report.excluded }, null, 2)}\n`,
   );
   log(`Prerendered ${report.routes.length} route(s) into ${browser}`);
+  for (const { route, message } of report.warnings ?? []) log(`Warning: ${route}: ${message}`);
   if (report.errors.length) {
     log(`The application logged ${report.errors.length} error(s) while prerendering:`);
     for (const { route, message } of report.errors.slice(0, 10)) log(`  ${route}: ${message}`);

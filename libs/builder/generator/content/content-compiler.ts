@@ -42,6 +42,7 @@ import {
 } from '../kernel/footprint';
 import { readTextFile } from '../kernel/observations';
 import { hostPath } from '../kernel/paths';
+import { snippetRegion } from './code-snippet';
 import { type HighlightSession, HIGHLIGHT_CACHE_MISMATCH } from './highlight-cache';
 import {
   type LinkedDocument,
@@ -115,6 +116,8 @@ export class GeneratorContentCompiler implements ContentCompiler {
     private readonly services: ContentCompilerServices,
     private readonly highlight?: HighlightSession,
     private readonly back?: ContentBack,
+    /** The Shiki grammars highlighting loads (`grammarsSwitch`). */
+    private readonly grammars: 'used' | 'all' = 'used',
   ) {}
 
   /**
@@ -852,7 +855,13 @@ export class GeneratorContentCompiler implements ContentCompiler {
     signal: AbortSignal,
     staged: () => void,
   ): Promise<RenderedDocument[]> {
-    const task: RenderTask = { documents, themes: this.services.configuration.themes };
+    const { themes, shikiLangs } = this.services.configuration;
+    const task: RenderTask = {
+      documents,
+      themes,
+      ...(shikiLangs ? { langs: shikiLangs } : {}),
+      ...(this.grammars === 'all' ? { grammars: 'all' as const } : {}),
+    };
     const rendered = this.back
       ? this.back.render(task, signal)
       : renderDocuments(
@@ -1181,7 +1190,7 @@ export class GeneratorContentCompiler implements ContentCompiler {
   ): string {
     const renderer: RendererObject = {
       code: (code, language) => {
-        const options = parseCodeBlockParams(language?.trim() || 'typescript');
+        const options = parseCodeBlockParams(language?.trim() || 'typescript', { snippets: true });
         if (options.file) {
           // The engine's spelling of the path: it is recorded as a dependency.
           const source = hostPath(path.resolve(context, options.file));
@@ -1191,7 +1200,20 @@ export class GeneratorContentCompiler implements ContentCompiler {
             diagnostics,
             'CONTENT_SNIPPET_READ',
           );
-          if (fullSource !== undefined) {
+          if (fullSource !== undefined && options.snippet !== undefined) {
+            const region = snippetRegion(fullSource, options.snippet);
+            if (region.status === 'found') code = region.code;
+            else
+              diagnostics.push(
+                this.diag(
+                  'CONTENT_SNIPPET_UNKNOWN',
+                  region.status === 'unknown'
+                    ? `Snippet "${options.snippet}" is not in ${options.file}: no "snippet#${options.snippet}" marker.`
+                    : `Snippet "${options.snippet}" in ${options.file} has no closing "snippet#${options.snippet}" marker.`,
+                  source,
+                ),
+              );
+          } else if (fullSource !== undefined) {
             try {
               // Lines end with LF on every platform (a CRLF file keeps its CR on each line), so
               // the output never depends on the operating system that builds the site.

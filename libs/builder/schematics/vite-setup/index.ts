@@ -25,15 +25,21 @@ import {
 } from '../migrate-to-vite/setup/workspace';
 import { NgDocViteSetupSchema } from './schema';
 
-/** The Angular CLI builders whose options the Vite setup reads. */
+/**
+ * The builders whose options the Vite setup reads: Angular's application builder, and Nx's
+ * executor that runs it with the same options and a few of its own, which `analyzeProject`
+ * reports like any other option.
+ */
 export const ANGULAR_BUILD_BUILDERS = [
   '@angular/build:application',
   '@angular-devkit/build-angular:application',
+  '@nx/angular:application',
 ];
-/** The Angular CLI development servers that the Vite development server replaces. */
+/** The development servers that the Vite development server replaces: Angular's and Nx's. */
 export const ANGULAR_SERVE_BUILDERS = [
   '@angular/build:dev-server',
   '@angular-devkit/build-angular:dev-server',
+  '@nx/angular:dev-server',
 ];
 /**
  * The name the Angular build target is kept under. Angular builders such as `unit-test` and
@@ -52,9 +58,9 @@ function list(findings: MigrationFinding[]): string[] {
 }
 
 /**
- * Sets up the Vite engine for a project that builds with Angular's application builder: the
- * `vite.config.mjs` of the project, the `vite-application` and `vite-dev-server` targets, the
- * server entry, the dependencies and `.gitignore`. It reads the build target the same way
+ * Sets up the Vite engine for a project that builds with Angular's application builder (or Nx's
+ * executor that runs it): the `vite.config.mjs` of the project, the `vite-application` and
+ * `vite-dev-server` targets, the server entry, the dependencies and `.gitignore`. It reads the build target the same way
  * `migrate-to-vite` reads a legacy one, and refuses what that schematic refuses. `ng add` runs it
  * after the NgDoc styles, assets and providers are in place.
  * @param options - The schematic options.

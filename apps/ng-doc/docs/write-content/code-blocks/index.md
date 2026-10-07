@@ -36,7 +36,7 @@ attribute.
 | `active`        | Opens this block first in its code group.          |
 | `icon="…"`      | Shows an icon next to the name.                    |
 | `{1,3-5}`       | Highlights lines 1, 3, 4 and 5.                    |
-| `file="./path"` | Loads the code from a file.                        |
+| `file="./path"` | Loads the code from a file, or a part of it.       |
 
 ## File names
 
@@ -113,8 +113,8 @@ export class App {}
 ## Highlighted lines
 
 Put line numbers in braces after the language. Separate them with commas, and use a dash for a
-range. With `file`, the numbers count the lines that the block shows: after the `#L` range is
-applied and hidden lines are removed.
+range. With `file`, the numbers count the lines that the block shows: after the `#L` range or the
+snippet is applied and hidden lines are removed.
 
 ````markdown name="index.md"
 ```typescript name="ng-doc.page.ts" {1,3-6}
@@ -175,6 +175,49 @@ to lines in the file.
 
 ```
 
+## Snippets from a file
+
+Line numbers change whenever the file changes. To load a part of a file that stays put, mark it
+with the snippet comments that demos use (`*SnippetsPage`), and put `#` and the snippet's id right
+after the closing quote:
+
+```typescript name="greeter.ts" {2,6}
+export class Greeter {
+  // snippet#greeting
+  greet(name: string): string {
+    return `Hello, ${name}!`;
+  }
+  // snippet#greeting
+
+  farewell(name: string): string {
+    return `Goodbye, ${name}!`;
+  }
+}
+```
+
+````markdown name="index.md"
+```typescript name="greeter.ts" file="./greeter.ts"#greeting
+
+```
+````
+
+The block shows the code between the two `snippet#greeting` comments:
+
+```typescript name="greeter.ts"
+greet(name: string): string {
+  return `Hello, ${name}!`;
+}
+```
+
+- The snippet comments aren't shown, and neither are the comments of snippets inside it.
+  `ng-doc-ignore-line` works as in a whole file.
+- The indentation that all its lines share is removed, so a snippet inside a class reads like
+  top-level code. Otherwise NgDoc shows the code as it is in the file.
+- `#L` with line numbers is a line range. Any other suffix is a snippet id: letters, digits and
+  dashes, as in `// snippet#greeting`.
+- An id that the file doesn't have, or a snippet without its closing comment, fails the build with
+  `CONTENT_SNIPPET_UNKNOWN`, which names the id and the file.
+
 ## Hiding lines
 
 A comment with `ng-doc-ignore-line` hides lines from code that NgDoc loads from a file, from demos
@@ -202,6 +245,10 @@ The comment works in `//`, `/* */` and `<!-- -->` form, so you can use it in Typ
 templates.
 
 ## 🚧 Gotchas
+
+> **Warning**
+> Only the new engine loads snippets with `file="…"#id`. The legacy builders can't parse such a
+> block and fail the build (`*LegacyBuildersPage`).
 
 > **Warning**
 > The comment also removes the line after it. A comment at the end of a line of code, such as

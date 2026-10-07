@@ -64,11 +64,20 @@ export class PageComponent extends NgDocRootPage {
     {%- if demoAssetsPath %}
   readonly demoAssets: NgDocDemoAssets = demoAssets;
     {%- endif %}
+    {#- The demo pages of the guide (Vite engine), and whether its demos are isolated by default. #}
+    {%- if demoRoute %}
+  readonly demoRoute: string = '{{ demoRoute | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}';
+      {%- if isolatedDemos %}
+  readonly isolatedDemos: boolean = true;
+      {%- endif %}
+    {%- endif %}
 
   constructor() {
     super();
   }
 }
+{#- The route has no title of its own: it inherits the title of its tab route, so a page's own
+    `route.title` is the only title here and wins over the generated one. #}
 {%- if contentSourceImport %}
 
 // The router shows the page only once its content has loaded, so the previous page stays on
@@ -79,7 +88,6 @@ const routes: Routes = [ɵwithNgDocContent({
     {%- endif %}
   path: '',
   component: PageComponent,
-  title: `{{ metadata.title | toTemplateString }}`,
 }, pageContentSource)]
 {%- else %}
 
@@ -89,7 +97,6 @@ const routes: Routes = [{
     {%- endif %}
   path: '',
   component: PageComponent,
-  title: `{{ metadata.title | toTemplateString }}`,
 }]
 {%- endif %}
 

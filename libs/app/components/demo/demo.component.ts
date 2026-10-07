@@ -1,4 +1,9 @@
-import { NgComponentOutlet, NgTemplateOutlet } from '@angular/common';
+import {
+  APP_BASE_HREF,
+  NgComponentOutlet,
+  NgTemplateOutlet,
+  PlatformLocation,
+} from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -12,17 +17,20 @@ import {
   signal,
   Type,
   untracked,
+  viewChild,
   viewChildren,
 } from '@angular/core';
 import { NgDocRootPage } from '@ng-doc/app/classes/root-page';
 import { NgDocCodeComponent } from '@ng-doc/app/components/code';
 import { NgDocCopyButtonComponent } from '@ng-doc/app/components/copy-button';
+import { NgDocDemoFrameComponent } from '@ng-doc/app/components/demo-frame';
 import { NgDocFullscreenButtonComponent } from '@ng-doc/app/components/fullscreen-button';
 import { NgDocFullscreenToggleComponent } from '@ng-doc/app/components/fullscreen-toggle';
 import { NgDocDemoAsset } from '@ng-doc/app/interfaces';
 import { asArray } from '@ng-doc/core/helpers/as-array';
 import { NgDocDemoActionOptions } from '@ng-doc/core/interfaces';
 import {
+  NgDocButtonIconComponent,
   NgDocFullscreenDirective,
   NgDocIconComponent,
   NgDocSelectionComponent,
@@ -53,8 +61,11 @@ let nextId = 0;
  * shows the stage fullscreen with the browser Fullscreen API; it is hidden where the browser does
  * not support it.
  *
- * The preview widths set the width of the demo's container; they do not emulate a device, so
- * media queries inside the demo do not respond to them.
+ * When the Vite engine built demo pages for the page (`NgDocRootPage.demoRoute`), the toolbar
+ * opens the demo's page in a new tab, and an isolated demo (the `isolated` option, or
+ * `isolatedDemos`) is shown in an iframe of its page: the preview widths are then the width of the
+ * iframe's viewport, so media queries inside the demo respond to them. Otherwise the demo renders
+ * in the page, and the preview widths set the width of its container only.
  */
 @Component({
   selector: 'ng-doc-demo',
@@ -65,7 +76,9 @@ let nextId = 0;
     NgComponentOutlet,
     NgTemplateOutlet,
     NgDocCodeComponent,
+    NgDocButtonIconComponent,
     NgDocCopyButtonComponent,
+    NgDocDemoFrameComponent,
     NgDocFullscreenButtonComponent,
     NgDocFullscreenDirective,
     NgDocFullscreenToggleComponent,
@@ -83,6 +96,8 @@ let nextId = 0;
 export class NgDocDemoComponent {
   private readonly rootPage = inject(NgDocRootPage);
   private readonly document = inject(DOCUMENT);
+  private readonly platformLocation = inject(PlatformLocation);
+  private readonly appBaseHref = inject(APP_BASE_HREF, { optional: true });
 
   /** Name of the demo component in the page's `demos`. */
   readonly componentName = input<string | undefined>(undefined);
@@ -96,6 +111,51 @@ export class NgDocDemoComponent {
 
     return name ? this.rootPage.page?.demos?.[name] : undefined;
   });
+
+  /**
+   * The URL of the demo's page, when the page has demo pages and the demo exists: the generated
+   * demo route and the demo's name under the base href, with the `inputs` option as a query
+   * parameter.
+   */
+  readonly demoUrl: Signal<string | undefined> = computed(() => {
+    const route: string | undefined = this.rootPage.demoRoute;
+    const name: string | undefined = this.componentName();
+
+    if (!route || !name || !this.demo()) return undefined;
+    // The demo pages are files under the document's base href, whatever the location strategy.
+    const baseHref: string = (
+      this.appBaseHref ??
+      this.platformLocation.getBaseHrefFromDOM() ??
+      '/'
+    ).replace(/^\/+|\/+$/g, '');
+    const path: string = [...baseHref.split('/'), ...route.split('/'), name]
+      .filter(Boolean)
+      .map((segment: string) => encodeURIComponent(segment))
+      .join('/');
+    const inputs: Record<string, unknown> | undefined = this.options().inputs;
+    const query: string =
+      inputs && Object.keys(inputs).length
+        ? `?inputs=${encodeURIComponent(JSON.stringify(inputs))}`
+        : '';
+
+    return `/${path}${query}`;
+  });
+
+  /** Whether the demo is shown in an iframe of its page. */
+  readonly isolated: Signal<boolean> = computed(
+    () =>
+      !!this.demoUrl() &&
+      !this.options().fullscreenRoute &&
+      (this.options().isolated ?? this.rootPage.isolatedDemos ?? false),
+  );
+
+  /** The accessible title of the demo's iframe. */
+  protected readonly frameTitle: Signal<string> = computed(() => `${this.componentName()} demo`);
+
+  /** Whether the stage is fullscreen. */
+  protected readonly fullscreen: Signal<boolean> = computed(() => this.stage()?.active() ?? false);
+
+  private readonly stage = viewChild(NgDocFullscreenDirective);
 
   /** Source files of the demo, filtered by the `tabs` option. */
   readonly assets: Signal<NgDocDemoAsset[]> = computed(() => {

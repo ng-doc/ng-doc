@@ -63,7 +63,12 @@ const servers: ViteDevServer[] = [];
 
 afterEach(async () => {
   await Promise.allSettled(servers.splice(0).map((server) => server.close()));
-  await Promise.all(temporary.splice(0).map((root) => rm(root, { recursive: true, force: true })));
+  // Vite's dependency optimizer may still write its fixture cache after the server closed.
+  await Promise.all(
+    temporary
+      .splice(0)
+      .map((root) => rm(root, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 })),
+  );
 });
 
 describe('createNgDocVitePlugin with a real Vite server and generator worker', () => {

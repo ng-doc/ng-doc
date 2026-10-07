@@ -11,6 +11,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const { create } = vi.hoisted(() => ({ create: vi.fn() }));
 vi.mock('shiki/core', () => ({ createHighlighterCore: create }));
+vi.mock('shiki/engine/oniguruma', () => ({ createOnigurumaEngine: vi.fn() }));
 const custom = { themes: [{ name: 'custom', tokenColors: [] }] };
 const highlighter = () => ({ codeToHtml: vi.fn(() => '<pre>colored</pre>'), dispose: vi.fn() });
 function owner(theme: { light: string; dark: string } = { light: '', dark: '' }) {

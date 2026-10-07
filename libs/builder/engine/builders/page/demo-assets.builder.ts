@@ -81,6 +81,8 @@ export function demoAssetsBuilder(config: Config): Builder<AsyncFileOutput> {
             const processed = await UTILS.processHtml(asset.code, {
               lightTheme: config.context.config.shiki?.themes.light,
               darkTheme: config.context.config.shiki?.themes.dark,
+              // Same output as loading every grammar; Shiki 4 takes seconds to load them all.
+              grammars: 'used',
             });
 
             if (processed.error) {
