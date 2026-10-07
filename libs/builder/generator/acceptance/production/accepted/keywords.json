@@ -436,6 +436,7 @@
 "*UpgradeTo22Page#5-custom-type-controls-and-page-skeleton-components": {"path":"docs/upgrade/upgrade-to-22#5-custom-type-controls-and-page-skeleton-components","title":"Upgrade to 22.0 [5. Custom type controls and page skeleton components]","type":"link"},
 "*UpgradeTo22Page#6-search-and-keyboard-shortcuts": {"path":"docs/upgrade/upgrade-to-22#6-search-and-keyboard-shortcuts","title":"Upgrade to 22.0 [6. Search and keyboard shortcuts]","type":"link"},
 "*UpgradeTo22Page#7-the-new-engine": {"path":"docs/upgrade/upgrade-to-22#7-the-new-engine","title":"Upgrade to 22.0 [7. The new engine]","type":"link"},
+"*UpgradeTo22Page#8-updating-from-220-to-221": {"path":"docs/upgrade/upgrade-to-22#8-updating-from-220-to-221","title":"Upgrade to 22.0 [8. Updating from 22.0 to 22.1]","type":"link"},
 "*UpgradeTo22Page#changed-markup": {"path":"docs/upgrade/upgrade-to-22#changed-markup","title":"Upgrade to 22.0 [Changed markup]","type":"link"},
 "*UpgradeTo22Page#command-palette": {"path":"docs/upgrade/upgrade-to-22#command-palette","title":"Upgrade to 22.0 [Command palette]","type":"link"},
 "*UpgradeTo22Page#default-theme": {"path":"docs/upgrade/upgrade-to-22#default-theme","title":"Upgrade to 22.0 [Default theme]","type":"link"},
