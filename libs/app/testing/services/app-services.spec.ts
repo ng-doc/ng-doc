@@ -25,6 +25,7 @@ import { describeChangeDetection } from '../change-detection/change-detection-mo
 
 vi.mock('shiki/core', () => ({ createHighlighterCore: vi.fn() }));
 vi.mock('shiki/wasm', () => ({ default: vi.fn() }));
+vi.mock('shiki/engine/oniguruma', () => ({ createOnigurumaEngine: vi.fn() }));
 // The theme modules declare `name`: a spec below reads it on every theme, and Vitest refuses reads
 // of exports a mock does not declare.
 vi.mock('shiki/themes/github-light.mjs', () => ({ default: {}, name: undefined }));
@@ -307,5 +308,33 @@ describeChangeDetection('NgDocHighlighterService with configured themes', ({ pro
     } finally {
       warn.mockRestore();
     }
+  });
+
+  it('loads the given languages after angular-html into a highlighter of its own', async () => {
+    const shared = fakeHighlighter();
+    const owned = fakeHighlighter();
+    createHighlighter.mockResolvedValueOnce(shared as never).mockResolvedValueOnce(owned as never);
+    // Another application's default highlighter is not used for custom languages.
+    await TestBed.runInInjectionContext(() => new NgDocHighlighterService()).initialize();
+    const lang = {
+      name: 'angular-html',
+      scopeName: 'text.html.derivative.ng',
+      patterns: [],
+      repository: {},
+    };
+    const service = TestBed.inject(NgDocHighlighterService);
+    await service.initialize({ langs: [lang] });
+
+    expect(createHighlighter).toHaveBeenCalledTimes(2);
+    const langs = createHighlighter.mock.calls[1][0]!.langs as unknown[];
+    expect(langs).toHaveLength(2);
+    expect(langs[1]).toBe(lang);
+    expect(service.highlight('<i></i>')).toBe('<pre class="shiki"><i></i></pre>');
+    expect(owned.codeToHtml).toHaveBeenCalled();
+    expect(shared.codeToHtml).not.toHaveBeenCalled();
+
+    TestBed.resetTestingModule();
+    expect(owned.dispose).toHaveBeenCalledTimes(1);
+    expect(shared.dispose).not.toHaveBeenCalled();
   });
 });

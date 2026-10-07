@@ -1,5 +1,7 @@
 import {
+  type NgDocPlaygroundOption,
   type NgDocPlaygroundProperties,
+  type NgDocPlaygroundProperty,
   buildPlaygroundDemoPipeTemplate,
   buildPlaygroundDemoTemplate,
   getAssignedInputs,
@@ -35,10 +37,14 @@ import { parseSnippet } from '../../parsers/parse-snippet';
 import type { DemoAsset, GeneratorConfiguration, GuideSemantics, JsonValue } from '../contracts';
 import { hostPath } from '../kernel/paths';
 import { type TrackedFiles, SemanticFailure } from './dependencies';
+import { formatting } from './formatting';
 import type { JsDoc } from './rendering';
 import { canonicalUnionMembers } from './type-text';
 
-/** A union's members in the canonical order of printed types (`type-text.ts`). */
+/**
+ * A union's members in the canonical order of printed types (`type-text.ts`).
+ * @param type
+ */
 function canonicalMembers(type: Type): Type[] {
   const members = type.getUnionTypes();
   const wrappers = new Map(members.map((member) => [member.compilerType, member]));
@@ -54,7 +60,31 @@ function canonicalMembers(type: Type): Type[] {
   ).map((member) => wrappers.get(member)!);
 }
 
-/** Resolves wrappers and local constants without executing source code. */
+/**
+ * An option of a union input. The runtime evaluates the printed text of a member, which works for
+ * literals (`'small'`, `1`) but not for an enum member (`Status.Good`): a member of an enum is the
+ * member's name, which the playground shows, and the literal value the checker resolved for it,
+ * which the playground sets.
+ * @param member - A member of the input's union type.
+ */
+function playgroundOption(member: Type): string | NgDocPlaygroundOption {
+  if (member.isEnumLiteral()) {
+    const value = member.getLiteralValue();
+    const name = member.getSymbol()?.getName();
+    if (name && (typeof value === 'string' || typeof value === 'number'))
+      return { label: name, value };
+  }
+  return member.getText(
+    undefined,
+    TypeFormatFlags.NoTruncation | TypeFormatFlags.UseSingleQuotesForStringLiteralType,
+  );
+}
+
+/**
+ * Resolves wrappers and local constants without executing source code.
+ * @param node
+ * @param seen
+ */
 export function unwrap(
   node: Node | undefined,
   seen: Set<Node<ts.Node>> = new Set<Node>(),
@@ -75,6 +105,10 @@ export function unwrap(
   return node;
 }
 
+/**
+ *
+ * @param source
+ */
 export function entryObject(source: SourceFile): ObjectLiteralExpression {
   const exported = source.getDefaultExportSymbol()?.getDeclarations()[0];
   const object = unwrap(exported);
@@ -86,6 +120,10 @@ export function entryObject(source: SourceFile): ObjectLiteralExpression {
   return object;
 }
 
+/**
+ *
+ * @param node
+ */
 export function literal(node: Node | undefined): JsonValue {
   const value = unwrap(node);
   if (Node.isStringLiteral(value) || Node.isNoSubstitutionTemplateLiteral(value))
@@ -114,36 +152,78 @@ export function literal(node: Node | undefined): JsonValue {
   );
 }
 
-function controlsToProperties(controls: Record<string, JsonValue>): NgDocPlaygroundProperties {
-  return Object.fromEntries(
-    Object.entries(controls).map(([name, value]) => {
-      if (typeof value === 'string') {
-        return [name, { inputName: name, type: value, isManual: true }];
-      }
-      if (!value || typeof value !== 'object' || Array.isArray(value)) {
-        throw new SemanticFailure('SEMANTIC_CONTROLS_SHAPE', `Invalid control ${name}`);
-      }
-      const type = value.type;
-      if (typeof type !== 'string') {
-        throw new SemanticFailure('SEMANTIC_CONTROLS_SHAPE', `Invalid control ${name}`);
-      }
-      return [
-        name,
-        {
-          inputName: typeof value.alias === 'string' ? value.alias : name,
-          type,
-          ...(typeof value.description === 'string' ? { description: value.description } : {}),
-          ...(Array.isArray(value.options) &&
-          value.options.every((item) => typeof item === 'string')
-            ? { options: value.options as string[] }
-            : {}),
-          isManual: true,
-        },
-      ];
-    }),
-  );
+/**
+ * The fields of a `controls` entry that only change how the inspector shows an input's row.
+ * @param value - The entry.
+ */
+function displayFields(
+  value: Record<string, JsonValue>,
+): Pick<NgDocPlaygroundProperty, 'label' | 'group' | 'order'> {
+  return {
+    ...(typeof value.label === 'string' ? { label: value.label } : {}),
+    ...(typeof value.group === 'string' ? { group: value.group } : {}),
+    ...(typeof value.order === 'number' && Number.isFinite(value.order)
+      ? { order: value.order }
+      : {}),
+  };
 }
 
+/**
+ * Applies a playground's `controls` to the properties read from its target. A type name, or an
+ * entry with a `type`, replaces (or adds) the property; an entry without a `type` keeps the
+ * control chosen for an input of the target and changes only how its row is shown.
+ * @param properties - The properties read from the target, changed in place.
+ * @param controls - The playground's `controls`, as JSON.
+ */
+function applyControls(
+  properties: NgDocPlaygroundProperties,
+  controls: Record<string, JsonValue>,
+): void {
+  for (const [name, value] of Object.entries(controls)) {
+    if (typeof value === 'string') {
+      properties[name] = { inputName: name, type: value, isManual: true };
+      continue;
+    }
+    if (!value || typeof value !== 'object' || Array.isArray(value)) {
+      throw new SemanticFailure('SEMANTIC_CONTROLS_SHAPE', `Invalid control ${name}`);
+    }
+    const type = value.type;
+    if (type === undefined) {
+      const detected = properties[name];
+      if (!detected)
+        throw new SemanticFailure(
+          'SEMANTIC_CONTROLS_SHAPE',
+          `Control ${name} has no type, and the target has no input ${name} to keep the control of`,
+        );
+      properties[name] = {
+        ...detected,
+        ...(typeof value.description === 'string' ? { description: value.description } : {}),
+        ...displayFields(value),
+      };
+      continue;
+    }
+    if (typeof type !== 'string') {
+      throw new SemanticFailure('SEMANTIC_CONTROLS_SHAPE', `Invalid control ${name}`);
+    }
+    properties[name] = {
+      inputName: typeof value.alias === 'string' ? value.alias : name,
+      type,
+      ...(typeof value.description === 'string' ? { description: value.description } : {}),
+      ...(Array.isArray(value.options) && value.options.every((item) => typeof item === 'string')
+        ? { options: value.options as string[] }
+        : {}),
+      isManual: true,
+      ...displayFields(value),
+    };
+  }
+}
+
+/**
+ *
+ * @param target
+ * @param files
+ * @param config
+ */
 function assets(
   target: ClassDeclaration,
   files: TrackedFiles,
@@ -175,7 +255,9 @@ function assets(
       isEmpty: !code,
       lang: title.replace('TypeScript', 'angular-ts').replace('HTML', 'angular-html'),
     };
-    const snippets = snippetsFromAsset(asset, config.inlineStyleLanguage, config.workspaceRoot);
+    const snippets = formatting(() =>
+      snippetsFromAsset(asset, config.inlineStyleLanguage, config.workspaceRoot),
+    );
     return (snippets.length ? snippets : [asset]).map((item) => ({
       title: item.title,
       source,
@@ -187,6 +269,14 @@ function assets(
   });
 }
 
+/**
+ *
+ * @param source
+ * @param files
+ * @param config
+ * @param docs
+ * @param values
+ */
 export function guideSemantics(
   source: SourceFile,
   files: TrackedFiles,
@@ -281,12 +371,7 @@ export function guideSemantics(
             ? docs.getJsDocParam(target.getMethodOrThrow('transform'), input.getName())
             : docs.getJsDocDescription(input),
           // In the written order: the checker's (stable) order sorts literals by value.
-          options: writtenUnionOrder(input, type, canonicalMembers(type)).map((part) =>
-            part.getText(
-              undefined,
-              TypeFormatFlags.NoTruncation | TypeFormatFlags.UseSingleQuotesForStringLiteralType,
-            ),
-          ),
+          options: writtenUnionOrder(input, type, canonicalMembers(type)).map(playgroundOption),
         };
       }
       const controls =
@@ -297,7 +382,7 @@ export function guideSemantics(
           'SEMANTIC_CONTROLS_SHAPE',
           `Controls for ${id} must be a JSON object`,
         );
-      Object.assign(properties, controlsToProperties(controls as Record<string, JsonValue>));
+      applyControls(properties, controls as Record<string, JsonValue>);
       for (const [key, value] of Object.entries(properties)) {
         if (!value || typeof value !== 'object' || typeof value.type !== 'string')
           throw new SemanticFailure('SEMANTIC_CONTROLS_SHAPE', `Invalid control ${id}.${key}`);

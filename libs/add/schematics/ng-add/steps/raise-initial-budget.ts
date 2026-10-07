@@ -8,6 +8,7 @@ import {
 } from '@schematics/angular/utility/workspace';
 
 import { Schema } from '../schema';
+import { getBuildOptionsTarget } from '../utils/get-build-options-target';
 import { getProject } from '../utils/get-project';
 
 /**
@@ -34,7 +35,8 @@ export function budgetBytes(value: JsonValue | undefined): number | undefined {
 }
 
 /**
- * Raises the `maximumError` of the `initial` budgets of the build target from the `ng new` default
+ * Raises the `maximumError` of the `initial` budgets of the target with the Angular build options
+ * (`getBuildOptionsTarget`) from the `ng new` default
  * (1 MB) to {@link NG_DOC_INITIAL_BUDGET}. A budget the project set itself, warnings and other
  * budgets are kept. The Vite engine has no budgets, and a project that already used NgDoc chose its
  * own, so only the legacy setup of a project new to NgDoc runs this step.
@@ -45,7 +47,8 @@ export function raiseInitialBudget(options: Schema): Rule {
     return updateWorkspace((workspace: WorkspaceDefinition) => {
       const logger = context.logger.createChild('raise-initial-budget');
       const project: ProjectDefinition | undefined = getProject(options, workspace);
-      const build: TargetDefinition | undefined = project?.targets.get('build');
+      const build: TargetDefinition | undefined =
+        project && project.targets.get(getBuildOptionsTarget(project));
       const raised: string[] = [];
 
       for (const [name, configuration] of [

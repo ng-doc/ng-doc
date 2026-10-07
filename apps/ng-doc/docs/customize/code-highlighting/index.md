@@ -183,7 +183,62 @@ const html = highlighter.codeToHtml('const answer = 42;', {
 
 Call `ngDocSyntaxTheme()` for every highlighter: Shiki changes the theme object that it loads.
 
+## Add languages
+
+Code blocks can use every language bundled with Shiki. To highlight a language that Shiki doesn't
+bundle, or to replace a bundled grammar with another one, register it in `shiki.langs` of
+`ng-doc.config.ts`. A registration is a TextMate grammar with a `name`, which code blocks use, and a
+`scopeName`. Import it from a `.tmLanguage.json` file or from `@shikijs/langs`:
+
+```typescript name="ng-doc.config.ts" {2,10}
+import { NgDocConfiguration } from '@ng-doc/builder';
+import myLanguage from './my-language.tmLanguage.json';
+
+const config: NgDocConfiguration = {
+  shiki: {
+    themes: {
+      light: 'css-variables',
+      dark: 'css-variables',
+    },
+    langs: [myLanguage],
+  },
+};
+
+export default config;
+```
+
+A code block that names the language, such as ` ```my-language `, is then highlighted with it. A
+registration named like a bundled language, `html` for example, replaces it, also where other
+grammars embed it. Only the new engine reads `shiki.langs`.
+
+The browser highlights playground code, which is Angular HTML, with the `angular-html` grammar and
+the grammars it embeds. To change them there too, pass the same registrations to `provideNgDocApp`:
+
+```typescript name="app.config.ts"
+import { ApplicationConfig } from '@angular/core';
+import { provideNgDocApp } from '@ng-doc/app';
+
+import angularHtml from './angular-html.tmLanguage.json';
+
+export const appConfig: ApplicationConfig = {
+  providers: [provideNgDocApp({ shiki: { langs: [angularHtml] } })],
+};
+```
+
 ## 🚧 Gotchas
+
+> **Note**
+> A registration of `shiki.langs` must be plain JSON data: a function or a promise, such as
+> `() => import('./grammar.json')`, fails the build with `DISCOVERY_SHIKI_LANGUAGE_INVALID`. The
+> languages that a grammar embeds (`embeddedLangs`) must be bundled with Shiki or registered too,
+> or every page fails to build.
+
+> **Note**
+> NgDoc highlights code with Shiki 4, which knows Angular's `@let` and every control flow block.
+> Themes and languages that you load yourself must be Shiki 4 registrations. Shiki writes the font
+> styles of a pair of themes as the `--shiki-light-font-style` and `--shiki-dark-font-style`
+> variables (and their `font-weight` and `text-decoration` siblings), which the NgDoc styles apply
+> to code blocks.
 
 > **Warning**
 > The theme names in `shiki.themes` must be themes bundled with Shiki, or `css-variables`. To use

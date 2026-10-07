@@ -16,7 +16,7 @@ import { FormControl, FormsModule } from '@angular/forms';
 import { NgDocPlaygroundPropertyComponent } from '@ng-doc/app/components/playground';
 import { NgDocProvidedTypeControl, NgDocTypeControl } from '@ng-doc/app/interfaces';
 import { NgDocTypeAliasControlComponent } from '@ng-doc/app/type-controls';
-import { NgDocPlaygroundProperty } from '@ng-doc/core/interfaces';
+import { NgDocPlaygroundOption, NgDocPlaygroundProperty } from '@ng-doc/core/interfaces';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 
 import {
@@ -158,6 +158,25 @@ class TypeAliasHostComponent {
   readonly value: string = 'medium';
 }
 
+/** An input typed with a numeric enum, `enum Level { Low, High = 5 }`, as the new engine lists it. */
+@Component({
+  selector: 'ng-doc-enum-host',
+  template: `<ng-doc-type-alias-control
+    [options]="options"
+    [default]="5"
+    [(ngModel)]="value"></ng-doc-type-alias-control>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgDocTypeAliasControlComponent, FormsModule],
+})
+class EnumHostComponent {
+  readonly options: Array<string | NgDocPlaygroundOption> = [
+    { label: 'Low', value: 0 },
+    { label: 'High', value: 5 },
+    'undefined',
+  ];
+  value: number = 0;
+}
+
 describeChangeDetection('Type controls in the playground', ({ providers }: ChangeDetectionCase) => {
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -232,5 +251,41 @@ describeChangeDetection('Type controls in the playground', ({ providers }: Chang
     // The value, then the default marker; the type chip is under the input's name.
     expect(value.textContent?.replace(/\s+/g, '')).toBe('mediumdefault');
     expect(value.querySelector('ng-doc-kind-icon')).toBeNull();
+  });
+
+  it('shows the name of an enum member and sets its value', async () => {
+    const fixture: ComponentFixture<EnumHostComponent> = TestBed.createComponent(EnumHostComponent);
+    const settle = async (): Promise<void> => {
+      // ngModel writes its value in a microtask, and the combobox forwards it in another.
+      for (let round = 0; round < 3; round++) {
+        fixture.detectChanges();
+        await fixture.whenStable();
+      }
+    };
+
+    await settle();
+
+    const control = fixture.debugElement.query(
+      (element) => element.componentInstance instanceof NgDocTypeAliasControlComponent,
+    ).componentInstance as NgDocTypeAliasControlComponent<number>;
+    const text = (): string | undefined =>
+      fixture.nativeElement
+        .querySelector('.ng-doc-type-alias-value')
+        ?.textContent?.replace(/\s+/g, '');
+
+    // `0` is a value like any other; `undefined` gets no option.
+    expect(
+      (control as unknown as { items: () => Array<{ label: string; value: unknown }> }).items(),
+    ).toEqual([
+      { label: 'Low', value: 0 },
+      { label: 'High', value: 5 },
+    ]);
+    expect(text()).toBe('Low');
+
+    control.changeModel(5);
+    await settle();
+
+    expect(fixture.componentInstance.value).toBe(5);
+    expect(text()).toBe('Highdefault');
   });
 });

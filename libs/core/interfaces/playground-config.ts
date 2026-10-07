@@ -8,9 +8,12 @@ import { NgDocPlaygroundOptions } from './playground-options';
  */
 export interface NgDocPlaygroundControlConfig {
   /**
-   * Input type that will be used to display the playground control (e.g. `string`, `number`, `boolean`, `MyOwnType`)
+   * Input type that will be used to display the playground control (e.g. `string`, `number`, `boolean`, `MyOwnType`).
+   *
+   * Leave it out to keep the control NgDoc chose for an input of the target and change only how
+   * its row is shown: its label, group, order or description. New engine only.
    */
-  type: string;
+  type?: string;
   /**
    * Input alias that will be used to set the input value (e.g. `myInputAlias`)
    */
@@ -23,6 +26,21 @@ export interface NgDocPlaygroundControlConfig {
    * List of possible options, it can be list of Type Alias items
    */
   options?: string[];
+  /**
+   * The name shown for the input in the inspector, instead of the input's name (e.g. `Primary
+   * color`). New engine only.
+   */
+  label?: string;
+  /**
+   * The group of the input in the inspector: inputs of the same group are listed together under
+   * its name, after the inputs without a group. New engine only.
+   */
+  group?: string;
+  /**
+   * The position of the input in the inspector, lowest first, and its group's position among the
+   * groups. Inputs with an `order` come before the others. New engine only.
+   */
+  order?: number;
 }
 
 /** Playground configuration */

@@ -28,6 +28,7 @@ import { assertConsistentAngularBuild } from './angular-version';
 import { boundServerClose } from './bounded-close';
 import { createComponentUpdateGate } from './component-updates';
 import { requirePublishedConfiguration } from './configuration';
+import { type NgDocDemoApplicationApi, readDemoApplication } from './demo-application';
 import { diagnosticText, hostDiagnostic } from './diagnostics';
 import type { HostUpdateTicket } from './host-updates';
 import { acquireOutputLease } from './lease';
@@ -321,6 +322,20 @@ export function createPlugin(options: NgDocVitePluginOptions): Plugin[] {
         schemaVersion: 1,
         select: (entry: string) => ssrRenderer.select(entry),
       }),
+      ngDocDemoApplication: Object.freeze({
+        schemaVersion: 1,
+        // A build decides its inputs before it starts, so the application plugin asks for the
+        // generation early (its `options` hook); `buildStart` then finds it initialized.
+        async resolve() {
+          if (vite?.command === 'build') await initializeBuild();
+          const state = active ?? (await initialized);
+          return state ? readDemoApplication(state.configuration.outputRoot) : undefined;
+        },
+        async current() {
+          const configuration = active?.lifecycle.configuration ?? active?.configuration;
+          return configuration ? readDemoApplication(configuration.outputRoot) : undefined;
+        },
+      } satisfies NgDocDemoApplicationApi),
     },
     enforce: 'pre',
     config(this: ConfigPluginContext | void, config: UserConfig, environment: ConfigEnv) {

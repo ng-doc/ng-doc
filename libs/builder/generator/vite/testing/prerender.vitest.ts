@@ -268,6 +268,93 @@ describe('prerender runtime', () => {
     expect(again.rendered[0].document).toContain('<base href="/preview/">');
   });
 
+  it('renders the demo pages into the demo application page, falling back to it on a failure', async () => {
+    const { browserDir } = await built();
+    await writeFile(
+      path.join(browserDir, 'ng-doc-demo.html'),
+      '<html><head><base href="/preview/"></head><body><ng-doc-demo-app></ng-doc-demo-app></body></html>',
+    );
+    const docs = server({ config: [{ path: 'docs', component: class Docs {} }] });
+    const demo = server({
+      fail: '/Broken',
+      config: [
+        {
+          path: 'demo-preview/docs',
+          loadChildren: () => [
+            { path: '', redirectTo: 'Button', pathMatch: 'full' },
+            { path: 'Button', component: class Button {} },
+            { path: 'Broken', component: class Broken {} },
+          ],
+        },
+        // Taken by the documentation already: never rendered twice.
+        { path: 'docs', component: class Docs {} },
+        { path: '**', component: class Unknown {} },
+      ],
+    });
+    const serverEntry = path.join(browserDir, '../server/server.mjs');
+    const demoServerEntry = path.join(browserDir, '../server/demo-server.mjs');
+    const report = await runPrerender(
+      { browserDir, serverEntry, demoServerEntry, routes: [], discoverRoutes: true },
+      {
+        importModule: async (url: string) =>
+          url.endsWith('demo-server.mjs') ? demo.module : docs.module,
+      },
+    );
+    expect(report.routes).toEqual([
+      { path: '/demo-preview/docs/Broken', file: 'demo-preview/docs/Broken/index.html' },
+      { path: '/demo-preview/docs/Button', file: 'demo-preview/docs/Button/index.html' },
+      { path: '/docs', file: 'docs/index.html' },
+    ]);
+    expect(report.warnings).toEqual([
+      {
+        route: '/demo-preview/docs/Broken',
+        message: expect.stringMatching(/^\[NGDOC_PRERENDER_DEMO_FALLBACK\].*render broke/),
+      },
+    ]);
+    // The demo pages render into their own page, never into the documentation's.
+    expect(demo.rendered.every(({ document }) => document.includes('<ng-doc-demo-app>'))).toBe(
+      true,
+    );
+    expect(
+      await readFile(path.join(browserDir, 'demo-preview/docs/Button/index.html'), 'utf8'),
+    ).toBe('<html>http://localhost/preview/demo-preview/docs/Button</html>');
+    // A demo that fails gets the client page, which renders it in the browser.
+    expect(
+      await readFile(path.join(browserDir, 'demo-preview/docs/Broken/index.html'), 'utf8'),
+    ).toContain('<ng-doc-demo-app></ng-doc-demo-app>');
+  });
+
+  it('warns instead of failing when the demo application cannot render at all', async () => {
+    const { browserDir } = await built();
+    const docs = server({ config: [{ path: 'docs', component: class Docs {} }] });
+    const serverEntry = path.join(browserDir, '../server/server.mjs');
+    // No demo application page in the browser output.
+    const report = await runPrerender(
+      {
+        browserDir,
+        serverEntry,
+        demoServerEntry: path.join(browserDir, '../server/demo-server.mjs'),
+        routes: [],
+        discoverRoutes: true,
+      },
+      { importModule: async () => docs.module },
+    );
+    expect(report.routes.map((route) => route.path)).toEqual(['/docs']);
+    expect(report.warnings).toEqual([
+      {
+        route: '/ng-doc-demo.html',
+        message: expect.stringContaining('[NGDOC_PRERENDER_DEMO_APPLICATION]'),
+      },
+    ]);
+    // Without demo pages the report has no warnings at all.
+    expect(
+      await runPrerender(
+        { browserDir, serverEntry, routes: [], discoverRoutes: true },
+        { importModule: async () => docs.module },
+      ),
+    ).not.toHaveProperty('warnings');
+  });
+
   it('answers requests for the prerender host from the browser output', async () => {
     const { browserDir } = await built();
     await mkdir(path.join(browserDir, 'assets/ng-doc'), { recursive: true });

@@ -526,3 +526,86 @@ test('targeted differential: a discovery that changes between the pinned and the
   expect(JSON.stringify(cold)).toContain('Third Raced');
   expect(published(result)).toEqual(cold);
 }, 240_000);
+
+/** A page whose code block shows a named snippet of a program file. */
+const namedSnippet = (region: string, outside: string, id: string = 'greeting'): string =>
+  [
+    'export class Greeter {',
+    `  // snippet#${id}`,
+    `  greet(): string { return '${region}'; }`,
+    `  // snippet#${id}`,
+    `  other(): string { return '${outside}'; }`,
+    '}',
+    '',
+  ].join('\n');
+
+test('targeted differential: edits of a file a code block shows a named snippet of', async () => {
+  const f = corpusFixture(false, {}, () => ({
+    'docs/fourth/examples/greeting.ts': namedSnippet('Region one', 'Outside one'),
+    'docs/fourth/index.md': '# Fourth\n\n```ts file="./examples/greeting.ts"#greeting\n```\n',
+  }));
+  const shown = () => Object.values(tree(f.path('out'))).join('\n');
+  const outcome = await targetedArms(f, [
+    {
+      name: 'an edit inside the snippet',
+      expect: 'content',
+      apply: (g) => [
+        corpusUpdate(
+          g.write('docs/fourth/examples/greeting.ts', namedSnippet('Region two', 'Outside one')),
+        ),
+      ],
+    },
+    {
+      name: 'an edit outside the snippet',
+      expect: 'content',
+      apply: (g) => [
+        corpusUpdate(
+          g.write('docs/fourth/examples/greeting.ts', namedSnippet('Region two', 'Outside two')),
+        ),
+      ],
+    },
+    {
+      name: 'the snippet renamed in the file',
+      // The targeted attempt fails, and a failed attempt runs the generation FULL.
+      expect: 'full',
+      fails: 'CONTENT_SNIPPET_UNKNOWN',
+      apply: (g) => [
+        corpusUpdate(
+          g.write(
+            'docs/fourth/examples/greeting.ts',
+            namedSnippet('Region two', 'Outside two', 'hello'),
+          ),
+        ),
+      ],
+    },
+    {
+      name: 'the code block names the new id',
+      // After a failed generation, the recovery compiles in full.
+      expect: 'full',
+      apply: (g) => [
+        corpusUpdate(
+          g.write(
+            'docs/fourth/index.md',
+            '# Fourth\n\n```ts file="./examples/greeting.ts"#hello\n```\n',
+          ),
+        ),
+      ],
+    },
+    {
+      name: 'an edit inside the renamed snippet',
+      expect: 'content',
+      apply: (g) => [
+        corpusUpdate(
+          g.write(
+            'docs/fourth/examples/greeting.ts',
+            namedSnippet('Region three', 'Outside two', 'hello'),
+          ),
+        ),
+      ],
+    },
+  ]);
+  expect(outcome.failed).toBe(1);
+  // Only the region is shown, with the edits.
+  expect(shown()).toContain('Region three');
+  expect(shown()).not.toContain('Outside');
+}, 600_000);

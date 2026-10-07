@@ -222,6 +222,77 @@ export class Optional {
     expect([...generator[name].options].sort(), name).toEqual([...(value.options ?? [])].sort());
 });
 
+test('enum inputs list the names and values of their members, in the written order', async () => {
+  // A file the checker reads first creates the later members first.
+  write(
+    'a-warm.ts',
+    `import { Status } from './status';\nexport const warm: [Status.Unknown, Status.Bad] = [Status.Unknown, Status.Bad];`,
+  );
+  write(
+    'status.ts',
+    `import { Component, Input, input } from '@angular/core';
+export enum Status { Good = 'good', Bad = 'bad', Unknown = '' }
+export const enum Level { Low, High = 5, Top }
+enum Mixed { Yes = 'yes', No = 0 }
+@Component({selector: 'status-box', template: ''})
+export class StatusBox {
+  @Input() status: Status = Status.Good;
+  level = input<Level>(Level.Low);
+  optional = input<Status>();
+  @Input() mixed: Mixed | 'maybe' = Mixed.Yes;
+  @Input() withLiteral: Status | 'maybe' = 'maybe';
+  @Input() single: Status.Good | Status.Bad = Status.Bad;
+}`,
+  );
+  write(
+    'entry.ts',
+    `import { StatusBox } from './status'; export default {playgrounds:{status:{target:StatusBox,template:'<ng-doc-selector></ng-doc-selector>'}}};`,
+  );
+  await sync();
+  const result = service.describeGuide('guide');
+  expect(result.diagnostics).toEqual([]);
+  const properties = result.value!.playgrounds[0].properties as Record<
+    string,
+    { type: string; options: unknown[] }
+  >;
+  const options = Object.fromEntries(
+    Object.entries(properties).map(([name, value]) => [name, value.options]),
+  );
+  expect(options).toEqual({
+    status: [
+      { label: 'Good', value: 'good' },
+      { label: 'Bad', value: 'bad' },
+      { label: 'Unknown', value: '' },
+    ],
+    level: [
+      { label: 'Low', value: 0 },
+      { label: 'High', value: 5 },
+      { label: 'Top', value: 6 },
+    ],
+    // `undefined` of an optional input stays source text, which the runtime evaluates.
+    optional: [
+      'undefined',
+      { label: 'Good', value: 'good' },
+      { label: 'Bad', value: 'bad' },
+      { label: 'Unknown', value: '' },
+    ],
+    mixed: [{ label: 'Yes', value: 'yes' }, { label: 'No', value: 0 }, "'maybe'"],
+    single: [
+      { label: 'Good', value: 'good' },
+      { label: 'Bad', value: 'bad' },
+    ],
+    withLiteral: [
+      { label: 'Good', value: 'good' },
+      { label: 'Bad', value: 'bad' },
+      { label: 'Unknown', value: '' },
+      "'maybe'",
+    ],
+  });
+  // The type keeps the enum's name, so a type control registered for it still matches.
+  expect(properties.status.type).toBe('Status');
+  expect(JSON.parse(JSON.stringify(result))).toEqual(result);
+});
+
 test('a query terminated by a template watchdog leaves a program that answers no query and is not retained', async () => {
   await service.dispose();
   let slow = false;
@@ -318,6 +389,48 @@ test('evaluated manual controls retain dependencies and assigned inputs are remo
     path: join(directory, 'manual.json'),
     digest: 'value',
   });
+});
+
+test('controls label, group and order rows, and an entry without a type keeps the detected control', async () => {
+  write(
+    'entry.ts',
+    `import { Demo } from './demo'; export default {playgrounds:{x:{target:Demo,template:'<demo-box></demo-box>',controls:{
+      title: { label: 'Title', group: 'Text', order: 2, description: 'Shown above' },
+      count: { type: 'number', label: 'Amount', group: 'Numbers', order: 1, alias: 'amount' },
+      inherited: { label: 3, group: null, order: 'first' },
+    }}}};`,
+  );
+  await sync();
+  const result = service.describeGuide('guide');
+  expect(result.diagnostics).toEqual([]);
+  const properties = result.value!.playgrounds[0].properties;
+  // The detected union keeps its type and options; the entry adds the row's presentation.
+  expect(properties.title).toEqual({
+    inputName: 'caption',
+    type: "'large' | 'small'",
+    description: 'Shown above',
+    options: ["'small'", "'large'"],
+    label: 'Title',
+    group: 'Text',
+    order: 2,
+  });
+  // An entry with a type replaces the control, as before, and carries the same fields.
+  expect(properties.count).toEqual({
+    inputName: 'amount',
+    type: 'number',
+    isManual: true,
+    label: 'Amount',
+    group: 'Numbers',
+    order: 1,
+  });
+  // Values of the wrong type are left out, like the other optional fields.
+  expect(Object.keys(properties.inherited as object).sort()).toEqual([
+    'description',
+    'inputName',
+    'options',
+    'type',
+  ]);
+  expect(JSON.parse(JSON.stringify(result))).toEqual(result);
 });
 
 test('composes the real discovery values reader without a pre-normalized controls DTO', async () => {
@@ -459,6 +572,14 @@ test.each([
   ],
   [
     "import {Demo} from './demo';export default {playgrounds:{x:{target:Demo,template:'<demo-box></demo-box>',controls:{bad:null}}}}",
+    'SEMANTIC_CONTROLS_SHAPE',
+  ],
+  [
+    "import {Demo} from './demo';export default {playgrounds:{x:{target:Demo,template:'<demo-box></demo-box>',controls:{missing:{label:'Missing'}}}}}",
+    'SEMANTIC_CONTROLS_SHAPE',
+  ],
+  [
+    "import {Demo} from './demo';export default {playgrounds:{x:{target:Demo,template:'<demo-box></demo-box>',controls:{bad:{type:1}}}}}",
     'SEMANTIC_CONTROLS_SHAPE',
   ],
 ])('invalid guide %s returns structured diagnostic', async (text, code) => {

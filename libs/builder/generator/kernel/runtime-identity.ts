@@ -6,8 +6,10 @@ import { fileURLToPath } from 'node:url';
  * The packages whose code shapes what a generation produces (parsing, rendering, highlighting,
  * formatting, search records, bundling of page modules), read from the `package.json` they
  * resolve to from this module. A package named with a second entry is resolved from that
- * package's directory: `shiki` from `@shikijs/rehype`, which loads it, and `@shikijs/core` from
- * that `shiki`.
+ * package's directory: `shiki` from `@shikijs/rehype`, which loads it, and from that `shiki` the
+ * packages it highlights with: `@shikijs/core`, the bundled grammars (`@shikijs/langs`) and themes
+ * (`@shikijs/themes`), the regular expression engine (`@shikijs/engine-oniguruma`) and, from
+ * `@shikijs/core`, the tokenizer (`@shikijs/vscode-textmate`).
  */
 const RUNTIME_PACKAGES: ReadonlyArray<readonly [string, string?]> = [
   ['typescript'],
@@ -18,6 +20,10 @@ const RUNTIME_PACKAGES: ReadonlyArray<readonly [string, string?]> = [
   ['@shikijs/rehype'],
   ['shiki', '@shikijs/rehype'],
   ['@shikijs/core', 'shiki'],
+  ['@shikijs/langs', 'shiki'],
+  ['@shikijs/themes', 'shiki'],
+  ['@shikijs/engine-oniguruma', 'shiki'],
+  ['@shikijs/vscode-textmate', '@shikijs/core'],
   ['marked'],
   ['gray-matter'],
   ['nunjucks'],

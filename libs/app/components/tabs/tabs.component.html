@@ -1,4 +1,4 @@
-<ng-doc-tab-group [openedTab]="activeIndex()">
+<ng-doc-tab-group [openedTab]="activeIndex()" [appearance]="contentTabs() ? 'plain' : 'framed'">
   @for (tab of tabs(); track tab; let i = $index) {
     <ng-doc-tab [label]="label" [content]="content" [id]="i">
       <ng-template #label>
@@ -8,7 +8,7 @@
         {{ tab.title }}
       </ng-template>
       <ng-template #content>
-        <div #element>
+        <div #element [class.ng-doc-tabs-content]="contentTabs()">
           {{ appendElement | execute: tab.content : element }}
         </div>
       </ng-template>

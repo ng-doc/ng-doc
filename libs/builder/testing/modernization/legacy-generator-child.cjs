@@ -154,7 +154,9 @@ const requiredArtifacts = [
   'guides/guide/demo-assets.ts',
   'api/page.ts',
 ];
-const deadline = Date.now() + 5_000;
+// An upper bound on the wait, not a speed check: readiness is the required artifacts. A cold
+// legacy build creates a Shiki highlighter with every bundled grammar (seconds on CI runners).
+const deadline = Date.now() + 30_000;
 let lastSignature = '';
 let lastEmissions = 0;
 let ready = false;

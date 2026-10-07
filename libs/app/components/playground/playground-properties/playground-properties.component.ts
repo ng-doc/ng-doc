@@ -13,14 +13,14 @@ import {
   Signal,
 } from '@angular/core';
 import { FormControl, FormGroup, FormsModule } from '@angular/forms';
-import { isPlaygroundProperty } from '@ng-doc/app/helpers';
+import { isPlaygroundProperty, resolvePlaygroundOption } from '@ng-doc/app/helpers';
 import { NgDocProvidedTypeControl } from '@ng-doc/app/interfaces';
 import { getTokenForType } from '@ng-doc/app/providers/type-control';
-import { extractValueOrThrow } from '@ng-doc/core/helpers/extract-value';
 import { isPresent } from '@ng-doc/core/helpers/is-present';
 import { objectKeys } from '@ng-doc/core/helpers/object-keys';
 import {
   NgDocPlaygroundContent,
+  NgDocPlaygroundOption,
   NgDocPlaygroundProperties,
   NgDocPlaygroundProperty,
 } from '@ng-doc/core/interfaces';
@@ -92,6 +92,9 @@ export class NgDocPlaygroundPropertiesComponent<
   /** Whether the demo is recreated each time an input changes. */
   readonly recreateDemo = model<boolean>(false);
 
+  /** Whether the Recreate setting is fixed by the playground's options and hidden. */
+  readonly recreateLocked = input<boolean>(false);
+
   /** Whether the Reset button is shown. */
   readonly showResetButton = input<boolean>(false);
 
@@ -116,21 +119,31 @@ export class NgDocPlaygroundPropertiesComponent<
         return typeControl ? { propertyName: String(key), property, typeControl } : null;
       })
       .filter(isPresent)
-      .sort((a: NgDocPlaygroundPropertyControl, b: NgDocPlaygroundPropertyControl) => {
-        const aOrder: number | undefined = a.typeControl.options?.order;
-        const bOrder: number | undefined = b.typeControl.options?.order;
+      .sort(
+        (a: NgDocPlaygroundPropertyControl, b: NgDocPlaygroundPropertyControl) =>
+          compareOrder(a.property.order, b.property.order) ?? compareByTypeControl(a, b),
+      );
+  });
 
-        if (isPresent(aOrder) && isPresent(bOrder)) {
-          return aOrder - bOrder;
-        }
-        if (isPresent(aOrder)) {
-          return -1;
-        }
-        if (isPresent(bOrder)) {
-          return 1;
-        }
-        return INPUT_ORDER.compare(a.property.inputName, b.property.inputName);
-      });
+  /**
+   * The controls in sections: the inputs without a group first, then a section per group, in the
+   * order of the group's first input.
+   */
+  protected readonly propertySections: Signal<NgDocPlaygroundPropertySection[]> = computed(() => {
+    const sections = new Map<string | undefined, NgDocPlaygroundPropertyControl[]>([
+      [undefined, []],
+    ]);
+
+    for (const control of this.propertyControls()) {
+      const group: string | undefined = control.property.group || undefined;
+
+      sections.set(group, [...(sections.get(group) ?? []), control]);
+    }
+
+    return Array.from(sections, ([group, controls]) => ({
+      title: group ?? 'Settings',
+      controls,
+    })).filter((section: NgDocPlaygroundPropertySection) => section.controls.length > 0);
   });
 
   /** The control of content slots. */
@@ -173,19 +186,19 @@ export class NgDocPlaygroundPropertiesComponent<
   }
 
   private getControlForTypeAlias(
-    options?: string[],
+    options?: Array<string | NgDocPlaygroundOption>,
     isManual?: boolean,
   ): NgDocProvidedTypeControl | undefined {
     if (options && options.length) {
       let optionsIsValid: boolean = true;
 
-      if (!isManual) {
-        try {
-          // checking that all values are extractable
-          options.forEach((item: string) => extractValueOrThrow(item));
-        } catch {
-          optionsIsValid = false;
-        }
+      try {
+        // checking that all values are extractable
+        options.forEach((item: string | NgDocPlaygroundOption) =>
+          resolvePlaygroundOption(item, isManual),
+        );
+      } catch {
+        optionsIsValid = false;
       }
 
       if (optionsIsValid) {
@@ -198,6 +211,57 @@ export class NgDocPlaygroundPropertiesComponent<
 
     return undefined;
   }
+}
+
+/** A titled list of controls in the inspector. */
+interface NgDocPlaygroundPropertySection {
+  title: string;
+  controls: NgDocPlaygroundPropertyControl[];
+}
+
+/**
+ * Compares the `order` of two inputs from the playground's `controls`: inputs with one come first,
+ * lowest first.
+ * @param a - The first input's order.
+ * @param b - The second input's order.
+ * @returns The comparison, or `undefined` when neither input has an order or both have the same.
+ */
+function compareOrder(a: number | undefined, b: number | undefined): number | undefined {
+  if (isPresent(a) && isPresent(b)) {
+    return a - b || undefined;
+  }
+  if (isPresent(a)) {
+    return -1;
+  }
+  if (isPresent(b)) {
+    return 1;
+  }
+  return undefined;
+}
+
+/**
+ * Compares two inputs by the order of their type controls: controls with an order first, lowest
+ * first (equal orders keep the inputs' order), then the others by name.
+ * @param a - The first input.
+ * @param b - The second input.
+ */
+function compareByTypeControl(
+  a: NgDocPlaygroundPropertyControl,
+  b: NgDocPlaygroundPropertyControl,
+): number {
+  const aOrder: number | undefined = a.typeControl.options?.order;
+  const bOrder: number | undefined = b.typeControl.options?.order;
+
+  if (isPresent(aOrder) && isPresent(bOrder)) {
+    return aOrder - bOrder;
+  }
+  if (isPresent(aOrder)) {
+    return -1;
+  }
+  if (isPresent(bOrder)) {
+    return 1;
+  }
+  return INPUT_ORDER.compare(a.property.inputName, b.property.inputName);
 }
 
 /** The types whose control also edits an optional or nullable input of the type. */

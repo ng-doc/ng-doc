@@ -62,7 +62,4 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE }}
-          # Fallback only: packages publish through trusted publishing. Remove with the secret once a
-          # release shows provenance.
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release

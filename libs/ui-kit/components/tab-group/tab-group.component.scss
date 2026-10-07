@@ -112,3 +112,22 @@
       inset 0 0 0 1px var(--ng-doc-base-4);
   }
 }
+
+// Plain: only the tabs over a line. Child combinators keep a tab group nested in the panel framed.
+:host(.ng-doc-tab-group-plain) {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+
+  > .ng-doc-tabs-header {
+    padding: 0 0 var(--ng-doc-space-2);
+    background: transparent;
+  }
+
+  > .ng-doc-body-wrapper {
+    padding-top: var(--ng-doc-space-4);
+    background: transparent;
+    overflow: visible;
+  }
+}

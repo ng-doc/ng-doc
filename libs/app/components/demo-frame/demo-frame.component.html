@@ -1,0 +1,26 @@
+@if (created()) {
+  <iframe
+    #frame
+    class="ng-doc-demo-frame-iframe"
+    loading="lazy"
+    [src]="frameSrc()"
+    [title]="frameTitle()"
+    [style.height.px]="fill() ? null : height()"
+    (load)="onLoad()"></iframe>
+}
+@if (state() !== 'ready') {
+  <div class="ng-doc-demo-frame-status" role="status" [attr.aria-busy]="state() === 'loading'">
+    @if (state() === 'loading') {
+      <span class="ng-doc-demo-frame-skeleton" aria-hidden="true"></span>
+      <span
+        >Loading the demo.
+        <a [href]="src()" target="_blank" rel="noopener">Open it in a new tab</a></span
+      >
+    } @else {
+      <span
+        >The demo did not load.
+        <a [href]="src()" target="_blank" rel="noopener">Open it in a new tab</a></span
+      >
+    }
+  </div>
+}

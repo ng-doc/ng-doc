@@ -158,6 +158,13 @@ export class DemoComponent {}
 
 <ng-doc-blockquote type="note" label="💡 Tip">
 
+A code block on a page can show a snippet too: `file="./demo.component.ts"#outer` loads the snippet
+with the id `outer` (`*CodeBlocksPage#snippets-from-a-file`).
+
+</ng-doc-blockquote>
+
+<ng-doc-blockquote type="note" label="💡 Tip">
+
 Snippets don't hide lines. To leave out a line inside a snippet, use `ng-doc-ignore-line`
 (`*CodeBlocksPage#hiding-lines`).
 

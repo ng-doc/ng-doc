@@ -159,12 +159,23 @@
   margin-left: 0;
 }
 
+.ng-doc-demo-open {
+  margin-left: auto;
+  --ng-doc-icon-color: var(--ng-doc-text-muted);
+}
+
+.ng-doc-demo-width-readout ~ .ng-doc-demo-open,
+.ng-doc-demo-copy ~ .ng-doc-demo-open {
+  margin-left: 0;
+}
+
 .ng-doc-demo-fullscreen {
   margin-left: auto;
 }
 
 .ng-doc-demo-width-readout ~ .ng-doc-demo-fullscreen,
-.ng-doc-demo-copy ~ .ng-doc-demo-fullscreen {
+.ng-doc-demo-copy ~ .ng-doc-demo-fullscreen,
+.ng-doc-demo-open ~ .ng-doc-demo-fullscreen {
   margin-left: 0;
 }
 
@@ -234,6 +245,28 @@
   }
 }
 
+// An isolated demo: its iframe is the frame's whole width, so the preview width is the width of
+// the demo's viewport. Fullscreen, the iframe fills the screen at that width.
+.ng-doc-demo-stage[data-ng-doc-isolated='true'] {
+  > .ng-doc-demo-frame {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  &[data-ng-doc-fullscreen='true'] {
+    place-items: stretch center;
+    padding: 0;
+
+    > .ng-doc-demo-frame {
+      height: 100%;
+    }
+
+    &[data-ng-doc-width='full'] > .ng-doc-demo-frame {
+      width: 100%;
+    }
+  }
+}
+
 .ng-doc-demo-source {
   background: var(--ng-doc-code-background);
 }
@@ -250,7 +283,12 @@
     display: none;
   }
 
-  .ng-doc-demo-copy {
+  .ng-doc-demo-copy,
+  .ng-doc-demo-open {
     margin-left: auto;
+  }
+
+  .ng-doc-demo-copy ~ .ng-doc-demo-open {
+    margin-left: 0;
   }
 }

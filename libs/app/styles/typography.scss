@@ -163,6 +163,11 @@ pre.shiki {
 
     span {
       background-color: var(--ng-doc-code-background, inherit) !important;
+      // Shiki writes the font styles of a pair of themes as variables only, the light ones
+      // included. A token without a style has none, which leaves the inherited font.
+      font-style: var(--shiki-light-font-style);
+      font-weight: var(--shiki-light-font-weight);
+      text-decoration: var(--shiki-light-text-decoration);
     }
   }
 }

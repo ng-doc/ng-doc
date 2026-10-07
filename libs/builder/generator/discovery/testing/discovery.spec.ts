@@ -1263,6 +1263,110 @@ test('omitted renderer settings take the default headings and syntax theme', asy
   }
 });
 
+test('api.protectedMembers false is the only value that enters the configuration', async () => {
+  const f = fixture();
+  const services = createDiscoveryServices();
+  try {
+    const configurations = [];
+    for (const api of [
+      '',
+      ', api: {}',
+      ', api: { protectedMembers: true }',
+      ', api: { protectedMembers: false }',
+    ]) {
+      write(f.config, `export default { docsPath: '.docs'${api} };`);
+      const result = await services.discovery.discover(f.request, new AbortController().signal);
+      expect(result.diagnostics).toEqual([]);
+      configurations.push(result.value!.configuration);
+    }
+    expect(configurations.map((configuration) => 'apiProtectedMembers' in configuration)).toEqual([
+      false,
+      false,
+      false,
+      true,
+    ]);
+    expect(configurations[3]).toMatchObject({ apiProtectedMembers: false });
+    // The option changes the digest; the configuration file's bytes change it too.
+    expect(new Set(configurations.map((configuration) => configuration.digest)).size).toBe(4);
+  } finally {
+    await services.runtime.dispose();
+  }
+});
+
+test('shiki.langs enters the configuration as plain JSON, flattened, only when it has languages', async () => {
+  const f = fixture();
+  const services = createDiscoveryServices();
+  const themes = "themes: { light: 'css-variables', dark: 'css-variables' }";
+  const lang = (name: string) =>
+    `{ name: '${name}', scopeName: 'source.${name}', patterns: [{ match: 'a', name: 'keyword' }], repository: {} }`;
+  try {
+    const configurations = [];
+    for (const shiki of [
+      '',
+      `, shiki: { ${themes} }`,
+      `, shiki: { ${themes}, langs: [] }`,
+      `, shiki: { ${themes}, langs: [${lang('one')}, Object.freeze([${lang('two')}, ${lang('three')}])] }`,
+    ]) {
+      write(f.config, `export default { docsPath: '.docs'${shiki} };`);
+      const result = await services.discovery.discover(f.request, new AbortController().signal);
+      expect(result.diagnostics).toEqual([]);
+      configurations.push(result.value!.configuration);
+    }
+    expect(configurations.map((configuration) => 'shikiLangs' in configuration)).toEqual([
+      false,
+      false,
+      false,
+      true,
+    ]);
+    const langs = configurations[3]!.shikiLangs!;
+    expect(langs.map((item) => item.name)).toEqual(['one', 'two', 'three']);
+    expect(langs[0]).toEqual({
+      name: 'one',
+      scopeName: 'source.one',
+      patterns: [{ match: 'a', name: 'keyword' }],
+      repository: {},
+    });
+    // A copy in this realm, not the configuration's frozen objects.
+    expect(Object.getPrototypeOf(langs[1])).toBe(Object.prototype);
+    expect(Object.isFrozen(langs[1])).toBe(false);
+  } finally {
+    await services.runtime.dispose();
+  }
+});
+
+test.each([
+  ['not an array', `{ name: 'x', scopeName: 'source.x' }`],
+  ['a function', `[() => ({ name: 'x', scopeName: 'source.x' })]`],
+  ['a promise', `[Promise.resolve({ name: 'x', scopeName: 'source.x' })]`],
+  ['without a scopeName', `[{ name: 'x' }]`],
+  ['with an empty name', `[{ name: '', scopeName: 'source.x' }]`],
+  ['with a class instance', `[{ name: 'x', scopeName: 'source.x', repository: new Map() }]`],
+  ['with a regular expression', `[{ name: 'x', scopeName: 'source.x', patterns: [/a/] }]`],
+  ['with a function inside', `[{ name: 'x', scopeName: 'source.x', patterns: [{ f() {} }] }]`],
+  ['with an infinite number', `[{ name: 'x', scopeName: 'source.x', patterns: [Infinity] }]`],
+  [
+    'with a cycle',
+    `(() => { const x: any = { name: 'x', scopeName: 'source.x' }; x.patterns = [x]; return [x]; })()`,
+  ],
+  ['nested twice', `[[[{ name: 'x', scopeName: 'source.x' }]]]`],
+])('shiki.langs that is %s fails the configuration', async (_, langs) => {
+  const f = fixture();
+  const services = createDiscoveryServices();
+  try {
+    write(
+      f.config,
+      `export default { docsPath: '.docs', shiki: { themes: { light: 'a', dark: 'b' }, langs: ${langs} } };`,
+    );
+    const result = await services.discovery.discover(f.request, new AbortController().signal);
+    expect(result.diagnostics.map((item) => [item.code, item.severity])).toEqual([
+      ['DISCOVERY_SHIKI_LANGUAGE_INVALID', 'error'],
+    ]);
+    expect(result.diagnostics[0]!.message).toContain('shiki.langs');
+  } finally {
+    await services.runtime.dispose();
+  }
+});
+
 test('preserves explicit API asset route separately from the omitted default', async () => {
   const f = fixture();
   const apiPath = join(f.root, '.docs', 'ng-doc.api.ts');
@@ -1409,5 +1513,164 @@ test('disposing discovery aborts an in-flight native fetch owned by a loader', a
     await runtime.runtime.dispose();
     server.closeAllConnections();
     await new Promise<void>((resolve) => server.close(() => resolve()));
+  }
+});
+
+test('demo page options enter the configuration only when they change a default', async () => {
+  const f = fixture();
+  const services = createDiscoveryServices();
+  try {
+    const cases: Array<[string, unknown]> = [
+      ['', undefined],
+      [', isolatedDemos: false', undefined],
+      [', demoApplication: { path: "/demo-preview/" }', { pages: 'all' }],
+      [', demoApplication: true', { pages: 'all' }],
+      [', demoApplication: { path: "previews/live" }', { pages: 'all', path: 'previews/live' }],
+      [', isolatedDemos: true', { pages: 'all', isolated: true }],
+      [', demoApplication: false', { pages: 'none' }],
+    ];
+    const digests = new Set<string>();
+    for (const [options, expected] of cases) {
+      write(f.config, `export default { docsPath: '.docs'${options} };`);
+      const result = await services.discovery.discover(f.request, new AbortController().signal);
+      expect(result.diagnostics, options).toEqual([]);
+      expect(result.value!.configuration.demoApplication, options).toEqual(expected);
+      digests.add(result.value!.configuration.digest);
+    }
+    expect(digests.size).toBe(cases.length);
+
+    write(
+      f.config,
+      `export default { docsPath: '.docs', demoApplication: false, isolatedDemos: true };`,
+    );
+    const off = await services.discovery.discover(f.request, new AbortController().signal);
+    expect(off.value!.configuration.demoApplication).toEqual({ pages: 'none' });
+    expect(off.diagnostics).toEqual([
+      expect.objectContaining({ code: 'DISCOVERY_DEMO_APPLICATION_OFF', severity: 'warning' }),
+    ]);
+  } finally {
+    await services.runtime.dispose();
+  }
+});
+
+test('invalid demo page options fail the configuration', async () => {
+  const f = fixture();
+  const services = createDiscoveryServices();
+  try {
+    for (const [options, code] of [
+      ['isolatedDemos: "yes"', 'DISCOVERY_DEMO_APPLICATION_INVALID'],
+      ['demoApplication: "on"', 'DISCOVERY_DEMO_APPLICATION_INVALID'],
+      ['demoApplication: null', 'DISCOVERY_DEMO_APPLICATION_INVALID'],
+      ['demoApplication: { path: "_demos" }', 'DISCOVERY_DEMO_PATH_INVALID'],
+      ['demoApplication: { path: "demos/.hidden" }', 'DISCOVERY_DEMO_PATH_INVALID'],
+      ['demoApplication: { path: "a/../b" }', 'DISCOVERY_DEMO_PATH_INVALID'],
+      ['demoApplication: { path: "/" }', 'DISCOVERY_DEMO_PATH_INVALID'],
+      ['demoApplication: { path: 42 }', 'DISCOVERY_DEMO_PATH_INVALID'],
+      ['demoProviders: "./demo.providers"', 'DISCOVERY_DEMO_PROVIDERS_INVALID'],
+    ] as const) {
+      write(f.config, `export default { docsPath: '.docs', ${options} };`);
+      const result = await services.discovery.discover(f.request, new AbortController().signal);
+      expect(result.value, options).toBeUndefined();
+      expect(result.diagnostics, options).toEqual([
+        expect.objectContaining({ code, severity: 'error', source: { path: f.config } }),
+      ]);
+    }
+  } finally {
+    await services.runtime.dispose();
+  }
+});
+
+test('demoProviders names its module without bundling or calling it', async () => {
+  const f = fixture();
+  const services = createDiscoveryServices();
+  const module = join(f.root, 'src', 'demo.providers.ts');
+  // Bundled, the import of a package that does not exist would fail the configuration; called,
+  // the module would throw.
+  write(
+    module,
+    `import { provideMissing } from '@angular/not-installed';\nthrow new Error('evaluated');\nexport default [provideMissing()];\n`,
+  );
+  try {
+    for (const form of [
+      `() => import('./src/demo.providers')`,
+      `async () => import("./src/demo.providers")`,
+      `() => { return import('./src/demo.providers'); }`,
+      `() => import('./src/demo.providers.ts')`,
+    ]) {
+      write(f.config, `export default { docsPath: '.docs', demoProviders: ${form} };`);
+      const result = await services.discovery.discover(f.request, new AbortController().signal);
+      expect(result.diagnostics, form).toEqual([]);
+      expect(result.value!.configuration.demoApplication, form).toEqual({ providers: module });
+      // Its existence is a configuration input; its content is not, since only browsers import it.
+      const dependencies = result.dependencies.filter(
+        (item) => 'path' in item && item.path === module,
+      );
+      expect(dependencies, form).toContainEqual({ kind: 'existence', path: module, exists: true });
+      expect(
+        dependencies.some((item) => item.kind === 'content'),
+        form,
+      ).toBe(false);
+    }
+  } finally {
+    await services.runtime.dispose();
+  }
+});
+
+test('demoProviders must be one import of a file that resolves', async () => {
+  const f = fixture();
+  const services = createDiscoveryServices();
+  write(join(f.root, 'src', 'demo.providers.ts'), 'export default [];\n');
+  try {
+    for (const [form, message] of [
+      [`() => import('./src/demo.providers').then((module) => module)`, 'must only import'],
+      [`(path = './src/demo.providers') => import(path)`, 'literal path'],
+      [`() => import('./src/missing')`, 'literal path'],
+      [`() => ({ default: [] })`, 'literal path'],
+    ] as const) {
+      write(f.config, `export default { docsPath: '.docs', demoProviders: ${form} };`);
+      const result = await services.discovery.discover(f.request, new AbortController().signal);
+      expect(result.value, form).toBeUndefined();
+      expect(result.diagnostics, form).toEqual([
+        expect.objectContaining({
+          code: 'DISCOVERY_DEMO_PROVIDERS_IMPORT',
+          message: expect.stringContaining(message),
+        }),
+      ]);
+    }
+  } finally {
+    await services.runtime.dispose();
+  }
+});
+
+test('shiki.langs modules and demoProviders work together in one configuration', async () => {
+  const f = fixture();
+  const services = createDiscoveryServices();
+  // The configuration imports a real `@shikijs/langs` module (static imports, bundled and
+  // evaluated) and names the demo providers with a dynamic import (kept out of the bundle).
+  symlinkSync(path.resolve('node_modules'), join(f.root, 'node_modules'), 'dir');
+  const module = join(f.root, 'src', 'demo.providers.ts');
+  write(module, `throw new Error('evaluated');\nexport default [];\n`);
+  const themes = "themes: { light: 'css-variables', dark: 'css-variables' }";
+  try {
+    const digests: string[] = [];
+    for (const demo of ['', `, demoProviders: () => import('./src/demo.providers')`]) {
+      write(
+        f.config,
+        `import angularTs from '@shikijs/langs/angular-ts';\n` +
+          `export default { docsPath: '.docs', shiki: { ${themes}, langs: [angularTs] }${demo} };`,
+      );
+      const result = await services.discovery.discover(f.request, new AbortController().signal);
+      expect(result.diagnostics, demo).toEqual([]);
+      const configuration = result.value!.configuration;
+      expect(
+        configuration.shikiLangs?.map((item) => item.name),
+        demo,
+      ).toContain('angular-ts');
+      expect(configuration.demoApplication, demo).toEqual(demo ? { providers: module } : undefined);
+      digests.push(configuration.digest);
+    }
+    expect(digests[0]).not.toBe(digests[1]);
+  } finally {
+    await services.runtime.dispose();
   }
 });

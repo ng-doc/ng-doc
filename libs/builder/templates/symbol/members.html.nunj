@@ -197,12 +197,14 @@
     </tr>
 {%- endmacro %}
 
-{% macro render(declaration) %}
+{#- `hideProtected` (the `api.protectedMembers: false` option) lists public class members only. #}
+{% macro render(declaration, hideProtected=false) %}
+    {%- set memberScopes = ["public"] if hideProtected else ["public", "protected"] -%}
     {%- if Node.isClassDeclaration(declaration) %}
         {%- set constructors = declaration.getConstructors() | filterByScope("public") | excludeByJsDocTags('internal') -%}
-        {%- set allProperties = declaration | getClassProperties | excludeByJsDocTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
-        {%- set allMethods = declaration | getClassMethods | excludeByJsDocTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
-        {%- set allAccessors = declaration | getClassAccessors | excludeByJsDocTags('internal') | filterByScope(["public", "protected"]) | filterUselessMembers | sortByNodesName -%}
+        {%- set allProperties = declaration | getClassProperties | excludeByJsDocTags('internal') | filterByScope(memberScopes) | filterUselessMembers | sortByNodesName -%}
+        {%- set allMethods = declaration | getClassMethods | excludeByJsDocTags('internal') | filterByScope(memberScopes) | filterUselessMembers | sortByNodesName -%}
+        {%- set allAccessors = declaration | getClassAccessors | excludeByJsDocTags('internal') | filterByScope(memberScopes) | filterUselessMembers | sortByNodesName -%}
         {%- set staticProperties = allProperties | filterByStatic(true) -%}
         {%- set properties = allProperties | filterByStatic(false) -%}
         {%- set staticAccessors = allAccessors | filterByStatic(true) | groupAccessors -%}

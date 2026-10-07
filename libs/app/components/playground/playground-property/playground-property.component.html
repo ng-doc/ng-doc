@@ -1,21 +1,40 @@
-<label
-  class="ng-doc-playground-property-label"
-  [class.with-label]="!option()?.hideLabel"
-  [ng-doc-label]="option()?.hideLabel ? '' : labelContent">
-  <ng-template #labelContent>
-    <span
-      class="ng-doc-playground-property-name"
-      [ngDocTooltip]="tooltipTemplate"
-      [canOpen]="!!tooltipContent()"
-      [positions]="['left-center', 'top-right', 'bottom-right']"
-      >{{ name() }}</span
-    >
-    @if (typeChip(); as type) {
-      <ng-doc-kind-icon [kind]="type" type="type"></ng-doc-kind-icon>
+@if (labelWrapper()) {
+  <label
+    class="ng-doc-playground-property-label"
+    [class.with-label]="!option()?.hideLabel"
+    [ng-doc-label]="option()?.hideLabel ? '' : labelContent">
+    <ng-container #propertyOutlet></ng-container>
+  </label>
+} @else {
+  <!-- A control with several interactive parts: a label would forward clicks on them to the first
+       of them, so the caption names the control through aria-labelledby instead. -->
+  <div
+    class="ng-doc-playground-property-label ng-doc-playground-property-group"
+    role="group"
+    [class.with-label]="!option()?.hideLabel"
+    [attr.aria-labelledby]="option()?.hideLabel ? null : captionId">
+    @if (!option()?.hideLabel) {
+      <span class="ng-doc-label" [id]="captionId">
+        <ng-container [ngTemplateOutlet]="labelContent"></ng-container>
+      </span>
     }
-    <ng-template #tooltipTemplate>
-      <div [innerHTML]="tooltipContent() | ngDocSanitizeHtml"></div>
-    </ng-template>
+    <span class="ng-doc-content">
+      <ng-container #propertyOutlet></ng-container>
+    </span>
+  </div>
+}
+<ng-template #labelContent>
+  <span
+    class="ng-doc-playground-property-name"
+    [ngDocTooltip]="tooltipTemplate"
+    [canOpen]="!!tooltipContent()"
+    [positions]="['left-center', 'top-right', 'bottom-right']"
+    >{{ name() }}</span
+  >
+  @if (typeChip(); as type) {
+    <ng-doc-kind-icon [kind]="type" type="type"></ng-doc-kind-icon>
+  }
+  <ng-template #tooltipTemplate>
+    <div [innerHTML]="tooltipContent() | ngDocSanitizeHtml"></div>
   </ng-template>
-  <ng-container #propertyOutlet></ng-container>
-</label>
+</ng-template>

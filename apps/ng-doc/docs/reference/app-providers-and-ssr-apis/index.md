@@ -19,6 +19,7 @@ rendering. Add the providers to your application configuration
 | `provideTypeControl(type, control, options?)`    | `@ng-doc/app`       | –            | Registers a playground control for a type (`*CustomTypeControlsPage`).               |
 | `providePlaygroundDemo(playgroundId, component)` | `@ng-doc/app`       | –            | Registers the component of a playground. Generated code calls it; you don't need to. |
 | `provideMermaid(config?)`                        | `@ng-doc/app`       | For diagrams | Enables Mermaid diagrams (`*DiagramsPage`).                                          |
+| `provideNgDocTitle(titleFn)`                     | `@ng-doc/app`       | –            | Builds the browser tab titles (`*BrowserTabTitlesPage`).                             |
 
 The routes of the site are in `NG_DOC_ROUTING`, also from `@ng-doc/generated`. The application
 also needs the Angular router and `provideHttpClient(withInterceptorsFromDi())`, because NgDoc
@@ -33,7 +34,7 @@ registers an HTTP interceptor.
 | `contentAnchorScrolling`           | `boolean`                          | `false`      | Scrolls to the anchor in the URL again after NgDoc content has loaded. Use it with the router's `anchorScrolling`.           |
 | `contentScrollPositionRestoration` | `'enabled' \| 'top' \| 'disabled'` | `'disabled'` | Restores the scroll position after NgDoc content has loaded. Use the same value as the router's `scrollPositionRestoration`. |
 | `uiKit`                            | `NgDocUiConfig`                    | See below    | Paths of the UI kit assets.                                                                                                  |
-| `shiki`                            | `NgDocHighlighterConfig`           | –            | Extra Shiki themes to load in the browser (`themes`). `theme` is deprecated and ignored.                                     |
+| `shiki`                            | `NgDocHighlighterConfig`           | –            | Extra Shiki themes (`themes`) and languages (`langs`) to load in the browser. `theme` is deprecated and ignored.             |
 | `shortcuts`                        | `boolean`                          | `true`       | Whether single-key shortcuts are on for readers who haven't chosen (`*SearchPage#keyboard-shortcuts`). ⌘K always works.      |
 
 `NgDocUiConfig` has two fields. Set both when you pass `uiKit`:
@@ -88,6 +89,17 @@ To use another engine, extend `NgDocSearchEngine` and pass your class.
 
 Leave a field out to remove that part of the page.
 
+## provideNgDocTitle
+
+`provideNgDocTitle(titleFn: NgDocTitleFn)` sets a `TitleStrategy` that builds the title of every
+navigation with `titleFn`. The function receives an `NgDocTitleContext` with the `categories`,
+`page`, `tab` and `api` of the route and the default `title`, and returns the title, or
+`undefined` to keep the current one. See `*BrowserTabTitlesPage`.
+
+```typescript name="app.config.ts"
+provideNgDocTitle(({ page, title }) => (page ? `${page} | My library` : title));
+```
+
 ## Page processors
 
 `provideMainPageProcessor(processors)` registers the processors you pass. Pass
@@ -109,10 +121,11 @@ processor is an `NgDocPageProcessor`:
 `provideTypeControl(type: string, control, options?)` registers a playground control for inputs of
 the given type name.
 
-| Option      | Type      | Description                                                      |
-| ----------- | --------- | ---------------------------------------------------------------- |
-| `hideLabel` | `boolean` | Hides the input name next to the control.                        |
-| `order`     | `number`  | The position of the control. The built-in controls use 10 to 40. |
+| Option         | Type      | Description                                                        |
+| -------------- | --------- | ------------------------------------------------------------------ |
+| `hideLabel`    | `boolean` | Hides the input name next to the control.                          |
+| `order`        | `number`  | The position of the control. The built-in controls use 10 to 40.   |
+| `labelWrapper` | `boolean` | Wraps the row in a `<label>` (default). `false` renders a `<div>`. |
 
 ## Preload pages
 

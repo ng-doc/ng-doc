@@ -9,6 +9,7 @@ import type { FootprintScopeKind } from '../kernel/footprint';
 import { docNode, supported } from './api-enumeration';
 import { normalize, SemanticFailure, TrackedFiles } from './dependencies';
 import { withIndexedDerivedClasses } from './derived-classes';
+import { formatting } from './formatting';
 import { ownedOverlap } from './program-builder';
 import { trackProgram } from './program-observations';
 import { type ResettableProgram, withPinnedRoots } from './program-retention';
@@ -38,7 +39,10 @@ export interface FragmentContext extends QueryContext {
   templateRoot(): string;
 }
 
-/** The recorder scope of a fragment request: its phase kind and its unit key. */
+/**
+ * The recorder scope of a fragment request: its phase kind and its unit key.
+ * @param request
+ */
 export function fragmentScope(request: SemanticFragmentRequest): [FootprintScopeKind, string] {
   return request.kind === 'entry-doc'
     ? ['entry-doc', request.entryId]
@@ -51,6 +55,10 @@ export function fragmentScope(request: SemanticFragmentRequest): [FootprintScope
 /**
  * The declaration a request names: an enumerated declaration id, or `path/to/file.ts#exportName`
  * relative to the workspace (which may add the file to the Project and mark it mutated).
+ * @param state
+ * @param request
+ * @param files
+ * @param context
  */
 function requestedDeclaration(
   state: Snapshot,
@@ -106,7 +114,13 @@ function requestedDeclaration(
   return { node: declaration };
 }
 
-/** Renders one fragment request against the snapshot, recording its reads in `files`. */
+/**
+ * Renders one fragment request against the snapshot, recording its reads in `files`.
+ * @param state
+ * @param request
+ * @param files
+ * @param context
+ */
 export function renderFragment(
   state: Snapshot,
   request: SemanticFragmentRequest,
@@ -149,28 +163,33 @@ export function renderFragment(
           ? `api/details/${kind}.html.nunj`
           : `api/${kind}.html.nunj`;
   // See Also lists derived classes; serve them from one heritage index per program.
+  // Signatures are formatted with the generation's format cache (`./format-cache`).
   const html = withIndexedDerivedClasses(node, state.project, () =>
-    renderApiTemplate(
-      template,
-      {
-        declaration: node,
-        docNode: documented,
-        templateName: kind,
-        scope,
-        ...(request.kind === 'api'
-          ? {
-              hideDescription: true,
-              hideSeeAlso: true,
-              hideUsageNotes: true,
-              hideRemarks: true,
-              hideExamples: true,
-            }
-          : {}),
-      },
-      context.templateRoot(),
-      files,
-      (text) => context.markdown(text, source, files),
-      state.discovery.configuration.workspaceRoot,
+    formatting(() =>
+      renderApiTemplate(
+        template,
+        {
+          declaration: node,
+          docNode: documented,
+          templateName: kind,
+          scope,
+          // The legacy engine passes no such flag, so the shared templates keep protected members.
+          hideProtectedMembers: state.discovery.configuration.apiProtectedMembers === false,
+          ...(request.kind === 'api'
+            ? {
+                hideDescription: true,
+                hideSeeAlso: true,
+                hideUsageNotes: true,
+                hideRemarks: true,
+                hideExamples: true,
+              }
+            : {}),
+        },
+        context.templateRoot(),
+        files,
+        (text) => context.markdown(text, source, files),
+        state.discovery.configuration.workspaceRoot,
+      ),
     ),
   );
   return {
@@ -221,6 +240,9 @@ function trackWholeProgram(state: Snapshot, files: TrackedFiles, context: Fragme
  * `stableTypeOrdering` orders a union's unnamed types by the program's file order: the queries
  * after the addition would print unions in another order than a generation that never adds the
  * file. Pinned, the existing files keep their order and the added ones come last.
+ * @param project
+ * @param path
+ * @param add
  */
 function withRootsAppended<T>(project: Snapshot['project'], path: string, add: () => T): T {
   const program = project.getProgram() as unknown as Partial<ResettableProgram>;

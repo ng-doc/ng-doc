@@ -1,2 +1,7 @@
 export * from './context';
 export * from './routes';
+{% if demoApplication -%}
+// Keeps the demo application's modules, the demo routes and the module of `demoProviders`, in the
+// application's Angular compilation, which compiles them: only the demo application imports them.
+import type {} from './demo-app';
+{% endif -%}

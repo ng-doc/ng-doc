@@ -23,6 +23,11 @@ export interface PrerenderRequest {
   discoverRoutes: boolean;
   /** Fails a route that takes longer to render, in milliseconds. */
   routeTimeoutMs?: number;
+  /**
+   * The server bundle of the demo application (`demo-server.mjs`), when the build has demo pages.
+   * Its routes are rendered into the demo application's page (`ng-doc-demo.html`).
+   */
+  demoServerEntry?: string;
 }
 
 export interface PrerenderReport {
@@ -34,6 +39,11 @@ export interface PrerenderReport {
   shell: string;
   /** What the application logged with `console.error` while rendering a route. */
   errors: Array<{ route: string; message: string }>;
+  /**
+   * Demo pages that failed to render, which got the demo application's client page instead, and
+   * a demo application that could not be prerendered at all. Absent when there are none.
+   */
+  warnings?: Array<{ route: string; message: string }>;
 }
 
 /** What the server entry of `createNgDocApplicationPlugin` exports. */
@@ -57,6 +67,8 @@ export interface PrerenderRuntimeOptions {
 }
 
 const SHELL = 'index.csr.html';
+/** The demo application's page in the browser output (`NG_DOC_DEMO_PAGE`). */
+const DEMO_SHELL = 'ng-doc-demo.html';
 const HOST = 'localhost';
 
 function prerenderError(code: string, message: string): Error {
@@ -230,12 +242,91 @@ export async function runPrerender(
     errors.push({ route: current, message: format(...args) });
     log.apply(console, args);
   };
+  const warnings: NonNullable<PrerenderReport['warnings']> = [];
   try {
-    return { ...(await renderRoutes()), errors };
+    const report = await renderRoutes();
+    if (request.demoServerEntry) report.routes = await renderDemoRoutes(report.routes);
+    return { ...report, errors, ...(warnings.length ? { warnings } : {}) };
   } finally {
     console.error = log;
     restoreWarnings();
     globalThis.fetch = originalFetch;
+  }
+
+  /**
+   * Renders the demo pages into the demo application's page. A demo that fails to render gets
+   * that page as it is (the client renders it) and a warning: demo pages never fail the build.
+   */
+  async function renderDemoRoutes(
+    rendered: PrerenderReport['routes'],
+  ): Promise<PrerenderReport['routes']> {
+    const shellFile = path.join(browserDir, DEMO_SHELL);
+    const message = (error: unknown) => (error instanceof Error ? error.message : String(error));
+    let demoDocument: string;
+    let demo: ServerEntry;
+    let inventory: Awaited<ReturnType<typeof enumerateRoutes>> | undefined;
+    current = `/${DEMO_SHELL}`;
+    try {
+      demoDocument = await readFile(shellFile, 'utf8');
+      demo = serverEntry(
+        await importModule(pathToFileURL(path.resolve(request.demoServerEntry!)).href),
+      );
+      // Unknown URLs show the demo application's "does not exist" page, so `/` renders.
+      await withTimeout(
+        demo.renderApplication(
+          async (context) => {
+            const application = await demo.bootstrap(context);
+            const router = application.injector.get(demo.Router) as
+              | { config?: unknown }
+              | undefined;
+            inventory = await enumerateRoutes(Array.isArray(router?.config) ? router.config : [], {
+              invoke: (factory) => demo.runInInjectionContext(application.injector, factory),
+            });
+            return application;
+          },
+          { document: demoDocument, url: url('/'), allowedHosts: [HOST] },
+        ),
+        request.routeTimeoutMs,
+        current,
+      );
+    } catch (error) {
+      warnings.push({
+        route: current,
+        message: `[NGDOC_PRERENDER_DEMO_APPLICATION] The demo pages were not prerendered: ${message(error)}`,
+      });
+      return rendered;
+    }
+    const taken = new Set(rendered.map((route) => route.path));
+    const result = [...rendered];
+    for (const route of inventory!.routes) {
+      if (route.redirectTo !== undefined || taken.has(route.path)) continue;
+      const file = routeFile(route.path);
+      current = route.path;
+      let html: string;
+      try {
+        html = await withTimeout(
+          demo.renderApplication(demo.bootstrap, {
+            document: demoDocument,
+            url: url(route.path),
+            allowedHosts: [HOST],
+          }),
+          request.routeTimeoutMs,
+          route.path,
+        );
+      } catch (error) {
+        warnings.push({
+          route: route.path,
+          message: `[NGDOC_PRERENDER_DEMO_FALLBACK] The demo page did not render on the server, so it renders in the browser only: ${message(error)}`,
+        });
+        html = demoDocument;
+      }
+      await mkdir(path.dirname(path.join(browserDir, file)), { recursive: true });
+      await writeFile(path.join(browserDir, file), html);
+      result.push({ ...route, file });
+    }
+    return result.sort((left, right) =>
+      left.path < right.path ? -1 : left.path > right.path ? 1 : 0,
+    );
   }
 
   async function renderRoutes(): Promise<Omit<PrerenderReport, 'errors'>> {

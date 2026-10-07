@@ -28,6 +28,26 @@ so the providers and the components use different injection tokens.
 
 **See also:** `*AppProvidersReference`
 
+### Type errors in `node_modules`
+
+**Cause:** `tsconfig.json` sets `"skipLibCheck": false`, so TypeScript checks the type
+declarations of every package the application uses. The types of NgDoc refer to other packages,
+such as Shiki and Mermaid, and some of their declarations don't compile with every TypeScript
+version, `lib` and `strict` setting. The errors name a declaration file, for example
+`node_modules/mermaid/dist/types.d.ts`, not your code.
+
+**Fix:** set `"skipLibCheck": true` in `compilerOptions`, as projects created by the Angular CLI
+do. TypeScript then doesn't check declaration files (`.d.ts`), such as those of packages, and
+still checks your own code.
+
+```json name="tsconfig.json"
+{
+  "compilerOptions": {
+    "skipLibCheck": true
+  }
+}
+```
+
 ### DISCOVERY_CONFIG_MISSING
 
 **Cause:** the Vite plugin's `generator.configFile` or the `--config` flag of the `ng-doc` command
@@ -247,6 +267,22 @@ change at once, for example during a branch switch. NgDoc checks the watched fil
 
 **Fix:** no action is needed. If a page doesn't update afterwards, save the file again or restart
 the server.
+
+### NGDOC_VITE_HOST_TIMEOUT
+
+The Vite host logs `[NGDOC_VITE_HOST_TIMEOUT] Host update did not settle.`, sometimes followed by
+one summary line with the number of hot updates that didn't settle either.
+
+**Cause:** many files changed at once while the server ran, for example a script that writes
+thousands of files into the documentation folder, so Vite needed more than 30 seconds to report a
+change. NgDoc logs the first timeout of such a burst and sums up the rest in one line. When the
+burst is over, NgDoc checks the generated files and every documentation input again, so the last
+edit is published even if a file event was lost.
+
+**Fix:** no action is needed. Keep scripts that write many files out of the documentation folder
+when you can. If a page doesn't update afterwards, save the file again or restart the server.
+
+This applies to the Vite engine only.
 
 {% index false %}
 

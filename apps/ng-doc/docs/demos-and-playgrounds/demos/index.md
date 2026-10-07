@@ -14,6 +14,9 @@ The toolbar switches between the **Preview** and the source files of the compone
 preview, the width buttons show the demo at full width, 480 pixels or 280 pixels, and the copy
 button copies the open source file, or on the preview, the file that would open first.
 
+When the demo has a page of its own, the **Open in a new tab** button opens it
+(`*IsolatedDemosPage`).
+
 The fullscreen button shows the demo on its own, centred on its canvas at the size of the screen.
 Press Esc, or the button in the corner of the screen, to leave fullscreen. Browsers that don't
 support fullscreen don't show the button.
@@ -68,6 +71,7 @@ Pass options as the second argument of `demo`. They follow `NgDocDemoActionOptio
 | `container`       | `boolean`                 | `true`  | Shows the toolbar and the frame. With `false`, the demo renders on its own, without the source. |
 | `fullscreenRoute` | `string`                  | –       | Shows a link that opens the demo on its own page in a new tab, instead of the demo (see below). |
 | `class`           | `string \| string[]`      | –       | CSS classes for the demo element, for example to style one demo.                                |
+| `isolated`        | `boolean`                 | `false` | Shows the demo in an iframe of its own page (new engine only, `*IsolatedDemosPage`).            |
 
 With `expanded`, the demo opens on the snippet marked `opened`, then on `defaultTab`, then on the
 first file.
@@ -144,7 +148,8 @@ To style one demo, give it a class with the `class` option and set the variables
 
 > **Note**
 > The width buttons resize the demo's frame, not the window, so media queries in the demo don't
-> respond to them.
+> respond to them. An isolated demo has a viewport of its own, which they resize
+> (`*IsolatedDemosPage`).
 
 > **Note**
 > Fullscreen shows only the demo's own element. Something the demo opens outside it, such as an
@@ -158,6 +163,7 @@ To style one demo, give it a class with the `class` option and set the variables
 - `*DemoPanePage`
 - `*SnippetsPage`
 - `*PlaygroundsPage`
+- `*IsolatedDemosPage`
 
 {% endindex %}
 

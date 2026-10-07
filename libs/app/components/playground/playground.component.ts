@@ -6,6 +6,7 @@ import {
   inject,
   input,
   InputSignal,
+  linkedSignal,
   Signal,
   signal,
   WritableSignal,
@@ -58,9 +59,6 @@ export class NgDocPlaygroundComponent<
   /** Options of the playground action; they extend the playground configuration. */
   readonly options: InputSignal<NgDocPlaygroundOptions> = input<NgDocPlaygroundOptions>({});
 
-  /** Whether the demo is created again each time a value changes. */
-  readonly recreateDemo: WritableSignal<boolean> = signal(false);
-
   /** The values of the inputs and content slots. */
   readonly formGroup: WritableSignal<FormGroup<NgDocPlaygroundForm> | undefined> =
     signal(undefined);
@@ -73,6 +71,19 @@ export class NgDocPlaygroundComponent<
     Object.assign({}, this.rootPage.page?.playgrounds?.[this.id()], this.options()),
   );
 
+  /**
+   * Whether the demo is created again each time a value changes. It starts from the `recreate`
+   * option; the reader can change it unless the option is `'always'`.
+   */
+  readonly recreateDemo: WritableSignal<boolean> = linkedSignal(
+    () => !!this.configuration().recreate,
+  );
+
+  /** Whether the Recreate setting is fixed on, and hidden, by the `'always'` option. */
+  readonly recreateLocked: Signal<boolean> = computed(
+    () => this.configuration().recreate === 'always',
+  );
+
   private defaultProperties: Record<string, unknown> = {};
   private defaultContent: Record<string, boolean> = {};
 
@@ -80,7 +91,13 @@ export class NgDocPlaygroundComponent<
     this.defaultProperties = this.getPropertiesFormValues();
     this.defaultContent = this.getContentFormValues();
 
-    const propertiesForm: FormGroup = this.formBuilder.group(this.defaultProperties);
+    // `FormBuilder` reads an array as `[value, validators]`, so each value is wrapped: the default
+    // of an array input is the value of its control.
+    const propertiesForm: FormGroup = this.formBuilder.group(
+      Object.fromEntries(
+        Object.entries(this.defaultProperties).map(([key, value]) => [key, [value]]),
+      ),
+    );
     const contentForm: FormGroup = this.formBuilder.group(this.defaultContent);
     const formGroup: FormGroup<NgDocPlaygroundForm> = this.formBuilder.group({
       properties: propertiesForm,

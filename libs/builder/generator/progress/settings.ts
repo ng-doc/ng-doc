@@ -189,6 +189,16 @@ export const ENGINE_SWITCHES: ReadonlyArray<{ name: string; values: RegExp; effe
       effect: 'every code block is highlighted again',
     },
     {
+      name: 'NGDOC_FORMAT_CACHE',
+      values: /^(0|false|off|no|verify)$/i,
+      effect: 'every signature and snippet is formatted again',
+    },
+    {
+      name: 'NGDOC_USED_GRAMMARS',
+      values: /^(0|false|off|no)$/i,
+      effect: 'every Shiki grammar is loaded before code is highlighted',
+    },
+    {
       name: 'NGDOC_PARALLEL_RENDER',
       values: /^(0|false|off|no|verify)$/i,
       effect: 'pages are rendered and linked in one thread',

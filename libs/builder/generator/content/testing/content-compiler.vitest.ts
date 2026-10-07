@@ -1622,20 +1622,11 @@ describe('GeneratorContentCompiler', () => {
       );
     const consulted = new Set<string>();
     const recorded = await link(keywords, consulted);
-    // Inline code and TypeScript blocks are consulted (root and anchored spellings); prose and
-    // other languages are not.
+    // Inline code and TypeScript blocks are consulted (root and anchored spellings); prose, other
+    // languages and positions that never link (the reserved word `const`, the declared name
+    // `value`) are not.
     expect([...consulted].sort()).toEqual(
-      [
-        '*Guide',
-        'Known',
-        'Missing',
-        'Other',
-        'Other.create',
-        'Thing',
-        'Thing.member',
-        'const',
-        'value',
-      ].sort(),
+      ['*Guide', 'Known', 'Missing', 'Other', 'Other.create', 'Thing', 'Thing.member'].sort(),
     );
     expect(recorded.value?.keywordDigest).toBe(linkedKeywordDigest(ir, keywords));
     const unrecorded = await link(keywords);
@@ -1653,8 +1644,14 @@ describe('GeneratorContentCompiler', () => {
     expect(relinked.value?.html).not.toBe(recorded.value?.html);
     expect(relinked.value?.html).toContain('api/moved');
     // A newly bound consulted key (previously missing) also changes the output.
-    const bound = await link([...keywords, { key: 'value', title: 'value', path: 'api/value' }]);
+    const bound = await link([
+      ...keywords,
+      { key: 'Other.create', title: 'Other.create', path: 'api/other#create' },
+    ]);
     expect(bound.value?.html).not.toBe(recorded.value?.html);
+    // A key in a position that never links is not consulted: binding it changes nothing.
+    const declared = await link([...keywords, { key: 'value', title: 'value', path: 'api/value' }]);
+    expect(declared.value).toEqual(recorded.value);
   });
 
   it('merges API seed exports with heading, member and scoped anchor exports', async () => {
@@ -1824,6 +1821,112 @@ describe('GeneratorContentCompiler', () => {
       new AbortController().signal,
     );
     expect(empty.value).toMatchObject({ html: '', anchors: [], usedKeywords: [] });
+  });
+
+  it('shows named snippets of a file without their markers', async () => {
+    const source = path.join(root, 'greeting.ts');
+    const markup = path.join(root, 'greeting.html');
+    const markdown = path.join(root, 'snippets.md');
+    const greeting = [
+      "import { Component } from '@angular/core';",
+      '',
+      'export class Greeter {',
+      '  // snippet#greeting "Greeting" icon="star"',
+      '  greet(name: string): string {',
+      '    // snippet#inner',
+      '    return `Hello, ${name}\\\\`;',
+      '    // snippet#inner',
+      '  }',
+      '',
+      '  // ng-doc-ignore-line',
+      '  hidden(): void {}',
+      '  /* snippet#greeting */',
+      '}',
+    ].join('\r\n');
+    fs.writeFileSync(source, greeting);
+    fs.writeFileSync(
+      markup,
+      '<p>before</p>\n<!-- snippet#part -->\n<b>part</b>\n<!-- snippet#part -->\n',
+    );
+    fs.writeFileSync(
+      markdown,
+      [
+        '```ts name="greeting.ts" file="./greeting.ts"#greeting {2}',
+        'fallback',
+        '```',
+        '```ts file="./greeting.ts"#inner',
+        '```',
+        '```html file="./greeting.html"#part',
+        '```',
+        '```ts file="./greeting.ts"#L3',
+        '```',
+      ].join('\n'),
+    );
+    const compiler = new GeneratorContentCompiler(services());
+    const result = await compiler.compile(
+      { kind: 'guide-tab', id: 'snippets', entry: entry(markdown), markdown },
+      new AbortController().signal,
+    );
+    expect(result.diagnostics).toEqual([]);
+    const blocks = [...result.value!.html.matchAll(/<pre[\s\S]*?<\/pre>/g)].map(([block]) =>
+      block
+        .replace(/<[^>]*>/g, '')
+        .replace(/&#x([0-9a-f]+);/gi, (_, code: string) => String.fromCodePoint(parseInt(code, 16)))
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&amp;/g, '&'),
+    );
+    expect(blocks).toEqual([
+      // Markers, nested ones included, and ignored lines are removed; the indentation and the CR
+      // of each line are not kept.
+      'greet(name: string): string {\n  return `Hello, ${name}\\\\`;\n}',
+      'return `Hello, ${name}\\\\`;',
+      '<b>part</b>',
+      'export class Greeter {',
+    ]);
+    expect(result.value!.html).toContain('name="greeting.ts"');
+    // Each block read the whole file once: an edit anywhere in it renders the page again.
+    expect(
+      result.dependencies.filter((item) => 'path' in item && item.path === hostPath(source)),
+    ).toEqual(
+      Array(3).fill({
+        kind: 'content',
+        path: hostPath(source),
+        digest: createHash('sha256').update(greeting).digest('hex'),
+      }),
+    );
+
+    fs.writeFileSync(
+      markdown,
+      [
+        '```ts file="./greeting.ts"#farewell',
+        'fallback',
+        '```',
+        '```html file="./greeting.html"#before',
+        '```',
+      ].join('\n'),
+    );
+    fs.writeFileSync(markup, '<!-- snippet#before -->\n<p>before</p>\n');
+    const unknown = await compiler.compile(
+      { kind: 'guide-tab', id: 'snippets', entry: entry(markdown), markdown },
+      new AbortController().signal,
+    );
+    expect(unknown.diagnostics).toEqual([
+      expect.objectContaining({
+        code: 'CONTENT_SNIPPET_UNKNOWN',
+        severity: 'error',
+        source: { path: hostPath(source) },
+        message: 'Snippet "farewell" is not in ./greeting.ts: no "snippet#farewell" marker.',
+      }),
+      expect.objectContaining({
+        code: 'CONTENT_SNIPPET_UNKNOWN',
+        severity: 'error',
+        source: { path: hostPath(markup) },
+        message: 'Snippet "before" in ./greeting.html has no closing "snippet#before" marker.',
+      }),
+    ]);
   });
 
   it('tracks missing demo sources and recovers with the full physical-file digest', async () => {

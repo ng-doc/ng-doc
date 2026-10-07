@@ -369,7 +369,10 @@ describe('ng-add with the Vite engine', () => {
       return app;
     };
 
-    for (const builder of ['@nx/angular:application', '@angular-devkit/build-angular:browser']) {
+    for (const builder of [
+      '@nx/angular:browser-esbuild',
+      '@angular-devkit/build-angular:browser',
+    ]) {
       logs = [];
 
       const tree: UnitTestTree = await setup(await appWith(builder));

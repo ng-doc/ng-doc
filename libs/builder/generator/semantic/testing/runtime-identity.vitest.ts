@@ -1,4 +1,12 @@
-import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  realpathSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterEach, expect, test } from 'vitest';
@@ -13,21 +21,37 @@ afterEach(() => {
   for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true });
 });
 
-const version = (name: string, from = '../../../../../node_modules') =>
+const modules = '../../../../../node_modules';
+const version = (name: string, from = modules) =>
   (
     JSON.parse(
       readFileSync(path.resolve(import.meta.dirname, from, name, 'package.json'), 'utf8'),
     ) as { version: string }
   ).version;
+/** The version of `name` from the package directory `from` upwards, as Node resolves it. */
+const resolved = (name: string, from: string): string =>
+  existsSync(path.resolve(import.meta.dirname, from, 'node_modules', name, 'package.json'))
+    ? version(name, `${from}/node_modules`)
+    : version(name);
 
 test('names the versions this process loads, Shiki from the plugin that loads it, once per process', () => {
   const packages = runtimePackages();
   for (const name of ['prettier', 'marked', 'ts-morph', 'typescript', '@shikijs/rehype'])
     expect(packages[name], name).toBe(version(name));
-  // `@shikijs/rehype` carries its own Shiki, which is the one that highlights.
-  const nested = '../../../../../node_modules/@shikijs/rehype/node_modules';
-  expect(packages['shiki']).toBe(version('shiki', nested));
-  expect(packages['@shikijs/core']).toBe(version('@shikijs/core', nested));
+  // The Shiki that highlights is the one `@shikijs/rehype` resolves, and its packages the ones
+  // that Shiki resolves.
+  const shiki = `${modules}/@shikijs/rehype`;
+  expect(packages['shiki']).toBe(resolved('shiki', shiki));
+  for (const name of [
+    '@shikijs/core',
+    '@shikijs/langs',
+    '@shikijs/themes',
+    '@shikijs/engine-oniguruma',
+  ])
+    expect(packages[name], name).toBe(resolved(name, `${modules}/shiki`));
+  expect(packages['@shikijs/vscode-textmate']).toBe(
+    resolved('@shikijs/vscode-textmate', `${modules}/@shikijs/core`),
+  );
   expect(runtimePackages()).toBe(packages);
   expect(Object.isFrozen(packages)).toBe(true);
 });

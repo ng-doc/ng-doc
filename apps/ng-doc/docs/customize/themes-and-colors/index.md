@@ -148,14 +148,20 @@ For a theme called `ocean`, add the rules to your global styles:
   --ng-doc-primary: #38bdf8;
 }
 
-/* Code blocks: use the dark colors of the code theme */
+/* Code blocks: use the dark colors and font styles of the code theme */
 :root[data-theme='ocean'] .shiki,
 :root[data-theme='ocean'] .shiki span {
   color: var(--shiki-dark) !important;
 }
+
+:root[data-theme='ocean'] .shiki span {
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
 ```
 
-The last rule is needed only for a dark custom theme whose code blocks use a pair of Shiki themes
+The last two rules are needed only for a dark custom theme whose code blocks use a pair of Shiki themes
 (the legacy builders, or `shiki.themes` in the configuration): code blocks use the light colors of
 the code theme unless the theme is `dark` or `auto`. With the default `css-variables` code theme,
 set `--ng-doc-syntax-*` in your theme instead.

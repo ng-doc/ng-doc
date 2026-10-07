@@ -801,3 +801,229 @@ test('a cache written by the previous schema version is rebuilt with one warning
   expect(restored.whyRebuilt.filter((reason) => reason.reason === 'cache-miss')).toEqual([]);
   expect(rebuilt.whyRebuilt.some((reason) => reason.reason === 'cache-miss')).toBe(true);
 }, 240_000);
+
+const memberFiles = (): Record<string, string> => ({
+  'tsconfig.json': JSON.stringify({
+    compilerOptions: { target: 'ES2022', types: [], skipLibCheck: true },
+    include: ['docs/**/*.ts'],
+  }),
+  'ng-doc.config.ts': `export default { docsPath: 'docs', cache: true };`,
+  'docs/ng-doc.api.ts': `const api = { title: 'API', scopes: [{ name: 'Public', route: 'public', include: ['docs/api*.ts'] }] }; export default api;`,
+  'docs/api.ts': [
+    '/** The base. */',
+    'export class Base {',
+    '  /** Shown everywhere. */ visibleValue = 1;',
+    '  /** A template binding. */ protected guardedValue = 2;',
+    '  /** A protected method. */ protected guardedMethod(): void {}',
+    '  /** A protected accessor. */ protected get guardedAccessor(): number { return 1; }',
+    '  /** A public method. */ visibleMethod(): void {}',
+    '}',
+    '/** The derived class. */',
+    'export class Derived extends Base {',
+    '  /** Its own protected value. */ protected ownGuarded = 3;',
+    '}',
+  ].join('\n'),
+  'docs/guide/ng-doc.page.ts': `const page = { title: 'Guide', route: 'guide', mdFile: './index.md' }; export default page;`,
+  'docs/guide/index.md': '# Guide\n\n{{ NgDocApi.api("docs/api.ts#Derived") }}\n',
+});
+
+const protectedConfig = (value?: boolean) =>
+  `export default { docsPath: 'docs', cache: true${value === undefined ? '' : `, api: { protectedMembers: ${value} }`} };`;
+
+const memberSteps: Step[] = [
+  {
+    name: 'protected members off',
+    apply: (f) => [update(f.write('ng-doc.config.ts', protectedConfig(false)))],
+  },
+  {
+    name: 'an API edit with protected members off',
+    apply: (f) => [
+      update(
+        f.write(
+          'docs/api.ts',
+          readFileSync(path.join(f.root, 'docs/api.ts'), 'utf8').replace(
+            'visibleMethod(): void {}',
+            'visibleMethod(): void {}\n  /** Added later. */ protected addedGuarded = 4;',
+          ),
+        ),
+      ),
+    ],
+  },
+  {
+    name: 'protected members on again (explicit true)',
+    apply: (f) => [update(f.write('ng-doc.config.ts', protectedConfig(true)))],
+  },
+];
+
+test('differential: api.protectedMembers on and off equal reference and cold builds', async () => {
+  const f = fixture(true, memberFiles);
+  const colds: CompilationResult[] = [];
+  const reference = await runChain(
+    f,
+    f.create({ incrementalReuse: false }),
+    async () => {
+      colds.push(await cold(f));
+    },
+    memberSteps,
+  );
+  f.reset();
+  const incremental = await runChain(f, f.create(), undefined, memberSteps);
+  for (const [index, result] of incremental.entries()) {
+    const label = index ? memberSteps[index - 1].name : 'initial';
+    expect({ label, result: JSON.stringify(result) }).toEqual({
+      label,
+      result: JSON.stringify(reference[index]),
+    });
+    expect({ label, ...published(result) }).toEqual({ label, ...published(colds[index]) });
+  }
+  const shown = (result: CompilationResult) => {
+    const candidate = success(result);
+    return {
+      html: candidate.artifacts
+        .flatMap((artifact) => artifact.content)
+        .map((content) => content.html)
+        .join('\n'),
+      keywords: candidate.artifacts
+        .flatMap((artifact) => artifact.exportedKeywords)
+        .map((keyword) => keyword.key),
+      search: JSON.stringify(candidate.artifacts.flatMap((artifact) => artifact.searchRecords)),
+    };
+  };
+  const guarded = ['guardedValue', 'guardedMethod', 'guardedAccessor', 'ownGuarded'];
+  const guardedDocs = [
+    'A template binding.',
+    'A protected method.',
+    'A protected accessor.',
+    'Its own protected value.',
+  ];
+  // Today's output: protected members, inherited ones too, have rows, records and keywords.
+  const on = shown(incremental[0]);
+  for (const name of [...guarded, 'visibleValue', 'visibleMethod']) expect(on.html).toContain(name);
+  for (const text of guardedDocs) expect(on.search).toContain(text);
+  expect(on.keywords).toEqual(
+    expect.arrayContaining([
+      'Base.guardedvalue',
+      'Base.get-guardedaccessor',
+      'Derived.guardedmethod',
+      'Derived.ownguarded',
+    ]),
+  );
+  // Off: only public members, in API pages and in the guide's API embed alike.
+  for (const off of [shown(incremental[1]), shown(incremental[2])]) {
+    for (const name of [...guarded, 'addedGuarded']) expect(off.html).not.toContain(name);
+    expect(off.keywords.filter((key) => /guarded/.test(key))).toEqual([]);
+    for (const text of [...guardedDocs, 'Added later.']) expect(off.search).not.toContain(text);
+    expect(off.html).toContain('visibleValue');
+    expect(off.search).toContain('Shown everywhere.');
+    expect(off.keywords).toEqual(
+      expect.arrayContaining(['Base.visiblevalue', 'Derived.visiblemethod']),
+    );
+  }
+  // `protectedMembers: true` is the default.
+  const again = shown(incremental[3]);
+  for (const name of [...guarded, 'addedGuarded']) expect(again.html).toContain(name);
+}, 240_000);
+
+const demoPage = (demos: string) =>
+  `import { ButtonDemo, LinkDemo } from './demos';\nimport category from '../ng-doc.category';\nconst page = { title: 'Guide', route: 'guide', category, mdFile: './index.md', demos: { ${demos} } }; export default page;`;
+const demoMarkdown = (options: string) =>
+  `# Guide\n\n{{ NgDocActions.demo("ButtonDemo", ${options}) }}\n`;
+const demoConfig = (options = '') => `export default { docsPath: 'docs', cache: true${options} };`;
+
+const demoFiles = (): Record<string, string> => ({
+  'tsconfig.json': JSON.stringify({
+    compilerOptions: {
+      target: 'ES2022',
+      types: [],
+      skipLibCheck: true,
+      experimentalDecorators: true,
+    },
+    include: ['docs/**/*.ts'],
+  }),
+  'ng-doc.config.ts': demoConfig(),
+  'src/demo.providers.ts': 'export default [];\n',
+  'docs/ng-doc.category.ts': `const category = { title: 'Docs', route: 'docs' }; export default category;`,
+  'docs/guide/demos.ts': [
+    "import { Component } from '@angular/core';",
+    "@Component({ selector: 'button-demo', template: '<button>Button</button>' }) export class ButtonDemo {}",
+    "@Component({ selector: 'link-demo', template: '<a>Link</a>' }) export class LinkDemo {}",
+  ].join('\n'),
+  'docs/guide/ng-doc.page.ts': demoPage('ButtonDemo'),
+  'docs/guide/index.md': demoMarkdown('{ expanded: true }'),
+  'docs/other/ng-doc.page.ts': `const page = { title: 'Other', route: 'other', mdFile: './index.md' }; export default page;`,
+  'docs/other/index.md': '# Other\n',
+});
+
+const demoSteps: Step[] = [
+  {
+    name: 'an isolated demo',
+    apply: (f) => [update(f.write('docs/guide/index.md', demoMarkdown('{ isolated: true }')))],
+  },
+  {
+    name: 'every demo isolated, under a path, with providers',
+    apply: (f) => [
+      update(
+        f.write(
+          'ng-doc.config.ts',
+          demoConfig(
+            `, isolatedDemos: true, demoApplication: { path: 'previews' }, demoProviders: () => import('./src/demo.providers')`,
+          ),
+        ),
+      ),
+    ],
+  },
+  {
+    name: 'a demo added to the guide',
+    apply: (f) => [update(f.write('docs/guide/ng-doc.page.ts', demoPage('ButtonDemo, LinkDemo')))],
+  },
+  {
+    name: 'demo pages turned off again',
+    apply: (f) => [
+      update(f.write('ng-doc.config.ts', demoConfig())),
+      update(f.write('docs/guide/index.md', demoMarkdown('{ expanded: true }'))),
+      update(f.write('docs/guide/ng-doc.page.ts', demoPage('ButtonDemo'))),
+    ],
+  },
+];
+
+test('differential: demo pages on and off equal reference and cold builds', async () => {
+  const f = fixture(true, demoFiles);
+  const colds: CompilationResult[] = [];
+  const reference = await runChain(
+    f,
+    f.create({ incrementalReuse: false }),
+    async () => {
+      colds.push(await cold(f));
+    },
+    demoSteps,
+  );
+  f.reset();
+  const incremental = await runChain(f, f.create(), undefined, demoSteps);
+  for (const [index, result] of incremental.entries()) {
+    const label = index ? demoSteps[index - 1].name : 'initial';
+    expect({ label, result: JSON.stringify(result) }).toEqual({
+      label,
+      result: JSON.stringify(reference[index]),
+    });
+    expect({ label, ...published(result) }).toEqual({ label, ...published(colds[index]) });
+  }
+  const files = (result: CompilationResult) => published(result).outputs;
+  const [initial, isolated, site, added, off] = incremental.map(files);
+  // Without isolated demos or options, no demo page exists.
+  expect(Object.keys(initial).filter((file) => /demo-(routes|app)\.ts$/.test(file))).toEqual([]);
+  // An isolated demo gives its guide demo pages; the other guide has none.
+  expect(Object.keys(isolated).filter((file) => /demo-(routes|app)\.ts$/.test(file))).toEqual([
+    'demo-app.ts',
+    'guides/guide/demo-routes.ts',
+  ]);
+  expect(isolated['guides/guide/index/page.ts'] ?? isolated['guides/guide/page.ts']).toBeDefined();
+  expect(isolated['demo-app.ts']).toContain("path: 'demo-preview/docs/guide',");
+  expect(site['demo-app.ts']).toContain("path: 'previews/docs/guide',");
+  expect(site['demo-app.ts']).toContain("import('../src/demo.providers')");
+  expect(site['index.ts']).toContain("import type {} from './demo-app';");
+  expect(site['guides/guide/demo-routes.ts']).not.toContain('LinkDemo');
+  expect(added['guides/guide/demo-routes.ts']).toContain("path: 'LinkDemo',");
+  // Off again, every published byte is what the site had before it opted in.
+  expect(off).toEqual(initial);
+  expect(published(incremental[4])).toEqual(published(incremental[0]));
+}, 240_000);

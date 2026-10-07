@@ -1,11 +1,14 @@
+import { APP_BASE_HREF, LocationStrategy } from '@angular/common';
 import { ChangeDetectionStrategy, Component, PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import {
   provideRouter,
   Route,
   Router,
+  RouterFeatures,
   RouterPreloader,
   Routes,
+  withHashLocation,
   withPreloading,
 } from '@angular/router';
 import { ɵwithNgDocContent } from '@ng-doc/app/helpers';
@@ -13,7 +16,7 @@ import { NgDocPreloadingStrategy, NgDocRoutePreloader } from '@ng-doc/app/servic
 import { NG_DOC_ROUTE_PREFIX } from '@ng-doc/app/tokens';
 import type { NgDocContentModule, NgDocContentSource } from '@ng-doc/core/interfaces';
 import { lastValueFrom, of, throwError } from 'rxjs';
-import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { describeChangeDetection } from '../change-detection/change-detection-modes';
 
@@ -72,8 +75,9 @@ describeChangeDetection('NgDocRoutePreloader', ({ providers }) => {
   /**
    * Configures a router with a lazy docs route of three lazy pages, and a lazy landing page.
    * @param extra - More providers.
+   * @param features - More router features, such as `withHashLocation()`.
    */
-  function configure(extra: unknown[] = []): void {
+  function configure(extra: unknown[] = [], features: RouterFeatures[] = []): void {
     pages = { current: lazyPage('current'), next: lazyPage('next'), other: lazyPage('other') };
     docsLoads = 0;
     landingLoads = 0;
@@ -129,7 +133,7 @@ describeChangeDetection('NgDocRoutePreloader', ({ providers }) => {
     TestBed.configureTestingModule({
       providers: [
         ...providers,
-        provideRouter(routes, withPreloading(NgDocPreloadingStrategy)),
+        provideRouter(routes, withPreloading(NgDocPreloadingStrategy), ...features),
         // The documentation's routes live under `docs`, as `routePrefix` says.
         { provide: NG_DOC_ROUTE_PREFIX, useValue: 'docs' },
         ...(extra as []),
@@ -367,5 +371,77 @@ describeChangeDetection('NgDocRoutePreloader', ({ providers }) => {
     expect(flakyLoads).toBe(2);
     // Loaded now: once is enough.
     expect(preloader.preload('/docs/flaky')).toBe(false);
+  });
+
+  describe('with the hash location strategy', () => {
+    it('preloads the route in the fragment of a link once', async () => {
+      configure([], [withHashLocation()]);
+      await open('/docs/current');
+      // The router keeps the route in the fragment.
+      expect(TestBed.inject(LocationStrategy).path()).toBe('/docs/current');
+      expect(TestBed.inject(LocationStrategy).prepareExternalUrl('/docs/current')).toBe(
+        '#/docs/current',
+      );
+
+      const next = link('#/docs/next');
+
+      point(next);
+      await turns();
+      expect(pages.next.chunkLoads()).toBe(1);
+      expect(pages.next.contentLoads()).toBe(1);
+
+      point(link('#/docs/next?tab=api'));
+      point(link(`${location.pathname}#/docs/next`));
+      await turns();
+      expect(pages.next.chunkLoads()).toBe(1);
+
+      // The link the router renders for a page under this strategy.
+      const router = TestBed.inject(Router);
+      const other = link(
+        TestBed.inject(LocationStrategy).prepareExternalUrl(
+          router.serializeUrl(router.parseUrl('/docs/other')),
+        ),
+      );
+
+      expect(other.getAttribute('href')).toBe('#/docs/other');
+      point(other);
+      await turns();
+      expect(pages.other.chunkLoads()).toBe(1);
+      expect(pages.other.contentLoads()).toBe(1);
+    });
+
+    it('ignores anchors, the current page, other documents and other routes', async () => {
+      configure([], [withHashLocation()]);
+      await open('/docs/current');
+      const before = { current: pages.current.contentLoads(), docs: docsLoads };
+
+      point(link('#usage'));
+      point(link('#/docs/current'));
+      point(link('#/docs/current#usage'));
+      point(link('/another-document.html#/docs/next'));
+      point(link('https://example.com/#/docs/next'));
+      point(link('#/blog'));
+      await turns();
+
+      expect(pages.next.chunkLoads()).toBe(0);
+      expect(pages.current.contentLoads()).toBe(before.current);
+      expect(docsLoads).toBe(before.docs);
+      expect(blogLoads).toBe(0);
+    });
+
+    it('strips the base href that APP_BASE_HREF gives the routes', async () => {
+      configure([{ provide: APP_BASE_HREF, useValue: '/app/' }], [withHashLocation()]);
+      await open('/docs/current');
+      expect(TestBed.inject(LocationStrategy).prepareExternalUrl('/docs/current')).toBe(
+        '#/app/docs/current',
+      );
+
+      point(link('#/app/docs/next'));
+      point(link('#/elsewhere/docs/other'));
+      await turns();
+
+      expect(pages.next.chunkLoads()).toBe(1);
+      expect(pages.other.chunkLoads()).toBe(0);
+    });
   });
 });

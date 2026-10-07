@@ -653,16 +653,17 @@ const playground: Variant = {
 };
 
 /** The option lists of the playground's inputs, as the published guide tab lists them. */
-function playgroundOptions(result: CompilationResult): Record<string, string[]> {
+function playgroundOptions(result: CompilationResult): Record<string, unknown[]> {
   const html = success(result)
     .artifacts.flatMap((artifact) => artifact.content.map((item) => item.html))
     .join('\n')
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'");
-  const options: Record<string, string[]> = {};
-  // Each input: its name, then `"options":[...]` (quoted, comma-separated strings).
+  const options: Record<string, unknown[]> = {};
+  // Each input: its name, then `"options":[...]` (quoted strings, or the label and value objects
+  // of enum members).
   for (const [, name, list] of html.matchAll(
-    /"(\w+)":\{"inputName":"\w+","type":"(?:[^"\\]|\\.)*","description":"(?:[^"\\]|\\.)*","options":\[((?:"(?:[^"\\]|\\.)*",?)*)\]/g,
+    /"(\w+)":\{"inputName":"\w+","type":"(?:[^"\\]|\\.)*","description":"(?:[^"\\]|\\.)*","options":\[((?:(?:"(?:[^"\\]|\\.)*"|\{[^{}]*\}),?)*)\]/g,
   ))
     options[name!] = JSON.parse(`[${list}]`);
   return options;
@@ -685,7 +686,11 @@ test('playground options follow the written order on every path', async () => {
   const reference = await chain(f, playground, {}, { incrementalReuse: false });
   const expected = {
     color: ["'primary'", "'warning'", "'link'"],
-    size: ['Size.Medium', 'Size.Small'],
+    // Enum members: their names, and the values the checker resolved.
+    size: [
+      { label: 'Medium', value: 'medium' },
+      { label: 'Small', value: 'small' },
+    ],
     tone: ["'soft'", "'link'", "'loud'"],
     // `undefined` keeps the checker's position; the written members their written order.
     mode: ['undefined', "'b'", "'a'"],

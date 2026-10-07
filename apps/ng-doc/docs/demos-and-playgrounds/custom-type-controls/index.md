@@ -54,13 +54,16 @@ The control of the playground above:
 Before the control renders, the playground sets these fields of `NgDocTypeControl`. Declare the
 ones you need, as signal inputs or as plain fields:
 
-| Field         | Type                    | Value                                                                             |
-| ------------- | ----------------------- | --------------------------------------------------------------------------------- |
-| `name`        | `string`                | The name of the input.                                                            |
-| `description` | `string`                | The description of the input, from its doc comment, as HTML.                      |
-| `default`     | the type of the control | The default value of the input.                                                   |
-| `options`     | `string[]`              | The members of the input's union type, as written in code, such as `"'small'"`.   |
-| `isManual`    | `boolean`               | `true` when the input comes from `controls` in the configuration of a playground. |
+| Field         | Type                                     | Value                                                                                                      |
+| ------------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `name`        | `string`                                 | The name of the input, or its `label` from the `controls` of the playground.                               |
+| `description` | `string`                                 | The description of the input, from its doc comment, as HTML.                                               |
+| `default`     | the type of the control                  | The default value of the input.                                                                            |
+| `options`     | `Array<string \| NgDocPlaygroundOption>` | The members of the input's union type: code, such as `"'small'"`, or an enum member's `label` and `value`. |
+| `isManual`    | `boolean`                                | `true` when the input comes from `controls` in the configuration of a playground.                          |
+
+`resolvePlaygroundOption(option, isManual)` from `@ng-doc/app` turns an option into the value it
+sets and the text that shows it.
 
 The playground sets a field that the control declares as an input, a signal input or an `@Input()`,
 with `setInput()`, so `ngOnChanges()` reports it. It assigns a plain field. With signal inputs,
@@ -126,14 +129,75 @@ optional and nullable inputs of their type, such as `@Input() label?: string`, `
 In development, the browser console names the type of every input that a playground skips, so you
 can copy the text to register.
 
+## Controls for array inputs
+
+An array input, such as `tags = input<string[]>([])`, has no built-in control. Register a control
+for its type text, `string[]`, like for any other type. This one edits the array as comma-separated
+text:
+
+```typescript name="string-list-control.component.ts"
+import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { NgDocTypeControl } from '@ng-doc/app';
+
+@Component({
+  selector: 'app-string-list-control',
+  template: `<input [value]="text()" (input)="update($event)" (blur)="touched()" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class StringListControlComponent implements NgDocTypeControl<string[]> {
+  readonly default = input<string[]>();
+
+  protected readonly text = signal('');
+  protected touched: () => void = () => {};
+  private changed: (value: string[]) => void = () => {};
+
+  writeValue(value: string[] | null): void {
+    // `null` means no value: show the default of the input.
+    this.text.set((value ?? this.default() ?? []).join(', '));
+  }
+
+  registerOnChange(fn: (value: string[]) => void): void {
+    this.changed = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.touched = fn;
+  }
+
+  protected update(event: Event): void {
+    const text = (event.target as HTMLInputElement).value;
+
+    this.text.set(text);
+    this.changed(
+      text
+        .split(',')
+        .map((item: string) => item.trim())
+        .filter(Boolean),
+    );
+  }
+}
+```
+
+```typescript name="app.config.ts"
+providers: [
+  provideTypeControl('string[]', StringListControlComponent),
+  // For `input<string[]>()` and `@Input() tags?: string[]`.
+  provideTypeControl('string[] | undefined', StringListControlComponent),
+],
+```
+
+The same works for arrays of other types, such as `number[]` or `Item[]`: the control parses the
+text, or offers a form row per item, and reports the new array.
+
 ## 📋 Options
 
 The third argument of `provideTypeControl` takes `NgDocTypeControlProviderOptions`:
 
-| Option      | Type      | Default | Description                                                                                 |
-| ----------- | --------- | ------- | ------------------------------------------------------------------------------------------- |
-| `hideLabel` | `boolean` | `false` | Hides the row's label, with the input's name and type chip, for a control that has its own. |
-| `order`     | `number`  | –       | The position of the control's rows in the inspector, lowest first.                          |
+| Option         | Type      | Default | Description                                                                                 |
+| -------------- | --------- | ------- | ------------------------------------------------------------------------------------------- |
+| `hideLabel`    | `boolean` | `false` | Hides the row's label, with the input's name and type chip, for a control that has its own. |
+| `order`        | `number`  | –       | The position of the control's rows in the inspector, lowest first.                          |
+| `labelWrapper` | `boolean` | `true`  | Wraps the row in a `<label>`. Set `false` for a control with several interactive parts.     |
 
 The inspector lists the inputs whose controls have an `order` first, by that order, and then the
 others by name. The built-in controls have these orders:
@@ -144,6 +208,19 @@ others by name. The built-in controls have these orders:
 | A text field                    | `string`         | 20    |
 | A number field                  | `number`         | 30    |
 | A checkbox                      | `boolean`        | 40    |
+
+### Controls with several interactive parts
+
+Each row of the inspector is a `<label>` around the control. A click anywhere in a label also
+clicks the first field inside it, so a control with several parts, such as a list with a filter
+field or a set of buttons, reacts to clicks it shouldn't. Set `labelWrapper: false` and the row
+becomes a `<div>` instead, named by its caption for assistive technology:
+
+```typescript name="app.config.ts"
+provideTypeControl('Items', ItemsControlComponent, { labelWrapper: false }),
+```
+
+The built-in controls keep their label.
 
 ## Appearance
 

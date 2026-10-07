@@ -135,6 +135,17 @@ function readProjectJsonProjects(tree: Tree, namesByRoot: Map<string, string>): 
 }
 
 /**
+ * Whether the tree overwrites the `angular.json` it was given. Nx's virtual `angular.json` always
+ * exists outside the tree, so an edit of it is an overwrite.
+ * @param tree - The workspace tree.
+ */
+function changesAngularJson(tree: Tree): boolean {
+  return tree.actions.some(
+    (action) => action.kind === 'o' && action.path.replace(/^\//, '') === 'angular.json',
+  );
+}
+
+/**
  * Reads every project of the workspace.
  *
  * - An Angular CLI workspace (no `nx.json`): the projects of `angular.json`, or of the
@@ -144,12 +155,24 @@ function readProjectJsonProjects(tree: Tree, namesByRoot: Map<string, string>): 
  *   `angular.json` built from every `project.json`, and writing it makes Nx rewrite all of them
  *   (reordered keys, its own layout, no final newline), including unrelated projects. Reading a
  *   project from its own `project.json` keeps every write in that one file, as a text edit.
+ * - An Nx workspace whose `angular.json` this tree already overwrites, as the steps of `ng add`
+ *   (which edit the workspace through the devkit API) do before `vite-setup`: the `angular.json`
+ *   projects first. When the tree is committed, Nx writes the projects of the virtual
+ *   `angular.json` over their `project.json`, so an edit of a `project.json` in the same tree is
+ *   lost, and the `project.json` read here would miss the edits of `angular.json`.
  * @param tree - The workspace tree.
  */
 export function readWorkspaceProjects(tree: Tree): WorkspaceProject[] {
   const angular = readAngularJsonProjects(tree);
   if (!tree.exists('nx.json')) {
     return tree.exists('angular.json') ? angular : readProjectJsonProjects(tree, new Map());
+  }
+  if (angular.length && changesAngularJson(tree)) {
+    const names = new Set(angular.map((project) => project.name));
+    return [
+      ...angular,
+      ...readProjectJsonProjects(tree, new Map()).filter((project) => !names.has(project.name)),
+    ];
   }
   // A `project.json` without a name is named by Nx, which the virtual `angular.json` shows.
   const projects = readProjectJsonProjects(

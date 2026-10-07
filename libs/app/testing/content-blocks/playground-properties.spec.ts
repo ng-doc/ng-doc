@@ -47,6 +47,15 @@ const PROPERTIES: NgDocPlaygroundProperties = {
   label: { type: 'string', inputName: 'label', description: 'Text of the tag' },
   color: { type: 'NgDocColor', inputName: 'color', options: ["'primary'", "'alert'"] },
   rounded: { type: 'boolean', inputName: 'rounded' },
+  // An enum, as the new engine lists its members: names and values.
+  level: {
+    type: 'Level',
+    inputName: 'level',
+    options: [
+      { label: 'Low', value: 0 },
+      { label: 'High', value: 5 },
+    ],
+  },
 };
 
 @Component({
@@ -74,6 +83,7 @@ class PropertiesHostComponent {
       label: new FormControl<unknown>('Tag'),
       color: new FormControl<unknown>('primary'),
       rounded: new FormControl<unknown>(false),
+      level: new FormControl<unknown>(0),
     }),
     content: new FormGroup<Record<string, FormControl<boolean>>>({}),
   });
@@ -120,13 +130,16 @@ describeChangeDetection(
         queryAll('ng-doc-playground-property').map(
           (row: HTMLElement) => row.querySelector('.ng-doc-playground-property-name')?.textContent,
         ),
-      ).toEqual(['color', 'label', undefined]);
-      // The type chip sits under the name: `string` for the alias of string literals.
+      ).toEqual(['color', 'level', 'label', undefined]);
+      // The type chip sits under the name: `string` for the alias of string literals, `number`
+      // for the enum of numbers.
       expect(
         queryAll('ng-doc-playground-property ng-doc-kind-icon').map((chip: HTMLElement) =>
           chip.getAttribute('data-ng-doc-kind'),
         ),
-      ).toEqual(['string', 'string']);
+      ).toEqual(['string', 'number', 'string']);
+      // The enum gets the list of its members.
+      expect(queryAll('ng-doc-type-alias-control')).toHaveLength(2);
       // The boolean control carries its own label.
       expect(query('ng-doc-boolean-control')?.textContent?.trim()).toBe('rounded');
     });
@@ -167,7 +180,7 @@ describeChangeDetection(
         'ng-doc-playground-properties',
       ]);
       expect(queryAll('.ng-doc-playground-property-list ng-doc-playground-property')).toHaveLength(
-        3,
+        4,
       );
     });
 
@@ -286,5 +299,215 @@ describeChangeDetection(
     });
 
     afterEach(() => warn.mockRestore());
+  },
+);
+
+/** A control with several interactive parts, as a custom type control may have. */
+@Component({
+  selector: 'ng-doc-list-control',
+  template: `<input class="list-filter" (click)="clicks = clicks + 1" /><span class="list-area"
+      >Area</span
+    >`,
+})
+class ListControlComponent {
+  clicks = 0;
+  writeValue(): void {}
+  registerOnChange(): void {}
+  registerOnTouched(): void {}
+}
+
+const LIST_PROPERTIES: NgDocPlaygroundProperties = {
+  items: { type: 'Items', inputName: 'items', description: 'The items' },
+  hidden: { type: 'HiddenItems', inputName: 'hidden' },
+  wrapped: { type: 'WrappedItems', inputName: 'wrapped' },
+};
+
+@Component({
+  selector: 'ng-doc-list-properties-host',
+  template: `<ng-doc-playground-properties
+    [form]="form"
+    [properties]="properties"
+    [defaultValues]="{}" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgDocPlaygroundPropertiesComponent],
+})
+class ListPropertiesHostComponent {
+  readonly properties: NgDocPlaygroundProperties = LIST_PROPERTIES;
+  readonly form = new FormGroup<NgDocPlaygroundForm>({
+    properties: new FormGroup<Record<string, FormControl<unknown>>>({
+      items: new FormControl<unknown>(null),
+      hidden: new FormControl<unknown>(null),
+      wrapped: new FormControl<unknown>(null),
+    }),
+    content: new FormGroup<Record<string, FormControl<boolean>>>({}),
+  });
+}
+
+describeChangeDetection(
+  'NgDocPlaygroundPropertiesComponent with labelWrapper',
+  ({ providers }: ChangeDetectionCase) => {
+    let fixture: ComponentFixture<ListPropertiesHostComponent>;
+
+    beforeEach(async () => {
+      TestBed.configureTestingModule({
+        providers: [
+          ...providers,
+          provideTypeControl('Items', ListControlComponent, { labelWrapper: false, order: 1 }),
+          provideTypeControl('HiddenItems', ListControlComponent, {
+            labelWrapper: false,
+            hideLabel: true,
+            order: 2,
+          }),
+          provideTypeControl('WrappedItems', ListControlComponent, { order: 3 }),
+        ],
+      });
+      fixture = TestBed.createComponent(ListPropertiesHostComponent);
+      await fixture.whenStable();
+      await fixture.whenStable();
+    });
+
+    const rows = (): HTMLElement[] =>
+      Array.from(fixture.nativeElement.querySelectorAll('ng-doc-playground-property'));
+    const wrapper = (row: HTMLElement): HTMLElement =>
+      row.querySelector('.ng-doc-playground-property-label')!;
+
+    it('renders the row as a div named by its caption', () => {
+      const row: HTMLElement = wrapper(rows()[0]);
+      const captionId: string | null = row.getAttribute('aria-labelledby');
+
+      expect(row.tagName).toBe('DIV');
+      expect(row.getAttribute('role')).toBe('group');
+      expect(captionId).toBeTruthy();
+      // The accessible name of the group is the caption: the input's name.
+      expect(
+        fixture.nativeElement
+          .querySelector(`#${captionId}`)
+          ?.querySelector('.ng-doc-playground-property-name')?.textContent,
+      ).toBe('items');
+      expect(row.querySelector('ng-doc-list-control')).not.toBeNull();
+    });
+
+    it('gives each row its own caption ID', () => {
+      const ids: Array<string | null> = rows().map(
+        (row: HTMLElement) =>
+          wrapper(row).querySelector('.ng-doc-label')?.getAttribute('id') ?? null,
+      );
+
+      expect(ids[0]).not.toBeNull();
+      expect(ids[0]).not.toBe(ids[1]);
+    });
+
+    it('leaves out the caption and the reference when the label is hidden', () => {
+      const row: HTMLElement = wrapper(rows()[1]);
+
+      expect(row.tagName).toBe('DIV');
+      expect(row.hasAttribute('aria-labelledby')).toBe(false);
+      expect(row.querySelector('.ng-doc-label')).toBeNull();
+      expect(row.querySelector('ng-doc-list-control')).not.toBeNull();
+    });
+
+    it('keeps the label of other controls', () => {
+      expect(wrapper(rows()[2]).tagName).toBe('LABEL');
+    });
+
+    it('does not forward clicks inside the control to its first field', () => {
+      const clicks = (row: HTMLElement): number =>
+        fixture.debugElement.query(
+          (debug) => debug.nativeElement === row.querySelector('ng-doc-list-control'),
+        ).componentInstance.clicks;
+      const [unwrapped, , wrapped] = rows();
+
+      unwrapped.querySelector<HTMLElement>('.list-area')!.click();
+      wrapped.querySelector<HTMLElement>('.list-area')!.click();
+
+      expect(clicks(unwrapped)).toBe(0);
+      // A label forwards the click to the input, the behaviour the option turns off.
+      expect(clicks(wrapped)).toBe(1);
+    });
+  },
+);
+
+/** Inputs with the `label`, `group` and `order` of the playground's `controls`. */
+const GROUPED_PROPERTIES: NgDocPlaygroundProperties = {
+  primaryColor: {
+    type: 'string',
+    inputName: 'primaryColor',
+    label: 'Primary color',
+    group: 'Colors',
+    order: 2,
+  },
+  accentColor: { type: 'string', inputName: 'accentColor', group: 'Colors', order: 1 },
+  rounded: { type: 'boolean', inputName: 'rounded', label: 'Rounded corners', group: 'Shape' },
+  title: { type: 'string', inputName: 'title' },
+  subtitle: { type: 'string', inputName: 'subtitle', order: 3 },
+};
+
+@Component({
+  selector: 'ng-doc-grouped-properties-host',
+  template: `<ng-doc-playground-properties
+    [form]="form"
+    [properties]="properties"
+    [defaultValues]="{}" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgDocPlaygroundPropertiesComponent],
+})
+class GroupedPropertiesHostComponent {
+  readonly properties: NgDocPlaygroundProperties = GROUPED_PROPERTIES;
+  readonly form = new FormGroup<NgDocPlaygroundForm>({
+    properties: new FormGroup<Record<string, FormControl<unknown>>>(
+      Object.fromEntries(
+        Object.keys(GROUPED_PROPERTIES).map((key: string) => [key, new FormControl<unknown>(null)]),
+      ),
+    ),
+    content: new FormGroup<Record<string, FormControl<boolean>>>({}),
+  });
+}
+
+describeChangeDetection(
+  'NgDocPlaygroundPropertiesComponent with labels, groups and orders',
+  ({ providers }: ChangeDetectionCase) => {
+    let fixture: ComponentFixture<GroupedPropertiesHostComponent>;
+
+    beforeEach(async () => {
+      TestBed.configureTestingModule({
+        providers: [
+          ...providers,
+          provideTypeControl('string', NgDocStringControlComponent, { order: 20 }),
+          provideTypeControl('boolean', NgDocBooleanControlComponent, {
+            hideLabel: true,
+            order: 40,
+          }),
+        ],
+      });
+      fixture = TestBed.createComponent(GroupedPropertiesHostComponent);
+      await fixture.whenStable();
+      await fixture.whenStable();
+    });
+
+    it('lists the inputs without a group first, then each group under its name', () => {
+      const sections = Array.from(
+        fixture.nativeElement.querySelectorAll('h5.ng-doc-title'),
+        (heading: Element) => ({
+          title: heading.textContent?.trim(),
+          rows: Array.from(
+            heading.nextElementSibling?.querySelectorAll('ng-doc-playground-property') ?? [],
+            (row: Element) =>
+              (
+                row.querySelector('.ng-doc-playground-property-name') ??
+                row.querySelector('ng-doc-boolean-control')
+              )?.textContent?.trim(),
+          ),
+        }),
+      );
+
+      expect(sections).toEqual([
+        // An order comes first; the others keep the order of their controls, then their names.
+        { title: 'Settings', rows: ['subtitle', 'title'] },
+        // A group takes the place of its first input, and its inputs are ordered the same way.
+        { title: 'Colors', rows: ['accentColor', 'Primary color'] },
+        // The label is also the name a control shows itself.
+        { title: 'Shape', rows: ['Rounded corners'] },
+      ]);
+    });
   },
 );

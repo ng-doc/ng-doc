@@ -64,6 +64,7 @@ These codes point to a problem in your files or setup. The linked entries explai
 | `DISCOVERY_CATEGORY_CYCLE`             | error    | Categories are nested in a loop.                                                                                                                                                                          |
 | `DISCOVERY_KEYWORD_LOADER_FAILED`      | error    | A keyword loader failed.                                                                                                                                                                                  |
 | `DISCOVERY_KEYWORD_INVALID`            | warning  | An entry of `keywords.keywords` has no `url`. It is left out.                                                                                                                                             |
+| `DISCOVERY_SHIKI_LANGUAGE_INVALID`     | error    | An entry of `shiki.langs` isn't a Shiki language registration: plain JSON data with a `name` and a `scopeName` (`*CodeHighlightingPage#add-languages`).                                                   |
 | `DISCOVERY_EVALUATION_FAILED`          | error    | Running an entity or configuration file failed, or a Markdown template failed to render, for example a Nunjucks syntax error or a missing `include` (`*TroubleshootingPage#discovery_evaluation_failed`). |
 | `DISCOVERY_SOURCE_OUTSIDE_WORKSPACE`   | error    | A page, category or API file resolves outside the workspace, for example through a symbolic link.                                                                                                         |
 
@@ -79,7 +80,7 @@ These codes point to a problem in your files or setup. The linked entries explai
 | `SEMANTIC_DEMO_OBJECT`         | error    | A page's `demos` isn't an object literal that maps names to component classes.                                           |
 | `SEMANTIC_PLAYGROUNDS_OBJECT`  | error    | A page's `playgrounds` isn't an object literal.                                                                          |
 | `SEMANTIC_PLAYGROUND_OBJECT`   | error    | A playground isn't a named property, or its configuration can't be resolved.                                             |
-| `SEMANTIC_CONTROLS_SHAPE`      | error    | An entry in a playground's `controls` is neither a type name nor an object with a `type`.                                |
+| `SEMANTIC_CONTROLS_SHAPE`      | error    | A `controls` entry isn't a type name or an object, its `type` isn't text, or it has no `type` and names no input.        |
 | `SEMANTIC_DECLARATION_PATH`    | error    | An `NgDocApi` or `JSDoc` path isn't in the form `path/to/file.ts#ExportName`.                                            |
 | `SEMANTIC_DECLARATION_MISSING` | error    | The declaration in such a path doesn't exist.                                                                            |
 | `SEMANTIC_ROUTE_COLLISION`     | error    | Two API declarations need the same route.                                                                                |
@@ -97,6 +98,7 @@ These codes point to a problem in your files or setup. The linked entries explai
 | `CONTENT_FRONTMATTER`       | error    | The front matter of a Markdown file is invalid.                                                                                                   |
 | `CONTENT_HEADER_READ`       | error    | The `guide.headerTemplate` file can't be read.                                                                                                    |
 | `CONTENT_SNIPPET_READ`      | error    | The file in a code block's `file` attribute doesn't exist.                                                                                        |
+| `CONTENT_SNIPPET_UNKNOWN`   | error    | The file in a code block's `file="…"#id` has no snippet with that id, or the snippet has no closing comment.                                      |
 | `CONTENT_DEMO`              | error    | `NgDocActions.demo` or `demoPane` names a demo that the page doesn't register.                                                                    |
 | `CONTENT_PLAYGROUND`        | error    | `NgDocActions.playground` names a playground that the page doesn't register.                                                                      |
 | `CONTENT_PLAYGROUND_SOURCE` | error    | The source file of a playground's target doesn't exist.                                                                                           |
@@ -114,28 +116,29 @@ These codes point to a problem in your files or setup. The linked entries explai
 
 ### Vite plugin
 
-| Code                                | Meaning                                                                                                                                              |
-| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `NGDOC_VITE_VERSION`                | The Vite engine runs on a Vite outside `^8.3.0`, such as Vite 7 (`*TroubleshootingPage#ngdoc_vite_version`).                                         |
-| `NGDOC_VITE_ANGULAR_VERSION`        | `@angular/compiler-cli` and `@angular/build` are from different Angular releases, or missing (`*TroubleshootingPage#ngdoc_vite_angular_version`).    |
-| `NGDOC_VITE_WATCH_CAPACITY`         | The plugin needs more watch targets than allowed (`*TroubleshootingPage#ngdoc_vite_watch_capacity`).                                                 |
-| `NGDOC_VITE_RESTART_REQUIRED`       | A setting that needs a restart changed (`*TroubleshootingPage#ngdoc_vite_restart_required`).                                                         |
-| `NGDOC_VITE_OUTPUT_LEASE`           | Another plugin instance in the same Vite process already uses the same project or generated folder (`*TroubleshootingPage#ngdoc_vite_output_lease`). |
-| `NGDOC_VITE_BUILD_WATCH`            | `vite build --watch` isn't supported.                                                                                                                |
-| `NGDOC_VITE_WATCH_DISABLED`         | `server.watch` is disabled.                                                                                                                          |
-| `NGDOC_VITE_HMR_DISABLED`           | `server.hmr` is disabled.                                                                                                                            |
-| `NGDOC_VITE_THEME_MODULE`           | A Shiki theme other than the built-in ones has no entry in `themeModules`.                                                                           |
-| `NGDOC_VITE_ANGULAR_COMPATIBILITY`  | The Angular plugins don't come from `createNgDocAngularPlugins`.                                                                                     |
-| `NGDOC_VITE_ANGULAR_OPTIONS`        | `createNgDocAngularPlugins` got an unsupported option value.                                                                                         |
-| `NGDOC_VITE_ANGULAR_MODE`           | The plugins run in test mode (`NODE_ENV=test` or `VITEST`).                                                                                          |
-| `NGDOC_VITE_ANGULAR_BUILD`          | `createNgDocAngularPlugins` was loaded from source instead of the built `@ng-doc/builder` package.                                                   |
-| `NGDOC_VITE_ANGULAR_COMPOSITION`    | The Angular plugin array was changed: it must contain exactly the plugins that `createNgDocAngularPlugins` returns.                                  |
-| `NGDOC_VITE_ANGULAR_PROBE`          | `angularComponentProbe` can't be read, or Angular didn't compile it. Point it to a component that the application always compiles.                   |
-| `NGDOC_VITE_UNRESOLVED_IMPORT`      | Vite can't resolve an import in development; the message names it. Check the tsconfig `paths`, or add a Vite `resolve.alias`.                        |
-| `NGDOC_VITE_APPLICATION_OPTION`     | `createNgDocApplicationPlugin` got an option of an `angular.json` build target. The message names its Vite or Analog equivalent.                     |
-| `NGDOC_VITE_SERVER_ENTRY`           | The server bundle or prerendering was requested, but `createNgDocApplicationPlugin` has no `server` entry.                                           |
-| `NGDOC_VITE_OPTION_REMOVED`         | The plugin got `maxContentRequests`, which was removed with the virtual content mode. Remove the option.                                             |
-| `NGDOC_DEVELOPMENT_CONTENT_REMOVED` | `generator.developmentContent: 'virtual'` was removed. Remove the option.                                                                            |
+| Code                                | Meaning                                                                                                                                                                                                   |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NGDOC_VITE_VERSION`                | The Vite engine runs on a Vite outside `^8.3.0`, such as Vite 7 (`*TroubleshootingPage#ngdoc_vite_version`).                                                                                              |
+| `NGDOC_VITE_ANGULAR_VERSION`        | `@angular/compiler-cli` and `@angular/build` are from different Angular releases, or missing (`*TroubleshootingPage#ngdoc_vite_angular_version`).                                                         |
+| `NGDOC_VITE_WATCH_CAPACITY`         | The plugin needs more watch targets than allowed (`*TroubleshootingPage#ngdoc_vite_watch_capacity`).                                                                                                      |
+| `NGDOC_VITE_RESTART_REQUIRED`       | A setting that needs a restart changed (`*TroubleshootingPage#ngdoc_vite_restart_required`).                                                                                                              |
+| `NGDOC_VITE_HOST_TIMEOUT`           | A hot update didn't settle within 30 seconds, usually while thousands of files changed at once. Only the first one of a burst is logged, then a summary (`*TroubleshootingPage#ngdoc_vite_host_timeout`). |
+| `NGDOC_VITE_OUTPUT_LEASE`           | Another plugin instance in the same Vite process already uses the same project or generated folder (`*TroubleshootingPage#ngdoc_vite_output_lease`).                                                      |
+| `NGDOC_VITE_BUILD_WATCH`            | `vite build --watch` isn't supported.                                                                                                                                                                     |
+| `NGDOC_VITE_WATCH_DISABLED`         | `server.watch` is disabled.                                                                                                                                                                               |
+| `NGDOC_VITE_HMR_DISABLED`           | `server.hmr` is disabled.                                                                                                                                                                                 |
+| `NGDOC_VITE_THEME_MODULE`           | A Shiki theme other than the built-in ones has no entry in `themeModules`.                                                                                                                                |
+| `NGDOC_VITE_ANGULAR_COMPATIBILITY`  | The Angular plugins don't come from `createNgDocAngularPlugins`.                                                                                                                                          |
+| `NGDOC_VITE_ANGULAR_OPTIONS`        | `createNgDocAngularPlugins` got an unsupported option value.                                                                                                                                              |
+| `NGDOC_VITE_ANGULAR_MODE`           | The plugins run in test mode (`NODE_ENV=test` or `VITEST`).                                                                                                                                               |
+| `NGDOC_VITE_ANGULAR_BUILD`          | `createNgDocAngularPlugins` was loaded from source instead of the built `@ng-doc/builder` package.                                                                                                        |
+| `NGDOC_VITE_ANGULAR_COMPOSITION`    | The Angular plugin array was changed: it must contain exactly the plugins that `createNgDocAngularPlugins` returns.                                                                                       |
+| `NGDOC_VITE_ANGULAR_PROBE`          | `angularComponentProbe` can't be read, or Angular didn't compile it. Point it to a component that the application always compiles.                                                                        |
+| `NGDOC_VITE_UNRESOLVED_IMPORT`      | Vite can't resolve an import in development; the message names it. Check the tsconfig `paths`, or add a Vite `resolve.alias`.                                                                             |
+| `NGDOC_VITE_APPLICATION_OPTION`     | `createNgDocApplicationPlugin` got an option of an `angular.json` build target. The message names its Vite or Analog equivalent.                                                                          |
+| `NGDOC_VITE_SERVER_ENTRY`           | The server bundle or prerendering was requested, but `createNgDocApplicationPlugin` has no `server` entry.                                                                                                |
+| `NGDOC_VITE_OPTION_REMOVED`         | The plugin got `maxContentRequests`, which was removed with the virtual content mode. Remove the option.                                                                                                  |
+| `NGDOC_DEVELOPMENT_CONTENT_REMOVED` | `generator.developmentContent: 'virtual'` was removed. Remove the option.                                                                                                                                 |
 
 ### Prerendering
 

@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -16,16 +17,21 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NgDocKindIconComponent } from '@ng-doc/app/components/kind-icon';
-import { isPlaygroundProperty } from '@ng-doc/app/helpers';
+import { isPlaygroundProperty, resolvePlaygroundOption } from '@ng-doc/app/helpers';
 import {
   NgDocProvidedTypeControl,
   NgDocTypeControl,
   NgDocTypeControlProviderOptions,
 } from '@ng-doc/app/interfaces';
 import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes';
-import { extractValueOrThrow } from '@ng-doc/core/helpers/extract-value';
-import { NgDocPlaygroundContent, NgDocPlaygroundProperty } from '@ng-doc/core/interfaces';
+import {
+  NgDocPlaygroundContent,
+  NgDocPlaygroundOption,
+  NgDocPlaygroundProperty,
+} from '@ng-doc/core/interfaces';
 import { NgDocLabelComponent, NgDocTooltipDirective } from '@ng-doc/ui-kit';
+
+let nextId = 0;
 
 /** Value types that have a chip colour. */
 const CHIP_TYPES: ReadonlySet<string> = new Set([
@@ -51,6 +57,7 @@ const CHIP_TYPES: ReadonlySet<string> = new Set([
     NgDocTooltipDirective,
     NgDocSanitizeHtmlPipe,
     NgDocKindIconComponent,
+    NgTemplateOutlet,
   ],
   host: {
     '[attr.data-has-property-control]': 'hasPropertyControl()',
@@ -92,29 +99,41 @@ export class NgDocPlaygroundPropertyComponent {
   /** The value type shown as a chip under the name, or an empty string. */
   protected readonly typeChip: Signal<string> = computed(() => valueType(this.property()));
 
-  private readonly propertyOutlet = viewChild.required('propertyOutlet', {
-    read: ViewContainerRef,
-  });
+  /** Whether the row is a `<label>` around the control, unless its provider opts out. */
+  protected readonly labelWrapper: Signal<boolean> = computed(
+    () => this.option()?.labelWrapper !== false,
+  );
+
+  /** ID of the caption that names the control of a row without the `<label>`. */
+  protected readonly captionId: string = `ng-doc-playground-property-caption-${nextId++}`;
+
+  // The outlet is in the `<label>` or in the `<div>` of the row, so the query follows the branch.
+  private readonly propertyOutlet = viewChild('propertyOutlet', { read: ViewContainerRef });
 
   private propertyTypeControl?: ComponentRef<NgDocTypeControl>;
 
   constructor() {
     // A plain effect, not an after-render hook: it runs during change detection on the server
-    // too, so server-rendered and prerendered pages include the controls. The outlet is a static
-    // node of this view, so it exists by then. It runs again only when an input it reads changes.
+    // too, so server-rendered and prerendered pages include the controls. The outlet is inside
+    // the row's `@if` branch, so the query reports it once the branch renders, and the effect
+    // runs again then. It also runs again when an input it reads changes.
     effect(() => {
+      const outlet: ViewContainerRef | undefined = this.propertyOutlet();
       const property = this.property();
       const typeControl: NgDocProvidedTypeControl | undefined = this.typeControl();
       const control: FormControl | undefined = this.control();
       const defaultValue: unknown = this.defaultValue();
 
-      untracked(() => this.createControl(property, typeControl, control, defaultValue));
+      if (outlet) {
+        untracked(() => this.createControl(outlet, property, typeControl, control, defaultValue));
+      }
     });
 
     inject(DestroyRef).onDestroy(() => this.propertyTypeControl?.destroy());
   }
 
   private createControl(
+    outlet: ViewContainerRef,
     property: NgDocPlaygroundProperty | NgDocPlaygroundContent | undefined,
     typeControl: NgDocProvidedTypeControl | undefined,
     formControl: FormControl | undefined,
@@ -126,9 +145,7 @@ export class NgDocPlaygroundPropertyComponent {
 
     this.propertyTypeControl?.destroy();
 
-    const control: ComponentRef<NgDocTypeControl> = this.propertyOutlet().createComponent(
-      typeControl.control,
-    );
+    const control: ComponentRef<NgDocTypeControl> = outlet.createComponent(typeControl.control);
 
     this.propertyTypeControl = control;
     setTypeControlField(control, 'name', this.name());
@@ -174,11 +191,11 @@ function valueType(property: NgDocPlaygroundProperty | NgDocPlaygroundContent | 
     return property.type;
   }
 
-  const option: string | undefined = property.options?.[0];
+  const option: string | NgDocPlaygroundOption | undefined = property.options?.[0];
 
   if (option !== undefined) {
     try {
-      const type: string = typeof (property.isManual ? option : extractValueOrThrow(option));
+      const type: string = typeof resolvePlaygroundOption(option, property.isManual).value;
 
       return CHIP_TYPES.has(type) ? type : '';
     } catch {

@@ -179,6 +179,57 @@ describe('render threads', () => {
     expect(renderPoolCounters().thread).toBe(3 * 3 * (tasks().length + LINKS.length));
   }, 120_000);
 
+  it('highlight with the task’s languages as the main thread does, warmed up with them', async () => {
+    const langs = [
+      {
+        name: 'ngdoc-test',
+        scopeName: 'source.ngdoc-test',
+        patterns: [{ match: '\\bhello\\b', name: 'keyword.control.ngdoc-test' }],
+        repository: {},
+      },
+    ];
+    const task: RenderTask = {
+      documents: [{ html: '<pre><code class="language-ngdoc-test">hello world</code></pre>' }],
+      themes,
+      langs,
+    };
+    const main = await renderDocuments(task, () => undefined);
+    expect(JSON.stringify(main)).toContain('language-ngdoc-test');
+    for (const cached of [false, true]) {
+      const highlight = cached ? production() : undefined;
+      const created = createRenderBack({ renderThreads: 1 }, highlight, {
+        themes,
+        langs,
+        cache: cached,
+      })!;
+      created.admit();
+      expect(await created.render(task, new AbortController().signal), `cache ${cached}`).toEqual(
+        main,
+      );
+      await disposeHtmlPool();
+    }
+    expect(renderPoolCounters()).toMatchObject({ main: 0, fallbacks: 0, thread: 2 });
+  }, 120_000);
+
+  it('load every grammar when the task says so, with the same results', async () => {
+    const documents = [
+      { html: '<pre><code class="language-html">&lt;b&gt;{{ x }}&lt;/b&gt;</code></pre>' },
+      { html: '<pre><code class="language-markdown"># a\n```ts\nlet a = 1;\n```</code></pre>' },
+    ];
+    const main = await renderDocuments({ documents, themes }, () => undefined);
+    const created = createRenderBack({ renderThreads: 1 }, undefined, {
+      themes,
+      grammars: 'all',
+      cache: false,
+    })!;
+    created.admit();
+    expect(
+      await created.render({ documents, themes, grammars: 'all' }, new AbortController().signal),
+    ).toEqual(main);
+    expect(await created.render({ documents, themes }, new AbortController().signal)).toEqual(main);
+    expect(renderPoolCounters()).toMatchObject({ main: 0, fallbacks: 0, thread: 2 });
+  }, 120_000);
+
   it('feed the highlight cache in plan order: the same entries and pack as the main thread', async () => {
     const root = mkdtempSync(path.join(tmpdir(), 'ngdoc-pool-pack-'));
     try {

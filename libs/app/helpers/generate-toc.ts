@@ -12,7 +12,10 @@ export function generateToc(container: HTMLElement): NgDocTocItem[] {
 
   const headingElements: HTMLHeadingElement[] = Array.from(
     container.querySelectorAll<HTMLHeadingElement>(headings.join(', ')),
-  ).filter((heading: HTMLHeadingElement) => heading.id);
+  )
+    // Only the open tab of a tab group is on the page, so the headings inside tabs would come and
+    // go with it; they stay out of the table of contents.
+    .filter((heading: HTMLHeadingElement) => heading.id && !heading.closest('ng-doc-tabs'));
 
   const levels: number[] = asArray(new Set(headingElements.map(levelFromTagName).sort()));
 

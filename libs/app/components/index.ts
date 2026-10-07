@@ -5,6 +5,7 @@ export * from '@ng-doc/app/components/command-palette';
 export * from '@ng-doc/app/components/copy-button';
 export * from '@ng-doc/app/components/demo';
 export * from '@ng-doc/app/components/demo-displayer';
+export * from '@ng-doc/app/components/demo-frame';
 export * from '@ng-doc/app/components/demo-pane';
 export * from '@ng-doc/app/components/fullscreen-button';
 export * from '@ng-doc/app/components/fullscreen-toggle';

@@ -10,6 +10,7 @@
     "@ng-doc/ui-kit",
     "@orama/plugin-match-highlight",
     "@orama/stemmers",
-    "mermaid"
+    "mermaid",
+    "shiki"
   ]
 }
