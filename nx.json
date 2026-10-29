@@ -71,6 +71,41 @@
     }
   },
   "defaultProject": "ng-doc",
+  "release": {
+    "projects": ["add", "app", "builder", "core", "keywords-loaders", "ui-kit", "utils"],
+    "projectsRelationship": "fixed",
+    "releaseTag": {
+      "pattern": "v{version}"
+    },
+    "version": {
+      "specifierSource": "prompt",
+      "currentVersionResolver": "git-tag",
+      "fallbackCurrentVersionResolver": "disk",
+      "manifestRootsToUpdate": ["dist/{projectRoot}"],
+      "versionPrefix": "",
+      "versionActionsOptions": {
+        "skipLockFileUpdate": true
+      },
+      "git": {
+        "commit": false,
+        "stageChanges": false,
+        "tag": false
+      }
+    },
+    "changelog": {
+      "workspaceChangelog": {
+        "createRelease": "github",
+        "file": false
+      },
+      "projectChangelogs": false,
+      "git": {
+        "commit": false,
+        "stageChanges": false,
+        "tag": true,
+        "push": true
+      }
+    }
+  },
   "targetDefaults": {
     "build": {
       "dependsOn": ["pre-build"],
@@ -100,6 +135,11 @@
     "@nx/vitest:test": {
       "cache": true,
       "inputs": ["default", "^production"]
+    },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
     }
   },
   "namedInputs": {

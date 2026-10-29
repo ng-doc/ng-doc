@@ -74,18 +74,17 @@ their own targets, `serve-legacy` and `build-legacy`, which build into `dist/app
 
 This is an [Nx](https://nx.dev/) monorepo. Each project has its own `project.json` with its targets.
 
-| Path                       | Package                    | What it is                                                                                       |
-| -------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------ |
-| `libs/app`                 | `@ng-doc/app`              | The Angular UI of a docs site: pages, demos, playgrounds, search, navigation.                    |
-| `libs/ui-kit`              | `@ng-doc/ui-kit`           | The generic Angular UI kit that `@ng-doc/app` is built on.                                       |
-| `libs/core`                | `@ng-doc/core`             | Types and helpers shared by the runtime and the builder, such as `NgDocPage`.                    |
-| `libs/utils`               | `@ng-doc/utils`            | HTML post-processing for the builder: code highlighting and keyword links.                       |
-| `libs/keywords-loaders`    | `@ng-doc/keywords-loaders` | Loaders for external keywords (Angular, RxJS, NgDoc).                                            |
-| `libs/builder`             | `@ng-doc/builder`          | The builders, schematics and both engines. The new engine lives in `libs/builder/generator`.     |
-| `libs/add`                 | `@ng-doc/add`              | The `ng add` schematics.                                                                         |
-| `apps/ng-doc`              | (not published)            | The documentation site, [ng-doc.com](https://ng-doc.com/). Its guides are in `apps/ng-doc/docs`. |
-| `tools/scripts`            | (not published)            | Build, test-runner and local-serve scripts (plain Node ESM).                                     |
-| `plugins/semantic-release` | (not published)            | Custom semantic-release plugins used by the release workflow.                                    |
+| Path                    | Package                    | What it is                                                                                       |
+| ----------------------- | -------------------------- | ------------------------------------------------------------------------------------------------ |
+| `libs/app`              | `@ng-doc/app`              | The Angular UI of a docs site: pages, demos, playgrounds, search, navigation.                    |
+| `libs/ui-kit`           | `@ng-doc/ui-kit`           | The generic Angular UI kit that `@ng-doc/app` is built on.                                       |
+| `libs/core`             | `@ng-doc/core`             | Types and helpers shared by the runtime and the builder, such as `NgDocPage`.                    |
+| `libs/utils`            | `@ng-doc/utils`            | HTML post-processing for the builder: code highlighting and keyword links.                       |
+| `libs/keywords-loaders` | `@ng-doc/keywords-loaders` | Loaders for external keywords (Angular, RxJS, NgDoc).                                            |
+| `libs/builder`          | `@ng-doc/builder`          | The builders, schematics and both engines. The new engine lives in `libs/builder/generator`.     |
+| `libs/add`              | `@ng-doc/add`              | The `ng add` schematics.                                                                         |
+| `apps/ng-doc`           | (not published)            | The documentation site, [ng-doc.com](https://ng-doc.com/). Its guides are in `apps/ng-doc/docs`. |
+| `tools/scripts`         | (not published)            | Build, test-runner and local-serve scripts (plain Node ESM).                                     |
 
 ## The two engines
 
@@ -282,10 +281,12 @@ everyone who works on it later.
 
 ## Releases
 
-Releases are automated with semantic-release, and only maintainers trigger them. Only `feat`, `fix`,
-`perf` and `revert` commits produce a release, which is why the commit format matters. Maintainers
-publish stable releases from the `release` branch and prereleases from `beta`; both are fed from
-`main` by the `create-release` and `create-beta` workflows.
+Only maintainers release. They run the **📦 Release** workflow from `main` with the exact version
+to publish (a dry run first), and Nx Release publishes every package with that version and writes
+the release notes from the commits since the previous release, which is why the commit format
+matters. Prereleases are `X.Y.Z-beta.N` versions on the `beta` dist-tag, and an older line gets
+fixes from an `N.x` maintenance branch. The steps are in the developer skill
+(`.agents/skills/ng-doc-developer/references/releasing.md`).
 
 ## 💬 Getting help
 

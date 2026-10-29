@@ -1,65 +1,121 @@
 name: 📦 Release
 
+# Releases the seven @ng-doc packages with one version, set by hand: the `version` input is the
+# exact version to publish, never derived from commits. Runs from `main`, or from an `N.x`
+# maintenance branch for an older line. A dry run (the default) builds everything and prints the
+# version, the changelog and every package's tarball, and publishes, tags and releases nothing.
+
 on:
-  push:
-    branches:
-      - release
-      - beta
-      - '*.x'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Exact version to release, for example 22.2.0 or 22.2.0-beta.1'
+        required: true
+        type: string
+      dry-run:
+        description: 'Print the version, changelog and tarballs only (publish nothing)'
+        required: true
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  CI: 'true'
+  NX_DAEMON: 'false'
+  NX_NO_CLOUD: 'true'
+  NX_TUI: 'false'
 
 jobs:
-  lint:
-    uses: ./.github/workflows/lint.yml
-    with:
-      head: ${GITHUB_REF##*/}
-  test:
-    uses: ./.github/workflows/test.yml
-    with:
-      head: ${GITHUB_REF##*/}
-
   release:
+    name: Release ${{ inputs.version }}${{ inputs.dry-run && ' (dry run)' || '' }}
     runs-on: ubuntu-latest
-    needs: [lint, test]
-    # id-token: npm trusted publishing (OIDC). Git and GitHub steps use the SEMANTIC_RELEASE token.
+    timeout-minutes: 40
     permissions:
-      contents: read
+      # The release tag and the GitHub release.
+      contents: write
+      # npm trusted publishing (OIDC), with provenance.
       id-token: write
+    outputs:
+      deploy: ${{ steps.plan.outputs.deploy }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
+          # The changelog starts at the previous release tag, which needs the history and tags.
           fetch-depth: 0
-          token: ${{ secrets.SEMANTIC_RELEASE }}
+          fetch-tags: true
 
-      - run: git fetch origin ${{ inputs.base }}
+      - uses: ./.github/actions/nodejs
 
-      - name: Setup Node.js
-        uses: ./.github/actions/nodejs
+      - name: Plan the release
+        id: plan
+        env:
+          VERSION: ${{ inputs.version }}
+          BRANCH: ${{ github.ref_name }}
+          REF_TYPE: ${{ github.ref_type }}
+        run: node tools/scripts/release-plan.mjs >> "$GITHUB_OUTPUT"
 
-      - name: Build Libraries
-        run: pnpm exec nx run-many --projects=tag:type:lib --target=build --configuration=ci --parallel
+      - name: Build the packages
+        run: pnpm exec nx run-many --target=build --projects=tag:type:lib --parallel=1 --skipNxCache
 
-      # ng-doc.com is built with the Vite engine (the site's `build` target), from the libraries
-      # built above. It skips the Nx cache, so every release builds the site from scratch.
-      - name: Build Documentation
+      # ng-doc.com is built with the Vite engine from the packages built above, and deployed after
+      # a stable release from main.
+      - name: Build the documentation
+        if: steps.plan.outputs.deploy == 'true'
         run: |
           pnpm exec nx run ng-doc:link-libs --excludeTaskDependencies
           pnpm exec nx run ng-doc:build --excludeTaskDependencies --skipNxCache
+          tar -cf ng-doc.tar dist/apps/ng-doc/browser
 
-      - name: Build Applications
-        run: pnpm exec nx run-many --projects='tag:type:app,!ng-doc' --target=build --configuration=ci --parallel
-
-      # deploy.yml syncs dist/apps/ng-doc/browser from the tar.
-      - name: Tar Artifacts
-        run: tar -cvf ng-doc.tar dist/apps/ng-doc/browser
-
-      - name: Uploading Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: artifacts
-          path: ng-doc.tar
-
-      - name: Release
+      # Writes the version into the built manifests (dist/libs/*) only: nothing in the repository
+      # changes, so there is no release commit.
+      - name: Version the packages
+        run: |
+          pnpm exec nx release version "$VERSION"
+          node tools/scripts/release-manifests.mjs
         env:
-          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE }}
-        run: pnpm exec semantic-release
+          VERSION: ${{ inputs.version }}
+
+      - name: Show the tarballs
+        run: |
+          for package in core utils ui-kit keywords-loaders builder app add; do
+            npm pack --dry-run "./dist/libs/$package"
+          done
+
+      # pnpm publishes with npm trusted publishing (the OIDC token of this job) and attaches a
+      # provenance attestation to each package.
+      - name: Publish
+        run: pnpm exec nx release publish --tag "$DIST_TAG" ${{ inputs.dry-run && '--dry-run' || '' }}
+        env:
+          DIST_TAG: ${{ steps.plan.outputs.dist-tag }}
+
+      # After publishing, so that a failed publish leaves no tag. Creates and pushes the tag
+      # v<version> and the GitHub release with the generated notes.
+      - name: Tag and GitHub release
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          pnpm exec nx release changelog "$VERSION" ${{ inputs.dry-run && '--dry-run' || '' }}
+        env:
+          VERSION: ${{ inputs.version }}
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: steps.plan.outputs.deploy == 'true' && !inputs.dry-run
+        with:
+          name: site
+          path: ng-doc.tar
+          if-no-files-found: error
+          retention-days: 3
+
+  deploy:
+    name: Deploy ng-doc.com
+    needs: release
+    if: needs.release.outputs.deploy == 'true' && !inputs.dry-run
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit

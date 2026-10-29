@@ -25,6 +25,7 @@ This skill is the single source of truth for agents working here. It is register
 | Generator tests, runner, coverage gates                                          | `libs/builder/generator/**/testing`, `tools/scripts/check-builder-modernization.mjs`      | [builder-testing.md](references/builder-testing.md)                   |
 | Builders, hosts, legacy engine, shared builder code                              | `libs/builder/{engine,application,dev-server,templates,helpers,schematics}`               | [builder-legacy-and-hosts.md](references/builder-legacy-and-hosts.md) |
 | Safety rules: shared `dist`, generated files, processes                          | everywhere                                                                                | [agent-safety.md](references/agent-safety.md)                         |
+| Releases: versions, dist-tags, the release workflow, release notes               | `nx.json` (`release`), `.github/workflows/release.yml`, `tools/scripts/release-*.mjs`     | [releasing.md](references/releasing.md)                               |
 
 Reference paths are relative to this skill's directory, `.agents/skills/ng-doc-developer/`.
 
@@ -37,6 +38,7 @@ Before you edit, read [agent-safety.md](references/agent-safety.md) and [code-st
 - **Components, directives, pipes, services or styles in `libs/app` or `libs/ui-kit`, or the `ng add` schematics in `libs/add`:** read [angular-libraries.md](references/angular-libraries.md).
 - **Pages, demos, playgrounds, keywords or API docs, or a new author-facing feature:** read [docs-app.md](references/docs-app.md).
 - **Running, building or serving anything:** read [repo-and-commands.md](references/repo-and-commands.md).
+- **Releases, versions, dist-tags, release notes or the release workflow:** read [releasing.md](references/releasing.md).
 
 ## Global rules
 

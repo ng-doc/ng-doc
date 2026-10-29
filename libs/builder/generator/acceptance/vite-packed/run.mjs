@@ -8,8 +8,8 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { promisify } from 'node:util';
 
-import { prepare } from '../../../../../plugins/semantic-release/update-dependencies.js';
 import { pnpmLockfileProject } from '../../../../../tools/scripts/generator-build-spec.mjs';
+import { pinLocalDependencies } from '../../../../../tools/scripts/release-manifests.mjs';
 
 const execute = promisify(execFile);
 const harness = path.dirname(fileURLToPath(import.meta.url));
@@ -115,8 +115,8 @@ try {
     ),
   );
   const versions = [...new Set(Object.values(manifestsBefore).map((manifest) => manifest.version))];
-  assert.deepEqual(versions, ['0.0.1'], 'Packed snapshot versions must agree before prepare.');
-  prepare({ packages: packageDirs }, { logger: { log: () => undefined } });
+  assert.deepEqual(versions, ['0.0.1'], 'Packed snapshot versions must agree before pinning.');
+  pinLocalDependencies(packageDirs);
   const manifestsAfter = Object.fromEntries(
     await Promise.all(
       packageNames.map(async (name) => [

@@ -18,17 +18,6 @@
         "commands": []
       }
     },
-    "publish": {
-      "executor": "nx:run-commands",
-      "dependsOn": [
-        {
-          "target": "build"
-        }
-      ],
-      "options": {
-        "command": "node tools/scripts/publish.mjs utils {args.ver} {args.tag}"
-      }
-    },
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]

@@ -46,7 +46,7 @@ To change generated output, change the generator, its templates (`libs/builder/t
 ## Dependencies, versions and publishing
 
 - **Pinned tooling:** don't change `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, Node, Angular, Nx, TypeScript, Vite, Vitest or Analog versions unless the task is that upgrade. The generator build records the toolchain and lockfile digests, and Analog compatibility is pinned per version.
-- **Never publish or deploy:** no `npm publish`, `nx run <project>:publish`, release-branch merges or deploy workflows unless the user explicitly asks.
+- **Never publish or deploy:** no `npm publish`, `nx release` (except with `--dry-run`), release workflow runs, tags or deploy workflows unless the user explicitly asks.
 - **Git:** don't commit, push, rewrite history or switch branches unless asked. Leave unrelated working-tree changes untouched.
 
 ## Tests and results

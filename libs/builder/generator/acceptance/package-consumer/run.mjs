@@ -7,7 +7,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { prepare } from '../../../../../plugins/semantic-release/update-dependencies.js';
+import { pinLocalDependencies } from '../../../../../tools/scripts/release-manifests.mjs';
 
 // The consumer installs with npm on purpose: this check covers npm consumers (npm's hoisted
 // node_modules and its lockfile). The packed Vite check (vite-packed) installs with pnpm.
@@ -300,10 +300,7 @@ try {
     );
   const before = await readManifests();
   assert.deepEqual([...new Set(Object.values(before).map(({ version }) => version))], ['0.0.1']);
-  prepare(
-    { packages: names.map((name) => path.join(snapshot, name)) },
-    { logger: { log: () => undefined } },
-  );
+  pinLocalDependencies(names.map((name) => path.join(snapshot, name)));
   const after = await readManifests();
   summary.releasePreparation = {
     snapshotOnly: true,
