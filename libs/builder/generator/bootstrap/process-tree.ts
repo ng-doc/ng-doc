@@ -20,7 +20,7 @@ export interface WindowsSpawnPlan {
 export interface WindowsCommandOptions {
   readonly cwd: string;
   readonly env: NodeJS.ProcessEnv;
-  /** The Node that starts `ng`, `npm` and `npx` directly; `process.execPath` by default. */
+  /** The Node that starts `ng`, `npm`, `npx` and Corepack's pnpm; `process.execPath` by default. */
   readonly execPath?: string;
   /** @internal Test port. */
   readonly isFile?: (file: string) => boolean;
@@ -93,22 +93,27 @@ export function quoteWindowsArgument(value: string, twice: boolean = false): str
 }
 
 /**
- * The JavaScript entry of `ng`, `npm` or `npx` given as a bare name: the Angular CLI of the
- * project (the nearest `node_modules/@angular/cli` above `cwd`), and the npm beside `execPath`
- * (the Windows Node layout). Undefined for any other command, or when the entry is missing.
+ * The JavaScript entry of `ng`, `npm`, `npx`, `pnpm` or `pnpx` given as a bare name: the Angular
+ * CLI of the project (the nearest `node_modules/@angular/cli` above `cwd`), the npm beside
+ * `execPath` (the Windows Node layout), and Corepack's pnpm beside `execPath` when the command
+ * resolves to Corepack's shim there. Undefined for any other command, or when the entry is missing.
  */
 export function nodeEntry(command: string, options: WindowsCommandOptions): string | undefined {
   const exists = options.isFile ?? isFile;
-  const name = /^(ng|npm|npx)(?:\.cmd)?$/i.exec(command)?.[1]?.toLowerCase();
+  const name = /^(ng|npm|npx|pnpm|pnpx)(?:\.cmd)?$/i.exec(command)?.[1]?.toLowerCase();
   if (!name) return undefined;
+  const nodeDirectory = path.win32.dirname(options.execPath ?? process.execPath);
+  if (name === 'pnpm' || name === 'pnpx') {
+    // Only `corepack enable` writes a pnpm shim beside Node. Any other pnpm the command resolves
+    // to (a standalone pnpm.exe, a global npm install) is a different program and runs as itself.
+    const shim = resolveWindowsCommand(name, options);
+    if (!shim || path.win32.dirname(shim).toLowerCase() !== nodeDirectory.toLowerCase())
+      return undefined;
+    const entry = path.win32.join(nodeDirectory, 'node_modules', 'corepack', 'dist', `${name}.js`);
+    return exists(entry) ? entry : undefined;
+  }
   if (name !== 'ng') {
-    const entry = path.win32.join(
-      path.win32.dirname(options.execPath ?? process.execPath),
-      'node_modules',
-      'npm',
-      'bin',
-      `${name}-cli.js`,
-    );
+    const entry = path.win32.join(nodeDirectory, 'node_modules', 'npm', 'bin', `${name}-cli.js`);
     return exists(entry) ? entry : undefined;
   }
   for (let directory = path.win32.resolve(options.cwd); ; ) {
@@ -122,8 +127,8 @@ export function nodeEntry(command: string, options: WindowsCommandOptions): stri
 
 /**
  * How to start `command` with `args` on Windows without a shell of the user's choosing:
- * - `ng`, `npm` and `npx` through Node itself (their JavaScript entry, see {@link nodeEntry}),
- *   with the arguments as an array, so no `cmd.exe` parses them;
+ * - `ng`, `npm`, `npx` and Corepack's `pnpm` and `pnpx` through Node itself (their JavaScript
+ *   entry, see {@link nodeEntry}), with the arguments as an array, so no `cmd.exe` parses them;
  * - an executable directly;
  * - any other `.cmd` or `.bat` file through `cmd.exe /d /s /c` with every argument quoted. An
  *   argument that quoting cannot protect there (`"`, `%`, `!`, CR or LF) is refused with an error
