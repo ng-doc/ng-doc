@@ -5,6 +5,7 @@ import {
   readFileSync,
   realpathSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -28,11 +29,20 @@ const version = (name: string, from = modules) =>
       readFileSync(path.resolve(import.meta.dirname, from, name, 'package.json'), 'utf8'),
     ) as { version: string }
   ).version;
+/**
+ * The real directory of `name` as Node resolves it from the package directory `from` upwards. A
+ * package linked into a store (pnpm) finds its dependencies beside its real copy.
+ */
+const directory = (name: string, from: string): string => {
+  for (let current = realpathSync(path.resolve(import.meta.dirname, from)); ; ) {
+    const candidate = path.join(current, 'node_modules', name);
+    if (existsSync(path.join(candidate, 'package.json'))) return realpathSync(candidate);
+    if (path.dirname(current) === current) throw new Error(`${name} does not resolve`);
+    current = path.dirname(current);
+  }
+};
 /** The version of `name` from the package directory `from` upwards, as Node resolves it. */
-const resolved = (name: string, from: string): string =>
-  existsSync(path.resolve(import.meta.dirname, from, 'node_modules', name, 'package.json'))
-    ? version(name, `${from}/node_modules`)
-    : version(name);
+const resolved = (name: string, from: string): string => version('.', directory(name, from));
 
 test('names the versions this process loads, Shiki from the plugin that loads it, once per process', () => {
   const packages = runtimePackages();
@@ -42,15 +52,16 @@ test('names the versions this process loads, Shiki from the plugin that loads it
   // that Shiki resolves.
   const shiki = `${modules}/@shikijs/rehype`;
   expect(packages['shiki']).toBe(resolved('shiki', shiki));
+  const loaded = directory('shiki', shiki);
   for (const name of [
     '@shikijs/core',
     '@shikijs/langs',
     '@shikijs/themes',
     '@shikijs/engine-oniguruma',
   ])
-    expect(packages[name], name).toBe(resolved(name, `${modules}/shiki`));
+    expect(packages[name], name).toBe(resolved(name, loaded));
   expect(packages['@shikijs/vscode-textmate']).toBe(
-    resolved('@shikijs/vscode-textmate', `${modules}/@shikijs/core`),
+    resolved('@shikijs/vscode-textmate', directory('@shikijs/core', loaded)),
   );
   expect(runtimePackages()).toBe(packages);
   expect(Object.isFrozen(packages)).toBe(true);
@@ -96,4 +107,29 @@ test('resolves upwards and through the package named second, and names null othe
     broken: null,
     null: null,
   });
+});
+
+test('resolves the dependencies of a linked package beside its real copy, as pnpm lays them out', () => {
+  const root = realpathSync(mkdtempSync(path.join(tmpdir(), 'runtime-identity-')));
+  roots.push(root);
+  const write = (directory: string, value: string) => {
+    mkdirSync(path.join(root, directory), { recursive: true });
+    writeFileSync(path.join(root, directory, 'package.json'), value);
+  };
+  // node_modules/host links into the store, where its dependency is a sibling of the real copy.
+  write('node_modules/.pnpm/host@1.0.0/node_modules/host', '{"version":"1.0.0"}');
+  write('node_modules/.pnpm/host@1.0.0/node_modules/inner', '{"version":"2.0.0"}');
+  symlinkSync(
+    path.join(root, 'node_modules/.pnpm/host@1.0.0/node_modules/host'),
+    path.join(root, 'node_modules/host'),
+    'junction',
+  );
+  const from = path.join(root, 'app');
+  mkdirSync(from);
+  expect(packageVersions([['host'], ['inner', 'host']], from)).toEqual({
+    host: '1.0.0',
+    inner: '2.0.0',
+  });
+  // Not linked at the top: only the package that depends on it finds it.
+  expect(packageVersions([['inner']], from)).toEqual({ inner: null });
 });
