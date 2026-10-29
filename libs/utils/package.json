@@ -37,7 +37,9 @@
     "chalk": "5.2.0",
     "shiki": "4.5.0",
     "unified": "11.0.5",
-    "stringify-entities": "4.0.4"
+    "stringify-entities": "4.0.4",
+    "hast-util-is-element": "3.0.0",
+    "unist-util-visit-parents": "6.0.2"
   },
   "publishConfig": {
     "access": "public"
