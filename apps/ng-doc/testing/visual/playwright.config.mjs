@@ -7,9 +7,9 @@ import { defineConfig } from '@playwright/test';
  * Visual harness: compares pages of a running docs site with the Hybrid prototype screenshots.
  *
  * It does not start a server. Serve the site on the library sources first, for example:
- *   NX_DAEMON=false npx nx run ng-doc:serve-legacy:development --excludeTaskDependencies --port 4251 --host 127.0.0.1
+ *   NX_DAEMON=false pnpm nx run ng-doc:serve-legacy:development --excludeTaskDependencies --port 4251 --host 127.0.0.1
  * then run:
- *   NGDOC_VISUAL_BASE_URL=http://127.0.0.1:4251 npm run visual
+ *   NGDOC_VISUAL_BASE_URL=http://127.0.0.1:4251 pnpm visual
  *
  * The reference screenshots are not part of the repository. By default they are read from
  * docs/design/ui-refresh/alternatives/hybrid/screenshots of this checkout (the design deliverable:
@@ -24,7 +24,7 @@ import { defineConfig } from '@playwright/test';
  * - NGDOC_VISUAL_TOLERANCE: allowed share of differing pixels in the first 900 rows (default 0.02).
  * - NGDOC_VISUAL_STRICT=1: fail cases above the tolerance (default: report only).
  * - NGDOC_VISUAL_CHANNEL: browser channel (default `chrome`, the installed Google Chrome); use
- *   `chromium` after `npx playwright install chromium`.
+ *   `chromium` after `pnpm exec playwright install chromium`.
  * - NGDOC_VISUAL_WORKERS: parallel browsers (default 2).
  */
 const here = dirname(fileURLToPath(import.meta.url));

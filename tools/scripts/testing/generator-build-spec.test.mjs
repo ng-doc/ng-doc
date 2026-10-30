@@ -31,6 +31,7 @@ import {
   generatorEntryPointMap,
   generatorSourceInventory,
   localModuleClosure,
+  pnpmLockfileProject,
   snapshotGeneratorInputs,
 } from '../generator-build-spec.mjs';
 
@@ -55,8 +56,17 @@ async function workspace(t) {
     JSON.stringify({ version: '1.0.0', dependencies: { nunjucks: '^3' } }),
   );
   await write(
-    'package-lock.json',
-    JSON.stringify({ packages: { 'node_modules/nunjucks': { version: '3.2.4' } } }),
+    'pnpm-lock.yaml',
+    [
+      "lockfileVersion: '9.0'",
+      'importers:',
+      '  .:',
+      '    dependencies:',
+      '      nunjucks:',
+      '        specifier: 3.2.4',
+      '        version: 3.2.4(chokidar@5.0.0)',
+      '',
+    ].join('\n'),
   );
   await write('libs/builder/generator/contracts.ts', 'export const contracts = 1;\n');
   await write('libs/builder/generator/vite/restore-theme.js', 'restore();\n');
@@ -299,7 +309,7 @@ test('the repository inventory covers templates and copied assets; its digest is
 
   const { root: snapshot } = await temporary(t, 'ngdoc-generator-snapshot-');
   const copied = [];
-  for (const file of [...files, 'package-lock.json']) {
+  for (const file of [...files, 'pnpm-lock.yaml']) {
     await mkdir(path.dirname(path.join(snapshot, file)), { recursive: true });
     try {
       await copyFile(path.join(REPOSITORY, file), path.join(snapshot, file));
@@ -307,7 +317,7 @@ test('the repository inventory covers templates and copied assets; its digest is
       if (error.code === 'ENOENT') continue; // deleted after the walk: not part of the snapshot
       throw error;
     }
-    if (file !== 'package-lock.json') copied.push(file);
+    if (file !== 'pnpm-lock.yaml') copied.push(file);
   }
   const first = await computeGeneratorDigests(snapshot);
   const second = await computeGeneratorDigests(snapshot);
@@ -389,8 +399,8 @@ test('the input snapshot holds exactly the inventory and the lockfile, links nod
   assert.deepEqual(files, await generatorSourceInventory(root));
   assert.deepEqual(await generatorSourceInventory(snapshot), files);
   assert.equal(
-    await readFile(path.join(snapshot, 'package-lock.json'), 'utf8'),
-    await readFile(path.join(root, 'package-lock.json'), 'utf8'),
+    await readFile(path.join(snapshot, 'pnpm-lock.yaml'), 'utf8'),
+    await readFile(path.join(root, 'pnpm-lock.yaml'), 'utf8'),
   );
   assert.ok(
     (await lstat(path.join(snapshot, 'node_modules'))).isSymbolicLink(),
@@ -412,13 +422,59 @@ test('the input snapshot holds exactly the inventory and the lockfile, links nod
   );
 });
 
+test('the dependency tuple takes the root importer versions from pnpm-lock.yaml', async (t) => {
+  const { root, write } = await workspace(t);
+  const first = await computeGeneratorDigests(root);
+  // The peer suffix pnpm appends to a resolved version is not part of the version.
+  assert.deepEqual(first.tuple, { nunjucks: '3.2.4' });
+  // A dependency the lockfile does not resolve keeps its manifest range.
+  await write(
+    'libs/builder/package.json',
+    JSON.stringify({ version: '1.0.0', dependencies: { nunjucks: '^3', 'not-locked': '^1' } }),
+  );
+  const second = await computeGeneratorDigests(root);
+  assert.deepEqual(second.tuple, { 'not-locked': '^1', nunjucks: '3.2.4' });
+  assert.equal(second.lockfileDigest, first.lockfileDigest);
+  assert.notEqual(second.toolchainDigest, first.toolchainDigest);
+  // Any lockfile change, even one that leaves the tuple as it is, changes the toolchain.
+  await write('pnpm-lock.yaml', `${await readFile(path.join(root, 'pnpm-lock.yaml'), 'utf8')}\n`);
+  const third = await computeGeneratorDigests(root);
+  assert.deepEqual(third.tuple, second.tuple);
+  assert.notEqual(third.lockfileDigest, second.lockfileDigest);
+  assert.notEqual(third.toolchainDigest, second.toolchainDigest);
+});
+
+test('the dependency tuple reads the project document of a lockfile that also locks pnpm', async (t) => {
+  const { root, write } = await workspace(t);
+  const project = await readFile(path.join(root, 'pnpm-lock.yaml'), 'utf8');
+  await write(
+    'pnpm-lock.yaml',
+    [
+      '---',
+      "lockfileVersion: '9.0'",
+      'importers:',
+      '  .:',
+      '    packageManagerDependencies:',
+      '      nunjucks:',
+      '        specifier: 9.9.9',
+      '        version: 9.9.9',
+      '',
+      '---',
+      project,
+    ].join('\n'),
+  );
+  assert.deepEqual((await computeGeneratorDigests(root)).tuple, { nunjucks: '3.2.4' });
+  assert.equal(pnpmLockfileProject(''), null);
+  assert.throws(() => pnpmLockfileProject('a: [\n'));
+});
+
 test('an input that disappears while it is snapshotted fails the build', async (t) => {
   const { root } = await workspace(t);
   const { root: scratch } = await temporary(t, 'ngdoc-generator-snapshot-');
-  await rm(path.join(root, 'package-lock.json'));
+  await rm(path.join(root, 'pnpm-lock.yaml'));
   await assert.rejects(
     snapshotGeneratorInputs(root, path.join(scratch, 'snapshot')),
-    /disappeared while it was being snapshotted: package-lock\.json/,
+    /disappeared while it was being snapshotted: pnpm-lock\.yaml/,
   );
 });
 

@@ -28,7 +28,9 @@ Everyone taking part agrees to follow our [Code of Conduct](CODE_OF_CONDUCT.md).
 ## Prerequisites
 
 - **Node.js 24**, version `>=24.15.0 <25`. NgDoc's builder requires it, and CI uses 24.19.0.
-- **npm**, which comes with Node. The repository uses the committed `package-lock.json`.
+- **pnpm**, through Corepack, which comes with Node 24: run `corepack enable pnpm` once. Corepack
+  then runs the pnpm version that `packageManager` in `package.json` names. The repository uses the
+  committed `pnpm-lock.yaml`.
 - **Git.**
 - **Linux, macOS or Windows.** CI runs on Linux and Windows. A few generator test groups need POSIX
   process groups and run on Linux and macOS only (see [Generator](#generator)).
@@ -48,21 +50,21 @@ Everyone taking part agrees to follow our [Code of Conduct](CODE_OF_CONDUCT.md).
 2. Install the dependencies from the lockfile. This also installs the Git hooks.
 
    ```bash
-   npm ci
+   pnpm install
    ```
 
 3. Run the documentation site with the new engine, then open the URL it prints:
 
    ```bash
-   npx nx serve ng-doc   # or: npm run serve
+   pnpm nx serve ng-doc   # or: pnpm serve
    ```
 
 The documentation site in `apps/ng-doc` is NgDoc's own site, [ng-doc.com](https://ng-doc.com/),
 built with NgDoc, so it is also the best place to try your change. Before it starts the server, the
 `serve` target builds the packages into `dist/libs` and links them into `node_modules/@ng-doc/*`,
 so it works on a fresh clone; later runs take unchanged packages from the Nx cache. The site loads
-the packages from `dist`, so restart it after you change library code. `npx nx build ng-doc` (or
-`npm run build`) builds and prerenders the site into `dist/apps/ng-doc`. The legacy builders have
+the packages from `dist`, so restart it after you change library code. `pnpm nx build ng-doc` (or
+`pnpm build`) builds and prerenders the site into `dist/apps/ng-doc`. The legacy builders have
 their own targets, `serve-legacy` and `build-legacy`, which build into `dist/apps/ng-doc-legacy`.
 
 > **Tip:** in scripts and non-interactive shells, run Nx with
@@ -112,11 +114,11 @@ the behaviour they cover. Don't reformat code you didn't otherwise change.
 Nx:
 
 ```bash
-npx nx test app                          # also: ui-kit, ng-doc, core, utils, keywords-loaders, add, builder
-npx nx test builder -- migrate-to-vite   # pass a Vitest filter after --
-npx nx run app:test-zoneless             # app and ui-kit run their specs again without zone.js
-npx nx run app:test-search-index         # the search index specs
-npm run test                             # every project
+pnpm nx test app                          # also: ui-kit, ng-doc, core, utils, keywords-loaders, add, builder
+pnpm nx test builder -- migrate-to-vite   # pass a Vitest filter after --
+pnpm nx run app:test-zoneless             # app and ui-kit run their specs again without zone.js
+pnpm nx run app:test-search-index         # the search index specs
+pnpm test                             # every project
 ```
 
 <a id="generator"></a>
@@ -160,9 +162,9 @@ node --test tools/scripts/testing/*.test.mjs
 ### Lint and format
 
 ```bash
-npx nx lint <project>   # for example: npx nx lint builder
-npm run lint            # every project
-npx nx format:write     # Prettier
+pnpm nx lint <project>   # for example: pnpm nx lint builder
+pnpm lint            # every project
+pnpm nx format:write     # Prettier
 ```
 
 Prettier uses single quotes, trailing commas and a line length of 100. The pre-commit hook lints and
@@ -175,9 +177,9 @@ CI checks the docs site's search index and keywords against reviewed snapshots i
 or search output on purpose, update the snapshots and commit them with your change:
 
 ```bash
-npx nx run ng-doc:build-legacy
+pnpm nx run ng-doc:build-legacy
 node libs/builder/generator/acceptance/production/source-stamp.mjs dist/apps/ng-doc-legacy/browser
-npx nx run ng-doc:build --excludeTaskDependencies
+pnpm nx run ng-doc:build --excludeTaskDependencies
 node libs/builder/generator/acceptance/production/source-stamp.mjs dist/apps/ng-doc/browser
 NGDOC_PARITY_ACCEPT=1 node libs/builder/generator/acceptance/production/parity.mjs
 ```

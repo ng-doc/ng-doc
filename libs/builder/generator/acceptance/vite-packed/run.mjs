@@ -9,6 +9,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { promisify } from 'node:util';
 
 import { prepare } from '../../../../../plugins/semantic-release/update-dependencies.js';
+import { pnpmLockfileProject } from '../../../../../tools/scripts/generator-build-spec.mjs';
 
 const execute = promisify(execFile);
 const harness = path.dirname(fileURLToPath(import.meta.url));
@@ -21,6 +22,13 @@ const runtime = await mkdtemp(path.join(os.tmpdir(), 'ng-doc-vite-packed-'));
 const snapshot = path.join(runtime, 'packages');
 const consumer = path.join(runtime, 'consumer');
 const summary = { status: 'running', node: process.version, runtime, checks: [], errors: [] };
+// The consumer installs with pnpm, whose strict node_modules layout lets a package resolve only
+// what it declares, so an undeclared dependency of a packed package fails here instead of being
+// hidden by hoisting. The packed-consumer and ng add checks install with npm, for npm consumers.
+// Corepack runs the pnpm version the workspace pins, named in the consumer's packageManager.
+const { packageManager } = JSON.parse(
+  await readFile(path.join(repository, 'package.json'), 'utf8'),
+);
 
 await mkdir(evidence, { recursive: true });
 
@@ -28,7 +36,14 @@ async function run(command, args, cwd, name) {
   try {
     const result = await execute(command, args, {
       cwd,
-      env: { ...process.env, CI: '1', NX_DAEMON: 'false', NX_NO_CLOUD: 'true', NX_TUI: 'false' },
+      env: {
+        ...process.env,
+        CI: '1',
+        NX_DAEMON: 'false',
+        NX_NO_CLOUD: 'true',
+        NX_TUI: 'false',
+        COREPACK_ENABLE_DOWNLOAD_PROMPT: '0',
+      },
       maxBuffer: 30 * 1024 * 1024,
       timeout: 180_000,
     });
@@ -165,6 +180,7 @@ try {
         name: 'ng-doc-packed-vite-consumer',
         private: true,
         type: 'module',
+        packageManager,
         dependencies: Object.fromEntries(
           Object.entries(tarballs).map(([name, file]) => [`@ng-doc/${name}`, `file:${file}`]),
         ),
@@ -191,12 +207,38 @@ try {
       2,
     ),
   );
-  await run('npm', ['install', '--no-audit', '--no-fund'], consumer, 'npm-install');
-  summary.checks.push('fresh npm consumer installed all five actual ng-doc package tarballs');
-  const installedLock = JSON.parse(
-    await readFile(path.join(consumer, 'package-lock.json'), 'utf8'),
+  // pnpm resolves a dependency between the packed packages (an exact version) from the registry,
+  // not from a tarball the consumer names; the overrides point every one at its tarball. pnpm
+  // fails an install whose dependencies run install scripts it was not allowed to run, so the
+  // consumer allows those of the native packages, as an application approves them.
+  await put(
+    'pnpm-workspace.yaml',
+    [
+      'overrides:',
+      ...Object.entries(tarballs).map(([name, file]) => `  '@ng-doc/${name}': 'file:${file}'`),
+      'allowBuilds:',
+      "  '@parcel/watcher': true",
+      '  esbuild: true',
+      '  lmdb: true',
+      '  msgpackr-extract: true',
+      '',
+    ].join('\n'),
   );
-  const rootVite = installedLock.packages['node_modules/vite']?.version ?? '';
+  await run('pnpm', ['install'], consumer, 'pnpm-install');
+  summary.checks.push('fresh pnpm consumer installed all five actual ng-doc package tarballs');
+  const installedLock = pnpmLockfileProject(
+    await readFile(path.join(consumer, 'pnpm-lock.yaml'), 'utf8'),
+  );
+  for (const [name, file] of Object.entries(tarballs))
+    assert.equal(
+      installedLock.importers['.'].dependencies[`@ng-doc/${name}`]?.specifier,
+      `file:${file}`,
+      `@ng-doc/${name} was not installed from its tarball`,
+    );
+  const rootVite = String(installedLock.importers['.'].devDependencies.vite?.version ?? '').replace(
+    /\(.*$/,
+    '',
+  );
   assert.match(rootVite, /^8\.(?:[3-9]|\d{2,})\.\d+$/, `the root Vite is ${rootVite}`);
   summary.checks.push(`the root Vite ${rootVite} is inside the engine's ^8.3.0 next to Vitest`);
 

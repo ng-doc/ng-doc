@@ -5,7 +5,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
 
-import { computeSourceDigest } from '../../../../../tools/scripts/generator-build-spec.mjs';
+import {
+  GENERATOR_LOCKFILE,
+  computeSourceDigest,
+} from '../../../../../tools/scripts/generator-build-spec.mjs';
 
 const root = fileURLToPath(new URL('../../../../../', import.meta.url));
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
@@ -29,7 +32,7 @@ export async function assertGeneratorMatchesSource(generatorRoot = generatorRoot
     'Source no longer matches frozen generator',
   );
   assert.equal(
-    sha(await readFile(path.join(root, 'package-lock.json'))),
+    sha(await readFile(path.join(root, GENERATOR_LOCKFILE))),
     provenance.lockfileDigest,
     'Lock no longer matches frozen generator',
   );
