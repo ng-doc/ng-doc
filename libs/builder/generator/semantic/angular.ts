@@ -313,7 +313,7 @@ export function guideSemantics(
       'Playgrounds must expose an object literal for target analysis',
     );
   const evaluated = values as
-    | { playgrounds?: Record<string, { controls?: JsonValue }> }
+    | { playgrounds?: Record<string, { controls?: JsonValue; isolated?: JsonValue }> }
     | undefined;
   return {
     demos,
@@ -390,6 +390,11 @@ export function guideSemantics(
           delete properties[key];
       }
       const templateInputs = getPlaygroundTemplateInputs(properties);
+      // `isolated: true` in the configuration gives the guide playground pages. The evaluated
+      // value decides; without evaluated values, only a literal `true` counts.
+      const isolated = evaluated
+        ? evaluated.playgrounds?.[id]?.isolated === true
+        : unwrap(expression.getProperty('isolated'))?.getText() === 'true';
       return {
         id,
         target: { source: target.getSourceFile().getFilePath(), exportName: target.getName()! },
@@ -406,6 +411,7 @@ export function guideSemantics(
         ),
         properties: properties as unknown as Record<string, JsonValue>,
         content,
+        ...(isolated ? { isolated: true as const } : {}),
       };
     }),
   };

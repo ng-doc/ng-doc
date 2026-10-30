@@ -1,13 +1,25 @@
 // @ts-nocheck
 import {Routes} from '@angular/router';
+{%- if demos.length or not playgrounds.length %}
 import {NgDocDemoHostComponent} from '@ng-doc/app/demo-app';
+{%- endif %}
+{%- if playgrounds.length %}
+import {NgDocPlaygroundHostComponent} from '@ng-doc/app/components/playground';
+{%- endif %}
 import entry from '{{ entryImport }}';
+{%- if playgrounds.length %}
+import {PLAYGROUND_PROVIDERS} from '{{ playgroundsImport }}';
+{%- endif %}
 
 // The demo pages of one guide: one route per demo, under the page's providers, as the demos have
 // them on the page.
+{%- if playgrounds.length %}
+// Its playground pages: one route per target of each playground, which finds the generated
+// playground classes of the page through PLAYGROUND_PROVIDERS, as the page does.
+{%- endif %}
 const routes: Routes = [{
   path: '',
-  providers: [...(entry.providers ?? [])],
+  providers: [{% if playgrounds.length %}PLAYGROUND_PROVIDERS, {% endif %}...(entry.providers ?? [])],
   children: [
     {%- for demo in demos %}
     {
@@ -15,6 +27,14 @@ const routes: Routes = [{
       component: NgDocDemoHostComponent,
       title: `{{ demo.title | toTemplateString }}`,
       data: {ngDocDemo: entry.demos?.['{{ demo.name }}']},
+    },
+    {%- endfor %}
+    {%- for playground in playgrounds %}
+    {
+      path: '{{ playground.path }}',
+      component: NgDocPlaygroundHostComponent,
+      title: `{{ playground.title | toTemplateString }}`,
+      data: {ngDocPlayground: {{ playground.data | dump }}},
     },
     {%- endfor %}
   ],

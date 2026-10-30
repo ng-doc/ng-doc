@@ -203,17 +203,25 @@ export interface GeneratorConfiguration {
    */
   apiProtectedMembers?: false;
   /**
-   * The demo pages (`isolatedDemos`, `demoApplication`, `demoProviders`). Absent when none of them
-   * is set, so every other configuration keeps its digest, and so is every default field:
+   * The demo pages (`isolatedDemos`, `isolatedPlaygrounds`, `demoApplication`, `demoProviders`).
+   * Absent when none of them is set, so every other configuration keeps its digest, and so is every
+   * default field:
    * - `pages`: `all` builds a demo page for every demo, `none` for none; absent, only the guides
    *   with an isolated demo get them.
    * - `isolated`: `true` when `isolatedDemos` is: every `demo` action shows an iframe by default.
+   * - `playgroundPages`: `all` builds the playground pages of every playground
+   *   (`isolatedPlaygrounds`, or `demoApplication` set); absent, only the guides with an isolated playground get them, and
+   *   no guide does when `pages` is `none`.
+   * - `isolatedPlaygrounds`: `true` when `isolatedPlaygrounds` is: every playground shows its demos
+   *   in iframes by default.
    * - `path`: the URL path of the demo pages, absent for `demo-preview`.
    * - `providers`: the module that `demoProviders` imports.
    */
   demoApplication?: {
     pages?: 'all' | 'none';
     isolated?: true;
+    playgroundPages?: 'all';
+    isolatedPlaygrounds?: true;
     path?: string;
     providers?: FilePath;
   };
@@ -387,6 +395,11 @@ export interface PlaygroundDescriptor {
   /** Existing NgDocPlaygroundProperties shape with JSON-safe values, aliases and model inputs. */
   properties: Record<string, JsonValue>;
   content: Record<string, string>;
+  /**
+   * `true` when the playground's configuration in `ng-doc.page.ts` sets `isolated: true`, so its
+   * guide gets playground pages. Absent otherwise, so every other guide keeps its semantics.
+   */
+  isolated?: true;
 }
 
 export interface GuideSemantics {
@@ -684,6 +697,11 @@ export interface RouteRecord {
   demoModulePath?: string;
   /** The names of the guide's demo pages, in the order of `demos`, with `demoModulePath`. */
   demoNames?: string[];
+  /**
+   * The guide's playground pages relative to its demo route (`playground/<id>/<target>`), with
+   * `demoModulePath`. Only written for a guide that has them.
+   */
+  playgroundPages?: string[];
 }
 
 export interface ApiListRecord {

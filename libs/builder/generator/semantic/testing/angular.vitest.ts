@@ -391,6 +391,49 @@ test('evaluated manual controls retain dependencies and assigned inputs are remo
   });
 });
 
+test('a playground isolated in its configuration is marked, from its evaluated value first', async () => {
+  write(
+    'entry.ts',
+    `import { Demo } from './demo'; const on = true; export default {playgrounds:{
+      literal:{target:Demo,template:'<demo-box></demo-box>',isolated:true},
+      named:{target:Demo,template:'<demo-box></demo-box>',isolated:on},
+      off:{target:Demo,template:'<demo-box></demo-box>',isolated:false},
+      none:{target:Demo,template:'<demo-box></demo-box>'},
+    }};`,
+  );
+  await sync();
+  const marked = (result: ReturnType<typeof service.describeGuide>) =>
+    Object.fromEntries(result.value!.playgrounds.map((item) => [item.id, item.isolated]));
+  // Without evaluated values, a literal `true` counts.
+  const literals = service.describeGuide('guide');
+  expect(literals.diagnostics).toEqual([]);
+  expect(marked(literals)).toEqual({
+    literal: true,
+    named: true,
+    off: undefined,
+    none: undefined,
+  });
+  expect(literals.value!.playgrounds.find((item) => item.id === 'none')).not.toHaveProperty(
+    'isolated',
+  );
+  // With them, the evaluated value decides, whatever the source says.
+  await service.dispose();
+  service = createSemanticService({
+    readGuideValues: () => ({
+      value: { playgrounds: { literal: { controls: {} }, none: { controls: {}, isolated: true } } },
+      dependencies: [],
+      diagnostics: [],
+    }),
+  });
+  await sync();
+  expect(marked(service.describeGuide('guide'))).toEqual({
+    literal: undefined,
+    named: undefined,
+    off: undefined,
+    none: true,
+  });
+});
+
 test('controls label, group and order rows, and an entry without a type keeps the detected control', async () => {
   write(
     'entry.ts',

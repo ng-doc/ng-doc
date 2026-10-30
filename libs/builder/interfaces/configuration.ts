@@ -56,11 +56,19 @@ export interface NgDocConfiguration {
    */
   isolatedDemos?: boolean;
   /**
+   * Renders the demos of every playground in iframes, as `isolated: true` does for one playground
+   * (`false` by default). It also builds the playground pages of every playground. Only the Vite
+   * engine reads it; the legacy engine renders playgrounds in the page.
+   */
+  isolatedPlaygrounds?: boolean;
+  /**
    * The demo pages: one page per demo that loads only Angular and that demo, which isolated demos
-   * show in an iframe and "Open in new tab" opens. Only the Vite engine builds them.
+   * show in an iframe and "Open in new tab" opens, and one page per target of each playground,
+   * which isolated playgrounds show in iframes. Only the Vite engine builds them.
    *
-   * By default only the pages with an isolated demo get them. `true` (or an object) builds them for
-   * every page with demos; `false` never builds them, and isolated demos render in the page.
+   * By default only the pages with an isolated demo or playground get them. `true` (or an object)
+   * builds them for every page with demos or playgrounds; `false` never builds them, and isolated
+   * demos and playgrounds render in the page.
    */
   demoApplication?: boolean | NgDocDemoApplicationConfiguration;
   /**

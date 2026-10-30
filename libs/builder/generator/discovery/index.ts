@@ -75,6 +75,7 @@ interface RawConfiguration extends LiveRecord {
   guide?: { anchorHeadings?: GeneratorConfiguration['anchorHeadings']; headerTemplate?: string };
   api?: { protectedMembers?: boolean };
   isolatedDemos?: unknown;
+  isolatedPlaygrounds?: unknown;
   demoApplication?: unknown;
   demoProviders?: unknown;
   shiki?: { themes?: { light?: string; dark?: string }; langs?: unknown };
@@ -452,7 +453,7 @@ export function createDiscoveryServices(options: DiscoveryOptions = {}): {
 }
 
 /**
- * The live guide values (playground controls) of one evaluated guide page, as JSON.
+ * The live guide values (playground controls and `isolated`) of one evaluated guide page, as JSON.
  * @param entry The page's live default export.
  * @param entryId
  * @param dependencies What the values depend on (the entry's recorded inputs).
@@ -479,8 +480,16 @@ function guideValuesOf(
   try {
     const playgrounds = Object.fromEntries(
       Object.entries(recordOrEmpty(entry['playgrounds'])).map(([id, value]) => {
-        const controls = recordOrEmpty(asRecord(value, `playground ${id}`))['controls'];
-        return [id, { controls: controls === undefined ? {} : assertJson(controls) }];
+        const playground = recordOrEmpty(asRecord(value, `playground ${id}`));
+        const controls = playground['controls'];
+        return [
+          id,
+          {
+            controls: controls === undefined ? {} : assertJson(controls),
+            // Only when set, so every other guide keeps its values and their digest.
+            ...(playground['isolated'] === true ? { isolated: true } : {}),
+          },
+        ];
       }),
     );
     return { value: assertJson({ playgrounds }), dependencies, diagnostics: [] };
@@ -1103,8 +1112,9 @@ function sanitizeDescription(source: string, kind: EntryKind): string {
                 !ts.isObjectLiteralExpression(playground.initializer)
               )
                 return [];
-              const controls = playground.initializer.properties.filter(
-                (item) => propertyName(item) === 'controls',
+              // `isolated` decides which guides get playground pages (guide values).
+              const controls = playground.initializer.properties.filter((item) =>
+                ['controls', 'isolated'].includes(propertyName(item) ?? ''),
               );
               return [
                 context.factory.updatePropertyAssignment(
@@ -1472,7 +1482,8 @@ export const DEFAULT_DEMO_PATH = 'demo-preview';
 const DEMO_PATH_SEGMENT = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
 
 /**
- * `isolatedDemos`, `demoApplication` and `demoProviders` as `GeneratorConfiguration` settings.
+ * `isolatedDemos`, `isolatedPlaygrounds`, `demoApplication` and `demoProviders` as
+ * `GeneratorConfiguration` settings.
  * Undefined when none of them changes a default, so every other configuration keeps its digest.
  */
 function demoApplicationSettings(
@@ -1490,9 +1501,12 @@ function demoApplicationSettings(
     });
     return undefined;
   };
-  const { isolatedDemos, demoApplication, demoProviders } = raw;
+  const { isolatedDemos, isolatedPlaygrounds, demoApplication, demoProviders } = raw;
   if (isolatedDemos !== undefined && typeof isolatedDemos !== 'boolean') {
     return invalid('DISCOVERY_DEMO_APPLICATION_INVALID', 'isolatedDemos must be a boolean.');
+  }
+  if (isolatedPlaygrounds !== undefined && typeof isolatedPlaygrounds !== 'boolean') {
+    return invalid('DISCOVERY_DEMO_APPLICATION_INVALID', 'isolatedPlaygrounds must be a boolean.');
   }
   const configured = demoApplication !== null && typeof demoApplication === 'object';
   if (demoApplication !== undefined && typeof demoApplication !== 'boolean' && !configured) {
@@ -1527,15 +1541,36 @@ function demoApplicationSettings(
       source: { path: source },
     });
   }
+  if (demoApplication === false && isolatedPlaygrounds === true) {
+    diagnostics.push({
+      code: 'DISCOVERY_DEMO_APPLICATION_OFF',
+      severity: 'warning',
+      stage: 'evaluation',
+      message:
+        'isolatedPlaygrounds has no effect while demoApplication is false: playgrounds render in ' +
+        'the page.',
+      source: { path: source },
+    });
+  }
   const pages =
     demoApplication === false
       ? ('none' as const)
       : isolatedDemos === true || demoApplication === true || configured
         ? ('all' as const)
         : undefined;
+  // Playground pages for every playground: the site isolates them all, or asks for every demo
+  // page. `isolatedDemos` alone builds demo pages only, so its sites keep their output.
+  const playgroundPages =
+    pages !== 'none' && (isolatedPlaygrounds === true || demoApplication === true || configured)
+      ? ('all' as const)
+      : undefined;
   const settings = {
     ...(pages ? { pages } : {}),
     ...(isolatedDemos === true && pages !== 'none' ? { isolated: true as const } : {}),
+    ...(playgroundPages ? { playgroundPages } : {}),
+    ...(isolatedPlaygrounds === true && pages !== 'none'
+      ? { isolatedPlaygrounds: true as const }
+      : {}),
     ...(demoPath && demoPath !== DEFAULT_DEMO_PATH ? { path: demoPath } : {}),
     ...(providers ? { providers } : {}),
   };

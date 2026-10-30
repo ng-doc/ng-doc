@@ -130,7 +130,12 @@ const SEMANTICS: GuideSemantics = {
   playgrounds: [],
 };
 
-function assemble(configuration: GeneratorConfiguration, root: string, body: string) {
+function assemble(
+  configuration: GeneratorConfiguration,
+  root: string,
+  body: string,
+  semantics: GuideSemantics = SEMANTICS,
+) {
   const entry = guide(root);
   const content = [
     linked(entry.id, 'header', 'header', '<h1>Start</h1>'),
@@ -139,14 +144,19 @@ function assemble(configuration: GeneratorConfiguration, root: string, body: str
       entry.id,
       'demo-assets',
       'demo-assets',
-      '<ng-doc-demo-assets name="ButtonDemo"><pre>x</pre></ng-doc-demo-assets>',
+      // One element per asset: `<ng-doc-demo-assets name="ButtonDemo">…` for the default demos.
+      Object.entries(semantics.demos)
+        .flatMap(([name, assets]) =>
+          assets.map(() => `<ng-doc-demo-assets name="${name}"><pre>x</pre></ng-doc-demo-assets>`),
+        )
+        .join(''),
     ),
   ];
   const page = createOutputAssembler().assemblePage({
     configuration,
     entry,
     content,
-    semantics: SEMANTICS,
+    semantics,
   });
   const pageArtifact: PageArtifact = {
     id: 'artifact:start',
@@ -380,3 +390,338 @@ const EXPECTED_INDEX =
 
 /** See the first test. */
 const BASE_DIGEST = '452f5ad4bf935a23e51256de5d7c206f22cf957d6b3f05e58dbe20cd976be3dd';
+
+/**
+ * A `playground` action as the content compiler writes it and the HTML pipeline keeps it.
+ */
+function playgroundAction(id: string, selectors: string, options: object): string {
+  const json = JSON.stringify(options).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  return (
+    `<ng-doc-playground id="${id}" indexable="false" class="ngde">` +
+    `<div id="selectors" class="ngde">${selectors}</div><div id="pipeName" class="ngde"></div>` +
+    `<div id="data" class="ngde">{&#x22;label&#x22;:{&#x22;type&#x22;:&#x22;string&#x22;}}</div>` +
+    `<div id="options" class="ngde">${json}</div></ng-doc-playground>`
+  );
+}
+
+function playground(
+  id: string,
+  target: { selector: string } | { pipeName: string },
+  isolated?: true,
+): GuideSemantics['playgrounds'][number] {
+  const keys = 'pipeName' in target ? [target.pipeName] : target.selector.split(',');
+  return {
+    id,
+    target: { source: 'button.ts', exportName: 'Button' },
+    standalone: true,
+    ...target,
+    template: '<ng-doc-selector></ng-doc-selector>',
+    templatesBySelector: Object.fromEntries(keys.map((key) => [key, `<${key}></${key}>`])),
+    properties: { label: { type: 'string' } },
+    content: {},
+    ...(isolated ? { isolated } : {}),
+  };
+}
+
+const BUTTON = 'button[ngDocButton],a[ngDocButton]';
+
+function playgroundSemantics(
+  playgrounds: GuideSemantics['playgrounds'],
+  demos: GuideSemantics['demos'] = SEMANTICS.demos,
+): GuideSemantics {
+  return { demos, playgrounds };
+}
+
+describe('playground pages', () => {
+  // A site that doesn't opt in generates exactly what the engine generated before playground
+  // pages existed: the digest was taken from the base engine (its outputs module and templates,
+  // before isolated playgrounds) with this fixture.
+  test('a site without isolated playgrounds generates the same bytes as before', () => {
+    const { root, configuration } = workspace();
+    const { page, aggregate, outputs } = assemble(
+      configuration,
+      root,
+      `<p>Intro</p>${demoAction('ButtonDemo', { expanded: true })}${playgroundAction(
+        'ButtonPlayground',
+        BUTTON,
+        { isolated: false, selectors: 'button[ngDocButton]' },
+      )}`,
+      playgroundSemantics([
+        playground('ButtonPlayground', { selector: BUTTON }),
+        playground('PipePlayground', { pipeName: 'currency' }),
+      ]),
+    );
+    expect([...page.diagnostics, ...aggregate.diagnostics]).toEqual([]);
+    expect(outputs.map((item) => item.path)).not.toContain('guides/start/demo-routes.ts');
+    expect(outputs.map((item) => item.path)).not.toContain('demo-app.ts');
+    expect(page.routes[0]).not.toHaveProperty('playgroundPages');
+    expect(digest(outputs, root)).toBe(BASE_PLAYGROUND_DIGEST);
+    // With isolated demos only (`isolatedDemos`), the guide gets demo pages and no playground
+    // page: the bytes of the base engine too.
+    const site = workspace({ pages: 'all', isolated: true });
+    const demos = assemble(
+      site.configuration,
+      site.root,
+      `<p>Intro</p>${demoAction('ButtonDemo', { expanded: true })}`,
+      playgroundSemantics([playground('ButtonPlayground', { selector: BUTTON })]),
+    );
+    expect(byPath(demos.outputs, 'guides/start/demo-routes.ts')).not.toContain('playground');
+    expect(digest(demos.outputs, site.root)).toBe(BASE_ISOLATED_DEMOS_DIGEST);
+  });
+
+  test('an isolated playground action gives its guide playground and demo pages', () => {
+    const { root, configuration } = workspace();
+    const { page, aggregate, outputs } = assemble(
+      configuration,
+      root,
+      `<p>Intro</p>${playgroundAction('ButtonPlayground', BUTTON, { isolated: true })}`,
+      playgroundSemantics([
+        playground('ButtonPlayground', { selector: BUTTON }),
+        playground('PipePlayground', { pipeName: 'currency' }),
+      ]),
+    );
+    expect(aggregate.diagnostics).toEqual([]);
+    expect(page.diagnostics.map((item) => item.code)).toEqual(['OUTPUT_DEMO_NAME_INVALID']);
+    expect(page.routes[0].demoModulePath).toBe('guides/start/demo-routes.ts');
+    // The demos of the page get their pages too: the page has a demo route.
+    expect(page.routes[0].demoNames).toEqual(['ButtonDemo']);
+    expect(page.routes[0].playgroundPages).toEqual([
+      'playground/ButtonPlayground/button-ngdocbutton',
+      'playground/ButtonPlayground/a-ngdocbutton',
+      'playground/PipePlayground/currency',
+    ]);
+
+    const routes = byPath(outputs, 'guides/start/demo-routes.ts');
+    expect(routes).toContain("import {NgDocDemoHostComponent} from '@ng-doc/app/demo-app';");
+    expect(routes).toContain(
+      "import {NgDocPlaygroundHostComponent} from '@ng-doc/app/components/playground';",
+    );
+    expect(routes).toContain("import {PLAYGROUND_PROVIDERS} from './playgrounds';");
+    expect(routes).toContain('providers: [PLAYGROUND_PROVIDERS, ...(entry.providers ?? [])],');
+    expect(routes).toContain("path: 'ButtonDemo',");
+    for (const [path, data] of [
+      [
+        'playground/ButtonPlayground/button-ngdocbutton',
+        '{"id":"ButtonPlayground","selector":"button[ngDocButton]"}',
+      ],
+      [
+        'playground/ButtonPlayground/a-ngdocbutton',
+        '{"id":"ButtonPlayground","selector":"a[ngDocButton]"}',
+      ],
+      ['playground/PipePlayground/currency', '{"id":"PipePlayground","pipeName":"currency"}'],
+    ]) {
+      expect(routes).toContain(
+        [
+          `      path: '${path}',`,
+          '      component: NgDocPlaygroundHostComponent,',
+          `      title: \`Start: ${path.split('/')[1]}\`,`,
+          `      data: {ngDocPlayground: ${data}},`,
+        ].join('\n'),
+      );
+    }
+    // Demo routes first, then the playground routes in the order of the playgrounds.
+    expect(routes.indexOf("path: 'ButtonDemo'")).toBeLessThan(routes.indexOf("path: 'playground"));
+
+    const tab = byPath(outputs, 'guides/start/index/page.ts');
+    expect(tab).toContain("readonly demoRoute: string = 'demo-preview/docs/outer/inner/start';");
+    expect(tab).not.toContain('isolatedPlaygrounds');
+    expect(tab).not.toContain('isolatedDemos');
+
+    const application = byPath(outputs, 'demo-app.ts');
+    expect(application).toContain(
+      'export const NG_DOC_DEMO_PAGES: string[] = [' +
+        '"demo-preview/docs/outer/inner/start/ButtonDemo",' +
+        '"demo-preview/docs/outer/inner/start/playground/ButtonPlayground/button-ngdocbutton",' +
+        '"demo-preview/docs/outer/inner/start/playground/ButtonPlayground/a-ngdocbutton",' +
+        '"demo-preview/docs/outer/inner/start/playground/PipePlayground/currency"];',
+    );
+    expect(application).toContain("loadChildren: () => import('./guides/start/demo-routes'),");
+    expect(byPath(outputs, 'index.ts')).toBe(EXPECTED_INDEX);
+    expectValidTypeScript(outputs);
+  });
+
+  test('a playground isolated in the page configuration gives its guide playground pages', () => {
+    const { root, configuration } = workspace();
+    const { page, outputs } = assemble(
+      configuration,
+      root,
+      '<p>No playground action</p>',
+      playgroundSemantics(
+        [
+          playground('ButtonPlayground', { selector: BUTTON }, true),
+          playground('Other', { selector: 'ng-doc-other' }),
+        ],
+        {},
+      ),
+    );
+    expect(page.diagnostics).toEqual([]);
+    expect(page.routes[0].demoNames).toEqual([]);
+    expect(page.routes[0].playgroundPages).toEqual([
+      'playground/ButtonPlayground/button-ngdocbutton',
+      'playground/ButtonPlayground/a-ngdocbutton',
+      'playground/Other/ng-doc-other',
+    ]);
+    // Without demos the routes need no demo host.
+    const routes = byPath(outputs, 'guides/start/demo-routes.ts');
+    expect(routes).not.toContain('NgDocDemoHostComponent');
+    expect(routes).not.toContain('ngDocDemo:');
+    // The page has a demo route for its playground pages alone.
+    expect(byPath(outputs, 'guides/start/index/page.ts')).toContain(
+      "readonly demoRoute: string = 'demo-preview/docs/outer/inner/start';",
+    );
+    expectValidTypeScript(outputs);
+  });
+
+  test('every playground gets pages with the site options, under their path', () => {
+    const { root, configuration } = workspace({
+      playgroundPages: 'all',
+      isolatedPlaygrounds: true,
+      path: 'previews',
+    });
+    const { page, outputs } = assemble(
+      configuration,
+      root,
+      '<p>Text</p>',
+      playgroundSemantics([playground('ButtonPlayground', { selector: 'ng-doc-button' })], {}),
+    );
+    expect(page.routes[0].playgroundPages).toEqual(['playground/ButtonPlayground/ng-doc-button']);
+    const tab = byPath(outputs, 'guides/start/index/page.ts');
+    expect(tab).toContain("readonly demoRoute: string = 'previews/docs/outer/inner/start';");
+    expect(tab).toContain('readonly isolatedPlaygrounds: boolean = true;');
+    expect(tab).not.toContain('isolatedDemos');
+    expect(byPath(outputs, 'demo-app.ts')).toContain(
+      'export const NG_DOC_DEMO_PAGES: string[] = ' +
+        '["previews/docs/outer/inner/start/playground/ButtonPlayground/ng-doc-button"];',
+    );
+    // A guide without playgrounds gets no playground page, even with the site options.
+    const none = assemble(configuration, root, '<p>Text</p>', playgroundSemantics([], {}));
+    expect(none.outputs.map((item) => item.path)).not.toContain('guides/start/demo-routes.ts');
+    expect(byPath(none.outputs, 'guides/start/index/page.ts')).not.toContain('demoRoute');
+  });
+
+  test('no guide gets playground pages when demoApplication is false', () => {
+    const { root, configuration } = workspace({ pages: 'none' });
+    const { outputs } = assemble(
+      configuration,
+      root,
+      playgroundAction('ButtonPlayground', BUTTON, { isolated: true }),
+      playgroundSemantics([playground('ButtonPlayground', { selector: BUTTON }, true)]),
+    );
+    expect(outputs.map((item) => item.path)).not.toContain('guides/start/demo-routes.ts');
+    expect(outputs.map((item) => item.path)).not.toContain('demo-app.ts');
+    expect(byPath(outputs, 'guides/start/index/page.ts')).not.toContain('demoRoute');
+  });
+
+  test('targets take the URL segments of the page, in the order of its selectors', () => {
+    const { root, configuration } = workspace({ playgroundPages: 'all' });
+    const { page, outputs } = assemble(
+      configuration,
+      root,
+      '',
+      playgroundSemantics(
+        [
+          // Empty selectors are left out, as the page leaves them out; equal segments are
+          // numbered in selector order; a selector without letters or digits is `target`.
+          playground('Collide', { selector: "x-y, x_y,,X-Y ,[type='*'], ::" }),
+          playground('Pipe', { pipeName: 'myPipe' }),
+        ],
+        {},
+      ),
+    );
+    expect(page.routes[0].playgroundPages).toEqual([
+      'playground/Collide/x-y',
+      'playground/Collide/x-y-2',
+      'playground/Collide/x-y-3',
+      'playground/Collide/type',
+      'playground/Collide/target',
+      'playground/Pipe/mypipe',
+    ]);
+    const routes = byPath(outputs, 'guides/start/demo-routes.ts');
+    expect(routes).toContain('data: {ngDocPlayground: {"id":"Collide","selector":"x_y"}},');
+    expect(routes).toContain('data: {ngDocPlayground: {"id":"Collide","selector":"X-Y"}},');
+    expect(routes).toContain(
+      'data: {ngDocPlayground: {"id":"Collide","selector":"[type=\'*\']"}},',
+    );
+    expect(routes).toContain('data: {ngDocPlayground: {"id":"Pipe","pipeName":"myPipe"}},');
+    expectValidTypeScript(outputs);
+  });
+
+  test('a demo named like the playground segment, or a playground without a URL name, gets no page', () => {
+    const { root, configuration } = workspace({ playgroundPages: 'all' });
+    const semantics = playgroundSemantics(
+      [
+        playground('Odd playground', { selector: 'ng-doc-odd' }),
+        playground('ButtonPlayground', { selector: 'ng-doc-button' }),
+      ],
+      { playground: [], ButtonDemo: [] },
+    );
+    const { page, outputs } = assemble(configuration, root, '', semantics);
+    expect(page.diagnostics).toEqual([
+      expect.objectContaining({
+        code: 'OUTPUT_PLAYGROUND_NAME_INVALID',
+        severity: 'warning',
+        ownerId: 'guide:start',
+      }),
+      expect.objectContaining({
+        code: 'OUTPUT_DEMO_NAME_RESERVED',
+        severity: 'warning',
+        ownerId: 'guide:start',
+      }),
+    ]);
+    expect(page.routes[0].demoNames).toEqual(['ButtonDemo']);
+    expect(page.routes[0].playgroundPages).toEqual(['playground/ButtonPlayground/ng-doc-button']);
+    expect(byPath(outputs, 'guides/start/demo-routes.ts')).not.toContain('Odd playground');
+
+    // A guide without playground pages keeps the page of such a demo: nothing collides.
+    const other = workspace({ pages: 'all' });
+    const demos = assemble(
+      other.configuration,
+      other.root,
+      '',
+      playgroundSemantics([], { playground: [] }),
+    );
+    expect(demos.page.diagnostics).toEqual([]);
+    expect(demos.page.routes[0].demoNames).toEqual(['playground']);
+  });
+
+  test('reads isolated options only from playground actions, whatever their character references', () => {
+    const { root, configuration } = workspace();
+    const semantics = playgroundSemantics([playground('ButtonPlayground', { selector: BUTTON })]);
+    const isolated = (html: string) =>
+      assemble(configuration, root, html, semantics).outputs.some(
+        (item) => item.path === 'guides/start/demo-routes.ts',
+      );
+    expect(
+      isolated(
+        '<ng-doc-playground id="ButtonPlayground"><div id="selectors">a</div>' +
+          '<div id="options">{&#x22;isolated&#34;:true}</div></ng-doc-playground>',
+      ),
+    ).toBe(true);
+    expect(isolated(playgroundAction('ButtonPlayground', BUTTON, { isolated: 'yes' }))).toBe(false);
+    expect(
+      isolated(
+        '<ng-doc-playground id="ButtonPlayground"><div id="options">{oops</div></ng-doc-playground>',
+      ),
+    ).toBe(false);
+    expect(
+      isolated(
+        '<ng-doc-playground id="ButtonPlayground"><div id="data">{}</div></ng-doc-playground>',
+      ),
+    ).toBe(false);
+    // A demo with the option is no playground: it gives demo pages, without playground pages.
+    const demo = assemble(
+      configuration,
+      root,
+      demoAction('ButtonDemo', { isolated: true }),
+      semantics,
+    );
+    expect(demo.page.routes[0].demoNames).toEqual(['ButtonDemo']);
+    expect(demo.page.routes[0]).not.toHaveProperty('playgroundPages');
+  });
+});
+
+/** See the first playground test: the base engine's bytes of a guide with a playground. */
+const BASE_PLAYGROUND_DIGEST = '1caab32465341b19ab2370b6b22becc0ed64da4154642e1a116baa2c17c3c152';
+/** See the first playground test: the base engine's bytes of a site with isolated demos. */
+const BASE_ISOLATED_DEMOS_DIGEST =
+  'ba2247ec17f5c6d9d9651ab04841a3c012fdc980d8afef133f5a3054ed1a533b';

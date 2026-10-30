@@ -735,6 +735,47 @@ test('provides JSON-only playground controls and the legacy index extension', as
   ]);
 });
 
+test('guide values carry the isolated option of a playground only when it is true', async () => {
+  const f = fixture();
+  const guide = join(f.docs, 'parent', 'child', 'guide', 'ng-doc.page.ts');
+  write(join(f.root, 'isolation.ts'), 'export const isolation = 1 > 0;\n');
+  write(
+    guide,
+    `
+    import Child from '../ng-doc.category';
+    import { isolation } from '../../../../isolation';
+    const Page = {
+      title: 'Guide', category: Child, mdFile: ['./first.md.nunj', './second.md'],
+      playgrounds: {
+        Computed: { target: class {}, isolated: isolation, template: '<x></x>' },
+        Off: { target: class {}, isolated: false, controls: { label: 'string' } },
+        Text: { target: class {}, isolated: 'yes' },
+      },
+    };
+    export default Page;
+  `,
+  );
+  const service = new DiscoveryServiceImpl();
+  try {
+    const discovery = await service.discover(f.request, new AbortController().signal);
+    expect(discovery.diagnostics).toEqual([]);
+    const entry = discovery.value?.entries.find((item) => item.kind === 'guide');
+    expect(service.readGuideValues(entry!.id).value).toEqual({
+      playgrounds: {
+        Computed: { controls: {}, isolated: true },
+        Off: { controls: { label: 'string' } },
+        Text: { controls: {} },
+      },
+    });
+    // The option's module is part of the guide's evaluation, so an edit of it re-evaluates it.
+    expect(entry!.dependencies).toContainEqual(
+      expect.objectContaining({ kind: 'content', path: hostPath(join(f.root, 'isolation.ts')) }),
+    );
+  } finally {
+    await service.dispose();
+  }
+});
+
 test('bounds synchronous modules/templates, aborts pending loaders on dispose, and owns timers', async () => {
   const f = fixture();
   write(
@@ -1523,10 +1564,19 @@ test('demo page options enter the configuration only when they change a default'
     const cases: Array<[string, unknown]> = [
       ['', undefined],
       [', isolatedDemos: false', undefined],
-      [', demoApplication: { path: "/demo-preview/" }', { pages: 'all' }],
-      [', demoApplication: true', { pages: 'all' }],
-      [', demoApplication: { path: "previews/live" }', { pages: 'all', path: 'previews/live' }],
+      [', isolatedPlaygrounds: false', undefined],
+      [', demoApplication: { path: "/demo-preview/" }', { pages: 'all', playgroundPages: 'all' }],
+      [', demoApplication: true', { pages: 'all', playgroundPages: 'all' }],
+      [
+        ', demoApplication: { path: "previews/live" }',
+        { pages: 'all', playgroundPages: 'all', path: 'previews/live' },
+      ],
       [', isolatedDemos: true', { pages: 'all', isolated: true }],
+      [', isolatedPlaygrounds: true', { playgroundPages: 'all', isolatedPlaygrounds: true }],
+      [
+        ', isolatedDemos: true, isolatedPlaygrounds: true',
+        { pages: 'all', isolated: true, playgroundPages: 'all', isolatedPlaygrounds: true },
+      ],
       [', demoApplication: false', { pages: 'none' }],
     ];
     const digests = new Set<string>();
@@ -1548,6 +1598,23 @@ test('demo page options enter the configuration only when they change a default'
     expect(off.diagnostics).toEqual([
       expect.objectContaining({ code: 'DISCOVERY_DEMO_APPLICATION_OFF', severity: 'warning' }),
     ]);
+
+    write(
+      f.config,
+      `export default { docsPath: '.docs', demoApplication: false, isolatedPlaygrounds: true };`,
+    );
+    const playgroundsOff = await services.discovery.discover(
+      f.request,
+      new AbortController().signal,
+    );
+    expect(playgroundsOff.value!.configuration.demoApplication).toEqual({ pages: 'none' });
+    expect(playgroundsOff.diagnostics).toEqual([
+      expect.objectContaining({
+        code: 'DISCOVERY_DEMO_APPLICATION_OFF',
+        severity: 'warning',
+        message: expect.stringContaining('isolatedPlaygrounds'),
+      }),
+    ]);
   } finally {
     await services.runtime.dispose();
   }
@@ -1559,6 +1626,7 @@ test('invalid demo page options fail the configuration', async () => {
   try {
     for (const [options, code] of [
       ['isolatedDemos: "yes"', 'DISCOVERY_DEMO_APPLICATION_INVALID'],
+      ['isolatedPlaygrounds: 1', 'DISCOVERY_DEMO_APPLICATION_INVALID'],
       ['demoApplication: "on"', 'DISCOVERY_DEMO_APPLICATION_INVALID'],
       ['demoApplication: null', 'DISCOVERY_DEMO_APPLICATION_INVALID'],
       ['demoApplication: { path: "_demos" }', 'DISCOVERY_DEMO_PATH_INVALID'],
