@@ -112,6 +112,54 @@
         "ci": {}
       }
     },
+    "build-lazy-route-fixture": {
+      "executor": "@angular/build:application",
+      "metadata": {
+        "description": "Production browser build of the lazy-route fixture (libs/app/testing/lazy-route/fixture) for test-lazy-route; it is not a build of the library."
+      },
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/fixtures/app-lazy-route",
+        "browser": "libs/app/testing/lazy-route/fixture/main.ts",
+        "tsConfig": "libs/app/testing/lazy-route/fixture/tsconfig.json",
+        "index": false,
+        "inlineStyleLanguage": "scss",
+        "stylePreprocessorOptions": {
+          "includePaths": ["libs/app/styles"]
+        },
+        "polyfills": [],
+        "allowedCommonJsDependencies": [
+          "@braintree/sanitize-url",
+          "cytoscape-cose-bilkent",
+          "dayjs",
+          "elkjs",
+          "posthtml-parser",
+          "posthtml-render"
+        ],
+        "optimization": true,
+        "outputHashing": "none",
+        "sourceMap": false,
+        "extractLicenses": false,
+        "budgets": [],
+        "statsJson": true
+      }
+    },
+    "test-lazy-route": {
+      "executor": "nx:run-commands",
+      "metadata": {
+        "description": "Builds the lazy-route fixture and checks that its initial chunks hold no NgDoc runtime, Shiki or Orama."
+      },
+      "options": {
+        "commands": [
+          "nx run app:build-lazy-route-fixture --excludeTaskDependencies --skip-nx-cache",
+          "node --test libs/app/testing/lazy-route/bundle.test.mjs"
+        ],
+        "parallel": false
+      },
+      "configurations": {
+        "ci": {}
+      }
+    },
     "lint": {
       "executor": "@nx/eslint:lint"
     }
