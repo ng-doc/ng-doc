@@ -5,7 +5,7 @@ import { cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import path from 'node:path';
 
-import { prepare } from '../../../../../plugins/semantic-release/update-dependencies.js';
+import { pinLocalDependencies } from '../../../../../tools/scripts/release-manifests.mjs';
 import { withRetry } from '../../../../../tools/scripts/generator-output.mjs';
 
 /** Every published package: `ng add @ng-doc/add` installs `add`, which pulls in the rest. */
@@ -193,11 +193,8 @@ export async function packPackages({ repository, directory, env, logs }) {
     }
     await cp(source, path.join(snapshot, name), { recursive: true });
   }
-  // The release's dependency pinning, silenced.
-  prepare(
-    { packages: PACKAGES.map((name) => path.join(snapshot, name)) },
-    { logger: { log: () => undefined } },
-  );
+  // The release's dependency pinning.
+  pinLocalDependencies(PACKAGES.map((name) => path.join(snapshot, name)));
   const npm = npmCli();
   const packed = {};
   for (const name of PACKAGES) {

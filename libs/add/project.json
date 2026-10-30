@@ -4,6 +4,7 @@
   "sourceRoot": "",
   "projectType": "library",
   "tags": ["type:lib", "lib:add"],
+  "implicitDependencies": ["builder"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",

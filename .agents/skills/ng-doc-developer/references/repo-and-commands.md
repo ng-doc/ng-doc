@@ -4,18 +4,17 @@ See also `CONTRIBUTING.md` at the repository root, which covers the contribution
 
 ## Layout
 
-| Path                       | Nx project         | Package                    | What it is                                                                                                                                                                        |
-| -------------------------- | ------------------ | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `apps/ng-doc`              | `ng-doc`           | (not published)            | The documentation site (ng-doc.com), built with NgDoc itself.                                                                                                                     |
-| `libs/app`                 | `app`              | `@ng-doc/app`              | Runtime Angular UI of a docs site: page, demo, playground, search, sidebar, type controls, processors.                                                                            |
-| `libs/ui-kit`              | `ui-kit`           | `@ng-doc/ui-kit`           | Generic Angular UI kit used by `app`.                                                                                                                                             |
-| `libs/core`                | `core`             | `@ng-doc/core`             | Types and helpers shared by runtime and builder (`NgDocPage`, `NgDocCategory`, `NgDocApi`, ...). Framework-agnostic at runtime; Angular appears only in type positions. CommonJS. |
-| `libs/utils`               | `utils`            | `@ng-doc/utils`            | HTML post-processing for the builder (rehype, Shiki highlighting, keyword replacement). ESM.                                                                                      |
-| `libs/keywords-loaders`    | `keywords-loaders` | `@ng-doc/keywords-loaders` | Loaders for external keywords (Angular, RxJS, NgDoc).                                                                                                                             |
-| `libs/builder`             | `builder`          | `@ng-doc/builder`          | Angular CLI builders, schematics, the legacy engine and the new generator engine.                                                                                                 |
-| `libs/add`                 | `add`              | `@ng-doc/add`              | `ng add` schematics (`libs/add/schematics`). Built directly with `tsc`; it has no `pre-build`.                                                                                    |
-| `tools/scripts`            | -                  | -                          | Build, publish, test-runner and local-serve scripts (Node ESM).                                                                                                                   |
-| `plugins/semantic-release` | -                  | -                          | Custom semantic-release plugins (package publishing, dependency updates).                                                                                                         |
+| Path                    | Nx project         | Package                    | What it is                                                                                                                                                                        |
+| ----------------------- | ------------------ | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `apps/ng-doc`           | `ng-doc`           | (not published)            | The documentation site (ng-doc.com), built with NgDoc itself.                                                                                                                     |
+| `libs/app`              | `app`              | `@ng-doc/app`              | Runtime Angular UI of a docs site: page, demo, playground, search, sidebar, type controls, processors.                                                                            |
+| `libs/ui-kit`           | `ui-kit`           | `@ng-doc/ui-kit`           | Generic Angular UI kit used by `app`.                                                                                                                                             |
+| `libs/core`             | `core`             | `@ng-doc/core`             | Types and helpers shared by runtime and builder (`NgDocPage`, `NgDocCategory`, `NgDocApi`, ...). Framework-agnostic at runtime; Angular appears only in type positions. CommonJS. |
+| `libs/utils`            | `utils`            | `@ng-doc/utils`            | HTML post-processing for the builder (rehype, Shiki highlighting, keyword replacement). ESM.                                                                                      |
+| `libs/keywords-loaders` | `keywords-loaders` | `@ng-doc/keywords-loaders` | Loaders for external keywords (Angular, RxJS, NgDoc).                                                                                                                             |
+| `libs/builder`          | `builder`          | `@ng-doc/builder`          | Angular CLI builders, schematics, the legacy engine and the new generator engine.                                                                                                 |
+| `libs/add`              | `add`              | `@ng-doc/add`              | `ng add` schematics (`libs/add/schematics`). Built directly with `tsc`; it has no `pre-build`.                                                                                    |
+| `tools/scripts`         | -                  | -                          | Build, publish, test-runner and local-serve scripts (Node ESM).                                                                                                                   |
 
 Inside `libs/builder`:
 
@@ -160,9 +159,4 @@ node --test tools/scripts/testing/*.test.mjs   # tool-script tests
 
 - **`seed-caches.yml` workflow** (push to `main`, and manual dispatch): the only writer of the pnpm store cache. For every OS the `pr.yml` jobs use, it checks for the cache without downloading it, and on a miss installs and saves the store.
 
-- **`lint.yml` and `test.yml`** are reusable workflows that only `release.yml` calls (affected lint and affected `test`, `test-zoneless`, `test-search-index`).
-- **Releases:** semantic-release publishes from three kinds of branch: `release` (stable), `beta` (prerelease) and `N.x` maintenance branches.
-  - `release` and `beta` are fed from `main` through the `create-release` and `create-beta` workflow dispatches; `N.x` maintenance branches are pushed to directly.
-  - Only `feat`, `fix`, `perf` and `revert` trigger a release. For the breaking-change rule, see [code-style.md](code-style.md).
-  - Custom semantic-release plugins live in `plugins/semantic-release/`.
-  - `release.yml` builds ng-doc.com with the Vite engine (`ng-doc:build --skipNxCache`) and packs `dist/apps/ng-doc/browser`, which `deploy.yml` syncs to ng-doc.com.
+- **`release.yml` workflow** (manual dispatch with an exact `version` and a `dry-run` input) releases the seven packages with Nx Release, and `deploy.yml` deploys ng-doc.com after a stable release. How releases work, the branch and dist-tag rules and how to run one: [releasing.md](releasing.md).
