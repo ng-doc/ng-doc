@@ -233,6 +233,21 @@ export interface NgDocPlaygroundTexts {
   defaultValue: string;
   /** The button that resets a union type to its default. Default: "Reset to the default value". */
   resetToDefault: string;
+  /** The button that adds an item to a list. Default: "Add item". */
+  addItem: string;
+  /** The button that moves a list item up. Default: "Move up". */
+  moveUp: string;
+  /** The button that moves a list item down. Default: "Move down". */
+  moveDown: string;
+  /** The button that removes a list item. Default: "Remove". */
+  removeItem: string;
+  /**
+   * Accessible name of a list item's field. Default: "Item {index}".
+   * Values: `index`, the item's position, from 1.
+   */
+  item: (params: { index: number }) => string;
+  /** Shown when the text of a JSON control is not valid JSON. Default: "Invalid JSON". */
+  invalidJson: string;
 }
 
 /**

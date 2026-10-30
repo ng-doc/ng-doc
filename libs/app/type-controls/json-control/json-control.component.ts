@@ -1,5 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, Signal, signal } from '@angular/core';
-import { NgDocTypeControl } from '@ng-doc/app/interfaces';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  Signal,
+  signal,
+} from '@angular/core';
+import { NgDocPlaygroundTexts, NgDocTypeControl } from '@ng-doc/app/interfaces';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import { DIControl } from 'di-controls';
 
 /** The value of no text yet: no value has been written to the control. */
@@ -36,6 +44,8 @@ export class NgDocJsonControlComponent<T = unknown>
   protected readonly rows: Signal<number> = computed(() =>
     Math.min(Math.max(this.text().split('\n').length, 2), 10),
   );
+
+  protected readonly texts: NgDocPlaygroundTexts = inject(NG_DOC_TEXTS).playground;
 
   /** ID of the message that describes invalid text. */
   protected readonly errorId: string = `ng-doc-json-control-error-${nextId++}`;

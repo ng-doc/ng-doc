@@ -12,5 +12,5 @@
   (input)="edit(field.value)"
   (blur)="touch()"></textarea>
 @if (invalid()) {
-  <span class="ng-doc-json-control-error" [id]="errorId">Invalid JSON</span>
+  <span class="ng-doc-json-control-error" [id]="errorId">{{ texts.invalidJson }}</span>
 }

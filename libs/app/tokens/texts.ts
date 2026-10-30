@@ -104,6 +104,12 @@ export const NG_DOC_DEFAULT_TEXTS: NgDocTexts = Object.freeze({
     settings: 'Settings',
     defaultValue: 'default',
     resetToDefault: 'Reset to the default value',
+    addItem: 'Add item',
+    moveUp: 'Move up',
+    moveDown: 'Move down',
+    removeItem: 'Remove',
+    item: ({ index }: { index: number }) => `Item ${index}`,
+    invalidJson: 'Invalid JSON',
   }),
   navigation: Object.freeze({
     skipToContent: 'Skip to content',

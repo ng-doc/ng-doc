@@ -100,7 +100,7 @@ their English default, and `NG_DOC_DEFAULT_TEXTS` holds the defaults.
 | `searchPalette` | `NgDocSearchPaletteTexts` | The search palette: field, scopes, sections, messages, announcements, footer and actions.          |
 | `copy`          | `NgDocCopyTexts`          | Copy buttons and their confirmation.                                                               |
 | `demo`          | `NgDocDemoTexts`          | The demo toolbar (views, preview widths, new tab, fullscreen), demo code and isolated demos.       |
-| `playground`    | `NgDocPlaygroundTexts`    | The playground inspector: title, Reset, Recreate, sections and the default value of a union type.  |
+| `playground`    | `NgDocPlaygroundTexts`    | The playground inspector and its union, list and JSON controls: Reset, Recreate and sections.      |
 | `navigation`    | `NgDocNavigationTexts`    | The skip link, the menu button, the sidebar, the breadcrumbs and the previous and next page links. |
 | `page`          | `NgDocPageTexts`          | The page controls (copy link, edit, view source) and the way back from a fullscreen route.         |
 | `content`       | `NgDocContentTexts`       | Images that open larger and the highlighted lines of code blocks.                                  |

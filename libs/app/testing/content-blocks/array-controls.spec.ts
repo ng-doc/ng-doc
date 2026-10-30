@@ -3,6 +3,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { provideNgDocTexts } from '@ng-doc/app/providers/texts';
 import {
   NgDocJsonControlComponent,
   NgDocNumberListControlComponent,
@@ -485,5 +486,59 @@ describeChangeDetection('NgDocJsonControlComponent', ({ providers }: ChangeDetec
     await settle(fixture);
 
     expect(fixture.componentInstance.control.value).toEqual(value);
+  });
+});
+
+describeChangeDetection('The texts of the array controls', ({ providers }: ChangeDetectionCase) => {
+  it('come from provideNgDocTexts', async () => {
+    TestBed.configureTestingModule({
+      providers: [
+        ...providers,
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideNgDocTexts({
+          playground: {
+            addItem: 'Element hinzufügen',
+            moveUp: 'Nach oben',
+            moveDown: 'Nach unten',
+            removeItem: 'Entfernen',
+            item: ({ index }: { index: number }) => `Element ${index}`,
+            reset: 'Zurücksetzen',
+            resetToDefault: 'Auf den Standardwert zurücksetzen',
+            invalidJson: 'Ungültiges JSON',
+          },
+        }),
+      ],
+    });
+    const list = TestBed.createComponent(StringListHostComponent);
+
+    list.componentInstance.default.set(undefined);
+    await settle(list);
+    const host: HTMLElement = list.nativeElement;
+    const label = (selector: string): string | null =>
+      host.querySelector(selector)?.getAttribute('aria-label') ?? null;
+
+    expect(label('[data-ng-doc-list-input]')).toBe('Element 1');
+    expect(label('[data-ng-doc-list-up]')).toBe('Nach oben');
+    expect(label('[data-ng-doc-list-down]')).toBe('Nach unten');
+    expect(label('[data-ng-doc-list-remove]')).toBe('Entfernen');
+    expect(host.querySelector('[data-ng-doc-list-add]')?.textContent?.trim()).toBe(
+      'Element hinzufügen',
+    );
+    expect(label('[data-ng-doc-list-reset]')).toBe('Auf den Standardwert zurücksetzen');
+    expect(host.querySelector('[data-ng-doc-list-reset]')?.textContent?.trim()).toBe(
+      'Zurücksetzen',
+    );
+
+    const json = TestBed.createComponent(JsonHostComponent);
+
+    await settle(json);
+    const field: HTMLTextAreaElement = json.nativeElement.querySelector('textarea');
+
+    typeInto(field, '[');
+    await settle(json);
+    expect(
+      json.nativeElement.querySelector('.ng-doc-json-control-error')?.textContent?.trim(),
+    ).toBe('Ungültiges JSON');
   });
 });

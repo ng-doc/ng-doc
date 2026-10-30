@@ -10,7 +10,8 @@ import {
   Signal,
   signal,
 } from '@angular/core';
-import { NgDocTypeControl } from '@ng-doc/app/interfaces';
+import { NgDocPlaygroundTexts, NgDocTypeControl } from '@ng-doc/app/interfaces';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import {
   NgDocButtonComponent,
   NgDocButtonIconComponent,
@@ -71,6 +72,8 @@ export abstract class NgDocListControl<T extends string | number>
 
   /** The positions of the fields whose text is not an item, such as an empty number field. */
   protected readonly invalid = signal<ReadonlySet<number>>(new Set());
+
+  protected readonly texts: NgDocPlaygroundTexts = inject(NG_DOC_TEXTS).playground;
 
   private readonly injector = inject(Injector);
 
