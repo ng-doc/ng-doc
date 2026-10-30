@@ -8,7 +8,9 @@ import {
   viewChild,
 } from '@angular/core';
 import { NgDocSearchComponent } from '@ng-doc/app/components/search';
+import type { NgDocNavigationTexts } from '@ng-doc/app/interfaces';
 import { NgDocSidebarService } from '@ng-doc/app/services/sidebar';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import { NgDocButtonIconComponent } from '@ng-doc/ui-kit';
 
 /**
@@ -39,6 +41,8 @@ import { NgDocButtonIconComponent } from '@ng-doc/ui-kit';
   },
 })
 export class NgDocNavbarComponent {
+  protected readonly texts: NgDocNavigationTexts = inject(NG_DOC_TEXTS).navigation;
+
   protected readonly sidebarService = inject(NgDocSidebarService);
 
   /**

@@ -6,7 +6,7 @@
       </div>
       <div class="ng-doc-demo-controls">
         @if (!codeContent()) {
-          <ng-doc-copy-button [text]="code()" label="Copy code">
+          <ng-doc-copy-button [text]="code()" [label]="copyTexts.copyCode">
             <ng-doc-icon icon="copy"></ng-doc-icon>
           </ng-doc-copy-button>
         }
@@ -17,9 +17,9 @@
           [rounded]="false"
           [attr.aria-expanded]="expanded()"
           [attr.aria-controls]="codeId"
-          [attr.aria-label]="expanded() ? 'Hide code' : 'Show code'"
+          [attr.aria-label]="expanded() ? texts.hideCode : texts.showCode"
           (click)="toggle()"
-          [ngDocTooltip]="expanded() ? 'Hide code' : 'Show code'">
+          [ngDocTooltip]="expanded() ? texts.hideCode : texts.showCode">
           <ng-doc-icon icon="code"></ng-doc-icon>
         </button>
       </div>
@@ -28,7 +28,7 @@
       class="ng-doc-demo-code"
       [id]="codeId"
       [attr.role]="expanded() ? 'region' : null"
-      [attr.aria-label]="expanded() ? 'Code' : null">
+      [attr.aria-label]="expanded() ? texts.code : null">
       <ng-doc-expander
         [content]="codeContent() ? codeContent() : expanderContent"
         [expanded]="expanded()">

@@ -11,9 +11,11 @@ import {
   input,
   viewChild,
 } from '@angular/core';
+import type { NgDocNavigationTexts } from '@ng-doc/app/interfaces';
 import { NgDocFullscreenRouteService } from '@ng-doc/app/services/fullscreen-route';
 import { NgDocShortcutsService } from '@ng-doc/app/services/shortcuts';
 import { NgDocSidebarService } from '@ng-doc/app/services/sidebar';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import { NgDocContent, NgDocSidenavComponent } from '@ng-doc/ui-kit';
 import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 
@@ -89,6 +91,8 @@ type NgDocScrollOffset = () => [number, number];
   },
 })
 export class NgDocRootComponent {
+  protected readonly texts: NgDocNavigationTexts = inject(NG_DOC_TEXTS).navigation;
+
   /**
    * If `true` then the sidebar will be shown
    * You can use it for example for landing page to hide sidebar

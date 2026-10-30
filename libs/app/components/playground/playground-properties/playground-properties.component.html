@@ -9,24 +9,24 @@
     @if (!hideSidePanel()) {
       <div class="ng-doc-playground-properties">
         <div class="ng-doc-playground-header">
-          <h4>Playground</h4>
+          <h4>{{ texts.title }}</h4>
           @if (showResetButton()) {
             <button type="button" class="ng-doc-playground-reset" (click)="resetForm.emit()">
-              Reset
+              {{ texts.reset }}
             </button>
           }
         </div>
         @if (!recreateLocked()) {
           <div class="ng-doc-playground-setting">
             <ng-doc-checkbox [ngModel]="recreateDemo()" (ngModelChange)="recreateDemo.set($event)">
-              Recreate
+              {{ texts.recreate }}
             </ng-doc-checkbox>
             <ng-doc-icon
               class="ng-doc-playground-info"
               icon="info"
               role="img"
-              aria-label="Recreates the demo every time one of the inputs changes"
-              [ngDocTooltip]="'Recreates the demo every time one of the inputs changes'"
+              [attr.aria-label]="texts.recreateHint"
+              [ngDocTooltip]="texts.recreateHint"
               [positions]="['bottom-right', 'left-center']"></ng-doc-icon>
           </div>
         }
@@ -48,7 +48,7 @@
           </div>
         }
         @if ((dynamicContent() | keyvalue)?.length) {
-          <h5 class="ng-doc-title">Content</h5>
+          <h5 class="ng-doc-title">{{ texts.content }}</h5>
           <div class="ng-doc-playground-property-list">
             @for (content of dynamicContent() | keyvalue; track content.key) {
               <ng-doc-playground-property

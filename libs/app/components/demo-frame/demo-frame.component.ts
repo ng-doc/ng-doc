@@ -13,6 +13,8 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ɵisNgDocDemoSizeMessage } from '@ng-doc/app/demo-app';
+import type { NgDocDemoTexts } from '@ng-doc/app/interfaces';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 
 /** How long a loaded demo page may take to report its size before the frame reports a failure. */
 const READY_TIMEOUT_MS = 10_000;
@@ -37,6 +39,8 @@ const READY_TIMEOUT_MS = 10_000;
   },
 })
 export class NgDocDemoFrameComponent {
+  protected readonly texts: NgDocDemoTexts = inject(NG_DOC_TEXTS).demo;
+
   /** The URL of the demo page, relative to the document or absolute on its origin. */
   readonly src = input.required<string>();
 

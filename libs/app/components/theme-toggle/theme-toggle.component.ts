@@ -1,16 +1,19 @@
 import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
+import type { NgDocThemeTexts } from '@ng-doc/app/interfaces';
 import { NgDocThemeService } from '@ng-doc/app/services/theme';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import { NgDocButtonIconComponent, NgDocTooltipDirective } from '@ng-doc/ui-kit';
 
 interface ToggleTheme {
-  name: string;
+  /** The text of the theme's name. */
+  text: 'auto' | 'light' | 'dark';
   theme: string | null;
 }
 
 const THEMES: readonly ToggleTheme[] = [
-  { name: 'Auto', theme: 'auto' },
-  { name: 'Light', theme: null },
-  { name: 'Dark', theme: 'dark' },
+  { text: 'auto', theme: 'auto' },
+  { text: 'light', theme: null },
+  { text: 'dark', theme: 'dark' },
 ];
 
 /**
@@ -27,6 +30,7 @@ const THEMES: readonly ToggleTheme[] = [
 })
 export class NgDocThemeToggleComponent {
   protected readonly themeService = inject(NgDocThemeService);
+  protected readonly texts: NgDocThemeTexts = inject(NG_DOC_TEXTS).theme;
 
   /**
    * The current theme. A custom theme id counts as Auto, because the toggle does not offer it.

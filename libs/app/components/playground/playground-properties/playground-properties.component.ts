@@ -14,8 +14,9 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, FormsModule } from '@angular/forms';
 import { isPlaygroundProperty, resolvePlaygroundOption } from '@ng-doc/app/helpers';
-import { NgDocProvidedTypeControl } from '@ng-doc/app/interfaces';
+import { NgDocPlaygroundTexts, NgDocProvidedTypeControl } from '@ng-doc/app/interfaces';
 import { getTokenForType } from '@ng-doc/app/providers/type-control';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import { isPresent } from '@ng-doc/core/helpers/is-present';
 import { objectKeys } from '@ng-doc/core/helpers/object-keys';
 import {
@@ -66,6 +67,8 @@ export class NgDocPlaygroundPropertiesComponent<
   P extends NgDocPlaygroundProperties,
   C extends Record<string, NgDocPlaygroundContent>,
 > {
+  protected readonly texts: NgDocPlaygroundTexts = inject(NG_DOC_TEXTS).playground;
+
   private readonly injector = inject(Injector);
 
   /** The form of the playground. */
@@ -141,7 +144,7 @@ export class NgDocPlaygroundPropertiesComponent<
     }
 
     return Array.from(sections, ([group, controls]) => ({
-      title: group ?? 'Settings',
+      title: group ?? this.texts.settings,
       controls,
     })).filter((section: NgDocPlaygroundPropertySection) => section.controls.length > 0);
   });

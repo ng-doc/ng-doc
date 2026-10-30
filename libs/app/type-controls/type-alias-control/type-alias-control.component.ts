@@ -1,8 +1,9 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgDocResolvedPlaygroundOption, resolvePlaygroundOption } from '@ng-doc/app/helpers';
-import { NgDocTypeControl } from '@ng-doc/app/interfaces';
+import { NgDocPlaygroundTexts, NgDocTypeControl } from '@ng-doc/app/interfaces';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import { NgDocPlaygroundOption } from '@ng-doc/core/interfaces';
 import {
   NgDocButtonIconComponent,
@@ -38,6 +39,8 @@ import { DIControl } from 'di-controls';
   ],
 })
 export class NgDocTypeAliasControlComponent<T> extends DIControl<T> implements NgDocTypeControl<T> {
+  protected readonly texts: NgDocPlaygroundTexts = inject(NG_DOC_TEXTS).playground;
+
   /** Default value of the input; clearing the selection returns to it. */
   readonly default = input<T | undefined>(undefined);
 

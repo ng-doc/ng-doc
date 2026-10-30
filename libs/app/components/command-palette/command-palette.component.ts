@@ -19,9 +19,10 @@ import { form, FormField } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import { NgDocSearchEngine } from '@ng-doc/app/classes/search-engine';
 import { NgDocKindIconComponent } from '@ng-doc/app/components/kind-icon';
-import { NgDocSearchResult } from '@ng-doc/app/interfaces';
+import { NgDocSearchPaletteTexts, NgDocSearchResult } from '@ng-doc/app/interfaces';
 import { NgDocApiListDeclaration, NgDocApiListIndexService } from '@ng-doc/app/services';
 import { NgDocShortcutsService } from '@ng-doc/app/services/shortcuts';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import type { NgDocPageIndex } from '@ng-doc/core/interfaces';
 import {
   NG_DOC_DIALOG_DATA,
@@ -91,11 +92,15 @@ interface Action {
 
 type ApiSymbol = NgDocApiListDeclaration;
 
-const SCOPES: ReadonlyArray<{ id: NgDocCommandPaletteScope; label: string }> = [
-  { id: 'all', label: 'All' },
-  { id: 'guides', label: 'Guides' },
-  { id: 'api', label: 'API' },
-  { id: 'actions', label: 'Actions' },
+/** The scopes in the order of their tabs, with the text of their label. */
+const SCOPES: ReadonlyArray<{
+  id: NgDocCommandPaletteScope;
+  text: 'scopeAll' | 'scopeGuides' | 'scopeApi' | 'scopeActions';
+}> = [
+  { id: 'all', text: 'scopeAll' },
+  { id: 'guides', text: 'scopeGuides' },
+  { id: 'api', text: 'scopeApi' },
+  { id: 'actions', text: 'scopeActions' },
 ];
 
 /**
@@ -135,7 +140,8 @@ const SEARCH_DEBOUNCE = 120;
   },
 })
 export class NgDocCommandPaletteComponent {
-  protected readonly scopes = SCOPES;
+  protected readonly texts: NgDocSearchPaletteTexts = inject(NG_DOC_TEXTS).searchPalette;
+  protected readonly scopes = SCOPES.map(({ id, text }) => ({ id, label: this.texts[text] }));
   protected readonly shortcuts = inject(NgDocShortcutsService);
 
   private readonly data = inject<NgDocCommandPaletteData | null>(NG_DOC_DIALOG_DATA, {
@@ -187,21 +193,21 @@ export class NgDocCommandPaletteComponent {
 
   private readonly actions: Action[] = [
     {
-      name: () => 'Toggle dark mode',
-      keywords: 'theme dark light mode',
+      name: () => this.texts.actionToggleTheme,
+      keywords: this.texts.actionToggleThemeKeywords,
       keys: ['T'],
       run: () => this.shortcuts.run('t'),
     },
     {
-      name: () => 'Copy link to this page',
-      keywords: 'copy link url share',
+      name: () => this.texts.actionCopyLink,
+      keywords: this.texts.actionCopyLinkKeywords,
       keys: ['L'],
       run: () => this.shortcuts.run('l'),
     },
     {
       name: () =>
-        this.shortcuts.enabled() ? 'Turn off single-key shortcuts' : 'Turn on single-key shortcuts',
-      keywords: 'keyboard shortcuts keys single',
+        this.shortcuts.enabled() ? this.texts.actionShortcutsOff : this.texts.actionShortcutsOn,
+      keywords: this.texts.actionShortcutsKeywords,
       keys: [],
       keepOpen: true,
       run: () => this.shortcuts.toggle(),
@@ -223,24 +229,29 @@ export class NgDocCommandPaletteComponent {
       const pinned = apiRows.filter((row: Row) => row.pinned).slice(0, PINNED_LIMIT);
 
       apiRows = apiRows.filter((row: Row) => !pinned.includes(row));
-      sections.push({ key: 'top', type: 'api', title: 'Top matches', rows: pinned });
+      sections.push({
+        key: 'top',
+        type: 'api',
+        title: this.texts.sectionTopMatches,
+        rows: pinned,
+      });
     }
     if ((scope === 'all' || scope === 'guides') && query) {
       sections.push({
         key: 'guide',
         type: 'guide',
-        title: 'Guides',
+        title: this.texts.sectionGuides,
         rows: this.guideRows(query, scope === 'guides'),
       });
     }
     if (apiRows.length) {
-      sections.push({ key: 'api', type: 'api', title: 'API', rows: apiRows });
+      sections.push({ key: 'api', type: 'api', title: this.texts.sectionApi, rows: apiRows });
     }
     if (scope === 'all' || scope === 'actions') {
       sections.push({
         key: 'action',
         type: 'action',
-        title: 'Actions',
+        title: this.texts.sectionActions,
         rows: this.actionRows(query),
       });
     }
@@ -287,34 +298,34 @@ export class NgDocCommandPaletteComponent {
     const query = this.query();
 
     if (query) {
-      return `No results for “${query}”`;
+      return this.texts.noResults({ query });
     }
 
     return this.scope() === 'api'
-      ? 'Type to search the API.'
+      ? this.texts.typeToSearchApi
       : this.scope() === 'guides'
-        ? 'Type to search the guides.'
-        : 'Type to search.';
+        ? this.texts.typeToSearchGuides
+        : this.texts.typeToSearch;
   });
 
   /** What the status region announces: the scope, a running search, no results or a failure. */
   protected readonly status = computed(() => {
-    const scope = SCOPES.find(({ id }) => id === this.scope())?.label ?? '';
+    const scope = this.scopes.find(({ id }) => id === this.scope())?.label ?? '';
     const count = this.rows().filter((row: Row) => row.type !== 'action').length;
 
     if (this.failed()) {
-      return 'Search failed.';
+      return this.texts.failedStatus;
     }
     if (this.searching()) {
-      return 'Searching…';
+      return this.texts.searching;
     }
     if (!this.query()) {
-      return `${scope} scope.`;
+      return this.texts.statusScope({ scope });
     }
 
     return count
-      ? `${scope} scope: ${count} ${count === 1 ? 'result' : 'results'}.`
-      : `${scope} scope: no results for “${this.query()}”.`;
+      ? this.texts.statusResults({ scope, count })
+      : this.texts.statusNoResults({ scope, query: this.query() });
   });
 
   // Increments when the selection moves by keyboard, so only those moves scroll the list.

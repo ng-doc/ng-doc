@@ -1,15 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, input, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, Signal } from '@angular/core';
 import { NgDocIconComponent } from '@ng-doc/ui-kit/components/icon';
+import { NgDocBlockquoteTexts } from '@ng-doc/ui-kit/interfaces';
+import { NG_DOC_UI_KIT_TEXTS } from '@ng-doc/ui-kit/tokens';
 import { NgDocBlockquoteType } from '@ng-doc/ui-kit/types';
 
-/** The icon and the title each built-in callout type shows. */
-const BLOCKQUOTE_PRESETS: Partial<
-  Record<NgDocBlockquoteType, { readonly icon: string; readonly label: string }>
-> = {
-  note: { icon: 'info', label: 'Note' },
-  warning: { icon: 'alert-triangle', label: 'Warning' },
-  alert: { icon: 'alert-circle', label: 'Alert' },
-  success: { icon: 'check', label: 'Success' },
+/** The icon of each built-in callout type; its title is in `NgDocBlockquoteTexts`. */
+const BLOCKQUOTE_ICONS: Partial<Record<NgDocBlockquoteType, string>> = {
+  note: 'info',
+  warning: 'alert-triangle',
+  alert: 'alert-circle',
+  success: 'check',
 };
 
 /**
@@ -41,13 +41,22 @@ export class NgDocBlockquoteComponent {
   /** A title that replaces the type title, for example "Deprecated". */
   readonly label = input<string | undefined>(undefined);
 
+  private readonly texts: NgDocBlockquoteTexts = inject(NG_DOC_UI_KIT_TEXTS).blockquote;
+
   /** The icon that is shown, if any. */
   protected readonly iconName: Signal<string | undefined> = computed(
-    () => this.icon() || BLOCKQUOTE_PRESETS[this.type()]?.icon,
+    () => this.icon() || BLOCKQUOTE_ICONS[this.type()],
   );
 
   /** The title that is shown, if any. */
-  protected readonly title: Signal<string | undefined> = computed(
-    () => this.label() || (this.icon() ? undefined : BLOCKQUOTE_PRESETS[this.type()]?.label),
-  );
+  protected readonly title: Signal<string | undefined> = computed(() => {
+    const type: NgDocBlockquoteType = this.type();
+
+    return (
+      this.label() ||
+      (this.icon() || !BLOCKQUOTE_ICONS[type]
+        ? undefined
+        : this.texts[type as keyof NgDocBlockquoteTexts])
+    );
+  });
 }

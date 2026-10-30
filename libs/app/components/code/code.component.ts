@@ -11,11 +11,12 @@ import {
   untracked,
 } from '@angular/core';
 import { NgDocCopyButtonComponent } from '@ng-doc/app/components/copy-button';
+import type { NgDocContentTexts } from '@ng-doc/app/interfaces';
 import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes';
 import { NgDocPageProcessorComponent } from '@ng-doc/app/processors/page-processor';
 import { linkProcessor } from '@ng-doc/app/processors/processors/link';
 import { tooltipProcessor } from '@ng-doc/app/processors/processors/tooltip';
-import { provideMainPageProcessor } from '@ng-doc/app/tokens';
+import { NG_DOC_TEXTS, provideMainPageProcessor } from '@ng-doc/app/tokens';
 import { NgDocIconComponent } from '@ng-doc/ui-kit';
 
 /** Display names of common language ids; other ids are shown capitalized. */
@@ -83,6 +84,8 @@ interface NgDocRenderedCode {
   },
 })
 export class NgDocCodeComponent implements AfterViewInit {
+  protected readonly texts: NgDocContentTexts = inject(NG_DOC_TEXTS).content;
+
   private readonly elementRef: ElementRef<HTMLElement> = inject(ElementRef);
 
   /** Highlighted HTML of the code. When empty, the projected content is shown instead. */
@@ -125,7 +128,7 @@ export class NgDocCodeComponent implements AfterViewInit {
 
   /** The highlighted lines as text, for example "Lines 6–7" or "Lines 2, 5–6". */
   protected readonly range: Signal<string> = computed(() =>
-    describeLines(this.rendered().highlightedLines),
+    describeLines(this.rendered().highlightedLines, this.texts),
   );
 
   /** Reads the text of the rendered code when the copy button is pressed. */
@@ -190,9 +193,10 @@ function readProjectedCode(code: HTMLElement | null): NgDocRenderedCode {
 /**
  * Describes line numbers as ranges.
  * @param lines - Ascending one-based line numbers.
+ * @param texts - The texts of the page content, whose `codeLines` words the ranges.
  * @returns "Line 3", "Lines 6–7" or "Lines 2, 5–6"; an empty string for no lines.
  */
-function describeLines(lines: number[]): string {
+function describeLines(lines: number[], texts: NgDocContentTexts): string {
   const ranges: Array<[number, number]> = [];
 
   for (const line of lines) {
@@ -209,5 +213,5 @@ function describeLines(lines: number[]): string {
     .map(([start, end]: [number, number]) => (start === end ? `${start}` : `${start}–${end}`))
     .join(', ');
 
-  return text ? `${lines.length === 1 ? 'Line' : 'Lines'} ${text}` : '';
+  return text ? texts.codeLines({ count: lines.length, ranges: text }) : '';
 }

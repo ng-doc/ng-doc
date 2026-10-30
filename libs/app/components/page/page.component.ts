@@ -26,12 +26,12 @@ import {
   ɵngDocPageUrl,
   ɵrestoreNgDocHydrationSnapshot,
 } from '@ng-doc/app/helpers';
-import { NgDocPageSkeleton } from '@ng-doc/app/interfaces';
+import { NgDocPageSkeleton, NgDocPageTexts } from '@ng-doc/app/interfaces';
 import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes';
 import { NgDocPageProcessorComponent } from '@ng-doc/app/processors';
 import { provideTypeControl } from '@ng-doc/app/providers/type-control';
 import { NgDocFullscreenRouteService } from '@ng-doc/app/services/fullscreen-route';
-import { NG_DOC_PAGE_SKELETON } from '@ng-doc/app/tokens';
+import { NG_DOC_PAGE_SKELETON, NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import {
   NgDocBooleanControlComponent,
   NgDocJsonControlComponent,
@@ -95,6 +95,8 @@ import { WA_LOCATION } from '@ng-web-apis/common';
   },
 })
 export class NgDocPageComponent {
+  protected readonly texts: NgDocPageTexts = inject(NG_DOC_TEXTS).page;
+
   /** The element that holds the rendered page content. */
   readonly pageContainer = viewChild('pageContainer', { read: ElementRef<HTMLElement> });
 
