@@ -11,6 +11,8 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
+import type { NgDocContentTexts } from '@ng-doc/app/interfaces';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import { NgDocOverlayContainerComponent, NgDocOverlayService } from '@ng-doc/ui-kit';
 import { NgDocOverlayRef } from '@ng-doc/ui-kit/classes';
 
@@ -39,7 +41,7 @@ const ZOOM_EASING: string = 'cubic-bezier(0.2, 0, 0, 1)';
   host: {
     '[attr.role]': 'isInteractive() ? "button" : null',
     '[attr.tabindex]': 'isInteractive() ? 0 : null',
-    '[attr.aria-label]': 'isInteractive() ? "Open image: " + alt() : null',
+    '[attr.aria-label]': 'isInteractive() ? texts.openImage({ alt: alt() }) : null',
     '[attr.data-interactive]': 'isInteractive()',
     '[attr.data-opened]': 'opened()',
     '(click)': 'clickEvent()',
@@ -48,6 +50,8 @@ const ZOOM_EASING: string = 'cubic-bezier(0.2, 0, 0, 1)';
   },
 })
 export class NgDocImageViewerComponent {
+  protected readonly texts: NgDocContentTexts = inject(NG_DOC_TEXTS).content;
+
   /** Source of the image. */
   readonly src = input.required<string>();
 

@@ -26,7 +26,8 @@ import { NgDocCopyButtonComponent } from '@ng-doc/app/components/copy-button';
 import { NgDocDemoFrameComponent } from '@ng-doc/app/components/demo-frame';
 import { NgDocFullscreenButtonComponent } from '@ng-doc/app/components/fullscreen-button';
 import { NgDocFullscreenToggleComponent } from '@ng-doc/app/components/fullscreen-toggle';
-import { NgDocDemoAsset } from '@ng-doc/app/interfaces';
+import { NgDocCopyTexts, NgDocDemoAsset, NgDocDemoTexts } from '@ng-doc/app/interfaces';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import { asArray } from '@ng-doc/core/helpers/as-array';
 import { NgDocDemoActionOptions } from '@ng-doc/core/interfaces';
 import {
@@ -42,15 +43,15 @@ import {
 /** Widths the demo can be previewed at. */
 export type NgDocDemoPreviewWidth = 'full' | '480' | '280';
 
-/** The preview widths, in the order of their buttons. */
+/** The preview widths, in the order of their buttons, with the texts of their label and readout. */
 const PREVIEW_WIDTHS: ReadonlyArray<{
   readonly width: NgDocDemoPreviewWidth;
-  readonly label: string;
-  readonly readout: string;
+  readonly label: 'widthFull' | 'width480' | 'width280';
+  readonly readout: 'readoutFull' | 'readout480' | 'readout280';
 }> = [
-  { width: 'full', label: 'Full width', readout: '100% × auto' },
-  { width: '480', label: '480 pixels wide', readout: '480 × auto' },
-  { width: '280', label: '280 pixels wide', readout: '280 × auto' },
+  { width: 'full', label: 'widthFull', readout: 'readoutFull' },
+  { width: '480', label: 'width480', readout: 'readout480' },
+  { width: '280', label: 'width280', readout: 'readout280' },
 ];
 
 let nextId = 0;
@@ -94,6 +95,9 @@ let nextId = 0;
   },
 })
 export class NgDocDemoComponent {
+  protected readonly texts: NgDocDemoTexts = inject(NG_DOC_TEXTS).demo;
+  protected readonly copyTexts: NgDocCopyTexts = inject(NG_DOC_TEXTS).copy;
+
   private readonly rootPage = inject(NgDocRootPage);
   private readonly document = inject(DOCUMENT);
   private readonly platformLocation = inject(PlatformLocation);
@@ -150,7 +154,9 @@ export class NgDocDemoComponent {
   );
 
   /** The accessible title of the demo's iframe. */
-  protected readonly frameTitle: Signal<string> = computed(() => `${this.componentName()} demo`);
+  protected readonly frameTitle: Signal<string> = computed(() =>
+    this.texts.frameTitle({ name: `${this.componentName()}` }),
+  );
 
   /** Whether the stage is fullscreen. */
   protected readonly fullscreen: Signal<boolean> = computed(() => this.stage()?.active() ?? false);
@@ -182,12 +188,17 @@ export class NgDocDemoComponent {
   /** The width the demo is previewed at. */
   readonly previewWidth = signal<NgDocDemoPreviewWidth>('full');
 
-  protected readonly previewWidths = PREVIEW_WIDTHS;
+  protected readonly previewWidths = PREVIEW_WIDTHS.map(({ width, label, readout }) => ({
+    width,
+    label: this.texts[label],
+    readout: this.texts[readout],
+  }));
 
   /** Readout of the preview width. */
   protected readonly widthReadout: Signal<string> = computed(
     () =>
-      PREVIEW_WIDTHS.find(({ width }) => width === this.previewWidth())?.readout ?? '100% × auto',
+      this.previewWidths.find(({ width }) => width === this.previewWidth())?.readout ??
+      this.texts.readoutFull,
   );
 
   /** The views in tab order: the preview, then the source files. */

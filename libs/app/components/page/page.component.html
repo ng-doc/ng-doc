@@ -4,8 +4,8 @@
       type="button"
       ng-doc-button-icon
       [rounded]="false"
-      [attr.aria-label]="linkCopied() ? 'Link copied' : 'Copy link to this page'"
-      [ngDocTooltip]="linkCopied() ? 'Copied' : 'Copy link'"
+      [attr.aria-label]="linkCopied() ? texts.linkCopied : texts.copyLink"
+      [ngDocTooltip]="linkCopied() ? texts.linkCopiedTooltip : texts.copyLinkTooltip"
       [attr.data-ng-doc-copied]="linkCopied()"
       (click)="copyLink()">
       <svg
@@ -26,11 +26,11 @@
       <a
         ng-doc-button-icon
         [rounded]="false"
-        [href]="rootPage.editSourceFileUrl"
         target="_blank"
         rel="noopener"
-        aria-label="Edit this page"
-        ngDocTooltip="Edit this page">
+        [attr.aria-label]="texts.edit"
+        [ngDocTooltip]="texts.edit"
+        [href]="rootPage.editSourceFileUrl">
         <svg
           width="16"
           height="16"
@@ -49,11 +49,11 @@
       <a
         ng-doc-button-icon
         [rounded]="false"
-        [href]="rootPage.viewSourceFileUrl"
         target="_blank"
         rel="noopener"
-        aria-label="View the page source"
-        ngDocTooltip="View source">
+        [attr.aria-label]="texts.viewSource"
+        [ngDocTooltip]="texts.viewSourceTooltip"
+        [href]="rootPage.viewSourceFileUrl">
         <svg
           width="16"
           height="16"
@@ -100,12 +100,14 @@
       <a
         class="ng-doc-fullscreen-route-back"
         [routerLink]="pageUrl()"
-        [attr.aria-label]="'Back to ' + (rootPage.page?.title ?? 'the page')"
-        [ngDocTooltip]="'Back to ' + (rootPage.page?.title ?? 'the page')">
+        [attr.aria-label]="texts.backTo({ title: rootPage.page?.title })"
+        [ngDocTooltip]="texts.backTo({ title: rootPage.page?.title })">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M19 12H5m7 7-7-7 7-7" />
         </svg>
-        <span class="ng-doc-fullscreen-route-back-label">{{ rootPage.page?.title ?? 'Back' }}</span>
+        <span class="ng-doc-fullscreen-route-back-label">{{
+          rootPage.page?.title ?? texts.back
+        }}</span>
       </a>
     }
     <router-outlet

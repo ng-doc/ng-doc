@@ -1,7 +1,9 @@
 import { KeyValuePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, Signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgDocKindIconComponent } from '@ng-doc/app/components/kind-icon';
+import type { NgDocSearchTexts } from '@ng-doc/app/interfaces';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import { NgDocPageInfo } from '@ng-doc/core/interfaces';
 import { NgDocTextComponent, NgDocTooltipDirective } from '@ng-doc/ui-kit';
 
@@ -22,6 +24,8 @@ import { NgDocTextComponent, NgDocTooltipDirective } from '@ng-doc/ui-kit';
   ],
 })
 export class NgDocSearchResultComponent {
+  protected readonly texts: NgDocSearchTexts = inject(NG_DOC_TEXTS).search;
+
   /** The pages to list. */
   readonly result = input<NgDocPageInfo[] | null>([]);
 
@@ -44,11 +48,11 @@ export class NgDocSearchResultComponent {
   typeToLabel(type: string): string {
     switch (type) {
       case 'api':
-        return 'API';
+        return this.texts.resultApi;
       case 'guide':
-        return 'Guides';
+        return this.texts.resultGuides;
       default:
-        return 'Unknown';
+        return this.texts.resultUnknown;
     }
   }
 }

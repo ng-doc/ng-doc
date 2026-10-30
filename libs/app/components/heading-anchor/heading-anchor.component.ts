@@ -10,6 +10,8 @@ import {
 } from '@angular/core';
 import { NgDocCopyButtonComponent } from '@ng-doc/app/components/copy-button';
 import { ɵngDocPageUrl } from '@ng-doc/app/helpers';
+import type { NgDocCopyTexts } from '@ng-doc/app/interfaces';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import { NgDocIconComponent } from '@ng-doc/ui-kit';
 import { WA_LOCATION } from '@ng-web-apis/common';
 
@@ -20,7 +22,7 @@ import { WA_LOCATION } from '@ng-web-apis/common';
   selector: 'ng-doc-heading-anchor',
   imports: [NgDocIconComponent, NgDocCopyButtonComponent],
   template: `
-    <ng-doc-copy-button [text]="href" label="Copy link to section">
+    <ng-doc-copy-button [text]="href" [label]="texts.copyLinkToSection">
       <ng-doc-icon icon="link-2"></ng-doc-icon>
     </ng-doc-copy-button>
   `,
@@ -31,6 +33,8 @@ import { WA_LOCATION } from '@ng-web-apis/common';
   },
 })
 export class NgDocHeadingAnchorComponent implements OnInit {
+  protected readonly texts: NgDocCopyTexts = inject(NG_DOC_TEXTS).copy;
+
   /** Id of the heading. */
   readonly anchor = input.required<string>();
 

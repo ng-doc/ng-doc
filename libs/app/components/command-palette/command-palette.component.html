@@ -1,9 +1,8 @@
-@let current = selected();
 <div
   class="ng-doc-command-palette"
   role="dialog"
   aria-modal="true"
-  aria-label="Search"
+  [attr.aria-label]="texts.dialogLabel"
   (keydown)="onTrapKeydown($event)">
   <div class="ng-doc-command-palette-input">
     <svg
@@ -22,20 +21,20 @@
       #input
       type="text"
       role="combobox"
-      aria-label="Search the documentation"
       aria-autocomplete="list"
       aria-expanded="true"
       aria-controls="ng-doc-command-palette-list"
-      [attr.aria-activedescendant]="current?.id ?? null"
       autocomplete="off"
       spellcheck="false"
-      placeholder="Search guides, API and actions…"
+      [attr.aria-label]="texts.inputLabel"
+      [attr.placeholder]="texts.inputPlaceholder"
+      [attr.aria-activedescendant]="selected()?.id ?? null"
       [formField]="searchForm.query"
       (keydown)="onKeydown($event)" />
     <div
       class="ng-doc-command-palette-scopes ng-doc-command-palette-segments"
       role="tablist"
-      aria-label="Search scope"
+      [attr.aria-label]="texts.scopesLabel"
       ngDocSelectionHost>
       <ng-doc-selection [align]="null" />
       @for (item of scopes; track item.id) {
@@ -53,7 +52,7 @@
         </button>
       }
     </div>
-    <kbd class="ng-doc-command-palette-kbd">Esc</kbd>
+    <kbd class="ng-doc-command-palette-kbd">{{ texts.keyEscape }}</kbd>
   </div>
 
   <div class="ng-doc-command-palette-body">
@@ -62,7 +61,7 @@
       class="ng-doc-command-palette-list"
       id="ng-doc-command-palette-list"
       role="listbox"
-      aria-label="Results">
+      [attr.aria-label]="texts.resultsLabel">
       @for (section of sections(); track section.key) {
         <div class="ng-doc-command-palette-group" role="group" [attr.aria-label]="section.title">
           <div class="ng-doc-command-palette-section" aria-hidden="true">
@@ -76,7 +75,7 @@
               [id]="row.id"
               [attr.data-ng-doc-type]="row.type"
               [attr.data-ng-doc-url]="row.url ?? null"
-              [attr.aria-selected]="row.id === current?.id"
+              [attr.aria-selected]="row.id === selected()?.id"
               (mousedown)="$event.preventDefault()"
               (mousemove)="hover(rows().indexOf(row))"
               (click)="activate(row)">
@@ -85,7 +84,9 @@
                   [ngTemplateOutlet]="icon"
                   [ngTemplateOutletContext]="{ $implicit: row.icon }"></ng-container>
               </span>
-              <span class="ng-doc-command-palette-name" [class.ng-doc-command-palette-mono]="row.type === 'api'">
+              <span
+                class="ng-doc-command-palette-name"
+                [class.ng-doc-command-palette-mono]="row.type === 'api'">
                 <span class="ng-doc-command-palette-label">
                   @for (segment of row.label; track $index) {
                     @if (segment.match) {
@@ -103,7 +104,9 @@
                 @if (row.kind) {
                   <ng-doc-kind-icon [kind]="row.kind"></ng-doc-kind-icon>
                 } @else if (row.type === 'api') {
-                  <span class="ng-doc-command-palette-type" data-ng-doc-page-type="api">API</span>
+                  <span class="ng-doc-command-palette-type" data-ng-doc-page-type="api">{{
+                    texts.typeApi
+                  }}</span>
                 }
                 @if (row.keys?.length && shortcuts.enabled()) {
                   @for (key of row.keys; track key) {
@@ -132,9 +135,9 @@
         <div class="ng-doc-command-palette-empty" role="presentation">
           @if (searching()) {
             <ng-doc-spinner size="small"></ng-doc-spinner>
-            Searching…
+            {{ texts.searching }}
           } @else if (failed()) {
-            Search failed. Try again.
+            {{ texts.failed }}
           } @else {
             {{ emptyMessage() }}
           }
@@ -143,26 +146,30 @@
     </div>
 
     <div class="ng-doc-command-palette-preview">
-      @if (current) {
+      @if (selected(); as current) {
         <div class="ng-doc-command-palette-preview-top">
           @switch (current.type) {
             @case ('api') {
               @if (current.kind) {
                 <ng-doc-kind-icon [kind]="current.kind"></ng-doc-kind-icon>
               } @else {
-                <span class="ng-doc-command-palette-type" data-ng-doc-page-type="api">API</span>
+                <span class="ng-doc-command-palette-type" data-ng-doc-page-type="api">{{
+                  texts.typeApi
+                }}</span>
               }
               <span>{{ current.scope }}</span>
             }
             @case ('guide') {
-              <span class="ng-doc-command-palette-type" data-ng-doc-page-type="guide">Guide</span>
+              <span class="ng-doc-command-palette-type" data-ng-doc-page-type="guide">{{
+                texts.typeGuide
+              }}</span>
               <span>{{ current.meta }}</span>
             }
             @default {
               <ng-container
                 [ngTemplateOutlet]="icon"
                 [ngTemplateOutletContext]="{ $implicit: 'action' }"></ng-container>
-              <span>Action</span>
+              <span>{{ texts.typeAction }}</span>
             }
           }
         </div>
@@ -173,11 +180,11 @@
         </h2>
         @if (current.type === 'action') {
           <p class="ng-doc-command-palette-muted">
-            {{ current.action?.keepOpen ? 'Changes the setting and keeps the search open.' : 'Runs immediately.' }}
+            {{ current.action?.keepOpen ? texts.actionKeepsOpen : texts.actionRunsImmediately }}
           </p>
           @if (current.keys?.length && shortcuts.enabled()) {
             <div class="ng-doc-command-palette-hint">
-              Shortcut
+              {{ texts.shortcut }}
               @for (key of current.keys; track key) {
                 <kbd class="ng-doc-command-palette-kbd">{{ key }}</kbd>
               }
@@ -192,7 +199,7 @@
           }
           <div class="ng-doc-command-palette-hint">
             <kbd class="ng-doc-command-palette-kbd">↵</kbd>
-            {{ current.type === 'api' ? 'open symbol page' : 'open' }}
+            {{ current.type === 'api' ? texts.openSymbolPage : texts.open }}
           </div>
         }
       }
@@ -205,25 +212,28 @@
     <span>
       <kbd class="ng-doc-command-palette-kbd">↑</kbd>
       <kbd class="ng-doc-command-palette-kbd">↓</kbd>
-      navigate
+      {{ texts.footerNavigate }}
     </span>
-    <span class="ng-doc-command-palette-wide"><kbd class="ng-doc-command-palette-kbd">↵</kbd> open</span>
     <span class="ng-doc-command-palette-wide"
-      ><kbd class="ng-doc-command-palette-kbd">Tab</kbd> scopes and settings</span
+      ><kbd class="ng-doc-command-palette-kbd">↵</kbd> {{ texts.open }}</span
+    >
+    <span class="ng-doc-command-palette-wide"
+      ><kbd class="ng-doc-command-palette-kbd">{{ texts.keyTab }}</kbd>
+      {{ texts.footerScopes }}</span
     >
     @if (shortcuts.enabled()) {
       <span class="ng-doc-command-palette-wide"
-        ><kbd class="ng-doc-command-palette-kbd">/</kbd> also opens search</span
+        ><kbd class="ng-doc-command-palette-kbd">/</kbd> {{ texts.footerSlash }}</span
       >
     }
     <button
       class="ng-doc-command-palette-switch"
       type="button"
       role="switch"
+      [attr.title]="texts.shortcutsSwitchTitle"
       [attr.aria-checked]="shortcuts.enabled()"
-      title="Single-character shortcuts: / [ ] F L T"
       (click)="shortcuts.toggle()">
-      Single-key shortcuts
+      {{ texts.shortcutsSwitch }}
       <span class="ng-doc-command-palette-track" aria-hidden="true"></span>
     </button>
   </div>

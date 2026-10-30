@@ -1,23 +1,23 @@
 @if (details()) {
-  <section class="ng-doc-toc-section ng-doc-toc-details" aria-label="Symbol">
+  <section class="ng-doc-toc-section ng-doc-toc-details" [attr.aria-label]="texts.symbol">
     <div class="ng-doc-toc-head">
-      <span class="ng-doc-toc-label">Symbol</span>
+      <span class="ng-doc-toc-label">{{ texts.symbol }}</span>
     </div>
     <div #details></div>
   </section>
 }
 @if (tableOfContent().length) {
-  <nav class="ng-doc-toc-section" aria-label="On this page">
+  <nav class="ng-doc-toc-section" [attr.aria-label]="texts.onThisPage">
     <div class="ng-doc-toc-head">
-      <span class="ng-doc-toc-label">On this page</span>
+      <span class="ng-doc-toc-label">{{ texts.onThisPage }}</span>
       <span class="ng-doc-toc-percent" aria-hidden="true">{{ progress() }}%</span>
     </div>
     <div
       class="ng-doc-toc-progress"
       role="progressbar"
-      aria-label="Reading progress"
       aria-valuemin="0"
       aria-valuemax="100"
+      [attr.aria-label]="texts.readingProgress"
       [attr.aria-valuenow]="progress()">
       <span [style.width.%]="progress()"></span>
     </div>
@@ -51,7 +51,7 @@
       aria-hidden="true">
       <path d="M12 19V5m-6 6 6-6 6 6" />
     </svg>
-    Back to top
+    {{ texts.backToTop }}
   </button>
   <button
     type="button"
@@ -71,7 +71,7 @@
       <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7" />
       <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7" />
     </svg>
-    <span aria-live="polite">{{ copied() ? 'Copied' : 'Copy link' }}</span>
+    <span aria-live="polite">{{ copied() ? texts.copied : texts.copyLink }}</span>
   </button>
   @if (editSourceFileUrl(); as url) {
     <a class="ng-doc-toc-action" [href]="url" target="_blank" rel="noopener">
@@ -87,7 +87,7 @@
         aria-hidden="true">
         <path d="M12 20h9M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4Z" />
       </svg>
-      Edit this page
+      {{ texts.edit }}
     </a>
   }
 </div>

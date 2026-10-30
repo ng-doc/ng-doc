@@ -1,6 +1,10 @@
 @if (options().container ?? true) {
   <div class="ng-doc-demo-toolbar">
-    <div class="ng-doc-demo-views" role="tablist" aria-label="Demo view" ngDocSelectionHost>
+    <div
+      class="ng-doc-demo-views"
+      role="tablist"
+      [attr.aria-label]="texts.viewsLabel"
+      ngDocSelectionHost>
       <ng-doc-selection [align]="null" />
       @for (item of views(); track item; let i = $index) {
         <button
@@ -16,7 +20,7 @@
           (keydown)="onViewKeydown($event)"
           #viewTab>
           @if (item === 'preview') {
-            Preview
+            {{ texts.preview }}
           } @else {
             @if (assets()[i - 1].icon; as icon) {
               <ng-doc-icon [customIcon]="icon"></ng-doc-icon>
@@ -29,7 +33,11 @@
 
     @if (view() === 'preview' && !options().fullscreenRoute) {
       <span class="ng-doc-demo-width-readout">{{ widthReadout() }}</span>
-      <div class="ng-doc-demo-widths" role="group" aria-label="Preview width" ngDocSelectionHost>
+      <div
+        class="ng-doc-demo-widths"
+        role="group"
+        [attr.aria-label]="texts.widthsLabel"
+        ngDocSelectionHost>
         <ng-doc-selection [align]="null" />
         @for (item of previewWidths; track item.width) {
           <button
@@ -66,7 +74,7 @@
     }
 
     @if (assets().length) {
-      <ng-doc-copy-button class="ng-doc-demo-copy" [text]="copyText" label="Copy code">
+      <ng-doc-copy-button class="ng-doc-demo-copy" [text]="copyText" [label]="copyTexts.copyCode">
         <ng-doc-icon icon="copy"></ng-doc-icon>
       </ng-doc-copy-button>
     }
@@ -79,8 +87,8 @@
         [href]="url"
         target="_blank"
         rel="noopener"
-        aria-label="Open in a new tab"
-        ngDocTooltip="Open in a new tab">
+        [attr.aria-label]="texts.openInNewTab"
+        [ngDocTooltip]="texts.openInNewTab">
         <ng-doc-icon icon="external-link"></ng-doc-icon>
       </a>
     }

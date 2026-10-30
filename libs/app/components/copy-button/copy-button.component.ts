@@ -8,6 +8,8 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
+import type { NgDocCopyTexts } from '@ng-doc/app/interfaces';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import { NgDocButtonIconComponent, NgDocTooltipDirective } from '@ng-doc/ui-kit';
 
 /** The text a copy button copies, or a function that reads it when the button is pressed. */
@@ -38,11 +40,13 @@ export type NgDocCopyButtonText = string | (() => string);
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgDocCopyButtonComponent {
+  protected readonly texts: NgDocCopyTexts = inject(NG_DOC_TEXTS).copy;
+
   /** The text to copy, or a function that returns it when the button is pressed. */
   readonly text = input.required<NgDocCopyButtonText>();
 
-  /** Accessible name of the button, also shown in its tooltip. */
-  readonly label = input<string>('Copy to clipboard');
+  /** Accessible name of the button, also shown in its tooltip. Defaults to the `copy.copy` text. */
+  readonly label = input<string>(this.texts.copy);
 
   /** The tooltip of the button. */
   readonly tooltip = viewChild.required(NgDocTooltipDirective);
@@ -56,7 +60,7 @@ export class NgDocCopyButtonComponent {
       const text: NgDocCopyButtonText = this.text();
 
       this.clipboard.copy(typeof text === 'function' ? text() : text);
-      this.tooltipText.set('Copied!');
+      this.tooltipText.set(this.texts.copied);
       this.tooltip().show();
     });
   }

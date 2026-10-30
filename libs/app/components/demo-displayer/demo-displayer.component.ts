@@ -1,8 +1,10 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, model } from '@angular/core';
 import { NgDocCodeComponent } from '@ng-doc/app/components/code';
 import { NgDocCopyButtonComponent } from '@ng-doc/app/components/copy-button';
 import { NgDocCodeHighlighterDirective } from '@ng-doc/app/directives/code-highlighter';
+import type { NgDocCopyTexts, NgDocDemoTexts } from '@ng-doc/app/interfaces';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import {
   NgDocButtonIconComponent,
   NgDocContent,
@@ -37,6 +39,9 @@ let nextId = 0;
   },
 })
 export class NgDocDemoDisplayerComponent {
+  protected readonly texts: NgDocDemoTexts = inject(NG_DOC_TEXTS).demo;
+  protected readonly copyTexts: NgDocCopyTexts = inject(NG_DOC_TEXTS).copy;
+
   /** Content shown when the code is revealed; when empty, the highlighted `code` is shown. */
   readonly codeContent = input<NgDocContent>('');
 

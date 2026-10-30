@@ -13,13 +13,13 @@
     @if (state() === 'loading') {
       <span class="ng-doc-demo-frame-skeleton" aria-hidden="true"></span>
       <span
-        >Loading the demo.
-        <a [href]="src()" target="_blank" rel="noopener">Open it in a new tab</a></span
+        >{{ texts.loading }}
+        <a [href]="src()" target="_blank" rel="noopener">{{ texts.openFrameInNewTab }}</a></span
       >
     } @else {
       <span
-        >The demo did not load.
-        <a [href]="src()" target="_blank" rel="noopener">Open it in a new tab</a></span
+        >{{ texts.failed }}
+        <a [href]="src()" target="_blank" rel="noopener">{{ texts.openFrameInNewTab }}</a></span
       >
     }
   </div>
