@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   contentChild,
+  inject,
   input,
   TemplateRef,
 } from '@angular/core';
@@ -16,6 +17,7 @@ import { NgDocDataDirective } from '@ng-doc/ui-kit/directives/data';
 import { NgDocFocusCatcherDirective } from '@ng-doc/ui-kit/directives/focus-catcher';
 import { NgDocInputStringDirective } from '@ng-doc/ui-kit/directives/input-string';
 import { NgDocContextWithImplicit } from '@ng-doc/ui-kit/interfaces';
+import { NG_DOC_UI_KIT_TEXTS } from '@ng-doc/ui-kit/tokens';
 import { NgDocContent } from '@ng-doc/ui-kit/types';
 import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { DIControl, provideHostControl } from 'di-controls';
@@ -52,8 +54,8 @@ export class NgDocComboboxComponent<T> extends DIControl<T> implements NgDocList
   /** Whether the text field is read-only: the value is picked from the list only. */
   readonly readonly = input<boolean>(false);
 
-  /** Placeholder of the text field. */
-  readonly placeholder = input<string>('Chose the value');
+  /** Placeholder of the text field. Defaults to the `combobox.placeholder` text. */
+  readonly placeholder = input<string>(inject(NG_DOC_UI_KIT_TEXTS).combobox.placeholder);
 
   /** Whether the clear button is shown. */
   readonly clearButton = input<boolean>(true);
