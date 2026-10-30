@@ -10,7 +10,8 @@ export interface NgDocTypeControlProviderOptions {
   /**
    * You can use this to change the order of the type control.
    * Controls are sorted by ascending order, and controls without an order come last.
-   * NgDoc's own controls use 10 (type aliases), 20 (`string`), 30 (`number`) and 40 (`boolean`)
+   * NgDoc's own controls use 10 (type aliases), 20 (`string`), 30 (`number`), 40 (`boolean`),
+   * 50 (`string[]` and `number[]`) and 60 (other arrays)
    */
   order?: number;
   /**

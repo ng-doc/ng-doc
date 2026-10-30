@@ -1,0 +1,85 @@
+@if (literal(); as literal) {
+  <code class="ng-doc-list-control-literal">{{ literal }}</code>
+}
+@if (items().length) {
+  <ol class="ng-doc-list-control-items">
+    @for (item of items(); track $index; let first = $first, last = $last) {
+      <li class="ng-doc-list-control-item" [attr.data-ng-doc-list-item]="$index">
+        <ng-doc-input-wrapper diControlSilencer>
+          <input
+            #field
+            class="ng-doc-input"
+            data-ng-doc-list-input
+            [attr.type]="inputType"
+            [attr.aria-label]="'Item ' + ($index + 1)"
+            [attr.aria-invalid]="invalid().has($index) ? 'true' : null"
+            [value]="item"
+            [disabled]="disabled"
+            (input)="edit($index, field.value)"
+            (blur)="commit($index, field)" />
+        </ng-doc-input-wrapper>
+        <button
+          ng-doc-button-icon-transparent
+          type="button"
+          size="small"
+          class="ng-doc-list-control-up"
+          data-ng-doc-list-up
+          aria-label="Move up"
+          [rounded]="false"
+          [disabled]="disabled || first"
+          (click)="move($index, -1)"
+          (focusout)="touch()">
+          <ng-doc-icon icon="chevron-right"></ng-doc-icon>
+        </button>
+        <button
+          ng-doc-button-icon-transparent
+          type="button"
+          size="small"
+          class="ng-doc-list-control-down"
+          data-ng-doc-list-down
+          aria-label="Move down"
+          [rounded]="false"
+          [disabled]="disabled || last"
+          (click)="move($index, 1)"
+          (focusout)="touch()">
+          <ng-doc-icon icon="chevron-right"></ng-doc-icon>
+        </button>
+        <button
+          ng-doc-button-icon-transparent
+          type="button"
+          size="small"
+          data-ng-doc-list-remove
+          aria-label="Remove"
+          [rounded]="false"
+          [disabled]="disabled"
+          (click)="remove($index)"
+          (focusout)="touch()">
+          <ng-doc-icon icon="x"></ng-doc-icon>
+        </button>
+      </li>
+    }
+  </ol>
+}
+<div class="ng-doc-list-control-actions">
+  <button
+    ng-doc-button-text
+    type="button"
+    data-ng-doc-list-add
+    [disabled]="disabled"
+    (click)="add()"
+    (focusout)="touch()">
+    Add item
+  </button>
+  @if (canReset()) {
+    <button
+      ng-doc-button-text
+      type="button"
+      data-ng-doc-list-reset
+      aria-label="Reset to the default value"
+      [disabled]="disabled"
+      (click)="reset()"
+      (focusout)="touch()">
+      Reset
+    </button>
+  }
+</div>

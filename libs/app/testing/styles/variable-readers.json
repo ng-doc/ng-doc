@@ -7,6 +7,10 @@
   "--ng-doc-alert": [
     "libs/app/components/mermaid-viewer/mermaid-viewer.component.scss :: :host .ng-doc-mermaid-error",
     "libs/app/components/sidebar/sidebar-item/sidebar-item.component.scss :: .ng-doc-sidebar-status[data-ng-doc-color=alert] :: --_status-hue",
+    "libs/app/type-controls/json-control/json-control.component.scss :: .ng-doc-json-control-error",
+    "libs/app/type-controls/json-control/json-control.component.scss :: .ng-doc-json-control-field[aria-invalid=true]",
+    "libs/app/type-controls/list-control/list-control.component.scss :: .ng-doc-list-control-item ng-doc-input-wrapper:has(input[aria-invalid=true]) :: --ng-doc-input-border",
+    "libs/app/type-controls/list-control/list-control.component.scss :: .ng-doc-list-control-item ng-doc-input-wrapper:has(input[aria-invalid=true]) :: --ng-doc-input-border-hover",
     "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host[data-ng-doc-type=alert] :: --ng-doc-blockquote-background",
     "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host[data-ng-doc-type=alert] :: --ng-doc-blockquote-border-color",
     "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host[data-ng-doc-type=alert] :: --ng-doc-icon-color",
@@ -283,6 +287,7 @@
     "libs/app/styles/variables.scss :: :root :: --ng-doc-tabs-margin",
     "libs/app/styles/variables.scss :: :root :: --ng-doc-toc-indent",
     "libs/app/styles/variables.scss :: :root :: --ng-doc-toc-top-padding",
+    "libs/app/type-controls/json-control/json-control.component.scss :: .ng-doc-json-control-field",
     "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host :: --ng-doc-code-margin",
     "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host",
     "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[data-ng-doc-rounded=false]",
@@ -417,6 +422,8 @@
   "--ng-doc-border-size": [
     "libs/app/styles/themes/dark.scss :: :root[data-theme=dark] :: --ng-doc-playground-input-border",
     "libs/app/styles/themes/dark.scss :: @media (prefers-color-scheme: dark) > :root[data-theme=auto] :: --ng-doc-playground-input-border",
+    "libs/app/type-controls/list-control/list-control.component.scss :: .ng-doc-list-control-item ng-doc-input-wrapper:has(input[aria-invalid=true]) :: --ng-doc-input-border",
+    "libs/app/type-controls/list-control/list-control.component.scss :: .ng-doc-list-control-item ng-doc-input-wrapper:has(input[aria-invalid=true]) :: --ng-doc-input-border-hover",
     "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-checkbox-border",
     "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-checkbox-border-hover",
     "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-input-border",
@@ -537,7 +544,9 @@
     "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=readonly]",
     "libs/app/styles/parts/tags.scss :: .ng-doc-tag[data-content=static]",
     "libs/app/styles/typography.scss :: *:not(pre) > code.ngde",
-    "libs/app/styles/typography.scss :: pre.shiki code"
+    "libs/app/styles/typography.scss :: pre.shiki code",
+    "libs/app/type-controls/json-control/json-control.component.scss :: .ng-doc-json-control-field",
+    "libs/app/type-controls/list-control/list-control.component.scss :: .ng-doc-list-control-literal"
   ],
   "--ng-doc-code-font-size": [
     "libs/app/components/code/code.component.scss :: :host .ng-doc-code-body ::ng-deep pre code",
@@ -644,6 +653,7 @@
     "libs/ui-kit/styles/variables.scss :: :root :: --ng-doc-floated-border"
   ],
   "--ng-doc-floated-border-radius": [
+    "libs/app/type-controls/json-control/json-control.component.scss :: .ng-doc-json-control-field",
     "libs/ui-kit/components/floated-border/floated-border.component.scss :: :host:after",
     "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container",
     "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-input, :host .ng-doc-input-container ::ng-deep .ng-doc-input",
@@ -667,6 +677,7 @@
     "libs/app/components/root/root.component.scss :: :host .ng-doc-skip-link:focus-visible",
     "libs/app/components/search/search.component.scss :: .ng-doc-search-field:focus-visible",
     "libs/app/styles/parts/tables.scss :: .ng-doc-members-filter:focus-within",
+    "libs/app/type-controls/json-control/json-control.component.scss :: .ng-doc-json-control-field:focus-visible",
     "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host:focus-visible",
     "libs/ui-kit/components/button/button.component.scss :: :host:focus-visible",
     "libs/ui-kit/components/checkbox/checkbox.component.scss :: .ng-doc-checkbox:has(input:focus-visible)",
@@ -993,17 +1004,20 @@
   "--ng-doc-input-background-color": [
     "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-filter",
     "libs/app/styles/parts/tables.scss :: .ng-doc-members-filter",
+    "libs/app/type-controls/json-control/json-control.component.scss :: .ng-doc-json-control-field",
     "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container"
   ],
   "--ng-doc-input-border": [
     "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-filter",
     "libs/app/styles/parts/tables.scss :: .ng-doc-members-filter",
     "libs/app/styles/variables.scss :: :root :: --ng-doc-playground-input-border",
+    "libs/app/type-controls/json-control/json-control.component.scss :: .ng-doc-json-control-field",
     "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container:after"
   ],
   "--ng-doc-input-border-hover": [
     "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-filter:hover",
     "libs/app/styles/parts/tables.scss :: .ng-doc-members-filter:hover",
+    "libs/app/type-controls/json-control/json-control.component.scss :: .ng-doc-json-control-field:hover:not(:disabled)",
     "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host:hover:not([data-ng-doc-input-disabled=true]) :: --ng-doc-input-border"
   ],
   "--ng-doc-input-color": [
@@ -1767,6 +1781,8 @@
     "libs/app/styles/parts/modifiers.scss :: .ng-doc-modifiers-wrapper",
     "libs/app/styles/typography.scss :: ul li.ngde, ol li.ngde",
     "libs/app/styles/typography.scss :: ul ul.ngde, ol ul.ngde, ul ol.ngde, ol ol.ngde",
+    "libs/app/type-controls/json-control/json-control.component.scss :: :host",
+    "libs/app/type-controls/list-control/list-control.component.scss :: .ng-doc-list-control-item",
     "libs/ui-kit/components/tab-group/tab-group.component.scss :: :host .ng-doc-tabs-header"
   ],
   "--ng-doc-space-12": ["libs/ui-kit/styles/tokens.scss :: :root :: --ng-doc-h2-margin-top"],
@@ -1831,6 +1847,9 @@
     "libs/app/styles/typography.scss :: h1.ngde, h2.ngde, h3.ngde, h4.ngde, h5.ngde, h6.ngde",
     "libs/app/styles/typography.scss :: h3.ngde",
     "libs/app/styles/typography.scss :: table.ngde thead tr th",
+    "libs/app/type-controls/list-control/list-control.component.scss :: .ng-doc-list-control-actions",
+    "libs/app/type-controls/list-control/list-control.component.scss :: .ng-doc-list-control-items",
+    "libs/app/type-controls/list-control/list-control.component.scss :: :host",
     "libs/app/type-controls/type-alias-control/type-alias-control.component.scss :: .ng-doc-type-alias-default",
     "libs/app/type-controls/type-alias-control/type-alias-control.component.scss :: .ng-doc-type-alias-value",
     "libs/ui-kit/components/checkbox/checkbox.component.scss :: .ng-doc-checkbox-icons",
@@ -2065,6 +2084,7 @@
     "libs/app/styles/variables.scss :: :root :: --ng-doc-search-result-color",
     "libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-plain",
     "libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-punctuation",
+    "libs/app/type-controls/json-control/json-control.component.scss :: .ng-doc-json-control-field",
     "libs/ui-kit/components/blockquote/blockquote.component.scss :: :host",
     "libs/ui-kit/components/button-toggle/button-toggle.component.scss :: :host",
     "libs/ui-kit/components/button/button.component.scss :: :host",
@@ -2161,6 +2181,7 @@
     "libs/app/styles/parts/text.scss :: .ng-doc-no-content",
     "libs/app/styles/variables.scss :: :root :: --ng-doc-code-line-number-color",
     "libs/app/styles/variables.scss :: :root :: --ng-doc-syntax-comment",
+    "libs/app/type-controls/list-control/list-control.component.scss :: .ng-doc-list-control-literal",
     "libs/app/type-controls/type-alias-control/type-alias-control.component.scss :: .ng-doc-type-alias-default",
     "libs/ui-kit/components/combobox/combobox.component.scss :: .ng-doc-combobox-chevron :: --ng-doc-icon-color",
     "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host .ng-doc-input-container .ng-doc-input::placeholder, :host .ng-doc-input-container ::ng-deep .ng-doc-input::placeholder",

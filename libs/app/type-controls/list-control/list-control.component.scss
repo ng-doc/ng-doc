@@ -1,0 +1,58 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ng-doc-space-2);
+  width: 100%;
+  min-width: 0;
+}
+
+// `undefined`, `null` or `[]`: the value when it has no items.
+.ng-doc-list-control-literal {
+  font-family: var(--ng-doc-code-font);
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--ng-doc-text-muted);
+}
+
+.ng-doc-list-control-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ng-doc-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// The field takes the width the buttons leave.
+.ng-doc-list-control-item {
+  display: flex;
+  align-items: center;
+  gap: var(--ng-doc-space-1);
+  min-width: 0;
+
+  ng-doc-input-wrapper {
+    flex: 1 1 auto;
+    min-width: 0;
+
+    // A field whose text is not an item, such as an empty number field.
+    &:has(input[aria-invalid='true']) {
+      --ng-doc-input-border: var(--ng-doc-border-size) solid var(--ng-doc-alert);
+      --ng-doc-input-border-hover: var(--ng-doc-border-size) solid var(--ng-doc-alert);
+    }
+  }
+}
+
+// The UI Kit has a right chevron only: it is turned to point up or down.
+.ng-doc-list-control-up ng-doc-icon {
+  transform: rotate(-90deg);
+}
+
+.ng-doc-list-control-down ng-doc-icon {
+  transform: rotate(90deg);
+}
+
+.ng-doc-list-control-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--ng-doc-space-2);
+}

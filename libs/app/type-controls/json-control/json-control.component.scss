@@ -1,0 +1,43 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ng-doc-space-1);
+  width: 100%;
+  min-width: 0;
+}
+
+// Drawn like the text fields of the inspector.
+.ng-doc-json-control-field {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: var(--ng-doc-base-gutter) calc(var(--ng-doc-base-gutter) * 1.5);
+  resize: vertical;
+  border: var(--ng-doc-input-border);
+  border-radius: var(--ng-doc-floated-border-radius);
+  outline: none;
+  background-color: var(--ng-doc-input-background-color);
+  color: var(--ng-doc-text);
+  font-family: var(--ng-doc-code-font);
+  font-size: 13px;
+  line-height: 18px;
+
+  &:hover:not(:disabled) {
+    border: var(--ng-doc-input-border-hover);
+  }
+
+  &:focus-visible {
+    box-shadow: var(--ng-doc-focus-ring);
+  }
+
+  &[aria-invalid='true'] {
+    border-color: var(--ng-doc-alert);
+  }
+}
+
+.ng-doc-json-control-error {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ng-doc-alert);
+}
