@@ -34,8 +34,11 @@ import { NgDocFullscreenRouteService } from '@ng-doc/app/services/fullscreen-rou
 import { NG_DOC_PAGE_SKELETON } from '@ng-doc/app/tokens';
 import {
   NgDocBooleanControlComponent,
+  NgDocJsonControlComponent,
   NgDocNumberControlComponent,
+  NgDocNumberListControlComponent,
   NgDocStringControlComponent,
+  NgDocStringListControlComponent,
   NgDocTypeAliasControlComponent,
 } from '@ng-doc/app/type-controls';
 import type { NgDocContentSource } from '@ng-doc/core/interfaces';
@@ -71,6 +74,17 @@ import { WA_LOCATION } from '@ng-web-apis/common';
     provideTypeControl('string', NgDocStringControlComponent, { order: 20 }),
     provideTypeControl('number', NgDocNumberControlComponent, { order: 30 }),
     provideTypeControl('boolean', NgDocBooleanControlComponent, { order: 40 }),
+    // Lists have several buttons, so their rows are not labels (see `labelWrapper`).
+    provideTypeControl('string[]', NgDocStringListControlComponent, {
+      order: 50,
+      labelWrapper: false,
+    }),
+    provideTypeControl('number[]', NgDocNumberListControlComponent, {
+      order: 50,
+      labelWrapper: false,
+    }),
+    // Array types without a control of their own (see the inspector's `arrayType`).
+    provideTypeControl('NgDocArray', NgDocJsonControlComponent, { order: 60 }),
   ],
   host: {
     ngSkipHydration: 'true',

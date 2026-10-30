@@ -8,6 +8,7 @@ import {
 
 import DemosAndPlaygroundsCategory from '../ng-doc.category';
 import { FormatDatePipe } from './format-date.pipe';
+import { TagCloudComponent } from './tag-cloud/tag-cloud.component';
 
 const PlaygroundsPage: NgDocPage = {
   title: 'Playgrounds',
@@ -48,6 +49,10 @@ const PlaygroundsPage: NgDocPage = {
     DatePipePlayground: {
       target: FormatDatePipe,
       template: `{{'2023-06-05T08:00:00.000Z' | formatDate}}`,
+    },
+    TagCloudPlayground: {
+      target: TagCloudComponent,
+      template: `<ng-doc-selector></ng-doc-selector>`,
     },
     ButtonPlayground: {
       target: NgDocButtonComponent,

@@ -70,6 +70,8 @@ alias becomes the name of the row. The type of the input chooses the control:
 | `boolean`                              | A checkbox.                                                               |
 | A union of literals, or an alias of it | A list of the values, such as `'small' \| 'medium' \| 'large'`.           |
 | An enum                                | A list of the member names, such as `Good`, that sets the member's value. |
+| `string[]` or `number[]`               | A list of fields, one per item, to add, remove and reorder items.         |
+| Any other array, or a tuple            | A JSON field.                                                             |
 | A type with a type control             | Your control (`*CustomTypeControlsPage`).                                 |
 | Any other type                         | No control. In development, the browser console names the skipped input.  |
 
@@ -102,6 +104,48 @@ export class StatusComponent {
 > Only the new engine lists the members of an enum. With the legacy builders, an enum input gets no
 > control: list its values in `controls` with the type `NgDocTypeAlias` (see "Controls for other
 > inputs").
+
+## Arrays
+
+An array of strings or numbers gets a list: a field per item, with buttons that move the item up
+or down and remove it, and **Add item** at the end. Any other array gets a JSON field. Try both
+with the `tags`, `sizes` and `accents` inputs of this component:
+
+```typescript name="tag-cloud.component.ts"
+export interface TagCloudAccent {
+  tag: string;
+  color: NgDocColor;
+}
+
+export class TagCloudComponent {
+  readonly tags = input<string[]>(['Angular', 'NgDoc', 'Playground']);
+  readonly sizes = input<number[]>();
+  readonly accents = input<TagCloudAccent[]>([{ tag: 'NgDoc', color: 'success' }]);
+}
+```
+
+{{ NgDocActions.playground("TagCloudPlayground") }}
+
+The list edits `string[]` and `number[]` inputs, however they are written: `Array<string>`,
+`readonly string[]` and `ReadonlyArray<string>` too, and optional or nullable ones, such as
+`input<number[]>()`.
+
+- The items of a `number[]` are numbers. A field without a number, such as an empty one, is marked
+  as invalid and the item keeps its number until you type one.
+- `undefined`, `null` and an empty array are different values, and the list shows which one the
+  input has. Removing the last item leaves `[]`. **Reset**, under the list, sets the input back to
+  its default value, such as `undefined` for an optional input.
+
+The JSON field edits every other array: arrays of objects (`Item[]`, `Array<{ x: number }>`),
+nested arrays (`string[][]`), arrays of unions (`(string | number)[]`) and tuples
+(`[string, number]`), optional or not. It shows the value as JSON, and sets the input when the text
+is valid JSON. While it is not, the field is marked as invalid and the input keeps its last valid
+value. An empty field sets `undefined`.
+
+The type of an input is read as TypeScript prints it, so an input typed with an alias of an array,
+such as `type Tags = string[]`, is typed `Tags` and gets no control. Register one of the built-in
+controls for the alias (`*CustomTypeControlsPage#reuse-the-built-in-controls`). In `controls`, name
+an array type such as `'string[]'`, or `'NgDocArray'` for the JSON field.
 
 ## Multiple selectors
 

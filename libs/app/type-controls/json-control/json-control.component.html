@@ -1,0 +1,16 @@
+<textarea
+  #field
+  class="ng-doc-json-control-field"
+  spellcheck="false"
+  autocapitalize="off"
+  autocomplete="off"
+  [rows]="rows()"
+  [value]="text()"
+  [disabled]="disabled"
+  [attr.aria-invalid]="invalid() ? 'true' : null"
+  [attr.aria-describedby]="invalid() ? errorId : null"
+  (input)="edit(field.value)"
+  (blur)="touch()"></textarea>
+@if (invalid()) {
+  <span class="ng-doc-json-control-error" [id]="errorId">Invalid JSON</span>
+}
