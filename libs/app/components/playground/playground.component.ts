@@ -1,20 +1,34 @@
+import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
+  effect,
   inject,
+  Injector,
   input,
   InputSignal,
   linkedSignal,
   Signal,
   signal,
+  untracked,
   WritableSignal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgDocRootPage } from '@ng-doc/app/classes/root-page';
+import {
+  ɵdecodePlaygroundValue,
+  ɵNgDocPlaygroundFragment,
+  ɵNgDocPlaygroundFrameMessage,
+  ɵplaygroundStateToFragment,
+} from '@ng-doc/app/demo-app';
+import { getTokenForType } from '@ng-doc/app/providers/type-control';
 import { isSameObject } from '@ng-doc/core/helpers/is-same-object';
 import { objectKeys } from '@ng-doc/core/helpers/object-keys';
+import { ɵplaygroundTargetSlugs } from '@ng-doc/core/helpers/playground-target-slugs';
 import {
   NgDocPlaygroundConfig,
   NgDocPlaygroundOptions,
@@ -22,13 +36,23 @@ import {
 } from '@ng-doc/core/interfaces';
 import { NgDocAsArrayPipe } from '@ng-doc/ui-kit';
 
-import { NgDocPlaygroundDemoComponent } from './playground-demo/playground-demo.component';
+import { ɵNG_DOC_PLAYGROUND_CONTAINER } from './playground-container';
+import {
+  NgDocPlaygroundDemoComponent,
+  ɵNgDocPlaygroundFrame,
+} from './playground-demo/playground-demo.component';
 import { NgDocPlaygroundForm } from './playground-form';
 import { NgDocPlaygroundPropertiesComponent } from './playground-properties/playground-properties.component';
 
 /**
  * A playground: an inspector with a control per input and content slot of its target, and a demo
  * per selector (or the pipe) rendered with the chosen values.
+ *
+ * An isolated playground (the `isolated` option, or `isolatedPlaygrounds`) shows each demo in an
+ * iframe of its page in the demo application, which the Vite engine builds. The inspector stays
+ * here and passes the values in the iframe's URL fragment; the page reports the target's defaults
+ * back. When a value can't be put in the URL, the playground renders its demos in the page
+ * instead, with a note that names the input.
  */
 @Component({
   selector: 'ng-doc-playground',
@@ -36,6 +60,8 @@ import { NgDocPlaygroundPropertiesComponent } from './playground-properties/play
   styleUrls: ['./playground.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgDocPlaygroundPropertiesComponent, NgDocPlaygroundDemoComponent, NgDocAsArrayPipe],
+  // The generated playground classes this playground creates report their defaults to it.
+  providers: [{ provide: ɵNG_DOC_PLAYGROUND_CONTAINER, useExisting: NgDocPlaygroundComponent }],
 })
 export class NgDocPlaygroundComponent<
   T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties,
@@ -84,10 +110,171 @@ export class NgDocPlaygroundComponent<
     () => this.configuration().recreate === 'always',
   );
 
+  /**
+   * Why the playground renders in the page although it is isolated: the input whose value can't
+   * be sent to its iframes, or what failed. Once set, it stays for the rest of the visit.
+   */
+  readonly fallback: WritableSignal<string | undefined> = signal(undefined);
+
+  /** Whether the demos are shown in iframes of their pages in the demo application. */
+  readonly isolated: Signal<boolean> = computed(
+    () =>
+      !!this.rootPage.demoRoute &&
+      !this.fallback() &&
+      !this.uncloneableControl() &&
+      (this.configuration().isolated ?? this.rootPage.isolatedPlaygrounds ?? false),
+  );
+
+  /** The note that says why an isolated playground renders in the page. */
+  readonly fallbackNote: Signal<string | undefined> = computed(() => {
+    const reason = this.uncloneableControl() ?? this.fallback();
+
+    return reason && (this.configuration().isolated ?? this.rootPage.isolatedPlaygrounds)
+      ? `This playground runs in the page because ${reason}.`
+      : undefined;
+  });
+
+  /** The iframe of each target, by selector or pipe name, while the playground is isolated. */
+  readonly frames: Signal<Map<string, ɵNgDocPlaygroundFrame> | undefined> = computed(() => {
+    const encoded = this.fragment();
+
+    if (!this.isolated() || !encoded.ok) return undefined;
+    const targets = this.targets();
+    const slugs = ɵplaygroundTargetSlugs(targets);
+
+    return new Map(
+      targets.map((target: string, index: number) => [
+        target,
+        {
+          url: this.pageUrl(slugs[index]),
+          fragment: encoded.fragment,
+          title: `${this.id()} playground: ${target}`,
+        },
+      ]),
+    );
+  });
+
+  private readonly injector = inject(Injector);
+  private readonly platformLocation = inject(PlatformLocation);
+  private readonly appBaseHref = inject(APP_BASE_HREF, { optional: true });
+  private readonly formValue = signal<{
+    properties?: Record<string, unknown>;
+    content?: Record<string, boolean>;
+  }>({});
   private defaultProperties: Record<string, unknown> = {};
   private defaultContent: Record<string, boolean> = {};
+  private viewInitialized = false;
+
+  /** Every target of the playground, in the order of its page's routes: its selectors, or the pipe. */
+  private readonly targets: Signal<string[]> = computed(() =>
+    this.pipeName() ? [this.pipeName()] : this.selectors(),
+  );
+
+  /** The state of the iframes as a URL fragment. */
+  private readonly fragment: Signal<ɵNgDocPlaygroundFragment> = computed(() => {
+    const names = objectKeys(this.properties() ?? {}).map(String);
+    const value = this.formValue();
+    const configuration = this.configuration();
+    // Before the iframe reported the defaults, it gets the playground's own values only.
+    const properties =
+      value.properties ??
+      Object.fromEntries(
+        Object.entries(Object.assign({}, configuration.defaults, configuration.inputs)).filter(
+          ([name]) => names.includes(name),
+        ),
+      );
+
+    return ɵplaygroundStateToFragment({
+      inputs: names,
+      properties,
+      content: Object.entries(value.content ?? {})
+        .filter(([, shown]) => shown)
+        .map(([slot]) => slot),
+      recreate: this.recreateDemo(),
+    });
+  });
+
+  /**
+   * An input whose control is declared not cloneable (`cloneable: false` of `provideTypeControl`):
+   * the playground renders in the page from the start.
+   */
+  private readonly uncloneableControl: Signal<string | undefined> = computed(() => {
+    const controls = this.configuration().controls ?? {};
+
+    for (const [name, property] of Object.entries(this.properties() ?? {})) {
+      const control = controls[name];
+      const type = typeof control === 'string' ? control : control?.type ?? property.type;
+      const token = getTokenForType(type);
+
+      if (token && this.injector.get(token, null)?.options?.cloneable === false) {
+        return `the control of \`${name}\` doesn't support it`;
+      }
+    }
+    return undefined;
+  });
+
+  constructor() {
+    // A value that can't be put in the URL makes the playground render in the page.
+    effect(() => {
+      const encoded = this.fragment();
+
+      if (!encoded.ok && this.isolated()) {
+        untracked(() =>
+          this.fallback.set(
+            encoded.path
+              ? `the value of \`${encoded.path}\` (${encoded.reason}) can't be sent to its frame`
+              : encoded.reason,
+          ),
+        );
+      }
+    });
+    // A playground that fell back before its form existed creates it once a demo in the page has
+    // reported the defaults. A playground in the page from the start creates it in
+    // `ngAfterViewInit`, as before.
+    effect(() => {
+      if (this.fallback() && this.defaultValues() && !this.formGroup() && this.viewInitialized) {
+        untracked(() => this.createForm());
+      }
+    });
+  }
+
+  /**
+   * Takes a message of a demo's iframe: the target's defaults, which create the form, or a
+   * failure, which makes the playground render in the page.
+   * @param message - The message.
+   * @internal
+   */
+  onFrameMessage(message: ɵNgDocPlaygroundFrameMessage): void {
+    if (message.type === 'playground-error') {
+      this.fallback.set(`its frame failed: ${message.message}`);
+      return;
+    }
+    if (message.type !== 'playground-ready' || this.formGroup()) return;
+    if (message.uncloneable.length) {
+      this.fallback.set(
+        `the default value of \`${message.uncloneable[0]}\` can't be sent to its frame`,
+      );
+      return;
+    }
+    this.defaultValues.set(
+      Object.fromEntries(
+        Object.entries(message.defaults).map(([name, value]) => [
+          name,
+          ɵdecodePlaygroundValue(value),
+        ]),
+      ),
+    );
+    this.createForm();
+  }
 
   ngAfterViewInit(): void {
+    this.viewInitialized = true;
+    // An isolated playground creates its form once its iframe reported the defaults.
+    if (this.isolated()) return;
+    this.createForm();
+  }
+
+  private createForm(): void {
     this.defaultProperties = this.getPropertiesFormValues();
     this.defaultContent = this.getContentFormValues();
 
@@ -110,6 +297,34 @@ export class NgDocPlaygroundComponent<
       content: this.defaultContent,
     });
     this.formGroup.set(formGroup);
+    formGroup.valueChanges
+      .pipe(takeUntilDestroyed(this.injector.get(DestroyRef)))
+      .subscribe(() => this.formValue.set(formGroup.getRawValue()));
+    this.formValue.set(formGroup.getRawValue());
+  }
+
+  /**
+   * The URL of a target's page in the demo application, under the document's base href.
+   * @param slug
+   */
+  private pageUrl(slug: string): string {
+    const baseHref: string = (
+      this.appBaseHref ??
+      this.platformLocation.getBaseHrefFromDOM() ??
+      '/'
+    ).replace(/^\/+|\/+$/g, '');
+    const path: string = [
+      ...baseHref.split('/'),
+      ...(this.rootPage.demoRoute ?? '').split('/'),
+      'playground',
+      this.id(),
+      slug,
+    ]
+      .filter(Boolean)
+      .map((segment: string) => encodeURIComponent(segment))
+      .join('/');
+
+    return `/${path}`;
   }
 
   protected isDefaultState(): boolean {

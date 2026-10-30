@@ -2,7 +2,6 @@ import {
   ɵdecodePlaygroundValue,
   ɵencodePlaygroundValue,
   ɵisNgDocPlaygroundFrameMessage,
-  ɵisNgDocPlaygroundStateMessage,
   ɵNG_DOC_DEMO_MESSAGE_SOURCE,
   ɵNG_DOC_PLAYGROUND_STATE_URL_LIMIT,
   ɵNgDocPlaygroundEncodedValue,
@@ -11,6 +10,10 @@ import {
 } from '@ng-doc/app/demo-app';
 import { describe, expect, it } from 'vitest';
 
+/**
+ *
+ * @param value
+ */
 function encoded(value: unknown): ɵNgDocPlaygroundEncodedValue {
   const result = ɵencodePlaygroundValue(value);
 
@@ -18,7 +21,10 @@ function encoded(value: unknown): ɵNgDocPlaygroundEncodedValue {
   return result.value;
 }
 
-/** Encodes, sends through JSON (as a message or a URL carries it) and decodes. */
+/**
+ * Encodes, sends through JSON (as a message or a URL carries it) and decodes.
+ * @param value
+ */
 function roundTrip(value: unknown): unknown {
   return ɵdecodePlaygroundValue(JSON.parse(JSON.stringify(encoded(value))));
 }
@@ -42,6 +48,7 @@ describe('the value codec of isolated playgrounds', () => {
       Number.NaN,
       Number.POSITIVE_INFINITY,
       Number.NEGATIVE_INFINITY,
+      -0,
       date,
       [1, 'two', [undefined, null]],
       { label: 'Save', size: 'small', nested: { when: date, items: [] } },
@@ -142,31 +149,6 @@ describe('the value codec of isolated playgrounds', () => {
 describe('the messages of isolated playgrounds', () => {
   const base = { source: ɵNG_DOC_DEMO_MESSAGE_SOURCE, version: 1 } as const;
 
-  it('accepts a well-formed state and nothing else', () => {
-    const state = {
-      ...base,
-      type: 'playground-state',
-      revision: 3,
-      properties: { label: 'Save', off: encoded(undefined) },
-      content: { icon: true },
-      recreate: false,
-    };
-
-    expect(ɵisNgDocPlaygroundStateMessage(state)).toBe(true);
-    for (const value of [
-      null,
-      { ...state, source: 'other' },
-      { ...state, version: 2 },
-      { ...state, revision: -1 },
-      { ...state, revision: 1.5 },
-      { ...state, properties: { label: { $ngdoc: 'function' } } },
-      { ...state, content: { icon: 'yes' } },
-      { ...state, recreate: 'no' },
-    ]) {
-      expect(ɵisNgDocPlaygroundStateMessage(value), JSON.stringify(value)).toBe(false);
-    }
-  });
-
   it('accepts the frame messages and nothing else', () => {
     const ready = {
       ...base,
@@ -174,7 +156,7 @@ describe('the messages of isolated playgrounds', () => {
       defaults: { size: 'small' },
       uncloneable: ['tpl'],
     };
-    const applied = { ...base, type: 'playground-applied', revision: 0 };
+    const applied = { ...base, type: 'playground-applied', fragment: '~inputs=label&label=Save' };
     const error = { ...base, type: 'playground-error', phase: 'apply', message: 'boom' };
 
     for (const value of [ready, applied, error]) {
@@ -183,7 +165,7 @@ describe('the messages of isolated playgrounds', () => {
     for (const value of [
       { ...ready, uncloneable: [1] },
       { ...ready, defaults: { size: { $ngdoc: 'nope' } } },
-      { ...applied, revision: '1' },
+      { ...applied, fragment: 1 },
       { ...error, phase: 'render' },
       { ...base, type: 'size', height: 10 },
       {

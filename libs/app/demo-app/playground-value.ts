@@ -34,7 +34,7 @@ export const ɵNG_DOC_PLAYGROUND_STATE_URL_LIMIT = 8192;
 
 /**
  * Encodes a value for the frame of an isolated playground. Only plain data is accepted:
- * strings, numbers (`NaN` and the infinities included), booleans, `null`, `undefined`, `Date`s,
+ * strings, numbers (`NaN`, the infinities and `-0` included), booleans, `null`, `undefined`, `Date`s,
  * arrays and plain objects (prototype `Object.prototype` or `null`, own enumerable data
  * properties). Anything else (a function, a symbol, a `bigint`, a class instance such as a
  * `TemplateRef`, a `Map` or a signal, a getter, a cycle) is refused rather than sent changed: a
@@ -115,6 +115,10 @@ class Unencodable extends Error {
   }
 }
 
+/**
+ *
+ * @param value
+ */
 function isPlainObject(value: unknown): value is Record<string, unknown> {
   if (typeof value !== 'object' || value === null || Array.isArray(value)) return false;
   const prototype: unknown = Object.getPrototypeOf(value);
@@ -122,6 +126,11 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
   return prototype === Object.prototype || prototype === null;
 }
 
+/**
+ *
+ * @param path
+ * @param key
+ */
 function child(path: string, key: string | number): string {
   if (typeof key === 'number') return `${path}[${key}]`;
   return /^[A-Za-z_$][\w$]*$/.test(key)
@@ -131,10 +140,22 @@ function child(path: string, key: string | number): string {
     : `${path}[${JSON.stringify(key)}]`;
 }
 
+/**
+ *
+ * @param tag
+ * @param value
+ */
 function tagged(tag: string, value?: ɵNgDocPlaygroundEncodedValue): ɵNgDocPlaygroundEncodedValue {
   return value === undefined ? { [TAG]: tag } : { [TAG]: tag, value };
 }
 
+/**
+ *
+ * @param value
+ * @param path
+ * @param depth
+ * @param ancestors
+ */
 function encode(
   value: unknown,
   path: string,
@@ -146,7 +167,10 @@ function encode(
     case 'boolean':
       return value;
     case 'number':
-      return Number.isFinite(value) ? value : tagged('number', String(value));
+      // JSON writes -0 as 0, so -0 is tagged like the numbers JSON has no form for.
+      return Number.isFinite(value) && !Object.is(value, -0)
+        ? value
+        : tagged('number', Object.is(value, -0) ? '-0' : String(value));
     case 'undefined':
       return tagged('undefined');
     case 'function':
@@ -204,6 +228,12 @@ function encode(
   }
 }
 
+/**
+ *
+ * @param value
+ * @param path
+ * @param depth
+ */
 function decode(value: unknown, path: string, depth: number): unknown {
   if (value === null || typeof value === 'string' || typeof value === 'boolean') return value;
   if (typeof value === 'number') {
@@ -225,6 +255,7 @@ function decode(value: unknown, path: string, depth: number): unknown {
       if (content === 'NaN') return Number.NaN;
       if (content === 'Infinity') return Number.POSITIVE_INFINITY;
       if (content === '-Infinity') return Number.NEGATIVE_INFINITY;
+      if (content === '-0') return -0;
     }
     if (tag === 'date' && keys === `${TAG},value` && typeof content === 'string') {
       const date = new Date(content === 'Invalid Date' ? Number.NaN : content);
@@ -239,6 +270,12 @@ function decode(value: unknown, path: string, depth: number): unknown {
   return decodeObject(value, path, depth);
 }
 
+/**
+ *
+ * @param value
+ * @param path
+ * @param depth
+ */
 function decodeObject(
   value: Record<string, unknown>,
   path: string,

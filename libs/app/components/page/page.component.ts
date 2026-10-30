@@ -70,21 +70,26 @@ import { WA_LOCATION } from '@ng-web-apis/common';
   providers: [
     NgDocContentAnchorController,
     NgDocContentController,
-    provideTypeControl('NgDocTypeAlias', NgDocTypeAliasControlComponent, { order: 10 }),
-    provideTypeControl('string', NgDocStringControlComponent, { order: 20 }),
-    provideTypeControl('number', NgDocNumberControlComponent, { order: 30 }),
-    provideTypeControl('boolean', NgDocBooleanControlComponent, { order: 40 }),
+    provideTypeControl('NgDocTypeAlias', NgDocTypeAliasControlComponent, {
+      order: 10,
+      cloneable: true,
+    }),
+    provideTypeControl('string', NgDocStringControlComponent, { order: 20, cloneable: true }),
+    provideTypeControl('number', NgDocNumberControlComponent, { order: 30, cloneable: true }),
+    provideTypeControl('boolean', NgDocBooleanControlComponent, { order: 40, cloneable: true }),
     // Lists have several buttons, so their rows are not labels (see `labelWrapper`).
     provideTypeControl('string[]', NgDocStringListControlComponent, {
       order: 50,
       labelWrapper: false,
+      cloneable: true,
     }),
     provideTypeControl('number[]', NgDocNumberListControlComponent, {
       order: 50,
       labelWrapper: false,
+      cloneable: true,
     }),
     // Array types without a control of their own (see the inspector's `arrayType`).
-    provideTypeControl('NgDocArray', NgDocJsonControlComponent, { order: 60 }),
+    provideTypeControl('NgDocArray', NgDocJsonControlComponent, { order: 60, cloneable: true }),
   ],
   host: {
     ngSkipHydration: 'true',

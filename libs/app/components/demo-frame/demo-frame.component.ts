@@ -4,15 +4,22 @@ import {
   Component,
   computed,
   DestroyRef,
+  effect,
   ElementRef,
   inject,
   input,
+  output,
   Signal,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { ɵisNgDocDemoSizeMessage } from '@ng-doc/app/demo-app';
+import {
+  ɵisNgDocDemoSizeMessage,
+  ɵisNgDocPlaygroundFrameMessage,
+  ɵNgDocPlaygroundFrameMessage,
+} from '@ng-doc/app/demo-app';
 import type { NgDocDemoTexts } from '@ng-doc/app/interfaces';
 import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 
@@ -50,6 +57,16 @@ export class NgDocDemoFrameComponent {
   /** Whether the iframe fills its container instead of taking the demo's height (fullscreen). */
   readonly fill = input<boolean>(false);
 
+  /**
+   * The URL fragment of the demo page, without `#` (the state of an isolated playground). The
+   * iframe loads with the fragment it has when the iframe is created; a later fragment replaces
+   * the page's location (`location.replace`), which reloads nothing and adds no history entry.
+   */
+  readonly fragment = input<string | undefined>(undefined);
+
+  /** The messages of an isolated playground's page, from this iframe only. */
+  readonly playgroundMessage = output<ɵNgDocPlaygroundFrameMessage>();
+
   /** The height the demo reported, in pixels. */
   readonly height = signal<number | undefined>(undefined);
 
@@ -61,20 +78,37 @@ export class NgDocDemoFrameComponent {
   /** Whether the iframe exists: only in the browser, after the first render. */
   protected readonly created = signal(false);
 
-  /** The demo page's URL for the iframe. */
+  /** The demo page's URL for the iframe, with the fragment the iframe was created with. */
   protected readonly frameSrc: Signal<SafeResourceUrl> = computed(() =>
     // The URL comes from the generated demo route and the demo's name: a page of this site.
-    this.sanitizer.bypassSecurityTrustResourceUrl(this.src()),
+    this.sanitizer.bypassSecurityTrustResourceUrl(withFragment(this.src(), this.initialFragment)),
   );
 
   private readonly sanitizer = inject(DomSanitizer);
   private readonly frame = viewChild<ElementRef<HTMLIFrameElement>>('frame');
   private readonly failed = signal(false);
+  private readonly loaded = signal(false);
+  private initialFragment?: string;
+  private shownFragment?: string;
   private timer?: ReturnType<typeof setTimeout>;
 
   constructor() {
-    afterNextRender(() => this.created.set(true));
+    afterNextRender(() => {
+      // Read once: a fragment that changes later must not change the iframe's `src`, which would
+      // navigate it and add a history entry.
+      this.initialFragment = this.shownFragment = untracked(this.fragment);
+      this.created.set(true);
+    });
     inject(DestroyRef).onDestroy(() => clearTimeout(this.timer));
+    effect(() => {
+      const fragment = this.fragment();
+      const window = this.loaded() ? this.frame()?.nativeElement.contentWindow : undefined;
+
+      if (!window || fragment === this.shownFragment) return;
+      this.shownFragment = fragment;
+      // Always with `#`: going from a fragment to none would load the page again.
+      window.location.replace(`${withFragment(this.src(), undefined)}#${fragment ?? ''}`);
+    });
   }
 
   /**
@@ -82,6 +116,7 @@ export class NgDocDemoFrameComponent {
    * @internal
    */
   protected onLoad(): void {
+    this.loaded.set(true);
     clearTimeout(this.timer);
     if (this.height() !== undefined) return;
     this.timer = setTimeout(() => this.failed.set(this.height() === undefined), READY_TIMEOUT_MS);
@@ -98,15 +133,30 @@ export class NgDocDemoFrameComponent {
     if (
       !frame?.contentWindow ||
       event.source !== frame.contentWindow ||
-      event.origin !== new URL(frame.src, frame.baseURI).origin ||
-      !ɵisNgDocDemoSizeMessage(event.data)
+      event.origin !== new URL(frame.src, frame.baseURI).origin
     ) {
       return;
     }
+    if (ɵisNgDocPlaygroundFrameMessage(event.data)) {
+      this.playgroundMessage.emit(event.data);
+      return;
+    }
+    if (!ɵisNgDocDemoSizeMessage(event.data)) return;
     // The first message comes before the demo has rendered, with no height yet.
     if (event.data.height === 0 && this.height() === undefined) return;
     clearTimeout(this.timer);
     this.failed.set(false);
     this.height.set(event.data.height);
   }
+}
+
+/**
+ * A URL with another fragment.
+ * @param url - A URL, relative or absolute.
+ * @param fragment - The fragment without `#`, or none.
+ */
+function withFragment(url: string, fragment: string | undefined): string {
+  const base = url.replace(/#.*$/, '');
+
+  return fragment ? `${base}#${fragment}` : base;
 }
