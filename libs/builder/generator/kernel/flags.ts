@@ -33,6 +33,7 @@ export const SHAPE_CLOSURE_FLAG = 'NGDOC_SHAPE_CLOSURE';
 export const ANGULAR_SHARED_PASS_FLAG = 'NGDOC_ANGULAR_SHARED_PASS';
 export const ANGULAR_STRUCTURAL_PASS_FLAG = 'NGDOC_ANGULAR_STRUCTURAL_PASS';
 export const VITE_BUILD_HANDOFF_FLAG = 'NGDOC_VITE_BUILD_HANDOFF';
+export const VITE_MODULELESS_SETTLE_FLAG = 'NGDOC_VITE_MODULELESS_SETTLE';
 export const TRACKED_PROGRAM_REUSE_FLAG = 'NGDOC_TRACKED_PROGRAM_REUSE';
 export const FAST_START_FLAG = 'NGDOC_FAST_START';
 export const PARALLEL_WRITES_FLAG = 'NGDOC_PARALLEL_WRITES';
@@ -125,6 +126,13 @@ export const FLAGS: readonly FlagDefinition[] = Object.freeze(
         'In the Vite host, the generated modules and description modules a generation creates ' +
         "or deletes join that generation's Angular compiler pass instead of starting a pass of " +
         'their own.',
+      verify: false,
+    },
+    {
+      name: VITE_MODULELESS_SETTLE_FLAG,
+      description:
+        'In the Vite host, a hot update that hands Vite no module to update settles once it is ' +
+        'acknowledged, instead of waiting for the newest generation to be published.',
       verify: false,
     },
     {

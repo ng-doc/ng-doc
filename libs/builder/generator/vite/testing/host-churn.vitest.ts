@@ -20,13 +20,13 @@ import type {
   CommitGuard,
   CommitRequest,
   CompilationResult,
-  Diagnostic,
   FileChange,
   FileEventSource,
   OutputCommitter,
   OutputManifest,
 } from '../../contracts';
 import { bytesDigest } from '../../kernel/canonical';
+import { VITE_MODULELESS_SETTLE_FLAG } from '../../kernel/flags';
 import { createBuildSession } from '../../session/build-session';
 import { type HostUpdateTicket, HostUpdateCoordinator } from '../host-updates';
 import { acquireOutputLease } from '../lease';
@@ -38,8 +38,9 @@ import { ViteAdapterLifecycle } from '../lifecycle';
  * markdown source Vite never served) has nothing to wait for: its acknowledgment settles its
  * obligations, and the reload is the coordinator's own. Its hook must settle right away instead of
  * following every newer generation until the churn stops. A hot update that hands Vite modules
- * still waits for the newest publication. Either way the served state after the churn is the one
- * a cold publication of the final sources serves.
+ * still waits for the newest publication. Either way, and with `NGDOC_VITE_MODULELESS_SETTLE=0`
+ * (every hot update waits, as before), the served state after the churn is the one a cold
+ * publication of the final sources serves.
  */
 
 const roots: string[] = [];
@@ -220,6 +221,14 @@ async function churn(rounds: number): Promise<ChurnOutcome> {
 
 const ROUNDS = 12;
 
+/**
+ * Turns the module-less settlement off for the coordinators created afterwards.
+ * @param on Whether it stays on (the default).
+ */
+function moduleless(on: boolean): void {
+  if (!on) vi.stubEnv(VITE_MODULELESS_SETTLE_FLAG, '0');
+}
+
 describe('host updates under sustained churn', () => {
   it('settles each module-less hot update in its own round, while module updates wait for the newest publication', async () => {
     const outcome = await churn(ROUNDS);
@@ -236,14 +245,104 @@ describe('host updates under sustained churn', () => {
     expect(outcome.errors).toEqual([]);
     expect(outcome.blockers).toBe(0);
   });
+
+  it(`waits for the newest publication with ${VITE_MODULELESS_SETTLE_FLAG}=0, and ends in the same state`, async () => {
+    const on = await churn(ROUNDS);
+    moduleless(false);
+    const off = await churn(ROUNDS);
+    // As before the switch: no hook settles while the churn lasts.
+    expect(off.rounds).toEqual(Array(ROUNDS).fill({ moduleless: 0, modules: 0 }));
+    // Only the latency differs: the same reloads, the same announced state, every hook settled.
+    expect({ ...off, rounds: [] }).toEqual({ ...on, rounds: [] });
+  });
+
+  it('reports a recoverable diagnostic to a module-less hook at once', async () => {
+    const root = directory();
+    const coordinator = new HostUpdateCoordinator(vi.fn(), vi.fn());
+    coordinator.seed(path.join(root, 'out'), searchManifest(1));
+    const broken = coordinator.begin(path.join(root, 'broken.ts'), 'update', () => '', false);
+    const diagnostic = new Error('invalid component');
+    coordinator.diagnostic(broken, diagnostic);
+    // A generation is in flight, so a hook that waited would not settle yet.
+    coordinator.started(2, []);
+    const page = coordinator.begin(path.join(root, 'docs/page.md'), 'update', () => '', false);
+    await coordinator.acknowledge(page);
+    await expect(coordinator.settle(page, false)).rejects.toBe(diagnostic);
+    coordinator.dispose();
+    await expect(coordinator.settle(page, false)).resolves.toBeUndefined();
+  });
+
+  it.each([true, false])(
+    'keeps the reload a claimed TypeScript update asks for when its generation is not published (module-less settlement %s)',
+    async (on) => {
+      moduleless(on);
+      const root = directory();
+      const notify = vi.fn();
+      const coordinator = new HostUpdateCoordinator(notify, vi.fn());
+      coordinator.seed(path.join(root, 'out'), searchManifest(1));
+      const component = path.join(root, 'docs/demo.component.ts');
+      const ticket = coordinator.begin(component, 'update', () => 'class Demo {}', true);
+      coordinator.started(2, [{ kind: 'update', path: component }]);
+      await ticket.ready;
+      await coordinator.acknowledge(ticket, false, true);
+      const hook = track(coordinator.settle(ticket, false));
+      await turns();
+      expect(hook.settled).toBe(on);
+      // A newer edit supersedes generation 2, which the session cancels; generation 3 publishes
+      // the same outputs (nothing of its own to reload), so only the update's request reloads.
+      coordinator.started(3, []);
+      coordinator.result({ status: 'cancelled', generation: 2, diagnostics: [], whyRebuilt: [] });
+      coordinator.publication(2, 'cancelled');
+      await turns();
+      expect(notify).not.toHaveBeenCalled();
+      const unchanged = { ...success(3), manifest: searchManifest(1) };
+      coordinator.result(unchanged);
+      coordinator.published(unchanged, false);
+      await turns();
+      expect(hook).toEqual({ settled: true });
+      expect(notify).toHaveBeenCalledOnce();
+      coordinator.dispose();
+    },
+  );
+
+  it('asks for no reload after a diagnostic or after disposal, as the wait did not', async () => {
+    const root = directory();
+    const notify = vi.fn();
+    const coordinator = new HostUpdateCoordinator(notify, vi.fn());
+    coordinator.seed(path.join(root, 'out'), searchManifest(1));
+    const update = async (generation: number, name: string) => {
+      const file = path.join(root, `docs/${name}.component.ts`);
+      const ticket = coordinator.begin(file, 'update', () => name, true);
+      coordinator.started(generation, [{ kind: 'update', path: file }]);
+      await ticket.ready;
+      await coordinator.acknowledge(ticket, false, true);
+      await coordinator.settle(ticket, false);
+    };
+    const pending = () =>
+      (coordinator as unknown as { pendingGeneration?: number }).pendingGeneration;
+    await update(2, 'diagnosed');
+    const broken = coordinator.begin(path.join(root, 'broken.ts'), 'update', () => '', false);
+    coordinator.diagnostic(broken, new Error('invalid component'));
+    coordinator.publication(2, 'skipped');
+    await turns();
+    expect(pending()).toBeUndefined();
+    await coordinator.acknowledge(
+      coordinator.begin(path.join(root, 'fixed.ts'), 'update', () => '', false),
+      false,
+      true,
+    );
+    expect(coordinator.diagnosticError()).toBeUndefined();
+    notify.mockClear();
+    await update(3, 'disposed');
+    coordinator.dispose();
+    await turns();
+    expect(notify).not.toHaveBeenCalled();
+  });
 });
 
 class Events implements FileEventSource {
   listener?: (events: FileChange[]) => unknown;
-  async subscribe(
-    listener: (events: FileChange[]) => unknown,
-    _onError: (item: Diagnostic) => void,
-  ) {
+  async subscribe(listener: (events: FileChange[]) => unknown) {
     this.listener = listener;
     return { dispose: async () => {} };
   }
@@ -484,14 +583,26 @@ async function hostChurn(edits: number): Promise<HostOutcome & { root: string }>
 }
 
 describe('host updates under sustained churn, through the real session and committer', () => {
-  it('serves what a cold publication of the final sources serves, and settles module-less hot updates during the churn', async () => {
-    const outcome = await hostChurn(ROUNDS);
-    expect(outcome.edits).toBe(ROUNDS);
-    // Every earlier edit's module-less hook settled before the churn's last edit arrived.
-    expect(outcome.settledBeforeLastEdit).toBe(ROUNDS - 1);
-    const reference = await cold(outcome.root);
-    expect(outcome.served).toEqual(reference);
-    expect(outcome.announced?.files).toEqual(reference.manifest.files);
-    expect(outcome.announced?.revision).toBe(reference.manifest.revision);
-  }, 30_000);
+  const outcomes = new Map<boolean, Served>();
+
+  it.each([true, false])(
+    'serves what a cold publication of the final sources serves (module-less settlement %s)',
+    async (on) => {
+      moduleless(on);
+      const outcome = await hostChurn(ROUNDS);
+      expect(outcome.edits).toBe(ROUNDS);
+      // Every earlier edit's module-less hook settled before the churn's last edit arrived. With
+      // the switch off they wait for the newest publication, which a pause between two of the
+      // session's generations may let happen, so their count is left open.
+      if (on) expect(outcome.settledBeforeLastEdit).toBe(ROUNDS - 1);
+      const reference = await cold(outcome.root);
+      expect(outcome.served).toEqual(reference);
+      expect(outcome.announced?.files).toEqual(reference.manifest.files);
+      expect(outcome.announced?.revision).toBe(reference.manifest.revision);
+      outcomes.set(on, outcome.served);
+      // The switch changes when the hooks settle, never what is served.
+      if (outcomes.size === 2) expect(outcomes.get(false)).toEqual(outcomes.get(true));
+    },
+    30_000,
+  );
 });
