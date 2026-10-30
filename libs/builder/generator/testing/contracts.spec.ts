@@ -15,6 +15,7 @@ import {
   GENERATOR_SCHEMA_VERSION,
   GeneratorConfiguration,
   isDeclarationDescriptor,
+  JsonValue,
   nonPhysicalIdentity,
   OUTPUT_SCHEMA_VERSION,
   PageArtifact,
@@ -30,20 +31,26 @@ const root = '/workspace/.worktrees/docs';
 const guideId = 'site:guide:docs/example/ng-doc.page.ts';
 const apiId = 'site:api:docs/api/ng-doc.api.ts';
 
-type IsJson<T> = T extends string | number | boolean | null | undefined
+// A type that is already a `JsonValue` is JSON. Checking it first also ends the recursion at the
+// recursive `JsonValue` itself (an open JSON record, such as a Shiki grammar), which the
+// structural walk below would otherwise expand without end.
+type IsJson<T> = [T] extends [JsonValue]
   ? true
-  : T extends (...args: never[]) => unknown
-    ? false
-    : T extends Array<infer Item>
-      ? IsJson<Item>
-      : T extends object
-        ? false extends { [Key in keyof T]-?: IsJson<T[Key]> }[keyof T]
-          ? false
-          : true
-        : false;
+  : T extends string | number | boolean | null | undefined
+    ? true
+    : T extends (...args: never[]) => unknown
+      ? false
+      : T extends Array<infer Item>
+        ? IsJson<Item>
+        : T extends object
+          ? false extends { [Key in keyof T]-?: IsJson<T[Key]> }[keyof T]
+            ? false
+            : true
+          : false;
 type Assert<Condition extends true> = Condition;
+// The assertions are checked by the compiler only, so they are exported to count as used.
 // Optional properties are allowed in schemas; runtime validation rejects explicit undefined.
-type DataContractsAreJson = Assert<
+export type DataContractsAreJson = Assert<
   IsJson<
     | ArtifactSnapshot
     | EntryDescriptor
@@ -52,13 +59,13 @@ type DataContractsAreJson = Assert<
     | BuildResult
   >
 >;
-type NodesAreNotJson = Assert<IsJson<{ getText(): string }> extends false ? true : false>;
-type ContentPayloadIsJson = Assert<IsJson<ContentModule>>;
-type RuntimeContentSourceIsNotJson = Assert<
+export type NodesAreNotJson = Assert<IsJson<{ getText(): string }> extends false ? true : false>;
+export type ContentPayloadIsJson = Assert<IsJson<ContentModule>>;
+export type RuntimeContentSourceIsNotJson = Assert<
   IsJson<NgDocContentSource> extends false ? true : false
 >;
-type SharedContentSchema = Assert<ContentModule extends NgDocContentModule ? true : false>;
-type RuntimeContentSchema = Assert<NgDocContentModule extends ContentModule ? true : false>;
+export type SharedContentSchema = Assert<ContentModule extends NgDocContentModule ? true : false>;
+export type RuntimeContentSchema = Assert<NgDocContentModule extends ContentModule ? true : false>;
 
 /** Example validation only; the artifacts layer supplies the production cache/transport one. */
 function assertJson(value: unknown): void {
