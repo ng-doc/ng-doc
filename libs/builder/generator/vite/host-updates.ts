@@ -4,6 +4,7 @@ import path from 'node:path';
 
 import type { BuildResult, FileChange, OutputManifest } from '../contracts';
 import { contentDigest } from '../kernel/canonical';
+import { flagOff, VITE_MODULELESS_SETTLE_FLAG } from '../kernel/flags';
 import { canonicalDrive } from './paths';
 
 type EventType = 'create' | 'update' | 'delete';
@@ -227,6 +228,13 @@ export function observePhysicalVersion(file: string): string | undefined {
  * input is re-observed (`HostUpdateRecovery.rescan`), so the newest edit is published even if
  * its event was lost or its generation failed under the load. A replayed report is matched like
  * any other: one that arrives twice is a repeat, so an edit still reloads once.
+ *
+ * Churn: under a sustained stream of edits a new generation starts before the previous one is
+ * published, again and again. A host update that waits for the current publication follows each
+ * newer generation, so it settles only once the stream stops. That is required of one whose hook
+ * hands Vite modules: Vite updates them when the hook returns, which must not happen before the
+ * newest publication. A module-less one hands Vite nothing, so it settles once it is acknowledged
+ * (see {@link settle}; `NGDOC_VITE_MODULELESS_SETTLE=0` makes it wait as well).
  */
 export class HostUpdateCoordinator {
   private outputRoot?: string;
@@ -256,6 +264,8 @@ export class HostUpdateCoordinator {
   private burst?: Burst;
   /** The start and the hot updates of the current burst-detection window. */
   private window = { start: 0, events: 0 };
+  /** Whether a module-less host update settles without waiting for the current publication. */
+  private readonly modulelessSettle = !flagOff(VITE_MODULELESS_SETTLE_FLAG);
 
   constructor(
     private readonly notify: () => void,
@@ -491,7 +501,8 @@ export class HostUpdateCoordinator {
    * generated output that a generation claimed. Its host hooks settle only once the newest
    * generation is published and every host obligation is drained, and by then `flush()` has sent
    * that generation's reload (or its outputs equal the last announced ones). A native reload for
-   * the same output would be a second one.
+   * the same output would be a second one. A module-less one settles earlier (see
+   * {@link settle}), but Vite has nothing of it to reload either way.
    */
   announces(read: object): boolean {
     const token = this.tokensByEvent.get(read);
@@ -581,10 +592,28 @@ export class HostUpdateCoordinator {
     }
   }
 
-  /** Waits for the current accepted publication and all peer host acknowledgments. */
-  async settle(ticket: HostUpdateTicket): Promise<void> {
+  /**
+   * Waits for the current accepted publication and all peer host acknowledgments.
+   *
+   * A module-less hot update does not wait: once its hooks return, Vite has no module to update
+   * and sends nothing, and its acknowledgment has already settled what it obliged (the reload,
+   * sent by `flush()` once every obligation is settled, is this coordinator's own). Waiting made
+   * it follow every generation that started meanwhile, so under sustained churn it settled only
+   * when the churn stopped, and each wait for the host obligations to drain could time out
+   * (`NGDOC_VITE_HOST_TIMEOUT`) while every single obligation was completed in time. Nothing
+   * else changes: obligations, the reload and what is published are the same, so the switch off
+   * (`NGDOC_VITE_MODULELESS_SETTLE=0`) only makes it wait as before.
+   * @param ticket The hot update's ticket, after its acknowledgment.
+   * @param modules Whether its hooks hand Vite any module to update (or a page reload Vite sends
+   *   itself, for an HTML file without modules). Only the caller, which sees Vite's context, knows.
+   */
+  async settle(ticket: HostUpdateTicket, modules: boolean = true): Promise<void> {
     const token = ticket.token as HostToken;
     if (!token || this.disposed) return;
+    if (!modules && this.modulelessSettle) {
+      this.settleModuleless(token);
+      return;
+    }
     if (
       !token.generated &&
       token.isClaimed &&
@@ -610,9 +639,14 @@ export class HostUpdateCoordinator {
     await token.attempt.result.promise;
   }
 
-  async complete(ticket: HostUpdateTicket): Promise<void> {
+  /**
+   * Acknowledges a hot update that takes no compiler pass, then settles it.
+   * @param ticket The hot update's ticket.
+   * @param modules See {@link settle}.
+   */
+  async complete(ticket: HostUpdateTicket, modules: boolean = true): Promise<void> {
     await this.acknowledge(ticket);
-    await this.settle(ticket);
+    await this.settle(ticket, modules);
   }
 
   published(result: Extract<BuildResult, { status: 'success' }>, recovered: boolean): void {
@@ -902,6 +936,39 @@ export class HostUpdateCoordinator {
       this.publishedGeneration ?? this.manifest?.generation ?? this.pendingGeneration ?? 0;
     this.pendingManifest = structuredClone(this.manifest ?? this.announcedManifest);
     this.flush();
+  }
+
+  /**
+   * Settles a module-less hot update without waiting (see {@link settle}).
+   * @param token The acknowledged hot update.
+   */
+  private settleModuleless(token: HostToken): void {
+    // A recoverable diagnostic is reported to the hook as the wait would have, at its start.
+    const failure = this.diagnosticError();
+    if (failure) throw failure;
+    const attempt = token.attempt;
+    if (
+      !attempt ||
+      token.generated ||
+      !token.isClaimed ||
+      token.sourceKind !== 'typescript' ||
+      token.type !== 'update'
+    ) {
+      return;
+    }
+    // A claimed TypeScript update requests the current reload when its own generation is not
+    // published (a newer one superseded it, or the session cancelled it): Angular compiled it,
+    // and no publication of that generation will reload. The wait did so after the publication;
+    // this continuation does it at the same point, without holding the hook. Every attempt's
+    // publication resolves by `dispose()` at the latest, and a disposed coordinator reloads
+    // nothing, so it never outlives the coordinator. As in the wait, a diagnostic raised before
+    // then keeps the reload back.
+    void attempt.publication.promise.then(() => {
+      if (this.disposed || this.diagnosticError()) return;
+      if (attempt.publicationStatus === 'skipped' || attempt.publicationStatus === 'cancelled') {
+        this.queueCurrentReload();
+      }
+    });
   }
 
   private async awaitCurrentPublication(initial?: Attempt): Promise<void> {

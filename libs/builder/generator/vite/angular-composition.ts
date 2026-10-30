@@ -51,6 +51,31 @@ export function globalStyleSheet(context: Pick<HmrContext, 'file' | 'modules'>):
   return context.modules.every(global) && virtual;
 }
 
+/**
+ * Whether a hot update's hooks hand Vite anything to do once they return: a module to update, or
+ * (for an HTML file without modules) the page reload Vite sends itself. Only such a hot update
+ * has to wait for the newest publication before it returns; a module-less one settles once it is
+ * acknowledged (`HostUpdateCoordinator.settle`).
+ * @param file - The hot update's file.
+ * @param modules - The modules Vite updates after this hook: what the hook returned, or the
+ *   context's modules when it returned nothing.
+ * @returns Whether Vite updates or reloads anything for the hot update.
+ */
+export function handsViteModules(file: string, modules: readonly unknown[]): boolean {
+  return modules.length > 0 || file.endsWith('.html');
+}
+
+/**
+ * The modules Vite updates after a legacy hot update hook: an array it returned replaces the
+ * context's modules.
+ * @param context - The hot update.
+ * @param result - What the hook returned.
+ * @returns The modules Vite goes on with.
+ */
+function handedModules(context: HmrContext, result: unknown): readonly unknown[] {
+  return Array.isArray(result) ? result : context.modules;
+}
+
 type HookObject<Handler> = { handler: Handler } & Record<string, unknown>;
 type LegacyHotHandler = (this: unknown, context: HmrContext) => unknown;
 type TransformHandler = (this: unknown, code: string, id: string, ...rest: unknown[]) => unknown;
@@ -115,7 +140,11 @@ export interface AngularCompositionBridge {
   ): Promise<void>;
   diagnostic(ticket: HostUpdateTicket, error: Error): void;
   committed(ticket: HostUpdateTicket): Promise<void>;
-  settle(ticket: HostUpdateTicket): Promise<void>;
+  /**
+   * Settles the hot update (see HostUpdateCoordinator.settle). `modules` is false when its hooks
+   * hand Vite nothing to update ({@link handsViteModules}); omitted, it is true.
+   */
+  settle(ticket: HostUpdateTicket, modules?: boolean): Promise<void>;
   fail(error: Error): void;
 }
 
@@ -527,7 +556,9 @@ export function composeAngularPlugins(
     if (!compilerTrigger) {
       const result = await Reflect.apply(originalHot, this, [context]);
       await bridge.acknowledge(ticket, false);
-      await bridge.settle(ticket);
+      // The context's modules are the mixed graph's (client and server), so a module-less one
+      // hands neither environment anything to update.
+      await bridge.settle(ticket, handsViteModules(context.file, handedModules(context, result)));
       return result;
     }
     await preflight();
@@ -595,7 +626,7 @@ export function composeAngularPlugins(
     } finally {
       release();
     }
-    await bridge.settle(ticket);
+    await bridge.settle(ticket, handsViteModules(context.file, handedModules(context, result)));
     return result;
   };
 

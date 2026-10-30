@@ -189,8 +189,13 @@ export class ViteAdapterLifecycle {
     return ticket;
   }
 
-  hostUpdateCompleted(ticket: HostUpdateTicket): Promise<void> {
-    return this.hostUpdates.complete(ticket);
+  /**
+   * See {@link HostUpdateCoordinator.complete}.
+   * @param ticket The hot update's ticket.
+   * @param modules Whether its hooks hand Vite any module to update.
+   */
+  hostUpdateCompleted(ticket: HostUpdateTicket, modules: boolean = true): Promise<void> {
+    return this.hostUpdates.complete(ticket, modules);
   }
 
   /** The adapter reloads for this settled hot update itself. */
@@ -259,8 +264,13 @@ export class ViteAdapterLifecycle {
     this.report(error);
   }
 
-  hostUpdateSettled(ticket: HostUpdateTicket): Promise<void> {
-    return this.hostUpdates.settle(ticket);
+  /**
+   * See {@link HostUpdateCoordinator.settle}.
+   * @param ticket The hot update's ticket.
+   * @param modules Whether its hooks hand Vite any module to update.
+   */
+  hostUpdateSettled(ticket: HostUpdateTicket, modules: boolean = true): Promise<void> {
+    return this.hostUpdates.settle(ticket, modules);
   }
 
   hostUpdateCommitted(ticket: HostUpdateTicket): Promise<void> {

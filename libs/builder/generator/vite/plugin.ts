@@ -23,7 +23,7 @@ import type {
 import { flagOff, VITE_BUILD_HANDOFF_FLAG } from '../kernel/flags';
 import type { HostProgress } from '../progress/host';
 import { assertAngularCompatibility } from './angular-compatibility';
-import { composeAngularPlugins } from './angular-composition';
+import { composeAngularPlugins, handsViteModules } from './angular-composition';
 import { assertConsistentAngularBuild } from './angular-version';
 import { boundServerClose } from './bounded-close';
 import { createComponentUpdateGate } from './component-updates';
@@ -302,9 +302,10 @@ export function createPlugin(options: NgDocVitePluginOptions): Plugin[] {
           (active?.lifecycle ?? pendingLifecycle)?.hostUpdateCommitted(ticket) ?? Promise.resolve()
         );
       },
-      settle(ticket: HostUpdateTicket) {
+      settle(ticket: HostUpdateTicket, modules?: boolean) {
         return (
-          (active?.lifecycle ?? pendingLifecycle)?.hostUpdateSettled(ticket) ?? Promise.resolve()
+          (active?.lifecycle ?? pendingLifecycle)?.hostUpdateSettled(ticket, modules) ??
+          Promise.resolve()
         );
       },
       fail(error: Error) {
@@ -536,7 +537,16 @@ export function createPlugin(options: NgDocVitePluginOptions): Plugin[] {
         const ticket = hostUpdates.get(context);
         if (ticket) {
           hostUpdates.delete(context);
-          await (active?.lifecycle ?? pendingLifecycle)?.hostUpdateCompleted(ticket);
+          // Vite runs the other environments' hooks, and updates their modules, only once the
+          // client's hooks returned: a file with modules there is not module-less either.
+          const modules =
+            handsViteModules(context.file, context.modules) ||
+            Object.values(devServer?.environments ?? {}).some(
+              (environment) =>
+                environment !== this.environment &&
+                (environment.moduleGraph.getModulesByFile(context.file)?.size ?? 0) > 0,
+            );
+          await (active?.lifecycle ?? pendingLifecycle)?.hostUpdateCompleted(ticket, modules);
         }
         if (!(active?.lifecycle ?? pendingLifecycle)?.hostUpdateAnnounced(context.read)) return;
         // A committed generated output: the adapter already sent this generation's full reload

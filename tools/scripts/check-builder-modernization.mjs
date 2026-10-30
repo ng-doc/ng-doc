@@ -122,6 +122,7 @@ export const COMMANDS = Object.freeze(
         'libs/builder/generator/vite/testing/application.vitest.ts': 1,
         'libs/builder/generator/vite/testing/bounded-close.vitest.ts': 1,
         'libs/builder/generator/vite/testing/dev-styles.vitest.ts': 1,
+        'libs/builder/generator/vite/testing/host-churn.vitest.ts': 1,
         'libs/builder/generator/vite/testing/paths.vitest.ts': 1,
         'libs/builder/generator/vite/testing/plugin-disposal.vitest.ts': 1,
         'libs/builder/generator/vite/testing/prerender.vitest.ts': 1,
