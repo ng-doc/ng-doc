@@ -104,8 +104,12 @@ server entry are left alone (`*LegacyBuildersPage#when-ng-add-sets-them-up`):
 - **Git:** it adds `/ng-doc` and `/.cache/ng-doc` to `.gitignore`, because those folders are
   generated.
 - **Application:** it adds the NgDoc providers to the application configuration (`app.config.ts`).
-  It replaces the root component template with the NgDoc layout and adds `NgDocRootComponent`,
-  `NgDocNavbarComponent` and `NgDocSidebarComponent` to the root component's imports.
+  When the root component's template is still the one `ng new` created, or holds only a router
+  outlet, it replaces it with the NgDoc layout and adds `NgDocRootComponent`,
+  `NgDocNavbarComponent` and `NgDocSidebarComponent` to the root component's imports. It never
+  overwrites a template that your application wrote, or an inline one: it prints the layout to
+  add instead. To add the documentation to an existing application under its own route, see
+  `*LazyRoutePage`.
 
 The command prints the build options that the Vite engine doesn't use, such as `budgets`, and the
 ones that need a change by hand. An application created with `ng new --ssr` renders pages on

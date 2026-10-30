@@ -114,6 +114,7 @@ Override these CSS variables in your global styles, for example in `styles.css`:
 | `--ng-doc-app-max-width`              | `1440px`                               | The widest the navbar content and the page area get.             |
 | `--ng-doc-app-horizontal-padding`     | `24px`                                 | Padding at the sides of the navbar, the sidebar and the page.    |
 | `--ng-doc-navbar-height`              | `60px`                                 | The height of the navbar. The page starts below it.              |
+| `--ng-doc-layout-top`                 | `0px`                                  | Room for an application header above the layout (see below).     |
 | `--ng-doc-navbar-background`          | `--ng-doc-base-0`                      | The navbar color. With `glassEffect`, it is mixed with the page. |
 | `--ng-doc-navbar-border`              | `1px solid var(--ng-doc-border-color)` | The line below the navbar.                                       |
 | `--ng-doc-navbar-horizontal-padding`  | `--ng-doc-app-horizontal-padding`      | Padding at the sides of the navbar.                              |
@@ -283,7 +284,8 @@ provideRouter([...routes, { path: 'docs', loadChildren: () => import('./docs/doc
 that `ng add` added to this list: the documentation routes now come from `docs.routes.ts`.
 
 NgDoc generates the links between pages, so it needs to know the route too. Set `routePrefix` in
-the configuration file (`*ConfigurationReference`):
+the configuration file (`*ConfigurationReference`). To keep NgDoc out of the bundle that the rest of
+the application loads at start, move the NgDoc providers to the route as well (`*LazyRoutePage`).
 
 ```typescript name="ng-doc.config.ts"
 import { NgDocConfiguration } from '@ng-doc/builder';
@@ -297,7 +299,19 @@ export default config;
 
 ### Keep your app header above the docs
 
-To show your application's header on the documentation pages too, put it in the documentation
+An application header that stays at the top of the window (`position: fixed`) can stay above the
+documentation layout: set `--ng-doc-layout-top` to its height on the layout's component, and the
+navbar, the sidebar, the sticky parts of a page and the scroll offset of anchors start below it.
+
+```css name="docs.component.css"
+:host {
+  --ng-doc-layout-top: 64px;
+}
+```
+
+Without navbar content in `ng-doc-root`, the layout has no header bar of its own.
+
+To show your application's header in place of the navbar instead, put it in the documentation
 layout as the custom navbar (see [Custom navbar](#custom-navbar)), and show it in the shell only
 outside the documentation:
 
@@ -390,9 +404,8 @@ export class App {
 > sidebar wrapped in another element, such as a `div`, lands in the page area.
 
 > **Warning**
-> NgDoc's header is fixed at the top of the window, even when the layout has no navbar. A header
-> of your application placed above `ng-doc-root` ends up under it and can't be clicked. Put it in
-> the layout as the custom navbar instead
+> NgDoc's navbar is fixed at the top of the window. A fixed header of your application above
+> `ng-doc-root` ends up under it, unless `--ng-doc-layout-top` makes room for it
 > ([Keep your app header above the docs](#keep-your-app-header-above-the-docs)).
 
 {% index false %}
@@ -402,6 +415,7 @@ export class App {
 - `*PageSkeletonPage`
 - `*ThemesAndColorsPage`
 - `*SearchPage`
+- `*LazyRoutePage`
 
 {% endindex %}
 
