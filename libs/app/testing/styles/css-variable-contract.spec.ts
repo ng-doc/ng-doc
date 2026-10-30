@@ -367,7 +367,7 @@ describe('resolveLength', () => {
 
 /**
  * Compares a value with its recorded JSON next to this spec. With `NGDOC_UPDATE_CSS_CONTRACT=1` the
- * file is rewritten instead (`NGDOC_UPDATE_CSS_CONTRACT=1 npx nx test app --skip-nx-cache`); commit it with the change that caused the difference.
+ * file is rewritten instead (`NGDOC_UPDATE_CSS_CONTRACT=1 pnpm nx test app --skip-nx-cache`); commit it with the change that caused the difference.
  * @param file - File name next to this spec.
  * @param actual - Current value.
  */

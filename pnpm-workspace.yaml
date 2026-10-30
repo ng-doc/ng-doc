@@ -1,0 +1,10 @@
+# A single-package workspace: this file only holds pnpm settings.
+
+# pnpm runs no dependency install scripts unless they are allowed here, and fails the install on
+# any other. These packages build or fetch their native binaries on install.
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  lmdb: true
+  msgpackr-extract: true
+  nx: true

@@ -27,4 +27,4 @@ jobs:
         uses: ./.github/actions/nodejs
 
       - name: Lint
-        run: npx nx affected --target=lint --quiet=true --parallel --base=remotes/origin/${{ inputs.base }} --head=${{ inputs.head }}
+        run: pnpm exec nx affected --target=lint --quiet=true --parallel --base=remotes/origin/${{ inputs.base }} --head=${{ inputs.head }}

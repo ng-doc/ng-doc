@@ -37,17 +37,17 @@ jobs:
         uses: ./.github/actions/nodejs
 
       - name: Build Libraries
-        run: npx nx run-many --projects=tag:type:lib --target=build --configuration=ci --parallel
+        run: pnpm exec nx run-many --projects=tag:type:lib --target=build --configuration=ci --parallel
 
       # ng-doc.com is built with the Vite engine (the site's `build` target), from the libraries
       # built above. It skips the Nx cache, so every release builds the site from scratch.
       - name: Build Documentation
         run: |
-          npx nx run ng-doc:link-libs --excludeTaskDependencies
-          npx nx run ng-doc:build --excludeTaskDependencies --skipNxCache
+          pnpm exec nx run ng-doc:link-libs --excludeTaskDependencies
+          pnpm exec nx run ng-doc:build --excludeTaskDependencies --skipNxCache
 
       - name: Build Applications
-        run: npx nx run-many --projects='tag:type:app,!ng-doc' --target=build --configuration=ci --parallel
+        run: pnpm exec nx run-many --projects='tag:type:app,!ng-doc' --target=build --configuration=ci --parallel
 
       # deploy.yml syncs dist/apps/ng-doc/browser from the tar.
       - name: Tar Artifacts
@@ -62,4 +62,4 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE }}
-        run: npx semantic-release
+        run: pnpm exec semantic-release

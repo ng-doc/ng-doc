@@ -48,7 +48,7 @@ Before you edit, read [agent-safety.md](references/agent-safety.md) and [code-st
 3. **Tests travel with behaviour.**
    - Every behaviour change updates or adds tests in the framework the area already uses: Vitest `*.spec.ts` for libraries, the site and the legacy builder (`nx test <project>`), Vitest `*.vitest.ts` for the generator, `node --test` for tool scripts.
    - Never weaken a test, a coverage gate or a lint rule to get a green run.
-4. **Lint and format.** Run `npx nx lint <project>` for touched projects. Formatting follows Prettier: single quotes, trailing commas, 100 columns.
+4. **Lint and format.** Run `pnpm nx lint <project>` for touched projects. Formatting follows Prettier: single quotes, trailing commas, 100 columns.
 5. **Public API is deliberate.** Anything exported from a library barrel is public. Exported declarations in files matched by the scopes in `apps/ng-doc/docs/ng-doc.api.ts` also appear in the site's API reference.
    - Document exports with JSDoc.
    - Treat renames and removals as breaking (a `BREAKING CHANGE:` footer; see code-style.md) and provide a migration path.
@@ -81,9 +81,9 @@ Before you edit, read [agent-safety.md](references/agent-safety.md) and [code-st
 ## Definition of done
 
 - [ ] The change is limited to the task, with tests added or updated next to the behaviour.
-- [ ] Lint passes for touched projects (`npx nx lint <project>`), and changed files are formatted.
+- [ ] Lint passes for touched projects (`pnpm nx lint <project>`), and changed files are formatted.
 - [ ] The relevant suites pass:
-  - Specs: `npx nx test <project>` (and `test-zoneless` for `app` and `ui-kit`).
+  - Specs: `pnpm nx test <project>` (and `test-zoneless` for `app` and `ui-kit`).
   - Generator: the matching runner groups, with their coverage gates, plus a strict `tsc --noEmit` of the touched generator area. See [builder-testing.md](references/builder-testing.md).
 - [ ] Shared builder code has been checked against both engines.
 - [ ] Author-facing features are documented in `apps/ng-doc/docs`.

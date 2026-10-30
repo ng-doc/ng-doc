@@ -32,7 +32,8 @@ import {
  *
  * The packages are packed from `dist/libs` and served under their own names by a local registry
  * for the `@ng-doc` scope; everything else comes from the npm registry (through the npm cache).
- * Runs on Linux, macOS and Windows.
+ * The application is created and installed with npm on purpose (`ng new --package-manager=npm`):
+ * this check covers `ng add` for npm consumers. Runs on Linux, macOS and Windows.
  *
  * Environment: NGDOC_NG_ADD_E2E_EVIDENCE (required, a new or empty directory for logs and
  * summary.json), NGDOC_NG_ADD_E2E_NPM_CACHE (npm cache; default: one inside the run),

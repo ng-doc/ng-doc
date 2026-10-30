@@ -9,6 +9,8 @@ import { fileURLToPath } from 'node:url';
 
 import { prepare } from '../../../../../plugins/semantic-release/update-dependencies.js';
 
+// The consumer installs with npm on purpose: this check covers npm consumers (npm's hoisted
+// node_modules and its lockfile). The packed Vite check (vite-packed) installs with pnpm.
 const directory = path.dirname(fileURLToPath(import.meta.url));
 const repository = path.resolve(directory, '../../../../..');
 const evidence = path.resolve(process.env.NGDOC_PACKAGE_CONSUMER_EVIDENCE ?? '');

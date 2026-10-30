@@ -396,7 +396,7 @@ describe('Windows process trees', () => {
   );
 });
 
-describe('ng, npm and npx on Windows', () => {
+describe('ng, npm, npx and pnpm on Windows', () => {
   const files = new Set([
     'C:\\work\\node_modules\\@angular\\cli\\bin\\ng.js',
     'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npx-cli.js',
@@ -447,6 +447,53 @@ describe('ng, npm and npx on Windows', () => {
       expect(() => windowsSpawnPlan('tool', [unsafe], options)).toThrow(/tool\.cmd/);
     }
     expect(windowsSpawnPlan('tool', ['a&b', 'c d'], options)).toMatchObject({ verbatim: true });
+  });
+
+  it("runs Corepack's pnpm through Node, and any other pnpm as itself", () => {
+    const corepack = new Set([
+      ...files,
+      'C:\\Program Files\\nodejs\\pnpm.cmd',
+      'C:\\Program Files\\nodejs\\pnpx.cmd',
+      'C:\\Program Files\\nodejs\\node_modules\\corepack\\dist\\pnpm.js',
+      'C:\\Program Files\\nodejs\\node_modules\\corepack\\dist\\pnpx.js',
+      'C:\\Users\\me\\AppData\\Local\\pnpm\\pnpm.exe',
+    ]);
+    const enabled = {
+      ...options,
+      env: {
+        PATH: 'C:\\Program Files\\nodejs;C:\\Users\\me\\AppData\\Local\\pnpm',
+        PATHEXT: '.exe;.cmd',
+      },
+      isFile: (file: string) =>
+        [...corepack].some((candidate) => candidate.toLowerCase() === file.toLowerCase()),
+    };
+    expect(nodeEntry('pnpm', enabled)).toBe(
+      'C:\\Program Files\\nodejs\\node_modules\\corepack\\dist\\pnpm.js',
+    );
+    expect(nodeEntry('PNPX.cmd', enabled)).toBe(
+      'C:\\Program Files\\nodejs\\node_modules\\corepack\\dist\\pnpx.js',
+    );
+    expect(windowsSpawnPlan('pnpm', ['exec', '%X%'], enabled)).toEqual({
+      file: 'C:\\Program Files\\nodejs\\node.exe',
+      args: ['C:\\Program Files\\nodejs\\node_modules\\corepack\\dist\\pnpm.js', 'exec', '%X%'],
+      verbatim: false,
+    });
+    // A standalone pnpm first on PATH wins over Corepack's shim, as it does in cmd.exe.
+    const standalone = {
+      ...enabled,
+      env: {
+        PATH: 'C:\\Users\\me\\AppData\\Local\\pnpm;C:\\Program Files\\nodejs',
+        PATHEXT: '.exe;.cmd',
+      },
+    };
+    expect(nodeEntry('pnpm', standalone)).toBeUndefined();
+    expect(windowsSpawnPlan('pnpm', ['exec', '%X%'], standalone)).toEqual({
+      file: 'C:\\Users\\me\\AppData\\Local\\pnpm\\pnpm.exe',
+      args: ['exec', '%X%'],
+      verbatim: false,
+    });
+    // Without Corepack enabled (no shim beside Node), its entry is not used.
+    expect(nodeEntry('pnpm', options)).toBeUndefined();
   });
 
   it('uses the running Node by default', () => {

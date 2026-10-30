@@ -1,6 +1,6 @@
 # Code style and conventions
 
-Tooling enforces most of this. Run `npx nx lint <project>` and `npx nx format:write` before you finish. The pre-commit hook runs both on staged files.
+Tooling enforces most of this. Run `pnpm nx lint <project>` and `pnpm nx format:write` before you finish. The pre-commit hook runs both on staged files.
 
 ## Formatting (Prettier + EditorConfig)
 

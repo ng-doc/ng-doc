@@ -2,6 +2,8 @@ import { createHash } from 'node:crypto';
 import { copyFile, lstat, mkdir, readFile, readdir, realpath, symlink } from 'node:fs/promises';
 import path from 'node:path';
 
+import { parseAllDocuments } from 'yaml';
+
 /**
  * The single definition of what the standalone generator build consumes and ships.
  * build-generator.mjs, the benchmark observed build and the production-c expected runtime all use
@@ -223,18 +225,49 @@ export async function digestFiles(root, files) {
   return hash.digest('hex');
 }
 
+/** The workspace lockfile: lockfileDigest hashes it, and the dependency tuple reads it. */
+export const GENERATOR_LOCKFILE = 'pnpm-lock.yaml';
+
+/**
+ * The project document of a pnpm lockfile, parsed. Since pnpm 11 the file can hold two YAML
+ * documents: the first one locks pnpm itself (`packageManagerDependencies`), and the last one
+ * locks the project.
+ */
+export function pnpmLockfileProject(lockText) {
+  const documents = parseAllDocuments(lockText);
+  for (const document of documents) if (document.errors.length) throw document.errors[0];
+  return documents.at(-1)?.toJS() ?? null;
+}
+
+/**
+ * The versions the lockfile resolves for the root importer's direct dependencies, without the
+ * peer suffix pnpm appends (`1.0.0(peer@2.0.0)`). Every runtime dependency of the builder is a
+ * direct dependency of the root, so this is the version installed for it.
+ */
+function lockedRootVersions(lockText) {
+  const importer = pnpmLockfileProject(lockText)?.importers?.['.'] ?? {};
+  const locked = {
+    ...importer.optionalDependencies,
+    ...importer.devDependencies,
+    ...importer.dependencies,
+  };
+  return new Map(
+    Object.entries(locked).map(([name, entry]) => [
+      name,
+      String(entry.version).replace(/\(.*$/, ''),
+    ]),
+  );
+}
+
 /** The dependency tuple and lockfile digest that, with sourceDigest, identify a toolchain. */
 export async function readToolchainInputs(root) {
   const manifest = JSON.parse(await readFile(path.join(root, 'libs/builder/package.json'), 'utf8'));
-  const lockText = await readFile(path.join(root, 'package-lock.json'), 'utf8');
-  const lock = JSON.parse(lockText);
+  const lockText = await readFile(path.join(root, GENERATOR_LOCKFILE), 'utf8');
+  const locked = lockedRootVersions(lockText);
   const tuple = Object.fromEntries(
     Object.keys(manifest.dependencies ?? {})
       .sort()
-      .map((name) => [
-        name,
-        lock.packages?.[`node_modules/${name}`]?.version ?? manifest.dependencies[name],
-      ]),
+      .map((name) => [name, locked.get(name) ?? manifest.dependencies[name]]),
   );
   return {
     manifest,
@@ -346,7 +379,7 @@ export function assertInventoryCoversBundle(
 }
 
 /** Files the build reads from its snapshot besides the digest inventory (lockfileDigest). */
-export const GENERATOR_SNAPSHOT_EXTRA_FILES = Object.freeze(['package-lock.json']);
+export const GENERATOR_SNAPSHOT_EXTRA_FILES = Object.freeze([GENERATOR_LOCKFILE]);
 
 /**
  * Copies the digest inventory (walked once, from the live tree) plus the lockfile into `destination`

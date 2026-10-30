@@ -34,7 +34,7 @@ jobs:
       - name: Every runner group and test target has a job
         run: node tools/scripts/check-ci-jobs.mjs
       - name: Build the packages and the generator
-        run: npx nx run-many --target=build --projects=tag:type:lib --parallel=1 --skipNxCache
+        run: pnpm exec nx run-many --target=build --projects=tag:type:lib --parallel=1 --skipNxCache
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: packages
@@ -57,7 +57,7 @@ jobs:
         with:
           name: packages
           path: dist/libs
-      - run: npx nx run-many --target=lint --quiet=true --parallel=3
+      - run: pnpm exec nx run-many --target=lint --quiet=true --parallel=3
 
   unit:
     name: Test ${{ matrix.target }}
@@ -91,8 +91,8 @@ jobs:
           path: dist/libs
       # The builder's legacy-engine specs run the built engine in a child process, which resolves
       # @ng-doc/core through these links.
-      - run: npx nx run ng-doc:link-libs --excludeTaskDependencies
-      - run: npx nx run ${{ matrix.target }} --configuration=ci --excludeTaskDependencies
+      - run: pnpm exec nx run ng-doc:link-libs --excludeTaskDependencies
+      - run: pnpm exec nx run ${{ matrix.target }} --configuration=ci --excludeTaskDependencies
 
   tools:
     name: Tool-script tests (${{ matrix.os }})
@@ -104,8 +104,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     steps:
-      # The suites compare committed fixtures byte for byte, and the node_modules cache key hashes
-      # package-lock.json, so Windows checks out LF as the other runners do.
+      # The suites compare committed fixtures byte for byte, and the pnpm store cache key hashes
+      # pnpm-lock.yaml, so Windows checks out LF as the other runners do.
       - name: Keep LF line endings
         if: runner.os == 'Windows'
         run: git config --global core.autocrlf false
@@ -168,8 +168,8 @@ jobs:
           - os: windows-latest
             coverage: 'off'
     steps:
-      # The suites compare committed fixtures byte for byte, and the node_modules cache key hashes
-      # package-lock.json, so Windows checks out LF as the other runners do.
+      # The suites compare committed fixtures byte for byte, and the pnpm store cache key hashes
+      # pnpm-lock.yaml, so Windows checks out LF as the other runners do.
       - name: Keep LF line endings
         if: runner.os == 'Windows'
         run: git config --global core.autocrlf false
@@ -321,8 +321,8 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 20
     steps:
-      # The suites compare committed fixtures byte for byte, and the node_modules cache key hashes
-      # package-lock.json, so Windows checks out LF as the other runners do.
+      # The suites compare committed fixtures byte for byte, and the pnpm store cache key hashes
+      # pnpm-lock.yaml, so Windows checks out LF as the other runners do.
       - name: Keep LF line endings
         run: git config --global core.autocrlf false
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -373,7 +373,7 @@ jobs:
         with:
           name: packages
           path: dist/libs
-      - run: npx nx run ng-doc:link-libs --excludeTaskDependencies
+      - run: pnpm exec nx run ng-doc:link-libs --excludeTaskDependencies
       # `generate` runs one complete generation through the build session, which projects the
       # watch inputs of every recorded dependency and fails on a path it refuses.
       - name: Generate the site
@@ -398,8 +398,8 @@ jobs:
         with:
           name: packages
           path: dist/libs
-      - run: npx nx run ng-doc:link-libs --excludeTaskDependencies
-      - run: npx nx run ng-doc:build-legacy --excludeTaskDependencies
+      - run: pnpm exec nx run ng-doc:link-libs --excludeTaskDependencies
+      - run: pnpm exec nx run ng-doc:build-legacy --excludeTaskDependencies
       # The parity gate compares outputs built from the same sources only.
       - name: Stamp the output
         run: node libs/builder/generator/acceptance/production/source-stamp.mjs dist/apps/ng-doc-legacy/browser
@@ -429,8 +429,8 @@ jobs:
         with:
           name: packages
           path: dist/libs
-      - run: npx nx run ng-doc:link-libs --excludeTaskDependencies
-      - run: npx nx run ng-doc:build --excludeTaskDependencies
+      - run: pnpm exec nx run ng-doc:link-libs --excludeTaskDependencies
+      - run: pnpm exec nx run ng-doc:build --excludeTaskDependencies
       - name: Stamp the output
         run: node libs/builder/generator/acceptance/production/source-stamp.mjs dist/apps/ng-doc/browser
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
@@ -476,7 +476,7 @@ jobs:
         with:
           name: packages
           path: dist/libs
-      - run: npx nx run ng-doc:link-libs --excludeTaskDependencies
+      - run: pnpm exec nx run ng-doc:link-libs --excludeTaskDependencies
       - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
         with:
           name: site-legacy
@@ -516,7 +516,7 @@ jobs:
         with:
           name: packages
           path: dist/libs
-      - run: npx nx run ng-doc:link-libs --excludeTaskDependencies
+      - run: pnpm exec nx run ng-doc:link-libs --excludeTaskDependencies
       - uses: ./.github/actions/browser
       - env:
           NGDOC_VITE_MAIN_EVIDENCE: ${{ runner.temp }}/vite-main
@@ -684,7 +684,8 @@ jobs:
     needs: build
     runs-on: ${{ matrix.os }}
     # One fresh application installed from the npm registry, built and served: a 28 minute
-    # scenario budget inside a 32 minute test timeout, plus setup (a cold Windows npm ci included).
+    # scenario budget inside a 32 minute test timeout, plus setup (a cold Windows workspace install
+    # included).
     timeout-minutes: 50
     strategy:
       fail-fast: false

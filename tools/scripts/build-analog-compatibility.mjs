@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { realpathSync } from 'node:fs';
 import { readdir, readFile, realpath } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -248,9 +249,19 @@ export async function prepareAnalogCompatibility({
     const result = patchSource(original, applyPatch, relative);
     patched.set(file, { relative, original, ...result });
   }
+  // Paths are compared by their real path: under pnpm the package directory is a symlink into
+  // node_modules/.pnpm, and esbuild reports importers through it only with `preserveSymlinks`.
+  const real = (file) => {
+    try {
+      return realpathSync(file);
+    } catch {
+      return path.resolve(file);
+    }
+  };
   const sourcePaths = new Set(
-    inventory.entries.map((entry) => path.join(sourceDirectory, entry.path)),
+    inventory.entries.map((entry) => real(path.join(sourceDirectory, entry.path))),
   );
+  const patchedByRealPath = new Map([...patched].map(([file, source]) => [real(file), source]));
   const encounteredStaticExternals = new Set();
   const upstreamIndex = path.join(sourceDirectory, 'index.js');
 
@@ -262,13 +273,12 @@ export async function prepareAnalogCompatibility({
         return { path: upstreamIndex };
       });
       build.onResolve({ filter: /.*/ }, (args) => {
-        if (!sourcePaths.has(path.resolve(args.importer)) || !isBareImport(args.path))
-          return undefined;
+        if (!isBareImport(args.path) || !sourcePaths.has(real(args.importer))) return undefined;
         encounteredStaticExternals.add(args.path);
         return { path: args.path, external: true };
       });
       build.onLoad({ filter: /\.js$/ }, (args) => {
-        const source = patched.get(path.resolve(args.path));
+        const source = patchedByRealPath.get(real(args.path));
         return source ? { contents: source.code, loader: 'js' } : undefined;
       });
     },

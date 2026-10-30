@@ -18,15 +18,15 @@ These rules prevent the failures that are easy to cause here and hard to notice 
 
 Never hand-edit these, and never commit them. They are rebuilt, regenerated or disposable.
 
-| Path                                                                                                                                           | What it is                                                                                     |
-| ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `dist/`                                                                                                                                        | Build output.                                                                                  |
-| `ng-doc/`                                                                                                                                      | Vite engine output for the docs site (`ng-doc/ng-doc`).                                        |
-| `ng-doc-legacy/`                                                                                                                               | Legacy engine output for the docs site's `*-legacy` targets.                                   |
-| `.cache/ng-doc/`, `.angular/`, `.nx/cache`, `.nx/workspace-data`                                                                               | Caches.                                                                                        |
-| `coverage/`                                                                                                                                    | Coverage reports.                                                                              |
-| `tmp/`                                                                                                                                         | Scratch space. Use it for your own temporary files, runner log directories and private builds. |
-| `**/.runtime/` under generator `testing/`/`acceptance/`                                                                                        | Test scratch workspaces.                                                                       |
+| Path                                                                                                                                                            | What it is                                                                                     |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `dist/`                                                                                                                                                         | Build output.                                                                                  |
+| `ng-doc/`                                                                                                                                                       | Vite engine output for the docs site (`ng-doc/ng-doc`).                                        |
+| `ng-doc-legacy/`                                                                                                                                                | Legacy engine output for the docs site's `*-legacy` targets.                                   |
+| `.cache/ng-doc/`, `.angular/`, `.nx/cache`, `.nx/workspace-data`                                                                                                | Caches.                                                                                        |
+| `coverage/`                                                                                                                                                     | Coverage reports.                                                                              |
+| `tmp/`                                                                                                                                                          | Scratch space. Use it for your own temporary files, runner log directories and private builds. |
+| `**/.runtime/` under generator `testing/`/`acceptance/`                                                                                                         | Test scratch workspaces.                                                                       |
 | `.ng-doc-stage-*`, `.ng-doc-output-manifest.json`, `*.compiler-memo.json`, `*.semantic-closures.json`, `*.fast-start.json`, `*.highlight.json`, `*.format.json` | Generator commit and cache internals inside an output or cache root.                           |
 
 To change generated output, change the generator, its templates (`libs/builder/templates`) or the docs source.
@@ -40,12 +40,12 @@ To change generated output, change the generator, its templates (`libs/builder/t
 
 ## Scratch copies of the repository
 
-- **Symlink, don't install.** When you need an isolated copy (a temporary workspace, a git worktree used for building), symlink the root `node_modules` into it instead of running `npm install`. A fresh install can resolve different versions than the committed lockfile.
+- **Symlink, don't install.** When you need an isolated copy (a temporary workspace, a git worktree used for building), symlink the root `node_modules` into it instead of running `pnpm install`. An install there writes into the shared store and can link a different tree than the root's.
 - **Writes through links reach the original.** A symlinked `node_modules` is shared, so don't write into it from the copy. Remove scratch copies when you are done.
 
 ## Dependencies, versions and publishing
 
-- **Pinned tooling:** don't change `package.json`, `package-lock.json`, Node, Angular, Nx, TypeScript, Vite, Vitest or Analog versions unless the task is that upgrade. The generator build records the toolchain and lockfile digests, and Analog compatibility is pinned per version.
+- **Pinned tooling:** don't change `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, Node, Angular, Nx, TypeScript, Vite, Vitest or Analog versions unless the task is that upgrade. The generator build records the toolchain and lockfile digests, and Analog compatibility is pinned per version.
 - **Never publish or deploy:** no `npm publish`, `nx run <project>:publish`, release-branch merges or deploy workflows unless the user explicitly asks.
 - **Git:** don't commit, push, rewrite history or switch branches unless asked. Leave unrelated working-tree changes untouched.
 
@@ -59,6 +59,6 @@ To change generated output, change the generator, its templates (`libs/builder/t
 ## Platform notes
 
 - **POSIX lane:** the posix-lane runner groups require POSIX process groups, so the core lane is the Windows gate of the runner.
-- **Windows processes:** Windows has no process groups. `ng-doc dev -- <command>` and the isolated SSR renderer end their child together with its process tree (`taskkill /T /F`, `bootstrap/process-tree.ts`); `ng`, `npm` and `npx` run through Node (their JavaScript entry), and any other `.cmd`/`.bat` command through `cmd.exe` with quoted arguments, refusing `"`, `%`, `!`, CR and LF. Liveness is Node's own exit status of the child, never a probe of its pid (which may be reused once it exited). A descendant that outlives its parent can't be found there, which the POSIX group check catches. Test them with the platform ports (`platform: 'win32'`, `killTree`) and add native Windows cases with `it.runIf(process.platform === 'win32')`.
+- **Windows processes:** Windows has no process groups. `ng-doc dev -- <command>` and the isolated SSR renderer end their child together with its process tree (`taskkill /T /F`, `bootstrap/process-tree.ts`); `ng`, `npm`, `npx` and Corepack's `pnpm`/`pnpx` (only when the command resolves to Corepack's shim beside Node) run through Node (their JavaScript entry), and any other `.cmd`/`.bat` command through `cmd.exe` with quoted arguments, refusing `"`, `%`, `!`, CR and LF. Liveness is Node's own exit status of the child, never a probe of its pid (which may be reused once it exited). A descendant that outlives its parent can't be found there, which the POSIX group check catches. Test them with the platform ports (`platform: 'win32'`, `killTree`) and add native Windows cases with `it.runIf(process.platform === 'win32')`.
 - **Windows files:** a rename or removal under an output or cache root can fail with EPERM, EBUSY or EACCES while another process holds a handle. Rename through `retryingRename` (`artifacts/index.ts`), which retries on win32 only. Split text on `'\n'`, never on `os.EOL`, and compare a drive letter through `canonicalDrive` (`vite/paths.ts`) where a path from Vite meets one the engine published.
 - **Path comparisons:** macOS temporary paths resolve through symlinks (`/var` → `/private/var`). Compare paths with `realpath` when ownership or overlap matters.

@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, realpathSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -77,11 +77,15 @@ export function packageVersions(
   return versions;
 }
 
-/** The directory of package `name` as Node's resolution finds it from `directory` upwards. */
+/**
+ * The directory of package `name` as Node's resolution finds it from `directory` upwards: its real
+ * path, as Node loads it. A package's own dependencies are found from there, which matters where
+ * `node_modules` links packages into a store (pnpm), whose dependencies sit beside the real copy.
+ */
 function packageDirectory(name: string, directory: string): string | undefined {
   for (let current = directory; ; current = path.dirname(current)) {
     const candidate = path.join(current, 'node_modules', name);
-    if (existsSync(path.join(candidate, 'package.json'))) return candidate;
+    if (existsSync(path.join(candidate, 'package.json'))) return realpathSync(candidate);
     if (path.dirname(current) === current) return undefined;
   }
 }

@@ -27,4 +27,4 @@ jobs:
         uses: ./.github/actions/nodejs
 
       - name: Test
-        run: npx nx affected -t test,test-zoneless,test-search-index --configuration=ci --parallel --base=remotes/origin/${{ inputs.base }} --head=${{ inputs.head }}
+        run: pnpm exec nx affected -t test,test-zoneless,test-search-index --configuration=ci --parallel --base=remotes/origin/${{ inputs.base }} --head=${{ inputs.head }}

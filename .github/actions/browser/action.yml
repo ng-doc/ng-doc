@@ -5,10 +5,12 @@ runs:
   using: composite
   steps:
     # Kept out of the workspace so that the checkout's dependencies stay exactly the lockfile's.
+    # Run from the workspace, so that Corepack runs the pnpm version package.json names.
     - name: Install Playwright and Chromium
       shell: bash
       run: |
-        npm install --prefix "$RUNNER_TEMP/ngdoc-browser" --no-audit --no-fund playwright@1.62.1
+        mkdir -p "$RUNNER_TEMP/ngdoc-browser"
+        pnpm --dir "$RUNNER_TEMP/ngdoc-browser" add playwright@1.62.1
         node "$RUNNER_TEMP/ngdoc-browser/node_modules/playwright/cli.js" install --with-deps chromium
         echo "PLAYWRIGHT_MODULE=$RUNNER_TEMP/ngdoc-browser/node_modules/playwright" >> "$GITHUB_ENV"
         node -e 'const p = require(process.env.RUNNER_TEMP + "/ngdoc-browser/node_modules/playwright"); console.log("CHROME_PATH=" + p.chromium.executablePath())' >> "$GITHUB_ENV"
