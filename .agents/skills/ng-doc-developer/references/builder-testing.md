@@ -67,13 +67,15 @@ node node_modules/vitest/vitest.mjs run --config libs/builder/vitest.config.ts g
 
 **Type-check** the area you touched; Vitest does not type-check. Use `node node_modules/typescript/bin/tsc -p <tsconfig> --noEmit --skipLibCheck` with:
 
-| Area touched                                                                 | tsconfig                                                                                                                                                        |
-| ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `compiler/`                                                                  | `libs/builder/generator/compiler/tsconfig.json`                                                                                                                 |
-| `outputs/`, `vite/`                                                          | the `tsconfig.json` in that directory                                                                                                                           |
-| `progress/`                                                                  | `libs/builder/generator/progress/tsconfig.json`                                                                                                                 |
-| `semantic/`, `worker/`, `bootstrap/`                                         | `libs/builder/generator/<area>/testing/tsconfig.json`                                                                                                           |
-| `session/`, `artifacts/`, `discovery/`, `graph/`, `content/`, `contracts.ts` | no config of their own: use `bootstrap/testing/tsconfig.json` and `compiler/tsconfig.json`, which reach them by import. Vitest does not type-check their specs. |
+| Area touched                                                                 | tsconfig                                                                                                                                                                                           |
+| ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `compiler/`                                                                  | `libs/builder/generator/compiler/tsconfig.json`                                                                                                                                                    |
+| `outputs/`, `vite/`                                                          | the `tsconfig.json` in that directory                                                                                                                                                              |
+| `progress/`                                                                  | `libs/builder/generator/progress/tsconfig.json`                                                                                                                                                    |
+| `semantic/`, `worker/`, `bootstrap/`                                         | `libs/builder/generator/<area>/testing/tsconfig.json`                                                                                                                                              |
+| `session/`, `artifacts/`, `discovery/`, `graph/`, `content/`, `contracts.ts` | no config of their own: use `bootstrap/testing/tsconfig.json` and `compiler/tsconfig.json`, which reach them by import. Their `*.spec.ts` suites are checked by `builder:typecheck-specs` (below). |
+
+Every builder `*.spec.ts` (the legacy specs and the generator spec suites) is type-checked by `pnpm nx run builder:typecheck-specs` (`tsc -p libs/builder/tsconfig.spec.json --noEmit`; the CI `typecheck` job runs it). That program also compiles the sources the specs import, generator modules included, under the builder's own options, which are stricter than `tsconfig.base.json`: `noUnusedLocals`, and `noPropertyAccessFromIndexSignature`, so a property of a `Record<string, unknown>` is read as `value['name']`. Run it after changing any spec or a module one imports.
 
 ## Writing a new test
 

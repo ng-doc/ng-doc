@@ -5,10 +5,10 @@ import path from 'node:path';
 
 import { COMMANDS, ROOT, isMain } from './check-builder-modernization.mjs';
 
-// Guards the one-check-per-job layout of .github/workflows/pr.yml: a runner group or a test
-// target that has no job would otherwise never run in CI, and nothing would say so. Branch
-// protection requires only the aggregate gate job, so a job the gate does not wait for would not
-// block a merge either.
+// Guards the one-check-per-job layout of .github/workflows/pr.yml: a runner group, a test target
+// or a type-check target that has no job would otherwise never run in CI, and nothing would say
+// so. Branch protection requires only the aggregate gate job, so a job the gate does not wait for
+// would not block a merge either.
 
 const require = createRequire(import.meta.url);
 const WORKFLOW = '.github/workflows/pr.yml';
@@ -194,6 +194,24 @@ export function testJobProblems(jobTargets, projects) {
   return problems;
 }
 
+/**
+ * Every type-check target (`typecheck*`) runs in a `typecheck` job, and every such job names an
+ * existing type-check target. Vitest does not type-check, so a spec type error that no job checks
+ * would go unnoticed.
+ */
+export function typecheckJobProblems(jobTargets, projects) {
+  const problems = [];
+  const existing = new Set();
+  for (const project of projects)
+    for (const name of Object.keys(project.targets))
+      if (name.startsWith('typecheck')) existing.add(`${project.name}:${name}`);
+  for (const id of existing)
+    if (!jobTargets.includes(id)) problems.push(`no typecheck job for ${id}`);
+  for (const id of jobTargets)
+    if (!existing.has(id)) problems.push(`typecheck job for a missing target: ${id}`);
+  return problems;
+}
+
 async function hasSpecs(directory) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     if (entry.name === 'node_modules') continue;
@@ -231,6 +249,7 @@ export async function checkWorkflow(root = ROOT) {
   const { parse } = require('yaml');
   const workflow = parse(await readFile(path.join(root, WORKFLOW), 'utf8'));
   const { jobs } = workflow;
+  const projects = await readProjects(root);
   return [
     ...generatorJobProblems([
       ...expandMatrix(jobs.generator.strategy.matrix),
@@ -238,7 +257,8 @@ export async function checkWorkflow(root = ROOT) {
     ]),
     ...mergeJobProblems(expandMatrix(jobs['generator-coverage']?.strategy.matrix)),
     ...stepProblems(jobs),
-    ...testJobProblems(jobs.unit.strategy.matrix.target, await readProjects(root)),
+    ...testJobProblems(jobs.unit.strategy.matrix.target, projects),
+    ...typecheckJobProblems(jobs.typecheck?.strategy.matrix.target ?? [], projects),
     ...gateProblems(jobs),
   ];
 }
@@ -248,7 +268,7 @@ if (await isMain(import.meta.url)) {
   for (const problem of problems) console.error(`check-ci-jobs: ${problem}`);
   if (!problems.length)
     console.log(
-      `check-ci-jobs: ${WORKFLOW} has a job for every runner group and test target, and ${GATE} needs every job`,
+      `check-ci-jobs: ${WORKFLOW} has a job for every runner group, test and type-check target, and ${GATE} needs every job`,
     );
   process.exitCode = problems.length ? 1 : 0;
 }

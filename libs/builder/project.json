@@ -73,6 +73,15 @@
           "command": "vitest run --config libs/builder/vitest.config.ts --coverage"
         }
       }
+    },
+    "typecheck-specs": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": ["default", "^production", "{workspaceRoot}/tsconfig.base.json"],
+      "outputs": [],
+      "options": {
+        "command": "tsc -p libs/builder/tsconfig.spec.json --noEmit"
+      }
     }
   }
 }
