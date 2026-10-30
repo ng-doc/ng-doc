@@ -98,4 +98,4 @@ Return `undefined` to keep the current title.
 
 {% endindex %}
 
-Next: `*DevServerAndBuildsPage`
+Next: `*UiTextsPage`
