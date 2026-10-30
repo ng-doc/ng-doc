@@ -73,6 +73,7 @@ jobs:
           - app:test
           - app:test-zoneless
           - app:test-search-index
+          - app:test-lazy-route
           - ui-kit:test
           - ui-kit:test-zoneless
           - ng-doc:test

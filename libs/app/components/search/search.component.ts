@@ -19,6 +19,7 @@ import {
   NgDocButtonIconComponent,
   NgDocComponentContent,
   NgDocDialogService,
+  NgDocOverlayService,
 } from '@ng-doc/ui-kit';
 import { NgDocOverlayRef } from '@ng-doc/ui-kit/classes';
 
@@ -33,6 +34,9 @@ import { NgDocOverlayRef } from '@ng-doc/ui-kit/classes';
   styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgDocButtonIconComponent],
+  // The palette is created with this component's injector, not the root one: it reads the search
+  // engine and the generated context, which may be provided by the route that holds the docs.
+  providers: [NgDocDialogService, NgDocOverlayService],
 })
 export class NgDocSearchComponent {
   protected readonly dialog = inject(NgDocDialogService);

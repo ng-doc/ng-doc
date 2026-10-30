@@ -2,7 +2,7 @@
 // collapsed categories and 8px around an open one.
 :host {
   display: block;
-  height: calc(100vh - var(--ng-doc-navbar-height));
+  height: calc(100vh - var(--ng-doc-navbar-height) - var(--ng-doc-layout-top));
   width: 100%;
   overflow: hidden;
   background: var(--ng-doc-sidebar-background);

@@ -236,7 +236,7 @@
 
 .ng-doc-api-list-group {
   margin-top: var(--ng-doc-space-8);
-  scroll-margin-top: calc(var(--ng-doc-navbar-height) + 16px);
+  scroll-margin-top: calc(var(--ng-doc-navbar-height) + var(--ng-doc-layout-top) + 16px);
 }
 
 .ng-doc-api-list-group-title {

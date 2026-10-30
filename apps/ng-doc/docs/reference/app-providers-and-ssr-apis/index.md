@@ -25,9 +25,15 @@ The routes of the site are in `NG_DOC_ROUTING`, also from `@ng-doc/generated`. T
 also needs the Angular router and `provideHttpClient(withInterceptorsFromDi())`, because NgDoc
 registers an HTTP interceptor.
 
+The providers work in the application configuration and in the `providers` of the route that holds
+the documentation (`*LazyRoutePage`). `provideNgDocTitle` and `NgDocPreloadingStrategy` configure
+the router, so they go in the application configuration.
+
 ## provideNgDocApp
 
-`provideNgDocApp(config?: NgDocApplicationConfig)`. See also `NgDocApplicationConfig`.
+`provideNgDocApp(config?: NgDocApplicationConfig)`. See also `NgDocApplicationConfig`. It starts
+NgDoc with environment initializers, which run where it is provided, and starts loading the code
+highlighter of playgrounds; the server render waits for it.
 
 | Option                             | Type                               | Default      | Description                                                                                                                  |
 | ---------------------------------- | ---------------------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------- |

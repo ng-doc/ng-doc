@@ -995,6 +995,11 @@
       "group": "keys",
       "source": "hybrid"
     },
+    "--ng-doc-layout-top": {
+      "group": "layout",
+      "source": "embedding",
+      "documented": true
+    },
     "--ng-doc-mix-border": {
       "group": "mix-weight",
       "source": "refresh"

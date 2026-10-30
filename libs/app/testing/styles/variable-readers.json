@@ -1086,6 +1086,18 @@
   "--ng-doc-label-content-width": [
     "libs/ui-kit/components/label/label.component.scss :: .ng-doc-content"
   ],
+  "--ng-doc-layout-top": [
+    "libs/app/components/api-list/api-list.component.scss :: .ng-doc-api-list-group",
+    "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host :: --ng-doc-page-sticky-offset",
+    "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host ng-doc-tab-routes-group",
+    "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host[data-ng-doc-page-tabs=true] :: --ng-doc-page-sticky-offset",
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-root-wrapper .ng-doc-header",
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-root-wrapper main",
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-root-wrapper main :: --ng-doc-sidenav-top",
+    "libs/app/components/root/root.component.scss :: :host .ng-doc-skip-link",
+    "libs/app/components/sidebar/sidebar.component.scss :: :host",
+    "libs/app/components/toc/toc.component.scss :: :host"
+  ],
   "--ng-doc-line-height": [
     "libs/app/styles/global.scss :: html, body",
     "libs/app/styles/parts/modifiers.scss :: .ng-doc-node-details",
@@ -1218,6 +1230,7 @@
     "libs/app/components/page-wrapper/page-wrapper.component.scss :: :host[data-ng-doc-page-tabs=true] :: --ng-doc-page-sticky-offset",
     "libs/app/components/root/root.component.scss :: :host .ng-doc-root-wrapper .ng-doc-header",
     "libs/app/components/root/root.component.scss :: :host .ng-doc-root-wrapper main :: --ng-doc-sidenav-top",
+    "libs/app/components/root/root.component.scss :: :host:has(> .ng-doc-root-wrapper > .ng-doc-header:empty) :: --ng-doc-main-padding",
     "libs/app/components/sidebar/sidebar.component.scss :: :host",
     "libs/app/components/toc/toc.component.scss :: :host",
     "libs/app/styles/variables.scss :: :root :: --ng-doc-main-padding",
@@ -1762,6 +1775,9 @@
   ],
   "--ng-doc-sidenav-content-padding": [
     "libs/ui-kit/components/sidenav/sidenav.component.scss :: :host .ng-doc-sidenav-content"
+  ],
+  "--ng-doc-sidenav-top": [
+    "libs/ui-kit/components/sidenav/sidenav.component.scss :: :host .ng-doc-sidenav"
   ],
   "--ng-doc-sidenav-width": [
     "libs/ui-kit/components/sidenav/sidenav.component.scss :: :host .ng-doc-sidenav",
