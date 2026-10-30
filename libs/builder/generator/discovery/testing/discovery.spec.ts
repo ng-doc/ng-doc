@@ -1565,12 +1565,9 @@ test('demo page options enter the configuration only when they change a default'
       ['', undefined],
       [', isolatedDemos: false', undefined],
       [', isolatedPlaygrounds: false', undefined],
-      [', demoApplication: { path: "/demo-preview/" }', { pages: 'all', playgroundPages: 'all' }],
-      [', demoApplication: true', { pages: 'all', playgroundPages: 'all' }],
-      [
-        ', demoApplication: { path: "previews/live" }',
-        { pages: 'all', playgroundPages: 'all', path: 'previews/live' },
-      ],
+      [', demoApplication: { path: "/demo-preview/" }', { pages: 'all' }],
+      [', demoApplication: true', { pages: 'all' }],
+      [', demoApplication: { path: "previews/live" }', { pages: 'all', path: 'previews/live' }],
       [', isolatedDemos: true', { pages: 'all', isolated: true }],
       [', isolatedPlaygrounds: true', { playgroundPages: 'all', isolatedPlaygrounds: true }],
       [

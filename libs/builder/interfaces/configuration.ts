@@ -67,8 +67,8 @@ export interface NgDocConfiguration {
    * which isolated playgrounds show in iframes. Only the Vite engine builds them.
    *
    * By default only the pages with an isolated demo or playground get them. `true` (or an object)
-   * builds them for every page with demos or playgrounds; `false` never builds them, and isolated
-   * demos and playgrounds render in the page.
+   * builds the demo pages of every page with demos; playground pages are built only for isolated
+   * playgrounds. `false` never builds them, and isolated demos and playgrounds render in the page.
    */
   demoApplication?: boolean | NgDocDemoApplicationConfiguration;
   /**

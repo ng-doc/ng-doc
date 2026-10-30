@@ -67,12 +67,12 @@ Only the new engine reads these options.
 Only the new engine reads these options. Isolated demos show a demo's page in an iframe
 (`*IsolatedDemosPage`).
 
-| Option                | Type                                           | Default | Description                                                                                                                                                              |
-| --------------------- | ---------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `isolatedDemos`       | `boolean`                                      | `false` | Shows every demo in an iframe of its page, unless its `isolated` option is `false`. Every page with demos gets demo pages.                                               |
-| `isolatedPlaygrounds` | `boolean`                                      | `false` | Shows the demos of every playground in iframes, unless its `isolated` option is `false`. Every playground gets playground pages.                                         |
-| `demoApplication`     | `boolean \| NgDocDemoApplicationConfiguration` | –       | `true` or an object gives every page with demos or playgrounds its demo and playground pages. `false` gives none, and isolated demos and playgrounds render in the page. |
-| `demoProviders`       | `NgDocDemoProvidersImport`                     | –       | `() => import('./demo.providers')`: the module whose default export, an `NgDocDemoProviders` list, provides for the demo pages.                                          |
+| Option                | Type                                           | Default | Description                                                                                                                                                                                |
+| --------------------- | ---------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `isolatedDemos`       | `boolean`                                      | `false` | Shows every demo in an iframe of its page, unless its `isolated` option is `false`. Every page with demos gets demo pages.                                                                 |
+| `isolatedPlaygrounds` | `boolean`                                      | `false` | Shows the demos of every playground in iframes, unless its `isolated` option is `false`. Every playground gets playground pages.                                                           |
+| `demoApplication`     | `boolean \| NgDocDemoApplicationConfiguration` | –       | `true` or an object gives every page with demos its demo pages; only isolated playgrounds get playground pages. `false` gives none, and isolated demos and playgrounds render in the page. |
+| `demoProviders`       | `NgDocDemoProvidersImport`                     | –       | `() => import('./demo.providers')`: the module whose default export, an `NgDocDemoProviders` list, provides for the demo pages.                                                            |
 
 Without them, only the pages with an isolated demo or an isolated playground get demo pages. A
 page with an isolated playground gets a playground page for each target of each of its

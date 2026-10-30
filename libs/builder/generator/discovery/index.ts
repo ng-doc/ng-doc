@@ -1558,12 +1558,11 @@ function demoApplicationSettings(
       : isolatedDemos === true || demoApplication === true || configured
         ? ('all' as const)
         : undefined;
-  // Playground pages for every playground: the site isolates them all, or asks for every demo
-  // page. `isolatedDemos` alone builds demo pages only, so its sites keep their output.
+  // Playground pages for every playground only when the site isolates them all: a playground
+  // page is reached only through an isolated playground, so `demoApplication` and
+  // `isolatedDemos` alone build none, and their sites keep their output.
   const playgroundPages =
-    pages !== 'none' && (isolatedPlaygrounds === true || demoApplication === true || configured)
-      ? ('all' as const)
-      : undefined;
+    pages !== 'none' && isolatedPlaygrounds === true ? ('all' as const) : undefined;
   const settings = {
     ...(pages ? { pages } : {}),
     ...(isolatedDemos === true && pages !== 'none' ? { isolated: true as const } : {}),
