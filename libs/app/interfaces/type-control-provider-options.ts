@@ -21,4 +21,12 @@ export interface NgDocTypeControlProviderOptions {
    * a `<div>` whose caption names the control through `aria-labelledby`.
    */
   labelWrapper?: boolean;
+  /**
+   * Whether the control's values can be sent to an isolated playground's iframe, which gets them
+   * in its URL: plain data only (strings, numbers, booleans, `null`, `undefined`, dates, arrays and
+   * plain objects of those). `false` makes a playground with an input of this control render in
+   * the page, with a note. Left out, each value is checked when it changes, and the first one that
+   * can't be sent does the same.
+   */
+  cloneable?: boolean;
 }

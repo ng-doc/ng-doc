@@ -55,6 +55,9 @@ export class NgDocDemoDisplayerComponent {
   /** Whether the code is revealed. */
   readonly expanded = model<boolean>(false);
 
+  /** A page that shows the demo alone, which the toolbar opens in a new tab. */
+  readonly newTabUrl = input<string | undefined>(undefined);
+
   /** Id of the region that holds the code, for the toggle's `aria-controls`. */
   protected readonly codeId: string = `ng-doc-demo-displayer-code-${nextId++}`;
 

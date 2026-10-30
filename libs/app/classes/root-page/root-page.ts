@@ -50,4 +50,10 @@ export abstract class NgDocRootPage {
 
   /** Whether the page's demos are isolated unless their `demo` action says otherwise (`isolatedDemos`). */
   readonly isolatedDemos?: boolean;
+
+  /**
+   * Whether the page's playgrounds are isolated unless their `playground` action or configuration
+   * says otherwise (`isolatedPlaygrounds`).
+   */
+  readonly isolatedPlaygrounds?: boolean;
 }

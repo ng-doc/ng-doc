@@ -1,4 +1,4 @@
-@if (defaultValues(); as defaultValues) {
+@if (defaultValues() || waitingForDefaults()) {
   <div
     class="ng-doc-playground-properties-wrapper"
     [class.no-side-panel]="hideSidePanel()"
@@ -6,7 +6,7 @@
     <div class="ng-doc-playground-demos">
       <ng-content></ng-content>
     </div>
-    @if (!hideSidePanel()) {
+    @if (!hideSidePanel() && defaultValues(); as defaultValues) {
       <div class="ng-doc-playground-properties">
         <div class="ng-doc-playground-header">
           <h4>Playground</h4>

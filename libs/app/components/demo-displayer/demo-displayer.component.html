@@ -10,6 +10,19 @@
             <ng-doc-icon icon="copy"></ng-doc-icon>
           </ng-doc-copy-button>
         }
+        @if (newTabUrl(); as url) {
+          <a
+            class="ng-doc-demo-open"
+            ng-doc-button-icon
+            [rounded]="false"
+            [href]="url"
+            target="_blank"
+            rel="noopener"
+            aria-label="Open in a new tab"
+            ngDocTooltip="Open in a new tab">
+            <ng-doc-icon icon="external-link"></ng-doc-icon>
+          </a>
+        }
         <button
           type="button"
           ng-doc-button-icon

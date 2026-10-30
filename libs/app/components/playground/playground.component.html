@@ -1,4 +1,7 @@
 @if (configuration(); as configuration) {
+  @if (fallbackNote(); as note) {
+    <p class="ng-doc-playground-note" role="note">{{ note }}</p>
+  }
   <ng-doc-playground-properties
     [form]="formGroup()!"
     [properties]="properties()"
@@ -7,6 +10,7 @@
     [hideSidePanel]="configuration.hideSidePanel ?? false"
     [inspectorPosition]="configuration.inspectorPosition ?? 'right'"
     [defaultValues]="defaultValues()"
+    [waitingForDefaults]="isolated()"
     [showResetButton]="!isDefaultState()"
     [(recreateDemo)]="recreateDemo"
     [recreateLocked]="recreateLocked()"
@@ -19,7 +23,10 @@
         [configuration]="configuration"
         [recreateDemo]="recreateDemo()"
         [form]="formGroup()"
-        [expanded]="configuration.expanded ?? false">
+        [expanded]="configuration.expanded ?? false"
+        [frame]="frames()?.get(selector)"
+        [frameDefaults]="defaultValues()"
+        (frameMessage)="onFrameMessage($event)">
       </ng-doc-playground-demo>
     }
     @if (pipeName()) {
@@ -29,7 +36,10 @@
         [properties]="properties()"
         [configuration]="configuration"
         [recreateDemo]="recreateDemo()"
-        [form]="formGroup()">
+        [form]="formGroup()"
+        [frame]="frames()?.get(pipeName())"
+        [frameDefaults]="defaultValues()"
+        (frameMessage)="onFrameMessage($event)">
       </ng-doc-playground-demo>
     }
   </ng-doc-playground-properties>

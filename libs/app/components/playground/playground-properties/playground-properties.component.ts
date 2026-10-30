@@ -83,6 +83,12 @@ export class NgDocPlaygroundPropertiesComponent<
   /** Default values of the inputs; the inspector renders once they are known. */
   readonly defaultValues = input<Record<string, unknown> | undefined>(undefined);
 
+  /**
+   * Whether the demos render before the defaults are known: an isolated playground's iframes
+   * report them, so they must render first. The controls render once the defaults are known.
+   */
+  readonly waitingForDefaults = input<boolean>(false);
+
   /** Whether the inspector is hidden, leaving the demos only. */
   readonly hideSidePanel = input<boolean>(false);
 

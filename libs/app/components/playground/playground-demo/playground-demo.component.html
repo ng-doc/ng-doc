@@ -2,6 +2,16 @@
   [code]="code()"
   [border]="false"
   [expanded]="expanded()"
+  [newTabUrl]="frameUrl()"
   language="angular-html">
+  @if (frame(); as frame) {
+    <ng-doc-demo-frame
+      [src]="frame.url"
+      [fragment]="frame.fragment"
+      [frameTitle]="frame.title"
+      (playgroundMessage)="frameMessage.emit($event)" />
+  }
+  <!-- Static, so the class can be created before the first check (in ngOnChanges). An isolated
+       playground leaves it empty. -->
   <ng-container #demoOutlet></ng-container>
 </ng-doc-demo-displayer>
