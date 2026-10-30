@@ -329,7 +329,7 @@ describe('delta commit: seeded random differential', () => {
     async (seed) => {
       const counts = await sequence(seed, STEPS);
       // Path accounting: the sequence exercised what it is for. Optionally written to a file.
-      const record = process.env.NGDOC_DELTA_RANDOM_COUNTS;
+      const record = process.env['NGDOC_DELTA_RANDOM_COUNTS'];
       if (record)
         await appendFile(record, `${JSON.stringify({ seed, steps: STEPS, ...counts })}\n`);
       expect(counts.delta).toBeGreaterThan(STEPS * 0.35);
