@@ -46,4 +46,13 @@ export interface NgDocPlaygroundOptions {
    * Custom data that you can use in the templates (e.g. `{{data.providedProperty}}`)
    */
   data?: Record<string, unknown>;
+  /**
+   * Renders the playground's demos in iframes that load only Angular and the target, instead of
+   * rendering them in the page: the preview widths become real viewport widths (media queries
+   * respond) and the page's styles and providers don't reach the target. The inspector stays on
+   * the page. The option of the `playground` action wins over the playground configuration, which
+   * wins over `isolatedPlaygrounds` of `ng-doc.config.ts` (`false` by default). Only the Vite
+   * engine builds the playground pages; elsewhere the playground renders in the page.
+   */
+  isolated?: boolean;
 }
