@@ -2,9 +2,10 @@
 keyword: CustomTypeControlsPage
 ---
 
-A playground has built-in controls for strings, numbers, booleans and unions of literals. For an
-input of any other type, such as an interface, write a type control: a small form component that
-edits a value of that type. Once you register it, every playground uses it for inputs of that type.
+A playground has built-in controls for strings, numbers, booleans, unions of literals and arrays.
+For an input of any other type, such as an interface, write a type control: a small form
+component that edits a value of that type. Once you register it, every playground uses it for
+inputs of that type.
 
 ## 👀 See it
 
@@ -131,9 +132,11 @@ can copy the text to register.
 
 ## Controls for array inputs
 
-An array input, such as `tags = input<string[]>([])`, has no built-in control. Register a control
-for its type text, `string[]`, like for any other type. This one edits the array as comma-separated
-text:
+Arrays of strings and numbers have a built-in list, and other arrays a JSON field
+(`*PlaygroundsPage#arrays`). A control that you register for `string[]` or `number[]` replaces the
+list for every spelling of the type: `Array<string>`, `readonly string[]`, `ReadonlyArray<string>`,
+and optional or nullable inputs such as `string[] | undefined`. So it also receives `undefined` and
+`null`. This one edits the array as comma-separated text:
 
 ```typescript name="string-list-control.component.ts"
 import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
@@ -151,8 +154,8 @@ export class StringListControlComponent implements NgDocTypeControl<string[]> {
   protected touched: () => void = () => {};
   private changed: (value: string[]) => void = () => {};
 
-  writeValue(value: string[] | null): void {
-    // `null` means no value: show the default of the input.
+  writeValue(value: string[] | null | undefined): void {
+    // `null` or `undefined` means no value: show the default of the input.
     this.text.set((value ?? this.default() ?? []).join(', '));
   }
 
@@ -179,15 +182,42 @@ export class StringListControlComponent implements NgDocTypeControl<string[]> {
 ```
 
 ```typescript name="app.config.ts"
+providers: [provideTypeControl('string[]', StringListControlComponent)],
+```
+
+Other array types match by their exact text, like any other type: a control for `Item[]` gets the
+`Item[]` inputs, and `Item[] | undefined` inputs keep the JSON field unless you register that type
+too. To replace the JSON field of every array without a control of its own, register your control
+for `NgDocArray`.
+
+### Reuse the built-in controls
+
+The built-in controls are exported from `@ng-doc/app`, so you can register them for other types.
+An input typed with an alias of an array, such as `type Tags = string[]`, is typed `Tags` and gets
+no control, but it can get the list:
+
+```typescript name="app.config.ts"
+import {
+  NgDocJsonControlComponent,
+  NgDocStringListControlComponent,
+  provideTypeControl,
+} from '@ng-doc/app';
+
 providers: [
-  provideTypeControl('string[]', StringListControlComponent),
-  // For `input<string[]>()` and `@Input() tags?: string[]`.
-  provideTypeControl('string[] | undefined', StringListControlComponent),
+  provideTypeControl('Tags', NgDocStringListControlComponent, { labelWrapper: false }),
+  // The JSON field edits any value that JSON can hold, objects too.
+  provideTypeControl('FloatingCirclePosition', NgDocJsonControlComponent),
 ],
 ```
 
-The same works for arrays of other types, such as `number[]` or `Item[]`: the control parses the
-text, or offers a form row per item, and reports the new array.
+| Control                           | Edits                         |
+| --------------------------------- | ----------------------------- |
+| `NgDocStringListControlComponent` | `string[]`                    |
+| `NgDocNumberListControlComponent` | `number[]`                    |
+| `NgDocJsonControlComponent`       | Any value that JSON can hold. |
+
+Register the lists with `labelWrapper: false`, as NgDoc does (see "Controls with several
+interactive parts").
 
 ## 📋 Options
 
@@ -202,12 +232,14 @@ The third argument of `provideTypeControl` takes `NgDocTypeControlProviderOption
 The inspector lists the inputs whose controls have an `order` first, by that order, and then the
 others by name. The built-in controls have these orders:
 
-| Control                         | Type             | Order |
-| ------------------------------- | ---------------- | ----- |
-| A list of the values of a union | `NgDocTypeAlias` | 10    |
-| A text field                    | `string`         | 20    |
-| A number field                  | `number`         | 30    |
-| A checkbox                      | `boolean`        | 40    |
+| Control                         | Type                   | Order |
+| ------------------------------- | ---------------------- | ----- |
+| A list of the values of a union | `NgDocTypeAlias`       | 10    |
+| A text field                    | `string`               | 20    |
+| A number field                  | `number`               | 30    |
+| A checkbox                      | `boolean`              | 40    |
+| A list of strings or numbers    | `string[]`, `number[]` | 50    |
+| A JSON field                    | `NgDocArray`           | 60    |
 
 ### Controls with several interactive parts
 
@@ -220,7 +252,8 @@ becomes a `<div>` instead, named by its caption for assistive technology:
 provideTypeControl('Items', ItemsControlComponent, { labelWrapper: false }),
 ```
 
-The built-in controls keep their label.
+The built-in lists of `string[]` and `number[]` are such controls; the other built-in controls
+keep their label.
 
 ## Appearance
 

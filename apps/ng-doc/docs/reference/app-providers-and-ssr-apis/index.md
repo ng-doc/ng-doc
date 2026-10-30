@@ -124,7 +124,7 @@ the given type name.
 | Option         | Type      | Description                                                        |
 | -------------- | --------- | ------------------------------------------------------------------ |
 | `hideLabel`    | `boolean` | Hides the input name next to the control.                          |
-| `order`        | `number`  | The position of the control. The built-in controls use 10 to 40.   |
+| `order`        | `number`  | The position of the control. The built-in controls use 10 to 60.   |
 | `labelWrapper` | `boolean` | Wraps the row in a `<label>` (default). `false` renders a `<div>`. |
 
 ## Preload pages
