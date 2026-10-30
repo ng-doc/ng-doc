@@ -8,6 +8,7 @@ import type {
   ArtifactSnapshot,
   BuildEvent,
   BuildResult,
+  CommitGuard,
   CommitRequest,
   CompilationContext,
   CompilationRequest,
@@ -290,7 +291,11 @@ describe('session progress events', () => {
     await watch.initial;
     const gate = deferred<void>();
     const commit = h.commit.getMockImplementation()!;
-    h.commit.mockImplementationOnce((async (request: CommitRequest, guard, signal) => {
+    h.commit.mockImplementationOnce((async (
+      request: CommitRequest,
+      guard: CommitGuard,
+      signal: AbortSignal,
+    ) => {
       await gate.promise;
       return commit(request, { isCurrent: () => true }, signal);
     }) as never);
@@ -321,7 +326,11 @@ describe('session progress events', () => {
       await watch.initial;
       const gate = deferred<void>();
       const commit = h.commit.getMockImplementation()!;
-      h.commit.mockImplementationOnce((async (request: CommitRequest, _guard, signal) => {
+      h.commit.mockImplementationOnce((async (
+        request: CommitRequest,
+        _guard: CommitGuard,
+        signal: AbortSignal,
+      ) => {
         await gate.promise;
         return commit(request, { isCurrent: () => true }, signal);
       }) as never);
@@ -630,7 +639,7 @@ describe('SessionProgress', () => {
       whyRebuilt: [],
     });
     generation.settle({ status: 'cancelled', generation: 4, diagnostics: [], whyRebuilt: [] });
-    generation.commitStarted(3);
+    generation.commitStarted(site('r1', [page('a', 'docs/a')]));
     expect(events.map((event) => event.kind)).toEqual([
       'progress-started',
       'progress',

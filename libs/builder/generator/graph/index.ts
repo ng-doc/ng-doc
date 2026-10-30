@@ -116,8 +116,6 @@ interface SemanticAnalysis {
   scopes: SemanticScope[];
 }
 
-type FileReason = Extract<RebuildReason['reason'], 'input' | 'existence' | 'semantic'>;
-
 /** Validates the compact semantic definition/reference closure of a complete candidate. */
 export function validateSemanticScopes(artifacts: PageArtifact[]): Diagnostic[] {
   return analyzeSemanticScopes(artifacts).diagnostics;

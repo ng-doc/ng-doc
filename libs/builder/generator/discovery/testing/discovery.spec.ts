@@ -767,7 +767,7 @@ test('bounds synchronous modules/templates, aborts pending loaders on dispose, a
       'had exceeded its 20ms time budget.',
   );
 
-  delete process.env.NG_DOC_OWNED_TIMER_TEST;
+  delete process.env['NG_DOC_OWNED_TIMER_TEST'];
   const scheduled = service.render(
     {
       entryId: guide!.id,
@@ -782,7 +782,7 @@ test('bounds synchronous modules/templates, aborts pending loaders on dispose, a
   expect(scheduled.value).toBe('scheduled');
   await service.dispose();
   await new Promise((resolve) => setTimeout(resolve, 60));
-  expect(process.env.NG_DOC_OWNED_TIMER_TEST).toBeUndefined();
+  expect(process.env['NG_DOC_OWNED_TIMER_TEST']).toBeUndefined();
 
   write(
     f.config,
@@ -1417,7 +1417,7 @@ test('real remote loaders use VM-local global and native fetch without cross-gen
         { key: 'Remote', title: 'Remote', path: '/remote' },
       ]);
     }
-    expect((globalThis as Record<string, unknown>).__ngDocScopeProbe).toBeUndefined();
+    expect((globalThis as Record<string, unknown>)['__ngDocScopeProbe']).toBeUndefined();
   } finally {
     await runtime.runtime.dispose();
     server.closeAllConnections();

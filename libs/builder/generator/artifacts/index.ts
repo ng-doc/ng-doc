@@ -1809,9 +1809,9 @@ function normalizeRelative(value: string): string {
 function trustedBase(last: Publication, request: CommitRequest): boolean {
   const published = (manifest: unknown) =>
     isRecord(manifest) &&
-    manifest.projectId === last.projectId &&
-    manifest.revision === last.revision &&
-    manifest.generation === last.generation;
+    manifest['projectId'] === last.projectId &&
+    manifest['revision'] === last.revision &&
+    manifest['generation'] === last.generation;
   const base = request.base;
   return (
     isRecord(base) &&
@@ -1849,8 +1849,8 @@ function sameManifestStamp(left: ManifestStamp, right: ManifestStamp): boolean {
 }
 
 function configurationDigest(candidate: unknown): unknown {
-  return isRecord(candidate) && isRecord(candidate.configuration)
-    ? candidate.configuration.digest
+  return isRecord(candidate) && isRecord(candidate['configuration'])
+    ? candidate['configuration']['digest']
     : undefined;
 }
 
@@ -1860,19 +1860,21 @@ function configurationDigest(candidate: unknown): unknown {
  * were verified when it was published.
  */
 function unchangedArtifact(artifact: Record<string, unknown>, last: Publication): boolean {
-  const id = artifact.id as string;
-  const outputs = artifact.outputs;
+  const id = artifact['id'] as string;
+  const outputs = artifact['outputs'];
   if (
-    !string(artifact.revision) ||
-    last.revisions.get(id) !== artifact.revision ||
+    !string(artifact['revision']) ||
+    last.revisions.get(id) !== artifact['revision'] ||
     !Array.isArray(outputs) ||
     outputs.length !== (last.counts.get(id) ?? 0)
   )
     return false;
   return outputs.every((output: unknown) => {
-    if (!isRecord(output) || !string(output.path)) return false;
-    const entry = last.files.get(output.path);
-    return entry?.ownerId === id && entry.digest === output.digest && entry.role === output.role;
+    if (!isRecord(output) || !string(output['path'])) return false;
+    const entry = last.files.get(output['path']);
+    return (
+      entry?.ownerId === id && entry.digest === output['digest'] && entry.role === output['role']
+    );
   });
 }
 
@@ -2212,8 +2214,8 @@ function isIdentity(value: unknown): value is ArtifactIdentity {
   )
     return false;
   return (
-    string(value.projectId) &&
-    string(value.entryId) &&
+    string(value['projectId']) &&
+    string(value['entryId']) &&
     [
       'page-shell',
       'content',
@@ -2222,9 +2224,9 @@ function isIdentity(value: unknown): value is ArtifactIdentity {
       'category',
       'api-list',
       'aggregate',
-    ].includes(String(value.role)) &&
-    (value.declarationId === undefined || string(value.declarationId)) &&
-    (value.part === undefined || string(value.part))
+    ].includes(String(value['role'])) &&
+    (value['declarationId'] === undefined || string(value['declarationId'])) &&
+    (value['part'] === undefined || string(value['part']))
   );
 }
 
@@ -2239,66 +2241,70 @@ function isFingerprint(value: unknown): value is ArtifactFingerprint {
       'inputDigest',
       'keywordDigest',
     ]) &&
-    value.schemaVersion === SCHEMA_VERSION &&
+    value['schemaVersion'] === SCHEMA_VERSION &&
     [
-      value.compilerVersion,
-      value.toolchainDigest,
-      value.configurationDigest,
-      value.inputDigest,
-      value.keywordDigest,
+      value['compilerVersion'],
+      value['toolchainDigest'],
+      value['configurationDigest'],
+      value['inputDigest'],
+      value['keywordDigest'],
     ].every(string)
   );
 }
 
 function isDependency(value: unknown): value is Dependency {
-  if (!isRecord(value) || !string(value.kind)) return false;
-  if (value.kind === 'content')
-    return exact(value, ['kind', 'path', 'digest']) && string(value.path) && string(value.digest);
-  if (value.kind === 'existence')
+  if (!isRecord(value) || !string(value['kind'])) return false;
+  if (value['kind'] === 'content')
+    return (
+      exact(value, ['kind', 'path', 'digest']) && string(value['path']) && string(value['digest'])
+    );
+  if (value['kind'] === 'existence')
     return (
       exact(value, ['kind', 'path', 'exists']) &&
-      string(value.path) &&
-      typeof value.exists === 'boolean'
+      string(value['path']) &&
+      typeof value['exists'] === 'boolean'
     );
-  if (value.kind === 'glob')
+  if (value['kind'] === 'glob')
     return (
       exact(value, ['kind', 'root', 'include', 'exclude', 'members']) &&
-      string(value.root) &&
-      stringArray(value.include) &&
-      stringArray(value.exclude) &&
-      stringArray(value.members)
+      string(value['root']) &&
+      stringArray(value['include']) &&
+      stringArray(value['exclude']) &&
+      stringArray(value['members'])
     );
-  if (value.kind === 'semantic')
+  if (value['kind'] === 'semantic')
     return (
       exact(value, ['kind', 'scopeId', 'digest', 'files', 'reason']) &&
-      string(value.scopeId) &&
-      string(value.digest) &&
-      stringArray(value.files) &&
-      string(value.reason)
+      string(value['scopeId']) &&
+      string(value['digest']) &&
+      stringArray(value['files']) &&
+      string(value['reason'])
     );
-  if (value.kind === 'semantic-reference')
+  if (value['kind'] === 'semantic-reference')
     return (
       exact(value, ['kind', 'scopeId', 'digest', 'reason']) &&
-      string(value.scopeId) &&
-      string(value.digest) &&
-      string(value.reason)
+      string(value['scopeId']) &&
+      string(value['digest']) &&
+      string(value['reason'])
     );
-  if (value.kind === 'semantic-closure')
+  if (value['kind'] === 'semantic-closure')
     return (
       exact(value, ['kind', 'scopeId', 'key', 'digest']) &&
-      string(value.scopeId) &&
-      string(value.key) &&
-      string(value.digest)
+      string(value['scopeId']) &&
+      string(value['key']) &&
+      string(value['digest'])
     );
-  if (value.kind === 'evaluated')
+  if (value['kind'] === 'evaluated')
     return (
-      exact(value, ['kind', 'entryId', 'digest']) && string(value.entryId) && string(value.digest)
+      exact(value, ['kind', 'entryId', 'digest']) &&
+      string(value['entryId']) &&
+      string(value['digest'])
     );
   return (
-    value.kind === 'keyword' &&
+    value['kind'] === 'keyword' &&
     exact(value, ['kind', 'key', 'digest']) &&
-    string(value.key) &&
-    string(value.digest)
+    string(value['key']) &&
+    string(value['digest'])
   );
 }
 
@@ -2306,12 +2312,12 @@ function isKeyword(value: unknown): boolean {
   return (
     isRecord(value) &&
     exact(value, ['key', 'title', 'path'], ['type', 'languages', 'description']) &&
-    string(value.key) &&
-    string(value.title) &&
-    string(value.path) &&
-    (value.type === undefined || value.type === 'link') &&
-    (value.languages === undefined || stringArray(value.languages)) &&
-    [value.description, value.signature].every((item) => item === undefined || string(item))
+    string(value['key']) &&
+    string(value['title']) &&
+    string(value['path']) &&
+    (value['type'] === undefined || value['type'] === 'link') &&
+    (value['languages'] === undefined || stringArray(value['languages'])) &&
+    [value['description'], value['signature']].every((item) => item === undefined || string(item))
   );
 }
 
@@ -2319,9 +2325,9 @@ function isSource(value: unknown): boolean {
   return (
     isRecord(value) &&
     exact(value, ['path'], ['line', 'column']) &&
-    string(value.path) &&
-    (value.line === undefined || finite(value.line)) &&
-    (value.column === undefined || finite(value.column))
+    string(value['path']) &&
+    (value['line'] === undefined || finite(value['line'])) &&
+    (value['column'] === undefined || finite(value['column']))
   );
 }
 
@@ -2329,9 +2335,9 @@ function isDiagnostic(value: unknown): boolean {
   return (
     isRecord(value) &&
     exact(value, ['code', 'severity', 'message', 'stage'], ['source', 'ownerId', 'related']) &&
-    string(value.code) &&
-    ['error', 'warning', 'info'].includes(String(value.severity)) &&
-    string(value.message) &&
+    string(value['code']) &&
+    ['error', 'warning', 'info'].includes(String(value['severity'])) &&
+    string(value['message']) &&
     [
       'discovery',
       'evaluation',
@@ -2341,17 +2347,17 @@ function isDiagnostic(value: unknown): boolean {
       'cache',
       'commit',
       'host',
-    ].includes(String(value.stage)) &&
-    (value.source === undefined || isSource(value.source)) &&
-    (value.ownerId === undefined || string(value.ownerId)) &&
-    (value.related === undefined ||
-      (Array.isArray(value.related) &&
-        value.related.every(
+    ].includes(String(value['stage'])) &&
+    (value['source'] === undefined || isSource(value['source'])) &&
+    (value['ownerId'] === undefined || string(value['ownerId'])) &&
+    (value['related'] === undefined ||
+      (Array.isArray(value['related']) &&
+        value['related'].every(
           (item) =>
             isRecord(item) &&
             exact(item, ['message', 'source']) &&
-            string(item.message) &&
-            isSource(item.source),
+            string(item['message']) &&
+            isSource(item['source']),
         )))
   );
 }
@@ -2364,10 +2370,10 @@ function isSearch(value: unknown): boolean {
       ['breadcrumbs', 'pageType', 'title', 'section', 'route', 'content'],
       ['fragment', 'kind', 'signature', 'description'],
     ) &&
-    stringArray(value.breadcrumbs) &&
-    ['guide', 'api'].includes(String(value.pageType)) &&
-    [value.title, value.section, value.route, value.content].every(string) &&
-    [value.fragment, value.kind, value.signature, value.description].every(
+    stringArray(value['breadcrumbs']) &&
+    ['guide', 'api'].includes(String(value['pageType'])) &&
+    [value['title'], value['section'], value['route'], value['content']].every(string) &&
+    [value['fragment'], value['kind'], value['signature'], value['description']].every(
       (item) => item === undefined || string(item),
     )
   );
@@ -2377,13 +2383,13 @@ function isAnchor(value: unknown): boolean {
   return (
     isRecord(value) &&
     exact(value, ['anchorId', 'anchor', 'title', 'type'], ['scope']) &&
-    [value.anchorId, value.anchor, value.title].every(string) &&
-    ['heading', 'member'].includes(String(value.type)) &&
-    (value.scope === undefined ||
-      (isRecord(value.scope) &&
-        exact(value.scope, ['key', 'title']) &&
-        string(value.scope.key) &&
-        string(value.scope.title)))
+    [value['anchorId'], value['anchor'], value['title']].every(string) &&
+    ['heading', 'member'].includes(String(value['type'])) &&
+    (value['scope'] === undefined ||
+      (isRecord(value['scope']) &&
+        exact(value['scope'], ['key', 'title']) &&
+        string(value['scope']['key']) &&
+        string(value['scope']['title'])))
   );
 }
 
@@ -2391,14 +2397,14 @@ function isLinkedContent(value: unknown): boolean {
   if (
     !isRecord(value) ||
     !exact(value, ['ir', 'html', 'searchRecords', 'keywordDigest']) ||
-    !string(value.html) ||
-    !string(value.keywordDigest) ||
-    !Array.isArray(value.searchRecords) ||
-    !value.searchRecords.every(isSearch) ||
-    !isRecord(value.ir)
+    !string(value['html']) ||
+    !string(value['keywordDigest']) ||
+    !Array.isArray(value['searchRecords']) ||
+    !value['searchRecords'].every(isSearch) ||
+    !isRecord(value['ir'])
   )
     return false;
-  const ir = value.ir;
+  const ir = value['ir'];
   return (
     exact(
       ir,
@@ -2419,20 +2425,22 @@ function isLinkedContent(value: unknown): boolean {
       ],
       ['icon', 'searchBreadcrumbs'],
     ) &&
-    ir.schemaVersion === SCHEMA_VERSION &&
-    [ir.id, ir.entryId, ir.title, ir.route, ir.absoluteRoute, ir.html].every(string) &&
-    ['guide-tab', 'api-tab', 'header', 'demo-assets'].includes(String(ir.role)) &&
-    (ir.searchBreadcrumbs === undefined || stringArray(ir.searchBreadcrumbs)) &&
-    (ir.icon === undefined || string(ir.icon)) &&
-    Array.isArray(ir.anchors) &&
-    ir.anchors.every(isAnchor) &&
-    Array.isArray(ir.exportedKeywords) &&
-    ir.exportedKeywords.every(isKeyword) &&
-    stringArray(ir.usedKeywords) &&
-    Array.isArray(ir.dependencies) &&
-    ir.dependencies.every(isDependency) &&
-    Array.isArray(ir.diagnostics) &&
-    ir.diagnostics.every(isDiagnostic)
+    ir['schemaVersion'] === SCHEMA_VERSION &&
+    [ir['id'], ir['entryId'], ir['title'], ir['route'], ir['absoluteRoute'], ir['html']].every(
+      string,
+    ) &&
+    ['guide-tab', 'api-tab', 'header', 'demo-assets'].includes(String(ir['role'])) &&
+    (ir['searchBreadcrumbs'] === undefined || stringArray(ir['searchBreadcrumbs'])) &&
+    (ir['icon'] === undefined || string(ir['icon'])) &&
+    Array.isArray(ir['anchors']) &&
+    ir['anchors'].every(isAnchor) &&
+    Array.isArray(ir['exportedKeywords']) &&
+    ir['exportedKeywords'].every(isKeyword) &&
+    stringArray(ir['usedKeywords']) &&
+    Array.isArray(ir['dependencies']) &&
+    ir['dependencies'].every(isDependency) &&
+    Array.isArray(ir['diagnostics']) &&
+    ir['diagnostics'].every(isDiagnostic)
   );
 }
 
@@ -2455,31 +2463,32 @@ function isRoute(value: unknown): boolean {
         'demoNames',
       ],
     ) &&
-    [value.id, value.path, value.title].every(string) &&
-    (value.parentId === undefined || string(value.parentId)) &&
-    (value.order === undefined || finite(value.order)) &&
-    (value.hidden === undefined || typeof value.hidden === 'boolean') &&
-    (value.icon === undefined || string(value.icon)) &&
-    (value.modulePath === undefined || string(value.modulePath)) &&
-    (value.apiListSegment === undefined || string(value.apiListSegment)) &&
-    (value.demoModulePath === undefined || string(value.demoModulePath)) &&
-    (value.demoNames === undefined || stringArray(value.demoNames)) &&
-    (value.metadata === undefined ||
-      (isRecord(value.metadata) &&
-        exact(value.metadata, ['description', 'tags']) &&
-        string(value.metadata.description) &&
-        isRecord(value.metadata.tags) &&
-        Object.values(value.metadata.tags).every(stringArray))) &&
-    (value.category === undefined ||
-      (isRecord(value.category) &&
-        exact(value.category, ['runtimeImport'], ['expandable', 'expanded']) &&
-        isRecord(value.category.runtimeImport) &&
-        exact(value.category.runtimeImport, ['source', 'exportName']) &&
-        string(value.category.runtimeImport.source) &&
-        string(value.category.runtimeImport.exportName) &&
-        (value.category.expandable === undefined ||
-          typeof value.category.expandable === 'boolean') &&
-        (value.category.expanded === undefined || typeof value.category.expanded === 'boolean')))
+    [value['id'], value['path'], value['title']].every(string) &&
+    (value['parentId'] === undefined || string(value['parentId'])) &&
+    (value['order'] === undefined || finite(value['order'])) &&
+    (value['hidden'] === undefined || typeof value['hidden'] === 'boolean') &&
+    (value['icon'] === undefined || string(value['icon'])) &&
+    (value['modulePath'] === undefined || string(value['modulePath'])) &&
+    (value['apiListSegment'] === undefined || string(value['apiListSegment'])) &&
+    (value['demoModulePath'] === undefined || string(value['demoModulePath'])) &&
+    (value['demoNames'] === undefined || stringArray(value['demoNames'])) &&
+    (value['metadata'] === undefined ||
+      (isRecord(value['metadata']) &&
+        exact(value['metadata'], ['description', 'tags']) &&
+        string(value['metadata']['description']) &&
+        isRecord(value['metadata']['tags']) &&
+        Object.values(value['metadata']['tags']).every(stringArray))) &&
+    (value['category'] === undefined ||
+      (isRecord(value['category']) &&
+        exact(value['category'], ['runtimeImport'], ['expandable', 'expanded']) &&
+        isRecord(value['category']['runtimeImport']) &&
+        exact(value['category']['runtimeImport'], ['source', 'exportName']) &&
+        string(value['category']['runtimeImport']['source']) &&
+        string(value['category']['runtimeImport']['exportName']) &&
+        (value['category']['expandable'] === undefined ||
+          typeof value['category']['expandable'] === 'boolean') &&
+        (value['category']['expanded'] === undefined ||
+          typeof value['category']['expanded'] === 'boolean')))
   );
 }
 
@@ -2491,10 +2500,15 @@ function isApiList(value: unknown): boolean {
       ['apiEntryId', 'scopeId', 'scopeTitle', 'name', 'type', 'route'],
       ['description', 'signature'],
     ) &&
-    [value.apiEntryId, value.scopeId, value.scopeTitle, value.name, value.type, value.route].every(
-      string,
-    ) &&
-    [value.description, value.signature].every((item) => item === undefined || string(item))
+    [
+      value['apiEntryId'],
+      value['scopeId'],
+      value['scopeTitle'],
+      value['name'],
+      value['type'],
+      value['route'],
+    ].every(string) &&
+    [value['description'], value['signature']].every((item) => item === undefined || string(item))
   );
 }
 
@@ -2502,13 +2516,13 @@ function isFileOutput(value: unknown): value is FileOutput {
   return (
     isRecord(value) &&
     exact(value, ['path', 'role', 'encoding', 'content', 'digest']) &&
-    string(value.path) &&
+    string(value['path']) &&
     ['angular', 'content', 'asset', 'routes', 'context', 'search', 'api-list'].includes(
-      String(value.role),
+      String(value['role']),
     ) &&
-    ['utf8', 'base64'].includes(String(value.encoding)) &&
-    string(value.content) &&
-    string(value.digest)
+    ['utf8', 'base64'].includes(String(value['encoding'])) &&
+    string(value['content']) &&
+    string(value['digest'])
   );
 }
 
@@ -2538,57 +2552,57 @@ function isContentDescriptor(value: unknown): boolean {
   )
     return false;
   if (
-    value.schemaVersion !== SCHEMA_VERSION ||
+    value['schemaVersion'] !== SCHEMA_VERSION ||
     ![
-      value.id,
-      value.ownerId,
-      value.title,
-      value.route,
-      value.absoluteRoute,
-      value.inputDigest,
-      value.requestDigest,
+      value['id'],
+      value['ownerId'],
+      value['title'],
+      value['route'],
+      value['absoluteRoute'],
+      value['inputDigest'],
+      value['requestDigest'],
     ].every(string) ||
-    ![value.id, value.ownerId, value.inputDigest, value.requestDigest].every(
+    ![value['id'], value['ownerId'], value['inputDigest'], value['requestDigest']].every(
       (item) => string(item) && item.length > 0 && !item.includes('\0'),
     ) ||
-    !finite(value.ordinal) ||
-    value.ordinal < 0 ||
-    !Number.isInteger(value.ordinal) ||
-    !['guide-tab', 'api-tab', 'header'].includes(String(value.role)) ||
-    !stringArray(value.searchBreadcrumbs) ||
-    !Array.isArray(value.dependencies) ||
-    !value.dependencies.every((dependency) => isPhysicalDescriptorDependency(dependency)) ||
-    new Set(value.dependencies.map((dependency) => stableJson(dependency))).size !==
-      value.dependencies.length ||
-    !stringArray(value.closureIds) ||
-    (value.icon !== undefined && !string(value.icon)) ||
-    (value.keyword !== undefined && !string(value.keyword)) ||
-    !isRecord(value.locator)
+    !finite(value['ordinal']) ||
+    value['ordinal'] < 0 ||
+    !Number.isInteger(value['ordinal']) ||
+    !['guide-tab', 'api-tab', 'header'].includes(String(value['role'])) ||
+    !stringArray(value['searchBreadcrumbs']) ||
+    !Array.isArray(value['dependencies']) ||
+    !value['dependencies'].every((dependency) => isPhysicalDescriptorDependency(dependency)) ||
+    new Set(value['dependencies'].map((dependency) => stableJson(dependency))).size !==
+      value['dependencies'].length ||
+    !stringArray(value['closureIds']) ||
+    (value['icon'] !== undefined && !string(value['icon'])) ||
+    (value['keyword'] !== undefined && !string(value['keyword'])) ||
+    !isRecord(value['locator'])
   )
     return false;
-  const locator = value.locator;
-  return value.role === 'header'
-    ? exact(locator, ['kind']) && locator.kind === 'header'
-    : value.role === 'guide-tab'
+  const locator = value['locator'];
+  return value['role'] === 'header'
+    ? exact(locator, ['kind']) && locator['kind'] === 'header'
+    : value['role'] === 'guide-tab'
       ? exact(locator, ['kind', 'markdown']) &&
-        locator.kind === 'guide-tab' &&
-        string(locator.markdown)
+        locator['kind'] === 'guide-tab' &&
+        string(locator['markdown'])
       : exact(locator, ['kind', 'declarationId']) &&
-        locator.kind === 'api-tab' &&
-        string(locator.declarationId);
+        locator['kind'] === 'api-tab' &&
+        string(locator['declarationId']);
 }
 
 function isPhysicalDescriptorDependency(value: unknown): boolean {
   return (
     isRecord(value) &&
-    ((value.kind === 'content' &&
+    ((value['kind'] === 'content' &&
       exact(value, ['kind', 'path', 'digest']) &&
-      absoluteNormalizedPath(value.path) &&
-      string(value.digest)) ||
-      (value.kind === 'existence' &&
+      absoluteNormalizedPath(value['path']) &&
+      string(value['digest'])) ||
+      (value['kind'] === 'existence' &&
         exact(value, ['kind', 'path', 'exists']) &&
-        absoluteNormalizedPath(value.path) &&
-        typeof value.exists === 'boolean'))
+        absoluteNormalizedPath(value['path']) &&
+        typeof value['exists'] === 'boolean'))
   );
 }
 
@@ -2726,27 +2740,27 @@ function isPageArtifact(value: unknown): value is PageArtifact {
       ],
       ['contentDescriptors'],
     ) &&
-    string(value.id) &&
-    isIdentity(value.identity) &&
-    string(value.revision) &&
-    isFingerprint(value.fingerprint) &&
-    Array.isArray(value.dependencies) &&
-    value.dependencies.every(isDependency) &&
-    Array.isArray(value.content) &&
-    value.content.every(isLinkedContent) &&
-    Array.isArray(value.exportedKeywords) &&
-    value.exportedKeywords.every(isKeyword) &&
-    stringArray(value.usedKeywords) &&
-    Array.isArray(value.searchRecords) &&
-    value.searchRecords.every(isSearch) &&
-    Array.isArray(value.routes) &&
-    value.routes.every(isRoute) &&
-    Array.isArray(value.apiList) &&
-    value.apiList.every(isApiList) &&
-    Array.isArray(value.outputs) &&
-    value.outputs.every((output) => isFileOutput(output) && validOutputDigest(output)) &&
-    Array.isArray(value.diagnostics) &&
-    value.diagnostics.every(isDiagnostic) &&
+    string(value['id']) &&
+    isIdentity(value['identity']) &&
+    string(value['revision']) &&
+    isFingerprint(value['fingerprint']) &&
+    Array.isArray(value['dependencies']) &&
+    value['dependencies'].every(isDependency) &&
+    Array.isArray(value['content']) &&
+    value['content'].every(isLinkedContent) &&
+    Array.isArray(value['exportedKeywords']) &&
+    value['exportedKeywords'].every(isKeyword) &&
+    stringArray(value['usedKeywords']) &&
+    Array.isArray(value['searchRecords']) &&
+    value['searchRecords'].every(isSearch) &&
+    Array.isArray(value['routes']) &&
+    value['routes'].every(isRoute) &&
+    Array.isArray(value['apiList']) &&
+    value['apiList'].every(isApiList) &&
+    Array.isArray(value['outputs']) &&
+    value['outputs'].every((output) => isFileOutput(output) && validOutputDigest(output)) &&
+    Array.isArray(value['diagnostics']) &&
+    value['diagnostics'].every(isDiagnostic) &&
     validDescriptorPlan(value as unknown as PageArtifact)
   );
 }
@@ -2797,21 +2811,21 @@ export function isPublishedGeneratorConfiguration(
     isJsonTree(value) &&
     isRecord(value) &&
     exact(value, ['outputRoot', 'cacheRoot', 'assetDirectory', 'themes', 'digest']) &&
-    [value.outputRoot, value.cacheRoot].every(
+    [value['outputRoot'], value['cacheRoot']].every(
       (item) =>
         string(item) &&
         path.isAbsolute(item) &&
         path.resolve(item).replace(/\\/g, '/') === item &&
         !item.includes('\0'),
     ) &&
-    string(value.assetDirectory) &&
-    !path.win32.parse(value.assetDirectory).root &&
-    safeRelative(value.assetDirectory) &&
-    isRecord(value.themes) &&
-    exact(value.themes, ['light', 'dark']) &&
-    string(value.themes.light) &&
-    string(value.themes.dark) &&
-    string(value.digest)
+    string(value['assetDirectory']) &&
+    !path.win32.parse(value['assetDirectory']).root &&
+    safeRelative(value['assetDirectory']) &&
+    isRecord(value['themes']) &&
+    exact(value['themes'], ['light', 'dark']) &&
+    string(value['themes']['light']) &&
+    string(value['themes']['dark']) &&
+    string(value['digest'])
   );
 }
 
@@ -2824,15 +2838,16 @@ function isArtifactSnapshotShape(value: unknown): boolean {
       ['projectId', 'revision', 'artifacts', 'globalKeywords', 'remoteKeywords'],
       ['configuration'],
     ) &&
-    (value.configuration === undefined || isPublishedGeneratorConfiguration(value.configuration)) &&
-    string(value.projectId) &&
-    string(value.revision) &&
-    Array.isArray(value.artifacts) &&
-    value.artifacts.every(isPageArtifact) &&
-    Array.isArray(value.globalKeywords) &&
-    value.globalKeywords.every(isKeyword) &&
-    Array.isArray(value.remoteKeywords) &&
-    value.remoteKeywords.every(isRemoteKeywords)
+    (value['configuration'] === undefined ||
+      isPublishedGeneratorConfiguration(value['configuration'])) &&
+    string(value['projectId']) &&
+    string(value['revision']) &&
+    Array.isArray(value['artifacts']) &&
+    value['artifacts'].every(isPageArtifact) &&
+    Array.isArray(value['globalKeywords']) &&
+    value['globalKeywords'].every(isKeyword) &&
+    Array.isArray(value['remoteKeywords']) &&
+    value['remoteKeywords'].every(isRemoteKeywords)
   );
 }
 
@@ -2840,11 +2855,11 @@ function isRemoteKeywords(remote: unknown): boolean {
   return (
     isRecord(remote) &&
     exact(remote, ['loaderId', 'digest', 'keywords'], ['validator']) &&
-    string(remote.loaderId) &&
-    string(remote.digest) &&
-    Array.isArray(remote.keywords) &&
-    remote.keywords.every(isKeyword) &&
-    (remote.validator === undefined || string(remote.validator))
+    string(remote['loaderId']) &&
+    string(remote['digest']) &&
+    Array.isArray(remote['keywords']) &&
+    remote['keywords'].every(isKeyword) &&
+    (remote['validator'] === undefined || string(remote['validator']))
   );
 }
 
@@ -2864,7 +2879,7 @@ function isSnapshotEnvelope(value: unknown): value is ArtifactSnapshot {
     })
   )
     return false;
-  const artifacts = value.artifacts;
+  const artifacts = value['artifacts'];
   if (
     !Array.isArray(artifacts) ||
     Object.getPrototypeOf(artifacts) !== Array.prototype ||
@@ -2879,15 +2894,16 @@ function isSnapshotEnvelope(value: unknown): value is ArtifactSnapshot {
       ['projectId', 'revision', 'artifacts', 'globalKeywords', 'remoteKeywords'],
       ['configuration'],
     ) &&
-    (value.configuration === undefined || isPublishedGeneratorConfiguration(value.configuration)) &&
-    string(value.projectId) &&
-    string(value.revision) &&
-    isJsonTree(value.globalKeywords) &&
-    Array.isArray(value.globalKeywords) &&
-    value.globalKeywords.every(isKeyword) &&
-    isJsonTree(value.remoteKeywords) &&
-    Array.isArray(value.remoteKeywords) &&
-    value.remoteKeywords.every(isRemoteKeywords)
+    (value['configuration'] === undefined ||
+      isPublishedGeneratorConfiguration(value['configuration'])) &&
+    string(value['projectId']) &&
+    string(value['revision']) &&
+    isJsonTree(value['globalKeywords']) &&
+    Array.isArray(value['globalKeywords']) &&
+    value['globalKeywords'].every(isKeyword) &&
+    isJsonTree(value['remoteKeywords']) &&
+    Array.isArray(value['remoteKeywords']) &&
+    value['remoteKeywords'].every(isRemoteKeywords)
   );
 }
 
@@ -2896,24 +2912,25 @@ function isOutputManifest(value: unknown): value is OutputManifest {
     isJsonTree(value) &&
     isRecord(value) &&
     exact(value, ['schemaVersion', 'projectId', 'generation', 'revision', 'files']) &&
-    value.schemaVersion === OUTPUT_SCHEMA_VERSION &&
-    string(value.projectId) &&
-    finite(value.generation) &&
-    string(value.revision) &&
-    Array.isArray(value.files) &&
-    value.files.every(
+    value['schemaVersion'] === OUTPUT_SCHEMA_VERSION &&
+    string(value['projectId']) &&
+    finite(value['generation']) &&
+    string(value['revision']) &&
+    Array.isArray(value['files']) &&
+    value['files'].every(
       (file) =>
         isRecord(file) &&
         exact(file, ['path', 'ownerId', 'digest', 'role']) &&
-        string(file.path) &&
-        string(file.ownerId) &&
-        string(file.digest) &&
-        safeRelative(file.path) &&
+        string(file['path']) &&
+        string(file['ownerId']) &&
+        string(file['digest']) &&
+        safeRelative(file['path']) &&
         ['angular', 'content', 'asset', 'routes', 'context', 'search', 'api-list'].includes(
-          String(file.role),
+          String(file['role']),
         ),
     ) &&
-    new Set(value.files.map((file) => (file as { path: string }).path)).size === value.files.length
+    new Set(value['files'].map((file) => (file as { path: string }).path)).size ===
+      value['files'].length
   );
 }
 

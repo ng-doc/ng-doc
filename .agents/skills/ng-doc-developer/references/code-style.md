@@ -74,7 +74,7 @@ Tooling enforces most of this. Run `pnpm nx lint <project>` and `pnpm nx format:
 | `tools/scripts`                                 | `node:test`                                 | `tools/scripts/testing/*.test.mjs`                                   |
 
 - **Where tests go:** add or update tests in the same change as the behaviour. Match the framework already used by the area.
-- **Vitest style:** import `describe`, `it`, `expect`, `vi` and the hooks from `vitest` explicitly (the Node configs set `globals: false`). Vitest does not type-check: the Angular unit-test builder compiles the `app`, `ui-kit` and site specs with the full type checker, and `nx test add` runs `tsc` on its spec tsconfig first.
+- **Vitest style:** import `describe`, `it`, `expect`, `vi` and the hooks from `vitest` explicitly (the Node configs set `globals: false`). Vitest does not type-check: the Angular unit-test builder compiles the `app`, `ui-kit` and site specs with the full type checker, `nx test add` runs `tsc` on its spec tsconfig first, and `nx run builder:typecheck-specs` (its own CI job) type-checks the builder specs.
 - **Test data:** use temporary directories (`mkdtemp`) and clean them up. Never write fixtures into the repository tree.
 
 ## Commits

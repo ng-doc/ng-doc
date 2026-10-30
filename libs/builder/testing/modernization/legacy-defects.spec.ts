@@ -101,7 +101,7 @@ describe('legacy regression contracts', () => {
 
   it('empty/cache-skipped source does not authorize a partial project call', () => {
     const first = new Subject<BuilderDone<string>>();
-    const project = vi.fn(async () => 'output');
+    const project = vi.fn(async (..._values: unknown[]) => 'output');
     const subscription = mergeFactory('empty', [first, EMPTY], project).subscribe();
     first.next(new BuilderDone('first', 'A'));
     expect(project).not.toHaveBeenCalled();
@@ -111,7 +111,7 @@ describe('legacy regression contracts', () => {
   it('keeps readiness state isolated between subscriptions', () => {
     const first = new Subject<BuilderDone<string>>();
     const second = new Subject<BuilderDone<string>>();
-    const project = vi.fn(async () => 'output');
+    const project = vi.fn(async (..._values: unknown[]) => 'output');
     const merged = mergeFactory('subscriptions', [first, second], project);
     const old = merged.subscribe();
     first.next(new BuilderDone('first', 'old'));

@@ -300,8 +300,8 @@ describe('delta commit', () => {
       {
         label: 'an output moves to another owner',
         files: (f) => {
-          const { 'api/entry.mjs': moved, ...api } = f.api;
-          return { ...f, api, two: { ...f.two, 'api/entry.mjs': moved } };
+          const { 'api/entry.mjs': moved, ...api } = f['api'];
+          return { ...f, api, two: { ...f['two'], 'api/entry.mjs': moved } };
         },
         expect: 'delta',
         written: [],
