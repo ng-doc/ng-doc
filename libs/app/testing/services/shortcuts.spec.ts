@@ -92,7 +92,12 @@ describeChangeDetection('NgDocShortcutsService', ({ providers }) => {
       ],
     });
 
-    return TestBed.inject(NgDocShortcutsService);
+    const service = TestBed.inject(NgDocShortcutsService);
+
+    // NgDocRootComponent listens while the documentation layout is shown.
+    service.listen();
+
+    return service;
   }
 
   /** Renders the hint fixture and waits for its first render. */
@@ -394,6 +399,40 @@ describeChangeDetection('NgDocShortcutsService', ({ providers }) => {
     press(document.body, '/');
 
     expect(handler).not.toHaveBeenCalled();
+  });
+
+  it('runs shortcuts only while a layout listens, until every listener has stopped', () => {
+    TestBed.configureTestingModule({
+      providers: [
+        providers,
+        { provide: WA_LOCAL_STORAGE, useValue: storage },
+        { provide: NgDocThemeService, useValue: themeService },
+      ],
+    });
+    const service = TestBed.inject(NgDocShortcutsService);
+    const handler = vi.fn();
+
+    service.register({ key: '/', handler });
+    press(document.body, '/');
+    expect(handler).not.toHaveBeenCalled();
+
+    const stopFirst = service.listen();
+    const stopSecond = service.listen();
+
+    press(document.body, '/');
+    expect(handler).toHaveBeenCalledTimes(1);
+
+    stopFirst();
+    // A second call of the same stop function must not release the other listener.
+    stopFirst();
+    press(document.body, '/');
+    expect(handler).toHaveBeenCalledTimes(2);
+
+    stopSecond();
+    const event = press(document.body, '/');
+
+    expect(handler).toHaveBeenCalledTimes(2);
+    expect(event.defaultPrevented).toBe(false);
   });
 
   it('never touches the document or the storage on the server', () => {

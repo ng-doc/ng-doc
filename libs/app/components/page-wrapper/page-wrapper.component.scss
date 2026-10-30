@@ -1,11 +1,12 @@
 :host {
   display: flex;
   justify-content: space-between;
-  --ng-doc-page-sticky-offset: var(--ng-doc-navbar-height);
+  --ng-doc-page-sticky-offset: calc(var(--ng-doc-navbar-height) + var(--ng-doc-layout-top));
 
   &[data-ng-doc-page-tabs='true'] {
     --ng-doc-page-sticky-offset: calc(
-      var(--ng-doc-navbar-height) + var(--ng-doc-page-wrapper-tabs-height)
+      var(--ng-doc-navbar-height) + var(--ng-doc-layout-top) +
+        var(--ng-doc-page-wrapper-tabs-height)
     );
   }
 
@@ -37,7 +38,7 @@
 
   ng-doc-tab-routes-group {
     position: sticky !important;
-    top: var(--ng-doc-navbar-height);
+    top: calc(var(--ng-doc-navbar-height) + var(--ng-doc-layout-top));
     margin: calc(var(--ng-doc-base-gutter) * 2) 0;
     background: var(--ng-doc-navbar-background);
     z-index: 5;

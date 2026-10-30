@@ -197,6 +197,12 @@
     "libs/ui-kit/components/tag/tag.component.scss :: :host[data-ng-doc-size=small] = 18px",
     "libs/ui-kit/components/text/text.component.scss :: :host[data-ng-doc-text-size=small] = 18px"
   ],
+  "--ng-doc-main-padding": [
+    "libs/app/components/root/root.component.scss :: :host:has(> .ng-doc-root-wrapper > .ng-doc-header:empty) = var(--ng-doc-navbar-height) 0 0 0"
+  ],
+  "--ng-doc-navbar-height": [
+    "libs/app/components/root/root.component.scss :: :host:has(> .ng-doc-root-wrapper > .ng-doc-header:empty) = 0px"
+  ],
   "--ng-doc-pane-border-radius": [
     "libs/app/components/demo-pane/demo-pane.component.scss :: :host = var(--ng-doc-demo-displayer-border-radius)"
   ],

@@ -141,6 +141,7 @@
     "--ng-doc-interface-color": "#ffffff",
     "--ng-doc-kbd-background": "#ffffff",
     "--ng-doc-kbd-border-color": "#dfe1e6",
+    "--ng-doc-layout-top": "0px",
     "--ng-doc-line-height": "26px",
     "--ng-doc-link-color": "#1d60e2",
     "--ng-doc-main-padding": "calc(8px * 7.5) 0 0 0",

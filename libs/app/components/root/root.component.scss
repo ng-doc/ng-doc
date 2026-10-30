@@ -1,4 +1,12 @@
 :host {
+  // Without navbar content the layout has no header: no empty bar covers the top of the page,
+  // and the page, the sidebar and the sticky parts start at the top of the layout.
+  // The main padding is declared again: the one on :root was resolved with the navbar's height.
+  &:has(> .ng-doc-root-wrapper > .ng-doc-header:empty) {
+    --ng-doc-navbar-height: 0px;
+    --ng-doc-main-padding: var(--ng-doc-navbar-height) 0 0 0;
+  }
+
   &[data-ng-doc-no-width-limit='true'] {
     .ng-doc-root-wrapper {
       main {
@@ -18,9 +26,12 @@
       margin-left: auto;
       margin-right: auto;
       max-width: var(--ng-doc-app-max-width);
+      // Room for an application header above the layout; `NgDocRootComponent` reads the resolved
+      // margin to scroll anchors below it.
+      margin-top: var(--ng-doc-layout-top);
       padding: var(--ng-doc-main-padding);
 
-      --ng-doc-sidenav-top: var(--ng-doc-navbar-height);
+      --ng-doc-sidenav-top: calc(var(--ng-doc-navbar-height) + var(--ng-doc-layout-top));
       --ng-doc-sidenav-width: var(--ng-doc-sidebar-width);
       --ng-doc-sidenav-content-padding: var(--ng-doc-page-padding);
     }
@@ -36,10 +47,14 @@
 
     .ng-doc-header {
       position: fixed;
-      top: 0;
+      top: var(--ng-doc-layout-top);
       height: var(--ng-doc-navbar-height);
       width: 100%;
       z-index: 15;
+
+      &:empty {
+        display: none;
+      }
     }
   }
 
@@ -47,7 +62,7 @@
   // and invisible to everyone else.
   .ng-doc-skip-link {
     position: fixed;
-    top: var(--ng-doc-space-2);
+    top: calc(var(--ng-doc-layout-top) + var(--ng-doc-space-2));
     left: var(--ng-doc-space-4);
     z-index: 70;
     display: inline-flex;

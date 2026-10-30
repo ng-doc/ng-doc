@@ -4,6 +4,9 @@
   --ng-doc-code-background: var(--ng-doc-base-1);
   --ng-doc-page-padding: calc(var(--ng-doc-base-gutter) * 3) var(--ng-doc-app-horizontal-padding);
   --ng-doc-main-padding: var(--ng-doc-navbar-height) 0 0 0;
+  // The height of an application header that stays above the documentation layout: the navbar,
+  // the sidebar and the sticky parts of a page start below it.
+  --ng-doc-layout-top: 0px;
   --ng-doc-page-block-margin: var(--ng-doc-space-6) 0;
   --ng-doc-page-wrapper-tabs-height: calc(var(--ng-doc-base-gutter) * 6);
 
