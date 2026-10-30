@@ -56,6 +56,16 @@ class MemoryStorage {
 })
 class TextsHostComponent {}
 
+// A page's `providers` go to the providers of its generated page component: an element injector.
+@Component({
+  selector: 'ng-doc-texts-page-host',
+  imports: [NgDocBreadcrumbComponent],
+  template: `<ng-doc-breadcrumb [breadcrumbs]="['Guides']" />`,
+  providers: [provideNgDocTexts({ navigation: { breadcrumbs: 'Pfad' } })],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class TextsPageHostComponent {}
+
 /** The texts the host shows to readers. */
 interface ShownTexts {
   skipLink: string;
@@ -240,6 +250,23 @@ describe('provideNgDocTexts merging', () => {
     expect(parent.get(NG_DOC_UI_KIT_TEXTS).pane.resizer).toBe('Resize the panes');
 
     child.destroy();
+  });
+
+  it('applies the providers of a component on top of the application texts', async () => {
+    TestBed.configureTestingModule({
+      providers: [provideNgDocTexts({ navigation: { breadcrumbs: 'Brotkrumen', next: 'Weiter' } })],
+    });
+
+    const fixture = TestBed.createComponent(TextsPageHostComponent);
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const breadcrumb = fixture.debugElement.children[0];
+
+    expect(breadcrumb.nativeElement.querySelector('nav').getAttribute('aria-label')).toBe('Pfad');
+    expect(breadcrumb.injector.get(NG_DOC_TEXTS).navigation.next).toBe('Weiter');
+    expect(TestBed.inject(NG_DOC_TEXTS).navigation.breadcrumbs).toBe('Brotkrumen');
   });
 
   it('keeps a text that a change sets to undefined, and changes neither input', () => {
