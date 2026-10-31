@@ -74,10 +74,11 @@ type NgDocScrollOffset = () => [number, number];
  * While a page shows one of its fullscreen routes (`NgDocFullscreenRouteService`), only the page
  * is shown: the navbar, the sidebar, the footer and the skip link are hidden.
  *
- * While it is shown, the router scrolls anchors below the navbar (`ViewportScroller.setOffset`),
- * and the keyboard shortcuts of the documentation work (`NgDocShortcutsService`). When it is
- * destroyed, for example when the reader leaves documentation served under a route, the previous
- * scroll offset comes back and the shortcuts stop. Without navbar content, it renders no header.
+ * While it is shown, the router scrolls anchors below the navbar (the scroll offset of
+ * `ViewportScroller`), and the keyboard shortcuts of the documentation work
+ * (`NgDocShortcutsService`). When it is destroyed, for example when the reader leaves
+ * documentation served under a route, the previous scroll offset comes back and the shortcuts
+ * stop. Without navbar content, it renders no header.
  */
 @Component({
   selector: 'ng-doc-root',
