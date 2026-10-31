@@ -54,6 +54,12 @@ export class NgDocDemoDisplayerComponent {
   /** Whether the demo is shown in the stage with its controls; otherwise it is shown as is. */
   readonly container = input<boolean>(true);
 
+  /**
+   * The background of the canvas, instead of the dot grid, such as the background of an isolated
+   * demo that shows a theme of its own.
+   */
+  readonly canvasBackground = input<string | undefined>(undefined);
+
   /** Whether the displayer draws its border. */
   readonly border = input<boolean>(true);
 

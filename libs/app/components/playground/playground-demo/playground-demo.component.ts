@@ -124,6 +124,19 @@ export class NgDocPlaygroundDemoComponent<
   /** The `theme` option of the playground, which the theme button offers too. */
   readonly configuredTheme = input<string | undefined>(undefined);
 
+  /** The iframe of an isolated playground, while it is shown. */
+  private readonly frameComponent = viewChild(NgDocDemoFrameComponent);
+
+  /**
+   * The background of the canvas while the iframe shows a theme of its own: the background its
+   * page reported, so the whole canvas reads in that theme.
+   */
+  protected readonly canvasBackground: Signal<string | undefined> = computed(() =>
+    this.frame() && this.frameTheme() !== undefined
+      ? this.frameComponent()?.background()
+      : undefined,
+  );
+
   /** The iframe's page with the current state, which the toolbar opens in a new tab. */
   protected readonly frameUrl: Signal<string | undefined> = computed(() => {
     const frame = this.frame();

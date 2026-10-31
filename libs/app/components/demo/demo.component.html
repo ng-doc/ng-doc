@@ -112,6 +112,8 @@
     [attr.aria-labelledby]="idPrefix + '-tab-0'"
     [attr.data-ng-doc-width]="previewWidth()"
     [attr.data-ng-doc-isolated]="isolated()"
+    [attr.data-ng-doc-themed]="stageBackground() ? true : null"
+    [style.background-color]="stageBackground() ?? null"
     [hidden]="view() !== 'preview'"
     ngDocFullscreen
     #stage="ngDocFullscreen">

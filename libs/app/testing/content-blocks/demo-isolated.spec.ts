@@ -166,6 +166,37 @@ describeChangeDetection('Isolated demos', ({ providers }: ChangeDetectionCase) =
     expect(openLink()?.getAttribute('href')).toBe('/demo-preview/docs/demos/ButtonDemoComponent');
   });
 
+  it('paints its stage in the background of its own theme, without the dot grid', async () => {
+    await create(rootPage({ demoRoute: 'demo-preview/docs/demos' }), {
+      isolated: true,
+      theme: 'dark',
+    });
+    const stage = () => query<HTMLElement>('.ng-doc-demo-stage')!;
+    const background = (color: string) =>
+      window.dispatchEvent(
+        new MessageEvent('message', {
+          data: { source: ɵNG_DOC_DEMO_MESSAGE_SOURCE, version: 1, type: 'background', color },
+          source: frame()!.contentWindow,
+          origin: window.location.origin,
+        }),
+      );
+
+    expect(stage().hasAttribute('data-ng-doc-themed')).toBe(false);
+    background('rgb(24, 24, 27)');
+    await fixture.whenStable();
+
+    expect(stage().getAttribute('data-ng-doc-themed')).toBe('true');
+    expect(stage().style.backgroundColor).toBe('rgb(24, 24, 27)');
+
+    // Following the page's theme again, the stage is the page's canvas.
+    const button = query<HTMLButtonElement>('ng-doc-demo-theme-button button')!;
+
+    button.click();
+    await fixture.whenStable();
+    expect(stage().hasAttribute('data-ng-doc-themed')).toBe(false);
+    expect(stage().style.backgroundColor).toBe('');
+  });
+
   it('has no theme button for a demo in the page', async () => {
     await create(rootPage({ demoRoute: 'demo-preview/docs/demos' }), { theme: 'dark' });
 

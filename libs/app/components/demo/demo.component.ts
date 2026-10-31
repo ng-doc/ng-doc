@@ -167,6 +167,14 @@ export class NgDocDemoComponent {
     () => this.options().theme,
   );
 
+  /**
+   * The background of the stage while the demo shows a theme of its own: the background its page
+   * reported, so the whole stage reads in the demo's theme rather than only the iframe.
+   */
+  protected readonly stageBackground: Signal<string | undefined> = computed(() =>
+    this.isolated() && this.frameTheme() !== undefined ? this.frame()?.background() : undefined,
+  );
+
   /** The URL fragment of the demo's iframe, which carries its theme. */
   protected readonly frameFragment: Signal<string | undefined> = computed(() =>
     ɵwithDemoTheme(undefined, this.frameTheme()),
@@ -189,6 +197,7 @@ export class NgDocDemoComponent {
   protected readonly fullscreen: Signal<boolean> = computed(() => this.stage()?.active() ?? false);
 
   private readonly stage = viewChild(NgDocFullscreenDirective);
+  private readonly frame = viewChild(NgDocDemoFrameComponent);
 
   /** Source files of the demo, filtered by the `tabs` option. */
   readonly assets: Signal<NgDocDemoAsset[]> = computed(() => {

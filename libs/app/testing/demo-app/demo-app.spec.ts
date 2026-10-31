@@ -5,6 +5,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import {
   NgDocDemoAppComponent,
   NgDocDemoHostComponent,
+  ɵisNgDocDemoBackgroundMessage,
   ɵisNgDocDemoSizeMessage,
   ɵNG_DOC_DEMO_MESSAGE_SOURCE,
   ɵngDocDemoApplicationConfig,
@@ -151,6 +152,28 @@ describe('Demo size messages', () => {
       expect(ɵisNgDocDemoSizeMessage(value), JSON.stringify(value)).toBe(false);
     }
   });
+
+  it('accepts only background messages of the demo application', () => {
+    const message = {
+      source: ɵNG_DOC_DEMO_MESSAGE_SOURCE,
+      version: 1,
+      type: 'background',
+      color: 'rgb(24, 24, 27)',
+    };
+
+    expect(ɵisNgDocDemoBackgroundMessage(message)).toBe(true);
+    for (const value of [
+      null,
+      { ...message, source: 'other' },
+      { ...message, version: 2 },
+      { ...message, type: 'size' },
+      { ...message, color: '' },
+      { ...message, color: 42 },
+      { ...message, color: 'x'.repeat(201) },
+    ]) {
+      expect(ɵisNgDocDemoBackgroundMessage(value), JSON.stringify(value)).toBe(false);
+    }
+  });
 });
 
 describe('Demo application root', () => {
@@ -247,6 +270,39 @@ describe('Demo application root', () => {
     fixture.destroy();
     store('ng-doc-theme-id', 'dark');
     expect(document.documentElement.hasAttribute('data-theme')).toBe(false);
+  });
+
+  it('reports the background of its page to the embedding page whenever it changes', () => {
+    embed();
+    const style = document.createElement('style');
+
+    style.textContent =
+      'body { background-color: rgb(250, 250, 250); } ' +
+      'html[data-theme="dark"] body { background-color: rgb(24, 24, 27); }';
+    document.head.append(style);
+    window.history.replaceState(null, '', '/demo#~theme=dark');
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    const fixture = TestBed.createComponent(NgDocDemoAppComponent);
+    const backgrounds = () =>
+      posted
+        .map(({ message }) => message as { type: string; color?: string })
+        .filter(({ type }) => type === 'background')
+        .map(({ color }) => color);
+
+    try {
+      expect(backgrounds()).toEqual(['rgb(24, 24, 27)']);
+      // The same background again is not reported again.
+      observers[0].callback([]);
+      expect(backgrounds()).toEqual(['rgb(24, 24, 27)']);
+
+      window.history.replaceState(null, '', '/demo#~theme=light');
+      window.dispatchEvent(new HashChangeEvent('hashchange'));
+      expect(backgrounds()).toEqual(['rgb(24, 24, 27)', 'rgb(250, 250, 250)']);
+    } finally {
+      fixture.destroy();
+      style.remove();
+      window.history.replaceState(null, '', '/');
+    }
   });
 
   it('shows the theme its fragment sets, whatever the site picks, until the fragment drops it', () => {

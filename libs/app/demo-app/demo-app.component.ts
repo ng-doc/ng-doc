@@ -11,7 +11,11 @@ import {
 import { RouterOutlet } from '@angular/router';
 import { NG_DOC_STORE_THEME_KEY } from '@ng-doc/app/constants';
 
-import { ɵNG_DOC_DEMO_MESSAGE_SOURCE, ɵNgDocDemoSizeMessage } from './demo-message';
+import {
+  ɵNG_DOC_DEMO_MESSAGE_SOURCE,
+  ɵNgDocDemoBackgroundMessage,
+  ɵNgDocDemoSizeMessage,
+} from './demo-message';
 import { ɵdemoThemeFromFragment } from './demo-theme';
 
 /**
@@ -20,6 +24,8 @@ import { ɵdemoThemeFromFragment } from './demo-theme';
  * `ResizeObserver` on its border box), and it follows the theme the reader picks on the
  * documentation site, which stores it in `localStorage`, unless its URL fragment sets a theme
  * (`~theme=dark`, the `theme` option of a demo or a playground, or the theme button beside it).
+ * In an iframe it also reports the background color of its page whenever it changes, so that the
+ * embedding page can paint the canvas around the iframe in the demo's theme.
  */
 @Component({
   selector: 'ng-doc-demo-app',
@@ -37,12 +43,39 @@ export class NgDocDemoAppComponent {
     const destroyRef = inject(DestroyRef);
 
     if (!window) return;
-    if (window.parent !== window) {
+    const embedded = window.parent !== window;
+    let reportedBackground = '';
+    // The page's background: the body's, or the document's when the body has none. Reported only
+    // when it changes, and once the page has one (its styles may still be loading).
+    const reportBackground = () => {
+      if (!embedded) return;
+      const transparent = (color: string) =>
+        !color || color === 'transparent' || color === 'rgba(0, 0, 0, 0)';
+      const body = document.body ? window.getComputedStyle(document.body).backgroundColor : '';
+      const color = transparent(body)
+        ? window.getComputedStyle(document.documentElement).backgroundColor
+        : body;
+
+      if (transparent(color) || color === reportedBackground) return;
+      reportedBackground = color;
+      const message: ɵNgDocDemoBackgroundMessage = {
+        source: ɵNG_DOC_DEMO_MESSAGE_SOURCE,
+        version: 1,
+        type: 'background',
+        color,
+      };
+
+      window.parent.postMessage(message, window.location.origin);
+    };
+
+    if (embedded) {
       const host: HTMLElement = inject(ElementRef).nativeElement;
       let reported = -1;
       const observer = new ResizeObserver(() => {
         const height = Math.ceil(host.getBoundingClientRect().height);
 
+        // Styles that load after the first report change the background too.
+        reportBackground();
         if (height === reported) return;
         reported = height;
         const message: ɵNgDocDemoSizeMessage = {
@@ -67,6 +100,7 @@ export class NgDocDemoAppComponent {
       } else {
         document.documentElement.removeAttribute('data-theme');
       }
+      reportBackground();
     };
     const pinned = () => ɵdemoThemeFromFragment(window.location.hash);
     const site = () => {
@@ -85,12 +119,18 @@ export class NgDocDemoAppComponent {
     // The documentation page changes the fragment with `location.replace`, without a reload.
     const onHashChange = () => apply(pinned() ?? site());
 
+    // The `auto` theme follows the system's color scheme.
+    const scheme = window.matchMedia?.('(prefers-color-scheme: dark)');
+
     if (pinned()) apply(pinned()!);
+    reportBackground();
     window.addEventListener('storage', onStorage);
     window.addEventListener('hashchange', onHashChange);
+    scheme?.addEventListener?.('change', reportBackground);
     destroyRef.onDestroy(() => {
       window.removeEventListener('storage', onStorage);
       window.removeEventListener('hashchange', onHashChange);
+      scheme?.removeEventListener?.('change', reportBackground);
     });
   }
 }

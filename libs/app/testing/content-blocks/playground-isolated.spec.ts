@@ -201,6 +201,40 @@ describeChangeDetection(
       expect(playground.frames()!.get('ng-doc-tag')!.fragment).toMatch(/&~theme=light$/);
     });
 
+    it('paints the canvas of each demo in the background of its own theme', async () => {
+      const fixture = await render({ options: { isolated: true, theme: 'dark' } });
+      const canvases = (): HTMLElement[] =>
+        Array.from(fixture.nativeElement.querySelectorAll('.ng-doc-demo-container'));
+
+      ready(fixture, { label: 'Tag', tone: 'calm' });
+      await fixture.whenStable();
+      expect(canvases().every((canvas) => !canvas.hasAttribute('data-ng-doc-themed'))).toBe(true);
+
+      for (const frame of iframes(fixture)) {
+        window.dispatchEvent(
+          new MessageEvent('message', {
+            data: {
+              source: ɵNG_DOC_DEMO_MESSAGE_SOURCE,
+              version: 1,
+              type: 'background',
+              color: 'rgb(24, 24, 27)',
+            },
+            source: frame.contentWindow,
+            origin: window.location.origin,
+          }),
+        );
+      }
+      await fixture.whenStable();
+
+      expect(canvases().map((canvas) => canvas.style.backgroundColor)).toEqual([
+        'rgb(24, 24, 27)',
+        'rgb(24, 24, 27)',
+      ]);
+      expect(
+        canvases().every((canvas) => canvas.getAttribute('data-ng-doc-themed') === 'true'),
+      ).toBe(true);
+    });
+
     it("passes the action's data to its iframes", async () => {
       const fixture = await render({
         options: { isolated: true, data: { label: 'From the action' } },

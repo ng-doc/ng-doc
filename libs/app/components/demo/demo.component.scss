@@ -305,3 +305,9 @@
     margin-left: 0;
   }
 }
+
+// A demo with a theme of its own: the stage takes the background of the demo's page, without the
+// dot grid, whose dots are in the colors of the documentation's theme.
+.ng-doc-demo-stage[data-ng-doc-themed] {
+  background-image: none;
+}

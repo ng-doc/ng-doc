@@ -16,6 +16,7 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import {
+  ɵisNgDocDemoBackgroundMessage,
   ɵisNgDocDemoSizeMessage,
   ɵisNgDocPlaygroundFrameMessage,
   ɵNgDocPlaygroundFrameMessage,
@@ -79,6 +80,12 @@ export class NgDocDemoFrameComponent {
 
   /** The height the demo reported, in pixels. */
   readonly height = signal<number | undefined>(undefined);
+
+  /**
+   * The background color the demo's page reported, so that the canvas around the iframe can take
+   * it when the demo shows a theme of its own.
+   */
+  readonly background = signal<string | undefined>(undefined);
 
   /** `loading` until the demo reports its size, then `ready`; `failed` when it never does. */
   readonly state: Signal<'loading' | 'ready' | 'failed'> = computed(() =>
@@ -163,6 +170,10 @@ export class NgDocDemoFrameComponent {
       this.answered = true;
       clearTimeout(this.silenceTimer);
       this.playgroundMessage.emit(event.data);
+      return;
+    }
+    if (ɵisNgDocDemoBackgroundMessage(event.data)) {
+      this.background.set(event.data.color);
       return;
     }
     if (!ɵisNgDocDemoSizeMessage(event.data)) return;
