@@ -24,7 +24,8 @@ export default defineConfig({
     // (`Date.now`), `process.env` and `process.cwd()` stay its own. Every spec writes only below
     // its own `mkdtemp` directory. The one spec that runs the built legacy engine
     // (`legacy-generator.spec.ts`) keeps its builds serial inside its file, because they share the
-    // engine's module cache next to the built package.
+    // engine's module cache next to the built package; `nx test builder` runs it alone, after the
+    // others (`vitest.test.config.ts`).
     pool: 'forks',
     // SchematicTestRunner requires the schematic factories named in collection.json.
     setupFiles: [path.join(workspace, 'tools/vitest/typescript-require.ts')],
