@@ -33,7 +33,7 @@ site:
   schematic adds both when `package.json` doesn't list them. If an earlier setup pinned
   `vite@7.3.5`, update it with `npm i -D vite@^8.3.0 @analogjs/vite-plugin-angular@^2.8.0`: the
   Vite engine stops with `NGDOC_VITE_VERSION` on Vite 7.
-- Node.js 24 (`>=24.15.0 <25`).
+- Node.js 24 or 26 (`>=24.15.0 <25` or `>=26.0.0 <27`).
 
 Zoneless applications are supported: NgDoc's own tests run with and without zone.js.
 

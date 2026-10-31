@@ -218,15 +218,15 @@ Production builds always use a fresh compiler worker, whatever these variables s
 
 ## Supported versions
 
-| Dependency                                                       | Version                  |
-| ---------------------------------------------------------------- | ------------------------ |
-| Angular (`@ng-doc/app`, `@ng-doc/ui-kit`)                        | `>=22.0.0 <23.0.0`       |
-| `@angular/compiler`, `@angular/compiler-cli` (`@ng-doc/builder`) | `>=22.0.0 <23.0.0`       |
-| Node.js                                                          | `>=24.15.0 <25`          |
-| Vite (Vite host only)                                            | `^8.3.0`                 |
-| `@analogjs/vite-plugin-angular` (Vite host only)                 | `^2.8.0`                 |
-| `@angular/compiler`, `@angular/compiler-cli` (Vite host only)    | `^22.0.0`                |
-| Platforms                                                        | Linux, macOS and Windows |
+| Dependency                                                       | Version                           |
+| ---------------------------------------------------------------- | --------------------------------- |
+| Angular (`@ng-doc/app`, `@ng-doc/ui-kit`)                        | `>=22.0.0 <23.0.0`                |
+| `@angular/compiler`, `@angular/compiler-cli` (`@ng-doc/builder`) | `>=22.0.0 <23.0.0`                |
+| Node.js                                                          | `>=24.15.0 <25` or `>=26.0.0 <27` |
+| Vite (Vite host only)                                            | `^8.3.0`                          |
+| `@analogjs/vite-plugin-angular` (Vite host only)                 | `^2.8.0`                          |
+| `@angular/compiler`, `@angular/compiler-cli` (Vite host only)    | `^22.0.0`                         |
+| Platforms                                                        | Linux, macOS and Windows          |
 
 The Vite engine is tested with Vite 8.3.2, Analog 2.8.0 and Angular 22.1 and 22.2. It checks the
 Vite version when it starts and stops with `NGDOC_VITE_VERSION` outside `^8.3.0`. `ng add` and

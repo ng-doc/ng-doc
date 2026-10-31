@@ -27,10 +27,11 @@ Everyone taking part agrees to follow our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Prerequisites
 
-- **Node.js 24**, version `>=24.15.0 <25`. NgDoc's builder requires it, and CI uses 24.19.0.
-- **pnpm**, through Corepack, which comes with Node 24: run `corepack enable pnpm` once. Corepack
-  then runs the pnpm version that `packageManager` in `package.json` names. The repository uses the
-  committed `pnpm-lock.yaml`.
+- **Node.js 24 or 26**, version `>=24.15.0 <25` or `>=26.0.0 <27`. NgDoc's builder requires it,
+  and CI uses 24.19.0.
+- **pnpm**, through Corepack: run `corepack enable pnpm` once. Corepack comes with Node 24; on Node
+  26, install it first with `npm install --global corepack`. Corepack then runs the pnpm version
+  that `packageManager` in `package.json` names. The repository uses the committed `pnpm-lock.yaml`.
 - **Git.**
 - **Linux, macOS or Windows.** CI runs on Linux and Windows. A few generator test groups need POSIX
   process groups and run on Linux and macOS only (see [Generator](#generator)).
