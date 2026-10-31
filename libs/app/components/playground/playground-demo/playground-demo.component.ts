@@ -158,11 +158,17 @@ export class NgDocPlaygroundDemoComponent<
         );
       }
 
-      await this.updateDemo();
-
       const form = this.form();
 
-      form?.valueChanges
+      if (!form) {
+        // No values yet: the class is created so that it reports the target's defaults.
+        await this.updateDemo();
+        return;
+      }
+      // The form's values reach the class synchronously, in this check: the class may already be
+      // attached again, and checked with no values its target would get `undefined` for every
+      // input instead of its default.
+      form.valueChanges
         .pipe(
           startWith(form.value),
           takeUntil(this.unsubscribe$),
