@@ -96,7 +96,8 @@ system) or the id of one of your themes (`*ThemesAndColorsPage`):
 
 The theme button of the toolbar switches the demo between the page's theme, light and dark, and
 the theme of the option. **Open in a new tab** opens the demo's page in the theme it shows. The
-theme travels in the iframe's URL, after the `#`, so switching it doesn't reload the demo. A demo
+theme travels in the iframe's URL, after the `#`, so switching it doesn't reload the demo. While a
+demo shows a theme of its own, its whole preview area takes the background of that theme. A demo
 in the page always has the page's theme.
 
 ### The pages of the demos
