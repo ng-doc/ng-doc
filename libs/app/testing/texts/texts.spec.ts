@@ -232,6 +232,24 @@ describe('provideNgDocTexts merging', () => {
     expect(TestBed.inject(NG_DOC_UI_KIT_TEXTS)).toBe(texts);
   });
 
+  it('applies the texts passed to one call in order, as separate calls do', () => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideNgDocTexts(
+          { toc: { onThisPage: 'Auf dieser Seite', backToTop: 'Nach oben' } },
+          { toc: { onThisPage: 'Inhalt' } },
+        ),
+        provideNgDocTexts({ toc: { backToTop: 'Hoch' } }),
+      ],
+    });
+
+    const texts: NgDocTexts = TestBed.inject(NG_DOC_TEXTS);
+
+    expect(texts.toc.onThisPage).toBe('Inhalt');
+    expect(texts.toc.backToTop).toBe('Hoch');
+    expect(TestBed.inject(NG_DOC_UI_KIT_TEXTS)).toBe(texts);
+  });
+
   it('applies the calls of a child injector on top of its parent', () => {
     TestBed.configureTestingModule({
       providers: [provideNgDocTexts({ toc: { onThisPage: 'Auf dieser Seite' } })],

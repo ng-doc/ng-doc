@@ -8,25 +8,33 @@ const NG_DOC_TEXTS_OVERRIDES = new InjectionToken<NgDocTextsOverrides[]>('NG_DOC
 
 /**
  * Changes the texts NgDoc shows to readers, for example to translate them. Pass the groups and
- * texts to change; every other text keeps its English default (`NG_DOC_DEFAULT_TEXTS`).
+ * texts to change; every other text keeps its English default (`NG_DOC_DEFAULT_TEXTS`). NgDoc
+ * ships complete translations in entry points of their own, such as `NG_DOC_TEXTS_DE` from
+ * `@ng-doc/app/texts/de`; pass one first and your changes after it.
  *
- * Calls add up: in one injector the calls apply in order, so a later call wins for a text both
- * set, and the providers of a child injector (a lazy route, for example) apply on top of the
+ * Calls and arguments add up: in one injector they apply in order, so a later one wins for a
+ * text both set, and the providers of a child injector (a lazy route, for example) apply on top of the
  * texts of its parent. The texts are read when a component is created, so they are fixed per
  * injector: switch the language by reloading the application, not at run time.
  * @example
  * ```typescript
+ * provideNgDocTexts(NG_DOC_TEXTS_DE, { search: { placeholder: 'Handbuch durchsuchen…' } });
+ *
  * provideNgDocTexts({
  *   search: { placeholder: 'Dokumentation durchsuchen…' },
  *   searchPalette: { noResults: ({ query }) => `Keine Ergebnisse für „${query}“` },
  * });
  * ```
- * @param texts - The texts to change, by group.
+ * @param texts - The texts to change, by group, in the order they apply.
  * @returns The providers to add to the application, a route or a page.
  */
-export function provideNgDocTexts(texts: NgDocTextsOverrides): Provider[] {
+export function provideNgDocTexts(...texts: NgDocTextsOverrides[]): Provider[] {
   return [
-    { provide: NG_DOC_TEXTS_OVERRIDES, useValue: texts, multi: true },
+    ...texts.map((overrides: NgDocTextsOverrides) => ({
+      provide: NG_DOC_TEXTS_OVERRIDES,
+      useValue: overrides,
+      multi: true,
+    })),
     { provide: NG_DOC_TEXTS, useFactory: resolveTexts },
     // The ui-kit components read their own token: NgDocTexts extends NgDocUiKitTexts, so the
     // same object serves both and the two libraries always show the same texts.
