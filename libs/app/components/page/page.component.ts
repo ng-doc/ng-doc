@@ -1,5 +1,5 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { isPlatformBrowser, LocationStrategy } from '@angular/common';
+import { isPlatformBrowser, LocationStrategy, ViewportScroller } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -25,6 +25,8 @@ import {
   generateToc,
   ɵngDocPageUrl,
   ɵrestoreNgDocHydrationSnapshot,
+  ɵupdatedNgDocContent,
+  ɵwatchNgDocContentUpdates,
 } from '@ng-doc/app/helpers';
 import { NgDocPageSkeleton, NgDocPageTexts } from '@ng-doc/app/interfaces';
 import { NgDocSanitizeHtmlPipe } from '@ng-doc/app/pipes';
@@ -124,9 +126,16 @@ export class NgDocPageComponent {
   private readonly ngZone = inject(NgZone);
   private readonly location = inject(WA_LOCATION);
   private readonly locationStrategy = inject(LocationStrategy);
+  private readonly viewportScroller = inject(ViewportScroller);
   private linkCopiedTimer?: ReturnType<typeof setTimeout>;
   /** Removes the server-rendered copy shown while asynchronous content loads. */
   private snapshot?: () => void;
+  /**
+   * The scroll position when a development content update of this page arrived, restored once
+   * its content has rendered: the new HTML replaces the old one, and the page may be shorter for
+   * a moment while its processors run.
+   */
+  private updateScroll?: [number, number];
 
   constructor() {
     // The router state is complete when the page is created, so a fullscreen route opened
@@ -135,10 +144,25 @@ export class NgDocPageComponent {
 
     const source: NgDocContentSource | undefined = this.rootPage.pageContentSource;
 
+    const browser = isPlatformBrowser(inject(PLATFORM_ID));
+
+    if (source && browser) {
+      // Registered before the content controller's own listener, so the HTML is still the one on
+      // the page: an update that changes it renders a new pass, which restores the position.
+      const stop = ɵwatchNgDocContentUpdates(({ ids }) => {
+        const payload = ids.has(source.id) ? ɵupdatedNgDocContent(source.id) : undefined;
+
+        if (payload && payload.html !== this.contentController.html() && !this.fullscreenRoute()) {
+          this.updateScroll ??= this.viewportScroller.getScrollPosition();
+        }
+      });
+
+      inject(DestroyRef).onDestroy(stop);
+    }
     if (source && !this.fullscreenRoute()) {
       // Angular empties this host (it skips hydration) and the content loads asynchronously, so
       // the server-rendered page stays visible until the loaded content renders.
-      if (isPlatformBrowser(inject(PLATFORM_ID))) {
+      if (browser) {
         this.snapshot = ɵrestoreNgDocHydrationSnapshot(inject(ElementRef).nativeElement);
       }
       this.connectContent(source);
@@ -224,6 +248,7 @@ export class NgDocPageComponent {
       this.changeDetectorRef.detectChanges();
     }
     if (this.rootPage.pageContentSource) this.contentAnchorController.contentProcessed();
+    this.restoreUpdateScroll();
   }
 
   /**
@@ -254,6 +279,13 @@ export class NgDocPageComponent {
     // Both calls do nothing once the source is connected.
     this.contentAnchorController.activate();
     this.contentController.connect(source);
+  }
+
+  private restoreUpdateScroll(): void {
+    const position = this.updateScroll;
+
+    this.updateScroll = undefined;
+    if (position) this.viewportScroller.scrollToPosition(position);
   }
 
   private releaseSnapshot(): void {

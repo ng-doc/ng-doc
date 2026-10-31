@@ -2,6 +2,8 @@ import { inject, InjectionToken } from '@angular/core';
 import type { ActivatedRouteSnapshot, ResolveFn, Route } from '@angular/router';
 import type { NgDocContentModule, NgDocContentSource } from '@ng-doc/core/interfaces';
 
+import { ɵloadNgDocContent, ɵupdatedNgDocContent } from './content-updates';
+
 /** The key of the resolver that `ɵwithNgDocContent` adds to a generated page route. */
 const RESOLVE_KEY = 'ɵngDocContent';
 
@@ -42,12 +44,21 @@ export const ɵNG_DOC_CONTENT_WAIT = new InjectionToken<number>('ɵNG_DOC_CONTEN
  */
 export function ɵpreloadNgDocContent(source: NgDocContentSource): Promise<NgDocContentModule> {
   const existing = preloads.get(source);
+  const update = ɵupdatedNgDocContent(source.id);
 
-  if (existing) return existing.promise;
+  // A development content update replaces whatever was loaded before it.
+  if (existing && (!update || existing.payload === update)) return existing.promise;
+  if (update) {
+    const entry: PreloadEntry = { promise: Promise.resolve(update), payload: update };
+
+    preloads.set(source, entry);
+
+    return entry.promise;
+  }
 
   // Preloads are shared between navigations, so no navigation may abort them.
   const promise = Promise.resolve()
-    .then(() => source.load(new AbortController().signal))
+    .then(() => ɵloadNgDocContent(source, new AbortController().signal))
     .then(
       (payload: NgDocContentModule) => {
         if (preloads.get(source) === entry) entry.payload = payload;
@@ -66,13 +77,14 @@ export function ɵpreloadNgDocContent(source: NgDocContentSource): Promise<NgDoc
 }
 
 /**
- * Returns the payload of a source that `ɵpreloadNgDocContent` has loaded, without waiting.
+ * Returns the payload of a source that `ɵpreloadNgDocContent` has loaded, or that a development
+ * content update delivered, without waiting.
  * @param source - The content source.
  * @returns The payload, or `undefined` when the source has not finished loading.
  * @internal
  */
 export function ɵpeekNgDocContent(source: NgDocContentSource): NgDocContentModule | undefined {
-  return preloads.get(source)?.payload;
+  return ɵupdatedNgDocContent(source.id) ?? preloads.get(source)?.payload;
 }
 
 /**
@@ -87,7 +99,7 @@ export function ɵpendingNgDocContent(
 ): Promise<NgDocContentModule> | undefined {
   const entry = preloads.get(source);
 
-  return entry && !entry.payload ? entry.promise : undefined;
+  return entry && !entry.payload && !ɵupdatedNgDocContent(source.id) ? entry.promise : undefined;
 }
 
 /**

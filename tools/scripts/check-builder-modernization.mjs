@@ -109,6 +109,8 @@ export const COMMANDS = Object.freeze(
         'libs/builder/generator/vite/testing/page-tabs-structural.vitest.ts': 272,
         'libs/builder/generator/vite/testing/page-tabs.vitest.ts': 266,
         'libs/builder/generator/vite/testing/watch-scope.vitest.ts': 75,
+        'libs/builder/generator/vite/testing/content-updates.vitest.ts': 90,
+        'libs/builder/generator/vite/testing/description-pass.vitest.ts': 80,
         'libs/builder/generator/vite/testing/reconcile-inputs.vitest.ts': 36,
         'libs/builder/generator/vite/testing/only-for-tags.vitest.ts': 34,
         'libs/builder/generator/vite/testing/watcher-recovery.vitest.ts': 6,

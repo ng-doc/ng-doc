@@ -20,7 +20,7 @@ export interface PhysicalState {
   version: string;
 }
 
-interface ManifestFile {
+export interface ManifestFile {
   digest: string;
   role: OutputManifest['files'][number]['role'];
 }
@@ -69,6 +69,21 @@ interface HostToken {
   repeat?: boolean;
   postObserved: boolean;
   isClaimed: boolean;
+}
+
+/**
+ * One generated file whose bytes or role differ between the outputs the browser was last told
+ * about and the outputs a reload announces now.
+ */
+export interface AnnouncedChange {
+  /** Relative to the output root, with forward slashes, as the manifest lists it. */
+  readonly path: string;
+  /** The absolute path. */
+  readonly file: string;
+  /** Absent for a created file. */
+  readonly before?: Readonly<ManifestFile>;
+  /** Absent for a deleted file. */
+  readonly after?: Readonly<ManifestFile>;
 }
 
 export interface HostUpdateTicket {
@@ -266,9 +281,21 @@ export class HostUpdateCoordinator {
   private window = { start: 0, events: 0 };
   /** Whether a module-less host update settles without waiting for the current publication. */
   private readonly modulelessSettle = !flagOff(VITE_MODULELESS_SETTLE_FLAG);
+  /**
+   * Whether the pending reload must reload the page whatever its outputs: an Angular source was
+   * compiled for it, or it repairs an earlier failure (the browser shows the error overlay).
+   */
+  private pendingFull = false;
 
+  /**
+   * @param notify Announces the newest settled publication to the browser. `changes` lists the
+   *   generated files that differ from the last announcement, when nothing else asks for a full
+   *   reload; without it, or when the host cannot apply the changes in place, the page reloads.
+   * @param fail Reports a host error.
+   * @param recovery What the host does after a burst.
+   */
   constructor(
-    private readonly notify: () => void,
+    private readonly notify: (changes?: readonly AnnouncedChange[]) => void,
     private readonly fail: (error: Error) => void,
     private readonly recovery?: HostUpdateRecovery,
   ) {}
@@ -541,6 +568,40 @@ export class HostUpdateCoordinator {
   }
 
   /**
+   * Whether the generation that claimed this TypeScript source update committed and still has a
+   * generated TypeScript module update whose Angular pass has not completed: that pass is still to
+   * come, and the source can join it (`ngDocCompanionFiles`) instead of taking a pass of its own.
+   * False for anything else: a generated output, a source no generation claimed, a generation
+   * that failed, was cancelled or rewrote no TypeScript module, or whose passes all completed.
+   * Call it after `committed(ticket)`, which waits for the generation's result.
+   * @param ticket The source's hot update ticket.
+   */
+  generationPass(ticket: HostUpdateTicket): boolean {
+    const token = ticket.token as HostToken;
+    const attempt = token?.attempt;
+    if (
+      this.disposed ||
+      !token ||
+      token.generated ||
+      !token.isClaimed ||
+      token.sourceKind !== 'typescript' ||
+      token.type !== 'update' ||
+      !attempt?.resultSeen ||
+      attempt.resultStatus !== 'success'
+    ) {
+      return false;
+    }
+    // The outputs whose update takes a compiler pass, as `releaseUnwitnessedSources` counts them.
+    return [...attempt.expected.values()].some(
+      (expected) =>
+        expected.kind === 'update' &&
+        !expected.completed &&
+        COMPILER_TYPESCRIPT.test(expected.path) &&
+        !JAVASCRIPT_MODULE.test(expected.path),
+    );
+  }
+
+  /**
    * Whether `file` is a generated output: a path below the output root of the published
    * generation. Nothing is generated before the first publication or after disposal.
    * @param file An absolute path.
@@ -662,6 +723,7 @@ export class HostUpdateCoordinator {
     // host compilation. Rebind that intent to the newest successful epoch and clear it only in
     // flush(), after every compiler obligation has acknowledged completion.
     if (recovered || delta.changed || compilerSource || this.pendingGeneration !== undefined) {
+      if (recovered || compilerSource) this.pendingFull = true;
       this.pendingGeneration = result.generation;
       this.pendingManifest = structuredClone(result.manifest);
       this.flush();
@@ -675,6 +737,7 @@ export class HostUpdateCoordinator {
     this.burst = undefined;
     this.pendingGeneration = undefined;
     this.pendingManifest = undefined;
+    this.pendingFull = false;
     for (const attempt of this.attempts.values()) {
       attempt.result.resolve();
       attempt.shapes.resolve();
@@ -922,8 +985,13 @@ export class HostUpdateCoordinator {
       return;
     if (this.latestAttempt && this.pendingGeneration < this.latestAttempt.generation) return;
     this.pendingGeneration = undefined;
+    const changes =
+      this.pendingFull || !this.pendingManifest || !this.outputRoot
+        ? undefined
+        : this.changes(this.outputRoot, this.announcedManifest, this.pendingManifest);
+    this.pendingFull = false;
     try {
-      this.notify();
+      this.notify(changes?.length ? changes : undefined);
       if (this.pendingManifest) this.announcedManifest = this.pendingManifest;
       this.pendingManifest = undefined;
     } catch (error) {
@@ -932,6 +1000,7 @@ export class HostUpdateCoordinator {
   }
 
   private queueCurrentReload(): void {
+    this.pendingFull = true;
     this.pendingGeneration =
       this.publishedGeneration ?? this.manifest?.generation ?? this.pendingGeneration ?? 0;
     this.pendingManifest = structuredClone(this.manifest ?? this.announcedManifest);
@@ -1041,6 +1110,33 @@ export class HostUpdateCoordinator {
       changed = true;
     }
     return { changed };
+  }
+
+  /**
+   * The generated files that differ between two manifests, in path order.
+   * @param previousManifest The outputs the browser was last told about.
+   * @param nextManifest The outputs announced now.
+   */
+  private changes(
+    root: string,
+    previousManifest: OutputManifest | undefined,
+    nextManifest: OutputManifest,
+  ): AnnouncedChange[] {
+    const previous = manifestMap(previousManifest);
+    const next = manifestMap(nextManifest);
+    const changes: AnnouncedChange[] = [];
+    for (const relative of [...new Set([...previous.keys(), ...next.keys()])].sort()) {
+      const before = previous.get(relative);
+      const after = next.get(relative);
+      if (sameFile(before, after)) continue;
+      changes.push({
+        path: relative,
+        file: normalize(path.join(root, relative)),
+        ...(before ? { before: { digest: before.digest, role: before.role } } : {}),
+        ...(after ? { after: { digest: after.digest, role: after.role } } : {}),
+      });
+    }
+    return changes;
   }
 
   private prune(generation: number): void {

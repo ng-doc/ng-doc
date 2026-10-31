@@ -7,6 +7,7 @@ import {
 } from '@angular/platform-browser-dynamic/testing';
 import { NgDocDefaultSearchEngine } from '@ng-doc/app/classes/default-search-engine';
 import { NgDocSearchEngine } from '@ng-doc/app/classes/search-engine';
+import { ɵNG_DOC_CONTENT_UPDATE_EVENT } from '@ng-doc/app/constants';
 import { provideSearchEngine } from '@ng-doc/app/providers/search-engine';
 import type { NgDocPageIndex } from '@ng-doc/core/interfaces';
 import { EMPTY, firstValueFrom } from 'rxjs';
@@ -228,5 +229,78 @@ test('highlights the searched properties only', async () => {
     expect(result.positions.title).toEqual([{ start: 4, length: 5 }]);
   } finally {
     restore();
+  }
+});
+
+test('loads the index again after a development content update changed it', async () => {
+  let pages = [record('First guide')];
+  const fetchMock = vi
+    .spyOn(globalThis, 'fetch')
+    .mockImplementation(async () => new Response(JSON.stringify(pages)));
+  const update = (search: boolean) =>
+    window.dispatchEvent(
+      new CustomEvent(ɵNG_DOC_CONTENT_UPDATE_EVENT, {
+        cancelable: true,
+        detail: { payloads: [], search },
+      }),
+    );
+  try {
+    const engine = new NgDocDefaultSearchEngine();
+    expect(await titles(engine, 'guide')).toEqual(['First guide']);
+
+    // Content without search records changed: the loaded index stays.
+    pages = [record('Second guide')];
+    update(false);
+    expect(await titles(engine, 'guide')).toEqual(['First guide']);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    update(true);
+    expect(await titles(engine, 'guide')).toEqual(['Second guide']);
+    expect(await titles(engine, 'guide')).toEqual(['Second guide']);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  } finally {
+    fetchMock.mockRestore();
+  }
+});
+
+test('does not listen for content updates in production mode or without a window', () => {
+  const addEventListener = vi.spyOn(window, 'addEventListener');
+  try {
+    vi.stubGlobal('ngDevMode', false);
+    new NgDocDefaultSearchEngine();
+    vi.unstubAllGlobals();
+    vi.stubGlobal('window', undefined);
+    new NgDocDefaultSearchEngine();
+    vi.unstubAllGlobals();
+    expect(addEventListener).not.toHaveBeenCalled();
+  } finally {
+    vi.unstubAllGlobals();
+    addEventListener.mockRestore();
+  }
+});
+
+test('stops listening for content updates once its engine is gone', () => {
+  // An engine nobody references any more: its weak reference is empty.
+  vi.stubGlobal(
+    'WeakRef',
+    class {
+      deref(): undefined {
+        return undefined;
+      }
+    },
+  );
+  const removeEventListener = vi.spyOn(window, 'removeEventListener');
+  try {
+    new NgDocDefaultSearchEngine();
+    window.dispatchEvent(
+      new CustomEvent(ɵNG_DOC_CONTENT_UPDATE_EVENT, { detail: { payloads: [], search: true } }),
+    );
+    expect(removeEventListener).toHaveBeenCalledWith(
+      ɵNG_DOC_CONTENT_UPDATE_EVENT,
+      expect.any(Function),
+    );
+  } finally {
+    removeEventListener.mockRestore();
+    vi.unstubAllGlobals();
   }
 });

@@ -179,6 +179,16 @@ export const ENGINE_SWITCHES: ReadonlyArray<{ name: string; values: RegExp; effe
       effect: 'adding or removing a page compiles the application twice',
     },
     {
+      name: 'NGDOC_ANGULAR_DESCRIPTION_PASS',
+      values: /^(0|false|off|no)$/i,
+      effect: 'a page title edit compiles the application twice',
+    },
+    {
+      name: 'NGDOC_VITE_CONTENT_UPDATE',
+      values: /^(0|false|off|no)$/i,
+      effect: 'guide text edits reload the page',
+    },
+    {
       name: 'NGDOC_VITE_MODULELESS_SETTLE',
       values: /^(0|false|off|no)$/i,
       effect: 'hot updates of files the browser never loaded wait for the newest generation',

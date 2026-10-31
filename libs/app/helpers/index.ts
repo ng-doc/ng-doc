@@ -1,6 +1,7 @@
 export * from './as-boolean';
 export * from './content-preload';
 export * from './content-ready';
+export * from './content-updates';
 export * from './create-component';
 export * from './format-html';
 export * from './generate-toc';

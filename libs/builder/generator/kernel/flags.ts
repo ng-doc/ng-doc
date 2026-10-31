@@ -32,6 +32,8 @@ export const INCREMENTAL_PROGRAM_FLAG = 'NGDOC_INCREMENTAL_PROGRAM';
 export const SHAPE_CLOSURE_FLAG = 'NGDOC_SHAPE_CLOSURE';
 export const ANGULAR_SHARED_PASS_FLAG = 'NGDOC_ANGULAR_SHARED_PASS';
 export const ANGULAR_STRUCTURAL_PASS_FLAG = 'NGDOC_ANGULAR_STRUCTURAL_PASS';
+export const ANGULAR_DESCRIPTION_PASS_FLAG = 'NGDOC_ANGULAR_DESCRIPTION_PASS';
+export const VITE_CONTENT_UPDATE_FLAG = 'NGDOC_VITE_CONTENT_UPDATE';
 export const VITE_BUILD_HANDOFF_FLAG = 'NGDOC_VITE_BUILD_HANDOFF';
 export const VITE_MODULELESS_SETTLE_FLAG = 'NGDOC_VITE_MODULELESS_SETTLE';
 export const TRACKED_PROGRAM_REUSE_FLAG = 'NGDOC_TRACKED_PROGRAM_REUSE';
@@ -126,6 +128,21 @@ export const FLAGS: readonly FlagDefinition[] = Object.freeze(
         'In the Vite host, the generated modules and description modules a generation creates ' +
         "or deletes join that generation's Angular compiler pass instead of starting a pass of " +
         'their own.',
+      verify: false,
+    },
+    {
+      name: ANGULAR_DESCRIPTION_PASS_FLAG,
+      description:
+        'In the Vite host, an edited description module joins the Angular compiler pass of the ' +
+        'generation it starts, when that generation rewrites generated TypeScript modules, ' +
+        'instead of taking a pass of its own first.',
+      verify: false,
+    },
+    {
+      name: VITE_CONTENT_UPDATE_FLAG,
+      description:
+        'In the Vite host, a generation that changes only content modules and the search index ' +
+        'updates the open pages in place instead of reloading them.',
       verify: false,
     },
     {

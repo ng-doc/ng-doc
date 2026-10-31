@@ -2,11 +2,17 @@ import { readFile, realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
 import type { HmrContext, Plugin, ViteDevServer } from 'vite';
 
-import { ANGULAR_SHARED_PASS_FLAG, ANGULAR_STRUCTURAL_PASS_FLAG, flagOff } from '../kernel/flags';
+import {
+  ANGULAR_DESCRIPTION_PASS_FLAG,
+  ANGULAR_SHARED_PASS_FLAG,
+  ANGULAR_STRUCTURAL_PASS_FLAG,
+  flagOff,
+} from '../kernel/flags';
 import {
   type HostUpdateTicket,
   type InitialCompilationInventory,
   type PhysicalState,
+  HOST_COMPLETION_TIMEOUT_MS,
   observePhysicalState,
   observePhysicalVersion,
 } from './host-updates';
@@ -125,6 +131,15 @@ export interface AngularCompositionBridge {
   start(file: string, read: () => string | Promise<string>): HostUpdateTicket;
   /** Other TypeScript outputs to compile in this ready ticket's pass (see compilerCompanions). */
   companions?(ticket: HostUpdateTicket): string[];
+  /**
+   * Whether the generation of this committed source update still has a generated TypeScript
+   * update to compile (see HostUpdateCoordinator.generationPass).
+   */
+  generationPass?(ticket: HostUpdateTicket): boolean;
+  /** Whether `file` is a description module the generator watches. */
+  descriptionModule?(file: string): boolean;
+  /** Whether `file` is a generated output. */
+  generated?(file: string): boolean;
   /** A mark of the diagnostics recorded so far (see HostUpdateCoordinator.diagnosticMark). */
   diagnosticMark?(): number;
   /**
@@ -154,6 +169,15 @@ export interface AngularComposition {
   observeStartupUpdate(file: string, read: () => string | Promise<string>): void;
   preflight(): Promise<void>;
   dispose(): Promise<void>;
+}
+
+/** A promise and the function that resolves it. */
+function released(): { promise: Promise<void>; resolve(): void } {
+  let resolve!: () => void;
+  const promise = new Promise<void>((done) => {
+    resolve = done;
+  });
+  return { promise, resolve };
 }
 
 function error(code: string, message: string, cause?: unknown): Error {
@@ -370,6 +394,19 @@ export function composeAngularPlugins(
   // rewritten: the compiler claims them instead, so they join the generation's pass (see
   // `ViteAdapterLifecycle.hostClaimsFilesystemChange`). Read once, like the shared pass.
   const hooks = flagOff(ANGULAR_STRUCTURAL_PASS_FLAG) ? undefined : analogHostHooks(compiler);
+  // An edited description module (a page title) starts a generation that rewrites the page
+  // shell, `routes.ts` and `context.ts`, whose updates share one pass. Its own update used to take
+  // a whole-program pass first, on the host's thread, while the generation ran; the generation's
+  // result then waited for that pass. With the switch on, it waits for the generation instead and
+  // joins its pass as one more companion. Read once, like the shared pass, which it needs.
+  const descriptionPasses = sharedPasses && !flagOff(ANGULAR_DESCRIPTION_PASS_FLAG);
+  /**
+   * The description modules waiting for their generation's pass, by resolved path. A generated
+   * TypeScript update's pass takes every one of them as a companion and marks it `taken`.
+   */
+  const waitingSources = new Map<string, { taken: boolean }>();
+  /** Settles when the hook that holds the compiler admission releases it. */
+  let admissionReleased = released();
   if (hooks)
     hooks.claimFilesystemChange = (file: string) =>
       !disposed && bridge.claimsFilesystemChange?.(file) === true;
@@ -565,6 +602,9 @@ export function composeAngularPlugins(
     const resource = COMPILER_RESOURCE.test(context.file);
     if (resource) await bridge.committed(ticket);
     else await ticket.ready;
+    if (!resource && descriptionPasses && bridge.descriptionModule?.(context.file)) {
+      await joinGenerationPass(context, ticket);
+    }
     const release = await admission.acquire();
     let result: unknown;
     try {
@@ -582,7 +622,10 @@ export function composeAngularPlugins(
         // rewrites the page, routes and context modules costs one pass instead of one per file.
         const companions =
           sharedPasses && !resource
-            ? await captureCompanions(bridge.companions?.(ticket) ?? [])
+            ? await captureCompanions([
+                ...(bridge.companions?.(ticket) ?? []),
+                ...takeWaitingSources(context.file),
+              ])
             : new Map<string, PhysicalState>();
         const hotContext: CompanionHmrContext =
           companions.size > 0
@@ -625,9 +668,64 @@ export function composeAngularPlugins(
       throw cause;
     } finally {
       release();
+      const ended = admissionReleased;
+      admissionReleased = released();
+      ended.resolve();
     }
     await bridge.settle(ticket, handsViteModules(context.file, handedModules(context, result)));
     return result;
+  };
+
+  /**
+   * Waits, without holding the compiler admission, until the generation this description module
+   * update started has committed and a pass of a generated TypeScript update took the module as a
+   * companion (or no such pass is left to come). The hook then finds its bytes compiled by that
+   * pass and takes none of its own; when the pass did not compile them (it failed, or the module
+   * changed since), or the generation failed or rewrote no TypeScript module, it compiles as
+   * before. The wait is bounded like a host update, so a lost report of a generated module costs
+   * the module its own pass, never its update.
+   * @param context The description module's hot update.
+   * @param ticket Its ticket, ready (claimed by its generation, or released unclaimed).
+   */
+  const joinGenerationPass = async (context: HmrContext, ticket: HostUpdateTicket) => {
+    await bridge.committed(ticket);
+    if (disposed || !bridge.generationPass?.(ticket)) return;
+    const file = path.resolve(context.file);
+    const entry = { taken: false };
+    waitingSources.set(file, entry);
+    const deadline = Date.now() + HOST_COMPLETION_TIMEOUT_MS;
+    try {
+      while (!entry.taken && !disposed && bridge.generationPass(ticket)) {
+        const remaining = deadline - Date.now();
+        if (remaining <= 0) return;
+        let timer: ReturnType<typeof setTimeout> | undefined;
+        await Promise.race([
+          admissionReleased.promise,
+          new Promise<void>((resolve) => {
+            timer = setTimeout(resolve, remaining);
+            timer.unref?.();
+          }),
+        ]);
+        clearTimeout(timer);
+      }
+    } finally {
+      if (waitingSources.get(file) === entry) waitingSources.delete(file);
+    }
+  };
+
+  /**
+   * The waiting description modules a generated TypeScript update's pass compiles too; each is
+   * marked taken, so its own hook stops waiting once this pass released the admission.
+   * @param file The file of the hook that runs the pass.
+   */
+  const takeWaitingSources = (file: string): string[] => {
+    if (!bridge.generated?.(file)) return [];
+    const taken: string[] = [];
+    for (const [source, entry] of waitingSources) {
+      entry.taken = true;
+      taken.push(source);
+    }
+    return taken;
   };
 
   const wrappedCompiler: Plugin = {

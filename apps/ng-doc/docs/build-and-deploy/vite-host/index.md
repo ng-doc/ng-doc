@@ -139,6 +139,14 @@ pages that depend on it, and the browser updates. The build tags of the server a
 (`*PagesAndCategoriesPage#build-tags`). The terminal shows the build's progress and a line for
 each edit (`*ProgressOutputPage`).
 
+An edit that changes only the text of pages, such as a guide's Markdown, updates the open page in
+place: the browser doesn't reload, so the scroll position and the rest of the application's state
+stay, and the search finds the new text. Every other edit reloads the page, for example a page's
+title or configuration, a new tab, a demo, a playground or any TypeScript file. A page without the
+NgDoc runtime reloads too. A custom search engine that keeps the index it loaded finds the new
+text after a reload. To reload the page after every edit, set `NGDOC_VITE_CONTENT_UPDATE=0`
+(`*BuildersReference#environment-switches`).
+
 ## 🚀 Build for production
 
 `vite build` builds the application with NgDoc. It generates every page once, with the build tag

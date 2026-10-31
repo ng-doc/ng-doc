@@ -1,12 +1,21 @@
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   DestroyRef,
   inject,
   Injectable,
   PendingTasks,
+  PLATFORM_ID,
   signal,
   WritableSignal,
 } from '@angular/core';
-import { ɵforgetNgDocContent, ɵpeekNgDocContent, ɵpendingNgDocContent } from '@ng-doc/app/helpers';
+import {
+  ɵforgetNgDocContent,
+  ɵlistenNgDocContentUpdates,
+  ɵloadNgDocContent,
+  ɵpeekNgDocContent,
+  ɵpendingNgDocContent,
+  ɵwatchNgDocContentUpdates,
+} from '@ng-doc/app/helpers';
 import { NgDocContentState } from '@ng-doc/app/services/content-state';
 import type { NgDocContentModule, NgDocContentSource } from '@ng-doc/core/interfaces';
 
@@ -65,6 +74,11 @@ export class NgDocContentController {
 
   constructor() {
     inject(DestroyRef).onDestroy(() => this.destroy());
+    // The Vite development host updates the content of an edited guide in place (see
+    // `ɵlistenNgDocContentUpdates`); a connected source then renders its new payload.
+    if (isPlatformBrowser(inject(PLATFORM_ID))) {
+      ɵlistenNgDocContentUpdates(inject(DOCUMENT).defaultView);
+    }
   }
 
   /**
@@ -89,13 +103,25 @@ export class NgDocContentController {
     this.contentState.clear(this.owner);
     this.error.set(undefined);
 
+    const stopUpdates = ɵwatchNgDocContentUpdates(({ ids }) => {
+      if (!ids.has(source.id) || this.source !== source || this.sourceEpoch !== sourceEpoch) {
+        return;
+      }
+      // The update's payload is the newest one, and it is at hand: render it at once.
+      this.reload(true);
+    });
+    this.unsubscribe = stopUpdates;
     try {
-      this.unsubscribe = source.subscribe?.(() => {
+      const unsubscribe = source.subscribe?.(() => {
         if (this.source !== source || this.sourceEpoch !== sourceEpoch) return;
         // The source has a new revision, so a preloaded payload is stale.
         ɵforgetNgDocContent(source);
         this.reload(false);
       });
+      this.unsubscribe = () => {
+        stopUpdates();
+        unsubscribe?.();
+      };
     } catch (error) {
       this.fail(source.id, error);
       return;
@@ -202,7 +228,10 @@ export class NgDocContentController {
     pending?: Promise<NgDocContentModule>,
   ): Promise<void> {
     try {
-      const payload = validatePayload(await (pending ?? source.load(signal)), source.id);
+      const payload = validatePayload(
+        await (pending ?? ɵloadNgDocContent(source, signal)),
+        source.id,
+      );
       if (!this.isCurrent(source, request, signal)) return;
 
       this.apply(payload, request);
