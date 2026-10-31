@@ -376,6 +376,28 @@ describeChangeDetection('Demo frames', ({ providers }: ChangeDetectionCase) => {
     expect(fixture.componentInstance.state()).toBe('ready');
   });
 
+  it('takes the color scheme its page reports, so its transparent page shows through', async () => {
+    const iframe = await create();
+
+    window.dispatchEvent(
+      new MessageEvent('message', {
+        data: {
+          source: ɵNG_DOC_DEMO_MESSAGE_SOURCE,
+          version: 1,
+          type: 'background',
+          color: 'rgb(24, 24, 27)',
+          scheme: 'dark',
+        },
+        source: iframe.contentWindow,
+        origin: window.location.origin,
+      }),
+    );
+    await fixture.whenStable();
+
+    expect(iframe.style.colorScheme).toBe('dark');
+    expect(fixture.componentInstance.background()).toBe('rgb(24, 24, 27)');
+  });
+
   it("tells when a playground's page loads but never answers", async () => {
     const iframe = await create('~inputs=label&label=Hi');
     let silent = 0;

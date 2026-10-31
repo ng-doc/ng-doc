@@ -50,6 +50,8 @@ export interface ɵNgDocDemoBackgroundMessage {
   readonly color: string;
   /** The color of the dots of the demo canvas in the demo's theme, if the theme sets one. */
   readonly dots?: string;
+  /** The color scheme of the demo's page (`dark`, for example), if it sets one. */
+  readonly scheme?: string;
 }
 
 /**
@@ -70,6 +72,9 @@ export function ɵisNgDocDemoBackgroundMessage(
     typeof message.color === 'string' &&
     message.color.length > 0 &&
     message.color.length <= 200 &&
-    (message.dots === undefined || (typeof message.dots === 'string' && message.dots.length <= 200))
+    (message.dots === undefined ||
+      (typeof message.dots === 'string' && message.dots.length <= 200)) &&
+    (message.scheme === undefined ||
+      (typeof message.scheme === 'string' && message.scheme.length <= 50))
   );
 }

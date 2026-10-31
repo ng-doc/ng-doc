@@ -6,6 +6,7 @@
     [src]="frameSrc()"
     [title]="frameTitle()"
     [style.height.px]="fill() ? null : height()"
+    [style.color-scheme]="scheme() ?? null"
     (load)="onLoad()"></iframe>
 }
 @if (state() !== 'ready') {

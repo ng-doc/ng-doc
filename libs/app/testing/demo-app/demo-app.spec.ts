@@ -163,8 +163,10 @@ describe('Demo size messages', () => {
 
     expect(ɵisNgDocDemoBackgroundMessage(message)).toBe(true);
     expect(ɵisNgDocDemoBackgroundMessage({ ...message, dots: '#3f3f46' })).toBe(true);
+    expect(ɵisNgDocDemoBackgroundMessage({ ...message, scheme: 'dark' })).toBe(true);
     for (const value of [
       { ...message, dots: 3 },
+      { ...message, scheme: 1 },
       { ...message, dots: 'x'.repeat(201) },
       null,
       { ...message, source: 'other' },
@@ -275,14 +277,14 @@ describe('Demo application root', () => {
     expect(document.documentElement.hasAttribute('data-theme')).toBe(false);
   });
 
-  it('reports the background of its page to the embedding page whenever it changes', () => {
+  it("is transparent in an iframe and reports its theme's background whenever it changes", () => {
     embed();
     const style = document.createElement('style');
 
     style.textContent =
-      'html { --ng-doc-base-5: #a1a1aa; } body { background-color: rgb(250, 250, 250); } ' +
-      'html[data-theme="dark"] { --ng-doc-base-5: #3f3f46; } ' +
-      'html[data-theme="dark"] body { background-color: rgb(24, 24, 27); }';
+      'html { --ng-doc-background: #fafafa; --ng-doc-base-5: #a1a1aa; } ' +
+      'html[data-theme="dark"] { --ng-doc-background: #18181b; --ng-doc-base-5: #3f3f46; } ' +
+      'body { background-color: var(--ng-doc-background); }';
     document.head.append(style);
     window.history.replaceState(null, '', '/demo#~theme=dark');
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
@@ -294,17 +296,23 @@ describe('Demo application root', () => {
         .map(({ color, dots }) => `${color} ${dots}`);
 
     try {
-      expect(backgrounds()).toEqual(['rgb(24, 24, 27) #3f3f46']);
+      // The page lets the documentation page's canvas show through.
+      expect(document.documentElement.classList.contains('ng-doc-demo-embedded')).toBe(true);
+      expect(window.getComputedStyle(document.body).backgroundColor).toMatch(
+        /^(transparent|rgba\(0, 0, 0, 0\))$/,
+      );
+      expect(backgrounds()).toEqual(['#18181b #3f3f46']);
       // The same background again is not reported again.
       observers[0].callback([]);
-      expect(backgrounds()).toEqual(['rgb(24, 24, 27) #3f3f46']);
+      expect(backgrounds()).toEqual(['#18181b #3f3f46']);
 
       window.history.replaceState(null, '', '/demo#~theme=light');
       window.dispatchEvent(new HashChangeEvent('hashchange'));
-      expect(backgrounds()).toEqual(['rgb(24, 24, 27) #3f3f46', 'rgb(250, 250, 250) #a1a1aa']);
+      expect(backgrounds()).toEqual(['#18181b #3f3f46', '#fafafa #a1a1aa']);
     } finally {
       fixture.destroy();
       style.remove();
+      document.documentElement.classList.remove('ng-doc-demo-embedded');
       window.history.replaceState(null, '', '/');
     }
   });

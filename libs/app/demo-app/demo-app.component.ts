@@ -7,6 +7,7 @@ import {
   ElementRef,
   inject,
   PLATFORM_ID,
+  ViewEncapsulation,
 } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NG_DOC_STORE_THEME_KEY } from '@ng-doc/app/constants';
@@ -24,15 +25,27 @@ import { ɵdemoThemeFromFragment } from './demo-theme';
  * `ResizeObserver` on its border box), and it follows the theme the reader picks on the
  * documentation site, which stores it in `localStorage`, unless its URL fragment sets a theme
  * (`~theme=dark`, the `theme` option of a demo or a playground, or the theme button beside it).
- * In an iframe it also reports the background color of its page whenever it changes, so that the
- * embedding page can paint the canvas around the iframe in the demo's theme.
+ * In an iframe its page is transparent, so the canvas of the documentation page shows through, and
+ * it reports its theme's background, dots and color scheme whenever they change, so that the
+ * embedding page can paint the canvas in the demo's own theme.
  */
 @Component({
   selector: 'ng-doc-demo-app',
   imports: [RouterOutlet],
   template: '<router-outlet />',
   // `flow-root`: the margins of the demo stay inside the measured box.
-  styles: ':host { display: flow-root; }',
+  styles: `
+    ng-doc-demo-app {
+      display: flow-root;
+    }
+
+    html.ng-doc-demo-embedded,
+    html.ng-doc-demo-embedded body {
+      background-color: transparent;
+    }
+  `,
+  // The rules above reach the document and its body, outside this component.
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgDocDemoAppComponent {
@@ -49,34 +62,34 @@ export class NgDocDemoAppComponent {
     // when it changes, and once the page has one (its styles may still be loading).
     const reportBackground = () => {
       if (!embedded) return;
-      const transparent = (color: string) =>
-        !color || color === 'transparent' || color === 'rgba(0, 0, 0, 0)';
-      const body = document.body ? window.getComputedStyle(document.body).backgroundColor : '';
-      const color = transparent(body)
-        ? window.getComputedStyle(document.documentElement).backgroundColor
-        : body;
+      // The theme's background and dots, from its variables: the page itself is transparent in
+      // an iframe, so its computed background is not the theme's.
+      const style = window.getComputedStyle(document.documentElement);
+      const color = style.getPropertyValue('--ng-doc-background').trim();
+      const dots = style.getPropertyValue('--ng-doc-base-5').trim();
+      // A transparent iframe shows its page only while the iframe element has the page's color
+      // scheme; otherwise the browser paints an opaque backdrop behind it.
+      const scheme = style.colorScheme && style.colorScheme !== 'normal' ? style.colorScheme : '';
+      const key = `${color}|${dots}|${scheme}`;
 
-      // The dots of the demo canvas in the demo's theme, so the canvas around the iframe keeps
-      // its grid in colors that suit the background.
-      const dots = window
-        .getComputedStyle(document.documentElement)
-        .getPropertyValue('--ng-doc-base-5')
-        .trim();
-
-      if (transparent(color) || `${color}|${dots}` === reportedBackground) return;
-      reportedBackground = `${color}|${dots}`;
+      if (!color || key === reportedBackground) return;
+      reportedBackground = key;
       const message: ɵNgDocDemoBackgroundMessage = {
         source: ɵNG_DOC_DEMO_MESSAGE_SOURCE,
         version: 1,
         type: 'background',
         color,
         ...(dots ? { dots } : {}),
+        ...(scheme ? { scheme } : {}),
       };
 
       window.parent.postMessage(message, window.location.origin);
     };
 
     if (embedded) {
+      // The page is transparent in an iframe, so the canvas of the documentation page, dots and
+      // all, shows through around and behind the demo.
+      document.documentElement.classList.add('ng-doc-demo-embedded');
       const host: HTMLElement = inject(ElementRef).nativeElement;
       let reported = -1;
       const observer = new ResizeObserver(() => {
