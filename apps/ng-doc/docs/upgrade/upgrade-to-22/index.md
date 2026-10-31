@@ -643,6 +643,25 @@ they apply to your site.
   as `/d+/`. If you doubled them as a workaround, remove the extra ones: demo code is now shown
   exactly as written.
 
+## 9. Updating from 22.1 to 22.2
+
+22.2 is a minor release: configurations, pages and APIs keep working. Check these cases if they
+apply to your site.
+
+- **Snapshots of NgDoc's markup:** every text that NgDoc shows now comes from `NG_DOC_TEXTS`, so
+  you can translate it (`*UiTextsPage`). The texts and attribute values are the same as before, but
+  the generated `_ngcontent` attributes and the order of some attributes in the rendered HTML
+  changed. Update HTML snapshots that include NgDoc components.
+- **A layout without navbar content:** it no longer renders an empty fixed header bar, and the
+  navbar takes no height. Remove styles that made room for that bar. To put the documentation
+  below a header of your application, set `--ng-doc-layout-top`
+  (`*LazyRoutePage#keep-your-application-header`).
+- **Tests that look for the placeholder of a select:** its default text is now "Choose the value"
+  instead of "Chose the value".
+- **pnpm 12:** pnpm 12 stops an install whose dependencies have build scripts nobody approved. Run
+  `pnpm approve-builds` and approve `@parcel/watcher`, `esbuild`, `lmdb` and `msgpackr-extract`,
+  which the new engine and Angular's build tools install.
+
 ## 🎉 Next steps
 
 - Try the new engine: `*MigrateToNewEnginePage`.
