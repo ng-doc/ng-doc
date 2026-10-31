@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
 import path from 'node:path';
-import type { ViteDevServer } from 'vite';
+import type { ViteDevServer, WebSocketClient } from 'vite';
 
 import type {
   ArtifactSnapshot,
@@ -13,8 +13,15 @@ import type {
 } from '../contracts';
 import { GeneratedAssetInventory } from './assets';
 import { sameRuntimeConfiguration } from './configuration';
+import {
+  CONTENT_CLIENT_EVENT,
+  CONTENT_UPDATE_VERSION,
+  contentOnly,
+  contentUpdatesEnabled,
+  sendContentUpdate,
+} from './content-updates';
 import { diagnosticText, resultError } from './diagnostics';
-import { type HostUpdateTicket, HostUpdateCoordinator } from './host-updates';
+import { type AnnouncedChange, type HostUpdateTicket, HostUpdateCoordinator } from './host-updates';
 import type { OutputLease } from './lease';
 import { canonicalDrive } from './paths';
 import {
@@ -58,6 +65,18 @@ export class ViteAdapterLifecycle {
    * description modules it read. `read` is computed on demand, once per snapshot.
    */
   private committed?: { generation: number; snapshot: ArtifactSnapshot; read?: Set<string> };
+  /** Whether a content-only reload updates the open pages in place (`NGDOC_VITE_CONTENT_UPDATE`). */
+  private readonly contentUpdates = contentUpdatesEnabled();
+  /** The browser clients whose NgDoc client listens for content updates. */
+  private readonly contentClients = new WeakSet<WebSocketClient>();
+  /** The timestamp of the last content update: each one imports the modules anew. */
+  private contentStamp = 0;
+  /** Records the clients that announce the NgDoc client. */
+  private readonly contentClient = (data: unknown, client: WebSocketClient): void => {
+    if ((data as { version?: unknown } | undefined)?.version === CONTENT_UPDATE_VERSION) {
+      this.contentClients.add(client);
+    }
+  };
 
   /**
    * @param progress NgDoc's terminal progress: `interrupt` clears its live line before the adapter
@@ -73,7 +92,7 @@ export class ViteAdapterLifecycle {
     },
   ) {
     this.hostUpdates = new HostUpdateCoordinator(
-      () => this.server?.ws.send({ type: 'full-reload' }),
+      (changes) => this.announce(changes),
       (error) => this.fail(error),
       {
         warn: (message) => this.warn(message),
@@ -101,8 +120,47 @@ export class ViteAdapterLifecycle {
 
   attachServer(server: ViteDevServer, source: ViteFileEventSource): void {
     if (this.disposed) throw new Error('Vite adapter is disposed.');
+    if (this.contentUpdates && this.server !== server) {
+      this.stopContentClients();
+      // A server without a WebSocket listener API (a test double) announces no client, so every
+      // page reloads, as without content updates.
+      if (typeof server.ws?.on === 'function')
+        server.ws.on(CONTENT_CLIENT_EVENT, this.contentClient);
+    }
     this.server = server;
     this.source = source;
+  }
+
+  /** Stops recording the clients that announce the NgDoc client. */
+  private stopContentClients(): void {
+    try {
+      if (typeof this.server?.ws?.off === 'function') {
+        this.server.ws.off(CONTENT_CLIENT_EVENT, this.contentClient);
+      }
+    } catch {
+      // A closed server has dropped its listeners already.
+    }
+  }
+
+  /**
+   * Tells the browser about the newest settled publication: a content update when it changed only
+   * content (see `contentOnly`), else a full reload.
+   * @param changes The generated files that differ from the last announcement, if the reload may
+   *   be applied in place.
+   */
+  private announce(changes?: readonly AnnouncedChange[]): void {
+    const server = this.server;
+    if (!server) return;
+    const content =
+      this.contentUpdates && this.configuration
+        ? contentOnly(changes, this.configuration.assetDirectory)
+        : undefined;
+    if (!content) {
+      server.ws.send({ type: 'full-reload' });
+      return;
+    }
+    this.contentStamp = Math.max(Date.now(), this.contentStamp + 1);
+    sendContentUpdate(server, this.contentClients, content, this.contentStamp);
   }
 
   attachWatch(watch: WatchHandle): void {
@@ -201,6 +259,29 @@ export class ViteAdapterLifecycle {
   /** The adapter reloads for this settled hot update itself. */
   hostUpdateAnnounced(read: object): boolean {
     return !this.disposed && this.hostUpdates.announces(read);
+  }
+
+  /** See {@link HostUpdateCoordinator.generationPass}. */
+  hostGenerationPass(ticket: HostUpdateTicket): boolean {
+    return !this.disposed && this.hostUpdates.generationPass(ticket);
+  }
+
+  /**
+   * Whether `file` is a description module (`ng-doc.page.ts`, `ng-doc.category.ts`,
+   * `ng-doc.api.ts`) the generator watches: its edit starts a generation that reads it.
+   * @param file An absolute path.
+   */
+  hostDescriptionModule(file: string): boolean {
+    return (
+      !this.disposed &&
+      DESCRIPTION_MODULE.test(path.basename(file)) &&
+      (this.source?.matches({ kind: 'update', path: file }) ?? false)
+    );
+  }
+
+  /** Whether `file` is a generated output (see {@link HostUpdateCoordinator.generated}). */
+  hostGenerated(file: string): boolean {
+    return !this.disposed && this.hostUpdates.generated(file);
   }
 
   /** See {@link HostUpdateCoordinator.compilerCompanions}. */
@@ -481,6 +562,7 @@ export class ViteAdapterLifecycle {
 
   private async disposeAll(): Promise<void> {
     this.hostUpdates.dispose();
+    this.stopContentClients();
     const results = await Promise.allSettled([
       this.registration,
       this.watch?.dispose(),
