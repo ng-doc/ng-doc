@@ -577,8 +577,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # The ends and the middle of the supported range, >=24.15.0 <25.
-        node: ['24.15.0', '24.19.0', '24.21.0']
+        # The ends and the middle of the Node 24 range, >=24.15.0 <25, and the ends of the Node 26
+        # range, >=26.0.0 <27.
+        node: ['24.15.0', '24.19.0', '24.21.0', '26.0.0', '26.13.0']
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:

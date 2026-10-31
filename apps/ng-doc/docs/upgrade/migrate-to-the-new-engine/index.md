@@ -12,7 +12,7 @@ when you are ready. You can roll it back.
 
 - NgDoc 22.0 with the legacy builders (`*UpgradeTo22Page`).
 - A clean working tree, so you can review and undo the changes. The schematic warns when it isn't.
-- Node.js `>=24.15.0 <25`.
+- Node.js `>=24.15.0 <25` or `>=26.0.0 <27`.
 
 ## 1. Preview the migration
 

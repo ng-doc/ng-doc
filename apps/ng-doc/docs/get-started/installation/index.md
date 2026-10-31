@@ -11,7 +11,7 @@ can start from a new Angular project or add it to an existing one.
   application's own Angular build tools. The command chooses the engine from the application
   ([Add NgDoc](#add-ngdoc)).
 - Vite 8 for the Vite engine, which the command adds for you (see below).
-- Node.js 24 (`>=24.15.0 <25`).
+- Node.js 24 or 26 (`>=24.15.0 <25` or `>=26.0.0 <27`).
 
 The examples use `npm`. Any package manager works.
 

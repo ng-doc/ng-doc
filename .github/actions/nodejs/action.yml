@@ -3,7 +3,7 @@ description: Set up Node.js and pnpm, and install the workspace's node_modules f
 
 inputs:
   node-version:
-    description: Node.js version. The builder requires Node >=24.15.0 <25.
+    description: Node.js version. The builder requires Node >=24.15.0 <25 || >=26.0.0 <27.
     required: false
     default: '24.19.0'
   seed:
@@ -23,6 +23,14 @@ runs:
         node-version: ${{ inputs.node-version }}
         # The pnpm store is cached below; setup-node's own cache would only add a second restore.
         package-manager-cache: false
+
+    # Node 25 and later no longer bundle Corepack, so install the version Node 24 bundles.
+    - name: Install Corepack
+      shell: bash
+      run: |
+        if ! command -v corepack >/dev/null 2>&1; then
+          npm install --global corepack@0.35.0
+        fi
 
     # Corepack installs the pnpm version that the packageManager field of package.json names.
     - name: Use pnpm
