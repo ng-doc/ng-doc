@@ -1,4 +1,5 @@
 {
+  "--ng-doc-background": ["libs/app/demo-app/demo-app.component.ts :: (binding) = "],
   "--ng-doc-base-5": ["libs/app/demo-app/demo-app.component.ts :: (binding) = "],
   "--ng-doc-button-active-background": [
     "libs/ui-kit/components/button-icon/button-icon.component.scss :: :host[ng-doc-button-icon-raised] = var(--ng-doc-base-3)",
