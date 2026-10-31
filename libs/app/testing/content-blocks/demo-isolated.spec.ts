@@ -176,11 +176,12 @@ describeChangeDetection('Isolated demos', ({ providers }: ChangeDetectionCase) =
 describeChangeDetection('Demo frames', ({ providers }: ChangeDetectionCase) => {
   let fixture: ComponentFixture<NgDocDemoFrameComponent>;
 
-  async function create(): Promise<HTMLIFrameElement> {
+  async function create(fragment?: string): Promise<HTMLIFrameElement> {
     TestBed.configureTestingModule({ providers });
     fixture = TestBed.createComponent(NgDocDemoFrameComponent);
     fixture.componentRef.setInput('src', '/demo-preview/docs/demos/ButtonDemoComponent');
     fixture.componentRef.setInput('frameTitle', 'ButtonDemoComponent demo');
+    fixture.componentRef.setInput('fragment', fragment);
     await fixture.whenStable();
 
     return fixture.nativeElement.querySelector('iframe');
@@ -288,5 +289,58 @@ describeChangeDetection('Demo frames', ({ providers }: ChangeDetectionCase) => {
     vi.advanceTimersByTime(20_000);
     vi.useRealTimers();
     expect(fixture.componentInstance.state()).toBe('ready');
+  });
+
+  it("tells when a playground's page loads but never answers", async () => {
+    const iframe = await create('~inputs=label&label=Hi');
+    let silent = 0;
+
+    fixture.componentInstance.playgroundSilent.subscribe(() => silent++);
+    // The size alone is not an answer: any page of the demo application reports one.
+    await post(size(30), iframe.contentWindow);
+    vi.useFakeTimers();
+    iframe.dispatchEvent(new Event('load'));
+    vi.advanceTimersByTime(9_999);
+    expect(silent).toBe(0);
+    vi.advanceTimersByTime(1);
+    vi.useRealTimers();
+
+    expect(silent).toBe(1);
+  });
+
+  it('waits for no answer once the playground answered', async () => {
+    const iframe = await create('~inputs=label&label=Hi');
+    let silent = 0;
+
+    fixture.componentInstance.playgroundSilent.subscribe(() => silent++);
+    await post(
+      {
+        source: ɵNG_DOC_DEMO_MESSAGE_SOURCE,
+        version: 1,
+        type: 'playground-ready',
+        defaults: {},
+        uncloneable: [],
+      },
+      iframe.contentWindow,
+    );
+    vi.useFakeTimers();
+    iframe.dispatchEvent(new Event('load'));
+    vi.advanceTimersByTime(20_000);
+    vi.useRealTimers();
+
+    expect(silent).toBe(0);
+  });
+
+  it('waits for no answer from the page of a demo', async () => {
+    const iframe = await create();
+    let silent = 0;
+
+    fixture.componentInstance.playgroundSilent.subscribe(() => silent++);
+    vi.useFakeTimers();
+    iframe.dispatchEvent(new Event('load'));
+    vi.advanceTimersByTime(20_000);
+    vi.useRealTimers();
+
+    expect(silent).toBe(0);
   });
 });

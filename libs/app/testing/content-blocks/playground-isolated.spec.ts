@@ -11,6 +11,7 @@ import {
   ɵNgDocPlaygroundEncodedValue,
   ɵplaygroundStateFromFragment,
 } from '@ng-doc/app/demo-app';
+import { provideNgDocTexts } from '@ng-doc/app/providers/texts';
 import { provideTypeControl } from '@ng-doc/app/providers/type-control';
 import { NgDocStringControlComponent } from '@ng-doc/app/type-controls';
 import { NgDocPage, NgDocPlaygroundOptions } from '@ng-doc/core/interfaces';
@@ -239,6 +240,54 @@ describeChangeDetection(
 
       expect(iframes(fixture)).toHaveLength(0);
       expect(note(fixture)).toContain('This playground does not exist.');
+    });
+
+    it('renders in the page, with a note, when its iframe never answers', async () => {
+      const fixture = await render({ options: { isolated: true } });
+
+      fixture.componentInstance.playground().onFrameSilent();
+      await fixture.whenStable();
+
+      expect(iframes(fixture)).toHaveLength(0);
+      expect(note(fixture)).toBe(
+        'This playground runs in the page because its frame did not load.',
+      );
+    });
+
+    it("renders in the page from the start when a selector of the option isn't the target's", async () => {
+      const fixture = await render({ options: { isolated: true, selectors: 'ng-doc-unknown' } });
+
+      expect(iframes(fixture)).toHaveLength(0);
+      expect(note(fixture)).toBe(
+        'This playground runs in the page because `ng-doc-unknown` is not a selector of its target.',
+      );
+    });
+
+    it("isolates the selectors of the option that are the target's", async () => {
+      const fixture = await render({ options: { isolated: true, selectors: 'button[ngDocTag]' } });
+
+      expect(iframes(fixture).map((frame) => frame.getAttribute('src')?.split('#')[0])).toEqual([
+        '/demo-preview/docs/tag/playground/TagPlayground/button-ngdoctag',
+      ]);
+      expect(iframes(fixture)[0].getAttribute('title')).toBe(
+        'TagPlayground playground: button[ngDocTag]',
+      );
+    });
+
+    it('takes its notes from provideNgDocTexts', async () => {
+      TestBed.configureTestingModule({
+        providers: [
+          provideNgDocTexts({
+            playground: { inPageFrameSilent: 'Die Vorschau läuft in der Seite.' },
+          }),
+        ],
+      });
+      const fixture = await render({ options: { isolated: true } });
+
+      fixture.componentInstance.playground().onFrameSilent();
+      await fixture.whenStable();
+
+      expect(note(fixture)).toBe('Die Vorschau läuft in der Seite.');
     });
   },
 );

@@ -110,6 +110,21 @@ export const NG_DOC_DEFAULT_TEXTS: NgDocTexts = Object.freeze({
     removeItem: 'Remove',
     item: ({ index }: { index: number }) => `Item ${index}`,
     invalidJson: 'Invalid JSON',
+    frameTitle: ({ id, target }: { id: string; target: string }) => `${id} playground: ${target}`,
+    inPageControl: ({ input }: { input: string }) =>
+      `This playground runs in the page because the control of \`${input}\` doesn't support it.`,
+    inPageValue: ({ input, reason }: { input: string; reason: string }) =>
+      `This playground runs in the page because the value of \`${input}\` (${reason}) can't be sent to its frame.`,
+    inPageDefault: ({ input }: { input: string }) =>
+      `This playground runs in the page because the default value of \`${input}\` can't be sent to its frame.`,
+    inPageTooLong:
+      'This playground runs in the page because its values are too long for the URL of its frame.',
+    inPageSelector: ({ selector }: { selector: string }) =>
+      `This playground runs in the page because \`${selector}\` is not a selector of its target.`,
+    inPageFrameError: ({ message }: { message: string }) =>
+      `This playground runs in the page because its frame failed: ${message}`,
+    inPageFrameSilent: 'This playground runs in the page because its frame did not load.',
+    missing: 'This playground does not exist.',
   }),
   navigation: Object.freeze({
     skipToContent: 'Skip to content',

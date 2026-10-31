@@ -111,6 +111,9 @@ export class NgDocPlaygroundDemoComponent<
   /** The messages of the iframe of an isolated playground. */
   readonly frameMessage = output<ɵNgDocPlaygroundFrameMessage>();
 
+  /** The iframe's page loaded but did not report the target in time. */
+  readonly frameSilent = output<void>();
+
   /** The iframe's page with the current state, which the toolbar opens in a new tab. */
   protected readonly frameUrl: Signal<string | undefined> = computed(() => {
     const frame = this.frame();

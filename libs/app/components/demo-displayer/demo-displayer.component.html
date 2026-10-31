@@ -18,8 +18,8 @@
             [href]="url"
             target="_blank"
             rel="noopener"
-            aria-label="Open in a new tab"
-            ngDocTooltip="Open in a new tab">
+            [attr.aria-label]="texts.openInNewTab"
+            [ngDocTooltip]="texts.openInNewTab">
             <ng-doc-icon icon="external-link"></ng-doc-icon>
           </a>
         }

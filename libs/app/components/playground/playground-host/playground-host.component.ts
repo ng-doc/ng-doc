@@ -23,7 +23,9 @@ import {
   ɵNgDocPlaygroundState,
   ɵplaygroundStateFromFragment,
 } from '@ng-doc/app/demo-app';
+import { NgDocPlaygroundTexts } from '@ng-doc/app/interfaces';
 import { getPlaygroundDemoToken } from '@ng-doc/app/providers/playground-demo';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 
 import { NgDocBasePlayground } from '../base-playground';
 import { ɵNG_DOC_PLAYGROUND_CONTAINER, ɵNgDocPlaygroundContainer } from '../playground-container';
@@ -65,7 +67,7 @@ const EMPTY_STATE: ɵNgDocPlaygroundState = {
   template: `
     <ng-container #outlet />
     @if (missing) {
-      <p role="alert">This playground does not exist.</p>
+      <p role="alert">{{ texts.missing }}</p>
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -82,6 +84,7 @@ export class NgDocPlaygroundHostComponent implements ɵNgDocPlaygroundContainer 
   /** Whether the route names a playground or a target the page doesn't have. */
   protected readonly missing: boolean;
 
+  protected readonly texts: NgDocPlaygroundTexts = inject(NG_DOC_TEXTS).playground;
   private readonly injector = inject(Injector);
   private readonly outlet = viewChild.required('outlet', { read: ViewContainerRef });
   private readonly window: Window | null = isPlatformBrowser(inject(PLATFORM_ID))
@@ -129,7 +132,7 @@ export class NgDocPlaygroundHostComponent implements ɵNgDocPlaygroundContainer 
       this.post({
         type: 'playground-error',
         phase: 'create',
-        message: 'This playground does not exist.',
+        message: this.texts.missing,
       });
       return;
     }

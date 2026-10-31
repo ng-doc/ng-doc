@@ -248,6 +248,58 @@ export interface NgDocPlaygroundTexts {
   item: (params: { index: number }) => string;
   /** Shown when the text of a JSON control is not valid JSON. Default: "Invalid JSON". */
   invalidJson: string;
+  /**
+   * Accessible title of the iframe of a demo of an isolated playground. Default: "{id} playground:
+   * {target}". Values: `id`, the name of the playground; `target`, its selector or pipe name.
+   */
+  frameTitle: (params: { id: string; target: string }) => string;
+  /**
+   * Note of an isolated playground in the page because the control of an input is not
+   * `cloneable`. Default: "This playground runs in the page because the control of `{input}`
+   * doesn't support it.". Values: `input`, the name of the input.
+   */
+  inPageControl: (params: { input: string }) => string;
+  /**
+   * Note of an isolated playground in the page because a value can't be put in a URL. Default:
+   * "This playground runs in the page because the value of `{input}` ({reason}) can't be sent to
+   * its frame.". Values: `input`, the input or the path of the value in it, such as
+   * `options.onSelect`; `reason`, what the value is, in English, such as "a function".
+   */
+  inPageValue: (params: { input: string; reason: string }) => string;
+  /**
+   * Note of an isolated playground in the page because the target's default value of an input
+   * can't be put in a URL. Default: "This playground runs in the page because the default value
+   * of `{input}` can't be sent to its frame.". Values: `input`, the name of the input.
+   */
+  inPageDefault: (params: { input: string }) => string;
+  /**
+   * Note of an isolated playground in the page because its values are too long for a URL.
+   * Default: "This playground runs in the page because its values are too long for the URL of its
+   * frame.".
+   */
+  inPageTooLong: string;
+  /**
+   * Note of an isolated playground in the page because its `selectors` option names a selector
+   * that is not one of the target's. Default: "This playground runs in the page because
+   * `{selector}` is not a selector of its target.". Values: `selector`, the selector.
+   */
+  inPageSelector: (params: { selector: string }) => string;
+  /**
+   * Note of an isolated playground in the page because the page in its iframe failed. Default:
+   * "This playground runs in the page because its frame failed: {message}". Values: `message`,
+   * the error of the page, in English.
+   */
+  inPageFrameError: (params: { message: string }) => string;
+  /**
+   * Note of an isolated playground in the page because the page in its iframe loaded but did not
+   * answer. Default: "This playground runs in the page because its frame did not load.".
+   */
+  inPageFrameSilent: string;
+  /**
+   * Shown in the iframe of an isolated playground when the page has no such playground. Default:
+   * "This playground does not exist.".
+   */
+  missing: string;
 }
 
 /**

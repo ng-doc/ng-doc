@@ -67,6 +67,12 @@ export class NgDocDemoFrameComponent {
   /** The messages of an isolated playground's page, from this iframe only. */
   readonly playgroundMessage = output<ɵNgDocPlaygroundFrameMessage>();
 
+  /**
+   * The page of an isolated playground (a frame with a `fragment`) loaded but sent no message of
+   * the playground within 10 seconds, such as a page the build didn't make.
+   */
+  readonly playgroundSilent = output<void>();
+
   /** The height the demo reported, in pixels. */
   readonly height = signal<number | undefined>(undefined);
 
@@ -91,6 +97,8 @@ export class NgDocDemoFrameComponent {
   private initialFragment?: string;
   private shownFragment?: string;
   private timer?: ReturnType<typeof setTimeout>;
+  private silenceTimer?: ReturnType<typeof setTimeout>;
+  private answered = false;
 
   constructor() {
     afterNextRender(() => {
@@ -99,7 +107,10 @@ export class NgDocDemoFrameComponent {
       this.initialFragment = this.shownFragment = untracked(this.fragment);
       this.created.set(true);
     });
-    inject(DestroyRef).onDestroy(() => clearTimeout(this.timer));
+    inject(DestroyRef).onDestroy(() => {
+      clearTimeout(this.timer);
+      clearTimeout(this.silenceTimer);
+    });
     effect(() => {
       const fragment = this.fragment();
       const window = this.loaded() ? this.frame()?.nativeElement.contentWindow : undefined;
@@ -118,6 +129,13 @@ export class NgDocDemoFrameComponent {
   protected onLoad(): void {
     this.loaded.set(true);
     clearTimeout(this.timer);
+    clearTimeout(this.silenceTimer);
+    if (untracked(this.fragment) !== undefined && !this.answered) {
+      this.silenceTimer = setTimeout(
+        () => this.answered || this.playgroundSilent.emit(),
+        READY_TIMEOUT_MS,
+      );
+    }
     if (this.height() !== undefined) return;
     this.timer = setTimeout(() => this.failed.set(this.height() === undefined), READY_TIMEOUT_MS);
   }
@@ -138,6 +156,8 @@ export class NgDocDemoFrameComponent {
       return;
     }
     if (ɵisNgDocPlaygroundFrameMessage(event.data)) {
+      this.answered = true;
+      clearTimeout(this.silenceTimer);
       this.playgroundMessage.emit(event.data);
       return;
     }

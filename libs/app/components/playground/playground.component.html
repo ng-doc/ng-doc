@@ -26,7 +26,8 @@
         [expanded]="configuration.expanded ?? false"
         [frame]="frames()?.get(selector)"
         [frameDefaults]="defaultValues()"
-        (frameMessage)="onFrameMessage($event)">
+        (frameMessage)="onFrameMessage($event)"
+        (frameSilent)="onFrameSilent()">
       </ng-doc-playground-demo>
     }
     @if (pipeName()) {
@@ -39,7 +40,8 @@
         [form]="formGroup()"
         [frame]="frames()?.get(pipeName())"
         [frameDefaults]="defaultValues()"
-        (frameMessage)="onFrameMessage($event)">
+        (frameMessage)="onFrameMessage($event)"
+        (frameSilent)="onFrameSilent()">
       </ng-doc-playground-demo>
     }
   </ng-doc-playground-properties>

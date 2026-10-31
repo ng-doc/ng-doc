@@ -9,7 +9,8 @@
       [src]="frame.url"
       [fragment]="frame.fragment"
       [frameTitle]="frame.title"
-      (playgroundMessage)="frameMessage.emit($event)" />
+      (playgroundMessage)="frameMessage.emit($event)"
+      (playgroundSilent)="frameSilent.emit()" />
   }
   <!-- Static, so the class can be created before the first check (in ngOnChanges). An isolated
        playground leaves it empty. -->

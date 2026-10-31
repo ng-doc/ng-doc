@@ -25,7 +25,9 @@ import {
   ɵNgDocPlaygroundFrameMessage,
   ɵplaygroundStateToFragment,
 } from '@ng-doc/app/demo-app';
+import { NgDocPlaygroundTexts } from '@ng-doc/app/interfaces';
 import { getTokenForType } from '@ng-doc/app/providers/type-control';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import { isSameObject } from '@ng-doc/core/helpers/is-same-object';
 import { objectKeys } from '@ng-doc/core/helpers/object-keys';
 import { ɵplaygroundTargetSlugs } from '@ng-doc/core/helpers/playground-target-slugs';
@@ -69,6 +71,7 @@ export class NgDocPlaygroundComponent<
 {
   private readonly rootPage = inject(NgDocRootPage);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly texts: NgDocPlaygroundTexts = inject(NG_DOC_TEXTS).playground;
 
   /** The name of the playground in the page configuration. */
   readonly id: InputSignal<string> = input.required<string>();
@@ -111,8 +114,9 @@ export class NgDocPlaygroundComponent<
   );
 
   /**
-   * Why the playground renders in the page although it is isolated: the input whose value can't
-   * be sent to its iframes, or what failed. Once set, it stays for the rest of the visit.
+   * The note that says why the playground renders in the page although it is isolated: the input
+   * whose value can't be sent to its iframes, or what failed. Once set, it stays for the rest of
+   * the visit.
    */
   readonly fallback: WritableSignal<string | undefined> = signal(undefined);
 
@@ -122,15 +126,16 @@ export class NgDocPlaygroundComponent<
       !!this.rootPage.demoRoute &&
       !this.fallback() &&
       !this.uncloneableControl() &&
+      !this.pagelessSelector() &&
       (this.configuration().isolated ?? this.rootPage.isolatedPlaygrounds ?? false),
   );
 
   /** The note that says why an isolated playground renders in the page. */
   readonly fallbackNote: Signal<string | undefined> = computed(() => {
-    const reason = this.uncloneableControl() ?? this.fallback();
+    const note = this.uncloneableControl() ?? this.pagelessSelector() ?? this.fallback();
 
-    return reason && (this.configuration().isolated ?? this.rootPage.isolatedPlaygrounds)
-      ? `This playground runs in the page because ${reason}.`
+    return note && (this.configuration().isolated ?? this.rootPage.isolatedPlaygrounds)
+      ? note
       : undefined;
   });
 
@@ -148,7 +153,7 @@ export class NgDocPlaygroundComponent<
         {
           url: this.pageUrl(slugs[index]),
           fragment: encoded.fragment,
-          title: `${this.id()} playground: ${target}`,
+          title: this.texts.frameTitle({ id: this.id(), target }),
         },
       ]),
     );
@@ -207,10 +212,23 @@ export class NgDocPlaygroundComponent<
       const token = getTokenForType(type);
 
       if (token && this.injector.get(token, null)?.options?.cloneable === false) {
-        return `the control of \`${name}\` doesn't support it`;
+        return this.texts.inPageControl({ input: name });
       }
     }
     return undefined;
+  });
+
+  /**
+   * A selector of the `selectors` option that is not one of the target's: it has no page, so the
+   * playground renders in the page from the start.
+   */
+  private readonly pagelessSelector: Signal<string | undefined> = computed(() => {
+    if (this.pipeName()) return undefined;
+    const option = this.configuration().selectors;
+    const rendered = option === undefined ? [] : Array.isArray(option) ? option : [option];
+    const selector = rendered.find((item: string) => !this.selectors().includes(item));
+
+    return selector === undefined ? undefined : this.texts.inPageSelector({ selector });
   });
 
   constructor() {
@@ -222,8 +240,8 @@ export class NgDocPlaygroundComponent<
         untracked(() =>
           this.fallback.set(
             encoded.path
-              ? `the value of \`${encoded.path}\` (${encoded.reason}) can't be sent to its frame`
-              : encoded.reason,
+              ? this.texts.inPageValue({ input: encoded.path, reason: encoded.reason })
+              : this.texts.inPageTooLong,
           ),
         );
       }
@@ -246,14 +264,12 @@ export class NgDocPlaygroundComponent<
    */
   onFrameMessage(message: ɵNgDocPlaygroundFrameMessage): void {
     if (message.type === 'playground-error') {
-      this.fallback.set(`its frame failed: ${message.message}`);
+      this.fallback.set(this.texts.inPageFrameError({ message: message.message }));
       return;
     }
     if (message.type !== 'playground-ready' || this.formGroup()) return;
     if (message.uncloneable.length) {
-      this.fallback.set(
-        `the default value of \`${message.uncloneable[0]}\` can't be sent to its frame`,
-      );
+      this.fallback.set(this.texts.inPageDefault({ input: message.uncloneable[0] }));
       return;
     }
     this.defaultValues.set(
@@ -265,6 +281,15 @@ export class NgDocPlaygroundComponent<
       ),
     );
     this.createForm();
+  }
+
+  /**
+   * Makes the playground render in the page when the page in an iframe loaded but did not report
+   * the target, such as a page the build didn't make.
+   * @internal
+   */
+  onFrameSilent(): void {
+    if (!this.fallback()) this.fallback.set(this.texts.inPageFrameSilent);
   }
 
   ngAfterViewInit(): void {
