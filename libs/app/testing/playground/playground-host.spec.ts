@@ -41,7 +41,9 @@ class TagComponent {
 /** What the builder generates for a playground of `TagComponent`. */
 @Component({
   selector: 'ng-doc-playground-host-spec',
-  template: `<ng-doc-host-tag [label]="properties()['label']" [size]="properties()['size']" />`,
+  template: `<ng-doc-host-tag
+    [label]="properties()['label'] ?? data.label"
+    [size]="properties()['size']" />`,
   imports: [TagComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -50,7 +52,7 @@ class TagPlayground extends NgDocBasePlayground {
   readonly target = TagComponent;
   readonly playground = viewChild(TagComponent);
   readonly viewContainerRef = viewChild(TagComponent, { read: ViewContainerRef });
-  readonly configData: Record<string, unknown> = {};
+  readonly configData: Record<string, unknown> = { label: 'configured label' };
 }
 
 const ROUTES: Routes = [
@@ -79,12 +81,17 @@ const PAGE = '/demo-preview/docs/tag/playground/TagPlayground/ng-doc-host-tag';
  * @param properties
  * @param recreate
  */
-function fragment(properties: Record<string, unknown>, recreate: boolean = false): string {
+function fragment(
+  properties: Record<string, unknown>,
+  recreate: boolean = false,
+  data?: Record<string, unknown>,
+): string {
   const result = ɵplaygroundStateToFragment({
     inputs: ['label', 'size'],
     properties,
     content: [],
     recreate,
+    data,
   });
 
   if (!result.ok) throw new Error(result.reason);
@@ -138,6 +145,21 @@ describeChangeDetection('NgDocPlaygroundHostComponent', ({ providers }: ChangeDe
 
     expect(root.querySelector('.label')?.textContent).toBe('Three');
     expect(created).toBe(2);
+  });
+
+  it("gives the template the configuration's data, extended by the action's", async () => {
+    const { harness, root } = await open(`${PAGE}#${fragment({ size: 1 })}`);
+
+    expect(root.querySelector('.label')?.textContent).toBe('configured label');
+    window.history.replaceState(
+      null,
+      '',
+      `${PAGE}#${fragment({ size: 1 }, false, { label: 'action label' })}`,
+    );
+    window.dispatchEvent(new HashChangeEvent('hashchange'));
+    await harness.fixture.whenStable();
+
+    expect(root.querySelector('.label')?.textContent).toBe('action label');
   });
 
   it('keeps the target and its values when the fragment is malformed', async () => {

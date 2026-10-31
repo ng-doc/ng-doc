@@ -82,6 +82,22 @@ describe('the URL fragment of an isolated playground', () => {
     expect(ɵplaygroundStateFromFragment(fragmentOf(value))).toStrictEqual(value);
   });
 
+  it("carries the action's data", () => {
+    const value = state({ label: 'Save' }, { data: { label: 'Rounded', when: new Date(0) } });
+    const fragment = fragmentOf(value);
+
+    expect(fragment).toMatch(/^~inputs=label&label=Save&~data=[A-Za-z0-9_-]+$/);
+    expect(ɵplaygroundStateFromFragment(fragment)).toStrictEqual(value);
+    // No data, no parameter: the fragment of a playground without it doesn't change.
+    expect(fragmentOf(state({ label: 'Save' }, { data: {} }))).toBe('~inputs=label&label=Save');
+    expect(ɵplaygroundStateFromFragment('~inputs=a')).not.toHaveProperty('data');
+    expect(ɵplaygroundStateToFragment(state({}, { data: { onClick: () => 1 } }))).toEqual({
+      ok: false,
+      path: 'data.onClick',
+      reason: 'a function',
+    });
+  });
+
   it('names the input whose value cannot be sent', () => {
     const result = ɵplaygroundStateToFragment(
       state({ label: 'ok', options: { onSelect: () => undefined } }),
@@ -106,6 +122,7 @@ describe('the URL fragment of an isolated playground', () => {
       '~inputs=a&noequals',
       '~inputs=a&~unknown=1',
       '~inputs=a&~v=%%%',
+      '~inputs=a&~data=%%%',
       '~inputs=a&a=%22unterminated',
       '~inputs=a&a=%2212%22x',
     ]) {

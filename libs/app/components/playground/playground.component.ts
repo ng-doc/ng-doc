@@ -196,6 +196,7 @@ export class NgDocPlaygroundComponent<
         .filter(([, shown]) => shown)
         .map(([slot]) => slot),
       recreate: this.recreateDemo(),
+      data: this.options().data,
     });
   });
 

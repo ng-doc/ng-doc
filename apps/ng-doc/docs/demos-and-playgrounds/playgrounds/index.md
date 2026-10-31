@@ -357,7 +357,8 @@ isolated playground gives its demos their pages too, so none of its demos may be
 The URL carries plain data: strings, numbers, booleans, `null`, `undefined`, dates, and arrays and
 plain objects of those. A playground with another value, such as a function or a class instance
 like a `TemplateRef`, renders in the page, and a note above the inspector names the input. So does
-a playground whose values don't fit in 8 KB of URL.
+a playground whose values don't fit in 8 KB of URL. The action's `data` travels with the values, so
+the same applies to it; the `data` of the configuration is part of the page and can hold anything.
 
 The note also tells when the playground renders in the page because:
 

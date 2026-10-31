@@ -194,6 +194,7 @@ export class NgDocPlaygroundHostComponent implements ɵNgDocPlaygroundContainer 
 
   private setState(state: ɵNgDocPlaygroundState): void {
     this.reference?.setInput('properties', state.properties);
+    this.reference?.setInput('actionData', state.data ?? {});
     this.reference?.setInput(
       'content',
       Object.fromEntries(state.content.map((slot) => [slot, true])),

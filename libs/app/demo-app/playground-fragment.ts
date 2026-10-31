@@ -20,6 +20,11 @@ export interface ɵNgDocPlaygroundState {
   readonly content: readonly string[];
   /** Whether the frame creates the target again for this state. */
   readonly recreate: boolean;
+  /**
+   * The `data` option of the playground action, which the template of the target reads; the
+   * frame has the configuration's own `data`.
+   */
+  readonly data?: Readonly<Record<string, unknown>>;
 }
 
 /**
@@ -36,6 +41,7 @@ const INPUTS = '~inputs';
 const CONTENT = '~content';
 const RECREATE = '~recreate';
 const VALUES = '~v';
+const DATA = '~data';
 
 /** The text JSON gives a number, which a readable string value must not look like. */
 const NUMBER = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/;
@@ -81,6 +87,26 @@ export function ɵplaygroundStateToFragment(state: ɵNgDocPlaygroundState): ɵNg
     parameters.push(`${CONTENT}=${state.content.map(encodeURIComponent).join(',')}`);
   }
   if (state.recreate) parameters.push(`${RECREATE}=1`);
+  if (state.data && Object.keys(state.data).length) {
+    const data: Record<string, ɵNgDocPlaygroundEncodedValue> = {};
+
+    for (const [name, value] of Object.entries(state.data)) {
+      const result = ɵencodePlaygroundValue(value);
+
+      if (!result.ok) {
+        return {
+          ok: false,
+          path: ['data', name, result.path].filter(Boolean).join('.'),
+          reason: result.reason,
+        };
+      }
+      data[name] = result.value;
+    }
+    const text = ɵplaygroundStateToUrl(data);
+
+    if (text === undefined) return tooLong();
+    parameters.push(`${DATA}=${text}`);
+  }
   const fragment = parameters.join('&');
 
   return fragment.length > ɵNG_DOC_PLAYGROUND_STATE_URL_LIMIT ? tooLong() : { ok: true, fragment };
@@ -98,6 +124,7 @@ export function ɵplaygroundStateFromFragment(fragment: string): ɵNgDocPlaygrou
   let inputs: string[] | undefined;
   let content: string[] = [];
   let recreate = false;
+  let data: Record<string, unknown> | undefined;
 
   if (text.length > ɵNG_DOC_PLAYGROUND_STATE_URL_LIMIT) throw new Error('The state is too long.');
   for (const parameter of text ? text.split('&') : []) {
@@ -116,6 +143,12 @@ export function ɵplaygroundStateFromFragment(fragment: string): ɵNgDocPlaygrou
       if (!values) throw new Error('Malformed encoded values.');
       for (const [key, item] of Object.entries(values))
         properties[key] = ɵdecodePlaygroundValue(item);
+    } else if (name === DATA) {
+      const values = ɵplaygroundStateFromUrl(value);
+
+      if (!values) throw new Error('Malformed data.');
+      data = {};
+      for (const [key, item] of Object.entries(values)) data[key] = ɵdecodePlaygroundValue(item);
     } else if (name.startsWith('~')) {
       throw new Error(`Unknown parameter: ${name}`);
     } else {
@@ -123,7 +156,7 @@ export function ɵplaygroundStateFromFragment(fragment: string): ɵNgDocPlaygrou
     }
   }
   if (!inputs) throw new Error('The state names no inputs.');
-  return { inputs, properties, content, recreate };
+  return { inputs, properties, content, recreate, ...(data ? { data } : {}) };
 }
 
 /**

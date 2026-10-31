@@ -178,6 +178,18 @@ describeChangeDetection(
       ).toContain('label=Changed');
     });
 
+    it("passes the action's data to its iframes", async () => {
+      const fixture = await render({
+        options: { isolated: true, data: { label: 'From the action' } },
+      });
+
+      expect(
+        ɵplaygroundStateFromFragment(
+          fixture.componentInstance.playground().frames()!.get('ng-doc-tag')!.fragment,
+        ).data,
+      ).toEqual({ label: 'From the action' });
+    });
+
     it('follows the site option, unless the action or the configuration says otherwise', async () => {
       expect(iframes(await render({ isolatedPlaygrounds: true }))).toHaveLength(2);
       TestBed.resetTestingModule();
