@@ -645,8 +645,8 @@ they apply to your site.
 
 ## 9. Updating from 22.1 to 22.2
 
-22.2 is a minor release: configurations, pages and APIs keep working. Check these cases if they
-apply to your site.
+22.2 is a minor release: configurations, pages and APIs keep working, and it runs on Node.js 26
+as well as 24. Check these cases if they apply to your site.
 
 - **Snapshots of NgDoc's markup:** every text that NgDoc shows now comes from `NG_DOC_TEXTS`, so
   you can translate it (`*UiTextsPage`). The texts and attribute values are the same as before, but
