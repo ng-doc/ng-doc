@@ -32,6 +32,13 @@ export interface NgDocPlaygroundOptions {
    */
   isolated?: boolean;
   /**
+   * The theme of the demos of an isolated playground: `'light'`, `'dark'`, `'auto'` (follows the
+   * system) or the id of a custom theme. Without it the demos follow the theme of the site. The
+   * reader can change it with the theme button beside each demo. A playground in the page always
+   * has the page's theme.
+   */
+  theme?: string;
+  /**
    * Whether the demo is created again each time an input changes, for components that read an
    * input only once. `true` starts with the "Recreate" setting on, and the reader can turn it off;
    * `'always'` keeps it on and hides the setting. Off by default.
