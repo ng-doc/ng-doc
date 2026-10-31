@@ -7,7 +7,7 @@ section, load NgDoc with the route that holds the documentation. Give that route
 providers: NgDoc starts when the reader opens the documentation, and none of its code is in the
 bundle that the rest of your application loads at start.
 
-## 👀 See it
+## 👀 See it
 
 The application below keeps its own pages at the root and loads the documentation lazily under
 `/docs`. Its start-up bundle holds Angular, the router and its own pages only:
@@ -19,7 +19,7 @@ The application below keeps its own pages at the root and loads the documentatio
 The scroll offset of anchors and the keyboard shortcuts of NgDoc apply only while the
 documentation layout is shown. Your other pages keep their own scroll offset and their own keys.
 
-## 🧰 Use it
+## 🧰 Use it
 
 ### 1. Set the route prefix
 
@@ -176,7 +176,7 @@ To show only your own header, leave the navbar out of `ng-doc-root`: without nav
 layout has no header bar. Put the search in your header with `NgDocSearchComponent`, or use your
 header as the navbar (`*LayoutPage#custom-navbar`).
 
-## ⚙️ How it works
+## 🔧 How it works
 
 `provideNgDocApp` starts NgDoc with environment initializers, which run where the providers are:
 in the application's injector, or in the injector that the router creates for the documentation
@@ -191,7 +191,7 @@ When the reader leaves the documentation, the offset that your application set c
 shortcuts stop. A layout of your own that doesn't use `ng-doc-root` turns the shortcuts on with
 `NgDocShortcutsService.listen()`.
 
-## 🚧 Gotchas
+## 🚧 Gotchas
 
 > **Note**
 > Keep `provideHttpClient` in the application's providers. NgDoc loads its icons and the API lists

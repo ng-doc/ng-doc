@@ -7,13 +7,13 @@ palette, the demo toolbar, the playground inspector, copy buttons, the navigatio
 contents, the theme button and the API list, and the accessible names of their controls. They are
 in English by default. `provideNgDocTexts` changes any of them, for example to translate the site.
 
-## 👀 See it
+## 👀 See it
 
 This site keeps the English texts. With the providers below, the search field in the navbar reads
 "Dokumentation durchsuchen…", the palette answers "Keine Ergebnisse für „Knopf“", and the table of
 contents is titled "Auf dieser Seite".
 
-## 🧰 Use it
+## 🧰 Use it
 
 Add `provideNgDocTexts` to the providers of your application and pass the texts to change, by
 group. Every text you leave out keeps its English default:
@@ -89,7 +89,7 @@ export class MyNavbarComponent {
 }
 ```
 
-## 📋 Texts
+## 📋 Texts
 
 `NgDocTexts` holds every text, in these groups. The API page of each group lists its texts with
 their English default, and `NG_DOC_DEFAULT_TEXTS` holds the defaults.
@@ -114,7 +114,7 @@ their English default, and `NG_DOC_DEFAULT_TEXTS` holds the defaults.
 The last three groups belong to `@ng-doc/ui-kit` (`NgDocUiKitTexts`, `NG_DOC_UI_KIT_TEXTS`);
 `provideNgDocTexts` sets them too.
 
-## 🚧 Gotchas
+## 🚧 Gotchas
 
 > **Note**
 > The texts are read when a component is created, and they stay the same for the life of the
