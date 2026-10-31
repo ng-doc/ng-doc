@@ -228,6 +228,7 @@ The third argument of `provideTypeControl` takes `NgDocTypeControlProviderOption
 | `hideLabel`    | `boolean` | `false` | Hides the row's label, with the input's name and type chip, for a control that has its own. |
 | `order`        | `number`  | –       | The position of the control's rows in the inspector, lowest first.                          |
 | `labelWrapper` | `boolean` | `true`  | Wraps the row in a `<label>`. Set `false` for a control with several interactive parts.     |
+| `cloneable`    | `boolean` | –       | Whether its values can be sent to isolated playgrounds. `false` keeps them in the page.     |
 
 The inspector lists the inputs whose controls have an `order` first, by that order, and then the
 others by name. The built-in controls have these orders:

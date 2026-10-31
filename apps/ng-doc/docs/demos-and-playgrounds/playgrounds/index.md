@@ -310,6 +310,61 @@ export default MyPage;
 The descriptions come from the `@param` tags of `transform`, and the defaults from its default
 parameter values.
 
+## Isolated playgrounds
+
+An isolated playground shows its demos in iframes, as isolated demos do (`*IsolatedDemosPage`).
+Each target runs on a page of its own, which loads only Angular and the target: the documentation
+page's styles and providers don't reach it, and its media queries see the width of its iframe. The
+inspector stays on the documentation page. Isolated playgrounds are part of the new engine.
+
+{{ NgDocActions.playground("TagPlayground", { isolated: true }) }}
+
+Change a value: the inspector writes the values into the iframe's URL, after the `#`, and the
+target takes them without reloading. **Open in a new tab**, beside the demo, opens the target's
+page with the current values.
+
+Isolate one playground with the `isolated` option of the action, or of its configuration in
+`ng-doc.page.ts`:
+
+```twig name="index.md"
+{{ '{{ NgDocActions.playground("TagPlayground", { isolated: true }) }}' | safe }}
+```
+
+Or isolate every playground of the site in `ng-doc.config.ts`, and keep one in the page with
+`isolated: false`:
+
+```typescript name="ng-doc.config.ts"
+import { NgDocConfiguration } from '@ng-doc/builder';
+
+const config: NgDocConfiguration = {
+  isolatedPlaygrounds: true,
+};
+
+export default config;
+```
+
+The action's option wins over the configuration's, which wins over `isolatedPlaygrounds`.
+
+The page of a target is `<base href>demo-preview/<page route>/playground/<name>/<target>/`. The
+target is the selector, or the pipe name, in lower case, with `-` for other characters:
+`button[ngDocTag]` is `button-ngdoctag`. The pages get the providers of their page and its
+categories, and `demoProviders`, as demo pages do (`*IsolatedDemosPage#providers`). A page with an
+isolated playground gives its demos their pages too, so none of its demos may be named
+`playground`.
+
+### Values that can be sent
+
+The URL carries plain data: strings, numbers, booleans, `null`, `undefined`, dates, and arrays and
+plain objects of those. A playground with another value, such as a function or a class instance
+like a `TemplateRef`, renders in the page, and a note above the inspector names the input. So does
+a playground whose values don't fit in 8 KB of URL.
+
+The note also tells when the playground renders in the page because:
+
+- the control of an input has `cloneable: false` (`*CustomTypeControlsPage#options`);
+- its `selectors` option names a selector that the target doesn't have;
+- the page in the iframe failed, or didn't answer within 10 seconds.
+
 ## 📋 Options
 
 Set options in the configuration of the playground, or as the second argument of the action. The
@@ -326,6 +381,7 @@ action's options win. They follow `NgDocPlaygroundOptions`:
 | `defaults`          | `Record<string, unknown>` | –         | Defaults for the controls, instead of the target's own. **Reset** returns to them.  |
 | `hiddenInputs`      | `string[]`                | –         | Inputs that get no control.                                                         |
 | `data`              | `Record<string, unknown>` | –         | Values for the template. The action's `data` extends the configuration's.           |
+| `isolated`          | `boolean`                 | `false`   | Shows the demos in iframes of their own pages (new engine only, see above).         |
 
 This playground hides the inspector, and starts with a rounded button:
 
@@ -415,6 +471,13 @@ An entry with a `type` takes the same fields.
 > In the action's options, put a space between two closing braces, such as `{ inputs: { a: 1 } }`.
 > Without it, Nunjucks reads `}}` as the end of the expression.
 
+> **Warning**
+> Only the new engine builds playground pages. With the legacy builders, an isolated playground
+> renders in the page, without a note (`*LegacyBuildersPage`).
+
+> **Warning**
+> An overlay that a target opens, such as a menu or a tooltip, can't leave its iframe.
+
 > **Note**
 > The legacy builders list the values of a union in the order the TypeScript checker created them,
 > which can differ from the written order (`*UpgradeTo22Page#7-the-new-engine`).
@@ -425,6 +488,7 @@ An entry with a `type` takes the same fields.
 
 - `*CustomTypeControlsPage`
 - `*DemosPage`
+- `*IsolatedDemosPage`
 - `*PageFilesReference#playground-configuration`
 
 {% endindex %}
