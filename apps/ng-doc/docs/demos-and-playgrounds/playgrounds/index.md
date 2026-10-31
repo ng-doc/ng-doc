@@ -345,6 +345,10 @@ export default config;
 
 The action's option wins over the configuration's, which wins over `isolatedPlaygrounds`.
 
+The `theme` option shows the demos of an isolated playground in another theme than the page, as
+for isolated demos (`*IsolatedDemosPage#theme`), and the theme button beside each demo switches
+it for all of them.
+
 The page of a target is `<base href>demo-preview/<page route>/playground/<name>/<target>/`. The
 target is the selector, or the pipe name, in lower case, with `-` for other characters:
 `button[ngDocTag]` is `button-ngdoctag`. The pages get the providers of their page and its
@@ -383,6 +387,7 @@ action's options win. They follow `NgDocPlaygroundOptions`:
 | `hiddenInputs`      | `string[]`                | –         | Inputs that get no control.                                                         |
 | `data`              | `Record<string, unknown>` | –         | Values for the template. The action's `data` extends the configuration's.           |
 | `isolated`          | `boolean`                 | `false`   | Shows the demos in iframes of their own pages (new engine only, see above).         |
+| `theme`             | `string`                  | –         | The theme of the demos of an isolated playground, such as `'dark'` (see above).     |
 
 This playground hides the inspector, and starts with a rounded button:
 

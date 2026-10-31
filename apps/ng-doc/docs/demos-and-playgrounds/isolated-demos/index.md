@@ -82,6 +82,23 @@ and the demo pages import the module in the browser and on the server.
 The demo pages also load your application's global styles, the `styles` of the application, and
 they follow the theme the reader picks on the documentation site.
 
+### Theme
+
+An isolated demo can show another theme than the page, for example to show a component in the dark
+theme on a light page. Set it with the `theme` option: `'light'`, `'dark'`, `'auto'` (follows the
+system) or the id of one of your themes (`*ThemesAndColorsPage`):
+
+```twig name="index.md"
+{{ '{{ NgDocActions.demo("ViewportDemoComponent", { isolated: true, theme: "dark" }) }}' | safe }}
+```
+
+{{ NgDocActions.demo("ViewportDemoComponent", { isolated: true, theme: "dark" }) }}
+
+The theme button of the toolbar switches the demo between the page's theme, light and dark, and
+the theme of the option. **Open in a new tab** opens the demo's page in the theme it shows. The
+theme travels in the iframe's URL, after the `#`, so switching it doesn't reload the demo. A demo
+in the page always has the page's theme.
+
 ### The pages of the demos
 
 A demo's page is `<base href>demo-preview/<page route>/<demo name>/`, for example
@@ -113,6 +130,7 @@ The option of the `demo` action:
 | Option     | Type      | Default         | Description                                                     |
 | ---------- | --------- | --------------- | --------------------------------------------------------------- |
 | `isolated` | `boolean` | `isolatedDemos` | Shows the demo in an iframe of its page instead of in the page. |
+| `theme`    | `string`  | The site's      | The theme of an isolated demo (see "Theme").                    |
 
 The options of `ng-doc.config.ts` (`*ConfigurationReference#demo-pages`):
 
