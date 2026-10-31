@@ -230,7 +230,7 @@ Production builds always use a fresh compiler worker, whatever these variables s
 | `@angular/compiler`, `@angular/compiler-cli` (Vite host only)    | `^22.0.0`                         |
 | Platforms                                                        | Linux, macOS and Windows          |
 
-The Vite engine is tested with Vite 8.3.2, Analog 2.8.0 and Angular 22.1 and 22.2. It checks the
+The Vite engine is tested with Vite 8.3.3, Analog 2.8.0 and Angular 22.1 and 22.2. It checks the
 Vite version when it starts and stops with `NGDOC_VITE_VERSION` outside `^8.3.0`. `ng add` and
 `migrate-to-vite` add these ranges to `devDependencies` when `package.json` doesn't list them, so
 npm installs the newest matching releases.

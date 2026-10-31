@@ -54,7 +54,7 @@ export const STATIC_EXTERNAL_INVENTORY = Object.freeze([
   Object.freeze({ id: 'oxc-parser', owner: 'upstream dependency oxc-parser@0.121.0' }),
   Object.freeze({ id: 'tinyglobby', owner: 'upstream dependency tinyglobby@0.2.17' }),
   Object.freeze({ id: 'typescript', owner: 'peer typescript@6.0.3' }),
-  Object.freeze({ id: 'vite', owner: 'peer vite@8.3.2' }),
+  Object.freeze({ id: 'vite', owner: 'peer vite@8.3.3' }),
 ]);
 
 export const RUNTIME_REQUIRES = Object.freeze([
