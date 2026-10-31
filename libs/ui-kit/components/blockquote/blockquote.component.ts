@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, Signal } from '@angular/core';
 import { NgDocIconComponent } from '@ng-doc/ui-kit/components/icon';
-import { NgDocBlockquoteTexts } from '@ng-doc/ui-kit/interfaces';
-import { NG_DOC_UI_KIT_TEXTS } from '@ng-doc/ui-kit/tokens';
+import { NG_DOC_UI_KIT_TEXTS, NgDocBlockquoteTexts } from '@ng-doc/ui-kit/texts';
 import { NgDocBlockquoteType } from '@ng-doc/ui-kit/types';
 
 /** The icon of each built-in callout type; its title is in `NgDocBlockquoteTexts`. */

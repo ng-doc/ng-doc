@@ -17,7 +17,7 @@ import { NgDocDataDirective } from '@ng-doc/ui-kit/directives/data';
 import { NgDocFocusCatcherDirective } from '@ng-doc/ui-kit/directives/focus-catcher';
 import { NgDocInputStringDirective } from '@ng-doc/ui-kit/directives/input-string';
 import { NgDocContextWithImplicit } from '@ng-doc/ui-kit/interfaces';
-import { NG_DOC_UI_KIT_TEXTS } from '@ng-doc/ui-kit/tokens';
+import { NG_DOC_UI_KIT_TEXTS } from '@ng-doc/ui-kit/texts';
 import { NgDocContent } from '@ng-doc/ui-kit/types';
 import { PolymorpheusOutlet } from '@taiga-ui/polymorpheus';
 import { DIControl, provideHostControl } from 'di-controls';

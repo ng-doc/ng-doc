@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
 import type { NgDocTexts, NgDocTextsOverrides } from '@ng-doc/app/interfaces';
-import { NG_DOC_UI_KIT_DEFAULT_TEXTS } from '@ng-doc/ui-kit/tokens';
+import { NG_DOC_UI_KIT_DEFAULT_TEXTS } from '@ng-doc/ui-kit/texts';
 
 /**
  * The English texts of the NgDoc application. They are the texts NgDoc showed before the texts

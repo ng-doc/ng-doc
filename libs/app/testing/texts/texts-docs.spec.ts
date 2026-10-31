@@ -14,7 +14,7 @@ const root = workspaceRoot();
 
 // The doc comments of the text interfaces are the reference of the texts: the API reference and
 // the UI texts guide show them. Each states the English default, so it must follow the value.
-const SOURCES = ['libs/ui-kit/interfaces/texts.ts', 'libs/app/interfaces/texts.ts'];
+const SOURCES = ['libs/ui-kit/texts/texts.interfaces.ts', 'libs/app/interfaces/texts.ts'];
 
 /** The doc comment of every property of every interface in the sources, by interface name. */
 function interfaceDocs(): Map<string, Map<string, { type: string; doc: string }>> {

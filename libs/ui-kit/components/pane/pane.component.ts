@@ -15,8 +15,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgDocPaneTexts } from '@ng-doc/ui-kit/interfaces';
-import { NG_DOC_UI_KIT_TEXTS } from '@ng-doc/ui-kit/tokens';
+import { NG_DOC_UI_KIT_TEXTS, NgDocPaneTexts } from '@ng-doc/ui-kit/texts';
 import { fromEvent, merge, Observable } from 'rxjs';
 import {
   debounceTime,

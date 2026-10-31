@@ -1,7 +1,7 @@
 import { inject, InjectionToken, Provider } from '@angular/core';
 import type { NgDocTexts, NgDocTextsOverrides } from '@ng-doc/app/interfaces';
 import { mergeNgDocTexts, NG_DOC_DEFAULT_TEXTS, NG_DOC_TEXTS } from '@ng-doc/app/tokens';
-import { NG_DOC_UI_KIT_TEXTS } from '@ng-doc/ui-kit/tokens';
+import { NG_DOC_UI_KIT_TEXTS } from '@ng-doc/ui-kit/texts';
 
 /** The changes of every `provideNgDocTexts` call of one injector, in the order of the calls. */
 const NG_DOC_TEXTS_OVERRIDES = new InjectionToken<NgDocTextsOverrides[]>('NG_DOC_TEXTS_OVERRIDES');

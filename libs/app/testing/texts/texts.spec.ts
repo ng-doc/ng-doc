@@ -17,7 +17,7 @@ import { NgDocTexts } from '@ng-doc/app/interfaces';
 import { provideNgDocTexts } from '@ng-doc/app/providers/texts';
 import { mergeNgDocTexts, NG_DOC_DEFAULT_TEXTS, NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import { NgDocBlockquoteComponent } from '@ng-doc/ui-kit/components/blockquote';
-import { NG_DOC_UI_KIT_DEFAULT_TEXTS, NG_DOC_UI_KIT_TEXTS } from '@ng-doc/ui-kit/tokens';
+import { NG_DOC_UI_KIT_DEFAULT_TEXTS, NG_DOC_UI_KIT_TEXTS } from '@ng-doc/ui-kit/texts';
 import { WA_LOCAL_STORAGE } from '@ng-web-apis/common';
 import { beforeEach, describe, expect, it } from 'vitest';
 

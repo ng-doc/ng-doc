@@ -1,5 +1,6 @@
 import { InjectionToken } from '@angular/core';
-import { NgDocUiKitTexts } from '@ng-doc/ui-kit/interfaces';
+
+import { NgDocUiKitTexts } from './texts.interfaces';
 
 /**
  * The English texts of the `@ng-doc/ui-kit` components. They are the texts the components showed

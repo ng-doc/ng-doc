@@ -17,8 +17,11 @@ import {
   NgDocPaneComponent,
   NgDocPaneFrontDirective,
 } from '@ng-doc/ui-kit/components/pane';
-import { NgDocUiKitTexts } from '@ng-doc/ui-kit/interfaces';
-import { NG_DOC_UI_KIT_DEFAULT_TEXTS, NG_DOC_UI_KIT_TEXTS } from '@ng-doc/ui-kit/tokens';
+import {
+  NG_DOC_UI_KIT_DEFAULT_TEXTS,
+  NG_DOC_UI_KIT_TEXTS,
+  NgDocUiKitTexts,
+} from '@ng-doc/ui-kit/texts';
 import { describe, expect, it } from 'vitest';
 
 // The site's API reference documents every exported declaration under libs/ui-kit, tests

@@ -1,4 +1,4 @@
-import type { NgDocUiKitTexts } from '@ng-doc/ui-kit/interfaces';
+import type { NgDocUiKitTexts } from '@ng-doc/ui-kit/texts';
 
 /**
  * The texts of the search button in the navbar and of the search result list
