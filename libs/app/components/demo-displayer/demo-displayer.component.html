@@ -5,6 +5,7 @@
         <ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
       </div>
       <div class="ng-doc-demo-controls">
+        <ng-content select="[ngDocDemoControl]" />
         @if (!codeContent()) {
           <ng-doc-copy-button [text]="code()" [label]="copyTexts.copyCode">
             <ng-doc-icon icon="copy"></ng-doc-icon>

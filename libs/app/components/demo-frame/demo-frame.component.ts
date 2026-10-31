@@ -58,18 +58,22 @@ export class NgDocDemoFrameComponent {
   readonly fill = input<boolean>(false);
 
   /**
-   * The URL fragment of the demo page, without `#` (the state of an isolated playground). The
-   * iframe loads with the fragment it has when the iframe is created; a later fragment replaces
-   * the page's location (`location.replace`), which reloads nothing and adds no history entry.
+   * The URL fragment of the demo page, without `#`: the state of an isolated playground, and the
+   * theme the page shows (`~theme=dark`). The iframe loads with the fragment it has when the
+   * iframe is created; a later fragment replaces the page's location (`location.replace`), which
+   * reloads nothing and adds no history entry.
    */
   readonly fragment = input<string | undefined>(undefined);
+
+  /** Whether the page is the page of an isolated playground, which reports the target. */
+  readonly playground = input<boolean>(false);
 
   /** The messages of an isolated playground's page, from this iframe only. */
   readonly playgroundMessage = output<ɵNgDocPlaygroundFrameMessage>();
 
   /**
-   * The page of an isolated playground (a frame with a `fragment`) loaded but sent no message of
-   * the playground within 10 seconds, such as a page the build didn't make.
+   * The page of an isolated playground (`playground`) loaded but sent no message of the playground
+   * within 10 seconds, such as a page the build didn't make.
    */
   readonly playgroundSilent = output<void>();
 
@@ -130,7 +134,7 @@ export class NgDocDemoFrameComponent {
     this.loaded.set(true);
     clearTimeout(this.timer);
     clearTimeout(this.silenceTimer);
-    if (untracked(this.fragment) !== undefined && !this.answered) {
+    if (untracked(this.playground) && !this.answered) {
       this.silenceTimer = setTimeout(
         () => this.answered || this.playgroundSilent.emit(),
         READY_TIMEOUT_MS,

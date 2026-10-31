@@ -1,3 +1,4 @@
+import { ɵisDemoThemeParameter } from './demo-theme';
 import {
   ɵdecodePlaygroundValue,
   ɵencodePlaygroundValue,
@@ -149,6 +150,8 @@ export function ɵplaygroundStateFromFragment(fragment: string): ɵNgDocPlaygrou
       if (!values) throw new Error('Malformed data.');
       data = {};
       for (const [key, item] of Object.entries(values)) data[key] = ɵdecodePlaygroundValue(item);
+    } else if (ɵisDemoThemeParameter(name)) {
+      // The demo application applies the theme; it is not part of the playground's state.
     } else if (name.startsWith('~')) {
       throw new Error(`Unknown parameter: ${name}`);
     } else {

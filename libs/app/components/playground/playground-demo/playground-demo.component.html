@@ -4,10 +4,17 @@
   [expanded]="expanded()"
   [newTabUrl]="frameUrl()"
   language="angular-html">
+  @if (frame()) {
+    <ng-doc-demo-theme-button
+      ngDocDemoControl
+      [(theme)]="frameTheme"
+      [configured]="configuredTheme()" />
+  }
   @if (frame(); as frame) {
     <ng-doc-demo-frame
       [src]="frame.url"
       [fragment]="frame.fragment"
+      [playground]="true"
       [frameTitle]="frame.title"
       (playgroundMessage)="frameMessage.emit($event)"
       (playgroundSilent)="frameSilent.emit()" />

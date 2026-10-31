@@ -178,6 +178,29 @@ describeChangeDetection(
       ).toContain('label=Changed');
     });
 
+    it('shows its demos in its theme, which the button beside each demo switches for all', async () => {
+      const fixture = await render({ config: { theme: 'dark' }, options: { isolated: true } });
+      const playground = fixture.componentInstance.playground();
+
+      expect(iframes(fixture)[0].getAttribute('src')).toMatch(/&~theme=dark$/);
+      ready(fixture, { label: 'Tag', tone: 'calm' });
+      await fixture.whenStable();
+      const buttons = fixture.nativeElement.querySelectorAll('ng-doc-demo-theme-button button');
+
+      expect(buttons).toHaveLength(2);
+      (buttons[0] as HTMLButtonElement).click();
+      await fixture.whenStable();
+
+      expect(playground.frameTheme()).toBeUndefined();
+      for (const frame of playground.frames()!.values()) {
+        expect(frame.fragment).not.toContain('~theme');
+      }
+      (buttons[1] as HTMLButtonElement).click();
+      await fixture.whenStable();
+      expect(playground.frameTheme()).toBe('light');
+      expect(playground.frames()!.get('ng-doc-tag')!.fragment).toMatch(/&~theme=light$/);
+    });
+
     it("passes the action's data to its iframes", async () => {
       const fixture = await render({
         options: { isolated: true, data: { label: 'From the action' } },

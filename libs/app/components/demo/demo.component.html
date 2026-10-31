@@ -79,7 +79,14 @@
       </ng-doc-copy-button>
     }
 
-    @if (demoUrl(); as url) {
+    @if (isolated()) {
+      <ng-doc-demo-theme-button
+        class="ng-doc-demo-theme"
+        [(theme)]="frameTheme"
+        [configured]="options().theme" />
+    }
+
+    @if (newTabUrl(); as url) {
       <a
         class="ng-doc-demo-open"
         ng-doc-button-icon
@@ -136,7 +143,11 @@
   @if (options().fullscreenRoute; as route) {
     <ng-doc-fullscreen-button [route]="route"></ng-doc-fullscreen-button>
   } @else if (isolated()) {
-    <ng-doc-demo-frame [src]="demoUrl()!" [frameTitle]="frameTitle()" [fill]="fullscreen()" />
+    <ng-doc-demo-frame
+      [src]="demoUrl()!"
+      [fragment]="frameFragment()"
+      [frameTitle]="frameTitle()"
+      [fill]="fullscreen()" />
   } @else if (demo(); as demo) {
     <ng-container *ngComponentOutlet="demo; inputs: options().inputs"></ng-container>
   }

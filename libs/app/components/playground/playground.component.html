@@ -26,6 +26,8 @@
         [expanded]="configuration.expanded ?? false"
         [frame]="frames()?.get(selector)"
         [frameDefaults]="defaultValues()"
+        [(frameTheme)]="frameTheme"
+        [configuredTheme]="configuration.theme"
         (frameMessage)="onFrameMessage($event)"
         (frameSilent)="onFrameSilent()">
       </ng-doc-playground-demo>
@@ -40,6 +42,8 @@
         [form]="formGroup()"
         [frame]="frames()?.get(pipeName())"
         [frameDefaults]="defaultValues()"
+        [(frameTheme)]="frameTheme"
+        [configuredTheme]="configuration.theme"
         (frameMessage)="onFrameMessage($event)"
         (frameSilent)="onFrameSilent()">
       </ng-doc-playground-demo>

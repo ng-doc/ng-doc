@@ -2157,6 +2157,7 @@
     "libs/app/components/demo-frame/demo-frame.component.scss :: .ng-doc-demo-frame-status",
     "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-copy :: --ng-doc-icon-color",
     "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-open :: --ng-doc-icon-color",
+    "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-theme > button :: --ng-doc-icon-color",
     "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-view, .ng-doc-demo-width",
     "libs/app/components/demo/demo.component.scss :: .ng-doc-demo-width-readout",
     "libs/app/components/navbar/navbar.component.scss :: :host :: --ng-doc-button-color",

@@ -19,13 +19,18 @@ import {
   untracked,
   viewChild,
   viewChildren,
+  WritableSignal,
 } from '@angular/core';
 import { NgDocRootPage } from '@ng-doc/app/classes/root-page';
 import { NgDocCodeComponent } from '@ng-doc/app/components/code';
 import { NgDocCopyButtonComponent } from '@ng-doc/app/components/copy-button';
-import { NgDocDemoFrameComponent } from '@ng-doc/app/components/demo-frame';
+import {
+  NgDocDemoFrameComponent,
+  NgDocDemoThemeButtonComponent,
+} from '@ng-doc/app/components/demo-frame';
 import { NgDocFullscreenButtonComponent } from '@ng-doc/app/components/fullscreen-button';
 import { NgDocFullscreenToggleComponent } from '@ng-doc/app/components/fullscreen-toggle';
+import { ɵwithDemoTheme } from '@ng-doc/app/demo-app';
 import { NgDocCopyTexts, NgDocDemoAsset, NgDocDemoTexts } from '@ng-doc/app/interfaces';
 import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import { asArray } from '@ng-doc/core/helpers/as-array';
@@ -80,6 +85,7 @@ let nextId = 0;
     NgDocButtonIconComponent,
     NgDocCopyButtonComponent,
     NgDocDemoFrameComponent,
+    NgDocDemoThemeButtonComponent,
     NgDocFullscreenButtonComponent,
     NgDocFullscreenDirective,
     NgDocFullscreenToggleComponent,
@@ -152,6 +158,27 @@ export class NgDocDemoComponent {
       !this.options().fullscreenRoute &&
       (this.options().isolated ?? this.rootPage.isolatedDemos ?? false),
   );
+
+  /**
+   * The theme of the demo's iframe: the `theme` option, until the reader picks another with the
+   * theme button; `undefined` follows the page.
+   */
+  readonly frameTheme: WritableSignal<string | undefined> = linkedSignal(
+    () => this.options().theme,
+  );
+
+  /** The URL fragment of the demo's iframe, which carries its theme. */
+  protected readonly frameFragment: Signal<string | undefined> = computed(() =>
+    ɵwithDemoTheme(undefined, this.frameTheme()),
+  );
+
+  /** The demo's page as the toolbar opens it in a new tab: in the theme of its iframe. */
+  protected readonly newTabUrl: Signal<string | undefined> = computed(() => {
+    const url = this.demoUrl();
+    const fragment = this.isolated() ? this.frameFragment() : undefined;
+
+    return url && fragment ? `${url}#${fragment}` : url;
+  });
 
   /** The accessible title of the demo's iframe. */
   protected readonly frameTitle: Signal<string> = computed(() =>

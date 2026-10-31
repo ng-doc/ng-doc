@@ -208,6 +208,22 @@ export interface NgDocDemoTexts {
   fullscreen: string;
   /** The button that leaves fullscreen. Default: "Exit fullscreen". */
   exitFullscreen: string;
+  /**
+   * The theme of an isolated demo that follows the page, in the theme button's texts. Default:
+   * "Page theme".
+   */
+  themePage: string;
+  /**
+   * Accessible name of the theme button of an isolated demo. Default: "Demo theme: {current}.
+   * Switch to {next}". Values: `current` and `next`, the names of the current and the next theme
+   * (`themePage`, the theme texts, or the id of a custom theme).
+   */
+  themeLabel: (params: { current: string; next: string }) => string;
+  /**
+   * Tooltip of the theme button of an isolated demo. Default: "Demo theme: {current}". Values:
+   * `current`, the name of the current theme.
+   */
+  themeTooltip: (params: { current: string }) => string;
 }
 
 /**

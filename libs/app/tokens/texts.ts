@@ -94,6 +94,10 @@ export const NG_DOC_DEFAULT_TEXTS: NgDocTexts = Object.freeze({
     openFullscreenRoute: 'Open demo in a new tab',
     fullscreen: 'Fullscreen',
     exitFullscreen: 'Exit fullscreen',
+    themePage: 'Page theme',
+    themeLabel: ({ current, next }: { current: string; next: string }) =>
+      `Demo theme: ${current}. Switch to ${next}`,
+    themeTooltip: ({ current }: { current: string }) => `Demo theme: ${current}`,
   }),
   playground: Object.freeze({
     title: 'Playground',

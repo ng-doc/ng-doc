@@ -98,6 +98,12 @@ describe('the URL fragment of an isolated playground', () => {
     });
   });
 
+  it('leaves the theme of the page to the demo application', () => {
+    expect(ɵplaygroundStateFromFragment('~inputs=label&label=Save&~theme=dark')).toStrictEqual(
+      state({ label: 'Save' }),
+    );
+  });
+
   it('names the input whose value cannot be sent', () => {
     const result = ɵplaygroundStateToFragment(
       state({ label: 'ok', options: { onSelect: () => undefined } }),

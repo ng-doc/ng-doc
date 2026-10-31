@@ -12,12 +12,14 @@ import { RouterOutlet } from '@angular/router';
 import { NG_DOC_STORE_THEME_KEY } from '@ng-doc/app/constants';
 
 import { ɵNG_DOC_DEMO_MESSAGE_SOURCE, ɵNgDocDemoSizeMessage } from './demo-message';
+import { ɵdemoThemeFromFragment } from './demo-theme';
 
 /**
  * The root of the demo application, which shows one demo per page with only Angular and that
  * demo loaded. In an iframe it reports the height of its content to the page that embeds it (a
  * `ResizeObserver` on its border box), and it follows the theme the reader picks on the
- * documentation site, which stores it in `localStorage`.
+ * documentation site, which stores it in `localStorage`, unless its URL fragment sets a theme
+ * (`~theme=dark`, the `theme` option of a demo or a playground, or the theme button beside it).
  */
 @Component({
   selector: 'ng-doc-demo-app',
@@ -57,19 +59,38 @@ export class NgDocDemoAppComponent {
       destroyRef.onDestroy(() => observer.disconnect());
     }
 
-    // The documentation page and the demo page share the origin, so a theme the reader picks
-    // reaches this page as a storage event. An empty id is the light theme, as in the restore
-    // script that applies the stored theme before the application starts.
-    const onStorage = (event: StorageEvent) => {
-      if (event.key !== NG_DOC_STORE_THEME_KEY || event.newValue === null) return;
-      if (event.newValue) {
-        document.documentElement.setAttribute('data-theme', event.newValue);
+    // An empty id is the light theme, as in the restore script that applies the stored theme
+    // before the application starts; so is `light`, which the `theme` option uses.
+    const apply = (theme: string | null) => {
+      if (theme && theme !== 'light') {
+        document.documentElement.setAttribute('data-theme', theme);
       } else {
         document.documentElement.removeAttribute('data-theme');
       }
     };
+    const pinned = () => ɵdemoThemeFromFragment(window.location.hash);
+    const site = () => {
+      try {
+        return window.localStorage.getItem(NG_DOC_STORE_THEME_KEY);
+      } catch {
+        return null;
+      }
+    };
+    // The documentation page and the demo page share the origin, so a theme the reader picks
+    // reaches this page as a storage event; a theme of the fragment wins over it.
+    const onStorage = (event: StorageEvent) => {
+      if (event.key !== NG_DOC_STORE_THEME_KEY || event.newValue === null || pinned()) return;
+      apply(event.newValue);
+    };
+    // The documentation page changes the fragment with `location.replace`, without a reload.
+    const onHashChange = () => apply(pinned() ?? site());
 
+    if (pinned()) apply(pinned()!);
     window.addEventListener('storage', onStorage);
-    destroyRef.onDestroy(() => window.removeEventListener('storage', onStorage));
+    window.addEventListener('hashchange', onHashChange);
+    destroyRef.onDestroy(() => {
+      window.removeEventListener('storage', onStorage);
+      window.removeEventListener('hashchange', onHashChange);
+    });
   }
 }

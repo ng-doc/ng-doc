@@ -9,6 +9,7 @@ import {
   Injector,
   input,
   InputSignal,
+  model,
   OnChanges,
   OnDestroy,
   output,
@@ -23,7 +24,10 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup } from '@angular/forms';
 import { NgDocDemoDisplayerComponent } from '@ng-doc/app/components/demo-displayer';
-import { NgDocDemoFrameComponent } from '@ng-doc/app/components/demo-frame';
+import {
+  NgDocDemoFrameComponent,
+  NgDocDemoThemeButtonComponent,
+} from '@ng-doc/app/components/demo-frame';
 import { ɵNgDocPlaygroundFrameMessage } from '@ng-doc/app/demo-app';
 import { formatHtml } from '@ng-doc/app/helpers';
 import { getPlaygroundDemoToken } from '@ng-doc/app/providers/playground-demo';
@@ -63,7 +67,7 @@ export interface ɵNgDocPlaygroundFrame {
   templateUrl: './playground-demo.component.html',
   styleUrls: ['./playground-demo.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgDocDemoDisplayerComponent, NgDocDemoFrameComponent],
+  imports: [NgDocDemoDisplayerComponent, NgDocDemoFrameComponent, NgDocDemoThemeButtonComponent],
 })
 export class NgDocPlaygroundDemoComponent<
     T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties,
@@ -113,6 +117,12 @@ export class NgDocPlaygroundDemoComponent<
 
   /** The iframe's page loaded but did not report the target in time. */
   readonly frameSilent = output<void>();
+
+  /** The theme of the iframe, which the theme button beside the demo changes. */
+  readonly frameTheme = model<string | undefined>(undefined);
+
+  /** The `theme` option of the playground, which the theme button offers too. */
+  readonly configuredTheme = input<string | undefined>(undefined);
 
   /** The iframe's page with the current state, which the toolbar opens in a new tab. */
   protected readonly frameUrl: Signal<string | undefined> = computed(() => {

@@ -248,4 +248,35 @@ describe('Demo application root', () => {
     store('ng-doc-theme-id', 'dark');
     expect(document.documentElement.hasAttribute('data-theme')).toBe(false);
   });
+
+  it('shows the theme its fragment sets, whatever the site picks, until the fragment drops it', () => {
+    const theme = () => document.documentElement.getAttribute('data-theme');
+    const hash = (fragment: string) => {
+      window.history.replaceState(null, '', `/demo#${fragment}`);
+      window.dispatchEvent(new HashChangeEvent('hashchange'));
+    };
+
+    window.localStorage.setItem('ng-doc-theme-id', 'auto');
+    window.history.replaceState(null, '', '/demo#~inputs=a&~theme=dark');
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    const fixture = TestBed.createComponent(NgDocDemoAppComponent);
+
+    try {
+      expect(theme()).toBe('dark');
+      window.dispatchEvent(new StorageEvent('storage', { key: 'ng-doc-theme-id', newValue: '' }));
+      expect(theme()).toBe('dark');
+
+      hash('~theme=light');
+      expect(theme()).toBeNull();
+      hash('~theme=my-brand');
+      expect(theme()).toBe('my-brand');
+      // Without a theme in the fragment, the page shows the site's theme again.
+      hash('');
+      expect(theme()).toBe('auto');
+    } finally {
+      fixture.destroy();
+      window.localStorage.removeItem('ng-doc-theme-id');
+      window.history.replaceState(null, '', '/');
+    }
+  });
 });

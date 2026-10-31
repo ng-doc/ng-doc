@@ -24,6 +24,7 @@ import {
   ɵNgDocPlaygroundFragment,
   ɵNgDocPlaygroundFrameMessage,
   ɵplaygroundStateToFragment,
+  ɵwithDemoTheme,
 } from '@ng-doc/app/demo-app';
 import { NgDocPlaygroundTexts } from '@ng-doc/app/interfaces';
 import { getTokenForType } from '@ng-doc/app/providers/type-control';
@@ -139,6 +140,14 @@ export class NgDocPlaygroundComponent<
       : undefined;
   });
 
+  /**
+   * The theme of the iframes: the `theme` option, until the reader picks another with the theme
+   * button beside a demo; `undefined` follows the page.
+   */
+  readonly frameTheme: WritableSignal<string | undefined> = linkedSignal(
+    () => this.configuration().theme,
+  );
+
   /** The iframe of each target, by selector or pipe name, while the playground is isolated. */
   readonly frames: Signal<Map<string, ɵNgDocPlaygroundFrame> | undefined> = computed(() => {
     const encoded = this.fragment();
@@ -152,7 +161,7 @@ export class NgDocPlaygroundComponent<
         target,
         {
           url: this.pageUrl(slugs[index]),
-          fragment: encoded.fragment,
+          fragment: ɵwithDemoTheme(encoded.fragment, this.frameTheme())!,
           title: this.texts.frameTitle({ id: this.id(), target }),
         },
       ]),
