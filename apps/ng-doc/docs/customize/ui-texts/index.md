@@ -15,8 +15,46 @@ contents is titled "Auf dieser Seite".
 
 ## 🧰 Use it
 
-Add `provideNgDocTexts` to the providers of your application and pass the texts to change, by
-group. Every text you leave out keeps its English default:
+### Use a translation
+
+NgDoc ships complete translations of its texts. Import the one of your language from its entry
+point and pass it to `provideNgDocTexts`. Only the language you import is bundled:
+
+```typescript name="app.config.ts"
+import { ApplicationConfig } from '@angular/core';
+import { provideNgDocTexts } from '@ng-doc/app';
+import { NG_DOC_TEXTS_DE } from '@ng-doc/app/texts/de';
+
+export const appConfig: ApplicationConfig = {
+  providers: [provideNgDocTexts(NG_DOC_TEXTS_DE)],
+};
+```
+
+| Language             | Entry point               | Texts                |
+| -------------------- | ------------------------- | -------------------- |
+| Arabic               | `@ng-doc/app/texts/ar`    | `NG_DOC_TEXTS_AR`    |
+| Chinese (Simplified) | `@ng-doc/app/texts/zh`    | `NG_DOC_TEXTS_ZH`    |
+| French               | `@ng-doc/app/texts/fr`    | `NG_DOC_TEXTS_FR`    |
+| German               | `@ng-doc/app/texts/de`    | `NG_DOC_TEXTS_DE`    |
+| Hindi                | `@ng-doc/app/texts/hi`    | `NG_DOC_TEXTS_HI`    |
+| Japanese             | `@ng-doc/app/texts/ja`    | `NG_DOC_TEXTS_JA`    |
+| Korean               | `@ng-doc/app/texts/ko`    | `NG_DOC_TEXTS_KO`    |
+| Portuguese (Brazil)  | `@ng-doc/app/texts/pt-br` | `NG_DOC_TEXTS_PT_BR` |
+| Russian              | `@ng-doc/app/texts/ru`    | `NG_DOC_TEXTS_RU`    |
+| Spanish              | `@ng-doc/app/texts/es`    | `NG_DOC_TEXTS_ES`    |
+| Ukrainian            | `@ng-doc/app/texts/uk`    | `NG_DOC_TEXTS_UK`    |
+
+To change some of its texts, pass your changes after it: `provideNgDocTexts(NG_DOC_TEXTS_DE,
+{ search: { placeholder: 'Handbuch durchsuchen…' } })`.
+
+The translations welcome corrections. If a text reads wrong in your language, open an issue or a
+pull request on GitHub that names the text (its group and key, as in "Texts" below) and your
+wording.
+
+### Change texts
+
+Pass the texts to change, by group. Every text you leave out keeps its English default, or the
+text of the translation you passed before them:
 
 ```typescript name="app.config.ts"
 import { ApplicationConfig } from '@angular/core';
@@ -64,11 +102,11 @@ The description of each text names its values.
 
 ### Several calls
 
-You can call `provideNgDocTexts` more than once, for example once for a shared translation and
-once for the texts of one site:
+You can pass several sets of texts to one `provideNgDocTexts`, or call it more than once, for
+example once for a translation and once for the texts of one site:
 
-- In the same providers, the calls apply in order: when two calls set the same text, the later one
-  wins. The other texts of a group are kept.
+- In the same providers, the sets and calls apply in order: when two set the same text, the later
+  one wins. The other texts of a group are kept.
 - The providers of a lazy route or of a page apply on top of the texts of the application, so a
   part of the site can change a few texts and keep the rest.
 
@@ -130,6 +168,10 @@ The last three groups belong to `@ng-doc/ui-kit` (`NgDocUiKitTexts`, `NG_DOC_UI_
 > **Note**
 > Set the `lang` attribute of the `html` element in your `index.html` to the language of the
 > texts, so screen readers pronounce them correctly.
+
+> **Warning**
+> NgDoc's layout reads left to right. The Arabic texts translate the interface, but the layout
+> isn't mirrored for right-to-left reading.
 
 {% index false %}
 
