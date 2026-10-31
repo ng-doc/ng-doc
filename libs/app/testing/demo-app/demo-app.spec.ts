@@ -250,6 +250,26 @@ describe('Demo application root', () => {
     expect(observers[0].disconnected).toBe(true);
   });
 
+  it('centers the demo of the page, as the canvas of the documentation page does', () => {
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    const fixture = TestBed.createComponent(NgDocDemoAppComponent);
+    const hosts = ['ng-doc-demo-host', 'ng-doc-playground-host'].map((name) =>
+      document.body.appendChild(document.createElement(name)),
+    );
+
+    try {
+      for (const host of hosts) {
+        const style = window.getComputedStyle(host);
+
+        expect(style.display, host.localName).toBe('flex');
+        expect(style.justifyContent, host.localName).toBe('center');
+      }
+    } finally {
+      hosts.forEach((host) => host.remove());
+      fixture.destroy();
+    }
+  });
+
   it('reports nothing when it is not embedded', () => {
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const fixture = TestBed.createComponent(NgDocDemoAppComponent);

@@ -39,12 +39,20 @@ import { ɵdemoThemeFromFragment } from './demo-theme';
       display: flow-root;
     }
 
+    /* A demo is centered, as it is in the canvas of the documentation page (.ng-doc-demo). */
+    ng-doc-demo-host,
+    ng-doc-playground-host {
+      display: flex;
+      justify-content: center;
+      min-width: 0;
+    }
+
     html.ng-doc-demo-embedded,
     html.ng-doc-demo-embedded body {
       background-color: transparent;
     }
   `,
-  // The rules above reach the document and its body, outside this component.
+  // The rules above reach the document, its body and the routed hosts, outside this component.
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
