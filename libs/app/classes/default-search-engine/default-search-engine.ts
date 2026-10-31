@@ -1,4 +1,5 @@
 import { NgDocSearchEngine } from '@ng-doc/app/classes/search-engine';
+import { ɵNG_DOC_CONTENT_UPDATE_EVENT } from '@ng-doc/app/constants';
 import { NgDocSearchResult } from '@ng-doc/app/interfaces';
 import { asArray } from '@ng-doc/core/helpers/as-array';
 import { NgDocPageIndex } from '@ng-doc/core/interfaces';
@@ -68,14 +69,14 @@ export interface NgDocDefaultSearchEngineOptions {
  */
 export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
   private db$: Observable<OramaIndex>;
+  /** The loaded index, shared by every search until a development update replaces it. */
+  private index?: Observable<OramaIndex>;
 
   constructor(private options?: NgDocDefaultSearchEngineOptions) {
     super();
 
-    this.db$ = this.request<NgDocPageIndex[]>(`assets/ng-doc/indexes.json`).pipe(
-      switchMap((pages) => this.createDatabase(pages)),
-      shareReplay(1),
-    );
+    this.db$ = defer(() => (this.index ??= this.loadIndex()));
+    this.refreshOnContentUpdates();
   }
 
   /**
@@ -130,6 +131,35 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
       // Each type may need the whole limit when the other one has few matches.
       limit: this.options?.limit ?? 10,
     });
+  }
+
+  /**
+   * The Vite development host updates an edited guide in place (`ɵNG_DOC_CONTENT_UPDATE_EVENT`);
+   * when its search records changed too, the next search loads the index again, as a reloaded
+   * page would. The listener holds the engine weakly, so an engine nobody uses any more stops
+   * listening. Nothing dispatches the event outside the development host, and Angular's
+   * production mode skips the listener altogether.
+   */
+  private refreshOnContentUpdates(): void {
+    if ((typeof ngDevMode !== 'undefined' && !ngDevMode) || typeof window === 'undefined') return;
+    const engine = new WeakRef(this);
+    const listener = (event: Event): void => {
+      const current = engine.deref();
+
+      if (!current) window.removeEventListener(ɵNG_DOC_CONTENT_UPDATE_EVENT, listener);
+      else if ((event as CustomEvent<{ search?: unknown } | null>).detail?.search === true) {
+        current.index = undefined;
+      }
+    };
+
+    window.addEventListener(ɵNG_DOC_CONTENT_UPDATE_EVENT, listener);
+  }
+
+  private loadIndex(): Observable<OramaIndex> {
+    return this.request<NgDocPageIndex[]>(`assets/ng-doc/indexes.json`).pipe(
+      switchMap((pages) => this.createDatabase(pages)),
+      shareReplay(1),
+    );
   }
 
   private request<T>(url: string): Observable<T> {

@@ -20,8 +20,11 @@ const api: NgDocApi = {
         // Internal helpers of the page and header components and of the generated page routes,
         // exported only across entry points.
         'libs/app/helpers/content-preload.ts',
+        'libs/app/helpers/content-updates.ts',
         'libs/app/helpers/hydration-snapshot.ts',
         'libs/app/helpers/page-url.ts',
+        // The event of the Vite development host's in-place content updates.
+        'libs/app/constants/content-update.ts',
         // The bootstrap and the iframe messages of the demo application, which generated code and
         // the demo frame use.
         'libs/app/demo-app/demo-application.ts',
