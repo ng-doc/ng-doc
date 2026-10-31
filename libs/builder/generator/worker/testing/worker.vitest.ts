@@ -356,7 +356,9 @@ describe('real disposable compilation workers', () => {
     },
   );
   it.each(['throw', 'hang'])('bounds disposal %s', async (dispose) => {
-    const proxy = service({ dispose }, { compileTimeoutMs: 50 });
+    // Only a hanging disposal needs the short deadline; a throwing one must report its own error,
+    // which a busy machine could otherwise turn into a timeout before the worker even compiles.
+    const proxy = service({ dispose }, dispose === 'hang' ? { compileTimeoutMs: 50 } : {});
     expect((await proxy.compile(request(), signal())).diagnostics[0].code).toBe(
       dispose === 'hang' ? 'WORKER_COMPILE_TIMEOUT' : 'WORKER_COMPILE',
     );
