@@ -25,7 +25,7 @@ export interface NgDocPaneTexts {
  */
 export interface NgDocComboboxTexts {
   /**
-   * Placeholder of the text field, unless the `placeholder` input sets one. Default: "Chose the
+   * Placeholder of the text field, unless the `placeholder` input sets one. Default: "Choose the
    * value".
    */
   placeholder: string;

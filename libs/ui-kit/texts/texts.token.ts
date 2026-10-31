@@ -17,7 +17,7 @@ export const NG_DOC_UI_KIT_DEFAULT_TEXTS: NgDocUiKitTexts = Object.freeze({
     resizer: 'Resize the panes',
   }),
   combobox: Object.freeze({
-    placeholder: 'Chose the value',
+    placeholder: 'Choose the value',
   }),
 });
 

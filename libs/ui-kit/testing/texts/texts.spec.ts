@@ -142,7 +142,7 @@ describeChangeDetection('NG_DOC_UI_KIT_TEXTS', ({ providers }: ChangeDetectionCa
     expect(shown).toEqual({
       titles: ['Note', 'Warning', 'Alert', 'Success'],
       resizer: 'Resize the panes',
-      placeholder: 'Chose the value',
+      placeholder: 'Choose the value',
       ownPlaceholder: 'Own',
     });
   });
