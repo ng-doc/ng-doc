@@ -20,9 +20,12 @@ export default defineConfig({
     include: ['**/*.{spec,test}.{ts,js}'],
     environment: 'node',
     globals: false,
+    // Files run in parallel, each in its own worker process: a file's module mocks, spies on globals
+    // (`Date.now`), `process.env` and `process.cwd()` stay its own. Every spec writes only below
+    // its own `mkdtemp` directory. The one spec that runs the built legacy engine
+    // (`legacy-generator.spec.ts`) keeps its builds serial inside its file, because they share the
+    // engine's module cache next to the built package.
     pool: 'forks',
-    // Specs share temporary directories, child processes and the built package; one file at a time.
-    fileParallelism: false,
     // SchematicTestRunner requires the schematic factories named in collection.json.
     setupFiles: [path.join(workspace, 'tools/vitest/typescript-require.ts')],
     coverage: {

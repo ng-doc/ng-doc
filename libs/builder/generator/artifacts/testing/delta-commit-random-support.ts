@@ -1,5 +1,3 @@
-/** @vitest-environment node */
-
 /**
  * The delta commit against the full commit over seeded random commit sequences. A committer with
  * delta commits and one with `delta: false` get the same candidate at every step; their results,
@@ -8,6 +6,9 @@
  * `localeCompare` orders as equal), interleave full commits without a base (a production build),
  * inject faults and stale guards, and restart the committers. Fixed seeds; a failure names the
  * seed and step.
+ *
+ * Each seed is its own spec file (`delta-commit-random-<seed>.spec.ts`), so that the seeds run in
+ * parallel worker processes: a seed takes minutes, and it fakes `Date.now` for its whole process.
  */
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -27,9 +28,6 @@ import type {
 import { type CommitMutation, TransactionalOutputCommitter } from '..';
 
 const roots: string[] = [];
-afterEach(async () => {
-  await Promise.all(roots.splice(0).map((root) => rm(root, { recursive: true, force: true })));
-});
 
 const digest = (value: string) => createHash('sha256').update(value).digest('hex');
 const clone = <T>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
@@ -204,9 +202,8 @@ async function sequence(seed: number, steps: number) {
 
   for (let step = 1; step <= steps; step++) {
     const roll = next();
-    const ids = [...site.keys()];
-    const owner = pick(ids);
-    const outputs = site.get(owner)!;
+    const entries = [...site];
+    const [owner, outputs] = pick(entries);
     if (roll < 0.35 && outputs.size) {
       outputs.set(pick([...outputs.keys()]), `edit ${seed}/${step}`);
     } else if (roll < 0.45) {
@@ -220,15 +217,15 @@ async function sequence(seed: number, steps: number) {
     } else if (roll < 0.52 && site.size > 3) {
       site.delete(owner);
     } else if (roll < 0.6 && outputs.size > 1) {
-      const moved = pick([...outputs.keys()]);
-      const target = pick(ids.filter((id) => id !== owner));
+      const [moved, content] = pick([...outputs]);
+      const target = pick(entries.filter(([id]) => id !== owner));
       if (target) {
-        site.get(target)!.set(moved, outputs.get(moved)!);
+        target[1].set(moved, content);
         outputs.delete(moved);
       }
     } else if (roll < 0.68 && outputs.size) {
-      const renamed = pick([...outputs.keys()]);
-      outputs.set(fresh(), outputs.get(renamed)!);
+      const [renamed, content] = pick([...outputs]);
+      outputs.set(fresh(), content);
       outputs.delete(renamed);
     } else if (roll < 0.7) {
       // A distinct path that `localeCompare` orders as equal to a published one.
@@ -238,8 +235,8 @@ async function sequence(seed: number, steps: number) {
         if (!used().has(twin)) outputs.set(twin, `twin ${step}`);
       }
     } else if (roll < 0.8) {
-      for (const [id, files] of site)
-        for (const file of [...files.keys()]) if (file.includes(soft)) site.get(id)!.delete(file);
+      for (const files of site.values())
+        for (const file of [...files.keys()]) if (file.includes(soft)) files.delete(file);
     }
     for (const [id, files] of [...site]) if (!files.size && site.size > 1) site.delete(id);
 
@@ -300,7 +297,11 @@ async function sequence(seed: number, steps: number) {
           !kept.has(`${file.ownerId}\0${file.path}\0${file.digest}`);
         if (files.length > 1 && changed(files[0]) && files.some((file) => !changed(file)))
           counts.first++;
-        if (files.length > 1 && changed(files.at(-1)!) && files.some((file) => !changed(file)))
+        if (
+          files.length > 1 &&
+          changed(files[files.length - 1]) &&
+          files.some((file) => !changed(file))
+        )
           counts.last++;
       }
     } else if (telemetry) counts.full++;
@@ -323,10 +324,18 @@ async function sequence(seed: number, steps: number) {
   return counts;
 }
 
-describe('delta commit: seeded random differential', () => {
-  it.each([[0x5eed01], [0x5eed02], [0x5eed03]])(
-    'seed %i: identical to the full commit at every step',
-    async (seed) => {
+/**
+ * Declares the differential of one seed: a delta committer and a full one over `STEPS` random
+ * commits, identical at every step, and a sequence that exercised every path it is for.
+ * @param seed The seed of the sequence.
+ */
+export function describeSeed(seed: number): void {
+  describe('delta commit: seeded random differential', () => {
+    afterEach(async () => {
+      await Promise.all(roots.splice(0).map((root) => rm(root, { recursive: true, force: true })));
+    });
+
+    it(`seed ${seed}: identical to the full commit at every step`, async () => {
       const counts = await sequence(seed, STEPS);
       // Path accounting: the sequence exercised what it is for. Optionally written to a file.
       const record = process.env['NGDOC_DELTA_RANDOM_COUNTS'];
@@ -340,7 +349,8 @@ describe('delta commit: seeded random differential', () => {
       expect(counts.stale).toBeGreaterThan(0);
       expect(counts.tails).toBeGreaterThan(0);
       expect(counts.repaired).toBeGreaterThan(0);
-    },
-    180_000,
-  );
-});
+      // A seed takes about 100 s on an idle CPU. The bound only catches a hang: spec files run in
+      // parallel, so a seed shares the CPU with the other seeds and specs, and with coverage.
+    }, 360_000);
+  });
+}
