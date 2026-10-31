@@ -55,10 +55,13 @@ export class NgDocDemoDisplayerComponent {
   readonly container = input<boolean>(true);
 
   /**
-   * The background of the canvas, instead of the dot grid, such as the background of an isolated
-   * demo that shows a theme of its own.
+   * The background of the canvas, such as the background of an isolated demo that shows a theme
+   * of its own.
    */
   readonly canvasBackground = input<string | undefined>(undefined);
+
+  /** The color of the dots of the canvas, such as the dots of a demo's own theme. */
+  readonly canvasDots = input<string | undefined>(undefined);
 
   /** Whether the displayer draws its border. */
   readonly border = input<boolean>(true);

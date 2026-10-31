@@ -3,7 +3,8 @@
     <div
       class="ng-doc-demo-container"
       [attr.data-ng-doc-themed]="canvasBackground() ? true : null"
-      [style.background-color]="canvasBackground() ?? null">
+      [style.background-color]="canvasBackground() ?? null"
+      [style.--_ng-doc-demo-canvas-dots]="canvasDots() ?? null">
       <div class="ng-doc-demo">
         <ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
       </div>

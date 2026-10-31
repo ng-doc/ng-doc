@@ -114,6 +114,7 @@
     [attr.data-ng-doc-isolated]="isolated()"
     [attr.data-ng-doc-themed]="stageBackground() ? true : null"
     [style.background-color]="stageBackground() ?? null"
+    [style.--_ng-doc-demo-canvas-dots]="stageDots() ?? null"
     [hidden]="view() !== 'preview'"
     ngDocFullscreen
     #stage="ngDocFullscreen">

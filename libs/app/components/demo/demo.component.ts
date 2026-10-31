@@ -175,6 +175,11 @@ export class NgDocDemoComponent {
     this.isolated() && this.frameTheme() !== undefined ? this.frame()?.background() : undefined,
   );
 
+  /** The dots of the stage while the demo shows a theme of its own, in that theme's color. */
+  protected readonly stageDots: Signal<string | undefined> = computed(() =>
+    this.stageBackground() ? this.frame()?.dots() : undefined,
+  );
+
   /** The URL fragment of the demo's iframe, which carries its theme. */
   protected readonly frameFragment: Signal<string | undefined> = computed(() =>
     ɵwithDemoTheme(undefined, this.frameTheme()),

@@ -162,7 +162,10 @@ describe('Demo size messages', () => {
     };
 
     expect(ɵisNgDocDemoBackgroundMessage(message)).toBe(true);
+    expect(ɵisNgDocDemoBackgroundMessage({ ...message, dots: '#3f3f46' })).toBe(true);
     for (const value of [
+      { ...message, dots: 3 },
+      { ...message, dots: 'x'.repeat(201) },
       null,
       { ...message, source: 'other' },
       { ...message, version: 2 },
@@ -277,7 +280,8 @@ describe('Demo application root', () => {
     const style = document.createElement('style');
 
     style.textContent =
-      'body { background-color: rgb(250, 250, 250); } ' +
+      'html { --ng-doc-base-5: #a1a1aa; } body { background-color: rgb(250, 250, 250); } ' +
+      'html[data-theme="dark"] { --ng-doc-base-5: #3f3f46; } ' +
       'html[data-theme="dark"] body { background-color: rgb(24, 24, 27); }';
     document.head.append(style);
     window.history.replaceState(null, '', '/demo#~theme=dark');
@@ -285,19 +289,19 @@ describe('Demo application root', () => {
     const fixture = TestBed.createComponent(NgDocDemoAppComponent);
     const backgrounds = () =>
       posted
-        .map(({ message }) => message as { type: string; color?: string })
+        .map(({ message }) => message as { type: string; color?: string; dots?: string })
         .filter(({ type }) => type === 'background')
-        .map(({ color }) => color);
+        .map(({ color, dots }) => `${color} ${dots}`);
 
     try {
-      expect(backgrounds()).toEqual(['rgb(24, 24, 27)']);
+      expect(backgrounds()).toEqual(['rgb(24, 24, 27) #3f3f46']);
       // The same background again is not reported again.
       observers[0].callback([]);
-      expect(backgrounds()).toEqual(['rgb(24, 24, 27)']);
+      expect(backgrounds()).toEqual(['rgb(24, 24, 27) #3f3f46']);
 
       window.history.replaceState(null, '', '/demo#~theme=light');
       window.dispatchEvent(new HashChangeEvent('hashchange'));
-      expect(backgrounds()).toEqual(['rgb(24, 24, 27)', 'rgb(250, 250, 250)']);
+      expect(backgrounds()).toEqual(['rgb(24, 24, 27) #3f3f46', 'rgb(250, 250, 250) #a1a1aa']);
     } finally {
       fixture.destroy();
       style.remove();

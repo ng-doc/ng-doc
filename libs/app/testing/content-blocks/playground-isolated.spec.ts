@@ -218,6 +218,7 @@ describeChangeDetection(
               version: 1,
               type: 'background',
               color: 'rgb(24, 24, 27)',
+              dots: '#3f3f46',
             },
             source: frame.contentWindow,
             origin: window.location.origin,
@@ -230,6 +231,9 @@ describeChangeDetection(
         'rgb(24, 24, 27)',
         'rgb(24, 24, 27)',
       ]);
+      expect(
+        canvases().map((canvas) => canvas.style.getPropertyValue('--_ng-doc-demo-canvas-dots')),
+      ).toEqual(['#3f3f46', '#3f3f46']);
       expect(
         canvases().every((canvas) => canvas.getAttribute('data-ng-doc-themed') === 'true'),
       ).toBe(true);

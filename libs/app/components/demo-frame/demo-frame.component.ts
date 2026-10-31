@@ -87,6 +87,9 @@ export class NgDocDemoFrameComponent {
    */
   readonly background = signal<string | undefined>(undefined);
 
+  /** The color of the dots of the demo canvas in the demo's theme, which its page reported. */
+  readonly dots = signal<string | undefined>(undefined);
+
   /** `loading` until the demo reports its size, then `ready`; `failed` when it never does. */
   readonly state: Signal<'loading' | 'ready' | 'failed'> = computed(() =>
     this.height() !== undefined ? 'ready' : this.failed() ? 'failed' : 'loading',
@@ -174,6 +177,7 @@ export class NgDocDemoFrameComponent {
     }
     if (ɵisNgDocDemoBackgroundMessage(event.data)) {
       this.background.set(event.data.color);
+      this.dots.set(event.data.dots);
       return;
     }
     if (!ɵisNgDocDemoSizeMessage(event.data)) return;

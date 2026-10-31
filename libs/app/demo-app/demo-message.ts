@@ -48,6 +48,8 @@ export interface ɵNgDocDemoBackgroundMessage {
   readonly type: 'background';
   /** The computed background color of the demo's page, such as `rgb(24, 24, 27)`. */
   readonly color: string;
+  /** The color of the dots of the demo canvas in the demo's theme, if the theme sets one. */
+  readonly dots?: string;
 }
 
 /**
@@ -67,6 +69,7 @@ export function ɵisNgDocDemoBackgroundMessage(
     message.type === 'background' &&
     typeof message.color === 'string' &&
     message.color.length > 0 &&
-    message.color.length <= 200
+    message.color.length <= 200 &&
+    (message.dots === undefined || (typeof message.dots === 'string' && message.dots.length <= 200))
   );
 }

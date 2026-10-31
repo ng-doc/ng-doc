@@ -80,12 +80,9 @@ ng-doc-code {
   }
 }
 
-// A canvas in the background of a demo's own theme: no dot grid, whose dots are in the colors of the
-// documentation's theme, and controls on a surface of the documentation's theme, so they stay
-// readable on any background.
+// A canvas in the background of a demo's own theme keeps its controls on a surface of the
+// documentation's theme, so they stay readable on any background.
 .ng-doc-demo-container[data-ng-doc-themed] {
-  background-image: none;
-
   .ng-doc-demo-controls {
     border-radius: var(--ng-doc-radius-md);
     background: var(--ng-doc-background);

@@ -137,6 +137,11 @@ export class NgDocPlaygroundDemoComponent<
       : undefined,
   );
 
+  /** The dots of the canvas while the iframe shows a theme of its own, in that theme's color. */
+  protected readonly canvasDots: Signal<string | undefined> = computed(() =>
+    this.canvasBackground() ? this.frameComponent()?.dots() : undefined,
+  );
+
   /** The iframe's page with the current state, which the toolbar opens in a new tab. */
   protected readonly frameUrl: Signal<string | undefined> = computed(() => {
     const frame = this.frame();

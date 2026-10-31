@@ -166,7 +166,7 @@ describeChangeDetection('Isolated demos', ({ providers }: ChangeDetectionCase) =
     expect(openLink()?.getAttribute('href')).toBe('/demo-preview/docs/demos/ButtonDemoComponent');
   });
 
-  it('paints its stage in the background of its own theme, without the dot grid', async () => {
+  it('paints its stage in the background and the dots of its own theme', async () => {
     await create(rootPage({ demoRoute: 'demo-preview/docs/demos' }), {
       isolated: true,
       theme: 'dark',
@@ -175,7 +175,13 @@ describeChangeDetection('Isolated demos', ({ providers }: ChangeDetectionCase) =
     const background = (color: string) =>
       window.dispatchEvent(
         new MessageEvent('message', {
-          data: { source: ɵNG_DOC_DEMO_MESSAGE_SOURCE, version: 1, type: 'background', color },
+          data: {
+            source: ɵNG_DOC_DEMO_MESSAGE_SOURCE,
+            version: 1,
+            type: 'background',
+            color,
+            dots: '#3f3f46',
+          },
           source: frame()!.contentWindow,
           origin: window.location.origin,
         }),
@@ -187,6 +193,7 @@ describeChangeDetection('Isolated demos', ({ providers }: ChangeDetectionCase) =
 
     expect(stage().getAttribute('data-ng-doc-themed')).toBe('true');
     expect(stage().style.backgroundColor).toBe('rgb(24, 24, 27)');
+    expect(stage().style.getPropertyValue('--_ng-doc-demo-canvas-dots')).toBe('#3f3f46');
 
     // Following the page's theme again, the stage is the page's canvas.
     const button = query<HTMLButtonElement>('ng-doc-demo-theme-button button')!;
@@ -195,6 +202,7 @@ describeChangeDetection('Isolated demos', ({ providers }: ChangeDetectionCase) =
     await fixture.whenStable();
     expect(stage().hasAttribute('data-ng-doc-themed')).toBe(false);
     expect(stage().style.backgroundColor).toBe('');
+    expect(stage().style.getPropertyValue('--_ng-doc-demo-canvas-dots')).toBe('');
   });
 
   it('has no theme button for a demo in the page', async () => {

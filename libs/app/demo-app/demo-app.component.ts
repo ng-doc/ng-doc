@@ -56,13 +56,21 @@ export class NgDocDemoAppComponent {
         ? window.getComputedStyle(document.documentElement).backgroundColor
         : body;
 
-      if (transparent(color) || color === reportedBackground) return;
-      reportedBackground = color;
+      // The dots of the demo canvas in the demo's theme, so the canvas around the iframe keeps
+      // its grid in colors that suit the background.
+      const dots = window
+        .getComputedStyle(document.documentElement)
+        .getPropertyValue('--ng-doc-base-5')
+        .trim();
+
+      if (transparent(color) || `${color}|${dots}` === reportedBackground) return;
+      reportedBackground = `${color}|${dots}`;
       const message: ɵNgDocDemoBackgroundMessage = {
         source: ɵNG_DOC_DEMO_MESSAGE_SOURCE,
         version: 1,
         type: 'background',
         color,
+        ...(dots ? { dots } : {}),
       };
 
       window.parent.postMessage(message, window.location.origin);
