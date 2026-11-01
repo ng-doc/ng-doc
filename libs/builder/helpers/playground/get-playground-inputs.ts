@@ -16,6 +16,7 @@ import { getInputType } from '../angular/get-input-type';
 import { NgDocInputDeclaration } from '../angular/is-input';
 import { getJsDocDescription, getJsDocParam } from '../get-js-doc';
 import { formatType } from '../typescript';
+import { playgroundArrayOptions } from './playground-options';
 
 /**
  *
@@ -77,14 +78,17 @@ function propOrParamToPlaygroundProperty(
               propOrParam.getParentIfKindOrThrow(SyntaxKind.MethodDeclaration),
               propOrParam.getName(),
             ),
-      options: inputType
-        .getUnionTypes()
-        .map((type: Type) =>
-          type.getText(
-            undefined,
-            TypeFormatFlags.NoTruncation | TypeFormatFlags.UseSingleQuotesForStringLiteralType,
+      // An array of a union of literals gets the members of its item type, as in the new engine.
+      options:
+        playgroundArrayOptions(propOrParam, inputType) ??
+        inputType
+          .getUnionTypes()
+          .map((type: Type) =>
+            type.getText(
+              undefined,
+              TypeFormatFlags.NoTruncation | TypeFormatFlags.UseSingleQuotesForStringLiteralType,
+            ),
           ),
-        ),
     },
   };
 }
