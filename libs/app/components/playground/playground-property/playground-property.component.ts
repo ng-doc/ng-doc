@@ -31,6 +31,8 @@ import {
 } from '@ng-doc/core/interfaces';
 import { NgDocLabelComponent, NgDocTooltipDirective } from '@ng-doc/ui-kit';
 
+import { arrayType } from '../playground-array-type';
+
 let nextId = 0;
 
 /** Value types that have a chip colour. */
@@ -175,7 +177,7 @@ export class NgDocPlaygroundPropertyComponent {
 
 /**
  * The value type of an input: its declared type when it is a primitive, else the type of the first
- * value of its type alias. Content slots are booleans.
+ * value of its type alias; none for an array. Content slots are booleans.
  * @param property - The input or the content slot.
  */
 function valueType(property: NgDocPlaygroundProperty | NgDocPlaygroundContent | undefined): string {
@@ -189,6 +191,12 @@ function valueType(property: NgDocPlaygroundProperty | NgDocPlaygroundContent | 
 
   if (CHIP_TYPES.has(property.type)) {
     return property.type;
+  }
+
+  // The options of an array are the values of its items, or the members of an optional array's
+  // union (`undefined` first): neither is the type of the input.
+  if (arrayType(property.type)) {
+    return '';
   }
 
   const option: string | NgDocPlaygroundOption | undefined = property.options?.[0];

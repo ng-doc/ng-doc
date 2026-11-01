@@ -23,6 +23,8 @@ const api: NgDocApi = {
         'libs/app/helpers/content-updates.ts',
         'libs/app/helpers/hydration-snapshot.ts',
         'libs/app/helpers/page-url.ts',
+        // How the playground inspector reads an array type, shared by its rows.
+        'libs/app/components/playground/playground-array-type.ts',
         // The event of the Vite development host's in-place content updates.
         'libs/app/constants/content-update.ts',
         // The bootstrap and the iframe messages of the demo application, which generated code and

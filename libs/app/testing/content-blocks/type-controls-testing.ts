@@ -14,6 +14,7 @@ import {
   NgDocStringControlComponent,
   NgDocStringListControlComponent,
   NgDocTypeAliasControlComponent,
+  NgDocTypeAliasListControlComponent,
 } from '@ng-doc/app/type-controls';
 import { NgDocPlaygroundProperties } from '@ng-doc/core/interfaces';
 
@@ -36,39 +37,83 @@ export function builtInTypeControls(): Provider[] {
       order: 50,
       labelWrapper: false,
     }),
+    provideTypeControl('NgDocTypeAlias[]', NgDocTypeAliasListControlComponent, {
+      order: 50,
+      labelWrapper: false,
+    }),
     provideTypeControl('NgDocArray', NgDocJsonControlComponent, { order: 60 }),
   ];
 }
 
-/** Array input types as both engines print them, plus `Array<T>` as `controls` may name it. */
-export const ARRAY_PROPERTIES: NgDocPlaygroundProperties = Object.fromEntries(
-  Object.entries({
-    tags: 'string[]',
-    readonlyTags: 'readonly string[]',
-    optionalTags: 'string[] | undefined',
-    genericTags: 'Array<string>',
-    counts: 'number[]',
-    nullableCounts: 'number[] | null | undefined',
-    readonlyCounts: 'readonly number[] | null',
-    genericCounts: 'ReadonlyArray<number>',
-    items: 'Item[]',
-    optionalItems: 'Item[] | undefined',
-    literalItems: '{ x: number; }[]',
-    genericItems: 'Array<{ x: number }>',
-    pair: '[string, number]',
-    readonlyPair: 'readonly [string] | undefined',
-    grid: 'string[][]',
-    mixed: '(string | number)[]',
-    optionalStrings: '(string | undefined)[]',
-    sizes: "('s' | 'm')[]",
-    named: 'NgDocArray',
-    // Not arrays.
-    factory: '() => string[]',
-    either: 'string[] | number[]',
-    keys: 'keyof Item[]',
-    alias: 'Tags',
-  }).map(([name, type]: [string, string]) => [name, { type, inputName: name }]),
-);
+/**
+ * Array input types as both engines print them, plus `Array<T>` as `controls` may name it, with
+ * the `options` the engines give them: the values of the items of an array of a union of literals,
+ * and the members of the input's own union otherwise.
+ */
+export const ARRAY_PROPERTIES: NgDocPlaygroundProperties = {
+  ...Object.fromEntries(
+    Object.entries({
+      tags: 'string[]',
+      readonlyTags: 'readonly string[]',
+      optionalTags: 'string[] | undefined',
+      genericTags: 'Array<string>',
+      counts: 'number[]',
+      nullableCounts: 'number[] | null | undefined',
+      readonlyCounts: 'readonly number[] | null',
+      genericCounts: 'ReadonlyArray<number>',
+      items: 'Item[]',
+      optionalItems: 'Item[] | undefined',
+      literalItems: '{ x: number; }[]',
+      genericItems: 'Array<{ x: number }>',
+      pair: '[string, number]',
+      readonlyPair: 'readonly [string] | undefined',
+      grid: 'string[][]',
+      mixed: '(string | number)[]',
+      optionalStrings: '(string | undefined)[]',
+      sizes: "('s' | 'm')[]",
+      named: 'NgDocArray',
+      // Not arrays.
+      factory: '() => string[]',
+      either: 'string[] | number[]',
+      keys: 'keyof Item[]',
+      alias: 'Tags',
+    }).map(([name, type]: [string, string]) => [name, { type, inputName: name }]),
+  ),
+  // Arrays of a union of literals.
+  variants: { type: 'NgDocSize[]', inputName: 'variants', options: ["'small'", "'large'"] },
+  optionalVariants: {
+    type: "('a' | 'b')[] | undefined",
+    inputName: 'optionalVariants',
+    options: ["'a'", "'b'"],
+  },
+  statuses: {
+    type: 'Status[]',
+    inputName: 'statuses',
+    options: [
+      { label: 'Good', value: 'good' },
+      { label: 'Bad', value: 'bad' },
+    ],
+  },
+  manualVariants: {
+    type: 'NgDocTypeAlias[]',
+    inputName: 'manualVariants',
+    options: ['x', 'y'],
+    isManual: true,
+  },
+  // The options of an optional array: the members of its own union, not values of items.
+  optionalItemsWithOptions: {
+    type: 'Item[] | undefined',
+    inputName: 'optionalItemsWithOptions',
+    options: ['undefined', 'Item[]'],
+  },
+  optionalPair: {
+    type: '[1, 2] | undefined',
+    inputName: 'optionalPair',
+    options: ['undefined', '[1, 2]'],
+  },
+  // A union that is not an array keeps its select.
+  size: { type: 'NgDocSize', inputName: 'size', options: ["'small'", "'large'"] },
+};
 
 /** An inspector with a row for each of `ARRAY_PROPERTIES`. */
 @Component({

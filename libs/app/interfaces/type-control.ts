@@ -32,7 +32,8 @@ export interface NgDocTypeControl<T = unknown> extends ControlValueAccessor {
    */
   default?: NgDocTypeControlField<T>;
   /**
-   * The list of possible values, it usually works only for Type Aliases which has several values.
+   * The list of possible values, it usually works only for Type Aliases which has several values,
+   * and for arrays of them, whose options are the values of an item.
    * An option is the source text of a union member (such as `'small'`), a plain value when
    * `isManual` is set, or the name and value of an enum member (`resolvePlaygroundOption` reads
    * all three)

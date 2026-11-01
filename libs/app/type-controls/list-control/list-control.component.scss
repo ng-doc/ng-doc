@@ -1,58 +1,264 @@
 :host {
   display: flex;
   flex-direction: column;
-  gap: var(--ng-doc-space-2);
+  gap: var(--ng-doc-space-1);
   width: 100%;
   min-width: 0;
 }
 
-// `undefined`, `null` or `[]`: the value when it has no items.
-.ng-doc-list-control-literal {
-  font-family: var(--ng-doc-code-font);
-  font-size: 13px;
-  line-height: 18px;
-  color: var(--ng-doc-text-muted);
+// The box of a text field of the inspector, which grows to the lines of chips it holds.
+.ng-doc-list-control-box {
+  display: flex;
+  align-items: flex-start;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: var(--ng-doc-input-height);
+  padding: 5px var(--ng-doc-space-1) 5px 5px;
+  border: var(--ng-doc-input-border);
+  border-radius: var(--ng-doc-floated-border-radius);
+  background-color: var(--ng-doc-input-background-color);
+  cursor: text;
+
+  &:hover:not([data-ng-doc-disabled='true']) {
+    border: var(--ng-doc-input-border-hover);
+  }
+
+  &:has(:focus-visible) {
+    box-shadow: var(--ng-doc-focus-ring);
+  }
+
+  // After the hover border, which it replaces.
+  &[data-ng-doc-invalid='true'],
+  &[data-ng-doc-invalid='true']:hover {
+    border-color: var(--ng-doc-alert);
+  }
+
+  &[data-ng-doc-disabled='true'] {
+    cursor: default;
+    opacity: 0.6;
+  }
 }
 
-.ng-doc-list-control-items {
+.ng-doc-list-control-flow {
   display: flex;
-  flex-direction: column;
-  gap: var(--ng-doc-space-2);
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.ng-doc-list-control-chips {
+  display: contents;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-// The field takes the width the buttons leave.
 .ng-doc-list-control-item {
   display: flex;
-  align-items: center;
-  gap: var(--ng-doc-space-1);
   min-width: 0;
+  max-width: 100%;
 
-  ng-doc-input-wrapper {
-    flex: 1 1 auto;
-    min-width: 0;
-
-    // A field whose text is not an item, such as an empty number field.
-    &:has(input[aria-invalid='true']) {
-      --ng-doc-input-border: var(--ng-doc-border-size) solid var(--ng-doc-alert);
-      --ng-doc-input-border-hover: var(--ng-doc-border-size) solid var(--ng-doc-alert);
-    }
+  // The chip being dragged: its place among the others.
+  &[data-ng-doc-dragging='true'] .ng-doc-list-control-chip {
+    opacity: 0.5;
   }
 }
 
-// The UI Kit has a right chevron only: it is turned to point up or down.
-.ng-doc-list-control-up ng-doc-icon {
-  transform: rotate(-90deg);
+// A compact soft chip: the item's text, then its ×.
+.ng-doc-list-control-chip {
+  gap: 2px;
+  height: 24px;
+  max-width: 100%;
+  padding: 0 2px 0 0;
+  overflow: hidden;
+  --ng-doc-font-size: 13px;
+  --ng-doc-line-height: 24px;
 }
 
-.ng-doc-list-control-down ng-doc-icon {
-  transform: rotate(90deg);
+.ng-doc-list-control-chip-text {
+  min-width: 0;
+  overflow: hidden;
+  padding-left: var(--ng-doc-space-2);
+  border-radius: var(--ng-doc-radius-sm);
+  text-overflow: ellipsis;
+  outline: none;
+  cursor: grab;
+  user-select: none;
+  // A touch on a chip drags it instead of scrolling the page.
+  touch-action: none;
+
+  &:focus-visible {
+    box-shadow: var(--ng-doc-focus-ring);
+  }
+
+  [data-ng-doc-disabled='true'] & {
+    cursor: default;
+  }
 }
 
-.ng-doc-list-control-actions {
+// An empty string is shown as code: `""`.
+.ng-doc-list-control-empty-string {
+  font-family: var(--ng-doc-code-font);
+  opacity: 0.7;
+}
+
+.ng-doc-list-control-remove {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ng-doc-radius-sm);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.6;
+  --ng-doc-icon-width: 12px;
+  --ng-doc-icon-height: 12px;
+
+  // The icons are drawn 16px wide.
+  ::ng-deep svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  &:hover:not(:disabled) {
+    opacity: 1;
+    background: var(--ng-doc-hover-background);
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+// The field that edits a chip in place, as wide as its text.
+.ng-doc-list-control-edit {
+  box-sizing: content-box;
+  height: 22px;
+  min-width: 2ch;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 var(--ng-doc-space-2);
+  border: 1px solid var(--ng-doc-primary);
+  border-radius: var(--ng-doc-radius-sm);
+  outline: none;
+  background: var(--ng-doc-input-background-color);
+  color: var(--ng-doc-text);
+  font: inherit;
+  font-size: 13px;
+
+  &[aria-invalid='true'] {
+    border-color: var(--ng-doc-alert);
+  }
+}
+
+// `undefined`, `null` or `[]`: the value when it has no items.
+.ng-doc-list-control-literal {
+  padding: 0 var(--ng-doc-space-1);
+  font-family: var(--ng-doc-code-font);
+  font-size: 13px;
+  line-height: 24px;
+  color: var(--ng-doc-text-muted);
+}
+
+// The text field takes the rest of the line after the chips, or a line of its own.
+.ng-doc-list-control-field {
+  flex: 1 1 32px;
+  min-width: 32px;
+  height: 24px;
+  margin: 0;
+  padding: 0 var(--ng-doc-space-1);
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--ng-doc-text);
+  font-family: var(--ng-doc-font-family);
+  font-size: 14px;
+
+  &::placeholder {
+    color: var(--ng-doc-text-muted);
+  }
+}
+
+.ng-doc-list-control-reset {
+  flex: none;
+}
+
+.ng-doc-list-control-dropdown {
+  display: contents;
+}
+
+.ng-doc-list-control-error {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ng-doc-alert);
+}
+
+// Announced, not shown.
+.ng-doc-list-control-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+// The dropdown, drawn like the options of the inspector's selects.
+.ng-doc-list-control-panel {
+  box-sizing: border-box;
+  min-width: 160px;
+  max-width: 100vw;
+  padding: var(--ng-doc-space-1) 0;
+  font-family: var(--ng-doc-font-family);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.ng-doc-list-control-row {
   display: flex;
   align-items: center;
   gap: var(--ng-doc-space-2);
+  padding: 4px calc(var(--ng-doc-base-gutter) * 1.5);
+  color: var(--ng-doc-text);
+  cursor: pointer;
+
+  &[data-ng-doc-highlighted='true'] {
+    background: var(--ng-doc-hover-background);
+  }
+
+  &[data-ng-doc-list-row='add'] {
+    color: var(--ng-doc-heading-color);
+    font-weight: 500;
+  }
+
+  &[aria-selected='true']:not([data-ng-doc-list-row='add']) {
+    color: var(--ng-doc-heading-color);
+  }
+}
+
+.ng-doc-list-control-row-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ng-doc-list-control-check {
+  flex: none;
+  --ng-doc-icon-color: var(--ng-doc-primary);
+}
+
+.ng-doc-list-control-no-matches {
+  padding: 4px calc(var(--ng-doc-base-gutter) * 1.5);
+  color: var(--ng-doc-text-muted);
 }

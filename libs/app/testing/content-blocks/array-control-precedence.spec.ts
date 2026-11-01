@@ -71,6 +71,7 @@ describeChangeDetection(
           provideTypeControl('string[]', UserTagsControlComponent),
           provideTypeControl('Item[]', UserItemsControlComponent),
           provideTypeControl('number[] | null | undefined', UserItemsControlComponent),
+          provideTypeControl('NgDocSize[]', UserItemsControlComponent),
         ],
       });
       fixture = TestBed.createComponent(ArrayPropertiesHostComponent);
@@ -101,6 +102,13 @@ describeChangeDetection(
       expect(controls['optionalItems']).toBe('ng-doc-json-control');
       // An exact registration wins over the list of its item type.
       expect(controls['nullableCounts']).toBe('ng-doc-user-items-control');
+    });
+
+    it('lets a control for an array of a union replace the multi-select of that type only', () => {
+      const controls = controlsByName(fixture);
+
+      expect(controls['variants']).toBe('ng-doc-user-items-control');
+      expect(controls['optionalVariants']).toBe('ng-doc-type-alias-list-control');
     });
   },
 );
