@@ -31,3 +31,23 @@
   color: var(--ng-doc-text-muted);
   white-space: nowrap;
 }
+
+// An option of the dropdown: the selected one ends with a tick, like the chip combobox's rows.
+.ng-doc-type-alias-option {
+  display: flex;
+  align-items: center;
+  gap: var(--ng-doc-space-2);
+  min-width: 0;
+
+  .ng-doc-type-alias-default {
+    // The tick slot, not the chevron, ends the row.
+    padding-right: 0;
+  }
+}
+
+.ng-doc-type-alias-check {
+  display: inline-flex;
+  flex: none;
+  width: 16px;
+  --ng-doc-icon-color: var(--ng-doc-primary);
+}
