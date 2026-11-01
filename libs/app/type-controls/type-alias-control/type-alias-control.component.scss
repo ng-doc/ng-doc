@@ -32,12 +32,29 @@
   white-space: nowrap;
 }
 
-// An option of the dropdown: the selected one ends with a tick, like the chip combobox's rows.
+// The options of the dropdown are drawn like the rows of the chip combobox: the same height and
+// padding, muted text, and the selected one in the heading color with a tick.
+ng-doc-list {
+  padding: var(--ng-doc-space-1) 0;
+}
+
+ng-doc-option {
+  --ng-doc-option-padding: 4px calc(var(--ng-doc-base-gutter) * 1.5);
+}
+
 .ng-doc-type-alias-option {
   display: flex;
   align-items: center;
   gap: var(--ng-doc-space-2);
   min-width: 0;
+
+  .ng-doc-type-alias-value {
+    color: var(--ng-doc-text);
+  }
+
+  &[data-ng-doc-selected='true'] .ng-doc-type-alias-value {
+    color: var(--ng-doc-heading-color);
+  }
 
   .ng-doc-type-alias-default {
     // The tick slot, not the chevron, ends the row.

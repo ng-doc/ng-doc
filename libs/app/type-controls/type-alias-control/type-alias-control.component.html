@@ -8,7 +8,7 @@
   <ng-doc-list *ngDocData>
     @for (item of items(); track $index) {
       <ng-doc-option [value]="item.value">
-        <div class="ng-doc-type-alias-option">
+        <div class="ng-doc-type-alias-option" [attr.data-ng-doc-selected]="item.value === model()">
           <ng-container
             *ngTemplateOutlet="valueTemplate; context: { $implicit: item.value }"></ng-container>
           <!-- The slot stays when empty, so the default markers line up. -->

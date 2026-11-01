@@ -280,6 +280,12 @@ describeChangeDetection('Type controls in the playground', ({ providers }: Chang
       'mediumdefault',
     ]);
     expect(options.map(ticked)).toEqual([false, true]);
+    // The selected option is also drawn in the heading color.
+    expect(
+      options.map((option) =>
+        option.querySelector('.ng-doc-type-alias-option')?.getAttribute('data-ng-doc-selected'),
+      ),
+    ).toEqual(['false', 'true']);
     // Every option keeps the slot, so the default markers line up.
     expect(options.every((option) => option.querySelector('[data-ng-doc-type-alias-check]'))).toBe(
       true,
