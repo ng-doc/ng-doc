@@ -67,12 +67,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Every target runs Vitest. Projects without specs (core) have no job;
+        # Every target runs Vitest. A project without specs has no job;
         # tools/scripts/check-ci-jobs.mjs fails the build when a project gains specs.
         target:
           - app:test
           - app:test-zoneless
           - app:test-search-index
+          - app:test-lazy-route
           - ui-kit:test
           - ui-kit:test-zoneless
           - ng-doc:test
@@ -80,6 +81,7 @@ jobs:
           - builder:test
           - keywords-loaders:test
           - utils:test
+          - core:test
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
@@ -93,6 +95,27 @@ jobs:
       # @ng-doc/core through these links.
       - run: pnpm exec nx run ng-doc:link-libs --excludeTaskDependencies
       - run: pnpm exec nx run ${{ matrix.target }} --configuration=ci --excludeTaskDependencies
+
+  typecheck:
+    name: Type-check ${{ matrix.target }}
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        # Vitest does not type-check, so these targets run tsc over the specs.
+        # tools/scripts/check-ci-jobs.mjs fails the build when a typecheck* target has no job.
+        target:
+          - builder:typecheck-specs
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/nodejs
+      # No packages download: the spec programs resolve @ng-doc/* to the sources
+      # (tsconfig.base.json paths), never to dist.
+      - run: pnpm exec nx run ${{ matrix.target }} --excludeTaskDependencies
 
   tools:
     name: Tool-script tests (${{ matrix.os }})
@@ -554,8 +577,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # The ends and the middle of the supported range, >=24.15.0 <25.
-        node: ['24.15.0', '24.19.0', '24.21.0']
+        # The ends and the middle of the Node 24 range, >=24.15.0 <25, and the ends of the Node 26
+        # range, >=26.0.0 <27.
+        node: ['24.15.0', '24.19.0', '24.21.0', '26.0.0', '26.13.0']
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
@@ -740,6 +764,7 @@ jobs:
       - build
       - lint
       - unit
+      - typecheck
       - tools
       - generator
       - generator-shard

@@ -1027,3 +1027,107 @@ test('differential: demo pages on and off equal reference and cold builds', asyn
   expect(off).toEqual(initial);
   expect(published(incremental[4])).toEqual(published(incremental[0]));
 }, 240_000);
+
+const playgroundPage = (options = '') =>
+  `import { ButtonDemo } from './demos';\nimport category from '../ng-doc.category';\nconst page = { title: 'Guide', route: 'guide', category, mdFile: './index.md', demos: { ButtonDemo }, playgrounds: { ButtonPlayground: { target: ButtonDemo, template: '<ng-doc-selector></ng-doc-selector>'${options} } } }; export default page;`;
+const playgroundMarkdown = (options: string) =>
+  `# Guide\n\n{{ NgDocActions.demo("ButtonDemo") }}\n\n{{ NgDocActions.playground("ButtonPlayground", ${options}) }}\n`;
+
+const playgroundFiles = (): Record<string, string> => ({
+  ...demoFiles(),
+  'docs/guide/demos.ts': [
+    "import { Component, Input } from '@angular/core';",
+    "@Component({ selector: 'button-demo, a[buttonDemo]', template: '<button>{{ label }}</button>' }) export class ButtonDemo { @Input() label = 'Button'; }",
+    "@Component({ selector: 'link-demo', template: '<a>Link</a>' }) export class LinkDemo {}",
+  ].join('\n'),
+  'docs/guide/ng-doc.page.ts': playgroundPage(),
+  'docs/guide/index.md': playgroundMarkdown('{ expanded: true }'),
+});
+
+const playgroundSteps: Step[] = [
+  {
+    name: 'an isolated playground action',
+    apply: (f) => [
+      update(f.write('docs/guide/index.md', playgroundMarkdown('{ isolated: true }'))),
+    ],
+  },
+  {
+    name: 'the playground isolated in the page configuration instead',
+    apply: (f) => [
+      update(f.write('docs/guide/index.md', playgroundMarkdown('{ expanded: true }'))),
+      update(f.write('docs/guide/ng-doc.page.ts', playgroundPage(', isolated: true'))),
+    ],
+  },
+  {
+    name: 'the playground configuration isolated off',
+    apply: (f) => [
+      update(f.write('docs/guide/ng-doc.page.ts', playgroundPage(', isolated: false'))),
+    ],
+  },
+  {
+    name: 'every playground isolated by the site',
+    apply: (f) => [update(f.write('ng-doc.config.ts', demoConfig(', isolatedPlaygrounds: true')))],
+  },
+  {
+    name: 'isolated playgrounds turned off again',
+    apply: (f) => [
+      update(f.write('ng-doc.config.ts', demoConfig())),
+      update(f.write('docs/guide/ng-doc.page.ts', playgroundPage())),
+    ],
+  },
+];
+
+test('differential: isolated playgrounds on and off equal reference and cold builds', async () => {
+  const f = fixture(true, playgroundFiles);
+  const colds: CompilationResult[] = [];
+  const reference = await runChain(
+    f,
+    f.create({ incrementalReuse: false }),
+    async () => {
+      colds.push(await cold(f));
+    },
+    playgroundSteps,
+  );
+  f.reset();
+  const incremental = await runChain(f, f.create(), undefined, playgroundSteps);
+  for (const [index, result] of incremental.entries()) {
+    const label = index ? playgroundSteps[index - 1].name : 'initial';
+    expect({ label, result: JSON.stringify(result) }).toEqual({
+      label,
+      result: JSON.stringify(reference[index]),
+    });
+    expect({ label, ...published(result) }).toEqual({ label, ...published(colds[index]) });
+  }
+  const files = (result: CompilationResult) => published(result).outputs;
+  const [initial, action, configured, configuredOff, site, off] = incremental.map(files);
+  const demoModules = (outputs: Record<string, string>) =>
+    Object.keys(outputs).filter((file) => /demo-(routes|app)\.ts$/.test(file));
+  const tab = (outputs: Record<string, string>) =>
+    outputs['guides/guide/index/page.ts'] ?? outputs['guides/guide/page.ts'];
+  // Without an isolated playground or the site option, no playground page exists.
+  expect(demoModules(initial)).toEqual([]);
+  expect(demoModules(configuredOff)).toEqual([]);
+  // The action option, the page configuration and the site option each give the guide its
+  // playground pages, one per selector, in the order of the target's selectors.
+  for (const outputs of [action, configured, site]) {
+    expect(demoModules(outputs)).toEqual(['demo-app.ts', 'guides/guide/demo-routes.ts']);
+    const routes = outputs['guides/guide/demo-routes.ts'];
+    expect(routes).toContain("path: 'playground/ButtonPlayground/button-demo',");
+    expect(routes).toContain(
+      'data: {ngDocPlayground: {"id":"ButtonPlayground","selector":"button-demo"}},',
+    );
+    expect(routes).toContain("path: 'playground/ButtonPlayground/a-buttondemo',");
+    expect(routes).toContain('providers: [PLAYGROUND_PROVIDERS, ...(entry.providers ?? [])],');
+    expect(routes).toContain("path: 'ButtonDemo',");
+    expect(outputs['demo-app.ts']).toContain(
+      '"demo-preview/docs/guide/playground/ButtonPlayground/button-demo"',
+    );
+    expect(tab(outputs)).toContain("readonly demoRoute: string = 'demo-preview/docs/guide';");
+  }
+  expect(tab(action)).not.toContain('isolatedPlaygrounds');
+  expect(tab(site)).toContain('readonly isolatedPlaygrounds: boolean = true;');
+  // Off again, every published byte is what the site had before it opted in.
+  expect(configuredOff).toEqual(initial);
+  expect(off).toEqual(initial);
+  expect(published(incremental[5])).toEqual(published(incremental[0]));
+}, 240_000);

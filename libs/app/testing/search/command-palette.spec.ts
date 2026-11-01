@@ -931,6 +931,8 @@ describeChangeDetection('NgDocSearchComponent', ({ providers }) => {
 
   it('opens with Control+K and the slash key, once, and closes with the chord', async () => {
     const opener = fixture.nativeElement.querySelector('.opener') as HTMLElement;
+    // NgDocRootComponent listens for the shortcuts while the documentation layout is shown.
+    TestBed.inject(NgDocShortcutsService).listen();
 
     opener.focus();
     press(opener, 'k', { ctrlKey: true });

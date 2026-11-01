@@ -574,6 +574,61 @@ describe('GeneratorContentCompiler', () => {
     });
   });
 
+  it('keeps the selectors and the isolated option of a playground action for its pages', async () => {
+    const markdown = path.join(root, 'isolated.md');
+    const source = path.join(root, 'demo.ts');
+    fs.writeFileSync(source, 'export class Demo {}');
+    fs.writeFileSync(
+      markdown,
+      '{{ NgDocActions.playground("Play", {isolated: true, selectors: "a[demoElement]"}) }}',
+    );
+    const ports = services();
+    ports.semantic.describeGuide = () => ({
+      value: {
+        demos: {},
+        playgrounds: [
+          {
+            id: 'Play',
+            target: { source, exportName: 'Demo' },
+            standalone: true,
+            selector: "demo-element,a[demoElement],[type='<x>']",
+            template: '<demo-element></demo-element>',
+            templatesBySelector: {},
+            properties: {},
+            content: {},
+          },
+        ],
+      },
+      dependencies: [],
+      diagnostics: [],
+    });
+    const result = await new GeneratorContentCompiler(ports).compile(
+      { kind: 'guide-tab', id: 'isolated', entry: entry(markdown), markdown },
+      new AbortController().signal,
+    );
+    expect(result.diagnostics).toEqual([]);
+    const tree = parseFragment(result.value!.html);
+    const find = (node: any, predicate: (value: any) => boolean): any =>
+      predicate(node)
+        ? node
+        : (node.childNodes ?? []).map((child: any) => find(child, predicate)).find(Boolean);
+    const playground = find(tree, (node) => node.tagName === 'ng-doc-playground');
+    const text = (id: string) =>
+      find(playground, (child) =>
+        child.attrs?.some((attr: any) => attr.name === 'id' && attr.value === id),
+      )
+        .childNodes.map((child: any) => child.value ?? '')
+        .join('');
+    // The page splits this text into the playground's targets, and the outputs take the URL
+    // segments of its pages from the same list, so it is the descriptor's selector as it is.
+    expect(text('selectors')).toBe("demo-element,a[demoElement],[type='<x>']");
+    expect(JSON.parse(text('options'))).toEqual({ isolated: true, selectors: 'a[demoElement]' });
+    // The outputs read the option from the HTML as the pipeline writes it.
+    expect(result.value!.html).toMatch(
+      /<ng-doc-playground\b[^>]*>[\s\S]*?<div\b[^>]*\bid="options"[^>]*>[^<]*<\/div>[\s\S]*?<\/ng-doc-playground>/,
+    );
+  });
+
   it('renders real front matter, Nunjucks action output, Unicode headings and keyword uses', async () => {
     const markdown = path.join(root, 'page.md');
     fs.writeFileSync(

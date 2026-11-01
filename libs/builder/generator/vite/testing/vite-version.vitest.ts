@@ -7,7 +7,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { NgDocVitePluginOptions } from '..';
 
-// The Vite that NgDoc resolves, switchable per test. The real one is 8.3.2 (the root lockfile).
+// The Vite that NgDoc resolves, switchable per test. The real one is 8.3.3 (the root lockfile).
 const vite = vi.hoisted(() => ({ version: undefined as string | undefined }));
 
 vi.mock('vite', async (original) => {

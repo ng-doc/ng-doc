@@ -72,32 +72,32 @@ export function projectWatchInputs(dependencies: unknown): WatchInputs {
   const references: Array<{ scopeId: string; digest: string }> = [];
 
   for (const dependency of dependencies) {
-    if (!isRecord(dependency) || typeof dependency.kind !== 'string')
+    if (!isRecord(dependency) || typeof dependency['kind'] !== 'string')
       throw new Error('Invalid dependency');
-    switch (dependency.kind) {
+    switch (dependency['kind']) {
       case 'content': {
         if (!hasExactKeys(dependency, ['digest', 'kind', 'path']))
           throw new Error('Invalid content dependency');
-        files.add(path(dependency.path, 'content path'));
-        string(dependency.digest, 'content digest');
+        files.add(path(dependency['path'], 'content path'));
+        string(dependency['digest'], 'content digest');
         break;
       }
       case 'existence': {
         if (
           !hasExactKeys(dependency, ['exists', 'kind', 'path']) ||
-          typeof dependency.exists !== 'boolean'
+          typeof dependency['exists'] !== 'boolean'
         )
           throw new Error('Invalid existence dependency');
-        files.add(path(dependency.path, 'existence path'));
+        files.add(path(dependency['path'], 'existence path'));
         break;
       }
       case 'glob': {
         if (!hasExactKeys(dependency, ['exclude', 'include', 'kind', 'members', 'root']))
           throw new Error('Invalid glob dependency');
-        const root = path(dependency.root, 'glob root');
-        const include = strings(dependency.include, 'glob include');
-        const exclude = strings(dependency.exclude, 'glob exclude');
-        paths(dependency.members, 'glob members').forEach((member) => files.add(member));
+        const root = path(dependency['root'], 'glob root');
+        const include = strings(dependency['include'], 'glob include');
+        const exclude = strings(dependency['exclude'], 'glob exclude');
+        paths(dependency['members'], 'glob members').forEach((member) => files.add(member));
         const glob = { root, include, exclude };
         globs.set(JSON.stringify(glob), glob);
         break;
@@ -105,10 +105,10 @@ export function projectWatchInputs(dependencies: unknown): WatchInputs {
       case 'semantic': {
         if (!hasExactKeys(dependency, ['digest', 'files', 'kind', 'reason', 'scopeId']))
           throw new Error('Invalid semantic dependency');
-        const scopeId = string(dependency.scopeId, 'semantic scope ID');
-        const digest = string(dependency.digest, 'semantic digest');
-        string(dependency.reason, 'semantic reason');
-        const scopeFiles = paths(dependency.files, 'semantic files');
+        const scopeId = string(dependency['scopeId'], 'semantic scope ID');
+        const digest = string(dependency['digest'], 'semantic digest');
+        string(dependency['reason'], 'semantic reason');
+        const scopeFiles = paths(dependency['files'], 'semantic files');
         scopeFiles.forEach((file) => files.add(file));
         const registered = scopes.get(scopeId) ?? [];
         registered.push({ digest });
@@ -119,17 +119,17 @@ export function projectWatchInputs(dependencies: unknown): WatchInputs {
         if (!hasExactKeys(dependency, ['digest', 'kind', 'reason', 'scopeId']))
           throw new Error('Invalid semantic-reference dependency');
         references.push({
-          scopeId: string(dependency.scopeId, 'semantic-reference scope ID'),
-          digest: string(dependency.digest, 'semantic-reference digest'),
+          scopeId: string(dependency['scopeId'], 'semantic-reference scope ID'),
+          digest: string(dependency['digest'], 'semantic-reference digest'),
         });
-        string(dependency.reason, 'semantic-reference reason');
+        string(dependency['reason'], 'semantic-reference reason');
         break;
       }
       case 'keyword': {
         if (!hasExactKeys(dependency, ['digest', 'key', 'kind']))
           throw new Error('Invalid keyword dependency');
-        string(dependency.key, 'keyword key');
-        string(dependency.digest, 'keyword digest');
+        string(dependency['key'], 'keyword key');
+        string(dependency['digest'], 'keyword digest');
         break;
       }
       // The non-physical kinds are validated but are never watch inputs: they name no path, and
@@ -137,16 +137,16 @@ export function projectWatchInputs(dependencies: unknown): WatchInputs {
       case 'semantic-closure': {
         if (!hasExactKeys(dependency, ['digest', 'key', 'kind', 'scopeId']))
           throw new Error('Invalid semantic-closure dependency');
-        string(dependency.scopeId, 'semantic-closure scope ID');
-        string(dependency.key, 'semantic-closure key');
-        string(dependency.digest, 'semantic-closure digest');
+        string(dependency['scopeId'], 'semantic-closure scope ID');
+        string(dependency['key'], 'semantic-closure key');
+        string(dependency['digest'], 'semantic-closure digest');
         break;
       }
       case 'evaluated': {
         if (!hasExactKeys(dependency, ['digest', 'entryId', 'kind']))
           throw new Error('Invalid evaluated dependency');
-        string(dependency.entryId, 'evaluated entry ID');
-        string(dependency.digest, 'evaluated digest');
+        string(dependency['entryId'], 'evaluated entry ID');
+        string(dependency['digest'], 'evaluated digest');
         break;
       }
       default:

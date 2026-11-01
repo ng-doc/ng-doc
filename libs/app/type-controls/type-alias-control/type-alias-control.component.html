@@ -8,8 +8,16 @@
   <ng-doc-list *ngDocData>
     @for (item of items(); track $index) {
       <ng-doc-option [value]="item.value">
-        <ng-container
-          *ngTemplateOutlet="valueTemplate; context: { $implicit: item.value }"></ng-container>
+        <div class="ng-doc-type-alias-option" [attr.data-ng-doc-selected]="item.value === model()">
+          <ng-container
+            *ngTemplateOutlet="valueTemplate; context: { $implicit: item.value }"></ng-container>
+          <!-- The slot stays when empty, so the default markers line up. -->
+          <span class="ng-doc-type-alias-check" data-ng-doc-type-alias-check>
+            @if (item.value === model()) {
+              <ng-doc-icon icon="check" aria-hidden="true"></ng-doc-icon>
+            }
+          </span>
+        </div>
       </ng-doc-option>
     }
   </ng-doc-list>
@@ -17,7 +25,7 @@
     <div class="ng-doc-type-alias-value">
       <span class="ng-doc-type-alias-value-text">{{ labelOf(value) }}</span>
       @if (value === default()) {
-        <span class="ng-doc-type-alias-default">default</span>
+        <span class="ng-doc-type-alias-default">{{ texts.defaultValue }}</span>
       }
     </div>
   </ng-template>
@@ -26,7 +34,7 @@
       <button
         ng-doc-button-icon-transparent
         size="large"
-        aria-label="Reset to the default value"
+        [attr.aria-label]="texts.resetToDefault"
         [ngDocFocusable]="false"
         [disabled]="disabled"
         [rounded]="false"

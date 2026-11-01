@@ -54,6 +54,10 @@ const OWN_KEYS = [
  * the choice is saved in the browser. A site turns them off by default with the shortcuts option
  * of provideNgDocApp. They never run while the reader types in a field or holds Command, Control
  * or Alt. Chords such as Command+K (Control+K) always work.
+ *
+ * Shortcuts run only while the documentation layout is shown: `NgDocRootComponent` turns them on
+ * with `listen()`, so the other pages of an application that shows its documentation under a
+ * route keep their own keys.
  */
 @Service()
 export class NgDocShortcutsService {
@@ -64,6 +68,10 @@ export class NgDocShortcutsService {
   private readonly appDefault = inject(NG_DOC_SHORTCUTS);
   private readonly userChoice = signal<boolean | undefined>(undefined);
   private readonly shortcuts: NgDocShortcut[] = [];
+  private readonly listener = (event: KeyboardEvent): void => this.onKeydown(event);
+  /** The layouts that listen for the shortcuts; the document listener is on while there are any. */
+  private listeners = 0;
+  private destroyed = false;
   // The theme T switched away from, and the theme it set, so a second T restores the first.
   private themeToggle?: { previous: string | null; set: string | null };
 
@@ -84,10 +92,42 @@ export class NgDocShortcutsService {
     // what the server rendered (the site's default) and then switches.
     afterNextRender(() => this.userChoice.set(this.readChoice()), { injector: this.injector });
 
-    const listener = (event: KeyboardEvent) => this.onKeydown(event);
-    // One document listener for every shortcut; change detection runs only when one matches.
-    this.ngZone.runOutsideAngular(() => this.document.addEventListener('keydown', listener));
-    inject(DestroyRef).onDestroy(() => this.document.removeEventListener('keydown', listener));
+    inject(DestroyRef).onDestroy(() => {
+      this.destroyed = true;
+      this.document.removeEventListener('keydown', this.listener);
+    });
+  }
+
+  /**
+   * Runs the shortcuts on key presses until the returned function is called. `NgDocRootComponent`
+   * calls it while the documentation layout is shown; a site with a layout of its own calls it
+   * the same way. Several callers may listen at once: the shortcuts run until each has stopped.
+   * Does nothing on the server.
+   * @returns A function that stops listening; later calls do nothing.
+   */
+  listen(): () => void {
+    if (!this.browser || this.destroyed) {
+      return () => undefined;
+    }
+
+    if (this.listeners++ === 0) {
+      // One document listener for every shortcut; change detection runs only when one matches.
+      this.ngZone.runOutsideAngular(() => this.document.addEventListener('keydown', this.listener));
+    }
+
+    let listening = true;
+
+    return () => {
+      if (!listening) {
+        return;
+      }
+
+      listening = false;
+
+      if (--this.listeners === 0) {
+        this.document.removeEventListener('keydown', this.listener);
+      }
+    };
   }
 
   /**

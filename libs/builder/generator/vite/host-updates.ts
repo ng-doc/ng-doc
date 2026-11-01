@@ -4,6 +4,7 @@ import path from 'node:path';
 
 import type { BuildResult, FileChange, OutputManifest } from '../contracts';
 import { contentDigest } from '../kernel/canonical';
+import { flagOff, VITE_MODULELESS_SETTLE_FLAG } from '../kernel/flags';
 import { canonicalDrive } from './paths';
 
 type EventType = 'create' | 'update' | 'delete';
@@ -19,7 +20,7 @@ export interface PhysicalState {
   version: string;
 }
 
-interface ManifestFile {
+export interface ManifestFile {
   digest: string;
   role: OutputManifest['files'][number]['role'];
 }
@@ -68,6 +69,21 @@ interface HostToken {
   repeat?: boolean;
   postObserved: boolean;
   isClaimed: boolean;
+}
+
+/**
+ * One generated file whose bytes or role differ between the outputs the browser was last told
+ * about and the outputs a reload announces now.
+ */
+export interface AnnouncedChange {
+  /** Relative to the output root, with forward slashes, as the manifest lists it. */
+  readonly path: string;
+  /** The absolute path. */
+  readonly file: string;
+  /** Absent for a created file. */
+  readonly before?: Readonly<ManifestFile>;
+  /** Absent for a deleted file. */
+  readonly after?: Readonly<ManifestFile>;
 }
 
 export interface HostUpdateTicket {
@@ -227,6 +243,13 @@ export function observePhysicalVersion(file: string): string | undefined {
  * input is re-observed (`HostUpdateRecovery.rescan`), so the newest edit is published even if
  * its event was lost or its generation failed under the load. A replayed report is matched like
  * any other: one that arrives twice is a repeat, so an edit still reloads once.
+ *
+ * Churn: under a sustained stream of edits a new generation starts before the previous one is
+ * published, again and again. A host update that waits for the current publication follows each
+ * newer generation, so it settles only once the stream stops. That is required of one whose hook
+ * hands Vite modules: Vite updates them when the hook returns, which must not happen before the
+ * newest publication. A module-less one hands Vite nothing, so it settles once it is acknowledged
+ * (see {@link settle}; `NGDOC_VITE_MODULELESS_SETTLE=0` makes it wait as well).
  */
 export class HostUpdateCoordinator {
   private outputRoot?: string;
@@ -256,9 +279,23 @@ export class HostUpdateCoordinator {
   private burst?: Burst;
   /** The start and the hot updates of the current burst-detection window. */
   private window = { start: 0, events: 0 };
+  /** Whether a module-less host update settles without waiting for the current publication. */
+  private readonly modulelessSettle = !flagOff(VITE_MODULELESS_SETTLE_FLAG);
+  /**
+   * Whether the pending reload must reload the page whatever its outputs: an Angular source was
+   * compiled for it, or it repairs an earlier failure (the browser shows the error overlay).
+   */
+  private pendingFull = false;
 
+  /**
+   * @param notify Announces the newest settled publication to the browser. `changes` lists the
+   *   generated files that differ from the last announcement, when nothing else asks for a full
+   *   reload; without it, or when the host cannot apply the changes in place, the page reloads.
+   * @param fail Reports a host error.
+   * @param recovery What the host does after a burst.
+   */
   constructor(
-    private readonly notify: () => void,
+    private readonly notify: (changes?: readonly AnnouncedChange[]) => void,
     private readonly fail: (error: Error) => void,
     private readonly recovery?: HostUpdateRecovery,
   ) {}
@@ -491,7 +528,8 @@ export class HostUpdateCoordinator {
    * generated output that a generation claimed. Its host hooks settle only once the newest
    * generation is published and every host obligation is drained, and by then `flush()` has sent
    * that generation's reload (or its outputs equal the last announced ones). A native reload for
-   * the same output would be a second one.
+   * the same output would be a second one. A module-less one settles earlier (see
+   * {@link settle}), but Vite has nothing of it to reload either way.
    */
   announces(read: object): boolean {
     const token = this.tokensByEvent.get(read);
@@ -527,6 +565,40 @@ export class HostUpdateCoordinator {
       )
       .map((expected) => expected.path)
       .sort();
+  }
+
+  /**
+   * Whether the generation that claimed this TypeScript source update committed and still has a
+   * generated TypeScript module update whose Angular pass has not completed: that pass is still to
+   * come, and the source can join it (`ngDocCompanionFiles`) instead of taking a pass of its own.
+   * False for anything else: a generated output, a source no generation claimed, a generation
+   * that failed, was cancelled or rewrote no TypeScript module, or whose passes all completed.
+   * Call it after `committed(ticket)`, which waits for the generation's result.
+   * @param ticket The source's hot update ticket.
+   */
+  generationPass(ticket: HostUpdateTicket): boolean {
+    const token = ticket.token as HostToken;
+    const attempt = token?.attempt;
+    if (
+      this.disposed ||
+      !token ||
+      token.generated ||
+      !token.isClaimed ||
+      token.sourceKind !== 'typescript' ||
+      token.type !== 'update' ||
+      !attempt?.resultSeen ||
+      attempt.resultStatus !== 'success'
+    ) {
+      return false;
+    }
+    // The outputs whose update takes a compiler pass, as `releaseUnwitnessedSources` counts them.
+    return [...attempt.expected.values()].some(
+      (expected) =>
+        expected.kind === 'update' &&
+        !expected.completed &&
+        COMPILER_TYPESCRIPT.test(expected.path) &&
+        !JAVASCRIPT_MODULE.test(expected.path),
+    );
   }
 
   /**
@@ -581,10 +653,28 @@ export class HostUpdateCoordinator {
     }
   }
 
-  /** Waits for the current accepted publication and all peer host acknowledgments. */
-  async settle(ticket: HostUpdateTicket): Promise<void> {
+  /**
+   * Waits for the current accepted publication and all peer host acknowledgments.
+   *
+   * A module-less hot update does not wait: once its hooks return, Vite has no module to update
+   * and sends nothing, and its acknowledgment has already settled what it obliged (the reload,
+   * sent by `flush()` once every obligation is settled, is this coordinator's own). Waiting made
+   * it follow every generation that started meanwhile, so under sustained churn it settled only
+   * when the churn stopped, and each wait for the host obligations to drain could time out
+   * (`NGDOC_VITE_HOST_TIMEOUT`) while every single obligation was completed in time. Nothing
+   * else changes: obligations, the reload and what is published are the same, so the switch off
+   * (`NGDOC_VITE_MODULELESS_SETTLE=0`) only makes it wait as before.
+   * @param ticket The hot update's ticket, after its acknowledgment.
+   * @param modules Whether its hooks hand Vite any module to update (or a page reload Vite sends
+   *   itself, for an HTML file without modules). Only the caller, which sees Vite's context, knows.
+   */
+  async settle(ticket: HostUpdateTicket, modules: boolean = true): Promise<void> {
     const token = ticket.token as HostToken;
     if (!token || this.disposed) return;
+    if (!modules && this.modulelessSettle) {
+      this.settleModuleless(token);
+      return;
+    }
     if (
       !token.generated &&
       token.isClaimed &&
@@ -610,9 +700,14 @@ export class HostUpdateCoordinator {
     await token.attempt.result.promise;
   }
 
-  async complete(ticket: HostUpdateTicket): Promise<void> {
+  /**
+   * Acknowledges a hot update that takes no compiler pass, then settles it.
+   * @param ticket The hot update's ticket.
+   * @param modules See {@link settle}.
+   */
+  async complete(ticket: HostUpdateTicket, modules: boolean = true): Promise<void> {
     await this.acknowledge(ticket);
-    await this.settle(ticket);
+    await this.settle(ticket, modules);
   }
 
   published(result: Extract<BuildResult, { status: 'success' }>, recovered: boolean): void {
@@ -628,6 +723,7 @@ export class HostUpdateCoordinator {
     // host compilation. Rebind that intent to the newest successful epoch and clear it only in
     // flush(), after every compiler obligation has acknowledged completion.
     if (recovered || delta.changed || compilerSource || this.pendingGeneration !== undefined) {
+      if (recovered || compilerSource) this.pendingFull = true;
       this.pendingGeneration = result.generation;
       this.pendingManifest = structuredClone(result.manifest);
       this.flush();
@@ -641,6 +737,7 @@ export class HostUpdateCoordinator {
     this.burst = undefined;
     this.pendingGeneration = undefined;
     this.pendingManifest = undefined;
+    this.pendingFull = false;
     for (const attempt of this.attempts.values()) {
       attempt.result.resolve();
       attempt.shapes.resolve();
@@ -888,8 +985,13 @@ export class HostUpdateCoordinator {
       return;
     if (this.latestAttempt && this.pendingGeneration < this.latestAttempt.generation) return;
     this.pendingGeneration = undefined;
+    const changes =
+      this.pendingFull || !this.pendingManifest || !this.outputRoot
+        ? undefined
+        : this.changes(this.outputRoot, this.announcedManifest, this.pendingManifest);
+    this.pendingFull = false;
     try {
-      this.notify();
+      this.notify(changes?.length ? changes : undefined);
       if (this.pendingManifest) this.announcedManifest = this.pendingManifest;
       this.pendingManifest = undefined;
     } catch (error) {
@@ -898,10 +1000,44 @@ export class HostUpdateCoordinator {
   }
 
   private queueCurrentReload(): void {
+    this.pendingFull = true;
     this.pendingGeneration =
       this.publishedGeneration ?? this.manifest?.generation ?? this.pendingGeneration ?? 0;
     this.pendingManifest = structuredClone(this.manifest ?? this.announcedManifest);
     this.flush();
+  }
+
+  /**
+   * Settles a module-less hot update without waiting (see {@link settle}).
+   * @param token The acknowledged hot update.
+   */
+  private settleModuleless(token: HostToken): void {
+    // A recoverable diagnostic is reported to the hook as the wait would have, at its start.
+    const failure = this.diagnosticError();
+    if (failure) throw failure;
+    const attempt = token.attempt;
+    if (
+      !attempt ||
+      token.generated ||
+      !token.isClaimed ||
+      token.sourceKind !== 'typescript' ||
+      token.type !== 'update'
+    ) {
+      return;
+    }
+    // A claimed TypeScript update requests the current reload when its own generation is not
+    // published (a newer one superseded it, or the session cancelled it): Angular compiled it,
+    // and no publication of that generation will reload. The wait did so after the publication;
+    // this continuation does it at the same point, without holding the hook. Every attempt's
+    // publication resolves by `dispose()` at the latest, and a disposed coordinator reloads
+    // nothing, so it never outlives the coordinator. As in the wait, a diagnostic raised before
+    // then keeps the reload back.
+    void attempt.publication.promise.then(() => {
+      if (this.disposed || this.diagnosticError()) return;
+      if (attempt.publicationStatus === 'skipped' || attempt.publicationStatus === 'cancelled') {
+        this.queueCurrentReload();
+      }
+    });
   }
 
   private async awaitCurrentPublication(initial?: Attempt): Promise<void> {
@@ -974,6 +1110,33 @@ export class HostUpdateCoordinator {
       changed = true;
     }
     return { changed };
+  }
+
+  /**
+   * The generated files that differ between two manifests, in path order.
+   * @param previousManifest The outputs the browser was last told about.
+   * @param nextManifest The outputs announced now.
+   */
+  private changes(
+    root: string,
+    previousManifest: OutputManifest | undefined,
+    nextManifest: OutputManifest,
+  ): AnnouncedChange[] {
+    const previous = manifestMap(previousManifest);
+    const next = manifestMap(nextManifest);
+    const changes: AnnouncedChange[] = [];
+    for (const relative of [...new Set([...previous.keys(), ...next.keys()])].sort()) {
+      const before = previous.get(relative);
+      const after = next.get(relative);
+      if (sameFile(before, after)) continue;
+      changes.push({
+        path: relative,
+        file: normalize(path.join(root, relative)),
+        ...(before ? { before: { digest: before.digest, role: before.role } } : {}),
+        ...(after ? { after: { digest: after.digest, role: after.role } } : {}),
+      });
+    }
+    return changes;
   }
 
   private prune(generation: number): void {

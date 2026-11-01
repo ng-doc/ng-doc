@@ -1,14 +1,32 @@
 @if (container()) {
   <div class="ng-doc-demo-wrapper">
-    <div class="ng-doc-demo-container">
+    <div
+      class="ng-doc-demo-container"
+      [attr.data-ng-doc-themed]="canvasBackground() ? true : null"
+      [style.background-color]="canvasBackground() ?? null"
+      [style.--_ng-doc-demo-canvas-dots]="canvasDots() ?? null">
       <div class="ng-doc-demo">
         <ng-container *ngTemplateOutlet="demoTemplate"></ng-container>
       </div>
       <div class="ng-doc-demo-controls">
+        <ng-content select="[ngDocDemoControl]" />
         @if (!codeContent()) {
-          <ng-doc-copy-button [text]="code()" label="Copy code">
+          <ng-doc-copy-button [text]="code()" [label]="copyTexts.copyCode">
             <ng-doc-icon icon="copy"></ng-doc-icon>
           </ng-doc-copy-button>
+        }
+        @if (newTabUrl(); as url) {
+          <a
+            class="ng-doc-demo-open"
+            ng-doc-button-icon
+            [rounded]="false"
+            [href]="url"
+            target="_blank"
+            rel="noopener"
+            [attr.aria-label]="texts.openInNewTab"
+            [ngDocTooltip]="texts.openInNewTab">
+            <ng-doc-icon icon="external-link"></ng-doc-icon>
+          </a>
         }
         <button
           type="button"
@@ -17,9 +35,9 @@
           [rounded]="false"
           [attr.aria-expanded]="expanded()"
           [attr.aria-controls]="codeId"
-          [attr.aria-label]="expanded() ? 'Hide code' : 'Show code'"
+          [attr.aria-label]="expanded() ? texts.hideCode : texts.showCode"
           (click)="toggle()"
-          [ngDocTooltip]="expanded() ? 'Hide code' : 'Show code'">
+          [ngDocTooltip]="expanded() ? texts.hideCode : texts.showCode">
           <ng-doc-icon icon="code"></ng-doc-icon>
         </button>
       </div>
@@ -28,7 +46,7 @@
       class="ng-doc-demo-code"
       [id]="codeId"
       [attr.role]="expanded() ? 'region' : null"
-      [attr.aria-label]="expanded() ? 'Code' : null">
+      [attr.aria-label]="expanded() ? texts.code : null">
       <ng-doc-expander
         [content]="codeContent() ? codeContent() : expanderContent"
         [expanded]="expanded()">

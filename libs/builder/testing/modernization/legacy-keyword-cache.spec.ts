@@ -1,3 +1,4 @@
+import type { NgDocKeyword } from '@ng-doc/core';
 import { EMPTY, from, map } from 'rxjs';
 import { type Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -39,7 +40,7 @@ vi.mock('../../engine/core', () => ({
   },
 }));
 
-const keyword = { title: 'Page', path: '/page', type: 'link' };
+const keyword: NgDocKeyword = { title: 'Page', path: '/page', type: 'link' };
 function build() {
   return contentBuilder({
     tag: 'fixture',

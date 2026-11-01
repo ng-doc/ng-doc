@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser, Location } from '@angular/common';
 import { DestroyRef, inject, PLATFORM_ID, Service, Signal, signal } from '@angular/core';
 import {
   NavigationCancel,
@@ -26,6 +26,7 @@ export interface NgDocInitialContentScrollIntent {
 export class NgDocContentScrollIntent {
   private readonly browser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly router = inject(Router);
+  private readonly location = inject(Location);
   private candidate?: { eligible: boolean; navigationId: number };
   private intent?: NgDocInitialContentScrollIntent;
   private readonly listeners = new Set<
@@ -46,10 +47,14 @@ export class NgDocContentScrollIntent {
     inject(DestroyRef).onDestroy(() => this.destroy());
   }
 
-  /** Starts following router events. Does nothing on the server or when already started. */
+  /**
+   * Starts following router events. Does nothing on the server or when already started. Started
+   * during a navigation, it follows that navigation too.
+   */
   start(): void {
     if (this.started || !this.browser) return;
     this.started = true;
+    this.followCurrentNavigation();
     this.subscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) this.navigationStarted(event);
       else if (event instanceof NavigationEnd) this.navigationEnded(event);
@@ -95,6 +100,30 @@ export class NgDocContentScrollIntent {
         event.restoredState == null &&
         navigation?.id === event.id &&
         navigation.previousNavigation === null &&
+        navigation.extras.scroll !== 'manual',
+    };
+  }
+
+  /**
+   * Takes the navigation in progress as the candidate. The providers of a lazy route start the
+   * intent while the router loads that route, after the first navigation has started, and its
+   * fragment must still be replayed.
+   */
+  private followCurrentNavigation(): void {
+    const navigation = this.router.currentNavigation();
+
+    if (!navigation) return;
+
+    // The router restores the history state of the first navigation, as `restoredState` of its
+    // NavigationStart, when that state has a navigation id.
+    const state = this.location.getState() as { navigationId?: unknown } | null;
+
+    this.candidate = {
+      navigationId: navigation.id,
+      eligible:
+        navigation.trigger === 'imperative' &&
+        navigation.previousNavigation === null &&
+        !state?.navigationId &&
         navigation.extras.scroll !== 'manual',
     };
   }

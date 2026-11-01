@@ -277,5 +277,6 @@ export const appConfig: ApplicationConfig = {
 `,
   );
 
-  createSourceFile('test/app/app.component.html', `<app></app>`);
+  // A new application's shell: `ng add` replaces only such a template with the layout.
+  createSourceFile('test/app/app.component.html', `<router-outlet></router-outlet>`);
 }

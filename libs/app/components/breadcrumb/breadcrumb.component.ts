@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { NgDocPageBreadcrumbs } from '@ng-doc/app/interfaces';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { NgDocNavigationTexts, NgDocPageBreadcrumbs } from '@ng-doc/app/interfaces';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 
 /**
  * The breadcrumbs of a page: a navigation landmark that lists the categories above the page and
@@ -12,6 +13,8 @@ import { NgDocPageBreadcrumbs } from '@ng-doc/app/interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgDocBreadcrumbComponent implements NgDocPageBreadcrumbs {
+  protected readonly texts: NgDocNavigationTexts = inject(NG_DOC_TEXTS).navigation;
+
   /** Titles from the top category down to the page. */
   readonly breadcrumbs = input<string[]>([]);
 }

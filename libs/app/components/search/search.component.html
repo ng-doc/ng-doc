@@ -2,7 +2,7 @@
   class="ng-doc-search-field"
   type="button"
   aria-haspopup="dialog"
-  [attr.aria-label]="'Search (' + chord() + ')'"
+  [attr.aria-label]="texts.label({ shortcut: chord() })"
   aria-keyshortcuts="Meta+K Control+K"
   (click)="open()">
   <svg
@@ -17,7 +17,7 @@
     <circle cx="11" cy="11" r="7" />
     <path d="m20 20-3.5-3.5" />
   </svg>
-  <span class="ng-doc-search-placeholder">Search docs…</span>
+  <span class="ng-doc-search-placeholder">{{ texts.placeholder }}</span>
   <kbd>{{ chord() }}</kbd>
 </button>
 <button
@@ -27,7 +27,7 @@
   size="large"
   [rounded]="false"
   aria-haspopup="dialog"
-  [attr.aria-label]="'Search (' + chord() + ')'"
+  [attr.aria-label]="texts.label({ shortcut: chord() })"
   aria-keyshortcuts="Meta+K Control+K"
   (click)="open()">
   <svg

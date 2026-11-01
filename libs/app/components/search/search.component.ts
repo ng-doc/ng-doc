@@ -14,11 +14,14 @@ import {
   NgDocCommandPaletteComponent,
   NgDocCommandPaletteData,
 } from '@ng-doc/app/components/command-palette';
+import type { NgDocSearchTexts } from '@ng-doc/app/interfaces';
 import { NgDocShortcutsService } from '@ng-doc/app/services/shortcuts';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import {
   NgDocButtonIconComponent,
   NgDocComponentContent,
   NgDocDialogService,
+  NgDocOverlayService,
 } from '@ng-doc/ui-kit';
 import { NgDocOverlayRef } from '@ng-doc/ui-kit/classes';
 
@@ -33,13 +36,17 @@ import { NgDocOverlayRef } from '@ng-doc/ui-kit/classes';
   styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgDocButtonIconComponent],
+  // The palette is created with this component's injector, not the root one: it reads the search
+  // engine and the generated context, which may be provided by the route that holds the docs.
+  providers: [NgDocDialogService, NgDocOverlayService],
 })
 export class NgDocSearchComponent {
   protected readonly dialog = inject(NgDocDialogService);
   protected readonly searchEngine = inject(NgDocSearchEngine, { optional: true });
   protected readonly shortcuts = inject(NgDocShortcutsService);
+  protected readonly texts: NgDocSearchTexts = inject(NG_DOC_TEXTS).search;
   /** The chord that opens the search, as the reader's platform labels it. */
-  protected readonly chord = signal('⌘K');
+  protected readonly chord = signal(this.texts.shortcutMac);
 
   private readonly document = inject(DOCUMENT);
   private readonly browser = isPlatformBrowser(inject(PLATFORM_ID));
@@ -68,7 +75,7 @@ export class NgDocSearchComponent {
     // The platform is known only in the browser; the server renders the macOS label.
     afterNextRender(() => {
       if (!/Mac|iPhone|iPad/i.test(this.document.defaultView?.navigator.platform ?? '')) {
-        this.chord.set('Ctrl K');
+        this.chord.set(this.texts.shortcutOther);
       }
     });
   }

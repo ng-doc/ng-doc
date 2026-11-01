@@ -293,6 +293,133 @@ export class StatusBox {
   expect(JSON.parse(JSON.stringify(result))).toEqual(result);
 });
 
+test('arrays of literal unions list the members of their items, alike in both engines', async () => {
+  // The array types need the default library, which the other fixtures leave out.
+  write(
+    'tsconfig.json',
+    JSON.stringify({
+      compilerOptions: {
+        target: 'ES2022',
+        lib: ['ES2022'],
+        types: [],
+        ignoreDeprecations: '6.0',
+        experimentalDecorators: true,
+        strict: true,
+        baseUrl: directory,
+        paths: {
+          '@angular/core': [join(repository, 'node_modules/@angular/core/types/core.d.ts')],
+        },
+      },
+      include: ['*.ts'],
+    }),
+  );
+  // A file the checker reads first creates the later members first.
+  write(
+    'a-warm.ts',
+    `export const warm: ['large', 'a', 1, 'x', true] = ['large', 'a', 1, 'x', true];`,
+  );
+  write(
+    'arrays.ts',
+    `import { Component, Input, input, model } from '@angular/core';
+export type Size = 'small' | 'medium' | 'large';
+export enum Status { Good = 'good', Bad = 'bad' }
+type Sizes = Size[];
+@Component({selector: 'arrays-box', template: ''})
+export class Arrays {
+  sizes = input<Size[]>(['small']);
+  written = input<('b' | 'a')[]>([]);
+  generic = input<Array<'y' | 'x'>>([]);
+  readonlyGeneric = input<ReadonlyArray<2 | 1>>([]);
+  readonlySizes = input<readonly Size[]>([]);
+  optional = input<Size[]>();
+  @Input() decorated?: ('z' | 'w')[];
+  nullable = input<Size[] | null>(null);
+  statuses = model<Status[]>([]);
+  withBoolean = input<('m' | boolean)[]>([]);
+  nullableItems = input<('n' | 'o' | null)[]>([]);
+  inferred = input(['a'] as ('b' | 'a')[]);
+  strings = input<string[]>([]);
+  flags = input<boolean[]>([]);
+  objects = input<{ a: 1 }[]>([]);
+  widened = input<('a' | string)[]>([]);
+  alias = input<Sizes>([]);
+  tuple = input<['a' | 'b']>(['a']);
+  either = input<'a'[] | 'b'[]>([]);
+  single = input<'only'[]>([]);
+  scalar = input<Size>('small');
+}`,
+  );
+  write(
+    'entry.ts',
+    `import { Arrays } from './arrays'; export default {playgrounds:{arrays:{target:Arrays,template:'<ng-doc-selector></ng-doc-selector>'}}};`,
+  );
+  await sync();
+  const result = service.describeGuide('guide');
+  expect(result.diagnostics).toEqual([]);
+  const generator = result.value!.playgrounds[0].properties as Record<
+    string,
+    { type: string; options: unknown[] }
+  >;
+  const sizes = ["'small'", "'medium'", "'large'"];
+  const arrays = {
+    sizes,
+    written: ["'b'", "'a'"],
+    generic: ["'y'", "'x'"],
+    readonlyGeneric: ['2', '1'],
+    readonlySizes: sizes,
+    optional: sizes,
+    decorated: ["'z'", "'w'"],
+    nullable: sizes,
+    statuses: [
+      { label: 'Good', value: 'good' },
+      { label: 'Bad', value: 'bad' },
+    ],
+    // `boolean` names no literal: its members follow by their text.
+    withBoolean: ["'m'", 'false', 'true'],
+    // The items are values: `null` is left out.
+    nullableItems: ["'n'", "'o'"],
+    // No written type: by text.
+    inferred: ["'a'", "'b'"],
+  };
+  const options = (properties: Record<string, { options?: unknown[] }>) =>
+    Object.fromEntries(Object.entries(properties).map(([name, value]) => [name, value.options]));
+  expect(options(generator)).toMatchObject({
+    ...arrays,
+    // Not arrays of literal unions: the members of the input's own union, as before.
+    strings: [],
+    flags: [],
+    objects: [],
+    widened: [],
+    alias: [],
+    tuple: [],
+    single: [],
+    scalar: sizes,
+  });
+  // The playground reads the type as an array and offers the options.
+  expect(generator.sizes.type).toBe('Size[]');
+  expect(generator.alias.type).toBe('Sizes');
+  const project = new Project({ tsConfigFilePath: join(directory, 'tsconfig.json') });
+  // The legacy engine's checker meets the members in another order first.
+  project
+    .getSourceFileOrThrow(join(directory, 'a-warm.ts'))
+    .getVariableDeclarationOrThrow('warm')
+    .getType()
+    .getTupleElements();
+  const legacy = getPlaygroundComponentInputs(
+    project.getSourceFileOrThrow(join(directory, 'arrays.ts')).getClassOrThrow('Arrays'),
+  );
+  expect(options(legacy)).toMatchObject(arrays);
+  // The printed types may order a union differently (`stableTypeOrdering`); the options never do.
+  for (const [name, value] of Object.entries(legacy)) {
+    // The other options are the same members (the generator lists them in the written order).
+    if (!(name in arrays))
+      expect([...generator[name].options].map(String).sort(), name).toEqual(
+        [...(value.options ?? [])].map(String).sort(),
+      );
+  }
+  expect(JSON.parse(JSON.stringify(result))).toEqual(result);
+});
+
 test('a query terminated by a template watchdog leaves a program that answers no query and is not retained', async () => {
   await service.dispose();
   let slow = false;
@@ -388,6 +515,49 @@ test('evaluated manual controls retain dependencies and assigned inputs are remo
     kind: 'content',
     path: join(directory, 'manual.json'),
     digest: 'value',
+  });
+});
+
+test('a playground isolated in its configuration is marked, from its evaluated value first', async () => {
+  write(
+    'entry.ts',
+    `import { Demo } from './demo'; const on = true; export default {playgrounds:{
+      literal:{target:Demo,template:'<demo-box></demo-box>',isolated:true},
+      named:{target:Demo,template:'<demo-box></demo-box>',isolated:on},
+      off:{target:Demo,template:'<demo-box></demo-box>',isolated:false},
+      none:{target:Demo,template:'<demo-box></demo-box>'},
+    }};`,
+  );
+  await sync();
+  const marked = (result: ReturnType<typeof service.describeGuide>) =>
+    Object.fromEntries(result.value!.playgrounds.map((item) => [item.id, item.isolated]));
+  // Without evaluated values, a literal `true` counts.
+  const literals = service.describeGuide('guide');
+  expect(literals.diagnostics).toEqual([]);
+  expect(marked(literals)).toEqual({
+    literal: true,
+    named: true,
+    off: undefined,
+    none: undefined,
+  });
+  expect(literals.value!.playgrounds.find((item) => item.id === 'none')).not.toHaveProperty(
+    'isolated',
+  );
+  // With them, the evaluated value decides, whatever the source says.
+  await service.dispose();
+  service = createSemanticService({
+    readGuideValues: () => ({
+      value: { playgrounds: { literal: { controls: {} }, none: { controls: {}, isolated: true } } },
+      dependencies: [],
+      diagnostics: [],
+    }),
+  });
+  await sync();
+  expect(marked(service.describeGuide('guide'))).toEqual({
+    literal: undefined,
+    named: undefined,
+    off: undefined,
+    none: true,
   });
 });
 

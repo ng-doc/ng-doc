@@ -1,8 +1,10 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, model } from '@angular/core';
 import { NgDocCodeComponent } from '@ng-doc/app/components/code';
 import { NgDocCopyButtonComponent } from '@ng-doc/app/components/copy-button';
 import { NgDocCodeHighlighterDirective } from '@ng-doc/app/directives/code-highlighter';
+import type { NgDocCopyTexts, NgDocDemoTexts } from '@ng-doc/app/interfaces';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import {
   NgDocButtonIconComponent,
   NgDocContent,
@@ -37,6 +39,9 @@ let nextId = 0;
   },
 })
 export class NgDocDemoDisplayerComponent {
+  protected readonly texts: NgDocDemoTexts = inject(NG_DOC_TEXTS).demo;
+  protected readonly copyTexts: NgDocCopyTexts = inject(NG_DOC_TEXTS).copy;
+
   /** Content shown when the code is revealed; when empty, the highlighted `code` is shown. */
   readonly codeContent = input<NgDocContent>('');
 
@@ -49,11 +54,23 @@ export class NgDocDemoDisplayerComponent {
   /** Whether the demo is shown in the stage with its controls; otherwise it is shown as is. */
   readonly container = input<boolean>(true);
 
+  /**
+   * The background of the canvas, such as the background of an isolated demo that shows a theme
+   * of its own.
+   */
+  readonly canvasBackground = input<string | undefined>(undefined);
+
+  /** The color of the dots of the canvas, such as the dots of a demo's own theme. */
+  readonly canvasDots = input<string | undefined>(undefined);
+
   /** Whether the displayer draws its border. */
   readonly border = input<boolean>(true);
 
   /** Whether the code is revealed. */
   readonly expanded = model<boolean>(false);
+
+  /** A page that shows the demo alone, which the toolbar opens in a new tab. */
+  readonly newTabUrl = input<string | undefined>(undefined);
 
   /** Id of the region that holds the code, for the toggle's `aria-controls`. */
   protected readonly codeId: string = `ng-doc-demo-displayer-code-${nextId++}`;

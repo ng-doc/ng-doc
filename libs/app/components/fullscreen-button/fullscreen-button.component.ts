@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import type { NgDocDemoTexts } from '@ng-doc/app/interfaces';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import {
   NgDocButtonComponent,
   NgDocIconComponent,
@@ -22,6 +24,8 @@ import {
   ],
 })
 export class NgDocFullscreenButtonComponent {
+  protected readonly texts: NgDocDemoTexts = inject(NG_DOC_TEXTS).demo;
+
   /** Route of the fullscreen demo. */
   readonly route = input.required<string>();
 }

@@ -4,6 +4,7 @@ import type {
   ConfigPluginContext,
   EnvironmentModuleNode,
   HotUpdateOptions,
+  IndexHtmlTransformContext,
   Logger,
   Plugin,
   ResolvedConfig,
@@ -23,11 +24,12 @@ import type {
 import { flagOff, VITE_BUILD_HANDOFF_FLAG } from '../kernel/flags';
 import type { HostProgress } from '../progress/host';
 import { assertAngularCompatibility } from './angular-compatibility';
-import { composeAngularPlugins } from './angular-composition';
+import { composeAngularPlugins, handsViteModules } from './angular-composition';
 import { assertConsistentAngularBuild } from './angular-version';
 import { boundServerClose } from './bounded-close';
 import { createComponentUpdateGate } from './component-updates';
 import { requirePublishedConfiguration } from './configuration';
+import { contentUpdateClientTags } from './content-updates';
 import { type NgDocDemoApplicationApi, readDemoApplication } from './demo-application';
 import { diagnosticText, hostDiagnostic } from './diagnostics';
 import type { HostUpdateTicket } from './host-updates';
@@ -276,6 +278,15 @@ export function createPlugin(options: NgDocVitePluginOptions): Plugin[] {
       diagnosticMark() {
         return (active?.lifecycle ?? pendingLifecycle)?.hostDiagnosticMark() ?? 0;
       },
+      generationPass(ticket: HostUpdateTicket) {
+        return (active?.lifecycle ?? pendingLifecycle)?.hostGenerationPass(ticket) ?? false;
+      },
+      descriptionModule(file: string) {
+        return (active?.lifecycle ?? pendingLifecycle)?.hostDescriptionModule(file) ?? false;
+      },
+      generated(file: string) {
+        return (active?.lifecycle ?? pendingLifecycle)?.hostGenerated(file) ?? false;
+      },
       claimsFilesystemChange(file: string) {
         return (active?.lifecycle ?? pendingLifecycle)?.hostClaimsFilesystemChange(file) ?? false;
       },
@@ -302,9 +313,10 @@ export function createPlugin(options: NgDocVitePluginOptions): Plugin[] {
           (active?.lifecycle ?? pendingLifecycle)?.hostUpdateCommitted(ticket) ?? Promise.resolve()
         );
       },
-      settle(ticket: HostUpdateTicket) {
+      settle(ticket: HostUpdateTicket, modules?: boolean) {
         return (
-          (active?.lifecycle ?? pendingLifecycle)?.hostUpdateSettled(ticket) ?? Promise.resolve()
+          (active?.lifecycle ?? pendingLifecycle)?.hostUpdateSettled(ticket, modules) ??
+          Promise.resolve()
         );
       },
       fail(error: Error) {
@@ -507,7 +519,15 @@ export function createPlugin(options: NgDocVitePluginOptions): Plugin[] {
     load(id: string) {
       return ssrRenderer.controlModule(id) ?? null;
     },
-    transformIndexHtml: { order: 'pre', handler: transformNgDocIndex },
+    transformIndexHtml: {
+      order: 'pre',
+      async handler(html: string, context?: IndexHtmlTransformContext) {
+        const transformed = await transformNgDocIndex(html);
+        // Development pages get the client that applies content updates in place.
+        const tags = context?.server ? contentUpdateClientTags(transformed) : [];
+        return tags.length > 0 ? { html: transformed, tags } : transformed;
+      },
+    },
     async generateBundle(_output: Rolldown.NormalizedOutputOptions, bundle: Rolldown.OutputBundle) {
       if (vite?.command === 'build' && active) await active.lifecycle.assets.emit(this, bundle);
     },
@@ -536,7 +556,16 @@ export function createPlugin(options: NgDocVitePluginOptions): Plugin[] {
         const ticket = hostUpdates.get(context);
         if (ticket) {
           hostUpdates.delete(context);
-          await (active?.lifecycle ?? pendingLifecycle)?.hostUpdateCompleted(ticket);
+          // Vite runs the other environments' hooks, and updates their modules, only once the
+          // client's hooks returned: a file with modules there is not module-less either.
+          const modules =
+            handsViteModules(context.file, context.modules) ||
+            Object.values(devServer?.environments ?? {}).some(
+              (environment) =>
+                environment !== this.environment &&
+                (environment.moduleGraph.getModulesByFile(context.file)?.size ?? 0) > 0,
+            );
+          await (active?.lifecycle ?? pendingLifecycle)?.hostUpdateCompleted(ticket, modules);
         }
         if (!(active?.lifecycle ?? pendingLifecycle)?.hostUpdateAnnounced(context.read)) return;
         // A committed generated output: the adapter already sent this generation's full reload

@@ -2,11 +2,11 @@
 // taller than the viewport, and hidden below 1240px, where the article needs the room.
 :host {
   position: sticky;
-  top: var(--ng-doc-navbar-height);
+  top: calc(var(--ng-doc-navbar-height) + var(--ng-doc-layout-top));
   align-self: flex-start;
   flex: none;
   width: var(--ng-doc-toc-width);
-  max-height: calc(100vh - var(--ng-doc-navbar-height));
+  max-height: calc(100vh - var(--ng-doc-navbar-height) - var(--ng-doc-layout-top));
   // Pulled up by the page's top padding, so the rail sits at the same height whether it is
   // stuck under the navbar or not.
   margin: calc(var(--ng-doc-space-6) * -1) 0 0 var(--ng-doc-toc-margin);

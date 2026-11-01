@@ -10,7 +10,6 @@ import {
   unlinkSync,
   writeFileSync,
 } from 'node:fs';
-import { tmpdir } from 'node:os';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { BuildResult, Dependency, FileChange, WatchInputs } from '../../contracts';

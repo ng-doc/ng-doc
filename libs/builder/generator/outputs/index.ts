@@ -1,3 +1,4 @@
+import { ɵplaygroundTargetSlugs } from '@ng-doc/core';
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, isAbsolute, posix, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -20,6 +21,7 @@ import type {
   KeywordExport,
   LinkedContent,
   PageArtifact,
+  PlaygroundDescriptor,
   RouteRecord,
   ServiceResult,
 } from '../contracts';
@@ -47,6 +49,15 @@ const DEFAULT_DEMO_PATH = 'demo-preview';
 const DEMO_NAME = /^[A-Za-z0-9_$-]+$/;
 /** A `demo` action and its options, as the content compiler writes them and the HTML pipeline keeps them. */
 const DEMO_ACTION = /<ng-doc-demo\b[^>]*>\s*<div\b[^>]*\bid="options"[^>]*>([^<]*)<\/div>/g;
+/** A `playground` action, as the content compiler writes it and the HTML pipeline keeps it. */
+const PLAYGROUND_ACTION = /<ng-doc-playground\b[^>]*>([\s\S]*?)<\/ng-doc-playground>/g;
+/** The options of a `playground` action: the last of its fields, after its selectors and data. */
+const PLAYGROUND_OPTIONS = /<div\b[^>]*\bid="options"[^>]*>([^<]*)<\/div>/;
+/**
+ * The URL segment under a guide's demo path that its playground pages live under
+ * (`playground/<id>/<target>`), which no demo of such a guide may be named.
+ */
+const PLAYGROUND_SEGMENT = 'playground';
 
 /**
  * The demo pages of a configuration, with their defaults.
@@ -54,13 +65,18 @@ const DEMO_ACTION = /<ng-doc-demo\b[^>]*>\s*<div\b[^>]*\bid="options"[^>]*>([^<]
 function demoSettings(configuration: GeneratorConfiguration): {
   pages: 'all' | 'isolated' | 'none';
   isolated: boolean;
+  playgroundPages: 'all' | 'isolated' | 'none';
+  isolatedPlaygrounds: boolean;
   path: string;
   providers?: string;
 } {
   const settings = configuration.demoApplication;
+  const pages = settings?.pages ?? 'isolated';
   return {
-    pages: settings?.pages ?? 'isolated',
+    pages,
     isolated: settings?.isolated === true,
+    playgroundPages: pages === 'none' ? 'none' : settings?.playgroundPages ?? 'isolated',
+    isolatedPlaygrounds: settings?.isolatedPlaygrounds === true,
     path: settings?.path ?? DEFAULT_DEMO_PATH,
     ...(settings?.providers ? { providers: settings.providers } : {}),
   };
@@ -83,19 +99,54 @@ function decodeHtmlText(value: string): string {
 }
 
 /**
+ * Whether the options of an action, as the HTML pipeline wrote them, have `isolated: true`.
+ * @param text - The text of the action's `options` element.
+ */
+function isolatedOption(text: string): boolean {
+  try {
+    return (JSON.parse(decodeHtmlText(text)) as { isolated?: unknown })?.isolated === true;
+  } catch {
+    // Options the runtime can't parse either: the action renders in the page.
+    return false;
+  }
+}
+
+/**
  * Whether rendered content has a `demo` action with `isolated: true`.
  */
 function hasIsolatedDemo(html: string | undefined): boolean {
   for (const match of html?.matchAll(DEMO_ACTION) ?? []) {
-    try {
-      if ((JSON.parse(decodeHtmlText(match[1])) as { isolated?: unknown })?.isolated === true) {
-        return true;
-      }
-    } catch {
-      // Options the runtime can't parse either: the demo renders in the page.
-    }
+    if (isolatedOption(match[1])) return true;
   }
   return false;
+}
+
+/**
+ * Whether rendered content has a `playground` action with `isolated: true`.
+ * @param html - The rendered content.
+ */
+function hasIsolatedPlayground(html: string | undefined): boolean {
+  for (const match of html?.matchAll(PLAYGROUND_ACTION) ?? []) {
+    const options = PLAYGROUND_OPTIONS.exec(match[1])?.[1];
+    if (options !== undefined && isolatedOption(options)) return true;
+  }
+  return false;
+}
+
+/**
+ * The targets of a playground, in the order the page reads them: the pipe name, or the selectors
+ * of the `selectors` field the content compiler writes (`PlaygroundDescriptor.selector`), split
+ * at commas, trimmed and without empty ones, as `playgroundProcessor` splits that field's text.
+ * The page takes each target's URL segment from the same list, so the order must stay this one.
+ * @param playground - The playground.
+ */
+function playgroundTargets(playground: PlaygroundDescriptor): string[] {
+  return playground.pipeName
+    ? [playground.pipeName]
+    : (playground.selector ?? '')
+        .split(',')
+        .map((selector) => selector.trim())
+        .filter(Boolean);
 }
 
 export interface PageAssemblyRequest {
@@ -1180,6 +1231,7 @@ export class OutputAssemblerImpl implements OutputAssembler {
             ? {
                 demoRoute: `${demoSettingsOfPage.path}/${request.entry.absoluteRoute}`,
                 isolatedDemos: demoSettingsOfPage.isolated,
+                isolatedPlaygrounds: demoSettingsOfPage.isolatedPlaygrounds,
               }
             : {}),
           demoAssetsPath: resolve(request.configuration.outputRoot, demoPath),
@@ -1281,14 +1333,22 @@ export class OutputAssemblerImpl implements OutputAssembler {
       ...(request.metadata ? { metadata: request.metadata } : {}),
       modulePath: wrapperPath,
       ...(demoPages ? { demoModulePath: demoPages.path, demoNames: demoPages.names } : {}),
+      ...(demoPages?.playgroundPages.length ? { playgroundPages: demoPages.playgroundPages } : {}),
     });
   }
 
   /**
-   * Writes the guide's demo routes module (one route per demo, under the page's own providers)
-   * when the guide gets demo pages: with `pages: 'all'`, or by default when its content has a demo
-   * with `isolated: true`. Returns its path and the names of the demos that got a page, or
-   * undefined.
+   * Writes the guide's demo routes module when the guide gets demo or playground pages, and
+   * returns its path, the names of the demos that got a page and the playground pages (relative
+   * to the guide's demo route), or undefined.
+   *
+   * - Demo pages: with `pages: 'all'`, by default when its content has a demo with
+   *   `isolated: true`, and whenever the guide gets playground pages: the page then has a demo
+   *   route, and the runtime offers every demo of such a page its demo page.
+   * - Playground pages (`playground/<id>/<target>`, one per target of every playground of the
+   *   guide, under the page's providers and its generated playground classes): with
+   *   `playgroundPages: 'all'`, or by default when a `playground` action of its content or a
+   *   playground of its configuration has `isolated: true`.
    */
   private demoRoutes(
     request: PageAssemblyRequest & { entry: GuideDescriptor },
@@ -1296,30 +1356,46 @@ export class OutputAssemblerImpl implements OutputAssembler {
     slots: Array<{ linked?: LinkedContent }>,
     outputs: Map<string, FileOutput>,
     diagnostics: Diagnostic[],
-  ): { path: string; names: string[] } | undefined {
+  ): { path: string; names: string[]; playgroundPages: string[] } | undefined {
     const settings = demoSettings(request.configuration);
+    if (settings.pages === 'none') return undefined;
+    const playgrounds = this.playgroundRoutes(request, slots, diagnostics);
     const names = Object.keys(request.semantics?.demos ?? {});
-    if (
-      settings.pages === 'none' ||
-      !names.length ||
-      (settings.pages === 'isolated' && !slots.some((slot) => hasIsolatedDemo(slot.linked?.html)))
-    ) {
-      return undefined;
-    }
-    const demos = names.filter((name) => {
-      if (DEMO_NAME.test(name)) return true;
-      diagnostics.push({
-        ...diagnostic(
-          'OUTPUT_DEMO_NAME_INVALID',
-          `Demo ${JSON.stringify(name)} has no demo page: a demo name must be letters, digits, '_', '$' or '-' to be its page's URL segment.`,
-          request.entry.id,
-        ),
-        severity: 'warning',
-      });
-      return false;
+    const withDemoPages =
+      names.length > 0 &&
+      (settings.pages === 'all' ||
+        playgrounds.length > 0 ||
+        slots.some((slot) => hasIsolatedDemo(slot.linked?.html)));
+    if (!withDemoPages && !playgrounds.length) return undefined;
+    const demos = (withDemoPages ? names : []).filter((name) => {
+      if (!DEMO_NAME.test(name)) {
+        diagnostics.push({
+          ...diagnostic(
+            'OUTPUT_DEMO_NAME_INVALID',
+            `Demo ${JSON.stringify(name)} has no demo page: a demo name must be letters, digits, '_', '$' or '-' to be its page's URL segment.`,
+            request.entry.id,
+          ),
+          severity: 'warning',
+        });
+        return false;
+      }
+      if (playgrounds.length && name === PLAYGROUND_SEGMENT) {
+        diagnostics.push({
+          ...diagnostic(
+            'OUTPUT_DEMO_NAME_RESERVED',
+            `Demo ${JSON.stringify(name)} has no demo page: '${PLAYGROUND_SEGMENT}' is the URL segment of the guide's playground pages. Rename the demo.`,
+            request.entry.id,
+          ),
+          severity: 'warning',
+        });
+        return false;
+      }
+      return true;
     });
     const path = joinOutput(directory, 'demo-routes.ts');
-    if (!path || !demos.length) return undefined;
+    const playgroundsPath = joinOutput(directory, 'playgrounds.ts');
+    if (!path || !playgroundsPath || (!demos.length && !playgrounds.length)) return undefined;
+    const routesDirectory = dirname(resolve(request.configuration.outputRoot, path));
     this.renderOutput(
       outputs,
       diagnostics,
@@ -1327,18 +1403,79 @@ export class OutputAssemblerImpl implements OutputAssembler {
       'angular',
       'demo-routes.ts.nunj',
       {
-        entryImport: moduleSpecifier(
-          dirname(resolve(request.configuration.outputRoot, path)),
-          request.entry.runtimeImport.source,
-        ),
+        entryImport: moduleSpecifier(routesDirectory, request.entry.runtimeImport.source),
         demos: demos.map((name) => ({
           name,
           title: `${request.entry.title}: ${name}`,
         })),
+        playgrounds,
+        ...(playgrounds.length
+          ? {
+              playgroundsImport: moduleSpecifier(
+                routesDirectory,
+                resolve(request.configuration.outputRoot, playgroundsPath),
+              ),
+            }
+          : {}),
       },
       request.entry.id,
     );
-    return outputs.has(path) ? { path, names: demos } : undefined;
+    return outputs.has(path)
+      ? { path, names: demos, playgroundPages: playgrounds.map((route) => route.path) }
+      : undefined;
+  }
+
+  /**
+   * The playground pages of a guide, when it gets them (see `demoRoutes`): one per target of each
+   * playground, in the order of the guide's playgrounds and of `playgroundTargets`. A playground
+   * whose ID is no URL segment gets none, with a warning.
+   * @param request - The guide's assembly request.
+   * @param slots - The guide's content.
+   * @param diagnostics - Receives the warnings.
+   */
+  private playgroundRoutes(
+    request: PageAssemblyRequest & { entry: GuideDescriptor },
+    slots: Array<{ linked?: LinkedContent }>,
+    diagnostics: Diagnostic[],
+  ): Array<{
+    path: string;
+    title: string;
+    data: { id: string; selector?: string; pipeName?: string };
+  }> {
+    const settings = demoSettings(request.configuration);
+    const playgrounds = request.semantics?.playgrounds ?? [];
+    if (
+      settings.playgroundPages === 'none' ||
+      !playgrounds.length ||
+      (settings.playgroundPages === 'isolated' &&
+        !playgrounds.some((playground) => playground.isolated === true) &&
+        !slots.some((slot) => hasIsolatedPlayground(slot.linked?.html)))
+    ) {
+      return [];
+    }
+    return playgrounds.flatMap((playground) => {
+      if (!DEMO_NAME.test(playground.id)) {
+        diagnostics.push({
+          ...diagnostic(
+            'OUTPUT_PLAYGROUND_NAME_INVALID',
+            `Playground ${JSON.stringify(playground.id)} has no playground pages: a playground name must be letters, digits, '_', '$' or '-' to be a URL segment of its pages.`,
+            request.entry.id,
+          ),
+          severity: 'warning',
+        });
+        return [];
+      }
+      const targets = playgroundTargets(playground);
+      const slugs = ɵplaygroundTargetSlugs(targets);
+      return targets.map((target, index) => ({
+        path: `${PLAYGROUND_SEGMENT}/${playground.id}/${slugs[index]}`,
+        title: `${request.entry.title}: ${playground.id}`,
+        data: {
+          id: playground.id,
+          ...(playground.pipeName ? { pipeName: target } : { selector: target }),
+        },
+      }));
+    });
   }
 
   private apiEntry(
@@ -1602,8 +1739,8 @@ export class OutputAssemblerImpl implements OutputAssembler {
 
   /**
    * Writes `demo-app.ts`, the routes of the demo application (one lazy route per guide with demo
-   * pages, under its categories' providers) and its `demoProviders` import, when a guide has demo
-   * pages. Returns whether it did.
+   * or playground pages, under its categories' providers), every such page (`NG_DOC_DEMO_PAGES`)
+   * and its `demoProviders` import, when a guide has demo pages. Returns whether it did.
    */
   private demoApplication(
     request: AggregateRequest,
@@ -1633,7 +1770,9 @@ export class OutputAssemblerImpl implements OutputAssembler {
         const route = `${settings.path}/${entries.get(record.id)!.absoluteRoute}`;
         return {
           path: route,
-          demos: (record.demoNames ?? []).map((name) => `${route}/${name}`),
+          demos: [...(record.demoNames ?? []), ...(record.playgroundPages ?? [])].map(
+            (page) => `${route}/${page}`,
+          ),
           categories: chain,
           importPath: moduleSpecifier(outputRoot, resolve(outputRoot, record.demoModulePath!)),
         };

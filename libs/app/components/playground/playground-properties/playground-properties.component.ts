@@ -14,8 +14,9 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, FormsModule } from '@angular/forms';
 import { isPlaygroundProperty, resolvePlaygroundOption } from '@ng-doc/app/helpers';
-import { NgDocProvidedTypeControl } from '@ng-doc/app/interfaces';
+import { NgDocPlaygroundTexts, NgDocProvidedTypeControl } from '@ng-doc/app/interfaces';
 import { getTokenForType } from '@ng-doc/app/providers/type-control';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import { isPresent } from '@ng-doc/core/helpers/is-present';
 import { objectKeys } from '@ng-doc/core/helpers/object-keys';
 import {
@@ -32,6 +33,12 @@ import {
   NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
 
+import {
+  ARRAY_CONTROL_TYPE,
+  arrayType,
+  NgDocArrayType,
+  UNION_ARRAY_CONTROL_TYPE,
+} from '../playground-array-type';
 import { NgDocPlaygroundForm } from '../playground-form';
 import { NgDocPlaygroundPropertyComponent } from '../playground-property/playground-property.component';
 import { NgDocPlaygroundPropertyControl } from '../playground-property-control';
@@ -66,6 +73,8 @@ export class NgDocPlaygroundPropertiesComponent<
   P extends NgDocPlaygroundProperties,
   C extends Record<string, NgDocPlaygroundContent>,
 > {
+  protected readonly texts: NgDocPlaygroundTexts = inject(NG_DOC_TEXTS).playground;
+
   private readonly injector = inject(Injector);
 
   /** The form of the playground. */
@@ -82,6 +91,12 @@ export class NgDocPlaygroundPropertiesComponent<
 
   /** Default values of the inputs; the inspector renders once they are known. */
   readonly defaultValues = input<Record<string, unknown> | undefined>(undefined);
+
+  /**
+   * Whether the demos render before the defaults are known: an isolated playground's iframes
+   * report them, so they must render first. The controls render once the defaults are known.
+   */
+  readonly waitingForDefaults = input<boolean>(false);
 
   /** Whether the inspector is hidden, leaving the demos only. */
   readonly hideSidePanel = input<boolean>(false);
@@ -141,7 +156,7 @@ export class NgDocPlaygroundPropertiesComponent<
     }
 
     return Array.from(sections, ([group, controls]) => ({
-      title: group ?? 'Settings',
+      title: group ?? this.texts.settings,
       controls,
     })).filter((section: NgDocPlaygroundPropertySection) => section.controls.length > 0);
   });
@@ -162,13 +177,22 @@ export class NgDocPlaygroundPropertiesComponent<
   private getTypeControl(property: NgDocPlaygroundProperty): NgDocProvidedTypeControl | undefined {
     const type: string = property.type;
     const primitive: string | undefined = optionalPrimitive(type);
+    const array: NgDocArrayType | undefined = arrayType(type);
+    const options: Array<string | NgDocPlaygroundOption> | undefined = isPlaygroundProperty(
+      property,
+    )
+      ? property.options
+      : undefined;
+    // The options of an array are the values of its items, when they are a union of literals.
     const typeControl: NgDocProvidedTypeControl | undefined =
       this.getControlForType(type) ??
       (primitive ? this.getControlForType(primitive) : undefined) ??
-      this.getControlForTypeAlias(
-        isPlaygroundProperty(property) ? property.options : undefined,
-        property.isManual,
-      );
+      (array?.list ? this.getControlForType(array.list) : undefined) ??
+      (array
+        ? this.getControlForTypeAlias(options, property.isManual, UNION_ARRAY_CONTROL_TYPE)
+        : undefined) ??
+      (array ? this.getControlForType(ARRAY_CONTROL_TYPE) : undefined) ??
+      this.getControlForTypeAlias(options, property.isManual, 'NgDocTypeAlias');
 
     if (!typeControl && isDevMode()) {
       console.warn(
@@ -185,31 +209,48 @@ export class NgDocPlaygroundPropertiesComponent<
     return token ? this.injector.get(token) : undefined;
   }
 
+  /**
+   * The control of the values of a union, when every option is a value: the select of a union
+   * (`NgDocTypeAlias`) or the multi-select of an array of one (`NgDocTypeAlias[]`). An optional
+   * array input without such options has the members of its own union (`undefined` and the array
+   * type), and the text of an array type is not a value of an item.
+   * @param options - The options of the input.
+   * @param isManual - Whether the options come from the playground's `controls`.
+   * @param controlType - The type the control is registered for.
+   */
   private getControlForTypeAlias(
-    options?: Array<string | NgDocPlaygroundOption>,
-    isManual?: boolean,
+    options: Array<string | NgDocPlaygroundOption> | undefined,
+    isManual: boolean | undefined,
+    controlType: string,
   ): NgDocProvidedTypeControl | undefined {
-    if (options && options.length) {
-      let optionsIsValid: boolean = true;
-
-      try {
-        // checking that all values are extractable
-        options.forEach((item: string | NgDocPlaygroundOption) =>
-          resolvePlaygroundOption(item, isManual),
-        );
-      } catch {
-        optionsIsValid = false;
-      }
-
-      if (optionsIsValid) {
-        const token: InjectionToken<NgDocProvidedTypeControl> | undefined =
-          getTokenForType('NgDocTypeAlias');
-
-        return token ? this.injector.get(token) : undefined;
-      }
+    if (!options?.length) {
+      return undefined;
     }
 
-    return undefined;
+    const values: unknown[] = [];
+
+    try {
+      // checking that all values are extractable
+      options.forEach((item: string | NgDocPlaygroundOption) =>
+        values.push(resolvePlaygroundOption(item, isManual).value),
+      );
+    } catch {
+      return undefined;
+    }
+
+    // The items of an array are values: an option that evaluates to an object, such as the text
+    // of a tuple type, means the options are not those of the items.
+    if (
+      controlType === UNION_ARRAY_CONTROL_TYPE &&
+      !(
+        values.every((value: unknown) => value === null || ITEM_TYPES.has(typeof value)) &&
+        values.some((value: unknown) => value !== null && value !== undefined)
+      )
+    ) {
+      return undefined;
+    }
+
+    return this.getControlForType(controlType);
   }
 }
 
@@ -264,6 +305,9 @@ function compareByTypeControl(
   return INPUT_ORDER.compare(a.property.inputName, b.property.inputName);
 }
 
+/** The types of the values that an item of the multi-select of a union can have. */
+const ITEM_TYPES: ReadonlySet<string> = new Set(['string', 'number', 'boolean', 'undefined']);
+
 /** The types whose control also edits an optional or nullable input of the type. */
 const PRIMITIVE_TYPES: ReadonlySet<string> = new Set(['string', 'number', 'boolean']);
 
@@ -271,9 +315,9 @@ const PRIMITIVE_TYPES: ReadonlySet<string> = new Set(['string', 'number', 'boole
  * The primitive of an optional or nullable primitive input type, such as `string` of
  * `string | undefined` (an optional `@Input() label?: string`, `input<string>()` or
  * `model<string>()`) or of `number | null`, so that the input gets the primitive's control.
- * Other types are matched by their exact name only: a custom control registered for `Position`
- * does not receive the `undefined` of a `Position | undefined` input unless it is registered for
- * that type too.
+ * Other types are matched by their exact name only (arrays of strings and numbers aside, see
+ * `arrayType`): a custom control registered for `Position` does not receive the `undefined` of a
+ * `Position | undefined` input unless it is registered for that type too.
  * @param type - The input type as the builder printed it.
  * @returns The primitive, or `undefined` when the type is not one.
  */

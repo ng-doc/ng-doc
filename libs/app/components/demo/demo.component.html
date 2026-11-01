@@ -1,6 +1,10 @@
 @if (options().container ?? true) {
   <div class="ng-doc-demo-toolbar">
-    <div class="ng-doc-demo-views" role="tablist" aria-label="Demo view" ngDocSelectionHost>
+    <div
+      class="ng-doc-demo-views"
+      role="tablist"
+      [attr.aria-label]="texts.viewsLabel"
+      ngDocSelectionHost>
       <ng-doc-selection [align]="null" />
       @for (item of views(); track item; let i = $index) {
         <button
@@ -16,7 +20,7 @@
           (keydown)="onViewKeydown($event)"
           #viewTab>
           @if (item === 'preview') {
-            Preview
+            {{ texts.preview }}
           } @else {
             @if (assets()[i - 1].icon; as icon) {
               <ng-doc-icon [customIcon]="icon"></ng-doc-icon>
@@ -29,7 +33,11 @@
 
     @if (view() === 'preview' && !options().fullscreenRoute) {
       <span class="ng-doc-demo-width-readout">{{ widthReadout() }}</span>
-      <div class="ng-doc-demo-widths" role="group" aria-label="Preview width" ngDocSelectionHost>
+      <div
+        class="ng-doc-demo-widths"
+        role="group"
+        [attr.aria-label]="texts.widthsLabel"
+        ngDocSelectionHost>
         <ng-doc-selection [align]="null" />
         @for (item of previewWidths; track item.width) {
           <button
@@ -66,12 +74,19 @@
     }
 
     @if (assets().length) {
-      <ng-doc-copy-button class="ng-doc-demo-copy" [text]="copyText" label="Copy code">
+      <ng-doc-copy-button class="ng-doc-demo-copy" [text]="copyText" [label]="copyTexts.copyCode">
         <ng-doc-icon icon="copy"></ng-doc-icon>
       </ng-doc-copy-button>
     }
 
-    @if (demoUrl(); as url) {
+    @if (isolated()) {
+      <ng-doc-demo-theme-button
+        class="ng-doc-demo-theme"
+        [(theme)]="frameTheme"
+        [configured]="options().theme" />
+    }
+
+    @if (newTabUrl(); as url) {
       <a
         class="ng-doc-demo-open"
         ng-doc-button-icon
@@ -79,8 +94,8 @@
         [href]="url"
         target="_blank"
         rel="noopener"
-        aria-label="Open in a new tab"
-        ngDocTooltip="Open in a new tab">
+        [attr.aria-label]="texts.openInNewTab"
+        [ngDocTooltip]="texts.openInNewTab">
         <ng-doc-icon icon="external-link"></ng-doc-icon>
       </a>
     }
@@ -97,6 +112,9 @@
     [attr.aria-labelledby]="idPrefix + '-tab-0'"
     [attr.data-ng-doc-width]="previewWidth()"
     [attr.data-ng-doc-isolated]="isolated()"
+    [attr.data-ng-doc-themed]="stageBackground() ? true : null"
+    [style.background-color]="stageBackground() ?? null"
+    [style.--_ng-doc-demo-canvas-dots]="stageDots() ?? null"
     [hidden]="view() !== 'preview'"
     ngDocFullscreen
     #stage="ngDocFullscreen">
@@ -128,7 +146,11 @@
   @if (options().fullscreenRoute; as route) {
     <ng-doc-fullscreen-button [route]="route"></ng-doc-fullscreen-button>
   } @else if (isolated()) {
-    <ng-doc-demo-frame [src]="demoUrl()!" [frameTitle]="frameTitle()" [fill]="fullscreen()" />
+    <ng-doc-demo-frame
+      [src]="demoUrl()!"
+      [fragment]="frameFragment()"
+      [frameTitle]="frameTitle()"
+      [fill]="fullscreen()" />
   } @else if (demo(); as demo) {
     <ng-container *ngComponentOutlet="demo; inputs: options().inputs"></ng-container>
   }

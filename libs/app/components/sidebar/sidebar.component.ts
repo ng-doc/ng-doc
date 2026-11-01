@@ -1,7 +1,7 @@
 import { Location, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { NgDocNavigation } from '@ng-doc/app/interfaces';
-import { NG_DOC_CONTEXT } from '@ng-doc/app/tokens';
+import { NgDocNavigation, NgDocNavigationTexts } from '@ng-doc/app/interfaces';
+import { NG_DOC_CONTEXT, NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import { NgDocBindPipe, NgDocExecutePipe } from '@ng-doc/ui-kit';
 
 import { NgDocSidebarCategoryComponent } from './sidebar-category/sidebar-category.component';
@@ -21,6 +21,8 @@ import { NgDocSidebarItemComponent } from './sidebar-item/sidebar-item.component
   ],
 })
 export class NgDocSidebarComponent {
+  protected readonly texts: NgDocNavigationTexts = inject(NG_DOC_TEXTS).navigation;
+
   protected readonly location = inject(Location);
   protected readonly context = inject(NG_DOC_CONTEXT);
 

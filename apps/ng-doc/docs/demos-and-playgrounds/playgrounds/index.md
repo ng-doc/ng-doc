@@ -70,6 +70,9 @@ alias becomes the name of the row. The type of the input chooses the control:
 | `boolean`                              | A checkbox.                                                               |
 | A union of literals, or an alias of it | A list of the values, such as `'small' \| 'medium' \| 'large'`.           |
 | An enum                                | A list of the member names, such as `Good`, that sets the member's value. |
+| `string[]` or `number[]`               | A chip field: the items are chips that you add, edit, remove and reorder. |
+| An array of a union of literals        | A chip field that picks the values of the union, such as `NgDocSize[]`.   |
+| Any other array, or a tuple            | A JSON field.                                                             |
 | A type with a type control             | Your control (`*CustomTypeControlsPage`).                                 |
 | Any other type                         | No control. In development, the browser console names the skipped input.  |
 
@@ -102,6 +105,78 @@ export class StatusComponent {
 > Only the new engine lists the members of an enum. With the legacy builders, an enum input gets no
 > control: list its values in `controls` with the type `NgDocTypeAlias` (see "Controls for other
 > inputs").
+
+## Arrays
+
+An array of strings or numbers gets a chip field: each item is a chip, and a text field follows
+them, all in one box. An array of a union of literals gets the same field, which picks the values of
+the union. Any other array gets a JSON field. Try them with the `tags`, `sizes`, `palette` and
+`accents` inputs of this component:
+
+```typescript name="tag-cloud.component.ts"
+export interface TagCloudAccent {
+  tag: string;
+  color: NgDocColor;
+}
+
+export class TagCloudComponent {
+  readonly tags = input<string[]>(['Angular', 'NgDoc', 'Playground']);
+  readonly sizes = input<number[]>();
+  readonly palette = input<NgDocColor[]>(['primary', 'info', 'warning']);
+  readonly accents = input<TagCloudAccent[]>([{ tag: 'NgDoc', color: 'success' }]);
+}
+```
+
+{{ NgDocActions.playground("TagCloudPlayground") }}
+
+The chip field edits `string[]` and `number[]` inputs, however they are written: `Array<string>`,
+`readonly string[]` and `ReadonlyArray<string>` too, and optional or nullable ones, such as
+`input<number[]>()`.
+
+- **Add:** type a value and press **Enter**. While you type, a list shows the matching suggestions,
+  and a row that adds the text itself when no suggestion is that text. The arrow keys move through
+  the list, and **Enter** or a click picks a row; **Escape** closes the list.
+- **Suggestions:** the items of the input's default value and the items you removed, so a removed
+  item can come back. An item that the array holds is not suggested, but you can still type it: an
+  array of strings or numbers may hold an item twice.
+- **Remove:** click the **×** of a chip, or press **Backspace** in the empty text field to remove
+  the last chip.
+- **Reorder:** drag a chip to another place. With the keyboard, the arrow keys move between the
+  chips and the text field, **Alt+Left** and **Alt+Right** move the focused chip, and **Delete**
+  removes it.
+- **Edit:** double-click a chip, or press **Enter** or **F2** on it, to edit its value in place.
+  **Enter** keeps the new value, and **Escape** the old one.
+- **Numbers:** the items of a `number[]` are numbers. Text that is not a number is marked as
+  invalid and isn't added.
+- **Empty values:** `undefined`, `null` and an empty array are different values, and the field
+  shows which one the input has. The first item you add makes an array, and removing the last item
+  leaves `[]`. The **×** at the end of the field resets the input to its default value, such as
+  `undefined` for an optional input.
+
+An array of a union of literals, such as `palette` above, gets a multi-select: `NgDocSize[]` (an
+alias of a union), `('a' | 'b')[]`, `Array<'x' | 'y'>`, an array of an enum, and optional or
+nullable ones. Its list shows every value of the union, as the list of a union does, and marks the
+values that the array holds. Picking a value adds it, picking a marked value removes it, and the text
+you type filters the values instead of adding text. It moves and removes chips like the other chip
+fields. Both engines give such an input its values; an array of `boolean` gets the JSON field.
+
+The JSON field edits every other array: arrays of objects (`Item[]`, `Array<{ x: number }>`),
+nested arrays (`string[][]`), arrays of unions that are not only literals (`(string | number)[]`)
+and tuples (`[string, number]`), optional or not. It shows the value as JSON, and sets the input
+when the text is valid JSON. While it is not, the field is marked as invalid and the input keeps its
+last valid value. An empty field sets `undefined`.
+
+The type of an input is read as TypeScript prints it, so an input typed with an alias of an array,
+such as `type Tags = string[]`, is typed `Tags` and gets no control. Register one of the built-in
+controls for the alias (`*CustomTypeControlsPage#reuse-the-built-in-controls`). In `controls`, name
+an array type such as `'string[]'`, `'NgDocArray'` for the JSON field, or `'NgDocTypeAlias[]'` with
+`options` for the multi-select:
+
+```typescript name="ng-doc.page.ts"
+controls: {
+  sizes: { type: 'NgDocTypeAlias[]', options: ['small', 'medium', 'large'] },
+},
+```
 
 ## Multiple selectors
 
@@ -266,6 +341,66 @@ export default MyPage;
 The descriptions come from the `@param` tags of `transform`, and the defaults from its default
 parameter values.
 
+## Isolated playgrounds
+
+An isolated playground shows its demos in iframes, as isolated demos do (`*IsolatedDemosPage`).
+Each target runs on a page of its own, which loads only Angular and the target: the documentation
+page's styles and providers don't reach it, and its media queries see the width of its iframe. The
+inspector stays on the documentation page. Isolated playgrounds are part of the new engine.
+
+{{ NgDocActions.playground("TagPlayground", { isolated: true }) }}
+
+Change a value: the inspector writes the values into the iframe's URL, after the `#`, and the
+target takes them without reloading. **Open in a new tab**, beside the demo, opens the target's
+page with the current values.
+
+Isolate one playground with the `isolated` option of the action, or of its configuration in
+`ng-doc.page.ts`:
+
+```twig name="index.md"
+{{ '{{ NgDocActions.playground("TagPlayground", { isolated: true }) }}' | safe }}
+```
+
+Or isolate every playground of the site in `ng-doc.config.ts`, and keep one in the page with
+`isolated: false`:
+
+```typescript name="ng-doc.config.ts"
+import { NgDocConfiguration } from '@ng-doc/builder';
+
+const config: NgDocConfiguration = {
+  isolatedPlaygrounds: true,
+};
+
+export default config;
+```
+
+The action's option wins over the configuration's, which wins over `isolatedPlaygrounds`.
+
+The `theme` option shows the demos of an isolated playground in another theme than the page, as
+for isolated demos (`*IsolatedDemosPage#theme`), and the theme button beside each demo switches
+it for all of them.
+
+The page of a target is `<base href>demo-preview/<page route>/playground/<name>/<target>/`. The
+target is the selector, or the pipe name, in lower case, with `-` for other characters:
+`button[ngDocTag]` is `button-ngdoctag`. The pages get the providers of their page and its
+categories, and `demoProviders`, as demo pages do (`*IsolatedDemosPage#providers`). A page with an
+isolated playground gives its demos their pages too, so none of its demos may be named
+`playground`.
+
+### Values that can be sent
+
+The URL carries plain data: strings, numbers, booleans, `null`, `undefined`, dates, and arrays and
+plain objects of those. A playground with another value, such as a function or a class instance
+like a `TemplateRef`, renders in the page, and a note above the inspector names the input. So does
+a playground whose values don't fit in 8 KB of URL. The action's `data` travels with the values, so
+the same applies to it; the `data` of the configuration is part of the page and can hold anything.
+
+The note also tells when the playground renders in the page because:
+
+- the control of an input has `cloneable: false` (`*CustomTypeControlsPage#options`);
+- its `selectors` option names a selector that the target doesn't have;
+- the page in the iframe failed, or didn't answer within 10 seconds.
+
 ## 📋 Options
 
 Set options in the configuration of the playground, or as the second argument of the action. The
@@ -282,6 +417,8 @@ action's options win. They follow `NgDocPlaygroundOptions`:
 | `defaults`          | `Record<string, unknown>` | –         | Defaults for the controls, instead of the target's own. **Reset** returns to them.  |
 | `hiddenInputs`      | `string[]`                | –         | Inputs that get no control.                                                         |
 | `data`              | `Record<string, unknown>` | –         | Values for the template. The action's `data` extends the configuration's.           |
+| `isolated`          | `boolean`                 | `false`   | Shows the demos in iframes of their own pages (new engine only, see above).         |
+| `theme`             | `string`                  | –         | The theme of the demos of an isolated playground, such as `'dark'` (see above).     |
 
 This playground hides the inspector, and starts with a rounded button:
 
@@ -336,8 +473,8 @@ export default MyPage;
 ```
 
 An entry in `controls` also replaces the control that NgDoc chose for an input of the same name. The
-type `NgDocTypeAlias` shows a list of `options`; a type registered with `provideTypeControl` shows
-your control.
+type `NgDocTypeAlias` shows a list of `options`, and `NgDocTypeAlias[]` a multi-select of them for
+an array; a type registered with `provideTypeControl` shows your control.
 
 ## Labels, groups and order
 
@@ -371,6 +508,13 @@ An entry with a `type` takes the same fields.
 > In the action's options, put a space between two closing braces, such as `{ inputs: { a: 1 } }`.
 > Without it, Nunjucks reads `}}` as the end of the expression.
 
+> **Warning**
+> Only the new engine builds playground pages. With the legacy builders, an isolated playground
+> renders in the page, without a note (`*LegacyBuildersPage`).
+
+> **Warning**
+> An overlay that a target opens, such as a menu or a tooltip, can't leave its iframe.
+
 > **Note**
 > The legacy builders list the values of a union in the order the TypeScript checker created them,
 > which can differ from the written order (`*UpgradeTo22Page#7-the-new-engine`).
@@ -381,6 +525,7 @@ An entry with a `type` takes the same fields.
 
 - `*CustomTypeControlsPage`
 - `*DemosPage`
+- `*IsolatedDemosPage`
 - `*PageFilesReference#playground-configuration`
 
 {% endindex %}

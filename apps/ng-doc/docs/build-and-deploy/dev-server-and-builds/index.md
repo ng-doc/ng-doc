@@ -45,7 +45,9 @@ imports the generated code from `@ng-doc/generated`. The Vite builders run the s
 configuration for `ng serve` and `ng build` (`*BuildersReference#vite-builders`).
 
 In development, the engine keeps a compiler worker running between edits. When you save a file, it
-rebuilds only the pages that depend on it, and the host updates the page in the browser.
+rebuilds only the pages that depend on it, and the host updates the page in the browser. With the
+Vite host, an edit of a page's text updates the open page without a reload; other edits reload it
+(`*ViteHostPage#3-start-the-server`).
 
 ## The `ng-doc` command
 

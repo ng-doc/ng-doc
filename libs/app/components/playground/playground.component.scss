@@ -12,3 +12,10 @@ ng-doc-playground-demo:last-child {
 ng-doc-playground-demo + ng-doc-playground-demo {
   border-top: 1px solid color-mix(in srgb, var(--ng-doc-border-color) 70%, transparent);
 }
+
+// Why an isolated playground renders in the page.
+.ng-doc-playground-note {
+  margin: 0;
+  padding: var(--ng-doc-space-2) var(--ng-doc-space-3);
+  color: var(--ng-doc-text-muted);
+}

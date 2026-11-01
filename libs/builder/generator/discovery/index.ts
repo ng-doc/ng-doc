@@ -75,6 +75,7 @@ interface RawConfiguration extends LiveRecord {
   guide?: { anchorHeadings?: GeneratorConfiguration['anchorHeadings']; headerTemplate?: string };
   api?: { protectedMembers?: boolean };
   isolatedDemos?: unknown;
+  isolatedPlaygrounds?: unknown;
   demoApplication?: unknown;
   demoProviders?: unknown;
   shiki?: { themes?: { light?: string; dark?: string }; langs?: unknown };
@@ -248,13 +249,13 @@ export class DiscoveryServiceImpl
       configScope = configEvaluation.scope;
       const rawConfig =
         configEvaluation.modules.find((item) => item.kind === 'config')?.value ?? {};
-      const configuredRoots = asArray(rawConfig.docsPath ?? request.defaults.docsRoot).map((root) =>
-        normalizeAbsolute(String(root), workspaceRoot),
+      const configuredRoots = asArray(rawConfig['docsPath'] ?? request.defaults.docsRoot).map(
+        (root) => normalizeAbsolute(String(root), workspaceRoot),
       );
       const descriptions = scanDescriptions(configuredRoots, dependencies);
       const entryEvaluation = await evaluateModules(
         workspaceRoot,
-        String(rawConfig.tsConfig ?? request.defaults.tsConfig),
+        String(rawConfig['tsConfig'] ?? request.defaults.tsConfig),
         undefined,
         descriptions,
         dependencies,
@@ -452,7 +453,7 @@ export function createDiscoveryServices(options: DiscoveryOptions = {}): {
 }
 
 /**
- * The live guide values (playground controls) of one evaluated guide page, as JSON.
+ * The live guide values (playground controls and `isolated`) of one evaluated guide page, as JSON.
  * @param entry The page's live default export.
  * @param entryId
  * @param dependencies What the values depend on (the entry's recorded inputs).
@@ -478,9 +479,17 @@ function guideValuesOf(
   }
   try {
     const playgrounds = Object.fromEntries(
-      Object.entries(recordOrEmpty(entry.playgrounds)).map(([id, value]) => {
-        const controls = recordOrEmpty(asRecord(value, `playground ${id}`)).controls;
-        return [id, { controls: controls === undefined ? {} : assertJson(controls) }];
+      Object.entries(recordOrEmpty(entry['playgrounds'])).map(([id, value]) => {
+        const playground = recordOrEmpty(asRecord(value, `playground ${id}`));
+        const controls = playground['controls'];
+        return [
+          id,
+          {
+            controls: controls === undefined ? {} : assertJson(controls),
+            // Only when set, so every other guide keeps its values and their digest.
+            ...(playground['isolated'] === true ? { isolated: true } : {}),
+          },
+        ];
       }),
     );
     return { value: assertJson({ playgrounds }), dependencies, diagnostics: [] };
@@ -1103,8 +1112,9 @@ function sanitizeDescription(source: string, kind: EntryKind): string {
                 !ts.isObjectLiteralExpression(playground.initializer)
               )
                 return [];
-              const controls = playground.initializer.properties.filter(
-                (item) => propertyName(item) === 'controls',
+              // `isolated` decides which guides get playground pages (guide values).
+              const controls = playground.initializer.properties.filter((item) =>
+                ['controls', 'isolated'].includes(propertyName(item) ?? ''),
               );
               return [
                 context.factory.updatePropertyAssignment(
@@ -1305,18 +1315,18 @@ class EvaluationScope {
     new vm.Script(code, {
       filename: path.join(this.workspaceRoot, '.ng-doc-discovery-evaluator.cjs'),
     }).runInContext(this.context, { timeout: timeoutMs });
-    return (this.context.module as { exports: unknown }).exports;
+    return (this.context['module'] as { exports: unknown }).exports;
   }
 
   invoke<T>(callback: () => T, timeoutMs: number): T {
     this.assertActive();
-    this.context.__ngDocInvoke = callback;
+    this.context['__ngDocInvoke'] = callback;
     try {
       return new vm.Script('__ngDocInvoke()').runInContext(this.context, {
         timeout: timeoutMs,
       }) as T;
     } finally {
-      delete this.context.__ngDocInvoke;
+      delete this.context['__ngDocInvoke'];
     }
   }
 
@@ -1472,7 +1482,8 @@ export const DEFAULT_DEMO_PATH = 'demo-preview';
 const DEMO_PATH_SEGMENT = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
 
 /**
- * `isolatedDemos`, `demoApplication` and `demoProviders` as `GeneratorConfiguration` settings.
+ * `isolatedDemos`, `isolatedPlaygrounds`, `demoApplication` and `demoProviders` as
+ * `GeneratorConfiguration` settings.
  * Undefined when none of them changes a default, so every other configuration keeps its digest.
  */
 function demoApplicationSettings(
@@ -1490,9 +1501,12 @@ function demoApplicationSettings(
     });
     return undefined;
   };
-  const { isolatedDemos, demoApplication, demoProviders } = raw;
+  const { isolatedDemos, isolatedPlaygrounds, demoApplication, demoProviders } = raw;
   if (isolatedDemos !== undefined && typeof isolatedDemos !== 'boolean') {
     return invalid('DISCOVERY_DEMO_APPLICATION_INVALID', 'isolatedDemos must be a boolean.');
+  }
+  if (isolatedPlaygrounds !== undefined && typeof isolatedPlaygrounds !== 'boolean') {
+    return invalid('DISCOVERY_DEMO_APPLICATION_INVALID', 'isolatedPlaygrounds must be a boolean.');
   }
   const configured = demoApplication !== null && typeof demoApplication === 'object';
   if (demoApplication !== undefined && typeof demoApplication !== 'boolean' && !configured) {
@@ -1527,15 +1541,35 @@ function demoApplicationSettings(
       source: { path: source },
     });
   }
+  if (demoApplication === false && isolatedPlaygrounds === true) {
+    diagnostics.push({
+      code: 'DISCOVERY_DEMO_APPLICATION_OFF',
+      severity: 'warning',
+      stage: 'evaluation',
+      message:
+        'isolatedPlaygrounds has no effect while demoApplication is false: playgrounds render in ' +
+        'the page.',
+      source: { path: source },
+    });
+  }
   const pages =
     demoApplication === false
       ? ('none' as const)
       : isolatedDemos === true || demoApplication === true || configured
         ? ('all' as const)
         : undefined;
+  // Playground pages for every playground only when the site isolates them all: a playground
+  // page is reached only through an isolated playground, so `demoApplication` and
+  // `isolatedDemos` alone build none, and their sites keep their output.
+  const playgroundPages =
+    pages !== 'none' && isolatedPlaygrounds === true ? ('all' as const) : undefined;
   const settings = {
     ...(pages ? { pages } : {}),
     ...(isolatedDemos === true && pages !== 'none' ? { isolated: true as const } : {}),
+    ...(playgroundPages ? { playgroundPages } : {}),
+    ...(isolatedPlaygrounds === true && pages !== 'none'
+      ? { isolatedPlaygrounds: true as const }
+      : {}),
     ...(demoPath && demoPath !== DEFAULT_DEMO_PATH ? { path: demoPath } : {}),
     ...(providers ? { providers } : {}),
   };
@@ -1621,13 +1655,13 @@ function describeEntries(
     if (!filtered.has(module.source)) {
       filtered.set(module.source, {
         kind: module.kind,
-        title: typeof entry.title === 'string' ? entry.title : '',
+        title: typeof entry['title'] === 'string' ? entry['title'] : '',
         source: module.source,
         absoluteRoute,
         ...(onlyForTags ? { onlyForTags } : {}),
         filteredBy,
         ...(module.kind === 'guide'
-          ? guideKeywords(entry.mdFile, module.source, allDependencies)
+          ? guideKeywords(entry['mdFile'], module.source, allDependencies)
           : {}),
       });
     }
@@ -1666,16 +1700,16 @@ function describeEntries(
     const ownFilter =
       onlyForTags && !onlyForTags.some((tag) => tags.has(tag))
         ? {
-            title: typeof entry.title === 'string' ? entry.title : '',
+            title: typeof entry['title'] === 'string' ? entry['title'] : '',
             source: module.source,
             onlyForTags,
           }
         : undefined;
     const parentModule =
-      entry.category && typeof entry.category === 'object'
-        ? moduleByObject.get(entry.category as LiveRecord)
+      entry['category'] && typeof entry['category'] === 'object'
+        ? moduleByObject.get(entry['category'] as LiveRecord)
         : undefined;
-    if (entry.category && !parentModule) {
+    if (entry['category'] && !parentModule) {
       if (ownFilter) return exclude(module, routePrefix, ownFilter, onlyForTags);
       diagnostics.push({
         code: 'DISCOVERY_CATEGORY_SOURCE_MISSING',
@@ -1697,7 +1731,7 @@ function describeEntries(
       return exclude(module, described?.absoluteRoute ?? routePrefix, ownFilter, onlyForTags);
     }
     const parent = described;
-    if (typeof entry.title !== 'string' || entry.title.length === 0) {
+    if (typeof entry['title'] !== 'string' || entry['title'].length === 0) {
       diagnostics.push({
         code: 'DISCOVERY_INVALID_ENTRY',
         severity: 'error',
@@ -1713,19 +1747,19 @@ function describeEntries(
     const common = {
       id,
       source: { path: module.source },
-      title: entry.title,
+      title: entry['title'],
       route,
       absoluteRoute: joinRoute(parent?.absoluteRoute ?? routePrefix, route),
-      breadcrumbs: [...(parent?.breadcrumbs ?? []), entry.title],
+      breadcrumbs: [...(parent?.breadcrumbs ?? []), entry['title']],
       parentId: parent?.id,
-      order: numberValue(entry.order),
-      hidden: booleanValue(entry.hidden),
+      order: numberValue(entry['order']),
+      hidden: booleanValue(entry['hidden']),
       runtimeImport,
       dependencies: [] as Dependency[],
     };
     liveEntries.set(id, entry);
     if (module.kind === 'guide') {
-      const markdown = asArray(entry.mdFile).map((file) =>
+      const markdown = asArray(entry['mdFile']).map((file) =>
         normalizeAbsolute(String(file), path.dirname(module.source)),
       );
       for (const file of markdown) allDependencies.observeFile(file);
@@ -1753,21 +1787,21 @@ function describeEntries(
           closures.get(module.source),
         ),
         kind: 'category',
-        expandable: booleanValue(entry.expandable),
-        expanded: booleanValue(entry.expanded),
+        expandable: booleanValue(entry['expandable']),
+        expanded: booleanValue(entry['expanded']),
       } satisfies CategoryDescriptor;
     }
-    const scopesValue = Array.isArray(entry.scopes) ? entry.scopes : [];
+    const scopesValue = Array.isArray(entry['scopes']) ? entry['scopes'] : [];
     const scopes = scopesValue.map((scope) => {
       const value = asRecord(scope, module.source);
-      const scopeRoute = normalizeRoute(String(value.route ?? ''));
+      const scopeRoute = normalizeRoute(String(value['route'] ?? ''));
       return {
         id: `${id}:scope:${scopeRoute}`,
-        name: String(value.name ?? ''),
+        name: String(value['name'] ?? ''),
         route: scopeRoute,
-        order: numberValue(value.order),
-        include: asArray(value.include).map(String),
-        exclude: asArray(value.exclude).map(String),
+        order: numberValue(value['order']),
+        include: asArray(value['include']).map(String),
+        exclude: asArray(value['exclude']).map(String),
       };
     });
     return {
@@ -1778,8 +1812,8 @@ function describeEntries(
         closures.get(module.source),
       ),
       kind: 'api',
-      keyword: stringValue(entry.keyword),
-      assetRoute: normalizeRoute(typeof entry.route === 'string' ? entry.route : ''),
+      keyword: stringValue(entry['keyword']),
+      assetRoute: normalizeRoute(typeof entry['route'] === 'string' ? entry['route'] : ''),
       scopes,
     } satisfies ApiDescriptor;
   };
@@ -1824,7 +1858,7 @@ function guideKeywords(
   for (const file of asArray(mdFile)) {
     try {
       const text = dependencies.readFile(normalizeAbsolute(String(file), path.dirname(source)));
-      const keyword = text ? matter(text.toString('utf8')).data.keyword : undefined;
+      const keyword = text ? matter(text.toString('utf8')).data['keyword'] : undefined;
       if (typeof keyword === 'string' && keyword) keywords.add(`*${keyword}`);
     } catch {
       // A broken front matter of an entry that does not exist in this build is not an error.
@@ -1855,7 +1889,7 @@ function normalizeBuildTags(value: unknown): string[] | { invalid: string } {
 function entryOnlyForTags(
   module: EvaluatedModule & { kind: EntryKind },
 ): string[] | string | undefined {
-  const value = module.value.onlyForTags;
+  const value = module.value['onlyForTags'];
   // `null` and `''` mean "no filter", as the legacy engine's truthiness check did; `[]` hides.
   if (module.kind === 'api' || value === undefined || value === null || value === '')
     return undefined;
@@ -2031,11 +2065,11 @@ function kindFor(file: string): EntryKind {
 }
 
 function entryRoute(kind: EntryKind, entry: LiveRecord, source: string): string {
-  const route = entry.route;
+  const route = entry['route'];
   if (kind === 'guide') {
     if (typeof route === 'object' && route !== null)
       return normalizeRoute(
-        String((route as LiveRecord).path ?? path.basename(path.dirname(source))),
+        String((route as LiveRecord)['path'] ?? path.basename(path.dirname(source))),
       );
     return normalizeRoute(String(route ?? path.basename(path.dirname(source))));
   }

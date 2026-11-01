@@ -149,25 +149,30 @@ describe('one patched Angular pass per generation', () => {
     vi.stubEnv('VITEST', undefined);
     // One fixture for both arms, so generated identities and paths are the same.
     const fixture = await project();
-    const shared = await pageTitleEdit(fixture, true);
-    const separate = await pageTitleEdit(fixture, false);
+    const shared = await pageTitleEdit(fixture, { sharedPass: true });
+    const separate = await pageTitleEdit(fixture, { sharedPass: false });
     // The edit rewrites several generated TypeScript modules (page, routes, context).
     expect(shared.changed.length).toBeGreaterThanOrEqual(3);
     expect(separate.changed).toEqual(shared.changed);
-    // Shared: one pass that takes the others as companions and confirms them.
+    // Shared: one pass that takes the other modules and the edited description module as
+    // companions and confirms them.
     expect(shared.passes).toEqual([
-      { file: expect.any(String), companions: shared.changed.length - 1, confirmed: true },
+      { file: expect.any(String), companions: shared.changed.length, confirmed: true },
     ]);
     // Switch off: exactly one pass per report of a module, without companions, and every module
     // compiled. Not one per module: the switch restores the old behaviour, which compiles every
     // report, and under load FSEvents may report one committed write twice (the commit's write and
-    // rename can arrive as two events); how often is the kernel's timing, not the host's.
-    expect(separate.passes).toHaveLength(separate.reports);
-    expect([...new Set(separate.passes.map((pass) => pass.file))].sort()).toEqual(separate.changed);
+    // rename can arrive as two events); how often is the kernel's timing, not the host's. The
+    // description module takes its own pass, as before.
+    expect(separate.passes).toHaveLength(separate.reports + 1);
+    expect([...new Set(separate.passes.map((pass) => pass.file))].sort()).toEqual(
+      [...separate.changed, DESCRIPTION].sort(),
+    );
     expect(separate.passes.every((pass) => pass.companions === 0)).toBe(true);
     // Both serve the new title, byte for byte the same modules.
     expect(shared.served.get('routes.ts')).toContain('Retitled guide');
     expect(shared.served.get('context.ts')).toContain('Retitled guide');
+    expect(shared.served.get(DESCRIPTION)).toContain('Retitled guide');
     expect(shared.served).toEqual(separate.served);
   }, 180_000);
 });
@@ -573,8 +578,11 @@ async function tabRouteEdit(fixture: Fixture, structuralPass: boolean) {
  * then serves for each of them (timestamps and optimizer hashes normalized). Restores the title
  * before closing the server.
  */
-async function pageTitleEdit(fixture: Fixture, sharedPass: boolean) {
-  vi.stubEnv('NGDOC_ANGULAR_SHARED_PASS', sharedPass ? undefined : '0');
+/** The description module of the fixture's page, relative to the fixture root. */
+const DESCRIPTION = 'docs/ng-doc.page.ts';
+
+async function pageTitleEdit(fixture: Fixture, switches: { sharedPass: boolean }) {
+  vi.stubEnv('NGDOC_ANGULAR_SHARED_PASS', switches.sharedPass ? undefined : '0');
   const { createNgDocAngularPlugins } = await import(
     pathToFileURL(path.join(repository, 'dist/libs/builder/generator/vite/angular/index.js')).href
   );
@@ -588,11 +596,17 @@ async function pageTitleEdit(fixture: Fixture, sharedPass: boolean) {
   const originalHot = compiler.handleHotUpdate as (context: any) => any;
   let editing = false;
   const passes: Array<{ file: string; companions: number; confirmed: boolean }> = [];
+  const description = path.join(fixture.root, DESCRIPTION);
   compiler.handleHotUpdate = async function (context: HmrContext & Record<string, any>) {
     const result = await originalHot.call(this, context);
-    if (editing && context.file.startsWith(fixture.output) && /\.ts$/.test(context.file)) {
+    if (
+      editing &&
+      ((context.file.startsWith(fixture.output) && /\.ts$/.test(context.file)) ||
+        context.file === description)
+    ) {
       passes.push({
-        file: path.relative(fixture.output, context.file),
+        file:
+          context.file === description ? DESCRIPTION : path.relative(fixture.output, context.file),
         companions: context.ngDocCompanionFiles?.length ?? 0,
         confirmed: context.ngDocCompanionPass !== undefined,
       });
@@ -679,6 +693,13 @@ async function pageTitleEdit(fixture: Fixture, sharedPass: boolean) {
     const result = await client.transformRequest(url(file));
     served.set(file, normalize(result?.code ?? ''));
   }
+  // The edited description module, as the reloaded page requests it.
+  for (const node of client.moduleGraph.getModulesByFile(description) ?? [])
+    client.moduleGraph.invalidateModule(node);
+  served.set(
+    DESCRIPTION,
+    normalize((await client.transformRequest(`/@fs${description}`))?.code ?? ''),
+  );
   editing = false;
   // Restored while this server runs, so the next one starts on an unchanged output (a startup
   // commit's late events would otherwise reach its edit).

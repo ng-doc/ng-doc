@@ -1,14 +1,10 @@
 import { inject, isDevMode, OnDestroy, Service, Signal, signal } from '@angular/core';
 import { NG_DOC_SHIKI_THEME } from '@ng-doc/app/tokens';
 import { ngDocSyntaxTheme } from '@ng-doc/core/constants/syntax-theme';
-import {
-  type HighlighterCore,
-  type LanguageInput,
-  type ThemeInput,
-  createHighlighterCore,
-} from 'shiki/core';
-import { createOnigurumaEngine } from 'shiki/engine/oniguruma';
-import getWasm from 'shiki/wasm';
+// Types only: Shiki, its Oniguruma engine and the WebAssembly binary load with the first
+// `initialize()`, so an application that imports NgDoc only in a lazy route keeps them out of its
+// initial bundle.
+import type { HighlighterCore, LanguageInput, ThemeInput } from 'shiki/core';
 
 /** Shiki configuration of the code highlighter. */
 export interface NgDocHighlighterConfig {
@@ -39,7 +35,9 @@ export interface NgDocHighlighterConfig {
 }
 
 /**
- * Highlights code with Shiki. `provideNgDocApp` initializes it before the application renders.
+ * Highlights code with Shiki. `provideNgDocApp` starts its initialization where it is provided (the
+ * application, or the route that holds the documentation), and the server render waits for it.
+ * Shiki is loaded on demand: `initialize()` imports it.
  */
 @Service()
 export class NgDocHighlighterService implements OnDestroy {
@@ -123,6 +121,11 @@ export class NgDocHighlighterService implements OnDestroy {
     themes: ThemeInput[] = [],
     langs: LanguageInput[] = [],
   ): Promise<HighlighterCore> {
+    const [{ createHighlighterCore }, { createOnigurumaEngine }] = await Promise.all([
+      import('shiki/core'),
+      import('shiki/engine/oniguruma'),
+    ]);
+
     return createHighlighterCore({
       themes: [
         import('shiki/themes/github-light.mjs'),
@@ -135,7 +138,7 @@ export class NgDocHighlighterService implements OnDestroy {
       langs: [import('shiki/langs/angular-html.mjs'), ...langs],
       // The Oniguruma engine, as at build time, so that the browser tokenizes code as the code
       // blocks were tokenized.
-      engine: createOnigurumaEngine(getWasm),
+      engine: createOnigurumaEngine(import('shiki/wasm')),
     });
   }
 

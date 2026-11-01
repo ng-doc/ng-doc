@@ -1,13 +1,15 @@
-import { isPlatformBrowser, ViewportScroller } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import {
   DOCUMENT,
   EnvironmentProviders,
   inject,
+  PendingTasks,
   PLATFORM_ID,
-  provideAppInitializer,
+  provideEnvironmentInitializer,
   Provider,
 } from '@angular/core';
 import { ɵcaptureNgDocHydrationSnapshots } from '@ng-doc/app/helpers';
+import { NgDocApiListIndexService } from '@ng-doc/app/services';
 import { NgDocContentScrollIntent } from '@ng-doc/app/services/content-scroll-intent';
 import type { NgDocHighlighterConfig } from '@ng-doc/app/services/highlighter';
 import { NgDocHighlighterService } from '@ng-doc/app/services/highlighter';
@@ -52,6 +54,12 @@ export interface NgDocApplicationConfig {
 
 /**
  * Provides the NgDoc application configuration.
+ *
+ * Add it to the application's providers, or to the `providers` of the route that holds the
+ * documentation, together with the other NgDoc providers: then NgDoc starts only when the reader
+ * opens the documentation, and its code stays out of the application's initial bundle. It starts
+ * with environment initializers, which run where it is provided. The server render waits until
+ * the code highlighter of playgrounds has loaded.
  * @param config - The optional application configuration.
  */
 export function provideNgDocApp(
@@ -63,36 +71,41 @@ export function provideNgDocApp(
       provide: NG_DOC_CONTENT_SCROLL_POSITION_RESTORATION,
       useValue: config?.contentScrollPositionRestoration ?? 'disabled',
     },
+    { provide: NG_DOC_SHORTCUTS, useValue: config?.shortcuts ?? true },
+
+    /* --- Services --- */
+    // Provided where the configuration is, so that they read the NgDoc providers of a lazy route
+    // (the generated context, the shortcuts option): an instance in the root injector could not
+    // see them. In the root injector this is the instance `providedIn: 'root'` gives.
+    NgDocHighlighterService,
+    NgDocShortcutsService,
+    NgDocApiListIndexService,
+
     ...(config?.contentAnchorScrolling || config?.contentScrollPositionRestoration === 'enabled'
       ? [
-          provideAppInitializer(() => {
+          provideEnvironmentInitializer(() => {
             inject(NgDocContentScrollIntent).start();
           }),
         ]
       : []),
 
     /* --- Hydration --- */
-    // Before the application renders: the pages and headers that skip hydration show their
-    // server-rendered content until their own is rendered, instead of a blank page.
-    provideAppInitializer(() => {
+    // Before the documentation renders: the pages and headers that skip hydration show their
+    // server-rendered content until their own is rendered, instead of a blank page. A lazy route
+    // creates its injector before it creates its components, so this also runs in time when the
+    // documentation is the first route the browser hydrates.
+    provideEnvironmentInitializer(() => {
       if (isPlatformBrowser(inject(PLATFORM_ID))) ɵcaptureNgDocHydrationSnapshots(inject(DOCUMENT));
     }),
 
-    /* --- Keyboard shortcuts --- */
-    { provide: NG_DOC_SHORTCUTS, useValue: config?.shortcuts ?? true },
-    // Created at start-up so the built-in shortcuts work on every page.
-    provideAppInitializer(() => {
-      inject(NgDocShortcutsService);
-    }),
-
-    /* --- Viewport Scroller --- */
-    provideAppInitializer(() => {
-      inject(ViewportScroller).setOffset([0, 120]);
-    }),
-
     /* --- Shiki --- */
-    provideAppInitializer(async () => {
-      await inject(NgDocHighlighterService).initialize(config?.shiki);
+    // Started with the documentation instead of blocking the application's start: the playgrounds
+    // highlight their code once it is ready, and the application stays unstable until then, so the
+    // server renders the highlighted code.
+    provideEnvironmentInitializer(() => {
+      const highlighter = inject(NgDocHighlighterService);
+
+      inject(PendingTasks).run(() => highlighter.initialize(config?.shiki));
     }),
 
     /* --- UiKit --- */

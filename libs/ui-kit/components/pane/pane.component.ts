@@ -15,6 +15,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NG_DOC_UI_KIT_TEXTS, NgDocPaneTexts } from '@ng-doc/ui-kit/texts';
 import { fromEvent, merge, Observable } from 'rxjs';
 import {
   debounceTime,
@@ -56,6 +57,8 @@ const KEYBOARD_STEP = 0.1;
   },
 })
 export class NgDocPaneComponent {
+  protected readonly texts: NgDocPaneTexts = inject(NG_DOC_UI_KIT_TEXTS).pane;
+
   private readonly document = inject<Document>(DOCUMENT);
   private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly ngZone = inject(NgZone);

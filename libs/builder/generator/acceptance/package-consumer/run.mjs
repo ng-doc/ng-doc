@@ -25,8 +25,8 @@ assert.ok(
 assert.match(expected ?? '', /^[a-f0-9]{64}$/, 'NGDOC_EXPECTED_SOURCE_DIGEST is required');
 assert.match(
   process.version,
-  /^v24\.(?:15|19|21)\.0$/,
-  'Use an explicitly supported Node 24 line probe',
+  /^v(?:24\.(?:15|19|21)|26\.(?:0|13))\.0$/,
+  'Use an explicitly supported Node 24 or Node 26 line probe',
 );
 assert.notEqual(process.platform, 'win32');
 await mkdir(evidence, { recursive: true });

@@ -191,43 +191,46 @@ another folder.
 The new engine reads these variables in every entry point. Each one turns off one optimization.
 Use them to find the cause of a problem, and report it (`*TroubleshootingPage`).
 
-| Variable                        | Default | When set to `0`, `false`, `off` or `no`                                                                                                                                                                           |
-| ------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `NGDOC_PERSISTENT_WORKER`       | on      | Starts a new compiler worker for every development build. It keeps no TypeScript program between builds, so this also turns off the next two switches, the targeted rebuild and the reuse of the program.         |
-| `NGDOC_PERSISTENT_WORKER_PRIME` | on      | Doesn't prepare the compiler worker for the first edit: the server's first build runs in a separate worker, and the first edit after the start rebuilds the TypeScript program.                                   |
-| `NGDOC_DELTA_TRANSPORT`         | on      | Sends complete snapshots to the compiler worker instead of changes.                                                                                                                                               |
-| `NGDOC_INCREMENTAL_SKIP`        | on      | Recompiles the TypeScript program from scratch on every development build.                                                                                                                                        |
-| `NGDOC_TARGETED_REBUILD`        | on      | Checks every page on every development build, instead of only the pages that an edit can reach.                                                                                                                   |
-| `NGDOC_INCREMENTAL_PROGRAM`     | on      | Builds a new TypeScript program after a TypeScript edit, instead of updating the kept one.                                                                                                                        |
-| `NGDOC_SEMANTIC_RECORDER`       | on      | Stops recording which files each TypeScript query reads. After a TypeScript edit, every page that reads TypeScript is rendered again, as with the next switch off.                                                |
-| `NGDOC_SCOPED_SEMANTIC`         | on      | After any TypeScript edit, renders again every page that reads TypeScript, such as API pages, API embeds, demos and playgrounds, instead of only those that read the edited code. Also turns off the next switch. |
-| `NGDOC_SHAPE_CLOSURE`           | on      | Renders again every page whose TypeScript imports an edited file, even when the edit changes no declared type.                                                                                                    |
-| `NGDOC_TRACKED_PROGRAM_REUSE`   | on      | Tracks the whole TypeScript program again for every API embed of a production build (or with `NGDOC_SCOPED_SEMANTIC` off), instead of once per build. The output is the same.                                     |
-| `NGDOC_ANGULAR_SHARED_PASS`     | on      | Vite host only. Compiles each generated TypeScript module that an edit changed in an Angular pass of its own, instead of one pass for all of them.                                                                |
-| `NGDOC_ANGULAR_STRUCTURAL_PASS` | on      | Vite host only. When an edit adds, moves or deletes pages, compiles the application once more on those files before the pass that compiles the edit.                                                              |
-| `NGDOC_FAST_START`              | on      | Generates every page on a development server start, even when no file changed since the last run, and doesn't reuse the cached links and generated files of unchanged pages on a start after edits.               |
-| `NGDOC_VITE_BUILD_HANDOFF`      | on      | `vite-application` only. Generates the documentation again for the server bundle instead of reusing the browser build's generation.                                                                               |
-| `NGDOC_PARALLEL_WRITES`         | on      | Writes the generated files one at a time, instead of several at once. The published files are the same.                                                                                                           |
-| `NGDOC_HIGHLIGHT_CACHE`         | on      | Highlights every code block again, instead of reusing the highlighting of code that it highlighted before. The published files are the same.                                                                      |
-| `NGDOC_FORMAT_CACHE`            | on      | Reads the Prettier configuration again and formats every API signature and snippet again, instead of reusing the formatting of code that it formatted before. The published files are the same.                   |
-| `NGDOC_USED_GRAMMARS`           | on      | Loads every grammar bundled with Shiki before it highlights code, instead of only the grammars of the languages that code blocks use. The published files are the same.                                           |
-| `NGDOC_PARALLEL_RENDER`         | on      | Processes the HTML of every page in one thread, instead of on up to four worker threads in a build that renders many pages. The published files are the same.                                                     |
+| Variable                         | Default | When set to `0`, `false`, `off` or `no`                                                                                                                                                                           |
+| -------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NGDOC_PERSISTENT_WORKER`        | on      | Starts a new compiler worker for every development build. It keeps no TypeScript program between builds, so this also turns off the next two switches, the targeted rebuild and the reuse of the program.         |
+| `NGDOC_PERSISTENT_WORKER_PRIME`  | on      | Doesn't prepare the compiler worker for the first edit: the server's first build runs in a separate worker, and the first edit after the start rebuilds the TypeScript program.                                   |
+| `NGDOC_DELTA_TRANSPORT`          | on      | Sends complete snapshots to the compiler worker instead of changes.                                                                                                                                               |
+| `NGDOC_INCREMENTAL_SKIP`         | on      | Recompiles the TypeScript program from scratch on every development build.                                                                                                                                        |
+| `NGDOC_TARGETED_REBUILD`         | on      | Checks every page on every development build, instead of only the pages that an edit can reach.                                                                                                                   |
+| `NGDOC_INCREMENTAL_PROGRAM`      | on      | Builds a new TypeScript program after a TypeScript edit, instead of updating the kept one.                                                                                                                        |
+| `NGDOC_SEMANTIC_RECORDER`        | on      | Stops recording which files each TypeScript query reads. After a TypeScript edit, every page that reads TypeScript is rendered again, as with the next switch off.                                                |
+| `NGDOC_SCOPED_SEMANTIC`          | on      | After any TypeScript edit, renders again every page that reads TypeScript, such as API pages, API embeds, demos and playgrounds, instead of only those that read the edited code. Also turns off the next switch. |
+| `NGDOC_SHAPE_CLOSURE`            | on      | Renders again every page whose TypeScript imports an edited file, even when the edit changes no declared type.                                                                                                    |
+| `NGDOC_TRACKED_PROGRAM_REUSE`    | on      | Tracks the whole TypeScript program again for every API embed of a production build (or with `NGDOC_SCOPED_SEMANTIC` off), instead of once per build. The output is the same.                                     |
+| `NGDOC_ANGULAR_SHARED_PASS`      | on      | Vite host only. Compiles each generated TypeScript module that an edit changed in an Angular pass of its own, instead of one pass for all of them.                                                                |
+| `NGDOC_ANGULAR_STRUCTURAL_PASS`  | on      | Vite host only. When an edit adds, moves or deletes pages, compiles the application once more on those files before the pass that compiles the edit.                                                              |
+| `NGDOC_ANGULAR_DESCRIPTION_PASS` | on      | Vite host only. When an edit changes a page, category or API configuration file, such as a page title, compiles the application once on that file before the pass that compiles the edit.                         |
+| `NGDOC_VITE_CONTENT_UPDATE`      | on      | Vite host only. Reloads the page after an edit that changes only the text of pages, instead of updating the open page in place.                                                                                   |
+| `NGDOC_VITE_MODULELESS_SETTLE`   | on      | Vite host only. A hot update of a file the browser never loaded, such as a Markdown page, waits for the newest edit to be published: while files keep changing, it finishes only once they stop.                  |
+| `NGDOC_FAST_START`               | on      | Generates every page on a development server start, even when no file changed since the last run, and doesn't reuse the cached links and generated files of unchanged pages on a start after edits.               |
+| `NGDOC_VITE_BUILD_HANDOFF`       | on      | `vite-application` only. Generates the documentation again for the server bundle instead of reusing the browser build's generation.                                                                               |
+| `NGDOC_PARALLEL_WRITES`          | on      | Writes the generated files one at a time, instead of several at once. The published files are the same.                                                                                                           |
+| `NGDOC_HIGHLIGHT_CACHE`          | on      | Highlights every code block again, instead of reusing the highlighting of code that it highlighted before. The published files are the same.                                                                      |
+| `NGDOC_FORMAT_CACHE`             | on      | Reads the Prettier configuration again and formats every API signature and snippet again, instead of reusing the formatting of code that it formatted before. The published files are the same.                   |
+| `NGDOC_USED_GRAMMARS`            | on      | Loads every grammar bundled with Shiki before it highlights code, instead of only the grammars of the languages that code blocks use. The published files are the same.                                           |
+| `NGDOC_PARALLEL_RENDER`          | on      | Processes the HTML of every page in one thread, instead of on up to four worker threads in a build that renders many pages. The published files are the same.                                                     |
 
 Production builds always use a fresh compiler worker, whatever these variables say.
 
 ## Supported versions
 
-| Dependency                                                       | Version                  |
-| ---------------------------------------------------------------- | ------------------------ |
-| Angular (`@ng-doc/app`, `@ng-doc/ui-kit`)                        | `>=22.0.0 <23.0.0`       |
-| `@angular/compiler`, `@angular/compiler-cli` (`@ng-doc/builder`) | `>=22.0.0 <23.0.0`       |
-| Node.js                                                          | `>=24.15.0 <25`          |
-| Vite (Vite host only)                                            | `^8.3.0`                 |
-| `@analogjs/vite-plugin-angular` (Vite host only)                 | `^2.8.0`                 |
-| `@angular/compiler`, `@angular/compiler-cli` (Vite host only)    | `^22.0.0`                |
-| Platforms                                                        | Linux, macOS and Windows |
+| Dependency                                                       | Version                           |
+| ---------------------------------------------------------------- | --------------------------------- |
+| Angular (`@ng-doc/app`, `@ng-doc/ui-kit`)                        | `>=22.0.0 <23.0.0`                |
+| `@angular/compiler`, `@angular/compiler-cli` (`@ng-doc/builder`) | `>=22.0.0 <23.0.0`                |
+| Node.js                                                          | `>=24.15.0 <25` or `>=26.0.0 <27` |
+| Vite (Vite host only)                                            | `^8.3.0`                          |
+| `@analogjs/vite-plugin-angular` (Vite host only)                 | `^2.8.0`                          |
+| `@angular/compiler`, `@angular/compiler-cli` (Vite host only)    | `^22.0.0`                         |
+| Platforms                                                        | Linux, macOS and Windows          |
 
-The Vite engine is tested with Vite 8.3.2, Analog 2.8.0 and Angular 22.1 and 22.2. It checks the
+The Vite engine is tested with Vite 8.3.3, Analog 2.8.0 and Angular 22.1 and 22.2. It checks the
 Vite version when it starts and stops with `NGDOC_VITE_VERSION` outside `^8.3.0`. `ng add` and
 `migrate-to-vite` add these ranges to `devDependencies` when `package.json` doesn't list them, so
 npm installs the newest matching releases.

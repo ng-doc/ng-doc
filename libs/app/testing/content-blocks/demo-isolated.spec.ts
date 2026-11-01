@@ -3,6 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { NgDocRootPage } from '@ng-doc/app/classes/root-page';
 import { NgDocDemoComponent } from '@ng-doc/app/components/demo';
@@ -131,6 +132,86 @@ describeChangeDetection('Isolated demos', ({ providers }: ChangeDetectionCase) =
     );
   });
 
+  it('shows an isolated demo in its theme, which the reader switches from the toolbar', async () => {
+    await create(rootPage({ demoRoute: 'demo-preview/docs/demos' }), {
+      isolated: true,
+      theme: 'auto',
+    });
+    const button = () => query<HTMLButtonElement>('ng-doc-demo-theme-button button')!;
+    const component = fixture.debugElement.query(By.directive(NgDocDemoComponent))
+      .componentInstance as NgDocDemoComponent;
+
+    // The iframe loads in the theme of the option, and the new tab opens in it too.
+    expect(frame()?.getAttribute('src')).toBe(
+      '/demo-preview/docs/demos/ButtonDemoComponent#~theme=auto',
+    );
+    expect(openLink()?.getAttribute('href')).toBe(
+      '/demo-preview/docs/demos/ButtonDemoComponent#~theme=auto',
+    );
+    expect(button().getAttribute('aria-label')).toBe('Demo theme: Auto. Switch to Light');
+
+    const themes: Array<string | undefined> = [];
+
+    for (let press = 0; press < 4; press++) {
+      button().click();
+      await fixture.whenStable();
+      themes.push(component.frameTheme());
+    }
+    expect(themes).toEqual(['light', 'dark', undefined, 'auto']);
+    button().click();
+    button().click();
+    button().click();
+    await fixture.whenStable();
+    expect(button().getAttribute('aria-label')).toBe('Demo theme: Page theme. Switch to Auto');
+    expect(openLink()?.getAttribute('href')).toBe('/demo-preview/docs/demos/ButtonDemoComponent');
+  });
+
+  it('paints its stage in the background and the dots of its own theme', async () => {
+    await create(rootPage({ demoRoute: 'demo-preview/docs/demos' }), {
+      isolated: true,
+      theme: 'dark',
+    });
+    const stage = () => query<HTMLElement>('.ng-doc-demo-stage')!;
+    const background = (color: string) =>
+      window.dispatchEvent(
+        new MessageEvent('message', {
+          data: {
+            source: ɵNG_DOC_DEMO_MESSAGE_SOURCE,
+            version: 1,
+            type: 'background',
+            color,
+            dots: '#3f3f46',
+          },
+          source: frame()!.contentWindow,
+          origin: window.location.origin,
+        }),
+      );
+
+    expect(stage().hasAttribute('data-ng-doc-themed')).toBe(false);
+    background('rgb(24, 24, 27)');
+    await fixture.whenStable();
+
+    expect(stage().getAttribute('data-ng-doc-themed')).toBe('true');
+    expect(stage().style.backgroundColor).toBe('rgb(24, 24, 27)');
+    expect(stage().style.getPropertyValue('--_ng-doc-demo-canvas-dots')).toBe('#3f3f46');
+
+    // Following the page's theme again, the stage is the page's canvas.
+    const button = query<HTMLButtonElement>('ng-doc-demo-theme-button button')!;
+
+    button.click();
+    await fixture.whenStable();
+    expect(stage().hasAttribute('data-ng-doc-themed')).toBe(false);
+    expect(stage().style.backgroundColor).toBe('');
+    expect(stage().style.getPropertyValue('--_ng-doc-demo-canvas-dots')).toBe('');
+  });
+
+  it('has no theme button for a demo in the page', async () => {
+    await create(rootPage({ demoRoute: 'demo-preview/docs/demos' }), { theme: 'dark' });
+
+    expect(query('ng-doc-demo-theme-button')).toBeNull();
+    expect(openLink()?.getAttribute('href')).toBe('/demo-preview/docs/demos/ButtonDemoComponent');
+  });
+
   it('isolates the demos of a page with isolatedDemos, unless a demo says otherwise', async () => {
     await create(rootPage({ demoRoute: 'demo-preview/docs/demos', isolatedDemos: true }));
     expect(frame()).not.toBeNull();
@@ -176,11 +257,16 @@ describeChangeDetection('Isolated demos', ({ providers }: ChangeDetectionCase) =
 describeChangeDetection('Demo frames', ({ providers }: ChangeDetectionCase) => {
   let fixture: ComponentFixture<NgDocDemoFrameComponent>;
 
-  async function create(): Promise<HTMLIFrameElement> {
+  async function create(
+    fragment?: string,
+    playground: boolean = fragment !== undefined,
+  ): Promise<HTMLIFrameElement> {
     TestBed.configureTestingModule({ providers });
     fixture = TestBed.createComponent(NgDocDemoFrameComponent);
     fixture.componentRef.setInput('src', '/demo-preview/docs/demos/ButtonDemoComponent');
     fixture.componentRef.setInput('frameTitle', 'ButtonDemoComponent demo');
+    fixture.componentRef.setInput('fragment', fragment);
+    fixture.componentRef.setInput('playground', playground);
     await fixture.whenStable();
 
     return fixture.nativeElement.querySelector('iframe');
@@ -288,5 +374,80 @@ describeChangeDetection('Demo frames', ({ providers }: ChangeDetectionCase) => {
     vi.advanceTimersByTime(20_000);
     vi.useRealTimers();
     expect(fixture.componentInstance.state()).toBe('ready');
+  });
+
+  it('takes the color scheme its page reports, so its transparent page shows through', async () => {
+    const iframe = await create();
+
+    window.dispatchEvent(
+      new MessageEvent('message', {
+        data: {
+          source: ɵNG_DOC_DEMO_MESSAGE_SOURCE,
+          version: 1,
+          type: 'background',
+          color: 'rgb(24, 24, 27)',
+          scheme: 'dark',
+        },
+        source: iframe.contentWindow,
+        origin: window.location.origin,
+      }),
+    );
+    await fixture.whenStable();
+
+    expect(iframe.style.colorScheme).toBe('dark');
+    expect(fixture.componentInstance.background()).toBe('rgb(24, 24, 27)');
+  });
+
+  it("tells when a playground's page loads but never answers", async () => {
+    const iframe = await create('~inputs=label&label=Hi');
+    let silent = 0;
+
+    fixture.componentInstance.playgroundSilent.subscribe(() => silent++);
+    // The size alone is not an answer: any page of the demo application reports one.
+    await post(size(30), iframe.contentWindow);
+    vi.useFakeTimers();
+    iframe.dispatchEvent(new Event('load'));
+    vi.advanceTimersByTime(9_999);
+    expect(silent).toBe(0);
+    vi.advanceTimersByTime(1);
+    vi.useRealTimers();
+
+    expect(silent).toBe(1);
+  });
+
+  it('waits for no answer once the playground answered', async () => {
+    const iframe = await create('~inputs=label&label=Hi');
+    let silent = 0;
+
+    fixture.componentInstance.playgroundSilent.subscribe(() => silent++);
+    await post(
+      {
+        source: ɵNG_DOC_DEMO_MESSAGE_SOURCE,
+        version: 1,
+        type: 'playground-ready',
+        defaults: {},
+        uncloneable: [],
+      },
+      iframe.contentWindow,
+    );
+    vi.useFakeTimers();
+    iframe.dispatchEvent(new Event('load'));
+    vi.advanceTimersByTime(20_000);
+    vi.useRealTimers();
+
+    expect(silent).toBe(0);
+  });
+
+  it('waits for no answer from the page of a demo', async () => {
+    const iframe = await create();
+    let silent = 0;
+
+    fixture.componentInstance.playgroundSilent.subscribe(() => silent++);
+    vi.useFakeTimers();
+    iframe.dispatchEvent(new Event('load'));
+    vi.advanceTimersByTime(20_000);
+    vi.useRealTimers();
+
+    expect(silent).toBe(0);
   });
 });

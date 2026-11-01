@@ -38,9 +38,12 @@ import { getInitializer } from '../utils/get-initializer';
 import { getBootstrapPath } from '../utils/get-main-path';
 import { getProject } from '../utils/get-project';
 import { getBootstrapModuleFn, getRootModule } from '../utils/get-root-module';
+import { getLayoutTemplate } from '../utils/layout-template';
 
 /**
- * Adds the NgDoc providers, the router and the layout components to the application.
+ * Adds the NgDoc providers, the router and the layout components to the application. The layout
+ * components are left out when `ng add` keeps the root template (see `addLayout`): the template
+ * would not use them.
  *
  * Calls that the application already has (`provideRouter`, `provideHttpClient`,
  * `RouterModule.forRoot`) are extended rather than repeated, so the rule can run more than once.
@@ -148,6 +151,7 @@ function planEdits(
   logger: logging.LoggerApi,
 ): ArrayEdit[] | undefined {
   const bootstrapApplicationFn = getBootstrapApplicationFn(mainPath);
+  const keepsTemplate: boolean = getLayoutTemplate(tree, mainPath).action === 'keep';
 
   if (bootstrapApplicationFn) {
     const appComponent = getAppComponent(tree, mainPath);
@@ -179,16 +183,20 @@ function planEdits(
 
     return [
       arrayEdit(providers, STANDALONE_APP.providers, logger),
-      {
-        file: appComponent.getSourceFile(),
-        entries: STANDALONE_APP.imports,
-        apply: () =>
-          STANDALONE_APP.imports.map((component: ImportConstant) => {
-            addImportToComponent(appComponent, component.initializer, { unique: true });
+      ...(keepsTemplate
+        ? []
+        : [
+            {
+              file: appComponent.getSourceFile(),
+              entries: STANDALONE_APP.imports,
+              apply: () =>
+                STANDALONE_APP.imports.map((component: ImportConstant) => {
+                  addImportToComponent(appComponent, component.initializer, { unique: true });
 
-            return 'unchanged';
-          }),
-      },
+                  return 'unchanged' as const;
+                }),
+            },
+          ]),
     ];
   }
 
@@ -226,7 +234,7 @@ function planEdits(
 
   return [
     ...(routerEdit ? [routerEdit] : []),
-    arrayEdit(imports, components, logger),
+    ...(keepsTemplate ? [] : [arrayEdit(imports, components, logger)]),
     arrayEdit(providers, MODULE_APP.providers, logger),
   ];
 }

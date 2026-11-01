@@ -11,6 +11,7 @@ import {
   runsProjectSpecs,
   stepProblems,
   testJobProblems,
+  typecheckJobProblems,
 } from '../check-ci-jobs.mjs';
 
 const core = (id, extra = {}) => ({ id, lane: 'core', ...extra });
@@ -315,6 +316,35 @@ test('a spec target is the unit-test builder or a Vitest run of the project conf
   assert.equal(runsProjectSpecs({ executor: '@nx/eslint:lint' }), false);
 });
 
+test('type-check jobs: every typecheck target, and nothing else', () => {
+  const projects = [
+    {
+      name: 'builder',
+      hasSpecs: true,
+      targets: {
+        test: { executor: 'nx:run-commands' },
+        'typecheck-specs': {
+          executor: 'nx:run-commands',
+          options: { command: 'tsc -p libs/builder/tsconfig.spec.json --noEmit' },
+        },
+      },
+    },
+    { name: 'core', hasSpecs: false, targets: { lint: {} } },
+  ];
+  assert.deepEqual(typecheckJobProblems(['builder:typecheck-specs'], projects), []);
+  // A type-check target without a job would never run in CI.
+  assert.deepEqual(typecheckJobProblems([], projects), [
+    'no typecheck job for builder:typecheck-specs',
+  ]);
+  assert.deepEqual(
+    typecheckJobProblems(['builder:typecheck-specs', 'core:typecheck', 'builder:test'], projects),
+    [
+      'typecheck job for a missing target: core:typecheck',
+      'typecheck job for a missing target: builder:test',
+    ],
+  );
+});
+
 test('the gate job waits for every other job and runs whatever their outcome', () => {
   const always = '${{ always() }}';
   const jobs = {
@@ -343,7 +373,7 @@ test('the gate job waits for every other job and runs whatever their outcome', (
   ]);
 });
 
-test('the committed pull request workflow has a job for every runner group and test target', async () => {
+test('the committed pull request workflow has a job for every runner group, test and type-check target', async () => {
   assert.ok(COMMANDS.length > 0);
   assert.deepEqual(await checkWorkflow(), []);
 });

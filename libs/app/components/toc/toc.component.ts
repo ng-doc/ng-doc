@@ -22,8 +22,9 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { ɵngDocPageUrl, ɵngDocRouteUrl } from '@ng-doc/app/helpers';
-import { NgDocPageToc, NgDocTocItem } from '@ng-doc/app/interfaces';
+import { NgDocPageToc, NgDocTocItem, NgDocTocTexts } from '@ng-doc/app/interfaces';
 import { NgDocShortcutsService } from '@ng-doc/app/services/shortcuts';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import { WA_LOCATION, WA_WINDOW } from '@ng-web-apis/common';
 import { filter } from 'rxjs/operators';
 
@@ -66,6 +67,8 @@ const SCROLL_KEYS: ReadonlySet<string> = new Set([
   imports: [NgDocTocElementComponent],
 })
 export class NgDocTocComponent implements NgDocPageToc {
+  protected readonly texts: NgDocTocTexts = inject(NG_DOC_TEXTS).toc;
+
   /** The headings of the page. */
   readonly tableOfContent = input<NgDocTocItem[]>([]);
 

@@ -20,14 +20,21 @@ rendering. Add the providers to your application configuration
 | `providePlaygroundDemo(playgroundId, component)` | `@ng-doc/app`       | –            | Registers the component of a playground. Generated code calls it; you don't need to. |
 | `provideMermaid(config?)`                        | `@ng-doc/app`       | For diagrams | Enables Mermaid diagrams (`*DiagramsPage`).                                          |
 | `provideNgDocTitle(titleFn)`                     | `@ng-doc/app`       | –            | Builds the browser tab titles (`*BrowserTabTitlesPage`).                             |
+| `provideNgDocTexts(texts)`                       | `@ng-doc/app`       | –            | Changes or translates the texts of the interface (`*UiTextsPage`).                   |
 
 The routes of the site are in `NG_DOC_ROUTING`, also from `@ng-doc/generated`. The application
 also needs the Angular router and `provideHttpClient(withInterceptorsFromDi())`, because NgDoc
 registers an HTTP interceptor.
 
+The providers work in the application configuration and in the `providers` of the route that holds
+the documentation (`*LazyRoutePage`). `provideNgDocTitle` and `NgDocPreloadingStrategy` configure
+the router, so they go in the application configuration.
+
 ## provideNgDocApp
 
-`provideNgDocApp(config?: NgDocApplicationConfig)`. See also `NgDocApplicationConfig`.
+`provideNgDocApp(config?: NgDocApplicationConfig)`. See also `NgDocApplicationConfig`. It starts
+NgDoc with environment initializers, which run where it is provided, and starts loading the code
+highlighter of playgrounds; the server render waits for it.
 
 | Option                             | Type                               | Default      | Description                                                                                                                  |
 | ---------------------------------- | ---------------------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------- |
@@ -100,6 +107,17 @@ navigation with `titleFn`. The function receives an `NgDocTitleContext` with the
 provideNgDocTitle(({ page, title }) => (page ? `${page} | My library` : title));
 ```
 
+## provideNgDocTexts
+
+`provideNgDocTexts(texts: NgDocTextsOverrides)` changes the texts NgDoc shows to readers, by group
+(`NgDocTexts`). Texts that are left out keep their English default (`NG_DOC_DEFAULT_TEXTS`), and
+texts with values are functions. Several calls add up: a later call wins, and a child injector
+applies its calls on top of its parent's. See `*UiTextsPage`.
+
+```typescript name="app.config.ts"
+provideNgDocTexts({ search: { placeholder: 'Dokumentation durchsuchen…' } });
+```
+
 ## Page processors
 
 `provideMainPageProcessor(processors)` registers the processors you pass. Pass
@@ -124,7 +142,7 @@ the given type name.
 | Option         | Type      | Description                                                        |
 | -------------- | --------- | ------------------------------------------------------------------ |
 | `hideLabel`    | `boolean` | Hides the input name next to the control.                          |
-| `order`        | `number`  | The position of the control. The built-in controls use 10 to 40.   |
+| `order`        | `number`  | The position of the control. The built-in controls use 10 to 60.   |
 | `labelWrapper` | `boolean` | Wraps the row in a `<label>` (default). `false` renders a `<div>`. |
 
 ## Preload pages

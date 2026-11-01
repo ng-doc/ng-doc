@@ -275,6 +275,8 @@ describeChangeDetection('NgDocApiListComponent', ({ providers }) => {
 
   it('focuses the filter with F while single-key shortcuts are on', async () => {
     await open('/api');
+    // NgDocRootComponent listens for the shortcuts while the documentation layout is shown.
+    TestBed.inject(NgDocShortcutsService).listen();
 
     document.body.dispatchEvent(
       new KeyboardEvent('keydown', { key: 'f', bubbles: true, cancelable: true }),

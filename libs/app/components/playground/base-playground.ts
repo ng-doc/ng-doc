@@ -13,7 +13,7 @@ import { NgDocPlaygroundConfig } from '@ng-doc/core/interfaces';
 import { Constructor } from '@ng-doc/core/types';
 import { Observable, Subject, take } from 'rxjs';
 
-import { NgDocPlaygroundComponent } from './playground.component';
+import { ɵNG_DOC_PLAYGROUND_CONTAINER, ɵNgDocPlaygroundContainer } from './playground-container';
 
 /**
  * Base class of the playground classes the builder generates, one per playground and selector.
@@ -51,7 +51,9 @@ export abstract class NgDocBasePlayground implements Pick<NgDocPlaygroundConfig,
   defaultValues: Record<string, unknown> = {};
 
   private readonly reattached: Subject<void> = new Subject<void>();
-  private readonly playgroundContainer: NgDocPlaygroundComponent = inject(NgDocPlaygroundComponent);
+  private readonly playgroundContainer: ɵNgDocPlaygroundContainer = inject(
+    ɵNG_DOC_PLAYGROUND_CONTAINER,
+  );
   protected readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   constructor() {

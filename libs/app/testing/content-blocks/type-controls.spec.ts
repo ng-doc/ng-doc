@@ -17,6 +17,7 @@ import { NgDocPlaygroundPropertyComponent } from '@ng-doc/app/components/playgro
 import { NgDocProvidedTypeControl, NgDocTypeControl } from '@ng-doc/app/interfaces';
 import { NgDocTypeAliasControlComponent } from '@ng-doc/app/type-controls';
 import { NgDocPlaygroundOption, NgDocPlaygroundProperty } from '@ng-doc/core/interfaces';
+import { NgDocDropdownComponent } from '@ng-doc/ui-kit';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 
 import {
@@ -251,6 +252,44 @@ describeChangeDetection('Type controls in the playground', ({ providers }: Chang
     // The value, then the default marker; the type chip is under the input's name.
     expect(value.textContent?.replace(/\s+/g, '')).toBe('mediumdefault');
     expect(value.querySelector('ng-doc-kind-icon')).toBeNull();
+  });
+
+  it('ends the selected option of the dropdown with a tick', async () => {
+    const fixture: ComponentFixture<TypeAliasHostComponent> =
+      TestBed.createComponent(TypeAliasHostComponent);
+    const settle = async (): Promise<void> => {
+      // ngModel writes its value in a microtask, and the combobox forwards it in another.
+      for (let round = 0; round < 3; round++) {
+        fixture.detectChanges();
+        await fixture.whenStable();
+      }
+    };
+
+    await settle();
+    fixture.debugElement
+      .query((element) => element.componentInstance instanceof NgDocDropdownComponent)
+      .componentInstance.open();
+    await settle();
+
+    const options: HTMLElement[] = Array.from(document.querySelectorAll('ng-doc-option'));
+    const ticked = (option: HTMLElement): boolean =>
+      !!option.querySelector('[data-ng-doc-type-alias-check] ng-doc-icon');
+
+    expect(options.map((option) => option.textContent?.replace(/\s+/g, ''))).toEqual([
+      'small',
+      'mediumdefault',
+    ]);
+    expect(options.map(ticked)).toEqual([false, true]);
+    // The selected option is also drawn in the heading color.
+    expect(
+      options.map((option) =>
+        option.querySelector('.ng-doc-type-alias-option')?.getAttribute('data-ng-doc-selected'),
+      ),
+    ).toEqual(['false', 'true']);
+    // Every option keeps the slot, so the default markers line up.
+    expect(options.every((option) => option.querySelector('[data-ng-doc-type-alias-check]'))).toBe(
+      true,
+    );
   });
 
   it('shows the name of an enum member and sets its value', async () => {

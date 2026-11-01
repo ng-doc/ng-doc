@@ -2,14 +2,17 @@ import {
   ChangeDetectionStrategy,
   Component,
   ComponentRef,
+  computed,
   DestroyRef,
   inject,
   InjectionToken,
   Injector,
   input,
   InputSignal,
+  model,
   OnChanges,
   OnDestroy,
+  output,
   PendingTasks,
   Signal,
   signal,
@@ -21,6 +24,11 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup } from '@angular/forms';
 import { NgDocDemoDisplayerComponent } from '@ng-doc/app/components/demo-displayer';
+import {
+  NgDocDemoFrameComponent,
+  NgDocDemoThemeButtonComponent,
+} from '@ng-doc/app/components/demo-frame';
+import { ɵNgDocPlaygroundFrameMessage } from '@ng-doc/app/demo-app';
 import { formatHtml } from '@ng-doc/app/helpers';
 import { getPlaygroundDemoToken } from '@ng-doc/app/providers/playground-demo';
 import { NgDocFormPartialValue } from '@ng-doc/app/types';
@@ -38,15 +46,28 @@ import { NgDocBasePlayground } from '../base-playground';
 import { NgDocPlaygroundForm } from '../playground-form';
 
 /**
+ * The iframe an isolated playground shows a target in: the URL of the target's page in the demo
+ * application, the fragment with the current state, and the iframe's accessible title.
+ * @internal
+ */
+export interface ɵNgDocPlaygroundFrame {
+  readonly url: string;
+  readonly fragment: string;
+  readonly title: string;
+}
+
+/**
  * One demo of a playground: it creates the generated playground class of its selector (or pipe),
- * passes it the form's values and shows the code of the current state.
+ * passes it the form's values and shows the code of the current state. In an isolated playground
+ * the class runs on a page of the demo application in an iframe, which gets the values from its
+ * URL fragment, and reports the target's defaults back for the code view.
  */
 @Component({
   selector: 'ng-doc-playground-demo',
   templateUrl: './playground-demo.component.html',
   styleUrls: ['./playground-demo.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgDocDemoDisplayerComponent],
+  imports: [NgDocDemoDisplayerComponent, NgDocDemoFrameComponent, NgDocDemoThemeButtonComponent],
 })
 export class NgDocPlaygroundDemoComponent<
     T extends NgDocPlaygroundProperties = NgDocPlaygroundProperties,
@@ -81,6 +102,53 @@ export class NgDocPlaygroundDemoComponent<
   /** Whether the code of the demo is shown. */
   readonly expanded: InputSignal<boolean> = input<boolean>(false);
 
+  /** The iframe of an isolated playground; without it, the class is created in the page. */
+  readonly frame: InputSignal<ɵNgDocPlaygroundFrame | undefined> = input<
+    ɵNgDocPlaygroundFrame | undefined
+  >(undefined);
+
+  /** The defaults of the target's inputs that the iframe reported, for the code view. */
+  readonly frameDefaults: InputSignal<Record<string, unknown> | undefined> = input<
+    Record<string, unknown> | undefined
+  >(undefined);
+
+  /** The messages of the iframe of an isolated playground. */
+  readonly frameMessage = output<ɵNgDocPlaygroundFrameMessage>();
+
+  /** The iframe's page loaded but did not report the target in time. */
+  readonly frameSilent = output<void>();
+
+  /** The theme of the iframe, which the theme button beside the demo changes. */
+  readonly frameTheme = model<string | undefined>(undefined);
+
+  /** The `theme` option of the playground, which the theme button offers too. */
+  readonly configuredTheme = input<string | undefined>(undefined);
+
+  /** The iframe of an isolated playground, while it is shown. */
+  private readonly frameComponent = viewChild(NgDocDemoFrameComponent);
+
+  /**
+   * The background of the canvas while the iframe shows a theme of its own: the background its
+   * page reported, so the whole canvas reads in that theme.
+   */
+  protected readonly canvasBackground: Signal<string | undefined> = computed(() =>
+    this.frame() && this.frameTheme() !== undefined
+      ? this.frameComponent()?.background()
+      : undefined,
+  );
+
+  /** The dots of the canvas while the iframe shows a theme of its own, in that theme's color. */
+  protected readonly canvasDots: Signal<string | undefined> = computed(() =>
+    this.canvasBackground() ? this.frameComponent()?.dots() : undefined,
+  );
+
+  /** The iframe's page with the current state, which the toolbar opens in a new tab. */
+  protected readonly frameUrl: Signal<string | undefined> = computed(() => {
+    const frame = this.frame();
+
+    return frame ? `${frame.url}#${frame.fragment}` : undefined;
+  });
+
   /** Where the playground class is created. */
   readonly demoOutlet: Signal<ViewContainerRef | undefined> = viewChild('demoOutlet', {
     read: ViewContainerRef,
@@ -98,7 +166,11 @@ export class NgDocPlaygroundDemoComponent<
   private demoRef?: ComponentRef<NgDocBasePlayground>;
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
 
-  async ngOnChanges({ form, id }: SimpleChanges): Promise<void> {
+  async ngOnChanges({ form, id, frame }: SimpleChanges): Promise<void> {
+    // A playground that falls back from its iframe to the page creates its class in the page.
+    if (frame && !frame.firstChange && !this.frame()) {
+      await this.updateDemo(this.form()?.value);
+    }
     if (form || id) {
       this.unsubscribe$.next();
 
@@ -114,11 +186,17 @@ export class NgDocPlaygroundDemoComponent<
         );
       }
 
-      await this.updateDemo();
-
       const form = this.form();
 
-      form?.valueChanges
+      if (!form) {
+        // No values yet: the class is created so that it reports the target's defaults.
+        await this.updateDemo();
+        return;
+      }
+      // The form's values reach the class synchronously, in this check: the class may already be
+      // attached again, and checked with no values its target would get `undefined` for every
+      // input instead of its default.
+      form.valueChanges
         .pipe(
           startWith(form.value),
           takeUntil(this.unsubscribe$),
@@ -133,6 +211,10 @@ export class NgDocPlaygroundDemoComponent<
   private async updateDemo(
     data?: NgDocFormPartialValue<FormGroup<NgDocPlaygroundForm>>,
   ): Promise<void> {
+    if (this.frame()) {
+      await this.updateCodeView();
+      return;
+    }
     if (this.recreateDemo() || !this.demoRef) {
       this.createDemo();
     }
@@ -206,7 +288,7 @@ export class NgDocPlaygroundDemoComponent<
     return objectKeys(formData).reduce((result: Record<string, string>, key: string) => {
       const inputName = this.properties()?.[key]?.inputName ?? key;
       const value: unknown = formData[key];
-      const property: unknown | undefined = this.demoRef?.instance?.defaultValues[key];
+      const property: unknown | undefined = this.defaultValue(key);
 
       if (property !== value) {
         result[inputName] = stringify(value).replace(/"/g, `'`);
@@ -224,7 +306,7 @@ export class NgDocPlaygroundDemoComponent<
     return objectKeys(formData)
       .map((key: string, i: number) => {
         const value: unknown = formData[key];
-        const defaultValue: unknown | undefined = this.demoRef?.instance?.defaultValues[key];
+        const defaultValue: unknown | undefined = this.defaultValue(key);
 
         if (defaultValue !== value) {
           changedInputIndex = i;
@@ -243,5 +325,13 @@ export class NgDocPlaygroundDemoComponent<
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  /**
+   * The default of an input: from the class in the page, or as the iframe reported it.
+   * @param key
+   */
+  private defaultValue(key: string): unknown {
+    return this.frame() ? this.frameDefaults()?.[key] : this.demoRef?.instance?.defaultValues[key];
   }
 }

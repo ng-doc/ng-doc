@@ -168,6 +168,8 @@ describeChangeDetection('NgDocTocComponent', ({ providers }) => {
   });
 
   it('copies the page link and says so when the reader presses L', async () => {
+    // NgDocRootComponent listens for the shortcuts while the documentation layout is shown.
+    TestBed.inject(NgDocShortcutsService).listen();
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'l', bubbles: true }));
     await stable();
 

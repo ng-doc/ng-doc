@@ -1815,7 +1815,7 @@ test('navigation metadata survives full artifact restore and rejects malformed t
     artifact: page,
   });
   const malformed = structuredClone(page);
-  (malformed.routes[0].metadata!.tags as Record<string, unknown>).deprecated = 'wrong shape';
+  (malformed.routes[0].metadata!.tags as Record<string, unknown>)['deprecated'] = 'wrong shape';
   await expect(cache.write(malformed)).rejects.toThrow(TypeError);
 });
 
@@ -1830,7 +1830,7 @@ test('search breadcrumbs survive strict cache roundtrip and malformed navigation
   });
   for (const malformed of ['Guide', ['Guide', 1], { title: 'Guide' }]) {
     const invalid = structuredClone(page);
-    (invalid.content[0].ir as unknown as Record<string, unknown>).searchBreadcrumbs = malformed;
+    (invalid.content[0].ir as unknown as Record<string, unknown>)['searchBreadcrumbs'] = malformed;
     await expect(cache.write(invalid)).rejects.toThrow(TypeError);
   }
 });
@@ -1860,10 +1860,10 @@ test('API summaries survive the strict cache roundtrip and malformed ones are re
     artifact: page,
   });
   const malformed: Array<(value: PageArtifact) => void> = [
-    (value) => ((value.searchRecords[0] as unknown as Record<string, unknown>).signature = 1),
-    (value) => ((value.routes[0] as unknown as Record<string, unknown>).apiListSegment = null),
-    (value) => ((value.apiList[0] as unknown as Record<string, unknown>).description = ['A']),
-    (value) => ((value.apiList[0] as unknown as Record<string, unknown>).signature = 1),
+    (value) => ((value.searchRecords[0] as unknown as Record<string, unknown>)['signature'] = 1),
+    (value) => ((value.routes[0] as unknown as Record<string, unknown>)['apiListSegment'] = null),
+    (value) => ((value.apiList[0] as unknown as Record<string, unknown>)['description'] = ['A']),
+    (value) => ((value.apiList[0] as unknown as Record<string, unknown>)['signature'] = 1),
   ];
   for (const mutate of malformed) {
     const invalid = structuredClone(page);

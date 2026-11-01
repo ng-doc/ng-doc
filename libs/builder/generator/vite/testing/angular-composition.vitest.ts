@@ -8,6 +8,7 @@ import {
   type AngularCompositionBridge,
   composeAngularPlugins,
   globalStyleSheet,
+  handsViteModules,
   unresolvedImportError,
 } from '../angular-composition';
 import type { HostUpdateTicket } from '../host-updates';
@@ -350,6 +351,77 @@ describe('Analog Angular composition ownership', () => {
     expect(bridge.acknowledge).toHaveBeenCalledWith(expect.anything(), false);
     expect(bridge.settle).toHaveBeenCalledOnce();
     expect(bridge.fail).not.toHaveBeenCalled();
+    await composition.dispose();
+  });
+
+  it('tells the bridge whether a hot update hands Vite modules, so a module-less one settles at once', async () => {
+    const { probe, root } = await fixtureProbe();
+    let handed: HmrContext['modules'] | 'context' | undefined;
+    const settle = vi.fn(async () => {});
+    const bridge: AngularCompositionBridge = {
+      initialize: vi.fn(async () => {}),
+      start: vi.fn(() => ticket(1)),
+      acknowledge: vi.fn(async () => {}),
+      diagnostic: vi.fn(),
+      committed: vi.fn(async () => {}),
+      settle,
+      fail: vi.fn(),
+    };
+    const compiler: Plugin = {
+      name: '@analogjs/vite-plugin-angular',
+      buildStart() {},
+      handleHotUpdate: (value: HmrContext) => (handed === 'context' ? value.modules : handed),
+      transform() {
+        return { code: 'class App {}; App.ɵcmp = {};', map: null };
+      },
+    };
+    const composition = composeAngularPlugins([compiler], probe, bridge);
+    const wrapped = composition.plugins[0]!;
+    const server = {
+      environments: {
+        client: {
+          moduleGraph: { ensureEntryFromUrl: async () => ({}), invalidateModule() {} },
+          transformRequest: async () => callable(wrapped.transform)('', probe),
+        },
+      },
+    } as unknown as ViteDevServer;
+    composition.attachServer(server);
+    await callable(wrapped.buildStart)();
+    await composition.preflight();
+    const hot = callable(wrapped.handleHotUpdate);
+    const module = [{ id: 'served' }] as unknown as HmrContext['modules'];
+    const page = path.join(root, 'docs/page.md');
+    const data = path.join(root, 'docs/data.json');
+    const component = path.join(root, 'docs/demo.component.ts');
+
+    // A markdown source Vite never served: the hook returns nothing and the context has no module.
+    handed = undefined;
+    await hot(context(page, server));
+    // A data module the application imports: Vite updates it after the hook.
+    handed = 'context';
+    await hot({ ...context(data, server), modules: module });
+    // The hook's array replaces the context's modules, either way.
+    handed = [];
+    await hot({ ...context(data, server), modules: module });
+    handed = module;
+    await hot(context(data, server));
+    // A compiler pass of a TypeScript file nothing in the browser imports, then of one it does.
+    handed = [];
+    await hot(context(component, server));
+    handed = module;
+    await hot(context(component, server));
+    expect(settle.mock.calls.map((call) => (call as unknown[])[1])).toEqual([
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+    ]);
+    // Vite reloads the page for an HTML file without modules itself.
+    expect(handsViteModules(path.join(root, 'index.html'), [])).toBe(true);
+    expect(handsViteModules(page, [])).toBe(false);
+    expect(handsViteModules(page, module)).toBe(true);
     await composition.dispose();
   });
 

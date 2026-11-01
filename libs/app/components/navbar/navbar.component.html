@@ -8,7 +8,7 @@
       [rounded]="false"
       aria-controls="ng-doc-sidenav"
       [attr.aria-expanded]="sidebarService.expandedState()"
-      [attr.aria-label]="sidebarService.expandedState() ? 'Close navigation' : 'Open navigation'"
+      [attr.aria-label]="sidebarService.expandedState() ? texts.closeMenu : texts.openMenu"
       (click)="sidebarService.toggle()"
       #menuButton>
       <svg

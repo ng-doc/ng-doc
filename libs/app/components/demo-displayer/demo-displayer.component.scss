@@ -50,13 +50,18 @@
 }
 
 // Pinned to the top-right corner, so they stay put on a canvas that is taller than one row (the
-// last demo of a playground). On a one-row canvas (64px) this is also its vertical centre.
+// last demo of a playground). On a one-row canvas (64px) this is also its vertical centre. They sit
+// on a surface of the documentation's theme, so they read the same on any canvas, including the
+// canvas of a demo in a theme of its own.
 .ng-doc-demo-controls {
   position: absolute;
   top: var(--ng-doc-space-4);
   right: var(--ng-doc-space-3);
   display: flex;
   gap: 2px;
+  border-radius: var(--ng-doc-radius-md);
+  background: var(--ng-doc-background);
+  box-shadow: 0 0 0 1px var(--ng-doc-border-color);
 }
 
 // The pressed code toggle uses the tint of an active control.

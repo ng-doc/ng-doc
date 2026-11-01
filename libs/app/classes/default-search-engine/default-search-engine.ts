@@ -1,15 +1,14 @@
 import { NgDocSearchEngine } from '@ng-doc/app/classes/search-engine';
+import { ɵNG_DOC_CONTENT_UPDATE_EVENT } from '@ng-doc/app/constants';
 import { NgDocSearchResult } from '@ng-doc/app/interfaces';
 import { asArray } from '@ng-doc/core/helpers/as-array';
 import { NgDocPageIndex } from '@ng-doc/core/interfaces';
 import { NgDocHighlightPosition } from '@ng-doc/ui-kit';
-import { create, insertMultiple, Orama } from '@orama/orama';
-import {
-  afterInsert,
-  OramaWithHighlight,
-  searchWithHighlight,
-} from '@orama/plugin-match-highlight';
-import { stemmer } from '@orama/stemmers/english';
+// Types only: Orama loads with the first search, so an application that imports NgDoc only in a
+// lazy route keeps it out of its initial bundle, and readers who never search never load it.
+import type { Orama } from '@orama/orama';
+import type { OramaWithHighlight, searchWithHighlight } from '@orama/plugin-match-highlight';
+import type { stemmer } from '@orama/stemmers/english';
 import { defer, from, Observable } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 
@@ -21,6 +20,17 @@ type OramaDb = OramaWithHighlight<
     pageType: 'enum';
   }>
 >;
+
+/** The Orama functions the engine calls, loaded with the index. */
+interface OramaApi {
+  readonly searchWithHighlight: typeof searchWithHighlight;
+}
+
+/** The database of the index and the Orama functions that search it. */
+interface OramaIndex {
+  readonly db: OramaDb;
+  readonly api: OramaApi;
+}
 
 /** The properties the engine searches in; the page type only filters the results. */
 const SEARCHED_PROPERTIES = ['title', 'section', 'content'] as const;
@@ -58,15 +68,15 @@ export interface NgDocDefaultSearchEngineOptions {
  * more than half when fewer guides match.
  */
 export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
-  private db$: Observable<OramaDb>;
+  private db$: Observable<OramaIndex>;
+  /** The loaded index, shared by every search until a development update replaces it. */
+  private index?: Observable<OramaIndex>;
 
   constructor(private options?: NgDocDefaultSearchEngineOptions) {
     super();
 
-    this.db$ = this.request<NgDocPageIndex[]>(`assets/ng-doc/indexes.json`).pipe(
-      switchMap((pages) => this.createDatabase(pages)),
-      shareReplay(1),
-    ) as Observable<OramaDb>;
+    this.db$ = defer(() => (this.index ??= this.loadIndex()));
+    this.refreshOnContentUpdates();
   }
 
   /**
@@ -75,13 +85,13 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
    */
   search(query: string): Observable<NgDocSearchResult[]> {
     return this.db$.pipe(
-      switchMap((db) =>
+      switchMap((index) =>
         // Each type of page is searched on its own, so that API references, which usually have
         // many more records, cannot push the guides out of the limit.
         from(
           Promise.all([
-            this.searchPages(db, query, { eq: 'guide' }),
-            this.searchPages(db, query, { nin: ['guide'] }),
+            this.searchPages(index, query, { eq: 'guide' }),
+            this.searchPages(index, query, { nin: ['guide'] }),
           ]),
         ),
       ),
@@ -106,11 +116,11 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
   }
 
   private searchPages(
-    db: OramaDb,
+    { db, api }: OramaIndex,
     query: string,
     pageType: { eq: string } | { nin: string[] },
-  ): ReturnType<typeof searchWithHighlight> {
-    return searchWithHighlight(db, {
+  ): ReturnType<OramaApi['searchWithHighlight']> {
+    return api.searchWithHighlight(db, {
       term: query,
       boost: { title: 4, section: 2 },
       threshold: 0.3,
@@ -123,22 +133,59 @@ export class NgDocDefaultSearchEngine extends NgDocSearchEngine {
     });
   }
 
+  /**
+   * The Vite development host updates an edited guide in place (`ɵNG_DOC_CONTENT_UPDATE_EVENT`);
+   * when its search records changed too, the next search loads the index again, as a reloaded
+   * page would. The listener holds the engine weakly, so an engine nobody uses any more stops
+   * listening. Nothing dispatches the event outside the development host, and Angular's
+   * production mode skips the listener altogether.
+   */
+  private refreshOnContentUpdates(): void {
+    if ((typeof ngDevMode !== 'undefined' && !ngDevMode) || typeof window === 'undefined') return;
+    const engine = new WeakRef(this);
+    const listener = (event: Event): void => {
+      const current = engine.deref();
+
+      if (!current) window.removeEventListener(ɵNG_DOC_CONTENT_UPDATE_EVENT, listener);
+      else if ((event as CustomEvent<{ search?: unknown } | null>).detail?.search === true) {
+        current.index = undefined;
+      }
+    };
+
+    window.addEventListener(ɵNG_DOC_CONTENT_UPDATE_EVENT, listener);
+  }
+
+  private loadIndex(): Observable<OramaIndex> {
+    return this.request<NgDocPageIndex[]>(`assets/ng-doc/indexes.json`).pipe(
+      switchMap((pages) => this.createDatabase(pages)),
+      shareReplay(1),
+    );
+  }
+
   private request<T>(url: string): Observable<T> {
     return defer(() => fetch(url)).pipe(
       switchMap((response: Response) => response.json() as Promise<T>),
     );
   }
 
-  private createDatabase(pages: NgDocPageIndex[]): Observable<OramaDb> {
+  private createDatabase(pages: NgDocPageIndex[]): Observable<OramaIndex> {
     return from(
-      create({
-        schema: { title: 'string', section: 'string', content: 'string', pageType: 'enum' },
-        plugins: [{ name: 'highlight', afterInsert }],
-        components: { tokenizer: { stemmer: this.options?.stemmer } },
-      }),
+      Promise.all([import('@orama/orama'), import('@orama/plugin-match-highlight')]),
     ).pipe(
-      switchMap((db) =>
-        from(insertMultiple(db, pages as any)).pipe(map(() => db as unknown as OramaDb)),
+      switchMap(([{ create, insertMultiple }, { afterInsert, searchWithHighlight: search }]) =>
+        from(
+          create({
+            schema: { title: 'string', section: 'string', content: 'string', pageType: 'enum' },
+            plugins: [{ name: 'highlight', afterInsert }],
+            components: { tokenizer: { stemmer: this.options?.stemmer } },
+          }),
+        ).pipe(
+          switchMap((db) =>
+            from(insertMultiple(db, pages as any)).pipe(
+              map(() => ({ db: db as unknown as OramaDb, api: { searchWithHighlight: search } })),
+            ),
+          ),
+        ),
       ),
     );
   }

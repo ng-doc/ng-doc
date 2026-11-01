@@ -1,8 +1,7 @@
 <h1 class="ng-doc-api-list-title">{{ title() }}</h1>
 @if (loaded()) {
   <p class="ng-doc-api-list-lead">
-    {{ declarations().length }} declarations in {{ scopes().length }}
-    {{ scopes().length === 1 ? 'scope' : 'scopes' }}.
+    {{ texts.summary({ declarations: declarations().length, scopes: scopes().length }) }}
   </p>
 }
 
@@ -25,12 +24,10 @@
       type="text"
       autocomplete="off"
       spellcheck="false"
-      [placeholder]="hasDescriptions() ? 'Filter by name or description' : 'Filter by name'"
-      [attr.aria-label]="
-        hasDescriptions()
-          ? 'Filter declarations by name or description'
-          : 'Filter declarations by name'
+      [placeholder]="
+        hasDescriptions() ? texts.filterPlaceholderWithDescriptions : texts.filterPlaceholder
       "
+      [attr.aria-label]="hasDescriptions() ? texts.filterLabelWithDescriptions : texts.filterLabel"
       [attr.aria-keyshortcuts]="shortcuts.enabled() ? 'F' : null"
       [formField]="filterForm.filter" />
     @if (shortcuts.enabled()) {
@@ -38,7 +35,7 @@
     }
   </label>
   <div class="ng-doc-api-list-group-by">
-    <span id="ng-doc-api-list-group-by">Group by</span>
+    <span id="ng-doc-api-list-group-by">{{ texts.groupBy }}</span>
     <div
       class="ng-doc-api-list-segments"
       role="group"
@@ -50,23 +47,23 @@
         [attr.aria-pressed]="groupBy() === 'kind'"
         [ngDocSelectionOrigin]="groupBy() === 'kind'"
         (click)="selectGroupBy('kind')">
-        Kind
+        {{ texts.groupByKind }}
       </button>
       <button
         type="button"
         [attr.aria-pressed]="groupBy() === 'scope'"
         [ngDocSelectionOrigin]="groupBy() === 'scope'"
         (click)="selectGroupBy('scope')">
-        Scope
+        {{ texts.groupByScope }}
       </button>
     </div>
   </div>
 </div>
 
 @if (kinds().length) {
-  <div class="ng-doc-api-list-kinds" role="group" aria-label="Filter by kind">
+  <div class="ng-doc-api-list-kinds" role="group" [attr.aria-label]="texts.kindsLabel">
     <button type="button" [attr.aria-pressed]="!kind()" (click)="selectKind('')">
-      All <span class="ng-doc-api-list-count">{{ inScope().length }}</span>
+      {{ texts.allKinds }} <span class="ng-doc-api-list-count">{{ inScope().length }}</span>
     </button>
     @for (item of kinds(); track item.kind) {
       <button
@@ -84,8 +81,8 @@
 
 @if (scope()) {
   <p class="ng-doc-api-list-scope-note">
-    Showing {{ scope() }} only.
-    <button type="button" (click)="clearScope()">Show every scope</button>
+    {{ texts.scopeNote({ scope: scope() }) }}
+    <button type="button" (click)="clearScope()">{{ texts.showEveryScope }}</button>
   </p>
 }
 
@@ -110,7 +107,9 @@
                   item.description
                 }}</span>
               } @else {
-                <span class="ng-doc-api-list-description ng-doc-api-list-none">No description</span>
+                <span class="ng-doc-api-list-description ng-doc-api-list-none">{{
+                  texts.noDescription
+                }}</span>
               }
             }
             @if (group.kind) {
@@ -125,8 +124,8 @@
   </section>
 } @empty {
   @if (loaded()) {
-    <p class="ng-doc-api-list-empty">No declarations match.</p>
+    <p class="ng-doc-api-list-empty">{{ texts.empty }}</p>
   } @else if (failed()) {
-    <p class="ng-doc-api-list-empty">The API list could not be loaded.</p>
+    <p class="ng-doc-api-list-empty">{{ texts.failed }}</p>
   }
 }

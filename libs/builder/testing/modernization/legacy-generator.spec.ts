@@ -95,7 +95,7 @@ function run(root: string, outDir: string, cache: boolean = false): Capture {
     timeout: 45_000,
     env: {
       ...process.env,
-      PATH: `${path.dirname(node)}:${process.env.PATH}`,
+      PATH: `${path.dirname(node)}:${process.env['PATH']}`,
       CACHE_DIR: path.join(root, '.cache'),
       NGDOC_TEST_CACHE: cache ? '1' : '0',
     },
@@ -107,7 +107,7 @@ function run(root: string, outDir: string, cache: boolean = false): Capture {
 function watch(root: string, outDir: string) {
   const watcherProcess = spawn(node, [child, root, outDir, 'watch'], {
     cwd: root,
-    env: { ...process.env, PATH: `${path.dirname(node)}:${process.env.PATH}` },
+    env: { ...process.env, PATH: `${path.dirname(node)}:${process.env['PATH']}` },
   });
   const events: Capture[] = [];
   let notify: (() => void) | undefined;

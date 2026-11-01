@@ -10,6 +10,7 @@ export * from '@ng-doc/ui-kit/observables';
 export * from '@ng-doc/ui-kit/pipes';
 export * from '@ng-doc/ui-kit/providers';
 export * from '@ng-doc/ui-kit/services';
+export * from '@ng-doc/ui-kit/texts';
 export * from '@ng-doc/ui-kit/tokens';
 export * from '@ng-doc/ui-kit/types';
 export * from '@ng-doc/ui-kit/utils';

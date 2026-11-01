@@ -5,6 +5,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import {
   NgDocDemoAppComponent,
   NgDocDemoHostComponent,
+  ɵisNgDocDemoBackgroundMessage,
   ɵisNgDocDemoSizeMessage,
   ɵNG_DOC_DEMO_MESSAGE_SOURCE,
   ɵngDocDemoApplicationConfig,
@@ -151,6 +152,33 @@ describe('Demo size messages', () => {
       expect(ɵisNgDocDemoSizeMessage(value), JSON.stringify(value)).toBe(false);
     }
   });
+
+  it('accepts only background messages of the demo application', () => {
+    const message = {
+      source: ɵNG_DOC_DEMO_MESSAGE_SOURCE,
+      version: 1,
+      type: 'background',
+      color: 'rgb(24, 24, 27)',
+    };
+
+    expect(ɵisNgDocDemoBackgroundMessage(message)).toBe(true);
+    expect(ɵisNgDocDemoBackgroundMessage({ ...message, dots: '#3f3f46' })).toBe(true);
+    expect(ɵisNgDocDemoBackgroundMessage({ ...message, scheme: 'dark' })).toBe(true);
+    for (const value of [
+      { ...message, dots: 3 },
+      { ...message, scheme: 1 },
+      { ...message, dots: 'x'.repeat(201) },
+      null,
+      { ...message, source: 'other' },
+      { ...message, version: 2 },
+      { ...message, type: 'size' },
+      { ...message, color: '' },
+      { ...message, color: 42 },
+      { ...message, color: 'x'.repeat(201) },
+    ]) {
+      expect(ɵisNgDocDemoBackgroundMessage(value), JSON.stringify(value)).toBe(false);
+    }
+  });
 });
 
 describe('Demo application root', () => {
@@ -222,6 +250,26 @@ describe('Demo application root', () => {
     expect(observers[0].disconnected).toBe(true);
   });
 
+  it('centers the demo of the page, as the canvas of the documentation page does', () => {
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    const fixture = TestBed.createComponent(NgDocDemoAppComponent);
+    const hosts = ['ng-doc-demo-host', 'ng-doc-playground-host'].map((name) =>
+      document.body.appendChild(document.createElement(name)),
+    );
+
+    try {
+      for (const host of hosts) {
+        const style = window.getComputedStyle(host);
+
+        expect(style.display, host.localName).toBe('flex');
+        expect(style.justifyContent, host.localName).toBe('center');
+      }
+    } finally {
+      hosts.forEach((host) => host.remove());
+      fixture.destroy();
+    }
+  });
+
   it('reports nothing when it is not embedded', () => {
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const fixture = TestBed.createComponent(NgDocDemoAppComponent);
@@ -247,5 +295,76 @@ describe('Demo application root', () => {
     fixture.destroy();
     store('ng-doc-theme-id', 'dark');
     expect(document.documentElement.hasAttribute('data-theme')).toBe(false);
+  });
+
+  it("is transparent in an iframe and reports its theme's background whenever it changes", () => {
+    embed();
+    const style = document.createElement('style');
+
+    style.textContent =
+      'html { --ng-doc-background: #fafafa; --ng-doc-base-5: #a1a1aa; } ' +
+      'html[data-theme="dark"] { --ng-doc-background: #18181b; --ng-doc-base-5: #3f3f46; } ' +
+      'body { background-color: var(--ng-doc-background); }';
+    document.head.append(style);
+    window.history.replaceState(null, '', '/demo#~theme=dark');
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    const fixture = TestBed.createComponent(NgDocDemoAppComponent);
+    const backgrounds = () =>
+      posted
+        .map(({ message }) => message as { type: string; color?: string; dots?: string })
+        .filter(({ type }) => type === 'background')
+        .map(({ color, dots }) => `${color} ${dots}`);
+
+    try {
+      // The page lets the documentation page's canvas show through.
+      expect(document.documentElement.classList.contains('ng-doc-demo-embedded')).toBe(true);
+      expect(window.getComputedStyle(document.body).backgroundColor).toMatch(
+        /^(transparent|rgba\(0, 0, 0, 0\))$/,
+      );
+      expect(backgrounds()).toEqual(['#18181b #3f3f46']);
+      // The same background again is not reported again.
+      observers[0].callback([]);
+      expect(backgrounds()).toEqual(['#18181b #3f3f46']);
+
+      window.history.replaceState(null, '', '/demo#~theme=light');
+      window.dispatchEvent(new HashChangeEvent('hashchange'));
+      expect(backgrounds()).toEqual(['#18181b #3f3f46', '#fafafa #a1a1aa']);
+    } finally {
+      fixture.destroy();
+      style.remove();
+      document.documentElement.classList.remove('ng-doc-demo-embedded');
+      window.history.replaceState(null, '', '/');
+    }
+  });
+
+  it('shows the theme its fragment sets, whatever the site picks, until the fragment drops it', () => {
+    const theme = () => document.documentElement.getAttribute('data-theme');
+    const hash = (fragment: string) => {
+      window.history.replaceState(null, '', `/demo#${fragment}`);
+      window.dispatchEvent(new HashChangeEvent('hashchange'));
+    };
+
+    window.localStorage.setItem('ng-doc-theme-id', 'auto');
+    window.history.replaceState(null, '', '/demo#~inputs=a&~theme=dark');
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    const fixture = TestBed.createComponent(NgDocDemoAppComponent);
+
+    try {
+      expect(theme()).toBe('dark');
+      window.dispatchEvent(new StorageEvent('storage', { key: 'ng-doc-theme-id', newValue: '' }));
+      expect(theme()).toBe('dark');
+
+      hash('~theme=light');
+      expect(theme()).toBeNull();
+      hash('~theme=my-brand');
+      expect(theme()).toBe('my-brand');
+      // Without a theme in the fragment, the page shows the site's theme again.
+      hash('');
+      expect(theme()).toBe('auto');
+    } finally {
+      fixture.destroy();
+      window.localStorage.removeItem('ng-doc-theme-id');
+      window.history.replaceState(null, '', '/');
+    }
   });
 });

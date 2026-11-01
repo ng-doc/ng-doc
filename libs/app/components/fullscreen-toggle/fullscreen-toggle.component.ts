@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, input, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, Signal } from '@angular/core';
+import type { NgDocDemoTexts } from '@ng-doc/app/interfaces';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import {
   NgDocButtonIconComponent,
   NgDocFullscreenDirective,
@@ -64,11 +66,13 @@ import {
   },
 })
 export class NgDocFullscreenToggleComponent {
+  protected readonly texts: NgDocDemoTexts = inject(NG_DOC_TEXTS).demo;
+
   /** The element to show fullscreen. */
   readonly target = input.required<NgDocFullscreenDirective>();
 
   /** Accessible name and tooltip of the button, which follow the fullscreen state. */
   protected readonly label: Signal<string> = computed(() =>
-    this.target().active() ? 'Exit fullscreen' : 'Fullscreen',
+    this.target().active() ? this.texts.exitFullscreen : this.texts.fullscreen,
   );
 }

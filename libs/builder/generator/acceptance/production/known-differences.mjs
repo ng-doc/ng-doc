@@ -32,6 +32,19 @@ export const KNOWN = {
     added: [
       // Isolated demos have pages of their own, which only the new engine builds.
       'demo-preview/docs/demos-and-playgrounds/isolated-demos/ViewportDemoComponent/index.html',
+      // The page of each target of each playground of a guide with an isolated playground.
+      'demo-preview/docs/demos-and-playgrounds/playgrounds/playground/ButtonPlayground/a-ng-doc-button-flat/index.html',
+      'demo-preview/docs/demos-and-playgrounds/playgrounds/playground/ButtonPlayground/a-ng-doc-button-text/index.html',
+      'demo-preview/docs/demos-and-playgrounds/playgrounds/playground/ButtonPlayground/a-ng-doc-button/index.html',
+      'demo-preview/docs/demos-and-playgrounds/playgrounds/playground/ButtonPlayground/button-ng-doc-button-flat/index.html',
+      'demo-preview/docs/demos-and-playgrounds/playgrounds/playground/ButtonPlayground/button-ng-doc-button-text/index.html',
+      'demo-preview/docs/demos-and-playgrounds/playgrounds/playground/ButtonPlayground/button-ng-doc-button/index.html',
+      'demo-preview/docs/demos-and-playgrounds/playgrounds/playground/DatePipePlayground/formatdate/index.html',
+      'demo-preview/docs/demos-and-playgrounds/playgrounds/playground/RotatorPlayground/ngdocrotator/index.html',
+      'demo-preview/docs/demos-and-playgrounds/playgrounds/playground/TagCloudPlayground/ng-doc-tag-cloud/index.html',
+      'demo-preview/docs/demos-and-playgrounds/playgrounds/playground/TagDataPlayground/ng-doc-tag/index.html',
+      'demo-preview/docs/demos-and-playgrounds/playgrounds/playground/TagIconPlayground/ng-doc-tag/index.html',
+      'demo-preview/docs/demos-and-playgrounds/playgrounds/playground/TagPlayground/ng-doc-tag/index.html',
     ],
     /** Legacy routes the new engine does not build (onlyForTags removals are derived). */
     removed: [],

@@ -1,4 +1,4 @@
-<nav aria-label="Breadcrumb">
+<nav [attr.aria-label]="texts.breadcrumbs">
   <ol class="ng-doc-breadcrumbs">
     @for (item of breadcrumbs(); track $index; let last = $last) {
       <li class="ng-doc-breadcrumb" [attr.aria-current]="last ? 'page' : null">{{ item }}</li>

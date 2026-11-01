@@ -40,6 +40,12 @@ export interface NgDocDemoActionOptions extends NgDocBaseDemoOptions {
    * renders in the page.
    */
   isolated?: boolean;
+  /**
+   * The theme of an isolated demo: `'light'`, `'dark'`, `'auto'` (follows the system) or the id of
+   * a custom theme. Without it the demo follows the theme of the site. The reader can change it
+   * with the theme button of the toolbar. A demo in the page always has the page's theme.
+   */
+  theme?: string;
 }
 
 /**

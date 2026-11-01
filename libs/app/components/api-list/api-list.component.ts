@@ -17,8 +17,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField } from '@angular/forms/signals';
 import { ActivatedRoute, ParamMap, Params, Router, RouterLink } from '@angular/router';
 import { NgDocKindIconComponent, ngDocKindLabel } from '@ng-doc/app/components/kind-icon';
+import type { NgDocApiListTexts } from '@ng-doc/app/interfaces';
 import { NgDocApiListIndexService } from '@ng-doc/app/services';
 import { NgDocShortcutsService } from '@ng-doc/app/services/shortcuts';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import { asArray } from '@ng-doc/core/helpers/as-array';
 import type { NgDocApiList, NgDocApiListItem } from '@ng-doc/core/interfaces';
 import {
@@ -80,8 +82,10 @@ interface KindFilter {
   ],
 })
 export class NgDocApiListComponent {
-  /** The title of the page. */
-  readonly title = input<string>('API References');
+  protected readonly texts: NgDocApiListTexts = inject(NG_DOC_TEXTS).apiList;
+
+  /** The title of the page. Defaults to the `apiList.title` text. */
+  readonly title = input<string>(this.texts.title);
   /** The segment of the API list data, when the site has more than one API list. */
   readonly segment = input<string>();
 

@@ -1091,7 +1091,10 @@ describe('migrate-to-vite', () => {
     // As Nx presents project.json to Angular devkit schematics: `architect` and `builder`.
     const architect = Object.fromEntries(
       Object.entries(project.targets as Record<string, Record<string, unknown>>).map(
-        ([name, { executor, ...rest }]) => [name, { builder: executor, ...rest }],
+        ([name, { executor, ...rest }]): [string, Record<string, unknown>] => [
+          name,
+          { builder: executor, ...rest },
+        ],
       ),
     );
     const build = architect['build'] as { options: Record<string, unknown>; dependsOn?: unknown };

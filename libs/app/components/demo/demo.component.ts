@@ -19,14 +19,20 @@ import {
   untracked,
   viewChild,
   viewChildren,
+  WritableSignal,
 } from '@angular/core';
 import { NgDocRootPage } from '@ng-doc/app/classes/root-page';
 import { NgDocCodeComponent } from '@ng-doc/app/components/code';
 import { NgDocCopyButtonComponent } from '@ng-doc/app/components/copy-button';
-import { NgDocDemoFrameComponent } from '@ng-doc/app/components/demo-frame';
+import {
+  NgDocDemoFrameComponent,
+  NgDocDemoThemeButtonComponent,
+} from '@ng-doc/app/components/demo-frame';
 import { NgDocFullscreenButtonComponent } from '@ng-doc/app/components/fullscreen-button';
 import { NgDocFullscreenToggleComponent } from '@ng-doc/app/components/fullscreen-toggle';
-import { NgDocDemoAsset } from '@ng-doc/app/interfaces';
+import { ɵwithDemoTheme } from '@ng-doc/app/demo-app';
+import { NgDocCopyTexts, NgDocDemoAsset, NgDocDemoTexts } from '@ng-doc/app/interfaces';
+import { NG_DOC_TEXTS } from '@ng-doc/app/tokens';
 import { asArray } from '@ng-doc/core/helpers/as-array';
 import { NgDocDemoActionOptions } from '@ng-doc/core/interfaces';
 import {
@@ -42,15 +48,15 @@ import {
 /** Widths the demo can be previewed at. */
 export type NgDocDemoPreviewWidth = 'full' | '480' | '280';
 
-/** The preview widths, in the order of their buttons. */
+/** The preview widths, in the order of their buttons, with the texts of their label and readout. */
 const PREVIEW_WIDTHS: ReadonlyArray<{
   readonly width: NgDocDemoPreviewWidth;
-  readonly label: string;
-  readonly readout: string;
+  readonly label: 'widthFull' | 'width480' | 'width280';
+  readonly readout: 'readoutFull' | 'readout480' | 'readout280';
 }> = [
-  { width: 'full', label: 'Full width', readout: '100% × auto' },
-  { width: '480', label: '480 pixels wide', readout: '480 × auto' },
-  { width: '280', label: '280 pixels wide', readout: '280 × auto' },
+  { width: 'full', label: 'widthFull', readout: 'readoutFull' },
+  { width: '480', label: 'width480', readout: 'readout480' },
+  { width: '280', label: 'width280', readout: 'readout280' },
 ];
 
 let nextId = 0;
@@ -79,6 +85,7 @@ let nextId = 0;
     NgDocButtonIconComponent,
     NgDocCopyButtonComponent,
     NgDocDemoFrameComponent,
+    NgDocDemoThemeButtonComponent,
     NgDocFullscreenButtonComponent,
     NgDocFullscreenDirective,
     NgDocFullscreenToggleComponent,
@@ -94,6 +101,9 @@ let nextId = 0;
   },
 })
 export class NgDocDemoComponent {
+  protected readonly texts: NgDocDemoTexts = inject(NG_DOC_TEXTS).demo;
+  protected readonly copyTexts: NgDocCopyTexts = inject(NG_DOC_TEXTS).copy;
+
   private readonly rootPage = inject(NgDocRootPage);
   private readonly document = inject(DOCUMENT);
   private readonly platformLocation = inject(PlatformLocation);
@@ -149,13 +159,50 @@ export class NgDocDemoComponent {
       (this.options().isolated ?? this.rootPage.isolatedDemos ?? false),
   );
 
+  /**
+   * The theme of the demo's iframe: the `theme` option, until the reader picks another with the
+   * theme button; `undefined` follows the page.
+   */
+  readonly frameTheme: WritableSignal<string | undefined> = linkedSignal(
+    () => this.options().theme,
+  );
+
+  /**
+   * The background of the stage while the demo shows a theme of its own: the background its page
+   * reported, so the whole stage reads in the demo's theme rather than only the iframe.
+   */
+  protected readonly stageBackground: Signal<string | undefined> = computed(() =>
+    this.isolated() && this.frameTheme() !== undefined ? this.frame()?.background() : undefined,
+  );
+
+  /** The dots of the stage while the demo shows a theme of its own, in that theme's color. */
+  protected readonly stageDots: Signal<string | undefined> = computed(() =>
+    this.stageBackground() ? this.frame()?.dots() : undefined,
+  );
+
+  /** The URL fragment of the demo's iframe, which carries its theme. */
+  protected readonly frameFragment: Signal<string | undefined> = computed(() =>
+    ɵwithDemoTheme(undefined, this.frameTheme()),
+  );
+
+  /** The demo's page as the toolbar opens it in a new tab: in the theme of its iframe. */
+  protected readonly newTabUrl: Signal<string | undefined> = computed(() => {
+    const url = this.demoUrl();
+    const fragment = this.isolated() ? this.frameFragment() : undefined;
+
+    return url && fragment ? `${url}#${fragment}` : url;
+  });
+
   /** The accessible title of the demo's iframe. */
-  protected readonly frameTitle: Signal<string> = computed(() => `${this.componentName()} demo`);
+  protected readonly frameTitle: Signal<string> = computed(() =>
+    this.texts.frameTitle({ name: `${this.componentName()}` }),
+  );
 
   /** Whether the stage is fullscreen. */
   protected readonly fullscreen: Signal<boolean> = computed(() => this.stage()?.active() ?? false);
 
   private readonly stage = viewChild(NgDocFullscreenDirective);
+  private readonly frame = viewChild(NgDocDemoFrameComponent);
 
   /** Source files of the demo, filtered by the `tabs` option. */
   readonly assets: Signal<NgDocDemoAsset[]> = computed(() => {
@@ -182,12 +229,17 @@ export class NgDocDemoComponent {
   /** The width the demo is previewed at. */
   readonly previewWidth = signal<NgDocDemoPreviewWidth>('full');
 
-  protected readonly previewWidths = PREVIEW_WIDTHS;
+  protected readonly previewWidths = PREVIEW_WIDTHS.map(({ width, label, readout }) => ({
+    width,
+    label: this.texts[label],
+    readout: this.texts[readout],
+  }));
 
   /** Readout of the preview width. */
   protected readonly widthReadout: Signal<string> = computed(
     () =>
-      PREVIEW_WIDTHS.find(({ width }) => width === this.previewWidth())?.readout ?? '100% × auto',
+      this.previewWidths.find(({ width }) => width === this.previewWidth())?.readout ??
+      this.texts.readoutFull,
   );
 
   /** The views in tab order: the preview, then the source files. */

@@ -11,9 +11,11 @@ import type {
   CommitResult,
   CompilationRequest,
   CompilationResult,
+  CompilationService,
   Diagnostic,
   FileChange,
   FileEventSource,
+  OutputCommitter,
 } from '../../contracts';
 import { hostPath } from '../../kernel/paths';
 
@@ -84,11 +86,13 @@ export function committed(request: CommitRequest): CommitResult {
 }
 
 export function harness(projectId: string = 'test') {
-  const compile = vi.fn(
+  // Typed as the service methods, so a spec's replacement implementation and the recorded calls
+  // carry every parameter of the contract (the compilation context included).
+  const compile = vi.fn<CompilationService['compile']>(
     async (request: CompilationRequest, _signal: AbortSignal): Promise<CompilationResult> =>
       compilation(`${projectId}-${request.generation}`, projectId),
   );
-  const commit = vi.fn(
+  const commit = vi.fn<OutputCommitter['commit']>(
     async (
       request: CommitRequest,
       guard: CommitGuard,

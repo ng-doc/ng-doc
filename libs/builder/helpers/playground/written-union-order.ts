@@ -22,7 +22,18 @@ export function writtenUnionOrder(
   type: Type,
   members: Type[] = type.getUnionTypes(),
 ): Type[] {
-  const node = writtenTypeNode(declaration);
+  return writtenOrder(writtenTypeNode(declaration), members);
+}
+
+/**
+ * The members of a union in the order a written type node names them (see
+ * {@link writtenUnionOrder}): the members the node names, through unions, parentheses,
+ * non-generic type aliases and enums, take their written order in the positions they hold in
+ * `members`; the others keep their positions. Without a node, `members` is returned.
+ * @param node - The type node the author wrote for the union, if any.
+ * @param members - The union's members in the order to fall back to.
+ */
+export function writtenOrder(node: TypeNode | undefined, members: Type[]): Type[] {
   if (!node || members.length < 2) return members;
   const written: ts.Type[] = [];
   collect(node, written, new Set());
@@ -38,8 +49,12 @@ export function writtenUnionOrder(
   );
 }
 
-/** The type node the author wrote for an input or parameter, if any. */
-function writtenTypeNode(declaration: NgDocInputDeclaration | Node): TypeNode | undefined {
+/**
+ * The type node the author wrote for an input or parameter, if any: its annotation, or the type
+ * argument of `input<T>()`, `input.required<T>()` or `model<T>()`.
+ * @param declaration - The input property, accessor or pipe parameter.
+ */
+export function writtenTypeNode(declaration: NgDocInputDeclaration | Node): TypeNode | undefined {
   if (Node.isPropertyDeclaration(declaration) && isInputSignal(declaration)) {
     const initializer = declaration.getInitializer();
     return Node.isCallExpression(initializer) ? initializer.getTypeArguments()[0] : undefined;

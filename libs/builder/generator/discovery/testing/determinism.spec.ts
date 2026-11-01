@@ -87,7 +87,7 @@ it('keeps real concurrent-import discovery provenance stable, preserving ordered
         routePrefix: result.value.configuration.routePrefix,
       });
     }
-    const evidence = process.env.NGDOC_DETERMINISM_EVIDENCE;
+    const evidence = process.env['NGDOC_DETERMINISM_EVIDENCE'];
     if (evidence) writeFileSync(evidence, JSON.stringify({ runs }, null, 2) + '\n');
     expect(new Set(runs.map((r) => r.dependencySet)).size).toBe(1);
     expect(new Set(runs.map((r) => r.configurationDigest)).size).toBe(1);

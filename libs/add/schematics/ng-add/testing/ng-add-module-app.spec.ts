@@ -276,5 +276,6 @@ import { AppComponent } from './app.component';
 export class AppComponent {}`,
   );
 
-  createSourceFile('test/app/app.template.html', `<app></app>`);
+  // A new application's shell: `ng add` replaces only such a template with the layout.
+  createSourceFile('test/app/app.template.html', `<router-outlet></router-outlet>`);
 }

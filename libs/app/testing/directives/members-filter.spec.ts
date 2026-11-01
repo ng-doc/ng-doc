@@ -309,6 +309,8 @@ describeChangeDetection('NgDocMembersFilterDirective', ({ providers }) => {
   });
 
   it('focuses the filter with F and gives the key back when destroyed', () => {
+    // NgDocRootComponent listens for the shortcuts while the documentation layout is shown.
+    TestBed.inject(NgDocShortcutsService).listen();
     document.body.dispatchEvent(
       new KeyboardEvent('keydown', { key: 'f', bubbles: true, cancelable: true }),
     );

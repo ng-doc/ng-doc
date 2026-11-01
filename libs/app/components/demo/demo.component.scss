@@ -165,7 +165,19 @@
 }
 
 .ng-doc-demo-width-readout ~ .ng-doc-demo-open,
-.ng-doc-demo-copy ~ .ng-doc-demo-open {
+.ng-doc-demo-copy ~ .ng-doc-demo-open,
+.ng-doc-demo-theme ~ .ng-doc-demo-open {
+  margin-left: 0;
+}
+
+// The button is `display: contents`: its own button takes the place in the toolbar.
+.ng-doc-demo-theme > button {
+  margin-left: auto;
+  --ng-doc-icon-color: var(--ng-doc-text-muted);
+}
+
+.ng-doc-demo-width-readout ~ .ng-doc-demo-theme > button,
+.ng-doc-demo-copy ~ .ng-doc-demo-theme > button {
   margin-left: 0;
 }
 
@@ -175,6 +187,7 @@
 
 .ng-doc-demo-width-readout ~ .ng-doc-demo-fullscreen,
 .ng-doc-demo-copy ~ .ng-doc-demo-fullscreen,
+.ng-doc-demo-theme ~ .ng-doc-demo-fullscreen,
 .ng-doc-demo-open ~ .ng-doc-demo-fullscreen {
   margin-left: 0;
 }
