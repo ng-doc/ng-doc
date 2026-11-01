@@ -1,5 +1,4 @@
 import {
-  type NgDocPlaygroundOption,
   type NgDocPlaygroundProperties,
   type NgDocPlaygroundProperty,
   buildPlaygroundDemoPipeTemplate,
@@ -29,6 +28,10 @@ import { getContentForPlayground } from '../../helpers/playground/get-content-fo
 import { getPlaygroundTemplateInputs } from '../../helpers/playground/get-playground-template-inputs';
 import { getTargetForPlayground } from '../../helpers/playground/get-target-for-playground';
 import { getTemplateForPlayground } from '../../helpers/playground/get-template-for-playground';
+import {
+  playgroundArrayOptions,
+  playgroundOption,
+} from '../../helpers/playground/playground-options';
 import { writtenUnionOrder } from '../../helpers/playground/written-union-order';
 import { removeLinesFromCode } from '../../helpers/remove-lines-from-code';
 import { snippetsFromAsset } from '../../helpers/snippets-from-asset';
@@ -58,26 +61,6 @@ function canonicalMembers(type: Type): Type[] {
           TypeFormatFlags.NoTruncation | TypeFormatFlags.UseSingleQuotesForStringLiteralType,
         ),
   ).map((member) => wrappers.get(member)!);
-}
-
-/**
- * An option of a union input. The runtime evaluates the printed text of a member, which works for
- * literals (`'small'`, `1`) but not for an enum member (`Status.Good`): a member of an enum is the
- * member's name, which the playground shows, and the literal value the checker resolved for it,
- * which the playground sets.
- * @param member - A member of the input's union type.
- */
-function playgroundOption(member: Type): string | NgDocPlaygroundOption {
-  if (member.isEnumLiteral()) {
-    const value = member.getLiteralValue();
-    const name = member.getSymbol()?.getName();
-    if (name && (typeof value === 'string' || typeof value === 'number'))
-      return { label: name, value };
-  }
-  return member.getText(
-    undefined,
-    TypeFormatFlags.NoTruncation | TypeFormatFlags.UseSingleQuotesForStringLiteralType,
-  );
 }
 
 /**
@@ -370,8 +353,11 @@ export function guideSemantics(
           description: Node.isParameterDeclaration(input)
             ? docs.getJsDocParam(target.getMethodOrThrow('transform'), input.getName())
             : docs.getJsDocDescription(input),
-          // In the written order: the checker's (stable) order sorts literals by value.
-          options: writtenUnionOrder(input, type, canonicalMembers(type)).map(playgroundOption),
+          // In the written order: the checker's (stable) order sorts literals by value. An array
+          // of a union of literals gets the members of its item type, as in the legacy engine.
+          options:
+            playgroundArrayOptions(input, type) ??
+            writtenUnionOrder(input, type, canonicalMembers(type)).map(playgroundOption),
         };
       }
       const controls =

@@ -33,6 +33,12 @@ import {
   NgDocTooltipDirective,
 } from '@ng-doc/ui-kit';
 
+import {
+  ARRAY_CONTROL_TYPE,
+  arrayType,
+  NgDocArrayType,
+  UNION_ARRAY_CONTROL_TYPE,
+} from '../playground-array-type';
 import { NgDocPlaygroundForm } from '../playground-form';
 import { NgDocPlaygroundPropertyComponent } from '../playground-property/playground-property.component';
 import { NgDocPlaygroundPropertyControl } from '../playground-property-control';
@@ -172,15 +178,21 @@ export class NgDocPlaygroundPropertiesComponent<
     const type: string = property.type;
     const primitive: string | undefined = optionalPrimitive(type);
     const array: NgDocArrayType | undefined = arrayType(type);
+    const options: Array<string | NgDocPlaygroundOption> | undefined = isPlaygroundProperty(
+      property,
+    )
+      ? property.options
+      : undefined;
+    // The options of an array are the values of its items, when they are a union of literals.
     const typeControl: NgDocProvidedTypeControl | undefined =
       this.getControlForType(type) ??
       (primitive ? this.getControlForType(primitive) : undefined) ??
       (array?.list ? this.getControlForType(array.list) : undefined) ??
+      (array
+        ? this.getControlForTypeAlias(options, property.isManual, UNION_ARRAY_CONTROL_TYPE)
+        : undefined) ??
       (array ? this.getControlForType(ARRAY_CONTROL_TYPE) : undefined) ??
-      this.getControlForTypeAlias(
-        isPlaygroundProperty(property) ? property.options : undefined,
-        property.isManual,
-      );
+      this.getControlForTypeAlias(options, property.isManual, 'NgDocTypeAlias');
 
     if (!typeControl && isDevMode()) {
       console.warn(
@@ -197,31 +209,48 @@ export class NgDocPlaygroundPropertiesComponent<
     return token ? this.injector.get(token) : undefined;
   }
 
+  /**
+   * The control of the values of a union, when every option is a value: the select of a union
+   * (`NgDocTypeAlias`) or the multi-select of an array of one (`NgDocTypeAlias[]`). An optional
+   * array input without such options has the members of its own union (`undefined` and the array
+   * type), and the text of an array type is not a value of an item.
+   * @param options - The options of the input.
+   * @param isManual - Whether the options come from the playground's `controls`.
+   * @param controlType - The type the control is registered for.
+   */
   private getControlForTypeAlias(
-    options?: Array<string | NgDocPlaygroundOption>,
-    isManual?: boolean,
+    options: Array<string | NgDocPlaygroundOption> | undefined,
+    isManual: boolean | undefined,
+    controlType: string,
   ): NgDocProvidedTypeControl | undefined {
-    if (options && options.length) {
-      let optionsIsValid: boolean = true;
-
-      try {
-        // checking that all values are extractable
-        options.forEach((item: string | NgDocPlaygroundOption) =>
-          resolvePlaygroundOption(item, isManual),
-        );
-      } catch {
-        optionsIsValid = false;
-      }
-
-      if (optionsIsValid) {
-        const token: InjectionToken<NgDocProvidedTypeControl> | undefined =
-          getTokenForType('NgDocTypeAlias');
-
-        return token ? this.injector.get(token) : undefined;
-      }
+    if (!options?.length) {
+      return undefined;
     }
 
-    return undefined;
+    const values: unknown[] = [];
+
+    try {
+      // checking that all values are extractable
+      options.forEach((item: string | NgDocPlaygroundOption) =>
+        values.push(resolvePlaygroundOption(item, isManual).value),
+      );
+    } catch {
+      return undefined;
+    }
+
+    // The items of an array are values: an option that evaluates to an object, such as the text
+    // of a tuple type, means the options are not those of the items.
+    if (
+      controlType === UNION_ARRAY_CONTROL_TYPE &&
+      !(
+        values.every((value: unknown) => value === null || ITEM_TYPES.has(typeof value)) &&
+        values.some((value: unknown) => value !== null && value !== undefined)
+      )
+    ) {
+      return undefined;
+    }
+
+    return this.getControlForType(controlType);
   }
 }
 
@@ -276,6 +305,9 @@ function compareByTypeControl(
   return INPUT_ORDER.compare(a.property.inputName, b.property.inputName);
 }
 
+/** The types of the values that an item of the multi-select of a union can have. */
+const ITEM_TYPES: ReadonlySet<string> = new Set(['string', 'number', 'boolean', 'undefined']);
+
 /** The types whose control also edits an optional or nullable input of the type. */
 const PRIMITIVE_TYPES: ReadonlySet<string> = new Set(['string', 'number', 'boolean']);
 
@@ -298,174 +330,4 @@ function optionalPrimitive(type: string): string | undefined {
   return rest.length === 1 && rest.length < members.length && PRIMITIVE_TYPES.has(rest[0])
     ? rest[0]
     : undefined;
-}
-
-/**
- * The type that the control of array types without a control of their own is registered for.
- * NgDoc registers its JSON field for it, and `controls` can name it for an input.
- */
-const ARRAY_CONTROL_TYPE: string = 'NgDocArray';
-
-/** The item types whose arrays get the control registered for `<item>[]`, a list by default. */
-const LIST_ITEM_TYPES: ReadonlySet<string> = new Set(['string', 'number']);
-
-/** Keywords that make a type ending in `[]` another type than an array, as in `keyof Item[]`. */
-const TYPE_OPERATOR: RegExp = /^(?:keyof|typeof|unique|infer|asserts|new)\s/;
-
-/** An input type that is an array or a tuple. */
-interface NgDocArrayType {
-  /** `string[]` or `number[]` for an array of strings or numbers, whatever its spelling. */
-  list?: string;
-}
-
-/**
- * Reads an input type as an array type: `T[]` (as both engines print an array), `Array<T>`,
- * `readonly T[]`, `ReadonlyArray<T>` or a tuple such as `[string, number]`, alone or in a union
- * with `undefined` or `null` (an optional or nullable input). An array of strings or numbers gets
- * the control of `string[]` or `number[]`, so a control registered for that type replaces the
- * built-in list for every spelling; any other array gets the control of `NgDocArray`, the JSON
- * field. A type alias of an array (`type Tags = string[]`) is printed by its name and is not
- * recognized: register a control for the name.
- * @param type - The input type as the builder printed it.
- * @returns What the array type is, or `undefined` when the type is not one.
- */
-function arrayType(type: string): NgDocArrayType | undefined {
-  const members: string[] = splitTopLevel(type);
-  const rest: string[] = members.filter(
-    (member: string) => member !== 'undefined' && member !== 'null',
-  );
-
-  if (rest.length !== 1) {
-    return undefined;
-  }
-
-  const written: string = unwrapParentheses(rest[0]).replace(/^readonly\s+/, '');
-  const item: string | undefined = arrayItem(written);
-
-  if (item !== undefined) {
-    return LIST_ITEM_TYPES.has(item) ? { list: `${item}[]` } : {};
-  }
-
-  return written.startsWith('[') && written.endsWith(']') && isBalanced(written.slice(1, -1))
-    ? {}
-    : undefined;
-}
-
-/**
- * The item type of `T[]`, `Array<T>` or `ReadonlyArray<T>`.
- * @param type - A type that is not a union.
- */
-function arrayItem(type: string): string | undefined {
-  const generic: RegExpExecArray | null = /^(?:Readonly)?Array<([\s\S]*)>$/.exec(type);
-
-  if (generic) {
-    return isBalanced(generic[1]) ? unwrapParentheses(generic[1].trim()) : undefined;
-  }
-
-  if (!type.endsWith('[]') || TYPE_OPERATOR.test(type)) {
-    return undefined;
-  }
-
-  const item: string = type.slice(0, -2).trim();
-
-  // `() => string[]` is a function, and `A extends B ? C[] : D[]` a conditional type.
-  const text: string | undefined = item ? topLevelText(item) : undefined;
-
-  return text !== undefined && !/=>|\?/.test(text) ? unwrapParentheses(item) : undefined;
-}
-
-/**
- * Splits a type at the `|` of its top-level union, outside brackets and string literals.
- * @param type - The type.
- */
-function splitTopLevel(type: string): string[] {
-  const text: string | undefined = topLevelText(type);
-
-  if (text === undefined) {
-    return [type.trim()];
-  }
-
-  const members: string[] = [];
-  let start: number = 0;
-
-  for (let index = 0; index < text.length; index++) {
-    if (text[index] === '|') {
-      members.push(type.slice(start, index).trim());
-      start = index + 1;
-    }
-  }
-
-  return [...members, type.slice(start).trim()];
-}
-
-/**
- * Removes the parentheses around a whole type, such as those of `(string | number)`.
- * @param type - The type.
- */
-function unwrapParentheses(type: string): string {
-  let result: string = type.trim();
-
-  while (result.startsWith('(') && result.endsWith(')') && isBalanced(result.slice(1, -1))) {
-    result = result.slice(1, -1).trim();
-  }
-
-  return result;
-}
-
-/**
- * Whether every bracket and string literal of a type is closed in it.
- * @param type - The type.
- */
-function isBalanced(type: string): boolean {
-  return topLevelText(type) !== undefined;
-}
-
-/**
- * The type with every character inside brackets or a string literal replaced by a space, so that
- * the operators of the type itself can be found by position; `undefined` when a bracket or a string
- * is not closed. The `>` of an arrow (`=>`) closes no bracket.
- * @param type - The type.
- */
-function topLevelText(type: string): string | undefined {
-  let depth: number = 0;
-  let quote: string | undefined;
-  let text: string = '';
-
-  for (let index = 0; index < type.length; index++) {
-    const char: string = type[index];
-
-    if (quote) {
-      if (char === '\\') {
-        index++;
-        text += '  ';
-        continue;
-      }
-      if (char === quote) {
-        quote = undefined;
-      }
-      text += ' ';
-      continue;
-    }
-
-    if (char === "'" || char === '"' || char === '`') {
-      quote = char;
-      text += ' ';
-    } else if ('([{<'.includes(char)) {
-      depth++;
-      text += ' ';
-    } else if (char === '>' && type[index - 1] === '=') {
-      text += depth ? ' ' : char;
-    } else if (')]}>'.includes(char)) {
-      depth--;
-      text += ' ';
-
-      if (depth < 0) {
-        return undefined;
-      }
-    } else {
-      text += depth ? ' ' : char;
-    }
-  }
-
-  return depth === 0 && !quote ? text : undefined;
 }

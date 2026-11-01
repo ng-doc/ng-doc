@@ -612,9 +612,10 @@ test.each(variants)(
   300_000,
 );
 
-// Playground options list the members of an input's union type. They follow the written order
-// (`helpers/playground/written-union-order.ts`), never the checker's: `tone` is written
-// `'soft' | 'link' | 'loud'`, while the checker orders literals by value (`'link'` first).
+// Playground options list the members of an input's union type, or of the item type of an array
+// of literals. They follow the written order (`helpers/playground/written-union-order.ts`), never
+// the checker's: `tone` is written `'soft' | 'link' | 'loud'`, while the checker orders literals by
+// value (`'link'` first).
 const playground: Variant = {
   name: 'playground options',
   sources: {
@@ -643,6 +644,10 @@ const playground: Variant = {
       "  /** Tone. */ tone = input<'soft' | 'link' | 'loud'>('soft');",
       "  /** Optional. */ @Input() mode?: 'b' | 'a';",
       '  /** Flag. */ @Input() flag = false;',
+      // Arrays of a union of literals: the members of the item type (`playground-options.ts`).
+      '  /** Palette. */ palette = input<Color[]>([]);',
+      '  /** Sizes. */ @Input() sizes?: Size[];',
+      "  /** Tones. */ tones = input<Array<'soft' | 'link' | boolean>>([]);",
       '}',
       '',
     ].join('\n'),
@@ -697,6 +702,13 @@ test('playground options follow the written order on every path', async () => {
     flag: ['false', 'true'],
     // No written type: the canonical order of printed types (by text), not the creation order.
     tied: ['{ p: number; }', '{ q: string; }'],
+    palette: ["'primary'", "'warning'", "'link'"],
+    sizes: [
+      { label: 'Medium', value: 'medium' },
+      { label: 'Small', value: 'small' },
+    ],
+    // `boolean` names no literal: its members follow the written ones, by their text.
+    tones: ["'soft'", "'link'", 'false', 'true'],
   };
   for (const index of [0, 1]) {
     const label = index ? 'edited' : 'initial';

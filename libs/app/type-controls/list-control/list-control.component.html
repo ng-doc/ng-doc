@@ -1,85 +1,162 @@
-@if (literal(); as literal) {
-  <code class="ng-doc-list-control-literal">{{ literal }}</code>
-}
-@if (items().length) {
-  <ol class="ng-doc-list-control-items">
-    @for (item of items(); track $index; let first = $first, last = $last) {
-      <li class="ng-doc-list-control-item" [attr.data-ng-doc-list-item]="$index">
-        <ng-doc-input-wrapper diControlSilencer>
-          <input
-            #field
-            class="ng-doc-input"
-            data-ng-doc-list-input
-            [attr.type]="inputType"
-            [attr.aria-label]="texts.item({ index: $index + 1 })"
-            [attr.aria-invalid]="invalid().has($index) ? 'true' : null"
-            [value]="item"
-            [disabled]="disabled"
-            (input)="edit($index, field.value)"
-            (blur)="commit($index, field)" />
-        </ng-doc-input-wrapper>
-        <button
-          ng-doc-button-icon-transparent
-          type="button"
-          size="small"
-          class="ng-doc-list-control-up"
-          data-ng-doc-list-up
-          [attr.aria-label]="texts.moveUp"
-          [rounded]="false"
-          [disabled]="disabled || first"
-          (click)="move($index, -1)"
-          (focusout)="touch()">
-          <ng-doc-icon icon="chevron-right"></ng-doc-icon>
-        </button>
-        <button
-          ng-doc-button-icon-transparent
-          type="button"
-          size="small"
-          class="ng-doc-list-control-down"
-          data-ng-doc-list-down
-          [attr.aria-label]="texts.moveDown"
-          [rounded]="false"
-          [disabled]="disabled || last"
-          (click)="move($index, 1)"
-          (focusout)="touch()">
-          <ng-doc-icon icon="chevron-right"></ng-doc-icon>
-        </button>
-        <button
-          ng-doc-button-icon-transparent
-          type="button"
-          size="small"
-          data-ng-doc-list-remove
-          [attr.aria-label]="texts.removeItem"
-          [rounded]="false"
-          [disabled]="disabled"
-          (click)="remove($index)"
-          (focusout)="touch()">
-          <ng-doc-icon icon="x"></ng-doc-icon>
-        </button>
-      </li>
+<!-- The chips and the text field share one field-styled box, which the dropdown is attached to. -->
+<div
+  #fieldBox
+  class="ng-doc-list-control-box"
+  ngDocDropdownOrigin
+  [attr.data-ng-doc-invalid]="invalid() || editInvalid()"
+  [attr.data-ng-doc-disabled]="disabled"
+  (click)="fieldClick($event, field)">
+  <div class="ng-doc-list-control-flow">
+    <!-- `display: contents` lets the chips and the text field wrap as one line of content. -->
+    <ul class="ng-doc-list-control-chips" role="list">
+      @for (item of shownItems(); track $index) {
+        <li
+          class="ng-doc-list-control-item"
+          [attr.data-ng-doc-list-item]="$index"
+          [attr.data-ng-doc-dragging]="dragIndex() === $index">
+          @if (editing() === $index) {
+            <input
+              class="ng-doc-list-control-edit"
+              data-ng-doc-list-edit
+              spellcheck="false"
+              autocomplete="off"
+              [size]="editText().length || 1"
+              [value]="editText()"
+              [attr.aria-label]="texts.editItem({ item: chipText(item) })"
+              [attr.aria-invalid]="editInvalid() ? 'true' : null"
+              [attr.aria-describedby]="editInvalid() ? id + '-error' : null"
+              (input)="editText.set(edit.value)"
+              (keydown)="editKeydown($event)"
+              (blur)="editBlur()"
+              #edit />
+          } @else {
+            <ng-doc-tag class="ng-doc-list-control-chip" mod="light">
+              <span
+                class="ng-doc-list-control-chip-text"
+                data-ng-doc-list-chip
+                [class.ng-doc-list-control-empty-string]="labelOf(item) === ''"
+                [attr.role]="freeText ? 'button' : null"
+                [attr.tabindex]="
+                  disabled ? null : $index === tabStop() || ($last && tabStop() > $index) ? 0 : -1
+                "
+                [attr.aria-describedby]="
+                  freeText ? id + '-edit-keys ' + id + '-keys' : id + '-keys'
+                "
+                (focus)="tabStop.set($index)"
+                (keydown)="chipKeydown($event, $index)"
+                (dblclick)="startEdit($index)"
+                (pointerdown)="chipPointerDown($event, $index)"
+                (pointermove)="chipPointerMove($event)"
+                (pointerup)="chipPointerUp($event)"
+                (pointercancel)="cancelDrag()"
+                >{{ chipText(item) }}</span
+              >
+              <button
+                type="button"
+                class="ng-doc-list-control-remove"
+                data-ng-doc-list-remove
+                tabindex="-1"
+                [attr.aria-label]="texts.removeItem({ item: chipText(item) })"
+                [disabled]="disabled"
+                (click)="remove($index)">
+                <ng-doc-icon icon="x" aria-hidden="true"></ng-doc-icon>
+              </button>
+            </ng-doc-tag>
+          }
+        </li>
+      }
+    </ul>
+    @if (literal(); as literal) {
+      <code class="ng-doc-list-control-literal" data-ng-doc-list-literal>{{ literal }}</code>
     }
-  </ol>
-}
-<div class="ng-doc-list-control-actions">
-  <button
-    ng-doc-button-text
-    type="button"
-    data-ng-doc-list-add
-    [disabled]="disabled"
-    (click)="add()"
-    (focusout)="touch()">
-    {{ texts.addItem }}
-  </button>
+    <input
+      #field
+      class="ng-doc-list-control-field"
+      data-ng-doc-list-field
+      role="combobox"
+      aria-autocomplete="list"
+      spellcheck="false"
+      autocomplete="off"
+      [value]="text()"
+      [placeholder]="items().length ? '' : texts.addItem"
+      [disabled]="disabled"
+      [attr.aria-label]="texts.addItem"
+      [attr.aria-expanded]="panelOpen()"
+      [attr.aria-controls]="id + '-rows'"
+      [attr.aria-activedescendant]="panelOpen() && highlighted() >= 0 ? rowId(highlighted()) : null"
+      [attr.aria-invalid]="invalid() ? 'true' : null"
+      [attr.aria-describedby]="invalid() ? id + '-error' : null"
+      (input)="type(field.value)"
+      (keydown)="fieldKeydown($event, field)" />
+  </div>
   @if (canReset()) {
     <button
-      ng-doc-button-text
+      ng-doc-button-icon-transparent
       type="button"
+      size="small"
+      class="ng-doc-list-control-reset"
       data-ng-doc-list-reset
+      [rounded]="false"
       [attr.aria-label]="texts.resetToDefault"
       [disabled]="disabled"
-      (click)="reset()"
-      (focusout)="touch()">
-      {{ texts.reset }}
+      (click)="reset()">
+      <ng-doc-icon icon="x" aria-hidden="true"></ng-doc-icon>
     </button>
   }
+  <!-- The dropdown's host takes the focus while it is open, to move it into the overlay. The rows
+       here are never focused (the text field names the highlighted one), so the host is inert. -->
+  <span class="ng-doc-list-control-dropdown" inert>
+    <ng-doc-dropdown
+      [content]="panel"
+      [positions]="['bottom-center', 'top-center']"
+      [maxHeight]="240"
+      (beforeClose)="expanded.set(false)"></ng-doc-dropdown>
+  </span>
 </div>
+@if (invalid() || editInvalid()) {
+  <span class="ng-doc-list-control-error" [id]="id + '-error'">{{ texts.invalidNumber }}</span>
+}
+<span hidden [id]="id + '-keys'">{{ texts.itemKeys }}</span>
+<span hidden [id]="id + '-edit-keys'">{{ texts.editKeys }}</span>
+<span class="ng-doc-list-control-status" role="status">{{ announcement() }}</span>
+
+<ng-template #panel>
+  <!-- A press on a row keeps the focus in the text field. -->
+  <div
+    class="ng-doc-list-control-panel"
+    [style.width.px]="panelWidth()"
+    (mousedown)="$event.preventDefault()">
+    @if (rows().length) {
+      <div
+        role="listbox"
+        class="ng-doc-list-control-rows"
+        [id]="id + '-rows'"
+        [attr.aria-label]="texts.suggestions"
+        [attr.aria-multiselectable]="freeText ? null : 'true'">
+        @for (row of rows(); track $index) {
+          <div
+            role="option"
+            class="ng-doc-list-control-row"
+            [id]="rowId($index)"
+            [attr.data-ng-doc-list-row]="row.kind"
+            [attr.data-ng-doc-highlighted]="highlighted() === $index"
+            [attr.aria-selected]="freeText ? highlighted() === $index : row.selected"
+            (pointerenter)="highlighted.set($index)"
+            (click)="pick(row)">
+            <span class="ng-doc-list-control-row-text">
+              {{ row.kind === 'add' ? texts.addValue({ value: row.label }) : row.label || '""' }}
+            </span>
+            @if (row.selected) {
+              <ng-doc-icon
+                class="ng-doc-list-control-check"
+                icon="check"
+                aria-hidden="true"></ng-doc-icon>
+            }
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="ng-doc-list-control-no-matches" role="status">{{ texts.noMatches }}</div>
+    }
+  </div>
+</ng-template>

@@ -42,6 +42,7 @@ import {
   NgDocStringControlComponent,
   NgDocStringListControlComponent,
   NgDocTypeAliasControlComponent,
+  NgDocTypeAliasListControlComponent,
 } from '@ng-doc/app/type-controls';
 import type { NgDocContentSource } from '@ng-doc/core/interfaces';
 import { NgDocButtonIconComponent, NgDocTooltipDirective } from '@ng-doc/ui-kit';
@@ -79,13 +80,20 @@ import { WA_LOCATION } from '@ng-web-apis/common';
     provideTypeControl('string', NgDocStringControlComponent, { order: 20, cloneable: true }),
     provideTypeControl('number', NgDocNumberControlComponent, { order: 30, cloneable: true }),
     provideTypeControl('boolean', NgDocBooleanControlComponent, { order: 40, cloneable: true }),
-    // Lists have several buttons, so their rows are not labels (see `labelWrapper`).
+    // The chip fields have several interactive parts, so their rows are not labels (see
+    // `labelWrapper`).
     provideTypeControl('string[]', NgDocStringListControlComponent, {
       order: 50,
       labelWrapper: false,
       cloneable: true,
     }),
     provideTypeControl('number[]', NgDocNumberListControlComponent, {
+      order: 50,
+      labelWrapper: false,
+      cloneable: true,
+    }),
+    // Arrays of a union of literals, whose item values the builder lists as `options`.
+    provideTypeControl('NgDocTypeAlias[]', NgDocTypeAliasListControlComponent, {
       order: 50,
       labelWrapper: false,
       cloneable: true,

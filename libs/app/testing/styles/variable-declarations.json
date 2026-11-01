@@ -141,6 +141,7 @@
     "libs/app/styles/typography.scss :: h4.ngde = var(--ng-doc-h4-font-size)",
     "libs/app/styles/typography.scss :: h5.ngde = var(--ng-doc-h5-font-size)",
     "libs/app/styles/typography.scss :: h6.ngde = var(--ng-doc-h6-font-size)",
+    "libs/app/type-controls/list-control/list-control.component.scss :: .ng-doc-list-control-chip = 13px",
     "libs/ui-kit/components/button/button.component.scss :: :host = calc(var(--ng-doc-base-gutter) * 2)",
     "libs/ui-kit/components/button/button.component.scss :: :host[data-ng-doc-size=large] = 20px",
     "libs/ui-kit/components/button/button.component.scss :: :host[data-ng-doc-size=small] = 14px",
@@ -165,11 +166,7 @@
   ],
   "--ng-doc-input-border": [
     "libs/app/components/playground/playground-properties/playground-properties.component.scss :: .ng-doc-playground-properties = var(--ng-doc-playground-input-border)",
-    "libs/app/type-controls/list-control/list-control.component.scss :: .ng-doc-list-control-item ng-doc-input-wrapper:has(input[aria-invalid=true]) = var(--ng-doc-border-size) solid var(--ng-doc-alert)",
     "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host:hover:not([data-ng-doc-input-disabled=true]) = var(--ng-doc-input-border-hover)"
-  ],
-  "--ng-doc-input-border-hover": [
-    "libs/app/type-controls/list-control/list-control.component.scss :: .ng-doc-list-control-item ng-doc-input-wrapper:has(input[aria-invalid=true]) = var(--ng-doc-border-size) solid var(--ng-doc-alert)"
   ],
   "--ng-doc-input-cursor": [
     "libs/ui-kit/components/input-wrapper/input-wrapper.component.scss :: :host:not([data-ng-doc-input-disabled=true]) ::ng-deep .ng-doc-input:read-only = pointer"
@@ -194,6 +191,7 @@
     "libs/app/styles/typography.scss :: h4.ngde = var(--ng-doc-h4-line-height)",
     "libs/app/styles/typography.scss :: h5.ngde = var(--ng-doc-h5-line-height)",
     "libs/app/styles/typography.scss :: h6.ngde = var(--ng-doc-h6-line-height)",
+    "libs/app/type-controls/list-control/list-control.component.scss :: .ng-doc-list-control-chip = 24px",
     "libs/ui-kit/components/button/button.component.scss :: :host = calc(var(--ng-doc-base-gutter) * 3)",
     "libs/ui-kit/components/button/button.component.scss :: :host[data-ng-doc-size=large] = 32px",
     "libs/ui-kit/components/button/button.component.scss :: :host[data-ng-doc-size=small] = 16px",

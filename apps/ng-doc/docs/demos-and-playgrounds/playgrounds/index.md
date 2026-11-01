@@ -70,7 +70,8 @@ alias becomes the name of the row. The type of the input chooses the control:
 | `boolean`                              | A checkbox.                                                               |
 | A union of literals, or an alias of it | A list of the values, such as `'small' \| 'medium' \| 'large'`.           |
 | An enum                                | A list of the member names, such as `Good`, that sets the member's value. |
-| `string[]` or `number[]`               | A list of fields, one per item, to add, remove and reorder items.         |
+| `string[]` or `number[]`               | A chip field: the items are chips that you add, edit, remove and reorder. |
+| An array of a union of literals        | A chip field that picks the values of the union, such as `NgDocSize[]`.   |
 | Any other array, or a tuple            | A JSON field.                                                             |
 | A type with a type control             | Your control (`*CustomTypeControlsPage`).                                 |
 | Any other type                         | No control. In development, the browser console names the skipped input.  |
@@ -107,9 +108,10 @@ export class StatusComponent {
 
 ## Arrays
 
-An array of strings or numbers gets a list: a field per item, with buttons that move the item up
-or down and remove it, and **Add item** at the end. Any other array gets a JSON field. Try both
-with the `tags`, `sizes` and `accents` inputs of this component:
+An array of strings or numbers gets a chip field: each item is a chip, and a text field follows
+them, all in one box. An array of a union of literals gets the same field, which picks the values of
+the union. Any other array gets a JSON field. Try them with the `tags`, `sizes`, `palette` and
+`accents` inputs of this component:
 
 ```typescript name="tag-cloud.component.ts"
 export interface TagCloudAccent {
@@ -120,32 +122,61 @@ export interface TagCloudAccent {
 export class TagCloudComponent {
   readonly tags = input<string[]>(['Angular', 'NgDoc', 'Playground']);
   readonly sizes = input<number[]>();
+  readonly palette = input<NgDocColor[]>(['primary', 'info', 'warning']);
   readonly accents = input<TagCloudAccent[]>([{ tag: 'NgDoc', color: 'success' }]);
 }
 ```
 
 {{ NgDocActions.playground("TagCloudPlayground") }}
 
-The list edits `string[]` and `number[]` inputs, however they are written: `Array<string>`,
+The chip field edits `string[]` and `number[]` inputs, however they are written: `Array<string>`,
 `readonly string[]` and `ReadonlyArray<string>` too, and optional or nullable ones, such as
 `input<number[]>()`.
 
-- The items of a `number[]` are numbers. A field without a number, such as an empty one, is marked
-  as invalid and the item keeps its number until you type one.
-- `undefined`, `null` and an empty array are different values, and the list shows which one the
-  input has. Removing the last item leaves `[]`. **Reset**, under the list, sets the input back to
-  its default value, such as `undefined` for an optional input.
+- **Add:** type a value and press **Enter**. While you type, a list shows the matching suggestions,
+  and a row that adds the text itself when no suggestion is that text. The arrow keys move through
+  the list, and **Enter** or a click picks a row; **Escape** closes the list.
+- **Suggestions:** the items of the input's default value and the items you removed, so a removed
+  item can come back. An item that the array holds is not suggested, but you can still type it: an
+  array of strings or numbers may hold an item twice.
+- **Remove:** click the **×** of a chip, or press **Backspace** in the empty text field to remove
+  the last chip.
+- **Reorder:** drag a chip to another place. With the keyboard, the arrow keys move between the
+  chips and the text field, **Alt+Left** and **Alt+Right** move the focused chip, and **Delete**
+  removes it.
+- **Edit:** double-click a chip, or press **Enter** or **F2** on it, to edit its value in place.
+  **Enter** keeps the new value, and **Escape** the old one.
+- **Numbers:** the items of a `number[]` are numbers. Text that is not a number is marked as
+  invalid and isn't added.
+- **Empty values:** `undefined`, `null` and an empty array are different values, and the field
+  shows which one the input has. The first item you add makes an array, and removing the last item
+  leaves `[]`. The **×** at the end of the field resets the input to its default value, such as
+  `undefined` for an optional input.
+
+An array of a union of literals, such as `palette` above, gets a multi-select: `NgDocSize[]` (an
+alias of a union), `('a' | 'b')[]`, `Array<'x' | 'y'>`, an array of an enum, and optional or
+nullable ones. Its list shows every value of the union, as the list of a union does, and marks the
+values that the array holds. Picking a value adds it, picking a marked value removes it, and the text
+you type filters the values instead of adding text. It moves and removes chips like the other chip
+fields. Both engines give such an input its values; an array of `boolean` gets the JSON field.
 
 The JSON field edits every other array: arrays of objects (`Item[]`, `Array<{ x: number }>`),
-nested arrays (`string[][]`), arrays of unions (`(string | number)[]`) and tuples
-(`[string, number]`), optional or not. It shows the value as JSON, and sets the input when the text
-is valid JSON. While it is not, the field is marked as invalid and the input keeps its last valid
-value. An empty field sets `undefined`.
+nested arrays (`string[][]`), arrays of unions that are not only literals (`(string | number)[]`)
+and tuples (`[string, number]`), optional or not. It shows the value as JSON, and sets the input
+when the text is valid JSON. While it is not, the field is marked as invalid and the input keeps its
+last valid value. An empty field sets `undefined`.
 
 The type of an input is read as TypeScript prints it, so an input typed with an alias of an array,
 such as `type Tags = string[]`, is typed `Tags` and gets no control. Register one of the built-in
 controls for the alias (`*CustomTypeControlsPage#reuse-the-built-in-controls`). In `controls`, name
-an array type such as `'string[]'`, or `'NgDocArray'` for the JSON field.
+an array type such as `'string[]'`, `'NgDocArray'` for the JSON field, or `'NgDocTypeAlias[]'` with
+`options` for the multi-select:
+
+```typescript name="ng-doc.page.ts"
+controls: {
+  sizes: { type: 'NgDocTypeAlias[]', options: ['small', 'medium', 'large'] },
+},
+```
 
 ## Multiple selectors
 
@@ -442,8 +473,8 @@ export default MyPage;
 ```
 
 An entry in `controls` also replaces the control that NgDoc chose for an input of the same name. The
-type `NgDocTypeAlias` shows a list of `options`; a type registered with `provideTypeControl` shows
-your control.
+type `NgDocTypeAlias` shows a list of `options`, and `NgDocTypeAlias[]` a multi-select of them for
+an array; a type registered with `provideTypeControl` shows your control.
 
 ## Labels, groups and order
 

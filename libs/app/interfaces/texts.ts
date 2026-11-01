@@ -249,19 +249,53 @@ export interface NgDocPlaygroundTexts {
   defaultValue: string;
   /** The button that resets a union type to its default. Default: "Reset to the default value". */
   resetToDefault: string;
-  /** The button that adds an item to a list. Default: "Add item". */
-  addItem: string;
-  /** The button that moves a list item up. Default: "Move up". */
-  moveUp: string;
-  /** The button that moves a list item down. Default: "Move down". */
-  moveDown: string;
-  /** The button that removes a list item. Default: "Remove". */
-  removeItem: string;
   /**
-   * Accessible name of a list item's field. Default: "Item {index}".
-   * Values: `index`, the item's position, from 1.
+   * Placeholder and accessible name of the text field of an array control, which adds an item.
+   * Default: "Add item".
    */
-  item: (params: { index: number }) => string;
+  addItem: string;
+  /**
+   * The row of an array control's suggestions that adds the typed text as an item. Default: "Add
+   * “{value}”". Values: `value`, the typed text.
+   */
+  addValue: (params: { value: string }) => string;
+  /**
+   * Accessible name of the button that removes an item of an array control. Default: "Remove
+   * {item}". Values: `item`, the item as the control shows it.
+   */
+  removeItem: (params: { item: string }) => string;
+  /**
+   * Accessible name of the field that edits an item of an array control in place. Default: "Edit
+   * {item}". Values: `item`, the item as the control shows it.
+   */
+  editItem: (params: { item: string }) => string;
+  /**
+   * Describes the keys of an item of an array control for assistive technology. Default:
+   * "Alt+Left or Alt+Right to move, Delete to remove".
+   */
+  itemKeys: string;
+  /**
+   * Describes the key that edits an item of an array of strings or numbers for assistive
+   * technology. Default: "Enter or F2 to edit".
+   */
+  editKeys: string;
+  /**
+   * Announced when an item of an array control moves. Default: "{item}: {position} of {count}".
+   * Values: `item`, the item as the control shows it; `position`, its new position, from 1;
+   * `count`, the number of items.
+   */
+  itemMoved: (params: { item: string; position: number; count: number }) => string;
+  /** Accessible name of the suggestions of an array control. Default: "Suggestions". */
+  suggestions: string;
+  /**
+   * Shown when no value of an array of a union matches the typed text. Default: "No matches".
+   */
+  noMatches: string;
+  /**
+   * Shown when the text typed in the field of an array of numbers is not a number. Default: "Not
+   * a number".
+   */
+  invalidNumber: string;
   /** Shown when the text of a JSON control is not valid JSON. Default: "Invalid JSON". */
   invalidJson: string;
   /**

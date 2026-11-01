@@ -43,7 +43,10 @@ export class TagCloudComponent {
   /** The font size of each tag in pixels, by position. A tag without one is 14px. */
   readonly sizes = input<number[]>();
 
-  /** The colors of some tags. The others are `primary`. */
+  /** The colors of the tags, in turn. Without one, the tags are `primary`. */
+  readonly palette = input<NgDocColor[]>(['primary', 'info', 'warning']);
+
+  /** The colors of some tags, which win over the palette. */
   readonly accents = input<TagCloudAccent[]>([{ tag: 'NgDoc', color: 'success' }]);
 
   protected readonly items = computed<TagCloudItem[]>(() =>
@@ -51,7 +54,9 @@ export class TagCloudComponent {
       label,
       size: this.sizes()?.[index] ?? 14,
       color:
-        this.accents().find((accent: TagCloudAccent) => accent.tag === label)?.color ?? 'primary',
+        this.accents().find((accent: TagCloudAccent) => accent.tag === label)?.color ??
+        this.palette()[index % this.palette().length] ??
+        'primary',
     })),
   );
 }

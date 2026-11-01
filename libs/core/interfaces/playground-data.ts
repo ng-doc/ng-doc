@@ -12,7 +12,8 @@ export interface NgDocPlaygroundProperty {
   /**
    * List of possible options: the members of a union type as written in code (such as `'small'`,
    * evaluated by the playground), plain values when `isManual` is set, or the name and value of an
-   * enum member
+   * enum member. For an array whose items are a union of literals (`NgDocSize[]`), the members of
+   * the item type
    */
   options?: Array<string | NgDocPlaygroundOption>;
   /** Determines if the property is manually added by the user */
