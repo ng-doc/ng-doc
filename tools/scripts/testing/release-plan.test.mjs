@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { compareVersions, planRelease } from '../release-plan.mjs';
+import { compareVersions, planRelease, previousReleaseTag } from '../release-plan.mjs';
 
 const TAGS = ['v21.1.1', 'v22.0.0-beta.1', 'v22.0.0-beta.2', 'v22.0.0', 'v22.1.0', 'other'];
 
@@ -26,6 +26,7 @@ test('main releases a stable version on latest and deploys the site', () => {
   assert.deepEqual(planRelease({ version: '22.2.0', branch: 'main', tags: TAGS }), {
     distTag: 'latest',
     deploy: true,
+    from: 'v22.1.0',
   });
 });
 
@@ -33,6 +34,7 @@ test('main releases a beta on the beta dist-tag without deploying', () => {
   assert.deepEqual(planRelease({ version: '22.2.0-beta.1', branch: 'main', tags: TAGS }), {
     distTag: 'beta',
     deploy: false,
+    from: 'v22.1.0',
   });
   assert.throws(
     () => planRelease({ version: '22.2.0-rc.1', branch: 'main', tags: TAGS }),
@@ -44,6 +46,7 @@ test('a maintenance branch releases its own major on release-N.x', () => {
   assert.deepEqual(planRelease({ version: '21.1.2', branch: '21.x', tags: TAGS }), {
     distTag: 'release-21.x',
     deploy: false,
+    from: 'v21.1.1',
   });
   assert.throws(
     () => planRelease({ version: '22.1.1', branch: '21.x', tags: TAGS }),
@@ -61,6 +64,27 @@ test('a maintenance branch releases its own major on release-N.x', () => {
     () => planRelease({ version: '21.2.0-beta.1', branch: '21.x', tags: TAGS }),
     /prereleases from main/,
   );
+});
+
+test('the notes start at the newest earlier release, a stable one for a stable release', () => {
+  const released = [
+    '21.1.1',
+    '22.0.0-beta.1',
+    '22.0.0',
+    '22.1.0',
+    '22.2.0-beta.1',
+    '22.2.0-beta.2',
+  ];
+  // A stable release covers its betas: its notes start at the previous stable release.
+  assert.equal(previousReleaseTag('22.2.0', released), 'v22.1.0');
+  // A beta starts at the previous release of any kind.
+  assert.equal(previousReleaseTag('22.2.0-beta.3', released), 'v22.2.0-beta.2');
+  assert.equal(previousReleaseTag('22.3.0-beta.1', released), 'v22.2.0-beta.2');
+  // A maintenance release starts at the newest release of its line below it.
+  assert.equal(previousReleaseTag('21.1.2', released), 'v21.1.1');
+  // Newer releases never count: tags are compared as versions, not by when they were made.
+  assert.equal(previousReleaseTag('22.0.1', released), 'v22.0.0');
+  assert.equal(previousReleaseTag('1.0.0', released), undefined);
 });
 
 test('anything else is refused with the reason', () => {

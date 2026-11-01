@@ -19,13 +19,13 @@ NgDoc releases its seven packages (`@ng-doc/add`, `app`, `builder`, `core`, `key
 
 ## What the workflow does
 
-1. **Plan:** `release-plan.mjs` checks the inputs against the rules above and outputs the dist-tag and whether to deploy.
+1. **Plan:** `release-plan.mjs` checks the inputs against the rules above and outputs the dist-tag, whether to deploy, and the previous release tag: the newest released version below this one, among stable versions for a stable release (`v22.1.0` for `22.2.0`, `v22.2.0-beta.1` for `22.2.0-beta.2`).
 2. **Build:** every `type:lib` project, without the Nx cache. For a stable release from `main` it also builds ng-doc.com with the Vite engine.
 3. **Version:** `nx release version <version>` writes the version into `dist/libs/*/package.json` and pins the packages' dependencies on each other to it. Nx follows the project graph for this, which comes from imports, so a package that depends on another one without importing it declares the dependency in `implicitDependencies` (`@ng-doc/add` on `@ng-doc/builder`); `tools/scripts/testing/release-manifests.test.mjs` keeps every such dependency a graph edge. `tools/scripts/release-manifests.mjs` then copies the shared metadata of the root `package.json` (`keywords`, `author`, `repository`, `bugs`, `homepage`, `license`) into each manifest.
 4. **Show:** `npm pack --dry-run` lists every tarball's files and size.
 5. **Publish:** `nx release publish --tag <dist-tag>` runs `pnpm publish` for each package, dependencies first. It uses npm trusted publishing (OIDC: `id-token: write`, no token or secret), and pnpm attaches a provenance attestation under trusted publishing. Each package's trusted publisher on npmjs.com names this repository and `release.yml`, so renaming the workflow breaks publishing.
-6. **Tag and notes:** `nx release changelog <version>` creates the annotated tag `v<version>`, pushes it, and creates the GitHub release. Its notes are generated from the Conventional Commits since the previous release tag (Nx looks for it on the current branch first, then on all branches). There is no `CHANGELOG.md` file. This step runs after publishing, so a failed publish leaves no tag.
-7. **Deploy:** after a stable release from `main`, `deploy.yml` (called with the `site` artifact) syncs `dist/apps/ng-doc/browser` to ng-doc.com.
+6. **Tag and notes:** `nx release changelog <version> --from <previous release tag>` creates the annotated tag `v<version>`, pushes it, and creates the GitHub release. Its notes are generated from the Conventional Commits since the previous release tag. The plan names that tag because Nx alone takes the newest tag it can reach from the branch: releases up to 22.1.0 were tagged on a `release` branch that `main` never contains, so before `v22.2.0` the newest tag `main` reaches is `v14.0.0`. There is no `CHANGELOG.md` file. This step runs after publishing, so a failed publish leaves no tag.
+7. **Deploy:** after a stable release from `main`, `deploy.yml` (called with the `site` artifact) syncs `dist/apps/ng-doc/browser` to ng-doc.com. Run by hand (**📚 Deploy** with a `tag` such as `v22.2.0`), it builds the site from that tag with the same steps, then deploys it. An older tag rolls the site back to that release.
 
 ## Running a release
 
@@ -37,7 +37,9 @@ From a terminal: `gh workflow run release.yml --ref main -f version=22.2.0 -f dr
 
 - **Betas:** release `X.Y.Z-beta.N` from `main`, then `X.Y.Z` when it is ready. `latest` never moves for a beta.
 - **Maintenance:** cut `N.x` from the last `vN.*` tag only when an older line needs a fix (`git switch -c N.x vN.Y.Z`), put the fixes there through pull requests, and release `N.Y.Z+1` from it. Cut it from a tag that already carries this workflow (22.2.0 or later).
-- **Recovery:** if a run fails before the tag step, run it again with the same version: `nx release publish` skips a package whose version is already published. If it failed after publishing but before the tag, the same re-run creates the tag and the release. Never publish a version by hand.
+- **Recovery:**
+  - If a run fails before the tag step, run it again with the same version: `nx release publish` skips a package whose version is already published. If it failed after publishing but before the tag, the same re-run creates the tag and the release. Never publish a version by hand.
+  - Once the tag is pushed, the plan refuses the version, so a re-run can't finish the release. If the GitHub release is missing, create it by hand from the existing tag, titled `v<version>`, with the notes of `pnpm nx release changelog <version> --from <previous release tag> --dry-run` (in a clone with the full history and tags). If the deploy didn't run, run **📚 Deploy** with the tag.
 
 ## Previewing locally
 
@@ -45,9 +47,11 @@ After building the packages (`pnpm nx run-many -t build --projects=tag:type:lib`
 
 ```sh
 pnpm nx release version 22.2.0 --dry-run     # the versions and dependency pins it would write
-pnpm nx release changelog 22.2.0 --dry-run   # the release notes and the tag
+pnpm nx release changelog 22.2.0 --from v22.1.0 --dry-run   # the release notes and the tag
 node tools/scripts/release-plan.mjs          # with VERSION=22.2.0 BRANCH=main REF_TYPE=branch
 ```
+
+`release-plan.mjs` prints the `from` tag to pass to `changelog`. The notes need the full history and the tags: in a shallow clone, `git fetch --unshallow --tags` first.
 
 Never run `nx release version`, `changelog` or `publish` without `--dry-run` in the shared checkout: `version` rewrites the shared `dist`, and `changelog` creates and pushes a tag. A full local rehearsal belongs in a scratch copy with its own `dist` (see [agent-safety.md](agent-safety.md)).
 

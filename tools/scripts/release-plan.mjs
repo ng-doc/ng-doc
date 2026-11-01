@@ -10,6 +10,10 @@ import { pathToFileURL } from 'node:url';
 //   on `beta`. Only a stable release from main deploys ng-doc.com.
 // - An `N.x` maintenance branch releases versions of major N on `release-N.x` (a dist-tag must
 //   not be a semver range, so it can't be `N.x`), and never moves `latest`.
+// - The release notes start at the previous release: the newest released version below this one
+//   (stable versions only, for a stable release). It is named here because Nx would otherwise take
+//   the newest tag it can reach from the branch, and releases up to 22.1.0 were tagged on a
+//   `release` branch that main never contains.
 
 const SEMVER = /^(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/;
 const BETA = /^beta\.\d+$/;
@@ -39,7 +43,21 @@ export function compareVersions(a, b) {
 }
 
 /**
- * The release plan for `version` from `branch`, given the existing tags (`v<version>`).
+ * The tag of the release that `version`'s notes start after: the newest released version below
+ * `version`, among stable versions for a stable `version`. `undefined` for a first release.
+ */
+export function previousReleaseTag(version, released) {
+  const stable = !SEMVER.exec(version)[4];
+  const previous = released
+    .filter((value) => (!stable || !SEMVER.exec(value)[4]) && compareVersions(value, version) < 0)
+    .sort(compareVersions)
+    .at(-1);
+  return previous && `v${previous}`;
+}
+
+/**
+ * The release plan for `version` from `branch`, given the existing tags (`v<version>`): the npm
+ * dist-tag, whether to deploy ng-doc.com, and the previous release tag (`from`).
  * Throws with the reason when the release is not allowed.
  */
 export function planRelease({ version, branch, refType = 'branch', tags = [] }) {
@@ -63,14 +81,21 @@ export function planRelease({ version, branch, refType = 'branch', tags = [] }) 
     const newest = line.sort(compareVersions).at(-1);
     if (newest && compareVersions(version, newest) <= 0)
       throw new Error(`${version} is not newer than ${newest}, the newest ${branch} release.`);
-    return { distTag: `release-${branch}`, deploy: false };
+    return {
+      distTag: `release-${branch}`,
+      deploy: false,
+      from: previousReleaseTag(version, released),
+    };
   }
   if (branch !== 'main') throw new Error(`Release from main or an N.x branch, not ${branch}.`);
   const stable = released.filter((value) => !SEMVER.exec(value)[4]).sort(compareVersions);
   const newest = stable.at(-1);
   if (newest && compareVersions(version, newest) <= 0)
     throw new Error(`${version} is not newer than ${newest}, the newest release.`);
-  return prerelease ? { distTag: 'beta', deploy: false } : { distTag: 'latest', deploy: true };
+  const from = previousReleaseTag(version, released);
+  return prerelease
+    ? { distTag: 'beta', deploy: false, from }
+    : { distTag: 'latest', deploy: true, from };
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
@@ -86,10 +111,12 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
     });
     console.error(
       `Release ${process.env.VERSION} from ${process.env.BRANCH}: dist-tag ${plan.distTag}, ` +
-        `deploy ng-doc.com: ${plan.deploy ? 'yes' : 'no'}.`,
+        `deploy ng-doc.com: ${plan.deploy ? 'yes' : 'no'}, ` +
+        `notes since ${plan.from ?? 'no previous release'}.`,
     );
     console.log(`dist-tag=${plan.distTag}`);
     console.log(`deploy=${plan.deploy}`);
+    console.log(`from=${plan.from ?? ''}`);
   } catch (error) {
     console.error(`release-plan: ${error.message}`);
     process.exitCode = 1;
