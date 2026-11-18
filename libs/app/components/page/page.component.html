@@ -69,7 +69,14 @@
       </a>
     }
   </div>
+}
 
+<!--
+  The content has a block of its own: a block that follows the inline SVG icons above in the same
+  block takes their namespace, and the components that the page processor creates under it would
+  then be SVG elements, which the browser does not render.
+-->
+@if (!fullscreenRoute()) {
   @if (rootPage.pageContentSource) {
     @if (contentController.error(); as error) {
       <div class="ng-doc-page-wrapper" role="alert">{{ error.message }}</div>
